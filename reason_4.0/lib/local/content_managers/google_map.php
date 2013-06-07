@@ -11,15 +11,17 @@
 	/**
 	 * A content manager for displaying a Google Map
 	 */
-	define("DEFAULT_ZOOM_LEVEL", 16);
-	define("DEFAULT_LATITUDE", 43.313625);
-	define("DEFAULT_LONGITUDE", -91.804547);
+	include_once(SETTINGS_INC .'google_api_settings.php');
 	
 	class GoogleMap extends ContentManager
 	{
 
 		function alter_data()
 		{
+			$defaultZoomLevel = (defined('GOOGLE_MAPS_DEFAULT_ZOOM_LEVEL') ? GOOGLE_MAPS_DEFAULT_ZOOM_LEVEL : 4);			
+			$defaultLatitude = (defined('GOOGLE_MAPS_DEFAULT_LATITUDE') ? GOOGLE_MAPS_DEFAULT_LATITUDE : 39.059325);
+			$defaultLongitude = (defined('GOOGLE_MAPS_DEFAULT_LONGITUDE') ? GOOGLE_MAPS_DEFAULT_LONGITUDE : -97.045476);
+
 			$this->set_comments('google_map_msid', form_comment('My places map id (e.g. 206354152960879485239.0004bd7c539131dd1e563) containing custom polygons and placemarks.<br/>Place multiple ids on a separate lines.'));
 			$this->set_display_name('google_map_zoom_level', 'Zoom level');
 			$this->set_display_name('google_map_latitude', 'Latitude');
@@ -41,15 +43,15 @@
 						
 			if (!$this->get_value('google_map_zoom_level'))
 			{
-				$this->set_value('google_map_zoom_level', DEFAULT_ZOOM_LEVEL);
+				$this->set_value('google_map_zoom_level', $defaultZoomLevel);
 			}
 			if (!$this->get_value('google_map_latitude'))
 			{
-				$this->set_value('google_map_latitude', DEFAULT_LATITUDE);
+				$this->set_value('google_map_latitude', $defaultLatitude);
 			}
 			if (!$this->get_value('google_map_longitude'))
 			{
-				$this->set_value('google_map_longitude', DEFAULT_LONGITUDE);
+				$this->set_value('google_map_longitude', $defaultLongitude);
 			}
 			if (!$this->get_value('google_map_primary_pushpin_latitude') && !$this->get_value('google_map_primary_pushpin_longitude'))
 			{
@@ -93,12 +95,12 @@
 					'google_map_msid',
 				)
 			);
-			
 		}
 		
 		function on_every_time()
 		{
 			$protocol = (HTTPS_AVAILABLE && on_secure_page() ? 'https' : 'http');
+			$campusTemplateID = (defined('GOOGLE_MAPS_CAMPUS_TEMPLATE_ID') ? GOOGLE_MAPS_CAMPUS_TEMPLATE_ID : '');
 			
 			parent::on_every_time();
 
@@ -117,6 +119,8 @@
 			<script type="text/javascript" src="'.$protocol.'://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
 			<script type="text/javascript" src="'.$protocol.'://google-maps-utility-library-v3.googlecode.com/svn/trunk/styledmarker/src/StyledMarker.js"></script>
 			<script type="text/javascript">
+			
+			google.maps.visualRefresh = true;
 						
 			function initialize() {
 				var latLng = new google.maps.LatLng('.$this->get_value('google_map_latitude').','.$this->get_value('google_map_longitude').');
@@ -130,8 +134,9 @@
 		        var map = new google.maps.Map(document.getElementById(\'map_canvas\'), myOptions);
 		        
 		        var arrayOfMsids = ["'. preg_replace("|\s|", '","', $this->get_value('google_map_msid')) . '"];
-		        if (document.disco_form.google_map_show_campus_template.options[document.disco_form.google_map_show_campus_template.options.selectedIndex].value == "yes") {
-					arrayOfMsids.splice(0, 0, "203908844213597815590.0004cfa54d955e6e86cbb");
+		        if (document.disco_form.google_map_show_campus_template.options[document.disco_form.google_map_show_campus_template.options.selectedIndex].value == "yes"
+		        	&& "'. $campusTemplateID .'" != \'\') {
+					arrayOfMsids.splice(0, 0, "'.$campusTemplateID.'");
 				}
 		        var nyLayer = [];
 		        setLayers(arrayOfMsids, nyLayer, map);
@@ -201,9 +206,10 @@
 					nyLayer.length = 0;
 					
 					arrayOfMsids = document.disco_form.google_map_msid.value.split("\n");
-					if (document.disco_form.google_map_show_campus_template.options[document.disco_form.google_map_show_campus_template.options.selectedIndex].value == "yes")
+					if (document.disco_form.google_map_show_campus_template.options[document.disco_form.google_map_show_campus_template.options.selectedIndex].value == "yes"
+						&& "'. $campusTemplateID .'" != \'\')
 					{
-						arrayOfMsids.splice(0, 0, "203908844213597815590.0004cfa54d955e6e86cbb");
+						arrayOfMsids.splice(0, 0, "'.$campusTemplateID.'");
 					}
 					setLayers(arrayOfMsids, nyLayer, map)
 				});
@@ -215,9 +221,10 @@
 					nyLayer.length = 0;
 					
 					arrayOfMsids = document.disco_form.google_map_msid.value.split("\n");
-					if (document.disco_form.google_map_show_campus_template.options[document.disco_form.google_map_show_campus_template.options.selectedIndex].value == "yes")
+					if (document.disco_form.google_map_show_campus_template.options[document.disco_form.google_map_show_campus_template.options.selectedIndex].value == "yes"
+						&& "'. $campusTemplateID .'" != \'\')
 					{
-						arrayOfMsids.splice(0, 0, "203908844213597815590.0004cfa54d955e6e86cbb");
+						arrayOfMsids.splice(0, 0, "'.$campusTemplateID.'");
 					}
 		        	setLayers(arrayOfMsids, nyLayer, map)
 				}); 
@@ -254,15 +261,6 @@
 			</script>'."\n";
         	
         	echo '<div id="map_canvas"></div><br/>'."\n";
-        	
-        	/*echo '<script type="text/javascript">
-        		$(document).ready(function() {
-        			$("input").change(function() {
-    					$(this).css("background-color","#FFFFCC");
-    					google.maps.setZoom(11);
-  					});
-  				});
-  			</script>'."\n";*/
 		
 		}
 		
