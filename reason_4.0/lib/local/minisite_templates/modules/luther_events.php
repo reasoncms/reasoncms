@@ -11,7 +11,7 @@ class LutherEventsModule extends EventsModule
 {
 	var $list_date_format = 'l, F j';
 	var $show_months = false;
-	var $show_icalendar_links = false;
+	var $show_icalendar_links = true;
 	
 	//////////////////////////////////////
 	// For The Events Listing
@@ -111,6 +111,10 @@ class LutherEventsModule extends EventsModule
 		if ($sponsorContactUrl)
 		{
 			echo '<p class="eventUrl">&nbsp;</p>'."\n";
+		}
+		if($this->show_icalendar_links)
+		{
+			$this->show_item_export_link($e);
 		}
 		$this->show_google_map($e);
 		echo '</div>'."\n";
@@ -273,6 +277,21 @@ class LutherEventsModule extends EventsModule
 	function show_event_list_item_verbose( $event_id, $day, $ongoing_type = '' )
 	{
 		$this->show_event_list_item_standard( $event_id, $day, $ongoing_type);
+	}
+	
+	function show_item_export_link($e)
+	{
+		$imgCal = "/images/calendar_40.png";
+		echo '<div class="export">'."\n";
+		if($e->get_value('recurrence') == 'none' || empty($this->request['date']))
+		{
+			echo '<a href="'.$this->construct_link(array('event_id'=>$e->id(),'format'=>'ical')).'"><img class="ical" src="' . $imgCal .'" alt="calendar_image" title="Add to calendar..."></a>';
+		}
+		else
+		{
+			echo '<a href="'.$this->construct_link(array('event_id'=>$e->id(),'format'=>'ical','date'=>'')).'"><img class="ical" src="' . $imgCal .'" alt="calendar_image" title="Add to calendar..."></a>';
+		}
+		echo '</div>'."\n";
 	}
 	
 	function get_all_categories() // {{{
