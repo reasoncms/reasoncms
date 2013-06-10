@@ -347,7 +347,7 @@ else
 function admin_user_exists()
 {
 	reason_include_once('function_libraries/admin_actions.php');
-	return reason_unique_name_exists('admin_user');
+	return reason_unique_name_exists('admin_user', false);
 }
 
 function create_admin_user($password)
