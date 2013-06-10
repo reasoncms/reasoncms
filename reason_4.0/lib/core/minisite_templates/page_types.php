@@ -1307,6 +1307,9 @@
 			'main_post' => 'go',
 			'post_foot' => 'textonly_toggle',
 		),
+		'google_map' => array(
+			'main_post' => 'google_map',
+		),
 		'images_under_nav' => array(
 			'sidebar' => 'blurb',
 			'sub_nav' => 'image_sidebar',
