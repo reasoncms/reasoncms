@@ -1,0 +1,13 @@
+/* google maps */
+#map_canvas {
+ width: 100%;
+ /* if defined, height will override aspect ratio in google_api_settings */
+ /* height: 345px; */
+}
+#map_from {
+ width: 58%;
+}
+#map_reset {
+ float: right;
+ margin-top: 2px;
+}

@@ -517,7 +517,7 @@ class MediaWorkDisplayer
 				$avd->set_parameter('flv', 'controlbar', '0');
 			
 			//$mp4->set_value('media_format', 'Flash Video');
-			$mp4->set_value('url', $mp4->get_value('url')."/a.mp4");
+			$mp4->set_value('url', $this->_match_protocol($mp4->get_value('url').'/a.mp4'));
 			
 			$avd_markup = $avd->get_embedding_markup_for_flash_video($mp4);
 			//return $avd_markup; // uncomment this if testing the flash player
@@ -537,7 +537,7 @@ class MediaWorkDisplayer
 	*/
 	private function _get_video_source_tag($media_file, $mime_type)
 	{
-		$markup = '<source src="'.$media_file->get_value('url').'" ';
+		$markup = '<source src="'.$this->_match_protocol($media_file->get_value('url')).'" ';
 			
 		if (!empty($mime_type))
 			$markup .= 'type="'.$mime_type.'"';
@@ -677,7 +677,7 @@ class MediaWorkDisplayer
 		$mp3 = false;
 		foreach ($this->media_files as $file)
 		{
-			$markup .= '<source src="'.$file->get_value('url').'" type="'.$file->get_value('mime_type').'" />'."\n";
+			$markup .= '<source src="'.$this->_match_protocol($file->get_value('url')).'" type="'.$file->get_value('mime_type').'" />'."\n";
 			if ($file->get_value('mime_type') == 'audio/mpeg')
 				$mp3 = $file;
 		}
@@ -693,7 +693,7 @@ class MediaWorkDisplayer
 			if ( !$this->show_controls )
 				$avd->set_parameter('flv', 'controlbar', '0');
 			
-			$mp3->set_value('url', $mp3->get_value('url')."/a.mp3");
+			$mp3->set_value('url',$this->_match_protocol($mp3->get_value('url').'/a.mp3'));
 			
 			$avd_markup = $avd->get_embedding_markup_For_flash_video($mp3);
 			$markup .= $avd_markup;
@@ -704,7 +704,18 @@ class MediaWorkDisplayer
 
 		return $markup;
 	}	
-
+	
+	private function _match_protocol($url)
+	{
+		if(defined('KALTURA_HTTPS_ENABLED') && KALTURA_HTTPS_ENABLED && on_secure_page())
+		{
+			if(strpos($url, 'http://') === 0)
+			{
+				return 'https://'.substr($url, 7);
+			}
+		}
+		return $url;
+	}
 }
 
 ?>

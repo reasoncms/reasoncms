@@ -30,10 +30,11 @@ $(document).ready(function()
         var current_text = cur_text;
         var char_limit = parseInt(limit_note.children('span.charLimit').html());
         var chars_remaining_element = limit_note.children('span.charsRemaining');
+        var auto_show_hide = limit_note.hasClass("autoShowHide");
         
         // only make the AJAX call if within what JS considers to be 20
         // characters of the limit
-        if( current_text.length > (char_limit - 20) )
+        if( !auto_show_hide || (current_text.length > (char_limit - 20) ))
         {
             $.get(counter_src, 
                 {text: current_text},
@@ -51,13 +52,13 @@ $(document).ready(function()
                         
                     }
                     // display caution
-                    else if(chars_remaining < 20)
+                    else if( !auto_show_hide || (chars_remaining < 20) )
                     {
                         limit_note.show();
                         over_limit_note.hide();
                     }
                     // not "close" to limit, so hide everything
-                    else
+                    else if(auto_show_hide)
                     {
                         limit_note.hide();
                         over_limit_note.hide();   

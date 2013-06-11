@@ -42,9 +42,9 @@ echo "DO NOT include a trailing slash."
 echo "For example /var/www/htdocs"
 read webdir
 
-ln -s $PWD/reason_4.0/www/ $webdir/reason
-ln -s $PWD/www/ $webdir/reason_package
-ln -s $PWD/thor/ $webdir/thor
+ln -ns $PWD/reason_4.0/www/ $webdir/reason
+ln -ns $PWD/www/ $webdir/reason_package
+ln -ns $PWD/thor/ $webdir/thor
 
 echo "Symlinks created"
 

@@ -66,11 +66,6 @@ domain_define ('IMAGEMAGICK_PATH', '/usr/bin/');
  */
 domain_define ('TIDY_EXE', '/usr/bin/tidy');
 
-/**
- * The command line path used to invoke curl (eg. /usr/bin/curl) - optional if libcurl is part of the php install
- */
-domain_define ('CURL_PATH', '/usr/bin/curl');
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // You shouldn't have to alter any of the constants below in a default install for reason to function
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -156,9 +151,6 @@ define('XML_PARSER_INC',INCLUDE_PATH.'xml/');
 
 // Define the path to HTML Purifier
 define('HTML_PURIFIER_INC',INCLUDE_PATH.'htmlpurifier/');
-
-// Define the path to libcurlemu
-define('LIBCURLEMU_INC',INCLUDE_PATH.'libcurlemu-1.0.4/');
 
 // Define the path to jquery
 define('JQUERY_INC',INCLUDE_PATH.'jquery/');

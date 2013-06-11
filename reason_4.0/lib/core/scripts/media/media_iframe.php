@@ -182,7 +182,7 @@ switch($page_state)
 }
 echo '</title>'."\n";
 if('ok' == $page_state)
-	echo '<style>body{margin:0;padding:0;}.AudioWrapper{position:relative;height:46px;}audio{width:100%;position:absolute;bottom:0;}</style>'."\n";
+	echo '<style>body{margin:0;padding:0;}.AudioWrapper{position:relative;height:46px;}audio{width:100%;position:absolute;bottom:0;}video,img{width:100%;height:auto;}</style>'."\n";
 else
 	echo '<style>body{background:#777;color:#eee;font-family:Verdana,Arial,Helvetica,sans-serif;font-size:0.8em;margin:0;padding:0.5em;}a{color:#fff}a.signIn{background:#555;padding:0.3em 0.67em;text-decoration:none;}p{margin-top:0;}</style>'."\n";
 echo '</head>'."\n";
@@ -212,7 +212,9 @@ switch($page_state)
 		echo 'The requested media cannot be found.';
 		break;
 }
+echo '<![if gt IE 7]>'."\n";
 echo '<script src="'.JQUERY_URL.'"></script>'."\n";
+echo '<script src="'.REASON_PACKAGE_HTTP_BASE_PATH.'fitvids/jquery.fitvids.js"></script>'."\n";
 echo '<script>
 $(document).ready(function(){
 	match = /Android\s+(\d+\.?\d*)[^\d]/.exec(window.navigator.userAgent);
@@ -226,9 +228,14 @@ $(document).ready(function(){
 			$("object a").attr("target","_blank");
 		}
 	}
+	else
+	{
+		$("body").fitVids();
+	}
 });
 </script>
 ';
+echo '<![endif]>'."\n";
 echo '</body>'."\n";
 echo '</html>'."\n";
 ?>

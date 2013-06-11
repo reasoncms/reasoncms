@@ -167,9 +167,9 @@
 			// check for spaces
 			if( !$this->has_error( 'base_url' ) )
 			{
-				if( !preg_match( '|^[a-z0-9_/]*$|i', $this->get_value('base_url') ) )
+				if( !preg_match( '|^[a-z0-9_\-/]*$|i', $this->get_value('base_url') ) )
 				{
-					$this->set_error( 'base_url', 'Your base URL contains illegal characters. Allowable characters are letters, numbers, underscores, and slashes.' );
+					$this->set_error( 'base_url', 'Your base URL contains illegal characters. Allowable characters are letters, numbers, hyphens, underscores, and slashes.' );
 				}
 			}
 			

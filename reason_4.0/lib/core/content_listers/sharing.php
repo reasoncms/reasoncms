@@ -131,7 +131,7 @@
 		function show_admin_normal( $row , $options) // {{{
 		{
 			echo '<td align="left" class="'.$options[ 'class' ].'"><strong>';
-			$borrow_array =  array( 'cur_module' => 'DoBorrow' , 'id' => $row->id() );
+			$borrow_array =  array( 'cur_module' => 'DoBorrow' , 'id' => $row->id(), 'admin_token' => $this->admin_page->get_admin_token() );
 			if( !$this->select )
 				$borrow_array[ 'unborrow' ] = 1;
 			$borrow_link = $this->admin_page->make_link( $borrow_array );

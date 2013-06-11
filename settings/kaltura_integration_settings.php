@@ -11,6 +11,11 @@ if(!defined('KALTURA_REASON_INTEGRATED')) define('KALTURA_REASON_INTEGRATED', fa
 if(!defined('KALTURA_SERVICE_URL')) define('KALTURA_SERVICE_URL', "");
 
 /*
+ * This defines whether Kaltura has HTTPS on with a valid cert
+ */
+if(!defined('KALTURA_HTTPS_ENABLED')) define('KALTURA_HTTPS_ENABLED', true);
+
+/*
 * These three settings can be found in the Kaltura Management Console (KMC).  In 
 * Settings->Integration Settings, there is an Account Info pane containing these
 * fields.  Note that you want the partner id, not the sub partner id.

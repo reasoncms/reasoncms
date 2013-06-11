@@ -800,28 +800,9 @@ function tidy_check()
 
 function curl_check()
 {
-	global $curl_test_content;
-	$link = carl_construct_link(array('curl_test' => "true"), array(''));
-	$insecure_link = on_secure_page() ? alter_protocol($link,'https','http') : $link;
-	$secure_link = on_secure_page() ? $link : alter_protocol($link,'http', 'https');
-	$content = get_reason_url_contents( $insecure_link );
-	if ($content != $curl_test_content)
-	{
-		$extra_error_txt = (!empty($content)) ? ' - the curl attempt returned this content: <pre>' . htmlentities($content) . '</pre> and should have returned <pre>' . htmlentities($curl_test_content) .'</pre>' : ' - The curl attempt returned no content.';
-		return msg('<span class="error">curl check failed</span>' . $extra_error_txt, false);
-	}
-	else 
-	{
-		// if HTTPS_AVAILABLE is true, lets hit the current page in that way
-		if (securest_available_protocol() == 'https') 
-		{
-			$content = get_reason_url_contents($secure_link);
-			if (empty($content)) return msg('<span class="error">curl check failed over https</span>.
-											<p>Your server probably does not support https connections</p>
-											<p>Set the HTTPS_AVAILABLE constant in package_settings.php to false and try again.</p>', false);
-		}
-		return msg('<span class="success">curl check passed</span>', true);
-	}
+	if (!function_exists('curl_init'))
+		die_with_message('<span class="error">curl check failed. You need to install php5-curl. </span>');
+	return msg('<span class="success">curl check passed</span>', true);
 }
 
 /**

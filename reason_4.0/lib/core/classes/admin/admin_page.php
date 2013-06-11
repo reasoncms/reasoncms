@@ -650,9 +650,9 @@ class AdminPage
 		if( !$e->get_value( 'no_share' ) )
 		{
 			if( site_borrows_entity( $this->site_id , $e->id() ) )
-				$links[ 'Don\'t Borrow' ] = $this->make_link( array( 'cur_module' => 'DoBorrow' , 'unborrow' => 1 ) );
+				$links[ 'Don\'t Borrow' ] = $this->make_link( array( 'cur_module' => 'DoBorrow' , 'admin_token' => $this->get_admin_token(), 'unborrow' => 1 ) );
 			else
-				$links[ 'Borrow' ] = $this->make_link( array( 'cur_module' => 'DoBorrow' ) );
+				$links[ 'Borrow' ] = $this->make_link( array( 'cur_module' => 'DoBorrow', 'admin_token' => $this->get_admin_token() ) );
 		}
 		if( !empty( $this->request[ CM_VAR_PREFIX . 'id' ] ) )
 		{
@@ -1211,8 +1211,13 @@ class AdminPage
 					if($show)
 					{
 						$link = REASON_STATS_URI_BASE;
-						$uname = posix_uname();
-						$link .=  strtolower($uname['nodename']).'/';
+						if (function_exists('posix_uname'))
+						{
+							$uname = posix_uname();
+							$uname_host = $uname['nodename'];
+						}
+						else $uname_host = php_uname('n');
+						$link .=  strtolower($uname_host).'/';
 						$link .= $_SERVER['HTTP_HOST'].'/';
 						$link .= $site->get_value( 'unique_name' ).'/';
 						return $link;
@@ -1365,7 +1370,11 @@ class AdminPage
 		{
 			$this->title();
 		}
-		$this->module->run();
+		if ($this->module->check_admin_token() && $this->invalid_admin_token())
+		{
+			$this->module->run_invalid_admin_token();
+		}
+		else $this->module->run();
 		
 		echo '</div>';
 	}
@@ -1634,7 +1643,11 @@ class AdminPage
 			$this->module_name = $module_name;
 			$this->module = new $module_name( $this );
 			$this->module->set_head_items($this->head_items);
-			$this->module->init();
+			if ($this->module->check_admin_token() && $this->invalid_admin_token())
+			{
+				$this->module->init_invalid_admin_token();
+			}
+			else $this->module->init();
 		}
 		else
 		{
@@ -1816,6 +1829,39 @@ class AdminPage
 				}
 			}
 		}
+	}
+	
+	/**
+	 * We create and store a token in the session that we can use to minimize the chance of CSRF attacks.
+	 *
+	 * The admin token can optionally be verified by a module. We usually don't pass it since Disco itself has
+	 * built in CSRF protection. As a temporary measure, however, a few admin modules (doAssociate, doDisassociate)
+	 * do use this.
+	 */
+	function get_admin_token()
+	{
+		if (!isset($_SESSION['admin_token']))
+		{
+			$token = md5('admin_' . uniqid(mt_rand(), true));
+			$_SESSION['admin_token'] = $token;
+		}
+		return $_SESSION['admin_token'];
+	}
+	
+	/**
+	 * Check if the admin_token in the URL is equal to what we have stored in the session.
+	 */
+	function invalid_admin_token()
+	{
+		if (!isset($this->_invalid_admin_token))
+		{
+			if (!isset($_GET['admin_token']) || ($_GET['admin_token'] != $this->get_admin_token()))
+			{
+				$this->_invalid_admin_token = true;
+			}
+			else $this->_invalid_admin_token = false;
+		}
+		return $this->_invalid_admin_token;
 	}
 }
 ?>
