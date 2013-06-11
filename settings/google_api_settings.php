@@ -134,4 +134,31 @@ if ( USE_GOOGLE_ANALYTICS )
      * If you are not getting any results from google analytics, try setting this to an empty string.
      */
     domain_define('GA_HOST_NAME', HTTP_HOST_NAME);
+
+    /**
+     * Google Maps Default Settings
+     */
+    
+    /**
+     * The Map ID obtained from a dedicated google account containing a campus map
+     * For example '203908844213597815590.0004cfa54d955e6e86cbb'
+     */
+    define('GOOGLE_MAPS_CAMPUS_TEMPLATE_ID', '');
+
+    /**
+     * The default latitude, longitude, and zoom level for new maps.
+     * Often an overview of campus.
+     * For example: 'GOOGLE_MAPS_DEFAULT_LATITUDE', 39.059325
+     * 'GOOGLE_MAPS_DEFAULT_LONGITUDE', -97.045476
+     * 'GOOGLE_MAPS_DEFAULT_ZOOM_LEVEL', 4 
+     */
+    define('GOOGLE_MAPS_DEFAULT_LATITUDE', 39.059325);
+    define('GOOGLE_MAPS_DEFAULT_LONGITUDE', -97.045476);
+    define('GOOGLE_MAPS_DEFAULT_ZOOM_LEVEL', 4);
+    
+    /**
+     * The map aspect ratio, which is width divided by height.
+     * For example: 'GOOGLE_MAPS_DEFAULT_LATITUDE', 1.5
+     */
+    define('GOOGLE_MAPS_ASPECT_RATIO', 1.333333);
 }
