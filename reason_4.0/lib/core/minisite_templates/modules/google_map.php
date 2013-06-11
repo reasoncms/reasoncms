@@ -8,7 +8,8 @@
 	{
 		function init( $args = array() )
 		{
-
+			parent::init( $args );
+			$this->get_head_items()->add_stylesheet(REASON_HTTP_BASE_PATH.'modules/map/map.css');
 		}
 		function has_content()
 		{
