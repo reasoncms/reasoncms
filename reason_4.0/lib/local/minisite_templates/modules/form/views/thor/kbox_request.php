@@ -5,29 +5,45 @@ reason_include_once('minisite_templates/modules/form/views/thor/luther_default.p
 $GLOBALS[ '_form_view_class_names' ][ basename( __FILE__, '.php') ] = 'KboxRequestsForm';
 
 /**
+ * This form view sends the content of the form to the kbox for auto ticket 
+ * creation. The title of the form is the tilte of the request.
  * 
  * @author Steve Smith
  */
 
 class KboxRequestsForm extends LutherDefaultThorForm
 {   
-    var $email_body = '';
-
     function process()
     {
-        // send an email to helpdesk for auto ticket creation
         // kbox@helpdesk.luther.edu
-        $txt = "Software Development Emergency Auto-Generate";
-        $txt .= "\n";
-        $txt .= $this->get_value_from_label('Emergency');
-        $hd_mail = new Email('kbox@help.luther.edu', $this->get_value_from_label('Username'), $this->get_value_from_label('Username'), $this->get_value_from_label('Emergency'), $txt, $txt);
-        $hd_mail->send();
+        $model =& $this->get_model();
+        $body = $this->get_email_txt();
+
+        $mail = new Email('kbox@help.luther.edu', $this->get_value_from_label('Username'), $this->get_value_from_label('Username'), $model->get_form_name(), $body['txt_body'], $body['html_body']);
+        $mail->send();
+
+        parent::process();
     }
 
     function get_email_txt()
     {
-    
-        $values = $this->get_values();
-        $this->email_body .= '';
+        $model =& $this->get_model();
+
+        $email_values = $model->get_values_for_email_submitter_view();
+
+        $values = "\n";
+        foreach ($email_values as $key => $val)
+        {
+            $values .= sprintf("\n%s:\n   %s\n", $val['label'], $val['value']);
+        }        
+        
+        $html_body = nl2br($values);
+        $txt_body = html_entity_decode(strip_tags($html_body));
+
+        $body = array('html_body' => $html_body, 'txt_body' => $txt_body);
+
+        
+
+        return $body;
     }
 }
