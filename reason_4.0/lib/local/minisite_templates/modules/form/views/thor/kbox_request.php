@@ -13,13 +13,16 @@ $GLOBALS[ '_form_view_class_names' ][ basename( __FILE__, '.php') ] = 'KboxReque
 
 class KboxRequestsForm extends LutherDefaultThorForm
 {   
+
     function process()
     {
         // kbox@helpdesk.luther.edu
         $model =& $this->get_model();
+        $user_info = $model->get_values_for_user();
+        $username = $user_info[1]['submitted_by'];
         $body = $this->get_email_txt();
 
-        $mail = new Email('kbox@help.luther.edu', $this->get_value_from_label('Username'), $this->get_value_from_label('Username'), $model->get_form_name(), $body['txt_body'], $body['html_body']);
+        $mail = new Email('kbox@help.luther.edu', $username, $username, $model->get_form_name(), $body['txt_body'], $body['html_body']);
         $mail->send();
 
         parent::process();
