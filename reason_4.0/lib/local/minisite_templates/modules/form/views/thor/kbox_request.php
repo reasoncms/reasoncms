@@ -14,24 +14,26 @@ $GLOBALS[ '_form_view_class_names' ][ basename( __FILE__, '.php') ] = 'KboxReque
 class KboxRequestsForm extends LutherDefaultThorForm
 {   
     var $model;
+    var $user_id;
 
     function custom_init()
     {
         $this->model =& $this->get_model();
+        $this->user_id = $this->model->get_user_netid();
     }
 
     function on_every_time(){
-        $this->get_kbox_labels();
+        // pray($this->model);
+        $this->user_info = $this->model->get_values_for_user();
     }
 
     function process()
     {
-        // kbox@helpdesk.luther.edu
-        $user_info = $this->model->get_values_for_user();
-        $username = $user_info[1]['submitted_by'];
         $body = $this->get_email_txt();
 
-        $mail = new Email('kbox@help.luther.edu', $username, $username, $this->model->get_form_name(), $body['txt_body'], '');
+        // $mail = new Email('kbox@help.luther.edu', $username, $username, $this->model->get_form_name(), $body['txt_body'], '');
+        $kbox_labels = $this->get_kbox_labels();
+        $mail = new Email('kbox@help.luther.edu', $kbox_labels['@submitter'], $kbox_labels['@submitter'], $this->model->get_form_name(), $body['txt_body'], '');
         $mail->send();
 
         parent::process();
@@ -43,15 +45,15 @@ class KboxRequestsForm extends LutherDefaultThorForm
         $email_values = $this->model->get_values_for_email_submitter_view();
 
         $values = "\n";
-        foreach ($email_values as $key => $val)
-        {
-            $values .= sprintf("\n%s:\n   %s\n", $val['label'], $val['value']);
-        }
         foreach ($this->get_kbox_labels() as $key => $val)
         {
             $values .= sprintf("\n%s = %s\n", $key, $val);
         }   
-        
+        foreach ($email_values as $key => $val)
+        {
+            $values .= sprintf("\n%s:\n   %s\n", $val['label'], $val['value']);
+        }
+        // die(pray($this->get_kbox_labels()));
         $html_body = nl2br($values);
         $txt_body = html_entity_decode(strip_tags($html_body));
 
@@ -95,7 +97,6 @@ class KboxRequestsForm extends LutherDefaultThorForm
             'created'       =>  '@created',
             'modified'      =>  '@modified',
             'submitter'     =>  '@submitter', //requester
-            'requester'     =>  '@requester', // not officially on the list, but I have used this successfully
             'machine'       =>  '@machine', //workstation
             'asset'         =>  '@asset',
             'approval_info' =>  '@approval_info',
@@ -135,18 +136,17 @@ class KboxRequestsForm extends LutherDefaultThorForm
             }
 
         }
+
+        // get the kbox submitter if "set" by the form creator (based on the 
+        // answers of the form submitter), otherwise the form submitter is the 
+        // kbox submitter
+        if (array_key_exists('@submitter',$kbox_labels_for_email)){
+            $username = $kbox_labels_for_email['@submitter'];
+        } else {
+            $username = $this->user_id;
+        }
+        $kbox_labels_for_email['@submitter'] = $username;
+        
         return $kbox_labels_for_email;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
