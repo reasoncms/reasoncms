@@ -22,5 +22,5 @@ define('AKISMET_INC', INCLUDE_PATH.'akismet/');
 /**
  * Akismet API Key.
  */
-domain_define('AKISMET_API_KEY', '' );
+domain_define('AKISMET_API_KEY', 'b1c0ec71e3bb' );
 ?>
