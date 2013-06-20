@@ -347,7 +347,8 @@ else
 function admin_user_exists()
 {
 	reason_include_once('function_libraries/admin_actions.php');
-	return reason_unique_name_exists('admin_user', false);
+	reason_refresh_unique_names(); // lets make sure we pull admin_user from the database not the cache.
+	return reason_unique_name_exists('admin_user');
 }
 
 function create_admin_user($password)
