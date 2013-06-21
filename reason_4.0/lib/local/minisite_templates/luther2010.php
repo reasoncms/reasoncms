@@ -386,11 +386,23 @@ class LutherTemplate2010 extends MinisiteTemplate
 		}
 		if ($this->has_content( 'sidebar_5' ))
 		{
+			// Override default behavior of related publication on landing pages
+			// If no related publicatons are attached, no news listing will appear
+			/*$es = new entity_selector();
+			$es->add_type(id_of('publication_type'));
+			$es->add_right_relationship($this->page_id, relationship_id_of('page_to_related_publication'));
+			$result = $es->run_one();
+			if ($result == null)
+			{
+				return;
+			}*/			
+			
 			if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_giving'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature'
-				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature_sidebar_news')
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature_sidebar_news'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music')
 			{
 				echo '<aside class="news group">'."\n";
 				echo '<header class="blue-stripe"><h1><span>News</span></h1></header>'."\n";
@@ -402,7 +414,8 @@ class LutherTemplate2010 extends MinisiteTemplate
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_giving'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature'
-				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature_sidebar_news')
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature_sidebar_news'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music')
 			{
 				echo '</aside> <!-- class="news group" -->'."\n";
 			}

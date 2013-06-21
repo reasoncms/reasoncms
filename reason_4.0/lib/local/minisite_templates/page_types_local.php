@@ -599,10 +599,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'pre_sidebar_2' => '',
 		'pre_sidebar_3' => '',
 		'sidebar_2' => '',
-		'sidebar_5'=> array( // News
-			'module' => 'luther_other_publication_news',
-			'max_num_to_show' => 3,
-		),
+		'sidebar_5' => get_luther_related_publication(3),
 		'post_sidebar' => 'luther_flickr_slideshow',
 	),
 	'luther2010_public_information' => array(
@@ -1418,6 +1415,25 @@ function get_luther_publication_section_nav()
 		);
 	}
 
+}
+
+function get_luther_related_publication($max_num_items = 3)
+// set up the related publication template for landing pages
+{
+	return array(
+		'module' => 'publication',
+		'markup_generator_info' => array(
+			'list_item' => array(
+				'classname' => 'MinimalListItemMarkupGenerator',
+				'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/minimal.php',
+			)
+		),
+		//'related_publication_unique_names' => luther_get_publication_unique_name("headlines"),
+		'related_mode' => true,
+		'related_title' => '',
+		'max_num_items' => $max_num_items,
+	);
+	
 }
 
 function get_luther_headlines($max_num_items)
