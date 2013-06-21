@@ -45,16 +45,17 @@
 			{
 				if (preg_match("/bannerad\s(.*?)$/", $image->get_value('keywords'), $matches))
 				{
+					$bn = $_SERVER['REQUEST_URI'] . "banner_" . strtolower(preg_replace('|[\'\"]|', '', preg_replace('| |', '_', $image->get_value('name'))));
 					$url = WEB_PHOTOSTOCK . $id . '.' . $image->get_value('image_type');
 					if ($theme->get_value( 'name' ) == 'luther2010')
 					{
 						echo '<li>'."\n";
-						echo '<a href="' . $matches[1] . '"><img src="' . $url . '" alt="' . $image->get_value('description') . '" width="235" height="90"/></a>';
+						echo '<a href="' . $matches[1] . '" onclick="_gaq.push([\'_trackEvent\', \'banner\', \'click\', \'' . $bn . '\']);"><img src="' . $url . '" alt="' . $image->get_value('description') . '" width="235" height="90"/></a>';
 						echo '</li>'."\n";
 					}
 					else
 					{
-						echo '<a href="' . $matches[1] . '"><img src="' . $url . '" alt="' . $image->get_value('description') . '" width="100%" /></a>';
+						echo '<a href="' . $matches[1] . '" onclick="_gaq.push([\'_trackEvent\', \'banner\', \'click\', \'' . $bn . '\']);"><img src="' . $url . '" alt="' . $image->get_value('description') . '" width="100%" /></a>';
 					}
 					$i++;
 				}
