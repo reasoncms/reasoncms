@@ -585,7 +585,7 @@
 		}
 		function display_sub_policy($policy)
 		{
-			echo '<div class="policy sub_policy">'."\n";
+			echo '<div class="accordion policy sub_policy">'."\n";
 			echo '<a id="'.$policy->id().'"></a>';
 			echo "<h4 class='policyName'>" . 	$policy->get_value('name') . "</h4>\n";
 			if($policy->get_value( 'content' ))
@@ -603,13 +603,13 @@
 			// we display the policy normally with inline editing css elements.
 			if ($inline_edit->active_for_module($this) && $cur_policy_edit_id == $policy->id())
 			{
-				echo '<div class="policy sub_policy">'."\n";
+				echo '<div class="accordion policy sub_policy">'."\n";
 				$this->run_policy_data_form($policy, false);
 				echo '</div>'."\n";
 			}
 			else
 			{
-				echo '<div class="policy sub_policy editRegion">'."\n";
+				echo '<div class="accordion policy sub_policy editRegion">'."\n";
 				echo '<a id="'.$policy->id().'" name="'.$policy->id().'"></a>';
 				echo "<h4 class='policyName'>" . 	$policy->get_value('name') . "</h4>\n";
 				echo '<div class="policyContent">'.$policy->get_value('content') . '</div>';
@@ -990,4 +990,3 @@
 			return false;
 		}	
 	}
-?>

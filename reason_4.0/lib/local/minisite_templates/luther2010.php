@@ -658,8 +658,8 @@ class LutherTemplate2010 extends MinisiteTemplate
 		//echo '<link href="/stylesheets/luther2010/reason.css" media="screen, projection" rel="stylesheet" type="text/css" />'."\n";  
   		//echo '<link href="/stylesheets/luther2010/print.css" media="print" rel="stylesheet" type="text/css" />'."\n";
 		$this->head_items->add_javascript( '/javascripts/modernizr-1.1.min.js' );
-  		$this->head_items->add_javascript( JQUERY_URL );
-  		$this->head_items->add_javascript( JQUERY_UI_URL );
+		$this->head_items->add_javascript( JQUERY_UI_URL, true );
+  		$this->head_items->add_javascript( JQUERY_URL, true );
   		// echo '<script src="/javascripts/modernizr-1.1.min.js" type="text/javascript"></script>'."\n";
   		//echo '<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js" type="text/javascript"></script>'."\n";
 		//echo '<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.min.js"></script>'."\n";
