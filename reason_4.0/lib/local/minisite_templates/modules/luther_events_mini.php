@@ -190,7 +190,6 @@ class LutherEventsMiniModule extends LutherEventsModule
 		//echo $site_id."\n";
 		//echo $this->site_id."\n";
 		
-		
 		$sd = substr($this->events[$event_id]->get_value('datetime'), 0, 10);
 		if (substr($day, 0, 10) == $sd
 			|| substr($day, 0, 10) == substr($this->today, 0, 10))
@@ -199,6 +198,10 @@ class LutherEventsMiniModule extends LutherEventsModule
 			if (!empty($this->events_page_url))
 			{
 				echo '<a href="'.$this->events_page_url.'?event_id='.$this->events[$event_id]->id().'&date='.$day.'">'."\n";
+			}
+			else get_site_id_from_url("/events");  // luther instance-wide events located at /events
+			{
+				echo '<a href="/events?event_id='.$this->events[$event_id]->id().'&date='.$day.'">'."\n";
 			}
 			
 			echo '<div>'."\n";
