@@ -35,7 +35,7 @@
 			$this->add_required('posts_per_page');
 			$this->add_required('blog_feed_string');
 			
-			if($this->_is_element('notify_upon_post'))
+			if($this->is_element('notify_upon_post'))
 			{
 				$this->set_display_name( 'notify_upon_post', 'New Post Notification' );
 			}
@@ -43,7 +43,7 @@
 			{
 				trigger_error('The field "notify_upon_request" needs to be added to the blog table. Please run the upgrade script: '.REASON_HTTP_BASE_PATH.'scripts/upgrade/4.0b3_to_4.0b4/upgrade_db.php to add the proper field.');
 			}
-			if($this->_is_element('notify_upon_comment'))
+			if($this->is_element('notify_upon_comment'))
 			{
 				$this->set_display_name( 'notify_upon_comment', 'New Comment Notification' );
 			}
@@ -81,13 +81,13 @@
 			{
 				$this->set_value('has_sections', 'no');
 			}	
-
+		
 			// hide things that do not appear fully implemented
 			//$this->change_element_type( 'hold_posts_for_review', 'hidden' );
-			if($this->_is_element('commenting_state'))$this->change_element_type( 'commenting_state', 'hidden' );
-			if($this->_is_element('pagination_state')) $this->change_element_type( 'pagination_state', 'hidden' );
-			if($this->_is_element('enable_comment_notification')) $this->change_element_type( 'enable_comment_notification', 'hidden' );
-			if($this->_is_element('enable_front_end_posting')) $this->change_element_type('enable_front_end_posting', 'hidden');
+			if($this->is_element('commenting_state'))$this->change_element_type( 'commenting_state', 'hidden' );
+			if($this->is_element('pagination_state')) $this->change_element_type( 'pagination_state', 'hidden' );
+			if($this->is_element('enable_comment_notification')) $this->change_element_type( 'enable_comment_notification', 'hidden' );
+			if($this->is_element('enable_front_end_posting')) $this->change_element_type('enable_front_end_posting', 'hidden');
 			
 			$this->set_display_name('has_issues','Issue-based?');
 			$this->add_comments('has_issues', form_comment('Choose "no" for standard chronological display of posts.<br />Choose "yes" to group posts together into issues, similar to in a print-based magazine (note that you will need to set up at least one issue before any posts will appear).'));
@@ -110,9 +110,26 @@
 			$this->add_element('comment_comment','comment',array('text'=>'<h4>Commenting</h4>'));
 			$this->add_element('posting_comment','comment',array('text'=>'<h4>Posting on the public site</h4>'));
 			$this->add_element('issue_section_comment','comment',array('text'=>'<h4>Issues and sections</h4>'));
-			$this->set_order(array('name', 'publication_type', 'posts_per_page', 
-								   'blog_feed_string', 'description', 'date_format', 'posting_comment', 'allow_front_end_posting', 'notify_upon_post', 'hold_posts_for_review',
-								   'comment_comment','allow_comments', 'notify_upon_comment', 'hold_comments_for_review', 'issue_section_comment', 'has_issues','has_sections',));
+			
+			// social sharing
+			if ($this->is_element('enable_social_sharing'))
+			{
+				if(!$this->get_value('enable_social_sharing'))
+				{
+					$this->set_value('enable_social_sharing', 'no');
+				}
+				$this->add_element('social_sharing_comment','comment',array('text'=>'<h4>Social Sharing</h4>'));
+				
+				// I should check whether or not any social accounts are attached to this site and probably report on their names here.
+			}
+			else
+			{
+				trigger_error('You need to run Reason 4.3 to 4.4 upgrade scripts to add social sharing to Reason publications');
+			}
+			
+			$this->set_order(array('name', 'unique_name', 'publication_type', 'posts_per_page', 'blog_feed_string', 'description', 'date_format', 'social_sharing_comment', 
+								   'enable_social_sharing', 'posting_comment', 'allow_front_end_posting', 'notify_upon_post', 'hold_posts_for_review', 'comment_comment', 
+								   'allow_comments', 'notify_upon_comment', 'hold_comments_for_review', 'issue_section_comment', 'has_issues','has_sections'));
 		}
 
 		function alter_display_names()
