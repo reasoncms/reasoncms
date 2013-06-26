@@ -135,6 +135,11 @@ class HomecomingRegistrationOneForm extends FormStep
 		'attend_dinner_20_to_10' => 'text',
 		'attend_dinner_5' => 'text',
 		'ride_in_parade' => 'text',
+		'booklet_header' => array(
+    		'type' => 'comment',
+			'text' => '<h3>50 year reunion booklet</h3>'
+        ),
+        'booklet' => 'text'
 	);
 	
 	var $required = array('current_first_name', 'current_last_name', 'graduation_name', 'e-mail');
@@ -183,6 +188,17 @@ class HomecomingRegistrationOneForm extends FormStep
         $this->change_element_type(
 			'ride_in_parade', 'radio_inline_no_sort', array(
 				'display_name' => 'Will you ride in the parade?',
+				'comments' => 'Class of ' . ($date['year'] - 50) . ' only',
+				'options' => array(
+					'yes' => 'Yes',
+					'no' => 'No',
+				),
+			)
+		);
+		// 50th reunion booklet
+        $this->change_element_type(
+			'booklet', 'radio_inline_no_sort', array(
+				'display_name' => 'Would you like a printed 50th reunion booklet?',
 				'comments' => 'Class of ' . ($date['year'] - 50) . ' only',
 				'options' => array(
 					'yes' => 'Yes',
@@ -269,6 +285,7 @@ class HomecomingRegistrationOneForm extends FormStep
 	  	$dinner_tix_50_to_25 = $this->get_value('attend_dinner_50_to_25');
 	  	$dinner_tix_20_to_10 = $this->get_value('attend_dinner_20_to_10');
 	  	$dinner_tix_5 = $this->get_value('attend_dinner_5');
+	  	$booklet = $this->get_value('booklet');
 
 		if (isset($program_tix))
 	  	{
@@ -288,6 +305,11 @@ class HomecomingRegistrationOneForm extends FormStep
 		if (isset($dinner_tix_5))
 	  	{
 			$amount = $amount + ($dinner_tix_5 * 10);
+		}
+
+		if ($booklet == 'yes')
+	  	{
+			$amount = $amount + 7;
 		}
 		$this->set_value('amount', $amount);
 		

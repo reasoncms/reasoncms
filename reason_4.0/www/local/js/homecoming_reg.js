@@ -63,6 +63,11 @@ $(document).ready(function(){
     if (!$("radio[name='ride_in_parade']").val()){
         $("#rideinparadeRow").css("display", "none");
     }
+    //Booklet Row and Header
+    if (!$("radio[name='booklet']").val()){
+        $("#bookletRow").css("display", "none");
+        $("#bookletheaderRow").css("display", "none");
+    }
     // class 1961 reception
     if (!$("radio[name='attend_1961_reception']").val()){
        $("#attend50threceptionRow").css("display", "none");
@@ -91,9 +96,7 @@ $(document).ready(function(){
             $("#vegetarianguestsnamesRow").show();
         }else{
             $("#vegetarianguestsnamesRow").hide();
-        }
-        
-        
+        }    
     })
 
 
@@ -159,11 +162,13 @@ $(document).ready(function(){
         }
          
         if ((year - parseInt(class_year)) == 50) {
+            $("#bookletheaderRow").show();
+            $("#bookletRow").show();
             $("#rideinparadeRow").show();
             $("#attend50threceptionRow").show();
-
         }else{
-             
+            $("#bookletheaderRow").hide();
+            $("#bookletRow").hide();
             $("#rideinparadeRow").hide();
             $("#attend50threceptionRow").hide();
 
