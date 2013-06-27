@@ -110,7 +110,7 @@ class HomecomingRegistrationConfirmation extends FormStep
 		}
 		if ($booklet)
 		{
-			$txt .= '<li><strong>Ride in the Parade:</strong> '.$ride_in_parade.'</li>'."\n";
+			$txt .= '<li><strong>Number of 50 year reunion booklets:</strong> '.$booklet.'</li>'."\n";
 		}
 		$txt .= '</ul>'."\n";
 		$txt .= '</div>'."\n";
