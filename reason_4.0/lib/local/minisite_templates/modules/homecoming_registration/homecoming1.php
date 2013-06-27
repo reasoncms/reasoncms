@@ -196,9 +196,9 @@ class HomecomingRegistrationOneForm extends FormStep
 		);
 		// 50th reunion booklet
         $this->change_element_type(
-			'booklet' => 'select', array(
+			'booklet', 'select', array(
 				'display_name' => 'Would you like a printed 50th reunion booklet ($7/booklet)?',
-				'comments' => 'Class of ' . ($date['year'] - 50) . ' only',
+				'comments' => '<br />Class of ' . ($date['year'] - 50) . ' only',
 				'options' => array('1' => '1','2' => '2','3' => '3','4' => '4'),
 			)
 		);	
