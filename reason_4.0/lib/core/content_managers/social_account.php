@@ -53,11 +53,6 @@ class SocialAccountManager extends ContentManager
 			$this->add_callback(array($integrator, 'social_account_pre_show_form'), 'pre_show_form');
 			$this->add_callback(array($integrator, 'social_account_on_every_time'), 'on_every_time');
 			$this->add_callback(array($integrator, 'social_account_run_error_checks'), 'run_error_checks');
-			
-			// we run social_account_process on the tail end of run_error_checks so that it can dynamically set 
-			// fields before the main process method of the content manager. Ideally we would have a call back
-			// called pre_process or something, but we don't.
-			$this->add_callback(array($integrator, 'social_account_process'), 'run_error_checks');
 		}
 		else $this->show_form = false;
 	}

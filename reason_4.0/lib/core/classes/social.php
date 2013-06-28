@@ -22,6 +22,8 @@ class ReasonSocialIntegrationHelper
 	/**
 	 * Returns an array describing available social accounts.
 	 *
+	 * @todo could generate dynamically by reading social directory - or maybe by reading a config file.
+	 *
 	 * @return array
 	 */
 	function get_available_integrators()
@@ -30,10 +32,34 @@ class ReasonSocialIntegrationHelper
 	}
 	
 	/**
+	 * Returns the integrator class for an social_account entity.
+	 *
+	 * @return mixed object that implements the ReasonSocialIntegrator interface or boolean false
+	 */
+	function get_social_account_integrator($entity_id, $required_interface_support = NULL)
+	{
+		$social_integrator = new entity($entity_id);
+		$social_integrator_type = $social_integrator->get_value('account_type');
+		if ($integrator = $this->get_integrator($social_integrator_type))
+		{
+			if (is_null($required_interface_support) || in_array($required_interface_support, class_implements($integrator)))
+			{
+				return $integrator;
+			}
+		}
+		return false;
+	}
+	
+	/**
 	 * @return mixed integrator object or false if it couldn't be loaded.
 	 */
 	function get_integrator($account_type)
 	{
+		if (empty($account_type))
+		{
+			trigger_error('The get_integrator account_type parameter cannot be empty');
+			return false;
+		}
 		if (!isset($this->_integrators[$account_type]))
 		{
 			if (reason_file_exists('classes/social/'.$account_type.'.php'))
@@ -57,28 +83,47 @@ class ReasonSocialIntegrationHelper
 		}
 		return $this->_integrators[$account_type];
 	}
-	
-	/**
-	 * Adds the elements we need for facebook integration setup to a disco form.
-	 */
-	function on_every_time(&$disco)
+}
+
+abstract class ReasonSocialIntegrator implements SocialAccountContentManager
+{
+	public function social_account_on_every_time($cm)
 	{
-	
 	}
 	
-	function run_error_checks(&$disco)
+	public function social_account_pre_show_form($cm)
 	{
-	
 	}
 	
-	/**
-	 * @return json
-	 */
-	function process(&$disco)
+	public function social_account_run_error_checks($cm)
 	{
-	
 	}
 }
+
+/**
+ * We define interfaces that a ReasonSocialIntegrator may implement.
+ */
+interface SocialAccountContentManager
+{
+	public function social_account_on_every_time($cm);
+	public function social_account_pre_show_form($cm);
+	public function social_account_run_error_checks($cm);
+}
+
+/**
+ * If the social account provides profile links it should implement this interface.
+ */
+interface SocialAccountProfileLinks
+{
+	public function get_profile_link_icon($social_entity_id);
+	public function get_profile_link_text($social_entity_id);
+	public function get_profile_link_src($social_entity_id);
+}
+
+
+
+
+
 
 /**
  * Get the singleton social integration object

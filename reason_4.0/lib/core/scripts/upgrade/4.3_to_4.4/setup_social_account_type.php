@@ -27,7 +27,7 @@ class ReasonUpgrader_44_SetupSocialAccountType implements reasonUpgraderInterfac
 		'directionality'=>'bidirectional',
 		'connections'=>'many_to_many',
 		'required'=>'no',
-		'is_sortable'=>'no',
+		'is_sortable'=>'yes',
 		'display_name'=>'Associate Social Account',
 		'display_name_reverse_direction'=>'Associate with Site',
 		'description_reverse_direction'=>'Sites using this Social Account');	
