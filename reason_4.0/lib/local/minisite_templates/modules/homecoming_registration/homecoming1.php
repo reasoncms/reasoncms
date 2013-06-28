@@ -81,11 +81,11 @@ class HomecomingRegistrationOneForm extends FormStep
 		'guest_class' => 'text',
 		'reservations_header' => array(
 			'type' => 'comment',
-			'text' => '<h3>Alumni Dinner Reservations</h3>',
+			'text' => '<h3>Friday\'s Alumni Dinner Reservations</h3>',
 		),
 		'attend_program' => array(
 			'type' => 'select_no_sort',
-			'display_name' => 'Alumni Dinner',
+			'display_name' => 'Friday\'s Alumni Dinner',
 			'comments' => '<br />$20/person',
 			'options' => array(
 				'--'=>'--', 
@@ -123,7 +123,7 @@ class HomecomingRegistrationOneForm extends FormStep
 //		),
 		'reunion_reservations_header' => array(
 			'type' => 'comment',
-			'text' => '<h3>Class Reunion Reservations</h3>'
+			'text' => '<h3>Saturday\'s Class Reunion Reservations</h3>'
 		),
         'attend_50th_reception'=>'text',
 		'attend_luncheon' => 'text',
@@ -135,6 +135,11 @@ class HomecomingRegistrationOneForm extends FormStep
 		'attend_dinner_20_to_10' => 'text',
 		'attend_dinner_5' => 'text',
 		'ride_in_parade' => 'text',
+		'booklet_header' => array(
+    		'type' => 'comment',
+			'text' => '<h3>50 Year Reunion Booklet</h3>'
+        ),
+        'booklet' => 'text'
 	);
 	
 	var $required = array('current_first_name', 'current_last_name', 'graduation_name', 'e-mail');
@@ -151,7 +156,6 @@ class HomecomingRegistrationOneForm extends FormStep
 		$this->change_element_type( 
 			'guest_class', 'year', array('start' => ($date['year'] - 75), 'end' => ($date['year'])));
 
-		
 		// Set years and cost for luncheon
 		$classes_string_75_to_50 = 'for Classes ';
 		for ($i = 75; $i >= 55; $i -= 5){
@@ -161,7 +165,7 @@ class HomecomingRegistrationOneForm extends FormStep
 		$classes_string_75_to_50 .= $date['year'] - 50;
 		$this->change_element_type(
 			'attend_luncheon', 'select', array(
-				'display_name' => 'Tickets for Luncheon',
+				'display_name' => 'Tickets for Saturday\'s Luncheon',
 				'comments' => '<br />'.$classes_string_75_to_50.'<br />No Cost',
 				'options' => array( 
 					'1' => '1', '2' => '2', '3' => '3', '4' => '4', '5' => '5', 
@@ -188,6 +192,14 @@ class HomecomingRegistrationOneForm extends FormStep
 					'yes' => 'Yes',
 					'no' => 'No',
 				),
+			)
+		);
+		// 50th reunion booklet
+        $this->change_element_type(
+			'booklet', 'select', array(
+				'display_name' => 'Would you like a printed 50th reunion booklet ($7/booklet)?',
+				'comments' => '<br />Class of ' . ($date['year'] - 50) . ' only',
+				'options' => array('1' => '1','2' => '2','3' => '3','4' => '4'),
 			)
 		);	
 
@@ -269,6 +281,7 @@ class HomecomingRegistrationOneForm extends FormStep
 	  	$dinner_tix_50_to_25 = $this->get_value('attend_dinner_50_to_25');
 	  	$dinner_tix_20_to_10 = $this->get_value('attend_dinner_20_to_10');
 	  	$dinner_tix_5 = $this->get_value('attend_dinner_5');
+	  	$booklet = $this->get_value('booklet');
 
 		if (isset($program_tix))
 	  	{
@@ -288,6 +301,11 @@ class HomecomingRegistrationOneForm extends FormStep
 		if (isset($dinner_tix_5))
 	  	{
 			$amount = $amount + ($dinner_tix_5 * 10);
+		}
+
+		if (isset($booklet))
+	  	{
+			$amount = $amount + ($booklet * 7);
 		}
 		$this->set_value('amount', $amount);
 		
