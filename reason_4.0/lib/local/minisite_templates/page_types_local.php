@@ -625,7 +625,13 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'post_sidebar_2' => 'main_blurb',
 	),
 	'luther2010_sports' => array(
-		'main_head' => 'luther_carousel',
+		'main_head' => array(
+				'module' => 'feature/feature',
+				'shuffle' => false,
+				'autoplay_timer' => 12,
+				'width'=>716,
+				'height'=>288
+		),
 		'main_head_5' => '',
 		'main' => 'luther_sports_results_mini',
 		'main_2' => '',
