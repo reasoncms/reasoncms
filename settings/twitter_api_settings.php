@@ -33,19 +33,19 @@ define('TMHOAUTH_INC', INCLUDE_PATH.'tmhOAuth/');
 /**
  * Consumer Key for the application you created at dev.twitter.com/apps
  */
-define('TWITTER_API_CONSUMER_KEY', "");
+define('TWITTER_API_CONSUMER_KEY', "vWjklXeEfd9tl1AHtk8mw");
 
 /**
  * Consumer Secret for the application you created at dev.twitter.com/apps
  */
-define('TWITTER_API_CONSUMER_SECRET', "");
+define('TWITTER_API_CONSUMER_SECRET', "ru099hRMC6nqPZYSHV9QqGZqNSJDKOIUHPVq5rhygH4");
 
 /**
  * Access Token for the application you created at dev.twitter.com/apps
  */
-define('TWITTER_API_ACCESS_TOKEN', "");
+define('TWITTER_API_ACCESS_TOKEN', "1560760800-1ZIKakRE1Oa0OC9ARda72eHL1iYv625S2Mu98Ad");
 
 /**
  * Access Token Secret for the application you created at dev.twitter.com/apps
  */
-define('TWITTER_API_ACCESS_TOKEN_SECRET', "");
+define('TWITTER_API_ACCESS_TOKEN_SECRET', "F65icKwlZm8PWNbwbQItroaEyY5NbiwOe89ARHBxPA");
