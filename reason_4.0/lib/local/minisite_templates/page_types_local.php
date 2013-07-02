@@ -1214,6 +1214,7 @@ function google_analytics()
   	echo 'var _gaq = _gaq || [];'."\n";
   	echo "_gaq.push(['_setAccount', 'UA-129020-8']);"."\n";
   	echo "_gaq.push(['_setDomainName', 'luther.edu']);"."\n";
+  	echo "_gaq.push(['_setAllowLinker', true]);"."\n";
   	echo "_gaq.push(['_trackPageview']);"."\n";
 
   	echo '(function() {'."\n";
