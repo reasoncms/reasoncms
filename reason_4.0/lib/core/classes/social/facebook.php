@@ -34,11 +34,6 @@ $GLOBALS[ '_social_integrator_class_names' ][ basename( __FILE__, '.php' ) ] = '
 class ReasonFacebookIntegrator extends ReasonSocialIntegrator implements SocialAccountProfileLinks
 {
 	/****************** SocialAccountProfileLinks implementation ********************/
-	public function get_profile_link_icon($social_entity_id)
-	{
-		return REASON_HTTP_BASE_PATH . 'modules/social_account/images/FB-f-Logo__blue_72.png';
-	}
-	
 	public function get_profile_link_text($social_entity_id)
 	{
 		$social_entity = new entity($social_entity_id);

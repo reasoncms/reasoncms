@@ -28,7 +28,8 @@ class ReasonSocialIntegrationHelper
 	 */
 	function get_available_integrators()
 	{
-		return array('facebook' => 'FaceBook');
+		return array('facebook' => 'FaceBook',
+					 'twitter' => 'Twitter');
 	}
 	
 	/**
@@ -87,14 +88,50 @@ class ReasonSocialIntegrationHelper
 
 abstract class ReasonSocialIntegrator implements SocialAccountContentManager
 {
+	/**
+	 * Return the account_type field from the social account entity.
+	 *
+	 * @param int
+	 * @return string
+	 */
+	public function get_profile_link_type($social_entity_id)
+	{
+		$social_entity = new entity($social_entity_id);
+		return $social_entity->get_value('account_type');
+	}
+	
+	/**
+	 * Return a 300x300 png from www/modules/social_account/images/ folder.
+	 *
+	 * The filename should correspond to the social account entity account_type value (plus .png).
+	 *
+	 * @param int
+	 * @return string
+	 */
+	public function get_profile_link_icon($social_entity_id)
+	{
+		$social_entity = new entity($social_entity_id);
+		$account_type = $social_entity->get_value('account_type');
+		return REASON_HTTP_BASE_PATH . 'modules/social_account/images/'.$account_type.'.png';
+	}
+	
+	/**
+	 * @param object
+	 */
 	public function social_account_on_every_time($cm)
 	{
 	}
 	
+	/**
+	 * @param object
+	 */
 	public function social_account_pre_show_form($cm)
 	{
 	}
 	
+	/**
+	 * @param object
+	 */
 	public function social_account_run_error_checks($cm)
 	{
 	}
@@ -115,6 +152,7 @@ interface SocialAccountContentManager
  */
 interface SocialAccountProfileLinks
 {
+	public function get_profile_link_type($social_entity_id);
 	public function get_profile_link_icon($social_entity_id);
 	public function get_profile_link_text($social_entity_id);
 	public function get_profile_link_src($social_entity_id);

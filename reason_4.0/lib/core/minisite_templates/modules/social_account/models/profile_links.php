@@ -47,6 +47,7 @@ class ReasonSocialProfileLinksModel extends ReasonMVCModel
 	{
 		if ($site_id = $this->config('site_id'))
 		{
+			$s = get_microtime();
 			$es = new entity_selector();
 			$es->add_type(id_of('social_account_type'));
 			$es->add_right_relationship($site_id, relationship_id_of('site_to_social_account'));
