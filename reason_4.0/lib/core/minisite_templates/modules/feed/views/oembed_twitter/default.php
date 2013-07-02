@@ -26,8 +26,12 @@ class ReasonOembedTwitterFeedView extends ReasonMVCView
 	function get()
 	{
 		$tweet_json = $this->data();
-		$str = json_decode($tweet_json);
-		return $str->html;
+		if (!empty($tweet_json))
+		{
+			$str = json_decode($tweet_json);
+			return $str->html;
+		}
+		else return '';
 	}
 }
 ?>

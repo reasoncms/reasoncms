@@ -38,6 +38,7 @@ $GLOBALS[ '_reason_mvc_model_class_names' ][ reason_basename( __FILE__) ] = 'Rea
  * - cache_duration
  * - cache_directory
  *
+ * @deprecated since Reason 4.4 - Twitter no longer provides RSS or ATOM feeds.
  * @author Nathan White
  */
 class ReasonSimplepieTwitterFeedModel extends ReasonMVCModel // implements ReasonFeedInterface
@@ -57,6 +58,9 @@ class ReasonSimplepieTwitterFeedModel extends ReasonMVCModel // implements Reaso
 	 */
 	function build()
 	{
+		trigger_error('The ReasonSimplepieTwitterFeedModel class is deprecated - use twitter/twitter.php instead of simplepie_twitter/simplepie_twitter.php');
+		return '';
+
 		if ($url = $this->config('screen_name'))
 		{			
 			$simplepie = new SimplePie_Twitter;
