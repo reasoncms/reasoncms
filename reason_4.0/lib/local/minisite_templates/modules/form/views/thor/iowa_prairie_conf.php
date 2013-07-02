@@ -21,6 +21,25 @@ class IowaPrairieConferenceForm extends CreditCardThorForm {
       $this->set_value($this->get_element_name_from_label('Revenue Budget Number'), '13-000-00619-22000');
       $this->set_value($this->get_element_name_from_label('Expense Budget Number'), '13-000-00619-12121');
 
+      $july4 = 184; // July 4 == day 184 (185 on a leap year) on a 0 - 364 scale
+      if (date('L')){ // if this year is a leap year
+        $july4 = 185;
+      }
+      $date = getdate();
+      if ($date['yday'] > $july4){
+        $this->change_element_type($this->get_element_name_from_label('Registration Type'), 'radio_no_sort',
+          array('options'=>array(
+                '$90 - Regular Full'=>'$90 - Regular Full',
+                '$55 - Friday Only'=>'$55 - Friday Only',
+                '$45 - Saturday Only'=>'$45 - Saturday Only',
+                '$50 - Graduate Student'=>'$50 - Graduate Student',
+                '$45 - Undergraduate Student'=>'$45 - Undergraduate Student',
+                '$200 - Commercial Vendor'=>'$200 - Commercial Vendor',
+                '$100 - Non-Profit Exhibitor'=>'$100 - Non-Profit Exhibitor',
+                '$500 - Friends of IPC Sponsorship'=>'$500 - Friends of IPC Sponsorship'))
+          );
+      }
+
       $this->add_element('registration_fees_header', 'comment', array('text'=>'<h4>Registration Fees</h4>See <a href="/iowaprairieconference/RegistrationPrelim">registration information</a> page for more details.'));
       $this->move_element('registration_fees_header', 'before', $this->get_element_name_from_label('Registration Type'));
       $this->add_element('lodging_header', 'comment', array('text'=>'<h4>Luther College Dorm Lodging Reservations</h4>If reserving a double room for two registrants, only one registrant should fill out the dorm lodging section.'));
