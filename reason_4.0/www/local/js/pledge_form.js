@@ -11,7 +11,7 @@ $(document).ready(function() {
     });
 
     employer_match_id = ($(".words:contains('employer match gifts')").parent().attr('id'));
-    employer_match_id = employer_match_id.replace(/id/i, "id_");
+    employer_match_id = employer_match_id.replace(/id/i, "_id");
     employer_match = employer_match_id.replace(/row/i, "");
     $('input[name="'+employer_match+'"]').change(function(){
         if ($('input[name="'+employer_match+'"]:checked').val() == 'Yes'){
