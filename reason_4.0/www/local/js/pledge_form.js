@@ -10,10 +10,15 @@ $(document).ready(function() {
             $(".words:contains('sports designation')").parent().hide();
     });
 
-    var employer_match_id = ($(".words:contains('employer match gifts')").parent().attr('id'));
-    var employer_match = employer_match_id.replace(/row/i, "");
+    employer_match_id = ($(".words:contains('employer match gifts')").parent().attr('id'));
+    employer_match_id = employer_match_id.replace(/id/i, "id_");
+    employer_match = employer_match_id.replace(/row/i, "");
     $('input[name="'+employer_match+'"]').change(function(){
-        alert('yo');
+        if ($('input[name="'+employer_match+'"]:checked').val() == 'Yes'){
+            $(".words:contains('Employer Name')").parent().show();
+        } else {
+            $(".words:contains('Employer Name')").parent().hide();
+        }
     });
 
 
@@ -24,23 +29,3 @@ $(document).ready(function() {
             $(".words:contains('Class Year')").parent().hide();
     });
 });
-
-function hide_field(element)
-{
-    element = "tr#"+element;
-    $(element).hide();
-}
-function show_field(element)
-{
-    element = "tr#"+element;
-    $(element).show();
-}
-function animate_field(element)
-{
-    element = "tr#"+element;
-    $(element).animate({
-        "height": "toggle"
-    }, {
-        duration: 0
-    });
-}
