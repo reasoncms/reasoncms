@@ -20,6 +20,13 @@ class LutherEventsModule extends EventsModule
 	{
 		$sponsorContactUrl = false;
 		$e =& $this->event;
+		if (preg_match("/^[Rr]edirect:?\s?(.*?)$/", $e->get_value( 'url' ), $matches))
+		// Redirect to another site to display event information or registration
+		{
+			echo '<script>
+			window.location.replace("'.$matches[1].'");
+			</script>'."\n";
+		}
 		if ($this->is_sports_event($e->get_value('sponsor')))
 		{
 			$postToResults = (preg_match("/post_to_results/", $e->get_value( 'contact_organization' ))) ? true : false;
