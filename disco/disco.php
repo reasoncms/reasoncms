@@ -248,7 +248,6 @@
 		var $chosen_action = '';
 		/**
 		* Class name of the box object to use.
-		* This is kind of ancient and there is only one box class currently.
 		* @var string
 		*/
 		var $box_class = 'Box';
@@ -2343,14 +2342,30 @@
 				return false;
 		 }			
 					
+		
 		/**
-		* Used to change box class.  Essentially useless.
+		* Set the class to use for the box markup
+		*
+		* Default class: "Box"
+		*
+		* Also available by default: "StackedBox"
+		*
+		* Other box classes must be included by your code before being used
+		*
 		* @param $bc string Name of box class
 		*/
-		function set_form_class( $bc ) // {{{
+		function set_box_class( $bc )
 		{
 			$this->box_class = $bc;
-		} // }}}
+		}
+		/**
+		* Alias for set_box_class()
+		* @param $bc string Name of box class
+		*/
+		function set_form_class( $bc )
+		{
+			$this->set_box_class($bc);
+		}
 		
 		/**
 		* Set the actions
