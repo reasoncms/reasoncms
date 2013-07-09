@@ -44,6 +44,13 @@ class IowaPrairieConferenceForm extends CreditCardThorForm {
       $this->move_element('registration_fees_header', 'before', $this->get_element_name_from_label('Registration Type'));
       $this->add_element('lodging_header', 'comment', array('text'=>'<h4>Luther College Dorm Lodging Reservations</h4>If reserving a double room for two registrants, only one registrant should fill out the dorm lodging section.'));
       $this->move_element('lodging_header', 'after', $this->get_element_name_from_label('Registration Type'));
+
+      $friday_trip = $this->get_element_name_from_label('Choose destination of Friday afternoon field trip');
+      $this->add_element('friday_trip_header', 'comment', array('text'=>'<h3>We are sorry, but the Prairie Song Farm field trip is FULL.</h3> All full, late registrations and Friday late registrations will be automatically registered for the Chipera Prairie Friday afternoon field trip. <br />Chipera Prairie is a 90-acre site with native tallgrass prairie and has never been plowed. This site is managed by the Winneshiek County Conservation Board.'));
+      $this->move_element('friday_trip_header', 'before', $friday_trip);
+      $this->change_element_type($friday_trip, 'radio', 
+        array('options'=>array('Chipera Prairie (Winneshiek Country Conservation Board site in Jackson Junction)'=>'Chipera Prairie (Winneshiek Country Conservation Board site in Jackson Junction)')));
+      $this->set_value($friday_trip, 'Chipera Prairie (Winneshiek Country Conservation Board site in Jackson Junction)');
     }
 
     function get_amount(){
@@ -87,4 +94,3 @@ class IowaPrairieConferenceForm extends CreditCardThorForm {
       parent :: run_error_checks();
     }
 }
-?>
