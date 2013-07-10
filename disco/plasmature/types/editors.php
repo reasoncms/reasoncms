@@ -149,43 +149,92 @@ class loki2Type extends defaultType
  *
  * @package disco
  * @subpackage plasmature
+ *
+ * @todo should really be tinymceType not tiny_mceType
+ * @todo move items out of individual valid args and just allow them to be passed as init options.
  */
 class tiny_mceType extends textareaType
 {
 	var $type = 'tiny_mce';
-	var $type_valid_args = array('buttons', 'buttons2', 'buttons3', 'reason_page_id', 'reason_site_id', 'status_bar_location', 'formatselect_options', 'content_css', 'init_options');
-	var $status_bar_location = 'none';
-	var $buttons = array('formatselect','bold','italic','hr','blockquote','numlist','bullist','indent','outdent','reasonimage','link','unlink','anchor','media','forecolor');
+	var $type_valid_args = array('buttons', 'buttons2', 'buttons3', 'status_bar_location', 'formatselect_options', 'content_css', 'init_options', 'rows', 'cols', 'reason_page_id', 'reason_site_id');
+	var $buttons = array('formatselect', 'bold','italic','hr','blockquote','numlist','bullist','indent','outdent','reasonimage','link','unlink','anchor','cleanup');
 	var $buttons2 = array();
 	var $buttons3 = array();
+	var $reason_page_id;
+	var $reason_site_id;
 	var $content_css;
-  // TODO: This needs to affect the formats option on init(), no longer
-  // works as a theme option.
-	var $formatselect_options = array('p','h3','h4','pre');
+	var $formatselect_options;
 	var $init_options = array();
 	var $base_init_options = array(
 		'mode' => 'exact',
-		'plugins' => 'image,anchor,link,paste,reasonimage,media,textcolor',
+		'plugins' => 'anchor,link,paste,reasonimage',
 		'dialog_type' => 'modal',
 		'theme' => 'modern',
-		'convert_urls' => false,
+		'convert_urls' => 'false',
+		'menubar' => 'false',
+		'block_formats' => "Paragraph=p;Header 1=h3;header 2=h4;Pre=pre",
 	);
+	
+	/**
+	 * We init with 20 rows
+	 */
+	var $rows = 20;
 	
 	function display()
 	{
+		$content_css = $this->get_class_var('content_css');
+		if (is_null($content_css)) $this->set_class_var('content_css', UNIVERSAL_CSS_PATH);
+		
+		$this->transform_deprecated_options();
+		
 		$display = $this->get_tiny_mce_javascript();
 		$display .= '<script language="javascript" type="text/javascript">'."\n";
 		$display .= $this->get_tiny_mce_init_string();
 		$display .= '</script>'."\n";
 		
 		// Why do we do this?
-		//$this->set_class_var('rows', $this->get_class_var('rows')+5 );
+		//$this->set_class_var('rows', $this->get_class_var('rows')+10 );
 		echo $display;
 		parent::display();
 	}
 	
-	function get_tiny_mce_init_string()
+	/**
+	 * TinyMCE 3 handled some configuration differently. We handle this gracefully.
+	 *
+	 * - If formatselect_options were provided, transform them gracefully.
+	 * -  
+	 * 
+	 * We handle this gracefully.
+	 */
+	function transform_deprecated_options()
 	{
+		if ($format_select = $this->get_class_var('formatselect_options'))
+		{
+			$format_to_block_map = array(
+				'p' => 'Paragraph',
+				'address' => 'Address',
+				'pre' => 'Pre',
+				'h1' => 'Header 1',
+				'h2' => 'Header 2',
+				'h3' => 'Header 3',
+				'h4' => 'Header 4',
+				'h5' => 'Header 5',
+				'h6' => 'Header 6',
+			);
+			foreach ($format_select as $v)
+			{
+				if (isset($format_to_block_map[$v]))
+				{
+					$block_formats[] = $format_to_block_map[$v].'='.$v;
+				}
+				else $block_formats[] = $v.'='.$v;
+			}
+			$this->base_init_options['block_formats'] = implode(";",$block_formats);
+		}
+	}
+	
+	function get_tiny_mce_init_string()
+	{	
 		// Add calculated/passed options to base options
 		$options = $this->base_init_options;
 		$options['toolbar1'] = implode(" ",$this->buttons);
@@ -193,22 +242,26 @@ class tiny_mceType extends textareaType
 		$options['toolbar3'] = implode(" ",$this->buttons3);
 		// make me conditional on formatselect being in the buttons array and formatselect_options being set.
 		//$options['formats'] = "{'p', 'pre', 'h1'}"; //implode(",",$this->formatselect_options);
-    $options['elements'] = $this->name;
-    if (isset($this->reason_page_id))
-      $options['reason_page_id'] = $this->reason_page_id;
-    if (isset($this->reason_site_id))
-      $options['reason_site_id'] = $this->reason_site_id;
 
-    $options['reason_http_base_path'] = REASON_HTTP_BASE_PATH;
-
+    	$options['elements'] = $this->name;    	
+    	if ($this->get_class_var('reason_page_id')) $options['reason_page_id'] = $this->get_class_var('reason_page_id');
+    	if ($this->get_class_var('reason_site_id')) $options['reason_site_id'] = $this->get_class_var('reason_site_id');
 		if ($this->get_class_var('content_css')) $options['content_css'] = $this->get_class_var('content_css');
+		$options['reason_http_base_path'] = REASON_HTTP_BASE_PATH;
 		
 		// Merge in custom options
 		foreach($this->init_options as $option => $val) $options[$option] = $val;
 		
 		// Format the options
-		foreach ($options as $option => $val) $parts[] = sprintf('%s : "%s"', $option, $val);
-			
+		foreach ($options as $option => $val)
+		{
+			// support configuration params that expect a json object
+			if (!empty($val) && (substr($val, 0, 1) == '['))
+			{
+				$parts[] = sprintf('%s : %s', $option, $val);
+			}
+			else $parts[] = sprintf('%s : "%s"', $option, $val);
+		}
 		return 'tinymce.init({'."\n" . implode(",\n", $parts) . "\n});\n";
 	}
 	/**

@@ -1,11 +1,10 @@
 <?php
-
 /**
  * @package reason
  * @subpackage html_editors
+ * @author Nathan White
  * @author Matt Ryan
  */
- 
 reason_include('html_editors/base.php');
 
 // Identify the class that should be used
@@ -34,10 +33,10 @@ class reasonTinyMCEIntegration extends reasonEditorIntegrationBase
 	 */
 	function get_plasmature_element_parameters($site_id, $user_id = 0)
 	{
-    return array(
-      'reason_site_id' => $site_id,
-      'reason_page_id' => null
-    );
+    	return array(
+    		'reason_site_id' => $site_id,
+      		'reason_page_id' => null,
+      	);
 	}
 	
 	/**
@@ -53,5 +52,4 @@ class reasonTinyMCEIntegration extends reasonEditorIntegrationBase
 		return array();
 	}
 }
-
 ?>
