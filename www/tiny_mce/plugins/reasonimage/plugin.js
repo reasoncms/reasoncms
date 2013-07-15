@@ -253,10 +253,12 @@ ReasonImage.prototype.bindReasonUI = function() {
     var target = e.target || window.event.srcElement;
     self.delay(function() {
       if (target.value) {
+        self.page = 1;
         self.result = self.findItemsWithText(target.value);
         self.displayedItems = self.result;
         self.displayImages();
       } else {
+        self.page = 1;
         self.displayedItems = self.items;
         self.displayImages();
       }
@@ -337,7 +339,7 @@ ReasonImage.prototype.selectImage = function (image_item) {
     src = src.replace("_tn", "");
 
   this.setSrc(src);
-  this.setAlt(image_item.getElementsByClassName('name')[0].innerHTML);
+  this.setAlt(image_item.getElementsByClassName('description')[0].innerHTML);
   return true;
 };
 
