@@ -133,6 +133,40 @@ div.publication .primaryContent div.back {
 	margin:1.5em 0;
 }
 
+/* lets style the social section */
+div.publication div.fullPost div.relatedItems div.social {
+	
+}
+
+div.publication div.fullPost div.relatedItems div.social ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	padding-bottom: 1em;
+}
+
+div.publication div.fullPost div.relatedItems div.social ul li {
+	display: inline;
+	margin-left: 0;
+	padding-left: 1em;
+}
+
+div.publication div.fullPost div.relatedItems div.social ul li.first{
+	display: inline;
+	margin-left: 0;
+	padding-left: 0;
+}
+
+div.publication div.fullPost div.relatedItems div.social ul li a {
+	padding: 0;
+	margin: 0;
+}
+
+div.publication div.fullPost div.relatedItems div.social img {
+	width: 2.5em;
+	height: 2.5em;
+}
+
 /* lets hide the "List All Issues" link */
 div.publication div.allIssuesLink
 {

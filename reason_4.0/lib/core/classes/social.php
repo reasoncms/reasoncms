@@ -52,9 +52,34 @@ class ReasonSocialIntegrationHelper
 	}
 	
 	/**
+	 * Return all the integrators that implement a particular interface.
+	 *
+	 * @return array
+	 */
+	function get_social_integrators_by_interface($interface)
+	{
+		if (!isset($this->_integrators_by_interface[$interface]))
+		{
+			$integrators_by_interface[$interface] = array();
+			$integrator_types = $this->get_available_integrators();
+			foreach ($integrator_types as $integrator_type => $integrator)
+			{
+				if ($integrator = $this->get_integrator($integrator_type))
+				{
+					if (in_array($interface, class_implements($integrator)))
+					{
+						$this->_integrators_by_interface[$interface][$integrator_type] = $integrator;
+					}
+				}
+			}
+		}
+		return $this->_integrators_by_interface[$interface];
+	}
+	
+	/**
 	 * @return mixed integrator object or false if it couldn't be loaded.
 	 */
-	function get_integrator($account_type)
+	function get_integrator($account_type, $required_interface_support = NULL)
 	{
 		if (empty($account_type))
 		{
@@ -149,6 +174,8 @@ interface SocialAccountContentManager
 
 /**
  * If the social account provides profile links it should implement this interface.
+ *
+ * @todo src should probably be href no?
  */
 interface SocialAccountProfileLinks
 {
@@ -158,10 +185,15 @@ interface SocialAccountProfileLinks
 	public function get_profile_link_src($social_entity_id);
 }
 
-
-
-
-
+/**
+ * If the social account provides sharing links it should implement this interface.
+ */
+interface SocialSharingLinks
+{
+	public function get_sharing_link_icon();
+	public function get_sharing_link_text();
+	public function get_sharing_link_href($url = NULL);
+}
 
 /**
  * Get the singleton social integration object

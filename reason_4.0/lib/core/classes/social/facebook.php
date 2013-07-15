@@ -25,13 +25,13 @@ $GLOBALS[ '_social_integrator_class_names' ][ basename( __FILE__, '.php' ) ] = '
  * $facebook_integrator = $sih->get_integrator('facebook');
  * </code>
  *
- * Currently this provides content manager integration and implements the SocialAccountProfileLinks interface.
+ * Currently this provides content manager integration and implements the SocialAccountProfileLinks and SocialSharing Links interfaces.
  *
  * The idea here is that this file is the only spot where we directly deal with facebook APIs.
  *
  * @author Nathan White
  */
-class ReasonFacebookIntegrator extends ReasonSocialIntegrator implements SocialAccountProfileLinks
+class ReasonFacebookIntegrator extends ReasonSocialIntegrator implements SocialAccountProfileLinks, SocialSharingLinks
 {
 	/****************** SocialAccountProfileLinks implementation ********************/
 	public function get_profile_link_text($social_entity_id)
@@ -46,6 +46,28 @@ class ReasonFacebookIntegrator extends ReasonSocialIntegrator implements SocialA
 		$social_entity = new entity($social_entity_id);
 		$details = json_decode($social_entity->get_value('account_details'), true);
 		return $details['link'];
+	}
+
+	/****************** SocialSharingLinks implementation ***********************/
+	public function get_sharing_link_icon()
+	{
+		return REASON_HTTP_BASE_PATH . 'modules/social_account/images/facebook.png';
+	}
+	
+	public function get_sharing_link_text()
+	{
+		return 'FaceBook';
+	}
+	
+	/**
+	 * Return a URL encoded view of the current URL, right?
+	 * 
+	 * @param string URL if null we assume the current URL.
+	 */
+	public function get_sharing_link_href($url = NULL)
+	{
+		$url = (!is_null($url)) ? urlencode($url) : urlencode(get_current_url());
+		return 'https://www.facebook.com/sharer/sharer.php?u=' . $url;
 	}
 
 	/****************** SocialAccountContentManager implementation *********************/

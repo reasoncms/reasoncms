@@ -32,6 +32,7 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 								  'item_images',
 								  'item_assets',
 								  'item_categories',
+								  'item_social_sharing',
 								  'item_comments',
 								  'comment_form_markup',
 								  'commenting_status',
@@ -50,7 +51,7 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 
 	function run()
 	{
-		$show_related_section = ($this->should_show_related_events_section() || $this->should_show_images_section() || $this->should_show_assets_section() || $this->should_show_categories_section());
+		$show_related_section = ($this->should_show_related_events_section() || $this->should_show_images_section() || $this->should_show_assets_section() || $this->should_show_categories_section() || $this->should_show_social_sharing_section());
 		
 		$this->markup_string = '';
 		$this->markup_string .= '<div class="fullPost';
@@ -104,6 +105,10 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 		if($show_related_section)
 		{
 			$this->markup_string .= '<div class="relatedItems">'."\n";
+			if($this->should_show_social_sharing_section())
+			{
+				$this->markup_string .= '<div class="social">'.$this->get_social_sharing_section().'</div>'."\n";
+			}
 			if($this->should_show_related_events_section())
 			{
 				$this->markup_string .= '<div class="relatedEvents">'.$this->get_related_events_section().'</div>'."\n";
@@ -325,6 +330,29 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 		foreach($this->passed_vars['item_categories'] as $category)
 		{
 			$ret .= '<li><a href="'.$category->get_value('category_url').'">'.$category->get_value('name').'</a></li>';
+		}
+		$ret .= '</ul>';
+		return $ret;
+	}
+
+	// Categories section
+	function should_show_social_sharing_section()
+	{
+		if(!empty($this->passed_vars['item_social_sharing']))
+			return true;
+		else
+			return false;
+	}
+	function get_social_sharing_section()
+	{
+		$ret = '<h4>Share</h4>';
+		$ret .= '<ul>';
+		foreach($this->passed_vars['item_social_sharing'] as $social_sharing)
+		{
+			$li_class = (isset($li_class)) ? '' : ' class=first';
+			$ret .= '<li' . $li_class.'><a href="'.$social_sharing['href'].'">';
+			$ret .= '<img src="'. $social_sharing['icon'] . '" alt="'. $social_sharing['text'] . '" />';
+			$ret .= '</a></li>';
 		}
 		$ret .= '</ul>';
 		return $ret;

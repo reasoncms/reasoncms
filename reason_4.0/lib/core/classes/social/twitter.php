@@ -30,7 +30,7 @@ $GLOBALS[ '_social_integrator_class_names' ][ basename( __FILE__, '.php' ) ] = '
  * @todo move oauth stuff into this class and modify the twitter feed models to use it.
  * @author Nathan White
  */
-class ReasonTwitterIntegrator extends ReasonSocialIntegrator implements SocialAccountProfileLinks
+class ReasonTwitterIntegrator extends ReasonSocialIntegrator implements SocialAccountProfileLinks, SocialSharingLinks
 {
 	/****************** SocialAccountProfileLinks implementation ********************/
 	public function get_profile_link_text($social_entity_id)
@@ -45,6 +45,28 @@ class ReasonTwitterIntegrator extends ReasonSocialIntegrator implements SocialAc
 		return 'https://www.twitter.com/'.$username;
 	}
 
+	/****************** SocialSharingLinks implementation ***********************/
+	public function get_sharing_link_icon()
+	{
+		return REASON_HTTP_BASE_PATH . 'modules/social_account/images/twitter.png';
+	}
+	
+	public function get_sharing_link_text()
+	{
+		return 'Twitter';
+	}
+	
+	/**
+	 * Return a URL encoded view of the current URL, right?
+	 * 
+	 * @param string URL if null we assume the current URL.
+	 */
+	public function get_sharing_link_href($url = NULL)
+	{
+		$url = (!is_null($url)) ? urlencode($url) : urlencode(get_current_url());
+		return 'https://twitter.com/share?&url=' . $url;
+	}
+	
 	/****************** SocialAccountContentManager implementation *********************/
 	
 	/**
