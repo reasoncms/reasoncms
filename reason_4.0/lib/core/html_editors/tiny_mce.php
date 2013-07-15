@@ -34,7 +34,10 @@ class reasonTinyMCEIntegration extends reasonEditorIntegrationBase
 	 */
 	function get_plasmature_element_parameters($site_id, $user_id = 0)
 	{
-		return array();
+    return array(
+      'reason_site_id' => $site_id,
+      'reason_page_id' => null
+    );
 	}
 	
 	/**
