@@ -28,6 +28,7 @@
  *       elements.
  * TODO: A selected image's highlight doesn't persist between renders of the page of results.
  * TODO: use reason_http_base_path to reduce size of JSON being requested.
+ * TODO: Search for a selected image as chunks come in, rather than all at the end.
  *
  * @param {Object} controlSelectors The items to which the the picker will be bound
  * @param {String} targetPanelSelector The item to which the the picker will be bound
@@ -180,7 +181,7 @@ ReasonImage.prototype.getControlReferences = function(controlSelectors, placehol
 ReasonImage.prototype.insertReasonUI = function() {
   var holderDiv;
   this.UI = this.targetPanel.getEl();
-  var css = '.selectedImage {background-image: linear-gradient(to bottom, rgb(222, 222, 222), rgb(184, 184, 184)); } button:disabled, button:disabled:hover, button:disabled:focus, button[disabled=true] { background-image: linear-gradient(to bottom, rgb(222, 222, 222), rgb(184, 184, 184)) !important; color: #aaaaaa; } .items_chunk { text-align: center; height: 300px; white-space: normal; text-align: center;} .image_item {width: 190px; padding: 5px; display: inline-block; text-align: center; } .items_chunk .name, .items_chunk .description {display: block; white-space: normal; text-align: center;} .items_chunk .description {font-size: 0.9em;}' ,
+  var css = '.selectedImage {background-image: linear-gradient(to bottom, rgb(222, 222, 222), rgb(184, 184, 184)); } button:disabled, button:disabled:hover, button:disabled:focus, button[disabled=true] { background-image: linear-gradient(to bottom, rgb(222, 222, 222), rgb(184, 184, 184)) !important; color: #aaaaaa; } .items_chunk { text-align: center; height: 300px; white-space: normal; text-align: center; overflow: auto;} .image_item {width: 190px; padding: 5px; display: inline-block; text-align: center; } .items_chunk .name, .items_chunk .description {display: block; white-space: normal; text-align: center;} .items_chunk .description {font-size: 0.9em;}' ,
     head = document.getElementsByTagName('head')[0],
     style = document.createElement('style');
 
@@ -483,9 +484,8 @@ ReasonImageDialogItem.prototype.URLs = {
   full: ''
 };
 ReasonImageDialogItem.prototype.hasText = function(q) {
-  if ((this.name.search(q) !== -1) || (this.description.search(q) !== -1)) {
+  if ((this.name && this.name.search(q) !== -1) || (this.description && this.description.search(q) !== -1))
     return this;
-  }
 };
 
 ReasonImageDialogItem.prototype.description = '';
