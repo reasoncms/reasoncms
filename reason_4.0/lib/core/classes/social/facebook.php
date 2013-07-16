@@ -25,7 +25,10 @@ $GLOBALS[ '_social_integrator_class_names' ][ basename( __FILE__, '.php' ) ] = '
  * $facebook_integrator = $sih->get_integrator('facebook');
  * </code>
  *
- * Currently this provides content manager integration and implements the SocialAccountProfileLinks and SocialSharing Links interfaces.
+ * Currently this provides content manager integration and also implements
+ *
+ * - SocialAccountProfileLinks
+ * - SocialSharingLinks
  *
  * The idea here is that this file is the only spot where we directly deal with facebook APIs.
  *
@@ -38,10 +41,10 @@ class ReasonFacebookIntegrator extends ReasonSocialIntegrator implements SocialA
 	{
 		$social_entity = new entity($social_entity_id);
 		$details = json_decode($social_entity->get_value('account_details'), true);
-		return 'Visit on FaceBook';
+		return 'Visit on Facebook';
 	}
 	
-	public function get_profile_link_src($social_entity_id)
+	public function get_profile_link_href($social_entity_id)
 	{
 		$social_entity = new entity($social_entity_id);
 		$details = json_decode($social_entity->get_value('account_details'), true);
@@ -56,7 +59,7 @@ class ReasonFacebookIntegrator extends ReasonSocialIntegrator implements SocialA
 	
 	public function get_sharing_link_text()
 	{
-		return 'FaceBook';
+		return 'Facebook';
 	}
 	
 	/**
@@ -66,7 +69,7 @@ class ReasonFacebookIntegrator extends ReasonSocialIntegrator implements SocialA
 	 */
 	public function get_sharing_link_href($url = NULL)
 	{
-		$url = (!is_null($url)) ? urlencode($url) : urlencode(get_current_url());
+		$url = (!is_null($url)) ? urlencode($url) : urlencode(get_current_url('http'));
 		return 'https://www.facebook.com/sharer/sharer.php?u=' . $url;
 	}
 
@@ -81,7 +84,7 @@ class ReasonFacebookIntegrator extends ReasonSocialIntegrator implements SocialA
 		$cm->change_element_type('account_details', 'protected');
 		$cm->set_display_name('account_id', 'Facebook ID');
 		$cm->add_required('account_id');
-		$cm->set_comments('account_id', form_comment('This is usually the number at the end of your facebook profile or page. If you cannot find it, try your username instead.'));
+		$cm->set_comments('account_id', form_comment('This is usually the number at the end of your Facebook profile or page. If you cannot find it, try your username instead.'));
 			
 		// lets add a field showing the current link if one is available.
 		
@@ -113,7 +116,7 @@ class ReasonFacebookIntegrator extends ReasonSocialIntegrator implements SocialA
 		$account_id = $cm->get_value('account_id');
 		if ( !check_against_regexp($account_id, array('naturalnumber')) && !check_against_regexp($account_id, array('/^[a-z\d.]*$/i')) )
 		{
-			$cm->set_error('account_id', 'Invalid format for facebook ID. Please enter a numeric ID or a valid facebook username');
+			$cm->set_error('account_id', 'Invalid format for Facebook ID. Please enter a numeric ID or a valid Facebook username');
 		}
 		else
 		{

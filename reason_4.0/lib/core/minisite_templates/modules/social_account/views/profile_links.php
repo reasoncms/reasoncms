@@ -21,7 +21,7 @@ $GLOBALS[ '_reason_mvc_view_class_names' ][ reason_basename(__FILE__) ] = 'Reaso
  * ID ->
  *	- icon
  *  - text
- *  - src
+ *  - href
  *
  * @author Nathan White
  */
@@ -33,12 +33,13 @@ class ReasonSocialProfileLinksView extends ReasonMVCView
 		$profile_links = $this->data();
 		if (!empty($profile_links))
 		{
-			$str = '<ul>';
+			$str = '<div class="socialProfileLinks">';
 			foreach ($profile_links as $id => $link)
 			{
-				$str .= '<li><a href="'.$link['src'].'"><img src="'.$link['icon'].'" alt="'.$link['text'].'" /></a></li>';	
+				$space = (isset($space)) ? " " : "";
+				$str .= $space . '<a href="'.$link['href'].'"><img src="'.$link['icon'].'" alt="'.$link['text'].'" /></a>';	
 			}
-			$str .= '</ul>';
+			$str .= '</div>';
 		}
 		else $str = '';
 		return $str;

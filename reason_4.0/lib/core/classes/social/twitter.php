@@ -22,10 +22,13 @@ $GLOBALS[ '_social_integrator_class_names' ][ basename( __FILE__, '.php' ) ] = '
  *
  * <code>
  * $sih = reason_get_social_integration_helper();
- * $facebook_integrator = $sih->get_integrator('twitter');
+ * $twitter_integrator = $sih->get_integrator('twitter');
  * </code>
  *
- * Currently this provides content manager integration and implements the SocialAccountProfileLinks interface.
+ * Currently this provides content manager integration and also implements:
+ *
+ * - SocialAccountProfileLinks
+ * - SocialSharingLinks
  *
  * @todo move oauth stuff into this class and modify the twitter feed models to use it.
  * @author Nathan White
@@ -38,11 +41,11 @@ class ReasonTwitterIntegrator extends ReasonSocialIntegrator implements SocialAc
 		return 'Visit on Twitter';
 	}
 	
-	public function get_profile_link_src($social_entity_id)
+	public function get_profile_link_href($social_entity_id)
 	{
 		$social_entity = new entity($social_entity_id);
 		$username = $social_entity->get_value('account_id');
-		return 'https://www.twitter.com/'.$username;
+		return 'http://www.twitter.com/'.$username;
 	}
 
 	/****************** SocialSharingLinks implementation ***********************/
@@ -63,7 +66,7 @@ class ReasonTwitterIntegrator extends ReasonSocialIntegrator implements SocialAc
 	 */
 	public function get_sharing_link_href($url = NULL)
 	{
-		$url = (!is_null($url)) ? urlencode($url) : urlencode(get_current_url());
+		$url = (!is_null($url)) ? urlencode($url) : urlencode(get_current_url('http'));
 		return 'https://twitter.com/share?&url=' . $url;
 	}
 	

@@ -64,7 +64,7 @@ class ReasonSocialProfileLinksModel extends ReasonMVCModel
 					{
 						$profile_links[$id]['icon'] = $integrator->get_profile_link_icon($id);
 						$profile_links[$id]['text'] = $integrator->get_profile_link_text($id);
-						$profile_links[$id]['src'] = $integrator->get_profile_link_src($id);
+						$profile_links[$id]['href'] = $integrator->get_profile_link_href($id);
 					}
 				}
 				if (!empty($profile_links)) return $profile_links;

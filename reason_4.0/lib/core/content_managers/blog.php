@@ -114,13 +114,7 @@
 			// social sharing
 			if ($this->is_element('enable_social_sharing'))
 			{
-				if(!$this->get_value('enable_social_sharing'))
-				{
-					$this->set_value('enable_social_sharing', 'no');
-				}
 				$this->add_element('social_sharing_comment','comment',array('text'=>'<h4>Social Sharing</h4>'));
-				
-				// I should check whether or not any social accounts are attached to this site and probably report on their names here.
 			}
 			else
 			{

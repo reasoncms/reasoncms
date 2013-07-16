@@ -51,7 +51,7 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 
 	function run()
 	{
-		$show_related_section = ($this->should_show_related_events_section() || $this->should_show_images_section() || $this->should_show_assets_section() || $this->should_show_categories_section() || $this->should_show_social_sharing_section());
+		$show_related_section = ($this->should_show_related_events_section() || $this->should_show_images_section() || $this->should_show_assets_section() || $this->should_show_categories_section());
 		
 		$this->markup_string = '';
 		$this->markup_string .= '<div class="fullPost';
@@ -75,9 +75,17 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 		{
 			$this->markup_string .= '<div class="author">'.$this->get_author_section().'</div>'."\n";
 		}
+		if($this->should_show_social_sharing_section())
+		{
+			$this->markup_string .= '<div class="social top">'.$this->get_social_sharing_section().'</div>'."\n";
+		}
 		if($this->should_show_content_section())
 		{
 			$this->markup_string .= '<div class="text">'.$this->get_content_section().'</div>'."\n";
+		}
+		if($this->should_show_social_sharing_section())
+		{
+			$this->markup_string .= '<div class="social bottom">'.$this->get_social_sharing_section().'</div>'."\n";
 		}
 		if($this->should_show_inline_editing_link())
 		{
@@ -105,10 +113,6 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 		if($show_related_section)
 		{
 			$this->markup_string .= '<div class="relatedItems">'."\n";
-			if($this->should_show_social_sharing_section())
-			{
-				$this->markup_string .= '<div class="social">'.$this->get_social_sharing_section().'</div>'."\n";
-			}
 			if($this->should_show_related_events_section())
 			{
 				$this->markup_string .= '<div class="relatedEvents">'.$this->get_related_events_section().'</div>'."\n";
@@ -345,16 +349,14 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 	}
 	function get_social_sharing_section()
 	{
-		$ret = '<h4>Share</h4>';
-		$ret .= '<ul>';
+		$ret = '<p><strong>Share post:</strong>';
 		foreach($this->passed_vars['item_social_sharing'] as $social_sharing)
 		{
-			$li_class = (isset($li_class)) ? '' : ' class=first';
-			$ret .= '<li' . $li_class.'><a href="'.$social_sharing['href'].'">';
+			$ret .= ' <a href="'.$social_sharing['href'].'">';
 			$ret .= '<img src="'. $social_sharing['icon'] . '" alt="'. $social_sharing['text'] . '" />';
-			$ret .= '</a></li>';
+			$ret .= '</a>';
 		}
-		$ret .= '</ul>';
+		$ret .= '</p>';
 		return $ret;
 	}
 	

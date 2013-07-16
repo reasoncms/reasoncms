@@ -2,6 +2,7 @@
 /**
  * @package reason
  * @subpackage classes
+ * @author Nathan White
  */
 
 /**
@@ -28,7 +29,7 @@ class ReasonSocialIntegrationHelper
 	 */
 	function get_available_integrators()
 	{
-		return array('facebook' => 'FaceBook',
+		return array('facebook' => 'Facebook',
 					 'twitter' => 'Twitter');
 	}
 	
@@ -174,15 +175,13 @@ interface SocialAccountContentManager
 
 /**
  * If the social account provides profile links it should implement this interface.
- *
- * @todo src should probably be href no?
  */
 interface SocialAccountProfileLinks
 {
 	public function get_profile_link_type($social_entity_id);
 	public function get_profile_link_icon($social_entity_id);
 	public function get_profile_link_text($social_entity_id);
-	public function get_profile_link_src($social_entity_id);
+	public function get_profile_link_href($social_entity_id);
 }
 
 /**

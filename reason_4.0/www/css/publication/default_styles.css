@@ -134,37 +134,18 @@ div.publication .primaryContent div.back {
 }
 
 /* lets style the social section */
-div.publication div.fullPost div.relatedItems div.social {
-	
+div.publication div.fullPost div.social {
 }
 
-div.publication div.fullPost div.relatedItems div.social ul {
-	list-style-type: none;
-	margin: 0;
-	padding: 0;
-	padding-bottom: 1em;
+div.publication div.fullPost div.social p {
+	font-size: .9em;
 }
 
-div.publication div.fullPost div.relatedItems div.social ul li {
-	display: inline;
-	margin-left: 0;
-	padding-left: 1em;
-}
-
-div.publication div.fullPost div.relatedItems div.social ul li.first{
-	display: inline;
-	margin-left: 0;
-	padding-left: 0;
-}
-
-div.publication div.fullPost div.relatedItems div.social ul li a {
-	padding: 0;
-	margin: 0;
-}
-
-div.publication div.fullPost div.relatedItems div.social img {
-	width: 2.5em;
-	height: 2.5em;
+div.publication div.fullPost div.social img {
+	width: 1.3em;
+	margin: 0 .2em;
+	height: auto;
+	vertical-align: middle;
 }
 
 /* lets hide the "List All Issues" link */

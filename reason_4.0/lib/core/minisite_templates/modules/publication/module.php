@@ -2665,27 +2665,33 @@ class PublicationModule extends Generic3Module
 		 * - alt (for the image)
 		 * - href (the actual link)
 		 *
-		 * We respect item and publication level sharing preferences.
+		 * We only return items is the page is public and the publication has social sharing enabled.
 		 *
-		 * @todo check publication settings.
-		 * @todo check item setting ... do we need one????
+		 * @param object
+		 * @return array
 		 */
 		function get_item_social_sharing($item)
 		{
-			reason_include_once('classes/social.php');
-			$helper = reason_get_social_integration_helper();
-			$integrators = $helper->get_social_integrators_by_interface('SocialSharingLinks');
-			if (!empty($integrators))
+			if ($this->page_is_public() && 
+				$this->publication->has_value('enable_social_sharing') && (
+				$this->publication->get_value('enable_social_sharing') == 'yes' )
+				)
 			{
-				foreach ($integrators as $integrator_type => $integrator)
+				reason_include_once('classes/social.php');
+				$helper = reason_get_social_integration_helper();
+				$integrators = $helper->get_social_integrators_by_interface('SocialSharingLinks');
+				if (!empty($integrators))
 				{
-					$item_social_sharing[$integrator_type]['icon'] = $integrator->get_sharing_link_icon();
-					$item_social_sharing[$integrator_type]['text'] = $integrator->get_sharing_link_text();
-					$item_social_sharing[$integrator_type]['href'] = $integrator->get_sharing_link_href();
+					foreach ($integrators as $integrator_type => $integrator)
+					{
+						$item_social_sharing[$integrator_type]['icon'] = $integrator->get_sharing_link_icon();
+						$item_social_sharing[$integrator_type]['text'] = $integrator->get_sharing_link_text();
+						$item_social_sharing[$integrator_type]['href'] = $integrator->get_sharing_link_href();
+					}
+					return $item_social_sharing;
 				}
-				return $item_social_sharing;
 			}
-			else return false;
+			return false;
 		}
 		function get_item_comments($item)
 		{
