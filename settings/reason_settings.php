@@ -760,6 +760,11 @@
 	
 	/**
 	 * REASON_DEFAULT_ALLOWED_TAGS
+	 *
+	 * @deprecated  slated for removal in Reason 4.5
+	 *
+	 * This security model is insufficient for XSS protection - see REASON_ENABLE_ENTITY_SANITIZATION.
+	 *
 	 * A whitelist of the (X)HTML(5) tags Reason will allow to be saved to the database.
 	 *
 	 * Note that the head items field on pages does not follow this whitelist.
@@ -776,6 +781,20 @@
 	 * This string should be in the same format as the second argument to php's built-in strip_tags() function, e.g.: '<a><abbr><acronym><address>'
 	 */
 	define('REASON_DEFAULT_ALLOWED_TAGS','<a><abbr><acronym><address><area><article><aside><audio><b><bdi><bdo><big><blockquote><br><button><canvas><caption><cite><code><col><colgroup><command><datalist><dd><del><details><dfn><div><dl><dt><em><embed><fieldset><figcaption><figure><footer><form><h1><h2><h3><h4><h5><h6><header><hgroup><hr><i><iframe><img><input><ins><kbd><keygen><label><legend><li><map><mark><menu><meter><nav><noscript><object><ol><optgroup><option><output><p><param><pre><progress><q><ruby><rb><rp><rpc><rt><rtc><s><samp><section><select><small><source><span><strike><strong><sub><summary><sup><table><tbody><td><textarea><tfoot><th><thead><time><tr><track><tt><u><ul><var><video><wbr>');
+	
+	/**
+	 * REASON_ENABLE_ENTITY_SANITIZATION
+	 *
+	 * When this is set to true, when saved or updated, each field of an entity will be run through default or custom sanitization
+	 * procedures as defined in config/sanitization/default.php. In its default configuration, this runs most entity fields through
+	 * HTML Purifier, combatting a wide variety of XSS exploits.
+	 *
+	 * This is new in Reason 4.4. If you have modified REASON_DEFAULT_ALLOWED_TAGS in the past, you may need to customize the filtering
+	 * mechanism in config/sanitization/default.php so that XHTML filtering works according to your setup.
+	 *
+	 * This will be enabled by default in Reason 4.5. You should test and enable it as soon as possible in Reason 4.4.
+	 */
+	define('REASON_ENABLE_ENTITY_SANITIZATION', false);
 	
 	/**
 	 * REASON_DEFAULT_FOOTER_XHTML
