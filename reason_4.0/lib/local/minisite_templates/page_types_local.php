@@ -355,10 +355,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 				),
 			),
 		),
-		'sidebar_5'=> array( // News
-			'module' => 'luther_other_publication_news',
-			'max_num_to_show' => 3,
-		),
+		'sidebar_5' => get_luther_related_publication(3),
 	),
 	'luther2010_alumni' => array(
 		'main_head' => 'luther_carousel',
@@ -371,10 +368,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'pre_sidebar_2' => get_luther_spotlight(),
 		'pre_sidebar_3' => '',
 		'sidebar_2' => '',
-		'sidebar_5'=> array( // News
-			'module' => 'luther_other_publication_news',
-			'max_num_to_show' => 3,
-		),
+		'sidebar_5' => get_luther_related_publication(3),
 	),
 	'luther2010_carousel' => array (
 		'main_head' => 'luther_carousel',
@@ -394,10 +388,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'pre_sidebar_2' => get_luther_spotlight(),
 		'pre_sidebar_3' => 'luther_events_mini',
 		'sidebar_2' => '',
-		'sidebar_5'=> array( // News
-			'module' => 'luther_other_publication_news',
-			'max_num_to_show' => 3,
-		),
+		'sidebar_5' => get_luther_related_publication(3),
 	),
 	'luther2010_home' => array(
 		'main_post'=>'',
@@ -517,10 +508,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'pre_sidebar_2' => get_luther_spotlight(),
 		'sidebar_2' => '',
 		'sidebar_3' => 'luther_events_mini',
-		'sidebar_5'=> array( // News
-			'module' => 'luther_other_publication_news',
-			'max_num_to_show' => 3,
-		),
+		'sidebar_5' => get_luther_related_publication(3),
 		'post_sidebar' => 'luther_flickr_slideshow',
 	),
 	'luther2010_landing_feature' => array(
@@ -542,10 +530,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'pre_sidebar_3' => '',
 		'sidebar_2' => '',
 		'sidebar_3' => 'luther_events_mini',
-		'sidebar_5'=> array( // News
-			'module' => 'luther_other_publication_news',
-			'max_num_to_show' => 3,
-		),
+		'sidebar_5' => get_luther_related_publication(3),
 		'post_sidebar' => 'luther_flickr_slideshow',
 	),
 	 'luther2010_landing_feature_sidebar_news' => array(

@@ -388,14 +388,14 @@ class LutherTemplate2010 extends MinisiteTemplate
 		{
 			// Override default behavior of related publication on landing pages
 			// If no related publicatons are attached, no news listing will appear
-			/*$es = new entity_selector();
+			$es = new entity_selector();
 			$es->add_type(id_of('publication_type'));
 			$es->add_right_relationship($this->page_id, relationship_id_of('page_to_related_publication'));
 			$result = $es->run_one();
 			if ($result == null)
 			{
 				return;
-			}*/			
+			}		
 			
 			if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_giving'
