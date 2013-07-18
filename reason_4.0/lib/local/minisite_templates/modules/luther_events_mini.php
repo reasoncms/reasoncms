@@ -168,6 +168,7 @@ class LutherEventsMiniModule extends LutherEventsModule
 				foreach($this->events_by_date as $day => $val)
 				{
 					$this->show_daily_events($day);
+					
 					if ($this->luther_counter <= 0)
 						break;
 				}		
@@ -178,8 +179,7 @@ class LutherEventsMiniModule extends LutherEventsModule
 	function show_daily_events($day)
 	{
 		foreach ($this->events_by_date[$day] as $event_id)
-		{
-			
+		{			
 			$this->show_event_list_item( $event_id, $day );
 		}		
 	}
@@ -229,10 +229,8 @@ class LutherEventsMiniModule extends LutherEventsModule
 					echo '<br />('.date('M', $s).' '.date('d', $s).'-'.date('M', $e).' '.date('d', $e).')';
 				}
 			}
-			if (!empty($this->events_page_url))
-			{
-				echo '</a>'."\n";
-			}
+			echo '</a>'."\n";
+
 			echo $this->video_audio_streaming($this->events[$event_id]->get_value('id'), "/images/luther2010/video_camera_white_128.png", "/images/luther2010/headphones_white_256.png")."\n";
 			if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports')
 			{
