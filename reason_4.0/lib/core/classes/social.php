@@ -30,7 +30,8 @@ class ReasonSocialIntegrationHelper
 	function get_available_integrators()
 	{
 		return array('facebook' => 'Facebook',
-					 'twitter' => 'Twitter');
+					 'twitter' => 'Twitter',
+					 'googleplus' => 'Google+');
 	}
 	
 	/**

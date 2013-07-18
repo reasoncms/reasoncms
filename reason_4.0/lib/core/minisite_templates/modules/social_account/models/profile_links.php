@@ -51,6 +51,8 @@ class ReasonSocialProfileLinksModel extends ReasonMVCModel
 			$es = new entity_selector();
 			$es->add_type(id_of('social_account_type'));
 			$es->add_right_relationship($site_id, relationship_id_of('site_to_social_account'));
+			$es->add_rel_sort_field($site_id, relationship_id_of('site_to_social_account'));
+			$es->set_order('rel_sort_order ASC');
 			$es->limit_tables();
 			$es->limit_fields();
 			if ($results = $es->run_one())

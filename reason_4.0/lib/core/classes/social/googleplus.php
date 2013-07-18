@@ -13,16 +13,16 @@ reason_include_once( 'classes/social.php' );
 /**
  * Register the integrator with Reason CMS.
  */
-$GLOBALS[ '_social_integrator_class_names' ][ basename( __FILE__, '.php' ) ] = 'ReasonTwitterIntegrator';
+$GLOBALS[ '_social_integrator_class_names' ][ basename( __FILE__, '.php' ) ] = 'ReasonGooglePlusIntegrator';
 
 /**
- * A class that provides ReasonCMS with Twitter integration.
+ * A class that provides ReasonCMS with Google+ integration.
  *
  * This is intended to be used as a singleton - obtain it like this:
  *
  * <code>
  * $sih = reason_get_social_integration_helper();
- * $twitter_integrator = $sih->get_integrator('twitter');
+ * $twitter_integrator = $sih->get_integrator('googleplus');
  * </code>
  *
  * Currently this provides content manager integration and also implements:
@@ -30,33 +30,32 @@ $GLOBALS[ '_social_integrator_class_names' ][ basename( __FILE__, '.php' ) ] = '
  * - SocialAccountProfileLinks
  * - SocialSharingLinks
  *
- * @todo move oauth stuff into this class and modify the twitter feed models to use it.
  * @author Nathan White
  */
-class ReasonTwitterIntegrator extends ReasonSocialIntegrator implements SocialAccountProfileLinks, SocialSharingLinks
+class ReasonGooglePlusIntegrator extends ReasonSocialIntegrator implements SocialAccountProfileLinks, SocialSharingLinks
 {
 	/****************** SocialAccountProfileLinks implementation ********************/
 	public function get_profile_link_text($social_entity_id)
 	{
-		return 'Visit on Twitter';
+		return 'Visit on Google+';
 	}
 	
 	public function get_profile_link_href($social_entity_id)
 	{
 		$social_entity = new entity($social_entity_id);
 		$username = $social_entity->get_value('account_id');
-		return 'http://www.twitter.com/'.$username;
+		return 'http://plus.google.com/'.$username;
 	}
 
 	/****************** SocialSharingLinks implementation ***********************/
 	public function get_sharing_link_icon()
 	{
-		return REASON_HTTP_BASE_PATH . 'modules/social_account/images/twitter.png';
+		return REASON_HTTP_BASE_PATH . 'modules/social_account/images/googleplus.png';
 	}
 	
 	public function get_sharing_link_text()
 	{
-		return 'Twitter';
+		return 'Google+';
 	}
 	
 	/**
@@ -67,7 +66,7 @@ class ReasonTwitterIntegrator extends ReasonSocialIntegrator implements SocialAc
 	public function get_sharing_link_href($url = NULL)
 	{
 		$url = (!is_null($url)) ? urlencode($url) : urlencode(get_current_url('http'));
-		return 'https://twitter.com/share?url=' . $url;
+		return 'https://plus.google.com/share?url=' . $url;
 	}
 	
 	/****************** SocialAccountContentManager implementation *********************/
@@ -79,14 +78,15 @@ class ReasonTwitterIntegrator extends ReasonSocialIntegrator implements SocialAc
 	{
 		$cm->change_element_type('account_type', 'protected');
 		$cm->change_element_type('account_details', 'protected');
-		$cm->set_display_name('account_id', 'Twitter username');
+		$cm->set_display_name('account_id', 'Google+ ID');
 		$cm->add_required('account_id');
-			
+		$cm->add_comments('account_id', form_comment('Your Google+ ID is the set of numbers after plus.google.com/ in the URL when you view your profile.'));
+
 		// lets add a field showing the current link if one is available.		
 		$account_id = $cm->get_value('account_id');
 		if (!empty($account_id))
 		{
-			$link = 'http://www.twitter.com/'.$account_id;
+			$link = 'http://plus.google.com/'.$account_id;
 			$comment_text = '<a href="'.$link.'">'.$link.'</a>';
 			$cm->add_element('account_link', 'commentWithLabel', array('text' => $comment_text));
 		}
@@ -94,7 +94,7 @@ class ReasonTwitterIntegrator extends ReasonSocialIntegrator implements SocialAc
 	
 	function social_account_pre_show_form($cm)
 	{
-		echo '<p>Add/edit a Twitter profile.</p>';
+		echo '<p>Add/edit a Google+ profile.</p>';
 	}
 	
 	/**
@@ -105,9 +105,9 @@ class ReasonTwitterIntegrator extends ReasonSocialIntegrator implements SocialAc
 	function social_account_run_error_checks($cm)
 	{
 		$account_id = $cm->get_value('account_id');
-		if ( !check_against_regexp($account_id, array('naturalnumber')) && !check_against_regexp($account_id, array('/^[a-z\d.]*$/i')) )
+		if ( !check_against_regexp($account_id, array('naturalnumber')) )
 		{
-			$cm->set_error('account_id', 'Invalid format for twitter username. Please enter a valid username');
+			$cm->set_error('account_id', 'Invalid format for google account id - should be all numbers.');
 		}
 		// if we have a problem with account_id lets remove the account_link field.
 		if ($cm->has_error('account_id'))
