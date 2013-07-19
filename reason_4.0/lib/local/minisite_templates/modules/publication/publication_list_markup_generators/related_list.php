@@ -33,8 +33,18 @@ class RelatedListMarkupGenerator extends PublicationMarkupGenerator
 	function get_post_list_markup()
 	{
 		$markup_string = '';
-		
-		// Create "View all news" link for related publications that are minisite headlines
+		$url = end($this->passed_vars['links_to_current_publications']);
+		reset($this->passed_vars['links_to_current_publications']);
+		if(count($this->passed_vars['links_to_current_publications']) == 1
+			&& preg_match('/spotlight/', $url) === 0)
+		{
+			$markup_string .= '<nav class="button view-all">'."\n";
+			$markup_string .= '<ul>'."\n";
+			$markup_string .= '<li><a href="'.$url.'">View all news &gt;</a></li>'."\n";
+			$markup_string .= '</ul>'."\n";
+			$markup_string .= '</nav>'."\n";
+		}
+		/*// Create "View all news" link for related publications that are minisite headlines
 		$is_headline = false;
 		if(!empty($this->passed_vars['links_to_current_publications']))
 		{
@@ -54,7 +64,7 @@ class RelatedListMarkupGenerator extends PublicationMarkupGenerator
 			$markup_string .= '<li><a href="'.$url.'">View all news &gt;</a></li>'."\n";
 			$markup_string .= '</ul>'."\n";
 			$markup_string .= '</nav>'."\n";
-		}
+		}*/
 		
 		return $markup_string;
 	}
