@@ -552,19 +552,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 	 	'pre_sidebar_3' => '',
 		'sidebar_2' => '',
 		'sidebar_3' => 'luther_events_mini',
-		'sidebar_5' => array(
-			'module' => 'publication',
-			'markup_generator_info' => array(
-				'list_item' => array(
-					'classname' => 'MinimalListItemMarkupGenerator',
-					'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/minimal.php',
-				)
-			),
-			'related_publication_unique_names' => luther_get_publication_unique_name("headlines"),
-			'related_mode' => true,
-			'related_title' => '',
-			'max_num_items' => 5,
-		),
+		'sidebar_5' => get_luther_related_publication(5),
 		'post_sidebar' => 'luther_flickr_slideshow',
 	),
 	'luther2010_music' => array(
