@@ -395,8 +395,10 @@ class LutherTemplate2010 extends MinisiteTemplate
 			if ($result == null)
 			{
 				return;
-			}		
-			
+			}	
+			$first = reset($result);
+			$title = $first->get_value('name');
+						
 			if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_giving'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'
@@ -405,7 +407,14 @@ class LutherTemplate2010 extends MinisiteTemplate
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music')
 			{
 				echo '<aside class="news group">'."\n";
-				echo '<header class="blue-stripe"><h1><span>News</span></h1></header>'."\n";
+				if (count($result) == 1 && strlen($title) < 24)   // need name to fit on one line
+				{	
+					echo '<header class="blue-stripe"><h1><span>' . $title .'</span></h1></header>'."\n";
+				}
+				else
+				{
+					echo '<header class="blue-stripe"><h1><span>News</span></h1></header>'."\n";
+				}
 			}
 				
 			$this->run_section( 'sidebar_5' );
