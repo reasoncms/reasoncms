@@ -8,7 +8,7 @@
  * Include the base class
  */
 include_once( 'reason_header.php' );
-reason_include_once( 'config/htmlpurifier/abstract.php' );
+reason_include_once( 'config/htmlpurifier/configs/abstract.php' );
 
 /**
  * Register config with Reason CMS
@@ -59,7 +59,7 @@ class ReasonDefaultHTMLPurifierConfig extends ReasonAbstractHTMLPurifierConfig
 	final function alter_config($config)
 	{
  		$config->set('HTML.DefinitionRev', $this->get_revision());
-		if ($this->enabled_id) $config->set('Attr.EnableID', true);
+		if ($this->enable_id) $config->set('Attr.EnableID', true);
 		if ($this->allow_blank_target) $config->set('Attr.AllowedFrameTargets', array('_blank'));
 		if ($this->allow_html5_tags) $this->add_html5_tags($config);
  	}
