@@ -133,20 +133,19 @@ class ReasonUpgrader_44_EntitySanitization extends reasonUpgraderDefault impleme
 		echo '<li><strong>Updated - </strong> <span class="num_updated">' . $updated_count . '</span></li>';
 		echo '<li><strong>Processing Time (ms) - </strong> ' . round( (($e - $s) * 1000) ) . '</li>';
 		echo '</ul>';
-		if (!$complete) echo '<p>The starting ID has been updated to <span class="starting_id">' . $eid . '</span></p>';
-		echo '</div>';
-		echo '<hr/>';
-		
-		// If we processed less than the num_to_process we must have finished
-		if ( $num_rows < $disco->get_value('num_to_process') )
+		if (!$complete)
 		{
-			echo '<p><strong>Processing is complete.</strong></p>';
-			$disco->show_form = false;
+			echo '<p>The starting ID has been updated to <span class="starting_id">' . $eid . '</span></p>';
+			$disco->actions = array('Continue Entity Sanitization');
 		}
 		else
 		{
-			$disco->actions = array('Continue Entity Sanitization');
+			$status = '<p><strong>Processing is complete.</strong></p>';
+			$disco->add_element('status', 'comment', array('text' => $status));
+			$disco->actions = array();
 		}
+		echo '</div>';
+		echo '<hr/>';
 	}
 	
 	/**
