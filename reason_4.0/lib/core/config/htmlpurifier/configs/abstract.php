@@ -23,6 +23,7 @@ abstract class ReasonAbstractHTMLPurifierConfig
 	{
  		$this->config = HTMLPurifier_Config::createDefault();
  		if (defined("HTMLPURIFIER_CACHE")) $this->config->set('Cache.SerializerPath', HTMLPURIFIER_CACHE);
+ 		else $this->config->set('Cache.SerializerPath', REASON_CACHE_DIR);
  		$this->config->set('HTML.DefinitionID', get_class($this));
  		$this->alter_config($this->config);
  	}

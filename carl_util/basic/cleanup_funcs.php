@@ -310,7 +310,7 @@
 	 * - We add a rule to transform b to strong.
 	 * - We add a rule to transform i to em.
 	 *
-	 * @param string raw unsanitizted html
+	 * @param string raw unsanitized html
 	 * @param object HTMLPurifier config object
 	 */
 	function get_safer_html_html_purifier($string, $config = NULL)
@@ -323,6 +323,7 @@
 			$config->set('HTML.DefinitionRev', 1);
 			$config->set('Attr.EnableID', true);
 			if (defined("HTMLPURIFIER_CACHE")) $config->set('Cache.SerializerPath', HTMLPURIFIER_CACHE);
+			elseif(function_exists('sys_get_temp_dir')) $config->set('Cache.SerializerPath', sys_get_temp_dir());
 			if ($def = $config->maybeGetRawHTMLDefinition())
 			{
 				// lets transform b to strong and i to em
