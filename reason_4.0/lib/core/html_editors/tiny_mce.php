@@ -45,6 +45,8 @@ class reasonTinyMCEIntegration extends reasonEditorIntegrationBase
 	function get_plasmature_element_parameters($site_id, $user_id = 0)
 	{
 		$param['rows'] = 20;
+		$param['external_css'][] = REASON_HTTP_BASE_PATH . 'tinymce/css/external.css';
+		$param['init_options']['content_css'] = $this->get_content_css_path();
 		$site = new entity($site_id);
 		$loki_default = $site->get_value( 'loki_default' );
 		
@@ -81,6 +83,18 @@ class reasonTinyMCEIntegration extends reasonEditorIntegrationBase
 			$param['init_options']['plugins'] .= ',code';
 		}
 		return $param;
+	}
+	
+	/**
+	 * Returns the path in REASON_TINYMCE_CONTENT_CSS_PATH or a default path. 
+	 */
+	function get_content_css_path()
+	{
+		if (defined("REASON_TINYMCE_CONTENT_CSS_PATH"))
+		{
+			return REASON_TINYMCE_CONTENT_CSS_PATH;
+		}
+		else return REASON_HTTP_BASE_PATH . 'tinymce/css/content.css';
 	}
 	
 	/**

@@ -1,0 +1,13 @@
+/** 
+ * Reason CMS loads this whenever tinyMCE is loaded. This defaults version does a couple things:
+ *
+ * - Fixes what is probably a bug with the lightgray theme which causes the format pull down to be too tall.
+ * - Provides styles for our reasonimage and reasonlink plugins (soon)
+ *
+ * @todo move reasonimage and reasonlink CSS to this file
+ */
+
+/* This seems to fix the format pull down height problem */
+.mce-menubtn span { 
+	line-height: normal; 
+}

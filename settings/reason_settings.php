@@ -882,6 +882,15 @@
 	define('REASON_LOKI_CSS_FILE','');
 	
 	/**
+	 * REASON_TINYMCE_CONTENT_CSS_PATH
+	 *
+	 * Relative path to the CSS file that TinyMCE will use to style the WYSIWYG content area. If you have an install
+	 * of Reason CMS with a simple css footprint and a main css file, you may want to change this to that css file
+	 * instead of using the simple one (content.css) that comes with Reason CMS.
+	 */
+	define('REASON_TINYMCE_CONTENT_CSS_PATH', REASON_HTTP_BASE_PATH . 'tinymce/css/content.css');
+		
+	/**
 	 * REASON_DELETED_ITEM_EXPUNGEMENT_WAIT_DAYS
 	 *
 	 * The number of days Reason's garbage collector should wait before expunging a deleted item from the database.
