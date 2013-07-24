@@ -246,33 +246,38 @@ define("tinymce/pasteplugin/Clipboard", [
 			});
 		} else {
 			if (Env.ie) {
+				var keyPasteTime = 0;
+
+				editor.on('keydown', function(e) {
+					if (isPasteKeyEvent(e) && !e.isDefaultPrevented()) {
+						// Prevent undoManager keydown handler from making an undo level with the pastebin in it
+						e.stopImmediatePropagation();
+
+						var pastebinElm = createPasteBin();
+						keyPasteTime = now();
+
+						editor.dom.bind(pastebinElm, 'paste', function() {
+							setTimeout(function() {
+								editor.selection.setRng(lastRng);
+								removePasteBin(pastebinElm);
+
+								if (shouldPasteAsPlainText()) {
+									processText(innerText(pastebinElm.firstChild));
+								} else {
+									processHtml(pastebinElm.firstChild.innerHTML);
+								}
+							}, 0);
+						});
+
+						var lastRng = editor.selection.getRng();
+						pastebinElm.firstChild.focus();
+						pastebinElm.firstChild.innerText = '';
+					}
+				});
+
 				// Explorer fallback
 				editor.on('init', function() {
-					var dom = editor.dom, keyPasteTime = 0;
-
-					editor.on('keydown', function(e) {
-						if (isPasteKeyEvent(e) && !e.isDefaultPrevented()) {
-							var pastebinElm = createPasteBin();
-							keyPasteTime = now();
-
-							dom.bind(pastebinElm, 'paste', function() {
-								setTimeout(function() {
-									removePasteBin(pastebinElm);
-									editor.selection.setRng(lastRng);
-
-									if (shouldPasteAsPlainText()) {
-										processText(innerText(pastebinElm.firstChild));
-									} else {
-										processHtml(pastebinElm.firstChild.innerHTML);
-									}
-								}, 0);
-							});
-
-							var lastRng = editor.selection.getRng();
-							pastebinElm.firstChild.focus();
-							pastebinElm.firstChild.innerText = '';
-						}
-					});
+					var dom = editor.dom;
 
 					// Use a different method if the paste was made without using the keyboard
 					// for example using the browser menu items
@@ -321,6 +326,9 @@ define("tinymce/pasteplugin/Clipboard", [
 				// Old Gecko/WebKit/Opera fallback
 				editor.on('keydown', function(e) {
 					if (isPasteKeyEvent(e) && !e.isDefaultPrevented()) {
+						// Prevent undoManager keydown handler from making an undo level with the pastebin in it
+						e.stopImmediatePropagation();
+
 						var pastebinElm = createPasteBin();
 						var lastRng = editor.selection.getRng();
 
@@ -605,7 +613,7 @@ define("tinymce/pasteplugin/WordFilter", [
 				// Setup strict schema
 				var schema = new Schema({
 					valid_elements: '@[style],-strong/b,-em/i,-span,-p,-ol,-ul,-li,-h1,-h2,-h3,-h4,-h5,-h6,-table,' +
-								'-tr,-td[colspan|rowspan],-th,-thead,-tfoot,-tbody,-a[!href]'
+								'-tr,-td[colspan|rowspan],-th,-thead,-tfoot,-tbody,-a[!href],sub,sup,strike'
 				});
 
 				// Parse HTML into DOM structure
