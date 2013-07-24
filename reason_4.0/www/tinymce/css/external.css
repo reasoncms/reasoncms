@@ -11,3 +11,41 @@
 .mce-menubtn span { 
 	line-height: normal; 
 }
+
+.selectedImage {
+	background-image: linear-gradient(to bottom,rgb(222,222,222), #b8b8b8);
+}
+
+/**
+ * Styles for tinymce reason integration plugin
+ */
+
+button:disabled,button:disabled:hover,button:disabled:focus,button[disabled=true] {
+	background-image: linear-gradient(to bottom,rgb(222,222,222), #b8b8b8) !important;
+	color: #aaa;
+}
+
+.items_chunk {
+	text-align: center;
+	height: 300px;
+	white-space: normal;
+	overflow: auto;
+}
+
+.image_item {
+	width: 190px;
+	padding: 5px;
+	display: inline-block;
+	text-align: center;
+}
+
+.items_chunk .name,.items_chunk .description {
+	display: block;
+	white-space: normal;
+	text-align: center;
+}
+
+.items_chunk .description {
+	font-size: .9em;
+}
+

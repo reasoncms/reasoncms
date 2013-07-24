@@ -1,4 +1,4 @@
-// 4.0.1 (2013-06-26)
+// 4.0.2 (2013-07-18)
 
 /**
  * Compiled inline version. (Library mode)
@@ -11838,6 +11838,7 @@ define("tinymce/dom/ControlSelection", [
 		var selectedElm, selectedElmGhost, resizeHandles, selectedHandle;
 		var startX, startY, selectedElmX, selectedElmY, startW, startH, ratio, resizeStarted;
 		var width, height, editableDoc = editor.getDoc(), rootDocument = document, isIE = Env.ie;
+		var lastMouseDownEvent;
 
 		// Details about each resize handle how to scale etc
 		resizeHandles = {
@@ -12152,8 +12153,8 @@ define("tinymce/dom/ControlSelection", [
 			var target = e.srcElement, pos, name, corner, cornerX, cornerY, relativeX, relativeY;
 
 			pos = target.getBoundingClientRect();
-			relativeX = e.clientX - pos.left;
-			relativeY = e.clientY - pos.top;
+			relativeX = lastMouseDownEvent.clientX - pos.left;
+			relativeY = lastMouseDownEvent.clientY - pos.top;
 
 			// Figure out what corner we are draging on
 			for (name in resizeHandles) {
@@ -12171,7 +12172,7 @@ define("tinymce/dom/ControlSelection", [
 			// Remove native selection and let the magic begin
 			resizeStarted = true;
 			editor.getDoc().selection.empty();
-			showResizeRect(target, name, e);
+			showResizeRect(target, name, lastMouseDownEvent);
 		}
 
 		function nativeControlSelect(e) {
@@ -12235,6 +12236,10 @@ define("tinymce/dom/ControlSelection", [
 				});
 
 				attachEvent(editor.getBody(), 'controlselect', nativeControlSelect);
+
+				editor.on('mousedown', function(e) {
+					lastMouseDownEvent = e;
+				});
 			} else {
 				disableGeckoResize();
 			}
@@ -23928,7 +23933,7 @@ define("tinymce/util/Quirks", [
 					selection.getSel().setBaseAndExtent(e, 0, e, 1);
 				}
 
-				if (e.nodeName == 'A' && dom.hasClass(e, 'mceItemAnchor')) {
+				if (e.nodeName == 'A' && dom.hasClass(e, 'mce-item-anchor')) {
 					selection.select(e);
 				}
 
@@ -25909,7 +25914,12 @@ define("tinymce/Editor", [
 
 				// Focus the window iframe
 				if (!contentEditable) {
-					self.getBody().focus(); // WebKit needs this call to fire focusin event properly see #5948
+					// WebKit needs this call to fire focusin event properly see #5948
+					// But Opera pre Blink engine will produce an empty selection so skip Opera
+					if (!Env.opera) {
+						self.getBody().focus();
+					}
+
 					self.getWin().focus();
 				}
 
@@ -27321,7 +27331,7 @@ define("tinymce/EditorManager", [
 		 * @property releaseDate
 		 * @type String
 		 */
-		releaseDate: '2013-06-26',
+		releaseDate: '2013-07-18',
 
 		/**
 		 * Collection of editor instances.
@@ -31961,6 +31971,7 @@ define("tinymce/ui/MenuButton", [
 					});
 
 					if (hasVisibleSiblingMenu) {
+						overCtrl.focus(); // Fix for: #5887
 						overCtrl.showMenu();
 					}
 				}
