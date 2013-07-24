@@ -28,6 +28,7 @@
  *       elements.
  * TODO: A selected image's highlight doesn't persist between renders of the page of results.
  * TODO: use reason_http_base_path to reduce size of JSON being requested.
+ * TODO: Search for a selected image as chunks come in, rather than all at the end.
  *
  * @param {Object} controlSelectors The items to which the the picker will be bound
  * @param {String} targetPanelSelector The item to which the the picker will be bound
@@ -180,18 +181,6 @@ ReasonImage.prototype.getControlReferences = function(controlSelectors, placehol
 ReasonImage.prototype.insertReasonUI = function() {
   var holderDiv;
   this.UI = this.targetPanel.getEl();
-  var css = '.selectedImage {background-image: linear-gradient(to bottom, rgb(222, 222, 222), rgb(184, 184, 184)); } button:disabled, button:disabled:hover, button:disabled:focus, button[disabled=true] { background-image: linear-gradient(to bottom, rgb(222, 222, 222), rgb(184, 184, 184)) !important; color: #aaaaaa; } .items_chunk { text-align: center; height: 300px; white-space: normal; text-align: center;} .image_item {width: 190px; padding: 5px; display: inline-block; text-align: center; } .items_chunk .name, .items_chunk .description {display: block; white-space: normal; text-align: center;} .items_chunk .description {font-size: 0.9em;}' ,
-    head = document.getElementsByTagName('head')[0],
-    style = document.createElement('style');
-
-  style.type = 'text/css';
-  if (style.styleSheet){
-    style.styleSheet.cssText = css;
-  } else {
-    style.appendChild(document.createTextNode(css));
-  }
-
-  head.appendChild(style);
   holderDiv = document.createElement("div");
   var search = '<div style="margin-left: 20px; margin-top: 20px; width: 660px; height: 30px;" class="mce-container-body mce-abs-layout"><div id="mce_51-absend" class="mce-abs-end"></div><label style="line-height: 18px; left: 0px; top: 6px; width: 122px; height: 18px;" id="mce_52" class="mce-widget mce-label mce-first mce-abs-layout-item">Search:</label><input style="left: 122px; top: 0px; width: 528px; height: 28px;" id="searchyThing" class="reasonImageSearch mce-textbox mce-last mce-abs-layout-item" value="" hidefocus="true" size="40"></div>';
   holderDiv.innerHTML = '<div class="reasonImage">' + search + '<button class="mce-btn prevImagePage" type="button">Previous</button><button class="mce-btn nextImagePage">Next</button><div class="items_chunk"> </div></div>';
@@ -483,9 +472,8 @@ ReasonImageDialogItem.prototype.URLs = {
   full: ''
 };
 ReasonImageDialogItem.prototype.hasText = function(q) {
-  if ((this.name.search(q) !== -1) || (this.description.search(q) !== -1)) {
+  if ((this.name && this.name.search(q) !== -1) || (this.description && this.description.search(q) !== -1))
     return this;
-  }
 };
 
 ReasonImageDialogItem.prototype.description = '';
