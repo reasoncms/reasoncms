@@ -516,7 +516,7 @@ ReasonLink.prototype = new ReasonPlugin();
 
 
 
-tinymce.PluginManager.add('reasonimage', function(editor, url) {
+tinymce.PluginManager.add('reasonintegration', function(editor, url) {
 
   function showDialog() {
     var win, data, dom = editor.dom, imgElm = editor.selection.getNode(), reasonImagePlugin;

@@ -51,7 +51,6 @@ class reasonTinyMCEIntegration extends reasonEditorIntegrationBase
 		$loki_default = $site->get_value( 'loki_default' );
 		
 		$config = (!empty($loki_default) && in_array($loki_default, array_keys($this->get_configuration_options()))) ? $loki_default : 'notables';	
-		$imageplugin = ($this->reason_plugins_available($user_id)) ? 'reasonimage' : 'image';
 		$imagetoolbar = ($this->reason_plugins_available($user_id)) ? 'reasonimage' : 'image';
 		
 		/* these will need to change when the link plugin is available */
@@ -70,7 +69,15 @@ class reasonTinyMCEIntegration extends reasonEditorIntegrationBase
 			$param['init_options']['reason_http_base_path'] = REASON_HTTP_BASE_PATH;	
 		}
 		$param['init_options']['toolbar1'] = 'formatselect,|,bold,italic,|,hr,'.$cutcopypaste.'|,blockquote,|,numlist,bullist,|,indent,outdent,'.$tabletoolbar.'|,'.$imagetoolbar.',|,link,unlink,|,anchor';
-		$param['init_options']['plugins'] = 'anchor,link,paste,'.$imageplugin;
+		$param['init_options']['plugins'] = 'anchor,link,paste';
+		if ($this->reason_plugins_available($user_id))
+		{
+			$param['init_options']['external_plugins'] = '{ "reasonintegration": "' . REASON_HTTP_BASE_PATH . 'tinymce/plugins/reasonintegration/plugin.js" }';
+		}
+		else
+		{
+			 $param['init_options']['plugins'] .= ',image';
+		}
 		$param['init_options']['block_formats'] = $blockformats;
 		if (!empty($tabletoolbar))
 		{

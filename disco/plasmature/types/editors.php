@@ -195,8 +195,6 @@ class tiny_mceType extends textareaType
 	protected $external_css = array();
 
 	/**
-	 * The most common use case for this parameter is to load custom TinyMCE plugins.
-	 *
 	 * @param array of paths (relative to server root) of JS files to load after TinyMCE loads but before init.
 	 */
 	protected $external_js = array();
@@ -357,7 +355,7 @@ class tiny_mceType extends textareaType
 	}
 
 	/**
-	 * We return the main javascript for TinyMCE and any external javascript (likely plugins) - we use a static variable to keep track such that we include it only once.
+	 * We return the main javascript for TinyMCE and any external javascript - we use a static variable to keep track such that we include it only once.
 	 *
 	 * @return string
 	 */
