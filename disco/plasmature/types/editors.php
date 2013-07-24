@@ -140,39 +140,55 @@ class loki2Type extends defaultType
 /**
  * Edit HTML using the TinyMCE editor advanced theme.
  *
- * The plasmature type allows you to optionally pass in an array of buttons to use.
+ * These are the type valid args you should use:
  *
- * We the advanced themes.
+ * - rows
+ * - cols
+ * - init_options
  *
- * @todo all you to specify external config. css?
- * @todo use head items??
+ * Init options supports everything TinyMCE supports - we setup defaults in $this->base_init_options.
+ *
+ * For backwards compatibility we support these type_valid_args. We set TinyMCE 4 base_init_options based upon them.
+ *
+ * - buttons
+ * - buttons1
+ * - buttons2
+ * - formatselect_options
+ * - content_css
  *
  * @package disco
  * @subpackage plasmature
- *
- * @todo should really be tinymceType not tiny_mceType
- * @todo move items out of individual valid args and just allow them to be passed as init options.
  */
 class tiny_mceType extends textareaType
 {
 	var $type = 'tiny_mce';
-	var $type_valid_args = array('buttons', 'buttons2', 'buttons3', 'status_bar_location', 'formatselect_options', 'content_css', 'init_options', 'rows', 'cols', 'reason_page_id', 'reason_site_id');
-	var $buttons = array('formatselect', 'bold','italic','hr','blockquote','numlist','bullist','indent','outdent','reasonimage','link','unlink','anchor','cleanup');
+	var $type_valid_args = array('rows',
+								 'cols',
+								 'init_options',
+								 'buttons', // legacy
+								 'buttons2', // legacy
+								 'buttons3', // legacy
+								 'formatselect_options', // legacy
+								 'content_css', // legacy
+								);
+	var $init_options = array();
+							
+	var $buttons = array();
 	var $buttons2 = array();
 	var $buttons3 = array();
-	var $reason_page_id;
-	var $reason_site_id;
-	var $content_css;
 	var $formatselect_options;
-	var $init_options = array();
+	var $content_css;
+	
 	var $base_init_options = array(
 		'mode' => 'exact',
-		'plugins' => 'anchor,link,paste,reasonimage',
+		'toolbar1' => 'formatselect,bold,italic,hr,blockquote,numlist,bullist,indent,outdent,image,link,unlink,anchor',
+		'plugins' => 'anchor,link,paste',
 		'dialog_type' => 'modal',
 		'theme' => 'modern',
-		'convert_urls' => 'false',
-		'menubar' => 'false',
-		'block_formats' => "Paragraph=p;Header 1=h3;header 2=h4;Pre=pre",
+		'convert_urls' => false,
+		'menubar' => false,
+		'statusbar' => false,
+		'block_formats' => "Paragraph=p;Header 1=h3;Header 2=h4",
 	);
 	
 	/**
@@ -180,29 +196,28 @@ class tiny_mceType extends textareaType
 	 */
 	var $rows = 20;
 	
+	function __construct()
+	{
+		$this->base_init_options['content_css'] = UNIVERSAL_CSS_PATH;
+	}
+	
 	function display()
 	{
-		$content_css = $this->get_class_var('content_css');
-		if (is_null($content_css)) $this->set_class_var('content_css', UNIVERSAL_CSS_PATH);
-		
 		$this->transform_deprecated_options();
-		
 		$display = $this->get_tiny_mce_javascript();
+		$display .= $this->get_tiny_mce_unfortunate_css();
 		$display .= '<script language="javascript" type="text/javascript">'."\n";
 		$display .= $this->get_tiny_mce_init_string();
 		$display .= '</script>'."\n";
-		
-		// Why do we do this?
-		//$this->set_class_var('rows', $this->get_class_var('rows')+10 );
 		echo $display;
 		parent::display();
 	}
 	
 	/**
-	 * TinyMCE 3 handled some configuration differently. We handle this gracefully.
+	 * TinyMCE 3 handled some configuration differently and we used more type_valid_args. We handle this gracefully.
 	 *
 	 * - If formatselect_options were provided, transform them gracefully.
-	 * -  
+	 * - If buttons, buttons2, or buttons3 was used, populate the appropriate toolbar init option. 
 	 * 
 	 * We handle this gracefully.
 	 */
@@ -231,23 +246,30 @@ class tiny_mceType extends textareaType
 			}
 			$this->base_init_options['block_formats'] = implode(";",$block_formats);
 		}
+		
+		if ($buttons = $this->get_class_var('buttons'))
+		{
+			$this->base_init_options['toolbar1'] = implode(" ",$buttons);
+		}
+		if ($buttons2 = $this->get_class_var('buttons2'))
+		{
+			$this->base_init_options['toolbar2'] = implode(" ",$buttons2);
+		}
+		if ($buttons3 = $this->get_class_var('buttons3'))
+		{
+			$this->base_init_options['toolbar3'] = implode(" ",$buttons3);
+		}
 	}
 	
+	/**
+	 * I'm not crazy about how this works but right now we take the PHP array style base_init_options
+	 * and combine them with passed in init_options, and then we special case json and boolean values
+	 * to get our actual tinymce.init string. 
+	 */
 	function get_tiny_mce_init_string()
 	{	
-		// Add calculated/passed options to base options
 		$options = $this->base_init_options;
-		$options['toolbar1'] = implode(" ",$this->buttons);
-		$options['toolbar2'] = implode(" ",$this->buttons2);
-		$options['toolbar3'] = implode(" ",$this->buttons3);
-		// make me conditional on formatselect being in the buttons array and formatselect_options being set.
-		//$options['formats'] = "{'p', 'pre', 'h1'}"; //implode(",",$this->formatselect_options);
-
     	$options['elements'] = $this->name;    	
-    	if ($this->get_class_var('reason_page_id')) $options['reason_page_id'] = $this->get_class_var('reason_page_id');
-    	if ($this->get_class_var('reason_site_id')) $options['reason_site_id'] = $this->get_class_var('reason_site_id');
-		if ($this->get_class_var('content_css')) $options['content_css'] = $this->get_class_var('content_css');
-		$options['reason_http_base_path'] = REASON_HTTP_BASE_PATH;
 		
 		// Merge in custom options
 		foreach($this->init_options as $option => $val) $options[$option] = $val;
@@ -260,10 +282,19 @@ class tiny_mceType extends textareaType
 			{
 				$parts[] = sprintf('%s : %s', $option, $val);
 			}
-			else $parts[] = sprintf('%s : "%s"', $option, $val);
+			elseif (is_bool($val)) // handle booleans
+			{
+				$strval = ($val) ? 'true' : 'false';
+				$parts[] = sprintf('%s : %s', $option, $strval);
+			}
+			else // default for strings
+			{
+				$parts[] = sprintf('%s : "%s"', $option, $val);
+			}
 		}
 		return 'tinymce.init({'."\n" . implode(",\n", $parts) . "\n});\n";
 	}
+
 	/**
 	 * We return the main javascript for TinyMCE - we use a static variable to keep track such that we include it only once.
 	 */
@@ -277,6 +308,25 @@ class tiny_mceType extends textareaType
 			$loaded_an_instance = true;
 		}
 		return (!empty($js)) ? $js : '';
+	}
+	
+	/**
+	 * We return any extra css for TinyMCE that is (unfortunately) needed.
+	 *
+	 * This is only here to deal with the fact that our formatselect list appears to be taller than needed by default,
+	 * and we don't have another CSS file that we are confident has loaded in which to add this hacky rule. When the 
+	 * theme is fixed, we should get rid of this method and the call to it in display().
+	 */
+	function get_tiny_mce_unfortunate_css()
+	{
+		// we only want to load this extra css declaration once.
+		static $loaded_an_instance;
+		if (!isset($loaded_an_instance))
+		{
+			$css = '<style type="text/css">.mce-menubtn span { line-height: normal }</style>'."\n";
+			$loaded_an_instance = true;
+		}
+		return (!empty($css)) ? $css : '';
 	}
 }
 
