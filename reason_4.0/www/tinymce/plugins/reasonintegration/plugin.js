@@ -23,7 +23,6 @@
  * TODO: Change ReasonPlugin.getPanel to keep going up elements until we find a
  *       parent of type panel to make it a little more robust.
  * TODO: insertReasonUI should insert a tinymce control of type panel w/ settings.html, maybe?
- * TODO: the plugin should use a real CSS file (not js-css in insertReasonUI)
  * TODO: to style each element, insertReasonUI should copy styles/classes from native tinymce
  *       elements.
  * TODO: A selected image's highlight doesn't persist between renders of the page of results.
@@ -122,7 +121,13 @@ ReasonPlugin.prototype.updatePagination = function() {
   var num_of_pages = Math.ceil(this.displayedItems.length/this.pageSize);
   this.nextButton.disabled = (this.page + 1 > num_of_pages);
   this.prevButton.disabled = (this.page - 1 <= 0);
+  this.UI.getElementsByClassName("pageCount")[0].innerHTML = this.pageCounter();
 };
+
+ReasonPlugin.prototype.pageCounter = function() {
+  var numPages = Math.ceil(this.displayedItems.length/this.pageSize);
+  return "Pg. " + this.page + "/" + numPages;
+}
 
 ReasonPlugin.prototype.makePageSlice = function(page_num) {
   var begin, end;
@@ -182,8 +187,8 @@ ReasonImage.prototype.insertReasonUI = function() {
   var holderDiv;
   this.UI = this.targetPanel.getEl();
   holderDiv = document.createElement("div");
-  var search = '<div style="margin-left: 20px; margin-top: 20px; width: 660px; height: 30px;" class="mce-container-body mce-abs-layout"><div id="mce_51-absend" class="mce-abs-end"></div><label style="line-height: 18px; left: 0px; top: 6px; width: 122px; height: 18px;" id="mce_52" class="mce-widget mce-label mce-first mce-abs-layout-item">Search:</label><input style="left: 122px; top: 0px; width: 528px; height: 28px;" id="searchyThing" class="reasonImageSearch mce-textbox mce-last mce-abs-layout-item" value="" hidefocus="true" size="40"></div>';
-  holderDiv.innerHTML = '<div class="reasonImage">' + search + '<button class="mce-btn prevImagePage" type="button">Previous</button><button class="mce-btn nextImagePage">Next</button><div class="items_chunk"> </div></div>';
+  var search = '<div style="margin-left: 20px; margin-top: 20px; width: 660px; height: 30px;" class="mce-container-body mce-abs-layout"><div id="mce_51-absend" class="mce-abs-end"></div><label style="line-height: 18px; left: 0px; top: 6px; width: 101px; height: 18px;" id="mce_52" class="mce-widget mce-label mce-first mce-abs-layout-item">Search</label><input style="left: 101px; top: 0px; width: 549px; height: 28px;" id="searchyThing" class="reasonImageSearch mce-textbox mce-last mce-abs-layout-item" value="" hidefocus="true" size="40"></div>';
+  holderDiv.innerHTML = '<div class="reasonImage">' + search + '<div class="pagination"><span class="pageCount">Pg. 1/10</span><div class="mce-btn mce-widget"><button class="prevImagePage" type="button">Previous</button></div><div class="mce-btn mce-widget"><button class="nextImagePage">Next</button></div></div><div class="items_chunk"> </div></div>';
 
   this.UI.insertBefore(holderDiv.firstChild, this.UI.firstChild);
 
