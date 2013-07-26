@@ -133,6 +133,21 @@ div.publication .primaryContent div.back {
 	margin:1.5em 0;
 }
 
+/* lets style the social section */
+div.publication div.fullPost div.social {
+}
+
+div.publication div.fullPost div.social p {
+	font-size: .9em;
+}
+
+div.publication div.fullPost div.social img {
+	width: 1.3em;
+	margin: 0 .2em;
+	height: auto;
+	vertical-align: middle;
+}
+
 /* lets hide the "List All Issues" link */
 div.publication div.allIssuesLink
 {

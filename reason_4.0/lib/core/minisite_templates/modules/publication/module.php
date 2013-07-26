@@ -203,6 +203,7 @@ class PublicationModule extends Generic3Module
 													 'item_images' => 'get_item_images',
 													 'item_assets' => 'get_item_assets',
 													 'item_categories' => 'get_item_categories',
+													 'item_social_sharing' => 'get_item_social_sharing',
 													 'item_comments' => 'get_item_comments',
 													 'comment_form_markup'=>'get_comment_form_markup',
 													 'comment_has_errors' => 'get_comment_has_errors',
@@ -2653,6 +2654,44 @@ class PublicationModule extends Generic3Module
 				}
 			}
 			return $cats;
+		}
+		
+		/**
+		 * Get social sharing links from social sharing integrators that support social sharing links.
+		 *
+		 * Returns an array where each item is an array with these keys:
+		 *
+		 * - src (for the image)
+		 * - alt (for the image)
+		 * - href (the actual link)
+		 *
+		 * We only return items is the page is public and the publication has social sharing enabled.
+		 *
+		 * @param object
+		 * @return array
+		 */
+		function get_item_social_sharing($item)
+		{
+			if ($this->page_is_public() && 
+				$this->publication->has_value('enable_social_sharing') && (
+				$this->publication->get_value('enable_social_sharing') == 'yes' )
+				)
+			{
+				reason_include_once('classes/social.php');
+				$helper = reason_get_social_integration_helper();
+				$integrators = $helper->get_social_integrators_by_interface('SocialSharingLinks');
+				if (!empty($integrators))
+				{
+					foreach ($integrators as $integrator_type => $integrator)
+					{
+						$item_social_sharing[$integrator_type]['icon'] = $integrator->get_sharing_link_icon();
+						$item_social_sharing[$integrator_type]['text'] = $integrator->get_sharing_link_text();
+						$item_social_sharing[$integrator_type]['href'] = $integrator->get_sharing_link_href();
+					}
+					return $item_social_sharing;
+				}
+			}
+			return false;
 		}
 		function get_item_comments($item)
 		{

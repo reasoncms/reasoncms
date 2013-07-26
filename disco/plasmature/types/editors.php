@@ -138,14 +138,29 @@ class loki2Type extends defaultType
 }
 
 /**
- * Edit HTML using the TinyMCE editor advanced theme.
+ * Edit HTML using the TinyMCE editor modern (lightgray) theme.
  *
- * The plasmature type allows you to optionally pass in an array of buttons to use.
+ * These are the type valid args you should use:
  *
- * We the advanced themes.
+ * - rows
+ * - cols
+ * - external_css
+ * - plugins
+ * - init_options
  *
- * @todo all you to specify external config. css?
- * @todo use head items??
+ * Init options supports everything TinyMCE supports - we setup defaults in $this->base_init_options.
+ *
+ * For backwards compatibility we support these legacy type_valid_args. We set TinyMCE 4 base_init_options based upon them.
+ *
+ * - buttons
+ * - buttons1
+ * - buttons2
+ * - formatselect_options
+ * - content_css
+ *
+ * @todo do we need to add db_type error checks like we have in Loki?
+ * @todo do we need to tidy here if core sanitization is off?
+ * @todo would be great to integrate with head items instead of adding JS and CSS inline.
  *
  * @package disco
  * @subpackage plasmature
@@ -153,58 +168,196 @@ class loki2Type extends defaultType
 class tiny_mceType extends textareaType
 {
 	var $type = 'tiny_mce';
-	var $type_valid_args = array('buttons', 'buttons2', 'buttons3', 'status_bar_location', 'formatselect_options', 'content_css', 'init_options');
-	var $status_bar_location = 'none';
-	var $buttons = array('formatselect','bold','italic','hr','blockquote','numlist','bullist','indent','outdent','image','link','unlink','anchor','cleanup');
-	var $buttons2 = array();
-	var $buttons3 = array();
-	var $content_css;
-	var $formatselect_options = array('p','h3','h4','pre');
-	var $init_options = array();
-	var $base_init_options = array(
+	var $type_valid_args = array('rows',
+								 'cols',
+								 'external_css',
+								 'external_js',
+								 'init_options',
+								 'buttons', // legacy
+								 'buttons2', // legacy
+								 'buttons3', // legacy
+								 'formatselect_options', // legacy
+								 'content_css', // legacy
+								);
+	/**
+	 * @param int number of rows to display
+	 */
+	var $rows = 20;
+	
+	/**
+	 * @param int number of columns to display
+	 */
+	var $cols = 80;
+
+	/**
+	 * @param array of paths (relative to server root) of CSS files to load before TinyMCE inits.
+	 */
+	protected $external_css = array();
+
+	/**
+	 * @param array of paths (relative to server root) of JS files to load after TinyMCE loads but before init.
+	 */
+	protected $external_js = array();
+	
+	/**
+	 * @param array containing TinyMCE init options in addition or to override base_init_options
+	 */
+	protected $init_options = array();
+	
+	/**
+	 * @param array deprecated
+	 */						
+	protected $buttons = array();
+
+	/**
+	 * @param array deprecated
+	 */
+	protected $buttons2 = array();
+
+	/**
+	 * @param array deprecated
+	 */
+	protected $buttons3 = array();
+
+	/**
+	 * @param array deprecated
+	 */
+	protected $formatselect_options;
+	
+	/**
+	 * @param array deprecated this should be provided within init_options
+	 */
+	protected $content_css;
+
+	/**
+	 * $param array basic set of options for tinyMCE - init_options can override or add to this.
+	 */	
+	private $base_init_options = array(
 		'mode' => 'exact',
-		'plugins' => 'inlinepopups',
+		'toolbar1' => 'formatselect,bold,italic,hr,blockquote,numlist,bullist,indent,outdent,image,link,unlink,anchor',
+		'plugins' => 'anchor,link,paste',
 		'dialog_type' => 'modal',
-		'theme' => 'advanced',
+		'theme' => 'modern',
 		'convert_urls' => false,
+		'menubar' => false,
+		'statusbar' => false,
+		'block_formats' => "Paragraph=p;Header 1=h3;Header 2=h4",
 	);
+	
+	/**
+	 * We set tinyMCE content_css to the UNIVERSAL_CSS_PATH by default.
+	 */
+	function __construct()
+	{
+		$this->base_init_options['content_css'] = UNIVERSAL_CSS_PATH;
+	}
 	
 	function display()
 	{
+		$this->transform_deprecated_options();
 		$display = $this->get_tiny_mce_javascript();
+		$display .= $this->get_tiny_mce_external_css();
 		$display .= '<script language="javascript" type="text/javascript">'."\n";
 		$display .= $this->get_tiny_mce_init_string();
 		$display .= '</script>'."\n";
-		
-		// Why do we do this?
-		//$this->set_class_var('rows', $this->get_class_var('rows')+5 );
 		echo $display;
 		parent::display();
 	}
 	
-	function get_tiny_mce_init_string()
+	/**
+	 * TinyMCE 3 handled some configuration differently and we used more type_valid_args. We handle this gracefully.
+	 *
+	 * - If formatselect_options were provided, transform them gracefully.
+	 * - If buttons, buttons2, or buttons3 was used, populate the appropriate toolbar init option. 
+	 * 
+	 * This method alters base_init_options.
+	 * 
+	 * @return void
+	 */
+	function transform_deprecated_options()
 	{
-		// Add calculated/passed options to base options
+		if ($format_select = $this->get_class_var('formatselect_options'))
+		{
+			$format_to_block_map = array(
+				'p' => 'Paragraph',
+				'address' => 'Address',
+				'pre' => 'Pre',
+				'h1' => 'Header 1',
+				'h2' => 'Header 2',
+				'h3' => 'Header 3',
+				'h4' => 'Header 4',
+				'h5' => 'Header 5',
+				'h6' => 'Header 6',
+			);
+			foreach ($format_select as $v)
+			{
+				if (isset($format_to_block_map[$v]))
+				{
+					$block_formats[] = $format_to_block_map[$v].'='.$v;
+				}
+				else $block_formats[] = $v.'='.$v;
+			}
+			$this->base_init_options['block_formats'] = implode(";",$block_formats);
+		}
+		
+		if ($buttons = $this->get_class_var('buttons'))
+		{
+			$this->base_init_options['toolbar1'] = implode(" ",$buttons);
+		}
+		if ($buttons2 = $this->get_class_var('buttons2'))
+		{
+			$this->base_init_options['toolbar2'] = implode(" ",$buttons2);
+		}
+		if ($buttons3 = $this->get_class_var('buttons3'))
+		{
+			$this->base_init_options['toolbar3'] = implode(" ",$buttons3);
+		}
+	}
+	
+	/**
+	 * Generate TinyMCE init string from the combination of base_init_options and init_options.
+	 *
+	 * The items in our init options arrays are generally treated as strings with three exceptions:
+	 *
+	 * - We assume values starting with [ or { are JSON and do not add quotes.
+	 * - We do not add quotes to integers.
+	 * - We do not add quotes to boolean values - tinyMCE init will treat true and "true" differently.
+	 *
+	 * @return string
+	 */
+	function get_tiny_mce_init_string()
+	{	
 		$options = $this->base_init_options;
-		$options['theme_advanced_buttons1'] = implode(",",$this->buttons);
-		$options['theme_advanced_buttons2'] = implode(",",$this->buttons2);
-		$options['theme_advanced_buttons3'] = implode(",",$this->buttons3);
-		// make me conditional on formatselect being in the buttons array and formatselect_options being set.
-		$options['theme_advanced_blockformats'] = implode(",",$this->formatselect_options);
-		$options['theme_advanced_statusbar_location'] = $this->status_bar_location;
-		$options['elements'] = $this->name;
-		if ($this->get_class_var('content_css')) $options['content_css'] = $this->get_class_var('content_css');
+    	$options['elements'] = $this->name;    	
 		
 		// Merge in custom options
 		foreach($this->init_options as $option => $val) $options[$option] = $val;
 		
 		// Format the options
-		foreach ($options as $option => $val) $parts[] = sprintf('%s : "%s"', $option, $val);
-			
-		return 'tinyMCE.init({'."\n" . implode(",\n", $parts) . "\n});\n";
+		foreach ($options as $option => $val)
+		{
+			// support configuration params that expect a json object or pure integer
+			if (is_int($val) || (!empty($val) && ((substr($val, 0, 1) == '[') || (substr($val, 0, 1) == '{'))))
+			{
+				$parts[] = sprintf('%s : %s', $option, $val);
+			}
+			elseif (is_bool($val)) // handle booleans
+			{
+				$strval = ($val) ? 'true' : 'false';
+				$parts[] = sprintf('%s : %s', $option, $strval);
+			}
+			else // default for strings
+			{
+				$parts[] = sprintf('%s : "%s"', $option, $val);
+			}
+		}
+		return 'tinymce.init({'."\n" . implode(",\n", $parts) . "\n});\n";
 	}
+
 	/**
-	 * We return the main javascript for TinyMCE - we use a static variable to keep track such that we include it only once.
+	 * We return the main javascript for TinyMCE and any external javascript - we use a static variable to keep track such that we include it only once.
+	 *
+	 * @return string
 	 */
 	function get_tiny_mce_javascript()
 	{
@@ -212,10 +365,45 @@ class tiny_mceType extends textareaType
 		static $loaded_an_instance;
 		if (!isset($loaded_an_instance))
 		{
-			$js = '<script language="javascript" type="text/javascript" src="'.TINYMCE_HTTP_PATH.'tiny_mce.js"></script>'."\n";
+			$js = '<script language="javascript" type="text/javascript" src="'.TINYMCE_HTTP_PATH.'tinymce.js"></script>'."\n";
+			$external_js = $this->get_class_var('external_js');
+			if (!empty($external_js))
+			{
+				foreach ($external_js as $js_file)
+				{
+					$js .= '<script language="javascript" type="text/javascript" src="'.$js_file.'"></script>'."\n";
+				}
+			}
 			$loaded_an_instance = true;
 		}
 		return (!empty($js)) ? $js : '';
+	}
+	
+	/**
+	 * If a css path was provided to tinyMCE, then load it. Note any file here is used to style aspects of tinyMCE
+	 * other than the content area. If you want to style content within TinyMCE's content area, use the tinyMCE
+	 * content_css config option.
+	 *
+	 * @return string
+	 */
+	function get_tiny_mce_external_css()
+	{
+		// we only want to load this extra css declaration once.
+		static $loaded_css;
+		if (!isset($loaded_css))
+		{
+			$external_css = $this->get_class_var('external_css');
+			if (!empty($external_css))
+			{
+				$css = '';
+				foreach ($external_css as $css_file)
+				{
+					$css .= '<link rel="stylesheet" type="text/css" href="' . $css_file . '" />'."\n";
+				}
+			}
+			$loaded_css = true;
+		}
+		return (!empty($css)) ? $css : '';
 	}
 }
 

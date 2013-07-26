@@ -104,8 +104,10 @@ domain_define( 'HTTP_HOST_NAME', $_SERVER['HTTP_HOST'] );
  */
 //setlocale(LC_ALL, 'en_US.UTF-8');
 
-// Define the name of the function which performs html sanitization
-// this should be a specialized settings file probably - only relevant if the cleanup libraries are loaded
+/**
+ * This is deprecated - while carl_get_safer_html($html) respects this currently, it will go away
+ * entirely when Reason 4.5 is released.
+ */
 define('HTML_SANITIZATION_FUNCTION','get_safer_html_html_purifier');
 
 // Define the path to the folder that contains Reason's lib and www folder

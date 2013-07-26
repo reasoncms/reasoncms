@@ -999,7 +999,10 @@
 				'height'=>300
 			),
 			'main_post' => 'content',
-			'pre_sidebar'=>'events_mini',
+			'pre_sidebar'=> array(
+				'module' => 'events_mini',
+				'ideal_count' => 4,
+			),	
 			'sidebar' => array(
 				'module' => 'publication',
 				'related_mode' => 'true',
