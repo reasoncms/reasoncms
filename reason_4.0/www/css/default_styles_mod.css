@@ -21,14 +21,14 @@
 	border-top-color: #748FC2;
 }
 #breadcrumbs {
-	background-image: url(/global_stock/images/shade_blue.gif);
+	background-image: url(../ui_images/shade_blue.gif);
 	background-repeat: repeat-x;
 }
 .bannerTable {
 	background-repeat: repeat-x;
 }
 .nocrumbs .bannerTable {
-	background-image: url(/global_stock/images/shade_blue.gif);
+	background-image: url(../ui_images/shade_blue.gif);
 }
 table.layoutTable {
 	width: 100%;
