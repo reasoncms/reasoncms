@@ -1477,7 +1477,7 @@
 			create_relationship( $field->get_value('_new_field_id'), $destination_table_entity->id(), relationship_id_of(	'field_to_entity_table' ) );
 			$q = 'ALTER TABLE `'.addslashes($destination_table).'` CHANGE '.addslashes($field->get_value('_field_move_temp_name')).' '.addslashes( $field->get_value('name') ).' '.$field->get_value('db_type') ;
 			db_query( $q, 'Unable to change field name of '.$field->get_value('_field_move_temp_name').' in reason_move_table_fields()' );
-			reason_update_entity( $field->get_value('_new_field_id'), $user_id, array('name' => $field->get_value('name') ) );
+			reason_update_entity( $field->get_value('_new_field_id'), $user_id, array('name' => $field->get_value('name') ), false );
 		}
 		
 		// delete the rows from the source table

@@ -14,6 +14,7 @@
  *
  * @todo after reason 4.5 remove "no_tidy" from admin interface and use these rules instead.
  * @todo create sanitization function which parses thor XML and sanitizes the individual fields with HTML purifier.
+ * @todo create sanitization function which parses LDAP queries and sanitizes them as appropriate.
  *
  * @package reason
  * @subpackage config
@@ -40,6 +41,14 @@ $GLOBALS['_reason_entity_sanitization'] = array(
 	),
 	'form' => array(
 		'thor_content' => '',
+	),
+	'audience_type' => array(
+		'audience_filter' => '',
+	),
+	'group_type' => array(
+		'arbitrary_ldap_query' => '',
+		'ldap_group_filter' => '',
+		'ldap_group_member_fields' => '',
 	),
 );
 
