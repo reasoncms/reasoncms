@@ -12,6 +12,11 @@
 	line-height: normal; 
 }
 
+/* Hide the path item info while preserving resize ability */
+.mce-path > .mce-path-item, .mce-path > .mce-divider {
+	display: none !important;
+}
+
 .selectedImage {
 	background: #dedede;
 	background: -moz-linear-gradient(top,  #dedede 0%, #b8b8b8 100%);

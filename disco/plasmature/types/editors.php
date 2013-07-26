@@ -240,7 +240,6 @@ class tiny_mceType extends textareaType
 		'theme' => 'modern',
 		'convert_urls' => false,
 		'menubar' => false,
-		'statusbar' => false,
 		'block_formats' => "Paragraph=p;Header 1=h3;Header 2=h4",
 	);
 	
