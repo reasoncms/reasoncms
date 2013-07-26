@@ -755,6 +755,15 @@ class AdminPage
 				echo '<a href="'.$this->make_link( array( 'cur_module' => 'ManageLocks' ) ).' "class="nav">'.$text.'</a>';
 			echo '</li>' . "\n";
 		}
+
+		
+		if( $this->show[ 'analytics' ] )
+		{
+			echo '<li class="navItem';
+			if( $this->cur_module == 'Analytics' || $this->cur_module == 'AnalyticsAbout' )
+				echo ' navSelect';
+			echo '"><a href="'.$this->make_link( array( 'cur_module' => 'Analytics' ) ).'" class="nav"><img src="'.REASON_HTTP_BASE_PATH.'silk_icons/chart_curve.png" alt="" />Analytics</a></li>'."\n";
+		}
 		
 		if($show_history)
 		{
