@@ -219,7 +219,7 @@
 		 */
 		function could_be_csrf()
 		{
-			if ( ($_GET['submitted'] == 1) && empty($_POST) )
+			if ( (isset($_GET['submitted']) && ($_GET['submitted'] == 1)) && empty($_POST) )
 			{
 				$this->_run_all_error_checks();
 				if ($this->has_errors()) return false;
