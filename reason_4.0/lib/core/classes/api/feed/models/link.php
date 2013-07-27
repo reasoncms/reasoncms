@@ -135,7 +135,7 @@ class ReasonPageListJSON extends ReasonLinksJSON implements ReasonFeedInterface
 		{
 			return json_encode($this->build_pages($id));
 		}
-		else return json_encode('{}');
+		else return '{}';
 	}
 	
 	/**
@@ -188,41 +188,62 @@ class ReasonPageListJSON extends ReasonLinksJSON implements ReasonFeedInterface
 }
 
 /**
- * ReasonAnchorListJSON provides a list of anchors on a minisite page.
+ * ReasonAssetListJSON provides a list of assets on a site.
  *
- * @todo actually make this work.
+ * @todo consider whether to not show assets that are behind authentication.
+ *
  * @author Nathan White
  */
-class ReasonAnchorListJSON extends ReasonLinksJSON implements ReasonFeedInterface
+class ReasonAssetListJSON extends ReasonLinksJSON implements ReasonFeedInterface
 {
+	function __construct()
+	{
+		reason_include_once( 'function_libraries/asset_functions.php' );
+	}
+	
 	function configure()
 	{
 		if (!$this->config('site_id'))
 		{
 			if (isset($_GET['site_id'])) $this->config('site_id', intval($_GET['site_id']));
 		}
-		if (!$this->config('page_id'))
-		{
-			if (isset($_GET['page_id'])) $this->config('page_id', intval($_GET['page_id']));
-		}
 	}
 	
 	function configured()
 	{
-		if ( ($site_id = $this->config('site_id')) && ($page_id = $this->config('page_id')) )
+		if ( ($site_id = $this->config('site_id')) )
 		{
 			$site = new entity($site_id);
-			$page = new entity($page_id);
-			if ( reason_is_entity($site, 'site') && reason_is_entity($page, 'minisite_page') ) return true;
+			if ( reason_is_entity($site, 'site') )return true;
 		}
 		return false;
 	}
 	
 	function get_json()
 	{
-		$anchors = array('anchors' => array('name' => 'an anchor', 'hash' => '#an_anchor_hash'),
-									  array('name' => 'another anchor', 'hash' => '#another_anchor_hash')
-						);
-		return json_encode($anchors);		
+		if ($assets = $this->get_assets())
+		{
+			$site = new entity($this->config('site_id'));
+			foreach($assets as $asset)
+			{
+				$asset_list['name'] = $asset->get_value('name');
+				$asset_list['url'] = reason_get_asset_url($asset, $site);
+			}
+			return json_encode($asset_list);
+		}
+		else return '{}';
+	}
+	
+	function get_assets()
+	{
+		if (!isset($this->_assets))
+		{
+			$es = new entity_selector($this->config('site_id'));
+			$es->add_type(id_of('asset'));
+			$es->limit_tables();
+			$es->limit_fields('name');
+			$this->_assets = $es->run_one();
+		}
+		return $this->_assets;
 	}
 }

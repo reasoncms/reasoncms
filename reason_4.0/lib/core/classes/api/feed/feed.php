@@ -73,10 +73,10 @@ class ReasonFeedAPI extends CarlUtilAPI
 				$model = new ReasonPageListJSON();
 				$this->set_model($model);
 			}
-			elseif ($_GET['type'] == 'anchorList')
+			elseif ($_GET['type'] == 'assetList')
 			{
 				reason_include_once('classes/api/feed/models/link.php');
-				$model = new ReasonAnchorListJSON();
+				$model = new ReasonAssetListJSON();
 				$this->set_model($model);
 			}
 		}
