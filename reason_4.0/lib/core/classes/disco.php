@@ -191,15 +191,41 @@
 		} // }}}
 		
 		/**
-		* Runs all required error checks, defined checks, and user checks.
-		* Called by {@link run_process_phase()}.
-		* @access private
-		*/
-		function _run_all_error_checks() // {{{
+		 * Runs all required error checks, defined checks, and user checks.
+		 * Called by {@link run_process_phase()}.
+		 * @access private
+		 */
+		function _run_all_error_checks()
 		{
-			parent::_run_all_error_checks();
-			$this->_check_unique_name_field();
-		} // }}}
+			if (!isset($this->_run_all_error_checks_called))
+			{
+				parent::_run_all_error_checks();
+				$this->_check_unique_name_field();
+				$this->_run_all_error_checks_called = true;
+			}
+		}
+		
+		
+		/**
+		 * We introduce a hack here. Clicking the "Finish" button on the left hand menu of the editor content manager has historically checked
+		 * for errors, and if they exist, "submitted" the form to trigger error messages. This causes problems with CSRF protection, which 
+		 * verifies that the csrf_token was submitted as a valid $_POST request before doing other error checks.
+		 *
+		 * So we do this:
+		 *
+		 * - If $_GET['submitted'] == 1 and $_POST is empty
+		 * - Run _run_all_error_checks.
+		 * - If we have errors, report that this could not be CSRF (form won't submit anyway since it has errors).
+		 */
+		function could_be_csrf()
+		{
+			if ( ($_GET['submitted'] == 1) && empty($_POST) )
+			{
+				$this->_run_all_error_checks();
+				if ($this->has_errors()) return false;
+			}
+			parent::could_be_csrf();
+		}
 		
 		function _check_unique_name_field()
 		{
