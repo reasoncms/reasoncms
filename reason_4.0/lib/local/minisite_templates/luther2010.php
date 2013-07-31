@@ -407,7 +407,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music')
 			{
 				echo '<aside class="news group">'."\n";
-				if (count($result) == 1 && strlen($title) < 24)   // need name to fit on one line
+				if (count($result) == 1 && strlen($title) < 25)   // need name to fit on one line
 				{	
 					echo '<header class="blue-stripe"><h1><span>' . $title .'</span></h1></header>'."\n";
 				}
