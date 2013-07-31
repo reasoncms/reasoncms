@@ -55,7 +55,7 @@ class reasonTinyMCEIntegration extends reasonEditorIntegrationBase
 		
 		/* these will need to change when the link plugin is available */
 		$linkplugin = ($this->reason_plugins_available($user_id)) ? 'link' : 'link';
-		$linktoolbar = ($this->reason_plugins_available($user_id)) ? 'link' : 'link';
+		$linktoolbar = ($this->reason_plugins_available($user_id)) ? 'reasonlink' : 'link';
 		$blockformats = ($config == 'notables_plus_pre' || $config == 'all')
 		              ? 'Paragraph=p;Header 1=h3;Header 2=h4;Pre=pre'
 		              : 'Paragraph=p;Header 1=h3;Header 2=h4';
@@ -68,7 +68,7 @@ class reasonTinyMCEIntegration extends reasonEditorIntegrationBase
 			$param['init_options']['reason_site_id'] = $site_id;
 			$param['init_options']['reason_http_base_path'] = REASON_HTTP_BASE_PATH;	
 		}
-		$param['init_options']['toolbar1'] = 'formatselect,|,bold,italic,|,hr,'.$cutcopypaste.'|,blockquote,|,numlist,bullist,|,indent,outdent,'.$tabletoolbar.'|,'.$imagetoolbar.',|,link,unlink,|,anchor';
+		$param['init_options']['toolbar1'] = 'formatselect,|,bold,italic,|,hr,'.$cutcopypaste.'|,blockquote,|,numlist,bullist,|,indent,outdent,'.$tabletoolbar.'|,'.$imagetoolbar.',|,'.$linktoolbar.',unlink,|,anchor';
 		$param['init_options']['plugins'] = 'anchor,link,paste';
 		if ($this->reason_plugins_available($user_id))
 		{
