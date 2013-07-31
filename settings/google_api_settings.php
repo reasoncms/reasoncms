@@ -90,7 +90,7 @@ if ( USE_GOOGLE_ANALYTICS )
 
     /*  The path to your private key file from your Google API Project
         See instruction 6 above         */
-    domain_define('GOOGLE_API_PRIVATE_KEY_FILE', '/var/reason/keys/google-analytics-privatekey.p12');
+    domain_define('GOOGLE_API_PRIVATE_KEY_FILE', REASON_INC.'lib/local/keys/google-analytics-privatekey.p12');
     
 
     
