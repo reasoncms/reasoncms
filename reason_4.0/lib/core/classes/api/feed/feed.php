@@ -61,6 +61,12 @@ class ReasonFeedAPI extends CarlUtilAPI
 				$model = new ReasonImageJSON();
 				$this->set_model($model);
 			}
+			elseif ($_GET['type'] === 'linkTypeList')
+			{
+				reason_include_once('classes/api/feed/models/link.php');
+				$model = new ReasonLinkTypeListJSON();
+				$this->set_model($model);
+			}
 			elseif ($_GET['type'] === 'siteList')
 			{
 				reason_include_once('classes/api/feed/models/link.php');

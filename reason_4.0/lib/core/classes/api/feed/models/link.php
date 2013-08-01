@@ -38,6 +38,51 @@ abstract class ReasonLinksJSON extends ReasonMVCModel
 }
 
 /**
+ * ReasonLinkTypeListJSON provides a list of what link feeds a particular site makes available.
+ *
+ * Right now we support just assets and pages. All sites provide a page feed. If the site owns or borrows
+ * assets then we provide the asset feed as well.
+ * 
+ * @author Nathan White
+ */
+class ReasonLinkTypeListJSON extends ReasonLinksJSON implements ReasonFeedInterface
+{
+	function configure()
+	{
+		if (!$this->config('site_id'))
+		{
+			if (isset($_GET['site_id'])) $this->config('site_id', intval($_GET['site_id']));
+		}
+	}
+	
+	function configured()
+	{
+		if ($site_id = $this->config('site_id'))
+		{
+			$site = new entity($site_id);
+			if (reason_is_entity($site, 'site')) return true;
+		}
+		return false;
+	}
+	
+	function get_json()
+	{
+		$site_id = $this->config('site_id');
+		$site = new entity($site_id);
+		$es = new entity_selector();
+		$es->add_type(id_of('asset'));
+		$es->limit_tables();
+		$es->limit_fields();
+		$feeds['pages'] = 'pageList';
+		if ($results = $es->run_one())
+		{
+			$feeds['assets'] = 'assetList';
+		}
+		return json_encode($feeds);
+	}
+}
+
+/**
  * ReasonSiteListJSON provides a list of Reason sites.
  *
  * Requires a site_id - checks "liveness" and uses these rules in making the list.
