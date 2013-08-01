@@ -249,8 +249,11 @@ ReasonImage.prototype.bindReasonUI = function() {
       if (target.value) {
         self.page = 1;
         self.result = self.findItemsWithText(target.value);
-        self.displayedItems = self.result;
-        self.displayImages();
+        if (self.result) {
+          self.displayedItems = self.result;
+          self.displayImages();
+        } else 
+          self.noResults();
       } else {
         self.page = 1;
         self.displayedItems = self.items;
@@ -374,8 +377,20 @@ ReasonImage.prototype.setImageSize = function (size) {
 ReasonImage.prototype.renderReasonImages = function () {
   this.fetchImages(1, function() {
     this.displayedItems = this.items;
-    this.displayImages();
+    if (this.items.length != 0)
+      this.displayImages();
+    else {
+      this.noImages();
+      this.switchToTab('URL');
+    }
   });
+};
+
+ReasonImage.prototype.noImages = function() {
+  this.UI.innerHTML = '<span class="noResult">No images are attached to this site.</span>';
+};
+ReasonImage.prototype.noResults = function() {
+  this.UI.imagesListBox.innerHTML = '<span class="noResult">No images were found with those search terms..</span>';
 };
 
 /**
@@ -1013,6 +1028,12 @@ tinymce.PluginManager.add('reasonintegration', function(editor, url) {
 		if (selectedElm.nodeName == "IMG") {
 			data.text = initialText = " ";
 		}
+
+    if (!data.text) {
+      tinymce.activeEditor.windowManager.alert({title: "Insert a link", text: "You must first select some text in order to insert a link."});
+      return;
+    }
+
 
     win = editor.windowManager.open({
       title: 'Create a link',

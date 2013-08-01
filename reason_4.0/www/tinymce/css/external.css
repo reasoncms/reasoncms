@@ -67,6 +67,12 @@ button:disabled,button:disabled:hover,button:disabled:focus,button[disabled=true
 	padding: 7px 0;
 }
 
+.noResult {
+  text-align: center;
+  display: block;
+  margin: 50px;
+}
+
 .reasonImage .pagination {
 	padding: 10px 0 0px 120px;
 }
