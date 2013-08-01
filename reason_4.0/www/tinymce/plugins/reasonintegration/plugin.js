@@ -1,4 +1,3 @@
-debug = false;
 /**
  * ReasonImage and ReasonLink plugins
  *
@@ -522,13 +521,25 @@ ReasonLink.prototype = new ReasonPlugin();
 ReasonLink.prototype.getControlReferences = function(controlSelectors, placeholderSelector) {
   var self = this;
 
-  this.window = this.getWindow(controlSelectors.tabPanel);
-  this.targetPanel = this.getControl(placeholderSelector);
-  this.hrefControls = [this.getControl(controlSelectors.href)];
-  this.emailControl = this.getControl(controlSelectors.email);
-  this.descriptionControls = tinymce.map(controlSelectors.description, function(item) {
-    return self.getControl(item);
-  });
+  if (!this.window) {
+    this.window = this.getWindow(controlSelectors.tabPanel);
+    this.targetPanel = this.getControl(placeholderSelector);
+    this.hrefControls = [this.getControl(controlSelectors.href)];
+    this.emailControl = this.getControl(controlSelectors.email);
+    this.descriptionControls = tinymce.map(controlSelectors.description, function(item) {
+      return self.getControl(item);
+    });
+  }
+
+  this.formControls = {
+    Anchors: this.getControl('anchors'),
+    Pages: this.getControl('pages'),
+    //Types: this.getControl('types'),
+    Sites: this.getControl('sites'),
+    Description: this.getControl('title_3')
+  };
+
+  this.descriptionControls[2] = this.getControl('title_3');
 };
 ReasonLink.prototype.jsonURL = function (params) {
   urlString = this._reason_http_base_path + 'displayers/generate_json.php?';
@@ -615,11 +626,10 @@ ReasonLink.prototype.parseItems = function (type, response) {
       break;
     case "siteList":
       result = JSON.parse(response);
-      this.setSites(result.sites);
+      this.setSites([{treeName: "(Select a site)", url: "0"}].concat(result.sites));
       break;
   };
 };
-var count = 0;
 ReasonLink.prototype.fetchItems = function(options, callback) {
 
 
@@ -629,7 +639,6 @@ ReasonLink.prototype.fetchItems = function(options, callback) {
     "url": url,
     "content_type": options.content_type || '',
     "success": function(response, xhr) {
-      count++;
       this.parseItems(options.type, response);
       callback.call(this);
       this.loaded(options.type);
@@ -676,12 +685,6 @@ ReasonLink.prototype.updateValues = function(items, selectedItem) {
 ReasonLink.prototype.bindReasonUI = function () {
   var self = this;
 
-  this.anchorsListBox = this.getControl('anchors');
-  this.pagesListBox = this.getControl('pages');
-  this.typesListBox = this.getControl('types');
-  this.sitesListBox = this.getControl('sites');
-  this.descriptionControls.push(this.getControl('title_3'));
-
   this.hrefControls[0].on('change', function() {
     self.setSelected({});
     self.updateForm();
@@ -704,11 +707,11 @@ ReasonLink.prototype.bindReasonUI = function () {
     self.setDesc(self.descriptionControls[2].value());
   });
 
-  this.anchorsListBox.on('select', function(e) {
+  this.formControls.Anchors.on('select', function(e) {
     self.setSelected('anchor', e.control.value());
     self.setHref(self.makeURL());
   });
-  this.pagesListBox.on('select', function(e) {
+  this.formControls.Pages.on('select', function(e) {
     if (e.control.value() == "0")
       return;
     self.setSelected('page', e.control.value());
@@ -719,7 +722,9 @@ ReasonLink.prototype.bindReasonUI = function () {
       self.updateForm();
     });
   });
-  this.sitesListBox.on('select', function(e) {
+  this.formControls.Sites.on('select', function(e) {
+    self.emailControl.value('');
+    self.setHref('');
     self.setSelected('site', e.control.value());
     self.fetchPages(e.control.value(), function() {
       self.setDisabled('pages', false);
@@ -747,6 +752,7 @@ ReasonLink.prototype.constructSites = function() {
     name: "sites",
     label: "Site",
     type: "listbox",
+    flex: 1,
     values: this.updateValues(sites, selected),
     disabled: !!this.getDisabled().sites
   };
@@ -760,6 +766,7 @@ ReasonLink.prototype.constructTypes = function() {
     name: "types",
     label: "Type",
     type: "listbox",
+    flex: 1,
     values: this.updateValues(types, selected),
     disabled: !!this.getDisabled().types
   };
@@ -773,6 +780,7 @@ ReasonLink.prototype.constructPages = function() {
     name: "pages",
     label: "Page",
     type: "listbox",
+    flex: 1,
     values: this.updateValues(pages, selected),
     disabled: !!this.getDisabled().pages
   };
@@ -786,6 +794,7 @@ ReasonLink.prototype.constructAnchors = function() {
     name: "anchors",
     label: "Anchor",
     type: "listbox",
+    flex: 1,
     values: this.updateValues(anchors),
     disabled: !!this.getDisabled().anchors
   };
@@ -798,6 +807,7 @@ ReasonLink.prototype.constructDescription = function() {
     name: 'title_3',
     type: 'textbox',
     size: 40,
+    flex: 1,
     label: 'Description',
     value: currentDesc
   }
@@ -815,6 +825,7 @@ ReasonLink.prototype.constructFormObj = function() {
       this.constructDescription()
     ],
   };
+  window.formObj = formObj;
   return formObj;
 }
 
@@ -830,15 +841,33 @@ ReasonLink.prototype.addFormObj = function (obj) {
   var newForm = this.targetPanel.append(obj).items()[0];
   this.targetPanel.renderTo().reflow().postRender();
   this.setFormControl(newForm);
+  this.getControlReferences();
+  this.saveLayoutRect();
   return newForm;
 };
 
+ReasonLink.prototype.saveLayoutRect = function() {
+  this.layoutRects = tinymce.map(this.formControls, function(v) {
+    return [v.layoutRect(), v.parent().layoutRect()];
+  });
+}
+
+
 ReasonLink.prototype.updateForm = function() {
-  var newForm;
-  this.targetPanel.find('form')[0].remove();
-  this.descriptionControls.pop();
-  console.log(this.getFormControl());
-  newForm = this.addFormObj(this.constructFormObj());
+  var i = 0;
+  tinymce.each(this.formControls, function(v, k) {
+    var methodName = "construct" + k;
+    v.before(tinymce.ui.Factory.create(this[methodName]())).remove();
+  }, this);
+  this.getControlReferences()
+  tinymce.each(this.formControls, function(v) {
+    v.parent().layoutRect(this.layoutRects[i][1]);
+    v.layoutRect(this.layoutRects[i][0]);
+    v.parent().reflow();
+    v.reflow();
+    i++;
+  }, this);
+
   this.bindReasonUI();
 };
 
