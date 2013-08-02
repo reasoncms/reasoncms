@@ -137,7 +137,7 @@ function cleanup_description( $description, $title ){
 
 function get_xml(){
     $file = '/Users/smitst01/Sites/reason.local/PublicBlogPostsShort.xml';
-    $file = $_SERVER['HTTP_HOST'].'/LISBlogexport.xml';
+    $file = '/var/reason/htdoc/LISBlogexport.xml';
 
     $xml = file_get_contents($file);
 
