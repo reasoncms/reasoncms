@@ -1,7 +1,7 @@
 <?
 include_once('reason_header.php');
 //include_once('/usr/local/webapps/reason/reason_package_local/disco/plasmature/types/datetime.php');
-reason_include_once('minisite_templates/modules/form/views/thor/default.php');
+reason_include_once('minisite_templates/modules/form/views/thor/luther_default.php');
 include_once(DISCO_INC.'disco.php');
 include_once(DISCO_INC.'plasmature/plasmature.php');
 
