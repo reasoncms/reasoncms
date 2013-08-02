@@ -131,13 +131,13 @@ function cleanup_description( $description, $title ){
     if (stripos($title, 'User Services Weekly') !== false)
         $desc = '';
     $desc = strip_tags($desc);
-    
+
     return $desc;
 }
 
 function get_xml(){
     $file = '/Users/smitst01/Sites/reason.local/PublicBlogPostsShort.xml';
-    $file = '/Users/smitst01/Sites/reason.local/LISBlogexport.xml';
+    $file = $_SERVER['HTTP_HOST'].'/LISBlogexport.xml';
 
     $xml = file_get_contents($file);
 
