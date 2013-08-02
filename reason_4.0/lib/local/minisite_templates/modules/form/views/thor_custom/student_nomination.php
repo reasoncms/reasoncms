@@ -7,7 +7,7 @@ include_once(DISCO_INC.'plasmature/plasmature.php');
 
 
 //include_once('disco/boxes/boxes.php');
-$GLOBALS[ '_form_view_class_names' ][ basename( __FILE__, '.php') ] = 'IndividualVisitForm';
+$GLOBALS[ '_form_view_class_names' ][ basename( __FILE__, '.php') ] = 'StudentNominationForm';
 
 /**
  * 
@@ -15,7 +15,7 @@ $GLOBALS[ '_form_view_class_names' ][ basename( __FILE__, '.php') ] = 'Individua
  */
 
 
-class IndividualVisitForm extends DefaultThorForm
+class StudentNominationForm extends LutherDefaultThorForm
 {
 	function on_every_time()
 	{	
@@ -32,12 +32,14 @@ class IndividualVisitForm extends DefaultThorForm
 		// If the date is before August 2, let submitters choose the current year+1.
 		// If the date is before August 2, let submitters choose the current year+1.
 		$aug1 = 212; // the numeric representation (yday) of August 1st
+		$sep1 = 244; // changing to sep1 for 2013 https://helpdesk.luther.edu/adminui/ticket.php?ID=25619
 		
 
 		if (date('L') > 0){ // if leap year increment August 1
 			$aug1 = 213;
+			$sep1 = 245;
 		}
-		if ($today['yday'] < $aug1) {
+		if ($today['yday'] < $sep1) {
 			$this->change_element_type($grad_year, 'radio_inline', array(
 				'options' => array(
 					($today['year']+1) => ($today['year']+1), 
