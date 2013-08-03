@@ -127,7 +127,7 @@ ReasonPlugin.prototype.updatePagination = function() {
 ReasonPlugin.prototype.pageCounter = function() {
   var numPages = Math.ceil(this.displayedItems.length/this.pageSize);
   return "Pg. " + this.page + "/" + numPages;
-}
+};
 
 ReasonPlugin.prototype.makePageSlice = function(page_num) {
   var begin, end;
@@ -135,12 +135,12 @@ ReasonPlugin.prototype.makePageSlice = function(page_num) {
   begin = ((page_num - 1) * this.pageSize);
   end = begin + this.pageSize;
   return this.displayedItems.slice(begin, end);
-}
+};
 
 ReasonPlugin.prototype.loaded = function() {
   var self = this;
   tinymce.each(this.whenLoadedFuncs, function(v) {v.call(self);});
-}
+};
 ReasonPlugin.prototype.whenLoaded = function(func_to_add) {
   this.whenLoadedFuncs.push(func_to_add);
 };
@@ -177,7 +177,7 @@ ReasonImage.prototype.getControlReferences = function(controlSelectors, placehol
     return self.getControl(item);
   });
   this.sizeControl = this.getControl(controlSelectors.size);
-}
+};
 
 /**
  * Prepends the reason controls to the tinyMCE panel specified by
@@ -327,7 +327,7 @@ ReasonImage.prototype.selectImage = function (image_item) {
       this.switchToTab("reason");
     } else
       return false;
-  };
+  }
 
   this.highlightImage(image_item);
 
@@ -564,7 +564,7 @@ ReasonLink.prototype.jsonURL = function (params) {
       urlString += i + "=" + params[i] + "&";
   }
   return urlString;
-}
+};
 
 ReasonLink.prototype.getFormControl = function() { return this._formControl; };
 ReasonLink.prototype.setFormControl = function(formctl) { this._formControl = formctl; };
@@ -595,7 +595,7 @@ ReasonLink.prototype.setDisabled = function(type, value) {
     this._disabled = type;
   else
     this._disabled[type] = value;
-}
+};
 
 ReasonLink.prototype.fetchSites = function(callback) {
   this.fetchItems({type: "siteList", site_id: this._siteId}, callback);
@@ -623,7 +623,7 @@ ReasonLink.prototype.scrapeForAnchors = function(response) {
     var curA = possibleAnchors[i];
     if ( !curA.href && (curA.id || curA.name) )
       results.push({name: curA.id || curA.name, url: '#' + (curA.id || curA.name)});
-  };
+  }
 
   return results;
 };
@@ -643,7 +643,7 @@ ReasonLink.prototype.parseItems = function (type, response) {
       result = JSON.parse(response);
       this.setSites([{treeName: "(Select a site)", url: "0"}].concat(result.sites));
       break;
-  };
+  }
 };
 ReasonLink.prototype.fetchItems = function(options, callback) {
 
@@ -825,7 +825,7 @@ ReasonLink.prototype.constructDescription = function() {
     flex: 1,
     label: 'Description',
     value: currentDesc
-  }
+  };
 };
 
 ReasonLink.prototype.constructFormObj = function() {
@@ -838,11 +838,11 @@ ReasonLink.prototype.constructFormObj = function() {
       this.constructPages(),
       this.constructAnchors(),
       this.constructDescription()
-    ],
+    ]
   };
   window.formObj = formObj;
   return formObj;
-}
+};
 
 ReasonLink.prototype.insertReasonUI = function() {
   var self = this;
@@ -850,7 +850,7 @@ ReasonLink.prototype.insertReasonUI = function() {
     self.addFormObj(self.constructFormObj());
     self.bindReasonUI();
   });
-}
+};
 
 ReasonLink.prototype.addFormObj = function (obj) {
   var newForm = this.targetPanel.append(obj).items()[0];
@@ -865,7 +865,7 @@ ReasonLink.prototype.saveLayoutRect = function() {
   this.layoutRects = tinymce.map(this.formControls, function(v) {
     return [v.layoutRect(), v.parent().layoutRect()];
   });
-}
+};
 
 
 ReasonLink.prototype.updateForm = function() {
@@ -933,7 +933,7 @@ tinymce.PluginManager.add('reasonintegration', function(editor, url) {
               {text: 'Left', value: 'left'},
               {text: 'Right', value: 'right'}
             ]}
-          ],
+          ]
         },
 
         // Add from the Web
@@ -1047,7 +1047,7 @@ tinymce.PluginManager.add('reasonintegration', function(editor, url) {
           type: "form",
           minWidth: "700",
           minHeight: "375",
-          items: [],
+          items: []
         },
 
         // Add from the Web
@@ -1141,7 +1141,7 @@ tinymce.PluginManager.add('reasonintegration', function(editor, url) {
 		icon: 'link',
 		tooltip: 'Insert link',
 		onclick: showLinkDialog,
-		stateSelector: 'a[href]',
+		stateSelector: 'a[href]'
 	});
 
 
