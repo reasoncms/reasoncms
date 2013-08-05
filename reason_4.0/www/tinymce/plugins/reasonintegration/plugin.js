@@ -834,8 +834,8 @@ ReasonLink.prototype.bindReasonUI = function () {
 ReasonLink.prototype.initControlVals = function() {
   this.setDisabled('pages', true);
   this.setDisabled('anchors', true);
-  this.setPages([{name: "(Select a site)", url: "0"}]);
-  this.setAnchors([{name: "(Select a page)", url: "0"}]);
+  this.setPages([{name: "(Select a page)", url: "0"}]);
+  this.setAnchors([{name: "(No anchor)", url: "0"}]);
 };
 
 ReasonLink.prototype.makeURL = function () {
