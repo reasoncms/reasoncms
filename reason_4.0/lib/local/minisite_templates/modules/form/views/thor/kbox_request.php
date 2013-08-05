@@ -33,7 +33,7 @@ class KboxRequestsForm extends LutherDefaultThorForm
 
         // $mail = new Email('kbox@help.luther.edu', $username, $username, $this->model->get_form_name(), $body['txt_body'], '');
         $kbox_labels = $this->get_kbox_labels();
-        $mail = new Email('kbox@help.luther.edu', $kbox_labels['@submitter'], $kbox_labels['@submitter'], $this->model->get_form_name(), $body['txt_body'], '');
+        $mail = new Email($this->model->get_email_of_recipient(), 'helpdesk@luther.edu', 'helpdesk@luther.edu', $this->model->get_form_name(), $body['txt_body'], '');
         $mail->send();
 
         parent::process();
