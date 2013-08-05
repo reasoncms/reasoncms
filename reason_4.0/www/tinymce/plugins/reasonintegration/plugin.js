@@ -16,7 +16,6 @@
  * functions.
  *
  * Executes the correct plugin for the given filebrowser field type.
- * TODO: json_generator should take the unique name of the type, not the type ID.
  * TODO: We need to account for having multiple editors per page. I think that maybe
  *       we should cache a reference to the current editor's plugin and check if activeEditor
  *       is the same as the last time ReasonPlugin was called?
@@ -48,7 +47,7 @@ ReasonPlugin = function () {
  */
 ReasonPlugin.prototype.jsonURL = function (offset, chunk_size, type) {
   var site_id = tinymce.activeEditor.settings.reason_site_id,
-    reason_http_base_path = tinymce.activeEditor.settings.reason_http_base_path;
+      reason_http_base_path = tinymce.activeEditor.settings.reason_http_base_path;
 
   return reason_http_base_path + 'displayers/generate_json.php?site_id=' + site_id + '&type=' + type + '&num=' + chunk_size + '&offset=' + offset + '&';
 };
@@ -62,6 +61,10 @@ ReasonPlugin.prototype.getControl = function (selector) {
   return this.window.find('#' + selector)[0];
 };
 
+/**
+ * Gets a reference to the plugin's lightbox window.
+ * @param {String} windowName the 'name' value of the window.
+ **/
 ReasonPlugin.prototype.getWindow = function(windowName) {
   var windows;
   windows = tinymce.activeEditor.windowManager.windows;
@@ -83,7 +86,14 @@ ReasonPlugin.prototype.getPanel = function (control) {
   return control.parent().parent();
 };
 
-// From SO: http://stackoverflow.com/questions/1909441/jquery-keyup-delay
+ /**
+ * Performs some function after a short delay, but resets timer on each
+ * successive call, rather than queuing calls. Used to buffer search-as-
+ * you-type.
+ *
+ * From SO: http://stackoverflow.com/questions/1909441/jquery-keyup-delay
+ **/
+
 ReasonPlugin.prototype.delay = (function(){
   var timer = 0;
   return function(callback, ms){
@@ -113,7 +123,7 @@ ReasonPlugin.prototype.findItemsWithText = function (q) {
 };
 
 /**
- * Handles enabling/disabling of "Next Page"/"Previous Page" buttons.
+ * Enables/disables "Next Page"/"Previous Page" buttons.
  * Should be called after every new chunk is loaded, page is displayed,
  * or search result is calculated.
  **/
@@ -124,11 +134,19 @@ ReasonPlugin.prototype.updatePagination = function() {
   this.UI.getElementsByClassName("pageCount")[0].innerHTML = this.pageCounter();
 };
 
+/**
+ * Returns a string that represents the page number over total pages.
+ **/
 ReasonPlugin.prototype.pageCounter = function() {
   var numPages = Math.ceil(this.displayedItems.length/this.pageSize);
   return "Pg. " + this.page + "/" + numPages;
 };
 
+/**
+ * A page is a slice of the displayedItems array. This function returns
+ * a slice of the array given a page number.
+ * @param {Number} page_num 1-indexed page number.
+ **/
 ReasonPlugin.prototype.makePageSlice = function(page_num) {
   var begin, end;
 
@@ -137,17 +155,33 @@ ReasonPlugin.prototype.makePageSlice = function(page_num) {
   return this.displayedItems.slice(begin, end);
 };
 
+/**
+ * This function is called when all items have been loaded and no more
+ * data is required. It in turn calls all functions which have been
+ * queued using ReasonPlugin.whenLoaded();
+ **/
 ReasonPlugin.prototype.loaded = function() {
   var self = this;
   tinymce.each(this.whenLoadedFuncs, function(v) {v.call(self);});
 };
-ReasonPlugin.prototype.whenLoaded = function(func_to_add) {
-  this.whenLoadedFuncs.push(func_to_add);
+
+/**
+ * Calls func when all JSON has finished loading.
+ * @param {Function} func A function to add to the callbacks array.
+ **/
+ReasonPlugin.prototype.whenLoaded = function(func) {
+  this.whenLoadedFuncs.push(func);
 };
 
 /**
  * Dispatch function. Gets a reference to the panel, and does everything we
  * need to do in order to get the plugin up and running.
+ *
+ * @param {Object} controlSelectors Map of certain control types to names
+ *        been assigned. Should contain names for tabPanel, src, size,
+ *        alt (array of names) and align (array of names).
+ * @param {Object} placeholderSelector name of the window that will contain
+ *        the plugin controls.
  */
 ReasonImage = function(controlSelectors, placeholderSelector) {
   this.chunkSize = 1000;
@@ -164,19 +198,24 @@ ReasonImage = function(controlSelectors, placeholderSelector) {
 ReasonImage.prototype = new ReasonPlugin();
 
 
+/**
+ * Converts names of controls to references to their tinymce data structures.
+ * Prevents us from typing this.getControl(string) a lot.
+ * @see ReasonImage() for information on parameters.
+ **/
 ReasonImage.prototype.getControlReferences = function(controlSelectors, placeholderSelector) {
   var self = this;
 
   this.window = this.getWindow(controlSelectors.tabPanel);
   this.targetPanel = this.getControl(placeholderSelector);
   this.srcControl = this.getControl(controlSelectors.src);
+  this.sizeControl = this.getControl(controlSelectors.size);
   this.altControls = tinymce.map(controlSelectors.alt, function(item) {
     return self.getControl(item);
   });
   this.alignControls = tinymce.map(controlSelectors.align, function(item) {
     return self.getControl(item);
   });
-  this.sizeControl = this.getControl(controlSelectors.size);
 };
 
 /**
@@ -252,7 +291,7 @@ ReasonImage.prototype.bindReasonUI = function() {
         if (self.result) {
           self.displayedItems = self.result;
           self.displayImages();
-        } else 
+        } else
           self.noResults();
       } else {
         self.page = 1;
@@ -280,6 +319,15 @@ ReasonImage.prototype.setAlign = function(align) {
 ReasonImage.prototype.setSrc = function(src) {
   this.srcControl.value(src);
 };
+
+/**
+ * Figures out image size from filename, so we can preserve settings for a
+ * selected image across plugin instances. Does not check for correct
+ * reason_http_base_path etc. -- that happens in ReasonImage.selectImage().
+ *
+ * @param {String} url url of the image in question, with or without hostname
+ *        etc.
+ **/
 ReasonImage.prototype.deduceSize = function(url) {
     if (url.search("_tn.") != -1)
       return "thumbnail";
@@ -287,29 +335,44 @@ ReasonImage.prototype.deduceSize = function(url) {
       return "full";
 };
 
-ReasonImage.prototype.findPageWith = function(image_url) {
+/**
+ * Looks through all loaded items to find the image with the specified url.
+ * Used to select an already-inserted image.
+ * @param {String} imageUrl the url of the image that you'd like to find. Can
+ *        be of either thumbnail or full-size image. 
+ **/
+ReasonImage.prototype.findPageWith = function(imageUrl) {
   for (var i = 0; i < this.items.length; i++) {
-    if (this.items[i].URLs.thumbnail == image_url || this.items[i].URLs.full == image_url) {
+    if (this.items[i].URLs.thumbnail == imageUrl || this.items[i].URLs.full == imageUrl) {
       return Math.ceil((i+1) / this.pageSize);
     }
   }
   return false;
 };
 
-ReasonImage.prototype.displayPageWith = function (image_url) {
-  var thePage = this.findPageWith(image_url);
+/**
+ * Renders the page of images that includes the image of given url.
+ * @param {String} imageUrl the URL of the image to find.
+ **/
+ReasonImage.prototype.displayPageWith = function (imageUrl) {
+  var thePage = this.findPageWith(imageUrl);
   if (!thePage)
     return false;
   else {
-    this.displayImages(this.makePageSlice(this.findPageWith(image_url)));
+    this.displayImages(this.makePageSlice(this.findPageWith(imageUrl)));
     return true;
   }
 };
 
-ReasonImage.prototype.findImageItemOnPage = function (image_item) {
+/**
+ * Finds the DOM node which contains an image of the given URL, so that we can
+ * select it.
+ * @param {String} imageUrl the url of the image to select.
+ **/
+ReasonImage.prototype.findImageItemOnPage = function (imageUrl) {
   var images = this.targetPanel.getEl().getElementsByTagName("IMG");
   for (var i in images) {
-    if (images[i].src == image_item || images[i].src.replace("_tn", "") == image_item) {
+    if (images[i].src == imageUrl || images[i].src.replace("_tn", "") == imageUrl) {
       return images[i].parentNode;
     }
   }
@@ -340,6 +403,11 @@ ReasonImage.prototype.selectImage = function (image_item) {
   return true;
 };
 
+/**
+ * Adds class "selectedImage" to the given DOM node, removes it from all other
+ * nodes. Makes it look highlighted.
+ * @param {HTMLElement} image_item DOM node to add class to
+ **/
 ReasonImage.prototype.highlightImage = function(image_item) {
   tinymce.each(this.window.getEl().getElementsByClassName("selectedImage"), function(v) {v.className = v.className.replace("selectedImage",""); });
   image_item.className += " selectedImage";
@@ -556,6 +624,10 @@ ReasonLink.prototype.getControlReferences = function(controlSelectors, placehold
 
   this.descriptionControls[2] = this.getControl('title_3');
 };
+/**
+ * Turns an object of params to a query string. Very facile implementation.
+ * @param {Object} params mapping of query variable names and values.
+ **/
 ReasonLink.prototype.jsonURL = function (params) {
   urlString = this._reason_http_base_path + 'displayers/generate_json.php?';
 
@@ -610,6 +682,12 @@ ReasonLink.prototype.fetchAnchors = function(siteId, pageId, callback) {
   this.fetchItems({type: "anchorList", site_id: siteId, content_type: 'application/xml', url: pageId}, callback);
 };
 
+/**
+ * Fetches all anchors without hrefs in a given document (the better to link
+ * to, my dear!). Uses a div (detached from DOM). If things got really slow
+ * we could recycle this div, but that's premature at this point.
+ * @param {String} response html of document from XHR.
+ **/
 ReasonLink.prototype.scrapeForAnchors = function(response) {
   var doc, divContent, possibleAnchors, results, docFrag;
 
@@ -628,6 +706,11 @@ ReasonLink.prototype.scrapeForAnchors = function(response) {
   return results;
 };
 
+/**
+ * Adds items of `type` to the corresponding storage in the plugin object.
+ *
+ * @param {String} response the result of an XHR.
+ **/
 ReasonLink.prototype.parseItems = function (type, response) {
   var result;
   switch (type) {
