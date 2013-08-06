@@ -918,16 +918,30 @@
 	/**
 	 * REASON_SIZED_IMAGE_DIR
 	 *
-	 * Full path to the directory where Reason's sized image class (sized_image.php) should store sized images.
+	 * Full file system path to the directory where Reason's sized image class (sized_image.php) should store sized images.
 	 */
-	define('REASON_SIZED_IMAGE_DIR', REASON_INC.'www/sized_images/');
+	define('REASON_SIZED_IMAGE_DIR', REASON_DATA_DIR.'sized_images/');
 	
 	/**
 	 * REASON_SIZED_IMAGE_DIR_WEB_PATH
 	 *
-	 * Full path to the directory where Reason's sized image class (sized_image.php) should store sized images.
+	 * Web path to the directory where Reason's sized image are accessible.
 	 */
 	define('REASON_SIZED_IMAGE_DIR_WEB_PATH', REASON_HTTP_BASE_PATH.'sized_images/');
+
+	/**
+	 * REASON_SIZED_IMAGE_CUSTOM_DIR
+	 *
+	 * Full file system path to the directory where Reason's should store custom sized images.
+	 */
+	define('REASON_SIZED_IMAGE_CUSTOM_DIR', REASON_DATA_DIR.'sized_images_custom/');
+	
+	/**
+	 * REASON_SIZED_IMAGE_CUSTOM_DIR_WEB_PATH
+	 *
+	 * Web path to the directory where Reason's custom sized image are accessible.
+	 */
+	define('REASON_SIZED_IMAGE_CUSTOM_DIR_WEB_PATH', REASON_HTTP_BASE_PATH.'sized_images_custom/');
 	
 	/**
 	 * REASON_ENTITY_LOCKS_ENABLED

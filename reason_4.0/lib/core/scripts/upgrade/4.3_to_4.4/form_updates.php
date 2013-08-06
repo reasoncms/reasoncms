@@ -40,7 +40,7 @@ class ReasonUpgrader_44_FormUpdates implements reasonUpgraderInterface
 	 */
 	public function description()
 	{
-		$str  = '<p>This script adds new fields (tableless, submission_limit, open_date, and close_date) to the form type to support new form features in Reason 4.4.</p>.';
+		$str  = '<p>This script adds new fields (tableless, submission_limit, open_date, and close_date) to the form type to support new form features in Reason 4.4.</p>';
 		return $str;
 	}
 
