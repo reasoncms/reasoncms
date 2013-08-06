@@ -635,7 +635,7 @@ function check_jquery_accessible_over_http()
 			$symlink_loc = str_replace("//", "/", WEB_PATH . rtrim(JQUERY_HTTP_PATH, "/"));
 			if (is_writable(dirname($symlink_loc))) symlink(JQUERY_INC, $symlink_loc);
 		}
-		$accessible = check_accessible_over_http(JQUERY_URL, 'John Resig');
+		$accessible = check_accessible_over_http(JQUERY_URL, 'jQuery Foundation');
 		$fixed_str = ($accessible) ? ' was fixed using auto mode and' : ' could not be fixed using auto mode and';
 	}
 	if ($accessible) return msg('<span class="success">jQuery'.$fixed_str.' is accessible over http</span> - check passed', true);
