@@ -945,7 +945,7 @@ function luther2010_global_navigation()
 	echo '<ul>'."\n";
 	echo '<li class="admissions"><a href="/admissions">Admissions</a></li>'."\n";
 	echo '<li class="academics"><a href="/academics">Academics</a></li>'."\n";
-	echo '<li class="library-Technology"><a href="http://lis.luther.edu">Library & Technology</a></li>'."\n";
+	echo '<li class="library-Technology"><a href="/lis">Library & Technology</a></li>'."\n";
 	echo '<li class="student-life"><a href="/studentlife">Student Life</a></li>'."\n";
 	echo '<li class="athletics"><a href="/sports">Athletics</a></li>'."\n";
 	echo '<li class="music"><a href="/music">Music</a></li>'."\n";
@@ -1006,7 +1006,7 @@ function admissions_main_navigation()
 	echo '<li><a href="/academics/dean/honors/">Honors Program</a></li>'."\n";
 	//echo '<li><a href="/admissions/academics/studyabroad/">Study Abroad</a></li>'."\n";
 	echo '<li><a href="/global_learning/">Center for Global Learning</a></li>'."\n";
-	echo '<li><a href="http://lis.luther.edu/">Library & Information Services</a></li>'."\n";
+	echo '<li><a href="/lis">Library & Information Services</a></li>'."\n";
 	echo '<li><a href="/sasc/">Student Academic Support Center</a></li>'."\n";
 	echo '<li><a href="/sss/">Student Support Services</a></li>'."\n";
 	echo '<li><a href="/admissions/academics/undergrad/">Undergraduate Research</a></li>'."\n";
