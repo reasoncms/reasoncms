@@ -273,6 +273,9 @@
 					$this->update_site_url_history();
 				}
 			}
+			reason_include_once('classes/object_cache.php');
+			$cache = new ReasonObjectCache($this->get_value('id') . '_navigation_cache');
+			$cache->clear();
 		}
 		
 		function create_base_dir()
