@@ -125,7 +125,7 @@ class ReasonSiteListJSON extends ReasonLinksJSON implements ReasonFeedInterface
 		$es->add_type(id_of('site'));
 		$es->limit_tables('site');
 		$es->limit_fields('id', 'name');
-		$es->add_relation('custom_url_handler = "" OR custom_url_handler IS NULL');
+		$es->add_relation('( (custom_url_handler = "") OR (custom_url_handler IS NULL) )');
 		$es->set_order('name ASC');
 		if ($restrict_to_live) $es->add_relation('site_state = "Live"');
 		if ($results = $es->run_one())
