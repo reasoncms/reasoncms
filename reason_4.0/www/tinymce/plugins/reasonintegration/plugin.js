@@ -864,7 +864,7 @@ ReasonLink.prototype.initControlVals = function() {
   this.setDisabled('pages', true);
   this.setDisabled('anchors', true);
   this.setPages([{name: "(Select a page)", url: "0"}]);
-  this.setAnchors([{name: "(No anchor)", url: "0"}]);
+  this.setAnchors([{name: "(No anchor)", url: "0"}]);  
 };
 
 ReasonLink.prototype.makeURL = function () {
@@ -1156,7 +1156,14 @@ tinymce.PluginManager.add('reasonintegration', function(editor, url) {
 		data.href = anchorElm ? dom.getAttrib(anchorElm, 'href') : '';
 		data.target = anchorElm ? dom.getAttrib(anchorElm, 'target') : '';
 		data.rel = anchorElm ? dom.getAttrib(anchorElm, 'rel') : '';
-
+		
+		if ((/^mailto:/).test(data.href))
+		{
+			data.title = anchorElm ? dom.getAttrib(anchorElm, 'title') : '';
+			data.email = data.href.slice(7);
+		}
+		data.title_2 = anchorElm ? dom.getAttrib(anchorElm, 'title') : '';
+		
 		if (selectedElm.nodeName == "IMG") {
 			data.text = initialText = " ";
 		}
@@ -1184,23 +1191,6 @@ tinymce.PluginManager.add('reasonintegration', function(editor, url) {
 
         // Add from the Web
         {
-          title: "an email address",
-          type: "form",
-          items: [{
-            name: 'email',
-            type: 'textbox',
-            filetype: 'image',
-            size: 40,
-            autofocus: true,
-            label: 'Email address'
-          }, {
-            name: 'title',
-            type: 'textbox',
-            size: 40,
-            label: 'Description'
-          }]
-        },
-        {
           title: "a web address",
           type: "form",
           items: [{
@@ -1216,8 +1206,24 @@ tinymce.PluginManager.add('reasonintegration', function(editor, url) {
             size: 40,
             label: 'Description'
           }]
+        },
+        {
+          title: "an email address",
+          type: "form",
+          items: [{
+            name: 'email',
+            type: 'textbox',
+            filetype: 'image',
+            size: 40,
+            autofocus: true,
+            label: 'Email address'
+          }, {
+            name: 'title',
+            type: 'textbox',
+            size: 40,
+            label: 'Description'
+          }]
         }
-
       ],
       bodyType: 'tabpanel',
       onPostRender: function(e) {
@@ -1232,7 +1238,6 @@ tinymce.PluginManager.add('reasonintegration', function(editor, url) {
       },
       onSubmit: function(e) {
        var data = win.toJSON(), href = data.href, title = data.title;
-
 				function insertLink() {
 						editor.execCommand('mceInsertLink', false, {
 							href: href,
@@ -1250,12 +1255,7 @@ tinymce.PluginManager.add('reasonintegration', function(editor, url) {
 				insertLink();
       }
     });
-
-
   }
-
-
-
 
 
 /***************************************************
