@@ -364,7 +364,7 @@ class tiny_mceType extends textareaType
 		static $loaded_an_instance;
 		if (!isset($loaded_an_instance))
 		{
-			$js = '<script language="javascript" type="text/javascript" src="'.TINYMCE_HTTP_PATH.'tinymce.js"></script>'."\n";
+			$js = '<script language="javascript" type="text/javascript" src="'.TINYMCE_HTTP_PATH.'tinymce.min.js"></script>'."\n";
 			$external_js = $this->get_class_var('external_js');
 			if (!empty($external_js))
 			{
