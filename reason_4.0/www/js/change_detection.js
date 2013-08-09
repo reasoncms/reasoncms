@@ -23,7 +23,7 @@ function change_detection_serialize_form() {
         // loki
         serialized_data += $(this).find("iframe").contents().find("body.contentMain").html();
     });
-    $("td.mceIframeContainer").each(function(){
+    $("div.mce-edit-area").each(function(){
         // tincy mce
         serialized_data += $(this).find("iframe").contents().find("body").html();
     });

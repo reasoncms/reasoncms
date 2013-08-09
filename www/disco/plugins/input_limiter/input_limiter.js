@@ -142,17 +142,19 @@ $(document).ready(function()
 
 	//bind count_and_update to the keyup event of appropriate tinyMCE editors
 	if (typeof tinymce !== 'undefined') {
-		tinymce.onAddEditor.add(function(mgr,ed) {
-			ed.onInit.add(function (ed) {
-				if ($(ed.getContainer()).siblings('div.inputLimitNote').size() > 0) {
-					ed.onKeyUp.add(function(ed, e) {
-						var elementToUpdate = $(ed.getContainer());
-						var content = ed.getContent();
+		tinymce.on('addEditor', function(obj) {
+			obj.editor.on('init', function(ed) {
+				editor = ed.target;
+				container = $(editor.getContainer());
+				if (container.siblings('div.inputLimitNote').size() > 0) {
+					editor.on('KeyUp', function(e) {
+						var elementToUpdate = container;
+						var content = editor.getContent();
 						if(typeof(t_out) != 'undefined')
 						{
 							clearTimeout(t_out);
 						}
-						t_out = setTimeout(function(){ count_and_update(elementToUpdate, ed.getContent()) }, 700);
+						t_out = setTimeout(function(){ count_and_update(elementToUpdate, editor.getContent()) }, 700);
 					});
 				}
 			});

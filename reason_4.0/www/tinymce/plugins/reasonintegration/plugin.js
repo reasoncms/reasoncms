@@ -2,8 +2,15 @@
  * ReasonImage and ReasonLink plugins
  *
  * These plugins integrate tinyMCE into the Reason CMS.
- * ReasonImage allows a user to insert an image that belongs
- * to a Reason Site
+ *
+ * ReasonImage allows a user to insert an image that belongs to a Reason Site.
+ *
+ * ReasonLink allow a user to link to pages on Reason sites.
+ *
+ * @todo allow links to additional types.
+ *
+ * @author Andrew Bacon
+ * @author Nathan White - Maintainer / Tweaker
  */
 
 /*global tinymce:true */
@@ -184,7 +191,7 @@ ReasonPlugin.prototype.whenLoaded = function(func) {
  *        the plugin controls.
  */
 ReasonImage = function(controlSelectors, placeholderSelector) {
-  this.chunkSize = 1000;
+  this.chunkSize = 5000;
   this.pageSize = 6;
   this.page = 1;
   this.type = "image";
@@ -227,10 +234,8 @@ ReasonImage.prototype.insertReasonUI = function() {
   this.UI = this.targetPanel.getEl();
   holderDiv = document.createElement("div");
   var search = '<div style="margin-left: 20px; margin-top: 20px; width: 660px; height: 30px;" class="mce-container-body mce-abs-layout"><div id="mce_51-absend" class="mce-abs-end"></div><label style="line-height: 18px; left: 0px; top: 6px; width: 101px; height: 18px;" id="mce_52" class="mce-widget mce-label mce-first mce-abs-layout-item">Search</label><input style="left: 101px; top: 0px; width: 549px; height: 28px;" id="searchyThing" class="reasonImageSearch mce-textbox mce-last mce-abs-layout-item" value="" hidefocus="true" size="40"></div>';
-  holderDiv.innerHTML = '<div class="reasonImage">' + search + '<div class="pagination"><span class="pageCount">Pg. 1/10</span><div class="mce-btn mce-widget"><button class="prevImagePage" type="button">Previous</button></div><div class="mce-btn mce-widget"><button class="nextImagePage">Next</button></div></div><div class="items_chunk"> </div></div>';
-
+  holderDiv.innerHTML = '<div class="reasonImage">' + search + '<div class="pagination"><span class="pageCount">Pg. 1/10</span><div class="mce-btn mce-widget"><button class="prevImagePage" type="button">Previous</button></div><div class="mce-btn mce-widget"><button class="nextImagePage">Next</button></div></div><div class="items_chunk"></div></div>';
   this.UI.insertBefore(holderDiv.firstChild, this.UI.firstChild);
-
 };
 
 /**
@@ -244,7 +249,7 @@ ReasonImage.prototype.bindReasonUI = function() {
   this.prevButton = this.UI.getElementsByClassName('prevImagePage')[0];
   this.nextButton = this.UI.getElementsByClassName('nextImagePage')[0];
   this.searchBox = this.UI.getElementsByClassName('reasonImageSearch')[0];
-
+  
   // Maybe I should move these bindings elsewhere for better coherence?
   tinymce.DOM.bind(this.imagesListBox, 'click', function(e) {
     var target = e.target || window.event.srcElement;
@@ -443,6 +448,8 @@ ReasonImage.prototype.setImageSize = function (size) {
 };
 
 ReasonImage.prototype.renderReasonImages = function () {
+  throbber = new tinymce.ui.Throbber(this.imagesListBox);
+  throbber.show();
   this.fetchImages(1, function() {
     this.displayedItems = this.items;
     if (this.items.length != 0)
@@ -533,9 +540,11 @@ ReasonImage.prototype.fetchImages = function (chunk, callback) {
     "success": function(response) {
       this.parseImages(response, chunk);
       callback.call(this);
+      this.updatePagination();
       if (chunk+1 <= this.totalItems/this.chunkSize)
-        this.fetchImages(chunk+1, function() {});
-      else
+      {
+      	this.fetchImages(chunk+1, function() {});
+      } else
         this.loaded();
     },
     "success_scope": this
@@ -587,6 +596,7 @@ ReasonImageDialogItem.prototype.displayItem = function () {
 
 
 ReasonLink = function(controlSelectors, placeholderSelector) {
+  this._throbber;
   this._selected = {};
   this._disabled = {};
   this._siteId = tinymce.activeEditor.settings.reason_site_id;
@@ -815,16 +825,22 @@ ReasonLink.prototype.bindReasonUI = function () {
     self.setSelected('page', e.control.value());
     self.setHref(self.makeURL());
     self.setDesc(e.control.text().replace(/\u2014* /, ""));
+    self.startThrobber();
     self.fetchAnchors(self._siteId, e.control.value(), function() {
+      self.stopThrobber();
       self.setDisabled('anchors', false);
       self.updateForm();
     });
   });
   this.formControls.Sites.on('select', function(e) {
+    if (e.control.value() == "0")
+      return;
     self.emailControl.value('');
     self.setHref('');
     self.setSelected('site', e.control.value());
+	self.startThrobber();
     self.fetchPages(e.control.value(), function() {
+      self.stopThrobber();
       self.setDisabled('pages', false);
       self.updateForm();
     });
@@ -927,9 +943,29 @@ ReasonLink.prototype.constructFormObj = function() {
   return formObj;
 };
 
+ReasonLink.prototype.startThrobber = function() {
+	throbber = this.getThrobber();
+	throbber.show();
+}
+
+ReasonLink.prototype.stopThrobber = function() {
+	throbber = this.getThrobber();
+	throbber.hide();
+}
+
+ReasonLink.prototype.getThrobber = function() {
+	if (!this._throbber)
+	{
+		this._throbber = new tinymce.ui.Throbber(this.targetPanel.getEl());
+	}
+  	return this._throbber;
+}
+
 ReasonLink.prototype.insertReasonUI = function() {
   var self = this;
+  this.startThrobber();
   this.fetchSites(function() {
+  	self.stopThrobber();
     self.addFormObj(self.constructFormObj());
     self.bindReasonUI();
   });

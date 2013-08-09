@@ -215,9 +215,9 @@ class ReasonPageListJSON extends ReasonLinksJSON implements ReasonFeedInterface
 		{
 			$site_id = $this->config('site_id');
 			$cache = new ReasonObjectCache($site_id . '_navigation_cache', -1);
-			if ($result = $cache->fetch())
+			if ( ($result = $cache->fetch()) && isset($result['MinisiteNavigation']) )
 			{
-				$this->_pages = (is_array($result)) ? reset($result) : $result;
+				$this->_pages = reset($result);
 			}
 			else
 			{
