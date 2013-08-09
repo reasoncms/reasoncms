@@ -738,20 +738,28 @@ ReasonLink.prototype.parseItems = function (type, response) {
       break;
   }
 };
+
+/**
+ * In the case of an error we run parseItems with an empty json result.
+ */
 ReasonLink.prototype.fetchItems = function(options, callback) {
-
-
   var url = options.url || this.jsonURL(options);
 
   tinymce.util.XHR.send({
     "url": url,
     "content_type": options.content_type || '',
     "success": function(response, xhr) {
-      this.parseItems(options.type, response);
-      callback.call(this);
-      this.loaded(options.type);
+    	this.parseItems(options.type, response);
+    	callback.call(this);
+    	this.loaded(options.type);
     },
-    "success_scope": this
+    "error" : function(type, req, o ) {
+    	this.parseItems(options.type, {});
+    	callback.call(this);
+    	this.loaded(options.type);
+    },
+    "success_scope": this,
+    "error_scope": this
   });
 };
 
@@ -785,7 +793,12 @@ ReasonLink.prototype.updateValues = function(items, selectedItem) {
   var values = [];
   for (var i=0; i < items.length; i++) {
     var value = items[i].url || items[i].id;
-    values.push({text: items[i].treeName || items[i].name, value: value, selected:(value == selectedItem)});
+    
+    // lets decode entities into raw UTF-8
+    var text = items[i].treeName || items[i].name;
+    text = tinymce.html.Entities.decode(text);
+    
+    values.push({text: text, value: value, selected:(value == selectedItem)});
   }
   return values;
 };

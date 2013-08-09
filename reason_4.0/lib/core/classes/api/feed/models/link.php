@@ -133,7 +133,7 @@ class ReasonSiteListJSON extends ReasonLinksJSON implements ReasonFeedInterface
 			$sites['count'] = 0;
 			foreach($results as $result)
 			{
-				$sites['sites'][] = array('name' => $result->get_value('name'), 'id' => $result->id());
+				$sites['sites'][] = array('name' => strip_tags($result->get_value('name')), 'id' => $result->id());
 				$sites['count']++;
 			}
 			return json_encode($sites);
@@ -191,7 +191,7 @@ class ReasonPageListJSON extends ReasonLinksJSON implements ReasonFeedInterface
 		$pages = $this->get_pages();
 		$children = $pages->children($id);
 		$page['url'] = $pages->get_full_url($id);
-		$page['name'] = $pages->values[$id]->get_value('name');
+		$page['name'] = strip_tags($pages->values[$id]->get_value('name'));
 		$page['id'] = $id;
 		if ($children)
 		{
@@ -271,7 +271,7 @@ class ReasonAssetListJSON extends ReasonLinksJSON implements ReasonFeedInterface
 			$site = new entity($this->config('site_id'));
 			foreach($assets as $asset)
 			{
-				$asset_list['name'] = $asset->get_value('name');
+				$asset_list['name'] = strip_tags($asset->get_value('name'));
 				$asset_list['url'] = reason_get_asset_url($asset, $site);
 			}
 			return json_encode($asset_list);
