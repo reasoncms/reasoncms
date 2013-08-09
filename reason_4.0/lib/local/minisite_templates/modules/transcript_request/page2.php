@@ -176,7 +176,7 @@ class TranscriptPageTwoForm extends FormStep
 		$txt .= '<li><strong>Date:</strong> '.date($this->date_format).'</li>'."\n";
 		$txt .= '<li><strong>Name:</strong> '.$this->controller->get('name').'</li>'."\n";
 		$txt .= '<li><strong>Date of Birth:</strong> '.$this->controller->get('date_of_birth').'</li>'."\n";
-		$txt .= '<li><strong>Status:</strong> '.$this->controller->get('student_status').'</li>'."\n";
+		$txt .= '<li><strong>Lifetime Academic Transcript Fee:</strong> '.$this->controller->get('LATF').'</li>'."\n";
 		$txt .= '<li><strong>Daytime Phone:</strong> '.$this->controller->get('daytime_phone').'</li>'."\n";
 		$txt .= '<li><strong>Email:</strong> '.$this->controller->get('e-mail').'</li>'."\n";
                 if($this->controller->get('unofficial')){

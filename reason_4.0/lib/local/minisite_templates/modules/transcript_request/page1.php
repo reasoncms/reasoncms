@@ -27,7 +27,8 @@ class TranscriptPageOneForm extends FormStep {
         ),
          'date_of_birth' => array(
             'type' => 'textdate',
-            'use_picker' => false
+            'use_picker' => false,
+            'comments' => 'mm/dd/yyyy'
         ),
         'daytime_phone' => array(
             'type' => 'text',
@@ -38,10 +39,12 @@ class TranscriptPageOneForm extends FormStep {
             'type' => 'text',
             'size' => 35,
         ),
-        'student_status' => array(
+        'LATF' => array(
             'type' => 'radio_no_sort',
             'display_name' => 'What is your status?',
-            'options' => array('Student' => 'Current Student', 'Alumni' => 'Former student/Alumni'),
+            'options' => array(
+                'Paid' => 'Enrolled after August 1, 2013 or paid the Lifetime Academic Transcript Fee.', 
+                'Not paid' => 'I have not paid the Lifetime Academic Transcript Fee.'),
         ),
         'unofficial_header' => array(
             'type' => 'comment',
@@ -143,7 +146,7 @@ class TranscriptPageOneForm extends FormStep {
         ),
         'submitter_ip' => 'hidden',
     );
-    var $required = array('date_of_birth', 'daytime_phone', 'e-mail', 'deliver_to', 'delivery_time', 'student_status');
+    var $required = array('date_of_birth', 'daytime_phone', 'e-mail', 'deliver_to', 'delivery_time', 'LATF');
     var $display_name = 'Transcript Request Info';
     var $error_header_text = 'Please check your form.';
 
@@ -271,7 +274,7 @@ former students to pay</u> for the transcript via credit card.</p>';
        $official_number = $this->get_value('number_of_official');
        $deliver_time = $this->get_value('delivery_time');
 
-       if ($this->get_value('student_status') == 'Alumni') {
+       if ($this->get_value('LATF') == 'Not paid') {
             $pay_amount = $pay_amount + ($official_number * 5);
         }
         $this->set_value('amount', $pay_amount);
@@ -346,4 +349,3 @@ former students to pay</u> for the transcript via credit card.</p>';
 //        }
     }
 }
-?>

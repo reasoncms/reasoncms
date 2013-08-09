@@ -24,7 +24,7 @@ class TranscriptRequestConfirmation extends FormStep {
 
         $name = $this->controller->get('name');
         $date_of_birth = $this->controller->get('date_of_birth');
-        $student_status = $this->controller->get('student_status');
+        $latf = $this->controller->get('LATF');
         $daytime_phone = $this->controller->get('daytime_phone');
         $email = $this->controller->get('e-mail');
         $address = $this->controller->get('address');
@@ -48,7 +48,7 @@ class TranscriptRequestConfirmation extends FormStep {
         $txt .= '<li><strong>Date:</strong> ' . date($this->date_format) . '</li>' . "\n";
         $txt .= '<li><strong>Name:</strong> ' . $name . '</li>' . "\n";
         $txt .= '<li><strong>Date of Birth:</strong> ' . $date_of_birth . '</li>' . "\n";
-        $txt .= '<li><strong>Status:</strong> '. $student_status . '</li>'."\n";
+        $txt .= '<li><strong>Lifetime Academic Transcript Fee:</strong> ' . $latf . '</li>'."\n";
         $txt .= '<li><strong>Daytime Phone:</strong> ' . $daytime_phone . '</li>' . "\n";
         $txt .= '<li><strong>Email:</strong> ' . $email . '</li>' . "\n";
         if ($unofficial) {
@@ -94,27 +94,27 @@ class TranscriptRequestConfirmation extends FormStep {
         connectDB('transcript_connection');
 
         $qstring = "INSERT INTO `requestor` SET
-                submitter_ip='" . addslashes($submitter_ip) . "',
+        submitter_ip='" . addslashes($submitter_ip) . "',
 		name='" . addslashes($name) . "',
 		date_of_birth ='" . addslashes($date_of_birth) . "',
-                student_status='".addslashes($student_status)."',
-		address='" . ((!empty($address)) ? addslashes($address) : 'NULL') . "',
-                unofficial_address='" . ((!empty($unofficial_address)) ? addslashes($address) : 'NULL') . "',
-		city='" . ((!empty($city)) ? addslashes($city) : 'NULL') . "',
-		state_province = '" . ((!empty($state_province)) ? addslashes($state_province) : 'NULL') . "',
-		zip = '" . ((!empty($zip)) ? addslashes($zip) : 'NULL') . "',
-		country = '" . ((!empty($coumtry)) ? addslashes($country) : 'NULL') . "',
-		daytime_phone = '" . ((!empty($daytime_phone)) ? addslashes($daytime_phone) : 'NULL') . "',
-		email = '" . ((!empty($email)) ? addslashes($email) : 'NULL') . /*"',
-		official_type='" . ((!empty($official_type)) ? addslashes($official_type) : 'NULL') . */"',
-                number_of_official='" . ((!empty($number_of_official)) ? addslashes($number_of_official) : 'NULL') . "',
-                amount_paid='" . ((!empty($amount)) ? addslashes($amount) : 'NULL') . "',
-		unofficial='" . ((!empty($unofficial)) ? addslashes($unofficial) : 'NULL') . "',
-                deliver_to='" . addslashes($deliver_to) . "',
-		delivery_time='" . ((!empty($delivery_time)) ? addslashes($delivery_time) : 'NULL') . "',
-		institution_name='" . ((!empty($institution_name)) ? addslashes($institution_name) : 'NULL') . "',
-		institution_attn='" . ((!empty($institution_attn)) ? addslashes($institution_attn) : 'NULL') . "',
-		institution_email='" . ((!empty($institution_email)) ? addslashes($institution_email) : 'NULL') . "' ";
+        LATF='". (($latf == 'Paid') ? 'LATF' : '') ."',
+		address='" . ((!empty($address)) ? addslashes($address) : '') . "',
+        unofficial_address='" . ((!empty($unofficial_address)) ? addslashes($address) : '') . "',
+		city='" . ((!empty($city)) ? addslashes($city) : '') . "',
+		state_province = '" . ((!empty($state_province)) ? addslashes($state_province) : '') . "',
+		zip = '" . ((!empty($zip)) ? addslashes($zip) : '') . "',
+		country = '" . ((!empty($coumtry)) ? addslashes($country) : '') . "',
+		daytime_phone = '" . ((!empty($daytime_phone)) ? addslashes($daytime_phone) : '') . "',
+		email = '" . ((!empty($email)) ? addslashes($email) : '') . /*"',
+		official_type='" . ((!empty($official_type)) ? addslashes($official_type) : '') . */"',
+        number_of_official='" . ((!empty($number_of_official)) ? addslashes($number_of_official) : '') . "',
+        amount_paid='" . ((!empty($amount)) ? addslashes($amount) : '') . "',
+		unofficial='" . ((!empty($unofficial)) ? addslashes($unofficial) : '') . "',
+        deliver_to='" . addslashes($deliver_to) . "',
+		delivery_time='" . ((!empty($delivery_time)) ? addslashes($delivery_time) : '') . "',
+		institution_name='" . ((!empty($institution_name)) ? addslashes($institution_name) : '') . "',
+		institution_attn='" . ((!empty($institution_attn)) ? addslashes($institution_attn) : '') . "',
+		institution_email='" . ((!empty($institution_email)) ? addslashes($institution_email) : '') . "' ";
 
 
         if (THIS_IS_A_DEVELOPMENT_REASON_INSTANCE || !empty($this->_request['tm'])) {
