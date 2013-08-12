@@ -358,7 +358,13 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'sidebar_5' => get_luther_related_publication(3),
 	),
 	'luther2010_alumni' => array(
-		'main_head' => 'luther_carousel',
+		'main_head' => array(
+			'module' => 'feature/feature',
+			'shuffle' => false,
+			'autoplay_timer' => 12,
+			'width'=>716,
+			'height'=>288
+		),
 		'main_head_5' => '',
 		'main_2' => '',
 		'main_3' => '',
