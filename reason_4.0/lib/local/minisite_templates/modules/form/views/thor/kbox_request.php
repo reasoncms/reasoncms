@@ -33,8 +33,7 @@ class KboxRequestsForm extends LutherDefaultThorForm
 
         $kbox_labels = $this->get_kbox_labels();
 
-        // Using doccenter as sender so the kbox will accept @ requests from the email
-        $mail = new Email($this->model->get_email_of_recipient(), 'doccenter@luther.edu', 'doccenter@luther.edu', $this->model->get_form_name(), $body['txt_body'], '');
+        $mail = new Email($this->model->get_email_of_recipient(), 'kboxautosubmit@luther.edu', 'kboxautosubmit@luther.edu', $this->model->get_form_name(), $body['txt_body'], '');
         $mail->send();
 
         parent::process();
