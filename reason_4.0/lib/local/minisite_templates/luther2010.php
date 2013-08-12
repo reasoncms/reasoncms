@@ -562,11 +562,13 @@ class LutherTemplate2010 extends MinisiteTemplate
 		{
 			if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_admissions'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports')
 			{
 				echo '<aside class="gallery group">'."\n";
 				if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_admissions'
-						|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni')
+					|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni'
+					|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music')
 				{
 					echo '<header class="red-stripe"><h1><span>Featured Gallery</span></h1></header>'."\n";
 				}
@@ -575,12 +577,11 @@ class LutherTemplate2010 extends MinisiteTemplate
 					echo '<header class="blue-stripe"><h1><span>Featured Gallery</span></h1></header>'."\n";
 				}
 			}
-			if ($this->cur_page->get_value( 'custom_page' ) != 'luther2010_music')
-			{
-				echo "<div id=\"gallery\">\n";
-				echo "<div class=\"gallery-info\">\n";
-				echo "<div id=\"gallerycontainer\">\n";
-			}
+			
+			echo "<div id=\"gallery\">\n";
+			echo "<div class=\"gallery-info\">\n";
+			echo "<div id=\"gallerycontainer\">\n";
+				
 			if ($this->cur_page->get_value( 'custom_page' ) != 'luther2010_admissions'
 				&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_alumni'
 				&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_music'
@@ -591,15 +592,13 @@ class LutherTemplate2010 extends MinisiteTemplate
 						
 			$this->run_section( 'main_post_2' );
 
-			if ($this->cur_page->get_value( 'custom_page' ) != 'luther2010_music')
-			{
-				echo "</div>   <!-- id=\"gallerycontainer\"-->\n";
-				echo "</div>   <!-- class=\"gallery-info\"-->\n";
-				echo "</div>   <!-- id=\"gallery\"-->\n";
-			}
+			echo "</div>   <!-- id=\"gallerycontainer\"-->\n";
+			echo "</div>   <!-- class=\"gallery-info\"-->\n";
+			echo "</div>   <!-- id=\"gallery\"-->\n";
 			
 			if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_admissions'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports')
 			{
 				echo '</aside> <!-- class="gallery group" -->'."\n";
