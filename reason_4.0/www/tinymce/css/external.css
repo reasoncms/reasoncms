@@ -39,19 +39,24 @@ button:disabled,button:disabled:hover,button:disabled:focus,button[disabled=true
 	cursor: default;
 }
 
+/**
+ * For some reason IE8 seems to require important on some of these attributes in order to work.
+ * 
+ * I'm not sure why.
+ */
 .items_chunk {
-	text-align: center;
-	height: 300px;
-	white-space: normal;
-	overflow: auto;
-	margin-top: 10px;
+	text-align: center !important;
+	height: 300px !important;
+	white-space: normal !important;
+	overflow: auto !important;
+	margin-top: 10px !important;
 }
 
 .image_item {
-	width: 190px;
-	padding: 5px;
-	display: inline-block;
-	text-align: center;
+	width: 190px !important;
+	padding: 5px !important;
+	display: inline-block !important;
+	text-align: center !important;
 }
 
 .items_chunk .name,.items_chunk .description {

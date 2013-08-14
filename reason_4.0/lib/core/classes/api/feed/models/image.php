@@ -64,8 +64,8 @@ class ReasonImageJSON extends ReasonJSON implements ReasonFeedInterface
 		$newArray['description'] = $v->get_value('description');
 		$newArray['pubDate'] = $v->get_value('creation_date');
 		$newArray['lastMod'] = $v->get_value('last_modified');
-		$newArray['link'] = 'http://' . REASON_HOST.WEB_PHOTOSTOCK . reason_format_image_filename($v->id(), $v->get_value('image_type'), 'standard');
-		$newArray['thumbnail'] = 'http://' . REASON_HOST.WEB_PHOTOSTOCK . reason_format_image_filename($v->id(), $v->get_value('thumbnail_image_type'), 'thumbnail');
+		$newArray['link'] = '//' . REASON_HOST.WEB_PHOTOSTOCK . reason_format_image_filename($v->id(), $v->get_value('image_type'), 'standard');
+		$newArray['thumbnail'] = '//' . REASON_HOST.WEB_PHOTOSTOCK . reason_format_image_filename($v->id(), $v->get_value('thumbnail_image_type'), 'thumbnail');
 		$newArray['content'] = $v->get_value('content');
 		$newArray['keywords'] = $v->get_value('keywords');
 		return $newArray;

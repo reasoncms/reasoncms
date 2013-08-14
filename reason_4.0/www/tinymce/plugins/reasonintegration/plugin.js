@@ -138,7 +138,7 @@ ReasonPlugin.prototype.updatePagination = function() {
   var num_of_pages = Math.ceil(this.displayedItems.length/this.pageSize);
   this.nextButton.disabled = (this.page + 1 > num_of_pages);
   this.prevButton.disabled = (this.page - 1 <= 0);
-  this.UI.getElementsByClassName("pageCount")[0].innerHTML = this.pageCounter();
+  this.UI.querySelectorAll(".pageCount")[0].innerHTML = this.pageCounter();
 };
 
 /**
@@ -168,8 +168,10 @@ ReasonPlugin.prototype.makePageSlice = function(page_num) {
  * queued using ReasonPlugin.whenLoaded();
  **/
 ReasonPlugin.prototype.loaded = function() {
-  var self = this;
-  tinymce.each(this.whenLoadedFuncs, function(v) {v.call(self);});
+	var self = this;
+	tinymce.each(this.whenLoadedFuncs, function(v) {
+		v.call(self);
+	});
 };
 
 /**
@@ -177,7 +179,7 @@ ReasonPlugin.prototype.loaded = function() {
  * @param {Function} func A function to add to the callbacks array.
  **/
 ReasonPlugin.prototype.whenLoaded = function(func) {
-  this.whenLoadedFuncs.push(func);
+	this.whenLoadedFuncs.push(func);
 };
 
 /**
@@ -191,19 +193,20 @@ ReasonPlugin.prototype.whenLoaded = function(func) {
  *        the plugin controls.
  */
 ReasonImage = function(controlSelectors, placeholderSelector) {
+  this.whenLoadedFuncs = [];
   this.chunkSize = 5000;
   this.pageSize = 6;
   this.page = 1;
   this.type = "image";
   this.items = [];
-
+  
   this.getControlReferences(controlSelectors, placeholderSelector);
   this.insertReasonUI();
   this.bindReasonUI();
   this.renderReasonImages();
 };
 ReasonImage.prototype = new ReasonPlugin();
-
+ReasonImage.prototype.constructor=ReasonImage;
 
 /**
  * Converts names of controls to references to their tinymce data structures.
@@ -245,10 +248,10 @@ ReasonImage.prototype.insertReasonUI = function() {
 ReasonImage.prototype.bindReasonUI = function() {
   var self = this;
 
-  this.imagesListBox = this.UI.getElementsByClassName('items_chunk')[0];
-  this.prevButton = this.UI.getElementsByClassName('prevImagePage')[0];
-  this.nextButton = this.UI.getElementsByClassName('nextImagePage')[0];
-  this.searchBox = this.UI.getElementsByClassName('reasonImageSearch')[0];
+  this.imagesListBox = this.UI.querySelectorAll('.items_chunk')[0];
+  this.prevButton = this.UI.querySelectorAll('.prevImagePage')[0];
+  this.nextButton = this.UI.querySelectorAll('.nextImagePage')[0];
+  this.searchBox = this.UI.querySelectorAll('.reasonImageSearch')[0];
   
   // Maybe I should move these bindings elsewhere for better coherence?
   tinymce.DOM.bind(this.imagesListBox, 'click', function(e) {
@@ -321,8 +324,23 @@ ReasonImage.prototype.setAlt = function(alt) {
 ReasonImage.prototype.setAlign = function(align) {
   tinymce.each(this.alignControls, function(v) {v.value(align);});
 };
+
+/**
+ * If the image is on our server lets strip http:// or https:// from the SRC to avoid mixed content errors.
+ */
 ReasonImage.prototype.setSrc = function(src) {
-  this.srcControl.value(src);
+	this.srcControl.value(this.normalizeSrc(src));
+};
+
+/**
+ * At least Gecko when we access the .src property of an image node appears to always give an absolute url
+ *
+ * We return the src here in this format - //window.location.hostname/the_image_path
+ */
+ReasonImage.prototype.normalizeSrc = function(src) {
+	src = src.replace('https://'+window.location.hostname, '//'+window.location.hostname);
+	src = src.replace('http://'+window.location.hostname, '//'+window.location.hostname);
+	return src;
 };
 
 /**
@@ -347,6 +365,7 @@ ReasonImage.prototype.deduceSize = function(url) {
  *        be of either thumbnail or full-size image. 
  **/
 ReasonImage.prototype.findPageWith = function(imageUrl) {
+	imageUrl = this.normalizeSrc(imageUrl);
   for (var i = 0; i < this.items.length; i++) {
     if (this.items[i].URLs.thumbnail == imageUrl || this.items[i].URLs.full == imageUrl) {
       return Math.ceil((i+1) / this.pageSize);
@@ -376,7 +395,7 @@ ReasonImage.prototype.displayPageWith = function (imageUrl) {
  **/
 ReasonImage.prototype.findImageItemOnPage = function (imageUrl) {
   var images = this.targetPanel.getEl().getElementsByTagName("IMG");
-  for (var i in images) {
+  for (var i = 0; i < images.length; i++) {
     if (images[i].src == imageUrl || images[i].src.replace("_tn", "") == imageUrl) {
       return images[i].parentNode;
     }
@@ -404,7 +423,7 @@ ReasonImage.prototype.selectImage = function (image_item) {
     src = src.replace("_tn", "");
 
   this.setSrc(src);
-  this.setAlt(image_item.getElementsByClassName('description')[0].innerHTML);
+  this.setAlt(image_item.querySelectorAll('.description')[0].innerHTML);
   return true;
 };
 
@@ -414,7 +433,7 @@ ReasonImage.prototype.selectImage = function (image_item) {
  * @param {HTMLElement} image_item DOM node to add class to
  **/
 ReasonImage.prototype.highlightImage = function(image_item) {
-  tinymce.each(this.window.getEl().getElementsByClassName("selectedImage"), function(v) {v.className = v.className.replace("selectedImage",""); });
+  tinymce.each(this.window.getEl().querySelectorAll(".selectedImage"), function(v) {v.className = v.className.replace("selectedImage",""); });
   image_item.className += " selectedImage";
 };
 
@@ -596,20 +615,19 @@ ReasonImageDialogItem.prototype.displayItem = function () {
 
 
 ReasonLink = function(controlSelectors, placeholderSelector) {
-  this._throbber;
-  this._selected = {};
-  this._disabled = {};
-  this._siteId = tinymce.activeEditor.settings.reason_site_id;
-  this._reason_http_base_path = tinymce.activeEditor.settings.reason_http_base_path;
-
-  this.getControlReferences(controlSelectors, placeholderSelector);
-
-  this.initControlVals();
-
-  this.insertReasonUI();
+	this.whenLoadedFuncs = [];
+	this._throbber;
+	this._selected = {};
+	this._disabled = {};
+	this._siteId = tinymce.activeEditor.settings.reason_site_id;
+	this._reason_http_base_path = tinymce.activeEditor.settings.reason_http_base_path;
+	this.getControlReferences(controlSelectors, placeholderSelector);
+	this.initControlVals();
+	this.insertReasonUI();
 };
 
 ReasonLink.prototype = new ReasonPlugin();
+ReasonLink.prototype.constructor = ReasonLink;
 
 ReasonLink.prototype.getControlReferences = function(controlSelectors, placeholderSelector) {
   var self = this;
@@ -1040,7 +1058,6 @@ tinymce.PluginManager.add('reasonintegration', function(editor, url) {
     } else {
       imgElm = null;
     }
-
     tinymce.activeEditor = editor;
 
     win = editor.windowManager.open({
@@ -1106,11 +1123,11 @@ tinymce.PluginManager.add('reasonintegration', function(editor, url) {
             };
         reasonImagePlugin = new ReasonImage(controls_to_bind, target_panel, 'image', e);
         if (imgElm) {
-          reasonImagePlugin.switchToTab("URL");
-          reasonImagePlugin.setAlign(imgElm.align);
-          reasonImagePlugin.setAlt(imgElm.alt);
-          reasonImagePlugin.setSrc(imgElm.src);
-          reasonImagePlugin.whenLoaded(function() {
+        	reasonImagePlugin.switchToTab("URL");
+        	reasonImagePlugin.setAlign(imgElm.align);
+        	reasonImagePlugin.setAlt(imgElm.alt);
+        	reasonImagePlugin.setSrc(imgElm.src);
+        	reasonImagePlugin.whenLoaded(function() {
             if (this.selectImage(imgElm.src)) {
               this.setImageSize(this.deduceSize(imgElm.src));
               this.setAlt(imgElm.alt);
