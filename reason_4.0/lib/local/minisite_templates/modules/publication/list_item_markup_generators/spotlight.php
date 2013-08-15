@@ -31,14 +31,8 @@ class SpotlightListItemMarkupGenerator extends PublicationMarkupGenerator
 		if (get_theme($this->passed_vars['site_id'])->get_value('name') == 'luther2010')
 		{
 			if ($this->passed_vars['cur_page']->get_value( 'custom_page' ) == 'luther2010_home'
-				|| $this->passed_vars['cur_page']->get_value( 'custom_page' ) == 'luther2010_home_feature'
-				|| $this->passed_vars['cur_page']->get_value( 'custom_page' ) == 'luther2010_music')
+				|| $this->passed_vars['cur_page']->get_value( 'custom_page' ) == 'luther2010_home_feature')
 			{
-				if ($this->passed_vars['cur_page']->get_value( 'custom_page' ) == 'luther2010_music')
-				{
-					$this->markup_string .= '<section class="spotlight" role="group">'."\n";					
-					$this->markup_string .= '<header class="red-stripe"><h1><span>Spotlight</span></h1></header>'."\n";
-				}
 				$this->markup_string .= '<article class="highlight">'."\n";
 				//$this->markup_string .= $this->get_title_markup();
 				$this->markup_string .= $this->get_description_markup();
@@ -52,10 +46,6 @@ class SpotlightListItemMarkupGenerator extends PublicationMarkupGenerator
 				$this->markup_string .= '<nav class="button view-all">'."\n";
 				$this->markup_string .= '<ul><li><a href="/spotlightarchives">View all spotlights &gt;</a></li></ul>'."\n";
 				$this->markup_string .= '</nav>'."\n";
-				if ($this->passed_vars['cur_page']->get_value( 'custom_page' ) == 'luther2010_music')
-				{
-					$this->markup_string .= '</section> <!-- class="spotlight" role="group" -->'."\n";	
-				}
 			}
 			else 
 			{
@@ -63,6 +53,10 @@ class SpotlightListItemMarkupGenerator extends PublicationMarkupGenerator
 				if ($this->passed_vars['cur_page']->get_value( 'custom_page' ) == 'luther2010_sports')
 				{	
 					$this->markup_string .= '<header class="blue-stripe"><h1><span>Spotlight</span></h1></header>'."\n";
+				}
+				elseif ((preg_match("/^https?:\/\/[A-Za-z0-9_\.]+\/archives\/?/", get_current_url())))
+				{
+					$this->markup_string .= '<header class="blue-stripe"><h1><span>Moments in History</span></h1></header>'."\n";
 				}
 				else 
 				{
