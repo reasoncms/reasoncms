@@ -10,11 +10,8 @@
  * @todo allow links to additional types.
  *
  * @author Andrew Bacon
- * @author Nathan White - Maintainer / Tweaker
+ * @author Nathan White
  */
-
-/*global tinymce:true */
-
 
 /**
  * ReasonPlugins is a container and dispatch for ReasonImage and ReasonLink.
@@ -31,7 +28,6 @@
  * TODO: insertReasonUI should insert a tinymce control of type panel w/ settings.html, maybe?
  * TODO: to style each element, insertReasonUI should copy styles/classes from native tinymce
  *       elements.
- * TODO: A selected image's highlight doesn't persist between renders of the page of results.
  * TODO: use reason_http_base_path to reduce size of JSON being requested.
  * TODO: Search for a selected image as chunks come in, rather than all at the end.
  *
@@ -138,7 +134,16 @@ ReasonPlugin.prototype.updatePagination = function() {
   var num_of_pages = Math.ceil(this.displayedItems.length/this.pageSize);
   this.nextButton.disabled = (this.page + 1 > num_of_pages);
   this.prevButton.disabled = (this.page - 1 <= 0);
-  this.UI.querySelectorAll(".pageCount")[0].innerHTML = this.pageCounter();
+  if (num_of_pages > 1)
+  {
+  	this.UI.querySelector(".reasonImage .pagination").style.visibility = 'visible';
+  	this.UI.querySelector(".reasonImage .pageCount").innerHTML = this.pageCounter();
+  }
+  else
+  {
+  	pagination = this.UI.querySelector(".reasonImage .pagination");
+  	if (pagination) pagination.style.visibility = 'hidden';
+  }
 };
 
 /**
@@ -245,69 +250,84 @@ ReasonImage.prototype.insertReasonUI = function() {
  * Binds various controls like cancel, next page, and search to their
  * corresponding functions.
  **/
-ReasonImage.prototype.bindReasonUI = function() {
-  var self = this;
-
-  this.imagesListBox = this.UI.querySelectorAll('.items_chunk')[0];
-  this.prevButton = this.UI.querySelectorAll('.prevImagePage')[0];
-  this.nextButton = this.UI.querySelectorAll('.nextImagePage')[0];
-  this.searchBox = this.UI.querySelectorAll('.reasonImageSearch')[0];
-  
-  // Maybe I should move these bindings elsewhere for better coherence?
-  tinymce.DOM.bind(this.imagesListBox, 'click', function(e) {
-    var target = e.target || window.event.srcElement;
-    if (target.nodeName == 'A' && target.className == 'image_item')
-      self.selectImage( target );
-    else if (target.nodeName == 'IMG' || (target.nodeName == 'SPAN' && (target.className == 'name' || target.className == 'description')))
-      self.selectImage( target.parentElement );
-  });
-
-  tinymce.DOM.bind(this.prevButton, 'click', function() {
-    self.page -= 1;
-    self.displayImages(self.makePageSlice(self.page));
-  });
-
-  tinymce.DOM.bind(this.nextButton, 'click', function() {
-    self.page += 1;
-    self.displayImages(self.makePageSlice(self.page));
-  });
-
-  this.sizeControl.on('select', function () {
-    self.setImageSize(self.sizeControl.value());
-  });
-
-  this.altControls[0].on('change', function() {
-    self.setAlt(self.altControls[0].value());
-  });
-  this.altControls[1].on('change', function() {
-    self.setAlt(self.altControls[1].value());
-  });
-
-  this.alignControls[0].on('select', function(e) {
-    self.setAlign(e.control.value());
-  });
-  this.alignControls[1].on('select', function(e) {
-    self.setAlign(e.control.value());
-  });
-
-  tinymce.DOM.bind(this.searchBox, 'keyup', function(e) {
-    var target = e.target || window.event.srcElement;
-    self.delay(function() {
-      if (target.value) {
-        self.page = 1;
-        self.result = self.findItemsWithText(target.value);
-        if (self.result) {
-          self.displayedItems = self.result;
-          self.displayImages();
-        } else
-          self.noResults();
-      } else {
-        self.page = 1;
-        self.displayedItems = self.items;
-        self.displayImages();
-      }
-    }, 200);
-  });
+ReasonImage.prototype.bindReasonUI = function()	{
+	var self = this;
+	this.imagesListBox = this.UI.querySelectorAll('.items_chunk')[0];
+	this.prevButton = this.UI.querySelectorAll('.prevImagePage')[0];
+	this.nextButton = this.UI.querySelectorAll('.nextImagePage')[0];
+	this.searchBox = this.UI.querySelectorAll('.reasonImageSearch')[0];
+	
+	// Maybe I should move these bindings elsewhere for better coherence?
+	tinymce.DOM.bind(this.imagesListBox, 'click', function(e) {
+		var target = e.target || window.event.srcElement;
+		if (target.nodeName == 'A' && target.className == 'image_item') {
+			self.selectImage( target );
+		}
+		else if (target.nodeName == 'IMG' || (target.nodeName == 'SPAN' && (target.className == 'name' || target.className == 'description'))) {
+			self.selectImage( target.parentElement );
+		}
+	});
+	
+	tinymce.DOM.bind(this.prevButton, 'click', function() {
+		self.page -= 1;
+		self.displayImages(self.makePageSlice(self.page));
+	});
+	
+	tinymce.DOM.bind(this.nextButton, 'click', function() {
+		self.page += 1;
+		self.displayImages(self.makePageSlice(self.page));
+	});
+	
+	tinymce.DOM.bind(this.searchBox, 'keyup', function(e) {
+		var target = e.target || window.event.srcElement;
+		self.delay(function() {
+			self.displayedItems = self.findItemsWithText(target.value);
+			if (self.displayedItems.length > 0) {
+				self.page = 1;
+    			self.displayImages();
+    		}
+    		else {
+    			self.noResults();
+    		}
+    		self.updatePagination();
+    	}, 200);
+    });
+	
+	this.sizeControl.on('select', function (e) {
+		cur_src = self.srcControl.value();
+		for (var i in self.items) {
+			for (url in self.items[i].URLs) {
+				if (cur_src == self.items[i].URLs[url])
+				{
+					self.setSrc(self.items[i].URLs[e.control.value()]);
+					break;
+				}
+			}
+		}
+	});
+	
+	this.altControls[0].on('change', function() {
+		self.setAlt(self.altControls[0].value());
+	});
+	
+	this.altControls[1].on('change', function() {
+		self.setAlt(self.altControls[1].value());
+	});
+	
+	this.alignControls[0].on('select', function(e) {
+		self.setAlign(e.control.value());
+	});
+	
+	this.alignControls[1].on('select', function(e) {
+		self.setAlign(e.control.value());
+	});
+	
+	/**
+	 * Redraw current page in case new URL matches a reason item on the page.
+	 */
+	this.srcControl.on('change', function(e) {
+		self.displayImages(self.makePageSlice(self.page));
+	});
 };
 
 ReasonImage.prototype.switchToTab = function(tabName) {
@@ -326,36 +346,10 @@ ReasonImage.prototype.setAlign = function(align) {
 };
 
 /**
- * If the image is on our server lets strip http:// or https:// from the SRC to avoid mixed content errors.
+ * Set the src
  */
 ReasonImage.prototype.setSrc = function(src) {
-	this.srcControl.value(this.normalizeSrc(src));
-};
-
-/**
- * At least Gecko when we access the .src property of an image node appears to always give an absolute url
- *
- * We return the src here in this format - //window.location.hostname/the_image_path
- */
-ReasonImage.prototype.normalizeSrc = function(src) {
-	src = src.replace('https://'+window.location.hostname, '//'+window.location.hostname);
-	src = src.replace('http://'+window.location.hostname, '//'+window.location.hostname);
-	return src;
-};
-
-/**
- * Figures out image size from filename, so we can preserve settings for a
- * selected image across plugin instances. Does not check for correct
- * reason_http_base_path etc. -- that happens in ReasonImage.selectImage().
- *
- * @param {String} url url of the image in question, with or without hostname
- *        etc.
- **/
-ReasonImage.prototype.deduceSize = function(url) {
-    if (url.search("_tn.") != -1)
-      return "thumbnail";
-    else
-      return "full";
+	this.srcControl.value(src);
 };
 
 /**
@@ -365,7 +359,6 @@ ReasonImage.prototype.deduceSize = function(url) {
  *        be of either thumbnail or full-size image. 
  **/
 ReasonImage.prototype.findPageWith = function(imageUrl) {
-	imageUrl = this.normalizeSrc(imageUrl);
   for (var i = 0; i < this.items.length; i++) {
     if (this.items[i].URLs.thumbnail == imageUrl || this.items[i].URLs.full == imageUrl) {
       return Math.ceil((i+1) / this.pageSize);
@@ -389,42 +382,65 @@ ReasonImage.prototype.displayPageWith = function (imageUrl) {
 };
 
 /**
- * Finds the DOM node which contains an image of the given URL, so that we can
- * select it.
+ * Finds the DOM node which contains an image of the given URL, so that we can select it.
+ *
+ * @todo this should be based on the ids of those dom nodes and the corresponding URLs in this.items.
  * @param {String} imageUrl the url of the image to select.
  **/
-ReasonImage.prototype.findImageItemOnPage = function (imageUrl) {
-  var images = this.targetPanel.getEl().getElementsByTagName("IMG");
-  for (var i = 0; i < images.length; i++) {
-    if (images[i].src == imageUrl || images[i].src.replace("_tn", "") == imageUrl) {
-      return images[i].parentNode;
-    }
-  }
+ReasonImage.prototype.findImageItemOnPage = function (imageURL)
+{
+	var images = this.targetPanel.getEl().querySelectorAll(".image_item");
+	for (var i = 0; i < images.length; i++)
+	{
+		URLs = this.getImageURLs(this.getImageID(images[i]));
+		for (var u in URLs)
+		{
+			if (imageURL == URLs[u])
+			{
+				return {
+					size: u,
+					image: images[i]
+				};
+			}
+		}
+	}
 };
 
 /**
  * Links reason controls (selecting an image, writing alt text) to hidden
  * tinyMCE elements.
  * @param {HTMLDivElement|String} image_item the div that contains the image
+ * @todo this should possibly be updated to use ReasonImageDialogItems instead of the DOM?
  */
 ReasonImage.prototype.selectImage = function (image_item) {
-  if (typeof image_item == "string") {
-    if (this.displayPageWith(image_item)) {
-      image_item = this.findImageItemOnPage(image_item);
-      this.switchToTab("reason");
-    } else
-      return false;
-  }
-
-  this.highlightImage(image_item);
-
-  var src = image_item.getElementsByTagName('IMG')[0].src;
-  if (!!this.imageSize && this.imageSize == 'full')
-    src = src.replace("_tn", "");
-
-  this.setSrc(src);
-  this.setAlt(image_item.querySelectorAll('.description')[0].innerHTML);
-  return true;
+	if (typeof image_item == "string")
+	{
+		if (this.displayPageWith(image_item))
+    	{
+    		image = this.findImageItemOnPage(image_item);
+    		if (image)
+    		{
+    			image_item = image.image;
+    			if (this.sizeControl.value() != image.size)
+    			{
+    				this.sizeControl.value(image.size);
+    			}
+    			this.switchToTab("reason");
+    		}
+    		else return false;
+    	}
+    	else
+    	{
+    		return false;
+    	}
+    }
+    if (!this.sizeControl.value()) this.sizeControl.value('thumbnail');
+    this.highlightImage(image_item);
+    image_elm = image_item.getElementsByTagName('IMG')[0];
+    URLs = this.getImageURLs(this.getImageID(image_item));
+    this.setSrc(URLs[this.sizeControl.value()]);
+    this.setAlt(tinymce.DOM.getAttrib(image_elm, 'alt'));
+    return true;
 };
 
 /**
@@ -438,33 +454,27 @@ ReasonImage.prototype.highlightImage = function(image_item) {
 };
 
 /**
- * setImageSize is used to do some string voodoo on the src attribute. Call it whenever
- * src or the image size is changed.
- *
- * @param {String} size
+ * Get the image id from an node that has an id this format reasonimage_IMAGEID.
  */
+ReasonImage.prototype.getImageID = function(image_node)
+{
+	return image_node.id.replace("reasonimage_", "");
+}
 
-ReasonImage.prototype.setImageSize = function (size) {
-  this.imageSize = size;
-
-  if (this.sizeControl.value() != size)
-    this.sizeControl.value(size);
-
-  var curVal = this.srcControl.value(),
-    reason_http_base_path = tinymce.activeEditor.settings.reason_http_base_path;
-  if (!curVal || curVal.search(reason_http_base_path) == -1)
-    return;
-  if (size == "full") {
-    if (curVal.search("_tn.") != -1) {
-      this.srcControl.value(curVal.replace("_tn", ""));
-    }
-  } else if (curVal.search("_tn.") == -1) {
-    var add_from = curVal.lastIndexOf('.'),
-      string;
-    string = curVal.substr(0, add_from) + "_tn" + curVal.substr(add_from);
-    this.srcControl.value(string);
-  }
-};
+/**
+ * Given an image_id from an image_node in the panel, return the URLs from the items array.
+ */
+ReasonImage.prototype.getImageURLs = function(image_id)
+{
+	for (var i = 0; i < this.items.length; i++)
+	{
+		if (image_id == this.items[i].id)
+		{
+			return this.items[i]['URLs'];
+		}
+	}
+	return;
+}
 
 ReasonImage.prototype.renderReasonImages = function () {
   throbber = new tinymce.ui.Throbber(this.imagesListBox);
@@ -481,10 +491,11 @@ ReasonImage.prototype.renderReasonImages = function () {
 };
 
 ReasonImage.prototype.noImages = function() {
-  this.UI.innerHTML = '<span class="noResult">No images are attached to this site.</span>';
+	this.UI.innerHTML = '<span class="noResult">No images are attached to this site.</span>';
 };
+
 ReasonImage.prototype.noResults = function() {
-  this.UI.imagesListBox.innerHTML = '<span class="noResult">No images were found with those search terms..</span>';
+	this.imagesListBox.innerHTML = '<span class="noResult">No images were found with those search terms.</span>';
 };
 
 /**
@@ -495,17 +506,26 @@ ReasonImage.prototype.noResults = function() {
  * @param {Array<ReasonImageDialogItem>} images_array
  **/
 ReasonImage.prototype.displayImages = function (images_array) {
-  var imagesHTML = "";
-
-  images_array = (!images_array && this.displayedItems) ? this.makePageSlice(1) : images_array;
-
-  for (var i in images_array) {
-    i = images_array[i];
-    imagesHTML += i.displayItem();
-  }
-
-  this.imagesListBox.innerHTML = imagesHTML;
-  this.updatePagination();
+	var imagesHTML = "";
+	images_array = (!images_array && this.displayedItems) ? this.makePageSlice(1) : images_array;
+	cur_src = this.srcControl.value();
+	for (var i in images_array)
+	{
+		selected = false;
+		if (!!cur_src)
+		{
+			for (url in images_array[i].URLs) {
+				if (cur_src == images_array[i].URLs[url])
+				{
+					selected = true;
+					break;
+				}
+			}
+		}
+		imagesHTML += images_array[i].displayItem(selected);
+	}
+	this.imagesListBox.innerHTML = imagesHTML;
+	this.updatePagination();
 };
 
 /**
@@ -594,18 +614,17 @@ ReasonImageDialogItem.prototype.hasText = function(q) {
 
 ReasonImageDialogItem.prototype.description = '';
 
-
-ReasonImageDialogItem.prototype.renderItem = function () {
-  var size, description;
-  size = 'thumbnail';
-  description = this.escapeHtml(this.description);
-  return '<img ' +
-    'src="' + this.URLs[size] +
-    '" alt="' + description + '"></img>';
-};
-
-ReasonImageDialogItem.prototype.displayItem = function () {
-  return '<a id="reasonimage_' + this.id + '" class="image_item"><span class="name">' + this.escapeHtml(this.name) + '</span>' + this.renderItem() + '<span class="description">' + this.escapeHtml(this.description) + '</span></a>';
+/**
+ * render image in the dialog box with selectedImage class if it is the current image.
+ */
+ReasonImageDialogItem.prototype.displayItem = function ( selected ) {
+	selectedImageClass = (selected == true) ? " selectedImage" : "";
+	imageHTML = '';
+	imageHTML += '<a id="reasonimage_' + this.id + '" class="image_item' + selectedImageClass + '">';
+	imageHTML += '<span class="name">' + this.escapeHtml(this.name) + '</span>';
+	imageHTML += '<img src="' + this.URLs['thumbnail'] + '" alt="' + this.escapeHtml(this.description) + '"/>';
+	imageHTML += '<span class="description">' + this.escapeHtml(this.description) + '</span></a>';
+	return imageHTML;
 };
 
 
@@ -1074,7 +1093,7 @@ tinymce.PluginManager.add('reasonintegration', function(editor, url) {
           items: [
             {name: 'alt_2', type: 'textbox', size: 40, label: 'Description'},
             {name: 'size', type: 'listbox', label: "Size", values: [
-              {text: 'Thumbnail', value: 'thumb'},
+              {text: 'Thumbnail', value: 'thumbnail'},
               {text: 'Full', value: 'full'}
             ]},
             {name: 'align_2', type: 'listbox', label: "Align", values: [
@@ -1125,14 +1144,12 @@ tinymce.PluginManager.add('reasonintegration', function(editor, url) {
         if (imgElm) {
         	reasonImagePlugin.switchToTab("URL");
         	reasonImagePlugin.setAlign(imgElm.align);
-        	reasonImagePlugin.setAlt(imgElm.alt);
-        	reasonImagePlugin.setSrc(imgElm.src);
-        	reasonImagePlugin.whenLoaded(function() {
-            if (this.selectImage(imgElm.src)) {
-              this.setImageSize(this.deduceSize(imgElm.src));
-              this.setAlt(imgElm.alt);
-            }
-          });
+        	reasonImagePlugin.setAlt(tinymce.DOM.getAttrib(imgElm, 'alt'));
+        	reasonImagePlugin.setSrc(tinymce.DOM.getAttrib(imgElm, 'src'));
+        	reasonImagePlugin.whenLoaded(function()
+        	{
+        		this.selectImage(tinymce.DOM.getAttrib(imgElm, 'src'));
+        	});
         }
       },
       onSubmit: function() {
