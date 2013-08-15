@@ -413,6 +413,7 @@ ReasonImage.prototype.findImageItemOnPage = function (imageURL)
  * @todo this should possibly be updated to use ReasonImageDialogItems instead of the DOM?
  */
 ReasonImage.prototype.selectImage = function (image_item) {
+	shouldSetAlt = true;
 	if (typeof image_item == "string")
 	{
 		if (this.displayPageWith(image_item))
@@ -426,6 +427,7 @@ ReasonImage.prototype.selectImage = function (image_item) {
     				this.sizeControl.value(image.size);
     			}
     			this.switchToTab("reason");
+    			if (this.altControls[0].value()) shouldSetAlt = false;
     		}
     		else return false;
     	}
@@ -439,7 +441,7 @@ ReasonImage.prototype.selectImage = function (image_item) {
     image_elm = image_item.getElementsByTagName('IMG')[0];
     URLs = this.getImageURLs(this.getImageID(image_item));
     this.setSrc(URLs[this.sizeControl.value()]);
-    this.setAlt(tinymce.DOM.getAttrib(image_elm, 'alt'));
+    if (shouldSetAlt) this.setAlt(tinymce.DOM.getAttrib(image_elm, 'alt'));
     return true;
 };
 
