@@ -57,19 +57,14 @@
 	 * @param int $type entity's type
 	 * @return string of form <table>.<field>
 	 */
-	function table_of( $name , $type) // {{{
+	function table_of( $name , $type ) // {{{
 	{
-		$tables = get_entity_tables_by_type( $type );
-		foreach( $tables AS $t )
+		if ($table = get_table_from_field($name, $type))
 		{
-			$x = get_fields_by_content_table( $t );
-			if( in_array( $name , $x ) )
-			{
-				return $t . '.' . $name;
-			}
+			return $table . '.' . $name;
 		}
 		return false;
-	} // }}}
+	}
 	
 	/**
 	 * Generic sorting function for reason

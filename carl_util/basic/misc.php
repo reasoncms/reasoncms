@@ -60,57 +60,6 @@ if (!defined("ENT_COMPAT")) define("ENT_COMPAT", 2);
 if (!defined("ENT_NOQUOTES")) define("ENT_NOQUOTES", 0);
 if (!defined("ENT_QUOTES")) define("ENT_QUOTES", 3);
 
-if (!function_exists('html_entity_decode')) {
-
-	/**
-	 * html_entity_decode replacement
-	 *
-	 * This function has a number of significant problems:
-	 *
-	 * 1. It does not translate into UTF-8, but into ISO-8859-1
-	 *
-	 * 2. It should only be defined prior to php 4.3. Since it is likely that 
-	 * no Reason installs are running a version this old, and since Reason is 
-	 * soon to be php5+, this function definition is therefore deprecated.
-	 *
-	 * @deprecated
-	 * @todo remove this function once php4 support goes away
-	 */
-	function html_entity_decode ($string, $opt = ENT_COMPAT)
-	{
-		trigger_error('Running reason on php older than 4.3 is deprecated. Newer versions of Reason will not work under <4.3; please upgrade your php version.');
-		$trans_tbl = get_html_translation_table (HTML_ENTITIES);
-		$trans_tbl = array_flip ($trans_tbl);
-		
-		// Translating single quotes
-		if ($opt & 1)
-		{
-			// Add single quote to translation table;
-			// doesn't appear to be there by default
-			$trans_tbl["&apos;"] = "'";
-		}
-
-		// Not translating double quotes
-		if (!($opt & 2))
-		{
-			// Remove double quote from translation table
-			unset( $trans_tbl["&quot;"] );
-		}
-
-		return strtr ($string, $trans_tbl);
-	}
-}
-
-if(!function_exists('htmlspecialchars_decode'))
-{
-	function htmlspecialchars_decode($string,$style=ENT_COMPAT)
-    {
-        $translation = array_flip(get_html_translation_table(HTML_SPECIALCHARS,$style));
-        if($style === ENT_QUOTES){ $translation['&#039;'] = '\''; }
-        return strtr($string,$translation);
-    }
-}
-
 	/**
 	 *	Log a line to a file
 	 *
@@ -859,6 +808,81 @@ if(!function_exists('htmlspecialchars_decode'))
 			return $codes[$status_code];
 		trigger_error('Unrecognized http response code '.$status_code);
 		return false;
+	}
+	
+	/**
+	 * An exec replacement that supports an optional timeout parameter.
+	 *
+	 * - On Windows the timeout is ignored.
+	 * - Exit status appears to be unreliable. Don't use this if you depend on it.
+	 */
+	function exec_with_timeout($cmd, $timeout = NULL, &$output = NULL, &$exit_status = NULL)
+	{
+		if (!server_is_windows())
+		{
+			$exit_status = proc_with_timeout($cmd, null, $stdout, $stderr, $timeout);
+			if (is_array($output))
+			{
+				$output = array_merge($output, preg_split("/\r\n|\n|\r/", $stdout));
+			}
+		}
+		else exec($cmd, $output, $exit_status);
+	}
+
+	/**
+	 * A proc_open based function that appears to work and lets me set a timeout.
+	 *
+	 * In my testing it seems like the exitcode is not properly returned on some systems.
+	 *
+	 * Where possible, use stdout or a more definitive test (like file existence) to determine if things worked.
+	 *
+	 * from http://stackoverflow.com/questions/3407939/shell-exec-timeout-management-exec
+	 */
+	function proc_with_timeout($cmd, $stdin=null, &$stdout, &$stderr, $timeout=false)
+	{
+		$pipes = array();
+		$process = proc_open(
+			$cmd,
+			array(array('pipe','r'),array('pipe','w'),array('pipe','w')),
+			$pipes
+		);
+		$start = time();
+		$stdout = '';
+		$stderr = '';
+
+		if(is_resource($process))
+		{
+			stream_set_blocking($pipes[0], 0);
+			stream_set_blocking($pipes[1], 0);
+			stream_set_blocking($pipes[2], 0);
+			fwrite($pipes[0], $stdin);
+			fclose($pipes[0]);
+		}
+
+		while(is_resource($process))
+		{
+			//echo ".";
+			$stdout .= stream_get_contents($pipes[1]);
+			$stderr .= stream_get_contents($pipes[2]);
+
+			if($timeout !== false && time() - $start > $timeout)
+			{
+				proc_terminate($process, 9);
+				return 1;
+			}
+
+			$status = proc_get_status($process);
+			if(!$status['running'])
+			{
+				fclose($pipes[1]);
+				fclose($pipes[2]);
+				proc_close($process);
+				return $status['exitcode'];
+			}
+
+			usleep(100000);
+		}
+		return 1;
 	}
 }
 ?>

@@ -12,12 +12,15 @@
 	reason_include_once('classes/plasmature/upload.php');
 	reason_include_once('classes/kaltura_shim.php');
 	reason_include_once('classes/csv.php');
+	reason_include_once('classes/default_access.php');
 	/**
 	 * 
 	 */
 	class KalturaImportModule extends DefaultModule
 	{
+		protected $temp_dir = 'kaltura-imports/';
 		protected $metadata;
+		protected $default_access_group;
 		function KalturaImportModule( &$page )
 		{
 			$this->admin_page =& $page;
@@ -41,6 +44,7 @@
 						'keywords' => '',
 						'categories' => '',
 						'show_hide' => 'show',
+						'transcript_status' => 'pending',
 					);
 		}
 		function get_acceptable_values()
@@ -51,6 +55,7 @@
 						'email_notification' => array('0','1'),
 						'show_embed' => array('0','1'),
 						'show_download' => array('0','1'),
+						'transcript_status' => array('pending','published'),
 					);
 		}
 		function run()
@@ -78,10 +83,27 @@
 			$d->add_callback(array($this,'process_form'),'process');
 			$d->run();
 		}
-		
+		protected function get_default_access_group()
+		{
+			if(!isset($this->default_access_group))
+			{
+				$da = reason_get_default_access();
+				$this->default_access_group = false;
+				if($group_id = $da->get($this->admin_page->site_id, 'av', 'av_restricted_to_group'))
+				{
+					$this->default_access_group = new entity($group_id);
+				}
+			}
+			return $this->default_access_group;
+		}
 		function get_instructions($d)
 		{
 			$ret = '<p>Package your media files in a flat zip archive, with a CSV spreadsheet in the archive named metadata.csv. The first row of the CSV file should contain the following column names (* = required for processing).</p>'."\n";
+			$group_info = '';
+			if($group = $this->get_default_access_group())
+			{
+				$group_info = '; default '.$group->id().' ['.$group->get_value('name').']';
+			}
 			$ret .= '<ul>
 				<li><strong>filename*</strong> (Must be one of the following file types: '.implode(', ',$this->get_recognized_extensions()).')</li>
 				<li><strong>name*</strong></li>
@@ -92,15 +114,41 @@
 				<li><strong>keywords</strong></li>
 				<li><strong>datetime</strong> (A date/time value indicating when the work was created)</li>
 				<li><strong>transcript</strong></li>
-				<li><strong>transcript_status</strong></li>
+				<li><strong>transcript_status</strong> (must be either "pending" or "published"; default "pending")</li>
 				<li><strong>rights_statement</strong></li>
 				<li><strong>email_notification</strong> (1 to send notification email when processing is complete; default 0)</li>
 				<li><strong>show_embed</strong> (1 to offer embedding in the front-end interface; default 1)</li>
 				<li><strong>show_download</strong> (1 to offer download of the file in the front-end interface; default 1</li>
+				<li><strong>access_group</strong> (unique name or id of a Group'.$group_info.')</li>
 			</ul>'."\n";
 			$ret .= '<p>If there are any required values not present, no processing of the entire import will occur. (This import will attempt to provide a helpful summary of the issues.)</p>'."\n";
 			$ret .= '<p>If any of the non-required columns are not present or contain no value, no value (or the default value indicated) will be used.</p>'."\n";
 			return $ret;
+		}
+		function delete_dir($dir) {
+			$dir = "/".trim_slashes($dir)."/";
+			if ( is_dir($dir) )
+			{			
+				$objects = scandir($dir);
+				foreach ($objects as $object)
+				{
+					if ( !empty($object) && $object != "." && $object != ".." ) // exclude the pointers!
+					{
+						$full_path_obj = $dir.$object;
+						if ( filetype($full_path_obj) == "dir" ) 
+						{
+							$this->delete_dir($full_path_obj.'/');
+						} 
+						else 
+						{
+							unlink($full_path_obj);
+						}
+					}
+				}
+				reset($objects);
+				return @rmdir($dir);
+			}
+			return false;
 		}
 		function error_check($d)
 		{
@@ -125,31 +173,41 @@
 						$res = $zip->open($file_path);
 						if ($res === TRUE)
 						{
-							$this->temp_location = REASON_TEMP_DIR.uniqid().'/';
+							$temp_base = $this->get_kaltura_import_dir();
+							$this->temp_location = $temp_base.uniqid().'/';
 							mkdir($this->temp_location);
 							$zip->extractTo($this->temp_location);
 							$zip->close();
 							$errors = $this->sanity_check($this->temp_location);
-							foreach($errors as $error)
+							if ( !empty($errors) )
 							{
-								$d->set_error('zip_file',$error);
+								$this->delete_dir($this->temp_location);
+								foreach($errors as $error)
+								{
+									$d->set_error('zip_file',$error);
+								}
 							}
 						}
 						else
 						{
 							$d->set_error('zip_file','Unable to unzip uploaded zip file.');
 						}
+						// delete $file_path
+						unlink($file_path);
 					}
 				}
 			}
 			elseif( !$d->has_error('zip_file_url') && $d->get_value('zip_file_url') )
 			{
-				$file_path = REASON_TEMP_DIR.uniqid().'.zip';
+				set_time_limit(2700);
+				
+				$file_path = $this->get_kaltura_import_dir().uniqid().'.zip';
 				$ch = curl_init($d->get_value('zip_file_url'));
 				$fp = fopen($file_path, "w");
 				curl_setopt($ch, CURLOPT_FILE, $fp);
 				curl_setopt($ch, CURLOPT_HEADER, 0);
-
+				curl_setopt($ch, CURLOPT_CONNECTTIMEOUT ,300);
+				curl_setopt($ch, CURLOPT_TIMEOUT, 1800);
 				curl_exec($ch);
 				curl_close($ch);
 				
@@ -159,20 +217,26 @@
 				$res = $zip->open($file_path);
 				if ($res === TRUE)
 				{
-					$this->temp_location = REASON_TEMP_DIR.uniqid().'/';
+					$this->temp_location =  $this->get_kaltura_import_dir().uniqid().'/';
 					mkdir($this->temp_location);
 					$zip->extractTo($this->temp_location);
 					$zip->close();
 					$errors = $this->sanity_check($this->temp_location);
-					foreach($errors as $error)
+					if ( !empty($errors) )
 					{
-						$d->set_error('zip_file',$error);
+						$this->delete_dir($this->temp_location);
+						foreach($errors as $error)
+						{
+							$d->set_error('zip_file',$error);
+						}
 					}
 				}
 				else
 				{
 					$d->set_error('zip_file','Unable to unzip zip file from URL.');
 				}
+				// delete $file_path
+				unlink($file_path);
 			}
 		}
 		function sanity_check($dir)
@@ -212,7 +276,7 @@
 							}
 							if(empty($item['name']))
 							{
-								$errors[] = 'At least one item does not have a filename value';
+								$errors[] = 'At least one item does not have a name value';
 							}
 							if(empty($item['av_type']))
 							{
@@ -243,6 +307,36 @@
 							{
 								$errors[] = 'At least one filename in the csv does not appear to have an extension ('.htmlspecialchars($item['filename']).')';
 							}
+							
+							// check to see if the access group is a valid unique id or id
+							if (!empty($item['access_group']))
+							{
+								$group = $item['access_group'];
+								if (is_numeric($group)) // id number
+								{
+									$group = new entity($group);
+									if ($group->get_value('type') != id_of('group_type'))
+									{
+										$errors[] = 'At least one access_group in the csv does not have a valid Group id.';
+									}
+								}
+								else
+								{
+									if($id = id_of($group, true, false))
+									{
+										$group = new entity($id);
+										if ($group->get_value('type') != id_of('group_type'))
+										{
+											$errors[] = 'At least one access_group\'s unique name in the csv does not correspond to a Group.';
+										}
+									}
+									else
+									{
+										$errors[] = 'At least one access_group in the csv does not have a valid access_group unique name.';
+									}
+								}
+							}
+							
 							if(!empty($errors))
 								break;
 						}
@@ -327,14 +421,52 @@
 		function process_form($d)
 		{
 			$user = new entity( $this->admin_page->user_id );
+			$fail_count = 0;
+			$success_count = 0;
+			echo '<ul>'."\n";
 			foreach($this->metadata as $info)
 			{
 				$prepped_info = $this->prep_item_info($info);
 				$shim = new KalturaShim();
 				$entry = $this->kaltura_import($prepped_info, $user, $shim);
-				$id = $this->reason_import($prepped_info, $entry, $user);
+				if (!empty($entry) && $entry->id)
+				{
+					$id = $this->reason_import($prepped_info, $entry, $user);
+					// attach access group if applicable
+					if (!empty($info['access_group']))
+					{
+						if (is_numeric($info['access_group']))
+						{
+							$group_id = $info['access_group'];
+						}
+						else
+						{
+							$group_id = id_of($info['access_group']);
+						}
+						create_relationship( $id, $group_id, relationship_id_of('av_restricted_to_group') );
+					}
+					elseif($group = $this->get_default_access_group())
+					{
+						create_relationship( $id, $group->id(), relationship_id_of('av_restricted_to_group') );
+					}
+					echo '<li>Started processing: ' . reason_htmlspecialchars($info['name']) . '</li>'."\n";
+					$success_count++;
+				}
+				else
+				{
+					echo '<li><strong>Failed</strong to start processing (likely due to a communication problem with Kaltura): ' . reason_htmlspecialchars($info['name']) . '</li>'."\n";
+					$fail_count++;
+				}
 			}
-			echo 'Imported '.count($this->metadata).' item(s).';
+			echo '</ul>'."\n";
+			if($success_count)
+				echo '<h4>Successfully started processing ' . $success_count . ' item(s).</h4>'."\n";
+			if($fail_count)
+			{
+				echo '<h4>Failed to import ' . $fail_count . ' item(s).</h4>'."\n";
+				echo '<p>Please contact your Reason or Kaltura administrator for assistance.</p>'."\n";
+			}
+			echo '<hr />'."\n";
 		}
 		function kaltura_import($info, $user, $shim)
 		{
@@ -372,13 +504,21 @@
 			$info['transcoding_status'] = 'converting';
 			$info['integration_library'] = 'kaltura';
 			$info['new'] = '0';
+			$site = new entity($this->admin_page->site_id);
+			$info['categories'] = $site->get_value('name').','.$info['categories'];
 			if('show' == $info['show_hide'])
 				$info['media_publication_datetime'] = date('Y-m-d H:i:s');
 			$info['tmp_file_name'] = uniqid('imported-media-work-',true).'.'.$this->get_extension($info['file_location']);
-			$info['tmp_file_path'] = substr_replace(WEB_PATH,"",-1).WEB_TEMP.$info['tmp_file_name'];
+			$info['tmp_file_path'] = $this->get_kaltura_import_dir().$info['tmp_file_name'];
 			rename($info['file_location'], $info['tmp_file_path']);
+			$this->delete_dir($this->temp_location);
 			// todo: tidy, strip tags
 			return $info;
 		}
+		function get_kaltura_import_dir()
+		{
+			return KalturaShim::get_temp_import_dir();
+		}
+		
 	}
 ?>

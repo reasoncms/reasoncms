@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.5.9, for osx10.4 (i386)
+-- MySQL dump 10.13  Distrib 5.5.25, for osx10.6 (i386)
 --
 -- Host: localhost    Database: reason
 -- ------------------------------------------------------
--- Server version	5.5.9
+-- Server version	5.5.25
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -1592,7 +1592,7 @@ CREATE TABLE `theme` (
   `id` int(10) unsigned NOT NULL,
   `theme_customizer` tinytext,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1759,4 +1759,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-01-31 11:20:06
+-- Dump completed on 2013-07-26 15:25:35

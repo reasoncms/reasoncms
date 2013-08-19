@@ -16,7 +16,7 @@
 
 include_once('reason_header.php');
 reason_include_once('classes/entity_selector.php');
-reason_include_once( 'classes/group_helper.php' );
+reason_include_once('classes/media_work_helper.php');
 reason_include_once('function_libraries/user_functions.php');
 reason_include_once('classes/media_work_displayer.php');
 
@@ -70,26 +70,17 @@ $group = current($es->run_one());
 
 $extension = $media_file->get_value('av_type') == 'Video' ? 'mp4' : 'mp3';
 
-# If there is an associated group, check to see if the user has access
-# If there is NO associated group, the podcast is available, and we header to its url
-if ($group)
+# If the user doesn't have access to the media work, header to the "No Access" url
+$mwh = new media_work_helper($media_work);
+if ( !$mwh->user_has_access_to_media() )
 {
-	$gh = new group_helper();
-	$gh->set_group_by_entity($group);
-	
-	# Get http authentication if the group requires login
-	# If it doesn't require login, we can header to the podcast's url
-	if($gh->requires_login())
+	$username = reason_require_http_authentication();
+	if ( !$mwh->user_has_access_to_media($username) )
 	{
-		$username = reason_require_http_authentication();
-		if( !$gh->is_username_member_of_group($username) )
-		{
-			// header to the access denied media
-			header('Location: http://'.HTTP_HOST_NAME.REASON_HTTP_BASE_PATH.'modules/av/no_access_message.'.$extension);
-			die();
-		}
+		// header to the access denied media
+		header('Location: http://'.HTTP_HOST_NAME.REASON_HTTP_BASE_PATH.'modules/av/no_access_message.'.$extension);
+		die();
 	}
-	
 }
 
 # If we make it here, the podcast is safe to provide

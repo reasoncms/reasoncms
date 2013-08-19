@@ -14,6 +14,8 @@
 	 */
 	class DoBorrowModule extends DefaultModule // {{{
 	{
+		var $check_admin_token = true;
+		
 		function DoBorrowModule( &$page ) // {{{
 		{
 			$this->admin_page =& $page;

@@ -347,6 +347,7 @@ else
 function admin_user_exists()
 {
 	reason_include_once('function_libraries/admin_actions.php');
+	reason_refresh_unique_names(); // lets make sure we pull admin_user from the database not the cache.
 	return reason_unique_name_exists('admin_user');
 }
 
@@ -625,7 +626,7 @@ function check_jquery_accessible_over_http()
 {
 	global $auto_mode_enabled;
 	$fixed_str = '';
-	$accessible = check_accessible_over_http(JQUERY_URL, 'John Resig');
+	$accessible = check_accessible_over_http(JQUERY_URL, 'jQuery Foundation');
 	if (!$accessible && $auto_mode_enabled) // lets try to repair this
 	{
 		// if JQUERY_INC is readable
@@ -634,7 +635,7 @@ function check_jquery_accessible_over_http()
 			$symlink_loc = str_replace("//", "/", WEB_PATH . rtrim(JQUERY_HTTP_PATH, "/"));
 			if (is_writable(dirname($symlink_loc))) symlink(JQUERY_INC, $symlink_loc);
 		}
-		$accessible = check_accessible_over_http(JQUERY_URL, 'John Resig');
+		$accessible = check_accessible_over_http(JQUERY_URL, 'jQuery Foundation');
 		$fixed_str = ($accessible) ? ' was fixed using auto mode and' : ' could not be fixed using auto mode and';
 	}
 	if ($accessible) return msg('<span class="success">jQuery'.$fixed_str.' is accessible over http</span> - check passed', true);
@@ -800,28 +801,9 @@ function tidy_check()
 
 function curl_check()
 {
-	global $curl_test_content;
-	$link = carl_construct_link(array('curl_test' => "true"), array(''));
-	$insecure_link = on_secure_page() ? alter_protocol($link,'https','http') : $link;
-	$secure_link = on_secure_page() ? $link : alter_protocol($link,'http', 'https');
-	$content = get_reason_url_contents( $insecure_link );
-	if ($content != $curl_test_content)
-	{
-		$extra_error_txt = (!empty($content)) ? ' - the curl attempt returned this content: <pre>' . htmlentities($content) . '</pre> and should have returned <pre>' . htmlentities($curl_test_content) .'</pre>' : ' - The curl attempt returned no content.';
-		return msg('<span class="error">curl check failed</span>' . $extra_error_txt, false);
-	}
-	else 
-	{
-		// if HTTPS_AVAILABLE is true, lets hit the current page in that way
-		if (securest_available_protocol() == 'https') 
-		{
-			$content = get_reason_url_contents($secure_link);
-			if (empty($content)) return msg('<span class="error">curl check failed over https</span>.
-											<p>Your server probably does not support https connections</p>
-											<p>Set the HTTPS_AVAILABLE constant in package_settings.php to false and try again.</p>', false);
-		}
-		return msg('<span class="success">curl check passed</span>', true);
-	}
+	if (!function_exists('curl_init'))
+		die_with_message('<span class="error">curl check failed. You need to install php5-curl. </span>');
+	return msg('<span class="success">curl check passed</span>', true);
 }
 
 /**

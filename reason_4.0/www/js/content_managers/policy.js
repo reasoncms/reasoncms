@@ -1,5 +1,5 @@
 function do_policy_element_hiding() {
-	selector = '#descriptionRow, #keywordsRow, #lastreviseddateRow, #lastrevieweddateRow, #approvalsRow, #limitaccessRow, #audiencesRow';
+	selector = '#descriptionRow, #keywordsRow, #lastreviseddateRow, #lastrevieweddateRow, #limitaccessRow, #audiencesRow';
 	if( $('option:selected', '#parent_idElement').index() > 1)
 		$(selector).hide();
 	else

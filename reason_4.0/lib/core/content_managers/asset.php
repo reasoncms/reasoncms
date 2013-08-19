@@ -12,6 +12,7 @@
 	reason_include_once('classes/plasmature/upload.php');
 	reason_include_once('content_managers/default.php3');
 	reason_include_once('function_libraries/asset_functions.php');
+	reason_include_once('classes/default_access.php');
 	
 	require_once CARL_UTIL_INC.'basic/mime_types.php';
 	require_once CARL_UTIL_INC.'basic/misc.php';
@@ -38,6 +39,7 @@
 			$params = array('authenticator' => $authenticator,
 				'max_file_size' => $this->get_actual_max_upload_size(),
 				'head_items' => &$this->head_items,
+				//'download_info_mbps' => 1,
 				'file_display_name' => $this->get_value('file_name'));
 			if (!empty($existing_asset_type)) {
 				$params = array_merge($params, array(
@@ -60,9 +62,13 @@
 			$this->set_display_name( 'datetime', 'Publication Date' );
 			
 			$this->change_element_type( 'file_size', 'hidden' );
+			
+			
 			$this->change_element_type( 'file_name', 'text' );
 			$this->change_element_type( 'file_type', 'hidden' );
 			$this->change_element_type( 'mime_type', 'hidden' );
+			
+			$this->add_restriction_selector();
 		} // }}}
 		
 		// This method is useful for debugging uploads; it maintains the same
@@ -93,6 +99,7 @@
 					'asset',
 					'file_size',
 					'mime_type',
+					'limit_access',
 					'no_share',
 				)
 			);
@@ -272,6 +279,19 @@
 		function get_actual_max_upload_size()
 		{
 			return reason_get_asset_max_upload_size();
+		}
+		protected function add_restriction_selector()
+		{
+			$this->add_relationship_element('limit_access', id_of('group_type'), relationship_id_of('asset_access_permissions_to_group'), 'right', 'select', true, $sort = 'entity.name ASC');
+			if($this->is_new_entity() && $this->_is_first_time() && !$this->get_value('name') && !$this->get_value('limit_access') && ($group_id = $this->get_default_restricted_group_id()))
+			{
+				$this->set_value('limit_access', $group_id);
+			}
+		}
+		protected function get_default_restricted_group_id()
+		{
+			$da = reason_get_default_access();
+			return $da->get($this->get_value( 'site_id' ), $this->get_value( 'type_id' ), 'asset_access_permissions_to_group');
 		}
 	}
 ?>

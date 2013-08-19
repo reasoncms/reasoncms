@@ -16,22 +16,6 @@ include_once(CARL_UTIL_INC . 'basic/image_funcs.php');
 reason_include_once('function_libraries/image_tools.php');
 
 /**
- * lets define our image directory (must exist and be web accessible and readable / writable by apache)
- */
-if (!defined("REASON_SIZED_IMAGE_DIR"))
-{
-	define("REASON_SIZED_IMAGE_DIR", '/' . trim_slashes(WEB_PATH) . '/' . trim_slashes(WEB_TEMP) . '/');
-}
-
-/**
- * lets define our image directory (must exist and be web accessible and readable / writable by apache)
- */
-if (!defined("REASON_SIZED_IMAGE_DIR_WEB_PATH"))
-{
-	define("REASON_SIZED_IMAGE_DIR_WEB_PATH", '/' . trim_slashes(WEB_TEMP) . '/');
-}
-
-/**
  * reasonSizedImage create sized image files (if needed) and returns a filename string for them.
  *
  * If you set only a width or height, the other dimension will be automatically picked based upon the aspect
@@ -45,7 +29,6 @@ if (!defined("REASON_SIZED_IMAGE_DIR_WEB_PATH"))
  * $rsi->set_crop_style('fill');
  * $image_url = $rsi->get_url();
  *
- * @todo integrate REASON_SIZED_IMAGE_DIR and REASON_SIZED_IMAGE_DIR_WEB_PATH into reason_settings.php - use a better spot than loose in WEB_PATH/WEB_TEMP
  * @todo what should we do if we want to resize to a larger size than the original
  * @todo Add a quality setting so code can choose between "fast" and "good" --
  * the main difference being that "fast" will resize from the full-sized image

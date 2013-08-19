@@ -22,6 +22,7 @@ $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'ReasonMVCMo
  * - Hard coded configuration parameters may be better than page type parameters for some controllers, models, and views.
  * - Module system specific concerns like breadcrumbs, inline editing, head items, standalone API, etc should be handled in a module.
  * - The configuration of an MVC combination is dependent upon the request variables.
+ * - You want to specify default views and models so that page types can just pass in configuration params.
  * 
  * In effect, when extended the module itself becomes something of a super controller. It is generally a good idea to keep module specific 
  * logic out of a controller such that the MVC components can easily be used anywhere - not just in the module system. A controller should 
@@ -59,6 +60,21 @@ class ReasonMVCModule extends DefaultMinisiteModule
 	var $acceptable_params = array('controller' => '',
 								   'model' => '',
 								   'view' => '');
+	
+	/**
+	 * @param string file name of the default view
+	 */
+	var $view;
+	
+	/**
+	 * @param string file name of the default model
+	 */
+	var $model;
+	
+	/**
+	 * @param string file name of the default controller
+	 */
+	var $controller;
 	
 	protected $content;
 	
@@ -133,30 +149,31 @@ class ReasonMVCModule extends DefaultMinisiteModule
 			trigger_warning('The type passed ('.$type.') to _setup_mvc must be "controller", "model", or "view"', 1);
 			return NULL;
 		}
-		if (!empty($params['file'])) // we need to do an include
+		if (!empty($params['file']) || !empty($this->$type)) // we need to do an include
 		{
-				if (reason_file_exists('minisite_templates/modules/'.$params['file']))
-				{
-					reason_include_once('minisite_templates/modules/'.$params['file']);
-					$full_path = reason_resolve_path('minisite_templates/modules/'.$params['file']);
-				}
-				elseif (reason_file_exists($params['file']))
-				{
-					reason_include_once($params['file']);
-					$full_path = reason_resolve_path($params['file']);
-				}
-				elseif (file_exists($params['file']))
-				{
-					include_once($params['file']);
-					$full_path = realpath($params['file']);
-				}
-				else trigger_error('The mvc module was unable to load the ' . $type . ' ('.$params['file'].')', FATAL);
-				if (isset($GLOBALS[ '_reason_mvc_'.$type.'_class_names' ][ reason_basename($full_path) ]))
-				{
-					$class_name = $GLOBALS[ '_reason_mvc_'.$type.'_class_names' ][ reason_basename($full_path) ];
-				}
-				else trigger_error('The mvc module was unable to determine the class name for the ' . $type . ' ('.$params['file'].') - check that the file properly registers itself.', FATAL);
-				unset($params['file']);
+			if (empty($params['file']) || !empty($this->$type)) $params['file'] = $this->$type;	
+			if (reason_file_exists('minisite_templates/modules/'.$params['file']))
+			{
+				reason_include_once('minisite_templates/modules/'.$params['file']);
+				$full_path = reason_resolve_path('minisite_templates/modules/'.$params['file']);
+			}
+			elseif (reason_file_exists($params['file']))
+			{
+				reason_include_once($params['file']);
+				$full_path = reason_resolve_path($params['file']);
+			}
+			elseif (file_exists($params['file']))
+			{
+				include_once($params['file']);
+				$full_path = realpath($params['file']);
+			}
+			else trigger_error('The mvc module was unable to load the ' . $type . ' ('.$params['file'].')', FATAL);
+			if (isset($GLOBALS[ '_reason_mvc_'.$type.'_class_names' ][ reason_basename($full_path) ]))
+			{
+				$class_name = $GLOBALS[ '_reason_mvc_'.$type.'_class_names' ][ reason_basename($full_path) ];
+			}
+			else trigger_error('The mvc module was unable to determine the class name for the ' . $type . ' ('.$params['file'].') - check that the file properly registers itself.', FATAL);
+			unset($params['file']);
 		}
 		else
 		{

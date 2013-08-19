@@ -84,13 +84,19 @@ class blogPostsFeed extends pageTreeFeed
 		$this->feed->set_item_field_handler( 'description', 'expand_all_links_in_html', false );
 		$this->feed->set_item_field_handler( 'title', 'strip_tags', false );
 		
-		$this->feed->es->add_relation( 'show_hide.show_hide = "show"' );
+		$this->feed->es->add_relation( 'show_hide = "show"' );
 		$this->feed->es->set_order( 'datetime DESC' );
-		$this->feed->es->add_relation( 'status.status != "pending"' );
-		$this->feed->es->add_relation( 'dated.datetime <= NOW()' );
+		$this->feed->es->add_relation( 'status != "pending"' );
+		
+		// In order to be able to take advantage of query caching so we round up using 5 minute intervals when looking at the datetime.
+		$this->feed->es->add_relation( 'datetime <= "' . get_mysql_datetime(ceil(time()/300)*300) . '"' );
+		
+		// lets add some sensible limits to avoid joining across all the tables (particularly chunk)
+		$this->feed->es->limit_tables(array('entity', 'dated', 'status', 'show_hide'));
+		$this->feed->es->limit_fields();
 		
 		if(!empty($this->request['shared_only']))
-			$this->feed->es->add_relation( 'entity.no_share = "0"' );
+			$this->feed->es->add_relation( 'no_share = "0"' );
 		
 		if($this->blog->get_value('has_issues') == 'yes')
 		{

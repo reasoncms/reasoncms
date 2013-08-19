@@ -58,7 +58,8 @@ reason_include_once( 'minisite_templates/modules/feature/views/default_view.php'
  */
 class DefaultFeatureView extends FeatureView
 {
-
+	var $has_av = false;
+	
 	function set($view_data,$view_params,$current_feature_id,&$head_items)
 	{
 		//call Mother
@@ -84,16 +85,19 @@ class DefaultFeatureView extends FeatureView
 			if(!isset($data['feature_av_html'])){ $view_data[$id]['feature_av_html']=array("none");}
 			if(!isset($data['feature_av_img_url'])){ $view_data[$id]['feature_av_img_url']=array("none");}
 			if(!isset($data['feature_av_img_alt'])){ $view_data[$id]['feature_av_img_alt']=array("");}
+			if ($view_data[$id]['current_object_type'] == 'av') $this->has_av = true;
 		}
 		$this->_view_data=$view_data;
-		
-		
-		
+			
 		$width=$this->_view_params['width'];
 		$height=$this->_view_params['height'];
 		if($head_items != null)
 		{
-			$head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH."nyroModal/js/jquery.nyroModal-1.6.2.min.js");
+			$head_items->add_javascript(JQUERY_URL, true);
+			if ($this->has_av)
+			{
+				$head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH."nyroModal/js/jquery.nyroModal-1.6.2.min.js");
+			}
 			$head_items->add_javascript(REASON_HTTP_BASE_PATH . 'js/feature.js');
 			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH . 'css/features/feature.css');
 			$head_items->add_head_item("style",array("type"=>"text/css"),"

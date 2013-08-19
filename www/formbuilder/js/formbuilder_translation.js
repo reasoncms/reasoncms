@@ -46,13 +46,15 @@
 		xmlHead += '<form submit="' + submit + '" >';
 		delete ul_obj['options'];
 		var i = 1;
-		for (var item in ul_obj) {
-			item = i;
-			itemVals = decodeURIComponent(ul_obj[item].values);
+		for (var item in ul_obj) { 
+			item = i; 
+			itemVals = htmlspecialchars(decodeURIComponent(ul_obj[item].values));
 			itemRequired = (decodeURIComponent(ul_obj[item].required) == 'true') ? 'required' : '';
-			itemTitle = decodeURIComponent(ul_obj[item].title);
-			itemDefault = decodeURIComponent((ul_obj[item].defaultValue) ? ul_obj[item].defaultValue : '');
+			itemTitle = htmlspecialchars(decodeURIComponent(ul_obj[item].title));
+			itemDefault = htmlspecialchars(decodeURIComponent((ul_obj[item].defaultValue) ? ul_obj[item].defaultValue : ''));
 			if (ul_obj[item].cssClass == "input_text") {
+				console.log(itemVals);
+				console.log(itemDefault);
 				xmlDoc += '<input type="text" id="' + $().makeThorID();
 				if (itemRequired) xmlDoc += '" required="' + itemRequired;
 				if (itemDefault) xmlDoc += '" value="' + itemDefault;
@@ -70,7 +72,7 @@
                     addString += '" required="' + itemRequired;
 				addString += '" label="' + itemTitle + '">';
 				for (var checkitem in ul_obj[item]['values']) {
-					subVals = decodeURIComponent(ul_obj[item]['values'][checkitem].value);
+					subVals = htmlspecialchars(decodeURIComponent(ul_obj[item]['values'][checkitem].value));
 					subRequired = (decodeURIComponent(ul_obj[item]['values'][checkitem].required) == 'checked') ? 'required' : '';
 					subSelected = (decodeURIComponent(ul_obj[item]['values'][checkitem].baseline) == "checked") ? 'selected' : null;
 					if (typeof (ul_obj[item]['values'][checkitem]) == 'object') {
@@ -87,7 +89,7 @@
 				if (itemRequired !== '') addString += '" required="' + itemRequired;
 				addString += '" label="' + itemTitle + '">';
 				for (var radioitem in ul_obj[item]['values']) {
-					subVals = decodeURIComponent(ul_obj[item]['values'][radioitem].value);
+					subVals = htmlspecialchars(decodeURIComponent(ul_obj[item]['values'][radioitem].value));
 					subRequired = (decodeURIComponent(ul_obj[item]['values'][radioitem].required) == 'checked') ? 'required' : '';
 					subSelected = (decodeURIComponent(ul_obj[item]['values'][radioitem].baseline) == "checked") ? 'selected' : null;
 
@@ -105,7 +107,7 @@
 				if (itemRequired != '') addString += '" required="' + itemRequired;
 				addString += '" label="' + itemTitle + '">';
 				for (var optionitem in ul_obj[item]['values']) {
-					subVals = decodeURIComponent(ul_obj[item]['values'][optionitem].value);
+					subVals = htmlspecialchars(decodeURIComponent(ul_obj[item]['values'][optionitem].value));
 					subRequired = (decodeURIComponent(ul_obj[item]['values'][optionitem].required) == 'checked') ? 'required' : '';
 					subSelected = (decodeURIComponent(ul_obj[item]['values'][optionitem].baseline) == "checked") ? 'selected' : null;
 
@@ -122,8 +124,8 @@
 				xmlDoc += '<comment id="' + $().makeThorID() + '" >' + itemVals + '</comment>';
 			}
 			else if (ul_obj[item].cssClass == "hidden") {
-				label = ul_obj[item].values[0];
-				value = ul_obj[item].values[1];
+				label = htmlspecialchars(ul_obj[item].values[0]);
+				value = htmlspecialchars(ul_obj[item].values[1]);
 				xmlDoc += '<hidden label="' + label + '" id="' + $().makeThorID() + '" value="' + value + '" />';
 			}
 		i++;
@@ -173,6 +175,7 @@
 				cssClass = 'input_text';
 				defaultValue = $(this).attr('value');
 				label = $(this).attr('label');
+				
 				// Not at all sure how this is handled.
 				obj[counter] = {
 					'values': label,
@@ -276,4 +279,10 @@
 		//	$("#thor_content_form-builder").after('<div id="monkey" />');
 		//	$("#monkey").formbuilder({load_data: json});
 	};
+	
+	function htmlspecialchars( str )
+	{
+		return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g,'&gt;').replace(/"/g, '&quot;');
+	}
+
 })(jQuery);

@@ -66,7 +66,8 @@ class mediaWorkDownloadLinksModule extends DefaultModule
 			echo '<p>All download links for "'.$this->media_work->get_value('name').'" are displayed below.</p>'."\n";
 			
 			echo '<ul>'."\n";
-			echo '<li><a href="'.$this->kaltura_shim->get_original_data_url($this->media_work->get_value('entry_id')).'">Original</a></li>'."\n";
+			$file_ext = $this->kaltura_shim->get_source_file_extension($this->media_work->get_value('entry_id'));
+			echo '<li><a href="'.$this->kaltura_shim->get_original_data_url($this->media_work->get_value('entry_id')).'">Original (.'.$file_ext.')</a></li>'."\n";
 			foreach ($this->media_files as $file)
 			{
 				echo '<li><a href="'.$file->get_value('download_url').'">'.$file->get_value('name').'</a></li>'."\n";

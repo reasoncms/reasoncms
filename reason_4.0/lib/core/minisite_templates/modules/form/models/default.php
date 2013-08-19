@@ -20,13 +20,14 @@ $GLOBALS[ '_form_model_class_names' ][ basename( __FILE__, '.php') ] = 'DefaultF
  *
  * It provides is_* methods for our basic form modes:
  *
- * 'admin', 'form_complete', 'summary', 'form', 'unauthorized'
+ * 'admin', 'form_complete', 'summary', 'form', 'unauthorized', 'closed'
  *
  * 1. admin - The user wants to administer a form
  * 2. form_complete - The user has just completed the form
  * 3. summary - The user wants to see a listing of completed forms 
  * 4. form - The user wants to create or edit a form
  * 5. unauthorized - The user wants to do something but is unauthorized or not logged in
+ * 6. closed - The form is closed to submissions
  *
  * The default is_* methods return false for everything - so nothing will be done.
  * 
@@ -122,6 +123,11 @@ class DefaultFormModel extends AbstractFormModel
 		return false;
 	}
 
+	function is_closed()
+	{
+		return false;
+	}
+	
 	function should_save_form_data()
 	{
 		return false;
