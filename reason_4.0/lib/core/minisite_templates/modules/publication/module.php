@@ -706,9 +706,15 @@ class PublicationModule extends Generic3Module
 			$url = carl_construct_link(array(''), array('story_id', 'issue_id', 'section_id'));
 			if ($teaser = $this->get_teaser_image($item))
 			{
-				$protocol = (on_secure_page()) ? 'https' : 'http';
 				$teaser = reset($teaser);
-				$image_url = $protocol . '://'.$_SERVER['HTTP_HOST'].reason_get_image_url($teaser);
+				$image_urls[] = reason_get_image_url($teaser);
+			}
+			elseif ($images = $this->get_item_images($item))
+			{
+				foreach ($images as $image)
+				{
+					$image_urls[] = reason_get_image_url($image);
+				}
 			}
 			$site = $this->get_site_entity();
 			if ($site) $site_name = htmlspecialchars(trim(strip_tags($site->get_value('name'))),ENT_QUOTES,'UTF-8');
@@ -717,7 +723,14 @@ class PublicationModule extends Generic3Module
 			$head_items->add_head_item('meta',array( 'property' => 'og:title', 'content' => $title));
 			$head_items->add_head_item('meta',array( 'property' => 'og:url', 'content' => $url));
 			if (!empty($description)) $head_items->add_head_item('meta',array( 'property' => 'og:description', 'content' => $description));
-			if (!empty($image_url)) $head_items->add_head_item('meta',array( 'property' => 'og:image', 'content' => $image_url));
+			if (!empty($image_urls))
+			{
+				foreach ($image_urls as $image_url)
+				{
+					$head_items->add_head_item('meta',array( 'property' => 'og:image', 'content' => 'http://'.$_SERVER['HTTP_HOST'].$image_url));
+					if (HTTPS_AVAILABLE) $head_items->add_head_item('meta',array( 'property' => 'og:image:secure_url', 'content' => 'https://'.$_SERVER['HTTP_HOST'].$image_url));
+				}	
+			}
 			if (!empty($site_name)) $head_items->add_head_item('meta',array( 'property' => 'og:site_name', 'content' => $site_name));
 		}
 	}
