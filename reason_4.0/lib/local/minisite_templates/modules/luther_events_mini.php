@@ -199,7 +199,7 @@ class LutherEventsMiniModule extends LutherEventsModule
 			{
 				echo '<a href="'.$this->events_page_url.'?event_id='.$this->events[$event_id]->id().'&date='.$day.'">'."\n";
 			}
-			else get_site_id_from_url("/events");  // luther instance-wide events located at /events
+			else // luther instance-wide events located at /events
 			{
 				echo '<a href="/events?event_id='.$this->events[$event_id]->id().'&date='.$day.'">'."\n";
 			}
