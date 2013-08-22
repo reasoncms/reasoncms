@@ -38,6 +38,7 @@
 										'thumbnail_crop' => '',
 										'parent_unique_name' => '',
 										'force_full_page_title' => false,
+										'html5' => false,
 									);
 		var $offspring = array();
 		var $az = array();
@@ -230,6 +231,7 @@
 			{
 				echo '<a name="child_'.$this->az[$child->id()].'"></a>';
 			}
+			$image_markup = '';
 			if($this->params['provide_images'])
 			{
 				$image = $this->get_page_image($child->id());
@@ -254,22 +256,36 @@
 							{
 								$rsi->set_crop_style($this->params['thumbnail_crop']);
 							}
-							show_image($rsi, true, false, false, '' , '', false, $link);
+							if(!$this->params['html5'])
+								$image_markup = get_show_image_html($rsi, true, false, false, '' , '', false, $link);
+							else
+								$image_markup = get_show_image_html($rsi, true, false, false, '' , '', false );
 						}
 					}
 					else
 					{
-					show_image( $image->id(), true, false, false, '' , '', false, $link );
+						if(!$this->params['html5'])
+							$image_markup = get_show_image_html( $image->id(), true, false, false, '' , '', false, $link );
+						else
+							$image_markup = get_show_image_html( $image->id(), true, false, false, '' , '', false );
 					}
 				}
+				if(!$this->params['html5'])
+					echo $image_markup;
 			}
 			if($this->params['description_part_of_link'])
 			{
-				// needs somewhat different html since inline elements cannot contain block elements
-				echo '<a href="'.$link.'"'.$title_attr.'><strong>'.$page_name.'</strong><br />';
+				$element = $this->params['html5'] ? 'h4' : 'strong';
+				echo '<a href="'.$link.'"'.$title_attr.'>';
+				if($this->params['html5'])
+					echo $image_markup;
+				echo '<'.$element.'>'.$page_name.'</'.$element.'>';
+				if(!$this->params['html5'])
+					echo '<br />';
 				if ( $child->get_value( 'description' ))
 				{
-					echo "\n".'<span class="childDesc">'.$child->get_value( 'description' ).'</span>';
+					$element = $this->params['html5'] ? 'div' : 'span';
+					echo "\n".'<'.$element.' class="childDesc">'.$child->get_value( 'description' ).'</'.$element.'>';
 				}
 				echo '</a>';
 			}
