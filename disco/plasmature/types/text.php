@@ -36,7 +36,7 @@ class textType extends defaultType
 	
 	function get_display()
 	{
-		return '<input type="text" name="'.$this->name.'" value="'.str_replace('"', '&quot;', $this->get()).'" size="'.$this->size.'" maxlength="'.$this->maxlength.'" id="'.$this->name.'Element" />';
+		return '<input type="text" name="'.$this->name.'" value="'.str_replace('"', '&quot;', $this->get()).'" size="'.$this->size.'" maxlength="'.$this->maxlength.'" id="'.$this->name.'Element" class="text" />';
 	}
 }
 	
