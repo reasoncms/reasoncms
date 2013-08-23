@@ -414,6 +414,51 @@ class ReasonPageType
 		);
 
 	}
+	
+	/**
+	 * Set the parameters for a given region
+	 *
+	 * This function clears any existing parameters for the region. To leave existing parameters
+	 * in place, use set_region_parameter().
+	 *
+	 * @access public
+	 * @param string $region_name
+	 * @param array $module_params An array of parameter key-value pairs
+	 * @return boolean true if region exists, false if not
+	 */
+	function set_region_parameters($region_name, $module_params)
+	{
+		if(isset($this->_page_type[$region_name]['module_name']))
+		{
+			$this->_page_type[$region_name]['module_params'] = $module_params;
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Set a single parameter for a given region
+	 *
+	 * This function changes a single parameter for a given region. If you want to clear all parameters
+	 * and start from scratch, use set_region_parameters().
+	 *
+	 * @access public
+	 * @param string $region_name
+	 * @param array $key The parameter name to set
+	 * @param $calue The parameter value to set
+	 * @return boolean true if region exists, false if not
+	 */
+	function set_region_parameter($region_name, $key, $value)
+	{
+		if(isset($this->_page_type[$region_name]['module_name']))
+		{
+			if(empty($this->_page_type[$region_name]['module_params']))
+				$this->_page_type[$region_name]['module_params'] = array();
+			$this->_page_type[$region_name]['module_params'][$key] = $value;
+			return true;
+		}
+		return false;
+	}
 
 	/**
 	 * Removes a region from a page type object.
