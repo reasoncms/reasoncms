@@ -287,7 +287,7 @@ class MinisitePageManager extends parent_childManager
 		$has_administrator_field = false;
 		foreach($administrator_fields as $field)
 		{
-			if($this->is_element($field))
+			if($this->is_element($field) && !$this->element_is_hidden($field) )
 			{
 				$has_administrator_field = true;
 				break;
