@@ -444,10 +444,10 @@ class MinisiteTemplate
 			$this->cur_page = new entity($this->page_id);
 			
 			$this->title = $this->cur_page->get_value('name');
+			
+			$this->get_css_files();
 
 			$this->get_meta_information();
-	
-			$this->get_css_files();
 			
 			if( $this->sess->exists() )
 			{
