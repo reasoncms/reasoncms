@@ -155,7 +155,7 @@ class DefaultForm extends Disco
 		if (!empty($this->required))
 		{
 			$order = $this->get_order();
-			$this->add_element('_required_text', 'comment', array('text' => '<p class="required_indicator">* = required field</p>'));
+			$this->add_element('_required_text', 'comment', array('text' => '<p class="required_indicator"><span class="requiredSymbol">*</span> = required field</p>'));
 			$this->set_order(array('_required_text' => '_required_text') + $this->get_order());
 		}
 	}
@@ -235,7 +235,6 @@ class DefaultForm extends Disco
 	function get_html_table($values, $hide_empty_values = false)
 	{
 		$message = "<table border='0' cellspacing='0' cellpadding='7'>\n";
-
 		foreach ( $values as $key => $value )
 		{
 			// Replace key with value[label], and value with value[value]
