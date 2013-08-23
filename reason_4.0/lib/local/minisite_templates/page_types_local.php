@@ -413,7 +413,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'main_post_3' => '',
 		'pre_nav' => '',
 		'navigation' => 'luther_carousel',
-		'sub_nav' => 'luther_image_quote',
+		'sub_nav' => 'main_blurb',
 		'sub_nav_2' => '',
 		'sub_nav_3' => '',
 		'sub_nav_4' => '',
@@ -469,7 +469,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 					'width'=>716,
 					'height'=>288
 			),
-			'sub_nav' => 'luther_image_quote',
+			'sub_nav' => 'main_blurb',
 			'sub_nav_2' => '',
 			'sub_nav_3' => '',
 			'sub_nav_4' => '',
