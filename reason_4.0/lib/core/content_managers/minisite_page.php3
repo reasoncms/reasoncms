@@ -12,6 +12,7 @@ reason_include_once('classes/url_manager.php');
 reason_include_once('classes/page_types.php');
 reason_include_once('minisite_templates/page_types.php');
 reason_require_once( 'minisite_templates/page_types.php' );
+reason_include_once( 'classes/plasmature/head_items.php' );
 include_once( DISCO_INC . 'plugins/input_limiter/input_limiter.php' );
 
 $GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'MinisitePageManager';
@@ -35,6 +36,8 @@ class MinisitePageManager extends parent_childManager
 		}
 		$this->head_items->add_stylesheet(REASON_ADMIN_CSS_DIRECTORY.
 				'content_managers/minisite_page.css');
+		$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.
+				'content_managers/page.js');
 	}
 	
 	/**
@@ -110,8 +113,10 @@ class MinisitePageManager extends parent_childManager
 		$this->_no_tidy[] = 'url_fragment';
 		$this->_no_tidy[] = 'custom_page';
 		$this->_no_tidy[] = 'extra_head_content';
+		$this->_no_tidy[] = 'extra_head_content_structured';
 		
 		$this->set_allowable_html_tags('extra_head_content','all');
+		$this->set_allowable_html_tags('extra_head_content_structured','all');
 
 		$this->add_element( 'is_link', 'hidden' );
 		if( !empty( $_REQUEST[ 'is_link' ] ) OR $this->get_value( 'url' ) )
@@ -194,6 +199,14 @@ class MinisitePageManager extends parent_childManager
 			if( !reason_user_has_privs( $this->admin_page->user_id, 'edit_head_items') )
 			{
 				$this->remove_element( 'extra_head_content' );
+				$this->remove_element( 'extra_head_content_structured' );
+			}
+			else
+			{
+				$this->change_element_type( 'extra_head_content_structured', 'head_items' );
+				$this->set_display_name('extra_head_content_structured','Header Items');
+				$this->set_display_name('extra_head_content','Additional Header Content');
+				$this->add_comments('extra_head_content',form_comment('If you need to add headers that are not simple css or javascript, enter raw HTML header markup here.'));
 			}
 			
 			// for admin users
@@ -270,7 +283,22 @@ class MinisitePageManager extends parent_childManager
 		$limiter->suggest_limit('description', 156);
 		$limiter->auto_show_hide('description', false);
 		
-		$this->set_order(array('name', 'link_name', 'unique_name', 'author', 'description', 'keywords', 'parent_id', 'parent_info', 'url_fragment', 'extra_head_content', 'nav_display', 'custom_page', 'page_type_note', 'content') );
+		$administrator_fields = array('extra_head_content_structured', 'extra_head_content', 'unique_name');
+		$has_administrator_field = false;
+		foreach($administrator_fields as $field)
+		{
+			if($this->is_element($field))
+			{
+				$has_administrator_field = true;
+				break;
+			}
+		}
+		if($has_administrator_field)
+		{
+			$this->add_element('administrator_section_heading', 'comment', array('text' => '<h3>Administrator Tools</h3>'));
+		}
+		
+		$this->set_order(array('name', 'link_name', 'author', 'description', 'keywords', 'parent_id', 'parent_info', 'url_fragment', 'nav_display', 'custom_page', 'page_type_note', 'content', 'state', 'administrator_section_heading', 'extra_head_content_structured', 'extra_head_content', 'unique_name') );
 	}
 	
 	function _add_page_url_elements($parents)
