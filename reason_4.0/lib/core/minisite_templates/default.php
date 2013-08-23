@@ -254,6 +254,23 @@ class MinisiteTemplate
 	 */
 	var $sections = array('content'=>'show_main_content','related'=>'show_sidebar','navigation'=>'show_navbar');
 	/**
+	 * What elements should be used for each section?
+	 *
+	 * Example: array('content'=>'section','related'=>'aside');
+	 *
+	 * The template use divs by default.
+	 * @var array
+	 */
+	protected $section_elements = array();
+	/**
+	 * What ARIA roles should each of the sections have?
+	 *
+	 * Example: array('content'=>'main','related'=>'complementary');
+	 *
+	 * @var array
+	 */
+	protected $section_roles = array();
+	/**
 	 * The doctype that the template should use
 	 * @var string
 	 * @access private
@@ -318,6 +335,16 @@ class MinisiteTemplate
 	 * @var boolean
 	 */
 	var $include_modules_css = true;
+	
+	/**
+	 * The page type
+	 * 
+	 * Don't access this variable directly -- use $this->get_page_type(), which will set it up
+	 * if it has not already.
+	 *
+	 * @var object
+	 */
+	protected $page_type;
 	
 	/**
 	 * Set up the template
@@ -395,8 +422,6 @@ class MinisiteTemplate
 		
 		$this->_handle_access_auth_check();
 		
-		$this->get_css_files();
-		
 		$this->textonly = '';
 		if (!empty($this->pages->request['textonly']))
 			$this->textonly = 1;
@@ -421,6 +446,8 @@ class MinisiteTemplate
 			$this->title = $this->cur_page->get_value('name');
 
 			$this->get_meta_information();
+	
+			$this->get_css_files();
 			
 			if( $this->sess->exists() )
 			{
@@ -557,6 +584,36 @@ class MinisiteTemplate
 			$customizer->modify_head_items($this->head_items);
 		}
 	}
+	/**
+	 * Add structured extra head items (stored on the page entity as json) to the page
+	 */
+	function add_extra_head_content_structured()
+	{
+		if($this->page_info->has_value('extra_head_content_structured') && $this->page_info->get_value('extra_head_content_structured') && ($data = json_decode($this->page_info->get_value('extra_head_content_structured'))))
+		{
+			foreach($data as $item)
+			{
+				if(empty($item->url))
+					continue;
+				
+				switch($item->type)
+				{
+					case 'js':
+						$this->head_items->add_javascript( $item->url );
+						break;
+					case 'css':
+						$this->head_items->add_stylesheet( $item->url );
+						break;
+					default:
+						trigger_error('Unrecognized head item type ('.$item->type.')');
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Get the theme customizer class
+	 */
 	function get_theme_customizer()
 	{
 		if(!isset($this->theme_customizer))
@@ -700,6 +757,7 @@ class MinisiteTemplate
 	 *
 	 * @todo We use reflection here and should make sure performance is okay... it might be possible without reflection.
 	 * @todo make sure equivalency check of page_type_oldformat_altered and page_type_oldformat is correct.
+	 * @todo update the export function to properly handle _meta content
 	 */
 	final protected function _legacy_alter_page_type($page_type, $page_type_name)
 	{
@@ -713,11 +771,16 @@ class MinisiteTemplate
 				// we need to call alter_page_type with the old style array and trigger a warning
 				//trigger_error('The template object ' . $alter_page_type_method->class . ' extends alter_page_type, which is deprecated. Use alter_reason_page_type instead.');
 				$page_type_oldformat = $page_type->export("reasonPTArray_var");
+				$page_type_meta = $page_type->meta();
 				$page_type_oldformat_altered = $this->alter_page_type($page_type_oldformat);
 				if ($page_type_oldformat_altered != $page_type_oldformat)
 				{
 					$rpt =& get_reason_page_types();
 					$page_type = $rpt->get_page_type($page_type_name, $page_type_oldformat_altered);
+					// we are setting the meta information again because the export doesn't handle it properly.
+					// this should be removed once that is fixed.
+					foreach($page_type_meta as $k=>$v)
+						$page_type->meta($k, $v);
 				};
 			}
 		}
@@ -740,16 +803,26 @@ class MinisiteTemplate
 	{
 	} // }}}
 	
+	function get_page_type()
+	{
+		if(!isset($this->page_type))
+		{
+			reason_include_once( 'classes/page_types.php');
+			$requested_page_type_name = ($this->cur_page->get_value('custom_page') !== FALSE) ? $this->cur_page->get_value('custom_page') : null;
+		
+			// get the fully composed page type - make sure to support legacy alter_page_type operations
+			$rpt =& get_reason_page_types();
+			$page_type = ($requested_page_type = $rpt->get_page_type($requested_page_type_name)) ? $requested_page_type : 	$rpt->get_page_type();
+			$page_type = $this->_legacy_alter_page_type($page_type, $requested_page_type_name);
+			$this->alter_reason_page_type($page_type);
+			$this->page_type = $page_type;
+		}
+		return $this->page_type;
+	}
+	
 	function load_modules() // {{{
 	{
-		reason_include_once( 'classes/page_types.php');
-		$requested_page_type_name = ($this->cur_page->get_value('custom_page') !== FALSE) ? $this->cur_page->get_value('custom_page') : null;
-		
-		// get the fully composed page type - make sure to support legacy alter_page_type operations
-		$rpt =& get_reason_page_types();
-		$page_type = ($requested_page_type = $rpt->get_page_type($requested_page_type_name)) ? $requested_page_type : $rpt->get_page_type();
-		$page_type = $this->_legacy_alter_page_type($page_type, $requested_page_type_name);
-		$this->alter_reason_page_type($page_type);
+		$page_type = $this->get_page_type();
 
 		if (extension_loaded('newrelic')) { 
 			newrelic_name_transaction($page_type->get_name()); 
@@ -966,7 +1039,7 @@ class MinisiteTemplate
 		//echo '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />' . "\n";
 		
 		$this->do_org_head_items();
-		
+		$this->add_extra_head_content_structured();
 		echo $this->head_items->get_head_item_markup();
 		
 		if($this->cur_page->get_value('extra_head_content'))
@@ -1339,9 +1412,16 @@ class MinisiteTemplate
 		echo '<div id="meat" class="'.implode(' ',$classes).' '.$blobclass.'">'."\n";
 		foreach($hasSections as $section=>$show_function)
 		{
-			echo '<div id="'.$section.'">'."\n";
+			if(isset($this->section_elements[$section]))
+				$element = $this->section_elements[$section];
+			else
+				$element = 'div';
+			echo '<'.$element.' id="'.$section.'"';
+			if(isset($this->section_roles[$section]))
+				echo ' role="'.$this->section_roles[$section].'"';
+			echo '>'."\n";
 			$this->$show_function();
-			echo '</div>'."\n";
+			echo '</'.$element.'>'."\n";
 		}
 		echo '</div>'."\n";
 	} // }}}
@@ -1625,12 +1705,13 @@ class MinisiteTemplate
 	}
 	
 	/**
-	 * This function assembles the head items from the data provided by the modules and handles some basic checking
+	 * This function used to set up the head item markup. It has been replaced by direct access to the head items object.
 	 * @deprecated method should be called on the head_items object
 	 */
 	function get_head_item_markup()
 	{
-		return $this->head_items->get_head_item_markup();
+		trigger_error('$this->get_head_items_markup() no longer works on templates. Use $this->head_items->get_head_item_markup() instead.');
+		return;
 	}
 	
 	/*this stuff comes from the tableless template. from here... */
