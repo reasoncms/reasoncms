@@ -66,13 +66,16 @@ function make_assets_list_markup( $assets, $site, $fields = array('name','file_s
 		{
 			$owner_site = $asset->get_owner();
 			$type = '';
-			if($asset->get_value('file_type') && array_key_exists($asset->get_value('file_type'), $file_types))
+			if($asset->get_value('file_type'))
 			{
-				$type = $file_types[$asset->get_value('file_type')];
+				if(array_key_exists($asset->get_value('file_type'), $file_types))
+					$type = $file_types[$asset->get_value('file_type')];
+				else
+					$type = htmlspecialchars('.'.$asset->get_value('file_type').' file');
 			}
 			$url = '';
 
-			$txt .= '<li>';
+			$txt .= '<li class="'.htmlspecialchars($asset->get_value('file_type'), ENT_QUOTES).'">';
 			
 			if( $_show_name || $_show_file_size || $_show_file_type )
 			{
@@ -104,7 +107,7 @@ function make_assets_list_markup( $assets, $site, $fields = array('name','file_s
 			{
 				$txt .= '<div class="date">'.prettify_mysql_datetime($asset->get_value('datetime'), $date_format).'</div> ';
 			}
-			if($_show_description && $asset->get_value('description'))
+			if($_show_description && $asset->get_value('description') && $asset->get_value('description') != $asset->get_value('name'))
 			{
 				$txt .= '<div class="description">'.$asset->get_value('description').'</div>'."\n";
 			}
