@@ -445,14 +445,14 @@
 				{
 					$GLOBALS['sqler']->update_one( $table, $fields, $id );
 				}
-				$updated_entity = new entity($id, false);
 				if (!empty($archive))
 				{
 					$archived_id = duplicate_entity( $original, false, true, array( 'state' => 'Archived' ) );
 					$rel_id = reason_get_archive_relationship_id($original->get_value('type'));
 					create_relationship( $id, $archived_id, $rel_id );
 				}
-			
+				$updated_entity = new entity($id, false);
+				$updated_entity->get_values();
 				// If the unique_name changes on the updated entity, or a uniquely named entity is deleted or undeleted, lets update the unique name cache
 				if ($updated_entity->get_value('unique_name') != $original->get_value('unique_name') ||
 					($original->get_value('state') != 'Deleted' && $updated_entity->get_value('state') == 'Deleted' && $original->get_value('unique_name')) ||
