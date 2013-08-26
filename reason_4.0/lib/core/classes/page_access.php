@@ -95,12 +95,12 @@ class reasonPageAccess
 		{
 			foreach($groups as $group_id => $group)
 			{
-				if (!isset($this->_group_helpers[$id]))
+				if (!isset($this->_group_helpers[$group_id]))
 				{
-					$this->_group_helpers[$id] = new group_helper();
-					$this->_group_helpers[$id]->set_group_by_entity($group);
+					$this->_group_helpers[$group_id] = new group_helper();
+					$this->_group_helpers[$group_id]->set_group_by_entity($group);
 				}
-				if(!$this->_group_helpers[$id]->has_authorization($username))
+				if(!$this->_group_helpers[$group_id]->has_authorization($username))
 					return false;
 			}
 		}
