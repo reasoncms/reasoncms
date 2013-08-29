@@ -1,14 +1,17 @@
 /**** Item List markup ****/
 ul#imageGalleryItemList {
-	display: inline-block;
+	display: block;
 	list-style: none;
+	margin:1em 0;
+	padding:0;
 }
 
 ul#imageGalleryItemList li.item {
 	overflow: hidden;
-	float: left;
+	display:inline-block;
 	margin: 10px 5px;
 	text-align: center;
+	vertical-align:top;
 }
 #imageGalleryItemList li.item a.imageLink  {
 	text-decoration:none;
@@ -38,9 +41,9 @@ ul#imageGalleryItemList li.item img {
 li#imageGalleryNextPageItem {
 	display: none;
 	overflow: hidden;
-	float: left;
 	margin: 10px 5px;
 	text-align: center;
+	vertical-align:top;
 }
 
 #imageGalleryItemList:after, div#imageGallery div.pagination:after {
