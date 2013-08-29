@@ -182,13 +182,12 @@ class Gallery2Module extends Generic3Module
 	{
 		$this->prev_arrow_url = REASON_HTTP_BASE_PATH.'css/gallery2/image_gallery_arrow_prev.gif';
 		$this->next_arrow_url = REASON_HTTP_BASE_PATH.'css/gallery2/image_gallery_arrow_next.gif';
-		$this->parent->head_items->add_stylesheet( REASON_HTTP_BASE_PATH.'css/gallery2/gallery2.css', '', true );
+		$this->parent->head_items->add_stylesheet( REASON_HTTP_BASE_PATH.'css/gallery2/gallery2.v2.css', '', true );
 		$this->parent->head_items->add_javascript(JQUERY_URL, true);
 		
 		if( !isset($this->request['image_id']) )
 		{
 			$this->parent->head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/gallery2/next_page_link.js');
-			$this->parent->head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/gallery2/adjust_dimensions.js');
 		}
 		$this->use_pagination = ($this->params['use_pagination']) ? true : false;
 		$this->num_per_page = $this->params['number_per_page'];
@@ -340,7 +339,7 @@ class Gallery2Module extends Generic3Module
 		
 		$css =  "\n\t".'#imageGalleryItemList li.item, li#imageGalleryNextPageItem {';
 		$css .= "\n\t\t".'width: '.$largest_width_with_padding.'px;';
-		$css .= "\n\t\t".'height: '.$largest_height_with_text.'px;';
+		//$css .= "\n\t\t".'height: '.$largest_height_with_text.'px;';
 		$css .= "\n\t".'}';
 		$this->parent->add_head_item('style', array('type' => 'text/css','media' => 'screen'),$css);
 
@@ -351,7 +350,8 @@ class Gallery2Module extends Generic3Module
 	 */
 	function do_list()
 	{
-		echo '<ul id="imageGalleryItemList">'."\n";
+		// Note that it is important not to have spaces between the items in order to use inline-block display
+		echo '<ul id="imageGalleryItemList">';
 		foreach( $this->items AS $item )
 		{
 			$this->show_list_item( $item );
@@ -365,7 +365,7 @@ class Gallery2Module extends Generic3Module
 		{
 			$pages = $this->get_pages_for_pagination_markup();
 			if (array_key_exists($this->request['page'] + 1,$pages))
-				echo '<li id="imageGalleryNextPageItem"><a href="'.$pages[$this->request['page'] + 1]['url'].'" title="Page '.($this->request['page'] + 1).'">Next Page</a></li>'."\n";
+				echo '<li id="imageGalleryNextPageItem"><a href="'.$pages[$this->request['page'] + 1]['url'].'" title="Page '.($this->request['page'] + 1).'">Next Page</a></li>';
 		}
 		echo '</ul>'."\n";
 		
@@ -382,7 +382,8 @@ class Gallery2Module extends Generic3Module
 		echo '</a>'."\n";
 		$this->show_list_item_date( $item );
 		$this->show_list_item_desc( $item );
-		echo '</li>'."\n";
+		// Note that it is important not to have spaces between the items in order to use inline-block display
+		echo '</li>';
 		$this->item_counter++;
 	} // }}}
 	
