@@ -54,7 +54,7 @@ function checkShowOrHide() {
       }
       else
       {
-        document.getElementById("imageGalleryNextPageItem").style.display = 'block';
+        document.getElementById("imageGalleryNextPageItem").style.display = 'inline-block';
       }
     }
   }
