@@ -791,7 +791,8 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'main_post'=>'open_id',
 	),
 	'publication' => get_luther_publication(),
-	'publication_section_nav' => get_luther_publication_section_nav(),
+	'publication_feature_autoplay' => get_luther_publication("publication_feature_autoplay"),
+	'publication_section_nav' => get_luther_publication("publication_section_nav"),
 	'sidebar_blurb' => array(
 		'main_4' => '',
 		'pre_sidebar_2' => 'main_blurb',
@@ -1315,12 +1316,12 @@ function luther_is_local_ip()
 	return false;
 }
 
-function get_luther_publication()
+function get_luther_publication($page_type = "publication")
 // return array containing publication directives
 {
 	if (preg_match("/story_id\=\d+/", get_current_url()))
 	{
-		return array(
+		$list = array(
 			'pre_banner' => '',
 			'post_banner' => '',
 			'main_head_4' => 'publication/luther_title',
@@ -1342,7 +1343,7 @@ function get_luther_publication()
 	}
 	else 
 	{
-		return array(
+		$list = array(
 			'pre_banner' => '',
 			'post_banner' => '',
 			'main_head_4' => 'publication/luther_title',
@@ -1353,51 +1354,24 @@ function get_luther_publication()
 			'main_post'=>'publication',		
 			'sidebar_2'=>'luther_image_sidebar',
 		);
+		if ($page_type = "publication_feature_autoplay")
+		{
+			$list['main_head'] = array(
+				'module' => 'feature/feature',
+				'shuffle' => false,
+				'autoplay_timer' => 12,
+				'width'=>716,
+				'height'=>288
+			);
+			$list['main_head_5'] = '';
+			$list['pre_sidebar_3'] = '';
+		}
+		else if ($page_type = "publication_section_nav")
+		{
+			$list['navigation'] = 'publication/sections';	
+		}
 	}
-
-}
-
-function get_luther_publication_section_nav()
-// return array containing publication directives
-{
-	if (preg_match("/story_id\=\d+/", get_current_url()))
-	{
-		return array(
-			'pre_banner' => '',
-			'post_banner' => '',
-			'main_head_4' => 'publication/luther_title',
-			'main_head_5' => '',
-			'main'=> array(
-				'module' => 'publication/description',
-				'hide_on_item' => true
-			),
-			'main_2' => '',
-			'main_3' => '',
-			'main_4' => '',
-			'main_post' => 'publication',
-			'main_post_2' => '', 
-			'navigation' => 'publication/sections',
-			'pre_sidebar_3' => '',		
-			'sidebar'=> '',
-			'sidebar_2' => 'luther_publication_image_sidebar',
-			'sidebar_4' => '',
-		);
-	}
-	else 
-	{
-		return array(
-			'pre_banner' => '',
-			'post_banner' => '',
-			'main_head_4' => 'publication/luther_title',
-			'main'=> array(
-				'module' => 'publication/description',
-				'hide_on_item' => true
-			),
-			'main_post'=>'publication',		
-			'navigation' => 'publication/sections',
-			'sidebar_2'=>'luther_image_sidebar',
-		);
-	}
+	return $list;
 
 }
 
