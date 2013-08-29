@@ -187,7 +187,7 @@ class Gallery2Module extends Generic3Module
 		
 		if( !isset($this->request['image_id']) )
 		{
-			$this->parent->head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/gallery2/next_page_link.js');
+			$this->parent->head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/gallery2/next_page_link.v2.js');
 		}
 		$this->use_pagination = ($this->params['use_pagination']) ? true : false;
 		$this->num_per_page = $this->params['number_per_page'];
