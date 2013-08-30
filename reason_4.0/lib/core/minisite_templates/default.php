@@ -423,14 +423,6 @@ class MinisiteTemplate
 		$this->_handle_access_auth_check();
 		
 		$this->textonly = '';
-		if (!empty($this->pages->request['textonly']))
-			$this->textonly = 1;
-			$this->pages->textonly = $this->textonly;
-		if (!empty($this->textonly))
-		{
-			$this->head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/textonly_styles.css');
-			$this->head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/print_styles.css','print');
-		}
 		
 		if( $this->pages->values  )
 		{
@@ -667,7 +659,7 @@ class MinisiteTemplate
 			$this->head_items->add_head_item('meta',array('name'=>'keywords','content'=>$content) );
 		}
 		
-		if (!empty ($this->textonly) || !empty( $_REQUEST['no_search'] ) || $this->site_info->get_value('site_state') != 'Live' || ( defined('THIS_IS_A_DEVELOPMENT_REASON_INSTANCE') && THIS_IS_A_DEVELOPMENT_REASON_INSTANCE ) )
+		if (!empty( $_REQUEST['no_search'] ) || $this->site_info->get_value('site_state') != 'Live' || ( defined('THIS_IS_A_DEVELOPMENT_REASON_INSTANCE') && THIS_IS_A_DEVELOPMENT_REASON_INSTANCE ) )
 		{
 			$this->head_items->add_head_item('meta',array('name'=>'robots','content'=>'none' ) );
 		}
@@ -871,7 +863,7 @@ class MinisiteTemplate
 						// we set the module identifier as a hash of the section - should be unique
 						$args[ 'identifier' ] = ReasonAPIFactory::get_identifier_for_module($page_type, $region);
 						//$args[ 'nav_pages' ] =& $this->pages;
-						$args[ 'textonly' ] = $this->textonly;
+						$args[ 'textonly' ] = '';
 						$args[ 'api' ] = (!empty($module_api)) ? $module_api['api'] : false;
 						$args[ 'page_is_public' ] = $this->page_is_public;
 						
@@ -1053,17 +1045,9 @@ class MinisiteTemplate
 		echo '<div class="hide"><a href="#content" class="hide">Skip Navigation</a></div>'."\n";
 		if ($this->has_content( 'pre_bluebar' ))
 			$this->run_section( 'pre_bluebar' );
-		//$this->textonly_toggle( 'hide_link' );
-		if (empty($this->textonly))
-		{
-			$this->do_org_navigation();
+		$this->do_org_navigation();
 		// You are here bar
-			$this->you_are_here();
-		}
-		else
-		{
-			$this->do_org_navigation_textonly();
-		}	
+		$this->you_are_here();
 	} // }}}
 	function create_body_tag()
 	{
@@ -1075,7 +1059,7 @@ class MinisiteTemplate
 	function get_body_tag_classes()
 	{
 		$classes = array();
-		$classes[] = $this->textonly ? 'textOnly' : 'fullGraphics';
+		$classes[] = 'fullGraphics';
 		if($this->pages->root_node() == $this->page_id)
 			$classes[] = 'siteHome';
 		if($this->page_info->get_value('unique_name'))
@@ -1108,10 +1092,6 @@ class MinisiteTemplate
 			{
 				$ret .= ': '.$last_crumb['page_name'];
 			}
-		}
-		if (!empty ($this->textonly) )
-		{
-			$ret .= ' (Text Only)';
 		}
 		$ret = reason_htmlspecialchars(strip_tags($ret));
 		$this->head_items->add_head_item('title',array(),$ret, true);
@@ -1232,14 +1212,7 @@ class MinisiteTemplate
 	}
 	function show_body_tableless() // {{{
 	{
-		if (!empty($this->textonly))
-		{
-			$class = 'textOnlyView';
-		}
-		else
-		{
-			$class = 'fullGraphicsView';
-		}
+		$class = 'fullGraphicsView';
 		echo '<div id="wrapper" class="'.$class.'">'."\n";
 		echo '<div id="bannerAndMeat">'."\n";
 		$this->show_banner();
@@ -1250,14 +1223,7 @@ class MinisiteTemplate
 	} // }}}
 	function show_body_tabled() // {{{
 	{
-		if (!empty($this->textonly))
-		{
-			$class = 'textOnlyView';
-		}
-		else
-		{
-			$class = 'fullGraphicsView';
-		}
+		$class = 'fullGraphicsView';
 		echo '<div id="wrapper" class="'.$class.'">'."\n";
 		$this->show_banner();
 		$this->show_meat();
@@ -1324,14 +1290,7 @@ class MinisiteTemplate
 	} // }}}
 	function show_banner_tabled() // {{{
 	{
-		if(!empty($this->textonly))
-		{
-			$add_class = ' textOnly';
-		}
-		else
-		{
-			$add_class = ' fullGraphics';
-		}
+		$add_class = ' fullGraphics';
 		echo '<div class="bannerAndMeat'.$add_class.'">'."\n";
 		if ($this->has_content( 'pre_banner' ))
 		{	
@@ -1340,12 +1299,9 @@ class MinisiteTemplate
 			echo '</div>'."\n";
 		}
 		echo '<div class="banner">'."\n";
-		if (empty($this->textonly))
-		{
-			echo '<table width="100%" border="0" cellspacing="0" cellpadding="0" class="bannerTable" summary="The Site Name">'."\n";
-			echo '<tr>'."\n";
-			echo '<td class="bannerCol1">'."\n";
-		}
+		echo '<table width="100%" border="0" cellspacing="0" cellpadding="0" class="bannerTable" summary="The Site Name">'."\n";
+		echo '<tr>'."\n";
+		echo '<td class="bannerCol1">'."\n";
 		echo '<div class="bannerInfo">'."\n";
 		if($this->should_show_parent_sites())
 		{
@@ -1353,27 +1309,19 @@ class MinisiteTemplate
 		}
 		echo '<h1 class="siteName"><a href="';
 		echo $this->site_info->get_value('base_url');
-		if (!empty ($this->textonly) )
-			echo '?textonly=1';
 		echo '" class="siteLink"><span>';
 		echo $this->site_info->get_value('name');
 		echo '</span></a></h1>'."\n";
 		echo '</div>'."\n";
-		if (empty($this->textonly)) 
-		{
-			echo '</td>'."\n";
-			echo '<td class="bannerCol2">'."\n";
-		}
+		echo '</td>'."\n";
+		echo '<td class="bannerCol2">'."\n";
 		if ($this->has_content( 'banner_xtra' ))
 		{	
 			echo '<div class="bannerXtra">';
 			$this->run_section( 'banner_xtra' );
 			echo '</div>'."\n";
 		}
-		if (empty($this->textonly))
-		{
-			echo '</td>'."\n".'</tr>'."\n".'</table>'."\n";
-		}
+		echo '</td>'."\n".'</tr>'."\n".'</table>'."\n";
 		if($this->has_content('post_banner'))
 		{
 			echo '<div id="postBanner">'."\n";
@@ -1428,20 +1376,12 @@ class MinisiteTemplate
 	function show_meat_tabled() // {{{
 	{
 		echo '<div class="layout">'."\n";
-		if (empty($this->textonly))
-		{
-			echo '<table border="0" cellspacing="0" cellpadding="0" class="layoutTable" summary="The Main Content of Page">'."\n";
-			echo '<tr>'."\n";
-			$this->show_navbar();
-		}
+		echo '<table border="0" cellspacing="0" cellpadding="0" class="layoutTable" summary="The Main Content of Page">'."\n";
+		echo '<tr>'."\n";
+		$this->show_navbar();
 		$this->show_main_content();
 		$this->show_sidebar();
-		if (empty($this->textonly))  
-			echo '</tr>'."\n".'</table>'."\n";
-		else
-		{
-			$this->show_nav_foot();
-		}
+		echo '</tr>'."\n".'</table>'."\n";
 		echo '</div>'."\n";
 		echo '</div>'."\n";
 	} // }}}
@@ -1528,13 +1468,11 @@ class MinisiteTemplate
 	{
 		if ($this->has_content( 'main_head' ) || $this->has_content( 'main' ) || $this->has_content( 'main_post' )) 
 		{
-			if (empty($this->textonly))
-				echo '<td valign="top" class="contentTD">'."\n";
+			echo '<td valign="top" class="contentTD">'."\n";
 			echo '<div class="content"><a name="content"></a>'."\n";
 			$this->show_main_content_sections();
 			echo '</div>'."\n";
-			if (empty($this->textonly))
-				echo '</td>'."\n";
+			echo '</td>'."\n";
 		}
 	} // }}}
 	function show_main_content_sections()
@@ -1558,8 +1496,13 @@ class MinisiteTemplate
 			echo '</div>'."\n";
 		}
 	}
+	/**
+	 * @deprecated This was for textonly views, which are deprecated
+	 * @todo remove this function
+	 */
 	function show_nav_foot() // {{{
 	{
+		trigger_error('show_nav_foot() is deprecated. It will go away in a future release of Reason.');
 		if ($this->has_content( 'sub_nav_2' ))
 			$this->run_section( 'sub_nav_2' );
 		if ($this->has_content( 'navigation' )) 
@@ -1615,8 +1558,7 @@ class MinisiteTemplate
 		$show_post_sidebar = $this->has_content( 'post_sidebar' );
 		if ($show_sidebar || $show_pre_sidebar || $show_post_sidebar)
 		{ 
-			if (empty($this->textonly))
-				echo '<td valign="top" class="sidebarTD">'."\n"; 
+			echo '<td valign="top" class="sidebarTD">'."\n"; 
 			if($show_pre_sidebar)
 			{
 				echo '<div class="preSidebar">'."\n";
@@ -1638,8 +1580,7 @@ class MinisiteTemplate
 			echo '<div class="sidebarSpacer">'."\n";
 			echo '<img src="'.REASON_HTTP_BASE_PATH.'ui_images/stp.gif" width="80" height="2" alt="" />'."\n";
 			echo '</div>'."\n";
-			if (empty($this->textonly))
-				echo '</td>'."\n";
+			echo '</td>'."\n";
 		}
 	} // }}}
 	function show_footer()
@@ -1754,7 +1695,9 @@ class MinisiteTemplate
 	{
 		// Just here as a shell for branding
 	}
-	
+	/**
+	 * @deprecated Textonly is no longer a thing.
+	 */
 	function do_org_navigation_textonly()
 	{
 		$this->do_org_navigation();
@@ -1784,21 +1727,18 @@ class MinisiteTemplate
 		$parent_sites = $this->get_parent_sites();
 		if(!empty($parent_sites))
 		{
-			$url_xtra = '';
-			if($this->textonly)
-				$url_xtra = '?textonly=1';
 			$ret .= '<div class="parentSites">'."\n";
 			if(count($parent_sites) == 1)
 			{
 				$ps = current($parent_sites);
-				$ret .= '<h2><a href="'.$ps->get_value('base_url').$url_xtra.'"><span>'.$ps->get_value('name').'</span></a></h2>'."\n";
+				$ret .= '<h2><a href="'.$ps->get_value('base_url').'"><span>'.$ps->get_value('name').'</span></a></h2>'."\n";
 			}
 			else
 			{
 				$ret .= '<ul>'."\n";
 				foreach($parent_sites as $id=>$ps)
 				{
-					$ret .= '<li><h2><a href="'.$ps->get_value('base_url').$url_xtra.'"><span>'.$ps->get_value('name').'</span></a></h2></li>'."\n";
+					$ret .= '<li><h2><a href="'.$ps->get_value('base_url').'"><span>'.$ps->get_value('name').'</span></a></h2></li>'."\n";
 				}
 				$ret .= '</ul>'."\n";
 			}
