@@ -1,6 +1,6 @@
- /*!
+/*!
  * Media helper for fancyBox
- * version: 1.0.3
+ * version: 1.0.5 (Tue, 23 Oct 2012)
  * @requires fancyBox v2.0 or later
  *
  * Usage:
@@ -15,20 +15,35 @@
  *         helpers : {
  *             media: {
  *                 youtube : {
- *                     autoplay : 0
+ *                     params : {
+ *                         autoplay : 0
+ *                     }
  *                 }
  *             }
  *         }
  *     });
  *
+ * Or:
+ *     $(".fancybox").fancybox({,
+ *	       helpers : {
+ *             media: true
+ *         },
+ *         youtube : {
+ *             autoplay: 0
+ *         }
+ *     });
+ *
  *  Supports:
+ *
  *      Youtube
  *          http://www.youtube.com/watch?v=opj24KnzrWo
+ *          http://www.youtube.com/embed/opj24KnzrWo
  *          http://youtu.be/opj24KnzrWo
  *      Vimeo
  *          http://vimeo.com/40648169
  *          http://vimeo.com/channels/staffpicks/38843628
  *          http://vimeo.com/groups/surrealism/videos/36516384
+ *          http://player.vimeo.com/video/45074303
  *      Metacafe
  *          http://www.metacafe.com/watch/7635964/dr_seuss_the_lorax_movie_trailer/
  *          http://www.metacafe.com/watch/7635964/
@@ -59,7 +74,7 @@
 			}
 
 			$.each(rez, function(key, value) {
-				url = url.replace( '$' + key, value );
+				url = url.replace( '$' + key, value || '' );
 			});
 
 			if (params.length) {
@@ -73,7 +88,7 @@
 	F.helpers.media = {
 		defaults : {
 			youtube : {
-				matcher : /(youtube\.com|youtu\.be)\/(v\/|u\/|embed\/|watch\?v=)?([^#\&\?]*).*/i,
+				matcher : /(youtube\.com|youtu\.be)\/(watch\?v=|v\/|u\/|embed\/?)?(videoseries\?list=(.*)|[\w-]{11}|\?listType=(.*)&list=(.*)).*/i,
 				params  : {
 					autoplay    : 1,
 					autohide    : 1,
@@ -87,18 +102,17 @@
 				url  : '//www.youtube.com/embed/$3'
 			},
 			vimeo : {
-				matcher : /(vimeo.com|vimeopro.com)\/((.*)\/(.*)\/)?(\d+)\/?(.*)/,
+				matcher : /(?:vimeo(?:pro)?.com)\/(?:[^\d]+)?(\d+)(?:.*)/,
 				params  : {
 					autoplay      : 1,
 					hd            : 1,
 					show_title    : 1,
 					show_byline   : 1,
 					show_portrait : 0,
-					color         : '',
 					fullscreen    : 1
 				},
 				type : 'iframe',
-				url  : '//player.vimeo.com/video/$5'
+				url  : '//player.vimeo.com/video/$1'
 			},
 			metacafe : {
 				matcher : /metacafe.com\/(?:watch|fplayer)\/([\w\-]{1,10})/,
@@ -150,26 +164,23 @@
 
 		beforeLoad : function(opts, obj) {
 			var url   = obj.href || '',
-				types = $.extend(true, {}, this.defaults, opts || {}),
 				type  = false,
 				what,
 				item,
 				rez,
 				params;
 
-			for (what in types) {
-				if (types.hasOwnProperty(what)){
-					item = types[ what ];
-					rez  = url.match( item.matcher );
+			for (what in opts) {
+				item = opts[ what ];
+				rez  = url.match( item.matcher );
 
-					if (rez) {
-						type   = item.type;
-						params = item.params || null;
+				if (rez) {
+					type   = item.type;
+					params = $.extend(true, {}, item.params, obj[ what ] || ($.isPlainObject(opts[ what ]) ? opts[ what ].params : null));
 
-						url = $.type( item.url ) === "function" ? item.url.call( this, rez, params, obj ) : format( item.url, rez, params );
+					url = $.type( item.url ) === "function" ? item.url.call( this, rez, params, obj ) : format( item.url, rez, params );
 
-						break;
-					}
+					break;
 				}
 			}
 

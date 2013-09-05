@@ -385,6 +385,7 @@ class EventsModule extends DefaultMinisiteModule
 	 						'freetext_filters' => array(),
 	 						'cache_lifespan' => 0,
 	 						'cache_lifespan_meta' => 0,
+	 						'natural_sort_categories' => false,
 						);
 	/**
 	 * Views that should not be indexed by search engines
@@ -1265,7 +1266,7 @@ class EventsModule extends DefaultMinisiteModule
 					echo '<p>There are no events '.$this->get_scope_description().'.</p>'."\n";
 				if($start_date > '1970-01-01')
 				{
-					echo '<li><a href="'.$this->construct_link(array('start_date'=>'1970-01-01', 'view'=>'all')).'">View entire event archive</a></li>'."\n";
+					echo '<ul><li><a href="'.$this->construct_link(array('start_date'=>'1970-01-01', 'view'=>'all')).'">View entire event archive</a></li></ul>'."\n";
 				}
 				}
 				else
@@ -1296,14 +1297,14 @@ class EventsModule extends DefaultMinisiteModule
 				}
 				$clears .= '</ul>'."\n";
 				echo $clears;
-			}
-			if($this->calendar->get_start_date() > $this->today)
-			{
-				echo '<p><a href="'.$this->construct_link(array('start_date'=>'', 'view'=>'','category'=>'','audience'=>'', 'end_date'=>'','search'=>'')).'">Reset calendar to today</a></p>';
-			}
-			if($start_date > '1970-01-01')
-			{
-				echo '<p><a href="'.$this->construct_link(array('start_date'=>'1970-01-01', 'view'=>'all')).'">View entire event archive</a></p>'."\n";
+				if($this->calendar->get_start_date() > $this->today)
+				{
+					echo '<p><a href="'.$this->construct_link(array('start_date'=>'', 'view'=>'','category'=>'','audience'=>'', 'end_date'=>'','search'=>'')).'">Reset calendar to today</a></p>';
+				}
+				if($start_date > '1970-01-01')
+				{
+					echo '<p><a href="'.$this->construct_link(array('start_date'=>'1970-01-01', 'view'=>'all')).'">View entire event archive</a></p>'."\n";
+				}
 			}
 		}
 		echo '</div>'."\n";
@@ -1872,6 +1873,14 @@ class EventsModule extends DefaultMinisiteModule
 		$cats = $this->check_categories($cats);
 		if(empty($cats))
 			return '';
+		
+		$cat_names = array();
+		foreach($cats as $cat)
+			$cat_names[$cat->id()] = $cat->get_value('name');
+		
+		if($this->params['natural_sort_categories'])
+			natcasesort($cat_names);
+		
 		$ret .= '<div class="categories';
 		if ($this->calendar->get_view() == "all")
 			$ret .= ' divider';
@@ -1885,8 +1894,9 @@ class EventsModule extends DefaultMinisiteModule
 			else
 				$ret .= '<a href="'.$this->construct_link(array('category'=>'','view'=>'')).'" title="Events in all categories">All</a>';
 		$ret .= '</li>';
-		foreach($cats as $cat)
+		foreach($cat_names as $cat_id=>$cat_name)
 		{
+			$cat = $cats[$cat_id];
 			$ret .= '<li>';
 			if (array_key_exists($cat->id(), $this->calendar->get_categories()))
 				$ret .= '<strong>'.$cat->get_value('name').'</strong>';
@@ -2670,6 +2680,8 @@ class EventsModule extends DefaultMinisiteModule
 	/**
 	 * Initialiation function for event detail mode
 	 *
+	 * @todo should probably just grab audience and categories right here.
+	 *
 	 * @return void
 	 */
 	function init_event() // {{{
@@ -2771,9 +2783,9 @@ class EventsModule extends DefaultMinisiteModule
 			else $es = new entity_selector($sites->id());
 			$es->add_type(id_of('event_type'));
 			$es->add_relation('entity.id = "'.$id.'"');
-			$es->add_relation('show_hide.show_hide = "show"');
+			$es->add_relation(table_of('show_hide', id_of('event_type')). ' = "show"');
 			$es->set_num(1);
-			$es->limit_tables(array('show_hide'));
+			$es->limit_tables(get_table_from_field('show_hide', id_of('event_type')));
 			$es->limit_fields();
 			if($this->_get_sharing_mode() == 'shared_only') $es->add_relation('entity.no_share != 1');
 			$this->_ok_to_show[$id] = ($es->run_one());
@@ -3231,20 +3243,29 @@ class EventsModule extends DefaultMinisiteModule
 	 */
 	function show_event_audiences(&$e)
 	{
+		// lets try a different approach for comparison
 		$es = new entity_selector();
 		$es->description = 'Selecting audiences for event';
-		$es->add_type( id_of('audience_type'));
-        $es->add_right_relationship( $e->id(), relationship_id_of('event_to_audience') );
-		//echo $es->get_one_query();
-        $auds = $es->run_one();
-		if (!empty($auds))
+		$es->limit_tables();
+		$es->limit_fields();
+		$es->enable_multivalue_results();
+		$es->add_type( id_of('event_type'));
+		$es->add_relation('entity.id = ' . $e->id());
+		$es->add_left_relationship_field('event_to_audience', 'entity', 'id', 'aud_ids');
+		$with_audiences = $es->run_one();
+		
+		if (!empty($with_audiences))
         {
+        	$event = reset($with_audiences);
+        	$aud_ids = $event->get_value('aud_ids');
+        	$aud_ids = is_array($aud_ids) ? $aud_ids : array($aud_ids);
             echo '<div class="audiences">';
             echo '<h4>Audiences:</h4>'."\n";
 			echo '<p>'."\n";
 			$links = array();
-            foreach( $auds AS $aud )
+            foreach( $aud_ids AS $aud_id )
             {
+            	$aud = new entity($aud_id);
                 $links[] = '<a href="'.$this->construct_link(array('audience'=>$aud->id(),'no_search'=>'1'), false).'">'.$aud->get_value('name').'</a>';
             }
 			echo implode(', ',$links);

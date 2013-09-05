@@ -101,6 +101,14 @@ class MinisiteTemplate
 	 * @var object (entity)
 	 * @todo clean up modules so that this can be private
 	 */
+	 
+	/**
+	 * Whether or not the page shown by the template is public - populated in _handle_access_auth_check.
+	 *
+	 * @var boolean
+	 */
+	protected $page_is_public;
+	
 	var $page_info;
 	/**
 	 * The title of the current page
@@ -112,20 +120,6 @@ class MinisiteTemplate
 	 * @access private
 	 */
 	var $title;
-	
-	/**
-	 * @deprecated
-	 * @access private
-	 * Now use $this->head_items object.
-	 */
-	var $css_files;
-	
-	/**
-	 * @deprecated
-	 * @access private
-	 * Now use $this->head_items object.
-	 */
-	var $meta;
 	
 	/**
 	 * A minisite navigation class, which contains a tree of all pages in the site
@@ -460,7 +454,8 @@ class MinisiteTemplate
 		$auth_username = reason_check_authentication();
 		$rpa = new reasonPageAccess();
 		$rpa->set_page_tree($this->pages);
-		if(!$rpa->has_access($auth_username,$this->page_id))
+		$has_access = $rpa->has_access($auth_username, $this->page_id);
+		if(!$has_access)
 		{
 			if(!empty($auth_username))
 			{
@@ -472,6 +467,10 @@ class MinisiteTemplate
 				header('Location: '.REASON_LOGIN_URL.'?dest_page='.urlencode(get_current_url()));
 				die();
 			}
+		}
+		else
+		{
+			$this->page_is_public = (empty($auth_username)) ? true : $rpa->has_access(false, $this->page_id);
 		}
 	}
 	
@@ -801,6 +800,7 @@ class MinisiteTemplate
 						//$args[ 'nav_pages' ] =& $this->pages;
 						$args[ 'textonly' ] = $this->textonly;
 						$args[ 'api' ] = (!empty($module_api)) ? $module_api['api'] : false;
+						$args[ 'page_is_public' ] = $this->page_is_public;
 						
 						// this is used by a few templates to add some arguments.  leaving it in for backwards
 						// compatibility.  i believe that any usage of this can be done with page type parameteres now.

@@ -67,6 +67,15 @@
 		 */
 		var $textonly = null;
 		/**
+		 * A page if considered public if it can be viewed without login.
+		 *
+		 * Access through the function $this->page_is_public()
+		 *
+		 * @var object
+		 */
+		var $page_is_public;
+		
+		/**
 		 * allowable parameters for this module
 		 *
 		 * IMPORTANT: this array must contain fully specified keys AND values.
@@ -144,6 +153,14 @@
 		 * @var object
 		 */
 		var $_crumbs;
+			
+		/**
+		 * We need this because late static binding is not supported until PHP 5.3
+		 *
+		 * @todo eliminate me when we require PHP 5.3 or above.
+		 */
+		protected static $classname = NULL;
+
 		/**
 		 * convenience method that the template calls. sets up the variables from the template
 		 * @param array $args
@@ -151,14 +168,6 @@
 		 *       instantiate modules just call something like set_site, set_page, etc?
 		 *       This seems unnecessarily dangerous and complex.
 		 */
-		
-		/**
-		 * We need this because late static binding is not supported until PHP 5.3
-		 *
-		 * @todo eliminate me when we require PHP 5.3 or above.
-		 */
-		protected static $classname = NULL;
-		
 		function prep_args( $args = array() ) // {{{
 		{
 			// only run this method once.  for compatibility, it is called by init().
@@ -598,6 +607,11 @@
 		function get_sample_output()
 		{
 			return '';
+		}
+		
+		function page_is_public()
+		{
+			return $this->page_is_public;
 		}
 	}
 

@@ -15,13 +15,14 @@
 	 *
 	 * The controller inits and runs scenarios for the following supported modes:
 	 *
-	 * 'admin', 'form_complete', 'summary', 'form', 'unauthorized'
+	 * 'admin', 'form_complete', 'summary', 'form', 'unauthorized', 'closed'
 	 *
 	 * 1. admin - The user wants to administer a form
 	 * 2. form_complete - The user has just completed the form
 	 * 3. summary - The user wants to see a listing of completed forms 
 	 * 4. form - The user wants to create or edit a form
 	 * 5. unauthorized - The user wants to do something but is unauthorized or not logged in
+	 * 6. closed - The form is closed to submissions
 	 *
 	 * Simple customization:
 	 *
@@ -54,7 +55,7 @@
 	 *
 	 * Run - the controller should provide a default run method for each supported_mode. If the *VIEW* being used defines a method with
 	 *       the same name, that run method will be used in place of the controller default.
-     *
+	 *
 	 * @author Nathan White
 	 */
 	class DefaultFormController extends AbstractFormController
@@ -64,13 +65,13 @@
 								   'form_id' => array('function' => 'turn_into_int'),
 								   'netid' => array('function' => 'turn_into_string'));
 								   
-		var $supported_modes = array('admin', 'form_complete', 'summary', 'form', 'unauthorized');
+		var $supported_modes = array('admin', 'form_complete', 'summary', 'closed', 'form', 'unauthorized');
 		
 		function init_admin()
 		{
 			$model =& $this->get_model();
 			$head_items =& $model->get_head_items();
-			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form_data.css');
+			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form.css');
 			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/hide_nav.css');
 			if (method_exists($model, 'init_admin_object')) $model->init_admin_object();
 		}
@@ -79,7 +80,7 @@
 		{
 			$model =& $this->get_model();
 			$head_items =& $model->get_head_items();
-			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form_data.css');
+			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form.css');
 		}
 		
 		/**
@@ -89,7 +90,7 @@
 		{
 			$model =& $this->get_model();
 			$head_items =& $model->get_head_items();
-			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form_data.css');
+			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form.css');
 			if (method_exists($model, 'init_summary_object')) $model->init_summary_object();
 			//$summary =& $model->get_summary_object();
 			//$summary->init();
@@ -99,8 +100,7 @@
 		{
 			$model =& $this->get_model();
 			$head_items =& $model->get_head_items();
-			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form_error.css');
-			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form_data.css');
+			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form.css');
 			$head_items->add_javascript(JQUERY_URL, true);
 			$head_items->add_javascript(WEB_JAVASCRIPT_PATH .'disable_submit.js?id=disco_form&reset_time=60000');
 			$view =& $this->get_view();
@@ -112,6 +112,13 @@
 			$model =& $this->get_model();
 			$head_items =& $model->get_head_items();
 			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form_data.css');
+		}
+		
+		function init_closed()
+		{
+			$model =& $this->get_model();
+			$head_items =& $model->get_head_items();
+			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form.css');
 		}
 		
 		function pre_run()
@@ -174,6 +181,17 @@
 			echo $this->check_view_and_invoke_method('get_unauthorized_html');
 		}
 
+		function run_closed()
+		{
+			$model =& $this->get_model();
+			echo $this->check_view_and_invoke_method('get_closed_html');
+			if ($model->user_has_administrative_access())
+			{
+				echo '<p>[As someone with administrative access to this form, you can see the form even though it is closed. Regular users only see the message above.]</p>';
+				$this->run_form();	
+			}
+		}
+
 		function post_run()
 		{
 			if ($this->check_view_and_model_and_invoke_method('should_show_login_logout'))
@@ -197,6 +215,11 @@
 				return '<p>You are not currently logged in. If you have access to this form, the contents will be displayed after you login.</p>';
 			}
 		}
+		
+		function get_closed_html()
+		{
+			return '<h3>This form is closed.</h3>';
+		}	
 		
 		function get_return_link_html()
 		{

@@ -59,7 +59,7 @@ class reasonVersionCheck
 	 */
 	function get_current_version_id()
 	{
-		return '4.3';
+		return '4.4';
 	}
 	
 	/**
@@ -83,8 +83,9 @@ class reasonVersionCheck
 			'4.0'=>'old',
 			'4.1'=>'old',
 			'4.2'=>'old',
-			'4.3'=>'current',
-			'4.4'=>'bleeding',
+			'4.3'=>'old',
+			'4.4'=>'current',
+			'4.5'=>'bleeding',
 		);
 	}
 	

@@ -130,7 +130,9 @@
 		
 		function run_restrict()
 		{
-			echo '<input type="hidden" name="'.$this->get_seach_form_restriction_field_name().'" value="http://'.REASON_HOST . $this->_search_site->get_value('base_url').'" />'."\n";
+			// Google doesn't include subpages if there's a trailing slash
+			$url = rtrim($this->_search_site->get_value('base_url'),'/');
+			echo '<input type="hidden" name="'.$this->get_seach_form_restriction_field_name().'" value="'.REASON_HOST . $url.'" />'."\n";
 		}
 		function run_form_hidden_fields()
 		{

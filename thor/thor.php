@@ -7,7 +7,6 @@
  * Include dependencies
  */
 include_once('paths.php');
-require_once( THOR_INC .'disco_thor.php');
 include_once(TYR_INC.'tyr.php');
 require_once( INCLUDE_PATH . 'xml/xmlparser.php' );
 include_once ( SETTINGS_INC.'thor_settings.php' );
@@ -35,7 +34,13 @@ class ThorCore
 	var $_xml = false;
 	var $_table = false;
 	var $_db_conn = THOR_FORM_DB_CONN;
-	var $_extra_fields = array('id', 'submitted_by', 'submitter_ip', 'date_created', 'date_modified');
+	var $_extra_fields = array(
+		'id' => 'int(11) NOT NULL AUTO_INCREMENT',
+		'submitted_by' => 'tinytext NOT NULL',
+		'submitter_ip' => 'tinytext NOT NULL',
+		'date_created' => 'timestamp default 0 NOT NULL',
+		'date_modified' => 'timestamp default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP',
+		);
 	
 	function ThorCore($xml = '', $table = '')
 	{
@@ -486,7 +491,8 @@ class ThorCore
 	function get_create_table_sql()
 	{
 		$db_structure = $this->_build_db_structure();
-		$q = 'CREATE TABLE ' . $this->get_thor_table() . '(`id` int(11) NOT NULL AUTO_INCREMENT, ';
+		$q = 'CREATE TABLE ' . $this->get_thor_table() . '(';
+		$q .= '`id`'. $this->_extra_fields['id'].', ';
 		//$q .= '`formkey` tinytext NOT NULL , ';
 		foreach ($db_structure as $k=>$v)
 		{
@@ -508,10 +514,12 @@ class ThorCore
    				break;
 			}
 		}
-		$q .= '`submitted_by` tinytext NOT NULL , ';
-		$q .= '`submitter_ip` tinytext NOT NULL , ';
-		$q .= '`date_created` timestamp default 0 NOT NULL , ';
-		$q .= '`date_modified` timestamp default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP , ';
+		foreach ($this->_extra_fields as $field => $definition)
+		{
+			if ($field == 'id') continue;
+			$q .= '`'.$field.'`'. $definition . ', ';
+		}
+		
 		$q .= 'PRIMARY KEY(`id`)) ENGINE=MYISAM CHARACTER SET utf8 COLLATE utf8_general_ci;';
 		return $q;
 	}
@@ -687,9 +695,21 @@ class ThorCore
 		}
 	}
 	
-	function &get_extra_field_names()
+	function get_extra_field_names()
 	{
-		return $this->_extra_fields;
+		return array_keys($this->_extra_fields);
+	}
+	
+	/**
+	 * Add a new extra field to the beginning of the extra field list. Allows code to store
+	 * and retrieve arbitrary fields not defined by the thor form.
+	 * 
+	 * @param $name SQL column name
+	 * @param $description SQL column definition
+	 */
+	function add_extra_field($name, $description)
+	{
+		$this->_extra_fields = array_merge(array($name => $description), $this->_extra_fields);
 	}
 	
 	/**
@@ -742,7 +762,7 @@ class ThorCore
 				$display_values = array_merge($display_values, $this->$build_function($v));
 			}
 		}
-		foreach ($this->_extra_fields as $field_name)
+		foreach ($this->get_extra_field_names() as $field_name)
 		{
 			$display_values[$field_name]['label'] = prettify_string($field_name);
 			$display_values[$field_name]['type'] = 'text';

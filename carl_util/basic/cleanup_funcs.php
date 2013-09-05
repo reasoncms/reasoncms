@@ -280,51 +280,72 @@
 	}
 	
 	/**
-	 * Sanitizes HTML using the function specified in the package_settings.php HTML_SANITIZATION_FUNTION
-	 * - defaults to using get_safer_html_html_purifier
+	 * Sanitizes HTML using HTMLPurifier - accepts custom config object.
+	 * 
 	 * @param string html string needing sanitization
+	 * @param HTMLPurifier_Config custom configuation - if provided we use HTML Purifier regardless of HTML_SANITIZATION_FUNCTION value.
 	 * @return string sanitized html string
+	 *
+	 * @todo remove support for HTML_SANITIZATION_FUNCTION when Reason 4.5 is released.
 	 */
-	function carl_get_safer_html($string)
+	function carl_get_safer_html($raw_html, $config = NULL)
 	{
-		if (defined('HTML_SANITIZATION_FUNCTION'))
+		if (defined('HTML_SANITIZATION_FUNCTION') && is_null($config))
 		{
 			$func_name = HTML_SANITIZATION_FUNCTION;
+			return $func_name($raw_html);
 		}
 		else
 		{
-			trigger_error('The HTML_SANITIZATION_FUNCTION constant in package_settings.php is not defined - defaulting to get_safer_html_html_purifier', WARNING);
-			$func_name = 'get_safer_html_html_purifier';
+			return get_safer_html_html_purifier($raw_html, $config);
 		}
-		return $func_name($string);
 	}
 
 	/**
-	 * Return a safer string using HTML Purifier to do sanitization.
+	 * Return a safer string using HTML Purifier to do sanitization. You may pass in your own configuration object, or use defaults.
+	 *
+	 * The default settings use HTMLPurifier's defaults, except for these two things:
+	 *
+	 * - We allow the id attribute - recognizing this could break validation and confuse JavaScript
+	 * - We add a rule to transform b to strong.
+	 * - We add a rule to transform i to em.
+	 *
+	 * @param string raw unsanitized html
+	 * @param object HTMLPurifier config object
 	 */
-	function get_safer_html_html_purifier($string)
+	function get_safer_html_html_purifier($string, $config = NULL)
 	{
-		require_once( HTML_PURIFIER_INC . 'htmlpurifier.php' );
-		$config = HTMLPurifier_Config::createDefault();
-		$config->set('HTML.DefinitionID', 'allow_anchors_transform_em_and_strong');
-		$config->set('HTML.DefinitionRev', 1);
-		$config->set('Attr.EnableID', true);
-		$config->set('Cache.SerializerPath', HTMLPURIFIER_CACHE);
-		if ($def = $config->maybeGetRawHTMLDefinition())
+		if (is_null($config))
 		{
-			// lets transform b to strong and i to em
-			$def->info_tag_transform['b'] = new HTMLPurifier_TagTransform_Simple('strong');
-			$def->info_tag_transform['i'] = new HTMLPurifier_TagTransform_Simple('em');
+			require_once( HTML_PURIFIER_INC . 'htmlpurifier.php' );
+			$config = HTMLPurifier_Config::createDefault();
+			$config->set('HTML.DefinitionID', 'allow_anchors_transform_em_and_strong');
+			$config->set('HTML.DefinitionRev', 1);
+			$config->set('Attr.EnableID', true);
+			if (defined("HTMLPURIFIER_CACHE")) $config->set('Cache.SerializerPath', HTMLPURIFIER_CACHE);
+			elseif(function_exists('sys_get_temp_dir')) $config->set('Cache.SerializerPath', sys_get_temp_dir());
+			if ($def = $config->maybeGetRawHTMLDefinition())
+			{
+				// lets transform b to strong and i to em
+				$def->info_tag_transform['b'] = new HTMLPurifier_TagTransform_Simple('strong');
+				$def->info_tag_transform['i'] = new HTMLPurifier_TagTransform_Simple('em');
+			}
 		}
 		$purifier = new HTMLPurifier($config);
 		return $purifier->purify( $string );
 	}
 
+	/**
+	 * @deprecated use carl_get_safer_html
+	 */
 	function get_safer_html($string)
 	{
 		return carl_get_safer_html($string);
 	}
 
+	/**
+	 * @deprecated HTML Safe is not good enough (blacklist instead of whitelist based).
+	 */
 	function get_safer_html_html_safe($string)
 	{
 		require_once('HTML/Safe.php');

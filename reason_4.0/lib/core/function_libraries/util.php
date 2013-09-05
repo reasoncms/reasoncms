@@ -671,6 +671,23 @@
 		return $row['id'];
 	} // }}}
 
+	/**
+	 * Give a field and type id, return the table name that contains the field.
+	 */
+	function get_table_from_field( $field, $type_id )
+	{
+		$tables = get_entity_tables_by_type( $type_id );
+		foreach( $tables AS $t )
+		{
+			$x = get_fields_by_content_table( $t );
+			if( in_array( $field , $x ) )
+			{
+				return $t;
+			}
+		}
+		return false;
+	}
+	
 	function get_fields_by_content_table( $table, $cache = true ) // {{{
 	{
 		static $results = '';
@@ -2091,5 +2108,115 @@
 			$version = $rvc->get_current_version_id();
 		}
 		return $version;
+	}
+	
+	/**
+	 * Returns an HTMLPurifier config object defined in config/htmlpurifier/setup.php.
+	 *
+	 * @param string config_requested key in $GLOBALS['_reason_htmlpurifier_config']
+	 * @return object
+	 */
+	function reason_get_html_purifier_config($config_requested)
+	{
+		static $config;
+		if (!isset($config[$config_requested]))
+		{
+			if (empty($GLOBALS['_reason_htmlpurifier_config'])) reason_include_once('config/htmlpurifier/setup.php');
+			if (!isset($GLOBALS['_reason_htmlpurifier_config'][$config_requested]))
+			{
+				trigger_error('HTMLPurifier configuration ' . $config_requested . ' is not defined - using default instead.');
+				$config_actual = 'default';
+			}
+			else $config_actual = $config_requested;
+			reason_include_once('config/htmlpurifier/configs/'.$config_actual.'.php');
+			$config_object = new $GLOBALS['_reason_htmlpurifier_config_class'][ $config_actual ]();
+			$config[$config_requested] = $config_object->get_config();
+		}
+		return $config[$config_requested];
+	}
+	
+	/**
+	 * Returns XHTML snippets filtered to remove XSS vectors using HTMLPurifier.
+	 *
+	 * This is expensive - best used before saving content as opposed to on display of content.
+	 *
+	 * Note we only run filters if the raw_html provided is a string - boolean, int, NULL, etc pass through untouched.
+	 * 
+	 * We also skip tidy and purification in any of these cases:
+	 *
+	 * - $raw_html is empty
+	 * - is_numeric($raw_html) is true
+	 *
+	 * @param string $raw_html
+	 * @param string $config string identifying key of HTMLPurifier config as setup in config/htmlpurifier/setup.php
+	 * @param boolean default true should we run the HTML through tidy before using HTMLPurifier
+	 * @return string XSS-filtered XHTML
+	 */
+	function reason_sanitize_html($raw_html, $config = 'default', $tidy = true)
+	{
+		if (is_string($raw_html))
+		{
+			if (!empty($raw_html) && !is_numeric($raw_html))
+			{
+				$html = ($tidy) ? tidy($raw_html) : $raw_html;
+				$purifier_config = reason_get_html_purifier_config($config);
+				return get_safer_html_html_purifier($html, $purifier_config);
+			}
+		}
+		return $raw_html;
+	}
+	
+	/**
+	 * Returns sanitized entity value according to rules defined in config/entity_sanitization/setup.php
+	 *
+	 * @param mixed $type_unique_name_or_id
+	 * @param string $field_name
+	 * @param mixed $raw_value
+	 * @return mixed
+	 */
+	function reason_sanitize_value($type_unique_name_or_id, $field_name, $raw_value)
+	{
+		if (defined('REASON_ENABLE_ENTITY_SANITIZATION') && (REASON_ENABLE_ENTITY_SANITIZATION === true))
+		{
+			if (empty($GLOBALS['_reason_entity_sanitization'])) reason_include_once('config/entity_sanitization/setup.php');
+			$type_unique_name = (is_numeric($type_unique_name_or_id)) ? unique_name_of($type_unique_name_or_id) : $type_unique_name_or_id;	
+			if (isset($GLOBALS['_reason_entity_sanitization'][$type_unique_name][$field_name]))
+			{
+				if ($GLOBALS['_reason_entity_sanitization'][$type_unique_name][$field_name] != '') // if it is the empty string we don't sanitize
+				{
+					$sanitize_func = $GLOBALS['_reason_entity_sanitization'][$type_unique_name][$field_name];
+				}
+			}
+			elseif (isset($GLOBALS['_reason_entity_sanitization']['entity'][$field_name]))
+			{
+				if ($GLOBALS['_reason_entity_sanitization']['entity'][$field_name] != '') // if it is the empty string we don't sanitize
+				{
+					$sanitize_func = $GLOBALS['_reason_entity_sanitization']['entity'][$field_name];
+				}
+			}
+			else $sanitize_func = $GLOBALS['_reason_entity_sanitization']['default'];
+		}
+		return (isset($sanitize_func)) ? $sanitize_func($raw_value) : $raw_value;
+	}
+
+	
+	/**
+	 * Returns sanitized entity values according to rules defined in config/entity_sanitization/setup.php
+	 *
+	 * @param mixed $type_unique_name_or_id
+	 * @param array $raw_value_array
+	 * @return array
+	 */	
+	function reason_sanitize_values($type_unique_name_or_id, $raw_value_array)
+	{
+		if (defined('REASON_ENABLE_ENTITY_SANITIZATION') && (REASON_ENABLE_ENTITY_SANITIZATION === true))
+		{
+			foreach ($raw_value_array as $k => $v)
+			{
+				$sanitized_value_array[$k] = reason_sanitize_value($type_unique_name_or_id, $k, $v);
+			}
+			return $sanitized_value_array;
+		}
+		return $raw_value_array;
 	}
 ?>

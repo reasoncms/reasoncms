@@ -4,6 +4,12 @@ body {
 	font-size:100%;
 }
 
+body#tinymce {
+	margin: 8px;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:0.8125em;
+}
+
 #breadcrumbs, .locationBarText {
 	background-color:#231e5f;
 	font-size:0.625em;

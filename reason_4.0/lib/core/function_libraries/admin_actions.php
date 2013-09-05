@@ -60,6 +60,8 @@
 	 *
 	 * reason_create_entity() is an easier (and probably better) function to use.
 	 *
+	 * @todo error handling if given invalid type_id
+	 *
 	 *	@param	integer	$site_id	The ID of the site that will own this entity.
 	 *	@param	integer	$type_id	The ID of the type of the entity.
 	 *	@param	integer	$user_id	The ID of the user creating the entity.
@@ -68,8 +70,13 @@
 	 *	@param	boolean $testmode	turn on testing mode; if true, insert statement is echoed rather than executed
 	 *	@return	integer	$entity_id	id of the new entity
 	 */
-	function create_entity( $site_id, $type_id, $user_id, $name, $values = array(),$testmode = false)
+	function create_entity( $site_id, $type_id, $user_id, $raw_name, $raw_values = array(),$testmode = false)
 	{
+		foreach ($raw_values as $table => $entity_values)
+		{
+			$values[$table] = reason_sanitize_values(unique_name_of($type_id), $entity_values);
+		}
+		$name = reason_sanitize_value(unique_name_of($type_id), 'name', $raw_name);
 		// create entity record
 		$q = "INSERT INTO entity (name,creation_date,type,created_by,last_edited_by,state) VALUES ('".addslashes($name)."',NOW(),$type_id,$user_id,$user_id,'Live')";
 		if( $testmode )
@@ -116,6 +123,7 @@
 		// if more values, create the appropriate records in the entity tables
 		foreach( $entity_tables as $table )
 		{
+			
 			if( $table != 'entity' )
 			{
 				$keys = $field_values = '';
@@ -142,7 +150,7 @@
 				if( !empty( $values[ 'entity' ] ) )
 				{
 					$sqler = new sqler;
-					$sqler->update_one( 'entity', $values[ 'entity' ], $entity_id );
+					$sqler->update_one( 'entity', $values['entity'], $entity_id );
 				}
 			}
 		}
@@ -288,7 +296,7 @@
 		trigger_error('delete_entity() is deprecated. Use reason_expunge_entity() instead.');
 		return reason_expunge_entity( $id );
 	}
-	
+
 	/** Removes entity with id = $id and all relationships with that id from the database.
 	 *
 	 *	Specifically, deletes the entry from the entity table and all sub-tables.
@@ -391,79 +399,76 @@
 		return $entity;
 	} //
 
-	/** update_entity( $id, $user_id, $updates = array(), $archive = true ) {{{
-	 *	Updates entity with id = $id with the values of the array $values
+	/**
+	 * Updates entity with id = $id with the values of the array $values
 	 *
-	 *	reason_update_entity() provides an easier-to-use interface 
-	 *	where the updates do not need to be organized by table.
+	 * reason_update_entity() provides an easier-to-use interface 
+	 * where the updates do not need to be organized by table.
 	 *
 	 * @todo figure out how to refresh the entity data cache on update
 	 *
-	 *	@param	integer	$id	ID of entity to update
-	 *	@param 	integer	$user_id	Reason ID of user making changes
-	 *	@param	array	$updates	array of tables with values being array of key-val pairs
-	 *	@param	boolean	$archive	boolean that determines whether this update will be archived
-	 *	@returns	boolean	true => entity has changed,  false => entity has not changed
+	 * @param integer $id ID of entity to update
+	 * @param integer $user_id Reason ID of user making changes
+	 * @param array $updates array of tables with values being array of key-val pairs
+	 * @param boolean $archive boolean that determines whether this update will be archived
+	 * @return boolean true => entity has changed,  false => entity has not changed
 	 */
-	function update_entity( $id, $user_id, $updates = array(), $archive = true )
+	function update_entity( $id, $user_id, $raw_updates = array(), $archive = true )
 	{
-		// get original entity before update
-		$original = new entity( $id, false );
-		$original->get_values();	// this is so unbelievably important.  stupid dave.
-
-		// do the update
-		$sqler = new SQLER;
-
-		foreach( $updates AS $table => $fields )
-			$sqler->update_one( $table, $fields, $id );
-
-		// check for differences
-		$updated_entity = new entity( $id, false );
-		$keys = array_keys( $updated_entity->get_values() );
-		$changed = false;
-		foreach( $keys AS $key )
-			if( $updated_entity->get_value( $key ) != $original->get_value( $key ) )
-				$changed = true;
-
-		if( !empty($changed) )
+		$original = new entity($id, false);
+		if (reason_is_entity($original, true)) // must be an entity of some type.
 		{
-			// entity has changed.  update last_mod and who last edited
-			if(!empty($updates['entity']['last_modified']))
-				$lastmod = '"'.addslashes($updates['entity']['last_modified']).'"';
-			else
-				$lastmod = 'NOW()';
-			$q = 'UPDATE entity SET `last_modified` = '.$lastmod.', `last_edited_by` = "'.addslashes($user_id).'" where `id` = "'.addslashes($id).'"';
-			db_query( $q , 'Error updating last_modified' );
-
-			if( !empty($archive) )
+			if (isset($raw_updates['entity']['type']) && ($raw_updates['entity']['type'] != $original->get_value('type')))
 			{
-				$archived_id = duplicate_entity( $original, false, true, array( 'state' => 'Archived' ) );
-
-				// create archive relationship
-
-				// get archive relationship id
-				$q = 'SELECT id FROM allowable_relationship WHERE name LIKE "%archive%" AND relationship_a = '.$original->get_value('type').' AND relationship_b = '.$original->get_value('type');
-				$r = db_query( $q, 'Unable to get archive relationship.' );
-				$row = mysql_fetch_array( $r, MYSQL_ASSOC );
-				mysql_free_result( $r );
-				$rel_id = $row['id'];
-				
-				// actually create the relationship
-				create_relationship( $id, $archived_id, $rel_id );
+				trigger_error('update_entity cannot be used to change the type of an entity.');
 			}
+			foreach( $raw_updates AS $table => $raw_fields )
+			{
+				$updates[$table] = reason_sanitize_values($original->get_value('type'), $raw_fields);
+				if (empty($changed))
+				{
+					foreach ($updates[$table] as $k => $v) // see if this represents a change.
+					{
+						if ($v != $original->get_value($k))
+						{
+							$changed = true;
+							break;
+						}
+					}
+				}
+			}
+			if (!empty($changed)) // some change took place
+			{
+				if (!isset($updates['entity']['last_edited_by'])) $updates['entity']['last_edited_by'] = $user_id;
+				if (!isset($updates['entity']['last_modified'])) $updates['entity']['last_modified'] = get_mysql_datetime();
+				foreach  ($updates as $table => $fields)
+				{
+					$GLOBALS['sqler']->update_one( $table, $fields, $id );
+				}
+				$updated_entity = new entity($id, false);
+				if (!empty($archive))
+				{
+					$archived_id = duplicate_entity( $original, false, true, array( 'state' => 'Archived' ) );
+					$rel_id = reason_get_archive_relationship_id($original->get_value('type'));
+					create_relationship( $id, $archived_id, $rel_id );
+				}
 			
-			// If the unique_name changes on the updated entity, or a uniquely named entity is deleted or undeleted, lets update the unique name cache
-			if ($updated_entity->get_value('unique_name') != $original->get_value('unique_name') ||
-				($original->get_value('state') != 'Deleted' && $updated_entity->get_value('state') == 'Deleted' && $original->get_value('unique_name')) ||
-				($original->get_value('state') == 'Deleted' && $updated_entity->get_value('state') != 'Deleted' && $updated_entity->get_value('unique_name')))
-			{
-				reason_refresh_unique_names();
+				// If the unique_name changes on the updated entity, or a uniquely named entity is deleted or undeleted, lets update the unique name cache
+				if ($updated_entity->get_value('unique_name') != $original->get_value('unique_name') ||
+					($original->get_value('state') != 'Deleted' && $updated_entity->get_value('state') == 'Deleted' && $original->get_value('unique_name')) ||
+					($original->get_value('state') == 'Deleted' && $updated_entity->get_value('state') != 'Deleted' && $updated_entity->get_value('unique_name')))
+				{
+					reason_refresh_unique_names();
+				}
+				return true;
 			}
-			return true;
 		}
 		else
-			return false;
-	} // }}}
+		{
+			trigger_error('update_entity requires a valid entity id (was given ' . $id . ').');
+		}
+		return false;
+	}
 	
 	/** reason_update_entity( $id, $user_id, $updates = array(), $archive = true ) {{{
 	 *	Updates entity with id = $id with the values of the array $values
@@ -1472,7 +1477,7 @@
 			create_relationship( $field->get_value('_new_field_id'), $destination_table_entity->id(), relationship_id_of(	'field_to_entity_table' ) );
 			$q = 'ALTER TABLE `'.addslashes($destination_table).'` CHANGE '.addslashes($field->get_value('_field_move_temp_name')).' '.addslashes( $field->get_value('name') ).' '.$field->get_value('db_type') ;
 			db_query( $q, 'Unable to change field name of '.$field->get_value('_field_move_temp_name').' in reason_move_table_fields()' );
-			reason_update_entity( $field->get_value('_new_field_id'), $user_id, array('name' => $field->get_value('name') ) );
+			reason_update_entity( $field->get_value('_new_field_id'), $user_id, array('name' => $field->get_value('name') ), false );
 		}
 		
 		// delete the rows from the source table

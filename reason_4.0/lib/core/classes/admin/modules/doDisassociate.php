@@ -16,6 +16,8 @@
 	 */
 	class DoDisassociateModule extends DefaultModule // {{{
 	{
+		var $check_admin_token = true;
+		
 		function DoDisassociateModule( &$page ) // {{{
 		{
 			$this->admin_page =& $page;

@@ -19,7 +19,7 @@
  */
 include ('reason_header.php');
 reason_include_once('classes/media_work_displayer.php');
-reason_include_once('classes/group_helper.php');
+reason_include_once('classes/media_work_helper.php');
 reason_include_once('function_libraries/user_functions.php');
 
 
@@ -141,31 +141,19 @@ $page_state = 'invalid_request';
 if ($media_work != false && $valid_hash)
 {
 	$page_state = 'ok';
-	$es = new entity_selector();
-	$es->add_type(id_of('group_type'));
-	$es->add_right_relationship($media_work->id(), relationship_id_of('av_restricted_to_group'));
-	$group = current($es->run_one());
-
-	if (!empty($group))
+	$mwh = new media_work_helper($media_work);
+	$username = reason_check_authentication();
+	if ( !$mwh->user_has_access_to_media($username) )
 	{
-		$gh = new group_helper();
-		$gh->set_group_by_id($group->id());
-		if ( $gh->requires_login() ) 
+		if ($username)
 		{
-			$username = reason_check_authentication();
-			if ($username)
-			{
-				if (!$gh->is_username_member_of_group($username))
-				{
-					$page_state = 'unauthorized';
-					header('HTTP/1.1 403 Forbidden');
-				}
-			}
-			else
-			{
-				$page_state = 'authentication_required';
-				header('HTTP/1.1 403 Forbidden');
-			}
+			$page_state = 'unauthorized';
+			header('HTTP/1.1 403 Forbidden');
+		}
+		else
+		{
+			$page_state = 'authentication_required';
+			header('HTTP/1.1 403 Forbidden');
 		}
 	}
 }
@@ -194,7 +182,7 @@ switch($page_state)
 }
 echo '</title>'."\n";
 if('ok' == $page_state)
-	echo '<style>body{margin:0;padding:0;}.AudioWrapper{position:relative;height:46px;}audio{width:100%;position:absolute;bottom:0;}</style>'."\n";
+	echo '<style>body{margin:0;padding:0;}.AudioWrapper{position:relative;height:46px;}audio{width:100%;position:absolute;bottom:0;}video,img{width:100%;height:auto;}</style>'."\n";
 else
 	echo '<style>body{background:#777;color:#eee;font-family:Verdana,Arial,Helvetica,sans-serif;font-size:0.8em;margin:0;padding:0.5em;}a{color:#fff}a.signIn{background:#555;padding:0.3em 0.67em;text-decoration:none;}p{margin-top:0;}</style>'."\n";
 echo '</head>'."\n";
@@ -224,7 +212,9 @@ switch($page_state)
 		echo 'The requested media cannot be found.';
 		break;
 }
+echo '<![if gt IE 7]>'."\n";
 echo '<script src="'.JQUERY_URL.'"></script>'."\n";
+echo '<script src="'.REASON_PACKAGE_HTTP_BASE_PATH.'fitvids/jquery.fitvids.js"></script>'."\n";
 echo '<script>
 $(document).ready(function(){
 	match = /Android\s+(\d+\.?\d*)[^\d]/.exec(window.navigator.userAgent);
@@ -238,9 +228,14 @@ $(document).ready(function(){
 			$("object a").attr("target","_blank");
 		}
 	}
+	else
+	{
+		$("body").fitVids();
+	}
 });
 </script>
 ';
+echo '<![endif]>'."\n";
 echo '</body>'."\n";
 echo '</html>'."\n";
 ?>

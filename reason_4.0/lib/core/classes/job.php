@@ -118,13 +118,15 @@ abstract class ReasonJob implements BasicReasonJob
 	}
 	
 	/**
-	 * Get the id for the job.
+	 * Get or set the id for the job.
+	 *
+	 * @param guid ignored if the id has already been set for the job.
 	 */
-	public final function id()
+	public final function id($guid = NULL)
 	{
 		if (!isset($this->id))
 		{
-			$this->id = $this->construct_job_id();
+			$this->id = (!is_null($guid)) ? $guid : $this->construct_job_id();
 		}
 		return $this->id;
 	}
@@ -141,7 +143,7 @@ abstract class ReasonJob implements BasicReasonJob
 	}
 	
 	/**
-	 * Set or get configuration paramaters for the controller.
+	 * Set or get configuration paramaters for the job.
 	 *
 	 * @param string configuration key
 	 * @param mixed configuration value - stored for the provided key.
@@ -173,10 +175,7 @@ abstract class ReasonJob implements BasicReasonJob
 	 */
 	protected final function set_result($result)
 	{
-		// self or static?
-		$id = $this->id();
-		$results = self::$results;
-		$results[$id] = $result;
+		self::$results[$this->id()] = $result;
 	}
 
 	/**
@@ -325,6 +324,11 @@ class ReasonJobStack extends ReasonJob
 		}
 		$this->job_queue[$id] = $job;
 		return $id;
+	}
+	
+	function get_job_count()
+	{
+		return count($this->job_queue);
 	}
 }
 

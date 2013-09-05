@@ -1,0 +1,90 @@
+/* Tableless/responsive styling */
+#discoLinear {
+	margin-bottom:2em;
+}
+#discoLinear .formElement {
+	margin:1.25em 0;
+}
+#discoLinear .formElement .words {
+	margin-bottom:0.25em;
+}
+#discoLinear #requiredtextItem {
+	font-size:0.86em;
+	opacity:0.67;
+}
+#discoLinear #requiredtextItem p.required_indicator {
+	margin:0;
+}
+#discoLinear textarea, #discoLinear input[type=text] {
+	max-width:100%;
+	box-sizing:border-box;
+}
+#discoLinear div.submitSection {
+	margin:1.25em 0;
+}
+#discoLinear .formElement .solidText {
+	font-style:italic;
+	opacity:0.67;
+}
+
+/* Errors - tabled */
+form tr.error td, #discoLinear div.formElement.error {
+	background-color:#FFC;
+}
+form tr.error td.words, #discoLinear div.formElement.error .words {
+	font-weight:bold;
+	color:#900;
+}
+#discoLinear div.formElement.error {
+	padding:0.5em;
+}
+
+/* Table Admin */
+table.thor_data, table.table_data {
+	border-spacing: 0px;
+	border-bottom: 1px solid #000;
+}
+
+table.thor_data th, table.table_data th {
+	text-align: left;
+	padding: .3em;
+	border: 1px solid #000;
+	border-left: none;
+}
+
+table.thor_data td, table.table_data td {
+	padding: .3em;
+	border-right: 1px solid #000;
+}
+
+table.thor_data td.first, table.thor_data th.first, table.table_data td.first, table.table_data th.first {
+	border-left: 1px solid #000;	
+}
+
+table.thor_data td.filterButtons, table.table_data td.filterButtons {
+	border: 1px solid #000;
+}
+table.thor_data tbody tr.odd, table.table_data tbody tr.odd {
+	background-color:#E3EDFF;
+}
+
+table.thor_data tr.even, table.table_data tr.even {
+	background-color:#F0F5FF;
+}
+
+#form div.formDataAdmin, #form div.loginlogout {
+	padding:.5em;
+	border:1px solid #ccc;
+	clear:both;
+}
+#form div.formDataAdmin p {
+	margin:0;
+}
+
+#formAdminControlBox {
+	background: #dfdfdf;
+}
+
+#formAdminControlBox p {
+	padding: 3px;
+}

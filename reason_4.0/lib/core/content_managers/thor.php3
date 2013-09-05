@@ -44,7 +44,6 @@
 		function alter_data()
 		{
 			$this->set_allowable_html_tags('thor_content','all');
-			//$this->add_required( 'email_of_recipient' ); // only required if db_flag == 'no'
 			$this->add_required( 'thor_content' );
 			$this->add_required( 'thank_you_message' );
 		
@@ -52,7 +51,10 @@
 			$this->set_comments( 'thank_you_message', form_comment('After a user submits the form, this message will be displayed on the generic confirmation page.') );
 			$this->set_comments( 'display_return_link', form_comment('This option toggles whether the thank you message page displays a link to return to the form or not.') );
 			$this->set_comments( 'show_submitted_data', form_comment('This option allows you to display a copy of the submitted information on the thank you page.'));
-
+			$this->set_comments( 'submission_limit', form_comment('To limit the number of submissions to this form, make sure the form is saving its data in a database and enter a maximum number of submissions here. The form will stop accepting submissions when this limit is reached. A value of 0 indicates no limit.'));
+			$this->set_comments( 'open_date', form_comment('If this value is set, the form will not accept submissions before this date and time.'));
+			$this->set_comments( 'close_date', form_comment('If this value is set, the form will not accept submissions after this date and time.'));
+			
 			$this->set_display_name( 'email_of_recipient', 'Email of Recipient' );
 			$this->set_display_name( 'thor_content', 'Form Content' );
 			$this->set_display_name( 'db_flag', 'Save to Database?' );
@@ -74,6 +76,7 @@
 			$this->set_display_name('magic_string_autofill','Autofill Options');
 			$this->add_element('magic_string_autofill_note','comment',array('text'=>'<h3>Autofilling of Fields</h3><p>If you choose one of the "Autofill" options below, the will form automatically fill in personal information for the person submitting the form. The special field names that can be autofilled are: "Your Full Name", "Your Name", "Your First Name", "Your Last Name", "Your Department", "Your Email", "Your Home Phone", "Your Work Phone", and "Your Title".</p><p><strong>Note: The autofill feature will only work if the visitor is logged in.</strong></p>') );
 			$this->add_element('thank_you_note','comment',array('text'=>'<h3>Thank You Note</h3><p>This information is displayed after someone submits the form.</p>') );
+			$this->add_element('limiting_note','comment',array('text'=>'<h3>Limiting and Scheduling</h3>') );
 			if (!USE_JS_THOR)
 				$this->change_element_type( 'thor_content', 'thor', array('thor_db_conn_name' => THOR_FORM_DB_CONN) );
 			else
@@ -81,8 +84,9 @@
 			$this->alter_data_advanced_options();
 			$this->set_order (array ('name', 'db_flag', 'email_of_recipient', 'thor_content','magic_string_autofill_note',
 									 'magic_string_autofill', 'thank_you_note', 'thank_you_message', 'display_return_link', 'show_submitted_data', 
+									 'limiting_note', 'submission_limit', 'open_date', 'close_date',
 									 'advanced_options_header', 'thor_view', 'thor_view_custom', 'is_editable', 'allow_multiple', 'email_submitter', 'email_link', 'email_data', 'email_empty_fields', // advanced options
-									 'unique_name'));
+									 'unique_name', 'tableless'));
 		}
 
 		/**
@@ -114,6 +118,7 @@
 					$this->remove_element($k);	
 				}
 			}
+			$this->setup_tableless_element();
 		}
 		
 		function pre_error_check_advanced_options()
@@ -158,6 +163,29 @@
 			$this->set_value('thor_view_custom', $thor_view_value);
 		}
 		
+		/**
+		 * New in Reason 4.4, if this is present and set to 1 the form module will use the tableless stacked box class.
+		 *
+		 * For a new form, we set this to 1 - for existing forms we maintain the default of 0.
+		 *
+		 * We only show the toggle if the user has the edit_form_advanced_options privilege.
+		 */
+		function setup_tableless_element()
+		{
+			if ($this->is_element('tableless'))
+			{
+				if (strlen($this->get_value('name')) == 0) $this->set_value('tableless', 1);
+				if(reason_user_has_privs($this->admin_page->user_id, 'edit_form_advanced_options'))
+				{
+					$this->change_element_type('tableless', 'checkbox', array('checked_value' => 1, 'description' => 'Use tableless display for this form.'));
+				}
+				else $this->change_element_type('tableless', 'hidden');	
+			}
+			else
+			{
+				trigger_error('The field "tableless" needs to be added to the form table. Please run the 4.3 to 4.4 upgrade scripts.');
+			}
+		}
 		
 		function pre_error_check_actions()
 		{
@@ -218,6 +246,11 @@
 					}
 					$this->set_error('email_of_recipient',$msg);
 				}
+			}
+			
+			if ($this->get_value('submission_limit') && $db_flag == 'no')
+			{
+				$this->set_error('submission_limit','You have set a submission limit, but this form is not saving data to a database. Please enable the database option or remove the submission limit.');
 			}
 			$this->run_error_checks_advanced_options();
 		}

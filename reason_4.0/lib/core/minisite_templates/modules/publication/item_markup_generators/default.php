@@ -32,6 +32,7 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 								  'item_images',
 								  'item_assets',
 								  'item_categories',
+								  'item_social_sharing',
 								  'item_comments',
 								  'comment_form_markup',
 								  'commenting_status',
@@ -74,9 +75,17 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 		{
 			$this->markup_string .= '<div class="author">'.$this->get_author_section().'</div>'."\n";
 		}
+		if($this->should_show_social_sharing_section())
+		{
+			$this->markup_string .= '<div class="social top">'.$this->get_social_sharing_section().'</div>'."\n";
+		}
 		if($this->should_show_content_section())
 		{
 			$this->markup_string .= '<div class="text">'.$this->get_content_section().'</div>'."\n";
+		}
+		if($this->should_show_social_sharing_section())
+		{
+			$this->markup_string .= '<div class="social bottom">'.$this->get_social_sharing_section().'</div>'."\n";
 		}
 		if($this->should_show_inline_editing_link())
 		{
@@ -327,6 +336,27 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 			$ret .= '<li><a href="'.$category->get_value('category_url').'">'.$category->get_value('name').'</a></li>';
 		}
 		$ret .= '</ul>';
+		return $ret;
+	}
+
+	// Categories section
+	function should_show_social_sharing_section()
+	{
+		if(!empty($this->passed_vars['item_social_sharing']))
+			return true;
+		else
+			return false;
+	}
+	function get_social_sharing_section()
+	{
+		$ret = '<p><strong>Share post:</strong>';
+		foreach($this->passed_vars['item_social_sharing'] as $social_sharing)
+		{
+			$ret .= ' <a href="'.$social_sharing['href'].'">';
+			$ret .= '<img src="'. $social_sharing['icon'] . '" alt="'. $social_sharing['text'] . '" />';
+			$ret .= '</a>';
+		}
+		$ret .= '</p>';
 		return $ret;
 	}
 	

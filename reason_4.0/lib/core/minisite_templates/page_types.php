@@ -35,6 +35,19 @@
 	 *  'page_type_2'=>array('page_location_1'=>'module_2','page_location_2'=>'module_1'),
 	 * );
 	 *
+	 * *Adding notes to a page type*
+	 *
+	 * Instead of a page location name, you can use the special keyword "_meta" to add an array of
+	 * extra information to a page type. Currently "note" is implemented, and any html you provide
+	 * will show up underneath the page type field in the page content manager.
+	 *
+	 * array(
+	 *	'page_type_1'=>array(
+	 *		'page_location_1'=>'module_1',
+	 *		'_meta'=>array('note' => '<p>A note about this page type presented to the user</p>'),
+	 *	),
+	 * );
+	 *
 	 * *Customizations*
 	 *
 	 * Do not customize this array. Instead, define $GLOBALS['_reason_page_types_local']
@@ -289,6 +302,48 @@
 			'sidebar' => 'assets',
 			'main_post' => 'children',
 		),
+		'audio_video_offer_original_download' => array(
+			'main_post' => array(
+				'module' => 'av',
+				'offer_original_download_link' => true,
+			),
+		),
+		'audio_video_simple' => array(
+			'main_post' => 'av_simple',
+		),
+		'audio_video_simple_360_wide' => array(
+			'main_post' => array(
+				'module' => 'av_simple',
+				'width' => 360,
+			),
+		),
+		'audio_video_simple_640_wide' => array(
+			'main_post' => array(
+				'module' => 'av_simple',
+				'width' => 640,
+			),
+		),
+		'audio_video_simple_sidebar' => array(
+			'sidebar' => array(
+				'module' => 'av_simple',
+				'width' => 240,
+			),
+		),
+		'audio_video_media_above_description' => array(
+			'main_post' => array(
+				'module'=>'av',
+				'show_media_first'=>true,
+			),
+		),
+		'kaltura_import' => array(
+			'main_post' => 'kaltura_import',
+		),
+		'kaltura_import_default_hidden' => array(
+			'main_post' => array(
+				'module' => 'kaltura_import',
+				'default_values' => array('show_hide' => 'hide'),
+			),
+		),
 		'basic_tabs' => array(
 			'main_head' => 'basic_tabs',
 		),
@@ -517,6 +572,16 @@
 			'sidebar' => 'siblings',
 			'sub_nav' => '',
 		),
+		'blurb_2_columns' => array(
+			'main_post' => array(
+				'module' => 'blurb',
+				'demote_headings' => 0,
+			),
+			'sub_nav' => array(
+				'module' => 'head_items_include',
+				'css' => array(array(REASON_HTTP_BASE_PATH.'css/blurb_grids/blurb_2_columns.css')),
+			),
+		),
 		'blurbs_with_events_and_publication_sidebar_by_page_categories' => array(
 			'pre_sidebar'=> array(
 				'module'=>'events_mini',
@@ -688,8 +753,24 @@
 			'main_post' => 'event_slot_registration',
 			'sidebar' => '',
 		),
+		'event_slot_registration_cache_1_hour' => array(
+			'main_post' => array(
+				'module' => 'event_slot_registration',
+				'cache_lifespan' => '3600',
+				'cache_lifespan_meta' => '7400',
+			),
+			'sidebar' => '',
+		),
 		'events' => array(
 			'main_post' => 'events',
+			'sidebar' => '',
+		),
+		'events_cache_1_hour' => array(
+			'main_post' => array(
+				'module' => 'events',
+				'cache_lifespan' => '3600',
+				'cache_lifespan_meta' => '7400',
+			),
 			'sidebar' => '',
 		),
 		'events_gallery_archive' => array(
@@ -777,11 +858,23 @@
 		),
 		'events_sidebar' => array(
 			'sidebar' => 'events_mini',
-		),	
+		),
 		'events_sidebar_by_page_categories' => array(
 			'sidebar'=> array(
 				'module'=>'events_mini',
 				'limit_to_page_categories'=>true,
+			),
+		),
+		'events_and_publication_sidebar_by_page_categories' => array(
+			'sidebar'=> array(
+				'module'=>'events_mini',
+				'limit_to_page_categories'=>true,
+			),
+			'post_sidebar'=>array(
+				'module'=>'publication',
+				'related_mode'=>'true',
+				'limit_by_page_categories'=>'true',
+				'max_num_items' => 3,
 			),
 		),
 		'events_sidebar_grouped_by_category' => array(
@@ -906,7 +999,10 @@
 				'height'=>300
 			),
 			'main_post' => 'content',
-			'pre_sidebar'=>'events_mini',
+			'pre_sidebar'=> array(
+				'module' => 'events_mini',
+				'ideal_count' => 4,
+			),	
 			'sidebar' => array(
 				'module' => 'publication',
 				'related_mode' => 'true',
@@ -1139,7 +1235,15 @@
 			),
 			'sidebar' => '',
 		),
-		
+		'gallery_24_per_page_sidebar_blurb' => array(
+			'main_post' => array(
+				'module'=>'gallery2',
+				'sort_order'=>'rel',//'meta.description ASC',
+				'number_per_page' => 24,
+			),
+			'sub_nav' => '',
+			'sidebar' => 'blurb',
+		),
 		'gallery_100x100_thumbnails' => array(
 			'main_post' => array(
 				'module'=>'gallery2',
@@ -1261,6 +1365,11 @@
 					 ),
 				'max_num_items' => 5,
 			),
+		),
+		'image_slideshow_before_content_events_sidebar' => array(
+			'main' => 'image_slideshow',
+			'main_post' => 'content',
+			'sidebar' => 'events_mini',
 		),
 		'image_slideshow_manual' => array(
 			'main_post' => array('module'=>'image_slideshow','slideshow_type'=>'manual'),
@@ -1794,12 +1903,14 @@
 			'main_head' => '',
 			'main_post' => array(
 				'module' => 'sitemap',
-				'site_types_unique_names' => array(
+				/* You can customize headings and page types with an array like this */
+				/* 'site_types_unique_names' => array(
 					'Gateways'=>array('gateway_site_type'),
 					'Departments and Concentrations'=>array('department_site_type',
 													'concentration_site_type'),
 					'Offices'=>array('office_site_type'),
-					'Other Sites'=>array('other_site_type'))),
+					'Other Sites'=>array('other_site_type'))), */
+			),
 			'post_foot' => 'textonly_toggle',
 			'sidebar' => 'blurb',
 		),

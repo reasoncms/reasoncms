@@ -731,7 +731,7 @@ class FormController
 			if ($this->clear_form_data_on_finish && !$this->destroy_session_on_finish)
 			{
 				$this->destroy_form_data();
-				
+				$this->reset_to_first_run();
 			}
 			if ($this->destroy_session_on_finish)
 			{
@@ -941,10 +941,14 @@ class FormController
 	function destroy_form_data()
 	{
 		$this->session->set($this->_data_key, array());
-		$this->session->set($this->_path_key, array());
-		$this->session->set($this->_data_key . '_running', '');
 	}
 
+	function reset_to_first_run()
+	{
+		$this->session->set($this->_path_key, array());
+		$this->session->set($this->_data_key . '_running', '');		
+	}
+	
 	function set_session_class($class)
 	{
 		if (class_exists($class))

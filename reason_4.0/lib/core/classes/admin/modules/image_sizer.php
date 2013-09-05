@@ -281,8 +281,8 @@
 					$showing_normal_size = false;
 					
 					$rsi = new reasonSizedImage();
-					$server_path = REASON_INC.'www/sized_images_custom/';
-					$web_path = REASON_HTTP_BASE_PATH.'sized_images_custom/';
+					$server_path = REASON_SIZED_IMAGE_CUSTOM_DIR;
+					$web_path = REASON_SIZED_IMAGE_CUSTOM_DIR_WEB_PATH;
 					$rsi->set_paths($server_path, $web_path);
 					$rsi->set_id($image->id());
 					if(!empty($sized_width))
