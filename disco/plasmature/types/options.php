@@ -468,7 +468,6 @@ class radio_with_otherType extends optionType
 	function grab_value()
 	{
 		$return = parent::grab_value();
-		
 		if ($return == '__other__')
 		{
 			$http_vars = $this->get_request();
@@ -496,6 +495,17 @@ class radio_with_otherType extends optionType
 	function set( $value )
 	{
 		$this->value = $value;
+	}
+
+	/**
+	  * Make sure the other value is visible in the request
+	  **/
+	function get_cleanup_rules()
+	{
+		return array( 
+			$this->name => array('function' => 'turn_into_string' ),
+			$this->name . '_other' => array('function' => 'turn_into_string' ),
+			);
 	}
 }
 
@@ -597,9 +607,9 @@ class checkboxgroupType extends optionType
 		else
 			return $this->value;
 	}
-	function get_cleanup_rule()
+	function get_cleanup_rules()
 	{
-		return array( 'function' => 'turn_into_array' );
+		return array( $this->name => array('function' => 'turn_into_array' ));
 	}
 }
 
@@ -689,6 +699,16 @@ class checkboxgroup_with_otherType extends checkboxgroupType
 			}
 			$this->set( $request[ $this->name ] );
 		}
+	}
+	/**
+	  * Make sure the other value is visible in the request
+	  **/
+	function get_cleanup_rules()
+	{
+		return array( 
+			$this->name => array('function' => 'turn_into_array' ),
+			$this->name . '_other' => array('function' => 'turn_into_string' ),
+			);
 	}
 }
 

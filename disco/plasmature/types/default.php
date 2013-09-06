@@ -536,6 +536,7 @@ class defaultType
 	}
 	
 	/**
+ 	 * (Deprecated: see get_cleanup_rules())
 	 * Allows a plasmature type to define its own cleanup rule.
 	 * Primarily for use within the Minisite module system
 	 * @returns array The value part of a cleanup rule (generally, 'function' => 'turn_into_something').
@@ -543,6 +544,16 @@ class defaultType
 	function get_cleanup_rule()
 	{
 		return array( 'function' => 'turn_into_string' );
+	}
+
+	/**
+	 * Allows a plasmature type to define its own cleanup rules.
+	 * Primarily for use within the Minisite module system
+	 * @returns array The full cleanup rule(s) for this element (generally, 'name' => array('function' => 'turn_into_something')).
+	 */
+	function get_cleanup_rules()
+	{
+		return array($this->name => array( 'function' => 'turn_into_string' ));
 	}
 
 	/**

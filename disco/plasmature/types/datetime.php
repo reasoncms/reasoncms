@@ -459,9 +459,9 @@ class textDateTimeType extends textType
 		$str .= '</select>';
 		return $str;
 	}
-	function get_cleanup_rule()
+	function get_cleanup_rules()
 	{
-		return array( 'function' => 'turn_into_array' );
+		return array( $this->name => array( 'function' => 'turn_into_array' ));
 	}
  }
 
