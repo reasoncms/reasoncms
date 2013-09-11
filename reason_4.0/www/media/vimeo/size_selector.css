@@ -1,0 +1,34 @@
+div.size_links {
+	margin-top:0.75em;
+}
+div.size_links span.buttonSize {
+	display: inline-block;
+}
+div.size_links h4, div.size_links ul, div.size_links li {
+	display:inline-block;
+	margin:0 0.25em 0 0;
+	padding:0;
+	font-size:1em;
+	font-weight:normal;
+	list-style:none;
+}
+div.size_links li span > a, div.size_links li strong {
+	display:block;
+	padding:3px 10px;
+	background-color:#ddd;
+	color:#000;
+	text-decoration:none;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+}
+div.size_links li strong {
+	background-color:#888;
+	color:#fff;
+	font-weight:normal;
+}
+div.size_links li em {
+	font-style:normal;
+	font-size:0.82em;
+	opacity:0.67;
+}
