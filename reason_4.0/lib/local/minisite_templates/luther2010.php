@@ -345,6 +345,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_giving'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature_publication'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature_sidebar_news'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music')
 			{
@@ -359,6 +360,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_giving'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature_publication'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature_sidebar_news'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_public_information'
@@ -403,6 +405,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_giving'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature_publication'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature_sidebar_news'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music')
 			{
@@ -423,6 +426,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_giving'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature_publication'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature_sidebar_news'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music')
 			{
@@ -439,6 +443,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 			if ($this->cur_page->get_value( 'custom_page' ) == 'flickr_slideshow_sidebar'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature_publication'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature_sidebar_news'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_public_information')
@@ -459,6 +464,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 			if ($this->cur_page->get_value( 'custom_page' ) != 'flickr_slideshow_sidebar'	
 				&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_landing'
 				&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_landing_feature'
+				&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_landing_feature_publication'
 				&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_landing_feature_sidebar_news'
 				&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_music'
 				&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_public_information')
@@ -471,6 +477,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 			if ($this->cur_page->get_value( 'custom_page' ) == 'flickr_slideshow_sidebar'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature_publication'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature_sidebar_news'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_public_information')
@@ -729,6 +736,7 @@ class LutherTemplate2010 extends MinisiteTemplate
         	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_giving'
         	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'
 			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature'
+			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature_publication'
 			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature_sidebar_news'
 			|| $this->cur_page->get_value( 'custom_page' ) == 'publication_feature_autoplay'
         	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music'
@@ -807,6 +815,7 @@ class LutherTemplate2010 extends MinisiteTemplate
         	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_home_feature'
         	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'
         	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature'
+        	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature_publication'
         	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature_sidebar_news'
         	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music'
         	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_public_information'
