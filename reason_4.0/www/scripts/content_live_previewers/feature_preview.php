@@ -101,7 +101,7 @@ function clean_up_data($val)
 {
 	$allowed_tags="<a><abbr><acronym><b><bdo><cite><code><del><dfn><em><i><ins><kbd><q><samp><span><strong><sub><sup><tt><var>";
 	
-	$clean_val = 	carl_get_safer_html( $val ,$allowed_tags);
+	$clean_val = 	carl_get_safer_html( strip_tags($val,$allowed_tags));
 
 	return $clean_val;
 }
