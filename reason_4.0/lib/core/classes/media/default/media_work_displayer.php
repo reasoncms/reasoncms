@@ -121,6 +121,25 @@ class DefaultMediaWorkDisplayer implements MediaWorkDisplayerInterface
 	}
 	
 	/**
+	 * Returns a height generated from the aspect ratio of the media work.  If no width is specified,
+	 * it falls back to get_default_height().
+	 *
+	 * @access private
+	 * @return int
+	 */
+	private function _get_height_from_width()
+	{
+		if ( !empty($this->width) )
+		{
+			$aspect_ratio = $this->get_video_aspect_ratio($this->get_current_media_file());
+			if ($aspect_ratio != false)
+				return $this->width / $aspect_ratio + 20;
+		}
+		$current = $this->get_current_media_file();
+		return $current->get_value('height');
+	}	
+	
+	/**
 	 * Returns an int keeping in mind the allowed enums.
 	 *
 	 * @return int
@@ -132,15 +151,15 @@ class DefaultMediaWorkDisplayer implements MediaWorkDisplayerInterface
 		{
 			if ($cur_file->get_value('media_format') == 'Flash Video')
 			{
-				if ($this->height == 'small')
+				if ($this->height === 'small')
 				{
 					return MEDIA_WORK_SMALL_HEIGHT;
 				}
-				elseif ($this->height == 'medium')
+				elseif ($this->height === 'medium')
 				{
 					return MEDIA_WORK_MEDIUM_HEIGHT;
 				}
-				elseif ($this->height == 'large')
+				elseif ($this->height === 'large')
 				{
 					return MEDIA_WORK_LARGE_HEIGHT;
 				}
@@ -159,8 +178,6 @@ class DefaultMediaWorkDisplayer implements MediaWorkDisplayerInterface
 			return 0;
 		}
 	}
-	
-	
  	
  	/**
  	 * Returns the html to display the media.
@@ -176,7 +193,7 @@ class DefaultMediaWorkDisplayer implements MediaWorkDisplayerInterface
 				$current = $this->get_current_media_file();
 				if ($current->get_value('av_type') == 'Video')
 				{
-					$iframe_height = $this->_get_height() ? $this->_get_height() : $current->get_value('height');
+					$iframe_height = $this->_get_height() ? $this->_get_height() : $this->_get_height_from_width();
 					$iframe_width = $this->width ? $this->width : $this->get_video_aspect_ratio($current)*$iframe_height;
 					
 					if ($current->get_value('media_format') == 'Quicktime')
