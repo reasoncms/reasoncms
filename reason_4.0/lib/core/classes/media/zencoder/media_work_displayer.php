@@ -102,6 +102,7 @@ class ZencoderMediaWorkDisplayer implements MediaWorkDisplayerInterface
 		if ($media_work->get_value('integration_library') == 'zencoder')
 		{
 			$this->media_work = $media_work;
+			self::$ratios = array();
 		}
 		else
 		{
