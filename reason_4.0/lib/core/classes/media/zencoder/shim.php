@@ -193,10 +193,14 @@ class ZencoderShim implements ShimInterface
  			}
  		}
 		
-		if ($vid_height)
+		// TEMPORARY HACK!! We need ffmpeg on Chicago!
+		$profile = 'large';
+		return $this->_upload_video_with_specified_profile($filepath, $media_work, $netid, $profile, $media_files_to_delete, $media_work_to_delete);
+		
+		/*if ($vid_height)
 		{
 			// pick the correct transcoding profile based on the video's height
-			/*if ($vid_height >= MEDIA_WORK_LARGE_HEIGHT)
+			if ($vid_height >= MEDIA_WORK_LARGE_HEIGHT)
 			{
 				$profile = 'large';
 			}
@@ -207,16 +211,14 @@ class ZencoderShim implements ShimInterface
 			else
 			{
 				$profile = 'small';
-			}*/
-			// TEMPORARY HACK TO MAKE SURE WE GET HIGHEST QUALITY VIDEOS. INSTALL ffmpeg ON CHICAGO!!
-			$profile = 'large';
+			}
 			return $this->_upload_video_with_specified_profile($filepath, $media_work, $netid, $profile, $media_files_to_delete, $media_work_to_delete);
 		}
 		else
 		{
 			// If we couldn't identify the video's height, then we'll default to 'small'.
 			return $this->_upload_video_with_specified_profile($filepath, $media_work, $netid, 'small', $media_files_to_delete, $media_work_to_delete);
-		}
+		}*/
  	}
 	
  	/**
