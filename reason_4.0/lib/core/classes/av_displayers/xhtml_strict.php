@@ -558,12 +558,12 @@ class xhtmlStrictReasonAVDisplay
 		{
 			$dimensions_attrs = 'width="'.$dimensions['width'].'" height="'.$dimensions['height'].'"';
 		}
-		
+		$url = $this->equalize_protocol($entity->get_value('url'));
 		$ret[] = '<object id="flashWidget'.$entity->id().'" '.$dimensions_attrs.' classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" type="application/x-shockwave-flash" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab">';
-		$ret[] = '<param name="movie" value="'.$entity->get_value('url').'" />';
+		$ret[] = '<param name="movie" value="'.$url.'" />';
 		if(!empty($this->parameters['swf']['wmode']))
 			$ret[] = '<param name="wmode" value="'.$this->parameters['swf']['wmode'].'" />';
-		$ret[] = '<embed type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" src="'.$entity->get_value('url').'" '.$dimensions_attrs.'></embed>';
+		$ret[] = '<embed type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" src="'.$url.'" '.$dimensions_attrs.'></embed>';
 		$ret[] = '</object>';
 		return implode("\n",$ret);
 	}
