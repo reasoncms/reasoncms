@@ -10,7 +10,7 @@
  */
 reason_include_once('classes/admin/modules/default.php');
 reason_include_once('classes/entity_selector.php');
-reason_include_once('classes/kaltura_shim.php');
+reason_include_once('classes/media/kaltura/shim.php');
 reason_include_once( 'function_libraries/url_utils.php' );
 reason_include_once('classes/media_work_helper.php');
 
@@ -66,7 +66,7 @@ class mediaWorkDownloadLinksModule extends DefaultModule
 			echo '<p>All download links for "'.$this->media_work->get_value('name').'" are displayed below.</p>'."\n";
 			
 			echo '<ul>'."\n";
-			$file_ext = $this->kaltura_shim->get_source_file_extension($this->media_work->get_value('entry_id'));
+			$file_ext = $this->kaltura_shim->get_source_file_extension($this->media_work);
 			echo '<li><a href="'.$this->kaltura_shim->get_original_data_url($this->media_work->get_value('entry_id')).'">Original (.'.$file_ext.')</a></li>'."\n";
 			foreach ($this->media_files as $file)
 			{

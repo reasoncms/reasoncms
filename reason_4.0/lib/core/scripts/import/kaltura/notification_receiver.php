@@ -23,16 +23,18 @@
  * Include dependencies
  */
 include_once('reason_header.php');
+require_once(SETTINGS_INC.'media_integration/kaltura_settings.php');
 reason_require_once('classes/entity_selector.php');
 reason_include_once('function_libraries/admin_actions.php');
 reason_require_once('function_libraries/user_functions.php');
 require_once(INCLUDE_PATH.'kaltura/KalturaNotificationClient.php');
 require_once(INCLUDE_PATH.'kaltura/KalturaClient.php');
-reason_require_once('classes/kaltura_shim.php');
+reason_include_once('classes/media/kaltura/shim.php');
 reason_include_once( 'function_libraries/url_utils.php' );
 reason_include_once('content_managers/image.php3');
 include_once( CARL_UTIL_INC . 'dir_service/directory.php' );
 include_once( CARL_UTIL_INC . 'basic/url_funcs.php' );
+include_once( CARL_UTIL_INC . 'basic/misc.php' );
 
 /**
  * Class that encapsulates kaltura notification receiver logic
@@ -132,124 +134,25 @@ class ReasonKalturaNotificationReceiver
 				// First, check to see if the status is abnormal
 				if ($data['status'] <= 0)
 				{
-					reason_update_entity($media_work->id(), $data['puser_id'], array('transcoding_status' => 'error'));
+					reason_update_entity($media_work->id(), $data['puser_id'], array('transcoding_status' => 'error'), false);
 					$this->send_email($media_work, $data, 'error');
 					trigger_error('Kaltura unsuccessfully transcoded media entry with id = '.$data['entry_id']);
 					return;
 				}
 				
+				// Kaltura sends multiple notifications.  This is to make sure we're not overwriting
+				// a successful transcoding.
 				if ($media_work->get_value('transcoding_status') != 'ready')
 				{
-	
 					$flavor_assets = $this->kaltura_shim->get_flavor_assets_for_entry($data['entry_id'], $data['puser_id']);
-					// If there are less than 2 flavors, it must be the throwaway initial video upload
-					// Kaltura likes to give server notifications before things are ready sometimes, so the
-					// 'height' check is just to make sure this is a meaningful server notification
-					if (count($flavor_assets) == 1 && !empty($data['height']))
-					{					
-						// We use two pieces of logic to determine which profile to use.
-						// First, check the height of the video.  Then, make sure its bitrate
-						// is high enough for that transcoding profile.  We fall back to the
-						// Small profile.
-						$asset = current($flavor_assets);
-						
-						// auto generate the placard image
-						// grab the possible associated image
-						$es = new entity_selector();
-						$es->add_type(id_of('image'));
-						$es->add_right_relationship($media_work->id(), relationship_id_of('av_to_primary_image'));
-						$image = current($es->run_one());
-						
-						// Only create a default placard image for videos that don't have a user-specified image.
-						if ($media_work->get_value('av_type') == 'Video')
-						{
-							if (!empty($image)) 
-							{
-								if (strpos($image->get_value('name'), "(Generated Thumbnail)") != false)
-								{
-									$this->associate_image($media_work, $data);
-								}
-							}
-							else
-							{
-								$this->associate_image($media_work, $data);
-							}
-						}
-						// If it's audio AND it has a previous kaltura-generated thumbnail attached, just get rid of it.
-						else if ($media_work->get_value('av_type') == 'Audio')
-						{
-							if (!empty($image))
-							{
-								if (strpos($image->get_value('name'), "(Generated Thumbnail)") != false) 
-								{
-									delete_relationships( array( 'entity_a' => $media_work->id(), 'entity_b' => $image->id(),'type' => relationship_id_of('av_to_primary_image')));
-								}
-							}
-						}
-							
-						// Determine the appropriate transcoding profile for the given source file
-						if ($data['height'] <= MEDIA_WORK_SMALL_HEIGHT)
-						{
-							if ($asset->bitrate < KALTURA_SMALL_VIDEO_BITRATE)
-								$transcoding_profile = KALTURA_VIDEO_SMALL_LOW_BANDWIDTH_TRANSCODING_PROFILE;
-							else
-								$transcoding_profile = KALTURA_VIDEO_SMALL_TRANSCODING_PROFILE;
-						}
-						else if ($data['height'] <= MEDIA_WORK_MEDIUM_HEIGHT)
-						{
-							if ($asset->bitrate < KALTURA_MEDIUM_VIDEO_BITRATE)
-								$transcoding_profile = KALTURA_VIDEO_MEDIUM_LOW_BANDWIDTH_TRANSCODING_PROFILE;
-							else
-								$transcoding_profile = KALTURA_VIDEO_MEDIUM_TRANSCODING_PROFILE;							
-						}
-						else
-						{
-							if ($asset->bitrate < KALTURA_LARGE_VIDEO_BITRATE)
-							{	
-								if ($asset->bitrate < KALTURA_MEDIUM_VIDEO_BITRATE)
-									$transcoding_profile = KALTURA_VIDEO_LARGE_VERY_LOW_BANDWIDTH_TRANSCODING_PROFILE;
-								else
-									$transcoding_profile = KALTURA_VIDEO_LARGE_LOW_BANDWIDTH_TRANSCODING_PROFILE;
-							}
-							else
-								$transcoding_profile = KALTURA_VIDEO_LARGE_TRANSCODING_PROFILE;
-						}
-						
-						$categories = $this->_get_categories($media_work);
-						
-						// Check to see if it was an imported file or uploaded file
-						$tmp_file_path = $this->_get_full_tmp_file_path($media_work);
-						if(empty($tmp_file_path))
-						{
-							trigger_error('Unable to find temp file for media work (id '.$media_work->id().'). Not able to proceed with processing.');
-							$this->send_email($media_work, $data, 'error');
-							reason_update_entity($media_work->id(), $data['puser_id'], array('transcoding_status' => 'error'));
-							return;
-						}
-						
-						// delete the temporary entry
-						$this->kaltura_shim->delete_media($data['entry_id'], $data['puser_id']);
-						
-						$entry = $this->kaltura_shim->upload_video($tmp_file_path, html_entity_decode($media_work->get_value('name')), $media_work->get_value('description'), explode(" ", $media_work->get_value('keywords')), $categories, $data['puser_id'], $transcoding_profile);
-						
-						if (!empty($entry) && $entry->id) 
-						{
-							reason_update_entity($media_work->id(), $data['puser_id'], array('entry_id' => $entry->id));
-						}
-						else
-						{	
-							reason_update_entity($media_work->id(), $data['puser_id'], array('transcoding_status' => 'error'));
-							$this->send_email($media_work, $data, 'error');
-						}
-					}
-					else if (count($flavor_assets) > 1)
+					if (count($flavor_assets) > 0)
 					{
 						$might_require_email = $media_work->get_value('transcoding_status') != 'ready';
 						
 						// assume it's going to be an error, set it to 'ready' at the end of this script
-						reason_update_entity($media_work->id(), $data['puser_id'], array('transcoding_status' => 'error'));
+						reason_update_entity($media_work->id(), $data['puser_id'], array('transcoding_status' => 'error'), false);
 						
-						// remove the temporary file in /tmp
+						// remove the temporary file in tmp
 						try
 						{
 							$tmp = $media_work->get_value('tmp_file_name');
@@ -271,6 +174,7 @@ class ReasonKalturaNotificationReceiver
 						try
 						{
 							$this->update_entity_values($media_work, $data);
+							$this->generate_thumbnail($media_work, $flavor_assets, $data);
 						}
 						catch (Exception $ex)
 						{
@@ -297,44 +201,16 @@ class ReasonKalturaNotificationReceiver
 	{
 		if (strpos($media_work->get_value('tmp_file_name'), 'http') === 0)
 			return $media_work->get_value('tmp_file_name');
-		if(file_exists(KalturaShim::get_temp_import_dir().$media_work->get_value('tmp_file_name')))
-			return KalturaShim::get_temp_import_dir().$media_work->get_value('tmp_file_name');
+		if(file_exists(KalturaShim::get_temp_dir().$media_work->get_value('tmp_file_name')))
+			return KalturaShim::get_temp_dir().$media_work->get_value('tmp_file_name');
 		if(file_exists(substr_replace(WEB_PATH,"",-1).WEB_TEMP.$media_work->get_value('tmp_file_name')))
 			return substr_replace(WEB_PATH,"",-1).WEB_TEMP.$media_work->get_value('tmp_file_name');
 		return NULL;
 	}
 	
-	function _get_categories($media_work)
-	{
-		$es = new entity_selector();
-		$es->add_type(id_of('category_type'));
-		$es->add_right_relationship($media_work->get_value('id'), relationship_id_of('av_is_about_category'));
-		$abouts = $es->run_one();
-		
-		$es = new entity_selector();
-		$es->add_type(id_of('category_type'));
-		$es->add_right_relationship($media_work->get_value('id'), relationship_id_of('av_refers_to_category'));
-		$refers = $es->run_one();
-		
-		$names = array();
-		foreach ($abouts as $cat)
-		{
-			$names[] = $cat->get_value('name');
-		}
-		foreach ($refers as $cat)
-		{
-			$names[] = $cat->get_value('name');
-		}
-		
-		$site = $media_work->get_owner();
-		$names[] = $site->get_value('name');
-		
-		return $names;
-	}
-	
 	function send_email($media_work, $data, $status)
 	{	
-		if ($media_work->get_value('email_notification') == true)
+		if ($media_work->get_value('email_notification'))
 		{
 			$user = new entity(get_user_id($data['puser_id']));
 			
@@ -449,20 +325,63 @@ class ReasonKalturaNotificationReceiver
 				'media_duration' => $this->get_human_readable_duration($data['length_in_msecs']),
 			);
 			
-			reason_update_entity($media_work->id(), $data['puser_id'], $media_work_values);
+			reason_update_entity($media_work->id(), $data['puser_id'], $media_work_values, false);
 		}
 		else
 		{
 			$media_work_values = array(
 				'transcoding_status' => 'converting',
 			);
-			reason_update_entity($media_work->id(), $data['puser_id'], $media_work_values);
+			reason_update_entity($media_work->id(), $data['puser_id'], $media_work_values, false);
+		}
+	}
+	
+	function generate_thumbnail($media_work, $flavor_assets, $data)
+	{
+		// We use two pieces of logic to determine which profile to use.
+		// First, check the height of the video.  Then, make sure its bitrate
+		// is high enough for that transcoding profile.  We fall back to the
+		// Small profile.
+		$asset = current($flavor_assets);
+		
+		// auto generate the placard image
+		// grab the possible associated image
+		$es = new entity_selector();
+		$es->add_type(id_of('image'));
+		$es->add_right_relationship($media_work->id(), relationship_id_of('av_to_primary_image'));
+		$image = current($es->run_one());
+		
+		// Only create a default placard image for videos that don't have a user-specified image.
+		if ($media_work->get_value('av_type') == 'Video')
+		{
+			if (!empty($image)) 
+			{
+				if (strpos($image->get_value('name'), "(Generated Thumbnail)") != false)
+				{
+					$this->associate_image($media_work, $data);
+				}
+			}
+			else
+			{
+				$this->associate_image($media_work, $data);
+			}
+		}
+		// If it's audio AND it has a previous kaltura-generated thumbnail attached, just get rid of it.
+		else if ($media_work->get_value('av_type') == 'Audio')
+		{
+			if (!empty($image))
+			{
+				if (strpos($image->get_value('name'), "(Generated Thumbnail)") != false) 
+				{
+					delete_relationships( array( 'entity_a' => $media_work->id(), 'entity_b' => $image->id(),'type' => relationship_id_of('av_to_primary_image')));
+				}
+			}
 		}
 	}
 	
 	function associate_image($media_work, $data)
 	{		
-		$tmp_path = KalturaShim::get_temp_import_dir().'temp_media_image_'.$media_work->get_value('entry_id').'.jpg';
+		$tmp_path = KalturaShim::get_temp_dir().'temp_media_image_'.$media_work->get_value('entry_id').'.jpg';
 		$f = fopen($tmp_path, 'w');
 		
 		$thumb_opts = array(
@@ -544,53 +463,9 @@ class ReasonKalturaNotificationReceiver
 	// Takes milliseconds and returns, for example, "1 minute 18 seconds"
 	function get_human_readable_duration($duration)
 	{
-		$duration = trim($duration);
-		
-		$days = floor($duration/86400000);
-		$duration -= $days*86400000;
-		
-		$hours = floor($duration/3600000);
-		$duration -= $hours*3600000;
-		
-		$mins = floor($duration/60000);
-		$duration -= $mins*60000;
-		
-		$secs = floor($duration/1000);
-		$duration -= $secs*1000;
-		
-		$ret_array = array();
-		
-		if(!empty($days))
-		{
-			if($days == 1) $word = 'day';
-			else $word = 'days';
-			$ret_array[] = $days.' '.$word;
-		}
-		if(!empty($hours))
-		{
-			if($hours == 1) $word = 'hour';
-			else $word = 'hours';
-			$ret_array[] = $hours.' '.$word;
-		}
-		if(!empty($mins))
-		{
-			if($mins == 1) $word = 'minute';
-			else $word = 'minutes';
-			$ret_array[] = $mins.' '.$word;
-		}
-		if(!empty($secs))
-		{
-			if($secs == 1) $word = 'second';
-			else $word = 'seconds';
-			$ret_array[] = $secs.' '.$word;
-		}
-		
-		$ret_str = implode(' ',$ret_array);
-		if ( empty($ret_str) )
-			$ret_str = "Less than 1 second";
-		
-		return $ret_str;
-	}		
+		$seconds = intval($duration) / 1000.0;
+		return format_seconds_as_human_readable($seconds);
+	}
 	
 	// Returns a list of flavors that are done converting and are not already associated with the media
 	// work in reason.  Also, set the class variable $all_flavors_complete to true if all of the flavors

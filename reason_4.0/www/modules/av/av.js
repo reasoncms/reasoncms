@@ -51,7 +51,7 @@ $(document).ready(function()
     	$("div.share_download_info").hide();
     }
     
-    var iframe = $("div.displayer iframe.media_work_iframe");
+    var iframe = $("div.displayer iframe");
     var iframe_height = -1;
     var iframe_width = -1;
         

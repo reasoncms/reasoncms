@@ -3,7 +3,6 @@
  * @package reason
  * @subpackage feeds
  */
-
 /**
  * Include dependencies & register feed with Reason
  */
@@ -15,7 +14,7 @@ reason_include_once( 'content_listers/tree.php3' );
 reason_include_once( 'minisite_templates/nav_classes/default.php' );
 reason_include_once( 'classes/page_access.php' );
 reason_include_once( 'classes/group_helper.php' );
-reason_include_once('classes/media_work_displayer.php');
+reason_include_once('classes/media/factory.php');	
 
 
 $GLOBALS[ '_feed_class_names' ][ basename( __FILE__, '.php' ) ] = 'mediaFileFeed';
@@ -309,15 +308,12 @@ class mediaFileRSS extends ReasonRSS
 	{
 		$this->_nullify_items = true;
 	}
-	function _build_rss() // {{{
+	function _build_rss()
 	{
 		if(!$this->_nullify_items)
 		{
 			$this->_get_av_items();
 		}
-		
-		//pray($this->items);
-		//echo $this->es->get_one_query();
 
 		$this->_out = '<?xml version="1.0" encoding="UTF-8"?'.'>'."\n".'<rss version="2.0">'."\n".'<channel>'."\n\n";
 		foreach( $this->_channel_attr_values AS $attr => $value )
@@ -334,14 +330,13 @@ class mediaFileRSS extends ReasonRSS
 
 		$this->_out .= '</channel>'."\n".'</rss>';
 		
-	} // }}}
+	}
 	function _get_av_items()
 	{
 		$works_es = new entity_selector($this->site_id);
 		$works_es->add_type( id_of('av') );
 		$works_es->set_num( $this->num_works );
 		$works_es->add_relation('show_hide.show_hide = "show"');
-		$works_es->add_relation('( integration_library = "" OR integration_library IS NULL OR ( integration_library = "kaltura" AND transcoding_status = "ready") )');
 		$works_es->set_order('media_work.media_publication_datetime DESC');
 		if(!empty($this->_page_id))
 		{
@@ -354,69 +349,70 @@ class mediaFileRSS extends ReasonRSS
 		}
 		
 		$media_works = $works_es->run_one();
-		
-		
 		foreach($media_works as $work)
 		{
-			$es = carl_clone($this->es);
+			$es = new entity_selector();
+			$es->add_type(id_of('av_file'));
 			$es->add_right_relationship($work->id(),relationship_id_of('av_to_av_file'));
-			if($work->get_value('integration_library') == 'kaltura')
+			if($work->get_value('integration_library'))
 			{
 				$es->set_num(1);
-				$es->set_order('av.height DESC');
+				if ($work->get_value('av_type') == 'Video')
+				{
+					$es->set_order('av.height DESC');
+					$es->add_relation('av.mime_type = "video/mp4"');
+				}
+				elseif ($work->get_value('av_type') == 'Audio')
+				{
+					$es->add_relation('av.mime_type = "audio/mpeg"');
+				}
 			}
 			$media_files = $es->run_one();
-			foreach($media_files as $media_file)
+			if (!empty($media_files))
 			{
-				$media_file->set_value('work_publication_datetime',$work->get_value('media_publication_datetime'));
-				$media_file->set_value('work_name',$work->get_value('name'));
-				$media_file->set_value('work_description',$work->get_value('description'));
-				$media_file->set_value('author',$work->get_value('author'));
-				$media_file->set_value('integration_library',$work->get_value('integration_library'));
-				$media_file->set_value('work_id',$work->id());
-				$this->items[$media_file->id()] = $media_file;
+				foreach($media_files as $media_file)
+				{
+					$media_file->set_value('work_publication_datetime',$work->get_value('media_publication_datetime'));
+					$media_file->set_value('work_name',$work->get_value('name'));
+					$media_file->set_value('work_description',$work->get_value('description'));
+					$media_file->set_value('author',$work->get_value('author'));
+					$media_file->set_value('integration_library',$work->get_value('integration_library'));
+					$media_file->set_value('work_id',$work->id());
+					$this->items[$media_file->id()] = $media_file;
+				}
 			}
 		}
 	}
 	function make_enclosure($item, $attr, $value)
 	{
-		if($item->get_value('url'))
+		//$size = get_remote_filesize($item->get_value('url'));
+		if($item->get_value('media_size_in_bytes'))
 		{
-			//$size = get_remote_filesize($item->get_value('url'));
-			if($item->get_value('media_size_in_bytes'))
-			{
-				$size = $item->get_value('media_size_in_bytes');
-			}
-			else // guess wildly -- 5 megs?
-			{
-				$size = 5242880;
-			}
-			$additional_attrs = $this->get_additional_enclosure_arributes( $item );
-			$url = $this->get_media_file_url( $item );
+			$size = $item->get_value('media_size_in_bytes');
+		}
+		else // guess wildly -- 5 megs?
+		{
+			$size = 5242880;
+		}
+		$additional_attrs = $this->get_additional_enclosure_arributes( $item );
+		$url = $this->get_media_file_url( $item );
+		if ($url)
+		{
 			return '<'.$attr.' url="'.$url.'" length="'.$size.'" '.implode(' ',$additional_attrs).' />'."\n";
 		}
-		else
-		{
-			return '';
-		}
+		return '';
 	}
 	function get_media_file_url( $item )
 	{
-		if($item->get_value('integration_library') == 'kaltura')
+		$media_work = new entity($item->get_value('work_id'));
+		$shim = MediaWorkFactory::shim($media_work->get_value('integration_library'));
+		if ($shim)
 		{
-			$work = new entity($item->get_value('work_id'));
-			
-			switch($item->get_value('mime_type'))
-			{
-				case 'video/mp4':
-					return 'http://'.HTTP_HOST_NAME.REASON_HTTP_BASE_PATH.'scripts/media/validate_requested_podcast.mp4?media_file_id='.$item->id().'&amp;media_work_id='.$item->get_value('work_id').'&amp;hash='.MediaWorkDisplayer::get_hash($work);
-				case 'audio/mpeg':
-					return 'http://'.HTTP_HOST_NAME.REASON_HTTP_BASE_PATH.'scripts/media/validate_requested_podcast.mp3?media_file_id='.$item->id().'&amp;media_work_id='.$item->get_value('work_id').'&amp;hash='.MediaWorkDisplayer::get_hash($work);
-			}
-			
+			return $shim->get_media_file_url($item, $media_work);
 		}
-		return $item->get_value('url');
+		return false;
 	}
+	
 	// This is meant to be overloaded so that the rss feed can get the appropriate attributes
 	function get_additional_enclosure_arributes( $item )
 	{

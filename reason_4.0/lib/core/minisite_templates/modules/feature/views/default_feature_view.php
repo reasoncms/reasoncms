@@ -383,7 +383,7 @@ class DefaultFeatureView extends FeatureView
 				$media_str ="<div class=\"featureImage\" >\n";
 				$media_str.=$image_anchor_start."<img alt=\"".reason_htmlspecialchars($img_alt)."\"  name=\"big_pic\" src=\"".$img_url."\" />".$image_anchor_end."\n";
 				$media_str.="</div>";
-				$media_str.="<div class=\"featureVideo\" id=\"".$img_id."\" style=\"\">";
+				$media_str.="<div class=\"featureVideo nofitvids\" id=\"".$img_id."\" style=\"\">";
 				$media_str .= $av_html;
 				$media_str .= '<h3 class="featureTitle">'.$view_data['title'].'</h3>'."\n";
 				$media_str .= '<div class="featureText">'.$view_data['text'].$link.'</div>'."\n";

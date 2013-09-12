@@ -147,7 +147,7 @@ class MediaWorkDisplayer
 	* @access private
 	* @return integer
 	*/
-	private function _get_embed_width() 
+	public function get_embed_width() 
 	{
 		if ( !empty($this->width) )
 			return $this->width;
@@ -161,7 +161,7 @@ class MediaWorkDisplayer
 	* @access private
 	* @return integer
 	*/	
-	private function _get_embed_height()
+	public function get_embed_height()
 	{
 		if ( !empty($this->height) )
 			return $this->_get_height();
@@ -180,8 +180,8 @@ class MediaWorkDisplayer
 	{
 		if ($this->media_work->get_value('av_type') == 'Video')
 		{
-			$embed_width = $this->_get_embed_width();
-			$embed_height = $this->_get_embed_height();
+			$embed_width = $this->get_embed_width();
+			$embed_height = $this->get_embed_height();
 				
 			$media_files = $this->_get_suitable_flavors($embed_width, $embed_height);;	
 			
@@ -474,8 +474,8 @@ class MediaWorkDisplayer
 		// specify width and height attributes explicitly in the video tag every time
 		// this is needed 1) so the browswer doesn't have to figure it out(?), 2) so the placard image
 		// works nicely, and 3) so the flash video player is properly scaled because it doesn't automatically scale itself.
-		$embed_width = $this->_get_embed_width();
-		$embed_height = $this->_get_embed_height();
+		$embed_width = $this->get_embed_width();
+		$embed_height = $this->get_embed_height();
 		
 		$markup .= 'width="'.$embed_width.'" ';
 		$markup .= 'height="'.$embed_height.'" ';
