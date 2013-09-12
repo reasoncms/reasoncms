@@ -111,6 +111,7 @@ class KalturaMediaWorkDisplayer implements MediaWorkDisplayerInterface
 		if ($media_work->get_value('integration_library') == 'kaltura')
 		{
 			$this->media_work = $media_work;
+			self::$ratios = array(); // make sure to reset the ratios array
 		}
 		else
 		{
@@ -302,7 +303,7 @@ class KalturaMediaWorkDisplayer implements MediaWorkDisplayerInterface
 		$media_file = $this->_smallest_media_file();
 		
 		if($media_file)
-		{		
+		{
 			$width = (float)$media_file->get_value('width');
 			$height = (float)$media_file->get_value('height');
 			self::$ratios[$height] = $width/$height;
@@ -323,7 +324,7 @@ class KalturaMediaWorkDisplayer implements MediaWorkDisplayerInterface
 	 * @return int
 	 */
 	function _get_width_from_height()
-	{		
+	{
 		$aspect_ratio = $this->get_video_aspect_ratio($this->media_work);
 		if ($aspect_ratio != false)
 		{
@@ -419,7 +420,7 @@ class KalturaMediaWorkDisplayer implements MediaWorkDisplayerInterface
 					$iframe_width = 360;
 			}
 			//add video or audio class using string on object
-			$markup = '<iframe class="media_work_iframe ' . strtolower($this->media_work->get_value('av_type')) . '" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" height="'.intval($iframe_height).'" width="'.intval($iframe_width).'" ';
+			$markup = '<iframe class="media_work_iframe ' . strtolower($this->media_work->get_value('av_type')) . '" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" allowfullscreen="allowfullscreen" height="'.intval($iframe_height).'" width="'.intval($iframe_width).'" ';
 
 			$markup .= 'src="'.$this->get_iframe_src($iframe_height, $iframe_width).'" ';
 			
@@ -437,11 +438,8 @@ class KalturaMediaWorkDisplayer implements MediaWorkDisplayerInterface
 		$hash = $this->get_hash();
 		$src = '//'.HTTP_HOST_NAME.REASON_HTTP_BASE_PATH.'scripts/media/media_iframe.php?media_work_id='.$this->media_work->id().'&amp;hash='.$hash;
 		
-		if ($iframe_height)
-			$src .= '&amp;height='.intval($iframe_height);
-			
-		if ($iframe_width)
-			$src .= '&amp;width='.intval($iframe_width);
+		$src .= '&amp;height='.intval($iframe_height);
+		$src .= '&amp;width='.intval($iframe_width);
 			
 		if ($this->autostart)
 			$src .= '&amp;autostart=1';
