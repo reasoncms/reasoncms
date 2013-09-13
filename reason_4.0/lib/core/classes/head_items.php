@@ -1,27 +1,30 @@
 <?php
 /**
- *	Class for managing head items
- *	@package reason
- *	@subpackage classes
+ * Class for managing head items
+ * @package reason
+ * @subpackage classes
  */
 
 /**
- *	Inputs and outputs head items.
+ * Inputs and outputs head items. Can combine and cache javascript, css, and less files based on filemtime.
  * 
- *  Methods:
- *  - add head items of various types
- *  - selectively remove head items whether they exist or not when method is called
- *  - output html markup of head items
+ * Methods:
  *
- *  Sample usage
+ * - add head items of various types
+ * - selectively remove head items whether they exist or not when method is called
+ * - output html markup of head items
  *
- *  <code>
- *  	$head_item = new HeadItems();
- *		$head_item->add_stylesheet('mycss.css');
- *		$head_html = $head_item->get_head_items_html();
- *  </code>
+ * Notes:
  *
- *  @author Nathan White and the author(s) of functions that I lifted from the default template
+ * Sample usage
+ *
+ * <code>
+ *	$head_item = new HeadItems();
+ *	$head_item->add_stylesheet('mycss.css');
+ *	$head_html = $head_item->get_head_items_html();
+ * </code>
+ *
+ * @author Nathan White and the author(s) of functions that I lifted from the default template
  */
 class HeadItems
 {
