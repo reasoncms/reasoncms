@@ -119,8 +119,8 @@ class SelectItems extends FormStep
 			$site_id = (integer) $_REQUEST['site_id'];
 			$site = new entity($site_id);
 			$start_date = $this->controller->get_form_data('events_start_date');
-			$format = 'Y-m-d';
-			$end_date = date($format);
+			$end_date = $this->controller->get_form_data('events_end_date');
+			$end_date = (!empty($end_date)) ? $end_date : date('Y-m-d');
 			$cal = new reasonCalendar(array('site'=>$site,'start_date'=>$start_date,'end_date'=>$end_date));
 			$cal->run();
 			$events = $cal->get_all_events();
