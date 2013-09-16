@@ -108,9 +108,18 @@
 			//print(current($avfilelist)->get_value('height'));
 			//print(current($avfilelist)->get_value('width'));
 			//$vurl = preg_replace("|(.*?)&.*?$|", "\\1", current($avfilelist)->get_value('url'));
+			$url = current($avfilelist)->get_value('url');
+			if ($protocol == "https")
+			{
+				$url = preg_replace('|http://|', 'https://', $url);
+			}
+			else 
+			{
+				$url = preg_replace('|https://|', 'http://', $url);
+			}
 			if (current($avfilelist)->get_value('media_format') == 'Flash')
 			{
-				$url = current($avfilelist)->get_value('url');
+				
 				if (preg_match("/(^https?:\/\/youtu\.be\/)((.*?)$)/", $url, $m))
 				{
 					$url = $protocol . "://www.youtube.com/watch?v=" . $m[2];
@@ -154,13 +163,13 @@
 				else
 				{
 					//echo "<a href=\"" . current($avfilelist)->get_value('url') . "\" onclick=\"javascript:pageTracker._trackPageview('" . $vn ."');return hs.htmlExpand(this, { objectType: 'swf', width: " . current($avfilelist)->get_value('width') . ", objectWidth: " . current($avfilelist)->get_value('width') . ", objectHeight: " . current($avfilelist)->get_value('height') . ", preserveContent: false, outlineType: 'rounded-white', wrapperClassName: 'draggable-header no-footer', maincontentText: 'You need to upgrade your Flash player', swfOptions: { version: '7' } } )\" class=\"highslide\">" . preg_replace("|(\<img src=\".*?\").*?\/\>|", "\\1 />", $pi) . "<img class=\"av-play\" title=\"Play Video: " . preg_replace('|\"|', '&quot;', $item->get_value( 'name' )) . "\" src=\"/images/play_44.png\" /></a>";
-					echo "<a href=\"" . current($avfilelist)->get_value('url') . "\" onclick=\"return hs.htmlExpand(this, { slideshowGroup: -1, objectType: 'swf', width: " . current($avfilelist)->get_value('width') . ", objectWidth: " . current($avfilelist)->get_value('width') . ", objectHeight: " . current($avfilelist)->get_value('height') . ", preserveContent: false, outlineType: 'rounded-white', wrapperClassName: 'draggable-header no-footer', maincontentText: 'You need to upgrade your Flash player', swfOptions: { version: '7' } } )\" class=\"highslide\" name=\"" . $vn . "\">" . preg_replace("|(\<img src=\".*?\").*?\/\>|", "\\1 />", $pi) . "<img class=\"av-play\" title=\"Play Video: " . preg_replace('|\"|', '&quot;', $item->get_value( 'name' )) . "\" src=\"/images/play_44.png\" /></a>";
+					echo "<a href=\"" . $url . "\" onclick=\"return hs.htmlExpand(this, { slideshowGroup: -1, objectType: 'swf', width: " . current($avfilelist)->get_value('width') . ", objectWidth: " . current($avfilelist)->get_value('width') . ", objectHeight: " . current($avfilelist)->get_value('height') . ", preserveContent: false, outlineType: 'rounded-white', wrapperClassName: 'draggable-header no-footer', maincontentText: 'You need to upgrade your Flash player', swfOptions: { version: '7' } } )\" class=\"highslide\" name=\"" . $vn . "\">" . preg_replace("|(\<img src=\".*?\").*?\/\>|", "\\1 />", $pi) . "<img class=\"av-play\" title=\"Play Video: " . preg_replace('|\"|', '&quot;', $item->get_value( 'name' )) . "\" src=\"/images/play_44.png\" /></a>";
 				}
 				//print(current($avfilelist)->get_value('media_format'));
 			}
 			else
 			{
-				echo "<a href=\"" . current($avfilelist)->get_value('url') . "\" onclick=\"javascript:pageTracker._trackPageview('" . $vn ."')\">" . preg_replace("|(\<img src=\".*?\").*?\/\>|", "\\1 />", $pi) . "<img class=\"av-play\" title=\"Play Video: " . preg_replace('|\"|', '&quot;', $item->get_value( 'name' )) . "\" src=\"/images/play_44.png\" /></a>";
+				echo "<a href=\"" . $url . "\" onclick=\"javascript:pageTracker._trackPageview('" . $vn ."')\">" . preg_replace("|(\<img src=\".*?\").*?\/\>|", "\\1 />", $pi) . "<img class=\"av-play\" title=\"Play Video: " . preg_replace('|\"|', '&quot;', $item->get_value( 'name' )) . "\" src=\"/images/play_44.png\" /></a>";
 			}
 			//print_r($avfilelist);
 		}
