@@ -81,7 +81,8 @@
 
 		//Called on by show_list_item()
 		function show_list_item_pre( $item )
-		{
+		{			
+			$protocol = on_secure_page() ? "https" : "http";
 			$pi = $this->get_primary_image( $item );
 			//echo $pi;
 			//echo preg_replace("|(\<img src=\".*?\").*?\/\>|", "\\1 />", $pi);
@@ -109,13 +110,12 @@
 			//$vurl = preg_replace("|(.*?)&.*?$|", "\\1", current($avfilelist)->get_value('url'));
 			if (current($avfilelist)->get_value('media_format') == 'Flash')
 			{
-			//	if (preg_match("/(^http:\/\/www\.youtube\.com\/)(\w+)(\/(.*?)$)/", $vurl, $m ))
 				$url = current($avfilelist)->get_value('url');
-				if (preg_match("/(^http:\/\/youtu\.be\/)((.*?)$)/", $url, $m))
+				if (preg_match("/(^https?:\/\/youtu\.be\/)((.*?)$)/", $url, $m))
 				{
-					$url = "http://www.youtube.com/watch?v=" . $m[2];
+					$url = $protocol . "://www.youtube.com/watch?v=" . $m[2];
 				}
-				if (preg_match("/(^http:\/\/www\.youtube\.com\/)(watch\?v\=)((.*?)$)/", $url, $m ))
+				if (preg_match("/(^https?:\/\/www\.youtube\.com\/)(watch\?v\=)((.*?)$)/", $url, $m ))
 				{
 					if (!$this->params['full_size'])
 					{
@@ -123,11 +123,11 @@
 						//echo "<a href=\"" . $m[1] . "v/" . $m[3] . "&amp;hl=en&amp;rel=0&amp;fs=0&amp;autoplay=1\" onclick=\"return hs.htmlExpand(this, { slideshowGroup: -1, objectType: 'swf', width: " . current($avfilelist)->get_value('width') . ", objectWidth: " . current($avfilelist)->get_value('width') . ", objectHeight: " . current($avfilelist)->get_value('height') . ", preserveContent: false, outlineType: 'rounded-white', wrapperClassName: 'draggable-header no-footer', maincontentText: 'You need to upgrade your Flash player', swfOptions: { version: '7' } } )\" class=\"highslide\" name=\"" . $vn . "\"><img src=\"http://img.youtube.com/vi/" . $m[3] . "/default.jpg\" /><img class=\"av-play\" title=\"Play Video: " . preg_replace('|\"|', '&quot;', $item->get_value( 'name' )) . "\" src=\"/images/play_44.png\" /></a>";
 						if (preg_match('/android 2\.1/i',$_SERVER['HTTP_USER_AGENT']))
 						{
-							echo "<a href=\"" . $m[1] . "v/" . $m[3] . "&amp;hl=en&amp;rel=0&amp;fs=0&amp;autoplay=1&amp;showinfo=1\" onclick=\"return hs.htmlExpand(this, { slideshowGroup: -1, objectType: 'swf', width: " . current($avfilelist)->get_value('width') . ", objectWidth: " . current($avfilelist)->get_value('width') . ", objectHeight: " . current($avfilelist)->get_value('height') . ", preserveContent: false, outlineType: 'rounded-white', wrapperClassName: 'draggable-header no-footer', maincontentText: 'You need to upgrade your Flash player', swfOptions: { version: '7' } } )\" class=\"highslide\" name=\"" . $vn . "\"><img src=\"http://img.youtube.com/vi/" . $m[3] . "/default.jpg\" /><img class=\"av-play\" title=\"Play Video: " . preg_replace('|\"|', '&quot;', $item->get_value( 'name' )) . "\" src=\"/images/play_44.png\" /></a>";
+							echo "<a href=\"" . $m[1] . "v/" . $m[3] . "&amp;hl=en&amp;rel=0&amp;fs=0&amp;autoplay=1&amp;showinfo=1\" onclick=\"return hs.htmlExpand(this, { slideshowGroup: -1, objectType: 'swf', width: " . current($avfilelist)->get_value('width') . ", objectWidth: " . current($avfilelist)->get_value('width') . ", objectHeight: " . current($avfilelist)->get_value('height') . ", preserveContent: false, outlineType: 'rounded-white', wrapperClassName: 'draggable-header no-footer', maincontentText: 'You need to upgrade your Flash player', swfOptions: { version: '7' } } )\" class=\"highslide\" name=\"" . $vn . "\"><img src=\"" . $protcol ."://img.youtube.com/vi/" . $m[3] . "/default.jpg\" /><img class=\"av-play\" title=\"Play Video: " . preg_replace('|\"|', '&quot;', $item->get_value( 'name' )) . "\" src=\"/images/play_44.png\" /></a>";
 						}
 						else 
 						{
-							echo "<a href=\"" . $m[1] . "embed/" . $m[3] . "?autoplay=1&amp;rel=0&amp;fs=1&amp;showinfo=1\" onclick=\"return hs.htmlExpand(this, { slideshowGroup: -1, objectType: 'iframe', width: '640', height: '418', objectLoadTime: 'after', outlineType: 'rounded-white', wrapperClassName: 'draggable-header no-footer'} )\" class=\"highslide\" name=\"" . $vn . "\"><img src=\"http://img.youtube.com/vi/" . $m[3] . "/default.jpg\" /><img class=\"av-play\" title=\"Play Video: " . preg_replace('|\"|', '&quot;', $item->get_value( 'name' )) . "\" src=\"/images/play_44.png\" /></a>";
+							echo "<a href=\"" . $m[1] . "embed/" . $m[3] . "?autoplay=1&amp;rel=0&amp;fs=1&amp;showinfo=1\" onclick=\"return hs.htmlExpand(this, { slideshowGroup: -1, objectType: 'iframe', width: '640', height: '418', objectLoadTime: 'after', outlineType: 'rounded-white', wrapperClassName: 'draggable-header no-footer'} )\" class=\"highslide\" name=\"" . $vn . "\"><img src=\"" . $protocol . "://img.youtube.com/vi/" . $m[3] . "/default.jpg\" /><img class=\"av-play\" title=\"Play Video: " . preg_replace('|\"|', '&quot;', $item->get_value( 'name' )) . "\" src=\"/images/play_44.png\" /></a>";
 						}
 					}
 					else
