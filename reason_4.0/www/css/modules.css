@@ -1681,7 +1681,7 @@ div#projects li.overdue {
 }
 
 /* Publications module */
-form tr#tarbabypreRow, form tr#tarbabyRow, form tr#noturlRow, form tr#antlionRow  {
+form #tarbabypreRow, form #tarbabypreItem, form #tarbabyRow, form #tarbabyItem, form #noturlRow, form #noturlItem, form #antlionRow, form #antlionItem  {
 	display:none;
 }
 
