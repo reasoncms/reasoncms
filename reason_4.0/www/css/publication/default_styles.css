@@ -62,6 +62,47 @@ div.publication div.fullPost div.relatedItems {
 	width:28%;
 	clear:right;
 }
+div.publication .fullPost .media {
+	margin:1em 0;
+}
+div.publication .fullPost .media>ul, div.publication .fullPost .media>ul>li {
+	margin:0;
+	padding:0;
+	list-style:none;
+	display:block;
+}
+div.publication div.fullPost .media .playingMedia {
+	margin:0.5em 0;
+}
+div.publication div.fullPost .media img.placard {
+	display:none;
+}
+div.publication div.fullPost .media .galleryActive>li {
+	display:inline-block;
+	list-style:none;
+	padding:0;
+	margin:0 1px 1px 0;
+	vertical-align:top;
+	font-size:0.846em;
+}
+div.publication div.fullPost .media .galleryActive>li a {
+	display:block;
+	padding:1em;
+	background-color:#eee;
+	background-color:rgba(0,0,0,0.08);
+}
+div.publication div.fullPost .media .galleryActive>li a:hover, div.publication div.fullPost .media .galleryActive>li a:active, div.publication div.fullPost .media .galleryActive>li a:focus {
+	background-color:#ccc;
+	background-color:rgba(0,0,0,0.24);
+}
+div.publication div.fullPost .media .galleryActive>li.showing a {
+	background-color:#ddd;
+	background-color:rgba(0,0,0,0.16);
+	text-decoration:none;
+	color:#333;
+	cursor:default;
+}
+div.publication div.fullPost .media 
 div.publication div.fullPost div.images h4 {
 	display:block;
 	position:absolute;
