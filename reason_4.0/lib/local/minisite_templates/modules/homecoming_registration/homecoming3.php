@@ -152,7 +152,7 @@ class HomecomingRegistrationConfirmation extends FormStep
 		dinner_dietary_restrictions= '".((!empty($dinner_dietary_restrictions)) ? addslashes($dinner_dietary_restrictions) : 'NULL')."',
 		attend_50th_reception=".((!empty($attend_50th_reception)) ? addslashes($attend_50th_reception) : 'NULL').",
 		attend_luncheon=".((!empty($attend_luncheon)) ? addslashes($attend_luncheon) : 'NULL').",
-		attend_70th_dinner=".((!empty($attend_70th_dinner)) ? addslashes($attend_70th_dinner) : 'NULL').",:
+		attend_70th_dinner=".((!empty($attend_70th_dinner)) ? addslashes($attend_70th_dinner) : 'NULL').",
 		attend_dinner_50_to_25=".((!empty($attend_dinner_50_to_25)) ? addslashes($attend_dinner_50_to_25) : 'NULL').",
 		attend_dinner_20_to_10=".((!empty($attend_dinner_20_to_10)) ? addslashes($attend_dinner_20_to_10) : 'NULL').",
 		attend_dinner_5=".((!empty($attend_dinner_5)) ? addslashes($attend_dinner_5) : 'NULL').",
