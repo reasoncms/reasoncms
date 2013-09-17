@@ -1033,6 +1033,31 @@
 			'pre_sidebar'=>'events_mini',
 			'post_sidebar' => 'blurb',
 		),
+		'feature_slow_after_content_sidebar_news_events' => array(
+			'sub_nav' => 'blurb',
+			'main_post' => array(
+				'module' => 'feature/feature',
+				'shuffle' => false,
+				'autoplay_timer' => 5,
+				'width'=>500,
+				'height'=>300
+			),	
+			'pre_sidebar' => array(
+				'module' => 'publication',
+				'related_mode' => 'true',
+				'markup_generator_info' =>
+				array('list_item' => array(
+									'classname' => 'MinimalListItemMarkupGenerator', 
+									'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/minimal.php',
+									)
+					 ),
+				'max_num_items' => 4,
+			),
+			'sidebar'=> array(
+				'module' => 'events_mini',
+				'ideal_count' => 4,
+			),
+		),
 		'feature_before_content_sidebar_blurbs_first_under_subnav' => array(
 			'sub_nav' => array(
 				'module' => 'blurb',
