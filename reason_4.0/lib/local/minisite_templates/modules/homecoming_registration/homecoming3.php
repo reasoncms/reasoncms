@@ -38,6 +38,7 @@ class HomecomingRegistrationConfirmation extends FormStep
 		$attend_program = $this->controller->get('attend_program');
 		$dinner_dietary_restrictions = $this->controller->get('dinner_dietary_restrictions');
 		$attend_luncheon = $this->controller->get('attend_luncheon');
+		$attend_70th_dinner = $this->controller->get('attend_70th_dinner');
 		$attend_50th_reception = $this->controller->get('attend_50th_reception');
 		$attend_dinner_50_to_25 = $this->controller->get('attend_dinner_50_to_25');
 		$attend_dinner_20_to_10 = $this->controller->get('attend_dinner_20_to_10');
@@ -92,6 +93,10 @@ class HomecomingRegistrationConfirmation extends FormStep
 		{
 			$txt .= '<li><strong>Attend ' . $class_year . ' Year Reunion Luncheon:</strong> '.$attend_luncheon.'</li>'."\n";
 		}
+		if($attend_70th_dinner)
+		{
+			$txt .= '<li><strong>Attend ' . $class_year . ' Year Reunion Dinner:</strong> '.$attend_70th_dinner.'</li>'."\n";
+		}
 		if($attend_dinner_50_to_25)
 		{
 			$txt .= '<li><strong>Attend ' . $class_year . ' Year Reunion Dinner:</strong> '.$attend_dinner_50_to_25.'</li>'."\n";
@@ -121,7 +126,7 @@ class HomecomingRegistrationConfirmation extends FormStep
 			$txt_with_blurb = '<p><strong>Thank you for registering for Homecoming!</strong></p>'."\n" . $txt;
 */
 		echo $txt;
-		$this->email_alumni($txt);
+		// $this->email_alumni($txt);
 		$this->email_registrant($blurb . $txt);
 		echo 'A copy of this confirmation has been sent to your email address.'."\n";
 				
@@ -141,18 +146,19 @@ class HomecomingRegistrationConfirmation extends FormStep
 		cell_phone = '".((!empty($cell_phone)) ? addslashes($cell_phone) : 'NULL')."',
 		email = '".((!empty($email)) ? addslashes($email) : 'NULL')."',
 		guest_name='".((!empty($guest_name)) ? addslashes($guest_name) : 'NULL')."',
-		attended_luther='".((!empty($attended_luther)) ? addslashes($attended_luther) : 'NULL')."',
+		attended_luther=".((!empty($attended_luther)) ? addslashes($attended_luther) : 'NULL').",
 		guest_class=".((!empty($guest_class)) ? addslashes($guest_class) : 'NULL').",
 		attend_program=".((!empty($attend_program)) ? addslashes($attend_program) : 'NULL').",
 		dinner_dietary_restrictions= '".((!empty($dinner_dietary_restrictions)) ? addslashes($dinner_dietary_restrictions) : 'NULL')."',
-		attend_50th_reception= '".((!empty($attend_50th_reception)) ? addslashes($attend_50th_reception) : 'NULL')."',
+		attend_50th_reception=".((!empty($attend_50th_reception)) ? addslashes($attend_50th_reception) : 'NULL').",
 		attend_luncheon=".((!empty($attend_luncheon)) ? addslashes($attend_luncheon) : 'NULL').",
+		attend_70th_dinner=".((!empty($attend_70th_dinner)) ? addslashes($attend_70th_dinner) : 'NULL').",
 		attend_dinner_50_to_25=".((!empty($attend_dinner_50_to_25)) ? addslashes($attend_dinner_50_to_25) : 'NULL').",
 		attend_dinner_20_to_10=".((!empty($attend_dinner_20_to_10)) ? addslashes($attend_dinner_20_to_10) : 'NULL').",
 		attend_dinner_5=".((!empty($attend_dinner_5)) ? addslashes($attend_dinner_5) : 'NULL').",
                 amount_paid ='".((!empty($amount_paid)) ? addslashes($amount_paid) : 'NULL')."',
-		ride_in_parade='".((!empty($ride_in_parade)) ? addslashes($ride_in_parade) : 'NULL')."',
-		booklet='".((!empty($booklet)) ? addslashes($booklet) : 'NULL')."' ";
+		ride_in_parade=".((!empty($ride_in_parade)) ? addslashes($ride_in_parade) : 'NULL').",
+		booklet=".((!empty($booklet)) ? addslashes($booklet) : 'NULL')."";
 		
 		
 		if(THIS_IS_A_DEVELOPMENT_REASON_INSTANCE || !empty( $this->_request[ 'tm' ] ) ){

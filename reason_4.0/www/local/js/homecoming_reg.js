@@ -15,6 +15,7 @@ $(document).ready(function(){
     $("#festivalguestsnamesRow").hide();
     $("#vegetarianguestsRow").hide();
     $("#seatingpreferenceRow").hide();
+    $("#reunionreservationsheaderRow").hide();
     
 
     $('#attend_programElement').change(function() {
@@ -57,6 +58,9 @@ $(document).ready(function(){
     }
     if (!$("#attend_dinner_5Element").val()){
         $("#attenddinner5Row").css("display", "none");
+    }
+    if (!$("#attend_70th_dinnerElement").val()){
+        $("#attend70thdinnerRow").css("display", "none");
     }
 
     //Parade Row
@@ -157,8 +161,10 @@ $(document).ready(function(){
         
         if (((year - parseInt(class_year))%5) == 0) {
             $("#luncheonheaderRow").show();
+            $("#reunionreservationsheaderRow").show();
         }else{
             $("#luncheonheaderRow").hide();
+            $("#reunionreservationsheaderRow").hide();
         }
          
         if ((year - parseInt(class_year)) == 50) {
@@ -172,6 +178,12 @@ $(document).ready(function(){
             $("#rideinparadeRow").hide();
             $("#attend50threceptionRow").hide();
 
+        }
+
+        if ((year - parseInt(class_year)) == 70) {
+            $("#attend70thdinnerRow").show();
+        }else{
+            $("#attend70thdinnerRow").hide();
         }
        
     });

@@ -216,6 +216,9 @@ class HomecomingRegistrationTwoForm extends FormStep {
         if ($this->controller->get('attend_luncheon')) {
             $txt .= '<li><strong>Attend ' . $class_year . ' Reunion Luncheon :</strong> Class of ' . $class_year . '</li>' . "\n";
         }
+        if ($this->controller->get('attend_70th_dinner')) {
+            $txt .= '<li><strong>Attend ' . $class_year . ' Reunion Dinner :</strong> Class of ' . $class_year . '</li>' . "\n";
+        }
         if ($this->controller->get('attend_dinner_50_to_25')) {
             $txt .= '<li><strong>Attend ' . $class_year . ' Reunion Dinner:</strong> Class of ' . $class_year . '</li>' . "\n";
         }
