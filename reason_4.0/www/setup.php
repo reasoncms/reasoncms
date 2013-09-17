@@ -478,7 +478,7 @@ function perform_checks()
 	if (data_dir_writable(rtrim($_SERVER[ 'DOCUMENT_ROOT' ], DIRECTORY_SEPARATOR).WEB_TEMP, 'WEB_TEMP')) $check_passed++;
 	else $check_failed++;
 
-	if (data_dir_writable(REASON_INC.'data/geocodes/', 'Geocode data directory')) $check_passed++;
+	if (data_dir_writable(REASON_DATA_DIR.'geocodes/', 'Geocode data directory')) $check_passed++;
 	else $check_failed++;
 	
 	echo '<h4>Read checks</h4>';
