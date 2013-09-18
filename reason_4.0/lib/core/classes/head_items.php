@@ -288,10 +288,41 @@ class HeadItems
 	 * @param string $url
 	 * @param boolean $add_to_top
 	 */	
-	function add_javascript( $url, $add_to_top = false, $wrapper = array('before'=>'','after'=>'') )
+	function add_javascript( $url, $add_to_top = false, $wrapper = array('before'=>'','after'=>''), $inline = false )
 	{
-		$attrs = array('type' => 'text/javascript', 'src' => $url);
-		$this->add_head_item('script', $attrs, '', $add_to_top, $wrapper);
+		if($inline)
+		{
+			if(substr($url, 0, 1) != '/')
+			{
+				trigger_error('Inlined javascript must be specified relative to server root (i.e. starting with "/"). Path given ('.$url.') does not conform to this specification. JS not inlined.');
+			}
+			else
+			{
+				$input_path = WEB_PATH.substr($url, 1);
+				if(!file_exists($input_path))
+				{
+					trigger_error('Javascript file not found at "'.$input_path.'". JS not inlined.');
+				}
+				else
+				{
+					$js = file_get_contents($input_path);
+					if(false === $js)
+					{
+						trigger_error('Javascript file readable at "'.$input_path.'". JS not inlined.');
+					}
+					else
+					{
+						$attrs = array('type' => 'text/javascript');
+						$this->add_head_item('script', $attrs, $js, $add_to_top, $wrapper);
+					}
+				}
+			}
+		}
+		else
+		{
+			$attrs = array('type' => 'text/javascript', 'src' => $url);
+			$this->add_head_item('script', $attrs, '', $add_to_top, $wrapper);
+		}
 	}
 	
 	/**
