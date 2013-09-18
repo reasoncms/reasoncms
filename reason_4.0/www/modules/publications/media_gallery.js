@@ -7,8 +7,8 @@ $(document).ready(function(){
 		if(width > widest)
 			widest = width;
 	});
-	var playingMediaBlock = $('<div class="playingMedia"></div>');
-	$('div.publication div.fullPost .media .mediaGallery').addClass('galleryActive').before('<a id="playingMediaBlockAnchor"></a>').before(playingMediaBlock);
+	var playingMediaBlock = $('<div class="playingMedia" tabindex="-1"></div>');
+	$('div.publication div.fullPost .media .mediaGallery').addClass('galleryActive').before(playingMediaBlock);
 	var focus_media = function(listItem){
 		galleryItems.removeClass('showing');
 		listItem.addClass('showing');
@@ -24,7 +24,7 @@ $(document).ready(function(){
 		if(listItem.hasClass('showing'))
 			return;
 		focus_media(listItem);
-		$('#playingMediaBlockAnchor').focus();
+		playingMediaBlock.focus();
 	});
 	galleryItems.find('.titleBlock').wrapInner(link);
 	var tallest = 125;
