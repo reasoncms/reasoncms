@@ -74,6 +74,11 @@ div.publication .fullPost .media>ul, div.publication .fullPost .media>ul>li {
 div.publication div.fullPost .media .playingMedia {
 	margin:0.5em 0;
 }
+div.publication div.fullPost .media .playingMedia {
+	outline-style:none;
+	box-shadow:none;
+	border-color:transparent;
+}
 div.publication div.fullPost .media img.placard {
 	display:none;
 }
@@ -102,7 +107,6 @@ div.publication div.fullPost .media .galleryActive>li.showing a {
 	color:#333;
 	cursor:default;
 }
-div.publication div.fullPost .media 
 div.publication div.fullPost div.images h4 {
 	display:block;
 	position:absolute;
