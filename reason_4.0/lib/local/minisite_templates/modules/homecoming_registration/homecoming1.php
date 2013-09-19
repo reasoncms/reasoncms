@@ -143,7 +143,7 @@ class HomecomingRegistrationOneForm extends FormStep
         'booklet' => 'text'
 	);
 	
-	var $required = array('current_first_name', 'current_last_name', 'graduation_name', 'e-mail');
+	var $required = array('current_first_name', 'current_last_name', 'e-mail');
 	
 	var $display_name = 'Homecoming Info';
 	var $error_header_text = 'Please check your form.';
