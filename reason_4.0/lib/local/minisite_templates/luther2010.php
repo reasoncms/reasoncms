@@ -256,7 +256,14 @@ class LutherTemplate2010 extends MinisiteTemplate
 		}
 		
 		// Navigation area
-		echo '<nav id="nav-section" role="navigation">'."\n";
+		if ($this->site_id == id_of('connect'))
+		{
+			echo '<nav id="nav-section" class="show-icon" role="navigation">'."\n";
+		}
+		else 
+		{
+			echo '<nav id="nav-section" role="navigation">'."\n";
+		}
 		if ($this->has_content( 'navigation' ))
 		{
 			$this->run_section( 'navigation' );

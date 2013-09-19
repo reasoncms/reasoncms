@@ -78,7 +78,8 @@
 					echo '</li>'."\n";				
 				}
 				
-				echo '<li class="navListItem '.$class.'">';
+				$this->prepend_icon($this->values[$item], $class);
+				//echo '<li class="navListItem '.$class.'">';
 				$this->show_item( $this->values[ $item  ] );
 				if( $open AND !empty( $children ))
 				{
@@ -399,6 +400,18 @@
 				return $chain;
 			}
 			return array_merge($chain, $this->get_id_chain($this->parent($page_id)));
+		}
+		
+		function prepend_icon(&$item, $class)
+		// Add unique name-specific class to prepend an icon to navigation text.
+		// e.g. Facebook, Twitter, GooglePlus, YouTube, etc.
+		// Will require loading image in css
+		{
+			//$icons = array('facebook', 'twitter', 'google+', 'youtube', 'linkedin', 'pinterest');
+			$page_name = $item->get_value( 'link_name' ) ? $item->get_value( 'link_name' ) : $item->get_value('name');
+			$page_name = strtolower(preg_replace('| |', '_', $page_name));
+			echo '<li class="navListItem ' . $class.' ' . $page_name .'">'; 
+			
 		}
 	}
 ?>
