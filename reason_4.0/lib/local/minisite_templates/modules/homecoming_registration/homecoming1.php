@@ -127,6 +127,7 @@ class HomecomingRegistrationOneForm extends FormStep
 		),
         'attend_50th_reception'=>'text',
 		'attend_luncheon' => 'text',
+		'attend_70th_dinner'=>'text',
 		// 'dinner_header' => array(
 		// 	'type' => 'comment',	
 		// 	'text' => '<h3>Class Reunion Dinners/Receptions</h3>',
@@ -142,7 +143,7 @@ class HomecomingRegistrationOneForm extends FormStep
         'booklet' => 'text'
 	);
 	
-	var $required = array('current_first_name', 'current_last_name', 'graduation_name', 'e-mail');
+	var $required = array('current_first_name', 'current_last_name', 'e-mail');
 	
 	var $display_name = 'Homecoming Info';
 	var $error_header_text = 'Please check your form.';
@@ -183,6 +184,17 @@ class HomecomingRegistrationOneForm extends FormStep
 			)
 		);
 		
+		// 70th dinner
+        $this->change_element_type(
+			'attend_70th_dinner', 'select', array(
+				'display_name' => 'Reservation for Saturday\'s 70th reunion dinner',
+				'comments' => '<br /> Class of ' . ($date['year'] - 70) . ' only<br />No Cost',
+				'options' => array( 
+					'1' => '1', '2' => '2', '3' => '3', '4' => '4', '5' => '5', 
+					'6' => '6', '7' => '7', '8' => '8', '9' => '9',	'10' => '10',),
+			)
+		);
+
 		// ride in parade
         $this->change_element_type(
 			'ride_in_parade', 'radio_inline_no_sort', array(
