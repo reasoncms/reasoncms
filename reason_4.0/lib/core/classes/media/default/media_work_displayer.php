@@ -224,8 +224,8 @@ class DefaultMediaWorkDisplayer implements MediaWorkDisplayerInterface
 				else // for audio
 				{
 					$height = false;
-					$iframe_height = 50;
-					$iframe_width = 360;
+					$iframe_height = 20;
+					$iframe_width = 300;
 				}
 				//add video or audio class using string on object
 				$markup = '<iframe class="media_file_iframe ' . strtolower($current->get_value('av_type')) . '" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" allowfullscreen="allowfullscreen" height="'.intval($iframe_height).'" width="'.intval($iframe_width).'" ';
@@ -296,7 +296,7 @@ class DefaultMediaWorkDisplayer implements MediaWorkDisplayerInterface
 			$width = $this->get_embed_width();
 
 			$avd->set_video_dimensions($width, $height);
-			$avd->set_audio_dimensions($width, $height);
+			$avd->set_audio_dimensions(0, 0);
 			
 	 		if (!$this->show_controls)
 	 		{
