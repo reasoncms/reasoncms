@@ -410,6 +410,7 @@
 			//$icons = array('facebook', 'twitter', 'google+', 'youtube', 'linkedin', 'pinterest');
 			$page_name = $item->get_value( 'link_name' ) ? $item->get_value( 'link_name' ) : $item->get_value('name');
 			$page_name = strtolower(preg_replace('| |', '_', $page_name));
+			$page_name = strtolower(preg_replace('|[Gg]oogle\+|', 'googleplus', $page_name));
 			echo '<li class="navListItem ' . $class.' ' . $page_name .'">'; 
 			
 		}
