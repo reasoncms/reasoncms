@@ -277,9 +277,20 @@ class entity
 			if( $type->get_value( 'display_name_handler' ) )
 			{
 				$file = 'display_name_handlers/' . $type->get_value( 'display_name_handler' );
-				reason_include_once( $file );
-				$display_handler = $GLOBALS['display_name_handlers'][$type->get_value( 'display_name_handler' )];
-				return $display_handler( $this );
+				if(reason_include_once( $file ))
+				{
+					$display_handler = $GLOBALS['display_name_handlers'][$type->get_value( 'display_name_handler' )];
+					if(empty($display_handler))
+						trigger_error('Custom display name handler not registered in '.$file);
+					elseif(!function_exists($display_handler))
+						trigger_error('Custom display name handler not registered properly in '.$file);
+					else
+						return $display_handler( $this );
+				}
+				else
+				{
+					trigger_error('Unable to use custom display name handler -- no file at ('.$file.')' );
+				}	
 			}
 		}
 		else
