@@ -48,7 +48,14 @@
 
 		function run()
 		{
-			echo '<header class="blue-stripe"><h1><span>Recent Tweets</span></h1></header>'."\n";
+			if ($this->site_id == id_of('connect'))
+			{
+				echo '<div class="section"><h1>Recent Tweets</h1></div>'."\n";
+			}
+			else
+			{
+				echo '<header class="blue-stripe"><h1><span>Recent Tweets</span></h1></header>'."\n";
+			}
 			echo '<div class="twitter-feed">';
 			echo $this->tweet_html;
 			echo '</div>';
