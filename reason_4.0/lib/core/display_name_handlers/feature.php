@@ -44,6 +44,32 @@ if( !defined( 'DISPLAY_HANDLER_FEATURE_PHP' ) )
 				}
 			}
 		}
+		elseif($media = $e->get_left_relationship('feature_to_media_work'))
+		{
+			$m = reset($media);
+			$images = $m->get_left_relationship('av_to_primary_image');
+			if(!empty($images))
+			{
+				$image = reset($images);
+				if($path = reason_get_image_path($image, 'thumbnail'))
+				{
+					if(file_exists($path))
+					{
+						if($size = getimagesize($path))
+						{
+							return '<img src="'.htmlspecialchars(reason_get_image_url($image, 'thumbnail'), ENT_QUOTES).'" width="'.round($size[0] / 2).'" height="'.round($size[1] /2 ).'" alt="'.reason_htmlspecialchars(strip_tags($image->get_value('description'))).'" /> '.$e->get_value('name');
+						}
+					}
+				}
+			}
+			switch($m->get_value('av_type'))
+			{
+				case 'Audio':
+					return '<img src="'.REASON_HTTP_BASE_PATH.'silk_icons/sound.png" width="16" height="16" alt="Audio" /> '.$e->get_value('name');
+				case 'Video':
+					return '<img src="'.REASON_HTTP_BASE_PATH.'silk_icons/television.png" width="16" height="16" alt="Video" /> '.$e->get_value('name');
+			}
+		}
 		return $e->get_value('name');
 	}
 }
