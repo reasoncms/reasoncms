@@ -282,6 +282,7 @@ ul.childrenList {
 	border-top-style: solid;
 	border-top-color: #748FC2;
 	clear: both;
+	list-style: none;
 }
 .childrenList li {
 	list-style-type: none;
