@@ -538,20 +538,34 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 			case 'publication_comments_off':
 				break;
 			case 'item_comments_off':
-				$ret .= '<h4>Comments for this post are turned off</h4>';
+				$ret .= '<div class="commentsOff">'."\n";
+				$ret .= '<h4>Comments for this post are turned off</h4>'."\n";
+				$ret .= '</div>';
 				break;
 			case 'login_required':
+				$ret .= '<div class="loginRequired">'."\n";
 				$ret .= '<h4>Add a comment</h4>'."\n";
+				$ret .= '<div class="subContent">'."\n";
 				$ret .= '<p>Please <a href="'.REASON_LOGIN_URL.'"> login </a> to comment.</p>';
+				$ret .= '</div>';
+				$ret .= '</div>';
 				break;
 			case 'user_not_permitted':
+				$ret .= '<div class="notPermitted">'."\n";
 				$ret .= '<h4>Commenting Restricted</h4>'."\n";
+				$ret .= '<div class="subContent">'."\n";
 				$ret .= '<p>You do not currently have the rights to post a comment. If you would like to comment, please contact the site maintainer listed on this page.</p>';
+				$ret .= '</div>';
+				$ret .= '</div>';
 				break;
 			case 'open_comments':
 			case 'user_has_permission':
+				$ret .= '<div class="commentsOn">'."\n";
 				$ret .= '<a name="addComment"></a><h4>Add a comment</h4>'."\n";
+				$ret .= '<div class="subContent">';
 				$ret .= $this->passed_vars['comment_form_markup'];
+				$ret .= '</div>';
+				$ret .= '</div>';
 				break;
 			default:
 				trigger_error( 'commenting_status not an expected value ('.$this->passed_vars['commenting_status'].')' );
