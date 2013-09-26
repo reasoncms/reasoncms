@@ -136,6 +136,9 @@ class PublicationModule extends Generic3Module
 										'issue_list' => array ('classname' => 'PublicationIssueListMarkupGenerator',
 															   'filename' => 'minisite_templates/modules/publication/issue_list_markup_generators/default.php',
 															   ),
+										'persistent' => array('classname' => 'PublicationsPersistentMarkupGenerator',
+															  'filename' => 'minisite_templates/modules/publication/persistent_markup/default.php',
+															  ),
 								   	   );
 								   	   
 	var $related_markup_generator_info = array( 'list_item' => array ('classname' => 'RelatedListItemMarkupGenerator', 
@@ -147,7 +150,10 @@ class PublicationModule extends Generic3Module
 										        'featured_item' => array ('classname' => 'RelatedListItemMarkupGenerator', 
 										                          'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/related_item.php',
 										                          ),
-								   	   			);								   
+										        'persistent' => array ('classname' => 'EmptyMarkupGenerator', 
+										                          'filename' => 'minisite_templates/modules/publication/empty_markup_generator.php',
+										                          ),
+								   	   			);
 
 	/** 
 	* Maps the names of variables needed by the markup generator classes to the name of the method that generates them.
@@ -186,6 +192,10 @@ class PublicationModule extends Generic3Module
 									   'filter_interface_markup'=>'get_filter_interface_markup',
 									   'search_interface_markup'=>'get_search_interface_markup',
 									   'pagination_markup' => 'get_pagination_markup',
+									   'add_item_link' => 'get_add_item_link',
+									   'login_logout_link' => 'get_login_logout_link',
+									   'use_filters' => 'get_use_filters_value',
+									   'filtering_markup' => 'get_filtering_markup',
 									);
 	
 	/**
@@ -746,6 +756,9 @@ class PublicationModule extends Generic3Module
 			return;
 		if(empty($this->current_item_id))
 		{
+			$persistent_markup_generator = $this->set_up_generator_of_type('persistent');
+			$persistent_markup_generator->add_head_items($head_items);
+			
 			if ($this->issue_list_should_be_displayed())
 			{
 				$issue_markup_generator = $this->set_up_generator_of_type('issue_list');
@@ -777,6 +790,10 @@ class PublicationModule extends Generic3Module
 		else
 		{
 			$item = new entity($this->current_item_id);
+			
+			$persistent_markup_generator = $this->set_up_generator_of_type('persistent', $item);
+			$persistent_markup_generator->add_head_items($head_items);
+			
 			$item_markup_generator = $this->set_up_generator_of_type('item', $item);
 			$item_markup_generator->add_head_items($head_items);
 		}
@@ -1224,7 +1241,6 @@ class PublicationModule extends Generic3Module
 			echo $this->_unauthorized_message;
 			return;
 		}
-		$this->item = $item;
 		
 		//if this is an issued publication, we want to say what issue we're viewing
 		$current_issue = $this->get_current_issue();
@@ -1259,7 +1275,29 @@ class PublicationModule extends Generic3Module
 	
 ////////
 // DISPLAY LIST METHODS
-////////	
+////////
+
+	
+		
+	function show_persistent()
+	{
+		if(!empty($this->current_item_id) && $this->request['story_id'] == $this->current_item_id)
+		{
+			$item = new entity($this->current_item_id);
+			$item->get_values();
+			$persistent_markup_generator = $this->set_up_generator_of_type('persistent', $item);
+		}
+		else
+		{
+			$persistent_markup_generator = $this->set_up_generator_of_type('persistent');
+		}
+		echo $persistent_markup_generator->get_markup();
+	}
+	
+	function get_use_filters_value()
+	{
+		return $this->use_filters;
+	}
 
 	//overloaded from generic3 so that the links to other issues will still appear even when there are no items for that issue.
 	function list_should_be_displayed()
@@ -1314,8 +1352,34 @@ class PublicationModule extends Generic3Module
 		$item_id = !empty($item) ? $item->id() : 0;
 		if(!isset($this->markup_generators[$type][$item_id]))
 		{
-			reason_include_once( $this->markup_generator_info[$type]['filename'] );
-			$markup_generator = new $this->markup_generator_info[$type]['classname']();
+			if(isset($this->markup_generator_info[$type]['filename']))
+			{
+				if(!reason_include_once( $this->markup_generator_info[$type]['filename'] ))
+				{
+					trigger_error('Markup generator file not found at '.$this->markup_generator_info[$type]['filename'].'. Empty markup generator substituted.');
+					reason_include_once('minisite_templates/modules/publication/empty_markup_generator.php');
+				}
+			}
+			else
+			{
+				trigger_error('No markup generator filename found for "'.$type.'". Empty markup generator substituted.');
+				reason_include_once('minisite_templates/modules/publication/empty_markup_generator.php');
+			}
+			if(isset($this->markup_generator_info[$type]['classname']))
+			{
+				if(class_exists($this->markup_generator_info[$type]['classname']))
+					$markup_generator = new $this->markup_generator_info[$type]['classname']();
+				else
+				{
+					trigger_error('Class '.$this->markup_generator_info[$type]['classname'].' not found. Empty markup generator substituted.');
+					$markup_generator = new EmptyMarkupGenerator();
+				}
+			}
+			else
+			{
+				trigger_error('No markup generator classname found for "'.$type.'". Empty markup generator substituted.');
+				$markup_generator = new EmptyMarkupGenerator();
+			}
 			$markup_generator_settings = (!empty($this->markup_generator_info[$type]['settings'])) 
 								     ? $this->markup_generator_info[$type]['settings'] 
 								     : '';
@@ -1360,9 +1424,15 @@ class PublicationModule extends Generic3Module
 			{
 				$values_to_pass[$var_name] = $item;
 			}
+			elseif($var_name == 'item')
+			{
+				$values_to_pass[$var_name] = false;
+			}
 			//elseif( isset($this->markup_generator_info
 			elseif( isset($this->$var_name))
+			{
 				$values_to_pass[$var_name] = $this->$var_name;
+			}
 		}
 		return $values_to_pass;
 	}
@@ -2169,6 +2239,13 @@ class PublicationModule extends Generic3Module
 			}
 		}
 		
+		function get_filtering_markup()
+		{
+			ob_start();
+			$this->show_filtering();
+			return ob_get_clean();
+		}
+		
 		function get_pagination_markup($class = '')
 		{
 			if($this->use_pagination && ( $this->show_list_with_details || empty( $this->current_item_id ) ) )
@@ -2185,6 +2262,7 @@ class PublicationModule extends Generic3Module
 					{
 						$class = ' '.$class;
 					}
+					$class .= ' page'.htmlspecialchars($this->request['page']);
 					return '<div class="pagination'.$class.'">'.$this->pagination_output_string.'</div>'."\n";
 				}
 			}
@@ -2216,7 +2294,6 @@ class PublicationModule extends Generic3Module
 						if(empty($item))
 							break;
 						next($items);
-						$this->item = $item;
 						$list_item_markup_generator = $this->set_up_generator_of_type('list_item', $item);
 						$list_item_markup_strings[$item->id()] = $list_item_markup_generator->get_markup();
 					}
@@ -2226,7 +2303,6 @@ class PublicationModule extends Generic3Module
 			{
 				foreach($this->items as $item)
 				{
-					$this->item = $item;
 					$list_item_markup_generator = $this->set_up_generator_of_type('list_item', $item);
 					$list_item_markup_strings[$item->id()] = $list_item_markup_generator->get_markup();
 				}
