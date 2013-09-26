@@ -395,7 +395,7 @@ class ReasonPageType
 	 * 
 	 * @param string $region_name name of the region
 	 * @param string $module_name name of the module
-	 * @param string $module_filename relative to minisite_templates/modules/
+	 * @param string $module_filename relative to core or local
 	 * @param string $module_params module parameters 
 	 *
 	 * @todo remove restriction on _meta region name once we move off the php array fprmat for page type definitions
