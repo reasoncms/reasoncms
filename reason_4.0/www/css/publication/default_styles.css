@@ -1,4 +1,4 @@
-div.publication div.moduleNav ul, div.publication div.fullPost div.comments ul {
+div.publication div.moduleNav ul, div.publication div.fullPost div.comments>ul {
 	margin-left:0px;
 	padding-left:0px;
 	list-style-type:none;
@@ -32,7 +32,7 @@ div.publication div.moduleNav div.filterMessage span.clear {
 	font-weight:normal;
 	opacity:0.7;
 }
-div.publication div.fullPost div.comments ul li {
+div.publication div.fullPost div.comments>ul>li {
 	padding:1em;
 	margin:.5em 0px .5em 0px;
 	background-color:#F0F5FF;
