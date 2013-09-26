@@ -187,7 +187,7 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 	{
 		if(!empty($this->passed_vars['search_string']))
 		{
-			return '<h3>Results for "'.$this->passed_vars['search_string'].'"</h3>'."\n";
+			return '<h3 class="searchTitle">Results for <span class="searchPhrase">"'.$this->passed_vars['search_string'].'"</span></h3>'."\n";
 		}
 		return '';
 	}
