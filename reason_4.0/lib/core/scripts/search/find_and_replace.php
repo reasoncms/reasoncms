@@ -51,6 +51,7 @@ class FindReplaceWizard extends Disco
 	{
 		$this->step_init();
 		parent::init(true);
+		ini_set('memory_limit', '256M');
 	}
 	
 	function step_init()
@@ -254,7 +255,7 @@ class FindReplaceWizard4 extends FindReplaceWizard
 		}
 	}
 	
-	function step_pre_show_form()
+	function step_pre_show_form()	
 	{
 		$matches =& $this->helper->get_matches();
 		$count = count($matches);
@@ -551,7 +552,7 @@ class FindReplaceWizardHelper
 					$table_array[] = $table;
 					foreach($fields as $field)
 					{
-						$relation_pieces[] = $table.'.'.$field.' LIKE "%'.$this->get_search_term_for_query().'%" COLLATE latin1_bin';
+						$relation_pieces[] = $table.'.'.$field.' LIKE "%'.$this->get_search_term_for_query().'%"';
 					}
 				}
 			}
