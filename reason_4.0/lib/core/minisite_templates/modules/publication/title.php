@@ -60,7 +60,7 @@
 				{
 					$pubname = $this->publication->get_value('name');
 				}
-				echo '<h2 class="pageTitle"><span>'.$pubname.'</span></h2>';
+				echo '<h2 class="pageTitle publicationTitle"><span>'.$pubname.'</span></h2>';
 			}
 			elseif( !empty( $this->parent->title ) )
 				parent::run();
