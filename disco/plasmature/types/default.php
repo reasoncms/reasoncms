@@ -156,6 +156,7 @@ class defaultType
 							  'value' =>'default',
 							  'db_type',
 							  'display_style', // deprecated
+							  'trim_input',
 							  );
 							  
 	/**
@@ -199,6 +200,8 @@ class defaultType
 	 * @var array
 	 */
 	protected $_set_args = array();
+	
+	protected $trim_input = true;
 	
 
 	/////////////////////////
@@ -274,7 +277,12 @@ class defaultType
 		if ( isset( $http_vars[ $this->name ] ) )
 		{
 			if( !is_array( $http_vars[ $this->name ] ) AND !is_object( $http_vars[ $this->name ] ) )
-				return trim($http_vars[ $this->name ]);
+			{
+				if($this->trim_input)
+					return trim($http_vars[ $this->name ]);
+				else
+					return $http_vars[ $this->name ];
+			}
 			else
 				return $http_vars[ $this->name ];
 		}
@@ -301,7 +309,7 @@ class defaultType
 	 */
 	function get_display()
 	{
-		$str  = '<input type="text" name="'.$this->name.'" value="'.htmlspecialchars($this->get(),ENT_QUOTES).'" size="50" />';
+		$str  = '<input type="text" name="'.$this->name.'" value="'.htmlspecialchars($this->get(),ENT_QUOTES).'" size="50" class="default" />';
 		return $str;
 	}
 	
