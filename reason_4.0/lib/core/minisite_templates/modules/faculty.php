@@ -51,6 +51,12 @@
 		var $other_affiliation_flag = false;
 		var $affiliations_to_use_other_aff_flag = array();
 		var $required_attributes = array('ds_email','ds_fullname','ds_lastname','ds_affiliation','ds_phone');
+		var $acceptable_params = array(
+			'thumbnail_width' => 0,
+			'thumbnail_height' => 0,
+			// How to crop the image to fit the size requirements; 'fill' or 'fit'
+			'thumbnail_crop' => '',
+		);
 				
 		function has_content() // {{{
 		{
@@ -259,7 +265,7 @@
 						
 					$links[] = '<a class="facStaffNavLink" href="#'.preg_replace('/\s+/','_', $aff).'">'.$display.'</a>';
 				}
-				echo join(' | ', $links);
+				echo join('<span class="divider"> | </span>', $links);
 				echo '</div>'."\n";
 			}
 		} // }}}
@@ -357,8 +363,9 @@
 				$image_id = $this->grab_faculty_image( $this->reason_netids[ $person[ 'ds_username' ][0] ] );
 			if (!empty($image_id))
 			{
+				$sized = $this->get_sized_image($image_id);
 				echo "\t<div class='facStaffImage'>";
-				show_image( $image_id, false,true,false );
+				show_image( $sized, false,true,false );
 				echo "</div>\n";
 			}
 		} // }}}
@@ -399,6 +406,31 @@
 			else
 				return false;
 		} // }}}
+		/**
+		 * @return mixed a reasonSizedImage object or the image id if no sizing required
+		 */
+		function get_sized_image($image_id)
+		{
+			if($this->params['thumbnail_width'] != 0 or $this->params['thumbnail_height'] != 0)
+			{
+				$rsi = new reasonSizedImage();
+				$rsi->set_id($image_id);
+				if($this->params['thumbnail_width'] != 0)
+				{
+					$rsi->set_width($this->params['thumbnail_width']);
+				}
+				if($this->params['thumbnail_height'] != 0)
+				{
+					$rsi->set_height($this->params['thumbnail_height']);
+				}
+				if($this->params['thumbnail_crop'] != '')
+				{
+					$rsi->set_crop_style($this->params['thumbnail_crop']);
+				}
+				return $rsi;
+			}
+			return $image_id;
+		}
 		/**
 		*  Template calls this function to figure out the most recently last modified item on page
 		* This function uses the most recently modified faculty/staff member
