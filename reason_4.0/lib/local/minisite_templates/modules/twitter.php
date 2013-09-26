@@ -50,7 +50,7 @@
 		{
 			if ($this->site_id == id_of('connect'))
 			{
-				echo '<div class="section"><h1>Recent Tweets</h1></div>'."\n";
+				echo '<div class="section blue"><h1>Recent Tweets</h1></div>'."\n";
 			}
 			else
 			{
