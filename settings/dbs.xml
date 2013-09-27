@@ -26,7 +26,7 @@
     </database>
 
     <database>
-    <connection_name>admissions_applications_connection</connection_name>
+        <connection_name>admissions_applications_connection</connection_name>
         <db>admissions_applications</db>
         <user>reason_user</user>
         <password>8shtKGFGw4.v7cMm</password>
@@ -37,7 +37,7 @@
         <connection_name>all_band_connection</connection_name>
         <db>all_band</db>
         <user>reason_user</user>
-            <password>8shtKGFGw4.v7cMm</password>
+        <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>
     </database>
 
@@ -93,38 +93,40 @@
         <connection_name>dorian_jh_camp_connection</connection_name>
         <db>dorian_jh_camp</db>
         <user>reason_user</user>
-                <password>8shtKGFGw4.v7cMm</password>
-                <host>database-1.luther.edu</host>
+        <password>8shtKGFGw4.v7cMm</password>
+        <host>database-1.luther.edu</host>
     </database>
 
-        <database>
-                <connection_name>dorian_sh_camp_connection</connection_name>
-                <db>dorian_sh_camp</db>
-                <user>reason_user</user>
-                <password>8shtKGFGw4.v7cMm</password>
-                <host>database-1.luther.edu</host>
-        </database>
     <database>
-            <connection_name>transcript_connection</connection_name>
-            <db>transcript_requests</db>
-            <user>reason_user</user>
-            <password>8shtKGFGw4.v7cMm</password>
-            <host>database-1.luther.edu</host>
+        <connection_name>dorian_sh_camp_connection</connection_name>
+        <db>dorian_sh_camp</db>
+        <user>reason_user</user>
+        <password>8shtKGFGw4.v7cMm</password>
+        <host>database-1.luther.edu</host>
     </database>
+
+    <database>
+        <connection_name>transcript_connection</connection_name>
+        <db>transcript_requests</db>
+        <user>reason_user</user>
+        <password>8shtKGFGw4.v7cMm</password>
+        <host>database-1.luther.edu</host>
+    </database>
+    
     <database>
         <connection_name>norge_connection</connection_name>
         <db>norge_conference</db>
         <user>reason_user</user>
-            <password>8shtKGFGw4.v7cMm</password>
+        <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>
     </database>
 
-        <database>
-                <connection_name>royal_visit_connection</connection_name>
-                <db>royal_visit_payment</db>
-                <user>reason_user</user>
-                <password>8shtKGFGw4.v7cMm</password>
-                <host>database-1.luther.edu</host>
-        </database>
+    <database>
+        <connection_name>royal_visit_connection</connection_name>
+        <db>royal_visit_payment</db>
+        <user>reason_user</user>
+        <password>8shtKGFGw4.v7cMm</password>
+        <host>database-1.luther.edu</host>
+    </database>
 
 </databases>
