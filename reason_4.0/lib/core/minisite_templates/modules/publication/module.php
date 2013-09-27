@@ -2916,7 +2916,7 @@ class PublicationModule extends Generic3Module
 		{
 			if(empty($this->commenting_status[$item->id()]))
 			{
-				$this->commenting_status[$item->id()] = $this->get_commentability_status_full_check($item);
+				$this->commenting_status[$item->id()] = (isset($this->items[$item->id()])) ? $this->get_commentability_status_full_check($item) : false;
 			}
 			return $this->commenting_status[$item->id()];
 		}
