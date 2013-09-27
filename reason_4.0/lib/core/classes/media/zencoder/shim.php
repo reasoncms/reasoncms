@@ -176,79 +176,23 @@ class ZencoderShim implements ShimInterface
  		if (strpos($filepath, 'http://') === 0 || $at_remote_url)
  		{
  			$filepath = str_replace('https://', 'http://', $filepath);
- 			$vid_height = $this->_get_video_height($filepath);
  		}
  		else
  		{
  			if (strpos($filepath, 'https://') === 0)
  			{
  				$filepath = str_replace('https://', 'http://', $filepath);
-				$vid_height = $this->_get_video_height($filepath);
  			}
  			else
  			{
-				$vid_height = $this->_get_video_height($filepath);
  				$filepath = carl_construct_link(array(''), array(''), WEB_TEMP.$filename);
  				$filepath = str_replace('https://', 'http://', $filepath);
  			}
  		}
 		
-		// TEMPORARY HACK!! We need ffmpeg on Chicago!
+		// Always specify all output sizes. Use conditional outputs to filter the outputs.
 		$profile = 'large';
 		return $this->_upload_video_with_specified_profile($filepath, $media_work, $netid, $profile, $media_files_to_delete, $media_work_to_delete);
-		
-		/*if ($vid_height)
-		{
-			// pick the correct transcoding profile based on the video's height
-			if ($vid_height >= MEDIA_WORK_LARGE_HEIGHT)
-			{
-				$profile = 'large';
-			}
-			elseif ($vid_height >= MEDIA_WORK_MEDIUM_HEIGHT)
-			{
-				$profile = 'medium';
-			}
-			else
-			{
-				$profile = 'small';
-			}
-			return $this->_upload_video_with_specified_profile($filepath, $media_work, $netid, $profile, $media_files_to_delete, $media_work_to_delete);
-		}
-		else
-		{
-			// If we couldn't identify the video's height, then we'll default to 'small'.
-			return $this->_upload_video_with_specified_profile($filepath, $media_work, $netid, 'small', $media_files_to_delete, $media_work_to_delete);
-		}*/
- 	}
-	
- 	/**
- 	 * Gets the height of the video at the specified filepath using ffmpeg's output. 
- 	 *
- 	 * @param $filepath string
- 	 * @return mixed int or false
- 	 */
- 	private function _get_video_height($filepath)
- 	{
- 		// we want the stderr output
- 		$output = shell_exec('ffmpeg -i "'.$filepath.'" 2>&1 1>/dev/null');
- 		$lines = explode("\n", $output);
-		// find the line containing the video dimensions		
-		foreach ($lines as $line)
-		{
-			if (strpos($line, 'Video:'))
-			{	
-				$match = preg_match('/(?P<width>\d+)x(?P<height>\d+)/', $line, $dimensions);
-				if ($match)
-				{
-					return intval($dimensions['height']);
-				}
-				else
-				{
-					return false;
-				}
-			}
-		}
-		return false;
  	}
  	
  	/**
@@ -360,8 +304,6 @@ class ZencoderShim implements ShimInterface
 		$parts = explode('.', $filename);
 		$extension = end($parts);
  	
- 		$stills_directory = self::get_storage_class()->get_stills_base_url($media_work);
- 	
  		if (intval($profile) == 1 || strtolower($profile) == 'small')
  		{
  			$media_files = $this->_create_media_files($media_work, 'small', $filepath);
@@ -375,12 +317,6 @@ class ZencoderShim implements ShimInterface
 					"height" => MEDIA_WORK_SMALL_HEIGHT,
 					"aspect_mode" => "preserve",
 					"video_bitrate" => 300,
-					"thumbnails" => array(
-						"number" => $this->get_num_stills(),
-						"format" => "jpg",
-						"base_url" => $stills_directory,
-						"filename" => "{{number}}",
-					),
 					"url" => self::get_storage_class()->get_destination_url_for_transcoded_file($media_files[0], 'mp4', $media_work, 'small'),
 					"public" => true,
 					"notifications" => $this->get_notification_receiver_url(),
@@ -436,15 +372,12 @@ class ZencoderShim implements ShimInterface
 					"height" => MEDIA_WORK_MEDIUM_HEIGHT,
 					"aspect_mode" => "preserve",
 					"video_bitrate" => 600,
-					"thumbnails" => array(
-						"number" => $this->get_num_stills(),
-						"format" => "jpg",
-						"base_url" => $stills_directory,
-						"filename" => "{{number}}",
-					),
 					"url" => self::get_storage_class()->get_destination_url_for_transcoded_file($media_files[2], 'mp4', $media_work, 'medium'),
 					"public" => true,
 					"notifications" => $this->get_notification_receiver_url(),
+					"skip" => array(
+						"min_size" => "400x300",
+					),
 				),
 				array(
 					"label" => "webm_medium_".$media_files[3],
@@ -457,6 +390,9 @@ class ZencoderShim implements ShimInterface
 					"url" => self::get_storage_class()->get_destination_url_for_transcoded_file($media_files[3], 'webm', $media_work, 'medium'),
 					"public" => true,
 					"notifications" => $this->get_notification_receiver_url(),
+					"skip" => array(
+						"min_size" => "400x300",
+					),
 				),
 			);
  		}
@@ -500,6 +436,9 @@ class ZencoderShim implements ShimInterface
 					"url" => self::get_storage_class()->get_destination_url_for_transcoded_file($media_files[2], 'mp4', $media_work, 'medium'),
 					"public" => true,
 					"notifications" => $this->get_notification_receiver_url(),
+					"skip" => array(
+						"min_size" => "400x300",
+					),
 				),
 				array(
 					"label" => "webm_medium_".$media_files[3],
@@ -512,6 +451,9 @@ class ZencoderShim implements ShimInterface
 					"url" => self::get_storage_class()->get_destination_url_for_transcoded_file($media_files[3], 'webm', $media_work, 'medium'),
 					"public" => true,
 					"notifications" => $this->get_notification_receiver_url(),
+					"skip" => array(
+						"min_size" => "400x300",
+					),
 				),
 				array(
 					"label" => "mp4_large_".$media_files[4],
@@ -521,15 +463,12 @@ class ZencoderShim implements ShimInterface
 					"height" => MEDIA_WORK_LARGE_HEIGHT,
 					"aspect_mode" => "preserve",
 					"video_bitrate" => 1050,
-					"thumbnails" => array(
-						"number" => $this->get_num_stills(),
-						"format" => "jpg",
-						"base_url" => $stills_directory,
-						"filename" => "{{number}}",
-					),
 					"url" => self::get_storage_class()->get_destination_url_for_transcoded_file($media_files[4], 'mp4', $media_work, 'large'),
 					"public" => true,
 					"notifications" => $this->get_notification_receiver_url(),
+					"skip" => array(
+						"min_size" => "560x420",
+					),
 				),
 				array(
 					"label" => "webm_large_".$media_files[5],
@@ -542,6 +481,9 @@ class ZencoderShim implements ShimInterface
 					"url" => self::get_storage_class()->get_destination_url_for_transcoded_file($media_files[5], 'webm', $media_work, 'large'),
 					"public" => true,
 					"notifications" => $this->get_notification_receiver_url(),
+					"skip" => array(
+						"min_size" => "560x420",
+					),
 				),
 			);
  		}
@@ -551,7 +493,7 @@ class ZencoderShim implements ShimInterface
  			return false;
  		}
  		
- 		$output = self::get_storage_class()->add_additional_outputs($output, $filename, $media_work);
+ 		$output = self::get_storage_class()->add_additional_outputs($output, $filename, $media_work, $this, 'Video');
  		return $output;
  	}
  	 	
@@ -630,7 +572,7 @@ class ZencoderShim implements ShimInterface
 						"notifications" => $this->get_notification_receiver_url(),
 					),
 				);
-				$output = self::get_storage_class()->add_additional_outputs($output, $filename, $media_work);
+				$output = self::get_storage_class()->add_additional_outputs($output, $filename, $media_work, $this, 'Audio');
 				
 				$encoding_job = $zencoder->jobs->create(
 					array(
@@ -664,7 +606,7 @@ class ZencoderShim implements ShimInterface
 						"notifications" => $this->get_notification_receiver_url(),
 					),
 				);
-				$output = self::get_storage_class()->add_additional_outputs($output, $filename, $media_work);
+				$output = self::get_storage_class()->add_additional_outputs($output, $filename, $media_work, $this, 'Audio');
 				
 				$encoding_job = $zencoder->jobs->create(
 					array(
@@ -718,7 +660,7 @@ class ZencoderShim implements ShimInterface
 						"notifications" => $this->get_notification_receiver_url(),
 					),
 				);
-				$output = self::get_storage_class()->add_additional_outputs($output, $filename, $media_work);
+				$output = self::get_storage_class()->add_additional_outputs($output, $filename, $media_work, $this, 'Audio');
 				
 				$encoding_job = $zencoder->jobs->create(
 					array(
