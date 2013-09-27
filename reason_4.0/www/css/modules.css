@@ -66,6 +66,13 @@ div#facultyStaff div#deptInfo li {
 	margin-top: 2px;
 	margin-bottom: 0px;
 }
+#facultyStaff a.tel {
+	color: inherit;
+	text-decoration:none;
+}
+#facultyStaff a.tel>strong {
+	font-weight:normal;
+}
 
 /* Search Module */
 
