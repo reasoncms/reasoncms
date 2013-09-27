@@ -37,7 +37,7 @@ domain_define( 'WEBMASTER_NAME', 'Steve Smith' );
  * 
  * SECURITY ALERT: this file MUST be outside of the web tree - otherwise your database credentials are accessible to everyone
  */
-switch ($_SERVER[SERVER_NAME]) {
+switch ($_SERVER['SERVER_NAME']) {
     case 'www.luther.edu':
         domain_define( 'DB_CREDENTIALS_FILEPATH', SETTINGS_INC. 'dbs.xml' );
         break;
@@ -67,7 +67,7 @@ domain_define( 'HTTP_CREDENTIALS_FILEPATH', '' );
  * HTTPS_AVAILABLE
  * Boolean; lets the package know if the domain is configured to serve up pages under https or not
  */
-switch ($_SERVER[SERVER_NAME]) {
+switch ($_SERVER['SERVER_NAME']) {
     case 'www.luther.edu':
         domain_define( 'HTTPS_AVAILABLE', true );
         break;
