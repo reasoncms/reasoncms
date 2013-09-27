@@ -381,10 +381,10 @@
 			{
 				echo '<div class="facStaffInfo">'."\n";
 				if ( !empty ( $person['ds_phone'] ))
-					echo '<div class="facStaffPhone">Phone: '.$person['ds_phone'].'</div>'."\n";
+					echo '<div class="facStaffPhone"><span class="label">Phone: </span><span class="phoneNumber">'.$person['ds_phone'].'</span></div>'."\n";
 				if ( !empty ( $person['mail'] ))
 				{
-					echo '<div class="facStaffEmail">Email: <a href="mailto:'.$person['mail'].'">'.$person['mail'].'</a></div>'."\n";
+					echo '<div class="facStaffEmail"><span class="label">Email: </span><a href="mailto:'.$person['mail'].'" class="emailAddress">'.$person['mail'].'</a></div>'."\n";
 				}
 				if (!empty( $person['content' ] ) )
 				{
