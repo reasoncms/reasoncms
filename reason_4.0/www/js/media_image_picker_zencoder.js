@@ -10,7 +10,7 @@ $(document).ready(function()
 	var thumb_width = 250;
 
 	var init_index = $("#thumbnailsElement").val();
-	var my_image = $('<img id="custom_image" src="'+get_thumbnail_url(init_index)+'" />');
+	var my_image = $('<img id="custom_image" src="'+get_thumbnail_url(init_index)+'" width="500"/>');
 	
 	// Insert a new row into the disco table that holds the dynamic still frame image
 	var my_tr = $('<tr class="imageRow" style="right">');
