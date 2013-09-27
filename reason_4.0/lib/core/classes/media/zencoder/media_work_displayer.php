@@ -704,14 +704,32 @@ class ZencoderMediaWorkDisplayer implements MediaWorkDisplayerInterface
 		
 		if ( !empty($results) )
 		{
+			reason_include_once('classes/sized_image.php');
 			$primary_image = current($results);
-			
-			return reason_get_image_url($primary_image);
+			$rsi = new reasonSizedImage();
+			$rsi->set_id($primary_image->id());
+			$rsi->set_height($this->_get_closest_size($this->get_embed_height(), array(240,360,480)));
+			return $rsi->get_url();
 		}
 		else
 		{
 			return false;
 		}
+	}
+	private function _get_closest_size($size, $sizes)
+	{
+		foreach($sizes as $test)
+		{
+			$distance = $size - $test;
+			if($distance < 0)
+				$distance = $distance * -1;
+			if(!isset($least_distance) || $distance < $least_distance)
+			{
+				$least_distance = $distance;
+				$least_distance_size = $test;
+			}
+		}
+		return $least_distance_size;
 	}
 
 	/**
