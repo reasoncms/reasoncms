@@ -36,7 +36,18 @@ if ($media_work)
 	$netid = $user->get_value('name');
 	
 	// first check to see if all successfully transcoded
-	if ($output->state != "finished") 
+	if ($output->state == "skipped")
+	{
+		echo 'This output was skipped because of conditional outputs.'."\n";
+		$output = current($notification->job->outputs);
+		$label = $output->label;
+		$label_parts = explode('_', $label);
+		$format = reset($label_parts);
+		$id = end($label_parts);
+		echo 'Expunging Media File '.$id."\n";		
+		reason_expunge_entity($id, $user->id());
+	}
+	elseif ($output->state != "finished") 
 	{
 		echo 'Output '.$output->id.' for job '.$notification->job->id.' not successful in encoding.'."\n";
 		echo 'There were errors or cancellations in the transcoding process.'."\n";
@@ -99,7 +110,6 @@ function process_video($media_work, $notification, $mime_type_map, $netid)
 	if ($media_file && $media_file->get_value('url') != 'downloading')
 	{
 		echo 'Processing media file '.$media_file->id()."\n";
-		attach_thumbnail($output, $media_work, $netid);
 		
 		reason_update_entity($media_file->get_value('id'), $media_work->get_owner()->get_value('id'), array('url' => 'downloading'), false);
 		
@@ -123,6 +133,10 @@ function process_video($media_work, $notification, $mime_type_map, $netid)
 		);
 		
 		ZencoderShim::get_storage_class()->update_video_media_file_in_notification_receiver($values, $format, $media_work, $media_file);		
+	}
+	elseif ($label == 'original')
+	{
+		attach_thumbnail($output, $media_work, $netid);
 	}
 	else
 	{
@@ -191,7 +205,7 @@ function process_audio($media_work, $notification, $mime_type_map, $netid)
  */
 function attach_thumbnail($obj, $media_work, $netid)
 {	
-	// check to see if this is the output file that had a thumbnail generated
+	// check to see if this had thumbnails generated
 	if (property_exists($obj, 'thumbnails'))
 	{
 		// First, create temp file
