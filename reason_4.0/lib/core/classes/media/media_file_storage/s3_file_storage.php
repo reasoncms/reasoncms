@@ -378,17 +378,33 @@ class S3MediaFileStorageClass extends MediaFileStorageClass
 	 * @param $outputs array
 	 * @param $filename string
 	 * @param $media_work entity
+	 * @param $shim object
+	 * @param $av_type 'Video' or 'Audio'
 	 */
-	public static function add_additional_outputs($outputs, $filename, $media_work)
+	public static function add_additional_outputs($outputs, $filename, $media_work, $shim, $av_type)
 	{
 		$url = self::get_base_url().self::get_path(false, $filename, $media_work, 'original');
 		$name = basename($url);
 		$url = str_replace($name, urlencode($name), $url);
-		$outputs[] = array(
+		$params = array(
 			"type" => "transfer-only",
 			"url" => $url,
 			"public" => true,
+			"label" => "original",
 		);
+		// also generate thumbnails if it's a Video
+		$stills_directory = $shim->get_storage_class()->get_stills_base_url($media_work);
+		if ($av_type == 'Video')
+		{
+			$params['thumbnails'] = array(			
+				"number" => $shim->get_num_stills(),
+				"format" => "jpg",
+				"base_url" => $stills_directory,
+				"filename" => "{{number}}",
+			);
+			$params['notifications'] = $shim->get_notification_receiver_url();
+		}
+		$outputs[] = $params;
 		return $outputs;
 	}
 }

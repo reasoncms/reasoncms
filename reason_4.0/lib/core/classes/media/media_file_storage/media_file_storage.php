@@ -275,9 +275,11 @@ class MediaFileStorageClass
 	 * @param $outputs array
 	 * @param $filename string
 	 * @param $media_work output
+	 * @param $shim object
+	 * @param $av_type 'Video' or 'Audio'
 	 * @return array
 	 */
-	public static function add_additional_outputs($outputs, $filename, $media_work)
+	public static function add_additional_outputs($outputs, $filename, $media_work, $shim, $av_type)
 	{}
 }
 ?>
