@@ -709,6 +709,7 @@ class ZencoderMediaWorkDisplayer implements MediaWorkDisplayerInterface
 			$rsi = new reasonSizedImage();
 			$rsi->set_id($primary_image->id());
 			$rsi->set_height($this->_get_closest_size($this->get_embed_height(), array(240,360,480)));
+			$rsi->allow_enlarge(false);
 			return $rsi->get_url();
 		}
 		else
