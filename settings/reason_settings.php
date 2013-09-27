@@ -143,7 +143,21 @@
 	 * In order for pages in your Reason instance to be visible to search engines, you *must*
 	 * change this setting to false.
 	 */
-	define( 'THIS_IS_A_DEVELOPMENT_REASON_INSTANCE', false );
+	switch ($_SERVER[SERVER_NAME]) {
+		case 'www.luther.edu':
+		    define( 'THIS_IS_A_DEVELOPMENT_REASON_INSTANCE', false );
+		    break;
+		case 'reasondev.luther.edu':
+		    define( 'THIS_IS_A_DEVELOPMENT_REASON_INSTANCE', true );
+		    break;
+		case 'reasondev2.luther.edu':
+		    define( 'THIS_IS_A_DEVELOPMENT_REASON_INSTANCE', true );
+		    break; 
+		default:
+		    define( 'THIS_IS_A_DEVELOPMENT_REASON_INSTANCE', true );
+		    break;
+	}
+	
 	
 	/**
 	 * REASON_HOST_HAS_VALID_SSL_CERTIFICATE
@@ -156,7 +170,20 @@
 	 * If this is set to false, Reason will work in either case, but it is better practice
 	 * to set it to true when possible to eliminate the possiblity of man-in-the-middle attacks.
 	 */
-	define('REASON_HOST_HAS_VALID_SSL_CERTIFICATE', true);
+	switch ($_SERVER[SERVER_NAME]) {
+	    case 'www.luther.edu':
+	        define('REASON_HOST_HAS_VALID_SSL_CERTIFICATE', true);
+	        break;
+	    case 'reasondev.luther.edu':
+	        define('REASON_HOST_HAS_VALID_SSL_CERTIFICATE', true);
+	        break; 
+		case 'reasondev2.luther.edu':
+	        define('REASON_HOST_HAS_VALID_SSL_CERTIFICATE', true);
+	        break; 
+	    default:
+	        define('REASON_HOST_HAS_VALID_SSL_CERTIFICATE', false);
+	        break;
+	}
 	
 	/**
 	 * REASON_SESSION_TIMEOUT

@@ -37,7 +37,20 @@ domain_define( 'WEBMASTER_NAME', 'Steve Smith' );
  * 
  * SECURITY ALERT: this file MUST be outside of the web tree - otherwise your database credentials are accessible to everyone
  */
-domain_define( 'DB_CREDENTIALS_FILEPATH', SETTINGS_INC. 'dbs.xml' );
+switch ($_SERVER[SERVER_NAME]) {
+    case 'www.luther.edu':
+        domain_define( 'DB_CREDENTIALS_FILEPATH', SETTINGS_INC. 'dbs.xml' );
+        break;
+    case 'reasondev.luther.edu':
+        domain_define( 'DB_CREDENTIALS_FILEPATH', SETTINGS_INC. 'dbs.reasondev.xml' );
+        break; 
+    case 'reasondev2.luther.edu':
+        domain_define( 'DB_CREDENTIALS_FILEPATH', SETTINGS_INC. 'dbs.reasondev.xml' );
+        break; 
+    default:
+        domain_define( 'DB_CREDENTIALS_FILEPATH', SETTINGS_INC. 'dbs.localhost.xml' );
+        break;
+}
 
 /**
  * The locations of the http credentials file - this need not be defined unless you have web resources behind https authentication
@@ -54,7 +67,20 @@ domain_define( 'HTTP_CREDENTIALS_FILEPATH', '' );
  * HTTPS_AVAILABLE
  * Boolean; lets the package know if the domain is configured to serve up pages under https or not
  */
-domain_define( 'HTTPS_AVAILABLE', true );
+switch ($_SERVER[SERVER_NAME]) {
+    case 'www.luther.edu':
+        domain_define( 'HTTPS_AVAILABLE', true );
+        break;
+    case 'reasondev.luther.edu':
+        domain_define( 'HTTPS_AVAILABLE', true );
+        break; 
+    case 'reasondev2.luther.edu':
+        domain_define( 'HTTPS_AVAILABLE', true );
+        break; 
+    default:
+        domain_define( 'HTTPS_AVAILABLE', false );
+        break;
+}
 
 /**
  * The file system directory that contains imagemagick binaries (such as mogrify)
