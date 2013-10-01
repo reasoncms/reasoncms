@@ -28,7 +28,7 @@ reason_include_once('classes/media_work_helper.php');
 *
 * @author Marcus Huderle
 */
-class mediaWorkImagePickerModule extends DefaultModule
+class kalturaMediaWorkImagePickerModule extends DefaultModule
 {	
 	
 	var $media_work;
