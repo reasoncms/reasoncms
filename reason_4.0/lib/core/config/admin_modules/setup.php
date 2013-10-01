@@ -90,7 +90,7 @@
 		'ManageLocks'=>array('file'=>'manage_locks.php','class'=>'ManageLocksModule'),
 		'AdminTools'=>array('file'=>'admin_tools.php','class'=>'ReasonAdminToolsModule'),
 		'ErrorVisibility'=>array('file'=>'error_visibility.php','class'=>'ErrorVisibilityModule'),	
-		'MediaImagePicker'=>array('file'=>'media_work_image_picker.php','class'=>'mediaWorkImagePickerModule'),
+		'KalturaMediaImagePicker'=>array('file'=>'media_work_image_picker_kaltura.php','class'=>'kalturaMediaWorkImagePickerModule'),
 		'ZencoderMediaImagePicker'=>array('file'=>'media_work_image_picker_zencoder.php', 'class'=>'zencoderMediaWorkImagePickerModule'),
 		'ZencoderMediaWorkUpdate'=>array('file'=>'pull_files_from_zencoder.php','class'=>'zencoderMediaWorkUpdateModule'),
 		'MediaDownloadLinks'=>array('file'=>'media_work_download_links.php','class'=>'mediaWorkDownloadLinksModule'),
