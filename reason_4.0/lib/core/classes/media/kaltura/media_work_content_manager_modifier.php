@@ -295,7 +295,7 @@ class KalturaMediaWorkContentManagerModifier implements MediaWorkContentManagerM
 				$this->displayer_chrome->set_google_analytics(false);
 				$embed_markup .= $this->displayer_chrome->get_html_markup();
 				
-				$image_picker_url = carl_make_link(array('cur_module' => 'MediaImagePicker'));
+				$image_picker_url = carl_make_link(array('cur_module' => 'KalturaMediaImagePicker'));
 				$image_picker_link = '<br/><a href="'.$image_picker_url.'"><strong>Choose a still frame for this video</strong></a>';
 				$embed_markup .= $image_picker_link;
 			}
