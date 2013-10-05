@@ -209,11 +209,13 @@ class MinisitePageManager extends parent_childManager
 				$this->add_comments('extra_head_content',form_comment('If you need to add headers that are not simple css or javascript, enter raw HTML header markup here.'));
 			}
 			
+			$this->alter_page_type_section();
+			
 			// for admin users
 			$rpts =& get_reason_page_types();
 			if(reason_user_has_privs( $this->admin_page->user_id, 'assign_any_page_type'))
 			{
-				$options = array();
+				$options = array(''=>'--');
 				$pts = $rpts->get_page_types();
 				$deprecated_mods = $this->_get_deprecated_modules();
 					
@@ -227,13 +229,14 @@ class MinisitePageManager extends parent_childManager
 					}
 
 				}
-				$this->change_element_type( 'custom_page' , 'select' , array( 'options' => $options ) );
+				ksort($options);
+				$primary = $this->get_element_property('custom_page', 'options');
+				if(!empty($primary))
+					$this->change_element_type( 'custom_page' , 'radio_with_other_no_sort' , array( 'options' => $primary, 'other_options' => $options ) );
+				else
+					$this->change_element_type('custom_page' , 'select_no_sort', array( 'options' => $options ));
 				$this->set_comments( 'custom_page', form_comment('<a href="'.REASON_HTTP_BASE_PATH.'scripts/page_types/view_page_type_info.php">Page type definitions</a>.') );
 
-			}
-			else
-			{
-				$this->alter_page_type_section();
 			}
 			
 			$page_type_for_note = $this->get_value('custom_page') ? $this->get_value('custom_page') : 'default';
@@ -353,11 +356,14 @@ class MinisitePageManager extends parent_childManager
 		
 		if ( !$this->get_value('custom_page') ) $this->set_value( 'custom_page', 'default' ); // set as default if no value
 		
-		if ( array_key_exists($this->get_value('custom_page'),$basic_options ) )
+		if ( array_key_exists($this->get_value('custom_page'),$basic_options ) || reason_user_has_privs( $this->admin_page->user_id, 'assign_any_page_type') )
 		{
 			$this->change_element_type( 'custom_page' , 'radio_no_sort' , array( 'options' => $basic_options ) );
 		}
-		else $this->change_element_type( 'custom_page', 'solidtext' );	
+		else 
+		{
+			$this->change_element_type( 'custom_page', 'solidtext' );
+		}
 	}
 	
 	function alter_tree_list( $list, $parent_id )
