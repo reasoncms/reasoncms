@@ -538,6 +538,29 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'sidebar_5' => get_luther_related_publication(3),
 		'post_sidebar' => 'luther_flickr_slideshow',
 	),
+	'luther2010_landing_feature_form' => array(
+		'main_head' => array(
+			'module' => 'feature/feature',
+			'shuffle' => false,
+			'autoplay_timer' => 12,
+			'width'=>716,
+			'height'=>288
+		),
+		'main_head_5' => 'form',
+		'main' => 'form_content',
+		'main_2' => '',
+		'main_3' => '',
+		'main_4' => '',
+		'main_post' => get_luther_headlines(3),
+		'main_post_2' => '',
+		'pre_sidebar' => 'main_blurb',
+		'pre_sidebar_2' => get_luther_spotlight(),
+		'pre_sidebar_3' => '',
+		'sidebar_2' => '',
+		'sidebar_3' => 'luther_events_mini',
+		'sidebar_5' => get_luther_related_publication(3),
+		'post_sidebar' => 'luther_flickr_slideshow',
+	),
 	'luther2010_landing_feature_publication' => array(
 			'main_head' => array(
 					'module' => 'feature/feature',
