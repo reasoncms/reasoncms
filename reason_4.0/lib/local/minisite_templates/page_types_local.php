@@ -1497,6 +1497,7 @@ function luther_get_publication_unique_name($s)
 // e.g. /reslife becomes "headlines_reslife" or "spotlights_reslife"
 {
 	$url = get_current_url();
+	$url = preg_replace("|\-|", "", $url);   // remove hypens
 	if (preg_match("/^https?:\/\/[A-Za-z0-9_\.]+\/([A-Za-z0-9_]+)\/?/", $url, $matches))
 	{
 		return $s . "_" . $matches[1];
@@ -1510,7 +1511,8 @@ function luther_sports_get_publication_unique_name($s)
 // $s is either "headlines" or "spotlights"
 // e.g. /sports/men/football becomes "headlines_football_men" or "spotlights_football_men"
 {
-	$url = get_current_url();
+	$url = get_current_url();	
+	$url = preg_replace("|\-|", "", $url);   // remove hypens
 	if (preg_match("/sports\/?$/", $url))
 	{
 		return $s . "_sports";
