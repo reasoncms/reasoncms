@@ -997,13 +997,13 @@ function luther2010_global_navigation()
 	echo '<ul>'."\n";
 	echo '<li class="admissions"><a href="/admissions">Admissions</a></li>'."\n";
 	echo '<li class="academics"><a href="/academics">Academics</a></li>'."\n";
-	echo '<li class="library-Technology"><a href="/lis">Library & Technology</a></li>'."\n";
+	echo '<li class="connect"><a href="/connect">Connect</a></li>'."\n";
 	echo '<li class="student-life"><a href="/studentlife">Student Life</a></li>'."\n";
 	echo '<li class="athletics"><a href="/sports">Athletics</a></li>'."\n";
 	echo '<li class="music"><a href="/music">Music</a></li>'."\n";
 	echo '<li class="giving"><a href="/giving">Giving</a></li>'."\n";
 	echo '<li class="decorah"><a href="/decorah">Decorah</a></li>'."\n";
-	echo '<li class="about-luther"><a href="/about">About Luther</a></li></ul>'."\n";
+	echo '<li class="about"><a href="/about">About</a></li></ul>'."\n";
 }
 
 function luther_google_search()
