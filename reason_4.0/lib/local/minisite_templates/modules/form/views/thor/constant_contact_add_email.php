@@ -76,8 +76,25 @@ class ConstantContactAddEmail extends DefaultThorForm
 
     function run_error_checks()
     {
-        $email = $this->get_value_from_label('Email');
-        if (!$this->valid_email())
+    	$url = get_current_url();
+    	$email = $this->get_value_from_label('Email');
+    	
+    	$keepintouch = $this->get_value_from_label('<strong>Keep in Touch</strong>');
+    	$lifeatluther = $this->get_value_from_label('<strong>Life at Luther</strong>');
+    	$norseathletics = $this->get_value_from_label('<strong>Norse Athletics</strong> (Intro to season, recap of season & team highlights)');
+    	
+    	if (!($keepintouch || $lifeatluther || $norseathletics))
+    	{
+    		$this->set_error($this->get_element_name_from_label('<strong>Keep in Touch</strong>'), 'Check at least one of the newsletters below.');
+    		$this->set_error($this->get_element_name_from_label('<strong>Life at Luther</strong>'), 'Check at least one of the newsletters below.');
+    		$this->set_error($this->get_element_name_from_label('<strong>Norse Athletics</strong> (Intro to season, recap of season & team highlights)'), 'Check at least one of the newsletters below.');
+    	}
+        
+    	if (empty($email))
+    	{
+    		$this->set_error($this->get_element_name_from_label('Email'), 'Email can\'t be blank.');
+    	}
+        else if (!$this->valid_email($email))
         {
             $this->set_error($this->get_element_name_from_label('Email'), 'Invalid email.');
         }
@@ -104,10 +121,13 @@ class ConstantContactAddEmail extends DefaultThorForm
     	}
     }
     
-    function valid_email()
-    //TODO: add email check
+    function valid_email($email)
     {
-    	return true;
+    	if (preg_match("/@/", $email))
+    	{
+    		return true;
+    	}
+    	return false;
     }
 
 }
