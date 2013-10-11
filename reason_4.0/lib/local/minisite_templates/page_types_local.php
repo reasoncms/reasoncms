@@ -538,6 +538,29 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'sidebar_5' => get_luther_related_publication(3),
 		'post_sidebar' => 'luther_flickr_slideshow',
 	),
+	'luther2010_landing_feature_form' => array(
+		'main_head' => array(
+			'module' => 'feature/feature',
+			'shuffle' => false,
+			'autoplay_timer' => 12,
+			'width'=>716,
+			'height'=>288
+		),
+		'main_head_5' => 'form',
+		'main' => 'form_content',
+		'main_2' => '',
+		'main_3' => '',
+		'main_4' => '',
+		'main_post' => get_luther_headlines(3),
+		'main_post_2' => '',
+		'pre_sidebar' => 'main_blurb',
+		'pre_sidebar_2' => get_luther_spotlight(),
+		'pre_sidebar_3' => '',
+		'sidebar_2' => '',
+		'sidebar_3' => 'luther_events_mini',
+		'sidebar_5' => get_luther_related_publication(3),
+		'post_sidebar' => 'luther_flickr_slideshow',
+	),
 	'luther2010_landing_feature_publication' => array(
 			'main_head' => array(
 					'module' => 'feature/feature',
@@ -974,13 +997,13 @@ function luther2010_global_navigation()
 	echo '<ul>'."\n";
 	echo '<li class="admissions"><a href="/admissions">Admissions</a></li>'."\n";
 	echo '<li class="academics"><a href="/academics">Academics</a></li>'."\n";
-	echo '<li class="library-Technology"><a href="/lis">Library & Technology</a></li>'."\n";
+	echo '<li class="connect"><a href="/connect">Connect</a></li>'."\n";
 	echo '<li class="student-life"><a href="/studentlife">Student Life</a></li>'."\n";
 	echo '<li class="athletics"><a href="/sports">Athletics</a></li>'."\n";
 	echo '<li class="music"><a href="/music">Music</a></li>'."\n";
 	echo '<li class="giving"><a href="/giving">Giving</a></li>'."\n";
 	echo '<li class="decorah"><a href="/decorah">Decorah</a></li>'."\n";
-	echo '<li class="about-luther"><a href="/about">About Luther</a></li></ul>'."\n";
+	echo '<li class="about"><a href="/about">About</a></li></ul>'."\n";
 }
 
 function luther_google_search()
@@ -1474,6 +1497,7 @@ function luther_get_publication_unique_name($s)
 // e.g. /reslife becomes "headlines_reslife" or "spotlights_reslife"
 {
 	$url = get_current_url();
+	$url = preg_replace("|\-|", "", $url);   // remove hypens
 	if (preg_match("/^https?:\/\/[A-Za-z0-9_\.]+\/([A-Za-z0-9_]+)\/?/", $url, $matches))
 	{
 		return $s . "_" . $matches[1];
@@ -1487,7 +1511,8 @@ function luther_sports_get_publication_unique_name($s)
 // $s is either "headlines" or "spotlights"
 // e.g. /sports/men/football becomes "headlines_football_men" or "spotlights_football_men"
 {
-	$url = get_current_url();
+	$url = get_current_url();	
+	$url = preg_replace("|\-|", "", $url);   // remove hypens
 	if (preg_match("/sports\/?$/", $url))
 	{
 		return $s . "_sports";
