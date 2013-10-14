@@ -371,17 +371,6 @@ class mediaUploadModule extends DefaultMinisiteModule
 		
 		$media_work_id = $this->_create_media_entity($disco);
 					
-		$categories = array($this->cur_page->get_value('name'));
-		if(!empty($this->params['entries_gallery_page']))
-		{
-			if(reason_unique_name_exists($this->params['entries_gallery_page']))
-			{
-				$page_id = id_of($this->params['entries_gallery_page']);
-				$page = new entity($page_id);
-				$categories = array($page->get_value('name'));
-			}				
-		}
-					
 		if ($disco->get_value('av_type') == 'Video')
 		{
 			$this->_entry = $this->shim->upload_video($this->_filepath, new entity($this->_media_work_id), $username, $at_remote_url);
@@ -459,12 +448,29 @@ class mediaUploadModule extends DefaultMinisiteModule
 		//$this->set_form_id($id);
 		
 		$page_id = $this->page_id;
+		
 		if(!empty($this->params['entries_gallery_page']))
 		{
-			if(reason_unique_name_exists($this->params['entries_gallery_page']))
+			if('parent' == $this->params['entries_gallery_page'])
+			{
+				if($pages =& $this->get_page_nav())
+				{
+					if($parent_page_id = $pages->parent($this->page_id))
+						$page_id = $parent_page_id;
+					else
+						trigger_error('Unable to find parent page. Attaching photos to form page.');
+				}
+				else
+					trigger_error('Unable to find page tree. Attaching photos to form page.');
+			}
+			elseif(reason_unique_name_exists($this->params['entries_gallery_page']))
+			{
 				$page_id = id_of($this->params['entries_gallery_page']);
+			}			
 			else
+			{
 				trigger_error('Unable to find uniquely named page '.$this->params['entries_gallery_page'].'. Attaching photos to form page.');
+			}
 		}
 		create_relationship( $page_id, $id, relationship_id_of('minisite_page_to_av'));
 		
