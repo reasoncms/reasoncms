@@ -329,7 +329,16 @@ class LutherTemplate2010 extends MinisiteTemplate
 		}
 		if ($this->has_content( 'pre_sidebar_2' ))
 		{
+			if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_news_portal')
+			{
+				echo '<aside class="news group">'."\n";
+				echo '<header class="blue-stripe"><h1><span>Luther News</span></h1></header>'."\n";
+			}
 			$this->run_section( 'pre_sidebar_2' );
+			if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_news_portal')
+			{
+				echo '</aside> <!-- class="news group" -->'."\n";
+			}
 			echo '<hr>'."\n";
 		}
 		if ($this->has_content( 'pre_sidebar_3' ))
@@ -417,6 +426,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature_form'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature_publication'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature_sidebar_news'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_news_portal'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music')
 			{
 				echo '<aside class="news group">'."\n";
@@ -439,6 +449,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature_form'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature_publication'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature_sidebar_news'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_news_portal'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music')
 			{
 				echo '</aside> <!-- class="news group" -->'."\n";
@@ -576,6 +587,10 @@ class LutherTemplate2010 extends MinisiteTemplate
 		if ($this->has_content( 'main_post' ))
 		{
 			echo '<div class="contentPost">'."\n";
+			if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_news_portal')
+			{
+				echo '<header class="blue-stripe"><h1><span>Academic Blog</span></h1></header>'."\n";
+			}
 			$this->run_section( 'main_post' );
 			echo '</div>'."\n";
 		}

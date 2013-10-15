@@ -40,7 +40,14 @@ class RelatedListMarkupGenerator extends PublicationMarkupGenerator
 		{
 			$markup_string .= '<nav class="button view-all">'."\n";
 			$markup_string .= '<ul>'."\n";
-			$markup_string .= '<li><a href="'.$url.'">View all news &gt;</a></li>'."\n";
+			if (preg_match('/headlines/', $url) === 1)
+			{
+				$markup_string .= '<li><a href="'.$url.'">View all news &gt;</a></li>'."\n";
+			}
+			else
+			{
+				$markup_string .= '<li><a href="'.$url.'">View all &gt;</a></li>'."\n";
+			}
 			$markup_string .= '</ul>'."\n";
 			$markup_string .= '</nav>'."\n";
 		}

@@ -629,6 +629,48 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'sidebar_2' => '',
 		'sidebar_5' => get_luther_related_publication(3),
 	),
+	'luther2010_news_portal' => array(
+		'main_head' => array(
+			'module' => 'feature/feature',
+			'shuffle' => false,
+			'autoplay_timer' => 12,
+			'width'=>716,
+			'height'=>288
+		),
+		'main_head_4' => '',
+		'main_head_5' => '',
+		'main_2' => '',
+		'main_3' => '',
+		'main_4' => '',
+		'main_post' => array(
+			'module' => 'publication',
+			'related_publication_unique_names' => array('ideascreations'),
+			'related_mode' => true,
+			'related_title' => '',
+			'max_num_items' => 7,
+		),
+		'main_post_2' => '',
+		'pre_sidebar' => 'twitter',
+		'pre_sidebar_2' => array(
+			'module' => 'publication',
+			'related_publication_unique_names' => array('headlinesarchive'),
+			'markup_generator_info' => array(
+				'list_item' => array(
+					'classname' => 'MinimalListItemMarkupGenerator',
+					'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/minimal.php',
+				)
+			),
+			'related_mode' => true,
+			'related_title' => '',
+			'max_num_items' => 5,
+		),
+		'sidebar_2' => '',
+		'sidebar_3' => 'luther_events_mini',
+		'sidebar_4' => '',
+		'sidebar_5' => get_luther_related_publication(3),
+		'post_sidebar' => get_luther_spotlight(),
+		'post_sidebar_2' => 'main_blurb',
+	),
 	'luther2010_public_information' => array(
 		'main_head' => 'luther_carousel',
 		'main_head_5' => '',
