@@ -22,7 +22,6 @@ class LutherTemplate2010 extends MinisiteTemplate
 	// reorder sections so that navigation is first instead of last
 	var $sections = array('navigation'=>'show_navbar','content'=>'show_main_content','related'=>'show_sidebar');
 	var $doctype = '<!DOCTYPE html>';
-	public $luther_add_this_complete = false;
 	var $include_modules_css = false;
 	var $nav_class = 'NoRootNavigation'; 
 	
