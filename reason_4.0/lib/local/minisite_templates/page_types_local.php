@@ -664,6 +664,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'related_title' => '',
 			'max_num_items' => 5,
 		),
+		'pre_sidebar_3' => '',
 		'sidebar_2' => '',
 		'sidebar_3' => 'luther_events_mini',
 		'sidebar_4' => '',
