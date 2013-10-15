@@ -76,8 +76,6 @@ class EventsInstancewideModule extends LutherEventsModule
 				$ret .= '<a href="'.$this->construct_link(array('category'=>$cat->id(),'view'=>'','no_search'=>'1')).'" title="'.reason_htmlspecialchars(strip_tags($cat->get_value('name'))).' events">'.$cat->get_value('name').'</a>';
 			$ret .= '</li>';
 		}
-		
-		$ret .= '<li></li>';
 		$ret .= '</ul>'."\n";
 		$ret .= '</div>'."\n";
 		return $ret;

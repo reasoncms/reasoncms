@@ -47,7 +47,7 @@ $GLOBALS[ '_DEVELOPER_INFO' ] = array(
 $GLOBALS[ '_DEVELOPER_INFO' ] = array(
 	'steve' => array(
 		'email' => 'steve.smith@luther.edu', //error alerts are sent to these emails
-		'ip' => array( '127.0.0.1', '10.22.40.234', '172.26.46.245' ),
+		'ip' => array( '127.0.0.1', '10.22.42.1', '10.27.6.226' ),
 		'pager' => 'steve.smith@luther.edu', '563-419-1556'  //emergency error alerts are sent to pagers, if specified
 	),
 );
