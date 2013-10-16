@@ -668,7 +668,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'sidebar_2' => '',
 		'sidebar_3' => 'luther_events_mini',
 		'sidebar_4' => '',
-		'sidebar_5' => get_luther_related_publication(3),
+		'sidebar_5' => get_luther_related_publication(5),
 		'post_sidebar' => get_luther_spotlight(),
 		'post_sidebar_2' => 'main_blurb',
 	),
