@@ -588,7 +588,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 			echo '<div class="contentPost">'."\n";
 			if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_news_portal')
 			{
-				echo '<header class="blue-stripe"><h1><span>Academic Blog</span></h1></header>'."\n";
+				echo '<header class="blue-stripe"><h1><span>Ideas and Creations</span></h1></header>'."\n";
 			}
 			$this->run_section( 'main_post' );
 			echo '</div>'."\n";
