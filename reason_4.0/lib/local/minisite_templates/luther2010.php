@@ -556,8 +556,16 @@ class LutherTemplate2010 extends MinisiteTemplate
 			$this->run_section( 'main_head_4' );			
 		}
 		if ($this->has_content( 'main_head_5' ))
-		{			
-			$this->run_section( 'main_head_5' );			
+		{
+			if ($this->site_id == id_of('connect'))
+			{
+				echo '<div class="callout">'."\n";
+			}			
+			$this->run_section( 'main_head_5' );
+			if ($this->site_id == id_of('connect'))
+			{
+				echo '</div>'."\n";
+			}			
 		}
 
 		if ($this->has_content( 'main' ))
