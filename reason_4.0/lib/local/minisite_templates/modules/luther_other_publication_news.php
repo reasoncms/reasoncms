@@ -114,7 +114,7 @@ class LutherOtherPublicationNewsModule extends OtherPublicationNewsModule
 			
 			echo '<nav class="button view-all">'."\n";
 			echo '<ul>'."\n";
-			echo '<li><a href="/headlines">View all news &gt;</a></li>'."\n";
+			echo '<li><a href="/news">View all news &gt;</a></li>'."\n";
 			echo '</ul>'."\n";
 			echo '</nav>'."\n";
 		}

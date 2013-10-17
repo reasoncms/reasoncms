@@ -363,7 +363,8 @@ class LutherTemplate2010 extends MinisiteTemplate
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature_form'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature_publication'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature_sidebar_news'
-				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music')
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_news_portal')
 			{
 				echo '<aside class="news group">'."\n";
 				echo '<header class="blue-stripe"><h1><span>Featured Video</span></h1></header>'."\n";
