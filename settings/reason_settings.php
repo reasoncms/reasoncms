@@ -88,7 +88,7 @@
 	 * will be unable to access the administrative interface, and modules should restrict
 	 * database writes / updates.
 	 */
-	define( 'REASON_MAINTENANCE_MODE', false ); 
+	define( 'REASON_MAINTENANCE_MODE', true ); 
 	
 	/**
 	 * REASON_DEFAULT_TIMEZONE
@@ -107,7 +107,7 @@
 	 * true = shut down -- people cannot log in
 	 * Boolean (e.g. true, false -- no quotes)
 	 */
-	define('DISABLE_REASON_LOGIN', false);
+	define('DISABLE_REASON_LOGIN', true);
 	
 	/**
 	 * DISABLE_REASON_ADMINISTRATIVE_INTERFACE
@@ -116,7 +116,7 @@
 	 * true = shut down -- people cannot use the administrative interface
 	 * Boolean (e.g. true, false -- no quotes)
 	 */
-	define('DISABLE_REASON_ADMINISTRATIVE_INTERFACE', false);
+	define('DISABLE_REASON_ADMINISTRATIVE_INTERFACE', true);
 	
 	/**
 	 * ADMIN_NOTIFICATIONS_EMAIL_ADDRESSES
