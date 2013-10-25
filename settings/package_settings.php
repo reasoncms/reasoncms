@@ -44,7 +44,7 @@ switch ($_SERVER['SERVER_NAME']) {
     case 'reasondev.luther.edu':
         domain_define( 'DB_CREDENTIALS_FILEPATH', SETTINGS_INC. 'dbs.reasondev.xml' );
         break; 
-    case 'reasondev2.luther.edu':
+    case 'smitst01.reasondev.luther.edu':
         domain_define( 'DB_CREDENTIALS_FILEPATH', SETTINGS_INC. 'dbs.reasondev.xml' );
         break; 
     default:
