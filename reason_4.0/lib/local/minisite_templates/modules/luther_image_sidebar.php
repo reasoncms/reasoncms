@@ -86,6 +86,13 @@
 						$url = WEB_PHOTOSTOCK . $id . '.' . $image->get_value('image_type');
 						$thumb = WEB_PHOTOSTOCK . $id . '_tn.' . $image->get_value('image_type');
 						$orig = WEB_PHOTOSTOCK . $id . '_orig.' . $image->get_value('image_type');
+						// if images not found locally try pulling from www
+						if (!file_exists($url))
+						{
+							$url = "http://www.luther.edu" . $url;
+							$thumb = "http://www.luther.edu" . $thumb;
+							$orig = "http://www.luther.edu" . $orig;
+						}
 						$d = max($image->get_value('width'), $image->get_value('height')) / 125.0;
 						
 						if (preg_match("/hide_caption/", $image->get_value('keywords')))

@@ -47,6 +47,11 @@
 				{
 					$bn = $_SERVER['REQUEST_URI'] . "banner_" . strtolower(preg_replace('|[\'\"]|', '', preg_replace('| |', '_', $image->get_value('name'))));
 					$url = WEB_PHOTOSTOCK . $id . '.' . $image->get_value('image_type');
+					// if images not found locally try pulling from www
+					if (!file_exists($url))
+					{
+						$url = "http://www.luther.edu" . $url;
+					}
 					if ($theme->get_value( 'name' ) == 'luther2010')
 					{
 						echo '<li>'."\n";
