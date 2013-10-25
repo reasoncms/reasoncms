@@ -308,7 +308,7 @@ class MinisitePageManager extends parent_childManager
 	{
 		foreach($this->build_path_map($parents) as $id=>$path)
 		{
-			$this->add_element('path_to_'.$id, 'hidden');
+			$this->add_element('path_to_'.$id, 'protected');
 			$this->set_value('path_to_'.$id, $path);
 		}
 	}
@@ -320,8 +320,8 @@ class MinisitePageManager extends parent_childManager
 	function alter_page_type_section()
 	{
 		$basic_options = array( 
-			"default" => "Normal Page",
-			"gallery" => 'Photo Gallery <span class="smallText">(Shows associated images in a gallery format)</span>',
+			'default' => 'Normal Page',
+			'gallery' => 'Photo Gallery <span class="smallText">(Shows associated images in a gallery format)</span>',
 			'show_children' => 'Shows children <span class="smallText">(Shows child pages in a list with their descriptions. Note: this includes pages not shown in navigation.)</span>',
 			'show_siblings' => 'Shows siblings <span class="smallText">(Shows this page\'s sibling pages after the content of the page. Note: this includes pages not shown in navigation.)</span>',
 		);
