@@ -89,12 +89,12 @@ switch ($_SERVER['SERVER_NAME']) {
     case 'reasondev.luther.edu':
         domain_define( 'HTTPS_AVAILABLE', true );
         break; 
-    case 'reasondev2.luther.edu':
-        domain_define( 'HTTPS_AVAILABLE', true );
-        break; 
     default:
-        domain_define( 'HTTPS_AVAILABLE', false );
-        break;
+        if (preg_match('.reasondev.luther.edu', $_SERVER['SERVER_NAME'])){
+            domain_define('HTTPS_AVAILABLE', true);
+        } else {
+            domain_define('HTTPS_AVAILABLE', false);
+        }
 }
 
 /**
