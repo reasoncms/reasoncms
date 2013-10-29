@@ -175,7 +175,7 @@
 	        define('REASON_HOST_HAS_VALID_SSL_CERTIFICATE', true);
 	        break; 
 	    default:
-	    	if (preg_match('\.reasondev\.luther\.edu', $_SERVER['SERVER_NAME'])){
+	    	if (preg_match('/\.reasondev\.luther\.edu/', $_SERVER['SERVER_NAME'])){
 	    		define('REASON_HOST_HAS_VALID_SSL_CERTIFICATE', true);
 	    	} else {
 	        	define('REASON_HOST_HAS_VALID_SSL_CERTIFICATE', false);
