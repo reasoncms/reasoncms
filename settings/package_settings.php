@@ -90,7 +90,7 @@ switch ($_SERVER['SERVER_NAME']) {
         domain_define( 'HTTPS_AVAILABLE', true );
         break; 
     default:
-        if (preg_match('.reasondev.luther.edu', $_SERVER['SERVER_NAME'])){
+        if (preg_match('\.reasondev\.luther\.edu', $_SERVER['SERVER_NAME'])){
             domain_define('HTTPS_AVAILABLE', true);
         } else {
             domain_define('HTTPS_AVAILABLE', false);
