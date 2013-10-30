@@ -924,6 +924,8 @@ class PublicationModule extends Generic3Module
 						$this->_add_crumb( $section->get_value( 'name' ), $this->get_link_to_section($section) );
 					}
 				}
+				$this->item_specific_variables_to_pass['next_post'] = 'get_next_post';
+				$this->item_specific_variables_to_pass['previous_post'] = 'get_previous_post';
 				return true;
 			}
 			elseif (!empty($all_issue_keys) && in_array($requested_issue, $all_issue_keys))
