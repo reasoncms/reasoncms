@@ -3,7 +3,7 @@
 <databases>
     <database>
         <connection_name>reason_connection</connection_name>
-        <db>reasondev_jonebr01</db>
+        <db>reasondev_jonebr01_reason</db>
         <user>reasondev_jonebr01_user</user>
         <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>
