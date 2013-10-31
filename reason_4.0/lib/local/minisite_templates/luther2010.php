@@ -801,6 +801,10 @@ class LutherTemplate2010 extends MinisiteTemplate
 		{
 			return '<body class="style-one-column ' . $s . '">'."\n";
 		}
+		elseif ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_single_column')
+		{
+			return '<body class="style-landing-single-column ' . $s . '">'."\n";
+		}
 		elseif ($this->cur_page->get_value( 'custom_page' ) == 'search_results')
 		{
 			return '<body class="style-search-results ' . $s . '">' ."\n"; 

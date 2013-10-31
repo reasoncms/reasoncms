@@ -39,6 +39,11 @@
 				if (preg_match("/imagetop/", $image->get_value('keywords')))
 				{
 					$url = WEB_PHOTOSTOCK . $id . '.' . $image->get_value('image_type');
+					// if images not found locally try pulling from www
+					if (!file_exists($url))
+					{
+						$url = "http://www.luther.edu" . $url;
+					}
 					if ($i <= 6)
 					{
 						if ($i == 1)

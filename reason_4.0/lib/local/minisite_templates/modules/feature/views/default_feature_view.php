@@ -353,6 +353,11 @@ class DefaultFeatureView extends FeatureView
 		if($view_data['current_object_type']=='img')
 		{
 			$img_url=$view_data['feature_image_url'][$view_data['current_image_index']];
+			// if images not found locally try pulling from www
+			if (!file_exists($img_url))
+			{
+				$img_url = "http://www.luther.edu" . $img_url;
+			}
 			$img_alt=$view_data['feature_image_alt'][$view_data['current_image_index']];
 			if($img_url!="none")
 			{
