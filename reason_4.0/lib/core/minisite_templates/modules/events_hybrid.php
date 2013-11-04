@@ -25,9 +25,13 @@
  */
 class EventsHybridModule extends EventsModule
 {
-	var $show_calendar_grid = false;
-	var $show_views = false;
+	var $default_list_markup = 'minisite_templates/modules/events_markup/hybrid/hybrid_events_list.php';
+	var $default_list_chrome_markup = 'minisite_templates/modules/events_markup/hybrid/hybrid_events_list_chrome.php';
 	
+	/* function handle_params( $params )
+	{
+		return parent::handle_params();
+	} */
 	function make_reason_calendar_init_array($start_date, $end_date = '', $view = '')
 	{
 		$array = parent::make_reason_calendar_init_array($start_date, $end_date, $view);
@@ -35,6 +39,7 @@ class EventsHybridModule extends EventsModule
 		$array['view'] = 'all';
 		return $array;
 	}
+	/*
 	function list_events()
 	{
 		$msg = '';
@@ -112,6 +117,7 @@ class EventsHybridModule extends EventsModule
 		$this->show_feed_link();
 		echo '</div>'."\n";
 	}
+	*/
 	function get_ongoing_event_ids($ongoing_display = '')
 	{
 		if(empty($ongoing_display))
