@@ -1744,7 +1744,7 @@ class EventsModule extends DefaultMinisiteModule
 			$name = strip_tags($e->get_value('name'));
 			$ret .= '<li class="categories first">';
 			$ret .= '<h4>Events in category: '.$name.'</h4>'."\n";
-			$ret .= '<a href="'.$this->construct_link(array('category'=>'','view'=>'')).'" class="clear">See all categories (clear <em>&quot;'.htmlspecialchars($name).'&quot;</em>)</a>';
+			$ret .= '<a href="'.$this->construct_link(array('category'=>'','view'=>'')).'" class="clear">See all categories (clear <em>&quot;'.$name.'&quot;</em>)</a>';
 			$ret .= '</li>';
 		}
 		return $ret;
@@ -1770,7 +1770,7 @@ class EventsModule extends DefaultMinisiteModule
 				$ret .= 'Events ';
 			$name = strip_tags($e->get_value('name'));
 			$ret .= 'for '.$name.'</h4>'."\n";
-			$ret .= '<a href="'.$this->construct_link(array('audience'=>'','view'=>'')).'" class="clear">See events for all groups (clear <em>&quot;'.htmlspecialchars($name).'&quot;</em>)</a>';
+			$ret .= '<a href="'.$this->construct_link(array('audience'=>'','view'=>'')).'" class="clear">See events for all groups (clear <em>&quot;'.$name.'&quot;</em>)</a>';
 			$ret .= '</li>';
 		}
 		return $ret;
