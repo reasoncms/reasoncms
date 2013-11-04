@@ -55,8 +55,8 @@ class defaultEventsListItemMarkup implements eventsListItemMarkup
 		}
 		$ret = '';
 		$link = '';
-		$link = $this->bundle->event_link($event->id(), $day);
-		$ret .= $this->bundle->teaser_image( $event->id(), $link );
+		$link = $this->bundle->event_link($event, $day);
+		$ret .= $this->bundle->teaser_image( $event, $link );
 		if($time && 'all_day' != $time)
 			$ret .= prettify_mysql_datetime($event->get_value('datetime'), 'g:i a') . ' - ';
 		$name = $event->get_value('name');

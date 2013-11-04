@@ -55,8 +55,8 @@ class verboseEventsListItemMarkup implements eventsListItemMarkup
 		}
 		$ret = '';
 		$link = '';
-		$link = $this->bundle->event_link($event->id(), $day);
-		$ret .= $this->bundle->teaser_image( $event->id(), $link );
+		$link = $this->bundle->event_link($event, $day);
+		$ret .= $this->bundle->teaser_image( $event, $link );
 		$name = $event->get_value('name');
 		if(!empty($link))
 			$name = '<a href="'.$link.'">'.$name.'</a>';
