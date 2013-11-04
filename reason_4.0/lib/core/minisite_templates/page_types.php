@@ -740,12 +740,16 @@
 			'sidebar' => '',
 		),
 		'event_slot_registration' => array(
-			'main_post' => 'event_slot_registration',
+			'main_post' => array(
+				'module' => 'events',
+				'list_item_markup' => 'minisite_templates/modules/events_markup/verbose/verbose_events_list_item.php',
+			),
 			'sidebar' => '',
 		),
 		'event_slot_registration_cache_1_hour' => array(
 			'main_post' => array(
-				'module' => 'event_slot_registration',
+				'module' => 'events',
+				'list_item_markup' => 'minisite_templates/modules/events_markup/verbose/verbose_events_list_item.php',
 				'cache_lifespan' => '3600',
 				'cache_lifespan_meta' => '7400',
 			),
@@ -818,14 +822,14 @@
 		'events_hybrid_verbose' => array(
 			'main_post' => array(
 				'module'=>'events_hybrid',
-				'list_type'=>'verbose',
+				'list_item_markup' => 'minisite_templates/modules/events_markup/verbose/verbose_events_list_item.php',
 			),
 			'sidebar' => '',
 		),
 		'events_archive_verbose' => array(
 			'main_post' => array(
 				'module'=>'events_archive',
-				'list_type'=>'verbose',
+				'list_item_markup' => 'minisite_templates/modules/events_markup/verbose/verbose_events_list_item.php',
 			),
 			'sidebar' => '',
 		),
@@ -899,15 +903,25 @@
 			'sidebar' => '',
 		),
 		'events_verbose' => array(
-			'main_post' => 'events_verbose',
+			'main_post' => array(
+				'module' => 'events',
+				'list_item_markup' => 'minisite_templates/modules/events_markup/verbose/verbose_events_list_item.php',
+			),
 			'sidebar' => '',
 		),	
 		'events_schedule' => array(
-			'main_post' => 'events_schedule',
+			'main_post' => array(
+				'module' => 'events',
+				'list_markup' => 'minisite_templates/modules/events_markup/schedule/schedule_events_list.php',
+				'list_item_markup' => 'minisite_templates/modules/events_markup/schedule/schedule_events_list_item.php',
+			),
 			'sidebar' => '',
 		),	
 		'events_verbose_nonav' => array(
-			'main_post' => 'events_verbose',
+			'main_post' => array(
+				'module' => 'events',
+				'list_item_markup' => 'minisite_templates/modules/events_markup/verbose/verbose_events_list_item.php',
+			),
 			'navigation' => '',
 			'sub_nav_2' => '',
 			'sub_nav' => '',
