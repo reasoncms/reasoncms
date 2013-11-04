@@ -3479,6 +3479,7 @@ class EventsModule extends DefaultMinisiteModule
 			$bundle->set_function('is_all_day_event', array($this, 'event_is_all_day_event'));
 			$bundle->set_function('map_zoom_level', array($this, 'get_map_zoom_level'));
 			$bundle->set_function('registration_markup', array($this, 'get_registration_slots_markup'));
+			$bundle->set_function('prettify_duration', array($this, 'prettify_duration'));
 			$this->modify_item_function_bundle($bundle);
 			$markup->set_bundle($bundle);
 			echo $markup->get_markup($e);
