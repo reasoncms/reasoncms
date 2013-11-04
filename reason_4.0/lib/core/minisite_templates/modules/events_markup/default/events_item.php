@@ -55,8 +55,8 @@ class defaultEventsItemMarkup implements eventsItemMarkup
 		if ($event->get_value('description'))
 			$ret .= '<p class="description">'.$event->get_value( 'description' ).'</p>'."\n";
 		$ret .= $this->get_repetition_info_markup($event);
-		if (!empty($this->request_date) && strstr($event->get_value('dates'), $this->request_date))
-			$ret .= '<p class="date"><strong>Date:</strong> '.prettify_mysql_datetime( $this->request_date, "l, F jS, Y" ).'</p>'."\n";
+		if ($this->bundle->request_date() && strstr($event->get_value('dates'), $this->bundle->request_date()))
+			$ret .= '<p class="date"><strong>Date:</strong> '.prettify_mysql_datetime( $this->bundle->request_date(), "l, F jS, Y" ).'</p>'."\n";
 		if(!$this->bundle->is_all_day_event($event))
 			$ret .= '<p class="time"><strong>Time:</strong> '.prettify_mysql_datetime( $event->get_value( 'datetime' ), "g:i a" ).'</p>'."\n";
 		if ($event->get_value( 'hours' ) || $event->get_value( 'minutes' ))
@@ -305,7 +305,7 @@ class defaultEventsItemMarkup implements eventsItemMarkup
 		if($ical_link = $this->bundle->ical_link($event))
 		{
 			echo '<div class="export">'."\n";
-			if($event->get_value('recurrence') == 'none' || empty($this->request_date))
+			if($event->get_value('recurrence') == 'none' || !$this->bundle->request_date() )
 			{
 				$ret .= '<a href="'.$ical_link.'">Import into your calendar program</a>';
 			}
@@ -331,7 +331,7 @@ class defaultEventsItemMarkup implements eventsItemMarkup
 	{
 		$ret = '';
 		$dates = explode(', ', $event->get_value('dates'));
-		if(count($dates) > 1 || empty($this->request_date) || !strstr($event->get_value('dates'), $this->request_date))
+		if(count($dates) > 1 || !$this->bundle->request_date() || !strstr($event->get_value('dates'), $this->bundle->request_date()))
 		{
 			$ret .= '<div class="dates"><h4>This event occurs on:</h4>'."\n";
 			$ret .= '<ul>'."\n";
