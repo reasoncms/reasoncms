@@ -115,6 +115,11 @@ class miniEventsModule extends EventsModule
 			echo '<div class="eventsNoContentMessage">'.$msg.'</div>'."\n";
 		}
 	}
+	function display_list_title()
+	{
+		echo '<h3><a href="'.$this->events_page_url.'">'.$this->_get_list_title().'</a></h3>'."\n";
+	}
+
 	function _get_list_title()
 	{
 		if(!empty($this->params['title']))
