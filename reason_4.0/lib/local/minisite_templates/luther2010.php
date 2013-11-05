@@ -732,7 +732,11 @@ class LutherTemplate2010 extends MinisiteTemplate
 		echo '<meta property="og:phone_number" content="563-387-2000"/>'."\n";
 
 		echo '<link rel="icon" href="/favicon.ico" type="image/x-icon">'."\n";
-		echo '<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">'."\n"; 
+		echo '<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">'."\n";
+		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_single_column')
+		{
+			echo '<meta name="viewport" content="width=device-width, initial-scale=1">'."\n";
+		}
 		$this->head_items->add_javascript('/javascripts/highslide/highslide-full.js' );
 		$this->head_items->add_javascript('/javascripts/highslide/highslide-overrides.js' );
 		$this->head_items->add_javascript('//ajax.googleapis.com/ajax/libs/swfobject/2.1/swfobject.js');
