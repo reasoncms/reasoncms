@@ -4,7 +4,7 @@
  * @subpackage classes
  */
 /**
- * A tool for wrapping up a set of functions into a single package
+ * A tool for dynamically wrapping up a set of functions into a single package
  *
  * Use:
  *
