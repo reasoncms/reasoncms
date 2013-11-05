@@ -312,9 +312,9 @@ class defaultEventsItemMarkup implements eventsItemMarkup
 			else
 			{
 				$ret .= 'Add to your calendar: ';
-				if($event->get_value('_ical_link_this_occurrence'))
+				if($item_ical_link = $this->bundle->ical_link($event, false))
 				{
-					$ret .= '<a href="'.$this->bundle->ical_link($event, false).'">This occurrence</a> | ';
+					$ret .= '<a href="'.$item_ical_link.'">This occurrence</a> | ';
 				}
 				$ret .= '<a href="'.$ical_link.'">All occurrences</a>';
 			}
