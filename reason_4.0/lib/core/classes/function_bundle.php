@@ -17,6 +17,14 @@
  * $bundle->do_something(); // calls phpinfo();
  * $bundle->method('argument'); // calls $object->method_name('argument');
  * $bundle->static_method('argument1', 'argument2'); // calls classname::static_method_name('argument1', 'argument2');
+ *
+ * The bundle will raise an error if a method is called that does not exist. If you want
+ * your code to handle the possibility that a function may not be set on the bundle,
+ * use this pattern:
+ *
+ * if($bundle->has_function('functionname'))
+ * 		$bundle->functionname();
+ * 
  */
 class functionBundle
 {
@@ -55,6 +63,12 @@ class functionBundle
 	{
 		if($function = $this->get_function($name))
 			return call_user_func_array($function, $arguments);
+		
+		$trace = debug_backtrace(false);
+		$error = 'Function '.$name.' not set on function bundle.';
+		if(isset($trace[1]))
+			$error .= ' Called in '.$trace[1]['file'].' at line '.$trace[1]['line'];
+		trigger_error($error);
 		return null;
 	}
 	
