@@ -3,127 +3,128 @@
 <databases>
     <database>
         <connection_name>reason_connection</connection_name>
-        <db>reasondev_reason</db>
-        <user>reasondev_user</user>
+        <db>reasondev_huintr01_reason</db>
+        <user>reasondev_huintr01_user</user>
         <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>
     </database>
 
     <database>
         <connection_name>thor_connection</connection_name>
-        <db>reasondev_thor</db>
-        <user>reasondev_user</user>
+        <db>reasondev_huintr01_thor</db>
+        <user>reasondev_huintr01_user</user>
         <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>
     </database>
 
     <database>
         <connection_name>reason_transactions</connection_name>
-        <db>reasondev_transactions</db>
-        <user>reasondev_user</user>
+        <db>reasondev_huintr01_transactions</db>
+        <user>reasondev_huintr01_user</user>
         <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>
     </database>
 
     <database>
         <connection_name>admissions_applications_connection</connection_name>
-        <db>reasondev_admissions_applications</db>
-        <user>reasondev_user</user>
+        <db>reasondev_huintr01_admissions_applications</db>
+        <user>reasondev_huintr01_user</user>
         <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>
     </database>
     
     <database>
         <connection_name>all_band_connection</connection_name>
-        <db>reasondev_all_band</db>
-        <user>reasondev_user</user>
+        <db>reasondev_huintr01_all_band</db>
+        <user>reasondev_huintr01_user</user>
         <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>
     </database>
 
     <database>
         <connection_name>discovery_camps_connection</connection_name>
-        <db>reasondev_discovery_camps</db>
-        <user>reasondev_user</user>
+        <db>reasondev_huintr01_discovery_camps</db>
+        <user>reasondev_huintr01_user</user>
         <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>
     </database>
 
     <database>
         <connection_name>homecoming_connection</connection_name>
-        <db>reasondev_homecoming_registration</db>
-        <user>reasondev_user</user>
+        <db>reasondev_huintr01_homecoming_registration</db>
+        <user>reasondev_huintr01_user</user>
         <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>
     </database>
 
     <database>
         <connection_name>lfw_connection</connection_name>
-        <db>reasondev_lfw_registration</db>
-        <user>reasondev_user</user>
+        <db>reasondev_huintr01_lfw_registration</db>
+        <user>reasondev_huintr01_user</user>
         <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>
     </database>
 
     <database>
         <connection_name>jenson_medal_connection</connection_name>
-        <db>reasondev_jenson_medal</db>
-        <user>reasondev_user</user>
+        <db>reasondev_huintr01_jenson_medal</db>
+        <user>reasondev_huintr01_user</user>
         <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>
     </database>         
     
     <database>
         <connection_name>reason_gifts_connection</connection_name>
-        <db>reasondev_gifts</db>
-        <user>reasondev_user</user>
+        <db>reasondev_huintr01_gifts</db>
+        <user>reasondev_huintr01_user</user>
         <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>
     </database>
 
     <database>
         <connection_name>dorian_vocal_connection</connection_name>
-        <db>reasondev_dorian_vocal</db>
-        <user>reasondev_user</user>
+        <db>reasondev_huintr01_dorian_vocal</db>
+        <user>reasondev_huintr01_user</user>
         <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>
     </database>
 
     <database>
         <connection_name>dorian_jh_camp_connection</connection_name>
-        <db>reasondev_dorian_jh_camp</db>
-        <user>reasondev_user</user>
+        <db>reasondev_huintr01_dorian_jh_camp</db>
+        <user>reasondev_huintr01_user</user>
         <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>
     </database>
 
     <database>
         <connection_name>dorian_sh_camp_connection</connection_name>
-        <db>reasondev_dorian_sh_camp</db>
-        <user>reasondev_user</user>
+        <db>reasondev_huintr01_dorian_sh_camp</db>
+        <user>reasondev_huintr01_user</user>
         <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>
     </database>
     <database>
         <connection_name>transcript_connection</connection_name>
-        <db>reasondev_transcript_requests</db>
-        <user>reasondev_user</user>
+        <db>reasondev_huintr01_transcript_requests</db>
+        <user>reasondev_huintr01_user</user>
         <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>
     </database>
     <database>
         <connection_name>norge_connection</connection_name>
-        <db>reasondev_norge_conference</db>
-        <user>reasondev_user</user>
+        <db>reasondev_huintr01_norge_conference</db>
+        <user>reasondev_huintr01_user</user>
         <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>
     </database>
 
     <database>
         <connection_name>royal_visit_connection</connection_name>
-        <db>reasondev_royal_visit_payment</db>
-        <user>reasondev_user</user>
+        <db>reasondev_huintr01_royal_visit_payment</db>
+        <user>reasondev_huintr01_user</user>
         <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>
     </database>
+
 </databases>

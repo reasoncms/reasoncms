@@ -150,11 +150,8 @@
 		case 'reasondev.luther.edu':
 		    define( 'THIS_IS_A_DEVELOPMENT_REASON_INSTANCE', true );
 		    break;
-		case 'reasondev2.luther.edu':
-		    define( 'THIS_IS_A_DEVELOPMENT_REASON_INSTANCE', true );
-		    break; 
 		default:
-		    define( 'THIS_IS_A_DEVELOPMENT_REASON_INSTANCE', true );
+	    	define( 'THIS_IS_A_DEVELOPMENT_REASON_INSTANCE', true );
 		    break;
 	}
 	
@@ -177,11 +174,12 @@
 	    case 'reasondev.luther.edu':
 	        define('REASON_HOST_HAS_VALID_SSL_CERTIFICATE', true);
 	        break; 
-		case 'reasondev2.luther.edu':
-	        define('REASON_HOST_HAS_VALID_SSL_CERTIFICATE', true);
-	        break; 
 	    default:
-	        define('REASON_HOST_HAS_VALID_SSL_CERTIFICATE', false);
+	    	if (preg_match('/\.reasondev\.luther\.edu/', $_SERVER['SERVER_NAME'])){
+	    		define('REASON_HOST_HAS_VALID_SSL_CERTIFICATE', true);
+	    	} else {
+	        	define('REASON_HOST_HAS_VALID_SSL_CERTIFICATE', false);
+	        }
 	        break;
 	}
 	

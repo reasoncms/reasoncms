@@ -44,8 +44,23 @@ switch ($_SERVER['SERVER_NAME']) {
     case 'reasondev.luther.edu':
         domain_define( 'DB_CREDENTIALS_FILEPATH', SETTINGS_INC. 'dbs.reasondev.xml' );
         break; 
-    case 'reasondev2.luther.edu':
-        domain_define( 'DB_CREDENTIALS_FILEPATH', SETTINGS_INC. 'dbs.reasondev.xml' );
+    case 'reasondev.smitst01.luther.edu':
+        domain_define( 'DB_CREDENTIALS_FILEPATH', SETTINGS_INC. 'dbs.reasondev.smitst01.xml' );
+        break;
+    case 'reasondev.jonebr01.luther.edu':
+        domain_define( 'DB_CREDENTIALS_FILEPATH', SETTINGS_INC. 'dbs.reasondev.jonebr01.xml' );
+        break;
+    case 'reasondev.wilbbe01.luther.edu':
+        domain_define( 'DB_CREDENTIALS_FILEPATH', SETTINGS_INC. 'dbs.reasondev.wilbbe01.xml' );
+        break;
+    case 'reasondev.huintr01.luther.edu':
+        domain_define( 'DB_CREDENTIALS_FILEPATH', SETTINGS_INC. 'dbs.reasondev.huintr01.xml' );
+        break;
+    case 'reasondev.dykega01.luther.edu':
+        domain_define( 'DB_CREDENTIALS_FILEPATH', SETTINGS_INC. 'dbs.reasondev.dykega01.xml' );
+        break; 
+    case 'reasondev.dirks.luther.edu':
+        domain_define( 'DB_CREDENTIALS_FILEPATH', SETTINGS_INC. 'dbs.reasondev.dirks.xml' );
         break; 
     default:
         domain_define( 'DB_CREDENTIALS_FILEPATH', SETTINGS_INC. 'dbs.localhost.xml' );
@@ -74,12 +89,12 @@ switch ($_SERVER['SERVER_NAME']) {
     case 'reasondev.luther.edu':
         domain_define( 'HTTPS_AVAILABLE', true );
         break; 
-    case 'reasondev2.luther.edu':
-        domain_define( 'HTTPS_AVAILABLE', true );
-        break; 
     default:
-        domain_define( 'HTTPS_AVAILABLE', false );
-        break;
+        if (preg_match('/\.reasondev\.luther\.edu/', $_SERVER['SERVER_NAME'])){
+            domain_define('HTTPS_AVAILABLE', true);
+        } else {
+            domain_define('HTTPS_AVAILABLE', false);
+        }
 }
 
 /**
