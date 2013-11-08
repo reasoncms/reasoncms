@@ -26,6 +26,7 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 								  'item_images',
 								  'item_assets',
 								  'item_categories',
+								  'item_social_sharing',
 								  'item_comments',
 								  'comment_form_markup',
 								  'commenting_status',
@@ -56,6 +57,10 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 		if($this->should_show_author_section())
 		{
 			$this->markup_string .= '<div class="author">'.$this->get_author_section().'</div>'."\n";
+		}
+		if($this->should_show_social_sharing_section())
+		{
+			$this->markup_string .= '<div class="social top">'.$this->get_social_sharing_section().'</div>'."\n";
 		}
 		if (get_theme($this->passed_vars['site_id'])->get_value('name') != 'luther2010' && $this->should_show_images_section())
 		// luther2010 images are rendered in the luther_publication_image_sidebar module
@@ -297,6 +302,27 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 			$ret .= '<li><a href="'.$category->get_value('category_url').'">'.$category->get_value('name').'</a></li>';
 		}
 		$ret .= '</ul>';
+		return $ret;
+	}
+	
+	// Social Sharing section
+	function should_show_social_sharing_section()
+	{
+		if(!empty($this->passed_vars['item_social_sharing']))
+			return true;
+		else
+			return false;
+	}
+	function get_social_sharing_section()
+	{
+		$ret = '<p>';
+		foreach($this->passed_vars['item_social_sharing'] as $social_sharing)
+		{
+			$ret .= ' <a href="'.$social_sharing['href'].'">';
+			$ret .= '<img src="'. $social_sharing['icon'] . '" alt="'. $social_sharing['text'] . '" title="Share on '. $social_sharing['text'] . '" />';
+			$ret .= '</a>';
+		}
+		$ret .= '</p>';
 		return $ret;
 	}
 	
