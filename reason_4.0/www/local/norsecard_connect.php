@@ -47,6 +47,7 @@ try {
 
   $statement->execute();
   if ($row = $statement->fetch()) {
+    $data=true;
     $rows[] = json_encode($row);
     while ($row = $statement->fetch()) {
       $rows[] = json_encode($row);
@@ -55,6 +56,10 @@ try {
     echo '"results": [';
     echo implode(', ', $rows);
     echo ']}';
+  }
+  if (!$data) {
+    echo '{';
+    echo '"results": []}';
   }
   unset($dbh);
   unset($statement);

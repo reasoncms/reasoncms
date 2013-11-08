@@ -68,8 +68,7 @@ $(document).ready(function() {
                     }
                 },
                 error: function(xhr, ajaxOptions, thrownError) {
-                    alert('An error has occurred, please try again later.');
-                    alert(thrownError);
+                    alert('An error has occurred while gathering your transaction totals, please try again later.');
                 }
             });
 
@@ -109,7 +108,7 @@ $(document).ready(function() {
                     });
                 },
                 error: function(xhr, ajaxOptions, thrownError) {
-                    alert('An error has occurred, please try again later.');
+                    alert('An error has occurred while retrieving your transactions, please try again later.');
                 }
             });
         } else {
