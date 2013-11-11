@@ -3634,7 +3634,8 @@ class EventsModule extends DefaultMinisiteModule
 			$es->add_relation('`entity`.`id` NOT IN ("'.implode('","',array_keys($images)).'")');
 		$es->add_rel_sort_field($e->id(), relationship_id_of('event_to_image'));
 		$es->set_order('rel_sort_order ASC');
-		return $es->run_one();
+		$images += $es->run_one();
+		return $images;
 	}
 	/**
 	 * Get the categories for a given event entity
