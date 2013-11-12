@@ -3,7 +3,7 @@
 <databases>
     <database>
         <connection_name>reason_connection</connection_name>
-        <db>reasondev</db>
+        <db>reasondev_reason</db>
         <user>reasondev_user</user>
         <password>8shtKGFGw4.v7cMm</password>
         <host>localhost</host>
