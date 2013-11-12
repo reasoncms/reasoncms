@@ -1,5 +1,5 @@
 Welcome to Reason CMS!
-
+----------------------
 Home Page:    http://reason.carleton.edu/
 Source Code:  http://github.com/carleton/reason_package
 Requirements: http://apps.carleton.edu/opensource/reason/reqs/
