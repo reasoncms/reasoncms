@@ -80,8 +80,10 @@
 		function luther_process_images()
 		// use figure style for images and add highslide functionality
 		{
-			$this->content = preg_replace_callback('-<img\s*alt="(.*)"\s*src="(.*)(\d+)(_tn)(\.jpe?g|JPE?G|Jpe?g|gif|GIF|Gif|png|PNG|Png)"(\s?align="\w+")?\s?\/>-isuU', array($this, 'luther_replace_image'), $this->content);
-//			$this->content = preg_replace('-<img\s*alt="(.*)"\s*src="(.*)(_tn)(.*)"\s?\/>-isuU', '<div class="figure" style="width: 125px"><a href="'.'$2'.'$4'.'" class="highslide" onclick="return hs.expand(this)"><img src="'.'$2'.'$3'.'$4'.'" border="0" alt="'.'$1'.'" title="click to enlarge"/></a>'.'$1'.'</div>', $this->content);
+			//$this->content = preg_replace_callback('-<img\s*alt="(.*)"\s*src="(.*)(\d+)(_tn)(\.jpe?g|JPE?G|Jpe?g|gif|GIF|Gif|png|PNG|Png)"(\s?align="\w+")?\s?\/>-isuU', array($this, 'luther_replace_image'), $this->content);
+			//$this->content = preg_replace('-<img\s*alt="(.*)"\s*src="(.*)(_tn)(.*)"\s?\/>-isuU', '<div class="figure" style="width: 125px"><a href="'.'$2'.'$4'.'" class="highslide" onclick="return hs.expand(this)"><img src="'.'$2'.'$3'.'$4'.'" border="0" alt="'.'$1'.'" title="click to enlarge"/></a>'.'$1'.'</div>', $this->content);
+			$this->content = preg_replace('-<img(.*)(align="(\w+))"-', '<img'.'$1'.'class="'.'$3'.'" ', $this->content);
+			
 
 		}
 	}
