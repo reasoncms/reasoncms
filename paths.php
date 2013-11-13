@@ -47,6 +47,7 @@ define ('SETTINGS_INC',
        
 /**
  * Load in domain specific settings. Any setting defined with the domain_define will use domain specific settings when available
+ * fixes awesome!
  */
 include_once (SETTINGS_INC . 'domain_settings.php');
 
