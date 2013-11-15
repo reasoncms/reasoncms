@@ -1,5 +1,4 @@
 Welcome to Reason CMS!
-----------------------
 
 Home Page:    http://reason.carleton.edu/
 Source Code:  http://github.com/carleton/reason_package
