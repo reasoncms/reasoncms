@@ -635,7 +635,8 @@ class TableAdmin
 		{
 			foreach ($filter_array as $k=>$v)
 			{
-				if (!empty($v)) $this->filters[$k] = array('name' => $k, 'value' => $v);
+				$v = trim($v);
+				if (strlen($v)) $this->filters[$k] = array('name' => $k, 'value' => $v);
 			}
 		}
 	}
@@ -646,7 +647,8 @@ class TableAdmin
 		{
 			foreach ($filter_array as $k=>$v)
 			{
-				if (!empty($v)) $this->filters[$k] = array('name' => $k, 'value' => '');
+				$v = trim($v);
+				if (strlen($v)) $this->filters[$k] = array('name' => $k, 'value' => '');
 			}
 		}
 	}
