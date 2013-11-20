@@ -33,7 +33,7 @@ class ConstantContactAddEmail extends DefaultThorForm
 		'Diversity Today (monthly)' => array('username' => 'lcdiversity', 'listname' => 'Diversity Today', 'token' => "ef688df7-c24b-4ac1-826d-68d6ed22bd16"),
 		'Luther College Chapel (M, W, F)' => array('username' => 'lcchapel', 'listname' => 'Upcoming In Chapel', 'token' => "d8296e3f-4097-4380-9136-7e83f6885d5e"), //The list name here may be changing in the near future
 		'Luther News (weekly)' => array('username' => 'lccampusnews', 'listname' => 'Luther News', 'token' => "1082bbed-d18c-442f-9f45-f109d4c71888"),
-		'Music Connection (weekly)' => array('username' => 'lcmusicmarketing', 'listname' => 'Music Connections', 'token' => "0bea60bc-b224-4104-85b4-6187e42784e2"),
+		'Music Connections (weekly)' => array('username' => 'lcmusicmarketing', 'listname' => 'Music Connections', 'token' => "0bea60bc-b224-4104-85b4-6187e42784e2"),
 		'Sustainability (2x/month)' => array('username' => 'lcsustainability', 'listname' => 'Newsletter', 'token' => "cc938f38-031e-40bb-a4e6-bc548e2f4799"),
 		'Baseball' => array('username' => 'lcbaseball', 'listname' => 'Luther College Baseball Newsletter', 'token' => "887408da-ffa7-4223-b742-3c1770bb4b56"),
 		'Men\'s Basketball' => array('username' => 'lcmbasketball', 'listname' => 'Luther College Men\'s Basketball Newsletter', 'token' => "51a3b3fd-ff76-4a29-8197-b22f2cd418ca"),
