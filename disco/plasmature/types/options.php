@@ -305,6 +305,8 @@ class option_no_sortType extends optionType
 class radioType extends optionType
 {
 	var $type = 'radio';
+	var $type_valid_args = array( 'sub_labels' );
+	var $sub_labels = array();
 	protected function _array_val_ok()
 	{
 		return false;
@@ -320,6 +322,7 @@ class radioType extends optionType
 		}
 		foreach( $this->options as $key => $val )
 		{
+			if (!empty($this->sub_labels[$key])) $str .= $this->_get_sub_label_row($key);
 			$str .= $this->_get_radio_row($key,$val,$i++);
 		}
 		$str .= '</table>'."\n";
@@ -338,6 +341,12 @@ class radioType extends optionType
 		$str .= ' /></td>'."\n".'<td valign="top"><label for="'.$id.'">'.$val.'</label></td>'."\n".'</tr>'."\n";
 		return $str;
 	}
+	
+	protected function _get_sub_label_row($key)
+	{
+		if (!empty($this->sub_labels[$key]))
+			return '<tr class="sublabel">'."\n".'<td colspan="2">'.$this->sub_labels[$key].'</td>'."\n".'</tr>'."\n";
+	}
 }
 
 /**
@@ -348,6 +357,8 @@ class radioType extends optionType
 class radio_inlineType extends optionType
 {
 	var $type = 'radio_inline';
+	var $type_valid_args = array( 'sub_labels' );
+	var $sub_labels = array();
 
 	protected function _array_val_ok()
 	{
@@ -363,6 +374,7 @@ class radio_inlineType extends optionType
 		}
 		foreach( $this->options as $key => $val )
 		{
+			if (!empty($this->sub_labels[$key])) $str .= $this->_get_sub_label_span($key);
 			$str .= $this->_get_radio_span($key,$val,$i++);
 		}
 		$str .= '</div>'."\n";
@@ -380,6 +392,12 @@ class radio_inlineType extends optionType
 			$str .= ' disabled="disabled"';
 		$str .= ' /></span> <label for="'.$id.'">'.$val.'</label></span> '."\n";
 		return $str;
+	}
+
+	protected function _get_sub_label_span($key)
+	{
+		if (!empty($this->sub_labels[$key]))
+			return '<span class="radioItem sublabel">'.$this->sub_labels[$key].'</span>'."\n";
 	}
 }
 
