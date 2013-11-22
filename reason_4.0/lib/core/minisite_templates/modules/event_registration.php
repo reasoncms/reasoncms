@@ -13,6 +13,9 @@
 
 /**
  * A minisite module that displays a site calendar and offer basic event registration capability to logged-in users
+ *
+ * Is this deprecated??
+ *
  */
 class EventRegistrationModule extends EventsModule
 {
