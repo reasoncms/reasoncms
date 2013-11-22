@@ -2052,6 +2052,72 @@ class EventsModule extends DefaultMinisiteModule
 		return $duration;
 	}
 	
+	public function get_repetition_explanation($event)
+	{
+		$ret = '';
+		$rpt = $event->get_value('recurrence');
+		$freq = '';
+		$words = array();
+		$dates_text = '';
+		$occurence_days = array();
+		if (!($rpt == 'none' || empty($rpt)))
+		{
+			$words = array('daily'=>array('singular'=>'day','plural'=>'days'),
+							'weekly'=>array('singular'=>'week','plural'=>'weeks'),
+							'monthly'=>array('singular'=>'month','plural'=>'months'),
+							'yearly'=>array('singular'=>'year','plural'=>'years'),
+					);
+			if ($event->get_value('frequency') <= 1)
+				$sp = 'singular';
+			else
+			{
+				$sp = 'plural';
+				$freq = $event->get_value('frequency').' ';
+			}
+			if ($rpt == 'weekly')
+			{
+				$days_of_week = array('sunday','monday','tuesday','wednesday','thursday','friday','saturday');
+				foreach($days_of_week as $day)
+				{
+					if($event->get_value($day))
+						$occurence_days[] = $day;
+				}
+				$last_day = array_pop($occurence_days);
+				$dates_text = ' on ';
+				if (!empty( $occurence_days ) )
+				{
+					$comma = '';
+					if(count($occurence_days) > 2)
+						$comma = ',';
+					$dates_text .= ucwords(implode(', ', $occurence_days)).$comma.' and ';
+				}
+				$dates_text .= prettify_string($last_day);
+			}
+			elseif ($rpt == 'monthly')
+			{
+				$suffix = array(1=>'st',2=>'nd',3=>'rd',4=>'th',5=>'th');
+				if ($event->get_value('week_of_month'))
+				{
+					$dates_text = ' on the '.$event->get_value('week_of_month');
+					$dates_text .= $suffix[$event->get_value('week_of_month')];
+					$dates_text .= ' '.$event->get_value('month_day_of_week');
+				}
+				else
+					$dates_text = ' on the '.prettify_mysql_datetime($event->get_value('datetime'), 'jS').' day of the month';
+			}
+			elseif ($rpt == 'yearly')
+			{
+				$dates_text = ' on '.prettify_mysql_datetime($event->get_value('datetime'), 'F jS');
+			}
+			$ret .= 'This event takes place each ';
+			$ret .= $freq;
+			$ret .= $words[$rpt][$sp];
+			$ret .= $dates_text;
+			$ret .= ' from '.prettify_mysql_datetime($event->get_value('datetime'), 'F jS, Y').' to '.prettify_mysql_datetime($event->get_value('last_occurence'), 'F jS, Y').'.';
+		}
+		return $ret;
+	}
+	
 	/**
 	 * Format a date to be shown in a "through [formatted date]" phrase
 	 *
@@ -2173,29 +2239,9 @@ class EventsModule extends DefaultMinisiteModule
 				return;
 		}
 		echo '<div class="nav">'."\n";
-		if($this->calendar->get_view() != 'all')
-		{
-			if(empty($this->next_and_previous_links))
-				$this->generate_next_and_previous_links();
-			echo $this->next_and_previous_links;
-		}
-		else
-		{
-			echo '<strong>Starting '.prettify_mysql_datetime($this->calendar->get_start_date(),$this->list_date_format.', Y');
-			switch($this->calendar->get_start_date())
-			{
-				case $this->today:
-					echo ' (today)';
-					break;
-				case $this->tomorrow:
-					echo ' (tomorrow)';
-					break;
-				case $this->yesterday:
-					echo ' (yesterday)';
-					break;
-			}
-			echo '</strong>';
-		}
+		if(empty($this->next_and_previous_links))
+			$this->generate_next_and_previous_links();
+		echo $this->next_and_previous_links;
 		echo '</div>'."\n";
 	}
 	/**
@@ -2252,31 +2298,28 @@ class EventsModule extends DefaultMinisiteModule
 		$on_defined_view = false;
 		foreach($this->calendar->get_views() as $view_name=>$view)
 		{
-			$ret .= '<li>';
 			if($view != $this->calendar->get_view())
 			{
 				$link_params = array('view'=>$view,'end_date'=>'');
 				if(in_array($view,$this->views_no_index))
 					$link_params['no_search'] = 1;
-				$opener = '<a href="'.$this->construct_link($link_params).'">';
-				$closer = '</a>';
+				$opener = '<li><a href="'.$this->construct_link($link_params).'">';
+				$closer = '</a></li>';
 			}
 			else
 			{
-				$opener = '<strong>';
-				$closer = '</strong>';
+				$opener = '<li class="current"><strong>';
+				$closer = '</strong></li>';
 				$on_defined_view = true;
 			}
 			
 			$ret .= $opener.prettify_string($view_name).$closer;
-			$ret .= '</li>'."\n";
 		}
 		if(!$on_defined_view)
 		{
-			$ret .= '<li><strong>'.$this->get_scope('-').'</strong></li>'."\n";
+			$ret .= '<li class="current"><strong>'.$this->get_scope('-').'</strong></li>'."\n";
 		}
 		$ret .= '</ul>'."\n";
-	//	$ret .= '<div style="clear:both;border:1px solid #f00;"></div>'."\n"; //ie7 fix??
 		$ret .= '</div>'."\n";
 		return $ret;
 	}
@@ -2313,12 +2356,12 @@ class EventsModule extends DefaultMinisiteModule
 		$ret .= '">'."\n";
 		$ret .= '<h4>Event Categories</h4>'."\n";
 		$ret .= '<ul>'."\n";
-		$ret .= '<li>';
+		$ret .= '<li class="all">';
 		$used_cats = $this->calendar->get_categories();
 			if (empty( $used_cats ))
-				$ret .= '<strong>All</strong>';
+				$ret .= '<strong>All Categories</strong>';
 			else
-				$ret .= '<a href="'.$this->construct_link(array('category'=>'','view'=>'')).'" title="Events in all categories">All</a>';
+				$ret .= '<a href="'.$this->construct_link(array('category'=>'','view'=>'')).'" title="Events in all categories">All Categories</a>';
 		$ret .= '</li>';
 		foreach($cat_names as $cat_id=>$cat_name)
 		{
@@ -2453,7 +2496,7 @@ class EventsModule extends DefaultMinisiteModule
 		$ret .= '<div class="audiences">'."\n";
 		$ret .= '<h4>View Events for:</h4>'."\n";
 		$ret .= '<ul>'."\n";
-		$ret .= '<li>';
+		$ret .= '<li class="all">';
 		$this->init_audiences();
 		$used_auds = $this->calendar->get_audiences();
 		if (empty($used_auds))
@@ -2481,14 +2524,14 @@ class EventsModule extends DefaultMinisiteModule
 	 * @return void
 	 * @todo move into markup class
 	 */
-	function generate_next_and_previous_links() // {{{
+	function generate_next_and_previous_links()
 	{
+		$start_array = explode('-',$this->calendar->get_start_date() );
 		if ($this->calendar->get_view() != 'all')
 		{
 			$show_links = true;
 			$prev_u = 0;
-			$start_array = explode('-',$this->calendar->get_start_date() );
-			$end_array = explode('-',$this->calendar->get_end_date() );
+			//$end_array = explode('-',$this->calendar->get_end_date() );
 			if( $this->calendar->get_view() == 'daily' )
 			{
 				$prev_u = get_unix_timestamp($this->calendar->get_start_date()) - 60*60*24;
@@ -2550,7 +2593,7 @@ class EventsModule extends DefaultMinisiteModule
 					$this->next_and_previous_links .= '&laquo;</a> &nbsp; ';
 				}
 			}
-			$this->next_and_previous_links .= '<strong>'.$this->get_scope().'</strong>';
+			$this->next_and_previous_links .= '<strong>'.$this->get_scope('&#8212;').'</strong>';
 			if($show_links && $this->calendar->contains_any_events_after($next_start) )
 			{
 				$this->next_and_previous_links .= ' &nbsp; <a class="next" href="';
@@ -2566,9 +2609,52 @@ class EventsModule extends DefaultMinisiteModule
 				$this->next_and_previous_links .= '&raquo;</a>'."\n";
 			}
 		}
-		else
+		else // "all" view should have a 1-month-back link
+		{
 			$this->next_and_previous_links = '';
-	} // }}}
+			
+			if($this->calendar->contains_any_events_before($this->calendar->get_start_date()) )
+			{
+			
+				$prev_u = get_unix_timestamp($start_array[0].'-'.str_pad($start_array[1]-1, 2, "0", 	STR_PAD_LEFT).'-'.$start_array[2]);
+				
+				$prev_start = date('Y-m-d', $prev_u);
+				
+				$format_prev_year = '';
+				if (date('Y', $prev_u) != date('Y'))
+				{
+					$format_prev_year = ', Y';
+				}
+				
+				$this->next_and_previous_links = '<a class="previous" href="';
+				$link_params = array('start_date'=>$prev_start,'view'=>'monthly');
+				if(in_array($this->calendar->get_view(),$this->views_no_index))
+					$link_params['no_search'] = 1;
+				$this->next_and_previous_links .= $this->construct_link($link_params);
+				if(date('M', $prev_u) == 'May') // All months but may need a period after them
+					$punctuation = '';
+				else
+					$punctuation = '.';
+				$this->next_and_previous_links .= '" title="View Month Starting '.date('M'.$punctuation.' j'.$format_prev_year, $prev_u).'">';
+				$this->next_and_previous_links .= '&laquo;</a> &nbsp; ';
+			}
+			
+			$this->next_and_previous_links .= '<strong>Starting '.prettify_mysql_datetime($this->calendar->get_start_date(),$this->list_date_format.', Y');
+			switch($this->calendar->get_start_date())
+			{
+				case $this->today:
+					$this->next_and_previous_links .= ' (today)';
+					break;
+				case $this->tomorrow:
+					$this->next_and_previous_links .= ' (tomorrow)';
+					break;
+				case $this->yesterday:
+					$this->next_and_previous_links .= ' (yesterday)';
+					break;
+			}
+			$this->next_and_previous_links .= '</strong>';
+		}
+	}
 	
 	
 	/**
@@ -2815,7 +2901,7 @@ class EventsModule extends DefaultMinisiteModule
 		$max_year = $this->get_max_year();
 		echo '<div class="dateJump">'."\n";
 		echo '<form action="'.$this->construct_link().'" method="post">'."\n";
-		echo '<h4>Select date:</h4>';
+		echo '<h4>Jump to date:</h4>';
 		echo '<span style="white-space:nowrap;">'."\n";
 		echo '<select name="start_month">'."\n";
 		for($m = 1; $m <= 12; $m++)
@@ -2976,7 +3062,7 @@ class EventsModule extends DefaultMinisiteModule
 	function show_search()
 	{
 		echo '<div class="search">'."\n";
-		echo '<h4><label for="calendar_search">Search:</label></h4>'."\n";
+		echo '<h4><label for="calendar_search">Search Events:</label></h4>'."\n";
 		echo $this->get_search_form();
 		echo $this->get_search_other_actions();
 		echo '</div>'."\n";
@@ -3253,10 +3339,10 @@ class EventsModule extends DefaultMinisiteModule
 		}
 		echo '<a href="webcal://'.REASON_HOST.$this->parent->pages->get_full_url( $this->page_id ).$query_string.'">'.$subscribe_text.'</a>';
 		if(!empty($this->events))
-			echo ' | <a href="'.$query_string.'">'.$download_text.'</a>';
+			echo ' <span class="divider">|</span> <a href="'.$query_string.'">'.$download_text.'</a>';
 		if (defined("REASON_URL_FOR_ICAL_FEED_HELP") && ( (bool) REASON_URL_FOR_ICAL_FEED_HELP != FALSE))
 		{
-			echo ' | <a href="'.REASON_URL_FOR_ICAL_FEED_HELP.'"><img src="'.REASON_HTTP_BASE_PATH . 'silk_icons/help.png" alt="Help" width="16px" height="16px" /></a>';
+			echo ' <span class="divider">|</span> <a href="'.REASON_URL_FOR_ICAL_FEED_HELP.'"><img src="'.REASON_HTTP_BASE_PATH . 'silk_icons/help.png" alt="Help" width="16px" height="16px" /></a>';
 			echo ' <a href="'.REASON_URL_FOR_ICAL_FEED_HELP.'">How to Use This</a>';
 		}
 		echo '</div>'."\n";
@@ -3480,6 +3566,7 @@ class EventsModule extends DefaultMinisiteModule
 			$bundle->set_function('map_zoom_level', array($this, 'get_map_zoom_level'));
 			$bundle->set_function('registration_markup', array($this, 'get_registration_slots_markup'));
 			$bundle->set_function('prettify_duration', array($this, 'prettify_duration'));
+			$bundle->set_function('repetition_explanation', array($this, 'get_repetition_explanation'));
 			$this->modify_item_function_bundle($bundle);
 			$markup->set_bundle($bundle);
 			echo $markup->get_markup($e);
@@ -3881,21 +3968,21 @@ class EventsModule extends DefaultMinisiteModule
 				echo '<ul>'."\n";
 				$description = $slot->get_value('slot_description');
 				if(!empty($description))
-					echo '<li>'.$description.'</li>'."\n";
+					echo '<li class="desc">'.$description.'</li>'."\n";
 				$spaces_available = $this->get_spaces_available($event, get_entity_by_id($slot->id()));
 				if($spaces_available < 0)
 					$spaces_available = 0;
-				echo '<li>Spaces Available: '.$spaces_available.'</li>'."\n";
+				echo '<li class="spaces">Spaces Available: '.$spaces_available.'</li>'."\n";
 				if($spaces_available > 0)
 				{
 					$link_vars = array('event_id'=>$event->id(), 'date'=>$this->request['date'], 'slot_id'=>$slot->id());
-					echo '<li><a href="'.$this->construct_link($link_vars).'" title = "Register for '.htmlspecialchars($slot->get_value('name'), ENT_QUOTES).'">Register Now</a></li>'."\n";;
+					echo '<li class="register"><a href="'.$this->construct_link($link_vars).'" title = "Register for '.htmlspecialchars($slot->get_value('name'), ENT_QUOTES).'">Register Now</a></li>'."\n";;
 				}
 				//if user is admin of slot, display admin link
 				if($this->user_is_slot_admin($event))
 				{
 					$link_vars = array('event_id'=>$event->id(), 'date'=>$this->request['date'], 'slot_id'=>$slot->id(), 'admin_view'=>'true');
-					echo '<li><a href="'.$this->construct_link($link_vars).'" title = "Administer '.htmlspecialchars($slot->get_value('name'), ENT_QUOTES).'">Administer '.$slot->get_value('name').'</a></li>'."\n";;
+					echo '<li class="administer"><a href="'.$this->construct_link($link_vars).'" title = "Administer '.htmlspecialchars($slot->get_value('name'), ENT_QUOTES).'">Administer '.$slot->get_value('name').'</a></li>'."\n";;
 				}
 				echo '</ul>'."\n";
 				echo '</li>'."\n";
@@ -3999,7 +4086,8 @@ class EventsModule extends DefaultMinisiteModule
 		echo '<h3>Administrative Info for '.$slot['name'].'</h3>'."\n";
 		echo '<div class="admin">'."\n";
 		echo '<ul>'."\n";
-		echo '<li><strong>Description: </strong>'.$slot['slot_description'].'</li>'."\n";
+		if(!empty($slot['slot_description']))
+			echo '<li><strong>Description: </strong>'.$slot['slot_description'].'</li>'."\n";
 		echo '<li><strong>Spaces Available: </strong>'.$this->get_spaces_available($event, $slot).'</li>'."\n";
 		echo '<li><strong>Capacity: </strong>'.$slot['registration_slot_capacity'].'</li>'."\n";
 		echo '</ul>'."\n";
@@ -4008,33 +4096,33 @@ class EventsModule extends DefaultMinisiteModule
 		if (count($registrants) > 0)
 		{
 			echo '<div id="registrant_data">'."\n";
-			echo '<table>'."\n";
-			echo '<summary> <h4>Current Registrants: </h4></summary>'."\n";
-			echo '<tr>'."\n".'<th id="name" scope="col">Name</th>'."\n".
+			echo '<h4>Current Registrants: </h4>'."\n";
+			echo '<ul>'."\n";
+			/* echo '<tr>'."\n".'<th id="name" scope="col">Name</th>'."\n".
 				 '<th id="email" scope="col">Email Address</th>'."\n".
 				 '<th id="date_registered" scope="col">Date Registered</th>'."\n".
 				 '<th id="delete_registrant" scope="col">Action</th>'."\n".
-				 '</tr>'."\n";
+				 '</tr>'."\n"; */
 			ksort($registrants);
 			$thisrow = 'odd';
 			foreach($registrants as $registrant)
 			{
 				$registrant_pieces = explode('|', $registrant);
-				echo '<tr class='.$thisrow.'>'."\n";	
-				echo '<td>'.htmlspecialchars($registrant_pieces[1], ENT_QUOTES).'</td>'."\n";
-				echo '<td>'.htmlspecialchars($registrant_pieces[2], ENT_QUOTES).'</td>'."\n";
-				echo '<td>'.date('m/d/Y', $registrant_pieces[3]).'</td>'."\n";
+				echo '<li class='.$thisrow.'>'."\n";	
+				echo '<strong>'.htmlspecialchars($registrant_pieces[1], ENT_QUOTES).'</strong> <span class="divider">|</span> '."\n";
+				echo '<span class="email">'.htmlspecialchars($registrant_pieces[2], ENT_QUOTES).'</span> <span class="divider">|</span> ';
+				echo '<span class="date">Registered '.date('m/d/Y', $registrant_pieces[3]).'</span> <span class="divider">|</span> ';
 				$link_vars = array('event_id'=>$event->id(), 'date'=>$this->request['date'], 'slot_id'=>$slot['id'], 'admin_view'=>'true', 'delete_registrant'=>md5($registrant));
-				echo '<td><a href="'.$this->construct_link($link_vars).'" title = "Delete '.htmlspecialchars($registrant_pieces[1], ENT_QUOTES).'">Delete this registrant</a></td>'."\n";
-				echo '</tr>'."\n";
+				echo '<span class="action"><a href="'.$this->construct_link($link_vars).'" title = "Delete '.htmlspecialchars($registrant_pieces[1], ENT_QUOTES).'">Delete this registrant</a></span>';
+				echo '</li>'."\n";
 				$thisrow = ($thisrow == 'odd') ? 'even' : 'odd';
 			}
-			echo '</table>'."\n";
+			echo '</ul>'."\n";
 			echo '</div>';
 			echo $this->slot_registration_admin_messages;
 		}
 		else echo '<p>There are currently no registrations for this event.</p>';
-		$link = carl_make_link(array('admin_view' => ''));
+		$link = carl_make_link(array('admin_view' => '', 'slot_id' => '',));
 		echo '<p><a href="'.$link.'">Leave administrative view</a></p>';
 		echo '</div>'."\n";
 	}
