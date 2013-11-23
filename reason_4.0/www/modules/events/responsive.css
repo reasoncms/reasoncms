@@ -1,0 +1,52 @@
+#calendar .responsiveEventsList .eventsListContent {
+	width:67%;
+	float:left;
+}
+#calendar .responsiveEventsList .gridAndOptionsWrapper {
+	width:32%;
+	margin-left:1%;
+	float:left;
+}
+#calendar .responsiveEventsList .gridAndOptions {
+	float:none;
+	width:auto;
+	margin:0;
+}
+div#calendar .responsiveEventsList .calendarGridWrapper {
+	margin:5% 5% 1em 5%;
+}
+div#calendar .responsiveEventsList div.gridAndOptions div.calendarGrid {
+	margin:0;
+	width:auto;
+	float:none;
+}
+div#calendar .responsiveEventsList div.gridAndOptions div.calendarGrid table {
+	width:100%;
+	font-size:0.9em;
+}
+#calendar .responsiveEventsList .foot {
+	clear:both;
+}
+@media all and (max-width:720px) {
+	#calendar .responsiveEventsList .eventsListContent, #calendar .responsiveEventsList .gridAndOptionsWrapper {
+		width:auto;
+		float:none;
+		margin-left:0;
+		clear:both;
+		padding:1px 0;
+	}
+	#calendar .responsiveEventsList .datesAndSearch {
+		float:left;
+		width:49%;
+	}
+	#calendar .responsiveEventsList .options {
+		float:right;
+		width:49%;
+	}
+}
+@media all and (max-width:500px) {
+	#calendar .responsiveEventsList .datesAndSearch, #calendar .responsiveEventsList .options {
+		float:none;
+		width:auto;
+	}
+}
