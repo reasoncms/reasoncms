@@ -201,7 +201,11 @@
 				$offspring = $this->offspring;
 				
 				if($this->params['html5'])
-					echo '<nav class="children" role="navigation">'."\n";
+				{
+					static $counter = 0;
+					$counter++;
+					echo '<nav class="children" role="navigation" id="childrenModule'.$counter.'">'."\n";
+				}
 				if($this->params['chunks'] > 1)
 				{
 					$num = count($offspring);
