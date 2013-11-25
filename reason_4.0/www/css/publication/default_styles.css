@@ -53,6 +53,10 @@ div.publication div.fullPost div.addCommentForm table#discoTable {
 div.publication div.fullPost div.addCommentForm table#discoTable #commentcontentRow textarea {
 	height:10em;
 }
+div.publication div.fullPost div.addCommentForm #disco_form, div.publication div.fullPost div.addCommentForm #disco_form div.formElement {
+	margin-bottom:1em;
+}
+
 div.publication div.fullPost div.primaryContent {
 	width:70%;
 	float:left;
