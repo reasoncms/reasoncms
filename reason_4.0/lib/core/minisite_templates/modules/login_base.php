@@ -285,8 +285,8 @@ class LoginBaseModule extends DefaultMinisiteModule
 		show_cookie_capability('<p class="smallText">You must have cookies enabled to login.  You do not have cookies enabled.</p>');
 		
 		$current_url = carl_make_link(array('dest_page' => $this->dest_page, 'redir_link_text' => $this->redir_link_text, 'logout'=>''));
-		$username_value = ($uname) ? 'value="'.$uname.'"' : '';
-		$form_class = ($class) ? 'class="'.$class.'"' : '';
+		$username_value = ($uname) ? 'value="'.htmlspecialchars($uname).'"' : '';
+        $form_class = ($class) ? 'class="'.htmlspecialchars($class).'"' : '';
 		?>
 		<form action="<?php echo $current_url; ?>" method="post" <?php echo $form_class; ?>>
 			<div class="loginElement" id="usernameLoginElement">
