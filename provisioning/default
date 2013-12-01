@@ -8,7 +8,7 @@
 	</Directory>
 	<Directory /var/www/>
 		Options Indexes FollowSymLinks MultiViews
-		AllowOverride FileInfo
+		AllowOverride ALL
 		Order allow,deny
 		allow from all
 	</Directory>
