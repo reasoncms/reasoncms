@@ -41,6 +41,7 @@
   - name: set permissions on write required dirs
     file: path={{ item }} group=www-data mode=0774
     with_items:
+      - /var/www/
       - /var/reason/reason_4.0/data/csv_data/
       - /var/reason/reason_4.0/data/logs/
       - /var/reason/reason_4.0/data/assets/
