@@ -6,7 +6,7 @@
 <db>reason</db>
 <user>reason_user</user>
 <password>some_password</password>
-<host>127.0.0.1</host>
+<host>your.mysql.hostname.or.ip.address</host>
 </database>
 
 <database>
@@ -14,6 +14,6 @@
 <db>reason</db>
 <user>reason_user</user>
 <password>some_password</password>
-<host>127.0.0.1</host>
+<host>your.mysql.hostname.or.ip.address</host>
 </database>
 </databases>
