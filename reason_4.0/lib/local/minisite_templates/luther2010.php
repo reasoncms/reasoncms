@@ -29,16 +29,6 @@ class LutherTemplate2010 extends MinisiteTemplate
 	function start_page() 
 	{
 		$url = get_current_url();
-		// redirect www.luther.edu to www.luther.edu/mobile if using mobile device
-		// do not redirect on subsequent visits for as long as browser is open
-		if (preg_match("/^https?:\/\/[A-Za-z0-9_\.]+\/$/", $url)
-			&& luther_is_mobile_device()
-			&& $_COOKIE['mobileDeviceAndRedirected'] != 'true')	
-		{
-			setcookie('mobileDeviceAndRedirected', 'true');
-	    	header("Location: /mobile");
-		}
-
 		$this->get_title();
 
 		// start page
