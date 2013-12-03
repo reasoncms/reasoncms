@@ -183,6 +183,8 @@ class LutherEventsMiniModule extends LutherEventsModule
 		foreach ($this->events_by_date[$day] as $event_id)
 		{			
 			$this->show_event_list_item( $event_id, $day );
+			if ($this->cur_page->get_value( 'custom_page' ) != 'luther2010_sports' && $this->luther_counter <= 0)
+				break;
 		}		
 	}
 
