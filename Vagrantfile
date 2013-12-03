@@ -17,7 +17,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
-  config.vm.network :private_network, ip: "192.168.33.10"
+  config.vm.network :private_network, ip: "192.168.56.101"
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
@@ -32,7 +32,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Share a additional directories to the guest VM.
   config.vm.synced_folder ".", "/var/reason"
-  config.vm.synced_folder "./reason_4.0/data", "/var/reason/reason_package/reason_4.0/data", :owner=>"www-data", :group=>"www-data"
+  config.vm.synced_folder "./reason_4.0/data", "/var/reason/reason_4.0/data", :owner=>"www-data", :group=>"www-data"
 
   # Ansible provisioning
   config.vm.provision "ansible" do |ansible|

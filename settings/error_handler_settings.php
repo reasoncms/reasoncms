@@ -23,28 +23,18 @@ define( 'PHP_ERROR_LOG_FILE', '/tmp/php-errors-'.$host );
  *
  **/
 
-/* Example:
+// Example:
 
 $GLOBALS[ '_DEVELOPER_INFO' ] = array(
-	'joe' => array(
-		'email' => 'joe@company.com', //error alerts are sent to these emails
-		'ip' => array(	//enter any IP addresses that this person works from
-			'111.22.333.444',
-			'111.22.33.444',
-			'111.222.33.444',
-		),
-		'pager' => '6512785288@tmomail.net',  //emergency error alerts are sent to pagers, if specified
-	),
-	'jane' => array(
+
+	'vagrant' => array(
 		'ip' => array(
-			'11.22.333.444',
+			'10.0.2.2',
+			'192.168.56.1',
+			'127.0.0.1',
 		)
-		//note: emails and pagers are optional
 	),
-
-*/
-
-$GLOBALS[ '_DEVELOPER_INFO' ] = array();
+);
 
 /* Where should the browser get sent if a fatal error occurs?
    Note that this may need to be changed based on where you unpacked Reason.

@@ -7,7 +7,7 @@
   sudo: yes
   tasks:
   - name: ensure apache & php are installed
-    apt: pkg={{ item }} state=present update_cache=yes
+    apt: pkg={{ item }} state=present update_cache=yes cache_valid_time=86400
     with_items:
       - apache2
       - php5
@@ -27,8 +27,11 @@
       - python-mysqldb
   - name: Start the MySQL service
     service: name=mysql state=started
-  - name: create db 'reason'
-    mysql_db: db=reason state=present
+  - name: create reason databases
+    mysql_db: db={{ item }} state=present
+    with_items:
+      - reason
+    notify: import reason databases
   # WARNING!: usernames and passwords should not be specified here for production!
   - name: create user reason_user...NO PRODUCTION PASSWORDS
     mysql_user: state=present name=reason_user password=some_password priv=reason.*:ALL
@@ -39,23 +42,16 @@
       - { src: '/var/reason/reason_4.0/www/', dest: '/var/www/reason' }
       - { src: '/var/reason/www/', dest: '/var/www/reason_package' }
       - { src: '/var/reason/thor/', dest: '/var/www/thor' }
-      - { src: '/var/reason/reason_package/loki_2.0/', dest: '/var/www/loki_2.0' }
-      - { src: '/var/reason/reason_package/flvplayer/', dest: '/var/www/flvplayer' }
-      - { src: '/var/reason/reason_package/jquery/', dest: '/var/wwww/jquery' }
-      - { src: '/var/reason/reason_package/date_picker/', dest: '/var/www/date_picker' }
+      - { src: '/var/reason/loki_2.0/', dest: '/var/www/loki_2.0' }
+      - { src: '/var/reason/flvplayer/', dest: '/var/www/flvplayer' }
+      - { src: '/var/reason/jquery/', dest: '/var/www/jquery' }
+      - { src: '/var/reason/date_picker/', dest: '/var/www/date_picker' }
 
   - name: set permissions on write required dirs
-    file: path={{ item }} group=www-data mode=0774
+    file: path={{ item }} group=www-data mode=0774 state=directory recurse=yes
     with_items:
       - /var/www/
-      - /var/reason/reason_4.0/data/csv_data/
-      - /var/reason/reason_4.0/data/logs/
-      - /var/reason/reason_4.0/data/assets/
-      - /var/reason/reason_4.0/data/images/
-      - /var/reason/reason_4.0/data/tmp/
-      - /var/reason/reason_4.0/data/cache/
-      - /var/www/reason/tmp/
-      - /var/reason/reason_4.0/data/geocodes/
+      - /var/reason/reason_4.0/data/
   - name: copy php.ini to /etc/php5/apache2/php.ini
     copy: src=php.ini dest=/etc/php5/apache2/php.ini owner=root group=root mode=0644
     notify:
@@ -73,8 +69,11 @@
     command: a2enmod rewrite creates=/etc/apache2/mods-enabled/rewrite.load
     notify: 
     - restart apache
-  - name: Write initial database data
-    command: sh /vagrant/provisioning/init_dbs.sh creates=/home/vagrant/dbs_written
   handlers:
     - name: restart apache
       service: name=apache2 state=restarted
+    - name: import reason databases
+      mysql_db: db={{ item.db }} target={{ item.target }} state=import
+      with_items:
+        - { db: reason, target: /vagrant/reason_4.0/data/dbs/reason4.4.sql }
+
