@@ -4,7 +4,7 @@ Provisioning via Vagrant & Ansible
 A locally functional reason within minutes.
 
 1. [Install virtualbox](https://www.virtualbox.org/wiki/Downloads)
-1. [Install ansible](http://docs.vagrantup.com/v2/installation/index.html)
+1. [Install vagrant](http://docs.vagrantup.com/v2/installation/index.html)
 1. [Install ansible](http://www.ansibleworks.com/docs/intro_installation.html)
 1. clone this repository
 1. `cd reason_package`
