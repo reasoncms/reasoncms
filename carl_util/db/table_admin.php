@@ -1238,7 +1238,7 @@ class TableAdmin
 		if ($this->allow_new) $menu_links['Create New Row'] = carl_make_link($links_new);
 		if ($this->show_header) $ret .= '<h3>Displaying '.$this->_filtered_rows.' of '.$this->_total_rows.' rows</h3>';
 		if (!empty($menu_links)) $ret .= $this->gen_menu($menu_links);
-		$form_open_string = '<form name="search" action="'.get_current_url().'" method="post">';
+		$form_open_string = '<form name="search" action="'.htmlspecialchars(get_current_url()).'" method="post">';
 		$ret .= $form_open_string;
 		$ret .= '<table class="table_data">';
 		$ret .= $header;
