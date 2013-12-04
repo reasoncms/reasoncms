@@ -40,7 +40,7 @@
 					fclose($f);
 					unlink($flickrset);
 					//fprintf($f2, "%s\n", $s);
-					preg_match_all("/\"id\";s:10:\"(\d+)\";/", $s, $images);
+					preg_match_all("/\"id\";s:1[01]:\"(\d+)\";/", $s, $images);
 					//ob_start();
 					//print_r($images);
 					//$output = ob_get_clean();
