@@ -22,7 +22,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
   config.vm.provider :virtualbox do |virtualbox|
-    virtualbox.customize ["modifyvm", :id, "--name", "reasonvm"]
+    virtualbox.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
     virtualbox.customize ["modifyvm", :id, "--memory", "1024"]
   end
 
@@ -31,8 +31,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # config.ssh.forward_agent = true
 
   # Share a additional directories to the guest VM.
-  config.vm.synced_folder ".", "/var/reason"
-  config.vm.synced_folder "./reason_4.0/data", "/var/reason/reason_4.0/data", :owner=>"www-data", :group=>"www-data"
+  config.vm.synced_folder ".", "/var/reason_package"
+  config.vm.synced_folder "./reason_4.0/data", "/var/reason_package/reason_4.0/data", :owner=>"www-data", :group=>"www-data"
 
   # Ansible provisioning
   config.vm.provision "ansible" do |ansible|
