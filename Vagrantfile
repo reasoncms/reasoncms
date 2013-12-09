@@ -31,8 +31,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # config.ssh.forward_agent = true
 
   # Share a additional directories to the guest VM.
+  # @todo remove luther_css_js when it's in the reason_package
+  # @todo find a better way to get mysql loaded
   config.vm.synced_folder ".", "/var/reason_package"
   config.vm.synced_folder "./reason_4.0/data", "/var/reason_package/reason_4.0/data", :owner=>"www-data", :group=>"www-data"
+  config.vm.synced_folder "../luther_css_js", "/var/www/", :owner=>"www-data", :group=>"www-data"
+  config.vm.synced_folder "../sql", "/var/sql"
+
 
   # Ansible provisioning
   config.vm.provision "ansible" do |ansible|
