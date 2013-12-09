@@ -5,6 +5,8 @@
     max_clients: 200
     web_root_path: /var/www
     reason_package_path: /var/reason_package
+  # vars_prompt:
+  #   github_user: "What is your github username?"
   user: vagrant
   sudo: yes
   tasks:
@@ -37,6 +39,7 @@
     mysql_db: db={{ item }} state=present
     with_items:
       - reason
+      - thor
     notify:
       - import reason databases
       - open setup in browser
@@ -55,12 +58,15 @@
       - { src: '{{ reason_package_path }}/flvplayer/', dest: '{{ web_root_path }}/flvplayer' }
       - { src: '{{ reason_package_path }}/jquery/', dest: '{{ web_root_path }}/jquery' }
       - { src: '{{ reason_package_path }}/date_picker/', dest: '{{ web_root_path }}/date_picker' }
+      # - { src: '{{ web_root_path }}/luther_css_js/stylesheets/', dest: '{{ web_root_path }}/stylesheets' }
+      # - { src: '{{ web_root_path }}/luther_css_js/javascripts/', dest: '{{ web_root_path }}/javascripts' }
+      # - { src: '{{ web_root_path }}/luther_css_js/images/', dest: '{{ web_root_path }}/images' }
 
   - name: set permissions on write required dirs
-    file: path={{ item }} group=www-data mode=0774 state=directory recurse=yes
+    file: path={{ item.path }} owner={{ item.owner }} group={{ item.group }} mode=0774 state=directory recurse=yes
     with_items:
-      - '{{ web_root_path }}/'
-      - '{{ reason_package_path }}/reason_4.0/data/'
+      - { path: '{{ web_root_path }}/', owner: www-data, group: www-data }
+      - { path: '{{ reason_package_path }}/reason_4.0/data/', owner: www-data, group: www-data }
 
   - name: copy php.ini to /etc/php5/apache2/php.ini
     copy: src=php.ini dest=/etc/php5/apache2/php.ini owner=root group=root mode=0644
@@ -81,7 +87,8 @@
   - name: Apache enable rewrite
     command: a2enmod rewrite creates=/etc/apache2/mods-enabled/rewrite.load
     notify: 
-    - restart apache
+      - restart apache
+      - update urls
 
   handlers:
     - name: restart apache
@@ -90,9 +97,12 @@
     - name: import reason databases
       mysql_db: db={{ item.db }} target={{ item.target }} state=import
       with_items:
-        - { db: reason, target: /vagrant/reason_4.0/data/dbs/reason4.4.sql }
+        - { db: reason, target: /var/sql/reason.sql }
+        - { db: thor, target: /var/sql/thor.sql }
+    
+    - name: update urls
+      command: 'curl -k -f http://192.168.56.101/reason/scripts/urls/update_urls_cli.php'
 
     - name: open setup in browser
       sudo: no
-      local_action: shell open http://192.168.56.101/reason/setup.php
-
+      local_action: 'shell open http://192.168.56.101/reason/setup.php'
