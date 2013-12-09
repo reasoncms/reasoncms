@@ -540,6 +540,17 @@
 			return $this->cleanup_rules;
 		} // }}}
 		/**
+		 * @return array
+		 */
+		function get_noncanonical_request_keys()
+		{
+			return array();
+		}
+		function get_canonical_url()
+		{
+			return NULL;
+		}
+		/**
 		 * the basic run function to display this module.
 		 *
 		 * this is called when the template is in non-editing mode
