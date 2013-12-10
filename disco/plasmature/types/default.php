@@ -156,6 +156,7 @@ class defaultType
 							  'value' =>'default',
 							  'db_type',
 							  'display_style', // deprecated
+							  'trim_input',
 							  );
 							  
 	/**
@@ -199,6 +200,8 @@ class defaultType
 	 * @var array
 	 */
 	protected $_set_args = array();
+	
+	protected $trim_input = true;
 	
 
 	/////////////////////////
@@ -274,7 +277,12 @@ class defaultType
 		if ( isset( $http_vars[ $this->name ] ) )
 		{
 			if( !is_array( $http_vars[ $this->name ] ) AND !is_object( $http_vars[ $this->name ] ) )
-				return trim($http_vars[ $this->name ]);
+			{
+				if($this->trim_input)
+					return trim($http_vars[ $this->name ]);
+				else
+					return $http_vars[ $this->name ];
+			}
 			else
 				return $http_vars[ $this->name ];
 		}
@@ -301,7 +309,7 @@ class defaultType
 	 */
 	function get_display()
 	{
-		$str  = '<input type="text" name="'.$this->name.'" value="'.htmlspecialchars($this->get(),ENT_QUOTES).'" size="50" />';
+		$str  = '<input type="text" name="'.$this->name.'" value="'.htmlspecialchars($this->get(),ENT_QUOTES).'" size="50" class="default" />';
 		return $str;
 	}
 	
@@ -536,6 +544,7 @@ class defaultType
 	}
 	
 	/**
+ 	 * (Deprecated: see get_cleanup_rules())
 	 * Allows a plasmature type to define its own cleanup rule.
 	 * Primarily for use within the Minisite module system
 	 * @returns array The value part of a cleanup rule (generally, 'function' => 'turn_into_something').
@@ -543,6 +552,16 @@ class defaultType
 	function get_cleanup_rule()
 	{
 		return array( 'function' => 'turn_into_string' );
+	}
+
+	/**
+	 * Allows a plasmature type to define its own cleanup rules.
+	 * Primarily for use within the Minisite module system
+	 * @returns array The full cleanup rule(s) for this element (generally, 'name' => array('function' => 'turn_into_something')).
+	 */
+	function get_cleanup_rules()
+	{
+		return array($this->name => array( 'function' => 'turn_into_string' ));
 	}
 
 	/**

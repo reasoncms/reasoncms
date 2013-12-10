@@ -1,0 +1,15 @@
+div#av div.item {
+	margin-bottom:2em;
+}
+div#av h4.share_download_header {
+	font-size:1em;
+}
+div#av div.share_download_info h5 {
+	margin:0;
+}
+div#av div.share_download_info div.share h5, div#av div.share_download_info div.share ul, div#av div.share_download_info div.share li, div#av div.share_download_info div.download h5, div#av div.share_download_info div.download ul, div#av div.share_download_info div.download li {
+	margin:0 0.25em 0 0;
+	padding:0;
+	display:inline;
+	list-style:none;
+}

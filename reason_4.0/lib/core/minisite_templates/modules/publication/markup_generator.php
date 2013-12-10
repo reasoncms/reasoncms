@@ -112,6 +112,14 @@ class PublicationMarkupGenerator
 			}
 		}
 	}
+	/**
+	 * If a markup generator needs to add head items it can interact with the head items object here.
+	 * @param object $head_items
+	 * @return void
+	 */
+	function add_head_items($head_items)
+	{
+	}
 
 	/**
 	*  Hook for the code that actually generates the markup.  

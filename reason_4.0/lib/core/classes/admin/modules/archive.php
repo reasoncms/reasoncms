@@ -17,6 +17,8 @@
 		var $content_transform = array(
 			'form'=>array('thor_content'=>'specialchars'),
 			'minisite_page'=>array('extra_head_content'=>'specialchars'),
+			'user'=>array('user_password_hash'=>'obscure'),
+			'av'=>array('salt'=>'obscure'),
 		);
 		var $current;
 		var $_current_user;
@@ -459,6 +461,10 @@
 		function specialchars($value)
 		{
 			return nl2br(htmlspecialchars($value,ENT_QUOTES,'UTF-8'));
+		}
+		function obscure($value)
+		{
+			return '[Value Obscured]';
 		}
 	}
 	

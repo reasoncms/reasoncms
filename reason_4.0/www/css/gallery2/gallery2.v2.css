@@ -1,0 +1,164 @@
+/**** Item List markup ****/
+ul#imageGalleryItemList {
+	display: block;
+	list-style: none;
+	margin:1em 0;
+	padding:0;
+}
+
+ul#imageGalleryItemList li.item {
+	overflow: hidden;
+	display:inline-block;
+	margin: 10px 5px;
+	text-align: center;
+	vertical-align:top;
+}
+#imageGalleryItemList li.item a.imageLink  {
+	text-decoration:none;
+}
+#imageGalleryItemList li.item .noImagePlaceholder {
+	display:block;
+	height: 70px;
+	width: 105px;
+	overflow: hidden;
+	margin: 0 10px;
+	padding:10px;
+	background-color: #CCCCCC;
+	border: 1px solid #000000;
+	color: #666666;
+	font-weight: bold;
+}
+
+#imageGalleryItemList li.item p.descText, #imageGalleryItemList li.item p.dateText {
+	margin: 1px 0 2px 0;
+	font-size: 85%;
+}
+
+ul#imageGalleryItemList li.item img {
+	border: 1px solid #000000;
+}
+
+li#imageGalleryNextPageItem {
+	display: none;
+	overflow: hidden;
+	margin: 10px 5px;
+	text-align: center;
+	vertical-align:top;
+}
+
+#imageGalleryItemList:after, div#imageGallery div.pagination:after {
+    content: "."; 
+    display: block; 
+    height: 0; 
+    clear: both; 
+    visibility: hidden;
+}
+
+div#imageGallery div.pagination {
+	padding:.3em .5em;
+	background-color:#D0E0EC;
+}
+div#imageGallery div.pagination.below {
+	text-align:right;
+}
+div#imageGallery div.pagination .next {
+	padding-left:1em;
+	margin-left:.67em;
+	border-left:1px dotted #333;
+}
+div#imageGallery div.pagination .previous {
+	padding-right:1em;
+	margin-right:.67em;
+	border-right:1px dotted #333;
+}
+div#imageGallery div.pagination a {
+	text-decoration:none;
+}
+div#imageGallery div.pagination a:hover {
+	text-decoration:underline;
+}
+
+/* Hides from IE-mac \*/
+* html #imageGalleryItemList { height: 1%; }
+#imageGalleryItemList { display: block; }
+/* End hide from IE-mac */
+
+/**** Joint markup ****/
+
+
+/**** Single Item Page markup ****/
+div.item {
+	text-align: center;
+}
+div.prevWrapper {
+	float: left;
+	height: 80px;
+	width: 80px;
+	overflow: hidden;
+	border: 1px solid #000;
+	margin: 0 5px 5px 0 !important;
+}
+div.nextWrapper {
+	height: 80px;
+	width: 80px;
+	overflow: hidden;
+	float: right;
+	border: 1px solid #000;
+	margin: 0 0 5px 5px !important;
+}
+div.thumbnail {
+	height: 80px;
+	overflow: hidden;
+}
+div.prevWrapper a, div.nextWrapper a {
+	position:relative;
+	top: -80px;
+}
+img.nav_arrow {
+	filter:alpha(opacity=60);
+	-moz-opacity: 0.6;
+	opacity: 0.6;
+}
+a:hover img.nav_arrow, a:hover img.nav_arrow {
+	filter:alpha(opacity=80);
+	-moz-opacity: 0.8;
+	opacity: 0.8;
+}
+div.prevWrapper a img, div.nextWrapper a img {
+	border: none;
+}
+div#imageGallery div.imageWrapper {
+	text-align: center;
+}
+div#imageGallery div.imageCaptionWrapper {
+	margin:1em;
+}
+div#imageGallery div.imageCaptionWrapper div.author, div#imageGallery div.imageCaptionWrapper div.owner, div#imageGallery div.imageCaptionWrapper div.dateTime {
+	margin:.75em 0;
+	font-size:90%;
+}
+div#imageGallery div.imageCaptionWrapper div.author h4 {
+	display:inline;
+	font-size:100%;
+	margin:0;
+}
+div#imageGallery h3.imageTitle {
+	margin-bottom:.05em;
+}
+div#imageGallery div.sequenceNum {
+	color:#333;
+	font-size:90%;
+	margin:.1em 0 .4em 0;
+}
+div#imageGallery div.imageCaptionWrapper div.keywords {
+	display:none;
+	/* At some point it would be nice to actually show the keywords... */
+}
+
+div#imageGallery div.back {
+	clear: both;
+}
+
+/* html img#prev_nav_arrow {
+   behavior: url("pngbehavior.htc");
+}*/

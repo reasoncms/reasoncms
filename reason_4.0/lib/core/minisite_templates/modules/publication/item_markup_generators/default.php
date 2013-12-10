@@ -8,6 +8,8 @@
  */
 reason_include_once( 'minisite_templates/modules/publication/markup_generator.php' );
 
+reason_include_once('classes/media/factory.php');
+
 /**
 *  Generates the full markup for an individual news item or blog post.
 *
@@ -30,6 +32,7 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 								  'publication',
 								  'item_events',
 								  'item_images',
+								  'item_media',
 								  'item_assets',
 								  'item_categories',
 								  'item_social_sharing',
@@ -39,14 +42,24 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 								  'permalink',
 								  'comment_has_errors',
 								  'inline_editing_info',
-								  //'next_post',
-								  //'previous_post',
+								  'next_post',
+								  'previous_post',
 								);
 
 
 	function additional_init_actions()
 	{
 		$this->item = $this->passed_vars['item'];
+	}
+	
+	function add_head_items($head_items)
+	{
+		parent::add_head_items($head_items);
+		if($this->should_show_media_section() && $this->get_media_count() > 1)
+		{
+			$head_items->add_javascript(JQUERY_URL, true);
+			$head_items->add_javascript(REASON_HTTP_BASE_PATH.'modules/publications/media_gallery.js');
+		}
 	}
 
 	function run()
@@ -79,6 +92,10 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 		{
 			$this->markup_string .= '<div class="social top">'.$this->get_social_sharing_section().'</div>'."\n";
 		}
+		if($this->should_show_media_section())
+		{
+			$this->markup_string .= '<div class="media">'.$this->get_media_section().'</div>'."\n";
+		}
 		if($this->should_show_content_section())
 		{
 			$this->markup_string .= '<div class="text">'.$this->get_content_section().'</div>'."\n";
@@ -95,6 +112,12 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 		{
 			$this->markup_string .= $this->get_back_links_markup();
 		}
+		// Not quite ready to add this to the default markup generator
+		// Main question: should this go above or below the comments?
+		if($this->should_show_next_prev_section())
+		{
+			$this->markup_string .= '<div class="nextPrev">'.$this->get_next_prev_section().'</div>'."\n";
+		}
 		if($this->should_show_comments_section())
 		{
 			$this->markup_string .= '<div class="comments">'.$this->get_comments_section().'</div>'."\n";
@@ -103,12 +126,6 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 		{
 			$this->markup_string .= '<div class="addCommentForm">'.$this->get_comment_adder_section().'</div>'."\n";
 		}
-		// Not quite ready to add this to the default markup generator
-		// Main question: should this go above or below the comments?
-		/* if($this->should_show_next_prev_section())
-		{
-			$this->markup_string .= '<div class="nextPrev">'.$this->get_next_prev_section().'</div>'."\n";
-		} */
 		$this->markup_string .= '</div>'."\n";
 		if($show_related_section)
 		{
@@ -220,6 +237,81 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 	function get_author_section()
 	{
 		return 'By '.$this->item->get_value( 'author' );
+	}
+	function should_show_media_section()
+	{
+		return (!empty($this->passed_vars['item_media']));
+	}
+	function get_media_count()
+	{
+		return count($this->passed_vars['item_media']);
+	}
+	/**
+	 * Get the markup for the media section
+	 * @todo support classic media somehow
+	 */
+	function get_media_section()
+	{
+		$class = $this->get_media_count() > 1 ? 'mediaGallery' : 'basicMedia';
+		$str = '<ul class="'.$class.'">';
+		foreach($this->passed_vars['item_media'] as $media)
+		{
+			$str .= '<li>';
+			$str .= '<div class="titleBlock">';
+			if($placard_info = $this->get_media_placard_info($media))
+				$str .= '<img src="'.$placard_info['url'].'" alt="Placeholder image for '.reason_htmlspecialchars($media->get_value('name')).'" class="placard" width="'.$placard_info['width'].'" height="'.$placard_info['height'].'" style="display:none;" />';
+			$str .= '<div class="mediaName">'.$media->get_value('name').'</div>';
+			$str .= '</div>';
+			//$str .= $media->get_value('integration_library').'<br />';
+			$displayer_chrome = MediaWorkFactory::displayer_chrome($media, 'default');
+			if ($displayer_chrome)
+			{
+				$str .= '<div class="mediaDisplay">';
+				$displayer_chrome->set_media_work($media);
+				
+				if($height = $this->get_media_display_height());
+					$displayer_chrome->set_media_height($height);
+				
+				if($width = $this->get_media_display_width());
+					$displayer_chrome->set_media_width($width);
+				
+				//$str .= get_class($displayer_chrome);
+	
+				$str .= $displayer_chrome->get_html_markup();
+				$str .= '</div>';
+			}
+			$str .= '</li>';
+		}
+		$str .= '</ul>';
+		return $str;
+	}
+	protected function get_media_display_height()
+	{
+		return NULL;
+	}
+	protected function get_media_display_width()
+	{
+		return 480;
+	}
+	protected function get_media_placard_info($media)
+	{
+		if($placards = $media->get_left_relationship('av_to_primary_image'))
+		{
+			$placard = current($placards);
+			$placard_url = reason_get_image_url($placard, 'tn');
+			list($width, $height) = getimagesize(reason_get_image_path($placard, 'tn'));
+		}	
+		else
+		{
+			$placard_url =  REASON_HTTP_BASE_PATH.'modules/publications/media_placeholder_thumbnail.png';
+			$width = 125;
+			$height = 70;
+		}
+		return array(
+			'url' => $placard_url,
+			'width' => $width,
+			'height' => $height,
+		);
 	}
 	function should_show_content_section()
 	{
@@ -374,14 +466,20 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 		$ret = '';
 		if(!empty($this->passed_vars['previous_post']))
 		{
-			$ret .= '<div class="prev">'."\n";
+			$ret .= '<div class="prev';
+			if(empty($this->passed_vars['next_post']))
+				$ret .= ' only';
+			$ret .= '">'."\n";
 			$ret .= '<h4>Previous Post</h4> '."\n";
 			$ret .= '<p><a href="'.$this->passed_vars['previous_post']->get_value('link_url').'">'.$this->passed_vars['previous_post']->get_value('release_title').'</a></p>'."\n";
 			$ret .= '</div>'."\n";
 		}
 		if(!empty($this->passed_vars['next_post']))
 		{
-			$ret .= '<div class="next">'."\n";
+			$ret .= '<div class="next';
+			if(empty($this->passed_vars['previous_post']))
+				$ret .= ' only';
+			$ret .= '">'."\n";
 			$ret .= '<h4>Next Post</h4> '."\n";
 			$ret .= '<p><a href="'.$this->passed_vars['next_post']->get_value('link_url').'">'.$this->passed_vars['next_post']->get_value('release_title').'</a></p>'."\n";
 			$ret .= '</div>'."\n";
@@ -440,20 +538,34 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 			case 'publication_comments_off':
 				break;
 			case 'item_comments_off':
-				$ret .= '<h4>Comments for this post are turned off</h4>';
+				$ret .= '<div class="commentsOff">'."\n";
+				$ret .= '<h4>Comments for this post are turned off</h4>'."\n";
+				$ret .= '</div>';
 				break;
 			case 'login_required':
+				$ret .= '<div class="loginRequired">'."\n";
 				$ret .= '<h4>Add a comment</h4>'."\n";
+				$ret .= '<div class="subContent">'."\n";
 				$ret .= '<p>Please <a href="'.REASON_LOGIN_URL.'"> login </a> to comment.</p>';
+				$ret .= '</div>';
+				$ret .= '</div>';
 				break;
 			case 'user_not_permitted':
+				$ret .= '<div class="notPermitted">'."\n";
 				$ret .= '<h4>Commenting Restricted</h4>'."\n";
+				$ret .= '<div class="subContent">'."\n";
 				$ret .= '<p>You do not currently have the rights to post a comment. If you would like to comment, please contact the site maintainer listed on this page.</p>';
+				$ret .= '</div>';
+				$ret .= '</div>';
 				break;
 			case 'open_comments':
 			case 'user_has_permission':
+				$ret .= '<div class="commentsOn">'."\n";
 				$ret .= '<a name="addComment"></a><h4>Add a comment</h4>'."\n";
+				$ret .= '<div class="subContent">';
 				$ret .= $this->passed_vars['comment_form_markup'];
+				$ret .= '</div>';
+				$ret .= '</div>';
 				break;
 			default:
 				trigger_error( 'commenting_status not an expected value ('.$this->passed_vars['commenting_status'].')' );

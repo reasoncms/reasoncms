@@ -11,12 +11,11 @@
 	
 	reason_include_once( 'classes/av_display.php' );
 	reason_include_once( 'function_libraries/url_utils.php' );
-	reason_include_once( 'classes/kaltura_shim.php' );
 	reason_include_once('classes/media_work_helper.php');
-	reason_include_once( 'classes/media_work_displayer.php' );
-
+	reason_include_once('classes/media/factory.php');
+	
 /**
- * A minisite module that displays the normal-sized images attached to the current page
+ * A minisite module that displays the media attached to the current page
  */
 class avSimpleModule extends Generic3Module
 {
@@ -71,32 +70,32 @@ class avSimpleModule extends Generic3Module
 		echo '<li>';
 		echo '<h4>'.$item->get_value('name').'</h4>'."\n";
 		echo '<div class="media">'."\n";
-		if ($item->get_value('integration_library') == 'kaltura')
+		
+		$displayer_chrome = MediaWorkFactory::displayer_chrome($item, 'default');
+		if ($displayer_chrome)
 		{
-			$displayer = new MediaWorkDisplayer();
+			$displayer_chrome->set_media_work($item);
 			if($this->params['height'])
-				$displayer->set_height($this->params['height']);
+				$displayer_chrome->set_media_height($this->params['height']);
 			if($this->params['width'])
-				$displayer->set_width($this->params['width']);
-			$displayer->set_media_work($item);
-			echo $displayer->get_iframe_markup();
+				$displayer_chrome->set_media_width($this->params['width']);
+
+			$embed_markup = $displayer_chrome->get_html_markup();
+			echo $embed_markup;
+	
+			echo '</div>'."\n";
+			if($this->params['show_descriptions'] && $item->get_value('description'))
+			{
+				echo '<div class="description">'.$item->get_value('description').'</div>'."\n";
+			}
+			if($this->params['show_authors'] && $item->get_value('author'))
+			{
+				echo '<div class="author">By '.$item->get_value('author').'</div>'."\n";
+			}
 		}
 		else
 		{
-			$files = $this->get_av_files( $item, 1 );
-			$first = reset($files);
-			$avd = new reasonAVDisplay();
-			$avd->disable_automatic_play_start();
-			echo $avd->get_embedding_markup($first);
-		}
-		echo '</div>'."\n";
-		if($this->params['show_descriptions'] && $item->get_value('description'))
-		{
-			echo '<div class="description">'.$item->get_value('description').'</div>'."\n";
-		}
-		if($this->params['show_authors'] && $item->get_value('author'))
-		{
-			echo '<div class="author">By '.$item->get_value('author').'</div>'."\n";
+			echo 'Media unavailable.';
 		}
 		echo '</li>'."\n";
 	}

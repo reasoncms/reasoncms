@@ -304,21 +304,30 @@ class Feature_Helper
 			$ret['av_img_id']="none";
 		}
 		
-		if($media_work->get_value('integration_library') == 'kaltura')
+		if($media_work->get_value('integration_library') && $media_work->get_value('integration_library') != 'default')
 		{
-			reason_include_once('classes/media_work_displayer.php');
-			$displayer = new MediaWorkDisplayer();
-			$displayer->set_media_work($media_work);
-			$displayer->set_height($height);
-			$displayer->set_width($width);
-			$ret['av_html'] = $displayer->get_iframe_markup();
-			$ret['type'] = $media_work->get_value('av_type');
-			$ret['format'] = 'HTML5';
+			reason_include_once('classes/media/factory.php');
+			$displayer_chrome = MediaWorkFactory::displayer_chrome($media_work, 'default');
+			if ($displayer_chrome)
+			{
+				$displayer_chrome->set_media_work($media_work);
+				$displayer_chrome->set_media_height($height);
+				$displayer_chrome->set_media_width($width);
+				$ret['av_html'] = $displayer_chrome->get_html_markup();
+				$ret['type'] = $media_work->get_value('av_type');
+				$ret['format'] = 'HTML5';
+			}
+			else
+			{	// TODO: test this?
+				$ret['av_html'] = '<p>Not available.</p>';
+				$ret['type'] = $media_work->get_value('av_type');
+				$ret['format'] = 'HTML5';
+			}
 		}
 		else
 		{
 			$avd = new reasonAVDisplay();
-
+			
 			$es = new entity_selector();
 			$es->add_type( id_of('av_file' ) );
 			$es->add_right_relationship( $media_works_id, relationship_id_of('av_to_av_file') );

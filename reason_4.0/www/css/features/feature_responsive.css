@@ -1,0 +1,124 @@
+/* This is the base feature css. Customizations can be done on the theme or page level. */
+.featureVideo{
+	display:none;
+}
+.featuresModule {
+	position:relative;
+}
+.featuresModule .feature {
+	overflow:hidden;
+}
+.featuresModule a img {
+	border:none;
+}
+.featuresModule .featureImage img {
+	max-width:100%;
+	height:auto;
+}
+.featuresModule .feature.inactive
+{
+	display:none;
+}
+.featuresModule .feature.active
+{
+	display:block;
+}
+.featuresModule .feature {
+	display:inline-block;
+}
+.featuresModule .feature {
+	position:relative;
+	display:block;
+}
+.features { width:100%; height:0; padding:0; }
+.features .sizable { height:100%; width:100%; }
+.featuresModule .featureContent {
+	text-align:center;
+}
+.featuresModule .feature .featureInfo {
+	position:absolute;
+	text-align:left;
+	bottom:0;
+	left:0;
+	width:100%;
+	color:#fff;
+	background-image:url(70_percent_black.png);
+	zoom:1;
+}
+/* hacks ahoy! This targets all browsers but IE7 & 8, which don't support rgba but do support semitransparent pngs used above */
+:root *> .featuresModule .feature .featureInfo, * html .featuresModule .feature .featureInfo {
+	background-image:none;
+	background-color:#666;
+	background-color:rgba(0,0,0,0.7);
+}
+
+.featuresModule .feature .featureInfo h3 {
+	margin:0;
+}
+.featuresModule .feature .featureInfo a {
+	color:#fff;
+}
+.featuresModule .feature .featureInfo a.dest {
+	text-decoration:none;
+}
+.featuresModule .feature .featureInfo a.anchor {
+	text-decoration:none;
+}
+.featuresModule .feature .featureTitle a.dest, .featuresModule .feature .featureTitle a.anchor, .featuresModule .feature .featureTitle span.noLink, .featuresModule .feature .featureText a.dest, .featuresModule .feature .featureText a.anchor, .featuresModule .feature .featureText span.noLink {
+	display:block;
+	padding:8px 12px 0 12px;
+}
+.featuresModule .feature .featureText a.dest, .featuresModule .feature .featureText a.anchor, .featuresModule .feature .featureText span.noLink {
+	padding-top:0;
+}
+/* .feature:hover .featureTitle a.dest {
+	text-decoration:underline;
+} */
+.featuresModule div.featureImage a, .featuresModule h3.featureTitle a, .featuresModule div.featureText a {
+	display:block;
+}
+
+
+.featuresModule ul {
+	margin:0;
+	list-style:none;
+}
+.featuresModule .feature .featureNav {
+	padding:0.25em 0.75em 0.5em 0.75em;
+	text-align:right;
+}
+.featuresModule .feature .featureNav a {
+	text-decoration:none;
+}
+.featuresModule .feature .featureNav .navBlock a {
+	margin-left:0.25em;
+}
+.featuresModule .feature .featureNav a.current {
+	font-weight:bold;
+}
+#nyroModalWrapper, #nyroModalLoading.error {
+	background-color:#fff;
+	padding:20px;
+	-moz-box-shadow: 0 3px 8px #000;
+	-webkit-box-shadow: 0 3px 8px #000;
+	box-shadow: 0 3px 8px #000;
+}
+#nyroModalWrapper #closeBut .closeText {
+	display:none;
+}
+#nyroModalWrapper #closeBut {
+	padding:6px;
+	position:absolute;
+	display:block;
+	right:-18px;
+	top:-16px;
+	width:16px;
+	height:16px;
+	background:#fff;
+	-moz-border-radius:13px;
+	-webkit-border-radius:13px;
+	border-radius:13px;
+	-moz-box-shadow: 0 1px 4px #000;
+	-webkit-box-shadow: 0 1px 4px #000;
+	box-shadow: 0 1px 4px #000;
+}

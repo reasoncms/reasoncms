@@ -98,17 +98,13 @@ class galleryFilterDisplay extends defaultFilterDisplay
 			$ret .= '<input type="hidden" name="filters['.$key.'][type]" value="'.$vals['type'].'">';
 			$ret .= '<input type="hidden" name="filters['.$key.'][id]" value="'.$vals['id'].'">';
 		}
-		if (!empty($this->textonly))
-			$ret .= '<input type="hidden" name="textonly" value="1">';
-		$ret .= 'Search: <input name="search" value="'.$v.'" size="'.$this->search_field_size.'" />'."\n";
+		$ret .= '<label for="gallerySearchField" class="searchLabel">Search</label><span class="colon">:</span> <input name="search" value="'.$v.'" size="'.$this->search_field_size.'" id="gallerySearchField" type="text" />'."\n";
 		$ret .= ' <input name="go" type="submit" value="Go">'."\n";
 		if(!empty($this->search_value))
 		{
 			$link = '?';
 			if(!empty($this->default_links))
 				$link .= implode('&amp;', $this->default_links);
-			if (!empty($this->textonly))
-				$link .= '&amp;textonly=1';
 			$ret .= ' <a href="'.$link.'" title="Remove this search term">Remove</a>'."\n";
 			if ($this->get_filter_numbers() && !empty($this->num_after_filter) && !empty($this->num_before_filter))
 			{

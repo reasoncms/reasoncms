@@ -59,7 +59,7 @@ class reasonVersionCheck
 	 */
 	function get_current_version_id()
 	{
-		return '4.4';
+		return '4.5';
 	}
 	
 	/**

@@ -12,6 +12,7 @@ reason_include_once('classes/url_manager.php');
 reason_include_once('classes/page_types.php');
 reason_include_once('minisite_templates/page_types.php');
 reason_require_once( 'minisite_templates/page_types.php' );
+reason_include_once( 'classes/plasmature/head_items.php' );
 include_once( DISCO_INC . 'plugins/input_limiter/input_limiter.php' );
 
 $GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'MinisitePageManager';
@@ -35,6 +36,8 @@ class MinisitePageManager extends parent_childManager
 		}
 		$this->head_items->add_stylesheet(REASON_ADMIN_CSS_DIRECTORY.
 				'content_managers/minisite_page.css');
+		$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.
+				'content_managers/page.js');
 	}
 	
 	/**
@@ -110,8 +113,10 @@ class MinisitePageManager extends parent_childManager
 		$this->_no_tidy[] = 'url_fragment';
 		$this->_no_tidy[] = 'custom_page';
 		$this->_no_tidy[] = 'extra_head_content';
+		$this->_no_tidy[] = 'extra_head_content_structured';
 		
 		$this->set_allowable_html_tags('extra_head_content','all');
+		$this->set_allowable_html_tags('extra_head_content_structured','all');
 
 		$this->add_element( 'is_link', 'hidden' );
 		if( !empty( $_REQUEST[ 'is_link' ] ) OR $this->get_value( 'url' ) )
@@ -194,13 +199,23 @@ class MinisitePageManager extends parent_childManager
 			if( !reason_user_has_privs( $this->admin_page->user_id, 'edit_head_items') )
 			{
 				$this->remove_element( 'extra_head_content' );
+				$this->remove_element( 'extra_head_content_structured' );
 			}
+			else
+			{
+				$this->change_element_type( 'extra_head_content_structured', 'head_items' );
+				$this->set_display_name('extra_head_content_structured','Header Items');
+				$this->set_display_name('extra_head_content','Additional Header Content');
+				$this->add_comments('extra_head_content',form_comment('If you need to add headers that are not simple css or javascript, enter raw HTML header markup here.'));
+			}
+			
+			$this->alter_page_type_section();
 			
 			// for admin users
 			$rpts =& get_reason_page_types();
 			if(reason_user_has_privs( $this->admin_page->user_id, 'assign_any_page_type'))
 			{
-				$options = array();
+				$options = array(''=>'--');
 				$pts = $rpts->get_page_types();
 				$deprecated_mods = $this->_get_deprecated_modules();
 					
@@ -214,13 +229,14 @@ class MinisitePageManager extends parent_childManager
 					}
 
 				}
-				$this->change_element_type( 'custom_page' , 'select' , array( 'options' => $options ) );
+				ksort($options);
+				$primary = $this->get_element_property('custom_page', 'options');
+				if(!empty($primary))
+					$this->change_element_type( 'custom_page' , 'radio_with_other_no_sort' , array( 'options' => $primary, 'other_options' => $options ) );
+				else
+					$this->change_element_type('custom_page' , 'select_no_sort', array( 'options' => $options ));
 				$this->set_comments( 'custom_page', form_comment('<a href="'.REASON_HTTP_BASE_PATH.'scripts/page_types/view_page_type_info.php">Page type definitions</a>.') );
 
-			}
-			else
-			{
-				$this->alter_page_type_section();
 			}
 			
 			$page_type_for_note = $this->get_value('custom_page') ? $this->get_value('custom_page') : 'default';
@@ -270,14 +286,29 @@ class MinisitePageManager extends parent_childManager
 		$limiter->suggest_limit('description', 156);
 		$limiter->auto_show_hide('description', false);
 		
-		$this->set_order(array('name', 'link_name', 'unique_name', 'author', 'description', 'keywords', 'parent_id', 'parent_info', 'url_fragment', 'extra_head_content', 'nav_display', 'custom_page', 'page_type_note', 'content') );
+		$administrator_fields = array('extra_head_content_structured', 'extra_head_content', 'unique_name');
+		$has_administrator_field = false;
+		foreach($administrator_fields as $field)
+		{
+			if($this->is_element($field) && !$this->element_is_hidden($field) )
+			{
+				$has_administrator_field = true;
+				break;
+			}
+		}
+		if($has_administrator_field)
+		{
+			$this->add_element('administrator_section_heading', 'comment', array('text' => '<h3>Administrator Tools</h3>'));
+		}
+		
+		$this->set_order(array('name', 'link_name', 'author', 'description', 'keywords', 'parent_id', 'parent_info', 'url_fragment', 'nav_display', 'custom_page', 'page_type_note', 'content', 'state', 'administrator_section_heading', 'extra_head_content_structured', 'extra_head_content', 'unique_name') );
 	}
 	
 	function _add_page_url_elements($parents)
 	{
 		foreach($this->build_path_map($parents) as $id=>$path)
 		{
-			$this->add_element('path_to_'.$id, 'hidden');
+			$this->add_element('path_to_'.$id, 'protected');
 			$this->set_value('path_to_'.$id, $path);
 		}
 	}
@@ -289,8 +320,8 @@ class MinisitePageManager extends parent_childManager
 	function alter_page_type_section()
 	{
 		$basic_options = array( 
-			"default" => "Normal Page",
-			"gallery" => 'Photo Gallery <span class="smallText">(Shows associated images in a gallery format)</span>',
+			'default' => 'Normal Page',
+			'gallery' => 'Photo Gallery <span class="smallText">(Shows associated images in a gallery format)</span>',
 			'show_children' => 'Shows children <span class="smallText">(Shows child pages in a list with their descriptions. Note: this includes pages not shown in navigation.)</span>',
 			'show_siblings' => 'Shows siblings <span class="smallText">(Shows this page\'s sibling pages after the content of the page. Note: this includes pages not shown in navigation.)</span>',
 		);
@@ -325,11 +356,14 @@ class MinisitePageManager extends parent_childManager
 		
 		if ( !$this->get_value('custom_page') ) $this->set_value( 'custom_page', 'default' ); // set as default if no value
 		
-		if ( array_key_exists($this->get_value('custom_page'),$basic_options ) )
+		if ( array_key_exists($this->get_value('custom_page'),$basic_options ) || reason_user_has_privs( $this->admin_page->user_id, 'assign_any_page_type') )
 		{
 			$this->change_element_type( 'custom_page' , 'radio_no_sort' , array( 'options' => $basic_options ) );
 		}
-		else $this->change_element_type( 'custom_page', 'solidtext' );	
+		else 
+		{
+			$this->change_element_type( 'custom_page', 'solidtext' );
+		}
 	}
 	
 	function alter_tree_list( $list, $parent_id )

@@ -77,9 +77,10 @@ class EventSlotRegistrationForm extends Disco{
 		$slot_entity = get_entity_by_id($this->request_array['slot_id']);
 		$registrants = explode($this->delimiter1, $slot_entity['registrant_data']);
 
+		$lc_email = strtolower($this->get_value('email'));
 		foreach ($registrants as $registrant => $value) {
 			$regs = explode($this->delimiter2, $value);
-			if (in_array($this->get_value('email'), $regs))
+			if (in_array($lc_email, array_map('strtolower', $regs)))
 			{
 				return false;
 			}

@@ -312,7 +312,7 @@ class defaultFilterDisplay
 				$ret .= '<input type="hidden" name="search" value="'.htmlspecialchars($this->search_value,ENT_QUOTES,"UTF-8").'">';
 			}
 			if(count($this->filter_types) != 1)
-				$ret .= 'Browse by '.implode('/',array_keys($this->filter_types)).':'."\n";
+				$ret .= '<span class="filterLabel">Browse by '.implode('/',array_keys($this->filter_types)).':</span>'."\n";
 			foreach($this->filters as $key=>$values)
 			{
 				$ret .= $this->_build_filter_set($key);

@@ -1,4 +1,4 @@
-div.publication div.moduleNav ul, div.publication div.fullPost div.comments ul {
+div.publication div.moduleNav ul, div.publication div.fullPost div.comments>ul {
 	margin-left:0px;
 	padding-left:0px;
 	list-style-type:none;
@@ -32,7 +32,7 @@ div.publication div.moduleNav div.filterMessage span.clear {
 	font-weight:normal;
 	opacity:0.7;
 }
-div.publication div.fullPost div.comments ul li {
+div.publication div.fullPost div.comments>ul>li {
 	padding:1em;
 	margin:.5em 0px .5em 0px;
 	background-color:#F0F5FF;
@@ -61,6 +61,51 @@ div.publication div.fullPost div.relatedItems {
 	float:right;
 	width:28%;
 	clear:right;
+}
+div.publication .fullPost .media {
+	margin:1em 0;
+}
+div.publication .fullPost .media>ul, div.publication .fullPost .media>ul>li {
+	margin:0;
+	padding:0;
+	list-style:none;
+	display:block;
+}
+div.publication div.fullPost .media .playingMedia {
+	margin:0.5em 0;
+}
+div.publication div.fullPost .media .playingMedia {
+	outline-style:none;
+	box-shadow:none;
+	border-color:transparent;
+}
+div.publication div.fullPost .media img.placard {
+	display:none;
+}
+div.publication div.fullPost .media .galleryActive>li {
+	display:inline-block;
+	list-style:none;
+	padding:0;
+	margin:0 1px 1px 0;
+	vertical-align:top;
+	font-size:0.846em;
+}
+div.publication div.fullPost .media .galleryActive>li a {
+	display:block;
+	padding:1em;
+	background-color:#eee;
+	background-color:rgba(0,0,0,0.08);
+}
+div.publication div.fullPost .media .galleryActive>li a:hover, div.publication div.fullPost .media .galleryActive>li a:active, div.publication div.fullPost .media .galleryActive>li a:focus {
+	background-color:#ccc;
+	background-color:rgba(0,0,0,0.24);
+}
+div.publication div.fullPost .media .galleryActive>li.showing a {
+	background-color:#ddd;
+	background-color:rgba(0,0,0,0.16);
+	text-decoration:none;
+	color:#333;
+	cursor:default;
 }
 div.publication div.fullPost div.images h4 {
 	display:block;

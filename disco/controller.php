@@ -896,7 +896,7 @@ class FormController
 		foreach( $this->_vars AS $key => $form )
 		{
 			$el = $this->forms[ $form ]->get_element( $key );
-			$rules[ $key ] = $el->get_cleanup_rule();
+			$rules = array_merge($rules, $el->get_cleanup_rules());
 		}
 		return $rules;
 	} // }}}

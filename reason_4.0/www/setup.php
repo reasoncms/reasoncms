@@ -279,6 +279,8 @@ function setup_www_local_support()
 			$str = 'RewriteEngine On' . "\n";
 			$str .= 'RewriteCond ' . $www_local_dir . '$0 -f' . "\n";
 			$str .= 'RewriteRule ^(.*)$ ./local/$0' ."\n";
+			$str .= 'RewriteCond %{REQUEST_FILENAME} !-f' ."\n";
+			$str .= 'RewriteRule ^'.basename(WEB_TEMP).'/less_compiled/[a-f0-9]{2}/([a-f0-9]{32})_(.*)\.css$ scripts/urls/less_redirect.php?basename=$1 [L]';
 			if (!is_writable(dirname($www_local_htaccess)))
 			{
 				echo '<p>The .htaccess file ' . $www_local_htaccess . ' does not exists and cannot be created by apache.</p>';
@@ -478,7 +480,7 @@ function perform_checks()
 	if (data_dir_writable(rtrim($_SERVER[ 'DOCUMENT_ROOT' ], DIRECTORY_SEPARATOR).WEB_TEMP, 'WEB_TEMP')) $check_passed++;
 	else $check_failed++;
 
-	if (data_dir_writable(REASON_INC.'data/geocodes/', 'Geocode data directory')) $check_passed++;
+	if (data_dir_writable(REASON_DATA_DIR.'geocodes/', 'Geocode data directory')) $check_passed++;
 	else $check_failed++;
 	
 	echo '<h4>Read checks</h4>';

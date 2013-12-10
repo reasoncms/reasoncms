@@ -28,6 +28,7 @@ class Email
 	var $_subject;
 	var $_txtbody;
 	var $_htmlbody;
+	var $_attachments;
 
 	/**
 	 * Construct the Email object
@@ -38,9 +39,10 @@ class Email
 	 * @param string $txtbody The text version of the email body
 	 * @param string $htmlbody An HTML version of the email body (if available)
 	 * @param string $address_types one of "mixed", "email", or "username" -- if tos, froms, and replytos are all either email addresses or usernames, indicating that here can save lookup time
+	 * @param array $attachments array of filepaths to optional attachments
 	 * @return void
 	 */
-	function Email($tos, $froms = '', $replytos = '', $subject = '', $txtbody = '', $htmlbody = '', $address_types = 'mixed') {
+	function Email($tos, $froms = '', $replytos = '', $subject = '', $txtbody = '', $htmlbody = '', $address_types = 'mixed', $attachments = null) {
 		if($address_types != 'mixed' && $address_types != 'email' && $address_types != 'username')
 		{
 			trigger_error('$address_types parameter ('.$address_types.') must be "mixed","email", or "username." Defaulting to "mixed".');
@@ -52,6 +54,7 @@ class Email
 		$this->set_subject($subject);
 		$this->set_txtbody($txtbody);
 		$this->set_htmlbody($htmlbody);
+		$this->set_attachments($attachments);
 	}
 
 	// For details about $tos see $this->_prettify_addresses()
@@ -81,14 +84,16 @@ class Email
 		$this->_htmlbody = $htmlbody;
 	}
 
+	function set_attachments($attachments) {
+		$this->_attachments = $attachments;
+	}
+
 	/**
 	 * Send the Email
 	 *
 	 * @return boolean Accepted for delivery
 	 */
 	function send() {
-		$multipart_boundary = uniqid('the_multipart_boundary_is_');
-		
 		$crlf = "\r\n" ;
 	
 		$additional_headers =
@@ -97,37 +102,93 @@ class Email
 			 'Reply-To: ' . $this->_replytos . $crlf .
 			 'MIME-version: 1.0'.$crlf;
 		
-		$email = '';
-
-		if ( !empty($this->_htmlbody) ) {
-			$additional_headers .= 'Content-Type: multipart/alternative; boundary="' . $multipart_boundary . '"' . $crlf; // define boundary
-			$email .= "\n".'This is a MIME message. If you are reading this text, you may want to consider changing to a mail reader or gateway that understands how properly to handle MIME multipart messages.'.$crlf."\n"; // preamble
-			$email .= "--" . $multipart_boundary . $crlf; // first boundary
-			$email .= 'Content-Type: text/plain; charset=UTF-8'.$crlf;
-			$email .= 'Content-Disposition: inline'.$crlf;
-		}
-		else
+		// simplest case: just plain text content
+		if (empty($this->_htmlbody) && empty($this->_attachments))
 		{
 			$additional_headers .= 'Content-Type: text/plain; charset=UTF-8'.$crlf;
 			$additional_headers .= 'Content-Disposition: inline'.$crlf;
+			$email = "\n\n" . $this->_txtbody;			
 		}
-	
-		$email .= "\n\n" . $this->_txtbody;
-	
-		if ( !empty($this->_htmlbody) ) {
-			$email .= "\n\n--" . $multipart_boundary . "\n";
-			$email .= 'Content-Type: text/html; charset=UTF-8'.$crlf;
-			$email .= 'Content-Disposition: inline'.$crlf."\n";
-			$email .= $this->_htmlbody;
-			$email .= "\n\n--" . $multipart_boundary . "--\n"; //last boundary
+		// More complicated: there's an HTML alternate and/or attachments
+		else 
+		{
+			$email = "\n".'This is a MIME message. If you are reading this text, you may want to consider changing to a mail reader or gateway that understands how properly to handle MIME multipart messages.'.$crlf."\n"; // preamble
+			
+			// If there's an HTML alternate, build up a MIME block to contain the text and HTML. We'll either
+			// use it standalone (if there's no attachment) or inside another MIME block with attachments.
+			if (!empty($this->_htmlbody))
+			{
+				$alternate_boundary = uniqid('the_alternate_boundary_is_');
+				$alternate = "--" . $alternate_boundary . $crlf; // first boundary
+				$alternate .= 'Content-Type: text/plain; charset=UTF-8'.$crlf;
+				$alternate .= 'Content-Disposition: inline'.$crlf;
+				$alternate .= "\n\n" . $this->_txtbody;
+				$alternate .= "\n\n--" . $alternate_boundary . "\n";
+				$alternate .= 'Content-Type: text/html; charset=UTF-8'.$crlf;
+				$alternate .= 'Content-Disposition: inline'.$crlf."\n";
+				$alternate .= $this->_htmlbody;
+				$alternate .= "\n\n--" . $alternate_boundary . "--\n"; //last boundary
+			}
+
+			// If there's no attachment, the text alternates are the whole of the message
+			if (empty($this->_attachments))
+			{
+				$additional_headers .= 'Content-Type: multipart/alternative; boundary="' . $alternate_boundary . '"' . $crlf; // define boundary
+				$email .= $alternate;
+			}
+			// If there are attachments, set up container parts around the text and attachments
+			else
+			{
+				$multipart_boundary = uniqid('the_multipart_boundary_is_');
+				$additional_headers .= 'Content-Type: multipart/mixed; boundary="' . $multipart_boundary . '"' . $crlf; // define boundary
+				$email .= "--" . $multipart_boundary . $crlf; // first boundary
+				if (isset($alternate))
+				{
+					$email .= 'Content-Type: multipart/alternative; boundary="' . $alternate_boundary . '"' . $crlf; // define boundary
+					$email .= $alternate;
+				}
+				else
+				{
+					$email .= 'Content-Type: text/plain; charset=UTF-8'.$crlf;
+					$email .= "\n\n" . $this->_txtbody;						
+				}
+				$email .= $this->add_message_attachments($multipart_boundary);
+				$email .= "\n\n--" . $multipart_boundary . "--\n"; //last boundary
+			}
 		}
+
 		$subject = $this->mb_mime_header_encode($this->_subject);
-		
+
 		// it seems a little odd that we are sending the whole email in via the additional headers parameter when not running windows
 		$success = (server_is_windows()) 
 				 ? mail('', $subject, $email, $additional_headers )
 				 : mail('', $subject, '', $additional_headers.$email );
 		return $success;
+	}
+		
+	function add_message_attachments($multipart_boundary)
+	{
+		$message = '';
+		foreach ($this->_attachments as $name => $file)
+		{
+			if (is_file($file))
+			{
+				// the filename can be used as the array key; if the key is just numeric, use the
+				// actual filename.
+				$filename = (is_numeric($name)) ? basename($file) : $name;
+				$type = (mime_content_type($file)) ? mime_content_type($file) : 'application/octet-stream';
+				$message .= "\n\n--{$multipart_boundary}\n";
+				$fp = @fopen($file,"rb");
+				$data = @fread($fp, filesize($file));
+				@fclose($fp);
+				$data = chunk_split(base64_encode($data));
+				$message .= "Content-Type: ".$type."; name=\"".basename($file)."\"\n" .
+				"Content-Description: ".basename($file)."\n" .
+				"Content-Disposition: attachment;\n" . " filename=\"".$filename."\"; size=".filesize($file).";\n" .
+				"Content-Transfer-Encoding: base64\n\n" . $data . "\n\n";
+			}
+		}		
+		return $message;
 	}
 	
 	/**
@@ -162,7 +223,7 @@ class Email
 	/**
 	 * Take mixed username/netids and email addresses and resolve into "clean" array of good-looking email addresses
 	 *
-	 * By good-looking we mean that they satisfy this regex: /^([-.]|\w)+@([-.]|\w)+\.([-.]|\w)+$/i
+	 * By good-looking we mean that they satisfy this regex: /^([^<]+<)?([-.]|\w)+@([-.]|\w)+\.([-.]|\w)+>?$/i
 	 *
 	 * This function works as follows: For each address, first treats
 	 * the address as a netid and tries to find a corresponding
@@ -176,7 +237,6 @@ class Email
 	 * @param string $address_type can be 'mixed', 'email', or 'username'
 	 * @return string $pretty_addresses Comma separated email addresses
 	 *
-	 * @todo add ability to handle addresses that include names like this: "Jane Smith" <janesmith@example.com>
 	 **/
 	function _prettify_addresses($addresses, $address_type = 'mixed')
 	{
@@ -217,7 +277,7 @@ class Email
 					
 				}
 				
-				$num_results = preg_match( '/^([-.]|\w)+@([-.]|\w)+\.([-.]|\w)+$/i', $address );
+				$num_results = preg_match( '/^([^<]+<)?([-.]|\w)+@([-.]|\w)+\.([-.]|\w)+>?$/i', $address );
 				if ($num_results <= 0)
 				{
 					trigger_error('The address ' . $address . ' is invalid - setting address to ' . WEBMASTER_EMAIL_ADDRESS . ' instead.');

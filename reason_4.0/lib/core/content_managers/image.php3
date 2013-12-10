@@ -159,7 +159,7 @@
 		{
 			$limiter = new DiscoInputLimiter($this);
 		    $limiter->limit_field('description', 100);
-		    $limiter->limit_field('content', 500);
+		    $limiter->limit_field('content', 1000);
 		}
 		
 		function on_every_time() // {{{

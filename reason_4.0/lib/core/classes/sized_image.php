@@ -215,7 +215,7 @@ class reasonSizedImage
 		{
 			$entity = $this->get_entity();
 			$filename = $this->_get_filename();
-			if( $this->_orig_exists() )
+			if( $this->_orig_exists() && $entity->get_value('original_image_type') )
 				$image_type = $entity->get_value('original_image_type');
 			else
 				$image_type = $entity->get_value('image_type');
@@ -233,7 +233,7 @@ class reasonSizedImage
 		{
 			$entity = $this->get_entity();
 			$filename = $this->_get_filename();
-			if( $this->_orig_exists() )
+			if( $this->_orig_exists() && $entity->get_value('original_image_type') )
 				$image_type = $entity->get_value('original_image_type');
 			else
 				$image_type = $entity->get_value('image_type');
@@ -336,7 +336,7 @@ class reasonSizedImage
 		{
 			if ($this->_make_sure_entity_directory_exists($entity->id()) && is_writable($this->get_image_dir() . $entity->id() . '/'))
 			{
-				if( $this->_orig_exists() && file_exists(reason_get_image_path($entity, 'original')))
+				if( $this->_orig_exists())
 					$path = reason_get_image_path($entity, 'original'); // we want to copy our original image to our destination and resize in place
 				else
 					$path = reason_get_image_path($entity);
@@ -457,7 +457,7 @@ class reasonSizedImage
 		if (!isset($this->entity_max_dimensions))
 		{
 			$entity = $this->get_entity();
-			if( $this->_orig_exists() && file_exists(reason_get_image_path($entity, 'original')))
+			if( $this->_orig_exists())
 			{
 				$path = reason_get_image_path($entity, 'original');
 			}
@@ -475,12 +475,7 @@ class reasonSizedImage
 		if(!isset($this->orig_exists))
 		{
 			$entity = $this->get_entity();
-			if( $entity->get_value('original_image_type') )
-			{
-				$this->orig_exists = true;
-			}
-			else
-				$this->orig_exists = false;
+			$this->orig_exists = file_exists(reason_get_image_path($entity, 'original'));
 		}
 		return $this->orig_exists;
 	}
@@ -518,7 +513,7 @@ class reasonSizedImage
 	function get_file_system_path_and_file_of_dest(){ return ($this->_get_path());}
 	function get_image_type(){
 		$entity=$this->get_entity();
-		if( $this->_orig_exists() )
+		if( $this->_orig_exists() && $entity->get_value('original_image_type') )
 			return $entity->get_value('original_image_type');
 		else
 			return $entity->get_value('image_type');

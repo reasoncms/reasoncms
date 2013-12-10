@@ -170,6 +170,8 @@ class Tyr
 				// replacing.
 				if ( $fkey == 'next_page' )
 					$field = $this->_format_field($field, true);
+				if ( $fkey == 'attachments' )
+					continue;
 				else
 					$field = $this->_format_field($field, false);
 
@@ -431,7 +433,9 @@ class Tyr
 									empty($message['reply-to']) ? '' : $message['reply-to'],
 									empty($message['subject']) ? '' : $message['subject'],
 									empty($message['body']) ? '' : $message['body'],
-									empty($message['html_body']) ? '' : $message['html_body'] );
+									empty($message['html_body']) ? '' : $message['html_body'],
+									empty($message['address_types']) ? 'mixed' : $message['address_types'],
+									empty($message['attachments']) ? null : $message['attachments']);
 				$email->send();
 // 				prp('just tyr::_send_messages, to' . $message['to']);
 			}

@@ -60,7 +60,7 @@ class windowPaginationDisplay extends defaultPaginationDisplay
 		{
 			$out[] = $this->_build_page_markup($first,$this->pages[$first]);
 			if($first < $window_start-1)
-				$out[] = '…';
+				$out[] = '<span class="ellipsis">…</span>';
 		}
 		
 		for($i = $window_start; $i <= $window_end; $i++)
@@ -72,7 +72,7 @@ class windowPaginationDisplay extends defaultPaginationDisplay
 		if($last > $window_end)
 		{
 			if($last > $window_end+1)
-				$out[] = '…';
+				$out[] = '<span class="ellipsis">…</span>';
 			$out[] = $this->_build_page_markup($last,$this->pages[$last]);
 		}
 		$out[] = '</span>';

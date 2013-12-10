@@ -1,6 +1,7 @@
 <?php
 	include_once( 'paths.php');
 	include_once( CARL_UTIL_INC . 'basic/date_funcs.php' );
+	include_once( DISCO_INC . 'boxes/stacked.php' );
 
 /**
 * Simple box class to facilitate quick creation of good-looking forms.

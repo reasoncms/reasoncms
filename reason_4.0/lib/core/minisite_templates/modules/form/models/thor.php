@@ -281,7 +281,7 @@ class ThorFormModel extends DefaultFormModel
 			$row = ($form_id) ? $thor_core->get_values_for_primary_key($form_id) : false;
 			if ($row)
 			{
-				if (isset($row['submitted_by']) && ($user_netid == $row['submitted_by'])) return true;
+				if (isset($row['submitted_by']) && (strtolower($user_netid) == strtolower($row['submitted_by']))) return true;
 			}
 		}
 		elseif ($form_id && !$user_netid && $this->_is_editable()) reason_require_authentication();

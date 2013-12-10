@@ -192,11 +192,11 @@
 		}
 		function show_item( &$item , $options = false) // {{{
 		{
-			$class_attr = '';
+			$classes = array();
 			if( $item->id() == $this->root_node() )
 			{
 				$page_name = '<span>'.$this->get_home_page_link_text().'</span>';
-				$class_attr = ' class="home"';
+				$classes[] = 'home';
 			}
 			else
 			{
@@ -219,19 +219,32 @@
 				{
 					$prepend = '<strong>';
 					$append = '</strong>';
+					if($this->cur_page_id == $item->id())
+						$classes[] = 'cur';
+					else
+						$classes[] = 'parent';
 				}
 				else
 				{
 					$prepend = '';
 					$append = '';
 				}
-				
+				if(!empty($classes))
+					$class_attr = ' class="'.implode(' ',$classes).'"';
+				else
+					$class_attr = '';
 				$link = '<a href="'.$link.'"'.$class_attr.'>'.$prepend.$page_name.$append.'</a>';
 
 				echo $link;
 			}
 			else
+			{
+				if(!empty($classes))
+					$class_attr = ' class="'.implode(' ',$classes).'"';
+				else
+					$class_attr = '';
 				echo '<strong'.$class_attr.'>'.$page_name.'</strong>';
+			}
 		} //  }}}
 		function modify_base_url($base_url) // {{{
 		// for extending

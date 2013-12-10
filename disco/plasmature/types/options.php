@@ -415,7 +415,8 @@ class radio_with_otherType extends optionType
 {
 	var $type = 'radio_with_other';
 	var $other_label = 'Other: ';
-	var $type_valid_args = array( 'other_label' );
+	var $other_options = array();
+	var $type_valid_args = array( 'other_label', 'other_options' );
 	protected function _array_val_ok()
 	{
 		return false;
@@ -448,7 +449,21 @@ class radio_with_otherType extends optionType
 			$other_value = '';
 		}
 		$str .= '></td>'."\n".'<td valign="top"><label for="'.$id.'">'.$this->other_label.'</label>';
-		$str .= '<input type="text" name="'.$this->name.'_other" value="'.str_replace('"', '&quot;', $other_value).'"  /></td>'."\n".'</tr>'."\n";
+		if(empty($this->other_options))
+		{
+			$str .= '<input type="text" name="'.$this->name.'_other" value="'.str_replace('"', '&quot;', $other_value).'"  />';
+		}
+		else
+		{
+			$str .= '<select name="'.$this->name.'_other" class="other">';
+			foreach($this->other_options as $k => $v)
+			{
+				$selected = ($k == $other_value) ? ' selected="selected"' : '';
+				$str .= '<option value="'.htmlspecialchars($k, ENT_QUOTES).'"'.$selected.'>'.strip_tags($v).'</option>'."\n";
+			}
+			$str .= '</select>';
+		}
+		$str .= '</td>'."\n".'</tr>'."\n";
 		$str .= '</table>'."\n";
 		$str .= '</div>'."\n";
 		return $str;
@@ -468,13 +483,14 @@ class radio_with_otherType extends optionType
 	function grab_value()
 	{
 		$return = parent::grab_value();
-		
 		if ($return == '__other__')
 		{
 			$http_vars = $this->get_request();
 			if ( isset( $http_vars[ $this->name .'_other' ] ) )
 			{
 				$return = trim($http_vars[ $this->name .'_other' ]);
+				if(!empty($this->other_options) && !isset($this->other_options[$return]))
+					$this->set_error(strip_tags($this->display_name).': Please choose a value other than "'.htmlspecialchars($return,ENT_QUOTES).'".');
 				if($this->_is_disabled_option($return) && !$this->_is_current_value($return))
 					$this->set_error(strip_tags($this->display_name).': Please choose a value other than "'.htmlspecialchars($return,ENT_QUOTES).'".');
 			}
@@ -496,6 +512,17 @@ class radio_with_otherType extends optionType
 	function set( $value )
 	{
 		$this->value = $value;
+	}
+
+	/**
+	  * Make sure the other value is visible in the request
+	  **/
+	function get_cleanup_rules()
+	{
+		return array( 
+			$this->name => array('function' => 'turn_into_string' ),
+			$this->name . '_other' => array('function' => 'turn_into_string' ),
+			);
 	}
 }
 
@@ -597,9 +624,9 @@ class checkboxgroupType extends optionType
 		else
 			return $this->value;
 	}
-	function get_cleanup_rule()
+	function get_cleanup_rules()
 	{
-		return array( 'function' => 'turn_into_array' );
+		return array( $this->name => array('function' => 'turn_into_array' ));
 	}
 }
 
@@ -689,6 +716,16 @@ class checkboxgroup_with_otherType extends checkboxgroupType
 			}
 			$this->set( $request[ $this->name ] );
 		}
+	}
+	/**
+	  * Make sure the other value is visible in the request
+	  **/
+	function get_cleanup_rules()
+	{
+		return array( 
+			$this->name => array('function' => 'turn_into_array' ),
+			$this->name . '_other' => array('function' => 'turn_into_string' ),
+			);
 	}
 }
 
