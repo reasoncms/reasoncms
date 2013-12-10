@@ -310,6 +310,10 @@
 		
 		function get_edit_preview_links($entity)
 		{
+			$owner = $entity->get_owner();
+			if(empty($owner))
+				return '<span class="edit_preview_links">Unable to edit or preview -- no owner site</span>'."\n";
+			
 			$markup = '';
 			$markup .= '<span class="edit_preview_links">'."\n";
 			
