@@ -45,6 +45,14 @@ jQuery(function($) {
 	});
 	
 	/**
+	  * Define an event on the form object(s) that can be triggered to update 
+	  * the message.
+	  */
+	$(selector_string).on('update_message', function(e, msg) {
+		$('span.submit_waiting', this).html(msg);
+	});
+
+	/**
 	  * Define an event on the form object(s) that can be triggered to enable 
 	  * the submit buttons and update the message.
 	  */
@@ -109,9 +117,7 @@ jQuery(function($) {
 		// We store references to the timers on the form object so that
 		// other processes can intercept them if needed.
 		
-		var timer2 = setTimeout(function reassure_user() {
-			$('span.submit_waiting', form).html(still_working_msg);
-		}, reassurance_time);
+		var timer2 = setTimeout(function(){$(form).trigger('update_message',still_working_msg)}, reassurance_time);
 		$(this).data('timer2', timer2);
 		
 		if (valid_reset_time) {
@@ -176,8 +182,10 @@ function cancelDisableSubmit(form)
 			clearTimeout($(this).data('timer2'));
 			clearTimeout($(this).data('timer3'));
 			// Trigger the enable_buttons event in case any timers
-			// have already fired.
-			$(this).triggerHandler('enable_buttons', '');
+			// have already fired. We pass cancel as the second parameter
+			// so any other listeners can distinguish this from a natural
+			// expiration.
+			$(this).triggerHandler('enable_buttons', ['', 'cancel']);
 		}
 	});
 }
