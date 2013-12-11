@@ -35,7 +35,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # @todo find a better way to get mysql loaded
   config.vm.synced_folder ".", "/var/reason_package"
   config.vm.synced_folder "./reason_4.0/data", "/var/reason_package/reason_4.0/data", :owner=>"www-data", :group=>"www-data"
-  config.vm.synced_folder "../luther_css_js", "/var/www/", :owner=>"www-data", :group=>"www-data"
+  config.vm.synced_folder "../luther_css_js/javascripts", "/var/www/javascripts/", :owner=>"www-data", :group=>"www-data"
+  config.vm.synced_folder "../luther_css_js/stylesheets", "/var/www/stylesheets/", :owner=>"www-data", :group=>"www-data"
+  config.vm.synced_folder "../luther_css_js/images", "/var/www/images/", :owner=>"www-data", :group=>"www-data"
+
   config.vm.synced_folder "../sql", "/var/sql"
 
 

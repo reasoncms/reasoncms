@@ -64,10 +64,11 @@
       # - { src: '{{ web_root_path }}/luther_css_js/images/', dest: '{{ web_root_path }}/images' }
 
   - name: set permissions on write required dirs
-    file: path={{ item.path }} owner={{ item.owner }} group={{ item.group }} mode=0774 state=directory recurse=yes
+    file: path={{ item.path }} owner={{ item.owner }} group={{ item.group }} mode={{ item.mode }} state=directory recurse=yes
     with_items:
-      - { path: '{{ web_root_path }}/', owner: www-data, group: www-data }
-      - { path: '{{ reason_package_path }}/reason_4.0/data/', owner: www-data, group: www-data }
+      #- { path: '{{ web_root_path }}/', owner: www-data, group: www-data, mode: 0755 }
+      - { path: '{{ reason_package_path }}/reason_4.0/data/', owner: www-data, group: www-data, mode: 0644 }
+
 
   - name: copy php.ini to /etc/php5/apache2/php.ini
     copy: src=php.ini dest=/etc/php5/apache2/php.ini owner=root group=root mode=0644
