@@ -66,7 +66,7 @@
   - name: set permissions on write required dirs
     file: path={{ item.path }} owner={{ item.owner }} group={{ item.group }} mode={{ item.mode }} state=directory recurse=yes
     with_items:
-      #- { path: '{{ web_root_path }}/', owner: www-data, group: www-data, mode: 0755 }
+      - { path: '{{ web_root_path }}/', owner: www-data, group: www-data, mode: 0755 }
       - { path: '{{ reason_package_path }}/reason_4.0/data/', owner: www-data, group: www-data, mode: 0644 }
 
 
