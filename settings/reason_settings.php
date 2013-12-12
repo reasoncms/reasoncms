@@ -578,6 +578,34 @@
 	 * The url manager uses this setting to create the feed rewrite rules
 	 */
 	define( 'FEED_GENERATOR_STUB_PATH',REASON_HTTP_BASE_PATH.'displayers/generate_feed.php' );
+	
+
+	/**
+	* PUBLICATION_FEED_DEFAULT_TO_CONTENT
+	* This setting identifies whether the blog feed will default to using the content field of a post for the RSS description
+	* If set to true, content will be used, if set to false, description will be used
+	* The blog content manager uses this variable to determine the initial setting of a new blog
+	*/
+	define( 'PUBLICATION_FEED_DEFAULT_TO_CONTENT', false);
+
+	/**
+	* PUBLICATION_HIDE_FEED_DESCRIPTION_CHECKBOX
+	* The feed description checkbox allows editors to decide whether a blog will use content or description
+	* from a blog post for the RSS description field, if this is false this checkbox will be displayed
+	* If true no checkbox will be shown and the feed will simply use the previous value or default
+	* The blog content manager uses this variable
+	*/
+	define( 'PUBLICATION_HIDE_FEED_DESCRIPTION_CHECKBOX', false);	
+
+	/**
+	* PUBLICATION_REMINDER_CRON_SET_UP
+	* This setting allows users to add reminder days and emails to a publication.
+	* If no post has been added in reminder_days, an email will be sent to reminder_emails
+	* If this is true, these options will be available. If false, they will not and no reminders will occur.
+	* The blog content manager uses this variable.
+	*/
+	define( 'PUBLICATION_REMINDER_CRON_SET_UP', false);
+	
 	/**
 	 * REASON_WEB_ADMIN_PATH
 	 * This setting identifies the location of the Reason admin area
