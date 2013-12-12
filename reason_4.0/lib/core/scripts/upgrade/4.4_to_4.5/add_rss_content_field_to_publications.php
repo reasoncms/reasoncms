@@ -69,7 +69,7 @@ class ReasonUpgrader_45_AddRSSContentFieldToPublications implements reasonUpgrad
 	public function run()
 	{
 		$entity_table_name = 'blog';
-		$fields = array('blog_feed_include_content' => array('db_type' => 'tinytext'));
+		$fields = array('blog_feed_include_content' => array('db_type' => 'enum("Yes","No")'));
 		$updater = new FieldToEntityTable($entity_table_name, $fields);
 		if($updater->field_exists('blog_feed_include_content'))
 		{
