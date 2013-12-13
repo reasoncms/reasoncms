@@ -603,8 +603,21 @@
 	* If no post has been added in reminder_days, an email will be sent to reminder_emails
 	* If this is true, these options will be available. If false, they will not and no reminders will occur.
 	* The blog content manager uses this variable.
+	* Run this script from the command-line (probably as a cron task) like this:
+ 	*
+ 	* /path/to/php -d include_path=/path/to/reason_package/ /path/to/reason_package/reason_4.0/lib/core/scripts/news/tickler_many.php
+ 	*
+	* In order to begin the sending of reminders. 
 	*/
 	define( 'PUBLICATION_REMINDER_CRON_SET_UP', false);
+
+	/**
+	* PUBLICATION_SOCIAL_SHARING_DEFAULT
+	* This setting identifies whether the social sharing on the publication content manager will default to on or off
+	* If set to true, it will default to on, if set to false, it will default to off
+	* The blog content manager uses this variable to determine the initial setting for a new blog
+	*/
+	define( 'PUBLICATION_SOCIAL_SHARING_DEFAULT', false);
 	
 	/**
 	 * REASON_WEB_ADMIN_PATH
