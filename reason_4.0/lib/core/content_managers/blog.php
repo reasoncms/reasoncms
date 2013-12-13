@@ -23,81 +23,25 @@
 	{
 		function alter_data()
 		{
+			// Hide fields that are not used
 			$this->change_element_type( 'keywords','hidden' );
-			// use WYSISWG editor for description 
-			$this->change_element_type( 'description' , html_editor_name($this->admin_page->site_id) , html_editor_params($this->admin_page->site_id, $this->admin_page->user_id) );
-
-			$this->add_element('allow_comments', 'checkbox');
-			$this->add_element('allow_front_end_posting', 'checkbox');
-
-			$this->add_required('hold_comments_for_review');
-			$this->add_required('hold_posts_for_review');
-			$this->add_required('posts_per_page');
-			$this->add_required('blog_feed_string');
-			
-			if($this->is_element('notify_upon_post'))
-			{
-				$this->set_display_name( 'notify_upon_post', 'New Post Notification' );
-			}
-			else
-			{
-				trigger_error('The field "notify_upon_request" needs to be added to the blog table. Please run the upgrade script: '.REASON_HTTP_BASE_PATH.'scripts/upgrade/4.0b3_to_4.0b4/upgrade_db.php to add the proper field.');
-			}
-			if($this->is_element('notify_upon_comment'))
-			{
-				$this->set_display_name( 'notify_upon_comment', 'New Comment Notification' );
-			}
-			else
-			{
-				trigger_error('The field "notify_upon_comment" needs to be added to the blog table. Please run the upgrade script: '.REASON_HTTP_BASE_PATH.'scripts/upgrade/4.0b3_to_4.0b4/upgrade_db.php to add the proper field.');
-			}
-			if(site_borrows_entity( $this->get_value('site_id'), id_of('nobody_group')) || site_owns_entity( $this->get_value('site_id'), id_of('nobody_group')))
-			{
-				$nobody_group = new entity(id_of('nobody_group'));
-				if(!$this->entity->has_left_relation_with_entity($nobody_group, 'publication_to_authorized_posting_group'))
-					$this->set_value('allow_front_end_posting', 'true');
-				if(!$this->entity->has_left_relation_with_entity($nobody_group, 'publication_to_authorized_commenting_group'))
-					$this->set_value('allow_comments', 'true');
-			}
-			else
-			{
-				$this->set_value('allow_comments', 'true');
-				$this->set_value('allow_front_end_posting', 'true');
-			} 
-			
-			if(!$this->get_value('hold_comments_for_review'))
-			{
-				$this->set_value('hold_comments_for_review', 'no');
-			}
-			if(!$this->get_value('hold_posts_for_review'))
-			{
-				$this->set_value('hold_posts_for_review', 'no');
-			}
-			if(!$this->get_value('has_issues'))
-			{
-				$this->set_value('has_issues', 'no');
-			}
-			if(!$this->get_value('has_sections'))
-			{
-				$this->set_value('has_sections', 'no');
-			}	
-		
-			// hide things that do not appear fully implemented
-			//$this->change_element_type( 'hold_posts_for_review', 'hidden' );
 			if($this->is_element('commenting_state'))$this->change_element_type( 'commenting_state', 'hidden' );
 			if($this->is_element('pagination_state')) $this->change_element_type( 'pagination_state', 'hidden' );
 			if($this->is_element('enable_comment_notification')) $this->change_element_type( 'enable_comment_notification', 'hidden' );
 			if($this->is_element('enable_front_end_posting')) $this->change_element_type('enable_front_end_posting', 'hidden');
 			
-			$this->set_display_name('has_issues','Issue-based?');
-			$this->add_comments('has_issues', form_comment('Choose "no" for standard chronological display of posts.<br />Choose "yes" to group posts together into issues, similar to in a print-based magazine (note that you will need to set up at least one issue before any posts will appear).'));
+			// Name
+			$this->set_display_name('name','Publication Name');
 			
-			$this->set_display_name('has_sections','Broken into sections?');
-			$this->add_comments('has_sections', form_comment('Choose "no" for standard chronological display of posts.<br />Choose "yes" to group posts together into sections (note that you will need to create sections for your publication)'));
-			
-			
-			if (!$this->get_value( 'publication_type' )) $this->set_value( 'publication_type', 'blog' );
+			// Publication type
 			$this->add_required('publication_type');
+			if (!$this->get_value( 'publication_type' )) $this->set_value( 'publication_type', 'blog' );
+			
+			// Posts per page
+			$this->add_required('posts_per_page');
+			
+			// Date format
+			$this->set_comments('date_format',form_comment('Posts on this publication will use the date format that you select to show the date (and/or) time of publication.'));
 			$this->change_element_type( 'date_format', 'select_no_sort', array('options' => array('F j, Y \a\t g:i a' => date('F j, Y \a\t g:i a'),
 																								  'n/d/y \a\t g:i a' => date('n/d/y \a\t g:i a'),
 																								  'l, F j, Y' => date('l, F j, Y'),
@@ -107,42 +51,24 @@
 																								  'j F Y' => date('j F Y'),
 																								  'j F Y \a\t  g:i a' => date('j F Y \a\t  g:i a'),
 																								  'j F Y \a\t  g:i a' => date('j F Y \a\t  H:i'), )));
-			$this->add_element('comment_comment','comment',array('text'=>'<h4>Commenting</h4>'));
-			$this->add_element('posting_comment','comment',array('text'=>'<h4>Posting on the public site</h4>'));
-			$this->add_element('issue_section_comment','comment',array('text'=>'<h4>Issues and sections</h4>'));
 			
-			// social sharing
-			if ($this->is_element('enable_social_sharing'))
-			{
-				$this->add_element('social_sharing_comment','comment',array('text'=>'<h4>Social Sharing</h4>'));
-			}
-			else
-			{
-				trigger_error('You need to run Reason 4.3 to 4.4 upgrade scripts to add social sharing to Reason publications');
-			}
-			
-			$this->set_order(array('name', 'unique_name', 'publication_type', 'posts_per_page', 'blog_feed_string', 'description', 'date_format', 'social_sharing_comment', 
-								   'enable_social_sharing', 'posting_comment', 'allow_front_end_posting', 'notify_upon_post', 'hold_posts_for_review', 'comment_comment', 
-								   'allow_comments', 'notify_upon_comment', 'hold_comments_for_review', 'issue_section_comment', 'has_issues','has_sections'));
-		}
-
-		function alter_display_names()
-		{
-			$this->set_display_name('name','Publication Name');
-			$this->set_display_name('blog_feed_string','RSS feed URL');		
-		}
-	
-		function alter_comments()
-		{
-			$this->set_comments('hold_comments_for_review',form_comment('Choose "yes" to moderate comments; choose "no" to allow comments to be unmoderated. In either case, you will be able to delete comments after they are made.'));
-			$this->set_comments('hold_posts_for_review',form_comment('Choose "yes" to moderate posts; choose "no" to allow posts to be unmoderated. In either case, you will be able to delete posts after they are made.'));
+			// RSS
+			$this->set_display_name('blog_feed_string','RSS feed URL');
+			$this->add_required('blog_feed_string');
 			$this->add_comments('blog_feed_string',form_comment('The URL snippet that this blog / publication will use for its RSS feed.'));
-			$this->set_comments('date_format',form_comment('Posts on this publication will use the date format that you select to show the date (and/or) time of publication.'));
-			$this->add_comments('notify_upon_post',form_comment('Who should be notified when a post is added to this publication? Enter usernames or email addresses, separated by commas. Leave this field blank if you don\'t want any notification to be sent.'));
-			$this->add_comments('notify_upon_comment',form_comment('Who should be notified when a comment is added to this publication? Enter usernames or email addresses, separated by commas. Leave this field blank if you don\'t want any notification to be sent.'));
-			$this->add_comments('allow_front_end_posting',form_comment('Check to enable simple posting on the publication itself (you can always post from inside Reason)'));
-			
-
+			$this->set_display_name('blog_feed_include_content','RSS Format');
+			$this->change_element_type('blog_feed_include_content', 'radio',array('options' => array('no' => 'Only publish descriptions in RSS','yes' => 'Publish full post content in RSS' )));
+			if(defined('PUBLICATION_HIDE_FEED_DESCRIPTION_CHECKBOX') && PUBLICATION_HIDE_FEED_DESCRIPTION_CHECKBOX )
+			{
+				$this->change_element_type('blog_feed_include_content', 'cloaked');
+			}
+			if(!$this->get_value('blog_feed_include_content'))
+			{
+				if(!$this->is_new_entity() || !defined('PUBLICATION_FEED_DEFAULT_TO_CONTENT') || !PUBLICATION_FEED_DEFAULT_TO_CONTENT)
+					$this->set_value('blog_feed_include_content', 'no');
+				else
+					$this->set_value('blog_feed_include_content', 'yes');
+			}
 			if( $this->is_new_entity() || reason_user_has_privs( $this->admin_page->user_id, 'edit_fragile_slugs' ) )
 			{
 				$this->add_comments('blog_feed_string',form_comment('Only lowercase letters and underscores are allowed in this field.'));
@@ -160,8 +86,88 @@
 				$this->change_element_type( 'blog_feed_string','solidtext' );
 				$this->add_comments('blog_feed_string',form_comment('This field is now fixed so that newsreaders can rely on a stable URL.'));
 			}
+			
+			// Description
+			$this->change_element_type( 'description' , html_editor_name($this->admin_page->site_id) , html_editor_params($this->admin_page->site_id, $this->admin_page->user_id) );
+			
+			// Social sharing
+			$this->add_element('social_sharing_comment','comment',array('text'=>'<h4>Social Sharing</h4>'));
+			
+			// Front-end posting
+			$this->add_element('posting_comment','comment',array('text'=>'<h4>Posting on the public site</h4>'));
+			$this->add_required('hold_posts_for_review');
+			$this->set_comments('hold_posts_for_review',form_comment('Choose "yes" to moderate posts; choose "no" to allow posts to be unmoderated. In either case, you will be able to delete posts after they are made.'));
+			$this->add_element('allow_front_end_posting', 'checkbox');
+			$this->add_comments('allow_front_end_posting',form_comment('Check to enable simple posting on the publication Reason can send an email reminder if it has been a while since the last post...'));
+			$this->set_display_name( 'notify_upon_post', 'New Post Notification' );
+			$this->add_comments('notify_upon_post',form_comment('Who should be notified when a post is added to this publication? Enter usernames or email addresses, separated by commas. Leave this field blank if you don\'t want any notification to be sent.'));
+
+			// Commenting
+			$this->add_element('comment_comment','comment',array('text'=>'<h4>Commenting</h4>'));
+			$this->add_element('allow_comments', 'checkbox');
+			$this->add_required('hold_comments_for_review');
+			$this->set_comments('hold_comments_for_review',form_comment('Choose "yes" to moderate comments; choose "no" to allow comments to be unmoderated. In either case, you will be able to delete comments after they are made.'));
+			$this->set_display_name( 'notify_upon_comment', 'New Comment Notification' );
+			$this->add_comments('notify_upon_comment',form_comment('Who should be notified when a comment is added to this publication? Enter usernames or email addresses, separated by commas. Leave this field blank if you don\'t want any notification to be sent.'));
+			
+			// Posting & commenting defaults
+			if(site_borrows_entity( $this->get_value('site_id'), id_of('nobody_group')) || site_owns_entity( $this->get_value('site_id'), id_of('nobody_group')))
+			{
+				$nobody_group = new entity(id_of('nobody_group'));
+				if(!$this->entity->has_left_relation_with_entity($nobody_group, 'publication_to_authorized_posting_group'))
+					$this->set_value('allow_front_end_posting', 'true');
+				if(!$this->entity->has_left_relation_with_entity($nobody_group, 'publication_to_authorized_commenting_group'))
+					$this->set_value('allow_comments', 'true');
+			}
+			else
+			{
+				$this->set_value('allow_comments', 'true');
+				$this->set_value('allow_front_end_posting', 'true');
+			}
+			if(!$this->get_value('hold_comments_for_review'))
+			{
+				$this->set_value('hold_comments_for_review', 'no');
+			}
+			if(!$this->get_value('hold_posts_for_review'))
+			{
+				$this->set_value('hold_posts_for_review', 'no');
+			}
+			
+			
+			// Issues & Sections
+			$this->add_element('issue_section_comment','comment',array('text'=>'<h4>Issues and sections</h4>'));
+			
+			$this->set_display_name('has_issues','Issue-based?');
+			$this->add_comments('has_issues', form_comment('Choose "no" for standard chronological display of posts.<br />Choose "yes" to group posts together into issues, similar to in a print-based magazine (note that you will need to set up at least one issue before any posts will appear).'));
+			if(!$this->get_value('has_issues'))
+			{
+				$this->set_value('has_issues', 'no');
+			}
+			
+			$this->set_display_name('has_sections','Broken into sections?');
+			$this->add_comments('has_sections', form_comment('Choose "no" for standard chronological display of posts.<br />Choose "yes" to group posts together into sections (note that you will need to create sections for your publication)'));
+			if(!$this->get_value('has_sections'))
+			{
+				$this->set_value('has_sections', 'no');
+			}
+			
+			// Reminders
+			$this->add_element('reminder_comment','comment',array('text'=>'<h4>Reminders</h4>'));
+			$this->set_display_name('reminder_days','Days Before Reminder');
+			$this->add_comments('reminder_days',form_comment('How many days of inactivity before Reason sends an email reminder? Leave blank or enter 0 to disable this feature.'));
+			$this->set_display_name('reminder_emails','Send Reminders To');
+			$this->add_comments('reminder_emails',form_comment('The emails or usernames of people who should be reminded'));
+			if (!defined('PUBLICATION_REMINDER_CRON_SET_UP')||!PUBLICATION_REMINDER_CRON_SET_UP)
+			{
+				$this->change_element_type( 'reminder_days','hidden');
+				$this->change_element_type( 'reminder_emails','hidden');
+				$this->change_element_type( 'reminder_comment','hidden');
+			}
+			
+			$this->set_order(array('name', 'unique_name', 'publication_type', 'posts_per_page', 'date_format', 'blog_feed_string', 'blog_feed_include_content','description', 'social_sharing_comment', 
+								   'enable_social_sharing', 'posting_comment', 'allow_front_end_posting', 'notify_upon_post', 'hold_posts_for_review', 'comment_comment', 
+								   'allow_comments', 'notify_upon_comment', 'hold_comments_for_review', 'issue_section_comment', 'has_issues','has_sections','reminder_comment','reminder_days', 'reminder_emails','unique_name',));
 		}
-	
 		
 		function run_error_checks() // {{{
 		{
@@ -186,8 +192,50 @@
 					}
 				}
 			}
+			
+			if($this->get_value('reminder_days'))
+			{
+				if(!$this->get_value('reminder_emails'))
+				{
+					$this->set_error('reminder_emails', 'If Reminder Days is set, Reminder Emails must be filled out');
+				}
+			}
+			if($bad_addresses = $this->invalid_addresses($this->get_value('reminder_emails')))
+			{
+				$error = 'Reason was not able to validate these reminder addresses: '.htmlspecialchars(implode(', ',$bad_addresses));
+				$this->set_error('reminder_emails', $validity);	
+			}
 		}
-		
+
+		function invalid_addresses($addresses)
+		{
+			$return_value = '';
+			if ( !is_array($addresses) )
+			{
+				$addresses = explode(',', $addresses);
+			}
+			$bad_addresses = array();
+			foreach ( $addresses as $address )
+			{
+				$address = trim($address);
+				if ( !empty($address) )
+				{
+					$dir = new directory_service();
+					$result = $dir->search_by_attribute('ds_username', $address, array('ds_email'));
+					$dir_value = $dir->get_first_value('ds_email');
+					if(empty($dir_value))
+					{
+						$num_results = preg_match( '/^([-.]|\w)+@([-.]|\w)+\.([-.]|\w)+$/i', $address );
+						if ($num_results <= 0)
+						{
+							$bad_addresses[] = $address;
+						}
+					}
+				}	
+			}
+			return $bad_addresses;
+		}
+			
 		function process() // {{{
 		{
 			$nobody_group = new entity(id_of('nobody_group'));
