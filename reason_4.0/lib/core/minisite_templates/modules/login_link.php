@@ -103,49 +103,51 @@ reason_include_once( 'classes/inline_editing.php' );
 		 */
 		function run() // {{{
 		{
-			$inline_edit =& get_reason_inline_editing($this->page_id);
-
-			if ($inline_edit->is_enabled())
-			{
-				$clarify_text = 'In Reason Admin: ';
-				echo '<div class="editDiv inlineEnabled">'."\n";
-			}
-			else
-			{
-				$clarify_text = '';
-				echo '<div class="editDiv">'."\n";
-			}
+			$inline_edit = get_reason_inline_editing($this->page_id);
+			
+			$classes = array('loginLinkModule');
+			$classes[] = $this->get_user_netid() ? 'authenticated' : 'unauthenticated';
+			echo '<div class="'.implode(' ',$classes).'">';
+			
 			if ($this->has_admin_edit_privs())
 			{
-				echo '<span class="clarifyingText">'.$clarify_text.'</span>'."\n";
+				if ($inline_edit->is_enabled())
+				{
+					echo '<div class="editDiv inlineEnabled">'."\n";
+					echo '<span class="clarifyingText">In Reason Admin: </span>'."\n";
+				}
+				else
+				{
+					echo '<div class="editDiv">'."\n";
+				}
 				echo '<a href="'.$this->get_edit_page_link().'" class="editLink editPageLink">Edit Page</a> <span class="editDivider">&#183;</span> '."\n";
 				echo '<a href="'.$this->get_edit_site_link().'" class="editLink editSiteLink">Edit Site</a>'."\n";		
 				echo '</div>';
 			}
 			if ($inline_edit->reason_allows_inline_editing()&& $inline_edit->is_enabled()||$inline_edit->is_available() )
 			{
+				$classes = array('inlineEditDiv');
 				if ($inline_edit->is_enabled())
 				{
 					$link =  carl_make_link(array('inline_editing_availability' => 'disable'));
 					$link_text = 'Stop Editing';
-					$class = 'inlineEditDiv inlineEnabled';
+					$classes[] = 'inlineEnabled';
 				}
 				else
 				{
 					$link = carl_make_link(array('inline_editing_availability' => 'enable'));
 					$link_text = 'Edit in Place';
-					$class = 'inlineEditDiv';
 				}
-				$inline_html = '<div class="'.$class.'">'."\n";
+				$inline_html = '<div class="'.implode(' ', $classes).'">'."\n";
 				$inline_html .= '<a href="'.$link.'" class="inlineEditLink">'.$link_text.'</a>'."\n";
 				$inline_html .= '</div>';
 				echo $inline_html;
 			}	
 			echo '<p id="footerLoginLink">';
 			echo ($this->get_user_netid()) ? '<span class="username">' . $this->get_user_netid() . '</span>: ' : '';
-			echo ($this->get_user_netid()) ? '<a href="'. $this->get_login_url().'?logout=1">Logout</a>' : '<a href="'.$this->get_login_url().'">Login</a>';
-			echo '</p>';
-			echo '</div>';
+			echo ($this->get_user_netid()) ? '<a href="'. $this->get_login_url().'?logout=1" class="logout">Logout</a>' : '<a href="'.$this->get_login_url().'" class="login">Login</a>';
+			echo '</p>'."\n";
+			echo '</div>'."\n";
 		}
 
 		function get_documentation()
