@@ -32,7 +32,7 @@ class ReasonUpgrader_45_AddRSSContentFieldToPublications implements reasonUpgrad
 	 */
 	public function title()
 	{
-		return 'Adds a field to the blog entity which sets which blog post field that is used in the RSS description output';
+		return 'Add blog_feed_include_content field to the publication type';
 	}
 	/**
 	 * Get a description of what this upgrade script will do
@@ -50,8 +50,7 @@ class ReasonUpgrader_45_AddRSSContentFieldToPublications implements reasonUpgrad
 	public function test()
 	{
 		$entity_table_name = 'blog';
-		$fields = array('blog_feed_include_content' => array('db_type' => 'enum("Yes","No")'));
-		$updater = new FieldToEntityTable($entity_table_name, $fields);
+		$updater = new FieldToEntityTable($entity_table_name, $this->get_fields_definition());
 		if($updater->field_exists('blog_feed_include_content'))
 		{
 			return '<p>This updater has already been run.</p>';
@@ -69,8 +68,7 @@ class ReasonUpgrader_45_AddRSSContentFieldToPublications implements reasonUpgrad
 	public function run()
 	{
 		$entity_table_name = 'blog';
-		$fields = array('blog_feed_include_content' => array('db_type' => 'enum("Yes","No")'));
-		$updater = new FieldToEntityTable($entity_table_name, $fields);
+		$updater = new FieldToEntityTable($entity_table_name, $this->get_fields_definition());
 		if($updater->field_exists('blog_feed_include_content'))
 		{
 			return '<p>This updater has already been run.</p>';
@@ -82,6 +80,11 @@ class ReasonUpgrader_45_AddRSSContentFieldToPublications implements reasonUpgrad
 			$updater->report();
 			return ob_get_clean();
 		}
+	}
+	
+	protected function get_fields_definition()
+	{
+		return array('blog_feed_include_content' => array('db_type' => 'enum("yes","no")'));
 	}
 }
 ?>
