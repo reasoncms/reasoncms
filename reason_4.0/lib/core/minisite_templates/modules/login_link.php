@@ -55,17 +55,23 @@ reason_include_once( 'classes/inline_editing.php' );
 			if ($this->request['inline_editing_availability'] == 'enable') $inline_edit->enable();
 			else $inline_edit->disable();
 			$redirect = carl_make_redirect(array('inline_editing_availability' => ''));
-            header('Location: ' . $redirect);
-            exit();
+	                header('Location: ' . $redirect);
+		        exit();
 		}
 		
-		function get_edit_link()
+		function get_edit_page_link()
 		{
 			$type_id = id_of('minisite_page');
 			$qs = carl_construct_query_string(array('site_id' => $this->site_id, 'type_id' => $type_id, 'id' => $this->page_id, 'cur_module' => 'Editor', 'fromweb' => get_current_url()));
 			return securest_available_protocol() . '://' . REASON_WEB_ADMIN_PATH . $qs;	
 		}
-		
+
+		function get_edit_site_link()
+		{
+			$qs = carl_construct_query_string(array('site_id' => $this->site_id));
+			return securest_available_protocol() . '://' . REASON_WEB_ADMIN_PATH . $qs;	
+		}
+			
 		/**
 		 * @return boolean
 		 */
@@ -98,32 +104,48 @@ reason_include_once( 'classes/inline_editing.php' );
 		function run() // {{{
 		{
 			$inline_edit =& get_reason_inline_editing($this->page_id);
+
+			if ($inline_edit->is_enabled())
+			{
+				$clarify_text = 'In Reason Admin: ';
+				echo '<div class="editDiv inlineEnabled">'."\n";
+			}
+			else
+			{
+				$clarify_text = '';
+				echo '<div class="editDiv">'."\n";
+			}
 			if ($this->has_admin_edit_privs())
 			{
-				echo '<div class="editDiv">'."\n";
-				echo '<a href="'.$this->get_edit_link().'" class="editLink">Edit page in Reason Admin</a>'."\n";
+				echo '<span class="clarifyingText">'.$clarify_text.'</span>'."\n";
+				echo '<a href="'.$this->get_edit_page_link().'" class="editLink editPageLink">Edit Page</a> <span class="editDivider">&#183;</span> '."\n";
+				echo '<a href="'.$this->get_edit_site_link().'" class="editLink editSiteLink">Edit Site</a>'."\n";		
 				echo '</div>';
 			}
-			if ($inline_edit->reason_allows_inline_editing() && ($inline_edit->is_available() || $inline_edit->is_enabled()))
+			if ($inline_edit->reason_allows_inline_editing()&& $inline_edit->is_enabled()||$inline_edit->is_available() )
 			{
 				if ($inline_edit->is_enabled())
 				{
 					$link =  carl_make_link(array('inline_editing_availability' => 'disable'));
-					$link_text = 'Turn off inline editing';
+					$link_text = 'Stop Editing';
+					$class = 'inlineEditDiv inlineEnabled';
 				}
 				else
 				{
 					$link = carl_make_link(array('inline_editing_availability' => 'enable'));
-					$link_text = 'Turn on inline editing';
+					$link_text = 'Edit in Place';
+					$class = 'inlineEditDiv';
 				}
-				echo '<div class="inlineEditDiv">'."\n";
-				echo '<a href="'.$link.'" class="inlineEditLink">'.$link_text.'</a>'."\n";
-				echo '</div>';
-			}
+				$inline_html = '<div class="'.$class.'">'."\n";
+				$inline_html .= '<a href="'.$link.'" class="inlineEditLink">'.$link_text.'</a>'."\n";
+				$inline_html .= '</div>';
+				echo $inline_html;
+			}	
 			echo '<p id="footerLoginLink">';
 			echo ($this->get_user_netid()) ? '<span class="username">' . $this->get_user_netid() . '</span>: ' : '';
 			echo ($this->get_user_netid()) ? '<a href="'. $this->get_login_url().'?logout=1">Logout</a>' : '<a href="'.$this->get_login_url().'">Login</a>';
 			echo '</p>';
+			echo '</div>';
 		}
 
 		function get_documentation()
