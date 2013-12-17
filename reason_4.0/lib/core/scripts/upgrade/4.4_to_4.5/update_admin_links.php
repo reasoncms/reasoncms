@@ -60,6 +60,10 @@ class ReasonUpgrader_45_UpdateAdminLinks implements reasonUpgraderInterface
 		{
 			$to_return = '<p>This updater has already been run.</p>';
 		}
+		else
+		{
+			$to_return .= '<p><strong>Note:</strong> These administrative functions will still be available in the Admin Tools interface.</p>';
+		}
 		return $to_return;
 	}
 	/**
@@ -79,6 +83,10 @@ class ReasonUpgrader_45_UpdateAdminLinks implements reasonUpgraderInterface
 		if($to_return=='')
 		{
 			$to_return = '<p>This updater has already been run.</p>';
+		}
+		else
+		{
+			$to_return .= '<p><strong>Note:</strong> These administrative functions will still be available in the Admin Tools interface.</p>';
 		}
 		return $to_return;
 	}
