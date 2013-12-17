@@ -422,6 +422,18 @@ div.versionUpdateNotice {
 	border:1px solid #f1df46;
 	padding:12px 12px 12px 34px;
 }
+tr.notInNav td.viewerCol_name {
+	
+}
+
+div.addlActions {
+	color: #666;	
+}
+
+div.addlActions a {
+	text-decoration: none;	
+}
+
 .borrowNav, .borrowNav ul {
 	list-style:none;
 	padding:0;
