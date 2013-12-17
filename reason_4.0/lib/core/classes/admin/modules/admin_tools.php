@@ -79,6 +79,11 @@ class ReasonAdminToolsModule extends DefaultModule
 					'description' => 'See all Reason sites, with links',
 					'safety_level' => 'safe',
 				),
+				'?site_id='.id_of('master_admin').'&cur_module=TopLevelNavAnalysis' => array(
+					'title' => 'Site Structure Analysis',
+					'description' => 'Describes the top level navigation used by each site.',
+					'safety_level' => 'safe',
+				),
 								
 			),
 			'Content Actions' => array(
