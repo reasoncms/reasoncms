@@ -12,17 +12,19 @@ tr#urlfragmentRow span.parent_path, tr#urlfragmentRow span.trailing_slash {
 #pagetypenoteRow div.note>*:first-child, #pagetypenoteRow div.note div.callOut>*:first-child {
 	margin-top:0;
 }
-#administratorsectionheadingRow h3 {
-	font-weight:normal;
+h4 {
 	font-size:1.125em;
 }
-#administratorsectionheadingRow h3 a.closed {
-	background:transparent url(../../../ui_images/item_closed.gif) no-repeat left center;
-	padding-left:20px;
+#administratorsectionheadingRow h4 a.closed {
+	background:transparent url(../../../ui_images/item_closed.gif) no-repeat right center;
+	padding-right:20px;
+	text-decoration: none;
 }
-#administratorsectionheadingRow h3 a.open {
-	background:transparent url(../../../ui_images/item_open.gif) no-repeat left center;
-	padding-left:20px;
+#administratorsectionheadingRow h4 a.open {
+	background:transparent url(../../../ui_images/item_open.gif) no-repeat right center;
+	padding-right:20px;
+	text-decoration: none;
+
 }
 #extraheadcontentstructuredRow .headItemAdder a {
 	background:transparent url(../../../silk_icons/add.png) no-repeat;
