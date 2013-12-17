@@ -49,22 +49,12 @@ class ReasonUpgrader_45_UpdateAdminLinks implements reasonUpgraderInterface
      */
 	public function test()
 	{
-		$admin_links = array('delete_duplicate_relationships_admin_link', 'delete_headless_chickens_admin_link', 'delete_widowed_relationships_admin_link', 'fix_amputees_admin_link', 'import_photos_admin_link', 'view_page_type_info_admin_link', 'remove_duplicate_entities_admin_link');
+		
+		$results = $this->get_entities_to_delete($this->get_parameter_array());	
 		$to_return = '';
-		foreach ($admin_links as $admin_link)
-		{
-			$to_return.=$this->get_admin_link_relationship($admin_link);
-		}
-		$es = new entity_selector;
-		$es->add_type(id_of('admin_link'));
-		$results = $es->run_one();
 		foreach($results as $res_id => $result)
 		{
-			$name = $result->get_value('name');
-			if($name=='Site Stucture Analysis')
-			{
-				$to_return.=$this->get_admin_link_relationship($result->id(),$name);
-			}
+			$to_return.='<p>Will remove '.$result->get_value('name').' from the admin links on master admin.</p>';
 		}
 		if($to_return=='')
 		{
@@ -79,98 +69,45 @@ class ReasonUpgrader_45_UpdateAdminLinks implements reasonUpgraderInterface
 	 */
 	public function run()
 	{
-		$admin_links = array('delete_duplicate_relationships_admin_link', 'delete_headless_chickens_admin_link', 'delete_widowed_relationships_admin_link', 'fix_amputees_admin_link', 'import_photos_admin_link', 'view_page_type_info_admin_link', 'remove_duplicate_entities_admin_link');
+		$results = $this->get_entities_to_delete($this->get_parameter_array());	
 		$to_return = '';
-		foreach ($admin_links as $admin_link)
-		{
-			$to_return.=$this->remove_admin_link_relationship($admin_link);
-		}
-		$es = new entity_selector;
-		$es->add_type(id_of('admin_link'));
-		$results = $es->run_one();
 		foreach($results as $res_id => $result)
 		{
-			if($result->get_value('name')=='Site Stucture Analysis')
-			{	
-				$to_return.=$this->remove_admin_link_relationship($result->id());
-			}
-		}	
+			delete_relationships(array('entity_a'=>id_of('master_admin'),'entity_b'=>$result->id(),'type'=>relationship_id_of('site_to_admin_link')));
+			$to_return.='<p>Removed '.$result->get_value('name').' from the admin links on master admin.</p>';
+		}
 		if($to_return=='')
 		{
 			$to_return = '<p>This updater has already been run.</p>';
 		}
 		return $to_return;
-		
 	}
-	
-	protected function remove_admin_link_relationship($admin_link,$name='')
+
+	protected function get_parameter_array()
 	{
-		$admin_text = $admin_link;
-		$es = new entity_selector;
-		$es->add_type(id_of('site'));
-		if(!is_numeric($admin_link))
-		{	
-			$admin_link = id_of($admin_link);
-		}
-		if(empty($admin_link))
-			return '';
-		
-		$es->add_left_relationship($admin_link,relationship_id_of('site_to_admin_link'));
-		$results = $es->run_one();
-		$master_admin_found = False;
-		foreach($results as $result_id=>$object)
-		{
-			if($object->id()==id_of('master_admin'))
-			{
-				$master_admin_found = True;
-			}
-		}
-		if($master_admin_found)
-		{
-			if(!empty($name))
-			{
-				$admin_text = $name;
-			}
-			delete_relationships(array('entity_a'=>id_of('master_admin'),'entity_b'=>$admin_link,'type'=>relationship_id_of('site_to_admin_link')));
-			return '<p>'.$admin_text.' deleted</p>';
-		}	
-		return '';
-	}
+		return array('unique_name'=>array('delete_duplicate_relationships_admin_link', 'delete_headless_chickens_admin_link', 'delete_widowed_relationships_admin_link', 'fix_amputees_admin_link', 'import_photos_admin_link', 'view_page_type_info_admin_link', 'remove_duplicate_entities_admin_link'),'name'=>array('Site Stucture Analysis'));
+	}	
 	
-	protected function get_admin_link_relationship($admin_link,$name='')
+	function get_entities_to_delete($parameters)
 	{
-		$admin_text = $admin_link;
-		$es = new entity_selector;
-		$es->add_type(id_of('site'));
-		if(!is_numeric($admin_link))
-		{	
-			$admin_link = id_of($admin_link);
-		}
-		if(empty($admin_link))
-			return '';
-		
-		$es->add_left_relationship($admin_link,relationship_id_of('site_to_admin_link'));	
-		$results = $es->run_one();
-		$master_admin_found = False;
-		foreach($results as $result_id=>$object)
+		$es = new entity_selector();
+		$es->add_type(id_of('admin_link'));
+		$es->add_right_relationship(id_of('master_admin'),relationship_id_of('site_to_admin_link'));
+		$query_str = "(";
+		foreach($parameters as $field => $options)
 		{
-			if($object->id()==id_of('master_admin'))
+			$query_str.=addslashes($field).' IN (';
+			foreach($options as $option)
 			{
-				$master_admin_found = True;
+				$query_str.="'".addslashes($option)."',";
 			}
+			$query_str = rtrim($query_str, ',');	
+			$query_str.=') OR ';
 		}
-		if($master_admin_found)
-		{
-			if(!empty($name))
-			{
-				$admin_text=$name;
-			}
-			return '<p>'. $admin_text.' will be deleted</p>';
-		}	
-		else
-		{
-			return '';
-		}
-	}		
+		$query_str = rtrim($query_str, ' OR ');
+		$query_str.= ")";
+		$es->add_relation($query_str);
+		return $es->run_one();
+	}	
 }
 ?>
