@@ -141,6 +141,7 @@ class MinisitePageManager extends parent_childManager
 
 		$this->set_display_name( 'name', 'Title');
 		$this->set_display_name('link_name', 'Title Used in Navigation');
+		$this->set_element_properties( 'link_name', array('size' => 25) );
 		$this->set_comments( 'link_name', form_comment('If the page title is long, you can shorten the title for use in the site\'s navigation.') );
 		
 		// don't show the url for the root page.  it is defined by the site's base_url
