@@ -245,7 +245,14 @@
 						}
 					}
 					else
-						$display = $handler( $row->get_value( $col ) );
+					{
+						$value = ($row->has_value( $col )) ? $row->get_value( $col ) : $row;
+						
+						if (method_exists($this, $handler))
+							$display = $this->$handler( $value );
+						else if (function_exists($handler))
+							$display = $handler( $value );
+					}
 				}
 				else
 				{
@@ -257,10 +264,10 @@
 							$wrapper_count++;
 						$display .= '<div class="treeItemWrapDepth'.$wrapper_count.'">';
 						$display .=  '<strong>' . $row->get_value( 'name' ) . '</strong>';
-						if( reason_user_has_privs($this->admin_page->user_id,'edit') && count( $this->children( $row->id() ) ) > 1 )
+						if ( $actions = $this->get_additional_actions($row) )
 						{
 							$display .= '<div class="addlActions">';
-							$display .= '<a href="'.$this->admin_page->make_link( array( 'cur_module' => 'Sorting','parent_id' => $row->id() ) ).'" class="smallText sortChildren">Sort children</a>';
+							$display .= join('&sdot;', $actions);
 							$display .= '</div>';
 						}
 						$display .= '</div>';
@@ -272,6 +279,21 @@
 				echo '>'.$display.'</td>';
 			}
 		} // }}} 
+		
+		function get_additional_actions($row)
+		{
+			$actions = array();
+			
+			if( reason_user_has_privs($this->admin_page->user_id,'edit') && count( $this->children( $row->id() ) ) > 1 )
+			{
+				$actions[] = '<a href="'.$this->admin_page->make_link( array( 'cur_module' => 'Sorting','parent_id' => $row->id() ) ).'" class="smallText sortChildren">Sort children</a>';
+				if ($row->id() == $this->root_node())
+					$actions[] =  '<a href="#" class="smallText ExpandAll">Expand/close all</a>';
+			}				
+
+			return $actions;
+		}
+		
 		function show_admin_live( $row , $options) // {{{
 		{
 			echo '<td align="left" class="viewerCol_admin '.$options[ 'class' ].'"><strong>';
