@@ -105,7 +105,7 @@ class reasonPublicationReminder
 		if($days_since_weekly_reminder==0)
 		{
 			echo 'No new posts on publication id ' . $this->pub->id() . ' ('.$this->pub->get_value('name').') since ' . $this->recent_date . '.'."\n";
-			$email = new Email($this->emails, 'no-reply@carleton.edu', 'no-reply@carleton.edu', 'Reason Publication Reminder', $this->get_email_message(), $this->get_email_message());
+			$email = new Email($this->emails, 'no-reply@carleton.edu', 'no-reply@carleton.edu', 'Reason Publication Reminder', $this->get_email_message(), nl2br($this->get_email_message()));
 			$email->send();
 			echo 'Message sent to '.$this->emails."\n".'<br>';
 		}
@@ -126,7 +126,7 @@ class reasonPublicationReminder
 	{
 		$message = 'FYI, there are currently no recent posts on the Reason publication "' . $this->pub->get_value('name') . '."'."\n\n";
 		$message .= 'You are signed up to receive notices when this publication has not been updated in the last '.$this->days.' days.'."\n\n";
-		$message .= 'It may be time to add a new post!'."\n\n";
+		$message .= 'It may be time to add a new post! ';
 		$message .= 'Click here to add posts to this publication: http://'.REASON_WEB_ADMIN_PATH.'?site_id='.get_owner_site_id( $this->pub->id() ).'&type_id='.id_of('news')."\n\n";
 		$message .= 'If you are no longer responsible for this publication, please contact a Reason administrator to have this email sent to someone else.'."\n\n";
 		$message .= 'Thank you!'."\n\n";
@@ -173,7 +173,6 @@ class reasonPublicationReminder
 	}
 	
 }
-
 // Checks for user, requires authentication for non-cli users.
 if(PHP_SAPI == 'cli')
 {
