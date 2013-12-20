@@ -101,7 +101,16 @@
 		 * @var array
 		 */
 		var $params;
-		
+
+
+		/**
+		 * noncanonical_request_keys with values as values
+		 * 
+		 * ?????
+		 * 
+		 */
+		var $noncanonical_request_keys = array(); 
+
 		/**
 		 * see if arguments have been parsed
 		 * @var boolean
@@ -544,15 +553,40 @@
 		 */
 		function get_noncanonical_request_keys()
 		{
-			return array();
+			return $this->noncanonical_request_keys;
 		}
 		function get_canonical_url()
 		{
-			return NULL;
+			$canonicalized_url = NULL;
+			$non_cans_array = $this->get_noncanonical_request_keys();
+			$curr_url = get_current_url();
+			$parsed_url = parse_url($curr_url);
+			$non_cans_array = array_flip($non_cans_array);
+
+			if (!empty($non_cans_array))
+			{
+				parse_str($parsed_url['query'], $qs_arrray);
+				$canonicalized_qs = array_diff_key($qs_arrray, $non_cans_array);
+			 	$canonicalized_qs = http_build_query($canonicalized_qs);
+			 	$canonicalized_url = $parsed_url['scheme'];
+			 	$canonicalized_url .= '://';
+			 	$canonicalized_url .= $parsed_url['host'];
+			 	if (isset($parsed_url['port']))
+			 	{
+			 		$canonicalized_url .= $parsed_url['port'];
+			 	}
+			 	$canonicalized_url .= $parsed_url['path'];
+			 	$canonicalized_url .= '?';
+			 	$canonicalized_url .= $canonicalized_qs;
+			} 
+			else 
+			{
+				$canonicalized_url = $curr_url;
+			}
+			return $canonicalized_url;
 		}
 		/**
-		 * the basic run function to display this module.
-		 *
+ 		 *
 		 * this is called when the template is in non-editing mode
 		 */
 		function run() // {{{

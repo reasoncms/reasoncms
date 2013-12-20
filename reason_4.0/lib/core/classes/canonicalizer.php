@@ -11,27 +11,28 @@ class reasonCanonicalizer
 	}
 	public function get_canonical_url()
 	{
-		$full_request_keys = array_keys($_GET);
 		foreach($this->modules as $key=>$module)
 		{
 			$this->data[$key]['non_canonical'] = $module->get_noncanonical_request_keys();
 			$this->data[$key]['all'] = array_keys($module->get_cleanup_rules());
-			$this->data[$key]['canonical'] = array_diff($non_canonical, $all);
-			if (!empty($this->data[$key]['canonical']))
+			// $this->data[$key]['canonical'] = array_diff($non_canonical, $all);
+			$this->data[$key]['canonical'] = array_diff($this->data[$key]['non_canonical'], $this->data[$key]['all']);
+			if (!empty($this->data[$key]['non_canonical']))
 			{
-				$num_canonical_mods++;
+				$this->num_canonical_mods++;
 				$canonical_module = $module;
 			}
-
 		}
 		// logic goes here
-		if ($num_canonical_mods == 1) //follow left side of pdf
+		if ($this->num_canonical_mods == 1) //follow left side of pdf
 		{
+			// echo $canonical_module->get_canonical_url();
 			return $canonical_module->get_canonical_url();
 			// return '/foo/bar/';
 		} 
 		else //follow right side
 		{
+			$params_string = array();
 			$non_cans = $this->has_non_canonical_url_params(); // Any non-canonical QSPs?
 			if (!empty($non_cans))
 			{

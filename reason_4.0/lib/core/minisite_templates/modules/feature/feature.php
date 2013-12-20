@@ -64,6 +64,7 @@ class FeatureModule extends DefaultMinisiteModule
 	var $cleanup_rules = array('feature'=>'turn_into_int');
 	var $features_view_params;
 	var $current_feature_id = 0;
+	var $noncanonical_request_keys = array('feature');
 	
 	private $_view;
 	private $_view_data;
@@ -76,8 +77,6 @@ class FeatureModule extends DefaultMinisiteModule
 			$head_items =& $this->get_head_items();
 			$head_items->add_javascript(JQUERY_URL, true);
 
-			$canonical_url = get_current_url();
-			$head_items->add_head_item('link',array('rel'=>'canonical','href'=>$canonical_url ), '');
 			//create the view layer
 			$view = $this->get_view();
 			$view_data = $this->_view_data;
