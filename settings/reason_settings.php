@@ -603,12 +603,13 @@
 	* If no post has been added in reminder_days, an email will be sent to reminder_emails
 	* If this is true, these options will be available. If false, they will not and no reminders will occur.
 	* The blog content manager uses this variable.
-	* Run this script from the command-line (probably as a cron task) like this:
- 	*
- 	* /path/to/php -d include_path=/path/to/reason_package/ /path/to/reason_package/reason_4.0/lib/core/scripts/news/tickler_many.php
+	* Add this to the crontab:
+	*
+	* 00 00 * * * user path/to/php/bin/php -d include_path=/path/to/reason_package path/to/reason_package/reason_4.0/lib/core/scripts/news/tickler_many.php
  	*
 	* In order to begin the sending of reminders. 
-	*/
+	* (user is the username; the first 00 is the minute of the day to send at, the second 00 is the hour, so 30 09 would be 9:30 in the morning)
+	*/	
 	define( 'PUBLICATION_REMINDER_CRON_SET_UP', false);
 
 	/**
