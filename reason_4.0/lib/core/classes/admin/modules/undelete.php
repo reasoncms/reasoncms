@@ -63,10 +63,14 @@
 				$cache = new ReasonObjectCache($this->admin_page->site_id . '_navigation_cache');
 				$cache->clear();
 			}
-			
+			$manager_site_id  = $this->admin_page->site_id;
+			if ($item->get_value('type') == id_of('site'))
+			{
+				$manager_site_id = $item->id();
+			}
 			//Updates the rewrites to prevent infinite redirection loop.
 			reason_include_once('classes/url_manager.php');
-			$urlm = new url_manager($this->admin_page->site_id);
+			$urlm = new url_manager($manager_site_id);
 			$urlm->update_rewrites();
 			
 			$link = unhtmlentities( $this->admin_page->make_link( array( 'cur_module' => 'Lister' , 'id' => '' , 'state' => 'deleted' ) ) );
