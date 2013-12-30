@@ -759,6 +759,57 @@ class checkboxgroup_with_other_no_sortType extends checkboxgroup_with_otherType
 }
 
 /**
+ * Same as {@link checkboxgroupType}, but inline.
+ * @package disco
+ * @subpackage plasmature
+ */
+class checkboxgroup_inlineType extends checkboxgroupType
+{
+	var $type = 'checkboxgroup_inline';
+
+	function get_display()
+	{
+		$str = '<div class="checkBoxGroup">'."\n";
+		$i = 0;
+		
+		if($this->add_empty_value_to_top)
+		{
+			$str .= $this->_get_checkbox_row('','--',$i++);
+		}
+		foreach( $this->options as $key => $val )
+		{
+			$str .= $this->_get_checkbox_row($key,$val,$i++);
+		}
+		$str .= '</div>'."\n";
+		return $str;
+	}
+	
+	protected function _get_checkbox_row($key,$val,$count)
+	{
+		$id = 'checkbox_'.$this->name.'_'.$count;
+		$str = '';
+		$str .= '<span class="checkboxItem"><span class="checkBox"><input type="checkbox" id="'.$id.'" name="'.$this->name.'['.$count.']" value="'.htmlspecialchars($key, ENT_QUOTES).'"';
+		if ( $this->_is_current_value($key) )
+			$str .= ' checked="checked"';
+		if ( $this->_is_disabled_option($key) )
+			$str .= ' disabled="disabled"';
+		$str .= ' /></span><label for="'.$id.'">'.$val."</label></span>\n";
+		return $str;
+	}	
+}
+
+/**
+ * Same as {@link checkboxgroup_no_sortType}, but inline.
+ * @package disco
+ * @subpackage plasmature
+ */
+class checkboxgroup_inline_no_sortType extends checkboxgroup_inlineType
+{
+	var $type = 'checkboxgroup_inline_no_sort';
+	var $sort_options = false;
+}
+
+/**
  * @package disco
  * @subpackage plasmature
  * @todo do better data checking to make sure that value is one of the available options (or empty/null)
