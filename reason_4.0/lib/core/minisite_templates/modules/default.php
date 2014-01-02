@@ -565,7 +565,14 @@
 
 			if (!empty($non_cans_array))
 			{
-				parse_str($parsed_url['query'], $qs_arrray);
+				if (array_key_exists('query', $parsed_url))
+				{
+					parse_str($parsed_url['query'], $qs_arrray);
+				} 
+				else 
+				{
+					$qs_arrray = array();
+				}
 				$canonicalized_qs = array_diff_key($qs_arrray, $non_cans_array);
 			 	$canonicalized_qs = http_build_query($canonicalized_qs);
 			 	$canonicalized_url = $parsed_url['scheme'];
@@ -575,9 +582,12 @@
 			 	{
 			 		$canonicalized_url .= $parsed_url['port'];
 			 	}
-			 	$canonicalized_url .= $parsed_url['path'];
-			 	$canonicalized_url .= '?';
-			 	$canonicalized_url .= $canonicalized_qs;
+		 		$canonicalized_url .= $parsed_url['path'];
+			 	if (!empty($canonicalized_qs))
+			 	{
+				 	$canonicalized_url .= '?';
+				 	$canonicalized_url .= $canonicalized_qs;
+				 }
 			} 
 			else 
 			{

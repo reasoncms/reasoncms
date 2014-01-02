@@ -26,8 +26,17 @@ class reasonCanonicalizer
 		// logic goes here
 		if ($this->num_canonical_mods == 1) //follow left side of pdf
 		{
-			// echo $canonical_module->get_canonical_url();
-			return $canonical_module->get_canonical_url();
+			$canonical_url = $canonical_module->get_canonical_url();
+			if ($canonical_url == get_current_url())
+			{
+				return;
+			} 
+			else 
+			{
+				$canonical_url = trim_slashes($canonical_url); 
+				return $canonical_url;
+			}
+			// return $canonical_module->get_canonical_url();
 			// return '/foo/bar/';
 		} 
 		else //follow right side
