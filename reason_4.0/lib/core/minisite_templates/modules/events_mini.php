@@ -17,27 +17,24 @@ class miniEventsModule extends EventsModule
 {
 	var $ideal_count = 7;
 	var $div_id = 'miniCal';
-	var $show_options = false;
-	var $show_navigation = false;
-	var $show_views = false;
-	var $show_months = false;
 	var $snap_to_nearest_view = false;
 	var $events_page;
+	var $default_list_chrome_markup = 'minisite_templates/modules/events_markup/mini/mini_events_list_chrome.php';
+	var $default_list_markup = 'minisite_templates/modules/events_markup/mini/mini_events_list.php';
 	/**
 	 * An array of page types that this module should link to
 	 *
 	 * @var array
-	 * @deprecated -- use @var $_events_modules instead.
+	 * @deprecated use config/module_sets instead
 	 */
 	var $events_page_types = array();
 	/**
 	 * An array of additional module names that this module should link to
 	 *
 	 * @var array
+	 * @deprecated use config/module_sets instead
 	 */
 	var $_events_modules = array();
-	var $list_date_format = 'D. M. j';
-	var $show_calendar_grid = false;
 	
 	 /**
 	 * Accept the params from the page type, with local additions to acceptable params
@@ -61,9 +58,6 @@ class miniEventsModule extends EventsModule
 		
 		if(!isset($this->acceptable_params['title']))
 			$this->acceptable_params['title'] = '';
-		
-		if(!isset($this->acceptable_params['calendar_link_text']))
-			$this->acceptable_params['calendar_link_text'] = 'More events';
 		
 		parent::handle_params( $params );
 	}
@@ -121,6 +115,11 @@ class miniEventsModule extends EventsModule
 			echo '<div class="eventsNoContentMessage">'.$msg.'</div>'."\n";
 		}
 	}
+	function display_list_title()
+	{
+		echo '<h3><a href="'.$this->events_page_url.'">'.$this->_get_list_title().'</a></h3>'."\n";
+	}
+
 	function _get_list_title()
 	{
 		if(!empty($this->params['title']))
@@ -128,17 +127,13 @@ class miniEventsModule extends EventsModule
 		else
 			return $this->events_page->get_value('name');
 	}
-	function display_list_title()
-	{
-		echo '<h3><a href="'.$this->events_page_url.'">'.$this->_get_list_title().'</a></h3>'."\n";
-	}
 	function _get_events_module_names()
 	{
 		reason_include_once( 'classes/module_sets.php' );
 		$ms =& reason_get_module_sets();
 		return array_unique(array_merge($ms->get('event_display'),$this->_events_modules));
 	}
-	function find_events_page() // {{{
+	function find_events_page()
 	{
 		$module_names = $this->_get_events_module_names();
 		reason_include_once( 'minisite_templates/nav_classes/default.php' );
@@ -161,30 +156,6 @@ class miniEventsModule extends EventsModule
 		}
 		if(!empty($ret))
 			$this->events_page_url = $ret;
-	} // }}}
-	function show_ongoing_events($ids)
-	{
-		if(!empty($ids))
-		{
-			echo '<div class="ongoingblock">'."\n";
-			echo '<h4>Ongoing</h4>'."\n";
-			echo '<ul class="ongoingEvents">'."\n";
-			foreach($ids as $id)
-			{
-				echo '<li class="event">';
-				$this->show_event_list_item( $id, '', 'through' );
-				echo '</li>'."\n";
-			}
-			echo '</ul>'."\n";
-			echo '</div>'."\n";
-		}
-	}
-	function show_feed_link()
-	{
-		echo '<p class="more"><a href="'.$this->events_page_url.'">'.$this->params['calendar_link_text'].'</a></p>'."\n";
-	}
-	function show_list_export_links()
-	{
 	}
 }
 ?>

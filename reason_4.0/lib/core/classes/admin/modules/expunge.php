@@ -84,9 +84,7 @@
 			$this->disco_item = new $deleter;
 			$this->disco_item->actions = array();
 			$this->disco_item->set_page( $this->admin_page );
-			$this->disco_item->actions[ 'delete' ] = 'Yes, Expunge and Go Back to List';
-			
-			$this->disco_item->actions[ 'cancel' ] = 'No, Cancel';	
+			$this->disco_item->actions[ 'delete' ] = 'Expunge This '.strip_tags($type->get_value( 'name' ));	
 			$this->disco_item->grab_info( $this->admin_page->id , $graph );
 			$this->disco_item->init();
 		}

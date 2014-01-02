@@ -1,6 +1,6 @@
 <?php
 /**
- * Upgrader that adds storage-related fields to media works.
+ * Upgrader that adds a display name handler for features
  *
  * @package reason
  * @subpackage scripts
@@ -16,9 +16,6 @@ reason_include_once('function_libraries/admin_actions.php');
 
 $GLOBALS['_reason_upgraders']['4.4_to_4.5']['add_feature_display_name_handler'] = 'ReasonUpgrader_45_AddFeatureDisplayNameHandler';
 
-/**
- * @todo also add event_to_media_work relationship
- */
 class ReasonUpgrader_45_AddFeatureDisplayNameHandler implements reasonUpgraderInterface
 {
 

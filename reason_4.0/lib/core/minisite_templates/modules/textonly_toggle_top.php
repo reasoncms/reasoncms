@@ -14,21 +14,9 @@
 	 * A minisite module that displays a link to switch between full graphics and limited graphics mode
 	 *
 	 * This module is designed to use the class "hide" when in full graphics mode
+	 * @deprecated Will be removed in future versions of Reason
 	 */
 	class TextOnlyToggleTopModule extends TextOnlyToggleModule
 	{
-		function generate_class()
-		{
-			if (!empty($this->textonly))
-				return 'fullGraphicsLink';
-			else
-				return 'hide';
-		}
-		function get_documentation()
-		{
-			if (!empty($this->textonly))
-				return parent::get_documentation();
-			return false;
-		}
 	}
 ?>

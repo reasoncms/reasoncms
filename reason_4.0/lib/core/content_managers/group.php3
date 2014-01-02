@@ -47,7 +47,7 @@
 			{
 				$this->set_value('group_has_members','true');
 			}
-			$this->change_element_type( 'require_authentication','radio_no_sort',array( 'options' => array( 'false' => 'Everyone','true' => 'Just '.SHORT_ORGANIZATION_NAME.' people<br /><span class="tinytext">(those with a '.SHORT_ORGANIZATION_NAME.'-supplied username and password)</span>' ) ) );
+			$this->change_element_type( 'require_authentication','radio_no_sort',array( 'options' => array( 'false' => 'Everyone<br />(anybody on the web, no login required)','true' => 'Just '.SHORT_ORGANIZATION_NAME.' people<br /><span class="tinytext">(those with a '.SHORT_ORGANIZATION_NAME.'-supplied username and password)</span>' ) ) );
 			$this->set_display_name( 'require_authentication', ' ' );
 			//$this->set_display_name( 'require_authentication', 'Require '.SHORT_ORGANIZATION_NAME.' Login?' );
 			$this->change_element_type( 'limit_authorization','radio_no_sort',array( 'options' => array( 'false' => 'All '.SHORT_ORGANIZATION_NAME.' people', 'true' => 'A subset' ) ) );
@@ -81,7 +81,7 @@
 				$this->set_display_name( 'ldap_group_member_fields','Group membership LDAP attributes' );
 				$this->add_comments( 'ldap_group_member_fields',form_comment( 'Redefine what LDAP attributes to use when determining group membership. Use comma-separated attribute names. If left empty Reason will use the attribute ds_members.' ) );
 			}
-			$this->add_element('authentication_comment', 'comment', array('text'=>'<h3>Broadly define the group</h3><p>Does it include everyone, or just '.SHORT_ORGANIZATION_NAME.' people?</p>'));
+			$this->add_element('authentication_comment', 'comment', array('text'=>'<h3>Broadly define the group</h3><p>Does it include everyone in the world, or just '.SHORT_ORGANIZATION_NAME.' people?</p>'));
 			$this->add_element('limit_comment', 'comment', array('text'=>'<h3>Focusing the group</h3>If you answered "Just '.SHORT_ORGANIZATION_NAME.' people" above: is this the group of all '.SHORT_ORGANIZATION_NAME.' people or just a subset?</p>'));
 			$this->add_element('audiences_comment', 'comment', array('text'=>'<h3>The details</h3><p>If you answered "subset" above, please indicate the sets of '.SHORT_ORGANIZATION_NAME.' people that make up this group. These fields are additive -- if you enter "Alumni," "Students," and members of a certain class, the group will include <em>all</em> of those people. Please note that if <strong>all</strong> members of checked audiences will be considered part of this group.'));
 			$this->add_relationship_element('audiences', id_of('audience_type'), 

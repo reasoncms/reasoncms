@@ -659,7 +659,10 @@ class MinisiteTemplate
 			$this->head_items->add_head_item('meta',array('name'=>'keywords','content'=>$content) );
 		}
 		
-		if (!empty( $_REQUEST['no_search'] ) || $this->site_info->get_value('site_state') != 'Live' || ( defined('THIS_IS_A_DEVELOPMENT_REASON_INSTANCE') && THIS_IS_A_DEVELOPMENT_REASON_INSTANCE ) )
+		if (!empty( $_REQUEST['no_search'] ) 
+			|| $this->site_info->get_value('site_state') != 'Live' 
+			|| ( defined('THIS_IS_A_DEVELOPMENT_REASON_INSTANCE') && THIS_IS_A_DEVELOPMENT_REASON_INSTANCE ) 
+			|| !$this->cur_page->get_value('indexable'))
 		{
 			$this->head_items->add_head_item('meta',array('name'=>'robots','content'=>'none' ) );
 		}
@@ -1466,7 +1469,7 @@ class MinisiteTemplate
 	
 	function show_main_content_tabled() // {{{
 	{
-		if ($this->has_content( 'main_head' ) || $this->has_content( 'main' ) || $this->has_content( 'main_post' )) 
+		if ($this->has_content( 'main_head' ) || $this->has_content( 'main' ) || $this->has_content( 'main_post' ) || $this->has_content( 'main_post_2' ) || $this->has_content( 'main_post_3' )) 
 		{
 			echo '<td valign="top" class="contentTD">'."\n";
 			echo '<div class="content"><a name="content"></a>'."\n";
@@ -1493,6 +1496,18 @@ class MinisiteTemplate
 		{
 			echo '<div class="contentPost">'."\n";
 			$this->run_section( 'main_post' );
+			echo '</div>'."\n";
+		}
+		if ($this->has_content( 'main_post_2' )) 
+		{
+			echo '<div class="contentPost2">'."\n";
+			$this->run_section( 'main_post_2' );
+			echo '</div>'."\n";
+		}
+		if ($this->has_content( 'main_post_3' )) 
+		{
+			echo '<div class="contentPost3">'."\n";
+			$this->run_section( 'main_post_3' );
 			echo '</div>'."\n";
 		}
 	}
@@ -1658,7 +1673,7 @@ class MinisiteTemplate
 	/*this stuff comes from the tableless template. from here... */
 		function has_content_section()
 	{
-		if($this->has_content( 'main_head' ) || $this->has_content( 'main' ) || $this->has_content( 'main_post' ) )
+		if($this->has_content( 'main_head' ) || $this->has_content( 'main' ) || $this->has_content( 'main_post' ) || $this->has_content( 'main_post_2' ) || $this->has_content( 'main_post_3' ) )
 		{
 			return true;
 		}

@@ -24,6 +24,7 @@ class Email
 {
 	var $_tos;
 	var $_froms;
+	var $_ccs;
 	var $_replytos;
 	var $_subject;
 	var $_txtbody;
@@ -58,17 +59,22 @@ class Email
 	}
 
 	// For details about $tos see $this->_prettify_addresses()
-	function add_tos($tos, $address_types) {
+	function add_tos($tos, $address_types = 'mixed') {
 		$this->_tos .= $this->_prettify_addresses($tos, $address_types);
 	}
 
 	// For details about $froms see $this->_prettify_addresses()
-	function add_froms($froms, $address_types) {
+	function add_froms($froms, $address_types = 'mixed') {
 		$this->_froms .= $this->_prettify_addresses($froms, $address_types);
 	}
 
+	// For details about $froms see $this->_prettify_addresses()
+	function add_ccs($ccs, $address_types = 'mixed') {
+		$this->_ccs .= $this->_prettify_addresses($ccs, $address_types);
+	}
+
 	// For details about $replytos see $this->_prettify_addresses()
-	function add_replytos($replytos, $address_types) {
+	function add_replytos($replytos, $address_types = 'mixed') {
 		$this->_replytos .= $this->_prettify_addresses($replytos, $address_types);
 	}
 
@@ -95,12 +101,12 @@ class Email
 	 */
 	function send() {
 		$crlf = "\r\n" ;
-	
-		$additional_headers =
-			 'From: ' . $this->_froms . $crlf .
-			 'Bcc: ' . $this->_tos . $crlf .
-			 'Reply-To: ' . $this->_replytos . $crlf .
-			 'MIME-version: 1.0'.$crlf;
+		$additional_headers = '';
+		if ($this->_froms) $additional_headers .= 'From: ' . $this->_froms . $crlf;
+		if ($this->_ccs) $additional_headers .= 'Cc: ' . $this->_ccs . $crlf;
+		if ($this->_tos) $additional_headers .= 'Bcc: ' . $this->_tos . $crlf;
+		if ($this->_replytos) $additional_headers .= 'Reply-To: ' . $this->_replytos . $crlf;
+		$additional_headers .= 'MIME-version: 1.0'.$crlf;
 		
 		// simplest case: just plain text content
 		if (empty($this->_htmlbody) && empty($this->_attachments))

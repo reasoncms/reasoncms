@@ -141,7 +141,7 @@ class PollingGraphModule extends DefaultMinisiteModule
 			{	
 				echo '<table width="300px" border="solid" cellpadding="5px">
 				<tr>
-				<td width="50px">' . $per[$i] . ' </td><td> ' . $name[$i] . '</td>
+				<td width="50px">' . reason_htmlspecialchars($per[$i]) . ' </td><td> ' . reason_htmlspecialchars($name[$i]) . '</td>
 				</tr>
 				</table>';
 			}

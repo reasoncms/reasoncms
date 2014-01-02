@@ -39,6 +39,7 @@
                 $this->head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH . 'formbuilder/js/jquery.formbuilder.js');
                 $this->head_items->add_stylesheet(REASON_PACKAGE_HTTP_BASE_PATH . 'formbuilder/css/jquery.formbuilder.css');
             }
+			$this->head_items->add_stylesheet(REASON_ADMIN_CSS_DIRECTORY . 'content_managers/form.css');
 		}
 
 		function alter_data()
@@ -46,6 +47,8 @@
 			$this->set_allowable_html_tags('thor_content','all');
 			$this->add_required( 'thor_content' );
 			$this->add_required( 'thank_you_message' );
+
+			$this->add_element( 'thor_comment', 'hidden');
 		
 			$this->set_comments( 'email_of_recipient', form_comment('When a user submits the form, the form\'s information will be sent here. You are encouraged to use '.SHORT_ORGANIZATION_NAME.' netids instead of complete '.SHORT_ORGANIZATION_NAME.' email addresses. Multiple addresses or netids may be separated by commas. This field is required if this form does not save results to a database.') );
 			$this->set_comments( 'thank_you_message', form_comment('After a user submits the form, this message will be displayed on the generic confirmation page.') );
@@ -54,7 +57,7 @@
 			$this->set_comments( 'submission_limit', form_comment('To limit the number of submissions to this form, make sure the form is saving its data in a database and enter a maximum number of submissions here. The form will stop accepting submissions when this limit is reached. A value of 0 indicates no limit.'));
 			$this->set_comments( 'open_date', form_comment('If this value is set, the form will not accept submissions before this date and time.'));
 			$this->set_comments( 'close_date', form_comment('If this value is set, the form will not accept submissions after this date and time.'));
-			
+	
 			$this->set_display_name( 'email_of_recipient', 'Email of Recipient' );
 			$this->set_display_name( 'thor_content', 'Form Content' );
 			$this->set_display_name( 'db_flag', 'Save to Database?' );
@@ -82,7 +85,7 @@
 			else
 				$this->change_element_type( 'thor_content', 'formbuilder');
 			$this->alter_data_advanced_options();
-			$this->set_order (array ('name', 'db_flag', 'email_of_recipient', 'thor_content','magic_string_autofill_note',
+			$this->set_order (array ('name', 'db_flag', 'email_of_recipient', 'thor_content', 'thor_comment', 'magic_string_autofill_note',
 									 'magic_string_autofill', 'thank_you_note', 'thank_you_message', 'display_return_link', 'show_submitted_data', 
 									 'limiting_note', 'submission_limit', 'open_date', 'close_date',
 									 'advanced_options_header', 'thor_view', 'thor_view_custom', 'is_editable', 'allow_multiple', 'email_submitter', 'email_link', 'email_data', 'email_empty_fields', // advanced options
@@ -201,6 +204,10 @@
 						$this->show_error_jumps = false;
 				}
 				$this->remove_element('thor_content');
+				$data_manager_link = $this->admin_page->make_link( array( 'cur_module' => 'ThorData' ));
+				$data_comment= '<div id="manageDataNote"><p><strong>This form has stored data. </strong><a href="'.$data_manager_link.'">Manage stored data</a></p>';
+				$data_comment.='<p>To edit this form, you will first need to delete the stored data.</p></div>';	
+				$this->change_element_type('thor_comment','comment',array('text'=>$data_comment));	
 			}
 			$this->pre_error_check_advanced_options();
 		}
@@ -266,10 +273,7 @@
 				$es->add_left_relationship($this->admin_page->id, relationship_id_of('page_to_form'));
 				$result = $es->run_one();
 				
-				$page = (isset($result[$page_id])) ? $result[$page_id]: current($result);
-				$data_manager_link = unhtmlentities($this->admin_page->make_link( array( 'cur_module' => 'ThorData' )));
-				echo '<p><strong>There is stored data that is linked to this form.</strong></p><p>To edit the <strong>contents</strong> of the form, you will first need to delete the data that is associated with this form.</p>';
-				echo '<p><a href="'.$data_manager_link.'">View / Delete stored data</a></p>';
+				$page = (isset($result[$page_id])) ? $result[$page_id]: current($result);	
 			}
 		}
 		

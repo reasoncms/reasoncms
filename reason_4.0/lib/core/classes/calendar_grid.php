@@ -142,7 +142,7 @@
 						{
 							$link = $this->linked_dates[$day];
 							$title = 'View '.date('j F Y', mktime(0,0,0,$this->view_month,$day,$this->view_year));
-							$calendar_markup .= '<a href="'.$link.'&no_search=1" title="'.$title.'">'.$day.'</a>';
+							$calendar_markup .= '<a href="'.$link.'" title="'.$title.'">'.$day.'</a>';
 						}
 						else
 						{
