@@ -17,7 +17,7 @@ $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'ChildrenAnd
  *
  * Use the parameter max_depth to control how deeply the module shows progeny
  *
- * @todo support parent_unique_name and thumbnail parameters in the original module.
+ * @todo support thumbnail parameters in the original module.
  * @todo possibly rework so this supports all params of ChildrenModule, extends less ... see children_full_titles.php for example
  */
 class ChildrenAndGrandchildrenModule extends ChildrenModule 
@@ -29,6 +29,7 @@ class ChildrenAndGrandchildrenModule extends ChildrenModule
 		'depth_to_tag_map' => array(1=>'h4'),
 		'show_only_this_branch' => '',
 		'show_only_pages_in_nav' => false,
+		'parent_unique_name' => '',
 	);
 	
 	function run() // {{{
@@ -69,18 +70,7 @@ class ChildrenAndGrandchildrenModule extends ChildrenModule
 			$page_name = $child->get_value('name');
 		}
 
-		/* Check for a url (that is, the page is an external link); otherwise, use its relative address */
-		if( $child->get_value( 'url' ) )
-			$link = $child->get_value( 'url' );
-		else
-		{
-			$link = '';
-			if( !empty($prepend_url) )
-				$link .= $prepend_url;
-			$link .= $child->get_value( 'url_fragment' ).'/';
-			if (!empty($this->textonly))
-				$link .= '?textonly=1';
-		}
+		$link = $this->get_page_link($child);
 		if ( array_key_exists( $depth, $this->params['depth_to_tag_map'] ) )
 		{
 			$tag = $this->params['depth_to_tag_map'][$depth];
@@ -122,7 +112,27 @@ class ChildrenAndGrandchildrenModule extends ChildrenModule
 		}
 		$es->set_order('sortable.sort_order ASC');
 		return $es->run_one();
-	}
+	}/**
+		 * Get the full page link for a page. We fork our linking logic based on whether we have specified a parent_unique_name or not.
+		 *
+		 * - If no, we get the relative URL just by looking at the url_fragment.
+		 * - If yes, we call get_page_link_other_parent($page)
+		 *
+		 * @return string href attribute
+		 */
+		function get_page_link($page)
+		{
+			/* Check for a url (that is, the page is an external link); otherwise, use its relative address */
+			if( $page->get_value( 'url' ) )
+			{
+				$link = $page->get_value( 'url' );
+			}
+			else
+			{
+				$link = $this->get_page_link_other_parent($page);
+			}
+			return $link;
+		}
 }
 
 ?>
