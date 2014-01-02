@@ -24,7 +24,7 @@ $GLOBALS[ '_slot_registration_view_class_names' ][ basename( __FILE__, '.php') ]
  * A form by which people can register for an event's registration slot
  */
 class EventSlotRegistrationForm extends Disco{
-
+	var $box_class = 'StackedBox';
 	/**
 	* Array of elements the form will use
 	* @access public
@@ -62,6 +62,8 @@ class EventSlotRegistrationForm extends Disco{
 	var $show_error_jumps = false;	
 	var $show_date_change_link = false;
 	var $include_time_in_email = true;
+	
+	var $actions = array('Register');
 	
 	function __construct($event_entity, $request_array, $delimiter1, $delimiter2, $cancel_link)
 	{

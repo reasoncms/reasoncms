@@ -553,5 +553,20 @@
 		{
 			return array();
 		}
+		
+		function has_association($rel_name)
+		{
+			if ($rels = $this->admin_page->get_rels())
+			{
+				foreach ($rels as $assoc)
+					if ($assoc['name'] == $rel_name) return true;
+			}
+			if ($rels = $this->admin_page->get_backward_rels())
+			{
+				foreach ($rels as $assoc)
+					if ($assoc['name'] == $rel_name) return true;
+			}
+			return false;
+		}
 	}
 ?>

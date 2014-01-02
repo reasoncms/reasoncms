@@ -201,7 +201,11 @@
 				$offspring = $this->offspring;
 				
 				if($this->params['html5'])
-					echo '<nav class="children" role="navigation">'."\n";
+				{
+					static $counter = 0;
+					$counter++;
+					echo '<nav class="children" role="navigation" id="childrenModule'.$counter.'">'."\n";
+				}
 				if($this->params['chunks'] > 1)
 				{
 					$num = count($offspring);
@@ -252,13 +256,18 @@
 			}
 			$page_name = strip_tags($page_name,'<span><strong><em>');
 			$link = $this->get_page_link($child);
+			$classes = array('number'.$counter, $even_odd);
 			$uname = '';
 			if($child->get_value( 'unique_name' ))
 			{
-				$uname = ' uname-'.reason_htmlspecialchars($child->get_value( 'unique_name' ));
+				$classes[] = 'uname-'.reason_htmlspecialchars($child->get_value( 'unique_name' ));
+			}
+			if($child->get_value('url'))
+			{
+				$classes[] = 'jump';
 			}
 				
-			echo '<li class="number'.$counter.' '.$even_odd.$uname.'">';
+			echo '<li class="'.implode(' ',$classes).'">';
 			
 			if($this->params['provide_az_links'] && array_key_exists($child->id(),$this->az))
 			{

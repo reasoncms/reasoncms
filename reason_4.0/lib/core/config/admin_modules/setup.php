@@ -74,6 +74,7 @@
 		'ThorData'=>array('file'=>'thor_data.php','class'=>'ThorDataModule'),
 		'GroupTester'=>array('file'=>'group_tester.php','class'=>'GroupTesterModule'),
 		'ListSites'=>array('file'=>'list_sites.php','class'=>'ListSitesModule'),
+		'ListUnusedThemes'=>array('file'=>'list_unused_themes.php','class'=>'ListUnusedThemesModule'),
 		'ImageImport'=>array('file'=>'image_import.php','class'=>'ImageImportModule'),
 		'AllowableRelationshipManager'=>array('file'=>'allowable_relationship_manager.php','class'=>'AllowableRelationshipManagerModule'),
 		'SortPosts'=>array('file'=>'sort_posts.php','class'=>'SortPostsModule'),

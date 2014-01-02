@@ -62,12 +62,16 @@
 			'pre_bluebar' => '',
 			'main' => 'content',
 			'main_head' => 'page_title',
+			'main_post' => '',
+			'main_post_2' => '',
+			'main_post_3' => '',
 			'edit_link' => 'login_link',
 			'pre_banner' => 'announcements',
 			'banner_xtra' => 'search',
 			'post_banner' => 'navigation_top',
 			'pre_sidebar' => 'assets',
 			'sidebar' => 'image_sidebar',
+			'post_sidebar' => '',
 			'navigation' => 'navigation',
 			'footer' => 'maintained',
 			'sub_nav' => 'blurb',
@@ -740,12 +744,16 @@
 			'sidebar' => '',
 		),
 		'event_slot_registration' => array(
-			'main_post' => 'event_slot_registration',
+			'main_post' => array(
+				'module' => 'events',
+				'list_item_markup' => 'minisite_templates/modules/events_markup/verbose/verbose_events_list_item.php',
+			),
 			'sidebar' => '',
 		),
 		'event_slot_registration_cache_1_hour' => array(
 			'main_post' => array(
-				'module' => 'event_slot_registration',
+				'module' => 'events',
+				'list_item_markup' => 'minisite_templates/modules/events_markup/verbose/verbose_events_list_item.php',
 				'cache_lifespan' => '3600',
 				'cache_lifespan_meta' => '7400',
 			),
@@ -818,14 +826,14 @@
 		'events_hybrid_verbose' => array(
 			'main_post' => array(
 				'module'=>'events_hybrid',
-				'list_type'=>'verbose',
+				'list_item_markup' => 'minisite_templates/modules/events_markup/verbose/verbose_events_list_item.php',
 			),
 			'sidebar' => '',
 		),
 		'events_archive_verbose' => array(
 			'main_post' => array(
 				'module'=>'events_archive',
-				'list_type'=>'verbose',
+				'list_item_markup' => 'minisite_templates/modules/events_markup/verbose/verbose_events_list_item.php',
 			),
 			'sidebar' => '',
 		),
@@ -899,15 +907,25 @@
 			'sidebar' => '',
 		),
 		'events_verbose' => array(
-			'main_post' => 'events_verbose',
+			'main_post' => array(
+				'module' => 'events',
+				'list_item_markup' => 'minisite_templates/modules/events_markup/verbose/verbose_events_list_item.php',
+			),
 			'sidebar' => '',
 		),	
 		'events_schedule' => array(
-			'main_post' => 'events_schedule',
+			'main_post' => array(
+				'module' => 'events',
+				'list_markup' => 'minisite_templates/modules/events_markup/schedule/schedule_events_list.php',
+				'list_item_markup' => 'minisite_templates/modules/events_markup/schedule/schedule_events_list_item.php',
+			),
 			'sidebar' => '',
 		),	
 		'events_verbose_nonav' => array(
-			'main_post' => 'events_verbose',
+			'main_post' => array(
+				'module' => 'events',
+				'list_item_markup' => 'minisite_templates/modules/events_markup/verbose/verbose_events_list_item.php',
+			),
 			'navigation' => '',
 			'sub_nav_2' => '',
 			'sub_nav' => '',
@@ -1554,14 +1572,13 @@
 			'main_post' => 'policy',
 		),
 		'poll' => array(
-			'main' => array('module' => 'form', 'form_view' => 'minisite_templates/modules/poll/poll_form_view.php'),
-			'main_post' => array('module' => 'poll/polling_graph', 'custom_colors' => array('#cb4b4b', '#edc240', '#2f90dc', '#9440ed', '#4da74d')),
+			'main_post' => array('module' => 'form', 'form_view' => 'minisite_templates/modules/poll/poll_form_view.php'),
+			'main_post_2' => array('module' => 'poll/polling_graph', 'custom_colors' => array('#cb4b4b', '#edc240', '#2f90dc', '#9440ed', '#4da74d')),
 		),
 		'poll_sidebar' => array(
 			'pre_sidebar' => array('module' => 'form', 'form_view' => 'minisite_templates/modules/poll/poll_form_view.php'),
 			'sidebar' => array('module' => 'poll/polling_graph_sidebar', 'custom_colors' => array('#cb4b4b', '#edc240', '#2f90dc', '#9440ed', '#4da74d')),
 		),
-		
 		'projects' => array(
 			'main_post' => 'projects',
 		),

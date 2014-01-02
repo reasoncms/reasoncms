@@ -96,9 +96,11 @@
 				$siblings = $this->_get_previous_next($this->siblings);
 			else
 				$siblings = $this->siblings;
-			$class = 'siblingList';
+			$classes = array('siblingList');
 			if($this->params['provide_images'])
-				$class .= ' siblingListWithImages';
+				$classes[] = 'siblingListWithImages';
+			if($this->params['previous_next'])
+				$classes[] = 'prevNext';
 			
 			echo '<div class="siblingsModule">'."\n";
 
@@ -106,17 +108,17 @@
 			{
 				echo '<h3>'.$this->parent_page->get_value('name').'</h3>'."\n";
 			}
-			echo '<ul class="'.$class.'">'."\n";
+			echo '<ul class="'.implode(' ',$classes).'">'."\n";
 			$counter = 1;
 			$even_odd = 'odd';
 
 			foreach ( $siblings AS $key=>$sibling )
 			{
-				
+				$classes = array('number'.$counter, $even_odd);
 				$uname = '';
 				if($sibling->get_value( 'unique_name' ))
 				{
-					$uname = ' uname-'.reason_htmlspecialchars($sibling->get_value( 'unique_name' ));
+					$classes[] = 'uname-'.reason_htmlspecialchars($sibling->get_value( 'unique_name' ));
 				}
 				/* If the page has a link name, use that; otherwise, use its name */
 				$page_name = $sibling->get_value( 'link_name' ) ? $sibling->get_value( 'link_name' ) : $sibling->get_value('name');
@@ -125,7 +127,10 @@
 				
 				$is_current_page = false;
 				if ( $this->parent->cur_page->id() == $sibling->id() )
+				{
+					$classes[] = 'currentPage';
 					$is_current_page = true;
+				}
 				
 				$link = '';
 				
@@ -133,7 +138,10 @@
 				{
 					/* Check for a url (that is, the page is an external link); otherwise, use its relative address */
 					if( $sibling->get_value( 'url' ) )
+					{
 						$link = $sibling->get_value( 'url' );
+						$classes[] = 'jump';
+					}
 					else
 					{
 						$link = '../'.$sibling->get_value( 'url_fragment' ).'/';
@@ -181,10 +189,9 @@
 				
 				if ( !$is_current_page )
 				{
-					$prevnext = '';
 					if('previous' == $key || 'next' == $key)
-						$prevnext = ' '.$key;
-					echo '<li class="number'.$counter.' '.$even_odd.$uname.$prevnext.'">';
+						$classes[] = $key;
+					echo '<li class="'.implode(' ',$classes).'">';
 					if(!empty($prevnext))
 						echo '<strong>'.ucfirst($key).':</strong> ';
 					echo $image_html;
@@ -195,7 +202,7 @@
 				}
 				else
 				{
-					echo '<li class="number'.$counter.' '.$even_odd.$uname.' currentPage">';
+					echo '<li class="'.implode(' ',$classes).'">';
 					echo $image_html;
 					echo '<strong>'.$page_name.'</strong>';
 					echo '</li>'."\n";

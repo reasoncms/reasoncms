@@ -1587,9 +1587,18 @@ div.facStaffName span.degrees {
 
 .editLink {
 }
-.editDiv {
-	font-weight: bold;
+
+.editDiv {	
 	margin:1em 0;
+	font-weight: bold;	
+}
+
+.editDiv.inlineEnabled {
+	font-weight: normal;
+}
+
+.inlineEditDiv.inlineEnabled  {
+	font-weight: bold;	
 }
 
 /* Blurb Module */
