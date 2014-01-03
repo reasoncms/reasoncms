@@ -81,6 +81,7 @@ else {
 
     <!-- Bootstrap core CSS -->
     <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="facilities-scheduler.css" rel="stylesheet">
   </head>
 
   <body>
