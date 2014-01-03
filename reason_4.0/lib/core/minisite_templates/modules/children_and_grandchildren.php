@@ -30,6 +30,11 @@ class ChildrenAndGrandchildrenModule extends ChildrenModule
 		'show_only_this_branch' => '',
 		'show_only_pages_in_nav' => false,
 		'parent_unique_name' => '',
+		'provide_images' => false,
+		'randomize_images' => false,
+		'thumbnail_width' => 0,
+		'thumbnail_height' => 0,
+		'thumbnail_crop' => '',
 	);
 	
 	function run() // {{{
@@ -79,8 +84,13 @@ class ChildrenAndGrandchildrenModule extends ChildrenModule
 		{
 			$tag = $this->params['default_tag'];
 		}
-			
-		echo '<li><'.$tag.'><a href="'.$link.'">'.$page_name.'</a></'.$tag.'>';
+		
+		echo '<li><'.$tag.'>';
+		echo '<a href="'.$link.'">';
+		echo $this->get_image_markup($child);
+		echo $page_name;
+		echo '</a>';
+		echo '</'.$tag.'>';
 		if ( $child->get_value( 'description' ))
 			echo "\n".'<div class="childDesc">'.$child->get_value( 'description' ).'</div>';
 		if($depth < $this->params['max_depth'])
@@ -112,7 +122,8 @@ class ChildrenAndGrandchildrenModule extends ChildrenModule
 		}
 		$es->set_order('sortable.sort_order ASC');
 		return $es->run_one();
-	}/**
+	}
+		/**
 		 * Get the full page link for a page. We fork our linking logic based on whether we have specified a parent_unique_name or not.
 		 *
 		 * - If no, we get the relative URL just by looking at the url_fragment.
@@ -133,6 +144,44 @@ class ChildrenAndGrandchildrenModule extends ChildrenModule
 			}
 			return $link;
 		}
+	function get_image_markup($page)
+	{
+		$image_markup = '';
+		if($this->params['provide_images'])
+		{
+			$image = $this->get_page_image($page->id());
+			
+			if(!empty($image))
+			{
+				if($this->params['thumbnail_width'] != 0 or $this->params['thumbnail_height'] != 0)
+				{
+					$rsi = new reasonSizedImage();
+					if(!empty($rsi))
+					{
+						$rsi->set_id($image->id());
+						if($this->params['thumbnail_width'] != 0)
+						{
+							$rsi->set_width($this->params['thumbnail_width']);
+						}
+						if($this->params['thumbnail_height'] != 0)
+						{
+							$rsi->set_height($this->params['thumbnail_height']);
+						}
+						if($this->params['thumbnail_crop'] != '')
+						{
+							$rsi->set_crop_style($this->params['thumbnail_crop']);
+						}
+						$image_markup = get_show_image_html($rsi, true, false, false, '' , '', false );
+					}
+				}
+				else
+				{
+					$image_markup = get_show_image_html( $image->id(), true, false, false, '' , '', false );
+				}
+			}
+		}
+		return $image_markup;
+	}
 }
 
 ?>
