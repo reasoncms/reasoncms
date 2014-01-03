@@ -28,9 +28,6 @@ $apiConfig = array(
     'oauth2_client_id' => '1007853628558-m3lbbreb0tsgjscc0n9hgcqe0j38dnhu.apps.googleusercontent.com',
     'oauth2_client_secret' => 'IYs7nxXon36YYqSt8YfKmPA6',
     'oauth2_redirect_uri' => 'https://www.luther.edu/reason/facilities-scheduler/index.php',
-
-    // The developer key, you get this at https://code.google.com/apis/console
-    'developer_key' => 'AIzaSyBaKdbjb-_amssCz91NdQEhtUpEdGE_YEc',
   
     // Site name to show in the Google's OAuth 1 authentication screen.
     'site_name' => 'www.luther.edu',
