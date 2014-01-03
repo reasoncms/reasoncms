@@ -13,7 +13,7 @@ $gcal = new Google_CalendarService($client);
 if (isset($_GET['code'])) {
   $client->authenticate($_GET['code']);
   $_SESSION['token'] = $client->getAccessToken();
-  $redirect = 'http://reasondev.luther.edu/g/gc/index.php';
+  $redirect = 'https://www.luther.edu/reason/facilities-scheduler/index.php';
   header('Location: ' . filter_var($redirect, FILTER_SANITIZE_URL));
   return;
 }

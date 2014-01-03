@@ -22,18 +22,18 @@ $apiConfig = array(
     'use_objects' => true,
   
     // The application_name is included in the User-Agent HTTP header.
-    'application_name' => 'Facilities Calendar Test',
+    'application_name' => 'Facilities Scheduler',
 
     // OAuth2 Settings, you can get these keys at https://code.google.com/apis/console
-    'oauth2_client_id' => '287121463624.apps.googleusercontent.com',
-    'oauth2_client_secret' => 'TsdDthxgHwvtjHL23MIFTdsK',
-    'oauth2_redirect_uri' => 'http://reasondev.luther.edu/reason/facilities-scheduler/index.php',
+    'oauth2_client_id' => '1007853628558-m3lbbreb0tsgjscc0n9hgcqe0j38dnhu.apps.googleusercontent.com',
+    'oauth2_client_secret' => 'IYs7nxXon36YYqSt8YfKmPA6',
+    'oauth2_redirect_uri' => 'https://www.luther.edu/reason/facilities-scheduler/index.php',
 
     // The developer key, you get this at https://code.google.com/apis/console
-    'developer_key' => 'AIzaSyBvpxwdACL-aLZKyhll6cepA6bG9e4kQNA',
+    'developer_key' => 'AIzaSyBaKdbjb-_amssCz91NdQEhtUpEdGE_YEc',
   
     // Site name to show in the Google's OAuth 1 authentication screen.
-    'site_name' => 'reasondev.luther.edu',
+    'site_name' => 'www.luther.edu',
 
     // Which Authentication, Storage and HTTP IO classes to use.
     'authClass'    => 'Google_OAuth2',
