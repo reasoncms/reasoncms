@@ -391,10 +391,6 @@
 				{
 					$link = $this->get_page_link_other_parent($page);
 				}
-				if (!empty($this->textonly))
-				{
-					$link .= '?textonly=1';
-				}
 			}
 			return $link;
 		}
