@@ -27,7 +27,7 @@ $apiConfig = array(
     // OAuth2 Settings, you can get these keys at https://code.google.com/apis/console
     'oauth2_client_id' => '287121463624.apps.googleusercontent.com',
     'oauth2_client_secret' => 'TsdDthxgHwvtjHL23MIFTdsK',
-    'oauth2_redirect_uri' => 'http://reasondev.luther.edu/g/gc/index.php',
+    'oauth2_redirect_uri' => 'http://reasondev.luther.edu/reason/facilities-scheduler/index.php',
 
     // The developer key, you get this at https://code.google.com/apis/console
     'developer_key' => 'AIzaSyBvpxwdACL-aLZKyhll6cepA6bG9e4kQNA',
