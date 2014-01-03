@@ -89,7 +89,7 @@ else {
       <div class="container">
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="assign_permissions.php">Assign Permissions</a></li>
+            <li class="active"><a href="assign-permissions.php">Assign Permissions</a></li>
             <li><a href="revoke_permissions.php">Revoke Permissions</a></li>
             <li><a href="http://help.luther.edu">Report an Issue</a></li>
             <li>
