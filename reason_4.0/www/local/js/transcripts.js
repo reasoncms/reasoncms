@@ -144,10 +144,14 @@ function showDeliveryInfo()
 function toggle_unofficial_address() {
     if ($("input[name='unofficial']:checked").val() == 'true') {
         show_field('unofficial_address');
+        show_field('unofficial_email');
+        show_field('unofficial_delivery_type');
         //$("input[name='deliver_to']:checked").val() = true;
         //$('#radio_deliver_to_0').checked = true;
     } else {
         hide_field('unofficial_address');
+        hide_field('unofficial_email');
+        hide_field('unofficial_delivery_type');
         //$("input[name='deliver_to']:checked") = false;
         //$('#radio_deliver_to_0').checked = false;
     }
