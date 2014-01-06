@@ -35,7 +35,7 @@ class TranscriptPageOneForm extends FormStep {
             'size' => 20,
             'comments' => '<br>include area code'
         ),
-        'e-mail' => array(
+        'email' => array(
             'type' => 'text',
             'size' => 35,
         ),
@@ -50,15 +50,21 @@ class TranscriptPageOneForm extends FormStep {
             'type' => 'comment',
             'text' => '<h3>Unofficial transcripts</h3>',
         ),
-        'unofficial_comment' => array(
-            'type' => 'comment',
-            'text' => 'There is no charge for an unofficial transcript'
-        ),
         'unofficial' => array(
             'type' => 'checkboxfirst',
-            'display_name' => 'Check here if you would like an unofficial transcript sent to your home address via postal mail',
+            'display_name' => 'Check here if you would like an unofficial transcript',
         //'options' => array('yes' => 'Yes', 'no' => 'No'),
         //'comments' => '<em>Unofficial</em> transcript are sent to your address via postal mail',
+        ),
+        'unofficial_delivery_type' => array(
+            'type' => 'radio_no_sort',
+            'display_name' => array(
+                'email' => 'Electronic (Email)'
+                'postal' => 'Physical copy (Postal mail)'
+                )
+        ),
+        'unofficial_email' => array(
+            'type' => 'text'
         ),
         'unofficial_address' => array(
             'type' => 'textarea',
@@ -70,14 +76,8 @@ class TranscriptPageOneForm extends FormStep {
         ),
         'official_comment' => array(
             'type' => 'comment',
-            'text' => 'Official transcripts cost $5 per transcript for Alumni'
+            'text' => 'One address per request'
         ),
-//        'official_type' => array(
-//            'type' => 'radio_inline_no_sort',
-//            'display_name' => 'What kind of official transcript would you like sent?',
-//            'options' => array('paper' => 'Paper', 'eScrip' => 'eScrip-Safe'),
-//            'comments' => '<br><a href="http://www.scrip-safe.com/" target=__blank>What is an eScrip-Safe transcript?</a>',
-//        ),
         'number_of_official' => array(
             'type' => 'text',
             'display_name' => 'Number of <em>official</em> paper transcripts',
@@ -91,10 +91,21 @@ class TranscriptPageOneForm extends FormStep {
             'type' => 'comment',
             'text' => '<h4>Delivery Location</h4>',
         ),
+        'official_delivery_type' => array(
+            'type' => 'radio_no_sort',
+            'display_name' => array(
+                'email' => 'Electronic (Email)'
+                'postal' => 'Physical copy (Postal mail)'
+                )
+        ),
         'deliver_to' => array(
             'type' => 'radio_no_sort',
             'display_name' => 'Where should these transcripts be delivered?',
             'options' => array('Your address' => 'Your address', 'institution' => 'An Institution/Company')
+        ),
+        'delivery_email' => array(
+            'type' => 'text',
+            'display_name' => 'Email address',
         ),
         'institution_name' => array(
             'type' => 'text',
@@ -104,9 +115,9 @@ class TranscriptPageOneForm extends FormStep {
             'type' => 'text',
             'display_name' => 'Attention'
         ),
-        'institution_email' => array(
+        'official_email' => array(
             'type' => 'text',
-            'display_name' => 'Institution/Company E-mail'
+            'display_name' => 'Email address',
         ),
         'address' => array(
             'type' => 'textarea',
@@ -146,7 +157,7 @@ class TranscriptPageOneForm extends FormStep {
         ),
         'submitter_ip' => 'hidden',
     );
-    var $required = array('date_of_birth', 'daytime_phone', 'e-mail', 'deliver_to', 'delivery_time', 'LATF');
+    var $required = array('date_of_birth', 'daytime_phone', 'email', 'deliver_to', 'delivery_time', 'LATF', 'delivery_type');
     var $display_name = 'Transcript Request Info';
     var $error_header_text = 'Please check your form.';
 
@@ -194,8 +205,8 @@ class TranscriptPageOneForm extends FormStep {
 //            } else {
 //                $this->set_value('name', $display_name);
 //            }
-            $this->change_element_type('e-mail', 'text');
-            $this->set_value('e-mail', $email);
+            $this->change_element_type('email', 'text');
+            $this->set_value('email', $email);
         } else {
             if (reason_check_authentication ()) {
                 echo '<div class = "loginlogout">';

@@ -28,6 +28,7 @@ class ConstantContactAddEmail extends DefaultThorForm
 	
 	var $newsletter_codes = array(
 		'Luther Alumni Magazine (3x/year)' => array('username' => 'lcmagazine', 'listname' => 'E-Magazine Reminder', 'token' => "68d44a70-3e25-4c8d-aac7-73ce9e5e35fc"),
+		'College Ministries "In Touch" (monthly)' => array('username' => 'lcchapel', 'listname' => 'In Touch', 'token' => "d8296e3f-4097-4380-9136-7e83f6885d5e"),
 		'Parent Newsletter (monthly)' => array('username' => 'lcparents', 'listname' => 'Parents of Luther College Newsletter', 'token' => "41513ddc-bbac-4e16-bb11-44f0e0228ae4"),
 		'The Bulletin (Tu, F)' => array('username' => 'lcbulletin', 'listname' => 'Bulletin', 'token' => "e069031c-ed27-4583-bfdf-13a7624da435"),
 		'Diversity Today (monthly)' => array('username' => 'lcdiversity', 'listname' => 'Diversity Today', 'token' => "ef688df7-c24b-4ac1-826d-68d6ed22bd16"),
