@@ -61,6 +61,7 @@ function showDeliveryInfo()
    if ($("input[name='delivery_type']:checked").val() == 'postal'
       && $("input[name=deliver_to]:checked").val() == 'Your address')
     {
+        $('#official_emailElement').val('');
         hide_field('institution_name');
         hide_field('institution_attn');
         hide_field('official_email');
@@ -69,7 +70,6 @@ function showDeliveryInfo()
         show_field('state_province');
         show_field('zip');
         show_field('country');
-        $('#official_emailElement').val('');
     }
     if ($("input[name='delivery_type']:checked").val() == 'email'
       && $("input[name=deliver_to]:checked").val() == 'Your address')
@@ -88,6 +88,7 @@ function showDeliveryInfo()
     if ($("input[name='delivery_type']:checked").val() == 'postal'
       && $("input[name=deliver_to]:checked").val() == 'institution')
     {
+        $('#official_emailElement').val('');
         show_field('institution_name');
         show_field('institution_attn');
         hide_field('official_email');
@@ -96,11 +97,11 @@ function showDeliveryInfo()
         show_field('state_province');
         show_field('zip');
         show_field('country');
-        $('#official_emailElement').val('');
     }
     if ($("input[name='delivery_type']:checked").val() == 'email'
       && $("input[name=deliver_to]:checked").val() == 'institution')
     {
+        $('#official_emailElement').val('');
         show_field('institution_name');
         show_field('institution_attn');
         show_field('official_email');
@@ -109,7 +110,6 @@ function showDeliveryInfo()
         hide_field('state_province');
         hide_field('zip');
         hide_field('country');
-        $('#official_emailElement').val('');
     }
 }
 function toggle_unofficial_address() {
