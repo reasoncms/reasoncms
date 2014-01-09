@@ -372,6 +372,7 @@ class EventsModule extends DefaultMinisiteModule
 	 						'natural_sort_categories' => false,
 	 						'form_include' => 'minisite_templates/modules/event_slot_registration/event_slot_registration_form.php',
 	 						'calendar_link_text' => 'More events',
+	 						'wrapper_id' => '',
 						);
 	var $default_item_markup = 'minisite_templates/modules/events_markup/default/events_item.php';
 	var $default_list_markup = 'minisite_templates/modules/events_markup/default/events_list.php';
@@ -542,6 +543,8 @@ class EventsModule extends DefaultMinisiteModule
 				$this->edit_handler->disco_item->add_callback(array($this,'editor_where_to'),'where_to');
 			}
 		}
+		if(!empty($this->params['wrapper_id']))
+			$this->div_id = $this->params['wrapper_id'];
 	}
 	
 	/**
