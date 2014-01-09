@@ -410,6 +410,22 @@ class EventsModule extends DefaultMinisiteModule
 	 * @var boolean
 	 */
 	var $show_icalendar_links = true;
+	
+	var $noncanonical_request_keys = array(
+									'audience',
+									'view',
+									'start_date',
+									'category',
+									'end_date',
+									'nav_date',
+									'textonly',
+									'start_month',
+									'start_day',
+									'start_year',
+									'search',
+									'format',
+									'no_search');
+
 	/**
 	 * A place to store the default image so it does not have to be
 	 * re-identified for each imageless event

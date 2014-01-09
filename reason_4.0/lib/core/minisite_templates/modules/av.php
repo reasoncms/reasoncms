@@ -49,7 +49,11 @@
 		var $no_items_text = 'There is no audio or video attached to this page yet.';
 		var $media_format_overrides = array('Flash Video'=>'Flash');
 		var $kaltura_shim;
-		
+			
+		var $noncanonical_request_keys = array(
+										'show_transcript',
+										'displayer_height');
+
 		
 		function init($args = array())
 		{

@@ -215,6 +215,17 @@ class PublicationModule extends Generic3Module
 
 	//var $acceptable_params
 	
+var $noncanonical_request_keys = array(
+								'filters',
+								'search',
+								'page',
+								'textonly',
+								'add_item',
+								'filter1',
+								'filter2',
+								'filter3',
+								'comment_posted_id');
+
 ////////
 // INIT-RELATED METHODS
 ////////	

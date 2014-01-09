@@ -106,8 +106,10 @@
 		/**
 		 * noncanonical_request_keys with values as values
 		 * 
-		 * ?????
+		 * Use get_cleanup_rules to see possible url parameters for
+		 * a given module
 		 * 
+		 * @var array
 		 */
 		var $noncanonical_request_keys = array(); 
 
@@ -554,46 +556,6 @@
 		function get_noncanonical_request_keys()
 		{
 			return $this->noncanonical_request_keys;
-		}
-		function get_canonical_url()
-		{
-			$canonicalized_url = NULL;
-			$non_cans_array = $this->get_noncanonical_request_keys();
-			$curr_url = get_current_url();
-			$parsed_url = parse_url($curr_url);
-			$non_cans_array = array_flip($non_cans_array);
-
-			if (!empty($non_cans_array))
-			{
-				if (array_key_exists('query', $parsed_url))
-				{
-					parse_str($parsed_url['query'], $qs_arrray);
-				} 
-				else 
-				{
-					$qs_arrray = array();
-				}
-				$canonicalized_qs = array_diff_key($qs_arrray, $non_cans_array);
-			 	$canonicalized_qs = http_build_query($canonicalized_qs);
-			 	$canonicalized_url = $parsed_url['scheme'];
-			 	$canonicalized_url .= '://';
-			 	$canonicalized_url .= $parsed_url['host'];
-			 	if (isset($parsed_url['port']))
-			 	{
-			 		$canonicalized_url .= $parsed_url['port'];
-			 	}
-		 		$canonicalized_url .= $parsed_url['path'];
-			 	if (!empty($canonicalized_qs))
-			 	{
-				 	$canonicalized_url .= '?';
-				 	$canonicalized_url .= $canonicalized_qs;
-				 }
-			} 
-			else 
-			{
-				$canonicalized_url = $curr_url;
-			}
-			return $canonicalized_url;
 		}
 		/**
  		 *

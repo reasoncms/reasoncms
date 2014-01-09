@@ -841,8 +841,9 @@ class MinisiteTemplate
 						// in prep_args
 						if ($this->should_benchmark()) $this->benchmark_start('init module ' . $module_name);
 						$this->_modules[ $region ]->init( $args );
-						$canonicalizer->register($this->_modules[ $region ]);
 						if ($this->should_benchmark()) $this->benchmark_stop('init module ' . $module_name);
+
+						$canonicalizer->register($this->_modules[ $region ]);
 					}
 					else
 					{
@@ -852,7 +853,6 @@ class MinisiteTemplate
 			}
 			if($canonical_url = $canonicalizer->get_canonical_url())
 			{
-				// add link rel=canonical to the head items
 				$this->head_items->add_head_item('link',array('rel'=>'canonical','href'=>$canonical_url ), '');
 			}
 		}
