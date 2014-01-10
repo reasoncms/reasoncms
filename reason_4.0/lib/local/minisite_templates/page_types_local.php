@@ -1035,6 +1035,8 @@ $GLOBALS['_reason_page_types_local'] = array(
 	),
 	'transcript_request' => array(
 		'main_post' => 'transcript_request/transcript_request',
+		'sidebar' => 'policy_related',
+		'post_sidebar' => 'assets',
 	),
 	'webcams' => array(
 		'main' => 'content',
