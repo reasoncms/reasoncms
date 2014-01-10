@@ -43,7 +43,7 @@ class TranscriptPageOneForm extends FormStep {
             'type' => 'radio_no_sort',
             'display_name' => 'What is your status?',
             'options' => array(
-                'Paid' => 'Enrolled after August 1, 2013 or paid the Lifetime Academic Transcript Fee.', 
+                'Paid' => 'Enrolled after August 1, 2013 or paid the <a href="/financial-services/student/cost-pymt/1314general/" target="_blank">Lifetime Academic Transcript Fee.</a>', 
                 'Not paid' => 'I have not paid the Lifetime Academic Transcript Fee.'),
         ),
         'unofficial_header' => array(
@@ -76,14 +76,6 @@ class TranscriptPageOneForm extends FormStep {
             'display_name' => 'Number of <em>official</em> transcripts',
             'size' => 3,
         ),
-        // 'delivery_header' => array(
-        //     'type' => 'comment',
-        //     'text' => '<h3>Delivery Information</h3>',
-        // ),
-        // 'delivery_location_header' => array(
-        //     'type' => 'comment',
-        //     'text' => '<h4>Delivery Location</h4>',
-        // ),
         'delivery_type' => array(
             'type' => 'radio_no_sort',
             'display_name' => 'How should your official transcripts be delivered?',
@@ -162,8 +154,6 @@ class TranscriptPageOneForm extends FormStep {
         $username = reason_check_authentication(); // this will force login
         $group = id_of('transcripts_group');
         $has_access = (reason_user_is_in_group($username, $group));
-        $has_access = true;
-        $username = 'smitst01';
 
         if ($has_access) {
             $qlist = array('alumcn', 'sn');
@@ -224,10 +214,10 @@ class TranscriptPageOneForm extends FormStep {
         //$txt .= '<p>You are not currently logged in. Luther College students and alumni have access to this form. The contents will be displayed after you login.' . "\n";
         $txt .= '<p>To request a transcript, official or unofficial, electronically (requires user name and
                 password, ie: norse key), please <a href="' . $url . '">log in</a>.</p>';
-        $txt .= '<p>The request form will be displayed after you login. This method <u>requires graduates/
-former students to pay</u> for the transcript via credit card.</p>';
+//         $txt .= '<p>The request form will be displayed after you login. This method requires graduates/
+// former students to pay for the transcript via credit card.</p>';
         $txt .= '<p>If you have forgotten your norse key (user name or password), please try our automated
-                <a href="https://norsekey.luther.edu/prod1/forgot.php">
+                <a href="https://norsekey.luther.edu/prod1/forgot.php" target="_blank">
                 Forgot My Norse Key</a> system to reset your password.</p>';
         if (reason_unique_name_exists('transcript_request_form')) {
             $asset_url = '/registrar/assets/Transcript_Request_Form.pdf';
