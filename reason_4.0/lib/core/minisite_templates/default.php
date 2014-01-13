@@ -34,6 +34,7 @@ reason_include_once( 'classes/page_access.php' );
 reason_include_once( 'classes/crumbs.php' );
 reason_include_once( 'classes/api/factory.php' );
 reason_include_once( 'classes/object_cache.php' );
+reason_include_once( 'classes/canonicalizer.php' );
 include_once( CARL_UTIL_INC . 'dev/timer.php' );
 
 /**
@@ -844,6 +845,7 @@ class MinisiteTemplate
 		
 		if (!empty($this->section_to_module))
 		{
+			$canonicalizer = new reasonCanonicalizer();
 			foreach( $this->section_to_module AS $region => $module_name )
 			{
 				if( !empty( $module_name ) )
@@ -908,12 +910,18 @@ class MinisiteTemplate
 						if ($this->should_benchmark()) $this->benchmark_start('init module ' . $module_name);
 						$this->_modules[ $region ]->init( $args );
 						if ($this->should_benchmark()) $this->benchmark_stop('init module ' . $module_name);
+
+						$canonicalizer->register($this->_modules[ $region ]);
 					}
 					else
 					{
 						trigger_error( 'Badly formatted module ('.$module_name.') - $module_class not set ' );
 					}
 				}
+			}
+			if($canonical_url = $canonicalizer->get_canonical_url())
+			{
+				$this->head_items->add_head_item('link',array('rel'=>'canonical','href'=>$canonical_url ), '');
 			}
 		}
 	} // }}}

@@ -64,6 +64,7 @@ class FeatureModule extends DefaultMinisiteModule
 	var $cleanup_rules = array('feature'=>'turn_into_int');
 	var $features_view_params;
 	var $current_feature_id = 0;
+	var $noncanonical_request_keys = array('feature');
 	
 	private $_view;
 	private $_view_data;
