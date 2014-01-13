@@ -1034,8 +1034,8 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'sub_nav_3'=> 'twitter',
 	),
 	'transcript_request' => array(
+		'main_5' => 'policy_related',
 		'main_post' => 'transcript_request/transcript_request',
-		'sidebar' => 'policy_related',
 		'post_sidebar' => 'assets',
 	),
 	'webcams' => array(
