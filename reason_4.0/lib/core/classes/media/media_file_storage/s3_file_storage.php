@@ -384,8 +384,7 @@ class S3MediaFileStorageClass extends MediaFileStorageClass
 	public static function add_additional_outputs($outputs, $filename, $media_work, $shim, $av_type)
 	{
 		$url = self::get_base_url().self::get_path(false, $filename, $media_work, 'original');
-		$name = basename($url);
-		$url = str_replace($name, urlencode($name), $url);
+		
 		$params = array(
 			"type" => "transfer-only",
 			"url" => $url,
