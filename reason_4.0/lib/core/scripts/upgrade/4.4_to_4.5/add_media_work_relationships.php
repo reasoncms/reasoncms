@@ -38,7 +38,7 @@ class ReasonUpgrader_45_AddMediaWorkRelationships implements reasonUpgraderInter
 	 */
 	public function title()
 	{
-		return 'Add news to media work relationship';
+		return 'Add news and event to media work relationships';
 	}
 	/**
 	 * Get a description of what this upgrade script will do
@@ -46,7 +46,7 @@ class ReasonUpgrader_45_AddMediaWorkRelationships implements reasonUpgraderInter
 	 */
 	public function description()
 	{
-		return '<p>This upgrade adds the news_to_media_work allowable relationship.</p>';
+		return '<p>This upgrade adds the news_to_media_work and event_to_media_work allowable relationships.</p>';
 	}
 
 	/**
@@ -56,9 +56,24 @@ class ReasonUpgrader_45_AddMediaWorkRelationships implements reasonUpgraderInter
 	public function test()
 	{
 		if(reason_relationship_name_exists('news_to_media_work'))
-			return '<p>This update has already run.</p>';
+		{
+			if(reason_relationship_name_exists('event_to_media_work'))
+			{
+				return '<p>This update has already run.</p>';
+			}
+			else
+			{
+				return '<p>The news_to_media_work allowable relationship has already been added.</p><p>This update will add the event_to_media_work allowable relationship.</p>';
+			}
+		}
+		elseif(reason_relationship_name_exists('event_to_media_work'))
+		{
+			return '<p>The event_to_media_work allowable relationship has already been added.</p><p>This update will add the news_to_media_work allowable relationship.</p>';
+		}
 		else
-			return '<p>This update will add the news_to_media_work allowable relationship.</p>';
+		{
+			return '<p>This update will add the news_to_media_work and event_to_media_work allowable relationships.</p>';
+		}
 	}
 	
     /**
@@ -67,9 +82,8 @@ class ReasonUpgrader_45_AddMediaWorkRelationships implements reasonUpgraderInter
      */
 	public function run()
 	{
-		if(reason_relationship_name_exists('news_to_media_work'))
-			return '<p>This update has already run.</p>';
-		else
+		$run_message = '';
+		if(!reason_relationship_name_exists('news_to_media_work'))
 		{
 			$news_to_media_work_definition = array (
 				'description'=>'News / Post shows Media Work',
@@ -81,9 +95,33 @@ class ReasonUpgrader_45_AddMediaWorkRelationships implements reasonUpgraderInter
 				'display_name_reverse_direction'=>'News / Posts',
 			);	
 			if(create_allowable_relationship(id_of('news'),id_of('av'),'news_to_media_work', $news_to_media_work_definition))
-				return '<p>Added the news_to_media_work allowable relationship.</p>';
+				$run_message .= '<p>Added the news_to_media_work allowable relationship.</p>';
 			else
-				return '<p>Failed to create the news_to_media_work allowable relationship. Try again. If you are not successful, you may wish to try to add this relationship type manually: In Master Admin, go to Allowable Relationship Manager, add a row, then create a relationship between News / Post and Media Work named news_to_media work. The other values are:</p>'.spray($news_to_media_work_definition);
+				$run_message .= '<p>Failed to create the news_to_media_work allowable relationship. Try again. If you are not successful, you may wish to try to add this relationship type manually: In Master Admin, go to Allowable Relationship Manager, add a row, then create a relationship between News / Post and Media Work named news_to_media work. The other values are:</p>'.spray($news_to_media_work_definition);
+		}	
+		if(!reason_relationship_name_exists('event_to_media_work'))
+		{
+			$event_to_media_work_definition = array (
+				'description'=>'Event shows Media Work',
+				'directionality'=>'bidirectional',
+				'connections'=>'many_to_many',
+				'required'=>'no',
+				'is_sortable'=>'yes',
+				'display_name'=>'Media',
+				'display_name_reverse_direction'=>'Events',
+			);	
+			if(create_allowable_relationship(id_of('event_type'),id_of('av'),'event_to_media_work', $event_to_media_work_definition))
+				$run_message .= '<p>Added the event_to_media_work allowable relationship.</p>';
+			else
+				$run_message .= '<p>Failed to create the event_to_media_work allowable relationship. Try again. If you are not successful, you may wish to try to add this relationship type manually: In Master Admin, go to Allowable Relationship Manager, add a row, then create a relationship between Event and Media Work named event_to_media work. The other values are:</p>'.spray($event_to_media_work_definition);
+		}		
+		if(!empty($run_message))
+		{
+			return $run_message;
+		}
+		else
+		{
+			return 'This update has already run.';
 		}
 	}
 }

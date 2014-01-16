@@ -19,6 +19,7 @@ class miniEventsModule extends EventsModule
 	var $div_id = 'miniCal';
 	var $snap_to_nearest_view = false;
 	var $events_page;
+	var $events_page_url;
 	var $default_list_chrome_markup = 'minisite_templates/modules/events_markup/mini/mini_events_list_chrome.php';
 	var $default_list_markup = 'minisite_templates/modules/events_markup/mini/mini_events_list.php';
 	/**
@@ -77,7 +78,8 @@ class miniEventsModule extends EventsModule
 	} // }}}
 	function _has_content_to_display() // {{{
 	{
-		if(!empty($this->events_page_url) && !empty($this->calendar))
+		$events_page = $this->get_events_page();
+		if(!empty($events_page) && !empty($this->calendar))
 		{
 			$events = $this->calendar->get_all_events();
 			if(!empty($events))
@@ -117,21 +119,41 @@ class miniEventsModule extends EventsModule
 	}
 	function display_list_title()
 	{
-		echo '<h3><a href="'.$this->events_page_url.'">'.$this->_get_list_title().'</a></h3>'."\n";
+		$events_page_url = $this->get_events_page_url();
+		echo '<h3>';
+		if(!empty($events_page_url))
+			echo '<a href="'.$events_page_url.'">'.$this->_get_list_title().'</a>';
+		else
+			$this->_get_list_title();
+		echo '</h3>'."\n";
 	}
 
 	function _get_list_title()
 	{
 		if(!empty($this->params['title']))
 			return $this->params['title'];
+		elseif($events_page = $this->get_events_page())
+			return $events_page->get_value('name');
 		else
-			return $this->events_page->get_value('name');
+			return 'Events';
 	}
 	function _get_events_module_names()
 	{
 		reason_include_once( 'classes/module_sets.php' );
 		$ms =& reason_get_module_sets();
 		return array_unique(array_merge($ms->get('event_display'),$this->_events_modules));
+	}
+	function get_events_page()
+	{
+		if(!isset($this->events_page))
+			$this->find_events_page();
+		return $this->events_page;
+	}
+	function get_events_page_url()
+	{
+		if(!isset($this->events_page_url))
+			$this->find_events_page();
+		return $this->events_page_url;
 	}
 	function find_events_page()
 	{
@@ -154,6 +176,7 @@ class miniEventsModule extends EventsModule
 		{
 			$ret = $this->parent->pages->get_full_url($this->events_page->id());
 		}
+		$this->events_page_url = '';
 		if(!empty($ret))
 			$this->events_page_url = $ret;
 	}
