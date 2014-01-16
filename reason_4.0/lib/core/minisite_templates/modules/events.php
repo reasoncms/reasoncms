@@ -28,6 +28,11 @@ $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'EventsModul
 class EventsModule extends DefaultMinisiteModule
 {
 	/**
+	 * The string that acts as a cache for the run method. Set by the get_run_output() method
+	 * @var string
+	 */
+	var $run_output_string;
+	/**
 	 * The number of events that the calendar attempts to display if there is no
 	 * duration specified. Note that the actual number may be larger or smaller
 	 * due to the calendar "snapping" to full days.
@@ -372,6 +377,7 @@ class EventsModule extends DefaultMinisiteModule
 	 						'natural_sort_categories' => false,
 	 						'form_include' => 'minisite_templates/modules/event_slot_registration/event_slot_registration_form.php',
 	 						'calendar_link_text' => 'More events',
+	 						'wrapper_id' => '',
 						);
 	var $default_item_markup = 'minisite_templates/modules/events_markup/default/events_item.php';
 	var $default_list_markup = 'minisite_templates/modules/events_markup/default/events_list.php';
@@ -501,15 +507,13 @@ class EventsModule extends DefaultMinisiteModule
 		$this->register_passables();
 		
 		$this->handle_jump();
-		
-		
+				
 		if(empty($this->request['event_id']))
 		{
 			$this->init_list();
 		}
 		else
-			$this->init_event();
-		
+			$this->init_event();		
 		$inline_edit =& get_reason_inline_editing($this->page_id);
 		$inline_edit->register_module($this, $this->user_can_inline_edit());
 		if ($inline_edit->active_for_module($this))
@@ -558,6 +562,12 @@ class EventsModule extends DefaultMinisiteModule
 				$this->edit_handler->disco_item->add_callback(array($this,'editor_where_to'),'where_to');
 			}
 		}
+		if(!empty($this->params['wrapper_id']))
+			$this->div_id = $this->params['wrapper_id'];
+		
+		// get_run_output() should be the very last thing done before the end of init()
+		// This is done to allow the markup classes to add head items
+		$this->get_run_output();
 	}
 	
 	/**
@@ -843,17 +853,37 @@ class EventsModule extends DefaultMinisiteModule
 	 */
 	function run()
 	{
-		echo '<div id="'.$this->div_id.'">'."\n";
-		if (empty($this->request['event_id']))
-		{
-			$this->list_events();
-		}
-		else
-			$this->show_event();
-		echo '</div>'."\n";
-		
+		echo $this->get_run_output();	
 	}
 	
+	/**
+	 * Get the output for the run phase
+	 *
+	 * This method internally caches the output, so it can be called multiple times
+	 * during page generation
+	 *
+	 * @return string
+	 */
+	function get_run_output()
+	{
+		if(!isset($this->run_output_string))
+		{
+			ob_start();
+			echo '<div id="'.$this->div_id.'">'."\n";
+			if (empty($this->request['event_id']))
+			{
+				$this->list_events();
+			}
+			else
+				$this->show_event();
+			echo '</div>'."\n";
+			$this->run_output_string = ob_get_contents();
+			ob_end_clean();
+		}
+		return $this->run_output_string;
+	}
+			
+					
 	/**
 	 * Get the length of time that the module's cache of events should persist
 	 *
@@ -897,21 +927,6 @@ class EventsModule extends DefaultMinisiteModule
 		else
 		{
 			$this->init_html_calendar();
-			if($head_items = $this->get_head_items())
-			{
-				if($markup = $this->get_markup_object('list'))
-				{
-					$markup->modify_head_items($head_items);
-				}
-				if($markup = $this->get_markup_object('list_chrome'))
-				{
-					$markup->modify_head_items($head_items);
-				}
-				if($markup = $this->get_markup_object('list_item'))
-				{
-					$markup->modify_head_items($head_items);
-				}
-			}
 		}
 		
 	}
@@ -1391,6 +1406,8 @@ class EventsModule extends DefaultMinisiteModule
 				/* if($markup->needs_markup('list'))
 					$markup->set_markup('list', $this->get_events_list_markup($msg)); */
 				$markup->set_bundle($bundle);
+				if($head_items = $this->get_head_items())	
+					$markup->modify_head_items($head_items);
 				echo $markup->get_markup();
 			}
 		}
@@ -1428,9 +1445,12 @@ class EventsModule extends DefaultMinisiteModule
 				$item_bundle = new functionBundle();
 				$item_bundle->set_function('event_link', array($this, 'get_event_link') );
 				$item_bundle->set_function('teaser_image', array($this, 'get_teaser_image_html') );
+				$item_bundle->set_function('media_works', array($this, 'get_event_media_works'));
 				$item_bundle->set_function('prettify_duration', array($this, 'prettify_duration') );
 				$this->modify_list_item_function_bundle($item_bundle);
 				$item_markup->set_bundle($item_bundle);
+				if($head_items = $this->get_head_items())	
+					$item_markup->modify_head_items($head_items);
 				
 				$list_bundle = new functionBundle();
 				$list_bundle->set_function('list_item_markup', array($item_markup,'get_markup') );
@@ -1439,6 +1459,8 @@ class EventsModule extends DefaultMinisiteModule
 				$list_bundle->set_function('today', array($this, 'get_today') );
 				$this->modify_list_function_bundle($list_bundle);
 				$list_markup->set_bundle($list_bundle);
+				if($head_items = $this->get_head_items())	
+					$list_markup->modify_head_items($head_items);
 				echo $list_markup->get_markup();
 			}
 			echo '</div>'."\n";
@@ -3397,15 +3419,11 @@ class EventsModule extends DefaultMinisiteModule
 				$this->_add_crumb( $this->event->get_value( 'name' ) );
 				$this->parent->pages->make_current_page_a_link();
 				
-				if($head_items = $this->get_head_items())
+				if($head_items = $this->get_head_items() )
 				{
 					if($this->event->get_value('keywords'))
 					{
 						$head_items->add_head_item('meta',array( 'name' => 'keywords', 'content' => htmlspecialchars($this->event->get_value('keywords'),ENT_QUOTES,'UTF-8')));
-					}
-					if($markup = $this->get_markup_object('item'))
-					{
-						$markup->modify_head_items($head_items);
 					}
 				}
 				
@@ -3572,6 +3590,7 @@ class EventsModule extends DefaultMinisiteModule
 			$bundle->set_function('back_link',array($this,'construct_link'));
 			$bundle->set_function('request_date',array($this,'get_request_date'));
 			$bundle->set_function('images', array($this, 'get_event_images') );
+			$bundle->set_function('media_works', array($this, 'get_event_media_works'));
 			$bundle->set_function('owner_site', array($this, 'get_owner_site_info'));
 			$bundle->set_function('ical_link', array($this, 'get_item_ical_link'));
 			$bundle->set_function('contact_info', array($this, 'get_contact_info'));
@@ -3585,6 +3604,8 @@ class EventsModule extends DefaultMinisiteModule
 			$bundle->set_function('repetition_explanation', array($this, 'get_repetition_explanation'));
 			$this->modify_item_function_bundle($bundle);
 			$markup->set_bundle($bundle);
+			if($head_items = $this->get_head_items())	
+				$markup->modify_head_items($head_items, $e);
 			echo $markup->get_markup($e);
 		}
 		echo '</div>'."\n";
@@ -3739,6 +3760,28 @@ class EventsModule extends DefaultMinisiteModule
 		$es->set_order('rel_sort_order ASC');
 		$images += $es->run_one();
 		return $images;
+	}
+	/**
+	* Get the media works for a given event entity
+	*
+	* @param object $e event entity
+	* @return array media work entities
+	*/
+	function get_event_media_works($e)
+	{
+		static $cache = array();
+		if(empty($cache[$e->id()]))
+		{
+			$es = new entity_selector();
+			$es->add_type( id_of('av'));
+			$es->add_right_relationship( $e->id(), relationship_id_of('event_to_media_work'));
+			$es->add_rel_sort_field($e->id(), relationship_id_of('event_to_media_work'));
+			$es->set_order('rel_sort_order ASC');
+			$es->add_relation( 'show_hide.show_hide = "show"' );
+			$es->add_relation( '(media_work.transcoding_status = "ready" OR ISNULL(media_work.transcoding_status) OR media_work.transcoding_status = "")' );
+			$cache[$e->id()] = $es->run_one();
+		}
+		return $cache[$e->id()];
 	}
 	/**
 	 * Get the categories for a given event entity

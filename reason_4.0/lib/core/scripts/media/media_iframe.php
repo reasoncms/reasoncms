@@ -32,6 +32,10 @@ reason_include_once('function_libraries/user_functions.php');
  */
 function reason_iframe_get_media_work()
 {
+	static $media_work;
+	if(isset($media_work))
+		return $media_work;
+	
 	if (!empty($_REQUEST['media_work_id']))
 	{
 		$id = (integer) $_REQUEST['media_work_id'];
@@ -52,6 +56,30 @@ function reason_iframe_get_media_work()
 			}
 		}
 	}
+	$media_work = false;
+	return $media_work;
+}
+
+function reason_iframe_get_media_file()
+{
+	if (!empty($_REQUEST['media_file_id']))
+	{
+		$id = (integer) $_REQUEST['media_file_id'];
+		if ($id)
+		{
+			if($work = reason_iframe_get_media_work())
+			{
+				$es = new entity_selector();
+				$es->add_type(id_of('av_file'));
+				$es->add_right_relationship($work->id(), relationship_id_of('av_to_av_file'));
+				$es->add_relation('`entity`.`id` = "'.addslashes($id).'"');
+				$es->set_num(1);
+				$results = $es->run_one();
+				if(!empty($results))
+					return current($results);
+			}
+		}
+	}
 	return false;
 }
 
@@ -62,9 +90,10 @@ function reason_iframe_get_displayer($media_work)
 	if ($displayer)
 	{
 		$displayer->set_media_work($media_work);
-		if (!$media_work->get_value('integration_library') || $media_work->get_value('integration_library') == 'default' && isset($_REQUEST['media_file_id']))
+		$media_file = reason_iframe_get_media_file();
+		if ((!$media_work->get_value('integration_library') || $media_work->get_value('integration_library') == 'default') && !empty($media_file))
 		{
-			$media_file_id = (integer) $_REQUEST['media_file_id'];
+			$media_file_id = $media_file->id();
 			$displayer->set_current_media_file($media_file_id);
 		}
 		if ( !empty($_REQUEST['height']) )

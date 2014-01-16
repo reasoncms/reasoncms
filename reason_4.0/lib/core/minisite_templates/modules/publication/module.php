@@ -270,7 +270,7 @@ var $noncanonical_request_keys = array(
 				$this->publication = current($publications);
 				parent::init( $args );
 			}
-			else
+			elseif(!empty($this->params['no_publication_warning']))
 			{
 				trigger_error('No publications are associated with this publication page');
 			}
@@ -399,9 +399,9 @@ var $noncanonical_request_keys = array(
 			}
 			parent::init( $args );
 		}
-		else
+		elseif(!empty($this->params['no_publication_warning']))
 		{
-			trigger_error('None of the related publications on this page are placed on a live page that runs the publication module in non-related mode.');
+			trigger_error('Publication module unable to find an active publication to display.');
 		}
 	}
 		
@@ -552,6 +552,7 @@ var $noncanonical_request_keys = array(
 		$this->acceptable_params['module_displays_search_interface'] = true;
 		$this->acceptable_params['module_displays_filter_interface'] = true;
 		$this->acceptable_params['show_pagination_in_module'] = true;
+		$this->acceptable_params['no_publication_warning'] = true;
 		parent::handle_params( $params );
 	}
 

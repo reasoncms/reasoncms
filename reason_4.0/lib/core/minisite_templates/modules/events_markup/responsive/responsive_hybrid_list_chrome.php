@@ -78,7 +78,7 @@ class responsiveHybridEventsListChromeMarkup implements eventsListChromeMarkup
 	{
 		$ret = '';
 		
-		$ret .= '<div class="responsiveEventsList">'."\n";
+		$ret .= '<div class="responsiveEventsList hybrid">'."\n";
 		
 		$ret .= '<div class="eventsListContent">'."\n";
 		
