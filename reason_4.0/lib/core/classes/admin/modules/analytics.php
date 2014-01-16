@@ -80,6 +80,7 @@ class AnalyticsModule extends DefaultModule
 		$this->head_items->add_stylesheet(REASON_HTTP_BASE_PATH . 'modules/google_api/analytics/analytics.css');
 		$this->head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'flot/jquery.flot.js');
 		$this->head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'flot/jquery.flot.pie.js');
+		$this->head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'flot/jquery.flot.time.js');
 		$this->head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'flot/jquery.flot.selection.js');
 		$this->head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/js/jquery.tablesorter.min.js');
 		$this->head_items->add_stylesheet(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/css/theme.blue.css');
@@ -390,33 +391,56 @@ class AnalyticsModule extends DefaultModule
 
 					//Display daily results plot
 					echo '<div class="results-title"><h4>Daily Results for '.$page_path_text.'</h4></div>' . "\n";
+					
 					echo '<div id="daily-results-div" class="jsdisabled">' ."\n";
 					echo $this->draw_ga_table($this->daily_results, 'daily_results');
 					echo '</div>' . "\n";//daily-results
 
 					echo '<div class="jsenabled">' . "\n";
-					echo '<div id="placeholder" style="width:785px;height:300px;margin:20px"></div>' . "\n";
+					if ($this->daily_results->getTotalResults() == 1) 
+					{
+						echo $this->draw_ga_table($this->daily_results, 'daily_results');
+					}
+					else
+					{
 
-					echo '<p>Click and drag on the overview plot below to change zoom level.<img src="'.REASON_HTTP_BASE_PATH.'silk_icons/zoom.png" alt="Click-drag to Zoom" /></p>' . "\n";
+						echo '<div id="placeholder" style="width:785px;height:300px;margin:20px"></div>' . "\n";
 
-					echo '<div id="overview" style="margin-left:125px;margin-top:20px;width:600px;height:50px"></div>' . "\n";
+						echo '<p>Click and drag on the overview plot below to change zoom level.<img src="'.REASON_HTTP_BASE_PATH.'silk_icons/zoom.png" alt="Click-drag to Zoom" /></p>' . "\n";
+
+						echo '<div id="overview" style="margin-left:125px;margin-top:20px;width:600px;height:50px"></div>' . "\n";
+					}
 					echo '</div>' . "\n"; //jsenabled
 
 					//Display top 20 source results
 					$top = ($this->source_results->getTotalResults() > 20 ? '20' : $this->source_results->getTotalResults());
-					echo '<div class="results-title"><h4>Top ' . $top . ' <a  title="'.$this->about->get_help('source_help','text').'">Sources</a> for '.$page_path_text.'</h4></div>' . "\n";
+					if (count($this->source_results->getRows()) == 1)
+					{
+						echo '<div class="results-title"><h4>Top <a  title="'.$this->about->get_help('source_help','text').'">Source</a> for '.$page_path_text.'</h4></div>' . "\n";
+					}
+					else
+					{
+						echo '<div class="results-title"><h4>Top ' . $top . ' <a  title="'.$this->about->get_help('source_help','text').'">Sources</a> for '.$page_path_text.'</h4></div>' . "\n";
+					}
 					echo '<div id="source_metric"></div>' . "\n";
 					echo '<div id="source-jsdisabled-div" class="jsdisabled">' ."\n";
 					echo $this->draw_ga_table($this->source_results, 'source_results');
 					echo '</div>' . "\n";//source-results
 
 					echo '<div id="source-jsenabled-div" class="jsenabled">' . "\n";
-					echo '<div id="source-pie-chart" style="width:785px;height:375px;margin:20px"></div>' . "\n";
-					echo '<div id="source-pie-hover"></div>';
-					echo '</div>' . "\n"; //jsenabled
+					if (count($this->source_results->getRows()) == 1)
+					{
+						echo $this->draw_ga_table($this->source_results, 'source_results');
+					}
+					else
+					{
+						echo '<div id="source-pie-chart" style="width:785px;height:375px;margin:20px"></div>' . "\n";
+						echo '<div id="source-pie-hover"></div>';
+						echo '</div>' . "\n"; //jsenabled
+					}	
 
-					$this->draw_pie_chart($this->source_results);
 					$this->draw_line_chart($this->daily_results);
+					$this->draw_pie_chart($this->source_results);
 
 					if (empty($this->admin_page->request['type_id']))
 					{
@@ -1053,14 +1077,17 @@ class AnalyticsModule extends DefaultModule
 			$year = substr($row[0], 0, -4);
 			$month = substr($row[0], 4, -2);
 			$day = substr($row[0], -2);
-	
 			$unix_time = mktime(0,0,0,$month,$day,$year) . '000';
 			$pageviews[] = $unix_time . ', ' . $row[1];
+			$unique_pageviews[] = $unix_time . ', ' . $row[4];
 			$entrances[] = $unix_time . ', ' . $row[2];
 		}
 		$pageviews_output = '[[';
 		$pageviews_output .= implode('], [', $pageviews);
 		$pageviews_output .= ']]' . "\n";
+		$unique_output = '[[';
+		$unique_output .= implode('], [', $unique_pageviews);
+		$unique_output .= ']]' . "\n";
 		$entrances_output = '[[';
 		$entrances_output .= implode('], [', $entrances);
 		$entrances_output .= ']]' . "\n";
@@ -1068,7 +1095,8 @@ class AnalyticsModule extends DefaultModule
 		echo '<script id="source">
 		$(function () {
 			var d = ' . $pageviews_output . ';' .
-		   'var e = ' . $entrances_output . ';' .
+			'var e = ' . $unique_output . ';' .
+		   	'var f = ' . $entrances_output . ';' .
 
 
 			'// first correct the timestamps - they are recorded as the daily
@@ -1077,6 +1105,7 @@ class AnalyticsModule extends DefaultModule
 			/**
 			 * is this needed? -sls
 			 * commenting out for now -- was causing the plot to be bumped over
+			
 			for (var i = 0; i < d.length; ++i){
 			  d[i][0] += 60 * 60 * 1000;
 			  e[i][0] += 60 * 60 * 1000;
@@ -1109,9 +1138,9 @@ class AnalyticsModule extends DefaultModule
 				grid: { markings: weekendAreas, hoverable: true },             
 			};
 
-			var plot = $.plot($("#placeholder"), [{label:"Pageviews", data:d},{label:"Entrances", data:e}], options);
+			var plot = $.plot($("#placeholder"), [{label:"Pageviews", data:d},{label:"Unique Pageviews", data:e},{label:"Entrances", data:f}], options);
 
-			var overview = $.plot($("#overview"), [d,e], {
+			var overview = $.plot($("#overview"), [d,e,f], {
 				series: {
 					lines: { show: true, lineWidth: 1 , fill: true},
 					shadowSize: 0
@@ -1125,10 +1154,13 @@ class AnalyticsModule extends DefaultModule
 
 			$("#placeholder").bind("plotselected", function (event, ranges) {
 				// do the zooming
-				plot = $.plot($("#placeholder"), [{label:"Pageviews", data:d},{label:"Entrances", data:e}],  
-							  $.extend(true, {}, options, {
-								  xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to },
-							  }));
+				plot = $.plot($("#placeholder"), [
+					{label:"Pageviews", data:d},
+					{label:"Unique Pageviews", data:e},
+					{label:"Entrances", data:f}
+					], $.extend(true, {}, options, {
+							  xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to },
+						  }));
 
 				// don\'t fire event on the overview to prevent eternal loop
 				overview.setSelection(ranges, true);
@@ -1238,45 +1270,44 @@ class AnalyticsAboutModule extends DefaultModule
 		$this->about = new AnalyticsAbout();
 		echo '<div id="analytics-about">'."\n";
 		echo '<div id="average_time_help">'."\n";
-		echo '<h5>'.$this->about->get_help('average_time_help','heading').'</h5>'."\n";
+		echo '<h3>'.$this->about->get_help('average_time_help','heading').'</h3>'."\n";
 		echo '<p>'.$this->about->get_help('average_time_help','text').'</p>'."\n";
 		echo '</div>'."\n";
 		echo '<hr>';
 		echo '<div id="bounce_rate_help">'."\n";
-		echo '<h5>Bounce Rate</h5>'."\n";
-		echo '<h5>'.$this->about->get_help('bounce_rate_help','heading').'</h5>'."\n";
+		echo '<h3>'.$this->about->get_help('bounce_rate_help','heading').'</h3>'."\n";
 		echo '<p>'.$this->about->get_help('bounce_rate_help','text').'</p>'."\n";
 		echo '</div>'."\n";
 		echo '<hr>';
 		echo '<div id="entrances_help">'."\n";
-		echo '<h5>'.$this->about->get_help('entrances_help','heading').'</h5>'."\n";
+		echo '<h3>'.$this->about->get_help('entrances_help','heading').'</h3>'."\n";
 		echo '<p>'.$this->about->get_help('entrances_help','text').'</p>'."\n";
 		echo '</div>'."\n";
 		echo '<hr>';
 		echo '<div id="exit_rate_help">'."\n";
-		echo '<h5>'.$this->about->get_help('exit_rate_help','heading').'</h5>'."\n";
+		echo '<h3>'.$this->about->get_help('exit_rate_help','heading').'</h3>'."\n";
 		echo '<p>'.$this->about->get_help('exit_rate_help','text').'</p>'."\n";
 		echo '</div>'."\n";
 		echo '<hr>';
 		echo '<div id="pageviews_help">'."\n";
-		echo '<h5>'.$this->about->get_help('pageviews_help','heading').'</h5>'."\n";
+		echo '<h3>'.$this->about->get_help('pageviews_help','heading').'</h3>'."\n";
 		echo '<p>'.$this->about->get_help('pageviews_help','text').'</p>'."\n";
 		echo '</div>'."\n";
 		echo '<hr>';
 		echo '<div id="unique_pageviews_help">'."\n";
-		echo '<h5>'.$this->about->get_help('unique_pageviews_help','heading').'</h5>'."\n";
+		echo '<h3>'.$this->about->get_help('unique_pageviews_help','heading').'</h3>'."\n";
 		echo '<p>'.$this->about->get_help('unique_pageviews_help','text').'</p>'."\n";
 		echo '</div>'."\n";
 		
 		echo '<hr>';
 		echo '<div id="sessions_help">'."\n";
-		echo '<h5>'.$this->about->get_help('sessions_help','heading').'</h5>'."\n";
+		echo '<h3>'.$this->about->get_help('sessions_help','heading').'</h3>'."\n";
 		echo '<p>'.$this->about->get_help('sessions_help','text').'</p>'."\n";
 		echo '</div>'."\n";
 
 		echo '<hr>';
 		echo '<div id="source_help">'."\n";
-		echo '<h5>Source</h5>'."\n";
+		echo '<h3>Source</h3>'."\n";
 		echo '<p>The referral source of visits to the selected page or set of pages. "(direct)" denotes a source without a referral. For example, the user typed the URL in the address bar, clicked a bookmark, clicked a link from a PDF, clicked a link in a email newsletter that wasn\'t tracked, etc. The source helps determine how visitors are finding the ' . SHORT_ORGANIZATION_NAME . ' website and subsequently your pages.</p>'."\n";
 		echo '</div>'."\n";
 		echo '<hr>';
