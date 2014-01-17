@@ -35,6 +35,19 @@
 	 *  'page_type_2'=>array('page_location_1'=>'module_2','page_location_2'=>'module_1'),
 	 * );
 	 *
+	 * *Adding notes to a page type*
+	 *
+	 * Instead of a page location name, you can use the special keyword "_meta" to add an array of
+	 * extra information to a page type. Currently "note" is implemented, and any html you provide
+	 * will show up underneath the page type field in the page content manager.
+	 *
+	 * array(
+	 *	'page_type_1'=>array(
+	 *		'page_location_1'=>'module_1',
+	 *		'_meta'=>array('note' => '<p>A note about this page type presented to the user</p>'),
+	 *	),
+	 * );
+	 *
 	 * *Customizations*
 	 *
 	 * Do not customize this array. Instead, define $GLOBALS['_reason_page_types_local']
@@ -986,7 +999,10 @@
 				'height'=>300
 			),
 			'main_post' => 'content',
-			'pre_sidebar'=>'events_mini',
+			'pre_sidebar'=> array(
+				'module' => 'events_mini',
+				'ideal_count' => 4,
+			),	
 			'sidebar' => array(
 				'module' => 'publication',
 				'related_mode' => 'true',
@@ -1219,7 +1235,15 @@
 			),
 			'sidebar' => '',
 		),
-		
+		'gallery_24_per_page_sidebar_blurb' => array(
+			'main_post' => array(
+				'module'=>'gallery2',
+				'sort_order'=>'rel',//'meta.description ASC',
+				'number_per_page' => 24,
+			),
+			'sub_nav' => '',
+			'sidebar' => 'blurb',
+		),
 		'gallery_100x100_thumbnails' => array(
 			'main_post' => array(
 				'module'=>'gallery2',
@@ -1341,6 +1365,11 @@
 					 ),
 				'max_num_items' => 5,
 			),
+		),
+		'image_slideshow_before_content_events_sidebar' => array(
+			'main' => 'image_slideshow',
+			'main_post' => 'content',
+			'sidebar' => 'events_mini',
 		),
 		'image_slideshow_manual' => array(
 			'main_post' => array('module'=>'image_slideshow','slideshow_type'=>'manual'),
@@ -1874,12 +1903,14 @@
 			'main_head' => '',
 			'main_post' => array(
 				'module' => 'sitemap',
-				'site_types_unique_names' => array(
+				/* You can customize headings and page types with an array like this */
+				/* 'site_types_unique_names' => array(
 					'Gateways'=>array('gateway_site_type'),
 					'Departments and Concentrations'=>array('department_site_type',
 													'concentration_site_type'),
 					'Offices'=>array('office_site_type'),
-					'Other Sites'=>array('other_site_type'))),
+					'Other Sites'=>array('other_site_type'))), */
+			),
 			'post_foot' => 'textonly_toggle',
 			'sidebar' => 'blurb',
 		),

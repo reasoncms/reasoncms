@@ -1469,3 +1469,10 @@ div#editorDemo div.echoBack {
 	background-color:#ddd;
 	border:1px solid #aaa;
 }
+
+/* Social accounts module - default view */
+div.socialProfileLinks img {
+	width: 2em;
+	height: auto;
+	margin: 0 .2em;
+}

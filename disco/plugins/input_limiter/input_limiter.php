@@ -33,8 +33,23 @@
 	     * An array containing field => character limit
 	     * @var array
 	     */
-	    private $field_limits;
-	    
+	    private $field_limits = array();
+
+	    /**
+	     * An array containing field => suggested character limit
+	     * @var array
+	     */
+	    private $suggested_field_limits = array();
+
+	    /**
+	     * Whether or not we auto hide and show the warnings.
+	     * 
+	     * Call auto_show_hide(false) if you want warnings to always show.
+	     *
+	     * @var array
+	     */
+	    private $auto_show_hide = array();
+	        
 	    /**
 	     * Disco form must be passed in -- callbacks will be attached to various process points in 
 	     * disco 
@@ -60,7 +75,7 @@
 	    
 	    /**
 	     * Sets a character limit on the given field. 
-	     * For backwards compatiability, the actual limit is calculated as the maximum between
+	     * For backwards compatibility, the actual limit is calculated as the maximum between
 	     * $char_limit and whatever is currently stored in the database for the given element
 	     * @param string $field_name -- the field/element to limit
 	     * @param int $char_limit -- the number of chars to limit to
@@ -71,6 +86,32 @@
 	        $current_num_chars = carl_util_count_html_text_characters($element_value);
 	        $max_chars = max($current_num_chars, $char_limit);
 	        $this->field_limits[$field_name] = $max_chars;
+	    }
+	    
+	    /**
+	     * Suggests a character limit for a given field.
+	     *
+	     * @param string $field_name the field/element to suggest a limit for.
+	     * @param int $char_limit the number of characters for the suggested limit.
+	     */
+	    public function suggest_limit($field_name, $char_limit)
+	    {
+	    	$this->suggested_field_limits[$field_name] = $char_limit;
+	    }
+	    
+	    /**
+	     * Get / set whether or not the input limit text for a field should auto show/hide.
+	     *
+	     * @param string $field_name the field/element to suggest a limit for.
+	     * @param int $char_limit the number of characters for the suggested limit.
+	     */
+	    public function auto_show_hide($field_name, $boolean = NULL)
+	    {
+	    	if ($boolean !== NULL)
+	    	{
+	    		$this->auto_show_hide[$field_name] = $boolean;
+	    	}
+	    	return (isset($this->auto_show_hide[$field_name])) ? $this->auto_show_hide[$field_name] : true;
 	    }
 	    
 	    /**
@@ -86,12 +127,30 @@
 	            $element_value = $this->disco_form->get_value($field);
 	            $chars_remaining = $char_limit - carl_util_count_html_text_characters($element_value);
 	            
-	            $formatted_char_limit = '<div class="smallText inputLimitNote" style="display: none; ">
+	            $auto_show_hide = ($this->auto_show_hide($field)) ? ' autoShowHide' : '';
+	            $formatted_char_limit = '<div class="smallText showRemaining inputLimitNote' . $auto_show_hide . '" style="display: none;">
 	                Characters remaining: <span class="charsRemaining">'. $chars_remaining . '</span>
                     <span class="charLimit", style="display: none;">'. $char_limit . '</span></div>';
                 
-                $over_limit_note = '<div class="smallText overLimitNote" style="display: none; font-weight:bold; ">
+                $over_limit_note = '<div class="smallText overLimitNote' . $auto_show_hide . '" style="display: none; font-weight:bold;">
                 <span class="numCharsOver">0</span> characters over the limit! Please shorten text.</b></div>';
+                
+                $this->disco_form->add_comments($field, $formatted_char_limit);
+                $this->disco_form->add_comments($field, $over_limit_note);
+	        }
+	        foreach($this->suggested_field_limits as $field => $char_limit)
+	        {
+	            // grab value from DB, count its characters, calculate how many remain
+	            $element_value = $this->disco_form->get_value($field);
+	            $chars_remaining = $char_limit - carl_util_count_html_text_characters($element_value);
+	            
+	            $auto_show_hide = ($this->auto_show_hide($field)) ? ' autoShowHide' : '';
+	            $formatted_char_limit = '<div class="smallText inputLimitNote' . $auto_show_hide . '" style="display: none;">
+	                Characters remaining: <span class="charsRemaining">'. $chars_remaining . '</span>
+                    <span class="charLimit", style="display: none;">'. $char_limit . '</span></div>';
+                
+                $over_limit_note = '<div class="smallText overLimitNote' . $auto_show_hide . '" style="display: none; font-weight:bold;">
+                <span class="numCharsOver">0</span> characters over the suggested limit! Consider shortening text.</b></div>';
                 
                 $this->disco_form->add_comments($field, $formatted_char_limit);
                 $this->disco_form->add_comments($field, $over_limit_note);

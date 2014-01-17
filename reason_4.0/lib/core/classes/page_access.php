@@ -34,6 +34,8 @@ class reasonPageAccess
 {
 	var $_page_tree;
 	var $_pages_to_groups = array();
+	var $_group_helpers = array();
+	
 	/**
 	 * provide a page tree object (e.g. minisite navigation)
 	 * @param object $page_tree
@@ -79,6 +81,9 @@ class reasonPageAccess
 	}
 	/**
 	 * Find out if a user has access to a given page
+	 * 
+	 * We also determine if the anonymous user has access so that modules know whether or not a page is public.
+	 *
 	 * @param string $username
 	 * @param integer $page_id
 	 * @return boolean username has access to view page
@@ -88,11 +93,14 @@ class reasonPageAccess
 	{
 		if($groups = $this->get_groups($page_id))
 		{
-			foreach($groups as $group_id=>$group)
+			foreach($groups as $group_id => $group)
 			{
-				$gh = new group_helper();
-				$gh->set_group_by_entity($group);
-				if(!$gh->has_authorization($username))
+				if (!isset($this->_group_helpers[$group_id]))
+				{
+					$this->_group_helpers[$group_id] = new group_helper();
+					$this->_group_helpers[$group_id]->set_group_by_entity($group);
+				}
+				if(!$this->_group_helpers[$group_id]->has_authorization($username))
 					return false;
 			}
 		}

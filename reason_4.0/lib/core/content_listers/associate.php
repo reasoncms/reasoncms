@@ -503,6 +503,9 @@
 			{
 				if (!empty($link))
 				{
+					// lets add a CSRF token for the GET request - we should make all these requests go via POST but 
+					// this is better than nothing to prevent CSRF attacks.
+					$link = array_merge( $link, (array ('admin_token' => $this->admin_page->get_admin_token() ) ) );
 					echo '<a href="' .$this->admin_page->make_link( $link ).'">' . $name . '</a>';
 				}
 				else

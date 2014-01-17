@@ -3,24 +3,45 @@
     margin: 5px;
     border: 2px solid #D9E2F4;
 }
+
 .frmb_preview_label {
-    width: 30%;
+    width: 150px;
     clear: left;
     display: table-cell;
+    text-align: right;
+    padding-right: 10px;
 }
+
 .frmb_preview_hidden {
     font-style: italic;
     color: gray;
 }
-.frmb_preview_hiddenLabel:after {
-    content: ":";
-}
+
 .frmb_preview_row div {
     display: table-cell;
+    vertical-align: top;
 }
 
 .frmb_preview_row div span {
     display: table-row;
+    vertical-align: top;
+}
+
+.frmb_preview_checkbox, .frmb_preview_checkbox_label {
+    display: table-cell;
+}
+
+.frmb_preview_checkbox_row {
+    display: table-row;
+}
+
+.del-button, .frmb .legend .stopEditing {
+    float: right;
+    margin-right: 10px;
+}
+
+.submit_and_resetType div.legend:hover {
+    cursor: default;
 }
 
 /* jquery.formbuilder css */
@@ -136,17 +157,3 @@ ul.frmb {
 
 .frm-elements,
 .frm-fld { display: block }
-
-.del-button, .frmb .legend .stopEditing {
-    float: right;
-    margin-right: 10px;
-}
-.frmb_preview_checkbox, .frmb_preview_checkbox_label {
-    display: table-cell;
-}
-.frmb_preview_checkbox_row {
-    display: table-row;
-}
-.submit_and_resetType div.legend:hover {
-    cursor: default;
-}

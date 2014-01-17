@@ -480,7 +480,7 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 			{
 				foreach($entities as $e)
 				{
-					$parts[] = '"'.$e->get_value('name').'"';
+					$parts[] = '&#8220;'.$e->get_value('name').'&#8221;';
 				}
 			}
 			$glue = ' ';

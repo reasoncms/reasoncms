@@ -19,10 +19,49 @@
 		var $page;
 		var $head_items;
 		
-		function DefaultModule( &$page ) // {{{
+		/**
+		 * We do not by default do CSRF protection in the admin interface right now, but we enable it for certain modules.
+		 *
+		 * This is why:
+		 *
+		 * 1. Disco has built in CSRF protection. Many admin modules get CSRF protection via disco.
+		 * 2. Sharing and borrowing happen in response to GET links and do not get Disco CSRF protection.
+		 * 3. OWASP maintains that having a URL in a token is better, as a temporary measure, than not doing it.
+		 *
+		 * We use a different token than Disco since this is really just a temporary measure.
+		 */
+		var $check_admin_token = false;
+		
+		function DefaultModule( &$page )
 		{
 			$this->admin_page =& $page;
-		} // }}}
+		}
+		
+		function check_admin_token()
+		{
+			return $this->check_admin_token;
+		}
+		
+		/**
+		 * Some modules (like doAssociate) perform their actions during init so we don't want to run the standard init if CSRF failed.
+		 */
+		function init_invalid_admin_token()
+		{
+		
+		}
+		
+		/**
+		 * Lets provide a standard message (and a link back if we have a referrer header).
+		 */
+		function run_invalid_admin_token()
+		{
+			echo '<p>Your request could not be verified. Please return to the original page and try your request again.</p>';
+			if (!empty($_SERVER['HTTP_REFERER']))
+			{
+				echo '<a href="'.$_SERVER['HTTP_REFERER'].'">Return to original page</a>';
+			}
+		}
+		
 		function init() // {{{
 		{
 			$sites = $this->admin_page->get_sites();

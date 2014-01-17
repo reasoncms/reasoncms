@@ -9,14 +9,13 @@ include_once(CARL_UTIL_INC.'basic/misc.php');
  *
  * - Currently we support json, html, and xml
  *
- * Right now outputs a 404 if content is not set ... we likely need something more robust.
+ * Right now outputs a 404 if content is not set AND no http_response_code has been set.
  *
  * // output json with the application/json content type
  * $api = new CarlUtilAPI('json');
  * $api->set_content( json_encode(array('text' => 'hello world')));
  * $api->run();
  *
- * @todo add more extensive error / status code support with flexbility by content type
  * @todo allow extensibility with content type definitions - remove hard coded content type map
  *
  * @version .1
@@ -49,6 +48,7 @@ class CarlUtilAPI
 	private $content_type;
 	private $api_name;
 	private $content;
+	private $http_response_code;
 	
 	/**
 	 * Constructor allows specification of supported content types. The first listed type is considered the "default" content type.
@@ -128,6 +128,14 @@ class CarlUtilAPI
 	}
 
 	/**
+	 * @param string http response code
+	 */
+	final function set_http_response_code($string)
+	{
+		$this->http_response_code = $string;
+	}
+	
+	/**
 	 * @param string name for the api
 	 */
 	final function set_name($name)
@@ -176,6 +184,16 @@ class CarlUtilAPI
 	{
 		return (isset($this->content_type)) ? $this->content_type : FALSE;
 	}
+
+	/**
+	 * Returns the http_response_code if it has been set.
+	 *
+	 * @return mixed string http_response_code or boolean FALSE
+	 */
+	final function get_http_response_code()
+	{
+		return (isset($this->http_response_code)) ? $this->http_response_code : FALSE;
+	}
 	
 	/** 
 	 * @return mixed string content or boolean FALSE
@@ -198,7 +216,9 @@ class CarlUtilAPI
 	}
 	
 	/**
-	 * echo content in correct content type and provide 404 message in all potential content types.
+	 * We provide a default 404 if content is empty but everything else is in place.
+	 *
+	 * We provide a default 400 for invalid content_type requests.
 	 *
 	 * @todo add customizable messages, additional status code support
 	 */
@@ -210,27 +230,57 @@ class CarlUtilAPI
 		$content_type_header = $this->get_content_type_header();
 		$content_type_supported = $this->have_supported_content_type();
 		
-		if ($content && $content_type && $content_type_header && $content_type_supported)
+		// we set some defaults for the response code if it was never set
+		if ($this->get_http_response_code() === FALSE)
 		{
+			if ($content !== FALSE) $this->set_http_response_code(200);
+			else $this->set_http_response_code(404);
+		}
+		$http_response_code = $this->get_http_response_code();
+		
+		if ( ($content !== FALSE) && $http_response_code && $content_type && $content_type_header && $content_type_supported)
+		{
+			http_response_code( $http_response_code );
 			header('Content-type: ' . $content_type_header);
 			echo $content;
 		}
-		elseif (!$content && $content_type && $content_type_header && $content_type_supported) // we have a header and supported type but no content - 404
+		elseif ($http_response_code && $content_type && $content_type_header && $content_type_supported) // defaults for certain codes if content was not set.
 		{
-			http_response_code(404);
-			header('Content-type: ' . $content_type_header);
-			switch ($this->get_content_type())
+			if ($http_response_code == '404')
 			{
-				case "html":
-					echo '<html><body><h1>404</h1><p>Resource Not Found</p></body></html>';
-					break;
-				case "json":
-					echo json_encode(array('status' => '404', 'error' => 'Resource Not Found'));
-					break;
-				case "xml":
-					$xml = '<?xml version=\'1.0\' standalone=\'yes\'?>';
-					$xml .= '<root><status>404</status><error>Resource Not Found</error></root>';
-					break;
+				http_response_code(404);
+				header('Content-type: ' . $content_type_header);
+				switch ($this->get_content_type())
+				{
+					case "html":
+						echo '<html><body><h1>404</h1><p>Resource Not Found</p></body></html>';
+						break;
+					case "json":
+						echo json_encode(array('status' => '404', 'error' => 'Resource Not Found'));
+						break;
+					case "xml":
+						$xml = '<?xml version=\'1.0\' standalone=\'yes\'?>';
+						$xml .= '<root><status>404</status><error>Resource Not Found</error></root>';
+						break;
+				}
+			}
+			elseif ($http_response_code == '403')
+			{
+				http_response_code(403);
+				header('Content-type: ' . $content_type_header);
+				switch ($this->get_content_type())
+				{
+					case "html":
+						echo '<html><body><h1>404</h1><p>Unauthorized</p></body></html>';
+						break;
+					case "json":
+						echo json_encode(array('status' => '403', 'error' => 'Unauthorized'));
+						break;
+					case "xml":
+						$xml = '<?xml version=\'1.0\' standalone=\'yes\'?>';
+						$xml .= '<root><status>403</status><error>Unauthorized</error></root>';
+						break;
+				}
 			}
 		}
 		elseif ($content_type && !$content_type_supported) // this request is invalid - no content type set

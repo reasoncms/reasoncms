@@ -203,6 +203,7 @@ class PublicationModule extends Generic3Module
 													 'item_images' => 'get_item_images',
 													 'item_assets' => 'get_item_assets',
 													 'item_categories' => 'get_item_categories',
+													 'item_social_sharing' => 'get_item_social_sharing',
 													 'item_comments' => 'get_item_comments',
 													 'comment_form_markup'=>'get_comment_form_markup',
 													 'comment_has_errors' => 'get_comment_has_errors',
@@ -705,9 +706,15 @@ class PublicationModule extends Generic3Module
 			$url = carl_construct_link(array(''), array('story_id', 'issue_id', 'section_id'));
 			if ($teaser = $this->get_teaser_image($item))
 			{
-				$protocol = (on_secure_page()) ? 'https' : 'http';
 				$teaser = reset($teaser);
-				$image_url = $protocol . '://'.$_SERVER['HTTP_HOST'].reason_get_image_url($teaser);
+				$image_urls[] = reason_get_image_url($teaser);
+			}
+			elseif ($images = $this->get_item_images($item))
+			{
+				foreach ($images as $image)
+				{
+					$image_urls[] = reason_get_image_url($image);
+				}
 			}
 			$site = $this->get_site_entity();
 			if ($site) $site_name = htmlspecialchars(trim(strip_tags($site->get_value('name'))),ENT_QUOTES,'UTF-8');
@@ -716,7 +723,14 @@ class PublicationModule extends Generic3Module
 			$head_items->add_head_item('meta',array( 'property' => 'og:title', 'content' => $title));
 			$head_items->add_head_item('meta',array( 'property' => 'og:url', 'content' => $url));
 			if (!empty($description)) $head_items->add_head_item('meta',array( 'property' => 'og:description', 'content' => $description));
-			if (!empty($image_url)) $head_items->add_head_item('meta',array( 'property' => 'og:image', 'content' => $image_url));
+			if (!empty($image_urls))
+			{
+				foreach ($image_urls as $image_url)
+				{
+					$head_items->add_head_item('meta',array( 'property' => 'og:image', 'content' => 'http://'.$_SERVER['HTTP_HOST'].$image_url));
+					if (HTTPS_AVAILABLE) $head_items->add_head_item('meta',array( 'property' => 'og:image:secure_url', 'content' => 'https://'.$_SERVER['HTTP_HOST'].$image_url));
+				}	
+			}
 			if (!empty($site_name)) $head_items->add_head_item('meta',array( 'property' => 'og:site_name', 'content' => $site_name));
 		}
 	}
@@ -2653,6 +2667,44 @@ class PublicationModule extends Generic3Module
 				}
 			}
 			return $cats;
+		}
+		
+		/**
+		 * Get social sharing links from social sharing integrators that support social sharing links.
+		 *
+		 * Returns an array where each item is an array with these keys:
+		 *
+		 * - src (for the image)
+		 * - alt (for the image)
+		 * - href (the actual link)
+		 *
+		 * We only return items is the page is public and the publication has social sharing enabled.
+		 *
+		 * @param object
+		 * @return array
+		 */
+		function get_item_social_sharing($item)
+		{
+			if ($this->page_is_public() && 
+				$this->publication->has_value('enable_social_sharing') && (
+				$this->publication->get_value('enable_social_sharing') == 'yes' )
+				)
+			{
+				reason_include_once('classes/social.php');
+				$helper = reason_get_social_integration_helper();
+				$integrators = $helper->get_social_integrators_by_interface('SocialSharingLinks');
+				if (!empty($integrators))
+				{
+					foreach ($integrators as $integrator_type => $integrator)
+					{
+						$item_social_sharing[$integrator_type]['icon'] = $integrator->get_sharing_link_icon();
+						$item_social_sharing[$integrator_type]['text'] = $integrator->get_sharing_link_text();
+						$item_social_sharing[$integrator_type]['href'] = $integrator->get_sharing_link_href();
+					}
+					return $item_social_sharing;
+				}
+			}
+			return false;
 		}
 		function get_item_comments($item)
 		{

@@ -45,9 +45,9 @@ class StackedBox extends Box // {{{
 		if($use_label)
 		{
 			if(!empty($stripped_label)) 
-				$markup  .= $label; //.$label_punct;
+				$markup  .= '<span class="labelText">'.$label.'</span>';
 			if($required) 
-				$markup .= '<span class="requiredIndicator">*</span>';
+				$markup .= '<span class="requiredIndicator">'.$this->get_required_indicator().'</span>';
 		}
 		$markup .= '</div>'."\n";
 		$markup .= '<div class="element">'."\n";

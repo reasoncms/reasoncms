@@ -38,4 +38,4 @@ Reason is designed to make it simple for content creators to create content.
 
 Reason is more capable than Wordpress, and simpler than Drupal.
 
-Reason is free software created at Carleton College in 2003 and released under the GNU General Public License Version 2 in October, 2006.
+Reason is free and open source - released under the GNU General Public License Version 2.

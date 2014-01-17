@@ -15,6 +15,8 @@
 	 */
 	class DoAssociateModule extends DefaultModule // {{{
 	{
+		var $check_admin_token = true;
+		
 		function DoAssociateModule( &$page) // {{{
 		{
 			$this->admin_page =& $page;

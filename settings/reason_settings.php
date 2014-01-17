@@ -180,7 +180,7 @@
 	 * Note that this is the same as the name of the file in lib/[core|local]/html_editors, 
 	 * but without the ".php"
 	 */
-	define('REASON_DEFAULT_HTML_EDITOR', 'loki_2');
+	define('REASON_DEFAULT_HTML_EDITOR', 'tiny_mce');
 	
 	/**
 	 * REASON_URL_FOR_GENERAL_FEED_HELP
@@ -760,6 +760,11 @@
 	
 	/**
 	 * REASON_DEFAULT_ALLOWED_TAGS
+	 *
+	 * @deprecated  slated for removal in Reason 4.5
+	 *
+	 * This security model is insufficient for XSS protection - see REASON_ENABLE_ENTITY_SANITIZATION.
+	 *
 	 * A whitelist of the (X)HTML(5) tags Reason will allow to be saved to the database.
 	 *
 	 * Note that the head items field on pages does not follow this whitelist.
@@ -776,6 +781,20 @@
 	 * This string should be in the same format as the second argument to php's built-in strip_tags() function, e.g.: '<a><abbr><acronym><address>'
 	 */
 	define('REASON_DEFAULT_ALLOWED_TAGS','<a><abbr><acronym><address><area><article><aside><audio><b><bdi><bdo><big><blockquote><br><button><canvas><caption><cite><code><col><colgroup><command><datalist><dd><del><details><dfn><div><dl><dt><em><embed><fieldset><figcaption><figure><footer><form><h1><h2><h3><h4><h5><h6><header><hgroup><hr><i><iframe><img><input><ins><kbd><keygen><label><legend><li><map><mark><menu><meter><nav><noscript><object><ol><optgroup><option><output><p><param><pre><progress><q><ruby><rb><rp><rpc><rt><rtc><s><samp><section><select><small><source><span><strike><strong><sub><summary><sup><table><tbody><td><textarea><tfoot><th><thead><time><tr><track><tt><u><ul><var><video><wbr>');
+	
+	/**
+	 * REASON_ENABLE_ENTITY_SANITIZATION
+	 *
+	 * When this is set to true, when saved or updated, each field of an entity will be run through default or custom sanitization
+	 * procedures as defined in config/sanitization/default.php. In its default configuration, this runs most entity fields through
+	 * HTML Purifier, combatting a wide variety of XSS exploits.
+	 *
+	 * This is new in Reason 4.4. If you have modified REASON_DEFAULT_ALLOWED_TAGS in the past, you may need to customize the filtering
+	 * mechanism in config/sanitization/default.php so that XHTML filtering works according to your setup.
+	 *
+	 * This will be enabled by default in Reason 4.5. You should test and enable it as soon as possible in Reason 4.4.
+	 */
+	define('REASON_ENABLE_ENTITY_SANITIZATION', false);
 	
 	/**
 	 * REASON_DEFAULT_FOOTER_XHTML
@@ -863,6 +882,15 @@
 	define('REASON_LOKI_CSS_FILE','');
 	
 	/**
+	 * REASON_TINYMCE_CONTENT_CSS_PATH
+	 *
+	 * Relative path to the CSS file that TinyMCE will use to style the WYSIWYG content area. If you have an install
+	 * of Reason CMS with a simple css footprint and a main css file, you may want to change this to that css file
+	 * instead of using the simple one (content.css) that comes with Reason CMS.
+	 */
+	define('REASON_TINYMCE_CONTENT_CSS_PATH', REASON_HTTP_BASE_PATH . 'tinymce/css/content.css');
+		
+	/**
 	 * REASON_DELETED_ITEM_EXPUNGEMENT_WAIT_DAYS
 	 *
 	 * The number of days Reason's garbage collector should wait before expunging a deleted item from the database.
@@ -890,16 +918,30 @@
 	/**
 	 * REASON_SIZED_IMAGE_DIR
 	 *
-	 * Full path to the directory where Reason's sized image class (sized_image.php) should store sized images.
+	 * Full file system path to the directory where Reason's sized image class (sized_image.php) should store sized images.
 	 */
-	define('REASON_SIZED_IMAGE_DIR', REASON_INC.'www/sized_images/');
+	define('REASON_SIZED_IMAGE_DIR', REASON_DATA_DIR.'sized_images/');
 	
 	/**
 	 * REASON_SIZED_IMAGE_DIR_WEB_PATH
 	 *
-	 * Full path to the directory where Reason's sized image class (sized_image.php) should store sized images.
+	 * Web path to the directory where Reason's sized image are accessible.
 	 */
 	define('REASON_SIZED_IMAGE_DIR_WEB_PATH', REASON_HTTP_BASE_PATH.'sized_images/');
+
+	/**
+	 * REASON_SIZED_IMAGE_CUSTOM_DIR
+	 *
+	 * Full file system path to the directory where Reason's should store custom sized images.
+	 */
+	define('REASON_SIZED_IMAGE_CUSTOM_DIR', REASON_DATA_DIR.'sized_images_custom/');
+	
+	/**
+	 * REASON_SIZED_IMAGE_CUSTOM_DIR_WEB_PATH
+	 *
+	 * Web path to the directory where Reason's custom sized image are accessible.
+	 */
+	define('REASON_SIZED_IMAGE_CUSTOM_DIR_WEB_PATH', REASON_HTTP_BASE_PATH.'sized_images_custom/');
 	
 	/**
 	 * REASON_ENTITY_LOCKS_ENABLED

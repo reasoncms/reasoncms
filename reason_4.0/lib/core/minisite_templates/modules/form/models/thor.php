@@ -9,7 +9,8 @@
  */
 reason_include_once( 'minisite_templates/modules/form/models/default.php' );
 reason_include_once( 'classes/object_cache.php' );
-include_once(TYR_INC.'tyr.php');
+require_once( THOR_INC.'boxes_thor.php' );
+include_once( TYR_INC.'tyr.php' );
 
 /**
  * Register model with Reason
@@ -131,6 +132,11 @@ class ThorFormModel extends DefaultFormModel
 	function is_unauthorized()
 	{
 		return (!$this->user_has_access_to_fill_out_form());
+	}
+	
+	function is_closed()
+	{
+		return ($this->submission_limit_is_exceeded() || $this->before_open_date() || $this->after_close_date());
 	}
 	
 	function get_email_of_recipient()
@@ -353,6 +359,16 @@ class ThorFormModel extends DefaultFormModel
 		else return false;
 	}
 	
+	function form_is_tableless()
+	{
+		$form =& $this->get_form_entity();
+		if ($form->has_value('tableless'))
+		{
+			return ($form->get_value('tableless') == 1);
+		}
+		else return false;
+	}
+	
 	/**
 	 * @return boolean whether or not there is a submission saved in the database for the user
 	 */
@@ -522,14 +538,20 @@ class ThorFormModel extends DefaultFormModel
 
 	function &_get_values_and_extra_email_fields(&$disco_obj)
 	{
-		$thor_values = array();
 		$thor_core =& $this->get_thor_core_object();
-		if ($disco_obj->get_show_submitted_data_dynamic_fields())
+		$thor_values = $thor_core->get_thor_values_from_form($disco_obj);
+		// Merge in any additional dynamic fields specified by the application
+		if ($dynamic = $disco_obj->get_show_submitted_data_dynamic_fields())
 		{
-			$values = $disco_obj->get_values();
-			foreach ($values as $k=>$value) if (isset($values[$k])) $thor_values[$k] =& $values[$k];
+			foreach ($dynamic as $element) 
+			{
+				if ($value = $disco_obj->get_value($element)) 
+				{
+					$thor_values[$element] = $value;
+				}
+			}
 		}
-		$thor_values = array_merge($thor_values, $thor_core->get_thor_values_from_form($disco_obj), $this->get_values_for_email_extra_fields());
+		$thor_values = array_merge($thor_values, $this->get_values_for_email_extra_fields());
 		return $thor_values;
 	}
 	
@@ -971,7 +993,8 @@ class ThorFormModel extends DefaultFormModel
 	function transform_form()
 	{
 		$disco =& $this->get_view();
-		$disco->set_form_class('BoxThor2');
+		$box_class = ($this->form_is_tableless()) ? 'BoxThorTableless' : 'BoxThor';
+		$disco->set_form_class($box_class);
 		$thor_core =& $this->get_thor_core_object();
 		$thor_core->append_thor_elements_to_form($disco);		
 		// if it is editable, load data for the user (if it exists)
@@ -1076,6 +1099,52 @@ class ThorFormModel extends DefaultFormModel
 			$this->_user_has_access_to_fill_out_form = $this->_user_is_in_viewing_group();
 		}
 		return $this->_user_has_access_to_fill_out_form;
+	}
+	
+	function submission_limit_is_exceeded()
+	{
+		$form =& $this->get_form_entity();
+		// If we have a limit value...
+		if ($cap = $form->get_value('submission_limit'))
+		{
+			$thor_core =& $this->get_thor_core_object();
+
+			// and we have some rows in the database...
+			if ($rows = $thor_core->get_rows())
+			{
+				// if we've passed the cap limit
+				if (count($rows) >= $cap)
+				{
+					// and this isn't someone editing a preexisting entry
+					if (!($this->_is_editable() && $this->get_form_id()))
+					{
+						return true;
+					}
+				}
+			}
+		}
+		return false;				
+	}
+	
+	function before_open_date()
+	{
+		$form =& $this->get_form_entity();
+		if (($start = $form->get_value('open_date')) && $start != '0000-00-00 00:00:00')
+		{		
+			if (strtotime($start) > time()) return true;
+		}
+		return false;
+	}
+	
+	function after_close_date()
+	{
+		$form =& $this->get_form_entity();
+		
+		if (($end = $form->get_value('close_date')) && $end != '0000-00-00 00:00:00')
+		{		
+			if (strtotime($end) < time()) return true;
+		}
+		return false;
 	}
 	
 	function _user_has_site_editing_access()

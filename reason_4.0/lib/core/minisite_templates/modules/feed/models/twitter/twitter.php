@@ -27,8 +27,9 @@ $GLOBALS[ '_reason_mvc_model_class_names' ][ reason_basename( __FILE__) ] = 'Rea
  *
  * User Configurables
  *
- * - screen_name
  * - cache_duration
+ * - screen_name OR
+ * - search_string
  *
  * @author Nathan White
  */
@@ -48,14 +49,18 @@ class ReasonTwitterFeedModel extends ReasonMVCModel // implements ReasonFeedInte
 	 */
 	function build()
 	{
-		if ($url = $this->config('screen_name'))
+		if ($this->config('screen_name') || $this->config('search_string'))
 		{	
 			$roc = new ReasonObjectCache('reason_twitter_feed_model_tweets_for_' . $this->config('screen_name'), $this->config('cache_duration'));
 			$tweets = $roc->fetch();
 			if ($tweets === FALSE) // nothing in the cache - lets get em
 			{
 				$obj = $this->get_oauth_object();
-				$result = $obj->request('GET', $obj->url('1.1/statuses/user_timeline'), array('screen_name' => $this->config('screen_name')));
+				if ($this->config('screen_name'))
+					$result = $obj->request('GET', $obj->url('1.1/statuses/user_timeline'), array('screen_name' => $this->config('screen_name')));
+				else if ($this->config('search_string'))
+					$result = $obj->request('GET', $obj->url('1.1/search/tweets.json'), array('q' => $this->config('search_string'), 'result_type' => 'recent'));
+				
 				if ($result == '200')
 				{
 					$tweets = json_decode($obj->response['response'], true); // make an associative array
@@ -74,7 +79,7 @@ class ReasonTwitterFeedModel extends ReasonMVCModel // implements ReasonFeedInte
 					}
 					else // we could have much more robust error messages here if we wanted.
 					{
-						trigger_error('No new or expired tweets available for user ' . $this->config('screen_name') . '. The twitter API returned code ' . $result . ' - we will retry when we have a fresh cache interval.');
+						trigger_error('No new or expired tweets available for ' . $this->config('screen_name') . '. The twitter API returned code ' . $result . ' - we will retry when we have a fresh cache interval.');
 						$tweets = array();
 						$roc->set($tweets);
 					}
@@ -84,7 +89,7 @@ class ReasonTwitterFeedModel extends ReasonMVCModel // implements ReasonFeedInte
 		}
 		else
 		{
-			trigger_error('The ReasonTwitterFeedModel must be provided with the configuration parameter screen_name.', FATAL);
+			trigger_error('The ReasonTwitterFeedModel must be provided with the configuration parameter screen_name or search_string.', FATAL);
 		}
 	}
 	

@@ -23,7 +23,9 @@ include_once(CARL_UTIL_INC.'error_handler/error_handler.php');
  * The general data format is an associative array.  It takes care of the rest.
  * 
  * A singleton instance of SQLER is stored in $GLOBALS['sqler'] to reduce the need to constantly reinstantiate this class
- * 
+ *
+ * @todo unify with db_query class so we aren't using mysql_query directly there and there.
+ *
  * @author dave hendler
  */
 
@@ -52,7 +54,7 @@ include_once(CARL_UTIL_INC.'error_handler/error_handler.php');
 			foreach($data as $key => $val )
 			{
 				$fields .= '`'.$key.'`,';
-				$values .= '"'.addslashes( $val ).'",';
+				$values .= ($val !== NULL) ? '"'.addslashes( $val ).'",' : 'NULL,';
 			}
 			$fields = substr( $fields, 0, -1 );
 			$values = substr( $values, 0, -1 );
@@ -92,7 +94,8 @@ include_once(CARL_UTIL_INC.'error_handler/error_handler.php');
 			$set_these = '';
 			foreach($data as $key => $val )
 			{
-				$set_these .= '`'.$key.'` = "'.addslashes( $val ).'",';
+				$set_these .= '`'.$key.'` = ';
+				$set_these .= ($val !== NULL) ? '"'.addslashes( $val ).'",' : 'NULL,';
 			}
 			$set_these = substr( $set_these, 0, -1 );
 

@@ -122,12 +122,10 @@ $.fn.formbuilder = function (options) {
 	return false;
 });
 }(opts.control_box_target);
-function htmlEntities(str) {
-	return String(str).replace(/</g, '&lt;').replace(/>/g, '&gt;');
-}
-
+	
 	appendNewPreview = function(type, values, options, required, defaultValue, id) {
 		var inputMap;
+		
 		rowMap = {
 			'class': 'frmb_preview_row',
 			name: id
@@ -135,64 +133,63 @@ function htmlEntities(str) {
 		thisRow = $("<div>").attr(rowMap);
 		inputLabel = $("<span>").attr("class", "frmb_preview_label");
 		thisRow.append(inputLabel);
-		element = type;
 
 		switch(type) {
 			case "input_text":
-				element = "<input>";
-			inputLabel.text(values[0]);
-			inputMap = {
-				type: "text",
-				value: defaultValue,
-				'class': "frmb_preview_inputtext_row"
-			};
+			    inputLabel.html(values[0] + ( (required == "true") ? ':*' : ':') );
+				element = $("<div>");
+				inputElement = $("<input>");
+				inputElement.attr(
+				{
+					type: "text",
+					value: defaultValue,
+					'class': "frmb_preview_inputtext_row"
+				});
+				element.append(inputElement);
 			break;
 
 			case "textarea":
-				element = "<textarea>";
-			inputLabel.text(values[0]);
-			inputMap = {
-				rows: "6",
-				cols: "40",
-				'class': "frmb_preview_textarea_row"
-			};
+				inputLabel.html(values[0] + ( (required == "true") ? ':*' : ':') );
+				element = $("<div>");
+				textareaElement = $("<textarea>");
+				textareaElement.text(defaultValue);
+				textareaElement.attr(
+				{
+					type: "text",
+					rows: "6",
+					cols: "40",
+				});
+				element.append(textareaElement);
 			break;
 
+			// hidden needs some work ... lets not show the label in the preview
 			case "hidden":
-				inputLabel.text(values[0]);
-				//values[1]=values[0];
-				element = "<p>";
-				inputMap = {
-					'class': "frmb_preview_hidden"
-				};
-				inputLabel.attr("class", "frmb_preview_hiddenLabel");
+				inputLabel.text(values[0] + " ");
+				inputLabel.append($("<em>(hidden)</em>"));
+				element = $("<div>");
+				element.text(values[1]);
+				element.attr("class", "frmb_preview_hidden");
 			break;
 
 			case "comment":
-				//inputLabel.text(values[0]);
-				values[1] = values[0];
-			element = "<p>";
-			inputMap = {
-				'class': "frmb_preview_comment"
-			};
+				inputLabel.remove();
+				element = $("<p>");
+				element.append(values[0]);
+				element.attr("class", "frmb_preview_comment");
 			break;
 
 			case "submit_and_reset":
-				element = "<button>";
-			values = values['submit'];
-			inputMap = {
-				'class': 'frmb_preview_submit'
-			};
-			thisRow.attr("name", "submit_and_reset");
-			inputLabel.remove();
+				inputLabel.remove();
+				element = $("<button>");
+				element.text(values['submit']);
+				element.attr("class", "frmb_preview_submit");
+				thisRow.attr("name", "submit_and_reset");
 			break;
 
 			case "select":
 				element = $("<div>");
-				inputLabel.text(options[0]);
-				inputMap = {
-					'class': "frmb_preview_select"
-				}
+				inputLabel.html(options[0] + ( (required == "true") ? ':*' : ':') );
+				element.attr("class", "frmb_preview_select");
 				// Fix this.
 				select = $("<select class='frmb_preview_select_row'>");
 				$.each(values, function () {
@@ -203,42 +200,24 @@ function htmlEntities(str) {
 
 			case "radio":
 				element = $("<div>");
-				inputLabel.text(options[0]);
-				inputMap = {
-					'class': "frmb_preview_radio"
-				};
+				inputLabel.html(options[0] + ( (required == "true") ? ':*' : ':') );
+				element.attr("class", "frmb_preview_radio");
 				$.each(values, function () {
 					element.append("<span class='frmb_preview_radiobutton_row'><input type='radio'" + (this[1] == 'checked' ? "checked=''": '') + "class='frmb_preview_radiobutton' /><label class='frmb_preview_radiobutton_label'>" + this[0] + "</label></span>");
 				});
 			break;
 
 			case "checkbox":
-				inputLabel.text(options[0]);
+				inputLabel.html(options[0] + ( (required == "true") ? ':*' : ':') );
 				element = $("<div>");
 				$.each(values, function() {
 					element.append("<span class='frmb_preview_checkbox_row'><input type='checkbox'" + (this[1] == 'checked' ? "checked=''": '') + "class='frmb_preview_checkbox' /><label class='frmb_preview_checkbox_label'>" + this[0] + "</label></span>");
 				});
-				inputMap = {
-					'class': "frmb_preview_checkboxgroup"
-				};
+				element.attr("class", "frmb_preview_checkboxgroup");
 			break;
 		}
 
-
-		input = $(element).attr(inputMap);
-
-		if (element == "<textarea>")
-			input.text(defaultValue);
-
-		if (element == "<p>")
-			input.text(values[1]);
-		else if (element == '<button>')
-			input.text(values);
-
-		thisRow.append(input);
-
-		if (element != "<p>")
-			inputLabel.text(inputLabel.text() + (required != "false" ? ":*" : ":"));
+		thisRow.append(element);
 
 		if (type != 'submit_and_reset')
 			oldRow = $("[name=" + id + "]");
@@ -310,9 +289,7 @@ function htmlEntities(str) {
 					break;
 
 					default:
-						// sort of...
-						//! FIXME
-						values = [htmlEntities(this.values)];
+						values = [this.values];
 					break;
 				}
 
@@ -364,7 +341,7 @@ function htmlEntities(str) {
 		buttonText = ['Submit'];
 		if (values === '') values = buttonText;
 		field += '<div class="frm-fld"><label>' + opts.messages.submitLabel + '</label>';
-		field += '<input class="fld-title" id="title-' + last_id + '" type="text" value="' + values['submit'] + '" /></div>';
+		field += '<input class="fld-title" id="title-' + last_id + '" type="text" value="' + htmlspecialchars(values['submit']) + '" /></div>';
 		help = '';
 		options = {
 			'removable': false,
@@ -375,7 +352,7 @@ function htmlEntities(str) {
 	// Adds a comment of some kind to the form.
 	var appendComment = function (values, objectID) {
 		field += '<label>' + opts.messages.comment + '</label>';
-		field += '<input class="fld-title" id="title-' + last_id + '" type="text" value="' + values + '" />';
+		field += '<input class="fld-title" id="title-' + last_id + '" type="text" value="' + htmlspecialchars(values) + '" />';
 		help = '';
 		appendFieldLi(opts.messages.comment_field, field, null, help, {'objectID': objectID});
 	};
@@ -383,9 +360,9 @@ function htmlEntities(str) {
 	var appendHiddenField = function (values, objectID) {
 		if (values === '') values = ['', ''];
 		field += '<div class="frm-fld"><label>' + opts.messages.label + '</label>';
-		field += '<input class="fld-title" id="title-' + last_id + '" type="text" value="' + values[0] + '" /></div>';
+		field += '<input class="fld-title" id="title-' + last_id + '" type="text" value="' + htmlspecialchars(values[0]) + '" /></div>';
 		field += '<div class="frm-fld"><label>' + opts.messages.value + '</label>';
-		field += '<input class="fld-default" id="title-' + (last_id + 1) + '" type="text" value="' + values[1] + '" /></div>';
+		field += '<input class="fld-default" id="title-' + (last_id + 1) + '" type="text" value="' + htmlspecialchars(values[1]) + '" /></div>';
 		help = '';
 		appendFieldLi(opts.messages.hidden_field, field, null, help, {'objectID': objectID});
 	};
@@ -393,9 +370,9 @@ function htmlEntities(str) {
 	// single line input type="text"
 	var appendTextInput = function (values, required, defaultValue, objectID) {
 		field += '<label>' + opts.messages.label + '</label>';
-		field += '<input class="fld-title" id="title-' + last_id + '" type="text" value="' + values + '" />';
+		field += '<input class="fld-title" id="title-' + last_id + '" type="text" value="' + htmlspecialchars(values) + '" />';
 		field += '<label>' + opts.messages.defaultVal + '</label>';
-		field += '<input class="fld-default" id="title-' + last_id + '_def" type="text" value="' + defaultValue + '" />';
+		field += '<input class="fld-default" id="title-' + last_id + '_def" type="text" value="' + htmlspecialchars(defaultValue) + '" />';
 
 		help = '';
 		appendFieldLi(opts.messages.text, field, required, help, {'objectID': objectID});
@@ -403,9 +380,9 @@ function htmlEntities(str) {
 	// multi-line textarea
 	var appendTextarea = function (values, required, defaultValue, objectID) {
 		field += '<label>' + opts.messages.label + '</label>';
-		field += '<input class="fld-title" id="title-' + last_id + '" type="text" value="' + values + '" />';
+		field += '<input class="fld-title" id="title-' + last_id + '" type="text" value="' + htmlspecialchars(values) + '" />';
 		field += '<label>' + opts.messages.defaultVal + '</label>';
-		field += '<input class="fld-default" id="title-' + last_id + '_def" type="text" value="' + defaultValue + '" />';
+		field += '<input class="fld-default" id="title-' + last_id + '_def" type="text" value="' + htmlspecialchars(defaultValue) + '" />';
 		help = '';
 		appendFieldLi(opts.messages.paragraph_field, field, required, help, {'objectID': objectID});
 	};
@@ -417,7 +394,7 @@ function htmlEntities(str) {
 		}
 		field += '<div class="chk_group">';
 		field += '<div class="frm-fld"><label>' + opts.messages.title + '</label>';
-		field += '<input type="text" name="title" value="' + title + '" /></div>';
+		field += '<input type="text" name="title" value="' + htmlspecialchars(title) + '" /></div>';
 		field += '<div class="false-label">' + opts.messages.select_options + '</div>';
 		field += '<div class="fields">';
 		if (typeof (values) === 'object') {
@@ -445,7 +422,7 @@ function htmlEntities(str) {
 		field = '';
 		field += '<div>';
 		field += '<input type="checkbox"' + (checked ? ' checked="checked"' : '') + ' />';
-		field += '<input type="text" value="' + value + '" />';
+		field += '<input type="text" value="' + htmlspecialchars(value) + '" />';
 		field += '<a href="#" class="remove" title="' + opts.messages.remove_message + '">' + opts.messages.remove + '</a>';
 		field += '</div>';
 		return field;
@@ -458,7 +435,7 @@ function htmlEntities(str) {
 		}
 		field += '<div class="rd_group">';
 		field += '<div class="frm-fld"><label>' + opts.messages.title + '</label>';
-		field += '<input type="text" name="title" value="' + title + '" /></div>';
+		field += '<input type="text" name="title" value="' + htmlspecialchars(title) + '" /></div>';
 		field += '<div class="false-label">' + opts.messages.select_options + '</div>';
 		field += '<div class="fields">';
 		if (typeof (values) === 'object') {
@@ -486,7 +463,7 @@ function htmlEntities(str) {
 		field = '';
 		field += '<div>';
 		field += '<input type="radio"' + (checked ? ' checked="checked"' : '') + ' name="radio_' + name + '" />';
-		field += '<input type="text" value="' + value + '" />';
+		field += '<input type="text" value="' + htmlspecialchars(value) + '" />';
 		field += '<a href="#" class="remove" title="' + opts.messages.remove_message + '">' + opts.messages.remove + '</a>';
 		field += '</div>';
 		return field;
@@ -501,7 +478,7 @@ function htmlEntities(str) {
 		}
 		field += '<div class="opt_group">';
 		field += '<div class="frm-fld"><label>' + opts.messages.title + '</label>';
-		field += '<input type="text" name="title" value="' + title + '" /></div>';
+		field += '<input type="text" name="title" value="' + htmlspecialchars(title) + '" /></div>';
 		field += '';
 		field += '<div class="false-label">' + opts.messages.select_options + '</div>';
 		field += '<div class="fields">';
@@ -769,10 +746,13 @@ function htmlEntities(str) {
 
 			//});
 		};
+		
+		function htmlspecialchars( str )
+		{
+			return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g,'&gt;').replace(/"/g, '&quot;');
+		}
+	
 	})(jQuery);
-
-
-
 
 /*
 * Serializes the form list created by the formbuilder into JSON.

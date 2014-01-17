@@ -12,6 +12,7 @@ reason_include_once('classes/url_manager.php');
 reason_include_once('classes/page_types.php');
 reason_include_once('minisite_templates/page_types.php');
 reason_require_once( 'minisite_templates/page_types.php' );
+include_once( DISCO_INC . 'plugins/input_limiter/input_limiter.php' );
 
 $GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'MinisitePageManager';
 
@@ -179,7 +180,7 @@ class MinisitePageManager extends parent_childManager
 			// Note that the contents of the url_comment_replace block are replaced by javascript to indicate
 			// a slight sematic difference in the behavior of the field when javascript is enabled.
 			// You may need to change the javascript to see any wording change here.
-			$this->set_comments( 'url_fragment', form_comment('<span class="url_comment_replace">The final part of the page\'s Web address.</span> <span class="rules">Only use letters and numbers; separate words with underscores (_). Please avoid upper-case letters.</span>') );
+			$this->set_comments( 'url_fragment', form_comment('<span class="url_comment_replace">The final part of the page\'s Web address.</span> <span class="rules">Only use letters and numbers; separate words with hyphens (-). Please avoid upper-case letters.</span>') );
 			$this->add_required( 'url_fragment' );
 			$this->add_required( 'nav_display' );
 			$this->_add_page_url_elements($this->_available_parents);
@@ -234,7 +235,7 @@ class MinisitePageManager extends parent_childManager
 			
 			$this->set_comments( 'name', form_comment('What should this page be called?') );
 			$this->set_comments( 'author', form_comment('Source or original author of this page') );
-			$this->set_comments( 'description', form_comment('A brief one or two sentence summary of the page') );
+			$this->set_comments( 'description', form_comment('A brief summary of the page. For best results when the page is indexed by search engines, try to not exceed 156 characters.') );
 			$this->set_comments( 'keywords', form_comment('Comma-separated keywords (for search engines) ie "Dave, Hendler, College, Relations"') );
 			$this->set_comments( 'nav_display', form_comment('If YES, the page shows up in the navigation box. If NO, the page does not.') );	
 			$this->set_comments( 'parent_id', form_comment(''));
@@ -262,6 +263,13 @@ class MinisitePageManager extends parent_childManager
 			$this->set_comments( 'name', form_comment('The title of link displayed in your site\'s navigation.') );
 			$this->set_comments( 'parent_id', form_comment('Use this field to choose the link\'s parent page.') );
 		}
+		
+		// Suggest a limit of 156 characters so that google will display the complete description.
+		$this->change_element_type('description', 'textarea', array('rows' => 4));
+		$limiter = new DiscoInputLimiter($this);
+		$limiter->suggest_limit('description', 156);
+		$limiter->auto_show_hide('description', false);
+		
 		$this->set_order(array('name', 'link_name', 'unique_name', 'author', 'description', 'keywords', 'parent_id', 'parent_info', 'url_fragment', 'extra_head_content', 'nav_display', 'custom_page', 'page_type_note', 'content') );
 	}
 	
@@ -347,8 +355,8 @@ class MinisitePageManager extends parent_childManager
 		if( $this->has_url() && !in_array( $this->get_value( 'id' ) , $this->root_node() ) )
 		{
 			if( !$this->has_error( 'url_fragment' ) )
-				if( !preg_match( "|^[0-9a-z_]*$|i" , $this->get_value('url_fragment') ) )
-					$this->set_error( 'url_fragment', 'URLs may only contain letters, numbers, and underscores' );
+				if( !preg_match( "|^[0-9a-z_\-]*$|i" , $this->get_value('url_fragment') ) )
+					$this->set_error( 'url_fragment', 'URLs may only contain letters, numbers, hyphens, and underscores' );
 			if( !$this->has_error( 'url_fragment' ) && !$this->has_error('parent_id') )
 			{
 				// get siblings.  make sure name is unique among siblings
