@@ -188,7 +188,7 @@
 	 *
 	 * Determines how long a Reason session lasts, in minutes.
 	 */
-	define('REASON_SESSION_TIMEOUT', 180);
+	define('REASON_SESSION_TIMEOUT', 485);
 	
 	/**
 	 * REASON_SESSION_TIMEOUT_WARNING
