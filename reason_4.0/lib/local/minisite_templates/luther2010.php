@@ -709,11 +709,16 @@ class LutherTemplate2010 extends MinisiteTemplate
   		echo '<!--[if lt IE 8]><link href="/stylesheets/luther2010/ie7.css" media="all" rel="stylesheet" type="text/css" /><![endif]-->'."\n";
   		echo '<!--[if lt IE 7]><link href="/stylesheets/luther2010/ie6.css" media="all" rel="stylesheet" type="text/css" /><![endif]-->'."\n";  		
   		
-		echo '<meta property="og:title" content="' . $this->title . '" />'."\n";
-		echo '<meta property="og:type" content="university" />'."\n";
-		echo '<meta property="og:url" content="' . get_current_url() . '" />'."\n";
-		echo '<meta property="og:site_name" content="Luther College" />'."\n";
-		echo '<meta property="og:image" content="" />'."\n";
+  		if (!preg_match("/story_id\=\d+/", get_current_url()))
+  		// News posts insert their own og: for social sharing
+  		{
+  			echo '<meta property="og:title" content="' . $this->title . '" />'."\n";
+  			echo '<meta property="og:type" content="university" />'."\n";
+  			echo '<meta property="og:url" content="' . get_current_url() . '" />'."\n";
+  			echo '<meta property="og:site_name" content="Luther College" />'."\n";
+  			echo '<meta property="og:image" content="" />'."\n";
+  		}
+
 		echo '<meta property="og:street-address" content="700 College Drive"/>'."\n";
 		echo '<meta property="og:locality" content="Decorah" />'."\n";
 		echo '<meta property="og:region" content="Iowa" />'."\n";
