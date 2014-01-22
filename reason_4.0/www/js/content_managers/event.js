@@ -26,6 +26,7 @@ function populate_calendar_preview()
 		$("div#event_preview").load("/reason_package/reason_4.0/www/displayers/calendar_preview.php",
 			{
 			date: event_date,
+			site: $("div.sites > strong").first().text(),
 			path: path,
 			params: params,
 			});
