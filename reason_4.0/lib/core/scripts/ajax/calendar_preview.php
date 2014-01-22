@@ -44,7 +44,7 @@ if (empty($_REQUEST['date']) || !reason_check_authentication())
 		$admin = new AdminPage();
 		$params['admin_token'] = $admin->get_admin_token();
 		
-		echo '<p>Click an event to add it to the <em>'.$_REQUEST['site'].'</em> calendar. Please do not recreate existing events.</p>';
+		echo '<p>Click an event to add it to the <em>'.$_REQUEST['site'].'</em> calendar instead of duplicating an existing event:</p>';
 		echo '<ul class="preview_list">';
 		foreach ($events as $event)
 		{
