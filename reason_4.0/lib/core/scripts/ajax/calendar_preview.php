@@ -56,8 +56,15 @@ if (empty($_REQUEST['date']) || !reason_check_authentication())
 			else
 				$time = 'All day';
 			echo '<span class="preview_time">'.$time.' </span>';
-			echo '<a class="nav" href="#" onclick = \'borrow_confirm("'.carl_make_link($params, $_REQUEST['path']).'", "'.addslashes($event->get_value('name')).'"); return false;\' title="Add this event to your calendar">';
-			echo $event->get_value('name').'</a></li>'."\n";	
+			echo '<span class="preview_name">';
+			if ($editing_id != $event->get_value( 'id' ))
+			{
+				echo '<a class="nav" href="#" onclick = \'borrow_confirm("'.carl_make_link($params, $_REQUEST['path']).'", "'.addslashes($event->get_value('name')).'"); return false;\' title="Add this event to your calendar">';
+				echo $event->get_value('name').'</a>';
+			} else {
+				echo $event->get_value('name');
+			}
+			echo '</li>'."\n";	
 		}
 		echo '</ul>';
 	}
