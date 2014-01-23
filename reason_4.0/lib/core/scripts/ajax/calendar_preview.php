@@ -57,7 +57,8 @@ if (empty($_REQUEST['date']) || !reason_check_authentication())
 				$time = 'All day';
 			echo '<span class="preview_time">'.$time.' </span>';
 			echo '<span class="preview_name">';
-			if ($editing_id != $event->get_value( 'id' ))
+			$owner = $event->get_owner();
+			if ($params['site_id'] != $owner->id())
 			{
 				echo '<a class="nav" href="#" onclick = \'borrow_confirm("'.carl_make_link($params, $_REQUEST['path']).'", "'.addslashes($event->get_value('name')).'"); return false;\' title="Add this event to your calendar">';
 				echo $event->get_value('name').'</a>';
