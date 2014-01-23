@@ -33,6 +33,7 @@ if (empty($_REQUEST['date']) || !reason_check_authentication())
 	
 	// Figure out the URL for the borrow action
 	parse_str(trim($_REQUEST['params'],'?'),$params);
+	$editing_id = $params['id'];
 	$params['cur_module']='DoBorrow';
 	
 	echo '<h4>Other events for '. date( 'l, F jS', $stamp) . ':</h4>';
@@ -48,7 +49,7 @@ if (empty($_REQUEST['date']) || !reason_check_authentication())
 		echo '<ul class="preview_list">';
 		foreach ($events as $event)
 		{
-			echo '<li>';
+			echo ($editing_id == $event->get_value( 'id' )) ? '<li class="current">' : '<li>';
 			$params['id'] = $event->get_value( 'id' );
 			if(substr($event->get_value( 'datetime' ), 11) != '00:00:00')
 				$time = prettify_mysql_datetime( $event->get_value( 'datetime' ), 'g:ia' );
