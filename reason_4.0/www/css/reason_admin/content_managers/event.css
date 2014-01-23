@@ -25,11 +25,11 @@ div#event_preview li.current {
 	font-weight: bold;	
 }
 
-div#event_preview li span {
+div#event_preview li span.preview_time {
 	float: left;	
 }
 
-div#event_preview li a {
+div#event_preview li span.preview_name {
 	display: block;	
 	padding-left: 5.5em;
 }
