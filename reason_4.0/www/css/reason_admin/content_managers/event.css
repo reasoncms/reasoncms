@@ -21,6 +21,10 @@ div#event_preview li {
 	clear: both;
 }
 
+div#event_preview li.current {
+	font-weight: bold;	
+}
+
 div#event_preview li span {
 	float: left;	
 }
