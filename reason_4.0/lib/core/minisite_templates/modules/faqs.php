@@ -30,6 +30,8 @@
 		var $acceptable_params = array(
 			'audiences'=>array(),
 			'limit_to_current_site'=>true,
+			'order_field' => 'last_modified',
+			'order_direction' => 'DESC',
 		);
 		var $has_feed = true;
 		var $feed_link_title = 'Subscribe to this feed for updates to this FAQ';
@@ -45,12 +47,44 @@
 			if (!$this->params['limit_to_current_site'])
 			{
 				$alias = $this->es->add_right_relationship_field('owns', 'entity', 'name', 'site_name');
-				$site_order_string = $alias['site_name']['table'] . '.' . $alias['site_name']['field'] . ' ASC';
-				$this->es->set_order( $site_order_string . ', entity.last_modified DESC' );
+				$order_string = $alias['site_name']['table'] . '.' . $alias['site_name']['field'] . ' ASC';
+				if(!empty($this->params['order_field']) && !empty($this->params['order_direction']))
+				{
+					$table = get_table_from_field($this->params['order_field'], id_of('faq_type'));
+					if($table)
+					{
+						if(strtoupper($this->params['order_direction']) == 'DESC')
+							$order_direction = 'DESC';
+						else
+							$order_direction = 'ASC';
+						$order_string .= ', `'.$table.'`.`'.$this->params['order_field'].'` '.$order_direction;
+					}
+					else
+					{
+						trigger_error('Table not found for order field '.$this->params['order_field']);
+					}
+				}
+				$this->es->set_order( $order_string );
 			}
 			else
 			{
-				$this->es->set_order( 'entity.last_modified DESC' );
+				if(!empty($this->params['order_field']) && !empty($this->params['order_direction']))
+				{
+					$table = get_table_from_field($this->params['order_field'], id_of('faq_type'));
+					if($table)
+					{
+						if(strtoupper($this->params['order_direction']) == 'DESC')
+							$order_direction = 'DESC';
+						else
+							$order_direction = 'ASC';
+						$order_string = '`'.$table.'`.`'.$this->params['order_field'].'` '.$order_direction;
+						$this->es->set_order( $order_string );
+					}
+					else
+					{
+						trigger_error('Table not found for order field '.$this->params['order_field']);
+					}
+				}
 			}
 			if(!empty($this->params['audiences']))
 			{
