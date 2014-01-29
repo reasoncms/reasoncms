@@ -340,9 +340,9 @@ class LutherTemplate2010 extends MinisiteTemplate
 			$this->run_section( 'pre_sidebar_4' );
 			echo '<hr>'."\n";
 		}
-		if ($this->has_content( 'pre_sidebar_4' ))
+		if ($this->has_content( 'pre_sidebar_5' ))
 		{
-			$this->run_section( 'pre_sidebar_4' );
+			$this->run_section( 'pre_sidebar_5' );
 			echo '<hr>'."\n";
 		}		
 		
