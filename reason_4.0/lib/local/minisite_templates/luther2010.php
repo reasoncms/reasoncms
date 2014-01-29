@@ -318,21 +318,31 @@ class LutherTemplate2010 extends MinisiteTemplate
 		}
 		if ($this->has_content( 'pre_sidebar_2' ))
 		{
+			$this->run_section( 'pre_sidebar_2' );
+			echo '<hr>'."\n";
+		}
+		if ($this->has_content( 'pre_sidebar_3' ))
+		{
 			if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_news_portal')
 			{
 				echo '<aside class="news group">'."\n";
 				echo '<header class="blue-stripe"><h1><span>Luther News</span></h1></header>'."\n";
 			}
-			$this->run_section( 'pre_sidebar_2' );
+			$this->run_section( 'pre_sidebar_3' );
 			if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_news_portal')
 			{
 				echo '</aside> <!-- class="news group" -->'."\n";
 			}
 			echo '<hr>'."\n";
 		}
-		if ($this->has_content( 'pre_sidebar_3' ))
+		if ($this->has_content( 'pre_sidebar_4' ))
 		{
-			$this->run_section( 'pre_sidebar_3' );
+			$this->run_section( 'pre_sidebar_4' );
+			echo '<hr>'."\n";
+		}
+		if ($this->has_content( 'pre_sidebar_4' ))
+		{
+			$this->run_section( 'pre_sidebar_4' );
 			echo '<hr>'."\n";
 		}		
 		
