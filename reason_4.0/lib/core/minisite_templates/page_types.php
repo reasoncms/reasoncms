@@ -961,6 +961,13 @@
 		'faqs' => array(
 			'main_post' => 'faqs',
 		),
+		'faqs_ordered_by_keywords' => array(
+			'main_post' => array(
+				'module' => 'faqs',
+				'order_field' => 'keywords',
+				'order_direction' => 'ASC',
+			),
+		),
 		'feature' => array(
 			'main_post' => 'feature/feature',
 		),
