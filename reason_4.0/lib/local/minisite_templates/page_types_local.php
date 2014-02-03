@@ -2,7 +2,7 @@
 
 $GLOBALS['_reason_page_types_local'] = array(
 	'default' => array(
-		'pre_bluebar' => 'textonly_toggle_top',
+		'pre_bluebar' => '',
 		'pre_banner' => 'announcements',
 		'banner_xtra' => 'nav_search_logo',
 		'lis_site_announcements' => 'lis_site_announcements',
