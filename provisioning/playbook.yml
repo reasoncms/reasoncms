@@ -90,7 +90,7 @@
     - name: import reason databases
       mysql_db: db={{ item.db }} target={{ item.target }} state=import
       with_items:
-        - { db: reason, target: /vagrant/reason_4.0/data/dbs/reason4.4.sql }
+        - { db: reason, target: /vagrant/reason_4.0/data/dbs/reason4.5.sql }
 
     - name: open setup in browser
       sudo: no
