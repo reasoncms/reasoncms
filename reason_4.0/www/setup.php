@@ -315,9 +315,53 @@ if (admin_user_exists() == false)
 		$user_id = create_admin_user($password);
 		if ($user_id > 0)
 		{
+			// create the page types demo site if running the first time (i.e. there is no admin user)
+			reason_include_once ('function_libraries/admin_actions.php');
+			reason_include_once ('classes/entity_selector.php');
+			$ptds_id = id_of('page_types_demo_site');
+			$ptds_entity = new entity($ptds_id);
+			$path = WEB_PATH.trim_slashes($ptds_entity->get_value('base_url'));
+			echo '<h3>Checking for Page Types Demo site</h3>';
+			if(!is_dir($path))
+			{
+				echo '<p>Creating demo site</p>';
+				reason_include_once ('classes/url_manager.php');
+				include_once(CARL_UTIL_INC.'basic/filesystem.php');
+				mkdir_recursive($path, 0775);
+				if (!is_dir($path)) die_with_message('<p>The demo site folder at ' . $path.' could not be written. Check paths and permissions.</p>');
+				else echo '<p>The demo site folder at ' . $path.' has been created.</p>';
+			}		
+			$htaccess = $path . '/.htaccess';
+			if (!file_exists($htaccess))
+			{
+				reason_include_once ('classes/url_manager.php');
+				echo '<p>Creating .htaccess rewrite rules</p>';
+				$um = new url_manager( $ptds_id, true );
+				$um->update_rewrites();
+				if (!file_exists($htaccess)) die_with_message('<p>The demo site .htaccess rules were not written to ' . $htaccess.'. Checks paths and permissions.</p>');
+				else echo '<p>The .htaccess access rules were written to ' . $htaccess .'.</p>'; 
+			}
+			else // lets verify that the .htaccess file is correct and update it if not.
+			{
+				reason_include_once ('classes/url_manager.php');
+				ob_start();
+				$um = new url_manager( $ptds_id, true );
+				$um->update_rewrites();
+				$result = ob_get_contents();
+				ob_end_clean();
+				if (strpos($result, "Updates complete.") !== FALSE)
+				{
+					echo '<p><strong>Updated demo site rewrite rules.</strong></p>';
+				}
+				else
+				{
+					echo '<p>The demo site appears to be setup.</p>';
+				}
+			}
+
 			$es = new entity_selector();
 			$es->add_type(id_of('site'));
-			$es->add_relation ('((entity.unique_name = "master_admin") OR (entity.unique_name = "site_login"))');
+			$es->add_relation ('((entity.unique_name = "master_admin") OR (entity.unique_name = "site_login") OR (entity.unique_name = "page_types_demo_site"))');
 			$result = $es->run_one();
 			foreach ($result as $result)
 			{
@@ -328,6 +372,10 @@ if (admin_user_exists() == false)
 				if (empty($current_userid))
 				{ 
 					reason_update_entity( $result->id(), $user_id, array('primary_maintainer' => 'admin'), $archive = false);
+					if ($result->get_value('unique_name') == 'page_types_demo_site')
+					{
+						create_relationship( $result->id(), $user_id, relationship_id_of('site_to_user'));
+					}
 				}
 			}
 			created_admin_HTML($password);
