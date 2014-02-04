@@ -134,7 +134,7 @@ if ( USE_GOOGLE_ANALYTICS )
      * If you are not getting any results from google analytics, try setting this to an empty string.
      */
     domain_define('GA_HOST_NAME', HTTP_HOST_NAME);
-
+}
     /**
      * Google Maps Default Settings
      */
@@ -161,4 +161,3 @@ if ( USE_GOOGLE_ANALYTICS )
      * For example: 'GOOGLE_MAPS_DEFAULT_LATITUDE', 1.5
      */
     define('GOOGLE_MAPS_ASPECT_RATIO', 1.333333);
-}
