@@ -84,8 +84,9 @@ class reasonVersionCheck
 			'4.1'=>'old',
 			'4.2'=>'old',
 			'4.3'=>'old',
-			'4.4'=>'current',
-			'4.5'=>'bleeding',
+			'4.4'=>'old',
+			'4.5'=>'current',
+			'4.6'=>'bleeding',
 		);
 	}
 	
