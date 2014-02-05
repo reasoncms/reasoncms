@@ -508,7 +508,7 @@ class ClassifiedView extends Disco
 		echo '<ul id="classifiedView">';
 		$this->show_item_values($item);
 		echo '</ul>';
-		if ($this->model->get_user_can_delete($item->id()))
+		if (is_object($item) && $this->model->get_user_can_delete($item->id()))
 		{
 			$this->show_delete_classified_text();
 		}
