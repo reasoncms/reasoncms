@@ -394,7 +394,7 @@ class S3 {
 			$rest->error = array('code' => $rest->code, 'message' => 'Unexpected HTTP status');
 		if ($rest->error !== false) {
 			trigger_error(sprintf("S3::getObjectInfo({$bucket}, {$uri}): [%s] %s",
-			$rest->error['code'], $rest->error['message']), E_USER_WARNING);
+			$rest->error['code'], $rest->error['message']), E_USER_NOTICE);
 			return false;
 		}
 		return $rest->code == 200 ? $returnInfo ? $rest->headers : true : false;
@@ -605,7 +605,31 @@ class S3 {
 		return true;
 	}
 
-
+	/**
+	*
+	* @param string $bucket Source bucket name
+	* @param string $uri Source object URI
+	* @param string $bucket Destination bucket name
+	* @param string $uri Destination object URI
+	* @return mixed | false
+	*/
+	public static function copyObject($srcBucket, $srcUri, $bucket, $uri) {
+		$rest = new S3Request('PUT', $bucket, $uri);
+		$rest->setAmzHeader('x-amz-copy-source', sprintf('/%s/%s', $srcBucket, $srcUri));
+		$rest = $rest->getResponse();
+		if ($rest->error === false && $rest->code !== 200)
+		{
+			$rest->error = array('code' => $rest->code, 'message' => 'Unexpected HTTP status');
+		}
+		if ($rest->error !== false) {
+			trigger_error(sprintf("S3::copyObject({$srcBucket}, {$srcUri}, {$bucket}, {$uri}): [%s] %s", $rest->error['code'], $rest->error['message']), E_USER_WARNING);
+			return false;
+		}
+		return isset($rest->body->LastModified, $rest->body->ETag) ? array(
+			'time' => strtotime((string)$rest->body->LastModified),
+			'hash' => substr((string)$rest->body->ETag, 1, -1)
+		) : false;
+	}
 	/**
 	* Get MIME type for file
 	*
