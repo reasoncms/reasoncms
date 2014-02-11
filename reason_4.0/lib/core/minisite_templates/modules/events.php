@@ -4255,6 +4255,10 @@ class EventsModule extends DefaultMinisiteModule
 	 */
 	function user_is_slot_admin($event)
 	{
+		if($event->get_value('contact_username') && $event->get_value('contact_username') == reason_check_authentication())
+		{
+			return true;
+		}
 		return $this->user_can_inline_edit_event($event->id());
 	}
  	/**
