@@ -150,6 +150,7 @@ class KalturaAVDisplayerChrome implements DisplayerChromeInterface
 						$av_files = $this->displayer->get_media_files();
 						foreach ($av_files as $file) 
 						{
+							$url = $file->get_value('download_url') ? $file->get_value('download_url') : $file->get_value('url');
 							$extension = $file->get_value('mime_type');
 							// people know what mp3 is, not mpeg, so we display mpegs as mp3s
 							if ($extension == 'audio/mpeg')
@@ -157,7 +158,8 @@ class KalturaAVDisplayerChrome implements DisplayerChromeInterface
 								$extension = 'audio/mp3';
 							}
 							$parts = explode('/', $extension);
-							$markup .= '<li class="'.reason_htmlspecialchars(str_replace(' ','-',end($parts))).'_li"><a href="'.$file->get_value('download_url').'">.'.end($parts).'</a></li>'."\n";
+							$extension = end($parts);
+							$markup .= '<li class="'.reason_htmlspecialchars(str_replace(' ','-',$extension)).'_li"><a href="'.reason_htmlspecialchars($url).'">.'.reason_htmlspecialchars($extension).'</a></li>'."\n";
 						}
 					}
 					$markup .= '</ul>'."\n";
