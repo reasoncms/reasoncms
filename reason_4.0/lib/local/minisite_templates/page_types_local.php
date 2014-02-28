@@ -1,7 +1,6 @@
 <?php
 
 $GLOBALS['_reason_page_types_local'] = array(
-
 	/* Core overrides */
 	
 	'default' => array(

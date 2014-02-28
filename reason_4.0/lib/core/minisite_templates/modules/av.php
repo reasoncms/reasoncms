@@ -50,7 +50,6 @@
 		var $size_selector;
 		
 		var $displayer_chrome; // used for displaying the av items
-			
 		var $noncanonical_request_keys = array(
 										'show_transcript',
 										'displayer_height');
