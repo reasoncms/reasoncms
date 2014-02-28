@@ -35,7 +35,7 @@ class TranscriptPageOneForm extends FormStep {
             'size' => 20,
             'comments' => '<br>include area code'
         ),
-        'e-mail' => array(
+        'email' => array(
             'type' => 'text',
             'size' => 35,
         ),
@@ -43,22 +43,21 @@ class TranscriptPageOneForm extends FormStep {
             'type' => 'radio_no_sort',
             'display_name' => 'What is your status?',
             'options' => array(
-                'Paid' => 'Enrolled after August 1, 2013 or paid the Lifetime Academic Transcript Fee.', 
+                'Paid' => 'Enrolled after August 1, 2013 or paid the <a href="/financial-services/student/cost-pymt/1314general/" target="_blank">Lifetime Academic Transcript Fee.</a>', 
                 'Not paid' => 'I have not paid the Lifetime Academic Transcript Fee.'),
         ),
         'unofficial_header' => array(
             'type' => 'comment',
             'text' => '<h3>Unofficial transcripts</h3>',
         ),
-        'unofficial_comment' => array(
-            'type' => 'comment',
-            'text' => 'There is no charge for an unofficial transcript'
-        ),
         'unofficial' => array(
-            'type' => 'checkboxfirst',
-            'display_name' => 'Check here if you would like an unofficial transcript sent to your home address via postal mail',
-        //'options' => array('yes' => 'Yes', 'no' => 'No'),
-        //'comments' => '<em>Unofficial</em> transcript are sent to your address via postal mail',
+            'type' => 'radio_no_sort',
+            'display_name' => 'Would you like an unofficial transcript?',
+            'options' => array(
+                'email' => 'Electronic (Email - to the address above)',
+                'postal' => 'Physical copy (Postal mail)',
+                'no' => 'No, thanks'
+                )
         ),
         'unofficial_address' => array(
             'type' => 'textarea',
@@ -70,43 +69,41 @@ class TranscriptPageOneForm extends FormStep {
         ),
         'official_comment' => array(
             'type' => 'comment',
-            'text' => 'Official transcripts cost $5 per transcript for Alumni'
+            'text' => 'One address per request'
         ),
-//        'official_type' => array(
-//            'type' => 'radio_inline_no_sort',
-//            'display_name' => 'What kind of official transcript would you like sent?',
-//            'options' => array('paper' => 'Paper', 'eScrip' => 'eScrip-Safe'),
-//            'comments' => '<br><a href="http://www.scrip-safe.com/" target=__blank>What is an eScrip-Safe transcript?</a>',
-//        ),
         'number_of_official' => array(
             'type' => 'text',
-            'display_name' => 'Number of <em>official</em> paper transcripts',
+            'display_name' => 'Number of <em>official</em> transcripts',
             'size' => 3,
         ),
-        'delivery_header' => array(
-            'type' => 'comment',
-            'text' => '<h3>Delivery Information</h3>',
-        ),
-        'delivery_location_header' => array(
-            'type' => 'comment',
-            'text' => '<h4>Delivery Location</h4>',
+        'delivery_type' => array(
+            'type' => 'radio_no_sort',
+            'display_name' => 'How should your official transcripts be delivered?',
+            'options' => array(
+                'email' => 'Electronic (Email)',
+                'postal' => 'Physical copy (Postal mail)'
+                )
         ),
         'deliver_to' => array(
             'type' => 'radio_no_sort',
             'display_name' => 'Where should these transcripts be delivered?',
             'options' => array('Your address' => 'Your address', 'institution' => 'An Institution/Company')
         ),
+        // 'delivery_email' => array(
+        //     'type' => 'text',
+        //     'display_name' => 'Email address',
+        // ),
         'institution_name' => array(
             'type' => 'text',
-            'display_name' => 'Institution/&nbsp;Company&nbsp;Name',
+            'display_name' => 'Institution/Company&nbsp;Name',
         ),
         'institution_attn' => array(
             'type' => 'text',
             'display_name' => 'Attention'
         ),
-        'institution_email' => array(
+        'official_email' => array(
             'type' => 'text',
-            'display_name' => 'Institution/Company E-mail'
+            'display_name' => 'Email address',
         ),
         'address' => array(
             'type' => 'textarea',
@@ -146,7 +143,7 @@ class TranscriptPageOneForm extends FormStep {
         ),
         'submitter_ip' => 'hidden',
     );
-    var $required = array('date_of_birth', 'daytime_phone', 'e-mail', 'deliver_to', 'delivery_time', 'LATF');
+    var $required = array('date_of_birth', 'daytime_phone', 'email', 'deliver_to', 'delivery_time', 'LATF', 'delivery_type');
     var $display_name = 'Transcript Request Info';
     var $error_header_text = 'Please check your form.';
 
@@ -163,7 +160,7 @@ class TranscriptPageOneForm extends FormStep {
             $qlist = array('cn', 'alumcn', 'displayname', 'edupersonaffiliation', 'alumaffiliation');
             $dir = new directory_service();
 
-            $lookup_login = 'uid=' . $username . ',dc=luther,dc=edu'; /// username is get login norsekey
+            $lookup_login = 'uid=' . $username . ',dc=luther,dc=edu'; /// username is get login norse key
             $dir->serv_inst['ldap_luther']->set_conn_param('cn=webauth,dc=luther,dc=edu', $lookup_login);
 
             $dir->search_by_attribute('uid', $username, $qlist);
@@ -194,8 +191,8 @@ class TranscriptPageOneForm extends FormStep {
 //            } else {
 //                $this->set_value('name', $display_name);
 //            }
-            $this->change_element_type('e-mail', 'text');
-            $this->set_value('e-mail', $email);
+            $this->change_element_type('email', 'text');
+            $this->set_value('email', $email);
         } else {
             if (reason_check_authentication ()) {
                 echo '<div class = "loginlogout">';
@@ -216,12 +213,12 @@ class TranscriptPageOneForm extends FormStep {
         $txt .= '<h3>Electronic Request</h3>';
         //$txt .= '<p>You are not currently logged in. Luther College students and alumni have access to this form. The contents will be displayed after you login.' . "\n";
         $txt .= '<p>To request a transcript, official or unofficial, electronically (requires user name and
-                password, ie: norsekey), please <a href="' . $url . '">log in</a>.</p>';
-        $txt .= '<p>The request form will be displayed after you login. This method <u>requires graduates/
-former students to pay</u> for the transcript via credit card.</p>';
-        $txt .= '<p>If you have forgotten your norsekey (user name or password), please try our automated
-                <a href="https://norsekey.luther.edu/prod1/forgot.php">
-                Forgot My Norsekey</a> system to reset your password.</p>';
+                password, ie: norse key), please <a href="' . $url . '">log in</a>.</p>';
+//         $txt .= '<p>The request form will be displayed after you login. This method requires graduates/
+// former students to pay for the transcript via credit card.</p>';
+        $txt .= '<p>If you have forgotten your norse key (user name or password), please try our automated
+                <a href="https://norsekey.luther.edu/prod1/forgot.php" target="_blank">
+                Forgot My Norse Key</a> system to reset your password.</p>';
         if (reason_unique_name_exists('transcript_request_form')) {
             $asset_url = '/registrar/assets/Transcript_Request_Form.pdf';
         }
@@ -296,6 +293,7 @@ former students to pay</u> for the transcript via credit card.</p>';
         if ($this->get_value('unofficial') /*&& !$this->get_value('unofficial_address)')*/ && !$this->get_value('number_of_official')) {
             $this->remove_required('deliver_to');
             $this->remove_required('delivery_time');
+            $this->remove_required('delivery_type');
         }
     }
     function run_error_checks() {
@@ -305,47 +303,41 @@ former students to pay</u> for the transcript via credit card.</p>';
 			$this->set_error('unofficial', 'Please indicate whether you\'d like to recieve an official or unofficial transcript.');
 		}
 
-        if ($this->get_value('unofficial') && !$this->get_value('unofficial_address') ) {
+        if (($this->get_value('unofficial') == 'postal') && !$this->get_value('unofficial_address')) {
             $this->set_error('unofficial_address', 'Since you\'d like an unofficial transcript, please include an address.');
         }
         if ($this->get_value('number_of_official') && (!preg_match('/^\d+$/', $this->get_value('number_of_official')))) {
             $this->set_error('number_of_official', "Please enter a whole number.");
         }
-//        if ($this->get_value('official_type') == 'paper' && (!$this->get_value('number_of_official') ) ) {
-//        if (!$this->get_value('number_of_official'))  {
-//            $this->set_error('number_of_official', 'Since you chose to send paper transcripts, please tell us how many to send.');
-//        }
+        if ($this->get_value('delivery_type') == 'paper' && (!$this->get_value('number_of_official') ) ) {
+       // if (!$this->get_value('number_of_official'))  {
+           $this->set_error('number_of_official', 'Since you chose to send paper transcripts, please tell us how many to send.');
+        }
 		if ($this->get_value('deliver_to') && !$this->get_value('number_of_official')){
 			$this->set_error('number_of_official', 'Please indicate the number of official transcripts we should send?');
 		}
-        if ($this->get_value('number_of_official') && $this->get_value('deliver_to') == 'Your address'
+        if ($this->get_value('number_of_official') && $this->get_value('delivery_type') == 'postal' && $this->get_value('deliver_to') == 'Your address'
             && (!$this->get_value('address') || !$this->get_value('city') || !$this->get_value('state_province')
                 || !$this->get_value('zip') || !$this->get_value('country') ) ) {
                     $this->set_error('address', 'Please enter the full delivery address.');
         }
-        if ($this->get_value('number_of_official') && $this->get_value('deliver_to') == 'institution'
-            && !$this->get_value('institution_name') && (!$this->get_value('address')
-                || !$this->get_value('city')
-                || !$this->get_value('state_province')
-                || !$this->get_value('zip_postal')
-                || !$this->get_value('country') ) ) {
-                    $this->set_error('institution_name', 'Please enter the institution\'s/company\'s full delivery address.');
-                    echo 'there';
+        if ($this->get_value('number_of_official') && $this->get_value('delivery_type') == 'email' && $this->get_value('deliver_to') == 'Your address'
+           && !$this->get_value('official_email') ) {
+                   $this->set_error('official_email', 'Please enter an email address.');
+        } 
+        if ($this->get_value('number_of_official') && $this->get_value('delivery_type') == 'postal' && $this->get_value('deliver_to') == 'institution'
+           && (!$this->get_value('institution_name')
+               || !$this->get_value('address')
+               || !$this->get_value('city')
+               || !$this->get_value('state_province')
+               || !$this->get_value('zip')
+               || !$this->get_value('country') ) ) {
+                   $this->set_error('institution_name', 'Please enter the full delivery address.');
+               echo $this->get_value('zip');
         }
-//        if ($this->get_value('official_type') == 'paper' && $this->get_value('deliver_to') == 'institution'
-//            && (!$this->get_value('institution_name')
-//                || !$this->get_value('address')
-//                || !$this->get_value('city')
-//                || !$this->get_value('state_province')
-//                || !$this->get_value('zip_postal')
-//                || !$this->get_value('country') ) ) {
-//                    $this->set_error('institution_name', 'Please enter the full delivery address.');
-//                    echo 'there';
-//        }
-//        if ($this->get_value('official_type') == 'eScrip' && $this->get_value('deliver_to') == 'institution'
-//            && (!$this->get_value('institution_name')|| !$this->get_value('institution_email') ) ) {
-//                $this->set_error('institution_name', 'Please enter institution details.');
-//                echo 'everywhere';
-//        }
+        if ($this->get_value('number_of_official') && $this->get_value('delivery_type') == 'email' && $this->get_value('deliver_to') == 'institution'
+           && (!$this->get_value('institution_name')|| !$this->get_value('official_email') ) ) {
+               $this->set_error('institution_name', 'Please enter institution details.');
+       }
     }
 }

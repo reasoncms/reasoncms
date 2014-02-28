@@ -155,7 +155,7 @@ class BlurbModule extends DefaultMinisiteModule
 		$inline_editing =& get_reason_inline_editing($this->page_id);
 		$editing_available = $inline_editing->available_for_module($this);
 		$editing_active = $inline_editing->active_for_module($this);
-		echo '<div class="blurbs">'."\n";
+		echo '<div class="blurbs ' . $this->get_api_class_string() . '">'."\n";
 		$i = 0;
 		$class = 'odd';
 		foreach( $this->blurbs as $blurb )

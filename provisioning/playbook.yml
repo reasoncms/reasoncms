@@ -18,6 +18,7 @@
       - libapache2-mod-php5
       - php5-mysql
       - php5-tidy
+      - php5-ldap
       - php5-curl
       - imagemagick
       - curl

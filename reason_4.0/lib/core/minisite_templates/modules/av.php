@@ -50,7 +50,11 @@
 		var $size_selector;
 		
 		var $displayer_chrome; // used for displaying the av items
-		
+			
+		var $noncanonical_request_keys = array(
+										'show_transcript',
+										'displayer_height');
+
 		function init($args = array())
 		{	
 			if(isset($this->params['num_per_page']))

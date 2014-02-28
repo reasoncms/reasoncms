@@ -7,6 +7,8 @@
  /**
   * Include dependencies & register the class
   */
+reason_include_once('classes/media/factory.php');
+
 reason_include_once('minisite_templates/modules/events_markup/interfaces/events_item_interface.php');
 $GLOBALS['events_markup']['minisite_templates/modules/events_markup/default/events_item.php'] = 'defaultEventsItemMarkup';
 /**
@@ -24,9 +26,19 @@ class defaultEventsItemMarkup implements eventsItemMarkup
 	 * @param object $head_items
 	 * @return void
 	 */
-	public function modify_head_items($head_items)
+	public function modify_head_items($head_items, $event = null)
 	{
-	}
+		$media = $this->bundle->media_works($event);
+		if(!empty($media))
+		{
+			if(count($media) > 1)
+			{
+				$head_items->add_javascript(JQUERY_URL, true);
+				$head_items->add_javascript(REASON_HTTP_BASE_PATH.'modules/events/media_gallery.js');
+			}
+			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'modules/events/media_gallery.css');	
+		}
+	}	
 	/**
 	 * Set the function bundle for the markup to use
 	 * @param object $bundle
@@ -70,6 +82,7 @@ class defaultEventsItemMarkup implements eventsItemMarkup
 			$ret .= '<p class="sponsor"><strong>Sponsored by:</strong> '.$event->get_value('sponsor').'</p>'."\n";
 		$ret .= $this->get_contact_info_markup($event);
 		$ret .= $this->get_item_export_link_markup($event);
+		$ret .= $this->get_media_work_markup($event);
 		if ($event->get_value('content'))
 			$ret .= '<div class="eventContent">'.$event->get_value( 'content' ).'</div>'."\n";
 		$ret .= $this->get_dates_markup($event);
@@ -99,6 +112,85 @@ class defaultEventsItemMarkup implements eventsItemMarkup
 		    $ret .=  "</div>";
 		}
 		return $ret;
+	}
+	protected function get_media_work_markup($event)
+	{
+		$ret = '';
+		$media_works = $this->bundle->media_works($event);
+		if(!empty($media_works))
+		{
+			$ret .= '<div class="mediaWorks">';
+			$ret .= $this->get_media_section($media_works);
+			$ret .= "</div>";
+		}
+		return $ret;
+	}
+	/**
+	 * Get the markup for the media section
+	 * @todo support classic media somehow
+	 */
+	function get_media_section($media_works)
+	{
+		$class = count($media_works) > 1 ? 'mediaGallery' : 'basicMedia';
+		$str = '<ul class="'.$class.'">';
+		foreach($media_works as $media)
+		{
+			$str .= '<li>';
+			$str .= '<div class="titleBlock">';
+			if($placard_info = $this->get_media_placard_info($media))
+				$str .= '<img src="'.$placard_info['url'].'" alt="Placeholder image for '.reason_htmlspecialchars($media->get_value('name')).'" class="placard" width="'.$placard_info['width'].'" height="'.$placard_info['height'].'" style="display:none;" />';
+			$str .= '<div class="mediaName">'.$media->get_value('name').'</div>';
+			$str .= '</div>';
+			//$str .= $media->get_value('integration_library').'<br />';
+			$displayer_chrome = MediaWorkFactory::displayer_chrome($media, 'default');
+			if ($displayer_chrome)
+			{
+				$str .= '<div class="mediaDisplay">';
+				$displayer_chrome->set_media_work($media);
+				
+				if($height = $this->get_media_display_height());
+					$displayer_chrome->set_media_height($height);
+				
+				if($width = $this->get_media_display_width());
+					$displayer_chrome->set_media_width($width);
+				
+				//$str .= get_class($displayer_chrome);
+	
+				$str .= $displayer_chrome->get_html_markup();
+				$str .= '</div>';
+			}
+			$str .= '</li>';
+		}
+		$str .= '</ul>';
+		return $str;
+	}
+	protected function get_media_display_height()
+	{
+		return NULL;
+	}
+	protected function get_media_display_width()
+	{
+		return 480;
+	}
+	protected function get_media_placard_info($media)
+	{
+		if($placards = $media->get_left_relationship('av_to_primary_image'))
+		{
+			$placard = current($placards);
+			$placard_url = reason_get_image_url($placard, 'tn');
+			list($width, $height) = getimagesize(reason_get_image_path($placard, 'tn'));
+		}	
+		else
+		{
+			$placard_url =  REASON_HTTP_BASE_PATH.'modules/publications/media_placeholder_thumbnail.png';
+			$width = 125;
+			$height = 70;
+		}
+		return array(
+			'url' => $placard_url,
+			'width' => $width,
+			'height' => $height,
+		);
 	}
 	/**
 	 * Get the ownership information markup for a given event

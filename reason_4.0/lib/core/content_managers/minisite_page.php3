@@ -165,7 +165,7 @@ class MinisitePageManager extends parent_childManager
 			}
 			else
 			{
-				$this->change_element_type( 'link_name', 'hidden' );
+				$this->change_element_type( 'link_name', 'hidden', array('userland_changeable' => true) );
 			}
 		}
 		// if we have a subpage, show the url fragment field
@@ -312,12 +312,12 @@ class MinisitePageManager extends parent_childManager
 		}
 		else
 		{
-			// loop thorugh all elements making them hidden, except for the important link fields
+			// loop through all elements making them hidden, except for the important link fields
 			$fields = array( 'name', 'url', 'parent_id', 'nav_display', 'description' );
 			foreach($this->get_element_names() as $element_name)
 			{
 				if( !in_array( $element_name, $fields ) )
-					$this->change_element_type( $element_name, 'hidden' );
+					$this->change_element_type( $element_name, 'hidden', array('userland_changeable' => true) );
 			}
 			
 			$this->set_element_properties( 'nav_display', array(

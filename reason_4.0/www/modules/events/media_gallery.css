@@ -1,0 +1,45 @@
+div.eventDetails .mediaWorks {
+	margin:1em 0;
+}
+div.eventDetails .mediaWorks>ul, div.eventDetails .mediaWorks>ul>li {
+	margin:0;
+	padding:0;
+	list-style:none;
+	display:block;
+}
+div.eventDetails div.mediaWorks .playingMedia {
+	margin:0.5em 0;
+}
+div.eventDetails div.mediaWorks .playingMedia {
+	outline-style:none;
+	box-shadow:none;
+	border-color:transparent;
+}
+div.eventDetails div.mediaWorks img.placard {
+	display:none;
+}
+div.eventDetails div.mediaWorks .galleryActive>li {
+	display:inline-block;
+	list-style:none;
+	padding:0;
+	margin:0 1px 1px 0;
+	vertical-align:top;
+	font-size:0.846em;
+}
+div.eventDetails div.mediaWorks .galleryActive>li a {
+	display:block;
+	padding:1em;
+	background-color:#eee;
+	background-color:rgba(0,0,0,0.08);
+}
+div.eventDetails div.mediaWorks .galleryActive>li a:hover, div.eventDetails div.mediaWorks .galleryActive>li a:active, div.eventDetails div.mediaWorks .galleryActive>li a:focus {
+	background-color:#ccc;
+	background-color:rgba(0,0,0,0.24);
+}
+div.eventDetails div.mediaWorks .galleryActive>li.showing a {
+	background-color:#ddd;
+	background-color:rgba(0,0,0,0.16);
+	text-decoration:none;
+	color:#333;
+	cursor:default;
+}

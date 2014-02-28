@@ -101,7 +101,18 @@
 		 * @var array
 		 */
 		var $params;
-		
+
+
+		/**
+		 * noncanonical_request_keys with values as values
+		 * 
+		 * Use get_cleanup_rules to see possible url parameters for
+		 * a given module
+		 * 
+		 * @var array
+		 */
+		var $noncanonical_request_keys = array(); 
+
 		/**
 		 * see if arguments have been parsed
 		 * @var boolean
@@ -540,8 +551,14 @@
 			return $this->cleanup_rules;
 		} // }}}
 		/**
-		 * the basic run function to display this module.
-		 *
+		 * @return array
+		 */
+		function get_noncanonical_request_keys()
+		{
+			return $this->noncanonical_request_keys;
+		}
+		/**
+ 		 *
 		 * this is called when the template is in non-editing mode
 		 */
 		function run() // {{{
