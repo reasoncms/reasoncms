@@ -47,33 +47,33 @@ $GLOBALS[ '_DEVELOPER_INFO' ] = array(
 define( 'OHSHI_SCRIPT', REASON_PACKAGE_HTTP_BASE_PATH . 'oops.php');
 
 /*
-	
-	MAINTENANCE MODE
-	
-	This variable triggers maintenance mode.  Do not change this lightly.  When set to false, all sites behave
-	normally.  However, when this is set to true, all non-developer users will see the maintenance page which is
-	stored in MAINTENTANCE_MODE_URL.  The developers are listed above.  IP address checks are used to determine
-	who you are.
-	
-	$GLOBALS['_maintenance_estimate'] allows you to provide a time that the maintenance should be completed.  A nice message
-	with the estimated time will be shown on the maintenance page.  Additionally, it's intelligent enough not to
-	show negative times.  Make sure you know the form of mktime() before using it.  An absolute time is needed since
-	a relative one would keep changing with each request.  Make sure you pay attention to the timezone as well.
-	mktime uses the machine's local time zone.
-	
-	BIG NOTE: Maintenance mode should only be used when new code is being deployed to a production environment.
-	Most changes should be thoroughly tested in a development environment.  There are times when major components
-	need to be moved and there will certainly be downtime as files are being moved and/or databases are being
-	changed or synchronized.  To further drive the point home:
-	
-	********* THIS TAKES DOWN ALL SERVICES THAT USE THE ERROR HANDLER -- INCLUDING REASON SITES -- UNTIL IT IS SWITCHED OFF. ************
-	
+        
+        MAINTENANCE MODE
+        
+        This variable triggers maintenance mode.  Do not change this lightly.  When set to false, all sites behave
+        normally.  However, when this is set to true, all non-developer users will see the maintenance page which is
+        stored in MAINTENTANCE_MODE_URL.  The developers are listed above.  IP address checks are used to determine
+        who you are.
+        
+        $GLOBALS['_maintenance_estimate'] allows you to provide a time that the maintenance should be completed.  A nice message
+        with the estimated time will be shown on the maintenance page.  Additionally, it's intelligent enough not to
+        show negative times.  Make sure you know the form of mktime() before using it.  An absolute time is needed since
+        a relative one would keep changing with each request.  Make sure you pay attention to the timezone as well.
+        mktime uses the machine's local time zone.
+        
+        BIG NOTE: Maintenance mode should only be used when new code is being deployed to a production environment.
+        Most changes should be thoroughly tested in a development environment.  There are times when major components
+        need to be moved and there will certainly be downtime as files are being moved and/or databases are being
+        changed or synchronized.  To further drive the point home:
+        
+        ********* THIS TAKES DOWN ALL SERVICES THAT USE THE ERROR HANDLER -- INCLUDING REASON SITES -- UNTIL IT IS SWITCHED OFF. ************
+        
 */
 
 /* allow other files that use error_handler to activate maintenance mode.  if they set the var up,
 we don't want this one overwriting it */
 if( !defined( 'MAINTENANCE_MODE_ON' ) )
-	define('MAINTENANCE_MODE_ON', false);
+        define('MAINTENANCE_MODE_ON', false);
 
 /* Where should the browser get sent if maintenance mode is on?
    Note that this may need to be changed based on where you unpacked Reason.

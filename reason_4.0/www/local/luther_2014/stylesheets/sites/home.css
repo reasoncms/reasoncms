@@ -1,0 +1,146 @@
+.light-link-color {
+  color: white;
+}
+
+.zero-out, .lutherHome .moduleNav ul {
+  margin: 0;
+  padding: 0;
+}
+
+.screenreader {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  margin-bottom: 0;
+}
+
+/* STRUCTURE */
+@media only screen and (max-width: 40em) {
+  .lutherHome #minisite {
+    padding-top: 4px !important;
+  }
+}
+@media only screen and (min-width: 40.063em) and (max-width: 64em) {
+  .lutherHome #minisite {
+    padding-top: 4px !important;
+  }
+}
+.lutherHome #minisite.hasConRelNav #contentAndRelated #contentFeature, .lutherHome #minisite.hasConNav #contentAndRelated #contentFeature, .lutherHome #minisite.hasConRel #contentAndRelated #contentFeature, .lutherHome #minisite.hasCon #contentAndRelated #contentFeature {
+  margin-bottom: 0;
+}
+@media only screen and (min-width: 64.063em) {
+  .lutherHome #minisite.hasConRelNav #contentAndRelated #contentFeature, .lutherHome #minisite.hasConNav #contentAndRelated #contentFeature, .lutherHome #minisite.hasConRel #contentAndRelated #contentFeature, .lutherHome #minisite.hasCon #contentAndRelated #contentFeature {
+    position: relative;
+    padding-left: 0;
+    padding-right: 0;
+    width: 68.75%;
+    float: left;
+    float: right;
+  }
+}
+.lutherHome #minisite.hasConRelNav #contentAndRelated #contentSections, .lutherHome #minisite.hasConNav #contentAndRelated #contentSections, .lutherHome #minisite.hasConRel #contentAndRelated #contentSections, .lutherHome #minisite.hasCon #contentAndRelated #contentSections {
+  margin-top: 0;
+  margin-left: -1.25rem;
+  margin-right: -1.25rem;
+  padding: 1.25rem;
+  background: #d9ecfd url("../../images/lc_color_line.gif") repeat-x left top;
+}
+@media only screen and (min-width: 64.063em) {
+  .lutherHome #minisite.hasConRelNav #contentAndRelated #contentSections, .lutherHome #minisite.hasConNav #contentAndRelated #contentSections, .lutherHome #minisite.hasConRel #contentAndRelated #contentSections, .lutherHome #minisite.hasCon #contentAndRelated #contentSections {
+    position: relative;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+    width: 31.25%;
+    float: left;
+    margin: 0 !important;
+    -moz-border-radius-topleft: 12px;
+    -webkit-border-top-left-radius: 12px;
+    border-top-left-radius: 12px;
+  }
+}
+.lutherHome #minisite.hasConRelNav #contentAndRelated #relatedSections, .lutherHome #minisite.hasConNav #contentAndRelated #relatedSections, .lutherHome #minisite.hasConRel #contentAndRelated #relatedSections, .lutherHome #minisite.hasCon #contentAndRelated #relatedSections {
+  clear: both;
+  padding: 0;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 0;
+  margin-bottom: 0;
+  max-width: 100%;
+  *zoom: 1;
+  margin-top: 2.5rem;
+}
+.lutherHome #minisite.hasConRelNav #contentAndRelated #relatedSections:before, .lutherHome #minisite.hasConRelNav #contentAndRelated #relatedSections:after, .lutherHome #minisite.hasConNav #contentAndRelated #relatedSections:before, .lutherHome #minisite.hasConNav #contentAndRelated #relatedSections:after, .lutherHome #minisite.hasConRel #contentAndRelated #relatedSections:before, .lutherHome #minisite.hasConRel #contentAndRelated #relatedSections:after, .lutherHome #minisite.hasCon #contentAndRelated #relatedSections:before, .lutherHome #minisite.hasCon #contentAndRelated #relatedSections:after {
+  content: " ";
+  display: table;
+}
+.lutherHome #minisite.hasConRelNav #contentAndRelated #relatedSections:after, .lutherHome #minisite.hasConNav #contentAndRelated #relatedSections:after, .lutherHome #minisite.hasConRel #contentAndRelated #relatedSections:after, .lutherHome #minisite.hasCon #contentAndRelated #relatedSections:after {
+  clear: both;
+}
+.lutherHome #minisite.hasConRelNav #contentAndRelated #relatedSections h3, .lutherHome #minisite.hasConNav #contentAndRelated #relatedSections h3, .lutherHome #minisite.hasConRel #contentAndRelated #relatedSections h3, .lutherHome #minisite.hasCon #contentAndRelated #relatedSections h3 {
+  border-bottom: 1px solid #e9e9e9;
+  margin: 0;
+  padding-bottom: 0.75rem;
+}
+.lutherHome #minisite.hasConRelNav #contentAndRelated #preSidebar,
+.lutherHome #minisite.hasConRelNav #contentAndRelated #sidebar,
+.lutherHome #minisite.hasConRelNav #contentAndRelated #postSidebar, .lutherHome #minisite.hasConNav #contentAndRelated #preSidebar,
+.lutherHome #minisite.hasConNav #contentAndRelated #sidebar,
+.lutherHome #minisite.hasConNav #contentAndRelated #postSidebar, .lutherHome #minisite.hasConRel #contentAndRelated #preSidebar,
+.lutherHome #minisite.hasConRel #contentAndRelated #sidebar,
+.lutherHome #minisite.hasConRel #contentAndRelated #postSidebar, .lutherHome #minisite.hasCon #contentAndRelated #preSidebar,
+.lutherHome #minisite.hasCon #contentAndRelated #sidebar,
+.lutherHome #minisite.hasCon #contentAndRelated #postSidebar {
+  background: #fff;
+}
+@media only screen and (min-width: 40.063em) {
+  .lutherHome #minisite.hasConRelNav #contentAndRelated #preSidebar,
+  .lutherHome #minisite.hasConRelNav #contentAndRelated #sidebar,
+  .lutherHome #minisite.hasConRelNav #contentAndRelated #postSidebar, .lutherHome #minisite.hasConNav #contentAndRelated #preSidebar,
+  .lutherHome #minisite.hasConNav #contentAndRelated #sidebar,
+  .lutherHome #minisite.hasConNav #contentAndRelated #postSidebar, .lutherHome #minisite.hasConRel #contentAndRelated #preSidebar,
+  .lutherHome #minisite.hasConRel #contentAndRelated #sidebar,
+  .lutherHome #minisite.hasConRel #contentAndRelated #postSidebar, .lutherHome #minisite.hasCon #contentAndRelated #preSidebar,
+  .lutherHome #minisite.hasCon #contentAndRelated #sidebar,
+  .lutherHome #minisite.hasCon #contentAndRelated #postSidebar {
+    position: relative;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+    width: 33.33333%;
+    float: left;
+  }
+}
+.lutherHome #minisite.hasConRelNav #contentAndRelated #calloutSections, .lutherHome #minisite.hasConNav #contentAndRelated #calloutSections, .lutherHome #minisite.hasConRel #contentAndRelated #calloutSections, .lutherHome #minisite.hasCon #contentAndRelated #calloutSections {
+  margin-top: 2.5rem;
+  position: relative;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+  width: 100%;
+  float: left;
+}
+.lutherHome #minisite.hasConRelNav #contentAndRelated #calloutSections .blurbs, .lutherHome #minisite.hasConNav #contentAndRelated #calloutSections .blurbs, .lutherHome #minisite.hasConRel #contentAndRelated #calloutSections .blurbs, .lutherHome #minisite.hasCon #contentAndRelated #calloutSections .blurbs {
+  width: auto;
+  margin-left: -1.25rem;
+  margin-right: -1.25rem;
+  margin-top: 0;
+  margin-bottom: 0;
+  max-width: none;
+  *zoom: 1;
+}
+.lutherHome #minisite.hasConRelNav #contentAndRelated #calloutSections .blurbs:before, .lutherHome #minisite.hasConRelNav #contentAndRelated #calloutSections .blurbs:after, .lutherHome #minisite.hasConNav #contentAndRelated #calloutSections .blurbs:before, .lutherHome #minisite.hasConNav #contentAndRelated #calloutSections .blurbs:after, .lutherHome #minisite.hasConRel #contentAndRelated #calloutSections .blurbs:before, .lutherHome #minisite.hasConRel #contentAndRelated #calloutSections .blurbs:after, .lutherHome #minisite.hasCon #contentAndRelated #calloutSections .blurbs:before, .lutherHome #minisite.hasCon #contentAndRelated #calloutSections .blurbs:after {
+  content: " ";
+  display: table;
+}
+.lutherHome #minisite.hasConRelNav #contentAndRelated #calloutSections .blurbs:after, .lutherHome #minisite.hasConNav #contentAndRelated #calloutSections .blurbs:after, .lutherHome #minisite.hasConRel #contentAndRelated #calloutSections .blurbs:after, .lutherHome #minisite.hasCon #contentAndRelated #calloutSections .blurbs:after {
+  clear: both;
+}
+@media only screen and (min-width: 40.063em) {
+  .lutherHome #minisite.hasConRelNav #contentAndRelated #calloutSections .blurbs .blurb, .lutherHome #minisite.hasConNav #contentAndRelated #calloutSections .blurbs .blurb, .lutherHome #minisite.hasConRel #contentAndRelated #calloutSections .blurbs .blurb, .lutherHome #minisite.hasCon #contentAndRelated #calloutSections .blurbs .blurb {
+    background: #efefef;
+    position: relative;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+    width: 25%;
+    float: left;
+  }
+}
