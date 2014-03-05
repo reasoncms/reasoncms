@@ -1,47 +1,9 @@
 <?php
 
 /**
- * A full-featured feature item view that can be used as a default
- *
- * Here is sample markup for a page with two features attached that have the following characteristics:
- *
- * - The features each have bg_color set to #ff0000
- * - The first feature is an image, the second is a video.
- * - Looping is enabled
- *
- * 	<div class="featuresModule autoplay-5 looping-on noscript">
- *	<ul class="features">
- *	<li class="feature active" style="background-color:#ff0000;">
- *		<div class="featureContent featureTypeImage">
- *		<a href="http://destination_url" class="dest"><img alt="image caption" src="/reason/sized_images/730793/4d378bcfa56dfd78c5af82fe2bbe73f7.jpg" /></a>
- *		<h3 class="featureTitle"><a href="http://destination_url" class="dest">Feature 1 Title</a></h3>
- *		<div class="featureText"><a href="http://destination_url" class="dest">Feature 1 Text</a></div>
- *		<div class="featureNav"><a href="?feature=12345" title="Feature 1 Title" class="current num1"></a><a href="?feature=23456" title="Feature 2 Title" class="nonCurrent num2"></a></div>
- *		</div>
- *	</li>
- *	<li class="feature inactive" style="background-color:#ff0000;">
- *		<div class="featureContent featureTypeVideo">
- *		<div class="featureImage">
- *		<a href="#featureVideo-11111"><img alt="image_caption" src="/reason/sized_images/730793/4d378bcfa56dfd78c5af82fe2bbe73f7.jpg" /></a>
- *		</div>
- *
- *		<div class="featureVideo" id="featureVideo-11111">
- * 		<object type="application/x-shockwave-flash" data="media_player.swf?file=http://rtsp.carleton.edu/media_file.mp4&amp;autostart=false&amp;image=/reason/images/730690.jpg" width="840" height="650" id="flashVideoWidget728524">
- *		<param name="movie" value="/global_stock/flv_media_player/player.swf?file=http://rtsp.carleton.edu/media_file.mp4&amp;autostart=false&amp;image=/reason/images/730690.jpg">
- *		<param name="allowfullscreen" value="true">
- *		</object>
- *		<h3 class="featureTitle"><a href="http://destination_url" class="dest">Feature 2 Title</a></h3>
- *		<div class="featureText"><a href="http://destination_url" class="dest">Feature 2 Text</a></div>
- *		</div>
- *
- *		<a href="http://destination_url"><img alt="image caption" src="/reason/sized_images/730793/4d378bcfa56dfd78c5af82fe2bbe73f7.jpg" /></a>
- *		<h3 class="featureTitle"><a href="http://destination_url">Feature 2 Title</a></h3>
- *		<div class="featureText"><a href="http://destination_url">Feature 2 Text</a></div>
- *		<div class="featureNav"><a href="?feature=12345" title="Feature 1 Title" class="nonCurrent num1"></a><a href="?feature=23456" title="Feature 2 Title" class="current num2"></a></div>
- *		</div>
- *	</li>
- *	</ul>
- *	</div>
+ * This is an exact copy of default_feature_view.php from the core.  All it does is add a styling hook by adding a wrapper around the feature nav, 
+ * and bring it outside of <div class="featureInfo">.
+ * I tried to add a new feature view, but it only seemed to work if I used the class names DefaultFeatureView and default_feature_view.php.
  *
  * @todo no need for nyromodal if there are no videos
  * @package reason
@@ -58,7 +20,8 @@ reason_include_once( 'minisite_templates/modules/feature/views/default_view.php'
  */
 class DefaultFeatureView extends FeatureView
 {
-
+	var $has_av = false;
+	
 	function set($view_data,$view_params,$current_feature_id,&$head_items)
 	{
 		//call Mother
@@ -84,21 +47,24 @@ class DefaultFeatureView extends FeatureView
 			if(!isset($data['feature_av_html'])){ $view_data[$id]['feature_av_html']=array("none");}
 			if(!isset($data['feature_av_img_url'])){ $view_data[$id]['feature_av_img_url']=array("none");}
 			if(!isset($data['feature_av_img_alt'])){ $view_data[$id]['feature_av_img_alt']=array("");}
+			if ($view_data[$id]['current_object_type'] == 'av') $this->has_av = true;
 		}
 		$this->_view_data=$view_data;
-		
-		
-		
+			
 		$width=$this->_view_params['width'];
 		$height=$this->_view_params['height'];
 		if($head_items != null)
 		{
-			$head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH."nyroModal/js/jquery.nyroModal-1.6.2.min.js");
+			$head_items->add_javascript(JQUERY_URL, true);
+			if ($this->has_av)
+			{
+				$head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH."nyroModal/js/jquery.nyroModal-1.6.2.min.js");
+			}
 			$head_items->add_javascript(REASON_HTTP_BASE_PATH . 'js/feature.js');
-			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH . 'css/features/feature.css');
+			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH . 'css/features/feature_responsive.css');
 			$head_items->add_head_item("style",array("type"=>"text/css"),"
-			.features, .features .sizable { height:".$height."px; }
-			.features .sizable { width:".$width."px; }
+			.featuresModule { max-width: ".$width."px; }
+			.features { padding-bottom:" . round($height/$width*100, 5) . "%; }
 			",false);
 		}
 		
@@ -172,7 +138,7 @@ class DefaultFeatureView extends FeatureView
 				}
 				
 				$title=$d['title'];
-				$str.="<a  href=\"?feature=".$id."\" title=\"".$title."\" class=\"".$anchor_class." navItem\">"."<span>"."&#x25cf;"."</span></a>";
+				$str.="<a  href=\"?feature=".$id."\" title=\"".reason_htmlspecialchars($title)."\" class=\"".$anchor_class." navItem\">"."<span>".$feature_num."</span></a>";
 				$feature_num++;
 			}
 		}
@@ -261,7 +227,7 @@ class DefaultFeatureView extends FeatureView
 				$title=$titles[$curr_index+1];
 			}
 		}
-		$str="<a href=\"?feature=".$id."\" title=\"".$title."\" class=\"".$class." \">"."<span>".$arrow."</span></a>";
+		$str="<a href=\"?feature=".$id."\" title=\"".reason_htmlspecialchars($title)."\" class=\"".$class." \">"."<span>".$arrow."</span></a>";
 		return $str;
 
 
@@ -274,7 +240,7 @@ class DefaultFeatureView extends FeatureView
 	*/
 	function build_play_nav_str()
 	{
-		$str="<a style=\"display:none\" href=\"#\" title=\"Play Slide Show\" class=\"button play \">&#x25BA;</a>";
+		$str="<a style=\"display:none\" href=\"#\" title=\"Play Slide Show\" class=\"button play \"> Play </a>";
 		return $str;
 	}
 	
@@ -283,7 +249,7 @@ class DefaultFeatureView extends FeatureView
 	*/
 	function build_pause_nav_str()
 	{
-		$str="<a style=\"display:none\" href=\"#\" title=\"Pause Slide Show\" class=\"button pause \">&#x2759; &#x2759;&nbsp;</a>";
+		$str="<a style=\"display:none\" href=\"#\" title=\"Pause Slide Show\" class=\"button pause \"> Pause </a>";
 		return $str;
 	}
 	
@@ -353,16 +319,11 @@ class DefaultFeatureView extends FeatureView
 		if($view_data['current_object_type']=='img')
 		{
 			$img_url=$view_data['feature_image_url'][$view_data['current_image_index']];
-			// if images not found locally try pulling from www
-			if (!file_exists($img_url))
-			{
-				$img_url = "http://www.luther.edu" . $img_url;
-			}
 			$img_alt=$view_data['feature_image_alt'][$view_data['current_image_index']];
 			if($img_url!="none")
 			{
 					$media_str ="<div class=\"featureImage\" >\n";
-					$media_str.=$image_anchor_start."<img alt=\"".$img_alt."\" name=\"big_pic\" src=\"".$img_url."\" />".$image_anchor_end."\n";
+					$media_str.=$image_anchor_start."<img alt=\"".reason_htmlspecialchars($img_alt)."\" name=\"big_pic\" src=\"".$img_url."\" />".$image_anchor_end."\n";
 					$media_str.="</div>";
 			}
 			$type_str = ' featureTypeImage';
@@ -382,9 +343,9 @@ class DefaultFeatureView extends FeatureView
 			{
 				$link = ($has_anchor) ? ' (' .$anchor_start . 'more' . $anchor_end . ')' : '';
 				$media_str ="<div class=\"featureImage\" >\n";
-				$media_str.=$image_anchor_start."<img alt=\"".$img_alt."\"  name=\"big_pic\" src=\"".$img_url."\" />".$image_anchor_end."\n";
+				$media_str.=$image_anchor_start."<img alt=\"".reason_htmlspecialchars($img_alt)."\"  name=\"big_pic\" src=\"".$img_url."\" />".$image_anchor_end."\n";
 				$media_str.="</div>";
-				$media_str.="<div class=\"featureVideo\" id=\"".$img_id."\" style=\"\">";
+				$media_str.="<div class=\"featureVideo nofitvids\" id=\"".$img_id."\" style=\"\">";
 				$media_str .= $av_html;
 				$media_str .= '<h3 class="featureTitle">'.$view_data['title'].'</h3>'."\n";
 				$media_str .= '<div class="featureText">'.$view_data['text'].$link.'</div>'."\n";
@@ -399,12 +360,12 @@ class DefaultFeatureView extends FeatureView
 			if ($view_data['current_object_type'] == 'av') // our links go to the movie not the dest url
 			{
 				$title_str="<h3 class=\"featureTitle\">".$text_anchor_start.$view_data['title'].$text_anchor_end."</h3>\n";
-				$text_str="<div class=\"featureText\">".$text_anchor_start.$view_data['text'].$text_anchor_end."</div>\n";
+				$text_str="<p class=\"featureText\">".$text_anchor_start.$view_data['text'].$text_anchor_end."</p>\n";
 			}
 			else
 			{
 				$title_str="<h3 class=\"featureTitle\">".$anchor_start.$view_data['title'].$anchor_end."</h3>\n";
-				$text_str="<div class=\"featureText\">".$anchor_start.$view_data['text'].$anchor_end."</div>\n";
+				$text_str="<p class=\"featureText\">".$anchor_start.$view_data['text'].$anchor_end."</p>\n";
 			}
 		}
 
@@ -412,11 +373,20 @@ class DefaultFeatureView extends FeatureView
 		 		style=\"background-color:#".$view_data['bg_color'].";\" >\n";
 		$str.='<div class="featureContent' .$type_str.'">'."\n";
 			$str.=$media_str;
-			$str.="<div class=\"featureInfo\">";
-				$str.=$title_str;
-				$str.=$text_str;
-				$str.=$view_data['feature_nav_str'];
+			$str.="<div class=\"featureInfoWrap\">";
+
+			if ($view_data['show_text'])
+			{
+				$str.="<div class=\"featureInfo\">";
+					$str.=$title_str;
+					$str.=$text_str;
 				$str.="</div>";//end featureInfo div
+			}
+
+			$str.="<div class=\"featureNavWrap\">";
+				$str.=$view_data['feature_nav_str'];
+			$str.="</div>";//end featureNavWrapper div
+			$str.="</div>";//end featureInfoWrap div
 
 		$str.="</div>\n";//end featureContent div
 		$str.="</li>\n";
