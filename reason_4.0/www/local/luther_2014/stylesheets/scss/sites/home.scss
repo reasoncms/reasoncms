@@ -1,0 +1,107 @@
+// Foundation imports
+@import "settings";
+@import "foundation/components/grid";
+
+// Compass imports
+@import "compass/css3";
+@import "compass/css3/opacity";
+@import "compass/css3/transition";
+
+/* STRUCTURE */
+
+.lutherHome {
+
+	#minisite {
+
+		@media #{$small-only} {
+			padding-top: 4px !important;
+		}
+
+		@media #{$medium-only} {
+			padding-top: 4px !important;
+		}
+
+		&.hasConRelNav,
+		&.hasConNav,
+		&.hasConRel,
+		&.hasCon {
+
+			#contentAndRelated {
+
+				#contentFeature {
+					margin-bottom: 0;
+
+					@media #{$large-up} {
+						@include grid-column($columns: 11, $collapse: true);
+						float: right;
+					}
+				}
+
+				#contentSections {
+					//margin: 0 -$column-gutter/2;
+					margin-top: 0;
+					margin-left: -$column-gutter/2;
+					margin-right: -$column-gutter/2;
+					padding: $column-gutter/2;
+					background: $lc-blue-xtra-light url('../../images/lc_color_line.gif') repeat-x left top;
+
+					@media #{$large-up} {
+						@include grid-column($columns: 5);
+						margin: 0 !important;
+						@include border-top-left-radius(12px);
+					}
+				}
+
+				#relatedSections {
+					clear: both;
+					padding: 0;
+					@include grid-row();
+					margin-top: $column-gutter;
+
+					h3 {
+						border-bottom: 1px solid $lc-grey;
+						margin: 0;
+						padding-bottom: rem-calc(12); 
+					}
+
+				}
+
+				#preSidebar,
+				#sidebar,
+				#postSidebar {
+					background: #fff;
+
+					@media #{$medium-up} {
+						@include grid-column(5.3333333);
+					}
+				}
+
+				#calloutSections {
+					margin-top: $column-gutter;
+					@include grid-column(16);
+
+					.blurbs {
+						@include grid-row($behavior: nest);
+					
+						@media #{$medium-up} {
+							.blurb {
+								background: #efefef;
+								@include grid-column(4);
+							}
+						}
+
+					} // .blurbs
+
+				} // #calloutSections
+
+			} // #contentAndRelated
+
+		} // &.hasCon
+
+	} // #minisite
+
+	.moduleNav ul {
+		@extend .zero-out;
+	}
+
+} // lutherHome
