@@ -198,7 +198,7 @@ class ThorAdmin extends TableAdmin
 		$tc =& $this->get_thor_core();
 		echo '<h3>Viewing row id ' . $id . '</h3>';
 		$link = carl_make_link(array('table_row_action' => '', 'table_action_id' => ''));
-		echo '<p><a href="'.$link.'">Return to summary form data</a></p>';
+		echo '<p class="summaryReturn"><a href="'.$link.'">Return to summary form data</a></p>';
 		
 		$data = $tc->get_values_for_primary_key($this->get_action_id());
 		unset ($data['id']); // lets not show the id in this view
@@ -224,7 +224,7 @@ class ThorAdmin extends TableAdmin
 		$id = $this->get_action_id();
 		echo '<h3>Editing row id ' . $id . '</h3>';
 		$link = carl_make_link(array('table_row_action' => '', 'table_action_id' => ''));
-		echo '<p><a href="'.$link.'">Return to summary form data</a></p>';
+		echo '<p class="summaryReturn"><a href="'.$link.'">Return to summary form data</a></p>';
 		if ($this->show_hidden_fields_in_edit_view)
 		{
 			$elements = $this->get_element_names();
