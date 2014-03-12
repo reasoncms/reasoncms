@@ -41,25 +41,28 @@ switch ($_SERVER['SERVER_NAME']) {
     case 'www.luther.edu':
         domain_define( 'DB_CREDENTIALS_FILEPATH', SETTINGS_INC. 'dbs.xml' );
         break;
+    case 'reason-node-1.luther.edu':
+        domain_define( 'DB_CREDENTIALS_FILEPATH', SETTINGS_INC. 'dbs.xml' );
+        break;
     case 'reasondev.luther.edu':
         domain_define( 'DB_CREDENTIALS_FILEPATH', SETTINGS_INC. 'dbs.reasondev.xml' );
         break; 
-    case 'reasondev.smitst01.luther.edu':
+    case 'smitst01.luther.edu':
         domain_define( 'DB_CREDENTIALS_FILEPATH', SETTINGS_INC. 'dbs.reasondev.smitst01.xml' );
         break;
-    case 'reasondev.jonebr01.luther.edu':
+    case 'jonebr01.luther.edu':
         domain_define( 'DB_CREDENTIALS_FILEPATH', SETTINGS_INC. 'dbs.reasondev.jonebr01.xml' );
         break;
-    case 'reasondev.wilbbe01.luther.edu':
+    case 'wilbbe01.luther.edu':
         domain_define( 'DB_CREDENTIALS_FILEPATH', SETTINGS_INC. 'dbs.reasondev.wilbbe01.xml' );
         break;
-    case 'reasondev.huintr01.luther.edu':
+    case 'huintr01.luther.edu':
         domain_define( 'DB_CREDENTIALS_FILEPATH', SETTINGS_INC. 'dbs.reasondev.huintr01.xml' );
         break;
-    case 'reasondev.dykega01.luther.edu':
+    case 'dykega01.luther.edu':
         domain_define( 'DB_CREDENTIALS_FILEPATH', SETTINGS_INC. 'dbs.reasondev.dykega01.xml' );
         break; 
-    case 'reasondev.dirks.luther.edu':
+    case 'dirks.luther.edu':
         domain_define( 'DB_CREDENTIALS_FILEPATH', SETTINGS_INC. 'dbs.reasondev.dirks.xml' );
         break; 
     default:
@@ -86,7 +89,28 @@ switch ($_SERVER['SERVER_NAME']) {
     case 'www.luther.edu':
         domain_define( 'HTTPS_AVAILABLE', true );
         break;
+    case 'reason-node-1.luther.edu':
+        domain_define( 'HTTPS_AVAILABLE', true );
+        break;
     case 'reasondev.luther.edu':
+        domain_define( 'HTTPS_AVAILABLE', true );
+        break;
+    case 'smitst01.luther.edu':
+        domain_define( 'HTTPS_AVAILABLE', true );
+        break;
+    case 'jonebr01.luther.edu':
+        domain_define( 'HTTPS_AVAILABLE', true );
+        break;
+    case 'wilbbe01.luther.edu':
+        domain_define( 'HTTPS_AVAILABLE', true );
+        break;
+    case 'huintr01.luther.edu':
+        domain_define( 'HTTPS_AVAILABLE', true );
+        break;
+    case 'dykega01.luther.edu':
+        domain_define( 'HTTPS_AVAILABLE', true );
+        break; 
+    case 'dirks.luther.edu':
         domain_define( 'HTTPS_AVAILABLE', true );
         break; 
     default:

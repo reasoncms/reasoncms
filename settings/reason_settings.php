@@ -147,6 +147,9 @@
 		case 'www.luther.edu':
 		    define( 'THIS_IS_A_DEVELOPMENT_REASON_INSTANCE', false );
 		    break;
+		case 'reason-node-1.luther.edu':
+		    define( 'THIS_IS_A_DEVELOPMENT_REASON_INSTANCE', false );
+		    break;
 		case 'reasondev.luther.edu':
 		    define( 'THIS_IS_A_DEVELOPMENT_REASON_INSTANCE', true );
 		    break;
@@ -169,6 +172,9 @@
 	 */
 	switch ($_SERVER['SERVER_NAME']) {
 	    case 'www.luther.edu':
+	        define('REASON_HOST_HAS_VALID_SSL_CERTIFICATE', true);
+	        break;
+	    case 'reason-node-1.luther.edu':
 	        define('REASON_HOST_HAS_VALID_SSL_CERTIFICATE', true);
 	        break;
 	    case 'reasondev.luther.edu':
