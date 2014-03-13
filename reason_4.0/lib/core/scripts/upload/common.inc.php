@@ -90,7 +90,7 @@ function can_upload($session) {
 		{
 			$username = $reason_session->get('username');
 			$param_cleanup_rules = array('user_id' => array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => 'true')));
-			$cleanRequest = array_merge($_REQUEST, carl_clean_vars($request, $param_cleanup_rules));
+			$cleanRequest = array_merge($_REQUEST, carl_clean_vars($_REQUEST, $param_cleanup_rules));
 			$nametag = $cleanRequest['user_id'];
 			$id = get_user_id($username);
 			if (reason_user_has_privs($id, 'pose_as_other_user'))
