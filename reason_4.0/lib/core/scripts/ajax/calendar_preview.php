@@ -26,7 +26,7 @@ if (empty($_REQUEST['date']) || !reason_check_authentication())
 	$date = date('Y-m-d', $stamp);
 	
 	// Get and sort the events
-	$calendar = new reasonCalendar(array('start_date' => $date, 'end_date' => $date, 'view'=>'daily'));
+	$calendar = new reasonCalendar(array('start_date' => $date, 'end_date' => $date, 'view'=>'daily', 'show_statuses'=>array('show','tentative','cancelled')));
 	$calendar->run();
 	$events = $calendar->get_all_events();
 	usort( $events, 'compare_times' );
@@ -49,14 +49,22 @@ if (empty($_REQUEST['date']) || !reason_check_authentication())
 		echo '<ul class="preview_list">';
 		foreach ($events as $event)
 		{
-			echo ($editing_id == $event->get_value( 'id' )) ? '<li class="current">' : '<li>';
+			$classes = array($event->get_value( 'show_hide' ).'_status');
+			if ($editing_id == $event->get_value( 'id' )) $classes[] = 'current';
+			echo '<li class="'.join(' ', $classes).'">';
 			$params['id'] = $event->get_value( 'id' );
 			if(substr($event->get_value( 'datetime' ), 11) != '00:00:00')
 				$time = prettify_mysql_datetime( $event->get_value( 'datetime' ), 'g:ia' );
 			else
 				$time = 'All day';
+			
+			if ($event->get_value( 'show_hide' ) == 'tentative')
+				$time .= '<br /><span class="label">tentative</span>';
+				
 			echo '<span class="preview_time">'.$time.' </span>';
 			echo '<span class="preview_name">';
+			
+			// Get the owner site for the event; we don't want events from the current site to look borrowable
 			$owner = $event->get_owner();
 			if ($params['site_id'] != $owner->id())
 			{
@@ -73,6 +81,8 @@ if (empty($_REQUEST['date']) || !reason_check_authentication())
 	{
 		echo '<p>No events found.</p>';	
 	}
+	
+	echo '<a href="/calendar/?date='.$date.'" target="_blank">Full Calendar</a>';
 	
 	echo '<div id="borrow_confirm">
 		<h3>Event Title</h3>
