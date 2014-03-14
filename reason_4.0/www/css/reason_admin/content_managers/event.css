@@ -25,6 +25,15 @@ div#event_preview li.current {
 	font-weight: bold;	
 }
 
+div#event_preview li.tentative_status {
+	color: #888;
+	font-style: italic;	
+}
+
+div#event_preview li.tentative_status a {
+	color: #888;
+}
+
 div#event_preview li span.preview_time {
 	float: left;	
 }
@@ -32,6 +41,11 @@ div#event_preview li span.preview_time {
 div#event_preview li span.preview_name {
 	display: block;	
 	padding-left: 5.5em;
+}
+
+div#event_preview span.label {
+	font-variant: small-caps;
+	font-size: 0.8em;	
 }
 
 div#borrow_confirm_shade {
