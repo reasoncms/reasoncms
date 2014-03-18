@@ -187,7 +187,16 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'main_post' => 'dorian_vocal/dorian_vocal',
 	),
 	'events' => array(
-		'main_post' => 'luther_events', // @todo: TRY TO USE CORE
+		'main_post' => array(
+			'module' => 'events',
+			'list_chrome_markup' => 'minisite_templates/modules/events_markup/responsive/responsive_list_chrome.php',
+		),
+	),
+	'events_instancewide' => array(
+		'main_post' => array(
+			'module' => 'events_instancewide',
+			'list_chrome_markup' => 'minisite_templates/modules/events_markup/responsive/responsive_list_chrome.php',
+		),
 	),
 	'faculty' => array(
 		'main_post' => 'luther_faculty'

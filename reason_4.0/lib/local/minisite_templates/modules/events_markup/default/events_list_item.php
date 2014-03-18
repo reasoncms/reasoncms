@@ -7,7 +7,7 @@
  /**
   * Include dependencies & register the class
   */
-reason_include_once( 'minisite_templates/modules/events_luther.php' );
+reason_include_once( 'minisite_templates/modules/events.php' );
 reason_include_once('minisite_templates/modules/events_markup/interfaces/events_list_item_interface.php');
 $GLOBALS['events_markup']['minisite_templates/modules/events_markup/default/events_list_item.php'] = 'defaultEventsListItemMarkup';
 /**
@@ -15,7 +15,7 @@ $GLOBALS['events_markup']['minisite_templates/modules/events_markup/default/even
  *
  * This class takes an event and produces markup meant to be used in the events listing
  */
-class defaultEventsListItemMarkup extends EventsLutherModule implements eventsListItemMarkup
+class defaultEventsListItemMarkup extends EventsModule implements eventsListItemMarkup
 {
 	/**
 	 * The function bundle
@@ -58,8 +58,14 @@ class defaultEventsListItemMarkup extends EventsLutherModule implements eventsLi
 		$link = '';
 		$link = $this->bundle->event_link($event, $day);
 		$ret .= $this->bundle->teaser_image( $event, $link );
-		if($time && 'all_day' != $time)
+		if ($time && 'all_day' != $time && substr($event->get_value('datetime'), 11) != '00:00:00')
+		{
 			$ret .= prettify_mysql_datetime($event->get_value('datetime'), 'g:i a') . ' - ';
+		}
+		else
+		{
+			$ret .= 'All day - ';
+		}
 		$name = $event->get_value('name');
 		if ($this->is_sports_event($event->get_value('sponsor')))
 		{
