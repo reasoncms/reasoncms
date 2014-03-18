@@ -225,6 +225,13 @@ class textDateTimeType extends textType
 			$name = $this->name;
 		}
 		$name = prettify_string($name);
+		if (($this->month AND !is_numeric($this->month)) ||
+			($this->day AND !is_numeric($this->day)) ||
+				($this->year AND !is_numeric($this->year)) )
+		{
+			$this->set_error(  $name.':  Date values need to be numbers.' );
+			return;
+		}
 		if(in_array('year', $this->use_fields))
 		{
 			//check to make sure we have a year if it's in the use_fields
@@ -243,13 +250,6 @@ class textDateTimeType extends textType
 				elseif(!empty($this->year_max) && $this->year > $this->year_max)
 					$this->set_error( $name.':  Dates after the year '.$this->year_max.' cannot be processed.'  );
 			}
-		}
-		if (($this->month AND !is_numeric($this->month)) ||
-			($this->day AND !is_numeric($this->day)) ||
-				($this->year AND !is_numeric($this->year)) )
-		{
-			$this->set_error(  $name.':  Date values need to be numbers.' );
-			return;
 		}
 		if( $this->month AND $this->day AND $this->year )
 		{
