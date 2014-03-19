@@ -12,6 +12,65 @@
 	{
 		var $include_modules_css = false;
 		var $nav_class = 'LutherDefaultMinisiteNavigation';
+
+		function alter_reason_page_type($page_type)
+		{
+			parent::alter_reason_page_type($page_type); // Make sure we do everything the parent template does.
+
+			if($regions = $page_type->module_regions(array('navigation', 'navigation_top')))
+			{
+				foreach($regions as $region)
+				{
+					if(!isset($module['module_params']['wrapper_element']))
+						$page_type->set_region_parameter($region, 'wrapper_element', 'div');
+				}
+			}
+
+			// Global parameters for the children module
+			if($regions = $page_type->module_regions('children'))
+			{
+				foreach($regions as $region)
+				{
+					if(!isset($module['module_params']['thumbnail_width']))
+						$page_type->set_region_parameter($region, 'thumbnail_width', 600);
+					if(!isset($module['module_params']['thumbnail_height']))
+						$page_type->set_region_parameter($region, 'thumbnail_height', 400);
+					//if(!isset($module['module_params']['provide_images']))
+					//	$page_type->set_region_parameter($region, 'provide_images', true);
+					if(!isset($module['module_params']['description_part_of_link']))
+						$page_type->set_region_parameter($region, 'description_part_of_link', true);	
+					if(!isset($module['module_params']['html5']))
+						$page_type->set_region_parameter($region, 'html5', true);
+					if(!isset($module['module_params']['show_only_pages_in_nav']))
+						$page_type->set_region_parameter($region, 'show_only_pages_in_nav', true);
+				}
+			}
+
+			// Global parameters for the image sidebar module
+			if($regions = $page_type->module_regions('image_sidebar'))
+			{
+				foreach($regions as $region)
+				{
+					if(!isset($module['module_params']['thumbnail_width']))
+						$page_type->set_region_parameter($region, 'thumbnail_width', 600);
+					if(!isset($module['module_params']['thumbnail_height']))
+						$page_type->set_region_parameter($region, 'thumbnail_height', 400);
+					if(!isset($module['module_params']['thumbnail_crop']))
+						$page_type->set_region_parameter($region, 'thumbnail_crop', 'fill');
+					if(!isset($module['module_params']['num_to_display']))
+						$page_type->set_region_parameter($region, 'num_to_display', 3);
+				}
+			}
+
+			// Global parameters for the pulbication module
+			if($regions = $page_type->module_regions('publication'))
+			{
+				foreach($regions as $region)
+				{
+
+				}
+			}
+		}
 		
 		function start_page()
 		{
@@ -113,6 +172,9 @@
 			//$this->head_items->add_javascript('/reason/local/luther_2014/javascripts/vendor/jquery.js');
 			
 			// Stylesheets
+			// @todo: Host Google fonts on our servers for faster load time?
+			$this->head_items->add_stylesheet('http://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700');
+			$this->head_items->add_stylesheet('http://fonts.googleapis.com/css?family=Open+Sans:300italic,300,400,400italic,600,600italic,700,700italic,800,800italic');
 			$this->head_items->add_stylesheet('/reason/local/luther_2014/stylesheets/fonts/font-awesome-4.0.3/css/font-awesome.css');
 			$this->head_items->add_stylesheet('/reason/local/luther_2014/stylesheets/dependencies/dependencies.css');
 			$this->head_items->add_stylesheet('/reason/local/luther_2014/stylesheets/base.css');
@@ -247,11 +309,7 @@
 			echo '<h1 class="siteTitle"><a href="'.$this->site_info->get_value('base_url').'"><span>'.$this->site_info->get_value('name').'</span></a></h1>'."\n";
 			echo '</div>'."\n";
 
-			if ($this->has_content( 'responsive_page_title' ))
-			{
-				$this->you_are_here(); // Breadcrumbs
-				$this->run_section( 'responsive_page_title' );
-			}
+			$this->you_are_here(); // Breadcrumbs for mobile
 
 			echo '</header>';
 			
@@ -268,10 +326,10 @@
 		{
 			// changed from the default $section generation for more flexibility in markup order	
 			$this->show_navbar();
-			echo '<div id="contentAndRelated">';
+			echo '<section id="contentAndRelated">';
 			$this->show_main_content();
 			$this->show_sidebar();
-			echo '</div>';
+			echo '</section>';
 		}
 		
 		function show_main_content_sections()
@@ -365,15 +423,18 @@
 				$wrapperClasses[] = 'hasSubNav';
 			}
 			if(!empty($wrapperClasses))
-				echo '<div id="navWrap" class="'.implode(' ',$wrapperClasses).'">'."\n";
+			{
+				echo '<nav id="navWrap" class="'.implode(' ',$wrapperClasses).'">'."\n";
 
 				echo '<a class="toggle" href="#minisiteNavigation">'."\n";
+				echo '<h1 style="margin: 0; padding: 0;">'."\n";
 				echo '<i class="fa fa-bars"></i>'."\n";
 				echo '<i class="fa fa-times"></i>'."\n";
 				echo '<span>' . $this->site_info->get_value('name') . ' Navigation</span>'."\n";
+				echo '</h1>'."\n";
 				echo '</a>'."\n";
+			}
 
-				//echo '<a class="toggle" href="#minisiteNavigation"><i class="fa fa-bars"></i><span>' . $this->site_info->get_value('name') . ' Navigation</span></a>';
 			if ($this->has_content( 'navigation' )) 
 			{
 				$this->run_section( 'navigation' );
@@ -402,7 +463,7 @@
 				echo '</div>'."\n";
 			}
 			if(!empty($wrapperClasses))
-				echo '</div>'."\n";
+				echo '</nav>'."\n";
 		}
 		function show_footer()
 		{

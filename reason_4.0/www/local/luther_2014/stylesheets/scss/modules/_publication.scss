@@ -1,0 +1,118 @@
+//
+// PUBLICATION STYLES
+//
+// @author Nathan Dirks
+//
+
+// Foundation imports
+@import "settings";
+@import "foundation/components/grid";
+
+// Compass imports
+@import "compass/css3";
+
+// Luther imports
+@import "extends";
+@import "mixins";
+
+// Publications
+//////////////////////////////////////
+ 
+.publication .persistent {
+ 	display: none; // Persistent is also turned off at the page type level with 'use_filters' => false & 'show_login_link' => false.
+}
+
+#relatedPub {
+
+	.posts {
+		margin-bottom: rem-calc(16);
+	}
+
+	.post {
+		border-bottom: 1px solid $lc-grey;
+		padding: rem-calc(16) 0;
+		@include clearfix;
+
+		figure {
+			float: right;
+			margin-left: rem-calc(16);
+
+			@media #{$large-up} {
+				float: left;
+				margin: 0 rem-calc(16) 0 0;
+			}
+		}
+
+		h4 {
+			margin: 0;
+		}
+	}
+}
+
+.publication {
+
+	.posts {
+		margin: 0;
+	}
+
+	.post {
+		border-bottom: 1px dotted $lc-grey;
+		padding: $column-gutter 0;
+
+		&:first-child {
+			padding-top: 0;
+		}
+
+		.title {
+			margin: 0 0 $column-gutter/4;
+			font-size: $h3-font-size;
+		}
+
+		time,
+		p.comments {
+			display: inline-block;
+			margin-bottom: $column-gutter/4;
+			font-family: $open-sans;
+			font-size: rem-calc(14);
+		}
+
+		time {
+			color: lighten($body-font-color, 25%);
+		}
+
+		p.comments {
+			margin-left: rem-calc(16);
+
+			a {
+				&:before {
+					@extend .fa;
+					content: $fa-var-comments;
+					margin-right: rem-calc(6);
+				}
+			}
+		}
+
+		p.more {
+			margin: 0;
+
+			a {
+				&:before {
+					@extend .fa;
+					content: $fa-var-chevron-right;
+					margin-right: rem-calc(6);
+				}
+
+			}
+
+		}
+
+	}
+
+	.pagination {
+
+		&.above {
+			display: none;
+		}
+	}
+
+}

@@ -1,0 +1,180 @@
+//
+// FEATURE STYLES
+//
+// @author Nathan Dirks
+//
+
+// Foundation imports
+@import "settings";
+@import "foundation/components/grid";
+
+// Compass imports
+@import "compass/css3";
+
+// Luther imports
+@import "extends";
+@import "mixins";
+
+ // 1. Features 
+//////////////////////////////////////
+
+ #contentFeature {
+  margin: 0 -2em $column-gutter/1.5;
+  
+  @media #{$medium-up} {
+    //margin: 0 0 $column-gutter;
+  }
+  @media #{$large-up} { 
+    margin: 0 0 $column-gutter/1.5;
+  }
+}
+ 
+.featuresModule {
+
+  .feature {
+
+    .featureInfo,
+    h3 {
+      color: $lc-white !important;
+    }
+
+    .featureInfoWrap {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: rgb(0,0,0);
+      background: rgba(0,0,0,.75);
+      padding: $column-gutter/6 $column-gutter/1.25;
+
+      @media #{$medium-up} {
+        position: static;
+        padding: 0;
+      }
+
+    }
+
+    .featureInfo {
+      position: relative;
+      background: none !important;
+      padding: $column-gutter/6 0;
+
+      @media #{$medium-up} {
+        position: absolute;
+        background: rgb(0,0,0) !important;
+        background: rgba(0,0,0,.75) !important;
+        padding: $column-gutter/3 $column-gutter/1.25;
+      }
+
+      @media #{$large-up} {
+        padding: $column-gutter/3 $column-gutter/1.75;
+      }
+
+      .featureTitle {
+        line-height: 1;
+        font-size: $font-size-14;
+          
+        @media #{$medium-up} {
+          font-size: $h3-font-size;
+          
+          display: inline;
+        }
+
+        a,
+        .noLink {
+          @extend .zero-out;
+
+          @media #{$medium-up} {
+            display: inline;
+            /*loat: left;*/
+          } 
+        }
+      }
+
+      .featureText { // hide description text on mobile 
+        display: none;
+
+        @media #{$medium-up} { // show
+          clear: none;
+          display: inline;
+          /*float: left;*/
+          line-height: $h3-font-size;
+          padding-top: 16px;
+        }
+
+        a,
+        span { 
+
+          padding: 0;
+          display: inline;
+
+          &:before { // The little divider between the Heading and Description
+            @extend .fa;
+            content: $fa-var-angle-double-right;
+            margin: 0 .5rem;
+            display: inline-block;
+            color: rgba(255,255,255,.5);
+          }
+
+          &:empty {  // Here we hide it if there's no content
+            display: none;
+          }
+        }
+      }
+    } 
+
+    .featureNavWrap {
+      position: relative;
+      display: block;
+      padding: $column-gutter/6 0;
+      @include clearfix;
+      
+      @media #{$medium-up} { // show
+        margin-top: 0;
+        padding: $column-gutter/6 0;
+        position: absolute;
+        top: $column-gutter/2;
+        right: $column-gutter/2;
+      }
+
+      .featureNav {
+        @extend .zero-out;
+      }
+
+      .play-pause,
+      .prev,
+      .next {
+        display: none;
+      }
+
+      .navBlock {
+
+        .navItem {
+
+          width: 14px;
+          height: 14px;
+          display: block;
+          float: left;
+          background: rgba(255,255,255,.5);
+          @include border-radius($global-rounded);
+          @include box-shadow(0 0 4px #000);
+          margin: 0 $column-gutter/3.5 0 0;
+
+          &.current {
+            background: #FFF;
+          }
+
+          @media #{$medium-up} {
+            width: 20px;
+            height: 20px;
+            margin: 0 0 0 $column-gutter/3.5;
+          }
+
+          span {
+            @extend .screenreader;
+          }
+        }
+      } 
+    }
+  }
+}

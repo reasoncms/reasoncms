@@ -1,0 +1,104 @@
+//
+// FEATRE STYLES
+//
+// @author Nathan Dirks
+//
+
+// Foundation imports
+@import "settings";
+@import "foundation/components/grid";
+
+// Compass imports
+@import "compass/css3";
+
+// Luther imports
+@import "extends";
+@import "mixins";
+
+// Blurbs
+//////////////////////////////////////
+
+.blurb {
+
+	/* Ordinary Text Blurbs */
+	margin-bottom: $column-gutter;
+
+	&:last-child {
+		margin-bottom: 0;
+	}
+
+	/* Call to Action Buttons */
+	
+	// In order for these styles to work, Call to Action blurbs need a unique name starting with "call_to_action".
+	// Example: call_to_action_admissions_01  (Don't add the prefix "uname_" -- Reason adds this.)
+
+	&[class^='uname_call_to_action'],
+	&[class*=' uname_call_to_action'] {
+
+		color: #ff00ff;
+
+		ul {
+			@extend .zero-out;
+			list-style-type: none;
+
+			li {
+				margin-bottom: rem-calc(16);
+				&:last-child {
+					margin-bottom: 0;
+				}
+
+				.cta {
+					font-family: $open-sans;
+					font-size: $font-size-18;
+					font-weight: 700;
+					display: block;
+					text-align: center;
+					background: $lc-blue-light;
+					color: $lc-white;
+					padding: rem-calc(12);
+
+					@include border-radius($global-rounded);
+					@include transition-property(background);
+					@include transition-duration(.5s);
+					@include transition-timing-function(ease);
+
+					&:link {
+						text-decoration: none;
+					}
+
+					&.blue {
+						background: $lc-blue-light;
+
+						&:hover {
+							background: darken($lc-blue-light, 8%);
+						}
+					}
+
+					&.red {
+						background: $lc-red;
+
+						&:hover {
+							background: darken($lc-red, 8%);
+						}
+					}
+
+					&.green {
+						background: $lc-green;
+
+						&:hover {
+							background: darken($lc-green, 8%);
+						}
+					}
+
+					&.yellow {
+						background: $lc-yellow;
+
+						&:hover {
+							background: darken($lc-yellow, 8%);
+						}
+					}
+				}	
+			}
+		}    
+	}
+}

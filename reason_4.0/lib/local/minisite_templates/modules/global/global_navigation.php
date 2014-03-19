@@ -20,7 +20,7 @@
 		?>
 	
 			<nav id="global-nav" class="left-off-canvas-menu" role="navigation">
-				<h1 class="screenreader">Main Navigation</h1>
+				<h1 class="screenreader">Luther College Site Navigation</h1>
 				
 				<ul class="audiences">
 					<li><a href="#">Parents</a></li>
@@ -31,7 +31,7 @@
 				
 				<ul class="sections">
 					<li>
-						<a href="#"><i class="fa fa-user fa-fw"></i>Admissions</a>
+						<a href="#">Admissions</a>
 						<ul>
 							<li><a href="#">Lorem ipsum dolor</a></li>
 							<li><a href="#">Dolor lorem</a></li>
@@ -41,17 +41,7 @@
 						</ul>
 					</li>
 					<li>
-						<a href="#"><i class="fa fa-book fa-fw"></i>Academics</a>
-						<ul>
-							<li><a href="#">Lorem ipsum dolor</a></li>
-							<li><a href="#">Dolor lorem</a></li>
-							<li><a href="#">Lorem ipsum dolor</a></li>
-							<li><a href="#">Dolor lorem</a></li>
-							<li><a href="#">Lorem ipsum dolor</a></li>
-						</ul>
-					</li>
-					<li><a href="#">
-						<i class="fa fa-users fa-fw"></i>Student Life</a>
+						<a href="#">Academics</a>
 						<ul>
 							<li><a href="#">Lorem ipsum dolor</a></li>
 							<li><a href="#">Dolor lorem</a></li>
@@ -61,7 +51,7 @@
 						</ul>
 					</li>
 					<li>
-						<a href="#"><i class="fa fa-trophy fa-fw"></i>Athletics</a>
+						<a href="#">Student Life</a>
 						<ul>
 							<li><a href="#">Lorem ipsum dolor</a></li>
 							<li><a href="#">Dolor lorem</a></li>
@@ -71,7 +61,7 @@
 						</ul>
 					</li>
 					<li>
-						<a href="#"><i class="fa fa-music fa-fw"></i>Music</a>
+						<a href="#">Athletics</a>
 						<ul>
 							<li><a href="#">Lorem ipsum dolor</a></li>
 							<li><a href="#">Dolor lorem</a></li>
@@ -81,27 +71,7 @@
 						</ul>
 					</li>
 					<li>
-						<a href="#"><i class="fa fa-rocket fa-fw"></i>Giving</a>
-						<ul>
-							<li><a href="#">Lorem ipsum dolor</a></li>
-							<li><a href="#">Dolor lorem</a></li>
-							<li><a href="#">Lorem ipsum dolor</a></li>
-							<li><a href="#">Dolor lorem</a></li>
-							<li><a href="#">Lorem ipsum dolor</a></li>
-						</ul>
-					</li>
-					<!--<li>
-						<a href="#"><i class="fa fa-map-marker fa-fw"></i>Decorah</a>
-						<ul>
-							<li><a href="#">Lorem ipsum dolor</a></li>
-							<li><a href="#">Dolor lorem</a></li>
-							<li><a href="#">Lorem ipsum dolor</a></li>
-							<li><a href="#">Dolor lorem</a></li>
-							<li><a href="#">Lorem ipsum dolor</a></li>
-						</ul>
-					</li>-->
-					<li>
-						<a href="#"><i class="fa fa-search fa-fw"></i>About</a>
+						<a href="#">Music</a>
 						<ul>
 							<li><a href="#">Lorem ipsum dolor</a></li>
 							<li><a href="#">Dolor lorem</a></li>
@@ -111,7 +81,27 @@
 						</ul>
 					</li>
 					<li>
-						<a href="#"><i class="fa fa-twitter fa-fw"></i>Connect</a>
+						<a href="#">Giving</a>
+						<ul>
+							<li><a href="#">Lorem ipsum dolor</a></li>
+							<li><a href="#">Dolor lorem</a></li>
+							<li><a href="#">Lorem ipsum dolor</a></li>
+							<li><a href="#">Dolor lorem</a></li>
+							<li><a href="#">Lorem ipsum dolor</a></li>
+						</ul>
+					</li>
+					<li>
+						<a href="#">About</a>
+						<ul>
+							<li><a href="#">Lorem ipsum dolor</a></li>
+							<li><a href="#">Dolor lorem</a></li>
+							<li><a href="#">Lorem ipsum dolor</a></li>
+							<li><a href="#">Dolor lorem</a></li>
+							<li><a href="#">Lorem ipsum dolor</a></li>
+						</ul>
+					</li>
+					<li>
+						<a href="#">Connect</a>
 						<ul>
 							<li><a href="#">Lorem ipsum dolor</a></li>
 							<li><a href="#">Dolor lorem</a></li>

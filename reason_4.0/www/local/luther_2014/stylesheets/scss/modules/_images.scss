@@ -1,0 +1,128 @@
+//
+// IMAGE STYLES
+//
+// @author Nathan Dirks
+//
+
+// Foundation imports
+@import "settings";
+@import "foundation/components/grid";
+
+// Compass imports
+@import "compass/css3";
+
+// Luther imports
+@import "extends";
+@import "mixins";
+
+/* Image Sidebar */
+
+.imageSidebarModule {
+
+	.imageChunk {
+		padding-bottom: $column-gutter;
+		background: $lc-white;
+		max-width: $global-image-width;
+		margin: 0 auto;
+
+		&:last-child { // Take away bottom padding on last element to keep spacing even
+			padding-bottom: 0;
+		}
+	}
+
+	a { // semi-annoying image pop out effect
+		img {
+				@include transition-timing-function(ease);
+				//@include transition-property(max-width, margin, box-shadow);
+				@include transition-property(box-shadow);
+				@include transition-duration(.25s);
+		}
+
+		&:hover {
+			img {
+				//max-width: 102%;
+				//margin-left: -1%;
+				@include box-shadow(rgba(0,0,0,.25) 0 0 4px);
+			}	
+		}
+	}
+
+	.tnDesc { // Image captions
+		display: block;
+		margin-top: rem-calc(6);
+		padding: 0 rem-calc(6);
+		font-family: $header-font-family;
+		font-size: rem-calc(12);
+		font-style: italic;
+		color: $blockquote-font-color;
+	}
+}
+
+/* Inline Images */
+
+// Inline images are a little tricky.
+// The goal is to have inline images look great at any screen size, any wysiwyg alignment, and in any column configuration.
+// Below is the ugly result.
+
+// If just two columns, inline images...
+#pageContent {
+
+	img { // are full width on small screens...
+		width: $global-image-width;
+		
+		&.right,
+		&.left {
+			float: none !important;
+			margin: 0 auto;
+		}
+
+		@media #{$medium-up} {
+			width: 40%; // and are only 40% wide on medium and up.
+			
+			&.right {
+				margin: 0 0 rem-calc(16) $column-gutter;
+				float: right !important;
+			}
+
+		}
+	}
+}
+
+// If three columns, inline images...
+.hasConRelNav {
+
+	#pageContent {
+	
+		img {
+
+			@media #{$medium-up} {
+				width: 100%;  // are 100% wide on medium (becuase the middle column is fairly narrow)...
+				
+				&.right {
+					margin: 0 0 rem-calc(16);
+					float: right !important;
+				}
+			}
+
+			@media #{$large-up} {
+				width: 40%; // are 40% wide on large (becuase the middle column is super wide)...
+				float: right !important;  // float all images right by default
+				margin: 0 0 rem-calc(16) $column-gutter;
+				
+				&.left {  // float left images left
+					float: left !important;
+					margin: 0 $column-gutter rem-calc(16) 0;
+				}
+			}
+
+			@media #{$xlarge-up} {
+				width: 100%;  // are 100% again (becuase the middle column gets squeezed by related content)...
+				
+				&.right {
+					margin: 0 0 rem-calc(16);
+					float: right !important;
+				}
+			}
+		}
+	}
+}

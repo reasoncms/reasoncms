@@ -876,8 +876,9 @@
 	 *
 	 * [[lastmodified]] is replaced with the date the page was most recently modified
 	 */
-	define('REASON_DEFAULT_FOOTER_XHTML','<div id="maintainer">[[sitename]] pages maintained by [[maintainer]]</div><div id="lastUpdated">This page was last updated on [[lastmodified]]</div>');
-	
+	//define('REASON_DEFAULT_FOOTER_XHTML','<div id="maintainer">[[sitename]] site maintained by [[maintainer]]</div><div id="lastUpdated"> Page last updated: [[lastmodified]]</div>');
+	define('REASON_DEFAULT_FOOTER_XHTML','<div id="maintainer">[[sitename]] maintained by [[maintainer]]. <span id="lastUpdated"> Page updated [[lastmodified]]</span>.</div>');
+
 	/**
 	 * REASON_DEFAULT_FAVICON_PATH
 	 *

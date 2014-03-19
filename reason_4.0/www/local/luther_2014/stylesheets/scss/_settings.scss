@@ -19,6 +19,10 @@ $rem-base: 16px;
 // Use Open Sans font (we import it via the template instead)
 $include-open-sans: false;
 
+// Fonts
+$open-sans: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
+$roboto:  "Roboto Slab", serif;
+
 // Determine if CSS classes come through in the gem files
 $include-html-classes: false;
 $include-print-styles: false;
@@ -36,7 +40,7 @@ $total-columns: 16;
 // Global styles
 $body-bg: #fff;
 $body-font-color: #444;
-$body-font-family: "Roboto Slab", serif;
+$body-font-family: $roboto;
 $body-font-weight: normal;
 $body-font-style: normal;
 
@@ -68,7 +72,9 @@ $lc-grey: #e9e9e9;
 
 $lc-white: #FFF;
 
-$minisite-nav-background: #e5ecf0;
+//$minisite-nav-background: #e5ecf0;
+$minisite-nav-background: $lc-grey;
+
 
 // Default Foundation color variables
 // @todo: Set these to real values
@@ -97,48 +103,21 @@ $logo-width-mobile: 149px;
 // global navigation
 $num-global-nav-items: 8;
 
-
-// Luther Mixins & Classes for Extending
-//////////////////////////////////////////////////////////
-
-@mixin lr-border($color) {
-	border-left: 7px solid $color;
-	border-right: 7px solid $color;
-}
-
-@mixin semi-transparent-text-color($color, $opacity) {
-    color: $color;
-    color: rgba($color, $opacity);
-}
-
-.light-link-color {
-	color: $link-light-on-dark;
-}
-
-.zero-out {
-	margin: 0;
-	padding: 0;
-}
-
-.screenreader {
-	position: absolute;
-	left: -9999px;
-	top: -9999px;
-	margin-bottom: 0;
-}
-
+// images
+$global-thumbnail-width: 125px;
+$global-image-width: 600px;
 
 // Typeography
 //////////////////////////////////////////////////////////
 
 // Heading font styles
-$header-font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
+$header-font-family: $open-sans;
 $header-font-weight: 300;
 $header-font-style: normal;
 $header-font-color: #222;
 $header-line-height: 1.4;
-$header-top-margin: .2rem;
-$header-bottom-margin: .5rem;
+$header-top-margin: .25rem;
+$header-bottom-margin: .75rem;
 $header-text-rendering: optimizeLegibility;
 
 // Heading font sizes
@@ -172,7 +151,7 @@ $paragraph-font-family: inherit;
 $paragraph-font-weight: 300;
 $paragraph-font-size: .95rem;
 $paragraph-line-height: 1.6;
-$paragraph-margin-bottom: rem-calc(20);
+$paragraph-margin-bottom: rem-calc(24);
 $paragraph-aside-font-size: rem-calc(14);
 $paragraph-aside-line-height: 1.35;
 $paragraph-aside-font-style: italic;
@@ -196,8 +175,8 @@ $hr-margin: rem-calc(20);
 
 // List Styles
 $list-style-position: outside;
-$list-side-margin: 1.1rem;
-$list-ordered-side-margin: 1.4rem;
+$list-side-margin: 2.1rem;
+$list-ordered-side-margin: 2.4rem;
 $list-side-margin-no-bullet: 0 !default;
 $list-nested-margin: rem-calc(20) !default;
 $definition-list-header-weight: bold !default;
@@ -206,6 +185,7 @@ $definition-list-margin-bottom: rem-calc(12) !default;
 
 // Blockquote styles
 $blockquote-font-color: lighten($header-font-color, 30%) !default;
+$blockquote-font-family: $header-font-family;
 $blockquote-padding: rem-calc(9 20 0 19) !default;
 $blockquote-border: 1px solid #ddd !default;
 $blockquote-cite-font-size: rem-calc(13) !default;
@@ -237,6 +217,35 @@ $microformat-abbr-padding: rem-calc(0 1) !default;
 // We use this to control abbr font styles
 $microformat-abbr-font-weight: bold !default;
 $microformat-abbr-font-decoration: none !default;
+
+// Tables
+//////////////////////////////////////////////////////////
+
+// These control the background color for the table and even rows
+$table-bg: #fff;
+$table-even-row-bg: #f9f9f9;
+
+// These control the table cell border style
+$table-border-style: solid;
+$table-border-size: 1px;
+$table-border-color: #ddd;
+
+// These control the table head styles
+$table-head-bg: #f5f5f5;
+$table-head-font-size: rem-calc(14);
+$table-head-font-color: #222;
+$table-head-font-weight: bold;
+$table-head-padding: rem-calc(8 10 10);
+
+// These control the row padding and font styles
+$table-row-padding: rem-calc(9 10);
+$table-row-font-size: rem-calc(14);
+$table-row-font-color: #222;
+$table-line-height: rem-calc(18);
+
+// These are for controlling the display and margin of tables
+$table-display: table-cell;
+$table-margin-bottom: $paragraph-margin-bottom;
 
 
 // Media Queries
@@ -312,7 +321,7 @@ $large-up-reitna:
 
 // Off Canvas Menu Variables
 $off-canvas-width: 70%;
-$off-canvas-bg: darken($lc-grey, 20%);
+$off-canvas-bg: darken($lc-grey, 30%);
 
 // Off Canvas Menu List Variables
 // $off-canvas-label-padding: 0.3rem rem-calc(15);
@@ -333,6 +342,10 @@ $off-canvas-bg: darken($lc-grey, 20%);
 // $off-canvas-overlay-box-shadow: -4px 0 4px rgba(#000, 0.5), 4px 0 4px rgba(#000, 0.5);
 // $off-canvas-overlay-background: rgba(#FFF, 0.2);
 // $off-canvas-overlay-background-hover: rgba(#FFF, 0.05);
+
+$off-canvas-overlay-box-shadow: -4px 0 4px rgba(#000, 0.25), 4px 0 4px rgba(#000, 0.25);
+$off-canvas-overlay-background: none;
+$off-canvas-overlay-background-hover: rgba(#FFF, 0.05);
 
 // Transition Variabls
 $menu-slide: "transform 800ms ease";
