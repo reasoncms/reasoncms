@@ -7,7 +7,7 @@
  /**
 * include the base class and register the module with Reason
 */
-reason_include_once( 'minisite_templates/modules/luther_events.php' );
+reason_include_once( 'minisite_templates/modules/events.php' );
 $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'EventsInstancewideModule';
 
 /**
@@ -19,7 +19,7 @@ $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'EventsInsta
 * a good idea to turn on page caching for the site that contains this module until these
 * performance issues are resolved.
 */
-class EventsInstancewideModule extends LutherEventsModule
+class EventsInstancewideModule extends EventsModule
 {
 	var $limit_to_current_site = false;
 	function _get_sites()
