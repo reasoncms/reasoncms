@@ -166,6 +166,7 @@ $code-font-weight: bold;
 $anchor-text-decoration: none;
 $anchor-font-color: $primary-link-color;
 $anchor-font-color-hover: darken($primary-link-color, 8%);
+$anchor-secondary-font-color-hover: lighten($secondary-link-color, 8%);
 
 // Styles for the <hr> element
 $hr-border-width: 1px;

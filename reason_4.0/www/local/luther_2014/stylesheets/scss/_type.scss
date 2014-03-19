@@ -33,6 +33,17 @@ a { // HTML5 sometimes wrapps anchors around headings. Let's make sure they stil
 		h4,
 		h5 {
 			color: $anchor-font-color;
+			text-decoration: $anchor-text-decoration;
+		}
+	}
+
+	&:visited {
+		h1,
+		h2,
+		h3,
+		h4,
+		h5 {
+			color: $anchor-font-color;
 		}
 	}
 
@@ -46,15 +57,6 @@ a { // HTML5 sometimes wrapps anchors around headings. Let's make sure they stil
 		}
 	}
 
-	&:visited {
-		h1,
-		h2,
-		h3,
-		h4,
-		h5 {
-			color: $anchor-font-color;
-		}
-	}
 }
 
 /* Blockquote */
