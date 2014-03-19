@@ -18,124 +18,146 @@
 @import "extends";
 @import "mixins";
 
-#form,
-form {
+// 1. Foundation Form Styles
+// 2. Luther Form Styles & Foundation Overrides
+
+// 1. FOUNDATION FORM STYLES
 
 // In _settings.scss, we set $include-html-form-classes: false to keep from including all the non-symantic form classes that we don't use.
 // To get the form classes we do want, we include the Foundation form styles from components/_forms.scss here.
+
+#form,
+form {
 
 	div,
 	.words,
 	input,
 	label,
-    select {
+	select {
 		font-family: $header-font-family;
 	}
 
-    // Basic styling on all basic form elements
-    input[type="text"],
-    input[type="password"],
-    input[type="date"],
-    input[type="datetime"],
-    input[type="datetime-local"],
-    input[type="month"],
-    input[type="week"],
-    input[type="email"],
-    input[type="number"],
-    input[type="search"],
-    input[type="tel"],
-    input[type="time"],
-    input[type="url"],
-    textarea {
-      -webkit-appearance: none;
-      -webkit-border-radius: 0;
-      border-radius: 0;
-      @include form-element;
-      @if not $input-include-glowing-effect {
-          @include single-transition(all, 0.15s, linear);
-      }
-      margin-bottom: 0;
-    }
+	// Basic styling on all basic form elements
+	input[type="text"],
+	input[type="password"],
+	input[type="date"],
+	input[type="datetime"],
+	input[type="datetime-local"],
+	input[type="month"],
+	input[type="week"],
+	input[type="email"],
+	input[type="number"],
+	input[type="search"],
+	input[type="tel"],
+	input[type="time"],
+	input[type="url"],
+	textarea {
+		-webkit-appearance: none;
+		-webkit-border-radius: 0;
+		border-radius: 0;
+		@include form-element;
+		@if not $input-include-glowing-effect {
+		  @include single-transition(all, 0.15s, linear);
+		}
+		margin-bottom: 0;
+	}
 
-    input[type="text"],
-    input[type="password"],
-    input[type="date"],
-    input[type="datetime"],
-    input[type="datetime-local"],
-    input[type="month"],
-    input[type="week"],
-    input[type="email"],
-    input[type="number"],
-    input[type="search"],
-    input[type="tel"],
-    input[type="time"],
-    input[type="url"] {max-width: 600px;}
+	// Set a max width for inputs (otherwise they can look a wee bit absurd)
+	input[type="text"],
+	input[type="password"],
+	input[type="date"],
+	input[type="datetime"],
+	input[type="datetime-local"],
+	input[type="month"],
+	input[type="week"],
+	input[type="email"],
+	input[type="number"],
+	input[type="search"],
+	input[type="tel"],
+	input[type="time"],
+	input[type="url"] {
+		max-width: 600px;
+	}
 
-     // Adjust margin for form elements below
-    input[type="file"],
-    select {
-      margin: 0 0 $form-spacing 0;
-    }
+	// Adjust margin for form elements below
+	input[type="file"],
+	select {
+		margin: 0 0 $form-spacing 0;
+	}
 
-    input[type="checkbox"],
-    input[type="radio"] {}
+	input[type="checkbox"],
+	input[type="radio"] {
 
-    input[type="checkbox"] + label,
-    input[type="radio"] + label {
-      display: inline-block;
-      margin-#{$default-float}: $form-spacing * .5;
-      margin-#{$opposite-direction}: $form-spacing;
-      margin-bottom: 0;
-      vertical-align: baseline;
-    }
+	}
 
-    // Normalize file input width
-    input[type="file"] {
-      width:100%;
-    }
+	input[type="checkbox"] + label,
+	input[type="radio"] + label {
+		display: inline-block;
+		margin-#{$default-float}: $form-spacing * .5;
+		margin-#{$opposite-direction}: $form-spacing;
+		margin-bottom: 0;
+		vertical-align: baseline;
+	}
 
-    // Basic fieldset styling
-    fieldset {
-      @include fieldset;
-    }
+	// Normalize file input width
+	input[type="file"] {
+		width:100%;
+	}
 
-    // Basic select styling
-    select {
-      -webkit-appearance: none !important;
-      background: $select-bg-color;
-      background-position-x: 97%;
-      background-position-y: center;
-      border: $input-border-width $input-border-style $input-border-color;
-      padding: $form-spacing / 2;
-      font-size: $input-font-size;
-      @include radius(0);
-      &.radius { @include radius($global-radius); }
-      &:hover {
-        background: darken($select-bg-color, 3%);
-        background-position-x: 97%;
-        background-position-y: center;
-        border-color: $input-focus-border-color;
-      }
-      width: auto;
-      max-width: 100%;
-    }
+	// Basic fieldset styling
+	fieldset {
+		@include fieldset;
+	}
 
-    textarea {
-    	height: auto;
-    }
+	// Basic select styling
+	select {
+		-webkit-appearance: none !important;
+		background: $select-bg-color;
+		background-position-x: 97%;
+		background-position-y: center;
+		border: $input-border-width $input-border-style $input-border-color;
+		padding: $form-spacing / 2;
+		font-size: $input-font-size;
+		@include radius(0);
+		&.radius { 
+			@include radius($global-radius);
+		}
+		&:hover {
+			background: darken($select-bg-color, 3%);
+			background-position-x: 97%;
+			background-position-y: center;
+			border-color: $input-focus-border-color;
+		}
+		width: auto;
+		max-width: 100%;
+	}
 
-// Luther custom styles & Foundation overrides
-// Custom form styles unique to Reason form markup
+	textarea {
+		height: auto;
+	}
+}
 
+// 2. LUTHER FORM STYLES & Foundation overrides
+// Form styles unique to Reason form markup
 
+#form,
+form {
 
 	.formElement {
 		@include grid-row();
 		padding: $form-spacing;
-		margin-bottom: 1px;
+		//margin-bottom: 1px;
+		border-bottom: 1px solid $lc-white;
+
+		&#requiredtextItem {
+			display: none;
+			@media #{$medium-up} {
+				padding-left: rem-calc(28);
+			}
+		}
 
 		&:nth-child(even) {
-			background: lighten($lc-grey, 5%);
+			background: rgba($lc-grey, .65);
 		}
 
 		.words {
@@ -152,6 +174,10 @@ form {
 
 		td {
 			padding: .5em 0 .5em 1em; 
+		}
+
+		&.error {
+			background: lighten($alert-color, 50%) !important;
 		}
 
 		@media #{$medium-up} {
@@ -178,35 +204,41 @@ form {
 		
 	}
 
-	table tr {}
+	//  Removes deafult table styles from radios and checkboxes 
+	//  A temporary fix until we get tables out of radio/checkbox markup
+	table {
+		margin-bottom: 0;
+		border: none;
+		background: none;
 
-	#discoErrorNotice {
-		@include alert($bg: $alert-color, $radius: 6px);
-		color: $lc-red !important;
-
-		&:before {
-			  display: inline-block;
-			  font-family: FontAwesome;
-			  font-style: normal;
-			  font-weight: normal;
-			  line-height: 1;
-			  -webkit-font-smoothing: antialiased;
-			  -moz-osx-font-smoothing: grayscale;
-			  content: "\f071"; // fa-var-exclamation-triangle
+		tr.even,
+		tr.alt,
+		tr:nth-of-type(2n) {
+			background: none !important;
 		}
+	}
+
+	#discoErrorNotice {  // Submission errors -- displayed at the top of the form.
+
+		margin-bottom: $column-gutter;
 
 		h3 {
 			font-size: $font-size-18;
-			
 			font-weight: 600;
-			margin: 0 rem-calc(6) 0 0;
-			display: inline;
-			display: none;
+			margin: 0 0 rem-calc(6);
+			color: $alert-color !important;
+
+			&:before {
+				  @extend .fa;
+				  content: $fa-var-exclamation-triangle;
+				  margin-right: rem-calc(12);
+			}
 		}
 
 		ul {
+			@include alert($bg: lighten($alert-color, 50%), $radius: $global-radius);
+			color: lighten($body-font-color, 15%);
 			margin: 0;
-			display: inline;
 			font-weight: 600;
 
 			li {

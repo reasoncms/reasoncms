@@ -155,7 +155,7 @@ small {
 code {
   font-family: Consolas, "Liberation Mono", Courier, monospace;
   font-weight: bold;
-  color: #ef8174;
+  color: #71170d;
 }
 
 /* Lists */
@@ -1675,7 +1675,8 @@ body #wrapper #post-footer p {
 
 /* line 4, scss/font-awesome/_core.scss */
 .fa, #minisite #navWrap .jump:before, .assets li:before, .childrenList li a:before, #childrenAndGrandchildren li ul .childDesc:before, .featuresModule .feature .featureInfo .featureText a:before,
-.featuresModule .feature .featureInfo .featureText span:before, .publication .post p.comments a:before, .publication .post p.more a:before {
+.featuresModule .feature .featureInfo .featureText span:before, #form #discoErrorNotice h3:before,
+form #discoErrorNotice h3:before, .publication .post p.comments a:before, .publication .post p.more a:before {
   display: inline-block;
   font-family: FontAwesome;
   font-style: normal;
@@ -2275,7 +2276,8 @@ body #wrapper #post-footer p {
 
 /* line 4, scss/font-awesome/_core.scss */
 .fa, #minisite #navWrap .jump:before, .assets li:before, .childrenList li a:before, #childrenAndGrandchildren li ul .childDesc:before, .featuresModule .feature .featureInfo .featureText a:before,
-.featuresModule .feature .featureInfo .featureText span:before, .publication .post p.comments a:before, .publication .post p.more a:before {
+.featuresModule .feature .featureInfo .featureText span:before, #form #discoErrorNotice h3:before,
+form #discoErrorNotice h3:before, .publication .post p.comments a:before, .publication .post p.more a:before {
   display: inline-block;
   font-family: FontAwesome;
   font-style: normal;
@@ -2958,7 +2960,7 @@ body #wrapper #post-footer p {
   margin-bottom: 0;
 }
 
-/* line 31, scss/modules/_form.scss */
+/* line 36, scss/modules/_form.scss */
 #form div,
 #form .words,
 #form input,
@@ -2971,7 +2973,7 @@ form label,
 form select {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
 }
-/* line 49, scss/modules/_form.scss */
+/* line 54, scss/modules/_form.scss */
 #form input[type="text"],
 #form input[type="password"],
 #form input[type="date"],
@@ -3121,7 +3123,7 @@ form input[type="url"][disabled],
 form textarea[disabled] {
   background-color: #dddddd;
 }
-/* line 72, scss/modules/_form.scss */
+/* line 78, scss/modules/_form.scss */
 #form input[type="text"],
 #form input[type="password"],
 #form input[type="date"],
@@ -3150,14 +3152,14 @@ form input[type="time"],
 form input[type="url"] {
   max-width: 600px;
 }
-/* line 76, scss/modules/_form.scss */
+/* line 84, scss/modules/_form.scss */
 #form input[type="file"],
 #form select,
 form input[type="file"],
 form select {
   margin: 0 0 1rem 0;
 }
-/* line 84, scss/modules/_form.scss */
+/* line 94, scss/modules/_form.scss */
 #form input[type="checkbox"] + label,
 #form input[type="radio"] + label,
 form input[type="checkbox"] + label,
@@ -3168,12 +3170,12 @@ form input[type="radio"] + label {
   margin-bottom: 0;
   vertical-align: baseline;
 }
-/* line 93, scss/modules/_form.scss */
+/* line 103, scss/modules/_form.scss */
 #form input[type="file"],
 form input[type="file"] {
   width: 100%;
 }
-/* line 98, scss/modules/_form.scss */
+/* line 108, scss/modules/_form.scss */
 #form fieldset,
 form fieldset {
   border: solid 1px #dddddd;
@@ -3189,7 +3191,7 @@ form fieldset legend {
   margin: 0;
   margin-left: -0.1875rem;
 }
-/* line 103, scss/modules/_form.scss */
+/* line 113, scss/modules/_form.scss */
 #form select,
 form select {
   -webkit-appearance: none !important;
@@ -3204,13 +3206,13 @@ form select {
   width: auto;
   max-width: 100%;
 }
-/* line 112, scss/modules/_form.scss */
+/* line 122, scss/modules/_form.scss */
 #form select.radius,
 form select.radius {
   -webkit-border-radius: 6px;
   border-radius: 6px;
 }
-/* line 113, scss/modules/_form.scss */
+/* line 125, scss/modules/_form.scss */
 #form select:hover,
 form select:hover {
   background: #f2f2f2;
@@ -3218,12 +3220,13 @@ form select:hover {
   background-position-y: center;
   border-color: #999999;
 }
-/* line 123, scss/modules/_form.scss */
+/* line 135, scss/modules/_form.scss */
 #form textarea,
 form textarea {
   height: auto;
 }
-/* line 132, scss/modules/_form.scss */
+
+/* line 146, scss/modules/_form.scss */
 #form .formElement,
 form .formElement {
   width: 100%;
@@ -3234,7 +3237,7 @@ form .formElement {
   max-width: 100%;
   *zoom: 1;
   padding: 1rem;
-  margin-bottom: 1px;
+  border-bottom: 1px solid white;
 }
 /* line 165, ../foundation/bower_components/foundation/scss/foundation/components/_global.scss */
 #form .formElement:before, #form .formElement:after,
@@ -3248,12 +3251,24 @@ form .formElement:after {
 form .formElement:after {
   clear: both;
 }
-/* line 137, scss/modules/_form.scss */
+/* line 152, scss/modules/_form.scss */
+#form .formElement#requiredtextItem,
+form .formElement#requiredtextItem {
+  display: none;
+}
+@media only screen and (min-width: 40.063em) {
+  /* line 152, scss/modules/_form.scss */
+  #form .formElement#requiredtextItem,
+  form .formElement#requiredtextItem {
+    padding-left: 1.75rem;
+  }
+}
+/* line 159, scss/modules/_form.scss */
 #form .formElement:nth-child(even),
 form .formElement:nth-child(even) {
-  background: #f6f6f6;
+  background: rgba(233, 233, 233, 0.65);
 }
-/* line 141, scss/modules/_form.scss */
+/* line 163, scss/modules/_form.scss */
 #form .formElement .words,
 form .formElement .words {
   font-size: 1rem;
@@ -3264,7 +3279,7 @@ form .formElement .words {
   margin-bottom: 0.75rem;
   font-weight: 600;
 }
-/* line 145, scss/modules/_form.scss */
+/* line 167, scss/modules/_form.scss */
 #form .formElement .words .requiredIndicator,
 form .formElement .words .requiredIndicator {
   font-weight: 300;
@@ -3272,18 +3287,23 @@ form .formElement .words .requiredIndicator {
   padding-left: 0.25rem;
   color: #838383;
 }
-/* line 153, scss/modules/_form.scss */
+/* line 175, scss/modules/_form.scss */
 #form .formElement td,
 form .formElement td {
   padding: .5em 0 .5em 1em;
 }
+/* line 179, scss/modules/_form.scss */
+#form .formElement.error,
+form .formElement.error {
+  background: #fad4d0 !important;
+}
 @media only screen and (min-width: 40.063em) {
-  /* line 132, scss/modules/_form.scss */
+  /* line 146, scss/modules/_form.scss */
   #form .formElement,
   form .formElement {
     padding: 1rem 0;
   }
-  /* line 161, scss/modules/_form.scss */
+  /* line 187, scss/modules/_form.scss */
   #form .formElement .words,
   form .formElement .words {
     position: relative;
@@ -3292,7 +3312,7 @@ form .formElement td {
     width: 25%;
     float: left;
   }
-  /* line 165, scss/modules/_form.scss */
+  /* line 191, scss/modules/_form.scss */
   #form .formElement .element,
   form .formElement .element {
     position: relative;
@@ -3301,15 +3321,50 @@ form .formElement td {
     width: 75%;
     float: left;
   }
-  /* line 169, scss/modules/_form.scss */
+  /* line 195, scss/modules/_form.scss */
   #form .formElement td,
   form .formElement td {
     padding: .5em 1em .5em 0;
   }
 }
-/* line 183, scss/modules/_form.scss */
+/* line 209, scss/modules/_form.scss */
+#form table,
+form table {
+  margin-bottom: 0;
+  border: none;
+  background: none;
+}
+/* line 216, scss/modules/_form.scss */
+#form table tr.even,
+#form table tr.alt,
+#form table tr:nth-of-type(2n),
+form table tr.even,
+form table tr.alt,
+form table tr:nth-of-type(2n) {
+  background: none !important;
+}
+/* line 221, scss/modules/_form.scss */
 #form #discoErrorNotice,
 form #discoErrorNotice {
+  margin-bottom: 2.5rem;
+}
+/* line 225, scss/modules/_form.scss */
+#form #discoErrorNotice h3,
+form #discoErrorNotice h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0 0 0.375rem;
+  color: #b62615 !important;
+}
+/* line 231, scss/modules/_form.scss */
+#form #discoErrorNotice h3:before,
+form #discoErrorNotice h3:before {
+  content: "\f071";
+  margin-right: 0.75rem;
+}
+/* line 238, scss/modules/_form.scss */
+#form #discoErrorNotice ul,
+form #discoErrorNotice ul {
   border-style: solid;
   border-width: 1px;
   display: block;
@@ -3318,47 +3373,21 @@ form #discoErrorNotice {
   position: relative;
   padding: 0.875rem 1.5rem 0.875rem 0.875rem;
   font-size: 0.8125rem;
-  background-color: #f7c0b9;
-  border-color: #f4aba2;
+  background-color: #fad4d0;
+  border-color: #f7c0b9;
   color: black;
   -webkit-border-radius: 6px;
   border-radius: 6px;
-  color: #9f2112 !important;
-}
-/* line 187, scss/modules/_form.scss */
-#form #discoErrorNotice:before,
-form #discoErrorNotice:before {
-  display: inline-block;
-  font-family: FontAwesome;
-  font-style: normal;
-  font-weight: normal;
-  line-height: 1;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  content: "\f071";
-}
-/* line 198, scss/modules/_form.scss */
-#form #discoErrorNotice h3,
-form #discoErrorNotice h3 {
-  font-size: 1.125rem;
-  font-weight: 600;
-  margin: 0 0.375rem 0 0;
-  display: inline;
-  display: none;
-}
-/* line 207, scss/modules/_form.scss */
-#form #discoErrorNotice ul,
-form #discoErrorNotice ul {
+  color: #6a6a6a;
   margin: 0;
-  display: inline;
   font-weight: 600;
 }
-/* line 212, scss/modules/_form.scss */
+/* line 244, scss/modules/_form.scss */
 #form #discoErrorNotice ul li,
 form #discoErrorNotice ul li {
   display: inline;
 }
-/* line 215, scss/modules/_form.scss */
+/* line 247, scss/modules/_form.scss */
 #form #discoErrorNotice ul li a,
 form #discoErrorNotice ul li a {
   font-weight: 400;
