@@ -17,6 +17,12 @@ reason_include_once( 'minisite_templates/modules/feature/views/default_view.php'
 
 /**
  * A full-featured feature item view that can be used as a default
+ *
+ * Luther customizations include...
+ * 1. Adding wrapper classes for styling
+ * 2. Moving the navigation for easier styling
+ * 3. Adding a conditional to output the text div only if text exisits
+ *
  */
 class DefaultFeatureView extends FeatureView
 {
@@ -373,9 +379,9 @@ class DefaultFeatureView extends FeatureView
 		 		style=\"background-color:#".$view_data['bg_color'].";\" >\n";
 		$str.='<div class="featureContent' .$type_str.'">'."\n";
 			$str.=$media_str;
-			$str.="<div class=\"featureInfoWrap\">";
+			$str.="<div class=\"featureInfoWrap\">"; //  Add wrap for styling
 
-			if ($view_data['show_text'])
+			if ($view_data['show_text']) // Only show Feature Info if there is text.
 			{
 				$str.="<div class=\"featureInfo\">";
 					$str.=$title_str;

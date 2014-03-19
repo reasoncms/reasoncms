@@ -21,7 +21,7 @@
 			<header id="global-banner" role="banner">
 			
 				<hgroup>
-					<h1><a href="#"><span>Luther College</span></a></h1>
+					<h1><a href="/"><span>Luther College</span></a></h1>
 					<h2><span>Global Site Tagline</span></h2>
 				</hgroup>
 				
@@ -49,7 +49,10 @@
 						<li class="offices"><a href="/contact/administrative">Offices</a></li>
 						<li class="index"><a href="/azindex/">A-Z Index</a></li>
 						<li class="search">
-							<form><input type="text" value="Search" /><input type="submit" value="Go" /></form>
+							<form>
+								<input type="text" value="Search" />
+								<input type="submit" value="Go" />
+							</form>
 						</li>
 					</ul>
 				</div>

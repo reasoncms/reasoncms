@@ -1,0 +1,70 @@
+//
+// SIBLING STYLES
+//
+// @author Nathan Dirks
+//
+
+// Foundation imports
+@import "settings";
+@import "foundation/components/grid";
+
+// Compass imports
+@import "compass/css3";
+
+// Luther imports
+@import "extends";
+@import "mixins";
+
+.childrenList {
+
+}
+
+// Children
+
+.childrenList {
+	border-top: 1px solid $lc-grey;
+	padding: $column-gutter/2 0 0;
+	margin: 0;
+
+	a {
+		h4 {
+
+			color: $anchor-font-color;
+			text-decoration: $anchor-text-decoration;
+			line-height: inherit;
+
+			&:hover,
+			&:focus { color: $anchor-font-color-hover; }
+
+			img { border:none; }
+
+		}
+
+	}
+
+	li {
+
+	}
+}
+
+.childrenListWithImages {
+	margin-left: 200px;
+
+	li {
+		clear: both;
+		display: block;
+		@include clearfix;
+		margin-bottom: $column-gutter/2;
+	}
+
+	.tnImage {
+		width: 160px;
+		margin-left: -200px;
+		float: left;
+	}
+
+}
+
+// Children & Grandchildren
+
+// #childrenAndGrandchildren {}

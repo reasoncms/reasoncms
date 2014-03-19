@@ -20,12 +20,18 @@
 
 // Compass imports
 @import "compass/css3";
-@import "compass/css3/opacity";
-@import "compass/css3/transition";
+
+// Font Awesome Imports
+@import "font-awesome/variables";
+@import "font-awesome/core";
+
+// Luther imports
+@import "extends";
+@import "mixins";
 
 #minisite {
 	@include grid-row();
-	padding-top: $column-gutter/2;
+	padding-top: rem-calc(22);
 	clear: both;
 	position: relative;
 
@@ -39,7 +45,10 @@
 
 	.breadcrumbs {
 		font-family: $header-font-family;
+		padding: 0 0 rem-calc(21);
 		font-size: rem-calc(12);
+		line-height: 1.5;
+
 		span {
 			padding: rem-calc(4);
 		}
@@ -51,6 +60,7 @@
 		padding-top: 14px;
 		padding-bottom: $column-gutter/2;
 		margin: 0;
+		font-size: $h2-font-size;
 	}
 
 	#preBanner { // @todo: Emergency Preempt? 
@@ -64,16 +74,15 @@
 		#banner {
 			h1 { // Hide minisite title, but keep readable by screenreaders
 				@extend .screenreader;
-			}	
+			}
 		}
 
-		.pageTitle { // Page Title for mobile
-			padding-right: $header-height-mobile;
+		.breadcrumbs {
+			margin-right: rem-calc(60) + $column-gutter/3;
 		}
 
-		@media #{$large-up} {  // Hide #minisiteBanner for desktop
-			.breadcrumbs {display: none;}  // Breadcrumbs for mobile
-			.pageTitle {display: none;} // Page Title for mobile
+		@media #{$large-up} {  // Hide mobile breadcrumb on desktop
+			.breadcrumbs {display: none;}
 		}
 	}
 
@@ -85,10 +94,17 @@
 	#contentAndRelated { // Desktop banner
 
 		.contentHead {  // Hide desktop breadcrumb & page title
-			display: none;
-			
-			@media #{$large-up} {
-				display: block;  // Show desktop breadcrumb & page title
+			.pageTitle {
+				padding-top: 0;
+			}
+
+			.breadcrumbs {
+				display: none;
+				padding: 0 0 rem-calc(14);
+
+				@media #{$large-up} {
+					display: block;  // Show desktop breadcrumb & page title
+				}
 			}
 		}
 	}
@@ -108,25 +124,47 @@
 			@include grid-column($columns: 16, $collapse: true);
 		}
 
-		#contentSections {
+		#contentSections,
+		#relatedSections {
 			margin-top: $column-gutter/2;
+		}
+
+		#contentSections {
+
+			> div:last-child {
+				margin-bottom: $column-gutter;
+			}
 		}
 	}
 	
 	&.hasConRelNav { /* 3 COLUMNS: Nav, Content, & Related */
+		@media #{$medium-up} {
+			#contentAndRelated {
+
+				#contentSections {
+					@include grid-column($columns: 10, $collapse: true);
+					padding-right: $column-gutter / 2;
+				}
+				
+				#relatedSections {
+					@include grid-column($columns: 6, $collapse: true);
+					padding-left: $column-gutter / 2;
+				}
+			}
+		}
 		@media #{$large-up} {
 			#contentAndRelated {
 				@include grid-column($columns: 11, $collapse: true);
 				padding-left: $column-gutter / 2;
 
 				#contentSections {
-					@include grid-column($columns: 12, $collapse: true);
-					padding-right: $column-gutter / 2;
+					@include grid-column($columns: 16, $collapse: true);
+					//padding-right: $column-gutter / 2;
 				}
 				
 				#relatedSections {
-					@include grid-column($columns: 4, $collapse: true);
-					padding-left: $column-gutter / 2;
+					@include grid-column($columns: 16, $collapse: true);
+					//padding-left: $column-gutter / 2;
 				}
 			}
 		}
@@ -136,12 +174,12 @@
 				padding-left: $column-gutter / 2;
 
 				#contentSections {
-					@include grid-column($columns: 10.6666666, $collapse: true);
+					@include grid-column($columns: 10, $collapse: true);
 					padding-right: $column-gutter / 2;
 				}
 				
 				#relatedSections {
-					@include grid-column($columns: 5.33333333, $collapse: true);
+					@include grid-column($columns: 6, $collapse: true);
 					padding-left: $column-gutter / 2;
 				}
 			}	
@@ -215,13 +253,18 @@
 		@include box-shadow(rgba(#000, .5) 0 0 4px);
 		position: relative;
 		top: -1px;
-		z-index: 800;
-
-		@media #{$large-up} {
-			@include box-shadow(0 0 0 0)
+		z-index: 9;
+		
+		&.open {
+			//margin-bottom: $column-gutter;	
 		}
 
-		a.toggle {  // Mobile minisite navigation toggle
+
+		@media #{$large-up} {
+			@include box-shadow(0 0 0 0);
+		}
+
+		a.toggle {  // Mobile minisite navigation toggle button
 			position: absolute;
 			top: -$header-height-mobile;
 			right: 0;
@@ -231,18 +274,23 @@
 			z-index: 12;
 
 			&.open {
-				background: $minisite-nav-background;
-				@include box-shadow(rgba(#000, .3) -2px -2px 2px);
+				background: lighten($minisite-nav-background, 4%);
+				@include box-shadow(rgba(#000, .2) -2px -2px 2px);
 
 				.fa-times {display: block;}
 				.fa-bars {display: none;}
 			}
 
+			h1 {
+				font-size: rem-calc(20);
+				color: $lc-blue-light;
+			}
+
 			i {
-				font-size: rem-calc(30); 
+				font-size: rem-calc(20);
 				width: $header-height-mobile;
+				margin-top: rem-calc(20);
 				text-align: center;
-				margin-top: rem-calc(15);
 				
 				&.fa-times {
 					display: none;
@@ -258,8 +306,8 @@
 			
 		}
 		
-		nav {	
-			background: $minisite-nav-background;
+		#minisiteNavigation {	
+			background: lighten($minisite-nav-background, 3%);
 		}
 
 		#minisiteNavigation,
@@ -281,7 +329,7 @@
 		
 		.navListTop {
 			margin: 0;
-			border-bottom: 1px solid #bfcad1;
+			border-bottom: 1px solid darken($minisite-nav-background, 7%);
 		}
 		
 		.navListTop ul {
@@ -301,13 +349,26 @@
 			font-size: rem-calc(32);
 			line-height: 1;
 			font-weight: 300;
-			color: #303030;
+			//color: #303030;
+			color: darken($lc-blue-dark, 5%);
 			border-top: none;
+			position: relative;
+			padding-top: rem-calc(30);
+			padding-bottom: rem-calc(30);
 			
 			strong {
 				font-weight: 300;
 			}
-			
+
+			/*&:after {
+				@extend .fa;
+				content: $fa-var-home;
+				position: absolute;
+				right: 0;
+				top: 0;
+				color: rgba(255,255,255,.25);
+			}*/
+
 			@media #{$large-up} {
 				padding-top: rem-calc(40);
 				padding-bottom: rem-calc(40);
@@ -315,7 +376,7 @@
 				border-bottom: 6px solid #FFF;
 				
 				&:hover {
-					text-decoration: underline;
+					//text-decoration: underline;
 					//@include transition(.25s, ease)
 					//@include transition-property(background, color);
 					//@include transition-duration(.25s);
@@ -326,14 +387,14 @@
 		
 		.navListTop ul a {
 			display: block;
-			border-top: 1px solid #bfcad1;
+			border-top: 1px solid darken($minisite-nav-background, 7%);
 			$minisite-nav-color: #303030;
 			color: $minisite-nav-color;
 			font-weight: 300;
 			font-size: rem-calc(15);
 			
 			&:hover {
-				background: darken($minisite-nav-background, 2%);
+				background: $minisite-nav-background;
 				color: darken($minisite-nav-color, 100%);
 			}								
 		}
@@ -343,10 +404,10 @@
 			a {
 				border: none;
 				padding: $column-gutter / 3.5 $column-gutter / 2 $column-gutter / 3.5 $column-gutter;
-				border-top: 1px solid darken($minisite-nav-background, 3%);
+				border-top: 1px solid darken($minisite-nav-background, 1%);
 			
 				&:hover {
-					background: lighten($minisite-nav-background, 2%);	
+					background: lighten($minisite-nav-background, 4%);	
 				}
 				
 			}
@@ -358,11 +419,11 @@
 		
 		.navListTop ul .navListItem.open {
 			background: #f0f5f8;
-			background: lighten($minisite-nav-background, 5%);
+			background: lighten($minisite-nav-background, 6%);
 			a {
 			
 				&:hover {
-					background: lighten($minisite-nav-background, 2%);	
+					background: lighten($minisite-nav-background, 4%);	
 				}
 			}
 		}
@@ -374,13 +435,8 @@
 			}
 			
 			&:before {
-				-moz-osx-font-smoothing: grayscale;
-				display: inline-block;
-				font-family: FontAwesome;
-				font-style: normal;
-				font-weight: normal;
-				line-height: 1;
-				content: "\f08e";
+				@extend .fa;
+				content: $fa-var-external-link;
 				position: absolute;
 				top: $column-gutter / 2;
 				right: $column-gutter / 2;
@@ -388,19 +444,67 @@
 		}
 	}
 
-	// 4. Minisite Footer
+	// 4. Related Content
+	//////////////////////////////////////
+
+	#relatedSections {
+
+		> div {
+			margin-bottom: $column-gutter;
+		}
+
+		.assets,
+		.blurb {
+			background: lighten($lc-grey, 5%);
+			padding: $column-gutter/2;
+
+			> *:last-child {
+				padding-bottom: 0;
+				margin-bottom: 0;
+			}
+		}
+
+		h3 {
+			font-size: $h4-font-size;
+			margin-top: 0;
+		}
+
+	}
+
+
+	// 5. Minisite Footer
 	//////////////////////////////////////
 	
 	#footer {
 		@include grid-column(16);
 		font-size: rem-calc(12);
-		padding: $column-gutter / 2;
+		padding-top: $column-gutter/2;
+		padding-bottom: $column-gutter/2;
+
+		@media #{$large-up} {
+			@include grid-column($columns: 16, $collapse: true);
+		}
 		
 		.loginLinkModule {
 			text-align: right;
+
+			.editDivider {display: none;}
+
+			div {
+				display: inline;
+
+				a {
+					background: $lc-grey;
+					padding: rem-calc(2) rem-calc(6);
+					@include border-radius(4px);
+					margin-left: rem-calc(4);
+				}
+
+			}
 			
 			#footerLoginLink {
-				font-size: rem-calc(12); margin: 0;
+				font-size: rem-calc(12);
+				margin: rem-calc(8) 0 0;
 			}
 		}
 	}

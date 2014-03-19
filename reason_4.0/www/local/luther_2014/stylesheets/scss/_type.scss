@@ -1,19 +1,135 @@
+//
+// LUTHER TYPE
+//
+// @author Nathan Dirks
+//
+// Typography variables can be set in Luther's _settings.scss.  Those variables are used in Foudnation's _type.scss 
+// and are written to our stylesheet when we set the parameter $include-html-type-classes to true (see line 9 below).
+// To keep from editing Foundation's _type.scss, we add any overrides or additional type styles below.
+
 $include-html-type-classes: true;
+$include-html-table-classes: true;
+
+// Foundaton imports
 @import "settings";
 @import "foundation/components/type";
+@import "foundation/components/tables";
 
+// Compass Imports
+@import "compass/css3";
 
-/* Base Typography 
+// Luther imports
+@import "extends";
+@import "mixins";
+
+/* Luther Custom Typography 
 *******************************************/
 
-a.more {
+a { // HTML5 sometimes wrapps anchors around headings. Let's make sure they still get the default anchor colors
+	&:link {
+		h1,
+		h2,
+		h3,
+		h4,
+		h5 {
+			color: $anchor-font-color;
+		}
+	}
+
+	&:hover {
+		h1,
+		h2,
+		h3,
+		h4,
+		h5 {
+			color: $anchor-font-color-hover;
+		}
+	}
+
+	&:visited {
+		h1,
+		h2,
+		h3,
+		h4,
+		h5 {
+			color: $anchor-font-color;
+		}
+	}
+}
+
+/* Blockquote */
+blockquote {
+	font-family: $blockquote-font-family;
+}
+
+/* Wysiwyg Formatting */  
+#pageContent,
+.blurb {
+
+	ol, // bullets needed for wysiwyg content
+	ul,
+	dl {
+		font-weight: $paragraph-font-weight;
+		padding-bottom: rem-calc(6);
+		&:last-child {
+			padding-bottom: 0;
+		}
+	}
+	ol {list-style-type: decimal;}
+	ul {list-style-type: disc;}
+
+	a:link { // underline links
+		text-decoration: underline;
+	}
+
+	.callOut {
+		@include border-radius($global-radius);
+		background: $lc-grey;
+		padding: $column-gutter/2 $column-gutter/1.5;
+		margin-bottom: $paragraph-margin-bottom;
+
+		*:last-child {
+			margin-bottom: 0;
+		}
+	}
+}
+
+// Tables
+
+table {
+	font-family: $header-font-family;
+}
+
+// Callouts
+
+
+// "More" links at the end of feeds or short descriptions
+a.more,
+.pubLinks a {
 	color: $secondary-link-color;
-	text-decoration: underline;
+	font-family: $open-sans;
+	font-size: rem-calc(14);
+	font-weight: 700;
+	text-transform: uppercase;
 
 	&:hover {
 		color: darken($secondary-link-color, 10%);	
 	}
-} 
+}
+
+
+/* Feeds */
+#relatedPub .post h4 {
+	font-family: $body-font-family;
+	font-size: rem-calc(18);
+	font-weight: 400;
+}
+
+time {
+	font-family: $header-font-family;
+	font-weight: 300;
+}
+
 
 /* Custom Typography 
 *******************************************/

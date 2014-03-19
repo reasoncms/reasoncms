@@ -25,56 +25,67 @@ $GLOBALS['_reason_page_types_local'] = array(
 				'thumbnail_height' => 600,
 				'thumbnail_crop' => 'fill',
 			),*/
-			'responsive_page_title' => 'page_title',
 			'main_head' => 'page_title',
 			'main' => 'content',
 			'main_post' => '',
 			'main_post_2' => '',
 			'main_post_3' => '',
 			'pre_sidebar' => 'assets',
-			'sidebar' => array(
-				'module' => 'image_sidebar',
-				'num_to_display' => 2,
-				'thumbnail_width' => 600,
-				'thumbnail_height' => 400,
-				'thumbnail_crop' => 'fill',
-			),
-			'post_sidebar' => 'main_blurb',
+			'sidebar' =>'image_sidebar', // default parameters set in alter_reason_pagetype in luther.php
+			'post_sidebar' => 'blurb',
 			'navigation' => 'navigation',
 			'sub_nav' => 'social_account/social_account',
-			'sub_nav_2' => 'contact_blurb',
+			'sub_nav_2' => 'blurb_contact',
 			'sub_nav_3' => '',
 			'edit_link' => 'login_link',
-			'footer' => '',
+			'footer' => 'maintained',
 			'post_foot' => '',
 		'global_footer' => 'global/global_footer',
 	),
-	
-	'show_children' => array(
+
+	'publication' => array(
+		'main_head' => 'publication/title',
+		'main'=>'publication/description',
 		'main_post' => array(
-			'module'=>'children',
-			'description_part_of_link' => true,
-			'provide_images' => true,
-			'randomize_images' => true,
-			'thumbnail_height' => 300,
-			'thumbnail_width' => 200,
-			'html5' => true,
+			'module' => 'publication',
+			'css' => false,
+			'use_filters' => false,
+			'show_login_link' => false,
+		),
+		'sidebar'=>'',
+		'pre_sidebar' => '',
+	),
+
+	'show_siblings' => array(
+		'main_post' => array(
+			'module' => 'siblings',
+			'show_only_pages_in_nav' => true,
 		),
 	),
 	
 	/* NEW LOCAL PAGE TYPES */
 	
 	'luther_homepage' => array(
+		'main_post' => array(
+			'module' => 'blurb',
+			'num_to_display' => '1',
+		),
 		'pre_sidebar' => array(
 				'module' => 'publication',
 				'related_mode' => 'true',
 				'markup_generator_info' =>
-					array('list_item' => array(
-						'classname' => 'MinimalListItemMarkupGenerator', 
-						'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/minimal.php',
-						)
+					array(
+						'list_item' => array(
+							'classname' => 'RelatedListItemNoDescriptionMarkupGenerator', 
+							'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/related_item_no_description.php',
+							),
+						//'list' => array(
+						//	'classname' => 'RelatedListHTML5MarkupGenerator', 
+						//	'filename' => 'minisite_templates/modules/publication/publication_list_markup_generators/related_list_html5.php',
+						//),
 					 ),
 				'max_num_items' => 3,
+				'related_title' => 'Headlines',
 				'css' => '',
 		),
 		'sidebar' => 'global/placeholder',
@@ -82,7 +93,10 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'module' => 'luther_av',
 			'full_size' => true,
 		),
-		'callouts' => 'blurb',
+		'callouts' => array(
+			'module' => 'blurb',
+			'num_to_display' => '4',
+		),
 		'navigation' => '',
 		'sub_nav' => '',
 	),
@@ -326,7 +340,10 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'sidebar_4' => '',
 	),
 	'standalone_login_page_stripped' => array(
+		'global_header' => '',
+		'global_navigation' => '',
 		'main' => 'login',
+		'global_footer' => '',
 	),
 	'study_skills_assessment'=> array(
 		'main_post'=> 'study_skills_assessment/study_skills_assessment', 

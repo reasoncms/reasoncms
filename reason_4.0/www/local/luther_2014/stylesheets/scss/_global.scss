@@ -19,17 +19,9 @@
 @import "compass/css3/opacity";
 @import "compass/css3/transition";
 
-.zero-out {
-	margin: 0;
-	padding: 0;
-}
-
-.screenreader {
-	position: absolute;
-	left: -9999px;
-	top: -9999px;
-	margin-bottom: 0;
-}
+// Luther imports
+@import "extends";
+@import "mixins";
 
 //#reasonDeveloper {display: none;}
 
@@ -130,12 +122,12 @@ body {
 				}
 			}
 			
-			#mobile-nav {  // This is the mobile nav toggle button
+			#mobile-nav {  // Mobile nav toggle buttons (Global Menu & Search)
 			
 				ul {
 					@extend .zero-out;
 					
-					a {
+					a { // Global Menu Toggle
 						width: $header-height-mobile;
 						height: $header-height-mobile;
 						display: block;
@@ -167,12 +159,12 @@ body {
 
 					}
 				
-					a.search {
+					a.search { // Search Menu Toggle
 						left: auto;
 						right: 0;
 						
 						&.open {
-							background: #efefef;
+							background: lighten($lc-grey, 5%);
 							
 							i {
 								color: $lc-blue-light;
@@ -195,11 +187,11 @@ body {
 				
 			}
 			
-			#search-nav {  // Mobile nav search button
+			#search-nav {  // Mobile nav search
 				display: none;
 				@include grid-column(16);
-				background: #efefef;
-				box-shadow: 0 2px 2px rgba(0,0,0,.5);
+				background: lighten($lc-grey, 5%);
+				@include box-shadow(rgba(0,0,0,.25) 0 2px 2px);
 			
 				&.open {
 					display: block;
@@ -295,7 +287,7 @@ body {
 					display: inline-block;
 					a {
 						background: lighten($lc-blue-light, 15%);
-						padding: rem-calc(4) rem-calc(12);
+						padding: rem-calc(4) rem-calc(16);
 						@include border-radius($global-rounded);
 						margin: rem-calc(6) rem-calc(2);
 						display: inline-block;
@@ -368,7 +360,7 @@ body {
 						}
 						
 						ul {
-							display: block;
+							// display: block;
 
 							li {
 								border: none;
@@ -559,8 +551,6 @@ body {
 				.phone {
 					display: block;
 				}
-				
-
 				
 			}
 			

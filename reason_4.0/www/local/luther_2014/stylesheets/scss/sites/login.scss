@@ -1,0 +1,128 @@
+// Foundation imports
+@import "settings";
+@import "foundation/components/grid";
+
+// Compass imports
+@import "compass/css3";
+
+// Font Awesome Imports
+@import "font-awesome/variables";
+@import "font-awesome/core";
+
+// Luther Imports
+@import "modules/form";
+
+// Luther imports
+@import "extends";
+
+/* STRUCTURE */
+.lutherLogin {
+	font-family: $open-sans;
+	background: lighten($lc-grey, 5%);
+	padding-top: rem-calc(50);
+	line-height: 1.3;
+
+	a {
+		&:link,
+		&:visited {
+			color: $anchor-font-color;
+		}
+		&:hover {
+			color: $anchor-font-color-hover;
+			text-decoration: underline;
+		}
+	}
+
+	.minisiteWrap {
+		width: 90%;
+		max-width: rem-calc(400px);
+		margin: 0 auto;
+
+		.siteTitle {
+		 	a {
+		 		display: block;
+		 		width: 100px;
+		 		//height: 153px;
+		 		margin: 0 auto;
+		 	}
+		 }
+
+		#contentAndRelated {
+			 @include box-shadow(rgba(0,0,0,.25) 0 0 2px);
+			 @include border-radius(8px);
+			 margin-bottom: rem-calc(32);
+			 background: $lc-white;
+
+
+			 .pageTitle {
+			 	font-size: rem-calc(16);
+			 	text-align: center;
+			 	background: lighten($lc-grey, 2%);
+			 	padding: rem-calc(16);
+			 	color: rgba($lc-blue-dark, .75);
+			 	text-transform: uppercase;
+			 	@include border-radius(8px 8px 0 0);
+			 	border-bottom: 1px solid darken($lc-grey, 3%);
+
+				&:before {
+					@extend .fa;
+					margin-right: rem-calc(8);
+					content: $fa-var-lock;
+					//color: darken($lc-grey, 15%);
+					color: rgba($lc-blue-dark, .75);
+				}
+			 }
+
+			 .contentMain {
+			 	padding: rem-calc(16) rem-calc(18);
+
+			 	h3 {
+			 		font-size: $h5-font-size;
+			 		padding: 0;
+			 		margin: 0 0 rem-calc(16);
+			 	}
+
+			 	h4.msg {
+			 		color: $warning-color;
+			 	}
+
+			 	p {
+			 		color: darken($lc-grey, 30%);
+
+			 		&.smallText {
+			 			font-size: rem-calc(12);
+			 			margin-top: rem-calc(16);
+			 		}
+			 	}
+
+				table {
+					width: 100%;
+				}
+
+				tr {
+					display: block;
+					margin-top: rem-calc(24);
+				}
+
+				td:first-child {
+					display: inline-block;
+					width: 30%;
+					margin-right: 5%;
+					//font-size: rem-calc(14);
+					font-weight: 300;
+					font-size: rem-calc(14);
+
+					@media #{$small-high-up} {
+						font-size: rem-calc(14);
+					}
+
+				}
+
+				td:last-child {
+					display: inline-block;
+					width: 65%;
+				}
+			}
+		}
+	}
+}

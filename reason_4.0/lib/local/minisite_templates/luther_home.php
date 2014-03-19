@@ -17,6 +17,12 @@
 			// @todo: Alter page types to force empty regions, instead of copying entire functions and overriding one line
 	
 		}
+
+		function do_org_head_items()
+		{
+			parent::do_org_head_items();
+			$this->head_items->add_stylesheet('/reason/local/luther_2014/stylesheets/sites/home.css');
+		}
 	
 		function get_body_tag_classes()
 		{
@@ -76,6 +82,8 @@
 		function show_main_content_sections()
 		{
 		
+			echo '<div id="welcomeRow">'."\n";
+
 			if ($this->has_content( 'pre_main_head' )) 
 			{
 				echo '<div id="contentFeature">'."\n";
@@ -110,6 +118,7 @@
 			echo '</div>'."\n";
 
 			}
+			echo '</div>'."\n";
 		}
 
 		function show_sidebar_tableless()
@@ -120,8 +129,7 @@
 				
 					if($this->has_content( 'pre_sidebar' ))
 					{
-						echo '<div id="preSidebar">'."\n";
-						echo '<h3>Headlines</h3>'."\n";
+						echo '<div id="preSidebar">'."\n"; // Headlines
 						$this->run_section( 'pre_sidebar' );
 						echo '</div>'."\n";
 					}
@@ -137,6 +145,7 @@
 						echo '<div id="postSidebar">'."\n";
 						echo '<h3>Featured Video</h3>'."\n";
 						$this->run_section( 'post_sidebar' );
+						echo '<a class="more" href="http://www.youtube.com/user/LutherCollegeMedia" target="_blank">YouTube Video Archive</a>'."\n";
 						echo '</div>'."\n";
 					}
 				

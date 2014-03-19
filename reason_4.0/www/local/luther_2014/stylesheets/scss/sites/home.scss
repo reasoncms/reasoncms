@@ -7,6 +7,13 @@
 @import "compass/css3/opacity";
 @import "compass/css3/transition";
 
+// Font Awesome Imports
+@import "font-awesome/variables";
+@import "font-awesome/core";
+
+// Luther imports
+@import "extends";
+
 /* STRUCTURE */
 
 .lutherHome {
@@ -25,6 +32,10 @@
 		&.hasConNav,
 		&.hasConRel,
 		&.hasCon {
+
+			#welcomeRow {
+				@include grid-row;
+			}
 
 			#contentAndRelated {
 
@@ -50,13 +61,55 @@
 						margin: 0 !important;
 						@include border-top-left-radius(12px);
 					}
+
+					.pageTitle {
+						border: none;
+					}
+
+					.contentPost {
+						.blurb {
+							ul {
+								@extend .zero-out;
+								list-style-type: none;
+
+								.cta:before {
+									@extend .fa;
+									margin-right: rem-calc(16);
+								}
+
+								.blue:before {
+									content: $fa-var-picture-o;
+								}
+
+								.green:before {
+									content: $fa-var-map-marker;
+								}
+
+								.red:before {
+									content: $fa-var-pencil;
+								}
+
+							}
+						}
+					}
 				}
 
 				#relatedSections {
+					
 					clear: both;
 					padding: 0;
 					@include grid-row();
 					margin-top: $column-gutter;
+
+					> div {
+						background: none;
+					}
+
+					@media #{$medium-up} {
+						@include grid-row($behavior: nest);
+						float: none;
+						margin-top: $column-gutter;
+					}
 
 					h3 {
 						border-bottom: 1px solid $lc-grey;
@@ -66,27 +119,65 @@
 
 				}
 
-				#preSidebar,
-				#sidebar,
-				#postSidebar {
-					background: #fff;
-
 					@media #{$medium-up} {
-						@include grid-column(5.3333333);
+						#preSidebar {
+							@include grid-column(8);
+						}
+						#sidebar {
+							@include grid-column(8);
+						}
+						#postSidebar {
+							clear: left;
+							@include grid-column(8);
+						}
 					}
-				}
+
+					@media #{$xlarge-up} {
+						#preSidebar,
+						#sidebar,
+						#postSidebar {
+							@include grid-column(5.3333333);
+							clear: none;
+						}
+					}
 
 				#calloutSections {
 					margin-top: $column-gutter;
-					@include grid-column(16);
+					//@include grid-column(16);
+					@include grid-row;
+
+					@media #{$medium-up} {
+						@include grid-row($behavior: nest);
+						margin-top: $column-gutter;
+					}
 
 					.blurbs {
-						@include grid-row($behavior: nest);
+						//@include grid-row($behavior: nest);
 					
 						@media #{$medium-up} {
 							.blurb {
-								background: #efefef;
 								@include grid-column(4);
+
+								.blurbInner {
+
+									background: $lc-grey;
+									padding-bottom: $column-gutter/3;
+
+									* {
+										padding: 0 $column-gutter/2 ;
+									}
+
+									p:first-child {
+										padding: 0;
+										margin: 0;
+									}
+
+									img:first-child {
+										padding: 0;
+									}
+									
+								}
+
 							}
 						}
 
@@ -99,6 +190,36 @@
 		} // &.hasCon
 
 	} // #minisite
+
+	// ICONS
+
+	.pubLinks a,
+	.more {
+		&:before {
+			@extend .fa;
+			margin-right: rem-calc(8);
+		}
+	}
+
+	#pageContent .more {
+		&:before {
+			content: $fa-var-arrow-circle-right;
+		}
+	}
+
+	.pubLinks a {
+		&:before {
+			content: $fa-var-th-list;
+		}
+	}
+
+	#postSidebar .more {
+		&:before {
+			content: $fa-var-youtube-play;
+		}
+	}
+
+	// MODULES
 
 	.moduleNav ul {
 		@extend .zero-out;
