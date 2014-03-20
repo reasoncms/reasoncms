@@ -65,8 +65,7 @@ blockquote {
 }
 
 /* Wysiwyg Formatting */  
-#pageContent,
-.blurb {
+#{$wysiwyg-all-areas} {
 
 	ol, // bullets needed for wysiwyg content
 	ul,
@@ -84,14 +83,27 @@ blockquote {
 		text-decoration: underline;
 	}
 
-	.callOut {
+	.callOut,
+	.callout {
+		clear: both;
 		@include border-radius($global-radius);
 		background: $lc-grey;
 		padding: $column-gutter/2 $column-gutter/1.5;
 		margin-bottom: $paragraph-margin-bottom;
+		@include clearfix;
 
 		*:last-child {
 			margin-bottom: 0;
+		}
+	}
+
+	h1,
+	h2,
+	h3,
+	h4,
+	h5 {
+		strong {
+			font-weight: 400;
 		}
 	}
 }

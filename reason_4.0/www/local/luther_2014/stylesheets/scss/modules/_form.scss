@@ -51,7 +51,9 @@ form {
 	input[type="tel"],
 	input[type="time"],
 	input[type="url"],
-	textarea {
+	textarea,
+	.loki div.iframe_wrapper,
+	.loki textarea {
 		-webkit-appearance: none;
 		-webkit-border-radius: 0;
 		border-radius: 0;
@@ -132,7 +134,10 @@ form {
 		max-width: 100%;
 	}
 
-	textarea {
+	textarea,
+	.loki div.iframe_wrapper,
+	.loki textarea
+	 {
 		height: auto;
 	}
 }
@@ -143,12 +148,13 @@ form {
 #form,
 form {
 
+	// Each form element
 	.formElement {
 		@include grid-row();
 		padding: $form-spacing;
-		//margin-bottom: 1px;
 		border-bottom: 1px solid $lc-white;
 
+		// Hides the "* = required field" text. People know what asterisks mean.
 		&#requiredtextItem {
 			display: none;
 			@media #{$medium-up} {
@@ -156,13 +162,37 @@ form {
 			}
 		}
 
-		&:nth-child(even) {
-			background: rgba($lc-grey, .65);
+		// Changes the text label bg to red if there's an error 
+		&.error {
+			background: none !important; // removes Reason's defult yellow error row
+
+			.words {
+				.labelText {
+					@include border-radius(2px);
+					padding: rem-calc(4) rem-calc(6px);
+					background: lighten($alert-color, 50%) !important;
+				}
+			}
 		}
 
+		// Adds a grey bg to every other row, even error rows
+		&:nth-child(even) {
+			background: rgba($lc-grey, .65);
+
+			&.error {
+				background: rgba($lc-grey, .65) !important;
+			}
+		}
+
+		// Labels
 		.words {
 			@include form-label;
 			font-weight: 600;
+			display: inline-block;
+
+			.labelText {
+				display: inline-block;
+			}
 
 			.requiredIndicator {
 				font-weight: 300;
@@ -172,16 +202,96 @@ form {
 			}
 		}
 
-		td {
-			padding: .5em 0 .5em 1em; 
+		// Loki comment editor
+		.loki {
+			border: none;
+			width: 100%;
+			padding: 0;
+			background: none !important;
+
+			.toolbar {
+				a {
+					border: 1px solid darken($lc-grey, 10%);
+					width: 34px;
+					display: inline-block;
+					margin: 0 0 rem-calc(8px);
+					position: relative;
+
+					@media #{$medium-up} {
+						width: 40px;	
+					}
+
+					&:hover {
+						background: $lc-grey;
+						border: 1px solid darken($lc-grey, 15%);
+					}
+
+					&:first-child {
+						@include border-left-radius(4px);	
+					}
+
+					&:last-child {
+						@include border-right-radius(4px);	
+					}
+
+					& + a {
+						margin-left: -1px;
+					}
+
+					&:hover,
+					&:active {
+						z-index: 100;
+					}
+
+					&:active {
+						@include box-shadow(rgba(#000, .125) 0 3px 5px inset);
+					}
+					
+					img,
+					span {
+						margin: 8px auto;
+						display: block;
+
+						@media #{$medium-up} {
+							margin: 10px auto;
+						}
+
+					}
+				}
+			}
+
+			div.iframe_wrapper,
+			textarea {
+				//border: 1px solid $lc-grey;
+				//border: 1px solid;
+			}
+
+			.grippy_wrapper {
+				display: none;
+			}
 		}
 
-		&.error {
-			background: lighten($alert-color, 50%) !important;
+		&#commentcontentItem { // Let's not stripe the blog comment form -- it looks wonky with just two fields.
+			background: $lc-white;
+
+			&:nth-child(even) {
+			 	background: none !important;
+
+				&.error {
+					background: #FFF !important;
+				}
+			}
+		}
+
+		// Honeypot captcha fields. We hide these.
+		&#tarbabypreItem,
+		&#tarbabyItem,
+		&#noturlItem,
+		&#antlionItem {
+		    display: none;
 		}
 
 		@media #{$medium-up} {
-
 			padding: $form-spacing 0;
 
 			.words {
@@ -197,11 +307,6 @@ form {
 			}
 
 		}
-
-	}
-
-	input[type="text"] {
-		
 	}
 
 	//  Removes deafult table styles from radios and checkboxes 
@@ -216,36 +321,41 @@ form {
 		tr:nth-of-type(2n) {
 			background: none !important;
 		}
+
+		td {
+			padding: .5em 0 .5em 1em; 
+		}
+	}
+}
+
+// Submission errors -- displayed at the top of the form.
+#discoErrorNotice { 
+	font-family: $header-font-family;
+	margin-bottom: $column-gutter/2;
+
+	h3 {
+		font-size: $font-size-18;
+		font-weight: 600;
+		margin: 0 0 rem-calc(6);
+		color: $alert-color !important;
+
+		&:before {
+			  @extend .fa;
+			  content: $fa-var-exclamation-triangle;
+			  margin-right: rem-calc(12);
+		}
 	}
 
-	#discoErrorNotice {  // Submission errors -- displayed at the top of the form.
+	ul {
+		@include alert($bg: lighten($alert-color, 50%), $radius: $global-radius);
+		color: lighten($body-font-color, 15%);
+		margin: 0;
+		font-weight: 600;
 
-		margin-bottom: $column-gutter;
+		li {
+			display: inline;
 
-		h3 {
-			font-size: $font-size-18;
-			font-weight: 600;
-			margin: 0 0 rem-calc(6);
-			color: $alert-color !important;
-
-			&:before {
-				  @extend .fa;
-				  content: $fa-var-exclamation-triangle;
-				  margin-right: rem-calc(12);
-			}
-		}
-
-		ul {
-			@include alert($bg: lighten($alert-color, 50%), $radius: $global-radius);
-			color: lighten($body-font-color, 15%);
-			margin: 0;
-			font-weight: 600;
-
-			li {
-				display: inline;
-
-				a {font-weight: 400; text-decoration: underline;}
-			}
+			a {font-weight: 400; text-decoration: underline;}
 		}
 	}
 }
