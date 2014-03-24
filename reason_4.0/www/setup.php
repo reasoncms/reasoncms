@@ -414,9 +414,11 @@ function create_admin_user($password)
 	$rel_id2 = relationship_id_of('site_to_user');
 	$ma_id = id_of('master_admin');
 	$ls_id = id_of('site_login');
+	$pts_id = id_of('page_types_demo_site');
 	create_relationship($user_id, $admin_id, $rel_id1, false, true);
 	create_relationship($ma_id, $user_id, $rel_id2, false, true);
 	create_relationship($ls_id, $user_id, $rel_id2, false, true);
+	create_relationship($pts_id, $user_id, $rel_id2, false, true);
 	return $user_id;
 }
 
