@@ -124,7 +124,7 @@ class miniEventsModule extends EventsModule
 		if(!empty($events_page_url))
 			echo '<a href="'.$events_page_url.'">'.$this->_get_list_title().'</a>';
 		else
-			$this->_get_list_title();
+			echo $this->_get_list_title();
 		echo '</h3>'."\n";
 	}
 
