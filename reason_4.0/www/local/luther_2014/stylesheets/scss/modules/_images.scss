@@ -58,14 +58,14 @@
 	}
 }
 
-/* Inline Images */
+/* Inline Images (Main content areas only -- no sidebars) */
 
 // Inline images are a little tricky.
 // The goal is to have inline images look great at any screen size, any wysiwyg alignment, and in any column configuration.
 // Below is the ugly result.
 
 // If just two columns, inline images...
-#pageContent {
+#{$wysiwyg-content-area} {
 
 	img { // are full width on small screens...
 		width: $global-image-width;
@@ -78,10 +78,15 @@
 
 		@media #{$medium-up} {
 			width: 40%; // and are only 40% wide on medium and up.
-			
-			&.right {
-				margin: 0 0 rem-calc(16) $column-gutter;
-				float: right !important;
+			float: right !important;
+			margin: 0 0 rem-calc(16) $column-gutter;
+			clear: right;
+
+			&.left,
+			&[align="left"] {
+				margin: 0 $column-gutter rem-calc(16) 0;
+				float: left !important;
+				clear: left;
 			}
 
 		}
@@ -91,7 +96,7 @@
 // If three columns, inline images...
 .hasConRelNav {
 
-	#pageContent {
+	#{$wysiwyg-content-area} {
 	
 		img {
 

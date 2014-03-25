@@ -18,129 +18,181 @@
 @import "extends";
 @import "mixins";
 
-#form,
-form {
+// 1. Foundation Form Styles
+// 2. Luther Form Styles & Foundation Overrides
+
+// 1. FOUNDATION FORM STYLES
 
 // In _settings.scss, we set $include-html-form-classes: false to keep from including all the non-symantic form classes that we don't use.
 // To get the form classes we do want, we include the Foundation form styles from components/_forms.scss here.
+
+#form,
+form {
 
 	div,
 	.words,
 	input,
 	label,
-    select {
+	select {
 		font-family: $header-font-family;
 	}
 
-    // Basic styling on all basic form elements
-    input[type="text"],
-    input[type="password"],
-    input[type="date"],
-    input[type="datetime"],
-    input[type="datetime-local"],
-    input[type="month"],
-    input[type="week"],
-    input[type="email"],
-    input[type="number"],
-    input[type="search"],
-    input[type="tel"],
-    input[type="time"],
-    input[type="url"],
-    textarea {
-      -webkit-appearance: none;
-      -webkit-border-radius: 0;
-      border-radius: 0;
-      @include form-element;
-      @if not $input-include-glowing-effect {
-          @include single-transition(all, 0.15s, linear);
-      }
-      margin-bottom: 0;
-    }
+	// Basic styling on all basic form elements
+	input[type="text"],
+	input[type="password"],
+	input[type="date"],
+	input[type="datetime"],
+	input[type="datetime-local"],
+	input[type="month"],
+	input[type="week"],
+	input[type="email"],
+	input[type="number"],
+	input[type="search"],
+	input[type="tel"],
+	input[type="time"],
+	input[type="url"],
+	textarea,
+	.loki div.iframe_wrapper,
+	.loki textarea {
+		-webkit-appearance: none;
+		-webkit-border-radius: 0;
+		border-radius: 0;
+		@include form-element;
+		@if not $input-include-glowing-effect {
+		  @include single-transition(all, 0.15s, linear);
+		}
+		margin-bottom: 0;
+	}
 
-    input[type="text"],
-    input[type="password"],
-    input[type="date"],
-    input[type="datetime"],
-    input[type="datetime-local"],
-    input[type="month"],
-    input[type="week"],
-    input[type="email"],
-    input[type="number"],
-    input[type="search"],
-    input[type="tel"],
-    input[type="time"],
-    input[type="url"] {max-width: 600px;}
+	// Set a max width for inputs (otherwise they can look a wee bit absurd)
+	input[type="text"],
+	input[type="password"],
+	input[type="date"],
+	input[type="datetime"],
+	input[type="datetime-local"],
+	input[type="month"],
+	input[type="week"],
+	input[type="email"],
+	input[type="number"],
+	input[type="search"],
+	input[type="tel"],
+	input[type="time"],
+	input[type="url"] {
+		max-width: 600px;
+	}
 
-     // Adjust margin for form elements below
-    input[type="file"],
-    select {
-      margin: 0 0 $form-spacing 0;
-    }
+	// Adjust margin for form elements below
+	input[type="file"],
+	select {
+		margin: 0 0 $form-spacing 0;
+	}
 
-    input[type="checkbox"],
-    input[type="radio"] {}
+	input[type="checkbox"],
+	input[type="radio"] {
 
-    input[type="checkbox"] + label,
-    input[type="radio"] + label {
-      display: inline-block;
-      margin-#{$default-float}: $form-spacing * .5;
-      margin-#{$opposite-direction}: $form-spacing;
-      margin-bottom: 0;
-      vertical-align: baseline;
-    }
+	}
 
-    // Normalize file input width
-    input[type="file"] {
-      width:100%;
-    }
+	input[type="checkbox"] + label,
+	input[type="radio"] + label {
+		display: inline-block;
+		margin-#{$default-float}: $form-spacing * .5;
+		margin-#{$opposite-direction}: $form-spacing;
+		margin-bottom: 0;
+		vertical-align: baseline;
+	}
 
-    // Basic fieldset styling
-    fieldset {
-      @include fieldset;
-    }
+	// Normalize file input width
+	input[type="file"] {
+		width:100%;
+	}
 
-    // Basic select styling
-    select {
-      -webkit-appearance: none !important;
-      background: $select-bg-color;
-      background-position-x: 97%;
-      background-position-y: center;
-      border: $input-border-width $input-border-style $input-border-color;
-      padding: $form-spacing / 2;
-      font-size: $input-font-size;
-      @include radius(0);
-      &.radius { @include radius($global-radius); }
-      &:hover {
-        background: darken($select-bg-color, 3%);
-        background-position-x: 97%;
-        background-position-y: center;
-        border-color: $input-focus-border-color;
-      }
-      width: auto;
-      max-width: 100%;
-    }
+	// Basic fieldset styling
+	fieldset {
+		@include fieldset;
+	}
 
-    textarea {
-    	height: auto;
-    }
+	// Basic select styling
+	select {
+		-webkit-appearance: none !important;
+		background: $select-bg-color;
+		background-position-x: 97%;
+		background-position-y: center;
+		border: $input-border-width $input-border-style $input-border-color;
+		padding: $form-spacing / 2;
+		font-size: $input-font-size;
+		@include radius(0);
+		&.radius { 
+			@include radius($global-radius);
+		}
+		&:hover {
+			background: darken($select-bg-color, 3%);
+			background-position-x: 97%;
+			background-position-y: center;
+			border-color: $input-focus-border-color;
+		}
+		width: auto;
+		max-width: 100%;
+	}
 
-// Luther custom styles & Foundation overrides
-// Custom form styles unique to Reason form markup
+	textarea,
+	.loki div.iframe_wrapper,
+	.loki textarea
+	 {
+		height: auto;
+	}
+}
 
+// 2. LUTHER FORM STYLES & Foundation overrides
+// Form styles unique to Reason form markup
 
+#form,
+form {
 
+	// Each form element
 	.formElement {
 		@include grid-row();
 		padding: $form-spacing;
-		margin-bottom: 1px;
+		border-bottom: 1px solid $lc-white;
 
-		&:nth-child(even) {
-			background: lighten($lc-grey, 5%);
+		// Hides the "* = required field" text. People know what asterisks mean.
+		&#requiredtextItem {
+			display: none;
+			@media #{$medium-up} {
+				padding-left: rem-calc(28);
+			}
 		}
 
+		// Changes the text label bg to red if there's an error 
+		&.error {
+			background: none !important; // removes Reason's defult yellow error row
+
+			.words {
+				.labelText {
+					@include border-radius(2px);
+					padding: rem-calc(4) rem-calc(6px);
+					background: lighten($alert-color, 50%) !important;
+				}
+			}
+		}
+
+		// Adds a grey bg to every other row, even error rows
+		&:nth-child(even) {
+			background: rgba($lc-grey, .65);
+
+			&.error {
+				background: rgba($lc-grey, .65) !important;
+			}
+		}
+
+		// Labels
 		.words {
 			@include form-label;
 			font-weight: 600;
+			display: inline-block;
+
+			.labelText {
+				display: inline-block;
+			}
 
 			.requiredIndicator {
 				font-weight: 300;
@@ -150,12 +202,96 @@ form {
 			}
 		}
 
-		td {
-			padding: .5em 0 .5em 1em; 
+		// Loki comment editor
+		.loki {
+			border: none;
+			width: 100%;
+			padding: 0;
+			background: none !important;
+
+			.toolbar {
+				a {
+					border: 1px solid darken($lc-grey, 10%);
+					width: 34px;
+					display: inline-block;
+					margin: 0 0 rem-calc(8px);
+					position: relative;
+
+					@media #{$medium-up} {
+						width: 40px;	
+					}
+
+					&:hover {
+						background: $lc-grey;
+						border: 1px solid darken($lc-grey, 15%);
+					}
+
+					&:first-child {
+						@include border-left-radius(4px);	
+					}
+
+					&:last-child {
+						@include border-right-radius(4px);	
+					}
+
+					& + a {
+						margin-left: -1px;
+					}
+
+					&:hover,
+					&:active {
+						z-index: 100;
+					}
+
+					&:active {
+						@include box-shadow(rgba(#000, .125) 0 3px 5px inset);
+					}
+					
+					img,
+					span {
+						margin: 8px auto;
+						display: block;
+
+						@media #{$medium-up} {
+							margin: 10px auto;
+						}
+
+					}
+				}
+			}
+
+			div.iframe_wrapper,
+			textarea {
+				//border: 1px solid $lc-grey;
+				//border: 1px solid;
+			}
+
+			.grippy_wrapper {
+				display: none;
+			}
+		}
+
+		&#commentcontentItem { // Let's not stripe the blog comment form -- it looks wonky with just two fields.
+			background: $lc-white;
+
+			&:nth-child(even) {
+			 	background: none !important;
+
+				&.error {
+					background: #FFF !important;
+				}
+			}
+		}
+
+		// Honeypot captcha fields. We hide these.
+		&#tarbabypreItem,
+		&#tarbabyItem,
+		&#noturlItem,
+		&#antlionItem {
+		    display: none;
 		}
 
 		@media #{$medium-up} {
-
 			padding: $form-spacing 0;
 
 			.words {
@@ -171,49 +307,55 @@ form {
 			}
 
 		}
-
 	}
 
-	input[type="text"] {
-		
+	//  Removes deafult table styles from radios and checkboxes 
+	//  A temporary fix until we get tables out of radio/checkbox markup
+	table {
+		margin-bottom: 0;
+		border: none;
+		background: none;
+
+		tr.even,
+		tr.alt,
+		tr:nth-of-type(2n) {
+			background: none !important;
+		}
+
+		td {
+			padding: .5em 0 .5em 1em; 
+		}
 	}
+}
 
-	table tr {}
+// Submission errors -- displayed at the top of the form.
+#discoErrorNotice { 
+	font-family: $header-font-family;
+	margin-bottom: $column-gutter/2;
 
-	#discoErrorNotice {
-		@include alert($bg: $alert-color, $radius: 6px);
-		color: $lc-red !important;
+	h3 {
+		font-size: $font-size-18;
+		font-weight: 600;
+		margin: 0 0 rem-calc(6);
+		color: $alert-color !important;
 
 		&:before {
-			  display: inline-block;
-			  font-family: FontAwesome;
-			  font-style: normal;
-			  font-weight: normal;
-			  line-height: 1;
-			  -webkit-font-smoothing: antialiased;
-			  -moz-osx-font-smoothing: grayscale;
-			  content: "\f071"; // fa-var-exclamation-triangle
+			  @extend .fa;
+			  content: $fa-var-exclamation-triangle;
+			  margin-right: rem-calc(12);
 		}
+	}
 
-		h3 {
-			font-size: $font-size-18;
-			
-			font-weight: 600;
-			margin: 0 rem-calc(6) 0 0;
+	ul {
+		@include alert($bg: lighten($alert-color, 50%), $radius: $global-radius);
+		color: lighten($body-font-color, 15%);
+		margin: 0;
+		font-weight: 600;
+
+		li {
 			display: inline;
-			display: none;
-		}
 
-		ul {
-			margin: 0;
-			display: inline;
-			font-weight: 600;
-
-			li {
-				display: inline;
-
-				a {font-weight: 400; text-decoration: underline;}
-			}
+			a {font-weight: 400; text-decoration: underline;}
 		}
 	}
 }

@@ -56,6 +56,22 @@ $inline-list-bottom-margin: 0;
 // Luther Variables
 //////////////////////////////////////////////////////////
 
+// Wysiwyg Areas
+// User created content areas (or WYWIWYG areas) have their own set of typographic styles. Here we define which HTML elements wrap WYSIWYG areas.
+// We can then use variables in place of selectors, so that any time a wysiwyg area is added, we can just add it below, and all styles are updated.
+
+$contentSections: '#contentSections';  // The main content div
+$relatedSections: '#relatedSections';  // The related content div
+
+$pageContent: '#pageContent';  // Normal page content wysiwyg
+$fullPost: '.fullPost .text';  // Full article wysiwyg
+$blurb-content: '#{$contentSections} .blurb';  // Main content blurb wysiwyg
+$blurb-related: '#{$relatedSections} .blurb';  // Sidebar blurb wysiwyg
+
+$wysiwyg-all-areas: '#{$pageContent}, #{$fullPost}, #{$blurb-related}, #{$blurb-content}';
+$wysiwyg-content-area: '#{$pageContent}, #{$fullPost}';
+$wysiwyg-related-area: #{$blurb-related};
+
 // global colors
 $lc-blue-dark: #004789;
 $lc-blue-dark-compliment: #6b9fd0;
@@ -80,8 +96,8 @@ $minisite-nav-background: $lc-grey;
 // @todo: Set these to real values
 $primary-color: #000;
 $secondary-color: #333;
-$alert-color: lighten($lc-red, 50%);
-$success-color: green;
+$alert-color: lighten($lc-red, 5%);
+$success-color: lighten($lc-green, 5%);
 $warning-color: red;
 $info-color: blue;
 
@@ -166,6 +182,7 @@ $code-font-weight: bold;
 $anchor-text-decoration: none;
 $anchor-font-color: $primary-link-color;
 $anchor-font-color-hover: darken($primary-link-color, 8%);
+$anchor-secondary-font-color-hover: lighten($secondary-link-color, 8%);
 
 // Styles for the <hr> element
 $hr-border-width: 1px;
