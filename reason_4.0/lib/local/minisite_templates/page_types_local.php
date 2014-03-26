@@ -1,4 +1,5 @@
 <?php
+reason_include_once( 'carl_util/luther_util.php' );
 
 $GLOBALS['_reason_page_types_local'] = array(
 	/* Core overrides */
@@ -243,6 +244,27 @@ $GLOBALS['_reason_page_types_local'] = array(
 	),
 	'luther_google_map' => array(
 		'main_post' => 'luther_google_map',
+	),
+	'luther_landing' => array(		
+		//'main_post' => get_luther_headlines(3),
+		'pre_sidebar' => array(
+			'module' => 'events_mini',
+			'title' => luther_get_event_title(),
+			'ideal_count' => 5,
+			'default_view_min_days' => 1,
+			'calendar_link_text' => 'View all events',
+		),
+		'sidebar' => luther_get_related_publication(3),
+		//'post_sidebar' => 'luther_flickr_slideshow',
+	),
+	'luther_sports' => array(
+		'pre_sidebar' => array(
+			'module' => 'events_mini',
+			'title' => 'Schedule',
+			'ideal_count' => 7,
+			'calendar_link_text' => 'Complete schedule',
+		),
+		'sidebar' => luther_get_related_publication(3),
 	),
 	'net_price_calculator' => array(
 		'main_post' => 'net_price_calculator',
