@@ -18,13 +18,13 @@ class GiftPageOneForm extends FormStep
 	var $error;
 	
 	var $elements = array(
-		'gift_note' => array(
-			'type' => 'comment',
-			'text' => '<h3>Gift Amount</h3>',
-		),
+		// 'gift_amount_header' => array(
+		// 	'type' => 'comment',
+		// 	'text' => '<h3>Gift Amount</h3>',
+		// ),
 		'gift_amount' => array(
 			'type' => 'money',
-			'display_name' => '&nbsp;',
+			'display_name' => '<h3>Gift Amount</h3>',
 			'size'=>12,
 		),
 		'installment_type' => array(
@@ -43,10 +43,26 @@ class GiftPageOneForm extends FormStep
 			'display_name' => 'Ending',
 			'options' => array('indefinite'=>'No end date'),
 		),
-		        'designation_header' => array(
-			'type' => 'comment',
-			'text' => '<h3>Designation</h3>',
-		),
+		'designation_header' => array(
+         'type' => 'comment',
+         'text' => '<h3>Designation</h3>',
+        ),
+  //       'designation' => array(
+		// 	'type' => 'radio_no_sort',
+		// 	'display_name' => '<h3>Designation</h3>',
+  //           'options'=>array(
+  //               'annual_fund' => '<a href="/giving/annual/" target="_blank">Annual Fund<a/> (please use my gift where it is needed most)',
+  //               'specific_fund' => '<a href="/giving/choices/" target="_blank">Designated Giving</a> (I have something specific in mind)' )
+		// ),
+  //       'specific_designation' => array(
+  //           'type' => 'checkboxgroup_with_other_no_sort',
+  //           'display_name' => 'If more than one designation is specified, your gift will be divided equally unless you indicate otherwise in the comments section below.',
+  //           'options' => array(
+  //               'baseball_stadium' => '<a href="/giving/priorities/stadiums/" target="_blank">Baseball Stadium</a>',
+  //               'softball_stadium'  => '<a href="/giving/priorities/stadiums/" target="_blank">Softball Stadium</a>',
+  //               'scholarship_fund' => '<a href="/giving/choices/scholarship/" target="_blank">Scholarship Support</a>, general',
+  //           )
+  //       ),
 		'annual_fund' => array(
 			'type' => 'checkboxfirst',
 			'display_name' => '<a href="/giving/annual/" target="_blank">Annual Fund<a/> (please use my gift where it is needed most)',
@@ -61,18 +77,18 @@ class GiftPageOneForm extends FormStep
                            will be divided equally unless you indicate otherwise
                            in the comments section below.'
         ),
-        'aquatic_center' => array(
+        'baseball_stadium' => array(
         		'type' => 'checkboxfirst',
-        		'display_name' => '<a href="/giving/sesquicentennialfund/?story_id=284434" target="_blank">Aquatic Center</a>',
+        		'display_name' => '<a href="/giving/priorities/stadiums/" target="_blank">Baseball Stadium</a>',
+        ),
+        'softball_stadium' => array(
+                'type' => 'checkboxfirst',
+                'display_name' => '<a href="/giving/priorities/stadiums/" target="_blank">Softball Stadium</a>',
         ),
         'scholarship_fund' => array(
                 'type' => 'checkboxfirst',
                 'display_name' => '<a href="/giving/choices/scholarship/" target="_blank">Scholarship Support</a>, general',
         ),
-        // 'sesq_study_abroad_fund' => array(
-        //         'type' => 'checkboxfirst',
-        //         'display_name' => '<a href="/giving/sesquicentennialfund/?story_id=268624" target="_blank">Study Abroad Support</a>',
-        // ),
         'transform_teaching_fund' => array(
                 'type' => 'checkboxfirst',
                 'display_name' => '<a href="/giving/sesquicentennialfund/?story_id=268591" target="_blank">The Fund for Transformational Teaching and Learning</a>',
@@ -119,7 +135,7 @@ class GiftPageOneForm extends FormStep
                 'type' => 'textarea',
                 'display_name' => '&nbsp;',
         ),
-        'matching_gift_note' => array(
+        'matching_gift_header' => array(
 			'type' => 'comment',
 			'text' => '<h3>Will your gift be matched by your employer?</h3>
 				  <p><a href="http://www.matchinggifts.com/luther/" 
@@ -136,7 +152,7 @@ class GiftPageOneForm extends FormStep
 			'display_name'=>'&nbsp;',
 			'comments'=>'<div class="smallText comment">Employer name</div>',
 		),
-		'existing_pledge_note' => array(
+		'existing_pledge_header' => array(
 			'type' => 'comment',
 			'text' => '<h3>Is this a payment on an existing pledge?</h3>',
 		),
@@ -145,25 +161,25 @@ class GiftPageOneForm extends FormStep
 			'options' => array('Yes'=>'Yes','No'=>'No'),
 			'display_name'=>'&nbsp;',
 		),
-        'gift_prompt_note' => array(
-                'type' => 'comment',
-                'text' => '<h3>What prompted you to make this gift?</h3>'
-        ),
+        // 'gift_prompt_header' => array(
+        //         'type' => 'comment',
+        //         'text' => '<h3>What prompted you to make this gift?</h3>'
+        // ),
         'gift_prompt' => array(
         	'type' => 'textarea',
 			'rows' => 5,
 			'cols' => 35,
-			'display_name' => '&nbsp;',
+			'display_name' => '<h3>What prompted you to make this gift?</h3>',
         ),
 
-        'dedication_note' => array(
-			'type' => 'comment',
-			'text' => '<h3>Dedication <em>(optional)</em></h3>'
-		),
+  //       'dedication_header' => array(
+		// 	'type' => 'comment',
+		// 	'text' => '<h3>Dedication <em>(optional)</em></h3>'
+		// ),
 		'dedication' => array(
 			'type' => 'radio_no_sort',
 			'options' => array('Memory'=>'In memory of','Honor'=>'In honor of'),
-			'display_name'=>'&nbsp;',
+			'display_name' => '<h3>Dedication <em>(optional)</em></h3>',
 		),
 		'dedication_details' => array(
 			'type' => 'text',
@@ -187,12 +203,6 @@ class GiftPageOneForm extends FormStep
 				'rows' => array('','')
 			),
 		),
-/*
-		'other_desig_group' => array('type' => 'inline',
-			'elements' => array('other_designation', 'other_designation_details'),
-                     'args' => array('use_group_display_name' => false, 'use_element_labels' => false),
-		),
-*/
    	);
 
 	var $display_name = 'Gift Info';
@@ -201,6 +211,7 @@ class GiftPageOneForm extends FormStep
 	// style up the form and add comments et al
 	function on_every_time()
 	{
+        $this->box_class = 'StackedBox';
 		$this->set_value('submitter_ip', $_SERVER[ 'REMOTE_ADDR' ]);
 
 		if(!$this->get_value('installment_start_date'))
@@ -234,11 +245,11 @@ class GiftPageOneForm extends FormStep
 
 	function pre_show_form()
 	{
-		echo '<div id="giftForm" class="pageOne">'."\n";
+		// echo '<div id="giftForm" class="pageOne">'."\n";
 	}
 	function post_show_form()
 	{
-		echo '</div>'."\n";
+		// echo '</div>'."\n";
 	}
 	function run_error_checks()
 	{

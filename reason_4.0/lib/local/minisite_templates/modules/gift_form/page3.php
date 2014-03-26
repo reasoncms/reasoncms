@@ -149,6 +149,7 @@ class GiftPageThreeForm extends FormStep {
 
     // style up the form and add comments et al
     function on_every_time() {
+        $this->box_class = 'StackedBox';
         if (!$this->controller->get('gift_amount')) {
             echo '<div id="giftFormSetupError">You can\'t complete this step without having set up a gift; please go back to <a href="?_step=GiftPageOneForm">Gift Info</a> and provide a gift amount.</div>';
             $this->show_form = false;
@@ -515,27 +516,15 @@ class GiftPageThreeForm extends FormStep {
                     //'</h3>'=>'',
                     '<br />' => "\n",
                 );
-                /*
-                  if (reason_unique_name_exists('giving_form_thank_you_blurb'))
-                  $confirm_text = get_text_blurb_content('giving_form_thank_you_blurb') . $confirm_text;
-                  else
-                  $confirm_text = '<p><strong>Thank you for your gift to Luther College!</strong></p>' . $confirm_text;
-                 */
                 $mail_text = str_replace(array_keys($replacements), $replacements, $confirm_text);
                 $email_to_development = new Email('waskni01@luther.edu', 'noreply@luther.edu', 'noreply@luther.edu', 'New Online Gift ' . date('mdY H:i:s'), strip_tags($mail_text), $mail_text);
                 $email_to_development->send();
                 $email_to_giver = new Email($this->controller->get('email'), 'giving@luther.edu', 'giving@luther.edu', 'Luther College Online Gift Confirmation', strip_tags($mail_text), $mail_text);
                 $email_to_giver->send();
-
-//				$add_headers = 'Content-Type: text/plain; charset="utf-8"'."\r\n".'From: "Luther College Giving" <giving@luther.edu>' . "\r\n" .
-//'Reply-To: "Luther College Giving" <giving@luther.edu>';
-                /*
-                  $add_headers = 'MIME-Version: 1.0' . "\r\n" . 'Content-Type: text/html; charset="utf-8"'."\r\n".'From: "Luther College Giving" <giving@luther.edu>' . "\r\n" .
-                  'Reply-To: "Luther College Giving" <giving@luther.edu>';
-                  mail($this->controller->get('email'),'Luther College Gift Confirmation', $mail_text, $add_headers);
-                  mail('waskni01@luther.edu', 'New Online Gift', strip_tags($mail_text), $add_headers);
-                 */
-                //}
+                if ($this->controller->get('estate_plans') || $this->controller->get('estate_info')) {
+                    $email_to_estate_plans = new Email('kelly.wedmann@luther.edu', 'noreply@luther.edu', 'noreply@luther.edu', 'New Online Gift ' . date('mdY H:i:s'), strip_tags($mail_text), $mail_text);
+                    $email_to_estate_plans->send();
+                }
             }
         }
     }
