@@ -5,50 +5,11 @@ reason_include_once('minisite_templates/modules/publication/item_markup_generato
 class ResponsiveItemMarkupGenerator extends PublicationItemMarkupGenerator
 {
 
-function get_comment_link_markup()
-	{
-		$item = $this->passed_vars['item'];
-		$comment_count = isset($this->passed_vars['item_comment_count']) ? $this->passed_vars['item_comment_count'] : 0;
-		$link_to_item = $this->passed_vars['link_to_full_item'];
-
-		// Here we change the way comment counts are rendered.
-		if($comment_count >= 1)
-		{
-			$markup_string = '<p class="comments">';
-			if($comment_count == 1)
-			{
-				$view_comments_text = ''.$comment_count.' Comment';
-			}
-			else
-			{
-				$view_comments_text = ''.$comment_count.' Comments';
-			}
-			$link_to_item = $this->passed_vars['link_to_full_item'];
-			$markup_string .= '<a href="'.$link_to_item.'#comments">'.$view_comments_text.'</a>';
-			$markup_string .= '</p>'."\n";
-		}
-		elseif (isset($this->passed_vars['commenting_status']))
-		{
-			switch($this->passed_vars['commenting_status'])
-			{
-				case 'login_required':
-					$markup_string = '<p class="comments noComments">';
-					$markup_string .= '<a href="'.REASON_LOGIN_URL.'?dest_page='.urlencode(carl_make_link( array(), '', '', false, false).htmlspecialchars_decode($link_to_item).'#addComment').'">Leave a comment (login required)</a>';
-					$markup_string .= '</p>'."\n";
-					break;
-				case 'open_comments':
-				case 'user_has_permission':
-					$markup_string = '<p class="comments noComments">';
-					$markup_string .= '<a href="'.$link_to_item.'#addComment">Leave a comment</a>';
-					$markup_string .= '</p>'."\n";
-					break;
-				default:
-					$markup_string = '';
-			}
-		}
-		else $markup_string = '';
-		return $markup_string;
-	}
+/* Luther changes include...
+ * 1. Modified order of markup items in run()
+ * 2. Custom handling of Comment links
+ * 3. Custom "back to publication" links
+ */
 
 	function run()
 	{
@@ -121,15 +82,15 @@ function get_comment_link_markup()
 			$this->markup_string .= '</div>'."\n";
 		}
 		$this->markup_string .= '<div class="primaryContent secondChunk">'."\n";
-		if($this->should_show_comments_section() || $this->should_show_comment_adder_section())
-		{
-			$this->markup_string .= $this->get_back_links_markup();
-		}
 		// Not quite ready to add this to the default markup generator
 		// Main question: should this go above or below the comments?
 		if($this->should_show_next_prev_section())
 		{
 			$this->markup_string .= '<div class="nextPrev">'.$this->get_next_prev_section().'</div>'."\n";
+		}
+		if($this->should_show_comments_section() || $this->should_show_comment_adder_section())
+		{
+			$this->markup_string .= $this->get_back_links_markup();
 		}
 		if($this->should_show_comments_section())
 		{
@@ -141,6 +102,95 @@ function get_comment_link_markup()
 		}
 		$this->markup_string .= '</div>'."\n"; //close second chunk
 		$this->markup_string .= '</div>'."\n"; //close fullPost div
+	}
+
+	function get_social_sharing_section()
+	{
+		$ret = '<p><strong>Share the love:</strong>';
+		foreach($this->passed_vars['item_social_sharing'] as $social_sharing)
+		{
+			$ret .= '<a href="'.$social_sharing['href'].'">';
+			$ret .= '<img src="'. $social_sharing['icon'] . '" alt="'. $social_sharing['text'] . '" />';
+			$ret .= '</a>';
+		}
+		$ret .= '</p>';
+		return $ret;
+	}
+
+	function get_comment_link_markup()
+	{
+		$item = $this->passed_vars['item'];
+		$comment_count = isset($this->passed_vars['item_comment_count']) ? $this->passed_vars['item_comment_count'] : 0;
+		$link_to_item = $this->passed_vars['link_to_full_item'];
+
+		// Here we change the way comment counts are rendered.
+		if($comment_count >= 1)
+		{
+			$markup_string = '<p class="comments">';
+			if($comment_count == 1)
+			{
+				$view_comments_text = ''.$comment_count.' Comment';
+			}
+			else
+			{
+				$view_comments_text = ''.$comment_count.' Comments';
+			}
+			$link_to_item = $this->passed_vars['link_to_full_item'];
+			$markup_string .= '<a href="'.$link_to_item.'#comments">'.$view_comments_text.'</a>';
+			$markup_string .= '</p>'."\n";
+		}
+		elseif (isset($this->passed_vars['commenting_status']))
+		{
+			switch($this->passed_vars['commenting_status'])
+			{
+				case 'login_required':
+					$markup_string = '<p class="comments noComments">';
+					$markup_string .= '<a href="'.REASON_LOGIN_URL.'?dest_page='.urlencode(carl_make_link( array(), '', '', false, false).htmlspecialchars_decode($link_to_item).'#addComment').'">Leave a comment (login required)</a>';
+					$markup_string .= '</p>'."\n";
+					break;
+				case 'open_comments':
+				case 'user_has_permission':
+					$markup_string = '<p class="comments noComments">';
+					$markup_string .= '<a href="'.$link_to_item.'#addComment">Leave a comment</a>';
+					$markup_string .= '</p>'."\n";
+					break;
+				default:
+					$markup_string = '';
+			}
+		}
+		else $markup_string = '';
+		return $markup_string;
+	}
+
+	// Here, we get rid of <div> around link_markup to avoid outputting it into the HTML if there's no content.
+	function get_back_links_markup()
+	{
+		$markup_string = '';
+		$markup_string .= '<div class = "back">';
+		$markup_string .= $this->get_back_link_markup();
+		$markup_string .= $this->get_back_to_section_link_markup();
+		$markup_string .= '</div>';
+		return $markup_string;
+	}
+	
+	// Here, we change the language of the link_markup sections
+	function get_back_link_markup()
+	{
+		return '<p>{ Return to <a class="more" href="'.$this->passed_vars['back_link'].'">'.$this->get_main_list_name().'</a> for more posts. }</p>';
+	}
+
+	function get_back_to_section_link_markup()
+	{
+		$current_section = $this->passed_vars['current_section'];
+		if(!empty($current_section))
+		{
+			$section_name = $current_section->get_value('name');
+			$section_url = $this->passed_vars['back_to_section_link'];
+			$link = '<p>{ Return to <a class="more"<a href="'.$section_url.'">More posts from '.$section_name.' ('.$this->get_main_list_name().')</a> for more posts. }</p>';
+			return $link;
+		}
+		else
+			return false;
 	}
 }
 ?>
