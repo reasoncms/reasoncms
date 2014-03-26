@@ -303,15 +303,15 @@ class GiftPageThreeForm extends FormStep {
             if ($this->controller->get('annual_fund')) {
                 $txt .= '<li>The Annual Fund</li>' . "\n";
             }
-            if ($this->controller->get('aquatic_center')) {
-                $txt .= '<li>Aquatic Center</li>' . "\n";
+            if ($this->controller->get('baseball_stadium')) {
+                $txt .= '<li>Baseball Stadium</li>' . "\n";
+            }
+            if ($this->controller->get('softball_stadium')) {
+                $txt .= '<li>Softball Stadium</li>' . "\n";
             }
             if ($this->controller->get('scholarship_fund')) {
                 $txt .= '<li>The Scholarship Fund, </li>' . "\n";
             }
-            // if ($this->controller->get('sesq_study_abroad_fund')) {
-            //     $txt .= '<li>The Sesquicentennial Study Abroad Scholarship Fund</li>' . "\n";
-            // }
             if ($this->controller->get('transform_teaching_fund')) {
                 $txt .= '<li>The Fund for Transformational Teaching and Learning</li>' . "\n";
             }
