@@ -162,6 +162,26 @@ class ResponsiveItemMarkupGenerator extends PublicationItemMarkupGenerator
 		return $markup_string;
 	}
 
+	// Here, we get rid of <h4>Images</h4>, <ul> and enlarge thumbanil size.
+	function get_images_section()
+	{
+		//$str .= '<ul>';
+		foreach($this->passed_vars['item_images'] as $image)
+		{
+			$str .= '<div class="imageChunk">';
+			ob_start();
+			$textonly = false;
+			if(!empty($this->passed_vars['request']['textonly']))
+				$textonly = true;
+			show_image( $image, false, true, true, '', $textonly );
+			$str .= ob_get_contents();
+			ob_end_clean();
+			$str .= '</div>';
+		}
+		//$str .= '</ul>';
+		return $str;
+	}
+
 	// Here, we get rid of <div> around link_markup to avoid outputting it into the HTML if there's no content.
 	function get_back_links_markup()
 	{

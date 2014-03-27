@@ -15,7 +15,7 @@ reason_include_once( 'minisite_templates/modules/publication/markup_generator.ph
 *
 *  Helper class to the publication minisite module.
 *
-*  Luther edits include...
+* Luther edits include...
 * 1. Removing redundant permalink.
 * 2. Changing language for the "read more" link.
 * 3. Editing the location and display of the "comment" link.
@@ -221,20 +221,7 @@ class PublicationListItemMarkupGenerator extends PublicationMarkupGenerator
 
 	function get_permalink_markup()
 	{
-		$item = $this->passed_vars['item'];
-		if(isset($this->passed_vars['permalink']) &&  !empty($this->passed_vars['permalink']))
-		{
-			$markup_string = '';
-			$markup_string .=  '<li class="permalink">';
-			$markup_string .=  '<a href="' . $this->passed_vars['permalink'] . '">'; 
-			$markup_string .=  'Permalink';
-			$markup_string .=  '</a>';
-			$markup_string .=  '</li>'."\n";
-			return $markup_string;
-		}
-		else
-			trigger_error('Could not generate permalink markup; index '.$item->id().' is empty or undefined', WARNING);
-	} 
+	}
 
 	function get_comment_link_markup()
 	{
@@ -246,11 +233,11 @@ class PublicationListItemMarkupGenerator extends PublicationMarkupGenerator
 		if($comment_count >= 1)
 		{
 			$markup_string = '<p class="comments">';
-			if($comment_count == 1)
+			if($comment_count == 1)  // If one comment, we say "1 Comment"
 			{
 				$view_comments_text = ''.$comment_count.' Comment';
 			}
-			else
+			else  // If 0 or more than one comment, say "{number} Comments"
 			{
 				$view_comments_text = ''.$comment_count.' Comments';
 			}

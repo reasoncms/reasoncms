@@ -44,12 +44,12 @@ $GLOBALS['_reason_page_types_local'] = array(
 	),
 
 	'publication' => array(
-		'main_head' => 'publication/title',
+		'main_head' => 'publication/luther_title',
 		'main'=>'publication/description',
 		'main_post' => array(
 			'module' => 'publication',
 			'css' => false,
-			'use_filters' => false,
+			'use_filters' => false,  // Can make true to show categories or search
 			'show_login_link' => false,
 		),
 		'sidebar'=>'',
@@ -214,6 +214,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 	),
 	'faculty' => array(
 		'main_post' => 'luther_faculty'
+		//'main_post' => 'faculty'
 	),
 	'faculty_first' => array(
 		'main' => 'luther_faculty',
