@@ -88,43 +88,11 @@ domain_define( 'HTTP_CREDENTIALS_FILEPATH', '' );
  * HTTPS_AVAILABLE
  * Boolean; lets the package know if the domain is configured to serve up pages under https or not
  */
-switch ($_SERVER['SERVER_NAME']) {
-    case 'www.luther.edu':
-        domain_define( 'HTTPS_AVAILABLE', true );
-        break;
-    case 'luther.edu':
-        domain_define( 'HTTPS_AVAILABLE', true );
-        break;
-    case 'reason.luther.edu':
-        domain_define( 'HTTPS_AVAILABLE', true );
-        break;
-    case 'reasondev.luther.edu':
-        domain_define( 'HTTPS_AVAILABLE', true );
-        break;
-    case 'smitst01.luther.edu':
-        domain_define( 'HTTPS_AVAILABLE', true );
-        break;
-    case 'jonebr01.luther.edu':
-        domain_define( 'HTTPS_AVAILABLE', true );
-        break;
-    case 'wilbbe01.luther.edu':
-        domain_define( 'HTTPS_AVAILABLE', true );
-        break;
-    case 'huintr01.luther.edu':
-        domain_define( 'HTTPS_AVAILABLE', true );
-        break;
-    case 'dykega01.luther.edu':
-        domain_define( 'HTTPS_AVAILABLE', true );
-        break; 
-    case 'dirks.luther.edu':
-        domain_define( 'HTTPS_AVAILABLE', true );
-        break; 
-    default:
-        if (preg_match('/\.reasondev\.luther\.edu/', $_SERVER['SERVER_NAME'])){
-            domain_define('HTTPS_AVAILABLE', true);
-        } else {
-            domain_define('HTTPS_AVAILABLE', false);
-        }
+// Luther has a wildcard cert, so we may as well use it
+if (preg_match('/\.reasondev\.luther\.edu/', $_SERVER['SERVER_NAME'])){
+    domain_define('HTTPS_AVAILABLE', true);
+} else {
+    domain_define('HTTPS_AVAILABLE', false);
 }
 
 /**
