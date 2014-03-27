@@ -147,7 +147,10 @@
 		case 'www.luther.edu':
 		    define( 'THIS_IS_A_DEVELOPMENT_REASON_INSTANCE', false );
 		    break;
-		case 'reason-node-1.luther.edu':
+		case 'luther.edu':
+		    define( 'THIS_IS_A_DEVELOPMENT_REASON_INSTANCE', false );
+		    break;
+		case 'reason.luther.edu':
 		    define( 'THIS_IS_A_DEVELOPMENT_REASON_INSTANCE', false );
 		    break;
 		case 'reasondev.luther.edu':
@@ -170,24 +173,12 @@
 	 * If this is set to false, Reason will work in either case, but it is better practice
 	 * to set it to true when possible to eliminate the possiblity of man-in-the-middle attacks.
 	 */
-	switch ($_SERVER['SERVER_NAME']) {
-	    case 'www.luther.edu':
-	        define('REASON_HOST_HAS_VALID_SSL_CERTIFICATE', true);
-	        break;
-	    case 'reason-node-1.luther.edu':
-	        define('REASON_HOST_HAS_VALID_SSL_CERTIFICATE', true);
-	        break;
-	    case 'reasondev.luther.edu':
-	        define('REASON_HOST_HAS_VALID_SSL_CERTIFICATE', true);
-	        break; 
-	    default:
-	    	if (preg_match('/\.reasondev\.luther\.edu/', $_SERVER['SERVER_NAME'])){
-	    		define('REASON_HOST_HAS_VALID_SSL_CERTIFICATE', true);
-	    	} else {
-	        	define('REASON_HOST_HAS_VALID_SSL_CERTIFICATE', false);
-	        }
-	        break;
-	}
+	// Luther has a wildcard cert, so we may as well use it
+	if (preg_match('/\.reasondev\.luther\.edu/', $_SERVER['SERVER_NAME'])){
+		define('REASON_HOST_HAS_VALID_SSL_CERTIFICATE', true);
+	} else {
+    	define('REASON_HOST_HAS_VALID_SSL_CERTIFICATE', false);
+    }
 	
 	/**
 	 * REASON_SESSION_TIMEOUT

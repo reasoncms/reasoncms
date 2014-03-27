@@ -41,7 +41,10 @@ switch ($_SERVER['SERVER_NAME']) {
     case 'www.luther.edu':
         domain_define( 'DB_CREDENTIALS_FILEPATH', SETTINGS_INC. 'dbs.xml' );
         break;
-    case 'reason-node-1.luther.edu':
+    case 'luther.edu':
+        domain_define( 'DB_CREDENTIALS_FILEPATH', SETTINGS_INC. 'dbs.xml' );
+        break;
+    case 'reason.luther.edu':
         domain_define( 'DB_CREDENTIALS_FILEPATH', SETTINGS_INC. 'dbs.xml' );
         break;
     case 'reasondev.luther.edu':
@@ -89,7 +92,10 @@ switch ($_SERVER['SERVER_NAME']) {
     case 'www.luther.edu':
         domain_define( 'HTTPS_AVAILABLE', true );
         break;
-    case 'reason-node-1.luther.edu':
+    case 'luther.edu':
+        domain_define( 'HTTPS_AVAILABLE', true );
+        break;
+    case 'reason.luther.edu':
         domain_define( 'HTTPS_AVAILABLE', true );
         break;
     case 'reasondev.luther.edu':
