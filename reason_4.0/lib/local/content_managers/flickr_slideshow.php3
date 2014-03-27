@@ -31,7 +31,7 @@
 				//$f2 = fopen('/var/www/phpFlickrCache/out.txt', 'w');
 				//fprintf($f2, "%s\n", $this->get_value('flickr_photoset_id'));
 
-				$flickrset = exec("grep -l '" . $this->get_value('flickr_photoset_id') . "' /var/reason/reason_package/reason_4.0/www/local/phpFlickrCache/*.cache");
+				$flickrset = exec("grep -l '" . $this->get_value('flickr_photoset_id') . REASON_HTTP_BASE_PATH . "'/local/phpFlickrCache/*.cache");
 				//fprintf($f2, "%s\n", $flickrset);
 
 				if ($f = fopen($flickrset, "r"))
@@ -49,7 +49,7 @@
 					foreach ($images[1] as $img)
 					// $images[1] contains matched images from (\d+) 
 					{
-						$i = exec("grep -l '" . $img . "' /var/reason/reason_package/reason_4.0/www/local/phpFlickrCache/*.cache");
+						$i = exec("grep -l '" . $img . REASON_HTTP_BASE_PATH . "'/local/phpFlickrCache/*.cache"); 
 						//fprintf($f2, "%s\n", $i);
 						unlink($i);
 					}

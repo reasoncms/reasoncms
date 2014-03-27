@@ -54,7 +54,7 @@
 					if (HTTP_HOST_NAME != 'localhost')
 					{
 						// 365 day cache expiration
-						$f->enableCache("fs", "/var/reason/reason_package/reason_4.0/www/local/phpFlickrCache", 31536000); 
+						$f->enableCache("fs", REASON_HTTP_BASE_PATH . "/local/phpFlickrCache", 31536000); 
 					}
 					$photos = $f->photosets_getPhotos($post->get_value('flickr_photoset_id'));
 					//foreach ((array)$photos['photoset']['photo'] as $photo)
