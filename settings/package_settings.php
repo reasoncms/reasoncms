@@ -89,7 +89,7 @@ domain_define( 'HTTP_CREDENTIALS_FILEPATH', '' );
  * Boolean; lets the package know if the domain is configured to serve up pages under https or not
  */
 // Luther has a wildcard cert, so we may as well use it
-if (preg_match('/\.reasondev\.luther\.edu/', $_SERVER['SERVER_NAME'])){
+if (preg_match('/luther\.edu/', $_SERVER['SERVER_NAME'])){
     domain_define('HTTPS_AVAILABLE', true);
 } else {
     domain_define('HTTPS_AVAILABLE', false);
