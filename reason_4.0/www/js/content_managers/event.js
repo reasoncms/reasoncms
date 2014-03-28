@@ -34,9 +34,13 @@ function populate_calendar_preview()
 	}
 }
 
-function borrow_confirm(url, name)
+function borrow_confirm(url, id)
 {
-	$("div#borrow_confirm h3").html(name);
+	$("div#borrow_confirm div#event_detail").load("/reason_package/reason_4.0/www/displayers/calendar_preview.php",
+			{
+			event_id: id
+			});
+	
 	$("div#borrow_confirm a.confirm").attr('href', url);
 	$("div#borrow_confirm").css('display','block');	
 	$("div#borrow_confirm_shade").css('display','block');	
