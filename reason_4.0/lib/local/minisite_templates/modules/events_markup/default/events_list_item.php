@@ -67,7 +67,9 @@ class defaultEventsListItemMarkup extends EventsModule implements eventsListItem
 			$ret .= 'All day - ';
 		}
 		$name = $event->get_value('name');
-		if ($this->is_sports_event($event->get_value('sponsor')))
+		
+		if ($this->is_sports_event($event->get_value('sponsor')) && (!luther_is_sports_page()
+			|| get_site_id_from_url("/sports") == get_site_id_from_url(get_current_url())))
 		{
 			$name = ucfirst(preg_replace("|(^.*?)\s\((w?o?m?en)\)$|", "\\2's \\1", $event->get_value('sponsor'))) . ' - ' . $name;
 		}
@@ -88,10 +90,12 @@ class defaultEventsListItemMarkup extends EventsModule implements eventsListItem
 		elseif($event->get_value('_ongoing_ends') == $day)
 			$ret .= ' <span class="ends">ends</span>';
 		
+		$ret .= luther_video_audio_streaming($event->get_value('id'));
+		
 		if($event->get_value('_inline_editable'))
 		{
 			$before = '<div class="editable"><div class="editRegion">'."\n";
-			$after = ' <a href="'.$event->get_value('_inline_editable_link').'" class="editThis">Edit Event</a></div></div>'."\n";
+			$after = ' <a href="'.$event->get_value('_inline_editable_link').'" title="Edit Event" class="editThis"><i class="fa fa-pencil-square-o"></i></a></div></div>'."\n";
 			$ret = $before.$ret.$after;
 		}
 		
