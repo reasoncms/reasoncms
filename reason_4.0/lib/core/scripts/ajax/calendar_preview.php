@@ -16,11 +16,13 @@ reason_include_once( 'classes/calendar.php' );
 reason_include_once( 'classes/admin/admin_page.php' );
 
 
-if (empty($_REQUEST['date']) || !reason_check_authentication())
+if (!reason_check_authentication())
 {
 	header('HTTP/1.1 400 Bad Request');
-	echo '<html><head><title>Calendar did not work</title><meta name="robots" content="none" /></head><body><h1>Calendar did not work</h1><p>Use the form "?date=YYYY-MM-DD"</p></body></html>';
-} else {
+	echo '<html><head><title>Calendar did not work</title><meta name="robots" content="none" /></head><body><h1>Calendar did not work</h1><p>You must be logged in to use this script.</p></body></html>';
+} 
+else if (!empty($_REQUEST['date']))
+{
 	// normalize the date format
 	$stamp = strtotime($_REQUEST['date']);
 	$date = date('Y-m-d', $stamp);
@@ -68,7 +70,7 @@ if (empty($_REQUEST['date']) || !reason_check_authentication())
 			$owner = $event->get_owner();
 			if ($params['site_id'] != $owner->id())
 			{
-				echo '<a class="nav" href="#" onclick = \'borrow_confirm("'.carl_make_link($params, $_REQUEST['path']).'", "'.addslashes($event->get_value('name')).'"); return false;\' title="Add this event to your calendar">';
+				echo '<a class="nav" href="#" onclick = \'borrow_confirm("'.carl_make_link($params, $_REQUEST['path']).'", '.$event->get_value('id').'); return false;\' title="Add this event to your calendar">';
 				echo $event->get_value('name').'</a>';
 			} else {
 				echo $event->get_value('name');
@@ -85,13 +87,32 @@ if (empty($_REQUEST['date']) || !reason_check_authentication())
 	echo '<a href="/calendar/?date='.$date.'" target="_blank">Full Calendar</a>';
 	
 	echo '<div id="borrow_confirm">
-		<h3>Event Title</h3>
-		<p>You are about to borrow this event and place it on your site. 
-		This will cancel any changes to the event you are currently editing.</p>
+		<div id="event_detail"></div>
+		<hr>
+		<p>Click below to borrow this event and place it on your site. 
+		<em>This will cancel any changes to the event you are currently editing.</em></p>
 		<p class="buttons">
-		<a class="confirm" href="#">Continue</a> 
+		<a class="confirm" href="#">Borrow this Event</a> 
 		<a class="cancel" href="#" onclick = "borrow_confirm_cancel()">Cancel</a></p></div>';
 	echo '<div id="borrow_confirm_shade"></div>';
 
 }
+else if (!empty($_REQUEST['event_id']))
+{
+	if ( $event = new entity($_REQUEST['event_id']))
+	{
+		echo '<h3>'.$event->get_value('name').'</h3>';
+		echo '<p>'.$event->get_value('location').'</p>';
+		echo '<p>'.$event->get_value('description').'</p>';
+		echo '<p>'.$event->get_value('sponsor').'<br />';
+		echo 'Contact: '.$event->get_value('contact_username').'@carleton.edu</p>';
+	} else {
+		echo '<h3>Event Detail Not Available</h3>';	
+	}
+}
+else
+{
+	header('HTTP/1.1 400 Bad Request');
+	echo '<html><head><title>Calendar did not work</title><meta name="robots" content="none" /></head><body><h1>Calendar did not work</h1><p>Use the form "?date=YYYY-MM-DD"</p></body></html>';
+} 
 ?>
