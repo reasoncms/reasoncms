@@ -130,17 +130,17 @@ function toggle_billing_address() {
     if (!$("input[name='billing_address']:checked").val() ||
         $("input[name='billing_address']:checked").val() == 'entered')
         {
-        $("tr#billingstreetaddressItem").hide();
-        $("tr#billingcityItem").hide();
-        $("tr#billingstateprovinceItem").hide();
-        $("tr#billingzipItem").hide();
-        $("tr#billingcountryItem").hide();
+        $("#billingstreetaddressItem").hide();
+        $("#billingcityItem").hide();
+        $("#billingstateprovinceItem").hide();
+        $("#billingzipItem").hide();
+        $("#billingcountryItem").hide();
     } else {
-        $("tr#billingstreetaddressItem").show();
-        $("tr#billingcityItem").show();
-        $("tr#billingstateprovinceItem").show();
-        $("tr#billingzipItem").show();
-        $("tr#billingcountryItem").show();
+        $("#billingstreetaddressItem").show();
+        $("#billingcityItem").show();
+        $("#billingstateprovinceItem").show();
+        $("#billingzipItem").show();
+        $("#billingcountryItem").show();
         $("select#billing_state_provinceElement").change();
     }
 }
@@ -152,7 +152,7 @@ function toggle_country_field(stateElementSelector, countryItemSelector)
 	{
    	    $(countryItemSelector + " select").val('');
     	$("#countryItem").show();
-   		$("tr#billingcountryItem").show();
+   		$("#billingcountryItem").show();
 	}
 	// If US or Canada, populate Country but hide it
 	else
