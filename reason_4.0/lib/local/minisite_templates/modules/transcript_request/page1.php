@@ -80,7 +80,7 @@ class TranscriptPageOneForm extends FormStep {
             'type' => 'radio_no_sort',
             'display_name' => 'How should your official transcripts be delivered?',
             'options' => array(
-                'email' => 'Electronic (Email)',
+                'email' => 'Electronic (Email - Note: Transcripts cannot be forwarded.)',
                 'postal' => 'Physical copy (Postal mail)'
                 )
         ),
@@ -149,6 +149,7 @@ class TranscriptPageOneForm extends FormStep {
 
     // style up the form and add comments et al
     function on_every_time() {
+        $this->box_class = 'StackedBox';
         $this->set_value('submitter_ip', $_SERVER['REMOTE_ADDR']);
 
         $username = reason_check_authentication(); // this will force login
@@ -192,7 +193,7 @@ class TranscriptPageOneForm extends FormStep {
 //                $this->set_value('name', $display_name);
 //            }
             $this->change_element_type('email', 'text');
-            $this->set_value('email', $email);
+            // $this->set_value('email', $email);
         } else {
             if (reason_check_authentication ()) {
                 echo '<div class = "loginlogout">';
