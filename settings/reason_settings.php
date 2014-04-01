@@ -174,7 +174,7 @@
 	 * to set it to true when possible to eliminate the possiblity of man-in-the-middle attacks.
 	 */
 	// Luther has a wildcard cert, so we may as well use it
-	if (preg_match('/\.reasondev\.luther\.edu/', $_SERVER['SERVER_NAME'])){
+	if (preg_match('/luther\.edu/', $_SERVER['SERVER_NAME'])){
 		define('REASON_HOST_HAS_VALID_SSL_CERTIFICATE', true);
 	} else {
     	define('REASON_HOST_HAS_VALID_SSL_CERTIFICATE', false);
