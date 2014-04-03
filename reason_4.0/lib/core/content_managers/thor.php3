@@ -63,7 +63,10 @@
 			$this->set_display_name( 'db_flag', 'Save to Database?' );
 			$this->set_display_name( 'display_return_link', 'Display Return Link?' );
 
-			
+			$this->add_required('db_flag');
+			$this->change_element_type('db_flag', 'radio_no_sort', array('options'=>array('no'=>'No <span class="smallText">(Submissions will just be emailed; 
+data will not be stored on the server)</span>','yes'=>'Yes 
+<span class="smallText">(Submissions will be stored on the server and can be exported as a spreadsheet)</span>')));
 			$this->change_element_type( 'thank_you_message' , html_editor_name($this->admin_page->site_id) , html_editor_params($this->admin_page->site_id, $this->admin_page->user_id) );
 			
 			$db_flag = $this->get_value('db_flag');
