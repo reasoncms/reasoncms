@@ -72,7 +72,7 @@ body {
 						height: $logo-height-mobile;
 						width: $logo-width-mobile;
 						margin: 0 auto;
-						background: url('/images/logo_mobile_1x.png') no-repeat;
+						background: url('../images/logo_mobile_1x.png') no-repeat;
 						top: ($header-height-mobile - $logo-height-mobile)/2;
 						position: relative;
 						z-index: 11;
@@ -82,7 +82,7 @@ body {
 					@media #{$small-up-reitna} {
 					
 						a {				
-							background: url('/images/logo_mobile_2x.png') no-repeat;
+							background: url('../images/logo_mobile_2x.png') no-repeat;
 							@include background-size($logo-width-mobile $logo-height-mobile);
 						}
 					}
@@ -94,7 +94,7 @@ body {
 							height: $logo-height;
 							top: ($header-height - $logo-height)/2;
 							margin-left: $column-gutter / 2;
-							background: url('/images/logo_1x.png') no-repeat;
+							background: url('../images/logo_1x.png') no-repeat;
 							@include transition-property(opacity);
 							@include transition-duration(.5s);
 						}
@@ -102,7 +102,7 @@ body {
 						@media #{$large-up-reitna} {
 					
 							a {	
-								background: url('/images/logo_2x.png') no-repeat;
+								background: url('../images/logo_2x.png') no-repeat;
 								@include background-size($logo-width-mobile $logo-height-mobile);
 							}
 						}							
