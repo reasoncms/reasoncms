@@ -244,6 +244,49 @@ class LutherEventsModule extends EventsModule
 		}
 	}
 	
+	function show_event_list_item( $event_id, $day, $ongoing_type = '' )
+	{
+		$inline_edit =& get_reason_inline_editing($this->page_id);
+		$editable = $inline_edit->available_for_module($this);
+		if ($editable && $this->user_can_inline_edit_event($event_id))
+		{
+			$active = $inline_edit->active_for_module($this);
+			$class = ($active) ? 'editable editing' : 'editable';
+			echo '<div class="'.$class.'">'."\n";
+			if (!$active) echo '<div class="editRegion">';
+		}
+	
+		if($this->params['list_type'] == 'verbose')
+			$this->show_event_list_item_verbose( $event_id, $day, $ongoing_type );
+		else if($this->params['list_type'] == 'schedule')
+			$this->show_event_list_item_schedule( $event_id, $day, $ongoing_type );
+		else
+			$this->show_event_list_item_standard( $event_id, $day, $ongoing_type );
+	
+		// We're currently only showing edit options if you're on a calendar page
+		// (signified by the absence of $events_page_url). Inline editing events in
+		// sidebars, etc., is a complicated issue.
+		if (!$this->events_page_url)
+		{
+			if ($editable && $this->user_can_inline_edit_event($event_id))
+			{
+				if ($active)
+				{
+					echo 'EDITING';
+				}
+				else
+				{
+					$activation_params = $inline_edit->get_activation_params($this);
+					$activation_params['edit_id'] = $event_id;
+					$activation_params['event_id'] = $event_id;
+					$url = carl_make_link($activation_params);
+					echo ' <a href="'.$url.'" class="editThis">Edit Event</a></div>'."\n";
+				}
+				echo '</div>';
+			}
+		}
+	}
+	
 	function show_event_list_item_standard( $event_id, $day, $ongoing_type = '' )
 	{
 		$link = $this->events_page_url.$this->construct_link(array('event_id'=>$this->events[$event_id]->id(),'date'=>$day));

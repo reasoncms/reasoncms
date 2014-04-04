@@ -175,6 +175,7 @@ class GiftPageTwoForm extends FormStep
 	// style up the form and add comments et al
 	function on_every_time()
 	{
+		$this->box_class = 'StackedBox';
 		//add element groups
 		foreach($this->element_group_info as $name => $info)
 		{
