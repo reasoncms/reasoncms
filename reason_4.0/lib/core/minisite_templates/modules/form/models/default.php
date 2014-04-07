@@ -354,7 +354,7 @@ class DefaultFormModel extends AbstractFormModel
 			$tyr->add_disclaimer = (isset($options['disclaimer']) && ($options['disclaimer'] == false) ) ? false : true;
 			$tyr->run();
 		}
-	}sned_email(
+	}
 	
 	/**
 	 * Live person search
