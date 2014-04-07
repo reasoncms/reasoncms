@@ -329,6 +329,7 @@ class DefaultFormModel extends AbstractFormModel
 	 * - origin_link: link indicating where the URL where the form was filled out
 	 * - access_link: link indicating where the form can be accessed for view/edit
 	 * - email_empty_fields: boolean indicating whether or not to email empty fields
+	 * - attachments: array of filename => filepath for message attachments
 	 *
 	 * @param array data - key/value pairs of the data to e-mail
 	 * @param array options - allows various parameters to be optionally passed
@@ -348,11 +349,12 @@ class DefaultFormModel extends AbstractFormModel
 			$messages[0]['from'] = (isset($options['from'])) ? $options['from'] : TYR_REPLY_TO_EMAIL_ADDRESS;
 			$messages[0]['reply-to'] = (isset($options['reply-to'])) ? $options['reply-to'] : TYR_REPLY_TO_EMAIL_ADDRESS;
 			$messages[0]['subject'] = (isset($options['subject'])) ? $options['subject'] : 'Response to Form';
+			if (!empty($options['attachments'])) $messages['0']['attachments'] = $options['attachments'];
 			$tyr = new Tyr($messages, $data);
 			$tyr->add_disclaimer = (isset($options['disclaimer']) && ($options['disclaimer'] == false) ) ? false : true;
 			$tyr->run();
 		}
-	}
+	}sned_email(
 	
 	/**
 	 * Live person search
