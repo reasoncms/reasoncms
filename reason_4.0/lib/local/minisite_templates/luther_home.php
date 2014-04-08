@@ -152,14 +152,12 @@
 				echo '</div>'."\n";
 			}
 			
-			if($this->has_content( 'callouts' ) ) {
-			
+			if($this->has_content( 'callouts' ) )
+			{
 				echo '<div id="calloutSections">'."\n";
-					$this->run_section( 'callouts' );
+				$this->run_section( 'callouts' );
 				echo '</div>'."\n";
-
 			}
-
 
 		}
 		
@@ -167,7 +165,6 @@
 		function show_navbar()
 		{		
 		}
-
 
 	}
 ?>
