@@ -1748,7 +1748,7 @@ body #wrapper #post-footer p {
 }
 
 /* line 4, scss/font-awesome/_core.scss */
-.fa, #minisite #navWrap .jump:before, .assets li:before, .childrenList li a:before, #childrenAndGrandchildren li ul .childDesc:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
+.fa, #minisite #navWrap .jump:before, #minisite .feedLink .feedInfo a:before, .assets li:before, .childrenList li a:before, #childrenAndGrandchildren li ul .childDesc:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, .featuresModule .feature .featureInfo .featureText a:before,
 .featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, .publication .post p.comments a:before, .publication .post p.more a:before, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after {
   display: inline-block;
@@ -2367,9 +2367,56 @@ body #wrapper #post-footer p {
   font-size: 0.75rem;
   margin: 0.5rem 0 0;
 }
+@media only screen and (min-width: 40.063em) {
+  /* line 530, scss/_minisite.scss */
+  #minisite .feedLink {
+    display: inline;
+    text-align: right;
+  }
+}
+/* line 538, scss/_minisite.scss */
+#minisite .feedLink .feedInfo a {
+  color: transparent;
+}
+/* line 542, scss/_minisite.scss */
+#minisite .feedLink .feedInfo a:before {
+  content: "\f09e";
+  display: block;
+  color: #9f2112;
+}
+/* line 551, scss/_minisite.scss */
+#minisite .pagination {
+  margin-bottom: 2.5rem;
+  *zoom: 1;
+}
+/* line 165, ../foundation/bower_components/foundation/scss/foundation/components/_global.scss */
+#minisite .pagination:before, #minisite .pagination:after {
+  content: " ";
+  display: table;
+}
+/* line 166, ../foundation/bower_components/foundation/scss/foundation/components/_global.scss */
+#minisite .pagination:after {
+  clear: both;
+}
+@media only screen and (min-width: 40.063em) {
+  /* line 551, scss/_minisite.scss */
+  #minisite .pagination {
+    width: 50%;
+    float: left;
+  }
+}
+/* line 560, scss/_minisite.scss */
+#minisite .pagination.above {
+  dispaly: none;
+}
+/* line 571, scss/_minisite.scss */
+#minisite .pagination .pages a,
+#minisite .pagination .pages strong {
+  margin: 0 0.25rem;
+}
 
 /* line 4, scss/font-awesome/_core.scss */
-.fa, #minisite #navWrap .jump:before, .assets li:before, .childrenList li a:before, #childrenAndGrandchildren li ul .childDesc:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
+.fa, #minisite #navWrap .jump:before, #minisite .feedLink .feedInfo a:before, .assets li:before, .childrenList li a:before, #childrenAndGrandchildren li ul .childDesc:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, .featuresModule .feature .featureInfo .featureText a:before,
 .featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, .publication .post p.comments a:before, .publication .post p.more a:before, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after {
   display: inline-block;
@@ -4250,7 +4297,7 @@ form table td {
 }
 /* line 62, scss/modules/_publication.scss */
 .publication .posts {
-  margin: 0;
+  margin: 0 0 2.5rem;
 }
 /* line 66, scss/modules/_publication.scss */
 .publication .post {

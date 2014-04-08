@@ -524,4 +524,59 @@
 		}
 	}
 
+	// 6. Resued Elements
+	//////////////////////////////////////
+  
+	.feedLink {  // xml link
+
+		@media #{$medium-up} {
+			display: inline;
+			text-align: right;
+		}
+
+		.feedInfo {  // @todo: Replace "xml" text with something less obscure.  Not sure if we have to overwrite function_libraries/feed_utils.php or if there's another way.
+			a {
+				color: transparent;
+			}
+
+			a:before {
+				@extend .fa;
+				content: $fa-var-rss;
+				display: block;
+				color: $lc-red;
+			}
+		}
+	}
+
+	.pagination {
+		margin-bottom: $column-gutter;
+		@include clearfix;
+
+		@media #{$medium-up} {
+			width: 50%;	
+			float: left;
+		}
+
+		&.above {
+			dispaly: none;
+		}
+
+		.previous {
+
+		}
+
+		.pages {
+
+			a,
+			strong {
+				margin: 0 rem-calc(4);
+			}
+
+		}
+
+		.next {
+
+		}
+	}
+
 }  // end #minisite
