@@ -3,10 +3,9 @@ include_once('reason_header.php');
 reason_include_once('function_libraries/user_functions.php');
 
 try {
-
+  #connectDB('norsecard');
   # MS SQL Server and Sybase with PDO_DBLIB
-  $dbh = new PDO("dblib:host=odyssey.luther.edu:2638;dbname=odyssey", "pcsuser", "viewonly");
-
+  $dbh = new PDO("mysql:host=database-1.luther.edu;dbname=reason_norsecard", "norsecard_user", "KawSXRO`F[kB.bxQf|gk");
 
   if ($user = reason_check_authentication()) {
     if (array_key_exists('action', $_GET)) {
