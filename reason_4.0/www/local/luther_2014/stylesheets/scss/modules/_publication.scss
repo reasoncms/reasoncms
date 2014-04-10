@@ -20,7 +20,7 @@
 
 /* Global Publication styles */
 .publication .persistent {
- 	display: none; // Persistent is also turned off at the page type level with 'use_filters' => false & 'show_login_link' => false.
+ 	//display: none; // Persistent is currently turned off at the page type level for the publication page type with 'use_filters' => false & 'show_login_link' => false.
 }
 
 /* Related Publications (often in sidebars) */
@@ -53,10 +53,14 @@
 
 .publication {
 
-	/* POST INDEX (list of posts) */
+	/* Common */
+	time {
+		color: lighten($body-font-color, 25%);
+	}
 
+	/* POST INDEX (list of posts) */
 	.posts {
-		margin: 0;
+		margin: 0 0 $column-gutter;
 	}
 
 	.post {
@@ -69,8 +73,7 @@
 
 		.title {
 			margin: 0 0 $column-gutter/4;
-			font-size: $h3-font-size;
-		}
+			font-size: $h3-font-size;		}
 
 		time,
 		p.comments {
@@ -78,10 +81,6 @@
 			margin-bottom: $column-gutter/4;
 			font-family: $open-sans;
 			font-size: rem-calc(14);
-		}
-
-		time {
-			color: lighten($body-font-color, 25%);
 		}
 
 		p.comments {
@@ -100,10 +99,32 @@
 			margin: 0;
 
 			a {
+				color: $secondary-link-color;
+				position: relative;
+							margin-left: rem-calc(32);
+			
+
 				&:before {
 					@extend .fa;
-					content: $fa-var-chevron-right;
-					margin-right: rem-calc(6);
+					content: $fa-var-chevron-circle-right;
+					margin-left: rem-calc(6);
+					position: absolute;
+					left: - rem-calc(32);
+					top: rem-calc(3);
+					@include transition-property(left);
+					@include transition-duration(.5s);
+					@include transition-timing-function(ease);
+
+				}
+
+				&:hover,
+				&:focus {
+					&:before {
+						left: - rem-calc(28);
+						@include transition-property(left);
+						@include transition-duration(.5s);
+						@include transition-timing-function(ease);
+					}
 				}
 			}
 		}
@@ -117,14 +138,28 @@
 	}
 
 	/* FULL POST */
-
 	&.fullPostDisplay {
 		//margin-right: rem-calc(40); // Leaves space for the persistent social media slider thing
 	}
 
 	.fullPost {
 
-		// The "Woo-hoo, comment added!" message above the article after comments are posted
+		.postTitle {display: none;}
+
+		.date {
+			display: block;
+			margin-bottom: rem-calc(12);
+		}
+
+		.author {
+			margin-bottom: $paragraph-margin-bottom;
+			font-family: $header-font-family;
+			font-size: $h4-font-size;
+			font-weight: 300;
+			margin-bottom: $column-gutter/1.25;
+		}
+
+		// The "Comment added!" message above the article after comments are posted
 		.commentAdded {
 			@include alert($bg: lighten($lc-green, 60%), $radius: $global-radius);
 			border: 1px solid lighten($lc-green, 50%);
@@ -155,20 +190,38 @@
 			}
 		}
 		// Artle WYSIWYG stiles are shared with other WYSIWYG content areas.  See _type.scss and _images.scss.
-	}
 
-	.social {
-		&.top {
-			position: fixed;
-			z-index: 99999;
-			right: 0;
-			bottom: 50px;
-			//width: rem-calc(40);
-			padding: rem-calc(12);
-			background: $lc-grey;
-			background: rgba($lc-white, .9);
-			@include box-shadow(rgba(#000, .25) 0 0 6px);
-			@include border-left-radius(6px);
+		/* Social Sharing */
+		.social {
+
+			&.top {
+
+				display: none;
+
+				// Make sticky on desktop
+				@media #{$large-up} {
+					display: block;
+					position: fixed;
+					z-index: 99999;
+					right: 0;
+					bottom: 50px;
+					//width: rem-calc(40);
+					padding: rem-calc(12);
+					background: $lc-grey;
+					background: rgba($lc-white, .9);
+					@include box-shadow(rgba(#000, .25) 0 0 6px);
+					@include border-left-radius(6px);
+				}
+			}
+
+			&.bottom {
+				text-align: center;
+				margin-bottom: $column-gutter;
+
+				@media #{$large-up} {
+					display: none;
+				}
+			}
 
 			p {
 				padding: 0;
@@ -179,21 +232,42 @@
 				position: relative;
 				top: rem-calc(6);
 				display: block;
-				float: left;
+				padding-bottom: rem-calc(12);
+				
+				@media #{$large-up} {
+					float: left;
+					padding-bottom: 0;
+				}
+				
 			}
 
 			a {
-				display: block;
-				float: left;
+				width: rem-calc(40);
+				display: inline-block;
 				margin-left: rem-calc(12);
-				width: 40px;
+
+				@media #{$large-up} {
+					
+					float: left;
+					
+
+				}
 			}
 		}
 
-		&.bottom {
-			display: none;
+		&.hasRelated { // If images, assets, or events are attached to the post
+			.firstChunk {
+				width: 60%;
+				float: left;
+			}
+			.relatedItems {
+				width: 40%;
+				float: right;
+			}
+			.secondChunk {
+				clear: both;
+			}
 		}
-
 	}
 
 	/* Next & Previous Posts navigation */
@@ -328,13 +402,6 @@
 
 					*:last-child {
 						margin-bottom: 0;
-					}
-
-					// Ideally, this would hide any empty p tags that people unknowingly leave in the WYSIWYG.
-					// But Reason spits out &nbsp; insde empty <p> tags, meaning the resulting <p> is not :empty. 
-					// Javascript seems to be the only solution right now: http://stackoverflow.com/questions/13380906/hiding-an-element-that-contains-only-spaces-using-css
-					*:empty {  
-						display: none;
 					}
 				}
 			}

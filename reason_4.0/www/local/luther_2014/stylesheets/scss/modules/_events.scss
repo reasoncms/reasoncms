@@ -1,0 +1,418 @@
+//
+// EVENTS STYLES
+//
+// @author Nathan Dirks
+//
+
+// Foundation imports
+@import "settings";
+@import "foundation/components/grid";
+@import "foundation/components/buttons";
+@import "foundation/components/forms";
+
+// Compass imports
+@import "compass/css3";
+
+// Luther imports
+@import "extends";
+@import "mixins";
+
+// Events
+
+/* Events Column Layouts */
+
+#calendar { // Override some Reason layout styles
+	.responsiveEventsList {
+
+		.gridAndOptionsWrapper {
+			width: 100%;
+			float: left;
+			margin: -$column-gutter/2 0 0 0;
+		    border-left: 1px solid darken($lc-grey, 0%);
+		    padding: rem-calc(16);
+		    clear: none;
+		}
+
+		.datesAndSearch,
+		.options {
+			width: 100%;
+		}
+	}		
+}
+
+.hasCon #calendar { // Events module only (no sidebar)
+
+	.responsiveEventsList {
+
+		.eventsMainContent {	
+			
+			@media #{$medium-up} {
+				float: left;
+				width: 60%;
+			}
+			
+			@media #{$large-up} {
+				float: left;
+				width: 67%;
+			}
+		}
+
+		.gridAndOptionsWrapper {
+
+			@media #{$medium-up} { 
+			    width: 40% !important;
+			}
+
+			@media #{$large-up} {
+			    width: 33% !important;
+
+			    .datesAndSearch {
+				    width: 100%;
+				}
+			}
+		}
+	}
+}
+
+.hasConRel #calendar, 
+.hasConNav #calendar {  // Events module + one sidebar (either nav or related)
+
+	.eventsMainContent {	
+		@media #{$large-up} {
+			float: left;
+			width: 60%;
+		}
+	}
+
+	.gridAndOptionsWrapper {
+
+		border: none;
+
+		@media #{$large-up} { 
+		    width: 40% !important;
+		    border-left: 1px solid #ddd;
+		}
+	}
+}
+
+
+.hasConRelNav #calendar { // Events module + nav & related
+
+	.gridAndOptionsWrapper {
+		border: none;
+		width: 100%;
+	}
+}
+
+/* Events Styles */
+
+#calendar {
+
+	.responsiveEventsList {
+
+		@include grid-row();
+
+		.options {
+			display: none;
+			background: $lc-grey;
+			margin-bottom: rem-calc(64);
+
+			@media #{$medium-up} {
+				@include grid-column(8);
+			}
+			
+			//@include clearfix;
+
+			.categories {
+				ul {
+					display: none;
+				}
+			}
+
+			.audiences,
+			.today,
+			.archive {
+				display: none;
+			}
+		}
+
+		.search {
+			display: none;
+			margin-bottom: rem-calc(64);
+			background: $lc-grey;
+
+			@media #{$medium-up} {
+				@include grid-column(8);
+			}
+
+			h4 {display: none;}
+
+			form {
+				.search {
+					margin-bottom: 0;
+					background: none;
+				}
+				input[type="text"] {
+					@include grid-column($columns:13);
+				}
+				input[type="submit"] {
+					 @include prefix-postfix-base();
+					  @include grid-column(
+					    $columns:3,
+					    $float:left
+					  );
+				}
+			}
+		}
+
+		.views { // Day, Week, Month, Year, All tabs
+			text-align: center;
+			margin: -$column-gutter/2 0 0;
+			//background: lighten($lc-grey, 4%);
+			clear: both;
+			@include clearfix;
+			padding: $column-gutter/2 0;
+			
+
+			h4 {
+				//display: none;
+				display: inline;
+				font-size: rem-calc(12);
+			}
+
+			ul {
+				@extend .zero-out;
+				display: inline-block;
+
+				li {
+					display: inline-block;
+					margin: 0 0 0 rem-calc(6);
+					padding: 0;
+
+					@media #{$medium-up} {
+						margin: 0 0 0 rem-calc(6);
+					}
+
+					&:nth-child(4),
+					&:nth-child(5) {
+						display: none;
+					}
+
+					a,
+					strong {
+						padding: rem-calc(1) rem-calc(12);
+						@include border-radius($global-rounded);
+						display: inline-block;
+						text-decoration: underline;
+						font-size: rem-calc(12);
+					}
+
+					a {
+						&:hover {
+							background: $lc-grey;
+						}
+					}
+
+					strong {
+						text-decoration: none;
+						font-weight: 400;
+						background: $lc-blue-light;
+						color: #FFF;
+					}
+				}
+			}
+		}
+
+		.nav { // Left/right navigation to change dates
+			clear: both;
+			text-align: center;
+			padding-bottom: $column-gutter/3;
+			font-size: rem-calc(24);
+			line-height: 1.75;
+		}
+
+		.eventsListContent { // Event listings
+			width: 100%;
+
+			.focus { // Shows what you're currently browsing. Redundant.
+				display: none;
+			}
+
+			.newEventsError { // Shows errors.  "No events."
+
+			}
+
+			.ongoingblock {
+
+			}
+
+			.dayblock {
+
+			}
+
+			ul {
+				margin-left: 0;
+			}
+
+			.event {
+				display: block;
+				margin-bottom: 2px;
+				padding: rem-calc(16);
+				@include clearfix;
+				border-bottom: 1px dotted $lc-grey;
+				position: relative;
+
+				&:nth-child(odd) {
+					//background: #efefef;
+				}
+				
+				a {
+					
+					max-width: 65%;
+					display: block;
+					float: left;
+
+					&:hover {
+						text-decoration: underline;
+					}
+				}
+
+				em {
+					&.through {
+						max-width: 65%;
+						display: block;
+						float: left;
+						clear: left;
+					}
+				}
+
+				.time {
+					//width: 35%;
+					//float: right;
+					//display: inline-block;
+					font-weight: bold;
+					color: $lc-red;
+					position: absolute;
+					left: 70%;
+				}
+			}
+		}
+
+		.gridAndOptionsWrapper { // Clickable calendar, search, jump to date, & categories
+
+			.calendarGridWrapper {
+				margin-bottom: $column-gutter;
+			}
+
+			.calendarGrid {
+
+				text-align: center;
+
+				a.previous,
+				h4,
+				a.next {
+					display: inline-block;
+					padding: 0 rem-calc(6);
+				}
+
+				table {
+					border: none;
+					tr {
+						background: #FFF;
+					}
+
+					th,
+					td {
+						text-align: center;
+						padding: 0;
+					}
+
+
+
+					th {
+						padding: 5% 0;
+						background: lighten($lc-grey, 7%);
+						background: #FFF;
+						border: #FFF;
+					}
+
+					td {
+						border-color: #DDDDDD;
+					    border-image: none;
+					    border-style: solid;
+					    border-width: 1px;
+
+					    &:empty {
+					    	background: lighten($lc-grey, 5%);
+					    }
+
+						&.startDate {
+
+						}
+
+						&.hasEvent {
+							a {
+								color: $primary-link-color;
+								//font-weight: 700;
+							}
+						}
+
+					    &.currentlyViewing {
+					    	//background: rgba($lc-blue-light, .10);
+					    	background: $lc-blue-light;
+
+					    	a {
+					    		color: #FFF;	
+					    	}
+					    }
+
+					   	&.today {
+					    	//background: rgba(0,0,0,.08);
+					    	background: lighten($lc-blue-light, 15%);
+					    	//box-shadow: inset 0 0 1px #999;
+					    	a {
+					    		color: #FFF;
+					    	}
+					    }
+
+						a {
+							color: lighten($body-font-color, 35%);
+							display: block;
+							padding: 28% 0;
+						}
+
+					}
+				}
+			}
+
+			.iCalExport,
+			.feedInfo {
+				a {
+					margin: 0 5%;
+					display: block;
+					padding: 0;
+					&:before {
+						@extend .fa;
+						margin: 0 rem-calc(8) rem-calc(16) 0;
+					}
+				}
+			}
+
+			.webcal:before {
+				content: $fa-var-calendar;
+			}
+			
+			.download:before {
+				content: $fa-var-arrow-down;
+			}
+			
+			.rss:before {
+				content: $fa-var-rss;
+			}
+		}
+
+		.foot {  // Left/right navigation to change dates & XML
+
+		}
+	}
+}

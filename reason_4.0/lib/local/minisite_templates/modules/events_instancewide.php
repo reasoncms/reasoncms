@@ -34,8 +34,8 @@ class EventsInstancewideModule extends EventsModule
 	{
 		$type = new entity(id_of('event_type'));
 		if($type->get_value('feed_url_string'))
-			echo '<div class="feedInfo"><a href="/'.REASON_GLOBAL_FEEDS_PATH.
-			'/'.$type->get_value('feed_url_string').'" title="RSS feed for this site\'s events">xml</a></div>';
+			echo '<div class="feedInfo"><a class="rss" href="/'.REASON_GLOBAL_FEEDS_PATH.
+			'/'.$type->get_value('feed_url_string').'" title="RSS feed for this site\'s events">RSS</a></div>';
 	}
 
 	function get_all_categories() // {{{
@@ -58,7 +58,7 @@ class EventsInstancewideModule extends EventsModule
 		if ($this->calendar->get_view() == "all")
 			$ret .= ' divider';
 		$ret .= '">'."\n";
-		$ret .= '<h4>Event Categories</h4>'."\n";
+		$ret .= '<h4><a href="#" data-dropdown="drop" class="custom-dropdown-button">Categories</a></h4>'."\n";
 		$ret .= '<ul>'."\n";
 		$ret .= '<li>';
 		$used_cats = $this->calendar->get_categories();

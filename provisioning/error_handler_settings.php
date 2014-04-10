@@ -23,15 +23,32 @@ define( 'PHP_ERROR_LOG_FILE', '/tmp/php-errors-'.$host );
  *
  **/
 
-// Example:
+/* Example:
 
 $GLOBALS[ '_DEVELOPER_INFO' ] = array(
-	'vagrant' => array(
+	'joe' => array(
+		'email' => 'joe@company.com', //error alerts are sent to these emails
+		'ip' => array(	//enter any IP addresses that this person works from
+			'111.22.333.444',
+			'111.22.33.444',
+			'111.222.33.444',
+		),
+		'pager' => '6512785288@tmomail.net',  //emergency error alerts are sent to pagers, if specified
+	),
+	'jane' => array(
 		'ip' => array(
-			'10.0.2.2',
-			'192.168.56.1',
-			'127.0.0.1',
+			'11.22.333.444',
 		)
+		//note: emails and pagers are optional
+	),
+
+*/
+
+$GLOBALS[ '_DEVELOPER_INFO' ] = array(
+	'steve' => array(
+		'email' => 'steve.smith@luther.edu', //error alerts are sent to these emails
+		'ip' => array( '127.0.0.1', '192.168.56.1', '10.22.42.1' ),
+		'pager' => 'steve.smith@luther.edu', '563-419-1556'  //emergency error alerts are sent to pagers, if specified
 	),
 );
 
@@ -41,7 +58,8 @@ $GLOBALS[ '_DEVELOPER_INFO' ] = array(
    outside the Reason package and to re-point this constant to that location. */
 define( 'OHSHI_SCRIPT', REASON_PACKAGE_HTTP_BASE_PATH . 'oops.php');
 
-/*	
+/*
+	
 	MAINTENANCE MODE
 	
 	This variable triggers maintenance mode.  Do not change this lightly.  When set to false, all sites behave
@@ -61,6 +79,7 @@ define( 'OHSHI_SCRIPT', REASON_PACKAGE_HTTP_BASE_PATH . 'oops.php');
 	changed or synchronized.  To further drive the point home:
 	
 	********* THIS TAKES DOWN ALL SERVICES THAT USE THE ERROR HANDLER -- INCLUDING REASON SITES -- UNTIL IT IS SWITCHED OFF. ************
+	
 */
 
 /* allow other files that use error_handler to activate maintenance mode.  if they set the var up,
@@ -78,4 +97,5 @@ define('MAINTENTANCE_MODE_URL', REASON_PACKAGE_HTTP_BASE_PATH . 'maintenance.php
 // NOTE: pay attention to mktime's argument order:
 // mktime( hour, minute, second, month, day, year )
 //$GLOBALS['_maintenance_estimate'] = mktime( 1, 30, 0, 5, 3, 2005 );
+
 ?>

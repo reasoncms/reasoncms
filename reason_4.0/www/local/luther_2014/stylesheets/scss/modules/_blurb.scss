@@ -32,6 +32,15 @@
 	// In order for these styles to work, Call to Action blurbs need a unique name starting with "call_to_action".
 	// Example: call_to_action_admissions_01  (Don't add the prefix "uname_" -- Reason adds this.)
 
+	// Sample CTA Blurb Markup 
+	//
+	//<h3>Call to Action!</h3>
+	//<ul>
+	//<li><a href="#" class="cta blue">Do this!</a></li>
+	//<li><a href="#" class="cta green">No, do this!</a></li>
+	//<li><a href="#" class="cta red">No! THIS!</a></li>
+	//</ul>
+
 	&[class^='uname_call_to_action'],
 	&[class*=' uname_call_to_action'] {
 
@@ -39,7 +48,7 @@
 
 		ul {
 			@extend .zero-out;
-			list-style-type: none;
+			list-style-type: none !important;
 
 			li {
 				margin-bottom: rem-calc(16);
@@ -63,7 +72,7 @@
 					@include transition-timing-function(ease);
 
 					&:link {
-						text-decoration: none;
+						text-decoration: none !important;
 					}
 
 					&.blue {

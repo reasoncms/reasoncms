@@ -15,11 +15,12 @@ reason_include_once( 'minisite_templates/modules/publication/markup_generator.ph
 *
 *  Helper class to the publication minisite module.
 *
-*  Luther edits include...
+* Luther edits include...
 * 1. Removing redundant permalink.
 * 2. Changing language for the "read more" link.
 * 3. Editing the location and display of the "comment" link.
 * 4. Update to some HTML5 markup
+* 5. Edit default image size
 *
 *  @author Meg Gibbs
 *  @author Nathan Dirks
@@ -68,7 +69,7 @@ class PublicationListItemMarkupGenerator extends PublicationMarkupGenerator
 		return $this->get_teaser_image_markup();
 	}
 	
-	function get_teaser_image_markup()
+	/*function get_teaser_image_markup()
 	{
 		$markup_string = '';
 		$image = $this->passed_vars['teaser_image'];
@@ -82,38 +83,30 @@ class PublicationListItemMarkupGenerator extends PublicationMarkupGenerator
 			$markup_string .= '</figure>';
 		} 
 		return $markup_string;
-	}
+	}*/
 
-	/*function get_teaser_image_markup()
+	function get_teaser_image_markup()
 	{
 		$markup_string = '';
-		$image = current($this->passed_vars['teaser_image']);
-		//print_r($image);
-
+		$image = $this->passed_vars['teaser_image'];
 		if (!empty($image))
 		{
-
-			$image_id = $image->id();
-			//print_r($image_id);
+			$markup_string .= '<figure class="teaserImage">';
 
 			$rsi = new reasonSizedImage();
-			$rsi->set_id($image_id);
+			//$rsi->set_id($image->id());
 			$rsi->set_width(400);
+			$rsi->set_height(400);
 			$rsi->set_crop_style('fill');
-			//$image_url = $rsi->get_url();
 
-			//$markup_string .= '<img src="'.$image_url.'" />';
-
-			//$markup_string .= '<figure class="primaryImage">';
-			//$markup_string .= '<img src="'.WEB_PHOTOSTOCK.reason_get_image_filename( $image->id() ).'" width="'.$image->get_value( 'width' ).'" height="'.$image->get_value( 'height' ).'" alt="'.str_replace('"', "'", $image->get_value( 'description' )).'"/>';
-			//$markup_string .= $image_url;
-			//$markup_string .= '</figure>';
-
-			//echo $image_url;
+			ob_start();	
+			show_image( reset($image), true,false,false );
+			$markup_string .= ob_get_contents();
+			ob_end_clean();
+			$markup_string .= '</figure>';
 		} 
 		return $markup_string;
-
-	}*/
+	}
 
 	/*function get_teaser_image_markup()
 	{
@@ -221,20 +214,7 @@ class PublicationListItemMarkupGenerator extends PublicationMarkupGenerator
 
 	function get_permalink_markup()
 	{
-		$item = $this->passed_vars['item'];
-		if(isset($this->passed_vars['permalink']) &&  !empty($this->passed_vars['permalink']))
-		{
-			$markup_string = '';
-			$markup_string .=  '<li class="permalink">';
-			$markup_string .=  '<a href="' . $this->passed_vars['permalink'] . '">'; 
-			$markup_string .=  'Permalink';
-			$markup_string .=  '</a>';
-			$markup_string .=  '</li>'."\n";
-			return $markup_string;
-		}
-		else
-			trigger_error('Could not generate permalink markup; index '.$item->id().' is empty or undefined', WARNING);
-	} 
+	}
 
 	function get_comment_link_markup()
 	{
@@ -246,11 +226,11 @@ class PublicationListItemMarkupGenerator extends PublicationMarkupGenerator
 		if($comment_count >= 1)
 		{
 			$markup_string = '<p class="comments">';
-			if($comment_count == 1)
+			if($comment_count == 1)  // If one comment, we say "1 Comment"
 			{
 				$view_comments_text = ''.$comment_count.' Comment';
 			}
-			else
+			else  // If 0 or more than one comment, say "{number} Comments"
 			{
 				$view_comments_text = ''.$comment_count.' Comments';
 			}
