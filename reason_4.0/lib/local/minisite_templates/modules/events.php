@@ -4386,8 +4386,7 @@ class EventsModule extends DefaultMinisiteModule
 	// Is the event from one of the Luther sports minisites?
 	{
 		$url = get_current_url();
-		if (preg_match("/^https?:\/\/[A-Za-z0-9_\.]+\/sports\/?/", $url)
-				|| preg_match("/([Bb]aseball|[Bb]asketball|[Cc]ross [Cc]ountry|[Ff]ootball|[Gg]olf|[Ss]occer|[Ss]oftball|[Ss]wimming|[Tt]ennis|[Tt]rack|[Vv]olleyball|[Ww]restling)/", $sponsor))
+		if (preg_match("/([Bb]aseball|[Bb]asketball|[Cc]ross [Cc]ountry|[Ff]ootball|[Gg]olf|[Ss]occer|[Ss]oftball|[Ss]wimming|[Tt]ennis|[Tt]rack|[Vv]olleyball|[Ww]restling)/", $sponsor))
 		{
 			return true;
 		}

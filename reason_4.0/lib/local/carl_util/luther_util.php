@@ -7,6 +7,45 @@ function luther_is_sports_page()
 	return preg_match("/^https?:\/\/[A-Za-z0-9_\.]+\/sports\/?/", $url);	
 }
 
+function luther_video_audio_streaming($event_id, $imgVideo = null, $imgAudio = null)
+// append video and audio images if video/audio streaming categories are present for an event
+// by default uses fontawesome to display video and audio icons--pass in an image to override
+{
+	$es = new entity_selector();
+	$es->description = 'Selecting categories for event';
+	$es->add_type( id_of('category_type'));
+	$es->add_right_relationship( $event_id, relationship_id_of('event_to_event_category') );
+	$cats = $es->run_one();
+	$vstream = '';
+	$astream = '';
+	foreach( $cats AS $cat )
+	{
+		if ($cat->get_value('name') == 'Video Streaming')
+		{
+			if ($imgVideo != null)
+			{
+				$vstream = '<a title="Video Streaming" href="http://client.stretchinternet.com/client/luther.portal"><img class="video_streaming" src="' . $imgVideo .'" alt="Video Streaming"></a>';
+			}
+			else 
+			{
+				$vstream = '<a title="Video Streaming" href="http://client.stretchinternet.com/client/luther.portal"><i class="fa fa-video-camera fa-fw"></i></a>';
+			}
+		}
+		if ($cat->get_value('name') == 'Audio Streaming')
+		{
+			if ($imgAudio != null)
+			{
+				$astream = '<a title="Audio Streaming" href="http://www.luther.edu/kwlc/"><img class="audio_streaming" src="' . $imgAudio .'" alt="Audio Streaming"></a>';
+			}
+			else
+			{
+				$astream = '<a title="Audio Streaming" href="http://www.luther.edu/kwlc/"><i class="fa fa-headphones fa-fw"></i></a>';
+			}
+		}
+	}
+	return $astream . $vstream;
+}
+
 function luther_get_event_title($include_site_name = true)
 // event title is based on the current root level minisite
 {

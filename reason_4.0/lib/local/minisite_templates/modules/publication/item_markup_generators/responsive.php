@@ -169,6 +169,11 @@ class ResponsiveItemMarkupGenerator extends PublicationItemMarkupGenerator
 		foreach($this->passed_vars['item_images'] as $image)
 		{
 			$str .= '<div class="imageChunk">';
+			$rsi = new reasonSizedImage();
+			$rsi->set_id($image->id());
+			$rsi->set_width(400);
+			$rsi->set_height(400);
+			$rsi->set_crop_style('fill');
 			ob_start();
 			$textonly = false;
 			if(!empty($this->passed_vars['request']['textonly']))

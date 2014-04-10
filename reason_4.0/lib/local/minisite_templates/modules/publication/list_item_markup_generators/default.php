@@ -20,6 +20,7 @@ reason_include_once( 'minisite_templates/modules/publication/markup_generator.ph
 * 2. Changing language for the "read more" link.
 * 3. Editing the location and display of the "comment" link.
 * 4. Update to some HTML5 markup
+* 5. Edit default image size
 *
 *  @author Meg Gibbs
 *  @author Nathan Dirks
@@ -68,7 +69,7 @@ class PublicationListItemMarkupGenerator extends PublicationMarkupGenerator
 		return $this->get_teaser_image_markup();
 	}
 	
-	function get_teaser_image_markup()
+	/*function get_teaser_image_markup()
 	{
 		$markup_string = '';
 		$image = $this->passed_vars['teaser_image'];
@@ -82,38 +83,30 @@ class PublicationListItemMarkupGenerator extends PublicationMarkupGenerator
 			$markup_string .= '</figure>';
 		} 
 		return $markup_string;
-	}
+	}*/
 
-	/*function get_teaser_image_markup()
+	function get_teaser_image_markup()
 	{
 		$markup_string = '';
-		$image = current($this->passed_vars['teaser_image']);
-		//print_r($image);
-
+		$image = $this->passed_vars['teaser_image'];
 		if (!empty($image))
 		{
-
-			$image_id = $image->id();
-			//print_r($image_id);
+			$markup_string .= '<figure class="teaserImage">';
 
 			$rsi = new reasonSizedImage();
-			$rsi->set_id($image_id);
+			//$rsi->set_id($image->id());
 			$rsi->set_width(400);
+			$rsi->set_height(400);
 			$rsi->set_crop_style('fill');
-			//$image_url = $rsi->get_url();
 
-			//$markup_string .= '<img src="'.$image_url.'" />';
-
-			//$markup_string .= '<figure class="primaryImage">';
-			//$markup_string .= '<img src="'.WEB_PHOTOSTOCK.reason_get_image_filename( $image->id() ).'" width="'.$image->get_value( 'width' ).'" height="'.$image->get_value( 'height' ).'" alt="'.str_replace('"', "'", $image->get_value( 'description' )).'"/>';
-			//$markup_string .= $image_url;
-			//$markup_string .= '</figure>';
-
-			//echo $image_url;
+			ob_start();	
+			show_image( reset($image), true,false,false );
+			$markup_string .= ob_get_contents();
+			ob_end_clean();
+			$markup_string .= '</figure>';
 		} 
 		return $markup_string;
-
-	}*/
+	}
 
 	/*function get_teaser_image_markup()
 	{

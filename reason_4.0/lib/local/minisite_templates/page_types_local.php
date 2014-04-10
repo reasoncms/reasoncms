@@ -72,24 +72,28 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'num_to_display' => '1',
 		),
 		'pre_sidebar' => array(
-				'module' => 'publication',
-				'related_mode' => 'true',
-				'markup_generator_info' =>
-					array(
-						'list_item' => array(
-							'classname' => 'RelatedListItemNoDescriptionMarkupGenerator', 
-							'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/related_item_no_description.php',
-							),
-						//'list' => array(
-						//	'classname' => 'RelatedListHTML5MarkupGenerator', 
-						//	'filename' => 'minisite_templates/modules/publication/publication_list_markup_generators/related_list_html5.php',
-						//),
-					 ),
-				'max_num_items' => 3,
-				'related_title' => 'Headlines',
-				'css' => '',
+			'module' => 'publication',
+			'related_mode' => 'true',
+			'markup_generator_info' =>
+				array(
+					'list_item' => array(
+						'classname' => 'RelatedListItemNoDescriptionMarkupGenerator', 
+						'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/related_item_no_description.php',
+						),
+					//'list' => array(
+					//	'classname' => 'RelatedListHTML5MarkupGenerator', 
+					//	'filename' => 'minisite_templates/modules/publication/publication_list_markup_generators/related_list_html5.php',
+					//),
+				 ),
+			'max_num_items' => 3,
+			'related_title' => 'Headlines',
+			'css' => '',
 		),
-		'sidebar' => 'global/placeholder',
+		'sidebar' => 'test_module',
+		//'sidebar' => array(
+		//	'module' => 'events_mini',
+		//	'ideal_count' => 4,
+		//),
 		'post_sidebar' => array(
 			'module' => 'luther_av',
 			'full_size' => true,
@@ -212,6 +216,10 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'module' => 'events_instancewide',
 			'list_chrome_markup' => 'minisite_templates/modules/events_markup/responsive/responsive_list_chrome.php',
 		),
+		'navigation' => '',
+		'sub_nav' => '',
+		'sub_nav_2' => '',
+		'sub_nav_3' => '',
 	),
 	'faculty' => array(
 		'main_post' => 'luther_faculty'
