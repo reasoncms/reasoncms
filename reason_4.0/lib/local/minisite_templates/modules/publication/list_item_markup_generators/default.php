@@ -50,10 +50,13 @@ class PublicationListItemMarkupGenerator extends PublicationMarkupGenerator
 	
 	function run ()
 	{		
+		
 		$this->markup_string .= $this->get_pre_markup();
-		$this->markup_string .= $this->get_title_markup();
 		$this->markup_string .= $this->get_date_markup();
 		$this->markup_string .= $this->get_comment_markup();
+		$this->markup_string .= $this->get_title_markup();
+		//$this->markup_string .= $this->get_date_markup();
+		//$this->markup_string .= $this->get_comment_markup();
 		$this->markup_string .= $this->get_description_markup();
 		$this->markup_string .= $this->get_section_markup();
 		$this->markup_string .= $this->get_link_to_full_item_markup();
@@ -69,22 +72,6 @@ class PublicationListItemMarkupGenerator extends PublicationMarkupGenerator
 		return $this->get_teaser_image_markup();
 	}
 	
-	/*function get_teaser_image_markup()
-	{
-		$markup_string = '';
-		$image = $this->passed_vars['teaser_image'];
-		if (!empty($image))
-		{
-			$markup_string .= '<figure class="teaserImage">';
-			ob_start();	
-			show_image( reset($image), true,false,false );
-			$markup_string .= ob_get_contents();
-			ob_end_clean();
-			$markup_string .= '</figure>';
-		} 
-		return $markup_string;
-	}*/
-
 	function get_teaser_image_markup()
 	{
 		$markup_string = '';
@@ -93,30 +80,24 @@ class PublicationListItemMarkupGenerator extends PublicationMarkupGenerator
 		{
 			$markup_string .= '<figure class="teaserImage">';
 
+			if(is_array($image))
+				$image = reset($image);
+			
 			$rsi = new reasonSizedImage();
-			//$rsi->set_id($image->id());
+			$rsi->set_id($image->id());
 			$rsi->set_width(400);
-			$rsi->set_height(400);
+			$rsi->set_height(275);
 			$rsi->set_crop_style('fill');
 
 			ob_start();	
-			show_image( reset($image), true,false,false );
+			show_image( $rsi,true,false,false );
 			$markup_string .= ob_get_contents();
 			ob_end_clean();
+			//$markup_string .= '<img src="/reason/sized_images/540620/b25879bda30d8a9542e03ab9670e730e.gif?cb=1397165736">';
 			$markup_string .= '</figure>';
-		} 
+		}
 		return $markup_string;
 	}
-
-	/*function get_teaser_image_markup()
-	{
-		$rsi = new reasonSizedImage();
-		//$rsi->(23423);
-		$rsi->set_set_idwidth(400);
-		$rsi->set_crop_style('fill');
-		$image_url = $rsi->get_url();
-		echo get_url();
-	}*/
 	
 	function get_title_markup()
 	{
@@ -205,7 +186,7 @@ class PublicationListItemMarkupGenerator extends PublicationMarkupGenerator
 		{
 			$markup_string .=  '<p class="more">';
 			$markup_string .=  '<a href="' . $this->passed_vars['link_to_full_item'] .'">';
-			$markup_string .=  'Continue reading...';
+			$markup_string .=  'Full article';
 			$markup_string .=  '</a>';
 			$markup_string .=  '</p>'."\n";
 		}
