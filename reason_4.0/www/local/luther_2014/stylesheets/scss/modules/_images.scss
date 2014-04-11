@@ -17,7 +17,8 @@
 
 /* Image Sidebar */
 
-.imageSidebarModule {
+.imageSidebarModule,
+.publication .images {
 
 	.imageChunk {
 		padding-bottom: $column-gutter;
@@ -55,6 +56,10 @@
 		font-size: rem-calc(12);
 		font-style: italic;
 		color: $blockquote-font-color;
+
+		a {
+			color: $blockquote-font-color;
+		}
 	}
 }
 

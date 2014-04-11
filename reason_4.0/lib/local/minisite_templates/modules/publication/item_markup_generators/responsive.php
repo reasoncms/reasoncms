@@ -9,6 +9,7 @@ class ResponsiveItemMarkupGenerator extends PublicationItemMarkupGenerator
  * 1. Modified order of markup items in run()
  * 2. Custom handling of Comment links
  * 3. Custom "back to publication" links
+ * 4. Custom thumbnail sizes
  */
 
 	function run()
@@ -20,7 +21,6 @@ class ResponsiveItemMarkupGenerator extends PublicationItemMarkupGenerator
 		$this->markup_string .= $show_related_section ? ' hasRelated' : ' noRelated';
 		$this->markup_string .= '">';
 		$this->markup_string .= '<div class="primaryContent firstChunk">'."\n";
-
 		
 		if($this->should_show_comment_added_section())
 		{
@@ -30,15 +30,17 @@ class ResponsiveItemMarkupGenerator extends PublicationItemMarkupGenerator
 		{
 			$this->markup_string .= $this->get_open_inline_editing_section();
 		} 
-		$this->markup_string .= $this->get_title_section();
-		if($this->should_show_date_section())
-		{
-			$this->markup_string .= '<time class="date">'.$this->get_date_section().'</time>'."\n";
-		}
+		//$this->markup_string .= $this->get_title_section();  luther_title.php puts the title in the page title location, so we don't need to repeat it in the article body.
+		$this->markup_string .= '<div class="postMeta">'."\n";
 		if($this->should_show_author_section())
 		{
 			$this->markup_string .= '<div class="author">'.$this->get_author_section().'</div>'."\n";
 		}
+		if($this->should_show_date_section())
+		{
+			$this->markup_string .= '<time class="date">'.$this->get_date_section().'</time>'."\n";
+		}
+		$this->markup_string .= '</div>'."\n";
 		if($this->should_show_social_sharing_section())
 		{
 			$this->markup_string .= '<div class="social top">'.$this->get_social_sharing_section().'</div>'."\n";
@@ -63,13 +65,13 @@ class ResponsiveItemMarkupGenerator extends PublicationItemMarkupGenerator
 		if($show_related_section)
 		{
 			$this->markup_string .= '<div class="relatedItems">'."\n";
-			if($this->should_show_related_events_section())
-			{
-				$this->markup_string .= '<div class="relatedEvents">'.$this->get_related_events_section().'</div>'."\n";
-			}
 			if($this->should_show_images_section())
 			{
 				$this->markup_string .= '<div class="images">'.$this->get_images_section().'</div>'."\n";
+			}
+			if($this->should_show_related_events_section())
+			{
+				$this->markup_string .= '<div class="relatedEvents">'.$this->get_related_events_section().'</div>'."\n";
 			}
 			if($this->should_show_assets_section())
 			{
@@ -106,14 +108,14 @@ class ResponsiveItemMarkupGenerator extends PublicationItemMarkupGenerator
 
 	function get_social_sharing_section()
 	{
-		$ret = '<p><strong>Share the love:</strong>';
+		//$ret = '<p><strong>Share the love:</strong>';
 		foreach($this->passed_vars['item_social_sharing'] as $social_sharing)
 		{
 			$ret .= '<a href="'.$social_sharing['href'].'">';
 			$ret .= '<img src="'. $social_sharing['icon'] . '" alt="'. $social_sharing['text'] . '" />';
 			$ret .= '</a>';
 		}
-		$ret .= '</p>';
+	//	$ret .= '</p>';
 		return $ret;
 	}
 
@@ -165,25 +167,20 @@ class ResponsiveItemMarkupGenerator extends PublicationItemMarkupGenerator
 	// Here, we get rid of <h4>Images</h4>, <ul> and enlarge thumbanil size.
 	function get_images_section()
 	{
-		//$str .= '<ul>';
 		foreach($this->passed_vars['item_images'] as $image)
 		{
 			$str .= '<div class="imageChunk">';
 			$rsi = new reasonSizedImage();
 			$rsi->set_id($image->id());
-			$rsi->set_width(400);
+			$rsi->set_width(600);
 			$rsi->set_height(400);
 			$rsi->set_crop_style('fill');
 			ob_start();
-			$textonly = false;
-			if(!empty($this->passed_vars['request']['textonly']))
-				$textonly = true;
-			show_image( $image, false, true, true, '', $textonly );
+			show_image( $rsi, false, true, true, '');
 			$str .= ob_get_contents();
 			ob_end_clean();
 			$str .= '</div>';
 		}
-		//$str .= '</ul>';
 		return $str;
 	}
 

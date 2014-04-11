@@ -126,7 +126,7 @@
 
 		#contentSections,
 		#relatedSections {
-			margin-top: $column-gutter/2;
+			margin-top: $column-gutter;
 		}
 
 		#contentSections {
@@ -462,14 +462,17 @@
 	// 4. Related Content
 	//////////////////////////////////////
 
-	#relatedSections {
+	#relatedSections,
+	.relatedItems // Publications 
+	{
 
 		> div {
 			margin-bottom: $column-gutter;
 		}
 
 		.assets,
-		.blurb {
+		.blurb,
+		.relatedEvents {
 			background: lighten($lc-grey, 5%);
 			padding: $column-gutter/2;
 
