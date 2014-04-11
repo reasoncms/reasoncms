@@ -360,7 +360,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'autoplay_timer' => 12,
 			'width'=>716,
 			'height'=>288
-		), //'luther_carousel',
+		), 
 		'main_head_5' => '',
 		'main_2' => '',
 		'main_3' => '',
