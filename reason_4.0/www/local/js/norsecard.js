@@ -63,7 +63,7 @@ $(document).ready(function() {
                         if (t.Tender == 'Charge') {
                             $('#tender').append('<tr><td>' + t.Tender + ' ('+from+' - '+to+')' + '</td><td>'+ t.Balance + '</td></tr>');
                         } else {
-                            $('#tender').append('<tr><td>' + t.Tender + ' (Total remaining)' + '</td><td>'+ parseFloat(t.Balance,10).formatMoney(2,'.',',') + '</td></tr>');
+                            $('#tender').append('<tr><td>' + t.Tender + ' ('+from+' - '+to+')' + '</td><td>'+ parseFloat(t.Balance,10).formatMoney(2,'.',',') + '</td></tr>');
                         }
                     }
                 },
