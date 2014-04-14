@@ -115,6 +115,9 @@ var _swfupload_uri;
         if (upload_settings.user_id != null)
         	magical_upload_url = upload_settings.receiver + "?user_id=" + upload_settings.user_id;
         
+        // This redirects SWFUpload debugging messages to the console if debug and debug_handler are enabled below.
+        var debug_function = function (message) {console.debug(message);}
+                
         var swfupload_settings = {
 //            upload_url: upload_settings.receiver,
             upload_url: magical_upload_url,
@@ -122,6 +125,8 @@ var _swfupload_uri;
             file_post_name: upload_name,
             file_upload_limit: "0",
             file_queue_limit: "1",
+            debug: true,
+            debug_handler: debug_function,
             post_params: {
                 reason_sid: upload_settings.user_session,
                 upload_sid: upload_settings.transfer_session
