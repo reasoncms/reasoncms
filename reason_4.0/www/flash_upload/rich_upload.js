@@ -125,7 +125,7 @@ var _swfupload_uri;
             file_post_name: upload_name,
             file_upload_limit: "0",
             file_queue_limit: "1",
-            debug: true,
+            debug: false,
             debug_handler: debug_function,
             post_params: {
                 reason_sid: upload_settings.user_session,
