@@ -1,10 +1,14 @@
 <?php
 
-function luther_is_sports_page()
-// checks if url has "/sports" at the root level
+function luther_is_sports_page($include_landing = true)
+// checks if url has "/sports" at the root level if include_landing is true
+// if include_landing is false then url has /sports/ followed by a child page
 {
 	$url = get_current_url();
-	return preg_match("/^https?:\/\/[A-Za-z0-9_\.]+\/sports\/?/", $url);	
+	if ($include_landing)
+		return preg_match("/^https?:\/\/[A-Za-z0-9_\.]+\/sports\/?/", $url);
+	else 
+		return preg_match("/^https?:\/\/[A-Za-z0-9_\.]+\/sports\/[A-Za-z0-9_\.\-]+/", $url);
 }
 
 function luther_video_audio_streaming($event_id, $imgVideo = null, $imgAudio = null)
