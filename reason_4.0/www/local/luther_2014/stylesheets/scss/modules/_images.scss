@@ -17,7 +17,8 @@
 
 /* Image Sidebar */
 
-.imageSidebarModule {
+.imageSidebarModule,
+.publication .images {
 
 	.imageChunk {
 		padding-bottom: $column-gutter;
@@ -55,6 +56,10 @@
 		font-size: rem-calc(12);
 		font-style: italic;
 		color: $blockquote-font-color;
+
+		a {
+			color: $blockquote-font-color;
+		}
 	}
 }
 
@@ -76,8 +81,8 @@
 			margin: 0 auto;
 		}
 
-		@media #{$medium-up} {
-			width: 40%; // and are only 40% wide on medium and up.
+		@media #{$medium-up} {  // and are only 40% wide on medium and up.
+			width: 40%; 
 			float: right !important;
 			margin: 0 0 rem-calc(16) $column-gutter;
 			clear: right;
@@ -88,7 +93,13 @@
 				float: left !important;
 				clear: left;
 			}
+		}
+	}
 
+	.callout,
+	.callOut { // If images are in a callout, don't resize (Especially important for Ideas & Creations blog)
+		img {
+			width: auto;
 		}
 	}
 }

@@ -67,6 +67,10 @@ blockquote {
 /* Wysiwyg Formatting */  
 #{$wysiwyg-all-areas} {
 
+	p:empty {
+		display: none;
+	}
+
 	ol, // bullets needed for wysiwyg content
 	ul,
 	dl {
@@ -76,6 +80,7 @@ blockquote {
 			padding-bottom: 0;
 		}
 	}
+	
 	ol {list-style-type: decimal;}
 	ul {list-style-type: disc;}
 

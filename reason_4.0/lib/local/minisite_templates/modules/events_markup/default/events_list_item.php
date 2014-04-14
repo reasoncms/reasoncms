@@ -58,15 +58,7 @@ class defaultEventsListItemMarkup extends EventsModule implements eventsListItem
 		$link = '';
 		$link = $this->bundle->event_link($event, $day);
 		$ret .= $this->bundle->teaser_image( $event, $link );
-		if ($time && 'all_day' != $time && substr($event->get_value('datetime'), 11) != '00:00:00')
-		{
-			$ret .= prettify_mysql_datetime($event->get_value('datetime'), 'g:i a') . ' - ';
-		}
-		else
-		{
-			$ret .= 'All day - ';
-		}
-		$name = $event->get_value('name');
+		$name = '<span>'.$event->get_value('name').'</span>';
 		
 		if ($this->is_sports_event($event->get_value('sponsor')) && (!luther_is_sports_page()
 			|| get_site_id_from_url("/sports") == get_site_id_from_url(get_current_url())))
@@ -98,7 +90,14 @@ class defaultEventsListItemMarkup extends EventsModule implements eventsListItem
 			$after = ' <a href="'.$event->get_value('_inline_editable_link').'" title="Edit Event" class="editThis"><i class="fa fa-pencil-square-o"></i></a></div></div>'."\n";
 			$ret = $before.$ret.$after;
 		}
-		
+		if ($time && 'all_day' != $time && substr($event->get_value('datetime'), 11) != '00:00:00')
+		{
+			$ret .= '<time class="time">'.prettify_mysql_datetime($event->get_value('datetime'), 'g:i a') . '</time>';
+		}
+		else
+		{
+			$ret .= '<time class="time">All day</time>';
+		}
 		return $ret;
 	}
 	
