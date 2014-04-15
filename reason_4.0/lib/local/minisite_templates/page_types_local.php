@@ -67,10 +67,18 @@ $GLOBALS['_reason_page_types_local'] = array(
 	/* NEW LOCAL PAGE TYPES */
 	
 	'luther_homepage' => array(
-		'main_post' => array(
+		'pre_main_head' => array(
+			'module' => 'feature/feature',
+			'width' => '1660',
+			'height' => '680',
+			'autoplay_timer' => 6,
+		),
+		'main_head' => '',
+		'main' => '',
+		/*'main_post' => array(
 			'module' => 'blurb',
 			'num_to_display' => '1',
-		),
+		),*/
 		'pre_sidebar' => array(
 			'module' => 'publication',
 			'related_mode' => 'true',
@@ -89,11 +97,12 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'related_title' => 'Headlines',
 			'css' => '',
 		),
-		'sidebar' => 'test_module',
-		//'sidebar' => array(
-		//	'module' => 'events_mini',
-		//	'ideal_count' => 4,
-		//),
+		'sidebar' => array(
+			'module' => 'events_mini',
+			'ideal_count' => 4,
+			'title' => 'Campus Events',
+			//'additional_sites' => 'events',
+		),
 		'post_sidebar' => array(
 			'module' => 'luther_av',
 			'full_size' => true,
