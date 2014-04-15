@@ -425,6 +425,10 @@
 
 #miniCal {
 
+	#events {
+		margin-bottom: rem-calc(16);
+	}
+
 	.dayblock {
 		border-bottom: 1px solid $lc-grey;
 		padding: rem-calc(16) 0;
@@ -468,7 +472,8 @@
 			@include clearfix;
 
 			a { // Event title
-				font-weight: 700;
+				//font-size: 1.125rem;
+				font-weight: 400;
 				display: block;
 				float: left;
 
@@ -513,7 +518,7 @@
 
 	.foot {
 		.more {
-			margin-top: $column-gutter/3;
+			margin: 0;
 			a {
 				&:before {
 					@extend .fa;

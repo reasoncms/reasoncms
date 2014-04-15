@@ -67,6 +67,7 @@ class miniEventsModule extends EventsModule
 	{
 		parent::init( $args );
 		$this->find_events_page();
+		//$this->events_page_url = '/events';
 		
 	} // }}}
 	function has_content() // {{{
@@ -112,20 +113,21 @@ class miniEventsModule extends EventsModule
 	{
 		if($this->_has_content_to_display())
 		{
-			parent::run();
+			parent::run();	
 		}
 		elseif($msg = $this->_get_no_content_message())
 		{
 			echo '<div class="eventsNoContentMessage">'.$msg.'</div>'."\n";
+	
 		}
 	}
 	function display_list_title()
 	{
 		$events_page_url = $this->get_events_page_url();
 		echo '<h3>';
-		if(!empty($events_page_url))
-			echo '<a href="'.$events_page_url.'">'.$this->_get_list_title().'</a>';
-		else
+		//if(!empty($events_page_url))
+			//echo '<a href="'.$events_page_url.'">'.$this->_get_list_title().'</a>';
+		//else
 			echo $this->_get_list_title();
 		echo '</h3>'."\n";
 	}
