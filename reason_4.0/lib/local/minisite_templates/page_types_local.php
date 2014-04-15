@@ -267,6 +267,14 @@ $GLOBALS['_reason_page_types_local'] = array(
 		//'post_sidebar' => 'luther_flickr_slideshow',
 	),
 	'luther_sports' => array(
+		//'main' => 'luther_sports_results_mini',
+		'main' => array(
+			'module' => 'luther_sports_results_mini',
+			'list_chrome_markup' => 'minisite_templates/modules/events_markup/sports/sports_events_list_chrome.php',
+				'list_markup' => 'minisite_templates/modules/events_markup/sports/sports_events_list.php',
+				'list_item_markup' => 'minisite_templates/modules/events_markup/sports/sports_events_list_item.php',
+				'ideal_count' => 10,
+		),
 		'pre_sidebar' => array(
 			'module' => 'events_mini',
 			'title' => 'Schedule',

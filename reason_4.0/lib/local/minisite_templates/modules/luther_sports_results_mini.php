@@ -7,40 +7,33 @@
  /**
   * include the base class and register the module with Reason
   */
-	reason_include_once( 'minisite_templates/modules/luther_events.php' );
+	reason_include_once( 'minisite_templates/modules/events.php' );
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'lutherSportsResultsMiniModule';
 
 /**
  * A minisite module that creates a minimal "sidebar" style event listing, linking to the main events page on the site
  */
-class lutherSportsResultsMiniModule extends LutherEventsModule
+class lutherSportsResultsMiniModule extends EventsModule
 {
 	var $ideal_count = 3;
 	var $luther_counter = 3;
 	var $luther_counter_sports_home = 7;   // show more results on sports home page
-	var $show_options = false;
-	var $show_navigation = false;
-	var $show_views = false;
-	var $show_calendar_grid = false;
-	var $show_months = false;
 	var $snap_to_nearest_view = false;
-	var $events_page;
 	var $events_page_types = array('events','events_verbose','events_nonav','events_academic_calendar','event_registration','event_slot_registration','events_archive','events_archive_verbose', 'sports_results');
 	var $list_date_format = 'M d';
 	var $passables = array('start_date','textonly','view','category','audience','end_date','search','season');
 	var $season_switch_date = "06-01";
 	var $luther_start_year = 2011;   // first year there is events data
-	var $start_date;
 	
 		
 	function init( $args = array() )
 	{
 		parent::init( $args );
-		$this->find_events_page();
-		if ($this->site_id == get_site_id_from_url("/sports"))
-		{
-			$this->luther_counter = $this->luther_counter_sports_home;
-		}
+		//$this->find_events_page();
+		//if ($this->site_id == get_site_id_from_url("/sports"))
+		//{
+		//	$this->luther_counter = $this->luther_counter_sports_home;
+		//}
 	}
 	
 	function event_ok_to_show($event)
@@ -48,75 +41,9 @@ class lutherSportsResultsMiniModule extends LutherEventsModule
 		return true;
 	}
 	
-	/*function show_event_details()
-	{
-		
-		$e =& $this->event;
-		$site_id = get_site_id_from_url("/sports");
-		
-			echo '<div class="eventDetails">'."\n";
-			//$this->show_images($e);
-			if ($site_id == $this->site_id)
-			{
-				$event_name = ucfirst(preg_replace("|(^.*?)\s\((w?o?m?en)\)$|", "\\2's \\1", $e->get_value('sponsor')))." - ".$e->get_value( 'name' );
-			}
-			else 
-			{
-				$event_name = $e->get_value( 'name' );
-			}
-			echo '<h1>'.$event_name.'</h1>'."\n";
-			//$this->show_ownership_info($e);
-			$st = substr($e->get_value('datetime'), 0, 10);
-			$lo = substr($e->get_value('last_occurence'), 0, 10);
-			$now = date('Y-m-d');
-			if (!empty($this->request['date']) && strstr($e->get_value('dates'), $this->request['date']))
-			{
-				if ($lo != $st)
-				{
-					echo '<p class="date">'.prettify_mysql_datetime($st, "F j, Y" ).' - '.prettify_mysql_datetime($lo, "F j, Y")."\n";
-				}
-				else 
-				{
-					echo '<p class="date">'.prettify_mysql_datetime( $this->request['date'], "F j, Y" )."\n";
-				}
-			}
-
-			if ($now <= $lo || !$e->get_value('content'))
-			{
-				if ($e->get_value('description'))
-				{
-					echo '&nbsp;('.$e->get_value( 'description' ).')'."\n";
-				}
-				else if (substr($e->get_value( 'datetime' ), 11) != '00:00:00')
-				{
-					echo '&nbsp;('.prettify_mysql_datetime( $e->get_value( 'datetime' ), "g:i a" ).')'."\n";
-				}
-				
-				if ($e->get_value('location'))
-					echo '<br>'.$e->get_value('location')."\n";
-			}
-			echo $this->video_audio_streaming($e->get_value('id'));	
-			echo '</p>'."\n";
-	
-			if ($e->get_value('content'))
-			{
-				echo '<div class="eventContent">'."\n";
-				echo $e->get_value( 'content' );
-				echo '</div>'."\n";
-			}
-			
-			if ($e->get_value('url'))
-				echo '<div class="eventUrl">For more information, visit: <a href="'.$e->get_value( 'url' ).'">'.$e->get_value( 'url' ).'</a>.</div>'."\n";
-			//$this->show_back_link();
-			//$this->show_event_categories($e);
-			//$this->show_event_audiences($e);
-			//$this->show_event_keywords($e);
-			echo '</div>'."\n";
-		
-	}*/
-	
 	function has_content()
 	{
+		return true;
 		if ($this->cur_page->get_value( 'custom_page' ) == 'sports_results')
 		{
 			return true;
@@ -142,31 +69,6 @@ class lutherSportsResultsMiniModule extends LutherEventsModule
 			}
 		}
 		return false;
-	}
-	function run()
-	{
-		if (empty($this->request['event_id']))
-		{					
-			echo '<section class="events" role="group">'."\n";
-			if ($this->cur_page->get_value( 'custom_page' ) != 'sports_results')
-			{
-				echo '<header class="blue-stripe"><h1><span>Results</span></h1></header>'."\n";
-			}	
-			
-			echo '<table class="tablesorter">'."\n";
-			$this->list_events();		
-			echo '</table>'."\n";
-			
-			if ($this->cur_page->get_value( 'custom_page' ) != 'sports_results')
-			{
-				$this->show_feed_link();
-			}
-			echo '</section> <!-- class="events" role="group" -->'."\n";
-		}
-		else
-		{
-			$this->show_event();
-		}
 	}
 	
 	function _get_start_date()
@@ -218,7 +120,7 @@ class lutherSportsResultsMiniModule extends LutherEventsModule
 		}
 	}
 	
-	function get_cleanup_rules()
+function get_cleanup_rules()
 	{
 		if (!isset($this->calendar)) $this->calendar = new reasonCalendar;
 		$views = $this->calendar->get_views();
@@ -233,10 +135,12 @@ class lutherSportsResultsMiniModule extends LutherEventsModule
 				'extra_args' => $views,
 			),
 			'start_date' => array(
-				'function' => 'turn_into_date'
+				'function' => 'turn_into_date',
+				'method'=>'get',
 			),
 			'date' => array(
-				'function' => 'turn_into_date'
+				'function' => 'turn_into_date',
+				'method'=>'get',
 			),
 			'category' => array(
 				'function' => 'turn_into_int'
@@ -245,7 +149,8 @@ class lutherSportsResultsMiniModule extends LutherEventsModule
 				'function' => 'turn_into_int'
 			),
 			'end_date' => array(
-				'function'=>'turn_into_date'
+				'function'=>'turn_into_date',
+				'method'=>'get',
 			),
 			'nav_date' => array(
 				'function'=>'turn_into_date'
@@ -272,8 +177,18 @@ class lutherSportsResultsMiniModule extends LutherEventsModule
 			'no_search' => array(
 				'function'=>'turn_into_int',
 			),
+			'slot_id' => array(
+				'function' => 'turn_into_int',
+			),
+			'admin_view' => array(
+				'function' => 'check_against_array',
+				'extra_args' => array('true'),
+			),
+			'delete_registrant' => array(
+				'function' => 'turn_into_string',
+			),
 			'season' => array(
-				'function'=>'turn_into_int',
+				'function' => 'turn_into_string',
 			),
 		);
 	}
@@ -293,50 +208,55 @@ class lutherSportsResultsMiniModule extends LutherEventsModule
 
 	function list_events()
 	{
-		if ($this->cur_page->get_value( 'custom_page' ) == 'sports_results')
-		{
-			$this->school_year_select_list();		
-		}
+		
 		
 		if ($this->calendar->contains_any_events())
 		{
+			if (luther_is_sports_page(false))
+			{
+				echo $this->school_year_select_list();
+			}
 			$this->events_by_date = $this->calendar->get_all_days();
 			if (!empty($this->events_by_date))
 			{
 				$this->events = $this->calendar->get_all_events();
-				
-				if ($this->cur_page->get_value( 'custom_page' ) != 'sports_results')
+				//echo '<table class="tablesorter">'."\n";
+				if (luther_is_sports_page())
 				{
-					// want most recent results listed first
+					// want most recent results listed first on landing pages
 					$this->events_by_date = array_reverse($this->events_by_date, TRUE);
 				}
-				else
-				{
-					echo '<tr>'."\n";
-					echo '<th>Date</th>'."\n";
-					echo '<th>Opponent</th>'."\n";
-					echo '<th>Location</th>'."\n";
-					echo '<th>Time/Results</th>'."\n";
-					echo '</tr>'."\n";
-				}	
 				
-				foreach($this->events_by_date as $day => $val)
+				if($markup = $this->get_markup_object('list_chrome'))
 				{
-					$this->show_daily_events($day);
-					if ($this->cur_page->get_value( 'custom_page' ) != 'sports_results' && $this->luther_counter <= 0)
-						break;
-				}		
+					$bundle = new functionBundle();
+					$bundle->set_function('calendar', array($this, 'get_current_calendar'));
+					$bundle->set_function('view_options_markup', array($this, 'get_section_markup_view_options'));
+					$bundle->set_function('calendar_grid_markup', array($this, 'get_section_markup_calendar_grid'));
+					$bundle->set_function('search_markup', array($this, 'get_section_markup_search'));
+					$bundle->set_function('options_markup', array($this, 'get_section_markup_options'));
+					$bundle->set_function('navigation_markup', array($this, 'get_section_markup_navigation'));
+					$bundle->set_function('focus_markup', array($this, 'get_section_markup_focus'));
+					$bundle->set_function('list_title_markup', array($this, 'get_section_markup_list_title'));
+					$bundle->set_function('ical_links_markup', array($this, 'get_section_markup_ical_links'));
+					$bundle->set_function('rss_links_markup', array($this, 'get_section_markup_rss_links'));
+					$bundle->set_function('list_markup', array($this, 'get_events_list_markup'));
+					$bundle->set_function('date_picker_markup', array($this, 'get_section_markup_date_picker'));
+					$bundle->set_function('options_markup', array($this, 'get_section_markup_options'));
+					$bundle->set_function('full_calendar_link_markup', array($this, 'get_full_calendar_link_markup'));
+					$bundle->set_function('prettify_duration', array($this, 'prettify_duration') );
+					// get_full_calendar_link_markup()
+					$this->modify_list_chrome_function_bundle($bundle);
+					/* if($markup->needs_markup('list'))
+					 $markup->set_markup('list', $this->get_events_list_markup($msg)); */
+					$markup->set_bundle($bundle);
+					if($head_items = $this->get_head_items())
+						$markup->modify_head_items($head_items);
+					echo $markup->get_markup();
+				}
+				//$ret .= '</table>'."\n";
 			}
 		}
-	}
-	
-	function show_daily_events($day)
-	{
-		foreach ($this->events_by_date[$day] as $event_id)
-		{
-			
-			$this->show_event_list_item( $event_id, $day );
-		}		
 	}
 
 	function show_event_list_item_standard( $event_id, $day, $ongoing_type = ''  )
@@ -431,30 +351,30 @@ class lutherSportsResultsMiniModule extends LutherEventsModule
 	
 	function school_year_select_list()
 	{
-		
+		$ret = '';
 		$d = intval(date('Y'));
-		echo '<form method="post" name="disco_form">'."\n";
-		echo '<div id="discoLinear">'."\n";
+		$ret .= '<form method="post" name="disco_form">'."\n";
+		$ret .= '<div id="discoLinear">'."\n";
 		
-		echo "School Year:&nbsp;\n";
-		echo '<select name="season" title="choose season" onchange="this.form.submit();">'."\n";
+		$ret .= "School Year:&nbsp;\n";
+		$ret .= '<select name="season" title="choose season" onchange="this.form.submit();">'."\n";
 		for ($i = $d; $i >= min($this->luther_start_year, $d - 1); $i--)
 		{
 			if ($i == intval(date('Y', strtotime($this->start_date))))
 			{
-				echo '<option value="' . strval($i) . '" selected="selected">' . strval($i) . ' - ' . strval($i + 1) .'</option>'."\n";
+				$ret .= '<option value="' . strval($i) . '" selected="selected">' . strval($i) . ' - ' . strval($i + 1) .'</option>'."\n";
 			}
 			else
 			{	
-				echo '<option value="' . strval($i) . '">' . strval($i) . ' - ' . strval($i + 1) .'</option>'."\n";
+				$ret .= '<option value="' . strval($i) . '">' . strval($i) . ' - ' . strval($i + 1) .'</option>'."\n";
 			}
 		}
-		echo '</select>'."\n";
-		//echo '<input type="submit" value="Go"/>'."\n";
-		echo '</div>'."\n";
+		$ret .= '</select>'."\n";
+		//$ret .= '<input type="submit" value="Go"/>'."\n";
+		$ret .= '</div>'."\n";
 		
-		echo '</form>'."\n";
-
+		$ret .= '</form>'."\n";
+		return $ret;
 	}
 
 }

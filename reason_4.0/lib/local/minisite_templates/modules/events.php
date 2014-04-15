@@ -249,7 +249,7 @@ class EventsModule extends DefaultMinisiteModule
 	 * @var string
 	 * @deprecated List markup now responsible for this
 	 */
-	var $list_date_format = 'l, F jS';
+	var $list_date_format = 'l, F j';
 	/**
 	 * The audiences that should be available as filters on this calendar
 	 * 
@@ -2145,13 +2145,13 @@ class EventsModule extends DefaultMinisiteModule
 			}
 			elseif ($rpt == 'yearly')
 			{
-				$dates_text = ' on '.prettify_mysql_datetime($event->get_value('datetime'), 'F jS');
+				$dates_text = ' on '.prettify_mysql_datetime($event->get_value('datetime'), 'F j');
 			}
 			$ret .= 'This event takes place each ';
 			$ret .= $freq;
 			$ret .= $words[$rpt][$sp];
 			$ret .= $dates_text;
-			$ret .= ' from '.prettify_mysql_datetime($event->get_value('datetime'), 'F jS, Y').' to '.prettify_mysql_datetime($event->get_value('last_occurence'), 'F jS, Y').'.';
+			$ret .= ' from '.prettify_mysql_datetime($event->get_value('datetime'), 'F j, Y').' to '.prettify_mysql_datetime($event->get_value('last_occurence'), 'F j, Y').'.';
 		}
 		return $ret;
 	}
