@@ -22,6 +22,7 @@ class miniEventsModule extends EventsModule
 	var $events_page_url;
 	var $default_list_chrome_markup = 'minisite_templates/modules/events_markup/mini/mini_events_list_chrome.php';
 	var $default_list_markup = 'minisite_templates/modules/events_markup/mini/mini_events_list.php';
+
 	/**
 	 * An array of page types that this module should link to
 	 *

@@ -552,30 +552,32 @@ table {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
 }
 
-/* line 127, scss/_type.scss */
+/* line 128, scss/_type.scss */
 a.more,
-.pubLinks a {
+.pubLinks a,
+p.more a {
   color: #9f2112;
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
   font-size: 0.875rem;
   font-weight: 700;
   text-transform: uppercase;
 }
-/* line 134, scss/_type.scss */
+/* line 135, scss/_type.scss */
 a.more:hover,
-.pubLinks a:hover {
+.pubLinks a:hover,
+p.more a:hover {
   color: #71170d;
 }
 
 /* Feeds */
-/* line 141, scss/_type.scss */
+/* line 142, scss/_type.scss */
 #relatedPub .post h4 {
   font-family: "Roboto Slab", serif;
   font-size: 1.125rem;
   font-weight: 400;
 }
 
-/* line 147, scss/_type.scss */
+/* line 148, scss/_type.scss */
 time {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
   font-weight: 300;
@@ -583,60 +585,60 @@ time {
 
 /* Custom Typography 
 *******************************************/
-/* line 156, scss/_type.scss */
+/* line 157, scss/_type.scss */
 nav {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
 }
 
-/* line 162, scss/_type.scss */
+/* line 163, scss/_type.scss */
 #global-banner #search-nav {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
 }
-/* line 165, scss/_type.scss */
+/* line 166, scss/_type.scss */
 #global-banner #search-nav a {
   font-size: 0.875rem;
 }
-/* line 169, scss/_type.scss */
+/* line 170, scss/_type.scss */
 #global-banner #search-nav a:link, #global-banner #search-nav a:visited {
   color: #1073ce;
   color: rgba(16, 115, 206, 0.8);
 }
 @media only screen and (min-width: 64.063em) {
-  /* line 169, scss/_type.scss */
+  /* line 170, scss/_type.scss */
   #global-banner #search-nav a:link, #global-banner #search-nav a:visited {
     color: white;
     color: rgba(255, 255, 255, 0.8);
   }
 }
-/* line 178, scss/_type.scss */
+/* line 179, scss/_type.scss */
 #global-banner #search-nav a:hover {
   color: #1073ce;
   color: #1073ce;
 }
 @media only screen and (min-width: 64.063em) {
-  /* line 178, scss/_type.scss */
+  /* line 179, scss/_type.scss */
   #global-banner #search-nav a:hover {
     color: white;
     color: white;
   }
 }
 
-/* line 195, scss/_type.scss */
+/* line 196, scss/_type.scss */
 #global-nav a:link, #global-nav a:visited {
   color: white;
   color: rgba(255, 255, 255, 0.8);
 }
-/* line 204, scss/_type.scss */
+/* line 205, scss/_type.scss */
 #global-nav .audiences a:hover {
   color: white;
   color: white;
 }
-/* line 212, scss/_type.scss */
+/* line 213, scss/_type.scss */
 #global-nav .sections a {
   color: #1073ce;
 }
 @media only screen and (min-width: 64.063em) {
-  /* line 212, scss/_type.scss */
+  /* line 213, scss/_type.scss */
   #global-nav .sections a {
     color: white;
     color: white;
@@ -644,80 +646,80 @@ nav {
     font-weight: 400;
     font-size: 0.875rem;
   }
-  /* line 226, scss/_type.scss */
+  /* line 227, scss/_type.scss */
   #global-nav .sections a:hover {
     color: white;
     color: white;
   }
 }
 @media only screen and (min-width: 64.063em) and (min-width: 90.063em) {
-  /* line 212, scss/_type.scss */
+  /* line 213, scss/_type.scss */
   #global-nav .sections a {
     font-size: 0.9375rem;
   }
 }
 
-/* line 241, scss/_type.scss */
+/* line 242, scss/_type.scss */
 #global-footer #global-footer-nav,
 #global-footer #global-footer-info {
   color: white;
   color: white;
 }
-/* line 246, scss/_type.scss */
+/* line 247, scss/_type.scss */
 #global-footer #global-footer-nav a:link, #global-footer #global-footer-nav a:visited,
 #global-footer #global-footer-info a:link,
 #global-footer #global-footer-info a:visited {
   color: white;
   color: rgba(255, 255, 255, 0.75);
 }
-/* line 249, scss/_type.scss */
+/* line 250, scss/_type.scss */
 #global-footer #global-footer-nav a:hover,
 #global-footer #global-footer-info a:hover {
   color: white;
   color: white;
 }
-/* line 256, scss/_type.scss */
+/* line 257, scss/_type.scss */
 #global-footer #global-footer-nav h3 {
   font-size: 1.125rem;
   font-weight: 700;
   color: white;
   color: white;
 }
-/* line 261, scss/_type.scss */
+/* line 262, scss/_type.scss */
 #global-footer #global-footer-nav ul {
   font-family: "Roboto Slab", serif;
   font-weight: 300;
 }
-/* line 271, scss/_type.scss */
+/* line 272, scss/_type.scss */
 #global-footer #global-footer-info nav ul {
   font-size: 0.875rem;
 }
-/* line 274, scss/_type.scss */
+/* line 275, scss/_type.scss */
 #global-footer #global-footer-info nav ul a {
   font-weight: 700;
 }
-/* line 277, scss/_type.scss */
+/* line 278, scss/_type.scss */
 #global-footer #global-footer-info nav ul a:hover {
   text-decoration: underline;
 }
-/* line 284, scss/_type.scss */
+/* line 285, scss/_type.scss */
 #global-footer #global-footer-info .contact {
   font-weight: 300;
   font-family: "Roboto Slab", serif;
   font-size: 0.75rem;
   letter-spacing: .65px;
 }
-/* line 291, scss/_type.scss */
+/* line 292, scss/_type.scss */
 #global-footer #global-footer-info .contact .sep {
   font-weight: 700;
 }
-/* line 299, scss/_type.scss */
+/* line 300, scss/_type.scss */
 #global-footer #post-footer p {
   font-size: 0.875rem;
   color: #777777;
   font-weight: 300;
 }
-/* line 305, scss/_type.scss */
+/* line 306, scss/_type.scss */
 #global-footer #post-footer a {
   text-decoration: underline;
 }
@@ -1749,7 +1751,7 @@ body #wrapper #post-footer p {
 
 /* line 4, scss/font-awesome/_core.scss */
 .fa, #minisite #navWrap .jump:before, #minisite .feedLink .feedInfo a:before, .assets li:before, .childrenList li a:before, #childrenAndGrandchildren li ul .childDesc:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
-#calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, .featuresModule .feature .featureInfo .featureText a:before,
+#calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, .featuresModule .feature .featureInfo .featureText a:before,
 .featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, .publication .post p.comments a:before, .publication .post p.more a:after, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after {
   display: inline-block;
   font-family: FontAwesome;
@@ -2427,7 +2429,7 @@ body #wrapper #post-footer p {
 
 /* line 4, scss/font-awesome/_core.scss */
 .fa, #minisite #navWrap .jump:before, #minisite .feedLink .feedInfo a:before, .assets li:before, .childrenList li a:before, #childrenAndGrandchildren li ul .childDesc:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
-#calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, .featuresModule .feature .featureInfo .featureText a:before,
+#calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, .featuresModule .feature .featureInfo .featureText a:before,
 .featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, .publication .post p.comments a:before, .publication .post p.more a:after, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after {
   display: inline-block;
   font-family: FontAwesome;
@@ -3002,7 +3004,7 @@ body #wrapper #post-footer p {
   width: 100%;
 }
 
-/* Events Styles */
+/* Event Calendar */
 /* line 111, scss/modules/_events.scss */
 #calendar .responsiveEventsList {
   width: 100%;
@@ -3335,6 +3337,131 @@ body #wrapper #post-footer p {
 /* line 413, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .rss:before {
   content: "\f09e";
+}
+
+/* Events Mini */
+/* line 428, scss/modules/_events.scss */
+#miniCal .dayblock {
+  border-bottom: 1px solid #e9e9e9;
+  padding: 1rem 0;
+  *zoom: 1;
+  position: relative;
+}
+/* line 165, ../foundation/bower_components/foundation/scss/foundation/components/_global.scss */
+#miniCal .dayblock:before, #miniCal .dayblock:after {
+  content: " ";
+  display: table;
+}
+/* line 166, ../foundation/bower_components/foundation/scss/foundation/components/_global.scss */
+#miniCal .dayblock:after {
+  clear: both;
+}
+/* line 435, scss/modules/_events.scss */
+#miniCal .day {
+  display: block;
+  text-align: center;
+  font-size: 0.875rem;
+  font-weight: 600;
+  width: 3.125rem;
+  margin: 0;
+  position: absolute;
+  top: 1rem;
+  left: 0;
+}
+/* line 446, scss/modules/_events.scss */
+#miniCal .day .month {
+  display: block;
+  background: #9f2112;
+  color: white;
+  -moz-border-radius-topleft: 6px;
+  -webkit-border-top-left-radius: 6px;
+  border-top-left-radius: 6px;
+  -moz-border-radius-topright: 6px;
+  -webkit-border-top-right-radius: 6px;
+  border-top-right-radius: 6px;
+  padding: 0.125rem;
+}
+/* line 454, scss/modules/_events.scss */
+#miniCal .day .date {
+  display: block;
+  background: #e9e9e9;
+  -moz-border-radius-bottomleft: 6px;
+  -webkit-border-bottom-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+  -moz-border-radius-bottomright: 6px;
+  -webkit-border-bottom-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+  padding: 0.125rem;
+}
+/* line 462, scss/modules/_events.scss */
+#miniCal .dayEvents {
+  margin: 0 0 0 4.375rem;
+  padding: 0;
+}
+/* line 466, scss/modules/_events.scss */
+#miniCal .dayEvents .event {
+  padding-bottom: 0.5rem;
+  *zoom: 1;
+}
+/* line 165, ../foundation/bower_components/foundation/scss/foundation/components/_global.scss */
+#miniCal .dayEvents .event:before, #miniCal .dayEvents .event:after {
+  content: " ";
+  display: table;
+}
+/* line 166, ../foundation/bower_components/foundation/scss/foundation/components/_global.scss */
+#miniCal .dayEvents .event:after {
+  clear: both;
+}
+/* line 470, scss/modules/_events.scss */
+#miniCal .dayEvents .event a {
+  font-weight: 700;
+  display: block;
+  float: left;
+}
+/* line 475, scss/modules/_events.scss */
+#miniCal .dayEvents .event a:hover {
+  text-decoration: underline;
+}
+/* line 478, scss/modules/_events.scss */
+#miniCal .dayEvents .event a:hover i {
+  color: #ffbd1c;
+}
+/* line 483, scss/modules/_events.scss */
+#miniCal .dayEvents .event a i {
+  color: #e8a500;
+  margin-left: 0.375rem;
+}
+/* line 489, scss/modules/_events.scss */
+#miniCal .dayEvents .event:last-child {
+  padding-bottom: 0;
+}
+/* line 493, scss/modules/_events.scss */
+#miniCal .dayEvents .event time {
+  display: block;
+  clear: left;
+  float: left;
+}
+/* line 499, scss/modules/_events.scss */
+#miniCal .dayEvents .event .sep {
+  padding: 0 0.25rem;
+  display: block;
+  float: left;
+}
+/* line 505, scss/modules/_events.scss */
+#miniCal .dayEvents .event .location {
+  font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
+  font-weight: 300;
+  display: block;
+  float: left;
+}
+/* line 515, scss/modules/_events.scss */
+#miniCal .foot .more {
+  margin-top: 0.83333rem;
+}
+/* line 518, scss/modules/_events.scss */
+#miniCal .foot .more a:before {
+  content: "\f073";
+  margin-right: 0.375rem;
 }
 
 /* line 10, scss/_extends.scss */
