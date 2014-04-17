@@ -20,12 +20,16 @@
 
 	#minisite {
 
-		@media #{$small-up} {
+		@media #{$small-only} {
+			padding-top: 4px !important;
+		}
+
+		@media #{$medium-only} {
 			padding-top: 4px !important;
 		}
 
 		@media #{$large-up} {
-			padding-top: 7px !important;
+			//padding-top: 16px !important;
 		}
 
 		&.hasConRelNav,
@@ -49,6 +53,46 @@
 
 						.featuresModule {
 							max-width: 100% !important;
+
+							.featureInfoWrap {
+								background: none !important;
+
+								.featureInfo {
+									background: none !important;
+									bottom: 1rem;
+									right: 1rem;
+
+
+									.featureTitle {
+										display: block;
+										float: right;
+    									font-size: rem-calc(65);
+    									background: rgba(0,0,0,.75);
+    									background: rgba(255,255,255,.75);
+    									color: $lc-blue-light !important;
+    									padding: rem-calc(12);
+    									margin-bottom: 1rem;
+    									text-align: right;
+									}
+									.featureText {
+										display: block;
+										float: right;
+										clear: right;
+										font-size: rem-calc(28);
+										background: rgba(0,0,0,.75);
+										background: rgba(255,255,255,.75);
+    									color: $lc-blue-light !important;
+										padding: rem-calc(12);
+										margin: 0;
+										text-align: right;
+
+										span:before {
+											color: $lc-blue-light !important;
+										}
+									}
+								}
+							}
+
 							
 						}
 					}
@@ -188,7 +232,8 @@
 
 							.blurbInner {
 								border-top: 12px solid;
-								background: lighten($lc-grey, 2%);
+								background: lighten($lc-grey, 6%);
+								@include box-shadow(rgba(0,0,0,.18) 0 2px 2px);
 								padding-bottom: $column-gutter/3;
 
 								* { // equal left/right padding for ALL blurb content 
