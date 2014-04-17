@@ -210,4 +210,3 @@ function reason_get_social_integration_helper()
 	}
 	return $si;
 }
-?>
