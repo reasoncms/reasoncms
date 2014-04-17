@@ -40,7 +40,7 @@ class ReasonTwitterDefaultFeedView extends ReasonMVCView
 	var $config = array('num_to_show' => 4,
 						'randomize' => false,
 						'title' => NULL,
-						'description' => NULL);
+						'description' => "");//NULL
 
 	function get()
 	{
@@ -76,7 +76,7 @@ class ReasonTwitterDefaultFeedView extends ReasonMVCView
 		$tweet = reset($tweets);
 		$screen_name = $tweet['user']['screen_name'];
 		$name = $tweet['user']['name'];
-		return '<h3><a href="http://twitter.com/"'. urlencode($screen_name) . '">'.htmlspecialchars($name).'</a></h3>';
+		return '<h3><a href="http://twitter.com/'. urlencode($screen_name) . '">'.htmlspecialchars($name).'</a></h3>';
 	}
 	
 	/**
