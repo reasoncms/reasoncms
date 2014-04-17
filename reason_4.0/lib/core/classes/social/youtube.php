@@ -28,7 +28,6 @@ $GLOBALS[ '_social_integrator_class_names' ][ basename( __FILE__, '.php' ) ] = '
  * Currently this provides content manager integration and also implements:
  *
  * - SocialAccountProfileLinks
- * - SocialSharingLinks
  *
  * @author Gage Dykema
  */
@@ -57,16 +56,11 @@ class ReasonYouTubeIntegrator extends ReasonSocialIntegrator implements SocialAc
 	{
 		return 'YouTube';
 	}
-	
-	/**
-	 * Return a URL encoded view of the current URL, right?
-	 * 
-	 * @param string URL if null we assume the current URL.
-	 */
+
 	public function get_sharing_link_href($url = NULL)
 	{
 		$url = (!is_null($url)) ? urlencode($url) : urlencode(get_current_url('http'));
-		return 'https://plus.google.com/share?url=' . $url;
+		return NULL;
 	}
 	
 	/****************** SocialAccountContentManager implementation *********************/
