@@ -88,7 +88,7 @@ class ReasonYouTubeIntegrator extends ReasonSocialIntegrator implements SocialAc
 	
 	function social_account_pre_show_form($cm)
 	{
-		echo '<p>Add/edit a YouTube channel.</p>';
+		echo '<p>Add/edit a YouTube account.</p>';
 	}
 	
 	/**
