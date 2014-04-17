@@ -113,4 +113,3 @@ class ReasonYouTubeIntegrator extends ReasonSocialIntegrator implements SocialAc
 		}
 	}
 }
-?>
