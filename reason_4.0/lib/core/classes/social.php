@@ -32,7 +32,8 @@ class ReasonSocialIntegrationHelper
 		return array('facebook' => 'Facebook',
 					 'twitter' => 'Twitter',
 					 'googleplus' => 'Google+',
-					 'email' => 'Email Signup');
+					 'email' => 'Email Signup',
+					 'youtube' => 'YouTube');
 	}
 	
 	/**
