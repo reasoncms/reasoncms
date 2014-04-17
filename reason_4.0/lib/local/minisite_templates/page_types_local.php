@@ -15,7 +15,8 @@ $GLOBALS['_reason_page_types_local'] = array(
 				'module' => 'feature/feature',
 				'width' => '1200',
 				'height' => '575',
-				'autoplay_timer' => 6,
+				'autoplay_timer' => 4,
+				'autoplay' => true,
 			),
 			/* experimental -- don't remove
 			'letterboard_image' => array(
@@ -86,7 +87,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 				),
 			),
 		),
-		'post_sidebar' => 'blurb',	
+		'post_sidebar' => 'blurb',
 	),
 	'all_band' => array(
 		'main_post' => 'all_band/all_band',
@@ -154,11 +155,11 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'sub_nav_3' => '',
 	),
 	'faculty' => array(
-		'main_post' => 'luther_faculty'
-		//'main_post' => 'faculty'
+		'main_post' => 'faculty_luther'
+		//'main_post' => 'faculty_placeholder',
 	),
 	'faculty_first' => array(
-		'main' => 'luther_faculty',
+		'main' => 'faculty_luther',
 		'main_post' => 'content'
 	),
 	'flickr_slideshow_sidebar' => array(
@@ -176,7 +177,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 	),
 	'image_slideshow' => array(
 		'main_post_2' => 'luther_image_slideshow',
-		'sidebar_2' => '',
+		'sidebar' => '',
 	),
 	'luther_google_map' => array(
 		'main_post' => 'luther_google_map',
@@ -185,7 +186,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'pre_main_head' => array(
 			'module' => 'feature/feature',
 			'width' => '1660',
-			'height' => '680',
+			'height' => '575',
 			'autoplay_timer' => 6,
 		),
 		'main_head' => '',
