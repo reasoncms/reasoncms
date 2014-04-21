@@ -1428,7 +1428,7 @@ class TableAdmin
 		}
 		elseif($status == 'cancel')
 		{
-			header( 'Location: '. make_redirect($links_view) );
+			header( 'Location: '. carl_make_redirect($links_view) );
 		}
 		elseif($status == 'delete_forever')
 		{
