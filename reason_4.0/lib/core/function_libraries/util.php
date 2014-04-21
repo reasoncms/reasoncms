@@ -2127,7 +2127,8 @@
 				trigger_error('HTMLPurifier configuration ' . $config_requested . ' is not defined - using default instead.');
 				$config_actual = 'default';
 			}
-			else $config_actual = $config_requested;
+			// If set, use requested custom configuration class
+			else $config_actual = $GLOBALS['_reason_htmlpurifier_config'][$config_requested];
 			reason_include_once('config/htmlpurifier/configs/'.$config_actual.'.php');
 			$config_object = new $GLOBALS['_reason_htmlpurifier_config_class'][ $config_actual ]();
 			$config[$config_requested] = $config_object->get_config();
