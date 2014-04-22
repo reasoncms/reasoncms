@@ -772,7 +772,6 @@ class S3
 			$rest->error = array('code' => $rest->code, 'message' => 'Unexpected HTTP status');
 		if ($rest->error !== false)
 		{
-			echo var_dump($rest->error);
 			self::__triggerError(sprintf("S3::getObjectInfo({$bucket}, {$uri}): [%s] %s",$rest->error['code'], $rest->error['message']), __FILE__, __LINE__);
 			return false;
 		}
