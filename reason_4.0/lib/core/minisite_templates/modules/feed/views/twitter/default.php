@@ -53,10 +53,17 @@ class ReasonTwitterDefaultFeedView extends ReasonMVCView
 			$str .= (!empty($description)) ? $description : '';
 			if ($this->config('randomize')) shuffle($tweets);
 			$str .= '<ul>';
+			$style = 'style="display:inline;margin-left:10px;margin-right:10px;"';
+			$imgbase = 'https://si0.twimg.com/images/dev/cms/intents/icons/';
+			$actbase = 'https://twitter.com/intent/';
 			foreach ($tweets as $tweet)
 			{
 				$num = (!isset($num)) ? 1 : ($num + 1);
-				$str .= '<li>'.$tweet['html'].' <span class="date">'.carl_date('j M', strtotime($tweet['created_at'])).'</li>';
+				$reply = '<a href="'.$actbase.'tweet?in_reply_to='.$tweet['id'].'"><img src ="'.$imgbase.'reply.png" '.$style.'></a>';
+				$retweet = '<a href="'.$actbase.'retweet?tweet_id='.$tweet['id'].'"><img src ="'.$imgbase.'retweet.png" '.$style.'></a>';
+				$fav = '<a href="'.$actbase.'favorite?tweet_id='.$tweet['id'].'"><img src ="'.$imgbase.'favorite.png" '.$style.'></a>';
+				$action = '<div style="display:inline;margin-left:5px;">'.$reply.$retweet.$fav.'</div>';
+				$str .= '<li>'.$tweet['html'].' <span class="date">'.carl_date('j M', strtotime($tweet['created_at'])).$action.'</li>';
 				if ($num == $this->config('num_to_show')) break;
 			}
 			$str .= '</ul>';
