@@ -352,7 +352,7 @@ class S3
 		if (self::$useExceptions)
 			throw new S3Exception($message, $file, $line, $code);
 		else
-			trigger_error($message, E_USER_WARNING);
+			trigger_error($message, E_USER_NOTICE);
 	}
 
 
