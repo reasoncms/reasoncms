@@ -10,9 +10,8 @@
 	reason_include_once('classes/admin/modules/default.php');
 
 	/**
-	 * An administrative module that lists the users of the current site
+	 * An administrative module for copying some or all of a user's sites to another user
 	 *
-	 * @todo add full names rather than just usernames
 	 */
 	class ShareSiteOwnershipModule extends DefaultModule // {{{
 	{
@@ -29,8 +28,6 @@
 		
 		/**
 		 * Standard Module init function
-		 *
-		 * Sets up page variables and runs the entity selctor that grabs the users
 		 * 
 		 * @return void
 		 */
@@ -62,7 +59,7 @@
 			}
 		} // }}}
 		/**
-		 * Lists the users who currently have access to the site
+		 * Display the interface
 		 * 
 		 * @return void
 		 */
