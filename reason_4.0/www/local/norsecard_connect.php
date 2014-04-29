@@ -57,8 +57,7 @@ group by id_number";
     echo '"results": [';
     echo implode(', ', $rows);
     echo ']}';
-  }
-  if (!$data) {
+  } else {
     echo '{';
     echo '"results": []}';
   }
