@@ -124,7 +124,8 @@ table {
 
 // "More" links at the end of feeds or short descriptions
 a.more,
-.pubLinks a {
+.pubLinks a,
+p.more a {
 	color: $secondary-link-color;
 	font-family: $open-sans;
 	font-size: rem-calc(14);

@@ -15,7 +15,6 @@
 		{
 			parent::alter_reason_page_type($page_type);
 			// @todo: Alter page types to force empty regions, instead of copying entire functions and overriding one line
-	
 		}
 
 		function do_org_head_items()
@@ -136,7 +135,7 @@
 					if($this->has_content( 'sidebar' ))
 					{
 						echo '<div id="sidebar">'."\n";
-						echo '<h3>Campus Events</h3>'."\n";
+						//echo '<h3>Campus Events</h3>'."\n";
 						$this->run_section( 'sidebar' );
 						echo '</div>'."\n";
 					}
@@ -145,7 +144,7 @@
 						echo '<div id="postSidebar">'."\n";
 						echo '<h3>Featured Video</h3>'."\n";
 						$this->run_section( 'post_sidebar' );
-						echo '<a class="more" href="http://www.youtube.com/user/LutherCollegeMedia" target="_blank">YouTube Video Archive</a>'."\n";
+						echo '<a class="more" href="http://www.youtube.com/user/LutherCollegeMedia" target="_blank">More YouTube Videos</a>'."\n";
 						echo '</div>'."\n";
 					}
 				

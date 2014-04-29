@@ -29,8 +29,8 @@ class LutherFacultyStaffModule extends FacultyStaffModule
 	{
         $this->show_image($person);
         echo '<a name="'.$person['ds_username'][0].'"></a>'."\n";
-        echo '<div class="facStaffName"><h5>'.$person['full_name'];
-        echo '</h5></div>'."\n";
+        echo '<h2 class="facStaffName">'.$person['full_name'];
+        echo '</h2>'."\n";
 
                     
         if( !empty( $person[ 'title' ])
@@ -40,25 +40,32 @@ class LutherFacultyStaffModule extends FacultyStaffModule
         {
             echo '<div class="facStaffInfo">'."\n";
             if ( !empty( $person['title']))
-                echo '<div class="facStaffTitle"><h6>'.$person['title'].'</h6></div>'."\n";
+                echo '<h3 class="facStaffTitle">'.$person['title'].'</h3>'."\n";
             if ($person['edupersonaffiliation'][0] != 'Emeritus')
+            
+            echo '<ul class="facStaffContact'>;
+
             {
+
                 if ( !empty ( $person['ds_office'] ) ){
-                    echo '<div class="facStaffOffice">Office: ';
+                    echo '<li class="facStaffOffice"><strong>Office:</strong> ';
                     foreach ($person['ds_office'] as $office) {
                         echo preg_replace('/;/', ', ', $office);
                     }
-                    echo '</div>' . "\n";
+                    echo '</li>' . "\n";
 
                 }
                 if ( !empty ( $person['ds_phone'] )){
-                    echo '<div class="facStaffPhone">Phone: ' . preg_replace('/,/', ', ', $person['ds_phone']) . '</div>' . "\n";
+                    echo '<li class="facStaffPhone"><strong>Phone:</strong> ' . preg_replace('/,/', ', ', $person['ds_phone']) . '</li>' . "\n";
                 }
             }
             if ( !empty ( $person['mail'] ))
             {
-                echo '<div class="facStaffEmail">E-mail: <a href="mailto:' . $person['mail'] . '">' . $person['mail'] . '</a></div>' . "\n";
+                echo '<li class="facStaffEmail"><strong>E-mail:</strong> <a href="mailto:' . $person['mail'] . '">' . $person['mail'] . '</a></li>' . "\n";
             }
+
+            echo '</ul>';
+
             if (!empty( $person['content' ] ) )
             {
                 echo '<div class="facStaffContent">' . $person[ 'content' ]  . '</div>' . "\n";
