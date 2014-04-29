@@ -31,7 +31,7 @@ group by id_number";
       $statement->bindValue(':user', $user);
     }
     else if ($action == 'tender' && $patron > 0) {
-      $query = "Select tender_name as Tender, sum(transaction_amount) as Balance from norsecard where email = :user and id_number=:patron and transaction_datetime >= STR_TO_DATE(:startDate, '%m/%d/%Y') and transaction_datetime <= STR_TO_DATE(:endDate, '%m/%d/%Y') group by id_number, tender_name";
+      $query = "Select concat(tender_name, ' (used during dates selected)') as Tender, sum(transaction_amount) as Balance from norsecard where email = :user and id_number=:patron and transaction_datetime >= STR_TO_DATE(:startDate, '%m/%d/%Y') and transaction_datetime <= STR_TO_DATE(:endDate, '%m/%d/%Y') and tender_name not in ('Board', 'Dining Dollars') group by id_number, tender_name union select concat(tender_name, ' remaining') as Tender, balance as Balance from remaining_balance where email = :user and id_number=:patron";
       $statement=$dbh->prepare($query);
       $statement->bindValue(':user', $user);
       $statement->bindValue(':patron', $patron);
