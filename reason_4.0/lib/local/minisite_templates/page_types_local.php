@@ -271,9 +271,9 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'main' => array(
 			'module' => 'luther_sports_results_mini',
 			'list_chrome_markup' => 'minisite_templates/modules/events_markup/sports/sports_events_list_chrome.php',
-				'list_markup' => 'minisite_templates/modules/events_markup/sports/sports_events_list.php',
-				'list_item_markup' => 'minisite_templates/modules/events_markup/sports/sports_events_list_item.php',
-				'ideal_count' => 10,
+			'list_markup' => 'minisite_templates/modules/events_markup/sports/sports_results_list.php',
+			'list_item_markup' => 'minisite_templates/modules/events_markup/sports/sports_events_list_item.php',
+			'ideal_count' => 4,
 		),
 		'pre_sidebar' => array(
 			'module' => 'events_mini',
@@ -321,7 +321,13 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'main_head_4' => '',
 	),
 	'sports_results' => array(
-		'main' => 'luther_sports_results_mini',
+		'main' => array(
+			'module' => 'luther_sports_results_mini',
+			'list_chrome_markup' => 'minisite_templates/modules/events_markup/sports/sports_events_list_chrome.php',
+			'list_markup' => 'minisite_templates/modules/events_markup/sports/sports_events_list.php',
+			'list_item_markup' => 'minisite_templates/modules/events_markup/sports/sports_events_list_item.php',
+			'ideal_count' => 10,
+		),
 		'pre_sidebar_3' => '',
 		'sidebar' => 'luther_events_image_sidebar',
 		'sidebar_2' => '',

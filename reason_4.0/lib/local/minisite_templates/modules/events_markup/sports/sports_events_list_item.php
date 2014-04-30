@@ -7,7 +7,7 @@
  /**
   * Include dependencies & register the class
   */
-reason_include_once( 'minisite_templates/modules/events.php' );
+//reason_include_once( 'minisite_templates/modules/luther_sports_results_mini.php' );
 reason_include_once('minisite_templates/modules/events_markup/interfaces/events_list_item_interface.php');
 $GLOBALS['events_markup']['minisite_templates/modules/events_markup/sports/sports_events_list_item.php'] = 'sportsEventsListItemMarkup';
 /**
@@ -15,7 +15,7 @@ $GLOBALS['events_markup']['minisite_templates/modules/events_markup/sports/sport
  *
  * This class takes an event and produces markup meant to be used in the events listing
  */
-class sportsEventsListItemMarkup extends EventsModule implements eventsListItemMarkup
+class sportsEventsListItemMarkup /*extends lutherSportsResultsMiniModule*/ implements eventsListItemMarkup
 {
 	/**
 	 * The function bundle
@@ -57,74 +57,65 @@ class sportsEventsListItemMarkup extends EventsModule implements eventsListItemM
 		$ret = '';
 		$link = '';
 		$link = $this->bundle->event_link($event, $day);
-		
-		if (substr($day, 0, 10) == substr($event->get_value('datetime'), 0, 10)
-			&& (luther_is_sports_page(false)
-			|| (!luther_is_sports_page(false)
-			&& preg_match("/post_to_results/", $event->get_value( 'contact_organization' )))))
+
+		$ret .= '<tr>'."\n";
+		$d = mktime(0, 0, 0, substr($day, 5, 2), substr($day, 8, 2), substr($day, 0, 4));
+		$lo = substr($event->get_value('last_occurence'), 0, 10);
+		if (substr($day, 0, 10) != $lo)
 		{
-			$ret .= '<tr>'."\n";
-			$d = mktime(0, 0, 0, substr($day, 5, 2), substr($day, 8, 2), substr($day, 0, 4));
-			$lo = substr($event->get_value('last_occurence'), 0, 10);
-			if (substr($day, 0, 10) != $lo)
+			$e = mktime(0, 0, 0, substr($lo, 5, 2), substr($lo, 8, 2), substr($lo, 0, 4));
+			if (date('M', $d) == date('M', $e))
 			{
-				$e = mktime(0, 0, 0, substr($lo, 5, 2), substr($lo, 8, 2), substr($lo, 0, 4));
-				if (date('M', $d) == date('M', $e))
-				{
-					$ret .= '<td>'.date('M', $d).' '.date('d', $d).'-'.date('d', $e).'</td>'."\n";
-				}
-				else
-				{
-					$ret .= '<td>'.date('M', $d).' '.date('d', $d).'-'.date('M', $e).' '.date('d', $e).'</td>'."\n";
-				}
+				$ret .= '<td>'.date('M', $d).' '.date('d', $d).'-'.date('d', $e).'</td>'."\n";
 			}
 			else
 			{
-		
-				$ret .= '<td>'.date('M', $d).' '.date('d', $d).'</td>'."\n";
+				$ret .= '<td>'.date('M', $d).' '.date('d', $d).'-'.date('M', $e).' '.date('d', $e).'</td>'."\n";
 			}
-				
-			if (!luther_is_sports_page(false))
-			{
-				$event_name = ucfirst(preg_replace("|(^.*?)\s\((w?o?m?en)\)$|", "\\2's \\1", $event->get_value('sponsor')))." - ".$event->get_value( 'name' );
-			}
-			else
-			{
-				$event_name = $event->get_value( 'name' );
-			}
-			if(!empty($link))
-			{
-				$ret .= '<td><a href="'.$this->events_page_url.'?event_id='.$event->id().'&date='.$day.'">'.$event_name.'</a></td>'."\n";
-			}
-			else
-			{
-				$ret .= '<td>'.$event_name.'</td>'."\n";
-			}
-				
-			$ret .= '<td>'.$event->get_value( 'location' ).'</td>'."\n";
-		
-			$ret .= '<td>';
-			if (preg_match("/https?:\/\/[A-Za-z0-9_\-\.\/]+/", $event->get_value( 'description' ), $matches))
-			{
-				$ret .= '<a title="Live stats" href="'. $matches[0] .'">Live stats</a>';
-			}
-			else if ($event->get_value( 'description' ) != '')
-			{
-				$ret .= $event->get_value( 'description' );
-			}
-			else if (substr($event->get_value('datetime'), 11) != '00:00:00')
-			{
-				$ret .= prettify_mysql_datetime($event->get_value('datetime'), "g:i a" );
-			}
-			$ret .= luther_video_audio_streaming($event->get_value('id'));
-			$ret .= '</td>'."\n";
-		
-			//echo '<td>'.$event->get_value( 'recurrence' ).'</td>'."\n";
-			//echo '<td>'.$event->get_value( 'last_occurence' ).'</td>'."\n";
-			//echo '<td>'.$event->get_value( 'datetime' ).'</td>'."\n";
-			$ret .= '</tr>'."\n";
-					$this->luther_counter--;
 		}
+		else
+		{
+	
+			$ret .= '<td>'.date('M', $d).' '.date('d', $d).'</td>'."\n";
+		}
+			
+		if (!luther_is_sports_page(false))
+		{
+			$event_name = ucfirst(preg_replace("|(^.*?)\s\((w?o?m?en)\)$|", "\\2's \\1", $event->get_value('sponsor')))." - ".$event->get_value( 'name' );
+		}
+		else
+		{
+			$event_name = $event->get_value( 'name' );
+		}
+		if(!empty($link))
+		{
+			$ret .= '<td><a href="'.$this->bundle->events_page_url().'?event_id='.$event->id().'&date='.$day.'">'.$event_name.'</a></td>'."\n";
+		}
+		else
+		{
+			$ret .= '<td>'.$event_name.'</td>'."\n";
+		}
+			
+		$ret .= '<td>'.$event->get_value( 'location' ).'</td>'."\n";
+	
+		$ret .= '<td>';
+		if (preg_match("/https?:\/\/[A-Za-z0-9_\-\.\/]+/", $event->get_value( 'description' ), $matches))
+		{
+			$ret .= '<a title="Live stats" href="'. $matches[0] .'">Live stats</a>';
+		}
+		else if ($event->get_value( 'description' ) != '')
+		{
+			$ret .= $event->get_value( 'description' );
+		}
+		else if (substr($event->get_value('datetime'), 11) != '00:00:00')
+		{
+			$ret .= prettify_mysql_datetime($event->get_value('datetime'), "g:i a" );
+		}
+		$ret .= luther_video_audio_streaming($event->get_value('id'));
+		$ret .= '</td>'."\n";
+	
+		$ret .= '</tr>'."\n";
+
 		
 		return $ret;
 	}

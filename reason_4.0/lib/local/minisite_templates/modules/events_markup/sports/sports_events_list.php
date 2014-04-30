@@ -65,32 +65,25 @@ class sportsEventsListMarkup implements eventsListMarkup
 		$ret = '';
 		
 		$ret .= '<table class="tablesorter">'."\n";
-		if (luther_is_sports_page(false))
-		{
-			$ret .= '<tr>'."\n";
-			$ret .= '<th>Date</th>'."\n";
-			$ret .= '<th>Opponent</th>'."\n";
-			$ret .= '<th>Location</th>'."\n";
-			$ret .= '<th>Time/Results</th>'."\n";
-			$ret .= '</tr>'."\n";
-		}
+		
+		$ret .= '<tr>'."\n";
+		$ret .= '<th>Date</th>'."\n";
+		$ret .= '<th>Opponent</th>'."\n";
+		$ret .= '<th>Location</th>'."\n";
+		$ret .= '<th>Time/Results</th>'."\n";
+		$ret .= '</tr>'."\n";
+	
 		if($events = $this->bundle->events($this->get_ongoing_display_type()))
-		{
-			
+		{			
 			foreach($events as $day => $times)
-			{
-				
+			{				
 				foreach($times as $time => $events)
 				{
 					foreach($events as $event)
-					{
-						
-						$ret .= $this->bundle->list_item_markup($event, $day, $time);
-						
+					{						
+						$ret .= $this->bundle->list_item_markup($event, $day, $time);						
 					}
 				}
-				
-				
 			}
 		}
 		$ret .= '</table>'."\n";
