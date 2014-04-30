@@ -60,11 +60,7 @@ $(document).ready(function() {
                     $('#tender').html('');
                     for (var i = 0; i < json.results.length; i++) {
                         var t = json.results[i];
-                        if (t.Tender == 'Charge') {
-                            $('#tender').append('<tr><td>' + t.Tender + ' ('+from+' - '+to+')' + '</td><td>'+ t.Balance + '</td></tr>');
-                        } else {
-                            $('#tender').append('<tr><td>' + t.Tender + ' ('+from+' - '+to+')' + '</td><td>'+ parseFloat(t.Balance,10).formatMoney(2,'.',',') + '</td></tr>');
-                        }
+                            $('#tender').append('<tr><td>' + t.Tender + '</td><td>'+ parseFloat(t.Balance,10).formatMoney(2,'.',',') + '</td></tr>');
                     }
                 },
                 error: function(xhr, ajaxOptions, thrownError) {
