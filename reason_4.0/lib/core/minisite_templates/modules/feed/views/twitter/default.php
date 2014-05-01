@@ -41,7 +41,7 @@ class ReasonTwitterDefaultFeedView extends ReasonMVCView
 						'randomize' => false,
 						'title' => NULL,
 						'description' => "");
-
+	
 	function get()
 	{
 		$tweets = $this->data();
@@ -53,17 +53,17 @@ class ReasonTwitterDefaultFeedView extends ReasonMVCView
 			$str .= (!empty($description)) ? $description : '';
 			if ($this->config('randomize')) shuffle($tweets);
 			$str .= '<ul>';
-			$style = 'style="display:inline;margin-left:10px;margin-right:10px;vertical-align:top;"';
-			$imgbase = 'https://si0.twimg.com/images/dev/cms/intents/icons/';
+			$class = 'class="twitter_action_img"';
+			$imgbase = REASON_HTTP_BASE_PATH . 'css/twitter/';
 			$actbase = 'https://twitter.com/intent/';
 			foreach ($tweets as $tweet)
 			{
 				$num = (!isset($num)) ? 1 : ($num + 1);
-				$reply = '<a href="'.$actbase.'tweet?in_reply_to='.$tweet['id'].'"><img src ="'.$imgbase.'reply.png" '.$style.'></a>';
-				$retweet = '<a href="'.$actbase.'retweet?tweet_id='.$tweet['id'].'"><img src ="'.$imgbase.'retweet.png" '.$style.'></a>';
-				$fav = '<a href="'.$actbase.'favorite?tweet_id='.$tweet['id'].'"><img src ="'.$imgbase.'favorite.png" '.$style.'></a>';
+				$reply = '<a href="'.$actbase.'tweet?in_reply_to='.$tweet['id'].'"><img src ="'.$imgbase.'reply.png" '.$class.'></a>';
+				$retweet = '<a href="'.$actbase.'retweet?tweet_id='.$tweet['id'].'"><img src ="'.$imgbase.'retweet.png" '.$class.'></a>';
+				$fav = '<a href="'.$actbase.'favorite?tweet_id='.$tweet['id'].'"><img src ="'.$imgbase.'favorite.png" '.$class.'></a>';
 				$action = $reply.$retweet.$fav;
-				$str .= '<li>'.$tweet['html'].' <div style="padding-top:3px;"><p style="display:inline;vertical-align:top;font-size:12px;">'.carl_date('j M', strtotime($tweet['created_at']))."</p>".$action.'</div></li>';
+				$str .= '<li>'.$tweet['html'].' <div class="twitter_action_bar"><p class="twitter_date">'.carl_date('j M', strtotime($tweet['created_at']))."</p>".$action.'</div></li>';
 				if ($num == $this->config('num_to_show')) break;
 			}
 			$str .= '</ul>';

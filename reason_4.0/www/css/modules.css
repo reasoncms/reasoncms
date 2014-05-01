@@ -1703,3 +1703,19 @@ form #tarbabypreRow, form #tarbabypreItem, form #tarbabyRow, form #tarbabyItem, 
 }
 
 /* End of old modules.css */
+
+/* Twitter module */
+.twitter_action_img {
+	display:inline;
+	margin-left:10px;
+	margin-right:10px;
+	vertical-align:top;
+}
+.twitter_action_bar {
+	padding-top:3px;
+}
+.twitter_date {
+	display:inline;
+	vertical-align:top;
+	font-size:12px !important;
+}
