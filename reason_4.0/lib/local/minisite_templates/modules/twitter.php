@@ -36,6 +36,7 @@
 					$twitter_name = $info->get_value('name');
 				}
 				$this->model->config('screen_name', $twitter_name);
+				$this->view->config('description',"");
 				$this->controller = new ReasonMVCController($this->model, $this->view);
 				$this->tweet_html = $this->controller->run();
 				if ( $this->tweet_html ){
