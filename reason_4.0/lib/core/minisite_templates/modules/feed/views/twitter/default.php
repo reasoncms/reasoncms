@@ -40,7 +40,7 @@ class ReasonTwitterDefaultFeedView extends ReasonMVCView
 	var $config = array('num_to_show' => 4,
 						'randomize' => false,
 						'title' => NULL,
-						'description' => "");
+						'description' => NULL);
 	
 	function get()
 	{
