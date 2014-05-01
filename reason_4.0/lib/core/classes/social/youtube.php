@@ -31,7 +31,7 @@ $GLOBALS[ '_social_integrator_class_names' ][ basename( __FILE__, '.php' ) ] = '
  *
  * @author Gage Dykema
  */
-class ReasonYouTubeIntegrator extends ReasonSocialIntegrator implements SocialAccountProfileLinks, SocialSharingLinks
+class ReasonYouTubeIntegrator extends ReasonSocialIntegrator implements SocialAccountProfileLinks
 {
 	/****************** SocialAccountProfileLinks implementation ********************/
 	public function get_profile_link_text($social_entity_id)
