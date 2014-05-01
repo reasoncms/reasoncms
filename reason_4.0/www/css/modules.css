@@ -134,7 +134,7 @@ div.facStaffName span.degrees {
 /* News Module */
 
 .newsItemName {
-	font-weight: bold;	
+	font-weight: bold;
 }
 .NewsImages {
 	margin: 10px;
@@ -155,12 +155,12 @@ div#news div.author {
 /* AV Module */
 
 .avName {
-	font-weight: bold;	
+	font-weight: bold;
 }
 .avFiles {
 	margin: 0px;
 	padding: 0px;
-	
+
 }.avFile {
 	margin: 0px;
 	padding: 0px;
@@ -169,7 +169,7 @@ div#news div.author {
 
 /* Pullquotes (basic) */
 
-p.pullQuoteRight { 
+p.pullQuoteRight {
 	font-weight: bold;
 	font-style: italic;
 	background-color: #E9EEF8;
@@ -197,4 +197,22 @@ div#projects li.overdue {
 /* Publications module */
 form tr#tarbabypreRow, form tr#tarbabyRow, form tr#noturlRow, form tr#antlionRow  {
 	display:none;
+}
+
+/* End of old modules.css */
+
+/* Twitter module */
+.twitter_action_img {
+	display:inline;
+	margin-left:10px;
+	margin-right:10px;
+	vertical-align:top;
+}
+.twitter_action_bar {
+	padding-top:3px;
+}
+.twitter_date {
+	display:inline;
+	vertical-align:top;
+	font-size:12px !important;
 }
