@@ -104,7 +104,7 @@
 	}
 }
 
-/* Events Styles */
+/* Event Calendar */
 
 #calendar {
 
@@ -120,8 +120,6 @@
 			@media #{$medium-up} {
 				@include grid-column(8);
 			}
-			
-			//@include clearfix;
 
 			.categories {
 				ul {
@@ -274,6 +272,15 @@
 
 					&:hover {
 						text-decoration: underline;
+
+						i { // Video feed icon
+							color: lighten($lc-yellow, 10%);
+						}
+					}
+
+					i { // Video feed icon
+						color: $lc-yellow;
+						margin-left: rem-calc(6);
 					}
 				}
 
@@ -287,9 +294,6 @@
 				}
 
 				.time {
-					//width: 35%;
-					//float: right;
-					//display: inline-block;
 					font-weight: bold;
 					color: $lc-red;
 					position: absolute;
@@ -413,6 +417,115 @@
 
 		.foot {  // Left/right navigation to change dates & XML
 
+		}
+	}
+}
+
+/* Events Mini */
+
+#miniCal {
+
+	#events {
+		margin-bottom: rem-calc(16);
+	}
+
+	.dayblock {
+		border-bottom: 1px solid $lc-grey;
+		padding: rem-calc(16) 0;
+		@include clearfix;
+		position: relative;
+	}
+
+	.day {  // Red/grey calendar "icon"
+		display: block;
+		text-align: center;
+		font-size: rem-calc(14);
+		font-weight: 600;
+		width: rem-calc(50);
+		margin: 0;
+		position: absolute;
+		top: rem-calc(16);
+		left: 0;
+
+		.month {
+			display: block;
+			background: $lc-red;
+			color: $lc-white;
+			@include border-top-radius($global-radius);
+			padding: rem-calc(2);
+		}
+
+		.date {
+			display: block;
+			background: $lc-grey;
+			@include border-bottom-radius($global-radius);
+			padding: rem-calc(2);
+		}
+	}
+
+	.dayEvents { 
+		margin: 0 0 0 rem-calc(70);
+		padding: 0;
+
+		.event {
+			padding-bottom: rem-calc(8);
+			@include clearfix;
+
+			a { // Event title
+				//font-size: 1.125rem;
+				font-weight: 400;
+				display: block;
+				float: left;
+
+				&:hover {
+					text-decoration: underline;
+
+					i { // Video feed icon
+						color: lighten($lc-yellow, 10%);
+					}
+				}
+
+				i { // Video feed icon
+					color: $lc-yellow;
+					margin-left: rem-calc(6);
+				}
+			}
+
+			&:last-child {
+				padding-bottom: 0;
+			}
+
+			time {
+				display: block;
+				clear: left;
+				float: left;
+			}
+
+			.sep {
+				padding: 0 rem-calc(4);
+				display: block;
+   				float: left;
+			}
+
+			.location {
+				font-family: $header-font-family;
+   				font-weight: 300;
+   				display: block;
+   				float: left;
+			}
+		}
+	}
+
+	.foot {
+		.more {
+			margin: 0;
+			a {
+				&:before {
+					@extend .fa;
+					content: $fa-var-calendar;
+					margin-right: rem-calc(6);
+				}
+			}
 		}
 	}
 }

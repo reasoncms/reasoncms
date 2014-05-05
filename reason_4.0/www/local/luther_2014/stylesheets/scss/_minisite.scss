@@ -496,15 +496,37 @@
 	#footer {
 		@include grid-column(16);
 		font-size: rem-calc(12);
+
 		padding-top: $column-gutter/2;
 		padding-bottom: $column-gutter/2;
+		//background: #efefef;
 
 		@media #{$large-up} {
 			@include grid-column($columns: 16, $collapse: true);
+			padding: $column-gutter/2;
+		}
+
+		#maintained {
+			color: darken($lc-grey, 30%);
+			display: block;
+			margin-bottom: 1rem;
+			
+			@media #{$medium-high-up} {
+				width: 45%;
+				float: left;
+				margin-bottom: 0;
+				padding-top: 4px;
+			}
 		}
 		
 		.loginLinkModule {
-			text-align: right;
+			display: block;
+
+			@media #{$medium-high-up} {
+				width: 45%;
+				float: right;
+				text-align: right;
+			}
 
 			.editDivider {display: none;}
 
@@ -515,14 +537,34 @@
 					background: $lc-grey;
 					padding: rem-calc(2) rem-calc(6);
 					@include border-radius(4px);
-					margin-left: rem-calc(4);
-				}
+					margin-right: rem-calc(4);
 
+					@media #{$medium-high-up} {
+						margin-left: rem-calc(4);
+					}
+				}
 			}
 			
 			#footerLoginLink {
+				display: inline;
 				font-size: rem-calc(12);
 				margin: rem-calc(8) 0 0;
+				background: $lc-grey;
+				padding: rem-calc(2) rem-calc(6);
+				@include border-radius(4px);
+				margin: 0 rem-calc(4) 0 0;
+
+				@media #{$medium-high-up} {
+					margin: 0 0 0 rem-calc(4) ;
+				}
+
+				.username {
+					font-weight: 400;
+				}
+			}
+
+			&.unauthenticated #footerLoginLink {
+				margin: 0;
 			}
 		}
 	}

@@ -1,0 +1,96 @@
+//
+// ASSET STYLES
+//
+// @author Nathan Dirks
+//
+
+// Foundation imports
+@import "settings";
+@import "foundation/components/grid";
+
+// Compass imports
+@import "compass/css3";
+
+// Font Awesome Imports
+@import "font-awesome/variables";
+@import "font-awesome/core";
+
+// Luther imports
+@import "extends";
+@import "mixins";
+
+#facultyStaff {
+	margin: 0 0 $column-gutter;
+
+	.facStaff {
+		border-bottom: 1px dotted $lc-grey;
+		padding: $column-gutter 0;
+		@include clearfix;
+
+		&:first-child {
+			padding-top: 0;
+		}
+
+		figure {
+			float: right;
+		}
+
+		.facStaffName {
+			margin: 0;
+			font-size: $h3-font-size;
+			font-weight: 400;
+		}
+
+		.facStaffInfo {
+
+		}
+
+		.facStaffTitle {
+			font-size: $h5-font-size;
+		}
+
+		.facStaffContact {
+			margin-top: $column-gutter/1.75;
+			margin-left: $column-gutter/2;
+			
+			li {
+
+				strong {
+					@extend .screenreader;
+				}
+
+				&:before {
+					@extend .fa;
+					width: rem-calc(32);
+					text-align: center;
+				}
+
+			}
+
+			.facStaffOffice {
+
+				&:before {
+					content: $fa-var-map-marker;
+				}
+			}
+
+			.facStaffPhone {
+				&:before {
+					content: $fa-var-phone;
+				}
+			}
+
+			.facStaffEmail {
+				&:before {
+					content: $fa-var-laptop;
+				}
+			}
+		}
+
+		.facStaffContent {
+
+		}
+
+	}
+
+}

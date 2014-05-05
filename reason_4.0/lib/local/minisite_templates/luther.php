@@ -26,6 +26,16 @@
 				}
 			}
 
+			// Global parameters for the events module
+			if($regions = $page_type->module_regions('events'))
+			{
+				foreach($regions as $region)
+				{
+					if(!isset($module['module_params']['list_chrome_markup']))
+						$page_type->set_region_parameter($region, 'list_chrome_markup', 'minisite_templates/modules/events_markup/responsive/responsive_list_chrome.php');
+				}
+			}
+
 			// Global parameters for the children module
 			if($regions = $page_type->module_regions('children'))
 			{
@@ -67,7 +77,22 @@
 			{
 				foreach($regions as $region)
 				{
+					if(!isset($module['module_params']['css']))
+						$page_type->set_region_parameter($region, 'css', false);
+					if(!isset($module['module_params']['use_filters']))
+						$page_type->set_region_parameter($region, 'use_filters', false);
+					if(!isset($module['module_params']['show_login_link']))
+						$page_type->set_region_parameter($region, 'show_login_link', false);
+				}
+			}
 
+			// Global parameters for the siblings module
+			if($regions = $page_type->module_regions('siblings'))
+			{
+				foreach($regions as $region)
+				{
+					if(!isset($module['module_params']['show_only_pages_in_nav']))
+						$page_type->set_region_parameter($region, 'show_only_pages_in_nav', true);
 				}
 			}
 		}

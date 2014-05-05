@@ -18,7 +18,8 @@
 /* STRUCTURE */
 .lutherLogin {
 	font-family: $open-sans;
-	background: lighten($lc-grey, 5%);
+	//background: lighten($lc-grey, 5%);
+	background: #FFF;
 	padding-top: rem-calc(50);
 	line-height: 1.3;
 
@@ -48,28 +49,32 @@
 		 }
 
 		#contentAndRelated {
-			 @include box-shadow(rgba(0,0,0,.25) 0 0 2px);
-			 @include border-radius(8px);
+			 @include box-shadow(rgba(0,0,0,.25) 0 4px 4px);
+			 @include border-radius(4px);
 			 margin-bottom: rem-calc(32);
-			 background: $lc-white;
+			 background: lighten($lc-grey, 5%);
 
 
 			 .pageTitle {
 			 	font-size: rem-calc(16);
 			 	text-align: center;
-			 	background: lighten($lc-grey, 2%);
+			 	// /background: lighten($lc-grey, 2%);
+			 	background: $lc-blue-light;
 			 	padding: rem-calc(16);
 			 	color: rgba($lc-blue-dark, .75);
+			 	color: #FFF;
 			 	text-transform: uppercase;
-			 	@include border-radius(8px 8px 0 0);
-			 	border-bottom: 1px solid darken($lc-grey, 3%);
+			 	@include border-radius(4px 4px 0 0);
+			 	margin: -1px;
+			 	//border-bottom: 1px solid darken($lc-grey, 3%);
 
 				&:before {
 					@extend .fa;
 					margin-right: rem-calc(8);
 					content: $fa-var-lock;
 					//color: darken($lc-grey, 15%);
-					color: rgba($lc-blue-dark, .75);
+					//color: rgba($lc-blue-dark, .75);
+					color: $lc-white;
 				}
 			 }
 
@@ -109,7 +114,7 @@
 					width: 30%;
 					margin-right: 5%;
 					//font-size: rem-calc(14);
-					font-weight: 300;
+					font-weight: 600;
 					font-size: rem-calc(14);
 
 					@media #{$small-high-up} {
