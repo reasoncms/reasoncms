@@ -107,7 +107,11 @@ class sportsEventsListItemMarkup /*extends lutherSportsResultsMiniModule*/ imple
 		{
 			$ret .= $event->get_value( 'description' );
 		}
-		else if (substr($event->get_value('datetime'), 11) != '00:00:00')
+		else if ($this->bundle->is_all_day_event($event))
+		{
+			$ret .= 'All day';
+		}
+		else
 		{
 			$ret .= prettify_mysql_datetime($event->get_value('datetime'), "g:i a" );
 		}

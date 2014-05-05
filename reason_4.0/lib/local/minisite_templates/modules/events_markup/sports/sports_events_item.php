@@ -10,11 +10,11 @@
 reason_include_once('classes/media/factory.php');
 
 reason_include_once('minisite_templates/modules/events_markup/interfaces/events_item_interface.php');
-$GLOBALS['events_markup']['minisite_templates/modules/events_markup/default/events_item.php'] = 'defaultEventsItemMarkup';
+$GLOBALS['events_markup']['minisite_templates/modules/events_markup/sports/sports_events_item.php'] = 'sportsEventsItemMarkup';
 /**
  * Markup class for showing the single item
  */
-class defaultEventsItemMarkup implements eventsItemMarkup
+class sportsEventsItemMarkup implements eventsItemMarkup
 {
 	/**
 	 * The function bundle
@@ -60,47 +60,76 @@ class defaultEventsItemMarkup implements eventsItemMarkup
 			trigger_error('Call set_bundle() before calling get_markup()');
 			return '';
 		}
+		$postToResults = (preg_match("/post_to_results/", $event->get_value( 'contact_organization' ))) ? true : false;
 		$ret = '<p class="back"><a href="'.$this->bundle->back_link().'" title="Back to event listings"><i class="fa fa-chevron-circle-left"></i></a></p>';
 		$ret .= $this->get_image_markup($event);
 		$ret .= '<h3>'.$event->get_value('name').'</h3>'."\n";
 		$ret .= $this->get_ownership_markup($event);
-		if ($event->get_value('description'))
+		if (!$postToResults && $event->get_value('description'))
 			$ret .= '<p class="description">'.$event->get_value( 'description' ).'</p>'."\n";
-		$ret .= $this->get_repetition_info_markup($event);
-	
+		if (!$postToResults)
+			$ret .= $this->get_repetition_info_markup($event);
+		$st = substr($event->get_value('datetime'), 0, 10);
+		$lo = substr($event->get_value('last_occurence'), 0, 10);
+		
 		$ret .= '<table>'."\n";
 		if ($this->bundle->request_date() && strstr($event->get_value('dates'), $this->bundle->request_date()))
-			$ret .= '<div class="date"><tr><td>Date:</td><td>'.prettify_mysql_datetime( $this->bundle->request_date(), "l, F j, Y" ).'</td></tr></div>'."\n";
-		
-		if(!$this->bundle->is_all_day_event($event))
 		{
-			$ret .= '<div class="time"><tr><td>Time:</td><td>'.prettify_mysql_datetime( $event->get_value( 'datetime' ), "g:i a" );
+			if ($postToResults)
+			{
+				if ($lo != $st)
+				{
+					$ret .= '<div class="date"><tr><td>Date:</td><td>'.prettify_mysql_datetime($st, "F j, Y" ).' - '.prettify_mysql_datetime($lo, "F j, Y").'</td></tr></div>'."\n";
+				}
+				else
+				{
+					$ret .= '<div class="date"><tr><td>Date:</td><td>'.prettify_mysql_datetime( $this->bundle->request_date(), "F j, Y" ).'</td></tr></div>'."\n";
+				}
+			}
+			else
+			{
+				$ret .= '<div class="date"><tr><td>Date:</td><td>'.prettify_mysql_datetime( $this->bundle->request_date(), "l, F j, Y" ).'</td></tr></div>'."\n";
+			}
+		}
+
+		$resultsTime = $postToResults ? "Results:" : "Time:";
+		if (preg_match("/https?:\/\/[A-Za-z0-9_\-\.\/]+/", $event->get_value('description'), $matches))
+		{
+			$ret .= '<div class="time"><tr><td>' . $resultsTime . '</td><td><a title="Live stats" href="'. $matches[0] . '">Live stats</a></td></tr></div>'."\n";
+		}
+		else if ($event->get_value('description') != '')
+		{
+			$ret .= '<div class="time"><tr><td>' . $resultsTime . '</td><td>' . $event->get_value('description') . '</td></tr></div>'."\n";
+		}
+		else if ($this->bundle->is_all_day_event($event))
+		{
+			$ret .= '<div class="time"><tr><td>' . $resultsTime . '</td><td>All Day</td></tr></div>'."\n";
+		}		
+		else 
+		{
+			$ret .= '<div class="time"><tr><td>' . $resultsTime . '</td><td>'.prettify_mysql_datetime( $event->get_value( 'datetime' ), "g:i a" );
 			if ($event->get_value( 'hours' ) || $event->get_value( 'minutes' ))
 			{
 				$dt = new DateTime($event->get_value('datetime'));
 				$end_time = 'PT' . strval($event->get_value( 'hours' ) * 60 + $event->get_value( 'minutes' )) . 'M';
 				$dt->add(new DateInterval($end_time));
 				$ret .= ' &ndash; ' . $dt->format('g:i a');
-				
 			}
+			
 			$ret .= '</td></tr></div>'."\n";
-		}
-		else 
-		{
-			$ret .= '<div class="time"><tr><td>Time:</td><td>All Day</td></tr></div>'."\n";
 		}
 		
 		$ret .= $this->get_location_markup($event);
 		$ret .= '</table>'."\n";
 		
-		
+		if ($event->get_value('content'))
+			$ret .= '<div class="eventContent">'.$event->get_value( 'content' ).'</div>'."\n";
 		if ($event->get_value('sponsor'))
 			$ret .= '<p class="sponsor">Sponsor: '.$event->get_value('sponsor').'</p>'."\n";
 		$ret .= $this->get_contact_info_markup($event);
 		$ret .= $this->get_item_export_link_markup($event);
 		$ret .= $this->get_media_work_markup($event);
-		if ($event->get_value('content'))
-			$ret .= '<div class="eventContent">'.$event->get_value( 'content' ).'</div>'."\n";
+		
 		//$ret .= $this->get_dates_markup($event);
 		if ($event->get_value('url'))
 			$ret .= '<div class="eventUrl"><strong>For more information, visit:</strong> <a href="'.reason_htmlspecialchars($event->get_value( 'url' )).'">'.$event->get_value( 'url' ).'</a>.</div>'."\n";

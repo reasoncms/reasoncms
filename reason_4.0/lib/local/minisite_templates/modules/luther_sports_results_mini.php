@@ -26,7 +26,7 @@ class lutherSportsResultsMiniModule extends EventsModule
 	function init( $args = array() )
 	{
 		parent::init( $args );
-		$this->find_events_page();
+		//$this->find_events_page();
 	}
 	
 	function event_ok_to_show($event)
@@ -152,30 +152,14 @@ class lutherSportsResultsMiniModule extends EventsModule
 		}
 	}
 	
-	function _get_events_module_names()
-	{
-		reason_include_once( 'classes/module_sets.php' );
-		$ms =& reason_get_module_sets();
-		return array_unique(array_merge($ms->get('event_display'),$this->_events_modules));
-	}
-	
 	function find_events_page()
+	// find the url of the custom events page called sport_results
 	{
-		$module_names = $this->_get_events_module_names();
-		echo $module_names;
 		reason_include_once( 'minisite_templates/nav_classes/default.php' );
 		$ps = new entity_selector($this->parent->site_id);
 		$ps->add_type( id_of('minisite_page') );
-		$rels = array();
-		$page_types = $this->events_page_types;
-		foreach($module_names as $module_name)
-		{
-			$page_types = array_merge($page_types, page_types_that_use_module($module_name));
-		}
-		$page_types = array_map('addslashes',array_unique($page_types));
-		$ps->add_relation('page_node.custom_page IN ("'.implode('","', $page_types).'")');
+		$ps->add_relation('page_node.custom_page IN ("sports_results")');
 		$page_array = $ps->run_one();
-		print_r($page_array);
 		reset($page_array);
 		$this->events_page = current($page_array);
 		if (!empty($this->events_page))
@@ -263,6 +247,23 @@ class lutherSportsResultsMiniModule extends EventsModule
 		);
 	}
 	
+	function get_contact_info($e)
+	{
+		$ret = array();
+		$contact = $e->get_value('contact_username');
+		if(!empty($contact) )
+		{
+			$ret['username'] = $contact;
+			$dir = new directory_service();
+			$dir->search_by_attribute('ds_username', array(trim($contact)), array('ds_email','ds_fullname','ds_phone',));
+			$ret['email'] = $dir->get_first_value('ds_email');
+			$ret['fullname'] = $dir->get_first_value('ds_fullname');
+			$ret['phone'] = $dir->get_first_value('ds_phone');
+			$ret['organization'] = '';  // post_to_results flag occupies this field
+		}
+		return $ret;
+	}
+	
 	function show_feed_link()
 	// show link to complete sports schedule and results page
 	{
@@ -271,7 +272,7 @@ class lutherSportsResultsMiniModule extends EventsModule
 		$ret = '';
 		$ret .= '<nav class="button view-all">'."\n";
 		$ret .= '<ul>'."\n";
-		$ret .= '<li><a href="'.$viewAllLink.'">Complete results &gt;</a></li>'."\n";
+		$ret .= '<li><a href="'.$viewAllLink.'">Complete results</a></li>'."\n";
 		$ret .= '</ul>'."\n";
 		$ret .= '<hr>'."\n";
 		$ret .= '</nav>'."\n";
@@ -289,6 +290,7 @@ class lutherSportsResultsMiniModule extends EventsModule
 				$this->events = $this->calendar->get_all_events();
 				if ($this->cur_page->get_value( 'custom_page' ) != 'sports_results')
 				{
+					$this->find_events_page();
 					// want most recent results listed first on landing pages
 					$this->events_by_date = array_reverse($this->events_by_date, TRUE);
 				}
@@ -348,6 +350,7 @@ class lutherSportsResultsMiniModule extends EventsModule
 				$item_bundle->set_function('media_works', array($this, 'get_event_media_works'));
 				$item_bundle->set_function('prettify_duration', array($this, 'prettify_duration') );
 				$item_bundle->set_function('events_page_url', array($this, 'get_events_page_url'));
+				$item_bundle->set_function('is_all_day_event', array($this, 'event_is_all_day_event'));
 				$this->modify_list_item_function_bundle($item_bundle);
 				$item_markup->set_bundle($item_bundle);
 				if($head_items = $this->get_head_items())
