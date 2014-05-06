@@ -8,11 +8,11 @@
   * Include dependencies & register the class
   */
 reason_include_once('minisite_templates/modules/events_markup/interfaces/events_list_interface.php');
-$GLOBALS['events_markup']['minisite_templates/modules/events_markup/sports/sports_events_list.php'] = 'sportsEventsListMarkup';
+$GLOBALS['events_markup']['minisite_templates/modules/events_markup/sports/sports_results_list.php'] = 'sportsResultsListMarkup';
 /**
  * Class that generates a list markup for the events module
  */
-class sportsEventsListMarkup implements eventsListMarkup
+class sportsResultsListMarkup implements eventsListMarkup
 {
 	/**
 	 * The function bundle
@@ -62,31 +62,32 @@ class sportsEventsListMarkup implements eventsListMarkup
 			trigger_error('Call set_bundle() before calling get_markup()');
 			return '';
 		}
-		$ret = '';
 		
+		$ret = '';
 		$ret .= '<table class="tablesorter">'."\n";
 		
-		$ret .= '<tr>'."\n";
-		$ret .= '<th>Date</th>'."\n";
-		$ret .= '<th>Opponent</th>'."\n";
-		$ret .= '<th>Location</th>'."\n";
-		$ret .= '<th>Time/Results</th>'."\n";
-		$ret .= '</tr>'."\n";
-	
+		$i = $this->bundle->ideal_count();
 		if($events = $this->bundle->events($this->get_ongoing_display_type()))
-		{			
+		{	
 			foreach($events as $day => $times)
-			{				
+			{			
 				foreach($times as $time => $events)
 				{
 					foreach($events as $event)
-					{						
-						$ret .= $this->bundle->list_item_markup($event, $day, $time);						
+					{
+						if ($i > 0 && preg_match("/post_to_results/", $event->get_value( 'contact_organization' )))
+						{
+							$ret .= $this->bundle->list_item_markup($event, $day, $time);
+							$i--;
+						}					
 					}
 				}
 			}
 		}
 		$ret .= '</table>'."\n";
+		
+		$ret .= $this->bundle->feed_link();
+		
 		return $ret;
 	}
 }
