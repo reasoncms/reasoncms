@@ -236,7 +236,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'navigation' => '',
 		'sub_nav' => '',
 	),
-	'landing_blog' => array(
+	'nathans_custom' => array(
 		'main_post' => array(
 			'module' => 'publication',
 			'related_mode' => 'true',
