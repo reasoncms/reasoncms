@@ -248,7 +248,6 @@ $GLOBALS['_reason_page_types_local'] = array(
 					),
 				 ),
 			'max_num_items' => 3,
-			//'related_title' => '',
 			'css' => '',
 		),
 		'pre_sidebar' => 'blurb',
@@ -256,12 +255,11 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'sidebar' =>'av',
 		'sidebar_2' => array(
 			'module' => 'events_mini',
-			'ideal_count' => 4,
+			'ideal_count' => 4
 		),
 		//'post_sidebar' => 'flickr',
 		//'post_sidebar_2' => 'twitter',
 	),
-
 	'luther_sports' => array(
 		//'main' => 'luther_sports_results_mini',
 		'main' => array(
