@@ -55,7 +55,7 @@ class ReasonEmailSignupIntegrator extends ReasonSocialIntegrator implements Soci
 	
 	public function get_sharing_link_text()
 	{
-		return 'Email Signup';
+		return 'Email';
 	}
 	
 	/**
@@ -66,8 +66,7 @@ class ReasonEmailSignupIntegrator extends ReasonSocialIntegrator implements Soci
 	public function get_sharing_link_href($url = NULL)
 	{
 		$url = (!is_null($url)) ? urlencode($url) : urlencode(get_current_url('http'));
-		//return 'https://plus.google.com/share?url=' . $url;
-		return NONE;
+		return 'mailto:?body=' . $url;
 	}
 	
 	/****************** SocialAccountContentManager implementation *********************/
