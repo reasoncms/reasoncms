@@ -229,7 +229,7 @@
 						@include box-shadow(rgba(0,0,0,.18) 0 2px 2px);
 						padding-bottom: $column-gutter/3;
 
-						* { // equal left/right padding for ALL blurb content 
+						> * { // equal left/right padding for ALL blurb content 
 							padding: 0 $column-gutter/2;
 						}
 

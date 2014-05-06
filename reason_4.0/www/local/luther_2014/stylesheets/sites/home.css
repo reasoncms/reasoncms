@@ -335,7 +335,7 @@
   padding-bottom: 0.83333rem;
 }
 /* line 232, ../scss/sites/home.scss */
-.lutherHome #contentAndRelated #calloutSections .blurbs .blurb .blurbInner * {
+.lutherHome #contentAndRelated #calloutSections .blurbs .blurb .blurbInner > * {
   padding: 0 1.25rem;
 }
 /* line 236, ../scss/sites/home.scss */
