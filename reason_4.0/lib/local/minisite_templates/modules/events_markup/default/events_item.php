@@ -318,10 +318,9 @@ class defaultEventsItemMarkup implements eventsItemMarkup
 		if (!empty($location))
 		{
 			//$ret .= '<div class="location"><tr><td>Location:</td><td>'.$event->get_value('location').'</td></tr></div>'."\n";
-			$ret .= '<div class="location"><strong>Location:</strong> '.$event->get_value('location').'</div>'."\n";
+			$ret .= '<div class="location"><strong>Location:</strong> '.$event->get_value('location').luther_video_audio_streaming($event->get_value('id')).'</div>'."\n";
+			return $ret;
 		}
-		return $ret;
-	}
 	/**
 	 * Get a map for a given event
 	 * @param object $event
