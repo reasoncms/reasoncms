@@ -31,263 +31,252 @@
 		@media #{$large-up} {
 			//padding-top: 16px !important;
 		}
+	}
 
-		&.hasConRelNav,
-		&.hasConNav,
-		&.hasConRel,
-		&.hasCon,
-		&.hasRel {
+	#welcomeRow {
+		@include grid-row;
+	}
 
-			#welcomeRow {
-				@include grid-row;
+	#contentAndRelated {
+
+		#contentFeature {
+			margin-bottom: 0;
+
+			@media #{$large-up} {
+				@include grid-column($columns: 16, $collapse: true);
+				//float: right;
+
+				.featuresModule {
+					max-width: 100% !important;
+
+					.featureInfoWrap {
+						background: none !important;
+
+						.featureInfo {
+							background: none !important;
+							bottom: 1rem;
+							right: 1rem;
+
+
+							.featureTitle {
+								display: block;
+								float: right;
+								font-size: rem-calc(65);
+								background: rgba(0,0,0,.75);
+								background: rgba(255,255,255,.75);
+								color: $lc-blue-light !important;
+								padding: rem-calc(12);
+								margin-bottom: 1rem;
+								text-align: right;
+							}
+
+							.featureText {
+								display: block;
+								float: right;
+								clear: right;
+								font-size: rem-calc(28);
+								background: rgba(0,0,0,.75);
+								background: rgba(255,255,255,.75);
+								color: $lc-blue-light !important;
+								padding: rem-calc(12);
+								margin: 0;
+								text-align: right;
+
+								span:before {
+									color: $lc-blue-light !important;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		/*#contentSections {
+			//margin: 0 -$column-gutter/2;
+			margin-top: 0;
+			margin-left: -$column-gutter/2;
+			margin-right: -$column-gutter/2;
+			padding: $column-gutter/2;
+			background: $lc-blue-xtra-light url('../../images/lc_color_line.gif') repeat-x left top;
+
+			@media #{$large-up} {
+				@include grid-column($columns: 5);
+				margin: 0 !important;
+				@include border-top-left-radius(12px);
 			}
 
-			#contentAndRelated {
+			.pageTitle {
+				border: none;
+			}
 
-				#contentFeature {
-					margin-bottom: 0;
+			.contentPost {
+				.blurb {
+					ul {
+						@extend .zero-out;
+						list-style-type: none;
 
-					@media #{$large-up} {
-						@include grid-column($columns: 16, $collapse: true);
-						//float: right;
+						.cta:before {
+							@extend .fa;
+							margin-right: rem-calc(16);
+						}
 
-						.featuresModule {
-							max-width: 100% !important;
+						.blue:before {
+							content: $fa-var-picture-o;
+						}
 
-							.featureInfoWrap {
-								background: none !important;
+						.green:before {
+							content: $fa-var-map-marker;
+						}
 
-								.featureInfo {
-									background: none !important;
-									bottom: 1rem;
-									right: 1rem;
-
-
-									.featureTitle {
-										display: block;
-										float: right;
-    									font-size: rem-calc(65);
-    									background: rgba(0,0,0,.75);
-    									background: rgba(255,255,255,.75);
-    									color: $lc-blue-light !important;
-    									padding: rem-calc(12);
-    									margin-bottom: 1rem;
-    									text-align: right;
-									}
-									.featureText {
-										display: block;
-										float: right;
-										clear: right;
-										font-size: rem-calc(28);
-										background: rgba(0,0,0,.75);
-										background: rgba(255,255,255,.75);
-    									color: $lc-blue-light !important;
-										padding: rem-calc(12);
-										margin: 0;
-										text-align: right;
-
-										span:before {
-											color: $lc-blue-light !important;
-										}
-									}
-								}
-							}
-
-							
+						.red:before {
+							content: $fa-var-pencil;
 						}
 					}
 				}
+			}
+		}*/
 
-				#contentSections {
-					//margin: 0 -$column-gutter/2;
-					margin-top: 0;
-					margin-left: -$column-gutter/2;
-					margin-right: -$column-gutter/2;
-					padding: $column-gutter/2;
-					background: $lc-blue-xtra-light url('../../images/lc_color_line.gif') repeat-x left top;
+		#relatedSections {
+			clear: both;
+			padding: 0;
+			@include grid-row();
+			margin-top: $column-gutter;
 
-					@media #{$large-up} {
-						@include grid-column($columns: 5);
-						margin: 0 !important;
-						@include border-top-left-radius(12px);
-					}
+			> div {
+				background: none;
+			}
 
-					.pageTitle {
-						border: none;
-					}
+			@media #{$medium-up} {
+				@include grid-row($behavior: nest);
+				float: none;
+				margin-top: $column-gutter;
+			}
 
-					.contentPost {
-						.blurb {
-							ul {
-								@extend .zero-out;
-								list-style-type: none;
+			h3 {
+				border-bottom: 1px solid $lc-grey;
+				margin: 0;
+				padding-bottom: rem-calc(12); 
+			}
 
-								.cta:before {
-									@extend .fa;
-									margin-right: rem-calc(16);
-								}
+			.dayEvents {
+				
+				.event {
 
-								.blue:before {
-									content: $fa-var-picture-o;
-								}
-
-								.green:before {
-									content: $fa-var-map-marker;
-								}
-
-								.red:before {
-									content: $fa-var-pencil;
-								}
-							}
-						}
+					a { // Event title
+						font-size: 1.125rem;
 					}
 				}
+			}
+		}
 
-				#relatedSections {
-					
-					clear: both;
-					padding: 0;
-					@include grid-row();
-					margin-top: $column-gutter;
+		@media #{$small-high-up} {
+			#preSidebar {
+				@include grid-column(8);
+			}
 
-					> div {
-						background: none;
-					}
+			#sidebar {
+				@include grid-column(8);
+			}
 
-					@media #{$medium-up} {
-						@include grid-row($behavior: nest);
-						float: none;
-						margin-top: $column-gutter;
-					}
+			#postSidebar {
+				clear: left;
+				@include grid-column($columns:8, $push: 4);
+			}
+		}
 
-					h3 {
-						border-bottom: 1px solid $lc-grey;
-						margin: 0;
-						padding-bottom: rem-calc(12); 
-					}
+		@media #{$medium-high-up} {
+			#preSidebar,
+			#sidebar,
+			#postSidebar {
+				@include grid-column($columns: 5.3333333, $push: 0);
+				clear: none;
+			}
+		}
 
-					.dayEvents {
-						
-						.event {
+		#calloutSections {
+			margin-top: $column-gutter;
+			@include grid-row;
 
-							a { // Event title
-								font-size: 1.125rem;
-							}
-						}
-					}
+			@media #{$small-high-up} {
+				@include grid-row($behavior: nest);
+				margin-top: $column-gutter;
+			}
 
-				}
-
-
-					@media #{$medium-up} {
-						#preSidebar {
-							@include grid-column(8);
-						}
-						#sidebar {
-							@include grid-column(8);
-						}
-						#postSidebar {
-							clear: left;
-							@include grid-column($columns:8, $push: 4);
-						}
-					}
-
-					@media #{$xlarge-up} {
-						#preSidebar,
-						#sidebar,
-						#postSidebar {
-							@include grid-column($columns: 5.3333333, $push: 0);
-							clear: none;
-						}
-					}
-
-				#calloutSections {
-					margin-top: $column-gutter;
-					@include grid-row;
+			.blurbs {
+				// "Callout" blurbs follow a specific HTML template, generated by the WYSIWYG
+				// Add Image (full width), Heading (<h4>), and description text (<p>).
+				// Resulting markup: 
+				//<p>
+				//<img src="//luther.edu/reason/images/540599.jpg" alt="Test Image">
+				//</p>
+				//<h4>Luther Book Shop</h4>
+				//<p>Your source for Norse apparel, AA batteries, and Mother's Day cards.</p>
+			
+				.blurb {
 
 					@media #{$small-high-up} {
-						@include grid-row($behavior: nest);
-						margin-top: $column-gutter;
+						@include grid-column(8);
 					}
 
-					.blurbs {
-						// "Callout" blurbs follow a specific HTML template, generated by the WYSIWYG
-						// Add Image (full width), Heading (<h4>), and description text (<p>).
-						// Resulting markup: 
-						//<p>
-						//<img src="//luther.edu/reason/images/540599.jpg" alt="Test Image">
-						//</p>
-						//<h4>Luther Book Shop</h4>
-						//<p>Your source for Norse apparel, AA batteries, and Mother's Day cards.</p>
-					
-						.blurb {
+					@media #{$medium-high-up} {
+						@include grid-column(4);
+					}
 
-							@media #{$small-high-up} {
-								@include grid-column(8);
-							}
+					.blurbInner {
+						border-top: 12px solid;
+						background: lighten($lc-grey, 6%);
+						@include box-shadow(rgba(0,0,0,.18) 0 2px 2px);
+						padding-bottom: $column-gutter/3;
 
-							@media #{$medium-high-up} {
-								@include grid-column(4);
-							}
-
-							.blurbInner {
-								border-top: 12px solid;
-								background: lighten($lc-grey, 6%);
-								@include box-shadow(rgba(0,0,0,.18) 0 2px 2px);
-								padding-bottom: $column-gutter/3;
-
-								* { // equal left/right padding for ALL blurb content 
-									padding: 0 $column-gutter/2;
-								}
-
-								p:first-child { // Removes padding from the first paragraph, which wraps the image.
-									padding: 0;
-									margin: 0;
-								}
-
-								img:first-child { // Removes left/right padding from images. Adds padding between image and text.
-									padding: 0 0 $column-gutter/2;
-								}
-							}
-						
-							&:nth-child(4n+1) {
-								.blurbInner {
-									border-color: $lc-yellow;
-									//background: lighten($lc-yellow, 50%);
-								}
-							}
-
-							&:nth-child(4n+2) {
-								.blurbInner {
-									border-color: $lc-green;
-									//background: lighten($lc-green, 60%);
-								}
-							}
-
-							&:nth-child(4n+3) {
-								.blurbInner {
-									border-color: $lc-red;
-									//background: lighten($lc-red, 60%);
-								}
-							}
-
-							&:nth-child(4n+4) {
-								.blurbInner {
-									border-color: $lc-blue-light;
-									//background: lighten($lc-blue-light, 50%);
-								}
-							}
+						> * { // equal left/right padding for ALL blurb content 
+							padding: 0 $column-gutter/2;
 						}
 
-					} // .blurbs
+						p:first-child { // Removes padding from the first paragraph, which wraps the image.
+							padding: 0;
+							margin: 0;
+						}
 
-				} // #calloutSections
+						img:first-child { // Removes left/right padding from images. Adds padding between image and text.
+							padding: 0 0 $column-gutter/2;
+						}
+					}
+				
+					&:nth-child(4n+1) {
+						.blurbInner {
+							border-color: $lc-yellow;
+							//background: lighten($lc-yellow, 50%);
+						}
+					}
 
-			} // #contentAndRelated
+					&:nth-child(4n+2) {
+						.blurbInner {
+							border-color: $lc-green;
+							//background: lighten($lc-green, 60%);
+						}
+					}
 
-		} // &.hasCon
+					&:nth-child(4n+3) {
+						.blurbInner {
+							border-color: $lc-red;
+							//background: lighten($lc-red, 60%);
+						}
+					}
 
-	} // #minisite
+					&:nth-child(4n+4) {
+						.blurbInner {
+							border-color: $lc-blue-light;
+							//background: lighten($lc-blue-light, 50%);
+						}
+					}
+				}
+
+			} // .blurbs
+
+		} // #calloutSections
+
+	} // #contentAndRelated
 
 	// ICONS
 
