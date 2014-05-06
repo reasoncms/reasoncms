@@ -237,9 +237,9 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'sub_nav' => '',
 	),
 	'landing_blog' => array(
-		'main_post'=>array(
-			'module'=>'publication',
-			'related_mode'=>'true',
+		'main_post' => array(
+			'module' => 'publication',
+			'related_mode' => 'true',
 			'markup_generator_info' =>
 				array(
 					'list_item' => array(
