@@ -12,9 +12,11 @@
 		var $controller;
 		var $twitter_info;
 		var $tweet_html;
+		var $css = 'css/twitter/twitter.css'; // style sheet(s) to be added
 
 		function init( $args = array() )
 		{
+			$this->parent->add_stylesheet(REASON_HTTP_BASE_PATH.$this->css,'',true);
 			$this->model = new ReasonTwitterFeedModel();
 			$this->view =  new ReasonTwitterDefaultFeedView();
 		}
