@@ -5109,7 +5109,7 @@ form table td {
 }
 /* line 511, scss/modules/_publication.scss */
 .publication .addCommentForm .subContent form {
-  padding: 1.25rem 0;
+  padding: 1.25rem;
   border: 1px solid #e9e9e9;
   -webkit-border-radius: 12px;
   -moz-border-radius: 12px;
