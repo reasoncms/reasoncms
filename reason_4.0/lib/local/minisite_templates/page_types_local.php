@@ -215,9 +215,10 @@ $GLOBALS['_reason_page_types_local'] = array(
 		),
 		'sidebar' => array(
 			'module' => 'events_mini',
-			//'module' => 'events_upcoming',
+			//'module' => 'events_upcoming_luther',
 			'ideal_count' => 4,
 			'title' => 'Campus Events',
+			//'foot' => '<a href="/events" class="more">More events</a>',
 		),
 		'post_sidebar' => array(
 			'module' => 'luther_av',

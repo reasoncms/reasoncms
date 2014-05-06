@@ -60,7 +60,7 @@ class defaultEventsItemMarkup implements eventsItemMarkup
 			trigger_error('Call set_bundle() before calling get_markup()');
 			return '';
 		}
-		$ret = '<p class="back"><a href="'.$this->bundle->back_link().'" title="Back to event listings"><i class="fa fa-chevron-circle-left"></i></a></p>';
+		$ret = '<p class="back"><a href="'.$this->bundle->back_link().'" title="Back to event listings"><i class="fa fa-chevron-circle-left"></i> Back to events</a></p>';
 		$ret .= $this->get_image_markup($event);
 		$ret .= '<h3>'.$event->get_value('name').'</h3>'."\n";
 		$ret .= $this->get_ownership_markup($event);
@@ -68,13 +68,15 @@ class defaultEventsItemMarkup implements eventsItemMarkup
 			$ret .= '<p class="description">'.$event->get_value( 'description' ).'</p>'."\n";
 		$ret .= $this->get_repetition_info_markup($event);
 	
-		$ret .= '<table>'."\n";
+		//$ret .= '<table>'."\n";
 		if ($this->bundle->request_date() && strstr($event->get_value('dates'), $this->bundle->request_date()))
-			$ret .= '<div class="date"><tr><td>Date:</td><td>'.prettify_mysql_datetime( $this->bundle->request_date(), "l, F j, Y" ).'</td></tr></div>'."\n";
+			//$ret .= '<div class="date"><tr><td>Date:</td><td>'.prettify_mysql_datetime( $this->bundle->request_date(), "l, F j, Y" ).'</td></tr></div>'."\n";
+			$ret .= '<div class="date"><strong>Date:</strong> '.prettify_mysql_datetime( $this->bundle->request_date(), "l, F j, Y" ).'</div>'."\n";
 		
 		if(!$this->bundle->is_all_day_event($event))
 		{
-			$ret .= '<div class="time"><tr><td>Time:</td><td>'.prettify_mysql_datetime( $event->get_value( 'datetime' ), "g:i a" );
+			//$ret .= '<div class="time"><tr><td>Time:</td><td>'.prettify_mysql_datetime( $event->get_value( 'datetime' ), "g:i a" );
+			$ret .= '<div class="time"><strong>Time:</strong> '.prettify_mysql_datetime( $event->get_value( 'datetime' ), "g:i a" );
 			if ($event->get_value( 'hours' ) || $event->get_value( 'minutes' ))
 			{
 				$dt = new DateTime($event->get_value('datetime'));
@@ -83,19 +85,21 @@ class defaultEventsItemMarkup implements eventsItemMarkup
 				$ret .= ' &ndash; ' . $dt->format('g:i a');
 				
 			}
-			$ret .= '</td></tr></div>'."\n";
+			//$ret .= '</td></tr></div>'."\n";
+			$ret .= '</div>'."\n";
 		}
 		else 
 		{
-			$ret .= '<div class="time"><tr><td>Time:</td><td>All Day</td></tr></div>'."\n";
+			//$ret .= '<div class="time"><tr><td>Time:</td><td>All Day</td></tr></div>'."\n";
+			$ret .= '<div class="time"><strong>Time:</strong> All day</div>'."\n";
 		}
 		
 		$ret .= $this->get_location_markup($event);
-		$ret .= '</table>'."\n";
+		//$ret .= '</table>'."\n";
 		
 		
 		if ($event->get_value('sponsor'))
-			$ret .= '<p class="sponsor">Sponsor: '.$event->get_value('sponsor').'</p>'."\n";
+			$ret .= '<p class="sponsor"><strong>Sponsor:</strong> '.$event->get_value('sponsor').'</p>'."\n";
 		$ret .= $this->get_contact_info_markup($event);
 		$ret .= $this->get_item_export_link_markup($event);
 		$ret .= $this->get_media_work_markup($event);
@@ -313,7 +317,8 @@ class defaultEventsItemMarkup implements eventsItemMarkup
 		
 		if (!empty($location))
 		{
-			$ret .= '<div class="location"><tr><td>Location:</td><td>'.$event->get_value('location').'</td></tr></div>'."\n";
+			//$ret .= '<div class="location"><tr><td>Location:</td><td>'.$event->get_value('location').'</td></tr></div>'."\n";
+			$ret .= '<div class="location"><strong>Location:</strong> '.$event->get_value('location').'</div>'."\n";
 		}
 		return $ret;
 	}
