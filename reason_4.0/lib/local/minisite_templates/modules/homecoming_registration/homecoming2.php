@@ -119,7 +119,9 @@ class HomecomingRegistrationTwoForm extends FormStep {
     );
 
     // style up the form and add comments et al
-    function on_every_time() {
+    function on_every_time() 
+    {
+        $this->set_form_class("StackedBox");
                 
         if (!$this->controller->get('amount')) {
             echo '<div id="homecomingSetupError">Sorry. There was a problem setting up payment for your form.

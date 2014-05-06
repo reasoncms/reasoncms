@@ -86,15 +86,15 @@ class HomecomingRegistrationOneForm extends FormStep
 		'attend_program' => array(
 			'type' => 'select_no_sort',
 			'display_name' => 'Friday\'s Alumni Dinner',
-			'comments' => '<br />$20/person',
+			'comments' => '<br />$25/person',
 			'options' => array(
 				'--'=>'--', 
-				'1'=>'1 ticket, $20',
-				'2'=>'2 tickets, $40',
-				'3'=>'3 tickets, $60',
-				'4'=>'4 tickets, $80',
-				'5'=>'5 tickets, $100',
-				'6'=>'6 tickets, $120',
+				'1'=>'1 ticket, $25',
+				'2'=>'2 tickets, $50',
+				'3'=>'3 tickets, $75',
+				'4'=>'4 tickets, $100',
+				'5'=>'5 tickets, $125',
+				'6'=>'6 tickets, $150',
 			),
 		),
 
@@ -151,6 +151,7 @@ class HomecomingRegistrationOneForm extends FormStep
 	// style up the form and add comments et al	
 	function on_every_time()
 	{
+		$this->set_form_class("StackedBox");
 		$date = getdate();
 		$this->change_element_type( 
 			'class_year', 'year', array('start' => ($date['year'] - 75), 'end' => ($date['year'])));
@@ -176,7 +177,7 @@ class HomecomingRegistrationOneForm extends FormStep
         // 50th reception
         $this->change_element_type(
 			'attend_50th_reception', 'select', array(
-				'display_name' => 'Reservation for Friday\'s 50th reunion reception',
+				'display_name' => 'Reservation for Friday\'s 50th reunion reception and luncheon',
 				'comments' => '<br /> Class of ' . ($date['year'] - 50) . ' only<br />No Cost',
 				'options' => array( 
 					'1' => '1', '2' => '2', '3' => '3', '4' => '4', '5' => '5', 
@@ -209,7 +210,7 @@ class HomecomingRegistrationOneForm extends FormStep
 		// 50th reunion booklet
         $this->change_element_type(
 			'booklet', 'select', array(
-				'display_name' => 'Would you like a printed 50th reunion booklet ($7/booklet)?',
+				'display_name' => 'Would you like a printed 50th reunion booklet ($10/booklet)?',
 				'comments' => '<br />Class of ' . ($date['year'] - 50) . ' only',
 				'options' => array('1' => '1','2' => '2','3' => '3','4' => '4'),
 			)
@@ -225,15 +226,15 @@ class HomecomingRegistrationOneForm extends FormStep
 		$this->change_element_type(
 			'attend_dinner_50_to_25', 'select_no_sort', array(
 				'display_name' => 'Tickets for Saturday\'s Reunion Dinner',  
-				'comments' => '<br />'.$classes_string_55_to_25.'<br />$20/person',
+				'comments' => '<br />'.$classes_string_55_to_25.'<br />$25/person',
 				'options' => array(
 					'--'=>'--', 
-					'1'=>'1 ticket, $20',
-					'2'=>'2 tickets, $40',
-					'3'=>'3 tickets, $60',
-					'4'=>'4 tickets, $80',
-					'5'=>'5 tickets, $100',
-					'6'=>'6 tickets, $120',
+					'1'=>'1 ticket, $25',
+					'2'=>'2 tickets, $50',
+					'3'=>'3 tickets, $75',
+					'4'=>'4 tickets, $100',
+					'5'=>'5 tickets, $125',
+					'6'=>'6 tickets, $150',
 				),
 			));
 		// Set years and ticket cost for 20 to 10 year reunions		
@@ -246,7 +247,23 @@ class HomecomingRegistrationOneForm extends FormStep
 		$this->change_element_type(
 			'attend_dinner_20_to_10', 'select_no_sort', array(
 				'display_name' => 'Tickets for Saturday\'s Reunion Reception', 
-				'comments' => '<br />'.$classes_string_20_to_10.'<br />$15/person',
+				'comments' => '<br />'.$classes_string_20_to_10.'<br />$20/person',
+				'options' => array(
+					'--'=>'--', 
+					'1'=>'1 ticket, $20',
+					'2'=>'2 tickets, $40',
+					'3'=>'3 tickets, $60',
+					'4'=>'4 tickets, $70',
+					'5'=>'5 tickets, $80',
+					'6'=>'6 tickets, $100',
+				),
+			));
+			
+		// Set cost for 5 year reunion
+		$this->change_element_type(
+			'attend_dinner_5', 'select_no_sort', array(
+				'display_name' => 'Tickets for Saturday\'s Reunion Reception',
+				'comments' => '<br />for Class of '. ($date['year']-5) .'<br />$15/person',
 				'options' => array(
 					'--'=>'--', 
 					'1'=>'1 ticket, $15',
@@ -255,22 +272,6 @@ class HomecomingRegistrationOneForm extends FormStep
 					'4'=>'4 tickets, $60',
 					'5'=>'5 tickets, $75',
 					'6'=>'6 tickets, $90',
-				),
-			));
-			
-		// Set cost for 5 year reunion
-		$this->change_element_type(
-			'attend_dinner_5', 'select_no_sort', array(
-				'display_name' => 'Tickets for Saturday\'s Reunion Reception',
-				'comments' => '<br />for Class of '. ($date['year']-5) .'<br />$10/person',
-				'options' => array(
-					'--'=>'--', 
-					'1'=>'1 ticket, $10',
-					'2'=>'2 tickets, $20',
-					'3'=>'3 tickets, $30',
-					'4'=>'4 tickets, $40',
-					'5'=>'5 tickets, $50',
-					'6'=>'6 tickets, $60',
 
 					),
 				)
@@ -297,27 +298,27 @@ class HomecomingRegistrationOneForm extends FormStep
 
 		if (isset($program_tix))
 	  	{
-			$amount = $amount + ($program_tix * 20);
+			$amount = $amount + ($program_tix * 25);
 		}
 		
 		if (isset($dinner_tix_50_to_25))
 	  	{
-			$amount = $amount + ($dinner_tix_50_to_25 * 20);
+			$amount = $amount + ($dinner_tix_50_to_25 * 25);
 		}
 		
 		if (isset($dinner_tix_20_to_10))
 	  	{
-			$amount = $amount + ($dinner_tix_20_to_10 * 15);
+			$amount = $amount + ($dinner_tix_20_to_10 * 20);
 		}
 		
 		if (isset($dinner_tix_5))
 	  	{
-			$amount = $amount + ($dinner_tix_5 * 10);
+			$amount = $amount + ($dinner_tix_5 * 15);
 		}
 
 		if (isset($booklet))
 	  	{
-			$amount = $amount + ($booklet * 7);
+			$amount = $amount + ($booklet * 10);
 		}
 		$this->set_value('amount', $amount);
 		
