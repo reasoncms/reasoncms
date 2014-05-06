@@ -17,7 +17,7 @@ reason_include_once( 'minisite_templates/modules/publication/list_item_markup_ge
  *
  */
 
-class RelatedListItemNoDescriptionMarkupGenerator extends RelatedListItemMarkupGenerator
+class RelatedListItemLutherMarkupGenerator extends RelatedListItemMarkupGenerator
 {
 	//variables needed to be passed from the publication module
 	var $variables_needed = array( 	'use_dates_in_list', 
@@ -36,6 +36,7 @@ class RelatedListItemNoDescriptionMarkupGenerator extends RelatedListItemMarkupG
 		$this->markup_string .= $this->get_teaser_image_markup();
 		$this->markup_string .= $this->get_date_markup();
 		$this->markup_string .= $this->get_title_markup();
+		$this->markup_string .= $this->get_description_markup();
 	}
 	
 /////
@@ -81,6 +82,13 @@ class RelatedListItemNoDescriptionMarkupGenerator extends RelatedListItemMarkupG
 			$markup_string .= '</figure>';
 		}
 		return $markup_string;
+	}
+
+	function get_description_markup()
+	{
+		$item = $this->passed_vars['item'];
+		if($item->get_value('description'))
+			return '<div class="description">'.$item->get_value('description').'</div>'."\n";
 	}
 
 }

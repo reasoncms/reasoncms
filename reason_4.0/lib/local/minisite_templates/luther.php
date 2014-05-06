@@ -410,7 +410,7 @@
 		
 		function show_sidebar_tableless()
 		{
-			if($this->has_content( 'pre_sidebar' ) || $this->has_content( 'sidebar' ) || $this->has_content( 'post_sidebar' ) ) {
+			if($this->has_content( 'pre_sidebar' ) || $this->has_content( 'sidebar' ) || $this->has_content( 'post_sidebar' ) || $this->has_content( 'post_sidebar_2' ) || $this->has_content( 'post_sidebar_3' ) ) {
 			
 			echo '<div id="relatedSections">'."\n";
 			
@@ -420,16 +420,40 @@
 					$this->run_section( 'pre_sidebar' );
 					echo '</div>'."\n";
 				}
+				if($this->has_content( 'pre_sidebar_2' ))
+				{
+					echo '<div id="preSidebar_2">'."\n";
+					$this->run_section( 'pre_sidebar_2' );
+					echo '</div>'."\n";
+				}
 				if($this->has_content( 'sidebar' ))
 				{
 					echo '<div id="sidebar">'."\n";
 					$this->run_section( 'sidebar' );
 					echo '</div>'."\n";
 				}
+				if($this->has_content( 'sidebar_2' ))
+				{
+					echo '<div id="sidebar_2">'."\n";
+					$this->run_section( 'sidebar_2' );
+					echo '</div>'."\n";
+				}
 				if($this->has_content( 'post_sidebar' ))
 				{
 					echo '<div id="postSidebar">'."\n";
 					$this->run_section( 'post_sidebar' );
+					echo '</div>'."\n";
+				}
+				if($this->has_content( 'post_sidebar_2' ))
+				{
+					echo '<div id="postSidebar_2">'."\n";
+					$this->run_section( 'post_sidebar_2' );
+					echo '</div>'."\n";
+				}
+				if($this->has_content( 'post_sidebar_3' ))
+				{
+					echo '<div id="postSidebar_3">'."\n";
+					$this->run_section( 'post_sidebar_3' );
 					echo '</div>'."\n";
 				}
 			

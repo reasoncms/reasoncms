@@ -27,7 +27,7 @@
 #relatedPub {
 
 	.posts {
-		margin-bottom: rem-calc(16);
+		margin: 0 0 rem-calc(16);
 	}
 
 	.post {
@@ -48,13 +48,31 @@
 		h4 {
 			margin: 0;
 		
-		a {
-			&:hover {
+			a {
+				&:hover {
 					text-decoration: underline;
 				}
 			}
 		}
+
+		.description {
+			margin-top: rem-calc(8);
+		}
 	}
+
+	.pubLinks {
+		margin-left: 0;
+
+		a {
+			&:before {
+				@extend .fa;
+				margin-right: rem-calc(8);
+				content: $fa-var-th-list;
+			}
+		}
+	}
+
+
 }
 
 .publication {
