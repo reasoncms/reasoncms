@@ -69,7 +69,7 @@
 								text-align: right;
 							}
 
-							$padding-multi-line: rem-calc(6);
+							$padding-multi-line: rem-calc(12);
 							$feature-text-font-size: rem-calc(24);
 							.featureText {
 								display: block;
@@ -86,7 +86,7 @@
 									background: rgba(255,255,255,.85);
 									color: $lc-blue-light !important;
 									line-height: rem-calc(46);
-									padding: $padding-multi-line;
+									padding: rem-calc(6);
 									padding-left: 0;
 									padding-right: 0;
 									box-shadow: $padding-multi-line 0 0 rgba(255,255,255,.85), - $padding-multi-line 0 0 rgba(255,255,255,.85);
