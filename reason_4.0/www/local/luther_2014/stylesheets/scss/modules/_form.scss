@@ -29,6 +29,7 @@
 #form,
 form {
 
+	// Sets a header font for all possible labels
 	div,
 	.words,
 	input,
@@ -64,7 +65,7 @@ form {
 		margin-bottom: 0;
 	}
 
-	// Set a max width for inputs (otherwise they can look a wee bit absurd)
+	// Set a max width for inputs (otherwise they start looking absurd)
 	input[type="text"],
 	input[type="password"],
 	input[type="date"],
@@ -103,7 +104,7 @@ form {
 
 	// Normalize file input width
 	input[type="file"] {
-		width:100%;
+		width: 100%;
 	}
 
 	// Basic fieldset styling
@@ -175,12 +176,16 @@ form {
 			}
 		}
 
-		// Adds a grey bg to every other row, even error rows
-		&:nth-child(even) {
-			background: rgba($lc-grey, .65);
+		// Adds a grey bg to every other row
+		&:nth-child(odd) {
+			background: lighten($lc-grey, 5%);
 
-			&.error {
-				background: rgba($lc-grey, .65) !important;
+			&.error { // even error rows
+				background: lighten($lc-grey, 5%) !important;
+			}
+
+			&.noLabel {  // but not "comment" (heading) rows
+				background: none !Important;
 			}
 		}
 
@@ -202,6 +207,22 @@ form {
 			}
 		}
 
+		/*@media #{$medium-up} {
+			padding: $form-spacing 0;
+
+			.words {
+			  @include grid-column($columns: 4, $float: left);
+			 }
+
+			.element {
+				@include grid-column($columns: 12);
+			}
+
+			td {
+				padding: .5em 1em .5em 0; 
+			}
+		}*/
+
 		// Loki comment editor
 		.loki {
 			border: none;
@@ -212,13 +233,13 @@ form {
 			.toolbar {
 				a {
 					border: 1px solid darken($lc-grey, 10%);
-					width: 34px;
+					width: rem-calc(34);
 					display: inline-block;
-					margin: 0 0 rem-calc(8px);
+					margin: 0 0 rem-calc(8);
 					position: relative;
 
 					@media #{$medium-up} {
-						width: 40px;	
+						width: rem-calc(40);	
 					}
 
 					&:hover {
@@ -289,23 +310,6 @@ form {
 		&#noturlItem,
 		&#antlionItem {
 		    display: none;
-		}
-
-		@media #{$medium-up} {
-			padding: $form-spacing 0;
-
-			.words {
-			  @include grid-column($columns: 4, $float:left);
-			 }
-
-			.element {
-				@include grid-column($columns: 12);
-			}
-
-			td {
-				padding: .5em 1em .5em 0; 
-			}
-
 		}
 	}
 
