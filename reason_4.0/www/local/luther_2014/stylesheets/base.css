@@ -4140,9 +4140,8 @@ form .formElement {
   margin-bottom: 0;
   max-width: 100%;
   *zoom: 1;
-  padding: 1rem;
-  border-bottom: 1px solid white;
-  		/*@media only screen and (min-width:40.063em) {
+  padding: 1rem 0;
+  		/*@media only screen and (min-width:40.063em) {  // Styles for left-aligned labels and right-aligned inputs
   			padding: $form-spacing 0;
   
   			.words {
@@ -4199,21 +4198,27 @@ form .formElement.error .words .labelText {
   background: #fad4d0 !important;
 }
 /* line 180, scss/modules/_form.scss */
-#form .formElement:nth-child(odd),
-form .formElement:nth-child(odd) {
-  background: #f6f6f6;
+#form .formElement.noLabel,
+form .formElement.noLabel {
+  border-top: 4px solid #e9e9e9;
 }
-/* line 183, scss/modules/_form.scss */
-#form .formElement:nth-child(odd).error,
-form .formElement:nth-child(odd).error {
-  background: #f6f6f6 !important;
+/* line 185, scss/modules/_form.scss */
+#form .formElement.noLabel h1,
+#form .formElement.noLabel h2,
+#form .formElement.noLabel h3,
+form .formElement.noLabel h1,
+form .formElement.noLabel h2,
+form .formElement.noLabel h3 {
+  font-size: 1.6875rem;
+  color: #1073ce;
 }
-/* line 187, scss/modules/_form.scss */
-#form .formElement:nth-child(odd).noLabel,
-form .formElement:nth-child(odd).noLabel {
-  background: none !Important;
+/* line 190, scss/modules/_form.scss */
+#form .formElement.noLabel > :last-child,
+form .formElement.noLabel > :last-child {
+  margin: 0;
+  padding: 0;
 }
-/* line 193, scss/modules/_form.scss */
+/* line 197, scss/modules/_form.scss */
 #form .formElement .words,
 form .formElement .words {
   font-size: 1rem;
@@ -4225,12 +4230,12 @@ form .formElement .words {
   font-weight: 600;
   display: inline-block;
 }
-/* line 198, scss/modules/_form.scss */
+/* line 202, scss/modules/_form.scss */
 #form .formElement .words .labelText,
 form .formElement .words .labelText {
   display: inline-block;
 }
-/* line 202, scss/modules/_form.scss */
+/* line 206, scss/modules/_form.scss */
 #form .formElement .words .requiredIndicator,
 form .formElement .words .requiredIndicator {
   font-weight: 300;
@@ -4238,7 +4243,7 @@ form .formElement .words .requiredIndicator {
   padding-left: 0.25rem;
   color: #838383;
 }
-/* line 227, scss/modules/_form.scss */
+/* line 231, scss/modules/_form.scss */
 #form .formElement .loki,
 form .formElement .loki {
   border: none;
@@ -4246,7 +4251,7 @@ form .formElement .loki {
   padding: 0;
   background: none !important;
 }
-/* line 234, scss/modules/_form.scss */
+/* line 238, scss/modules/_form.scss */
 #form .formElement .loki .toolbar a,
 form .formElement .loki .toolbar a {
   border: 1px solid #d0d0d0;
@@ -4256,19 +4261,19 @@ form .formElement .loki .toolbar a {
   position: relative;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 234, scss/modules/_form.scss */
+  /* line 238, scss/modules/_form.scss */
   #form .formElement .loki .toolbar a,
   form .formElement .loki .toolbar a {
     width: 2.5rem;
   }
 }
-/* line 245, scss/modules/_form.scss */
+/* line 249, scss/modules/_form.scss */
 #form .formElement .loki .toolbar a:hover,
 form .formElement .loki .toolbar a:hover {
   background: #e9e9e9;
   border: 1px solid #c3c3c3;
 }
-/* line 250, scss/modules/_form.scss */
+/* line 254, scss/modules/_form.scss */
 #form .formElement .loki .toolbar a:first-child,
 form .formElement .loki .toolbar a:first-child {
   -moz-border-radius-topleft: 4px;
@@ -4278,7 +4283,7 @@ form .formElement .loki .toolbar a:first-child {
   -webkit-border-bottom-left-radius: 4px;
   border-bottom-left-radius: 4px;
 }
-/* line 254, scss/modules/_form.scss */
+/* line 258, scss/modules/_form.scss */
 #form .formElement .loki .toolbar a:last-child,
 form .formElement .loki .toolbar a:last-child {
   -moz-border-radius-topright: 4px;
@@ -4288,25 +4293,25 @@ form .formElement .loki .toolbar a:last-child {
   -webkit-border-bottom-right-radius: 4px;
   border-bottom-right-radius: 4px;
 }
-/* line 258, scss/modules/_form.scss */
+/* line 262, scss/modules/_form.scss */
 #form .formElement .loki .toolbar a + a,
 form .formElement .loki .toolbar a + a {
   margin-left: -1px;
 }
-/* line 263, scss/modules/_form.scss */
+/* line 267, scss/modules/_form.scss */
 #form .formElement .loki .toolbar a:hover, #form .formElement .loki .toolbar a:active,
 form .formElement .loki .toolbar a:hover,
 form .formElement .loki .toolbar a:active {
   z-index: 100;
 }
-/* line 267, scss/modules/_form.scss */
+/* line 271, scss/modules/_form.scss */
 #form .formElement .loki .toolbar a:active,
 form .formElement .loki .toolbar a:active {
   -webkit-box-shadow: rgba(0, 0, 0, 0.125) 0 3px 5px inset;
   -moz-box-shadow: rgba(0, 0, 0, 0.125) 0 3px 5px inset;
   box-shadow: rgba(0, 0, 0, 0.125) 0 3px 5px inset;
 }
-/* line 272, scss/modules/_form.scss */
+/* line 276, scss/modules/_form.scss */
 #form .formElement .loki .toolbar a img,
 #form .formElement .loki .toolbar a span,
 form .formElement .loki .toolbar a img,
@@ -4315,7 +4320,7 @@ form .formElement .loki .toolbar a span {
   display: block;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 272, scss/modules/_form.scss */
+  /* line 276, scss/modules/_form.scss */
   #form .formElement .loki .toolbar a img,
   #form .formElement .loki .toolbar a span,
   form .formElement .loki .toolbar a img,
@@ -4323,27 +4328,27 @@ form .formElement .loki .toolbar a span {
     margin: 10px auto;
   }
 }
-/* line 290, scss/modules/_form.scss */
+/* line 294, scss/modules/_form.scss */
 #form .formElement .loki .grippy_wrapper,
 form .formElement .loki .grippy_wrapper {
   display: none;
 }
-/* line 295, scss/modules/_form.scss */
+/* line 299, scss/modules/_form.scss */
 #form .formElement#commentcontentItem,
 form .formElement#commentcontentItem {
   background: white;
 }
-/* line 298, scss/modules/_form.scss */
+/* line 302, scss/modules/_form.scss */
 #form .formElement#commentcontentItem:nth-child(even),
 form .formElement#commentcontentItem:nth-child(even) {
   background: none !important;
 }
-/* line 301, scss/modules/_form.scss */
+/* line 305, scss/modules/_form.scss */
 #form .formElement#commentcontentItem:nth-child(even).error,
 form .formElement#commentcontentItem:nth-child(even).error {
   background: #FFF !important;
 }
-/* line 311, scss/modules/_form.scss */
+/* line 315, scss/modules/_form.scss */
 #form .formElement#tarbabypreItem, #form .formElement#tarbabyItem, #form .formElement#noturlItem, #form .formElement#antlionItem,
 form .formElement#tarbabypreItem,
 form .formElement#tarbabyItem,
@@ -4351,14 +4356,14 @@ form .formElement#noturlItem,
 form .formElement#antlionItem {
   display: none;
 }
-/* line 318, scss/modules/_form.scss */
+/* line 322, scss/modules/_form.scss */
 #form table,
 form table {
   margin-bottom: 0;
   border: none;
   background: none;
 }
-/* line 325, scss/modules/_form.scss */
+/* line 329, scss/modules/_form.scss */
 #form table tr.even,
 #form table tr.alt,
 #form table tr:nth-of-type(2n),
@@ -4367,30 +4372,30 @@ form table tr.alt,
 form table tr:nth-of-type(2n) {
   background: none !important;
 }
-/* line 329, scss/modules/_form.scss */
+/* line 333, scss/modules/_form.scss */
 #form table td,
 form table td {
   padding: .5em 0 .5em 1em;
 }
 
-/* line 336, scss/modules/_form.scss */
+/* line 340, scss/modules/_form.scss */
 #discoErrorNotice {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
   margin-bottom: 1.25rem;
 }
-/* line 340, scss/modules/_form.scss */
+/* line 344, scss/modules/_form.scss */
 #discoErrorNotice h3 {
   font-size: 1.125rem;
   font-weight: 600;
   margin: 0 0 0.375rem;
   color: #b62615 !important;
 }
-/* line 346, scss/modules/_form.scss */
+/* line 350, scss/modules/_form.scss */
 #discoErrorNotice h3:before {
   content: "\f071";
   margin-right: 0.75rem;
 }
-/* line 353, scss/modules/_form.scss */
+/* line 357, scss/modules/_form.scss */
 #discoErrorNotice ul {
   border-style: solid;
   border-width: 1px;
@@ -4409,11 +4414,11 @@ form table td {
   margin: 0;
   font-weight: 600;
 }
-/* line 359, scss/modules/_form.scss */
+/* line 363, scss/modules/_form.scss */
 #discoErrorNotice ul li {
   display: inline;
 }
-/* line 362, scss/modules/_form.scss */
+/* line 366, scss/modules/_form.scss */
 #discoErrorNotice ul li a {
   font-weight: 400;
   text-decoration: underline;

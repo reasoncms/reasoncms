@@ -152,8 +152,8 @@ form {
 	// Each form element
 	.formElement {
 		@include grid-row();
-		padding: $form-spacing;
-		border-bottom: 1px solid $lc-white;
+		padding: $form-spacing 0;
+		//border-top: 1px dotted $lc-grey;
 
 		// Hides the "* = required field" text. People know what asterisks mean.
 		&#requiredtextItem {
@@ -176,16 +176,20 @@ form {
 			}
 		}
 
-		// Adds a grey bg to every other row
-		&:nth-child(odd) {
-			background: lighten($lc-grey, 5%);
+		// Styles for the "content" row -- often used for headings
+		&.noLabel {
+			border-top: 4px solid $lc-grey;
 
-			&.error { // even error rows
-				background: lighten($lc-grey, 5%) !important;
+			h1,
+			h2,
+			h3 { // Styles headings to look the same
+				font-size: $h3-font-size;
+				color: $lc-blue-light;
 			}
 
-			&.noLabel {  // but not "comment" (heading) rows
-				background: none !Important;
+			> :last-child { // removes bottom spacing from the last element to keep row spacing even
+				margin: 0;
+				padding: 0;
 			}
 		}
 
@@ -207,7 +211,7 @@ form {
 			}
 		}
 
-		/*@media #{$medium-up} {
+		/*@media #{$medium-up} {  // Styles for left-aligned labels and right-aligned inputs
 			padding: $form-spacing 0;
 
 			.words {
