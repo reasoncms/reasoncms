@@ -202,6 +202,7 @@ body {
 					margin: 0;			
 					padding: ($column-gutter/2.25) 0;
 					text-align: center;
+					@include clearfix;
 								
 					li {
 						display: inline;
@@ -210,10 +211,30 @@ body {
 						&.directory {
 							margin-left: 0;
 						}
-						
-						&.search{
+
+						&.search {
 							display: block;
-							margin: ($column-gutter/2.25) 0 0;
+							margin: ($column-gutter/2.25) auto;
+							max-width: rem-calc(400);
+
+							input {
+								height: 2rem !important;
+							}
+
+							input[type="text"] {
+								width: 80%;
+								float: left;
+								@include border-left-radius($global-radius);
+							}
+
+							input[type="submit"] {
+								width: 20%;
+								float: left;
+								border: none;
+								background: $lc-blue-light;
+								color: #FFF;
+								@include border-right-radius($global-radius);
+							}
 						}
 					}	
 				}
@@ -263,8 +284,7 @@ body {
 							&.search {
 								display: inline-block;
 								margin: 0 0 0 1em;
-								//display: none;
-								width: 300px;
+								width: rem-calc(300);
 								position: relative;
 								top: rem-calc(8);
 
@@ -275,6 +295,11 @@ body {
 								input[type="text"] {
 									width: rem-calc(250);
 									float: left;
+									border: none;
+
+									&:focus {
+										@include box-shadow(none);
+									}
 								}
 
 								input[type="submit"] {
