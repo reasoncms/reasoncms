@@ -31,84 +31,28 @@
 				
 				<ul class="sections">
 					<li>
-						<a href="/admissions-new">Admissions</a>
-						<ul>
-							<li><a href="#">Lorem ipsum dolor</a></li>
-							<li><a href="#">Dolor lorem</a></li>
-							<li><a href="#">Lorem ipsum dolor</a></li>
-							<li><a href="#">Dolor lorem</a></li>
-							<li><a href="#">Lorem ipsum dolor</a></li>
-						</ul>
+						<a href="/academics">Academics</a>
 					</li>
 					<li>
-						<a href="/academics">Academics</a>
-						<ul>
-							<li><a href="#">Lorem ipsum dolor</a></li>
-							<li><a href="#">Dolor lorem</a></li>
-							<li><a href="#">Lorem ipsum dolor</a></li>
-							<li><a href="#">Dolor lorem</a></li>
-							<li><a href="#">Lorem ipsum dolor</a></li>
-						</ul>
+						<a href="/admissions-new">Admissions</a>
 					</li>
 					<li>
 						<a href="/studentlife/">Student Life</a>
-						<ul>
-							<li><a href="#">Lorem ipsum dolor</a></li>
-							<li><a href="#">Dolor lorem</a></li>
-							<li><a href="#">Lorem ipsum dolor</a></li>
-							<li><a href="#">Dolor lorem</a></li>
-							<li><a href="#">Lorem ipsum dolor</a></li>
-						</ul>
 					</li>
 					<li>
 						<a href="/sports">Athletics</a>
-						<ul>
-							<li><a href="#">Lorem ipsum dolor</a></li>
-							<li><a href="#">Dolor lorem</a></li>
-							<li><a href="#">Lorem ipsum dolor</a></li>
-							<li><a href="#">Dolor lorem</a></li>
-							<li><a href="#">Lorem ipsum dolor</a></li>
-						</ul>
 					</li>
 					<li>
 						<a href="/music">Music</a>
-						<ul>
-							<li><a href="#">Lorem ipsum dolor</a></li>
-							<li><a href="#">Dolor lorem</a></li>
-							<li><a href="#">Lorem ipsum dolor</a></li>
-							<li><a href="#">Dolor lorem</a></li>
-							<li><a href="#">Lorem ipsum dolor</a></li>
-						</ul>
+					</li>
+					<li>
+						<a href="/outcomes">Outcomes</a>
 					</li>
 					<li>
 						<a href="/giving">Giving</a>
-						<ul>
-							<li><a href="#">Lorem ipsum dolor</a></li>
-							<li><a href="#">Dolor lorem</a></li>
-							<li><a href="#">Lorem ipsum dolor</a></li>
-							<li><a href="#">Dolor lorem</a></li>
-							<li><a href="#">Lorem ipsum dolor</a></li>
-						</ul>
 					</li>
 					<li>
 						<a href="/about">About</a>
-						<ul>
-							<li><a href="#">Lorem ipsum dolor</a></li>
-							<li><a href="#">Dolor lorem</a></li>
-							<li><a href="#">Lorem ipsum dolor</a></li>
-							<li><a href="#">Dolor lorem</a></li>
-							<li><a href="#">Lorem ipsum dolor</a></li>
-						</ul>
-					</li>
-					<li>
-						<a href="/connect">Connect</a>
-						<ul>
-							<li><a href="#">Lorem ipsum dolor</a></li>
-							<li><a href="#">Dolor lorem</a></li>
-							<li><a href="#">Lorem ipsum dolor</a></li>
-							<li><a href="#">Dolor lorem</a></li>
-							<li><a href="#">Lorem ipsum dolor</a></li>
-						</ul>
 					</li>
 				</ul>	
 			</nav>	
