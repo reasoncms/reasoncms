@@ -410,6 +410,10 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'sidebar' => array(
 			'module' => 'image_sidebar',
 			'num_to_skip' => 1,
+			'thumbnail_width' => 600,
+			'thumbnail_height' => 400,
+			'thumbnail_crop' => 'fill',
+			'num_to_display' => 3,
 		),
 	),
 	'transcript_request' => array(
