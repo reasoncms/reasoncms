@@ -94,7 +94,7 @@
     margin-bottom: 0.75rem;
     text-align: right;
   }
-  /* line 74, ../scss/sites/home.scss */
+  /* line 75, ../scss/sites/home.scss */
   .lutherHome #contentAndRelated #contentFeature .featuresModule .featureInfoWrap .featureInfo .featureText {
     display: block;
     float: left;
@@ -104,7 +104,7 @@
     margin: 0 0.75rem;
     padding: 0;
   }
-  /* line 84, ../scss/sites/home.scss */
+  /* line 85, ../scss/sites/home.scss */
   .lutherHome #contentAndRelated #contentFeature .featuresModule .featureInfoWrap .featureInfo .featureText span {
     display: inline;
     background: rgba(255, 255, 255, 0.85);
@@ -115,12 +115,12 @@
     padding-right: 0;
     box-shadow: 0.75rem 0 0 rgba(255, 255, 255, 0.85), -0.75rem 0 0 rgba(255, 255, 255, 0.85);
   }
-  /* line 95, ../scss/sites/home.scss */
+  /* line 98, ../scss/sites/home.scss */
   .lutherHome #contentAndRelated #contentFeature .featuresModule .featureInfoWrap .featureInfo .featureText span:before {
     color: #1073ce !important;
   }
 }
-/* line 105, ../scss/sites/home.scss */
+/* line 108, ../scss/sites/home.scss */
 .lutherHome #contentAndRelated #relatedSections {
   clear: both;
   padding: 0;
@@ -142,12 +142,12 @@
 .lutherHome #contentAndRelated #relatedSections:after {
   clear: both;
 }
-/* line 111, ../scss/sites/home.scss */
+/* line 114, ../scss/sites/home.scss */
 .lutherHome #contentAndRelated #relatedSections > div {
   background: none;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 105, ../scss/sites/home.scss */
+  /* line 108, ../scss/sites/home.scss */
   .lutherHome #contentAndRelated #relatedSections {
     width: auto;
     margin-left: -1.25rem;
@@ -169,18 +169,18 @@
     clear: both;
   }
 }
-/* line 121, ../scss/sites/home.scss */
+/* line 124, ../scss/sites/home.scss */
 .lutherHome #contentAndRelated #relatedSections h3 {
   border-bottom: 1px solid #e9e9e9;
   margin: 0;
   padding-bottom: 0.75rem;
 }
-/* line 131, ../scss/sites/home.scss */
+/* line 134, ../scss/sites/home.scss */
 .lutherHome #contentAndRelated #relatedSections .dayEvents .event a {
   font-size: 1.125rem;
 }
-@media only screen and (min-width: 30em) {
-  /* line 139, ../scss/sites/home.scss */
+@media only screen and (min-width: 40.063em) {
+  /* line 142, ../scss/sites/home.scss */
   .lutherHome #contentAndRelated #preSidebar {
     position: relative;
     padding-left: 1.25rem;
@@ -188,7 +188,7 @@
     width: 50%;
     float: left;
   }
-  /* line 143, ../scss/sites/home.scss */
+  /* line 146, ../scss/sites/home.scss */
   .lutherHome #contentAndRelated #sidebar {
     position: relative;
     padding-left: 1.25rem;
@@ -196,20 +196,20 @@
     width: 50%;
     float: left;
   }
-  /* line 147, ../scss/sites/home.scss */
+  /* line 150, ../scss/sites/home.scss */
   .lutherHome #contentAndRelated #postSidebar {
     clear: left;
     position: relative;
     padding-left: 1.25rem;
     padding-right: 1.25rem;
-    width: 50%;
-    left: 25%;
+    width: 75%;
+    left: 12.5%;
     right: auto;
     float: left;
   }
 }
 @media only screen and (min-width: 60.0625em) {
-  /* line 156, ../scss/sites/home.scss */
+  /* line 159, ../scss/sites/home.scss */
   .lutherHome #contentAndRelated #preSidebar,
   .lutherHome #contentAndRelated #sidebar,
   .lutherHome #contentAndRelated #postSidebar {
@@ -223,7 +223,7 @@
     clear: none;
   }
 }
-/* line 162, ../scss/sites/home.scss */
+/* line 165, ../scss/sites/home.scss */
 .lutherHome #contentAndRelated #calloutSections {
   margin-top: 2.5rem;
   width: 100%;
@@ -244,7 +244,7 @@
   clear: both;
 }
 @media only screen and (min-width: 30em) {
-  /* line 162, ../scss/sites/home.scss */
+  /* line 165, ../scss/sites/home.scss */
   .lutherHome #contentAndRelated #calloutSections {
     width: auto;
     margin-left: -1.25rem;
@@ -266,7 +266,7 @@
   }
 }
 @media only screen and (min-width: 30em) {
-  /* line 181, ../scss/sites/home.scss */
+  /* line 184, ../scss/sites/home.scss */
   .lutherHome #contentAndRelated #calloutSections .blurbs .blurb {
     position: relative;
     padding-left: 1.25rem;
@@ -276,7 +276,7 @@
   }
 }
 @media only screen and (min-width: 60.0625em) {
-  /* line 181, ../scss/sites/home.scss */
+  /* line 184, ../scss/sites/home.scss */
   .lutherHome #contentAndRelated #calloutSections .blurbs .blurb {
     position: relative;
     padding-left: 1.25rem;
@@ -285,7 +285,7 @@
     float: left;
   }
 }
-/* line 191, ../scss/sites/home.scss */
+/* line 194, ../scss/sites/home.scss */
 .lutherHome #contentAndRelated #calloutSections .blurbs .blurb .blurbInner {
   border-top: 12px solid;
   background: #f8f8f8;
@@ -294,49 +294,49 @@
   box-shadow: rgba(0, 0, 0, 0.18) 0 2px 2px;
   padding-bottom: 0.83333rem;
 }
-/* line 197, ../scss/sites/home.scss */
+/* line 200, ../scss/sites/home.scss */
 .lutherHome #contentAndRelated #calloutSections .blurbs .blurb .blurbInner > * {
   padding: 0 1.25rem;
 }
-/* line 201, ../scss/sites/home.scss */
+/* line 204, ../scss/sites/home.scss */
 .lutherHome #contentAndRelated #calloutSections .blurbs .blurb .blurbInner p:first-child {
   padding: 0;
   margin: 0;
 }
-/* line 206, ../scss/sites/home.scss */
+/* line 209, ../scss/sites/home.scss */
 .lutherHome #contentAndRelated #calloutSections .blurbs .blurb .blurbInner img:first-child {
   padding: 0 0 1.25rem;
 }
-/* line 212, ../scss/sites/home.scss */
+/* line 215, ../scss/sites/home.scss */
 .lutherHome #contentAndRelated #calloutSections .blurbs .blurb:nth-child(4n+1) .blurbInner {
   border-color: #e8a500;
 }
-/* line 219, ../scss/sites/home.scss */
+/* line 222, ../scss/sites/home.scss */
 .lutherHome #contentAndRelated #calloutSections .blurbs .blurb:nth-child(4n+2) .blurbInner {
   border-color: #4a8512;
 }
-/* line 226, ../scss/sites/home.scss */
+/* line 229, ../scss/sites/home.scss */
 .lutherHome #contentAndRelated #calloutSections .blurbs .blurb:nth-child(4n+3) .blurbInner {
   border-color: #9f2112;
 }
-/* line 233, ../scss/sites/home.scss */
+/* line 236, ../scss/sites/home.scss */
 .lutherHome #contentAndRelated #calloutSections .blurbs .blurb:nth-child(4n+4) .blurbInner {
   border-color: #1073ce;
 }
-/* line 250, ../scss/sites/home.scss */
+/* line 253, ../scss/sites/home.scss */
 .lutherHome .pubLinks a:before,
 .lutherHome .more:before {
   margin-right: 0.5rem;
 }
-/* line 257, ../scss/sites/home.scss */
+/* line 260, ../scss/sites/home.scss */
 .lutherHome #pageContent .more:before {
   content: "\f0a9";
 }
-/* line 263, ../scss/sites/home.scss */
+/* line 266, ../scss/sites/home.scss */
 .lutherHome .pubLinks a:before {
   content: "\f00b";
 }
-/* line 269, ../scss/sites/home.scss */
+/* line 272, ../scss/sites/home.scss */
 .lutherHome #postSidebar .more:before {
   content: "\f16a";
 }

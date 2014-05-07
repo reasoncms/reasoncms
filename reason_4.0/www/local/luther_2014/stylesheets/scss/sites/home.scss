@@ -62,8 +62,9 @@
 								float: left;
 								font-size: rem-calc(45);
 								//background: rgba(0,0,0,.75);
+								//color: #FFF;
 								background: rgba(255,255,255,.85);
-								color: $lc-blue-light !important;	
+								color: $lc-blue-light !important;
 								padding: rem-calc(12);
 								margin-bottom: rem-calc(12);
 								text-align: right;
@@ -83,8 +84,10 @@
 								
 								span {
 									display: inline;
-									background: rgba(255,255,255,.85);
+								background: rgba(255,255,255,.85);
 									color: $lc-blue-light !important;
+									//background: rgba(0,0,0,.75);
+									//color: #FFF;
 									line-height: rem-calc(46);
 									padding: rem-calc(6);
 									padding-left: 0;
@@ -135,7 +138,7 @@
 			}
 		}
 
-		@media #{$small-high-up} {
+		@media #{$medium-up} {
 			#preSidebar {
 				@include grid-column(8);
 			}
@@ -146,7 +149,7 @@
 
 			#postSidebar {
 				clear: left;
-				@include grid-column($columns:8, $push: 4);
+				@include grid-column($columns:12, $push: 2);
 			}
 		}
 
