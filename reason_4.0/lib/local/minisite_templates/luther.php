@@ -198,8 +198,8 @@
 			
 			// Stylesheets
 			// @todo: Host Google fonts on our servers for faster load time?
-			$this->head_items->add_stylesheet('http://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700');
-			$this->head_items->add_stylesheet('http://fonts.googleapis.com/css?family=Open+Sans:300italic,300,400,400italic,600,600italic,700,700italic,800,800italic');
+			$this->head_items->add_stylesheet('https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700');
+			$this->head_items->add_stylesheet('https://fonts.googleapis.com/css?family=Open+Sans:300italic,300,400,400italic,600,600italic,700,700italic,800,800italic');
 			$this->head_items->add_stylesheet('/reason/local/luther_2014/stylesheets/fonts/font-awesome-4.0.3/css/font-awesome.css');
 			$this->head_items->add_stylesheet('/reason/local/luther_2014/stylesheets/dependencies/dependencies.css');
 			$this->head_items->add_stylesheet('/reason/local/luther_2014/stylesheets/base.css');
