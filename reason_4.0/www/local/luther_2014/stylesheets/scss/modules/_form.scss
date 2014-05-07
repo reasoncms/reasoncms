@@ -166,8 +166,7 @@ form {
 		// Changes the text label bg to red if there's an error 
 		&.error {
 			background: none !important; // removes Reason's defult yellow error row
-			padding-left: 0 !important;
-			padding-right: 0 !important;
+			padding: $form-spacing 0 !important;
 
 			.words {
 				.labelText {
