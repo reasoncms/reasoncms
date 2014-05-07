@@ -253,7 +253,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		),
 		'pre_sidebar' => 'blurb',
 		//'pre_sidebar_2' => 'spotlight',
-		'sidebar' =>'av',
+		'sidebar' =>'luther_av',
 		'sidebar_2' => array(
 			'module' => 'events_mini',
 			'ideal_count' => 4,
