@@ -31,10 +31,10 @@
 				
 				<ul class="sections">
 					<li>
-						<a href="/academics">Academics</a>
+						<a href="/admissions-new">Admissions</a>
 					</li>
 					<li>
-						<a href="/admissions-new">Admissions</a>
+						<a href="/academics">Academics</a>
 					</li>
 					<li>
 						<a href="/studentlife/">Student Life</a>
