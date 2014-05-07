@@ -236,18 +236,19 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'navigation' => '',
 		'sub_nav' => '',
 	),
-	'nathans_custom' => array(
+	'landing_blog' => array(
 		'main_post' => array(
-			'module' => 'publication',
-			'related_mode' => 'true',
-			'markup_generator_info' =>
+			'module'=>'publication',
+			'related_mode'=>'true',
+			/*'markup_generator_info' =>
 				array(
 					'list_item' => array(
-						'classname' => 'RelatedListItemLutherMarkupGenerator', 
-						'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/related_item_luther.php',
+						'classname' => 'RelatedListItemNoDescriptionMarkupGenerator', 
+						'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/related_item.php',
 					),
-				 ),
+				 ),*/
 			'max_num_items' => 3,
+			//'related_title' => '',
 			'css' => '',
 		),
 		'pre_sidebar' => 'blurb',
@@ -255,11 +256,12 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'sidebar' =>'av',
 		'sidebar_2' => array(
 			'module' => 'events_mini',
-			'ideal_count' => 4
+			'ideal_count' => 4,
 		),
 		//'post_sidebar' => 'flickr',
 		//'post_sidebar_2' => 'twitter',
 	),
+
 	'luther_sports' => array(
 		//'main' => 'luther_sports_results_mini',
 		'main' => array(
