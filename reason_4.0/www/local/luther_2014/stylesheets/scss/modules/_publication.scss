@@ -509,7 +509,7 @@
 	.addCommentForm {
 		.subContent {
 			form {
-				padding: $column-gutter/2 0;
+				padding: $column-gutter/2;
 				border: 1px solid $lc-grey;
 				@include border-radius (12px);		
 			}
