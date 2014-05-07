@@ -18,14 +18,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 				'autoplay_timer' => 4,
 				'autoplay' => true,
 			),
-			/* experimental -- don't remove
-			'letterboard_image' => array(
-				'module' => 'image_sidebar',
-				'num_to_display' => 1,
-				'thumbnail_width' => 900,
-				'thumbnail_height' => 600,
-				'thumbnail_crop' => 'fill',
-			),*/
+			'top_image' => '',
 			'main_head' => 'page_title',
 			'main' => 'content',
 			'main_post' => '',
@@ -398,6 +391,13 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'main_post' => 'content',
 		'pre_sidebar' => 'main_blurb',
 		'main_4' => '',
+	),
+	'top_image' => array(
+		'module' => 'image_sidebar',
+		'num_to_display' => 1,
+		'thumbnail_width' => 900,
+		'thumbnail_height' => 600,
+		'thumbnail_crop' => 'fill',
 	),
 	'transcript_request' => array(
 		'main_post' => 'transcript_request/transcript_request',
