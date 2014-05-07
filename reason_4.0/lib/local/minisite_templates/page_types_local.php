@@ -264,6 +264,32 @@ $GLOBALS['_reason_page_types_local'] = array(
 		//'post_sidebar' => 'flickr',
 		//'post_sidebar_2' => 'twitter',
 	),
+	'landing_events' => array(
+		'main_post' => array(
+			'module' => 'events_mini',
+			'ideal_count' => 4,
+		),
+		'pre_sidebar' => 'blurb',
+		//'pre_sidebar_2' => 'spotlight',
+		'sidebar' => array(
+			'module' => 'luther_av',
+			'full_size' => true,
+		),
+		'sidebar_2' => array(
+			'module'=>'publication',
+			'related_mode'=>'true',
+			'max_num_items' => 3,
+			'css' => '',
+			'markup_generator_info' => array(
+				'list_item' => array(
+					'classname' => 'RelatedListItemNoDescriptionMarkupGenerator', 
+					'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/related_item_no_description.php',
+				),
+			),
+		),
+		//'post_sidebar' => 'flickr',
+		//'post_sidebar_2' => 'twitter',
+	),
 
 	'luther_sports' => array(
 		//'main' => 'luther_sports_results_mini',
