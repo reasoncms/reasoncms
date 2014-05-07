@@ -247,11 +247,14 @@
 				$this->show_luther_global_navigation();
 			
 			// Generate classes on the minisite section based on the contents inside. Useful for CSS. 
-			// Originally appears in show_meat_tableless() in the default template.   
+			// Originally appears in show_meat_tableless() in the default template.
+			//$sections = array('content'=>'show_main_content','related'=>'show_sidebar','navigation'=>'show_navbar');   
 			$hasSections = array();
 			$blobclass = 'has';  // changed from default 'contains'
 			$classes = array();
+
 			foreach($this->sections as $section=>$show_function)
+
 			{
 				$has_function = 'has_'.$section.'_section';
 				if($this->$has_function())
@@ -262,6 +265,8 @@
 					$blobclass .= substr($capsed_section_name,0,3);
 				}
 			}
+
+			print_r ($this->sections);
 			
 			// Start minisite markup
 			echo '<section id="minisite" class="'.implode(' ',$classes).' '.$blobclass.'">'."\n";
@@ -417,7 +422,14 @@
 		
 		function show_sidebar_tableless()
 		{
-			if($this->has_content( 'pre_sidebar' ) || $this->has_content( 'sidebar' ) || $this->has_content( 'post_sidebar' ) || $this->has_content( 'post_sidebar_2' ) || $this->has_content( 'post_sidebar_3' ) ) {
+			if(
+				$this->has_content( 'pre_sidebar' ) ||
+				$this->has_content( 'pre_sidebar_2' ) || 
+				$this->has_content( 'sidebar' ) ||
+				$this->has_content( 'sidebar_2' ) ||
+				$this->has_content( 'post_sidebar' ) || 
+				$this->has_content( 'post_sidebar_2' ) || 
+				$this->has_content( 'post_sidebar_3' ) ) {
 			
 			echo '<div id="relatedSections">'."\n";
 			
