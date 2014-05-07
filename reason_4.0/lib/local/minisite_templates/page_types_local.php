@@ -26,7 +26,14 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'main_post_3' => '',
 			'pre_sidebar' => 'assets',
 			'pre_sidebar_2' => '',
-			'sidebar' =>'image_sidebar', // default parameters set in alter_reason_pagetype in luther.php
+			/*'sidebar' => 'image_sidebar',*/
+			'sidebar' => array(
+				'module' => 'image_sidebar', // default parameters set in alter_reason_pagetype in luther.php
+				'thumbnail_width' => 600,
+				'thumbnail_height' => 400,
+				'thumbnail_crop' => 'fill',
+				'num_to_display' => 3,
+			),
 			'sidebar_2' =>'',
 			'post_sidebar' => 'blurb',
 			'post_sidebar_2' => '',
@@ -393,11 +400,17 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'main_4' => '',
 	),
 	'top_image' => array(
-		'module' => 'image_sidebar',
-		'num_to_display' => 1,
-		'thumbnail_width' => 900,
-		'thumbnail_height' => 600,
-		'thumbnail_crop' => 'fill',
+		'top_image' => array(
+			'module' => 'image_sidebar',
+			'num_to_display' => 1,
+			'thumbnail_width' => 1200,
+			'thumbnail_crop' => 'fit',
+			'caption_flag' => false,
+		),
+		'sidebar' => array(
+			'module' => 'image_sidebar',
+			'num_to_skip' => 1,
+		),
 	),
 	'transcript_request' => array(
 		'main_post' => 'transcript_request/transcript_request',

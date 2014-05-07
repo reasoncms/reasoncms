@@ -63,6 +63,26 @@
 	}
 }
 
+/* Top Images */
+
+#topImage {
+
+	.imageSidebarModule {
+
+		.imageChunk {
+			max-width: 100%; // override the image sidebar max-width, set above
+			max-height: 400px !important; // crop the image, since the module won't do it for us
+			overflow: hidden;
+
+			img {
+				//width: 100%;
+			}
+		}
+	}
+}
+
+
+
 /* Inline Images (Main content areas only -- no sidebars) */
 
 // Inline images are a little tricky.

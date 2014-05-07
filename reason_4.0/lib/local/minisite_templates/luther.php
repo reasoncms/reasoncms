@@ -57,7 +57,7 @@
 			}
 
 			// Global parameters for the image sidebar module
-			if($regions = $page_type->module_regions('image_sidebar'))
+			/*if($regions = $page_type->module_regions('image_sidebar'))
 			{
 				foreach($regions as $region)
 				{
@@ -70,7 +70,7 @@
 					if(!isset($module['module_params']['num_to_display']))
 						$page_type->set_region_parameter($region, 'num_to_display', 3);
 				}
-			}
+			}*/
 
 			// Global parameters for the pulbication module
 			if($regions = $page_type->module_regions('publication'))
@@ -373,6 +373,13 @@
 				$this->you_are_here(); // Breadcrumbs
 				$this->run_section( 'main_head' );  // Page Title
 				echo '</header>'."\n";
+			}
+
+			if ($this->has_content( 'top_image' )) 
+			{
+				echo '<div id="topImage">'."\n";
+				$this->run_section( 'top_image' );
+				echo '</div>'."\n";
 			}
 				
 			if($this->has_content( 'main_head' ) || $this->has_content( 'main' ) || $this->has_content( 'main_post' ) || $this->has_content( 'main_post_2' ) || $this->has_content( 'main_post_3' ) ) {
