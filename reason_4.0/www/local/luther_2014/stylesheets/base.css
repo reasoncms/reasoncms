@@ -4180,7 +4180,7 @@ form .formElement#requiredtextItem {
 #form .formElement.error,
 form .formElement.error {
   background: none !important;
-  padding: 1rem 0;
+  padding: 1rem 0 !important;
 }
 /* line 172, scss/modules/_form.scss */
 #form .formElement.error .words .labelText,
