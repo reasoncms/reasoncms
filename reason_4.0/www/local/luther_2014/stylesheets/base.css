@@ -2620,6 +2620,11 @@ body #wrapper #post-footer a {
   height: 100%;
 }
 
+/* line 29, scss/modules/_av.scss */
+#av .moduleNav ul {
+  margin: 0;
+}
+
 /* line 10, scss/_extends.scss */
 .zero-out, body #wrapper #global-banner hgroup h1, body #wrapper #global-banner #mobile-nav ul, body #wrapper #global-nav .sections, body #wrapper #global-footer #global-footer-nav .column ul, body #wrapper #global-footer #global-footer-info .contact, .blurb[class^='uname_call_to_action'] ul, .blurb[class*=' uname_call_to_action'] ul, #calendar .responsiveEventsList .views ul, .featuresModule .feature .featureInfo .featureTitle a,
 .featuresModule .feature .featureInfo .featureTitle .noLink, .featuresModule .feature .featureNavWrap .featureNav {

@@ -21,3 +21,13 @@
 .video {
  	@include flex-video-container();
  }
+
+ #av {
+
+ 	.moduleNav {
+ 		
+ 		ul {
+ 			margin: 0;
+ 		}
+ 	}
+ }
