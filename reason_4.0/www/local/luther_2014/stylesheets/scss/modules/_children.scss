@@ -21,8 +21,9 @@
 // Adds a little arrow icon next to each heading.
 
 .childrenList {
-	border-top: 1px solid $lc-grey;
-	padding: $column-gutter/2 0 0;
+	//border-top: 1px solid $lc-grey;
+	//padding: $column-gutter/2 0 0;
+	padding: 0;
 	margin: 0;
 
 	li {
@@ -185,7 +186,7 @@
 		}
 
 		a {  // Since the module uses the new HTML5 markup, the anchor is wrapped around both the heading and description.
-			@include border-bottom-radius(4px);
+			//@include border-bottom-radius(4px);
 			overflow: hidden;
 			background: lighten($lc-grey, 3%);
 			margin: 0;
@@ -194,8 +195,10 @@
 			@include clearfix;
 
 			&:before {
-				content: '';
+				content: "";
 				position: static;
+				height: 0;
+				display: none !important;
 			}
 
 			&:hover {
