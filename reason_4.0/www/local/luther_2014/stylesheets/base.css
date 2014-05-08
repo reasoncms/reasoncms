@@ -1782,7 +1782,7 @@ body #wrapper #post-footer a {
 
 /* line 4, scss/font-awesome/_core.scss */
 .fa, #minisite #navWrap .jump:before, #minisite .feedLink .feedInfo a:before, .assets li:before, .childrenList li a:before, #childrenAndGrandchildren li ul .childDesc:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
-#calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #facultyStaff .facStaff .facStaffContact li:before, .featuresModule .feature .featureInfo .featureText a:before,
+#calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
 .featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, #relatedPub .pubLinks a:before, .publication .post p.comments a:before, .publication .post p.more a:after, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after {
   display: inline-block;
   font-family: FontAwesome;
@@ -2524,7 +2524,7 @@ body #wrapper #post-footer a {
 
 /* line 4, scss/font-awesome/_core.scss */
 .fa, #minisite #navWrap .jump:before, #minisite .feedLink .feedInfo a:before, .assets li:before, .childrenList li a:before, #childrenAndGrandchildren li ul .childDesc:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
-#calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #facultyStaff .facStaff .facStaffContact li:before, .featuresModule .feature .featureInfo .featureText a:before,
+#calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
 .featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, #relatedPub .pubLinks a:before, .publication .post p.comments a:before, .publication .post p.more a:after, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after {
   display: inline-block;
   font-family: FontAwesome;
@@ -2659,20 +2659,22 @@ body #wrapper #post-footer a {
 /* line 45, scss/modules/_blurb.scss */
 .blurb[class^='uname_call_to_action'], .blurb[class*=' uname_call_to_action'] {
   color: #ff00ff;
+  background: none !important;
+  padding: 0 !important;
 }
-/* line 49, scss/modules/_blurb.scss */
+/* line 51, scss/modules/_blurb.scss */
 .blurb[class^='uname_call_to_action'] ul, .blurb[class*=' uname_call_to_action'] ul {
   list-style-type: none !important;
 }
-/* line 53, scss/modules/_blurb.scss */
+/* line 55, scss/modules/_blurb.scss */
 .blurb[class^='uname_call_to_action'] ul li, .blurb[class*=' uname_call_to_action'] ul li {
   margin-bottom: 1rem;
 }
-/* line 55, scss/modules/_blurb.scss */
+/* line 57, scss/modules/_blurb.scss */
 .blurb[class^='uname_call_to_action'] ul li:last-child, .blurb[class*=' uname_call_to_action'] ul li:last-child {
   margin-bottom: 0;
 }
-/* line 59, scss/modules/_blurb.scss */
+/* line 61, scss/modules/_blurb.scss */
 .blurb[class^='uname_call_to_action'] ul li .cta, .blurb[class*=' uname_call_to_action'] ul li .cta {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
   font-size: 1.125rem;
@@ -2700,39 +2702,39 @@ body #wrapper #post-footer a {
   -o-transition-timing-function: ease;
   transition-timing-function: ease;
 }
-/* line 74, scss/modules/_blurb.scss */
+/* line 76, scss/modules/_blurb.scss */
 .blurb[class^='uname_call_to_action'] ul li .cta:link, .blurb[class*=' uname_call_to_action'] ul li .cta:link {
   text-decoration: none !important;
 }
-/* line 78, scss/modules/_blurb.scss */
+/* line 80, scss/modules/_blurb.scss */
 .blurb[class^='uname_call_to_action'] ul li .cta.blue, .blurb[class*=' uname_call_to_action'] ul li .cta.blue {
   background: #1073ce;
 }
-/* line 81, scss/modules/_blurb.scss */
+/* line 83, scss/modules/_blurb.scss */
 .blurb[class^='uname_call_to_action'] ul li .cta.blue:hover, .blurb[class*=' uname_call_to_action'] ul li .cta.blue:hover {
   background: #0d5ea8;
 }
-/* line 86, scss/modules/_blurb.scss */
+/* line 88, scss/modules/_blurb.scss */
 .blurb[class^='uname_call_to_action'] ul li .cta.red, .blurb[class*=' uname_call_to_action'] ul li .cta.red {
   background: #9f2112;
 }
-/* line 89, scss/modules/_blurb.scss */
+/* line 91, scss/modules/_blurb.scss */
 .blurb[class^='uname_call_to_action'] ul li .cta.red:hover, .blurb[class*=' uname_call_to_action'] ul li .cta.red:hover {
   background: #7a190e;
 }
-/* line 94, scss/modules/_blurb.scss */
+/* line 96, scss/modules/_blurb.scss */
 .blurb[class^='uname_call_to_action'] ul li .cta.green, .blurb[class*=' uname_call_to_action'] ul li .cta.green {
   background: #4a8512;
 }
-/* line 97, scss/modules/_blurb.scss */
+/* line 99, scss/modules/_blurb.scss */
 .blurb[class^='uname_call_to_action'] ul li .cta.green:hover, .blurb[class*=' uname_call_to_action'] ul li .cta.green:hover {
   background: #36610d;
 }
-/* line 102, scss/modules/_blurb.scss */
+/* line 104, scss/modules/_blurb.scss */
 .blurb[class^='uname_call_to_action'] ul li .cta.yellow, .blurb[class*=' uname_call_to_action'] ul li .cta.yellow {
   background: #e8a500;
 }
-/* line 105, scss/modules/_blurb.scss */
+/* line 107, scss/modules/_blurb.scss */
 .blurb[class^='uname_call_to_action'] ul li .cta.yellow:hover, .blurb[class*=' uname_call_to_action'] ul li .cta.yellow:hover {
   background: #bf8800;
 }
@@ -3565,7 +3567,7 @@ body #wrapper #post-footer a {
 
 /* line 4, scss/font-awesome/_core.scss */
 .fa, #minisite #navWrap .jump:before, #minisite .feedLink .feedInfo a:before, .assets li:before, .childrenList li a:before, #childrenAndGrandchildren li ul .childDesc:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
-#calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #facultyStaff .facStaff .facStaffContact li:before, .featuresModule .feature .featureInfo .featureText a:before,
+#calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
 .featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, #relatedPub .pubLinks a:before, .publication .post p.comments a:before, .publication .post p.more a:after, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after {
   display: inline-block;
   font-family: FontAwesome;
@@ -3616,39 +3618,70 @@ body #wrapper #post-footer a {
 }
 /* line 34, scss/modules/_faculty.scss */
 #facultyStaff .facStaff figure {
+  width: 25%;
+  margin: 0 0 1.5rem 1.5rem;
   float: right;
 }
-/* line 38, scss/modules/_faculty.scss */
+@media only screen and (min-width: 40.063em) {
+  /* line 34, scss/modules/_faculty.scss */
+  #facultyStaff .facStaff figure {
+    float: left;
+    width: 9.375rem;
+    margin: 0 1.5rem 1.5rem 0;
+  }
+}
+/* line 47, scss/modules/_faculty.scss */
+#facultyStaff .facStaff figure img {
+  width: 100%;
+}
+@media only screen and (min-width: 40.063em) {
+  /* line 53, scss/modules/_faculty.scss */
+  #facultyStaff .facStaff .facStaffName,
+  #facultyStaff .facStaff .facStaffInfo {
+    margin-left: 12.5rem !important;
+  }
+}
+/* line 61, scss/modules/_faculty.scss */
 #facultyStaff .facStaff .facStaffName {
   margin: 0;
   font-size: 1.6875rem;
   font-weight: 400;
 }
-/* line 48, scss/modules/_faculty.scss */
+/* line 71, scss/modules/_faculty.scss */
 #facultyStaff .facStaff .facStaffTitle {
   font-size: 1.125rem;
 }
-/* line 52, scss/modules/_faculty.scss */
+/* line 75, scss/modules/_faculty.scss */
 #facultyStaff .facStaff .facStaffContact {
   margin-top: 1.42857rem;
   margin-left: 1.25rem;
 }
-/* line 62, scss/modules/_faculty.scss */
+/* line 79, scss/modules/_faculty.scss */
+#facultyStaff .facStaff .facStaffContact li {
+  margin-left: 2.5rem;
+}
+/* line 87, scss/modules/_faculty.scss */
 #facultyStaff .facStaff .facStaffContact li:before {
   width: 2rem;
+  margin-left: -2.25rem;
   text-align: center;
 }
-/* line 72, scss/modules/_faculty.scss */
+/* line 98, scss/modules/_faculty.scss */
 #facultyStaff .facStaff .facStaffContact .facStaffOffice:before {
   content: "\f041";
 }
-/* line 78, scss/modules/_faculty.scss */
+/* line 104, scss/modules/_faculty.scss */
 #facultyStaff .facStaff .facStaffContact .facStaffPhone:before {
   content: "\f095";
 }
-/* line 84, scss/modules/_faculty.scss */
+/* line 110, scss/modules/_faculty.scss */
 #facultyStaff .facStaff .facStaffContact .facStaffEmail:before {
   content: "\f109";
+}
+/* line 120, scss/modules/_faculty.scss */
+#facultyStaff .facStaff .facStaffContent .more:before {
+  content: "\f007";
+  margin-right: 0.375rem;
 }
 
 /* line 10, scss/_extends.scss */
