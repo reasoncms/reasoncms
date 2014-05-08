@@ -1141,11 +1141,21 @@ var $noncanonical_request_keys = array(
 		if (!empty($this->related_publications))
 		{
 			$issued_pubs = array();
+			$nonissued_pubs = array();
 			foreach($this->related_publications as $pub)
 			{
 				if($pub->get_value('has_issues') == 'yes')
 					$issued_pubs[$pub->id()] = $pub;
+				else
+					$nonissued_pubs[$pub->id()] = $pub;
 			}
+			
+			if(empty($issued_pubs))
+				return;
+			
+			$issued_posts = array();
+			$nonissued_posts = array();
+			$table_limit_array = (!empty($this->minimum_date)) ? array('status', 'dated') : array('status');
 			if(!empty($issued_pubs))
 			{
 				$es2 = new entity_selector();
@@ -1155,9 +1165,24 @@ var $noncanonical_request_keys = array(
 				$es2->add_left_relationship( array_keys($issued_pubs), relationship_id_of('issue_to_publication') );
 				$es2->add_relation("show_hide.show_hide = 'show'");
 				$issues = $es2->run_one();
-				$issue_array = ($issues) ? array_keys($issues) : array("0");
-				$es->add_left_relationship($issue_array, relationship_id_of('news_to_issue'));
+				if(!empty($issues))
+				{
+					$issued_posts_es = carl_clone($es);
+					$issued_posts_es->add_left_relationship(array_keys($issues), relationship_id_of('news_to_issue'));
+					$this->related_order_and_limit($issued_posts_es, $table_limit_array);
+					$issued_posts = $issued_posts_es->run_one();
+				}
 			}
+			if(!empty($nonissued_pubs))
+			{
+				$nonissued_posts_es = carl_clone($es);
+				$nonissued_posts_es->add_left_relationship(array_keys($nonissued_pubs), relationship_id_of('news_to_publication'));
+				$this->related_order_and_limit($nonissued_posts_es, $table_limit_array);
+				$nonissued_posts = $nonissued_posts_es->run_one();
+			}
+			
+			$post_ids = array_unique(array_merge(array_keys($issued_posts),array_keys($nonissued_posts)));
+			$es->add_relation('entity.id IN ("'.implode('","',$post_ids).'")');
 		}
 	}
 
