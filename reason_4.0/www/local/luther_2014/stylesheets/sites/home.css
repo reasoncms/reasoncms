@@ -1,5 +1,5 @@
 /* line 4, ../scss/font-awesome/_core.scss */
-.fa, .lutherHome .pubLinks a:before,
+.fa, .lutherHome #contentAndRelated #calloutSections .blurbs .blurb .more:after, .lutherHome .pubLinks a:before,
 .lutherHome .more:before {
   display: inline-block;
   font-family: FontAwesome;
@@ -266,7 +266,7 @@
   }
 }
 @media only screen and (min-width: 30em) {
-  /* line 184, ../scss/sites/home.scss */
+  /* line 185, ../scss/sites/home.scss */
   .lutherHome #contentAndRelated #calloutSections .blurbs .blurb {
     position: relative;
     padding-left: 1.25rem;
@@ -276,7 +276,7 @@
   }
 }
 @media only screen and (min-width: 60.0625em) {
-  /* line 184, ../scss/sites/home.scss */
+  /* line 185, ../scss/sites/home.scss */
   .lutherHome #contentAndRelated #calloutSections .blurbs .blurb {
     position: relative;
     padding-left: 1.25rem;
@@ -285,7 +285,7 @@
     float: left;
   }
 }
-/* line 194, ../scss/sites/home.scss */
+/* line 195, ../scss/sites/home.scss */
 .lutherHome #contentAndRelated #calloutSections .blurbs .blurb .blurbInner {
   border-top: 12px solid;
   background: #f8f8f8;
@@ -294,49 +294,54 @@
   box-shadow: rgba(0, 0, 0, 0.18) 0 2px 2px;
   padding-bottom: 0.83333rem;
 }
-/* line 200, ../scss/sites/home.scss */
+/* line 201, ../scss/sites/home.scss */
 .lutherHome #contentAndRelated #calloutSections .blurbs .blurb .blurbInner > * {
   padding: 0 1.25rem;
 }
-/* line 204, ../scss/sites/home.scss */
+/* line 205, ../scss/sites/home.scss */
 .lutherHome #contentAndRelated #calloutSections .blurbs .blurb .blurbInner p:first-child {
   padding: 0;
   margin: 0;
 }
-/* line 209, ../scss/sites/home.scss */
+/* line 210, ../scss/sites/home.scss */
 .lutherHome #contentAndRelated #calloutSections .blurbs .blurb .blurbInner img:first-child {
   padding: 0 0 1.25rem;
 }
-/* line 215, ../scss/sites/home.scss */
+/* line 217, ../scss/sites/home.scss */
+.lutherHome #contentAndRelated #calloutSections .blurbs .blurb .more:after {
+  content: "\f0a9";
+  margin-left: 0.375rem;
+}
+/* line 225, ../scss/sites/home.scss */
 .lutherHome #contentAndRelated #calloutSections .blurbs .blurb:nth-child(4n+1) .blurbInner {
   border-color: #e8a500;
 }
-/* line 222, ../scss/sites/home.scss */
+/* line 232, ../scss/sites/home.scss */
 .lutherHome #contentAndRelated #calloutSections .blurbs .blurb:nth-child(4n+2) .blurbInner {
   border-color: #4a8512;
 }
-/* line 229, ../scss/sites/home.scss */
+/* line 239, ../scss/sites/home.scss */
 .lutherHome #contentAndRelated #calloutSections .blurbs .blurb:nth-child(4n+3) .blurbInner {
   border-color: #9f2112;
 }
-/* line 236, ../scss/sites/home.scss */
+/* line 246, ../scss/sites/home.scss */
 .lutherHome #contentAndRelated #calloutSections .blurbs .blurb:nth-child(4n+4) .blurbInner {
   border-color: #1073ce;
 }
-/* line 253, ../scss/sites/home.scss */
+/* line 263, ../scss/sites/home.scss */
 .lutherHome .pubLinks a:before,
 .lutherHome .more:before {
   margin-right: 0.5rem;
 }
-/* line 260, ../scss/sites/home.scss */
+/* line 270, ../scss/sites/home.scss */
 .lutherHome #pageContent .more:before {
   content: "\f0a9";
 }
-/* line 266, ../scss/sites/home.scss */
+/* line 276, ../scss/sites/home.scss */
 .lutherHome .pubLinks a:before {
   content: "\f00b";
 }
-/* line 272, ../scss/sites/home.scss */
+/* line 282, ../scss/sites/home.scss */
 .lutherHome #postSidebar .more:before {
   content: "\f16a";
 }
