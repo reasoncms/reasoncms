@@ -232,6 +232,22 @@
 				$classes[] = 'uname_'.$this->page_info->get_value('unique_name');
 			return $classes;
 		}
+
+		function has_related_section()
+		{
+			if( 
+			$this->has_content( 'pre_sidebar' ) ||
+			$this->has_content( 'pre_sidebar_2' ) ||
+			$this->has_content( 'sidebar' ) ||
+			$this->has_content( 'sidebar_2' ) ||
+			$this->has_content( 'post_sidebar' ) ||
+			$this->has_content( 'post_sidebar_2' ) ||
+			$this->has_content( 'post_sidebar_3' ) )
+			{
+				return true;
+			}
+			return false;
+		}
 		
 		function show_body_tableless()
 		{
@@ -247,8 +263,7 @@
 				$this->show_luther_global_navigation();
 			
 			// Generate classes on the minisite section based on the contents inside. Useful for CSS. 
-			// Originally appears in show_meat_tableless() in the default template.
-			//$sections = array('content'=>'show_main_content','related'=>'show_sidebar','navigation'=>'show_navbar');   
+			// Originally appears in show_meat_tableless() in the default template. 
 			$hasSections = array();
 			$blobclass = 'has';  // changed from default 'contains'
 			$classes = array();
@@ -266,8 +281,6 @@
 				}
 			}
 
-			print_r ($this->sections);
-			
 			// Start minisite markup
 			echo '<section id="minisite" class="'.implode(' ',$classes).' '.$blobclass.'">'."\n";
 			echo '<div class="minisiteWrap">';
