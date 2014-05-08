@@ -983,7 +983,7 @@ body #wrapper #global-banner hgroup {
 body #wrapper #global-banner hgroup h1 a {
   display: block;
   height: 28px;
-  width: 149px;
+  width: 150px;
   margin: 0 auto;
   background: url("../images/logo_mobile_1x.png") no-repeat;
   top: 16px;
@@ -994,10 +994,10 @@ body #wrapper #global-banner hgroup h1 a {
   /* line 84, scss/_global.scss */
   body #wrapper #global-banner hgroup h1 a {
     background: url("../images/logo_mobile_2x.png") no-repeat;
-    -webkit-background-size: 149px 28px;
-    -moz-background-size: 149px 28px;
-    -o-background-size: 149px 28px;
-    background-size: 149px 28px;
+    -webkit-background-size: 150px 28px;
+    -moz-background-size: 150px 28px;
+    -o-background-size: 150px 28px;
+    background-size: 150px 28px;
   }
 }
 @media only screen and (min-width: 64.063em) {
@@ -1022,10 +1022,10 @@ body #wrapper #global-banner hgroup h1 a {
   /* line 104, scss/_global.scss */
   body #wrapper #global-banner hgroup h1 a {
     background: url("../images/logo_2x.png") no-repeat;
-    -webkit-background-size: 149px 28px;
-    -moz-background-size: 149px 28px;
-    -o-background-size: 149px 28px;
-    background-size: 149px 28px;
+    -webkit-background-size: 288px 54px;
+    -moz-background-size: 288px 54px;
+    -o-background-size: 288px 54px;
+    background-size: 288px 54px;
   }
 }
 /* line 111, scss/_global.scss */
