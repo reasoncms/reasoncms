@@ -38,7 +38,6 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'post_sidebar' => 'blurb',
 			'post_sidebar_2' => '',
 			'post_sidebar_3' => '',
-			'post_sidebar_4' => '',
 			'navigation' => 'navigation',
 			'sub_nav' => 'social_account/social_account',
 			'sub_nav_2' => 'blurb_contact',
@@ -124,6 +123,10 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'pre_sidebar' => 'main_blurb',
 		'sidebar' => '',
 	),
+	'blurb_main_content' => array(
+		'main_post' => 'blurb',
+		'post_sidebar' => '',
+	),
 	'caf_cam' => array(
 		'main_post' => 'caf_cam',
 	),
@@ -160,8 +163,8 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'sub_nav_3' => '',
 	),
 	'faculty' => array(
-		'main_post' => 'faculty_luther'
-		//'main_post' => 'faculty_placeholder',
+		//'main_post' => 'faculty_luther'
+		'main_post' => 'faculty_placeholder',
 	),
 	'faculty_first' => array(
 		'main' => 'faculty_luther',
