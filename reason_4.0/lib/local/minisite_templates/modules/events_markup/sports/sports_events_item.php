@@ -28,6 +28,8 @@ class sportsEventsItemMarkup implements eventsItemMarkup
 	 */
 	public function modify_head_items($head_items, $event = null)
 	{
+		$head_items->add_javascript(JQUERY_URL, true);
+		$head_items->add_javascript(JQUERY_UI_URL);
 		$media = $this->bundle->media_works($event);
 		if(!empty($media))
 		{
@@ -38,6 +40,9 @@ class sportsEventsItemMarkup implements eventsItemMarkup
 			}
 			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'modules/events/media_gallery.css');	
 		}
+		$head_items->add_javascript('http://www.luther.edu/javascripts/jquery.hoverIntent.min.js');
+		$head_items->add_stylesheet('http://www.luther.edu/javascripts/cluetip/jquery.cluetip.css');
+		$head_items->add_javascript('http://www.luther.edu/javascripts/cluetip/jquery.cluetip.js');
 	}	
 	/**
 	 * Set the function bundle for the markup to use

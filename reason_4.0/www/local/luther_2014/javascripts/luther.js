@@ -29,5 +29,14 @@ $(document).ready(function() {
 		var $this = $(this);
 		$this.html($this.html().replace(/&nbsp;/g, ''));
 	});
+
+    $("a.cluetip_athlete").cluetip({
+            arrows: true,
+            cursor: 'pointer',
+            local: true,
+            clickThrough: true,
+            waitImage: false,
+            cluetipClass: 'jtip'
+    });
 		
 });

@@ -1,0 +1,14 @@
+/* insert tablesorter fontawesome sorting arrows after table header */
+th.header:after {
+  color: #aaaaaa;
+  font-family: 'FontAwesome';
+  content: "  \f0dc";
+}
+th.headerSortUp:after {
+  font-family: 'FontAwesome';
+  content: "  \f0de";
+}
+th.headerSortDown:after {
+  font-family: 'FontAwesome';
+  content: "  \f0dd";
+}
