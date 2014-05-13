@@ -532,12 +532,16 @@
 
 			div {
 				display: inline;
+				
 
 				a {
 					background: $lc-grey;
-					padding: rem-calc(2) rem-calc(6);
+					padding: rem-calc(5) rem-calc(6);
 					@include border-radius(4px);
 					margin-right: rem-calc(4);
+					display: inline-block;
+					margin-bottom: rem-calc(4);
+					line-height: 1;
 
 					@media #{$medium-high-up} {
 						margin-left: rem-calc(4);
@@ -546,16 +550,19 @@
 			}
 			
 			#footerLoginLink {
-				display: inline;
+				display: inline-block;
 				font-size: rem-calc(12);
 				margin: rem-calc(8) 0 0;
 				background: $lc-grey;
-				padding: rem-calc(2) rem-calc(6);
+				padding: rem-calc(5) rem-calc(6);
 				@include border-radius(4px);
 				margin: 0 rem-calc(4) 0 0;
+				white-space: nowrap;
+				line-height: 1;
+
 
 				@media #{$medium-high-up} {
-					margin: 0 0 0 rem-calc(4) ;
+					margin: 0 0 0 rem-calc(4);
 				}
 
 				.username {
