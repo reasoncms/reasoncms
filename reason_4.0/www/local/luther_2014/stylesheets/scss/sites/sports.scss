@@ -1,0 +1,105 @@
+// Foundation imports
+@import "settings";
+@import "foundation/components/grid";
+
+// Compass imports
+@import "compass/css3";
+@import "compass/css3/opacity";
+@import "compass/css3/transition";
+
+// Font Awesome Imports
+@import "font-awesome/variables";
+@import "font-awesome/core";
+
+// Luther imports
+@import "extends";
+
+/* STRUCTURE */
+
+.lutherSports {
+	
+	background: #333;
+
+	#minisite {
+		background: #FFF;
+	}
+
+	// Luther Sports logo replaces the typeface logo
+	#wrapper #global-banner hgroup {
+
+		$logo-width: 168px;
+		$logo-height: 75px;
+		
+		h1 {
+
+			a {
+				background: url('../../images/logo_mobile_1x.png') no-repeat;		
+			}
+			
+			@media #{$small-up-reitna} {
+			
+				a {				
+					background: url('../../images/logo_mobile_2x.png') no-repeat;
+					@include background-size($logo-width-mobile $logo-height-mobile);
+				}
+			}
+		
+			@media #{$large-up} {
+		
+				a {
+					width: $logo-width;
+					height: $logo-height;
+					background: url('../../images/logo_sports_1x.png') no-repeat;
+					top: ($header-height - $logo-height)/2;
+				}
+			}
+				
+			@media #{$large-up-reitna} {
+			
+				a {	
+						background: url('../../images/logo_2x.png') no-repeat;
+						@include background-size($logo-width $logo-height);
+				}
+			}							
+		}
+	}
+
+	// Unique navigation colors
+	#minisite {
+
+		#navWrap {
+
+			.navListTop a.home {
+				background: #CCCCCC;
+			}
+
+			#minisiteNavigation {
+				background: #445566;
+
+				a {
+					color: #FFF;
+				}
+			}
+		}
+	}
+
+	// Sports results/schedule table 
+	.responsiveEventsList {
+
+		.view-all {
+			
+			ul {
+				margin: 0;
+
+				.more {
+
+					&:after {
+						@extend .fa;
+						content: $fa-var-chevron-circle-right;
+						margin-left: rem-calc(6);
+					}
+				}
+			}
+		}
+	}
+}
