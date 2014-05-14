@@ -2,8 +2,8 @@
 
 	// include the MinisiteTemplate class
 	reason_include_once( 'minisite_templates/luther.php' );
-	reason_include_once( 'classes/module_sets.php' );
-	reason_include_once( 'minisite_templates/nav_classes/luther_default.php' );
+	//reason_include_once( 'classes/module_sets.php' );
+	//reason_include_once( 'minisite_templates/nav_classes/luther_default.php' );
 	
 	// this variable must be the same as the class name
 	$GLOBALS[ '_minisite_template_class_names' ][ basename( __FILE__) ] = 'Luther2014HomeTemplate';
