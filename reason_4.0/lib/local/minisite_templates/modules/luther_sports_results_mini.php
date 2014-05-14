@@ -272,9 +272,8 @@ class lutherSportsResultsMiniModule extends EventsModule
 		$ret = '';
 		$ret .= '<nav class="button view-all">'."\n";
 		$ret .= '<ul>'."\n";
-		$ret .= '<li><a href="'.$viewAllLink.'">Complete results</a></li>'."\n";
+		$ret .= '<li><a class="more" href="'.$viewAllLink.'">Complete results</a></li>'."\n";
 		$ret .= '</ul>'."\n";
-		$ret .= '<hr>'."\n";
 		$ret .= '</nav>'."\n";
 		
 		return $ret;
