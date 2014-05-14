@@ -183,7 +183,9 @@
 				$this->head_items->add_head_item('meta',array('name'=>'robots','content'=>'none' ) );
 			}
 
+			$this->head_items->add_javascript(JQUERY_URL, true);
 			// Responsive stuff
+
 			$this->head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/respond/respond.min.js', false, array('before'=>'<!--[if lt IE 9]>','after'=>'<![endif]-->'));
 			$this->head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/ie8_fix_maxwidth.js', false, array('before'=>'<!--[if lt IE 9]>','after'=>'<![endif]-->'));
 			$this->add_head_item('meta',array('name'=>'viewport','content'=>'width=device-width, minimum-scale=1.0, maximum-scale=1.0' ) );
@@ -194,7 +196,6 @@
 			// Javascripts
 			// @todo: Is this the correct modernizer?  Not sure.
 			$this->head_items->add_javascript('/reason/local/luther_2014/javascripts/vendor/custom.modernizr.js');
-			$this->head_items->add_javascript('/reason/local/luther_2014/javascripts/vendor/jquery.js');
 			
 			// Stylesheets
 			// @todo: Host Google fonts on our servers for faster load time?
