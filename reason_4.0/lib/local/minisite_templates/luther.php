@@ -141,7 +141,7 @@
 		{
 			// add the charset information
 			$this->head_items->add_head_item('meta',array('http-equiv'=>'Content-Type','content'=>'text/html; charset=UTF-8' ) );
-			
+
 			// add favicon
 			if($favicon_path = $this->_get_favicon_path() )
 			{
@@ -186,7 +186,7 @@
 			// Responsive stuff
 			$this->head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/respond/respond.min.js', false, array('before'=>'<!--[if lt IE 9]>','after'=>'<![endif]-->'));
 			$this->head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/ie8_fix_maxwidth.js', false, array('before'=>'<!--[if lt IE 9]>','after'=>'<![endif]-->'));
-			$this->add_head_item('meta',array('name'=>'viewport','content'=>'width=device-width, minimum-scale=1.0, maximum-scale=2.0' ) );
+			$this->add_head_item('meta',array('name'=>'viewport','content'=>'width=device-width, minimum-scale=1.0, maximum-scale=1.0' ) );
 		}
 		
 		function do_org_head_items()
