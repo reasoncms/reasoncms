@@ -65,6 +65,7 @@ class defaultEventsListItemMarkup extends EventsModule implements eventsListItem
 		{
 			$name = ucfirst(preg_replace("|(^.*?)\s\((w?o?m?en)\)$|", "\\2's \\1", $event->get_value('sponsor'))) . ' - ' . $name;
 		}
+		$ret .= '<div class="title">';
 		if(!empty($link))
 			$name = '<a href="'.$link.'">'.$name.'</a>';
 		$ret .= $name;
@@ -81,7 +82,8 @@ class defaultEventsListItemMarkup extends EventsModule implements eventsListItem
 		}
 		elseif($event->get_value('_ongoing_ends') == $day)
 			$ret .= ' <span class="ends">ends</span>';
-		
+		$ret .= '</div>';
+
 		$ret .= luther_video_audio_streaming($event->get_value('id'));
 		
 		if($event->get_value('_inline_editable'))

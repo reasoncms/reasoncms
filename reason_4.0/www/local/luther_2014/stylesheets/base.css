@@ -397,7 +397,7 @@ table tfoot tr td {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -886,7 +886,7 @@ ul.off-canvas-list li a {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -1803,7 +1803,7 @@ body #wrapper #post-footer a {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -2543,7 +2543,7 @@ body #wrapper #post-footer a {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -2590,7 +2590,7 @@ body #wrapper #post-footer a {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -2639,7 +2639,7 @@ body #wrapper #post-footer a {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -2747,7 +2747,7 @@ body #wrapper #post-footer a {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -3019,7 +3019,7 @@ body #wrapper #post-footer a {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -3111,6 +3111,78 @@ body #wrapper #post-footer a {
   margin-bottom: 0;
   max-width: 100%;
   *zoom: 1;
+  		/*.eventsListContent { // Event listings
+  			width: 100%;
+  
+  			.focus { // Shows what you're currently browsing. Redundant.
+  				display: none;
+  			}
+  
+  			.newEventsError { // Shows errors.  "No events."
+  
+  			}
+  
+  			.ongoingblock {
+  
+  			}
+  
+  			.dayblock {
+  
+  			}
+  
+  			ul {
+  				margin-left: 0;
+  			}
+  
+  			.event {
+  				display: block;
+  				margin-bottom: 2px;
+  				padding: rem-calc(16);
+  				@include clearfix;
+  				border-bottom: 1px dotted $lc-grey;
+  				position: relative;
+  
+  				&:nth-child(odd) {
+  					//background: #efefef;
+  				}
+  				
+  				a {
+  					
+  					max-width: 65%;
+  					display: block;
+  					float: left;
+  
+  					&:hover {
+  						text-decoration: underline;
+  
+  						i { // Video feed icon
+  							color: lighten($lc-yellow, 10%);
+  						}
+  					}
+  
+  					i { // Video feed icon
+  						color: $lc-yellow;
+  						margin-left: rem-calc(6);
+  					}
+  				}
+  
+  				em {
+  					&.through {
+  						max-width: 65%;
+  						display: block;
+  						float: left;
+  						clear: left;
+  					}
+  				}
+  
+  				.time {
+  					font-weight: bold;
+  					color: $lc-red;
+  					position: absolute;
+  					left: 70%;
+  				}
+  			}
+  		}*/
 }
 /* line 165, ../foundation/bower_components/foundation/scss/foundation/components/_global.scss */
 #calendar .responsiveEventsList:before, #calendar .responsiveEventsList:after {
@@ -3275,173 +3347,254 @@ body #wrapper #post-footer a {
   font-size: 1.5rem;
   line-height: 1.75;
 }
-/* line 232, scss/modules/_events.scss */
+/* line 305, scss/modules/_events.scss */
 #calendar .responsiveEventsList .eventsListContent {
   width: 100%;
 }
-/* line 235, scss/modules/_events.scss */
-#calendar .responsiveEventsList .eventsListContent .focus {
-  display: none;
+/* line 308, scss/modules/_events.scss */
+#calendar .responsiveEventsList .eventsListContent #events {
+  margin-bottom: 1rem;
 }
-/* line 251, scss/modules/_events.scss */
-#calendar .responsiveEventsList .eventsListContent ul {
-  margin-left: 0;
-}
-/* line 255, scss/modules/_events.scss */
-#calendar .responsiveEventsList .eventsListContent .event {
-  display: block;
-  margin-bottom: 2px;
-  padding: 1rem;
+/* line 313, scss/modules/_events.scss */
+#calendar .responsiveEventsList .eventsListContent .dayblock,
+#calendar .responsiveEventsList .eventsListContent .ongoingblock {
+  border-bottom: 1px solid #e9e9e9;
+  padding: 1rem 0;
   *zoom: 1;
-  border-bottom: 1px dotted #e9e9e9;
   position: relative;
 }
 /* line 165, ../foundation/bower_components/foundation/scss/foundation/components/_global.scss */
-#calendar .responsiveEventsList .eventsListContent .event:before, #calendar .responsiveEventsList .eventsListContent .event:after {
+#calendar .responsiveEventsList .eventsListContent .dayblock:before, #calendar .responsiveEventsList .eventsListContent .dayblock:after,
+#calendar .responsiveEventsList .eventsListContent .ongoingblock:before,
+#calendar .responsiveEventsList .eventsListContent .ongoingblock:after {
   content: " ";
   display: table;
 }
 /* line 166, ../foundation/bower_components/foundation/scss/foundation/components/_global.scss */
-#calendar .responsiveEventsList .eventsListContent .event:after {
+#calendar .responsiveEventsList .eventsListContent .dayblock:after,
+#calendar .responsiveEventsList .eventsListContent .ongoingblock:after {
   clear: both;
 }
-/* line 267, scss/modules/_events.scss */
-#calendar .responsiveEventsList .eventsListContent .event a {
-  max-width: 65%;
-  display: block;
-  float: left;
+/* line 320, scss/modules/_events.scss */
+#calendar .responsiveEventsList .eventsListContent h3.month {
+  margin-top: 2.5rem;
 }
-/* line 273, scss/modules/_events.scss */
-#calendar .responsiveEventsList .eventsListContent .event a:hover {
+/* line 324, scss/modules/_events.scss */
+#calendar .responsiveEventsList .eventsListContent .day {
+  display: block;
+  text-align: center;
+  font-size: 0.875rem;
+  font-weight: 600;
+  width: 3.125rem;
+  margin: 0;
+  position: absolute;
+  top: 1rem;
+  left: 0;
+}
+/* line 335, scss/modules/_events.scss */
+#calendar .responsiveEventsList .eventsListContent .day .month {
+  display: block;
+  background: #9f2112;
+  color: white;
+  -moz-border-radius-topleft: 6px;
+  -webkit-border-top-left-radius: 6px;
+  border-top-left-radius: 6px;
+  -moz-border-radius-topright: 6px;
+  -webkit-border-top-right-radius: 6px;
+  border-top-right-radius: 6px;
+  padding: 0.125rem;
+}
+/* line 343, scss/modules/_events.scss */
+#calendar .responsiveEventsList .eventsListContent .day .date {
+  display: block;
+  background: #e9e9e9;
+  -moz-border-radius-bottomleft: 6px;
+  -webkit-border-bottom-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+  -moz-border-radius-bottomright: 6px;
+  -webkit-border-bottom-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+  padding: 0.125rem;
+}
+/* line 356, scss/modules/_events.scss */
+#calendar .responsiveEventsList .eventsListContent .dayEvents,
+#calendar .responsiveEventsList .eventsListContent .ongoingEvents {
+  margin: 0 0 0 4.375rem;
+  padding: 0;
+}
+/* line 360, scss/modules/_events.scss */
+#calendar .responsiveEventsList .eventsListContent .dayEvents .event,
+#calendar .responsiveEventsList .eventsListContent .ongoingEvents .event {
+  padding-bottom: 0.625rem;
+  *zoom: 1;
+}
+/* line 165, ../foundation/bower_components/foundation/scss/foundation/components/_global.scss */
+#calendar .responsiveEventsList .eventsListContent .dayEvents .event:before, #calendar .responsiveEventsList .eventsListContent .dayEvents .event:after,
+#calendar .responsiveEventsList .eventsListContent .ongoingEvents .event:before,
+#calendar .responsiveEventsList .eventsListContent .ongoingEvents .event:after {
+  content: " ";
+  display: table;
+}
+/* line 166, ../foundation/bower_components/foundation/scss/foundation/components/_global.scss */
+#calendar .responsiveEventsList .eventsListContent .dayEvents .event:after,
+#calendar .responsiveEventsList .eventsListContent .ongoingEvents .event:after {
+  clear: both;
+}
+/* line 364, scss/modules/_events.scss */
+#calendar .responsiveEventsList .eventsListContent .dayEvents .event a,
+#calendar .responsiveEventsList .eventsListContent .ongoingEvents .event a {
+  font-weight: 400;
+}
+/* line 370, scss/modules/_events.scss */
+#calendar .responsiveEventsList .eventsListContent .dayEvents .event a:hover,
+#calendar .responsiveEventsList .eventsListContent .ongoingEvents .event a:hover {
   text-decoration: underline;
 }
-/* line 276, scss/modules/_events.scss */
-#calendar .responsiveEventsList .eventsListContent .event a:hover i {
+/* line 373, scss/modules/_events.scss */
+#calendar .responsiveEventsList .eventsListContent .dayEvents .event a:hover i,
+#calendar .responsiveEventsList .eventsListContent .ongoingEvents .event a:hover i {
   color: #ffbd1c;
 }
-/* line 281, scss/modules/_events.scss */
-#calendar .responsiveEventsList .eventsListContent .event a i {
+/* line 378, scss/modules/_events.scss */
+#calendar .responsiveEventsList .eventsListContent .dayEvents .event a i,
+#calendar .responsiveEventsList .eventsListContent .ongoingEvents .event a i {
   color: #e8a500;
   margin-left: 0.375rem;
 }
-/* line 288, scss/modules/_events.scss */
-#calendar .responsiveEventsList .eventsListContent .event em.through {
-  max-width: 65%;
-  display: block;
-  float: left;
-  clear: left;
+/* line 388, scss/modules/_events.scss */
+#calendar .responsiveEventsList .eventsListContent .dayEvents .event:last-child,
+#calendar .responsiveEventsList .eventsListContent .ongoingEvents .event:last-child {
+  padding-bottom: 0;
 }
-/* line 296, scss/modules/_events.scss */
-#calendar .responsiveEventsList .eventsListContent .event .time {
-  font-weight: bold;
-  color: #9f2112;
-  position: absolute;
-  left: 70%;
+/* line 393, scss/modules/_events.scss */
+#calendar .responsiveEventsList .eventsListContent .dayEvents .event .through,
+#calendar .responsiveEventsList .eventsListContent .dayEvents .event .ends,
+#calendar .responsiveEventsList .eventsListContent .ongoingEvents .event .through,
+#calendar .responsiveEventsList .eventsListContent .ongoingEvents .event .ends {
+  font-style: normal;
+  display: inline;
 }
-/* line 307, scss/modules/_events.scss */
+/* line 398, scss/modules/_events.scss */
+#calendar .responsiveEventsList .eventsListContent .dayEvents .event time,
+#calendar .responsiveEventsList .eventsListContent .ongoingEvents .event time {
+  display: inline;
+}
+/* line 405, scss/modules/_events.scss */
+#calendar .responsiveEventsList .eventsListContent .dayEvents .event .sep,
+#calendar .responsiveEventsList .eventsListContent .ongoingEvents .event .sep {
+  padding: 0 0.25rem;
+}
+/* line 411, scss/modules/_events.scss */
+#calendar .responsiveEventsList .eventsListContent .dayEvents .event .location,
+#calendar .responsiveEventsList .eventsListContent .ongoingEvents .event .location {
+  font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
+  font-weight: 300;
+  display: inline;
+}
+/* line 425, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGridWrapper {
   margin-bottom: 2.5rem;
 }
-/* line 311, scss/modules/_events.scss */
+/* line 429, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid {
   text-align: center;
 }
-/* line 317, scss/modules/_events.scss */
+/* line 435, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid a.previous,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid h4,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid a.next {
   display: inline-block;
   padding: 0 0.375rem;
 }
-/* line 322, scss/modules/_events.scss */
+/* line 440, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table {
   border: none;
 }
-/* line 324, scss/modules/_events.scss */
+/* line 442, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table tr {
   background: #FFF;
 }
-/* line 329, scss/modules/_events.scss */
+/* line 447, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table th,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td {
   text-align: center;
   padding: 0;
 }
-/* line 336, scss/modules/_events.scss */
+/* line 454, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table th {
   padding: 5% 0;
   background: #fbfbfb;
   background: #FFF;
   border: #FFF;
 }
-/* line 343, scss/modules/_events.scss */
+/* line 461, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td {
   border-color: #DDDDDD;
   border-image: none;
   border-style: solid;
   border-width: 1px;
 }
-/* line 349, scss/modules/_events.scss */
+/* line 467, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td:empty {
   background: #f6f6f6;
 }
-/* line 358, scss/modules/_events.scss */
+/* line 476, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.hasEvent a {
   color: #1073ce;
 }
-/* line 364, scss/modules/_events.scss */
+/* line 482, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.currentlyViewing {
   background: #1073ce;
 }
-/* line 368, scss/modules/_events.scss */
+/* line 486, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.currentlyViewing a {
   color: #FFF;
 }
-/* line 373, scss/modules/_events.scss */
+/* line 491, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.today {
   background: #3b99f0;
 }
-/* line 377, scss/modules/_events.scss */
+/* line 495, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.today a {
   color: #FFF;
 }
-/* line 382, scss/modules/_events.scss */
+/* line 500, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td a {
   color: #9d9d9d;
   display: block;
   padding: 28% 0;
 }
-/* line 394, scss/modules/_events.scss */
+/* line 512, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a {
   margin: 0 5%;
   display: block;
   padding: 0;
 }
-/* line 398, scss/modules/_events.scss */
+/* line 516, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before {
   margin: 0 0.5rem 1rem 0;
 }
-/* line 405, scss/modules/_events.scss */
+/* line 523, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .webcal:before {
   content: "\f073";
 }
-/* line 409, scss/modules/_events.scss */
+/* line 527, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .download:before {
   content: "\f063";
 }
-/* line 413, scss/modules/_events.scss */
+/* line 531, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .rss:before {
   content: "\f09e";
 }
 
 /* Events Mini */
-/* line 428, scss/modules/_events.scss */
+/* line 546, scss/modules/_events.scss */
 #miniCal #events {
   margin-bottom: 1rem;
 }
-/* line 433, scss/modules/_events.scss */
+/* line 551, scss/modules/_events.scss */
 #miniCal .dayblock,
 #miniCal .ongoingblock {
   border-bottom: 1px solid #e9e9e9;
@@ -3461,7 +3614,7 @@ body #wrapper #post-footer a {
 #miniCal .ongoingblock:after {
   clear: both;
 }
-/* line 440, scss/modules/_events.scss */
+/* line 558, scss/modules/_events.scss */
 #miniCal .day {
   display: block;
   text-align: center;
@@ -3473,7 +3626,7 @@ body #wrapper #post-footer a {
   top: 1rem;
   left: 0;
 }
-/* line 451, scss/modules/_events.scss */
+/* line 569, scss/modules/_events.scss */
 #miniCal .day .month {
   display: block;
   background: #9f2112;
@@ -3486,7 +3639,7 @@ body #wrapper #post-footer a {
   border-top-right-radius: 6px;
   padding: 0.125rem;
 }
-/* line 459, scss/modules/_events.scss */
+/* line 577, scss/modules/_events.scss */
 #miniCal .day .date {
   display: block;
   background: #e9e9e9;
@@ -3498,13 +3651,13 @@ body #wrapper #post-footer a {
   border-bottom-right-radius: 6px;
   padding: 0.125rem;
 }
-/* line 472, scss/modules/_events.scss */
+/* line 590, scss/modules/_events.scss */
 #miniCal .dayEvents,
 #miniCal .ongoingEvents {
   margin: 0 0 0 4.375rem;
   padding: 0;
 }
-/* line 476, scss/modules/_events.scss */
+/* line 594, scss/modules/_events.scss */
 #miniCal .dayEvents .event,
 #miniCal .ongoingEvents .event {
   padding-bottom: 0.625rem;
@@ -3522,33 +3675,33 @@ body #wrapper #post-footer a {
 #miniCal .ongoingEvents .event:after {
   clear: both;
 }
-/* line 480, scss/modules/_events.scss */
+/* line 598, scss/modules/_events.scss */
 #miniCal .dayEvents .event a,
 #miniCal .ongoingEvents .event a {
   font-weight: 400;
 }
-/* line 486, scss/modules/_events.scss */
+/* line 604, scss/modules/_events.scss */
 #miniCal .dayEvents .event a:hover,
 #miniCal .ongoingEvents .event a:hover {
   text-decoration: underline;
 }
-/* line 489, scss/modules/_events.scss */
+/* line 607, scss/modules/_events.scss */
 #miniCal .dayEvents .event a:hover i,
 #miniCal .ongoingEvents .event a:hover i {
   color: #ffbd1c;
 }
-/* line 494, scss/modules/_events.scss */
+/* line 612, scss/modules/_events.scss */
 #miniCal .dayEvents .event a i,
 #miniCal .ongoingEvents .event a i {
   color: #e8a500;
   margin-left: 0.375rem;
 }
-/* line 504, scss/modules/_events.scss */
+/* line 622, scss/modules/_events.scss */
 #miniCal .dayEvents .event:last-child,
 #miniCal .ongoingEvents .event:last-child {
   padding-bottom: 0;
 }
-/* line 509, scss/modules/_events.scss */
+/* line 627, scss/modules/_events.scss */
 #miniCal .dayEvents .event .through,
 #miniCal .dayEvents .event .ends,
 #miniCal .ongoingEvents .event .through,
@@ -3556,50 +3709,50 @@ body #wrapper #post-footer a {
   font-style: normal;
   display: inline;
 }
-/* line 514, scss/modules/_events.scss */
+/* line 632, scss/modules/_events.scss */
 #miniCal .dayEvents .event time,
 #miniCal .ongoingEvents .event time {
   display: inline;
 }
-/* line 521, scss/modules/_events.scss */
+/* line 639, scss/modules/_events.scss */
 #miniCal .dayEvents .event .sep,
 #miniCal .ongoingEvents .event .sep {
   padding: 0 0.25rem;
 }
-/* line 527, scss/modules/_events.scss */
+/* line 645, scss/modules/_events.scss */
 #miniCal .dayEvents .event .location,
 #miniCal .ongoingEvents .event .location {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
   font-weight: 300;
   display: inline;
 }
-/* line 538, scss/modules/_events.scss */
+/* line 656, scss/modules/_events.scss */
 #miniCal .foot .more {
   margin: 0;
 }
-/* line 541, scss/modules/_events.scss */
+/* line 659, scss/modules/_events.scss */
 #miniCal .foot .more a:before {
   content: "\f073";
   margin-right: 0.375rem;
 }
 
 /* Events Single */
-/* line 559, scss/modules/_events.scss */
+/* line 677, scss/modules/_events.scss */
 #calendar .eventDetails .back a:before {
   content: "\f137";
   margin-right: 0.375rem;
 }
-/* line 569, scss/modules/_events.scss */
+/* line 687, scss/modules/_events.scss */
 #calendar .eventDetails .eventMeta li {
   margin-left: 2.5rem;
 }
-/* line 572, scss/modules/_events.scss */
+/* line 690, scss/modules/_events.scss */
 #calendar .eventDetails .eventMeta li:before {
   width: 2rem;
   margin-left: -2.25rem;
   text-align: center;
 }
-/* line 583, scss/modules/_events.scss */
+/* line 701, scss/modules/_events.scss */
 #calendar .eventDetails .eventMeta li .fa, #calendar .eventDetails .eventMeta li #minisite #navWrap .jump:before, #minisite #navWrap #calendar .eventDetails .eventMeta li .jump:before, #calendar .eventDetails .eventMeta li #minisite .feedLink .feedInfo a:before, #minisite .feedLink .feedInfo #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta .childrenList li a:before, .childrenList #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta #childrenAndGrandchildren li ul .childDesc:before, #childrenAndGrandchildren #calendar .eventDetails .eventMeta li ul .childDesc:before, #calendar .eventDetails .eventMeta li .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport .eventDetails .eventMeta li a:before,
 #calendar .eventDetails .eventMeta li .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li #miniCal .foot .more a:before, #miniCal .foot .more #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li .back a:before, #calendar .eventDetails .back .eventMeta li a:before, #calendar .eventDetails .eventMeta li li:before, #calendar .eventDetails .eventMeta li .contact:before,
@@ -3609,63 +3762,63 @@ body #wrapper #post-footer a {
 .featuresModule .feature .featureInfo .featureText #calendar .eventDetails .eventMeta li span:before, #calendar .eventDetails .eventMeta li #discoErrorNotice h3:before, #discoErrorNotice #calendar .eventDetails .eventMeta li h3:before, #calendar .eventDetails .eventMeta li #relatedPub .pubLinks a:before, #relatedPub .pubLinks #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li .publication .post p.comments a:before, .publication .post p.comments #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li .publication .post p.more a:after, .publication .post p.more #calendar .eventDetails .eventMeta li a:after, #calendar .eventDetails .eventMeta li .publication .fullPost .commentAdded h4:before, .publication .fullPost .commentAdded #calendar .eventDetails .eventMeta li h4:before, #calendar .eventDetails .eventMeta li .publication .nextPrev .prev h4:before, .publication .nextPrev .prev #calendar .eventDetails .eventMeta li h4:before, #calendar .eventDetails .eventMeta li .publication .nextPrev .next h4:after, .publication .nextPrev .next #calendar .eventDetails .eventMeta li h4:after {
   margin: 0 0.375rem;
 }
-/* line 588, scss/modules/_events.scss */
+/* line 706, scss/modules/_events.scss */
 #calendar .eventDetails .eventMeta .date:before {
   content: "\f073";
 }
-/* line 592, scss/modules/_events.scss */
+/* line 710, scss/modules/_events.scss */
 #calendar .eventDetails .eventMeta .time:before {
   content: "\f017";
 }
-/* line 596, scss/modules/_events.scss */
+/* line 714, scss/modules/_events.scss */
 #calendar .eventDetails .eventMeta .location:before {
   content: "\f041";
 }
-/* line 603, scss/modules/_events.scss */
+/* line 721, scss/modules/_events.scss */
 #calendar .eventDetails .images {
   margin-bottom: 2.5rem;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 606, scss/modules/_events.scss */
+  /* line 724, scss/modules/_events.scss */
   #calendar .eventDetails .images .imageChunk {
     float: left;
     width: 50%;
   }
-  /* line 612, scss/modules/_events.scss */
+  /* line 730, scss/modules/_events.scss */
   #calendar .eventDetails .images .imageChunk:nth-child(2n+1) {
     padding-right: 1rem;
     clear: left;
   }
-  /* line 617, scss/modules/_events.scss */
+  /* line 735, scss/modules/_events.scss */
   #calendar .eventDetails .images .imageChunk:nth-child(2n+2) {
     padding-left: 1rem;
   }
 }
-/* line 626, scss/modules/_events.scss */
+/* line 744, scss/modules/_events.scss */
 #calendar .eventDetails .contact,
 #calendar .eventDetails .eventUrl,
 #calendar .eventDetails .calendarExport {
   margin-bottom: 0;
 }
-/* line 629, scss/modules/_events.scss */
+/* line 747, scss/modules/_events.scss */
 #calendar .eventDetails .contact:before,
 #calendar .eventDetails .eventUrl:before,
 #calendar .eventDetails .calendarExport:before {
   margin-right: 0.375rem;
 }
-/* line 636, scss/modules/_events.scss */
+/* line 754, scss/modules/_events.scss */
 #calendar .eventDetails .contact:before {
   content: "\f059";
 }
-/* line 642, scss/modules/_events.scss */
+/* line 760, scss/modules/_events.scss */
 #calendar .eventDetails .eventUrl:before {
   content: "\f05a";
 }
-/* line 648, scss/modules/_events.scss */
+/* line 766, scss/modules/_events.scss */
 #calendar .eventDetails .calendarExport:before {
   content: "\f073";
 }
-/* line 653, scss/modules/_events.scss */
+/* line 771, scss/modules/_events.scss */
 #calendar .eventDetails .export {
   margin-bottom: 1.5rem;
 }
@@ -3693,7 +3846,7 @@ body #wrapper #post-footer a {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -3799,7 +3952,7 @@ body #wrapper #post-footer a {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -3983,7 +4136,7 @@ body #wrapper #post-footer a {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -4579,7 +4732,7 @@ form table td {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -4730,7 +4883,7 @@ form table td {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -5291,7 +5444,7 @@ form table td {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -5306,7 +5459,7 @@ form table td {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;

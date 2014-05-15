@@ -461,9 +461,9 @@ $ret .= $this->get_image_markup($event);
 			{
 				if($item_ical_link = $this->bundle->ical_link($event, false))
 				{
-					$ret .= '<p class="calendarExport"><a href="'.$item_ical_link.'" title="Add this occurrence to your calendar"></a></p>';
+					$ret .= '<p class="calendarExport"><a href="'.$item_ical_link.'" title="Add this occurrence to your calendar">Add this occurrence to your calendar</a></p>';
 				}
-				$ret .= '<p class="calendarExport"><a href="'.$ical_link.'" title="Add all occurrences to your calendar"></a></p>';
+				$ret .= '<p class="calendarExport"><a href="'.$ical_link.'" title="Add all occurrences to your calendar">Add all occurrences to your calendar</a></p>';
 			}
 			$ret .= '</div>'."\n";
 		}
