@@ -4036,12 +4036,27 @@ body #wrapper #post-footer a {
   }
 }
 
-/* line 37, scss/modules/_feature.scss */
+@media only screen and (max-width: 40em) {
+  /* line 35, scss/modules/_feature.scss */
+  .featuresModule .features {
+    padding: 0;
+    height: 224px;
+  }
+  /* line 39, scss/modules/_feature.scss */
+  .featuresModule .features img {
+    width: 646px;
+    max-width: 10000px !important;
+    height: 224px !important;
+    position: absolute;
+    margin-left: -323px;
+  }
+}
+/* line 52, scss/modules/_feature.scss */
 .featuresModule .feature .featureInfo,
 .featuresModule .feature h3 {
   color: white !important;
 }
-/* line 41, scss/modules/_feature.scss */
+/* line 56, scss/modules/_feature.scss */
 .featuresModule .feature .featureInfoWrap {
   position: absolute;
   bottom: 0;
@@ -4052,20 +4067,20 @@ body #wrapper #post-footer a {
   padding: 0.41667rem 2rem;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 41, scss/modules/_feature.scss */
+  /* line 56, scss/modules/_feature.scss */
   .featuresModule .feature .featureInfoWrap {
     position: static;
     padding: 0;
   }
 }
-/* line 57, scss/modules/_feature.scss */
+/* line 72, scss/modules/_feature.scss */
 .featuresModule .feature .featureInfo {
   position: relative;
   background: none !important;
   padding: 0.41667rem 0;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 57, scss/modules/_feature.scss */
+  /* line 72, scss/modules/_feature.scss */
   .featuresModule .feature .featureInfo {
     position: absolute;
     background: black !important;
@@ -4074,37 +4089,37 @@ body #wrapper #post-footer a {
   }
 }
 @media only screen and (min-width: 64.063em) {
-  /* line 57, scss/modules/_feature.scss */
+  /* line 72, scss/modules/_feature.scss */
   .featuresModule .feature .featureInfo {
     padding: 0.83333rem 1.42857rem;
   }
 }
-/* line 73, scss/modules/_feature.scss */
+/* line 88, scss/modules/_feature.scss */
 .featuresModule .feature .featureInfo .featureTitle {
   line-height: 1;
   font-size: 0.875rem;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 73, scss/modules/_feature.scss */
+  /* line 88, scss/modules/_feature.scss */
   .featuresModule .feature .featureInfo .featureTitle {
     font-size: 1.6875rem;
     display: inline;
   }
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 84, scss/modules/_feature.scss */
+  /* line 99, scss/modules/_feature.scss */
   .featuresModule .feature .featureInfo .featureTitle a,
   .featuresModule .feature .featureInfo .featureTitle .noLink {
     display: inline;
     /*loat: left;*/
   }
 }
-/* line 94, scss/modules/_feature.scss */
+/* line 109, scss/modules/_feature.scss */
 .featuresModule .feature .featureInfo .featureText {
   display: none;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 94, scss/modules/_feature.scss */
+  /* line 109, scss/modules/_feature.scss */
   .featuresModule .feature .featureInfo .featureText {
     clear: none;
     display: inline;
@@ -4113,13 +4128,13 @@ body #wrapper #post-footer a {
     padding-top: 16px;
   }
 }
-/* line 106, scss/modules/_feature.scss */
+/* line 121, scss/modules/_feature.scss */
 .featuresModule .feature .featureInfo .featureText a,
 .featuresModule .feature .featureInfo .featureText span {
   padding: 0;
   display: inline;
 }
-/* line 111, scss/modules/_feature.scss */
+/* line 126, scss/modules/_feature.scss */
 .featuresModule .feature .featureInfo .featureText a:before,
 .featuresModule .feature .featureInfo .featureText span:before {
   content: "\f101";
@@ -4127,12 +4142,12 @@ body #wrapper #post-footer a {
   display: inline-block;
   color: rgba(255, 255, 255, 0.5);
 }
-/* line 119, scss/modules/_feature.scss */
+/* line 134, scss/modules/_feature.scss */
 .featuresModule .feature .featureInfo .featureText a:empty,
 .featuresModule .feature .featureInfo .featureText span:empty {
   display: none;
 }
-/* line 126, scss/modules/_feature.scss */
+/* line 141, scss/modules/_feature.scss */
 .featuresModule .feature .featureNavWrap {
   position: relative;
   display: block;
@@ -4149,7 +4164,7 @@ body #wrapper #post-footer a {
   clear: both;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 126, scss/modules/_feature.scss */
+  /* line 141, scss/modules/_feature.scss */
   .featuresModule .feature .featureNavWrap {
     margin-top: 0;
     padding: 0.41667rem 0;
@@ -4158,13 +4173,13 @@ body #wrapper #post-footer a {
     right: 1.25rem;
   }
 }
-/* line 146, scss/modules/_feature.scss */
+/* line 161, scss/modules/_feature.scss */
 .featuresModule .feature .featureNavWrap .play-pause,
 .featuresModule .feature .featureNavWrap .prev,
 .featuresModule .feature .featureNavWrap .next {
   display: none;
 }
-/* line 152, scss/modules/_feature.scss */
+/* line 167, scss/modules/_feature.scss */
 .featuresModule .feature .featureNavWrap .navBlock .navItem {
   width: 14px;
   height: 14px;
@@ -4181,12 +4196,12 @@ body #wrapper #post-footer a {
   box-shadow: 0 0 4px black;
   margin: 0 0.71429rem 0 0;
 }
-/* line 163, scss/modules/_feature.scss */
+/* line 178, scss/modules/_feature.scss */
 .featuresModule .feature .featureNavWrap .navBlock .navItem.current {
   background: #FFF;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 152, scss/modules/_feature.scss */
+  /* line 167, scss/modules/_feature.scss */
   .featuresModule .feature .featureNavWrap .navBlock .navItem {
     width: 20px;
     height: 20px;

@@ -31,6 +31,21 @@
  
 .featuresModule {
 
+      @media #{$small-only} {
+        .features {
+          padding: 0;
+          height: 224px;
+        
+          img {
+            width: 646px;
+            max-width: 10000px !important;
+            height: 224px !important;
+            position: absolute;
+            margin-left: -323px;
+          }
+        }
+      }
+
   .feature {
 
     .featureInfo,
