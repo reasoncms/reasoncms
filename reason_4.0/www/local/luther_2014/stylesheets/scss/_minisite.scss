@@ -274,7 +274,6 @@
 			//margin-bottom: $column-gutter;	
 		}
 
-
 		@media #{$large-up} {
 			@include box-shadow(0 0 0 0);
 		}
@@ -321,20 +320,22 @@
 			
 		}
 		
+		// Sidebar nav background color
 		#minisiteNavigation {	
 			background: lighten($minisite-nav-background, 3%);
 		}
 
-		#minisiteNavigation,
+
+		#minisiteNavigation,  // Hide nav on mobile
 		.subNavElements {
 			display: none;
 			
 			@media #{$large-up} {
-				display: block;
+				display: block;  // Always show nav on desktop
 			}
 		}
 
-		&.open {
+		&.open {  // Show nav on mobile (class changed via jQuery)
 
 			#minisiteNavigation,
 			.subNavElements {
@@ -342,9 +343,9 @@
 			}
 		}
 		
-		.navListTop {
+		.navListTop {  // Places border at the bottom of the sidebar nav
 			margin: 0;
-			border-bottom: 1px solid darken($minisite-nav-background, 7%);
+			//border-bottom: 1px solid darken($minisite-nav-background, 7%);
 		}
 		
 		.navListTop ul {
@@ -360,11 +361,10 @@
 			padding: $column-gutter / 2.75 $column-gutter / 2;
 		}
 		
-		.navListTop a.home {
+		.navListTop a.home {  //  Large "home" link at the top of the nav
 			font-size: rem-calc(32);
 			line-height: 1;
 			font-weight: 300;
-			//color: #303030;
 			color: darken($lc-blue-dark, 5%);
 			border-top: none;
 			position: relative;
@@ -375,32 +375,15 @@
 				font-weight: 300;
 			}
 
-			/*&:after {
-				@extend .fa;
-				content: $fa-var-home;
-				position: absolute;
-				right: 0;
-				top: 0;
-				color: rgba(255,255,255,.25);
-			}*/
-
 			@media #{$large-up} {
 				padding-top: rem-calc(40);
 				padding-bottom: rem-calc(40);
 				background: $lc-blue-light-compliment;
 				border-bottom: 6px solid #FFF;
-				
-				&:hover {
-					//text-decoration: underline;
-					//@include transition(.25s, ease)
-					//@include transition-property(background, color);
-					//@include transition-duration(.25s);
-					//@include transition-timing-function(ease-in);
-				}
 			}
 		}
 		
-		.navListTop ul a {
+		.navListTop ul a {  // Top level page links
 			display: block;
 			border-top: 1px solid darken($minisite-nav-background, 7%);
 			$minisite-nav-color: #303030;
@@ -414,7 +397,7 @@
 			}								
 		}
 		
-		.navListTop ul ul {
+		.navListTop ul ul {  // Second level page links
 		
 			a {
 				border: none;
@@ -432,7 +415,7 @@
 			}
 		}
 		
-		.navListTop ul .navListItem.open {
+		.navListTop ul .navListItem.open {  // Nav accordion in the open state
 			background: #f0f5f8;
 			background: lighten($minisite-nav-background, 6%);
 			a {
@@ -578,6 +561,13 @@
 
 	// 6. Resued Elements
 	//////////////////////////////////////
+
+	table {
+		tr,
+		td {
+			font-weight: 300;
+		}
+	}
   
 	.feedLink {  // xml link
 
