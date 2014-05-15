@@ -18,6 +18,8 @@
 // Blurbs
 //////////////////////////////////////
 
+/* Standard Text Blurbs */
+
 .blurb {
 
 	/* Ordinary Text Blurbs */
@@ -27,19 +29,29 @@
 		margin-bottom: 0;
 	}
 
-	/* Call to Action Buttons */
-	
-	// In order for these styles to work, Call to Action blurbs need a unique name starting with "call_to_action".
-	// Example: call_to_action_admissions_01  (Don't add the prefix "uname_" -- Reason adds this.)
+	.blurbInner {
+		*:last-child {
+			margin-bottom: 0;
+		}
+	}
 
-	// Sample CTA Blurb Markup 
-	//
-	//<h3>Call to Action!</h3>
-	//<ul>
-	//<li><a href="#" class="cta blue">Do this!</a></li>
-	//<li><a href="#" class="cta green">No, do this!</a></li>
-	//<li><a href="#" class="cta red">No! THIS!</a></li>
-	//</ul>
+}
+
+/* Call to Action Blurbs */
+
+// In order for these styles to work, Call to Action blurbs need a unique name starting with "call_to_action".
+// Example: call_to_action_admissions_01  (Don't add the prefix "uname_" -- Reason adds this.)
+
+// Sample CTA Blurb Markup 
+//
+//<h3>Call to Action!</h3>
+//<ul>
+//<li><a href="#" class="cta-unique-name blue">Do this!</a></li>
+//<li><a href="#" class="cta-unique-name green">No, do this!</a></li>
+//<li><a href="#" class="cta-unique-name red">No! THIS!</a></li>
+//</ul>
+
+.blurb {
 
 	&[class^='uname_call_to_action'],
 	&[class*=' uname_call_to_action'] {
@@ -54,19 +66,22 @@
 
 			li {
 				margin-bottom: rem-calc(16);
-				&:last-child {
-					margin-bottom: 0;
-				}
 
-				.cta {
+				$cta-padding: rem-calc(18);
+				$cta-font-size: $font-size-18;
+				$cta-height: $cta-padding*2 + $cta-font-size;
+
+				a {
 					font-family: $open-sans;
-					font-size: $font-size-18;
+					font-size: $cta-font-size;
 					font-weight: 700;
 					display: block;
 					text-align: center;
 					background: $lc-blue-light;
 					color: $lc-white;
-					padding: rem-calc(12);
+					padding: $cta-padding;
+					position: relative;
+					line-height: 1;
 
 					@include border-radius($global-rounded);
 					@include transition-property(background);
@@ -75,6 +90,23 @@
 
 					&:link {
 						text-decoration: none !important;
+					}
+
+					&:after {
+						@extend .fa;
+						line-height: 1 !important;
+						content: $fa-var-chevron-right;
+						display: block;
+						//float: right;
+						position: absolute;
+						top: 0;
+						right: 0;
+						background: rgba(white, .25);
+						font-size: $cta-font-size;
+						padding: $cta-padding;
+						height: $cta-height;
+						width: $cta-height;
+						@include border-radius($global-rounded);
 					}
 
 					&.blue {
@@ -101,15 +133,70 @@
 						}
 					}
 
-					&.yellow {
+					&.yellow,
+					&.gold {
 						background: $lc-yellow;
 
 						&:hover {
 							background: darken($lc-yellow, 8%);
 						}
 					}
-				}	
+
+				}
+
+				&:last-child {
+					margin-bottom: 0;
+				}
 			}
 		}    
+	}
+}
+
+.blurb {
+
+	/* Callout Blurbs */
+
+	&[class^='uname_callout_blurb'],
+	&[class*='uname_callout_blurb'] {
+
+		background: none !important;
+		padding: 0 !important;
+
+
+		.blurbInner {
+			border-top: 12px solid;
+			background: lighten($lc-grey, 6%);
+			@include box-shadow(rgba(0,0,0,.18) 0 2px 2px);
+			//padding-bottom: $column-gutter/3;
+			padding: $column-gutter/2 !important;
+
+			*:last-child {
+				margin-bottom: 0;
+			}
+		}
+
+		&:nth-child(4n+1) {
+			.blurbInner {
+				border-color: $lc-yellow;
+			}
+		}
+
+		&:nth-child(4n+2) {
+			.blurbInner {
+				border-color: $lc-green;
+			}
+		}
+
+		&:nth-child(4n+3) {
+			.blurbInner {
+				border-color: $lc-red;
+			}
+		}
+
+		&:nth-child(4n+4) {
+			.blurbInner {
+				border-color: $lc-blue-light;
+			}
+		}
 	}
 }

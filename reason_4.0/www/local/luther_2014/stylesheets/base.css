@@ -1781,7 +1781,7 @@ body #wrapper #post-footer a {
 }
 
 /* line 4, scss/font-awesome/_core.scss */
-.fa, #minisite #navWrap .jump:before, #minisite .feedLink .feedInfo a:before, .assets li:before, .childrenList li a:before, #childrenAndGrandchildren li ul .childDesc:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
+.fa, #minisite #navWrap .jump:before, #minisite .feedLink .feedInfo a:before, .assets li:before, .blurb[class^='uname_call_to_action'] ul li a:after, .blurb[class*=' uname_call_to_action'] ul li a:after, .childrenList li a:before, #childrenAndGrandchildren li ul .childDesc:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
 #calendar .eventDetails .eventUrl:before,
 #calendar .eventDetails .calendarExport:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
@@ -2521,7 +2521,7 @@ body #wrapper #post-footer a {
 }
 
 /* line 4, scss/font-awesome/_core.scss */
-.fa, #minisite #navWrap .jump:before, #minisite .feedLink .feedInfo a:before, .assets li:before, .childrenList li a:before, #childrenAndGrandchildren li ul .childDesc:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
+.fa, #minisite #navWrap .jump:before, #minisite .feedLink .feedInfo a:before, .assets li:before, .blurb[class^='uname_call_to_action'] ul li a:after, .blurb[class*=' uname_call_to_action'] ul li a:after, .childrenList li a:before, #childrenAndGrandchildren li ul .childDesc:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
 #calendar .eventDetails .eventUrl:before,
 #calendar .eventDetails .calendarExport:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
@@ -2646,36 +2646,38 @@ body #wrapper #post-footer a {
   margin-bottom: 0;
 }
 
-/* line 21, scss/modules/_blurb.scss */
+/* Standard Text Blurbs */
+/* line 23, scss/modules/_blurb.scss */
 .blurb {
   /* Ordinary Text Blurbs */
   margin-bottom: 2.5rem;
-  /* Call to Action Buttons */
 }
-/* line 26, scss/modules/_blurb.scss */
+/* line 28, scss/modules/_blurb.scss */
 .blurb:last-child {
   margin-bottom: 0;
 }
-/* line 45, scss/modules/_blurb.scss */
+/* line 33, scss/modules/_blurb.scss */
+.blurb .blurbInner *:last-child {
+  margin-bottom: 0;
+}
+
+/* Call to Action Blurbs */
+/* line 57, scss/modules/_blurb.scss */
 .blurb[class^='uname_call_to_action'], .blurb[class*=' uname_call_to_action'] {
   color: #ff00ff;
   background: none !important;
   padding: 0 !important;
 }
-/* line 51, scss/modules/_blurb.scss */
+/* line 63, scss/modules/_blurb.scss */
 .blurb[class^='uname_call_to_action'] ul, .blurb[class*=' uname_call_to_action'] ul {
   list-style-type: none !important;
 }
-/* line 55, scss/modules/_blurb.scss */
+/* line 67, scss/modules/_blurb.scss */
 .blurb[class^='uname_call_to_action'] ul li, .blurb[class*=' uname_call_to_action'] ul li {
   margin-bottom: 1rem;
 }
-/* line 57, scss/modules/_blurb.scss */
-.blurb[class^='uname_call_to_action'] ul li:last-child, .blurb[class*=' uname_call_to_action'] ul li:last-child {
-  margin-bottom: 0;
-}
-/* line 61, scss/modules/_blurb.scss */
-.blurb[class^='uname_call_to_action'] ul li .cta, .blurb[class*=' uname_call_to_action'] ul li .cta {
+/* line 74, scss/modules/_blurb.scss */
+.blurb[class^='uname_call_to_action'] ul li a, .blurb[class*=' uname_call_to_action'] ul li a {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
   font-size: 1.125rem;
   font-weight: 700;
@@ -2683,7 +2685,9 @@ body #wrapper #post-footer a {
   text-align: center;
   background: #1073ce;
   color: white;
-  padding: 0.75rem;
+  padding: 1.125rem;
+  position: relative;
+  line-height: 1;
   -webkit-border-radius: 1000px;
   -moz-border-radius: 1000px;
   -ms-border-radius: 1000px;
@@ -2702,41 +2706,103 @@ body #wrapper #post-footer a {
   -o-transition-timing-function: ease;
   transition-timing-function: ease;
 }
-/* line 76, scss/modules/_blurb.scss */
-.blurb[class^='uname_call_to_action'] ul li .cta:link, .blurb[class*=' uname_call_to_action'] ul li .cta:link {
+/* line 91, scss/modules/_blurb.scss */
+.blurb[class^='uname_call_to_action'] ul li a:link, .blurb[class*=' uname_call_to_action'] ul li a:link {
   text-decoration: none !important;
 }
-/* line 80, scss/modules/_blurb.scss */
-.blurb[class^='uname_call_to_action'] ul li .cta.blue, .blurb[class*=' uname_call_to_action'] ul li .cta.blue {
+/* line 95, scss/modules/_blurb.scss */
+.blurb[class^='uname_call_to_action'] ul li a:after, .blurb[class*=' uname_call_to_action'] ul li a:after {
+  line-height: 1 !important;
+  content: "\f054";
+  display: block;
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.25);
+  font-size: 1.125rem;
+  padding: 1.125rem;
+  height: 3.375rem;
+  width: 3.375rem;
+  -webkit-border-radius: 1000px;
+  -moz-border-radius: 1000px;
+  -ms-border-radius: 1000px;
+  -o-border-radius: 1000px;
+  border-radius: 1000px;
+}
+/* line 112, scss/modules/_blurb.scss */
+.blurb[class^='uname_call_to_action'] ul li a.blue, .blurb[class*=' uname_call_to_action'] ul li a.blue {
   background: #1073ce;
 }
-/* line 83, scss/modules/_blurb.scss */
-.blurb[class^='uname_call_to_action'] ul li .cta.blue:hover, .blurb[class*=' uname_call_to_action'] ul li .cta.blue:hover {
+/* line 115, scss/modules/_blurb.scss */
+.blurb[class^='uname_call_to_action'] ul li a.blue:hover, .blurb[class*=' uname_call_to_action'] ul li a.blue:hover {
   background: #0d5ea8;
 }
-/* line 88, scss/modules/_blurb.scss */
-.blurb[class^='uname_call_to_action'] ul li .cta.red, .blurb[class*=' uname_call_to_action'] ul li .cta.red {
+/* line 120, scss/modules/_blurb.scss */
+.blurb[class^='uname_call_to_action'] ul li a.red, .blurb[class*=' uname_call_to_action'] ul li a.red {
   background: #9f2112;
 }
-/* line 91, scss/modules/_blurb.scss */
-.blurb[class^='uname_call_to_action'] ul li .cta.red:hover, .blurb[class*=' uname_call_to_action'] ul li .cta.red:hover {
+/* line 123, scss/modules/_blurb.scss */
+.blurb[class^='uname_call_to_action'] ul li a.red:hover, .blurb[class*=' uname_call_to_action'] ul li a.red:hover {
   background: #7a190e;
 }
-/* line 96, scss/modules/_blurb.scss */
-.blurb[class^='uname_call_to_action'] ul li .cta.green, .blurb[class*=' uname_call_to_action'] ul li .cta.green {
+/* line 128, scss/modules/_blurb.scss */
+.blurb[class^='uname_call_to_action'] ul li a.green, .blurb[class*=' uname_call_to_action'] ul li a.green {
   background: #4a8512;
 }
-/* line 99, scss/modules/_blurb.scss */
-.blurb[class^='uname_call_to_action'] ul li .cta.green:hover, .blurb[class*=' uname_call_to_action'] ul li .cta.green:hover {
+/* line 131, scss/modules/_blurb.scss */
+.blurb[class^='uname_call_to_action'] ul li a.green:hover, .blurb[class*=' uname_call_to_action'] ul li a.green:hover {
   background: #36610d;
 }
-/* line 104, scss/modules/_blurb.scss */
-.blurb[class^='uname_call_to_action'] ul li .cta.yellow, .blurb[class*=' uname_call_to_action'] ul li .cta.yellow {
+/* line 137, scss/modules/_blurb.scss */
+.blurb[class^='uname_call_to_action'] ul li a.yellow, .blurb[class^='uname_call_to_action'] ul li a.gold, .blurb[class*=' uname_call_to_action'] ul li a.yellow, .blurb[class*=' uname_call_to_action'] ul li a.gold {
   background: #e8a500;
 }
-/* line 107, scss/modules/_blurb.scss */
-.blurb[class^='uname_call_to_action'] ul li .cta.yellow:hover, .blurb[class*=' uname_call_to_action'] ul li .cta.yellow:hover {
+/* line 140, scss/modules/_blurb.scss */
+.blurb[class^='uname_call_to_action'] ul li a.yellow:hover, .blurb[class^='uname_call_to_action'] ul li a.gold:hover, .blurb[class*=' uname_call_to_action'] ul li a.yellow:hover, .blurb[class*=' uname_call_to_action'] ul li a.gold:hover {
   background: #bf8800;
+}
+/* line 147, scss/modules/_blurb.scss */
+.blurb[class^='uname_call_to_action'] ul li:last-child, .blurb[class*=' uname_call_to_action'] ul li:last-child {
+  margin-bottom: 0;
+}
+
+/* line 155, scss/modules/_blurb.scss */
+.blurb {
+  /* Callout Blurbs */
+}
+/* line 160, scss/modules/_blurb.scss */
+.blurb[class^='uname_callout_blurb'], .blurb[class*='uname_callout_blurb'] {
+  background: none !important;
+  padding: 0 !important;
+}
+/* line 166, scss/modules/_blurb.scss */
+.blurb[class^='uname_callout_blurb'] .blurbInner, .blurb[class*='uname_callout_blurb'] .blurbInner {
+  border-top: 12px solid;
+  background: #f8f8f8;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.18) 0 2px 2px;
+  -moz-box-shadow: rgba(0, 0, 0, 0.18) 0 2px 2px;
+  box-shadow: rgba(0, 0, 0, 0.18) 0 2px 2px;
+  padding: 1.25rem !important;
+}
+/* line 173, scss/modules/_blurb.scss */
+.blurb[class^='uname_callout_blurb'] .blurbInner *:last-child, .blurb[class*='uname_callout_blurb'] .blurbInner *:last-child {
+  margin-bottom: 0;
+}
+/* line 179, scss/modules/_blurb.scss */
+.blurb[class^='uname_callout_blurb']:nth-child(4n+1) .blurbInner, .blurb[class*='uname_callout_blurb']:nth-child(4n+1) .blurbInner {
+  border-color: #e8a500;
+}
+/* line 185, scss/modules/_blurb.scss */
+.blurb[class^='uname_callout_blurb']:nth-child(4n+2) .blurbInner, .blurb[class*='uname_callout_blurb']:nth-child(4n+2) .blurbInner {
+  border-color: #4a8512;
+}
+/* line 191, scss/modules/_blurb.scss */
+.blurb[class^='uname_callout_blurb']:nth-child(4n+3) .blurbInner, .blurb[class*='uname_callout_blurb']:nth-child(4n+3) .blurbInner {
+  border-color: #9f2112;
+}
+/* line 197, scss/modules/_blurb.scss */
+.blurb[class^='uname_callout_blurb']:nth-child(4n+4) .blurbInner, .blurb[class*='uname_callout_blurb']:nth-child(4n+4) .blurbInner {
+  border-color: #1073ce;
 }
 
 /* line 10, scss/_extends.scss */
@@ -3753,7 +3819,7 @@ body #wrapper #post-footer a {
   text-align: center;
 }
 /* line 701, scss/modules/_events.scss */
-#calendar .eventDetails .eventMeta li .fa, #calendar .eventDetails .eventMeta li #minisite #navWrap .jump:before, #minisite #navWrap #calendar .eventDetails .eventMeta li .jump:before, #calendar .eventDetails .eventMeta li #minisite .feedLink .feedInfo a:before, #minisite .feedLink .feedInfo #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta .childrenList li a:before, .childrenList #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta #childrenAndGrandchildren li ul .childDesc:before, #childrenAndGrandchildren #calendar .eventDetails .eventMeta li ul .childDesc:before, #calendar .eventDetails .eventMeta li .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport .eventDetails .eventMeta li a:before,
+#calendar .eventDetails .eventMeta li .fa, #calendar .eventDetails .eventMeta li #minisite #navWrap .jump:before, #minisite #navWrap #calendar .eventDetails .eventMeta li .jump:before, #calendar .eventDetails .eventMeta li #minisite .feedLink .feedInfo a:before, #minisite .feedLink .feedInfo #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta .blurb[class^='uname_call_to_action'] ul li a:after, .blurb[class^='uname_call_to_action'] ul #calendar .eventDetails .eventMeta li a:after, #calendar .eventDetails .eventMeta .blurb[class*=' uname_call_to_action'] ul li a:after, .blurb[class*=' uname_call_to_action'] ul #calendar .eventDetails .eventMeta li a:after, #calendar .eventDetails .eventMeta .childrenList li a:before, .childrenList #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta #childrenAndGrandchildren li ul .childDesc:before, #childrenAndGrandchildren #calendar .eventDetails .eventMeta li ul .childDesc:before, #calendar .eventDetails .eventMeta li .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport .eventDetails .eventMeta li a:before,
 #calendar .eventDetails .eventMeta li .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li #miniCal .foot .more a:before, #miniCal .foot .more #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li .back a:before, #calendar .eventDetails .back .eventMeta li a:before, #calendar .eventDetails .eventMeta li li:before, #calendar .eventDetails .eventMeta li .contact:before,
 #calendar .eventDetails .eventMeta li .eventUrl:before,
@@ -3824,7 +3890,7 @@ body #wrapper #post-footer a {
 }
 
 /* line 4, scss/font-awesome/_core.scss */
-.fa, #minisite #navWrap .jump:before, #minisite .feedLink .feedInfo a:before, .assets li:before, .childrenList li a:before, #childrenAndGrandchildren li ul .childDesc:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
+.fa, #minisite #navWrap .jump:before, #minisite .feedLink .feedInfo a:before, .assets li:before, .blurb[class^='uname_call_to_action'] ul li a:after, .blurb[class*=' uname_call_to_action'] ul li a:after, .childrenList li a:before, #childrenAndGrandchildren li ul .childDesc:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
 #calendar .eventDetails .eventUrl:before,
 #calendar .eventDetails .calendarExport:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
