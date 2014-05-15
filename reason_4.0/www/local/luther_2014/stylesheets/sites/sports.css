@@ -24,20 +24,24 @@
 }
 
 /* STRUCTURE */
-/* line 19, ../scss/sites/sports.scss */
+/* line 23, ../scss/sites/sports.scss */
 .lutherSports {
   background: #333;
+  background: #445566;
+  background: black;
+  background: #002d56;
+  background: #333;
 }
-/* line 23, ../scss/sites/sports.scss */
+/* line 31, ../scss/sites/sports.scss */
 .lutherSports #minisite {
   background: #FFF;
 }
-/* line 35, ../scss/sites/sports.scss */
+/* line 43, ../scss/sites/sports.scss */
 .lutherSports #wrapper #global-banner hgroup h1 a {
   background: url("../../images/logo_mobile_1x.png") no-repeat;
 }
 @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 2 / 1), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
-  /* line 41, ../scss/sites/sports.scss */
+  /* line 49, ../scss/sites/sports.scss */
   .lutherSports #wrapper #global-banner hgroup h1 a {
     background: url("../../images/logo_mobile_2x.png") no-repeat;
     -webkit-background-size: 150px 28px;
@@ -47,7 +51,7 @@
   }
 }
 @media only screen and (min-width: 64.063em) {
-  /* line 49, ../scss/sites/sports.scss */
+  /* line 57, ../scss/sites/sports.scss */
   .lutherSports #wrapper #global-banner hgroup h1 a {
     width: 168px;
     height: 75px;
@@ -56,7 +60,7 @@
   }
 }
 @media only screen and (-webkit-min-device-pixel-ratio: 2) and (min-width: 64.063em), only screen and (min--moz-device-pixel-ratio: 2) and (min-width: 64.063em), only screen and (-o-min-device-pixel-ratio: 2 / 1) and (min-width: 64.063em), only screen and (min-device-pixel-ratio: 2) and (min-width: 64.063em), only screen and (min-resolution: 192dpi) and (min-width: 64.063em), only screen and (min-resolution: 2dppx) and (min-width: 64.063em) {
-  /* line 59, ../scss/sites/sports.scss */
+  /* line 67, ../scss/sites/sports.scss */
   .lutherSports #wrapper #global-banner hgroup h1 a {
     background: url("../../images/logo_2x.png") no-repeat;
     -webkit-background-size: 168px 75px;
@@ -65,23 +69,73 @@
     background-size: 168px 75px;
   }
 }
-/* line 72, ../scss/sites/sports.scss */
-.lutherSports #minisite #navWrap .navListTop a.home {
-  background: #CCCCCC;
+@media only screen and (min-width: 64.063em) {
+  /* line 80, ../scss/sites/sports.scss */
+  .lutherSports #minisite #navWrap #minisiteNavigation {
+    background: #4a5d6f;
+  }
+  /* line 89, ../scss/sites/sports.scss */
+  .lutherSports #minisite #navWrap #minisiteNavigation a {
+    color: white;
+  }
+  /* line 93, ../scss/sites/sports.scss */
+  .lutherSports #minisite #navWrap #minisiteNavigation .navListTop a.home {
+    background: #54697e;
+    color: white;
+  }
+  /* line 103, ../scss/sites/sports.scss */
+  .lutherSports #minisite #navWrap #minisiteNavigation .navListTop ul a {
+    border-top: 1px solid #364351;
+    color: white;
+  }
+  /* line 107, ../scss/sites/sports.scss */
+  .lutherSports #minisite #navWrap #minisiteNavigation .navListTop ul a:hover {
+    background: #445566;
+    color: white;
+  }
+  /* line 115, ../scss/sites/sports.scss */
+  .lutherSports #minisite #navWrap #minisiteNavigation .navListTop ul ul a {
+    border-top: 1px solid #425263;
+  }
+  /* line 118, ../scss/sites/sports.scss */
+  .lutherSports #minisite #navWrap #minisiteNavigation .navListTop ul ul a:hover {
+    background: #4c5f72;
+  }
+  /* line 124, ../scss/sites/sports.scss */
+  .lutherSports #minisite #navWrap #minisiteNavigation .navListTop ul .navListItem.open {
+    background: #586e85;
+  }
+  /* line 128, ../scss/sites/sports.scss */
+  .lutherSports #minisite #navWrap #minisiteNavigation .navListTop ul .navListItem.open a:hover {
+    background: #4c5f72;
+  }
+  /* line 136, ../scss/sites/sports.scss */
+  .lutherSports #minisite #navWrap #minisiteNavigation .jump:before {
+    color: #FFF;
+  }
 }
-/* line 76, ../scss/sites/sports.scss */
-.lutherSports #minisite #navWrap #minisiteNavigation {
-  background: #445566;
+/* line 149, ../scss/sites/sports.scss */
+.lutherSports .responsiveEventsList table {
+  border: none;
 }
-/* line 79, ../scss/sites/sports.scss */
-.lutherSports #minisite #navWrap #minisiteNavigation a {
-  color: #FFF;
+/* line 153, ../scss/sites/sports.scss */
+.lutherSports .responsiveEventsList table tr th,
+.lutherSports .responsiveEventsList table tr td {
+  font-size: 100%;
+  padding: 0.9375rem;
 }
-/* line 91, ../scss/sites/sports.scss */
+@media only screen and (max-width: 40em) {
+  /* line 157, ../scss/sites/sports.scss */
+  .lutherSports .responsiveEventsList table tr th.location,
+  .lutherSports .responsiveEventsList table tr td.location {
+    display: none;
+  }
+}
+/* line 172, ../scss/sites/sports.scss */
 .lutherSports .responsiveEventsList .view-all ul {
   margin: 0;
 }
-/* line 96, ../scss/sites/sports.scss */
+/* line 177, ../scss/sites/sports.scss */
 .lutherSports .responsiveEventsList .view-all ul .more:after {
   content: "\f138";
   margin-left: 0.375rem;
