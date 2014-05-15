@@ -130,6 +130,18 @@ function luther_get_related_publication($max_num_items = 3)
 	);
 }
 
+function luther_get_image_url($image)
+// if the image is not found on the local server
+// try to find the image url on www.luther.edu
+{
+	// if images not found locally try pulling from www
+	if (!file_exists($image))
+	{
+		$image = "http://www.luther.edu" . $image;
+	}
+	return $image;
+}
+
 function luther_is_local_ip()
 // determine if ip address is luther college or Decorah area
 // used for ReachLocal remarketing pixel on admissions site

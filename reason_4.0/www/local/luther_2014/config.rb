@@ -11,7 +11,7 @@ javascripts_dir = "javascripts"
 # Add additional folders for compass to watch
 add_import_path "stylesheets/scss/dependencies"
 add_import_path "stylesheets/scss/modules"
-add_import_path "stylesheets/scss/font-awesome-4.0.3/"
+add_import_path "stylesheets/scss/font-awesome/"
 add_import_path "stylesheets/scss/sites"
 
 # You can select your preferred output style here (can be overridden via the command line):

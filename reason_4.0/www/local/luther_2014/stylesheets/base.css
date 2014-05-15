@@ -5489,3 +5489,44 @@ form table td {
   float: left;
   display: block;
 }
+
+/* insert tablesorter fontawesome sorting arrows after table header */
+/* line 2, scss/modules/_tablesorter.scss */
+th.header:after {
+  color: #aaaaaa;
+  font-family: 'FontAwesome';
+  content: "  \f0dc";
+}
+
+/* line 7, scss/modules/_tablesorter.scss */
+th.headerSortUp:after {
+  font-family: 'FontAwesome';
+  content: "  \f0de";
+}
+
+/* line 11, scss/modules/_tablesorter.scss */
+th.headerSortDown:after {
+  font-family: 'FontAwesome';
+  content: "  \f0dd";
+}
+
+/* /// Cluetip athlete tooltip \\ */
+/* line 5, scss/modules/_tooltip.scss */
+p.athlete_position_event,
+p.athlete_class_year,
+p.athlete_hometown,
+p.athlete_high_school {
+  width: 265px;
+  margin-bottom: 0;
+}
+
+/* line 9, scss/modules/_tooltip.scss */
+p.athlete_class_year {
+  margin-bottom: 16px;
+}
+
+/* line 12, scss/modules/_tooltip.scss */
+img.athlete_image {
+  float: left;
+  padding: 0 7px 0 0;
+}

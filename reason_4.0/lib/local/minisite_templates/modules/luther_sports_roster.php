@@ -157,7 +157,18 @@
 	var $positions;
 
 	function init( $args = array() )
-	{	
+	{
+		$head_items = $this->get_head_items();
+		$head_items->add_javascript(JQUERY_URL, true);
+		//$head_items->add_stylesheet(JQUERY_UI_CSS_URL);
+		$head_items->add_javascript(JQUERY_UI_URL);
+		
+		$head_items->add_javascript('http://www.luther.edu/javascripts/tablesorter.min.js');
+		$head_items->add_javascript('http://www.luther.edu/javascripts/jquery.hoverIntent.min.js');
+		$head_items->add_stylesheet('http://www.luther.edu/javascripts/cluetip/jquery.cluetip.css');
+		$head_items->add_javascript('http://www.luther.edu/javascripts/cluetip/jquery.cluetip.js');		
+		$head_items->add_javascript('/reason/local/luther_2014/javascripts/luther-sports-roster.js');
+		
 		$site_id = new entity( $this->site_id );
 		$this->site_name = $site_id->get_value('unique_name');
 		
@@ -254,12 +265,12 @@
 			if (!empty($player['image_id']))
 			{
 				$image = get_entity_by_id($player['image_id']);
-				$url = WEB_PHOTOSTOCK . $player['image_id'] . '.' . $image['image_type'];
-				$thumb = WEB_PHOTOSTOCK . $player['image_id'] . '_tn.' . $image['image_type'];
-				$orig = WEB_PHOTOSTOCK . $player['image_id'] . '_orig.' . $image['image_type'];
+				$url = luther_get_image_url(WEB_PHOTOSTOCK . $player['image_id'] . '.' . $image['image_type']);
+				$thumb = luther_get_image_url(WEB_PHOTOSTOCK . $player['image_id'] . '_tn.' . $image['image_type']);
+				$orig = luther_get_image_url(WEB_PHOTOSTOCK . $player['image_id'] . '_orig.' . $image['image_type']);
 				$d = max($image['width'], $image['height']) / 125.0;
 				$caption = $image['name'];
-				if (file_exists($_SERVER['DOCUMENT_ROOT'] . $orig))   // link to high res original if it exists
+				if (file_exists($orig))   // link to high res original if it exists
 				{
 					$caption_hr = $caption . '<a href="' . $orig . '" title="High res">&prop;</a>';
 				}
@@ -441,7 +452,7 @@
 						if (!empty($player['image_id']))
 						{
 							$image = get_entity_by_id($player['image_id']);
-							$thumb = WEB_PHOTOSTOCK . $player['image_id'] . '_tn.' . $image['image_type'];
+							$thumb = luther_get_image_url(WEB_PHOTOSTOCK . $player['image_id'] . '_tn.' . $image['image_type']);
 							$ct .= "<img class=\"athlete_image\" src=\"" . $thumb . "\" />";
 						}
 						$ct .= "</p>";					
