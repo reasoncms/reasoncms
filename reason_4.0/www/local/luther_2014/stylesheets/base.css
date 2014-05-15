@@ -80,8 +80,8 @@ h1, h2, h3, h4, h5, h6 {
   font-style: normal;
   color: #222222;
   text-rendering: optimizeLegibility;
-  margin-top: 0.25rem;
-  margin-bottom: 0.75rem;
+  margin-top: 0;
+  margin-bottom: 1rem;
   line-height: 1.4;
 }
 /* line 192, ../foundation/bower_components/foundation/scss/foundation/components/_type.scss */
@@ -372,12 +372,12 @@ table tfoot tr td {
 table tr th,
 table tr td {
   padding: 0.5625rem 0.625rem;
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
   color: #222222;
 }
 /* line 76, ../foundation/bower_components/foundation/scss/foundation/components/_tables.scss */
 table tr.even, table tr.alt, table tr:nth-of-type(even) {
-  background: #f9f9f9;
+  background: #efefef;
 }
 /* line 83, ../foundation/bower_components/foundation/scss/foundation/components/_tables.scss */
 table thead tr th,
@@ -397,7 +397,7 @@ table tfoot tr td {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -886,7 +886,7 @@ ul.off-canvas-list li a {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -983,7 +983,7 @@ body #wrapper #global-banner hgroup {
 body #wrapper #global-banner hgroup h1 a {
   display: block;
   height: 28px;
-  width: 149px;
+  width: 150px;
   margin: 0 auto;
   background: url("../images/logo_mobile_1x.png") no-repeat;
   top: 16px;
@@ -994,10 +994,10 @@ body #wrapper #global-banner hgroup h1 a {
   /* line 84, scss/_global.scss */
   body #wrapper #global-banner hgroup h1 a {
     background: url("../images/logo_mobile_2x.png") no-repeat;
-    -webkit-background-size: 149px 28px;
-    -moz-background-size: 149px 28px;
-    -o-background-size: 149px 28px;
-    background-size: 149px 28px;
+    -webkit-background-size: 150px 28px;
+    -moz-background-size: 150px 28px;
+    -o-background-size: 150px 28px;
+    background-size: 150px 28px;
   }
 }
 @media only screen and (min-width: 64.063em) {
@@ -1022,10 +1022,10 @@ body #wrapper #global-banner hgroup h1 a {
   /* line 104, scss/_global.scss */
   body #wrapper #global-banner hgroup h1 a {
     background: url("../images/logo_2x.png") no-repeat;
-    -webkit-background-size: 149px 28px;
-    -moz-background-size: 149px 28px;
-    -o-background-size: 149px 28px;
-    background-size: 149px 28px;
+    -webkit-background-size: 288px 54px;
+    -moz-background-size: 288px 54px;
+    -o-background-size: 288px 54px;
+    background-size: 288px 54px;
   }
 }
 /* line 111, scss/_global.scss */
@@ -1782,8 +1782,10 @@ body #wrapper #post-footer a {
 
 /* line 4, scss/font-awesome/_core.scss */
 .fa, #minisite #navWrap .jump:before, #minisite .feedLink .feedInfo a:before, .assets li:before, .childrenList li a:before, #childrenAndGrandchildren li ul .childDesc:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
-#calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #facultyStaff .facStaff .facStaffContact li:before, .featuresModule .feature .featureInfo .featureText a:before,
-.featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, .publication .post p.comments a:before, .publication .post p.more a:after, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after {
+#calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
+#calendar .eventDetails .eventUrl:before,
+#calendar .eventDetails .calendarExport:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
+.featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, #relatedPub .pubLinks a:before, .publication .post p.comments a:before, .publication .post p.more a:after, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after {
   display: inline-block;
   font-family: FontAwesome;
   font-style: normal;
@@ -1801,7 +1803,7 @@ body #wrapper #post-footer a {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -2165,7 +2167,7 @@ body #wrapper #post-footer a {
     box-shadow: 0 0 0 0;
   }
 }
-/* line 282, scss/_minisite.scss */
+/* line 281, scss/_minisite.scss */
 #minisite #navWrap a.toggle {
   position: absolute;
   top: -60px;
@@ -2175,39 +2177,39 @@ body #wrapper #post-footer a {
   display: block;
   z-index: 12;
 }
-/* line 291, scss/_minisite.scss */
+/* line 290, scss/_minisite.scss */
 #minisite #navWrap a.toggle.open {
   background: #f3f3f3;
   -webkit-box-shadow: rgba(0, 0, 0, 0.2) -2px -2px 2px;
   -moz-box-shadow: rgba(0, 0, 0, 0.2) -2px -2px 2px;
   box-shadow: rgba(0, 0, 0, 0.2) -2px -2px 2px;
 }
-/* line 295, scss/_minisite.scss */
+/* line 294, scss/_minisite.scss */
 #minisite #navWrap a.toggle.open .fa-times {
   display: block;
 }
-/* line 296, scss/_minisite.scss */
+/* line 295, scss/_minisite.scss */
 #minisite #navWrap a.toggle.open .fa-bars {
   display: none;
 }
-/* line 299, scss/_minisite.scss */
+/* line 298, scss/_minisite.scss */
 #minisite #navWrap a.toggle h1 {
   font-size: 1.25rem;
   color: #1073ce;
 }
-/* line 304, scss/_minisite.scss */
+/* line 303, scss/_minisite.scss */
 #minisite #navWrap a.toggle i {
   font-size: 1.25rem;
   width: 60px;
   margin-top: 1.25rem;
   text-align: center;
 }
-/* line 310, scss/_minisite.scss */
+/* line 309, scss/_minisite.scss */
 #minisite #navWrap a.toggle i.fa-times {
   display: none;
 }
 @media only screen and (min-width: 64.063em) {
-  /* line 282, scss/_minisite.scss */
+  /* line 281, scss/_minisite.scss */
   #minisite #navWrap a.toggle {
     display: none;
   }
@@ -2216,42 +2218,41 @@ body #wrapper #post-footer a {
 #minisite #navWrap #minisiteNavigation {
   background: #f1f1f1;
 }
-/* line 329, scss/_minisite.scss */
+/* line 330, scss/_minisite.scss */
 #minisite #navWrap #minisiteNavigation,
 #minisite #navWrap .subNavElements {
   display: none;
 }
 @media only screen and (min-width: 64.063em) {
-  /* line 329, scss/_minisite.scss */
+  /* line 330, scss/_minisite.scss */
   #minisite #navWrap #minisiteNavigation,
   #minisite #navWrap .subNavElements {
     display: block;
   }
 }
-/* line 340, scss/_minisite.scss */
+/* line 341, scss/_minisite.scss */
 #minisite #navWrap.open #minisiteNavigation,
 #minisite #navWrap.open .subNavElements {
   display: block;
 }
-/* line 345, scss/_minisite.scss */
+/* line 346, scss/_minisite.scss */
 #minisite #navWrap .navListTop {
   margin: 0;
-  border-bottom: 1px solid #d7d7d7;
 }
-/* line 350, scss/_minisite.scss */
+/* line 351, scss/_minisite.scss */
 #minisite #navWrap .navListTop ul {
   margin: 0;
 }
-/* line 354, scss/_minisite.scss */
+/* line 355, scss/_minisite.scss */
 #minisite #navWrap .navListTop li {
   position: relative;
 }
-/* line 358, scss/_minisite.scss */
+/* line 359, scss/_minisite.scss */
 #minisite #navWrap .navListTop li a {
   display: block;
   padding: 0.90909rem 1.25rem;
 }
-/* line 363, scss/_minisite.scss */
+/* line 364, scss/_minisite.scss */
 #minisite #navWrap .navListTop a.home {
   font-size: 2rem;
   line-height: 1;
@@ -2261,21 +2262,13 @@ body #wrapper #post-footer a {
   position: relative;
   padding-top: 1.875rem;
   padding-bottom: 1.875rem;
-  /*&:after {
-  	@extend .fa;
-  	content: $fa-var-home;
-  	position: absolute;
-  	right: 0;
-  	top: 0;
-  	color: rgba(255,255,255,.25);
-  }*/
 }
 /* line 374, scss/_minisite.scss */
 #minisite #navWrap .navListTop a.home strong {
   font-weight: 300;
 }
 @media only screen and (min-width: 64.063em) {
-  /* line 363, scss/_minisite.scss */
+  /* line 364, scss/_minisite.scss */
   #minisite #navWrap .navListTop a.home {
     padding-top: 2.5rem;
     padding-bottom: 2.5rem;
@@ -2283,7 +2276,7 @@ body #wrapper #post-footer a {
     border-bottom: 6px solid #FFF;
   }
 }
-/* line 403, scss/_minisite.scss */
+/* line 386, scss/_minisite.scss */
 #minisite #navWrap .navListTop ul a {
   display: block;
   border-top: 1px solid #d7d7d7;
@@ -2291,51 +2284,51 @@ body #wrapper #post-footer a {
   font-weight: 300;
   font-size: 0.9375rem;
 }
-/* line 411, scss/_minisite.scss */
+/* line 394, scss/_minisite.scss */
 #minisite #navWrap .navListTop ul a:hover {
   background: #e9e9e9;
   color: black;
 }
-/* line 419, scss/_minisite.scss */
+/* line 402, scss/_minisite.scss */
 #minisite #navWrap .navListTop ul ul a {
   border: none;
   padding: 0.71429rem 1.25rem 0.71429rem 2.5rem;
   border-top: 1px solid #e6e6e6;
 }
-/* line 424, scss/_minisite.scss */
+/* line 407, scss/_minisite.scss */
 #minisite #navWrap .navListTop ul ul a:hover {
   background: #f3f3f3;
 }
-/* line 430, scss/_minisite.scss */
+/* line 413, scss/_minisite.scss */
 #minisite #navWrap .navListTop ul ul ul li a {
   padding-left: 3.75rem;
 }
-/* line 435, scss/_minisite.scss */
+/* line 418, scss/_minisite.scss */
 #minisite #navWrap .navListTop ul .navListItem.open {
   background: #f0f5f8;
   background: #f8f8f8;
 }
-/* line 440, scss/_minisite.scss */
+/* line 423, scss/_minisite.scss */
 #minisite #navWrap .navListTop ul .navListItem.open a:hover {
   background: #f3f3f3;
 }
-/* line 448, scss/_minisite.scss */
+/* line 431, scss/_minisite.scss */
 #minisite #navWrap .jump a {
   padding-right: 2.25rem;
 }
-/* line 452, scss/_minisite.scss */
+/* line 435, scss/_minisite.scss */
 #minisite #navWrap .jump:before {
   content: "\f08e";
   position: absolute;
   top: 1.25rem;
   right: 1.25rem;
 }
-/* line 469, scss/_minisite.scss */
+/* line 452, scss/_minisite.scss */
 #minisite #relatedSections > div,
 #minisite .relatedItems > div {
   margin-bottom: 2.5rem;
 }
-/* line 475, scss/_minisite.scss */
+/* line 458, scss/_minisite.scss */
 #minisite #relatedSections .assets,
 #minisite #relatedSections .blurb,
 #minisite #relatedSections .relatedEvents,
@@ -2345,7 +2338,7 @@ body #wrapper #post-footer a {
   background: #f6f6f6;
   padding: 1.25rem;
 }
-/* line 479, scss/_minisite.scss */
+/* line 462, scss/_minisite.scss */
 #minisite #relatedSections .assets > *:last-child,
 #minisite #relatedSections .blurb > *:last-child,
 #minisite #relatedSections .relatedEvents > *:last-child,
@@ -2355,13 +2348,13 @@ body #wrapper #post-footer a {
   padding-bottom: 0;
   margin-bottom: 0;
 }
-/* line 485, scss/_minisite.scss */
+/* line 468, scss/_minisite.scss */
 #minisite #relatedSections h3,
 #minisite .relatedItems h3 {
   font-size: 1.4375rem;
   margin-top: 0;
 }
-/* line 496, scss/_minisite.scss */
+/* line 479, scss/_minisite.scss */
 #minisite #footer {
   position: relative;
   padding-left: 1.25rem;
@@ -2373,7 +2366,7 @@ body #wrapper #post-footer a {
   padding-bottom: 1.25rem;
 }
 @media only screen and (min-width: 64.063em) {
-  /* line 496, scss/_minisite.scss */
+  /* line 479, scss/_minisite.scss */
   #minisite #footer {
     position: relative;
     padding-left: 0;
@@ -2383,14 +2376,14 @@ body #wrapper #post-footer a {
     padding: 1.25rem;
   }
 }
-/* line 509, scss/_minisite.scss */
+/* line 492, scss/_minisite.scss */
 #minisite #footer #maintained {
   color: #9d9d9d;
   display: block;
   margin-bottom: 1rem;
 }
 @media only screen and (min-width: 60.0625em) {
-  /* line 509, scss/_minisite.scss */
+  /* line 492, scss/_minisite.scss */
   #minisite #footer #maintained {
     width: 45%;
     float: left;
@@ -2398,27 +2391,27 @@ body #wrapper #post-footer a {
     padding-top: 4px;
   }
 }
-/* line 522, scss/_minisite.scss */
+/* line 505, scss/_minisite.scss */
 #minisite #footer .loginLinkModule {
   display: block;
 }
 @media only screen and (min-width: 60.0625em) {
-  /* line 522, scss/_minisite.scss */
+  /* line 505, scss/_minisite.scss */
   #minisite #footer .loginLinkModule {
     width: 45%;
     float: right;
     text-align: right;
   }
 }
-/* line 531, scss/_minisite.scss */
+/* line 514, scss/_minisite.scss */
 #minisite #footer .loginLinkModule .editDivider {
   display: none;
 }
-/* line 533, scss/_minisite.scss */
+/* line 516, scss/_minisite.scss */
 #minisite #footer .loginLinkModule div {
   display: inline;
 }
-/* line 537, scss/_minisite.scss */
+/* line 520, scss/_minisite.scss */
 #minisite #footer .loginLinkModule div a {
   background: #e9e9e9;
   padding: 0.3125rem 0.375rem;
@@ -2433,12 +2426,12 @@ body #wrapper #post-footer a {
   line-height: 1;
 }
 @media only screen and (min-width: 60.0625em) {
-  /* line 537, scss/_minisite.scss */
+  /* line 520, scss/_minisite.scss */
   #minisite #footer .loginLinkModule div a {
     margin-left: 0.25rem;
   }
 }
-/* line 552, scss/_minisite.scss */
+/* line 535, scss/_minisite.scss */
 #minisite #footer .loginLinkModule #footerLoginLink {
   display: inline-block;
   font-size: 0.75rem;
@@ -2455,37 +2448,42 @@ body #wrapper #post-footer a {
   line-height: 1;
 }
 @media only screen and (min-width: 60.0625em) {
-  /* line 552, scss/_minisite.scss */
+  /* line 535, scss/_minisite.scss */
   #minisite #footer .loginLinkModule #footerLoginLink {
     margin: 0 0 0 0.25rem;
   }
 }
-/* line 568, scss/_minisite.scss */
+/* line 551, scss/_minisite.scss */
 #minisite #footer .loginLinkModule #footerLoginLink .username {
   font-weight: 400;
 }
-/* line 573, scss/_minisite.scss */
+/* line 556, scss/_minisite.scss */
 #minisite #footer .loginLinkModule.unauthenticated #footerLoginLink {
   margin: 0;
 }
+/* line 567, scss/_minisite.scss */
+#minisite table tr,
+#minisite table td {
+  font-weight: 300;
+}
 @media only screen and (min-width: 40.063em) {
-  /* line 582, scss/_minisite.scss */
+  /* line 572, scss/_minisite.scss */
   #minisite .feedLink {
     display: inline;
     text-align: right;
   }
 }
-/* line 590, scss/_minisite.scss */
+/* line 580, scss/_minisite.scss */
 #minisite .feedLink .feedInfo a {
   color: transparent;
 }
-/* line 594, scss/_minisite.scss */
+/* line 584, scss/_minisite.scss */
 #minisite .feedLink .feedInfo a:before {
   content: "\f09e";
   display: block;
   color: #9f2112;
 }
-/* line 603, scss/_minisite.scss */
+/* line 593, scss/_minisite.scss */
 #minisite .pagination {
   margin-bottom: 2.5rem;
   *zoom: 1;
@@ -2500,26 +2498,34 @@ body #wrapper #post-footer a {
   clear: both;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 603, scss/_minisite.scss */
+  /* line 593, scss/_minisite.scss */
   #minisite .pagination {
     width: 50%;
     float: left;
   }
 }
-/* line 612, scss/_minisite.scss */
+/* line 602, scss/_minisite.scss */
 #minisite .pagination.above {
   dispaly: none;
 }
-/* line 623, scss/_minisite.scss */
+/* line 613, scss/_minisite.scss */
 #minisite .pagination .pages a,
 #minisite .pagination .pages strong {
   margin: 0 0.25rem;
 }
+/* line 622, scss/_minisite.scss */
+#minisite .contentMain + .contentPost {
+  border-top: 1px solid #e9e9e9;
+  padding-top: 2.5rem;
+  margin-top: 2.5rem;
+}
 
 /* line 4, scss/font-awesome/_core.scss */
 .fa, #minisite #navWrap .jump:before, #minisite .feedLink .feedInfo a:before, .assets li:before, .childrenList li a:before, #childrenAndGrandchildren li ul .childDesc:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
-#calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #facultyStaff .facStaff .facStaffContact li:before, .featuresModule .feature .featureInfo .featureText a:before,
-.featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, .publication .post p.comments a:before, .publication .post p.more a:after, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after {
+#calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
+#calendar .eventDetails .eventUrl:before,
+#calendar .eventDetails .calendarExport:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
+.featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, #relatedPub .pubLinks a:before, .publication .post p.comments a:before, .publication .post p.more a:after, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after {
   display: inline-block;
   font-family: FontAwesome;
   font-style: normal;
@@ -2537,7 +2543,7 @@ body #wrapper #post-footer a {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -2584,7 +2590,7 @@ body #wrapper #post-footer a {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -2620,6 +2626,11 @@ body #wrapper #post-footer a {
   height: 100%;
 }
 
+/* line 29, scss/modules/_av.scss */
+#av .moduleNav ul {
+  margin: 0;
+}
+
 /* line 10, scss/_extends.scss */
 .zero-out, body #wrapper #global-banner hgroup h1, body #wrapper #global-banner #mobile-nav ul, body #wrapper #global-nav .sections, body #wrapper #global-footer #global-footer-nav .column ul, body #wrapper #global-footer #global-footer-info .contact, .blurb[class^='uname_call_to_action'] ul, .blurb[class*=' uname_call_to_action'] ul, #calendar .responsiveEventsList .views ul, .featuresModule .feature .featureInfo .featureTitle a,
 .featuresModule .feature .featureInfo .featureTitle .noLink, .featuresModule .feature .featureNavWrap .featureNav {
@@ -2628,7 +2639,7 @@ body #wrapper #post-footer a {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -2648,20 +2659,22 @@ body #wrapper #post-footer a {
 /* line 45, scss/modules/_blurb.scss */
 .blurb[class^='uname_call_to_action'], .blurb[class*=' uname_call_to_action'] {
   color: #ff00ff;
+  background: none !important;
+  padding: 0 !important;
 }
-/* line 49, scss/modules/_blurb.scss */
+/* line 51, scss/modules/_blurb.scss */
 .blurb[class^='uname_call_to_action'] ul, .blurb[class*=' uname_call_to_action'] ul {
   list-style-type: none !important;
 }
-/* line 53, scss/modules/_blurb.scss */
+/* line 55, scss/modules/_blurb.scss */
 .blurb[class^='uname_call_to_action'] ul li, .blurb[class*=' uname_call_to_action'] ul li {
   margin-bottom: 1rem;
 }
-/* line 55, scss/modules/_blurb.scss */
+/* line 57, scss/modules/_blurb.scss */
 .blurb[class^='uname_call_to_action'] ul li:last-child, .blurb[class*=' uname_call_to_action'] ul li:last-child {
   margin-bottom: 0;
 }
-/* line 59, scss/modules/_blurb.scss */
+/* line 61, scss/modules/_blurb.scss */
 .blurb[class^='uname_call_to_action'] ul li .cta, .blurb[class*=' uname_call_to_action'] ul li .cta {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
   font-size: 1.125rem;
@@ -2689,39 +2702,39 @@ body #wrapper #post-footer a {
   -o-transition-timing-function: ease;
   transition-timing-function: ease;
 }
-/* line 74, scss/modules/_blurb.scss */
+/* line 76, scss/modules/_blurb.scss */
 .blurb[class^='uname_call_to_action'] ul li .cta:link, .blurb[class*=' uname_call_to_action'] ul li .cta:link {
   text-decoration: none !important;
 }
-/* line 78, scss/modules/_blurb.scss */
+/* line 80, scss/modules/_blurb.scss */
 .blurb[class^='uname_call_to_action'] ul li .cta.blue, .blurb[class*=' uname_call_to_action'] ul li .cta.blue {
   background: #1073ce;
 }
-/* line 81, scss/modules/_blurb.scss */
+/* line 83, scss/modules/_blurb.scss */
 .blurb[class^='uname_call_to_action'] ul li .cta.blue:hover, .blurb[class*=' uname_call_to_action'] ul li .cta.blue:hover {
   background: #0d5ea8;
 }
-/* line 86, scss/modules/_blurb.scss */
+/* line 88, scss/modules/_blurb.scss */
 .blurb[class^='uname_call_to_action'] ul li .cta.red, .blurb[class*=' uname_call_to_action'] ul li .cta.red {
   background: #9f2112;
 }
-/* line 89, scss/modules/_blurb.scss */
+/* line 91, scss/modules/_blurb.scss */
 .blurb[class^='uname_call_to_action'] ul li .cta.red:hover, .blurb[class*=' uname_call_to_action'] ul li .cta.red:hover {
   background: #7a190e;
 }
-/* line 94, scss/modules/_blurb.scss */
+/* line 96, scss/modules/_blurb.scss */
 .blurb[class^='uname_call_to_action'] ul li .cta.green, .blurb[class*=' uname_call_to_action'] ul li .cta.green {
   background: #4a8512;
 }
-/* line 97, scss/modules/_blurb.scss */
+/* line 99, scss/modules/_blurb.scss */
 .blurb[class^='uname_call_to_action'] ul li .cta.green:hover, .blurb[class*=' uname_call_to_action'] ul li .cta.green:hover {
   background: #36610d;
 }
-/* line 102, scss/modules/_blurb.scss */
+/* line 104, scss/modules/_blurb.scss */
 .blurb[class^='uname_call_to_action'] ul li .cta.yellow, .blurb[class*=' uname_call_to_action'] ul li .cta.yellow {
   background: #e8a500;
 }
-/* line 105, scss/modules/_blurb.scss */
+/* line 107, scss/modules/_blurb.scss */
 .blurb[class^='uname_call_to_action'] ul li .cta.yellow:hover, .blurb[class*=' uname_call_to_action'] ul li .cta.yellow:hover {
   background: #bf8800;
 }
@@ -2734,7 +2747,7 @@ body #wrapper #post-footer a {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -2743,18 +2756,17 @@ body #wrapper #post-footer a {
 
 /* line 23, scss/modules/_children.scss */
 .childrenList {
-  border-top: 1px solid #e9e9e9;
-  padding: 1.25rem 0 0;
+  padding: 0;
   margin: 0;
 }
-/* line 30, scss/modules/_children.scss */
+/* line 31, scss/modules/_children.scss */
 .childrenList li a {
   margin-bottom: 1.25rem;
   margin-left: 2rem;
   position: relative;
   display: block;
 }
-/* line 36, scss/modules/_children.scss */
+/* line 37, scss/modules/_children.scss */
 .childrenList li a:before {
   content: "\f138";
   position: absolute;
@@ -2774,12 +2786,12 @@ body #wrapper #post-footer a {
   transition-timing-function: ease;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 36, scss/modules/_children.scss */
+  /* line 37, scss/modules/_children.scss */
   .childrenList li a:before {
     top: 0.6875rem;
   }
 }
-/* line 54, scss/modules/_children.scss */
+/* line 55, scss/modules/_children.scss */
 .childrenList li a:hover:before, .childrenList li a:focus:before {
   left: -1.75rem;
   -webkit-transition-property: left;
@@ -2795,75 +2807,75 @@ body #wrapper #post-footer a {
   -o-transition-timing-function: ease;
   transition-timing-function: ease;
 }
-/* line 63, scss/modules/_children.scss */
+/* line 64, scss/modules/_children.scss */
 .childrenList li h4 {
   line-height: inherit;
   margin: 0;
 }
-/* line 68, scss/modules/_children.scss */
+/* line 69, scss/modules/_children.scss */
 .childrenList li .childDesc {
   color: #6a6a6a;
   font-family: "Roboto Slab", serif;
   font-weight: 300;
 }
 
-/* line 83, scss/modules/_children.scss */
+/* line 84, scss/modules/_children.scss */
 #childrenAndGrandchildren li {
   margin-left: 2rem;
 }
-/* line 88, scss/modules/_children.scss */
+/* line 89, scss/modules/_children.scss */
 #childrenAndGrandchildren li h4 a {
   margin: 0;
 }
-/* line 91, scss/modules/_children.scss */
+/* line 92, scss/modules/_children.scss */
 #childrenAndGrandchildren li h4 a:before {
   font-size: 1rem;
 }
-/* line 97, scss/modules/_children.scss */
+/* line 98, scss/modules/_children.scss */
 #childrenAndGrandchildren li .childDesc {
   margin-bottom: 0.75rem;
 }
-/* line 101, scss/modules/_children.scss */
+/* line 102, scss/modules/_children.scss */
 #childrenAndGrandchildren li ul {
   margin: 0.25rem 0 1rem;
 }
-/* line 104, scss/modules/_children.scss */
+/* line 105, scss/modules/_children.scss */
 #childrenAndGrandchildren li ul li {
   margin-left: 0;
 }
-/* line 108, scss/modules/_children.scss */
+/* line 109, scss/modules/_children.scss */
 #childrenAndGrandchildren li ul strong {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
   font-weight: 400;
   display: inline;
 }
-/* line 114, scss/modules/_children.scss */
+/* line 115, scss/modules/_children.scss */
 #childrenAndGrandchildren li ul .childDesc {
   display: inline;
   margin: 0;
   font-size: 0.875rem;
 }
-/* line 119, scss/modules/_children.scss */
+/* line 120, scss/modules/_children.scss */
 #childrenAndGrandchildren li ul .childDesc:before {
   content: "\f101";
   margin: 0 0.375rem 0 0.25rem;
 }
-/* line 126, scss/modules/_children.scss */
+/* line 127, scss/modules/_children.scss */
 #childrenAndGrandchildren li ul a {
   color: #9f2112;
   margin: 0;
   display: inline;
 }
-/* line 131, scss/modules/_children.scss */
+/* line 132, scss/modules/_children.scss */
 #childrenAndGrandchildren li ul a:before {
   content: '';
 }
-/* line 135, scss/modules/_children.scss */
+/* line 136, scss/modules/_children.scss */
 #childrenAndGrandchildren li ul a:hover {
   color: #c42916;
 }
 
-/* line 146, scss/modules/_children.scss */
+/* line 147, scss/modules/_children.scss */
 .childrenListWithImages {
   *zoom: 1;
 }
@@ -2876,60 +2888,54 @@ body #wrapper #post-footer a {
 .childrenListWithImages:after {
   clear: both;
 }
-/* line 153, scss/modules/_children.scss */
+/* line 154, scss/modules/_children.scss */
 .childrenListWithImages li {
   clear: both;
   display: block;
   margin-bottom: 1.25rem;
 }
 @media only screen and (min-width: 30em) {
-  /* line 153, scss/modules/_children.scss */
+  /* line 154, scss/modules/_children.scss */
   .childrenListWithImages li {
     width: 50%;
     float: left;
     clear: none;
   }
-  /* line 162, scss/modules/_children.scss */
+  /* line 163, scss/modules/_children.scss */
   .childrenListWithImages li:nth-child(2n+1) {
     clear: left;
   }
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 153, scss/modules/_children.scss */
+  /* line 154, scss/modules/_children.scss */
   .childrenListWithImages li {
     width: 33.33333%;
   }
-  /* line 169, scss/modules/_children.scss */
+  /* line 170, scss/modules/_children.scss */
   .childrenListWithImages li:nth-child(2n+1) {
     clear: none;
   }
-  /* line 172, scss/modules/_children.scss */
+  /* line 173, scss/modules/_children.scss */
   .childrenListWithImages li:nth-child(3n+1) {
     clear: left;
   }
 }
 @media only screen and (min-width: 90.063em) {
-  /* line 153, scss/modules/_children.scss */
+  /* line 154, scss/modules/_children.scss */
   .childrenListWithImages li {
     width: 25%;
   }
-  /* line 179, scss/modules/_children.scss */
+  /* line 180, scss/modules/_children.scss */
   .childrenListWithImages li:nth-child(3n+1) {
     clear: none;
   }
-  /* line 182, scss/modules/_children.scss */
+  /* line 183, scss/modules/_children.scss */
   .childrenListWithImages li:nth-child(4n+1) {
     clear: left;
   }
 }
-/* line 187, scss/modules/_children.scss */
+/* line 188, scss/modules/_children.scss */
 .childrenListWithImages li a {
-  -moz-border-radius-bottomleft: 4px;
-  -webkit-border-bottom-left-radius: 4px;
-  border-bottom-left-radius: 4px;
-  -moz-border-radius-bottomright: 4px;
-  -webkit-border-bottom-right-radius: 4px;
-  border-bottom-right-radius: 4px;
   overflow: hidden;
   background: #f1f1f1;
   margin: 0;
@@ -2946,58 +2952,60 @@ body #wrapper #post-footer a {
 .childrenListWithImages li a:after {
   clear: both;
 }
-/* line 196, scss/modules/_children.scss */
+/* line 197, scss/modules/_children.scss */
 .childrenListWithImages li a:before {
-  content: '';
+  content: "";
   position: static;
+  height: 0;
+  display: none !important;
 }
-/* line 203, scss/modules/_children.scss */
+/* line 206, scss/modules/_children.scss */
 .childrenListWithImages li a:hover h4 {
   text-decoration: underline;
 }
-/* line 208, scss/modules/_children.scss */
+/* line 211, scss/modules/_children.scss */
 .childrenListWithImages li a h4 {
   padding: 0.75rem;
 }
-/* line 212, scss/modules/_children.scss */
+/* line 215, scss/modules/_children.scss */
 .childrenListWithImages li a .childDesc {
   padding: 0 0.75rem 0.75rem;
 }
 
 @media only screen and (min-width: 40.063em) {
-  /* line 223, scss/modules/_children.scss */
+  /* line 226, scss/modules/_children.scss */
   .hasRelated .childrenListWithImages li {
     width: 50%;
   }
-  /* line 227, scss/modules/_children.scss */
+  /* line 230, scss/modules/_children.scss */
   .hasRelated .childrenListWithImages li:nth-child(2n+1) {
     clear: left;
   }
 }
 @media only screen and (min-width: 64.063em) {
-  /* line 223, scss/modules/_children.scss */
+  /* line 226, scss/modules/_children.scss */
   .hasRelated .childrenListWithImages li {
     width: 33.333333%;
   }
-  /* line 234, scss/modules/_children.scss */
+  /* line 237, scss/modules/_children.scss */
   .hasRelated .childrenListWithImages li:nth-child(2n+1) {
     clear: none;
   }
-  /* line 237, scss/modules/_children.scss */
+  /* line 240, scss/modules/_children.scss */
   .hasRelated .childrenListWithImages li:nth-child(3n+1) {
     clear: left;
   }
 }
 @media only screen and (min-width: 90.063em) {
-  /* line 223, scss/modules/_children.scss */
+  /* line 226, scss/modules/_children.scss */
   .hasRelated .childrenListWithImages li {
     width: 50%;
   }
-  /* line 244, scss/modules/_children.scss */
+  /* line 247, scss/modules/_children.scss */
   .hasRelated .childrenListWithImages li:nth-child(3n+1) {
     clear: none;
   }
-  /* line 247, scss/modules/_children.scss */
+  /* line 250, scss/modules/_children.scss */
   .hasRelated .childrenListWithImages li:nth-child(2n+1) {
     clear: left;
   }
@@ -3011,7 +3019,7 @@ body #wrapper #post-footer a {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -3103,6 +3111,78 @@ body #wrapper #post-footer a {
   margin-bottom: 0;
   max-width: 100%;
   *zoom: 1;
+  		/*.eventsListContent { // Event listings
+  			width: 100%;
+  
+  			.focus { // Shows what you're currently browsing. Redundant.
+  				display: none;
+  			}
+  
+  			.newEventsError { // Shows errors.  "No events."
+  
+  			}
+  
+  			.ongoingblock {
+  
+  			}
+  
+  			.dayblock {
+  
+  			}
+  
+  			ul {
+  				margin-left: 0;
+  			}
+  
+  			.event {
+  				display: block;
+  				margin-bottom: 2px;
+  				padding: rem-calc(16);
+  				@include clearfix;
+  				border-bottom: 1px dotted $lc-grey;
+  				position: relative;
+  
+  				&:nth-child(odd) {
+  					//background: #efefef;
+  				}
+  				
+  				a {
+  					
+  					max-width: 65%;
+  					display: block;
+  					float: left;
+  
+  					&:hover {
+  						text-decoration: underline;
+  
+  						i { // Video feed icon
+  							color: lighten($lc-yellow, 10%);
+  						}
+  					}
+  
+  					i { // Video feed icon
+  						color: $lc-yellow;
+  						margin-left: rem-calc(6);
+  					}
+  				}
+  
+  				em {
+  					&.through {
+  						max-width: 65%;
+  						display: block;
+  						float: left;
+  						clear: left;
+  					}
+  				}
+  
+  				.time {
+  					font-weight: bold;
+  					color: $lc-red;
+  					position: absolute;
+  					left: 70%;
+  				}
+  			}
+  		}*/
 }
 /* line 165, ../foundation/bower_components/foundation/scss/foundation/components/_global.scss */
 #calendar .responsiveEventsList:before, #calendar .responsiveEventsList:after {
@@ -3267,189 +3347,274 @@ body #wrapper #post-footer a {
   font-size: 1.5rem;
   line-height: 1.75;
 }
-/* line 232, scss/modules/_events.scss */
+/* line 305, scss/modules/_events.scss */
 #calendar .responsiveEventsList .eventsListContent {
   width: 100%;
 }
-/* line 235, scss/modules/_events.scss */
-#calendar .responsiveEventsList .eventsListContent .focus {
-  display: none;
-}
-/* line 251, scss/modules/_events.scss */
-#calendar .responsiveEventsList .eventsListContent ul {
-  margin-left: 0;
-}
-/* line 255, scss/modules/_events.scss */
-#calendar .responsiveEventsList .eventsListContent .event {
-  display: block;
-  margin-bottom: 2px;
-  padding: 1rem;
-  *zoom: 1;
-  border-bottom: 1px dotted #e9e9e9;
-  position: relative;
-}
-/* line 165, ../foundation/bower_components/foundation/scss/foundation/components/_global.scss */
-#calendar .responsiveEventsList .eventsListContent .event:before, #calendar .responsiveEventsList .eventsListContent .event:after {
-  content: " ";
-  display: table;
-}
-/* line 166, ../foundation/bower_components/foundation/scss/foundation/components/_global.scss */
-#calendar .responsiveEventsList .eventsListContent .event:after {
-  clear: both;
-}
-/* line 267, scss/modules/_events.scss */
-#calendar .responsiveEventsList .eventsListContent .event a {
-  max-width: 65%;
-  display: block;
-  float: left;
-}
-/* line 273, scss/modules/_events.scss */
-#calendar .responsiveEventsList .eventsListContent .event a:hover {
-  text-decoration: underline;
-}
-/* line 276, scss/modules/_events.scss */
-#calendar .responsiveEventsList .eventsListContent .event a:hover i {
-  color: #ffbd1c;
-}
-/* line 281, scss/modules/_events.scss */
-#calendar .responsiveEventsList .eventsListContent .event a i {
-  color: #e8a500;
-  margin-left: 0.375rem;
-}
-/* line 288, scss/modules/_events.scss */
-#calendar .responsiveEventsList .eventsListContent .event em.through {
-  max-width: 65%;
-  display: block;
-  float: left;
-  clear: left;
-}
-/* line 296, scss/modules/_events.scss */
-#calendar .responsiveEventsList .eventsListContent .event .time {
-  font-weight: bold;
-  color: #9f2112;
-  position: absolute;
-  left: 70%;
-}
-/* line 307, scss/modules/_events.scss */
-#calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGridWrapper {
-  margin-bottom: 2.5rem;
-}
-/* line 311, scss/modules/_events.scss */
-#calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid {
-  text-align: center;
-}
-/* line 317, scss/modules/_events.scss */
-#calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid a.previous,
-#calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid h4,
-#calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid a.next {
-  display: inline-block;
-  padding: 0 0.375rem;
-}
-/* line 322, scss/modules/_events.scss */
-#calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table {
-  border: none;
-}
-/* line 324, scss/modules/_events.scss */
-#calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table tr {
-  background: #FFF;
-}
-/* line 329, scss/modules/_events.scss */
-#calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table th,
-#calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td {
-  text-align: center;
-  padding: 0;
-}
-/* line 336, scss/modules/_events.scss */
-#calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table th {
-  padding: 5% 0;
-  background: #fbfbfb;
-  background: #FFF;
-  border: #FFF;
-}
-/* line 343, scss/modules/_events.scss */
-#calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td {
-  border-color: #DDDDDD;
-  border-image: none;
-  border-style: solid;
-  border-width: 1px;
-}
-/* line 349, scss/modules/_events.scss */
-#calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td:empty {
-  background: #f6f6f6;
-}
-/* line 358, scss/modules/_events.scss */
-#calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.hasEvent a {
-  color: #1073ce;
-}
-/* line 364, scss/modules/_events.scss */
-#calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.currentlyViewing {
-  background: #1073ce;
-}
-/* line 368, scss/modules/_events.scss */
-#calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.currentlyViewing a {
-  color: #FFF;
-}
-/* line 373, scss/modules/_events.scss */
-#calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.today {
-  background: #3b99f0;
-}
-/* line 377, scss/modules/_events.scss */
-#calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.today a {
-  color: #FFF;
-}
-/* line 382, scss/modules/_events.scss */
-#calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td a {
-  color: #9d9d9d;
-  display: block;
-  padding: 28% 0;
-}
-/* line 394, scss/modules/_events.scss */
-#calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a,
-#calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a {
-  margin: 0 5%;
-  display: block;
-  padding: 0;
-}
-/* line 398, scss/modules/_events.scss */
-#calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
-#calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before {
-  margin: 0 0.5rem 1rem 0;
-}
-/* line 405, scss/modules/_events.scss */
-#calendar .responsiveEventsList .gridAndOptionsWrapper .webcal:before {
-  content: "\f073";
-}
-/* line 409, scss/modules/_events.scss */
-#calendar .responsiveEventsList .gridAndOptionsWrapper .download:before {
-  content: "\f063";
-}
-/* line 413, scss/modules/_events.scss */
-#calendar .responsiveEventsList .gridAndOptionsWrapper .rss:before {
-  content: "\f09e";
-}
-
-/* Events Mini */
-/* line 428, scss/modules/_events.scss */
-#miniCal #events {
+/* line 308, scss/modules/_events.scss */
+#calendar .responsiveEventsList .eventsListContent #events {
   margin-bottom: 1rem;
 }
-/* line 432, scss/modules/_events.scss */
-#miniCal .dayblock {
+/* line 313, scss/modules/_events.scss */
+#calendar .responsiveEventsList .eventsListContent .dayblock,
+#calendar .responsiveEventsList .eventsListContent .ongoingblock {
   border-bottom: 1px solid #e9e9e9;
   padding: 1rem 0;
   *zoom: 1;
   position: relative;
 }
 /* line 165, ../foundation/bower_components/foundation/scss/foundation/components/_global.scss */
-#miniCal .dayblock:before, #miniCal .dayblock:after {
+#calendar .responsiveEventsList .eventsListContent .dayblock:before, #calendar .responsiveEventsList .eventsListContent .dayblock:after,
+#calendar .responsiveEventsList .eventsListContent .ongoingblock:before,
+#calendar .responsiveEventsList .eventsListContent .ongoingblock:after {
   content: " ";
   display: table;
 }
 /* line 166, ../foundation/bower_components/foundation/scss/foundation/components/_global.scss */
-#miniCal .dayblock:after {
+#calendar .responsiveEventsList .eventsListContent .dayblock:after,
+#calendar .responsiveEventsList .eventsListContent .ongoingblock:after {
   clear: both;
 }
-/* line 439, scss/modules/_events.scss */
+/* line 320, scss/modules/_events.scss */
+#calendar .responsiveEventsList .eventsListContent h3.month {
+  margin-top: 2.5rem;
+}
+/* line 324, scss/modules/_events.scss */
+#calendar .responsiveEventsList .eventsListContent .day {
+  display: block;
+  text-align: center;
+  font-size: 0.875rem;
+  font-weight: 600;
+  width: 3.125rem;
+  margin: 0;
+  position: absolute;
+  top: 1rem;
+  left: 0;
+}
+/* line 335, scss/modules/_events.scss */
+#calendar .responsiveEventsList .eventsListContent .day .month {
+  display: block;
+  background: #9f2112;
+  color: white;
+  -moz-border-radius-topleft: 6px;
+  -webkit-border-top-left-radius: 6px;
+  border-top-left-radius: 6px;
+  -moz-border-radius-topright: 6px;
+  -webkit-border-top-right-radius: 6px;
+  border-top-right-radius: 6px;
+  padding: 0.125rem;
+}
+/* line 343, scss/modules/_events.scss */
+#calendar .responsiveEventsList .eventsListContent .day .date {
+  display: block;
+  background: #e9e9e9;
+  -moz-border-radius-bottomleft: 6px;
+  -webkit-border-bottom-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+  -moz-border-radius-bottomright: 6px;
+  -webkit-border-bottom-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+  padding: 0.125rem;
+}
+/* line 356, scss/modules/_events.scss */
+#calendar .responsiveEventsList .eventsListContent .dayEvents,
+#calendar .responsiveEventsList .eventsListContent .ongoingEvents {
+  margin: 0 0 0 4.375rem;
+  padding: 0;
+}
+/* line 360, scss/modules/_events.scss */
+#calendar .responsiveEventsList .eventsListContent .dayEvents .event,
+#calendar .responsiveEventsList .eventsListContent .ongoingEvents .event {
+  padding-bottom: 0.625rem;
+  *zoom: 1;
+}
+/* line 165, ../foundation/bower_components/foundation/scss/foundation/components/_global.scss */
+#calendar .responsiveEventsList .eventsListContent .dayEvents .event:before, #calendar .responsiveEventsList .eventsListContent .dayEvents .event:after,
+#calendar .responsiveEventsList .eventsListContent .ongoingEvents .event:before,
+#calendar .responsiveEventsList .eventsListContent .ongoingEvents .event:after {
+  content: " ";
+  display: table;
+}
+/* line 166, ../foundation/bower_components/foundation/scss/foundation/components/_global.scss */
+#calendar .responsiveEventsList .eventsListContent .dayEvents .event:after,
+#calendar .responsiveEventsList .eventsListContent .ongoingEvents .event:after {
+  clear: both;
+}
+/* line 364, scss/modules/_events.scss */
+#calendar .responsiveEventsList .eventsListContent .dayEvents .event a,
+#calendar .responsiveEventsList .eventsListContent .ongoingEvents .event a {
+  font-weight: 400;
+}
+/* line 370, scss/modules/_events.scss */
+#calendar .responsiveEventsList .eventsListContent .dayEvents .event a:hover,
+#calendar .responsiveEventsList .eventsListContent .ongoingEvents .event a:hover {
+  text-decoration: underline;
+}
+/* line 373, scss/modules/_events.scss */
+#calendar .responsiveEventsList .eventsListContent .dayEvents .event a:hover i,
+#calendar .responsiveEventsList .eventsListContent .ongoingEvents .event a:hover i {
+  color: #ffbd1c;
+}
+/* line 378, scss/modules/_events.scss */
+#calendar .responsiveEventsList .eventsListContent .dayEvents .event a i,
+#calendar .responsiveEventsList .eventsListContent .ongoingEvents .event a i {
+  color: #e8a500;
+  margin-left: 0.375rem;
+}
+/* line 388, scss/modules/_events.scss */
+#calendar .responsiveEventsList .eventsListContent .dayEvents .event:last-child,
+#calendar .responsiveEventsList .eventsListContent .ongoingEvents .event:last-child {
+  padding-bottom: 0;
+}
+/* line 393, scss/modules/_events.scss */
+#calendar .responsiveEventsList .eventsListContent .dayEvents .event .through,
+#calendar .responsiveEventsList .eventsListContent .dayEvents .event .ends,
+#calendar .responsiveEventsList .eventsListContent .ongoingEvents .event .through,
+#calendar .responsiveEventsList .eventsListContent .ongoingEvents .event .ends {
+  font-style: normal;
+  display: inline;
+}
+/* line 398, scss/modules/_events.scss */
+#calendar .responsiveEventsList .eventsListContent .dayEvents .event time,
+#calendar .responsiveEventsList .eventsListContent .ongoingEvents .event time {
+  display: inline;
+}
+/* line 405, scss/modules/_events.scss */
+#calendar .responsiveEventsList .eventsListContent .dayEvents .event .sep,
+#calendar .responsiveEventsList .eventsListContent .ongoingEvents .event .sep {
+  padding: 0 0.25rem;
+}
+/* line 411, scss/modules/_events.scss */
+#calendar .responsiveEventsList .eventsListContent .dayEvents .event .location,
+#calendar .responsiveEventsList .eventsListContent .ongoingEvents .event .location {
+  font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
+  font-weight: 300;
+  display: inline;
+}
+/* line 425, scss/modules/_events.scss */
+#calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGridWrapper {
+  margin-bottom: 2.5rem;
+}
+/* line 429, scss/modules/_events.scss */
+#calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid {
+  text-align: center;
+}
+/* line 435, scss/modules/_events.scss */
+#calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid a.previous,
+#calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid h4,
+#calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid a.next {
+  display: inline-block;
+  padding: 0 0.375rem;
+}
+/* line 440, scss/modules/_events.scss */
+#calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table {
+  border: none;
+}
+/* line 442, scss/modules/_events.scss */
+#calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table tr {
+  background: #FFF;
+}
+/* line 447, scss/modules/_events.scss */
+#calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table th,
+#calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td {
+  text-align: center;
+  padding: 0;
+}
+/* line 454, scss/modules/_events.scss */
+#calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table th {
+  padding: 5% 0;
+  background: #fbfbfb;
+  background: #FFF;
+  border: #FFF;
+}
+/* line 461, scss/modules/_events.scss */
+#calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td {
+  border-color: #DDDDDD;
+  border-image: none;
+  border-style: solid;
+  border-width: 1px;
+}
+/* line 467, scss/modules/_events.scss */
+#calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td:empty {
+  background: #f6f6f6;
+}
+/* line 476, scss/modules/_events.scss */
+#calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.hasEvent a {
+  color: #1073ce;
+}
+/* line 482, scss/modules/_events.scss */
+#calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.currentlyViewing {
+  background: #1073ce;
+}
+/* line 486, scss/modules/_events.scss */
+#calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.currentlyViewing a {
+  color: #FFF;
+}
+/* line 491, scss/modules/_events.scss */
+#calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.today {
+  background: #3b99f0;
+}
+/* line 495, scss/modules/_events.scss */
+#calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.today a {
+  color: #FFF;
+}
+/* line 500, scss/modules/_events.scss */
+#calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td a {
+  color: #9d9d9d;
+  display: block;
+  padding: 28% 0;
+}
+/* line 512, scss/modules/_events.scss */
+#calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a,
+#calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a {
+  margin: 0 5%;
+  display: block;
+  padding: 0;
+}
+/* line 516, scss/modules/_events.scss */
+#calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
+#calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before {
+  margin: 0 0.5rem 1rem 0;
+}
+/* line 523, scss/modules/_events.scss */
+#calendar .responsiveEventsList .gridAndOptionsWrapper .webcal:before {
+  content: "\f073";
+}
+/* line 527, scss/modules/_events.scss */
+#calendar .responsiveEventsList .gridAndOptionsWrapper .download:before {
+  content: "\f063";
+}
+/* line 531, scss/modules/_events.scss */
+#calendar .responsiveEventsList .gridAndOptionsWrapper .rss:before {
+  content: "\f09e";
+}
+
+/* Events Mini */
+/* line 546, scss/modules/_events.scss */
+#miniCal #events {
+  margin-bottom: 1rem;
+}
+/* line 551, scss/modules/_events.scss */
+#miniCal .dayblock,
+#miniCal .ongoingblock {
+  border-bottom: 1px solid #e9e9e9;
+  padding: 1rem 0;
+  *zoom: 1;
+  position: relative;
+}
+/* line 165, ../foundation/bower_components/foundation/scss/foundation/components/_global.scss */
+#miniCal .dayblock:before, #miniCal .dayblock:after,
+#miniCal .ongoingblock:before,
+#miniCal .ongoingblock:after {
+  content: " ";
+  display: table;
+}
+/* line 166, ../foundation/bower_components/foundation/scss/foundation/components/_global.scss */
+#miniCal .dayblock:after,
+#miniCal .ongoingblock:after {
+  clear: both;
+}
+/* line 558, scss/modules/_events.scss */
 #miniCal .day {
   display: block;
   text-align: center;
@@ -3461,7 +3626,7 @@ body #wrapper #post-footer a {
   top: 1rem;
   left: 0;
 }
-/* line 450, scss/modules/_events.scss */
+/* line 569, scss/modules/_events.scss */
 #miniCal .day .month {
   display: block;
   background: #9f2112;
@@ -3474,7 +3639,7 @@ body #wrapper #post-footer a {
   border-top-right-radius: 6px;
   padding: 0.125rem;
 }
-/* line 458, scss/modules/_events.scss */
+/* line 577, scss/modules/_events.scss */
 #miniCal .day .date {
   display: block;
   background: #e9e9e9;
@@ -3486,81 +3651,184 @@ body #wrapper #post-footer a {
   border-bottom-right-radius: 6px;
   padding: 0.125rem;
 }
-/* line 466, scss/modules/_events.scss */
-#miniCal .dayEvents {
+/* line 590, scss/modules/_events.scss */
+#miniCal .dayEvents,
+#miniCal .ongoingEvents {
   margin: 0 0 0 4.375rem;
   padding: 0;
 }
-/* line 470, scss/modules/_events.scss */
-#miniCal .dayEvents .event {
-  padding-bottom: 0.5rem;
+/* line 594, scss/modules/_events.scss */
+#miniCal .dayEvents .event,
+#miniCal .ongoingEvents .event {
+  padding-bottom: 0.625rem;
   *zoom: 1;
 }
 /* line 165, ../foundation/bower_components/foundation/scss/foundation/components/_global.scss */
-#miniCal .dayEvents .event:before, #miniCal .dayEvents .event:after {
+#miniCal .dayEvents .event:before, #miniCal .dayEvents .event:after,
+#miniCal .ongoingEvents .event:before,
+#miniCal .ongoingEvents .event:after {
   content: " ";
   display: table;
 }
 /* line 166, ../foundation/bower_components/foundation/scss/foundation/components/_global.scss */
-#miniCal .dayEvents .event:after {
+#miniCal .dayEvents .event:after,
+#miniCal .ongoingEvents .event:after {
   clear: both;
 }
-/* line 474, scss/modules/_events.scss */
-#miniCal .dayEvents .event a {
+/* line 598, scss/modules/_events.scss */
+#miniCal .dayEvents .event a,
+#miniCal .ongoingEvents .event a {
   font-weight: 400;
-  display: block;
-  float: left;
 }
-/* line 480, scss/modules/_events.scss */
-#miniCal .dayEvents .event a:hover {
+/* line 604, scss/modules/_events.scss */
+#miniCal .dayEvents .event a:hover,
+#miniCal .ongoingEvents .event a:hover {
   text-decoration: underline;
 }
-/* line 483, scss/modules/_events.scss */
-#miniCal .dayEvents .event a:hover i {
+/* line 607, scss/modules/_events.scss */
+#miniCal .dayEvents .event a:hover i,
+#miniCal .ongoingEvents .event a:hover i {
   color: #ffbd1c;
 }
-/* line 488, scss/modules/_events.scss */
-#miniCal .dayEvents .event a i {
+/* line 612, scss/modules/_events.scss */
+#miniCal .dayEvents .event a i,
+#miniCal .ongoingEvents .event a i {
   color: #e8a500;
   margin-left: 0.375rem;
 }
-/* line 494, scss/modules/_events.scss */
-#miniCal .dayEvents .event:last-child {
+/* line 622, scss/modules/_events.scss */
+#miniCal .dayEvents .event:last-child,
+#miniCal .ongoingEvents .event:last-child {
   padding-bottom: 0;
 }
-/* line 498, scss/modules/_events.scss */
-#miniCal .dayEvents .event time {
-  display: block;
-  clear: left;
-  float: left;
+/* line 627, scss/modules/_events.scss */
+#miniCal .dayEvents .event .through,
+#miniCal .dayEvents .event .ends,
+#miniCal .ongoingEvents .event .through,
+#miniCal .ongoingEvents .event .ends {
+  font-style: normal;
+  display: inline;
 }
-/* line 504, scss/modules/_events.scss */
-#miniCal .dayEvents .event .sep {
+/* line 632, scss/modules/_events.scss */
+#miniCal .dayEvents .event time,
+#miniCal .ongoingEvents .event time {
+  display: inline;
+}
+/* line 639, scss/modules/_events.scss */
+#miniCal .dayEvents .event .sep,
+#miniCal .ongoingEvents .event .sep {
   padding: 0 0.25rem;
-  display: block;
-  float: left;
 }
-/* line 510, scss/modules/_events.scss */
-#miniCal .dayEvents .event .location {
+/* line 645, scss/modules/_events.scss */
+#miniCal .dayEvents .event .location,
+#miniCal .ongoingEvents .event .location {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
   font-weight: 300;
-  display: block;
-  float: left;
+  display: inline;
 }
-/* line 520, scss/modules/_events.scss */
+/* line 656, scss/modules/_events.scss */
 #miniCal .foot .more {
   margin: 0;
 }
-/* line 523, scss/modules/_events.scss */
+/* line 659, scss/modules/_events.scss */
 #miniCal .foot .more a:before {
   content: "\f073";
   margin-right: 0.375rem;
 }
 
+/* Events Single */
+/* line 677, scss/modules/_events.scss */
+#calendar .eventDetails .back a:before {
+  content: "\f137";
+  margin-right: 0.375rem;
+}
+/* line 687, scss/modules/_events.scss */
+#calendar .eventDetails .eventMeta li {
+  margin-left: 2.5rem;
+}
+/* line 690, scss/modules/_events.scss */
+#calendar .eventDetails .eventMeta li:before {
+  width: 2rem;
+  margin-left: -2.25rem;
+  text-align: center;
+}
+/* line 701, scss/modules/_events.scss */
+#calendar .eventDetails .eventMeta li .fa, #calendar .eventDetails .eventMeta li #minisite #navWrap .jump:before, #minisite #navWrap #calendar .eventDetails .eventMeta li .jump:before, #calendar .eventDetails .eventMeta li #minisite .feedLink .feedInfo a:before, #minisite .feedLink .feedInfo #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta .childrenList li a:before, .childrenList #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta #childrenAndGrandchildren li ul .childDesc:before, #childrenAndGrandchildren #calendar .eventDetails .eventMeta li ul .childDesc:before, #calendar .eventDetails .eventMeta li .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport .eventDetails .eventMeta li a:before,
+#calendar .eventDetails .eventMeta li .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before,
+#calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li #miniCal .foot .more a:before, #miniCal .foot .more #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li .back a:before, #calendar .eventDetails .back .eventMeta li a:before, #calendar .eventDetails .eventMeta li li:before, #calendar .eventDetails .eventMeta li .contact:before,
+#calendar .eventDetails .eventMeta li .eventUrl:before,
+#calendar .eventDetails .eventMeta li .calendarExport:before, #calendar .eventDetails .eventMeta li #facultyStaff .facStaff .facStaffContent .more:before, #facultyStaff .facStaff .facStaffContent #calendar .eventDetails .eventMeta li .more:before, #calendar .eventDetails .eventMeta li .featuresModule .feature .featureInfo .featureText a:before, .featuresModule .feature .featureInfo .featureText #calendar .eventDetails .eventMeta li a:before,
+#calendar .eventDetails .eventMeta li .featuresModule .feature .featureInfo .featureText span:before,
+.featuresModule .feature .featureInfo .featureText #calendar .eventDetails .eventMeta li span:before, #calendar .eventDetails .eventMeta li #discoErrorNotice h3:before, #discoErrorNotice #calendar .eventDetails .eventMeta li h3:before, #calendar .eventDetails .eventMeta li #relatedPub .pubLinks a:before, #relatedPub .pubLinks #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li .publication .post p.comments a:before, .publication .post p.comments #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li .publication .post p.more a:after, .publication .post p.more #calendar .eventDetails .eventMeta li a:after, #calendar .eventDetails .eventMeta li .publication .fullPost .commentAdded h4:before, .publication .fullPost .commentAdded #calendar .eventDetails .eventMeta li h4:before, #calendar .eventDetails .eventMeta li .publication .nextPrev .prev h4:before, .publication .nextPrev .prev #calendar .eventDetails .eventMeta li h4:before, #calendar .eventDetails .eventMeta li .publication .nextPrev .next h4:after, .publication .nextPrev .next #calendar .eventDetails .eventMeta li h4:after {
+  margin: 0 0.375rem;
+}
+/* line 706, scss/modules/_events.scss */
+#calendar .eventDetails .eventMeta .date:before {
+  content: "\f073";
+}
+/* line 710, scss/modules/_events.scss */
+#calendar .eventDetails .eventMeta .time:before {
+  content: "\f017";
+}
+/* line 714, scss/modules/_events.scss */
+#calendar .eventDetails .eventMeta .location:before {
+  content: "\f041";
+}
+/* line 721, scss/modules/_events.scss */
+#calendar .eventDetails .images {
+  margin-bottom: 2.5rem;
+}
+@media only screen and (min-width: 40.063em) {
+  /* line 724, scss/modules/_events.scss */
+  #calendar .eventDetails .images .imageChunk {
+    float: left;
+    width: 50%;
+  }
+  /* line 730, scss/modules/_events.scss */
+  #calendar .eventDetails .images .imageChunk:nth-child(2n+1) {
+    padding-right: 1rem;
+    clear: left;
+  }
+  /* line 735, scss/modules/_events.scss */
+  #calendar .eventDetails .images .imageChunk:nth-child(2n+2) {
+    padding-left: 1rem;
+  }
+}
+/* line 744, scss/modules/_events.scss */
+#calendar .eventDetails .contact,
+#calendar .eventDetails .eventUrl,
+#calendar .eventDetails .calendarExport {
+  margin-bottom: 0;
+}
+/* line 747, scss/modules/_events.scss */
+#calendar .eventDetails .contact:before,
+#calendar .eventDetails .eventUrl:before,
+#calendar .eventDetails .calendarExport:before {
+  margin-right: 0.375rem;
+}
+/* line 754, scss/modules/_events.scss */
+#calendar .eventDetails .contact:before {
+  content: "\f059";
+}
+/* line 760, scss/modules/_events.scss */
+#calendar .eventDetails .eventUrl:before {
+  content: "\f05a";
+}
+/* line 766, scss/modules/_events.scss */
+#calendar .eventDetails .calendarExport:before {
+  content: "\f073";
+}
+/* line 771, scss/modules/_events.scss */
+#calendar .eventDetails .export {
+  margin-bottom: 1.5rem;
+}
+
 /* line 4, scss/font-awesome/_core.scss */
 .fa, #minisite #navWrap .jump:before, #minisite .feedLink .feedInfo a:before, .assets li:before, .childrenList li a:before, #childrenAndGrandchildren li ul .childDesc:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
-#calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #facultyStaff .facStaff .facStaffContact li:before, .featuresModule .feature .featureInfo .featureText a:before,
-.featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, .publication .post p.comments a:before, .publication .post p.more a:after, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after {
+#calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
+#calendar .eventDetails .eventUrl:before,
+#calendar .eventDetails .calendarExport:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
+.featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, #relatedPub .pubLinks a:before, .publication .post p.comments a:before, .publication .post p.more a:after, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after {
   display: inline-block;
   font-family: FontAwesome;
   font-style: normal;
@@ -3578,7 +3846,7 @@ body #wrapper #post-footer a {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -3610,39 +3878,70 @@ body #wrapper #post-footer a {
 }
 /* line 34, scss/modules/_faculty.scss */
 #facultyStaff .facStaff figure {
+  width: 25%;
+  margin: 0 0 1.5rem 1.5rem;
   float: right;
 }
-/* line 38, scss/modules/_faculty.scss */
+@media only screen and (min-width: 40.063em) {
+  /* line 34, scss/modules/_faculty.scss */
+  #facultyStaff .facStaff figure {
+    float: left;
+    width: 9.375rem;
+    margin: 0 1.5rem 1.5rem 0;
+  }
+}
+/* line 47, scss/modules/_faculty.scss */
+#facultyStaff .facStaff figure img {
+  width: 100%;
+}
+@media only screen and (min-width: 40.063em) {
+  /* line 53, scss/modules/_faculty.scss */
+  #facultyStaff .facStaff .facStaffName,
+  #facultyStaff .facStaff .facStaffInfo {
+    margin-left: 12.5rem !important;
+  }
+}
+/* line 61, scss/modules/_faculty.scss */
 #facultyStaff .facStaff .facStaffName {
   margin: 0;
   font-size: 1.6875rem;
   font-weight: 400;
 }
-/* line 48, scss/modules/_faculty.scss */
+/* line 71, scss/modules/_faculty.scss */
 #facultyStaff .facStaff .facStaffTitle {
   font-size: 1.125rem;
 }
-/* line 52, scss/modules/_faculty.scss */
+/* line 75, scss/modules/_faculty.scss */
 #facultyStaff .facStaff .facStaffContact {
   margin-top: 1.42857rem;
   margin-left: 1.25rem;
 }
-/* line 62, scss/modules/_faculty.scss */
+/* line 79, scss/modules/_faculty.scss */
+#facultyStaff .facStaff .facStaffContact li {
+  margin-left: 2.5rem;
+}
+/* line 87, scss/modules/_faculty.scss */
 #facultyStaff .facStaff .facStaffContact li:before {
   width: 2rem;
+  margin-left: -2.25rem;
   text-align: center;
 }
-/* line 72, scss/modules/_faculty.scss */
+/* line 98, scss/modules/_faculty.scss */
 #facultyStaff .facStaff .facStaffContact .facStaffOffice:before {
   content: "\f041";
 }
-/* line 78, scss/modules/_faculty.scss */
+/* line 104, scss/modules/_faculty.scss */
 #facultyStaff .facStaff .facStaffContact .facStaffPhone:before {
   content: "\f095";
 }
-/* line 84, scss/modules/_faculty.scss */
+/* line 110, scss/modules/_faculty.scss */
 #facultyStaff .facStaff .facStaffContact .facStaffEmail:before {
   content: "\f109";
+}
+/* line 120, scss/modules/_faculty.scss */
+#facultyStaff .facStaff .facStaffContent .more:before {
+  content: "\f007";
+  margin-right: 0.375rem;
 }
 
 /* line 10, scss/_extends.scss */
@@ -3653,7 +3952,7 @@ body #wrapper #post-footer a {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -3837,7 +4136,7 @@ body #wrapper #post-footer a {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -4185,8 +4484,9 @@ form .formElement#requiredtextItem {
 #form .formElement.error,
 form .formElement.error {
   background: none !important;
+  padding: 1rem 0 !important;
 }
-/* line 171, scss/modules/_form.scss */
+/* line 172, scss/modules/_form.scss */
 #form .formElement.error .words .labelText,
 form .formElement.error .words .labelText {
   -webkit-border-radius: 2px;
@@ -4197,12 +4497,12 @@ form .formElement.error .words .labelText {
   padding: 0.25rem 0.375rem;
   background: #fad4d0 !important;
 }
-/* line 180, scss/modules/_form.scss */
+/* line 181, scss/modules/_form.scss */
 #form .formElement.noLabel,
 form .formElement.noLabel {
   border-top: 4px solid #e9e9e9;
 }
-/* line 185, scss/modules/_form.scss */
+/* line 186, scss/modules/_form.scss */
 #form .formElement.noLabel h1,
 #form .formElement.noLabel h2,
 #form .formElement.noLabel h3,
@@ -4212,13 +4512,13 @@ form .formElement.noLabel h3 {
   font-size: 1.6875rem;
   color: #1073ce;
 }
-/* line 190, scss/modules/_form.scss */
+/* line 191, scss/modules/_form.scss */
 #form .formElement.noLabel > :last-child,
 form .formElement.noLabel > :last-child {
   margin: 0;
   padding: 0;
 }
-/* line 197, scss/modules/_form.scss */
+/* line 198, scss/modules/_form.scss */
 #form .formElement .words,
 form .formElement .words {
   font-size: 1rem;
@@ -4230,12 +4530,12 @@ form .formElement .words {
   font-weight: 600;
   display: inline-block;
 }
-/* line 202, scss/modules/_form.scss */
+/* line 203, scss/modules/_form.scss */
 #form .formElement .words .labelText,
 form .formElement .words .labelText {
   display: inline-block;
 }
-/* line 206, scss/modules/_form.scss */
+/* line 207, scss/modules/_form.scss */
 #form .formElement .words .requiredIndicator,
 form .formElement .words .requiredIndicator {
   font-weight: 300;
@@ -4243,7 +4543,7 @@ form .formElement .words .requiredIndicator {
   padding-left: 0.25rem;
   color: #838383;
 }
-/* line 231, scss/modules/_form.scss */
+/* line 232, scss/modules/_form.scss */
 #form .formElement .loki,
 form .formElement .loki {
   border: none;
@@ -4251,7 +4551,7 @@ form .formElement .loki {
   padding: 0;
   background: none !important;
 }
-/* line 238, scss/modules/_form.scss */
+/* line 239, scss/modules/_form.scss */
 #form .formElement .loki .toolbar a,
 form .formElement .loki .toolbar a {
   border: 1px solid #d0d0d0;
@@ -4261,19 +4561,19 @@ form .formElement .loki .toolbar a {
   position: relative;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 238, scss/modules/_form.scss */
+  /* line 239, scss/modules/_form.scss */
   #form .formElement .loki .toolbar a,
   form .formElement .loki .toolbar a {
     width: 2.5rem;
   }
 }
-/* line 249, scss/modules/_form.scss */
+/* line 250, scss/modules/_form.scss */
 #form .formElement .loki .toolbar a:hover,
 form .formElement .loki .toolbar a:hover {
   background: #e9e9e9;
   border: 1px solid #c3c3c3;
 }
-/* line 254, scss/modules/_form.scss */
+/* line 255, scss/modules/_form.scss */
 #form .formElement .loki .toolbar a:first-child,
 form .formElement .loki .toolbar a:first-child {
   -moz-border-radius-topleft: 4px;
@@ -4283,7 +4583,7 @@ form .formElement .loki .toolbar a:first-child {
   -webkit-border-bottom-left-radius: 4px;
   border-bottom-left-radius: 4px;
 }
-/* line 258, scss/modules/_form.scss */
+/* line 259, scss/modules/_form.scss */
 #form .formElement .loki .toolbar a:last-child,
 form .formElement .loki .toolbar a:last-child {
   -moz-border-radius-topright: 4px;
@@ -4293,25 +4593,25 @@ form .formElement .loki .toolbar a:last-child {
   -webkit-border-bottom-right-radius: 4px;
   border-bottom-right-radius: 4px;
 }
-/* line 262, scss/modules/_form.scss */
+/* line 263, scss/modules/_form.scss */
 #form .formElement .loki .toolbar a + a,
 form .formElement .loki .toolbar a + a {
   margin-left: -1px;
 }
-/* line 267, scss/modules/_form.scss */
+/* line 268, scss/modules/_form.scss */
 #form .formElement .loki .toolbar a:hover, #form .formElement .loki .toolbar a:active,
 form .formElement .loki .toolbar a:hover,
 form .formElement .loki .toolbar a:active {
   z-index: 100;
 }
-/* line 271, scss/modules/_form.scss */
+/* line 272, scss/modules/_form.scss */
 #form .formElement .loki .toolbar a:active,
 form .formElement .loki .toolbar a:active {
   -webkit-box-shadow: rgba(0, 0, 0, 0.125) 0 3px 5px inset;
   -moz-box-shadow: rgba(0, 0, 0, 0.125) 0 3px 5px inset;
   box-shadow: rgba(0, 0, 0, 0.125) 0 3px 5px inset;
 }
-/* line 276, scss/modules/_form.scss */
+/* line 277, scss/modules/_form.scss */
 #form .formElement .loki .toolbar a img,
 #form .formElement .loki .toolbar a span,
 form .formElement .loki .toolbar a img,
@@ -4320,7 +4620,7 @@ form .formElement .loki .toolbar a span {
   display: block;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 276, scss/modules/_form.scss */
+  /* line 277, scss/modules/_form.scss */
   #form .formElement .loki .toolbar a img,
   #form .formElement .loki .toolbar a span,
   form .formElement .loki .toolbar a img,
@@ -4328,27 +4628,27 @@ form .formElement .loki .toolbar a span {
     margin: 10px auto;
   }
 }
-/* line 294, scss/modules/_form.scss */
+/* line 295, scss/modules/_form.scss */
 #form .formElement .loki .grippy_wrapper,
 form .formElement .loki .grippy_wrapper {
   display: none;
 }
-/* line 299, scss/modules/_form.scss */
+/* line 300, scss/modules/_form.scss */
 #form .formElement#commentcontentItem,
 form .formElement#commentcontentItem {
   background: white;
 }
-/* line 302, scss/modules/_form.scss */
+/* line 303, scss/modules/_form.scss */
 #form .formElement#commentcontentItem:nth-child(even),
 form .formElement#commentcontentItem:nth-child(even) {
   background: none !important;
 }
-/* line 305, scss/modules/_form.scss */
+/* line 306, scss/modules/_form.scss */
 #form .formElement#commentcontentItem:nth-child(even).error,
 form .formElement#commentcontentItem:nth-child(even).error {
   background: #FFF !important;
 }
-/* line 315, scss/modules/_form.scss */
+/* line 316, scss/modules/_form.scss */
 #form .formElement#tarbabypreItem, #form .formElement#tarbabyItem, #form .formElement#noturlItem, #form .formElement#antlionItem,
 form .formElement#tarbabypreItem,
 form .formElement#tarbabyItem,
@@ -4356,14 +4656,14 @@ form .formElement#noturlItem,
 form .formElement#antlionItem {
   display: none;
 }
-/* line 322, scss/modules/_form.scss */
+/* line 323, scss/modules/_form.scss */
 #form table,
 form table {
   margin-bottom: 0;
   border: none;
   background: none;
 }
-/* line 329, scss/modules/_form.scss */
+/* line 330, scss/modules/_form.scss */
 #form table tr.even,
 #form table tr.alt,
 #form table tr:nth-of-type(2n),
@@ -4372,30 +4672,30 @@ form table tr.alt,
 form table tr:nth-of-type(2n) {
   background: none !important;
 }
-/* line 333, scss/modules/_form.scss */
+/* line 334, scss/modules/_form.scss */
 #form table td,
 form table td {
   padding: .5em 0 .5em 1em;
 }
 
-/* line 340, scss/modules/_form.scss */
+/* line 341, scss/modules/_form.scss */
 #discoErrorNotice {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
   margin-bottom: 1.25rem;
 }
-/* line 344, scss/modules/_form.scss */
+/* line 345, scss/modules/_form.scss */
 #discoErrorNotice h3 {
   font-size: 1.125rem;
   font-weight: 600;
   margin: 0 0 0.375rem;
   color: #b62615 !important;
 }
-/* line 350, scss/modules/_form.scss */
+/* line 351, scss/modules/_form.scss */
 #discoErrorNotice h3:before {
   content: "\f071";
   margin-right: 0.75rem;
 }
-/* line 357, scss/modules/_form.scss */
+/* line 358, scss/modules/_form.scss */
 #discoErrorNotice ul {
   border-style: solid;
   border-width: 1px;
@@ -4414,11 +4714,11 @@ form table td {
   margin: 0;
   font-weight: 600;
 }
-/* line 363, scss/modules/_form.scss */
+/* line 364, scss/modules/_form.scss */
 #discoErrorNotice ul li {
   display: inline;
 }
-/* line 366, scss/modules/_form.scss */
+/* line 367, scss/modules/_form.scss */
 #discoErrorNotice ul li a {
   font-weight: 400;
   text-decoration: underline;
@@ -4432,7 +4732,7 @@ form table td {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -4440,22 +4740,25 @@ form table td {
 }
 
 /* Image Sidebar */
-/* line 23, scss/modules/_images.scss */
+/* line 24, scss/modules/_images.scss */
 .imageSidebarModule .imageChunk,
-.publication .images .imageChunk {
+.publication .images .imageChunk,
+.eventDetails .images .imageChunk {
   padding-bottom: 2.5rem;
   background: white;
   max-width: 600px;
   margin: 0 auto;
 }
-/* line 29, scss/modules/_images.scss */
+/* line 30, scss/modules/_images.scss */
 .imageSidebarModule .imageChunk:last-child,
-.publication .images .imageChunk:last-child {
+.publication .images .imageChunk:last-child,
+.eventDetails .images .imageChunk:last-child {
   padding-bottom: 0;
 }
-/* line 35, scss/modules/_images.scss */
+/* line 36, scss/modules/_images.scss */
 .imageSidebarModule a img,
-.publication .images a img {
+.publication .images a img,
+.eventDetails .images a img {
   -webkit-transition-timing-function: ease;
   -moz-transition-timing-function: ease;
   -o-transition-timing-function: ease;
@@ -4469,16 +4772,18 @@ form table td {
   -o-transition-duration: 0.25s;
   transition-duration: 0.25s;
 }
-/* line 43, scss/modules/_images.scss */
+/* line 44, scss/modules/_images.scss */
 .imageSidebarModule a:hover img,
-.publication .images a:hover img {
+.publication .images a:hover img,
+.eventDetails .images a:hover img {
   -webkit-box-shadow: rgba(0, 0, 0, 0.25) 0 0 4px;
   -moz-box-shadow: rgba(0, 0, 0, 0.25) 0 0 4px;
   box-shadow: rgba(0, 0, 0, 0.25) 0 0 4px;
 }
-/* line 51, scss/modules/_images.scss */
+/* line 52, scss/modules/_images.scss */
 .imageSidebarModule .tnDesc,
-.publication .images .tnDesc {
+.publication .images .tnDesc,
+.eventDetails .images .tnDesc {
   display: block;
   margin-top: 0.375rem;
   padding: 0 0.375rem;
@@ -4487,38 +4792,47 @@ form table td {
   font-style: italic;
   color: #6f6f6f;
 }
-/* line 60, scss/modules/_images.scss */
+/* line 61, scss/modules/_images.scss */
 .imageSidebarModule .tnDesc a,
-.publication .images .tnDesc a {
+.publication .images .tnDesc a,
+.eventDetails .images .tnDesc a {
   color: #6f6f6f;
 }
 
+/* Top Images */
+/* line 73, scss/modules/_images.scss */
+#topImage .imageSidebarModule .imageChunk {
+  max-width: 100%;
+  max-height: 400px !important;
+  overflow: hidden;
+}
+
 /* Inline Images (Main content areas only -- no sidebars) */
-/* line 75, scss/modules/_images.scss */
+/* line 96, scss/modules/_images.scss */
 #pageContent img, .fullPost .text img {
   width: 600px;
 }
-/* line 79, scss/modules/_images.scss */
+/* line 100, scss/modules/_images.scss */
 #pageContent img.right, #pageContent img.left, .fullPost .text img.right, .fullPost .text img.left {
   float: none !important;
   margin: 0 auto;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 75, scss/modules/_images.scss */
+  /* line 96, scss/modules/_images.scss */
   #pageContent img, .fullPost .text img {
     width: 40%;
     float: right !important;
     margin: 0 0 1rem 2.5rem;
     clear: right;
   }
-  /* line 91, scss/modules/_images.scss */
+  /* line 112, scss/modules/_images.scss */
   #pageContent img.left, #pageContent img[align="left"], .fullPost .text img.left, .fullPost .text img[align="left"] {
     margin: 0 2.5rem 1rem 0;
     float: left !important;
     clear: left;
   }
 }
-/* line 101, scss/modules/_images.scss */
+/* line 122, scss/modules/_images.scss */
 #pageContent .callout img,
 #pageContent .callOut img, .fullPost .text .callout img,
 .fullPost .text .callOut img {
@@ -4526,35 +4840,35 @@ form table td {
 }
 
 @media only screen and (min-width: 40.063em) {
-  /* line 112, scss/modules/_images.scss */
+  /* line 133, scss/modules/_images.scss */
   .hasConRelNav #pageContent img, .hasConRelNav .fullPost .text img {
     width: 100%;
   }
-  /* line 117, scss/modules/_images.scss */
+  /* line 138, scss/modules/_images.scss */
   .hasConRelNav #pageContent img.right, .hasConRelNav .fullPost .text img.right {
     margin: 0 0 1rem;
     float: right !important;
   }
 }
 @media only screen and (min-width: 64.063em) {
-  /* line 112, scss/modules/_images.scss */
+  /* line 133, scss/modules/_images.scss */
   .hasConRelNav #pageContent img, .hasConRelNav .fullPost .text img {
     width: 40%;
     float: right !important;
     margin: 0 0 1rem 2.5rem;
   }
-  /* line 128, scss/modules/_images.scss */
+  /* line 149, scss/modules/_images.scss */
   .hasConRelNav #pageContent img.left, .hasConRelNav .fullPost .text img.left {
     float: left !important;
     margin: 0 2.5rem 1rem 0;
   }
 }
 @media only screen and (min-width: 90.063em) {
-  /* line 112, scss/modules/_images.scss */
+  /* line 133, scss/modules/_images.scss */
   .hasConRelNav #pageContent img, .hasConRelNav .fullPost .text img {
     width: 100%;
   }
-  /* line 137, scss/modules/_images.scss */
+  /* line 158, scss/modules/_images.scss */
   .hasConRelNav #pageContent img.right, .hasConRelNav .fullPost .text img.right {
     margin: 0 0 1rem;
     float: right !important;
@@ -4569,7 +4883,7 @@ form table td {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -4580,7 +4894,7 @@ form table td {
 /* Related Publications (often in sidebars) */
 /* line 29, scss/modules/_publication.scss */
 #relatedPub .posts {
-  margin-bottom: 1rem;
+  margin: 0 0 1rem;
 }
 /* line 33, scss/modules/_publication.scss */
 #relatedPub .post {
@@ -4600,13 +4914,13 @@ form table td {
 /* line 38, scss/modules/_publication.scss */
 #relatedPub .post figure {
   float: right;
-  margin-left: 1rem;
+  margin: 0 0 0.25rem 1rem;
 }
 @media only screen and (min-width: 64.063em) {
   /* line 38, scss/modules/_publication.scss */
   #relatedPub .post figure {
     float: left;
-    margin: 0 1rem 0 0;
+    margin: 0 1rem 0.25rem 0;
   }
 }
 /* line 48, scss/modules/_publication.scss */
@@ -4617,8 +4931,25 @@ form table td {
 #relatedPub .post h4 a:hover {
   text-decoration: underline;
 }
+/* line 58, scss/modules/_publication.scss */
+#relatedPub .post .description {
+  margin-top: 0.5rem;
+}
+/* line 62, scss/modules/_publication.scss */
+#relatedPub .post .more {
+  margin-bottom: 0;
+}
+/* line 71, scss/modules/_publication.scss */
+#relatedPub .pubLinks {
+  margin-left: 0;
+}
+/* line 75, scss/modules/_publication.scss */
+#relatedPub .pubLinks a:before {
+  margin-right: 0.5rem;
+  content: "\f00b";
+}
 
-/* line 60, scss/modules/_publication.scss */
+/* line 86, scss/modules/_publication.scss */
 .publication {
   /* Common */
   /* POST INDEX (list of posts) */
@@ -4627,15 +4958,15 @@ form table td {
   /* Comments */
   /* Add Comment Form */
 }
-/* line 63, scss/modules/_publication.scss */
+/* line 89, scss/modules/_publication.scss */
 .publication time {
   color: #848484;
 }
-/* line 68, scss/modules/_publication.scss */
+/* line 94, scss/modules/_publication.scss */
 .publication .posts {
   margin: 0 0 2.5rem;
 }
-/* line 72, scss/modules/_publication.scss */
+/* line 98, scss/modules/_publication.scss */
 .publication .post {
   border-bottom: 1px dotted #e9e9e9;
   padding: 2.5rem 0;
@@ -4651,16 +4982,16 @@ form table td {
   clear: both;
 }
 @media only screen and (max-width: 40em) {
-  /* line 72, scss/modules/_publication.scss */
+  /* line 98, scss/modules/_publication.scss */
   .publication .post {
     padding: 1.25rem 0;
   }
 }
-/* line 89, scss/modules/_publication.scss */
+/* line 115, scss/modules/_publication.scss */
 .publication .post:first-child {
   padding-top: 0;
 }
-/* line 93, scss/modules/_publication.scss */
+/* line 119, scss/modules/_publication.scss */
 .publication .post .teaserImage {
   margin-bottom: 1.25rem;
   margin-left: 1.5rem;
@@ -4668,24 +4999,24 @@ form table td {
   float: right;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 93, scss/modules/_publication.scss */
+  /* line 119, scss/modules/_publication.scss */
   .publication .post .teaserImage {
     width: 30%;
     max-width: 18.75rem;
   }
 }
-/* line 107, scss/modules/_publication.scss */
+/* line 133, scss/modules/_publication.scss */
 .publication .post .title {
   margin: 0 0 0.625rem;
   font-size: 1.6875rem;
 }
 @media only screen and (max-width: 40em) {
-  /* line 107, scss/modules/_publication.scss */
+  /* line 133, scss/modules/_publication.scss */
   .publication .post .title {
     font-size: 1.125rem;
   }
 }
-/* line 118, scss/modules/_publication.scss */
+/* line 144, scss/modules/_publication.scss */
 .publication .post time,
 .publication .post p.comments {
   display: inline-block;
@@ -4693,44 +5024,44 @@ form table td {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
   font-size: 0.875rem;
 }
-/* line 125, scss/modules/_publication.scss */
+/* line 151, scss/modules/_publication.scss */
 .publication .post time {
   margin-right: 1rem;
 }
 @media only screen and (max-width: 40em) {
-  /* line 125, scss/modules/_publication.scss */
+  /* line 151, scss/modules/_publication.scss */
   .publication .post time {
     margin-bottom: 0.41667rem;
   }
 }
 @media only screen and (max-width: 40em) {
-  /* line 136, scss/modules/_publication.scss */
+  /* line 162, scss/modules/_publication.scss */
   .publication .post p.comments {
     display: none;
   }
 }
-/* line 143, scss/modules/_publication.scss */
+/* line 169, scss/modules/_publication.scss */
 .publication .post p.comments a:before {
   content: "\f086";
   margin-right: 0.375rem;
 }
 @media only screen and (max-width: 40em) {
-  /* line 152, scss/modules/_publication.scss */
+  /* line 178, scss/modules/_publication.scss */
   .publication .post .description,
   .publication .post p.more {
     display: none;
   }
 }
-/* line 158, scss/modules/_publication.scss */
+/* line 184, scss/modules/_publication.scss */
 .publication .post p.more {
   margin: 0;
 }
-/* line 161, scss/modules/_publication.scss */
+/* line 187, scss/modules/_publication.scss */
 .publication .post p.more a {
   color: #9f2112;
   position: relative;
 }
-/* line 167, scss/modules/_publication.scss */
+/* line 193, scss/modules/_publication.scss */
 .publication .post p.more a:after {
   content: "\f061";
   margin-left: 0.375rem;
@@ -4748,7 +5079,7 @@ form table td {
   transition-timing-function: ease;
   font-size: 0.625rem;
 }
-/* line 183, scss/modules/_publication.scss */
+/* line 209, scss/modules/_publication.scss */
 .publication .post p.more a:hover:before, .publication .post p.more a:focus:before {
   left: -1.75rem;
   -webkit-transition-property: left;
@@ -4764,19 +5095,19 @@ form table td {
   -o-transition-timing-function: ease;
   transition-timing-function: ease;
 }
-/* line 196, scss/modules/_publication.scss */
+/* line 222, scss/modules/_publication.scss */
 .publication .pagination.above {
   display: none;
 }
-/* line 206, scss/modules/_publication.scss */
+/* line 232, scss/modules/_publication.scss */
 .publication .fullPost {
   /* Social Sharing */
 }
-/* line 208, scss/modules/_publication.scss */
+/* line 234, scss/modules/_publication.scss */
 .publication .fullPost .postMeta {
   margin-bottom: 2rem;
 }
-/* line 212, scss/modules/_publication.scss */
+/* line 238, scss/modules/_publication.scss */
 .publication .fullPost .author {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
   font-size: 1.4375rem;
@@ -4787,24 +5118,24 @@ form table td {
   font-weight: 400;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 212, scss/modules/_publication.scss */
+  /* line 238, scss/modules/_publication.scss */
   .publication .fullPost .author {
     border-right: 1px solid #e9e9e9;
     padding-right: 0.5rem;
     margin-right: 0.25rem;
   }
 }
-/* line 228, scss/modules/_publication.scss */
+/* line 254, scss/modules/_publication.scss */
 .publication .fullPost .date {
   display: block;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 228, scss/modules/_publication.scss */
+  /* line 254, scss/modules/_publication.scss */
   .publication .fullPost .date {
     display: inline-block;
   }
 }
-/* line 237, scss/modules/_publication.scss */
+/* line 263, scss/modules/_publication.scss */
 .publication .fullPost .commentAdded {
   border-style: solid;
   border-width: 1px;
@@ -4823,31 +5154,31 @@ form table td {
   color: #6a6a6a;
   margin: 0 0 1.25rem;
 }
-/* line 243, scss/modules/_publication.scss */
+/* line 269, scss/modules/_publication.scss */
 .publication .fullPost .commentAdded h4 {
   font-size: 1.125rem;
   color: #4a8512;
   font-weight: 600;
 }
-/* line 248, scss/modules/_publication.scss */
+/* line 274, scss/modules/_publication.scss */
 .publication .fullPost .commentAdded h4:before {
   content: "\f05d";
   margin-right: 0.625rem;
 }
-/* line 255, scss/modules/_publication.scss */
+/* line 281, scss/modules/_publication.scss */
 .publication .fullPost .commentAdded a {
   display: inline-block;
   margin-left: 1.5rem;
 }
-/* line 258, scss/modules/_publication.scss */
+/* line 284, scss/modules/_publication.scss */
 .publication .fullPost .commentAdded a:before {
   content: "(";
 }
-/* line 261, scss/modules/_publication.scss */
+/* line 287, scss/modules/_publication.scss */
 .publication .fullPost .commentAdded a:after {
   content: ")";
 }
-/* line 271, scss/modules/_publication.scss */
+/* line 297, scss/modules/_publication.scss */
 .publication .fullPost .social a {
   width: 2.5rem;
   display: inline-block;
@@ -4859,11 +5190,11 @@ form table td {
   border-radius: 6px;
   overflow: hidden;
 }
-/* line 279, scss/modules/_publication.scss */
+/* line 305, scss/modules/_publication.scss */
 .publication .fullPost .social.top {
   margin-bottom: 2rem;
 }
-/* line 282, scss/modules/_publication.scss */
+/* line 308, scss/modules/_publication.scss */
 .publication .fullPost .social.top a {
   width: 1.875rem;
   -webkit-border-radius: 4px;
@@ -4872,14 +5203,14 @@ form table td {
   -o-border-radius: 4px;
   border-radius: 4px;
 }
-/* line 289, scss/modules/_publication.scss */
+/* line 315, scss/modules/_publication.scss */
 .publication .fullPost .social.bottom {
   text-align: center;
   margin-top: 1.25rem;
   margin-bottom: 2.5rem;
 }
 @media only screen and (min-width: 64.063em) {
-  /* line 289, scss/modules/_publication.scss */
+  /* line 315, scss/modules/_publication.scss */
   .publication .fullPost .social.bottom {
     display: block;
     position: fixed;
@@ -4900,22 +5231,22 @@ form table td {
     border-bottom-left-radius: 6px;
     margin-top: 0;
   }
-  /* line 307, scss/modules/_publication.scss */
+  /* line 333, scss/modules/_publication.scss */
   .publication .fullPost .social.bottom a {
     display: block;
     margin-right: 0;
     margin-bottom: 0.75rem;
   }
-  /* line 313, scss/modules/_publication.scss */
+  /* line 339, scss/modules/_publication.scss */
   .publication .fullPost .social.bottom a:last-child {
     margin-bottom: 0;
   }
 }
-/* line 321, scss/modules/_publication.scss */
+/* line 347, scss/modules/_publication.scss */
 .publication .fullPost .firstChunk {
   margin-bottom: 2.5rem;
 }
-/* line 325, scss/modules/_publication.scss */
+/* line 351, scss/modules/_publication.scss */
 .publication .fullPost .text {
   *zoom: 1;
 }
@@ -4929,7 +5260,7 @@ form table td {
   clear: both;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 332, scss/modules/_publication.scss */
+  /* line 358, scss/modules/_publication.scss */
   .publication .fullPost.hasRelated .firstChunk {
     position: relative;
     padding-left: 0;
@@ -4938,7 +5269,7 @@ form table td {
     float: left;
     padding-right: 1.25rem;
   }
-  /* line 337, scss/modules/_publication.scss */
+  /* line 363, scss/modules/_publication.scss */
   .publication .fullPost.hasRelated .relatedItems {
     position: relative;
     padding-left: 0;
@@ -4948,12 +5279,12 @@ form table td {
     padding-left: 1.25rem;
     margin-bottom: 2.5rem;
   }
-  /* line 343, scss/modules/_publication.scss */
+  /* line 369, scss/modules/_publication.scss */
   .publication .fullPost.hasRelated .secondChunk {
     clear: both;
   }
 }
-/* line 351, scss/modules/_publication.scss */
+/* line 377, scss/modules/_publication.scss */
 .publication .nextPrev {
   *zoom: 1;
   background: #e9e9e9;
@@ -4973,34 +5304,34 @@ form table td {
 .publication .nextPrev:after {
   clear: both;
 }
-/* line 357, scss/modules/_publication.scss */
+/* line 383, scss/modules/_publication.scss */
 .publication .nextPrev h4 {
   padding: 1.25rem;
   margin: 0;
   font-size: 1.125rem;
 }
-/* line 364, scss/modules/_publication.scss */
+/* line 390, scss/modules/_publication.scss */
 .publication .nextPrev p {
   margin: 0;
 }
-/* line 367, scss/modules/_publication.scss */
+/* line 393, scss/modules/_publication.scss */
 .publication .nextPrev p a {
   padding: 1.25rem;
   display: block;
   background: #1073ce;
   color: #FFF;
 }
-/* line 373, scss/modules/_publication.scss */
+/* line 399, scss/modules/_publication.scss */
 .publication .nextPrev p a:hover {
   background: #004789;
   color: #FFF;
 }
-/* line 381, scss/modules/_publication.scss */
+/* line 407, scss/modules/_publication.scss */
 .publication .nextPrev .prev {
   border-bottom: 0.75rem solid white;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 381, scss/modules/_publication.scss */
+  /* line 407, scss/modules/_publication.scss */
   .publication .nextPrev .prev {
     border-bottom: none;
     width: 50%;
@@ -5009,53 +5340,53 @@ form table td {
     border-right: 1px solid #FFF;
   }
 }
-/* line 393, scss/modules/_publication.scss */
+/* line 419, scss/modules/_publication.scss */
 .publication .nextPrev .prev h4:before {
   content: "\f137";
   margin-right: 0.75rem;
   color: rgba(68, 68, 68, 0.35);
 }
-/* line 401, scss/modules/_publication.scss */
+/* line 427, scss/modules/_publication.scss */
 .publication .nextPrev .prev.only {
   width: 100%;
   text-align: center;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 407, scss/modules/_publication.scss */
+  /* line 433, scss/modules/_publication.scss */
   .publication .nextPrev .next {
     width: 50%;
     float: right;
   }
 }
-/* line 414, scss/modules/_publication.scss */
+/* line 440, scss/modules/_publication.scss */
 .publication .nextPrev .next h4:after {
   content: "\f138";
   margin-left: 0.75rem;
   color: rgba(68, 68, 68, 0.35);
 }
-/* line 422, scss/modules/_publication.scss */
+/* line 448, scss/modules/_publication.scss */
 .publication .nextPrev .next.only {
   width: 100%;
   text-align: center;
 }
-/* line 429, scss/modules/_publication.scss */
+/* line 455, scss/modules/_publication.scss */
 .publication .back {
   text-align: center;
   margin-bottom: 2.5rem;
 }
-/* line 433, scss/modules/_publication.scss */
+/* line 459, scss/modules/_publication.scss */
 .publication .back p {
   margin-bottom: 0;
 }
-/* line 444, scss/modules/_publication.scss */
+/* line 470, scss/modules/_publication.scss */
 .publication > .back {
   display: none;
 }
-/* line 450, scss/modules/_publication.scss */
+/* line 476, scss/modules/_publication.scss */
 .publication .comments ul {
   margin: 0 0 2.5rem;
 }
-/* line 453, scss/modules/_publication.scss */
+/* line 479, scss/modules/_publication.scss */
 .publication .comments ul li {
   position: relative;
   margin-top: 3.75rem;
@@ -5067,11 +5398,11 @@ form table td {
   border-radius: 12px;
   padding: 1.25rem;
 }
-/* line 460, scss/modules/_publication.scss */
+/* line 486, scss/modules/_publication.scss */
 .publication .comments ul li:first-child {
   margin-top: 2.5rem;
 }
-/* line 464, scss/modules/_publication.scss */
+/* line 490, scss/modules/_publication.scss */
 .publication .comments ul li .datetime {
   position: absolute;
   top: -30px;
@@ -5079,24 +5410,24 @@ form table td {
   font-size: 0.875rem;
   color: #848484;
 }
-/* line 472, scss/modules/_publication.scss */
+/* line 498, scss/modules/_publication.scss */
 .publication .comments ul li .author {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
   color: #1073ce;
   font-size: 1.4375rem;
   margin-bottom: 0.75rem;
 }
-/* line 479, scss/modules/_publication.scss */
+/* line 505, scss/modules/_publication.scss */
 .publication .comments ul li .commentContent {
   font-weight: 300;
 }
-/* line 482, scss/modules/_publication.scss */
+/* line 508, scss/modules/_publication.scss */
 .publication .comments ul li .commentContent *:last-child {
   margin-bottom: 0;
 }
-/* line 493, scss/modules/_publication.scss */
+/* line 519, scss/modules/_publication.scss */
 .publication .addCommentForm .subContent form {
-  padding: 1.25rem 0;
+  padding: 1.25rem;
   border: 1px solid #e9e9e9;
   -webkit-border-radius: 12px;
   -moz-border-radius: 12px;
@@ -5113,7 +5444,7 @@ form table td {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -5128,7 +5459,7 @@ form table td {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;

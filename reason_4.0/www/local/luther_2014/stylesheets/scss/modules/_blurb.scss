@@ -45,6 +45,8 @@
 	&[class*=' uname_call_to_action'] {
 
 		color: #ff00ff;
+		background: none !important;
+		padding: 0 !important;
 
 		ul {
 			@extend .zero-out;

@@ -85,6 +85,7 @@ class defaultEventsListMarkup implements eventsListMarkup
 					{
 						$ret .=  '<li class="event">';
 						$ret .= $this->bundle->list_item_markup($event, 'ongoing', $time);
+						$ret .= $this->get_location_markup($event);
 						$ret .= '</li>'."\n";
 					}
 				}
@@ -105,7 +106,7 @@ class defaultEventsListMarkup implements eventsListMarkup
 				}
 				$today = ($day == $this->bundle->today()) ? ' (Today)' : '';
 				$ret .= '<div class="dayblock" id="dayblock_'.$day.'">'."\n";
-				$ret .= '<h4 class="day"><a name="'.$day.'"></a>'.prettify_mysql_datetime( $day, 'l, F j' ).$today.'</h4>'."\n";
+				$ret .= '<h4 class="day"><a name="'.$day.'"></a><span class="month">'.prettify_mysql_datetime( $day, 'M' ).'</span> <span class="date">'.prettify_mysql_datetime( $day, 'j' ).'</span><span class="today">'.$today.'</span></h4>'."\n";
 				$ret .= '<ul class="dayEvents">';
 				foreach($times as $time => $events)
 				{
@@ -113,12 +114,26 @@ class defaultEventsListMarkup implements eventsListMarkup
 					{
 						$ret .= '<li class="event">';
 						$ret .= $this->bundle->list_item_markup($event, $day, $time);
+						$ret .= $this->get_location_markup($event);
 						$ret .= '</li>'."\n";
 					}
 				}
 				$ret .= '</ul>'."\n";
 				$ret .= '</div>'."\n";
 			}
+		}
+		return $ret;
+	}
+
+	protected function get_location_markup($event)
+	// Luther simplified location markup
+	{
+		$ret = '';
+		$location = ($event->has_value('location')) ? $event->get_value('location') : false;
+		
+		if (!empty($location))
+		{
+			$ret .= '<span class="sep">&nbsp;&bull;&nbsp;</span><span class="location">'.$event->get_value('location').'</span>'."\n";
 		}
 		return $ret;
 	}

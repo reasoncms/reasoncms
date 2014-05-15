@@ -57,7 +57,7 @@
 			}
 
 			// Global parameters for the image sidebar module
-			if($regions = $page_type->module_regions('image_sidebar'))
+			/*if($regions = $page_type->module_regions('image_sidebar'))
 			{
 				foreach($regions as $region)
 				{
@@ -70,7 +70,7 @@
 					if(!isset($module['module_params']['num_to_display']))
 						$page_type->set_region_parameter($region, 'num_to_display', 3);
 				}
-			}
+			}*/
 
 			// Global parameters for the pulbication module
 			if($regions = $page_type->module_regions('publication'))
@@ -141,7 +141,7 @@
 		{
 			// add the charset information
 			$this->head_items->add_head_item('meta',array('http-equiv'=>'Content-Type','content'=>'text/html; charset=UTF-8' ) );
-			
+
 			// add favicon
 			if($favicon_path = $this->_get_favicon_path() )
 			{
@@ -183,10 +183,12 @@
 				$this->head_items->add_head_item('meta',array('name'=>'robots','content'=>'none' ) );
 			}
 
+			$this->head_items->add_javascript(JQUERY_URL, true);
 			// Responsive stuff
+
 			$this->head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/respond/respond.min.js', false, array('before'=>'<!--[if lt IE 9]>','after'=>'<![endif]-->'));
 			$this->head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/ie8_fix_maxwidth.js', false, array('before'=>'<!--[if lt IE 9]>','after'=>'<![endif]-->'));
-			$this->add_head_item('meta',array('name'=>'viewport','content'=>'width=device-width, minimum-scale=1.0, maximum-scale=2.0' ) );
+			$this->add_head_item('meta',array('name'=>'viewport','content'=>'width=device-width, minimum-scale=1.0, maximum-scale=1.0' ) );
 		}
 		
 		function do_org_head_items()
@@ -194,12 +196,10 @@
 			// Javascripts
 			// @todo: Is this the correct modernizer?  Not sure.
 			$this->head_items->add_javascript('/reason/local/luther_2014/javascripts/vendor/custom.modernizr.js');
-			//$this->head_items->add_javascript('/reason/local/luther_2014/javascripts/vendor/jquery.js');
 			
 			// Stylesheets
-			// @todo: Host Google fonts on our servers for faster load time?
-			$this->head_items->add_stylesheet('http://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700');
-			$this->head_items->add_stylesheet('http://fonts.googleapis.com/css?family=Open+Sans:300italic,300,400,400italic,600,600italic,700,700italic,800,800italic');
+			$this->head_items->add_stylesheet('https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700');
+			$this->head_items->add_stylesheet('https://fonts.googleapis.com/css?family=Open+Sans:300italic,300,400,400italic,600,600italic,700,700italic,800,800italic');
 			$this->head_items->add_stylesheet('/reason/local/luther_2014/stylesheets/fonts/font-awesome-4.0.3/css/font-awesome.css');
 			$this->head_items->add_stylesheet('/reason/local/luther_2014/stylesheets/dependencies/dependencies.css');
 			$this->head_items->add_stylesheet('/reason/local/luther_2014/stylesheets/base.css');
@@ -208,9 +208,8 @@
 		function do_org_foot()
 		{ 
 			// Foundation scripts need to be directly before end of body
-			// @todo: Foundation recommends including jQuery at the bottom on the body (below). But this causes conflicts
-			// with Reason scripts, like Features. Currently, we're just calling it in the head.  Any action needed?
-			//echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/vendor/jquery.js"></script>';
+			// Foundation recommends including jQuery at the bottom on the body (below). But this causes conflicts
+			// with Reason scripts, like Features. Currently, we're just calling it in the head via in the normal reason way.
 			echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/vendor/fastclick.js"></script>';
 			echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/foundation/foundation.js"></script>';
 			echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/foundation/foundation.offcanvas.js"></script>';
@@ -232,6 +231,22 @@
 				$classes[] = 'uname_'.$this->page_info->get_value('unique_name');
 			return $classes;
 		}
+
+		function has_related_section()
+		{
+			if( 
+			$this->has_content( 'pre_sidebar' ) ||
+			$this->has_content( 'pre_sidebar_2' ) ||
+			$this->has_content( 'sidebar' ) ||
+			$this->has_content( 'sidebar_2' ) ||
+			$this->has_content( 'post_sidebar' ) ||
+			$this->has_content( 'post_sidebar_2' ) ||
+			$this->has_content( 'post_sidebar_3' ) )
+			{
+				return true;
+			}
+			return false;
+		}
 		
 		function show_body_tableless()
 		{
@@ -247,11 +262,13 @@
 				$this->show_luther_global_navigation();
 			
 			// Generate classes on the minisite section based on the contents inside. Useful for CSS. 
-			// Originally appears in show_meat_tableless() in the default template.   
+			// Originally appears in show_meat_tableless() in the default template. 
 			$hasSections = array();
 			$blobclass = 'has';  // changed from default 'contains'
 			$classes = array();
+
 			foreach($this->sections as $section=>$show_function)
+
 			{
 				$has_function = 'has_'.$section.'_section';
 				if($this->$has_function())
@@ -262,7 +279,7 @@
 					$blobclass .= substr($capsed_section_name,0,3);
 				}
 			}
-			
+
 			// Start minisite markup
 			echo '<section id="minisite" class="'.implode(' ',$classes).' '.$blobclass.'">'."\n";
 			echo '<div class="minisiteWrap">';
@@ -285,7 +302,7 @@
 		function you_are_here($delimiter = ' <span>&raquo;</span> ')
 		{
 			echo '<div class="breadcrumbs">';
-			echo '<a href="/"><span class="screenreader">Home</span><i class="fa fa-home"></a></i> <span>&raquo;</span>';
+			echo '<a href="/"><span class="screenreader">Home</span><i class="fa fa-home"></i></a> <span>&raquo;</span>';
 			echo $this->_get_breadcrumb_markup($this->_get_breadcrumbs(), $this->site_info->get_value('base_breadcrumbs'), $delimiter);
 			echo '</div>'."\n";
 		}
@@ -374,6 +391,13 @@
 				$this->run_section( 'main_head' );  // Page Title
 				echo '</header>'."\n";
 			}
+
+			if ($this->has_content( 'top_image' )) 
+			{
+				echo '<div id="topImage">'."\n";
+				$this->run_section( 'top_image' );
+				echo '</div>'."\n";
+			}
 				
 			if($this->has_content( 'main_head' ) || $this->has_content( 'main' ) || $this->has_content( 'main_post' ) || $this->has_content( 'main_post_2' ) || $this->has_content( 'main_post_3' ) ) {
 		
@@ -410,7 +434,14 @@
 		
 		function show_sidebar_tableless()
 		{
-			if($this->has_content( 'pre_sidebar' ) || $this->has_content( 'sidebar' ) || $this->has_content( 'post_sidebar' ) ) {
+			if(
+				$this->has_content( 'pre_sidebar' ) ||
+				$this->has_content( 'pre_sidebar_2' ) || 
+				$this->has_content( 'sidebar' ) ||
+				$this->has_content( 'sidebar_2' ) ||
+				$this->has_content( 'post_sidebar' ) || 
+				$this->has_content( 'post_sidebar_2' ) || 
+				$this->has_content( 'post_sidebar_3' ) ) {
 			
 			echo '<div id="relatedSections">'."\n";
 			
@@ -420,16 +451,40 @@
 					$this->run_section( 'pre_sidebar' );
 					echo '</div>'."\n";
 				}
+				if($this->has_content( 'pre_sidebar_2' ))
+				{
+					echo '<div id="preSidebar_2">'."\n";
+					$this->run_section( 'pre_sidebar_2' );
+					echo '</div>'."\n";
+				}
 				if($this->has_content( 'sidebar' ))
 				{
 					echo '<div id="sidebar">'."\n";
 					$this->run_section( 'sidebar' );
 					echo '</div>'."\n";
 				}
+				if($this->has_content( 'sidebar_2' ))
+				{
+					echo '<div id="sidebar_2">'."\n";
+					$this->run_section( 'sidebar_2' );
+					echo '</div>'."\n";
+				}
 				if($this->has_content( 'post_sidebar' ))
 				{
 					echo '<div id="postSidebar">'."\n";
 					$this->run_section( 'post_sidebar' );
+					echo '</div>'."\n";
+				}
+				if($this->has_content( 'post_sidebar_2' ))
+				{
+					echo '<div id="postSidebar_2">'."\n";
+					$this->run_section( 'post_sidebar_2' );
+					echo '</div>'."\n";
+				}
+				if($this->has_content( 'post_sidebar_3' ))
+				{
+					echo '<div id="postSidebar_3">'."\n";
+					$this->run_section( 'post_sidebar_3' );
 					echo '</div>'."\n";
 				}
 			

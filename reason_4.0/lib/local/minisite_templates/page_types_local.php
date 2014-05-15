@@ -18,25 +18,33 @@ $GLOBALS['_reason_page_types_local'] = array(
 				'autoplay_timer' => 4,
 				'autoplay' => true,
 			),
-			/* experimental -- don't remove
-			'letterboard_image' => array(
-				'module' => 'image_sidebar',
-				'num_to_display' => 1,
-				'thumbnail_width' => 900,
-				'thumbnail_height' => 600,
-				'thumbnail_crop' => 'fill',
-			),*/
+			'top_image' => '',
 			'main_head' => 'page_title',
 			'main' => 'content',
 			'main_post' => '',
 			'main_post_2' => '',
 			'main_post_3' => '',
-			'pre_sidebar' => 'assets',
-			'sidebar' =>'image_sidebar', // default parameters set in alter_reason_pagetype in luther.php
-			'post_sidebar' => 'blurb',
+			'pre_sidebar' => 'blurb',
+			'pre_sidebar_2' => array(
+				'module' => 'image_sidebar', // default parameters set in alter_reason_pagetype in luther.php
+				'thumbnail_width' => 600,
+				'thumbnail_height' => 400,
+				'thumbnail_crop' => 'fill',
+				'num_to_display' => 3,
+			),
+			'sidebar' => array(
+				'module' => 'luther_av',
+				'full_size' => true,
+				'num_per_page' => 2,
+			),
+			'sidebar_2' =>'assets',
+			'post_sidebar' => 'twitter',
+			'post_sidebar_2' => '',
+			'post_sidebar_3' => '',
 			'navigation' => 'navigation',
 			'sub_nav' => 'social_account/social_account',
-			'sub_nav_2' => 'blurb_contact',
+			'sub_nav_2' => '',
+			//'sub_nav_2' => 'blurb_contact',
 			'sub_nav_3' => '',
 			'edit_link' => 'login_link',
 			'footer' => 'maintained',
@@ -119,6 +127,10 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'pre_sidebar' => 'main_blurb',
 		'sidebar' => '',
 	),
+	'blurb_main_content' => array(
+		'main_post' => 'blurb',
+		'post_sidebar' => '',
+	),
 	'caf_cam' => array(
 		'main_post' => 'caf_cam',
 	),
@@ -155,8 +167,8 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'sub_nav_3' => '',
 	),
 	'faculty' => array(
-		'main_post' => 'faculty_luther'
-		//'main_post' => 'faculty_placeholder',
+		//'main_post' => 'faculty_luther'
+		'main_post' => 'faculty_placeholder',
 	),
 	'faculty_first' => array(
 		'main' => 'faculty_luther',
@@ -178,6 +190,81 @@ $GLOBALS['_reason_page_types_local'] = array(
 	'image_slideshow' => array(
 		'main_post_2' => 'luther_image_slideshow',
 		'sidebar' => '',
+	),
+	'landing_blog' => array(
+		'main_post' => array(
+			'module'=>'publication',
+			'related_mode'=>'true',
+			'max_num_items' => 3,
+			//'related_title' => '',
+			'css' => '',
+		),
+		'pre_sidebar' => 'blurb',
+		'pre_sidebar_2' => get_luther_spotlight(),
+		'sidebar' => array(
+			'module' => 'luther_av',
+			'full_size' => true,
+		),
+		'sidebar_2' => array(
+			'module' => 'events_mini',
+			'ideal_count' => 4,
+		),
+		//'post_sidebar' => 'flickr',
+		//'post_sidebar_2' => 'twitter',
+	),
+	'landing_events' => array(
+		'main_post' => array(
+			'module' => 'events_mini',
+			'ideal_count' => 4,
+		),
+		'pre_sidebar' => 'blurb',
+		'pre_sidebar_2' => get_luther_spotlight(),
+		'sidebar' => array(
+			'module' => 'luther_av',
+			'full_size' => true,
+		),
+		/*'sidebar_2' => array(
+			'module'=>'publication',
+			'related_mode'=>'true',
+			'max_num_items' => 3,
+			'css' => '',
+			'markup_generator_info' => array(
+				'list_item' => array(
+					'classname' => 'RelatedListItemNoDescriptionMarkupGenerator', 
+					'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/related_item_no_description.php',
+				),
+			),
+		),*/
+		//'sidbebar_2' => get_luther_related_publication(),
+		//'post_sidebar' => 'flickr',
+		//'post_sidebar_2' => 'twitter',
+	),
+	'landing_children' => array(
+		'main_post' => 'children',
+		'pre_sidebar' => 'blurb',
+		//'pre_sidebar_2' => 'spotlight',
+		'sidebar' => array(
+			'module' => 'luther_av',
+			'full_size' => true,
+		),
+		'sidebar_2' => array(
+			'module' => 'events_mini',
+			'ideal_count' => 4,
+		),
+		'post_sidebar' => array(
+			'module'=>'publication',
+			'related_mode'=>'true',
+			'max_num_items' => 3,
+			'css' => '',
+			'markup_generator_info' => array(
+				'list_item' => array(
+					'classname' => 'RelatedListItemNoDescriptionMarkupGenerator', 
+					'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/related_item_no_description.php',
+				),
+			),
+		),
+		//'post_sidebar_2' => 'flickr',
+		//'post_sidebar_3' => 'twitter',
 	),
 	'luther_google_map' => array(
 		'main_post' => 'luther_google_map',
@@ -215,9 +302,10 @@ $GLOBALS['_reason_page_types_local'] = array(
 		),
 		'sidebar' => array(
 			'module' => 'events_mini',
-			//'module' => 'events_upcoming',
+			//'module' => 'events_upcoming_luther',
 			'ideal_count' => 4,
 			'title' => 'Campus Events',
+			//'foot' => '<a href="/events" class="more">More events</a>',
 		),
 		'post_sidebar' => array(
 			'module' => 'luther_av',
@@ -230,35 +318,31 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'navigation' => '',
 		'sub_nav' => '',
 	),
-	'luther_landing' => array(		
-		//'main_post' => get_luther_headlines(3),
-		'pre_sidebar' => array(
-			'module' => 'events_mini',
-			'title' => luther_get_event_title(),
-			'ideal_count' => 5,
-			'default_view_min_days' => 1,
-			'calendar_link_text' => 'View all events',
-		),
-		'sidebar' => luther_get_related_publication(3),
-		//'post_sidebar' => 'luther_flickr_slideshow',
-	),
-	'luther_sports' => array(
-		//'main' => 'luther_sports_results_mini',
+
+	'landing_sports' => array(
 		'main' => array(
 			'module' => 'luther_sports_results_mini',
 			'list_chrome_markup' => 'minisite_templates/modules/events_markup/sports/sports_events_list_chrome.php',
 			'list_markup' => 'minisite_templates/modules/events_markup/sports/sports_results_list.php',
 			'list_item_markup' => 'minisite_templates/modules/events_markup/sports/sports_events_list_item.php',
 			'item_markup' => 'minisite_templates/modules/events_markup/sports/sports_events_item.php',
-			'ideal_count' => 4,
+			'ideal_count' => 12,
+		),
+		'main_post' => array(
+			'module' => 'publication',
+			'related_mode' => 'true',
+			'max_num_items' => 5,
+			'related_title' => 'Headlines',
+			'css' => '',
 		),
 		'pre_sidebar' => array(
 			'module' => 'events_mini',
 			'title' => 'Schedule',
 			'ideal_count' => 7,
-			'calendar_link_text' => 'Complete schedule',
+			//'events_page_url' => 'https://www.luther.edu/sports/schedule',
+			//'calendar_link_text' => 'Complete schedule',
 		),
-		'sidebar' => luther_get_related_publication(3),
+
 	),
 	'net_price_calculator' => array(
 		'main_post' => 'net_price_calculator',
@@ -334,32 +418,21 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'sidebar_4' => '',
 	),
 	'spotlight_archive' => array(
-		'pre_banner' => '',
-		'post_banner' => '',
-		'main_head_4' => 'publication/luther_title',
-		'main_head_5' => '',
-		'main_post' => array( // Spotlights
+		'main_head' => 'publication/title',
+		'main'=>'publication/description',
+		'main_post' => array(
 			'module' => 'publication',
-			'related_title' => '',
 			'markup_generator_info' =>array(
-				'item' =>array (
-					'classname' => 'SpotlightItemMarkupGenerator',
-					'filename' =>'minisite_templates/modules/publication/item_markup_generators/spotlight.php'
-				),
 				'list' =>array (
 					'classname' => 'SpotlightPublicationListMarkupGenerator',
 					'filename' =>'minisite_templates/modules/publication/publication_list_markup_generators/spotlight.php'
 				),
+				'list_item' =>array (
+					'classname' => 'SpotlightListItemMarkupGenerator',
+					'filename' =>'minisite_templates/modules/publication/list_item_markup_generators/spotlight.php'
+				),
 			),
 		),
-		'main'=>'publication/description',
-		'main_2' => '',
-		'main_3' => '',
-		'main_4' => '',
-		'pre_sidebar_3' => '',		
-		'sidebar'=> '',
-		'sidebar_2' => 'luther_publication_image_sidebar',
-		'sidebar_4' => '',
 	),
 	'standalone_login_page_stripped' => array(
 		'global_header' => '',
@@ -375,6 +448,23 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'main_post' => 'content',
 		'pre_sidebar' => 'main_blurb',
 		'main_4' => '',
+	),
+	'top_image' => array(
+		'top_image' => array(
+			'module' => 'image_sidebar',
+			'num_to_display' => 1,
+			'thumbnail_width' => 1200,
+			'thumbnail_crop' => 'fit',
+			'caption_flag' => false,
+		),
+		'sidebar' => array(
+			'module' => 'image_sidebar',
+			'num_to_skip' => 1,
+			'thumbnail_width' => 600,
+			'thumbnail_height' => 400,
+			'thumbnail_crop' => 'fill',
+			'num_to_display' => 3,
+		),
 	),
 	'transcript_request' => array(
 		'main_post' => 'transcript_request/transcript_request',

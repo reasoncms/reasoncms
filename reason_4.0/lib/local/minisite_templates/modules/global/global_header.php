@@ -13,6 +13,12 @@
 		{
 			return true;
 		}
+
+		function home_url()
+		{
+			$global_home = '/';
+			$sports_home = '/sports';
+		}
 		
 		function run()
 		{

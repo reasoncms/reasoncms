@@ -229,7 +229,7 @@
 			line-height: 1.75;
 		}
 
-		.eventsListContent { // Event listings
+		/*.eventsListContent { // Event listings
 			width: 100%;
 
 			.focus { // Shows what you're currently browsing. Redundant.
@@ -300,7 +300,125 @@
 					left: 70%;
 				}
 			}
+		}*/
+
+		.eventsListContent {
+			width: 100%;
+
+			#events {
+				margin-bottom: rem-calc(16);
+			}
+
+			.dayblock,
+			.ongoingblock {
+				border-bottom: 1px solid $lc-grey;
+				padding: rem-calc(16) 0;
+				@include clearfix;
+				position: relative;
+			}
+
+			h3.month {
+				margin-top: $column-gutter;
+			}
+
+			.day {  // Red/grey calendar "icon"
+				display: block;
+				text-align: center;
+				font-size: rem-calc(14);
+				font-weight: 600;
+				width: rem-calc(50);
+				margin: 0;
+				position: absolute;
+				top: rem-calc(16);
+				left: 0;
+
+				.month {
+					display: block;
+					background: $lc-red;
+					color: $lc-white;
+					@include border-top-radius($global-radius);
+					padding: rem-calc(2);
+				}
+
+				.date {
+					display: block;
+					background: $lc-grey;
+					@include border-bottom-radius($global-radius);
+					padding: rem-calc(2);
+				}
+
+				.today {
+					@extend .screenreader;
+				}
+			}
+
+			.dayEvents,
+			.ongoingEvents { 
+				margin: 0 0 0 rem-calc(70);
+				padding: 0;
+
+				.event {
+					padding-bottom: rem-calc(10);
+					@include clearfix;
+
+					a { // Event title
+						//font-size: 1.125rem;
+						font-weight: 400;
+						//display: block;
+						//float: left;
+
+						&:hover {
+							text-decoration: underline;
+
+							i { // Video feed icon
+								color: lighten($lc-yellow, 10%);
+							}
+						}
+
+						i { // Video feed icon
+							color: $lc-yellow;
+							margin-left: rem-calc(6);
+						}
+					}
+
+					.title {
+						//background: red;
+					}
+
+					&:last-child {
+						padding-bottom: 0;
+					}
+
+					.through,
+					.ends {
+						font-style: normal;
+						display: inline;
+					}
+
+					time {
+						//display: block;
+						//clear: left;
+						//float: left;
+						display: inline;
+					}
+
+					.sep {
+						padding: 0 rem-calc(4);
+						//display: block;
+		   				//float: left;
+					}
+
+					.location {
+						font-family: $header-font-family;
+		   				font-weight: 300;
+		   				display: inline;
+		   				//display: block;
+		   				//float: left;
+					}
+				}
+			}
 		}
+		
 
 		.gridAndOptionsWrapper { // Clickable calendar, search, jump to date, & categories
 
@@ -429,7 +547,8 @@
 		margin-bottom: rem-calc(16);
 	}
 
-	.dayblock {
+	.dayblock,
+	.ongoingblock {
 		border-bottom: 1px solid $lc-grey;
 		padding: rem-calc(16) 0;
 		@include clearfix;
@@ -461,21 +580,26 @@
 			@include border-bottom-radius($global-radius);
 			padding: rem-calc(2);
 		}
+
+		.today {
+			@extend .screenreader;
+		}
 	}
 
-	.dayEvents { 
+	.dayEvents,
+	.ongoingEvents { 
 		margin: 0 0 0 rem-calc(70);
 		padding: 0;
 
 		.event {
-			padding-bottom: rem-calc(8);
+			padding-bottom: rem-calc(10);
 			@include clearfix;
 
 			a { // Event title
 				//font-size: 1.125rem;
 				font-weight: 400;
-				display: block;
-				float: left;
+				//display: block;
+				//float: left;
 
 				&:hover {
 					text-decoration: underline;
@@ -491,27 +615,39 @@
 				}
 			}
 
+			.title {
+				//background: red;
+			}
+
 			&:last-child {
 				padding-bottom: 0;
 			}
 
+			.through,
+			.ends {
+				font-style: normal;
+				display: inline;
+			}
+
 			time {
-				display: block;
-				clear: left;
-				float: left;
+				//display: block;
+				//clear: left;
+				//float: left;
+				display: inline;
 			}
 
 			.sep {
 				padding: 0 rem-calc(4);
-				display: block;
-   				float: left;
+				//display: block;
+   				//float: left;
 			}
 
 			.location {
 				font-family: $header-font-family;
    				font-weight: 300;
-   				display: block;
-   				float: left;
+   				display: inline;
+   				//display: block;
+   				//float: left;
 			}
 		}
 	}
@@ -527,5 +663,114 @@
 				}
 			}
 		}
+	}
+}
+
+/* Events Single */
+
+#calendar {
+
+	.eventDetails {
+
+		.back {
+			a {
+				&:before {
+					@extend .fa;
+					content: $fa-var-chevron-circle-left;
+					margin-right: rem-calc(6);
+				}
+			}
+		}
+
+		.eventMeta {
+
+			li {
+				margin-left: rem-calc(40);
+				
+				&:before {
+					@extend .fa;
+					width: rem-calc(32);
+					margin-left: - rem-calc(36);
+					text-align: center;
+				}
+
+				strong {
+					@extend .screenreader;
+				}
+
+				.fa {
+					margin: 0 rem-calc(6);
+				}
+			}
+
+			.date:before {
+				content: $fa-var-calendar;
+			}
+
+			.time:before {
+				content: $fa-var-clock-o;
+			}
+
+			.location:before {
+				content: $fa-var-map-marker;
+			}
+
+
+		}
+
+		.images {
+			margin-bottom: $column-gutter;
+
+			.imageChunk {
+				@media
+				#{$medium-up} {
+					float: left;
+					width: 50%;
+
+					&:nth-child(2n+1) {
+						padding-right: rem-calc(16);
+						clear: left;
+					}
+
+					&:nth-child(2n+2) {
+						padding-left: rem-calc(16);
+					}
+				}
+			}
+		}
+
+		.contact,
+		.eventUrl,
+		.calendarExport {
+			margin-bottom: 0;
+
+			&:before {
+				@extend .fa;
+				margin-right: rem-calc(6);
+			}
+		}
+
+		.contact {
+			&:before {
+				content: $fa-var-question-circle;
+			}
+		}
+
+		.eventUrl {
+			&:before {
+				content: $fa-var-info-circle;
+			}
+		}
+
+		.calendarExport {
+			&:before {
+				content: $fa-var-calendar;
+			}
+		}
+
+		.export {
+			margin-bottom: $paragraph-margin-bottom;
+		}
+
 	}
 }

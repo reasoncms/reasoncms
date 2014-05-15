@@ -60,21 +60,25 @@ class defaultEventsItemMarkup implements eventsItemMarkup
 			trigger_error('Call set_bundle() before calling get_markup()');
 			return '';
 		}
-		$ret = '<p class="back"><a href="'.$this->bundle->back_link().'" title="Back to event listings"><i class="fa fa-chevron-circle-left"></i></a></p>';
-		$ret .= $this->get_image_markup($event);
+		$ret = '<p class="back"><a href="'.$this->bundle->back_link().'" title="Back to event listings">Back to event listings</a></p>';
+		
 		$ret .= '<h3>'.$event->get_value('name').'</h3>'."\n";
-		$ret .= $this->get_ownership_markup($event);
-		if ($event->get_value('description'))
-			$ret .= '<p class="description">'.$event->get_value( 'description' ).'</p>'."\n";
+
+		if ($event->get_value('sponsor'))
+			$ret .= '<p class="sponsor"><strong>Sponsored by</strong> '.$event->get_value('sponsor').'</p>'."\n";
+		
+		$ret .= '<ul class="eventMeta">'."\n";
 		$ret .= $this->get_repetition_info_markup($event);
 	
-		$ret .= '<table>'."\n";
+		//$ret .= '<table>'."\n";
 		if ($this->bundle->request_date() && strstr($event->get_value('dates'), $this->bundle->request_date()))
-			$ret .= '<div class="date"><tr><td>Date:</td><td>'.prettify_mysql_datetime( $this->bundle->request_date(), "l, F j, Y" ).'</td></tr></div>'."\n";
-		
+			//$ret .= '<div class="date"><tr><td>Date:</td><td>'.prettify_mysql_datetime( $this->bundle->request_date(), "l, F j, Y" ).'</td></tr></div>'."\n";
+			$ret .= '<li class="date"><strong>Date:</strong> '.prettify_mysql_datetime( $this->bundle->request_date(), "l, F j, Y" ).'</li>'."\n";
+
 		if(!$this->bundle->is_all_day_event($event))
 		{
-			$ret .= '<div class="time"><tr><td>Time:</td><td>'.prettify_mysql_datetime( $event->get_value( 'datetime' ), "g:i a" );
+			//$ret .= '<div class="time"><tr><td>Time:</td><td>'.prettify_mysql_datetime( $event->get_value( 'datetime' ), "g:i a" );
+			$ret .= '<li class="time"><strong>Time:</strong> '.prettify_mysql_datetime( $event->get_value( 'datetime' ), "g:i a" );
 			if ($event->get_value( 'hours' ) || $event->get_value( 'minutes' ))
 			{
 				$dt = new DateTime($event->get_value('datetime'));
@@ -83,31 +87,55 @@ class defaultEventsItemMarkup implements eventsItemMarkup
 				$ret .= ' &ndash; ' . $dt->format('g:i a');
 				
 			}
-			$ret .= '</td></tr></div>'."\n";
+			//$ret .= '</td></tr></div>'."\n";
+			$ret .= '</li>'."\n";
 		}
 		else 
 		{
-			$ret .= '<div class="time"><tr><td>Time:</td><td>All Day</td></tr></div>'."\n";
+			//$ret .= '<div class="time"><tr><td>Time:</td><td>All Day</td></tr></div>'."\n";
+			$ret .= '<li class="time"><strong>Time:</strong> All day</li>'."\n";
 		}
 		
 		$ret .= $this->get_location_markup($event);
-		$ret .= '</table>'."\n";
+		//$ret .= '</table>'."\n";
 		
+		$ret .= '</ul>'."\n";
+
 		
-		if ($event->get_value('sponsor'))
-			$ret .= '<p class="sponsor">Sponsor: '.$event->get_value('sponsor').'</p>'."\n";
-		$ret .= $this->get_contact_info_markup($event);
-		$ret .= $this->get_item_export_link_markup($event);
-		$ret .= $this->get_media_work_markup($event);
+
 		if ($event->get_value('content'))
+		{
 			$ret .= '<div class="eventContent">'.$event->get_value( 'content' ).'</div>'."\n";
-		//$ret .= $this->get_dates_markup($event);
+		} 
+		elseif ($event->get_value('description'))
+		{
+			$ret .= 'true!';	
+			$ret .= '<p class="description">'.$event->get_value( 'description' ).'</p>'."\n";
+		}
+		else 
+		{
+		}
+
+		$ret .= $this->get_contact_info_markup($event);			
+
 		if ($event->get_value('url'))
-			$ret .= '<div class="eventUrl"><strong>For more information, visit:</strong> <a href="'.reason_htmlspecialchars($event->get_value( 'url' )).'">'.$event->get_value( 'url' ).'</a>.</div>'."\n";
+			$ret .= '<p class="eventUrl"><strong>Learn more at</strong> <a href="'.reason_htmlspecialchars($event->get_value( 'url' )).'">'.$event->get_value( 'url' ).'</a></p>'."\n";
+			
+
+		$ret .= $this->get_item_export_link_markup($event);
+
+		// $ret .= $this->get_media_work_markup($event);
+		// $ret .= $this->get_ownership_markup($event);
+		//$ret .= $this->get_dates_markup($event);
 		//$ret .= $this->get_categories_markup($event);
 		//$ret .= $this->get_audiences_markup($event);
 		//$ret .= $this->get_keywords_markup($event);
+
+$ret .= $this->get_image_markup($event);
+
 		$ret .= $this->bundle->registration_markup($event);
+
+
 		return $ret;
 	}
 	/**
@@ -123,12 +151,24 @@ class defaultEventsItemMarkup implements eventsItemMarkup
 		    $ret .= '<div class="images">';
 		    foreach( $images AS $image )
 		    {
-				 $ret .= get_show_image_html( $image, false, true, true, '' );
+				// $ret .= get_show_image_html( $image, false, true, true, '' );
+				$ret .= '<div class="imageChunk">';
+			    $rsi = new reasonSizedImage();
+				$rsi->set_id($image->id());
+				$rsi->set_width(600);
+				$rsi->set_height(400);
+				$rsi->set_crop_style('fill');
+				ob_start();
+				show_image( $rsi, false, true, true, '');
+				$ret .= ob_get_contents();
+				ob_end_clean();
+				$ret .= '</div>';
 		    }
 		    $ret .=  "</div>";
 		}
 		return $ret;
 	}
+
 	protected function get_media_work_markup($event)
 	{
 		$ret = '';
@@ -313,7 +353,8 @@ class defaultEventsItemMarkup implements eventsItemMarkup
 		
 		if (!empty($location))
 		{
-			$ret .= '<div class="location"><tr><td>Location:</td><td>'.$event->get_value('location').luther_video_audio_streaming($event->get_value('id')).'</td></tr></div>'."\n";
+			//$ret .= '<div class="location"><tr><td>Location:</td><td>'.$event->get_value('location').luther_video_audio_streaming($event->get_value('id')).'</td></tr></div>'."\n";
+			$ret .= '<li class="location"><strong>Location:</strong> '.$event->get_value('location').luther_video_audio_streaming($event->get_value('id')).'</li>'."\n";
 		}
 		return $ret;
 	}
@@ -377,7 +418,7 @@ class defaultEventsItemMarkup implements eventsItemMarkup
 				$phone = $dir->get_first_value('ds_phone');
 			}
 			
-			$ret .= '<p class="contact">Contact: ';
+			$ret .= '<p class="contact"><strong>Questions?</strong> Contact ';
 			if(!empty($email))
 				$ret .= '<a href="mailto:'.htmlspecialchars($email).'">';
 			elseif(!empty($contact_info['email']))
@@ -414,15 +455,15 @@ class defaultEventsItemMarkup implements eventsItemMarkup
 			$ret .= '<div class="export">'."\n";
 			if($event->get_value('recurrence') == 'none' || !$this->bundle->request_date() )
 			{
-				$ret .= '<a href="'.$ical_link.'" title="Import into your calendar program"><i class="fa fa-calendar"></i></a>';
+				$ret .= '<p class="calendarExport"><a href="'.$ical_link.'" title="Import into your calendar program">Add this event to your calendar</a></p>';
 			}
 			else
 			{
 				if($item_ical_link = $this->bundle->ical_link($event, false))
 				{
-					$ret .= '<a href="'.$item_ical_link.'" title="Add this occurrence to your calendar"><i class="fa fa-calendar-o"></i></a>';
+					$ret .= '<p class="calendarExport"><a href="'.$item_ical_link.'" title="Add this occurrence to your calendar">Add this occurrence to your calendar</a></p>';
 				}
-				$ret .= '<a href="'.$ical_link.'" title="Add all occurrences to your calendar"><i class="fa fa-calendar"></i></a>';
+				$ret .= '<p class="calendarExport"><a href="'.$ical_link.'" title="Add all occurrences to your calendar">Add all occurrences to your calendar</a></p>';
 			}
 			$ret .= '</div>'."\n";
 		}

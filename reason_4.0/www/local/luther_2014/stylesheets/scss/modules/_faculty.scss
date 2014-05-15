@@ -32,7 +32,30 @@
 		}
 
 		figure {
+			width: 25%;
+			margin: 0 0 $paragraph-margin-bottom $paragraph-margin-bottom;
 			float: right;
+			//margin: 0 auto;
+
+			@media
+			#{$medium-up} {
+				float: left;
+				width: rem-calc(150);
+				margin: 0 $paragraph-margin-bottom $paragraph-margin-bottom 0;
+			}
+
+			img {
+				width: 100%;
+			}
+		}
+
+		.facStaffName,
+		.facStaffInfo {
+
+			@media
+			#{$medium-up} {
+				margin-left: rem-calc(200) !important;
+			}	
 		}
 
 		.facStaffName {
@@ -55,6 +78,8 @@
 			
 			li {
 
+				margin-left: rem-calc(40);
+
 				strong {
 					@extend .screenreader;
 				}
@@ -62,6 +87,7 @@
 				&:before {
 					@extend .fa;
 					width: rem-calc(32);
+					margin-left: - rem-calc(36);
 					text-align: center;
 				}
 
@@ -89,8 +115,15 @@
 
 		.facStaffContent {
 
-		}
+			.more {
 
+				&:before {
+					@extend .fa;
+					content: $fa-var-user;
+					margin-right: rem-calc(6);
+				}
+			}
+		}
 	}
 
 }
