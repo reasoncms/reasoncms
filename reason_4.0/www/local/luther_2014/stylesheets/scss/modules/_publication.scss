@@ -37,11 +37,11 @@
 
 		figure {
 			float: right;
-			margin-left: rem-calc(16);
+			margin: 0 0 rem-calc(4) rem-calc(16);
 
 			@media #{$large-up} {
 				float: left;
-				margin: 0 rem-calc(16) 0 0;
+				margin: 0 rem-calc(16) rem-calc(4) 0;
 			}
 		}
 
@@ -58,6 +58,14 @@
 		.description {
 			margin-top: rem-calc(8);
 		}
+
+		.more {
+			margin-bottom: 0;
+		}
+	}
+
+	.spotlight {
+
 	}
 
 	.pubLinks {

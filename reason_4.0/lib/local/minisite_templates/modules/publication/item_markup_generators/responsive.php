@@ -173,8 +173,8 @@ class ResponsiveItemMarkupGenerator extends PublicationItemMarkupGenerator
 			$rsi = new reasonSizedImage();
 			$rsi->set_id($image->id());
 			$rsi->set_width(600);
-			$rsi->set_height(400);
-			$rsi->set_crop_style('fill');
+			//$rsi->set_height(400);
+			//$rsi->set_crop_style('fill');
 			ob_start();
 			show_image( $rsi, false, true, true, '');
 			$str .= ob_get_contents();

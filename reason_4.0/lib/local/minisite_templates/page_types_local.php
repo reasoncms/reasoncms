@@ -43,6 +43,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'post_sidebar_3' => '',
 			'navigation' => 'navigation',
 			'sub_nav' => 'social_account/social_account',
+			'sub_nav_2' => '',
 			//'sub_nav_2' => 'blurb_contact',
 			'sub_nav_3' => '',
 			'edit_link' => 'login_link',
@@ -199,7 +200,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'css' => '',
 		),
 		'pre_sidebar' => 'blurb',
-		//'pre_sidebar_2' => 'spotlight',
+		'pre_sidebar_2' => get_luther_spotlight(),
 		'sidebar' => array(
 			'module' => 'luther_av',
 			'full_size' => true,
@@ -217,12 +218,12 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'ideal_count' => 4,
 		),
 		'pre_sidebar' => 'blurb',
-		//'pre_sidebar_2' => 'spotlight',
+		'pre_sidebar_2' => get_luther_spotlight(),
 		'sidebar' => array(
 			'module' => 'luther_av',
 			'full_size' => true,
 		),
-		'sidebar_2' => array(
+		/*'sidebar_2' => array(
 			'module'=>'publication',
 			'related_mode'=>'true',
 			'max_num_items' => 3,
@@ -233,7 +234,8 @@ $GLOBALS['_reason_page_types_local'] = array(
 					'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/related_item_no_description.php',
 				),
 			),
-		),
+		),*/
+		//'sidbebar_2' => get_luther_related_publication(),
 		//'post_sidebar' => 'flickr',
 		//'post_sidebar_2' => 'twitter',
 	),
@@ -416,32 +418,21 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'sidebar_4' => '',
 	),
 	'spotlight_archive' => array(
-		'pre_banner' => '',
-		'post_banner' => '',
-		'main_head_4' => 'publication/luther_title',
-		'main_head_5' => '',
-		'main_post' => array( // Spotlights
+		'main_head' => 'publication/title',
+		'main'=>'publication/description',
+		'main_post' => array(
 			'module' => 'publication',
-			'related_title' => '',
 			'markup_generator_info' =>array(
-				'item' =>array (
-					'classname' => 'SpotlightItemMarkupGenerator',
-					'filename' =>'minisite_templates/modules/publication/item_markup_generators/spotlight.php'
-				),
 				'list' =>array (
 					'classname' => 'SpotlightPublicationListMarkupGenerator',
 					'filename' =>'minisite_templates/modules/publication/publication_list_markup_generators/spotlight.php'
 				),
+				'list_item' =>array (
+					'classname' => 'SpotlightListItemMarkupGenerator',
+					'filename' =>'minisite_templates/modules/publication/list_item_markup_generators/spotlight.php'
+				),
 			),
 		),
-		'main'=>'publication/description',
-		'main_2' => '',
-		'main_3' => '',
-		'main_4' => '',
-		'pre_sidebar_3' => '',		
-		'sidebar'=> '',
-		'sidebar_2' => 'luther_publication_image_sidebar',
-		'sidebar_4' => '',
 	),
 	'standalone_login_page_stripped' => array(
 		'global_header' => '',
