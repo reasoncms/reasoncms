@@ -64,6 +64,7 @@ class sportsResultsListMarkup implements eventsListMarkup
 		}
 		
 		$ret = '';
+		$ret .= '<h3>Results</h3>';
 		$ret .= '<table class="tablesorter">'."\n";
 		
 		$i = $this->bundle->ideal_count();

@@ -67,10 +67,10 @@ class sportsEventsListMarkup implements eventsListMarkup
 		$ret .= '<table class="tablesorter">'."\n";
 		
 		$ret .= '<tr>'."\n";
-		$ret .= '<th>Date</th>'."\n";
-		$ret .= '<th>Opponent</th>'."\n";
-		$ret .= '<th>Location</th>'."\n";
-		$ret .= '<th>Time/Results</th>'."\n";
+		$ret .= '<th class="date">Date</th>'."\n";
+		$ret .= '<th class="event">Opponent</th>'."\n";
+		$ret .= '<th class="location">Location</th>'."\n";
+		$ret .= '<th class="timeOrResults">Time/Results</th>'."\n";
 		$ret .= '</tr>'."\n";
 	
 		if($events = $this->bundle->events($this->get_ongoing_display_type()))

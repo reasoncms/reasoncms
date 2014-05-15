@@ -66,17 +66,17 @@ class sportsEventsListItemMarkup /*extends lutherSportsResultsMiniModule*/ imple
 			$e = mktime(0, 0, 0, substr($lo, 5, 2), substr($lo, 8, 2), substr($lo, 0, 4));
 			if (date('M', $d) == date('M', $e))
 			{
-				$ret .= '<td>'.date('M', $d).' '.date('d', $d).'-'.date('d', $e).'</td>'."\n";
+				$ret .= '<td class="date">'.date('M', $d).' '.date('d', $d).'-'.date('d', $e).'</td>'."\n";
 			}
 			else
 			{
-				$ret .= '<td>'.date('M', $d).' '.date('d', $d).'-'.date('M', $e).' '.date('d', $e).'</td>'."\n";
+				$ret .= '<td class="date">'.date('M', $d).' '.date('d', $d).'-'.date('M', $e).' '.date('d', $e).'</td>'."\n";
 			}
 		}
 		else
 		{
 	
-			$ret .= '<td>'.date('M', $d).' '.date('d', $d).'</td>'."\n";
+			$ret .= '<td class="date">'.date('M', $d).' '.date('d', $d).'</td>'."\n";
 		}
 			
 		if (!luther_is_sports_page(false))
@@ -89,16 +89,16 @@ class sportsEventsListItemMarkup /*extends lutherSportsResultsMiniModule*/ imple
 		}
 		if(!empty($link))
 		{
-			$ret .= '<td><a href="'.$this->bundle->events_page_url().'?event_id='.$event->id().'&date='.$day.'">'.$event_name.'</a></td>'."\n";
+			$ret .= '<td class="event"><a href="'.$this->bundle->events_page_url().'?event_id='.$event->id().'&date='.$day.'">'.$event_name.'</a></td>'."\n";
 		}
 		else
 		{
-			$ret .= '<td>'.$event_name.'</td>'."\n";
+			$ret .= '<td class="event">'.$event_name.'</td>'."\n";
 		}
 			
-		$ret .= '<td>'.$event->get_value( 'location' ).'</td>'."\n";
+		$ret .= '<td class="location">'.$event->get_value( 'location' ).'</td>'."\n";
 	
-		$ret .= '<td>';
+		$ret .= '<td class="timeOrResults">';
 		if (preg_match("/https?:\/\/[A-Za-z0-9_\-\.\/]+/", $event->get_value( 'description' ), $matches))
 		{
 			$ret .= '<a title="Live stats" href="'. $matches[0] .'">Live stats</a>';
