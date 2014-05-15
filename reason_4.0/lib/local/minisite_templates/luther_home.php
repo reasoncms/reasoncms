@@ -26,7 +26,7 @@
 		function get_body_tag_classes()
 		{
 			$classes = array();
-			$classes[] = 'body';
+			$classes[] = 'body lutherHome';
 			if($this->pages->root_node() == $this->page_id)
 				$classes[] = 'body lutherHome siteHome';
 			if($this->page_info->get_value('unique_name'))
