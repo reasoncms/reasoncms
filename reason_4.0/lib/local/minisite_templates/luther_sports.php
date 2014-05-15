@@ -18,7 +18,7 @@
 		function get_body_tag_classes()
 		{
 			$classes = array();
-			$classes[] = 'body';
+			$classes[] = 'body lutherSports';
 			if($this->pages->root_node() == $this->page_id)
 				$classes[] = 'body lutherSports siteHome';
 			if($this->page_info->get_value('unique_name'))
