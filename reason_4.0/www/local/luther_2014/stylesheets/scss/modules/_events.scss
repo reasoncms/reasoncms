@@ -461,6 +461,10 @@
 			@include border-bottom-radius($global-radius);
 			padding: rem-calc(2);
 		}
+
+		.today {
+			@extend .screenreader;
+		}
 	}
 
 	.dayEvents { 
@@ -529,3 +533,113 @@
 		}
 	}
 }
+
+/* Events Single */
+
+#calendar {
+
+	.eventDetails {
+
+		.back {
+			a {
+				&:before {
+					@extend .fa;
+					content: $fa-var-chevron-circle-left;
+					margin-right: rem-calc(6);
+				}
+			}
+		}
+
+		.eventMeta {
+
+			li {
+				margin-left: rem-calc(40);
+				
+				&:before {
+					@extend .fa;
+					width: rem-calc(32);
+					margin-left: - rem-calc(36);
+					text-align: center;
+				}
+
+				strong {
+					@extend .screenreader;
+				}
+
+				.fa {
+					margin: 0 rem-calc(6);
+				}
+			}
+
+			.date:before {
+				content: $fa-var-calendar;
+			}
+
+			.time:before {
+				content: $fa-var-clock-o;
+			}
+
+			.location:before {
+				content: $fa-var-map-marker;
+			}
+
+
+		}
+
+		.images {
+			margin-bottom: $column-gutter;
+
+			.imageChunk {
+				@media
+				#{$medium-up} {
+					float: left;
+					width: 50%;
+
+					&:nth-child(2n+1) {
+						padding-right: rem-calc(16);
+						clear: left;
+					}
+
+					&:nth-child(2n+2) {
+						padding-left: rem-calc(16);
+					}
+				}
+			}
+		}
+
+		.contact,
+		.eventUrl,
+		.calendarExport {
+			margin-bottom: 0;
+
+			&:before {
+				@extend .fa;
+				margin-right: rem-calc(6);
+			}
+		}
+
+		.contact {
+			&:before {
+				content: $fa-var-question-circle;
+			}
+		}
+
+		.eventUrl {
+			&:before {
+				content: $fa-var-info-circle;
+			}
+		}
+
+		.calendarExport {
+			&:before {
+				content: $fa-var-calendar;
+			}
+		}
+
+		.export {
+			margin-bottom: $paragraph-margin-bottom;
+		}
+
+	}
+}
+
