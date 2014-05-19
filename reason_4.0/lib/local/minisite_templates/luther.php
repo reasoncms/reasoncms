@@ -195,6 +195,7 @@
 			// @todo: Is this the correct modernizer?  Not sure.
 			$this->head_items->add_javascript('/reason/local/luther_2014/javascripts/vendor/custom.modernizr.js');
 			//$this->head_items->add_javascript('/reason/local/luther_2014/javascripts/vendor/jquery.js');
+			$this->head_items->add_javascript(JQUERY_URL, true);
 			
 			// Stylesheets
 			// @todo: Host Google fonts on our servers for faster load time?

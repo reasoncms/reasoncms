@@ -43,6 +43,7 @@ class sportsEventsItemMarkup implements eventsItemMarkup
 		$head_items->add_javascript('http://www.luther.edu/javascripts/jquery.hoverIntent.min.js');
 		$head_items->add_stylesheet('http://www.luther.edu/javascripts/cluetip/jquery.cluetip.css');
 		$head_items->add_javascript('http://www.luther.edu/javascripts/cluetip/jquery.cluetip.js');
+		$head_items->add_javascript('/reason/local/luther_2014/javascripts/luther-cluetip.js');
 	}	
 	/**
 	 * Set the function bundle for the markup to use

@@ -30,13 +30,10 @@ $(document).ready(function() {
 		$this.html($this.html().replace(/&nbsp;/g, ''));
 	});
 
-    $("a.cluetip_athlete").cluetip({
-            arrows: true,
-            cursor: 'pointer',
-            local: true,
-            clickThrough: true,
-            waitImage: false,
-            cluetipClass: 'jtip'
-    });
+	// show and hide shows children pages on landing pages
+    $('li.navListItem.accordion > a').click(function( event ) {
+    	$(this).parent().toggleClass ('closed');
+    	event.preventDefault();
+    	});
 		
 });

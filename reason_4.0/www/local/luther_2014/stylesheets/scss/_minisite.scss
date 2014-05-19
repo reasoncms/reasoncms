@@ -457,6 +457,26 @@
 				right: $column-gutter / 2;
 			}
 		}
+		
+		.navListItem.accordion
+		{
+			a {
+				padding-right: 2.25rem;
+			}
+			&:before {
+				@extend .fa;
+				content: $fa-var-chevron-circle-down;
+				position: absolute;
+				top: $column-gutter / 2;
+				right: $column-gutter / 2;
+			}
+			&.closed:before {
+				content: $fa-var-chevron-circle-right;
+			}
+			&.closed ul.navList {
+				display: none;
+			}		
+		}
 	}
 
 	// 4. Related Content
