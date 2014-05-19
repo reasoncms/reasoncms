@@ -446,15 +446,16 @@
 			a {
 				padding-right: 2.25rem;
 			}
+
 			&:before {
 				@extend .fa;
-				content: $fa-var-chevron-circle-down;
+				content: $fa-var-chevron-up;
 				position: absolute;
 				top: $column-gutter / 2;
 				right: $column-gutter / 2;
 			}
 			&.closed:before {
-				content: $fa-var-chevron-circle-right;
+				content: $fa-var-chevron-down;
 			}
 			&.closed ul.navList {
 				display: none;
