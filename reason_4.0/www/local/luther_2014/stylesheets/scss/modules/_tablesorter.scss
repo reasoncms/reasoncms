@@ -1,14 +1,16 @@
 /* insert tablesorter fontawesome sorting arrows after table header */
-th.header:after {
-  color: #aaaaaa;
-  font-family: 'FontAwesome';
-  content: "  \f0dc";
-}
-th.headerSortUp:after {
-  font-family: 'FontAwesome';
-  content: "  \f0de";
-}
-th.headerSortDown:after {
-  font-family: 'FontAwesome';
-  content: "  \f0dd";
+
+th {
+  &.header:after {
+    color: darken($lc-grey, 25%);
+    padding-left: rem-calc(4);
+    @extend .fa;
+    content: $fa-var-sort;
+  }
+  &.headerSortUp:after {
+    content: $fa-var-sort-asc;
+  }
+  &.headerSortDown:after {
+    content: $fa-var-sort-desc;
+  }
 }

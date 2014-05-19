@@ -41,7 +41,7 @@
 			$this->end_depth = $prev_end_depth;
 			
 		}
-		function make_tree( &$item , &$root , $depth, $counter = 0 ) // {{{
+		function make_tree( &$item , &$root , $depth, $counter = 0 )
 		{
 			$display_item = false;
 			if($depth >= $this->end_depth)
@@ -68,20 +68,25 @@
 			{
 				$open = $this->is_open( $item );
 				$class = $this->get_item_class($item, $open, $depth, $counter);
+				$item_display = $this->show_item( $this->values[ $item  ], $depth );
+				if (!empty($children) && preg_match("/^show_children/", $this->values[ $item ]->get_value( 'custom_page' )) && $depth == 1)
+				{
+					$class = 'accordion ' . $class;
+				}
 				
 				// enter a section heading in navigation if description begins with 'Section:'
-				$theme_name = get_theme($this->site_id)->get_value('name');
-				if ($theme_name == 'luther2010' && preg_match("/(^Section:\s+)(.*?)$/", $this->values[ $item ]->get_value( 'description' ), $m))
+				// TODO: remove section header logic when section headers are no longer used
+				if (preg_match("/(^Section:\s+)(.*?)$/", $this->values[ $item ]->get_value( 'description' ), $m))
 				{					
 					echo '<li class="navListItem heading">'."\n";
 					echo $m[2]."\n";
 					echo '</li>'."\n";				
 				}
 				
-				$this->prepend_icon($this->values[$item], $class);
-				//echo '<li class="navListItem '.$class.'">';
-				$this->show_item( $this->values[ $item  ] );
-				if( $open AND !empty( $children ))
+				echo $this->prepend_icon($this->values[$item], $class);
+				echo $item_display;
+				if(( $open AND !empty( $children ))
+					|| (!empty($children) && preg_match("/^show_children/", $this->values[ $item ]->get_value( 'custom_page' )) && $depth == 1))
 				{
 					$shown_children = array();
 					$i = $counter;
@@ -120,7 +125,7 @@
 					}
 				}
 			}
-		} // }}}
+		}
 		
 		function get_item_class($id, $open, $depth = 0, $counter = 0)
 		{
@@ -144,7 +149,7 @@
 			return $class;
 		}
 		
-		function show_all_items() // {{{
+		function show_all_items()
 		{
 			$root = $this->root_node();
 			ob_start();
@@ -157,7 +162,7 @@
 				echo $tree;
 				echo '</ul>'."\n";
 			}
-		} // }}}
+		}
 		function main_nav_has_content()
 		{
 			return true;
@@ -202,7 +207,7 @@
 				return $this->site_info->get_value('name').' Home';
 			}
 		}
-		function show_item( &$item , $options = false) // {{{
+		function show_item( &$item , $depth, $options = false)
 		{
 			$class_attr = '';
 			if( $item->id() == $this->root_node() )
@@ -215,7 +220,8 @@
 				$page_name = $item->get_value( 'link_name' ) ? $item->get_value( 'link_name' ) : $item->get_value('name');
 			}
 			$page_name = strip_tags($page_name,'<span><strong><em>');
-			if( $this->cur_page_id != $item->id() || $this->should_link_to_current_page() )
+			if( $this->cur_page_id != $item->id() || $this->should_link_to_current_page()
+				|| (preg_match("/^show_children/", $item->get_value( 'custom_page' )) && $depth == 1))
 			{
 				$link = $this->get_full_url($item->id());
 				
@@ -223,11 +229,10 @@
 				// invisible page.  This code checks to see if the current page is the parent of the selected
 				// page and checks if the selected page should not be shown.
 				// It also checks to see if the current page is the same as the item id in the case where link_to_urrent_page is set
-				if($this->cur_page_id == $item->id()
-					||
+				if(($this->cur_page_id == $item->id() ||
 					( $this->values[ $this->cur_page_id ]->get_value( 'parent_id' ) == $item->id() AND
-					$this->values[ $this->cur_page_id ]->get_value( 'nav_display' ) == 'No' )
-				)
+					$this->values[ $this->cur_page_id ]->get_value( 'nav_display' ) == 'No' )) AND
+					(!preg_match("/^show_children/", $item->get_value( 'custom_page' )) && $depth != 1))
 				{
 					$prepend = '<strong>';
 					$append = '</strong>';
@@ -240,16 +245,16 @@
 				
 				$link = '<a href="'.$link.'"'.$class_attr.'>'.$prepend.$page_name.$append.'</a>';
 
-				echo $link;
+				return $link;
 			}
 			else
-				echo '<strong'.$class_attr.'>'.$page_name.'</strong>';
-		} //  }}}
-		function modify_base_url($base_url) // {{{
+				return '<strong'.$class_attr.'>'.$page_name.'</strong>';
+		}
+		function modify_base_url($base_url)
 		// for extending
 		{
 			return $base_url;
-		} // }}}
+		}
 		/**
 		 * Recursive function to build the path of a page inside the site
 		 *
@@ -261,7 +266,7 @@
 		 * @param integer $depth The depth from the first get_nice_url() called in this stack
 		 * @return string The url of the page (relative to the base url of the site)
 		 */
-		function get_nice_url( $id, $depth = 1) // {{{
+		function get_nice_url( $id, $depth = 1)
 		{
 			$ret = false;
 			if($depth > 60) // deeper than 60 we figure there is a problem
@@ -300,7 +305,7 @@
 				trigger_error('get_nice_url() called with an empty id at depth '.$depth);
 			}
 			return $ret;
-		} // }}}
+		}
 		/**
 		 * Gets the path to a page from the server root
 		 *
@@ -374,7 +379,7 @@
 		/**
 		 * Should include only those items needed by the minisite navigation builder
 		 */
-		function grab_request() // {{{
+		function grab_request()
 		{
 			$request = array_diff( conditional_stripslashes($_REQUEST), conditional_stripslashes($_COOKIE) );
 			$columns = (isset($this->columns)) ? array_keys($this->columns) : array('');
@@ -411,7 +416,7 @@
 			$page_name = $item->get_value( 'link_name' ) ? $item->get_value( 'link_name' ) : $item->get_value('name');
 			$page_name = strtolower(preg_replace('| |', '_', $page_name));
 			$page_name = strtolower(preg_replace('|[Gg]oogle\+|', 'googleplus', $page_name));
-			echo '<li class="navListItem ' . $class.' ' . $page_name .'">'; 
+			return '<li class="navListItem ' . $class.' ' . $page_name .'">'; 
 			
 		}
 	}

@@ -1781,11 +1781,11 @@ body #wrapper #post-footer a {
 }
 
 /* line 4, scss/font-awesome/_core.scss */
-.fa, #minisite #navWrap .jump:before, #minisite .feedLink .feedInfo a:before, .assets li:before, .blurb[class^='uname_call_to_action'] ul li a:after, .blurb[class*=' uname_call_to_action'] ul li a:after, .childrenList li a:before, #childrenAndGrandchildren li ul .childDesc:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
+.fa, #minisite #navWrap .jump:before, #minisite #navWrap .navListItem.accordion:before, #minisite .feedLink .feedInfo a:before, .assets li:before, .blurb[class^='uname_call_to_action'] ul li a:after, .blurb[class*=' uname_call_to_action'] ul li a:after, .childrenList li a:before, #childrenAndGrandchildren li ul .childDesc:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
 #calendar .eventDetails .eventUrl:before,
 #calendar .eventDetails .calendarExport:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
-.featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, #relatedPub .pubLinks a:before, .publication .post p.comments a:before, .publication .post p.more a:after, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after {
+.featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, #relatedPub .pubLinks a:before, .publication .post p.comments a:before, .publication .post p.more a:after, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after, th.header:after {
   display: inline-block;
   font-family: FontAwesome;
   font-style: normal;
@@ -2323,12 +2323,31 @@ body #wrapper #post-footer a {
   top: 1.25rem;
   right: 1.25rem;
 }
-/* line 452, scss/_minisite.scss */
+/* line 446, scss/_minisite.scss */
+#minisite #navWrap .navListItem.accordion a {
+  padding-right: 2.25rem;
+}
+/* line 449, scss/_minisite.scss */
+#minisite #navWrap .navListItem.accordion:before {
+  content: "\f13a";
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+}
+/* line 456, scss/_minisite.scss */
+#minisite #navWrap .navListItem.accordion.closed:before {
+  content: "\f138";
+}
+/* line 459, scss/_minisite.scss */
+#minisite #navWrap .navListItem.accordion.closed ul.navList {
+  display: none;
+}
+/* line 472, scss/_minisite.scss */
 #minisite #relatedSections > div,
 #minisite .relatedItems > div {
   margin-bottom: 2.5rem;
 }
-/* line 458, scss/_minisite.scss */
+/* line 478, scss/_minisite.scss */
 #minisite #relatedSections .assets,
 #minisite #relatedSections .blurb,
 #minisite #relatedSections .relatedEvents,
@@ -2338,7 +2357,7 @@ body #wrapper #post-footer a {
   background: #f6f6f6;
   padding: 1.25rem;
 }
-/* line 462, scss/_minisite.scss */
+/* line 482, scss/_minisite.scss */
 #minisite #relatedSections .assets > *:last-child,
 #minisite #relatedSections .blurb > *:last-child,
 #minisite #relatedSections .relatedEvents > *:last-child,
@@ -2348,13 +2367,13 @@ body #wrapper #post-footer a {
   padding-bottom: 0;
   margin-bottom: 0;
 }
-/* line 468, scss/_minisite.scss */
+/* line 488, scss/_minisite.scss */
 #minisite #relatedSections h3,
 #minisite .relatedItems h3 {
   font-size: 1.4375rem;
   margin-top: 0;
 }
-/* line 479, scss/_minisite.scss */
+/* line 499, scss/_minisite.scss */
 #minisite #footer {
   position: relative;
   padding-left: 1.25rem;
@@ -2366,7 +2385,7 @@ body #wrapper #post-footer a {
   padding-bottom: 1.25rem;
 }
 @media only screen and (min-width: 64.063em) {
-  /* line 479, scss/_minisite.scss */
+  /* line 499, scss/_minisite.scss */
   #minisite #footer {
     position: relative;
     padding-left: 0;
@@ -2376,14 +2395,14 @@ body #wrapper #post-footer a {
     padding: 1.25rem;
   }
 }
-/* line 492, scss/_minisite.scss */
+/* line 512, scss/_minisite.scss */
 #minisite #footer #maintained {
   color: #9d9d9d;
   display: block;
   margin-bottom: 1rem;
 }
 @media only screen and (min-width: 60.0625em) {
-  /* line 492, scss/_minisite.scss */
+  /* line 512, scss/_minisite.scss */
   #minisite #footer #maintained {
     width: 45%;
     float: left;
@@ -2391,27 +2410,27 @@ body #wrapper #post-footer a {
     padding-top: 4px;
   }
 }
-/* line 505, scss/_minisite.scss */
+/* line 525, scss/_minisite.scss */
 #minisite #footer .loginLinkModule {
   display: block;
 }
 @media only screen and (min-width: 60.0625em) {
-  /* line 505, scss/_minisite.scss */
+  /* line 525, scss/_minisite.scss */
   #minisite #footer .loginLinkModule {
     width: 45%;
     float: right;
     text-align: right;
   }
 }
-/* line 514, scss/_minisite.scss */
+/* line 534, scss/_minisite.scss */
 #minisite #footer .loginLinkModule .editDivider {
   display: none;
 }
-/* line 516, scss/_minisite.scss */
+/* line 536, scss/_minisite.scss */
 #minisite #footer .loginLinkModule div {
   display: inline;
 }
-/* line 520, scss/_minisite.scss */
+/* line 540, scss/_minisite.scss */
 #minisite #footer .loginLinkModule div a {
   background: #e9e9e9;
   padding: 0.3125rem 0.375rem;
@@ -2426,12 +2445,12 @@ body #wrapper #post-footer a {
   line-height: 1;
 }
 @media only screen and (min-width: 60.0625em) {
-  /* line 520, scss/_minisite.scss */
+  /* line 540, scss/_minisite.scss */
   #minisite #footer .loginLinkModule div a {
     margin-left: 0.25rem;
   }
 }
-/* line 535, scss/_minisite.scss */
+/* line 555, scss/_minisite.scss */
 #minisite #footer .loginLinkModule #footerLoginLink {
   display: inline-block;
   font-size: 0.75rem;
@@ -2448,42 +2467,42 @@ body #wrapper #post-footer a {
   line-height: 1;
 }
 @media only screen and (min-width: 60.0625em) {
-  /* line 535, scss/_minisite.scss */
+  /* line 555, scss/_minisite.scss */
   #minisite #footer .loginLinkModule #footerLoginLink {
     margin: 0 0 0 0.25rem;
   }
 }
-/* line 551, scss/_minisite.scss */
+/* line 571, scss/_minisite.scss */
 #minisite #footer .loginLinkModule #footerLoginLink .username {
   font-weight: 400;
 }
-/* line 556, scss/_minisite.scss */
+/* line 576, scss/_minisite.scss */
 #minisite #footer .loginLinkModule.unauthenticated #footerLoginLink {
   margin: 0;
 }
-/* line 567, scss/_minisite.scss */
+/* line 587, scss/_minisite.scss */
 #minisite table tr,
 #minisite table td {
   font-weight: 300;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 572, scss/_minisite.scss */
+  /* line 592, scss/_minisite.scss */
   #minisite .feedLink {
     display: inline;
     text-align: right;
   }
 }
-/* line 580, scss/_minisite.scss */
+/* line 600, scss/_minisite.scss */
 #minisite .feedLink .feedInfo a {
   color: transparent;
 }
-/* line 584, scss/_minisite.scss */
+/* line 604, scss/_minisite.scss */
 #minisite .feedLink .feedInfo a:before {
   content: "\f09e";
   display: block;
   color: #9f2112;
 }
-/* line 593, scss/_minisite.scss */
+/* line 613, scss/_minisite.scss */
 #minisite .pagination {
   margin-bottom: 2.5rem;
   *zoom: 1;
@@ -2498,22 +2517,22 @@ body #wrapper #post-footer a {
   clear: both;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 593, scss/_minisite.scss */
+  /* line 613, scss/_minisite.scss */
   #minisite .pagination {
     width: 50%;
     float: left;
   }
 }
-/* line 602, scss/_minisite.scss */
+/* line 622, scss/_minisite.scss */
 #minisite .pagination.above {
   dispaly: none;
 }
-/* line 613, scss/_minisite.scss */
+/* line 633, scss/_minisite.scss */
 #minisite .pagination .pages a,
 #minisite .pagination .pages strong {
   margin: 0 0.25rem;
 }
-/* line 622, scss/_minisite.scss */
+/* line 642, scss/_minisite.scss */
 #minisite .contentMain + .contentPost {
   border-top: 1px solid #e9e9e9;
   padding-top: 2.5rem;
@@ -2521,11 +2540,11 @@ body #wrapper #post-footer a {
 }
 
 /* line 4, scss/font-awesome/_core.scss */
-.fa, #minisite #navWrap .jump:before, #minisite .feedLink .feedInfo a:before, .assets li:before, .blurb[class^='uname_call_to_action'] ul li a:after, .blurb[class*=' uname_call_to_action'] ul li a:after, .childrenList li a:before, #childrenAndGrandchildren li ul .childDesc:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
+.fa, #minisite #navWrap .jump:before, #minisite #navWrap .navListItem.accordion:before, #minisite .feedLink .feedInfo a:before, .assets li:before, .blurb[class^='uname_call_to_action'] ul li a:after, .blurb[class*=' uname_call_to_action'] ul li a:after, .childrenList li a:before, #childrenAndGrandchildren li ul .childDesc:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
 #calendar .eventDetails .eventUrl:before,
 #calendar .eventDetails .calendarExport:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
-.featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, #relatedPub .pubLinks a:before, .publication .post p.comments a:before, .publication .post p.more a:after, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after {
+.featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, #relatedPub .pubLinks a:before, .publication .post p.comments a:before, .publication .post p.more a:after, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after, th.header:after {
   display: inline-block;
   font-family: FontAwesome;
   font-style: normal;
@@ -3819,13 +3838,13 @@ body #wrapper #post-footer a {
   text-align: center;
 }
 /* line 701, scss/modules/_events.scss */
-#calendar .eventDetails .eventMeta li .fa, #calendar .eventDetails .eventMeta li #minisite #navWrap .jump:before, #minisite #navWrap #calendar .eventDetails .eventMeta li .jump:before, #calendar .eventDetails .eventMeta li #minisite .feedLink .feedInfo a:before, #minisite .feedLink .feedInfo #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta .blurb[class^='uname_call_to_action'] ul li a:after, .blurb[class^='uname_call_to_action'] ul #calendar .eventDetails .eventMeta li a:after, #calendar .eventDetails .eventMeta .blurb[class*=' uname_call_to_action'] ul li a:after, .blurb[class*=' uname_call_to_action'] ul #calendar .eventDetails .eventMeta li a:after, #calendar .eventDetails .eventMeta .childrenList li a:before, .childrenList #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta #childrenAndGrandchildren li ul .childDesc:before, #childrenAndGrandchildren #calendar .eventDetails .eventMeta li ul .childDesc:before, #calendar .eventDetails .eventMeta li .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport .eventDetails .eventMeta li a:before,
+#calendar .eventDetails .eventMeta li .fa, #calendar .eventDetails .eventMeta li #minisite #navWrap .jump:before, #minisite #navWrap #calendar .eventDetails .eventMeta li .jump:before, #calendar .eventDetails .eventMeta li #minisite #navWrap .navListItem.accordion:before, #minisite #navWrap #calendar .eventDetails .eventMeta li .navListItem.accordion:before, #calendar .eventDetails .eventMeta li #minisite .feedLink .feedInfo a:before, #minisite .feedLink .feedInfo #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta .blurb[class^='uname_call_to_action'] ul li a:after, .blurb[class^='uname_call_to_action'] ul #calendar .eventDetails .eventMeta li a:after, #calendar .eventDetails .eventMeta .blurb[class*=' uname_call_to_action'] ul li a:after, .blurb[class*=' uname_call_to_action'] ul #calendar .eventDetails .eventMeta li a:after, #calendar .eventDetails .eventMeta .childrenList li a:before, .childrenList #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta #childrenAndGrandchildren li ul .childDesc:before, #childrenAndGrandchildren #calendar .eventDetails .eventMeta li ul .childDesc:before, #calendar .eventDetails .eventMeta li .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport .eventDetails .eventMeta li a:before,
 #calendar .eventDetails .eventMeta li .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li #miniCal .foot .more a:before, #miniCal .foot .more #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li .back a:before, #calendar .eventDetails .back .eventMeta li a:before, #calendar .eventDetails .eventMeta li li:before, #calendar .eventDetails .eventMeta li .contact:before,
 #calendar .eventDetails .eventMeta li .eventUrl:before,
 #calendar .eventDetails .eventMeta li .calendarExport:before, #calendar .eventDetails .eventMeta li #facultyStaff .facStaff .facStaffContent .more:before, #facultyStaff .facStaff .facStaffContent #calendar .eventDetails .eventMeta li .more:before, #calendar .eventDetails .eventMeta li .featuresModule .feature .featureInfo .featureText a:before, .featuresModule .feature .featureInfo .featureText #calendar .eventDetails .eventMeta li a:before,
 #calendar .eventDetails .eventMeta li .featuresModule .feature .featureInfo .featureText span:before,
-.featuresModule .feature .featureInfo .featureText #calendar .eventDetails .eventMeta li span:before, #calendar .eventDetails .eventMeta li #discoErrorNotice h3:before, #discoErrorNotice #calendar .eventDetails .eventMeta li h3:before, #calendar .eventDetails .eventMeta li #relatedPub .pubLinks a:before, #relatedPub .pubLinks #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li .publication .post p.comments a:before, .publication .post p.comments #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li .publication .post p.more a:after, .publication .post p.more #calendar .eventDetails .eventMeta li a:after, #calendar .eventDetails .eventMeta li .publication .fullPost .commentAdded h4:before, .publication .fullPost .commentAdded #calendar .eventDetails .eventMeta li h4:before, #calendar .eventDetails .eventMeta li .publication .nextPrev .prev h4:before, .publication .nextPrev .prev #calendar .eventDetails .eventMeta li h4:before, #calendar .eventDetails .eventMeta li .publication .nextPrev .next h4:after, .publication .nextPrev .next #calendar .eventDetails .eventMeta li h4:after {
+.featuresModule .feature .featureInfo .featureText #calendar .eventDetails .eventMeta li span:before, #calendar .eventDetails .eventMeta li #discoErrorNotice h3:before, #discoErrorNotice #calendar .eventDetails .eventMeta li h3:before, #calendar .eventDetails .eventMeta li #relatedPub .pubLinks a:before, #relatedPub .pubLinks #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li .publication .post p.comments a:before, .publication .post p.comments #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li .publication .post p.more a:after, .publication .post p.more #calendar .eventDetails .eventMeta li a:after, #calendar .eventDetails .eventMeta li .publication .fullPost .commentAdded h4:before, .publication .fullPost .commentAdded #calendar .eventDetails .eventMeta li h4:before, #calendar .eventDetails .eventMeta li .publication .nextPrev .prev h4:before, .publication .nextPrev .prev #calendar .eventDetails .eventMeta li h4:before, #calendar .eventDetails .eventMeta li .publication .nextPrev .next h4:after, .publication .nextPrev .next #calendar .eventDetails .eventMeta li h4:after, #calendar .eventDetails .eventMeta li th.header:after {
   margin: 0 0.375rem;
 }
 /* line 706, scss/modules/_events.scss */
@@ -3890,11 +3909,11 @@ body #wrapper #post-footer a {
 }
 
 /* line 4, scss/font-awesome/_core.scss */
-.fa, #minisite #navWrap .jump:before, #minisite .feedLink .feedInfo a:before, .assets li:before, .blurb[class^='uname_call_to_action'] ul li a:after, .blurb[class*=' uname_call_to_action'] ul li a:after, .childrenList li a:before, #childrenAndGrandchildren li ul .childDesc:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
+.fa, #minisite #navWrap .jump:before, #minisite #navWrap .navListItem.accordion:before, #minisite .feedLink .feedInfo a:before, .assets li:before,  .blurb[class^='uname_call_to_action'] ul li a:after, .blurb[class*=' uname_call_to_action'] ul li a:after, .childrenList li a:before, #childrenAndGrandchildren li ul .childDesc:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
 #calendar .eventDetails .eventUrl:before,
 #calendar .eventDetails .calendarExport:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
-.featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, #relatedPub .pubLinks a:before, .publication .post p.comments a:before, .publication .post p.more a:after, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after {
+.featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, #relatedPub .pubLinks a:before, .publication .post p.comments a:before, .publication .post p.more a:after, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after, th.header:after {
   display: inline-block;
   font-family: FontAwesome;
   font-style: normal;
@@ -5572,41 +5591,33 @@ form table td {
 }
 
 /* insert tablesorter fontawesome sorting arrows after table header */
-/* line 2, scss/modules/_tablesorter.scss */
+/* line 4, scss/modules/_tablesorter.scss */
 th.header:after {
-  color: #aaaaaa;
-  font-family: 'FontAwesome';
-  content: "  \f0dc";
+  color: darkgrey;
+  padding-left: 0.25rem;
+  content: "\f0dc";
 }
-
-/* line 7, scss/modules/_tablesorter.scss */
+/* line 10, scss/modules/_tablesorter.scss */
 th.headerSortUp:after {
-  font-family: 'FontAwesome';
-  content: "  \f0de";
+  content: "\f0dd";
 }
-
-/* line 11, scss/modules/_tablesorter.scss */
+/* line 13, scss/modules/_tablesorter.scss */
 th.headerSortDown:after {
-  font-family: 'FontAwesome';
-  content: "  \f0dd";
+  content: "\f0de";
 }
 
-/* /// Cluetip athlete tooltip \\ */
-/* line 5, scss/modules/_tooltip.scss */
-p.athlete_position_event,
-p.athlete_class_year,
-p.athlete_hometown,
-p.athlete_high_school {
+/* Cluetip athlete tooltip */
+/* line 4, scss/modules/_tooltip.scss */
+p.athlete_position_event, p.athlete_class_year, p.athlete_hometown, p.athlete_high_school {
   width: 265px;
   margin-bottom: 0;
 }
-
-/* line 9, scss/modules/_tooltip.scss */
+/* line 8, scss/modules/_tooltip.scss */
 p.athlete_class_year {
   margin-bottom: 16px;
 }
 
-/* line 12, scss/modules/_tooltip.scss */
+/* line 13, scss/modules/_tooltip.scss */
 img.athlete_image {
   float: left;
   padding: 0 7px 0 0;

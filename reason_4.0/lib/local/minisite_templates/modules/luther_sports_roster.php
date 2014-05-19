@@ -168,6 +168,7 @@
 		$head_items->add_stylesheet('http://www.luther.edu/javascripts/cluetip/jquery.cluetip.css');
 		$head_items->add_javascript('http://www.luther.edu/javascripts/cluetip/jquery.cluetip.js');		
 		$head_items->add_javascript('/reason/local/luther_2014/javascripts/luther-sports-roster.js');
+		$head_items->add_javascript('/reason/local/luther_2014/javascripts/luther-cluetip.js');
 		
 		$site_id = new entity( $this->site_id );
 		$this->site_name = $site_id->get_value('unique_name');
