@@ -27,7 +27,7 @@
 #relatedPub {
 
 	.posts {
-		margin-bottom: rem-calc(16);
+		margin: 0 0 rem-calc(16);
 	}
 
 	.post {
@@ -37,24 +37,50 @@
 
 		figure {
 			float: right;
-			margin-left: rem-calc(16);
+			margin: 0 0 rem-calc(4) rem-calc(16);
 
 			@media #{$large-up} {
 				float: left;
-				margin: 0 rem-calc(16) 0 0;
+				margin: 0 rem-calc(16) rem-calc(4) 0;
 			}
 		}
 
 		h4 {
 			margin: 0;
 		
-		a {
-			&:hover {
+			a {
+				&:hover {
 					text-decoration: underline;
 				}
 			}
 		}
+
+		.description {
+			margin-top: rem-calc(8);
+		}
+
+		.more {
+			margin-bottom: 0;
+		}
 	}
+
+	.spotlight {
+
+	}
+
+	.pubLinks {
+		margin-left: 0;
+
+		a {
+			&:before {
+				@extend .fa;
+				margin-right: rem-calc(8);
+				content: $fa-var-th-list;
+			}
+		}
+	}
+
+
 }
 
 .publication {
@@ -491,7 +517,7 @@
 	.addCommentForm {
 		.subContent {
 			form {
-				padding: $column-gutter/2 0;
+				padding: $column-gutter/2;
 				border: 1px solid $lc-grey;
 				@include border-radius (12px);		
 			}

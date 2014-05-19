@@ -103,7 +103,7 @@ body {
 					
 							a {	
 								background: url('../images/logo_2x.png') no-repeat;
-								@include background-size($logo-width-mobile $logo-height-mobile);
+								@include background-size($logo-width $logo-height);
 							}
 						}							
 					}

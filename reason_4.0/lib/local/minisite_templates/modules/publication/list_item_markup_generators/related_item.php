@@ -7,17 +7,16 @@
 /**
  * Include base class
  */
-reason_include_once( 'minisite_templates/modules/publication/list_item_markup_generators/related_item.php' );
+reason_include_once( 'minisite_templates/modules/publication/markup_generator.php' );
 
 /**
- * Generates markup for list items in a related news list, without the descriptions. Also adds a little HTML5 markup.  
+ * Generates markup for list items in a related news list.  
  *
  * @author Nathan White
- * @author Nathan Dirks
  *
  */
 
-class RelatedListItemNoDescriptionMarkupGenerator extends RelatedListItemMarkupGenerator
+class RelatedListItemMarkupGenerator extends PublicationMarkupGenerator
 {
 	//variables needed to be passed from the publication module
 	var $variables_needed = array( 	'use_dates_in_list', 
@@ -36,6 +35,7 @@ class RelatedListItemNoDescriptionMarkupGenerator extends RelatedListItemMarkupG
 		$this->markup_string .= $this->get_teaser_image_markup();
 		$this->markup_string .= $this->get_date_markup();
 		$this->markup_string .= $this->get_title_markup();
+		$this->markup_string .= $this->get_description_markup();
 	}
 	
 /////
@@ -66,6 +66,13 @@ class RelatedListItemNoDescriptionMarkupGenerator extends RelatedListItemMarkupG
 		$markup_string .=  '</h4>'."\n";
 		return $markup_string;
 	}
+
+	function get_description_markup()
+	{
+		$item = $this->passed_vars['item'];
+		if($item->get_value('description'))
+			return '<div class="description">'.$item->get_value('description').'</div>'."\n";
+	}
 	
 	function get_teaser_image_markup() // {{{
 	{
@@ -82,6 +89,7 @@ class RelatedListItemNoDescriptionMarkupGenerator extends RelatedListItemMarkupG
 		}
 		return $markup_string;
 	}
+
 
 }
 ?>

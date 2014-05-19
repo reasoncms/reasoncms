@@ -1,0 +1,186 @@
+// Foundation imports
+@import "settings";
+@import "foundation/components/grid";
+
+// Compass imports
+@import "compass/css3";
+@import "compass/css3/opacity";
+@import "compass/css3/transition";
+
+// Font Awesome Imports
+@import "font-awesome/variables";
+@import "font-awesome/core";
+
+// Luther imports
+@import "extends";
+
+/* STRUCTURE */
+
+$lc-sports-grey: #445566;
+$minisite-nav-background: $lc-sports-grey;
+$minisite-nav-color: $lc-white;
+
+.lutherSports {
+	
+	background: #333;
+	background: $lc-sports-grey;
+	background: darken($minisite-nav-background, 100%);
+	background: darken($lc-blue-dark, 10%);
+	background: #333;
+
+	#minisite {
+		background: #FFF;
+	}
+
+	// Luther Sports logo replaces the typeface logo
+	#wrapper #global-banner hgroup {
+
+		$logo-width: 168px;
+		$logo-height: 75px;
+		
+		h1 {
+
+			a {
+				background: url('../../images/logo_mobile_1x.png') no-repeat;		
+			}
+			
+			@media #{$small-up-reitna} {
+			
+				a {				
+					background: url('../../images/logo_mobile_2x.png') no-repeat;
+					@include background-size($logo-width-mobile $logo-height-mobile);
+				}
+			}
+		
+			@media #{$large-up} {
+		
+				a {
+					width: $logo-width;
+					height: $logo-height;
+					background: url('../../images/logo_sports_1x.png') no-repeat;
+					top: ($header-height - $logo-height)/2;
+				}
+			}
+				
+			@media #{$large-up-reitna} {
+			
+				a {	
+					background: url('../../images/logo_2x.png') no-repeat;
+					@include background-size($logo-width $logo-height);
+				}
+			}							
+		}
+	}
+
+
+	#minisite {
+
+		#navWrap {
+
+			#minisiteNavigation {
+
+				// Unique navigation colors
+				// Paramaters are set at top of document
+				// Desktop only. Mobile inherits global.
+
+				@media #{$large-up} {
+					background: lighten($minisite-nav-background, 3%);
+
+					a {
+						color: $minisite-nav-color;
+					}
+
+					.navListTop a.home {  //  Large "home" link at the top of the nav
+						//background: $lc-blue-light;
+						background: lighten($minisite-nav-background, 8%);
+						//background: #333;
+						//color: $lc-sports-grey;
+						//background: #ccc;
+
+						color: $minisite-nav-color;
+					}
+
+					.navListTop ul a {  // Top level page links
+						border-top: 1px solid darken($minisite-nav-background, 7%);
+						color: $minisite-nav-color;
+
+						&:hover {
+							background: $minisite-nav-background;
+							color: $minisite-nav-color;
+						}								
+					}
+					
+					.navListTop ul ul {  // Second level page links
+					
+						a {
+							border-top: 1px solid darken($minisite-nav-background, 1%);
+						
+							&:hover {
+								background: lighten($minisite-nav-background, 4%);	
+							}	
+						}
+					}
+					
+					.navListTop ul .navListItem.open {  // Nav accordion in the open state
+						background: lighten($minisite-nav-background, 10%);
+						a {
+						
+							&:hover {
+								background: lighten($minisite-nav-background, 4%);	
+							}
+						}
+					}	
+
+					.jump {
+						
+						&:before {
+							@extend .fa;
+							color: #FFF;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	// Sports results/schedule table 
+	.responsiveEventsList {
+
+		table {
+			border: none;
+
+			tr th,
+			tr td {
+			    font-size: $base-font-size;
+			    padding: rem-calc(15);
+
+			    &.location {
+					@media
+					#{$small-only} {
+						display: none;
+					}
+				}
+			}
+
+			td {
+
+			}
+		}
+
+		.view-all {
+			
+			ul {
+				margin: 0;
+
+				.more {
+
+					&:after {
+						@extend .fa;
+						content: $fa-var-chevron-circle-right;
+						margin-left: rem-calc(6);
+					}
+				}
+			}
+		}
+	}
+}
