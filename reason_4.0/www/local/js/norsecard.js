@@ -5,7 +5,7 @@ $(document).ready(function() {
         success: function(json){
             for (var i = 0; i< json.results.length; i++) {
                 var p = json.results[i];
-                $('#account-select').append('<option value="'+ p.Patron_SK +'">'+ p.First_Name + ' ' + p.Last_Name + ' (' + p.Plan + ')' +'</option>');
+                $('#account-select').append('<option value="'+ p.Patron_SK +'">'+ p.First_Name + ' ' + p.Last_Name + '</option>');
             }
         },
         error: function(xhr, ajaxOptions, thrownError){
@@ -60,11 +60,7 @@ $(document).ready(function() {
                     $('#tender').html('');
                     for (var i = 0; i < json.results.length; i++) {
                         var t = json.results[i];
-                        if (t.Tender == 'Charge') {
-                            $('#tender').append('<tr><td>' + t.Tender + ' ('+from+' - '+to+')' + '</td><td>'+ t.Balance + '</td></tr>');
-                        } else {
-                            $('#tender').append('<tr><td>' + t.Tender + ' (Total remaining)' + '</td><td>'+ parseFloat(t.Balance,10).formatMoney(2,'.',',') + '</td></tr>');
-                        }
+                            $('#tender').append('<tr><td>' + t.Tender + '</td><td>'+ parseFloat(t.Balance,10).formatMoney(2,'.',',') + '</td></tr>');
                     }
                 },
                 error: function(xhr, ajaxOptions, thrownError) {
@@ -79,10 +75,10 @@ $(document).ready(function() {
                     $('#transactions').html('');
                     $('#transactions').css({'width':''});
                     $('.pagination').remove();
-                    $('#transactions').append('<tr><th>Transaction Time</th><th>Terminal</th><th>Function</th><th>Amount</th><th>Tender</th></tr>');
+                    $('#transactions').append('<tr><th>Transaction Time</th><th>Terminal</th><th>Amount</th><th>Tender</th></tr>');
                     for (var i = 0; i < json.results.length; i++) {
                         var t = json.results[i];
-                        $('#transactions').append('<tr><td>' + t.Transaction_Time + '</td><td>'+ t.Terminal + '</td><td>' + t.transaction_function + '</td><td>' + parseFloat(t.Transaction_Amount, 10).formatMoney(2,'.',',') + '</td><td>' + t.Tender + '</td></tr>');
+                        $('#transactions').append('<tr><td>' + t.Transaction_Time + '</td><td>'+ t.Terminal + '</td><td>' + parseFloat(t.Transaction_Amount, 10).formatMoney(2,'.',',') + '</td><td>' + t.Tender + '</td></tr>');
                     }
                     $('#transactions tr:odd').css('background-color', '#AFD0EF');
                     $('#transactions').after('<div class="pagination"></div>');
