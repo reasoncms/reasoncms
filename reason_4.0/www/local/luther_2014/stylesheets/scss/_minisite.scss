@@ -589,6 +589,23 @@
 			font-weight: 300;
 		}
 	}
+
+	.continueReading {
+		margin: 0;
+
+		a {
+			background: lighten($lc-blue-light, 52%);
+			padding: rem-calc(4) rem-calc(8);
+			@include border-radius($global-radius);
+		}
+		
+		
+		a:after {
+			@extend .fa;
+			content: $fa-var-chevron-circle-right;
+			margin-left: rem-calc(6);
+		}
+	}
   
 	.feedLink {  // xml link
 

@@ -52,9 +52,9 @@ class SpotlightListItemMarkupGenerator extends PublicationMarkupGenerator
 	{		
 		$this->markup_string .= $this->get_pre_markup();
 		$this->markup_string .= $this->get_title_markup();
-		$this->markup_string .= $this->get_description_markup();
-		$this->markup_string .= $this->get_section_markup();
-		$this->markup_string .= $this->get_link_to_full_item_markup();
+		//$this->markup_string .= $this->get_description_markup();
+		//$this->markup_string .= $this->get_section_markup();
+		//$this->markup_string .= $this->get_link_to_full_item_markup();
 	}
 	
 /////
@@ -177,7 +177,7 @@ class SpotlightListItemMarkupGenerator extends PublicationMarkupGenerator
 		$markup_string = '';
 		if(!carl_empty_html($item->get_value('content')) && isset($this->passed_vars['link_to_full_item']) &&  !empty($this->passed_vars['link_to_full_item']))
 		{
-			$markup_string .=  '<p class="more">';
+			$markup_string .=  '<p class="continueReading">';
 			$markup_string .=  '<a href="' . $this->passed_vars['link_to_full_item'] .'">';
 			$markup_string .=  'Read spotlight';
 			$markup_string .=  '</a>';
