@@ -202,10 +202,19 @@
 
 // All contact blurbs
 .contactBlurb {
-
 	margin: $column-gutter/2 0;
-	background: $lc-grey;
-	padding: $column-gutter/2;
+
+	.blurbInner {
+		border-top: 12px solid;
+		background: lighten($lc-grey, 6%);
+		@include box-shadow(rgba(0,0,0,.18) 0 2px 2px);
+		padding: $column-gutter/2 !important;
+		border-color: $lc-red;
+
+		*:last-child {
+			margin-bottom: 0;
+		}
+	}
 
 	.vcard,
 	.contact-info {  // override Foundation vcard styles
