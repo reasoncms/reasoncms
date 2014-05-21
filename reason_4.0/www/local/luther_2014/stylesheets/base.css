@@ -2824,6 +2824,59 @@ body #wrapper #post-footer a {
   border-color: #1073ce;
 }
 
+/* line 208, scss/modules/_blurb.scss */
+.contactBlurb {
+  margin: 1.25rem 0;
+  background: #e9e9e9;
+  padding: 1.25rem;
+}
+/* line 215, scss/modules/_blurb.scss */
+.contactBlurb .vcard,
+.contactBlurb .contact-info {
+  border: none;
+  padding: 0;
+  margin: 0;
+  display: block;
+}
+/* line 222, scss/modules/_blurb.scss */
+.contactBlurb h2 {
+  font-size: 1.4375rem;
+}
+/* line 226, scss/modules/_blurb.scss */
+.contactBlurb h3 {
+  font-size: 1.125rem;
+  font-weight: 400;
+  margin-bottom: 0;
+}
+/* line 232, scss/modules/_blurb.scss */
+.contactBlurb *:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+/* line 240, scss/modules/_blurb.scss */
+.subNavElements .contactBlurb {
+  display: none;
+}
+@media only screen and (min-width: 64.063em) {
+  /* line 240, scss/modules/_blurb.scss */
+  .subNavElements .contactBlurb {
+    display: block;
+  }
+}
+
+/* line 252, scss/modules/_blurb.scss */
+footer .contactBlurb {
+  display: block;
+  margin-bottom: 2.5rem;
+}
+@media only screen and (min-width: 64.063em) {
+  /* line 252, scss/modules/_blurb.scss */
+  footer .contactBlurb {
+    display: none;
+  }
+}
+
 /* line 10, scss/_extends.scss */
 .zero-out, body #wrapper #global-banner hgroup h1, body #wrapper #global-banner #mobile-nav ul, body #wrapper #global-nav .sections, body #wrapper #global-footer #global-footer-nav .column ul, body #wrapper #global-footer #global-footer-info .contact, .blurb[class^='uname_call_to_action'] ul, .blurb[class*=' uname_call_to_action'] ul, #calendar .responsiveEventsList .views ul, .featuresModule .feature .featureInfo .featureTitle a,
 .featuresModule .feature .featureInfo .featureTitle .noLink, .featuresModule .feature .featureNavWrap .featureNav {

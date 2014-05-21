@@ -200,3 +200,62 @@
 		}
 	}
 }
+
+
+// CONTACT BLURBS
+
+// All contact blurbs
+.contactBlurb {
+
+	margin: $column-gutter/2 0;
+	background: $lc-grey;
+	padding: $column-gutter/2;
+
+	.vcard,
+	.contact-info {  // override Foundation vcard styles
+		border: none;
+		padding: 0;
+		margin: 0;
+		display: block;
+	}
+
+	h2 {
+		font-size: $h4-font-size;
+	}
+
+	h3 {
+		font-size: $h5-font-size;
+		font-weight: 400;
+		margin-bottom: 0;
+	}
+
+	*:last-child {
+		margin-bottom: 0;
+		padding-bottom: 0;
+	}
+}
+
+// Sidebar contact blurbs
+.subNavElements {
+	.contactBlurb {
+		display: none;  // hide on mobile
+
+		@media
+		#{$large-up} {
+			display: block;   // show on desktop
+		}
+	}
+}
+
+// Sidebar contact blurbs
+footer {
+	.contactBlurb {
+		display: block; // show on mobile
+		margin-bottom: $column-gutter;
+
+		@media
+		#{$large-up} {
+			display: none; // hide on desktop
+		}
+	}
+}

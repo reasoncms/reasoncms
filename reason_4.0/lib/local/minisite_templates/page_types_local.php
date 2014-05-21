@@ -43,8 +43,8 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'post_sidebar_3' => '',
 			'navigation' => 'navigation',
 			'sub_nav' => 'social_account/social_account',
+			'contact_blurb' => 'blurb_contact',
 			'sub_nav_2' => '',
-			//'sub_nav_2' => 'blurb_contact',
 			'sub_nav_3' => '',
 			'edit_link' => 'login_link',
 			'footer' => 'maintained',
@@ -129,7 +129,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 	),
 	'blurb_main_content' => array(
 		'main_post' => 'blurb',
-		'post_sidebar' => '',
+		'pre_sidebar' => '',
 	),
 	'caf_cam' => array(
 		'main_post' => 'caf_cam',
@@ -167,8 +167,8 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'sub_nav_3' => '',
 	),
 	'faculty' => array(
-		//'main_post' => 'faculty_luther'
-		'main_post' => 'faculty_placeholder',
+		'main_post' => 'faculty_luther'
+		//'main_post' => 'faculty_placeholder',
 	),
 	'faculty_first' => array(
 		'main' => 'faculty_luther',
@@ -317,6 +317,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		),
 		'navigation' => '',
 		'sub_nav' => '',
+		'contact_blurb' => '',
 	),
 
 	'landing_sports' => array(
