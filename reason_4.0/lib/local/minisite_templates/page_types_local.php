@@ -459,14 +459,14 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'thumbnail_crop' => 'fit',
 			'caption_flag' => false,
 		),
-		'sidebar' => array(
+		'pre_sidebar_2' => array(
 			'module' => 'image_sidebar',
 			'num_to_skip' => 1,
 			'thumbnail_width' => 600,
 			'thumbnail_height' => 400,
 			'thumbnail_crop' => 'fill',
-			'num_to_display' => 3,
-		),
+			'num_to_display' => 0,
+		)
 	),
 	'transcript_request' => array(
 		'main_post' => 'transcript_request/transcript_request',
