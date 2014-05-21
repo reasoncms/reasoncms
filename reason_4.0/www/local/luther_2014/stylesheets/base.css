@@ -1781,7 +1781,7 @@ body #wrapper #post-footer a {
 }
 
 /* line 4, scss/font-awesome/_core.scss */
-.fa, #minisite #navWrap .jump:before, #minisite #navWrap .navListItem.accordion:before, #minisite .feedLink .feedInfo a:before, .assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a:before, #childrenAndGrandchildren li ul .childDesc:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
+.fa, #minisite #navWrap .jump:before, #minisite #navWrap .navListItem.accordion:before, #minisite .continueReading a:after, #minisite .feedLink .feedInfo a:before, .assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a:before, #childrenAndGrandchildren li ul .childDesc:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
 #calendar .eventDetails .eventUrl:before,
 #calendar .eventDetails .calendarExport:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
@@ -2485,24 +2485,43 @@ body #wrapper #post-footer a {
 #minisite table td {
   font-weight: 300;
 }
+/* line 593, scss/_minisite.scss */
+#minisite .continueReading {
+  margin: 0;
+}
+/* line 596, scss/_minisite.scss */
+#minisite .continueReading a {
+  background: #eaf4fd;
+  padding: 0.25rem 0.5rem;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  -ms-border-radius: 6px;
+  -o-border-radius: 6px;
+  border-radius: 6px;
+}
+/* line 603, scss/_minisite.scss */
+#minisite .continueReading a:after {
+  content: "\f138";
+  margin-left: 0.375rem;
+}
 @media only screen and (min-width: 40.063em) {
-  /* line 593, scss/_minisite.scss */
+  /* line 610, scss/_minisite.scss */
   #minisite .feedLink {
     display: inline;
     text-align: right;
   }
 }
-/* line 601, scss/_minisite.scss */
+/* line 618, scss/_minisite.scss */
 #minisite .feedLink .feedInfo a {
   color: transparent;
 }
-/* line 605, scss/_minisite.scss */
+/* line 622, scss/_minisite.scss */
 #minisite .feedLink .feedInfo a:before {
   content: "\f09e";
   display: block;
   color: #9f2112;
 }
-/* line 614, scss/_minisite.scss */
+/* line 631, scss/_minisite.scss */
 #minisite .pagination {
   margin-bottom: 2.5rem;
   *zoom: 1;
@@ -2517,22 +2536,22 @@ body #wrapper #post-footer a {
   clear: both;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 614, scss/_minisite.scss */
+  /* line 631, scss/_minisite.scss */
   #minisite .pagination {
     width: 50%;
     float: left;
   }
 }
-/* line 623, scss/_minisite.scss */
+/* line 640, scss/_minisite.scss */
 #minisite .pagination.above {
   dispaly: none;
 }
-/* line 634, scss/_minisite.scss */
+/* line 651, scss/_minisite.scss */
 #minisite .pagination .pages a,
 #minisite .pagination .pages strong {
   margin: 0 0.25rem;
 }
-/* line 643, scss/_minisite.scss */
+/* line 660, scss/_minisite.scss */
 #minisite .contentMain + .contentPost {
   border-top: 1px solid #e9e9e9;
   padding-top: 2.5rem;
@@ -2540,7 +2559,7 @@ body #wrapper #post-footer a {
 }
 
 /* line 4, scss/font-awesome/_core.scss */
-.fa, #minisite #navWrap .jump:before, #minisite #navWrap .navListItem.accordion:before, #minisite .feedLink .feedInfo a:before, .assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a:before, #childrenAndGrandchildren li ul .childDesc:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
+.fa, #minisite #navWrap .jump:before, #minisite #navWrap .navListItem.accordion:before, #minisite .continueReading a:after, #minisite .feedLink .feedInfo a:before, .assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a:before, #childrenAndGrandchildren li ul .childDesc:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
 #calendar .eventDetails .eventUrl:before,
 #calendar .eventDetails .calendarExport:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
@@ -3891,7 +3910,7 @@ footer .contactBlurb {
   text-align: center;
 }
 /* line 701, scss/modules/_events.scss */
-#calendar .eventDetails .eventMeta li .fa, #calendar .eventDetails .eventMeta li #minisite #navWrap .jump:before, #minisite #navWrap #calendar .eventDetails .eventMeta li .jump:before, #calendar .eventDetails .eventMeta li #minisite #navWrap .navListItem.accordion:before, #minisite #navWrap #calendar .eventDetails .eventMeta li .navListItem.accordion:before, #calendar .eventDetails .eventMeta li #minisite .feedLink .feedInfo a:before, #minisite .feedLink .feedInfo #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta #callToActionBlurb .blurb ul li a:after, #callToActionBlurb .blurb ul #calendar .eventDetails .eventMeta li a:after, #calendar .eventDetails .eventMeta .childrenList li a:before, .childrenList #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta #childrenAndGrandchildren li ul .childDesc:before, #childrenAndGrandchildren #calendar .eventDetails .eventMeta li ul .childDesc:before, #calendar .eventDetails .eventMeta li .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport .eventDetails .eventMeta li a:before,
+#calendar .eventDetails .eventMeta li .fa, #calendar .eventDetails .eventMeta li #minisite #navWrap .jump:before, #minisite #navWrap #calendar .eventDetails .eventMeta li .jump:before, #calendar .eventDetails .eventMeta li #minisite #navWrap .navListItem.accordion:before, #minisite #navWrap #calendar .eventDetails .eventMeta li .navListItem.accordion:before, #calendar .eventDetails .eventMeta li #minisite .continueReading a:after, #minisite .continueReading #calendar .eventDetails .eventMeta li a:after, #calendar .eventDetails .eventMeta li #minisite .feedLink .feedInfo a:before, #minisite .feedLink .feedInfo #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta #callToActionBlurb .blurb ul li a:after, #callToActionBlurb .blurb ul #calendar .eventDetails .eventMeta li a:after, #calendar .eventDetails .eventMeta .childrenList li a:before, .childrenList #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta #childrenAndGrandchildren li ul .childDesc:before, #childrenAndGrandchildren #calendar .eventDetails .eventMeta li ul .childDesc:before, #calendar .eventDetails .eventMeta li .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport .eventDetails .eventMeta li a:before,
 #calendar .eventDetails .eventMeta li .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li #miniCal .foot .more a:before, #miniCal .foot .more #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li .back a:before, #calendar .eventDetails .back .eventMeta li a:before, #calendar .eventDetails .eventMeta li li:before, #calendar .eventDetails .eventMeta li .contact:before,
 #calendar .eventDetails .eventMeta li .eventUrl:before,
@@ -3962,7 +3981,7 @@ footer .contactBlurb {
 }
 
 /* line 4, scss/font-awesome/_core.scss */
-.fa, #minisite #navWrap .jump:before, #minisite #navWrap .navListItem.accordion:before, #minisite .feedLink .feedInfo a:before, .assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a:before, #childrenAndGrandchildren li ul .childDesc:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
+.fa, #minisite #navWrap .jump:before, #minisite #navWrap .navListItem.accordion:before, #minisite .continueReading a:after, #minisite .feedLink .feedInfo a:before, .assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a:before, #childrenAndGrandchildren li ul .childDesc:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
 #calendar .eventDetails .eventUrl:before,
 #calendar .eventDetails .calendarExport:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
@@ -5092,17 +5111,17 @@ form table td {
 #relatedPub .post .more {
   margin-bottom: 0;
 }
-/* line 71, scss/modules/_publication.scss */
+/* line 67, scss/modules/_publication.scss */
 #relatedPub .pubLinks {
   margin-left: 0;
 }
-/* line 75, scss/modules/_publication.scss */
+/* line 71, scss/modules/_publication.scss */
 #relatedPub .pubLinks a:before {
   margin-right: 0.5rem;
   content: "\f00b";
 }
 
-/* line 86, scss/modules/_publication.scss */
+/* line 82, scss/modules/_publication.scss */
 .publication {
   /* Common */
   /* POST INDEX (list of posts) */
@@ -5111,15 +5130,25 @@ form table td {
   /* Comments */
   /* Add Comment Form */
 }
-/* line 89, scss/modules/_publication.scss */
+/* line 85, scss/modules/_publication.scss */
 .publication time {
   color: #848484;
 }
-/* line 94, scss/modules/_publication.scss */
+/* line 90, scss/modules/_publication.scss */
 .publication .posts {
   margin: 0 0 2.5rem;
+  *zoom: 1;
 }
-/* line 98, scss/modules/_publication.scss */
+/* line 165, ../foundation/bower_components/foundation/scss/foundation/components/_global.scss */
+.publication .posts:before, .publication .posts:after {
+  content: " ";
+  display: table;
+}
+/* line 166, ../foundation/bower_components/foundation/scss/foundation/components/_global.scss */
+.publication .posts:after {
+  clear: both;
+}
+/* line 95, scss/modules/_publication.scss */
 .publication .post {
   border-bottom: 1px dotted #e9e9e9;
   padding: 2.5rem 0;
@@ -5135,16 +5164,16 @@ form table td {
   clear: both;
 }
 @media only screen and (max-width: 40em) {
-  /* line 98, scss/modules/_publication.scss */
+  /* line 95, scss/modules/_publication.scss */
   .publication .post {
     padding: 1.25rem 0;
   }
 }
-/* line 115, scss/modules/_publication.scss */
+/* line 112, scss/modules/_publication.scss */
 .publication .post:first-child {
   padding-top: 0;
 }
-/* line 119, scss/modules/_publication.scss */
+/* line 116, scss/modules/_publication.scss */
 .publication .post .teaserImage {
   margin-bottom: 1.25rem;
   margin-left: 1.5rem;
@@ -5152,24 +5181,24 @@ form table td {
   float: right;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 119, scss/modules/_publication.scss */
+  /* line 116, scss/modules/_publication.scss */
   .publication .post .teaserImage {
     width: 30%;
     max-width: 18.75rem;
   }
 }
-/* line 133, scss/modules/_publication.scss */
+/* line 130, scss/modules/_publication.scss */
 .publication .post .title {
   margin: 0 0 0.625rem;
   font-size: 1.6875rem;
 }
 @media only screen and (max-width: 40em) {
-  /* line 133, scss/modules/_publication.scss */
+  /* line 130, scss/modules/_publication.scss */
   .publication .post .title {
     font-size: 1.125rem;
   }
 }
-/* line 144, scss/modules/_publication.scss */
+/* line 141, scss/modules/_publication.scss */
 .publication .post time,
 .publication .post p.comments {
   display: inline-block;
@@ -5177,44 +5206,44 @@ form table td {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
   font-size: 0.875rem;
 }
-/* line 151, scss/modules/_publication.scss */
+/* line 148, scss/modules/_publication.scss */
 .publication .post time {
   margin-right: 1rem;
 }
 @media only screen and (max-width: 40em) {
-  /* line 151, scss/modules/_publication.scss */
+  /* line 148, scss/modules/_publication.scss */
   .publication .post time {
     margin-bottom: 0.41667rem;
   }
 }
 @media only screen and (max-width: 40em) {
-  /* line 162, scss/modules/_publication.scss */
+  /* line 159, scss/modules/_publication.scss */
   .publication .post p.comments {
     display: none;
   }
 }
-/* line 169, scss/modules/_publication.scss */
+/* line 166, scss/modules/_publication.scss */
 .publication .post p.comments a:before {
   content: "\f086";
   margin-right: 0.375rem;
 }
 @media only screen and (max-width: 40em) {
-  /* line 178, scss/modules/_publication.scss */
+  /* line 175, scss/modules/_publication.scss */
   .publication .post .description,
   .publication .post p.more {
     display: none;
   }
 }
-/* line 184, scss/modules/_publication.scss */
+/* line 181, scss/modules/_publication.scss */
 .publication .post p.more {
   margin: 0;
 }
-/* line 187, scss/modules/_publication.scss */
+/* line 184, scss/modules/_publication.scss */
 .publication .post p.more a {
   color: #9f2112;
   position: relative;
 }
-/* line 193, scss/modules/_publication.scss */
+/* line 190, scss/modules/_publication.scss */
 .publication .post p.more a:after {
   content: "\f061";
   margin-left: 0.375rem;
@@ -5232,7 +5261,7 @@ form table td {
   transition-timing-function: ease;
   font-size: 0.625rem;
 }
-/* line 209, scss/modules/_publication.scss */
+/* line 206, scss/modules/_publication.scss */
 .publication .post p.more a:hover:before, .publication .post p.more a:focus:before {
   left: -1.75rem;
   -webkit-transition-property: left;
@@ -5248,19 +5277,84 @@ form table td {
   -o-transition-timing-function: ease;
   transition-timing-function: ease;
 }
-/* line 222, scss/modules/_publication.scss */
+/* line 217, scss/modules/_publication.scss */
+.publication .spotlight {
+  border-bottom: none;
+  padding: 0 !important;
+  *zoom: 1;
+  width: 20%;
+  margin: 0 2.5%;
+  float: left;
+  margin-bottom: 2.5rem;
+  position: relative;
+}
+/* line 165, ../foundation/bower_components/foundation/scss/foundation/components/_global.scss */
+.publication .spotlight:before, .publication .spotlight:after {
+  content: " ";
+  display: table;
+}
+/* line 166, ../foundation/bower_components/foundation/scss/foundation/components/_global.scss */
+.publication .spotlight:after {
+  clear: both;
+}
+/* line 229, scss/modules/_publication.scss */
+.publication .spotlight:nth-child(4n+1) {
+  clear: left;
+}
+@media only screen and (max-width: 40em) {
+  /* line 217, scss/modules/_publication.scss */
+  .publication .spotlight {
+    padding: 1.25rem 0;
+  }
+}
+/* line 239, scss/modules/_publication.scss */
+.publication .spotlight .teaserImage {
+  float: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: 18.75rem;
+}
+/* line 247, scss/modules/_publication.scss */
+.publication .spotlight .title {
+  margin: 0;
+  padding: 0;
+}
+/* line 251, scss/modules/_publication.scss */
+.publication .spotlight .title a {
+  position: absolute;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.75);
+  padding: 0.625rem;
+  font-size: 1.4375rem;
+  margin: 0 !important;
+  display: block;
+  width: 100%;
+  color: #FFF;
+}
+/* line 263, scss/modules/_publication.scss */
+.publication .spotlight .title a:hover {
+  color: #1073ce;
+}
+@media only screen and (max-width: 40em) {
+  /* line 247, scss/modules/_publication.scss */
+  .publication .spotlight .title {
+    font-size: 1.125rem;
+  }
+}
+/* line 276, scss/modules/_publication.scss */
 .publication .pagination.above {
   display: none;
 }
-/* line 232, scss/modules/_publication.scss */
+/* line 286, scss/modules/_publication.scss */
 .publication .fullPost {
   /* Social Sharing */
 }
-/* line 234, scss/modules/_publication.scss */
+/* line 288, scss/modules/_publication.scss */
 .publication .fullPost .postMeta {
   margin-bottom: 2rem;
 }
-/* line 238, scss/modules/_publication.scss */
+/* line 292, scss/modules/_publication.scss */
 .publication .fullPost .author {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
   font-size: 1.4375rem;
@@ -5271,24 +5365,24 @@ form table td {
   font-weight: 400;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 238, scss/modules/_publication.scss */
+  /* line 292, scss/modules/_publication.scss */
   .publication .fullPost .author {
     border-right: 1px solid #e9e9e9;
     padding-right: 0.5rem;
     margin-right: 0.25rem;
   }
 }
-/* line 254, scss/modules/_publication.scss */
+/* line 308, scss/modules/_publication.scss */
 .publication .fullPost .date {
   display: block;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 254, scss/modules/_publication.scss */
+  /* line 308, scss/modules/_publication.scss */
   .publication .fullPost .date {
     display: inline-block;
   }
 }
-/* line 263, scss/modules/_publication.scss */
+/* line 317, scss/modules/_publication.scss */
 .publication .fullPost .commentAdded {
   border-style: solid;
   border-width: 1px;
@@ -5307,31 +5401,31 @@ form table td {
   color: #6a6a6a;
   margin: 0 0 1.25rem;
 }
-/* line 269, scss/modules/_publication.scss */
+/* line 323, scss/modules/_publication.scss */
 .publication .fullPost .commentAdded h4 {
   font-size: 1.125rem;
   color: #4a8512;
   font-weight: 600;
 }
-/* line 274, scss/modules/_publication.scss */
+/* line 328, scss/modules/_publication.scss */
 .publication .fullPost .commentAdded h4:before {
   content: "\f05d";
   margin-right: 0.625rem;
 }
-/* line 281, scss/modules/_publication.scss */
+/* line 335, scss/modules/_publication.scss */
 .publication .fullPost .commentAdded a {
   display: inline-block;
   margin-left: 1.5rem;
 }
-/* line 284, scss/modules/_publication.scss */
+/* line 338, scss/modules/_publication.scss */
 .publication .fullPost .commentAdded a:before {
   content: "(";
 }
-/* line 287, scss/modules/_publication.scss */
+/* line 341, scss/modules/_publication.scss */
 .publication .fullPost .commentAdded a:after {
   content: ")";
 }
-/* line 297, scss/modules/_publication.scss */
+/* line 351, scss/modules/_publication.scss */
 .publication .fullPost .social a {
   width: 2.5rem;
   display: inline-block;
@@ -5343,11 +5437,11 @@ form table td {
   border-radius: 6px;
   overflow: hidden;
 }
-/* line 305, scss/modules/_publication.scss */
+/* line 359, scss/modules/_publication.scss */
 .publication .fullPost .social.top {
   margin-bottom: 2rem;
 }
-/* line 308, scss/modules/_publication.scss */
+/* line 362, scss/modules/_publication.scss */
 .publication .fullPost .social.top a {
   width: 1.875rem;
   -webkit-border-radius: 4px;
@@ -5356,14 +5450,14 @@ form table td {
   -o-border-radius: 4px;
   border-radius: 4px;
 }
-/* line 315, scss/modules/_publication.scss */
+/* line 369, scss/modules/_publication.scss */
 .publication .fullPost .social.bottom {
   text-align: center;
   margin-top: 1.25rem;
   margin-bottom: 2.5rem;
 }
 @media only screen and (min-width: 64.063em) {
-  /* line 315, scss/modules/_publication.scss */
+  /* line 369, scss/modules/_publication.scss */
   .publication .fullPost .social.bottom {
     display: block;
     position: fixed;
@@ -5384,22 +5478,22 @@ form table td {
     border-bottom-left-radius: 6px;
     margin-top: 0;
   }
-  /* line 333, scss/modules/_publication.scss */
+  /* line 387, scss/modules/_publication.scss */
   .publication .fullPost .social.bottom a {
     display: block;
     margin-right: 0;
     margin-bottom: 0.75rem;
   }
-  /* line 339, scss/modules/_publication.scss */
+  /* line 393, scss/modules/_publication.scss */
   .publication .fullPost .social.bottom a:last-child {
     margin-bottom: 0;
   }
 }
-/* line 347, scss/modules/_publication.scss */
+/* line 401, scss/modules/_publication.scss */
 .publication .fullPost .firstChunk {
   margin-bottom: 2.5rem;
 }
-/* line 351, scss/modules/_publication.scss */
+/* line 405, scss/modules/_publication.scss */
 .publication .fullPost .text {
   *zoom: 1;
 }
@@ -5413,7 +5507,7 @@ form table td {
   clear: both;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 358, scss/modules/_publication.scss */
+  /* line 412, scss/modules/_publication.scss */
   .publication .fullPost.hasRelated .firstChunk {
     position: relative;
     padding-left: 0;
@@ -5422,7 +5516,7 @@ form table td {
     float: left;
     padding-right: 1.25rem;
   }
-  /* line 363, scss/modules/_publication.scss */
+  /* line 417, scss/modules/_publication.scss */
   .publication .fullPost.hasRelated .relatedItems {
     position: relative;
     padding-left: 0;
@@ -5432,12 +5526,12 @@ form table td {
     padding-left: 1.25rem;
     margin-bottom: 2.5rem;
   }
-  /* line 369, scss/modules/_publication.scss */
+  /* line 423, scss/modules/_publication.scss */
   .publication .fullPost.hasRelated .secondChunk {
     clear: both;
   }
 }
-/* line 377, scss/modules/_publication.scss */
+/* line 431, scss/modules/_publication.scss */
 .publication .nextPrev {
   *zoom: 1;
   background: #e9e9e9;
@@ -5457,34 +5551,34 @@ form table td {
 .publication .nextPrev:after {
   clear: both;
 }
-/* line 383, scss/modules/_publication.scss */
+/* line 437, scss/modules/_publication.scss */
 .publication .nextPrev h4 {
   padding: 1.25rem;
   margin: 0;
   font-size: 1.125rem;
 }
-/* line 390, scss/modules/_publication.scss */
+/* line 444, scss/modules/_publication.scss */
 .publication .nextPrev p {
   margin: 0;
 }
-/* line 393, scss/modules/_publication.scss */
+/* line 447, scss/modules/_publication.scss */
 .publication .nextPrev p a {
   padding: 1.25rem;
   display: block;
   background: #1073ce;
   color: #FFF;
 }
-/* line 399, scss/modules/_publication.scss */
+/* line 453, scss/modules/_publication.scss */
 .publication .nextPrev p a:hover {
   background: #004789;
   color: #FFF;
 }
-/* line 407, scss/modules/_publication.scss */
+/* line 461, scss/modules/_publication.scss */
 .publication .nextPrev .prev {
   border-bottom: 0.75rem solid white;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 407, scss/modules/_publication.scss */
+  /* line 461, scss/modules/_publication.scss */
   .publication .nextPrev .prev {
     border-bottom: none;
     width: 50%;
@@ -5493,53 +5587,53 @@ form table td {
     border-right: 1px solid #FFF;
   }
 }
-/* line 419, scss/modules/_publication.scss */
+/* line 473, scss/modules/_publication.scss */
 .publication .nextPrev .prev h4:before {
   content: "\f137";
   margin-right: 0.75rem;
   color: rgba(68, 68, 68, 0.35);
 }
-/* line 427, scss/modules/_publication.scss */
+/* line 481, scss/modules/_publication.scss */
 .publication .nextPrev .prev.only {
   width: 100%;
   text-align: center;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 433, scss/modules/_publication.scss */
+  /* line 487, scss/modules/_publication.scss */
   .publication .nextPrev .next {
     width: 50%;
     float: right;
   }
 }
-/* line 440, scss/modules/_publication.scss */
+/* line 494, scss/modules/_publication.scss */
 .publication .nextPrev .next h4:after {
   content: "\f138";
   margin-left: 0.75rem;
   color: rgba(68, 68, 68, 0.35);
 }
-/* line 448, scss/modules/_publication.scss */
+/* line 502, scss/modules/_publication.scss */
 .publication .nextPrev .next.only {
   width: 100%;
   text-align: center;
 }
-/* line 455, scss/modules/_publication.scss */
+/* line 509, scss/modules/_publication.scss */
 .publication .back {
   text-align: center;
   margin-bottom: 2.5rem;
 }
-/* line 459, scss/modules/_publication.scss */
+/* line 513, scss/modules/_publication.scss */
 .publication .back p {
   margin-bottom: 0;
 }
-/* line 470, scss/modules/_publication.scss */
+/* line 524, scss/modules/_publication.scss */
 .publication > .back {
   display: none;
 }
-/* line 476, scss/modules/_publication.scss */
+/* line 530, scss/modules/_publication.scss */
 .publication .comments ul {
   margin: 0 0 2.5rem;
 }
-/* line 479, scss/modules/_publication.scss */
+/* line 533, scss/modules/_publication.scss */
 .publication .comments ul li {
   position: relative;
   margin-top: 3.75rem;
@@ -5551,11 +5645,11 @@ form table td {
   border-radius: 12px;
   padding: 1.25rem;
 }
-/* line 486, scss/modules/_publication.scss */
+/* line 540, scss/modules/_publication.scss */
 .publication .comments ul li:first-child {
   margin-top: 2.5rem;
 }
-/* line 490, scss/modules/_publication.scss */
+/* line 544, scss/modules/_publication.scss */
 .publication .comments ul li .datetime {
   position: absolute;
   top: -30px;
@@ -5563,22 +5657,22 @@ form table td {
   font-size: 0.875rem;
   color: #848484;
 }
-/* line 498, scss/modules/_publication.scss */
+/* line 552, scss/modules/_publication.scss */
 .publication .comments ul li .author {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
   color: #1073ce;
   font-size: 1.4375rem;
   margin-bottom: 0.75rem;
 }
-/* line 505, scss/modules/_publication.scss */
+/* line 559, scss/modules/_publication.scss */
 .publication .comments ul li .commentContent {
   font-weight: 300;
 }
-/* line 508, scss/modules/_publication.scss */
+/* line 562, scss/modules/_publication.scss */
 .publication .comments ul li .commentContent *:last-child {
   margin-bottom: 0;
 }
-/* line 519, scss/modules/_publication.scss */
+/* line 573, scss/modules/_publication.scss */
 .publication .addCommentForm .subContent form {
   padding: 1.25rem;
   border: 1px solid #e9e9e9;
