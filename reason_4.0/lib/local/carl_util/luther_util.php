@@ -11,7 +11,7 @@ function get_luther_spotlight()
 			'related_publication_unique_names' => $spotlight,
 			'related_mode' => 'true',
 			//'related_title' => '',
-			//'related_order' => 'random',
+			'related_order' => 'random',
 			'max_num_items' => 1,
 			'markup_generator_info' =>array(
 				'list_item' =>array (
