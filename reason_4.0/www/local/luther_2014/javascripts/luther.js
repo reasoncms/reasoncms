@@ -32,7 +32,7 @@ $(document).ready(function() {
 
 	// show and hide shows children pages on landing pages
     $('li.navListItem.accordion > a').click(function( event ) {
-    	$(this).parent().toggleClass ('closed');
+    	$(this).parent().toggleClass('closed');
     	event.preventDefault();
     	});
 		
