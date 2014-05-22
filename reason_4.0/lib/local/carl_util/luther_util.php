@@ -137,7 +137,7 @@ function luther_get_image_url($image)
 	// if images not found locally try pulling from www
 	if (!file_exists($image))
 	{
-		$image = "http://www.luther.edu" . $image;
+		$image = (on_secure_page()) ? "https://www.luther.edu" . $image : "http://www.luther.edu" . $image;
 	}
 	return $image;
 }
