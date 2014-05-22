@@ -16,8 +16,8 @@
 	
 				if (preg_match("/[Cc]ontact [Ii]nformation/", $blurb->get_value('name')))
 				{
-					echo '<section class="contact-information">'."\n";
-					echo '<div class="contact-info">'."\n";
+					echo '<aside class="contactBlurb">'."\n";
+					echo '<div class="blurbInner">'."\n";
 					if ($theme->get_value( 'name' ) != 'admissions')
 					{
 						echo '<h2>Contact Information</h2>'."\n";
@@ -32,7 +32,7 @@
 						echo $s;
 					}
 					echo '</div>'."\n";
-					echo '</section> <!-- class="contact-information" -->'."\n";
+					echo '</aside>'."\n";
 				}
 			}
 			// echo '</div>'."\n";
@@ -89,6 +89,5 @@
 				}
 			}	
 		}
-		
 	}
 ?>

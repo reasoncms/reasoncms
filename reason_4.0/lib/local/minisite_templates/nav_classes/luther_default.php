@@ -64,12 +64,13 @@
 		
 				// enter a section heading in navigation if description begins with 'Section:'
 				// TODO: remove section header logic when section headers are no longer used
-				if (preg_match("/(^Section:\s+)(.*?)$/", $this->values[ $item ]->get_value( 'description' ), $m))
+				// I think we can just remove now since all navs will be transitioned on launch day.
+				/*if (preg_match("/(^Section:\s+)(.*?)$/", $this->values[ $item ]->get_value( 'description' ), $m))
 				{
 					echo '<li class="navListItem heading">'."\n";
 					echo $m[2]."\n";
 					echo '</li>'."\n";
-				}
+				}*/
 		
 				echo $this->prepend_icon($this->values[$item], $class);
 				echo $item_display;

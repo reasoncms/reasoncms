@@ -333,6 +333,22 @@
 				$this->run_section( 'global_footer' );
 			}
 		}
+
+		function show_luther_contact_blurb()
+		{
+			if ($this->has_content( 'contact_blurb' )) 
+			{
+				$this->run_section( 'contact_blurb' );
+			}
+		}
+
+		function show_luther_call_to_action_blurb()
+		{
+			if ($this->has_content( 'call_to_action_blurb' )) 
+			{
+				$this->run_section( 'call_to_action_blurb' );
+			}
+		}
 	
 		function show_banner()  // minisite banner
 		{
@@ -447,6 +463,13 @@
 				$this->has_content( 'post_sidebar_3' ) ) {
 			
 			echo '<div id="relatedSections">'."\n";
+
+				if($this->has_content( 'call_to_action_blurb' ))
+				{
+					echo '<div id="callToActionBlurb">'."\n";
+					$this->run_section( 'call_to_action_blurb' );
+					echo '</div>'."\n";
+				}
 			
 				if($this->has_content( 'pre_sidebar' ))
 				{
@@ -501,7 +524,7 @@
 			if ($this->has_content( 'navigation' )) {
 				$wrapperClasses[] = 'hasNav';
 			}
-			if ($this->has_content( 'sub_nav' ) || $this->has_content( 'sub_nav_2' ) || $this->has_content( 'sub_nav_3' ) )
+			if ($this->has_content( 'sub_nav' ) || $this->has_content( 'sub_nav_2' ) || $this->has_content( 'sub_nav_3' ) || $this->has_content( 'contact_blurb' ) )
 			{
 				$wrapperClasses[] = 'hasSubNav';
 			}
@@ -518,11 +541,12 @@
 				echo '</a>'."\n";
 			}
 
-			if ($this->has_content( 'navigation' )) 
+			if ($this->has_content( 'navigation' ))
 			{
 				$this->run_section( 'navigation' );
 			}
-			if ($this->has_content( 'sub_nav' ) || $this->has_content( 'sub_nav_2' ) || $this->has_content( 'sub_nav_3' ) )
+
+			if ($this->has_content( 'sub_nav' ) || $this->has_content( 'sub_nav_2' ) || $this->has_content( 'sub_nav_3' ) || $this->has_content( 'contact_blurb' ) )
 			{
 				echo '<div class="subNavElements">'."\n";
 				if ($this->has_content( 'sub_nav' )) 
@@ -531,6 +555,9 @@
 					$this->run_section( 'sub_nav' );
 					echo '</aside>'."\n";
 				}
+
+				$this->show_luther_contact_blurb();
+
 				if ($this->has_content( 'sub_nav_2' ))
 				{
 					echo '<aside id="subNav2" class="subNavBlock" role="complementary">'."\n";
@@ -551,6 +578,7 @@
 		function show_footer()
 		{
 			echo '<footer id="footer" role="contentInfo">'."\n";
+			$this->show_luther_contact_blurb();
 			$this->run_section( 'footer' );
 			$this->run_section( 'edit_link' );
 			if ($this->has_content( 'post_foot' ))

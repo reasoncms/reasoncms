@@ -24,6 +24,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'main_post' => '',
 			'main_post_2' => '',
 			'main_post_3' => '',
+			'call_to_action_blurb' => 'blurb_call_to_action',
 			'pre_sidebar' => 'blurb',
 			'pre_sidebar_2' => array(
 				'module' => 'image_sidebar', // default parameters set in alter_reason_pagetype in luther.php
@@ -43,8 +44,8 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'post_sidebar_3' => '',
 			'navigation' => 'navigation',
 			'sub_nav' => 'social_account/social_account',
+			'contact_blurb' => 'blurb_contact',
 			'sub_nav_2' => '',
-			//'sub_nav_2' => 'blurb_contact',
 			'sub_nav_3' => '',
 			'edit_link' => 'login_link',
 			'footer' => 'maintained',
@@ -129,7 +130,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 	),
 	'blurb_main_content' => array(
 		'main_post' => 'blurb',
-		'post_sidebar' => '',
+		'pre_sidebar' => '',
 	),
 	'caf_cam' => array(
 		'main_post' => 'caf_cam',
@@ -167,8 +168,8 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'sub_nav_3' => '',
 	),
 	'faculty' => array(
-		//'main_post' => 'faculty_luther'
-		'main_post' => 'faculty_placeholder',
+		'main_post' => 'faculty_luther'
+		//'main_post' => 'faculty_placeholder',
 	),
 	'faculty_first' => array(
 		'main' => 'faculty_luther',
@@ -317,6 +318,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		),
 		'navigation' => '',
 		'sub_nav' => '',
+		'contact_blurb' => '',
 	),
 
 	'landing_sports' => array(
@@ -457,14 +459,14 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'thumbnail_crop' => 'fit',
 			'caption_flag' => false,
 		),
-		'sidebar' => array(
+		'pre_sidebar_2' => array(
 			'module' => 'image_sidebar',
 			'num_to_skip' => 1,
 			'thumbnail_width' => 600,
 			'thumbnail_height' => 400,
 			'thumbnail_crop' => 'fill',
-			'num_to_display' => 3,
-		),
+			'num_to_display' => 0,
+		)
 	),
 	'transcript_request' => array(
 		'main_post' => 'transcript_request/transcript_request',
