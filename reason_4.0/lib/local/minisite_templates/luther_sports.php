@@ -8,6 +8,12 @@
 	
 	class Luther2014SportsTemplate extends Luther2014Template
 	{
+
+		function alter_page_type($page_type)
+		{
+			$page_type['sub_nav_3'] = array('module' => 'blurb', 'blurb_unique_names_to_show' => 'luther_sports_affiliations');
+   			return $page_type;
+		}
 		
 		function do_org_head_items()
 		{
@@ -24,7 +30,7 @@
 			if($this->page_info->get_value('unique_name'))
 				$classes[] = 'lutherSports uname_'.$this->page_info->get_value('unique_name');
 			return $classes;
-		}
+		}		
 
 		function show_footer()
 		{
