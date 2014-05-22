@@ -17,6 +17,7 @@
 /* STRUCTURE */
 
 $lc-sports-grey: #445566;
+$lc-sports-grey: #333;
 $minisite-nav-background: $lc-sports-grey;
 $minisite-nav-color: $lc-white;
 
@@ -84,15 +85,15 @@ $minisite-nav-color: $lc-white;
 				// Desktop only. Mobile inherits global.
 
 				@media #{$large-up} {
-					background: lighten($minisite-nav-background, 3%);
+					background: lighten($minisite-nav-background, 6%);
 
 					a {
 						color: $minisite-nav-color;
 					}
 
 					.navListTop a.home {  //  Large "home" link at the top of the nav
-						//background: $lc-blue-light;
-						background: lighten($minisite-nav-background, 8%);
+						background: $lc-blue-light;
+						//background: lighten($minisite-nav-background, 8%);
 						//background: #333;
 						//color: $lc-sports-grey;
 						//background: #ccc;
@@ -131,7 +132,8 @@ $minisite-nav-color: $lc-white;
 						}
 					}	
 
-					.jump {
+					.jump,
+					.accordion {
 						
 						&:before {
 							@extend .fa;
@@ -139,6 +141,24 @@ $minisite-nav-color: $lc-white;
 						}
 					}
 				}
+			}
+
+			.socialProfileLinks {
+				background: $lc-blue-light;
+			}
+		}
+
+		.uname_luther_sports_affiliations {
+			// /background: red;
+			text-align: center;
+
+			a {
+				display: inline-block;
+				margin: $column-gutter/2;
+			}
+
+			img {
+				width: rem-calc(100);
 			}
 		}
 	}
