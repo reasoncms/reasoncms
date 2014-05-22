@@ -163,10 +163,10 @@
 		//$head_items->add_stylesheet(JQUERY_UI_CSS_URL);
 		$head_items->add_javascript(JQUERY_UI_URL);
 		
-		$head_items->add_javascript('http://www.luther.edu/javascripts/tablesorter.min.js');
-		$head_items->add_javascript('http://www.luther.edu/javascripts/jquery.hoverIntent.min.js');
-		$head_items->add_stylesheet('http://www.luther.edu/javascripts/cluetip/jquery.cluetip.css');
-		$head_items->add_javascript('http://www.luther.edu/javascripts/cluetip/jquery.cluetip.js');		
+		$head_items->add_javascript('/reason/local/luther_2014/javascripts/tablesorter.min.js');
+		$head_items->add_javascript('/reason/local/luther_2014/javascripts/vendor/jquery.hoverIntent.min.js');
+		$head_items->add_stylesheet('/reason/local/luther_2014/javascripts/vendor/jquery.cluetip.css');
+		$head_items->add_javascript('/reason/local/luther_2014/javascripts/vendor/jquery.cluetip.min.js');		
 		$head_items->add_javascript('/reason/local/luther_2014/javascripts/luther-sports-roster.js');
 		$head_items->add_javascript('/reason/local/luther_2014/javascripts/luther-cluetip.js');
 		
