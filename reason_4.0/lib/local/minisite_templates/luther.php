@@ -197,7 +197,8 @@
 			// @todo: Is this the correct modernizer?  Not sure.
 			$this->head_items->add_javascript('/reason/local/luther_2014/javascripts/vendor/custom.modernizr.js');
 			//$this->head_items->add_javascript('/reason/local/luther_2014/javascripts/vendor/jquery.js');
-			$this->head_items->add_javascript(JQUERY_URL, true);
+			$this->head_items->add_javascript(JQUERY_URL, true);			
+			$this->head_items->add_javascript('/reason/local/luther_2014/javascripts/luther-gcse.js');
 			
 			// Stylesheets
 			$this->head_items->add_stylesheet('https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700');

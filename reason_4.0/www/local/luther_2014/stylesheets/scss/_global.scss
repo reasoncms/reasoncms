@@ -217,7 +217,64 @@ body {
 							margin: ($column-gutter/2.25) auto;
 							max-width: rem-calc(400);
 
-							input {
+							input.gsc-search-button {
+								background-image: inherit;
+								box-sizing: content-box;
+								-moz-box-sizing: content-box;
+								&:hover, &:focus {
+									background-image: inherit;
+									box-sizing: content-box;
+									-moz-box-sizing: content-box;
+								}
+							}							
+							.cse .gsc-search-button input.gsc-search-button-v2, input.gsc-search-button-v2 {
+								background-image: inherit;
+								box-sizing: content-box;
+								-moz-box-sizing: content-box;
+							}							
+							.cse .gsc-search-button input.gsc-search-button-v2 {
+								margin-top: 0;
+								margin-left: -18px;
+								padding: 6px;
+								/*background-color: transparent;
+								border-color: transparent;*/
+							}						
+							input.gsc-search-button-v2 {
+							margin-top: -1px;
+							margin-left: -18px;
+							padding: 6px;
+							/*background-color: transparent;
+							border-color: transparent;*/
+							&:hover, &:focus {
+								/*background-color: transparent;
+								border-color: transparent;*/
+								}
+							}							
+							.gscb_a {
+								font: 22px / 13px arial, sans-serif !important;
+								margin-top: -2px !important;
+							}							
+							.gsst_b {
+								margin-top: -2px !important;
+							}							
+							form input.gsc-input[type="text"] {
+							background-color: transparent !important;
+							border-color: transparent !important;
+							box-shadow: none !important;
+							&:focus {
+								background-color: transparent !important;
+								border-color: transparent !important;
+								box-shadow: none !important;
+								}
+							}							
+							table.gsc-search-box td {
+								vertical-align: top;
+							}							
+							/*form.gsc-search-box {
+								margin: 0px 0 -8px 0;
+							}*/
+							
+							/*input {
 								height: 2rem !important;
 							}
 
@@ -234,7 +291,7 @@ body {
 								background: $lc-blue-light;
 								color: #FFF;
 								@include border-right-radius($global-radius);
-							}
+							}*/
 						}
 					}	
 				}
@@ -280,15 +337,71 @@ body {
 						
 						li {
 
-
 							&.search {
 								display: inline-block;
 								margin: 0 0 0 1em;
 								width: rem-calc(300);
 								position: relative;
 								top: rem-calc(8);
+								
+								input.gsc-search-button {
+									background-image: inherit;
+									box-sizing: content-box;
+									-moz-box-sizing: content-box;
+									&:hover, &:focus {
+										background-image: inherit;
+										box-sizing: content-box;
+										-moz-box-sizing: content-box;
+									}
+								}								
+								.cse .gsc-search-button input.gsc-search-button-v2, input.gsc-search-button-v2 {
+									background-image: inherit;
+									box-sizing: content-box;
+									-moz-box-sizing: content-box;
+								}								
+								.cse .gsc-search-button input.gsc-search-button-v2 {
+									margin-top: -1px;
+									margin-left: -18px;
+									padding: 6px;
+									background-color: transparent;
+									border-color: transparent;
+								}								
+								input.gsc-search-button-v2 {
+								margin-top: 0;
+								margin-left: -18px;
+								padding: 6px;
+								background-color: transparent;
+								border-color: transparent;
+								&:hover, &:focus {
+									background-color: transparent;
+									border-color: transparent;
+									}
+								}								
+								.gscb_a {
+									font: 22px / 13px arial, sans-serif !important;
+									margin-top: -2px !important;
+								}								
+								.gsst_b {
+									margin-top: -2px !important;
+								}								
+								form input.gsc-input[type="text"] {
+								background-color: transparent !important;
+								border-color: transparent !important;
+								box-shadow: none !important;
+								&:focus {
+									background-color: transparent !important;
+									border-color: transparent !important;
+									box-shadow: none !important;
+									}
+								}								
+								table.gsc-search-box td {
+									vertical-align: top;
+								}								
+								form.gsc-search-box {
+									margin: 0px 0 -8px 0;
+								}
 
-								input {
+								/*input {
 									height: 2rem !important;
 								}
 
@@ -305,7 +418,7 @@ body {
 								input[type="submit"] {
 									width: rem-calc(50);
 									float: left;
-								}
+								}*/
 							}
 
 

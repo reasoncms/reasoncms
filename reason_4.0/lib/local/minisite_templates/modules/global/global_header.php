@@ -55,10 +55,7 @@
 						<li class="offices"><a href="/contact/administrative">Offices</a></li>
 						<li class="index"><a href="/azindex/">A-Z Index</a></li>
 						<li class="search">
-							<form>
-								<input type="text" value="Search" />
-								<input type="submit" value="Go" />
-							</form>
+							<gcse:searchbox-only></gcse:searchbox-only>
 						</li>
 					</ul>
 				</div>
