@@ -38,7 +38,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.synced_folder "../luther_css_js/javascripts", "/var/www/javascripts/", :owner=>"www-data", :group=>"www-data"
   config.vm.synced_folder "../luther_css_js/stylesheets", "/var/www/stylesheets/", :owner=>"www-data", :group=>"www-data"
   config.vm.synced_folder "../luther_css_js/images", "/var/www/images/", :owner=>"www-data", :group=>"www-data"
-  config.vm.synced_folder "../luther_css_js/stock", "/var/www/stock/", :owner=>"www-data", :group=>"www-data"
 
   config.vm.synced_folder "../sql", "/var/sql"
 

@@ -32,7 +32,8 @@ class ReasonSocialIntegrationHelper
 		return array('facebook' => 'Facebook',
 					 'twitter' => 'Twitter',
 					 'googleplus' => 'Google+',
-					 'email' => 'Email Signup');
+					 'email' => 'Email Signup',
+					 'youtube' => 'YouTube');
 	}
 	
 	/**
@@ -210,4 +211,3 @@ function reason_get_social_integration_helper()
 	}
 	return $si;
 }
-?>
