@@ -69,6 +69,10 @@ function connectDB($dbName, $dbuser = '', $dbpasswd = '', $dbhost='')
 		$db_info['password'] = '*************'; // replace password so it will not be exposed onscreen - nwhite
 		trigger_error( 'Unable to select database "'.$db_info[ 'db' ].'" ('.mysql_error().')', EMERGENCY );
 	}
+
+	// set character set for connection to UTF-8
+	mysql_set_charset("utf8", $db);
+
 	$GLOBALS['_current_db_connection_name'] = $dbName;
 	return $db;
 }
