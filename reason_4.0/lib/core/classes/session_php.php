@@ -124,7 +124,7 @@
 				}
 				else
 				{
-					if( empty( $_COOKIE[ $this->sess_name.'_EXISTS' ] ) )
+					if( !$this->exists() )
 					{
 						setcookie( $this->sess_name.'_EXISTS', 'true', 0, '/', $this->_transform_domain($_SERVER['SERVER_NAME']), 0 );
 					}
@@ -133,9 +133,15 @@
 					
 					if ($sid_override) {
 						session_id($sid_override);
-						session_start();
+						$started = session_start();
 					} else if (!session_id()) {
-						session_start();
+						$started = session_start();
+					}
+					
+					if (!$started) 
+					{
+						error_log('Failed to start session '.$this->sess_name.'; sid_override='.$sid_override);
+						return false;
 					}
 					
 					$this->__session_ref =& $_SESSION;
@@ -154,10 +160,9 @@
 					}
 					else
 					{
-						if( $this->has_expired() )
+						// If the session has expired, but is still active, destroy it and start over
+						if( $this->has_expired() && $this->exists() )
 						{
-							// Super common -- no need to trigger an error here -- mr
-							//trigger_error( 'Session has expired' );
 							$this->destroy();
 							$this->error_num = ERR_SESS_EXPIRED;
 							return false;
