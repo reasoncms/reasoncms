@@ -141,7 +141,8 @@
 					if (!$started) 
 					{
 						error_log('Failed to start session '.$this->sess_name.'; sid_override='.$sid_override);
-						return false;
+						// this seems to be problematic:
+						// return false;
 					}
 					
 					$this->__session_ref =& $_SESSION;
