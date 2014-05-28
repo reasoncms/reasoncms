@@ -29,18 +29,24 @@
   .lutherAdmissions #minisite #navWrap #minisiteNavigation {
     background: linen;
   }
+  /* line 37, ../scss/sites/admissions.scss */
+  .lutherAdmissions #minisite #navWrap #minisiteNavigation a {
+    color: #1073ce;
+  }
   /* line 41, ../scss/sites/admissions.scss */
   .lutherAdmissions #minisite #navWrap #minisiteNavigation .navListTop a.home {
-    background: #ffb602;
+    background: #e8a500;
     color: #FFF;
   }
   /* line 46, ../scss/sites/admissions.scss */
   .lutherAdmissions #minisite #navWrap #minisiteNavigation .navListTop ul a {
     border-top: 1px solid #f4dec8;
+    color: #1073ce;
   }
   /* line 50, ../scss/sites/admissions.scss */
   .lutherAdmissions #minisite #navWrap #minisiteNavigation .navListTop ul a:hover {
     background: linen;
+    color: #1073ce;
   }
   /* line 58, ../scss/sites/admissions.scss */
   .lutherAdmissions #minisite #navWrap #minisiteNavigation .navListTop ul ul a {
@@ -63,4 +69,8 @@
   .lutherAdmissions #minisite #navWrap #minisiteNavigation .accordion:before {
     color: #FFF;
   }
+}
+/* line 88, ../scss/sites/admissions.scss */
+.lutherAdmissions #minisite #navWrap .socialProfileLinks {
+  background: #e9bd91;
 }

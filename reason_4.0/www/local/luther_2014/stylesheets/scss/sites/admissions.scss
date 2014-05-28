@@ -35,21 +35,21 @@ $minisite-nav-color: $lc-blue-light;
 					background: $minisite-nav-background;
 
 					a {
-						//color: $minisite-nav-color;
+						color: $minisite-nav-color;
 					}
 
 					.navListTop a.home {  //  Large "home" link at the top of the nav
-						background: lighten($lc-yellow, 5%);
+						background: $lc-yellow;
 						color: #FFF;
 					}
 
 					.navListTop ul a {  // Top level page links
 						border-top: 1px solid darken($minisite-nav-background, 7%);
-						//color: $minisite-nav-color;
+						color: $minisite-nav-color;
 
 						&:hover {
 							background: $minisite-nav-background;
-							//color: $minisite-nav-color;
+							color: $minisite-nav-color;
 						}								
 					}
 					
@@ -83,6 +83,10 @@ $minisite-nav-color: $lc-blue-light;
 						}
 					}
 				}
+			}
+
+			.socialProfileLinks {
+				background: darken($minisite-nav-background, 20%);
 			}
 		}
 	}
