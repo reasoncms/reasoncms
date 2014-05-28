@@ -13,11 +13,16 @@
 @import "foundation/components/grid";
 @import "foundation/components/inline-lists";
 @import "foundation/components/offcanvas";
+@import "foundation/components/forms";
 
 // Compass imports
 @import "compass/css3";
 @import "compass/css3/opacity";
 @import "compass/css3/transition";
+
+// Font Awesome Imports
+@import "font-awesome/variables";
+@import "font-awesome/core";
 
 // Luther imports
 @import "extends";
@@ -176,15 +181,10 @@ body {
 								&.fa-times {
 									display: block;
 								}	
-								
 							}
-
-						}
-						
-					}
-								
-				}
-				
+						}	
+					}					
+				}		
 			}
 			
 			#search-nav {  // Mobile nav search
@@ -193,6 +193,7 @@ body {
 				@include grid-column(16);
 				background: lighten($lc-grey, 5%);
 				@include box-shadow(rgba(0,0,0,.25) 0 2px 2px);
+				display: block;
 			
 				&.open {
 					display: block;
@@ -217,7 +218,103 @@ body {
 							margin: ($column-gutter/2.25) auto;
 							max-width: rem-calc(400);
 
-							input.gsc-search-button {
+							form {
+								table {
+									td {
+										padding: 0;
+									}
+								}
+							}
+
+							.gsc-search-box {
+								font-size: auto;
+								margin: 0;
+
+								* { // zero out everything inside
+									border: none !important;
+									line-height: 1;
+									vertical-align: top;
+								}
+							}
+
+							.gsc-input-box {
+								background: none !important;
+							}
+
+							.gsc-input {
+								input {
+									&.gsc-input {  // search input
+										height: 2rem !important;
+										padding: 0 rem-calc(8) !important;
+										border: 1px solid $lc-grey !important;
+										border-right: none !important;
+										@include box-shadow(none);
+										background: $input-bg-color;
+										font-size: $input-font-size;
+										@include border-left-radius(4px);
+
+										&:focus {
+											border-color: darken($lc-grey, 10%);
+										}
+									}
+								}
+							}
+
+							.gsst_b {  // close search "x"
+								padding: 0;
+								height: 2rem;
+								border-top: 1px solid $lc-grey !important;
+								border-bottom: 1px solid $lc-grey !important;
+								background: #FFF;
+							}
+
+							.gsc-search-button {  // submit button
+								input.gsc-search-button {
+									border: none;
+									margin: 0;
+									height: 0;
+									width: 0;
+									display: block;
+									padding: 1rem;
+									@include border-radius(0);
+									@include border-right-radius(4px);
+									background: $lc-blue-light url("../images/search-1x.png") rem-calc(8) no-repeat;
+
+									&:hover,
+									&:active {
+										background-color: lighten($lc-blue-light, 5%);
+									}
+
+									@media #{$small-up-reitna} {
+									
+										a {				
+											background-image: url('../images/search-2x.png');
+											background-size: 50%;
+										}
+									}
+								}
+							}
+
+							/*form,
+							.gsc-search-box,
+							.gsc-search-box-tools {
+								margin: 0;
+								font-size: $base-font-size;
+
+								.gsc-input {
+									padding: 0 !important;
+
+									.gsc-input-box {
+										border: none !important;
+
+										table {
+											background: red;
+										}
+									}
+								}
+							}*/
+
+							/*input.gsc-search-button {
 								background-image: inherit;
 								box-sizing: content-box;
 								-moz-box-sizing: content-box;
@@ -236,18 +333,12 @@ body {
 								margin-top: 0;
 								margin-left: -18px;
 								padding: 6px;
-								/*background-color: transparent;
-								border-color: transparent;*/
 							}						
 							input.gsc-search-button-v2 {
 							margin-top: -1px;
 							margin-left: -18px;
 							padding: 6px;
-							/*background-color: transparent;
-							border-color: transparent;*/
 							&:hover, &:focus {
-								/*background-color: transparent;
-								border-color: transparent;*/
 								}
 							}							
 							.gscb_a {
@@ -269,7 +360,7 @@ body {
 							}							
 							table.gsc-search-box td {
 								vertical-align: top;
-							}							
+							}		*/					
 							/*form.gsc-search-box {
 								margin: 0px 0 -8px 0;
 							}*/
@@ -344,7 +435,7 @@ body {
 								position: relative;
 								top: rem-calc(8);
 								
-								input.gsc-search-button {
+								/*input.gsc-search-button {
 									background-image: inherit;
 									box-sizing: content-box;
 									-moz-box-sizing: content-box;
@@ -399,7 +490,7 @@ body {
 								}								
 								form.gsc-search-box {
 									margin: 0px 0 -8px 0;
-								}
+								}*/
 
 								/*input {
 									height: 2rem !important;
@@ -420,8 +511,6 @@ body {
 									float: left;
 								}*/
 							}
-
-
 						
 						}
 						
