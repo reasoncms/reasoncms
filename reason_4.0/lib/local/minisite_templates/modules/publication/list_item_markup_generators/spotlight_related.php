@@ -57,7 +57,7 @@ class SpotlightListItemMarkupGenerator extends PublicationMarkupGenerator
 			
 			$rsi = new reasonSizedImage();
 			$rsi->set_id($image->id());
-			$rsi->set_width(100);
+			$rsi->set_width(200);
 			//$rsi->set_height(275);
 			//$rsi->set_crop_style('fill');
 
