@@ -18,6 +18,10 @@
 
 .lutherHome {
 
+	#wrapper #global-banner #search-nav.open {
+	    margin-bottom: -4px; // removes the gap between the search and feature when the mobile search is open
+	}
+
 	#minisite {
 
 		@media #{$small-only} {
