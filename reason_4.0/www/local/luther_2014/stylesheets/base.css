@@ -5362,11 +5362,10 @@ form table td {
   border-bottom: none;
   padding: 0 !important;
   *zoom: 1;
-  width: 20%;
-  margin: 0 2.5%;
-  float: left;
   margin-bottom: 2.5rem;
   position: relative;
+  min-height: 6.25rem;
+  background: #e9e9e9;
 }
 /* line 165, ../foundation/bower_components/foundation/scss/foundation/components/_global.scss */
 .publication .spotlight:before, .publication .spotlight:after {
@@ -5377,9 +5376,46 @@ form table td {
 .publication .spotlight:after {
   clear: both;
 }
-/* line 233, scss/modules/_publication.scss */
-.publication .spotlight:nth-child(4n+1) {
-  clear: left;
+@media only screen and (max-width: 40em) {
+  /* line 223, scss/modules/_publication.scss */
+  .publication .spotlight {
+    width: 45%;
+    float: left;
+  }
+  /* line 237, scss/modules/_publication.scss */
+  .publication .spotlight:nth-child(odd) {
+    margin-right: 5%;
+  }
+  /* line 241, scss/modules/_publication.scss */
+  .publication .spotlight:nth-child(even) {
+    margin-left: 5%;
+  }
+}
+@media only screen and (min-width: 40.063em) and (max-width: 64em), only screen and (min-width: 64.063em) and (max-width: 90em) {
+  /* line 223, scss/modules/_publication.scss */
+  .publication .spotlight {
+    width: 28.3333333%;
+    margin-left: 2.5%;
+    margin-right: 2.5%;
+    float: left;
+  }
+  /* line 253, scss/modules/_publication.scss */
+  .publication .spotlight:nth-child(3n+1) {
+    clear: left;
+  }
+}
+@media only screen and (min-width: 90.063em) {
+  /* line 223, scss/modules/_publication.scss */
+  .publication .spotlight {
+    width: 20%;
+    margin-left: 2.5%;
+    margin-right: 2.5%;
+    float: left;
+  }
+  /* line 264, scss/modules/_publication.scss */
+  .publication .spotlight:nth-child(4n+1) {
+    clear: left;
+  }
 }
 @media only screen and (max-width: 40em) {
   /* line 223, scss/modules/_publication.scss */
@@ -5387,7 +5423,7 @@ form table td {
     padding: 1.25rem 0;
   }
 }
-/* line 243, scss/modules/_publication.scss */
+/* line 275, scss/modules/_publication.scss */
 .publication .spotlight .teaserImage {
   float: none;
   margin: 0;
@@ -5395,12 +5431,12 @@ form table td {
   width: 100%;
   max-width: 18.75rem;
 }
-/* line 251, scss/modules/_publication.scss */
+/* line 283, scss/modules/_publication.scss */
 .publication .spotlight .title {
   margin: 0;
   padding: 0;
 }
-/* line 255, scss/modules/_publication.scss */
+/* line 287, scss/modules/_publication.scss */
 .publication .spotlight .title a {
   position: absolute;
   bottom: 0;
@@ -5412,29 +5448,35 @@ form table td {
   width: 100%;
   color: #FFF;
 }
-/* line 267, scss/modules/_publication.scss */
+/* line 298, scss/modules/_publication.scss */
 .publication .spotlight .title a:hover {
   color: #1073ce;
 }
 @media only screen and (max-width: 40em) {
-  /* line 251, scss/modules/_publication.scss */
-  .publication .spotlight .title {
-    font-size: 1.125rem;
+  /* line 287, scss/modules/_publication.scss */
+  .publication .spotlight .title a {
+    font-size: 0.875rem;
   }
 }
-/* line 280, scss/modules/_publication.scss */
+@media only screen and (min-width: 40.063em) and (max-width: 64em) {
+  /* line 287, scss/modules/_publication.scss */
+  .publication .spotlight .title a {
+    font-size: 1rem;
+  }
+}
+/* line 315, scss/modules/_publication.scss */
 .publication .pagination.above {
   display: none;
 }
-/* line 290, scss/modules/_publication.scss */
+/* line 325, scss/modules/_publication.scss */
 .publication .fullPost {
   /* Social Sharing */
 }
-/* line 292, scss/modules/_publication.scss */
+/* line 327, scss/modules/_publication.scss */
 .publication .fullPost .postMeta {
   margin-bottom: 2rem;
 }
-/* line 296, scss/modules/_publication.scss */
+/* line 331, scss/modules/_publication.scss */
 .publication .fullPost .author {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
   font-size: 1.4375rem;
@@ -5445,24 +5487,24 @@ form table td {
   font-weight: 400;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 296, scss/modules/_publication.scss */
+  /* line 331, scss/modules/_publication.scss */
   .publication .fullPost .author {
     border-right: 1px solid #e9e9e9;
     padding-right: 0.5rem;
     margin-right: 0.25rem;
   }
 }
-/* line 312, scss/modules/_publication.scss */
+/* line 347, scss/modules/_publication.scss */
 .publication .fullPost .date {
   display: block;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 312, scss/modules/_publication.scss */
+  /* line 347, scss/modules/_publication.scss */
   .publication .fullPost .date {
     display: inline-block;
   }
 }
-/* line 321, scss/modules/_publication.scss */
+/* line 356, scss/modules/_publication.scss */
 .publication .fullPost .commentAdded {
   border-style: solid;
   border-width: 1px;
@@ -5481,31 +5523,31 @@ form table td {
   color: #6a6a6a;
   margin: 0 0 1.25rem;
 }
-/* line 327, scss/modules/_publication.scss */
+/* line 362, scss/modules/_publication.scss */
 .publication .fullPost .commentAdded h4 {
   font-size: 1.125rem;
   color: #4a8512;
   font-weight: 600;
 }
-/* line 332, scss/modules/_publication.scss */
+/* line 367, scss/modules/_publication.scss */
 .publication .fullPost .commentAdded h4:before {
   content: "\f05d";
   margin-right: 0.625rem;
 }
-/* line 339, scss/modules/_publication.scss */
+/* line 374, scss/modules/_publication.scss */
 .publication .fullPost .commentAdded a {
   display: inline-block;
   margin-left: 1.5rem;
 }
-/* line 342, scss/modules/_publication.scss */
+/* line 377, scss/modules/_publication.scss */
 .publication .fullPost .commentAdded a:before {
   content: "(";
 }
-/* line 345, scss/modules/_publication.scss */
+/* line 380, scss/modules/_publication.scss */
 .publication .fullPost .commentAdded a:after {
   content: ")";
 }
-/* line 355, scss/modules/_publication.scss */
+/* line 390, scss/modules/_publication.scss */
 .publication .fullPost .social a {
   width: 2.5rem;
   display: inline-block;
@@ -5517,11 +5559,11 @@ form table td {
   border-radius: 6px;
   overflow: hidden;
 }
-/* line 363, scss/modules/_publication.scss */
+/* line 398, scss/modules/_publication.scss */
 .publication .fullPost .social.top {
   margin-bottom: 2rem;
 }
-/* line 366, scss/modules/_publication.scss */
+/* line 401, scss/modules/_publication.scss */
 .publication .fullPost .social.top a {
   width: 1.875rem;
   -webkit-border-radius: 4px;
@@ -5530,14 +5572,14 @@ form table td {
   -o-border-radius: 4px;
   border-radius: 4px;
 }
-/* line 373, scss/modules/_publication.scss */
+/* line 408, scss/modules/_publication.scss */
 .publication .fullPost .social.bottom {
   text-align: center;
   margin-top: 1.25rem;
   margin-bottom: 2.5rem;
 }
 @media only screen and (min-width: 64.063em) {
-  /* line 373, scss/modules/_publication.scss */
+  /* line 408, scss/modules/_publication.scss */
   .publication .fullPost .social.bottom {
     display: block;
     position: fixed;
@@ -5558,22 +5600,22 @@ form table td {
     border-bottom-left-radius: 6px;
     margin-top: 0;
   }
-  /* line 391, scss/modules/_publication.scss */
+  /* line 426, scss/modules/_publication.scss */
   .publication .fullPost .social.bottom a {
     display: block;
     margin-right: 0;
     margin-bottom: 0.75rem;
   }
-  /* line 397, scss/modules/_publication.scss */
+  /* line 432, scss/modules/_publication.scss */
   .publication .fullPost .social.bottom a:last-child {
     margin-bottom: 0;
   }
 }
-/* line 405, scss/modules/_publication.scss */
+/* line 440, scss/modules/_publication.scss */
 .publication .fullPost .firstChunk {
   margin-bottom: 2.5rem;
 }
-/* line 409, scss/modules/_publication.scss */
+/* line 444, scss/modules/_publication.scss */
 .publication .fullPost .text {
   *zoom: 1;
 }
@@ -5587,7 +5629,7 @@ form table td {
   clear: both;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 416, scss/modules/_publication.scss */
+  /* line 451, scss/modules/_publication.scss */
   .publication .fullPost.hasRelated .firstChunk {
     position: relative;
     padding-left: 0;
@@ -5596,7 +5638,7 @@ form table td {
     float: left;
     padding-right: 1.25rem;
   }
-  /* line 421, scss/modules/_publication.scss */
+  /* line 456, scss/modules/_publication.scss */
   .publication .fullPost.hasRelated .relatedItems {
     position: relative;
     padding-left: 0;
@@ -5606,12 +5648,12 @@ form table td {
     padding-left: 1.25rem;
     margin-bottom: 2.5rem;
   }
-  /* line 427, scss/modules/_publication.scss */
+  /* line 462, scss/modules/_publication.scss */
   .publication .fullPost.hasRelated .secondChunk {
     clear: both;
   }
 }
-/* line 435, scss/modules/_publication.scss */
+/* line 470, scss/modules/_publication.scss */
 .publication .nextPrev {
   *zoom: 1;
   background: #e9e9e9;
@@ -5631,34 +5673,34 @@ form table td {
 .publication .nextPrev:after {
   clear: both;
 }
-/* line 441, scss/modules/_publication.scss */
+/* line 476, scss/modules/_publication.scss */
 .publication .nextPrev h4 {
   padding: 1.25rem;
   margin: 0;
   font-size: 1.125rem;
 }
-/* line 448, scss/modules/_publication.scss */
+/* line 483, scss/modules/_publication.scss */
 .publication .nextPrev p {
   margin: 0;
 }
-/* line 451, scss/modules/_publication.scss */
+/* line 486, scss/modules/_publication.scss */
 .publication .nextPrev p a {
   padding: 1.25rem;
   display: block;
   background: #1073ce;
   color: #FFF;
 }
-/* line 457, scss/modules/_publication.scss */
+/* line 492, scss/modules/_publication.scss */
 .publication .nextPrev p a:hover {
   background: #004789;
   color: #FFF;
 }
-/* line 465, scss/modules/_publication.scss */
+/* line 500, scss/modules/_publication.scss */
 .publication .nextPrev .prev {
   border-bottom: 0.75rem solid white;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 465, scss/modules/_publication.scss */
+  /* line 500, scss/modules/_publication.scss */
   .publication .nextPrev .prev {
     border-bottom: none;
     width: 50%;
@@ -5667,53 +5709,53 @@ form table td {
     border-right: 1px solid #FFF;
   }
 }
-/* line 477, scss/modules/_publication.scss */
+/* line 512, scss/modules/_publication.scss */
 .publication .nextPrev .prev h4:before {
   content: "\f137";
   margin-right: 0.75rem;
   color: rgba(68, 68, 68, 0.35);
 }
-/* line 485, scss/modules/_publication.scss */
+/* line 520, scss/modules/_publication.scss */
 .publication .nextPrev .prev.only {
   width: 100%;
   text-align: center;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 491, scss/modules/_publication.scss */
+  /* line 526, scss/modules/_publication.scss */
   .publication .nextPrev .next {
     width: 50%;
     float: right;
   }
 }
-/* line 498, scss/modules/_publication.scss */
+/* line 533, scss/modules/_publication.scss */
 .publication .nextPrev .next h4:after {
   content: "\f138";
   margin-left: 0.75rem;
   color: rgba(68, 68, 68, 0.35);
 }
-/* line 506, scss/modules/_publication.scss */
+/* line 541, scss/modules/_publication.scss */
 .publication .nextPrev .next.only {
   width: 100%;
   text-align: center;
 }
-/* line 513, scss/modules/_publication.scss */
+/* line 548, scss/modules/_publication.scss */
 .publication .back {
   text-align: center;
   margin-bottom: 2.5rem;
 }
-/* line 517, scss/modules/_publication.scss */
+/* line 552, scss/modules/_publication.scss */
 .publication .back p {
   margin-bottom: 0;
 }
-/* line 528, scss/modules/_publication.scss */
+/* line 563, scss/modules/_publication.scss */
 .publication > .back {
   display: none;
 }
-/* line 534, scss/modules/_publication.scss */
+/* line 569, scss/modules/_publication.scss */
 .publication .comments ul {
   margin: 0 0 2.5rem;
 }
-/* line 537, scss/modules/_publication.scss */
+/* line 572, scss/modules/_publication.scss */
 .publication .comments ul li {
   position: relative;
   margin-top: 3.75rem;
@@ -5725,11 +5767,11 @@ form table td {
   border-radius: 12px;
   padding: 1.25rem;
 }
-/* line 544, scss/modules/_publication.scss */
+/* line 579, scss/modules/_publication.scss */
 .publication .comments ul li:first-child {
   margin-top: 2.5rem;
 }
-/* line 548, scss/modules/_publication.scss */
+/* line 583, scss/modules/_publication.scss */
 .publication .comments ul li .datetime {
   position: absolute;
   top: -30px;
@@ -5737,22 +5779,22 @@ form table td {
   font-size: 0.875rem;
   color: #848484;
 }
-/* line 556, scss/modules/_publication.scss */
+/* line 591, scss/modules/_publication.scss */
 .publication .comments ul li .author {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
   color: #1073ce;
   font-size: 1.4375rem;
   margin-bottom: 0.75rem;
 }
-/* line 563, scss/modules/_publication.scss */
+/* line 598, scss/modules/_publication.scss */
 .publication .comments ul li .commentContent {
   font-weight: 300;
 }
-/* line 566, scss/modules/_publication.scss */
+/* line 601, scss/modules/_publication.scss */
 .publication .comments ul li .commentContent *:last-child {
   margin-bottom: 0;
 }
-/* line 577, scss/modules/_publication.scss */
+/* line 612, scss/modules/_publication.scss */
 .publication .addCommentForm .subContent form {
   padding: 1.25rem;
   border: 1px solid #e9e9e9;
