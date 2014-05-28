@@ -285,12 +285,9 @@ body {
 										background-color: lighten($lc-blue-light, 5%);
 									}
 
-									@media #{$small-up-reitna} {
-									
-										a {				
-											background-image: url('../images/search-2x.png');
-											background-size: 50%;
-										}
+									@media #{$small-up-reitna} {			
+										background-image: url('../images/search-2x.png');
+										background-size: 50%;
 									}
 								}
 							}
