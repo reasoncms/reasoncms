@@ -703,6 +703,10 @@
 				}
 			}
 
+			.repeats:before {
+				content: $fa-var-rotate-right;
+			}
+
 			.date:before {
 				content: $fa-var-calendar;
 			}
