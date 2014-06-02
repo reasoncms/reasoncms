@@ -22,14 +22,23 @@
 @import "compass/css3";
 
 // Font Awesome Imports
-@import "font-awesome/variables";
 @import "font-awesome/core";
+@import "font-awesome/mixins";
+@import "font-awesome/rotated-flipped";
+@import "font-awesome/variables";
 
 // Luther imports
 @import "extends";
 @import "mixins";
 
+.no-js {
+	.navListTop .navList .navListItem.open {
+		.navList {display: block !important;}
+	}
+}
+
 #minisite {
+
 	@include grid-row();
 	padding-top: rem-calc(22);
 	clear: both;
@@ -322,7 +331,8 @@
 		
 		// Sidebar nav background color
 		#minisiteNavigation {	
-			background: lighten($minisite-nav-background, 3%);
+			//background: lighten($minisite-nav-background, 3%);
+			background: lighten($minisite-nav-background, 5%);
 		}
 
 
@@ -385,7 +395,8 @@
 		
 		.navListTop ul a {  // Top level page links
 			display: block;
-			border-top: 1px solid darken($minisite-nav-background, 7%);
+			//border-top: 1px solid darken($minisite-nav-background, 7%);
+			border-top: 1px solid darken($minisite-nav-background, 2%);
 			$minisite-nav-color: #303030;
 			color: $minisite-nav-color;
 			font-weight: 300;
@@ -394,7 +405,11 @@
 			&:hover {
 				background: $minisite-nav-background;
 				color: darken($minisite-nav-color, 100%);
-			}								
+			}
+
+			&:visited {
+
+			}						
 		}
 		
 		.navListTop ul ul {  // Second level page links
@@ -415,13 +430,61 @@
 			}
 		}
 		
-		.navListTop ul .navListItem.open {  // Nav accordion in the open state
-			background: #f0f5f8;
-			background: lighten($minisite-nav-background, 6%);
-			a {
-			
-				&:hover {
-					background: lighten($minisite-nav-background, 4%);	
+		.navListTop ul .navListItem {
+
+			&.current {
+
+				> a {
+					font-weight: 700;
+				}
+				
+			}
+
+			&.open {
+
+				// Any nav item in the open state
+				background: #f0f5f8;
+				background: lighten($minisite-nav-background, 6%);
+				
+				a {
+					&:hover {
+						background: lighten($minisite-nav-background, 4%);	
+					}
+				}
+			}
+
+			&.accordion {
+				> a {
+					padding-right: 2.25rem;
+
+					&:before {
+						@extend .fa;
+						content: $fa-var-chevron-down;
+						position: absolute;
+						top: $column-gutter / 2;
+						right: $column-gutter / 2;
+						@include rotate(0);
+						@include transition-property(transform);
+						@include transition-duration(.4s);
+						@include transition-timing-function(ease-in);
+					}
+				}
+
+				ul.navList {
+					display: none;
+				}
+			}
+
+			&.accordion.open {
+
+				> a {
+					&:before {
+						content: $fa-var-chevron-down;
+						@include rotate(-180deg);
+						@include transition-property(transform);
+						@include transition-duration(.4s);
+						@include transition-timing-function(ease-in);
+					}
 				}
 			}
 		}
@@ -438,35 +501,6 @@
 					top: $column-gutter / 2;
 					right: $column-gutter / 2;
 				}
-			}
-		}
-		
-		.navListItem.accordion
-		{
-			> a {
-				padding-right: 2.25rem;
-
-				&:before {
-					@extend .fa;
-					content: $fa-var-chevron-up;
-					position: absolute;
-					top: $column-gutter / 2;
-					right: $column-gutter / 2;
-				}
-			}
-
-			&.closed {
-
-				> a {
-					&:before {
-						@extend .fa;
-						content: $fa-var-chevron-down;
-					}
-				}
-			}
-
-			&.closed ul.navList {
-				display: none;
 			}
 		}
 	}

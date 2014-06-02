@@ -30,10 +30,29 @@ $(document).ready(function() {
 		$this.html($this.html().replace(/&nbsp;/g, ''));
 	});
 
+
+	//var subnav = $('ul.navList');
+	
 	// show and hide shows children pages on landing pages
     $('li.navListItem.accordion > a').click(function( event ) {
-    	$(this).parent().toggleClass('closed');
-    	event.preventDefault();
-    	});
+		//$(this).parent().toggleClass('toggleOpen');
+
+		//item.slideToggle("slow");
+
+		var item = $(this).parent();
+
+		if(item.hasClass('closed')) {
+			item.removeClass('closed');
+			item.addClass('open');
+		} else {
+			item.removeClass('open');
+			item.addClass('closed');
+		}
+
+		item.children('ul').slideToggle('400');
+
+		//subnav.slideToggle('400');
+		event.preventDefault();
+    });
 		
 });
