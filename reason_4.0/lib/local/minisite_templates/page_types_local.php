@@ -168,7 +168,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'sub_nav_3' => '',
 	),
 	'faculty' => array(
-		'main_post' => 'faculty_luther'
+		'main_post' => 'faculty'
 		//'main_post' => 'faculty_placeholder',
 	),
 	'faculty_first' => array(
