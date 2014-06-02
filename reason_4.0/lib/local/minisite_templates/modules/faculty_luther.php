@@ -43,7 +43,7 @@ class LutherFacultyStaffModule extends FacultyStaffModule
                 echo '<h3 class="facStaffTitle">'.$person['title'].'</h3>'."\n";
             if ($person['edupersonaffiliation'][0] != 'Emeritus')
             
-            echo '<ul class="facStaffContact'>;
+            echo '<ul class="facStaffContact">';
 
             {
 
