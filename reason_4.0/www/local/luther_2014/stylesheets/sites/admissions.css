@@ -26,51 +26,51 @@
 /* STRUCTURE */
 @media only screen and (min-width: 64.063em) {
   /* line 28, ../scss/sites/admissions.scss */
-  .lutherAdmissions #minisite #navWrap #minisiteNavigation {
-    background: linen;
+  .lutherAdmissionsNot #minisite #navWrap #minisiteNavigation {
+    background: magenta;
   }
   /* line 37, ../scss/sites/admissions.scss */
-  .lutherAdmissions #minisite #navWrap #minisiteNavigation a {
+  .lutherAdmissionsNot #minisite #navWrap #minisiteNavigation a {
     color: #1073ce;
   }
   /* line 41, ../scss/sites/admissions.scss */
-  .lutherAdmissions #minisite #navWrap #minisiteNavigation .navListTop a.home {
+  .lutherAdmissionsNot #minisite #navWrap #minisiteNavigation .navListTop a.home {
     background: #e8a500;
     color: #FFF;
   }
   /* line 46, ../scss/sites/admissions.scss */
-  .lutherAdmissions #minisite #navWrap #minisiteNavigation .navListTop ul a {
-    border-top: 1px solid #f4dec8;
+  .lutherAdmissionsNot #minisite #navWrap #minisiteNavigation .navListTop ul a {
+    border-top: 1px solid #db00db;
     color: #1073ce;
   }
   /* line 50, ../scss/sites/admissions.scss */
-  .lutherAdmissions #minisite #navWrap #minisiteNavigation .navListTop ul a:hover {
-    background: linen;
+  .lutherAdmissionsNot #minisite #navWrap #minisiteNavigation .navListTop ul a:hover {
+    background: magenta;
     color: #1073ce;
   }
   /* line 58, ../scss/sites/admissions.scss */
-  .lutherAdmissions #minisite #navWrap #minisiteNavigation .navListTop ul ul a {
-    border-top: 1px solid #f9ede2;
+  .lutherAdmissionsNot #minisite #navWrap #minisiteNavigation .navListTop ul ul a {
+    border-top: 1px solid #fa00fa;
   }
   /* line 61, ../scss/sites/admissions.scss */
-  .lutherAdmissions #minisite #navWrap #minisiteNavigation .navListTop ul ul a:hover {
-    background: #fdfaf7;
+  .lutherAdmissionsNot #minisite #navWrap #minisiteNavigation .navListTop ul ul a:hover {
+    background: #ff14ff;
   }
   /* line 67, ../scss/sites/admissions.scss */
-  .lutherAdmissions #minisite #navWrap #minisiteNavigation .navListTop ul .navListItem.open {
-    background: white;
+  .lutherAdmissionsNot #minisite #navWrap #minisiteNavigation .navListTop ul .navListItem.open {
+    background: #ff33ff;
   }
   /* line 71, ../scss/sites/admissions.scss */
-  .lutherAdmissions #minisite #navWrap #minisiteNavigation .navListTop ul .navListItem.open a:hover {
-    background: #fdfaf7;
+  .lutherAdmissionsNot #minisite #navWrap #minisiteNavigation .navListTop ul .navListItem.open a:hover {
+    background: #ff14ff;
   }
   /* line 80, ../scss/sites/admissions.scss */
-  .lutherAdmissions #minisite #navWrap #minisiteNavigation .jump:before,
-  .lutherAdmissions #minisite #navWrap #minisiteNavigation .accordion:before {
+  .lutherAdmissionsNot #minisite #navWrap #minisiteNavigation .jump:before,
+  .lutherAdmissionsNot #minisite #navWrap #minisiteNavigation .accordion:before {
     color: #FFF;
   }
 }
 /* line 88, ../scss/sites/admissions.scss */
-.lutherAdmissions #minisite #navWrap .socialProfileLinks {
-  background: #e9bd91;
+.lutherAdmissionsNot #minisite #navWrap .socialProfileLinks {
+  background: #990099;
 }
