@@ -583,9 +583,14 @@ time {
   font-weight: 300;
 }
 
+/* line 153, scss/_type.scss */
+p:empty {
+  display: none !important;
+}
+
 /* Nav
 *******************************************/
-/* line 157, scss/_type.scss */
+/* line 161, scss/_type.scss */
 nav {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
 }

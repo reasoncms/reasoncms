@@ -1,0 +1,69 @@
+// Foundation imports
+@import "settings";
+@import "foundation/components/grid";
+
+// Compass imports
+@import "compass/css3";
+
+// Font Awesome Imports
+@import "font-awesome/variables";
+@import "font-awesome/core";
+
+// Luther imports
+@import "extends";
+
+/* STRUCTURE */
+
+.lutherLis {
+
+	#lisAnnouncements {
+
+		.announcement {
+			padding: $column-gutter / 2;
+			padding-left: rem-calc(32) + $column-gutter;
+			color: $lc-red;
+			background: rgba($lc-red, .18);
+			position: relative;
+
+			@media
+			#{$large-up} {
+				margin-bottom: $column-gutter / 2;
+			}
+
+			span {
+
+			}
+
+			&:before {
+				@extend .fa;
+				content: $fa-var-info-circle;
+				font-size: rem-calc(32);
+				position: absolute;
+				top: $column-gutter/2;
+				left: $column-gutter/2;
+				float: left;
+				padding: 0;
+			}
+
+			*:last-child {
+				margin-bottom: 0;
+			}
+
+			&.lis {
+				
+			}
+
+			&.helpDesk {
+
+			}
+
+			&.library {
+
+			}
+
+			&.archives {
+
+			}
+		}
+	}
+}

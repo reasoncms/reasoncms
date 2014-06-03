@@ -1,0 +1,54 @@
+/* line 4, ../scss/font-awesome/_core.scss */
+.fa, .lutherLis #lisAnnouncements .announcement:before {
+  display: inline-block;
+  font-family: FontAwesome;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* line 10, ../scss/_extends.scss */
+.zero-out {
+  margin: 0;
+  padding: 0;
+}
+
+/* line 15, ../scss/_extends.scss */
+.screenreader {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  margin-bottom: 0;
+}
+
+/* STRUCTURE */
+/* line 21, ../scss/sites/lis.scss */
+.lutherLis #lisAnnouncements .announcement {
+  padding: 1.25rem;
+  padding-left: 4.5rem;
+  color: #9f2112;
+  background: rgba(159, 33, 18, 0.18);
+  position: relative;
+}
+@media only screen and (min-width: 64.063em) {
+  /* line 21, ../scss/sites/lis.scss */
+  .lutherLis #lisAnnouncements .announcement {
+    margin-bottom: 1.25rem;
+  }
+}
+/* line 37, ../scss/sites/lis.scss */
+.lutherLis #lisAnnouncements .announcement:before {
+  content: "\f05a";
+  font-size: 2rem;
+  position: absolute;
+  top: 1.25rem;
+  left: 1.25rem;
+  float: left;
+  padding: 0;
+}
+/* line 48, ../scss/sites/lis.scss */
+.lutherLis #lisAnnouncements .announcement *:last-child {
+  margin-bottom: 0;
+}

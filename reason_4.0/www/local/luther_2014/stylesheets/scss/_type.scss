@@ -150,6 +150,10 @@ time {
 	font-weight: 300;
 }
 
+p:empty {
+	display: none !important;
+}
+
 
 /* Nav
 *******************************************/
