@@ -355,7 +355,6 @@
 		
 		.navListTop {  // Places border at the bottom of the sidebar nav
 			margin: 0;
-			//border-bottom: 1px solid darken($minisite-nav-background, 7%);
 		}
 		
 		.navListTop ul {
@@ -393,36 +392,43 @@
 			}
 		}
 		
-		.navListTop ul a {  // Top level page links
-			display: block;
-			//border-top: 1px solid darken($minisite-nav-background, 7%);
-			border-top: 1px solid darken($minisite-nav-background, 2%);
-			$minisite-nav-color: #303030;
-			color: $minisite-nav-color;
-			font-weight: 300;
-			font-size: rem-calc(15);
-			
-			&:hover {
-				background: $minisite-nav-background;
-				color: darken($minisite-nav-color, 100%);
+		.navListTop ul {  // TOP LEVEL page links
+
+			a {
+				display: block;
+				border-top: 1px solid darken($minisite-nav-background, 2%);
+				$minisite-nav-color: #303030;
+				color: $minisite-nav-color;
+				font-weight: 300;
+				font-size: rem-calc(15);
+				
+				&:hover {
+					background: rgba(0,0,0,.025);
+					color: darken($minisite-nav-color, 100%);
+				}
+
+				&:visited {
+
+				}	
 			}
 
-			&:visited {
-
-			}						
+			.open a:hover {
+				background: #FFF !important;
+			}
+					
 		}
 		
-		.navListTop ul ul {  // Second level page links
+		.navListTop ul ul {  // SECOND LEVEL page links
 		
 			a {
 				border: none;
 				padding: $column-gutter / 3.5 $column-gutter / 2 $column-gutter / 3.5 $column-gutter;
-				border-top: 1px solid darken($minisite-nav-background, 1%);
+				border-top: 1px solid #FFF;
 			
 				&:hover {
-					background: lighten($minisite-nav-background, 4%);	
+					background: none;
+					text-decoration: underline;
 				}
-				
 			}
 			
 			ul li a {
@@ -432,23 +438,21 @@
 		
 		.navListTop ul .navListItem {
 
-			&.current {
+			&.current {  // CURRENT PAGE ITEM
 
-				> a {
+				> a { 
 					font-weight: 700;
 				}
 				
 			}
 
 			&.open {
-
-				// Any nav item in the open state
-				background: #f0f5f8;
-				background: lighten($minisite-nav-background, 6%);
+				background: $minisite-nav-background;
+				background: #FFF;
 				
 				a {
 					&:hover {
-						background: lighten($minisite-nav-background, 4%);	
+						//background: lighten($minisite-nav-background, 4%);	
 					}
 				}
 			}
@@ -473,16 +477,6 @@
 				ul.navList {
 					display: none;
 				}
-
-				/*&.open ul.navList {
-					display: block;
-				}*/
-
-				/*&.closed {
-					ul.navList {
-						display: none;
-					}
-				}*/
 
 			}
 
