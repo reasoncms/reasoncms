@@ -1,0 +1,61 @@
+//
+// TAB WIGET STYLES
+//
+// @author Nathan Dirks
+//
+
+// Foundation imports
+@import "settings";
+@import "foundation/components/grid";
+
+// Compass imports
+@import "compass/css3";
+
+// Luther imports
+@import "extends";
+@import "mixins";
+
+#tabs {
+
+	.tabs {
+		@include clearfix;
+		margin: 0;
+		padding: 0;
+
+		.tab-title {
+			display: block;
+			float: left;
+			margin-right: rem-calc(1);
+			margin: 0;
+			padding: 0;
+
+			&.active a {
+				border: 1px solid darken($lc-grey, 10%);
+				border-bottom: none;
+				color: $body-font-color;
+			}
+
+			a {
+				@include border-top-radius($global-radius);
+				background: $lc-white;
+				display: block;
+				padding: $column-gutter/3 $column-gutter/2;
+
+			}
+		}
+	}
+
+	.tabs-content {
+		border: 1px solid darken($lc-grey, 10%);
+		padding: $column-gutter/2;
+		margin-top: - rem-calc(1);
+		
+		.content {
+			display: none;
+		
+			&.active {
+				display: block;
+			}
+		}			
+	}
+}

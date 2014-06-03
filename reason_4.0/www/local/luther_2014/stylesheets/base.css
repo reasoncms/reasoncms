@@ -5964,6 +5964,77 @@ form table td {
   display: block;
 }
 
+/* line 10, scss/_extends.scss */
+.zero-out, body #wrapper #global-banner hgroup h1, body #wrapper #global-banner #mobile-nav ul, body #wrapper #global-nav .sections, body #wrapper #global-footer #global-footer-nav .column ul, body #wrapper #global-footer #global-footer-info .contact, #callToActionBlurb .blurb ul, #calendar .responsiveEventsList .views ul, .featuresModule .feature .featureInfo .featureTitle a,
+.featuresModule .feature .featureInfo .featureTitle .noLink, .featuresModule .feature .featureNavWrap .featureNav {
+  margin: 0;
+  padding: 0;
+}
+
+/* line 15, scss/_extends.scss */
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  margin-bottom: 0;
+}
+
+/* line 20, scss/modules/_tab.scss */
+#tabs .tabs {
+  *zoom: 1;
+  margin: 0;
+  padding: 0;
+}
+/* line 165, ../foundation/bower_components/foundation/scss/foundation/components/_global.scss */
+#tabs .tabs:before, #tabs .tabs:after {
+  content: " ";
+  display: table;
+}
+/* line 166, ../foundation/bower_components/foundation/scss/foundation/components/_global.scss */
+#tabs .tabs:after {
+  clear: both;
+}
+/* line 25, scss/modules/_tab.scss */
+#tabs .tabs .tab-title {
+  display: block;
+  float: left;
+  margin-right: 0.0625rem;
+  margin: 0;
+  padding: 0;
+}
+/* line 32, scss/modules/_tab.scss */
+#tabs .tabs .tab-title.active a {
+  border: 1px solid #d0d0d0;
+  border-bottom: none;
+  color: #444444;
+}
+/* line 38, scss/modules/_tab.scss */
+#tabs .tabs .tab-title a {
+  -moz-border-radius-topleft: 6px;
+  -webkit-border-top-left-radius: 6px;
+  border-top-left-radius: 6px;
+  -moz-border-radius-topright: 6px;
+  -webkit-border-top-right-radius: 6px;
+  border-top-right-radius: 6px;
+  background: white;
+  display: block;
+  padding: 0.83333rem 1.25rem;
+}
+/* line 48, scss/modules/_tab.scss */
+#tabs .tabs-content {
+  border: 1px solid #d0d0d0;
+  padding: 1.25rem;
+  margin-top: -0.0625rem;
+}
+/* line 53, scss/modules/_tab.scss */
+#tabs .tabs-content .content {
+  display: none;
+}
+/* line 56, scss/modules/_tab.scss */
+#tabs .tabs-content .content.active {
+  display: block;
+}
+
 /* insert tablesorter fontawesome sorting arrows after table header */
 /* line 4, scss/modules/_tablesorter.scss */
 th.header:after {

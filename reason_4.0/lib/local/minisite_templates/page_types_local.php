@@ -212,6 +212,21 @@ $GLOBALS['_reason_page_types_local'] = array(
 		//'post_sidebar' => 'flickr',
 		//'post_sidebar_2' => 'twitter',
 	),
+	'landing_library' => array (
+		'main' => 'luther_tab_widget',
+		'main_post' => 'content',
+		'main_post_2' => array(
+			'module' => 'events_mini',
+			'ideal_count' => 4,
+		),
+		
+		'pre_sidebar' => 'blurb',
+		'pre_sidebar_2' => get_luther_spotlight(),
+		'sidebar' => array(
+			'module' => 'luther_av',
+			'full_size' => true,
+		),
+	),
 	'landing_events' => array(
 		'main_post' => array(
 			'module' => 'events_mini',

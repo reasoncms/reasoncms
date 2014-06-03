@@ -3,6 +3,7 @@
 	// include the MinisiteTemplate class
 	reason_include_once( 'minisite_templates/html5_responsive.php' );
 	reason_include_once( 'classes/module_sets.php' );
+	//reason_include_once( 'classes/foot_items.php' );
 	reason_include_once( 'minisite_templates/nav_classes/luther_default.php' );
 	
 	// this variable must be the same as the class name
@@ -213,15 +214,20 @@
 			// Foundation scripts need to be directly before end of body
 			// Foundation recommends including jQuery at the bottom on the body (below). But this causes conflicts
 			// with Reason scripts, like Features. Currently, we're just calling it in the head via in the normal reason way.
+			//
+
 			echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/vendor/fastclick.js"></script>';
 			echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/foundation/foundation.js"></script>';
 			echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/foundation/foundation.offcanvas.js"></script>';
+			echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/foundation/foundation.tab.js"></script>';
 
 			// Initialize Foundation javascript
 			echo '<script> $(document).foundation(); </script>';
 			
 			// Custom
 			echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/luther.js"></script>';
+
+			//$this->foot_items->add_javascript('/reason/local/luther_2014/javascripts/fooooooot.js');
 		}
 		
 		function get_body_tag_classes()

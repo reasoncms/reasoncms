@@ -14,6 +14,10 @@ $(document).ready(function() {
 		$this.html($this.html().replace(/&nbsp;/g, ''));
 	});
 
+	// Give the first tab and tab item an active class
+	$('#tabs .fragment-1').addClass('active');
+	$('#tabs #fragment-1').addClass('active');
+
 	// NAVIGATION
 	//////////////////////////////////////////////////
 	
