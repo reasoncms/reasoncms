@@ -18,16 +18,21 @@
 
 	#lisAnnouncements {
 
+		@media
+		#{$large-up} {
+			margin-bottom: $column-gutter / 2;
+		}
+
 		.announcement {
 			padding: $column-gutter / 2;
 			padding-left: rem-calc(32) + $column-gutter;
 			color: $lc-red;
 			background: rgba($lc-red, .18);
 			position: relative;
+			border-top: 1px solid rgba($lc-red, .2);
 
-			@media
-			#{$large-up} {
-				margin-bottom: $column-gutter / 2;
+			&:nth-child(1) {
+				border-top: none;
 			}
 
 			span {
