@@ -43,7 +43,7 @@ class LutherFacultyStaffModule extends FacultyStaffModule
                 echo '<h3 class="facStaffTitle">'.$person['title'].'</h3>'."\n";
             if ($person['edupersonaffiliation'][0] != 'Emeritus')
             
-            echo '<ul class="facStaffContact'>;
+            echo '<ul class="facStaffContact">';
 
             {
 
@@ -81,7 +81,7 @@ class LutherFacultyStaffModule extends FacultyStaffModule
                 $image_id = $this->grab_faculty_image( $this->reason_netids[ $person[ 'ds_username' ][0] ] );
         if (!empty($image_id))
         {
-            echo "\t<div class='facStaffImage'>";
+            echo "<div class='facStaffImage'>";
     		$image = get_entity_by_id($image_id);
     		$url = WEB_PHOTOSTOCK . $image_id . '.' . $image['image_type'];
     		$thumb = WEB_PHOTOSTOCK . $image_id . '_tn.' . $image['image_type'];

@@ -330,13 +330,13 @@ $ret .= $this->get_image_markup($event);
 			{
 				$dates_text = ' on '.prettify_mysql_datetime($event->get_value('datetime'), 'F jS');
 			}
-			$ret .= '<p class="repetition">This event takes place each ';
+			$ret .= '<li class="repeats repetition"><strong>Repeats:</strong> Every ';
 			$ret .= $freq;
 			$ret .= $words[$rpt][$sp];
 			$ret .= $dates_text;
 			$ret .= ' from '.prettify_mysql_datetime($event->get_value('datetime'), 'F j, Y').' to '.prettify_mysql_datetime($event->get_value('last_occurence'), 'F j, Y').'.';
 			
-			$ret .= '</p>'."\n";
+			$ret .= '</li>'."\n";
 		}
 		return $ret;
 	}
