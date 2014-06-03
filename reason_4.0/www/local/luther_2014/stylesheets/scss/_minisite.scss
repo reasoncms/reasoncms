@@ -297,7 +297,7 @@
 			z-index: 12;
 
 			&.open {
-				background: lighten($minisite-nav-background, 4%);
+				background: lighten($minisite-nav-background, 5%);
 				@include box-shadow(rgba(#000, .2) -2px -2px 2px);
 
 				.fa-times {display: block;}
@@ -341,7 +341,7 @@
 			display: none;
 			
 			@media #{$large-up} {
-				display: block;  // Always show nav on desktop
+				display: block !important;  // Always show nav on desktop
 			}
 		}
 
@@ -505,6 +505,7 @@
 					position: absolute;
 					top: $column-gutter / 2;
 					right: $column-gutter / 2;
+					color: lighten($body-font-color, 25%)
 				}
 			}
 		}
