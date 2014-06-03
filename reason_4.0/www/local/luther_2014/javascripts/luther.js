@@ -30,14 +30,9 @@ $(document).ready(function() {
 		$this.html($this.html().replace(/&nbsp;/g, ''));
 	});
 
-
-	//var subnav = $('ul.navList');
 	
-	// show and hide shows children pages on landing pages
+	// show and hide minisite navigation toggle
     $('li.navListItem.accordion > a').click(function( event ) {
-		//$(this).parent().toggleClass('toggleOpen');
-
-		//item.slideToggle("slow");
 
 		var item = $(this).parent();
 
@@ -51,8 +46,10 @@ $(document).ready(function() {
 
 		item.children('ul').slideToggle('400');
 
-		//subnav.slideToggle('400');
 		event.preventDefault();
     });
+
+    // sets open navLists to block so that they toggle correctly from an open state on page load
+    $('li.navListItem.accordion.open ul.navList').css('display', 'block');
 		
 });

@@ -473,6 +473,17 @@
 				ul.navList {
 					display: none;
 				}
+
+				/*&.open ul.navList {
+					display: block;
+				}*/
+
+				/*&.closed {
+					ul.navList {
+						display: none;
+					}
+				}*/
+
 			}
 
 			&.accordion.open {
