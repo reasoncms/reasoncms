@@ -27,7 +27,7 @@
 /* line 24, ../scss/sites/sports.scss */
 .lutherSports {
   background: #333;
-  background: #445566;
+  background: #333333;
   background: black;
   background: #002d56;
   background: #333;
@@ -72,7 +72,7 @@
 @media only screen and (min-width: 64.063em) {
   /* line 81, ../scss/sites/sports.scss */
   .lutherSports #minisite #navWrap #minisiteNavigation {
-    background: #506478;
+    background: #424242;
   }
   /* line 90, ../scss/sites/sports.scss */
   .lutherSports #minisite #navWrap #minisiteNavigation a {
@@ -85,29 +85,29 @@
   }
   /* line 104, ../scss/sites/sports.scss */
   .lutherSports #minisite #navWrap #minisiteNavigation .navListTop ul a {
-    border-top: 1px solid #364351;
+    border-top: 1px solid #212121;
     color: white;
   }
   /* line 108, ../scss/sites/sports.scss */
   .lutherSports #minisite #navWrap #minisiteNavigation .navListTop ul a:hover {
-    background: #445566;
+    background: #333333;
     color: white;
   }
   /* line 116, ../scss/sites/sports.scss */
   .lutherSports #minisite #navWrap #minisiteNavigation .navListTop ul ul a {
-    border-top: 1px solid #425263;
+    border-top: 1px solid #303030;
   }
   /* line 119, ../scss/sites/sports.scss */
   .lutherSports #minisite #navWrap #minisiteNavigation .navListTop ul ul a:hover {
-    background: #4c5f72;
+    background: #3d3d3d;
   }
   /* line 125, ../scss/sites/sports.scss */
   .lutherSports #minisite #navWrap #minisiteNavigation .navListTop ul .navListItem.open {
-    background: #586e85;
+    background: #4d4d4d;
   }
   /* line 129, ../scss/sites/sports.scss */
   .lutherSports #minisite #navWrap #minisiteNavigation .navListTop ul .navListItem.open a:hover {
-    background: #4c5f72;
+    background: #3d3d3d;
   }
   /* line 138, ../scss/sites/sports.scss */
   .lutherSports #minisite #navWrap #minisiteNavigation .jump:before,
