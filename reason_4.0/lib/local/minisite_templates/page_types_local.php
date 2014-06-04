@@ -18,7 +18,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 				'autoplay_timer' => 4,
 				'autoplay' => true,
 			),
-			'top_image' => '',
+			'post_main_head' => '',
 			'main_head' => 'page_title',
 			'main' => 'content',
 			'main_post' => '',
@@ -213,19 +213,9 @@ $GLOBALS['_reason_page_types_local'] = array(
 		//'post_sidebar_2' => 'twitter',
 	),
 	'landing_library' => array (
+		//'post_main_head' => 'luther_tab_widget',
 		'main' => 'luther_tab_widget',
 		'main_post' => 'content',
-		'main_post_2' => array(
-			'module' => 'events_mini',
-			'ideal_count' => 4,
-		),
-		
-		'pre_sidebar' => 'blurb',
-		'pre_sidebar_2' => get_luther_spotlight(),
-		'sidebar' => array(
-			'module' => 'luther_av',
-			'full_size' => true,
-		),
 	),
 	'landing_events' => array(
 		'main_post' => array(
@@ -466,7 +456,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'main_4' => '',
 	),
 	'top_image' => array(
-		'top_image' => array(
+		'post_main_head' => array(
 			'module' => 'image_sidebar',
 			'num_to_display' => 1,
 			'thumbnail_width' => 1200,

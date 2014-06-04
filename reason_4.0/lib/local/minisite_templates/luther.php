@@ -417,10 +417,10 @@
 				echo '</header>'."\n";
 			}
 
-			if ($this->has_content( 'top_image' )) 
+			if ($this->has_content( 'post_main_head' )) 
 			{
-				echo '<div id="topImage">'."\n";
-				$this->run_section( 'top_image' );
+				echo '<div id="postMainHead">'."\n";
+			$this->run_section( 'post_main_head' )
 				echo '</div>'."\n";
 			}
 				
