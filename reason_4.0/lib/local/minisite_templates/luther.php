@@ -420,7 +420,7 @@
 			if ($this->has_content( 'post_main_head' )) 
 			{
 				echo '<div id="postMainHead">'."\n";
-			$this->run_section( 'post_main_head' )
+			$this->run_section( 'post_main_head' );
 				echo '</div>'."\n";
 			}
 				
