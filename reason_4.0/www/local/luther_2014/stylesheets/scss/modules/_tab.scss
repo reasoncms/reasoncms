@@ -15,38 +15,114 @@
 @import "extends";
 @import "mixins";
 
+// No related
+
+#tabs .tabs .tab-title {
+	@media
+	#{$medium-up} {
+		float: left;
+		margin-right: rem-calc(1);
+	}
+}
+
+
+// If realted content
+.hasRelated #tabs .tabs .tab-title {
+	@media
+	#{$medium-up} {
+		float: none;
+		margin-right: 0;
+	}
+	@media
+	#{$large-up} {
+		float: left;
+		margin-right: rem-calc(1);
+	}
+}
+
 #tabs {
 
-	.tabs {
+	//@include box-shadow(rgba(0,0,0,.18) 0 2px 2px);
+	//border: 1px solid $lc-grey;
+	
+	// Clickable tabs
+	.tabs {  
+		//border-top: 1px solid $lc-grey;
 		@include clearfix;
 		margin: 0;
 		padding: 0;
+		background: #FFF;
+		//border: 1px solid $lc-grey;
 
 		.tab-title {
-			display: block;
-			float: left;
-			margin-right: rem-calc(1);
 			margin: 0;
 			padding: 0;
-
-			&.active a {
-				border: 1px solid darken($lc-grey, 10%);
-				border-bottom: none;
-				color: $body-font-color;
-			}
+			display: block;
 
 			a {
-				@include border-top-radius($global-radius);
-				background: $lc-white;
+				//background: $lc-blue-light;
+				//color: #FFF;
+				//background: lighten($lc-grey, 8%);
+				background: lighten($lc-grey, 5%);
 				display: block;
-				padding: $column-gutter/3 $column-gutter/2;
+				padding: $column-gutter/3.5 $column-gutter/1.5;
+				border-left: 6px solid $lc-grey;
+				margin-bottom: 2px;
 
+				@media
+				#{$medium-up} {
+					background: #FFF;
+					color: $lc-blue-dark;
+				}
+			}
+
+			&:nth-child(4n+1).active a {
+				border-color: $lc-green;
+				background: rgba($lc-green, .2);
+			}
+
+			&:nth-child(4n+2).active a {
+				border-color: $lc-red;
+				background: rgba($lc-red, .2);
+			}
+
+			&:nth-child(4n+3).active a {
+				border-color: $lc-blue-light;
+				background: rgba($lc-blue-light, .2);
+			}
+			
+			&:nth-child(4n+4).active a {
+				border-color: $lc-yellow;
+				background: rgba($lc-yellow, .2);
+			}
+
+			&.active a {
+				border-left-width: 6px;
+				border-left-style: solid;
+				color: $body-font-color;
+				background: $lc-grey;
+
+				@media
+				#{$medium-up} {
+					border-top-width: 3px;
+					border-top-style: solid;
+					border-left: none;
+					background: lighten($lc-grey, 5%);
+					color: $lc-blue-dark;
+				}
 			}
 		}
 	}
 
-	.tabs-content {
-		border: 1px solid darken($lc-grey, 10%);
+	// Related content
+	.tabs-content {  
+		//border: 1px solid darken($lc-grey, 10%);
+		//background: lighten($lc-grey, 5%);
+		//border-top: 4px solid $lc-white;
+		border: 1px solid $lc-grey;
+		border-top: none;
+
+		//background: lighten($lc-grey, 6%);
 		padding: $column-gutter/2;
 		margin-top: - rem-calc(1);
 		

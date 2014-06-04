@@ -24,6 +24,7 @@
 
 	/* Ordinary Text Blurbs */
 	margin-bottom: $column-gutter;
+	@include clearfix;
 
 	&:last-child {
 		margin-bottom: 0;

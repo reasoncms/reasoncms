@@ -167,13 +167,13 @@
 				padding-left: $column-gutter / 2;
 
 				#contentSections {
-					@include grid-column($columns: 16, $collapse: true);
-					//padding-right: $column-gutter / 2;
+					@include grid-column($columns: 9, $collapse: true);
+					padding-right: $column-gutter / 2;
 				}
 				
 				#relatedSections {
-					@include grid-column($columns: 16, $collapse: true);
-					//padding-left: $column-gutter / 2;
+					@include grid-column($columns: 7, $collapse: true);
+					padding-left: $column-gutter / 2;
 				}
 			}
 		}
