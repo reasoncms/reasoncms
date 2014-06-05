@@ -5992,11 +5992,11 @@ form table td {
   margin-bottom: 0;
 }
 
-/* line 184, scss/modules/_tab.scss */
+/* line 177, scss/modules/_tab.scss */
 #tabs {
   overflow: hidden;
 }
-/* line 187, scss/modules/_tab.scss */
+/* line 180, scss/modules/_tab.scss */
 #tabs .tabs {
   *zoom: 1;
   margin: 0;
@@ -6012,17 +6012,17 @@ form table td {
 #tabs .tabs:after {
   clear: both;
 }
-/* line 193, scss/modules/_tab.scss */
+/* line 186, scss/modules/_tab.scss */
 #tabs .tabs .tab-title {
   margin: 0;
   padding: 0;
   display: block;
 }
-/* line 202, scss/modules/_tab.scss */
+/* line 195, scss/modules/_tab.scss */
 #tabs .tabs-content .content {
   display: none;
 }
-/* line 205, scss/modules/_tab.scss */
+/* line 198, scss/modules/_tab.scss */
 #tabs .tabs-content .content.active {
   display: block;
 }
@@ -6103,13 +6103,6 @@ form table td {
   border-color: #e8a500;
 }
 
-/*.tab-title {	
-	@media
-	only screen and (min-width:40.063em) {
-		float: left;
-		margin-right: rem-calc(1);
-	}
-}*/
 @media only screen and (min-width: 90.063em) {
   /* line 99, scss/modules/_tab.scss */
   .hasRelated #tabs {
@@ -6142,19 +6135,19 @@ form table td {
   .hasRelated .tabs .tab-title:nth-child(4n+1).active a {
     border-color: #4a8512;
   }
-  /* line 122, scss/modules/_tab.scss */
+  /* line 121, scss/modules/_tab.scss */
   .hasRelated .tabs .tab-title:nth-child(4n+2).active a {
     border-color: #9f2112;
   }
-  /* line 127, scss/modules/_tab.scss */
+  /* line 125, scss/modules/_tab.scss */
   .hasRelated .tabs .tab-title:nth-child(4n+3).active a {
     border-color: #1073ce;
   }
-  /* line 132, scss/modules/_tab.scss */
+  /* line 129, scss/modules/_tab.scss */
   .hasRelated .tabs .tab-title:nth-child(4n+4).active a {
     border-color: #e8a500;
   }
-  /* line 137, scss/modules/_tab.scss */
+  /* line 133, scss/modules/_tab.scss */
   .hasRelated .tabs .tab-title.active a {
     border-left: none;
     border-top-width: 6px;
@@ -6162,34 +6155,34 @@ form table td {
     color: #004789;
     background: #f6f6f6 !important;
   }
-  /* line 147, scss/modules/_tab.scss */
+  /* line 143, scss/modules/_tab.scss */
   .hasRelated .tabs-content {
     margin-top: -0.1875rem;
   }
-  /* line 150, scss/modules/_tab.scss */
+  /* line 146, scss/modules/_tab.scss */
   .hasRelated .tabs-content .content {
     padding: 1.25rem;
     background: #f6f6f6;
   }
-  /* line 154, scss/modules/_tab.scss */
+  /* line 150, scss/modules/_tab.scss */
   .hasRelated .tabs-content .content.active {
     display: block;
     border: none;
     border-top: 3px solid #e9e9e9;
   }
-  /* line 163, scss/modules/_tab.scss */
+  /* line 156, scss/modules/_tab.scss */
   .hasRelated .tabs-content .content:nth-child(4n+1).active {
     border-color: #4a8512;
   }
-  /* line 167, scss/modules/_tab.scss */
+  /* line 160, scss/modules/_tab.scss */
   .hasRelated .tabs-content .content:nth-child(4n+2).active {
     border-color: #9f2112;
   }
-  /* line 171, scss/modules/_tab.scss */
+  /* line 164, scss/modules/_tab.scss */
   .hasRelated .tabs-content .content:nth-child(4n+3).active {
     border-color: #1073ce;
   }
-  /* line 175, scss/modules/_tab.scss */
+  /* line 168, scss/modules/_tab.scss */
   .hasRelated .tabs-content .content:nth-child(4n+4).active {
     border-color: #e8a500;
   }

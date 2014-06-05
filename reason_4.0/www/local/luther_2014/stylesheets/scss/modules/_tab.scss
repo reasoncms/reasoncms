@@ -116,22 +116,18 @@
 
 		&:nth-child(4n+1).active a {
 			border-color: $lc-green;
-			//background: rgba($lc-green, .2);
 		}
 
 		&:nth-child(4n+2).active a {
 			border-color: $lc-red;
-			//background: rgba($lc-red, .2);
 		}
 
 		&:nth-child(4n+3).active a {
 			border-color: $lc-blue-light;
-			//background: rgba($lc-blue-light, .2);
 		}
 		
 		&:nth-child(4n+4).active a {
 			border-color: $lc-yellow;
-			//background: rgba($lc-yellow, .2);
 		}
 
 		&.active a {
@@ -155,9 +151,6 @@
 				display: block;
 				border: none;
 				border-top: 3px solid $lc-grey;
-
-				//border-left-width: 6px;
-				//border-left-style: solid;
 			}
 
 			&:nth-child(4n+1).active {
@@ -212,26 +205,8 @@
 // No related content
 @include moblie-tabs;
 
-	@media
-	#{$medium-up} {
-//		@include desktop-tabs;
-	}
-
-	/*.tab-title {	
-		@media
-		#{$medium-up} {
-			float: left;
-			margin-right: rem-calc(1);
-		}
-	}*/
-
-// Has Related content
+// Has related content
 .hasRelated {
-
-	@media
-	#{$medium-up} {
-//		@include moblie-tabs;
-	}
 
 	@media
 	#{$xlarge-up} {
