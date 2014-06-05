@@ -57,8 +57,6 @@
 		&.active a {
 			border-left-width: 6px;
 			border-left-style: solid;
-			color: $body-font-color;
-			color: $lc-blue-dark;
 			background: $lc-grey;
 		}
 	}
@@ -134,7 +132,6 @@
 			border-left: none;
 			border-top-width: 6px;
 			border-top-style: solid;
-			color: $lc-blue-dark;
 			background: lighten($lc-grey, 5%) !important;
 		}
 	}
@@ -187,6 +184,11 @@
 			margin: 0;
 			padding: 0;
 			display: block;	
+
+			&.active a {
+				font-weight: 700;
+				color: $body-font-color;
+			}
 		}
 	}
 
@@ -202,14 +204,37 @@
 	}			
 }
 
-// No related content
+// Mobile tabs for all small screens, then...
 @include moblie-tabs;
 
-// Has related content
-.hasRelated {
-
+.hasConRelNav { /* 3 COLUMNS: Nav, Content, & Related */
+	
 	@media
 	#{$xlarge-up} {
+		@include desktop-tabs;
+	}
+}
+
+.hasConNav { /* 2 COLUMNS: Nav & Content (no Related) */
+
+	@media
+	#{$medium-up} {
+		@include desktop-tabs;
+	}
+}
+
+.hasConRel { /* 2 COLUMNS: Content & Related (no Nav) */
+
+	@media
+	#{$medium-up} {
+		@include desktop-tabs;
+	}
+}
+
+.hasCon { /* 1 COLUMN: Content (no Nav or Related) */ 
+
+	@media
+	#{$medium-up} {
 		@include desktop-tabs;
 	}
 }
