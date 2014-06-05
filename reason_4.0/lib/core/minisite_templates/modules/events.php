@@ -513,7 +513,9 @@ class EventsModule extends DefaultMinisiteModule
 			$this->init_list();
 		}
 		else
-			$this->init_event();		
+		{
+			$this->init_event();
+		}
 		$inline_edit =& get_reason_inline_editing($this->page_id);
 		$inline_edit->register_module($this, $this->user_can_inline_edit());
 		if ($inline_edit->active_for_module($this))
@@ -567,7 +569,10 @@ class EventsModule extends DefaultMinisiteModule
 		
 		// get_run_output() should be the very last thing done before the end of init()
 		// This is done to allow the markup classes to add head items
-		$this->get_run_output();
+		if($this->has_content())
+		{
+			$this->get_run_output();
+		}
 	}
 	
 	/**
