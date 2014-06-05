@@ -2,7 +2,6 @@
 /**
  * Inventory of all minisite images
  * Images must be present on server
- * Written by: jonebr01@luther.edu
  *
  * @package reason
  * @subpackage scripts
@@ -49,36 +48,31 @@
 	echo '</head><body><div id="wrapper">';
 	echo '<h1>Reason Image Inventory</h1>';
 	
-	/*$img_id = id_of('default_page_locations_image');
-	if(!empty($img_id))
-	{
-		$image = new entity($img_id);
-		echo '<div id="defaultPageLocations">';
-		show_image( $image );
-		echo '</div>';
-	}*/
-	
 	function put_image_params($filename)
 	// output original and thumbnail image size, width, and height to table if they exist
 	{
 		if (file_exists($filename))
-		{
+		{		
 			$fsize = filesize($filename);
-			echo '<td>' . round($fsize/1024) . 'k</td>' . "\n";
+			$img_size = round($fsize/1000);
+			echo '<td>' . $img_size . 'k</td>' . "\n";
 			$info = getimagesize($filename);
 			echo '<td>' . $info[0] . '</td>' . "\n";  // width
 			echo '<td>' . $info[1] . '</td>' . "\n";  // height						
 		}
 		else
 		{
+			$img_size = 0;
 			for ($i = 0; $i < 3; $i++)
 			{
 				echo '<td>&nbsp;</td>' . "\n";
 			}
 		}
+		return $img_size;
 	}
 	
 	$total_images = 0;
+	$total_size = 0;
 	
 	$es = new entity_selector();
 	$es->add_type(id_of('site'));
@@ -124,17 +118,20 @@
 				echo '<td>&#x2713;</td>' . "\n";
 			else
 				echo '<td>&nbsp;</td>' . "\n";
-			put_image_params(PHOTOSTOCK . $image->get_value('id') . '_orig.' . $image->get_value('image_type'));			
-			echo '<td>' . $image->get_value('size') . 'k</td>' . "\n";
-			echo '<td>' . $image->get_value('width') . '</td>' . "\n";
-			echo '<td>' . $image->get_value('height') . '</td>' . "\n";
-			put_image_params(PHOTOSTOCK . $image->get_value('id') . '_tn.' . $image->get_value('image_type'));
+			$total_size += put_image_params(PHOTOSTOCK . $image->get_value('id') . '_orig.' . $image->get_value('image_type'));
+			$total_size += put_image_params(PHOTOSTOCK . $image->get_value('id') . '.' . $image->get_value('image_type'));
+			//echo '<td>' . $image->get_value('size') . 'k</td>' . "\n";
+			//echo '<td>' . $image->get_value('width') . '</td>' . "\n";
+			//echo '<td>' . $image->get_value('height') . '</td>' . "\n";
+			//$total_size += $image->get_value('size');
+			$total_size += put_image_params(PHOTOSTOCK . $image->get_value('id') . '_tn.' . $image->get_value('image_type'));
 			echo '</tr>';
 		}
 		echo '</tbody></table>'."\n";
 	}
 	
-	echo '<h4>Total images = ' . $total_images .'</h4>' . "\n";
+	echo '<h4>Total images = ' . number_format($total_images) .'</h4>' . "\n";
+	echo '<h4>Total size = ' . number_format($total_size) .' k</h4>' . "\n";
 	
 	echo '</div></body></html>';
 
