@@ -15,123 +15,226 @@
 @import "extends";
 @import "mixins";
 
-// No related
+// TAB LAYOUTS
 
-#tabs .tabs .tab-title {
-	@media
-	#{$medium-up} {
-		float: left;
-		margin-right: rem-calc(1);
+@mixin moblie-tabs {
+
+	#tabs {
+		@include box-shadow(rgba(0,0,0,.24) 0 2px 2px);
+		@include border-radius($global-radius);
 	}
-}
 
+	.tabs .tab-title {
 
-// If realted content
-.hasRelated #tabs .tabs .tab-title {
-	@media
-	#{$medium-up} {
-		float: none;
-		margin-right: 0;
-	}
-	@media
-	#{$large-up} {
-		float: left;
-		margin-right: rem-calc(1);
-	}
-}
-
-#tabs {
-
-	//@include box-shadow(rgba(0,0,0,.18) 0 2px 2px);
-	//border: 1px solid $lc-grey;
-	
-	// Clickable tabs
-	.tabs {  
-		//border-top: 1px solid $lc-grey;
-		@include clearfix;
-		margin: 0;
-		padding: 0;
-		background: #FFF;
-		//border: 1px solid $lc-grey;
-
-		.tab-title {
-			margin: 0;
-			padding: 0;
+		a {
+			background: lighten($lc-grey, 6%);
 			display: block;
+			padding: $column-gutter/3.5 $column-gutter/1.5;
+			border-left: 6px solid lighten($lc-grey, 2%);
+			margin-bottom: 2px;
+		}
 
-			a {
-				//background: $lc-blue-light;
-				//color: #FFF;
-				//background: lighten($lc-grey, 8%);
-				background: lighten($lc-grey, 5%);
+		&:nth-child(4n+1).active a {
+			border-color: $lc-green;
+			background: rgba($lc-green, .2);
+		}
+
+		&:nth-child(4n+2).active a {
+			border-color: $lc-red;
+			background: rgba($lc-red, .2);
+		}
+
+		&:nth-child(4n+3).active a {
+			border-color: $lc-blue-light;
+			background: rgba($lc-blue-light, .2);
+		}
+		
+		&:nth-child(4n+4).active a {
+			border-color: $lc-yellow;
+			background: rgba($lc-yellow, .2);
+		}
+
+		&.active a {
+			border-left-width: 6px;
+			border-left-style: solid;
+			color: $body-font-color;
+			color: $lc-blue-dark;
+			background: $lc-grey;
+		}
+	}
+
+	// Related content
+	.tabs-content { 
+
+		.content {
+			padding: $column-gutter/2;
+		
+			&.active {
 				display: block;
-				padding: $column-gutter/3.5 $column-gutter/1.5;
-				border-left: 6px solid $lc-grey;
-				margin-bottom: 2px;
-
-				@media
-				#{$medium-up} {
-					background: #FFF;
-					color: $lc-blue-dark;
-				}
-			}
-
-			&:nth-child(4n+1).active a {
-				border-color: $lc-green;
-				background: rgba($lc-green, .2);
-			}
-
-			&:nth-child(4n+2).active a {
-				border-color: $lc-red;
-				background: rgba($lc-red, .2);
-			}
-
-			&:nth-child(4n+3).active a {
-				border-color: $lc-blue-light;
-				background: rgba($lc-blue-light, .2);
-			}
-			
-			&:nth-child(4n+4).active a {
-				border-color: $lc-yellow;
-				background: rgba($lc-yellow, .2);
-			}
-
-			&.active a {
 				border-left-width: 6px;
 				border-left-style: solid;
-				color: $body-font-color;
-				background: $lc-grey;
-
-				@media
-				#{$medium-up} {
-					border-top-width: 3px;
-					border-top-style: solid;
-					border-left: none;
-					background: lighten($lc-grey, 5%);
-					color: $lc-blue-dark;
-				}
 			}
+
+			&:nth-child(4n+1).active {
+				border-color: $lc-green;
+			}
+
+			&:nth-child(4n+2).active {
+				border-color: $lc-red;
+			}
+
+			&:nth-child(4n+3).active {
+				border-color: $lc-blue-light;
+			}
+			
+			&:nth-child(4n+4).active {
+				border-color: $lc-yellow;
+			}
+		}			
+	}
+}
+
+@mixin desktop-tabs {
+	
+	#tabs {
+		@include box-shadow(none);
+		@include border-radius(0);
+	}
+
+	.tabs .tab-title {
+
+		a {
+			background: #FFF !important;
+			display: block;
+			padding: $column-gutter/3.5 $column-gutter/1.5;
+			border-left: none;
+			margin: 0;
+			float: left;
+			font-weight: 300;
+			@include border-top-radius($global-radius);
+		}
+
+		&:nth-child(4n+1).active a {
+			border-color: $lc-green;
+			//background: rgba($lc-green, .2);
+		}
+
+		&:nth-child(4n+2).active a {
+			border-color: $lc-red;
+			//background: rgba($lc-red, .2);
+		}
+
+		&:nth-child(4n+3).active a {
+			border-color: $lc-blue-light;
+			//background: rgba($lc-blue-light, .2);
+		}
+		
+		&:nth-child(4n+4).active a {
+			border-color: $lc-yellow;
+			//background: rgba($lc-yellow, .2);
+		}
+
+		&.active a {
+			border-left: none;
+			border-top-width: 6px;
+			border-top-style: solid;
+			color: $lc-blue-dark;
+			background: lighten($lc-grey, 5%) !important;
 		}
 	}
 
 	// Related content
 	.tabs-content {  
-		//border: 1px solid darken($lc-grey, 10%);
-		//background: lighten($lc-grey, 5%);
-		//border-top: 4px solid $lc-white;
-		border: 1px solid $lc-grey;
-		border-top: none;
+		margin-top: - rem-calc(3);
 
-		//background: lighten($lc-grey, 6%);
-		padding: $column-gutter/2;
-		margin-top: - rem-calc(1);
+		.content {
+			padding: $column-gutter/2;
+			background: lighten($lc-grey, 5%);
 		
+			&.active {
+				display: block;
+				border: none;
+				border-top: 3px solid $lc-grey;
+
+				//border-left-width: 6px;
+				//border-left-style: solid;
+			}
+
+			&:nth-child(4n+1).active {
+				border-color: $lc-green;
+			}
+
+			&:nth-child(4n+2).active {
+				border-color: $lc-red;
+			}
+
+			&:nth-child(4n+3).active {
+				border-color: $lc-blue-light;
+			}
+			
+			&:nth-child(4n+4).active {
+				border-color: $lc-yellow;
+			}
+		}			
+	}
+}
+
+// All tabs
+
+#tabs {
+	overflow: hidden;
+	
+	.tabs {
+		@include clearfix;
+		margin: 0;
+		padding: 0;
+		background: #FFF;
+		
+		.tab-title {
+			margin: 0;
+			padding: 0;
+			display: block;	
+		}
+	}
+
+	.tabs-content {
+
 		.content {
 			display: none;
 		
 			&.active {
 				display: block;
 			}
-		}			
+		}
+	}			
+}
+
+// No related content
+@include moblie-tabs;
+
+	@media
+	#{$medium-up} {
+//		@include desktop-tabs;
+	}
+
+	/*.tab-title {	
+		@media
+		#{$medium-up} {
+			float: left;
+			margin-right: rem-calc(1);
+		}
+	}*/
+
+// Has Related content
+.hasRelated {
+
+	@media
+	#{$medium-up} {
+//		@include moblie-tabs;
+	}
+
+	@media
+	#{$xlarge-up} {
+		@include desktop-tabs;
 	}
 }

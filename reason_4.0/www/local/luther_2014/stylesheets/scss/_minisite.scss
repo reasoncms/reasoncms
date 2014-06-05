@@ -237,6 +237,7 @@
 				#relatedSections {
 					@include grid-column($columns: 5, $collapse: true);
 					padding-left: $column-gutter / 2;
+					padding: 0 $column-gutter/2;
 				}
 			}
 		}

@@ -71,4 +71,25 @@
 			}
 		}
 	}
+
+	&.siteHome {
+
+		#tabs {
+
+			.tabs-content {
+
+				.pane-content { // form row
+
+					strong {
+						margin-bottom: $paragraph-margin-bottom;
+						display: block;
+					}
+				}
+			}
+
+			input[type="submit"] {
+				margin-top: $paragraph-margin-bottom;
+			}
+		}
+	}
 }

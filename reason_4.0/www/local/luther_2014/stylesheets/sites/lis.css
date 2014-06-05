@@ -57,3 +57,12 @@
 .lutherLis #lisAnnouncements .announcement *:last-child {
   margin-bottom: 0;
 }
+/* line 83, ../scss/sites/lis.scss */
+.lutherLis.siteHome #tabs .tabs-content .pane-content strong {
+  margin-bottom: 1.5rem;
+  display: block;
+}
+/* line 90, ../scss/sites/lis.scss */
+.lutherLis.siteHome #tabs input[type="submit"] {
+  margin-top: 1.5rem;
+}
