@@ -48,16 +48,18 @@
 
 		function run()
 		{
+			echo '<div class="twitter-block">';
 			if ($this->site_id == id_of('connect'))
 			{
-				echo '<h2>Recent Tweets</h2>'."\n";
+				echo '<h3 class="recent-tweets">Recent Tweets:</h3>' . "\n";
 			}
 			else
 			{
-				echo '<h2>Recent Tweets</h2>'."\n";
+				echo '<h3 class="recent-tweets">Recent Tweets:</h3>' . "\n";
 			}
-			echo '<div class="twitter-feed">';
+			//echo '<div class="twitter-feed">';
 			echo $this->tweet_html;
+			//echo '</div>';
 			echo '</div>';
 		}
 	}
