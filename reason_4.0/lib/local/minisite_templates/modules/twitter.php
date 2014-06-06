@@ -50,11 +50,11 @@
 		{
 			if ($this->site_id == id_of('connect'))
 			{
-				echo '<div class="section blue"><h1>Recent Tweets</h1></div>'."\n";
+				echo '<h2>Recent Tweets</h2>'."\n";
 			}
 			else
 			{
-				echo '<header class="blue-stripe"><h1><span>Recent Tweets</span></h1></header>'."\n";
+				echo '<h2>Recent Tweets</h2>'."\n";
 			}
 			echo '<div class="twitter-feed">';
 			echo $this->tweet_html;
