@@ -36,6 +36,7 @@
 	<link rel="stylesheet" type="text/css" href="/reason_package/css/universal.css" />
 	<link rel="stylesheet" type="text/css" href="/reason/css/simplicity/blue.css" />
 	<link rel="stylesheet" type="text/css" href="/reason/css/forms/form.css" />
+	<script type="text/javascript" src="/jquery/jquery_latest.js"></script>
 	<style type="text/css">
 	  body {background-color: white;}
 	  div#wrapper {border: none; width: 90%;}
@@ -47,6 +48,7 @@
 	<?php
 	echo '</head><body><div id="wrapper">';
 	echo '<h1>Reason Image Inventory</h1>';
+	$site_id = filter_input(INPUT_GET, "site", FILTER_SANITIZE_STRING);
 	
 	function put_image_params($filename)
 	// output original and thumbnail image size, width, and height to table if they exist
@@ -70,25 +72,33 @@
 		}
 		return $img_size;
 	}
-	
-	$total_images = 0;
-	$total_size = 0;
-	
-	$es = new entity_selector();
-	$es->add_type(id_of('site'));
-	$es->set_order('entity.name ASC');
-	$es->limit_tables();
-	$sites = $es->run_one();
 		
-	foreach($sites as $id => $site)
+	function list_sites()
 	{
-		$es = new entity_selector($id);
-		$es->add_type( id_of('image') );
-		$result = $es->run_one();
+		$es = new entity_selector();
+		$es->add_type(id_of('site'));
+		$es->set_order('entity.name ASC');
+		$es->limit_tables();
+		$sites = $es->run_one();
 		
+		foreach($sites as $id => $site)
+		{
+			echo "<a href=\"/reason/scripts/developer_tools/image_inventory.php?site=" . $site->get_value('id'). "\"><h4>" . $site->get_value('name') . "</h4></a>";
+		}		
+	}
+	
+	function show_site_images($site_id)
+	{
+		$site = mysql_query('SELECT * FROM entity WHERE id = ' . $site_id);
+		$site = mysql_fetch_assoc($site);
+		
+		$es = new entity_selector($site_id);
+		$es->add_type( id_of('image') );
+		$result = $es->run_one();		
 		$num_site_images = count($result);
-		$total_images += $num_site_images;
-		echo "<h4>" . $site->get_value('name') . " (". $num_site_images . ")</h4>";
+		$total_size = 0;
+
+		echo "<h4>" . $site['name'] . " (". $num_site_images . ")</h4>";
 		echo '<table class="table_data"><tbody><tr>
 			<th>id</th>
 			<th>name</th>
@@ -112,7 +122,7 @@
 			$class = ($i++ % 2 == 0) ? 'even' : 'odd';
 			echo '<tr class = "' . $class .'"><td><a href="/reason/admin/?entity_id_test=' . $image->get_value('id'). '&cur_module=EntityInfo">' . $image->get_value('id') . '</a></td>' . "\n";
 			echo '<td>' . $image->get_value('name') . '</td>' . "\n";
-			echo '<td>' . $image->get_value('created_by') . '</td>' . "\n";
+			echo '<td><a href="/reason/admin/?entity_id_test=' . $image->get_value('created_by'). '&cur_module=EntityInfo">' . $image->get_value('created_by') . '</a></td>' . "\n";
 			echo '<td>' . $image->get_value('image_type') . '</td>' . "\n";
 			if (preg_match("/imagetop/", $image->get_value('keywords')))
 				echo '<td>&#x2713;</td>' . "\n";
@@ -120,19 +130,25 @@
 				echo '<td>&nbsp;</td>' . "\n";
 			$total_size += put_image_params(PHOTOSTOCK . $image->get_value('id') . '_orig.' . $image->get_value('image_type'));
 			$total_size += put_image_params(PHOTOSTOCK . $image->get_value('id') . '.' . $image->get_value('image_type'));
-			//echo '<td>' . $image->get_value('size') . 'k</td>' . "\n";
-			//echo '<td>' . $image->get_value('width') . '</td>' . "\n";
-			//echo '<td>' . $image->get_value('height') . '</td>' . "\n";
-			//$total_size += $image->get_value('size');
 			$total_size += put_image_params(PHOTOSTOCK . $image->get_value('id') . '_tn.' . $image->get_value('image_type'));
 			echo '</tr>';
 		}
 		echo '</tbody></table>'."\n";
+		
+		echo '<h4>Total size = ' . number_format($total_size) .' k</h4>' . "\n";
 	}
 	
-	echo '<h4>Total images = ' . number_format($total_images) .'</h4>' . "\n";
-	echo '<h4>Total size = ' . number_format($total_size) .' k</h4>' . "\n";
+	if ($site_id)
+	{
+		show_site_images($site_id);
+	}
+	else
+	{
+		list_sites();
+	}
 	
+	
+		
 	echo '</div></body></html>';
 
 	
