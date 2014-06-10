@@ -2412,7 +2412,7 @@ body #wrapper #post-footer a {
 }
 /* line 335, scss/_minisite.scss */
 #minisite #navWrap #minisiteNavigation {
-  background: #f6f6f6;
+  background: #f3f3f3;
 }
 /* line 342, scss/_minisite.scss */
 #minisite #navWrap #minisiteNavigation,
@@ -2475,7 +2475,7 @@ body #wrapper #post-footer a {
 /* line 399, scss/_minisite.scss */
 #minisite #navWrap .navListTop ul a {
   display: block;
-  border-top: 1px solid #e4e4e4;
+  border-top: 1px solid #e1e1e1;
   color: #303030;
   font-weight: 300;
   font-size: 0.9375rem;
@@ -2494,30 +2494,31 @@ body #wrapper #post-footer a {
   border: none;
   padding: 0.71429rem 1.25rem 0.71429rem 2.5rem;
   border-top: 1px solid #FFF;
+  border-top: 1px solid #ececec;
 }
-/* line 430, scss/_minisite.scss */
+/* line 431, scss/_minisite.scss */
 #minisite #navWrap .navListTop ul ul a:hover {
   background: none;
   text-decoration: underline;
 }
-/* line 436, scss/_minisite.scss */
+/* line 437, scss/_minisite.scss */
 #minisite #navWrap .navListTop ul ul ul li a {
   padding-left: 3.75rem;
 }
-/* line 445, scss/_minisite.scss */
+/* line 446, scss/_minisite.scss */
 #minisite #navWrap .navListTop ul .navListItem.current > a {
   font-weight: 700;
 }
-/* line 451, scss/_minisite.scss */
+/* line 452, scss/_minisite.scss */
 #minisite #navWrap .navListTop ul .navListItem.open {
   background: #e9e9e9;
-  background: #FFF;
+  background: #f8f8f8;
 }
-/* line 463, scss/_minisite.scss */
+/* line 465, scss/_minisite.scss */
 #minisite #navWrap .navListTop ul .navListItem.accordion > a {
   padding-right: 2.25rem;
 }
-/* line 466, scss/_minisite.scss */
+/* line 468, scss/_minisite.scss */
 #minisite #navWrap .navListTop ul .navListItem.accordion > a:before {
   content: "\f078";
   position: absolute;
@@ -2541,11 +2542,11 @@ body #wrapper #post-footer a {
   -o-transition-timing-function: ease-in;
   transition-timing-function: ease-in;
 }
-/* line 479, scss/_minisite.scss */
+/* line 481, scss/_minisite.scss */
 #minisite #navWrap .navListTop ul .navListItem.accordion ul.navList {
   display: none;
 }
-/* line 488, scss/_minisite.scss */
+/* line 490, scss/_minisite.scss */
 #minisite #navWrap .navListTop ul .navListItem.accordion.open > a:before {
   content: "\f078";
   -webkit-transform: rotate(-180deg);
@@ -2566,11 +2567,11 @@ body #wrapper #post-footer a {
   -o-transition-timing-function: ease-in;
   transition-timing-function: ease-in;
 }
-/* line 501, scss/_minisite.scss */
+/* line 503, scss/_minisite.scss */
 #minisite #navWrap .jump a {
   padding-right: 2.25rem;
 }
-/* line 504, scss/_minisite.scss */
+/* line 506, scss/_minisite.scss */
 #minisite #navWrap .jump a:before {
   content: "\f08e";
   position: absolute;
@@ -2578,12 +2579,12 @@ body #wrapper #post-footer a {
   right: 1.25rem;
   color: #848484;
 }
-/* line 523, scss/_minisite.scss */
+/* line 525, scss/_minisite.scss */
 #minisite #relatedSections > div,
 #minisite .relatedItems > div {
   margin-bottom: 2.5rem;
 }
-/* line 529, scss/_minisite.scss */
+/* line 531, scss/_minisite.scss */
 #minisite #relatedSections .assets,
 #minisite #relatedSections .blurb,
 #minisite #relatedSections .relatedEvents,
@@ -2593,7 +2594,7 @@ body #wrapper #post-footer a {
   background: #f6f6f6;
   padding: 1.25rem;
 }
-/* line 533, scss/_minisite.scss */
+/* line 535, scss/_minisite.scss */
 #minisite #relatedSections .assets > *:last-child,
 #minisite #relatedSections .blurb > *:last-child,
 #minisite #relatedSections .relatedEvents > *:last-child,
@@ -2603,13 +2604,13 @@ body #wrapper #post-footer a {
   padding-bottom: 0;
   margin-bottom: 0;
 }
-/* line 539, scss/_minisite.scss */
+/* line 541, scss/_minisite.scss */
 #minisite #relatedSections h3,
 #minisite .relatedItems h3 {
   font-size: 1.4375rem;
   margin-top: 0;
 }
-/* line 550, scss/_minisite.scss */
+/* line 552, scss/_minisite.scss */
 #minisite #footer {
   position: relative;
   padding-left: 1.25rem;
@@ -2621,7 +2622,7 @@ body #wrapper #post-footer a {
   padding-bottom: 1.25rem;
 }
 @media only screen and (min-width: 64.063em) {
-  /* line 550, scss/_minisite.scss */
+  /* line 552, scss/_minisite.scss */
   #minisite #footer {
     position: relative;
     padding-left: 0;
@@ -2631,14 +2632,14 @@ body #wrapper #post-footer a {
     padding: 1.25rem;
   }
 }
-/* line 563, scss/_minisite.scss */
+/* line 565, scss/_minisite.scss */
 #minisite #footer #maintained {
   color: #9d9d9d;
   display: block;
   margin-bottom: 1rem;
 }
 @media only screen and (min-width: 60.0625em) {
-  /* line 563, scss/_minisite.scss */
+  /* line 565, scss/_minisite.scss */
   #minisite #footer #maintained {
     width: 45%;
     float: left;
@@ -2646,27 +2647,27 @@ body #wrapper #post-footer a {
     padding-top: 4px;
   }
 }
-/* line 576, scss/_minisite.scss */
+/* line 578, scss/_minisite.scss */
 #minisite #footer .loginLinkModule {
   display: block;
 }
 @media only screen and (min-width: 60.0625em) {
-  /* line 576, scss/_minisite.scss */
+  /* line 578, scss/_minisite.scss */
   #minisite #footer .loginLinkModule {
     width: 45%;
     float: right;
     text-align: right;
   }
 }
-/* line 585, scss/_minisite.scss */
+/* line 587, scss/_minisite.scss */
 #minisite #footer .loginLinkModule .editDivider {
   display: none;
 }
-/* line 587, scss/_minisite.scss */
+/* line 589, scss/_minisite.scss */
 #minisite #footer .loginLinkModule div {
   display: inline;
 }
-/* line 591, scss/_minisite.scss */
+/* line 593, scss/_minisite.scss */
 #minisite #footer .loginLinkModule div a {
   background: #e9e9e9;
   padding: 0.3125rem 0.375rem;
@@ -2681,12 +2682,12 @@ body #wrapper #post-footer a {
   line-height: 1;
 }
 @media only screen and (min-width: 60.0625em) {
-  /* line 591, scss/_minisite.scss */
+  /* line 593, scss/_minisite.scss */
   #minisite #footer .loginLinkModule div a {
     margin-left: 0.25rem;
   }
 }
-/* line 604, scss/_minisite.scss */
+/* line 606, scss/_minisite.scss */
 #minisite #footer .loginLinkModule div a:hover {
   background: #d5d5d5;
   -webkit-transition-property: all;
@@ -2702,7 +2703,7 @@ body #wrapper #post-footer a {
   -o-transition-timing-function: ease;
   transition-timing-function: ease;
 }
-/* line 611, scss/_minisite.scss */
+/* line 613, scss/_minisite.scss */
 #minisite #footer .loginLinkModule #footerLoginLink {
   display: inline-block;
   font-size: 0.75rem;
@@ -2719,33 +2720,33 @@ body #wrapper #post-footer a {
   line-height: 1;
 }
 @media only screen and (min-width: 60.0625em) {
-  /* line 611, scss/_minisite.scss */
+  /* line 613, scss/_minisite.scss */
   #minisite #footer .loginLinkModule #footerLoginLink {
     margin: 0 0 0 0.25rem;
   }
 }
-/* line 626, scss/_minisite.scss */
+/* line 628, scss/_minisite.scss */
 #minisite #footer .loginLinkModule #footerLoginLink .username {
   font-weight: 400;
 }
-/* line 631, scss/_minisite.scss */
+/* line 633, scss/_minisite.scss */
 #minisite #footer .loginLinkModule #footerLoginLink a:hover {
   text-decoration: underline;
 }
-/* line 637, scss/_minisite.scss */
+/* line 639, scss/_minisite.scss */
 #minisite #footer .loginLinkModule.unauthenticated #footerLoginLink {
   margin: 0;
 }
-/* line 648, scss/_minisite.scss */
+/* line 650, scss/_minisite.scss */
 #minisite table tr,
 #minisite table td {
   font-weight: 300;
 }
-/* line 653, scss/_minisite.scss */
+/* line 655, scss/_minisite.scss */
 #minisite .continueReading {
   margin: 0;
 }
-/* line 656, scss/_minisite.scss */
+/* line 658, scss/_minisite.scss */
 #minisite .continueReading a {
   background: #eaf4fd;
   padding: 0.25rem 0.5rem;
@@ -2755,29 +2756,29 @@ body #wrapper #post-footer a {
   -o-border-radius: 6px;
   border-radius: 6px;
 }
-/* line 663, scss/_minisite.scss */
+/* line 665, scss/_minisite.scss */
 #minisite .continueReading a:after {
   content: "\f138";
   margin-left: 0.375rem;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 670, scss/_minisite.scss */
+  /* line 672, scss/_minisite.scss */
   #minisite .feedLink {
     display: inline;
     text-align: right;
   }
 }
-/* line 678, scss/_minisite.scss */
+/* line 680, scss/_minisite.scss */
 #minisite .feedLink .feedInfo a {
   color: transparent;
 }
-/* line 682, scss/_minisite.scss */
+/* line 684, scss/_minisite.scss */
 #minisite .feedLink .feedInfo a:before {
   content: "\f09e";
   display: block;
   color: #9f2112;
 }
-/* line 691, scss/_minisite.scss */
+/* line 693, scss/_minisite.scss */
 #minisite .pagination {
   margin-bottom: 2.5rem;
   *zoom: 1;
@@ -2792,22 +2793,22 @@ body #wrapper #post-footer a {
   clear: both;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 691, scss/_minisite.scss */
+  /* line 693, scss/_minisite.scss */
   #minisite .pagination {
     width: 50%;
     float: left;
   }
 }
-/* line 700, scss/_minisite.scss */
+/* line 702, scss/_minisite.scss */
 #minisite .pagination.above {
   dispaly: none;
 }
-/* line 711, scss/_minisite.scss */
+/* line 713, scss/_minisite.scss */
 #minisite .pagination .pages a,
 #minisite .pagination .pages strong {
   margin: 0 0.25rem;
 }
-/* line 720, scss/_minisite.scss */
+/* line 722, scss/_minisite.scss */
 #minisite .contentMain + .contentPost {
   border-top: 1px solid #e9e9e9;
   padding-top: 2.5rem;
@@ -2968,19 +2969,15 @@ body #wrapper #post-footer a {
 /* Call to Action Blurbs */
 /* line 54, scss/modules/_blurb.scss */
 #callToActionBlurb .blurb {
-  color: #ff00ff;
   background: none !important;
   padding: 0 !important;
 }
-/* line 60, scss/modules/_blurb.scss */
-#callToActionBlurb .blurb ul {
-  list-style-type: none !important;
-}
-/* line 64, scss/modules/_blurb.scss */
+/* line 62, scss/modules/_blurb.scss */
 #callToActionBlurb .blurb ul li {
   margin-bottom: 1rem;
+  list-style-type: none !important;
 }
-/* line 71, scss/modules/_blurb.scss */
+/* line 69, scss/modules/_blurb.scss */
 #callToActionBlurb .blurb ul li a {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
   font-size: 1.125rem;
@@ -3010,11 +3007,11 @@ body #wrapper #post-footer a {
   -o-transition-timing-function: ease;
   transition-timing-function: ease;
 }
-/* line 88, scss/modules/_blurb.scss */
+/* line 86, scss/modules/_blurb.scss */
 #callToActionBlurb .blurb ul li a:link {
   text-decoration: none !important;
 }
-/* line 92, scss/modules/_blurb.scss */
+/* line 90, scss/modules/_blurb.scss */
 #callToActionBlurb .blurb ul li a:after {
   line-height: 1 !important;
   content: "\f054";
@@ -3033,53 +3030,53 @@ body #wrapper #post-footer a {
   -o-border-radius: 1000px;
   border-radius: 1000px;
 }
-/* line 109, scss/modules/_blurb.scss */
+/* line 107, scss/modules/_blurb.scss */
 #callToActionBlurb .blurb ul li a.blue {
   background: #1073ce;
 }
-/* line 112, scss/modules/_blurb.scss */
+/* line 110, scss/modules/_blurb.scss */
 #callToActionBlurb .blurb ul li a.blue:hover {
   background: #0d5ea8;
 }
-/* line 117, scss/modules/_blurb.scss */
+/* line 115, scss/modules/_blurb.scss */
 #callToActionBlurb .blurb ul li a.red {
   background: #9f2112;
 }
-/* line 120, scss/modules/_blurb.scss */
+/* line 118, scss/modules/_blurb.scss */
 #callToActionBlurb .blurb ul li a.red:hover {
   background: #7a190e;
 }
-/* line 125, scss/modules/_blurb.scss */
+/* line 123, scss/modules/_blurb.scss */
 #callToActionBlurb .blurb ul li a.green {
   background: #4a8512;
 }
-/* line 128, scss/modules/_blurb.scss */
+/* line 126, scss/modules/_blurb.scss */
 #callToActionBlurb .blurb ul li a.green:hover {
   background: #36610d;
 }
-/* line 134, scss/modules/_blurb.scss */
+/* line 132, scss/modules/_blurb.scss */
 #callToActionBlurb .blurb ul li a.yellow, #callToActionBlurb .blurb ul li a.gold {
   background: #e8a500;
 }
-/* line 137, scss/modules/_blurb.scss */
+/* line 135, scss/modules/_blurb.scss */
 #callToActionBlurb .blurb ul li a.yellow:hover, #callToActionBlurb .blurb ul li a.gold:hover {
   background: #bf8800;
 }
-/* line 144, scss/modules/_blurb.scss */
+/* line 142, scss/modules/_blurb.scss */
 #callToActionBlurb .blurb ul li:last-child {
   margin-bottom: 0;
 }
 
-/* line 152, scss/modules/_blurb.scss */
+/* line 150, scss/modules/_blurb.scss */
 .blurb {
   /* Callout Blurbs */
 }
-/* line 157, scss/modules/_blurb.scss */
+/* line 155, scss/modules/_blurb.scss */
 .blurb[class^='uname_callout_blurb'], .blurb[class*='uname_callout_blurb'] {
   background: none !important;
   padding: 0 !important;
 }
-/* line 163, scss/modules/_blurb.scss */
+/* line 161, scss/modules/_blurb.scss */
 .blurb[class^='uname_callout_blurb'] .blurbInner, .blurb[class*='uname_callout_blurb'] .blurbInner {
   border-top: 12px solid;
   background: #f8f8f8;
@@ -3088,32 +3085,32 @@ body #wrapper #post-footer a {
   box-shadow: rgba(0, 0, 0, 0.18) 0 2px 2px;
   padding: 1.25rem !important;
 }
-/* line 170, scss/modules/_blurb.scss */
+/* line 168, scss/modules/_blurb.scss */
 .blurb[class^='uname_callout_blurb'] .blurbInner *:last-child, .blurb[class*='uname_callout_blurb'] .blurbInner *:last-child {
   margin-bottom: 0;
 }
-/* line 176, scss/modules/_blurb.scss */
+/* line 174, scss/modules/_blurb.scss */
 .blurb[class^='uname_callout_blurb']:nth-child(4n+1) .blurbInner, .blurb[class*='uname_callout_blurb']:nth-child(4n+1) .blurbInner {
   border-color: #e8a500;
 }
-/* line 182, scss/modules/_blurb.scss */
+/* line 180, scss/modules/_blurb.scss */
 .blurb[class^='uname_callout_blurb']:nth-child(4n+2) .blurbInner, .blurb[class*='uname_callout_blurb']:nth-child(4n+2) .blurbInner {
   border-color: #4a8512;
 }
-/* line 188, scss/modules/_blurb.scss */
+/* line 186, scss/modules/_blurb.scss */
 .blurb[class^='uname_callout_blurb']:nth-child(4n+3) .blurbInner, .blurb[class*='uname_callout_blurb']:nth-child(4n+3) .blurbInner {
   border-color: #9f2112;
 }
-/* line 194, scss/modules/_blurb.scss */
+/* line 192, scss/modules/_blurb.scss */
 .blurb[class^='uname_callout_blurb']:nth-child(4n+4) .blurbInner, .blurb[class*='uname_callout_blurb']:nth-child(4n+4) .blurbInner {
   border-color: #1073ce;
 }
 
-/* line 205, scss/modules/_blurb.scss */
+/* line 203, scss/modules/_blurb.scss */
 .contactBlurb {
   margin: 1.25rem 0;
 }
-/* line 208, scss/modules/_blurb.scss */
+/* line 206, scss/modules/_blurb.scss */
 .contactBlurb .blurbInner {
   border-top: 12px solid;
   background: #f8f8f8;
@@ -3123,11 +3120,11 @@ body #wrapper #post-footer a {
   padding: 1.25rem !important;
   border-color: #9f2112;
 }
-/* line 215, scss/modules/_blurb.scss */
+/* line 213, scss/modules/_blurb.scss */
 .contactBlurb .blurbInner *:last-child {
   margin-bottom: 0;
 }
-/* line 221, scss/modules/_blurb.scss */
+/* line 219, scss/modules/_blurb.scss */
 .contactBlurb .vcard,
 .contactBlurb .contact-info {
   border: none;
@@ -3135,40 +3132,40 @@ body #wrapper #post-footer a {
   margin: 0;
   display: block;
 }
-/* line 228, scss/modules/_blurb.scss */
+/* line 226, scss/modules/_blurb.scss */
 .contactBlurb h2 {
   font-size: 1.4375rem;
 }
-/* line 232, scss/modules/_blurb.scss */
+/* line 230, scss/modules/_blurb.scss */
 .contactBlurb h3 {
   font-size: 1.125rem;
   font-weight: 400;
   margin-bottom: 0;
 }
-/* line 238, scss/modules/_blurb.scss */
+/* line 236, scss/modules/_blurb.scss */
 .contactBlurb *:last-child {
   margin-bottom: 0;
   padding-bottom: 0;
 }
 
-/* line 246, scss/modules/_blurb.scss */
+/* line 244, scss/modules/_blurb.scss */
 .subNavElements .contactBlurb {
   display: none;
 }
 @media only screen and (min-width: 64.063em) {
-  /* line 246, scss/modules/_blurb.scss */
+  /* line 244, scss/modules/_blurb.scss */
   .subNavElements .contactBlurb {
     display: block;
   }
 }
 
-/* line 258, scss/modules/_blurb.scss */
+/* line 256, scss/modules/_blurb.scss */
 footer .contactBlurb {
   display: block;
   margin-bottom: 2.5rem;
 }
 @media only screen and (min-width: 64.063em) {
-  /* line 258, scss/modules/_blurb.scss */
+  /* line 256, scss/modules/_blurb.scss */
   footer .contactBlurb {
     display: none;
   }

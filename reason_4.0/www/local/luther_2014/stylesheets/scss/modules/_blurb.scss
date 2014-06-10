@@ -53,17 +53,15 @@
 
 	.blurb {
 
-		color: #ff00ff;
 		background: none !important;
 		padding: 0 !important;
 
 		ul {
 			@extend .zero-out;
-			list-style-type: none !important;
 
 			li {
 				margin-bottom: rem-calc(16);
-
+				list-style-type: none !important;
 				$cta-padding: rem-calc(18);
 				$cta-font-size: $font-size-18;
 				$cta-height: $cta-padding*2 + $cta-font-size;
