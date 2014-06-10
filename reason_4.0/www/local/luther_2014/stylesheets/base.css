@@ -1664,6 +1664,7 @@ body #wrapper #global-footer #global-footer-nav {
   background: #1073ce;
   padding-left: 1.25rem;
   padding-right: 1.25rem;
+  padding-top: 2.5rem;
   width: 100%;
   margin-left: auto;
   margin-right: auto;
@@ -1688,21 +1689,20 @@ body #wrapper #global-footer #global-footer-nav:after {
     border-right: 7px solid #a9cdee;
   }
 }
-/* line 615, scss/_global.scss */
+/* line 616, scss/_global.scss */
 body #wrapper #global-footer #global-footer-nav h3 {
   font-size: 1.125rem;
   font-weight: 700;
   color: white;
   color: white;
 }
-/* line 621, scss/_global.scss */
+/* line 622, scss/_global.scss */
 body #wrapper #global-footer #global-footer-nav ul {
   font-family: "Roboto Slab", serif;
   font-weight: 300;
 }
-/* line 626, scss/_global.scss */
+/* line 627, scss/_global.scss */
 body #wrapper #global-footer #global-footer-nav .column {
-  padding-top: 2.5rem;
   padding-bottom: 2.5rem;
   position: relative;
   padding-left: 1.25rem;
@@ -1710,8 +1710,8 @@ body #wrapper #global-footer #global-footer-nav .column {
   width: 100%;
   float: left;
 }
-@media only screen and (min-width: 30em) {
-  /* line 626, scss/_global.scss */
+@media only screen and (min-width: 30em) and (max-width: 40em) {
+  /* line 627, scss/_global.scss */
   body #wrapper #global-footer #global-footer-nav .column {
     position: relative;
     padding-left: 1.25rem;
@@ -1719,9 +1719,13 @@ body #wrapper #global-footer #global-footer-nav .column {
     width: 50%;
     float: left;
   }
+  /* line 633, scss/_global.scss */
+  body #wrapper #global-footer #global-footer-nav .column:nth-child(odd) {
+    clear: left;
+  }
 }
-@media only screen and (min-width: 40.063em) {
-  /* line 626, scss/_global.scss */
+@media only screen and (min-width: 40.063em) and (max-width: 64em) {
+  /* line 627, scss/_global.scss */
   body #wrapper #global-footer #global-footer-nav .column {
     position: relative;
     padding-left: 1.25rem;
@@ -1729,9 +1733,13 @@ body #wrapper #global-footer #global-footer-nav .column {
     width: 33.33333%;
     float: left;
   }
+  /* line 640, scss/_global.scss */
+  body #wrapper #global-footer #global-footer-nav .column:nth-child(3n+1) {
+    clear: left;
+  }
 }
 @media only screen and (min-width: 64.063em) {
-  /* line 626, scss/_global.scss */
+  /* line 627, scss/_global.scss */
   body #wrapper #global-footer #global-footer-nav .column {
     position: relative;
     padding-left: 1.25rem;
@@ -1740,12 +1748,12 @@ body #wrapper #global-footer #global-footer-nav .column {
     float: left;
   }
 }
-/* line 643, scss/_global.scss */
+/* line 650, scss/_global.scss */
 body #wrapper #global-footer #global-footer-nav .column ul {
   color: white;
   color: rgba(255, 255, 255, 0.75);
 }
-/* line 652, scss/_global.scss */
+/* line 659, scss/_global.scss */
 body #wrapper #global-footer #global-footer-info {
   width: 100%;
   margin-left: auto;
@@ -1769,25 +1777,25 @@ body #wrapper #global-footer #global-footer-info:after {
   clear: both;
 }
 @media only screen and (min-width: 64.063em) {
-  /* line 652, scss/_global.scss */
+  /* line 659, scss/_global.scss */
   body #wrapper #global-footer #global-footer-info {
     border-left: 7px solid #6b9fd0;
     border-right: 7px solid #6b9fd0;
   }
 }
-/* line 665, scss/_global.scss */
+/* line 672, scss/_global.scss */
 body #wrapper #global-footer #global-footer-info nav ul {
   font-size: 0.875rem;
 }
-/* line 668, scss/_global.scss */
+/* line 675, scss/_global.scss */
 body #wrapper #global-footer #global-footer-info nav ul a {
   font-weight: 700;
 }
-/* line 671, scss/_global.scss */
+/* line 678, scss/_global.scss */
 body #wrapper #global-footer #global-footer-info nav ul a:hover {
   text-decoration: underline;
 }
-/* line 678, scss/_global.scss */
+/* line 685, scss/_global.scss */
 body #wrapper #global-footer #global-footer-info .utility-nav {
   position: relative;
   padding-left: 1.25rem;
@@ -1795,38 +1803,38 @@ body #wrapper #global-footer #global-footer-info .utility-nav {
   width: 100%;
   float: left;
 }
-/* line 681, scss/_global.scss */
+/* line 688, scss/_global.scss */
 body #wrapper #global-footer #global-footer-info .utility-nav ul {
   padding: 0;
   margin: 0 0 1.66667rem;
   border-bottom: 1px dashed rgba(255, 255, 255, 0.125);
   line-height: 1;
 }
-/* line 688, scss/_global.scss */
+/* line 695, scss/_global.scss */
 body #wrapper #global-footer #global-footer-info .utility-nav ul li {
   margin-bottom: 1.66667rem;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 694, scss/_global.scss */
+  /* line 701, scss/_global.scss */
   body #wrapper #global-footer #global-footer-info .utility-nav ul li {
     display: inline;
   }
-  /* line 697, scss/_global.scss */
+  /* line 704, scss/_global.scss */
   body #wrapper #global-footer #global-footer-info .utility-nav ul li a {
     display: inline-block;
     border-right: 1px solid rgba(255, 255, 255, 0.25);
     margin-bottom: 1.66667rem;
   }
-  /* line 702, scss/_global.scss */
+  /* line 709, scss/_global.scss */
   body #wrapper #global-footer #global-footer-info .utility-nav ul li a span {
     margin: 0 0.75rem;
   }
-  /* line 708, scss/_global.scss */
+  /* line 715, scss/_global.scss */
   body #wrapper #global-footer #global-footer-info .utility-nav ul li:last-child > a {
     border: none;
   }
 }
-/* line 716, scss/_global.scss */
+/* line 723, scss/_global.scss */
 body #wrapper #global-footer #global-footer-info .contact {
   position: relative;
   padding-left: 1.25rem;
@@ -1838,17 +1846,17 @@ body #wrapper #global-footer #global-footer-info .contact {
   font-size: 0.75rem;
   letter-spacing: .65px;
 }
-/* line 724, scss/_global.scss */
+/* line 731, scss/_global.scss */
 body #wrapper #global-footer #global-footer-info .contact .sep {
   display: inline-block;
   margin: 0 0.5rem;
   font-weight: 700;
 }
-/* line 731, scss/_global.scss */
+/* line 738, scss/_global.scss */
 body #wrapper #global-footer #global-footer-info .phone {
   display: block;
 }
-/* line 737, scss/_global.scss */
+/* line 744, scss/_global.scss */
 body #wrapper #post-footer {
   width: 100%;
   margin-left: auto;
@@ -1870,7 +1878,7 @@ body #wrapper #post-footer:before, body #wrapper #post-footer:after {
 body #wrapper #post-footer:after {
   clear: both;
 }
-/* line 743, scss/_global.scss */
+/* line 750, scss/_global.scss */
 body #wrapper #post-footer p {
   position: relative;
   padding-left: 1.25rem;
@@ -1883,12 +1891,12 @@ body #wrapper #post-footer p {
   color: #777777;
   font-weight: 300;
 }
-/* line 752, scss/_global.scss */
+/* line 759, scss/_global.scss */
 body #wrapper #post-footer a {
   text-decoration: underline;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 758, scss/_global.scss */
+  /* line 765, scss/_global.scss */
   body #wrapper #post-footer p {
     text-align: left;
     margin-bottom: 0;
@@ -1898,13 +1906,13 @@ body #wrapper #post-footer a {
     width: 50%;
     float: left;
   }
-  /* line 764, scss/_global.scss */
+  /* line 771, scss/_global.scss */
   body #wrapper #post-footer .powered-by {
     text-align: right;
   }
 }
 @media only screen and (min-width: 64.063em) {
-  /* line 776, scss/_global.scss */
+  /* line 783, scss/_global.scss */
   body .off-canvas-wrap.move-right > .inner-wrap {
     -webkit-transform: translate3d(0, 0, 0);
     -moz-transform: translate3d(0, 0, 0);
@@ -1912,7 +1920,7 @@ body #wrapper #post-footer a {
     -o-transform: translate3d(0, 0, 0);
     transform: translate3d(0, 0, 0);
   }
-  /* line 784, scss/_global.scss */
+  /* line 791, scss/_global.scss */
   body .off-canvas-wrap.move-right a.exit-off-canvas {
     display: none;
   }
