@@ -6231,11 +6231,11 @@ form table td {
   margin-bottom: 0;
 }
 
-/* line 174, scss/modules/_tab.scss */
+/* line 194, scss/modules/_tab.scss */
 #tabs {
   overflow: hidden;
 }
-/* line 177, scss/modules/_tab.scss */
+/* line 197, scss/modules/_tab.scss */
 #tabs .tabs {
   *zoom: 1;
   margin: 0;
@@ -6251,22 +6251,22 @@ form table td {
 #tabs .tabs:after {
   clear: both;
 }
-/* line 183, scss/modules/_tab.scss */
+/* line 203, scss/modules/_tab.scss */
 #tabs .tabs .tab-title {
   margin: 0;
   padding: 0;
   display: block;
 }
-/* line 188, scss/modules/_tab.scss */
+/* line 208, scss/modules/_tab.scss */
 #tabs .tabs .tab-title.active a {
   font-weight: 700;
   color: #444444;
 }
-/* line 197, scss/modules/_tab.scss */
+/* line 217, scss/modules/_tab.scss */
 #tabs .tabs-content .content {
   display: none;
 }
-/* line 200, scss/modules/_tab.scss */
+/* line 220, scss/modules/_tab.scss */
 #tabs .tabs-content .content.active {
   display: block;
 }
@@ -6276,81 +6276,93 @@ form table td {
   -webkit-box-shadow: rgba(0, 0, 0, 0.24) 0 2px 2px;
   -moz-box-shadow: rgba(0, 0, 0, 0.24) 0 2px 2px;
   box-shadow: rgba(0, 0, 0, 0.24) 0 2px 2px;
-  -webkit-border-radius: 6px;
-  -moz-border-radius: 6px;
-  -ms-border-radius: 6px;
-  -o-border-radius: 6px;
-  border-radius: 6px;
+  -moz-border-radius-bottomleft: 6px;
+  -webkit-border-bottom-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+  -moz-border-radius-bottomright: 6px;
+  -webkit-border-bottom-right-radius: 6px;
+  border-bottom-right-radius: 6px;
 }
 
+/* line 27, scss/modules/_tab.scss */
+.tabs .tab-title {
+  		/*&:nth-child(4n+1).active a {
+  			border-color: $lc-green;
+  			background: rgba($lc-green, .2);
+  		}
+  
+  		&:nth-child(4n+2).active a {
+  			border-color: $lc-red;
+  			background: rgba($lc-red, .2);
+  		}
+  
+  		&:nth-child(4n+3).active a {
+  			border-color: $lc-blue-light;
+  			background: rgba($lc-blue-light, .2);
+  		}
+  		
+  		&:nth-child(4n+4).active a {
+  			border-color: $lc-yellow;
+  			background: rgba($lc-yellow, .2);
+  		}*/
+}
 /* line 29, scss/modules/_tab.scss */
 .tabs .tab-title a {
-  background: #f8f8f8;
+  background: #eeeeee;
   display: block;
   padding: 0.71429rem 1.66667rem;
-  border-left: 6px solid #eeeeee;
   margin-bottom: 2px;
+  text-align: center;
+  width: 50%;
+  float: left;
 }
-/* line 37, scss/modules/_tab.scss */
-.tabs .tab-title:nth-child(4n+1).active a {
-  border-color: #4a8512;
-  background: rgba(74, 133, 18, 0.2);
+/* line 40, scss/modules/_tab.scss */
+.tabs .tab-title:nth-child(2n+1) a {
+  border-right: 1px solid #FFF;
 }
-/* line 42, scss/modules/_tab.scss */
-.tabs .tab-title:nth-child(4n+2).active a {
-  border-color: #9f2112;
-  background: rgba(159, 33, 18, 0.2);
+/* line 44, scss/modules/_tab.scss */
+.tabs .tab-title:nth-child(2n+2) a {
+  border-left: 1px solid #FFF;
 }
-/* line 47, scss/modules/_tab.scss */
-.tabs .tab-title:nth-child(4n+3).active a {
-  border-color: #1073ce;
-  background: rgba(16, 115, 206, 0.2);
-}
-/* line 52, scss/modules/_tab.scss */
-.tabs .tab-title:nth-child(4n+4).active a {
-  border-color: #e8a500;
-  background: rgba(232, 165, 0, 0.2);
-}
-/* line 57, scss/modules/_tab.scss */
+/* line 70, scss/modules/_tab.scss */
 .tabs .tab-title.active a {
-  border-left-width: 6px;
   border-left-style: solid;
-  background: #e9e9e9;
+  background: #1073ce;
+  color: #FFF !important;
 }
 
-/* line 67, scss/modules/_tab.scss */
+/* line 81, scss/modules/_tab.scss */
 .tabs-content .content {
   padding: 1.25rem;
 }
-/* line 70, scss/modules/_tab.scss */
+/* line 84, scss/modules/_tab.scss */
 .tabs-content .content.active {
   display: block;
-  border-left-width: 6px;
   border-left-style: solid;
 }
-/* line 76, scss/modules/_tab.scss */
+/* line 90, scss/modules/_tab.scss */
 .tabs-content .content:nth-child(4n+1).active {
   border-color: #4a8512;
 }
-/* line 80, scss/modules/_tab.scss */
+/* line 94, scss/modules/_tab.scss */
 .tabs-content .content:nth-child(4n+2).active {
   border-color: #9f2112;
 }
-/* line 84, scss/modules/_tab.scss */
+/* line 98, scss/modules/_tab.scss */
 .tabs-content .content:nth-child(4n+3).active {
   border-color: #1073ce;
 }
-/* line 88, scss/modules/_tab.scss */
+/* line 102, scss/modules/_tab.scss */
 .tabs-content .content:nth-child(4n+4).active {
   border-color: #e8a500;
 }
 
-/* line 210, scss/modules/_tab.scss */
+/* line 230, scss/modules/_tab.scss */
 .hasConRelNav {
   /* 3 COLUMNS: Nav, Content, & Related */
 }
-@media only screen and (min-width: 90.063em) {
-  /* line 97, scss/modules/_tab.scss */
+@media only screen and (min-width: 80em) {
+  /* line 111, scss/modules/_tab.scss */
   .hasConRelNav #tabs {
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
@@ -6361,13 +6373,33 @@ form table td {
     -o-border-radius: 0;
     border-radius: 0;
   }
-  /* line 104, scss/modules/_tab.scss */
+  /* line 116, scss/modules/_tab.scss */
+  .hasConRelNav .tabs .tab-title {
+    		/*&:nth-child(4n+1).active a {
+    			border-color: $lc-green;
+    		}
+    
+    		&:nth-child(4n+2).active a {
+    			border-color: $lc-red;
+    		}
+    
+    		&:nth-child(4n+3).active a {
+    			border-color: $lc-blue-light;
+    		}
+    		
+    		&:nth-child(4n+4).active a {
+    			border-color: $lc-yellow;
+    		}*/
+  }
+  /* line 118, scss/modules/_tab.scss */
   .hasConRelNav .tabs .tab-title a {
     background: #FFF !important;
     display: block;
-    padding: 0.71429rem 1.66667rem;
+    padding: 0.71429rem 1.42857rem;
     border-left: none;
+    border-right: none;
     margin: 0;
+    width: auto;
     float: left;
     font-weight: 300;
     -moz-border-radius-topleft: 6px;
@@ -6377,68 +6409,54 @@ form table td {
     -webkit-border-top-right-radius: 6px;
     border-top-right-radius: 6px;
   }
-  /* line 115, scss/modules/_tab.scss */
-  .hasConRelNav .tabs .tab-title:nth-child(4n+1).active a {
-    border-color: #4a8512;
-  }
-  /* line 119, scss/modules/_tab.scss */
-  .hasConRelNav .tabs .tab-title:nth-child(4n+2).active a {
-    border-color: #9f2112;
-  }
-  /* line 123, scss/modules/_tab.scss */
-  .hasConRelNav .tabs .tab-title:nth-child(4n+3).active a {
-    border-color: #1073ce;
-  }
-  /* line 127, scss/modules/_tab.scss */
-  .hasConRelNav .tabs .tab-title:nth-child(4n+4).active a {
-    border-color: #e8a500;
-  }
-  /* line 131, scss/modules/_tab.scss */
+  /* line 148, scss/modules/_tab.scss */
   .hasConRelNav .tabs .tab-title.active a {
     border-left: none;
     border-top-width: 6px;
     border-top-style: solid;
+    border-color: #1073ce;
     background: #f6f6f6 !important;
+    color: #444444 !important;
   }
-  /* line 140, scss/modules/_tab.scss */
+  /* line 159, scss/modules/_tab.scss */
   .hasConRelNav .tabs-content {
     margin-top: -0.1875rem;
   }
-  /* line 143, scss/modules/_tab.scss */
+  /* line 162, scss/modules/_tab.scss */
   .hasConRelNav .tabs-content .content {
     padding: 1.25rem;
     background: #f6f6f6;
+    			/*&:nth-child(4n+1).active {
+    				border-color: $lc-green;
+    			}
+    
+    			&:nth-child(4n+2).active {
+    				border-color: $lc-red;
+    			}
+    
+    			&:nth-child(4n+3).active {
+    				border-color: $lc-blue-light;
+    			}
+    			
+    			&:nth-child(4n+4).active {
+    				border-color: $lc-yellow;
+    			}*/
   }
-  /* line 147, scss/modules/_tab.scss */
+  /* line 166, scss/modules/_tab.scss */
   .hasConRelNav .tabs-content .content.active {
     display: block;
     border: none;
     border-top: 3px solid #e9e9e9;
-  }
-  /* line 153, scss/modules/_tab.scss */
-  .hasConRelNav .tabs-content .content:nth-child(4n+1).active {
-    border-color: #4a8512;
-  }
-  /* line 157, scss/modules/_tab.scss */
-  .hasConRelNav .tabs-content .content:nth-child(4n+2).active {
-    border-color: #9f2112;
-  }
-  /* line 161, scss/modules/_tab.scss */
-  .hasConRelNav .tabs-content .content:nth-child(4n+3).active {
     border-color: #1073ce;
-  }
-  /* line 165, scss/modules/_tab.scss */
-  .hasConRelNav .tabs-content .content:nth-child(4n+4).active {
-    border-color: #e8a500;
   }
 }
 
-/* line 218, scss/modules/_tab.scss */
+/* line 238, scss/modules/_tab.scss */
 .hasConNav {
   /* 2 COLUMNS: Nav & Content (no Related) */
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 97, scss/modules/_tab.scss */
+  /* line 111, scss/modules/_tab.scss */
   .hasConNav #tabs {
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
@@ -6449,13 +6467,33 @@ form table td {
     -o-border-radius: 0;
     border-radius: 0;
   }
-  /* line 104, scss/modules/_tab.scss */
+  /* line 116, scss/modules/_tab.scss */
+  .hasConNav .tabs .tab-title {
+    		/*&:nth-child(4n+1).active a {
+    			border-color: $lc-green;
+    		}
+    
+    		&:nth-child(4n+2).active a {
+    			border-color: $lc-red;
+    		}
+    
+    		&:nth-child(4n+3).active a {
+    			border-color: $lc-blue-light;
+    		}
+    		
+    		&:nth-child(4n+4).active a {
+    			border-color: $lc-yellow;
+    		}*/
+  }
+  /* line 118, scss/modules/_tab.scss */
   .hasConNav .tabs .tab-title a {
     background: #FFF !important;
     display: block;
-    padding: 0.71429rem 1.66667rem;
+    padding: 0.71429rem 1.42857rem;
     border-left: none;
+    border-right: none;
     margin: 0;
+    width: auto;
     float: left;
     font-weight: 300;
     -moz-border-radius-topleft: 6px;
@@ -6465,68 +6503,54 @@ form table td {
     -webkit-border-top-right-radius: 6px;
     border-top-right-radius: 6px;
   }
-  /* line 115, scss/modules/_tab.scss */
-  .hasConNav .tabs .tab-title:nth-child(4n+1).active a {
-    border-color: #4a8512;
-  }
-  /* line 119, scss/modules/_tab.scss */
-  .hasConNav .tabs .tab-title:nth-child(4n+2).active a {
-    border-color: #9f2112;
-  }
-  /* line 123, scss/modules/_tab.scss */
-  .hasConNav .tabs .tab-title:nth-child(4n+3).active a {
-    border-color: #1073ce;
-  }
-  /* line 127, scss/modules/_tab.scss */
-  .hasConNav .tabs .tab-title:nth-child(4n+4).active a {
-    border-color: #e8a500;
-  }
-  /* line 131, scss/modules/_tab.scss */
+  /* line 148, scss/modules/_tab.scss */
   .hasConNav .tabs .tab-title.active a {
     border-left: none;
     border-top-width: 6px;
     border-top-style: solid;
+    border-color: #1073ce;
     background: #f6f6f6 !important;
+    color: #444444 !important;
   }
-  /* line 140, scss/modules/_tab.scss */
+  /* line 159, scss/modules/_tab.scss */
   .hasConNav .tabs-content {
     margin-top: -0.1875rem;
   }
-  /* line 143, scss/modules/_tab.scss */
+  /* line 162, scss/modules/_tab.scss */
   .hasConNav .tabs-content .content {
     padding: 1.25rem;
     background: #f6f6f6;
+    			/*&:nth-child(4n+1).active {
+    				border-color: $lc-green;
+    			}
+    
+    			&:nth-child(4n+2).active {
+    				border-color: $lc-red;
+    			}
+    
+    			&:nth-child(4n+3).active {
+    				border-color: $lc-blue-light;
+    			}
+    			
+    			&:nth-child(4n+4).active {
+    				border-color: $lc-yellow;
+    			}*/
   }
-  /* line 147, scss/modules/_tab.scss */
+  /* line 166, scss/modules/_tab.scss */
   .hasConNav .tabs-content .content.active {
     display: block;
     border: none;
     border-top: 3px solid #e9e9e9;
-  }
-  /* line 153, scss/modules/_tab.scss */
-  .hasConNav .tabs-content .content:nth-child(4n+1).active {
-    border-color: #4a8512;
-  }
-  /* line 157, scss/modules/_tab.scss */
-  .hasConNav .tabs-content .content:nth-child(4n+2).active {
-    border-color: #9f2112;
-  }
-  /* line 161, scss/modules/_tab.scss */
-  .hasConNav .tabs-content .content:nth-child(4n+3).active {
     border-color: #1073ce;
-  }
-  /* line 165, scss/modules/_tab.scss */
-  .hasConNav .tabs-content .content:nth-child(4n+4).active {
-    border-color: #e8a500;
   }
 }
 
-/* line 226, scss/modules/_tab.scss */
+/* line 246, scss/modules/_tab.scss */
 .hasConRel {
   /* 2 COLUMNS: Content & Related (no Nav) */
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 97, scss/modules/_tab.scss */
+  /* line 111, scss/modules/_tab.scss */
   .hasConRel #tabs {
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
@@ -6537,13 +6561,33 @@ form table td {
     -o-border-radius: 0;
     border-radius: 0;
   }
-  /* line 104, scss/modules/_tab.scss */
+  /* line 116, scss/modules/_tab.scss */
+  .hasConRel .tabs .tab-title {
+    		/*&:nth-child(4n+1).active a {
+    			border-color: $lc-green;
+    		}
+    
+    		&:nth-child(4n+2).active a {
+    			border-color: $lc-red;
+    		}
+    
+    		&:nth-child(4n+3).active a {
+    			border-color: $lc-blue-light;
+    		}
+    		
+    		&:nth-child(4n+4).active a {
+    			border-color: $lc-yellow;
+    		}*/
+  }
+  /* line 118, scss/modules/_tab.scss */
   .hasConRel .tabs .tab-title a {
     background: #FFF !important;
     display: block;
-    padding: 0.71429rem 1.66667rem;
+    padding: 0.71429rem 1.42857rem;
     border-left: none;
+    border-right: none;
     margin: 0;
+    width: auto;
     float: left;
     font-weight: 300;
     -moz-border-radius-topleft: 6px;
@@ -6553,68 +6597,54 @@ form table td {
     -webkit-border-top-right-radius: 6px;
     border-top-right-radius: 6px;
   }
-  /* line 115, scss/modules/_tab.scss */
-  .hasConRel .tabs .tab-title:nth-child(4n+1).active a {
-    border-color: #4a8512;
-  }
-  /* line 119, scss/modules/_tab.scss */
-  .hasConRel .tabs .tab-title:nth-child(4n+2).active a {
-    border-color: #9f2112;
-  }
-  /* line 123, scss/modules/_tab.scss */
-  .hasConRel .tabs .tab-title:nth-child(4n+3).active a {
-    border-color: #1073ce;
-  }
-  /* line 127, scss/modules/_tab.scss */
-  .hasConRel .tabs .tab-title:nth-child(4n+4).active a {
-    border-color: #e8a500;
-  }
-  /* line 131, scss/modules/_tab.scss */
+  /* line 148, scss/modules/_tab.scss */
   .hasConRel .tabs .tab-title.active a {
     border-left: none;
     border-top-width: 6px;
     border-top-style: solid;
+    border-color: #1073ce;
     background: #f6f6f6 !important;
+    color: #444444 !important;
   }
-  /* line 140, scss/modules/_tab.scss */
+  /* line 159, scss/modules/_tab.scss */
   .hasConRel .tabs-content {
     margin-top: -0.1875rem;
   }
-  /* line 143, scss/modules/_tab.scss */
+  /* line 162, scss/modules/_tab.scss */
   .hasConRel .tabs-content .content {
     padding: 1.25rem;
     background: #f6f6f6;
+    			/*&:nth-child(4n+1).active {
+    				border-color: $lc-green;
+    			}
+    
+    			&:nth-child(4n+2).active {
+    				border-color: $lc-red;
+    			}
+    
+    			&:nth-child(4n+3).active {
+    				border-color: $lc-blue-light;
+    			}
+    			
+    			&:nth-child(4n+4).active {
+    				border-color: $lc-yellow;
+    			}*/
   }
-  /* line 147, scss/modules/_tab.scss */
+  /* line 166, scss/modules/_tab.scss */
   .hasConRel .tabs-content .content.active {
     display: block;
     border: none;
     border-top: 3px solid #e9e9e9;
-  }
-  /* line 153, scss/modules/_tab.scss */
-  .hasConRel .tabs-content .content:nth-child(4n+1).active {
-    border-color: #4a8512;
-  }
-  /* line 157, scss/modules/_tab.scss */
-  .hasConRel .tabs-content .content:nth-child(4n+2).active {
-    border-color: #9f2112;
-  }
-  /* line 161, scss/modules/_tab.scss */
-  .hasConRel .tabs-content .content:nth-child(4n+3).active {
     border-color: #1073ce;
-  }
-  /* line 165, scss/modules/_tab.scss */
-  .hasConRel .tabs-content .content:nth-child(4n+4).active {
-    border-color: #e8a500;
   }
 }
 
-/* line 234, scss/modules/_tab.scss */
+/* line 254, scss/modules/_tab.scss */
 .hasCon {
   /* 1 COLUMN: Content (no Nav or Related) */
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 97, scss/modules/_tab.scss */
+  /* line 111, scss/modules/_tab.scss */
   .hasCon #tabs {
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
@@ -6625,13 +6655,33 @@ form table td {
     -o-border-radius: 0;
     border-radius: 0;
   }
-  /* line 104, scss/modules/_tab.scss */
+  /* line 116, scss/modules/_tab.scss */
+  .hasCon .tabs .tab-title {
+    		/*&:nth-child(4n+1).active a {
+    			border-color: $lc-green;
+    		}
+    
+    		&:nth-child(4n+2).active a {
+    			border-color: $lc-red;
+    		}
+    
+    		&:nth-child(4n+3).active a {
+    			border-color: $lc-blue-light;
+    		}
+    		
+    		&:nth-child(4n+4).active a {
+    			border-color: $lc-yellow;
+    		}*/
+  }
+  /* line 118, scss/modules/_tab.scss */
   .hasCon .tabs .tab-title a {
     background: #FFF !important;
     display: block;
-    padding: 0.71429rem 1.66667rem;
+    padding: 0.71429rem 1.42857rem;
     border-left: none;
+    border-right: none;
     margin: 0;
+    width: auto;
     float: left;
     font-weight: 300;
     -moz-border-radius-topleft: 6px;
@@ -6641,59 +6691,45 @@ form table td {
     -webkit-border-top-right-radius: 6px;
     border-top-right-radius: 6px;
   }
-  /* line 115, scss/modules/_tab.scss */
-  .hasCon .tabs .tab-title:nth-child(4n+1).active a {
-    border-color: #4a8512;
-  }
-  /* line 119, scss/modules/_tab.scss */
-  .hasCon .tabs .tab-title:nth-child(4n+2).active a {
-    border-color: #9f2112;
-  }
-  /* line 123, scss/modules/_tab.scss */
-  .hasCon .tabs .tab-title:nth-child(4n+3).active a {
-    border-color: #1073ce;
-  }
-  /* line 127, scss/modules/_tab.scss */
-  .hasCon .tabs .tab-title:nth-child(4n+4).active a {
-    border-color: #e8a500;
-  }
-  /* line 131, scss/modules/_tab.scss */
+  /* line 148, scss/modules/_tab.scss */
   .hasCon .tabs .tab-title.active a {
     border-left: none;
     border-top-width: 6px;
     border-top-style: solid;
+    border-color: #1073ce;
     background: #f6f6f6 !important;
+    color: #444444 !important;
   }
-  /* line 140, scss/modules/_tab.scss */
+  /* line 159, scss/modules/_tab.scss */
   .hasCon .tabs-content {
     margin-top: -0.1875rem;
   }
-  /* line 143, scss/modules/_tab.scss */
+  /* line 162, scss/modules/_tab.scss */
   .hasCon .tabs-content .content {
     padding: 1.25rem;
     background: #f6f6f6;
+    			/*&:nth-child(4n+1).active {
+    				border-color: $lc-green;
+    			}
+    
+    			&:nth-child(4n+2).active {
+    				border-color: $lc-red;
+    			}
+    
+    			&:nth-child(4n+3).active {
+    				border-color: $lc-blue-light;
+    			}
+    			
+    			&:nth-child(4n+4).active {
+    				border-color: $lc-yellow;
+    			}*/
   }
-  /* line 147, scss/modules/_tab.scss */
+  /* line 166, scss/modules/_tab.scss */
   .hasCon .tabs-content .content.active {
     display: block;
     border: none;
     border-top: 3px solid #e9e9e9;
-  }
-  /* line 153, scss/modules/_tab.scss */
-  .hasCon .tabs-content .content:nth-child(4n+1).active {
-    border-color: #4a8512;
-  }
-  /* line 157, scss/modules/_tab.scss */
-  .hasCon .tabs-content .content:nth-child(4n+2).active {
-    border-color: #9f2112;
-  }
-  /* line 161, scss/modules/_tab.scss */
-  .hasCon .tabs-content .content:nth-child(4n+3).active {
     border-color: #1073ce;
-  }
-  /* line 165, scss/modules/_tab.scss */
-  .hasCon .tabs-content .content:nth-child(4n+4).active {
-    border-color: #e8a500;
   }
 }
 

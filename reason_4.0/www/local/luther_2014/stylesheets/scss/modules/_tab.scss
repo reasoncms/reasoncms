@@ -21,20 +21,33 @@
 
 	#tabs {
 		@include box-shadow(rgba(0,0,0,.24) 0 2px 2px);
-		@include border-radius($global-radius);
+		@include border-bottom-radius($global-radius);
 	}
 
 	.tabs .tab-title {
 
 		a {
-			background: lighten($lc-grey, 6%);
+			background: lighten($lc-grey, 2%);
 			display: block;
 			padding: $column-gutter/3.5 $column-gutter/1.5;
-			border-left: 6px solid lighten($lc-grey, 2%);
+			//border-left: 6px solid lighten($lc-grey, 2%);
 			margin-bottom: 2px;
+			text-align: center;
+			width: 50%;
+			float: left;
 		}
 
-		&:nth-child(4n+1).active a {
+		&:nth-child(2n+1) a {
+			border-right: 1px solid #FFF;
+		}
+
+		&:nth-child(2n+2) a {
+			border-left: 1px solid #FFF;
+		}
+
+
+
+		/*&:nth-child(4n+1).active a {
 			border-color: $lc-green;
 			background: rgba($lc-green, .2);
 		}
@@ -52,12 +65,13 @@
 		&:nth-child(4n+4).active a {
 			border-color: $lc-yellow;
 			background: rgba($lc-yellow, .2);
-		}
+		}*/
 
 		&.active a {
-			border-left-width: 6px;
+			//border-left-width: 6px;
 			border-left-style: solid;
-			background: $lc-grey;
+			background: $lc-blue-light;
+			color: #FFF !important;
 		}
 	}
 
@@ -69,7 +83,7 @@
 		
 			&.active {
 				display: block;
-				border-left-width: 6px;
+				//border-left-width: 6px;
 				border-left-style: solid;
 			}
 
@@ -104,15 +118,18 @@
 		a {
 			background: #FFF !important;
 			display: block;
-			padding: $column-gutter/3.5 $column-gutter/1.5;
+			padding: $column-gutter/3.5 $column-gutter/1.75;
 			border-left: none;
+			border-right: none;
 			margin: 0;
+			width: auto;
 			float: left;
 			font-weight: 300;
 			@include border-top-radius($global-radius);
 		}
 
-		&:nth-child(4n+1).active a {
+
+		/*&:nth-child(4n+1).active a {
 			border-color: $lc-green;
 		}
 
@@ -126,13 +143,15 @@
 		
 		&:nth-child(4n+4).active a {
 			border-color: $lc-yellow;
-		}
+		}*/
 
 		&.active a {
 			border-left: none;
 			border-top-width: 6px;
 			border-top-style: solid;
+			border-color: $lc-blue-light;
 			background: lighten($lc-grey, 5%) !important;
+			color: $body-font-color !important;
 		}
 	}
 
@@ -148,9 +167,10 @@
 				display: block;
 				border: none;
 				border-top: 3px solid $lc-grey;
+				border-color: $lc-blue-light;
 			}
 
-			&:nth-child(4n+1).active {
+			/*&:nth-child(4n+1).active {
 				border-color: $lc-green;
 			}
 
@@ -164,7 +184,7 @@
 			
 			&:nth-child(4n+4).active {
 				border-color: $lc-yellow;
-			}
+			}*/
 		}			
 	}
 }
@@ -210,7 +230,7 @@
 .hasConRelNav { /* 3 COLUMNS: Nav, Content, & Related */
 	
 	@media
-	#{$xlarge-up} {
+	#{$large-high-up} {
 		@include desktop-tabs;
 	}
 }
