@@ -415,7 +415,8 @@
 			}
 
 			.open a:hover {
-				background: #FFF !important;
+				//background: #FFF !important;
+				background: lighten($minisite-nav-background, 5%) !important;	
 			}
 					
 		}
@@ -450,13 +451,11 @@
 			}
 
 			&.open {
-				background: $minisite-nav-background;
-				//background: #FFF;
 				background: lighten($minisite-nav-background, 6%);
 
 				a {
 					&:hover {
-						//background: lighten($minisite-nav-background, 4%);	
+						//background: lighten($minisite-nav-background, 5%);	
 					}
 				}
 			}
