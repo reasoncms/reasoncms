@@ -16,6 +16,12 @@
 }
 
 @mixin semi-transparent-text-color($color, $opacity) {
-    color: $color;
-    color: rgba($color, $opacity);
+	color: $color;
+	color: rgba($color, $opacity);
+}
+
+@mixin default-transition() {
+	@include transition-property(all);
+	@include transition-duration(.5s);
+	@include transition-timing-function(ease);
 }

@@ -93,12 +93,29 @@ blockquote {
 		clear: both;
 		@include border-radius($global-radius);
 		background: $lc-grey;
+		border: 1px solid darken($lc-grey, 10%);
 		padding: $column-gutter/2 $column-gutter/1.5;
 		margin-bottom: $paragraph-margin-bottom;
 		@include clearfix;
+		font-family: $header-font-family;
 
 		*:last-child {
 			margin-bottom: 0;
+		}
+
+		&.callout-success {
+			background: rgba($lc-green, .25);
+			border: 1px solid rgba($lc-green, .5);
+		}
+		
+		&.callout-warning {
+			background: rgba($lc-yellow, .25);
+			border: 1px solid rgba($lc-yellow, .65);
+		}
+		
+		&.callout-danger {
+			background: rgba($lc-red, .25);
+			border: 1px solid rgba($lc-red, .45);
 		}
 	}
 

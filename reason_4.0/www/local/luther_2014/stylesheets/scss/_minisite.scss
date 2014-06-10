@@ -9,7 +9,8 @@
 // 1. Minisite Banner
 // 2. Column Structure
 // 3. Minisite Navigation
-// 4. Minisite Footer
+// 4. Related Content
+// 5. Minisite Footer
 //
 
 // Foundation imports
@@ -599,6 +600,11 @@
 					@media #{$medium-high-up} {
 						margin-left: rem-calc(4);
 					}
+
+					&:hover {
+						background: darken($lc-grey, 8%);
+						@include default-transition();
+					}
 				}
 			}
 			
@@ -613,13 +619,18 @@
 				white-space: nowrap;
 				line-height: 1;
 
-
 				@media #{$medium-high-up} {
 					margin: 0 0 0 rem-calc(4);
 				}
 
 				.username {
 					font-weight: 400;
+				}
+
+				a {
+					&:hover {
+						text-decoration: underline;
+					}
 				}
 			}
 
