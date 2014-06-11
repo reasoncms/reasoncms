@@ -307,6 +307,7 @@ class ds_ldap extends ds_default {
 	function add_gen_attrs_to_results($results,$attrs) {
 		foreach ($results as $record) {
 			foreach ($attrs as $attr) {
+				$value = null;
 				if (isset($this->_gen_attr_depend[$attr])) {
 					// Provide mappings between all generic attributes and your local attributes.  This
 					// will need to be modified for your own particular situation.  These values would work
@@ -362,7 +363,7 @@ class ds_ldap extends ds_default {
 							}
 							break;
 					}
-					$record[$attr] = $value;
+					if ($value) $record[$attr] = $value;
 				}	
 			}
 			$updated_results[] = $record;
