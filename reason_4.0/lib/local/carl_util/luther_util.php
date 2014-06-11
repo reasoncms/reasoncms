@@ -1,10 +1,62 @@
 <?php
 
-function luther_is_sports_page()
-// checks if url has "/sports" at the root level
+function get_luther_spotlight()
+// return array containing spotlight information or '' if spotlight doesn't exist on this minisite
+{
+	$spotlight = luther_get_publication_unique_name("spotlights");
+	if (id_of($spotlight, true, false))
+	{
+		return array( // Spotlights
+			'module' => 'publication',
+			'related_publication_unique_names' => $spotlight,
+			'related_mode' => 'true',
+			//'related_title' => '',
+			'related_order' => 'random',
+			'max_num_items' => 1,
+			'markup_generator_info' =>array(
+				'list_item' =>array (
+					'classname' => 'SpotlightListItemMarkupGenerator',
+					'filename' =>'minisite_templates/modules/publication/list_item_markup_generators/spotlight_related.php'
+				),
+				'list' =>array (
+					'classname' => 'RelatedListHTML5SpotlightMarkupGenerator',
+					'filename' =>'minisite_templates/modules/publication/publication_list_markup_generators/related_list_html5_spotlight.php'
+				),
+			),
+		);
+	}
+	else 
+	{
+		return '';
+	}
+}
+
+function luther_get_publication_unique_name($s)
+// allows another minisite to use a popular template like music, alumni, or giving
+// by filling in an appropriate headline or spotlight unique publication name
+// given the url for a particular minisite landing page (e.g. /music, /kwlc).
+// The landing page must be at the root level of the luther site.
+// $s is either "headlines" or "spotlights"
+// e.g. /reslife becomes "headlines_reslife" or "spotlights_reslife"
 {
 	$url = get_current_url();
-	return preg_match("/^https?:\/\/[A-Za-z0-9_\.]+\/sports\/?/", $url);	
+	$url = preg_replace("|\-|", "", $url);   // remove hypens
+	if (preg_match("/^https?:\/\/[A-Za-z0-9_\.]+\/([A-Za-z0-9_]+)\/?/", $url, $matches))
+	{
+		return $s . "_" . $matches[1];
+	}
+	return '';
+}
+
+function luther_is_sports_page($include_landing = true)
+// checks if url has "/sports" at the root level if include_landing is true
+// if include_landing is false then url has /sports/ followed by a child page
+{
+	$url = get_current_url();
+	if ($include_landing)
+		return preg_match("/^https?:\/\/[A-Za-z0-9_\.]+\/sports\/?/", $url);
+	else 
+		return preg_match("/^https?:\/\/[A-Za-z0-9_\.]+\/sports\/[A-Za-z0-9_\.\-]+/", $url);
 }
 
 function luther_video_audio_streaming($event_id, $imgVideo = null, $imgAudio = null)
@@ -76,6 +128,18 @@ function luther_get_related_publication($max_num_items = 3)
 		'related_title' => '',
 		'max_num_items' => $max_num_items,
 	);
+}
+
+function luther_get_image_url($image)
+// if the image is not found on the local server
+// try to find the image url on www.luther.edu
+{
+	// if images not found locally try pulling from www
+	if (!file_exists($image))
+	{
+		$image = (on_secure_page()) ? "https://www.luther.edu" . $image : "http://www.luther.edu" . $image;
+	}
+	return $image;
 }
 
 function luther_is_local_ip()

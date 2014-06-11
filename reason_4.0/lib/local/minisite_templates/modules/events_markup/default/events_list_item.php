@@ -58,21 +58,14 @@ class defaultEventsListItemMarkup extends EventsModule implements eventsListItem
 		$link = '';
 		$link = $this->bundle->event_link($event, $day);
 		$ret .= $this->bundle->teaser_image( $event, $link );
-		if ($time && 'all_day' != $time && substr($event->get_value('datetime'), 11) != '00:00:00')
-		{
-			$ret .= prettify_mysql_datetime($event->get_value('datetime'), 'g:i a') . ' - ';
-		}
-		else
-		{
-			$ret .= 'All day - ';
-		}
-		$name = $event->get_value('name');
+		$name = '<span>'.$event->get_value('name').'</span>';
 		
 		if ($this->is_sports_event($event->get_value('sponsor')) && (!luther_is_sports_page()
 			|| get_site_id_from_url("/sports") == get_site_id_from_url(get_current_url())))
 		{
 			$name = ucfirst(preg_replace("|(^.*?)\s\((w?o?m?en)\)$|", "\\2's \\1", $event->get_value('sponsor'))) . ' - ' . $name;
 		}
+		$ret .= '<div class="title">';
 		if(!empty($link))
 			$name = '<a href="'.$link.'">'.$name.'</a>';
 		$ret .= $name;
@@ -89,7 +82,8 @@ class defaultEventsListItemMarkup extends EventsModule implements eventsListItem
 		}
 		elseif($event->get_value('_ongoing_ends') == $day)
 			$ret .= ' <span class="ends">ends</span>';
-		
+		$ret .= '</div>';
+
 		$ret .= luther_video_audio_streaming($event->get_value('id'));
 		
 		if($event->get_value('_inline_editable'))
@@ -98,7 +92,14 @@ class defaultEventsListItemMarkup extends EventsModule implements eventsListItem
 			$after = ' <a href="'.$event->get_value('_inline_editable_link').'" title="Edit Event" class="editThis"><i class="fa fa-pencil-square-o"></i></a></div></div>'."\n";
 			$ret = $before.$ret.$after;
 		}
-		
+		if ($time && 'all_day' != $time && substr($event->get_value('datetime'), 11) != '00:00:00')
+		{
+			$ret .= '<time class="time">'.prettify_mysql_datetime($event->get_value('datetime'), 'g:i a') . '</time>';
+		}
+		else
+		{
+			$ret .= '<time class="time">All day</time>';
+		}
 		return $ret;
 	}
 	

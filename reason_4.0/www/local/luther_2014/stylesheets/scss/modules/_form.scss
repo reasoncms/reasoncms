@@ -29,6 +29,7 @@
 #form,
 form {
 
+	// Sets a header font for all possible labels
 	div,
 	.words,
 	input,
@@ -64,7 +65,7 @@ form {
 		margin-bottom: 0;
 	}
 
-	// Set a max width for inputs (otherwise they can look a wee bit absurd)
+	// Set a max width for inputs (otherwise they start looking absurd)
 	input[type="text"],
 	input[type="password"],
 	input[type="date"],
@@ -103,7 +104,7 @@ form {
 
 	// Normalize file input width
 	input[type="file"] {
-		width:100%;
+		width: 100%;
 	}
 
 	// Basic fieldset styling
@@ -151,8 +152,8 @@ form {
 	// Each form element
 	.formElement {
 		@include grid-row();
-		padding: $form-spacing;
-		border-bottom: 1px solid $lc-white;
+		padding: $form-spacing 0;
+		//border-top: 1px dotted $lc-grey;
 
 		// Hides the "* = required field" text. People know what asterisks mean.
 		&#requiredtextItem {
@@ -165,6 +166,7 @@ form {
 		// Changes the text label bg to red if there's an error 
 		&.error {
 			background: none !important; // removes Reason's defult yellow error row
+			padding: $form-spacing 0 !important;
 
 			.words {
 				.labelText {
@@ -175,12 +177,20 @@ form {
 			}
 		}
 
-		// Adds a grey bg to every other row, even error rows
-		&:nth-child(even) {
-			background: rgba($lc-grey, .65);
+		// Styles for the "content" row -- often used for headings
+		&.noLabel {
+			border-top: 4px solid $lc-grey;
 
-			&.error {
-				background: rgba($lc-grey, .65) !important;
+			h1,
+			h2,
+			h3 { // Styles headings to look the same
+				font-size: $h3-font-size;
+				color: $lc-blue-light;
+			}
+
+			> :last-child { // removes bottom spacing from the last element to keep row spacing even
+				margin: 0;
+				padding: 0;
 			}
 		}
 
@@ -202,6 +212,22 @@ form {
 			}
 		}
 
+		/*@media #{$medium-up} {  // Styles for left-aligned labels and right-aligned inputs
+			padding: $form-spacing 0;
+
+			.words {
+			  @include grid-column($columns: 4, $float: left);
+			 }
+
+			.element {
+				@include grid-column($columns: 12);
+			}
+
+			td {
+				padding: .5em 1em .5em 0; 
+			}
+		}*/
+
 		// Loki comment editor
 		.loki {
 			border: none;
@@ -212,13 +238,13 @@ form {
 			.toolbar {
 				a {
 					border: 1px solid darken($lc-grey, 10%);
-					width: 34px;
+					width: rem-calc(34);
 					display: inline-block;
-					margin: 0 0 rem-calc(8px);
+					margin: 0 0 rem-calc(8);
 					position: relative;
 
 					@media #{$medium-up} {
-						width: 40px;	
+						width: rem-calc(40);	
 					}
 
 					&:hover {
@@ -289,23 +315,6 @@ form {
 		&#noturlItem,
 		&#antlionItem {
 		    display: none;
-		}
-
-		@media #{$medium-up} {
-			padding: $form-spacing 0;
-
-			.words {
-			  @include grid-column($columns: 4, $float:left);
-			 }
-
-			.element {
-				@include grid-column($columns: 12);
-			}
-
-			td {
-				padding: .5em 1em .5em 0; 
-			}
-
 		}
 	}
 

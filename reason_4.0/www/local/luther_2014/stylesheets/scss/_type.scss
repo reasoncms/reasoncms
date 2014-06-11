@@ -67,6 +67,10 @@ blockquote {
 /* Wysiwyg Formatting */  
 #{$wysiwyg-all-areas} {
 
+	p:empty {
+		display: none;
+	}
+
 	ol, // bullets needed for wysiwyg content
 	ul,
 	dl {
@@ -76,6 +80,7 @@ blockquote {
 			padding-bottom: 0;
 		}
 	}
+	
 	ol {list-style-type: decimal;}
 	ul {list-style-type: disc;}
 
@@ -119,7 +124,8 @@ table {
 
 // "More" links at the end of feeds or short descriptions
 a.more,
-.pubLinks a {
+.pubLinks a,
+p.more a {
 	color: $secondary-link-color;
 	font-family: $open-sans;
 	font-size: rem-calc(14);
@@ -145,160 +151,9 @@ time {
 }
 
 
-/* Custom Typography 
+/* Nav
 *******************************************/
 
 nav {
 	font-family: $navigation-font-family;
 }
-
-#global-banner {
-
-	#search-nav {
-		font-family: $navigation-font-family;
-		
-		a {
-			font-size: rem-calc(14);
-		
-			&:link,
-			&:visited {
-			
-				@include semi-transparent-text-color($primary-link-color, .8);
-			
-				@media #{$large-up} {
-					@include semi-transparent-text-color($lc-white, .8);
-				}
-			}
-			
-			&:hover {
-			
-				@include semi-transparent-text-color($primary-link-color, 1);
-				
-				@media #{$large-up} {
-					@include semi-transparent-text-color($lc-white, 1);
-				}
-			}
-		}
-	}
-} // end #global-banner
-
-#global-nav {
-
-	a {
-	
-		&:link,
-		&:visited {
-			@include semi-transparent-text-color($lc-white, .8);
-		}
-	}
-	
-	.audiences {
-	
-		a {
-		
-			&:hover {
-				@include semi-transparent-text-color($lc-white, 1);
-			}
-		}
-	}
-
-	.sections {
-	
-		a {
-		
-			color: #1073ce;
-			
-			@media #{$medium-high-up} { 
-				
-			}
-		
-			@media #{$large-up} {
-				@include semi-transparent-text-color($lc-white, 1);
-				/*text-shadow: 1px 1px 1px rgba(0,0,0,.2);*/
-				font-weight: 400;
-				font-size: rem-calc(14);
-				
-				&:hover {
-					@include semi-transparent-text-color($lc-white, 1);
-				}
-				
-				@media #{$xlarge-up} {
-					font-size: rem-calc(15);
-				}
-			}
-		}
-	}
-} // end #global-nav
-
-#global-footer {
-
-	#global-footer-nav,
-	#global-footer-info {
-		@include semi-transparent-text-color($lc-white, 1);
-
-		a {
-			&:link,
-			&:visited {
-				@include semi-transparent-text-color($lc-white, .75);
-			}
-			&:hover {
-				@include semi-transparent-text-color($lc-white, 1);
-			}
-		}
-	}
-	
-	#global-footer-nav {
-		h3 {
-			font-size: rem-calc(18);
-			font-weight: 700;
-			@include semi-transparent-text-color($lc-white, 1);
-		}
-		ul {
-			font-family: $body-font-family;
-			font-weight: 300;
-		}
-	}
-	
-	#global-footer-info {
-	
-		nav {
-	
-			ul {
-				font-size: rem-calc(14);
-			
-				a {
-					font-weight: 700;
-				
-					&:hover {
-						text-decoration: underline;
-					}
-				}
-			}
-		}
-		
-		.contact {
-			font-weight: 300;
-			font-family: $body-font-family;
-			font-size: rem-calc(12);
-			@extend .zero-out;
-			letter-spacing: .65px;
-			
-			.sep {
-				font-weight: 700;
-			}
-		}	
-	}
-	
-	#post-footer {
-	
-		p {
-			font-size: rem-calc(14);
-			color: lighten($body-font-color, 20%);
-			font-weight: 300;
-		}
-		
-		a {
-			text-decoration: underline;
-		}				
-	}
-}// end #global-footer

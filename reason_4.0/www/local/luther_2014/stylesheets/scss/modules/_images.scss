@@ -17,7 +17,9 @@
 
 /* Image Sidebar */
 
-.imageSidebarModule {
+.imageSidebarModule,
+.publication .images,
+.eventDetails .images {
 
 	.imageChunk {
 		padding-bottom: $column-gutter;
@@ -55,8 +57,32 @@
 		font-size: rem-calc(12);
 		font-style: italic;
 		color: $blockquote-font-color;
+
+		a {
+			color: $blockquote-font-color;
+		}
 	}
 }
+
+/* Top Images */
+
+#topImage {
+
+	.imageSidebarModule {
+
+		.imageChunk {
+			max-width: 100%; // override the image sidebar max-width, set above
+			max-height: 400px !important; // crop the image, since the module won't do it for us
+			overflow: hidden;
+
+			img {
+				//width: 100%;
+			}
+		}
+	}
+}
+
+
 
 /* Inline Images (Main content areas only -- no sidebars) */
 
@@ -76,8 +102,8 @@
 			margin: 0 auto;
 		}
 
-		@media #{$medium-up} {
-			width: 40%; // and are only 40% wide on medium and up.
+		@media #{$medium-up} {  // and are only 40% wide on medium and up.
+			width: 40%; 
 			float: right !important;
 			margin: 0 0 rem-calc(16) $column-gutter;
 			clear: right;
@@ -88,7 +114,13 @@
 				float: left !important;
 				clear: left;
 			}
+		}
+	}
 
+	.callout,
+	.callOut { // If images are in a callout, don't resize (Especially important for Ideas & Creations blog)
+		img {
+			width: auto;
 		}
 	}
 }

@@ -22,14 +22,23 @@
 @import "compass/css3";
 
 // Font Awesome Imports
-@import "font-awesome/variables";
 @import "font-awesome/core";
+@import "font-awesome/mixins";
+@import "font-awesome/rotated-flipped";
+@import "font-awesome/variables";
 
 // Luther imports
 @import "extends";
 @import "mixins";
 
+.no-js {
+	.navListTop .navList .navListItem.open {
+		.navList {display: block !important;}
+	}
+}
+
 #minisite {
+
 	@include grid-row();
 	padding-top: rem-calc(22);
 	clear: both;
@@ -55,7 +64,7 @@
 	}
 
 	.pageTitle {
-		border-bottom: 1px solid #efefef;
+		border-bottom: 1px solid $lc-grey;
 		padding-bottom: $column-gutter/2;
 		padding-top: 14px;
 		padding-bottom: $column-gutter/2;
@@ -126,7 +135,7 @@
 
 		#contentSections,
 		#relatedSections {
-			margin-top: $column-gutter/2;
+			margin-top: $column-gutter;
 		}
 
 		#contentSections {
@@ -202,16 +211,31 @@
 	}
 
 	&.hasConRel { /* 2 COLUMNS: Content & Related (no Nav) */
-		@media #{$large-up} {
-			#contentAndRelated {
-				@include grid-column($columns: 16, $collapse: true);
+		#contentAndRelated {
+			
+			@media #{$medium-up} {
 				
 				#contentSections {
 					@include grid-column($columns: 10, $collapse: true);
 					padding-right: $column-gutter / 2;
 				}
+				
 				#relatedSections {
 					@include grid-column($columns: 6, $collapse: true);
+					padding-left: $column-gutter / 2;
+				}
+			}
+			
+			@media #{$large-up} {
+
+				@include grid-column($columns: 16, $collapse: true);
+				
+				#contentSections {
+					@include grid-column($columns: 11, $collapse: true);
+					padding-right: $column-gutter / 2;
+				}
+				#relatedSections {
+					@include grid-column($columns: 5, $collapse: true);
 					padding-left: $column-gutter / 2;
 				}
 			}
@@ -259,7 +283,6 @@
 			//margin-bottom: $column-gutter;	
 		}
 
-
 		@media #{$large-up} {
 			@include box-shadow(0 0 0 0);
 		}
@@ -274,7 +297,7 @@
 			z-index: 12;
 
 			&.open {
-				background: lighten($minisite-nav-background, 4%);
+				background: lighten($minisite-nav-background, 5%);
 				@include box-shadow(rgba(#000, .2) -2px -2px 2px);
 
 				.fa-times {display: block;}
@@ -306,20 +329,23 @@
 			
 		}
 		
+		// Sidebar nav background color
 		#minisiteNavigation {	
-			background: lighten($minisite-nav-background, 3%);
+			//background: lighten($minisite-nav-background, 3%);
+			background: lighten($minisite-nav-background, 5%);
 		}
 
-		#minisiteNavigation,
+
+		#minisiteNavigation,  // Hide nav on mobile
 		.subNavElements {
 			display: none;
 			
 			@media #{$large-up} {
-				display: block;
+				display: block !important;  // Always show nav on desktop
 			}
 		}
 
-		&.open {
+		&.open {  // Show nav on mobile (class changed via jQuery)
 
 			#minisiteNavigation,
 			.subNavElements {
@@ -327,9 +353,8 @@
 			}
 		}
 		
-		.navListTop {
+		.navListTop {  // Places border at the bottom of the sidebar nav
 			margin: 0;
-			border-bottom: 1px solid darken($minisite-nav-background, 7%);
 		}
 		
 		.navListTop ul {
@@ -345,11 +370,10 @@
 			padding: $column-gutter / 2.75 $column-gutter / 2;
 		}
 		
-		.navListTop a.home {
+		.navListTop a.home {  //  Large "home" link at the top of the nav
 			font-size: rem-calc(32);
 			line-height: 1;
 			font-weight: 300;
-			//color: #303030;
 			color: darken($lc-blue-dark, 5%);
 			border-top: none;
 			position: relative;
@@ -360,56 +384,51 @@
 				font-weight: 300;
 			}
 
-			/*&:after {
-				@extend .fa;
-				content: $fa-var-home;
-				position: absolute;
-				right: 0;
-				top: 0;
-				color: rgba(255,255,255,.25);
-			}*/
-
 			@media #{$large-up} {
 				padding-top: rem-calc(40);
 				padding-bottom: rem-calc(40);
 				background: $lc-blue-light-compliment;
 				border-bottom: 6px solid #FFF;
-				
-				&:hover {
-					//text-decoration: underline;
-					//@include transition(.25s, ease)
-					//@include transition-property(background, color);
-					//@include transition-duration(.25s);
-					//@include transition-timing-function(ease-in);
-				}
 			}
 		}
 		
-		.navListTop ul a {
-			display: block;
-			border-top: 1px solid darken($minisite-nav-background, 7%);
-			$minisite-nav-color: #303030;
-			color: $minisite-nav-color;
-			font-weight: 300;
-			font-size: rem-calc(15);
-			
-			&:hover {
-				background: $minisite-nav-background;
-				color: darken($minisite-nav-color, 100%);
-			}								
+		.navListTop ul {  // TOP LEVEL page links
+
+			a {
+				display: block;
+				border-top: 1px solid darken($minisite-nav-background, 2%);
+				$minisite-nav-color: #303030;
+				color: $minisite-nav-color;
+				font-weight: 300;
+				font-size: rem-calc(15);
+				
+				&:hover {
+					background: rgba(0,0,0,.025);
+					color: darken($minisite-nav-color, 100%);
+				}
+
+				&:visited {
+
+				}	
+			}
+
+			.open a:hover {
+				background: #FFF !important;
+			}
+					
 		}
 		
-		.navListTop ul ul {
+		.navListTop ul ul {  // SECOND LEVEL page links
 		
 			a {
 				border: none;
 				padding: $column-gutter / 3.5 $column-gutter / 2 $column-gutter / 3.5 $column-gutter;
-				border-top: 1px solid darken($minisite-nav-background, 1%);
+				border-top: 1px solid #FFF;
 			
 				&:hover {
-					background: lighten($minisite-nav-background, 4%);	
+					background: none;
+					text-decoration: underline;
 				}
-				
 			}
 			
 			ul li a {
@@ -417,13 +436,60 @@
 			}
 		}
 		
-		.navListTop ul .navListItem.open {
-			background: #f0f5f8;
-			background: lighten($minisite-nav-background, 6%);
-			a {
-			
-				&:hover {
-					background: lighten($minisite-nav-background, 4%);	
+		.navListTop ul .navListItem {
+
+			&.current {  // CURRENT PAGE ITEM
+
+				> a { 
+					font-weight: 700;
+				}
+				
+			}
+
+			&.open {
+				background: $minisite-nav-background;
+				background: #FFF;
+				
+				a {
+					&:hover {
+						//background: lighten($minisite-nav-background, 4%);	
+					}
+				}
+			}
+
+			&.accordion {
+				> a {
+					padding-right: 2.25rem;
+
+					&:before {
+						@extend .fa;
+						content: $fa-var-chevron-down;
+						position: absolute;
+						top: $column-gutter / 2;
+						right: $column-gutter / 2;
+						@include rotate(0);
+						@include transition-property(transform);
+						@include transition-duration(.4s);
+						@include transition-timing-function(ease-in);
+					}
+				}
+
+				ul.navList {
+					display: none;
+				}
+
+			}
+
+			&.accordion.open {
+
+				> a {
+					&:before {
+						content: $fa-var-chevron-down;
+						@include rotate(-180deg);
+						@include transition-property(transform);
+						@include transition-duration(.4s);
+						@include transition-timing-function(ease-in);
+					}
 				}
 			}
 		}
@@ -432,14 +498,15 @@
 			
 			a {
 				padding-right: 2.25rem; 
-			}
-			
-			&:before {
-				@extend .fa;
-				content: $fa-var-external-link;
-				position: absolute;
-				top: $column-gutter / 2;
-				right: $column-gutter / 2;
+
+				&:before {
+					@extend .fa;
+					content: $fa-var-external-link;
+					position: absolute;
+					top: $column-gutter / 2;
+					right: $column-gutter / 2;
+					color: lighten($body-font-color, 25%)
+				}
 			}
 		}
 	}
@@ -447,14 +514,17 @@
 	// 4. Related Content
 	//////////////////////////////////////
 
-	#relatedSections {
+	#relatedSections,
+	.relatedItems // Publications 
+	{
 
 		> div {
 			margin-bottom: $column-gutter;
 		}
 
 		.assets,
-		.blurb {
+		.blurb,
+		.relatedEvents {
 			background: lighten($lc-grey, 5%);
 			padding: $column-gutter/2;
 
@@ -478,35 +548,167 @@
 	#footer {
 		@include grid-column(16);
 		font-size: rem-calc(12);
+
 		padding-top: $column-gutter/2;
 		padding-bottom: $column-gutter/2;
+		//background: #efefef;
 
 		@media #{$large-up} {
 			@include grid-column($columns: 16, $collapse: true);
+			padding: $column-gutter/2;
+		}
+
+		#maintained {
+			color: darken($lc-grey, 30%);
+			display: block;
+			margin-bottom: 1rem;
+			
+			@media #{$medium-high-up} {
+				width: 45%;
+				float: left;
+				margin-bottom: 0;
+				padding-top: 4px;
+			}
 		}
 		
 		.loginLinkModule {
-			text-align: right;
+			display: block;
+
+			@media #{$medium-high-up} {
+				width: 45%;
+				float: right;
+				text-align: right;
+			}
 
 			.editDivider {display: none;}
 
 			div {
 				display: inline;
+				
 
 				a {
 					background: $lc-grey;
-					padding: rem-calc(2) rem-calc(6);
+					padding: rem-calc(5) rem-calc(6);
 					@include border-radius(4px);
-					margin-left: rem-calc(4);
-				}
+					margin-right: rem-calc(4);
+					display: inline-block;
+					margin-bottom: rem-calc(4);
+					line-height: 1;
 
+					@media #{$medium-high-up} {
+						margin-left: rem-calc(4);
+					}
+				}
 			}
 			
 			#footerLoginLink {
+				display: inline-block;
 				font-size: rem-calc(12);
 				margin: rem-calc(8) 0 0;
+				background: $lc-grey;
+				padding: rem-calc(5) rem-calc(6);
+				@include border-radius(4px);
+				margin: 0 rem-calc(4) 0 0;
+				white-space: nowrap;
+				line-height: 1;
+
+
+				@media #{$medium-high-up} {
+					margin: 0 0 0 rem-calc(4);
+				}
+
+				.username {
+					font-weight: 400;
+				}
+			}
+
+			&.unauthenticated #footerLoginLink {
+				margin: 0;
 			}
 		}
+	}
+
+	// 6. Resued Elements
+	//////////////////////////////////////
+
+	table {
+		tr,
+		td {
+			font-weight: 300;
+		}
+	}
+
+	.continueReading {
+		margin: 0;
+
+		a {
+			background: lighten($lc-blue-light, 52%);
+			padding: rem-calc(4) rem-calc(8);
+			@include border-radius($global-radius);
+		}
+		
+		
+		a:after {
+			@extend .fa;
+			content: $fa-var-chevron-circle-right;
+			margin-left: rem-calc(6);
+		}
+	}
+  
+	.feedLink {  // xml link
+
+		@media #{$medium-up} {
+			display: inline;
+			text-align: right;
+		}
+
+		.feedInfo {  // @todo: Replace "xml" text with something less obscure.  Not sure if we have to overwrite function_libraries/feed_utils.php or if there's another way.
+			a {
+				color: transparent;
+			}
+
+			a:before {
+				@extend .fa;
+				content: $fa-var-rss;
+				display: block;
+				color: $lc-red;
+			}
+		}
+	}
+
+	.pagination {
+		margin-bottom: $column-gutter;
+		@include clearfix;
+
+		@media #{$medium-up} {
+			width: 50%;	
+			float: left;
+		}
+
+		&.above {
+			dispaly: none;
+		}
+
+		.previous {
+
+		}
+
+		.pages {
+
+			a,
+			strong {
+				margin: 0 rem-calc(4);
+			}
+		}
+
+		.next {
+		}
+	}
+
+	.contentMain + .contentPost {
+		border-top: 1px solid $lc-grey;
+		padding-top: $column-gutter;
+		margin-top: $column-gutter;
 	}
 
 }  // end #minisite

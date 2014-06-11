@@ -79,7 +79,7 @@ class RelatedListItemNoDescriptionMarkupGenerator extends RelatedListItemMarkupG
 			$markup_string .= ob_get_contents();
 			ob_end_clean();
 			$markup_string .= '</figure>';
-		} 
+		}
 		return $markup_string;
 	}
 

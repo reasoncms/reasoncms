@@ -2,8 +2,8 @@
 
 	// include the MinisiteTemplate class
 	reason_include_once( 'minisite_templates/luther.php' );
-	reason_include_once( 'classes/module_sets.php' );
-	reason_include_once( 'minisite_templates/nav_classes/luther_default.php' );
+	//reason_include_once( 'classes/module_sets.php' );
+	//reason_include_once( 'minisite_templates/nav_classes/luther_default.php' );
 	
 	// this variable must be the same as the class name
 	$GLOBALS[ '_minisite_template_class_names' ][ basename( __FILE__) ] = 'Luther2014HomeTemplate';
@@ -15,7 +15,6 @@
 		{
 			parent::alter_reason_page_type($page_type);
 			// @todo: Alter page types to force empty regions, instead of copying entire functions and overriding one line
-	
 		}
 
 		function do_org_head_items()
@@ -27,7 +26,7 @@
 		function get_body_tag_classes()
 		{
 			$classes = array();
-			$classes[] = 'body';
+			$classes[] = 'body lutherHome';
 			if($this->pages->root_node() == $this->page_id)
 				$classes[] = 'body lutherHome siteHome';
 			if($this->page_info->get_value('unique_name'))
@@ -136,7 +135,7 @@
 					if($this->has_content( 'sidebar' ))
 					{
 						echo '<div id="sidebar">'."\n";
-						echo '<h3>Campus Events</h3>'."\n";
+						//echo '<h3>Campus Events</h3>'."\n";
 						$this->run_section( 'sidebar' );
 						echo '</div>'."\n";
 					}
@@ -145,21 +144,19 @@
 						echo '<div id="postSidebar">'."\n";
 						echo '<h3>Featured Video</h3>'."\n";
 						$this->run_section( 'post_sidebar' );
-						echo '<a class="more" href="http://www.youtube.com/user/LutherCollegeMedia" target="_blank">YouTube Video Archive</a>'."\n";
+						echo '<a class="more" href="http://www.youtube.com/user/LutherCollegeMedia" target="_blank">More YouTube Videos</a>'."\n";
 						echo '</div>'."\n";
 					}
 				
 				echo '</div>'."\n";
 			}
 			
-			if($this->has_content( 'callouts' ) ) {
-			
+			if($this->has_content( 'callouts' ) )
+			{
 				echo '<div id="calloutSections">'."\n";
-					$this->run_section( 'callouts' );
+				$this->run_section( 'callouts' );
 				echo '</div>'."\n";
-
 			}
-
 
 		}
 		
@@ -167,7 +164,6 @@
 		function show_navbar()
 		{		
 		}
-
 
 	}
 ?>

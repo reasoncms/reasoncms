@@ -249,7 +249,7 @@ class EventsModule extends DefaultMinisiteModule
 	 * @var string
 	 * @deprecated List markup now responsible for this
 	 */
-	var $list_date_format = 'l, F jS';
+	var $list_date_format = 'l, F j';
 	/**
 	 * The audiences that should be available as filters on this calendar
 	 * 
@@ -2145,13 +2145,13 @@ class EventsModule extends DefaultMinisiteModule
 			}
 			elseif ($rpt == 'yearly')
 			{
-				$dates_text = ' on '.prettify_mysql_datetime($event->get_value('datetime'), 'F jS');
+				$dates_text = ' on '.prettify_mysql_datetime($event->get_value('datetime'), 'F j');
 			}
 			$ret .= 'This event takes place each ';
 			$ret .= $freq;
 			$ret .= $words[$rpt][$sp];
 			$ret .= $dates_text;
-			$ret .= ' from '.prettify_mysql_datetime($event->get_value('datetime'), 'F jS, Y').' to '.prettify_mysql_datetime($event->get_value('last_occurence'), 'F jS, Y').'.';
+			$ret .= ' from '.prettify_mysql_datetime($event->get_value('datetime'), 'F j, Y').' to '.prettify_mysql_datetime($event->get_value('last_occurence'), 'F j, Y').'.';
 		}
 		return $ret;
 	}
@@ -2331,7 +2331,7 @@ class EventsModule extends DefaultMinisiteModule
 	{
 		$ret = '';
 		$ret .= "\n".'<div class="views">'."\n";
-		$ret .= '<h4>View:</h4>';
+		$ret .= '<h4>View by:</h4>';
 		$ret .= '<ul>'."\n";
 		$on_defined_view = false;
 		foreach($this->calendar->get_views() as $view_name=>$view)
@@ -2392,7 +2392,7 @@ class EventsModule extends DefaultMinisiteModule
 		if ($this->calendar->get_view() == "all")
 			$ret .= ' divider';
 		$ret .= '">'."\n";
-		$ret .= '<h4>Event Categories</h4>'."\n";
+		$ret .= '<h4><a href="#" data-dropdown="drop" class="custom-dropdown-button">Categories</a></h4>'."\n";
 		$ret .= '<ul>'."\n";
 		$ret .= '<li class="all">';
 		$used_cats = $this->calendar->get_categories();
@@ -2532,8 +2532,8 @@ class EventsModule extends DefaultMinisiteModule
 	{
 		$ret = '';
 		$ret .= '<div class="audiences">'."\n";
-		$ret .= '<h4>View Events for:</h4>'."\n";
-		$ret .= '<ul>'."\n";
+		$ret .= '<h4><a href="#" data-dropdown="drop" class="custom-dropdown-button">Groups</a></h4>'."\n";
+		$ret .= '<ul id="drop" data-dropdown-content class="f-dropdown">'."\n";
 		$ret .= '<li class="all">';
 		$this->init_audiences();
 		$used_auds = $this->calendar->get_audiences();
@@ -3328,7 +3328,7 @@ class EventsModule extends DefaultMinisiteModule
 	{
 		$type = new entity(id_of('event_type'));
 		if($type->get_value('feed_url_string'))
-			echo '<div class="feedInfo"><a href="'.$this->parent->site_info->get_value('base_url').MINISITE_FEED_DIRECTORY_NAME.'/'.$type->get_value('feed_url_string').'" title="RSS feed for this site\'s events">xml</a></div>';
+			echo '<div class="feedInfo"><a class="rss" href="'.$this->parent->site_info->get_value('base_url').MINISITE_FEED_DIRECTORY_NAME.'/'.$type->get_value('feed_url_string').'" title="RSS feed for this site\'s events">RSS</a></div>';
 	}
 	/**
 	 * Generate the markup for a link to the full calendar link (for feed-style events modules)
@@ -3372,12 +3372,12 @@ class EventsModule extends DefaultMinisiteModule
 		}
 		else
 		{
-			$subscribe_text = 'Subscribe to this calendar';
+			$subscribe_text = 'Subscribe (iCal format)';
 			$download_text = 'Download events (.ics)';
 		}
-		echo '<a href="webcal://'.REASON_HOST.$this->parent->pages->get_full_url( $this->page_id ).$query_string.'">'.$subscribe_text.'</a>';
+		echo '<a class="webcal" href="webcal://'.REASON_HOST.$this->parent->pages->get_full_url( $this->page_id ).$query_string.'">'.$subscribe_text.'</a>';
 		if(!empty($this->events))
-			echo '<a href="'.$query_string.'" title="'.$download_text.'"><i class="fa fa-calendar"></i></a>';
+			echo '<a class="download" href="'.$query_string.'" title="'.$download_text.'">'.$download_text.'</a>';
 		if (defined("REASON_URL_FOR_ICAL_FEED_HELP") && ( (bool) REASON_URL_FOR_ICAL_FEED_HELP != FALSE))
 		{
 			echo ' <span class="divider">|</span> <a href="'.REASON_URL_FOR_ICAL_FEED_HELP.'"><img src="'.REASON_HTTP_BASE_PATH . 'silk_icons/help.png" alt="Help" width="16px" height="16px" /></a>';

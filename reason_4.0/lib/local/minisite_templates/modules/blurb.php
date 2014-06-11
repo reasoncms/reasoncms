@@ -23,6 +23,7 @@ $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'BlurbModule
  *
  * Luther customizations...
  * 1. Adds a wrapper class "blurbInner"
+ * 2. Excludes any Call to Action or Contact Blurbs
  * 
  */
 class BlurbModule extends DefaultMinisiteModule
@@ -164,43 +165,49 @@ class BlurbModule extends DefaultMinisiteModule
 		$class = 'odd';
 		foreach( $this->blurbs as $blurb )
 		{
-			$editable = ( $editing_available && $this->_blurb_is_editable($blurb) );
-			$editing_item = ( $editing_available && $editing_active && ($this->request['blurb_id'] == $blurb->id()) );
-			$i++;
-			echo '<div class="blurb number'.$i;
-			if($blurb->get_value('unique_name'))
-				echo ' uname_'.htmlspecialchars($blurb->get_value('unique_name'));
-			if( $editable )
-				echo ' editable';
-			if( $editing_item )
-				echo ' editing';
-			echo ' '.$class;
-			echo '">';
 
-			echo '<div class="blurbInner">';
-			
-			if($editing_item)
+			if (!preg_match("/[Cc]ontact [Ii]nformation/", $blurb->get_value('name'))
+					&& !preg_match("/[Cc]all [Tt]o [Aa]ction/", $blurb->get_value('name')))
 			{
-				if($pages = $this->_blurb_also_appears_on($blurb))
-				{
-					$num = count($pages);
-					echo '<div class="note"><strong>Note:</strong> Any edits you make here will also change this blurb on the '.$num.' other page'.($num > 1 ? 's' : '').' where it appears.</div>';
-				}
-				echo $this->_get_editing_form($blurb);
-			}
-			else
-			{
-				echo demote_headings($blurb->get_value('content'), $this->params['demote_headings']);
+
+				$editable = ( $editing_available && $this->_blurb_is_editable($blurb) );
+				$editing_item = ( $editing_available && $editing_active && ($this->request['blurb_id'] == $blurb->id()) );
+				$i++;
+				echo '<div class="blurb number'.$i;
+				if($blurb->get_value('unique_name'))
+					echo ' uname_'.htmlspecialchars($blurb->get_value('unique_name'));
 				if( $editable )
-				{
-					$params = array_merge(array('blurb_id' => $blurb->id()), $inline_editing->get_activation_params($this));
-					echo '<div class="edit"><a href="'.carl_make_link($params).'">Edit Blurb</a></div>'."\n";
-				}
-			}
+					echo ' editable';
+				if( $editing_item )
+					echo ' editing';
+				echo ' '.$class;
+				echo '">';
 
-			echo '</div>'."\n";
-			echo '</div>'."\n";
-			$class = ('odd' == $class) ? 'even' : 'odd';
+				echo '<div class="blurbInner">';
+				
+				if($editing_item)
+				{
+					if($pages = $this->_blurb_also_appears_on($blurb))
+					{
+						$num = count($pages);
+						echo '<div class="note"><strong>Note:</strong> Any edits you make here will also change this blurb on the '.$num.' other page'.($num > 1 ? 's' : '').' where it appears.</div>';
+					}
+					echo $this->_get_editing_form($blurb);
+				}
+				else
+				{
+					echo demote_headings($blurb->get_value('content'), $this->params['demote_headings']);
+					if( $editable )
+					{
+						$params = array_merge(array('blurb_id' => $blurb->id()), $inline_editing->get_activation_params($this));
+						echo '<div class="edit"><a href="'.carl_make_link($params).'">Edit Blurb</a></div>'."\n";
+					}
+				}
+
+				echo '</div>'."\n";
+				echo '</div>'."\n";
+				$class = ('odd' == $class) ? 'even' : 'odd';
+			}
 		}
 		if(!empty($this->params['footer_html']))
 		{

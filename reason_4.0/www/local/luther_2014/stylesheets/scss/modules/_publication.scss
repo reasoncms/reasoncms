@@ -20,14 +20,14 @@
 
 /* Global Publication styles */
 .publication .persistent {
- 	display: none; // Persistent is also turned off at the page type level with 'use_filters' => false & 'show_login_link' => false.
+ 	//display: none; // Persistent is currently turned off at the page type level for the publication page type with 'use_filters' => false & 'show_login_link' => false.
 }
 
 /* Related Publications (often in sidebars) */
 #relatedPub {
 
 	.posts {
-		margin-bottom: rem-calc(16);
+		margin: 0 0 rem-calc(16);
 	}
 
 	.post {
@@ -37,39 +37,110 @@
 
 		figure {
 			float: right;
-			margin-left: rem-calc(16);
+			margin: 0 0 rem-calc(4) rem-calc(16);
 
 			@media #{$large-up} {
 				float: left;
-				margin: 0 rem-calc(16) 0 0;
+				margin: 0 rem-calc(16) rem-calc(4) 0;
 			}
 		}
 
 		h4 {
 			margin: 0;
+		
+			a {
+				&:hover {
+					text-decoration: underline;
+				}
+			}
+		}
+
+		.description {
+			margin-top: rem-calc(8);
+		}
+
+		.more {
+			margin-bottom: 0;
 		}
 	}
+
+	.pubLinks {
+		margin-left: 0;
+
+		a {
+			&:before {
+				@extend .fa;
+				margin-right: rem-calc(8);
+				content: $fa-var-th-list;
+			}
+		}
+	}
+
+	.spotlight {
+		.teaserImage {
+			max-width: 50%;
+		}
+	}
+
+
 }
 
 .publication {
 
-	/* POST INDEX (list of posts) */
+	/* Common */
+	time {
+		color: lighten($body-font-color, 25%);
+	}
 
+	/* POST INDEX (list of posts) */
 	.posts {
-		margin: 0;
+		margin: 0 0 $column-gutter;
+		@include clearfix;
 	}
 
 	.post {
 		border-bottom: 1px dotted $lc-grey;
 		padding: $column-gutter 0;
+		@include clearfix;
+
+
+		@media #{$small-only} {
+			padding: $column-gutter/2 0;
+		}
+
+		$teaser-width: rem-calc(300);
+		$teaser-offset: $teaser-width + $column-gutter;
+
+		@media #{$medium-up} {
+			//margin-left: $teaser-offset;
+		}
 
 		&:first-child {
 			padding-top: 0;
 		}
 
+		.teaserImage {
+			margin-bottom: $column-gutter/2;
+			margin-left: rem-calc(24);
+			width: 30%;
+			float: right;
+
+			//margin-right: - $column-gutter/2;
+
+			@media #{$medium-up} {
+				width: 30%;
+				max-width: $teaser-width;
+			}
+		}
+
 		.title {
 			margin: 0 0 $column-gutter/4;
 			font-size: $h3-font-size;
+
+			@media #{$small-only} {
+				font-size: $h5-font-size;
+			}
+
 		}
 
 		time,
@@ -81,11 +152,21 @@
 		}
 
 		time {
-			color: lighten($body-font-color, 25%);
+			margin-right: rem-calc(16);
+			
+			@media #{$small-only} {
+				margin-bottom: $column-gutter/6;
+			}
+
 		}
 
+		//time {display: block;}
+
 		p.comments {
-			margin-left: rem-calc(16);
+
+			@media #{$small-only} {
+				display: none;
+			}
 
 			a {
 				&:before {
@@ -96,14 +177,135 @@
 			}
 		}
 
+		.description,
+		p.more {
+			@media #{$small-only} {
+				display: none;
+			}
+		}
+
 		p.more {
 			margin: 0;
 
 			a {
-				&:before {
+				color: $secondary-link-color;
+				position: relative;
+				//margin-left: rem-calc(32);
+			
+
+				&:after {
 					@extend .fa;
-					content: $fa-var-chevron-right;
-					margin-right: rem-calc(6);
+					content: $fa-var-arrow-right;
+					margin-left: rem-calc(6);
+					//position: absolute;
+					//left: - rem-calc(32);
+					//top: rem-calc(3);
+					@include transition-property(left);
+					@include transition-duration(.5s);
+					@include transition-timing-function(ease);
+					font-size: rem-calc(10);
+
+				}
+
+				&:hover,
+				&:focus {
+					&:before {
+						left: - rem-calc(28);
+						@include transition-property(left);
+						@include transition-duration(.5s);
+						@include transition-timing-function(ease);
+					}
+				}
+			}
+		}
+	}
+
+	.spotlight { // spotlight index listing
+		border-bottom: none;
+		padding: 0 !important;
+		@include clearfix;
+		margin-bottom: $column-gutter;
+		position: relative;
+		min-height: rem-calc(100);
+		background: $lc-grey;
+
+
+		@media #{$small-only} {
+			width: 45%;
+			float: left;
+
+			&:nth-child(odd) {
+				margin-right: 5%;
+				clear: left;
+			}
+
+			&:nth-child(even) {
+				margin-left: 5%;
+			}
+		}
+
+		@media #{$medium-only},
+		#{$large-only} {
+			width: 28.3333333%;
+			margin-left: 2.5%;
+			margin-right: 2.5%;
+			float: left;
+
+			&:nth-child(3n+1) {
+				clear: left;
+			}
+		}
+
+		@media #{$xlarge-up} {
+			width: 20%;
+		 	margin-left: 2.5%;
+		 	margin-right: 2.5%;
+		 	float: left;
+
+		 	&:nth-child(4n+1) {
+				clear: left;
+			}
+		}
+
+		@media #{$small-only} {
+			padding: $column-gutter/2 0;
+		}
+
+		$teaser-spotlight-width: rem-calc(300);
+
+		.teaserImage {
+			float: none;
+			margin: 0;
+			padding: 0;
+			width: 100%;
+			max-width: $teaser-spotlight-width;
+		}
+
+		.title {
+			margin: 0;
+			padding: 0;
+
+			a {
+				position: absolute;
+				bottom: 0;
+				background: rgba(0,0,0,.75);
+				padding: $column-gutter/4;
+				font-size: $h4-font-size;
+				margin: 0 !important;
+				display: block;
+				width: 100%;
+				color: #FFF;
+
+				&:hover {
+					color: $lc-blue-light;
+				}
+
+				@media #{$small-only} {
+					font-size: rem-calc(14);
+				}
+
+				@media #{$medium-only} {
+					font-size: rem-calc(16);
 				}
 			}
 		}
@@ -117,14 +319,41 @@
 	}
 
 	/* FULL POST */
-
 	&.fullPostDisplay {
 		//margin-right: rem-calc(40); // Leaves space for the persistent social media slider thing
 	}
 
 	.fullPost {
 
-		// The "Woo-hoo, comment added!" message above the article after comments are posted
+		.postMeta {
+			margin-bottom: $column-gutter/1.25;	
+		}
+
+		.author {
+			font-family: $header-font-family;
+			font-size: $h4-font-size;
+			font-size: rem-calc(18);
+			font-weight: 300;
+			display: inline-block;
+			margin: 0 rem-calc(14) rem-calc(6) 0;
+			font-weight: 400;
+
+			@media #{$medium-up} {
+				border-right: 1px solid $lc-grey;
+				padding-right: rem-calc(8);
+				margin-right: rem-calc(4);
+			}
+		}
+
+		.date { 
+			display: block;
+
+			@media #{$medium-up} {
+				display: inline-block;
+			}
+		}
+
+		// The "Comment added!" message above the article after comments are posted
 		.commentAdded {
 			@include alert($bg: lighten($lc-green, 60%), $radius: $global-radius);
 			border: 1px solid lighten($lc-green, 50%);
@@ -155,45 +384,87 @@
 			}
 		}
 		// Artle WYSIWYG stiles are shared with other WYSIWYG content areas.  See _type.scss and _images.scss.
-	}
 
-	.social {
-		&.top {
-			position: fixed;
-			z-index: 99999;
-			right: 0;
-			bottom: 50px;
-			//width: rem-calc(40);
-			padding: rem-calc(12);
-			background: $lc-grey;
-			background: rgba($lc-white, .9);
-			@include box-shadow(rgba(#000, .25) 0 0 6px);
-			@include border-left-radius(6px);
-
-			p {
-				padding: 0;
-				margin: 0;
-			}
-		
-			strong {
-				position: relative;
-				top: rem-calc(6);
-				display: block;
-				float: left;
-			}
+		/* Social Sharing */
+		.social {
 
 			a {
-				display: block;
-				float: left;
-				margin-left: rem-calc(12);
-				width: 40px;
+				width: rem-calc(40);
+				display: inline-block;
+				margin-right: rem-calc(12);
+				@include border-radius($global-radius);
+				overflow: hidden;
+			}
+
+			&.top {
+				margin-bottom: $column-gutter/1.25;
+
+				a {
+					width: rem-calc(30);
+					@include border-radius(4px);
+				}
+
+			}
+
+			&.bottom {
+				text-align: center;
+				margin-top: $column-gutter/2;
+				margin-bottom: $column-gutter;
+
+				@media #{$large-up} {
+					display: block;
+					position: fixed;
+					z-index: 99999;
+					right: 0;
+					bottom: 50px;
+					padding: rem-calc(12);
+					background: $lc-grey;
+					background: rgba($lc-white, .9);
+					@include box-shadow(rgba(#000, .25) 0 0 6px);
+					@include border-left-radius(6px);
+					margin-top: 0;
+
+					a {
+						display: block;
+						margin-right: 0;
+						margin-bottom: rem-calc(12);
+					}
+
+					& a:last-child {
+						margin-bottom: 0;
+					}
+
+				}
 			}
 		}
 
-		&.bottom {
-			display: none;
+		.firstChunk {
+			margin-bottom: $column-gutter;
 		}
 
+		.text {
+			@include clearfix;
+		}
+
+		&.hasRelated { // If images, assets, or events are attached to the post
+			
+			@media #{$medium-up} {
+				.firstChunk {
+					@include grid-column($columns: 10, $collapse: true);
+					padding-right: $column-gutter/2;
+				}
+
+				.relatedItems {
+					@include grid-column($columns: 6, $collapse: true);
+					padding-left: $column-gutter/2;
+					margin-bottom: $column-gutter;
+				}
+
+				.secondChunk {
+					clear: both;
+				}
+			}
+		}
 	}
 
 	/* Next & Previous Posts navigation */
@@ -201,11 +472,13 @@
 		@include clearfix;
 		background: $lc-grey;
 		margin-bottom: $column-gutter;
+		@include border-radius($global-radius);
 
 		h4 {
 			padding: $column-gutter/2;
 			//padding-bottom: $column-gutter/3.5;
 			margin: 0;
+			font-size: $h5-font-size;
 		}
 
 		p {
@@ -329,13 +602,6 @@
 					*:last-child {
 						margin-bottom: 0;
 					}
-
-					// Ideally, this would hide any empty p tags that people unknowingly leave in the WYSIWYG.
-					// But Reason spits out &nbsp; insde empty <p> tags, meaning the resulting <p> is not :empty. 
-					// Javascript seems to be the only solution right now: http://stackoverflow.com/questions/13380906/hiding-an-element-that-contains-only-spaces-using-css
-					*:empty {  
-						display: none;
-					}
 				}
 			}
 		}
@@ -345,7 +611,7 @@
 	.addCommentForm {
 		.subContent {
 			form {
-				padding: $column-gutter/2 0;
+				padding: $column-gutter/2;
 				border: 1px solid $lc-grey;
 				@include border-radius (12px);		
 			}

@@ -13,11 +13,16 @@
 @import "foundation/components/grid";
 @import "foundation/components/inline-lists";
 @import "foundation/components/offcanvas";
+@import "foundation/components/forms";
 
 // Compass imports
 @import "compass/css3";
 @import "compass/css3/opacity";
 @import "compass/css3/transition";
+
+// Font Awesome Imports
+@import "font-awesome/variables";
+@import "font-awesome/core";
 
 // Luther imports
 @import "extends";
@@ -72,7 +77,7 @@ body {
 						height: $logo-height-mobile;
 						width: $logo-width-mobile;
 						margin: 0 auto;
-						background: url('/images/logo_mobile_1x.png') no-repeat;
+						background: url('../images/logo_mobile_1x.png') no-repeat;
 						top: ($header-height-mobile - $logo-height-mobile)/2;
 						position: relative;
 						z-index: 11;
@@ -82,7 +87,7 @@ body {
 					@media #{$small-up-reitna} {
 					
 						a {				
-							background: url('/images/logo_mobile_2x.png') no-repeat;
+							background: url('../images/logo_mobile_2x.png') no-repeat;
 							@include background-size($logo-width-mobile $logo-height-mobile);
 						}
 					}
@@ -94,7 +99,7 @@ body {
 							height: $logo-height;
 							top: ($header-height - $logo-height)/2;
 							margin-left: $column-gutter / 2;
-							background: url('/images/logo_1x.png') no-repeat;
+							background: url('../images/logo_1x.png') no-repeat;
 							@include transition-property(opacity);
 							@include transition-duration(.5s);
 						}
@@ -102,8 +107,8 @@ body {
 						@media #{$large-up-reitna} {
 					
 							a {	
-								background: url('/images/logo_2x.png') no-repeat;
-								@include background-size($logo-width-mobile $logo-height-mobile);
+								background: url('../images/logo_2x.png') no-repeat;
+								@include background-size($logo-width $logo-height);
 							}
 						}							
 					}
@@ -176,18 +181,14 @@ body {
 								&.fa-times {
 									display: block;
 								}	
-								
 							}
-
-						}
-						
-					}
-								
-				}
-				
+						}	
+					}					
+				}		
 			}
 			
 			#search-nav {  // Mobile nav search
+				font-family: $navigation-font-family;
 				display: none;
 				@include grid-column(16);
 				background: lighten($lc-grey, 5%);
@@ -201,6 +202,7 @@ body {
 					margin: 0;			
 					padding: ($column-gutter/2.25) 0;
 					text-align: center;
+					@include clearfix;
 								
 					li {
 						display: inline;
@@ -209,14 +211,122 @@ body {
 						&.directory {
 							margin-left: 0;
 						}
-						
-						&.search{
+
+						&.search {
 							display: block;
-							margin: ($column-gutter/2.25) 0 0;
+							margin: ($column-gutter/2.25) auto;
+							max-width: rem-calc(400);
+
+							form {
+								table {
+									td {
+										padding: 0;
+									}
+								}
+							}
+
+							.gsc-search-box {
+								font-size: auto;
+								margin: 0;
+
+								* { // zero out everything inside
+									border: none !important;
+									line-height: 1;
+									vertical-align: top;
+								}
+
+								.gsc-input > input:hover,
+								.gsc-input-box-hover,
+								.gsc-input > input:focus,
+								.gsc-input-box-focus {
+									@include box-shadow(none);
+									border: none;
+								}
+							}
+
+							.gsc-input-box { // hide Google focus and hover styles
+								background: none !important;
+								border: none !important;
+
+								&:focus {
+									border: none !important;
+									@include box-shadow(0);
+								}
+							}
+
+							.gsc-input {
+								input {
+									&.gsc-input {  // search input
+										height: 2rem !important;
+										padding: 0 rem-calc(8) !important;
+										border: 1px solid $lc-grey !important;
+										border-right: none !important;
+										@include box-shadow(none);
+										background: $input-bg-color;
+										font-size: $input-font-size;
+										@include border-left-radius(4px);
+
+										&:focus {
+											border-color: darken($lc-grey, 10%);
+										}
+									}
+								}
+							}
+
+							.gsst_b {  // close search "x"
+								padding: 0;
+								height: 2rem;
+								border-top: 1px solid $lc-grey !important;
+								border-bottom: 1px solid $lc-grey !important;
+								background: #FFF;
+							}
+
+							.gsc-search-button {  // submit button
+								input.gsc-search-button {
+									border: none;
+									margin: 0;
+									height: 0;
+									width: 0;
+									display: block;
+									padding: 1rem;
+									@include border-radius(0);
+									@include border-right-radius(4px);
+									background: $lc-blue-light url("../images/search-1x.png") rem-calc(8) no-repeat;
+
+									&:hover,
+									&:active {
+										background-color: lighten($lc-blue-light, 5%);
+									}
+
+									@media #{$small-up-reitna} { // offer a retina icon	
+										background-image: url('../images/search-2x.png');
+										background-size: 50%;
+									}
+								}
+							}
 						}
-		
+					}	
+				}
+
+				a {
+					font-size: rem-calc(14);
+				
+					&:link,
+					&:visited {
+						@include semi-transparent-text-color($primary-link-color, .8);
+					
+						@media #{$large-up} {
+							@include semi-transparent-text-color($lc-white, .8);
+						}
 					}
 					
+					&:hover {
+						@include semi-transparent-text-color($primary-link-color, 1);
+						
+						@media #{$large-up} {
+							@include semi-transparent-text-color($lc-white, 1);
+						}
+					}
 				}
 				
 				@media #{$large-up} { 
@@ -224,7 +334,7 @@ body {
 					left: auto;
 					position: absolute;
 					right: $column-gutter;
-					top: 1em;
+					top: rem-calc(8);
 					padding: 0;
 					z-index: 10;
 					background: none;
@@ -235,21 +345,21 @@ body {
 					ul {
 						padding: 0;
 						text-align: left;
+						display: block;
 						
 						li {
+
 							&.search {
 								display: inline-block;
 								margin: 0 0 0 1em;
+								width: rem-calc(300);
+								position: relative;
+								top: rem-calc(8);
 							}
-						
 						}
-						
 					}
-					
 				}
-
 			}
-
 		} // end #global-banner
 		
 		#global-nav {
@@ -274,6 +384,14 @@ body {
 				display: none;
 			}
 
+			a {
+	
+				&:link,
+				&:visited {
+					@include semi-transparent-text-color($lc-white, .8);
+				}
+			}
+
 			// Audience Navigation
 			.audiences {
 			
@@ -291,6 +409,10 @@ body {
 						@include border-radius($global-rounded);
 						margin: rem-calc(6) rem-calc(2);
 						display: inline-block;
+
+						&:hover {
+							@include semi-transparent-text-color($lc-white, 1);
+						}
 					}
 				}
 				
@@ -331,6 +453,7 @@ body {
 					border-bottom: 1px solid darken($lc-grey, 14%);
 
 					a {
+						color: #1073ce;
 						font-weight: 600;
 						letter-spacing: 1px;
 						display: block;
@@ -344,7 +467,23 @@ body {
 						&:hover {
 							background-color: darken($lc-grey, 10%);
 						}
+
+						@media #{$large-up} {
+							@include semi-transparent-text-color($lc-white, 1);
+							font-weight: 400;
+							font-size: rem-calc(14);
+							
+							&:hover {
+								@include semi-transparent-text-color($lc-white, 1);
+							}
+				
+						}
+
+						@media #{$xlarge-up} {
+							font-size: rem-calc(15);
+						}
 					}
+
 					ul {  /* subnav */
 						display: none;
 					}					
@@ -447,6 +586,21 @@ body {
 			#footerInner {
 				@include grid-column($columns: 16, $collapse: true);
 			}
+
+			#global-footer-nav,
+			#global-footer-info {
+				@include semi-transparent-text-color($lc-white, 1);
+
+				a {
+					&:link,
+					&:visited {
+						@include semi-transparent-text-color($lc-white, .75);
+					}
+					&:hover {
+						@include semi-transparent-text-color($lc-white, 1);
+					}
+				}
+			}
 			
 			#global-footer-nav {	
 				background: $lc-blue-light;
@@ -456,6 +610,17 @@ body {
 
 				@media #{$large-up} {
 					@include lr-border($lc-blue-light-compliment);
+				}
+
+				h3 {
+					font-size: rem-calc(18);
+					font-weight: 700;
+					@include semi-transparent-text-color($lc-white, 1);
+				}
+
+				ul {
+					font-family: $body-font-family;
+					font-weight: 300;
 				}
 				
 				.column {
@@ -477,6 +642,7 @@ body {
 						
 					ul {
 						@extend .zero-out;
+						@include semi-transparent-text-color($lc-white, .75);
 					}
 					
 				}
@@ -492,6 +658,21 @@ body {
 				
 				@media #{$large-up} {
 					@include lr-border($lc-blue-dark-compliment);
+				}
+
+				nav {
+	
+					ul {
+						font-size: rem-calc(14);
+					
+						a {
+							font-weight: 700;
+						
+							&:hover {
+								text-decoration: underline;
+							}
+						}
+					}
 				}
 				
 				.utility-nav {
@@ -527,33 +708,30 @@ body {
 								&:last-child > a {
 									border: none;
 								}	
-					
-							}
-							
+							}	
 						}
-					
-					}
-					
+					}	
 				}
 				
 				.contact {
 					@include grid-column(16);
 					font-family: $navigation-font-family;
+					font-weight: 300;
+					font-size: rem-calc(12);
+					@extend .zero-out;
+					letter-spacing: .65px;
 					
 					.sep {
 						display: inline-block;
 						margin: 0 rem-calc(8);
 						font-weight: 700;
-					}
-					
+					}	
 				}
 				
 				.phone {
 					display: block;
 				}
-				
-			}
-			
+			}	
 		}  // end #global-footer
 		
 		#post-footer {
@@ -566,7 +744,14 @@ body {
 				@include grid-column(16);
 				text-align: center;
 				margin-bottom: 0;
+				font-size: rem-calc(14);
+				color: lighten($body-font-color, 20%);
+				font-weight: 300;
 			}
+
+			a {
+				text-decoration: underline;
+			}	
 			
 			@media #{$medium-up} {
 			
@@ -580,12 +765,8 @@ body {
 					text-align: right;
 					
 				}
-			
 			}
-
-		
 		}
-		
 	} // end #wrapper
 	
 	.off-canvas-wrap.move-right {
@@ -603,9 +784,6 @@ body {
 			a.exit-off-canvas {
 				display: none;
 			}
-		
 		}
-	
-	}
-	
+	}	
 }
