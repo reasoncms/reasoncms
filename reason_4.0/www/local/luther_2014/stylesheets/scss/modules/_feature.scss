@@ -34,14 +34,16 @@
       @media #{$small-only} {
         .features {
           padding: 0;
-          height: 224px;
+          //height: 224px;
+          height: 306px;
         
           img {
-            width: 646px;
+            width: 640px;
             max-width: 10000px !important;
-            height: 224px !important;
+            //height: 224px !important;
+            height: 306px !important;
             position: absolute;
-            margin-left: -323px;
+            margin-left: -320px;
           }
         }
       }

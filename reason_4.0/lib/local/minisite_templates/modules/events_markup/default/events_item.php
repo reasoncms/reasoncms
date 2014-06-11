@@ -108,8 +108,7 @@ class defaultEventsItemMarkup implements eventsItemMarkup
 			$ret .= '<div class="eventContent">'.$event->get_value( 'content' ).'</div>'."\n";
 		} 
 		elseif ($event->get_value('description'))
-		{
-			$ret .= 'true!';	
+		{	
 			$ret .= '<p class="description">'.$event->get_value( 'description' ).'</p>'."\n";
 		}
 		else 

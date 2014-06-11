@@ -606,6 +606,7 @@ body {
 				background: $lc-blue-light;
 				padding-left: $column-gutter/2;
 				padding-right: $column-gutter/2;
+				padding-top: $column-gutter;
 				@include grid-row();
 
 				@media #{$large-up} {
@@ -624,16 +625,22 @@ body {
 				}
 				
 				.column {
-					padding-top: $column-gutter;
 					padding-bottom: $column-gutter;
 					@include grid-column(16);
 					
-					@media #{$small-high-up} {
+					@media #{$small-high-only} {
 						@include grid-column(8);
+						&:nth-child(odd) {
+							clear: left;
+						}
 					}
 					
-					@media #{$medium-up} {
+					@media #{$medium-only} {
 						@include grid-column(5.33333333);
+						&:nth-child(3n+1) {
+							clear: left;
+						}
+
 					}
 					
 					@media #{$large-up} {

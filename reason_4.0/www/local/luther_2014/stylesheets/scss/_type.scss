@@ -76,13 +76,29 @@ blockquote {
 	dl {
 		font-weight: $paragraph-font-weight;
 		padding-bottom: rem-calc(6);
+		margin-left: rem-calc(32);
 		&:last-child {
 			padding-bottom: 0;
 		}
 	}
+
+	li {
+		line-height: 2;
+	}
 	
-	ol {list-style-type: decimal;}
-	ul {list-style-type: disc;}
+	ol li,
+	ol ol ol ol li {list-style-type: decimal;}
+	ol ol li,
+	ol ol ol ol ol li {list-style-type: lower-alpha;}
+	ol ol ol li,
+	ol ol ol ol ol ol li {list-style-type: lower-roman;}
+	
+	ul li,
+	ul ul ul ul li {list-style-type: disc;}
+	ul ul li,
+	ul ul ul ul ul li {list-style-type: circle;}
+	ul ul ul li,
+	ul ul ul ul ul ul li {list-style-type: square;}
 
 	a:link { // underline links
 		text-decoration: underline;
@@ -91,14 +107,31 @@ blockquote {
 	.callOut,
 	.callout {
 		clear: both;
-		@include border-radius($global-radius);
+		//@include border-radius($global-radius);
 		background: $lc-grey;
+		border: 1px solid darken($lc-grey, 10%);
 		padding: $column-gutter/2 $column-gutter/1.5;
 		margin-bottom: $paragraph-margin-bottom;
 		@include clearfix;
+		font-family: $header-font-family;
 
 		*:last-child {
 			margin-bottom: 0;
+		}
+
+		&.callout-success {
+			background: rgba($lc-green, .25);
+			border: 1px solid rgba($lc-green, .5);
+		}
+		
+		&.callout-warning {
+			background: rgba($lc-yellow, .25);
+			border: 1px solid rgba($lc-yellow, .65);
+		}
+		
+		&.callout-danger {
+			background: rgba($lc-red, .25);
+			border: 1px solid rgba($lc-red, .45);
 		}
 	}
 
@@ -150,6 +183,10 @@ time {
 	font-weight: 300;
 }
 
+p:empty {
+	display: none !important;
+}
+
 
 /* Nav
 *******************************************/
@@ -157,3 +194,4 @@ time {
 nav {
 	font-family: $navigation-font-family;
 }
+

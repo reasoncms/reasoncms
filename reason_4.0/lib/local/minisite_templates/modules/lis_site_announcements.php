@@ -52,15 +52,15 @@
 
         function run()
         {
-            echo '<div id="announcements">'."\n";
+            echo '<div id="lisAnnouncements">'."\n";
             if ($this->lis_announcement != NULL)
-                echo '<div class="announcement">'.$this->lis_announcement.'</div>'."\n";
+                echo '<div class="announcement lis">'.$this->lis_announcement.'</div>'."\n";
             if ($this->helpdesk_announcement != NULL)
-                echo '<div class="announcement">'.$this->helpdesk_announcement.'</div>'."\n";
+                echo '<div class="announcement helpDesk">'.$this->helpdesk_announcement.'</div>'."\n";
             if ($this->library_announcement != NULL)
-                echo '<div class="announcement">'.$this->library_announcement.'</div>'."\n";
+                echo '<div class="announcement library">'.$this->library_announcement.'</div>'."\n";
             if ($this->archives_announcement != NULL)
-                echo '<div class="announcement">'.$this->archives_announcement.'</div>'."\n";
+                echo '<div class="announcement archives">'.$this->archives_announcement.'</div>'."\n";
             echo '</div>'."\n";
         }
     }

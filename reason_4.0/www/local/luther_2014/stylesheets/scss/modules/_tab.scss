@@ -1,0 +1,260 @@
+//
+// TAB WIGET STYLES
+//
+// @author Nathan Dirks
+//
+
+// Foundation imports
+@import "settings";
+@import "foundation/components/grid";
+
+// Compass imports
+@import "compass/css3";
+
+// Luther imports
+@import "extends";
+@import "mixins";
+
+// TAB LAYOUTS
+
+@mixin moblie-tabs {
+
+	#tabs {
+		@include box-shadow(rgba(0,0,0,.24) 0 2px 2px);
+		@include border-bottom-radius($global-radius);
+	}
+
+	.tabs .tab-title {
+
+		a {
+			background: lighten($lc-grey, 2%);
+			display: block;
+			padding: $column-gutter/3.5 $column-gutter/1.5;
+			//border-left: 6px solid lighten($lc-grey, 2%);
+			margin-bottom: 2px;
+			text-align: center;
+			width: 50%;
+			float: left;
+		}
+
+		&:nth-child(2n+1) a {
+			border-right: 1px solid #FFF;
+		}
+
+		&:nth-child(2n+2) a {
+			border-left: 1px solid #FFF;
+		}
+
+
+
+		/*&:nth-child(4n+1).active a {
+			border-color: $lc-green;
+			background: rgba($lc-green, .2);
+		}
+
+		&:nth-child(4n+2).active a {
+			border-color: $lc-red;
+			background: rgba($lc-red, .2);
+		}
+
+		&:nth-child(4n+3).active a {
+			border-color: $lc-blue-light;
+			background: rgba($lc-blue-light, .2);
+		}
+		
+		&:nth-child(4n+4).active a {
+			border-color: $lc-yellow;
+			background: rgba($lc-yellow, .2);
+		}*/
+
+		&.active a {
+			//border-left-width: 6px;
+			border-left-style: solid;
+			background: $lc-blue-light;
+			color: #FFF !important;
+		}
+	}
+
+	// Related content
+	.tabs-content { 
+
+		.content {
+			padding: $column-gutter/2;
+		
+			&.active {
+				display: block;
+				//border-left-width: 6px;
+				border-left-style: solid;
+			}
+
+			&:nth-child(4n+1).active {
+				border-color: $lc-green;
+			}
+
+			&:nth-child(4n+2).active {
+				border-color: $lc-red;
+			}
+
+			&:nth-child(4n+3).active {
+				border-color: $lc-blue-light;
+			}
+			
+			&:nth-child(4n+4).active {
+				border-color: $lc-yellow;
+			}
+		}			
+	}
+}
+
+@mixin desktop-tabs {
+	
+	#tabs {
+		@include box-shadow(none);
+		@include border-radius(0);
+	}
+
+	.tabs .tab-title {
+
+		a {
+			background: #FFF !important;
+			display: block;
+			padding: $column-gutter/3.5 $column-gutter/1.75;
+			border-left: none;
+			border-right: none;
+			margin: 0;
+			width: auto;
+			float: left;
+			font-weight: 300;
+			@include border-top-radius($global-radius);
+		}
+
+
+		/*&:nth-child(4n+1).active a {
+			border-color: $lc-green;
+		}
+
+		&:nth-child(4n+2).active a {
+			border-color: $lc-red;
+		}
+
+		&:nth-child(4n+3).active a {
+			border-color: $lc-blue-light;
+		}
+		
+		&:nth-child(4n+4).active a {
+			border-color: $lc-yellow;
+		}*/
+
+		&.active a {
+			border-left: none;
+			border-top-width: 6px;
+			border-top-style: solid;
+			border-color: $lc-blue-light;
+			background: lighten($lc-grey, 5%) !important;
+			color: $body-font-color !important;
+		}
+	}
+
+	// Related content
+	.tabs-content {  
+		margin-top: - rem-calc(3);
+
+		.content {
+			padding: $column-gutter/2;
+			background: lighten($lc-grey, 5%);
+		
+			&.active {
+				display: block;
+				border: none;
+				border-top: 3px solid $lc-grey;
+				border-color: $lc-blue-light;
+			}
+
+			/*&:nth-child(4n+1).active {
+				border-color: $lc-green;
+			}
+
+			&:nth-child(4n+2).active {
+				border-color: $lc-red;
+			}
+
+			&:nth-child(4n+3).active {
+				border-color: $lc-blue-light;
+			}
+			
+			&:nth-child(4n+4).active {
+				border-color: $lc-yellow;
+			}*/
+		}			
+	}
+}
+
+// All tabs
+
+#tabs {
+	overflow: hidden;
+	
+	.tabs {
+		@include clearfix;
+		margin: 0;
+		padding: 0;
+		background: #FFF;
+		
+		.tab-title {
+			margin: 0;
+			padding: 0;
+			display: block;	
+
+			&.active a {
+				font-weight: 700;
+				color: $body-font-color;
+			}
+		}
+	}
+
+	.tabs-content {
+
+		.content {
+			display: none;
+		
+			&.active {
+				display: block;
+			}
+		}
+	}			
+}
+
+// Mobile tabs for all small screens, then...
+@include moblie-tabs;
+
+.hasConRelNav { /* 3 COLUMNS: Nav, Content, & Related */
+	
+	@media
+	#{$large-high-up} {
+		@include desktop-tabs;
+	}
+}
+
+.hasConNav { /* 2 COLUMNS: Nav & Content (no Related) */
+
+	@media
+	#{$medium-up} {
+		@include desktop-tabs;
+	}
+}
+
+.hasConRel { /* 2 COLUMNS: Content & Related (no Nav) */
+
+	@media
+	#{$medium-up} {
+		@include desktop-tabs;
+	}
+}
+
+.hasCon { /* 1 COLUMN: Content (no Nav or Related) */ 
+
+	@media
+	#{$medium-up} {
+		@include desktop-tabs;
+	}
+}
