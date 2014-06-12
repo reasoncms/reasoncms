@@ -78,7 +78,8 @@ function toggle_billing(){
     {
         $("#hrItem").show(500);
         $("#paymentnoteItem").show(500);
-        $("#paymentamountItem").show(500);
+        // $("#paymentamountItem").show(500);
+        $(".words:contains('Payment Amount')").parent().show(500);
         $("#creditcardtypeItem").show(500);
         $("#creditcardnumberItem").show(500);
         $("#creditcardexpirationmonthItem").show(500);
@@ -96,7 +97,8 @@ function toggle_billing(){
     } else {
         $("#hrItem").hide(500);
         $("#paymentnoteItem").hide(500);
-        $("#paymentamountItem").hide(500);
+        // $("#paymentamountItem").hide(500);
+        $(".words:contains('Payment Amount')").parent().hide(500);
         $("#creditcardtypeItem").hide(500);
         $("#creditcardnumberItem").hide(500);
         $("#creditcardexpirationmonthItem").hide(500);
@@ -364,6 +366,8 @@ function hide_initial_items(){
     $(".words:contains('Saturday Luncheon')").parent().hide();
     $(".words:contains('70th Reunion Dinner')").parent().hide();
     reunion_dinner_selector.parent().hide();
-    $("#paymentamountItem").hide(500);
+    payment_amountElement.hide(500);
+    $(".words:contains('Payment Amount')").parent().hide();
     toggle_billing();
+    $(".words:contains('REFNUM')").parent().hide(); //always hidden
 }

@@ -214,5 +214,12 @@ class HomecomingRegistrationForm extends CreditCardNoPaymentThorForm {
             $this->set_error($pa_element, '<strong>Incorrect Payment Amount</strong>. The amount set in the payment amount field does not equal the cost for all chosen options. Please check your math or <a href="http://enable-javascript.com/" target="_blank">enable javascript</a> to have the form automatically fill in this field.<br>');
         }
         parent :: run_error_checks();
+
+        if (isset($this->pfresult['PNREF']))
+        {
+            $this->set_value($this->get_element_name_from_label('REFNUM'), $this->pfresult['PNREF']);
+        } else {
+            $this->set_value($this->get_element_name_from_label('REFNUM'), '');
+        }
     }
 }
