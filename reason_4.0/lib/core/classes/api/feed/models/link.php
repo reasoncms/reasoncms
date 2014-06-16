@@ -238,6 +238,7 @@ class ReasonPageListJSON extends ReasonLinksJSON implements ReasonFeedInterface
  * @todo consider whether to not show assets that are behind authentication.
  *
  * @author Nathan White
+ * @author Andrew Collins
  */
 class ReasonAssetListJSON extends ReasonLinksJSON implements ReasonFeedInterface
 {
@@ -269,12 +270,24 @@ class ReasonAssetListJSON extends ReasonLinksJSON implements ReasonFeedInterface
 		if ($assets = $this->get_assets())
 		{
 			$site = new entity($this->config('site_id'));
+			$asset_json['count'] = 0;
+			$asset_list = array();
 			foreach($assets as $asset)
 			{
-				$asset_list['name'] = strip_tags($asset->get_value('name'));
-				$asset_list['url'] = reason_get_asset_url($asset, $site);
+				$asset_item = array();
+				$asset_item['id'] = strip_tags($asset->get_value('id'));
+				$asset_item['name'] = strip_tags($asset->get_value('name'));
+				$asset_item['description'] = strip_tags($asset->get_value('description'));
+				$asset_item['pubDate'] = strip_tags($asset->get_value('creation_date'));
+				$asset_item['lastMod'] = strip_tags($asset->get_value('last_modified'));
+				$asset_item['url'] = reason_get_asset_url($asset, $site);
+
+				$asset_list[] = $asset_item;
+
+				$asset_json['count']++;
 			}
-			return json_encode($asset_list);
+			$asset_json['assets'] = $asset_list;
+			return json_encode($asset_json);
 		}
 		else return '{}';
 	}
