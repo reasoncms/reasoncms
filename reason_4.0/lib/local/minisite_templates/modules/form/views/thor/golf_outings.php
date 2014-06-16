@@ -51,6 +51,7 @@ class GolfOutingForm extends CreditCardThorForm {
     {
         if (preg_match('/([\d\.,]+)/',$label, $match))
             $this->set_value('payment_amount', '$'.$match[1]);
+            return($match[1]);
     }
 
     /**
@@ -68,7 +69,7 @@ class GolfOutingForm extends CreditCardThorForm {
         if ($this->get_element_name_from_label('Golf Registration'))
             $golf_cost = $this->_cleanup_cost($this->get_value_from_label('Golf Registration'));
         if ($this->get_element_name_from_label('Dinner Registration'))
-            $dinner_cost = $this->_cleanup_cost($this->get_value_from_label('Cocktail Hour/Dinner Only'));
+            $dinner_cost = $this->_cleanup_cost($this->get_value_from_label('Dinner Registration'));
         if ($this->get_element_name_from_label('Brunch Registration'))
             $brunch_cost = $this->_cleanup_cost($this->get_value_from_label('Brunch Registration'));
 
