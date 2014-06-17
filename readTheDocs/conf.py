@@ -30,7 +30,6 @@ sys.path.insert(0, os.path.abspath('../../sphinxPackages/tk.phpautodoc-1.0.0/dis
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-# see https://pypi.python.org/pypi/tk.phpautodoc/1.0.0
 extensions = ['sphinxcontrib.phpdomain','sphinxcontrib_phpautodoc']
 
 primary_domain = 'php'
