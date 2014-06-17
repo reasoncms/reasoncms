@@ -17,12 +17,9 @@ Contents:
 API DOCS
 ========
 
-.. toctree::
-	:maxdepth: 3
-	:glob:
-
-	api
-
+.. phpautoclass:: SomeClassName
+    :filename: ../reason_4.0/lib/core/minisite_templates/modules/default.php
+    :members:
 
 Indices and tables
 ==================
