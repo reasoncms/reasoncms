@@ -20,6 +20,8 @@ import os
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #sys.path.insert(0, os.path.abspath('.'))
 
+sys.path.insert(0, os.path.abspath('../../sphinxPackages/tk.phpautodoc-1.0.0/dist/tk.phpautodoc-1.0.0-py2.7.egg'))
+
 # -- General configuration ------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
@@ -28,7 +30,10 @@ import os
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = []
+# see https://pypi.python.org/pypi/tk.phpautodoc/1.0.0
+extensions = ['sphinxcontrib.phpdomain','sphinxcontrib_phpautodoc']
+
+primary_domain = 'php'
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

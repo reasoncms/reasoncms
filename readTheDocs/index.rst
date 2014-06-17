@@ -17,9 +17,14 @@ Contents:
 API DOCS
 ========
 
-.. phpautoclass:: SomeClassName
-    :filename: ../reason_4.0/lib/core/minisite_templates/modules/default.php
+This is a test to see if api documentaiton works?
+
+.. phpautoclass:: SomethingFake
+    :filename: hello.php
     :members:
+    :undoc-members:
+
+Well? did it?
 
 Indices and tables
 ==================
