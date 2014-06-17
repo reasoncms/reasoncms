@@ -19,7 +19,7 @@ API DOCS
 
 This is a test to see if api documentaiton works?
 
-.. phpautoclass:: SomethingFake
+.. phpautoclass:: HelloWorld
     :filename: hello.php
     :members:
     :undoc-members:
