@@ -198,8 +198,8 @@
 			// @todo: Is this the correct modernizer?  Not sure.
 			$this->head_items->add_javascript('/reason/local/luther_2014/javascripts/vendor/custom.modernizr.js');
 			//$this->head_items->add_javascript('/reason/local/luther_2014/javascripts/vendor/jquery.js');
-			//$this->head_items->add_javascript(JQUERY_URL, true);			
-			//$this->head_items->add_javascript('/reason/local/luther_2014/javascripts/luther-gcse.js');
+			$this->head_items->add_javascript(JQUERY_URL, true);			
+			$this->head_items->add_javascript('/reason/local/luther_2014/javascripts/luther-gcse.js');
 			
 			// Stylesheets
 			$this->head_items->add_stylesheet('https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700');
@@ -222,8 +222,7 @@
 			// Foundation recommends including jQuery at the bottom on the body (below). But this causes conflicts
 			// with Reason scripts, like Features. Currently, we're just calling it in the head via in the normal reason way.
 			//
-			
-			echo '<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>';
+
 			echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/vendor/fastclick.js"></script>';
 			echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/foundation/foundation.js"></script>';
 			echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/foundation/foundation.offcanvas.js"></script>';
