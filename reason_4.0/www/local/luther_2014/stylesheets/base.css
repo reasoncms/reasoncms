@@ -2608,14 +2608,6 @@ body #wrapper #post-footer a {
   right: 1.25rem;
   color: #848484;
 }
-/* line 518, scss/_minisite.scss */
-#minisite .lt-ie10 #minisiteNavigation li.open ul {
-  display: block !important;
-}
-/* line 522, scss/_minisite.scss */
-#minisite .lt-ie10 #minisiteNavigation li.closed ul {
-  display: none !important;
-}
 /* line 534, scss/_minisite.scss */
 #minisite #relatedSections > div,
 #minisite .relatedItems > div {
