@@ -982,32 +982,6 @@ ul.off-canvas-list li a {
   margin-bottom: 0;
 }
 
-@media only screen and (min-width: 64.063em) {
-  /* line 33, scss/_global.scss */
-  .left-off-canvas-menu {
-    display: block;
-    position: relative;
-    overflow: visible;
-    padding-top: 0;
-    -moz-transform: translate3d(0, 0, 0);
-    -webkit-transform: translate3d(0, 0, 0);
-    transform: translate3d(0, 0, 0);
-    width: auto !important;
-    border-left: 7px solid #a9cdee;
-    border-right: 7px solid #a9cdee;
-    *zoom: 1;
-  }
-  /* line 165, ../foundation/bower_components/foundation/scss/foundation/components/_global.scss */
-  .left-off-canvas-menu:before, .left-off-canvas-menu:after {
-    content: " ";
-    display: table;
-  }
-  /* line 166, ../foundation/bower_components/foundation/scss/foundation/components/_global.scss */
-  .left-off-canvas-menu:after {
-    clear: both;
-  }
-}
-
 /* Layout
  ***************************************/
 /* line 53, scss/_global.scss */
