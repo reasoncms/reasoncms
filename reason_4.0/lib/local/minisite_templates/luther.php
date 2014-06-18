@@ -195,10 +195,7 @@
 		function do_org_head_items()
 		{	
 			// Javascripts
-			// @todo: Is this the correct modernizer?  Not sure.
-			//$this->head_items->add_javascript('/reason/local/luther_2014/javascripts/vendor/custom.modernizr.js');
 			$this->head_items->add_javascript('/reason/local/luther_2014/javascripts/vendor/modernizr.js');
-			//$this->head_items->add_javascript('/reason/local/luther_2014/javascripts/vendor/jquery.js');
 			$this->head_items->add_javascript(JQUERY_URL, true);			
 			$this->head_items->add_javascript('/reason/local/luther_2014/javascripts/luther-gcse.js');
 			
@@ -208,14 +205,15 @@
 			$this->head_items->add_stylesheet('/reason/local/luther_2014/stylesheets/fonts/font-awesome/css/font-awesome.css');
 			$this->head_items->add_stylesheet('/reason/local/luther_2014/stylesheets/dependencies/dependencies.css');
 			$this->head_items->add_stylesheet('/reason/local/luther_2014/stylesheets/base.css');
+			$this->head_items->add_stylesheet('/reason/local/luther_2014/stylesheets/ie.css');
 
-			echo '<!--[if lt IE 9]>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.2/html5shiv.js"></script>
-  <script src="http://s3.amazonaws.com/nwapi/nwmatcher/nwmatcher-1.2.5-min.js"></script>
-  <script src="https://html5base.googlecode.com/svn-history/r38/trunk/js/selectivizr-1.0.3b.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.1.0/respond.min.js"></script>
-<![endif]-->';
-		}
+// 			echo '<!--[if lt IE 9]>
+//   <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.2/html5shiv.js"></script>
+//   <script src="http://s3.amazonaws.com/nwapi/nwmatcher/nwmatcher-1.2.5-min.js"></script>
+//   <script src="https://html5base.googlecode.com/svn-history/r38/trunk/js/selectivizr-1.0.3b.js"></script>
+//   <script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.1.0/respond.min.js"></script>
+// <![endif]-->';
+	}
 		
 		function do_org_foot()
 		{ 
