@@ -5272,7 +5272,7 @@ form table td {
 /* Inline Images (Main content areas only -- no sidebars) */
 /* line 96, scss/modules/_images.scss */
 #pageContent img, .fullPost .text img {
-  width: 100%;
+  width: auto;
   max-width: 600px;
 }
 /* line 102, scss/modules/_images.scss */

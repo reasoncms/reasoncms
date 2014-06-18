@@ -95,7 +95,7 @@
 
 	img { // are full width on small screens...
 		//width: $global-image-width;
-		width: 100%;
+		width: auto;
 		max-width: $global-image-width;
 
 		&.right,
