@@ -1,42 +1,47 @@
+/* line 12, scss/_ie9.scss */
+.lt-ie10 .left-off-canvas-menu,
+.no-csstransforms3d .left-off-canvas-menu {
+  display: none;
+}
 @media only screen and (max-width: 40em) {
-  /* line 16, scss/_ie9.scss */
+  /* line 18, scss/_ie9.scss */
   .lt-ie10 .left-off-canvas-menu,
   .no-csstransforms3d .left-off-canvas-menu {
     left: -70%;
   }
-  /* line 17, scss/_ie9.scss */
+  /* line 19, scss/_ie9.scss */
   .lt-ie10 .right-off-canvas-menu,
   .no-csstransforms3d .right-off-canvas-menu {
     right: -70%;
   }
-  /* line 20, scss/_ie9.scss */
+  /* line 22, scss/_ie9.scss */
   .lt-ie10 .move-left > .inner-wrap,
   .no-csstransforms3d .move-left > .inner-wrap {
     right: 70%;
   }
-  /* line 21, scss/_ie9.scss */
+  /* line 23, scss/_ie9.scss */
   .lt-ie10 .move-right > .inner-wrap,
   .no-csstransforms3d .move-right > .inner-wrap {
     left: 70%;
   }
 }
 @media only screen and (min-width: 40.063em) and (max-width: 64em) {
-  /* line 29, scss/_ie9.scss */
+  /* line 31, scss/_ie9.scss */
   .lt-ie10 .left-off-canvas-menu,
   .no-csstransforms3d .left-off-canvas-menu {
     left: -70%;
   }
-  /* line 30, scss/_ie9.scss */
+  /* line 32, scss/_ie9.scss */
   .lt-ie10 .right-off-canvas-menu,
   .no-csstransforms3d .right-off-canvas-menu {
     right: -70%;
   }
-  /* line 33, scss/_ie9.scss */
+  /* line 35, scss/_ie9.scss */
   .lt-ie10 .move-left > .inner-wrap,
   .no-csstransforms3d .move-left > .inner-wrap {
     right: 70%;
   }
-  /* line 34, scss/_ie9.scss */
+  /* line 36, scss/_ie9.scss */
   .lt-ie10 .move-right > .inner-wrap,
   .no-csstransforms3d .move-right > .inner-wrap {
     left: 70%;
