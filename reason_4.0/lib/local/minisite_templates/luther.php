@@ -233,6 +233,7 @@
 			
 			// Custom
 			echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/luther.js"></script>';
+			echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/vendor/rem.js"></script>';
 
 			//$this->foot_items->add_javascript('/reason/local/luther_2014/javascripts/fooooooot.js');
 		}
