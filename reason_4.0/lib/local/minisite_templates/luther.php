@@ -207,6 +207,13 @@
 			$this->head_items->add_stylesheet('/reason/local/luther_2014/stylesheets/fonts/font-awesome/css/font-awesome.css');
 			$this->head_items->add_stylesheet('/reason/local/luther_2014/stylesheets/dependencies/dependencies.css');
 			$this->head_items->add_stylesheet('/reason/local/luther_2014/stylesheets/base.css');
+
+			echo '<!--[if lt IE 9]>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.2/html5shiv.js"></script>
+  <script src="//s3.amazonaws.com/nwapi/nwmatcher/nwmatcher-1.2.5-min.js"></script>
+  <script src="//html5base.googlecode.com/svn-history/r38/trunk/js/selectivizr-1.0.3b.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.1.0/respond.min.js"></script>
+<![endif]-->';
 		}
 		
 		function do_org_foot()
@@ -585,10 +592,20 @@
 		{
 			echo '<footer id="footer" role="contentInfo">'."\n";
 			$this->show_luther_contact_blurb();
+			if ($this->has_content( 'pre_foot' ))
+			{
+				echo '<div id="preFoot">'."\n";
+				$this->run_section( 'pre_foot' );
+				echo '</div>'."\n";
+			}	
 			$this->run_section( 'footer' );
 			$this->run_section( 'edit_link' );
 			if ($this->has_content( 'post_foot' ))
-				$this->run_section( 'post_foot' );
+			{
+				echo '<div id="postFoot">'."\n";
+				$this->run_section( 'poist_foot' );
+				echo '</div>'."\n";
+			}
 			echo '</footer>'."\n";
 		}
 	}
