@@ -1031,4 +1031,12 @@
 	 * With an API key, Reason can provide superior ip geolocation results.
 	 */
 	define('REASON_IPINFODB_API_KEY', '');
+
+	/**
+	 * REASON_PDF_DOWNLOAD_DISPOSITION_DEFAULT
+	 *
+	 * How should Reason handle when a user clicks on a pdf link? Set this to 'attachment' to force a download, or 'inline'
+	 * to attempt to display it in the browser.
+	 */
+	define('REASON_PDF_DOWNLOAD_DISPOSITION_DEFAULT', 'attachment');
 ?>
