@@ -94,8 +94,10 @@
 #{$wysiwyg-content-area} {
 
 	img { // are full width on small screens...
-		width: $global-image-width;
-		
+		//width: $global-image-width;
+		width: 100%;
+		max-width: $global-image-width;
+
 		&.right,
 		&.left {
 			float: none !important;
@@ -103,7 +105,8 @@
 		}
 
 		@media #{$medium-up} {  // and are only 40% wide on medium and up.
-			width: 40%; 
+			width: auto;
+			max-width: 40%;
 			float: right !important;
 			margin: 0 0 rem-calc(16) $column-gutter;
 			clear: right;
