@@ -5277,7 +5277,6 @@ form table td {
 }
 /* line 102, scss/modules/_images.scss */
 #pageContent img.right, #pageContent img.left, .fullPost .text img.right, .fullPost .text img.left {
-  float: none !important;
   margin: 0 auto;
 }
 @media only screen and (min-width: 40.063em) {
@@ -5285,7 +5284,6 @@ form table td {
   #pageContent img, .fullPost .text img {
     width: auto;
     max-width: 40%;
-    float: right !important;
     margin: 0 0 1rem 2.5rem;
     clear: right;
   }
@@ -5306,9 +5304,10 @@ form table td {
 @media only screen and (min-width: 40.063em) {
   /* line 136, scss/modules/_images.scss */
   .hasConRelNav #pageContent img, .hasConRelNav .fullPost .text img {
-    width: 100%;
+    width: auto;
+    max-width: 100%;
   }
-  /* line 141, scss/modules/_images.scss */
+  /* line 142, scss/modules/_images.scss */
   .hasConRelNav #pageContent img.right, .hasConRelNav .fullPost .text img.right {
     margin: 0 0 1rem;
     float: right !important;
@@ -5317,11 +5316,11 @@ form table td {
 @media only screen and (min-width: 64.063em) {
   /* line 136, scss/modules/_images.scss */
   .hasConRelNav #pageContent img, .hasConRelNav .fullPost .text img {
-    width: 40%;
-    float: right !important;
+    width: auto;
+    max-width: 40%;
     margin: 0 0 1rem 2.5rem;
   }
-  /* line 152, scss/modules/_images.scss */
+  /* line 155, scss/modules/_images.scss */
   .hasConRelNav #pageContent img.left, .hasConRelNav .fullPost .text img.left {
     float: left !important;
     margin: 0 2.5rem 1rem 0;
@@ -5330,9 +5329,10 @@ form table td {
 @media only screen and (min-width: 90.063em) {
   /* line 136, scss/modules/_images.scss */
   .hasConRelNav #pageContent img, .hasConRelNav .fullPost .text img {
-    width: 100%;
+    width: auto;
+    max-width: 100%;
   }
-  /* line 161, scss/modules/_images.scss */
+  /* line 165, scss/modules/_images.scss */
   .hasConRelNav #pageContent img.right, .hasConRelNav .fullPost .text img.right {
     margin: 0 0 1rem;
     float: right !important;

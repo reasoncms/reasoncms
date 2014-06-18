@@ -100,14 +100,14 @@
 
 		&.right,
 		&.left {
-			float: none !important;
+			//float: none !important;
 			margin: 0 auto;
 		}
 
 		@media #{$medium-up} {  // and are only 40% wide on medium and up.
 			width: auto;
 			max-width: 40%;
-			float: right !important;
+			//float: right !important;
 			margin: 0 0 rem-calc(16) $column-gutter;
 			clear: right;
 
@@ -136,8 +136,9 @@
 		img {
 
 			@media #{$medium-up} {
-				width: 100%;  // are 100% wide on medium (becuase the middle column is fairly narrow)...
-				
+				width: auto;  // are 100% wide on medium (becuase the middle column is fairly narrow)...
+				max-width: 100%;
+
 				&.right {
 					margin: 0 0 rem-calc(16);
 					float: right !important;
@@ -145,8 +146,10 @@
 			}
 
 			@media #{$large-up} {
-				width: 40%; // are 40% wide on large (becuase the middle column is super wide)...
-				float: right !important;  // float all images right by default
+				width: auto;
+				max-width: 40%; // are 40% wide on large (becuase the middle column is super wide)...
+				
+				//float: right !important;  // float all images right by default
 				margin: 0 0 rem-calc(16) $column-gutter;
 				
 				&.left {  // float left images left
@@ -156,7 +159,8 @@
 			}
 
 			@media #{$xlarge-up} {
-				width: 100%;  // are 100% again (becuase the middle column gets squeezed by related content)...
+				width: auto;
+				max-width: 100%;  // are 100% again (becuase the middle column gets squeezed by related content)...
 				
 				&.right {
 					margin: 0 0 rem-calc(16);
