@@ -18,16 +18,19 @@
 // AV Module
 //////////////////////////////////////
 
-.video {
- 	@include flex-video-container();
- }
+#wrapper {
 
- #av {
+	.video {
+		@include flex-video-container();
+	}
 
- 	.moduleNav {
- 		
- 		ul {
- 			margin: 0;
- 		}
- 	}
- }
+	#av {
+
+		.moduleNav {
+			
+			ul {
+				margin: 0;
+			}
+		}
+	}
+}
