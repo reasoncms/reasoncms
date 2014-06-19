@@ -66,7 +66,7 @@ class HomecomingRegistrationForm extends CreditCardNoPaymentThorForm {
         // $this->add_element('alumni_dinner_header', 'comment', array('text'=>'<h4>Alumni Dinner Reservations</h4>'));
         // $this->move_element('alumni_dinner_header', 'before', $this->get_element_name_from_label('Friday\'s Alumni Dinner'));
         $this->add_element('class_reunion_reservations_header', 'comment', array('text'=>'<h4>Class Reunion Reservations</h4>'));
-        $this->move_element('class_reunion_reservations_header', 'after', $this->get_element_name_from_label('Dining Restrictions?'));
+        $this->move_element('class_reunion_reservations_header', 'after', $this->get_element_name_from_label('Guest Class Year'));
         // $this->add_element('50_year_reunion_header', 'comment', array('text'=>'<h4>50 Year Reunion</h4>'));
         // $this->move_element('50_year_reunion_header', 'after', $this->get_element_name_from_label('Dining Restrictions?'));
         $class_year = $this->get_element_name_from_label('Reunion Class Year');
@@ -121,9 +121,9 @@ class HomecomingRegistrationForm extends CreditCardNoPaymentThorForm {
         $booklet_cost       = $this->_cleanup_cost($this->get_value_from_label('Booklet cost'));
         $alumni_dinner_cost = $this->_cleanup_cost($this->get_value_from_label('Alumni Dinner cost'));
 
-        $reunion_cost = 0;
+        $reunion_cost       = 0;
 
-        $total = 0;
+        $total              = 0;
 
         $class_year = intval($this->get_value_from_label('Reunion Class Year'));
         $cur_year = idate('Y');

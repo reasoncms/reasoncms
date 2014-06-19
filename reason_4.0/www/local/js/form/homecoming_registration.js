@@ -3,7 +3,7 @@ $(document).ready(function(){
     needs_payment = false;
 
     // payment_amountElement = $("#payment_amountElement");
-    payment_amountElement = $(".words:contains('Payment Amount')").next().find('input');
+    payment_amountElement   = $(".words:contains('Payment Amount')").next().find('input');
     payment_amountElement.attr('readonly', 'readonly');
 
     reunion_dinner_cost = 0;
@@ -86,18 +86,12 @@ function toggle_billing(){
         $("#creditcardexpirationyearItem").show(500);
         $("#creditcardnameItem").show(500);
         $("#samebillingItem").show(500);
-        // $("#billingstreetaddressItem").show(500);
-        // $("#billingcityItem").show(500);
-        // $("#billingstateprovinceItem").show(500);
-        // $("#billingzipItem").show(500);
-        // $("#billingcountryItem").show(500);
         setTotal();
         needs_payment = true;
         same_billing();
     } else {
         $("#hrItem").hide(500);
         $("#paymentnoteItem").hide(500);
-        // $("#paymentamountItem").hide(500);
         $(".words:contains('Payment Amount')").parent().hide(500);
         $("#creditcardtypeItem").hide(500);
         $("#creditcardnumberItem").hide(500);
@@ -142,14 +136,12 @@ function toggle_guest_class_year(){
 }
 
 function toggle_reunion_reservations(){
-    var year = (new Date).getFullYear();
-    var classyear = reunion_class_selector.next().find('select').val();
+    var year                            = (new Date).getFullYear();
+    var classyear                       = reunion_class_selector.next().find('select').val();
     var reunion = year - classyear;
-    var reunion_reservations_element = reunion_dinner_selector.parent();
-    var luncheon_element = $(".words:contains('Saturday Luncheon')").parent();
-    var seventieth_lunch_element = $(".words:contains('70th Reunion Dinner')").parent();
-
-    var five_year_cost = $(".words:contains('5 year')").next().find('input').val();
+    var reunion_reservations_element    = reunion_dinner_selector.parent();
+    var friday_luncheon_element         = $(".words:contains('Friday's Luncheon')").parent();
+    var saturday_luncheon_element       = $(".words:contains('Saturday's Luncheon')").parent();
 
     // check if this is a reunion year that has special activities and hide/show appropriate fields
     // set the reunion_dinner_cost 
@@ -159,125 +151,113 @@ function toggle_reunion_reservations(){
         $("#classreunionreservationsheaderItem").show(500);
         
         if (reunion < 56) {
-            reunion_dinner_cost = $(".words:contains('" + reunion + " year cost')").next().find('input').val();
+            reunion_dinner_cost = $("input[value~='" + reunion + "'][value~='year'][value~='cost']");
+            dinner_cost = cleanup_cost(reunion_dinner_cost.val());
+
+            reunion_dinner_selector.text('Saturday\'s Reunion Dinner/Reception - $' + dinner_cost + '/person');
         } else {
             reunion_dinner_cost = 0;
         }
 
     } else {
-        $("#classreunionreservationsheaderItem").hide(500);
+        $("#classreunionreservationsheaderItem").find('h4').text('Alumni Dinner Reservations');
+        $("#classreunionreservationsheaderItem").show(500);
     }
     switch (reunion) 
     {
         case 75:
-            luncheon_element.show(500);
+            friday_luncheon_element.hide(500);
+            saturday_luncheon_element.show(500);
             reunion_reservations_element.hide(500);
-            seventieth_lunch_element.hide(500);
             toggle_50_year_options('hide');
-            reunion_dinner_cost = $("input[value~='" + reunion + "'][value~='year'][value~='cost']");
             break;
         case 70:
-            luncheon_element.show(500);
+            friday_luncheon_element.hide(500);
+            saturday_luncheon_element.show(500);
             reunion_reservations_element.hide(500);
-            seventieth_lunch_element.show(500);
             toggle_50_year_options('hide');
-            reunion_dinner_cost = $("input[value~='" + reunion + "'][value~='year'][value~='cost']");
             break;
         case 65:
-            luncheon_element.show(500);
+            friday_luncheon_element.hide(500);
+            saturday_luncheon_element.show(500);
             reunion_reservations_element.hide(500);
-            seventieth_lunch_element.hide(500);
             toggle_50_year_options('hide');
-            reunion_dinner_cost = $("input[value~='" + reunion + "'][value~='year'][value~='cost']");
             break;
         case 60:
-            luncheon_element.show(500);
+            friday_luncheon_element.hide(500);
+            saturday_luncheon_element.show(500);
             reunion_reservations_element.hide(500);
-            seventieth_lunch_element.hide(500);
             toggle_50_year_options('hide');
-            reunion_dinner_cost = $("input[value~='" + reunion + "'][value~='year'][value~='cost']");
             break;
         case 55:
-            luncheon_element.show(500);
+            friday_luncheon_element.hide(500);
+            saturday_luncheon_element.show(500);
             reunion_reservations_element.show(500);
-            seventieth_lunch_element.hide(500);
             toggle_50_year_options('hide');
-            reunion_dinner_cost = $("input[value~='" + reunion + "'][value~='year'][value~='cost']");
             break;
         case 50:
-            luncheon_element.show(500);
+            friday_luncheon_element.show(500);
+            saturday_luncheon_element.show(500);
             reunion_reservations_element.show(500);
             toggle_50_year_options('show');
-            seventieth_lunch_element.hide(500);
-            reunion_dinner_cost = $("input[value~='" + reunion + "'][value~='year'][value~='cost']");
             break;
         case 45:
-            luncheon_element.hide(500);
+            friday_luncheon_element.hide(500);
+            saturday_luncheon_element.hide(500);
             reunion_reservations_element.show(500);
-            seventieth_lunch_element.hide(500);
             toggle_50_year_options('hide');
-            reunion_dinner_cost = $("input[value~='" + reunion + "'][value~='year'][value~='cost']");
             break;
         case 40:
-            luncheon_element.hide(500);
+            friday_luncheon_element.hide(500);
+            saturday_luncheon_element.hide(500);
             reunion_reservations_element.show(500);
-            seventieth_lunch_element.hide(500);
             toggle_50_year_options('hide');
-            reunion_dinner_cost = $("input[value~='" + reunion + "'][value~='year'][value~='cost']");
             break;
         case 35:
-            luncheon_element.hide(500);
+            friday_luncheon_element.hide(500);
+            saturday_luncheon_element.hide(500);
             reunion_reservations_element.show(500);
-            seventieth_lunch_element.hide(500);
             toggle_50_year_options('hide');
-            reunion_dinner_cost = $("input[value~='" + reunion + "'][value~='year'][value~='cost']");
             break;
         case 30:
-            luncheon_element.hide(500);
+            friday_luncheon_element.hide(500);
+            saturday_luncheon_element.hide(500);
             reunion_reservations_element.show(500);
-            seventieth_lunch_element.hide(500);
             toggle_50_year_options('hide');
-            reunion_dinner_cost = $("input[value~='" + reunion + "'][value~='year'][value~='cost']");
             break;
         case 25:
-            luncheon_element.hide(500);
+            friday_luncheon_element.hide(500);
+            saturday_luncheon_element.hide(500);
             reunion_reservations_element.show(500);
-            seventieth_lunch_element.hide(500);
             toggle_50_year_options('hide');
-            reunion_dinner_cost = $("input[value~='" + reunion + "'][value~='year'][value~='cost']");
             break;
         case 20:
-            luncheon_element.hide(500);
+            saturday_luncheon_element.hide(500);
             reunion_reservations_element.show(500);
-            seventieth_lunch_element.hide(500);
             toggle_50_year_options('hide');
-            reunion_dinner_cost = $("input[value~='" + reunion + "'][value~='year'][value~='cost']");
             break;
         case 15:
-            luncheon_element.hide(500);
+            friday_luncheon_element.hide(500);
+            saturday_luncheon_element.hide(500);
             reunion_reservations_element.show(500);
-            seventieth_lunch_element.hide(500);
             toggle_50_year_options('hide');
-            reunion_dinner_cost = $("input[value~='" + reunion + "'][value~='year'][value~='cost']");
             break;
         case 10:
-            luncheon_element.hide(500);
+            friday_luncheon_element.hide(500);
+            saturday_luncheon_element.hide(500);
             reunion_reservations_element.show(500);
-            seventieth_lunch_element.hide(500);
             toggle_50_year_options('hide');
-            reunion_dinner_cost = $("input[value~='" + reunion + "'][value~='year'][value~='cost']");
             break;
         case 5:
-            luncheon_element.hide(500);
+            friday_luncheon_element.hide(500);
+            saturday_luncheon_element.hide(500);
             reunion_reservations_element.show(500);
-            seventieth_lunch_element.hide(500);
             toggle_50_year_options('hide');
-            reunion_dinner_cost = $("input[value~='" + reunion + "'][value~='year'][value~='cost']");
             break;
         default:
-            luncheon_element.hide(500);
+            friday_luncheon_element.hide(500);
+            saturday_luncheon_element.hide(500);
             reunion_reservations_element.hide(500);
-            seventieth_lunch_element.hide(500);
             toggle_50_year_options('hide');
             reunion_dinner_cost = 0;
             // toggle_billing('hide');
@@ -363,8 +343,8 @@ function hide_initial_items(){
     attended_selector.parent().hide();
     guest_class_selector.parent().hide();
     $("#classreunionreservationsheaderItem").hide();
-    $(".words:contains('Saturday Luncheon')").parent().hide();
-    $(".words:contains('70th Reunion Dinner')").parent().hide();
+    $(".words:contains('Saturday's Luncheon')").parent().hide();
+    $(".words:contains('Friday's Luncheon')").parent().hide();
     reunion_dinner_selector.parent().hide();
     payment_amountElement.hide(500);
     $(".words:contains('Payment Amount')").parent().hide();
