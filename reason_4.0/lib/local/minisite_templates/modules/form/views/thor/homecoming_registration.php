@@ -122,7 +122,6 @@ class HomecomingRegistrationForm extends CreditCardNoPaymentThorForm {
         $alumni_dinner_cost = $this->_cleanup_cost($this->get_value_from_label('Alumni Dinner cost'));
 
         $reunion_cost       = 0;
-
         $total              = 0;
 
         $class_year = intval($this->get_value_from_label('Reunion Class Year'));
@@ -172,7 +171,7 @@ class HomecomingRegistrationForm extends CreditCardNoPaymentThorForm {
 
         $total = 0;
         $total = (($alumni_dinner_cost * intval($this->get_value_from_label('Friday\'s Alumni Dinner')))
-                + ($reunion_cost * intval($this->get_value_from_label('Reunion Dinner/Reception')))
+                + ($reunion_cost * intval($this->get_value_from_label('Saturday\'s Reunion Dinner/Reception')))
                 + ($booklet_cost * intval($this->get_value_from_label('50th Reunion Booklet'))));
         return $total;
     }
