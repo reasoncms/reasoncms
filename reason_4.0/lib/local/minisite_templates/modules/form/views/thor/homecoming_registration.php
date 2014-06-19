@@ -41,16 +41,34 @@ class HomecomingRegistrationForm extends CreditCardNoPaymentThorForm {
     function on_every_time() 
     {
         parent :: on_every_time(); 
+        $alumni_dinner_element = $this->get_element_name_from_label('Friday\'s Alumni Dinner');
+        $alumni_dinner_cost = $this->_cleanup_cost($this->get_value_from_label('Alumni Dinner cost'));
+        $txt = $this->get_display_name($alumni_dinner_element).' - $'.$alumni_dinner_cost.'/person';
+        $this->set_display_name($alumni_dinner_element, $txt);
+
+        $friday_luncheon_element = $this->get_element_name_from_label('Friday\'s Luncheon');
+        $txt = $this->get_display_name($friday_luncheon_element).' - no cost';
+        $this->set_display_name($friday_luncheon_element, $txt);
+
+        $saturday_luncheon_element = $this->get_element_name_from_label('Saturday\'s Luncheon');
+        $txt = $this->get_display_name($saturday_luncheon_element).' - no cost';
+        $this->set_display_name($saturday_luncheon_element, $txt);
+
+        $booklet_element = $this->get_element_name_from_label('50th Reunion Booklet');
+        $booklet_cost = $this->_cleanup_cost($this->get_value_from_label('Booklet cost'));
+        $txt = $this->get_display_name($booklet_element).' - $'.$booklet_cost.'/booklet';
+        $this->set_display_name($booklet_element, $txt);
+
         $this->add_element('your_information_header', 'comment', array('text'=>'<h4>Your Information</h4>'));
         $this->move_element('your_information_header', 'before', $this->get_element_name_from_label('Current First Name'));
         $this->add_element('guest_information_header', 'comment', array('text'=>'<h4>Spouse/Guest Information</h4>'));
         $this->move_element('guest_information_header', 'before', $this->get_element_name_from_label('Spouse/Guest Name'));
-        $this->add_element('alumni_dinner_header', 'comment', array('text'=>'<h4>Alumni Dinner Reservations</h4>'));
-        $this->move_element('alumni_dinner_header', 'before', $this->get_element_name_from_label('Friday\'s Alumni Dinner'));
+        // $this->add_element('alumni_dinner_header', 'comment', array('text'=>'<h4>Alumni Dinner Reservations</h4>'));
+        // $this->move_element('alumni_dinner_header', 'before', $this->get_element_name_from_label('Friday\'s Alumni Dinner'));
         $this->add_element('class_reunion_reservations_header', 'comment', array('text'=>'<h4>Class Reunion Reservations</h4>'));
-        $this->move_element('class_reunion_reservations_header', 'after', $this->get_element_name_from_label('Friday\'s Alumni Dinner'));
-        $this->add_element('50_year_reunion_header', 'comment', array('text'=>'<h4>50 Year Reunion</h4>'));
-        $this->move_element('50_year_reunion_header', 'before', $this->get_element_name_from_label('50th Reunion Luncheon'));
+        $this->move_element('class_reunion_reservations_header', 'after', $this->get_element_name_from_label('Guest Class Year'));
+        // $this->add_element('50_year_reunion_header', 'comment', array('text'=>'<h4>50 Year Reunion</h4>'));
+        // $this->move_element('50_year_reunion_header', 'after', $this->get_element_name_from_label('Dining Restrictions?'));
         $class_year = $this->get_element_name_from_label('Reunion Class Year');
           $this->change_element_type($class_year, 'year', array('num_years_before_today'=>'75','num_years_after_today'=>'-1'));
         $attended_luther = $this->get_element_name_from_label('Attended Luther');
@@ -103,9 +121,8 @@ class HomecomingRegistrationForm extends CreditCardNoPaymentThorForm {
         $booklet_cost       = $this->_cleanup_cost($this->get_value_from_label('Booklet cost'));
         $alumni_dinner_cost = $this->_cleanup_cost($this->get_value_from_label('Alumni Dinner cost'));
 
-        $reunion_cost = 0;
-
-        $total = 0;
+        $reunion_cost       = 0;
+        $total              = 0;
 
         $class_year = intval($this->get_value_from_label('Reunion Class Year'));
         $cur_year = idate('Y');
@@ -154,7 +171,7 @@ class HomecomingRegistrationForm extends CreditCardNoPaymentThorForm {
 
         $total = 0;
         $total = (($alumni_dinner_cost * intval($this->get_value_from_label('Friday\'s Alumni Dinner')))
-                + ($reunion_cost * intval($this->get_value_from_label('Reunion Dinner/Reception')))
+                + ($reunion_cost * intval($this->get_value_from_label('Saturday\'s Reunion Dinner/Reception')))
                 + ($booklet_cost * intval($this->get_value_from_label('50th Reunion Booklet'))));
         return $total;
     }
@@ -214,5 +231,11 @@ class HomecomingRegistrationForm extends CreditCardNoPaymentThorForm {
             $this->set_error($pa_element, '<strong>Incorrect Payment Amount</strong>. The amount set in the payment amount field does not equal the cost for all chosen options. Please check your math or <a href="http://enable-javascript.com/" target="_blank">enable javascript</a> to have the form automatically fill in this field.<br>');
         }
         parent :: run_error_checks();
+        if (isset($this->pfresult['PNREF']))
+        {
+            $this->set_value($this->get_element_name_from_label('REFNUM'), $this->pfresult['PNREF']);
+        } else {
+            $this->set_value($this->get_element_name_from_label('REFNUM'), '');
+        }
     }
 }
