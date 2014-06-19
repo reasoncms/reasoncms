@@ -1,8 +1,3 @@
-/* line 12, scss/_ie9.scss */
-.lt-ie10 .left-off-canvas-menu,
-.no-csstransforms3d .left-off-canvas-menu {
-  display: none;
-}
 @media only screen and (max-width: 40em) {
   /* line 17, scss/_ie9.scss */
   .lt-ie10 .left-off-canvas-menu,
