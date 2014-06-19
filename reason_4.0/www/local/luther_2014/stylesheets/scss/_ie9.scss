@@ -9,9 +9,10 @@
 .lt-ie10,
 .no-csstransforms3d {
 
+	.left-off-canvas-menu {display: none;}
+
 	@media
 	#{$small-only} {
-		  //$off-canvas-width: 70%;
 		  // move off canvas menus off the viewport
 		  .left-off-canvas-menu { left: -($off-canvas-width); } 
 		  .right-off-canvas-menu { right: -($off-canvas-width); }
@@ -24,7 +25,6 @@
 
   	@media
 	#{$medium-only} {
-		  $off-canvas-width: 70%;
 		  // move off canvas menus off the viewport
 		  .left-off-canvas-menu { left: -($off-canvas-width); } 
 		  .right-off-canvas-menu { right: -($off-canvas-width); }
@@ -34,5 +34,5 @@
 		  .move-right > .inner-wrap { left: $off-canvas-width; }
 
 	}
-	
+
 }
