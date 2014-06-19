@@ -253,6 +253,12 @@ function get_directory_images($folder)
 
 function google_analytics()
 {
+	if (preg_match("/^localhost$/", REASON_HOST, $matches))
+	{
+		echo '<!-- localhost: google analytics code goes here on production servers -->'."\n";
+		return;
+	}
+
 	echo '<script type="text/javascript">'."\n";
 
 	echo 'var _gaq = _gaq || [];'."\n";
