@@ -120,47 +120,51 @@
   text-align: center;
 }
 /* line 143, ../scss/sites/sports.scss */
+.lutherSports #minisite .uname_luther_sports_affiliations p {
+  display: inline;
+}
+/* line 147, ../scss/sites/sports.scss */
 .lutherSports #minisite .uname_luther_sports_affiliations a {
   display: inline-block;
   margin: 1.25rem;
 }
-/* line 148, ../scss/sites/sports.scss */
+/* line 152, ../scss/sites/sports.scss */
 .lutherSports #minisite .uname_luther_sports_affiliations img {
   width: 6.25rem;
 }
-/* line 157, ../scss/sites/sports.scss */
+/* line 161, ../scss/sites/sports.scss */
 .lutherSports .responsiveEventsList table {
   border: none;
 }
-/* line 161, ../scss/sites/sports.scss */
+/* line 165, ../scss/sites/sports.scss */
 .lutherSports .responsiveEventsList table tr th,
 .lutherSports .responsiveEventsList table tr td {
   font-size: 100%;
   padding: 0.9375rem;
 }
 @media only screen and (max-width: 40em) {
-  /* line 165, ../scss/sites/sports.scss */
+  /* line 169, ../scss/sites/sports.scss */
   .lutherSports .responsiveEventsList table tr th.location,
   .lutherSports .responsiveEventsList table tr td.location {
     display: none;
   }
 }
-/* line 180, ../scss/sites/sports.scss */
+/* line 184, ../scss/sites/sports.scss */
 .lutherSports .responsiveEventsList .view-all ul {
   margin: 0;
 }
-/* line 185, ../scss/sites/sports.scss */
+/* line 189, ../scss/sites/sports.scss */
 .lutherSports .responsiveEventsList .view-all ul .more:after {
   content: "\f138";
   margin-left: 0.375rem;
 }
-/* line 195, ../scss/sites/sports.scss */
+/* line 199, ../scss/sites/sports.scss */
 .lutherSports #preFoot {
   background: #eeeeee;
   width: 100%;
   margin: 0 auto 1.25rem auto;
 }
-/* line 201, ../scss/sites/sports.scss */
+/* line 205, ../scss/sites/sports.scss */
 .lutherSports #preFoot:before, .lutherSports #preFoot:after {
   display: block;
   height: 1px;

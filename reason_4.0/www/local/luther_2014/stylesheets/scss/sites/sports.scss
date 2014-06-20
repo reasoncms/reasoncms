@@ -140,6 +140,10 @@ $minisite-nav-color: $lc-white;
 		.uname_luther_sports_affiliations {
 			text-align: center;
 
+			p {
+				display: inline;
+			}
+
 			a {
 				display: inline-block;
 				margin: $column-gutter/2;
