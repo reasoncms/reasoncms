@@ -48,6 +48,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'sub_nav_2' => '',
 			'sub_nav_3' => '',
 			'edit_link' => 'login_link',
+			'pre_foot' => '',
 			'footer' => 'maintained',
 			'post_foot' => '',
 		'global_footer' => 'global/global_footer',
