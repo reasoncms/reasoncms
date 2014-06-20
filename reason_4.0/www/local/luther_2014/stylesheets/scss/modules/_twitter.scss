@@ -21,16 +21,29 @@
 
 
 .twitter-block{
-	.recent-tweets {
-		&:before {
-			@extend .fa;
-			content: $fa-var-twitter;
-			padding-right: $column-gutter/4;
-		}	
+
+	i {
+		font-size: $h3-font-size;
+		margin-top: rem-calc(4);
+		margin-right: $column-gutter/4;
+		padding-bottom: $column-gutter/2;
+		float: left;
 	}
 
 	h3 {
 		display: inline-block;
+		float: left;
+		//margin: 0;
+	}
+
+	.recent-tweets {
+		margin-bottom: 0;
+		margin-right: $column-gutter/4;
+	}
+
+	p,
+	ul {
+		clear: both;
 	}
 
 	.date {
