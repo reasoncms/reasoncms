@@ -48,6 +48,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'sub_nav_2' => '',
 			'sub_nav_3' => '',
 			'edit_link' => 'login_link',
+			'pre_foot' => '',
 			'footer' => 'maintained',
 			'post_foot' => '',
 		'global_footer' => 'global/global_footer',
@@ -168,7 +169,22 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'sub_nav_3' => '',
 	),
 	'faculty' => array(
-		'main_post' => 'faculty_luther'
+		'main_post' => 'faculty_luther',
+		'post_main_head' => array(
+			'module' => 'image_sidebar',
+			'num_to_display' => 1,
+			'thumbnail_width' => 1200,
+			'thumbnail_crop' => 'fit',
+			'caption_flag' => false,
+		),
+		'pre_sidebar_2' => array(
+			'module' => 'image_sidebar',
+			'num_to_skip' => 1,
+			'thumbnail_width' => 600,
+			'thumbnail_height' => 400,
+			'thumbnail_crop' => 'fill',
+			'num_to_display' => 0,
+		)
 	),
 	'faculty_first' => array(
 		'main' => 'faculty_luther',

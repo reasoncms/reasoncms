@@ -1,0 +1,39 @@
+//
+// IE9
+//
+
+@import "settings";
+
+// Off Canvas Navigation fix
+// ie9 doesn't have CSS 3d trasnformations.
+
+.lt-ie10,
+.no-csstransforms3d {
+
+	@media
+	#{$small-only} {
+		  //$off-canvas-width: 70%;
+		  // move off canvas menus off the viewport
+		  .left-off-canvas-menu { left: -($off-canvas-width); } 
+		  .right-off-canvas-menu { right: -($off-canvas-width); }
+
+		  // Snap them in place
+		  .move-left > .inner-wrap { right: $off-canvas-width; }
+		  .move-right > .inner-wrap { left: $off-canvas-width; }
+
+	}
+  	@media
+	#{$medium-only} {
+		//  $off-canvas-width: 70%;
+		  // move off canvas menus off the viewport
+		  .left-off-canvas-menu { left: -($off-canvas-width); } 
+		  .right-off-canvas-menu { right: -($off-canvas-width); }
+
+		  // Snap them in place
+		  .move-left > .inner-wrap { right: $off-canvas-width; }
+		  .move-right > .inner-wrap { left: $off-canvas-width; }
+
+	}
+
+
+}

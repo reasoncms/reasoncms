@@ -195,9 +195,7 @@
 		function do_org_head_items()
 		{	
 			// Javascripts
-			// @todo: Is this the correct modernizer?  Not sure.
-			$this->head_items->add_javascript('/reason/local/luther_2014/javascripts/vendor/custom.modernizr.js');
-			//$this->head_items->add_javascript('/reason/local/luther_2014/javascripts/vendor/jquery.js');
+			$this->head_items->add_javascript('/reason/local/luther_2014/javascripts/vendor/modernizr.js');
 			$this->head_items->add_javascript(JQUERY_URL, true);			
 			$this->head_items->add_javascript('/reason/local/luther_2014/javascripts/luther-gcse.js');
 			
@@ -207,7 +205,9 @@
 			$this->head_items->add_stylesheet('/reason/local/luther_2014/stylesheets/fonts/font-awesome/css/font-awesome.css');
 			$this->head_items->add_stylesheet('/reason/local/luther_2014/stylesheets/dependencies/dependencies.css');
 			$this->head_items->add_stylesheet('/reason/local/luther_2014/stylesheets/base.css');
-		}
+			$this->head_items->add_stylesheet('/reason/local/luther_2014/stylesheets/ie.css');
+
+	}
 		
 		function do_org_foot()
 		{	
@@ -228,6 +228,7 @@
 			
 			// Custom
 			echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/luther.js"></script>';
+			echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/vendor/rem.js"></script>';
 
 			//$this->foot_items->add_javascript('/reason/local/luther_2014/javascripts/fooooooot.js');
 		}
@@ -587,10 +588,20 @@
 		{
 			echo '<footer id="footer" role="contentInfo">'."\n";
 			$this->show_luther_contact_blurb();
+			if ($this->has_content( 'pre_foot' ))
+			{
+				echo '<div id="preFoot">'."\n";
+				$this->run_section( 'pre_foot' );
+				echo '</div>'."\n";
+			}	
 			$this->run_section( 'footer' );
 			$this->run_section( 'edit_link' );
 			if ($this->has_content( 'post_foot' ))
-				$this->run_section( 'post_foot' );
+			{
+				echo '<div id="postFoot">'."\n";
+				$this->run_section( 'poist_foot' );
+				echo '</div>'."\n";
+			}
 			echo '</footer>'."\n";
 		}
 	}
