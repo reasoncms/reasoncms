@@ -24,7 +24,9 @@
 		}
 
 		function do_org_foot()
-		{ 
+		{
+			google_analytics();
+			 
 			// Foundation scripts need to be directly before end of body
 			// We don't need most of the scripts from luther.php, so we take them out here.
 			echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/vendor/fastclick.js"></script>';

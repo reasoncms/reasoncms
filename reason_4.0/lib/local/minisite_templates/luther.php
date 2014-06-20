@@ -210,7 +210,9 @@
 	}
 		
 		function do_org_foot()
-		{ 
+		{	
+			google_analytics();
+			 
 			// Foundation scripts need to be directly before end of body
 			// Foundation recommends including jQuery at the bottom on the body (below). But this causes conflicts
 			// with Reason scripts, like Features. Currently, we're just calling it in the head via in the normal reason way.
