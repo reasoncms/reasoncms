@@ -171,3 +171,7 @@
   background: gainsboro;
   content: "";
 }
+/* line 213, ../scss/sites/sports.scss */
+.lutherSports #post-footer p {
+  color: #FFF !important;
+}
