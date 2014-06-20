@@ -67,9 +67,10 @@ $pageContent: '#pageContent';  // Normal page content wysiwyg
 $fullPost: '.fullPost .text';  // Full article wysiwyg
 $blurb-content: '#{$contentSections} .blurb';  // Main content blurb wysiwyg
 $blurb-related: '#{$relatedSections} .blurb';  // Sidebar blurb wysiwyg
+$faq-content: '#faq .answer';
 
-$wysiwyg-all-areas: '#{$pageContent}, #{$fullPost}, #{$blurb-related}, #{$blurb-content}';
-$wysiwyg-content-area: '#{$pageContent}, #{$fullPost}';
+$wysiwyg-all-areas: '#{$pageContent}, #{$fullPost}, #{$blurb-related}, #{$blurb-content}, #{$faq-content}';
+$wysiwyg-content-area: '#{$pageContent}, #{$fullPost}, #{$faq-content}';
 $wysiwyg-related-area: #{$blurb-related};
 
 // global colors
