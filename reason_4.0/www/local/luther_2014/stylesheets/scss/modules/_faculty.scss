@@ -1,0 +1,129 @@
+//
+// ASSET STYLES
+//
+// @author Nathan Dirks
+//
+
+// Foundation imports
+@import "settings";
+@import "foundation/components/grid";
+
+// Compass imports
+@import "compass/css3";
+
+// Font Awesome Imports
+@import "font-awesome/variables";
+@import "font-awesome/core";
+
+// Luther imports
+@import "extends";
+@import "mixins";
+
+#facultyStaff {
+	margin: 0 0 $column-gutter;
+
+	.facStaff {
+		border-bottom: 1px dotted $lc-grey;
+		padding: $column-gutter 0;
+		@include clearfix;
+
+		&:first-child {
+			padding-top: 0;
+		}
+
+		figure {
+			width: 25%;
+			margin: 0 0 $paragraph-margin-bottom $paragraph-margin-bottom;
+			float: right;
+			//margin: 0 auto;
+
+			@media
+			#{$medium-up} {
+				float: left;
+				width: rem-calc(150);
+				margin: 0 $paragraph-margin-bottom $paragraph-margin-bottom 0;
+			}
+
+			img {
+				width: 100%;
+			}
+		}
+
+		.facStaffName,
+		.facStaffInfo {
+
+			@media
+			#{$medium-up} {
+				margin-left: rem-calc(200) !important;
+			}	
+		}
+
+		.facStaffName {
+			margin: 0;
+			font-size: $h3-font-size;
+			font-weight: 400;
+		}
+
+		.facStaffInfo {
+
+		}
+
+		.facStaffTitle {
+			font-size: $h5-font-size;
+		}
+
+		.facStaffContact {
+			margin-top: $column-gutter/1.75;
+			margin-left: $column-gutter/2;
+			
+			li {
+
+				margin-left: rem-calc(40);
+
+				strong {
+					@extend .screenreader;
+				}
+
+				&:before {
+					@extend .fa;
+					width: rem-calc(32);
+					margin-left: - rem-calc(36);
+					text-align: center;
+				}
+
+			}
+
+			.facStaffOffice {
+
+				&:before {
+					content: $fa-var-map-marker;
+				}
+			}
+
+			.facStaffPhone {
+				&:before {
+					content: $fa-var-phone;
+				}
+			}
+
+			.facStaffEmail {
+				&:before {
+					content: $fa-var-laptop;
+				}
+			}
+		}
+
+		.facStaffContent {
+
+			.more {
+
+				&:before {
+					@extend .fa;
+					content: $fa-var-user;
+					margin-right: rem-calc(6);
+				}
+			}
+		}
+	}
+
+}

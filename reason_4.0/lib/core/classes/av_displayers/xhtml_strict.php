@@ -326,7 +326,7 @@ class xhtmlStrictReasonAVDisplay
 		}
 		else
 		{
-			$src = $entity->get_value('url');
+			$src = $this->equalize_protocol($entity->get_value('url'));
 		}
 		if($dimensions['width'] || $dimensions['height'] )
 		{
@@ -350,6 +350,15 @@ class xhtmlStrictReasonAVDisplay
 		$ret[] = '</object>';
 		
 		return implode("\n",$ret);
+	}
+	
+	function equalize_protocol($url)
+	{
+		if(on_secure_page() && substr($url,0,7) == 'http://')
+		{
+			$url = 'https://'.substr($url,7);
+		}
+		return $url;
 	}
 	/**
 	 * Creates appropriate markup for realplayer.
@@ -388,13 +397,14 @@ class xhtmlStrictReasonAVDisplay
 			}
 			$controls = implode(',',$controls_array);
 		}
+		$url = $this->equalize_protocol($entity->get_value('url'));
 		
 		$ret[] = '<object id="realWidget'.$entity->id().'" '.$dimensions_attrs.' classid="clsid:CFCDAA03-8BE4-11cf-B84B-0020AFBBCCFA">';
-		$ret[] = '<param name="src" value="'.$entity->get_value('url').'" />';
+		$ret[] = '<param name="src" value="'.$url.'" />';
 		$ret[] = '<param name="autostart" value="'.$this->parameters['real']['autostart'].'" />';
 		$ret[] = '<param name="controls" value="'.$controls.'" />';
 		$ret[] = '<param name="console" value="'.$this->parameters['real']['console'].'" />';
-		$ret[] = '<embed src="'.$entity->get_value('url').'" '.$dimensions_attrs.' nojava="'.$this->parameters['real']['nojava'].'" autostart="'.$this->parameters['real']['autostart'].'" controls="'.$this->parameters['real']['controls'].'" pluginspage="http://www.real.com/player/"></embed>';
+		$ret[] = '<embed src="'.$url.'" '.$dimensions_attrs.' nojava="'.$this->parameters['real']['nojava'].'" autostart="'.$this->parameters['real']['autostart'].'" controls="'.$this->parameters['real']['controls'].'" pluginspage="http://www.real.com/player/"></embed>';
 		$ret[] = '</object>';
 		return implode("\n",$ret);
 	}
@@ -438,8 +448,10 @@ class xhtmlStrictReasonAVDisplay
 			$show_display = 'false';
 		}
 		
-		$ret[] = '<object id="windowsMediaWidget'.$entity->id().'" type="video/x-ms-wmv" data="'.$entity->get_value('url').'" '.$dimensions_attrs.'>';
-		$ret[] = '<param name="src" value="'.$entity->get_value('url').'" />';
+		$url = $this->equalize_protocol($entity->get_value('url'));
+		
+		$ret[] = '<object id="windowsMediaWidget'.$entity->id().'" type="video/x-ms-wmv" data="'.$url.'" '.$dimensions_attrs.'>';
+		$ret[] = '<param name="src" value="'.$url.'" />';
 		$ret[] = '<param name="autostart" value="'.$this->parameters['wmv']['autostart'].'" />';
 		$ret[] = '<param name="ShowControls" value="'.$this->parameters['wmv']['ShowControls'].'" />';
 		$ret[] = '<param name="ShowDisplay" value="'.$show_display.'" />';
@@ -477,7 +489,7 @@ class xhtmlStrictReasonAVDisplay
 		}
 		$dimensions_attrs = 'width="'.$dimensions['width'].'" height="'.$dimensions['height'].'"';
 		
-		$url = REASON_FLASH_VIDEO_PLAYER_URI.'?file='.$entity->get_value('url').'&amp;autostart='.$this->parameters['flv']['autostart'];
+		$url = REASON_FLASH_VIDEO_PLAYER_URI.'?file='.$this->equalize_protocol($entity->get_value('url')).'&amp;autostart='.$this->parameters['flv']['autostart'];
 		if(isset($this->parameters['flv']['controlbar']))
 			$url .= '&amp;controlbar='.htmlspecialchars($this->parameters['flv']['controlbar']);
 		if(!empty($this->placard_image_url))
@@ -489,10 +501,11 @@ class xhtmlStrictReasonAVDisplay
 			$ret[] = '<param name="allowfullscreen" value="true" />';
 		}
 		$extension = $this->get_extension($entity->get_value('url'));
+		$link_text = 'Audio' == $entity->get_value('av_type') ? 'Unable to play this audio.' : 'Unable to play this video. ';
+		$link = $link_text.'<a href="'.$entity->get_value('url').'">';
+		
 		if('flv' != $extension)
 		{
-			$link_text = 'Audio' == $entity->get_value('av_type') ? 'Play Audio (.'.htmlspecialchars($extension).')' : 'Play Video (.'.htmlspecialchars($extension).')';
-			$link = '<a href="'.$entity->get_value('url').'">';
 			if(!empty($this->placard_image_url))
 			{
 				$placard_width = !empty($this->placard_image_dimensions['width']) ? $this->placard_image_dimensions['width'] : $orig_dimensions['width'];
@@ -501,11 +514,15 @@ class xhtmlStrictReasonAVDisplay
 			}
 			else
 			{
-				$link .= $link_text;
+				$link .= 'Download '.$entity->get_value('av_type').' (.'.htmlspecialchars($extension).')';
 			}
-			$link .= '</a>';
-			$ret [] = $link;
 		}
+		else
+		{
+			$link .= 'Download '.$entity->get_value('av_type').' (.'.htmlspecialchars($extension).')';
+		}
+		$link .= '</a>';
+		$ret [] = $link;
 		$ret [] = '</object>';
 		
 		return implode("\n",$ret);
@@ -541,12 +558,12 @@ class xhtmlStrictReasonAVDisplay
 		{
 			$dimensions_attrs = 'width="'.$dimensions['width'].'" height="'.$dimensions['height'].'"';
 		}
-		
+		$url = $this->equalize_protocol($entity->get_value('url'));
 		$ret[] = '<object id="flashWidget'.$entity->id().'" '.$dimensions_attrs.' classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" type="application/x-shockwave-flash" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab">';
-		$ret[] = '<param name="movie" value="'.$entity->get_value('url').'" />';
+		$ret[] = '<param name="movie" value="'.$url.'" />';
 		if(!empty($this->parameters['swf']['wmode']))
 			$ret[] = '<param name="wmode" value="'.$this->parameters['swf']['wmode'].'" />';
-		$ret[] = '<embed type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" src="'.$entity->get_value('url').'" '.$dimensions_attrs.'></embed>';
+		$ret[] = '<embed type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" src="'.$url.'" '.$dimensions_attrs.'></embed>';
 		$ret[] = '</object>';
 		return implode("\n",$ret);
 	}

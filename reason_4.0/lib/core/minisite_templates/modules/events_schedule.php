@@ -15,10 +15,12 @@
  */
 class ScheduleEventsModule extends EventsModule
 {
-	function handle_params( $params )
+	var $default_list_markup = 'minisite_templates/modules/events_markup/schedule/schedule_events_list.php';
+	var $default_list_item_markup = 'minisite_templates/modules/events_markup/schedule/schedule_events_list_item.php';
+	function init( $args = array() )
 	{
-		$this->acceptable_params['list_type'] = 'schedule';
-		parent::handle_params( $params );
+		trigger_error('The events_schedule module is deprecated and will go away in future versions of Reason. Use the events module with "list_markup" => "minisite_templates/modules/events_markup/schedule/schedule_events_list.php", "list_item_markup" => "minisite_templates/modules/events_markup/schedule/schedule_events_list_item.php" in the page type instead.');
+		parent::init($args);
 	}
 	
 }

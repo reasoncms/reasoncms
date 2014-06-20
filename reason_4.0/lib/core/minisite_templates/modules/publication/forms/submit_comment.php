@@ -23,6 +23,7 @@ $GLOBALS[ '_publication_comment_forms' ][ basename( __FILE__, '.php' ) ] = 'comm
  */
 class commentForm extends Disco
 {
+	var $box_class = 'StackedBox';
 	var $elements = array(
 		'author' => array(
 								'type'=>'text',

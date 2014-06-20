@@ -13,40 +13,17 @@
 
 	/**
 	 * A minisite module that displays a link to switch between full graphics and limited graphics mode
+	 * @deprecated Will be removed in future versions of Reason
 	 */
 	class TextOnlyToggleModule extends DefaultMinisiteModule
 	{
 		function has_content()
 		{
-			return true;
+			trigger_error('Reason\'s text-only mode has been removed. Please remove the textonly_toggle module from your page types!');
+			return false;
 		}
 		function run()
 		{
-			if (!empty($this->parent->textonly))
-			{
-				echo '<p class="'.$this->generate_class().'"><a href="'.$this->generate_link().'">View full graphics version of this page</a></p>'."\n";
-			}
-			else
-			{
-				echo '<p class="'.$this->generate_class().'"><a href="'.$this->generate_link().'"><span class="textOnly">Text Only/<span class="tiny"> </span>Printer-Friendly</span></a></p>'."\n";
-			}
-		}
-		function generate_class()
-		{
-			if (!empty($this->parent->textonly))
-				return 'fullGraphicsLink';
-			else
-				return 'textOnlyLink smallText';
-		}
-		function generate_link()
-		{
-			if ( empty( $this->parent->textonly )) return carl_make_link(array('textonly' => 1), '', 'qs_only');
-			else return carl_make_link(array('textonly' => ''), '', 'qs_only');
-		}
-		
-		function get_documentation()
-		{
-			return '<p>Displays a link to switch between normal mode and text-only/printer-friendly mode</p>';
 		}
 	}
 ?>

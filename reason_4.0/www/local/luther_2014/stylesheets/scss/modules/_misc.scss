@@ -1,0 +1,96 @@
+//
+// MISC STYLES
+//
+// @author Nathan Dirks
+//
+
+// Foundation imports
+@import "settings";
+@import "foundation/components/grid";
+
+// Compass imports
+@import "compass/css3";
+
+// Font Awesome Imports
+@import "font-awesome/variables";
+@import "font-awesome/core";
+
+// Luther imports
+@import "extends";
+@import "mixins";
+
+// WYSIWIG COLUMNS
+// This provides a two column layout for wysiwig content.
+//
+// Markup example:
+//
+// <div class="group two-column">
+// <div class="section">
+// ...text....
+// </div>
+// <div class="section">
+// ...text....
+// </div>
+// </div>
+
+@mixin two-columns {
+	.group.two-column .section {
+		@include grid-column(8);
+
+		&:nth-child(2n+1) {
+			clear: left;
+		}
+	}
+}
+
+.group.two-column {
+	@include grid-row();
+
+	.section {
+		h1,
+		h2,
+		h3 {
+			font-size: $h3-font-size;
+		}
+	}
+}
+	
+.hasConRelNav { /* 3 COLUMNS: Nav, Content, & Related */
+
+	@media
+	#{$small-high-only} {
+		@include two-columns;
+	}
+
+	@media
+	#{$large-high-up} {
+		@include two-columns;
+	}
+}
+
+.hasConNav { /* 2 COLUMNS: Nav & Content (no Related) */
+
+	@media
+	#{$small-high-up} {
+		@include two-columns;
+	}
+
+}
+
+.hasConRel { /* 2 COLUMNS: Content & Related (no Nav) */
+
+	@media
+	#{$small-high-up} {
+		@include two-columns;
+	}
+
+}
+
+.hasCon { /* 1 COLUMN: Content (no Nav or Related) */ 
+
+	@media
+	#{$small-high-up} {
+		@include two-columns;
+	}
+
+}

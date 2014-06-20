@@ -12,6 +12,7 @@ reason_include_once('classes/url_manager.php');
 reason_include_once('classes/page_types.php');
 reason_include_once('minisite_templates/page_types.php');
 reason_require_once( 'minisite_templates/page_types.php' );
+reason_include_once( 'classes/plasmature/head_items.php' );
 include_once( DISCO_INC . 'plugins/input_limiter/input_limiter.php' );
 
 $GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'MinisitePageManager';
@@ -26,6 +27,19 @@ class MinisitePageManager extends parent_childManager
 	var $root_node_description_text = '-- Home Page --';
 	var $parent_sort_order = 'sortable.sort_order ASC';
 	
+	function init( $externally_set_up = false)
+	{
+		parent::init($externally_set_up);
+		// If we're creating an external link rather than a page, change the page title accordingly
+		if (!$this->has_url())
+		{
+			if ( !($this->get_value( 'name' ) ) AND !(strlen($this->get_value( 'name' )) > 0))
+				$this->admin_page->title = 'Adding Link';
+			else
+				$this->admin_page->title = 'Editing "'.$this->get_value('name').'" (Link)';
+		}
+	}
+	
 	function init_head_items()
 	{
 		parent::init_head_items();
@@ -35,6 +49,8 @@ class MinisitePageManager extends parent_childManager
 		}
 		$this->head_items->add_stylesheet(REASON_ADMIN_CSS_DIRECTORY.
 				'content_managers/minisite_page.css');
+		$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.
+				'content_managers/page.js');
 	}
 	
 	/**
@@ -106,48 +122,28 @@ class MinisitePageManager extends parent_childManager
 	
 	function alter_data()
 	{
+		$fields = array('name', 'link_name', 'parent_id', 'parent_info', 'url_fragment', 'custom_page', 'page_type_note', 'content', 'visibility_heading', 'state', 'state_action', 'nav_display', 'indexable','metadata_heading', 'author', 'description', 'keywords', 'administrator_section_heading', 'extra_head_content_structured', 'extra_head_content', 'unique_name');
+		
 		parent::alter_data();
 		$this->_no_tidy[] = 'url_fragment';
 		$this->_no_tidy[] = 'custom_page';
 		$this->_no_tidy[] = 'extra_head_content';
+		$this->_no_tidy[] = 'extra_head_content_structured';
 		
 		$this->set_allowable_html_tags('extra_head_content','all');
+		$this->set_allowable_html_tags('extra_head_content_structured','all');
 
 		$this->add_element( 'is_link', 'hidden' );
 		if( !empty( $_REQUEST[ 'is_link' ] ) OR $this->get_value( 'url' ) )
 			$this->set_value( 'is_link', true );
 		else
 			$this->set_value( 'is_link', false );
+
 		$this->set_display_name( 'name', 'Title');
-		$this->change_element_type( 'nav_display','select_no_sort' );
-		$this->set_display_name( 'nav_display', 'Show this page in navigation' );
-		if( !$this->get_value( 'nav_display' ) )
-			$this->set_value( 'nav_display', 'Yes' );
-			
-		$this->set_comments( 'link_name', form_comment('If the page title is long, you can provide a shorter title for use in the site\'s navigation.<br /><em>Leave this field <strong>empty</strong> to use the full page title.</em>') );
-
-		if( reason_user_has_privs( $this->admin_page->user_id, 'publish' ) )
-		{
-			if( $this->get_value( 'parent_id' ) != $this->admin_page->id AND !$this->is_new_entity() )
-			{
-				$this->change_element_type( 'state','select',array( 'options' => array( 'Live' => 'Live', 'Pending' => 'Pending' ) ) );
-				$this->add_required( 'state' );
-			} 
-			elseif ( $this->is_new_entity() )
-			{
-				$this->add_element( 'state_action','select',array( 'options' => array( 'Live' => 'Live','Pending' => 'Pending' ), 'default' => 'Live' ) );
-				$this->set_display_name( 'state_action', 'state' );
-				$this->add_required( 'state_action' );
-			}
-		}	
-
-		if ($this->entity->has_right_relation_of_type('minisite_page_parent') && $this->get_value('state') == 'Live')
-		{
-			$this->set_comments('state', form_comment('The state cannot be changed because this page has live children'));
-			$this->change_element_type('state', 'solidtext');
-			$this->remove_required('state');
-		}
-
+		$this->set_display_name('link_name', 'Title Used in Navigation');
+		$this->set_element_properties( 'link_name', array('size' => 25) );
+		$this->set_comments( 'link_name', form_comment('If the page title is long, you can shorten the title for use in the site\'s navigation.') );
+		
 		// don't show the url for the root page.  it is defined by the site's base_url
 		$roots = $this->root_node();
 		if( $this->_id == $this->get_value( 'parent_id' ) || ($this->allow_creation_of_root_node && empty($roots) ) )
@@ -164,14 +160,14 @@ class MinisitePageManager extends parent_childManager
 			if(reason_user_has_privs( $this->admin_page->user_id, 'edit_home_page_nav_link'))
 			{
 				$site = new entity($this->admin_page->site_id);
-				$this->set_comments('link_name',form_comment('The contents of this field will be used to indicate the home page in the site\'s navigation.<br />Leave this field <strong>empty</strong> to use the default text: <strong>'.$site->get_value('name').' Home</strong>'));
+				$this->set_comments('link_name',form_comment('This is the text of the home page link in the site\'s navigation.'));
+				if (!$this->get_value('link_name')) $this->set_value('link_name', $site->get_value('name').' Home');
 			}
 			else
 			{
-				$this->change_element_type( 'link_name', 'hidden' );
+				$this->change_element_type( 'link_name', 'hidden', array('userland_changeable' => true) );
 			}
 		}
-		
 		// if we have a subpage, show the url fragment field
 		elseif( $this->has_url() && !($this->get_value( 'id' ) == $this->get_value('parent_id')))
 		{
@@ -182,10 +178,69 @@ class MinisitePageManager extends parent_childManager
 			// You may need to change the javascript to see any wording change here.
 			$this->set_comments( 'url_fragment', form_comment('<span class="url_comment_replace">The final part of the page\'s Web address.</span> <span class="rules">Only use letters and numbers; separate words with hyphens (-). Please avoid upper-case letters.</span>') );
 			$this->add_required( 'url_fragment' );
-			$this->add_required( 'nav_display' );
 			$this->_add_page_url_elements($this->_available_parents);
 		}
 
+		if (!$this->get_value('link_name')) $this->set_value('link_name', $this->get_value('name'));
+		
+		$this->change_element_type( 'nav_display','radio_no_sort', array(
+			'options'=>array(
+				'Yes'=>'Include this page in the site\'s navigation links',
+				'No'=>'Hide this page from navigation (page will still be accessible by URL)'),
+			'display_name'=>'Navigation',
+				));
+		if( !$this->get_value( 'nav_display' ) ) $this->set_value( 'nav_display', 'Yes' );
+		
+		$add = 'Allow search engines to add this page to their index';
+		$site = new entity( $this->get_value( 'site_id' ) );
+		if ($site->get_value('site_state') != 'Live') $add .= ' (once this site has been made live)';
+		$this->change_element_type( 'indexable','radio_no_sort', array(
+			'options'=>array(
+				1=>$add,
+				0=>'Ask seach engines to ignore this page and the links it contains'),
+			'display_name'=>'Search Engines',
+				));
+			
+		$visibility_text = '<h4>Visibility</h4><p>These options control how easily people can find this page. 
+			<em>If this page should not be visible to the public,</em> you should set State = Pending'; 
+		if ($this->has_association('page_to_access_group'))
+			$visibility_text .= ' or use Restrict Access in the sidebar to attach an access group.';
+		else
+			$visibility_text .= ' or contact your Reason administrator about adding access groups to your site.';
+			
+		$this->add_element('visibility_heading', 'comment', array('text' => $visibility_text));
+
+		$this->add_element('metadata_heading', 'comment', array('text' => '<h4>Metadata</h4>
+			<p>These fields provide additional information about the page, but are typically not displayed
+			to site visitors. Description and Keywords are visible to search engines, and can affect how 
+			easily this page can be found by searching.</p>'));
+		
+		if( reason_user_has_privs( $this->admin_page->user_id, 'publish' ) )
+		{
+			if( $this->get_value( 'parent_id' ) != $this->admin_page->id AND !$this->is_new_entity() )
+			{
+				$this->change_element_type( 'state','select',array( 'options' => array( 'Live' => 'Live', 'Pending' => 'Pending' ) ) );
+				$this->add_required( 'state' );
+			} 
+			/* Why are we creating a special new state element for new pages? Figure out if we can
+			   just use the state element all the time. */
+			elseif ( $this->is_new_entity() )
+			{
+				$this->add_element( 'state_action','select',array( 'options' => array( 'Live' => 'Live','Pending' => 'Pending' ), 'default' => 'Live' ) );
+				$this->set_display_name( 'state_action', 'state' );
+				$this->add_required( 'state_action' );
+			}
+		}	
+
+		if ($this->entity->has_right_relation_of_type('minisite_page_parent') && $this->get_value('state') == 'Live')
+		{
+			$this->set_comments('state', form_comment('The state cannot be changed because this page has live children'));
+			$this->change_element_type('state', 'solidtext');
+			$this->remove_required('state');
+		} else {
+			$this->set_comments('state', form_comment('LIVE pages are published on your site. PENDING pages are not published, and are only visible under Pending Items in the Reason page list.'));			
+		}
+				
 		if( $this->has_url() )
 		{
 			$this->set_display_name( 'custom_page','Type of Page' );
@@ -194,13 +249,23 @@ class MinisitePageManager extends parent_childManager
 			if( !reason_user_has_privs( $this->admin_page->user_id, 'edit_head_items') )
 			{
 				$this->remove_element( 'extra_head_content' );
+				$this->remove_element( 'extra_head_content_structured' );
 			}
+			else
+			{
+				$this->change_element_type( 'extra_head_content_structured', 'head_items' );
+				$this->set_display_name('extra_head_content_structured','Header Items');
+				$this->set_display_name('extra_head_content','Additional Header Content');
+				$this->add_comments('extra_head_content',form_comment('If you need to add headers that are not simple css or javascript, enter raw HTML header markup here.'));
+			}
+			
+			$this->alter_page_type_section();
 			
 			// for admin users
 			$rpts =& get_reason_page_types();
 			if(reason_user_has_privs( $this->admin_page->user_id, 'assign_any_page_type'))
 			{
-				$options = array();
+				$options = array(''=>'--');
 				$pts = $rpts->get_page_types();
 				$deprecated_mods = $this->_get_deprecated_modules();
 					
@@ -214,13 +279,14 @@ class MinisitePageManager extends parent_childManager
 					}
 
 				}
-				$this->change_element_type( 'custom_page' , 'select' , array( 'options' => $options ) );
+				ksort($options);
+				$primary = $this->get_element_property('custom_page', 'options');
+				if(!empty($primary))
+					$this->change_element_type( 'custom_page' , 'radio_with_other_no_sort' , array( 'options' => $primary, 'other_options' => $options ) );
+				else
+					$this->change_element_type('custom_page' , 'select_no_sort', array( 'options' => $options ));
 				$this->set_comments( 'custom_page', form_comment('<a href="'.REASON_HTTP_BASE_PATH.'scripts/page_types/view_page_type_info.php">Page type definitions</a>.') );
 
-			}
-			else
-			{
-				$this->alter_page_type_section();
 			}
 			
 			$page_type_for_note = $this->get_value('custom_page') ? $this->get_value('custom_page') : 'default';
@@ -237,7 +303,6 @@ class MinisitePageManager extends parent_childManager
 			$this->set_comments( 'author', form_comment('Source or original author of this page') );
 			$this->set_comments( 'description', form_comment('A brief summary of the page. For best results when the page is indexed by search engines, try to not exceed 156 characters.') );
 			$this->set_comments( 'keywords', form_comment('Comma-separated keywords (for search engines) ie "Dave, Hendler, College, Relations"') );
-			$this->set_comments( 'nav_display', form_comment('If YES, the page shows up in the navigation box. If NO, the page does not.') );	
 			$this->set_comments( 'parent_id', form_comment(''));
 			$this->change_element_type( 'url', 'hidden' );
 
@@ -247,21 +312,24 @@ class MinisitePageManager extends parent_childManager
 		}
 		else
 		{
-			// loop thorugh all elements making them hidden, except for the important link fields
-			$link_fields = array( 'name', 'url', 'parent_id', 'nav_display', 'description' );
+			// loop through all elements making them hidden, except for the important link fields
+			$fields = array( 'name', 'url', 'parent_id', 'nav_display', 'description' );
 			foreach($this->get_element_names() as $element_name)
 			{
-				if( !in_array( $element_name, $link_fields ) )
-					$this->change_element_type( $element_name, 'hidden' );
+				if( !in_array( $element_name, $fields ) )
+					$this->change_element_type( $element_name, 'hidden', array('userland_changeable' => true) );
 			}
 			
-/*				foreach( $this->_elements AS $name => $el )
-				if( !in_array( $name, $link_fields ) )
-					$this->change_element_type( $name, 'hidden' ); */
+			$this->set_element_properties( 'nav_display', array(
+				'options'=>array(
+					'Yes'=>'Include this link in the site\'s navigation',
+					'No'=>'Hide this link in the navigation')
+				));
 			$this->add_required( 'url' );
 			$this->set_comments( 'url', form_comment('The URL of the external link - should usually begin with http:// unless it is a link to a location within this site') );
 			$this->set_comments( 'name', form_comment('The title of link displayed in your site\'s navigation.') );
 			$this->set_comments( 'parent_id', form_comment('Use this field to choose the link\'s parent page.') );
+			$this->set_comments( 'description', form_comment('A brief description for this link; only displayed if the parent page shows its children.') );
 		}
 		
 		// Suggest a limit of 156 characters so that google will display the complete description.
@@ -270,14 +338,29 @@ class MinisitePageManager extends parent_childManager
 		$limiter->suggest_limit('description', 156);
 		$limiter->auto_show_hide('description', false);
 		
-		$this->set_order(array('name', 'link_name', 'unique_name', 'author', 'description', 'keywords', 'parent_id', 'parent_info', 'url_fragment', 'extra_head_content', 'nav_display', 'custom_page', 'page_type_note', 'content') );
+		$administrator_fields = array('extra_head_content_structured', 'extra_head_content', 'unique_name');
+		$has_administrator_field = false;
+		foreach($administrator_fields as $field)
+		{
+			if($this->is_element($field) && !$this->element_is_hidden($field) )
+			{
+				$has_administrator_field = true;
+				break;
+			}
+		}
+		if($has_administrator_field)
+		{
+			$this->add_element('administrator_section_heading', 'comment', array('text' => '<h4>Administrator Tools</h4>'));
+		}
+				
+		$this->set_order($fields);
 	}
 	
 	function _add_page_url_elements($parents)
 	{
 		foreach($this->build_path_map($parents) as $id=>$path)
 		{
-			$this->add_element('path_to_'.$id, 'hidden');
+			$this->add_element('path_to_'.$id, 'protected');
 			$this->set_value('path_to_'.$id, $path);
 		}
 	}
@@ -289,8 +372,8 @@ class MinisitePageManager extends parent_childManager
 	function alter_page_type_section()
 	{
 		$basic_options = array( 
-			"default" => "Normal Page",
-			"gallery" => 'Photo Gallery <span class="smallText">(Shows associated images in a gallery format)</span>',
+			'default' => 'Normal Page',
+			'gallery' => 'Photo Gallery <span class="smallText">(Shows associated images in a gallery format)</span>',
 			'show_children' => 'Shows children <span class="smallText">(Shows child pages in a list with their descriptions. Note: this includes pages not shown in navigation.)</span>',
 			'show_siblings' => 'Shows siblings <span class="smallText">(Shows this page\'s sibling pages after the content of the page. Note: this includes pages not shown in navigation.)</span>',
 		);
@@ -325,11 +408,14 @@ class MinisitePageManager extends parent_childManager
 		
 		if ( !$this->get_value('custom_page') ) $this->set_value( 'custom_page', 'default' ); // set as default if no value
 		
-		if ( array_key_exists($this->get_value('custom_page'),$basic_options ) )
+		if ( array_key_exists($this->get_value('custom_page'),$basic_options ) || reason_user_has_privs( $this->admin_page->user_id, 'assign_any_page_type') )
 		{
 			$this->change_element_type( 'custom_page' , 'radio_no_sort' , array( 'options' => $basic_options ) );
 		}
-		else $this->change_element_type( 'custom_page', 'solidtext' );	
+		else 
+		{
+			$this->change_element_type( 'custom_page', 'solidtext' );
+		}
 	}
 	
 	function alter_tree_list( $list, $parent_id )
@@ -494,6 +580,12 @@ class MinisitePageManager extends parent_childManager
 			$this->set_value('url_fragment', '');
 			$this->set_value('nav_display', 'Yes');
 		}
+		
+		$site = new entity($this->admin_page->site_id);
+		if ($this->get_value('link_title') == $this->get_value('name') ||
+			$this->get_value('link_title') == $site->get_value('name').' Home')
+			$this->set_value('link_title', '');
+		
 		parent::process();
 	}
 	

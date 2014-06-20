@@ -24,7 +24,7 @@ $GLOBALS[ '_slot_registration_view_class_names' ][ basename( __FILE__, '.php') ]
  * A form by which people can register for an event's registration slot
  */
 class EventSlotRegistrationForm extends Disco{
-
+	var $box_class = 'StackedBox';
 	/**
 	* Array of elements the form will use
 	* @access public
@@ -63,6 +63,8 @@ class EventSlotRegistrationForm extends Disco{
 	var $show_date_change_link = false;
 	var $include_time_in_email = true;
 	
+	var $actions = array('Register');
+	
 	function __construct($event_entity, $request_array, $delimiter1, $delimiter2, $cancel_link)
 	{
 		$this->event = $event_entity;
@@ -77,9 +79,10 @@ class EventSlotRegistrationForm extends Disco{
 		$slot_entity = get_entity_by_id($this->request_array['slot_id']);
 		$registrants = explode($this->delimiter1, $slot_entity['registrant_data']);
 
+		$lc_email = strtolower($this->get_value('email'));
 		foreach ($registrants as $registrant => $value) {
 			$regs = explode($this->delimiter2, $value);
-			if (in_array($this->get_value('email'), $regs))
+			if (in_array($lc_email, array_map('strtolower', $regs)))
 			{
 				return false;
 			}

@@ -150,15 +150,19 @@ class ImageSidebarModule extends DefaultMinisiteModule
 		$desc = isset( $this->description ) ? $this->description : true;
 		$text = isset( $this->additional_text ) ? $this->additional_text : "";
 		
+		echo '<div class="imageSidebarModule">'."\n";
+		
 		if ( !empty($this->textonly) )
 			echo '<h3>Images</h3>'."\n";
+		
+		$even_odd = 'odd';
 		
 		foreach( $this->images AS $id => $image )
 		{
 			$show_text = $text;
 			if( !empty( $this->show_size ) )
 				$show_text .= '<br />('.$image->get_value( 'size' ).' kb)';
-			echo '<div class="imageChunk '.$this->get_api_class_string().'">';
+			echo '<div class="imageChunk '.$this->get_api_class_string().' '.$even_odd.'">';
 			
 			if($this->params['thumbnail_width'] != 0 or $this->params['thumbnail_height'] != 0)
 			{
@@ -188,8 +192,11 @@ class ImageSidebarModule extends DefaultMinisiteModule
 				show_image( $image, $die, $popup, $desc, $show_text, $this->textonly, false, $this->get_image_url($image) );
 				
 			echo "</div>\n";
+			
+			$even_odd = ($even_odd == 'even') ? 'odd' : 'even';
 		}
-	
+		
+		echo '</div>'."\n";
 	}
 	
 	function get_image_detail_content()

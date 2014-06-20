@@ -38,6 +38,8 @@
 										'thumbnail_crop' => '',
 										'parent_unique_name' => '',
 										'force_full_page_title' => false,
+										'html5' => false,
+										'chunks' => 1,
 									);
 		var $offspring = array();
 		var $az = array();
@@ -193,17 +195,53 @@
 				$class = 'childrenList';
 				if($this->params['provide_images'])
 					$class .= ' childrenListWithImages';
-				echo '<ul class="'.$class.'">'."\n";
 				$counter = 1;
 				$even_odd = 'odd';
 				
-				foreach( $this->offspring AS $child )
+				$offspring = $this->offspring;
+				
+				if($this->params['html5'])
 				{
-					$this->show_child_page($child,$counter,$even_odd);
+					static $counter = 0;
 					$counter++;
-					$even_odd = ($even_odd == 'even') ? 'odd' : 'even';
+					echo '<nav class="children" role="navigation" id="childrenModule'.$counter.'">'."\n";
 				}
-				echo "</ul>\n";
+				if($this->params['chunks'] > 1)
+				{
+					$num = count($offspring);
+					$num_per_chunk = ceil($num / $this->params['chunks']);
+					$chunks = array();
+					for($i = 0; $i < $this->params['chunks']; $i++)
+					{
+						$offset = $i * $num_per_chunk;
+						$chunks[$i] = array_slice($offspring, $offset, $num_per_chunk, true);
+					}
+					foreach($chunks as $chunk_key => $chunk)
+					{
+						
+						echo '<ul class="'.$class.' chunk chunk'. ($chunk_key + 1) .'">'."\n";
+						foreach( $chunk AS $child )
+						{
+							$this->show_child_page($child,$counter,$even_odd);
+							$counter++;
+							$even_odd = ($even_odd == 'even') ? 'odd' : 'even';
+						}
+						echo "</ul>\n";
+					}
+				}
+				else
+				{
+					echo '<ul class="'.$class.'">'."\n";
+					foreach( $this->offspring AS $child )
+					{
+						$this->show_child_page($child,$counter,$even_odd);
+						$counter++;
+						$even_odd = ($even_odd == 'even') ? 'odd' : 'even';
+					}
+					echo "</ul>\n";
+				}
+				if($this->params['html5'])
+					echo '</nav>'."\n";
 			}
 		}
 		
@@ -218,18 +256,24 @@
 			}
 			$page_name = strip_tags($page_name,'<span><strong><em>');
 			$link = $this->get_page_link($child);
+			$classes = array('number'.$counter, $even_odd);
 			$uname = '';
 			if($child->get_value( 'unique_name' ))
 			{
-				$uname = ' uname-'.reason_htmlspecialchars($child->get_value( 'unique_name' ));
+				$classes[] = 'uname-'.reason_htmlspecialchars($child->get_value( 'unique_name' ));
+			}
+			if($child->get_value('url'))
+			{
+				$classes[] = 'jump';
 			}
 				
-			echo '<li class="number'.$counter.' '.$even_odd.$uname.'">';
+			echo '<li class="'.implode(' ',$classes).'">';
 			
 			if($this->params['provide_az_links'] && array_key_exists($child->id(),$this->az))
 			{
 				echo '<a name="child_'.$this->az[$child->id()].'"></a>';
 			}
+			$image_markup = '';
 			if($this->params['provide_images'])
 			{
 				$image = $this->get_page_image($child->id());
@@ -254,22 +298,36 @@
 							{
 								$rsi->set_crop_style($this->params['thumbnail_crop']);
 							}
-							show_image($rsi, true, false, false, '' , '', false, $link);
+							if(!$this->params['html5'])
+								$image_markup = get_show_image_html($rsi, true, false, false, '' , '', false, $link);
+							else
+								$image_markup = get_show_image_html($rsi, true, false, false, '' , '', false );
 						}
 					}
 					else
 					{
-					show_image( $image->id(), true, false, false, '' , '', false, $link );
+						if(!$this->params['html5'])
+							$image_markup = get_show_image_html( $image->id(), true, false, false, '' , '', false, $link );
+						else
+							$image_markup = get_show_image_html( $image->id(), true, false, false, '' , '', false );
 					}
 				}
+				if(!$this->params['html5'])
+					echo $image_markup;
 			}
 			if($this->params['description_part_of_link'])
 			{
-				// needs somewhat different html since inline elements cannot contain block elements
-				echo '<a href="'.$link.'"'.$title_attr.'><strong>'.$page_name.'</strong><br />';
+				$element = $this->params['html5'] ? 'h4' : 'strong';
+				echo '<a href="'.$link.'"'.$title_attr.'>';
+				if($this->params['html5'])
+					echo $image_markup;
+				echo '<'.$element.'>'.$page_name.'</'.$element.'>';
+				if(!$this->params['html5'])
+					echo '<br />';
 				if ( $child->get_value( 'description' ))
 				{
-					echo "\n".'<span class="childDesc">'.$child->get_value( 'description' ).'</span>';
+					$element = $this->params['html5'] ? 'div' : 'span';
+					echo "\n".'<'.$element.' class="childDesc">'.$child->get_value( 'description' ).'</'.$element.'>';
 				}
 				echo '</a>';
 			}
@@ -332,10 +390,6 @@
 				else // we use a link relative to the site or absolute to another page
 				{
 					$link = $this->get_page_link_other_parent($page);
-				}
-				if (!empty($this->textonly))
-				{
-					$link .= '?textonly=1';
 				}
 			}
 			return $link;

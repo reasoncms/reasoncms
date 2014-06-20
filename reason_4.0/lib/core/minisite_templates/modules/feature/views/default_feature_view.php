@@ -99,10 +99,10 @@ class DefaultFeatureView extends FeatureView
 				$head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH."nyroModal/js/jquery.nyroModal-1.6.2.min.js");
 			}
 			$head_items->add_javascript(REASON_HTTP_BASE_PATH . 'js/feature.js');
-			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH . 'css/features/feature.css');
+			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH . 'css/features/feature_responsive.css');
 			$head_items->add_head_item("style",array("type"=>"text/css"),"
-			.features, .features .sizable { height:".$height."px; }
-			.features .sizable { width:".$width."px; }
+			.featuresModule { max-width: ".$width."px; }
+			.features { padding-bottom:" . round($height/$width*100, 5) . "%; }
 			",false);
 		}
 		
@@ -383,7 +383,7 @@ class DefaultFeatureView extends FeatureView
 				$media_str ="<div class=\"featureImage\" >\n";
 				$media_str.=$image_anchor_start."<img alt=\"".reason_htmlspecialchars($img_alt)."\"  name=\"big_pic\" src=\"".$img_url."\" />".$image_anchor_end."\n";
 				$media_str.="</div>";
-				$media_str.="<div class=\"featureVideo\" id=\"".$img_id."\" style=\"\">";
+				$media_str.="<div class=\"featureVideo nofitvids\" id=\"".$img_id."\" style=\"\">";
 				$media_str .= $av_html;
 				$media_str .= '<h3 class="featureTitle">'.$view_data['title'].'</h3>'."\n";
 				$media_str .= '<div class="featureText">'.$view_data['text'].$link.'</div>'."\n";

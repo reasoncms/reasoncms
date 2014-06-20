@@ -17,7 +17,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
-  config.vm.network :private_network, ip: "192.168.56.101"
+  config.vm.network :private_network, ip: "192.168.56.102"
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
@@ -38,10 +38,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.synced_folder "../luther_css_js/javascripts", "/var/www/javascripts/", :owner=>"www-data", :group=>"www-data"
   config.vm.synced_folder "../luther_css_js/stylesheets", "/var/www/stylesheets/", :owner=>"www-data", :group=>"www-data"
   config.vm.synced_folder "../luther_css_js/images", "/var/www/images/", :owner=>"www-data", :group=>"www-data"
-  config.vm.synced_folder "../luther_css_js/stock", "/var/www/stock/", :owner=>"www-data", :group=>"www-data"
 
   config.vm.synced_folder "../sql", "/var/sql"
-
 
   # Ansible provisioning
   config.vm.provision "ansible" do |ansible|

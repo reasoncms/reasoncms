@@ -1,0 +1,27 @@
+//
+// LUTHER MIXINS
+//
+
+// Reusable mixins that can be added to any rule.
+// Example:
+// .my-classypoo {@include lr-border(red);}
+//
+
+// Luther Mixins & Classes for Extending
+//////////////////////////////////////////////////////////
+
+@mixin lr-border($color) {
+	border-left: 7px solid $color;
+	border-right: 7px solid $color;
+}
+
+@mixin semi-transparent-text-color($color, $opacity) {
+	color: $color;
+	color: rgba($color, $opacity);
+}
+
+@mixin default-transition() {
+	@include transition-property(all);
+	@include transition-duration(.5s);
+	@include transition-timing-function(ease);
+}

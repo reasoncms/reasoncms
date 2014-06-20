@@ -39,9 +39,29 @@
 			$this->alter_slug_field();
 		}
 		
+		function run_error_checks()
+		{				
+			parent::run_error_checks();
+			if ($this->_is_element('slug') && reason_user_has_privs( $this->admin_page->user_id, 'edit_fragile_slugs' ) && $slug = $this->get_value('slug'))
+			{
+				if (!preg_match('/^[0-9a-z-_]+$/', $slug))
+					$this->set_error('slug', 'Slugs may only contain numbers, lowercase letters, hyphens, and underscores.');
+			}
+		}
+
+
 		function alter_slug_field()
 		{
-			if ($this->_is_element('slug')) $this->change_element_type('slug','hidden');
+			if ($this->_is_element('slug'))
+			{
+				if (!reason_user_has_privs( $this->admin_page->user_id, 'edit_fragile_slugs' )) 
+					$this->change_element_type('slug','hidden');
+				else
+				{
+					if ($this->get_value('slug'))
+						$this->set_comments('slug', form_comment('Warning: changing slugs may cause existing links to break. Proceed with caution.'));
+				}
+			}
 		}
 	}
 ?>

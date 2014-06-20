@@ -110,6 +110,8 @@ class PublicationModule extends Generic3Module
 	var $_blurbs_by_issue; // a place to cache blurbs organized by issue
 	var $_comment_group_helper; // The helper for the publication's comment group	
 	var $_comment_has_errors;
+	protected $_item_images = array();
+	protected $_item_media = array();
 		
 	/** 
 	* Stores the default class names and file names of the markup generator classes used by the module.  
@@ -134,6 +136,9 @@ class PublicationModule extends Generic3Module
 										'issue_list' => array ('classname' => 'PublicationIssueListMarkupGenerator',
 															   'filename' => 'minisite_templates/modules/publication/issue_list_markup_generators/default.php',
 															   ),
+										'persistent' => array('classname' => 'PublicationsPersistentMarkupGenerator',
+															  'filename' => 'minisite_templates/modules/publication/persistent_markup/default.php',
+															  ),
 								   	   );
 								   	   
 	var $related_markup_generator_info = array( 'list_item' => array ('classname' => 'RelatedListItemMarkupGenerator', 
@@ -145,7 +150,10 @@ class PublicationModule extends Generic3Module
 										        'featured_item' => array ('classname' => 'RelatedListItemMarkupGenerator', 
 										                          'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/related_item.php',
 										                          ),
-								   	   			);								   
+										        'persistent' => array ('classname' => 'EmptyMarkupGenerator', 
+										                          'filename' => 'minisite_templates/modules/publication/empty_markup_generator.php',
+										                          ),
+								   	   			);
 
 	/** 
 	* Maps the names of variables needed by the markup generator classes to the name of the method that generates them.
@@ -184,6 +192,10 @@ class PublicationModule extends Generic3Module
 									   'filter_interface_markup'=>'get_filter_interface_markup',
 									   'search_interface_markup'=>'get_search_interface_markup',
 									   'pagination_markup' => 'get_pagination_markup',
+									   'add_item_link' => 'get_add_item_link',
+									   'login_logout_link' => 'get_login_logout_link',
+									   'use_filters' => 'get_use_filters_value',
+									   'filtering_markup' => 'get_filtering_markup',
 									);
 	
 	/**
@@ -201,6 +213,7 @@ class PublicationModule extends Generic3Module
 													 'item_publication' => 'get_item_publication',
 													 'item_events' => 'get_item_events',
 													 'item_images' => 'get_item_images',
+													 'item_media' => 'get_item_media',
 													 'item_assets' => 'get_item_assets',
 													 'item_categories' => 'get_item_categories',
 													 'item_social_sharing' => 'get_item_social_sharing',
@@ -257,7 +270,7 @@ var $noncanonical_request_keys = array(
 				$this->publication = current($publications);
 				parent::init( $args );
 			}
-			else
+			elseif(!empty($this->params['no_publication_warning']))
 			{
 				trigger_error('No publications are associated with this publication page');
 			}
@@ -276,7 +289,6 @@ var $noncanonical_request_keys = array(
 			// Only load inline_editing javascript if inline editing is available for the module and active for the module
 			if ($inline_edit->available_for_module($this) && $inline_edit->active_for_module($this))
 			{
-				
 				$head_items =& $this->get_head_items();
 				$head_items->add_javascript(JQUERY_URL, true);
 				$head_items->add_javascript(REASON_HTTP_BASE_PATH . 'modules/publications/inline_editing.js');
@@ -387,9 +399,9 @@ var $noncanonical_request_keys = array(
 			}
 			parent::init( $args );
 		}
-		else
+		elseif(!empty($this->params['no_publication_warning']))
 		{
-			trigger_error('None of the related publications on this page are placed on a live page that runs the publication module in non-related mode.');
+			trigger_error('Publication module unable to find an active publication to display.');
 		}
 	}
 		
@@ -540,6 +552,7 @@ var $noncanonical_request_keys = array(
 		$this->acceptable_params['module_displays_search_interface'] = true;
 		$this->acceptable_params['module_displays_filter_interface'] = true;
 		$this->acceptable_params['show_pagination_in_module'] = true;
+		$this->acceptable_params['no_publication_warning'] = true;
 		parent::handle_params( $params );
 	}
 
@@ -717,9 +730,15 @@ var $noncanonical_request_keys = array(
 			$url = carl_construct_link(array(''), array('story_id', 'issue_id', 'section_id'));
 			if ($teaser = $this->get_teaser_image($item))
 			{
-				$protocol = (on_secure_page()) ? 'https' : 'http';
 				$teaser = reset($teaser);
-				$image_url = $protocol . '://'.$_SERVER['HTTP_HOST'].reason_get_image_url($teaser);
+				$image_urls[] = reason_get_image_url($teaser);
+			}
+			elseif ($images = $this->get_item_images($item))
+			{
+				foreach ($images as $image)
+				{
+					$image_urls[] = reason_get_image_url($image);
+				}
 			}
 			$site = $this->get_site_entity();
 			if ($site) $site_name = htmlspecialchars(trim(strip_tags($site->get_value('name'))),ENT_QUOTES,'UTF-8');
@@ -728,8 +747,67 @@ var $noncanonical_request_keys = array(
 			$head_items->add_head_item('meta',array( 'property' => 'og:title', 'content' => $title));
 			$head_items->add_head_item('meta',array( 'property' => 'og:url', 'content' => $url));
 			if (!empty($description)) $head_items->add_head_item('meta',array( 'property' => 'og:description', 'content' => $description));
-			if (!empty($image_url)) $head_items->add_head_item('meta',array( 'property' => 'og:image', 'content' => $image_url));
+			if (!empty($image_urls))
+			{
+				foreach ($image_urls as $image_url)
+				{
+					$head_items->add_head_item('meta',array( 'property' => 'og:image', 'content' => 'http://'.$_SERVER['HTTP_HOST'].$image_url));
+					if (HTTPS_AVAILABLE) $head_items->add_head_item('meta',array( 'property' => 'og:image:secure_url', 'content' => 'https://'.$_SERVER['HTTP_HOST'].$image_url));
+				}	
+			}
 			if (!empty($site_name)) $head_items->add_head_item('meta',array( 'property' => 'og:site_name', 'content' => $site_name));
+		}
+	}
+	
+	protected function _init_markup_generators()
+	{
+		/* if(!$this->_ok_to_show)
+			return; */
+		$head_items = $this->get_head_items();
+		if(empty($head_items))
+			return;
+		if(empty($this->current_item_id))
+		{
+			$persistent_markup_generator = $this->set_up_generator_of_type('persistent');
+			$persistent_markup_generator->add_head_items($head_items);
+			
+			if ($this->issue_list_should_be_displayed())
+			{
+				$issue_markup_generator = $this->set_up_generator_of_type('issue_list');
+				$issue_markup_generator->add_head_items($head_items);
+			}
+			else
+			{
+				$list_markup_generator = $this->set_up_generator_of_type('list');
+				$list_markup_generator->add_head_items($head_items);
+				$featured = $this->get_featured_items();
+				if(!empty($featured))
+				{
+					foreach($featured as $f)
+					{
+						$featured_list_item_markup_generator = $this->set_up_generator_of_type('featured_item', $f);
+						$featured_list_item_markup_generator->add_head_items($head_items);
+					}
+				}
+				if(!empty($this->items))
+				{
+					foreach($this->items as $item)
+					{
+						$list_item_markup_generator = $this->set_up_generator_of_type('list_item', $item);
+						$list_item_markup_generator->add_head_items($head_items);
+					}
+				}
+			}
+		}
+		else
+		{
+			$item = new entity($this->current_item_id);
+			
+			$persistent_markup_generator = $this->set_up_generator_of_type('persistent', $item);
+			$persistent_markup_generator->add_head_items($head_items);
+			
+			$item_markup_generator = $this->set_up_generator_of_type('item', $item);
+			$item_markup_generator->add_head_items($head_items);
 		}
 	}
 	
@@ -858,6 +936,8 @@ var $noncanonical_request_keys = array(
 						$this->_add_crumb( $section->get_value( 'name' ), $this->get_link_to_section($section) );
 					}
 				}
+				$this->item_specific_variables_to_pass['next_post'] = 'get_next_post';
+				$this->item_specific_variables_to_pass['previous_post'] = 'get_previous_post';
 				return true;
 			}
 			elseif (!empty($all_issue_keys) && in_array($requested_issue, $all_issue_keys))
@@ -1109,6 +1189,7 @@ var $noncanonical_request_keys = array(
 	{
 		if ($this->related_mode) $this->related_post_es_additional_init_actions();
 		$this->_init_social_media_integration();
+		$this->_init_markup_generators();
 	}
 	
 	/**
@@ -1174,7 +1255,6 @@ var $noncanonical_request_keys = array(
 			echo $this->_unauthorized_message;
 			return;
 		}
-		$this->item = $item;
 		
 		//if this is an issued publication, we want to say what issue we're viewing
 		$current_issue = $this->get_current_issue();
@@ -1209,7 +1289,29 @@ var $noncanonical_request_keys = array(
 	
 ////////
 // DISPLAY LIST METHODS
-////////	
+////////
+
+	
+		
+	function show_persistent()
+	{
+		if(!empty($this->current_item_id) && $this->request['story_id'] == $this->current_item_id)
+		{
+			$item = new entity($this->current_item_id);
+			$item->get_values();
+			$persistent_markup_generator = $this->set_up_generator_of_type('persistent', $item);
+		}
+		else
+		{
+			$persistent_markup_generator = $this->set_up_generator_of_type('persistent');
+		}
+		echo $persistent_markup_generator->get_markup();
+	}
+	
+	function get_use_filters_value()
+	{
+		return $this->use_filters;
+	}
 
 	//overloaded from generic3 so that the links to other issues will still appear even when there are no items for that issue.
 	function list_should_be_displayed()
@@ -1259,15 +1361,48 @@ var $noncanonical_request_keys = array(
 	*/
 	function set_up_generator_of_type($type, $item = false)
 	{
-		reason_include_once( $this->markup_generator_info[$type]['filename'] );
-		$markup_generator = new $this->markup_generator_info[$type]['classname']();
-		$markup_generator_settings = (!empty($this->markup_generator_info[$type]['settings'])) 
+		if(!isset($this->markup_generators[$type]))
+			$this->markup_generators[$type] = array();
+		$item_id = !empty($item) ? $item->id() : 0;
+		if(!isset($this->markup_generators[$type][$item_id]))
+		{
+			if(isset($this->markup_generator_info[$type]['filename']))
+			{
+				if(!reason_include_once( $this->markup_generator_info[$type]['filename'] ))
+				{
+					trigger_error('Markup generator file not found at '.$this->markup_generator_info[$type]['filename'].'. Empty markup generator substituted.');
+					reason_include_once('minisite_templates/modules/publication/empty_markup_generator.php');
+				}
+			}
+			else
+			{
+				trigger_error('No markup generator filename found for "'.$type.'". Empty markup generator substituted.');
+				reason_include_once('minisite_templates/modules/publication/empty_markup_generator.php');
+			}
+			if(isset($this->markup_generator_info[$type]['classname']))
+			{
+				if(class_exists($this->markup_generator_info[$type]['classname']))
+					$markup_generator = new $this->markup_generator_info[$type]['classname']();
+				else
+				{
+					trigger_error('Class '.$this->markup_generator_info[$type]['classname'].' not found. Empty markup generator substituted.');
+					$markup_generator = new EmptyMarkupGenerator();
+				}
+			}
+			else
+			{
+				trigger_error('No markup generator classname found for "'.$type.'". Empty markup generator substituted.');
+				$markup_generator = new EmptyMarkupGenerator();
+			}
+			$markup_generator_settings = (!empty($this->markup_generator_info[$type]['settings'])) 
 								     ? $this->markup_generator_info[$type]['settings'] 
 								     : '';
-		if (!empty($markup_generator_settings)) $markup_generator->set_passed_variables($markup_generator_settings);
-		$markup_generator->set_passed_variables($this->get_values_to_pass($markup_generator, $item));
-		//pray($this->get_values_to_pass($markup_generator, $item));
-		return $markup_generator;
+			if (!empty($markup_generator_settings)) $markup_generator->set_passed_variables($markup_generator_settings);
+			$markup_generator->set_passed_variables($this->get_values_to_pass($markup_generator, $item));
+			//pray($this->get_values_to_pass($markup_generator, $item));
+			$this->markup_generators[$type][$item_id] = $markup_generator;
+		}
+		return $this->markup_generators[$type][$item_id];
 	}
 	
 	/**
@@ -1303,9 +1438,15 @@ var $noncanonical_request_keys = array(
 			{
 				$values_to_pass[$var_name] = $item;
 			}
+			elseif($var_name == 'item')
+			{
+				$values_to_pass[$var_name] = false;
+			}
 			//elseif( isset($this->markup_generator_info
 			elseif( isset($this->$var_name))
+			{
 				$values_to_pass[$var_name] = $this->$var_name;
+			}
 		}
 		return $values_to_pass;
 	}
@@ -2112,6 +2253,13 @@ var $noncanonical_request_keys = array(
 			}
 		}
 		
+		function get_filtering_markup()
+		{
+			ob_start();
+			$this->show_filtering();
+			return ob_get_clean();
+		}
+		
 		function get_pagination_markup($class = '')
 		{
 			if($this->use_pagination && ( $this->show_list_with_details || empty( $this->current_item_id ) ) )
@@ -2128,6 +2276,7 @@ var $noncanonical_request_keys = array(
 					{
 						$class = ' '.$class;
 					}
+					$class .= ' page'.htmlspecialchars($this->request['page']);
 					return '<div class="pagination'.$class.'">'.$this->pagination_output_string.'</div>'."\n";
 				}
 			}
@@ -2159,7 +2308,6 @@ var $noncanonical_request_keys = array(
 						if(empty($item))
 							break;
 						next($items);
-						$this->item = $item;
 						$list_item_markup_generator = $this->set_up_generator_of_type('list_item', $item);
 						$list_item_markup_strings[$item->id()] = $list_item_markup_generator->get_markup();
 					}
@@ -2169,7 +2317,6 @@ var $noncanonical_request_keys = array(
 			{
 				foreach($this->items as $item)
 				{
-					$this->item = $item;
 					$list_item_markup_generator = $this->set_up_generator_of_type('list_item', $item);
 					$list_item_markup_strings[$item->id()] = $list_item_markup_generator->get_markup();
 				}
@@ -2636,6 +2783,23 @@ var $noncanonical_request_keys = array(
 			}
 			return $this->_item_images[$item->id()];
 		}
+		function get_item_media($item)
+		{
+			if (!isset($this->_item_media[$item->id()]))
+			{
+				$es = new entity_selector();
+				$es->set_env( 'site' , $this->site_id );
+				$es->description = 'Selecting media for news item';
+				$es->add_type( id_of('av') );
+				$es->add_right_relationship( $item->id(), relationship_id_of('news_to_media_work') );
+				$es->add_rel_sort_field( $item->id(), relationship_id_of('news_to_media_work') );
+				$es->set_order('rel_sort_order');
+				$es->add_relation( 'show_hide.show_hide = "show"' );
+				$es->add_relation( '(media_work.transcoding_status = "ready" OR ISNULL(media_work.transcoding_status) OR media_work.transcoding_status = "")' );
+				$this->_item_media[$item->id()] = $es->run_one();
+			}
+			return $this->_item_media[$item->id()];
+		}
 		function get_item_assets($item)
 		{
 			$es = new entity_selector();
@@ -2766,7 +2930,8 @@ var $noncanonical_request_keys = array(
 		{
 			if(empty($this->commenting_status[$item->id()]))
 			{
-				$this->commenting_status[$item->id()] = $this->get_commentability_status_full_check($item);
+				// if the item does not exist in the items array we return publication_comments_off without bothering to do the full check.
+				$this->commenting_status[$item->id()] = (isset($this->items[$item->id()])) ? $this->get_commentability_status_full_check($item) : 'publication_comments_off';
 			}
 			return $this->commenting_status[$item->id()];
 		}

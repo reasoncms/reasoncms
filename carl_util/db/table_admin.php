@@ -635,7 +635,8 @@ class TableAdmin
 		{
 			foreach ($filter_array as $k=>$v)
 			{
-				if (!empty($v)) $this->filters[$k] = array('name' => $k, 'value' => $v);
+				$v = trim($v);
+				if (strlen($v)) $this->filters[$k] = array('name' => $k, 'value' => $v);
 			}
 		}
 	}
@@ -646,7 +647,8 @@ class TableAdmin
 		{
 			foreach ($filter_array as $k=>$v)
 			{
-				if (!empty($v)) $this->filters[$k] = array('name' => $k, 'value' => '');
+				$v = trim($v);
+				if (strlen($v)) $this->filters[$k] = array('name' => $k, 'value' => '');
 			}
 		}
 	}
@@ -955,7 +957,6 @@ class TableAdmin
 		$first = ' class="first"';
 		$ret = '<tr>';
 		$count = 0;
-		$form_open_string = '<form name="search" action="'.get_current_url().'" method="post">';
 		if ($this->show_actions_first_cell)
 		{
 			$count++;
@@ -966,7 +967,7 @@ class TableAdmin
 		{	
 			$type = (!empty($this->_display_values[$k]['type'])) ? $this->_display_values[$k]['type'] : 'text';
 			$cur_value = (!empty($this->filters[$k])) ? htmlspecialchars($this->filters[$k]['value'],ENT_QUOTES,'UTF-8') : '';
-			$ret .= '<td'.$first.'>'.$form_open_string;
+			$ret .= '<td'.$first.'>';
 			if (($type == 'radiogroup') || ($type == 'optiongroup') || ($type == 'enum'))
 			{
 				$selected = '';
@@ -995,7 +996,6 @@ class TableAdmin
 		$ret .= '<tr>';
 		$ret .= '<td class="filterButtons" colspan='.$count.'>';
 		$ret .= '<input type="submit" name="filter_submit" value="Apply Filters"> <input type="submit" name="table_filter_clear" value="Clear Filters" />';
-		$ret .= '</form>';
 		$ret .= '</td>';
 		$ret .= '</tr>';
 		return $ret;
@@ -1238,6 +1238,8 @@ class TableAdmin
 		if ($this->allow_new) $menu_links['Create New Row'] = carl_make_link($links_new);
 		if ($this->show_header) $ret .= '<h3>Displaying '.$this->_filtered_rows.' of '.$this->_total_rows.' rows</h3>';
 		if (!empty($menu_links)) $ret .= $this->gen_menu($menu_links);
+		$form_open_string = '<form name="search" action="'.htmlspecialchars(get_current_url()).'" method="post">';
+		$ret .= $form_open_string;
 		$ret .= '<table class="table_data">';
 		$ret .= $header;
 		if ($this->allow_filters) $ret .= $this->gen_filter_rows($this->_row);
@@ -1247,6 +1249,7 @@ class TableAdmin
 			$ret .= $this->gen_data_row($data_row, $class);
 		}
 		$ret .= '</table>';
+		$ret .= '</form>';
 		return $ret;
 	}
 

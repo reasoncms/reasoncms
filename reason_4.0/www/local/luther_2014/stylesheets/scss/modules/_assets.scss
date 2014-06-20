@@ -1,0 +1,55 @@
+//
+// ASSET STYLES
+//
+// @author Nathan Dirks
+//
+
+// Foundation imports
+@import "settings";
+@import "foundation/components/grid";
+
+// Compass imports
+@import "compass/css3";
+
+// Font Awesome Imports
+@import "font-awesome/variables";
+@import "font-awesome/core";
+
+// Luther imports
+@import "extends";
+@import "mixins";
+
+.assets {
+
+	ul { // bump out the list to make room for icons
+		margin-left: $column-gutter/1.75;
+	}
+
+	li {
+		padding-bottom: $column-gutter/2;
+
+		&:last-child {
+			padding-bottom: 0;
+		}
+	}
+		
+	li:before {  // download icon
+		@extend .fa;
+		content: $fa-var-download;
+		color: darken($lc-grey, 25%);
+		margin-left: -$column-gutter/1.75;
+		float: left;
+		margin-top: rem-calc(6);
+	}
+
+	.name {
+		font-size: rem-calc(10);
+		color: lighten($body-font-color, 35%);
+
+		a {
+			font-size: rem-calc(16);
+			font-family: $header-font-family;
+			display: block;
+		}
+	}
+}

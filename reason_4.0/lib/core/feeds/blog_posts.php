@@ -14,6 +14,28 @@ reason_include_once( 'feeds/page_tree.php' );
 reason_include_once( 'classes/page_types.php' );
 $GLOBALS[ '_feed_class_names' ][ basename( __FILE__, '.php' ) ] = 'blogPostsFeed';
 
+
+/** Functions that act as handlers for the rss feed code, only used by the blog_post feed. **/	
+
+function get_blog_description_from_id($id)
+{
+	$post = new entity($id);
+	return $post->get_value('description');
+}
+
+function get_blog_content_from_id($id)
+{
+	$post = new entity($id);
+	if($post->get_value('content'))
+	{
+		return $post->get_value('content');
+	}
+	else
+	{
+		return get_blog_description_from_id($id);
+	}
+}
+
 /**
  * Generates feed for a particular publication
  */
@@ -78,10 +100,21 @@ class blogPostsFeed extends pageTreeFeed
 		
 		$this->feed->set_item_field_map('title','release_title');
 		$this->feed->set_item_field_map('author','author');
-		$this->feed->set_item_field_map('description','description');
+		// Set description to the blog post id so it can be passed to a handler
+		$this->feed->set_item_field_map('description','id');
 		$this->feed->set_item_field_map('pubDate','datetime');
 		
-		$this->feed->set_item_field_handler( 'description', 'expand_all_links_in_html', false );
+		// Check for include content toggle
+		if($this->blog->get_value('blog_feed_include_content')=='yes')
+		{
+			$this->feed->set_item_field_handler('description','get_blog_content_from_id',false);
+		}
+		else
+		{
+			$this->feed->set_item_field_handler('description','get_blog_description_from_id',false);
+		}
+		// Don't run this handler because it overwrites the content/description grab handlers
+		//$this->feed->set_item_field_handler( 'description', 'expand_all_links_in_html', false );
 		$this->feed->set_item_field_handler( 'title', 'strip_tags', false );
 		
 		$this->feed->es->add_relation( 'show_hide = "show"' );

@@ -59,19 +59,23 @@
 	 */
 	$GLOBALS['_reason_page_types'] = array(
 		'default' => array(
-			'pre_bluebar' => 'textonly_toggle_top',
+			'pre_bluebar' => '',
 			'main' => 'content',
 			'main_head' => 'page_title',
+			'main_post' => '',
+			'main_post_2' => '',
+			'main_post_3' => '',
 			'edit_link' => 'login_link',
 			'pre_banner' => 'announcements',
 			'banner_xtra' => 'search',
 			'post_banner' => 'navigation_top',
 			'pre_sidebar' => 'assets',
 			'sidebar' => 'image_sidebar',
+			'post_sidebar' => '',
 			'navigation' => 'navigation',
 			'footer' => 'maintained',
 			'sub_nav' => 'blurb',
-			'sub_nav_2' => 'textonly_toggle',
+			'sub_nav_2' => '',
 			'sub_nav_3' => '',
 			'post_foot' => '',
 		),
@@ -82,7 +86,6 @@
 			'sub_nav' => '',
 			'main_head' => '',
 			'main_post' => 'atoz',
-			'post_foot' => 'textonly_toggle',
 			'sidebar' => 'blurb',
 		),	
 		'image_sidebar_100x100' => array(
@@ -270,7 +273,6 @@
 			'sub_nav' => '',
 			'sub_nav_2' => '',
 			'sub_nav_3' => '',
-			'post_foot' => 'textonly_toggle',
 		),
 		'audio_video_on_current_site_with_filters' => array(
 			'main_post' => array(
@@ -546,7 +548,6 @@
 			'navigation' => '',
 			'sub_nav_2' => '',
 			'sub_nav' => '',
-			'post_foot' => 'textonly_toggle',
 			'main_post'=>'blurb',
 		),
 		'blurb_under_nav_and_below_content' => array(
@@ -616,7 +617,6 @@
 			'navigation' => '',
 			'sub_nav_2' => '',
 			'sub_nav' => '',
-			'post_foot' => 'textonly_toggle',
 		),
 		'children_and_grandchildren' => array(
 			'main_post' => array(
@@ -635,7 +635,6 @@
 			'navigation' => '',
 			'sub_nav_2' => '',
 			'sub_nav' => '',
-			'post_foot' => 'textonly_toggle',
 			'main_post' => array(
 				'module' => 'children_and_grandchildren',
 				'max_depth' => 2
@@ -646,7 +645,6 @@
 			'navigation' => '',
 			'sub_nav_2' => '',
 			'sub_nav' => '',
-			'post_foot' => 'textonly_toggle',
 			'main_post' => array(
 				'module' => 'children_and_grandchildren',
 				'max_depth' => 2
@@ -704,7 +702,6 @@
 			'sub_nav' => '',
 			'sub_nav_2' => '',
 			'sub_nav_3' => '',
-			'post_foot' => 'textonly_toggle',
 		),
 		'children_before_content' => array(
 			'main_post' => 'content',
@@ -720,7 +717,6 @@
 			'navigation' => '',
 			'sub_nav_2' => '',
 			'sub_nav' => '',
-			'post_foot' => 'textonly_toggle',
 			'main_post'=>'children',
 		),
 		'children_no_nav_no_title' => array(
@@ -728,7 +724,6 @@
 			'sub_nav_2' => '',
 			'sub_nav' => '',
 			'main_head' => '',
-			'post_foot' => 'textonly_toggle',
 			'main_post'=>'children',
 		),
 		'department_listing' => array(
@@ -738,7 +733,6 @@
 			'sub_nav' => '',
 			'main_head' => '',
 			'main_post' => 'department_list',
-			'post_foot' => 'textonly_toggle',
 			'sidebar' => 'blurb',
 		),
 		'event_registration' => array(
@@ -750,12 +744,16 @@
 			'sidebar' => '',
 		),
 		'event_slot_registration' => array(
-			'main_post' => 'event_slot_registration',
+			'main_post' => array(
+				'module' => 'events',
+				'list_item_markup' => 'minisite_templates/modules/events_markup/verbose/verbose_events_list_item.php',
+			),
 			'sidebar' => '',
 		),
 		'event_slot_registration_cache_1_hour' => array(
 			'main_post' => array(
-				'module' => 'event_slot_registration',
+				'module' => 'events',
+				'list_item_markup' => 'minisite_templates/modules/events_markup/verbose/verbose_events_list_item.php',
 				'cache_lifespan' => '3600',
 				'cache_lifespan_meta' => '7400',
 			),
@@ -828,14 +826,14 @@
 		'events_hybrid_verbose' => array(
 			'main_post' => array(
 				'module'=>'events_hybrid',
-				'list_type'=>'verbose',
+				'list_item_markup' => 'minisite_templates/modules/events_markup/verbose/verbose_events_list_item.php',
 			),
 			'sidebar' => '',
 		),
 		'events_archive_verbose' => array(
 			'main_post' => array(
 				'module'=>'events_archive',
-				'list_type'=>'verbose',
+				'list_item_markup' => 'minisite_templates/modules/events_markup/verbose/verbose_events_list_item.php',
 			),
 			'sidebar' => '',
 		),
@@ -846,7 +844,6 @@
 			'navigation' => '',
 			'sub_nav_2' => '',
 			'sub_nav' => '',
-			'post_foot' => 'textonly_toggle',
 		),
 		'events_nonav' => array(
 			'main_post' => 'events',
@@ -854,7 +851,6 @@
 			'sub_nav_2' => '',
 			'sub_nav' => '',
 			'sidebar' => '',
-			'post_foot' => 'textonly_toggle',
 		),
 		'events_sidebar' => array(
 			'sidebar' => 'events_mini',
@@ -911,20 +907,29 @@
 			'sidebar' => '',
 		),
 		'events_verbose' => array(
-			'main_post' => 'events_verbose',
+			'main_post' => array(
+				'module' => 'events',
+				'list_item_markup' => 'minisite_templates/modules/events_markup/verbose/verbose_events_list_item.php',
+			),
 			'sidebar' => '',
 		),	
 		'events_schedule' => array(
-			'main_post' => 'events_schedule',
+			'main_post' => array(
+				'module' => 'events',
+				'list_markup' => 'minisite_templates/modules/events_markup/schedule/schedule_events_list.php',
+				'list_item_markup' => 'minisite_templates/modules/events_markup/schedule/schedule_events_list_item.php',
+			),
 			'sidebar' => '',
 		),	
 		'events_verbose_nonav' => array(
-			'main_post' => 'events_verbose',
+			'main_post' => array(
+				'module' => 'events',
+				'list_item_markup' => 'minisite_templates/modules/events_markup/verbose/verbose_events_list_item.php',
+			),
 			'navigation' => '',
 			'sub_nav_2' => '',
 			'sub_nav' => '',
 			'sidebar' => '',
-			'post_foot' => 'textonly_toggle',
 		),	
 		'faculty' => array(
 			'main_post' => 'faculty',
@@ -941,7 +946,6 @@
 			'navigation' => '',
 			'sub_nav_2' => '',
 			'sub_nav' => '',
-			'post_foot' => 'textonly_toggle',
 			'main_post' => 'faculty',
 			'sidebar' => 'blurb',
 		),
@@ -1047,6 +1051,31 @@
 			'pre_sidebar'=>'events_mini',
 			'post_sidebar' => 'blurb',
 		),
+		'feature_slow_after_content_sidebar_news_events' => array(
+			'sub_nav' => 'blurb',
+			'main_post' => array(
+				'module' => 'feature/feature',
+				'shuffle' => false,
+				'autoplay_timer' => 5,
+				'width'=>500,
+				'height'=>300
+			),	
+			'pre_sidebar' => array(
+				'module' => 'publication',
+				'related_mode' => 'true',
+				'markup_generator_info' =>
+				array('list_item' => array(
+									'classname' => 'MinimalListItemMarkupGenerator', 
+									'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/minimal.php',
+									)
+					 ),
+				'max_num_items' => 4,
+			),
+			'sidebar'=> array(
+				'module' => 'events_mini',
+				'ideal_count' => 4,
+			),
+		),
 		'feature_before_content_sidebar_blurbs_first_under_subnav' => array(
 			'sub_nav' => array(
 				'module' => 'blurb',
@@ -1084,7 +1113,6 @@
 			'navigation' => '',
 			'sub_nav_2' => '',
 			'sub_nav' => '',
-			'post_foot' => '',
 			'main' => 'content',
 			'main_post' => 'feedback',
 		),
@@ -1104,7 +1132,6 @@
 			'navigation' => '',
 			'sub_nav_2' => '',
 			'sub_nav' => '',
-			'post_foot' => 'textonly_toggle',
 			'main' => 'form_content',
 			'main_post' => 'form'
 		),
@@ -1202,7 +1229,6 @@
 			'navigation' => '',
 			'sub_nav_2' => '',
 			'sub_nav' => '',
-			'post_foot' => 'textonly_toggle',
 		),
 		'gallery_no_nav' => array(
 			'main_post' => array(
@@ -1213,7 +1239,6 @@
 			'navigation' => '',
 			'sub_nav_2' => '',
 			'sub_nav' => '',
-			'post_foot' => 'textonly_toggle',
 		),
 		'gallery_single_page' => array(
 			'main_post' => array(
@@ -1308,7 +1333,9 @@
 			'pre_sidebar' => '',
 			'navigation' => '',
 			'main_post' => 'go',
-			'post_foot' => 'textonly_toggle',
+		),
+		'google_map' => array(
+			'main_post' => 'google_map',
 		),
 		'images_under_nav' => array(
 			'sidebar' => 'blurb',
@@ -1318,7 +1345,6 @@
 			'navigation' => 'image_sidebar',
 			'sub_nav_2' => '',
 			'sidebar' => '',
-			'post_foot' => 'textonly_toggle',
 		),
 		'image_slideshow' => array(
 			'main_post' => 'image_slideshow',
@@ -1349,7 +1375,6 @@
 			'navigation' => '',
 			'sub_nav_2' => '',
 			'sidebar' => '',
-			'post_foot' => 'textonly_toggle',
 		),
 		'image_slideshow_before_content_publication_sidebar' => array(
 			'main' => 'image_slideshow',
@@ -1455,7 +1480,6 @@
 			'sub_nav_2' => '',
 			'sub_nav' => '',
 			'main_post'=>'navigation',
-			'post_foot' => 'textonly_toggle',
 		),
 		'publication_sidebar' => array(
 			'sidebar' => array(
@@ -1529,7 +1553,6 @@
 		'no_sub_nav' => array(
 			'sub_nav_2' => '',
 			'sub_nav' => '',
-			'post_foot' => 'textonly_toggle',
 		),
 		'no_title' => array(
 			'main_head' => '',
@@ -1538,27 +1561,24 @@
 			'navigation' => '',
 			'sub_nav_2' => '',
 			'sub_nav' => '',
-			'post_foot' => 'textonly_toggle',
 		),
 		'noNavNoSearch' => array(
 			'banner_xtra' => '',
 			'navigation' => '',
 			'sub_nav_2' => '',
 			'sub_nav' => '',
-			'post_foot' => 'textonly_toggle',
 		),
 		'policy' => array(
 			'main_post' => 'policy',
 		),
 		'poll' => array(
-			'main' => array('module' => 'form', 'form_view' => 'minisite_templates/modules/poll/poll_form_view.php'),
-			'main_post' => array('module' => 'poll/polling_graph', 'custom_colors' => array('#cb4b4b', '#edc240', '#2f90dc', '#9440ed', '#4da74d')),
+			'main_post' => array('module' => 'form', 'form_view' => 'minisite_templates/modules/poll/poll_form_view.php'),
+			'main_post_2' => array('module' => 'poll/polling_graph', 'custom_colors' => array('#cb4b4b', '#edc240', '#2f90dc', '#9440ed', '#4da74d')),
 		),
 		'poll_sidebar' => array(
 			'pre_sidebar' => array('module' => 'form', 'form_view' => 'minisite_templates/modules/poll/poll_form_view.php'),
 			'sidebar' => array('module' => 'poll/polling_graph_sidebar', 'custom_colors' => array('#cb4b4b', '#edc240', '#2f90dc', '#9440ed', '#4da74d')),
 		),
-		
 		'projects' => array(
 			'main_post' => 'projects',
 		),
@@ -1628,7 +1648,6 @@
 			'navigation' => '',
 			'sub_nav_2' => '',
 			'sub_nav' => '',
-			'post_foot' => 'textonly_toggle',
 		),
 		'show_children_no_nav_hide_non_nav' => array(
 			'main_post' => array(
@@ -1638,7 +1657,6 @@
 			'navigation' => '',
 			'sub_nav_2' => '',
 			'sub_nav' => '',
-			'post_foot' => 'textonly_toggle'
 		),
 		'show_children_no_nav_no_title' => array(
 			'main_post' => 'children',
@@ -1646,7 +1664,6 @@
 			'navigation' => '',
 			'sub_nav_2' => '',
 			'sub_nav' => '',
-			'post_foot' => 'textonly_toggle',
 		),
 		'show_children_with_az_list' => array(
 			'main_post' => array(
@@ -1827,7 +1844,6 @@
 			'navigation' => '',
 			'sub_nav_2' => '',
 			'sub_nav' => '',
-			'post_foot' => 'textonly_toggle',
 			'main_post'=>'siblings',
 		),
 		'siblings_and_sidebar_blurbs' => array(
@@ -1911,7 +1927,6 @@
 					'Offices'=>array('office_site_type'),
 					'Other Sites'=>array('other_site_type'))), */
 			),
-			'post_foot' => 'textonly_toggle',
 			'sidebar' => 'blurb',
 		),
 		'standalone_login_page' => array(
@@ -1924,7 +1939,6 @@
 			'navigation' => '',
 			'sub_nav' => '',
 			'sub_nav_2' => '',
-			'post_foot' => 'textonly_toggle',
 			'main_post' => 'login',
 			'sidebar' => 'blurb',
 		),

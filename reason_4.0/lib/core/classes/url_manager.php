@@ -233,11 +233,6 @@
 				$this->debug( 'ID provided is not of a site entity' );
 				return;
 			}
-			if($this->site->get_value('state') != 'Live')
-			{
-				$this->debug( 'Site is not live.' );
-				return;
-			}
 			if( !$this->site->get_value( 'base_url' ) )
 			{
 				$this->debug( $this->site->get_value( 'name' ).' does not have a base_url.' );

@@ -16,6 +16,7 @@
 	 */
 	class NavigationTopModule extends DefaultMinisiteModule
 	{
+		var $acceptable_params = array('wrapper_element' => 'div');
 		function has_content()
 		{
 			if($pages =& $this->get_page_nav())
@@ -29,16 +30,16 @@
 		}
 		function run()
 		{
-			echo '<div id="topNavigation">';
+			echo '<'.$this->params['wrapper_element'].' id="topNavigation" role="navigation" aria-label="page">';
 			if($pages =& $this->get_page_nav())
 			{
 				$pages->show_top_nav();
 			}
 			else
 			{
-				echo 'Not able to show nav; no page nav object provided to module';
+				trigger_error('Not able to show nav; no page nav object provided to module');
 			}
-			echo '</div>';
+			echo '</'.$this->params['wrapper_element'].'>';
 		}
 		function get_documentation()
 		{

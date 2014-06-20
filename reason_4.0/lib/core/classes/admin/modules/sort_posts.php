@@ -22,6 +22,7 @@
 		var $form; // form entity
 		var $issue;
 		var $posts;
+		var $locked_posts = array();
 		
 		function SortPostsModule( &$page ) // {{{
 		{

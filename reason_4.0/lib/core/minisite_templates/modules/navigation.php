@@ -16,15 +16,21 @@
 	 */
 	class NavigationModule extends DefaultMinisiteModule
 	{
+		var $acceptable_params = array('wrapper_element' => 'div');
 		function has_content()
 		{
-			return $this->parent->pages->main_nav_has_content();
+			if($pages = $this->get_page_nav())
+				return $pages->main_nav_has_content();
+			return false;
 		}
 		function run()
 		{
-			echo '<div id="minisiteNavigation" class="'.$this->get_api_class_string().'">';
-			$this->parent->pages->do_display();
-			echo '</div>';
+			$pages = $this->get_page_nav();
+			if(empty($pages))
+				return;
+			echo '<'.$this->params['wrapper_element'].' id="minisiteNavigation" class="'.$this->get_api_class_string().'" role="navigation" aria-label="page">';
+			$pages->do_display();
+			echo '</'.$this->params['wrapper_element'].'>';
 		}
 		function get_documentation()
 		{

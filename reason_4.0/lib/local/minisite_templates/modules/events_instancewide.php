@@ -7,7 +7,7 @@
  /**
 * include the base class and register the module with Reason
 */
-reason_include_once( 'minisite_templates/modules/luther_events.php' );
+reason_include_once( 'minisite_templates/modules/events.php' );
 $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'EventsInstancewideModule';
 
 /**
@@ -19,7 +19,7 @@ $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'EventsInsta
 * a good idea to turn on page caching for the site that contains this module until these
 * performance issues are resolved.
 */
-class EventsInstancewideModule extends LutherEventsModule
+class EventsInstancewideModule extends EventsModule
 {
 	var $limit_to_current_site = false;
 	function _get_sites()
@@ -34,8 +34,8 @@ class EventsInstancewideModule extends LutherEventsModule
 	{
 		$type = new entity(id_of('event_type'));
 		if($type->get_value('feed_url_string'))
-			echo '<div class="feedInfo"><a href="/'.REASON_GLOBAL_FEEDS_PATH.
-			'/'.$type->get_value('feed_url_string').'" title="RSS feed for this site\'s events">xml</a></div>';
+			echo '<div class="feedInfo"><a class="rss" href="/'.REASON_GLOBAL_FEEDS_PATH.
+			'/'.$type->get_value('feed_url_string').'" title="RSS feed for this site\'s events">RSS</a></div>';
 	}
 
 	function get_all_categories() // {{{
@@ -58,7 +58,7 @@ class EventsInstancewideModule extends LutherEventsModule
 		if ($this->calendar->get_view() == "all")
 			$ret .= ' divider';
 		$ret .= '">'."\n";
-		$ret .= '<h4>Event Categories</h4>'."\n";
+		$ret .= '<h4><a href="#" data-dropdown="drop" class="custom-dropdown-button">Categories</a></h4>'."\n";
 		$ret .= '<ul>'."\n";
 		$ret .= '<li>';
 		$used_cats = $this->calendar->get_categories();

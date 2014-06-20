@@ -1,0 +1,197 @@
+//
+// LUTHER TYPE
+//
+// @author Nathan Dirks
+//
+// Typography variables can be set in Luther's _settings.scss.  Those variables are used in Foudnation's _type.scss 
+// and are written to our stylesheet when we set the parameter $include-html-type-classes to true (see line 9 below).
+// To keep from editing Foundation's _type.scss, we add any overrides or additional type styles below.
+
+$include-html-type-classes: true;
+$include-html-table-classes: true;
+
+// Foundaton imports
+@import "settings";
+@import "foundation/components/type";
+@import "foundation/components/tables";
+
+// Compass Imports
+@import "compass/css3";
+
+// Luther imports
+@import "extends";
+@import "mixins";
+
+/* Luther Custom Typography 
+*******************************************/
+
+a { // HTML5 sometimes wrapps anchors around headings. Let's make sure they still get the default anchor colors
+	&:link {
+		h1,
+		h2,
+		h3,
+		h4,
+		h5 {
+			color: $anchor-font-color;
+			text-decoration: $anchor-text-decoration;
+		}
+	}
+
+	&:visited {
+		h1,
+		h2,
+		h3,
+		h4,
+		h5 {
+			color: $anchor-font-color;
+		}
+	}
+
+	&:hover {
+		h1,
+		h2,
+		h3,
+		h4,
+		h5 {
+			color: $anchor-font-color-hover;
+		}
+	}
+
+}
+
+/* Blockquote */
+blockquote {
+	font-family: $blockquote-font-family;
+}
+
+/* Wysiwyg Formatting */  
+#{$wysiwyg-all-areas} {
+
+	p:empty {
+		display: none;
+	}
+
+	ol, // bullets needed for wysiwyg content
+	ul,
+	dl {
+		font-weight: $paragraph-font-weight;
+		padding-bottom: rem-calc(6);
+		margin-left: rem-calc(32);
+		&:last-child {
+			padding-bottom: 0;
+		}
+	}
+
+	li {
+		line-height: 2;
+	}
+	
+	ol li,
+	ol ol ol ol li {list-style-type: decimal;}
+	ol ol li,
+	ol ol ol ol ol li {list-style-type: lower-alpha;}
+	ol ol ol li,
+	ol ol ol ol ol ol li {list-style-type: lower-roman;}
+	
+	ul li,
+	ul ul ul ul li {list-style-type: disc;}
+	ul ul li,
+	ul ul ul ul ul li {list-style-type: circle;}
+	ul ul ul li,
+	ul ul ul ul ul ul li {list-style-type: square;}
+
+	a:link { // underline links
+		text-decoration: underline;
+	}
+
+	.callOut,
+	.callout {
+		clear: both;
+		//@include border-radius($global-radius);
+		background: $lc-grey;
+		border: 1px solid darken($lc-grey, 10%);
+		padding: $column-gutter/2 $column-gutter/1.5;
+		margin-bottom: $paragraph-margin-bottom;
+		@include clearfix;
+		font-family: $header-font-family;
+
+		*:last-child {
+			margin-bottom: 0;
+		}
+
+		&.callout-success {
+			background: rgba($lc-green, .25);
+			border: 1px solid rgba($lc-green, .5);
+		}
+		
+		&.callout-warning {
+			background: rgba($lc-yellow, .25);
+			border: 1px solid rgba($lc-yellow, .65);
+		}
+		
+		&.callout-danger {
+			background: rgba($lc-red, .25);
+			border: 1px solid rgba($lc-red, .45);
+		}
+	}
+
+	h1,
+	h2,
+	h3,
+	h4,
+	h5 {
+		strong {
+			font-weight: 400;
+		}
+	}
+}
+
+// Tables
+
+table {
+	font-family: $header-font-family;
+}
+
+// Callouts
+
+
+// "More" links at the end of feeds or short descriptions
+a.more,
+.pubLinks a,
+p.more a {
+	color: $secondary-link-color;
+	font-family: $open-sans;
+	font-size: rem-calc(14);
+	font-weight: 700;
+	text-transform: uppercase;
+
+	&:hover {
+		color: darken($secondary-link-color, 10%);	
+	}
+}
+
+
+/* Feeds */
+#relatedPub .post h4 {
+	font-family: $body-font-family;
+	font-size: rem-calc(18);
+	font-weight: 400;
+}
+
+time {
+	font-family: $header-font-family;
+	font-weight: 300;
+}
+
+p:empty {
+	display: none !important;
+}
+
+
+/* Nav
+*******************************************/
+
+nav {
+	font-family: $navigation-font-family;
+}
+

@@ -35,13 +35,12 @@ reason_include_once('function_libraries/user_functions.php');
  * again. Trust me - this is useful.
  *
  * @todo support for multiple types at once
- * @todo support for site limiting
  * @todo security enhancements - turn_into_string and turn_into_array are not sufficient cleanup rules for real user input filtering
- * @todo preview highlighting enhancements - currently mucks up HTML when the search term is found in an item attribute .. this is kind of major
  * @todo add case-sensitive/case-insensitive toggler in UI and support both
  * 
- * @version .1.1 - July 28, 2011
+ * @version .2.0 - September 6, 2013
  * @author Nathan White
+ * @author Matt Ryan
  */
 class FindReplaceWizard extends Disco
 {
@@ -105,9 +104,10 @@ class FindReplaceWizard extends Disco
 	
 	function show_completed_list()
 	{
-		$choose_another_term = carl_construct_link(array('type_id' => $this->helper->get_type_id(), 'active_screen' => "3"), array('type_fields'));
+		$choose_another_term = carl_construct_link(array('type_id' => $this->helper->get_type_id(), 'site_id' => $this->helper->get_site_id(), 'active_screen' => "3"), array('type_fields'));
 		$start_over = carl_construct_link(array(''));
 		$find_more = carl_construct_link(array('type_id' => $this->helper->get_type_id(),
+											   'site_id' => $this->helper->get_site_id(),
 											   'type_fields' => $this->helper->get_type_fields(),
 											   'limit' => $this->helper->get_limit(),
 											   'active_screen' => "3",
@@ -135,13 +135,15 @@ class FindReplaceWizard1 extends FindReplaceWizard
 	function step_init()
 	{
 		$this->type_names_by_id = $this->helper->get_type_names_by_id();
+		$this->site_names_by_id = $this->helper->get_site_names_by_id();
 	}
 	
 	function on_every_time()
 	{
 		$this->add_element('active_screen', 'hidden');
 		$this->set_value('active_screen', 1);		
-		$this->add_element('type_id', 'select_no_sort', array('options' => $this->type_names_by_id, 'display_name' => 'Choose a Type'));
+		$this->add_element('type_id', 'select_no_sort', array('options' => $this->type_names_by_id, 'display_name' => 'Choose a Type'));	
+		$this->add_element('site_id', 'select_no_sort', array('options' => $this->site_names_by_id, 'display_name' => 'Choose a Site', 'add_empty_value_to_top' => true));
 	}
 	
 	function step_pre_show_form()
@@ -151,7 +153,11 @@ class FindReplaceWizard1 extends FindReplaceWizard
 	
 	function &get_values_to_pass()
 	{
-		$values = array('active_screen' => "2", 'type_id' => $this->get_value('type_id'));
+		$values = array(
+			'active_screen' => "2",
+			'type_id' => $this->get_value('type_id'),
+			'site_id' => $this->get_value('site_id'),
+		);
 		return $values;
 	}
 }
@@ -212,7 +218,6 @@ class FindReplaceWizard3 extends FindReplaceWizard
 		$this->add_element('find', 'text', array('display_name' => 'Search Term'));
 		$this->add_required('find');
 		$this->add_element('replace', 'text', array('display_name' => 'Replacement Term'));
-		$this->add_required('replace');
 		$this->add_element('limit', 'select_no_sort', array('options' => array('10' => '10','50' => '50', '100' => '100', '500' => '500'),
 															'add_null_value_to_top' => true));
 		
@@ -225,6 +230,7 @@ class FindReplaceWizard3 extends FindReplaceWizard
 	{
 		$values = array('active_screen' => "4", 
 						'type_id' => $this->helper->get_type_id(), 
+						'site_id' => $this->helper->get_site_id(), 
 						'type_fields' => $this->helper->get_type_fields(), 
 						'find' => $this->get_value('find'),
 						'replace' => $this->get_value('replace'),
@@ -244,7 +250,6 @@ class FindReplaceWizard4 extends FindReplaceWizard
 		if (!$this->helper->get_type_id()) $this->redirect_to_screen("1");
 		elseif (!$this->helper->get_type_fields()) $this->redirect_to_screen("2");
 		elseif (!$this->helper->get_search_term()) $this->redirect_to_screen("3");
-		elseif (!$this->helper->get_replace_term()) $this->redirect_to_screen("3");
 		$matches =& $this->helper->get_matches();
 		$this->show_memory();
 		if (!$matches)
@@ -260,7 +265,7 @@ class FindReplaceWizard4 extends FindReplaceWizard
 		$matches =& $this->helper->get_matches();
 		$count = count($matches);
 		echo '<h3>Step 4 - Confirm Replacements</h3>';
-		echo '<p>The table below shows ' . $count . ' instance(s) of the term <strong>'.$this->helper->get_search_term().'</strong> that will be replaced.</p>';
+		echo '<p>The table below shows ' . $count . ' instance(s) of the term <strong>"'.htmlspecialchars($this->helper->get_search_term()).'"</strong> that will be replaced with <strong>"'.htmlspecialchars($this->helper->get_replace_term()).'"</strong>.</p>';
 		echo '<p>Uncheck anything you do not want replaced and proceed.</p>';	  
 	}
 	
@@ -279,12 +284,15 @@ class FindReplaceWizard4 extends FindReplaceWizard
 				//pray(array_diff( array_keys($e->get_values()),array_keys( $type_fields_keys ) ) );
 				foreach($e->get_values() as $key=>$value)
 				{
+					$encoded_value = htmlspecialchars($value, ENT_QUOTES);
+					$encoded_search_term = htmlspecialchars($search_term);
+					$encoded_replace_term = htmlspecialchars($replace_term);
 					if (isset($type_fields_keys[$key]))
 					{
 						if(strstr($value,$search_term))
 						{
-							$search_value = str_replace($search_term,'<span style="font-weight: bold; color: red;">'.$search_term.'</span>',$value);			
-							$replace_value = str_replace($search_term, '<span style="font-weight: bold; color: red;">'.$replace_term.'</span>',$value);
+							$search_value = str_replace($encoded_search_term,'<span style="font-weight: bold; color: red;">'.$encoded_search_term.'</span>',$encoded_value);			
+							$replace_value = str_replace($encoded_search_term, '<span style="font-weight: bold; color: red;">'.$encoded_replace_term.'</span>',$encoded_value);
 							$option_info[$id.'|'.$key] = array ('id' => $id, 'values' => array('Field' => $key, 'Search' => $search_value, 'Replace' => $replace_value));
 							$options[$id.'|'.$key] = $id.'|'.$key;
 						}
@@ -346,6 +354,7 @@ class FindReplaceWizard4 extends FindReplaceWizard
 	{
 		$values = array('active_screen' => "5", 
 						'type_id' => $this->helper->get_type_id(), 
+						'site_id' => $this->helper->get_site_id(), 
 						'type_fields' => $this->helper->get_type_fields(), 
 						'find' => $this->helper->get_search_term(),
 						'replace' => $this->helper->get_replace_term(),
@@ -361,7 +370,6 @@ class FindReplaceWizard5 extends FindReplaceWizard
 		if (!$this->helper->get_type_id()) $this->redirect_to_screen("1");
 		elseif (!$this->helper->get_type_fields()) $this->redirect_to_screen("2");
 		elseif (!$this->helper->get_search_term()) $this->redirect_to_screen("3");
-		elseif (!$this->helper->get_replace_term()) $this->redirect_to_screen("3");
 		elseif (!$this->helper->get_changes()) $this->redirect_to_screen("4");
 		
 		echo '<h3>Complete</h3>';
@@ -448,6 +456,7 @@ class FindReplaceWizardHelper
 {
 	var $cleanup_rules = array('active_screen' => array('function' => 'check_against_array', 'extra_args' => array("1","2","3","4","5")),
 							   'type_id' => array('function' => 'turn_into_int'),
+							   'site_id' => array('function' => 'turn_into_int'),
 							   'changes' => array('function' => 'turn_into_int'),
 							   'type_fields' => array('function' => 'turn_into_array'),
 							   'replace_list' => array('function' => 'turn_into_array'),
@@ -514,6 +523,11 @@ class FindReplaceWizardHelper
 		return (isset($this->request['replace'])) ? $this->request['replace'] : false;
 	}
 	
+	function get_site_id()
+	{
+		return (isset($this->request['site_id'])) ? $this->request['site_id'] : false;
+	}
+	
 	function get_limit()
 	{
 		return (isset($this->request['limit'])) ? $this->request['limit'] : false;
@@ -540,7 +554,10 @@ class FindReplaceWizardHelper
 			$type_id = $this->get_type_id();
 			$tables = get_entity_tables_by_type( $type_id );
 			$table_array[] = 'entity';
-			$es = new entity_selector();
+			if($site_id = $this->get_site_id())
+				$es = new entity_selector($site_id);
+			else
+				$es = new entity_selector();
 			$es->add_type( $type_id );
 			if (!empty($limit)) $es->set_num($limit);
 			$relation_pieces = array();
@@ -566,9 +583,7 @@ class FindReplaceWizardHelper
 		}
 		return $this->_matches;
 	}
-	/**
-	 * @return array site entities that appear to need migration
-	 */
+	
 	function &get_types()
 	{	
 		if (!isset($this->_types))
@@ -581,6 +596,19 @@ class FindReplaceWizardHelper
 			$this->_types = $es->run_one();
 		}
 		return $this->_types;
+	}
+	function &get_sites()
+	{	
+		if (!isset($this->_sites))
+		{
+			$es = new entity_selector();
+			$es->limit_tables();
+			$es->limit_fields('entity.name');
+			$es->add_type(id_of('site'));
+			$es->set_order('entity.name ASC');
+			$this->_sites = $es->run_one();
+		}
+		return $this->_sites;
 	}
 
 	function &get_type_names_by_id()
@@ -605,6 +633,23 @@ class FindReplaceWizardHelper
 		$type_id = $this->get_type_id();
 		$type_names =& $this->get_type_names_by_id();
 		return $type_names[$type_id];
+	}
+
+	function &get_site_names_by_id()
+	{
+		if (!isset($this->_site_names_by_id))
+		{
+			$sites =& $this->get_sites();
+			if (!empty($sites))
+			{
+				foreach ($sites as $k=>$v)
+				{
+					$this->_sites_names_by_id[$k] = $v->get_value('name');
+				}
+			}
+			else $this->_sites_names_by_id = array();
+		}
+		return $this->_sites_names_by_id;
 	}
 	
 	function &get_fields_for_type()

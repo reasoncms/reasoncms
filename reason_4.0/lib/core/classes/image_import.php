@@ -435,6 +435,7 @@
 						{
 							copy( $new_name, $orig_name );
 							resize_image($new_name, REASON_STANDARD_MAX_IMAGE_WIDTH, REASON_STANDARD_MAX_IMAGE_HEIGHT);
+							$original_image_type = $this->image_types[$type];
 						}
 						
 						$thumb_dimensions = get_reason_thumbnail_dimensions($site_id);

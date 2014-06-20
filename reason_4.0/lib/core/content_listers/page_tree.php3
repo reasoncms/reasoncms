@@ -14,7 +14,20 @@
 	 * A lister/viewer for types that are hierarchical with only one root per site
 	 */
 	class page_tree_viewer extends tree_viewer
-	{
+	{		
+		var $columns = array(
+						'id' => true,
+						'name' => true, 
+						'visibility' => 'show_attributes', 
+						'last_modified' => 'prettify_mysql_timestamp'
+						);
+
+		function do_display()
+		{
+			//var_dump($this->values);
+			parent::do_display();	
+		}
+		
 		function is_open( $id )  // {{{
 		{
 			return true;
@@ -24,7 +37,7 @@
 		{
 			if($row->get_value('nav_display') == 'No')
 			{
-				$options['class'] = 'notInNav';
+			//	$options['class'] = 'notInNav';
 			}
 			return parent::show_item_pre($row, $options);
 		}
@@ -71,5 +84,27 @@
 			echo implode(' | ',$parts);
 			echo '</strong></td>';
 		} // }}}
+		
+		function show_attributes($row)
+		{
+			$actions = array();
+			
+			if($row->get_value('nav_display') == 'No')
+			{
+				$actions[] = '<span class="smallText" title="Not displayed in site navigation">No nav</span>';
+			}
+			if($row->get_value('indexable') == 0)
+			{
+				$actions[] = '<span class="smallText" title="Not indexed by search engines">No search</span>';
+			}
+			
+			$rels = $row->get_left_relationships();
+			if (!empty($rels['page_to_access_group']))
+			{
+				$actions[] = '<span class="smallText" title="This page has an access group attached">Restricted</span>';
+			}
+			
+			return join('&sdot;', $actions);
+		}
 	}
 ?>

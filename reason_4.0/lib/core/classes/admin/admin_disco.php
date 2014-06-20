@@ -100,6 +100,10 @@
 				}
 			}
 		} // }}}
+		function post_show_form()
+		{
+			echo '<p class="cancel"><a href="'.$this->admin_page->make_link( array( 'cur_module' => 'Preview' ) ).'">Cancel</a></p>';
+		}
 		function delete_entity() // {{{
 		{
 			reason_include_once( 'function_libraries/admin_actions.php' );
@@ -113,9 +117,7 @@
 					$link = unhtmlentities($this->admin_page->make_link( array( 'cur_module' => 'Lister' , 'id' => '', 'state' => 'deleted') ) );
 				else
 					$link = unhtmlentities( $this->admin_page->make_link( array( 'cur_module' => 'Lister' , 'id' => '' ) ) );
-			}
-			else
-				$link = unhtmlentities( $this->admin_page->make_link( array( 'cur_module' => 'Preview' ) ) );
+			}	
 			return $link;
 		} // }}}
 	} // }}}
