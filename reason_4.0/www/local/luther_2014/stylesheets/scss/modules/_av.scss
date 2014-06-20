@@ -1,0 +1,33 @@
+//
+// FEATRE STYLES
+//
+// @author Nathan Dirks
+//
+
+// Foundation imports
+@import "settings";
+@import "foundation/components/flex-video";
+
+// Compass imports
+@import "compass/css3";
+
+// Luther imports
+@import "extends";
+@import "mixins";
+
+// AV Module
+//////////////////////////////////////
+
+.video {
+ 	@include flex-video-container();
+ }
+
+ #av {
+
+ 	.moduleNav {
+ 		
+ 		ul {
+ 			margin: 0;
+ 		}
+ 	}
+ }

@@ -1,0 +1,68 @@
+/* line 4, ../scss/font-awesome/_core.scss */
+.fa, .lutherLis #lisAnnouncements .announcement:before {
+  display: inline-block;
+  font-family: FontAwesome;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* line 10, ../scss/_extends.scss */
+.zero-out {
+  margin: 0;
+  padding: 0;
+}
+
+/* line 15, ../scss/_extends.scss */
+.screenreader {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  margin-bottom: 0;
+}
+
+/* STRUCTURE */
+@media only screen and (min-width: 64.063em) {
+  /* line 19, ../scss/sites/lis.scss */
+  .lutherLis #lisAnnouncements {
+    margin-bottom: 1.25rem;
+  }
+}
+/* line 26, ../scss/sites/lis.scss */
+.lutherLis #lisAnnouncements .announcement {
+  padding: 1.25rem;
+  padding-left: 4.5rem;
+  color: #9f2112;
+  background: rgba(159, 33, 18, 0.18);
+  position: relative;
+  border-top: 1px solid rgba(159, 33, 18, 0.2);
+}
+/* line 34, ../scss/sites/lis.scss */
+.lutherLis #lisAnnouncements .announcement:nth-child(1) {
+  border-top: none;
+}
+/* line 42, ../scss/sites/lis.scss */
+.lutherLis #lisAnnouncements .announcement:before {
+  content: "\f05a";
+  font-size: 2rem;
+  position: absolute;
+  top: 1.25rem;
+  left: 1.25rem;
+  float: left;
+  padding: 0;
+}
+/* line 53, ../scss/sites/lis.scss */
+.lutherLis #lisAnnouncements .announcement *:last-child {
+  margin-bottom: 0;
+}
+/* line 83, ../scss/sites/lis.scss */
+.lutherLis.siteHome #tabs .tabs-content .pane-content strong {
+  margin-bottom: 1.5rem;
+  display: block;
+}
+/* line 90, ../scss/sites/lis.scss */
+.lutherLis.siteHome #tabs input[type="submit"] {
+  margin-top: 1.5rem;
+}
