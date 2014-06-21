@@ -16,18 +16,13 @@
 
 /* STRUCTURE */
 
-$lc-sports-grey: #445566;
 $lc-sports-grey: #333;
 $minisite-nav-background: $lc-sports-grey;
 $minisite-nav-color: $lc-white;
 
 .lutherSports {
-	
-	background: #333;
+
 	background: $lc-sports-grey;
-	background: darken($minisite-nav-background, 100%);
-	background: darken($lc-blue-dark, 10%);
-	background: #333;
 
 	#minisite {
 		background: #FFF;
@@ -82,7 +77,7 @@ $minisite-nav-color: $lc-white;
 
 				// Unique navigation colors
 				// Paramaters are set at top of document
-				// Desktop only. Mobile inherits global.
+				// Desktop only, mobile inherits global
 
 				@media #{$large-up} {
 					background: lighten($minisite-nav-background, 6%);
@@ -93,11 +88,6 @@ $minisite-nav-color: $lc-white;
 
 					.navListTop a.home {  //  Large "home" link at the top of the nav
 						background: $lc-blue-light;
-						//background: lighten($minisite-nav-background, 8%);
-						//background: #333;
-						//color: $lc-sports-grey;
-						//background: #ccc;
-
 						color: $minisite-nav-color;
 					}
 
@@ -127,7 +117,7 @@ $minisite-nav-color: $lc-white;
 						a {
 						
 							&:hover {
-								background: lighten($minisite-nav-background, 4%);	
+								background: lighten($minisite-nav-background, 12%) !important;	
 							}
 						}
 					}	
@@ -135,8 +125,7 @@ $minisite-nav-color: $lc-white;
 					.jump,
 					.accordion {
 						
-						&:before {
-							@extend .fa;
+						a:before {
 							color: #FFF;
 						}
 					}
@@ -149,8 +138,11 @@ $minisite-nav-color: $lc-white;
 		}
 
 		.uname_luther_sports_affiliations {
-			// /background: red;
 			text-align: center;
+
+			p {
+				display: inline;
+			}
 
 			a {
 				display: inline-block;
@@ -202,5 +194,23 @@ $minisite-nav-color: $lc-white;
 				}
 			}
 		}
+	}
+
+	#preFoot {
+ 		background: lighten($lc-grey, 2%);
+		width: 100%;
+		margin: 0 auto $column-gutter/2 auto;
+
+		&:before,
+		&:after {
+			display: block;
+			height: 1px;
+			background: darken($lc-grey, 5%);
+			content: "";
+		}
+	}
+
+	#post-footer p {
+		color: #FFF !important;
 	}
 }

@@ -51,10 +51,12 @@
 			echo '<div class="twitter-block">';
 			if ($this->site_id == id_of('connect'))
 			{
+				echo '<i class="fa fa-twitter"></i>' . "\n";
 				echo '<h3 class="recent-tweets">Recent Tweets:</h3>' . "\n";
 			}
 			else
 			{
+				echo '<i class="fa fa-twitter"></i>' . "\n";
 				echo '<h3 class="recent-tweets">Recent Tweets:</h3>' . "\n";
 			}
 			//echo '<div class="twitter-feed">';

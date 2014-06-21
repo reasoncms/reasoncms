@@ -80,13 +80,16 @@
 								display: block;
 								float: left;
 								font-size: rem-calc(45);
-								//background: rgba(0,0,0,.75);
-								//color: #FFF;
+								background: rgb(255,255,255);
 								background: rgba(255,255,255,.85);
 								color: $lc-blue-light !important;
 								padding: rem-calc(12);
 								margin-bottom: rem-calc(12);
 								text-align: right;
+
+								a {
+									color: $lc-blue-light !important;
+								}
 							}
 
 							$padding-multi-line: rem-calc(12);
@@ -101,12 +104,12 @@
 								padding: 0;
 								
 								
-								span {
+								span,
+								a {
 									display: inline;
-								background: rgba(255,255,255,.85);
+									background: rgb(255,255,255);
+									background: rgba(255,255,255,.85);
 									color: $lc-blue-light !important;
-									//background: rgba(0,0,0,.75);
-									//color: #FFF;
 									line-height: rem-calc(46);
 									padding: rem-calc(6);
 									padding-left: 0;
@@ -114,7 +117,8 @@
 									box-shadow: $padding-multi-line 0 0 rgba(255,255,255,.85), - $padding-multi-line 0 0 rgba(255,255,255,.85);
 								}
 
-								span:before {
+								span:before,
+								a:before {
 									color: $lc-blue-light !important;
 								}
 							}
