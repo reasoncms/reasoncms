@@ -4413,24 +4413,20 @@ footer .contactBlurb {
   }
 }
 
-/* line 32, scss/modules/_feature.scss */
-.featuresModule {
-  /* @media only screen and (max-width: 40em) {
-     .features {
-       padding: 0;
-       //height: 224px;
-       height: 306px;
-     
-       img {
-         width: 640px;
-         max-width: 10000px !important;
-         //height: 224px !important;
-         height: 306px !important;
-         position: absolute;
-         margin-left: -320px;
-       }
-     }
-   }*/
+@media only screen and (max-width: 40em) {
+  /* line 35, scss/modules/_feature.scss */
+  .featuresModule .features {
+    padding: 0;
+    height: 306px;
+  }
+  /* line 40, scss/modules/_feature.scss */
+  .featuresModule .features img {
+    width: 640px;
+    max-width: 10000px !important;
+    height: 306px !important;
+    position: absolute;
+    margin-left: -320px;
+  }
 }
 /* line 54, scss/modules/_feature.scss */
 .featuresModule .feature .featureInfo,
@@ -5184,6 +5180,80 @@ form table td {
 #discoErrorNotice ul li a {
   font-weight: 400;
   text-decoration: underline;
+}
+
+/* line 10, scss/_extends.scss */
+.zero-out, body #wrapper #global-banner hgroup h1, body #wrapper #global-banner #mobile-nav ul, body #wrapper #global-nav .sections, body #wrapper #global-footer #global-footer-nav .column ul, body #wrapper #global-footer #global-footer-info .contact, #callToActionBlurb .blurb ul, #calendar .responsiveEventsList .views ul, .featuresModule .feature .featureInfo .featureTitle a,
+.featuresModule .feature .featureInfo .featureTitle .noLink, .featuresModule .feature .featureNavWrap .featureNav {
+  margin: 0;
+  padding: 0;
+}
+
+/* line 15, scss/_extends.scss */
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  margin-bottom: 0;
+}
+
+/* Image galleries include image slideshows and flickr slideshows */
+/* line 20, scss/modules/_image-galleries.scss */
+.hidden-container {
+  display: none;
+}
+
+/* line 26, scss/modules/_image-galleries.scss */
+#galleryimages .flickr-image img {
+  float: left;
+  padding: 0.125rem;
+}
+
+/* line 33, scss/modules/_image-galleries.scss */
+.flickr-set-container {
+  float: left;
+  width: 112px;
+}
+/* line 37, scss/modules/_image-galleries.scss */
+.flickr-set-container h4 {
+  display: block;
+  margin-top: 0.375rem;
+  font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
+  font-size: 0.75rem;
+  font-style: italic;
+  font-weight: 500;
+  color: #6f6f6f;
+}
+/* line 46, scss/modules/_image-galleries.scss */
+.flickr-set-container h4 a {
+  color: #6f6f6f;
+}
+
+/* line 52, scss/modules/_image-galleries.scss */
+.flickr-set {
+  background: transparent url(/images/slideshow91x95.gif) no-repeat scroll 0 0;
+  height: 95px;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  padding: 7px 0 0 7px;
+  width: 91px;
+}
+/* line 60, scss/modules/_image-galleries.scss */
+.flickr-set img {
+  border: 1px solid #333333;
+}
+
+/* line 68, scss/modules/_image-galleries.scss */
+.fancybox-title a:link, .fancybox-title a:visited, .fancybox-title a:active {
+  color: #ededed;
+  float: right;
+  font-size: 1.8em;
+  padding-bottom: 5px;
+  text-decoration: none;
+}
+/* line 76, scss/modules/_image-galleries.scss */
+.fancybox-title a:hover, .fancybox-title a:focus {
+  color: #556677;
 }
 
 /* line 10, scss/_extends.scss */

@@ -7,6 +7,12 @@
 	{
 		function init( $args = array() )
 		{
+			$head_items = $this->get_head_items();
+			$head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'FancyBox/source/jquery.fancybox.js');
+			$head_items->add_stylesheet(REASON_PACKAGE_HTTP_BASE_PATH.'FancyBox/source/jquery.fancybox.css');			
+			$head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'FancyBox/source/helpers/jquery.fancybox-thumbs.js');
+			$head_items->add_stylesheet(REASON_PACKAGE_HTTP_BASE_PATH.'FancyBox/source/helpers/jquery.fancybox-thumbs.css');
+			$head_items->add_javascript('/reason/local/luther_2014/javascripts/luther-image-galleries.js');
 		}
 		
 		function run()
@@ -68,7 +74,7 @@
 					if ($number_slideshows == 1)
 					{
 						echo "<h3>" . $post->get_value('name') . "</h3>" . "\n";
-						echo "<ul id=\"galleryimages\">\n";
+						echo "<div id=\"galleryimages\">\n";
 					}
 					elseif ($number_slideshows > 1)
 					{
@@ -77,7 +83,6 @@
 					$photo_count = 1;
 					foreach ((array)$photos['photoset']['photo'] as $photo)
 					{
-						// see /javascripts/highslide/highslide-overrides.js for gallery declaration
 						$getInfo = $f->photos_getInfo($photo['id']);
 						$pinfo = $getInfo['photo'];
 						// free accounts don't fill in $pinfo['originalformat']
@@ -96,9 +101,8 @@
 						$description .= "<a href=\"http://farm" . $pinfo['farm'] . ".static.flickr.com/" . $photo['server'] . "/" . $photo['id'] . "_" . $pinfo['originalsecret'] . "_o." . $pinfo['originalformat'] . "\" title=\"High res\">&prop;</a>\n";
 						if ($number_slideshows == 1)
 						{
-							echo "<li>\n";
-						}
-						//elseif ($number_slideshows > 1 && $photo['isprimary']) 
+							echo "<div class=\"flickr-image\">\n";
+						} 
 						elseif ($number_slideshows > 1 && $photo_count == 1)
 						{
 							echo "<div class=\"flickr-set\">\n";
@@ -107,15 +111,15 @@
 						{
 							echo "<div class=\"hidden-container\">\n";
 						}
-						echo "<a class=\"highslide\" href=\"http://farm" . $pinfo['farm'] . ".static.flickr.com/" . $photo['server'] . "/" . $photo['id'] . "_" . $photo['secret'] . "." . $pinfo['originalformat']  . "\" onclick=\"return hs.expand(this, galleryOptions[" . $slideshowGroup . "])\">\n";
+						
+						echo "<a class=\"fancybox-thumb\" href=\"http://farm" . $pinfo['farm'] . ".static.flickr.com/" . $photo['server'] . "/" . $photo['id'] . "_" . $photo['secret'] . "." . $pinfo['originalformat']  . "\" rel=\"gallery" . $slideshowGroup . "\" title=\"" . htmlspecialchars($description, ENT_COMPAT) ."\">\n";
 						echo "<img src=\"http://farm" . $pinfo['farm'] . ".static.flickr.com/" . $photo['server'] . "/" . $photo['id'] . "_" . $photo['secret'] . "_s." . $pinfo['originalformat']  . "\" title=\"Click to open gallery\" alt=\"" . htmlspecialchars($description, ENT_COMPAT) ."\" />\n";
 						echo "</a>\n";
 	
 						if ($number_slideshows == 1)
 						{
-							echo "</li>\n";
+							echo "</div>   <!-- class=\"flickr-set\"-->\n";
 						}
-						//elseif ($number_slideshows > 1 && $photo['isprimary'])
 						elseif ($number_slideshows > 1 && $photo_count == 1)
 						{
 							echo "</div>   <!-- class=\"flickr-set\"-->\n";
@@ -128,7 +132,7 @@
 					}
 					if ($number_slideshows == 1)
 					{
-						echo "</ul>   <!-- id=\"galleryimages\"-->\n";
+						echo "</div>   <!-- id=\"galleryimages\"-->\n";
 					}
 					elseif ($number_slideshows > 1)
 					{
@@ -136,11 +140,7 @@
 						echo "</div>   <!-- class=\"flickr-set-container\"-->\n";
 					}
 					$slideshowGroup++;
-					if ($slideshowGroup % 3 == 0)
-					{
-						echo "<hr>\n";
-					}
-					// max gallery size is declared in /javascript/highslide/highslide-overrides.js
+					
 					if ($slideshowGroup > 49)
 					{
 						break;
