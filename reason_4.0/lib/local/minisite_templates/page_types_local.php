@@ -29,8 +29,8 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'pre_sidebar_2' => array(
 				'module' => 'image_sidebar', // default parameters set in alter_reason_pagetype in luther.php
 				'thumbnail_width' => 600,
-				'thumbnail_height' => 400,
-				'thumbnail_crop' => 'fill',
+				//'thumbnail_height' => 400,
+				//'thumbnail_crop' => 'fill',
 				'num_to_display' => 3,
 			),
 			'sidebar' => array(
