@@ -11,6 +11,7 @@
 
 // Luther imports
 @import "extends";
+@import "mixins";
 
 /* STRUCTURE */
 
@@ -74,9 +75,23 @@
 
 	&.siteHome {
 
+		#postMainHead {
+			margin-top: $column-gutter;
+		}
+
+		@media
+		#{$medium-up} {
+			@include desktop-tabs();
+		}
+
 		#tabs {
 
 			.tabs-content {
+
+				@media
+				#{$medium-up} {
+					border-bottom: 2px solid #ccc;
+				}
 
 				.pane-content { // form row
 
