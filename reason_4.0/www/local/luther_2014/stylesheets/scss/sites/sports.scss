@@ -17,19 +17,92 @@
 /* STRUCTURE */
 
 $lc-sports-grey: #333;
+$lc-sports-grey-alt: #999;
 $minisite-nav-background: $lc-sports-grey;
 $minisite-nav-color: $lc-white;
 
 .lutherSports {
 
-	background: $lc-sports-grey;
+	a.more,
+	.pubLinks a,
+	p.more a {
+		color: $lc-blue-dark;
+
+		&:hover {
+			color: darken($lc-blue-dark, 10%);	
+		}
+	}
+
+		@media
+		#{$large-up} {	@include background-image(linear-gradient(darken($lc-sports-grey, 4%), $lc-sports-grey)); }
 
 	#minisite {
-		background: #FFF;
+		// background: #efefef;
+		// background: #FFF;
+
+		@media
+		#{$large-up} {
+			margin: $column-gutter/2 0;
+			padding-top: 0;
+			border-color: lighten($lc-sports-grey-alt, 6%);	
+			background: $lc-sports-grey;
+			background: none;
+			border-left: 0;
+			border-right: 0;
+		}
+
+
+	}
+
+	#contentAndRelated {
+		//background: #FFF;
+		//background: rgba(255,255,255,.25)
+		@media
+		#{$large-up} {
+			background: #FFF;
+			padding-right: 1.25rem !important;
+			padding-top: $column-gutter/2;
+		}
+
+	}
+
+	#wrapper {
+
+
+		#global-banner {
+			border-color: darken($lc-blue-dark-compliment, 30%);
+		}
+
+		#global-nav {
+			border-color: darken($lc-blue-dark-compliment, 20%);
+
+			.sections {
+				@media #{$large-up} {
+	
+					> li {
+						background: $lc-blue-dark;
+			
+						a {
+
+							&:hover {
+								background-color: darken($lc-blue-dark, 4%);
+							}
+						}		
+					}
+				}
+			}
+			
+			@media #{$large-up} {
+				background: $lc-grey;
+			}
+		}
+
 	}
 
 	// Luther Sports logo replaces the typeface logo
 	#wrapper #global-banner hgroup {
+
+		@include background-image(linear-gradient($lc-blue-dark, #0a2345));
 
 		$logo-width: 168px;
 		$logo-height: 75px;
@@ -87,8 +160,12 @@ $minisite-nav-color: $lc-white;
 					}
 
 					.navListTop a.home {  //  Large "home" link at the top of the nav
-						background: $lc-blue-light;
-						color: $minisite-nav-color;
+						//background: $lc-blue-light;
+						//color: $minisite-nav-color;
+						background: $lc-sports-grey-alt;
+						//color: darken($lc-blue-dark, 10%);
+						color: $lc-sports-grey;
+						border-bottom: none;
 					}
 
 					.navListTop ul a {  // Top level page links
@@ -134,6 +211,7 @@ $minisite-nav-color: $lc-white;
 
 			.socialProfileLinks {
 				background: $lc-blue-light;
+				background: $lc-sports-grey-alt;
 			}
 		}
 
@@ -196,10 +274,22 @@ $minisite-nav-color: $lc-white;
 		}
 	}
 
+	// #footer {
+	// 	float: none;
+	// 	margin-bottom: 0;
+	// 	padding-bottom: 0 !important;
+	// }
+
+	#foot {
+		// /margin-bottom: $column-gutter/2;
+	}
+
 	#preFoot {
- 		background: lighten($lc-grey, 2%);
+		clear: both;
 		width: 100%;
-		margin: 0 auto $column-gutter/2 auto;
+
+		margin-bottom: $column-gutter/2;
+		background: $lc-grey;
 
 		&:before,
 		&:after {
@@ -207,6 +297,47 @@ $minisite-nav-color: $lc-white;
 			height: 1px;
 			background: darken($lc-grey, 5%);
 			content: "";
+		}
+
+		@media
+		#{$large-up} {
+			margin: 0 auto;
+			background: none;
+			
+			&:before,
+			&:after {
+				display: none;
+			}
+		}
+
+
+	}
+
+	@media
+	#{$large-up} {
+
+		.loginLinkModule {
+		
+			div {
+
+				a {	
+					background: #ccc;
+					background: rgba(255,255,255,.05) !important;
+					color: rgba(255,255,255,.5);
+
+					&:hover {
+						background: #ccc;
+						background: rgba(255,255,255,.25) !important;
+						color: rgba(255,255,255,.65);
+					}
+				}
+			}
+			
+			#footerLoginLink {
+				background: #ccc;
+				background: rgba(255,255,255,.05) !important;
+				color: rgba(255,255,255,.5);
+			}
 		}
 	}
 
