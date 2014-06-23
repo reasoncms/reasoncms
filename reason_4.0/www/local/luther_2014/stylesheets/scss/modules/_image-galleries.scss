@@ -1,0 +1,79 @@
+//
+// IMAGE GALLERY STYLES
+//
+// @author Brian Jones
+//
+
+// Foundation imports
+@import "settings";
+@import "foundation/components/grid";
+
+// Compass imports
+@import "compass/css3";
+
+// Luther imports
+@import "extends";
+@import "mixins";
+
+/* Image galleries include image slideshows and flickr slideshows */
+
+.hidden-container {
+	display: none;
+}
+
+#galleryimages {
+	.flickr-image {	
+		img {
+			float: left;
+			padding: rem-calc(2);
+		}
+	}
+}
+
+.flickr-set-container {
+	float: left;
+	width: 112px;
+	
+	h4 { // Slideshow title
+		display: block;
+		margin-top: rem-calc(6);
+		font-family: $header-font-family;
+		font-size: rem-calc(12);
+		font-style: italic;
+		font-weight: 500;
+		color: $blockquote-font-color;
+	
+		a {
+			color: $blockquote-font-color;
+		}
+	}
+}
+
+.flickr-set {
+	background:transparent url(/images/slideshow91x95.gif) no-repeat scroll 0 0;
+	height:95px;
+	margin-bottom:5px;
+	margin-top:5px;
+	padding:7px 0 0 7px;
+	width:91px;
+	
+	img {
+		border:1px solid #333333;
+	}
+}
+
+.fancybox-title a {
+	&:link,
+	&:visited,
+	&:active {
+		color:#ededed;
+		float: right;
+		font-size:1.8em;
+		padding-bottom: 5px;
+		text-decoration: none;
+	}
+	&:hover,
+	&:focus {
+		color:#556677;
+	}
+}
