@@ -1365,6 +1365,30 @@
 				),
 			'sidebar' => '',
 		),
+		'image_slideshow_640x480' => array(
+			'main_post' => array(
+				'module' => 'image_slideshow',
+				'width' => 640,
+				'height' => 480,
+				),
+			'sidebar' => '',
+		),
+		'image_slideshow_720x540' => array(
+			'main_post' => array(
+				'module' => 'image_slideshow',
+				'width' => 720,
+				'height' => 540,
+				),
+			'sidebar' => '',
+		),
+		'image_slideshow_800x600' => array(
+			'main_post' => array(
+				'module' => 'image_slideshow',
+				'width' => 800,
+				'height' => 600,
+				),
+			'sidebar' => '',
+		),
 		'image_slideshow_before_content' => array(
 			'main' => 'image_slideshow',
 			'main_post' => 'content',
