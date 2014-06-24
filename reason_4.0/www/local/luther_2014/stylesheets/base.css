@@ -5380,12 +5380,12 @@ form table td {
 }
 /* line 102, scss/modules/_images.scss */
 #pageContent img.left, #pageContent img[align="left"], .fullPost .text img.left, .fullPost .text img[align="left"], #faq .answer img.left, #faq .answer img[align="left"] {
-  float: none;
+  float: none !important;
   clear: left;
 }
 /* line 110, scss/modules/_images.scss */
 #pageContent img.right, #pageContent img[align="right"], .fullPost .text img.right, .fullPost .text img[align="right"], #faq .answer img.right, #faq .answer img[align="right"] {
-  float: none;
+  float: none !important;
   clear: right;
 }
 @media only screen and (min-width: 40.063em) {
