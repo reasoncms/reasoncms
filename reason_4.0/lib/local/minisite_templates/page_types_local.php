@@ -249,7 +249,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'module' => 'luther_av',
 			'full_size' => true,
 		),
-		/*'sidebar_2' => array(
+		'sidebar_2' => array(
 			'module'=>'publication',
 			'related_mode'=>'true',
 			'max_num_items' => 3,
@@ -260,7 +260,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 					'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/related_item_no_description.php',
 				),
 			),
-		),*/
+		),
 		//'sidbebar_2' => get_luther_related_publication(),
 		'post_sidebar' => 'luther_flickr_slideshow',
 		'post_sidebar_2' => 'twitter',
