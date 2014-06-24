@@ -1,0 +1,186 @@
+//
+// POLICY STYLES
+//
+// @author Blaise Schaeffer
+//
+
+// Foundation imports
+@import "settings";
+@import "foundation/components/grid";
+
+// Compass imports
+@import "compass/css3";
+
+// Font Awesome Imports
+@import "font-awesome/variables";
+@import "font-awesome/core";
+
+// Luther imports
+@import "extends";
+@import "mixins";
+
+
+#policyModule {
+	.policyForm {
+		.rootMenu {
+		}
+	}
+	// .policyForm {
+	// 	//width: rem-calc(365);
+	// 	//width: rem-calc(285);
+	// 	height: rem-calc(40);
+	// 	margin-bottom: $column-gutter/2;
+
+	// 	select {
+	// 		&:after {
+	// 			@extend .fa;
+	// 			content: $fa-var-sort;
+	// 			display: block;
+	// 			// height: rem-calc(40);
+	// 			// width: rem-calc(15);
+	// 			// border: rem-calc(1) solid darken($lc-grey,5%);
+	// 			// vertical-align: top;
+	// 			// padding-top: rem-calc(12);
+	// 			// border-left: none;
+	// 			// border-top-right-radius: rem-calc(10);
+	// 			// border-bottom-right-radius: rem-calc(10);
+	// 			// background-color: lighten($minisite-nav-background, 4%);
+	// 		}
+		
+	// 		// &:hover:after{
+	// 		// 	@extend .fa;
+	// 		// 	content: $fa-var-sort;
+	// 		// 	height: rem-calc(40);
+	// 		// 	width: rem-calc(15);
+	// 		// 	border: rem-calc(1) solid darken($lc-grey,5%);
+	// 		// 	vertical-align: top;
+	// 		// 	padding-top: rem-calc(12x);
+	// 		// 	border-left: none;
+	// 		// 	border-top-right-radius: rem-calc(10);
+	// 		// 	border-bottom-right-radius: rem-calc(10);
+	// 		// 	background-color: lighten($minisite-nav-background, 1%);
+	// 		// 	cursor: pointer;
+	// 		// }
+	// 	}
+	// 	.rootMenu {
+	// 		//width: rem-calc(350);
+	// 		//width: rem-calc(270);
+	// 		//width: 94%;
+	// 		height: rem-calc(40);
+	// 		color: $lc-blue-light;
+	// 		background-color: lighten($minisite-nav-background, 4%);
+	// 		outline: 0;
+	// 		border-top-left-radius: rem-calc(10);
+	// 		border-bottom-left-radius: rem-calc(10);
+	// 		border-color: darken($lc-grey,5%);
+	// 		border-right: none;
+	// 		&:hover {
+	// 			cursor: pointer;
+	// 			color: $lc-blue-dark;
+	// 			//background-color: lighten($minisite-nav-background, 1%);
+	// 			border-color: darken($lc-grey,5%);
+	// 		}
+	// 		option {
+	// 		}
+	// 	}
+	// }
+	.policy {
+		//For the 2nd link "Scholarships from outside sources"
+		.policyContent {
+			.contentMain {
+				h3:first-child {
+					padding-top: $column-gutter/6;
+					border-top: none;
+				}
+				h3 {
+					border-top: $microformat-border-width $microformat-border-style $microformat-border-color;
+					padding-top: $column-gutter/2;
+				}
+			}
+		}
+		//Closing the comment above
+		.decimal {
+			margin: 0;
+			.sub_policy {
+				.policyContent {
+					.contentMain {
+						border-bottom: $microformat-border-width $microformat-border-style $microformat-border-color;
+						margin-bottom: $column-gutter/4;
+						h5 {
+							border-bottom: none;
+							margin-left: rem-calc(20);
+
+						}
+						p {
+							border-bottom:none;
+							margin-left: rem-calc(20);
+						}
+						p:last-child {
+							margin-bottom: 0;
+							padding-bottom: $column-gutter/4;
+						}
+					}
+				}
+				.policyName {
+					color: $lc-blue-light;
+					width: 94%;
+					&:hover {
+						cursor: pointer;
+						color: $lc-blue-dark;
+					}
+				}
+			}
+			.closedAccordion {
+				.policyName {
+					&:after {
+						@extend .fa;
+						content: $fa-var-chevron-down;
+						color: $body-font-color;
+						font-size: rem-calc(12);
+						height: rem-calc(32);
+						width: rem-calc(32);
+						vertical-align: top;
+						//padding-top: rem-calc(11);
+						padding-top: 1.5%;
+						padding-left: rem-calc(5);
+					}
+				}
+			}
+			.openAccordion {
+				.policyName {
+					&:after {
+						@extend .fa;
+						content: $fa-var-chevron-up;
+						color: $body-font-color;
+						font-size: rem-calc(12);
+						height: rem-calc(32);
+						width: rem-calc(32);
+						vertical-align: top;
+						//padding-top: rem-calc(11);
+						padding-top: 1.5%;
+						padding-left: rem-calc(5);
+					}
+				}
+			}
+		}
+	}
+	.rootPolicyList {
+		margin: 0;
+		font-size: rem-calc(16);
+	}
+	.proximatePolicies {
+		padding-top: $column-gutter/4; 
+		padding-bottom: $column-gutter/6;
+		.previous {
+			padding-top: $column-gutter/8;
+		}
+	}
+	.listLink {
+		p {
+			a {
+				border-top: $microformat-border-width $microformat-border-style $microformat-border-color;	
+				padding-top: rem-calc(1.50);
+			}
+		}
+	}
+}
