@@ -5378,18 +5378,6 @@ form table td {
   max-width: 100%;
   margin: 0 auto 1rem;
 }
-/* line 102, scss/modules/_images.scss */
-#pageContent img.left, #pageContent img[align="left"], .fullPost .text img.left, .fullPost .text img[align="left"], #faq .answer img.left, #faq .answer img[align="left"] {
-  margin-right: 2.5rem;
-  float: left !important;
-  clear: left;
-}
-/* line 109, scss/modules/_images.scss */
-#pageContent img.right, #pageContent img[align="right"], .fullPost .text img.right, .fullPost .text img[align="right"], #faq .answer img.right, #faq .answer img[align="right"] {
-  margin-left: 2.5rem;
-  float: right !important;
-  clear: right;
-}
 @media only screen and (min-width: 40.063em) {
   /* line 96, scss/modules/_images.scss */
   #pageContent img, .fullPost .text img, #faq .answer img {
