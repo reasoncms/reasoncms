@@ -1,5 +1,7 @@
 <?php
 
+reason_include_once( 'function_libraries/root_finder.php');
+
 function get_luther_spotlight()
 // return array containing spotlight information or '' if spotlight doesn't exist on this minisite
 {
@@ -274,6 +276,49 @@ function google_analytics()
 	echo '})();'."\n";
 
 	echo '</script>'."\n";
+}
+
+function emergency_preempt()
+// Display one or more site-wide preemptive emergency messages
+// if one or more text blurbs are placed on the page /preempt
+{
+
+	$site_id = get_site_id_from_url("/preempt");
+	$page_id = root_finder( $site_id );   // see 'lib/core/function_libraries/root_finder.php'
+
+	$es = new entity_selector();
+	$es->add_type(id_of('text_blurb'));
+	$es->add_right_relationship($page_id, relationship_id_of('minisite_page_to_text_blurb'));
+	$result = $es->run_one();
+
+	if ($result == null)
+	{
+		return;
+	}
+
+	echo '<div class="emergency flash-notice">'."\n";
+	echo '<div class="callout callout-danger">'."\n";
+	foreach( $result AS $id => $page )
+	{
+		echo $page->get_value('content')."\n";
+	}
+	echo '</div>'."\n";
+	echo '</div>  <!-- class="emergency flash-notice"-->'."\n";
+}
+
+function handle_ie8()
+// if browser is ie 6-8 or display no longer supported message
+// change regex when version 16 comes along
+{
+	if(preg_match('/(?i)msie [6-8]/',$_SERVER['HTTP_USER_AGENT']))
+	{
+		echo '<div class="flash-notice">'."\n";
+		echo '<div class="callout callout-warning">'."\n";
+		echo 'Browser support for this version of Internet Explorer is no longer supported. Please upgrade to IE 9 or newer.'."\n";
+		echo '</div>'."\n";
+		echo '</div>  <!-- class="flash-notice"-->'."\n";
+	}
+	
 }
 
 function luther_shorten_string($text, $length, $append)

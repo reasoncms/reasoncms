@@ -111,7 +111,10 @@ blockquote {
 		background: $lc-grey;
 		border: 1px solid darken($lc-grey, 10%);
 		padding: $column-gutter/2 $column-gutter/1.5;
-		margin-bottom: $paragraph-margin-bottom;
+		:not(.flash-notice) {
+			margin-bottom: $paragraph-margin-bottom;
+		}
+		
 		@include clearfix;
 		font-family: $header-font-family;
 
