@@ -99,23 +99,29 @@
 		margin: 0 auto rem-calc(16); // space out the bottom
 		
 		&.left,
-		&[align="left"] { // align left images left, and pad out the right
-			margin-right: $column-gutter;
-			float: left !important;
-			clear: left;
-		}
-
+		&[align="left"],
 		&.right,
-		&[align="right"] { // align right images right, and pad out the left
-			margin-left: $column-gutter;
-			float: right !important;
-			clear: right;
+		&[align="right"] { // On phones, we won't float the images to prevent skinny column wrapping text.
+			float: none !important;
+			clear: left;
 		}
 
 		@media #{$medium-up} {  // Images are displayed at native resolution if align = none.
 			width: auto;
 			max-width: 100%;
 			margin: 0 0 rem-calc(16);
+
+			&.left,
+			&[align="left"] { // align left images left, and pad out the right
+				margin-right: $column-gutter;
+				float: left !important;
+			}
+
+			&.right,
+			&[align="right"] { // align right images right, and pad out the left
+				margin-left: $column-gutter;
+				float: right !important;
+			}
 
 			&.left,  // But if images are floated left or right, we cap their max-width at 40% max-width (since the column is so big, and there's no room to wrap text)
 			&[align="left"],
@@ -134,34 +140,24 @@
 	}
 }
 
-// THREE COLUMNS
-.hasConRelNav {
+// // THREE COLUMNS
+// .hasConRelNav {
 
-	#{$wysiwyg-content-area} {
+// 	#{$wysiwyg-content-area} {
 	
-		img {
+// 		img {
 
-			@media #{$medium-up} {
-				width: auto;
-				max-width: 100%; // Images with align = none are 100% max-width on medium (becuase the middle column is fairly narrow)...
-
-				&.left,  // And if images are floated left or right, we allow them to be 100% max-width (since the column is narrow and there's no room to wrap text)
-				&[align="left"],
-				&.right,
-				&[align="right"] {
-					max-width: 100%;
-				}
-			}
-
-			@media #{$large-up} {
+// 			@media #{$medium-up} {
+// 				width: auto;
+// 				max-width: 100%; // Images with align = none are 100% max-width on medium (becuase the middle column is fairly narrow)...
 				
-				&.left, // Ff images are floated left or right, we allow cap them at 40% max-width (becuase the middle column is wider and there's room to wrap text)
-				&[align="left"],
-				&.right,
-				&[align="right"] {
-					max-width: 40%; 
-				}
-			}
-		}
-	}
-}
+// 				&.left, // Ff images are floated left or right, we allow cap them at 40% max-width (becuase the middle column is wider and there's room to wrap text)
+// 				&[align="left"],
+// 				&.right,
+// 				&[align="right"] {
+// 					max-width: 40%; 
+// 				}
+// 			}
+// 		}
+// 	}
+// }
