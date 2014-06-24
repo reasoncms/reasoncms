@@ -71,7 +71,7 @@
 			foreach( $this->alpha as $keyletter => $keywords )
 			{
 				ksort( $keywords );
-				echo "\t".'<li><a name="'.strtolower($keyletter).'"></a>'.$keyletter.'<ul>'."\n";
+				echo "\t".'<li><a name="'.strtolower($keyletter).'"></a> <span class="letter">'.$keyletter.'</span><ul>'."\n";
 				foreach( $keywords as $word => $sites )
 				{
 					asort( $sites );
