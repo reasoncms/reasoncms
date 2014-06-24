@@ -523,6 +523,7 @@
 
 		> div {
 			margin-bottom: $column-gutter;
+			@include clearfix;
 		}
 
 		.assets,
