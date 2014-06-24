@@ -197,9 +197,11 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'main' => 'faculty_luther',
 		'main_post' => 'content'
 	),
+	'flickr_slideshow' => array(
+		'main_post_3' => 'luther_flickr_slideshow',		
+	),
 	'flickr_slideshow_sidebar' => array(
-		'main_post_2' => '',
-		'post_sidebar' => 'luther_flickr_slideshow',		
+		'post_sidebar_3' => 'luther_flickr_slideshow',		
 	),
 	'gift_page_engine' => array(
 		'main_post' => 'gift_form/gift_form',
@@ -236,7 +238,9 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'post_sidebar_2' => 'twitter',
 	),
 	'landing_library' => array (
-		'post_main_head' => 'luther_tab_widget',
+		//'post_main_head' => 'luther_tab_widget',
+		'main' => 'luther_tab_widget',
+		'main_post' => 'content',
 	),
 	'landing_events' => array(
 		'main_post' => array(
