@@ -39,7 +39,8 @@
 		// Below, we ensure the images will never be streatched larger than their native resolution, while spanning images the width of the full column
 		
 			float: left;
-			padding: 0 rem-calc(12) rem-calc(6);
+			//padding: 0 rem-calc(12) rem-calc(6);
+			padding: 2.5%;
 			width: 20%; // 5 in a row for small-low up
 
 			@media
@@ -59,8 +60,14 @@
 
 			img {
 				width: 100%;
+				@include default-transition();
+				border: 1px solid #FFF;
+
+				&:hover {
+					@include default-transition();
+					@include box-shadow(#666 0 0 4px);
+				}
 			}
-		
 		}
 	}
 
@@ -68,7 +75,8 @@
 
 		@include flicker-hidden-container();	
 		float: left;
-		padding: rem-calc(8) rem-calc(16);
+		//padding: rem-calc(8) rem-calc(16);
+		padding: 2.5% 4%;
 		width: 25%; // 4 in a row for small-low up
 
 		&:nth-child(4n+1) {
@@ -83,13 +91,13 @@
 
 		@media
 		#{$small-high-up} {
-			width: 16.666667%;  // 6 in a row for small-high up
+			width: 20%;  // 5 in a row for small-high up
 
 			&:nth-child(4n+1) {
 				clear: none;
 			}
 
-			&:nth-child(6n+1) {
+			&:nth-child(5n+1) {
 				clear: left;
 			}
 		}
@@ -98,7 +106,7 @@
 		#{$medium-up} {
 			width: 33.33333%;  // 3 in a row for medium up
 
-			&:nth-child(6n+1) {
+			&:nth-child(5n+1) {
 				clear: none;
 			}
 
@@ -122,7 +130,13 @@
 
 		img {
 			width: 100%;
-			@include box-shadow($lc-white 1px 1px 0, #5b5b5b 2px 2px 0, $lc-white 3px 3px 0, #5b5b5b 4px 4px 0);
+			@include default-transition();
+			@include box-shadow($lc-white 1.5px 1.5px 0, #ccc 3px 3px 0, $lc-white 4.5px 4.5px 0, #ccc 6px 6px 0);
+
+			&:hover {
+				@include default-transition();
+				@include box-shadow($lc-white 1.5px 1.5px 0, #999 3px 3px 0, $lc-white 4.5px 4.5px 0, #999 6px 6px 0);
+			}
 		}
 
 		h4 { // Slideshow title
@@ -143,21 +157,54 @@
 	
 	#galleryimages {
 
+		@include clearfix;
+
 		.flickr-image {
 			float: left;
-			padding: 0 rem-calc(12) rem-calc(6);
+			// padding: rem-calc(6) rem-calc(12) rem-calc(6) 0;
+			padding: 4%;
+
+			@media
+			#{$medium-up} {
+				padding: 2.5%;
+			}
+
+			img {
+				width: 100%;
+				opacity: .9;
+				border: 1px solid #FFF;
+				@include default-transition();
+
+				&:hover {
+					@include default-transition();
+					@include box-shadow(#666 0 0 4px);
+					opacity: 1;
+				}
+			}
 		}
 	}	
 
 	.flickr-set-container {
-
+		@include clearfix;
 		@include flicker-hidden-container();	
 		float: left;
-		padding: rem-calc(8) rem-calc(16);
+		//padding: rem-calc(8) rem-calc(16);
+		padding: 2.5% 4%;
+
+		@media
+		#{$medium-up} {
+			padding: 2.5%;
+		}
 
 		img {
 			width: 100%;
-			@include box-shadow($lc-white 1px 1px 0, #ccc 2px 2px 0, $lc-white 3px 3px 0, #ccc 4px 4px 0);
+			@include default-transition();
+			@include box-shadow($lc-white 1.5px 1.5px 0, #ccc 3px 3px 0, $lc-white 4.5px 4.5px 0, #ccc 6px 6px 0);
+
+			&:hover {
+				@include default-transition();
+				@include box-shadow($lc-white 1.5px 1.5px 0, #999 3px 3px 0, $lc-white 4.5px 4.5px 0, #999 6px 6px 0);
+			}
 		}
 
 		h4 { // Slideshow title
@@ -172,39 +219,7 @@
 	}
 }
 
-
-
-// .flickr-set-container {
-// 	float: left;
-// 	width: 112px;
-	
-// 	h4 { // Slideshow title
-// 		display: block;
-// 		margin-top: rem-calc(6);
-// 		font-family: $header-font-family;
-// 		font-size: rem-calc(12);
-// 		font-style: italic;
-// 		font-weight: 500;
-// 		color: $blockquote-font-color;
-	
-// 		a {
-// 			color: $blockquote-font-color;
-// 		}
-// 	}
-// }
-
-// .flickr-set {
-// 	background:transparent url(/images/slideshow91x95.gif) no-repeat scroll 0 0;
-// 	height:95px;
-// 	margin-bottom:5px;
-// 	margin-top:5px;
-// 	padding:7px 0 0 7px;
-// 	width:91px;
-	
-// 	img {
-// 		border:1px solid #333333;
-// 	}
-// }
+// Fancybox captions
 
 .fancybox-title a {
 	&:link,

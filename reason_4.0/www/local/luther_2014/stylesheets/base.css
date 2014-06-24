@@ -5520,8 +5520,39 @@ form table td {
 /* line 61, scss/modules/_image-galleries.scss */
 #relatedSections #galleryimages .flickr-image img {
   width: 100%;
+  -webkit-transition-property: all;
+  -moz-transition-property: all;
+  -o-transition-property: all;
+  transition-property: all;
+  -webkit-transition-duration: 0.5s;
+  -moz-transition-duration: 0.5s;
+  -o-transition-duration: 0.5s;
+  transition-duration: 0.5s;
+  -webkit-transition-timing-function: ease;
+  -moz-transition-timing-function: ease;
+  -o-transition-timing-function: ease;
+  transition-timing-function: ease;
+  border: 1px solid #FFF;
 }
-/* line 68, scss/modules/_image-galleries.scss */
+/* line 66, scss/modules/_image-galleries.scss */
+#relatedSections #galleryimages .flickr-image img:hover {
+  -webkit-transition-property: all;
+  -moz-transition-property: all;
+  -o-transition-property: all;
+  transition-property: all;
+  -webkit-transition-duration: 0.5s;
+  -moz-transition-duration: 0.5s;
+  -o-transition-duration: 0.5s;
+  transition-duration: 0.5s;
+  -webkit-transition-timing-function: ease;
+  -moz-transition-timing-function: ease;
+  -o-transition-timing-function: ease;
+  transition-timing-function: ease;
+  -webkit-box-shadow: #666666 0 0 4px;
+  -moz-box-shadow: #666666 0 0 4px;
+  box-shadow: #666666 0 0 4px;
+}
+/* line 74, scss/modules/_image-galleries.scss */
 #relatedSections .flickr-set-container {
   float: left;
   padding: 2.5% 4%;
@@ -5531,64 +5562,94 @@ form table td {
 #relatedSections .flickr-set-container .hidden-container {
   display: none;
 }
-/* line 76, scss/modules/_image-galleries.scss */
+/* line 82, scss/modules/_image-galleries.scss */
 #relatedSections .flickr-set-container:nth-child(4n+1) {
   clear: left;
 }
-/* line 81, scss/modules/_image-galleries.scss */
+/* line 87, scss/modules/_image-galleries.scss */
 #relatedSections .flickr-set-container:hover h4 {
   color: #1073ce;
 }
 @media only screen and (min-width: 30em) {
-  /* line 68, scss/modules/_image-galleries.scss */
+  /* line 74, scss/modules/_image-galleries.scss */
   #relatedSections .flickr-set-container {
-    width: 16.666667%;
+    width: 20%;
   }
-  /* line 90, scss/modules/_image-galleries.scss */
+  /* line 96, scss/modules/_image-galleries.scss */
   #relatedSections .flickr-set-container:nth-child(4n+1) {
     clear: none;
   }
-  /* line 94, scss/modules/_image-galleries.scss */
-  #relatedSections .flickr-set-container:nth-child(6n+1) {
+  /* line 100, scss/modules/_image-galleries.scss */
+  #relatedSections .flickr-set-container:nth-child(5n+1) {
     clear: left;
   }
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 68, scss/modules/_image-galleries.scss */
+  /* line 74, scss/modules/_image-galleries.scss */
   #relatedSections .flickr-set-container {
     width: 33.33333%;
   }
-  /* line 103, scss/modules/_image-galleries.scss */
-  #relatedSections .flickr-set-container:nth-child(6n+1) {
+  /* line 109, scss/modules/_image-galleries.scss */
+  #relatedSections .flickr-set-container:nth-child(5n+1) {
     clear: none;
   }
-  /* line 107, scss/modules/_image-galleries.scss */
+  /* line 113, scss/modules/_image-galleries.scss */
   #relatedSections .flickr-set-container:nth-child(3n+1) {
     clear: left;
   }
 }
 @media only screen and (min-width: 80em) {
-  /* line 68, scss/modules/_image-galleries.scss */
+  /* line 74, scss/modules/_image-galleries.scss */
   #relatedSections .flickr-set-container {
     width: 25%;
   }
-  /* line 116, scss/modules/_image-galleries.scss */
+  /* line 122, scss/modules/_image-galleries.scss */
   #relatedSections .flickr-set-container:nth-child(3n+1) {
     clear: none;
   }
-  /* line 120, scss/modules/_image-galleries.scss */
+  /* line 126, scss/modules/_image-galleries.scss */
   #relatedSections .flickr-set-container:nth-child(4n+1) {
     clear: left;
   }
 }
-/* line 125, scss/modules/_image-galleries.scss */
+/* line 131, scss/modules/_image-galleries.scss */
 #relatedSections .flickr-set-container img {
   width: 100%;
+  -webkit-transition-property: all;
+  -moz-transition-property: all;
+  -o-transition-property: all;
+  transition-property: all;
+  -webkit-transition-duration: 0.5s;
+  -moz-transition-duration: 0.5s;
+  -o-transition-duration: 0.5s;
+  transition-duration: 0.5s;
+  -webkit-transition-timing-function: ease;
+  -moz-transition-timing-function: ease;
+  -o-transition-timing-function: ease;
+  transition-timing-function: ease;
   -webkit-box-shadow: white 1.5px 1.5px 0, #cccccc 3px 3px 0, white 4.5px 4.5px 0, #cccccc 6px 6px 0;
   -moz-box-shadow: white 1.5px 1.5px 0, #cccccc 3px 3px 0, white 4.5px 4.5px 0, #cccccc 6px 6px 0;
   box-shadow: white 1.5px 1.5px 0, #cccccc 3px 3px 0, white 4.5px 4.5px 0, #cccccc 6px 6px 0;
 }
-/* line 130, scss/modules/_image-galleries.scss */
+/* line 136, scss/modules/_image-galleries.scss */
+#relatedSections .flickr-set-container img:hover {
+  -webkit-transition-property: all;
+  -moz-transition-property: all;
+  -o-transition-property: all;
+  transition-property: all;
+  -webkit-transition-duration: 0.5s;
+  -moz-transition-duration: 0.5s;
+  -o-transition-duration: 0.5s;
+  transition-duration: 0.5s;
+  -webkit-transition-timing-function: ease;
+  -moz-transition-timing-function: ease;
+  -o-transition-timing-function: ease;
+  transition-timing-function: ease;
+  -webkit-box-shadow: white 1.5px 1.5px 0, #999999 3px 3px 0, white 4.5px 4.5px 0, #999999 6px 6px 0;
+  -moz-box-shadow: white 1.5px 1.5px 0, #999999 3px 3px 0, white 4.5px 4.5px 0, #999999 6px 6px 0;
+  box-shadow: white 1.5px 1.5px 0, #999999 3px 3px 0, white 4.5px 4.5px 0, #999999 6px 6px 0;
+}
+/* line 142, scss/modules/_image-galleries.scss */
 #relatedSections .flickr-set-container h4 {
   display: block;
   margin: 0.5rem 0 0;
@@ -5599,7 +5660,7 @@ form table td {
   color: #6f6f6f;
 }
 
-/* line 146, scss/modules/_image-galleries.scss */
+/* line 158, scss/modules/_image-galleries.scss */
 #contentSections #galleryimages {
   *zoom: 1;
 }
@@ -5612,18 +5673,55 @@ form table td {
 #contentSections #galleryimages:after {
   clear: both;
 }
-/* line 150, scss/modules/_image-galleries.scss */
+/* line 162, scss/modules/_image-galleries.scss */
 #contentSections #galleryimages .flickr-image {
   float: left;
   padding: 4%;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 150, scss/modules/_image-galleries.scss */
+  /* line 162, scss/modules/_image-galleries.scss */
   #contentSections #galleryimages .flickr-image {
     padding: 2.5%;
   }
 }
-/* line 162, scss/modules/_image-galleries.scss */
+/* line 172, scss/modules/_image-galleries.scss */
+#contentSections #galleryimages .flickr-image img {
+  width: 100%;
+  opacity: .9;
+  border: 1px solid #FFF;
+  -webkit-transition-property: all;
+  -moz-transition-property: all;
+  -o-transition-property: all;
+  transition-property: all;
+  -webkit-transition-duration: 0.5s;
+  -moz-transition-duration: 0.5s;
+  -o-transition-duration: 0.5s;
+  transition-duration: 0.5s;
+  -webkit-transition-timing-function: ease;
+  -moz-transition-timing-function: ease;
+  -o-transition-timing-function: ease;
+  transition-timing-function: ease;
+}
+/* line 178, scss/modules/_image-galleries.scss */
+#contentSections #galleryimages .flickr-image img:hover {
+  -webkit-transition-property: all;
+  -moz-transition-property: all;
+  -o-transition-property: all;
+  transition-property: all;
+  -webkit-transition-duration: 0.5s;
+  -moz-transition-duration: 0.5s;
+  -o-transition-duration: 0.5s;
+  transition-duration: 0.5s;
+  -webkit-transition-timing-function: ease;
+  -moz-transition-timing-function: ease;
+  -o-transition-timing-function: ease;
+  transition-timing-function: ease;
+  -webkit-box-shadow: #666666 0 0 4px;
+  -moz-box-shadow: #666666 0 0 4px;
+  box-shadow: #666666 0 0 4px;
+  opacity: 1;
+}
+/* line 187, scss/modules/_image-galleries.scss */
 #contentSections .flickr-set-container {
   *zoom: 1;
   float: left;
@@ -5643,19 +5741,49 @@ form table td {
   display: none;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 162, scss/modules/_image-galleries.scss */
+  /* line 187, scss/modules/_image-galleries.scss */
   #contentSections .flickr-set-container {
     padding: 2.5%;
   }
 }
-/* line 174, scss/modules/_image-galleries.scss */
+/* line 199, scss/modules/_image-galleries.scss */
 #contentSections .flickr-set-container img {
   width: 100%;
+  -webkit-transition-property: all;
+  -moz-transition-property: all;
+  -o-transition-property: all;
+  transition-property: all;
+  -webkit-transition-duration: 0.5s;
+  -moz-transition-duration: 0.5s;
+  -o-transition-duration: 0.5s;
+  transition-duration: 0.5s;
+  -webkit-transition-timing-function: ease;
+  -moz-transition-timing-function: ease;
+  -o-transition-timing-function: ease;
+  transition-timing-function: ease;
   -webkit-box-shadow: white 1.5px 1.5px 0, #cccccc 3px 3px 0, white 4.5px 4.5px 0, #cccccc 6px 6px 0;
   -moz-box-shadow: white 1.5px 1.5px 0, #cccccc 3px 3px 0, white 4.5px 4.5px 0, #cccccc 6px 6px 0;
   box-shadow: white 1.5px 1.5px 0, #cccccc 3px 3px 0, white 4.5px 4.5px 0, #cccccc 6px 6px 0;
 }
-/* line 179, scss/modules/_image-galleries.scss */
+/* line 204, scss/modules/_image-galleries.scss */
+#contentSections .flickr-set-container img:hover {
+  -webkit-transition-property: all;
+  -moz-transition-property: all;
+  -o-transition-property: all;
+  transition-property: all;
+  -webkit-transition-duration: 0.5s;
+  -moz-transition-duration: 0.5s;
+  -o-transition-duration: 0.5s;
+  transition-duration: 0.5s;
+  -webkit-transition-timing-function: ease;
+  -moz-transition-timing-function: ease;
+  -o-transition-timing-function: ease;
+  transition-timing-function: ease;
+  -webkit-box-shadow: white 1.5px 1.5px 0, #999999 3px 3px 0, white 4.5px 4.5px 0, #999999 6px 6px 0;
+  -moz-box-shadow: white 1.5px 1.5px 0, #999999 3px 3px 0, white 4.5px 4.5px 0, #999999 6px 6px 0;
+  box-shadow: white 1.5px 1.5px 0, #999999 3px 3px 0, white 4.5px 4.5px 0, #999999 6px 6px 0;
+}
+/* line 210, scss/modules/_image-galleries.scss */
 #contentSections .flickr-set-container h4 {
   display: block;
   margin: 0.5rem 0 0;
@@ -5666,7 +5794,7 @@ form table td {
   color: #6f6f6f;
 }
 
-/* line 228, scss/modules/_image-galleries.scss */
+/* line 227, scss/modules/_image-galleries.scss */
 .fancybox-title a:link, .fancybox-title a:visited, .fancybox-title a:active {
   color: #ededed;
   float: right;
@@ -5674,7 +5802,7 @@ form table td {
   padding-bottom: 5px;
   text-decoration: none;
 }
-/* line 236, scss/modules/_image-galleries.scss */
+/* line 235, scss/modules/_image-galleries.scss */
 .fancybox-title a:hover, .fancybox-title a:focus {
   color: #556677;
 }
