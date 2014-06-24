@@ -265,13 +265,13 @@
 			echo '<div class="off-canvas-wrap">'."\n";
 			echo '<div class="inner-wrap">';
 			echo '<div id="wrapper">'."\n";
-			echo '<div id="wrapper-col">'."\n";
-			
-				// @todo: Hook up emergency preempt
-				//$this->emergency_preempt();
+			echo '<div id="wrapper-col">'."\n";				
 		
-				$this->show_luther_global_header();
-				$this->show_luther_global_navigation();
+			$this->show_luther_global_header();
+			$this->show_luther_global_navigation();
+			
+			emergency_preempt();
+			handle_ie8();
 			
 			// Generate classes on the minisite section based on the contents inside. Useful for CSS. 
 			// Originally appears in show_meat_tableless() in the default template. 
