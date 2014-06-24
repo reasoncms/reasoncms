@@ -69,7 +69,7 @@ $blurb-content: '#{$contentSections} .blurb';  // Main content blurb wysiwyg
 $blurb-related: '#{$relatedSections} .blurb';  // Sidebar blurb wysiwyg
 $faq-content: '#faq .answer';
 
-$wysiwyg-all-areas: '#{$pageContent}, #{$fullPost}, #{$blurb-related}, #{$blurb-content}, #{$faq-content}';
+$wysiwyg-all-areas: '#{$pageContent}, #{$fullPost}, #{$blurb-related}, #{$blurb-content}, #{$faq-content}, .flash-notice';
 $wysiwyg-content-area: '#{$pageContent}, #{$fullPost}, #{$faq-content}';
 $wysiwyg-related-area: #{$blurb-related};
 
