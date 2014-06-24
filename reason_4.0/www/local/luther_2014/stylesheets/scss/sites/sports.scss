@@ -108,7 +108,8 @@ $minisite-nav-color: $lc-white;
 	// Luther Sports logo replaces the typeface logo
 	#wrapper #global-banner hgroup {
 
-		@include background-image(linear-gradient($lc-blue-dark, #0a2345));
+		//@include background-image(linear-gradient($lc-blue-dark, #0a2345));
+		background: #0a2345;
 
 		$logo-width: 168px;
 		$logo-height: 75px;
