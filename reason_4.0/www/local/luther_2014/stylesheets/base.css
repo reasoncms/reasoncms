@@ -5558,9 +5558,9 @@ form table td {
 /* line 123, scss/modules/_image-galleries.scss */
 #relatedSections .flickr-set-container img {
   width: 100%;
-  -webkit-box-shadow: white 1px 1px 0, #5b5b5b 2px 2px 0, white 3px 3px 0, #5b5b5b 4px 4px 0;
-  -moz-box-shadow: white 1px 1px 0, #5b5b5b 2px 2px 0, white 3px 3px 0, #5b5b5b 4px 4px 0;
-  box-shadow: white 1px 1px 0, #5b5b5b 2px 2px 0, white 3px 3px 0, #5b5b5b 4px 4px 0;
+  -webkit-box-shadow: white 1.5px 1.5px 0, #cccccc 3px 3px 0, white 4.5px 4.5px 0, #cccccc 6px 6px 0;
+  -moz-box-shadow: white 1.5px 1.5px 0, #cccccc 3px 3px 0, white 4.5px 4.5px 0, #cccccc 6px 6px 0;
+  box-shadow: white 1.5px 1.5px 0, #cccccc 3px 3px 0, white 4.5px 4.5px 0, #cccccc 6px 6px 0;
 }
 /* line 128, scss/modules/_image-galleries.scss */
 #relatedSections .flickr-set-container h4 {
@@ -5589,12 +5589,22 @@ form table td {
 /* line 148, scss/modules/_image-galleries.scss */
 #contentSections #galleryimages .flickr-image {
   float: left;
-  padding: 0 0.75rem 0.75rem;
+  padding: 0.375rem 0.75rem 0.375rem 0;
 }
 /* line 154, scss/modules/_image-galleries.scss */
 #contentSections .flickr-set-container {
+  *zoom: 1;
   float: left;
   padding: 0.5rem 1rem;
+}
+/* line 165, ../foundation/bower_components/foundation/scss/foundation/components/_global.scss */
+#contentSections .flickr-set-container:before, #contentSections .flickr-set-container:after {
+  content: " ";
+  display: table;
+}
+/* line 166, ../foundation/bower_components/foundation/scss/foundation/components/_global.scss */
+#contentSections .flickr-set-container:after {
+  clear: both;
 }
 /* line 21, scss/modules/_image-galleries.scss */
 #contentSections .flickr-set-container .hidden-container {
@@ -5603,9 +5613,9 @@ form table td {
 /* line 160, scss/modules/_image-galleries.scss */
 #contentSections .flickr-set-container img {
   width: 100%;
-  -webkit-box-shadow: white 1px 1px 0, #cccccc 2px 2px 0, white 3px 3px 0, #cccccc 4px 4px 0;
-  -moz-box-shadow: white 1px 1px 0, #cccccc 2px 2px 0, white 3px 3px 0, #cccccc 4px 4px 0;
-  box-shadow: white 1px 1px 0, #cccccc 2px 2px 0, white 3px 3px 0, #cccccc 4px 4px 0;
+  -webkit-box-shadow: white 1.5px 1.5px 0, #cccccc 3px 3px 0, white 4.5px 4.5px 0, #cccccc 6px 6px 0;
+  -moz-box-shadow: white 1.5px 1.5px 0, #cccccc 3px 3px 0, white 4.5px 4.5px 0, #cccccc 6px 6px 0;
+  box-shadow: white 1.5px 1.5px 0, #cccccc 3px 3px 0, white 4.5px 4.5px 0, #cccccc 6px 6px 0;
 }
 /* line 165, scss/modules/_image-galleries.scss */
 #contentSections .flickr-set-container h4 {
