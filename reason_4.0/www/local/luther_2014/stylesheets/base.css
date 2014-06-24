@@ -4441,20 +4441,24 @@ footer .contactBlurb {
   }
 }
 
-@media only screen and (max-width: 40em) {
-  /* line 35, scss/modules/_feature.scss */
-  .featuresModule .features {
-    padding: 0;
-    height: 306px;
-  }
-  /* line 40, scss/modules/_feature.scss */
-  .featuresModule .features img {
-    width: 640px;
-    max-width: 10000px !important;
-    height: 306px !important;
-    position: absolute;
-    margin-left: -320px;
-  }
+/* line 32, scss/modules/_feature.scss */
+.featuresModule {
+  /* @media only screen and (max-width: 40em) {
+     .features {
+       padding: 0;
+       //height: 224px;
+       height: 306px;
+     
+       img {
+         width: 640px;
+         max-width: 10000px !important;
+         //height: 224px !important;
+         height: 306px !important;
+         position: absolute;
+         margin-left: -320px;
+       }
+     }
+   }*/
 }
 /* line 54, scss/modules/_feature.scss */
 .featuresModule .feature .featureInfo,
@@ -5371,28 +5375,34 @@ form table td {
 /* line 96, scss/modules/_images.scss */
 #pageContent img, .fullPost .text img, #faq .answer img {
   width: auto;
-  max-width: 600px;
+  max-width: 100%;
+  margin: 0 auto 1rem;
 }
 /* line 102, scss/modules/_images.scss */
-#pageContent img.right, #pageContent img.left, .fullPost .text img.right, .fullPost .text img.left, #faq .answer img.right, #faq .answer img.left {
-  margin: 0 auto;
+#pageContent img.left, #pageContent img[align="left"], .fullPost .text img.left, .fullPost .text img[align="left"], #faq .answer img.left, #faq .answer img[align="left"] {
+  margin-right: 2.5rem;
+  float: left !important;
+  clear: left;
+}
+/* line 109, scss/modules/_images.scss */
+#pageContent img.right, #pageContent img[align="right"], .fullPost .text img.right, .fullPost .text img[align="right"], #faq .answer img.right, #faq .answer img[align="right"] {
+  margin-left: 2.5rem;
+  float: right !important;
+  clear: right;
 }
 @media only screen and (min-width: 40.063em) {
   /* line 96, scss/modules/_images.scss */
   #pageContent img, .fullPost .text img, #faq .answer img {
     width: auto;
-    max-width: 40%;
-    margin: 0 0 1rem 2.5rem;
-    clear: right;
+    max-width: 100%;
+    margin: 0 0 1rem;
   }
-  /* line 115, scss/modules/_images.scss */
-  #pageContent img.left, #pageContent img[align="left"], .fullPost .text img.left, .fullPost .text img[align="left"], #faq .answer img.left, #faq .answer img[align="left"] {
-    margin: 0 2.5rem 1rem 0;
-    float: left !important;
-    clear: left;
+  /* line 123, scss/modules/_images.scss */
+  #pageContent img.left, #pageContent img[align="left"], #pageContent img.right, #pageContent img[align="right"], .fullPost .text img.left, .fullPost .text img[align="left"], .fullPost .text img.right, .fullPost .text img[align="right"], #faq .answer img.left, #faq .answer img[align="left"], #faq .answer img.right, #faq .answer img[align="right"] {
+    max-width: 40%;
   }
 }
-/* line 125, scss/modules/_images.scss */
+/* line 131, scss/modules/_images.scss */
 #pageContent .callout img,
 #pageContent .callOut img, .fullPost .text .callout img,
 .fullPost .text .callOut img, #faq .answer .callout img,
@@ -5401,40 +5411,20 @@ form table td {
 }
 
 @media only screen and (min-width: 40.063em) {
-  /* line 136, scss/modules/_images.scss */
+  /* line 142, scss/modules/_images.scss */
   .hasConRelNav #pageContent img, .hasConRelNav .fullPost .text img, .hasConRelNav #faq .answer img {
     width: auto;
     max-width: 100%;
   }
-  /* line 142, scss/modules/_images.scss */
-  .hasConRelNav #pageContent img.right, .hasConRelNav .fullPost .text img.right, .hasConRelNav #faq .answer img.right {
-    margin: 0 0 1rem;
-    float: right !important;
+  /* line 151, scss/modules/_images.scss */
+  .hasConRelNav #pageContent img.left, .hasConRelNav #pageContent img[align="left"], .hasConRelNav #pageContent img.right, .hasConRelNav #pageContent img[align="right"], .hasConRelNav .fullPost .text img.left, .hasConRelNav .fullPost .text img[align="left"], .hasConRelNav .fullPost .text img.right, .hasConRelNav .fullPost .text img[align="right"], .hasConRelNav #faq .answer img.left, .hasConRelNav #faq .answer img[align="left"], .hasConRelNav #faq .answer img.right, .hasConRelNav #faq .answer img[align="right"] {
+    max-width: 100%;
   }
 }
 @media only screen and (min-width: 64.063em) {
-  /* line 136, scss/modules/_images.scss */
-  .hasConRelNav #pageContent img, .hasConRelNav .fullPost .text img, .hasConRelNav #faq .answer img {
-    width: auto;
+  /* line 161, scss/modules/_images.scss */
+  .hasConRelNav #pageContent img.left, .hasConRelNav #pageContent img[align="left"], .hasConRelNav #pageContent img.right, .hasConRelNav #pageContent img[align="right"], .hasConRelNav .fullPost .text img.left, .hasConRelNav .fullPost .text img[align="left"], .hasConRelNav .fullPost .text img.right, .hasConRelNav .fullPost .text img[align="right"], .hasConRelNav #faq .answer img.left, .hasConRelNav #faq .answer img[align="left"], .hasConRelNav #faq .answer img.right, .hasConRelNav #faq .answer img[align="right"] {
     max-width: 40%;
-    margin: 0 0 1rem 2.5rem;
-  }
-  /* line 155, scss/modules/_images.scss */
-  .hasConRelNav #pageContent img.left, .hasConRelNav .fullPost .text img.left, .hasConRelNav #faq .answer img.left {
-    float: left !important;
-    margin: 0 2.5rem 1rem 0;
-  }
-}
-@media only screen and (min-width: 90.063em) {
-  /* line 136, scss/modules/_images.scss */
-  .hasConRelNav #pageContent img, .hasConRelNav .fullPost .text img, .hasConRelNav #faq .answer img {
-    width: auto;
-    max-width: 100%;
-  }
-  /* line 165, scss/modules/_images.scss */
-  .hasConRelNav #pageContent img.right, .hasConRelNav .fullPost .text img.right, .hasConRelNav #faq .answer img.right {
-    margin: 0 0 1rem;
-    float: right !important;
   }
 }
 
