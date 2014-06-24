@@ -23,8 +23,8 @@ class netPriceCalculatorModule extends DefaultMinisiteModule {
 
 
                 /* Do NOT edit the following code */
-                NPC_CONTAINER_PROTOCOL  = "http:",
-                NPC_EMBEDDED_PROTOCOL   = "http:",
+                NPC_CONTAINER_PROTOCOL  = "https:",
+                NPC_EMBEDDED_PROTOCOL   = "https:",
                 NPC_IGNITION_VERSION    = "1";
 
                 (function(){var d=document,s=d.createElement("script");s.type="text/javascript";s.src=NPC_EMBEDDED_PROTOCOL+"//"+NPC_CLIENT_DOMAIN+".aidcalculator.com/scripts/embed/ignition_v"+NPC_IGNITION_VERSION+".js";d.getElementsByTagName("head")[0].appendChild(s);})();
