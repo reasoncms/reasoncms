@@ -1,32 +1,37 @@
 <?php
 
 reason_include_once('minisite_templates/modules/default.php');
+reason_include_once('carl_util/luther_util.php');
 
 $GLOBALS['_module_class_names'][basename(__FILE__, '.php')] = 'netPriceCalculatorModule';
 
 class netPriceCalculatorModule extends DefaultMinisiteModule {
 
     function run() {
-        echo '<div id="npc_container"></div>
-            <script type="text/javascript">
+        if (luther_is_mobile_device()) {
+            echo 'This page is best viewed on a desktop device. Please use a desktop device to view this page.';
+        } else {        
+            echo '<div id="npc_container"></div>
+                <script type="text/javascript">
 
-            var
-            /* Update these three variables immediately */
-            NPC_CLIENT_DOMAIN = "luther",
-            NPC_CLIENT_HEIGHT = 1400,
-            NPC_CLIENT_WIDTH  = 700, /* minimum: 740 */
+                var
+                /* Update these three variables immediately */
+                NPC_CLIENT_DOMAIN = "luther",
+                NPC_CLIENT_HEIGHT = 1400,
+                NPC_CLIENT_WIDTH  = 700, /* minimum: 740 */
 
 
 
-            /* Do NOT edit the following code */
-            NPC_CONTAINER_PROTOCOL  = "https:",
-            NPC_EMBEDDED_PROTOCOL   = "https:",
-            NPC_IGNITION_VERSION    = "1";
+                /* Do NOT edit the following code */
+                NPC_CONTAINER_PROTOCOL  = "http:",
+                NPC_EMBEDDED_PROTOCOL   = "http:",
+                NPC_IGNITION_VERSION    = "1";
 
-            (function(){var d=document,s=d.createElement("script");s.type="text/javascript";s.src=NPC_EMBEDDED_PROTOCOL+"//"+NPC_CLIENT_DOMAIN+".aidcalculator.com/scripts/embed/ignition_v"+NPC_IGNITION_VERSION+".js";d.getElementsByTagName("head")[0].appendChild(s);})();
+                (function(){var d=document,s=d.createElement("script");s.type="text/javascript";s.src=NPC_EMBEDDED_PROTOCOL+"//"+NPC_CLIENT_DOMAIN+".aidcalculator.com/scripts/embed/ignition_v"+NPC_IGNITION_VERSION+".js";d.getElementsByTagName("head")[0].appendChild(s);})();
 
-            </script>
-            <noscript><p>Please enable Javascript to use this tool.</p></noscript>';
+                </script>
+                <noscript><p>Please enable Javascript to use this tool.</p></noscript>';
+        }
     }
 
 }
