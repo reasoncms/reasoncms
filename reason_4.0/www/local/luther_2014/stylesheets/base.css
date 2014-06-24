@@ -5413,18 +5413,6 @@ form table td {
   width: auto;
 }
 
-@media only screen and (min-width: 40.063em) {
-  /* line 148, scss/modules/_images.scss */
-  .hasConRelNav #pageContent img, .hasConRelNav .fullPost .text img, .hasConRelNav #faq .answer img {
-    width: auto;
-    max-width: 100%;
-  }
-  /* line 157, scss/modules/_images.scss */
-  .hasConRelNav #pageContent img.left, .hasConRelNav #pageContent img[align="left"], .hasConRelNav #pageContent img.right, .hasConRelNav #pageContent img[align="right"], .hasConRelNav .fullPost .text img.left, .hasConRelNav .fullPost .text img[align="left"], .hasConRelNav .fullPost .text img.right, .hasConRelNav .fullPost .text img[align="right"], .hasConRelNav #faq .answer img.left, .hasConRelNav #faq .answer img[align="left"], .hasConRelNav #faq .answer img.right, .hasConRelNav #faq .answer img[align="right"] {
-    max-width: 40%;
-  }
-}
-
 /* line 4, scss/font-awesome/_core.scss */
 .fa, #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .jump a:before, #minisite .continueReading a:after, #minisite .feedLink .feedInfo a:before, .assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a:before, #childrenAndGrandchildren li ul .childDesc:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
