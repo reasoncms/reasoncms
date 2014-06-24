@@ -1,0 +1,105 @@
+//
+// AZ STYLES
+//
+// @author Blaise Schaeffer
+//
+
+// Foundation imports
+@import "settings";
+@import "foundation/components/grid";
+
+// Compass imports
+@import "compass/css3";
+
+// Font Awesome Imports
+@import "font-awesome/variables";
+@import "font-awesome/core";
+
+// Luther imports
+@import "extends";
+@import "mixins";
+
+
+#atoz {
+	p {
+		a {
+			text-align: center;
+			display: inline-block;
+			width: rem-calc(24);	
+			height: rem-calc(24);
+			margin-bottom: $column-gutter/4;
+			@include border-radius($global-rounded); 
+
+			color: $lc-white;
+			background-color: darken($lc-grey, 12%);
+
+			@include scale(1,1);
+		    @include transition-timing-function(ease-out);
+		    @include transition-duration(250ms);
+
+		&:hover {
+			color: $lc-blue-light;
+			background-color: darken($lc-grey, 6%);
+
+		    @include scale(1.05, 1.07);
+		    @include transition-timing-function(ease-out);
+		    @include transition-duration(250ms);
+
+			}
+		}
+	}
+	ul {
+		margin-left: 0;
+		li:first-child {
+			padding-top: 0;
+		}
+		li {
+			padding-top: $column-gutter; 
+			.letter {
+				margin-bottom: rem-calc(3);
+				font-weight: 300;
+				text-align: center;
+				display: inline-block;
+				width: rem-calc(24);	
+				height: rem-calc(24);
+				@include border-radius($global-rounded); 
+				color: $lc-white;
+				background-color: darken($lc-grey, 12%);
+			}
+			ul {
+				margin-left: rem-calc(8);
+				li {
+					padding-top: 0;
+				}
+			}
+		}
+	}
+}
+
+
+
+
+
+/*
+#atoz {
+
+	ul {
+		margin: 0;
+
+		li { // The letters
+			width: 50px;
+			height: 50px;
+		}
+
+		ul {
+			margin-left: rem-calc(16);
+			
+			li { // the text
+				
+			}
+
+		}
+	}
+}
+*/
+
