@@ -232,8 +232,8 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'module' => 'events_mini',
 			'ideal_count' => 4,
 		),
-		//'post_sidebar' => 'flickr',
-		//'post_sidebar_2' => 'twitter',
+		'post_sidebar' => 'luther_flickr_slideshow',
+		'post_sidebar_2' => 'twitter',
 	),
 	'landing_library' => array (
 		'post_main_head' => 'luther_tab_widget',
@@ -262,8 +262,8 @@ $GLOBALS['_reason_page_types_local'] = array(
 			),
 		),*/
 		//'sidbebar_2' => get_luther_related_publication(),
-		//'post_sidebar' => 'flickr',
-		//'post_sidebar_2' => 'twitter',
+		'post_sidebar' => 'luther_flickr_slideshow',
+		'post_sidebar_2' => 'twitter',
 	),
 	'landing_children' => array(
 		'main_post' => 'children',
@@ -289,8 +289,8 @@ $GLOBALS['_reason_page_types_local'] = array(
 				),
 			),
 		),
-		//'post_sidebar_2' => 'flickr',
-		//'post_sidebar_3' => 'twitter',
+		'post_sidebar' => 'luther_flickr_slideshow',
+		'post_sidebar_3' => 'twitter',
 	),
 	'luther_google_map' => array(
 		'main_post' => 'luther_google_map',
