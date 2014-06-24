@@ -593,13 +593,18 @@
 				echo '<div id="preFoot">'."\n";
 				$this->run_section( 'pre_foot' );
 				echo '</div>'."\n";
-			}	
-			$this->run_section( 'footer' );
-			$this->run_section( 'edit_link' );
+			}
+			if ($this->has_content( 'footer' ) || $this->has_content( 'edit_link' ))
+			{
+				echo '<div id="foot">'."\n";
+				$this->run_section( 'footer' );
+				$this->run_section( 'edit_link' );
+				echo '</div>'."\n";
+			}
 			if ($this->has_content( 'post_foot' ))
 			{
 				echo '<div id="postFoot">'."\n";
-				$this->run_section( 'poist_foot' );
+				$this->run_section( 'post_foot' );
 				echo '</div>'."\n";
 			}
 			echo '</footer>'."\n";

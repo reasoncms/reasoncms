@@ -29,8 +29,8 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'pre_sidebar_2' => array(
 				'module' => 'image_sidebar', // default parameters set in alter_reason_pagetype in luther.php
 				'thumbnail_width' => 600,
-				'thumbnail_height' => 400,
-				'thumbnail_crop' => 'fill',
+				//'thumbnail_height' => 400,
+				//'thumbnail_crop' => 'fill',
 				'num_to_display' => 3,
 			),
 			'sidebar' => array(
@@ -130,8 +130,15 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'sidebar' => '',
 	),
 	'blurb_main_content' => array(
-		'main_post' => 'blurb',
-		'pre_sidebar' => '',
+		'main_post' => array(
+			'module' => 'blurb',
+			'num_to_display' => '1',
+			'exclude_shown_blurbs' => true,
+		),
+		'pre_sidebar' => array(
+			'module' => 'blurb',
+			'exclude_shown_blurbs' => true,
+		),
 	),
 	'caf_cam' => array(
 		'main_post' => 'caf_cam',
@@ -229,9 +236,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		//'post_sidebar_2' => 'twitter',
 	),
 	'landing_library' => array (
-		//'post_main_head' => 'luther_tab_widget',
-		'main' => 'luther_tab_widget',
-		'main_post' => 'content',
+		'post_main_head' => 'luther_tab_widget',
 	),
 	'landing_events' => array(
 		'main_post' => array(

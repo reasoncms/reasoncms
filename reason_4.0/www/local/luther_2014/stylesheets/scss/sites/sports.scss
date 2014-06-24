@@ -17,19 +17,98 @@
 /* STRUCTURE */
 
 $lc-sports-grey: #333;
+$lc-sports-grey-alt: #999;
 $minisite-nav-background: $lc-sports-grey;
 $minisite-nav-color: $lc-white;
 
 .lutherSports {
 
-	background: $lc-sports-grey;
-
-	#minisite {
-		background: #FFF;
+	// Give sports a really ominous looking dark background
+	@media
+	#{$large-up} {
+		@include background-image(linear-gradient(darken($lc-sports-grey, 4%), $lc-sports-grey));
 	}
 
+	// Change "more" links from red to blue.
+	a.more,
+	.pubLinks a,
+	p.more a {
+		color: $lc-blue-dark;
+
+		&:hover {
+			color: darken($lc-blue-dark, 10%);	
+		}
+	}
+
+	// Give the contact blurb a blue top border
+	.contactBlurb .blurbInner {
+		border-color: $lc-blue-dark;
+	}
+
+	// CUSTOM COLUMNS & BACKGROUND
+	#minisite {
+
+		// Custom theme elements for large screens. Small screens stay the same
+
+		// Take away the minisite background color, so that the ominous bg shows through.
+		// Fix some padding/margin issues due to no bg color.
+		@media
+		#{$large-up} {
+
+			margin: $column-gutter/2 0;
+			padding-top: 0;
+			border: none;
+			background: none;
+
+
+			// Add a white bg to the content, & fix padding
+			#contentAndRelated {
+					background: #FFF;
+					padding-right: 1.25rem !important;
+					padding-top: $column-gutter/2;
+			}
+		}
+	}
+
+	// CUSTOM GLOBAL BANNER
+	#wrapper {
+
+		// Darken the top of header
+		#global-banner {
+			border-color: darken($lc-blue-dark-compliment, 30%);
+		}
+
+		// Darken the menu bg color
+		#global-nav {
+			border-color: darken($lc-blue-dark-compliment, 20%);
+
+			.sections {
+				@media #{$large-up} {
+	
+					> li {
+						background: $lc-blue-dark;
+			
+						a {
+
+							&:hover {
+								background-color: darken($lc-blue-dark, 4%);
+							}
+						}		
+					}
+				}
+			}
+			
+			// @media #{$large-up} {
+			// 	//background: $lc-grey;
+			// }
+		}
+	}
+
+	// CUSTOM LOGO
 	// Luther Sports logo replaces the typeface logo
 	#wrapper #global-banner hgroup {
+
+		@include background-image(linear-gradient($lc-blue-dark, #0a2345));
 
 		$logo-width: 168px;
 		$logo-height: 75px;
@@ -68,7 +147,7 @@ $minisite-nav-color: $lc-white;
 		}
 	}
 
-
+	// CUSTOM MINISITE NAV
 	#minisite {
 
 		#navWrap {
@@ -87,8 +166,9 @@ $minisite-nav-color: $lc-white;
 					}
 
 					.navListTop a.home {  //  Large "home" link at the top of the nav
-						background: $lc-blue-light;
-						color: $minisite-nav-color;
+						background: $lc-sports-grey-alt;
+						color: $lc-blue-dark;
+						border-bottom: none;
 					}
 
 					.navListTop ul a {  // Top level page links
@@ -134,9 +214,11 @@ $minisite-nav-color: $lc-white;
 
 			.socialProfileLinks {
 				background: $lc-blue-light;
+				background: $lc-sports-grey-alt;
 			}
 		}
 
+		// CUSTOM AFFILIATIONS BLURB
 		.uname_luther_sports_affiliations {
 			text-align: center;
 
@@ -196,10 +278,18 @@ $minisite-nav-color: $lc-white;
 		}
 	}
 
+	// CUSTOM FOOTERS
+
+	#foot {
+		// /margin-bottom: $column-gutter/2;
+	}
+
 	#preFoot {
- 		background: lighten($lc-grey, 2%);
+		clear: both;
 		width: 100%;
-		margin: 0 auto $column-gutter/2 auto;
+
+		margin-bottom: $column-gutter/2;
+		background: $lc-grey;
 
 		&:before,
 		&:after {
@@ -207,6 +297,47 @@ $minisite-nav-color: $lc-white;
 			height: 1px;
 			background: darken($lc-grey, 5%);
 			content: "";
+		}
+
+		@media
+		#{$large-up} {
+			margin: 0 auto;
+			background: none;
+			
+			&:before,
+			&:after {
+				display: none;
+			}
+		}
+
+
+	}
+
+	@media
+	#{$large-up} {
+
+		.loginLinkModule {
+		
+			div {
+
+				a {	
+					background: #ccc;
+					background: rgba(255,255,255,.05) !important;
+					color: rgba(255,255,255,.5);
+
+					&:hover {
+						background: #ccc;
+						background: rgba(255,255,255,.25) !important;
+						color: rgba(255,255,255,.65);
+					}
+				}
+			}
+			
+			#footerLoginLink {
+				background: #ccc;
+				background: rgba(255,255,255,.05) !important;
+				color: rgba(255,255,255,.5);
+			}
 		}
 	}
 
