@@ -5418,7 +5418,7 @@ form table td {
   }
   /* line 151, scss/modules/_images.scss */
   .hasConRelNav #pageContent img.left, .hasConRelNav #pageContent img[align="left"], .hasConRelNav #pageContent img.right, .hasConRelNav #pageContent img[align="right"], .hasConRelNav .fullPost .text img.left, .hasConRelNav .fullPost .text img[align="left"], .hasConRelNav .fullPost .text img.right, .hasConRelNav .fullPost .text img[align="right"], .hasConRelNav #faq .answer img.left, .hasConRelNav #faq .answer img[align="left"], .hasConRelNav #faq .answer img.right, .hasConRelNav #faq .answer img[align="right"] {
-    max-width: 100%;
+    max-width: 40%;
   }
 }
 @media only screen and (min-width: 64.063em) {
