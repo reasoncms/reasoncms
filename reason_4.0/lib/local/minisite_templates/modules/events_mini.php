@@ -29,7 +29,7 @@ class miniEventsModule extends EventsModule
 	 * @var array
 	 * @deprecated use config/module_sets instead
 	 */
-	var $events_page_types = array();
+	var $events_page_types = array('sports_results');
 	/**
 	 * An array of additional module names that this module should link to
 	 *
