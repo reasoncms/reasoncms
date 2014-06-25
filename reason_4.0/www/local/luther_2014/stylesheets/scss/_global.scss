@@ -577,7 +577,11 @@ body {
 		}
 
 		#emergencyPreempt {
-			margin-top: $column-gutter;
+
+			@media
+			#{$large-up} {
+				margin-top: $column-gutter;
+			}
 		}
 		
 		#minisite { // see _minisite.scss
