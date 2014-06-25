@@ -203,6 +203,13 @@ $GLOBALS['_reason_page_types_local'] = array(
 	'flickr_slideshow_sidebar' => array(
 		'post_sidebar_3' => 'luther_flickr_slideshow',		
 	),
+	'gallery' => array(
+		'main_post' => array(
+			'module'=>'gallery2',
+			'sort_order'=>'rel',
+		),
+		'pre_sidebar_2' => '',
+	),
 	'gift_page_engine' => array(
 		'main_post' => 'gift_form/gift_form',
 	),
@@ -214,7 +221,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 	),
 	'image_slideshow' => array(
 		'main_post_2' => 'luther_image_slideshow',
-		'sidebar' => '',
+		'pre_sidebar_2' => '',
 	),
 	'landing_blog' => array(
 		'main_post' => array(
