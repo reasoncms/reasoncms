@@ -300,7 +300,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 				),
 			),
 		),
-		'post_sidebar' => 'luther_flickr_slideshow',
+		'post_sidebar_2' => 'luther_flickr_slideshow',
 		'post_sidebar_3' => 'twitter',
 	),
 	'luther_google_map' => array(
