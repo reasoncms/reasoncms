@@ -63,11 +63,14 @@ $(document).ready(function() {
 
     // TABLES
 	//////////////////////////////////////////////////
+
 	$('#pageContent table').addClass('responsive');
-	// $('table.tablesorter').css('overflow', 'scroll');
-	// $('table.tablesorter').parent().css('overflow', 'scroll');
-	// $('table.tablesorter').parent().addClass('hasTablesorter');
 	$('table.tablesorter').wrap('<div class="tableSorterWrap"></div>');
+
+	// IFRAMES
+	//////////////////////////////////////////////////
+
+	$('iframe').wrap('<div class="iframeWrap"></div>');
 
     // CALL TO ACTION
 	//////////////////////////////////////////////////
