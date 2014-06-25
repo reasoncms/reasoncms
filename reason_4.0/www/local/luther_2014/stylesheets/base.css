@@ -6073,7 +6073,23 @@ form table td {
   margin-bottom: 0;
 }
 
-/* line 46, scss/modules/_misc.scss */
+/* line 26, scss/modules/_misc.scss */
+.norseCalendar .iframeWrap {
+  position: relative;
+  padding-bottom: 75%;
+  height: 0;
+  overflow: hidden;
+}
+/* line 32, scss/modules/_misc.scss */
+.norseCalendar .iframeWrap iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* line 67, scss/modules/_misc.scss */
 .group.two-column {
   width: 100%;
   margin-left: auto;
@@ -6092,19 +6108,19 @@ form table td {
 .group.two-column:after {
   clear: both;
 }
-/* line 52, scss/modules/_misc.scss */
+/* line 73, scss/modules/_misc.scss */
 .group.two-column .section h1,
 .group.two-column .section h2,
 .group.two-column .section h3 {
   font-size: 1.6875rem;
 }
 
-/* line 58, scss/modules/_misc.scss */
+/* line 79, scss/modules/_misc.scss */
 .hasConRelNav {
   /* 3 COLUMNS: Nav, Content, & Related */
 }
 @media only screen and (min-width: 30em) and (max-width: 40em) {
-  /* line 37, scss/modules/_misc.scss */
+  /* line 58, scss/modules/_misc.scss */
   .hasConRelNav .group.two-column .section {
     position: relative;
     padding-left: 1.25rem;
@@ -6112,13 +6128,13 @@ form table td {
     width: 50%;
     float: left;
   }
-  /* line 40, scss/modules/_misc.scss */
+  /* line 61, scss/modules/_misc.scss */
   .hasConRelNav .group.two-column .section:nth-child(2n+1) {
     clear: left;
   }
 }
 @media only screen and (min-width: 80em) {
-  /* line 37, scss/modules/_misc.scss */
+  /* line 58, scss/modules/_misc.scss */
   .hasConRelNav .group.two-column .section {
     position: relative;
     padding-left: 1.25rem;
@@ -6126,18 +6142,18 @@ form table td {
     width: 50%;
     float: left;
   }
-  /* line 40, scss/modules/_misc.scss */
+  /* line 61, scss/modules/_misc.scss */
   .hasConRelNav .group.two-column .section:nth-child(2n+1) {
     clear: left;
   }
 }
 
-/* line 71, scss/modules/_misc.scss */
+/* line 92, scss/modules/_misc.scss */
 .hasConNav {
   /* 2 COLUMNS: Nav & Content (no Related) */
 }
 @media only screen and (min-width: 30em) {
-  /* line 37, scss/modules/_misc.scss */
+  /* line 58, scss/modules/_misc.scss */
   .hasConNav .group.two-column .section {
     position: relative;
     padding-left: 1.25rem;
@@ -6145,18 +6161,18 @@ form table td {
     width: 50%;
     float: left;
   }
-  /* line 40, scss/modules/_misc.scss */
+  /* line 61, scss/modules/_misc.scss */
   .hasConNav .group.two-column .section:nth-child(2n+1) {
     clear: left;
   }
 }
 
-/* line 80, scss/modules/_misc.scss */
+/* line 101, scss/modules/_misc.scss */
 .hasConRel {
   /* 2 COLUMNS: Content & Related (no Nav) */
 }
 @media only screen and (min-width: 30em) {
-  /* line 37, scss/modules/_misc.scss */
+  /* line 58, scss/modules/_misc.scss */
   .hasConRel .group.two-column .section {
     position: relative;
     padding-left: 1.25rem;
@@ -6164,18 +6180,18 @@ form table td {
     width: 50%;
     float: left;
   }
-  /* line 40, scss/modules/_misc.scss */
+  /* line 61, scss/modules/_misc.scss */
   .hasConRel .group.two-column .section:nth-child(2n+1) {
     clear: left;
   }
 }
 
-/* line 89, scss/modules/_misc.scss */
+/* line 110, scss/modules/_misc.scss */
 .hasCon {
   /* 1 COLUMN: Content (no Nav or Related) */
 }
 @media only screen and (min-width: 30em) {
-  /* line 37, scss/modules/_misc.scss */
+  /* line 58, scss/modules/_misc.scss */
   .hasCon .group.two-column .section {
     position: relative;
     padding-left: 1.25rem;
@@ -6183,7 +6199,7 @@ form table td {
     width: 50%;
     float: left;
   }
-  /* line 40, scss/modules/_misc.scss */
+  /* line 61, scss/modules/_misc.scss */
   .hasCon .group.two-column .section:nth-child(2n+1) {
     clear: left;
   }
