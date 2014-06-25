@@ -137,9 +137,14 @@
 		#contentSections,
 		#relatedSections {
 			margin-top: $column-gutter;
+			@include clearfix;
 		}
 
 		#contentSections {
+
+			> div {
+				@include clearfix;
+			}
 
 			> div:last-child {
 				margin-bottom: $column-gutter;
