@@ -86,12 +86,22 @@
 
 		#tabs {
 
+			@media
+			#{$medium-only}, #{$large-low-only} {
+				.tab-title a {
+					font-size: rem-calc(13);
+					padding: rem-calc(6) rem-calc(16);
+
+				}
+			}
+
 			.tabs-content {
 
 				@media
 				#{$medium-up} {
 					border-bottom: 2px solid #ccc;
 				}
+
 
 				.pane-content { // form row
 

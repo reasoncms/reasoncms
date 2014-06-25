@@ -197,9 +197,18 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'main' => 'faculty_luther',
 		'main_post' => 'content'
 	),
+	'flickr_slideshow' => array(
+		'main_post_3' => 'luther_flickr_slideshow',		
+	),
 	'flickr_slideshow_sidebar' => array(
-		'main_post_2' => '',
-		'post_sidebar' => 'luther_flickr_slideshow',		
+		'post_sidebar_3' => 'luther_flickr_slideshow',		
+	),
+	'gallery' => array(
+		'main_post' => array(
+			'module'=>'gallery2',
+			'sort_order'=>'rel',
+		),
+		'pre_sidebar_2' => '',
 	),
 	'gift_page_engine' => array(
 		'main_post' => 'gift_form/gift_form',
@@ -212,7 +221,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 	),
 	'image_slideshow' => array(
 		'main_post_2' => 'luther_image_slideshow',
-		'sidebar' => '',
+		'pre_sidebar_2' => '',
 	),
 	'landing_blog' => array(
 		'main_post' => array(
@@ -236,7 +245,9 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'post_sidebar_2' => 'twitter',
 	),
 	'landing_library' => array (
-		'post_main_head' => 'luther_tab_widget',
+		//'post_main_head' => 'luther_tab_widget',
+		'main' => 'luther_tab_widget',
+		'main_post' => 'content',
 	),
 	'landing_events' => array(
 		'main_post' => array(
@@ -249,7 +260,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'module' => 'luther_av',
 			'full_size' => true,
 		),
-		/*'sidebar_2' => array(
+		'sidebar_2' => array(
 			'module'=>'publication',
 			'related_mode'=>'true',
 			'max_num_items' => 3,
@@ -260,7 +271,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 					'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/related_item_no_description.php',
 				),
 			),
-		),*/
+		),
 		//'sidbebar_2' => get_luther_related_publication(),
 		'post_sidebar' => 'luther_flickr_slideshow',
 		'post_sidebar_2' => 'twitter',
@@ -268,7 +279,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 	'landing_children' => array(
 		'main_post' => 'children',
 		'pre_sidebar' => 'blurb',
-		//'pre_sidebar_2' => 'spotlight',
+		'pre_sidebar_2' => get_luther_spotlight(),
 		'sidebar' => array(
 			'module' => 'luther_av',
 			'full_size' => true,
@@ -289,7 +300,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 				),
 			),
 		),
-		'post_sidebar' => 'luther_flickr_slideshow',
+		'post_sidebar_2' => 'luther_flickr_slideshow',
 		'post_sidebar_3' => 'twitter',
 	),
 	'luther_google_map' => array(
