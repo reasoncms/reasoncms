@@ -623,31 +623,32 @@ form table td {
 .lutherLogin {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
   background: #FFF;
+  background: #FFFFFF;
   padding-top: 3.125rem;
   line-height: 1.3;
 }
-/* line 28, ../scss/sites/login.scss */
+/* line 29, ../scss/sites/login.scss */
 .lutherLogin a:link, .lutherLogin a:visited {
   color: #1073ce;
 }
-/* line 31, ../scss/sites/login.scss */
+/* line 32, ../scss/sites/login.scss */
 .lutherLogin a:hover {
   color: #0d5ea8;
   text-decoration: underline;
 }
-/* line 37, ../scss/sites/login.scss */
+/* line 38, ../scss/sites/login.scss */
 .lutherLogin .minisiteWrap {
   width: 90%;
   max-width: 25rem;
   margin: 0 auto;
 }
-/* line 43, ../scss/sites/login.scss */
+/* line 44, ../scss/sites/login.scss */
 .lutherLogin .minisiteWrap .siteTitle a {
   display: block;
   width: 100px;
   margin: 0 auto;
 }
-/* line 51, ../scss/sites/login.scss */
+/* line 52, ../scss/sites/login.scss */
 .lutherLogin .minisiteWrap #contentAndRelated {
   -webkit-box-shadow: rgba(0, 0, 0, 0.25) 0 4px 4px;
   -moz-box-shadow: rgba(0, 0, 0, 0.25) 0 4px 4px;
@@ -660,7 +661,7 @@ form table td {
   margin-bottom: 2rem;
   background: #f6f6f6;
 }
-/* line 58, ../scss/sites/login.scss */
+/* line 59, ../scss/sites/login.scss */
 .lutherLogin .minisiteWrap #contentAndRelated .pageTitle {
   font-size: 1rem;
   text-align: center;
@@ -676,45 +677,45 @@ form table td {
   border-radius: 4px 4px 0 0;
   margin: -1px;
 }
-/* line 71, ../scss/sites/login.scss */
+/* line 72, ../scss/sites/login.scss */
 .lutherLogin .minisiteWrap #contentAndRelated .pageTitle:before {
   margin-right: 0.5rem;
   content: "\f023";
   color: white;
 }
-/* line 81, ../scss/sites/login.scss */
+/* line 82, ../scss/sites/login.scss */
 .lutherLogin .minisiteWrap #contentAndRelated .contentMain {
   padding: 1rem 1.125rem;
 }
-/* line 84, ../scss/sites/login.scss */
+/* line 85, ../scss/sites/login.scss */
 .lutherLogin .minisiteWrap #contentAndRelated .contentMain h3 {
   font-size: 1.125rem;
   padding: 0;
   margin: 0 0 1rem;
 }
-/* line 90, ../scss/sites/login.scss */
+/* line 91, ../scss/sites/login.scss */
 .lutherLogin .minisiteWrap #contentAndRelated .contentMain h4.msg {
   color: red;
 }
-/* line 94, ../scss/sites/login.scss */
+/* line 95, ../scss/sites/login.scss */
 .lutherLogin .minisiteWrap #contentAndRelated .contentMain p {
   color: #9d9d9d;
 }
-/* line 97, ../scss/sites/login.scss */
+/* line 98, ../scss/sites/login.scss */
 .lutherLogin .minisiteWrap #contentAndRelated .contentMain p.smallText {
   font-size: 0.75rem;
   margin-top: 1rem;
 }
-/* line 103, ../scss/sites/login.scss */
+/* line 104, ../scss/sites/login.scss */
 .lutherLogin .minisiteWrap #contentAndRelated .contentMain table {
   width: 100%;
 }
-/* line 107, ../scss/sites/login.scss */
+/* line 108, ../scss/sites/login.scss */
 .lutherLogin .minisiteWrap #contentAndRelated .contentMain tr {
   display: block;
   margin-top: 1.5rem;
 }
-/* line 112, ../scss/sites/login.scss */
+/* line 113, ../scss/sites/login.scss */
 .lutherLogin .minisiteWrap #contentAndRelated .contentMain td:first-child {
   display: inline-block;
   width: 30%;
@@ -723,12 +724,12 @@ form table td {
   font-size: 0.875rem;
 }
 @media only screen and (min-width: 30em) {
-  /* line 112, ../scss/sites/login.scss */
+  /* line 113, ../scss/sites/login.scss */
   .lutherLogin .minisiteWrap #contentAndRelated .contentMain td:first-child {
     font-size: 0.875rem;
   }
 }
-/* line 126, ../scss/sites/login.scss */
+/* line 127, ../scss/sites/login.scss */
 .lutherLogin .minisiteWrap #contentAndRelated .contentMain td:last-child {
   display: inline-block;
   width: 65%;
