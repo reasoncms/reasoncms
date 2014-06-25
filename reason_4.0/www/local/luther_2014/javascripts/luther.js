@@ -59,7 +59,7 @@ $(document).ready(function() {
     });
 
     // We need to set navLists on open accorions to display:block so that they toggle correctly
-    $('li.navListItem.accordion.open ul.navList').css('display', 'block');
+    $('li.navListItem.accordion.open ul.navList').css({'display': 'block'});
 
     // TABLES
 	//////////////////////////////////////////////////
