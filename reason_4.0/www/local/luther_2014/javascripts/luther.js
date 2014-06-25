@@ -64,7 +64,8 @@ $(document).ready(function() {
     // TABLES
 	//////////////////////////////////////////////////
 
-	$('#pageContent table').addClass('responsive');
+	// give WYSIWYG tables 
+	$('#pageContent table').wrap('<div class="tableWrap"></div>');
 	$('table.tablesorter').wrap('<div class="tableSorterWrap"></div>');
 
 	// IFRAMES

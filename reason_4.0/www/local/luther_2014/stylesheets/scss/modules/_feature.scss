@@ -31,7 +31,7 @@
  
 .featuresModule {
 
-      @media #{$small-only} {
+     /* @media #{$small-only} {
         .features {
           padding: 0;
           //height: 224px;
@@ -46,7 +46,7 @@
             margin-left: -320px;
           }
         }
-      }
+      }*/
 
   .feature {
 
