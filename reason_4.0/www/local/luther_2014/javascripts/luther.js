@@ -63,7 +63,14 @@ $(document).ready(function() {
 
     // TABLES
 	//////////////////////////////////////////////////
-	$('#contentAndRelated table').addClass('responsive');		
+
+	$('#pageContent table').addClass('responsive');
+	$('table.tablesorter').wrap('<div class="tableSorterWrap"></div>');
+
+	// IFRAMES
+	//////////////////////////////////////////////////
+
+	$('iframe').wrap('<div class="iframeWrap"></div>');
 
     // CALL TO ACTION
 	//////////////////////////////////////////////////
