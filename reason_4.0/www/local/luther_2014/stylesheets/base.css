@@ -6993,6 +6993,22 @@ form table td {
   border-radius: 12px;
 }
 
+/* line 634, scss/modules/_publication.scss */
+.publication .issueBlurb .iframeWrap {
+  position: relative;
+  padding-bottom: 65%;
+  height: 0;
+  overflow: hidden;
+}
+/* line 640, scss/modules/_publication.scss */
+.publication .issueBlurb .iframeWrap iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
 /* line 10, scss/_extends.scss */
 .zero-out, body #wrapper #global-banner hgroup h1, body #wrapper #global-banner #mobile-nav ul, body #wrapper #global-nav .sections, body #wrapper #global-footer #global-footer-nav .column ul, body #wrapper #global-footer #global-footer-info .contact, #callToActionBlurb .blurb ul, #calendar .responsiveEventsList .views ul, .featuresModule .feature .featureInfo .featureTitle a,
 .featuresModule .feature .featureInfo .featureTitle .noLink, .featuresModule .feature .featureNavWrap .featureNav {
