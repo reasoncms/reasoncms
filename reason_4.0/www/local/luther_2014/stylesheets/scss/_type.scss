@@ -67,6 +67,20 @@ blockquote {
 /* Wysiwyg Formatting */  
 #{$wysiwyg-all-areas} {
 
+	a {  // http://css-tricks.com/snippets/css/prevent-long-urls-from-breaking-out-of-container/
+		-ms-word-break: break-all;
+
+		/* Be VERY careful with this, breaks normal words wh_erever */
+		word-break: break-all;
+
+		/* Non standard for webkit */
+		word-break: break-word;
+
+		-webkit-hyphens: auto;
+		-moz-hyphens: auto;
+		hyphens: auto;
+	}
+
 	p:empty {
 		display: none;
 	}
@@ -189,7 +203,6 @@ table {
 	
 	table.responsive td, table.responsive th { position: relative; white-space: nowrap; overflow: hidden; }
 	table.responsive th:first-child, table.responsive td:first-child, table.responsive td:first-child, table.responsive.pinned td { display: none; }
-	
 	
 }
 

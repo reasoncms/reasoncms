@@ -18,25 +18,24 @@
 /* Image galleries include image slideshows and flickr slideshows */
 
 @mixin flicker-hidden-container() {
-	.hidden-container {
+	.hidden-container { // Hides flicker thumbs
 		display: none;
 	}	
 }
 
-
-
 // FLICKR
 
 // Sidebar
-
 #relatedSections {
 	
+
+	// Single Gallery
 	#galleryimages {
 
-		.flickr-image {
+		.flickr-image { 
 
-		// Flickr thumbnails are 75px x 75px
-		// Below, we ensure the images will never be streatched larger than their native resolution, while spanning images the width of the full column
+			// Flickr thumbnails are 75px x 75px
+			// Below, we ensure the images will never be streatched larger than their native resolution, while spanning images the width of the full column
 		
 			float: left;
 			//padding: 0 rem-calc(12) rem-calc(6);
@@ -71,6 +70,7 @@
 		}
 	}
 
+	// Multiple Galleries
 	.flickr-set-container {
 
 		@include flicker-hidden-container();	
@@ -152,16 +152,15 @@
 }
 
 // Main Content
-
 #contentSections {
-	
+
+	// Single Gallery
 	#galleryimages {
 
 		@include clearfix;
 
 		.flickr-image {
 			float: left;
-			// padding: rem-calc(6) rem-calc(12) rem-calc(6) 0;
 			padding: 4%;
 
 			@media
@@ -184,11 +183,11 @@
 		}
 	}	
 
+	// Multiple Galleries
 	.flickr-set-container {
 		@include clearfix;
 		@include flicker-hidden-container();	
 		float: left;
-		//padding: rem-calc(8) rem-calc(16);
 		padding: 2.5% 4%;
 
 		@media
