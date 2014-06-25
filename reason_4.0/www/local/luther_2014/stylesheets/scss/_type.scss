@@ -161,49 +161,41 @@ blockquote {
 			font-weight: 400;
 		}
 	}
+	
+	// Zurb's Responsive Tables
+	// Reqires a class of "responsive" on the table element (provided by jQuery in luther.js)	
+	table.responsive { 
+		margin-bottom: 0;
+	}
+
+	table.responsive td, table.responsive th { position: relative; white-space: nowrap; overflow: hidden; }
+	table.responsive th:first-child, table.responsive td:first-child, table.responsive td:first-child, table.responsive.pinned td { display: none; }
+
+	.table-wrapper {
+		 position: relative; margin-bottom: 20px; overflow: hidden; border-right: 1px solid #ccc; 
+
+		.pinned { position: absolute; left: 0; top: 0; background: #fff; width: 35%; overflow: hidden; overflow-x: scroll; border-right: 1px solid #ccc; border-left: 1px solid #ccc; }
+		.pinned table { border-right: none; border-left: none; width: 100%; }
+		.pinned table th, .pinned table td { white-space: nowrap; }
+		.pinned td:last-child { border-bottom: 0; }
+
+		div.scrollable { margin-left: 35%; }
+		div.scrollable { overflow: scroll; overflow-y: hidden; }	
+	}
 }
 
 // Tables
 
-table {
-	font-family: $header-font-family;
-	width: 100%;
-	height: auto;
-	
-	//max-width: 100%;
-	//background: green;
+// Provide overflow:scroll for Tablesorter tables
+.tableSorterWrap {
+	overflow: scroll !important;
+	border: 1px solid $lc-grey;
+	padding: 1px;
 
-	// tbody,
-	// thead {
-	// 	overflow-x: scroll !important;
-	// }
-
-	td {
-		//background: red !important;
+	.tablesorter {
+		overflow: scroll !important;
+		border: none;
 	}
-}
-
-// table th { font-weight: bold; }
-// table td, table th { padding: 9px 10px; text-align: left; }
-
-/* Mobile */
-@media
-#{$small-only}, #{$medium-only} {
-	
-	table.responsive { margin-bottom: 0; }
-	
-	.pinned { position: absolute; left: 0; top: 0; background: #fff; width: 35%; overflow: hidden; overflow-x: scroll; border-right: 1px solid #ccc; border-left: 1px solid #ccc; }
-	.pinned table { border-right: none; border-left: none; width: 100%; }
-	.pinned table th, .pinned table td { white-space: nowrap; }
-	.pinned td:last-child { border-bottom: 0; }
-	
-	div.table-wrapper { position: relative; margin-bottom: 20px; overflow: hidden; border-right: 1px solid #ccc; }
-	div.table-wrapper div.scrollable { margin-left: 35%; }
-	div.table-wrapper div.scrollable { overflow: scroll; overflow-y: hidden; }	
-	
-	table.responsive td, table.responsive th { position: relative; white-space: nowrap; overflow: hidden; }
-	table.responsive th:first-child, table.responsive td:first-child, table.responsive td:first-child, table.responsive.pinned td { display: none; }
-	
 }
 
 // Callouts
