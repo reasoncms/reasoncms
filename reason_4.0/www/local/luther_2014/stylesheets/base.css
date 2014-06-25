@@ -6993,20 +6993,37 @@ form table td {
   border-radius: 12px;
 }
 
-/* line 634, scss/modules/_publication.scss */
+/* line 633, scss/modules/_publication.scss */
+.publication .issueMenu .allIssuesLink {
+  margin-bottom: 2.5rem;
+}
+/* line 640, scss/modules/_publication.scss */
 .publication .issueBlurb .iframeWrap {
   position: relative;
   padding-bottom: 65%;
   height: 0;
   overflow: hidden;
+  margin-bottom: 2.5rem;
 }
-/* line 640, scss/modules/_publication.scss */
+/* line 647, scss/modules/_publication.scss */
 .publication .issueBlurb .iframeWrap iframe {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
+}
+/* line 657, scss/modules/_publication.scss */
+.publication .issueBlurbs + .sections {
+  margin-left: 0;
+}
+/* line 660, scss/modules/_publication.scss */
+.publication .issueBlurbs + .sections .sectionInfo h3 a {
+  color: #444444;
+}
+/* line 664, scss/modules/_publication.scss */
+.publication .issueBlurbs + .sections .section {
+  margin-bottom: 2.5rem;
 }
 
 /* line 10, scss/_extends.scss */
