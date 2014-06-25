@@ -150,18 +150,25 @@
     border-color: #1073ce;
   }
 }
+@media only screen and (min-width: 40.063em) and (max-width: 64em), only screen and (min-width: 64.063em) and (max-width: 79.9375em) {
+  /* line 91, ../scss/sites/lis.scss */
+  .lutherLis.siteHome #tabs .tab-title a {
+    font-size: 0.8125rem;
+    padding: 0.375rem 1rem;
+  }
+}
 @media only screen and (min-width: 40.063em) {
-  /* line 89, ../scss/sites/lis.scss */
+  /* line 98, ../scss/sites/lis.scss */
   .lutherLis.siteHome #tabs .tabs-content {
     border-bottom: 2px solid #ccc;
   }
 }
-/* line 98, ../scss/sites/lis.scss */
+/* line 108, ../scss/sites/lis.scss */
 .lutherLis.siteHome #tabs .tabs-content .pane-content strong {
   margin-bottom: 1.5rem;
   display: block;
 }
-/* line 105, ../scss/sites/lis.scss */
+/* line 115, ../scss/sites/lis.scss */
 .lutherLis.siteHome #tabs input[type="submit"] {
   margin-top: 1.5rem;
 }

@@ -17,50 +17,208 @@
 
 /* Image galleries include image slideshows and flickr slideshows */
 
-.hidden-container {
-	display: none;
+@mixin flicker-hidden-container() {
+	.hidden-container { // Hides flicker thumbs
+		display: none;
+	}	
 }
 
-#galleryimages {
-	.flickr-image {	
-		img {
+// FLICKR
+
+// Sidebar
+#relatedSections {
+	
+
+	// Single Gallery
+	#galleryimages {
+
+		.flickr-image { 
+
+			// Flickr thumbnails are 75px x 75px
+			// Below, we ensure the images will never be streatched larger than their native resolution, while spanning images the width of the full column
+		
 			float: left;
-			padding: rem-calc(2);
+			//padding: 0 rem-calc(12) rem-calc(6);
+			padding: 2.5%;
+			width: 20%; // 5 in a row for small-low up
+
+			@media
+			#{$small-high-up} {
+				width: 14.2857143%;  // 7 in a row for small-high up
+			}
+
+			@media
+			#{$medium-up} {
+				width: 25%;  // 4 in a row for medium up
+			}
+
+			@media
+			#{$large-high-up} {
+				width: 20%;  // 5 in a row for large-high
+			}
+
+			img {
+				width: 100%;
+				@include default-transition();
+				border: 1px solid #FFF;
+
+				&:hover {
+					@include default-transition();
+					@include box-shadow(#666 0 0 4px);
+				}
+			}
 		}
 	}
-}
 
-.flickr-set-container {
-	float: left;
-	width: 112px;
-	
-	h4 { // Slideshow title
-		display: block;
-		margin-top: rem-calc(6);
-		font-family: $header-font-family;
-		font-size: rem-calc(12);
-		font-style: italic;
-		font-weight: 500;
-		color: $blockquote-font-color;
-	
-		a {
+	// Multiple Galleries
+	.flickr-set-container {
+
+		@include flicker-hidden-container();	
+		float: left;
+		//padding: rem-calc(8) rem-calc(16);
+		padding: 2.5% 4%;
+		width: 25%; // 4 in a row for small-low up
+
+		&:nth-child(4n+1) {
+			clear: left;
+		}
+
+		&:hover {
+			h4 {
+				color: $anchor-font-color;
+			}
+		}
+
+		@media
+		#{$small-high-up} {
+			width: 20%;  // 5 in a row for small-high up
+
+			&:nth-child(4n+1) {
+				clear: none;
+			}
+
+			&:nth-child(5n+1) {
+				clear: left;
+			}
+		}
+
+		@media
+		#{$medium-up} {
+			width: 33.33333%;  // 3 in a row for medium up
+
+			&:nth-child(5n+1) {
+				clear: none;
+			}
+
+			&:nth-child(3n+1) {
+				clear: left;
+			}
+		}
+
+		@media
+		#{$large-high-up} {
+			width: 25%;  // 4 in a row for large-high
+
+			&:nth-child(3n+1) {
+				clear: none;
+			}
+
+			&:nth-child(4n+1) {
+				clear: left;
+			}
+		}
+
+		img {
+			width: 100%;
+			@include default-transition();
+			@include box-shadow($lc-white 1.5px 1.5px 0, #ccc 3px 3px 0, $lc-white 4.5px 4.5px 0, #ccc 6px 6px 0);
+
+			&:hover {
+				@include default-transition();
+				@include box-shadow($lc-white 1.5px 1.5px 0, #999 3px 3px 0, $lc-white 4.5px 4.5px 0, #999 6px 6px 0);
+			}
+		}
+
+		h4 { // Slideshow title
+			display: block;
+			margin: rem-calc(8) 0 0;
+			font-family: $header-font-family;
+			font-size: rem-calc(12);
+			font-style: italic;
+			font-weight: 500;
 			color: $blockquote-font-color;
 		}
 	}
 }
 
-.flickr-set {
-	background:transparent url(/images/slideshow91x95.gif) no-repeat scroll 0 0;
-	height:95px;
-	margin-bottom:5px;
-	margin-top:5px;
-	padding:7px 0 0 7px;
-	width:91px;
-	
-	img {
-		border:1px solid #333333;
+// Main Content
+#contentSections {
+
+	// Single Gallery
+	#galleryimages {
+
+		@include clearfix;
+
+		.flickr-image {
+			float: left;
+			padding: 4%;
+
+			@media
+			#{$medium-up} {
+				padding: 2.5%;
+			}
+
+			img {
+				width: 100%;
+				opacity: .9;
+				border: 1px solid #FFF;
+				@include default-transition();
+
+				&:hover {
+					@include default-transition();
+					@include box-shadow(#666 0 0 4px);
+					opacity: 1;
+				}
+			}
+		}
+	}	
+
+	// Multiple Galleries
+	.flickr-set-container {
+		@include clearfix;
+		@include flicker-hidden-container();	
+		float: left;
+		padding: 2.5% 4%;
+
+		@media
+		#{$medium-up} {
+			padding: 2.5%;
+		}
+
+		img {
+			width: 100%;
+			@include default-transition();
+			@include box-shadow($lc-white 1.5px 1.5px 0, #ccc 3px 3px 0, $lc-white 4.5px 4.5px 0, #ccc 6px 6px 0);
+
+			&:hover {
+				@include default-transition();
+				@include box-shadow($lc-white 1.5px 1.5px 0, #999 3px 3px 0, $lc-white 4.5px 4.5px 0, #999 6px 6px 0);
+			}
+		}
+
+		h4 { // Slideshow title
+			display: block;
+			margin: rem-calc(8) 0 0;
+			font-family: $header-font-family;
+			font-size: rem-calc(12);
+			font-style: italic;
+			font-weight: 500;
+			color: $blockquote-font-color;
+		}
 	}
 }
+
+// Fancybox captions
 
 .fancybox-title a {
 	&:link,

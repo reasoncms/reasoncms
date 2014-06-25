@@ -38,10 +38,15 @@
 		figure {
 			float: right;
 			margin: 0 0 rem-calc(4) rem-calc(16);
+			max-width: rem-calc(175);
 
 			@media #{$large-up} {
 				float: left;
 				margin: 0 rem-calc(16) rem-calc(4) 0;
+			}
+
+			&:empty {
+				display: none;
 			}
 		}
 

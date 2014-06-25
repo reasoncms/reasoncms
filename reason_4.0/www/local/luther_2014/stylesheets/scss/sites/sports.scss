@@ -70,6 +70,13 @@ $minisite-nav-color: $lc-white;
 		}
 	}
 
+	#emergencyPreempt {
+		margin-top: $column-gutter/2;
+		.callout-danger {
+			background: lighten($lc-red, 40%);
+		}
+	}
+
 	// CUSTOM GLOBAL BANNER
 	#wrapper {
 
@@ -239,45 +246,45 @@ $minisite-nav-color: $lc-white;
 	}
 
 	// Sports results/schedule table 
-	.responsiveEventsList {
+	// .responsiveEventsList {
 
-		table {
-			border: none;
+	// 	table {
+	// 		border: none;
 
-			tr th,
-			tr td {
-			    font-size: $base-font-size;
-			    padding: rem-calc(15);
+	// 		tr th,
+	// 		tr td {
+	// 		    font-size: $base-font-size;
+	// 		    padding: rem-calc(15);
 
-			    &.location {
-					@media
-					#{$small-only} {
-						display: none;
-					}
-				}
-			}
+	// 		    &.location {
+	// 				@media
+	// 				#{$small-only} {
+	// 					display: none;
+	// 				}
+	// 			}
+	// 		}
 
-			td {
+	// 		td {
 
-			}
-		}
+	// 		}
+	// 	}
 
-		.view-all {
+	// 	.view-all {
 			
-			ul {
-				margin: 0;
+	// 		ul {
+	// 			margin: 0;
 
-				.more {
+	// 			.more {
 
-					&:after {
-						@extend .fa;
-						content: $fa-var-chevron-circle-right;
-						margin-left: rem-calc(6);
-					}
-				}
-			}
-		}
-	}
+	// 				&:after {
+	// 					@extend .fa;
+	// 					content: $fa-var-chevron-circle-right;
+	// 					margin-left: rem-calc(6);
+	// 				}
+	// 			}
+	// 		}
+	// 	}
+	// }
 
 	// CUSTOM FOOTERS
 
