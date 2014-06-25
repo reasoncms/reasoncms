@@ -64,9 +64,9 @@ $(document).ready(function() {
     // TABLES
 	//////////////////////////////////////////////////
 	$('#pageContent table').addClass('responsive');
-	$('table.tablesorter').css('overflow', 'scroll');
-	$('table.tablesorter').parent().css('overflow', 'scroll');
-	$('table.tablesorter').parent().addClass('hasTablesorter');
+	// $('table.tablesorter').css('overflow', 'scroll');
+	// $('table.tablesorter').parent().css('overflow', 'scroll');
+	// $('table.tablesorter').parent().addClass('hasTablesorter');
 	$('table.tablesorter').wrap('<div class="tableSorterWrap"></div>');
 
     // CALL TO ACTION

@@ -680,14 +680,24 @@ blockquote {
   font-weight: 400;
 }
 
+/* line 200, scss/_type.scss */
+.tableSorterWrap {
+  overflow: scroll !important;
+  border: 2px solid green;
+}
+/* line 204, scss/_type.scss */
+.tableSorterWrap .tablesorter {
+  overflow: scroll !important;
+}
+
 /* Mobile */
 @media only screen {
-  /* line 204, scss/_type.scss */
+  /* line 214, scss/_type.scss */
   table.responsive {
     margin-bottom: 0;
   }
 
-  /* line 206, scss/_type.scss */
+  /* line 216, scss/_type.scss */
   .pinned {
     position: absolute;
     left: 0;
@@ -700,24 +710,24 @@ blockquote {
     border-left: 1px solid #ccc;
   }
 
-  /* line 207, scss/_type.scss */
+  /* line 217, scss/_type.scss */
   .pinned table {
     border-right: none;
     border-left: none;
     width: 100%;
   }
 
-  /* line 208, scss/_type.scss */
+  /* line 218, scss/_type.scss */
   .pinned table th, .pinned table td {
     white-space: nowrap;
   }
 
-  /* line 209, scss/_type.scss */
+  /* line 219, scss/_type.scss */
   .pinned td:last-child {
     border-bottom: 0;
   }
 
-  /* line 211, scss/_type.scss */
+  /* line 221, scss/_type.scss */
   div.table-wrapper {
     position: relative;
     margin-bottom: 20px;
@@ -725,30 +735,30 @@ blockquote {
     border-right: 1px solid #ccc;
   }
 
-  /* line 212, scss/_type.scss */
+  /* line 222, scss/_type.scss */
   div.table-wrapper div.scrollable {
     margin-left: 35%;
   }
 
-  /* line 213, scss/_type.scss */
+  /* line 223, scss/_type.scss */
   div.table-wrapper div.scrollable {
     overflow: scroll;
     overflow-y: hidden;
   }
 
-  /* line 215, scss/_type.scss */
+  /* line 225, scss/_type.scss */
   table.responsive td, table.responsive th {
     position: relative;
     white-space: nowrap;
     overflow: hidden;
   }
 
-  /* line 216, scss/_type.scss */
+  /* line 226, scss/_type.scss */
   table.responsive th:first-child, table.responsive td:first-child, table.responsive td:first-child, table.responsive.pinned td {
     display: none;
   }
 }
-/* line 226, scss/_type.scss */
+/* line 236, scss/_type.scss */
 a.more,
 .pubLinks a,
 p.more a {
@@ -758,7 +768,7 @@ p.more a {
   font-weight: 700;
   text-transform: uppercase;
 }
-/* line 233, scss/_type.scss */
+/* line 243, scss/_type.scss */
 a.more:hover,
 .pubLinks a:hover,
 p.more a:hover {
@@ -766,27 +776,27 @@ p.more a:hover {
 }
 
 /* Feeds */
-/* line 240, scss/_type.scss */
+/* line 250, scss/_type.scss */
 #relatedPub .post h4 {
   font-family: "Roboto Slab", serif;
   font-size: 1.125rem;
   font-weight: 400;
 }
 
-/* line 246, scss/_type.scss */
+/* line 256, scss/_type.scss */
 time {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
   font-weight: 300;
 }
 
-/* line 251, scss/_type.scss */
+/* line 261, scss/_type.scss */
 p:empty {
   display: none !important;
 }
 
 /* Nav
 *******************************************/
-/* line 259, scss/_type.scss */
+/* line 269, scss/_type.scss */
 nav {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
 }
