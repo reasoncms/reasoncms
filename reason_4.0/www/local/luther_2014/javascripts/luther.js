@@ -64,7 +64,7 @@ $(document).ready(function() {
     // TABLES
 	//////////////////////////////////////////////////
 
-	// give WYSIWYG tables 
+	// give WYSIWYG and tablesorter tables wrapper classes for overflow:scroll
 	$('#pageContent table').wrap('<div class="tableWrap"></div>');
 	$('table.tablesorter').wrap('<div class="tableSorterWrap"></div>');
 
