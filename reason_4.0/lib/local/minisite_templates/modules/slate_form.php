@@ -15,7 +15,7 @@
             $es->add_right_relationship($this->cur_page->id(), relationship_id_of('slate_form_to_page'));
             $es->add_rel_sort_field($this->cur_page->id(), relationship_id_of('slate_form_to_page'));
             $this->slate_info = $es->run_one();
-            pray($this->slate_info);
+
             if ($this->slate_info != false)
             {
                 return true;
