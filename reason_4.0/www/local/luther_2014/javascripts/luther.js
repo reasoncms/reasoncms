@@ -64,7 +64,8 @@ $(document).ready(function() {
     // TABLES
 	//////////////////////////////////////////////////
 	$('#pageContent table').addClass('responsive');
-	$('table.tablesorter').css('overflow', 'scroll').parent('overflow', 'scroll');
+	$('table.tablesorter').css('overflow', 'scroll');
+	$('table.tablesorter').parent().css('overflow', 'scroll');
 
     // CALL TO ACTION
 	//////////////////////////////////////////////////
