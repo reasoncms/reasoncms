@@ -575,6 +575,14 @@ body {
 				}
 			}
 		}
+
+		#emergencyPreempt {
+
+			@media
+			#{$large-up} {
+				margin-top: $column-gutter;
+			}
+		}
 		
 		#minisite { // see _minisite.scss
 
@@ -792,5 +800,5 @@ body {
 				display: none;
 			}
 		}
-	}	
+	}
 }

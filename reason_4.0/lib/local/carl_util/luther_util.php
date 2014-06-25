@@ -296,14 +296,14 @@ function emergency_preempt()
 		return;
 	}
 
-	echo '<div class="emergency flash-notice">'."\n";
+	echo '<div id="emergencyPreempt" class="emergency flash-notice">'."\n";
 	echo '<div class="callout callout-danger">'."\n";
 	foreach( $result AS $id => $page )
 	{
 		echo $page->get_value('content')."\n";
 	}
 	echo '</div>'."\n";
-	echo '</div>  <!-- class="emergency flash-notice"-->'."\n";
+	echo '</div>'."\n";
 }
 
 function handle_ie8()
@@ -312,7 +312,7 @@ function handle_ie8()
 {
 	if(preg_match('/(?i)msie [6-8]/',$_SERVER['HTTP_USER_AGENT']))
 	{
-		echo '<div class="flash-notice">'."\n";
+		echo '<div id="emergencyPreempt" class="flash-notice">'."\n";
 		echo '<div class="callout callout-warning">'."\n";
 		echo 'Browser support for this version of Internet Explorer is no longer supported. Please upgrade to IE 9 or newer.'."\n";
 		echo '</div>'."\n";

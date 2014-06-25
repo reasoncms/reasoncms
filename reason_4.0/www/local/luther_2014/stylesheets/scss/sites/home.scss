@@ -37,6 +37,10 @@
 		}
 	}
 
+	#emergencyPreempt {
+		margin-bottom: - rem-calc(4);
+	}
+
 	#welcomeRow {
 		@include grid-row;
 	}
@@ -56,6 +60,8 @@
 						max-width: 10000px !important;
 						height: 224px !important;
 						position: absolute;
+						left: 50%;
+						top: 0;
 						margin-left: -323px;
 					}
 				}

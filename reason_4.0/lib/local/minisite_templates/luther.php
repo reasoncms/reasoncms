@@ -229,6 +229,7 @@
 			
 			// Custom
 			echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/luther.js"></script>';
+			echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/vendor/responsive-tables.js"></script>';
 		}
 		
 		function get_body_tag_classes()
