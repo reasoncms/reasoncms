@@ -65,4 +65,14 @@ $(document).ready(function() {
 	//////////////////////////////////////////////////
 	$('#contentAndRelated table').addClass('responsive');		
 
+    // CALL TO ACTION
+	//////////////////////////////////////////////////
+
+    // Add analytics tracking to call to action buttons
+    $("a[class^=cta-]").each(function(index) {
+    	if ((label = $(this).attr("class").match(/^cta\-([A-Za-z0-9_\-]+)/)[1]) != "button") {
+    		$(this).attr("onclick", "_gaq.push(['trackEvent', 'call-to-action', 'click', '" + $(location).attr('pathname') + "button" + label + "']);");
+    	}
+    });		
+
 });

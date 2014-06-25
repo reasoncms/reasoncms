@@ -403,7 +403,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'pre_sidebar_2' => 'main_blurb',
 	),
 	'slate_form' => array(
-		'main_2' => 'slate_form'
+		'main_post' => 'slate_form'
 	),
 	'sports_roster' => array(
 		'main' => 'luther_sports_roster',
