@@ -64,6 +64,7 @@ $(document).ready(function() {
     // TABLES
 	//////////////////////////////////////////////////
 	$('#pageContent table').addClass('responsive');
+	$('.contentMain .tablesorter').css('width', '100px');
 
     // CALL TO ACTION
 	//////////////////////////////////////////////////
