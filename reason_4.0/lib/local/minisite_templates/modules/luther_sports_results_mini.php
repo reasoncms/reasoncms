@@ -278,13 +278,56 @@ class lutherSportsResultsMiniModule extends EventsModule
 		
 		return $ret;
 	}
+	
+	/**
+	 * Display an error message if there are no events in the current view
+	 * @return void
+	 * @todo move into markup class
+	 */
+	function no_events_error()
+	{
+		echo '<div class="newEventsError">'."\n";
+		$start_date = $this->calendar->get_start_date();
+		$audiences = $this->calendar->get_audiences();
+		$categories = $this->calendar->get_categories();
+		$min_date = $this->calendar->get_min_date();
+		if($this->calendar->get_view() == 'all' && empty($categories) && empty( $audiences ) && empty($this->request['search']) )
+		{
+			//trigger_error('get_max_date called');
+			$max_date = $this->calendar->get_max_date();
+			if(empty($max_date))
+			{
+				echo '<p>This calendar does not have any events.</p>'."\n";
+			}
+		}
+		else
+		{
+			if(empty($categories) && empty($audiences) && empty($this->request['search']))
+			{
+				$desc = $this->get_scope_description();
+				if(!empty($desc))
+				{
+					echo '<p>There are no events '.$this->get_scope_description().'.</p>'."\n";
+				}
+				else
+				{
+					echo '<p>There are no events available.</p>'."\n";
+				}
+			}
+			else
+			{
+				echo '<p>There are no events available';
+			}
+		}
+		echo '</div>'."\n";
+	}
 
 	function list_events()
 	{		
 		if ($this->calendar->contains_any_events())
 		{
 			$this->events_by_date = $this->calendar->get_all_days();
-			if (!empty($this->events_by_date))
+			if (!empty($this->events_by_date) || $this->cur_page->get_value( 'custom_page' ) == 'sports_results')
 			{
 				$this->events = $this->calendar->get_all_events();
 				if ($this->cur_page->get_value( 'custom_page' ) != 'sports_results')
