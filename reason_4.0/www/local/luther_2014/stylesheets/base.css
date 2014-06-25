@@ -5530,31 +5530,31 @@ form table td {
 }
 
 /* Image galleries include image slideshows and flickr slideshows */
-/* line 36, scss/modules/_image-galleries.scss */
+/* line 35, scss/modules/_image-galleries.scss */
 #relatedSections #galleryimages .flickr-image {
   float: left;
   padding: 2.5%;
   width: 20%;
 }
 @media only screen and (min-width: 30em) {
-  /* line 36, scss/modules/_image-galleries.scss */
+  /* line 35, scss/modules/_image-galleries.scss */
   #relatedSections #galleryimages .flickr-image {
     width: 14.2857143%;
   }
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 36, scss/modules/_image-galleries.scss */
+  /* line 35, scss/modules/_image-galleries.scss */
   #relatedSections #galleryimages .flickr-image {
     width: 25%;
   }
 }
 @media only screen and (min-width: 80em) {
-  /* line 36, scss/modules/_image-galleries.scss */
+  /* line 35, scss/modules/_image-galleries.scss */
   #relatedSections #galleryimages .flickr-image {
     width: 20%;
   }
 }
-/* line 61, scss/modules/_image-galleries.scss */
+/* line 60, scss/modules/_image-galleries.scss */
 #relatedSections #galleryimages .flickr-image img {
   width: 100%;
   -webkit-transition-property: all;
@@ -5571,7 +5571,7 @@ form table td {
   transition-timing-function: ease;
   border: 1px solid #FFF;
 }
-/* line 66, scss/modules/_image-galleries.scss */
+/* line 65, scss/modules/_image-galleries.scss */
 #relatedSections #galleryimages .flickr-image img:hover {
   -webkit-transition-property: all;
   -moz-transition-property: all;
@@ -5721,7 +5721,7 @@ form table td {
     padding: 2.5%;
   }
 }
-/* line 172, scss/modules/_image-galleries.scss */
+/* line 171, scss/modules/_image-galleries.scss */
 #contentSections #galleryimages .flickr-image img {
   width: 100%;
   opacity: .9;
@@ -5739,7 +5739,7 @@ form table td {
   -o-transition-timing-function: ease;
   transition-timing-function: ease;
 }
-/* line 178, scss/modules/_image-galleries.scss */
+/* line 177, scss/modules/_image-galleries.scss */
 #contentSections #galleryimages .flickr-image img:hover {
   -webkit-transition-property: all;
   -moz-transition-property: all;
@@ -5783,7 +5783,7 @@ form table td {
     padding: 2.5%;
   }
 }
-/* line 199, scss/modules/_image-galleries.scss */
+/* line 198, scss/modules/_image-galleries.scss */
 #contentSections .flickr-set-container img {
   width: 100%;
   -webkit-transition-property: all;
@@ -5802,7 +5802,7 @@ form table td {
   -moz-box-shadow: white 1.5px 1.5px 0, #cccccc 3px 3px 0, white 4.5px 4.5px 0, #cccccc 6px 6px 0;
   box-shadow: white 1.5px 1.5px 0, #cccccc 3px 3px 0, white 4.5px 4.5px 0, #cccccc 6px 6px 0;
 }
-/* line 204, scss/modules/_image-galleries.scss */
+/* line 203, scss/modules/_image-galleries.scss */
 #contentSections .flickr-set-container img:hover {
   -webkit-transition-property: all;
   -moz-transition-property: all;
@@ -5820,7 +5820,7 @@ form table td {
   -moz-box-shadow: white 1.5px 1.5px 0, #999999 3px 3px 0, white 4.5px 4.5px 0, #999999 6px 6px 0;
   box-shadow: white 1.5px 1.5px 0, #999999 3px 3px 0, white 4.5px 4.5px 0, #999999 6px 6px 0;
 }
-/* line 210, scss/modules/_image-galleries.scss */
+/* line 209, scss/modules/_image-galleries.scss */
 #contentSections .flickr-set-container h4 {
   display: block;
   margin: 0.5rem 0 0;
@@ -5831,7 +5831,7 @@ form table td {
   color: #6f6f6f;
 }
 
-/* line 227, scss/modules/_image-galleries.scss */
+/* line 226, scss/modules/_image-galleries.scss */
 .fancybox-title a:link, .fancybox-title a:visited, .fancybox-title a:active {
   color: #ededed;
   float: right;
@@ -5839,7 +5839,7 @@ form table td {
   padding-bottom: 5px;
   text-decoration: none;
 }
-/* line 235, scss/modules/_image-galleries.scss */
+/* line 234, scss/modules/_image-galleries.scss */
 .fancybox-title a:hover, .fancybox-title a:focus {
   color: #556677;
 }
