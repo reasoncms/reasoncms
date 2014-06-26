@@ -30,6 +30,51 @@
 			
 			ul {
 				margin: 0;
+
+				li {
+					
+					border-bottom: 1px solid $lc-grey;
+					padding-bottom: $column-gutter;
+					margin-bottom: $column-gutter;
+
+					@media
+					#{$small-high-up} {
+						@include grid-column(8);
+
+						&:nth-child(2n+1) {
+							clear: left;
+						}
+					}
+
+					.highslide {
+						display: block;
+						margin-bottom: $column-gutter/2;
+						position: relative;
+						max-width: 480px;
+					}
+
+					img {
+						margin: 0 auto;
+						display: block;
+					}
+
+					.av-play {
+						width: 44px;
+						height: 44px;
+						position: absolute;
+						top: 50%;
+						left: 50%;
+						margin-left: -22px;
+						margin-top: -22px;
+					}
+
+					.desc {
+						*:last-child {
+							margin-bottom: 0;
+							padding-bottom: 0;
+						}
+					}
+				}
 			}
 		}
 	}
