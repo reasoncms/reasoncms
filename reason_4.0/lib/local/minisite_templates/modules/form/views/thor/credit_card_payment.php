@@ -215,14 +215,14 @@ class CreditCardThorForm extends LutherDefaultThorForm
 
 
 		// Turn on test mode when appropriate
-		if(THIS_IS_A_DEVELOPMENT_REASON_INSTANCE || !empty( $this->_request[ 'tm' ] ) )
-		{
+		// if(THIS_IS_A_DEVELOPMENT_REASON_INSTANCE || !empty( $this->_request[ 'tm' ] ) )
+		// {
 			$this->is_in_testing_mode = true;
-		}
-		else
-		{
+		// }
+		// else
+		// {
 			$this->is_in_testing_mode = false;
-		}
+		// }
 
                 $user = reason_check_authentication();
                 if ($user == 'smitst01'){
