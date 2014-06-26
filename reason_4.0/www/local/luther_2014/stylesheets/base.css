@@ -691,15 +691,16 @@ blockquote {
 .tableSorterWrap table,
 .tableWrap table {
   border: none;
+  width: 100%;
 }
-/* line 179, scss/_type.scss */
+/* line 180, scss/_type.scss */
 .tableSorterWrap .tablesorter,
 .tableWrap .tablesorter {
   overflow-x: scroll !important;
   border: none;
 }
 
-/* line 191, scss/_type.scss */
+/* line 192, scss/_type.scss */
 a.more,
 .pubLinks a,
 p.more a {
@@ -709,7 +710,7 @@ p.more a {
   font-weight: 700;
   text-transform: uppercase;
 }
-/* line 198, scss/_type.scss */
+/* line 199, scss/_type.scss */
 a.more:hover,
 .pubLinks a:hover,
 p.more a:hover {
@@ -717,27 +718,27 @@ p.more a:hover {
 }
 
 /* Feeds */
-/* line 205, scss/_type.scss */
+/* line 206, scss/_type.scss */
 #relatedPub .post h4 {
   font-family: "Roboto Slab", serif;
   font-size: 1.125rem;
   font-weight: 400;
 }
 
-/* line 211, scss/_type.scss */
+/* line 212, scss/_type.scss */
 time {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
   font-weight: 300;
 }
 
-/* line 216, scss/_type.scss */
+/* line 217, scss/_type.scss */
 p:empty {
   display: none !important;
 }
 
 /* Nav
 *******************************************/
-/* line 224, scss/_type.scss */
+/* line 225, scss/_type.scss */
 nav {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
 }
