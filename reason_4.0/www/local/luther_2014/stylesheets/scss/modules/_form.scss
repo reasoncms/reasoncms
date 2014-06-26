@@ -26,6 +26,7 @@
 // In _settings.scss, we set $include-html-form-classes: false to keep from including all the non-symantic form classes that we don't use.
 // To get the form classes we do want, we include the Foundation form styles from components/_forms.scss here.
 
+.form,
 #form,
 form {
 
@@ -83,8 +84,8 @@ form {
 	}
 
 	// Adjust margin for form elements below
-	input[type="file"],
-	select {
+	input[type="file"] {
+	//select {
 		margin: 0 0 $form-spacing 0;
 	}
 
@@ -141,13 +142,21 @@ form {
 	 {
 		height: auto;
 	}
+
 }
 
 // 2. LUTHER FORM STYLES & Foundation overrides
 // Form styles unique to Reason form markup
 
+.form,
 #form,
 form {
+
+	.submitSection {
+		@include grid-row();
+		padding: $form-spacing 0;
+		margin: 0 !important;	
+	}
 
 	// Each form element
 	.formElement {
@@ -334,6 +343,10 @@ form {
 		td {
 			padding: .5em 0 .5em 1em; 
 		}
+	}
+
+	input[type="submit"] {
+		@include default-button();
 	}
 }
 
