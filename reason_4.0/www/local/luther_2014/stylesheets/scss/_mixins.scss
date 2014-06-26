@@ -26,6 +26,27 @@
 	@include transition-timing-function(ease);
 }
 
+@mixin default-button() {
+	@include default-transition;
+	@include border-radius($global-radius);
+	background-color: $lc-blue-light;
+	text-align: center;
+	padding: rem-calc(6) rem-calc(16);
+	border: none;
+	color: #FFF;
+	font-size: rem-calc(16) !important;
+
+	&:hover {
+		@include default-transition;
+		background-color: darken($lc-blue-light, 10%);
+	}
+
+	&:active {
+		@include box-shadow(rgba(0,0,0,.5) 1px 1px 1px inset);
+		background-color: lighten($lc-blue-light, 10%);
+	}
+}
+
 @mixin moblie-tabs {
 
 	#tabs {

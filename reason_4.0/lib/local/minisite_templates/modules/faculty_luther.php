@@ -40,11 +40,13 @@ class LutherFacultyStaffModule extends FacultyStaffModule
         {
             echo '<div class="facStaffInfo">'."\n";
             if ( !empty( $person['title']))
-                echo '<h3 class="facStaffTitle">'.$person['title'].'</h3>'."\n";
-            if ($person['edupersonaffiliation'][0] != 'Emeritus')
-            
+            {
+                echo '<h3 class="facStaffTitle">'.$person['title'].'</h3>'."\n"; 
+            }
+           
             echo '<ul class="facStaffContact">';
-
+               
+            if ($person['edupersonaffiliation'][0] != 'Emeritus')
             {
 
                 if ( !empty ( $person['ds_office'] ) ){
@@ -59,6 +61,7 @@ class LutherFacultyStaffModule extends FacultyStaffModule
                     echo '<li class="facStaffPhone"><strong>Phone:</strong> ' . preg_replace('/,/', ', ', $person['ds_phone']) . '</li>' . "\n";
                 }
             }
+
             if ( !empty ( $person['mail'] ))
             {
                 echo '<li class="facStaffEmail"><strong>E-mail:</strong> <a href="mailto:' . $person['mail'] . '">' . $person['mail'] . '</a></li>' . "\n";
