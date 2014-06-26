@@ -175,3 +175,7 @@
 .lutherLis.siteHome #tabs .tabs-content #fragment-1 img {
   float: right;
 }
+/* line 120, ../scss/sites/lis.scss */
+.lutherLis.siteHome #tabs .tabs-content #lg_search_form input[type="submit"] {
+  margin-top: 2rem;
+}
