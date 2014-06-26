@@ -440,7 +440,7 @@ blockquote {
 
 /* Wysiwyg Formatting */
 /* line 70, scss/_type.scss */
-#pageContent *:last-child, .fullPost .text *:last-child, #relatedSections .blurb *:last-child, #contentSections .blurb *:last-child, #faq .answer *:last-child, .flash-notice *:last-child {
+#pageContent > *:last-child, .fullPost .text > *:last-child, #relatedSections .blurb > *:last-child, #contentSections .blurb > *:last-child, #faq .answer > *:last-child, .flash-notice > *:last-child {
   margin-bottom: 0;
 }
 /* line 74, scss/_type.scss */
