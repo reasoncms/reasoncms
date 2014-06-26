@@ -101,7 +101,7 @@
 						$description .= "<a href=\"http://farm" . $pinfo['farm'] . ".static.flickr.com/" . $photo['server'] . "/" . $photo['id'] . "_" . $pinfo['originalsecret'] . "_o." . $pinfo['originalformat'] . "\" title=\"High res\">&prop;</a>\n";
 						if ($number_slideshows == 1)
 						{
-							echo "<div class=\"flickr-image\">\n";
+							echo "<div class=\"image flickr-image\">\n";
 						} 
 						elseif ($number_slideshows > 1 && $photo_count == 1)
 						{
