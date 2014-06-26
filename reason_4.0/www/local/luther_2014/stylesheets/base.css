@@ -6032,10 +6032,21 @@ form input[type="submit"]:active {
 #contentSections #galleryimages .reason-image {
   width: 12.5rem;
   height: 12.5rem;
-  margin: 0.5rem;
-  float: left;
 }
-/* line 166, scss/modules/_image-galleries.scss */
+@media only screen and (max-width: 40em) {
+  /* line 160, scss/modules/_image-galleries.scss */
+  #contentSections #galleryimages .reason-image {
+    margin: 0 auto;
+  }
+}
+@media only screen and (min-width: 30em) {
+  /* line 160, scss/modules/_image-galleries.scss */
+  #contentSections #galleryimages .reason-image {
+    float: left;
+    margin: 0.5rem;
+  }
+}
+/* line 175, scss/modules/_image-galleries.scss */
 #contentSections #galleryimages .reason-image img {
   display: block;
   margin: 0 auto;
@@ -6045,7 +6056,7 @@ form input[type="submit"]:active {
   height: auto;
   border: 1px solid #FFF;
 }
-/* line 175, scss/modules/_image-galleries.scss */
+/* line 184, scss/modules/_image-galleries.scss */
 #contentSections #galleryimages .reason-image img:hover {
   -webkit-transition-property: all;
   -moz-transition-property: all;
@@ -6063,18 +6074,18 @@ form input[type="submit"]:active {
   -moz-box-shadow: #666666 0 0 4px;
   box-shadow: #666666 0 0 4px;
 }
-/* line 182, scss/modules/_image-galleries.scss */
+/* line 191, scss/modules/_image-galleries.scss */
 #contentSections #galleryimages .flickr-image {
   float: left;
   padding: 4%;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 182, scss/modules/_image-galleries.scss */
+  /* line 191, scss/modules/_image-galleries.scss */
   #contentSections #galleryimages .flickr-image {
     padding: 2.5%;
   }
 }
-/* line 191, scss/modules/_image-galleries.scss */
+/* line 200, scss/modules/_image-galleries.scss */
 #contentSections #galleryimages .flickr-image img {
   width: 100%;
   opacity: .9;
@@ -6092,7 +6103,7 @@ form input[type="submit"]:active {
   -o-transition-timing-function: ease;
   transition-timing-function: ease;
 }
-/* line 197, scss/modules/_image-galleries.scss */
+/* line 206, scss/modules/_image-galleries.scss */
 #contentSections #galleryimages .flickr-image img:hover {
   -webkit-transition-property: all;
   -moz-transition-property: all;
@@ -6111,7 +6122,7 @@ form input[type="submit"]:active {
   box-shadow: #666666 0 0 4px;
   opacity: 1;
 }
-/* line 207, scss/modules/_image-galleries.scss */
+/* line 216, scss/modules/_image-galleries.scss */
 #contentSections .flickr-set-container {
   *zoom: 1;
   float: left;
@@ -6131,12 +6142,12 @@ form input[type="submit"]:active {
   display: none;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 207, scss/modules/_image-galleries.scss */
+  /* line 216, scss/modules/_image-galleries.scss */
   #contentSections .flickr-set-container {
     padding: 2.5%;
   }
 }
-/* line 218, scss/modules/_image-galleries.scss */
+/* line 227, scss/modules/_image-galleries.scss */
 #contentSections .flickr-set-container img {
   width: 100%;
   -webkit-transition-property: all;
@@ -6155,7 +6166,7 @@ form input[type="submit"]:active {
   -moz-box-shadow: white 1.5px 1.5px 0, #cccccc 3px 3px 0, white 4.5px 4.5px 0, #cccccc 6px 6px 0;
   box-shadow: white 1.5px 1.5px 0, #cccccc 3px 3px 0, white 4.5px 4.5px 0, #cccccc 6px 6px 0;
 }
-/* line 223, scss/modules/_image-galleries.scss */
+/* line 232, scss/modules/_image-galleries.scss */
 #contentSections .flickr-set-container img:hover {
   -webkit-transition-property: all;
   -moz-transition-property: all;
@@ -6173,7 +6184,7 @@ form input[type="submit"]:active {
   -moz-box-shadow: white 1.5px 1.5px 0, #999999 3px 3px 0, white 4.5px 4.5px 0, #999999 6px 6px 0;
   box-shadow: white 1.5px 1.5px 0, #999999 3px 3px 0, white 4.5px 4.5px 0, #999999 6px 6px 0;
 }
-/* line 229, scss/modules/_image-galleries.scss */
+/* line 238, scss/modules/_image-galleries.scss */
 #contentSections .flickr-set-container h4 {
   display: block;
   margin: 0.5rem 0 0;
@@ -6184,7 +6195,7 @@ form input[type="submit"]:active {
   color: #6f6f6f;
 }
 
-/* line 246, scss/modules/_image-galleries.scss */
+/* line 255, scss/modules/_image-galleries.scss */
 .fancybox-title a:link, .fancybox-title a:visited, .fancybox-title a:active {
   color: #ededed;
   float: right;
@@ -6192,7 +6203,7 @@ form input[type="submit"]:active {
   padding-bottom: 5px;
   text-decoration: none;
 }
-/* line 254, scss/modules/_image-galleries.scss */
+/* line 263, scss/modules/_image-galleries.scss */
 .fancybox-title a:hover, .fancybox-title a:focus {
   color: #556677;
 }
