@@ -334,9 +334,22 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'module' => 'events_mini',
 			'title' => 'Schedule',
 			'ideal_count' => 7,
-			//'events_page_url' => 'https://www.luther.edu/sports/schedule',
-			//'calendar_link_text' => 'Complete schedule',
 		),
+		'pre_sidebar_2' => 'blurb',
+		'sidebar' => array(
+			'module' => 'image_sidebar', // default parameters set in alter_reason_pagetype in luther.php
+			'thumbnail_width' => 600,
+			'num_to_display' => 3,
+		),
+		'sidebar_2' => array(
+			'module' => 'luther_av',
+			'full_size' => true,
+			'num_per_page' => 2,
+		),
+		'post_sidebar' => 'assets',
+		'post_sidebar_2' => 'twitter',
+		'post_sidebar_3' => '',
+
 	),
 	'luther_google_map' => array(
 		'main_post' => 'luther_google_map',
