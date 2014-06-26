@@ -161,39 +161,23 @@ blockquote {
 			font-weight: 400;
 		}
 	}
-	
-	// Zurb's Responsive Tables
-	// Reqires a class of "responsive" on the table element (provided by jQuery in luther.js)	
-	table.responsive { 
-		margin-bottom: 0;
-	}
-
-	table.responsive td, table.responsive th { position: relative; white-space: nowrap; overflow: hidden; }
-	table.responsive th:first-child, table.responsive td:first-child, table.responsive td:first-child, table.responsive.pinned td { display: none; }
-
-	.table-wrapper {
-		 position: relative; margin-bottom: 20px; overflow: hidden; border-right: 1px solid #ccc; 
-
-		.pinned { position: absolute; left: 0; top: 0; background: #fff; width: 35%; overflow: hidden; overflow-x: scroll; border-right: 1px solid #ccc; border-left: 1px solid #ccc; }
-		.pinned table { border-right: none; border-left: none; width: 100%; }
-		.pinned table th, .pinned table td { white-space: nowrap; }
-		.pinned td:last-child { border-bottom: 0; }
-
-		div.scrollable { margin-left: 35%; }
-		div.scrollable { overflow: scroll; overflow-y: hidden; }	
-	}
 }
 
 // Tables
 
-// Provide overflow:scroll for Tablesorter tables
-.tableSorterWrap {
-	overflow: scroll !important;
+// Provide overflow:scroll for Tablesorter & #pageContent tables
+.tableSorterWrap,
+.tableWrap {
+	overflow-x: scroll !important;
 	border: 1px solid $lc-grey;
 	padding: 1px;
 
+	table {
+		border: none;
+	}
+
 	.tablesorter {
-		overflow: scroll !important;
+		overflow-x: scroll !important;
 		border: none;
 	}
 }

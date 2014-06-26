@@ -679,76 +679,27 @@ blockquote {
 .flash-notice h5 strong {
   font-weight: 400;
 }
-/* line 167, scss/_type.scss */
-#pageContent table.responsive, .fullPost .text table.responsive, #relatedSections .blurb table.responsive, #contentSections .blurb table.responsive, #faq .answer table.responsive, .flash-notice table.responsive {
-  margin-bottom: 0;
-}
-/* line 171, scss/_type.scss */
-#pageContent table.responsive td, #pageContent table.responsive th, .fullPost .text table.responsive td, .fullPost .text table.responsive th, #relatedSections .blurb table.responsive td, #relatedSections .blurb table.responsive th, #contentSections .blurb table.responsive td, #contentSections .blurb table.responsive th, #faq .answer table.responsive td, #faq .answer table.responsive th, .flash-notice table.responsive td, .flash-notice table.responsive th {
-  position: relative;
-  white-space: nowrap;
-  overflow: hidden;
-}
-/* line 172, scss/_type.scss */
-#pageContent table.responsive th:first-child, #pageContent table.responsive td:first-child, #pageContent table.responsive td:first-child, #pageContent table.responsive.pinned td, .fullPost .text table.responsive th:first-child, .fullPost .text table.responsive td:first-child, .fullPost .text table.responsive td:first-child, .fullPost .text table.responsive.pinned td, #relatedSections .blurb table.responsive th:first-child, #relatedSections .blurb table.responsive td:first-child, #relatedSections .blurb table.responsive td:first-child, #relatedSections .blurb table.responsive.pinned td, #contentSections .blurb table.responsive th:first-child, #contentSections .blurb table.responsive td:first-child, #contentSections .blurb table.responsive td:first-child, #contentSections .blurb table.responsive.pinned td, #faq .answer table.responsive th:first-child, #faq .answer table.responsive td:first-child, #faq .answer table.responsive td:first-child, #faq .answer table.responsive.pinned td, .flash-notice table.responsive th:first-child, .flash-notice table.responsive td:first-child, .flash-notice table.responsive td:first-child, .flash-notice table.responsive.pinned td {
-  display: none;
-}
-/* line 174, scss/_type.scss */
-#pageContent .table-wrapper, .fullPost .text .table-wrapper, #relatedSections .blurb .table-wrapper, #contentSections .blurb .table-wrapper, #faq .answer .table-wrapper, .flash-notice .table-wrapper {
-  position: relative;
-  margin-bottom: 20px;
-  overflow: hidden;
-  border-right: 1px solid #ccc;
-}
-/* line 177, scss/_type.scss */
-#pageContent .table-wrapper .pinned, .fullPost .text .table-wrapper .pinned, #relatedSections .blurb .table-wrapper .pinned, #contentSections .blurb .table-wrapper .pinned, #faq .answer .table-wrapper .pinned, .flash-notice .table-wrapper .pinned {
-  position: absolute;
-  left: 0;
-  top: 0;
-  background: #fff;
-  width: 35%;
-  overflow: hidden;
-  overflow-x: scroll;
-  border-right: 1px solid #ccc;
-  border-left: 1px solid #ccc;
-}
-/* line 178, scss/_type.scss */
-#pageContent .table-wrapper .pinned table, .fullPost .text .table-wrapper .pinned table, #relatedSections .blurb .table-wrapper .pinned table, #contentSections .blurb .table-wrapper .pinned table, #faq .answer .table-wrapper .pinned table, .flash-notice .table-wrapper .pinned table {
-  border-right: none;
-  border-left: none;
-  width: 100%;
-}
-/* line 179, scss/_type.scss */
-#pageContent .table-wrapper .pinned table th, #pageContent .table-wrapper .pinned table td, .fullPost .text .table-wrapper .pinned table th, .fullPost .text .table-wrapper .pinned table td, #relatedSections .blurb .table-wrapper .pinned table th, #relatedSections .blurb .table-wrapper .pinned table td, #contentSections .blurb .table-wrapper .pinned table th, #contentSections .blurb .table-wrapper .pinned table td, #faq .answer .table-wrapper .pinned table th, #faq .answer .table-wrapper .pinned table td, .flash-notice .table-wrapper .pinned table th, .flash-notice .table-wrapper .pinned table td {
-  white-space: nowrap;
-}
-/* line 180, scss/_type.scss */
-#pageContent .table-wrapper .pinned td:last-child, .fullPost .text .table-wrapper .pinned td:last-child, #relatedSections .blurb .table-wrapper .pinned td:last-child, #contentSections .blurb .table-wrapper .pinned td:last-child, #faq .answer .table-wrapper .pinned td:last-child, .flash-notice .table-wrapper .pinned td:last-child {
-  border-bottom: 0;
-}
-/* line 182, scss/_type.scss */
-#pageContent .table-wrapper div.scrollable, .fullPost .text .table-wrapper div.scrollable, #relatedSections .blurb .table-wrapper div.scrollable, #contentSections .blurb .table-wrapper div.scrollable, #faq .answer .table-wrapper div.scrollable, .flash-notice .table-wrapper div.scrollable {
-  margin-left: 35%;
-}
-/* line 183, scss/_type.scss */
-#pageContent .table-wrapper div.scrollable, .fullPost .text .table-wrapper div.scrollable, #relatedSections .blurb .table-wrapper div.scrollable, #contentSections .blurb .table-wrapper div.scrollable, #faq .answer .table-wrapper div.scrollable, .flash-notice .table-wrapper div.scrollable {
-  overflow: scroll;
-  overflow-y: hidden;
-}
 
-/* line 190, scss/_type.scss */
-.tableSorterWrap {
-  overflow: scroll !important;
+/* line 170, scss/_type.scss */
+.tableSorterWrap,
+.tableWrap {
+  overflow-x: scroll !important;
   border: 1px solid #e9e9e9;
   padding: 1px;
 }
-/* line 195, scss/_type.scss */
-.tableSorterWrap .tablesorter {
-  overflow: scroll !important;
+/* line 175, scss/_type.scss */
+.tableSorterWrap table,
+.tableWrap table {
+  border: none;
+}
+/* line 179, scss/_type.scss */
+.tableSorterWrap .tablesorter,
+.tableWrap .tablesorter {
+  overflow-x: scroll !important;
   border: none;
 }
 
-/* line 207, scss/_type.scss */
+/* line 191, scss/_type.scss */
 a.more,
 .pubLinks a,
 p.more a {
@@ -758,7 +709,7 @@ p.more a {
   font-weight: 700;
   text-transform: uppercase;
 }
-/* line 214, scss/_type.scss */
+/* line 198, scss/_type.scss */
 a.more:hover,
 .pubLinks a:hover,
 p.more a:hover {
@@ -766,27 +717,27 @@ p.more a:hover {
 }
 
 /* Feeds */
-/* line 221, scss/_type.scss */
+/* line 205, scss/_type.scss */
 #relatedPub .post h4 {
   font-family: "Roboto Slab", serif;
   font-size: 1.125rem;
   font-weight: 400;
 }
 
-/* line 227, scss/_type.scss */
+/* line 211, scss/_type.scss */
 time {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
   font-weight: 300;
 }
 
-/* line 232, scss/_type.scss */
+/* line 216, scss/_type.scss */
 p:empty {
   display: none !important;
 }
 
 /* Nav
 *******************************************/
-/* line 240, scss/_type.scss */
+/* line 224, scss/_type.scss */
 nav {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
 }
@@ -6361,7 +6312,7 @@ form table td {
 #relatedPub .post figure {
   float: right;
   margin: 0 0 0.25rem 1rem;
-  max-width: 10.9375rem;
+  max-width: 7.8125rem;
 }
 @media only screen and (min-width: 64.063em) {
   /* line 38, scss/modules/_publication.scss */
