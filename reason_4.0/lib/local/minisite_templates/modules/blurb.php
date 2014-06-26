@@ -147,6 +147,23 @@ class BlurbModule extends DefaultMinisiteModule
 			
 	function has_content() // {{{
 	{
+		if (!empty($this->blurbs))
+		{
+			$total_blurbs = 0;
+			foreach($this->blurbs as $blurb)
+			{
+				if (preg_match("/[Cc]all [Tt]o [Aa]ction/", $blurb->get_value('name'))
+					|| preg_match("/[Cc]ontact [Ii]nformation/", $blurb->get_value('name')))
+				{
+					$total_blurbs++;
+				}
+			}
+			if ($total_blurbs == count($this->blurbs))
+			{
+				return false;
+			}
+		}
+		
 		$inline_editing =& get_reason_inline_editing($this->page_id);
 		if ($inline_editing->available_for_module($this))
 			return true;

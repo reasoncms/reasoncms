@@ -181,8 +181,16 @@ class miniEventsModule extends EventsModule
 			$ret = $this->parent->pages->get_full_url($this->events_page->id());
 		}
 		$this->events_page_url = '';
-		if(!empty($ret))
+		if(!empty($ret)){
 			$this->events_page_url = $ret;
+		}
+		//Send them to the /events/ page if looking at the homepage events
+		$parts = parse_url(get_current_url());
+		$homepage = $parts['scheme'].'://'.$_SERVER['SERVER_NAME'].'/';
+		if (get_current_url() == $homepage)
+		{
+			$this->events_page_url = "/events/";
+		}
 	}
 }
 ?>
