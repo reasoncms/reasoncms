@@ -885,7 +885,7 @@
 	 *
 	 * In future releases there will likely be a way to specify favicons for individual sites.
 	 */
-	define('REASON_DEFAULT_FAVICON_PATH','/favicon.ico');
+	define('REASON_DEFAULT_FAVICON_PATH','/reason/local/favicon.ico');
 	
 	/**
 	 * REASON_PERFORMANCE_PROFILE_LOG
