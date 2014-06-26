@@ -31,7 +31,7 @@
 				
 				<ul class="sections">
 					<li>
-						<a href="/admissions-new">Admissions</a>
+						<a href="/admissions">Admissions</a>
 					</li>
 					<li>
 						<a href="/academics">Academics</a>

@@ -45,7 +45,7 @@
 						<div class="column">
 							<h3>Campus</h3>
 							<ul>
-							<li><a href="/bookshop/">Book Store</a></li>
+							<li><a href="/bookshop/">Book Shop</a></li>
 							<li><a href="/ministries/">College Ministries</a></li>
 							<li><a href="/dining/">Dining Services</a></li>
 							<li><a href="/shuttle/">Shuttle Service</a></li>
