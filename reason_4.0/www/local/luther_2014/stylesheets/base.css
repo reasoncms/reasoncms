@@ -439,7 +439,7 @@ blockquote {
 }
 
 /* Wysiwyg Formatting */
-/* line 74, scss/_type.scss */
+/* line 70, scss/_type.scss */
 #pageContent a, .fullPost .text a, #relatedSections .blurb a, #contentSections .blurb a, #faq .answer a, .flash-notice a {
   -ms-word-break: break-all;
   /* Be VERY careful with this, breaks normal words wh_erever */
@@ -450,11 +450,11 @@ blockquote {
   -moz-hyphens: auto;
   hyphens: auto;
 }
-/* line 88, scss/_type.scss */
+/* line 84, scss/_type.scss */
 #pageContent p:empty, .fullPost .text p:empty, #relatedSections .blurb p:empty, #contentSections .blurb p:empty, #faq .answer p:empty, .flash-notice p:empty {
   display: none;
 }
-/* line 94, scss/_type.scss */
+/* line 90, scss/_type.scss */
 #pageContent ol,
 #pageContent ul,
 #pageContent dl, .fullPost .text ol,
@@ -472,7 +472,7 @@ blockquote {
   padding-bottom: 0.375rem;
   margin-left: 2rem;
 }
-/* line 98, scss/_type.scss */
+/* line 94, scss/_type.scss */
 #pageContent ol:last-child,
 #pageContent ul:last-child,
 #pageContent dl:last-child, .fullPost .text ol:last-child,
@@ -488,11 +488,11 @@ blockquote {
 .flash-notice dl:last-child {
   padding-bottom: 0;
 }
-/* line 103, scss/_type.scss */
+/* line 99, scss/_type.scss */
 #pageContent li, .fullPost .text li, #relatedSections .blurb li, #contentSections .blurb li, #faq .answer li, .flash-notice li {
   line-height: 2;
 }
-/* line 108, scss/_type.scss */
+/* line 104, scss/_type.scss */
 #pageContent ol li,
 #pageContent ol ol ol ol li, .fullPost .text ol li,
 .fullPost .text ol ol ol ol li, #relatedSections .blurb ol li,
@@ -502,7 +502,7 @@ blockquote {
 .flash-notice ol ol ol ol li {
   list-style-type: decimal;
 }
-/* line 110, scss/_type.scss */
+/* line 106, scss/_type.scss */
 #pageContent ol ol li,
 #pageContent ol ol ol ol ol li, .fullPost .text ol ol li,
 .fullPost .text ol ol ol ol ol li, #relatedSections .blurb ol ol li,
@@ -512,7 +512,7 @@ blockquote {
 .flash-notice ol ol ol ol ol li {
   list-style-type: lower-alpha;
 }
-/* line 112, scss/_type.scss */
+/* line 108, scss/_type.scss */
 #pageContent ol ol ol li,
 #pageContent ol ol ol ol ol ol li, .fullPost .text ol ol ol li,
 .fullPost .text ol ol ol ol ol ol li, #relatedSections .blurb ol ol ol li,
@@ -522,7 +522,7 @@ blockquote {
 .flash-notice ol ol ol ol ol ol li {
   list-style-type: lower-roman;
 }
-/* line 115, scss/_type.scss */
+/* line 111, scss/_type.scss */
 #pageContent ul li,
 #pageContent ul ul ul ul li, .fullPost .text ul li,
 .fullPost .text ul ul ul ul li, #relatedSections .blurb ul li,
@@ -532,7 +532,7 @@ blockquote {
 .flash-notice ul ul ul ul li {
   list-style-type: disc;
 }
-/* line 117, scss/_type.scss */
+/* line 113, scss/_type.scss */
 #pageContent ul ul li,
 #pageContent ul ul ul ul ul li, .fullPost .text ul ul li,
 .fullPost .text ul ul ul ul ul li, #relatedSections .blurb ul ul li,
@@ -542,7 +542,7 @@ blockquote {
 .flash-notice ul ul ul ul ul li {
   list-style-type: circle;
 }
-/* line 119, scss/_type.scss */
+/* line 115, scss/_type.scss */
 #pageContent ul ul ul li,
 #pageContent ul ul ul ul ul ul li, .fullPost .text ul ul ul li,
 .fullPost .text ul ul ul ul ul ul li, #relatedSections .blurb ul ul ul li,
@@ -552,11 +552,11 @@ blockquote {
 .flash-notice ul ul ul ul ul ul li {
   list-style-type: square;
 }
-/* line 121, scss/_type.scss */
+/* line 117, scss/_type.scss */
 #pageContent a:link, .fullPost .text a:link, #relatedSections .blurb a:link, #contentSections .blurb a:link, #faq .answer a:link, .flash-notice a:link {
   text-decoration: underline;
 }
-/* line 126, scss/_type.scss */
+/* line 122, scss/_type.scss */
 #pageContent .callOut,
 #pageContent .callout, .fullPost .text .callOut,
 .fullPost .text .callout, #relatedSections .blurb .callOut,
@@ -568,18 +568,9 @@ blockquote {
   background: #e9e9e9;
   border: 1px solid #d0d0d0;
   padding: 1.25rem 1.66667rem;
+  margin-bottom: 1.5rem;
   *zoom: 1;
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
-}
-/* line 132, scss/_type.scss */
-#pageContent .callOut :not(.flash-notice),
-#pageContent .callout :not(.flash-notice), .fullPost .text .callOut :not(.flash-notice),
-.fullPost .text .callout :not(.flash-notice), #relatedSections .blurb .callOut :not(.flash-notice),
-#relatedSections .blurb .callout :not(.flash-notice), #contentSections .blurb .callOut :not(.flash-notice),
-#contentSections .blurb .callout :not(.flash-notice), #faq .answer .callOut :not(.flash-notice),
-#faq .answer .callout :not(.flash-notice), .flash-notice .callOut :not(.flash-notice),
-.flash-notice .callout :not(.flash-notice) {
-  margin-bottom: 1.5rem;
 }
 /* line 165, ../foundation/bower_components/foundation/scss/foundation/components/_global.scss */
 #pageContent .callOut:before, #pageContent .callOut:after,
@@ -608,7 +599,7 @@ blockquote {
 .flash-notice .callout:after {
   clear: both;
 }
-/* line 139, scss/_type.scss */
+/* line 133, scss/_type.scss */
 #pageContent .callOut *:last-child,
 #pageContent .callout *:last-child, .fullPost .text .callOut *:last-child,
 .fullPost .text .callout *:last-child, #relatedSections .blurb .callOut *:last-child,
@@ -618,7 +609,7 @@ blockquote {
 .flash-notice .callout *:last-child {
   margin-bottom: 0;
 }
-/* line 143, scss/_type.scss */
+/* line 137, scss/_type.scss */
 #pageContent .callOut.callout-success,
 #pageContent .callout.callout-success, .fullPost .text .callOut.callout-success,
 .fullPost .text .callout.callout-success, #relatedSections .blurb .callOut.callout-success,
@@ -629,7 +620,7 @@ blockquote {
   background: rgba(74, 133, 18, 0.25);
   border: 1px solid rgba(74, 133, 18, 0.5);
 }
-/* line 148, scss/_type.scss */
+/* line 142, scss/_type.scss */
 #pageContent .callOut.callout-warning,
 #pageContent .callout.callout-warning, .fullPost .text .callOut.callout-warning,
 .fullPost .text .callout.callout-warning, #relatedSections .blurb .callOut.callout-warning,
@@ -640,7 +631,7 @@ blockquote {
   background: rgba(232, 165, 0, 0.25);
   border: 1px solid rgba(232, 165, 0, 0.65);
 }
-/* line 153, scss/_type.scss */
+/* line 147, scss/_type.scss */
 #pageContent .callOut.callout-danger,
 #pageContent .callout.callout-danger, .fullPost .text .callOut.callout-danger,
 .fullPost .text .callout.callout-danger, #relatedSections .blurb .callOut.callout-danger,
@@ -651,7 +642,7 @@ blockquote {
   background: rgba(159, 33, 18, 0.25);
   border: 1px solid rgba(159, 33, 18, 0.45);
 }
-/* line 164, scss/_type.scss */
+/* line 158, scss/_type.scss */
 #pageContent h1 strong,
 #pageContent h2 strong,
 #pageContent h3 strong,
@@ -679,8 +670,12 @@ blockquote {
 .flash-notice h5 strong {
   font-weight: 400;
 }
+/* line 163, scss/_type.scss */
+#pageContent .flash-notice .callout, .fullPost .text .flash-notice .callout, #relatedSections .blurb .flash-notice .callout, #contentSections .blurb .flash-notice .callout, #faq .answer .flash-notice .callout, .flash-notice .flash-notice .callout {
+  margin-bottom: 0;
+}
 
-/* line 174, scss/_type.scss */
+/* line 172, scss/_type.scss */
 .tableSorterWrap,
 .tableWrap {
   overflow-x: scroll !important;
@@ -688,21 +683,21 @@ blockquote {
   padding: 1px;
   margin-bottom: 2.5rem;
 }
-/* line 180, scss/_type.scss */
+/* line 178, scss/_type.scss */
 .tableSorterWrap table,
 .tableWrap table {
   border: none;
   width: 100%;
   margin-bottom: 0;
 }
-/* line 186, scss/_type.scss */
+/* line 184, scss/_type.scss */
 .tableSorterWrap .tablesorter,
 .tableWrap .tablesorter {
   overflow-x: scroll !important;
   border: none;
 }
 
-/* line 198, scss/_type.scss */
+/* line 196, scss/_type.scss */
 a.more,
 .pubLinks a,
 p.more a {
@@ -712,7 +707,7 @@ p.more a {
   font-weight: 700;
   text-transform: uppercase;
 }
-/* line 205, scss/_type.scss */
+/* line 203, scss/_type.scss */
 a.more:hover,
 .pubLinks a:hover,
 p.more a:hover {
@@ -720,27 +715,27 @@ p.more a:hover {
 }
 
 /* Feeds */
-/* line 212, scss/_type.scss */
+/* line 210, scss/_type.scss */
 #relatedPub .post h4 {
   font-family: "Roboto Slab", serif;
   font-size: 1.125rem;
   font-weight: 400;
 }
 
-/* line 218, scss/_type.scss */
+/* line 216, scss/_type.scss */
 time {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
   font-weight: 300;
 }
 
-/* line 223, scss/_type.scss */
+/* line 221, scss/_type.scss */
 p:empty {
   display: none !important;
 }
 
 /* Nav
 *******************************************/
-/* line 231, scss/_type.scss */
+/* line 229, scss/_type.scss */
 nav {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
 }
