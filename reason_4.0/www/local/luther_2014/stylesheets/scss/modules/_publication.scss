@@ -624,3 +624,45 @@
 		}
 	}
 }
+
+// Issues
+
+.publication {
+
+	.issueMenu {
+		.allIssuesLink {
+			margin-bottom: $column-gutter;
+		}
+	}
+
+	// Issues (luther.edu/magazine)
+	.issueBlurb {
+		.iframeWrap {
+			position: relative;
+			padding-bottom: 65%;
+			height: 0;
+			overflow: hidden;
+			margin-bottom: $column-gutter;
+
+			iframe {
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+			}
+		}
+	}
+
+	.issueBlurbs + .sections {
+		margin-left: 0;
+
+		.sectionInfo h3 a {
+			color: $body-font-color;
+		}
+
+		.section {
+			margin-bottom: $column-gutter;
+		}
+	}
+}
