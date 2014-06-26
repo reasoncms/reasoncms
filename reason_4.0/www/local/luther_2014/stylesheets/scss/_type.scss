@@ -171,10 +171,12 @@ blockquote {
 	overflow-x: scroll !important;
 	border: 1px solid $lc-grey;
 	padding: 1px;
+	margin-bottom: $column-gutter;
 
 	table {
 		border: none;
 		width: 100%;
+		margin-bottom: 0;
 	}
 
 	.tablesorter {

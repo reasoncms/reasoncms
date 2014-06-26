@@ -686,21 +686,23 @@ blockquote {
   overflow-x: scroll !important;
   border: 1px solid #e9e9e9;
   padding: 1px;
+  margin-bottom: 2.5rem;
 }
-/* line 175, scss/_type.scss */
+/* line 176, scss/_type.scss */
 .tableSorterWrap table,
 .tableWrap table {
   border: none;
   width: 100%;
+  margin-bottom: 0;
 }
-/* line 180, scss/_type.scss */
+/* line 182, scss/_type.scss */
 .tableSorterWrap .tablesorter,
 .tableWrap .tablesorter {
   overflow-x: scroll !important;
   border: none;
 }
 
-/* line 192, scss/_type.scss */
+/* line 194, scss/_type.scss */
 a.more,
 .pubLinks a,
 p.more a {
@@ -710,7 +712,7 @@ p.more a {
   font-weight: 700;
   text-transform: uppercase;
 }
-/* line 199, scss/_type.scss */
+/* line 201, scss/_type.scss */
 a.more:hover,
 .pubLinks a:hover,
 p.more a:hover {
@@ -718,27 +720,27 @@ p.more a:hover {
 }
 
 /* Feeds */
-/* line 206, scss/_type.scss */
+/* line 208, scss/_type.scss */
 #relatedPub .post h4 {
   font-family: "Roboto Slab", serif;
   font-size: 1.125rem;
   font-weight: 400;
 }
 
-/* line 212, scss/_type.scss */
+/* line 214, scss/_type.scss */
 time {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
   font-weight: 300;
 }
 
-/* line 217, scss/_type.scss */
+/* line 219, scss/_type.scss */
 p:empty {
   display: none !important;
 }
 
 /* Nav
 *******************************************/
-/* line 225, scss/_type.scss */
+/* line 227, scss/_type.scss */
 nav {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
 }
