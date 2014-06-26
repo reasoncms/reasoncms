@@ -5952,46 +5952,63 @@ form table td {
   overflow: hidden;
 }
 
-/* Inline Images (Main content areas only -- no sidebars) */
-/* line 96, scss/modules/_images.scss */
+/* Inline Images */
+/* line 97, scss/modules/_images.scss */
 #pageContent img, .fullPost .text img, #faq .answer img {
   width: auto;
   max-width: 100%;
   margin: 0 auto 1rem;
 }
-/* line 104, scss/modules/_images.scss */
+/* line 105, scss/modules/_images.scss */
 #pageContent img.left, #pageContent img[align="left"], #pageContent img.right, #pageContent img[align="right"], .fullPost .text img.left, .fullPost .text img[align="left"], .fullPost .text img.right, .fullPost .text img[align="right"], #faq .answer img.left, #faq .answer img[align="left"], #faq .answer img.right, #faq .answer img[align="right"] {
   float: none !important;
   clear: left;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 96, scss/modules/_images.scss */
+  /* line 97, scss/modules/_images.scss */
   #pageContent img, .fullPost .text img, #faq .answer img {
     width: auto;
     max-width: 100%;
     margin: 0 0 1rem;
   }
-  /* line 115, scss/modules/_images.scss */
+  /* line 116, scss/modules/_images.scss */
   #pageContent img.left, #pageContent img[align="left"], .fullPost .text img.left, .fullPost .text img[align="left"], #faq .answer img.left, #faq .answer img[align="left"] {
     margin-right: 2.5rem;
     float: left !important;
   }
-  /* line 121, scss/modules/_images.scss */
+  /* line 122, scss/modules/_images.scss */
   #pageContent img.right, #pageContent img[align="right"], .fullPost .text img.right, .fullPost .text img[align="right"], #faq .answer img.right, #faq .answer img[align="right"] {
     margin-left: 2.5rem;
     float: right !important;
   }
-  /* line 129, scss/modules/_images.scss */
+  /* line 130, scss/modules/_images.scss */
   #pageContent img.left, #pageContent img[align="left"], #pageContent img.right, #pageContent img[align="right"], .fullPost .text img.left, .fullPost .text img[align="left"], .fullPost .text img.right, .fullPost .text img[align="right"], #faq .answer img.left, #faq .answer img[align="left"], #faq .answer img.right, #faq .answer img[align="right"] {
     max-width: 40%;
   }
 }
-/* line 137, scss/modules/_images.scss */
+/* line 138, scss/modules/_images.scss */
 #pageContent .callout img,
 #pageContent .callOut img, .fullPost .text .callout img,
 .fullPost .text .callOut img, #faq .answer .callout img,
 #faq .answer .callOut img {
   width: auto;
+}
+
+/* line 145, scss/modules/_images.scss */
+#relatedSections .blurb img {
+  width: auto;
+  max-width: 100%;
+  margin: 0 0 1rem;
+}
+/* line 151, scss/modules/_images.scss */
+#relatedSections .blurb img.left, #relatedSections .blurb img[align="left"] {
+  margin-right: 2.5rem;
+  float: left !important;
+}
+/* line 157, scss/modules/_images.scss */
+#relatedSections .blurb img.right, #relatedSections .blurb img[align="right"] {
+  margin-left: 2.5rem;
+  float: right !important;
 }
 
 /* line 4, scss/font-awesome/_core.scss */
