@@ -221,7 +221,7 @@ class CreditCardThorForm extends LutherDefaultThorForm
 		// }
 		// else
 		// {
-		// 	$this->is_in_testing_mode = false;
+			$this->is_in_testing_mode = false;
 		// }
 
                 $user = reason_check_authentication();
