@@ -19,6 +19,27 @@
 @import "extends";
 @import "mixins";
 
+// NORSE CALENDARS (aka embedded Google Calendars)
+// Use page type "Norse Calendar"
+
+.norseCalendar {
+	.iframeWrap {
+		position: relative;
+	    padding-bottom: 75%;
+	    height: 0;
+	    overflow: hidden;
+
+	    iframe {
+			position: absolute;
+			top:0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+	    }
+	}
+}
+
+
 // WYSIWIG COLUMNS
 // This provides a two column layout for wysiwig content.
 //
