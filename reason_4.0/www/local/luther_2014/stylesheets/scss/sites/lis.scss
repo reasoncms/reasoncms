@@ -102,18 +102,25 @@
 					border-bottom: 2px solid #ccc;
 				}
 
+				h3 {
+					margin-top: rem-calc(12);
+				}
 
-				.pane-content { // form row
+				#fragment-1 {
+					span a {
+						font-size: rem-calc(14);
+					}
 
-					strong {
-						margin-bottom: $paragraph-margin-bottom;
-						display: block;
+					img {
+						float: right;
 					}
 				}
-			}
 
-			input[type="submit"] {
-				margin-top: $paragraph-margin-bottom;
+				#lg_search_form {
+					input[type="submit"] {
+						margin-top: rem-calc(32);
+					}
+				}
 			}
 		}
 	}

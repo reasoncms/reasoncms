@@ -67,6 +67,10 @@ blockquote {
 /* Wysiwyg Formatting */  
 #{$wysiwyg-all-areas} {
 
+	*:last-child {
+		margin-bottom: 0;
+	}
+
 	a {  // http://css-tricks.com/snippets/css/prevent-long-urls-from-breaking-out-of-container/
 		-ms-word-break: break-all;
 
