@@ -62,7 +62,7 @@
   margin-top: 2.5rem;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 120, ../scss/_mixins.scss */
+  /* line 141, ../scss/_mixins.scss */
   .lutherLis.siteHome #tabs {
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
@@ -73,7 +73,7 @@
     -o-border-radius: 0;
     border-radius: 0;
   }
-  /* line 125, ../scss/_mixins.scss */
+  /* line 146, ../scss/_mixins.scss */
   .lutherLis.siteHome .tabs .tab-title {
     		/*&:nth-child(4n+1).active a {
     			border-color: $lc-green;
@@ -91,7 +91,7 @@
     			border-color: $lc-yellow;
     		}*/
   }
-  /* line 127, ../scss/_mixins.scss */
+  /* line 148, ../scss/_mixins.scss */
   .lutherLis.siteHome .tabs .tab-title a {
     background: #FFF !important;
     display: block;
@@ -109,7 +109,7 @@
     -webkit-border-top-right-radius: 6px;
     border-top-right-radius: 6px;
   }
-  /* line 157, ../scss/_mixins.scss */
+  /* line 178, ../scss/_mixins.scss */
   .lutherLis.siteHome .tabs .tab-title.active a {
     border-left: none;
     border-top-width: 6px;
@@ -118,11 +118,11 @@
     background: #f6f6f6 !important;
     color: #444444 !important;
   }
-  /* line 168, ../scss/_mixins.scss */
+  /* line 189, ../scss/_mixins.scss */
   .lutherLis.siteHome .tabs-content {
     margin-top: -0.1875rem;
   }
-  /* line 171, ../scss/_mixins.scss */
+  /* line 192, ../scss/_mixins.scss */
   .lutherLis.siteHome .tabs-content .content {
     padding: 1.25rem;
     background: #f6f6f6;
@@ -142,7 +142,7 @@
     				border-color: $lc-yellow;
     			}*/
   }
-  /* line 175, ../scss/_mixins.scss */
+  /* line 196, ../scss/_mixins.scss */
   .lutherLis.siteHome .tabs-content .content.active {
     display: block;
     border: none;
@@ -163,12 +163,19 @@
     border-bottom: 2px solid #ccc;
   }
 }
-/* line 108, ../scss/sites/lis.scss */
-.lutherLis.siteHome #tabs .tabs-content .pane-content strong {
-  margin-bottom: 1.5rem;
-  display: block;
+/* line 105, ../scss/sites/lis.scss */
+.lutherLis.siteHome #tabs .tabs-content h3 {
+  margin-top: 0.75rem;
 }
-/* line 115, ../scss/sites/lis.scss */
-.lutherLis.siteHome #tabs input[type="submit"] {
-  margin-top: 1.5rem;
+/* line 110, ../scss/sites/lis.scss */
+.lutherLis.siteHome #tabs .tabs-content #fragment-1 span a {
+  font-size: 0.875rem;
+}
+/* line 114, ../scss/sites/lis.scss */
+.lutherLis.siteHome #tabs .tabs-content #fragment-1 img {
+  float: right;
+}
+/* line 120, ../scss/sites/lis.scss */
+.lutherLis.siteHome #tabs .tabs-content #lg_search_form input[type="submit"] {
+  margin-top: 2rem;
 }
