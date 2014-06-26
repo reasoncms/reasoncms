@@ -2945,8 +2945,6 @@ body #wrapper #post-footer a {
 }
 /* line 731, scss/_minisite.scss */
 #minisite .contentMain + .contentPost {
-  border-top: 1px solid #e9e9e9;
-  padding-top: 2.5rem;
   margin-top: 2.5rem;
 }
 
