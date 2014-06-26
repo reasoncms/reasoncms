@@ -388,6 +388,9 @@ $GLOBALS['_reason_page_types_local'] = array(
 	'norsecard' => array(
 		'main_post' => 'norsecard',
 	),
+	'norse_calendar' => array(
+		'main_post_3' => 'norse_calendar',
+	),
 	'open_id' => array(
 		'main_post'=>'open_id',
 	),
