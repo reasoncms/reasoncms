@@ -46,6 +46,10 @@
 						}
 					}
 
+					&:last-child {
+						margin-bottom: 0;
+					}
+
 					.highslide {
 						display: block;
 						margin-bottom: $column-gutter/2;
@@ -71,6 +75,37 @@
 					.desc {
 						*:last-child {
 							margin-bottom: 0;
+							padding-bottom: 0;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	#relatedSections {
+
+		#av {
+
+			.moduleNav {
+				
+				ul {
+					margin: 0;
+
+					li {
+						padding: 0;
+						border-bottom: 0;
+
+						@media
+						#{$small-high-up} {
+							@include grid-column($columns:16, $collapse:true);
+
+							&:nth-child(2n+1) {
+								clear: none;
+							}
+						}
+
+						&:last-child {
 							padding-bottom: 0;
 						}
 					}
