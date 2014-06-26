@@ -686,20 +686,23 @@ blockquote {
   overflow-x: scroll !important;
   border: 1px solid #e9e9e9;
   padding: 1px;
+  margin-bottom: 2.5rem;
 }
-/* line 175, scss/_type.scss */
+/* line 176, scss/_type.scss */
 .tableSorterWrap table,
 .tableWrap table {
   border: none;
+  width: 100%;
+  margin-bottom: 0;
 }
-/* line 179, scss/_type.scss */
+/* line 182, scss/_type.scss */
 .tableSorterWrap .tablesorter,
 .tableWrap .tablesorter {
   overflow-x: scroll !important;
   border: none;
 }
 
-/* line 191, scss/_type.scss */
+/* line 194, scss/_type.scss */
 a.more,
 .pubLinks a,
 p.more a {
@@ -709,7 +712,7 @@ p.more a {
   font-weight: 700;
   text-transform: uppercase;
 }
-/* line 198, scss/_type.scss */
+/* line 201, scss/_type.scss */
 a.more:hover,
 .pubLinks a:hover,
 p.more a:hover {
@@ -717,27 +720,27 @@ p.more a:hover {
 }
 
 /* Feeds */
-/* line 205, scss/_type.scss */
+/* line 208, scss/_type.scss */
 #relatedPub .post h4 {
   font-family: "Roboto Slab", serif;
   font-size: 1.125rem;
   font-weight: 400;
 }
 
-/* line 211, scss/_type.scss */
+/* line 214, scss/_type.scss */
 time {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
   font-weight: 300;
 }
 
-/* line 216, scss/_type.scss */
+/* line 219, scss/_type.scss */
 p:empty {
   display: none !important;
 }
 
 /* Nav
 *******************************************/
-/* line 224, scss/_type.scss */
+/* line 227, scss/_type.scss */
 nav {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
 }
@@ -5952,46 +5955,63 @@ form table td {
   overflow: hidden;
 }
 
-/* Inline Images (Main content areas only -- no sidebars) */
-/* line 96, scss/modules/_images.scss */
+/* Inline Images */
+/* line 97, scss/modules/_images.scss */
 #pageContent img, .fullPost .text img, #faq .answer img {
   width: auto;
   max-width: 100%;
   margin: 0 auto 1rem;
 }
-/* line 104, scss/modules/_images.scss */
+/* line 105, scss/modules/_images.scss */
 #pageContent img.left, #pageContent img[align="left"], #pageContent img.right, #pageContent img[align="right"], .fullPost .text img.left, .fullPost .text img[align="left"], .fullPost .text img.right, .fullPost .text img[align="right"], #faq .answer img.left, #faq .answer img[align="left"], #faq .answer img.right, #faq .answer img[align="right"] {
   float: none !important;
   clear: left;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 96, scss/modules/_images.scss */
+  /* line 97, scss/modules/_images.scss */
   #pageContent img, .fullPost .text img, #faq .answer img {
     width: auto;
     max-width: 100%;
     margin: 0 0 1rem;
   }
-  /* line 115, scss/modules/_images.scss */
+  /* line 116, scss/modules/_images.scss */
   #pageContent img.left, #pageContent img[align="left"], .fullPost .text img.left, .fullPost .text img[align="left"], #faq .answer img.left, #faq .answer img[align="left"] {
     margin-right: 2.5rem;
     float: left !important;
   }
-  /* line 121, scss/modules/_images.scss */
+  /* line 122, scss/modules/_images.scss */
   #pageContent img.right, #pageContent img[align="right"], .fullPost .text img.right, .fullPost .text img[align="right"], #faq .answer img.right, #faq .answer img[align="right"] {
     margin-left: 2.5rem;
     float: right !important;
   }
-  /* line 129, scss/modules/_images.scss */
+  /* line 130, scss/modules/_images.scss */
   #pageContent img.left, #pageContent img[align="left"], #pageContent img.right, #pageContent img[align="right"], .fullPost .text img.left, .fullPost .text img[align="left"], .fullPost .text img.right, .fullPost .text img[align="right"], #faq .answer img.left, #faq .answer img[align="left"], #faq .answer img.right, #faq .answer img[align="right"] {
     max-width: 40%;
   }
 }
-/* line 137, scss/modules/_images.scss */
+/* line 138, scss/modules/_images.scss */
 #pageContent .callout img,
 #pageContent .callOut img, .fullPost .text .callout img,
 .fullPost .text .callOut img, #faq .answer .callout img,
 #faq .answer .callOut img {
   width: auto;
+}
+
+/* line 145, scss/modules/_images.scss */
+#relatedSections .blurb img {
+  width: auto;
+  max-width: 100%;
+  margin: 0 0 1rem;
+}
+/* line 151, scss/modules/_images.scss */
+#relatedSections .blurb img.left, #relatedSections .blurb img[align="left"] {
+  margin-right: 2.5rem;
+  float: left !important;
+}
+/* line 157, scss/modules/_images.scss */
+#relatedSections .blurb img.right, #relatedSections .blurb img[align="right"] {
+  margin-left: 2.5rem;
+  float: right !important;
 }
 
 /* line 4, scss/font-awesome/_core.scss */

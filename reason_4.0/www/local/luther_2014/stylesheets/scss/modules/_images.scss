@@ -84,13 +84,14 @@
 
 
 
-/* Inline Images (Main content areas only -- no sidebars) */
+/* Inline Images */
 
 // Inline images are a little tricky.
 // The goal is to have inline images look great at any screen size, any wysiwyg alignment, and in any column configuration.
 // Below is the ugly result.
 
 // DEFAULT (ALL COLUMN LAYOUTS)
+// (Main content areas only -- no sidebars)
 #{$wysiwyg-content-area} {
 
 	img { // Images are full width on small screens
@@ -136,6 +137,26 @@
 	.callOut { // If images are in a callout, don't resize (Especially important for Ideas & Creations blog)
 		img {
 			width: auto;
+		}
+	}
+}
+
+#{$wysiwyg-related-area} {
+	img {
+		width: auto;  // display image at native resolution
+		max-width: 100%;  // but no bigger than its container
+		margin: 0 0 rem-calc(16); // space out the bottom
+
+		&.left,
+		&[align="left"] { // align left images left, and pad out the right
+			margin-right: $column-gutter;
+			float: left !important;
+		}
+
+		&.right,
+		&[align="right"] { // align right images right, and pad out the left
+			margin-left: $column-gutter;
+			float: right !important;
 		}
 	}
 }
