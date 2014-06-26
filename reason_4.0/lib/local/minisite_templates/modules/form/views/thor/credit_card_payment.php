@@ -1,8 +1,8 @@
-<?
+<?php  
+
 reason_include_once('minisite_templates/modules/form/views/thor/luther_default.php');
 include_once(WEB_PATH.'stock/pfproclass.php'); //<<<< Change this
 $GLOBALS[ '_form_view_class_names' ][ basename( __FILE__, '.php') ] = 'CreditCardThorForm';
-
 
 /**
  * @todo  ! take out Scott's code regarding Item List, etc. If this is done take change how
@@ -47,8 +47,8 @@ $GLOBALS[ '_form_view_class_names' ][ basename( __FILE__, '.php') ] = 'CreditCar
  * @author Steve Smith
  * 
  */
-
-class CreditCardThorForm extends LutherDefaultThorForm
+ 
+class CreditCardThorForm extends DefaultThorForm
 {
 	var $_log_errors = true;
 	var $no_session = array( 'credit_card_number' );
@@ -59,9 +59,8 @@ class CreditCardThorForm extends LutherDefaultThorForm
 	var $expense_budget_number;
 	var $revenue_budget_number;
 	var $transaction_comment;
-	var $pfresult;  // added so child classes could reference the results
 
-	
+
 	var $elements = array(
 		'payment_note' => array(
 			'type' => 'comment',
@@ -152,21 +151,21 @@ class CreditCardThorForm extends LutherDefaultThorForm
 	  $head_items = $model->get_head_items();
 	  $head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/disable_submit.js');
 	}
-			
-	
+
+
 	function on_every_time()
 	{
-		
+
 		parent :: on_every_time();
-		
+
 		// Don't take credit cards on an unencrypted connection!+
 		// if( !on_secure_page() )
 		// {		
-		
+
 		// 	header( 'Location: '.get_current_url( 'https' ) );
 		// 	exit;
 		// }
-		
+
 
 
 
@@ -185,7 +184,7 @@ class CreditCardThorForm extends LutherDefaultThorForm
 		// Scott Bassford 7/6/2009 - if we have a field called "Item List" then prepopulate fields, if no data then push the to the first page somehow
 		if ($this->budget_number_element = $this->get_element_name_from_label('Item List'))
 		{
-			
+
 
 			if ( !isset( $_POST['ccprepopulate'] ) && ( !isset( $_POST['credit_card_name'] )))  { header("Location: /getdowngiveback/register/"); echo 'Redirecting to list.'; die ; }
 
@@ -196,7 +195,7 @@ class CreditCardThorForm extends LutherDefaultThorForm
 						$this->change_element_type('payment_amount', 'solidtext');
 						$this->change_element_type($this->get_element_name_from_label('Item List'), 'solidtext');
 			}
-			
+
 
 		}
 		//if (!preg_match('/\d{2}-\d{4}-\d{4}-\d{4}/', $this->get_value($this->budget_number_element)))
@@ -216,14 +215,14 @@ class CreditCardThorForm extends LutherDefaultThorForm
 
 
 		// Turn on test mode when appropriate
-		// if(THIS_IS_A_DEVELOPMENT_REASON_INSTANCE || !empty( $this->_request[ 'tm' ] ) )
-		// {
+		if(THIS_IS_A_DEVELOPMENT_REASON_INSTANCE || !empty( $this->_request[ 'tm' ] ) )
+		{
 			$this->is_in_testing_mode = true;
-		// }
-		// else
-		// {
+		}
+		else
+		{
 			$this->is_in_testing_mode = false;
-		// }
+		}
 
                 $user = reason_check_authentication();
                 if ($user == 'smitst01'){
@@ -237,7 +236,7 @@ class CreditCardThorForm extends LutherDefaultThorForm
 		// pass a single payment amount, make that the value of the placeholder field,
 		// rename it, and make it uneditable. If they didn't add a Payment
 		// Amount field, rename and use the placeholder one.
-		
+
 		/**
 		 * @todo  ! ignore case when looking for payment amount
 		 */
@@ -263,15 +262,15 @@ class CreditCardThorForm extends LutherDefaultThorForm
 			$this->set_display_name('payment_amount', 'Payment Amount');
 			$this->payment_element = 'payment_amount';
 		}
-		
+
 		// Make sure the form creator has included an expense_budget_number and a revenue_budget_number field, and that they contain 
 		// properly formatted budget numbers.
 		// Modified by SLS
-		
+
 		/**
 		 * @todo  ! ignore case when looking for expense and revenue budget numbers
 		 */
-		
+
 		if ($this->expense_budget_number = $this->get_element_name_from_label('Expense Budget Number'))
 		{
 			// scott 9/4/2009 - Chuck Rhia says we want to use open text on some of the Budget Numbers.... 
@@ -283,7 +282,7 @@ class CreditCardThorForm extends LutherDefaultThorForm
 		} else {
 			$this->set_error('credit_card_type','Form Setup Error: Hidden "Expense Budget Number" field is required in Reason form.');		
 		}
-		
+
 		if ($this->revenue_budget_number = $this->get_element_name_from_label('Revenue Budget Number'))
 		{
 			// scott 9/4/2009 - Chuck Rhia says we want to use open text on some of the Budget Numbers.... 
@@ -299,7 +298,7 @@ class CreditCardThorForm extends LutherDefaultThorForm
 		// Make the date range for card expiration sane
 		$this->change_element_type('credit_card_expiration_year','numrange',array('start'=>date('Y'),'end'=>(date('Y')+15),'display_name' => 'Expiration Year'));
 	}
-		
+
 	function pre_show_form()
 	{
 		if( $this->is_in_testing_mode )
@@ -334,7 +333,7 @@ class CreditCardThorForm extends LutherDefaultThorForm
 			$expiration_mm = str_pad($this->get_value('credit_card_expiration_month'), 2, '0', STR_PAD_LEFT);
 			$expiration_yy = substr($this->get_value('credit_card_expiration_year'), 2, 2);
 			$expiration_mmyy = $expiration_mm.$expiration_yy;
-			
+
 			foreach($this->elements as $element_name => $vals)
 			{
 				if($this->get_value($element_name))
@@ -349,7 +348,7 @@ class CreditCardThorForm extends LutherDefaultThorForm
 					}
 				}
 			}
-			
+
 			$model =& $this->get_model();
 
                         $pf->set_info(
@@ -366,17 +365,17 @@ class CreditCardThorForm extends LutherDefaultThorForm
                                 $this->get_value('billing_zip'),
                                 $this->get_value($email_name)
 			);
-						
+
 			/* THIS IS WHERE THE TRANSACTION TAKES PLACE */
 			// Test mode: $result = $pf->transact('test');
 			// Live mode: $result = $pf->transact();
 			if($this->is_in_testing_mode)
 			{
-				$this->pfresult = $pf->transact('test');
+				$pfresult = $pf->transact('test');
 			}
 			else
 			{
-				$this->pfresult = $pf->transact();
+				$pfresult = $pf->transact();
 			}
 			 if (!$pf->approved)
 			 {
@@ -387,35 +386,35 @@ class CreditCardThorForm extends LutherDefaultThorForm
 			{
 			//// DO YOUR OWN LOGGING HERE
 				connectDB('reason_transactions');
-				
+
 				$billing_address = $this->get_value('billing_street_address') . "\n" .
 								$this->get_value('billing_city') . ", " .
 								$this->get_value('billing_state_province') . "  " .
 								$this->get_value('billing_zip') . "\n" .
 								$this->get_value('billing_country') . "\n";
-				
+
 				$query = 'INSERT INTO transactions SET
-					REFNUM = "'.$this->pfresult['PNREF'].'",
+					REFNUM = "'.$pfresult['PNREF'].'",
 					source = "'.addslashes( $pf->comment2 ). '", 
 					amount = "'.addslashes( $pf->amount ). '", 
 					name_on_card = "'.addslashes( $this->get_value('credit_card_name') ). '", 
 					billing_address = "'.addslashes( $billing_address ). '", 
 					card_number = "'.addslashes( obscure_credit_card_number( $this->get_value('credit_card_number') ) ). '", 
 					card_expiration = "'.addslashes( $expiration_mmyy ). '"'; 
-					
+
 				$dbresult = db_query($query, 'We were unable to record your transaction in our database. 
 					Your credit card has been charged, but you should contact the owner of this form
 					to verify that your payment was received.', false);
-				
+
 				connectDB(REASON_DB);
 			}
 		}
 	}
-	
+
 	function email_form_data_to_submitter()
 	{
 		$model =& $this->get_model();
-		
+
 		// Figure out who would get an email confirmation (either through a 
 		// Your Email field or by knowing the netid of the submitter
 		if (!$recipient = $this->get_value_from_label('Your Email'))
@@ -423,7 +422,7 @@ class CreditCardThorForm extends LutherDefaultThorForm
 			if ($submitter = $model->get_email_of_submitter())
 				$recipient = $submitter.'@luther.edu';
 		}
-		
+
 		// If we're supposed to send a confirmation and we have an address...
 		if ($recipient)
 		{
@@ -436,32 +435,36 @@ class CreditCardThorForm extends LutherDefaultThorForm
 			} else {
 				$sender = 'noreply@luther.edu';
 			}
-			
+
 			$thank_you = $model->get_thank_you_message();
-			
+
 			$email_values = $model->get_values_for_email_submitter_view();
-	
+
 			if (!($subject = $this->get_value_from_label('Confirmation Subject')))
 				$subject = 'Thank you for your payment';
-			
+
 			$values = "\n";
 			if ($model->should_email_data())
 			{
 				foreach ($email_values as $key => $val)
 				{
-					$values .= sprintf("\n%s:\n   %s\n", $val['label'], $val['value']);
-				}
+				   if(!empty($this->get_value_from_label($val['label']))){
+					$values .= sprintf("\n<strong>%s:</strong>\t   %s\n", $val['label'], $val['value']);
+				   }
+			        }
 			}
-			
+
+			$submission_time = date("Y-m-d H:i:s");
+			$values .= sprintf("\n<strong>%s:</strong>\t	%s\n", 'Form Submission Time', $submission_time);	
 			$html_body = $thank_you . nl2br($values);
 			$txt_body = html_entity_decode(strip_tags($html_body));
-			
+
 			$mailer = new Email($recipient, $sender, $sender, $subject, $txt_body, $html_body);
 			$mailer->send();
 		}		
 	}
-	
-	
+
+
 }
 
 function obscure_credit_card_number( $cc_num )
@@ -479,3 +482,7 @@ function obscure_credit_card_number( $cc_num )
 
 
 ?>
+
+
+
+
