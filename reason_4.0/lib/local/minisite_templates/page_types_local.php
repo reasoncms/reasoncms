@@ -210,6 +210,14 @@ $GLOBALS['_reason_page_types_local'] = array(
 	),
 	'gift_page_engine' => array(
 		'main_post' => 'gift_form/gift_form',
+		'post_main_head' => array(
+			'module' => 'image_sidebar',
+			'num_to_display' => 1,
+			'thumbnail_width' => 1200,
+			'thumbnail_crop' => 'fit',
+			'caption_flag' => false,
+		),
+		'pre_sidebar_2' => '',
 	),
 	'homecoming_registration' => array(
 		'main_post' => 'homecoming_registration/homecoming_registration',
@@ -220,6 +228,32 @@ $GLOBALS['_reason_page_types_local'] = array(
 	'image_slideshow' => array(
 		'main_post_2' => 'luther_image_slideshow',
 		'pre_sidebar_2' => '',
+	),
+	'landing' => array(
+		'pre_sidebar' => 'blurb',
+		'pre_sidebar_2' => get_luther_spotlight(),
+		'sidebar' => array(
+			'module' => 'luther_av',
+			'full_size' => true,
+		),
+		'sidebar_2' => array(
+			'module' => 'events_mini',
+			'ideal_count' => 4,
+		),
+		'post_sidebar' => array(
+			'module'=>'publication',
+			'related_mode'=>'true',
+			'max_num_items' => 3,
+			'css' => '',
+			'markup_generator_info' => array(
+				'list_item' => array(
+					'classname' => 'RelatedListItemNoDescriptionMarkupGenerator', 
+					'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/related_item_no_description.php',
+				),
+			),
+		),
+		'post_sidebar_2' => 'luther_flickr_slideshow',
+		'post_sidebar_3' => 'twitter',
 	),
 	'landing_blog' => array(
 		'main_post' => array(
