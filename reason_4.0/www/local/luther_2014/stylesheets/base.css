@@ -440,10 +440,6 @@ blockquote {
 
 /* Wysiwyg Formatting */
 /* line 70, scss/_type.scss */
-#pageContent *:last-child, .fullPost .text *:last-child, #relatedSections .blurb *:last-child, #contentSections .blurb *:last-child, #faq .answer *:last-child, .flash-notice *:last-child {
-  margin-bottom: 0;
-}
-/* line 74, scss/_type.scss */
 #pageContent a, .fullPost .text a, #relatedSections .blurb a, #contentSections .blurb a, #faq .answer a, .flash-notice a {
   -ms-word-break: break-all;
   /* Be VERY careful with this, breaks normal words wh_erever */
@@ -454,11 +450,11 @@ blockquote {
   -moz-hyphens: auto;
   hyphens: auto;
 }
-/* line 88, scss/_type.scss */
+/* line 84, scss/_type.scss */
 #pageContent p:empty, .fullPost .text p:empty, #relatedSections .blurb p:empty, #contentSections .blurb p:empty, #faq .answer p:empty, .flash-notice p:empty {
   display: none;
 }
-/* line 94, scss/_type.scss */
+/* line 90, scss/_type.scss */
 #pageContent ol,
 #pageContent ul,
 #pageContent dl, .fullPost .text ol,
@@ -476,7 +472,7 @@ blockquote {
   padding-bottom: 0.375rem;
   margin-left: 2rem;
 }
-/* line 98, scss/_type.scss */
+/* line 94, scss/_type.scss */
 #pageContent ol:last-child,
 #pageContent ul:last-child,
 #pageContent dl:last-child, .fullPost .text ol:last-child,
@@ -492,11 +488,11 @@ blockquote {
 .flash-notice dl:last-child {
   padding-bottom: 0;
 }
-/* line 103, scss/_type.scss */
+/* line 99, scss/_type.scss */
 #pageContent li, .fullPost .text li, #relatedSections .blurb li, #contentSections .blurb li, #faq .answer li, .flash-notice li {
   line-height: 2;
 }
-/* line 108, scss/_type.scss */
+/* line 104, scss/_type.scss */
 #pageContent ol li,
 #pageContent ol ol ol ol li, .fullPost .text ol li,
 .fullPost .text ol ol ol ol li, #relatedSections .blurb ol li,
@@ -506,7 +502,7 @@ blockquote {
 .flash-notice ol ol ol ol li {
   list-style-type: decimal;
 }
-/* line 110, scss/_type.scss */
+/* line 106, scss/_type.scss */
 #pageContent ol ol li,
 #pageContent ol ol ol ol ol li, .fullPost .text ol ol li,
 .fullPost .text ol ol ol ol ol li, #relatedSections .blurb ol ol li,
@@ -516,7 +512,7 @@ blockquote {
 .flash-notice ol ol ol ol ol li {
   list-style-type: lower-alpha;
 }
-/* line 112, scss/_type.scss */
+/* line 108, scss/_type.scss */
 #pageContent ol ol ol li,
 #pageContent ol ol ol ol ol ol li, .fullPost .text ol ol ol li,
 .fullPost .text ol ol ol ol ol ol li, #relatedSections .blurb ol ol ol li,
@@ -526,7 +522,7 @@ blockquote {
 .flash-notice ol ol ol ol ol ol li {
   list-style-type: lower-roman;
 }
-/* line 115, scss/_type.scss */
+/* line 111, scss/_type.scss */
 #pageContent ul li,
 #pageContent ul ul ul ul li, .fullPost .text ul li,
 .fullPost .text ul ul ul ul li, #relatedSections .blurb ul li,
@@ -536,7 +532,7 @@ blockquote {
 .flash-notice ul ul ul ul li {
   list-style-type: disc;
 }
-/* line 117, scss/_type.scss */
+/* line 113, scss/_type.scss */
 #pageContent ul ul li,
 #pageContent ul ul ul ul ul li, .fullPost .text ul ul li,
 .fullPost .text ul ul ul ul ul li, #relatedSections .blurb ul ul li,
@@ -546,7 +542,7 @@ blockquote {
 .flash-notice ul ul ul ul ul li {
   list-style-type: circle;
 }
-/* line 119, scss/_type.scss */
+/* line 115, scss/_type.scss */
 #pageContent ul ul ul li,
 #pageContent ul ul ul ul ul ul li, .fullPost .text ul ul ul li,
 .fullPost .text ul ul ul ul ul ul li, #relatedSections .blurb ul ul ul li,
@@ -556,11 +552,11 @@ blockquote {
 .flash-notice ul ul ul ul ul ul li {
   list-style-type: square;
 }
-/* line 121, scss/_type.scss */
+/* line 117, scss/_type.scss */
 #pageContent a:link, .fullPost .text a:link, #relatedSections .blurb a:link, #contentSections .blurb a:link, #faq .answer a:link, .flash-notice a:link {
   text-decoration: underline;
 }
-/* line 126, scss/_type.scss */
+/* line 122, scss/_type.scss */
 #pageContent .callOut,
 #pageContent .callout, .fullPost .text .callOut,
 .fullPost .text .callout, #relatedSections .blurb .callOut,
@@ -572,18 +568,9 @@ blockquote {
   background: #e9e9e9;
   border: 1px solid #d0d0d0;
   padding: 1.25rem 1.66667rem;
+  margin-bottom: 1.5rem;
   *zoom: 1;
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
-}
-/* line 132, scss/_type.scss */
-#pageContent .callOut :not(.flash-notice),
-#pageContent .callout :not(.flash-notice), .fullPost .text .callOut :not(.flash-notice),
-.fullPost .text .callout :not(.flash-notice), #relatedSections .blurb .callOut :not(.flash-notice),
-#relatedSections .blurb .callout :not(.flash-notice), #contentSections .blurb .callOut :not(.flash-notice),
-#contentSections .blurb .callout :not(.flash-notice), #faq .answer .callOut :not(.flash-notice),
-#faq .answer .callout :not(.flash-notice), .flash-notice .callOut :not(.flash-notice),
-.flash-notice .callout :not(.flash-notice) {
-  margin-bottom: 1.5rem;
 }
 /* line 165, ../foundation/bower_components/foundation/scss/foundation/components/_global.scss */
 #pageContent .callOut:before, #pageContent .callOut:after,
@@ -612,7 +599,7 @@ blockquote {
 .flash-notice .callout:after {
   clear: both;
 }
-/* line 139, scss/_type.scss */
+/* line 133, scss/_type.scss */
 #pageContent .callOut *:last-child,
 #pageContent .callout *:last-child, .fullPost .text .callOut *:last-child,
 .fullPost .text .callout *:last-child, #relatedSections .blurb .callOut *:last-child,
@@ -622,7 +609,7 @@ blockquote {
 .flash-notice .callout *:last-child {
   margin-bottom: 0;
 }
-/* line 143, scss/_type.scss */
+/* line 137, scss/_type.scss */
 #pageContent .callOut.callout-success,
 #pageContent .callout.callout-success, .fullPost .text .callOut.callout-success,
 .fullPost .text .callout.callout-success, #relatedSections .blurb .callOut.callout-success,
@@ -633,7 +620,7 @@ blockquote {
   background: rgba(74, 133, 18, 0.25);
   border: 1px solid rgba(74, 133, 18, 0.5);
 }
-/* line 148, scss/_type.scss */
+/* line 142, scss/_type.scss */
 #pageContent .callOut.callout-warning,
 #pageContent .callout.callout-warning, .fullPost .text .callOut.callout-warning,
 .fullPost .text .callout.callout-warning, #relatedSections .blurb .callOut.callout-warning,
@@ -644,7 +631,7 @@ blockquote {
   background: rgba(232, 165, 0, 0.25);
   border: 1px solid rgba(232, 165, 0, 0.65);
 }
-/* line 153, scss/_type.scss */
+/* line 147, scss/_type.scss */
 #pageContent .callOut.callout-danger,
 #pageContent .callout.callout-danger, .fullPost .text .callOut.callout-danger,
 .fullPost .text .callout.callout-danger, #relatedSections .blurb .callOut.callout-danger,
@@ -655,7 +642,7 @@ blockquote {
   background: rgba(159, 33, 18, 0.25);
   border: 1px solid rgba(159, 33, 18, 0.45);
 }
-/* line 164, scss/_type.scss */
+/* line 158, scss/_type.scss */
 #pageContent h1 strong,
 #pageContent h2 strong,
 #pageContent h3 strong,
@@ -683,8 +670,12 @@ blockquote {
 .flash-notice h5 strong {
   font-weight: 400;
 }
+/* line 163, scss/_type.scss */
+#pageContent .flash-notice .callout, .fullPost .text .flash-notice .callout, #relatedSections .blurb .flash-notice .callout, #contentSections .blurb .flash-notice .callout, #faq .answer .flash-notice .callout, .flash-notice .flash-notice .callout {
+  margin-bottom: 0;
+}
 
-/* line 174, scss/_type.scss */
+/* line 172, scss/_type.scss */
 .tableSorterWrap,
 .tableWrap {
   overflow-x: scroll !important;
@@ -692,21 +683,21 @@ blockquote {
   padding: 1px;
   margin-bottom: 2.5rem;
 }
-/* line 180, scss/_type.scss */
+/* line 178, scss/_type.scss */
 .tableSorterWrap table,
 .tableWrap table {
   border: none;
   width: 100%;
   margin-bottom: 0;
 }
-/* line 186, scss/_type.scss */
+/* line 184, scss/_type.scss */
 .tableSorterWrap .tablesorter,
 .tableWrap .tablesorter {
   overflow-x: scroll !important;
   border: none;
 }
 
-/* line 198, scss/_type.scss */
+/* line 196, scss/_type.scss */
 a.more,
 .pubLinks a,
 p.more a {
@@ -716,7 +707,7 @@ p.more a {
   font-weight: 700;
   text-transform: uppercase;
 }
-/* line 205, scss/_type.scss */
+/* line 203, scss/_type.scss */
 a.more:hover,
 .pubLinks a:hover,
 p.more a:hover {
@@ -724,27 +715,27 @@ p.more a:hover {
 }
 
 /* Feeds */
-/* line 212, scss/_type.scss */
+/* line 210, scss/_type.scss */
 #relatedPub .post h4 {
   font-family: "Roboto Slab", serif;
   font-size: 1.125rem;
   font-weight: 400;
 }
 
-/* line 218, scss/_type.scss */
+/* line 216, scss/_type.scss */
 time {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
   font-weight: 300;
 }
 
-/* line 223, scss/_type.scss */
+/* line 221, scss/_type.scss */
 p:empty {
   display: none !important;
 }
 
 /* Nav
 *******************************************/
-/* line 231, scss/_type.scss */
+/* line 229, scss/_type.scss */
 nav {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
 }
@@ -2954,8 +2945,6 @@ body #wrapper #post-footer a {
 }
 /* line 731, scss/_minisite.scss */
 #minisite .contentMain + .contentPost {
-  border-top: 1px solid #e9e9e9;
-  padding-top: 2.5rem;
   margin-top: 2.5rem;
 }
 
@@ -5859,31 +5848,31 @@ form input[type="submit"]:active {
 }
 
 /* Image galleries include image slideshows and flickr slideshows */
-/* line 35, scss/modules/_image-galleries.scss */
+/* line 34, scss/modules/_image-galleries.scss */
 #relatedSections #galleryimages .flickr-image {
   float: left;
   padding: 2.5%;
   width: 20%;
 }
 @media only screen and (min-width: 30em) {
-  /* line 35, scss/modules/_image-galleries.scss */
+  /* line 34, scss/modules/_image-galleries.scss */
   #relatedSections #galleryimages .flickr-image {
     width: 14.2857143%;
   }
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 35, scss/modules/_image-galleries.scss */
+  /* line 34, scss/modules/_image-galleries.scss */
   #relatedSections #galleryimages .flickr-image {
     width: 25%;
   }
 }
 @media only screen and (min-width: 80em) {
-  /* line 35, scss/modules/_image-galleries.scss */
+  /* line 34, scss/modules/_image-galleries.scss */
   #relatedSections #galleryimages .flickr-image {
     width: 20%;
   }
 }
-/* line 60, scss/modules/_image-galleries.scss */
+/* line 58, scss/modules/_image-galleries.scss */
 #relatedSections #galleryimages .flickr-image img {
   width: 100%;
   -webkit-transition-property: all;
@@ -5900,7 +5889,7 @@ form input[type="submit"]:active {
   transition-timing-function: ease;
   border: 1px solid #FFF;
 }
-/* line 65, scss/modules/_image-galleries.scss */
+/* line 63, scss/modules/_image-galleries.scss */
 #relatedSections #galleryimages .flickr-image img:hover {
   -webkit-transition-property: all;
   -moz-transition-property: all;
@@ -5918,7 +5907,7 @@ form input[type="submit"]:active {
   -moz-box-shadow: #666666 0 0 4px;
   box-shadow: #666666 0 0 4px;
 }
-/* line 74, scss/modules/_image-galleries.scss */
+/* line 72, scss/modules/_image-galleries.scss */
 #relatedSections .flickr-set-container {
   float: left;
   padding: 2.5% 4%;
@@ -5928,57 +5917,57 @@ form input[type="submit"]:active {
 #relatedSections .flickr-set-container .hidden-container {
   display: none;
 }
-/* line 82, scss/modules/_image-galleries.scss */
+/* line 80, scss/modules/_image-galleries.scss */
 #relatedSections .flickr-set-container:nth-child(4n+1) {
   clear: left;
 }
-/* line 87, scss/modules/_image-galleries.scss */
+/* line 85, scss/modules/_image-galleries.scss */
 #relatedSections .flickr-set-container:hover h4 {
   color: #1073ce;
 }
 @media only screen and (min-width: 30em) {
-  /* line 74, scss/modules/_image-galleries.scss */
+  /* line 72, scss/modules/_image-galleries.scss */
   #relatedSections .flickr-set-container {
     width: 20%;
   }
-  /* line 96, scss/modules/_image-galleries.scss */
+  /* line 94, scss/modules/_image-galleries.scss */
   #relatedSections .flickr-set-container:nth-child(4n+1) {
     clear: none;
   }
-  /* line 100, scss/modules/_image-galleries.scss */
+  /* line 98, scss/modules/_image-galleries.scss */
   #relatedSections .flickr-set-container:nth-child(5n+1) {
     clear: left;
   }
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 74, scss/modules/_image-galleries.scss */
+  /* line 72, scss/modules/_image-galleries.scss */
   #relatedSections .flickr-set-container {
     width: 33.33333%;
   }
-  /* line 109, scss/modules/_image-galleries.scss */
+  /* line 107, scss/modules/_image-galleries.scss */
   #relatedSections .flickr-set-container:nth-child(5n+1) {
     clear: none;
   }
-  /* line 113, scss/modules/_image-galleries.scss */
+  /* line 111, scss/modules/_image-galleries.scss */
   #relatedSections .flickr-set-container:nth-child(3n+1) {
     clear: left;
   }
 }
 @media only screen and (min-width: 80em) {
-  /* line 74, scss/modules/_image-galleries.scss */
+  /* line 72, scss/modules/_image-galleries.scss */
   #relatedSections .flickr-set-container {
     width: 25%;
   }
-  /* line 122, scss/modules/_image-galleries.scss */
+  /* line 120, scss/modules/_image-galleries.scss */
   #relatedSections .flickr-set-container:nth-child(3n+1) {
     clear: none;
   }
-  /* line 126, scss/modules/_image-galleries.scss */
+  /* line 124, scss/modules/_image-galleries.scss */
   #relatedSections .flickr-set-container:nth-child(4n+1) {
     clear: left;
   }
 }
-/* line 131, scss/modules/_image-galleries.scss */
+/* line 129, scss/modules/_image-galleries.scss */
 #relatedSections .flickr-set-container img {
   width: 100%;
   -webkit-transition-property: all;
@@ -5997,7 +5986,7 @@ form input[type="submit"]:active {
   -moz-box-shadow: white 1.5px 1.5px 0, #cccccc 3px 3px 0, white 4.5px 4.5px 0, #cccccc 6px 6px 0;
   box-shadow: white 1.5px 1.5px 0, #cccccc 3px 3px 0, white 4.5px 4.5px 0, #cccccc 6px 6px 0;
 }
-/* line 136, scss/modules/_image-galleries.scss */
+/* line 134, scss/modules/_image-galleries.scss */
 #relatedSections .flickr-set-container img:hover {
   -webkit-transition-property: all;
   -moz-transition-property: all;
@@ -6015,7 +6004,7 @@ form input[type="submit"]:active {
   -moz-box-shadow: white 1.5px 1.5px 0, #999999 3px 3px 0, white 4.5px 4.5px 0, #999999 6px 6px 0;
   box-shadow: white 1.5px 1.5px 0, #999999 3px 3px 0, white 4.5px 4.5px 0, #999999 6px 6px 0;
 }
-/* line 142, scss/modules/_image-galleries.scss */
+/* line 140, scss/modules/_image-galleries.scss */
 #relatedSections .flickr-set-container h4 {
   display: block;
   margin: 0.5rem 0 0;
@@ -6026,7 +6015,7 @@ form input[type="submit"]:active {
   color: #6f6f6f;
 }
 
-/* line 158, scss/modules/_image-galleries.scss */
+/* line 156, scss/modules/_image-galleries.scss */
 #contentSections #galleryimages {
   *zoom: 1;
 }
@@ -6039,18 +6028,64 @@ form input[type="submit"]:active {
 #contentSections #galleryimages:after {
   clear: both;
 }
-/* line 162, scss/modules/_image-galleries.scss */
+/* line 160, scss/modules/_image-galleries.scss */
+#contentSections #galleryimages .reason-image {
+  width: 12.5rem;
+  height: 12.5rem;
+}
+@media only screen and (max-width: 40em) {
+  /* line 160, scss/modules/_image-galleries.scss */
+  #contentSections #galleryimages .reason-image {
+    margin: 0 auto;
+  }
+}
+@media only screen and (min-width: 30em) {
+  /* line 160, scss/modules/_image-galleries.scss */
+  #contentSections #galleryimages .reason-image {
+    float: left;
+    margin: 0.5rem;
+  }
+}
+/* line 175, scss/modules/_image-galleries.scss */
+#contentSections #galleryimages .reason-image img {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  border: 1px solid #FFF;
+}
+/* line 184, scss/modules/_image-galleries.scss */
+#contentSections #galleryimages .reason-image img:hover {
+  -webkit-transition-property: all;
+  -moz-transition-property: all;
+  -o-transition-property: all;
+  transition-property: all;
+  -webkit-transition-duration: 0.5s;
+  -moz-transition-duration: 0.5s;
+  -o-transition-duration: 0.5s;
+  transition-duration: 0.5s;
+  -webkit-transition-timing-function: ease;
+  -moz-transition-timing-function: ease;
+  -o-transition-timing-function: ease;
+  transition-timing-function: ease;
+  -webkit-box-shadow: #666666 0 0 4px;
+  -moz-box-shadow: #666666 0 0 4px;
+  box-shadow: #666666 0 0 4px;
+}
+/* line 191, scss/modules/_image-galleries.scss */
 #contentSections #galleryimages .flickr-image {
   float: left;
   padding: 4%;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 162, scss/modules/_image-galleries.scss */
+  /* line 191, scss/modules/_image-galleries.scss */
   #contentSections #galleryimages .flickr-image {
     padding: 2.5%;
   }
 }
-/* line 171, scss/modules/_image-galleries.scss */
+/* line 200, scss/modules/_image-galleries.scss */
 #contentSections #galleryimages .flickr-image img {
   width: 100%;
   opacity: .9;
@@ -6068,7 +6103,7 @@ form input[type="submit"]:active {
   -o-transition-timing-function: ease;
   transition-timing-function: ease;
 }
-/* line 177, scss/modules/_image-galleries.scss */
+/* line 206, scss/modules/_image-galleries.scss */
 #contentSections #galleryimages .flickr-image img:hover {
   -webkit-transition-property: all;
   -moz-transition-property: all;
@@ -6087,7 +6122,7 @@ form input[type="submit"]:active {
   box-shadow: #666666 0 0 4px;
   opacity: 1;
 }
-/* line 187, scss/modules/_image-galleries.scss */
+/* line 216, scss/modules/_image-galleries.scss */
 #contentSections .flickr-set-container {
   *zoom: 1;
   float: left;
@@ -6107,12 +6142,12 @@ form input[type="submit"]:active {
   display: none;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 187, scss/modules/_image-galleries.scss */
+  /* line 216, scss/modules/_image-galleries.scss */
   #contentSections .flickr-set-container {
     padding: 2.5%;
   }
 }
-/* line 198, scss/modules/_image-galleries.scss */
+/* line 227, scss/modules/_image-galleries.scss */
 #contentSections .flickr-set-container img {
   width: 100%;
   -webkit-transition-property: all;
@@ -6131,7 +6166,7 @@ form input[type="submit"]:active {
   -moz-box-shadow: white 1.5px 1.5px 0, #cccccc 3px 3px 0, white 4.5px 4.5px 0, #cccccc 6px 6px 0;
   box-shadow: white 1.5px 1.5px 0, #cccccc 3px 3px 0, white 4.5px 4.5px 0, #cccccc 6px 6px 0;
 }
-/* line 203, scss/modules/_image-galleries.scss */
+/* line 232, scss/modules/_image-galleries.scss */
 #contentSections .flickr-set-container img:hover {
   -webkit-transition-property: all;
   -moz-transition-property: all;
@@ -6149,7 +6184,7 @@ form input[type="submit"]:active {
   -moz-box-shadow: white 1.5px 1.5px 0, #999999 3px 3px 0, white 4.5px 4.5px 0, #999999 6px 6px 0;
   box-shadow: white 1.5px 1.5px 0, #999999 3px 3px 0, white 4.5px 4.5px 0, #999999 6px 6px 0;
 }
-/* line 209, scss/modules/_image-galleries.scss */
+/* line 238, scss/modules/_image-galleries.scss */
 #contentSections .flickr-set-container h4 {
   display: block;
   margin: 0.5rem 0 0;
@@ -6160,7 +6195,7 @@ form input[type="submit"]:active {
   color: #6f6f6f;
 }
 
-/* line 226, scss/modules/_image-galleries.scss */
+/* line 255, scss/modules/_image-galleries.scss */
 .fancybox-title a:link, .fancybox-title a:visited, .fancybox-title a:active {
   color: #ededed;
   float: right;
@@ -6168,7 +6203,7 @@ form input[type="submit"]:active {
   padding-bottom: 5px;
   text-decoration: none;
 }
-/* line 234, scss/modules/_image-galleries.scss */
+/* line 263, scss/modules/_image-galleries.scss */
 .fancybox-title a:hover, .fancybox-title a:focus {
   color: #556677;
 }
