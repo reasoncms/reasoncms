@@ -164,11 +164,9 @@ function toggle_recur_fields()
 	if (!$("input[name='installment_type']:checked").val() ||
 	     $("input[name='installment_type']:checked").val() == 'Onetime')
 	{
-		$("input#installment_start_date").parent().parent().hide(500);	
-		$("select#installment_end_dateElement").parent().parent().hide(500);	
+		$("#recurgroupItem").hide(500);
 	} else {
-		$("input#installment_start_date").parent().parent().show(500);	
-		$("select#installment_end_dateElement").parent().parent().show(500);	
+		$("#recurgroupItem").show(500);
 	}
 }
 
