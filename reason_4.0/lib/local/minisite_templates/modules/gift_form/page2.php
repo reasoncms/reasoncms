@@ -35,7 +35,7 @@ class GiftPageTwoForm extends FormStep
 		'spouse_last_name' => array(
 			'type' => 'text',
 			'size' => 20,
-			'comments' => '<br>if applicable',
+			// 'comments' => 'if applicable',
 		),
 		'luther_affiliation' => array(
 			'display_name' => 'I am a Luther',
@@ -46,7 +46,7 @@ class GiftPageTwoForm extends FormStep
 			'type' => 'numrange',
 			'start' => 1924,
 			'end' => 2010,
-			'comments' => '<br>Choose either your class or your spouse\'s class',
+			'comments' => '<div class="smallText comment">Choose either your class or your spouse\'s class.</div>',
 		),'address_note' => array(
 			'type' => 'comment',
 			'text' => '<h3>Address and Contact Information</h3>',
@@ -165,7 +165,7 @@ class GiftPageTwoForm extends FormStep
 		'spouse_name_group' => array ( 'type' => 'inline',
 					'elements' => array( 'spouse_first_name', 'spouse_last_name'),
 					'args' => array('use_element_labels' => false,
-							'display_name' => 'Spouse&nbsp;Name'),
+							'display_name' => 'Spouse Name (if applicable)'),
 					),
 		'phone_group' => array ('type' => 'inline',
 					'elements' =>  array( 'phone', 'phone_type' ),

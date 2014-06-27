@@ -94,14 +94,14 @@ form {
 
 	}
 
-	input[type="checkbox"] + label,
-	input[type="radio"] + label {
-		display: inline-block;
-		margin-#{$default-float}: $form-spacing * .5;
-		margin-#{$opposite-direction}: $form-spacing;
-		margin-bottom: 0;
-		vertical-align: baseline;
-	}
+	// input[type="checkbox"] + label,
+	// input[type="radio"] + label {
+	// 	display: inline-block;
+	// 	margin-#{$default-float}: $form-spacing * .5;
+	// 	margin-#{$opposite-direction}: $form-spacing;
+	// 	margin-bottom: 0;
+	// 	vertical-align: baseline;
+	// }
 
 	// Normalize file input width
 	input[type="file"] {
@@ -160,13 +160,16 @@ form {
 
 	#discoLinear .formElement {
 		margin: 0;
+
+		.words {
+			@include form-label;
+		}
 	}
 
 	// Each form element
 	.formElement {
 		@include grid-row();
 		padding: $form-spacing 0;
-		//border-top: 1px dotted $lc-grey;
 
 		// Hides the "* = required field" text. People know what asterisks mean.
 		&#requiredtextItem {
@@ -199,6 +202,7 @@ form {
 			h3 { // Styles headings to look the same
 				font-size: $h3-font-size;
 				color: $lc-blue-light;
+				//color: $body-font-color;
 			}
 
 			> :last-child { // removes bottom spacing from the last element to keep row spacing even
@@ -226,7 +230,7 @@ form {
 		}
 
 		.element {
-			background: #efefef !important;
+			//background: #efefef !important;
 
 			// .inlineElement,
 			// input[size="2"],
@@ -241,17 +245,25 @@ form {
 
 			input[size="2"],
 			input[size="4"],
-			input[size="12"] {
-				background: orange !important;
+			input[size="12"],
+			input[size="15"],
+			input[size="20"] {
+				//background: orange !important;
 				width: auto !important;
 				max-width: auto !important;
 				display: inline-block;
+				margin: 0 rem-calc(12) 0 0;
+			}
+
+			input[size="2"],
+			input[size="4"]
+			{
 				margin: 0 rem-calc(6);
 			}
 		}
 
 		.comment {
-			padding: $form-spacing;
+			padding: $form-spacing 0;
 			font-weight: 300;
 			font-style: italic;
 
@@ -273,8 +285,35 @@ form {
 		// 	}
 		// }
 
+		 > input[type="checkbox"] {
+		 	margin: 0.5em .75em .5em 1em;
+			// float: left;
+			// display: block;
+			// display: inline;
+		 }
+
 		> .radioItem {
 			display: inline-block;
+		}
+
+		input[type="checkbox"] + label,
+		input[type="radio"] + label {
+			display: inline;
+			margin-left: 50px;
+			// margin-#{$default-float}: $form-spacing * .5;
+			// margin-#{$opposite-direction}: $form-spacing;
+			// margin-bottom: 0;
+			// vertical-align: baseline;
+		}
+
+		// RADIO BUTTONS, ungrouped
+		.radioItem {
+			margin-right: rem-calc(18);
+
+			.radioButton {
+				margin: 0.5em .75em .5em 1em;
+			}
+			
 		}
 
 		/*@media #{$medium-up} {  // Styles for left-aligned labels and right-aligned inputs

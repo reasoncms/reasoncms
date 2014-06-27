@@ -12,39 +12,15 @@
 @import "extends";
 @import "mixins";
 
-// Luther imports
-@import "modules/form-giving";
-
-//
-// GIVING FORM STYLES
-//
-// @author Nathan Dirks
-//
-
-// // Foundation imports
-// @import "settings";
-// @import "foundation/components/grid";
-// @import "foundation/components/forms";
-// @import "foundation/components/buttons";
-// @import "foundation/components/alert-boxes";
-
-// // Compass imports
-// @import "compass/css3";
-
-// // Luther imports
-// @import "extends";
-// @import "mixins";
-
-// $tab-default-color: #ccdeeb;
-// $tab-current-color: #95b3cd;
 $tab-default-color: $lc-blue-light;
 $tab-current-color: $lc-blue-dark;
-
 
 #giving_form {
 
 	// Form Navigation
 	#formNavigation {
+
+		margin-bottom: $column-gutter;
 
 		ul {
 			margin: 0;
@@ -91,23 +67,36 @@ $tab-current-color: $lc-blue-dark;
 					padding: rem-calc(12) rem-calc(32);
 					border: 1px solid #FFF;
 					color: #FFF;
-					text-align: center;
 				}
 			}
 		}
+	}
+
+	#discoErrorNotice {
+		margin-top: $column-gutter;
 	}
 
 	// Giving Form
 	#disco_form {
 
 		.formElement {
+			background: none;
 
-			padding-left: $column-gutter;
-
-			h3,
-			h3 + p {
-				margin-left: -$column-gutter;
+			div:empty {
+			   display: none;
 			}
+
+			@media
+			#{$medium-up} {
+
+				padding-left: $column-gutter !important;
+
+				h3,
+				h3 + p {
+					margin-left: -$column-gutter !important;
+				}
+			}
+
 
 			p a {
 				text-decoration: underline;
@@ -115,30 +104,134 @@ $tab-current-color: $lc-blue-dark;
 
 			h3 {
 				margin-top: rem-calc(16);
-				//text-decoration: underline;
-				border-bottom: 1px solid #ccc;
-				background: #EFEFEF;
+				border-bottom: 1px solid lighten($body-font-color, 30%);
 				display: inline-block;
-				padding: 0 rem-calc(12);
-				color: $lc-blue-light;
+				color: $body-font-color;
+
+				@media
+				#{$small-only} {
+					background: #efefef;
+					padding: rem-calc(6) rem-calc(12);
+					border: none;
+				}
 			}
 
-			// .element {
-			// 	margin-left: $column-gutter;
-			// }
+			@media
+			#{$small-only} {
+				.inlineElement input {
+					margin-bottom: rem-calc(6);
+				}
+			}
 
 			// Reomove extra spacing between formElements
 			&#annualfundItem,
 			&#specificfundItem,
 			&#matchgiftItem,
 			&#existingpledgeItem {
-				//padding-bottom: 0;
-				padding-top: 0;
 
 				label {
 					margin: 0;
 				}
 			}
+
+			#installment_end_dateElement {
+				margin-left: rem-calc(6);
+			}
 		}
+
+		#giftamountheaderItem {
+
+			h3 {
+				margin-top: 0;
+			}
+			
+		}
+
+		#giftamountItem.error {
+			input {
+				background: lighten($alert-color, 50%) !important;
+				border: 1px solid lighten($alert-color, 40%) !important;
+			}
+		}
+
+		#namegroupItem {
+			margin-top: $column-gutter;
+		}
+
+		#reviewnoteItem {
+			
+			@media
+			#{$medium-up} {
+				background: lighten($lc-blue-light, 50%);
+				background: lighten($lc-grey, 4%);
+				border: 1px solid $lc-grey;
+				padding: $column-gutter/2;
+				@include border-radius($global-radius);
+			}
+
+			#reviewGiftOverview {
+				.summary {
+					font-size: rem-calc(24);
+				}
+			}
+		}
+
+		#showGiftDetails,
+		.changeGiftButton a {
+			@include default-button();
+			display: inline-block;
+			text-decoration: none !important;
+		}
+
+		#reviewGiftDetails {
+			background: #FFF;
+			position: relative;
+			padding: $column-gutter/2;
+			margin-bottom: $column-gutter;
+			@include border-radius($global-radius);
+			@include box-shadow(rgba(0,0,0,.25) 0 0 4px);
+			
+			@media
+			#{$small-only} {
+				padding: rem-calc(8);
+			}
+
+			h3 {
+				margin-left: 0 !important;
+				margin-top: 0 !important;
+				margin-right: rem-calc(60);
+			}
+
+			#hideGiftDetails {
+				display: block;
+				position: absolute;
+				right: $column-gutter/2;
+				top: $column-gutter/2;
+				font-size: rem-calc(24);
+			}
+
+			table {
+				margin-bottom: $column-gutter/2;
+
+				tr,
+				td {
+					border: 1px solid $lc-grey;
+					padding: rem-calc(12);
+				}
+			}
+
+			#givingTotalsDisclaimer {
+				margin-bottom: 0;
+			}
+		}
+
+	}
+
+	.announcement {
+		clear: both;
+		background: $lc-grey;
+		border: 1px solid darken($lc-grey, 10%);
+		padding: $column-gutter/2 $column-gutter/1.5;
+		margin-bottom: $paragraph-margin-bottom;
 	}
 }
