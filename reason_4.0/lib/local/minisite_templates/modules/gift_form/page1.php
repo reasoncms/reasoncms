@@ -18,13 +18,13 @@ class GiftPageOneForm extends FormStep
 	var $error;
 	
 	var $elements = array(
-		// 'gift_amount_header' => array(
-		// 	'type' => 'comment',
-		// 	'text' => '<h3>Gift Amount</h3>',
-		// ),
+		'gift_amount_header' => array(
+			'type' => 'comment',
+			'text' => '<h3>Gift Amount</h3>',
+		),
 		'gift_amount' => array(
 			'type' => 'money',
-			'display_name' => '<h3>Gift Amount</h3>',
+			'display_name' => '',
 			'size'=>12,
 		),
 		'installment_type' => array(
@@ -161,25 +161,25 @@ class GiftPageOneForm extends FormStep
 			'options' => array('Yes'=>'Yes','No'=>'No'),
 			'display_name'=>'&nbsp;',
 		),
-        // 'gift_prompt_header' => array(
-        //         'type' => 'comment',
-        //         'text' => '<h3>What prompted you to make this gift?</h3>'
-        // ),
+        'gift_prompt_header' => array(
+                'type' => 'comment',
+                'text' => '<h3>What prompted you to make this gift?</h3>'
+        ),
         'gift_prompt' => array(
         	'type' => 'textarea',
 			'rows' => 5,
 			'cols' => 35,
-			'display_name' => '<h3>What prompted you to make this gift?</h3>',
+			'display_name' => '',
         ),
 
-  //       'dedication_header' => array(
-		// 	'type' => 'comment',
-		// 	'text' => '<h3>Dedication <em>(optional)</em></h3>'
-		// ),
+        'dedication_header' => array(
+			'type' => 'comment',
+			'text' => '<h3>Dedication <em>(optional)</em></h3>'
+		),
 		'dedication' => array(
 			'type' => 'radio_no_sort',
 			'options' => array('Memory'=>'In memory of','Honor'=>'In honor of'),
-			'display_name' => '<h3>Dedication <em>(optional)</em></h3>',
+			'display_name' => '',
 		),
 		'dedication_details' => array(
 			'type' => 'text',
