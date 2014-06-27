@@ -114,24 +114,26 @@
 		@include grid-row();
 
 		.options {
-			display: none;
-			background: $lc-grey;
+			//display: none;
+			//background: $lc-grey;
+			margin: 0 5%;
 			margin-bottom: rem-calc(64);
 
+
 			@media #{$medium-up} {
-				@include grid-column(8);
+				//@include grid-column(8);
 			}
 
 			.categories {
 				ul {
-					display: none;
+					//display: none;
 				}
 			}
 
 			.audiences,
 			.today,
 			.archive {
-				display: none;
+				//display: none;
 			}
 		}
 
@@ -305,6 +307,25 @@
 
 		.eventsListContent {
 			width: 100%;
+
+			.focus {
+				background: lighten($lc-grey, 4%) !important;
+				padding: $column-gutter/2;
+
+				h3 {
+					margin-top: - $column-gutter/2; 
+					margin-left: - $column-gutter/2;
+					padding: $column-gutter/2;
+					background: $lc-blue-light;
+					color: #FFF;
+					display: inline-block;
+					font-size: rem-calc(16);
+				}
+
+				ul {
+					margin-bottom: 0;
+				}
+			}
 
 			#events {
 				margin-bottom: rem-calc(16);
