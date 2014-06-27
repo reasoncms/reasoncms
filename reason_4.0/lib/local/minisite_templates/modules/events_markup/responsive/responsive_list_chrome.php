@@ -81,8 +81,8 @@ class responsiveEventsListChromeMarkup implements eventsListChromeMarkup
 		$ret .= '<div class="responsiveEventsList">'."\n";
 		
 		$ret .= '<div class="eventsMainContent">'."\n"; // Adds this div as a styling hook
-		$ret .= $this->get_section_markup('options');
-		$ret .= $this->get_section_markup('search');
+
+		//	$ret .= $this->get_section_markup('search');
 		
 		$ret .= $this->get_section_markup('navigation');
 		$ret .= $this->get_section_markup('view_options');
@@ -90,7 +90,7 @@ class responsiveEventsListChromeMarkup implements eventsListChromeMarkup
 		
 		$ret .= '<div class="eventsListContent">'."\n";
 		
-		//$ret .= $this->get_section_markup('focus');
+		$ret .= $this->get_section_markup('focus');
 		$ret .= $this->get_section_markup('list_title');
 		
 		$ret .= $this->get_section_markup('list');
@@ -105,6 +105,8 @@ class responsiveEventsListChromeMarkup implements eventsListChromeMarkup
 			$ret .= '<div class="calendarGridWrapper">'.$calgrid.'</div>';
 		}
 		//$ret .= $this->get_section_markup('date_picker');
+		
+		$ret .= $this->get_section_markup('options');
 		$ret .= $this->get_section_markup('ical_links');
 		$ret .= $this->get_section_markup('rss_links');
 		
@@ -112,12 +114,6 @@ class responsiveEventsListChromeMarkup implements eventsListChromeMarkup
 		//$ret .= $this->get_section_markup('options');
 		$ret .= '</div>'."\n";
 		$ret .= '</div>'."\n";
-		
-		//$ret .= '<div class="foot">'."\n";
-		//$ret .= $this->get_section_markup('navigation');
-		//$ret .= $this->get_section_markup('ical_links');
-		//$ret .= $this->get_section_markup('rss_links');
-		//$ret .= '</div>'."\n";
 		
 		$ret .= '</div>'."\n";
 		
