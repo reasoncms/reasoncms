@@ -243,6 +243,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'post_sidebar' => array(
 			'module'=>'publication',
 			'related_mode'=>'true',
+			'related_title' => 'Recent news',
 			'max_num_items' => 3,
 			'css' => '',
 			'markup_generator_info' => array(
@@ -259,6 +260,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'main_post' => array(
 			'module'=>'publication',
 			'related_mode'=>'true',
+			'related_title' => 'Recent news',
 			'max_num_items' => 3,
 			'css' => '',
 		),
@@ -290,6 +292,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'post_sidebar' => array(
 			'module'=>'publication',
 			'related_mode'=>'true',
+			'related_title' => 'Recent news',
 			'max_num_items' => 3,
 			'css' => '',
 			'markup_generator_info' => array(
@@ -316,6 +319,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'sidebar_2' => array(
 			'module'=>'publication',
 			'related_mode'=>'true',
+			'related_title' => 'Recent news',
 			'max_num_items' => 3,
 			'css' => '',
 			'markup_generator_info' => array(
@@ -360,8 +364,8 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'main_post' => array(
 			'module' => 'publication',
 			'related_mode' => 'true',
-			'max_num_items' => 5,
 			'related_title' => 'Headlines',
+			'max_num_items' => 5,
 			'css' => '',
 		),
 		'pre_sidebar' => array(
@@ -384,6 +388,21 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'post_sidebar_2' => 'twitter',
 		'post_sidebar_3' => '',
 
+	),
+	'landing_spotlight' => array(
+		'pre_sidebar' => 'blurb',
+		'pre_sidebar_2' => get_luther_spotlight(),
+		'sidebar' => array(
+				'module' => 'luther_av',
+				'full_size' => true,
+		),
+		'sidebar_2' => array(
+				'module' => 'events_mini',
+				'ideal_count' => 4,
+		),
+		'post_sidebar' => '',
+		'post_sidebar_2' => 'luther_flickr_slideshow',
+		'post_sidebar_3' => 'twitter',
 	),
 	'luther_google_map' => array(
 		'main_post' => 'luther_google_map',
