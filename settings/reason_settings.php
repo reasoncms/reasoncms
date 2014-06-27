@@ -1031,4 +1031,11 @@
 	 * With an API key, Reason can provide superior ip geolocation results.
 	 */
 	define('REASON_IPINFODB_API_KEY', '');
+
+	/**
+	 * REASON_SHOW_META_KEYWORDS
+	 *
+	 * Show meta keywords in <head>. meta keywords are deprecated and no longer beneficial for SEO.
+	 */
+	define('REASON_SHOW_META_KEYWORDS', false);
 ?>
