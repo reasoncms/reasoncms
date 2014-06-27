@@ -449,6 +449,8 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'navigation' => '',
 		'sub_nav' => '',
 		'contact_blurb' => '',
+		'footer' => '',
+		'edit_link' => '',
 	),
 	'net_price_calculator' => array(
 		'main_post' => 'net_price_calculator',
