@@ -60,6 +60,7 @@
 		.gridAndOptionsWrapper {
 
 			@media #{$medium-up} { 
+				margin-top: -$column-gutter;
 			    width: 40% !important;
 			}
 
@@ -85,10 +86,10 @@
 	}
 
 	.gridAndOptionsWrapper {
-
 		border: none;
 
-		@media #{$large-up} { 
+		@media #{$large-up} {
+			margin-top: -$column-gutter;
 		    width: 40% !important;
 		    border-left: 1px solid #ddd;
 		}
