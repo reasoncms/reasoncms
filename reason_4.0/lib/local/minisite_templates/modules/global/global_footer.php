@@ -110,7 +110,7 @@
 					
 					<div id="post-footer">
 						<p class="copyright">&copy; <?php echo date("Y"); ?> <a href="/">Luther College</a>. All rights reserved.</p>
-						<p class="powered-by">Powered by <a href="#">Reason CMS</a>.</p>
+						<p class="powered-by">Powered by <a href="https://apps.carleton.edu/opensource/reason/" target="_blank">Reason CMS</a>.</p>
 					</div>
 
 				</div>
