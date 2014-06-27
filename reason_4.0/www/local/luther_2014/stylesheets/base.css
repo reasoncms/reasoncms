@@ -2768,13 +2768,17 @@ body #wrapper #post-footer a {
   }
 }
 /* line 574, scss/_minisite.scss */
+#minisite #footer #foot {
+  clear: both;
+}
+/* line 578, scss/_minisite.scss */
 #minisite #footer #maintained {
   color: #9d9d9d;
   display: block;
   margin-bottom: 1rem;
 }
 @media only screen and (min-width: 60.0625em) {
-  /* line 574, scss/_minisite.scss */
+  /* line 578, scss/_minisite.scss */
   #minisite #footer #maintained {
     width: 45%;
     float: left;
@@ -2782,27 +2786,27 @@ body #wrapper #post-footer a {
     padding-top: 4px;
   }
 }
-/* line 587, scss/_minisite.scss */
+/* line 591, scss/_minisite.scss */
 #minisite #footer .loginLinkModule {
   display: block;
 }
 @media only screen and (min-width: 60.0625em) {
-  /* line 587, scss/_minisite.scss */
+  /* line 591, scss/_minisite.scss */
   #minisite #footer .loginLinkModule {
     width: 45%;
     float: right;
     text-align: right;
   }
 }
-/* line 596, scss/_minisite.scss */
+/* line 600, scss/_minisite.scss */
 #minisite #footer .loginLinkModule .editDivider {
   display: none;
 }
-/* line 598, scss/_minisite.scss */
+/* line 602, scss/_minisite.scss */
 #minisite #footer .loginLinkModule div {
   display: inline;
 }
-/* line 602, scss/_minisite.scss */
+/* line 606, scss/_minisite.scss */
 #minisite #footer .loginLinkModule div a {
   background: #e9e9e9;
   padding: 0.3125rem 0.375rem;
@@ -2817,12 +2821,12 @@ body #wrapper #post-footer a {
   line-height: 1;
 }
 @media only screen and (min-width: 60.0625em) {
-  /* line 602, scss/_minisite.scss */
+  /* line 606, scss/_minisite.scss */
   #minisite #footer .loginLinkModule div a {
     margin-left: 0.25rem;
   }
 }
-/* line 615, scss/_minisite.scss */
+/* line 619, scss/_minisite.scss */
 #minisite #footer .loginLinkModule div a:hover {
   background: #d5d5d5;
   -webkit-transition-property: all;
@@ -2838,7 +2842,7 @@ body #wrapper #post-footer a {
   -o-transition-timing-function: ease;
   transition-timing-function: ease;
 }
-/* line 622, scss/_minisite.scss */
+/* line 626, scss/_minisite.scss */
 #minisite #footer .loginLinkModule #footerLoginLink {
   display: inline-block;
   font-size: 0.75rem;
@@ -2855,33 +2859,33 @@ body #wrapper #post-footer a {
   line-height: 1;
 }
 @media only screen and (min-width: 60.0625em) {
-  /* line 622, scss/_minisite.scss */
+  /* line 626, scss/_minisite.scss */
   #minisite #footer .loginLinkModule #footerLoginLink {
     margin: 0 0 0 0.25rem;
   }
 }
-/* line 637, scss/_minisite.scss */
+/* line 641, scss/_minisite.scss */
 #minisite #footer .loginLinkModule #footerLoginLink .username {
   font-weight: 400;
 }
-/* line 642, scss/_minisite.scss */
+/* line 646, scss/_minisite.scss */
 #minisite #footer .loginLinkModule #footerLoginLink a:hover {
   text-decoration: underline;
 }
-/* line 648, scss/_minisite.scss */
+/* line 652, scss/_minisite.scss */
 #minisite #footer .loginLinkModule.unauthenticated #footerLoginLink {
   margin: 0;
 }
-/* line 659, scss/_minisite.scss */
+/* line 663, scss/_minisite.scss */
 #minisite table tr,
 #minisite table td {
   font-weight: 300;
 }
-/* line 664, scss/_minisite.scss */
+/* line 668, scss/_minisite.scss */
 #minisite .continueReading {
   margin: 0;
 }
-/* line 667, scss/_minisite.scss */
+/* line 671, scss/_minisite.scss */
 #minisite .continueReading a {
   background: #eaf4fd;
   padding: 0.25rem 0.5rem;
@@ -2891,29 +2895,29 @@ body #wrapper #post-footer a {
   -o-border-radius: 6px;
   border-radius: 6px;
 }
-/* line 674, scss/_minisite.scss */
+/* line 678, scss/_minisite.scss */
 #minisite .continueReading a:after {
   content: "\f138";
   margin-left: 0.375rem;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 681, scss/_minisite.scss */
+  /* line 685, scss/_minisite.scss */
   #minisite .feedLink {
     display: inline;
     text-align: right;
   }
 }
-/* line 689, scss/_minisite.scss */
+/* line 693, scss/_minisite.scss */
 #minisite .feedLink .feedInfo a {
   color: transparent;
 }
-/* line 693, scss/_minisite.scss */
+/* line 697, scss/_minisite.scss */
 #minisite .feedLink .feedInfo a:before {
   content: "\f09e";
   display: block;
   color: #9f2112;
 }
-/* line 702, scss/_minisite.scss */
+/* line 706, scss/_minisite.scss */
 #minisite .pagination {
   margin-bottom: 2.5rem;
   *zoom: 1;
@@ -2928,22 +2932,22 @@ body #wrapper #post-footer a {
   clear: both;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 702, scss/_minisite.scss */
+  /* line 706, scss/_minisite.scss */
   #minisite .pagination {
     width: 50%;
     float: left;
   }
 }
-/* line 711, scss/_minisite.scss */
+/* line 715, scss/_minisite.scss */
 #minisite .pagination.above {
   dispaly: none;
 }
-/* line 722, scss/_minisite.scss */
+/* line 726, scss/_minisite.scss */
 #minisite .pagination .pages a,
 #minisite .pagination .pages strong {
   margin: 0 0.25rem;
 }
-/* line 731, scss/_minisite.scss */
+/* line 735, scss/_minisite.scss */
 #minisite .contentMain + .contentPost {
   margin-top: 2.5rem;
 }
@@ -3509,6 +3513,28 @@ body #wrapper #post-footer a {
 footer .contactBlurb {
   display: block;
   margin-bottom: 2.5rem;
+}
+@media only screen and (min-width: 40.063em) and (max-width: 64em) {
+  /* line 257, scss/modules/_blurb.scss */
+  footer .contactBlurb {
+    position: relative;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+    width: 62.5%;
+    left: 18.75%;
+    right: auto;
+    float: left;
+    *zoom: 1;
+  }
+  /* line 165, ../foundation/bower_components/foundation/scss/foundation/components/_global.scss */
+  footer .contactBlurb:before, footer .contactBlurb:after {
+    content: " ";
+    display: table;
+  }
+  /* line 166, ../foundation/bower_components/foundation/scss/foundation/components/_global.scss */
+  footer .contactBlurb:after {
+    clear: both;
+  }
 }
 @media only screen and (min-width: 64.063em) {
   /* line 257, scss/modules/_blurb.scss */

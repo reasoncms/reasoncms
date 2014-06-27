@@ -259,6 +259,12 @@ footer {
 		margin-bottom: $column-gutter;
 
 		@media
+		#{$medium-only} {
+			@include grid-column($columns:10, $push:3);
+			@include clearfix;
+		}
+
+		@media
 		#{$large-up} {
 			display: none; // hide on desktop
 		}
