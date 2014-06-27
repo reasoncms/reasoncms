@@ -28,7 +28,7 @@
 			$head_items->add_javascript('/reason/local/luther_2014/javascripts/luther-image-galleries.js');
 		}
 		function run() // {{{
-		{
+	{
 			if(!empty($this->textonly))
 			{
 				$this->run_text_only();
@@ -64,7 +64,7 @@
 			foreach( $this->images AS $id => $image )
 			{
 				$show_text = $text;
-				echo "<div class=\"flickr-image\">\n";
+				echo "<div class=\"image reason-image\">\n";
 	
 				echo '<a class="fancybox-thumb" href="' . WEB_PHOTOSTOCK . $id . '.' . $image->get_value('image_type');
 				echo '" rel="gallery_image_slideshow"';

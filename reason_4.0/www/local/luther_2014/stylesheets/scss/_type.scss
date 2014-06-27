@@ -67,10 +67,6 @@ blockquote {
 /* Wysiwyg Formatting */  
 #{$wysiwyg-all-areas} {
 
-	*:last-child {
-		margin-bottom: 0;
-	}
-
 	a {  // http://css-tricks.com/snippets/css/prevent-long-urls-from-breaking-out-of-container/
 		-ms-word-break: break-all;
 
@@ -129,9 +125,7 @@ blockquote {
 		background: $lc-grey;
 		border: 1px solid darken($lc-grey, 10%);
 		padding: $column-gutter/2 $column-gutter/1.5;
-		:not(.flash-notice) {
-			margin-bottom: $paragraph-margin-bottom;
-		}
+		margin-bottom: $paragraph-margin-bottom;
 		
 		@include clearfix;
 		font-family: $header-font-family;
@@ -164,6 +158,10 @@ blockquote {
 		strong {
 			font-weight: 400;
 		}
+	}
+
+	.flash-notice .callout {
+		margin-bottom: 0;
 	}
 }
 
