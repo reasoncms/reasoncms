@@ -273,11 +273,13 @@ class GiftPageThreeForm extends FormStep {
         } else {
             $txt .= '</li>' . "\n";
         }
-        if ($this->controller->get('estate_plans')) {
+        foreach ($this->controller->get('estate_plans') as $plan) {
+            if ($this->controller->get('estate_plans') == 'have_estate_plans') {
             $txt .= '<li><strong>Estate Plans:</strong> I\'ve included Luther in my estate plans</li>' . "\n";
-        }
-        if ($this->controller->get('estate_info')) {
-            $txt .= '<li><strong>Estate Information:</strong> I would like information about including Luther in my estate planning</li>' . "\n";
+            }
+            if ($this->controller->get('estate_plans') == 'send_estate_info') {
+                $txt .= '<li><strong>Estate Information:</strong> I would like information about including Luther in my estate planning</li>' . "\n";
+            }
         }
         $txt .= '<h4>Gift Details</h4>';
         if ($this->controller->get('installment_type') == 'Onetime') {
@@ -521,7 +523,7 @@ class GiftPageThreeForm extends FormStep {
                 $email_to_development->send();
                 $email_to_giver = new Email($this->controller->get('email'), 'giving@luther.edu', 'giving@luther.edu', 'Luther College Online Gift Confirmation', strip_tags($mail_text), $mail_text);
                 $email_to_giver->send();
-                if ($this->controller->get('estate_plans') || $this->controller->get('estate_info')) {
+                if ($this->controller->get('estate_plans')) {
                     $email_to_estate_plans = new Email('kelly.wedmann@luther.edu', 'noreply@luther.edu', 'noreply@luther.edu', 'New Online Gift ' . date('mdY H:i:s'), strip_tags($mail_text), $mail_text);
                     $email_to_estate_plans->send();
                 }
