@@ -158,6 +158,10 @@ form {
 		margin: 0 !important;	
 	}
 
+	#discoLinear .formElement {
+		margin: 0;
+	}
+
 	// Each form element
 	.formElement {
 		@include grid-row();
@@ -188,7 +192,7 @@ form {
 
 		// Styles for the "content" row -- often used for headings
 		&.noLabel {
-			border-top: 4px solid $lc-grey;
+			//border-top: 4px solid $lc-grey;
 
 			h1,
 			h2,
@@ -219,6 +223,58 @@ form {
 				padding-left: rem-calc(4);
 				color: darken($lc-grey, 40%);
 			}
+		}
+
+		.element {
+			background: #efefef !important;
+
+			// .inlineElement,
+			// input[size="2"],
+			// input[size="4"] {
+
+			// 	input {
+			// 		width: auto !important;
+			// 		max-width: auto !important;
+			// 		display: inline;
+			// 	}
+			// }
+
+			input[size="2"],
+			input[size="4"],
+			input[size="12"] {
+				background: orange !important;
+				width: auto !important;
+				max-width: auto !important;
+				display: inline-block;
+				margin: 0 rem-calc(6);
+			}
+		}
+
+		.comment {
+			padding: $form-spacing;
+			font-weight: 300;
+			font-style: italic;
+
+			&.smallText {
+				font-size: rem-calc(14);
+			}
+		}
+
+		// > input[type="checkbox"] {
+		// 	margin: 0.5em .75em .5em 1em;
+		// 	float: left;
+		// 	display: block;
+
+		// 	+ label {
+		// 		//display: inline;
+		// 		display: block;
+		// 		float: left;
+		// 		background: red;
+		// 	}
+		// }
+
+		> .radioItem {
+			display: inline-block;
 		}
 
 		/*@media #{$medium-up} {  // Styles for left-aligned labels and right-aligned inputs

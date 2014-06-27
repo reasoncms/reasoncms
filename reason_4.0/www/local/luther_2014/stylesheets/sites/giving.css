@@ -1,0 +1,103 @@
+/* line 10, ../scss/_extends.scss */
+.zero-out {
+  margin: 0;
+  padding: 0;
+}
+
+/* line 15, ../scss/_extends.scss */
+.screenreader {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  margin-bottom: 0;
+}
+
+/* line 49, ../scss/sites/giving.scss */
+#giving_form #formNavigation ul {
+  margin: 0;
+}
+/* line 52, ../scss/sites/giving.scss */
+#giving_form #formNavigation ul li {
+  display: inline-block;
+}
+@media only screen and (max-width: 40em) {
+  /* line 52, ../scss/sites/giving.scss */
+  #giving_form #formNavigation ul li {
+    display: block;
+  }
+}
+/* line 62, ../scss/sites/giving.scss */
+#giving_form #formNavigation ul li.current a {
+  background: #004789;
+  position: relative;
+}
+/* line 66, ../scss/sites/giving.scss */
+#giving_form #formNavigation ul li.current a:after {
+  content: "";
+  display: block;
+  width: 0;
+  height: 0;
+  border: inset 10px;
+  border-color: transparent transparent transparent white;
+  border-left-style: solid;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  margin-top: -8px;
+}
+@media only screen and (min-width: 40.063em) {
+  /* line 76, ../scss/sites/giving.scss */
+  #giving_form #formNavigation ul li.current a:after {
+    content: "";
+    display: block;
+    width: 0;
+    height: 0;
+    border: inset 10px;
+    border-color: #004789 transparent transparent transparent;
+    border-top-style: solid;
+    position: absolute;
+    top: auto;
+    bottom: -20px;
+    left: 50%;
+    margin-left: -10px;
+  }
+}
+/* line 88, ../scss/sites/giving.scss */
+#giving_form #formNavigation ul li a {
+  display: block;
+  background: #1073ce;
+  padding: 0.75rem 2rem;
+  border: 1px solid #FFF;
+  color: #FFF;
+  text-align: center;
+}
+/* line 103, ../scss/sites/giving.scss */
+#giving_form #disco_form .formElement {
+  padding-left: 2.5rem;
+}
+/* line 108, ../scss/sites/giving.scss */
+#giving_form #disco_form .formElement h3,
+#giving_form #disco_form .formElement h3 + p {
+  margin-left: -2.5rem;
+}
+/* line 112, ../scss/sites/giving.scss */
+#giving_form #disco_form .formElement p a {
+  text-decoration: underline;
+}
+/* line 116, ../scss/sites/giving.scss */
+#giving_form #disco_form .formElement h3 {
+  margin-top: 1rem;
+  border-bottom: 1px solid #ccc;
+  background: #EFEFEF;
+  display: inline-block;
+  padding: 0 0.75rem;
+  color: #1073ce;
+}
+/* line 134, ../scss/sites/giving.scss */
+#giving_form #disco_form .formElement#annualfundItem, #giving_form #disco_form .formElement#specificfundItem, #giving_form #disco_form .formElement#matchgiftItem, #giving_form #disco_form .formElement#existingpledgeItem {
+  padding-top: 0;
+}
+/* line 138, ../scss/sites/giving.scss */
+#giving_form #disco_form .formElement#annualfundItem label, #giving_form #disco_form .formElement#specificfundItem label, #giving_form #disco_form .formElement#matchgiftItem label, #giving_form #disco_form .formElement#existingpledgeItem label {
+  margin: 0;
+}

@@ -1,0 +1,144 @@
+// Foundation imports
+@import "settings";
+@import "foundation/components/grid";
+@import "foundation/components/forms";
+@import "foundation/components/buttons";
+@import "foundation/components/alert-boxes";
+
+// Compass imports
+@import "compass/css3";
+
+// Luther imports
+@import "extends";
+@import "mixins";
+
+// Luther imports
+@import "modules/form-giving";
+
+//
+// GIVING FORM STYLES
+//
+// @author Nathan Dirks
+//
+
+// // Foundation imports
+// @import "settings";
+// @import "foundation/components/grid";
+// @import "foundation/components/forms";
+// @import "foundation/components/buttons";
+// @import "foundation/components/alert-boxes";
+
+// // Compass imports
+// @import "compass/css3";
+
+// // Luther imports
+// @import "extends";
+// @import "mixins";
+
+// $tab-default-color: #ccdeeb;
+// $tab-current-color: #95b3cd;
+$tab-default-color: $lc-blue-light;
+$tab-current-color: $lc-blue-dark;
+
+
+#giving_form {
+
+	// Form Navigation
+	#formNavigation {
+
+		ul {
+			margin: 0;
+
+			li {
+				display: inline-block;
+
+				@media
+				#{$small-only} {
+					display: block;
+				}
+
+				&.current {
+
+ 					a {
+ 						background: $tab-current-color;
+ 						position: relative;
+
+						&:after {
+ 							@include css-triangle(10px, #FFF, left);
+ 							position: absolute;
+							top: 50%;
+							left: 0;
+							margin-top: -8px;
+ 						}
+
+ 						@media
+ 						#{$medium-up} {
+	 						&:after {
+	 							@include css-triangle(10px, $tab-current-color, top);
+	 							position: absolute;
+	 							top: auto;
+								bottom: -20px;
+								left: 50%;
+								margin-left: -10px;
+	 						}
+	 					}
+ 					}
+				}
+
+				a {
+					display: block;
+					background: $tab-default-color;
+					padding: rem-calc(12) rem-calc(32);
+					border: 1px solid #FFF;
+					color: #FFF;
+					text-align: center;
+				}
+			}
+		}
+	}
+
+	// Giving Form
+	#disco_form {
+
+		.formElement {
+
+			padding-left: $column-gutter;
+
+			h3,
+			h3 + p {
+				margin-left: -$column-gutter;
+			}
+
+			p a {
+				text-decoration: underline;
+			}
+
+			h3 {
+				margin-top: rem-calc(16);
+				//text-decoration: underline;
+				border-bottom: 1px solid #ccc;
+				background: #EFEFEF;
+				display: inline-block;
+				padding: 0 rem-calc(12);
+				color: $lc-blue-light;
+			}
+
+			// .element {
+			// 	margin-left: $column-gutter;
+			// }
+
+			// Reomove extra spacing between formElements
+			&#annualfundItem,
+			&#specificfundItem,
+			&#matchgiftItem,
+			&#existingpledgeItem {
+				//padding-bottom: 0;
+				padding-top: 0;
+
+				label {
+					margin: 0;
+				}
+			}
+		}
+	}
+}
