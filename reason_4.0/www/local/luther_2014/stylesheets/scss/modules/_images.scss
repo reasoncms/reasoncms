@@ -72,7 +72,7 @@
 
 		.imageChunk {
 			max-width: 100%; // override the image sidebar max-width, set above
-			max-height: 400px !important; // crop the image, since the module won't do it for us
+			max-height: 575px !important; // crop the image, since the module won't do it for us
 			overflow: hidden;
 
 			img {
