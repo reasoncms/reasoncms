@@ -371,6 +371,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'pre_sidebar' => array(
 			'module' => 'events_mini',
 			'title' => 'Schedule',
+			'calendar_link_text' => 'Complete Schedule',
 			'ideal_count' => 7,
 		),
 		'pre_sidebar_2' => 'blurb',
