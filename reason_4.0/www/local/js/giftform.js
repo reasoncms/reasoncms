@@ -61,8 +61,8 @@ $(document).ready(function() {
 	{
 		$("div#giftForm div#reviewGiftDetails").hide(500);
 		
-		$("div#giftForm div#reviewGiftOverview p").append('<p><a id="showGiftDetails" href="#">Yearly totals for this gift</a></p>');
-		$("div#giftForm h3#yearlyTotalsHeading").append('<a id="hideGiftDetails" href="#">Close</a>');
+		$("div#giftForm div#reviewGiftOverview").append('<p><a id="showGiftDetails" href="#">Yearly totals for this gift</a></p>');
+		$("div#giftForm #reviewGiftDetails").append('<a id="hideGiftDetails" href="#"><i class="fa fa-times"></i></a>');
 
 		$("a#showGiftDetails").click(function(event){
 			$("a#showGiftDetails").hide(500);

@@ -155,9 +155,9 @@ class GiftPageThreeForm extends FormStep {
             $this->show_form = false;
             return;
         }
-        $this->change_element_type('e-receipt_note', 'comment', array('text' => '<h3>E-receipt</h3>As part of our efforts to make big and small
+        $this->change_element_type('e-receipt_note', 'comment', array('text' => '<h3>E-receipt</h3><p>As part of our efforts to make big and small
             changes to reduce our impact on the environment, Luther College will send an e-receipt only 
-            to '. $this->controller->get('email') . '. Thank you for doing your part to help us reduce our paper usage.'));
+            to '. $this->controller->get('email') . '. Thank you for doing your part to help us reduce our paper usage.</p>'));
         if ($this->controller->get('installment_type') == 'Onetime') {
             $this->remove_element('installment_notification_note_1');
             $this->remove_element('installment_notification_note_2');
@@ -212,9 +212,9 @@ class GiftPageThreeForm extends FormStep {
     function get_brief_review_text() {
         $txt = '<div id="reviewGiftOverview">' . "\n";
         if ($this->controller->get('installment_type') == 'Onetime') {
-            $txt .= '<p>You have indicated that you would like to make a one time gift of $' . number_format($this->controller->get('gift_amount'), 2, '.', ',') . '</p>' . "\n";
+            $txt .= '<p class="summary">You have indicated that you would like to make a one time gift of $' . number_format($this->controller->get('gift_amount'), 2, '.', ',') . '</p>' . "\n";
         } else {
-            $txt .= '<p>You have indicated that you would like to make a recurring gift of $' . number_format($this->controller->get('gift_amount'), 2, '.', ',') . ' per ' . $this->installment_type_to_word[$this->controller->get('installment_type')] . ', starting on ' . prettify_mysql_datetime($this->controller->get('installment_start_date'), $this->date_format);
+            $txt .= '<p class="summary">You have indicated that you would like to make a recurring gift of $' . number_format($this->controller->get('gift_amount'), 2, '.', ',') . ' per ' . $this->installment_type_to_word[$this->controller->get('installment_type')] . ', starting on ' . prettify_mysql_datetime($this->controller->get('installment_start_date'), $this->date_format);
             if ($this->controller->get('installment_end_date') != 'indefinite') {
                 $txt .= ' and ending on ' . date($this->date_format, $this->helper->get_last_repeat_timestamp());
             } else {

@@ -371,6 +371,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'pre_sidebar' => array(
 			'module' => 'events_mini',
 			'title' => 'Schedule',
+			'calendar_link_text' => 'Complete Schedule',
 			'ideal_count' => 7,
 		),
 		'pre_sidebar_2' => 'blurb',
@@ -448,6 +449,8 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'navigation' => '',
 		'sub_nav' => '',
 		'contact_blurb' => '',
+		'footer' => '',
+		'edit_link' => '',
 	),
 	'net_price_calculator' => array(
 		'main_post' => 'net_price_calculator',
