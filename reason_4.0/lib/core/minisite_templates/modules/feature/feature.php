@@ -373,8 +373,8 @@ class FeatureModule extends DefaultMinisiteModule
 
 			$d['bg_color']=$feature->get_value('bg_color');
 
-			$d['w']=$params['width']; 
-			$d['h']=$params['height']; 
+			$d['w']=$width; 
+			$d['h']=$height; 
 			$d['crop_style']=$feature->get_value('crop_style');;
 
 			$params="?id=".$d['id']."&amp;w=".$d['w']."&amp;h=".$d['h']."&amp;crop=".$d['crop_style'];
