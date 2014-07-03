@@ -53,7 +53,7 @@ a.navLink:hover {
 }
 div#facultyStaff div#deptInfo h4 {
 	margin: 10px 0px 0px;
-	padding: 0px;	
+	padding: 0px;
 }
 div#facultyStaff div#deptInfo ul {
 	margin-top: 5px;
@@ -334,7 +334,7 @@ ul.siblingList {
 
 /* Pullquotes (advanced)*/
 
-p.pullQuoteRight { 
+p.pullQuoteRight {
 	float: right;
 	clear: both;
 	width: 200px;
@@ -519,11 +519,11 @@ div#calendar div.nav a:hover {
 div#calendar div.gridAndOptions {
 
 	display: none; /* for ie 5 mac only */
-	
+
 	/* Mac IE can't see what's inside this hack \*/
 	display: block;
 	/* end hack */
-	
+
 	float: right;
 	width: 16em;
 	margin-left: 7px;
@@ -567,7 +567,7 @@ div#calendar div.options ul li {
 	margin-left: 0px;
 	font-size: 95%;
 }
-	
+
 div#calendar div.views h4 {
 	position:absolute;
 	left:-9999px;
@@ -604,9 +604,9 @@ div#calendar div.views ul li strong {
 }
 
 
-	/* Self-Clearing 
+	/* Self-Clearing
 	---------------- */
-	
+
 	div#calendar div.views:after
 	{
 		clear: both;
@@ -615,7 +615,7 @@ div#calendar div.views ul li strong {
 		height: 0;
 		visibility: hidden;
 	}
-	
+
 	div#calendar div.views { display: inline-block; }
 	div#calendar div.views { display: block; }
 
@@ -1588,9 +1588,9 @@ div.facStaffName span.degrees {
 .editLink {
 }
 
-.editDiv {	
+.editDiv {
 	margin:1em 0;
-	font-weight: bold;	
+	font-weight: bold;
 }
 
 .editDiv.inlineEnabled {
@@ -1598,7 +1598,7 @@ div.facStaffName span.degrees {
 }
 
 .inlineEditDiv.inlineEnabled  {
-	font-weight: bold;	
+	font-weight: bold;
 }
 
 /* Blurb Module */
@@ -1637,7 +1637,7 @@ div.facStaffName span.degrees {
 /* News Module */
 
 .newsItemName {
-	font-weight: bold;	
+	font-weight: bold;
 }
 .NewsImages {
 	margin: 10px;
@@ -1658,12 +1658,12 @@ div#news div.author {
 /* AV Module */
 
 .avName {
-	font-weight: bold;	
+	font-weight: bold;
 }
 .avFiles {
 	margin: 0px;
 	padding: 0px;
-	
+
 }.avFile {
 	margin: 0px;
 	padding: 0px;
@@ -1672,7 +1672,7 @@ div#news div.author {
 
 /* Pullquotes (basic) */
 
-p.pullQuoteRight { 
+p.pullQuoteRight {
 	font-weight: bold;
 	font-style: italic;
 	background-color: #E9EEF8;
@@ -1703,3 +1703,4 @@ form #tarbabypreRow, form #tarbabypreItem, form #tarbabyRow, form #tarbabyItem, 
 }
 
 /* End of old modules.css */
+

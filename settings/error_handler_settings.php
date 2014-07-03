@@ -26,6 +26,7 @@ define( 'PHP_ERROR_LOG_FILE', '/tmp/php-errors-'.$host );
 // Example:
 
 $GLOBALS[ '_DEVELOPER_INFO' ] = array(
+
         'vagrant' => array(
                 'ip' => array(
                         '10.0.2.2',
