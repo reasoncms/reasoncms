@@ -134,21 +134,26 @@
 			@include grid-column($columns: 16, $collapse: true);
 		}
 
+		// Uniform margin between content blocks
 		#contentSections,
 		#relatedSections {
 			margin-top: $column-gutter;
 			@include clearfix;
+
+			> div {
+				@include clearfix;
+				margin-bottom: $column-gutter;
+				border: 1px solid red;
+			}
+
+			> div:last-child {
+				margin-bottom: 0;
+			}
 		}
 
 		#contentSections {
 
-			> div {
-				@include clearfix;
-			}
 
-			> div:last-child {
-				margin-bottom: $column-gutter;
-			}
 		}
 	}
 	
@@ -525,11 +530,6 @@
 	#relatedSections,
 	.relatedItems // Publications 
 	{
-
-		> div {
-			margin-bottom: $column-gutter;
-			@include clearfix;
-		}
 
 		.assets,
 		.blurb,

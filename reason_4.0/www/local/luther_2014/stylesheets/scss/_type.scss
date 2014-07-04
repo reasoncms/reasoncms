@@ -165,6 +165,14 @@ blockquote {
 	}
 }
 
+#pageContent {
+	*:last-child {
+		margin-bottom: 0;
+		padding-bottom: 0;
+		background: purple;
+	}
+}
+
 // Tables
 
 // Provide overflow:scroll for Tablesorter & #pageContent tables

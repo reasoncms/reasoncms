@@ -62,6 +62,10 @@
 
 		.description {
 			margin-top: rem-calc(8);
+
+			p {
+				margin-bottom: 0;
+			}
 		}
 
 		.more {
@@ -71,6 +75,7 @@
 
 	.pubLinks {
 		margin-left: 0;
+		margin-bottom: 0;
 
 		a {
 			&:before {
