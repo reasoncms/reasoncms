@@ -100,6 +100,10 @@ $GLOBALS['_reason_page_types_local'] = array(
 	'all_band' => array(
 		'main_post' => 'all_band/all_band',
 	),
+	'assets' => array(
+		'sidebar_2' => '',
+		'main_post' => 'assets',
+	),
 	'a_to_z' => array(
 		'main_post' => 'atoz',
 	),
