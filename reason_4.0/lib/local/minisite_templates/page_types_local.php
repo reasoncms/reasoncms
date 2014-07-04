@@ -352,6 +352,60 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'main' => 'luther_tab_widget',
 		'main_post' => 'content',
 	),
+	'landing_news' => array(
+		'pre_main_head' => '',
+		'main' => '',
+		'main_post' => array(
+			'module'=>'publication',
+			'related_mode'=>'true',
+			'max_num_items' => 4,
+			'related_publication_unique_names' => array(
+				'headlinesarchive',
+			),
+			'css' => '',
+			'markup_generator_info' => array(
+				'list_item' => array(
+					'classname' => 'RelatedListItemMarkupGenerator', 
+					'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/related_item.php',
+				),
+			),
+		),
+		'main_post_2' => 'luther_flickr_slideshow',
+		'pre_sidebar' => array(
+			'module'=>'publication',
+			'related_mode'=>'true',
+			'max_num_items' => 3,
+			'related_publication_unique_names' => array(
+				'ideascreations',
+			),
+			'css' => '',
+			'markup_generator_info' => array(
+				'list_item' => array(
+					'classname' => 'RelatedListItemNoDescriptionMarkupGenerator', 
+					'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/related_item_no_description.php',
+				),
+			),
+		),
+		'pre_sidebar_2' => array(
+			'module' => 'luther_av',
+			'full_size' => true,
+		),
+		'sidebar' => array(
+			'module'=>'publication',
+			'related_mode'=>'true',
+			'max_num_items' => 3,
+			'related_publication_unique_names' => array(
+				'luther_in_the_media_publication',
+			),
+			'css' => '',
+			'markup_generator_info' => array(
+				'list_item' => array(
+					'classname' => 'RelatedListItemNoDescriptionMarkupGenerator', 
+					'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/related_item_no_description.php',
+				),
+			),
+		),
+	),
 	'landing_sports' => array(
 		'main' => array(
 			'module' => 'luther_sports_results_mini',
