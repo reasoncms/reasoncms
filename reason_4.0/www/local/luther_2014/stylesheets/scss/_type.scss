@@ -165,10 +165,17 @@ blockquote {
 	}
 }
 
-#pageContent {
+#pageContent { // removes bottom margin from final elements in the page content. Allows for uniform spacing.
 	> *:last-child {
 		margin-bottom: 0;
-		background: purple;
+	}
+
+	.first-p-unaltered,
+	div {
+
+		> *:last-child {
+			margin-bottom: 0;
+		}
 	}
 }
 
