@@ -113,7 +113,7 @@
 			padding: $column-gutter/2 0;
 		}
 
-		$teaser-width: rem-calc(300);
+		$teaser-width: rem-calc(250);
 		$teaser-offset: $teaser-width + $column-gutter;
 
 		@media #{$medium-up} {
