@@ -32,7 +32,9 @@ require_once( MAGPIE_DIR . 'rss_cache.inc' );
 
 // for including 3rd party libraries
 define('MAGPIE_EXTLIB', MAGPIE_DIR . 'extlib' . DIR_SEP);
-require_once( MAGPIE_EXTLIB . 'Snoopy.class.inc');
+
+// require_once( MAGPIE_EXTLIB . '_Snoopy.class.inc');
+require_once( MAGPIE_EXTLIB . 'Snoopy-1.2.5' . DIR_SEP . 'Snoopy.class.php');
 
 
 /* 
@@ -98,6 +100,7 @@ function fetch_rss ($url) {
     if ( !MAGPIE_CACHE_ON ) {
         // fetch file, and parse it
         $resp = _fetch_remote_file( $url );
+
         if ( is_success( $resp->status ) ) {
             return _response_to_rss( $resp );
         }
