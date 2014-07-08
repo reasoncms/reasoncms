@@ -449,6 +449,8 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'navigation' => '',
 		'sub_nav' => '',
 		'contact_blurb' => '',
+		'footer' => '',
+		'edit_link' => '',
 	),
 	'net_price_calculator' => array(
 		'main_post' => 'net_price_calculator',
@@ -563,6 +565,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'module' => 'image_sidebar',
 			'num_to_display' => 1,
 			'thumbnail_width' => 1200,
+			'thumbnail_height' => 575,
 			'thumbnail_crop' => 'fit',
 			'caption_flag' => false,
 		),

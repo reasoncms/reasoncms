@@ -247,15 +247,22 @@
 		@media
 		#{$large-up} {
 			display: block;   // show on desktop
+			margin-top: $column-gutter;
 		}
 	}
 }
 
-// Sidebar contact blurbs
+// Footer contact blurbs
 footer {
 	.contactBlurb {
 		display: block; // show on mobile
 		margin-bottom: $column-gutter;
+
+		@media
+		#{$medium-only} {
+			@include grid-column($columns:10, $push:3);
+			@include clearfix;
+		}
 
 		@media
 		#{$large-up} {

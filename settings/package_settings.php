@@ -68,6 +68,12 @@ switch ($_SERVER['SERVER_NAME']) {
     case 'dirks.luther.edu':
         domain_define( 'DB_CREDENTIALS_FILEPATH', SETTINGS_INC. 'dbs.reasondev.dirks.xml' );
         break; 
+    case 'kamoti01.luther.edu':
+        domain_define( 'DB_CREDENTIALS_FILEPATH', SETTINGS_INC. 'dbs.reasondev.kamoti01.xml' );
+        break; 
+    case 'schabl01.luther.edu':
+        domain_define( 'DB_CREDENTIALS_FILEPATH', SETTINGS_INC. 'dbs.reasondev.schabl01.xml' );
+        break; 
     default:
         domain_define( 'DB_CREDENTIALS_FILEPATH', SETTINGS_INC. 'dbs.localhost.xml' );
         break;
