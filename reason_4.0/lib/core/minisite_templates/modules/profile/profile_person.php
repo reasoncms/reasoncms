@@ -238,7 +238,7 @@ class profilePerson
 	 *
 	 * @param boolean $refresh Whether to reload the data from the database
 	 */
-	private function get_profile_entity( $refresh = false )
+	protected function get_profile_entity( $refresh = false )
 	{
 		if (!isset($this->profile_entity) || $refresh)
 		{
@@ -277,7 +277,7 @@ class profilePerson
 	/**
 	 * Create an empty profile for the user.
 	 */
-	private function create_profile_entity_if_needed()
+	protected function create_profile_entity_if_needed()
 	{
 		$profile = $this->get_profile_entity();
 		if (is_null($profile))
@@ -302,7 +302,7 @@ class profilePerson
 	 *
 	 * Nathan White '11 (nwhite)
 	 */
-	private function construct_profile_name()
+	protected function construct_profile_name()
 	{
 		$name = $this->get_first_ds_value('ds_fullname');
 		$class_year = $this->get_first_ds_value('ds_classyear');
@@ -354,7 +354,7 @@ class profilePerson
 	 * @param mixed $value Extra field value
 	 * @return string Updated JSON blob
 	 */
-	private function get_update_profile_entity_extra_field($profile, $field, $value)
+	protected function get_update_profile_entity_extra_field($profile, $field, $value)
 	{
 		if ($extra = $profile->get_value('extra_fields'))
 			$data = json_decode($extra, true);
@@ -373,7 +373,7 @@ class profilePerson
 	 *
 	 * @return int
 	 */
-	private function get_updater_user_id()
+	protected function get_updater_user_id()
 	{
 		if (!isset($this->updater_user_id))
 		{
@@ -485,7 +485,7 @@ class profilePerson
 	 *
 	 * @return boolean did it do a database update (or NULL) if there is no profile entity to update.
 	 */
-	private function update_last_modified()
+	protected function update_last_modified()
 	{
 		if ($entity = $this->get_profile_entity())
 		{
@@ -567,7 +567,7 @@ class profilePerson
 	/** 
 	 * @return array of external url entity objects
 	 */
-	private function get_sites_entities( $refresh = false )
+	protected function get_sites_entities( $refresh = false )
 	{
 		if (!isset($this->sites_entities) || $refresh)
 		{
@@ -776,7 +776,7 @@ class profilePerson
 	/** 
 	 * @return object asset entity which contains the resume
 	 */
-	private function get_resume_entity( $refresh = false )
+	protected function get_resume_entity( $refresh = false )
 	{
 		if (!isset($this->resume_entity) || $refresh)
 		{
