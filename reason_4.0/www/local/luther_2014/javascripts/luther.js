@@ -79,7 +79,8 @@ $(document).ready(function() {
     // Add analytics tracking to call to action buttons
     $("a[class^=cta-]").each(function(index) {
     	if ((label = $(this).attr("class").match(/^cta\-([A-Za-z0-9_\-]+)/)[1]) != "button") {
-    		$(this).attr("onclick", "_gaq.push(['trackEvent', 'call-to-action', 'click', '" + $(location).attr('pathname') + "button" + label + "']);");
+    		$(this).attr("onclick", "_gaq.push(['_trackEvent', 'call-to-action', 'click', '" + $(location).attr('pathname') + "button_" + label + "']);");
+    		$(this).attr("target", "_blank");
     	}
     });		
 

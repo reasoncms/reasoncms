@@ -59,6 +59,7 @@ class CreditCardThorForm extends LutherDefaultThorForm
 	var $expense_budget_number;
 	var $revenue_budget_number;
 	var $transaction_comment;
+	var $pfresult;  // added so child classes could reference the results
 
 	
 	var $elements = array(
@@ -159,12 +160,12 @@ class CreditCardThorForm extends LutherDefaultThorForm
 		parent :: on_every_time();
 		
 		// Don't take credit cards on an unencrypted connection!+
-		if( !on_secure_page() )
-		{		
+		// if( !on_secure_page() )
+		// {		
 		
-			header( 'Location: '.get_current_url( 'https' ) );
-			exit;
-		}
+		// 	header( 'Location: '.get_current_url( 'https' ) );
+		// 	exit;
+		// }
 		
 
 
@@ -371,11 +372,11 @@ class CreditCardThorForm extends LutherDefaultThorForm
 			// Live mode: $result = $pf->transact();
 			if($this->is_in_testing_mode)
 			{
-				$pfresult = $pf->transact('test');
+				$this->pfresult = $pf->transact('test');
 			}
 			else
 			{
-				$pfresult = $pf->transact();
+				$this->pfresult = $pf->transact();
 			}
 			 if (!$pf->approved)
 			 {
@@ -394,7 +395,7 @@ class CreditCardThorForm extends LutherDefaultThorForm
 								$this->get_value('billing_country') . "\n";
 				
 				$query = 'INSERT INTO transactions SET
-					REFNUM = "'.$pfresult['PNREF'].'",
+					REFNUM = "'.$this->pfresult['PNREF'].'",
 					source = "'.addslashes( $pf->comment2 ). '", 
 					amount = "'.addslashes( $pf->amount ). '", 
 					name_on_card = "'.addslashes( $this->get_value('credit_card_name') ). '", 

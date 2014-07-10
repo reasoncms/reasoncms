@@ -38,21 +38,21 @@ $(document).ready(function() {
 
     // Show/hide and populate Country field based on state/province choice
     $("select#state_provinceElement").change(function(){
-        toggle_country_field("select#state_provinceElement","tr#countryRow" )});
+        toggle_country_field("select#state_provinceElement","#countryItem" )});
 
     // Set the initial state for the Country field
     $("select#state_provinceElement").change();
-    $("#countryRow").hide();
+    $("#countryItem").hide();
 });
 
 function hide_field(element)
 {
-    element = "tr#"+element.replace(/_/g,"")+"Row";
+    element = "#"+element.replace(/_/g,"")+"Item";
     $(element).hide();
 }
 function show_field(element)
 {
-    element = "tr#"+element.replace(/_/g,"")+"Row";
+    element = "#"+element.replace(/_/g,"")+"Item";
     $(element).show();
 }
 function showDeliveryInfo()
@@ -130,39 +130,39 @@ function toggle_billing_address() {
     if (!$("input[name='billing_address']:checked").val() ||
         $("input[name='billing_address']:checked").val() == 'entered')
         {
-        $("tr#billingstreetaddressRow").hide();
-        $("tr#billingcityRow").hide();
-        $("tr#billingstateprovinceRow").hide();
-        $("tr#billingzipRow").hide();
-        $("tr#billingcountryRow").hide();
+        $("#billingstreetaddressItem").hide();
+        $("#billingcityItem").hide();
+        $("#billingstateprovinceItem").hide();
+        $("#billingzipItem").hide();
+        $("#billingcountryItem").hide();
     } else {
-        $("tr#billingstreetaddressRow").show();
-        $("tr#billingcityRow").show();
-        $("tr#billingstateprovinceRow").show();
-        $("tr#billingzipRow").show();
-        $("tr#billingcountryRow").show();
+        $("#billingstreetaddressItem").show();
+        $("#billingcityItem").show();
+        $("#billingstateprovinceItem").show();
+        $("#billingzipItem").show();
+        $("#billingcountryItem").show();
         $("select#billing_state_provinceElement").change();
     }
 }
-function toggle_country_field(stateElementSelector, countryRowSelector)
+function toggle_country_field(stateElementSelector, countryItemSelector)
 {
 	// Show/hide and populate Country field based on state/province choice
 	// If not US or Canada, show the Country field
 	if ($(stateElementSelector).val() == "XX")
 	{
-   	    $(countryRowSelector + " select").val('');
-    	$("#countryRow").show();
-   		$("tr#billingcountryRow").show();
+   	    $(countryItemSelector + " select").val('');
+    	$("#countryItem").show();
+   		$("#billingcountryItem").show();
 	}
 	// If US or Canada, populate Country but hide it
 	else
 	{
-	    //$(countryRowSelector).hide();
+	    //$(countryItemSelector).hide();
 	    // If a Canadian province...
 	    if (/^(?:AB|BC|MB|NB|NL|NT|NS|NU|ON|PE|QC|SK|YT)$/.test($(stateElementSelector).val()))
-		$(countryRowSelector + " select").val("CAN");
+		$(countryItemSelector + " select").val("CAN");
 	    // If anything else (other than unset)
 	    else if ($(stateElementSelector).val() != "")
-		$(countryRowSelector + " select").val('USA');
+		$(countryItemSelector + " select").val('USA');
 	}
 }

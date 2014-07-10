@@ -41,7 +41,7 @@ class ReasonTwitterDefaultFeedView extends ReasonMVCView
 						'randomize' => false,
 						'title' => NULL,
 						'description' => NULL);
-
+	
 	function get()
 	{
 		$tweets = $this->data();
@@ -53,10 +53,17 @@ class ReasonTwitterDefaultFeedView extends ReasonMVCView
 			$str .= (!empty($description)) ? $description : '';
 			if ($this->config('randomize')) shuffle($tweets);
 			$str .= '<ul>';
+			$class = 'class="twitter_action_img"';
+			$imgbase = REASON_HTTP_BASE_PATH . 'css/twitter/';
+			$actbase = 'https://twitter.com/intent/';
 			foreach ($tweets as $tweet)
 			{
 				$num = (!isset($num)) ? 1 : ($num + 1);
-				$str .= '<li>'.$tweet['html'].' <span class="date">'.carl_date('j M', strtotime($tweet['created_at'])).'</li>';
+				$reply = '<a href="'.$actbase.'tweet?in_reply_to='.$tweet['id'].'"><img src ="'.$imgbase.'reply.png" '.$class.'></a>';
+				$retweet = '<a href="'.$actbase.'retweet?tweet_id='.$tweet['id'].'"><img src ="'.$imgbase.'retweet.png" '.$class.'></a>';
+				$fav = '<a href="'.$actbase.'favorite?tweet_id='.$tweet['id'].'"><img src ="'.$imgbase.'favorite.png" '.$class.'></a>';
+				$action = $reply.$retweet.$fav;
+				$str .= '<li>'.$tweet['html'].' <div class="twitter_action_bar"><p class="twitter_date">'.carl_date('j M', strtotime($tweet['created_at']))."</p>".$action.'</div></li>';
 				if ($num == $this->config('num_to_show')) break;
 			}
 			$str .= '</ul>';
@@ -76,7 +83,7 @@ class ReasonTwitterDefaultFeedView extends ReasonMVCView
 		$tweet = reset($tweets);
 		$screen_name = $tweet['user']['screen_name'];
 		$name = $tweet['user']['name'];
-		return '<h3><a href="http://twitter.com/"'. urlencode($screen_name) . '">'.htmlspecialchars($name).'</a></h3>';
+		return '<h3><a href="http://twitter.com/'. urlencode($screen_name) . '">'.htmlspecialchars($name).'</a></h3>';
 	}
 	
 	/**
@@ -90,4 +97,3 @@ class ReasonTwitterDefaultFeedView extends ReasonMVCView
 		return '<p>'.htmlspecialchars($description).'</p>';
 	}
 }
-?>
