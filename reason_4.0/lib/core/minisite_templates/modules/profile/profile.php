@@ -701,7 +701,7 @@ class ProfileModule extends DefaultMinisiteModule
 	 * @todo can all site admins edit all profiles? Or should we require you to pose_as a user?
 	 * @return boolean;
 	 */
-	function user_can_inline_edit()
+	protected function user_can_inline_edit()
 	{
 		if (!isset($this->user_can_inline_edit))
 		{
@@ -725,7 +725,7 @@ class ProfileModule extends DefaultMinisiteModule
 	 *
 	 * @param string $section Profile section name
 	 */
-	function affiliation_supports_section( $section )
+	protected function affiliation_supports_section( $section )
 	{
 		if (!isset($this->affiliation_supports_section[$section]))
 		{
@@ -751,7 +751,7 @@ class ProfileModule extends DefaultMinisiteModule
 	 *
 	 * @param string $section Profile section name
 	 */
-	function affiliation_supports_section_editing( $section )
+	protected function affiliation_supports_section_editing( $section )
 	{
 		if (!isset($this->affiliation_supports_section_editing[$section]))
 		{
@@ -797,7 +797,7 @@ class ProfileModule extends DefaultMinisiteModule
 	 * - connect: for viewing the connections to an individual profile
 	 * - tag: for viewing the connections for a particular tag.
 	 */
-	function get_view_mode()
+	protected function get_view_mode()
 	{
 		if (!empty($this->request['tag']))
 			return 'tag';
@@ -816,7 +816,7 @@ class ProfileModule extends DefaultMinisiteModule
 	 * @param string $section Section name
 	 * @return object Form object
 	 */
-	private function get_inline_editing_form($section)
+	protected function get_inline_editing_form($section)
 	{
 		if (!isset($this->form[$section]))
 		{
@@ -858,7 +858,7 @@ class ProfileModule extends DefaultMinisiteModule
 	 * @param string $section Profile section name
 	 * @return string HTML for our form
 	 */
-	private function get_inline_editing_form_html($section)
+	protected function get_inline_editing_form_html($section)
 	{
 		if ($form = $this->get_inline_editing_form( $section ))
 		{
@@ -917,7 +917,7 @@ class ProfileModule extends DefaultMinisiteModule
 	 *  1. They're an admin on the profile site
 	 *  2. The profile is an alum, and the person is in the alumni_profile_editors_group
 	 */
-	function get_user_netid()
+	protected function get_user_netid()
 	{
 		if (!isset($this->_user_netid))
 		{
