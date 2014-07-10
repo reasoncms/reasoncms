@@ -90,7 +90,6 @@
 							<ul>
 								<li><a href="http://emergency.luther.edu"><span>Emergency Info</span></a></li>
 								<li><a href="/privacy/"><span>Privacy Statement</span></a></li>
-								<li><a href="/contact/"><span>Contact</span></a></li>
 								<li><a href="/reportproblem/"><span>Report a Problem</span></a></li>
 							</ul>
 						</div>
