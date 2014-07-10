@@ -125,8 +125,25 @@
 				$class = 'closed';
 			if($counter)
 				$class .= ' item'.$counter;
-			if(isset($this->values[$id]) && $this->values[$id]->get_value( 'url' ))
+			$url = $this->values[$id]->get_value( 'url' );
+			if(isset($this->values[$id]) && $url)
+			{
 				$class .= ' jump';
+				if (( filter_var($url, FILTER_VALIDATE_URL, FILTER_FLAG_HOST_REQUIRED) !== FALSE ))
+				{
+					if ( preg_match( '#'.(REASON_HOST).'#', $url ))
+					{
+						$class .= ' jump-internal';
+					} else {
+						$class .= ' jump-external';
+					}
+				}
+				else // relative URL
+				{
+					$class .= ' jump-internal';
+				}
+			}
+
 			if($this->values[ $id ]->get_value( 'unique_name'))
 				$class .= ' uname-'.htmlspecialchars($this->values[ $id ]->get_value( 'unique_name'), ENT_QUOTES);
 			return $class;
