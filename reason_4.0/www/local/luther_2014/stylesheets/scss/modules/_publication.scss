@@ -118,7 +118,7 @@
 			padding: $column-gutter/2 0;
 		}
 
-		$teaser-width: rem-calc(230);
+		$teaser-width: rem-calc(400);
 		$teaser-offset: $teaser-width + $column-gutter;
 
 		@media #{$medium-up} {

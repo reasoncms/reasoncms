@@ -143,7 +143,6 @@
 			> div {
 				@include clearfix;
 				margin-bottom: $column-gutter;
-				border: 1px solid red;
 			}
 
 			> div:last-child {
