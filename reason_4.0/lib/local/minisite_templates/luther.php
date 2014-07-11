@@ -312,7 +312,7 @@
 		function you_are_here($delimiter = ' <span>&raquo;</span> ')
 		{
 			echo '<div class="breadcrumbs">';
-			echo '<a href="/"><span class="screenreader">Home</span><i class="fa fa-home"></i></a> <span>&raquo;</span>';
+			echo '<a href="/"><span class="screenreader">Home</span><i class="fa fa-home"></i></a> <span>&raquo;</span> ';
 			echo $this->_get_breadcrumb_markup($this->_get_breadcrumbs(), $this->site_info->get_value('base_breadcrumbs'), $delimiter);
 			echo '</div>'."\n";
 		}
