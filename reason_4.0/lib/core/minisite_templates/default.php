@@ -1095,19 +1095,22 @@ class MinisiteTemplate
 
 	function get_title_tag_pattern_for ($zone)
 	{
-		
+		$pattern = $this->site_info->_values[$zone .'_title_pattern'];
+		if ( $pattern ) return $pattern;
+		return constant('REASON_' . strtoupper($zone) . '_TITLE_PATTERN');
 	}
 	
 	function get_title ()
 	{
 		if ( $this->is_minisite_home_page() )
-			$pattern = 'minisite home';
+			$pattern = 'minisite';
 		elseif ( $this->is_secondary_page() )
 			$pattern = 'secondary';
 		elseif ( $this->is_item_page() )
 			$pattern = 'item';
 
-		$parser = new TitleTagParser($pattern, $this);
+		$parser = new TitleTagParser($this->get_title_tag_pattern_for($pattern), $this);
+
 		$this->head_items->add_head_item('title', array(), $parser->render(), true);
 	}
 	

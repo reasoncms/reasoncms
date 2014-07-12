@@ -33,6 +33,13 @@ class TitleTagParser
   {
     $this->pattern = $pattern;
     $this->context = $context;
+    if ($this->context) $this->init_context();
+  }
+
+  protected function init_context ()
+  {
+    $crumbs = &$this->context->_get_crumbs_object();
+    $this->last_crumb = $crumbs->get_last_crumb();
   }
 
   public function render ()
@@ -40,9 +47,9 @@ class TitleTagParser
     return reason_htmlspecialchars(strip_tags(array_reduce($this->tags, array('TitleTagParser', 'sub'), $this->pattern)));
   }
 
-  protected function sub ($carry, $item)
+  protected function sub ($sum, $item)
   {
-    return str_replace("[$item]", $this->$item(), $carry);
+    return str_replace("[$item]", $this->$item(), $sum);
   }
 
   protected function organization_name ()
@@ -57,11 +64,11 @@ class TitleTagParser
 
   protected function item_name ()
   {
-    return 'it is an itmem';
+    return $this->last_crumb['page_name'];
   }
 
   protected function page_title ()
   {
-    return 'pag titel';
+    return $this->context->page_info->get_value('name');
   }
 }
