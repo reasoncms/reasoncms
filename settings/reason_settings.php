@@ -1031,4 +1031,21 @@
 	 * With an API key, Reason can provide superior ip geolocation results.
 	 */
 	define('REASON_IPINFODB_API_KEY', '');
-?>
+
+	/**
+	 * REASON_MINISITE_TITLE_PATTERN
+	 *
+	 */
+	define('REASON_MINISITE_TITLE_PATTERN', '[minisite_name] | [organization_name]');
+	
+	/**
+	 * REASON_SECONDARY_TITLE_PATTERN
+	 *
+	 */
+	define('REASON_SECONDARY_TITLE_PATTERN', '[minisite_name]: [page_title] | [organization_name]');
+	
+	/**
+	 * REASON_ITEM_TITLE_PATTERN
+	 *
+	 */
+	define('REASON_ITEM_TITLE_PATTERN', '[item_name] | [minisite_name] | [organization_name]');
