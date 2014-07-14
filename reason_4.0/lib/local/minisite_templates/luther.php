@@ -122,6 +122,8 @@
 				echo "\n".$this->cur_page->get_value('extra_head_content')."\n";
 			}
 			
+			echo "<!--[if lt IE 9]><link rel='stylesheet' type='text/css' href='/reason/local/luther_2014/stylesheets/ie.css' /><![endif]-->"."\n";
+
 			echo '</head>'."\n";
 
 			// start body
@@ -204,7 +206,7 @@
 			$this->head_items->add_stylesheet('/reason/local/luther_2014/stylesheets/fonts/font-awesome/css/font-awesome.css');
 			$this->head_items->add_stylesheet('/reason/local/luther_2014/stylesheets/dependencies/dependencies.css');
 			$this->head_items->add_stylesheet('/reason/local/luther_2014/stylesheets/base.css');
-			$this->head_items->add_stylesheet('/reason/local/luther_2014/stylesheets/ie.css');
+			//$this->head_items->add_stylesheet('/reason/local/luther_2014/stylesheets/ie.css');
 
 	}
 		
