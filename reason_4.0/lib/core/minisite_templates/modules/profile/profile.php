@@ -924,7 +924,7 @@ class ProfileModule extends DefaultMinisiteModule
 			if ($this->config->allow_posing && !empty($this->request['pose_as']))
 			{
 				$username = strtolower($this->request['pose_as']);
-				$p = new $this->person_class($username);
+				$p = new $this->config->person_class($username);
 				if ($p->get_ds_record()) 
 				{
 					if (reason_check_access_to_site($this->site_id))
