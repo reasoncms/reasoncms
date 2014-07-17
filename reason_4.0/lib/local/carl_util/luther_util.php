@@ -255,8 +255,6 @@ function get_directory_images($folder)
 
 function google_analytics()
 {
-	// if (preg_match("/^localhost$/", REASON_HOST, $matches))
-	echo REASON_HOST;
 	if (!preg_match("/^www.luther.edu$/", REASON_HOST, $matches))
 	{
 		echo '<!-- '. REASON_HOST.': google analytics code goes here on production servers -->'."\n";
