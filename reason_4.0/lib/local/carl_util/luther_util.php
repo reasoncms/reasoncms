@@ -27,7 +27,7 @@ function get_luther_spotlight()
 			),
 		);
 	}
-	else 
+	else
 	{
 		return '';
 	}
@@ -57,7 +57,7 @@ function luther_is_sports_page($include_landing = true)
 	$url = get_current_url();
 	if ($include_landing)
 		return preg_match("/^https?:\/\/[A-Za-z0-9_\.]+\/sports\/?/", $url);
-	else 
+	else
 		return preg_match("/^https?:\/\/[A-Za-z0-9_\.]+\/sports\/[A-Za-z0-9_\.\-]+/", $url);
 }
 
@@ -80,7 +80,7 @@ function luther_video_audio_streaming($event_id, $imgVideo = null, $imgAudio = n
 			{
 				$vstream = '<a title="Video Streaming" href="http://client.stretchinternet.com/client/luther.portal"><img class="video_streaming" src="' . $imgVideo .'" alt="Video Streaming"></a>';
 			}
-			else 
+			else
 			{
 				$vstream = '<a title="Video Streaming" href="http://client.stretchinternet.com/client/luther.portal"><i class="fa fa-video-camera fa-fw"></i></a>';
 			}
@@ -255,9 +255,11 @@ function get_directory_images($folder)
 
 function google_analytics()
 {
-	if (preg_match("/^localhost$/", REASON_HOST, $matches))
+	// if (preg_match("/^localhost$/", REASON_HOST, $matches))
+	echo REASON_HOST;
+	if (!preg_match("/^www.luther.edu$/", REASON_HOST, $matches))
 	{
-		echo '<!-- localhost: google analytics code goes here on production servers -->'."\n";
+		echo '<!-- '. REASON_HOST.': google analytics code goes here on production servers -->'."\n";
 		return;
 	}
 
@@ -318,7 +320,7 @@ function handle_ie8()
 		echo '</div>'."\n";
 		echo '</div>  <!-- class="flash-notice"-->'."\n";
 	}
-	
+
 }
 
 function luther_shorten_string($text, $length, $append)
