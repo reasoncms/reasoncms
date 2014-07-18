@@ -23,8 +23,23 @@
 
 			// Adds custom sports stylesheet
 			$this->head_items->add_stylesheet('/reason/local/luther_2014/stylesheets/sites/sports.css');
+			if (preg_match('/sports\/(men|women)\/\w*\/headlines/', get_current_url()))
+			{
+				$this->head_items->add_stylesheet('/reason/local/luther_2014/javascripts/vendor/jquery.cluetip.css');
+			}
 		}
-		
+
+		function do_org_foot()
+		{
+			parent::do_org_foot();
+			if (preg_match('/sports\/(men|women)\/\w*\/headlines/', get_current_url()))
+			{
+				echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/vendor/jquery.hoverIntent.min.js"></script>'."/n";
+				echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/vendor/jquery.cluetip.min.js"></script>'."/n";
+				echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/luther-cluetip.js"></script>'."/n";
+			}
+		}
+
 		function get_body_tag_classes()
 		{
 			// Adds the class lutherSports to the body tag on all pages of the site
