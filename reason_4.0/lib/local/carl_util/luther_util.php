@@ -313,7 +313,7 @@ function handle_ie8()
 	if(preg_match('/(?i)msie [6-8]/',$_SERVER['HTTP_USER_AGENT']))
 	{
 		echo '<div id="emergencyPreempt" class="flash-notice">'."\n";
-		echo '<div class="callout callout-warning">'."\n";
+		echo '<div class="callout callout-warning ie8-alert">'."\n";
 		echo 'Browser support for this version of Internet Explorer is no longer supported. Please upgrade to IE 9 or newer.'."\n";
 		echo '</div>'."\n";
 		echo '</div>  <!-- class="flash-notice"-->'."\n";

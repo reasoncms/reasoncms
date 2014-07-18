@@ -6648,21 +6648,32 @@ form input[type="submit"]:active {
 
 /* line 24, scss/modules/_policy.scss */
 #minisite .contentMain + .contentPost {
-  padding-top: 1.25rem;
+  margin-top: 0.83333rem;
 }
 
-/* line 33, scss/modules/_policy.scss */
+/* line 31, scss/modules/_policy.scss */
+#policyModule .rootPolicyList {
+  margin: 0;
+  font-size: 1.4375rem;
+  font-weight: 300;
+  font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
+}
+/* line 36, scss/modules/_policy.scss */
+#policyModule .rootPolicyList .rootPolicyItem {
+  margin-bottom: 1.25rem;
+}
+/* line 38, scss/modules/_policy.scss */
 #policyModule .rootPolicyList .rootPolicyItem a {
   margin-left: 2rem;
   position: relative;
-  display: block;
 }
-/* line 39, scss/modules/_policy.scss */
+/* line 44, scss/modules/_policy.scss */
 #policyModule .rootPolicyList .rootPolicyItem a:before {
   content: "\f138";
   position: absolute;
   left: -2rem;
-  top: 0.4375rem;
+  top: 0.5625rem;
+  font-size: 1rem;
   -webkit-transition-property: left;
   -moz-transition-property: left;
   -o-transition-property: left;
@@ -6676,8 +6687,9 @@ form input[type="submit"]:active {
   -o-transition-timing-function: ease;
   transition-timing-function: ease;
 }
-/* line 57, scss/modules/_policy.scss */
+/* line 63, scss/modules/_policy.scss */
 #policyModule .rootPolicyList .rootPolicyItem a:hover:before, #policyModule .rootPolicyList .rootPolicyItem a:focus:before {
+  font-size: 1rem;
   left: -1.75rem;
   -webkit-transition-property: left;
   -moz-transition-property: left;
@@ -6692,65 +6704,65 @@ form input[type="submit"]:active {
   -o-transition-timing-function: ease;
   transition-timing-function: ease;
 }
-/* line 68, scss/modules/_policy.scss */
+/* line 75, scss/modules/_policy.scss */
 #policyModule .policyForm .rootMenu {
   margin-bottom: 2.5rem;
 }
-/* line 135, scss/modules/_policy.scss */
+/* line 142, scss/modules/_policy.scss */
 #policyModule .policy .policyContent .contentMain h3:first-child {
   padding-top: 0.41667rem;
   border-top: none;
 }
-/* line 139, scss/modules/_policy.scss */
+/* line 146, scss/modules/_policy.scss */
 #policyModule .policy .policyContent .contentMain h3 {
   border-top: 1px solid #dddddd;
   padding-top: 1.25rem;
 }
-/* line 146, scss/modules/_policy.scss */
+/* line 153, scss/modules/_policy.scss */
 #policyModule .policy .decimal {
   margin: 0;
 }
-/* line 150, scss/modules/_policy.scss */
+/* line 157, scss/modules/_policy.scss */
 #policyModule .policy .decimal .sub_policy .policyContent .contentMain {
   border-bottom: 1px solid #dddddd;
   margin-bottom: 0.625rem;
 }
-/* line 153, scss/modules/_policy.scss */
+/* line 160, scss/modules/_policy.scss */
 #policyModule .policy .decimal .sub_policy .policyContent .contentMain h5 {
   border-bottom: none;
   margin-left: 1.25rem;
   margin-bottom: 0;
 }
-/* line 159, scss/modules/_policy.scss */
+/* line 166, scss/modules/_policy.scss */
 #policyModule .policy .decimal .sub_policy .policyContent .contentMain p {
   border-bottom: none;
   margin-left: 1.25rem;
   margin-bottom: 0.625rem;
 }
-/* line 164, scss/modules/_policy.scss */
+/* line 171, scss/modules/_policy.scss */
 #policyModule .policy .decimal .sub_policy .policyContent .contentMain p:last-child {
   margin-bottom: 0;
   padding-bottom: 0.625rem;
 }
-/* line 168, scss/modules/_policy.scss */
+/* line 175, scss/modules/_policy.scss */
 #policyModule .policy .decimal .sub_policy .policyContent .contentMain ul {
   margin-bottom: 0.625rem;
 }
-/* line 171, scss/modules/_policy.scss */
+/* line 178, scss/modules/_policy.scss */
 #policyModule .policy .decimal .sub_policy .policyContent .contentMain + .contentMain {
   border-bottom: none;
 }
-/* line 176, scss/modules/_policy.scss */
+/* line 183, scss/modules/_policy.scss */
 #policyModule .policy .decimal .sub_policy .policyName {
   color: #1073ce;
   width: 94%;
 }
-/* line 179, scss/modules/_policy.scss */
+/* line 186, scss/modules/_policy.scss */
 #policyModule .policy .decimal .sub_policy .policyName:hover {
   cursor: pointer;
   color: #004789;
 }
-/* line 187, scss/modules/_policy.scss */
+/* line 194, scss/modules/_policy.scss */
 #policyModule .policy .decimal .closedAccordion .policyName:after {
   content: "\f078";
   color: #444444;
@@ -6760,7 +6772,7 @@ form input[type="submit"]:active {
   padding-top: 0.625rem;
   padding-left: 0.3125rem;
 }
-/* line 201, scss/modules/_policy.scss */
+/* line 208, scss/modules/_policy.scss */
 #policyModule .policy .decimal .openAccordion .policyName:after {
   content: "\f077";
   color: #444444;
@@ -6770,21 +6782,16 @@ form input[type="submit"]:active {
   padding-top: 0.625rem;
   padding-left: 0.3125rem;
 }
-/* line 215, scss/modules/_policy.scss */
-#policyModule .rootPolicyList {
-  margin: 0;
-  font-size: 1rem;
-}
-/* line 219, scss/modules/_policy.scss */
+/* line 226, scss/modules/_policy.scss */
 #policyModule .proximatePolicies {
   padding-top: 0.625rem;
   padding-bottom: 0.41667rem;
 }
-/* line 222, scss/modules/_policy.scss */
+/* line 229, scss/modules/_policy.scss */
 #policyModule .proximatePolicies .previous {
   padding-top: 0.3125rem;
 }
-/* line 228, scss/modules/_policy.scss */
+/* line 235, scss/modules/_policy.scss */
 #policyModule .listLink p a {
   border-top: 1px solid #dddddd;
   padding-top: 0.09375rem;
