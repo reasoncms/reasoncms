@@ -3,6 +3,14 @@
   visibility: hidden;
 }
 
+/* line 8, scss/_ie8.scss */
+.ie8-alert {
+  color: red;
+  font-size: 18px;
+  text-align: center;
+  height: 20px;
+}
+
 @media only screen and (max-width: 40em) {
   /* line 17, scss/_ie9.scss */
   .lt-ie10 .left-off-canvas-menu,
