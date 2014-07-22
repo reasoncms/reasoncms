@@ -62,6 +62,10 @@
 
 		.description {
 			margin-top: rem-calc(8);
+
+			p {
+				//margin-bottom: 0;
+			}
 		}
 
 		.more {
@@ -71,6 +75,7 @@
 
 	.pubLinks {
 		margin-left: 0;
+		margin-bottom: 0;
 
 		a {
 			&:before {
@@ -113,7 +118,7 @@
 			padding: $column-gutter/2 0;
 		}
 
-		$teaser-width: rem-calc(300);
+		$teaser-width: rem-calc(400);
 		$teaser-offset: $teaser-width + $column-gutter;
 
 		@media #{$medium-up} {

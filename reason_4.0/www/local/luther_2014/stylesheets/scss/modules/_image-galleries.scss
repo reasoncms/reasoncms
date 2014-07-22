@@ -127,7 +127,7 @@
 		}
 
 		img {
-			width: 100%;
+			max-width: 100%;
 			@include default-transition();
 			@include box-shadow($lc-white 1.5px 1.5px 0, #ccc 3px 3px 0, $lc-white 4.5px 4.5px 0, #ccc 6px 6px 0);
 
@@ -198,7 +198,7 @@
 			}
 
 			img {
-				width: 100%;
+				max-width: 100%;
 				opacity: .9;
 				border: 1px solid #FFF;
 				@include default-transition();
@@ -225,7 +225,7 @@
 		}
 
 		img {
-			width: 100%;
+			max-width: 100%;
 			@include default-transition();
 			@include box-shadow($lc-white 1.5px 1.5px 0, #ccc 3px 3px 0, $lc-white 4.5px 4.5px 0, #ccc 6px 6px 0);
 

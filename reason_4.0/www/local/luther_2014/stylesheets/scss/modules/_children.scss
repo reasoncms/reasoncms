@@ -28,7 +28,7 @@
 
 	li {
 
-		a {
+		a[href] {
 			margin-bottom: $column-gutter/2;
 			margin-left: rem-calc(32);
 			position: relative;
