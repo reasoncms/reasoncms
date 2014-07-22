@@ -165,6 +165,20 @@ blockquote {
 	}
 }
 
+#pageContent { // removes bottom margin from final elements in the page content. Allows for uniform spacing.
+	> *:last-child {
+		margin-bottom: 0;
+	}
+
+	.first-p-unaltered,
+	div {
+
+		> *:last-child {
+			margin-bottom: 0;
+		}
+	}
+}
+
 // Tables
 
 // Provide overflow:scroll for Tablesorter & #pageContent tables

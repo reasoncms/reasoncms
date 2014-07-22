@@ -581,6 +581,10 @@ body {
 			@media
 			#{$large-up} {
 				margin-top: $column-gutter;
+
+				.callout {
+					margin-bottom: 0;
+				}
 			}
 		}
 		
