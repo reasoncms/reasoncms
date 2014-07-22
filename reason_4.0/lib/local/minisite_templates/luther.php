@@ -57,20 +57,22 @@
 			}
 
 			// Global parameters for the image sidebar module
-			/*if($regions = $page_type->module_regions('image_sidebar'))
+			if($regions = $page_type->module_regions('image_sidebar'))
 			{
 				foreach($regions as $region)
 				{
-					if(!isset($module['module_params']['thumbnail_width']))
-						$page_type->set_region_parameter($region, 'thumbnail_width', 600);
-					if(!isset($module['module_params']['thumbnail_height']))
-						$page_type->set_region_parameter($region, 'thumbnail_height', 400);
-					if(!isset($module['module_params']['thumbnail_crop']))
-						$page_type->set_region_parameter($region, 'thumbnail_crop', 'fill');
-					if(!isset($module['module_params']['num_to_display']))
-						$page_type->set_region_parameter($region, 'num_to_display', 3);
+					// if(!isset($module['module_params']['thumbnail_width']))
+					// 	$page_type->set_region_parameter($region, 'thumbnail_width', 600);
+					// if(!isset($module['module_params']['thumbnail_height']))
+					// 	$page_type->set_region_parameter($region, 'thumbnail_height', 400);
+					// if(!isset($module['module_params']['thumbnail_crop']))
+					// 	$page_type->set_region_parameter($region, 'thumbnail_crop', 'fill');
+					// if(!isset($module['module_params']['num_to_display']))
+					// 	$page_type->set_region_parameter($region, 'num_to_display', 3);
+					if(!isset($module['module_params']['caption_flag']))
+						$page_type->set_region_parameter($region, 'caption_flag', '');
 				}
-			}*/
+			}
 
 			// Global parameters for the pulbication module
 			if($regions = $page_type->module_regions('publication'))
@@ -122,6 +124,8 @@
 				echo "\n".$this->cur_page->get_value('extra_head_content')."\n";
 			}
 			
+			echo "<!--[if lt IE 9]><link rel='stylesheet' type='text/css' href='/reason/local/luther_2014/stylesheets/ie.css' /><![endif]-->"."\n";
+
 			echo '</head>'."\n";
 
 			// start body
@@ -204,7 +208,7 @@
 			$this->head_items->add_stylesheet('/reason/local/luther_2014/stylesheets/fonts/font-awesome/css/font-awesome.css');
 			$this->head_items->add_stylesheet('/reason/local/luther_2014/stylesheets/dependencies/dependencies.css');
 			$this->head_items->add_stylesheet('/reason/local/luther_2014/stylesheets/base.css');
-			$this->head_items->add_stylesheet('/reason/local/luther_2014/stylesheets/ie.css');
+			//$this->head_items->add_stylesheet('/reason/local/luther_2014/stylesheets/ie.css');
 
 	}
 		

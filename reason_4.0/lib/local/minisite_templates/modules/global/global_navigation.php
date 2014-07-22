@@ -23,10 +23,10 @@
 				<h1 class="screenreader">Luther College Site Navigation</h1>
 				
 				<ul class="audiences">
-					<li><a href="/parents">Parents</a></li>
 					<li><a href="/alumni">Alumni &amp; Friends</a></li>
 					<li><a href="/faculty-staff">Faculty &amp; Staff</a></li>
 					<li><a href="/students">Students</a></li>
+					<li><a href="/parents">Parents</a></li>
 				</ul>
 				
 				<ul class="sections">

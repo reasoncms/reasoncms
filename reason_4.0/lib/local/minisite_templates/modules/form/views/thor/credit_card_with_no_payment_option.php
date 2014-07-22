@@ -108,9 +108,9 @@ class CreditCardNoPaymentThorForm extends CreditCardThorForm {
 						// Test mode: $result = $pf->transact('test');
 						// Live mode: $result = $pf->transact();
 						if ($this->is_in_testing_mode) {
-								$pfresult = $pf->transact('test');
+								$this->pfresult = $pf->transact('test');
 						} else {
-								$pfresult = $pf->transact();
+								$this->pfresult = $pf->transact();
 						}
 						if (!$pf->approved) {
 								$message = $pf->message;
@@ -126,7 +126,7 @@ class CreditCardNoPaymentThorForm extends CreditCardThorForm {
 										$this->get_value('billing_country') . "\n";
 
 								$query = 'INSERT INTO transactions SET
-								REFNUM = "' . $pfresult['PNREF'] . '",
+								REFNUM = "' . $this->pfresult['PNREF'] . '",
 								source = "' . addslashes($pf->comment2) . '", 
 								amount = "' . addslashes($pf->amount) . '", 
 								name_on_card = "' . addslashes($this->get_value('credit_card_name')) . '", 

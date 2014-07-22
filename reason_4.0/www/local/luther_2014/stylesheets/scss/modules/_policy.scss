@@ -20,9 +20,60 @@
 @import "mixins";
 
 
+#minisite {
+	.contentMain + .contentPost {
+		margin-top: $column-gutter/3;
+	}
+}
+
+
 #policyModule {
+	.rootPolicyList {
+		margin: 0;
+		font-size: rem-calc(23);
+		font-weight: 300;
+		font-family: $open-sans;
+		.rootPolicyItem {
+			margin-bottom: $column-gutter/2;
+			a {
+				//margin-bottom: $column-gutter/2;
+				margin-left: rem-calc(32);
+				position: relative;
+				//display: block;
+
+				&:before { // Adds a little arrow icon that moves right on hover
+					@extend .fa;
+					content: $fa-var-chevron-circle-right;
+					//content: $fa-var-angle-right;
+					position: absolute;
+					left: - rem-calc(32);
+					top: rem-calc(9);
+					font-size: rem-calc(16);
+					@include transition-property(left);
+					@include transition-duration(.5s);
+					@include transition-timing-function(ease);
+
+					@media #{$medium-up} {
+						//top: rem-calc(11);
+					}
+				}
+
+				&:hover,
+				&:focus {
+					&:before {
+						font-size: rem-calc(16);
+						left: - rem-calc(28);
+						@include transition-property(left);
+						@include transition-duration(.5s);
+						@include transition-timing-function(ease);
+					}
+				}
+			}
+		}
+	}
 	.policyForm {
 		.rootMenu {
+			margin-bottom: $column-gutter;
 		}
 	}
 	// .policyForm {
@@ -109,15 +160,23 @@
 						h5 {
 							border-bottom: none;
 							margin-left: rem-calc(20);
+							margin-bottom: 0;
 
 						}
 						p {
 							border-bottom:none;
 							margin-left: rem-calc(20);
+							margin-bottom: $column-gutter/4;
 						}
 						p:last-child {
 							margin-bottom: 0;
 							padding-bottom: $column-gutter/4;
+						}
+						ul {
+							margin-bottom: $column-gutter/4;
+						}
+						+ .contentMain {
+							border-bottom: none;
 						}
 					}
 				}
@@ -136,12 +195,10 @@
 						@extend .fa;
 						content: $fa-var-chevron-down;
 						color: $body-font-color;
-						font-size: rem-calc(12);
-						height: rem-calc(32);
-						width: rem-calc(32);
+						font-size: 55%;
 						vertical-align: top;
-						//padding-top: rem-calc(11);
-						padding-top: 1.5%;
+						position: absolute;
+						padding-top: rem-calc(10);
 						padding-left: rem-calc(5);
 					}
 				}
@@ -152,22 +209,20 @@
 						@extend .fa;
 						content: $fa-var-chevron-up;
 						color: $body-font-color;
-						font-size: rem-calc(12);
-						height: rem-calc(32);
-						width: rem-calc(32);
+						font-size: 55%;
 						vertical-align: top;
-						//padding-top: rem-calc(11);
-						padding-top: 1.5%;
+						position: absolute;
+						padding-top: rem-calc(10);
 						padding-left: rem-calc(5);
 					}
 				}
 			}
 		}
 	}
-	.rootPolicyList {
-		margin: 0;
-		font-size: rem-calc(16);
-	}
+	// .rootPolicyList {
+	// 	margin: 0;
+	// 	font-size: rem-calc(16);
+	// }
 	.proximatePolicies {
 		padding-top: $column-gutter/4; 
 		padding-bottom: $column-gutter/6;
