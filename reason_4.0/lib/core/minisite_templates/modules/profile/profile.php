@@ -25,6 +25,23 @@ reason_include_once( 'minisite_templates/modules/profile/config.php' );
  * Presents editable profiles for individuals defined in directory services.
  *
  * We map out which profile sections are included for each audience. For those in multiple audiences, we take an additive approach.
+ *
+ * Important setup note: this module requires a manual addition to the .htaccess file of the site it is implemented in.
+ *
+ * Add this to the bottom of the .htaccess file for the site (replace [path_to_page] with page path, [reason_www_directory] 
+ * with the proper path, [site_id] with the site id, and [page_id] with the page id):
+ *
+ * RewriteCond %{REQUEST_URI} ^/[path_to_page]/([0-9a-zA-Z_]+)$
+ * RewriteRule ^([^/?&]*)$ /[path_to_page]/$1/ [R=permanent]
+ * 
+ * RewriteCond %{REQUEST_URI} ^/[path_to_page]/([0-9a-zA-Z_]+)/connect/?$
+ * RewriteRule ^([^/?&]*)/connect/?$  /[reason_www_directory]/displayers/generate_page.php?site_id=[site_id]&page_id=[page_id]&username=$1&connect=1
+ * 
+ * RewriteCond %{REQUEST_URI} ^/[path_to_page]/explore/([0-9a-zA-Z_]+)/?$
+ * RewriteRule ^explore/([^/?&]*)$  /[reason_www_directory]/displayers/generate_page.php?site_id=[site_id]&page_id=[page_id]&tag=$1
+ * 
+ * RewriteCond %{REQUEST_URI} ^/[path_to_page]/([0-9a-zA-Z_]+)/$
+ * RewriteRule ^([^/?&]*)/$  /[reason_www_directory]/displayers/generate_page.php?site_id=[site_id]&page_id=[page_id]&username=$1
  * 
  * @todo current inline editing does not use activation parameters or check if it is active and thus will not play well with layouts where multiple modules support inline editing.
  *
