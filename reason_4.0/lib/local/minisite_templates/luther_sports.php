@@ -32,7 +32,7 @@
 		function do_org_foot()
 		{
 			parent::do_org_foot();
-			if (preg_match('/sports\/(men|women)\/\w*\/headlines/', get_current_url()))
+			if (preg_match('/sports\/(men|women)\/.+\/headlines/', get_current_url()))
 			{
 				echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/vendor/jquery.hoverIntent.min.js"></script>'."/n";
 				echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/vendor/jquery.cluetip.min.js"></script>'."/n";
