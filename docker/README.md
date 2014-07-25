@@ -46,8 +46,18 @@ This starts a mysql server with password "ReasonAdminPassword1" and user "admin"
   docker run --rm -i -t --link reason_mysql:mysql -v /root/reason_package:/usr/src/app docker-registry.example.com/reason ./install.sh
   ~~~
 
+  You should only need to enter your public IP address (use
+  http://ipchicken.com/ or similar), none of the other config parameters
+  should matter.
+
 * __Launch the web app process__
 
   ~~~
   docker run --name reason -d --link reason_mysql:mysql -v /root/reason_package:/usr/src/app -e VIRTUAL_HOST=reason.example.com docker-registry.example.com/reason
   ~~~
+
+* __Run setup:__
+
+  Browse to http://reason.example.com/reason/setup.php. Everything should be
+  good to go, check the bottom for the newly created admin account login and
+  password.
