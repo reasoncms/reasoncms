@@ -23,7 +23,7 @@
 
 			// Adds custom sports stylesheet
 			$this->head_items->add_stylesheet('/reason/local/luther_2014/stylesheets/sites/sports.css');
-			if (preg_match('/sports\/(men|women)\/\w*\/headlines/', get_current_url()))
+			if (preg_match('/sports\/(men|women)\/.+\/headlines/', get_current_url()))
 			{
 				$this->head_items->add_stylesheet('/reason/local/luther_2014/javascripts/vendor/jquery.cluetip.css');
 			}
