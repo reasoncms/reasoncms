@@ -637,9 +637,11 @@ class MinisiteTemplate
 		// value: meta tag to use
 		$meta_tags = array(
 			'description' => 'description',
-			'author' => 'author',
-			'keywords' => 'keywords'
+			'author' => 'author'
 		);
+
+		if ( REASON_SHOW_META_KEYWORDS )
+			$meta_tags['keywords'] = 'keywords';
 
 		// load meta elements from current page
 		
@@ -654,7 +656,9 @@ class MinisiteTemplate
 			}
 		}
 		
-		if(!in_array('keywords',$tags_added) && $this->pages->root_node() == $this->page_id)
+		if ( !in_array('keywords',$tags_added)
+			&& $this->pages->root_node() == $this->page_id
+			&& REASON_SHOW_META_KEYWORDS )
 		{
 			$content = reason_htmlspecialchars( $this->site_info->get_value( 'keywords' ) );
 			$this->head_items->add_head_item('meta',array('name'=>'keywords','content'=>$content) );
