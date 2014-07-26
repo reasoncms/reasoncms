@@ -1038,4 +1038,21 @@
 	 * Show meta keywords in <head>. meta keywords are deprecated and no longer beneficial for SEO.
 	 */
 	define('REASON_SHOW_META_KEYWORDS', false);
-?>
+
+	/**
+	 * REASON_MINISITE_TITLE_PATTERN
+	 *
+	 */
+	define('REASON_MINISITE_TITLE_PATTERN', '[minisite_name] | [organization_name]');
+	
+	/**
+	 * REASON_SECONDARY_TITLE_PATTERN
+	 *
+	 */
+	define('REASON_SECONDARY_TITLE_PATTERN', '[minisite_name]: [page_title] | [organization_name]');
+	
+	/**
+	 * REASON_ITEM_TITLE_PATTERN
+	 *
+	 */
+	define('REASON_ITEM_TITLE_PATTERN', '[item_name] | [minisite_name] | [organization_name]');
