@@ -255,7 +255,8 @@
 			$this->has_content( 'sidebar_2' ) ||
 			$this->has_content( 'post_sidebar' ) ||
 			$this->has_content( 'post_sidebar_2' ) ||
-			$this->has_content( 'post_sidebar_3' ) )
+			$this->has_content( 'post_sidebar_3' ) ||
+			$this->has_content( 'call_to_action_blurb') )
 			{
 				return true;
 			}
@@ -471,7 +472,8 @@
 				$this->has_content( 'sidebar_2' ) ||
 				$this->has_content( 'post_sidebar' ) || 
 				$this->has_content( 'post_sidebar_2' ) || 
-				$this->has_content( 'post_sidebar_3' ) ) {
+				$this->has_content( 'post_sidebar_3' ) ||
+				$this->has_content( 'call_to_action_blurb') ) {
 			
 			echo '<div id="relatedSections">'."\n";
 
