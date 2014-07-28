@@ -39,7 +39,7 @@
 				//margin-bottom: $column-gutter/2;
 				margin-left: rem-calc(32);
 				position: relative;
-				//display: block;
+				display: inline-block;
 
 				&:before { // Adds a little arrow icon that moves right on hover
 					@extend .fa;
@@ -47,7 +47,7 @@
 					//content: $fa-var-angle-right;
 					position: absolute;
 					left: - rem-calc(32);
-					top: rem-calc(9);
+					top: rem-calc(11);
 					font-size: rem-calc(16);
 					@include transition-property(left);
 					@include transition-duration(.5s);
