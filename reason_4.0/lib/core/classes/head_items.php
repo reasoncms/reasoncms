@@ -90,6 +90,13 @@ class HeadItems
 	 */
 	protected $delete_old_less_css = true;
 	
+	/**
+	 * Should less output have an absolute URL (e.g. including the domain name)?
+	 *
+	 * @var boolean
+	 */
+	protected $use_absolute_url_for_less_output = false;
+	
 	function HeadItems()
 	{
 	}
@@ -173,6 +180,10 @@ class HeadItems
 	{
 		$this->default_less_functions = $array;
 	}
+	function use_absolute_url_for_less_output($use_absolute_url_for_less_output = true)
+	{
+		$this->use_absolute_url_for_less_output = $use_absolute_url_for_less_output;
+	}
 	
 	/**
 	 * Add a less-based stylesheet
@@ -209,6 +220,9 @@ class HeadItems
 		$output_filename = $hash.'_'.filemtime($input_path).'.css';
 		
 		$output_url = WEB_TEMP.'less_compiled/'.$first2.'/'.$output_filename;
+		
+		if($this->use_absolute_url_for_less_output)
+			$output_url = '//' . HTTP_HOST_NAME . $output_url;
 		
 		$base_output_directory = WEB_PATH.substr(WEB_TEMP, 1).'less_compiled/';
 		if(!file_exists($base_output_directory))
