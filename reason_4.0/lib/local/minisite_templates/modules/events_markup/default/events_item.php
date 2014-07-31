@@ -118,8 +118,18 @@ class defaultEventsItemMarkup implements eventsItemMarkup
 		$ret .= $this->get_contact_info_markup($event);			
 
 		if ($event->get_value('url'))
-			$ret .= '<p class="eventUrl"><strong>Learn more at</strong> <a href="'.reason_htmlspecialchars($event->get_value( 'url' )).'">'.$event->get_value( 'url' ).'</a></p>'."\n";
-			
+		{
+			if (preg_match("/^[Rr]edirect:?\s?(.*?)$/", $event->get_value( 'url' ), $matches))
+			// Redirect to another site to display event information or registration
+			{
+				header('Location: ' . $matches[1]);
+				exit;
+			}
+			else
+			{
+				$ret .= '<p class="eventUrl"><strong>Learn more at</strong> <a href="'.reason_htmlspecialchars($event->get_value( 'url' )).'">'.$event->get_value( 'url' ).'</a></p>'."\n";
+			}
+		}	
 
 		$ret .= $this->get_item_export_link_markup($event);
 

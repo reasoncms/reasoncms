@@ -57,20 +57,22 @@
 			}
 
 			// Global parameters for the image sidebar module
-			/*if($regions = $page_type->module_regions('image_sidebar'))
+			if($regions = $page_type->module_regions('image_sidebar'))
 			{
 				foreach($regions as $region)
 				{
-					if(!isset($module['module_params']['thumbnail_width']))
-						$page_type->set_region_parameter($region, 'thumbnail_width', 600);
-					if(!isset($module['module_params']['thumbnail_height']))
-						$page_type->set_region_parameter($region, 'thumbnail_height', 400);
-					if(!isset($module['module_params']['thumbnail_crop']))
-						$page_type->set_region_parameter($region, 'thumbnail_crop', 'fill');
-					if(!isset($module['module_params']['num_to_display']))
-						$page_type->set_region_parameter($region, 'num_to_display', 3);
+					// if(!isset($module['module_params']['thumbnail_width']))
+					// 	$page_type->set_region_parameter($region, 'thumbnail_width', 600);
+					// if(!isset($module['module_params']['thumbnail_height']))
+					// 	$page_type->set_region_parameter($region, 'thumbnail_height', 400);
+					// if(!isset($module['module_params']['thumbnail_crop']))
+					// 	$page_type->set_region_parameter($region, 'thumbnail_crop', 'fill');
+					// if(!isset($module['module_params']['num_to_display']))
+					// 	$page_type->set_region_parameter($region, 'num_to_display', 3);
+					if(!isset($module['module_params']['caption_flag']))
+						$page_type->set_region_parameter($region, 'caption_flag', '');
 				}
-			}*/
+			}
 
 			// Global parameters for the pulbication module
 			if($regions = $page_type->module_regions('publication'))
@@ -253,7 +255,8 @@
 			$this->has_content( 'sidebar_2' ) ||
 			$this->has_content( 'post_sidebar' ) ||
 			$this->has_content( 'post_sidebar_2' ) ||
-			$this->has_content( 'post_sidebar_3' ) )
+			$this->has_content( 'post_sidebar_3' ) ||
+			$this->has_content( 'call_to_action_blurb') )
 			{
 				return true;
 			}
@@ -314,7 +317,7 @@
 		function you_are_here($delimiter = ' <span>&raquo;</span> ')
 		{
 			echo '<div class="breadcrumbs">';
-			echo '<a href="/"><span class="screenreader">Home</span><i class="fa fa-home"></i></a> <span>&raquo;</span>';
+			echo '<a href="/"><span class="screenreader">Home</span><i class="fa fa-home"></i></a> <span>&raquo;</span> ';
 			echo $this->_get_breadcrumb_markup($this->_get_breadcrumbs(), $this->site_info->get_value('base_breadcrumbs'), $delimiter);
 			echo '</div>'."\n";
 		}
@@ -469,7 +472,8 @@
 				$this->has_content( 'sidebar_2' ) ||
 				$this->has_content( 'post_sidebar' ) || 
 				$this->has_content( 'post_sidebar_2' ) || 
-				$this->has_content( 'post_sidebar_3' ) ) {
+				$this->has_content( 'post_sidebar_3' ) ||
+				$this->has_content( 'call_to_action_blurb') ) {
 			
 			echo '<div id="relatedSections">'."\n";
 

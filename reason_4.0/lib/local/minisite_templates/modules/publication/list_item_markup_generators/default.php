@@ -86,7 +86,7 @@ class PublicationListItemMarkupGenerator extends PublicationMarkupGenerator
 			$rsi = new reasonSizedImage();
 			$rsi->set_id($image->id());
 			$rsi->set_width(400);
-			$rsi->set_height(275);
+			$rsi->set_height(250);
 			$rsi->set_crop_style('fill');
 
 			ob_start();	

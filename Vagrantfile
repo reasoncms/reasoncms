@@ -4,8 +4,8 @@ VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "ubuntu-raring1304-x63"
-  config.vm.box_url = "http://goo.gl/ceHWg"
+  config.vm.box = "trusty64"
+  config.vm.box_url = "https://oss-binaries.phusionpassenger.com/vagrant/boxes/latest/ubuntu-14.04-amd64-vbox.box"
 
   # Create a forwarded port mapping to the host machine
   # config.vm.network :forwarded_port, guest: 80, host: 8080
@@ -35,10 +35,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # @todo find a better way to get mysql loaded
   config.vm.synced_folder ".", "/var/reason_package"
   config.vm.synced_folder "./reason_4.0/data", "/var/reason_package/reason_4.0/data", :owner=>"www-data", :group=>"www-data"
-  config.vm.synced_folder "../luther_css_js/javascripts", "/var/www/javascripts/", :owner=>"www-data", :group=>"www-data"
-  config.vm.synced_folder "../luther_css_js/stylesheets", "/var/www/stylesheets/", :owner=>"www-data", :group=>"www-data"
-  config.vm.synced_folder "../luther_css_js/images", "/var/www/images/", :owner=>"www-data", :group=>"www-data"
-
   config.vm.synced_folder "../sql", "/var/sql"
 
   # Ansible provisioning
