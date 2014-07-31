@@ -297,7 +297,10 @@ class OtherPublicationNewsModule extends DefaultMinisiteModule
 		echo '<ul>';
 		foreach ($news_items as $news_item)
 		{
-			echo '<li class="' . ( $news_item->get_value('_featured') ? 'featured' : 'notFeatured' ) . '">';
+			$class = 'notFeatured';
+			if($news_item->has_value('_featured') && $news_item->get_value('_featured'))
+				$class = 'featured';
+			echo '<li class="' . $class . '">';
 			$this->show_news_item($news_item);
 			echo '</li>';
 		}
