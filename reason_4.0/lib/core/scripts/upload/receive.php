@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Handles asynchronous file uploads from (e.g., SWFUpload). Use the Reason
  * {@link UploadedFile} class to work with files uploaded using this script
@@ -10,11 +9,13 @@
  * @since Reason 4.0 beta 8
  * @author Eric Naeseth <enaeseth+reason@gmail.com>
  */
-
 require 'common.inc.php';
 require_once CARL_UTIL_INC.'basic/cleanup_funcs.php';
 require_once CARL_UTIL_INC.'basic/image_funcs.php';
-
+/* 
+ *  include the reason_settings.php file to get the allowable minimum uploaded image dimensions defined in the file 
+ */
+include_once('settings/reason_settings.php');
 
 if (!function_exists('json_encode')) {
 	// A very simple JSON encoder for PHP < 5.2.
@@ -87,11 +88,10 @@ foreach (array_keys($_FILES) as $name) {
 	}
 	
 	$img_info = @getimagesize($temp_path);
-	$file_type = $img_info[2];
-	
+	$file_type = $img_info[2];		
 	/*
-		If uploading an image, but provide a non-web-friendly type (i.e. pdf), convert it and
-		update all of its corresponding paths. Note 1=>'gif',2=>'jpg',3=>'png' 
+	 *	If uploading an image, but provide a non-web-friendly type (i.e. pdf), convert it and
+	 *	update all of its corresponding paths. Note 1=>'gif',2=>'jpg',3=>'png' 
 	*/
 	$web_acceptable_types = array(1,2,3);
 	if( (!$img_info || !in_array($file_type, $web_acceptable_types) ) 
@@ -120,12 +120,15 @@ foreach (array_keys($_FILES) as $name) {
 		list($width, $height) = $img_info;
 		
 		// If exceeds width or height limit, store an original and resize the standard image
-		if ($constraints && !empty($constraints['max_dimensions'])) {
+		if ($constraints && !empty($constraints['max_dimensions'])) 
+		{
 			list($max_width, $max_height) = $constraints['max_dimensions'];
 			
-			if ($width > $max_width || $height > $max_height) {
+			if ($width > $max_width || $height > $max_height) 
+			{
 				$unscaled_path = add_name_suffix($temp_path, '-unscaled');
-				if (@copy($temp_path, $unscaled_path)) {
+				if (@copy($temp_path, $unscaled_path)) 
+				{
 				
 					//Make sure the image won't make php crash:
 					if(image_is_too_big($temp_path))
@@ -134,18 +137,34 @@ foreach (array_keys($_FILES) as $name) {
 					}
 
 				
-					if (resize_image($temp_path, $max_width, $max_height)) {
+					if (resize_image($temp_path, $max_width, $max_height)) 
+					{
 						list($width, $height) = getimagesize($temp_path);
 						clearstatcache();
 						$filesize = filesize($temp_path);
-					} else {
+					} else 
+					{
 						@unlink($unscaled_path);
 						$unscaled_path = null;
 					}
 				}
 			}
 		}
+
 	}
+
+	/* 
+	 * 	 This next part has been commented out because the final_response function seems unable to handle reuse of one error code with 
+	 * 	 two different messages (it currently prints out the other error message passed with the 422 code to final_response)
+	*/
+
+	/*
+	if ($img_info)
+	{
+		if (!($img_info[0] > REASON_STANDARD_MIN_IMAGE_WIDTH && $img_info[1] > REASON_STANDARD_MIN_IMAGE_HEIGHT))
+			final_response(422, 'Uploaded image dimensions are too small. Please upload another image.');
+	} 
+	*/
 	
 	if (empty($session['files'][$name]))
 		$session['files'][$name] = array();

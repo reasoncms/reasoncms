@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Reason Settings
  *
@@ -363,6 +364,22 @@
 	 */
 	define('REASON_STANDARD_MAX_IMAGE_WIDTH', 500);
 	
+	/**
+	 * REASON_STANDARD_MIN_IMAGE_WIDTH
+	 *
+	 * When images are uploaded to Reason, they are checked to ensure their width is not less than the minimum width requirement.
+	 * This setting defines the minimum image width required and is currently set equal to the maximum width of the thumbnail..
+	 */
+	define ('REASON_STANDARD_MIN_IMAGE_WIDTH', 125);
+	
+	/**
+	 * REASON_STANDARD_MIN_IMAGE_HEIGHT
+	 *
+	 * When images are uploaded to Reason, they are checked to ensure their height is not less than the minimum required height.
+	 * This setting defines the minimum image height required and is currently set equal to the maximum height of the thumbnail.
+	 */
+	define ('REASON_STANDARD_MIN_IMAGE_HEIGHT', 125);
+
 	/**
 	 * REASON_STANDARD_MAX_THUMBNAIL_HEIGHT
 	 *

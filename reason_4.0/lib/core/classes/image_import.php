@@ -1,4 +1,5 @@
 <?php
+
 	/**
 	 * Image Import Disco Form
 	 * @package reason
@@ -15,6 +16,7 @@
 	include_once( DISCO_INC .'disco.php' );
 	
 	require_once CARL_UTIL_INC.'basic/image_funcs.php';
+	reason_include_once('function_libraries/image_tools.php');
 
 	/**
 	 * Form to upload and add bulk metadata to images
@@ -237,8 +239,14 @@
 				
 				$order[] = $name;
 			}
-			
+			/*
+			 *   add the ignore image size check option to allow upload of images of any size
+			*/
+			$this->add_element('ignore_min_img_size_check', 'checkbox',array('description' => 'Ignore minimum image size check.'));
+			$this->set_display_name('ignore_min_img_size_check', '&nbsp;');
+			$order[] = 'ignore_min_img_size_check';	
 			$this->set_order( $order );
+
 		}
 		
 		/**
@@ -277,7 +285,29 @@
 				}
 			}
 		}
-		
+	
+		function run_error_checks(){
+		  $min_width = REASON_STANDARD_MIN_IMAGE_WIDTH;
+		  $min_height = REASON_STANDARD_MIN_IMAGE_HEIGHT;
+
+		   for ($i = 1; $i <= $this->max_upload_number; $i++){
+  		     $element = $this->get_element('upload_'.$i);
+		     if(!empty($element->tmp_full_path) AND file_exists($element->tmp_full_path))
+		     {	
+		   /*
+		    *    Check to see that the ignore image size check option is not checked. If that's the case, then go ahead and check the 
+	            *    dimensions of the uploaded image to make sure they meet the minimum requirements.	
+		    */
+		       $image_path = getimagesize($element->tmp_full_path);
+			if(!isset($_POST['ignore_min_img_size_check']))
+			{		
+			   if(!image_error_check($image_path,$min_width,$min_height ))
+			      $this->set_error('upload_'.$i, 'Uploaded image is too small; it needs to be at least '.$min_width.' x '.$min_height.' pixels in height.');	
+			 }
+		      }	
+		    }
+		}
+	
 		function process()
 		{
 			$site_id = $this->site_id;
