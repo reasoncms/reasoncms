@@ -73,7 +73,13 @@
 		 */
 		function run()
 		{
-			if ($this->model_is_usable())
+			if (reason_maintenance_mode() && !reason_check_privs('db_maintenance'))
+			{
+				echo '<div id="form">';
+				echo '<p><em>This web site is currently in maintenance mode, forms are temporarily disabled. Please try again later.</em></p>';
+				echo '</div>';
+			}
+			else if ($this->model_is_usable())
 			{
 				$controller = $this->get_form_controller();
  				$controller->run();

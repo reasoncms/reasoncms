@@ -566,7 +566,15 @@ class FormController
 	 * @return void
 	 */
 	function run() // {{{
-	{	
+	{
+
+		if (reason_maintenance_mode() && !reason_check_privs('db_maintenance'))
+		{
+			echo '<div id="form">';
+			echo '<p><em>This web site is currently in maintenance mode, forms are temporarily disabled. Please try again later.</em></p>';
+			echo '</div>';
+			exit;
+		}
 		$this->determine_step();
 
 		if( empty( $this->_request[ $this->_step_var_name ] ) )
