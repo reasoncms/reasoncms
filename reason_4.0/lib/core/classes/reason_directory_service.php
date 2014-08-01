@@ -28,7 +28,8 @@ class ds_reason extends ds_default {
 	* @var array
 	*/
 	var $_gen_attr_depend = array(
-		'ds_username' => array('name'),
+		'ds_guid' => array('entity.id'),
+		'ds_username' => array('entity.name'),
 		'ds_email' => array('user_email'),
 		'ds_firstname' => array('user_given_name'),
 		'ds_lastname' => array('user_surname'),
@@ -41,6 +42,7 @@ class ds_reason extends ds_default {
 	* @var array
 	*/
 	var $_returned_vals_map = array(
+		'ds_guid' => array('id'),
 		'ds_username' => array('name'),
 		'ds_email' => array('user_email'),
 		'ds_firstname' => array('user_given_name'),
@@ -153,6 +155,7 @@ class ds_reason extends ds_default {
 	
 	/**
 	* Search for a particular value
+	*
 	* @access public
 	* @param string $attr Name of the attribute to search
 	* @param mixed $qstring string or array of strings to search for
@@ -183,7 +186,7 @@ class ds_reason extends ds_default {
 		$es->add_type(id_of('user'));
 		$es->add_relation($filter);
 		$es->add_relation($this->get_basic_limitation());
-		if($attr == 'ds_affiliation')
+		if($attr == 'ds_affiliation' || in_array('ds_affiliation', $return))
 		{
 			$es->add_left_relationship_field('user_to_audience','audience_integration','directory_service_value','ds_affiliation');
 			$es->enable_multivalue_results();
@@ -196,7 +199,6 @@ class ds_reason extends ds_default {
 		{
 		// add in any generic attributes required
 			$augmented_results = $this->add_gen_attrs_to_results($results, array_keys($this->_gen_attr_depend));
-			//pray($augmented_results);
 			return ($augmented_results);
 		} else {
 			return false;
@@ -261,6 +263,13 @@ class ds_reason extends ds_default {
 		$es->add_relation($this->filter_to_sql($tree));
 		$this->open_conn();
 		$es->add_type(id_of('user'));
+		
+		if($return == 'ds_affiliation' || in_array('ds_affiliation', $return))
+		{
+			$es->add_left_relationship_field('user_to_audience','audience_integration','directory_service_value','ds_affiliation');
+			$es->enable_multivalue_results();
+		}
+		
 		$results_entities = $es->run_one();
 		$this->close_conn();
 		
@@ -326,8 +335,6 @@ class ds_reason extends ds_default {
 								break;
 						}
 					}
-					//echo $attr;
-					//pray( $value );
 					$results[$key][$attr] = $value;
 				}
 			}

@@ -1,0 +1,180 @@
+div#breadcrumbs {
+	display: none;
+}
+
+div#basicInfo {
+    background: linear-gradient(to bottom, #B8C6D4 0%, #CDDDEC 14px, #CDDDEC 100%) repeat scroll 0 0 transparent;
+    padding: 20px 80px;
+    color: #000000;
+}
+
+div.connector div#basicInfo h2.name {
+	display: inline-block;	
+	padding-right: 1em;
+}
+
+div#basicInfo div.tagLinks {
+	display: inline-block;
+	padding: 1em 40px 0 0;	
+}
+
+div#basicInfo p.dirSearch {
+   margin: 0;
+   font-size: 0.9em;
+}
+
+#mainProfileContent div#profileInfo {
+    min-height:18em;
+    padding-left: 40px;
+}
+
+#secondaryProfileContent.connector {
+	margin-top: 30px;	
+}
+
+div#tagInfo {
+    background: none repeat scroll 0 0 #F1F5FA;
+    min-height: 10em;
+    padding: 1px 80px 40px 12em;
+    color: #000000;
+}
+
+div.connector div#tagInfo {
+    padding-left: 80px;
+}
+
+#tagInfo a {
+    color: #3676B3;
+}
+
+#tagInfo ul {
+	list-style: none;
+	display: inline;
+	margin: 0;
+	padding: 0;	
+}
+
+#tagInfo li {
+	display: inline;
+	margin: 0;
+	padding: 0;	
+}
+
+
+ul#navSections {
+	width: 10em;
+	padding: 0 0 0.4em;
+	margin: 0;
+	font-size: 0.9em;
+	float: left;
+	position: relative;	
+}
+
+ul#navSections li {
+	list-style: none;
+	text-align: right;
+	position: relative;
+}
+
+#mainProfileContent ul#navSections li a {
+	color: #1F5D99;
+	text-decoration: none;
+	padding: 0.5em 1em;
+	background-color: #CDDDEC;
+	display: block;
+	margin-bottom: 0.7em;
+}
+
+#mainProfileContent ul#navSections li.active a {
+	color: #fff;	
+	background-color: #88B3D8;
+}
+
+ul#navSections li.active a:after { 
+	content:""; 
+	position: absolute; 
+	left: 100%; 
+	top: 0.8em;
+   width: 1em; 
+   height: 1em; 
+   background: #88B3D8;
+   /* Rotate */
+   -webkit-transform: rotate(-45deg);
+   -moz-transform: rotate(-45deg);
+   -ms-transform: rotate(-45deg);
+   -o-transform: rotate(-45deg);
+   transform: rotate(-45deg);
+   /* Rotate Origin */
+   -webkit-transform-origin: 0 100%;
+   -moz-transform-origin: 0 100%;
+   -ms-transform-origin: 0 100%;
+   -o-transform-origin: 0 100%;
+   transform-origin: 0 100%;
+}
+
+#mainProfileContent ul#navSections li a:hover {
+	text-decoration:underline;
+}
+
+#mainProfileContent ul#navSections li.active a:hover {
+	text-decoration:none;
+}
+
+#tagInfo h4.tagName {
+	display: inline;
+	padding: 0.7em 1em 0.7em 0;
+	font-size: 1em;
+}
+
+
+#tagInfo h4.tagName a {
+    background: url("tag.png") no-repeat scroll left center #6898C6;
+    color: #FFFFFF;
+    font-weight: normal;
+    margin: 0.15em 0;
+    padding: 2px 7px 2px 13px;
+    text-decoration: none;
+}
+
+#tagInfo span.careerLinks {
+	font-size: 0.9em;	
+}
+
+#tagInfo ul.affiliations {
+	display: block;	
+	margin: 0.5em 0 0.5em 1em;	
+}
+
+#tagInfo ul.affiliations > li {
+	display: block;	
+	padding-bottom: .8em;
+}
+
+#tagInfo span.affiliation {
+	padding-right: 0.4em;
+	color: #000000;	
+}
+
+#tagInfo ul.profiles li {
+	padding-left: 0.3em;
+	line-height: 2;
+	font-size: 0.9em;
+}
+
+#tagInfo ul.profiles li a {
+	background-color: #ffffff;
+	padding: 0.3em 0.4em;
+	text-decoration: none;
+	white-space: nowrap;
+	border-radius: 3px;	
+}
+
+#tagInfo ul.profiles li.moreLink a {
+	background-color:transparent;
+}
+
+#tagInfo ul.profiles li a:hover {
+	text-decoration: underline;
+}
+
+

@@ -1,0 +1,39 @@
+div.profileContainer {
+	clear: both;
+	min-height: 6em;
+	margin-left: 2em;
+}
+
+div.profileContainer div.profilePhoto {
+	float: left;
+}
+
+div.profileContainer div.profilePhoto img {
+	height: 6em;
+	width: auto;
+	padding-right: 1em;
+}
+	
+div.profileContainer h4 {
+	margin-bottom: 0;
+	font-size: 1.4em;
+}
+
+div.profileContainer p.majors, div.profileContainer p.employment, div.profileContainer p.profileLink {
+	margin: 0;
+}
+
+div.profileContainer p.majors {
+	font-style: italic;
+}
+            
+ul.fieldLinks {
+	padding: 0;
+	text-align: center;	
+}
+
+ul.fieldLinks li {
+	list-style: none;
+	display: inline-block;
+	padding: 0 0.5em;
+}

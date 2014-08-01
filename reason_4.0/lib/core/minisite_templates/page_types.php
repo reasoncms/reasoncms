@@ -2114,6 +2114,17 @@
         'user_settings' => array(
         	'main_post' => 'user_settings/user_settings'
         ),
+        'profile' => array(
+        	'main_head' => '', // turn off main head
+        	'main' => '', // turn off main content - profile shows it
+        	'main_post' => 'profile/profile',
+        ),
+        'profile_explore' => array(
+        	'main_post' => 'profile/explore',
+        ),
+        'profile_list' => array(
+        	'main_post' => 'profile/profile_list',
+        ),
 	);
 	
 	$GLOBALS['_reason_deprecated_modules'] = array(

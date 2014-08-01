@@ -1,0 +1,131 @@
+#related, #navigation {
+	display: none;
+	
+}
+
+div.contentHead {
+	display: none;	
+}
+
+div#wrapper {
+	padding: 0;	
+}
+
+div#meat {
+	padding: 0 5%;
+}
+
+#content {
+	margin: 0;
+	width: 100%;	
+}
+
+#tagManagerModule {
+	position: relative;	
+}
+
+#tabs {
+	display: none;	
+}
+
+.ui-helper-reset {
+	font-size: 0.7em;
+}
+
+.ui-tabs .ui-tabs-nav li a {
+	padding: 0.5em;
+}
+
+span.ui-draggable-dragging {
+	color: #333;
+	background-color: #ddd;
+	padding: 5px;
+	border: 1px solid #333;	
+}
+
+span.merging {
+	background-color: red;	
+}
+
+ul.tags {
+	list-style: none;
+	padding: 0;
+}
+
+ul.tags ul {
+	padding-left: 1em;
+	list-style: none;	
+}
+
+li.tag {
+	cursor: pointer;	
+}
+
+li.bucket {
+	font-weight: bold;
+}
+
+li.inBucket > span.bucket {
+	background-image: url(/global_stock/images/silk_icons/basket.png);
+}
+
+span.edit, span.delete, span.bucket {
+	display: inline-block;
+	width: 20px;
+	background-repeat: no-repeat;
+	background-position: 0 4px;	
+}
+
+li.tag:hover > span.edit {
+	background-image: url(/global_stock/images/silk_icons/pencil.png);
+}
+
+li.tag:hover > span.delete {
+	background-image: url(/global_stock/images/silk_icons/cancel.png);
+}
+
+.dropTarget, div#tagBox.dropTarget {
+	background-color: #ddd;	
+}
+
+span.tagCount {
+	font-size: 0.7em;
+	color: #aaa;
+}
+
+span.tagName[contenteditable=true] {
+	cursor: text;
+	color: #666;
+}
+
+div#tagBox {
+	background-color: #fff;
+	border: 1px solid #BBBBBB;
+	box-shadow: 3px 3px 5px #888888;
+	color: #000;
+	padding: 1em;
+	position: fixed;
+	right: 100px;
+	top: 125px;
+}
+
+div#tagBox .instructions {
+	color: #bbb;
+	font-size: 0.7em;	
+}
+
+ul.tagBoxList, ul.ui-draggable-dragging {
+	list-style:none;
+	padding: 0.5em;
+	border: 1px solid #eee;
+	border-top: 15px solid #eee;
+	background-color: #fff;	
+}
+
+ul.ui-draggable-dragging {
+	color: #666;
+}	
+
+ul.tagBoxList .delete, ul.tagBoxList .bucket, ul.tagBoxList .edit, ul.tagBoxList .tagCount {
+	display: none;	
+}

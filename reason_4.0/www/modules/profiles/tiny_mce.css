@@ -1,0 +1,12 @@
+/* TinyMCE specific rules
+ *
+ * See http://www.tinymce.com/wiki.php/Configuration:content_css for info on tiny_mce content_css files
+ *
+ * These customizations are for the TinyMCE content editable box used in the profiles module.
+ *
+ */
+@import url('/global_stock/fonts/proxima_nova/family_basic.css');
+body.mceContentBody, body#tinymce {
+	font-size:1em;
+	font-family:'ProximaNova';
+}

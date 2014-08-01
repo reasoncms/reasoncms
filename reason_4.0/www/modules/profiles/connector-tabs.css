@@ -1,0 +1,111 @@
+div#breadcrumbs {
+	display: none;
+}
+
+div#basicInfo {
+    background: linear-gradient(to bottom, #B8C6D4 0%, #CDDDEC 14px, #CDDDEC 100%) repeat scroll 0 0 transparent;
+    padding: 20px 80px;
+    color: #000000;
+}
+
+div#tagInfo {
+    background: none repeat scroll 0 0 #F1F5FA;
+    min-height: 10em;
+    padding: 10px 0 80px 0;
+    color: #000000;
+}
+
+#tagInfo a {
+    color: #3676B3;
+}
+
+#tagInfo ul {
+	list-style: none;
+	display: inline;
+	margin: 0;
+	padding: 0;	
+}
+
+#tagInfo li {
+	display: inline;
+	margin: 0;
+	padding: 0;	
+}
+
+
+ul#navSections {
+	padding: 1em 0 0.4em;
+	margin: 0;
+	border-bottom: 1px solid #CDDDEC;
+	font-size: 0.9em;	
+}
+
+ul#navSections li {
+	display: inline;
+	padding: 0.5em 1em;
+	margin-left: 1em;
+	background-color: #F1F5FA;
+	border: 1px solid #CDDDEC;
+	border-bottom: 1px solid #F1F5FA;
+}
+
+ul#navSections li.disabled {
+	background-color: #CDDDEC;
+}
+
+ul#navSections li.disabled a {
+	color: #1F5D99;	
+}
+
+ul#navSections li a {
+	color: #000000;
+	text-decoration: none;
+}
+
+#tagInfo h4.tagName {
+	margin: 0.7em 0;
+	font-size: 1em;
+}
+
+
+#tagInfo h4.tagName a {
+    background: url("tag.png") no-repeat scroll left center #6898C6;
+    color: #FFFFFF;
+    font-weight: normal;
+    margin: 0.15em 0;
+    padding: 2px 7px 2px 13px;
+    text-decoration: none;
+}
+
+#tagInfo ul.affiliations {
+	display: block;	
+	margin-left: 1em;	
+}
+
+#tagInfo ul.affiliations > li {
+	display: block;	
+	padding-bottom: .8em;
+}
+
+#tagInfo span.affiliation {
+	color: #000000;	
+}
+
+#tagInfo ul.profiles li {
+	padding-left: 0.3em;
+	line-height: 2;
+}
+
+#tagInfo ul.profiles li a {
+	background-color: #ffffff;
+	padding: 0.3em 0.4em;
+	text-decoration: none;
+	white-space: nowrap;
+	border-radius: 3px;	
+}
+
+#tagInfo ul.profiles li a:hover {
+	text-decoration: underline;
+}
+
+

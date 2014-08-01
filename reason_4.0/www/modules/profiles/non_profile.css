@@ -1,0 +1,22 @@
+#breadcrumbs {
+	display:none;
+}
+#content {
+	background-color:#fff;
+	color:#000;
+	padding:1em 5% 2.5em 5%;
+}
+#content a {
+	color:#3676B3;
+}
+#content h2 {
+	margin:0;
+	font-weight:200;
+	font-size:3em;
+	line-height:1.1;
+	margin-top:5px;
+}
+#content h3 {
+	font-weight:200;
+	font-style:italic;
+}
