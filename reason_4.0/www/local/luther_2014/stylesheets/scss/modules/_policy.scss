@@ -47,7 +47,7 @@
 					//content: $fa-var-angle-right;
 					position: absolute;
 					left: - rem-calc(32);
-					top: rem-calc(10);
+					top: rem-calc(11);
 					font-size: rem-calc(16);
 					@include transition-property(left);
 					@include transition-duration(.5s);
