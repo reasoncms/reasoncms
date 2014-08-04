@@ -122,9 +122,8 @@ class defaultEventsItemMarkup implements eventsItemMarkup
 			if (preg_match("/^[Rr]edirect:?\s?(.*?)$/", $event->get_value( 'url' ), $matches))
 			// Redirect to another site to display event information or registration
 			{
-				$ret .= '<script>
-				window.location.replace("'.$matches[1].'");
-				</script>'."\n";
+				header('Location: ' . $matches[1]);
+				exit;
 			}
 			else
 			{
