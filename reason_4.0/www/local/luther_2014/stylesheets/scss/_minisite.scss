@@ -125,10 +125,6 @@
 	
 	#contentAndRelated {
 		@include grid-column(16);
-		
-		@media #{$medium-up} {
-			//@include grid-column($columns: 16, $collapse: true);
-		}
 
 		@media #{$large-up} {
 			@include grid-column($columns: 16, $collapse: true);
@@ -149,17 +145,12 @@
 				margin-bottom: 0;
 			}
 		}
-
-		#contentSections {
-
-
-		}
 	}
 	
 	&.hasConRelNav { /* 3 COLUMNS: Nav, Content, & Related */
 		@media #{$medium-up} {
-			#contentAndRelated {
-
+			#contentAndRelated { 
+				// Minisite navigation is in "mobile" view at and below this range, resulting in 2 columns.
 				#contentSections {
 					@include grid-column($columns: 10, $collapse: true);
 					padding-right: $column-gutter / 2;
@@ -173,18 +164,50 @@
 		}
 		@media #{$large-up} {
 			#contentAndRelated {
+				// Minisite navigation is in "desktop" view at and below this range, resulting in 3 columns.
 				@include grid-column($columns: 11, $collapse: true);
 				padding-left: $column-gutter / 2;
 
 				#contentSections {
-					@include grid-column($columns: 9, $collapse: true);
-					padding-right: $column-gutter / 2;
+					@include grid-column($columns: 16, $collapse: true);
+					//padding-right: $column-gutter / 2;
+					//background: green;
 				}
 				
 				#relatedSections {
-					@include grid-column($columns: 7, $collapse: true);
-					padding-left: $column-gutter / 2;
+					@include grid-column($columns: 16, $collapse: true);
+					//padding-left: $column-gutter / 2;
+					//background: red;
 				}
+			}
+
+			// #navWrap {
+			// 	background: #ff00ff;
+			// 	@include grid-column($columns: 4, $collapse: true);
+			// }
+		}
+		@media #{$large-high-up} {
+			#contentAndRelated {
+				// Minisite navigation is in "desktop" view at and below this range, resulting in 3 columns.
+				@include grid-column($columns: 11.75, $collapse: true);
+				padding-left: $column-gutter / 2;
+
+				#contentSections {
+					@include grid-column($columns: 10, $collapse: true);
+					padding-right: $column-gutter / 2;
+					//background: red;
+				}
+				
+				#relatedSections {
+					@include grid-column($columns: 6, $collapse: true);
+					padding-left: $column-gutter / 2;
+					//background: green;
+				}
+			}
+
+			#navWrap {
+				//background: #ff00ff;
+				@include grid-column($columns: 4.25, $collapse: true);
 			}
 		}
 		@media #{$xlarge-up} {
@@ -201,6 +224,10 @@
 					@include grid-column($columns: 6, $collapse: true);
 					padding-left: $column-gutter / 2;
 				}
+			}
+			#navWrap {
+				//background: #FFF;
+				@include grid-column($columns: 4, $collapse: true);
 			}	
 		}
 	}
@@ -287,7 +314,6 @@
 
 		@include box-shadow(rgba(#000, .5) 0 0 4px);
 		position: relative;
-		//top: -1px;
 		z-index: 9;
 		
 		&.open {
