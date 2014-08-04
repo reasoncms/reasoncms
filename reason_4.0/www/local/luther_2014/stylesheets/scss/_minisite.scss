@@ -166,22 +166,26 @@
 				// Minisite navigation is in "desktop" view at and below this range, resulting in 3 columns.
 				@include grid-column($columns: 11, $collapse: true);
 				padding-left: $column-gutter / 2;
+				// background: red;
 
+				// Content and sidebar are 100% wide.
 				#contentSections {
 					@include grid-column($columns: 16, $collapse: true);
+					padding-right: 0;
 				}
 				
 				#relatedSections {
-					@include grid-column($columns: 16, $collapse: true);
+					// @include grid-column($columns: 16, $collapse: true);
+					@include grid-column($columns: 10, $collapse: true);
+					padding-left: 0;
 				}
 			}
 		}
+
 		@media #{$large-high-up} {
 			#contentAndRelated {
-				// Minisite navigation is in "desktop" view at and below this range, resulting in 3 columns.
-				@include grid-column($columns: 11.25, $collapse: true);
-				padding-left: $column-gutter / 2;
-
+				
+				// Content and sidebar are now side by side.
 				#contentSections {
 					@include grid-column($columns: 10, $collapse: true);
 					padding-right: $column-gutter / 2;
@@ -208,9 +212,6 @@
 					padding-left: $column-gutter / 2;
 				}
 			}
-			#navWrap {
-				@include grid-column($columns: 4, $collapse: true);
-			}	
 		}
 	}
 	
@@ -282,13 +283,10 @@
 			padding-right: $column-gutter / 2;
 			display: block;
 		}
-		
-		@media #{$large-high-up} {
-			@include grid-column($columns: 4.75, $collapse: true);
-		}
-		
 		@media #{$xlarge-up} {
 			@include grid-column($columns: 4, $collapse: true);
+			padding-right: $column-gutter / 2;
+			display: block;
 		}
 	}
 
