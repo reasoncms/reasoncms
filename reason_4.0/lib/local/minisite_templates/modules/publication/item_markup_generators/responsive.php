@@ -184,6 +184,37 @@ class ResponsiveItemMarkupGenerator extends PublicationItemMarkupGenerator
 		return $str;
 	}
 
+	// Here, we get make the whole Next/Previous section linkable
+	function get_next_prev_section()
+	{
+		$ret = '';
+		if(!empty($this->passed_vars['previous_post']))
+		{
+			$ret .= '<div class="prev';
+			if(empty($this->passed_vars['next_post']))
+				$ret .= ' only';
+			$ret .= '">'."\n";
+			$ret .= '<a href="'.$this->passed_vars['previous_post']->get_value('link_url').'">'."\n";
+			$ret .= '<h4>Previous Post</h4> '."\n";
+			$ret .= '<p>'.$this->passed_vars['previous_post']->get_value('release_title').'</p>'."\n";
+			$ret .= '</a>'."\n";
+			$ret .= '</div>'."\n";
+		}
+		if(!empty($this->passed_vars['next_post']))
+		{
+			$ret .= '<div class="next';
+			if(empty($this->passed_vars['previous_post']))
+				$ret .= ' only';
+			$ret .= '">'."\n";
+			$ret .= '<a href="'.$this->passed_vars['next_post']->get_value('link_url').'">'."\n";
+			$ret .= '<h4>Next Post</h4> '."\n";
+			$ret .= '<p>'.$this->passed_vars['next_post']->get_value('release_title').'</p>'."\n";
+			$ret .= '</a>'."\n";
+			$ret .= '</div>'."\n";
+		}
+		return $ret;
+	}
+
 	// Here, we get rid of <div> around link_markup to avoid outputting it into the HTML if there's no content.
 	function get_back_links_markup()
 	{
