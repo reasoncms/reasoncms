@@ -98,7 +98,6 @@
 
 	#postBanner { // @todo: DO WE NEED THIS?
 		@include grid-column(16);
-		background: green;
 	}
 
 	#contentAndRelated { // Desktop banner
@@ -170,44 +169,28 @@
 
 				#contentSections {
 					@include grid-column($columns: 16, $collapse: true);
-					//padding-right: $column-gutter / 2;
-					//background: green;
 				}
 				
 				#relatedSections {
 					@include grid-column($columns: 16, $collapse: true);
-					//padding-left: $column-gutter / 2;
-					//background: red;
 				}
 			}
-
-			// #navWrap {
-			// 	background: #ff00ff;
-			// 	@include grid-column($columns: 4, $collapse: true);
-			// }
 		}
 		@media #{$large-high-up} {
 			#contentAndRelated {
 				// Minisite navigation is in "desktop" view at and below this range, resulting in 3 columns.
-				@include grid-column($columns: 11.75, $collapse: true);
+				@include grid-column($columns: 11.25, $collapse: true);
 				padding-left: $column-gutter / 2;
 
 				#contentSections {
 					@include grid-column($columns: 10, $collapse: true);
 					padding-right: $column-gutter / 2;
-					//background: red;
 				}
 				
 				#relatedSections {
 					@include grid-column($columns: 6, $collapse: true);
 					padding-left: $column-gutter / 2;
-					//background: green;
 				}
-			}
-
-			#navWrap {
-				//background: #ff00ff;
-				@include grid-column($columns: 4.25, $collapse: true);
 			}
 		}
 		@media #{$xlarge-up} {
@@ -226,7 +209,6 @@
 				}
 			}
 			#navWrap {
-				//background: #FFF;
 				@include grid-column($columns: 4, $collapse: true);
 			}	
 		}
@@ -300,10 +282,13 @@
 			padding-right: $column-gutter / 2;
 			display: block;
 		}
+		
+		@media #{$large-high-up} {
+			@include grid-column($columns: 4.75, $collapse: true);
+		}
+		
 		@media #{$xlarge-up} {
 			@include grid-column($columns: 4, $collapse: true);
-			padding-right: $column-gutter / 2;
-			display: block;
 		}
 	}
 
