@@ -185,7 +185,8 @@
 			}
 		}
 
-		a {  // Since the module uses the new HTML5 markup, the anchor is wrapped around both the heading and description.
+		a,
+		a[href] {  // Since the module uses the new HTML5 markup, the anchor is wrapped around both the heading and description.
 			//@include border-bottom-radius(4px);
 			overflow: hidden;
 			background: lighten($lc-grey, 3%);
@@ -242,7 +243,7 @@
 			}
 		}
 
-		@media #{$xlarge-up} { // 4 Columns for xl screens
+		@media #{$large-high-up} { // 4 Columns for xl screens
 			width: 50%;
 			&:nth-child(3n+1) {
 				clear: none;
