@@ -2,7 +2,7 @@
 reason_include_once( 'carl_util/luther_util.php' );
 
 $GLOBALS['_reason_page_types_local'] = array(
-	
+
 	'default' => array(
 		'global_header' => 'global/global_header',
 		'global_navigation' => 'global/global_navigation',
@@ -60,7 +60,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 	// 	'sub_nav' => '',
 	// 	'sub_nav_2' => 'admissions_sub_nav_2',
 	// 	'sub_nav_3' => 'admissions_events_mini',
-	// 	'main' => '',	
+	// 	'main' => '',
 	// 	'main_post' => array(
 	// 		'module'=> 'quote',
 	// 		'template' => '<blockquote><p><span class="openingQuote">&#8216;&#8216;</span>[[quote]]</p></blockquote><p class="cite">[[author]]</p>',
@@ -200,10 +200,10 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'main_post' => 'content'
 	),
 	'flickr_slideshow' => array(
-		'main_post_3' => 'luther_flickr_slideshow',		
+		'main_post_3' => 'luther_flickr_slideshow',
 	),
 	'flickr_slideshow_sidebar' => array(
-		'post_sidebar_3' => 'luther_flickr_slideshow',		
+		'post_sidebar_3' => 'luther_flickr_slideshow',
 	),
 	'gallery' => array(
 		'main_post' => array(
@@ -251,7 +251,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'css' => '',
 			'markup_generator_info' => array(
 				'list_item' => array(
-					'classname' => 'RelatedListItemNoDescriptionMarkupGenerator', 
+					'classname' => 'RelatedListItemNoDescriptionMarkupGenerator',
 					'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/related_item_no_description.php',
 				),
 			),
@@ -298,7 +298,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'css' => '',
 			'markup_generator_info' => array(
 				'list_item' => array(
-					'classname' => 'RelatedListItemNoDescriptionMarkupGenerator', 
+					'classname' => 'RelatedListItemNoDescriptionMarkupGenerator',
 					'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/related_item_no_description.php',
 				),
 			),
@@ -324,7 +324,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'css' => '',
 			'markup_generator_info' => array(
 				'list_item' => array(
-					'classname' => 'RelatedListItemNoDescriptionMarkupGenerator', 
+					'classname' => 'RelatedListItemNoDescriptionMarkupGenerator',
 					'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/related_item_no_description.php',
 				),
 			),
@@ -365,7 +365,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'css' => '',
 			'markup_generator_info' => array(
 				'list_item' => array(
-					'classname' => 'RelatedListItemMarkupGenerator', 
+					'classname' => 'RelatedListItemMarkupGenerator',
 					'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/related_item.php',
 				),
 			),
@@ -381,7 +381,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'css' => '',
 			'markup_generator_info' => array(
 				'list_item' => array(
-					'classname' => 'RelatedListItemNoDescriptionMarkupGenerator', 
+					'classname' => 'RelatedListItemNoDescriptionMarkupGenerator',
 					'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/related_item_no_description.php',
 				),
 			),
@@ -400,7 +400,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'css' => '',
 			'markup_generator_info' => array(
 				'list_item' => array(
-					'classname' => 'RelatedListItemNoDescriptionMarkupGenerator', 
+					'classname' => 'RelatedListItemNoDescriptionMarkupGenerator',
 					'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/related_item_no_description.php',
 				),
 			),
@@ -477,7 +477,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'markup_generator_info' =>
 				array(
 					'list_item' => array(
-						'classname' => 'RelatedListItemNoDescriptionMarkupGenerator', 
+						'classname' => 'RelatedListItemNoDescriptionMarkupGenerator',
 						'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/related_item_no_description.php',
 					),
 				 ),
@@ -524,7 +524,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 	//'publication' => get_luther_publication(),
 	//'publication_feature_autoplay' => get_luther_publication("publication_feature_autoplay"),
 	//'publication_section_nav' => get_luther_publication("publication_section_nav"),
-	
+
 	'sidebar_blurb' => array(
 		'main_4' => '',
 		'pre_sidebar_2' => 'main_blurb',
@@ -577,7 +577,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'main_2' => '',
 		'main_3' => '',
 		'main_4' => '',
-		'pre_sidebar_3' => '',		
+		'pre_sidebar_3' => '',
 		'sidebar'=> '',
 		'sidebar_2' => 'luther_publication_image_sidebar',
 		'sidebar_4' => '',
@@ -606,7 +606,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'global_footer' => '',
 	),
 	'study_skills_assessment'=> array(
-		'main_post'=> 'study_skills_assessment/study_skills_assessment', 
+		'main_post'=> 'study_skills_assessment/study_skills_assessment',
 	),
 	'stream' => array(
 		'main' => 'stream',
@@ -633,7 +633,8 @@ $GLOBALS['_reason_page_types_local'] = array(
 		)
 	),
 	'transcript_request' => array(
-		'main_post' => 'transcript_request/transcript_request',
+		'main_post' => 'policy_related',
+		'main_post_2' => 'transcript_request/transcript_request',
 	),
 	'webcams' => array(
 		'main' => 'content',
