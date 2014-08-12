@@ -156,7 +156,7 @@ class GiftPageThreeForm extends FormStep {
             return;
         }
         $this->change_element_type('e-receipt_note', 'comment', array('text' => '<h3>E-receipt</h3><p>As part of our efforts to make big and small
-            changes to reduce our impact on the environment, Luther College will send an e-receipt only 
+            changes to reduce our impact on the environment, Luther College will send an e-receipt only
             to '. $this->controller->get('email') . '. Thank you for doing your part to help us reduce our paper usage.</p>'));
         if ($this->controller->get('installment_type') == 'Onetime') {
             $this->remove_element('installment_notification_note_1');
@@ -238,10 +238,10 @@ class GiftPageThreeForm extends FormStep {
             if (reason_unique_name_exists('giving_form_100_dollars')){
                 $txt .= '<p>' . get_text_blurb_content('giving_form_100_dollars') . '</p>';
 			} else {
-				$txt .= '<p>This e-receipt will serve as confirmation of your online gift to Luther College. This e-receipt gives us 
-						the opportunity to continue to reduce our paper usage and helps us to achieve our sustainability goals. Thank 
+				$txt .= '<p>This e-receipt will serve as confirmation of your online gift to Luther College. This e-receipt gives us
+						the opportunity to continue to reduce our paper usage and helps us to achieve our sustainability goals. Thank
 						you for doing your part!</p>
-						<p>Of course, if you\'d prefer to receive a paper receipt, we can take care of that for you. 
+						<p>Of course, if you\'d prefer to receive a paper receipt, we can take care of that for you.
 						Simply email Nicole Waskow at waskni01@luther.edu and we will send one to you via US Mail.</p>';
 			}
         }
@@ -519,7 +519,7 @@ class GiftPageThreeForm extends FormStep {
                     '<br />' => "\n",
                 );
                 $mail_text = str_replace(array_keys($replacements), $replacements, $confirm_text);
-                $email_to_development = new Email('waskni01@luther.edu', 'noreply@luther.edu', 'noreply@luther.edu', 'New Online Gift ' . date('mdY H:i:s'), strip_tags($mail_text), $mail_text);
+                $email_to_development = new Email(array('oelrva01@luther.edu','waskni01@luther.edu'), 'noreply@luther.edu', 'noreply@luther.edu', 'New Online Gift ' . date('mdY H:i:s'), strip_tags($mail_text), $mail_text);
                 $email_to_development->send();
                 $email_to_giver = new Email($this->controller->get('email'), 'giving@luther.edu', 'giving@luther.edu', 'Luther College Online Gift Confirmation', strip_tags($mail_text), $mail_text);
                 $email_to_giver->send();
