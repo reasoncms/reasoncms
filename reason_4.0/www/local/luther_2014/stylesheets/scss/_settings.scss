@@ -140,8 +140,8 @@ $header-bottom-margin: 1rem;
 $header-text-rendering: optimizeLegibility;
 
 // Heading font sizes
-$h1-font-size: rem-calc(44);
-$h2-font-size: rem-calc(37);
+$h1-font-size: rem-calc(37);
+$h2-font-size: rem-calc(32);
 $h3-font-size: rem-calc(27);
 $h4-font-size: rem-calc(23);
 $h5-font-size: rem-calc(18);
@@ -274,11 +274,11 @@ $table-margin-bottom: $paragraph-margin-bottom;
 // Define the lower and upper bounds for each media size
 $small-range: (0em, 40em); // 0, 640px
 $small-high-range: (30em, 40em); // 480px, 640px
-$medium-range: (40.063em, 64em); // 641px, 1024px
-$medium-low-range: (40.0625em, 64em); // 641px, 960px
-$medium-high-range: (60.0625em, 64em); // 961px, 1024px
-$large-range: (64.063em, 90em); // 1025px, 1440px
-$large-low-range: (64.063em, 79.9375em); // 1025px, 1279px
+$medium-range: (40.063em, 63.75em); // 641px, 1020px
+$medium-low-range: (40.0625em, 60em); // 641px, 960px
+$medium-high-range: (60.0625em, 63.75em); // 961px, 1020px
+$large-range: (63.8125em, 90em); // 1021px, 1440px
+$large-low-range: (63.8125em, 79.9375em); // 1021px, 1279px
 $large-high-range: (80em, 90em); // 1280px, 1440px
 $xlarge-range: (90.063em, 120em); // 1441px, 1920px
 $xxlarge-range: (120.063em); // 1921px
