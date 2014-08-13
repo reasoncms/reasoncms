@@ -393,6 +393,7 @@
 				}
 			}
 		}
+		
 		// Artle WYSIWYG stiles are shared with other WYSIWYG content areas.  See _type.scss and _images.scss.
 
 		/* Social Sharing */
@@ -406,7 +407,8 @@
 				overflow: hidden;
 			}
 
-			&.top {
+			&.top,
+			&.bottom {
 				margin-bottom: $column-gutter/1.25;
 
 				a {
@@ -417,35 +419,41 @@
 			}
 
 			&.bottom {
-				text-align: center;
-				margin-top: $column-gutter/2;
-				margin-bottom: $column-gutter;
-
-				@media #{$large-up} {
-					display: block;
-					position: fixed;
-					z-index: 99999;
-					right: 0;
-					bottom: 50px;
-					padding: rem-calc(12);
-					background: $lc-grey;
-					background: rgba($lc-white, .9);
-					@include box-shadow(rgba(#000, .25) 0 0 6px);
-					@include border-left-radius(6px);
-					margin-top: 0;
-
-					a {
-						display: block;
-						margin-right: 0;
-						margin-bottom: rem-calc(12);
-					}
-
-					& a:last-child {
-						margin-bottom: 0;
-					}
-
-				}
+				margin-bottom: 0;
 			}
+
+			// Social Sharing floating box -- This is commented out since it overlapped article text. To reinstate: uncomment, then remove "&.bottom" the above two rules.
+
+			// &.bottom {
+			// 	text-align: center;
+			// 	margin-top: $column-gutter/2;
+			// 	margin-bottom: $column-gutter;
+
+			// 	@media #{$large-up} {
+			// 		display: block;
+			// 		position: fixed;
+			// 		z-index: 99999;
+			// 		right: 0;
+			// 		bottom: 50px;
+			// 		padding: rem-calc(12);
+			// 		background: $lc-grey;
+			// 		background: rgba($lc-white, .9);
+			// 		@include box-shadow(rgba(#000, .25) 0 0 6px);
+			// 		@include border-left-radius(6px);
+			// 		margin-top: 0;
+
+			// 		a {
+			// 			display: block;
+			// 			margin-right: 0;
+			// 			margin-bottom: rem-calc(12);
+			// 		}
+
+			// 		& a:last-child {
+			// 			margin-bottom: 0;
+			// 		}
+
+			// 	}
+			// }
 		}
 
 		.firstChunk {
@@ -480,34 +488,44 @@
 	/* Next & Previous Posts navigation */
 	.nextPrev {
 		@include clearfix;
-		background: $lc-grey;
 		margin-bottom: $column-gutter;
 		@include border-radius($global-radius);
+
+		a {
+			background: $lc-blue-light;
+			display: block;
+		}
 
 		h4 {
 			padding: $column-gutter/2;
 			//padding-bottom: $column-gutter/3.5;
+			background: $lc-grey;
 			margin: 0;
 			font-size: $h5-font-size;
 		}
 
 		p {
 			margin: 0;
-
-			a {
-				padding: $column-gutter/2;
-				display: block;
-				background: $lc-blue-light;
-				color: #FFF;
-
-				&:hover {
-					background: $lc-blue-dark;
-					color: #FFF;
-				}
-			}
+			padding: $column-gutter/2;
+			display: block;
+			color: #FFF;
 		}
 
-		
+		a:hover {
+
+			background: $lc-blue-dark;
+
+			h4 {
+				background: darken($lc-grey, 5%);
+			}
+
+			p {
+				color: #FFF;
+				text-decoration: underline;	
+			}
+			
+		}
+
 		.prev {
 			border-bottom: rem-calc(12) solid $lc-white;
 			
