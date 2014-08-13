@@ -29,7 +29,7 @@ class ShortURL
     var $db;
     var $basedir = 'http://go.carleton.edu'; 
     var $admin = false;
-    var $admins = array( 'mbockol', 'mryan', 'mheiman', 'jlawrenc', 'nwhite', 'dbratland');
+    var $admins = array( 'mryan', 'mheiman', 'jlawrenc', 'dbratland', 'tfeiler');
     
     function ShortURL()
     {
