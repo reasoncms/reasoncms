@@ -5,7 +5,7 @@ reason_include_once('classes/entity_selector.php');
 reason_include_once('classes/upgrade/upgrader_interface.php');
 reason_include_once('classes/field_to_entity_table_class.php');
 
-$GLOBALS['_reason_upgraders']['4.4_to_4.5']['title_tag_fields'] = 'ReasonUpgrader_45_TitleTagFields';
+$GLOBALS['_reason_upgraders']['4.4_to_4.5']['site_title_tag_pattern_fields'] = 'ReasonUpgrader_45_TitleTagFields';
 
 class ReasonUpgrader_45_TitleTagFields implements reasonUpgraderInterface
 {
