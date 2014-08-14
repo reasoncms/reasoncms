@@ -203,7 +203,7 @@ class DefaultFeatureView extends FeatureView
 		$title="";
 		$ids=array();
 		$titles=array();
-		$arrow="&lt;";
+		$arrow=$this->get_arrow_html('prev');
 		$class="button prev";
 		$looping=$this->_view_params['looping'];
 		
@@ -247,7 +247,7 @@ class DefaultFeatureView extends FeatureView
 		}
 		else if($direction=="next")
 		{
-			$arrow="&gt;";
+			$arrow=$this->get_arrow_html('next');
 			$class="button next";
 			if( $curr_index== ($n-1) && $looping=="on" )
 			{
@@ -270,6 +270,14 @@ class DefaultFeatureView extends FeatureView
 
 
 	}// end build_arrow_nav_str function
+	
+	function get_arrow_html($direction)
+	{
+		if($direction=="prev")
+			return "&lt;";
+		elseif($direction=="next")
+			return "&gt;";
+	}
 	
 
 
