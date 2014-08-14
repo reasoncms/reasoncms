@@ -119,9 +119,14 @@ class reason_iCalendar
 		//SUMMARY
 		if (strlen($event -> get_value('name')) != 0)
 			$icalendar_event .= 'SUMMARY:' . $this -> _fold_text($event -> get_value('name')) . "\r\n";
+		
 		//DESCRIPTION
+		// if "brief description of event" (field: description) was specified, use that. Otherwise, use the "full event information" (field: content)
 		if (strlen($event -> get_value('description')) != 0)
 			$icalendar_event .= 'DESCRIPTION:' . $this -> _fold_text($event -> get_value('description')) . "\r\n";
+		else if (strlen($event -> get_value('content')) != 0)
+			$icalendar_event .= 'DESCRIPTION:' . $this -> _fold_text($event -> get_value('content')) . "\r\n";
+
 		//LOCATION
 		if (strlen($event -> get_value('location')) != 0)
 			$icalendar_event .= 'LOCATION:' . $this -> _fold_text($event -> get_value('location')) . "\r\n";
@@ -183,6 +188,8 @@ class reason_iCalendar
 		{
 			$text = unhtmlentities($text);
 		}
+
+		/*
 		$folded_text = "";
 		while (strlen($text) > 75)
 		{
@@ -190,6 +197,18 @@ class reason_iCalendar
 			$text = substr($text, 75);
 		}
 		$folded_text .= $text;
+		 */
+
+		// 2014-08-14: rewritten to handle multibyte strings
+		$folded_text = "";
+		$break_at = 75;
+		$encoding = "UTF-8";
+		while (mb_strlen($text, $encoding) > $break_at) {
+			$folded_text .= mb_substr($text, 0, $break_at, $encoding) . "\r\n ";
+			$text = mb_substr($text, $break_at, mb_strlen($text, $encoding), $encoding);
+		}
+		$folded_text .= $text;
+
 		return $folded_text;
 	}
 	
