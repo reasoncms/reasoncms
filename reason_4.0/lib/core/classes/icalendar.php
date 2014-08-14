@@ -115,6 +115,8 @@ class reason_iCalendar
 		$icalendar_event = "";
 		$icalendar_event .= 'BEGIN:VEVENT' . "\r\n";  
 		$icalendar_event .= 'UID:'.$this->_fold_text(str_replace(array('-',' ',':'),'',$event->get_value('creation_date')).'-'.$event->id().'@'.REASON_ICALENDAR_UID_DOMAIN)."\r\n";
+
+		$foo = "hello world";
 	 
 		//SUMMARY
 		if (strlen($event -> get_value('name')) != 0)
@@ -126,6 +128,13 @@ class reason_iCalendar
 			$icalendar_event .= 'DESCRIPTION:' . $this -> _fold_text($event -> get_value('description')) . "\r\n";
 		else if (strlen($event -> get_value('content')) != 0)
 			$icalendar_event .= 'DESCRIPTION:' . $this -> _fold_text($event -> get_value('content')) . "\r\n";
+		else
+			$foo .= "no desc or content...";
+		
+		$foo .= "X";
+
+		$icalendar_event .= 'COMMENT:' . $this -> _fold_text($foo) . "\r\n";
+
 
 		//LOCATION
 		if (strlen($event -> get_value('location')) != 0)
