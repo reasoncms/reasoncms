@@ -92,7 +92,7 @@ class reason_iCalendar
 		$icalendar_header = "";
 		$icalendar_header .= 'BEGIN:VCALENDAR' . "\r\n";
 		$icalendar_header .= 'VERSION:2.0' . "\r\n";
-		$icalendar_header .= 'PRODID:-//Reason 4.0//EN' . "\r\n";
+		$icalendar_header .= 'PRODID:-//Reason 4.5//EN' . "\r\n";
 		if (!empty($title)) $icalendar_header .= 'X-WR-CALNAME;VALUE=TEXT:'. $this->_fold_text($title) . "\r\n";
 		if (defined("REASON_DEFAULT_TIMEZONE") && ( (boolean) REASON_DEFAULT_TIMEZONE ) && $this->use_x_wr_timezone)
 		{
