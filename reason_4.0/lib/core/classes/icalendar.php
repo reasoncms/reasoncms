@@ -124,12 +124,15 @@ class reason_iCalendar
 		
 		//DESCRIPTION
 		// if "brief description of event" (field: description) was specified, use that. Otherwise, use the "full event information" (field: content)
-		if (strlen($event -> get_value('description')) != 0)
+		if (strlen($event -> get_value('description')) != 0) {
+			$foo .= "A";
 			$icalendar_event .= 'DESCRIPTION:' . $this -> _fold_text($event -> get_value('description')) . "\r\n";
-		else if (strlen($event -> get_value('content')) != 0)
+		} else if (strlen($event -> get_value('content')) != 0) {
+			$foo .= "B";
 			$icalendar_event .= 'DESCRIPTION:' . $this -> _fold_text($event -> get_value('content')) . "\r\n";
-		else
+		} else {
 			$foo .= "no desc or content...";
+		}
 		
 		$foo .= "X";
 
