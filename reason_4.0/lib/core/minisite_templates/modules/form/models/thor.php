@@ -401,7 +401,7 @@ class ThorFormModel extends DefaultFormModel
 			if ($this->_is_editable())
 			{
 				$edit_link = carl_construct_link(array('form_id' => $v['id']), array('textonly', 'netid'));
-				$thor_values[$k]['Action'] = '<a href="'.$edit_link.'">Edit</a>';
+				$thor_values[$k] = array_merge(array('Action' => '<a href="'.$edit_link.'">Edit</a>'), $thor_values[$k]);
 			}
 			
 			if (isset($v['submitted_by'])) unset ($thor_values[$k]['submitted_by']);
