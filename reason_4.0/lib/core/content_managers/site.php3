@@ -82,7 +82,9 @@
 			}
 			$this->set_comments( 'use_page_caching', form_comment('<strong>Note:</strong> page caching may make changes to your pages be delayed up to 1 hour after they are made.  Only turn this on if your site has a lot of traffic and you need to improve performance.') );
 			$t = new TitleTagParser(null, null);
-			$this->set_comments( 'minisite_title_pattern', form_comment('<strong>Tags:</strong> '. join(', ', $t->tags) .'. Be sure to wrap the tag in <strong>straight brackets: [tag]</strong>'));
+			$this->set_comments( 'minisite_title_pattern', form_comment('<strong>Tags:</strong> '. join(', ', $t->tags) .'. Be sure to wrap the tag in <strong>straight brackets: [tag]</strong> The default value for this field is '. REASON_MINISITE_TITLE_PATTERN));
+			$this->set_comments( 'secondary_title_pattern', form_comment('The default value for this field is '. REASON_SECONDARY_TITLE_PATTERN));
+			$this->set_comments( 'item_title_pattern', form_comment('The default value for this field is '. REASON_ITEM_TITLE_PATTERN));
 			$this->set_comments( 'keywords',form_comment('These words or phrases will be used by the A-Z module to provide a keyword index of Reason sites. Separate words and phrases with a comma, like this: <em>Economics, Monetary Policy, Political Economy</em>'));
 			$this->set_comments( 'site_state',form_comment('The current status of the site. "Live" sites are listed in the A-Z and Sitemap modules, and cannot borrow items from "Not Live" sites. "Not Live" sites are hidden from search engines and do not appear in listings of live sites. When you are building a site you probably want it to be "Not Live," and when it is ready for primetime you should set it to be "Live" so it can be indexed.'));
 			$this->set_comments( 'other_base_urls',form_comment('This field is used by the stats integration feed to identify other directories whose stats you want to see along with this site\'s. Enter URLs relative to the server base, separated by commas (e.g. <em>/foo/bar/, /bar/foo/</em>.) You can ignore this field if you are not running a stats package integrated with Reason.'));

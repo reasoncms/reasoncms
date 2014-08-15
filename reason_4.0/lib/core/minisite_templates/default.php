@@ -1099,8 +1099,11 @@ class MinisiteTemplate
 
 	function get_title_tag_pattern_for ($zone)
 	{
-		$pattern = $this->site_info->_values[$zone .'_title_pattern'];
-		if ( $pattern ) return $pattern;
+		$zone_key = $zone .'_title_pattern';
+
+		if ( array_key_exists($zone_key, $this->site_info->_values) && $this->site_info->_values[$zone_key] )
+			return $this->site_info->_values[$zone_key];
+
 		return constant('REASON_' . strtoupper($zone) . '_TITLE_PATTERN');
 	}
 	
