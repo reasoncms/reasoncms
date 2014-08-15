@@ -96,10 +96,10 @@ class DefaultFeatureView extends FeatureView
 			$head_items->add_javascript(JQUERY_URL, true);
 			if ($this->has_av)
 			{
-				$head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH."nyroModal/js/jquery.nyroModal-1.6.2.min.js");
+				$head_items->add_javascript($this->absolutify_url_if_needed(REASON_PACKAGE_HTTP_BASE_PATH."nyroModal/js/jquery.nyroModal-1.6.2.min.js"));
 			}
-			$head_items->add_javascript(REASON_HTTP_BASE_PATH . 'js/feature.js');
-			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH . 'css/features/feature_responsive.css');
+			$head_items->add_javascript($this->absolutify_url_if_needed(REASON_HTTP_BASE_PATH . 'js/feature.js'));
+			$head_items->add_stylesheet($this->absolutify_url_if_needed(REASON_HTTP_BASE_PATH . 'css/features/feature_responsive.css'));
 			$head_items->add_head_item("style",array("type"=>"text/css"),"
 			.featuresModule { max-width: ".$width."px; }
 			.features { padding-bottom:" . round($height/$width*100, 5) . "%; }
