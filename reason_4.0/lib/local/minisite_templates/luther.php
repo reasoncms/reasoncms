@@ -51,8 +51,6 @@
 						$page_type->set_region_parameter($region, 'description_part_of_link', true);	
 					if(!isset($module['module_params']['html5']))
 						$page_type->set_region_parameter($region, 'html5', true);
-					if(!isset($module['module_params']['show_only_pages_in_nav']))
-						$page_type->set_region_parameter($region, 'show_only_pages_in_nav', true);
 				}
 			}
 
@@ -88,15 +86,6 @@
 				}
 			}
 
-			// Global parameters for the siblings module
-			if($regions = $page_type->module_regions('siblings'))
-			{
-				foreach($regions as $region)
-				{
-					if(!isset($module['module_params']['show_only_pages_in_nav']))
-						$page_type->set_region_parameter($region, 'show_only_pages_in_nav', true);
-				}
-			}
 		}
 		
 		function start_page()
