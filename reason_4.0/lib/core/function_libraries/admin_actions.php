@@ -78,7 +78,7 @@
 		}
 		$name = reason_sanitize_value(unique_name_of($type_id), 'name', $raw_name);
 		// create entity record
-		$q = "INSERT INTO entity (name,creation_date,type,created_by,last_edited_by,state) VALUES ('".addslashes($name)."',NOW(),$type_id,$user_id,$user_id,'Live')";
+		$q = "INSERT INTO entity (name,creation_date,type,created_by,last_edited_by,state) VALUES ('".mysql_real_escape_string($name)."',NOW(),$type_id,$user_id,$user_id,'Live')";
 		if( $testmode )
 			echo $q.'<br /><br />';
 		else
@@ -126,19 +126,20 @@
 			
 			if( $table != 'entity' )
 			{
-				$keys = $field_values = '';
+				$qparts = array('id' => $entity_id);
 				if( !empty( $values[ $table ] ) AND is_array( $values[ $table ] ) )
 				{
-					// loop through all key-val pairs
+					// loop through all key-val pairs to create a sanitized array
 					foreach( $values[ $table ] as $key => $val )
 					{
-						// build string of keys and values
-						$keys .= ",$key";
-						$field_values .= ',"'.addslashes( $val ).'"';
+						$qparts[$key] = mysql_real_escape_string( $val );
 					}
 				}
 				// create the query
-				$q = "INSERT INTO $table (id".$keys.") VALUES ($entity_id".$field_values.")";
+				$q = sprintf('INSERT INTO %s (`%s`) VALUES ("%s")',
+					$table,
+					join('`,`', array_keys($qparts)),
+					join('","', $qparts));
 				if( $testmode )
 					echo $q.'<br /><br />';
 				else
