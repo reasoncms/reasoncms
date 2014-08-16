@@ -16,7 +16,7 @@ class ReasonUpgrader_45_TitleTagFields implements reasonUpgraderInterface
     $entity_table_name = 'site';
 
     $this->fields = array(
-      'minisite_title_pattern'  => array('db_type' => 'tinytext'),
+      'home_title_pattern'      => array('db_type' => 'tinytext'),
       'secondary_title_pattern' => array('db_type' => 'tinytext'),
       'item_title_pattern'      => array('db_type' => 'tinytext'),
     );
@@ -47,7 +47,7 @@ class ReasonUpgrader_45_TitleTagFields implements reasonUpgraderInterface
 	 */
 	public function description()
 	{
-		return '<p>This script adds 3 new fields, minisite_title_pattern, to sites.</p>';
+		return '<p>This script adds 3 new fields, home_title_pattern, to sites.</p>';
 	}
 
   /**
@@ -68,7 +68,7 @@ class ReasonUpgrader_45_TitleTagFields implements reasonUpgraderInterface
 
   protected function _test_fields_exist()
   {
-    return $this->updater->field_exists('minisite_title_pattern') && 
+    return $this->updater->field_exists('home_title_pattern') && 
            $this->updater->field_exists('secondary_title_pattern') && 
            $this->updater->field_exists('item_title_pattern');
   }

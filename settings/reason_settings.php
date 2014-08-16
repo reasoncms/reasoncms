@@ -1040,10 +1040,10 @@
 	define('REASON_SHOW_META_KEYWORDS', false);
 
 	/**
-	 * REASON_MINISITE_TITLE_PATTERN
+	 * REASON_HOME_TITLE_PATTERN
 	 *
 	 */
-	define('REASON_MINISITE_TITLE_PATTERN', '[minisite_name] | [organization_name]');
+	define('REASON_HOME_TITLE_PATTERN', '[minisite_name] | [organization_name]');
 	
 	/**
 	 * REASON_SECONDARY_TITLE_PATTERN
