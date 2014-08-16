@@ -83,16 +83,21 @@
 			$this->set_comments( 'use_page_caching', form_comment('<strong>Note:</strong> page caching may make changes to your pages be delayed up to 1 hour after they are made.  Only turn this on if your site has a lot of traffic and you need to improve performance.') );
 			
 			$t = new TitleTagParser(null, null);
+
+			$this->set_comments( 'home_title_pattern', form_comment('<strong>Tags:</strong> '. join(', ', $t->tags) .'. Be sure to wrap the tag in <strong>straight brackets: [tag]</strong> The default value for this field is '. REASON_HOME_TITLE_PATTERN));
+			$this->set_comments( 'secondary_title_pattern', form_comment('The default value for this field is '. REASON_SECONDARY_TITLE_PATTERN));
+			$this->set_comments( 'item_title_pattern', form_comment('The default value for this field is '. REASON_ITEM_TITLE_PATTERN));
+
 			$this->add_element('title_patterns_header','comment',array('text'=>'<h3>Page Titles</h3><p class="smallText">These tags are replaced: ['. join('] [', $t->tags) .']. To change defaults across Reason, edit settings/reason_settings.php.</p>'));
 			
-			if('' == $this->get_value('minisite_title_pattern'))
+			if('' == $this->get_value('home_title_pattern'))
 			{
-				$this->set_value('minisite_title_pattern', REASON_MINISITE_TITLE_PATTERN);
-				$this->add_comments( 'minisite_title_pattern',' <em class="smallText">(Default)</em>');
+				$this->set_value('home_title_pattern', REASON_HOME_TITLE_PATTERN);
+				$this->add_comments( 'home_title_pattern',' <em class="smallText">(Default)</em>');
 			}
 			else
 			{
-				$this->add_comments( 'minisite_title_pattern',' <em class="smallText">(Customized; clear to return to default)</em>');
+				$this->add_comments( 'home_title_pattern',' <em class="smallText">(Customized; clear to return to default)</em>');
 			}
 			if('' == $this->get_value('secondary_title_pattern'))
 			{
@@ -113,7 +118,7 @@
 				$this->add_comments( 'item_title_pattern',' <em class="smallText">(Customized; clear to return to default)</em>');
 			}
 			
-			$this->add_comments( 'minisite_title_pattern',form_comment('Used for the site\'s home page'));
+			$this->add_comments( 'home_title_pattern',form_comment('Used for the site\'s home page'));
 			$this->add_comments( 'secondary_title_pattern',form_comment('Used for all other pages on the site'));
 			$this->add_comments( 'item_title_pattern',form_comment('Used for posts, events, and other non-page items'));
 			
@@ -152,7 +157,7 @@
 				$this->set_value( 'loki_default','notables' );
 
 			$this->set_comments( 'loki_default',form_comment('The HTML editor options available when editing content on the site.'));
-			$this->set_order(array('name','unique_name','primary_maintainer','base_url','domain','base_breadcrumbs','description','keywords','department','site_state','loki_default','other_base_urls','use_page_caching','theme','allow_site_to_change_theme','site_type','use_custom_footer','custom_footer','title_patterns_header','minisite_title_pattern','secondary_title_pattern','item_title_pattern',));
+			$this->set_order(array('name','unique_name','primary_maintainer','base_url','domain','base_breadcrumbs','description','keywords','department','site_state','loki_default','other_base_urls','use_page_caching','theme','allow_site_to_change_theme','site_type','use_custom_footer','custom_footer','title_patterns_header','home_title_pattern','secondary_title_pattern','item_title_pattern',));
 		} // }}}
 		function alter_editor_options_field()
 		{
@@ -215,8 +220,8 @@
 				$this->set_value('custom_footer','');
 			}
 			
-			if(REASON_MINISITE_TITLE_PATTERN == $this->get_value('minisite_title_pattern'))
-				$this->set_value('minisite_title_pattern', '');
+			if(REASON_HOME_TITLE_PATTERN == $this->get_value('home_title_pattern'))
+				$this->set_value('home_title_pattern', '');
 			if(REASON_SECONDARY_TITLE_PATTERN == $this->get_value('secondary_title_pattern'))
 				$this->set_value('secondary_title_pattern', '');
 			if(REASON_ITEM_TITLE_PATTERN == $this->get_value('item_title_pattern'))
