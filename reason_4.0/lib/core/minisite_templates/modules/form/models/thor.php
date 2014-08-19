@@ -541,7 +541,7 @@ class ThorFormModel extends DefaultFormModel
 		$thor_core =& $this->get_thor_core_object();
 		$thor_values = $thor_core->get_thor_values_from_form($disco_obj);
 		// Merge in any additional dynamic fields specified by the application
-		if ($dynamic = $disco_obj->get_show_submitted_data_dynamic_fields())
+		if (($dynamic = $disco_obj->get_show_submitted_data_dynamic_fields()) && is_array($dynamic) )	
 		{
 			foreach ($dynamic as $element) 
 			{
