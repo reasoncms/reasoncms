@@ -53,7 +53,7 @@ class tmhUtilities {
     }
 
     if (!isset($tweet['entities'])) {
-      return $tweet['text'];
+      return (isset($tweet['text'])) ? $tweet['text'] : null;
     }
 
     $target = (!empty($opts['target'])) ? ' target="'.$opts['target'].'"' : '';
