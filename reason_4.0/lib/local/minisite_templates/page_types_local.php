@@ -550,7 +550,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'main' => array(
 			'module' => 'luther_sports_results_mini',
 			'list_chrome_markup' => 'minisite_templates/modules/events_markup/sports/sports_events_list_chrome.php',
-			'list_markup' => 'minisite_templates/modules/events_markup/sports/sports_events_list.php',
+			'list_markup' => 'minisite_templates/modules/events_markup/sports/sports_results_list.php',
 			'list_item_markup' => 'minisite_templates/modules/events_markup/sports/sports_events_list_item.php',
 			'item_markup' => 'minisite_templates/modules/events_markup/sports/sports_events_item.php',
 		),

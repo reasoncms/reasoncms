@@ -62,33 +62,34 @@ class sportsResultsListMarkup implements eventsListMarkup
 			trigger_error('Call set_bundle() before calling get_markup()');
 			return '';
 		}
-		
 		$ret = '';
-		$ret .= '<h3>Results</h3>';
+		
 		$ret .= '<table class="tablesorter">'."\n";
 		
-		$i = $this->bundle->ideal_count();
+		$ret .= '<tr>'."\n";
+		$ret .= '<th class="date">Date</th>'."\n";
+		$ret .= '<th class="event">Opponent</th>'."\n";
+		$ret .= '<th class="location">Location</th>'."\n";
+		$ret .= '<th class="timeOrResults">Time/Results</th>'."\n";
+		$ret .= '</tr>'."\n";
+	
 		if($events = $this->bundle->events($this->get_ongoing_display_type()))
-		{	
+		{			
 			foreach($events as $day => $times)
-			{			
+			{				
 				foreach($times as $time => $events)
 				{
 					foreach($events as $event)
 					{
-						if ($i > 0 && preg_match("/post_to_results/", $event->get_value( 'contact_organization' )))
-						{
+						if (substr($day, 0, 10) == substr($event->get_value('datetime'), 0, 10))
+						{					
 							$ret .= $this->bundle->list_item_markup($event, $day, $time);
-							$i--;
-						}					
+						}						
 					}
 				}
 			}
 		}
 		$ret .= '</table>'."\n";
-		
-		$ret .= $this->bundle->feed_link();
-		
 		return $ret;
 	}
 }

@@ -8,6 +8,7 @@
   * Include dependencies & register the class
   */
 //reason_include_once( 'minisite_templates/modules/luther_sports_results_mini.php' );
+reason_include_once( 'minisite_templates/modules/events.php' );
 reason_include_once('minisite_templates/modules/events_markup/interfaces/events_list_item_interface.php');
 $GLOBALS['events_markup']['minisite_templates/modules/events_markup/sports/sports_events_list_item.php'] = 'sportsEventsListItemMarkup';
 /**
@@ -15,7 +16,7 @@ $GLOBALS['events_markup']['minisite_templates/modules/events_markup/sports/sport
  *
  * This class takes an event and produces markup meant to be used in the events listing
  */
-class sportsEventsListItemMarkup /*extends lutherSportsResultsMiniModule*/ implements eventsListItemMarkup
+class sportsEventsListItemMarkup extends EventsModule implements eventsListItemMarkup
 {
 	/**
 	 * The function bundle
@@ -79,7 +80,8 @@ class sportsEventsListItemMarkup /*extends lutherSportsResultsMiniModule*/ imple
 			$ret .= '<td class="date">'.date('M', $d).' '.date('d', $d).'</td>'."\n";
 		}
 			
-		if (!luther_is_sports_page(false))
+		if ($this->is_sports_event($event->get_value('sponsor')) && (!luther_is_sports_page()
+			|| get_site_id_from_url("/sports") == get_site_id_from_url(get_current_url())))
 		{
 			$event_name = ucfirst(preg_replace("|(^.*?)\s\((w?o?m?en)\)$|", "\\2's \\1", $event->get_value('sponsor')))." - ".$event->get_value( 'name' );
 		}

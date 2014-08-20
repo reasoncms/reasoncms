@@ -67,7 +67,8 @@ class sportsEventsItemMarkup implements eventsItemMarkup
 			return '';
 		}
 		$postToResults = (preg_match("/post_to_results/", $event->get_value( 'contact_organization' ))) ? true : false;
-		$ret = '<p class="back"><a href="'.$this->bundle->back_link().'" title="Back to event listings"><i class="fa fa-chevron-circle-left"></i></a></p>';
+		
+		$ret = '<p class="back"><a href="'.$this->bundle->back_link().'" title="Back to event listings">Back to event listings</a></p>';
 		$ret .= $this->get_image_markup($event);
 		$ret .= '<h3>'.$event->get_value('name').'</h3>'."\n";
 		$ret .= $this->get_ownership_markup($event);
@@ -449,15 +450,15 @@ class sportsEventsItemMarkup implements eventsItemMarkup
 			$ret .= '<div class="export">'."\n";
 			if($event->get_value('recurrence') == 'none' || !$this->bundle->request_date() )
 			{
-				$ret .= '<a href="'.$ical_link.'" title="Import into your calendar program"><i class="fa fa-calendar"></i></a>';
+				$ret .= '<p class="calendarExport"><a href="'.$ical_link.'" title="Import into your calendar program">Add this event to your calendar</a></p>';
 			}
 			else
 			{
 				if($item_ical_link = $this->bundle->ical_link($event, false))
 				{
-					$ret .= '<a href="'.$item_ical_link.'" title="Add this occurrence to your calendar"><i class="fa fa-calendar-o"></i></a>';
+					$ret .= '<p class="calendarExport"><a href="'.$item_ical_link.'" title="Add this occurrence to your calendar">Add this occurrence to your calendar</a></p>';
 				}
-				$ret .= '<a href="'.$ical_link.'" title="Add all occurrences to your calendar"><i class="fa fa-calendar"></i></a>';
+				$ret .= '<p class="calendarExport"><a href="'.$ical_link.'" title="Add all occurrences to your calendar">Add all occurrences to your calendar</a></p>';
 			}
 			$ret .= '</div>'."\n";
 		}
