@@ -4,96 +4,45 @@
  */
 $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'VolunteerOtherModule';
 
-class VolunteerOtherModule extends DefaultMinisiteModule
+reason_include_once( 'minisite_templates/modules/faculty_luther.php' );
+
+class VolunteerOtherModule extends LutherFacultyStaffModule
 {
-
-    function init()
-    {
-
-    }
+    var $volunteer_info;
 
     function has_content()
     {
+        $es =  new entity_selector( $this->site_id );
+        $es->add_type( id_of( 'volunteer_other_type' ));
+        $es->add_right_relationship( $this->cur_page->id(), relationship_id_of( 'page_to_volunteer' ));
+        $es->add_rel_sort_field($this->cur_page->id(), relationship_id_of('page_to_volunteer'));
+        $es->set_order('rel_sort_order');
+        $this->volunteer_info = $es->run_one();
+        if ( $this->volunteer_info ){
+            return true;
+        } else {
+            return false;
+        }
         return true;
     }
 
-    function show_person( $person ) // {{{
-	{
-        $this->show_image($person);
-        echo '<a name="'.$person['ds_username'][0].'"></a>'."\n";
-        echo '<h2 class="facStaffName">'.$person['full_name'];
-        echo '</h2>'."\n";
-
-
-        if( !empty( $person[ 'title' ])
-            || !empty( $person[ 'ds_phone' ] )
-            || !empty( $person[ 'mail' ] )
-            || !empty( $person['content' ] ) )
-        {
+    function show_person()
+    {
+        echo '<div id="facultyStaff">'."\n";
+        foreach ($this->volunteer_info as $vi) {
+            $this->show_volunteer_image($vi);
+            echo '<a name="'.$vi->get_value('name').'"></a>'."\n";
+            echo '<h2 class="facStaffName">'.$vi->get_value('name').'</h2>'."\n";
             echo '<div class="facStaffInfo">'."\n";
-            if ( !empty( $person['title']))
-            {
-                echo '<h3 class="facStaffTitle">'.$person['title'].'</h3>'."\n";
-            }
-
+            echo '<h3 class="facStaffTitle">'.$vi->get_value('title').'</h3>'."\n";
             echo '<ul class="facStaffContact">';
-
-            if ($person['edupersonaffiliation'][0] != 'Emeritus')
-            {
-
-                if ( !empty ( $person['ds_office'] ) ){
-                    echo '<li class="facStaffOffice"><strong>Office:</strong> ';
-                    foreach ($person['ds_office'] as $office) {
-                        echo preg_replace('/;/', ', ', $office);
-                    }
-                    echo '</li>' . "\n";
-
-                }
-                if ( !empty ( $person['ds_phone'] )){
-                    echo '<li class="facStaffPhone"><strong>Phone:</strong> ' . preg_replace('/,/', ', ', $person['ds_phone']) . '</li>' . "\n";
-                }
-            }
-
-            if ( !empty ( $person['mail'] ))
-            {
-                echo '<li class="facStaffEmail"><strong>E-mail:</strong> <a href="mailto:' . $person['mail'] . '">' . $person['mail'] . '</a></li>' . "\n";
-            }
-
-            echo '</ul>';
-
-            if (!empty( $person['content' ] ) )
-            {
-                echo '<div class="facStaffContent">' . $person[ 'content' ]  . '</div>' . "\n";
-            }
+            echo '<li class="facStaffOffice"><strong>Office:</strong> '.$vi->get_value('location').'</li>'."\n";
+            echo '<li class="facStaffPhone"><strong>Phone:</strong> ' . $vi->get_value('phone') . '</li>' . "\n";
+            echo '<li class="facStaffEmail"><strong>E-mail:</strong> <a href="mailto:' . $vi->get_value('email') . '">' . $vi->get_value('email') . '</a></li>' . "\n";
+            echo '<div class="facStaffContent">' . $vi->get_value( 'content' )  . '</div>' . "\n";
             echo '</div>'."\n";
         }
-    }
-
-    function show_image( $person )
-    {
-        $image_id = '';
-        if( !empty( $this->reason_netids[ $person[ 'ds_username' ][0] ] ) )
-                $image_id = $this->grab_faculty_image( $this->reason_netids[ $person[ 'ds_username' ][0] ] );
-        if (!empty($image_id))
-        {
-            echo "<figure class='facStaffImage'>";
-    		$image = get_entity_by_id($image_id);
-    		$url = WEB_PHOTOSTOCK . $image_id . '.' . $image['image_type'];
-    		$thumb = WEB_PHOTOSTOCK . $image_id . '_tn.' . $image['image_type'];
-    		if (!file_exists(preg_replace("|/$|", "", $_SERVER['DOCUMENT_ROOT']) . $thumb))
-    		{
-    			$thumb = $url;
-    		}
-    		$d = max($image['width'], $image['height']) / 125.0;
-    		//echo '<div class="figure" style="width:' . intval($image['width']/$d) .'px;">';
-    		echo '<a href="'. $url . '" class="highslide" onclick="return hs.expand(this, imageOptions)">';
-            echo '<img src="' . $thumb . '" border="0" alt="" title="Click to enlarge" />';
-            echo '</a>';
-
-            //show_image( $image_id, false,true,false );
-            //echo "</div>\n";
-            echo "</figure>\n";
-        }
+        echo '</div>';
     }
 }
 ?>
