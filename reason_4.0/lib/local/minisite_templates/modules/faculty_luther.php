@@ -97,7 +97,6 @@ class LutherFacultyStaffModule extends FacultyStaffModule
 
                 }
                 if ( !empty ( $person['ds_phone'] )){
-                    echo '<li class="facStaffPhone"><strong>Phone:</strong> ' . preg_replace('/,/', ', ', $person['ds_phone']) . '</li>' . "\n";
                     echo '<li class="facStaffPhone"><strong>Phone:</strong> <a href="tel:' . preg_replace('/,/', ', ', $person['ds_phone']) . '">' . preg_replace('/,/', ', ', $person['ds_phone']) . '</a></li>' . "\n";
                 }
             }
