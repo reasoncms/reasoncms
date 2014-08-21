@@ -27,13 +27,6 @@ class LutherFacultyStaffModule extends FacultyStaffModule
 
     function list_people( $people ) // {{{ // {{{
     {
-        // foreach( $people AS $person )
-        // {
-        //     echo '<div class="facStaff">'."\n";
-        //     $person = $this->process_person( $person );
-        //     $this->show_person( $person );
-        //     echo '</div>'."\n";
-        // }
         parent::list_people( $people );
 
         /* Volunteers attached to the page are added at the end */
@@ -57,7 +50,7 @@ class LutherFacultyStaffModule extends FacultyStaffModule
                     echo '<li class="facStaffOffice"><strong>Office:</strong> '.$vi->get_value('location').'</li>'."\n";
                 }
                 if ($vi->get_value('phone')){
-                    echo '<li class="facStaffPhone"><strong>Phone:</strong> ' . $vi->get_value('phone') . '</li>' . "\n";
+                    echo '<li class="facStaffPhone"><strong>Phone:</strong> <a href="tel:' . $vi->get_value('phone') . '">' . $vi->get_value('phone') . '</a></li>' . "\n";
                 }
                 if ($vi->get_value('email')){
                     echo '<li class="facStaffEmail"><strong>E-mail:</strong> <a href="mailto:' . $vi->get_value('email') . '">' . $vi->get_value('email') . '</a></li>' . "\n";
@@ -105,6 +98,7 @@ class LutherFacultyStaffModule extends FacultyStaffModule
                 }
                 if ( !empty ( $person['ds_phone'] )){
                     echo '<li class="facStaffPhone"><strong>Phone:</strong> ' . preg_replace('/,/', ', ', $person['ds_phone']) . '</li>' . "\n";
+                    echo '<li class="facStaffPhone"><strong>Phone:</strong> <a href="tel:' . preg_replace('/,/', ', ', $person['ds_phone']) . '">' . preg_replace('/,/', ', ', $person['ds_phone']) . '</a></li>' . "\n";
                 }
             }
 
