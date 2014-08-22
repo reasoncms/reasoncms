@@ -6099,8 +6099,8 @@ Util.HTML_Parser = function SAX_HTML_Parser()
 			
 			if (next_char != '>') {
 				// oh my, what on earth?
-				throw new Util.HTML_Parser.Error('Opening tag not terminated ' +
-					'by ">".');
+				// throw new Util.HTML_Parser.Error('Opening tag not terminated by ">".');
+				console.log('Opening tag not terminated by ">".');
 			}
 		}
 		
@@ -6116,8 +6116,8 @@ Util.HTML_Parser = function SAX_HTML_Parser()
 				next_char = scan_character();
 				if (next_char != '>') {
 					// oh my, what on earth?
-					throw new Util.HTML_Parser.Error('Closing tag not ' +
-						'terminated by ">".');
+					//throw new Util.HTML_Parser.Error('Closing tag not terminated by ">".');
+					console.log('Closing tag not terminated by ">".');
 				}
 			}
 			
