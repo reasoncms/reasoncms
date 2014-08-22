@@ -69,7 +69,7 @@ class sportsEventsItemMarkup implements eventsItemMarkup
 		$postToResults = (preg_match("/post_to_results/", $event->get_value( 'contact_organization' ))) ? true : false;
 		
 		$ret = '<p class="back"><a href="'.$this->bundle->back_link().'" title="Back to event listings">Back to event listings</a></p>';
-		$ret .= $this->get_image_markup($event);
+		//$ret .= $this->get_image_markup($event);
 		$ret .= '<h3>'.$event->get_value('name').'</h3>'."\n";
 		$ret .= $this->get_ownership_markup($event);
 		if (!$postToResults && $event->get_value('description'))
@@ -135,6 +135,7 @@ class sportsEventsItemMarkup implements eventsItemMarkup
 			$ret .= '<p class="sponsor">Sponsor: '.$event->get_value('sponsor').'</p>'."\n";
 		$ret .= $this->get_contact_info_markup($event);
 		$ret .= $this->get_item_export_link_markup($event);
+		$ret .= $this->get_image_markup($event);
 		$ret .= $this->get_media_work_markup($event);
 		
 		//$ret .= $this->get_dates_markup($event);
@@ -159,7 +160,9 @@ class sportsEventsItemMarkup implements eventsItemMarkup
 		    $ret .= '<div class="images">';
 		    foreach( $images AS $image )
 		    {
-				 $ret .= get_show_image_html( $image, false, true, true, '' );
+				$ret .= '<div class="imageChunk">';
+				$ret .= get_show_image_html( $image, false, false, true, '' );
+				$ret .=  "</div>";
 		    }
 		    $ret .=  "</div>";
 		}
