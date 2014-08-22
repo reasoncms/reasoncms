@@ -12,7 +12,7 @@
  * $Date: 2005/08/26 15:20:32 $
  *
  * @author Moxiecode. Extracts made by NF starting 2005/10/14.
- * @copyright Copyright © 2004, Moxiecode Systems AB, All rights reserved.
+ * @copyright Copyright ï¿½ 2004, Moxiecode Systems AB, All rights reserved.
  */
 function TinyMCE() {};
 
@@ -19051,6 +19051,7 @@ UI.Page_Link_Selector.Item_Selector = function(dialog, wrapper)
 							var options = {
 								method: 'get',
 								timeout: 10,
+								headers: {'X-Requested-With': 'Loki'},
 								
 								on_interactive: function(request)
 								{
