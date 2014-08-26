@@ -1,6 +1,10 @@
 <?php
 	reason_include_once( 'minisite_templates/modules/default.php' );
 	reason_include_once( 'disco/plasmature/types/athletics.php' );
+	reason_include_once( 'classes/sized_image.php' );
+	reason_include_once('function_libraries/image_tools.php');
+	//reason_include_once( 'classes/api/api.php' );
+	//reason_include_once( 'minisite_templates/modules/image_sidebar.php' );
 	//reason_include_once( 'classes/error_handler.php');
 
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'lutherSportsRosterModule';
@@ -158,10 +162,12 @@
 
 	function init( $args = array() )
 	{
+		parent::init( $args );
+		
+		//Do standard initialization
+		
 		$head_items = $this->get_head_items();
 		$head_items->add_javascript(JQUERY_URL, true);
-		//$head_items->add_stylesheet(JQUERY_UI_CSS_URL);
-		$head_items->add_javascript(JQUERY_UI_URL);
 		
 		$head_items->add_javascript('/reason/local/luther_2014/javascripts/tablesorter.min.js');
 		$head_items->add_javascript('/reason/local/luther_2014/javascripts/vendor/jquery.hoverIntent.min.js');
@@ -169,6 +175,23 @@
 		$head_items->add_javascript('/reason/local/luther_2014/javascripts/vendor/jquery.cluetip.min.js');		
 		$head_items->add_javascript('/reason/local/luther_2014/javascripts/luther-sports-roster.js');
 		$head_items->add_javascript('/reason/local/luther_2014/javascripts/luther-cluetip.js');
+		
+		if (defined(UNIVERSAL_CSS_PATH))
+		{
+			$head_items->add_stylesheet(UNIVERSAL_CSS_PATH);
+		}
+		
+		$head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'FancyBox/source/jquery.fancybox.js');
+		$head_items->add_stylesheet(REASON_PACKAGE_HTTP_BASE_PATH.'FancyBox/source/jquery.fancybox.css');
+		$head_items->add_head_item('script', array('type'=>'text/javascript'),
+			'$(document).ready(function() {
+				$(".fancybox").fancybox({
+					helpers		: {
+					title	: { type : \'inside\' },
+					}
+				});
+			});'
+		);
 		
 		$site_id = new entity( $this->site_id );
 		$this->site_name = $site_id->get_value('unique_name');
@@ -233,6 +256,7 @@
 				$this->parent->title = $pv['athlete_first_name'] . " " . $pv['athlete_last_name'];
 			}
 		}
+
 		//$this->init_player_order();
 	}
 
@@ -250,7 +274,7 @@
 			return false;
 		}
 	}
-
+	
 	function run()
 	{
 		$this->sort_columns($this->_columns);
@@ -258,13 +282,41 @@
 		
 		if (!empty($this->request['id']))
 		{
-			$player_class = 'playerInfo';
 			echo '<div id="athleticsPlayerInfo">';
-			echo '<p>';
 			$player = current($this->player_info); // get the player
 
 			if (!empty($player['image_id']))
 			{
+				$image = get_entity_by_id($player['image_id']);
+				$url = luther_get_image_url(WEB_PHOTOSTOCK . $player['image_id'] . '.' . $image['image_type']);
+				$thumb = luther_get_image_url(WEB_PHOTOSTOCK . $player['image_id'] . '_tn.' . $image['image_type']);
+				$orig = luther_get_image_url(WEB_PHOTOSTOCK . $player['image_id'] . '_orig.' . $image['image_type']);
+				$description = $player['name'];
+				if (file_exists($_SERVER['DOCUMENT_ROOT'] . $orig))   // link to high res original if it exists
+				{
+					$description .= '<a href="' . $orig . '" title="High res">&prop;</a>';
+				}
+
+				//$title = $player['name']<a href=\"http://farm" . $pinfo['farm'] . ".static.flickr.com/" . $photo['server'] . "/" . $photo['id'] . "_" . $pinfo['originalsecret'] . "_o." . $pinfo['originalformat'] . "\" title=\"High res\">&prop;</a>\n";
+				
+				echo '<a class="fancybox" title="' . htmlspecialchars($description, ENT_COMPAT) . '" rel="group" href="' . $url .'">
+					<img src="' . $thumb .'" alt="' . htmlspecialchars($description, ENT_COMPAT) . '" title="' . $player['name'] . '" /></a>';
+				
+				
+					/*$rsi = new reasonSizedImage();
+					if(!empty($rsi))
+					{
+						$rsi->set_id($image['id']);
+						$rsi->set_width(300);
+						//$rsi->set_height(600);
+						$image = $rsi;
+					}
+				print_r($rsi);
+				show_image( $rsi, false, true, false, "", false, false, "");
+						
+				echo "</div>\n";
+				echo "</div>\n";
+				
 				$image = get_entity_by_id($player['image_id']);
 				$url = luther_get_image_url(WEB_PHOTOSTOCK . $player['image_id'] . '.' . $image['image_type']);
 				$thumb = luther_get_image_url(WEB_PHOTOSTOCK . $player['image_id'] . '_tn.' . $image['image_type']);
@@ -287,10 +339,10 @@
 
 				// show caption if flag is true
 				if ($caption != "") echo $caption;
-				echo "</div>   <!-- class=\"figure\" -->\n";
+				echo "</div>   <!-- class=\"figure\" -->\n";*/
 			}
 			
-			echo '<ul>';
+			echo '<ul class="no-bullet">';
 			foreach ( array_keys($this->_columns) as $col)
 			{
 				
@@ -329,19 +381,16 @@
 						}
 					}
 
-				echo '<li><strong>'.$this->gen_custom_header($col).':</strong> '.$value.'</li>';
+				echo '<li>'.$this->gen_custom_header($col).': '.$value.'</li>';
 				}
 			}
 			echo '</ul>';
-			echo '</p>';
 			echo '<hr>';
-			if (!empty($player['content'])) {
-				echo '<div class="moreInfo">'."\n";
+			if (!empty($player['content'])) {	
 				echo $player['content']."\n";
-				echo '</div>'."\n";
 			}
 			echo '</div>', "\n";
-			echo '</div>';
+			//echo '</div>';
 		}
 		else
 		{
@@ -679,6 +728,5 @@
 		}
 	}
 	
-
 }
 ?>

@@ -129,11 +129,11 @@ function luther_get_related_publication($max_num_items = 3)
 }
 
 function luther_get_image_url($image)
-// if the image is not found on the local server
+// if the image is not found on the local server at WEB_PHOTOSTOCK followed by the image name
 // try to find the image url on www.luther.edu
 {
 	// if images not found locally try pulling from www
-	if (!file_exists($image))
+	if (!file_exists($_SERVER['DOCUMENT_ROOT'] . $image))
 	{
 		$image = (on_secure_page()) ? "https://www.luther.edu" . $image : "http://www.luther.edu" . $image;
 	}
