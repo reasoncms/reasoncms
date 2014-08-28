@@ -55,6 +55,7 @@ class LutherFacultyStaffModule extends FacultyStaffModule
                 if ($vi->get_value('email')){
                     echo '<li class="facStaffEmail"><strong>E-mail:</strong> <a href="mailto:' . $vi->get_value('email') . '">' . $vi->get_value('email') . '</a></li>' . "\n";
                 }
+                echo '</ul>'."\n";
                 if ($vi->get_value('content')){
                     echo '<div class="facStaffContent">' . $vi->get_value( 'content' )  . '</div>' . "\n";
                 }
