@@ -1,1 +1,248 @@
-.fa{display:inline-block;font-family:FontAwesome;font-style:normal;font-weight:normal;line-height:1;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}.zero-out{margin:0;padding:0}.screenreader{position:absolute;left:-9999px;top:-9999px;margin-bottom:0}@media only screen and (min-width: 64.063em){.lutherSports{background-image:-webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #292929), color-stop(100%, #333333));background-image:-webkit-linear-gradient(#292929,#333333);background-image:-moz-linear-gradient(#292929,#333333);background-image:-o-linear-gradient(#292929,#333333);background-image:linear-gradient(#292929,#333333)}}.lutherSports a.more,.lutherSports .pubLinks a,.lutherSports p.more a{color:#004789}.lutherSports a.more:hover,.lutherSports .pubLinks a:hover,.lutherSports p.more a:hover{color:#002d56}.lutherSports .contactBlurb .blurbInner{border-color:#004789}@media only screen and (min-width: 64.063em){.lutherSports #minisite{margin:1.25rem 0;padding-top:0;border:none;background:none}.lutherSports #minisite #contentAndRelated{background:#FFF;padding-right:1.25rem !important;padding-top:1.25rem}}.lutherSports #emergencyPreempt{margin-top:1.25rem}.lutherSports #emergencyPreempt .callout-danger{background:#f2968b}.lutherSports #wrapper #global-banner{border-color:#27527b}.lutherSports #wrapper #global-nav{border-color:#336ca2}@media only screen and (min-width: 64.063em){.lutherSports #wrapper #global-nav .sections>li{background:#004789}.lutherSports #wrapper #global-nav .sections>li a:hover{background-color:#003c75}}.lutherSports #wrapper #global-banner hgroup{background:#0a2345}.lutherSports #wrapper #global-banner hgroup h1 a{background:url("../../images/logo_mobile_1x.png") no-repeat}@media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 2 / 1), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx){.lutherSports #wrapper #global-banner hgroup h1 a{background:url("../../images/logo_mobile_2x.png") no-repeat;-webkit-background-size:150px 28px;-moz-background-size:150px 28px;-o-background-size:150px 28px;background-size:150px 28px}}@media only screen and (min-width: 64.063em){.lutherSports #wrapper #global-banner hgroup h1 a{width:168px;height:75px;background:url("../../images/logo_sports_1x.png") no-repeat;top:10.5px}}@media only screen and (-webkit-min-device-pixel-ratio: 2) and (min-width: 64.063em), only screen and (min--moz-device-pixel-ratio: 2) and (min-width: 64.063em), only screen and (-o-min-device-pixel-ratio: 2 / 1) and (min-width: 64.063em), only screen and (min-device-pixel-ratio: 2) and (min-width: 64.063em), only screen and (min-resolution: 192dpi) and (min-width: 64.063em), only screen and (min-resolution: 2dppx) and (min-width: 64.063em){.lutherSports #wrapper #global-banner hgroup h1 a{background:url("../../images/logo_2x.png") no-repeat;-webkit-background-size:168px 75px;-moz-background-size:168px 75px;-o-background-size:168px 75px;background-size:168px 75px}}@media only screen and (min-width: 64.063em){.lutherSports #minisite #navWrap #minisiteNavigation{background:#424242}.lutherSports #minisite #navWrap #minisiteNavigation a{color:#fff}.lutherSports #minisite #navWrap #minisiteNavigation .navListTop a.home{background:#999;color:#004789;border-bottom:none}.lutherSports #minisite #navWrap #minisiteNavigation .navListTop ul a{border-top:1px solid #212121;color:#fff}.lutherSports #minisite #navWrap #minisiteNavigation .navListTop ul a:hover{background:#333;color:#fff}.lutherSports #minisite #navWrap #minisiteNavigation .navListTop ul ul a{border-top:1px solid #303030}.lutherSports #minisite #navWrap #minisiteNavigation .navListTop ul ul a:hover{background:#3d3d3d}.lutherSports #minisite #navWrap #minisiteNavigation .navListTop ul .navListItem.open{background:#4d4d4d}.lutherSports #minisite #navWrap #minisiteNavigation .navListTop ul .navListItem.open a:hover{background:#525252 !important}.lutherSports #minisite #navWrap #minisiteNavigation .jump a:before,.lutherSports #minisite #navWrap #minisiteNavigation .accordion a:before{color:#FFF}}.lutherSports #minisite #navWrap .socialProfileLinks{background:#1073ce;background:#999}.lutherSports #minisite .uname_luther_sports_affiliations{text-align:center}.lutherSports #minisite .uname_luther_sports_affiliations p{display:inline}.lutherSports #minisite .uname_luther_sports_affiliations a{display:inline-block;margin:1.25rem}.lutherSports #minisite .uname_luther_sports_affiliations img{width:6.25rem}.lutherSports #preFoot{clear:both;width:100%;margin-bottom:1.25rem;background:#e9e9e9}.lutherSports #preFoot:before,.lutherSports #preFoot:after{display:block;height:1px;background:#dcdcdc;content:""}@media only screen and (min-width: 64.063em){.lutherSports #preFoot{margin:0 auto;background:none}.lutherSports #preFoot:before,.lutherSports #preFoot:after{display:none}}@media only screen and (min-width: 64.063em){.lutherSports .loginLinkModule div a{background:#ccc;background:rgba(255,255,255,0.05) !important;color:rgba(255,255,255,0.5)}.lutherSports .loginLinkModule div a:hover{background:#ccc;background:rgba(255,255,255,0.25) !important;color:rgba(255,255,255,0.65)}.lutherSports .loginLinkModule #footerLoginLink{background:#ccc;background:rgba(255,255,255,0.05) !important;color:rgba(255,255,255,0.5)}}.lutherSports #post-footer p{color:#FFF !important}
+/* line 4, ../scss/font-awesome/_core.scss */
+.fa {
+  display: inline-block;
+  font-family: FontAwesome;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* line 10, ../scss/_extends.scss */
+.zero-out {
+  margin: 0;
+  padding: 0;
+}
+
+/* line 15, ../scss/_extends.scss */
+.screenreader {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  margin-bottom: 0;
+}
+
+/* STRUCTURE */
+@media only screen and (min-width: 63.8125em) {
+  /* line 24, ../scss/sites/sports.scss */
+  .lutherSports {
+    background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #292929), color-stop(100%, #333333));
+    background-image: -webkit-linear-gradient(#292929, #333333);
+    background-image: -moz-linear-gradient(#292929, #333333);
+    background-image: -o-linear-gradient(#292929, #333333);
+    background-image: linear-gradient(#292929, #333333);
+  }
+}
+/* line 35, ../scss/sites/sports.scss */
+.lutherSports a.more,
+.lutherSports .pubLinks a,
+.lutherSports p.more a {
+  color: #004789;
+}
+/* line 38, ../scss/sites/sports.scss */
+.lutherSports a.more:hover,
+.lutherSports .pubLinks a:hover,
+.lutherSports p.more a:hover {
+  color: #002d56;
+}
+/* line 44, ../scss/sites/sports.scss */
+.lutherSports .contactBlurb .blurbInner {
+  border-color: #004789;
+}
+@media only screen and (min-width: 63.8125em) {
+  /* line 49, ../scss/sites/sports.scss */
+  .lutherSports #minisite {
+    margin: 1.25rem 0;
+    padding-top: 0;
+    border: none;
+    background: none;
+  }
+  /* line 65, ../scss/sites/sports.scss */
+  .lutherSports #minisite #contentAndRelated {
+    background: #FFF;
+    padding-right: 1.25rem !important;
+    padding-top: 1.25rem;
+  }
+}
+/* line 73, ../scss/sites/sports.scss */
+.lutherSports #emergencyPreempt {
+  margin-top: 1.25rem;
+}
+/* line 75, ../scss/sites/sports.scss */
+.lutherSports #emergencyPreempt .callout-danger {
+  background: #f2968b;
+}
+/* line 84, ../scss/sites/sports.scss */
+.lutherSports #wrapper #global-banner {
+  border-color: #27527b;
+}
+/* line 89, ../scss/sites/sports.scss */
+.lutherSports #wrapper #global-nav {
+  border-color: #336ca2;
+}
+@media only screen and (min-width: 63.8125em) {
+  /* line 95, ../scss/sites/sports.scss */
+  .lutherSports #wrapper #global-nav .sections > li {
+    background: #004789;
+  }
+  /* line 100, ../scss/sites/sports.scss */
+  .lutherSports #wrapper #global-nav .sections > li a:hover {
+    background-color: #003c75;
+  }
+}
+/* line 116, ../scss/sites/sports.scss */
+.lutherSports #wrapper #global-banner hgroup {
+  background: #0a2345;
+}
+/* line 126, ../scss/sites/sports.scss */
+.lutherSports #wrapper #global-banner hgroup h1 a {
+  background: url("../../images/logo_mobile_1x.png") no-repeat;
+}
+@media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 2 / 1), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
+  /* line 132, ../scss/sites/sports.scss */
+  .lutherSports #wrapper #global-banner hgroup h1 a {
+    background: url("../../images/logo_mobile_2x.png") no-repeat;
+    -webkit-background-size: 150px 28px;
+    -moz-background-size: 150px 28px;
+    -o-background-size: 150px 28px;
+    background-size: 150px 28px;
+  }
+}
+@media only screen and (min-width: 63.8125em) {
+  /* line 140, ../scss/sites/sports.scss */
+  .lutherSports #wrapper #global-banner hgroup h1 a {
+    width: 168px;
+    height: 75px;
+    background: url("../../images/logo_sports_1x.png") no-repeat;
+    top: 10.5px;
+  }
+}
+@media only screen and (-webkit-min-device-pixel-ratio: 2) and (min-width: 63.8125em), only screen and (min--moz-device-pixel-ratio: 2) and (min-width: 63.8125em), only screen and (-o-min-device-pixel-ratio: 2 / 1) and (min-width: 63.8125em), only screen and (min-device-pixel-ratio: 2) and (min-width: 63.8125em), only screen and (min-resolution: 192dpi) and (min-width: 63.8125em), only screen and (min-resolution: 2dppx) and (min-width: 63.8125em) {
+  /* line 150, ../scss/sites/sports.scss */
+  .lutherSports #wrapper #global-banner hgroup h1 a {
+    background: url("../../images/logo_2x.png") no-repeat;
+    -webkit-background-size: 168px 75px;
+    -moz-background-size: 168px 75px;
+    -o-background-size: 168px 75px;
+    background-size: 168px 75px;
+  }
+}
+@media only screen and (min-width: 63.8125em) {
+  /* line 163, ../scss/sites/sports.scss */
+  .lutherSports #minisite #navWrap #minisiteNavigation {
+    background: #424242;
+  }
+  /* line 172, ../scss/sites/sports.scss */
+  .lutherSports #minisite #navWrap #minisiteNavigation a {
+    color: white;
+  }
+  /* line 176, ../scss/sites/sports.scss */
+  .lutherSports #minisite #navWrap #minisiteNavigation .navListTop a.home {
+    background: #999999;
+    color: #004789;
+    border-bottom: none;
+  }
+  /* line 182, ../scss/sites/sports.scss */
+  .lutherSports #minisite #navWrap #minisiteNavigation .navListTop ul a {
+    border-top: 1px solid #212121;
+    color: white;
+  }
+  /* line 186, ../scss/sites/sports.scss */
+  .lutherSports #minisite #navWrap #minisiteNavigation .navListTop ul a:hover {
+    background: #333333;
+    color: white;
+  }
+  /* line 194, ../scss/sites/sports.scss */
+  .lutherSports #minisite #navWrap #minisiteNavigation .navListTop ul ul a {
+    border-top: 1px solid #303030;
+  }
+  /* line 197, ../scss/sites/sports.scss */
+  .lutherSports #minisite #navWrap #minisiteNavigation .navListTop ul ul a:hover {
+    background: #3d3d3d;
+  }
+  /* line 203, ../scss/sites/sports.scss */
+  .lutherSports #minisite #navWrap #minisiteNavigation .navListTop ul .navListItem.open {
+    background: #4d4d4d;
+  }
+  /* line 207, ../scss/sites/sports.scss */
+  .lutherSports #minisite #navWrap #minisiteNavigation .navListTop ul .navListItem.open a:hover {
+    background: #525252 !important;
+  }
+  /* line 216, ../scss/sites/sports.scss */
+  .lutherSports #minisite #navWrap #minisiteNavigation .jump a:before,
+  .lutherSports #minisite #navWrap #minisiteNavigation .accordion a:before {
+    color: #FFF;
+  }
+}
+/* line 223, ../scss/sites/sports.scss */
+.lutherSports #minisite #navWrap .socialProfileLinks {
+  background: #1073ce;
+  background: #999999;
+}
+/* line 230, ../scss/sites/sports.scss */
+.lutherSports #minisite .uname_luther_sports_affiliations {
+  text-align: center;
+}
+/* line 233, ../scss/sites/sports.scss */
+.lutherSports #minisite .uname_luther_sports_affiliations p {
+  display: inline;
+}
+/* line 237, ../scss/sites/sports.scss */
+.lutherSports #minisite .uname_luther_sports_affiliations a {
+  display: inline-block;
+  margin: 1.25rem;
+}
+/* line 242, ../scss/sites/sports.scss */
+.lutherSports #minisite .uname_luther_sports_affiliations img {
+  width: 6.25rem;
+}
+/* line 295, ../scss/sites/sports.scss */
+.lutherSports #preFoot {
+  clear: both;
+  width: 100%;
+  margin-bottom: 1.25rem;
+  background: #e9e9e9;
+}
+/* line 303, ../scss/sites/sports.scss */
+.lutherSports #preFoot:before, .lutherSports #preFoot:after {
+  display: block;
+  height: 1px;
+  background: gainsboro;
+  content: "";
+}
+@media only screen and (min-width: 63.8125em) {
+  /* line 295, ../scss/sites/sports.scss */
+  .lutherSports #preFoot {
+    margin: 0 auto;
+    background: none;
+  }
+  /* line 316, ../scss/sites/sports.scss */
+  .lutherSports #preFoot:before, .lutherSports #preFoot:after {
+    display: none;
+  }
+}
+@media only screen and (min-width: 63.8125em) {
+  /* line 331, ../scss/sites/sports.scss */
+  .lutherSports .loginLinkModule div a {
+    background: #ccc;
+    background: rgba(255, 255, 255, 0.05) !important;
+    color: rgba(255, 255, 255, 0.5);
+  }
+  /* line 336, ../scss/sites/sports.scss */
+  .lutherSports .loginLinkModule div a:hover {
+    background: #ccc;
+    background: rgba(255, 255, 255, 0.25) !important;
+    color: rgba(255, 255, 255, 0.65);
+  }
+  /* line 344, ../scss/sites/sports.scss */
+  .lutherSports .loginLinkModule #footerLoginLink {
+    background: #ccc;
+    background: rgba(255, 255, 255, 0.05) !important;
+    color: rgba(255, 255, 255, 0.5);
+  }
+}
+/* line 352, ../scss/sites/sports.scss */
+.lutherSports #post-footer p {
+  color: #FFF !important;
+}

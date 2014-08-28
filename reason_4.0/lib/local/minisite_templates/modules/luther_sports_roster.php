@@ -297,49 +297,9 @@
 					$description .= '<a href="' . $orig . '" title="High res">&prop;</a>';
 				}
 
-				//$title = $player['name']<a href=\"http://farm" . $pinfo['farm'] . ".static.flickr.com/" . $photo['server'] . "/" . $photo['id'] . "_" . $pinfo['originalsecret'] . "_o." . $pinfo['originalformat'] . "\" title=\"High res\">&prop;</a>\n";
-				
 				echo '<a class="fancybox" title="' . htmlspecialchars($description, ENT_COMPAT) . '" rel="group" href="' . $url .'">
 					<img src="' . $thumb .'" alt="' . htmlspecialchars($description, ENT_COMPAT) . '" title="' . $player['name'] . '" /></a>';
 				
-				
-					/*$rsi = new reasonSizedImage();
-					if(!empty($rsi))
-					{
-						$rsi->set_id($image['id']);
-						$rsi->set_width(300);
-						//$rsi->set_height(600);
-						$image = $rsi;
-					}
-				print_r($rsi);
-				show_image( $rsi, false, true, false, "", false, false, "");
-						
-				echo "</div>\n";
-				echo "</div>\n";
-				
-				$image = get_entity_by_id($player['image_id']);
-				$url = luther_get_image_url(WEB_PHOTOSTOCK . $player['image_id'] . '.' . $image['image_type']);
-				$thumb = luther_get_image_url(WEB_PHOTOSTOCK . $player['image_id'] . '_tn.' . $image['image_type']);
-				$orig = luther_get_image_url(WEB_PHOTOSTOCK . $player['image_id'] . '_orig.' . $image['image_type']);
-				$d = max($image['width'], $image['height']) / 125.0;
-				$caption = $image['name'];
-				if (file_exists($orig))   // link to high res original if it exists
-				{
-					$caption_hr = $caption . '<a href="' . $orig . '" title="High res">&prop;</a>';
-				}
-				else
-				{
-					$caption_hr = $caption;
-				}
-				echo '<div class="figure" style="width:' . intval($image['width']/$d) .'px;">';
-				// show href to full size image with class and onclick for highslide
-				echo '<a href="'. $url . '" class="highslide" onclick="return hs.expand(this, imageOptions)">';
-				echo '<img src="' . $thumb . '" border="0" title="Click to enlarge" alt="' . htmlspecialchars($caption_hr, ENT_COMPAT) . '" />';
-				echo '</a>';  
-
-				// show caption if flag is true
-				if ($caption != "") echo $caption;
-				echo "</div>   <!-- class=\"figure\" -->\n";*/
 			}
 			
 			echo '<ul class="no-bullet">';

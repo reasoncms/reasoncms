@@ -44,6 +44,18 @@ class sportsEventsItemMarkup implements eventsItemMarkup
 		$head_items->add_stylesheet('/reason/local/luther_2014/javascripts/vendor/jquery.cluetip.css');
 		$head_items->add_javascript('/reason/local/luther_2014/javascripts/vendor/jquery.cluetip.min.js');
 		$head_items->add_javascript('/reason/local/luther_2014/javascripts/luther-cluetip.js');
+		
+		$head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'FancyBox/source/jquery.fancybox.js');
+		$head_items->add_stylesheet(REASON_PACKAGE_HTTP_BASE_PATH.'FancyBox/source/jquery.fancybox.css');
+		$head_items->add_head_item('script', array('type'=>'text/javascript'),
+				'$(document).ready(function() {
+				$(".fancybox").fancybox({
+					helpers		: {
+					title	: { type : \'inside\' },
+					}
+				});
+			});'
+		);
 	}	
 	/**
 	 * Set the function bundle for the markup to use
@@ -160,11 +172,27 @@ class sportsEventsItemMarkup implements eventsItemMarkup
 		    $ret .= '<div class="images">';
 		    foreach( $images AS $image )
 		    {
-				$ret .= '<div class="imageChunk">';
-				$ret .= get_show_image_html( $image, false, false, true, '' );
-				$ret .=  "</div>";
+		    	$ret .= '<div class="imageChunk">';
+		    	$url = luther_get_image_url(WEB_PHOTOSTOCK . $image->id() . '.' . $image->get_value('image_type'));
+		    	$thumb = luther_get_image_url(WEB_PHOTOSTOCK . $image->id() . '_tn.' . $image->get_value('image_type'));
+		    	$orig = luther_get_image_url(WEB_PHOTOSTOCK . $image->id() . '_orig.' . $image->get_value('image_type'));
+		    	$description = $image->get_value('content') != '' ? $image->get_value('content') :$image->get_value('description');
+
+		    	if (file_exists($_SERVER['DOCUMENT_ROOT'] . $orig))   // link to high res original if it exists
+		    	{
+		    		$description .= '<a href="' . $orig . '" title="High res">&prop;</a>';
+		    	}
+
+		    	$ret .= '<div class="tnImage">';
+		    	$ret .= '<a class="fancybox" title="' . htmlspecialchars($description, ENT_COMPAT) . '" rel="group" href="' . $url .'">
+					<img src="' . $thumb .'" alt="' . htmlspecialchars($description, ENT_COMPAT) . '" title="' . $image->get_value('name') . '" /></a>';
+		    	$ret .=  "</div>";
+		    	$ret .= '<div class="tnDesc smallText">';
+		    	$ret .= $image->get_value('description');
+		    	$ret .= "</div>";
+		    	$ret .= "</div>";
 		    }
-		    $ret .=  "</div>";
+		    $ret .= "</div>";
 		}
 		return $ret;
 	}
