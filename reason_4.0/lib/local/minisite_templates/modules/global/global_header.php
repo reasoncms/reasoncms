@@ -16,8 +16,7 @@
 
 		function home_url()
 		{
-			$global_home = '/';
-			$sports_home = '/sports';
+			return luther_is_sports_page() ? '<a href="/sports"><span>Luther College Sports</span></a>' : '<a href="/"><span>Luther College</span></a>';
 		}
 		
 		function run()
@@ -27,7 +26,7 @@
 			<header id="global-banner" role="banner">
 			
 				<hgroup>
-					<h1><a href="/"><span>Luther College</span></a></h1>
+					<h1><?php echo $this->home_url() ?></h1>
 					<h2><span>Global Site Tagline</span></h2>
 				</hgroup>
 				
