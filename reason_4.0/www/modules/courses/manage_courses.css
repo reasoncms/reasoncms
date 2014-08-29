@@ -1,0 +1,77 @@
+
+div#courseNavigation {
+	position: absolute;
+	background-color: #231D5E;
+	top: 49px;
+	left: 0px;
+	width: 100%;
+	border-top: 1px solid #fff;
+	padding: 3px;
+	font-size: 0.85em;
+}
+
+header#banner, div#preBanner, div.pageTitle {
+	display: none;	
+}
+
+ul.courseListActive, ul.courseListInactive {
+	list-style: none;	
+}
+
+ul.courseListInactive {
+	color: #999;	
+}
+
+#wrapper ul.courseListInactive a {
+	color: #5c8ab5;	
+}
+
+
+li.courseListRow a {
+	display: inline-block;
+	width: 5.5em;	
+}
+
+
+div.contentPost div#discoLinear > div {
+	max-width: 45%;
+}
+
+div.contentPost span.labelText {
+	font-size: 0.85em;
+	color: #666;	
+}
+
+div#subjectItem, div#coursenumberItem {
+	display: inline-block;	
+}
+
+div#sectionsItem, div#courseinfoItem, div#requirementsItem  {
+	width: 45%;
+	float: right;
+	clear: right;
+}
+
+ul#courseInfo {
+	list-style: none;
+	padding: 0;	
+	font-size: 0.85em;
+	color: #666;	
+}
+
+body#tinymce {
+	font-size: 0.95em;	
+}
+
+div.contentPost div.mce-container {
+	width: 45em;	
+}
+
+div.contentPost input#titleElement {
+	width: 36.75em;	
+}
+
+div.contentPost div#prerequisitesItem textarea {
+	font-size: 0.8125em;
+	padding: 0.5em 0.25em;
+}
