@@ -29,7 +29,7 @@ class CourseListModule extends DefaultMinisiteModule
 				
 		// Retrieve courses whose subject matches the subject associated with the
 		// office/department entity associated with this site.
-		'get_courses_by_subjects' => array('MUSC'),
+		'get_courses_by_subjects' => array(),
 
 		// Retrieve courses whose subject matches the subject associated with the
 		// office/department entity associated with this site.
@@ -40,7 +40,7 @@ class CourseListModule extends DefaultMinisiteModule
 
 		// Retrieve courses with tags matching the categories attached to this page
 		// (or the page specified by source_page)
-		'get_courses_by_page_categories' => true,
+		'get_courses_by_page_categories' => false,
 		
 		// Show courses that have child tags of any of the tags designated above (NOT IMPLEMENTED)
 		'descend_tag_hierarchy' => false,
