@@ -33,6 +33,7 @@ class ReasonUpgrader_45_SetupCourseSupport implements reasonUpgraderInterface
 		'status' => array('db_type' => 'enum("Active","Inactive")'),
 		'data_source' => array('db_type' => 'varchar(50)'),
 		'sourced_id' => array('db_type' => 'varchar(10)'),
+		'cache' => array('db_type' => 'text'),
 		);	
 	
 	var $course_section_type_details = array (
@@ -58,6 +59,7 @@ class ReasonUpgrader_45_SetupCourseSupport implements reasonUpgraderInterface
 		'data_source' => array('db_type' => 'varchar(50)'),
 		'sourced_id' => array('db_type' => 'varchar(10)'),
 		'parent_template_id' => array('db_type' => 'varchar(10)'),
+		'cache' => array('db_type' => 'text'),
 		);	
 	
 	var $template_to_section_details = array (
