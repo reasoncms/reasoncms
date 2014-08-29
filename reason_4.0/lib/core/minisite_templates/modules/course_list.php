@@ -511,7 +511,7 @@ class CourseListModule extends DefaultMinisiteModule
 		// Build the list of courses already on the page so we know what's selected
 		$this->build_course_list();
 		
-		if ($courses = get_courses_by_subjects(array($data), 'webdev'))
+		if ($courses = get_courses_by_subjects(array($data), 'academic_catalog_2014_site'))
 		{
 			foreach ($courses as $id => $course)
 			{
