@@ -215,7 +215,7 @@ class CourseListModule extends DefaultMinisiteModule
 			$this->courses = $this->courses + $this->get_page_category_courses();
 		
 		if ($this->params['get_courses_by_subjects'])
-			$this->courses = $this->courses + get_courses_by_subjects($this->params['get_courses_by_subjects'], 'webdev');
+			$this->courses = $this->courses + get_courses_by_subjects($this->params['get_courses_by_subjects'], 'academic_catalog_2014_site');
 
 		if ($this->params['get_courses_by_site_subjects'])
 			$this->courses = $this->courses + $this->get_courses_by_site_subjects();
