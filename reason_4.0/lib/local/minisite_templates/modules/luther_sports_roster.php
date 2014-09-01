@@ -322,7 +322,7 @@
 					{
 						if ($player[$col] > 0)
 						{
-							$value = (string)((int)($player[$col] / 12) . '\' ' . $player[$col] % 12 . '"');
+							$value = (string)((int)($player[$col] / 12) . '-' . $player[$col] % 12);
 						}
 						else 
 						{
@@ -432,7 +432,7 @@
 								//$str .= (string)((int)($player[$col] / 12) . '\' ' . str_pad($player[$col] % 12, 2, '0', STR_PAD_LEFT) . '"');
 								if ($player[$col] > 0)
 								{
-									$str .= (string)((int)($player[$col] / 12) . '\' ' . $player[$col] % 12 . '"');
+									$str .= (string)((int)($player[$col] / 12) . '-' . $player[$col] % 12);
 								}
 							}
 							else if ($col == 'athlete_weight')
