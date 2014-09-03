@@ -29,39 +29,47 @@ class CourseImportEngine
 		echo "<pre>Running\n";
 		//$this->delete_all_course_entities();
 		
-		if ($raw_data = $this->get_course_template_data())
-		{
-			if ($mapped_data = $this->map_course_template_data($raw_data))
+		//foreach ($this->get_section_org_ids() as $org_id)
+		//{
+	/*		if ($raw_data = $this->get_course_template_data())
 			{
-				$this->build_course_template_entities($mapped_data);
+				if ($mapped_data = $this->map_course_template_data($raw_data))
+				{
+					$this->build_course_template_entities($mapped_data);
+				}
+				else
+				{
+					$this->errors[] = 'Course template data failed to map for '.$org_id.'.';	
+				}
 			}
 			else
 			{
-				$this->errors[] = 'Course template data failed to map.';	
+				$this->errors[] = 'No course template data received for '.$org_id.'.';
 			}
-		}
-		else
-		{
-			$this->errors[] = 'No course template data received.';	
-		}
+	*/	//}
 		
-		if ($raw_data = $this->get_course_section_data())
+		foreach ($this->get_section_org_ids() as $org_id)
 		{
-			if ($mapped_data = $this->map_course_section_data($raw_data))
+
+			if ($raw_data = $this->get_course_section_data($org_id))
 			{
-				$this->build_course_section_entities($mapped_data);
+				if ($mapped_data = $this->map_course_section_data($raw_data))
+				{
+					$this->build_course_section_entities($mapped_data);
+				}
+				else
+				{
+					$this->errors[] = 'Course section data failed to map for '.$org_id.'.';
+				}
 			}
 			else
 			{
-				$this->errors[] = 'Course section data failed to map.';	
+				$this->errors[] = 'No course section data received for '.$org_id.'.';	
 			}
-		}
-		else
-		{
-			$this->errors[] = 'No course section data received.';	
 		}
 		
 		echo join("\n", $this->errors);
+		echo "Import Complete.\n";
 	}
 
 	protected function get_section_parent($parent_template_id)
@@ -78,8 +86,12 @@ class CourseImportEngine
 	
 	protected function link_section_to_parent($section)
 	{
+		//echo round(memory_get_usage()/1024,2)."K at point A\n"; 
+
 		if ($template = $this->get_section_parent($section->get_value('parent_template_id')))
 		{
+		//	echo round(memory_get_usage()/1024,2)."K at point B\n"; 
+
 			if (!$parents = $section->get_right_relationship('course_template_to_course_section'))
 			{
 				return create_relationship( $template->id(), $section->id(), relationship_id_of('course_template_to_course_section'),false,false);
@@ -87,6 +99,7 @@ class CourseImportEngine
 			else if (is_array($parents))
 			{
 				$current_template = reset($parents);
+		//		echo round(memory_get_usage()/1024,2)."K at point C\n"; 
 				// verify that we have the correct parent, and fix if not.	
 				if ($current_template->get_value('sourced_id') == $template->get_value('sourced_id'))
 				{
@@ -103,8 +116,6 @@ class CourseImportEngine
 				//$this->errors[] = 'Non-array '.$parents.' returned from get_right_relationship';
 				echo 'Non-array '.$parents.' returned from get_right_relationship';
 			}
-			unset($template);
-			unset($current_template);
 		}
 		else
 		{
@@ -146,11 +157,11 @@ class CourseImportEngine
 	protected function build_course_section_entities($data)
 	{
 		echo "Building section entities\n";
-		$es = new entity_selector();
-		$es->add_type(id_of('course_section_type'));
 		foreach ($data as $key => $row)
 		{
-			echo round(memory_get_usage()/1024,2)."K at point A\n"; 
+			//echo round(memory_get_usage()/1024,2)."K at point E\n"; 
+			$es = new entity_selector();
+			$es->add_type(id_of('course_section_type'));
 			$name = sprintf('%s %s %s', $row['course_number'], $row['academic_session'], $row['title'] );
 			$es->relations = array();
 			$es->add_relation('sourced_id = "'.$row['sourced_id'].'"');
@@ -161,28 +172,32 @@ class CourseImportEngine
 				$values = array_intersect_key($section->get_values(), $row);
 				if ($values != $row)
 				{
-					echo 'Updating '.$name ."\n";
+					echo 'Updating: '.$name ."\n";
 					reason_update_entity( $section->id(), get_user_id('causal_agent'), $row, false);
+				}
+				else
+				{
+					echo 'Unchanged: '.$name ."\n";	
 				}
 			}
 			else
 			{
 				if ($this->get_section_parent($row['parent_template_id']))
 				{
-					echo round(memory_get_usage()/1024,2)."K at point B\n"; 
-					echo 'Adding '.$name ."\n";
+					echo 'Adding: '.$name ."\n";
 					$id = reason_create_entity( id_of('academic_catalog_site'), id_of('course_section_type'), get_user_id('causal_agent'), $name, $row);
 					$section = new entity($id);
 				}
 				else
 				{
 					echo 'No course template found; skipping '.$name ."\n";
+					continue;
 				}
 			}
 			
-			echo round(memory_get_usage()/1024,2)."K at point C\n"; 
-			$this->link_section_to_parent($section);
-			echo round(memory_get_usage()/1024,2)."K at point D\n"; 
+			if (!empty($section))
+				$this->link_section_to_parent($section);
+			//echo round(memory_get_usage()/1024,2)."K at point D\n"; 
 		}
 	}
 	
@@ -299,9 +314,9 @@ class CourseImportEngine
 		}
 	}
 	
-	protected function get_course_template_data()
+	protected function get_course_template_data($org_id = null)
 	{
-		echo "get_course_template_data\n";
+		echo "get_course_template_data $org_id\n";
 		$restore_conn = get_current_db_connection_name();
 		connectDB('reg_catalog_new');	
 		mysql_set_charset('utf8');
@@ -370,15 +385,17 @@ class CourseImportEngine
 		if (isset($data)) return $data;
 	}
 
-	protected function get_course_section_data()
+	protected function get_course_section_data($org_id = null)
 	{
-		echo "get_course_section_data\n";
+		echo "get_course_section_data $org_id\n";
+		$data = array();
 		$coursetable = 'course2014';
 		$restore_conn = get_current_db_connection_name();
 		connectDB('reg_catalog_new');	
 		mysql_set_charset('utf8');
 		$found = false;
 		$coursetableyear = 2014;
+		$org_id_limit = ($org_id) ? ' AND SEC_SUBJECT="'.$org_id.'" ' : '';
 		while ($coursetableyear > 2009)
 		{
 			$coursetable = 'course'.$coursetableyear;
@@ -389,8 +406,9 @@ class CourseImportEngine
 				OR '.$coursetable.'.match_title = s.SEC_SHORT_TITLE)
 				WHERE s.SEC_COURSE = c.COURSES_ID AND
 				(CRS_END_DATE IS NULL OR CRS_END_DATE > NOW()) 
-				AND SEC_START_DATE > "2009-09-01 00:00:00"
+				AND SEC_START_DATE > "2009-09-01 00:00:00" '. $org_id_limit .'
 				ORDER BY SEC_NAME';
+
 			if ($result = mysql_query($query))
 			{
 				while ($row = mysql_fetch_assoc($result))
@@ -399,10 +417,10 @@ class CourseImportEngine
 					{
 						if ($row['SEC_SUBJECT'] == 'OCP' || $row['SEC_SUBJECT'] == 'NORW') continue;
 						if (strpos($row['SEC_NO'], 'WL') !== false) continue;
-						if (strpos($row['SEC_TERM'], 'SU') !== false) continue;
+						//if (strpos($row['SEC_TERM'], 'SU') !== false) continue;
+						
+						$data[$row['COURSE_SECTIONS_ID']] = $row;
 					}
-	
-					$data[$row['COURSE_SECTIONS_ID']] = $row;
 				}
 			}
 			else
@@ -485,6 +503,25 @@ class CourseImportEngine
 				reason_expunge_entity($id, $user);
 			}
 		}
+	}
+	
+	protected function get_template_org_ids()
+	{
+		return $this->get_section_org_ids();
+	}
+
+	protected function get_section_org_ids()
+	{
+		$org_ids = array();
+		$q = 'SELECT DISTINCT SEC_SUBJECT FROM IDM_COURSE ORDER BY SEC_SUBJECT';
+		connectDB('reg_catalog_new');	
+		if ($result = mysql_query($q))
+		{
+			while($row = mysql_fetch_assoc($result))
+				$org_ids[] = $row['SEC_SUBJECT'];
+		}
+		connectDB(REASON_DB);
+		return $org_ids;
 	}
 	
 	function disable_output_buffering()
