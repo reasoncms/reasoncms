@@ -31,7 +31,7 @@ class CourseImportEngine
 		
 		//foreach ($this->get_section_org_ids() as $org_id)
 		//{
-	/*		if ($raw_data = $this->get_course_template_data())
+			if ($raw_data = $this->get_course_template_data())
 			{
 				if ($mapped_data = $this->map_course_template_data($raw_data))
 				{
@@ -46,7 +46,7 @@ class CourseImportEngine
 			{
 				$this->errors[] = 'No course template data received for '.$org_id.'.';
 			}
-	*/	//}
+		//}
 		
 		foreach ($this->get_section_org_ids() as $org_id)
 		{
