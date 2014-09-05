@@ -97,7 +97,7 @@ class CourseTemplateType extends Entity
 		}
 		
 		if (empty($long_description))
-			$long_description = '[PARENT] '.parent::get_value('long_description', $refresh);
+			$long_description = parent::get_value('long_description', $refresh);
 		
 		return $long_description;
 	}
@@ -521,7 +521,7 @@ function get_courses_by_subjects($codes, $catalog_site = null)
 	$es->set_entity_factory($factory);
 	$es->add_type( id_of('course_template_type') );
 	$es->add_relation('org_id in ("'.join('","', $codes).'")');
-	$es->set_order('course_number');
+	$es->set_order('course_number, title');
 	$results = $es->run_one();
 	foreach ($results as $id => $entity)
 	{
