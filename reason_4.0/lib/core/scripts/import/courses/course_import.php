@@ -19,6 +19,8 @@ $import->run();
 
 class CourseImportEngine
 {
+	protected $data_source_name = 'Colleague';
+	
 	protected $errors = array();
 	
 	public function run()
@@ -35,7 +37,7 @@ class CourseImportEngine
 			{
 				if ($mapped_data = $this->map_course_template_data($raw_data))
 				{
-					$this->build_course_template_entities($mapped_data);
+					$this->build_course_template_entities($mapped_data, $this->get_existing_template_ids());
 				}
 				else
 				{
@@ -47,7 +49,7 @@ class CourseImportEngine
 				$this->errors[] = 'No course template data received for '.$org_id.'.';
 			}
 		//}
-		
+		return;
 		foreach ($this->get_section_org_ids() as $org_id)
 		{
 
@@ -125,7 +127,7 @@ class CourseImportEngine
 		}
 	}
 	
-	protected function build_course_template_entities($data)
+	protected function build_course_template_entities($data, $existing = array())
 	{
 		echo "Building entities\n";
 		foreach ($data as $key => $row)
@@ -145,6 +147,9 @@ class CourseImportEngine
 					echo 'Updating '.$name ."\n";
 					reason_update_entity( $course->id(), get_user_id('causal_agent'), $row, false);
 				}
+				
+				$key = array_search($course->id(), $existing);
+				if ($key !== false) unset($existing[$key]);
 			}
 			else
 			{
@@ -152,6 +157,18 @@ class CourseImportEngine
 				reason_create_entity( id_of('academic_catalog_site'), id_of('course_template_type'), get_user_id('causal_agent'), $name, $row);
 			}
 		}
+		
+		if (count($existing))
+		{
+			$user = get_user_id('causal_agent');
+			foreach ($existing as $id)
+			{
+				$course = new CourseTemplateType($id);
+				echo 'Would Delete: '.$course->get_value('name')."\n";
+				//reason_expunge_entity($id, $user);
+			}
+		}
+		
 	}
 
 	protected function build_course_section_entities($data)
@@ -213,7 +230,7 @@ class CourseImportEngine
 			'credits' => 'SEC_MAX_CRED',
 			'list_of_prerequisites' => 'prereq',
 			'status' => 'Active',
-			'data_source' => 'Colleague',
+			'data_source' => $this->data_source_name,
 			'sourced_id' => 'COURSES_ID',
 			);
 		
@@ -270,7 +287,7 @@ class CourseImportEngine
 			'meeting' => 'meeting',
 			'notes' => null,
 			'status' => 'Active',
-			'data_source' => 'Colleague',
+			'data_source' => $this->data_source_name,
 			'sourced_id' => 'COURSE_SECTIONS_ID',
 			'parent_template_id' => 'SEC_COURSE',
 			);
@@ -480,29 +497,41 @@ class CourseImportEngine
 	protected function delete_all_course_entities()
 	{
 		$user = get_user_id('causal_agent');
-		$es = new entity_selector();
-		$es->add_type(id_of('course_template_type'));
-		if ($result = $es->get_ids())
+		foreach ($this->get_existing_template_ids() as $id)
 		{
-			foreach ($result as $id)
-			{
-				reason_expunge_entity($id, $user);
-			}
+			reason_expunge_entity($id, $user);
 		}
 	}
 	
 	protected function delete_all_section_entities()
 	{
 		$user = get_user_id('causal_agent');
+		foreach ($this->get_existing_section_ids() as $id)
+		{
+			reason_expunge_entity($id, $user);
+		}
+	}
+	
+	protected function get_existing_template_ids($org_id = null)
+	{
+		$es = new entity_selector();
+		$es->add_type(id_of('course_template_type'));
+		if ($org_id) $es->add_relation('org_id = "'.mysql_real_escape_string($org_id).'"');
+		if ($result = $es->get_ids())
+			return $result;
+		else
+			return array();
+	}
+	
+	protected function get_existing_section_ids($org_id = null)
+	{
 		$es = new entity_selector();
 		$es->add_type(id_of('course_section_type'));
+		if ($org_id) $es->add_relation('org_id = "'.mysql_real_escape_string($org_id).'"');
 		if ($result = $es->get_ids())
-		{
-			foreach ($result as $id)
-			{
-				reason_expunge_entity($id, $user);
-			}
-		}
+			return $result;
+		else
+			return array();
 	}
 	
 	protected function get_template_org_ids()
