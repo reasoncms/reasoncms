@@ -35,6 +35,12 @@ class ReasonUpgrader_45_SetupCourseSupport implements reasonUpgraderInterface
 		'sourced_id' => array('db_type' => 'varchar(10)'),
 		'cache' => array('db_type' => 'text'),
 		);	
+
+	var $course_template_type_indices = array(
+		'org_id',
+		'status',
+		'sourced_id',
+	);
 	
 	var $course_section_type_details = array (
 		'new'=>0,
@@ -61,6 +67,13 @@ class ReasonUpgrader_45_SetupCourseSupport implements reasonUpgraderInterface
 		'parent_template_id' => array('db_type' => 'varchar(10)'),
 		'cache' => array('db_type' => 'text'),
 		);	
+	
+	var $course_section_type_indices = array(
+		'org_id',
+		'status',
+		'sourced_id',
+		'parent_template_id'
+		);
 	
 	var $template_to_section_details = array (
 		'description'=>'Course Template to Course Section',
@@ -142,6 +155,7 @@ class ReasonUpgrader_45_SetupCourseSupport implements reasonUpgraderInterface
 			$str = '';
 			if (!$this->course_template_type_exists()) $str .= '<p>Would create course_template type.</p>';
 			if (!$this->course_section_type_exists()) $str .= '<p>Would create course_section type.</p>';
+			$str .= $this->add_indexes();
 			return $str;
 		}
 	}
@@ -168,6 +182,7 @@ class ReasonUpgrader_45_SetupCourseSupport implements reasonUpgraderInterface
 				$str .= $this->create_course_section_type();
 			}
 			$str .= $this->create_course_relationships();
+			$str .= $this->add_indexes(false);
 			return $str;
 		}
 		return $str;
@@ -242,6 +257,51 @@ class ReasonUpgrader_45_SetupCourseSupport implements reasonUpgraderInterface
 		}
 		return $str;
 	}
+	
+	function add_indexes($test_mode = true)
+	{
+		$str = '<h3>Adding indexes</h3>';
+		$str .= '<ul>';
+		foreach(array('course_template','course_section') as $table)
+		{
+			$handle = db_query('SHOW INDEX FROM `'.addslashes($table).'`');
+			$results = array();
+			while($row = mysql_fetch_assoc($handle))
+			{
+				$results[] = $row['Column_name'];
+			}
+			
+			$fields_var = $table.'_type_indices';
+			
+			foreach($this->$fields_var as $field)
+			{
+				if(in_array($field, $results))
+				{
+					$str .= '<li>'.$table.'.'.$field.' is already indexed. No need to do anything.</li>';
+				}
+				else
+				{
+					if($test_mode)
+					{
+						$str .= '<li>Would have added index on '.$table.'.'.$field.'.</li>';
+					}
+					else
+					{
+						if(db_query('ALTER TABLE `'.addslashes($table).'` ADD INDEX ( `'.addslashes($field).'` )'))
+						{
+							$str .= '<li>Successfully added index on '.$table.'.'.$field.'.</li>';
+						}
+						else
+						{
+							$str .= '<li>Attempted to add index on '.$table.'.'.$field.', but failed.</li>';
+						}
+					}
+				}
+			}
+		}
+		$str .= '</ul>';
+		return $str;
+	}	
 	
 	/// FUNCTIONS THAT CHECK IF WE HAVE WORK TO DO
 	protected function course_template_type_exists()
