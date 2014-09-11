@@ -37,10 +37,9 @@ $(document).ready(function() {
       }
     };
 
-    
     $("#attendees")
         .tablesorter(tablesorteropts)
         .tablesorterPager({
-            container: $("#page-results-pager")
+            container: $("#attendees-pager"),
         });
 });
