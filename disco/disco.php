@@ -1297,14 +1297,14 @@
 				$element_object = $this->get_element($element_name);
 				$element_display_name = trim($element_object->display_name);
 				if($empty_ok || !empty($element_display_name))
-					$display_name = prettify_string($element_display_name);
+					$display_name = $element_display_name;
 			}
 			elseif($this->_is_element_group($element_name))
 			{
 				$element_group_object = $this->get_element_group($element_name);
 				$group_display_name = trim($element_group_object->display_name);
 				if($empty_ok || !empty($group_display_name))
-					$display_name = prettify_string($group_display_name);
+					$display_name = $group_display_name;
 			}
 			
 			return $display_name;
