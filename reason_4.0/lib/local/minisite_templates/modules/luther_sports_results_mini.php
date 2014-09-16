@@ -21,12 +21,11 @@ class lutherSportsResultsMiniModule extends EventsModule
 	var $passables = array('start_date','textonly','view','category','audience','end_date','search','season', 'ideal_count');
 	var $season_switch_date = "06-01";
 	var $luther_start_year = 2011;   // first year there is events data
-	var $events_page_types = array('events','events_verbose','events_nonav','events_academic_calendar','event_registration','event_slot_registration','events_archive','events_archive_verbose', 'sports_results');
+	var $events_page_types = array('events','events_verbose','events_nonav','events_academic_calendar','event_registration','event_slot_registration','events_archive','events_archive_verbose', 'sports_results', 'sports_landing');
 
 	function init( $args = array() )
 	{
 		parent::init( $args );
-		//$this->find_events_page();
 	}
 	
 	function event_ok_to_show($event)
@@ -135,7 +134,17 @@ class lutherSportsResultsMiniModule extends EventsModule
 		{
 			$this->pass_vars['end_date'] = date('Y-').$this->season_switch_date;
 			$this->request['end_date'] = date('Y-').$this->season_switch_date;		
-		}	
+		}
+
+		parent::register_passables();
+	}
+	
+	function handle_params( $params )
+	{
+		if (!empty($params['ideal_count']))
+			$this->ideal_count = $params['ideal_count'];
+	
+		parent::handle_params( $params );
 	}
 	
 	function handle_jump()
@@ -335,6 +344,7 @@ class lutherSportsResultsMiniModule extends EventsModule
 					$this->find_events_page();
 					// want most recent results listed first on landing pages
 					$this->events_by_date = array_reverse($this->events_by_date, TRUE);
+					$this->events_by_date = $this->trim_to_ideal_count($this->events_by_date);
 				}
 				else 
 				{
@@ -477,6 +487,22 @@ class lutherSportsResultsMiniModule extends EventsModule
 		$ret .= '</form>'."\n";
 		return $ret;
 	}
+	
+	function trim_to_ideal_count($event_list_by_date)
+	// event_list_by_date is a 2-dimensional array with an array of events for each given date
+	{
+		$total_events = 0;
+		$i = 0;
+		foreach($event_list_by_date as $k => $v)
+		{
+			$total_events += count($v);
+			$i += 1;
+			if ($total_events > $this->ideal_count)
+				break;
+		}
+		return array_slice($event_list_by_date, 0, $i);
+	}
+
 
 }
 ?>
