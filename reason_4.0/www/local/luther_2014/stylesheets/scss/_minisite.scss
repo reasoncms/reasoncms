@@ -88,7 +88,9 @@
 		}
 
 		.breadcrumbs {
-			margin-right: rem-calc(60) + $column-gutter/3;
+			//margin-right: rem-calc(60) + $column-gutter/3;
+			margin: 0;
+			width: 70%;
 		}
 
 		@media #{$large-up} {  // Hide mobile breadcrumb on desktop
@@ -311,7 +313,7 @@
 			position: absolute;
 			top: -$header-height-mobile;
 			right: 0;
-			width: $header-height-mobile;
+			width: $header-height-mobile * 1.66;
 			height: $header-height-mobile;
 			display: block;
 			z-index: 12;
@@ -327,14 +329,29 @@
 			h1 {
 				font-size: rem-calc(20);
 				color: $lc-blue-light;
+				
+				p {
+					font-weight: bold;
+					font-size:10px; 
+					width:39%; 
+					display: inline;
+					margin-bottom: 0;
+					margin-left: 10px;
+					position: relative;
+					top: -4px;
+					
+					i.fa-arrow-right{
+						font-size: 10px;
+						width: auto;
+					}
+				}
 			}
 
 			i {
 				font-size: rem-calc(20);
-				width: $header-height-mobile;
+				width: $header-height-mobile / 2; // get rid of /2 if not using "menu" help text next to icon
 				margin-top: rem-calc(20);
-				text-align: center;
-				
+				text-align: center;				
 				&.fa-times {
 					display: none;
 				}
