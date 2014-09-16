@@ -349,7 +349,7 @@
 
 			i {
 				font-size: rem-calc(20);
-				width: $header-height-mobile / 2; // get rid of /2 if not using "menu" help text next to icon
+				width: $header-height-mobile / 2; // get rid of divided by 2 if not using "menu" help text next to icon
 				margin-top: rem-calc(20);
 				text-align: center;				
 				&.fa-times {
@@ -470,9 +470,37 @@
 				}
 			}
 			
-			ul li a {
-				padding-left: $column-gutter * 1.5;
+			//indentation for side nav
+			//3rd level
+			ul li {
+				a {
+					padding-left: $column-gutter * 1.5;
+				}
+				
+				ul li {
+					//4th level
+					a {
+						padding-left: $column-gutter * 2;
+					}
+					
+					ul li {
+						//5th level
+						a {
+							padding-left: $column-gutter * 2.5;
+						}
+						
+						ul li {
+							//6th level
+							a {
+								padding-left: $column-gutter * 3;
+							}
+						}
+					}
+				}
+			
 			}
+			
+			
 		}
 		
 		.navListTop ul .navListItem {
