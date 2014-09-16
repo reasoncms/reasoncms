@@ -453,9 +453,37 @@
 				}
 			}
 			
-			ul li a {
-				padding-left: $column-gutter * 1.5;
+			//indentation for side nav
+			//3rd level
+			ul li {
+				a {
+					padding-left: $column-gutter * 1.5;
+				}
+				
+				ul li {
+					//4th level
+					a {
+						padding-left: $column-gutter * 2;
+					}
+					
+					ul li {
+						//5th level
+						a {
+							padding-left: $column-gutter * 2.5;
+						}
+						
+						ul li {
+							//6th level
+							a {
+								padding-left: $column-gutter * 3;
+							}
+						}
+					}
+				}
+			
 			}
+			
+			
 		}
 		
 		.navListTop ul .navListItem {
