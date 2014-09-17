@@ -535,7 +535,7 @@
 				echo '<nav id="navWrap" class="'.implode(' ',$wrapperClasses).'">'."\n";
 
 				echo '<a class="toggle" href="#minisiteNavigation">'."\n";
-				echo '<h1 style="margin: 0; padding: 0;"><p>Menu <i class="fa fa-arrow-right"></i></p>'."\n";
+				echo '<h1 style="margin: 0; padding: 0;"><p class="menu_help">Menu <i class="fa fa-arrow-right"></i></p>'."\n";
 				echo '<i class="fa fa-bars"></i>'."\n";
 				echo '<i class="fa fa-times"></i>'."\n";
 				echo '<span>' . $this->site_info->get_value('name') . ' Navigation</span>'."\n";
