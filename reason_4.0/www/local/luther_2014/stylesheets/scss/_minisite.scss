@@ -322,8 +322,14 @@
 				background: lighten($minisite-nav-background, 5%);
 				@include box-shadow(rgba(#000, .2) -2px -2px 2px);
 
-				.fa-times {display: block;}
+				.fa-times {
+					display: block; 
+					width: $header-height-mobile;
+					margin-left:22%;
+					font-size: 1.2em;
+				}
 				.fa-bars {display: none;}
+				.menu_help {display: none;}
 			}
 
 			h1 {
