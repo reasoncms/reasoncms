@@ -18,11 +18,13 @@
 	{
 		var $form_prefix = 'form_'; // default prefix for thor db tables
 		var $type = 'email';
+		var $box_class = 'stackedBox';
 
 		function init( $externally_set_up = false)
 		{
 			parent::init();
-			if (!USE_JS_THOR)
+
+			if (USE_THOR_VERSION == THOR_VERSION_FLASH)
 			{
 				$this->ensure_temp_db_table_exists();
 			}
@@ -30,7 +32,7 @@
 
 		function init_head_items()
 		{
-            if (USE_JS_THOR)
+			if (USE_THOR_VERSION == THOR_VERSION_JS_OLD)
             {
                 $this->head_items->add_javascript(JQUERY_UI_URL, true);
                 $this->head_items->add_javascript(JQUERY_URL, true);
@@ -83,10 +85,25 @@ data will not be stored on the server)</span>','yes'=>'Yes
 			$this->add_element('magic_string_autofill_note','comment',array('text'=>'<h3>Autofilling of Fields</h3><p>If you choose one of the "Autofill" options below, the will form automatically fill in personal information for the person submitting the form. The special field names that can be autofilled are: "Your Full Name", "Your Name", "Your First Name", "Your Last Name", "Your Department", "Your Email", "Your Home Phone", "Your Work Phone", and "Your Title".</p><p><strong>Note: The autofill feature will only work if the visitor is logged in.</strong></p>') );
 			$this->add_element('thank_you_note','comment',array('text'=>'<h3>Thank You Note</h3><p>This information is displayed after someone submits the form.</p>') );
 			$this->add_element('limiting_note','comment',array('text'=>'<h3>Limiting and Scheduling</h3>') );
-			if (!USE_JS_THOR)
+			// echo "<HR>using thor version...[" . USE_THOR_VERSION . "]<hr>";
+			if (USE_THOR_VERSION == THOR_VERSION_FLASH)
+			{
+				include_once( THOR_INC . 'plasmature/flash.php' );
 				$this->change_element_type( 'thor_content', 'thor', array('thor_db_conn_name' => THOR_FORM_DB_CONN) );
-			else
+			}
+			else if (USE_THOR_VERSION == THOR_VERSION_JS_OLD)
+			{
 				$this->change_element_type( 'thor_content', 'formbuilder');
+			}
+			else if (USE_THOR_VERSION == THOR_VERSION_JS_FORMBUILDER)
+			{
+				include_once( THOR_INC . 'plasmature/formbuilder2.php' );
+				$this->change_element_type( 'thor_content', 'formbuilder2');
+			}
+			else
+			{
+				die("Fatal Error: USE_THOR_VERSION is configured with an invalid value [" . USE_THOR_VERSION . "]");
+			}
 			$this->alter_data_advanced_options();
 			$this->set_order (array ('name', 'db_flag', 'email_of_recipient', 'thor_content', 'thor_comment', 'magic_string_autofill_note',
 									 'magic_string_autofill', 'thank_you_note', 'thank_you_message', 'display_return_link', 'show_submitted_data', 
