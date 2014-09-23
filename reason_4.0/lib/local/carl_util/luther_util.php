@@ -2,6 +2,63 @@
 
 reason_include_once( 'function_libraries/root_finder.php');
 
+function get_statesAP()
+{
+	return array(
+		'AL' => 'Ala.',
+		'AK' => 'Alaska',
+		'AZ' => 'Ariz.',
+		'AR' => 'Ark.',
+		'CA' => 'Calif.',
+		'CO' => 'Colo.',
+		'CT' => 'Conn.',
+		'DE' => 'Del.',
+		'DC' => 'D.C.',
+		'FL' => 'Fla.',
+		'GA' => 'Ga.',
+		'HI' => 'Hawaii',
+		'ID' => 'Idaho',
+		'IL' => 'Ill.',
+		'IN' => 'Ind.',
+		'IA' => 'Iowa',
+		'KS' => 'Kan.',
+		'KY' => 'Ky.',
+		'LA' => 'La.',
+		'ME' => 'Maine',
+		'MD' => 'Md.',
+		'MA' => 'Mass.',
+		'MI' => 'Mich.',
+		'MN' => 'Minn.',
+		'MS' => 'Miss.',
+		'MO' => 'Mo.',
+		'MT' => 'Mont.',
+		'NE' => 'Neb.',
+		'NV' => 'Nev.',
+		'NH' => 'N.H.',
+		'NJ' => 'N.J.',
+		'NM' => ' N.M.',
+		'NY' => 'N.Y.',
+		'NC' => 'N.C.',
+		'ND' => ' N.D.',
+		'OH' => 'Ohio',
+		'OK' => ' Okla.',
+		'OR' => 'Ore.',
+		'PA' => 'Pa.',
+		'RI' => 'R.I.',
+		'SC' => 'S.C.',
+		'SD' => 'S.D.',
+		'TN' => 'Tenn.',
+		'TX' => 'Texas',
+		'UT' => 'Utah',
+		'VT' => 'Vt.',
+		'VA' => 'Va.',
+		'WA' => 'Wash.',
+		'WV' => 'W.Va.',
+		'WI' => 'Wis.',
+		'WY' => 'Wyo.',
+	);
+}
+
 function get_luther_spotlight()
 // return array containing spotlight information or '' if spotlight doesn't exist on this minisite
 {
@@ -327,4 +384,116 @@ function luther_shorten_string($text, $length, $append)
 		$text = substr($text, 0, $i) . $append;
 	}
 	return $text;
+}
+
+function get_athlete_tooltip($player, $site_name)
+// adds athlete tooltip utilizing Foundation framework
+{
+	$stAP = get_statesAP();
+	$tip = '';
+	$tip .= "<h5 class='athlete_name'>" . $player['athlete_first_name'] . " " . $player['athlete_last_name'] . "</h5>"."\n";
+	if (!empty($player['image_id']))
+	{
+		$image = get_entity_by_id($player['image_id']);
+		$thumb = luther_get_image_url(WEB_PHOTOSTOCK . $player['image_id'] . '_tn.' . $image['image_type']);
+		$tip .= "<img class='athlete_image' src='" . $thumb . "' />"."\n";
+	}
+	if ($player['athlete_position_event'] && ($position_event = get_sport_position_event_full_name($site_name)) != null)
+		$tip .= "<p class='athlete_position_event'>". $position_event[$player['athlete_position_event']] . "</p>"."\n";
+	$tip .= "<p class='athlete_class_year'>". $player['athlete_class_year']."</p>"."\n";
+	$tip .= "<p class='athlete_hometown'>". $player['athlete_hometown_city'];
+	if (array_key_exists($player['athlete_hometown_state'], $stAP))
+	{
+		$tip .= ", ". $stAP[$player['athlete_hometown_state']];
+	}
+	$tip .= "</p>"."\n";
+	$tip .= "<p class='athlete_high_school'>". $player['athlete_high_school']."</p>"."\n";
+	return $tip;
+}
+
+function get_sport_position_event_full_name($site_name)
+// replaces abbreviated position or event with the full name
+{
+	$positions = null;
+	if ($site_name == 'sport_baseball_men' || $site_name == 'sport_softball_women')
+	{
+		$positions = array(
+				'P' => 'Pitcher',
+				'C' => 'Catcher',
+				'IF' => 'Infield',
+				'1B' => 'First Base',
+				'2B' => 'Second Base',
+				'3B' => 'Third Base',
+				'SS' => 'Shortstop',
+				'OF' => 'Outfield',
+		);
+	}
+	else if ($site_name == 'sport_basketball_men' || $site_name == 'sport_basketball_women')
+	{
+		$positions = array(
+				'C' => 'Center',
+				'F' => 'Forward',
+				'G' => 'Guard',
+		);
+	}
+	else if ($site_name == 'sport_football_men' )
+	{
+		$positions = array(
+				'DB' => 'Defensive Back',
+				'DL' => 'Defensive Line',
+				'FB' => 'Fullback',
+				'K' => 'Kicker',
+				'LB' => 'Linebacker',
+				'OL' => 'Offensive Line',
+				'QB' => 'Quarterback',
+				'RB' => 'Running Back',
+				'TE' => 'Tight End',
+				'WR' => 'Wide Receiver',
+		);
+	}
+	else if ($site_name == 'sport_soccer_men' || $site_name == 'sport_soccer_women')
+	{
+		$positions = array(
+				'GK' => 'Goalkeeper',
+				'D' => 'Defender',
+				'MF' => 'Midfielder',
+				'F' => 'Forward',
+		);
+	}
+	else if ($site_name == 'sport_volleyball_women' )
+	{
+		$positions = array(
+				'DS' => 'Defensive Specialist',
+				'L' => 'Libero',
+				'MB' => 'Middle Blocker',
+				'OH' => 'Outside Hitter',
+				'R' => 'Right Side Hitter',
+				'S' => 'Setter',
+		);
+	}
+	else if ($site_name == 'sport_swimmingdiving_men' || $site_name == 'sport_swimmingdiving_women')
+	{
+		$positions = array(
+				'BU' => 'Butterfly',
+				'BA' => 'Backstroke',
+				'BR' => 'Breaststroke',
+				'FR' => 'Freestyle',
+				'IM' => 'Individual Medley',
+				'D' => 'Diving',
+		);
+	}
+	else if ($site_name == 'sport_trackfield_men' || $site_name == 'sport_trackfield_women')
+	{
+		$positions = array(
+				'D' => 'Distance',
+				'H' => 'Hurdles',
+				'J' => 'Jumps',
+				'MD' => 'Mid-distance',
+				'ME' => 'Multi-events',
+				'PV' => 'Pole Vault',
+				'S' => 'Sprints',
+				'T' => 'Throws',
+		);
+	}
+	return $positions;
 }

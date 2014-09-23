@@ -361,72 +361,9 @@
         {
             $this->add_streaming_category();
             $this->do_event_processing();
-            $this->sports_athlete_links();
             parent::process();
         }
         
-        function sports_athlete_links()
-        // finds name of athlete in main content and automatically inserts a link to the athlete's bio
-        {           
-            $site_id = new entity( $this->get_value( 'site_id' ) );
-            $site_name = $site_id->get_value('unique_name');            
-            if (!preg_match("/sport_\w+_w?o?men/", $site_name))
-            {
-                return;
-            }           
-                        
-            // get a list of athletes
-            $es = new entity_selector($this->get_value('site_id'));
-            $es->add_type(id_of('athlete_type'));
-            $es->add_relation('athlete_hide != "yes"');
-            $es->add_left_relationship_field( 'athlete_to_image', 'entity', 'id', 'image_id', false); // get images and those with no image - uses union query
-            $players = $es->run_one();
-
-            
-            if (!empty($players))
-            {
-                $url = $site_id->get_value('base_url') . "roster/";
-                $c = $this->get_value('content');
-                $ct = "";   // appended cluetip information
-                foreach ($players as $k=>$v)
-                {
-                    $pv = $v->get_values();
-                    //print_r ($pv);
-                    if (!preg_match("/<a href=.*?>".$pv['athlete_first_name']."\s+".$pv['athlete_last_name']."<\/a>/", $c)) 
-                    {
-                        
-                        //$image = get_entity_by_id($pv['image_id']);
-                        //$url = WEB_PHOTOSTOCK . $pv['image_id'] . '.' . $image['image_type'];
-                        //$c = preg_replace("|".$pv['athlete_first_name']."\s+".$pv['athlete_last_name']."|",
-                        //"<a href=".$url.">".$pv['athlete_first_name']." ".$pv['athlete_last_name']."</a>", $c, 1);
-                        $c = preg_replace("|".$pv['athlete_first_name']."\s+".$pv['athlete_last_name']."|",
-                        //"<a href=".$url."?id=".$pv['id'].">".$pv['athlete_first_name']." ".$pv['athlete_last_name']."</a>", $c, 1);
-                        "<a href=\"".$url."?id=".$pv['id']. "\" class=\"cluetip_athlete\" title=\"". $pv['athlete_first_name']." ".$pv['athlete_last_name'] ."\" rel=\"#athlete".$pv['id']."\">".$pv['athlete_first_name']." ".$pv['athlete_last_name']."</a>", $c, 1);
-                        
-
-                    }
-                    //if (preg_match("/<a href=\"".$url."\?id=".$pv['id']."\"/", $c))
-                    if (preg_match("/id=".$pv['id']."/", $c))
-                    {
-                        $ct .= "<div id=\"athlete".$pv['id']."\">";
-                        $ct .= "<p class=\"athlete_position_event\">". $pv['athlete_position_event'];
-                        if (!empty($pv['image_id']))
-                        {
-                            $image = get_entity_by_id($pv['image_id']);
-                            $thumb = WEB_PHOTOSTOCK . $pv['image_id'] . '_tn.' . $image['image_type'];
-                            $ct .= "<img class=\"athlete_image\" src=\"" . $thumb . "\" />";
-                        }
-                        $ct .= "</p>";                  
-                        $ct .= "<p class=\"athlete_class_year\">". $pv['athlete_class_year']."</p>";
-                        $ct .= "<p class=\"athlete_hometown\">". $pv['athlete_hometown_city'].", ". $this->statesAP[$pv['athlete_hometown_state']]."</p>";
-                        $ct .= "<p class=\"athlete_high_school\">". $pv['athlete_high_school']."</p>";      
-                        $ct .= "</div>";
-                    }
-                }
-                $this->set_value('content', $c . $ct);
-            }
-            
-        }
 
         // creates a relationship to the 'Streamed Events' category if 'Audio Streaming' or 'Video Streaming' is selected
         function add_streaming_category()

@@ -20,7 +20,7 @@
 	/**
 	 * full set of player data indexed by [player_id][column_name] - built while determing valid columns - also stores
 	 * whether or not there is an associated image with [player_id]['has_image'].
-	 * @var array players_info
+	 * @var array player_info
 	 */
 	var $player_info = array();
 
@@ -167,14 +167,14 @@
 		//Do standard initialization
 		
 		$head_items = $this->get_head_items();
-		$head_items->add_javascript(JQUERY_URL, true);
+		//$head_items->add_javascript(JQUERY_URL, true);
 		
 		$head_items->add_javascript('/reason/local/luther_2014/javascripts/tablesorter.min.js');
-		$head_items->add_javascript('/reason/local/luther_2014/javascripts/vendor/jquery.hoverIntent.min.js');
-		$head_items->add_stylesheet('/reason/local/luther_2014/javascripts/vendor/jquery.cluetip.css');
-		$head_items->add_javascript('/reason/local/luther_2014/javascripts/vendor/jquery.cluetip.min.js');		
+		//$head_items->add_javascript('/reason/local/luther_2014/javascripts/vendor/jquery.hoverIntent.min.js');
+		//$head_items->add_stylesheet('/reason/local/luther_2014/javascripts/vendor/jquery.cluetip.css');
+		//$head_items->add_javascript('/reason/local/luther_2014/javascripts/vendor/jquery.cluetip.min.js');		
 		$head_items->add_javascript('/reason/local/luther_2014/javascripts/luther-sports-roster.js');
-		$head_items->add_javascript('/reason/local/luther_2014/javascripts/luther-cluetip.js');
+		//$head_items->add_javascript('/reason/local/luther_2014/javascripts/luther-cluetip.js');
 		
 		if (defined(UNIVERSAL_CSS_PATH))
 		{
@@ -278,7 +278,8 @@
 	function run()
 	{
 		$this->sort_columns($this->_columns);
-		$this->handle_abbreviated_position_events();
+		//$this->handle_abbreviated_position_events();
+		$this->positions = get_sport_position_event_full_name($this->site_name);
 		
 		if (!empty($this->request['id']))
 		{
@@ -357,19 +358,18 @@
 			$str = '';
 			$show_captain = false;
 			$show_letter = false;
-
 				// now display the roster
-				$str .= '<table class="tablesorter"><thead><tr>';
+				$str .= '<table class="tablesorter"><thead><tr>'."\n";
 				foreach ($this->_columns as $k => $v)
 				{
 					// allows custom table sorting parser to be used for a given column
 					// the sorting parser is located in javascripts/jquery.init.js
 					// see http://tablesorter.com/docs/example-meta-headers.html
-					$str .= '<th class="{sorter: \'' . $k .'\'}">';   
+					$str .= '<th class="{sorter: \'' . $k .'\'}">'."\n";   
 					$str .= $this->gen_custom_header($k);
-					$str .= '</th>';
+					$str .= '</th>'."\n";
 				}
-				$str .= '</tr></thead><tbody>';
+				$str .= '</tr></thead><tbody>'."\n";
 
 				$row = 1;
 				$ct = "";   // appended cluetip information
@@ -401,7 +401,8 @@
 								$name = $player[$col]; //.' '.$player['athlete_last_name'];
 								$player_link = carl_make_link(array('id' => $k));
 								//$str .= '<a href="'.$player_link.'">'.$name.'</a>';
-								$str .= "<a href=\"".$player_link. "\" class=\"cluetip_athlete\" title=\"". $player['athlete_first_name']." ".$player['athlete_last_name'] ."\" rel=\"#athlete".$player['id']."\">".$name."</a>";
+								//$str .= "<a href=\"".$player_link. "\" class=\"cluetip_athlete\" title=\"". $player['athlete_first_name']." ".$player['athlete_last_name'] ."\" rel=\"#athlete".$player['id']."\">".$name."</a>";
+								$str .= '<a data-tooltip aria-haspopup href="' .$player_link. '" class="has-tip" title="'. get_athlete_tooltip($player, $this->site_name).'">'.$name.'</a>';
 								
 								if ($col == 'athlete_last_name' && $player['athlete_letter'] == 'yes'
 									&& $col == 'athlete_last_name' && $player['athlete_captain'] == 'yes')
@@ -453,11 +454,11 @@
 							{
 								$str .= $player[$col];
 							}
-							$str .= '</td>';
+							$str .= '</td>'."\n";
 						}
-						$str .= '</tr>';
+						$str .= '</tr>'."\n";
 						
-						$ct .= "<div id=\"athlete".$player['id']."\">";
+						/*$ct .= "<div id=\"athlete".$player['id']."\">";
 						$ct .= "<p class=\"athlete_position_event\">". $this->positions[$player['athlete_position_event']];
 						if (!empty($player['image_id']))
 						{
@@ -474,11 +475,11 @@
 						}
 						$ct .= "</p>";
 						$ct .= "<p class=\"athlete_high_school\">". $player['athlete_high_school']."</p>";		
-						$ct .= "</div>";
+						$ct .= "</div>";*/
 
 				}
 
-				$str .= '</tbody></table>';
+				$str .= '</tbody></table>'."\n";
 				if ($show_letter && $show_captain)
 				{
 					$str .= '<p>&#x25b5;&nbsp;letter winner<br/>';
@@ -490,12 +491,13 @@
 				}
 				else if ($show_captain)
 				{
-					$str .= '<p>&#x25a1;&nbsp;captain</p>';
+					$str .= '<p>&#x25a1;&nbsp;captain</p>'."\n";
 				}
 
-			echo $str . $ct;
+			echo $str;
 		}
 	}
+	
 	function gen_custom_header($k)
 	{
 		
@@ -603,90 +605,7 @@
 		$columns = $new_order;
 	}
 	
-	function handle_abbreviated_position_events()
-	// replaces abbreviated position or event with the full name
-	{
-		if ($this->site_name == 'sport_baseball_men' || $this->site_name == 'sport_softball_women')
-		{
-			$this->positions = array(
-				'P' => 'Pitcher',
-				'C' => 'Catcher',
-				'IF' => 'Infield',
-				'1B' => 'First Base',
-				'2B' => 'Second Base',
-				'3B' => 'Third Base',
-				'SS' => 'Shortstop',
-				'OF' => 'Outfield',
-			);
-		}
-		else if ($this->site_name == 'sport_basketball_men' || $this->site_name == 'sport_basketball_women')
-		{
-			$this->positions = array(
-				'C' => 'Center',
-				'F' => 'Forward',
-				'G' => 'Guard',
-			);
-		}
-		else if ($this->site_name == 'sport_football_men' )
-		{
-			$this->positions = array(
-				'DB' => 'Defensive Back',
-				'DL' => 'Defensive Line',
-				'FB' => 'Fullback',
-				'K' => 'Kicker',
-				'LB' => 'Linebacker',
-				'OL' => 'Offensive Line',
-				'QB' => 'Quarterback',
-				'RB' => 'Running Back',
-				'TE' => 'Tight End',
-				'WR' => 'Wide Receiver',
-			);
-		}
-		else if ($this->site_name == 'sport_soccer_men' || $this->site_name == 'sport_soccer_women')
-		{
-			$this->positions = array(
-				'GK' => 'Goalkeeper',
-				'D' => 'Defender',
-				'MF' => 'Midfielder',
-				'F' => 'Forward',
-			);
-		}
-		else if ($this->site_name == 'sport_volleyball_women' )
-		{
-			$this->positions = array(
-				'DS' => 'Defensive Specialist',
-				'L' => 'Libero',
-				'MB' => 'Middle Blocker',
-				'OH' => 'Outside Hitter',
-				'R' => 'Right Side Hitter',
-				'S' => 'Setter',
-			);
-		}
-		else if ($this->site_name == 'sport_swimmingdiving_men' || $this->site_name == 'sport_swimmingdiving_women')
-		{
-			$this->positions = array(
-				'BU' => 'Butterfly',
-				'BA' => 'Backstroke',
-				'BR' => 'Breaststroke',
-				'FR' => 'Freestyle',
-				'IM' => 'Individual Medley',
-				'D' => 'Diving',
-			);
-		}
-		else if ($this->site_name == 'sport_trackfield_men' || $this->site_name == 'sport_trackfield_women')
-		{
-			$this->positions = array(
-				'D' => 'Distance',
-				'H' => 'Hurdles',
-				'J' => 'Jumps',
-				'MD' => 'Mid-distance',
-				'ME' => 'Multi-events',
-				'PV' => 'Pole Vault',
-				'S' => 'Sprints',
-				'T' => 'Throws',
-			);
-		}
-	}
+
 	
 }
 ?>
