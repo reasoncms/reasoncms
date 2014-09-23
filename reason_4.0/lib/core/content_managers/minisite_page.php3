@@ -313,7 +313,7 @@ class MinisitePageManager extends parent_childManager
 		else
 		{
 			// loop through all elements making them hidden, except for the important link fields
-			$fields = array( 'name', 'url', 'parent_id', 'nav_display', 'description' );
+			$fields = array( 'name', 'url', 'parent_id', 'nav_display', 'description', 'administrator_section_heading', 'unique_name', );
 			foreach($this->get_element_names() as $element_name)
 			{
 				if( !in_array( $element_name, $fields ) )
