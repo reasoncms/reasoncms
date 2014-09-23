@@ -719,10 +719,14 @@ class ThorFormModel extends DefaultFormModel
 	
 	function &get_values_for_user()
 	{
-		if (!isset($this->_values_for_user))
+		$netid = $this->get_user_netid();
+		if (isset($this->_values_for_user['submitted_by']) && $this->_values_for_user['submitted_by'] == $netid)
+		{
+			return $this->_values_for_user;
+		}
+		else
 		{
 			$thor_core =& $this->get_thor_core_object();
-			$netid = $this->get_user_netid();
 			$this->_values_for_user = (!empty($netid)) ? $thor_core->get_values_for_user($netid) : false;
 		}
 		return $this->_values_for_user;
