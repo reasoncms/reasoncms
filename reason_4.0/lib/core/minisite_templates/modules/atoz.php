@@ -61,7 +61,7 @@
 			ksort( $this->alpha );
 
 			echo '<div id="atoz">'."\n";
-			echo '<p>Jump to: ';
+			echo '<p class="alpha"><span class="label">Jump to:</span> ';
 			foreach($this->alpha as $keyletter => $keywords )
 			{
 				echo '<a href="#'.strtolower($keyletter).'">'.$keyletter.'</a> ';
