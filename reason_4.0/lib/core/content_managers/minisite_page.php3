@@ -217,22 +217,22 @@ class MinisitePageManager extends parent_childManager
 		
 		if( reason_user_has_privs( $this->admin_page->user_id, 'publish' ) )
 		{
-			if( $this->get_value( 'parent_id' ) != $this->admin_page->id AND !$this->is_new_entity() )
+			if( !$this->is_new_entity() )
 			{
 				$this->change_element_type( 'state','select',array( 'options' => array( 'Live' => 'Live', 'Pending' => 'Pending' ) ) );
 				$this->add_required( 'state' );
 			} 
-			/* Why are we creating a special new state element for new pages? Figure out if we can
-			   just use the state element all the time. */
-			elseif ( $this->is_new_entity() )
+			else
 			{
+				/* Why are we creating a special new state element for new pages? Figure out if we can
+			   	just use the state element all the time. */
 				$this->add_element( 'state_action','select',array( 'options' => array( 'Live' => 'Live','Pending' => 'Pending' ), 'default' => 'Live' ) );
 				$this->set_display_name( 'state_action', 'state' );
 				$this->add_required( 'state_action' );
 			}
 		}	
-
-		if ($this->entity->has_right_relation_of_type('minisite_page_parent') && $this->get_value('state') == 'Live')
+		$is_home = $this->get_value( 'id' ) == $this->get_value('parent_id');
+		if ($this->entity->has_right_relation_of_type('minisite_page_parent') && $this->get_value('state') == 'Live' && (!$is_home || count($this->entity->get_right_relationship('minisite_page_parent')) > 1 ) )
 		{
 			$this->set_comments('state', form_comment('The state cannot be changed because this page has live children'));
 			$this->change_element_type('state', 'solidtext');
