@@ -17,6 +17,7 @@ $(document).ready(function() {
     hide_field('zip');
     hide_field('country');
 
+
     //delivery choices
     showDeliveryInfo();
     $("input[name='delivery_type']").change(function(){
