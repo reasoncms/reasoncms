@@ -190,8 +190,8 @@ class TranscriptPageTwoForm extends FormStep
         $state_province = $this->controller->get('state_province');
         $zip = $this->controller->get('zip');
         $country = $this->controller->get('country');
-        $unofficial = $this->controller->get('unofficial');
-        $unofficial_address = $this->controller->get('unofficial_address');
+        //$unofficial = $this->controller->get('unofficial');
+        //$unofficial_address = $this->controller->get('unofficial_address');
         $delivery_type = $this->controller->get('delivery_type');
         $number_of_official = $this->controller->get('number_of_official');
         $deliver_to = $this->controller->get('deliver_to');
@@ -209,12 +209,12 @@ class TranscriptPageTwoForm extends FormStep
         $txt .= '<li><strong>Lifetime Academic Transcript Fee:</strong> ' . $latf . '</li>'."\n";
         $txt .= '<li><strong>Daytime Phone:</strong> ' . $daytime_phone . '</li>' . "\n";
         $txt .= '<li><strong>Email:</strong> ' . $email . '</li>' . "\n";
-        if ($unofficial != 'no' && $unofficial != '') {
+        /*if ($unofficial != 'no' && $unofficial != '') {
             $txt .= '<li><strong>Unofficial transcripts requested:</strong> Yes - '. $unofficial .' </li>' . "\n";
             if ($unofficial == 'postal') {
                 $txt .= '<li><strong>Mail to:</strong> ' . $unofficial_address . '</li>' . "\n";
                 }
-            }
+            }*/
         if ($delivery_type == 'postal') {
             if ($number_of_official) {
                 $txt .= '<li><strong>Official paper transcripts requested:</strong> ' . $number_of_official . '</li>' . "\n";

@@ -46,23 +46,6 @@ class TranscriptPageOneForm extends FormStep {
                 'Paid' => 'Enrolled after August 1, 2013 or paid the <a href="/financial-services/student/cost-pymt/1314general/" target="_blank">Lifetime Academic Transcript Fee.</a>', 
                 'Not paid' => 'I have not paid the Lifetime Academic Transcript Fee.'),
         ),
-        'unofficial_header' => array(
-            'type' => 'comment',
-            'text' => '<h3>Unofficial transcripts</h3>',
-        ),
-        'unofficial' => array(
-            'type' => 'radio_no_sort',
-            'display_name' => 'Would you like an unofficial transcript?',
-            'options' => array(
-                'email' => 'Electronic (Email - to the address above)',
-                'postal' => 'Physical copy (Postal mail)',
-                'no' => 'No, thanks'
-                )
-        ),
-        'unofficial_address' => array(
-            'type' => 'textarea',
-            'display_name' => 'Address',
-        ),
         'official_header' => array(
             'type' => 'comment',
             'text' => '<h3>Official transcripts</h3>',
@@ -73,7 +56,7 @@ class TranscriptPageOneForm extends FormStep {
         ),
         'number_of_official' => array(
             'type' => 'text',
-            'display_name' => 'Number of <em>official</em> transcripts',
+            'display_name' => 'Number of transcripts',
             'size' => 3,
         ),
         'delivery_type' => array(
@@ -213,8 +196,8 @@ class TranscriptPageOneForm extends FormStep {
         $txt = '<h3>Access to this form is restricted</h3>';
         $txt .= '<h3>Electronic Request</h3>';
         //$txt .= '<p>You are not currently logged in. Luther College students and alumni have access to this form. The contents will be displayed after you login.' . "\n";
-        $txt .= '<p>To request a transcript, official or unofficial, electronically (requires user name and
-                password, ie: norse key), please <a href="' . $url . '">log in</a>.</p>';
+        $txt .= '<p>To request a transcript electronically requires user name and
+                password, ie: norse key, please <a href="' . $url . '">log in</a>.</p>';
 //         $txt .= '<p>The request form will be displayed after you login. This method requires graduates/
 // former students to pay for the transcript via credit card.</p>';
         $txt .= '<p>If you have forgotten your norse key (user name or password), please try our automated
@@ -264,7 +247,6 @@ class TranscriptPageOneForm extends FormStep {
     /*
      * Payment is required for alumns
      * No payment is required for current students
-     * No payment is required for an unofficial transcript
      */
 
     function needs_payment() {
@@ -291,22 +273,9 @@ class TranscriptPageOneForm extends FormStep {
 
     function  pre_error_check_actions() {
         parent::pre_error_check_actions();
-        if ($this->get_value('unofficial') /*&& !$this->get_value('unofficial_address)')*/ && !$this->get_value('number_of_official')) {
-            $this->remove_required('deliver_to');
-            $this->remove_required('delivery_time');
-            $this->remove_required('delivery_type');
-        }
     }
     function run_error_checks() {
         parent::run_error_checks();
-		
-		if (!$this->get_value('unofficial') && !$this->get_value('number_of_official')){
-			$this->set_error('unofficial', 'Please indicate whether you\'d like to recieve an official or unofficial transcript.');
-		}
-
-        if (($this->get_value('unofficial') == 'postal') && !$this->get_value('unofficial_address')) {
-            $this->set_error('unofficial_address', 'Since you\'d like an unofficial transcript, please include an address.');
-        }
         if ($this->get_value('number_of_official') && (!preg_match('/^\d+$/', $this->get_value('number_of_official')))) {
             $this->set_error('number_of_official', "Please enter a whole number.");
         }

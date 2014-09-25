@@ -6,7 +6,8 @@
 //    2010-05-18
 //
 //    Work on the confirmation page of the transcript request form
-//
+//  unofficial_address='" . ((!empty($unofficial_address)) ? addslashes($address) : '') . "',
+//		unofficial='" . ((!empty($unofficial)) ? addslashes($unofficial) : '') . "',
 ////////////////////////////////////////////////////////////////////////////////
 //require_once( '/usr/local/webapps/reason/reason_package/carl_util/db/db.php' );
 include_once(TYR_INC . 'tyr.php');
@@ -32,8 +33,8 @@ class TranscriptRequestConfirmation extends FormStep {
         $state_province = $this->controller->get('state_province');
         $zip = $this->controller->get('zip');
         $country = $this->controller->get('country');
-        $unofficial = $this->controller->get('unofficial');
-        $unofficial_address = $this->controller->get('unofficial_address');
+        //$unofficial = $this->controller->get('unofficial');
+        //$unofficial_address = $this->controller->get('unofficial_address');
         $delivery_type = $this->controller->get('delivery_type');
         $number_of_official = $this->controller->get('number_of_official');
         $deliver_to = $this->controller->get('deliver_to');
@@ -51,12 +52,12 @@ class TranscriptRequestConfirmation extends FormStep {
         $txt .= '<li><strong>Lifetime Academic Transcript Fee:</strong> ' . $latf . '</li>'."\n";
         $txt .= '<li><strong>Daytime Phone:</strong> ' . $daytime_phone . '</li>' . "\n";
         $txt .= '<li><strong>Email:</strong> ' . $email . '</li>' . "\n";
-        if ($unofficial != 'no' && $unofficial != '') {
+        /*if ($unofficial != 'no' && $unofficial != '') {
             $txt .= '<li><strong>Unofficial transcripts requested:</strong> Yes - '. $unofficial .' </li>' . "\n";
             if ($unofficial == 'postal') {
                 $txt .= '<li><strong>Mail to:</strong> ' . $unofficial_address . '</li>' . "\n";
                 }
-            }
+            }*/
         if ($delivery_type == 'postal') {
             if ($number_of_official) {
                 $txt .= '<li><strong>Official paper transcripts requested:</strong> ' . $number_of_official . '</li>' . "\n";
@@ -101,8 +102,7 @@ class TranscriptRequestConfirmation extends FormStep {
 		name='" . addslashes($name) . "',
 		date_of_birth ='" . addslashes($date_of_birth) . "',
         LATF='". (($latf == 'Paid') ? 'LATF' : '') ."',
-		address='" . ((!empty($address)) ? addslashes($address) : '') . "',
-        unofficial_address='" . ((!empty($unofficial_address)) ? addslashes($address) : '') . "',
+		address='" . ((!empty($address)) ? addslashes($address) : '') . "', 
 		city='" . ((!empty($city)) ? addslashes($city) : '') . "',
 		state_province = '" . ((!empty($state_province)) ? addslashes($state_province) : '') . "',
 		zip = '" . ((!empty($zip)) ? addslashes($zip) : '') . "',
@@ -112,7 +112,6 @@ class TranscriptRequestConfirmation extends FormStep {
 		delivery_type='" . ((!empty($delivery_type)) ? addslashes($delivery_type) : '') . "',
         number_of_official='" . ((!empty($number_of_official)) ? addslashes($number_of_official) : '') . "',
         amount_paid='" . ((!empty($amount)) ? addslashes($amount) : '') . "',
-		unofficial='" . ((!empty($unofficial)) ? addslashes($unofficial) : '') . "',
         deliver_to='" . addslashes($deliver_to) . "',
 		delivery_time='" . ((!empty($delivery_time)) ? addslashes($delivery_time) : '') . "',
 		institution_name='" . ((!empty($institution_name)) ? addslashes($institution_name) : '') . "',
