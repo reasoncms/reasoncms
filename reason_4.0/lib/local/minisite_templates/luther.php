@@ -216,7 +216,8 @@
 			echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/foundation/foundation.js"></script>';
 			echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/foundation/foundation.offcanvas.js"></script>';
 			echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/foundation/foundation.tab.js"></script>';
-
+			echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/foundation/foundation.tooltip.js"></script>';
+			
 			// Initialize Foundation javascript
 			echo '<script> $(document).foundation(); </script>';
 			

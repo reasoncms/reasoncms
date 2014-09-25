@@ -9,6 +9,7 @@
 
 $include-html-type-classes: true;
 $include-html-table-classes: true;
+$include-html-tooltip-classes: true;
 
 // Foundaton imports
 @import "settings";
@@ -242,5 +243,19 @@ p:empty {
 
 nav {
 	font-family: $navigation-font-family;
+}
+
+/* Tooltips */
+.tooltip {
+	h5 {
+		color: white;
+	}
+	p {
+		margin-bottom: 0;
+	}
+	img {
+		margin-bottom: 1.0rem;
+		border: 0.5rem solid white;
+	}
 }
 

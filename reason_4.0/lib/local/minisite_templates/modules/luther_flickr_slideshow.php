@@ -49,6 +49,9 @@
 
 			$slideshowGroup = 0;
 			$number_slideshows = count($posts);
+			if ($number_slideshows > 1){
+				echo "<ul class='flickr-gallery-list'> \n";
+			}
 			foreach( $posts AS $post )
 			{
     				//echo $post->get_value( 'flickr_username' ).'<br />';
@@ -71,7 +74,6 @@
 					//	echo "farm: " . $pinfo['farm'] . "<br />";
 					//	print_r($pinfo);
 					//}
-	
 					if ($number_slideshows == 1)
 					{
 						echo "<h3>" . $post->get_value('name') . "</h3>" . "\n";
@@ -79,7 +81,8 @@
 					}
 					elseif ($number_slideshows > 1)
 					{
-						echo "<div class=\"flickr-set-container\">\n";
+						echo "<li class='flickr-set-list-elm'>";
+						echo "<div class=\"flickr-set-container\"> \n";
 					}
 					$photo_count = 1;
 					foreach ((array)$photos['photoset']['photo'] as $photo)
@@ -114,7 +117,7 @@
 						}
 						
 						echo "<a class=\"fancybox-thumb\" href=\"http://farm" . $pinfo['farm'] . ".static.flickr.com/" . $photo['server'] . "/" . $photo['id'] . "_" . $photo['secret'] . "." . $pinfo['originalformat']  . "\" rel=\"gallery" . $slideshowGroup . "\" title=\"" . htmlspecialchars($description, ENT_COMPAT) ."\">\n";
-						echo "<img src=\"http://farm" . $pinfo['farm'] . ".static.flickr.com/" . $photo['server'] . "/" . $photo['id'] . "_" . $photo['secret'] . "_s." . $pinfo['originalformat']  . "\" title=\"Click to open gallery\" alt=\"" . htmlspecialchars($description, ENT_COMPAT) ."\" />\n";
+						echo "<img src=\"http://farm" . $pinfo['farm'] . ".static.flickr.com/" . $photo['server'] . "/" . $photo['id'] . "_" . $photo['secret'] . "_q." . $pinfo['originalformat']  . "\" title=\"Click to open gallery\" alt=\"" . htmlspecialchars($description, ENT_COMPAT) ."\" width='139px' height='139px'/>\n";
 						echo "</a>\n";
 	
 						if ($number_slideshows == 1)
@@ -137,7 +140,7 @@
 					}
 					elseif ($number_slideshows > 1)
 					{
-						echo "<h4>" . $post->get_value('name') . "</h4>" . "\n";
+						echo "<h4 class='flickr_subtitle'>" . $post->get_value('name') . "</h4>" . "\n";
 						echo "</div>   <!-- class=\"flickr-set-container\"-->\n";
 					}
 					$slideshowGroup++;
@@ -147,6 +150,10 @@
 						break;
 					}
 				}
+			}
+			if ($number_slideshows > 1)
+			{
+				echo "</ul>";
 			}
 			
 		}

@@ -142,7 +142,8 @@ class sportsEventsItemMarkup implements eventsItemMarkup
 		$ret .= '</table>'."\n";
 		
 		if ($event->get_value('content'))
-			$ret .= '<div class="eventContent">'.$event->get_value( 'content' ).'</div>'."\n";
+			$ret .= $this->get_content_tooltip($event->get_value('content'));
+			//$ret .= '<div class="eventContent">'.$event->get_value( 'content' ).'</div>'."\n";
 		if ($event->get_value('sponsor'))
 			$ret .= '<p class="sponsor">Sponsor: '.$event->get_value('sponsor').'</p>'."\n";
 		$ret .= $this->get_contact_info_markup($event);
@@ -592,4 +593,85 @@ class sportsEventsItemMarkup implements eventsItemMarkup
 		}
 		return $ret;
 	}
+	
+	/**
+	 * Insert Foundation tooltip with athlete info into main content
+	 * Luther College enhancement
+	 * @param object $content
+	 * @return string
+	 */
+	function get_content_tooltip($content)
+	{
+		$site_id = new entity( $this->bundle->current_site_id() );
+		$site_name = $site_id->get_value('unique_name');
+
+		// get a list of athletes
+		$es = new entity_selector($this->bundle->current_site_id());
+		$es->add_type(id_of('athlete_type'));
+		$es->add_relation('athlete_hide != "yes"');
+		$es->add_left_relationship_field( 'athlete_to_image', 'entity', 'id', 'image_id', false); // get images and those with no image - uses union query
+		$players = $es->run_one();
+	
+		if (!empty($players))
+		{
+			// insert link to athlete bio
+			$url = $site_id->get_value('base_url') . "roster/";
+			foreach ($players as $k=>$v)
+			{
+				$pv = $v->get_values();								
+				$content = preg_replace('/'.$pv['athlete_first_name'].'\s+'.$pv['athlete_last_name'].'/',
+				'<a data-tooltip aria-haspopup href="'.$url.'?id='.$pv['id'].'" class="has-tip" title="'.get_athlete_tooltip($pv, $site_name) .'">'.$pv['athlete_first_name'].' '.$pv['athlete_last_name'].'</a>', $content, 1);
+			}
+		}
+		return $content;
+	}
+	
+	/*function get_content_tooltip($content)
+	{
+		$site_id = new entity( $this->bundle->current_site_id() );
+		$site_name = $site_id->get_value('unique_name');
+		preg_match_all('/<a (href=".*?\?id=)(\d+)">(.*?)<\/a>/', $content, $matches);
+
+		foreach ($matches[2] as $val)
+		{
+			$athlete = $this->get_athlete_entity($site_id, $val);
+			
+			if (empty($athlete))
+			{
+				// remove link to athletes not listed in current roster
+				$content = preg_replace('/<a (href=".*?\?id=)('. $val.')">(.*?)<\/a>/', '$3', $content);
+			}
+			else
+			{
+				$content = preg_replace('/<a (href=".*?\?id=)('. $val.')">(.*?)<\/a>/', 
+				'<a data-tooltip aria-haspopup $1$2" class="has-tip" title="'.get_athlete_tooltip($athlete, $site_name) .'">$3</a>', $content);
+			}
+		}
+		return $content;
+	}*/
+
+	/**
+	 * Get athlete entity along with image given an athlete id
+	 * Luther College enhancement
+	 * @param int $site_id, int $athlete_id
+	 * @return entity
+	 */
+	function get_athlete_entity($site_id, $athlete_id)
+	{
+		$es = new entity_selector();
+		$es->add_type(id_of('athlete_type'));
+		$es->add_relation('entity.id = ' . $athlete_id);
+		$es->add_relation('athlete_hide != "yes"');
+		$es->add_left_relationship_field( 'athlete_to_image', 'entity', 'id', 'image_id', false); // get images and those with no image - uses union query
+		$result = $es->run_one();
+		//print_r($result);
+		//echo "<br>---------------------------------------------------<br><br>";
+		if (!empty($result))
+		{
+			foreach ($result as $k => $v) break;
+			return $v->get_values();;
+		}
+		return array();
+	}
+	
 }

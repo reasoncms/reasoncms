@@ -1,0 +1,40 @@
+//
+// ASSET STYLES
+//
+// @author Gage Dykema
+//
+
+// Foundation imports
+@import "settings";
+@import "foundation/components/grid";
+
+// Compass imports
+@import "compass/css3";
+
+// Font Awesome Imports
+@import "font-awesome/variables";
+@import "font-awesome/core";
+
+// Luther imports
+@import "extends";
+@import "mixins";
+
+.flickr-set{
+	width: 144px;
+}
+
+ul.flickr-gallery-list{
+	margin-left: 0px;
+}
+
+li.flickr-set-list-elm {
+	display:-moz-inline-box; 
+	display:inline-block;
+	vertical-align:top;
+	margin:15px 5px 15px 10px;
+	width: 147px;
+}
+
+h4.flickr_subtitle{
+	 width: 147px;
+}
