@@ -44,13 +44,10 @@ class MinisitePageManager extends parent_childManager
 	{
 		parent::init_head_items();
 		if ($this->has_url()) {
-			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.
-				'content_managers/page_parent_url.js');
+			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'content_managers/page_parent_url.js');
+			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'content_managers/page.js');
 		}
-		$this->head_items->add_stylesheet(REASON_ADMIN_CSS_DIRECTORY.
-				'content_managers/minisite_page.css');
-		$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.
-				'content_managers/page.js');
+		$this->head_items->add_stylesheet(REASON_ADMIN_CSS_DIRECTORY.'content_managers/minisite_page.css');
 	}
 	
 	/**
@@ -61,7 +58,7 @@ class MinisitePageManager extends parent_childManager
 	 */
 	function has_url()
 	{
-		return !$this->get_value('is_link');
+		return !($this->get_value('is_link') || !empty( $_REQUEST[ 'is_link' ]));
 	}
 	
 	/**
