@@ -614,6 +614,25 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'pre_sidebar' => 'main_blurb',
 		'main_4' => '',
 	),
+	'show_children_top_image' => array(
+		'main_post' => 'children',
+		'post_main_head' => array(
+			'module' => 'image_sidebar',
+			'num_to_display' => 1,
+			'thumbnail_width' => 1200,
+			'thumbnail_height' => 575,
+			'thumbnail_crop' => 'fit',
+			'caption_flag' => false,
+		),
+		'pre_sidebar_2' => array(
+			'module' => 'image_sidebar',
+			'num_to_skip' => 1,
+			'thumbnail_width' => 600,
+			'thumbnail_height' => 400,
+			'thumbnail_crop' => 'fill',
+			'num_to_display' => 0,
+		)
+	),
 	'top_image' => array(
 		'post_main_head' => array(
 			'module' => 'image_sidebar',
