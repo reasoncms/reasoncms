@@ -518,7 +518,15 @@ $GLOBALS['_reason_page_types_local'] = array(
 	'open_id' => array(
 		'main_post'=>'open_id',
 	),
-
+	'outcomes_profile' => array(
+		'pre_sidebar' => array(
+				'module' => 'luther_av',
+				'full_size' => true,
+				'num_per_page' => 2,
+		),
+		'pre_sidebar_2' => 'blurb',
+		'sidebar' => '',
+	),
 	// @todo: CAN WE USE CORE, or do we need get_luther_publication?
 
 	//'publication' => get_luther_publication(),
@@ -613,6 +621,25 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'main_post' => 'content',
 		'pre_sidebar' => 'main_blurb',
 		'main_4' => '',
+	),
+	'show_children_top_image' => array(
+		'main_post' => 'children',
+		'post_main_head' => array(
+			'module' => 'image_sidebar',
+			'num_to_display' => 1,
+			'thumbnail_width' => 1200,
+			'thumbnail_height' => 575,
+			'thumbnail_crop' => 'fit',
+			'caption_flag' => false,
+		),
+		'pre_sidebar_2' => array(
+			'module' => 'image_sidebar',
+			'num_to_skip' => 1,
+			'thumbnail_width' => 600,
+			'thumbnail_height' => 400,
+			'thumbnail_crop' => 'fill',
+			'num_to_display' => 0,
+		)
 	),
 	'top_image' => array(
 		'post_main_head' => array(

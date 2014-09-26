@@ -440,7 +440,7 @@ blockquote {
 
 /* Wysiwyg Formatting */
 /* line 71, scss/_type.scss */
-#pageContent a, .fullPost .text a, #relatedSections .blurb a, #contentSections .blurb a, #faq .answer a, .flash-notice a {
+#pageContent a, .fullPost .text a, #relatedSections .blurb a, #contentSections .blurb a, #faq .answer a, .facStaffContent a, .eventContent a, .flash-notice a {
   -ms-word-break: break-all;
   /* Be VERY careful with this, breaks normal words wh_erever */
   word-break: break-all;
@@ -451,7 +451,7 @@ blockquote {
   hyphens: auto;
 }
 /* line 85, scss/_type.scss */
-#pageContent p:empty, .fullPost .text p:empty, #relatedSections .blurb p:empty, #contentSections .blurb p:empty, #faq .answer p:empty, .flash-notice p:empty {
+#pageContent p:empty, .fullPost .text p:empty, #relatedSections .blurb p:empty, #contentSections .blurb p:empty, #faq .answer p:empty, .facStaffContent p:empty, .eventContent p:empty, .flash-notice p:empty {
   display: none;
 }
 /* line 91, scss/_type.scss */
@@ -465,7 +465,11 @@ blockquote {
 #contentSections .blurb ul,
 #contentSections .blurb dl, #faq .answer ol,
 #faq .answer ul,
-#faq .answer dl, .flash-notice ol,
+#faq .answer dl, .facStaffContent ol,
+.facStaffContent ul,
+.facStaffContent dl, .eventContent ol,
+.eventContent ul,
+.eventContent dl, .flash-notice ol,
 .flash-notice ul,
 .flash-notice dl {
   font-weight: 300;
@@ -483,13 +487,17 @@ blockquote {
 #contentSections .blurb ul:last-child,
 #contentSections .blurb dl:last-child, #faq .answer ol:last-child,
 #faq .answer ul:last-child,
-#faq .answer dl:last-child, .flash-notice ol:last-child,
+#faq .answer dl:last-child, .facStaffContent ol:last-child,
+.facStaffContent ul:last-child,
+.facStaffContent dl:last-child, .eventContent ol:last-child,
+.eventContent ul:last-child,
+.eventContent dl:last-child, .flash-notice ol:last-child,
 .flash-notice ul:last-child,
 .flash-notice dl:last-child {
   padding-bottom: 0;
 }
 /* line 100, scss/_type.scss */
-#pageContent li, .fullPost .text li, #relatedSections .blurb li, #contentSections .blurb li, #faq .answer li, .flash-notice li {
+#pageContent li, .fullPost .text li, #relatedSections .blurb li, #contentSections .blurb li, #faq .answer li, .facStaffContent li, .eventContent li, .flash-notice li {
   line-height: 2;
 }
 /* line 105, scss/_type.scss */
@@ -498,7 +506,9 @@ blockquote {
 .fullPost .text ol ol ol ol li, #relatedSections .blurb ol li,
 #relatedSections .blurb ol ol ol ol li, #contentSections .blurb ol li,
 #contentSections .blurb ol ol ol ol li, #faq .answer ol li,
-#faq .answer ol ol ol ol li, .flash-notice ol li,
+#faq .answer ol ol ol ol li, .facStaffContent ol li,
+.facStaffContent ol ol ol ol li, .eventContent ol li,
+.eventContent ol ol ol ol li, .flash-notice ol li,
 .flash-notice ol ol ol ol li {
   list-style-type: decimal;
 }
@@ -508,7 +518,9 @@ blockquote {
 .fullPost .text ol ol ol ol ol li, #relatedSections .blurb ol ol li,
 #relatedSections .blurb ol ol ol ol ol li, #contentSections .blurb ol ol li,
 #contentSections .blurb ol ol ol ol ol li, #faq .answer ol ol li,
-#faq .answer ol ol ol ol ol li, .flash-notice ol ol li,
+#faq .answer ol ol ol ol ol li, .facStaffContent ol ol li,
+.facStaffContent ol ol ol ol ol li, .eventContent ol ol li,
+.eventContent ol ol ol ol ol li, .flash-notice ol ol li,
 .flash-notice ol ol ol ol ol li {
   list-style-type: lower-alpha;
 }
@@ -518,7 +530,9 @@ blockquote {
 .fullPost .text ol ol ol ol ol ol li, #relatedSections .blurb ol ol ol li,
 #relatedSections .blurb ol ol ol ol ol ol li, #contentSections .blurb ol ol ol li,
 #contentSections .blurb ol ol ol ol ol ol li, #faq .answer ol ol ol li,
-#faq .answer ol ol ol ol ol ol li, .flash-notice ol ol ol li,
+#faq .answer ol ol ol ol ol ol li, .facStaffContent ol ol ol li,
+.facStaffContent ol ol ol ol ol ol li, .eventContent ol ol ol li,
+.eventContent ol ol ol ol ol ol li, .flash-notice ol ol ol li,
 .flash-notice ol ol ol ol ol ol li {
   list-style-type: lower-roman;
 }
@@ -528,7 +542,9 @@ blockquote {
 .fullPost .text ul ul ul ul li, #relatedSections .blurb ul li,
 #relatedSections .blurb ul ul ul ul li, #contentSections .blurb ul li,
 #contentSections .blurb ul ul ul ul li, #faq .answer ul li,
-#faq .answer ul ul ul ul li, .flash-notice ul li,
+#faq .answer ul ul ul ul li, .facStaffContent ul li,
+.facStaffContent ul ul ul ul li, .eventContent ul li,
+.eventContent ul ul ul ul li, .flash-notice ul li,
 .flash-notice ul ul ul ul li {
   list-style-type: disc;
 }
@@ -538,7 +554,9 @@ blockquote {
 .fullPost .text ul ul ul ul ul li, #relatedSections .blurb ul ul li,
 #relatedSections .blurb ul ul ul ul ul li, #contentSections .blurb ul ul li,
 #contentSections .blurb ul ul ul ul ul li, #faq .answer ul ul li,
-#faq .answer ul ul ul ul ul li, .flash-notice ul ul li,
+#faq .answer ul ul ul ul ul li, .facStaffContent ul ul li,
+.facStaffContent ul ul ul ul ul li, .eventContent ul ul li,
+.eventContent ul ul ul ul ul li, .flash-notice ul ul li,
 .flash-notice ul ul ul ul ul li {
   list-style-type: circle;
 }
@@ -548,12 +566,14 @@ blockquote {
 .fullPost .text ul ul ul ul ul ul li, #relatedSections .blurb ul ul ul li,
 #relatedSections .blurb ul ul ul ul ul ul li, #contentSections .blurb ul ul ul li,
 #contentSections .blurb ul ul ul ul ul ul li, #faq .answer ul ul ul li,
-#faq .answer ul ul ul ul ul ul li, .flash-notice ul ul ul li,
+#faq .answer ul ul ul ul ul ul li, .facStaffContent ul ul ul li,
+.facStaffContent ul ul ul ul ul ul li, .eventContent ul ul ul li,
+.eventContent ul ul ul ul ul ul li, .flash-notice ul ul ul li,
 .flash-notice ul ul ul ul ul ul li {
   list-style-type: square;
 }
 /* line 118, scss/_type.scss */
-#pageContent a:link, .fullPost .text a:link, #relatedSections .blurb a:link, #contentSections .blurb a:link, #faq .answer a:link, .flash-notice a:link {
+#pageContent a:link, .fullPost .text a:link, #relatedSections .blurb a:link, #contentSections .blurb a:link, #faq .answer a:link, .facStaffContent a:link, .eventContent a:link, .flash-notice a:link {
   text-decoration: underline;
 }
 /* line 123, scss/_type.scss */
@@ -562,7 +582,9 @@ blockquote {
 .fullPost .text .callout, #relatedSections .blurb .callOut,
 #relatedSections .blurb .callout, #contentSections .blurb .callOut,
 #contentSections .blurb .callout, #faq .answer .callOut,
-#faq .answer .callout, .flash-notice .callOut,
+#faq .answer .callout, .facStaffContent .callOut,
+.facStaffContent .callout, .eventContent .callOut,
+.eventContent .callout, .flash-notice .callOut,
 .flash-notice .callout {
   clear: both;
   background: #e9e9e9;
@@ -583,7 +605,11 @@ blockquote {
 #contentSections .blurb .callout:before,
 #contentSections .blurb .callout:after, #faq .answer .callOut:before, #faq .answer .callOut:after,
 #faq .answer .callout:before,
-#faq .answer .callout:after, .flash-notice .callOut:before, .flash-notice .callOut:after,
+#faq .answer .callout:after, .facStaffContent .callOut:before, .facStaffContent .callOut:after,
+.facStaffContent .callout:before,
+.facStaffContent .callout:after, .eventContent .callOut:before, .eventContent .callOut:after,
+.eventContent .callout:before,
+.eventContent .callout:after, .flash-notice .callOut:before, .flash-notice .callOut:after,
 .flash-notice .callout:before,
 .flash-notice .callout:after {
   content: " ";
@@ -595,7 +621,9 @@ blockquote {
 .fullPost .text .callout:after, #relatedSections .blurb .callOut:after,
 #relatedSections .blurb .callout:after, #contentSections .blurb .callOut:after,
 #contentSections .blurb .callout:after, #faq .answer .callOut:after,
-#faq .answer .callout:after, .flash-notice .callOut:after,
+#faq .answer .callout:after, .facStaffContent .callOut:after,
+.facStaffContent .callout:after, .eventContent .callOut:after,
+.eventContent .callout:after, .flash-notice .callOut:after,
 .flash-notice .callout:after {
   clear: both;
 }
@@ -605,7 +633,9 @@ blockquote {
 .fullPost .text .callout *:last-child, #relatedSections .blurb .callOut *:last-child,
 #relatedSections .blurb .callout *:last-child, #contentSections .blurb .callOut *:last-child,
 #contentSections .blurb .callout *:last-child, #faq .answer .callOut *:last-child,
-#faq .answer .callout *:last-child, .flash-notice .callOut *:last-child,
+#faq .answer .callout *:last-child, .facStaffContent .callOut *:last-child,
+.facStaffContent .callout *:last-child, .eventContent .callOut *:last-child,
+.eventContent .callout *:last-child, .flash-notice .callOut *:last-child,
 .flash-notice .callout *:last-child {
   margin-bottom: 0;
 }
@@ -615,7 +645,9 @@ blockquote {
 .fullPost .text .callout.callout-success, #relatedSections .blurb .callOut.callout-success,
 #relatedSections .blurb .callout.callout-success, #contentSections .blurb .callOut.callout-success,
 #contentSections .blurb .callout.callout-success, #faq .answer .callOut.callout-success,
-#faq .answer .callout.callout-success, .flash-notice .callOut.callout-success,
+#faq .answer .callout.callout-success, .facStaffContent .callOut.callout-success,
+.facStaffContent .callout.callout-success, .eventContent .callOut.callout-success,
+.eventContent .callout.callout-success, .flash-notice .callOut.callout-success,
 .flash-notice .callout.callout-success {
   background: rgba(74, 133, 18, 0.25);
   border: 1px solid rgba(74, 133, 18, 0.5);
@@ -626,7 +658,9 @@ blockquote {
 .fullPost .text .callout.callout-warning, #relatedSections .blurb .callOut.callout-warning,
 #relatedSections .blurb .callout.callout-warning, #contentSections .blurb .callOut.callout-warning,
 #contentSections .blurb .callout.callout-warning, #faq .answer .callOut.callout-warning,
-#faq .answer .callout.callout-warning, .flash-notice .callOut.callout-warning,
+#faq .answer .callout.callout-warning, .facStaffContent .callOut.callout-warning,
+.facStaffContent .callout.callout-warning, .eventContent .callOut.callout-warning,
+.eventContent .callout.callout-warning, .flash-notice .callOut.callout-warning,
 .flash-notice .callout.callout-warning {
   background: rgba(232, 165, 0, 0.25);
   border: 1px solid rgba(232, 165, 0, 0.65);
@@ -637,7 +671,9 @@ blockquote {
 .fullPost .text .callout.callout-danger, #relatedSections .blurb .callOut.callout-danger,
 #relatedSections .blurb .callout.callout-danger, #contentSections .blurb .callOut.callout-danger,
 #contentSections .blurb .callout.callout-danger, #faq .answer .callOut.callout-danger,
-#faq .answer .callout.callout-danger, .flash-notice .callOut.callout-danger,
+#faq .answer .callout.callout-danger, .facStaffContent .callOut.callout-danger,
+.facStaffContent .callout.callout-danger, .eventContent .callOut.callout-danger,
+.eventContent .callout.callout-danger, .flash-notice .callOut.callout-danger,
 .flash-notice .callout.callout-danger {
   background: rgba(159, 33, 18, 0.25);
   border: 1px solid rgba(159, 33, 18, 0.45);
@@ -663,7 +699,15 @@ blockquote {
 #faq .answer h2 strong,
 #faq .answer h3 strong,
 #faq .answer h4 strong,
-#faq .answer h5 strong, .flash-notice h1 strong,
+#faq .answer h5 strong, .facStaffContent h1 strong,
+.facStaffContent h2 strong,
+.facStaffContent h3 strong,
+.facStaffContent h4 strong,
+.facStaffContent h5 strong, .eventContent h1 strong,
+.eventContent h2 strong,
+.eventContent h3 strong,
+.eventContent h4 strong,
+.eventContent h5 strong, .flash-notice h1 strong,
 .flash-notice h2 strong,
 .flash-notice h3 strong,
 .flash-notice h4 strong,
@@ -671,7 +715,7 @@ blockquote {
   font-weight: 400;
 }
 /* line 164, scss/_type.scss */
-#pageContent .flash-notice .callout, .fullPost .text .flash-notice .callout, #relatedSections .blurb .flash-notice .callout, #contentSections .blurb .flash-notice .callout, #faq .answer .flash-notice .callout, .flash-notice .flash-notice .callout {
+#pageContent .flash-notice .callout, .fullPost .text .flash-notice .callout, #relatedSections .blurb .flash-notice .callout, #contentSections .blurb .flash-notice .callout, #faq .answer .flash-notice .callout, .facStaffContent .flash-notice .callout, .eventContent .flash-notice .callout, .flash-notice .flash-notice .callout {
   margin-bottom: 0;
 }
 
@@ -6192,7 +6236,7 @@ form input[type="submit"]:active {
 #relatedSections .flickr-set-container {
   float: left;
   padding: 2.5% 4%;
-  width: 25%;
+  width: 144px;
 }
 /* line 21, scss/modules/_image-galleries.scss */
 #relatedSections .flickr-set-container .hidden-container {
@@ -8352,4 +8396,58 @@ th.headerSortDown:after {
   content: "\f081";
   color: #e9e9e9;
   padding-right: 0.41667rem;
+}
+
+/* line 4, scss/font-awesome/_core.scss */
+.fa, #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .jump a:before, #minisite .continueReading a:after, #minisite .feedLink .feedInfo a:before, .assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a[href]:before, #childrenAndGrandchildren li ul .childDesc:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
+#calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
+#calendar .eventDetails .eventUrl:before,
+#calendar .eventDetails .calendarExport:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
+.featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, #policyModule .rootPolicyList .rootPolicyItem a:before, #policyModule .policy .decimal .closedAccordion .policyName:after, #policyModule .policy .decimal .openAccordion .policyName:after, #relatedPub .pubLinks a:before, .publication .post p.comments a:before, .publication .post p.more a:after, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after, th.header:after, .twitter-block li:before {
+  display: inline-block;
+  font-family: FontAwesome;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* line 10, scss/_extends.scss */
+.zero-out, body #wrapper #global-banner hgroup h1, body #wrapper #global-banner #mobile-nav ul, body #wrapper #global-nav .sections, body #wrapper #global-footer #global-footer-nav .column ul, body #wrapper #global-footer #global-footer-info .contact, #callToActionBlurb .blurb ul, #calendar .responsiveEventsList .views ul, .featuresModule .feature .featureInfo .featureTitle a,
+.featuresModule .feature .featureInfo .featureTitle .noLink, .featuresModule .feature .featureNavWrap .featureNav {
+  margin: 0;
+  padding: 0;
+}
+
+/* line 15, scss/_extends.scss */
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  margin-bottom: 0;
+}
+
+/* line 22, scss/modules/_flickr.scss */
+.flickr-set {
+  width: 144px;
+}
+
+/* line 26, scss/modules/_flickr.scss */
+ul.flickr-gallery-list {
+  margin-left: 0px;
+}
+
+/* line 30, scss/modules/_flickr.scss */
+li.flickr-set-list-elm {
+  display: -moz-inline-box;
+  display: inline-block;
+  vertical-align: top;
+  margin: 15px 5px 15px 10px;
+  width: 147px;
+}
+
+/* line 38, scss/modules/_flickr.scss */
+h4.flickr_subtitle {
+  width: 147px;
 }

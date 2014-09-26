@@ -33,7 +33,8 @@ class ReasonSocialIntegrationHelper
 					 'twitter' => 'Twitter',
 					 'googleplus' => 'Google+',
 					 'email' => 'Email Signup',
-					 'youtube' => 'YouTube');
+					 'youtube' => 'YouTube',
+					 'tagboard' => 'Tagboard');
 	}
 	
 	/**
