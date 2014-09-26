@@ -5,8 +5,6 @@
 $(document).ready(function() {
     //hide  fields
    // hide_field('official_paper_comment');
-    hide_field('unofficial_email');
-    hide_field('unofficial_address');
     hide_field('official_email');
     hide_field('institution_name');
     hide_field('institution_attn');
@@ -24,11 +22,6 @@ $(document).ready(function() {
     });
     $("input[name='deliver_to']").change(function(){
         showDeliveryInfo();
-    });
-
-    toggle_unofficial_address();
-    $("input[name='unofficial']").change(function(){ 
-        toggle_unofficial_address()
     });
         
     toggle_billing_address();
@@ -110,20 +103,6 @@ function showDeliveryInfo()
         hide_field('state_province');
         hide_field('zip');
         hide_field('country');
-    }
-}
-function toggle_unofficial_address() {
-    var unofficial_type = $("input[name=unofficial]:checked").val();
-    switch(unofficial_type){
-        case 'email':
-            hide_field('unofficial_address');
-        break;
-        case 'postal':
-            show_field('unofficial_address');
-        break;
-        default:
-            hide_field('unofficial_address');
-        break;
     }
 }
 function toggle_billing_address() {
