@@ -490,19 +490,38 @@ class lutherSportsResultsMiniModule extends EventsModule
 	
 	function trim_to_ideal_count($event_list_by_date)
 	// event_list_by_date is a 2-dimensional array with an array of events for each given date
+	// will also remove events that don't have "post_to_results" flag set.
 	{
 		$total_events = 0;
 		$i = 0;
+		$stack = array();   // events with more than one date will not be counted twice.
 		foreach($event_list_by_date as $k => $v)
 		{
-			$total_events += count($v);
+			foreach($v as $e => $event)
+			{
+				$entity = get_entity_by_id($event);
+				if (preg_match("/post_to_results/", $entity['contact_organization']))
+				{
+					if (array_search($event, $stack) === FALSE)
+					{
+						array_push($stack, $event);
+						$total_events++;
+					}
+				}
+				else 
+				{
+					// remove events that don't have "post_to_results" flag
+					unset($event_list_by_date[$k][$e]);
+				}
+						
+			}
 			$i += 1;
-			if ($total_events > $this->ideal_count)
+			if ($total_events >= $this->ideal_count)
 				break;
 		}
+
 		return array_slice($event_list_by_date, 0, $i);
 	}
-
 
 }
 ?>
