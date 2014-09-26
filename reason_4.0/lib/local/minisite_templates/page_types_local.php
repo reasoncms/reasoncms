@@ -518,7 +518,15 @@ $GLOBALS['_reason_page_types_local'] = array(
 	'open_id' => array(
 		'main_post'=>'open_id',
 	),
-
+	'outcomes_profile' => array(
+		'pre_sidebar' => array(
+				'module' => 'luther_av',
+				'full_size' => true,
+				'num_per_page' => 2,
+		),
+		'pre_sidebar_2' => 'blurb',
+		'sidebar' => '',
+	),
 	// @todo: CAN WE USE CORE, or do we need get_luther_publication?
 
 	//'publication' => get_luther_publication(),
