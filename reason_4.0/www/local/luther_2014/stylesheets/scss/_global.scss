@@ -379,6 +379,10 @@ body {
 				width: auto !important;
 				@include lr-border($lc-blue-light-compliment);		
 				@include clearfix;
+				
+				&.left-off-canvas-menu {
+					height: inherit;      // removes gray box below main top nav on mac localhost
+				}
 			}
 			
 			h2 {
