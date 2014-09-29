@@ -318,6 +318,8 @@ class DefaultFeatureView extends FeatureView
 			$image_anchor_end="</a>";
 			$anchor_start="<a href=\"".$view_data['destination_url']."\" class=\"dest\">";
 			$anchor_end="</a>";
+			$div_link_start="<a href=\"".$view_data['destination_url']."\">";
+			$div_link_end="</a>";
 		}
 
 		$media_str="";
@@ -365,13 +367,13 @@ class DefaultFeatureView extends FeatureView
 		{
 			if ($view_data['current_object_type'] == 'av') // our links go to the movie not the dest url
 			{
-				$title_str="<h3 class=\"featureTitle\">".$text_anchor_start.$view_data['title'].$text_anchor_end."</h3>\n";
-				$text_str="<p class=\"featureText\">".$text_anchor_start.$view_data['text'].$text_anchor_end."</p>\n";
+				$title_str="<h3 class=\"featureTitle dest\">"."<span class=\"dest\">".$view_data['title']."</span></h3>\n";
+				$text_str="<p class=\"featureText dest\">"."<span class=\"dest\">".$view_data['text']."</span></p>\n";
 			}
 			else
 			{
-				$title_str="<h3 class=\"featureTitle\">".$anchor_start.$view_data['title'].$anchor_end."</h3>\n";
-				$text_str="<p class=\"featureText\">".$anchor_start.$view_data['text'].$anchor_end."</p>\n";
+				$title_str="<h3 class=\"featureTitle dest\">"."<span class=\"dest\">".$view_data['title']."</span></h3>\n";
+				$text_str="<p class=\"featureText dest\">"."<span class=\"dest\">".$view_data['text']."</span></p>\n";
 			}
 		}
 
@@ -383,10 +385,12 @@ class DefaultFeatureView extends FeatureView
 
 			if ($view_data['show_text']) // Only show Feature Info if there is text.
 			{
+				$str.= $div_link_start;
 				$str.="<div class=\"featureInfo\">";
 					$str.=$title_str;
 					$str.=$text_str;
 				$str.="</div>";//end featureInfo div
+				$str .= $div_link_end;
 			}
 
 			$str.="<div class=\"featureNavWrap\">";
