@@ -34,11 +34,13 @@ class ArtScholarshipForm extends DefaultThorForm
     function process() // {{{
     {
             $portfolio = $this->get_element_name_from_label('Portfolio (pdf)');
-            $teacher_statement = $this->get_element_name_from_label('Teacher\'s Statement (pdf)');
+            $teacher_statement = $this->get_element_name_from_label('Letter of Recommendation (pdf)');
             $documents = array();
+
             array_push($documents, $this->get_element($portfolio), $this->get_element($teacher_statement));
             // $documents = $this->get_element($portfolio_element_name);
             // see if document was uploaded successfully
+
             foreach ($documents as $document) {
                 if(($document->state == 'received' OR $document->state == 'pending') AND file_exists( $document->tmp_full_path))
                 {
@@ -134,14 +136,10 @@ class ArtScholarshipForm extends DefaultThorForm
             }
         }
         $submission_time = date("Y-m-d H:i:s");
-        // $values = '';
         $values .= sprintf("\n<strong>%s:</strong>\t    %s\n",'Form Submission Time', $submission_time);
         $vl = nl2br($values);
         $html_body = $heading . $vl;
         $txt_body = html_entity_decode(strip_tags($html_body));
-        // $mailer = new Email($recipient, $sender, $sender, $subject, $txt_body, $html_body);
-        // pray($mailer);
-        // $mailer->send();
 
         $mail->IsSendmail();
         $mail->AddReplyTo("noreply@luther.edu","No Reply");
@@ -151,11 +149,13 @@ class ArtScholarshipForm extends DefaultThorForm
         $mail->Subject    = $model->get_form_name() . '-' . $this->get_value_from_label('First Name') . $this->get_value_from_label('Last Name');
         $mail->AltBody    = $txt_body;
         $mail->MsgHTML($html_body);
-        // pray($mail);
+
         if(!$mail->Send()) {
-            echo "Mailer Error: " . $mail->ErrorInfo;
+            echo "There was a problem sending your email.\n";
+            echo "Please contact <a href='mailto:{$recipient}?subject=Art%20Scholarship%20Submission%20Error' target=_blank>{$recipient}</a> to confirm that we've received your materials.\n";
+            die();
         } else {
-          echo "Message sent!";
+            echo "Message sent!";
         }
     }
 }
