@@ -75,11 +75,13 @@ class ArtScholarshipForm extends DefaultThorForm
                         mkdir($dir, 0755 , true);
                     }
 
+                    $first  = $this->get_value_from_label('Student\'s First Name');
+                    $last   = $this->get_value_from_label('Student\'s Last Name');
                     if (end($documents) === $document)
                     {
-                        $asset_dest = $dir . $this->get_value_from_label('name') . 'Statement.pdf';
+                        $asset_dest = $dir . $first . $last . 'Statement.pdf';
                     } else {
-                        $asset_dest = $dir . $this->get_value_from_label('name') . 'Portfolio.pdf';
+                        $asset_dest = $dir . $first . $last . 'Portfolio.pdf';
                     }
 
                     //move the file - if windows and the destination exists, unlink it first.
@@ -129,7 +131,6 @@ class ArtScholarshipForm extends DefaultThorForm
                 {
                     $values .= sprintf("\n<strong>%s ::</strong>\t %s\n", $val['label'], $val['value']['name']);
                     $mail->AddAttachment($val['value']['path']);
-
                 } else {
                     $values .= sprintf("\n<strong>%s ::</strong>\t %s\n", $val['label'], $val['value']);
                 }
