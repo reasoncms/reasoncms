@@ -94,10 +94,14 @@ class ArtScholarshipForm extends DefaultThorForm
                     {
                         unlink($asset_dest);
                     }
-                    rename ($document->tmp_full_path, $asset_dest );
-                    chown($asset_dest, REASON_SITE_DIRECTORY_OWNER);
-                    chgrp($asset_dest, REASON_SITE_DIRECTORY_OWNER);
-                    chmod($asset_dest, 0644);
+                    rename ($document->tmp_full_path, $this->statement_dest );
+                    chown($statement_dest, REASON_SITE_DIRECTORY_OWNER);
+                    chgrp($statement_dest, REASON_SITE_DIRECTORY_OWNER);
+                    chmod($statement_dest, 0644);
+                    rename ($document->tmp_full_path, $this->portfolio_dest );
+                    chown($portfolio_dest, REASON_SITE_DIRECTORY_OWNER);
+                    chgrp($portfolio_dest, REASON_SITE_DIRECTORY_OWNER);
+                    chmod($portfolio_dest, 0644);
                 }
 
                 // make sure to ignore the 'asset' field
