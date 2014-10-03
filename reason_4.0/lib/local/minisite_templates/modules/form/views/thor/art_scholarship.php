@@ -45,16 +45,16 @@ class ArtScholarshipForm extends DefaultThorForm
             $this->change_element_type($this->portfolio, 'text');
             $this->set_value($this->portfolio, 'None provided');
         } else {
-            $this->set_value($this->portfolio , $this->portfolio_dest);
+            // $this->set_value($this->portfolio , $this->portfolio_dest);
         }
         if (!$this->get_value($this->teacher_statement))
         {
             $this->change_element_type($this->teacher_statement, 'text');
             $this->set_value($this->teacher_statement, 'None provided');
         } else {
-            $this->set_value($this->teacher_statement, $this->statement_dest);
+            // $this->set_value($this->teacher_statement, $this->statement_dest);
         }
-        // parent::run_error_checks();
+        parent::run_error_checks();
     }
 
     function process() // {{{
@@ -135,6 +135,13 @@ class ArtScholarshipForm extends DefaultThorForm
 
             $this->email_form_data();
             // and, call the regular CM process method
+
+            // give the form builder a something to look at in the database.
+            // will also help others find the files in case there is a problem.
+            $this->change_element_type($this->teacher_statement, 'text');
+            $this->set_value($this->teacher_statement, $this->statement_dest);
+            $this->change_element_type($this->portfolio, 'text');
+            $this->set_value($this->portfolio , $this->portfolio_dest);
             parent::process();
     } // }}}
 
