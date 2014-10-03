@@ -38,25 +38,6 @@ class ArtScholarshipForm extends DefaultThorForm
         $this->change_element_type($personal_statement, 'tiny_mce');
     }
 
-    function run_error_checks()
-    {
-        if (!$this->get_value($this->portfolio))
-        {
-            $this->change_element_type($this->portfolio, 'text');
-            $this->set_value($this->portfolio, 'None provided');
-        } else {
-            // $this->set_value($this->portfolio , $this->portfolio_dest);
-        }
-        if (!$this->get_value($this->teacher_statement))
-        {
-            $this->change_element_type($this->teacher_statement, 'text');
-            $this->set_value($this->teacher_statement, 'None provided');
-        } else {
-            // $this->set_value($this->teacher_statement, $this->statement_dest);
-        }
-        parent::run_error_checks();
-    }
-
     function process() // {{{
     {
             $portfolio = $this->get_element_name_from_label('Portfolio (pdf)');
@@ -139,9 +120,19 @@ class ArtScholarshipForm extends DefaultThorForm
             // give the form builder a something to look at in the database.
             // will also help others find the files in case there is a problem.
             $this->change_element_type($this->teacher_statement, 'text');
-            $this->set_value($this->teacher_statement, $this->statement_dest);
             $this->change_element_type($this->portfolio, 'text');
-            $this->set_value($this->portfolio , $this->portfolio_dest);
+            if (is_null($this->get_value($this->portfolio)))
+            {
+                $this->set_value($this->portfolio, 'None provided');
+            } else {
+                $this->set_value($this->portfolio , $this->portfolio_dest);
+            }
+            if (is_null($this->get_value($this->teacher_statement)))
+            {
+                $this->set_value($this->teacher_statement, 'None provided');
+            } else {
+                $this->set_value($this->teacher_statement, $this->statement_dest);
+            }
             parent::process();
     } // }}}
 
