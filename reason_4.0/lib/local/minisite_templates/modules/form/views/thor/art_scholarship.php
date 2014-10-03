@@ -15,11 +15,16 @@ $GLOBALS[ '_form_view_class_names' ][ basename( __FILE__, '.php') ] = 'ArtSchola
 
 class ArtScholarshipForm extends DefaultThorForm
 {
+    var $statement_dest;
+    var $portfolio_dest;
 
     function on_every_time()
     {
         // $full_asset_path = (ASSET_PATH.$this->_id);
-        $params = array('acceptable_extensions' => array('pdf'), 'acceptable_types' => array('application/pdf'), 'allow_upload_on_edit' => true);
+        $params = array(
+            'acceptable_extensions' => array('pdf'),
+            'acceptable_types' => array('application/pdf'),
+            'allow_upload_on_edit' => true);
 
         $portfolio = $this->get_element_name_from_label('Portfolio (pdf)');
         $this->change_element_type($portfolio, 'ReasonUpload', $params);
@@ -79,9 +84,9 @@ class ArtScholarshipForm extends DefaultThorForm
                     $last   = $this->get_value_from_label('Student\'s Last Name');
                     if (end($documents) === $document)
                     {
-                        $asset_dest = $dir . $first . $last . 'Statement.pdf';
+                        $this->statement_dest = $dir . $first . $last . 'Statement.pdf';
                     } else {
-                        $asset_dest = $dir . $first . $last . 'Portfolio.pdf';
+                        $this->portfolio_dest = $dir . $first . $last . 'Portfolio.pdf';
                     }
 
                     //move the file - if windows and the destination exists, unlink it first.
@@ -127,10 +132,10 @@ class ArtScholarshipForm extends DefaultThorForm
         {
             foreach($email_data as $key => $val)
             {
-                if (is_array($val['value']))
+                if (is_array($val['value'])) // if it's an array, then it's an upload
                 {
                     $values .= sprintf("\n<strong>%s ::</strong>\t %s\n", $val['label'], $val['value']['name']);
-                    $mail->AddAttachment($val['value']['path']);
+                    // $mail->AddAttachment($val['value']['path']);
                 } else {
                     $values .= sprintf("\n<strong>%s ::</strong>\t %s\n", $val['label'], $val['value']);
                 }
@@ -147,6 +152,8 @@ class ArtScholarshipForm extends DefaultThorForm
         $mail->SetFrom("noreply@luther.edu","No Reply");
         // $address = $recipient;
         $mail->AddAddress($recipient);
+        $mail->AddAttachment($this->statement_dest);
+        $mail->AddAttachment($this->portfolio_dest);
         $mail->Subject    = $model->get_form_name() . '-' . $this->get_value_from_label('First Name') . $this->get_value_from_label('Last Name');
         $mail->AltBody    = $txt_body;
         $mail->MsgHTML($html_body);
