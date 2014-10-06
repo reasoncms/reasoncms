@@ -22,7 +22,6 @@ class ArtScholarshipForm extends DefaultThorForm
 
     function on_every_time()
     {
-        // $full_asset_path = (ASSET_PATH.$this->_id);
         $params = array(
             'acceptable_extensions' => array('pdf'),
             'acceptable_types' => array('application/pdf'),
@@ -31,23 +30,22 @@ class ArtScholarshipForm extends DefaultThorForm
         $this->portfolio = $this->get_element_name_from_label('Portfolio (pdf)');
         $this->change_element_type($this->portfolio, 'ReasonUpload', $params);
 
-        $this->teacher_statement = $this->get_element_name_from_label('Letter of Recommendation (pdf)');
+        $this->teacher_statement = $this->get_element_name_from_label('Teacher\'s Statement (pdf)');
         $this->change_element_type($this->teacher_statement, 'ReasonUpload', $params);
 
-        $personal_statement = $this->get_element_name_from_label('Please insert applicant\'s personal statement here: (student only)');
+        $personal_statement = $this->get_element_name_from_label('Personal Statement');
         $this->change_element_type($personal_statement, 'tiny_mce');
     }
 
     function process() // {{{
     {
             $portfolio = $this->get_element_name_from_label('Portfolio (pdf)');
-            $teacher_statement = $this->get_element_name_from_label('Letter of Recommendation (pdf)');
+            $teacher_statement = $this->get_element_name_from_label('Teacher\'s Statement (pdf)');
             $documents = array();
 
             array_push($documents, $this->get_element($portfolio), $this->get_element($teacher_statement));
-            // $documents = $this->get_element($portfolio_element_name);
-            // see if document was uploaded successfully
 
+            // see if document was uploaded successfully
             foreach ($documents as $document) {
                 if(($document->state == 'received' OR $document->state == 'pending') AND file_exists( $document->tmp_full_path))
                 {
@@ -82,8 +80,8 @@ class ArtScholarshipForm extends DefaultThorForm
                         mkdir($dir, 0755 , true);
                     }
 
-                    $first  = $this->get_value_from_label('Student\'s First Name');
-                    $last   = $this->get_value_from_label('Student\'s Last Name');
+                    $first  = $this->get_value_from_label('First Name');
+                    $last   = $this->get_value_from_label('Last Name');
                     if (end($documents) === $document)
                     {
                         $this->statement_dest = $dir . $first . $last . 'Statement.pdf';
@@ -108,8 +106,7 @@ class ArtScholarshipForm extends DefaultThorForm
                     chmod($this->portfolio_dest, 0644);
                 }
 
-                // make sure to ignore the 'asset' field
-                // $this->form->_process_ignore[] = 'upload_file';
+                // make sure to ignore the 'pdf' fields
                 $this->_process_ignore[] = $this->portfolio;
                 $this->_process_ignore[] = $this->teacher_statement;
             }
@@ -150,10 +147,9 @@ class ArtScholarshipForm extends DefaultThorForm
            }
         }
 
-        // $subject = 'Response to Form: ' . $model->get_form_name();
         $heading = "<h2><strong>".$model->get_form_name()."</strong></h2>";
         $email_data = $model->get_values_for_email();
-        // pray($email_data);
+
         $values = "\n";
         if ($model->should_email_data())
         {
@@ -162,7 +158,6 @@ class ArtScholarshipForm extends DefaultThorForm
                 if (is_array($val['value'])) // if it's an array, then it's an upload
                 {
                     $values .= sprintf("\n<strong>%s ::</strong>\t %s\n", $val['label'], $val['value']['name']);
-                    // $mail->AddAttachment($val['value']['path']);
                 } else {
                     $values .= sprintf("\n<strong>%s ::</strong>\t %s\n", $val['label'], $val['value']);
                 }
@@ -177,18 +172,16 @@ class ArtScholarshipForm extends DefaultThorForm
         $mail->IsSendmail();
         $mail->AddReplyTo("noreply@luther.edu","No Reply");
         $mail->SetFrom("noreply@luther.edu","No Reply");
-        // $address = $recipient;
         $mail->AddAddress($recipient);
         $mail->AddAttachment($this->statement_dest);
         $mail->AddAttachment($this->portfolio_dest);
-        $mail->Subject    = $model->get_form_name() . '-' . $this->get_value_from_label('First Name') . $this->get_value_from_label('Last Name');
+        $mail->Subject    = $model->get_form_name() . '-' . $this->get_value_from_label('First Name') . ' ' . $this->get_value_from_label('Last Name');
         $mail->AltBody    = $txt_body;
         $mail->MsgHTML($html_body);
 
         if(!$mail->Send()) {
             echo "There was a problem sending your email.\n";
             echo "Please contact <a href='mailto:{$recipient}?subject=Art%20Scholarship%20Submission%20Error' target=_blank>{$recipient}</a> to confirm that we've received your materials.\n";
-            // die();
         } else {
             echo "Message sent!";
         }
