@@ -40,7 +40,7 @@ class ArtScholarshipForm extends DefaultThorForm
     function process() // {{{
     {
             $portfolio = $this->get_element_name_from_label('Portfolio (pdf)');
-            $teacher_statement = $this->get_element_name_from_label('Teacher\'s statement (pdf)');
+            $teacher_statement = $this->get_element_name_from_label('Teacher\'s Statement (pdf)');
             $documents = array();
 
             array_push($documents, $this->get_element($portfolio), $this->get_element($teacher_statement));
