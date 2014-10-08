@@ -139,13 +139,13 @@
 
 		.search {
 			/*display: none;*/
-			margin-bottom: rem-calc(64);
+			/*margin-bottom: rem-calc(64);*/
+			margin-bottom: rem-calc(32);
 			background: inherit;
 
 			@media #{$medium-up} {
 				@include grid-column(16);
 			}
-
 			form {
 				.search {
 					margin-bottom: 0;
@@ -161,6 +161,9 @@
 					    $float:left
 					  );
 				}
+			}
+			.otherActions {
+				@include grid-column($columns:16);
 			}
 		}
 
