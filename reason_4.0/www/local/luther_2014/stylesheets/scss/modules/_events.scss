@@ -144,8 +144,12 @@
 			background: inherit;
 
 			@media #{$medium-up} {
-				@include grid-column(16);
+				@include grid-column(
+				  $columns:16,
+				  $float:inherit
+				);
 			}
+			float: inherit;
 			form {
 				.search {
 					margin-bottom: 0;
@@ -163,7 +167,10 @@
 				}
 			}
 			.otherActions {
-				@include grid-column($columns:16);
+				@include grid-column(
+				   $columns:16,
+				   $float:inherit
+				);
 			}
 		}
 
