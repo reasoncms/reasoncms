@@ -641,6 +641,33 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'num_to_display' => 0,
 		)
 	),
+	'tagboard_full' =>array(
+		'pre_main_head' => '',
+		'main' => array(
+			'module' => 'tagboard',
+		),
+		'call_to_action_blurb' => '',
+		'pre_sidebar' => 'b',
+		'pre_sidebar_2' => '',
+		'sidebar' => '',
+		'sidebar_2' =>'',
+		'post_sidebar' => '',
+		'navigation' => '',
+		'sub_nav' => '',
+		'contact_blurb' => '',		
+	),
+	'tagboard_nav' =>array(
+		'pre_main_head' => '',
+		'main' => array(
+				'module' => 'tagboard',
+		),
+		'call_to_action_blurb' => '',
+		'pre_sidebar' => 'b',
+		'pre_sidebar_2' => '',
+		'sidebar' => '',
+		'sidebar_2' =>'',
+		'post_sidebar' => '',
+	),
 	'top_image' => array(
 		'post_main_head' => array(
 			'module' => 'image_sidebar',
