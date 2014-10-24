@@ -137,12 +137,41 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 			{
 				$list = $this->passed_vars['items_by_section'][$section_id];
 				if($do_section_headings && array_key_exists($section_id, $this->passed_vars['sections']))
-				{		
-					$markup_string .= '<li class="section">'."\n";
-					$markup_string .= $this->get_section_heading_markup($section_id);
-					$markup_string .= $this->get_list_markup_for_these_items(array_keys($list));
-					$markup_string .= $this->get_section_footer_markup($section_id);
-					$markup_string .='</li>'."\n";
+				{	
+					if(!empty($this->passed_vars['current_filters'])) {
+						//if there are filters specified (assuming they are category filters) we want to filter
+						//by those categories and remove any posts w/o those categories
+						$filters = array();
+						$filList = array();
+						foreach($this->passed_vars['current_filters'] as $filterkey => $entities)
+						{
+							foreach($entities as $e)
+							{
+								//add each category id in the filter to a list of filters
+								array_push($filters,$e->_id);
+							}
+						}
+						foreach($list as $item){   //each item is a post here
+							$categories = $item->get_left_relationship('news_to_category');//get all of the categories for that post
+							foreach($categories as $cat){
+								if(in_array($cat->_id,$filters)){
+									//if the id of one of the posts categories is in the list of filters, we add it to our list of
+									//filtered posts
+									$key = array_search($item,$list);
+									$filList[$key]=$item;
+								}
+							}
+						}
+						$list = $filList;
+					}
+					if(sizeof($list)!=0){
+						//we only generate a section if it has posts
+						$markup_string .= '<li class="section">'."\n";
+						$markup_string .= $this->get_section_heading_markup($section_id);
+						$markup_string .= $this->get_list_markup_for_these_items(array_keys($list));
+						$markup_string .= $this->get_section_footer_markup($section_id);
+						$markup_string .='</li>'."\n";
+					}
 				}
 				elseif(array_key_exists($section_id, $this->passed_vars['items_by_section']))
 				{
@@ -432,9 +461,9 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 			$url = $this->passed_vars['links_to_sections'][$section_id];
 			
 			if(!empty($url))
-				$markup_string .= '<h3><a href="'.$url.'">'.$section_entity->get_value('name').'</a></h3>'."\n";
+				$markup_string .= '<h2><a href="'.$url.'">'.$section_entity->get_value('name').'</a></h2>'."\n";
 			else
-				$markup_string .= '<h3>'.$section_entity->get_value('name').'</h3>'."\n";
+				$markup_string .= '<h2>'.$section_entity->get_value('name').'</h2>'."\n";
 			
 			$description = $section_entity->get_value('description');
 			if(!empty($description))

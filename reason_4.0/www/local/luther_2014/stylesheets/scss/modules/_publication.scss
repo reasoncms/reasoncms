@@ -104,13 +104,14 @@
 
 	/* POST INDEX (list of posts) */
 	.posts {
-		margin: 0 0 $column-gutter;
+		//margin: 0 0 $column-gutter;
+		margin: 0 0 $column-gutter/2;
 		@include clearfix;
 	}
 
 	.post {
 		border-bottom: 1px dotted $lc-grey;
-		padding: $column-gutter 0;
+		padding: $column-gutter/2 0;
 		@include clearfix;
 
 
@@ -680,7 +681,7 @@
 	.issueBlurbs + .sections {
 		margin-left: 0;
 
-		.sectionInfo h3 a {
+		.sectionInfo h2 a {
 			color: $body-font-color;
 		}
 
@@ -688,4 +689,22 @@
 			margin-bottom: $column-gutter;
 		}
 	}
+	
+	// News Sections
+	.section{
+		border-bottom: 1px dotted grey;
+		margin-bottom: $column-gutter * 1.5;
+		
+		.sectionFoot{
+			margin-bottom: $column-gutter/2;
+		}
+		.sectionInfo h2 a {
+			color: $body-font-color;	
+		}
+	}
+	ul.sections > :last-child {
+		margin-bottom: $column-gutter/2; 
+	}
 }
+
+//
