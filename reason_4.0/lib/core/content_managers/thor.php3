@@ -33,14 +33,15 @@
 		function init_head_items()
 		{
 			if (USE_THOR_VERSION == THOR_VERSION_JS_OLD)
-            {
-                $this->head_items->add_javascript(JQUERY_UI_URL, true);
-                $this->head_items->add_javascript(JQUERY_URL, true);
-                $this->head_items->add_stylesheet(JQUERY_UI_CSS_URL);        
-                $this->head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH . 'formbuilder/js/formbuilder_translation.js');
-                $this->head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH . 'formbuilder/js/jquery.formbuilder.js');
-                $this->head_items->add_stylesheet(REASON_PACKAGE_HTTP_BASE_PATH . 'formbuilder/css/jquery.formbuilder.css');
-            }
+			{
+				$this->head_items->add_javascript(JQUERY_UI_URL, true);
+				$this->head_items->add_javascript(JQUERY_URL, true);
+				$this->head_items->add_stylesheet(JQUERY_UI_CSS_URL);        
+				$this->head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH . 'formbuilder/js/formbuilder_translation.js');
+				$this->head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH . 'formbuilder/js/jquery.formbuilder.js');
+				$this->head_items->add_stylesheet(REASON_PACKAGE_HTTP_BASE_PATH . 'formbuilder/css/jquery.formbuilder.css');
+			}
+			$this->head_items->add_stylesheet(REASON_ADMIN_CSS_DIRECTORY . 'content_managers/stacked_box.css');
 			$this->head_items->add_stylesheet(REASON_ADMIN_CSS_DIRECTORY . 'content_managers/form.css');
 		}
 
@@ -52,23 +53,22 @@
 
 			$this->add_element( 'thor_comment', 'hidden');
 		
-			$this->set_comments( 'email_of_recipient', form_comment('When a user submits the form, the form\'s information will be sent here. You are encouraged to use '.SHORT_ORGANIZATION_NAME.' netids instead of complete '.SHORT_ORGANIZATION_NAME.' email addresses. Multiple addresses or netids may be separated by commas. This field is required if this form does not save results to a database.') );
-			$this->set_comments( 'thank_you_message', form_comment('After a user submits the form, this message will be displayed on the generic confirmation page.') );
-			$this->set_comments( 'display_return_link', form_comment('This option toggles whether the thank you message page displays a link to return to the form or not.') );
-			$this->set_comments( 'show_submitted_data', form_comment('This option allows you to display a copy of the submitted information on the thank you page.'));
-			$this->set_comments( 'submission_limit', form_comment('To limit the number of submissions to this form, make sure the form is saving its data in a database and enter a maximum number of submissions here. The form will stop accepting submissions when this limit is reached. A value of 0 indicates no limit.'));
+			$this->set_comments( 'email_of_recipient', form_comment('When a user submits the form, their responses will be sent here. You are encouraged to use '.SHORT_ORGANIZATION_NAME.' usernames instead of complete '.SHORT_ORGANIZATION_NAME.' email addresses. Multiple addresses or usernames may be separated by commas. This field is required if this form does not save responses in Reason.') );
+			$this->set_comments( 'submission_limit', form_comment('To limit the number of submissions to this form, make sure the form is saving its data in Reason and enter a maximum number of submissions here. The form will stop accepting submissions when this limit is reached. A value of 0 indicates no limit.'));
 			$this->set_comments( 'open_date', form_comment('If this value is set, the form will not accept submissions before this date and time.'));
 			$this->set_comments( 'close_date', form_comment('If this value is set, the form will not accept submissions after this date and time.'));
 	
 			$this->set_display_name( 'email_of_recipient', 'Email of Recipient' );
-			$this->set_display_name( 'thor_content', 'Form Content' );
-			$this->set_display_name( 'db_flag', 'Save to Database?' );
-			$this->set_display_name( 'display_return_link', 'Display Return Link?' );
+			$this->set_display_name( 'thor_content', 'Form Fields' );
+			$this->set_display_name( 'db_flag', 'Form Response Options' );
+			$this->set_display_name( 'display_return_link', 'Display a "Return to form" link after the Thank You Note?' );
+			$this->set_display_name( 'show_submitted_data', 'Display the submitted form data after the Thank You Note?' );
 
 			$this->add_required('db_flag');
-			$this->change_element_type('db_flag', 'radio_no_sort', array('options'=>array('no'=>'No <span class="smallText">(Submissions will just be emailed; 
-data will not be stored on the server)</span>','yes'=>'Yes 
-<span class="smallText">(Submissions will be stored on the server and can be exported as a spreadsheet)</span>')));
+			$this->change_element_type('db_flag', 'radio_no_sort', array('options'=> array(
+				'yes'=>'Save form responses in Reason <span class="smallText">(allows you to browse and export form data)</span>',
+				'no'=>'Only email form responses to the recipient(s) listed below; do not save in Reason.',
+					)));
 			$this->change_element_type( 'thank_you_message' , html_editor_name($this->admin_page->site_id) , html_editor_params($this->admin_page->site_id, $this->admin_page->user_id) );
 			
 			$db_flag = $this->get_value('db_flag');
@@ -82,9 +82,18 @@ data will not be stored on the server)</span>','yes'=>'Yes
 			'editable'=>'Autofill (Editable) <span class="smallText">-- fill in visitor information and allow them to alter that information</span>',
 			'not_editable'=>'Autofill (Not Editable) <span class="smallText">-- fill in the visitor information and keep them from altering that information</span>')));
 			$this->set_display_name('magic_string_autofill','Autofill Options');
-			$this->add_element('magic_string_autofill_note','comment',array('text'=>'<h3>Autofilling of Fields</h3><p>If you choose one of the "Autofill" options below, the will form automatically fill in personal information for the person submitting the form. The special field names that can be autofilled are: "Your Full Name", "Your Name", "Your First Name", "Your Last Name", "Your Department", "Your Email", "Your Home Phone", "Your Work Phone", and "Your Title".</p><p><strong>Note: The autofill feature will only work if the visitor is logged in.</strong></p>') );
-			$this->add_element('thank_you_note','comment',array('text'=>'<h3>Thank You Note</h3><p>This information is displayed after someone submits the form.</p>') );
+			$this->add_element('magic_string_autofill_note','comment',array('text'=>
+				'<h3>Autofilling of Fields</h3><p>If you choose one of the "Autofill" options below, 
+				the form will automatically fill in personal information for the person submitting the form. 
+				The special field names that can be autofilled are: 
+				"Your Full Name", "Your Name", "Your First Name", "Your Last Name", "Your Department", 
+				"Your Email", "Your Home Phone", "Your Work Phone", and "Your Title".</p>
+				<p><strong>Note: The autofill feature will only work if the visitor is logged in.</strong>
+				To require logging in, associate a Group with this form or the page the form is placed on.</p>') );
+			$this->add_element('thank_you_note','comment',array('text'=>'<h3>Thank You Note</h3>') );
+			$this->set_display_name('thank_you_message','This information is displayed after someone submits the form:');
 			$this->add_element('limiting_note','comment',array('text'=>'<h3>Limiting and Scheduling</h3>') );
+			$this->set_element_properties('submission_limit', array('size'=>'4'));
 			// echo "<HR>using thor version...[" . USE_THOR_VERSION . "]<hr>";
 			if (USE_THOR_VERSION == THOR_VERSION_FLASH)
 			{
@@ -179,9 +188,9 @@ data will not be stored on the server)</span>','yes'=>'Yes
 			$thor_view_value = $form_entity->get_value('thor_view');
 			$this->change_element_type('thor_view', 'select', array('options' => $options));
 			
-			$comment_str = form_comment('Enter the fully qualified path <strong>OR</strong> a relative path from your core / local directory to a thor_view file');
-			$comment_str .= form_comment('Note that if you enter a path here, it will clear any view selected above.');
-			$this->add_element('thor_view_custom','text', array('display_name' => 'Custom Thor View Path', 'comments' => $comment_str));
+			$comment_str = form_comment('Enter the fully qualified path <strong>OR</strong> a relative path 
+				from your core / local directory to a thor_view file. Paths entered here will clear any view selected above.');
+			$this->add_element('thor_view_custom','text', array('display_name' => 'Custom Thor View Path', 'size' => '75', 'comments' => $comment_str));
 			if (!empty($thor_view_value) && !isset($options[$thor_view_value]))
 			$this->set_value('thor_view_custom', $thor_view_value);
 		}
