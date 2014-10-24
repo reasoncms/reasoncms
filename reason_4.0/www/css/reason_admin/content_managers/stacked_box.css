@@ -1,0 +1,23 @@
+/* This is a general stylesheet for content managers that have been converted to stacked-box Thor forms */
+
+div.editor div.formElement {
+	margin-bottom: 1.5em;	
+}
+
+div.editor div.formElement div.words {
+	margin-bottom: 0.5em;
+	color: #444;
+}
+
+div.editor div.formElement div.element {
+	margin-left: 1em;	
+}
+
+div.editor div.formElement div.formComment {
+	margin-top: 0.5em;
+	max-width: 45em;	
+}
+
+div.editor h3 {
+	margin-top: 1em;
+}
