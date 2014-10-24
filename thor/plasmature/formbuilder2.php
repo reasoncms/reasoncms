@@ -144,7 +144,7 @@ class formbuilder2Type extends textareaType
 	}
 	
 	function xml_to_json($xml) {
-		// var_dump("XML FROM DB", $xml);
+		// echo "<PRE>"; var_dump("XML FROM DB", $xml); echo "</PRE>";
 		$rootXml = $xml == null ? null : simplexml_load_string($xml);
 
 		// $maxOptionIdUsedInDB = 0;
@@ -160,6 +160,14 @@ class formbuilder2Type extends textareaType
 				// echo "BEFORE: id was [" . (string)$childEl->attributes()->{'id'} . "]";
 				foreach ($this->mainFieldTranslators as $translator) { $translator->translateAndAttachToJson($jsonObj, $childEl); }
 				// echo "...AFTER TRANSLATORS: id is [" . $jsonObj["cid"] . "]<P>";
+
+				// Mark found this bug - pre-existing forms with text comments were complaining about missing labels
+				// on text comments. When retrieving from the db let's explicitly add a label to match what Formbuilder uses
+				// so that Reason saving works ok. --tjf 20141024
+				if ($jsonFieldName == "text_comment" && $jsonObj["label"] == "") {
+					$jsonObj["label"] = "Text Comment";
+				}
+
 
 				if (isset($this->optionMap[$childEl->getName()])) {
 					$expectedChildNodeName = $this->optionMap[$childEl->getName()];
