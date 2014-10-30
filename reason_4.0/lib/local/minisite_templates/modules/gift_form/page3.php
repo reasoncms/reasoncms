@@ -231,18 +231,18 @@ class GiftPageThreeForm extends FormStep {
         $txt = '<div id="reviewGiftOverview">' . "\n";
 
         $txt .= '<p class="printConfirm">Print this confirmation for your records.</p>' . "\n";
-        $txt .= '<h3>Thank you for your gift to Luther College</h3>';
+        $txt .= '<h3>Thank you for your gift to Luther College</h3>' . "\n";
         if (reason_unique_name_exists('giving_form_thank_you_blurb'))
-            $txt .= '<p>' . get_text_blurb_content('giving_form_thank_you_blurb') . '</p>';
+            $txt .= get_text_blurb_content('giving_form_thank_you_blurb') . "\n";
         if ((intval($this->controller->get('gift_amount')) <= 100) && !$this->get_value('mail_receipt')) {
             if (reason_unique_name_exists('giving_form_100_dollars')){
-                $txt .= '<p>' . get_text_blurb_content('giving_form_100_dollars') . '</p>';
+                $txt .= get_text_blurb_content('giving_form_100_dollars') . "\n";
 			} else {
 				$txt .= '<p>This e-receipt will serve as confirmation of your online gift to Luther College. This e-receipt gives us
 						the opportunity to continue to reduce our paper usage and helps us to achieve our sustainability goals. Thank
-						you for doing your part!</p>
-						<p>Of course, if you\'d prefer to receive a paper receipt, we can take care of that for you.
-						Simply email Nicole Waskow at waskni01@luther.edu and we will send one to you via US Mail.</p>';
+						you for doing your part!</p>' . "\n";
+                $txt .= '<p>Of course, if you\'d prefer to receive a paper receipt, we can take care of that for you.
+						Simply email Nicole Waskow at waskni01@luther.edu and we will send one to you via US Mail.</p>' . "\n";
 			}
         }
         $txt .= '<p>Luther College is, for tax deduction purposes, a 501(c)(3) organization.</p>' . "\n";
@@ -250,7 +250,7 @@ class GiftPageThreeForm extends FormStep {
 			the online giving form, please contact the Luther College Development Office.</p>' . "\n";
         $txt .= '<ul>' . "\n";
         $txt .= '<li><strong>Date:</strong> ' . date($this->date_format) . '</li>' . "\n";
-        $txt .= '<h4>Your Information</h4>';
+        $txt .= '<h4>Your Information</h4>' . "\n";
         $txt .= '<li><strong>Name:</strong> ' . $this->controller->get('first_name') . ' ' . $this->controller->get('last_name') . '</li>' . "\n";
         if (($this->controller->get('spouse_first_name') != 'First') || ($this->controller->get('spouse_last_name') != 'Last')) {
             $txt .= '<li><strong>Spouse Name:</strong> ';
@@ -261,27 +261,23 @@ class GiftPageThreeForm extends FormStep {
         if ($this->controller->get('spouse_last_name') != 'Last') {
             $txt .= $this->controller->get('spouse_last_name') . '</li>' . "\n";
         }
-        $txt .= '<li><strong>' . $this->controller->get('address_type') . ' Address:</strong>' . "\n" . $this->controller->get('street_address') . "\n" . $this->controller->get('city') . ' ' . $this->controller->get('state_province') . ' ' . $this->controller->get('zip') . "\n" . $this->controller->get('country') . '</li>' . "\n";
+        $txt .= '<li>'."\n".'<strong>' . $this->controller->get('address_type') . ' Address:</strong>' . "\n" . $this->controller->get('street_address') . "\n" . $this->controller->get('city') . ' ' . $this->controller->get('state_province') . ' ' . $this->controller->get('zip') . "\n" . $this->controller->get('country') . "\n" .'</li>' . "\n";
         $txt .= '<li><strong>' . $this->controller->get('phone_type') . ' Phone:</strong> ' . $this->controller->get('phone') . '</li>' . "\n";
         $txt .= '<li><strong>E-mail:</strong> ' . $this->controller->get('email') . '</li>' . "\n";
         $txt .= '<li><strong>Luther Affiliation:</strong> ';
-        foreach ($this->controller->get('luther_affiliation') as $affiliation) {
-            $txt .= $affiliation . ', ';
-        }
+            $txt .= implode(', ', $this->controller->get('luther_affiliation')) . '</li>' . "\n";
         if ($this->controller->get('class_year')) {
-            $txt .= ' class of ' . $this->controller->get('class_year') . '</li>' . "\n";
-        } else {
-            $txt .= '</li>' . "\n";
+            $txt .= '<li><strong>Class:</strong>' . $this->controller->get('class_year') . '</li>' . "\n";
         }
         foreach ($this->controller->get('estate_plans') as $plan) {
-            if ($this->controller->get('estate_plans') == 'have_estate_plans') {
-            $txt .= '<li><strong>Estate Plans:</strong> I\'ve included Luther in my estate plans</li>' . "\n";
+            if ($plan == 'have_estate_plans') {
+                $txt .= '<li><strong>Estate Plans:</strong> I\'ve included Luther in my estate plans</li>' . "\n";
             }
-            if ($this->controller->get('estate_plans') == 'send_estate_info') {
+            if ($plan == 'send_estate_info') {
                 $txt .= '<li><strong>Estate Information:</strong> I would like information about including Luther in my estate planning</li>' . "\n";
             }
         }
-        $txt .= '<h4>Gift Details</h4>';
+        $txt .= '<h4>Gift Details</h4>' . "\n";
         if ($this->controller->get('installment_type') == 'Onetime') {
             $txt .= '<li><strong>One time gift:</strong> $' . number_format($this->controller->get('gift_amount'), 2, '.', ',') . '</li>' . "\n";
             if ($this->controller->get('mail_receipt') == true)
@@ -300,8 +296,8 @@ class GiftPageThreeForm extends FormStep {
             $txt .= '<li><strong>This is a payment on an existing pledge:</strong> ' . strip_tags($this->controller->get('existing_pledge')) . '</li>' . "\n";
         }
         if (($this->controller->get('annual_fund') || ($this->controller->get('specific_fund')))) {
-            $txt .= '<li><strong>Designation</strong> ' . "\n";
-            $txt .= '<ul>';
+            $txt .= '<li>'."\n".'<strong>Designation</strong> ' . "\n";
+            $txt .= '<ul>' . "\n";
             if ($this->controller->get('annual_fund')) {
                 $txt .= '<li>The Annual Fund</li>' . "\n";
             }
@@ -329,13 +325,13 @@ class GiftPageThreeForm extends FormStep {
                 $txt .= '</li>' . "\n";
             }
             if ($this->controller->get('other_designation_details')) {
-                $txt .= '<li>Comments/Other Designation: ' . strip_tags($this->controller->get('other_designation_details')) . "\n";
+                $txt .= '<li>Comments/Other Designation: ' . strip_tags($this->controller->get('other_designation_details')) . '</li>' . "\n";
             }
-            $txt .= '</ul>'; // Designated specifics end
-            $txt .= '</li>'; //Designated giving end
+            $txt .= '</ul>' . "\n"; // Designated specifics end
+            $txt .= '</li>' . "\n"; //Designated giving end
         }
         if ($this->controller->get('gift_prompt')) {
-            $txt .= '<li><strong>Gift Prompt:</strong> ' . strip_tags($this->controller->get('gift_prompt')) . "\n";
+            $txt .= '<li><strong>Gift Prompt:</strong> ' . strip_tags($this->controller->get('gift_prompt')) . '</li>' ."\n";
         }
         if ($this->controller->get('dedication') && $this->controller->get('dedication_details')) {
             $txt .= '<li><strong>Dedication:</strong> This gift is in ';
@@ -360,7 +356,7 @@ class GiftPageThreeForm extends FormStep {
             } else {
                 $insert_txt = '';
             }
-            $txt .= '<li><strong>Transaction Notifications:</strong> You will ' . $insert_txt . 'receive email notifications when installments occur on this gift</li>';
+            $txt .= '<li><strong>Transaction Notifications:</strong> You will ' . $insert_txt . 'receive email notifications when installments occur on this gift</li>' . "\n";
         }
         $txt .= '</ul>' . "\n";
         $txt .= '</div>' . "\n";
