@@ -39,8 +39,8 @@
 			$params = array('authenticator' => $authenticator,
 					'max_file_size' => $this->get_actual_max_upload_size(),
 					'head_items' => &$this->head_items,
-					'acceptable_extensions' => array("zip", "tar"),
-					'acceptable_types' => array("application/zip", "application/x-tar"),
+					'acceptable_extensions' => array("zip"),
+					'acceptable_types' => array("application/zip"),
 					'file_display_size' => $this->get_value('file_size') * 1024,
 					'file_display_name' => $this->get_value('file_name'));
 			if (!empty($existing_asset_type)) {
@@ -53,7 +53,7 @@
 			$asset = $this->get_element('virtual_tour');
 				
 			$this->set_comments( 'description', form_comment('A description of the virtual tour.') );
-			$this->set_comments ( 'virtual_tour', form_comment('Your zip or tar file name may be modified if it is has already been taken, or includes spaces or unusual characters.'));
+			$this->set_comments ( 'virtual_tour', form_comment('Your zip file name may be modified if it is has already been taken, or includes spaces or unusual characters.'));
 				
 			$this->add_required( 'description' );
 			
@@ -76,7 +76,7 @@
 		 * - if state is "pending" or "ready" (new) hide the field
 		 *
 		 */
-		function pre_error_check_actions() // {{{
+		function pre_error_check_actions()
 		{
 			$asset = $this->get_element('virtual_tour');
 				
@@ -93,7 +93,7 @@
 			// hide the file_name field unless it is an existing valid asset
 			if ($asset->state != 'existing') $this->change_element_type('file_name', 'hidden');
 			else $this->add_required('file_name');
-		} // }}}
+		}
 		
 		/**
 		 * @access private
@@ -137,7 +137,7 @@
 			return $filename;
 		}
 		
-		function run_error_checks() // {{{
+		function run_error_checks()
 		{
 			// check to see if an asset has been uploaded
 			$asset = $this->get_element( 'virtual_tour' );
@@ -146,9 +146,9 @@
 				$this->set_error( 'virtual_tour', 'You must upload a file' );
 			}
 				
-		} // }}}
+		}
 		
-		function post_error_check_actions() // {{{
+		function post_error_check_actions()
 		{
 			// display the URL of the document or a warning if no doc dir is set up.
 				
@@ -174,7 +174,7 @@
 				}
 				$this->add_element( 'doc_url', 'comment', array( 'text' => $text  ) );
 			}
-		} // }}}
+		}
 		
 		function process()
 		{
@@ -191,7 +191,6 @@
 				{
 					$type_to_suffix = array(
 							'application/zip' => 'zip',
-							'application/x-tar' => 'tar',
 					);
 					 
 					$type = $document->get_mime_type();
@@ -229,8 +228,7 @@
 				}
 				rename ($document->tmp_full_path, $asset_dest );
 				
-				//$this->unzip_file($asset_dest, $suffix);
-				$this->delete_previous_tour(ASSET_PATH.'virtual_tours/'.$this->_id);
+				$this->delete_previous_tour(REASON_PATH . 'data/images/virtual_tours/' . $this->_id);
 			}
 			
 			// make sure to ignore the 'virtual_tour' field
@@ -259,36 +257,6 @@
 			return $da->get($this->get_value( 'site_id' ), $this->get_value( 'type_id' ), 'asset_access_permissions_to_group');
 		}
 		
-		protected function unzip_file($filename, $suffix)
-		// Extracts contents of a virtual tour from zip file
-		{
-			// first delete all directories and files if they exist
-			$this->deleteDir(ASSET_PATH.$this->_id);
-
-			$phar = new PharData($filename);
-			if (!$phar->extractTo(ASSET_PATH.$this->_id) === TRUE)
-			{
-				trigger_error('could not extract virtual tour: ' . $filename);
-			}
-			
-			// delete the tar/zip file once it has been extracted
-			Phar::unlinkArchive(ASSET_PATH.$this->_id.'.'.$suffix);
-			//unlink(ASSET_PATH.$this->_id.'.'.$suffix);*/
-			
-			/*$zip = new ZipArchive();
-			$res = $zip->open($filename);
-			if ($res === TRUE)
-			{
-				$zip->extractTo(ASSET_PATH.$this->_id);
-				$zip->close();
-				unlink(ASSET_PATH.$this->_id.'.'.$suffix);
-			}
-			else
-			{
-				trigger_error('could not unzip virtual tour: ' . $filename);	
-			}*/
-		}
-		
 		public static function delete_previous_tour($dirPath)
 		{
 			if (is_dir($dirPath))
@@ -302,13 +270,11 @@
 				{
 					if (is_dir($file))
 					{
-//echo '<br>calling deleteDir: '.$file;
 						self::deleteDir($file);
 					}
 					else 
 					{
 						unlink($file);
-//echo '<br>deleting file: '.$file;
 					}
 				}
 				$dotFiles = glob($dirPath . '.*', GLOB_MARK);
@@ -317,11 +283,9 @@
 					if (!is_dir($dotFile))
 					{
 						unlink($dotFile);
-//echo '<br>deleting dotfile: '.$file;
 					}
 				}
 				rmdir($dirPath);
-//echo '<br>****rmdir: '.$dirPath;
 			}
 		}
 		
