@@ -23,7 +23,7 @@ $(document).ready(function() {
     $("input[name='deliver_to']").change(function(){
         showDeliveryInfo();
     });
-        
+
     toggle_billing_address();
     $("input[name='billing_address']").change(function(){
         toggle_billing_address()
@@ -36,6 +36,30 @@ $(document).ready(function() {
     // Set the initial state for the Country field
     $("select#state_provinceElement").change();
     $("#countryItem").hide();
+
+    var tablesorteropts = {
+      theme: 'blue',
+      widthFixed: false,
+      sortList: [[0,0]],
+      widgets : ["zebra", "columns", "filter", "resizeable"],
+      widgetOptions : {
+        columns : [ "primary", "secondary", "tertiary" ],
+        columns_thead : true,
+        filter_childRows : false,
+        filter_columnFilters : true,
+        filter_cssFilter : "tablesorter-filter",
+        filter_formatter : null,
+        filter_hideFilters : false,
+        filter_ignoreCase : true,
+        filter_liveSearch : true,
+        filter_searchDelay : 300,
+        filter_serversideFiltering: false,
+        filter_startsWith : false,
+        filter_useParsedData : false
+      }
+    };
+
+    $("#" + table_id).tablesorter(tablesorteropts);
 });
 
 function hide_field(element)
@@ -125,23 +149,23 @@ function toggle_billing_address() {
 }
 function toggle_country_field(stateElementSelector, countryItemSelector)
 {
-	// Show/hide and populate Country field based on state/province choice
-	// If not US or Canada, show the Country field
-	if ($(stateElementSelector).val() == "XX")
-	{
-   	    $(countryItemSelector + " select").val('');
-    	$("#countryItem").show();
-   		$("#billingcountryItem").show();
-	}
-	// If US or Canada, populate Country but hide it
-	else
-	{
-	    //$(countryItemSelector).hide();
-	    // If a Canadian province...
-	    if (/^(?:AB|BC|MB|NB|NL|NT|NS|NU|ON|PE|QC|SK|YT)$/.test($(stateElementSelector).val()))
-		$(countryItemSelector + " select").val("CAN");
-	    // If anything else (other than unset)
-	    else if ($(stateElementSelector).val() != "")
-		$(countryItemSelector + " select").val('USA');
-	}
+    // Show/hide and populate Country field based on state/province choice
+    // If not US or Canada, show the Country field
+    if ($(stateElementSelector).val() == "XX")
+    {
+        $(countryItemSelector + " select").val('');
+        $("#countryItem").show();
+        $("#billingcountryItem").show();
+    }
+    // If US or Canada, populate Country but hide it
+    else
+    {
+        //$(countryItemSelector).hide();
+        // If a Canadian province...
+        if (/^(?:AB|BC|MB|NB|NL|NT|NS|NU|ON|PE|QC|SK|YT)$/.test($(stateElementSelector).val()))
+        $(countryItemSelector + " select").val("CAN");
+        // If anything else (other than unset)
+        else if ($(stateElementSelector).val() != "")
+        $(countryItemSelector + " select").val('USA');
+    }
 }
