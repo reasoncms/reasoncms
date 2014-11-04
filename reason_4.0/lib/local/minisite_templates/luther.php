@@ -80,7 +80,7 @@
 					if(!isset($module['module_params']['css']))
 						$page_type->set_region_parameter($region, 'css', false);
 					if(!isset($module['module_params']['use_filters']))
-						$page_type->set_region_parameter($region, 'use_filters', false);
+						$page_type->set_region_parameter($region, 'use_filters', true);
 					if(!isset($module['module_params']['show_login_link']))
 						$page_type->set_region_parameter($region, 'show_login_link', false);
 				}
