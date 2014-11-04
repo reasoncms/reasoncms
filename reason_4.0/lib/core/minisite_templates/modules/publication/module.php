@@ -2295,11 +2295,9 @@ var $noncanonical_request_keys = array(
 		function get_list_item_markup_strings()
 		{
 			$list_item_markup_strings = array();
-			if($this->use_group_by_section_view() and empty($this->filters))
+			if($this->use_group_by_section_view())
 			{
 				//if we're grouping by section, we need to make sure that we limit the number of items per section
-				//also, if there no filters, then we want to limit (i.e. if we filter by category, we don't want to
-				//limit the number of posts seen even if there are sections)
 				$items_by_section = $this->get_items_by_section();
 				foreach($items_by_section as $section_id => $items)
 				{
