@@ -663,6 +663,9 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'main_post' => 'policy_related',
 		'main_post_2' => 'transcript_request/transcript_request',
 	),
+	'virtual_tour' => array(
+		'main_post' => 'virtual_tour',
+	),
 	'volunteer_other' => array(	// basically a copy of faculty
 		'main_post' => 'volunteer_other',
 		'post_main_head' => array(
