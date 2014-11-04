@@ -536,6 +536,11 @@ class DBFormModel extends DefaultFormModel
 		$admin_obj->init($this->get_db_conn(), $this->get_table_name());
 	}
 	
+	function set_admin_object($admin_object)
+	{
+		$this->_admin_obj = $admin_object;	
+	}
+	
 	function &get_admin_object()
 	{
 		if (!isset($this->_admin_obj))
