@@ -322,7 +322,7 @@ class TranscriptPageOneForm extends FormStep {
 
         $header = array_keys(mysql_fetch_array($result, MYSQL_ASSOC));
         echo mysql_num_rows($result) . ' results :: ';
-        echo "<a href='#' download='{$filename}' class='table_to_csv'><i class="fa fa-download"></i> Download {$filename}</a>\n";
+        echo "<a href='#' download='{$filename}' class='table_to_csv'><i class='fa fa-download'></i> Download {$filename}</a>\n";
         echo "<br /><br />\n";
         // build the table
         $table  = "<table id='{$table_id}' class='tablesorter'>\n";
