@@ -1,0 +1,24 @@
+//
+// ASSET STYLES
+//
+// @author Gage Dykema
+//
+
+// Foundation imports
+@import "settings";
+@import "foundation/components/grid";
+
+// Compass imports
+@import "compass/css3";
+
+// Font Awesome Imports
+@import "font-awesome/variables";
+@import "font-awesome/core";
+
+// Luther imports
+@import "extends";
+@import "mixins";
+
+div#tagboard-embed{
+	margin-top: - $column-gutter;
+}
