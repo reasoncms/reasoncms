@@ -7745,6 +7745,15 @@ form input[type="submit"]:active {
   margin-bottom: 1.25rem;
 }
 
+/* line 713, scss/modules/_publication.scss */
+#filtering .searchForm {
+  display: none;
+}
+/* line 716, scss/modules/_publication.scss */
+#filtering .filterSet {
+  margin: 5px;
+}
+
 /* line 10, scss/_extends.scss */
 .zero-out, body #wrapper #global-banner hgroup h1, body #wrapper #global-banner #mobile-nav ul, body #wrapper #global-nav .sections, body #wrapper #global-footer #global-footer-nav .column ul, body #wrapper #global-footer #global-footer-info .contact, #callToActionBlurb .blurb ul, #calendar .responsiveEventsList .views ul, .featuresModule .feature .featureInfo .featureTitle a,
 .featuresModule .feature .featureInfo .featureTitle .noLink, .featuresModule .feature .featureNavWrap .featureNav {
