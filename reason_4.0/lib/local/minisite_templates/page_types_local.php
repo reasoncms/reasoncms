@@ -482,7 +482,9 @@ $GLOBALS['_reason_page_types_local'] = array(
 					),
 				 ),
 			'max_num_items' => 3,
-			'related_title' => 'Headlines',
+			'related_title' => 'Campus News',
+			'related_publications_links' => array('411730' => '/news'),
+
 			'css' => '',
 		),
 		'sidebar' => array(
@@ -654,7 +656,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'post_sidebar' => '',
 		'navigation' => '',
 		'sub_nav' => '',
-		'contact_blurb' => '',		
+		'contact_blurb' => '',
 	),
 	'tagboard_nav' =>array(
 		'pre_main_head' => '',
