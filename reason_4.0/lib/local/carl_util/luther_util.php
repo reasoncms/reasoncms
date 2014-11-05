@@ -131,11 +131,11 @@ function luther_video_audio_streaming($event_id, $imgVideo = null, $imgAudio = n
 		{
 			if ($imgVideo != null)
 			{
-				$vstream = '<a title="Video Streaming" href="http://client.stretchinternet.com/client/luther.portal"><img class="video_streaming" src="' . $imgVideo .'" alt="Video Streaming"></a>';
+				$vstream = '<a title="Video Streaming" href="http://portal.stretchinternet.com/luther/"><img class="video_streaming" src="' . $imgVideo .'" alt="Video Streaming"></a>';
 			}
 			else
 			{
-				$vstream = '<a title="Video Streaming" href="http://client.stretchinternet.com/client/luther.portal"><i class="fa fa-video-camera fa-fw"></i></a>';
+				$vstream = '<a title="Video Streaming" href="http://portal.stretchinternet.com/luther/"><i class="fa fa-video-camera fa-fw"></i></a>';
 			}
 		}
 		if ($cat->get_value('name') == 'Audio Streaming')

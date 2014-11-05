@@ -482,7 +482,9 @@ $GLOBALS['_reason_page_types_local'] = array(
 					),
 				 ),
 			'max_num_items' => 3,
-			'related_title' => 'Headlines',
+			'related_title' => 'Campus News',
+			'related_publications_links' => array('411730' => '/news'),
+
 			'css' => '',
 		),
 		'sidebar' => array(
@@ -706,6 +708,9 @@ $GLOBALS['_reason_page_types_local'] = array(
 	'transcript_request' => array(
 		'main_post' => 'policy_related',
 		'main_post_2' => 'transcript_request/transcript_request',
+	),
+	'virtual_tour' => array(
+		'main_post' => 'virtual_tour',
 	),
 	'volunteer_other' => array(	// basically a copy of faculty
 		'main_post' => 'volunteer_other',

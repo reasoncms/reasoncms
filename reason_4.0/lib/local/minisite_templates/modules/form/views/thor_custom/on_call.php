@@ -127,13 +127,13 @@ class AppDevOnCallForm extends DefaultThorForm
 				break;
 			case "bob": $dev = array('email' => 'puffro01@luther.edu', 'sms' => '');
 				break;
-			case "cindy": $dev = array('email' => 'goede@luther.edu', 'sms' => '5633808899@email.uscc.net');
+			case "cindy": $dev = array('email' => 'goede@luther.edu', 'sms' => '5633808899@vtext.com');
 				break;
 			case "jean": $dev = array('email' => 'gehlje01@luther.edu', 'sms' => '5633805445@vtext.com');
 				break;
 			case "lane": $dev = array('email' => 'schwla01@luther.edu', 'sms' => '5634193233@vtext.com');
 				break;
-			case "nathan": $dev = array('email' => 'porana02@luther.edu', 'sms' => '	4024174829@messaging.sprintpcs.com');
+			case "nathan": $dev = array('email' => 'porana02@luther.edu', 'sms' => '4024174829@messaging.sprintpcs.com');
 				break;
 			case "nate": $dev = array('email' => 'porana02@luther.edu', 'sms' => '4024174829@messaging.sprintpcs.com');
 				break;
