@@ -482,7 +482,9 @@ $GLOBALS['_reason_page_types_local'] = array(
 					),
 				 ),
 			'max_num_items' => 3,
-			'related_title' => 'Headlines',
+			'related_title' => 'Campus News',
+			'related_publications_links' => array('411730' => '/news'),
+
 			'css' => '',
 		),
 		'sidebar' => array(
@@ -640,6 +642,50 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'thumbnail_crop' => 'fill',
 			'num_to_display' => 0,
 		)
+	),
+	'tagboard_full_HeyNorse' =>array(
+		'pre_main_head' => '',
+		'main' => array(
+			'module' => 'tagboard',
+			'name_id'=>'HeyNorse/184201',
+		),
+		'call_to_action_blurb' => '',
+		'pre_sidebar' => 'b',
+		'pre_sidebar_2' => '',
+		'sidebar' => '',
+		'sidebar_2' =>'',
+		'post_sidebar' => '',
+		'navigation' => '',
+		'sub_nav' => '',
+		'contact_blurb' => '',		
+	),
+	'tagboard_full_NorseSports' =>array(
+		'pre_main_head' => '',
+		'main' => array(
+				'module' => 'tagboard',
+				'name_id' => 'NorseSports/185650',
+		),
+		'call_to_action_blurb' => '',
+		'pre_sidebar' => 'b',
+		'pre_sidebar_2' => '',
+		'sidebar' => '',
+		'sidebar_2' =>'',
+		'post_sidebar' => '',
+		'navigation' => '',
+		'sub_nav' => '',
+		'contact_blurb' => '',
+	),
+	'tagboard_nav' =>array(
+		'pre_main_head' => '',
+		'main' => array(
+				'module' => 'tagboard',
+		),
+		'call_to_action_blurb' => '',
+		'pre_sidebar' => 'b',
+		'pre_sidebar_2' => '',
+		'sidebar' => '',
+		'sidebar_2' =>'',
+		'post_sidebar' => '',
 	),
 	'top_image' => array(
 		'post_main_head' => array(

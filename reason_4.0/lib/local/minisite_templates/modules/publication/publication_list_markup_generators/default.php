@@ -137,7 +137,7 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 			{
 				$list = $this->passed_vars['items_by_section'][$section_id];
 				if($do_section_headings && array_key_exists($section_id, $this->passed_vars['sections']))
-				{		
+				{	
 					$markup_string .= '<li class="section">'."\n";
 					$markup_string .= $this->get_section_heading_markup($section_id);
 					$markup_string .= $this->get_list_markup_for_these_items(array_keys($list));
@@ -432,9 +432,9 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 			$url = $this->passed_vars['links_to_sections'][$section_id];
 			
 			if(!empty($url))
-				$markup_string .= '<h3><a href="'.$url.'">'.$section_entity->get_value('name').'</a></h3>'."\n";
+				$markup_string .= '<h2><a href="'.$url.'">'.$section_entity->get_value('name').'</a></h2>'."\n";
 			else
-				$markup_string .= '<h3>'.$section_entity->get_value('name').'</h3>'."\n";
+				$markup_string .= '<h2>'.$section_entity->get_value('name').'</h2>'."\n";
 			
 			$description = $section_entity->get_value('description');
 			if(!empty($description))
