@@ -24,7 +24,6 @@
             $head_items->remove_head_item('script', array('src'=>'/javascripts/jquery.tmpl.js'));
             $head_items->remove_head_item('script', array('src'=>'/javascripts/jquery.metadata.js'));
             $head_items->remove_head_item('script', array('src'=>'/javascripts/modernizr-1.1.min.js'));
-            $head_items->remove_head_item('script', array('src'=>'/jquery/jquery_latest.js'));
             $head_items->remove_head_item('script', array('src'=>'/javascripts/highslide/highslide-full.js'));
             $head_items->remove_head_item('script', array('src'=>'/javascripts/highslide/highslide-overrides.js'));
             $head_items->remove_head_item('script', array('src'=>'//ajax.googleapis.com/ajax/libs/swfobject/2.1/swfobject.js'));
