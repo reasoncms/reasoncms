@@ -64,12 +64,24 @@
 	 * - simple class structure and hooks to facilitate extension
 	 * - error checking cycle (enter data, check for errors, repeat)
 	 *
-	 * ODisco is a more object oriented Disco system.  All elements are actually objects that know
+	 * Disco is an object oriented forms system.  All elements are objects that know
 	 * about themselves and their capabilities.  There is a standard interface to the object
 	 * so Disco knows that each object will definitely, for example, have a grab() method.
 	 * 
-	 * 2005-02-03 - Major change to some internals in progress.  I'm removing all references to $_REQUEST and instead using
-	 * an internal copy of whatever is passed to Disco, $this->_request.  Adding a $this->set_request( $r ) method.
+	 * Simple usage:
+	 *
+	 * <code>
+	 * include_once('paths.php');
+	 * include_once(DISCO_INC.'disco.php');
+	 * 
+	 * $d = new disco();
+	 * $d->add_element('first_name');
+	 * $d->add_element('last_name');
+	 * $d->add_element('favorite_color','radio',array('options'=>array('blue'=>'Blue','green'=>'Green','red'=>'Red','yellow'=>'Yellow')));
+	 * $d->run();
+	 * </code>
+	 *
+	 * See the plasmature subdirectory for the full set of available elements. Or roll your own.
 	 * 
  	 * @author Dave Hendler
 	 * @package disco
@@ -462,8 +474,8 @@
 				$this->chosen_action = '';
 				foreach( $HTTP_VARS AS $key => $val )
 				{
-					if( preg_match( '/__button_/' , $key ) )
-						$this->chosen_action = preg_replace( '/__button_/' , '' , $key );
+					if( 0 === strpos( $key, '__button_') )
+						$this->chosen_action = substr($key, strlen('__button_'));
 				}
 				
 				if (empty($this->form_action))
