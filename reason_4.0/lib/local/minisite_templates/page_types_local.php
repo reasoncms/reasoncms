@@ -664,7 +664,9 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'main_post_2' => 'transcript_request/transcript_request',
 	),
 	'virtual_tour' => array(
-		'main_post' => 'virtual_tour',
+		'post_main_head' => 'virtual_tour',
+		'main_post_2' => 'luther_image_slideshow',
+		'pre_sidebar_2' => '',
 	),
 	'volunteer_other' => array(	// basically a copy of faculty
 		'main_post' => 'volunteer_other',
