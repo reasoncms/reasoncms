@@ -157,12 +157,13 @@
 				}
 				input[type="text"] {
 					@include grid-column($columns:13);
+					padding-left: 0.5rem;
 				}
 				input[type="submit"] {
 					 @include prefix-postfix-base();
 					  @include grid-column(
 					    $columns:3,
-					    $float:left
+					    $float:none
 					  );
 				}
 			}
