@@ -19,11 +19,12 @@
 //////////////////////////////////////
 
 #wrapper {
-
-	.video {
-		@include flex-video-container();
+	#contentAndRelated {
+		.video {
+			@include flex-video-container();
+		}
 	}
-
+	
 	#av {
 
 		.moduleNav {

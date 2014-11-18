@@ -3243,7 +3243,7 @@ body #wrapper #post-footer a {
 }
 
 /* line 23, scss/modules/_av.scss */
-#wrapper .video {
+#wrapper #contentAndRelated .video {
   position: relative;
   padding-top: 1.5625rem;
   padding-bottom: 67.5%;
@@ -3252,36 +3252,36 @@ body #wrapper #post-footer a {
   overflow: hidden;
 }
 /* line 28, ../foundation/bower_components/foundation/scss/foundation/components/_flex-video.scss */
-#wrapper .video.widescreen {
+#wrapper #contentAndRelated .video.widescreen {
   padding-bottom: 57.25%;
 }
 /* line 29, ../foundation/bower_components/foundation/scss/foundation/components/_flex-video.scss */
-#wrapper .video.vimeo {
+#wrapper #contentAndRelated .video.vimeo {
   padding-top: 0;
 }
 /* line 34, ../foundation/bower_components/foundation/scss/foundation/components/_flex-video.scss */
-#wrapper .video iframe,
-#wrapper .video object,
-#wrapper .video embed,
-#wrapper .video video {
+#wrapper #contentAndRelated .video iframe,
+#wrapper #contentAndRelated .video object,
+#wrapper #contentAndRelated .video embed,
+#wrapper #contentAndRelated .video video {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
 }
-/* line 31, scss/modules/_av.scss */
+/* line 32, scss/modules/_av.scss */
 #wrapper #av .moduleNav ul {
   margin: 0;
 }
-/* line 34, scss/modules/_av.scss */
+/* line 35, scss/modules/_av.scss */
 #wrapper #av .moduleNav ul li {
   border-bottom: 1px solid #e9e9e9;
   padding-bottom: 2.5rem;
   margin-bottom: 2.5rem;
 }
 @media only screen and (min-width: 30em) {
-  /* line 34, scss/modules/_av.scss */
+  /* line 35, scss/modules/_av.scss */
   #wrapper #av .moduleNav ul li {
     position: relative;
     padding-left: 1.25rem;
@@ -3289,28 +3289,28 @@ body #wrapper #post-footer a {
     width: 50%;
     float: left;
   }
-  /* line 44, scss/modules/_av.scss */
+  /* line 45, scss/modules/_av.scss */
   #wrapper #av .moduleNav ul li:nth-child(2n+1) {
     clear: left;
   }
 }
-/* line 49, scss/modules/_av.scss */
+/* line 50, scss/modules/_av.scss */
 #wrapper #av .moduleNav ul li:last-child {
   margin-bottom: 0;
 }
-/* line 53, scss/modules/_av.scss */
+/* line 54, scss/modules/_av.scss */
 #wrapper #av .moduleNav ul li .highslide {
   display: block;
   margin-bottom: 1.25rem;
   position: relative;
   max-width: 480px;
 }
-/* line 60, scss/modules/_av.scss */
+/* line 61, scss/modules/_av.scss */
 #wrapper #av .moduleNav ul li img {
   margin: 0 auto;
   display: block;
 }
-/* line 65, scss/modules/_av.scss */
+/* line 66, scss/modules/_av.scss */
 #wrapper #av .moduleNav ul li .av-play {
   width: 44px;
   height: 44px;
@@ -3320,22 +3320,22 @@ body #wrapper #post-footer a {
   margin-left: -22px;
   margin-top: -22px;
 }
-/* line 76, scss/modules/_av.scss */
+/* line 77, scss/modules/_av.scss */
 #wrapper #av .moduleNav ul li .desc *:last-child {
   margin-bottom: 0;
   padding-bottom: 0;
 }
-/* line 92, scss/modules/_av.scss */
+/* line 93, scss/modules/_av.scss */
 #wrapper #relatedSections #av .moduleNav ul {
   margin: 0;
 }
-/* line 95, scss/modules/_av.scss */
+/* line 96, scss/modules/_av.scss */
 #wrapper #relatedSections #av .moduleNav ul li {
   padding: 0;
   border-bottom: 0;
 }
 @media only screen and (min-width: 30em) {
-  /* line 95, scss/modules/_av.scss */
+  /* line 96, scss/modules/_av.scss */
   #wrapper #relatedSections #av .moduleNav ul li {
     position: relative;
     padding-left: 0;
@@ -3343,12 +3343,12 @@ body #wrapper #post-footer a {
     width: 100%;
     float: left;
   }
-  /* line 103, scss/modules/_av.scss */
+  /* line 104, scss/modules/_av.scss */
   #wrapper #relatedSections #av .moduleNav ul li:nth-child(2n+1) {
     clear: none;
   }
 }
-/* line 108, scss/modules/_av.scss */
+/* line 109, scss/modules/_av.scss */
 #wrapper #relatedSections #av .moduleNav ul li:last-child {
   padding-bottom: 0;
 }
