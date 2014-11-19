@@ -138,16 +138,18 @@
 		}
 
 		.search {
-			display: none;
-			margin-bottom: rem-calc(64);
-			background: $lc-grey;
+			/*display: none;*/
+			/*margin-bottom: rem-calc(64);*/
+			margin-bottom: rem-calc(32);
+			background: inherit;
 
 			@media #{$medium-up} {
-				@include grid-column(8);
+				@include grid-column(
+				  $columns:16,
+				  $float:inherit
+				);
 			}
-
-			h4 {display: none;}
-
+			float: inherit;
 			form {
 				.search {
 					margin-bottom: 0;
@@ -155,14 +157,21 @@
 				}
 				input[type="text"] {
 					@include grid-column($columns:13);
+					padding-left: 0.5rem;
 				}
 				input[type="submit"] {
 					 @include prefix-postfix-base();
 					  @include grid-column(
 					    $columns:3,
-					    $float:left
+					    $float:none
 					  );
 				}
+			}
+			.otherActions {
+				@include grid-column(
+				   $columns:16,
+				   $float:inherit
+				);
 			}
 		}
 

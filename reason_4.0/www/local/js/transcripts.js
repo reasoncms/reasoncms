@@ -58,8 +58,9 @@ $(document).ready(function() {
         filter_useParsedData : false
       }
     };
-
-    $("#" + table_id).tablesorter(tablesorteropts);
+    if (typeof table_id != 'undefined') {
+        $("#" + table_id).tablesorter(tablesorteropts);
+    }
 });
 
 function hide_field(element)
