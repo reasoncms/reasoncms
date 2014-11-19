@@ -33,8 +33,11 @@
 			@media #{$medium-only} {
 				height: 48vw;
 			}
-			> div {
-				height:inherit;
+			> div.content {
+				height: inherit;
+				> div {
+				  height: inherit;
+				}
 			}
 			p {
 				float: left;
