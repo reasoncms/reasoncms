@@ -240,6 +240,10 @@ class updateTypes
 				echo '<p>The table ' . $table . ' for type ' . $type_unique_name . ' already exists.</p>';
 			}
 		}
+		else 
+		{
+			if ($this->mode == 'test') echo '<p>Would create table ' . $table . ' for type ' . $type_unique_name . '</p>';
+		}
 	}
 	
 	/**
@@ -271,27 +275,34 @@ class updateTypes
 	
 	function add_entity_table_to_type($et, $type)
 	{
-		$pub_type_id = id_of($type);
-		$es = new entity_selector( id_of('master_admin') );
-		$es->add_type( id_of('content_table') );
-		$es->add_right_relationship($pub_type_id, relationship_id_of('type_to_table') );
-		$es->add_relation ('entity.name = "'.$et.'"');
-		$entities = $es->run_one();
-		if (empty($entities))
+		if ($this->mode == 'run')
 		{
-			$es2 = new entity_selector();
-			$es2->add_type(id_of('content_table'));
-			$es2->add_relation('entity.name = "'.$et.'"');
-			$es2->set_num(1);
-			$tables = $es2->run_one();
-			if(!empty($tables))
+			$pub_type_id = id_of($type);
+			$es = new entity_selector( id_of('master_admin') );
+			$es->add_type( id_of('content_table') );
+			$es->add_right_relationship($pub_type_id, relationship_id_of('type_to_table') );
+			$es->add_relation ('entity.name = "'.$et.'"');
+			$entities = $es->run_one();
+			if (empty($entities))
 			{
-				$table = current($tables);
-				create_relationship($pub_type_id,$table->id(),relationship_id_of('type_to_table'));
-				return true;
+				$es2 = new entity_selector();
+				$es2->add_type(id_of('content_table'));
+				$es2->add_relation('entity.name = "'.$et.'"');
+				$es2->set_num(1);
+				$tables = $es2->run_one();
+				if(!empty($tables))
+				{
+					$table = current($tables);
+					create_relationship($pub_type_id,$table->id(),relationship_id_of('type_to_table'));
+					return true;
+				}
 			}
+			return false;
 		}
-		return false;
+		else
+		{
+			echo '<p>Would have added '.$et.' to '. $type .' if not already run.</p>'."\n";
+		}
 	}
 
 }

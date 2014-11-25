@@ -28,10 +28,10 @@
 		{
 			if ($this->get_value("clear_cache"))
 			{
-				//$f2 = fopen('/var/www/phpFlickrCache/out.txt', 'w');
+				//$f2 = fopen('/var/www/reason/local/phpFlickrCache/out.txt', 'w');
 				//fprintf($f2, "%s\n", $this->get_value('flickr_photoset_id'));
 
-				$flickrset = exec("grep -l '" . $this->get_value('flickr_photoset_id') . WEB_PATH . "'/reason/local/phpFlickrCache/*.cache");
+				$flickrset = exec("find " . WEB_PATH . "reason/local/phpFlickrCache | xargs grep -l '" . $this->get_value('flickr_photoset_id') . "' *.cache");				
 				//fprintf($f2, "%s\n", $flickrset);
 
 				if ($f = fopen($flickrset, "r"))
@@ -49,7 +49,7 @@
 					foreach ($images[1] as $img)
 					// $images[1] contains matched images from (\d+) 
 					{
-						$i = exec("grep -l '" . $img . WEB_PATH . "'/reason/local/phpFlickrCache/*.cache"); 
+						$i = exec("find " . WEB_PATH . "reason/local/phpFlickrCache | xargs grep -l '" . $img . "' *.cache"); 
 						//fprintf($f2, "%s\n", $i);
 						unlink($i);
 					}
