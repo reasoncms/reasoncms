@@ -678,7 +678,33 @@ blockquote {
   background: rgba(159, 33, 18, 0.25);
   border: 1px solid rgba(159, 33, 18, 0.45);
 }
-/* line 159, scss/_type.scss */
+/* line 153, scss/_type.scss */
+#pageContent .callOut.callout-blue-light,
+#pageContent .callout.callout-blue-light, .fullPost .text .callOut.callout-blue-light,
+.fullPost .text .callout.callout-blue-light, #relatedSections .blurb .callOut.callout-blue-light,
+#relatedSections .blurb .callout.callout-blue-light, #contentSections .blurb .callOut.callout-blue-light,
+#contentSections .blurb .callout.callout-blue-light, #faq .answer .callOut.callout-blue-light,
+#faq .answer .callout.callout-blue-light, .facStaffContent .callOut.callout-blue-light,
+.facStaffContent .callout.callout-blue-light, .eventContent .callOut.callout-blue-light,
+.eventContent .callout.callout-blue-light, .flash-notice .callOut.callout-blue-light,
+.flash-notice .callout.callout-blue-light {
+  background: rgba(16, 115, 206, 0.25);
+  border: 1px solid rgba(16, 115, 206, 0.45);
+}
+/* line 158, scss/_type.scss */
+#pageContent .callOut.callout-blue-dark,
+#pageContent .callout.callout-blue-dark, .fullPost .text .callOut.callout-blue-dark,
+.fullPost .text .callout.callout-blue-dark, #relatedSections .blurb .callOut.callout-blue-dark,
+#relatedSections .blurb .callout.callout-blue-dark, #contentSections .blurb .callOut.callout-blue-dark,
+#contentSections .blurb .callout.callout-blue-dark, #faq .answer .callOut.callout-blue-dark,
+#faq .answer .callout.callout-blue-dark, .facStaffContent .callOut.callout-blue-dark,
+.facStaffContent .callout.callout-blue-dark, .eventContent .callOut.callout-blue-dark,
+.eventContent .callout.callout-blue-dark, .flash-notice .callOut.callout-blue-dark,
+.flash-notice .callout.callout-blue-dark {
+  background: rgba(0, 71, 137, 0.25);
+  border: 1px solid rgba(0, 71, 137, 0.45);
+}
+/* line 169, scss/_type.scss */
 #pageContent h1 strong,
 #pageContent h2 strong,
 #pageContent h3 strong,
@@ -714,22 +740,22 @@ blockquote {
 .flash-notice h5 strong {
   font-weight: 400;
 }
-/* line 164, scss/_type.scss */
+/* line 174, scss/_type.scss */
 #pageContent .flash-notice .callout, .fullPost .text .flash-notice .callout, #relatedSections .blurb .flash-notice .callout, #contentSections .blurb .flash-notice .callout, #faq .answer .flash-notice .callout, .facStaffContent .flash-notice .callout, .eventContent .flash-notice .callout, .flash-notice .flash-notice .callout {
   margin-bottom: 0;
 }
 
-/* line 170, scss/_type.scss */
+/* line 180, scss/_type.scss */
 #pageContent > *:last-child {
   margin-bottom: 0;
 }
-/* line 177, scss/_type.scss */
+/* line 187, scss/_type.scss */
 #pageContent .first-p-unaltered > *:last-child,
 #pageContent div > *:last-child {
   margin-bottom: 0;
 }
 
-/* line 187, scss/_type.scss */
+/* line 197, scss/_type.scss */
 .tableSorterWrap,
 .tableWrap {
   overflow-x: scroll !important;
@@ -737,21 +763,21 @@ blockquote {
   padding: 1px;
   margin-bottom: 2.5rem;
 }
-/* line 193, scss/_type.scss */
+/* line 203, scss/_type.scss */
 .tableSorterWrap table,
 .tableWrap table {
   border: none;
   width: 100%;
   margin-bottom: 0;
 }
-/* line 199, scss/_type.scss */
+/* line 209, scss/_type.scss */
 .tableSorterWrap .tablesorter,
 .tableWrap .tablesorter {
   overflow-x: scroll !important;
   border: none;
 }
 
-/* line 211, scss/_type.scss */
+/* line 221, scss/_type.scss */
 a.more,
 .pubLinks a,
 p.more a {
@@ -761,7 +787,7 @@ p.more a {
   font-weight: 700;
   text-transform: uppercase;
 }
-/* line 218, scss/_type.scss */
+/* line 228, scss/_type.scss */
 a.more:hover,
 .pubLinks a:hover,
 p.more a:hover {
@@ -769,41 +795,41 @@ p.more a:hover {
 }
 
 /* Feeds */
-/* line 225, scss/_type.scss */
+/* line 235, scss/_type.scss */
 #relatedPub .post h4 {
   font-family: "Roboto Slab", serif;
   font-size: 1.125rem;
   font-weight: 400;
 }
 
-/* line 231, scss/_type.scss */
+/* line 241, scss/_type.scss */
 time {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
   font-weight: 300;
 }
 
-/* line 236, scss/_type.scss */
+/* line 246, scss/_type.scss */
 p:empty {
   display: none !important;
 }
 
 /* Nav
 *******************************************/
-/* line 244, scss/_type.scss */
+/* line 254, scss/_type.scss */
 nav {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
 }
 
 /* Tooltips */
-/* line 250, scss/_type.scss */
+/* line 260, scss/_type.scss */
 .tooltip h5 {
   color: white;
 }
-/* line 253, scss/_type.scss */
+/* line 263, scss/_type.scss */
 .tooltip p {
   margin-bottom: 0;
 }
-/* line 256, scss/_type.scss */
+/* line 266, scss/_type.scss */
 .tooltip img {
   margin-bottom: 1.0rem;
   border: 0.5rem solid white;
