@@ -713,6 +713,15 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'main_post_2' => 'luther_image_slideshow',
 		'pre_sidebar_2' => '',
 	),
+	'virtual_tour_with_siblings_prev_next' => array(
+		'post_main_head' => 'virtual_tour',
+		'main_post_2' => 'luther_image_slideshow',
+		'main_post_3' => array(
+			'module' => 'siblings',
+			'previous_next' => true,
+		),
+		'pre_sidebar_2' => '',
+	),
 	'volunteer_other' => array(	// basically a copy of faculty
 		'main_post' => 'volunteer_other',
 		'post_main_head' => array(

@@ -7776,6 +7776,31 @@ form input[type="submit"]:active {
   margin-bottom: 0;
 }
 
+/* line 18, scss/modules/_siblings.scss */
+ul.siblingList {
+  margin: 0;
+}
+/* line 21, scss/modules/_siblings.scss */
+ul.siblingList.prevNext li {
+  display: inline;
+}
+/* line 24, scss/modules/_siblings.scss */
+ul.siblingList.prevNext li.previous > a[href]:before {
+  font-family: FontAwesome;
+  content: "\f137";
+  padding-right: 0.35rem;
+}
+/* line 30, scss/modules/_siblings.scss */
+ul.siblingList.prevNext li.next {
+  float: right;
+}
+/* line 32, scss/modules/_siblings.scss */
+ul.siblingList.prevNext li.next > a[href]:after {
+  font-family: FontAwesome;
+  content: "\f138";
+  padding-left: 0.35rem;
+}
+
 /* line 10, scss/_extends.scss */
 .zero-out, body #wrapper #global-banner hgroup h1, body #wrapper #global-banner #mobile-nav ul, body #wrapper #global-nav .sections, body #wrapper #global-footer #global-footer-nav .column ul, body #wrapper #global-footer #global-footer-info .contact, #callToActionBlurb .blurb ul, #calendar .responsiveEventsList .views ul, .featuresModule .feature .featureInfo .featureTitle a,
 .featuresModule .feature .featureInfo .featureTitle .noLink, .featuresModule .feature .featureNavWrap .featureNav {
