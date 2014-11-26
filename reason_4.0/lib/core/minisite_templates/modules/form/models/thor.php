@@ -649,6 +649,7 @@ class ThorFormModel extends DefaultFormModel
 				$this->_admin_obj->set_allow_edit(true);
 				$this->_admin_obj->set_allow_new(true);
 				$this->_admin_obj->set_allow_row_delete(true);
+				$this->_admin_obj->set_allow_download_files(true);
 			}
 		}
 		return $this->_admin_obj;
@@ -875,14 +876,33 @@ class ThorFormModel extends DefaultFormModel
 		{
 			$email_data = $this->get_values_for_email();
 			$email_options = $this->get_options_for_email();
+
+			// if there were attachments, let's add some info about them to the text of the mail
+			if (isset($email_options["attachmentMetadata"])) {
+				$attachmentMetadata = $email_options["attachmentMetadata"];
+				foreach ($attachmentMetadata as $columnName => $filename) {
+					$email_data[$columnName] = $filename . " (attached)";
+				}
+				unset($email_options["attachmentMetadata"]);
+			}
+
 			$this->send_email($email_data, $email_options);
+
+			// clear out any attachments from the temp dir
+			if (!$this->should_save_form_data()) {
+				$attachments = isset($email_options["attachments"]) ? $email_options["attachments"] : Array();
+
+				foreach($attachments as $fileName => $filePath) {
+					unlink($filePath);
+				}
+			}
 		}
 		else
 		{
 			trigger_error('recipient e-mail could not be determined!');
 		}
 	}
-	
+
 	function get_options_for_email()
 	{
 		$email_link = $this->get_link_for_email();
@@ -902,6 +922,45 @@ class ThorFormModel extends DefaultFormModel
 			}
 			else trigger_error('The method get_custom_options_for_email, if defined in the view, needs to return an array.');
 		}
+
+		if ($this->should_email_data()) {
+			// were files a part of this submission? If saving to a database, they've already been relocated (see ThorCore::handle_file_uploads). If not,
+			// they are in a tmp dir. Either way lets run through the form and extract any attachments.
+			//
+			// @todo - make this a configurable thing on the form? Maybe some people don't want every attachment emailed to them...
+			// @todo - add a mapping that indicates which file came in as part of which column
+			$rawXml = $this->get_form_entity()->get_value('thor_content');
+			$formXml = new XMLParser($rawXml);
+			$formXml->Parse();
+			$attachments = Array();
+			$attachmentMetadata = Array();
+			foreach ($formXml->document->tagChildren as $node) {	
+				if ($node->tagName == 'upload') {
+					$col_id = $node->tagAttrs['id'];
+					$col_label = $node->tagAttrs['label'];
+					$upload_data = $_FILES[$col_id];
+					if ($upload_data["tmp_name"] != "") {
+						$disco_el = $this->get_view()->get_element($col_id);
+
+						if ($disco_el->state == "received") {
+							if ($this->should_save_form_data()) {
+								$tc = $this->get_thor_core_object();
+								$attachments[$upload_data["name"]] = $tc->construct_file_storage_location($this->get_form_id(), $col_id, $upload_data["name"]);
+							} else {
+								$attachments[$upload_data["name"]] = $disco_el->tmp_full_path;
+							}
+							$attachmentMetadata[$col_label] = $upload_data["name"];
+						}
+					}
+				}
+			}
+
+			if (count($attachments) > 0) {
+				$options["attachments"] = $attachments;
+				$options["attachmentMetadata"] = $attachmentMetadata;
+			}
+		}
+
 		return $options;
 	}
 	
@@ -940,7 +999,7 @@ class ThorFormModel extends DefaultFormModel
 			}
 		else // insert
 		{
-			$insert_id = $thor_core->insert_values($data);
+			$insert_id = $thor_core->insert_values($data, $this->get_view());
 			$this->set_form_id($insert_id);
 		}
 	}
