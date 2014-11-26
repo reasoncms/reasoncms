@@ -609,15 +609,13 @@
         } else {
           return false;
         }
+      } else if (evt.which === ENTER_KEYCODE || evt.keyCode === ENTER_KEYCODE) {
+        if (evt.target && (evt.target.type === "textarea")) {
+          return true;
+        } else {
+          return false;
+        }
       }
-      /*
-      else if (evt.which == ENTER_KEYCODE or evt.keyCode == ENTER_KEYCODE)
-        if (evt.target and (evt.target.type == "textarea"))
-          return true
-        else
-          return false
-      */
-
     };
 
     BuilderView.prototype.initialize = function(options) {
@@ -1387,11 +1385,17 @@
 }).call(this);
 
 (function() {
+  var localPrettyName;
+
+  localPrettyName = "File";
+
   Formbuilder.registerField('file', {
     order: 55,
     view: "<input type='file' />",
     edit: "",
-    addButton: "<span class=\"symbol\"><span class=\"fa fa-cloud-upload\"></span></span> File"
+    addButton: "<span class='symbol'><span class='fa fa-cloud-upload'></span></span> " + localPrettyName,
+    instructionDetails: "<div class=\"instructionText\">Provides a way for a user to upload a file.</div>",
+    prettyName: localPrettyName
   });
 
 }).call(this);
@@ -1860,7 +1864,7 @@ __p += '<div class=\'fb-left\'>\n  <ul class=\'fb-tabs\'>\n    <li class=\'activ
 ((__t = ( Formbuilder.templates['partials/add_field']() )) == null ? '' : __t) +
 '\n    ' +
 ((__t = ( Formbuilder.templates['partials/edit_field']() )) == null ? '' : __t) +
-'\n  </div>\n\n    <script language="Javascript">\n    function debugMe() {\n      // next line hooks up debug button for reason integration\n      // var fb = window.formbuilderInstance;\n\n      console.log("----------------- MODEL START --------------------");\n      for (var i = 0 ; i < fb.mainView.collection.models.length ; i++) {\n        var currModel = fb.mainView.collection.models[i];\n        console.log("[" + i + "] -> [" + JSON.stringify(currModel.attributes) + "]");\n      }\n      console.log("----------------- MODEL END --------------------");\n      // fb.saveForm()\n                       // fb.isFormReadyToSave();\n\n    }\n    </script>\n\n\t\t<!--\n    <p><input type="button" onClick="debugMe();" value="debug info (please ignore)">\n\t\t-->\n\n</div>\n';
+'\n  </div>\n\n    <script language="Javascript">\n    function debugMe() {\n      // next line hooks up debug button for reason integration\n      // var fb = window.formbuilderInstance;\n\n      console.log("----------------- MODEL START --------------------");\n      for (var i = 0 ; i < fb.mainView.collection.models.length ; i++) {\n        var currModel = fb.mainView.collection.models[i];\n        console.log("[" + i + "] -> [" + JSON.stringify(currModel.attributes) + "]");\n      }\n      console.log("----------------- MODEL END --------------------");\n      // fb.saveForm()\n                       // fb.isFormReadyToSave();\n\n    }\n    </script>\n\n    <p><input type="button" onClick="debugMe();" value="debug info (please ignore)">\n\n</div>\n';
 
 }
 return __p
