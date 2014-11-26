@@ -22,7 +22,6 @@ function initializeFormbuilder($, Formbuilder, thorContentItemId) {
 	                    'email',
 	                    'price',
 	                    'address',
-	                    'file',
 	                    'section_break'],
 	  SHOW_SAVE_BUTTON: false,
 	  WARN_IF_UNSAVED: false,
