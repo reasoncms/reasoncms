@@ -147,6 +147,10 @@ class TableAdmin
 	 */ 
 	var $allow_new = false;
 	/**
+	 * @var boolean allow file downloads
+	 */ 
+	var $allow_download_files = false;	
+	/**
 	 * @var boolean whether or not to show the "Displaying x of y rows" header
 	 */
 	var $show_header = true;
@@ -324,6 +328,19 @@ class TableAdmin
 		case "export":
 			$this->set_export_fields();
 			break;
+		case "batch_download":
+			$data = $this->get_data();
+
+			$fileCols = Array();
+			$firstRow = current($data);
+			foreach ($firstRow as $k => $col) {
+				$type = (!empty($this->_display_values[$k]['type'])) ? $this->_display_values[$k]['type'] : 'text';
+				if ($type == "file") {
+					$fileCols[$k] = $this->_display_values[$k]["label"];
+				}
+			}
+			$this->batch_download_form = new DiscoAdminBatchDownloader($this->get_table_name(), $fileCols, $data);
+			break;
 		case "archive":
 			break;
 		}
@@ -403,6 +420,7 @@ class TableAdmin
 		if ($this->allow_export) $actions[] = 'export';
 		if ($this->allow_delete) $actions[] = 'delete_all';
 		if ($this->allow_archive) $actions[] = 'archive';
+		if ($this->allow_download_files) $actions[] = 'batch_download';
 		return $actions;
 	}
 	
@@ -413,6 +431,7 @@ class TableAdmin
 		if ($this->allow_view) $actions[] = 'view';
 		if ($this->allow_edit) $actions[] = 'edit';
 		if ($this->allow_row_delete) $actions[] = 'delete';
+		// if ($this->allow_download_file) $actions[] = 'download_file';
 		return $actions;
 	}
 	
@@ -547,6 +566,11 @@ class TableAdmin
 	function set_allow_row_delete($val = NULL)
 	{
 		if (!is_null($val)) $this->allow_row_delete = $val;
+	}
+
+	function set_allow_download_files($val = NULL)
+	{
+		if (!is_null($val)) $this->allow_download_files = $val;
 	}
 	
 	function set_allow_export($val = NULL)
@@ -855,6 +879,7 @@ class TableAdmin
 		{
 			$q = 'SELECT '.$cols.' FROM '. $tn;
 			if (!empty($sf)) $q .= ' ORDER BY ' . $sf . ' ' . $so;
+			// echo "QUERY [" . $q . "], db [" . $this->get_db_conn() . "], org [" . $this->get_orig_db_conn() . "]";
 			connectDB($this->get_db_conn());
 			$res = mysql_query( $q ) or trigger_error( 'Error: mysql error in Thor: '.mysql_error() );
 			connectDB($this->get_orig_db_conn()); // reconnect to default DB
@@ -1000,7 +1025,7 @@ class TableAdmin
 		$ret .= '</tr>';
 		return $ret;
 	}
-	
+
 	/**
 	 * Generates HTML for a table row containing column headers
 	 * @param array $header_row can be any row from the data since the keys are always the same
@@ -1020,6 +1045,7 @@ class TableAdmin
 			$ret .= '<th'.$first.'>Action</th>';
 			$first = '';
 		}
+
 		foreach ($header_row as $k => $v)
 		{
 			if ($this->field_is_sortable($k))
@@ -1081,6 +1107,15 @@ class TableAdmin
 		{
 			$v = $this->should_convert_field($k) ? htmlspecialchars($v,ENT_QUOTES,'UTF-8') : $v;	
 			$v = (strlen($v) > 0) ? $v : '<br />';
+
+			// if it's a file, let's make it downloadable
+			$type = (!empty($this->_display_values[$k]['type'])) ? $this->_display_values[$k]['type'] : 'text';
+			if ($type == "file") {
+				$v = "<a href='/thor/getFormFile.php?table=" . $this->get_table_name() . "&row=$row_id&col=$k&filename=$v'>$v</a>";
+				// $link_params = array('table_row_action' => 'download_file', 'table_action_id' => $row_id, 'table_action' => '', 'download_col' => $k);
+				// $v = "<a href='" . carl_make_link($link_params) . "'>$v</a> (" . carl_make_link($link_params) . ")";
+			}
+
 			$ret .= '<td'.$first.'>'.$v.'</td>';
 			$first = '';
 		}
@@ -1200,6 +1235,18 @@ class TableAdmin
 		}
 		return implode(" | ", $action);
 	}
+
+	// returns true if this form contains any file elements
+	function form_contains_file_elements() {
+		$data_row = current($this->get_data());
+		foreach ($data_row as $k=>$v) {
+			$type = (!empty($this->_display_values[$k]['type'])) ? $this->_display_values[$k]['type'] : 'text';
+			if ($type == "file") {
+				return true;
+			}
+		}
+		return false;
+	}
 	
 	/**
 	 * Generates HTML to represent the stored data which corresponds to a thor form
@@ -1234,8 +1281,12 @@ class TableAdmin
 				$menu_links['Export Found Set ('.$num_string.')'] = carl_make_link($links_export);
 			}
 		}
+
+		$links_batchdownload = $this->gen_menu_links_base();
+		$links_batchdownload['table_action'] = 'batch_download';
 		if ($this->allow_delete) $menu_links['Delete Stored Data'] = carl_make_link($links_delete);
 		if ($this->allow_new) $menu_links['Create New Row'] = carl_make_link($links_new);
+		if ($this->allow_download_files && $this->form_contains_file_elements()) $menu_links['Batch Download Attachments'] = carl_make_link($links_batchdownload);
 		if ($this->show_header) $ret .= '<h3>Displaying '.$this->_filtered_rows.' of '.$this->_total_rows.' rows</h3>';
 		if (!empty($menu_links)) $ret .= $this->gen_menu($menu_links);
 		$form_open_string = '<form name="search" action="'.htmlspecialchars(get_current_url()).'" method="post">';
@@ -1381,6 +1432,10 @@ class TableAdmin
 		{
 			$this->run_delete();
 		}
+		else if ($this->table_action == 'batch_download')
+		{
+			$this->run_batch_download();
+		}
 		elseif ($this->table_action == 'export')
 		{
 			$this->run_export();
@@ -1389,7 +1444,7 @@ class TableAdmin
 	
 	function run_row_action()
 	{
-		if ($this->table_row_action == 'view' || $this->table_row_action == 'edit' || $this->table_row_action == 'delete' || $this->table_row_action == 'new')
+		if ($this->table_row_action == 'view' || $this->table_row_action == 'edit' || $this->table_row_action == 'delete' || $this->table_row_action == 'new' || $this->table_row_action == "download_file")
 		{
 			$form =& $this->get_admin_form();
 			$form->run();
@@ -1407,6 +1462,12 @@ class TableAdmin
 		}
 	}
 
+	function run_batch_download()
+	{
+		$this->batch_download_form->generate();
+		echo $this->batch_download_form->get_form_output();
+	}
+
 	function run_delete()
 	{
 		$links_base = $this->gen_menu_links_base();
@@ -1419,6 +1480,13 @@ class TableAdmin
 		$menu_links['Delete Stored Data'] = '';
 		$this->delete_form->set_num_rows($this->_total_rows);
 		$this->delete_form->provide_link_to_csv_export(carl_make_link($links_export));
+
+		if ($this->allow_download_files && $this->form_contains_file_elements()) {
+			$links_batchdownload = $this->gen_menu_links_base();
+			$links_batchdownload['table_action'] = 'batch_download';
+			$this->delete_form->provide_link_to_batch_file_download(carl_make_link($links_batchdownload));
+		}
+
 		$this->delete_form->generate();
 		$status = $this->delete_form->get_status();
 		if (empty($status))
@@ -1748,6 +1816,7 @@ class TableAdmin
 			{
 				$id_to_delete = $this->get_id();
 				$qry = 'DELETE FROM ' . $this->get_table_name() . ' WHERE '.$this->id_column_name.' = '.$id_to_delete;
+
 				$result = db_query($qry, 'The delete query failed');
 			}
 		}
@@ -1846,6 +1915,7 @@ class TableAdmin
 							  'disco_confirm_cancel'         => 'Cancel' );
 		var $status = '';
 		var $csv_export_string;
+		var $batch_file_download_string = "";
 		var $form_output;
 		
 		function set_num_rows($num_rows)
@@ -1861,7 +1931,11 @@ class TableAdmin
 				echo '<strong>all information</strong> that has been entered using this form on any page will be deleted from the database. ';
 				echo 'If this information is important, it is highly recommend that you use the following link to <strong>save ';
 				echo 'the data from the form before you proceed with deletion!</strong></p>'."\n";
-				echo '<hr/>'.$this->csv_export_string.'<hr/>';
+
+				echo '<hr/>'.$this->csv_export_string;
+				echo $this->batch_file_download_string;
+				echo '<hr/>';
+
 				echo '<p>Choose the "Delete Forever" button to <strong>permanently delete all ' . $this->num_rows . ' row(s)</strong> of data:</p>';
 			}
 			else
@@ -1870,6 +1944,11 @@ class TableAdmin
 				echo '<p>There appear to be no rows to delete.</p>';
 				$this->actions = array();
 			}
+		}
+
+		function provide_link_to_batch_file_download($link)
+		{
+			$this->batch_file_download_string = '<ul><li><a href="'.$link.'">Batch Download Attachments</a></li></ul>';
 		}
 		
 		function provide_link_to_csv_export($link)
@@ -1905,6 +1984,117 @@ class TableAdmin
 			else
 			{
 				$this->status = 'cancel';
+			}
+		}
+	}
+
+	/**
+	 * 
+	 *
+	 * @author Tom Feiler
+	 */
+	class DiscoAdminBatchDownloader extends Disco
+	{
+		var $actions = array( 'disco_confirm_export' => 'Generate Zip...');
+		function __construct($tableName, $fileColumns, $data)
+		{
+			$this->tableName = $tableName;
+			$this->fileColumns = $fileColumns;
+			$this->data = $data;
+
+			usort($this->data, Array("DiscoAdminBatchDownloader", "cmp"));
+
+			$firstRow = current($this->data);
+			$lastRow = end($this->data);
+
+			$this->dataMin = $firstRow["id"];
+			$this->dataMax = $lastRow["id"];
+
+			reset($this->data);
+		}
+
+		private static function cmp($lhs, $rhs) {
+			$a = $lhs["id"];
+			$b = $rhs["id"];
+			if ($a < $b) {
+				return -1;
+			} else if ($b < $a) {
+				return 1;
+			} else {
+				return 0;
+			}
+		}
+
+		function pre_show_form()
+		{
+			echo '<h2>Batch Download Attachments</h2>';
+			echo '<p>This will generate a zip with all attachments for the rows in the range:</p>';
+		}
+		
+		function get_form_output()
+		{
+			return $this->form_output;
+		}
+		
+		function generate()
+		{
+			$dataRange = Array();
+			for ($i = $this->dataMin ; $i <= $this->dataMax ; $i++) {
+				$dataRange[$i] = $i;
+			}
+			$this->add_element('min_id', 'select', array('options' => $dataRange, 'default' => $this->dataMin, 'add_null_value_to_top' => false));
+			$this->add_element('max_id', 'select', array('options' => $dataRange, 'default' => $this->dataMax, 'add_null_value_to_top' => false));
+
+			// $this->required = Array('min_id', 'max_id');
+
+			ob_start();
+			$this->run();
+			$this->form_output = ob_get_contents();
+			ob_end_clean();
+		}
+		
+		function process()
+		{
+			if ($this->get_chosen_action() == "disco_confirm_export") {
+				$tc = new ThorCore("", $this->tableName);
+
+				$targetMin = $this->get_value("min_id");
+				$targetMax = $this->get_value("max_id");
+				$i = 0;
+				$zipData = Array();
+				foreach ($this->data as $dataRow) {
+					if ($dataRow["id"] >= $targetMin && $dataRow["id"] <= $targetMax) {
+						foreach ($this->fileColumns as $fileCol => $fileLabel) {
+							$path = $tc->construct_file_storage_location($dataRow["id"], $fileCol, $dataRow[$fileCol]);
+							// echo "[$i]: include $fileLabel [" . $dataRow[$fileCol] . "] -> [" . $path . "]<P>";
+							$zipData[] = Array(
+												"actualPath" => $path,
+												"pathInZip" => "/row_" . $dataRow["id"] . "/" . $fileLabel . "/" . $dataRow[$fileCol]
+											);
+						}
+					}
+					$i++;
+				}
+
+				if (count($zipData) > 0) {
+					$filename = date("Y-m-d_h-i-s_") . $this->tableName . "_" . $targetMin . "-" . $targetMax . ".zip";
+					$zipPath = THOR_SUBMITTED_FILE_STORAGE_BASEDIR . $this->tableName . "/" . $filename;
+					// echo "MAKING ZIP AT [" . $zipPath . "]";
+					$zip = new ZipArchive();
+					$zip->open($zipPath, ZipArchive::CREATE);
+					foreach($zipData as $zd) {
+						$actualPath = $zd["actualPath"];
+						$pseudoPath = $zd["pathInZip"];
+						// echo "<BR>adding [" . $actualPath . "] to zip at [" . $pseudoPath . "]...<BR>";
+						$zip->addFile($actualPath, $pseudoPath);
+					}
+					$zip->close();
+
+					// use an iframe to serve up the zip - getFormFile will return it to the user and delete it when done
+					echo '<iframe src="/thor/getFormFile.php?mode=fetch_zip&table=' . $this->tableName . '&zipfile=' . $zipPath . '" id="zipper" style="display:none"></iframe>';
+				} else {
+					echo "No matching files were found<P>";
+				}
 			}
 		}
 	}
