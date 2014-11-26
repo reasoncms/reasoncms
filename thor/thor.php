@@ -173,6 +173,10 @@ class ThorCore
 				elseif ($node->tagName == 'optiongroup') $this->_transform_optiongroup($node, $disco_obj);
 				elseif ($node->tagName == 'hidden') $this->_transform_hidden($node, $disco_obj);
 				elseif ($node->tagName == 'comment') $this->_transform_comment($node, $disco_obj);
+				elseif ($node->tagName == 'upload') {
+					$disco_obj->form_enctype = "multipart/form-data";
+					$this->_transform_upload($node, $disco_obj);
+				}
 			}
 			$this->_transform_submit($xml->document->tagAttrs, $disco_obj);
 		}
@@ -297,9 +301,11 @@ class ThorCore
 
 	/**
 	 * Insert a row - we automatically add the date created timestamp
+	 *
+	 * @param $disco_obj reference to the disco object. Added Nov 2014
 	 * @return id of row inserted
 	 */
-	function insert_values($values)
+	function insert_values($values, $disco_obj)
 	{
 		if ($this->get_thor_table() && $values)
 		{
@@ -312,8 +318,12 @@ class ThorCore
   			$query = $GLOBALS['sqler']->insert( $this->get_thor_table(), $values );
   			$result = db_query($query);
   			$insert_id = mysql_insert_id();
+
+			$this->handle_file_uploads($insert_id, $disco_obj);
+
   			$GLOBALS['sqler']->mode = '';
   			if ($reconnect_db) connectDB($reconnect_db); // reconnect to default DB
+
   			return $insert_id;
   		}
   		elseif (!$this->get_thor_table())
@@ -326,6 +336,98 @@ class ThorCore
   			trigger_error('insert_values called but the values array was empty');
   			return NULL;
   		}
+	}
+
+	function create_dirs_if_needed($dirs)
+	{
+		foreach($dirs as $d) {
+			$this->create_dir_if_needed($d);
+		}
+	}
+
+	function create_dir_if_needed($dir)
+	{
+		if (!file_exists($dir)) {
+			mkdir($dir);
+			// chmod($dir, 0666);
+		}
+	}
+
+	function delete_file_storage_for_form() {
+		$storage_location_base_dir = THOR_SUBMITTED_FILE_STORAGE_BASEDIR;
+		$form_specific_dir = $storage_location_base_dir . $this->get_thor_table() . "/";
+
+		rmdir_and_contents($form_specific_dir); // see reason_package/reason_4.0/lib/core/function_libraries/util.php
+	}
+
+	function delete_file_storage_for_row($row_id) {
+		$storage_location_base_dir = THOR_SUBMITTED_FILE_STORAGE_BASEDIR;
+		$form_specific_dir = $storage_location_base_dir . $this->get_thor_table() . "/";
+		$submission_dir = $form_specific_dir . "row_" . $row_id . "/";
+
+		rmdir_and_contents($submission_dir); // see reason_package/reason_4.0/lib/core/function_libraries/util.php
+	}
+
+	// given some data about a particular file submission in a form, returns the path (optionally creating the directories)
+	function construct_file_storage_location($row_id, $col_id, $filename, $create_dirs = false) {
+		$storage_location_base_dir = THOR_SUBMITTED_FILE_STORAGE_BASEDIR;
+		$form_specific_dir = $storage_location_base_dir . $this->get_thor_table() . "/";
+		$submission_dir = $form_specific_dir . "row_" . $row_id . "/";
+
+		$destination_dir = $submission_dir . $col_id . "/";
+
+		if ($create_dirs) {
+			$this->create_dirs_if_needed(Array(
+								$storage_location_base_dir,
+								$form_specific_dir,
+								$submission_dir,
+								$destination_dir
+							));
+		}
+
+		return $destination_dir . $filename;
+	}
+
+	function handle_file_uploads($insert_id, $disco_obj)
+	{
+		$update_clauses = Array();
+
+		$xml = $this->get_thor_xml();
+		foreach ($xml->document->tagChildren as $node)
+		{	
+			if ($node->tagName == 'upload') {
+				$col_id = $node->tagAttrs['id'];
+				// $col_label = $node->tagAttrs['label'];
+
+				$upload_data = $_FILES[$col_id];
+				if ($upload_data["tmp_name"] != "") {
+					$disco_el = $disco_obj->get_element($col_id);
+
+					if ($disco_el->state == "received") { // || $disco_el->state == "pending") {
+						$source_file = $disco_el->tmp_full_path;
+						// $destination_file = $destination_dir . $upload_data["name"];
+						$destination_file = $this->construct_file_storage_location($insert_id, $col_id, $upload_data["name"], true);
+
+						$success = rename($source_file, $destination_file);
+						if ($success) {
+							$update_clauses[$col_id] = $upload_data["name"]; // just filename; rest can be reconstructed with construct_file_storage_location
+						}
+					} else {
+						// echo "ERROR - element not received (" . $disco_el->state . ")<P>";
+						// not sure what to do here...when would this occur, with paticularly large files?
+					}
+				} else {
+					// no file was uploaded for this; that's ok
+				}
+			}
+		}
+
+		if (count($update_clauses) > 0) {
+  			$GLOBALS['sqler']->mode = 'get_query';
+  			$update = $GLOBALS['sqler']->update_one($this->get_thor_table(), $update_clauses, $insert_id);
+  			$result = db_query($update);
+  			$GLOBALS['sqler']->mode = '';
+		}
 	}
 	
 	/**
@@ -467,6 +569,8 @@ class ThorCore
 		$table = $this->get_thor_table();
 		if ($this->get_thor_table() && (strlen($primary_key) > 0) )
 		{
+			$this->delete_file_storage_for_row($primary_key);
+
 			if (!get_current_db_connection_name()) connectDB($this->get_db_conn());
 			$reconnect_db = (get_current_db_connection_name() != $this->get_db_conn()) ? get_current_db_connection_name() : false;
 			if ($reconnect_db) connectDB($this->get_db_conn());
@@ -666,6 +770,8 @@ class ThorCore
 	{
 		if ($this->get_thor_table() && $this->table_exists())
 		{
+			$this->delete_file_storage_for_form();
+
 			$sql = $this->get_delete_table_sql();
 			if (!get_current_db_connection_name()) connectDB($this->get_db_conn());
 			$reconnect_db = (get_current_db_connection_name() != $this->get_db_conn()) ? get_current_db_connection_name() : false;
@@ -744,6 +850,9 @@ class ThorCore
 				foreach ($node_children as $node2) {
 					$db_structure[$node2->tagAttrs['id']]['type'] = 'tinytext';
 				}
+			}
+			elseif ($node->tagName == 'upload') {
+				$db_structure[$node->tagAttrs['id']]['type'] = 'tinytext';
 			}
 		}
 		return $db_structure;
@@ -843,6 +952,14 @@ class ThorCore
 			$options[] = $child_attrs['value'];
 		}
 		$display_values[$id] = array('label' => $label, 'type' => $type, 'options' => $options);
+		return $display_values;
+	}
+
+	function _build_display_upload($element_obj)
+	{
+		$element_attrs = $element_obj->tagAttrs;
+		$type = 'file';
+		$display_values[$element_attrs['id']] = array('label' => $element_attrs['label'], 'type' => $type);
 		return $display_values;
 	}
 	
@@ -986,6 +1103,21 @@ class ThorCore
 		}
 
 		$d->add_element($id, 'checkboxgroup_no_sort', $args);
+		if ( $required ) $d->add_required($id);
+	}
+
+	function _transform_upload($element, &$d)
+	{
+		$id = $element->tagAttrs['id'];
+		$display_name = (!empty($element->tagAttrs['label'])) ? $element->tagAttrs['label'] : '';
+		$required = (!empty($element->tagAttrs['required'])) ? true : false;
+
+		$args = array(
+						'display_name' => $display_name,
+						// 'acceptable_types' => Array('application/pdf'),
+					);
+
+		$d->add_element($id, 'upload', $args);
 		if ( $required ) $d->add_required($id);
 	}
 	
