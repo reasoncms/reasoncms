@@ -40,7 +40,8 @@ class formbuilder2Type extends textareaType
 		"radiogroup" => "radio",
 		"checkboxgroup" => "checkboxes",
 		"optiongroup" => "dropdown",
-		"hidden" => "hidden_field"
+		"hidden" => "hidden_field",
+		"upload" => "file"
 	);
 
 	var $optionMap = array(
