@@ -284,7 +284,7 @@ class ThorAdmin extends TableAdmin
 		$values['submitted_by'] = reason_check_authentication();
 		$values['submitter_ip'] = $_SERVER['REMOTE_ADDR'];
 		$values['date_created'] = get_mysql_datetime();
-		$tc->insert_values($values);
+		$tc->insert_values($values, $this);
 	}
 	
 	/**
