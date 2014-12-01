@@ -7776,25 +7776,25 @@ form input[type="submit"]:active {
   margin-bottom: 0;
 }
 
-/* line 18, scss/modules/_siblings.scss */
+/* line 20, scss/modules/_siblings.scss */
 ul.siblingList {
   margin: 0;
 }
-/* line 21, scss/modules/_siblings.scss */
+/* line 23, scss/modules/_siblings.scss */
 ul.siblingList.prevNext li {
   display: inline;
 }
-/* line 24, scss/modules/_siblings.scss */
+/* line 26, scss/modules/_siblings.scss */
 ul.siblingList.prevNext li.previous > a[href]:before {
   font-family: FontAwesome;
   content: "\f137";
   padding-right: 0.35rem;
 }
-/* line 30, scss/modules/_siblings.scss */
+/* line 32, scss/modules/_siblings.scss */
 ul.siblingList.prevNext li.next {
   float: right;
 }
-/* line 32, scss/modules/_siblings.scss */
+/* line 34, scss/modules/_siblings.scss */
 ul.siblingList.prevNext li.next > a[href]:after {
   font-family: FontAwesome;
   content: "\f138";

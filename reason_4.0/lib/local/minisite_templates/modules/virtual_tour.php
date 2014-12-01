@@ -41,16 +41,18 @@
 					{
 						echo "<div class='content' id='vtour". $i ."'> \n";
 					}
+				}
+				else 
+				{
+					echo "<div class='content active'> \n";
 				}	
 				
 				// uncompress zip file
 				$this->uncompress_file($post->_id, $post->get_value('file_type'));
 				$this->virtual_tour_javascript($post->_id);
 				echo "<p>" . $post->get_value('description') . "</p> \n";
-				if ($number_tours > 1)
-				{
-					echo "</div> \n";
-				}
+								
+				echo "</div>   <!-- class='content' -->\n";
 				
 				$i++;				
 			}
