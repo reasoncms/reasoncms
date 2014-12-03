@@ -474,10 +474,10 @@ function get_sport_position_event_full_name($site_name)
 	else if ($site_name == 'sport_swimmingdiving_men' || $site_name == 'sport_swimmingdiving_women')
 	{
 		$positions = array(
-				'BU' => 'Butterfly',
-				'BA' => 'Backstroke',
-				'BR' => 'Breaststroke',
-				'FR' => 'Freestyle',
+				'Fl' => 'Butterfly',
+				'Bk' => 'Backstroke',
+				'Br' => 'Breaststroke',
+				'Fr' => 'Freestyle',
 				'IM' => 'Individual Medley',
 				'D' => 'Diving',
 		);
