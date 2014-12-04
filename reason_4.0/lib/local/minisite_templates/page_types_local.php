@@ -648,6 +648,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'module' => 'tagboard',
 			'name_id'=>'HeyNorse/184201',
 		),
+		'main_head' => '',
 		'call_to_action_blurb' => '',
 		'pre_sidebar' => 'b',
 		'pre_sidebar_2' => '',
@@ -664,6 +665,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 				'module' => 'tagboard',
 				'name_id' => 'NorseSports/185650',
 		),
+		'main_head' => '',
 		'call_to_action_blurb' => '',
 		'pre_sidebar' => 'b',
 		'pre_sidebar_2' => '',
@@ -679,6 +681,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'main' => array(
 				'module' => 'tagboard',
 		),
+		'main_head' => '',
 		'call_to_action_blurb' => '',
 		'pre_sidebar' => 'b',
 		'pre_sidebar_2' => '',
