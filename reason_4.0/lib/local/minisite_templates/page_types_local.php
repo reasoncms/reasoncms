@@ -14,7 +14,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 				'width' => '1200',
 				'height' => '575',
 				'autoplay_timer' => 4,
-				'autoplay' => true,
+				// 'autoplay' => true,
 			),
 			'post_main_head' => '',
 			'main_head' => 'page_title',
