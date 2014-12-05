@@ -88,7 +88,7 @@
 }).call(this);
 
 (function() {
-  var BuilderView, DELETE_KEYCODE, DeletedFieldCollection, DeletedFieldModel, ENTER_KEYCODE, EditFieldView, Formbuilder, FormbuilderCollection, FormbuilderModel, ViewFieldView, emptyOrWhitespaceRegex, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6,
+  var BuilderView, DELETE_KEYCODE, DeletedFieldCollection, DeletedFieldModel, ENTER_KEYCODE, EditFieldView, Formbuilder, FormbuilderCollection, FormbuilderModel, ViewFieldView, emptyOrWhitespaceRegex, _ref, _ref1, _ref2, _ref3, _ref4, _ref5,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; },
@@ -102,11 +102,6 @@
 
   FormbuilderModel = (function(_super) {
     __extends(FormbuilderModel, _super);
-
-    function FormbuilderModel() {
-      _ref = FormbuilderModel.__super__.constructor.apply(this, arguments);
-      return _ref;
-    }
 
     FormbuilderModel.prototype.sync = function() {};
 
@@ -127,6 +122,15 @@
       return (this.collection.length - this.collection.indexOf(this)) === 1 && this.get(Formbuilder.options.mappings.FIELD_TYPE) === 'submit_button';
     };
 
+    function FormbuilderModel() {
+      FormbuilderModel.__super__.constructor.apply(this, arguments);
+      if (this.attributes.cid) {
+
+      } else {
+        this.cid = Formbuilder.getNextUniqueGlobalId("c");
+      }
+    }
+
     return FormbuilderModel;
 
   })(Backbone.DeepModel);
@@ -135,8 +139,8 @@
     __extends(FormbuilderCollection, _super);
 
     function FormbuilderCollection() {
-      _ref1 = FormbuilderCollection.__super__.constructor.apply(this, arguments);
-      return _ref1;
+      _ref = FormbuilderCollection.__super__.constructor.apply(this, arguments);
+      return _ref;
     }
 
     FormbuilderCollection.prototype.initialize = function() {
@@ -161,8 +165,8 @@
     __extends(DeletedFieldModel, _super);
 
     function DeletedFieldModel() {
-      _ref2 = DeletedFieldModel.__super__.constructor.apply(this, arguments);
-      return _ref2;
+      _ref1 = DeletedFieldModel.__super__.constructor.apply(this, arguments);
+      return _ref1;
     }
 
     DeletedFieldModel.prototype.sync = function() {};
@@ -175,8 +179,8 @@
     __extends(DeletedFieldCollection, _super);
 
     function DeletedFieldCollection() {
-      _ref3 = DeletedFieldCollection.__super__.constructor.apply(this, arguments);
-      return _ref3;
+      _ref2 = DeletedFieldCollection.__super__.constructor.apply(this, arguments);
+      return _ref2;
     }
 
     DeletedFieldCollection.prototype.model = DeletedFieldModel;
@@ -189,8 +193,8 @@
     __extends(ViewFieldView, _super);
 
     function ViewFieldView() {
-      _ref4 = ViewFieldView.__super__.constructor.apply(this, arguments);
-      return _ref4;
+      _ref3 = ViewFieldView.__super__.constructor.apply(this, arguments);
+      return _ref3;
     }
 
     ViewFieldView.prototype.className = "fb-field-wrapper";
@@ -241,8 +245,8 @@
     __extends(EditFieldView, _super);
 
     function EditFieldView() {
-      _ref5 = EditFieldView.__super__.constructor.apply(this, arguments);
-      return _ref5;
+      _ref4 = EditFieldView.__super__.constructor.apply(this, arguments);
+      return _ref4;
     }
 
     EditFieldView.prototype.className = "edit-response-field";
@@ -283,7 +287,7 @@
     };
 
     EditFieldView.prototype.render = function() {
-      var allowTypeChange, dvalIsEmpty, _ref6,
+      var allowTypeChange, dvalIsEmpty, _ref5,
         _this = this;
       dvalIsEmpty = Formbuilder.helpers.fieldIsEmptyOrNull(this.model.get(Formbuilder.options.mappings.DEFAULT_VALUE));
       this.model.attributes.displayDefaultValueUI = !dvalIsEmpty;
@@ -293,7 +297,7 @@
       rivets.bind(this.$el, {
         model: this.model
       });
-      if (((_ref6 = this.model.attributes.field_type) === "radio" || _ref6 === "dropdown" || _ref6 === "checkboxes")) {
+      if (((_ref5 = this.model.attributes.field_type) === "radio" || _ref5 === "dropdown" || _ref5 === "checkboxes")) {
         setTimeout((function() {
           return $(".sortableParentContainer").sortable({
             axis: "y",
@@ -345,7 +349,7 @@
     };
 
     EditFieldView.prototype.changeEditingFieldTypeWithDataLossWarning = function(fromType, toType) {
-      var inputData, multiFields, numCheckedOptions, numOptions, o, prettyFrom, prettyTo, warning, _i, _len, _ref6;
+      var inputData, multiFields, numCheckedOptions, numOptions, o, prettyFrom, prettyTo, warning, _i, _len, _ref5;
       if (fromType === toType) {
         return;
       }
@@ -369,9 +373,9 @@
         numOptions = 0;
         numCheckedOptions = 0;
         if (this.model.get(Formbuilder.options.mappings.OPTIONS)) {
-          _ref6 = this.model.get(Formbuilder.options.mappings.OPTIONS);
-          for (_i = 0, _len = _ref6.length; _i < _len; _i++) {
-            o = _ref6[_i];
+          _ref5 = this.model.get(Formbuilder.options.mappings.OPTIONS);
+          for (_i = 0, _len = _ref5.length; _i < _len; _i++) {
+            o = _ref5[_i];
             numOptions++;
             if (o.checked) {
               numCheckedOptions++;
@@ -431,7 +435,7 @@
       contain the logic to this one function at least, so it's manageable.
       */
 
-      var checksSeen, idx, o, onlyAllowOneCheck, translationData, _i, _len, _ref6;
+      var checksSeen, idx, o, onlyAllowOneCheck, translationData, _i, _len, _ref5;
       translationData = {
         pseudoLabel: null,
         options: null,
@@ -451,9 +455,9 @@
           if (onlyAllowOneCheck) {
             checksSeen = 0;
             if (this.model.get(Formbuilder.options.mappings.OPTIONS)) {
-              _ref6 = this.model.get(Formbuilder.options.mappings.OPTIONS);
-              for (idx = _i = 0, _len = _ref6.length; _i < _len; idx = ++_i) {
-                o = _ref6[idx];
+              _ref5 = this.model.get(Formbuilder.options.mappings.OPTIONS);
+              for (idx = _i = 0, _len = _ref5.length; _i < _len; idx = ++_i) {
+                o = _ref5[idx];
                 if (o.checked) {
                   if (checksSeen > 0) {
                     o.checked = false;
@@ -503,8 +507,8 @@
     };
 
     EditFieldView.prototype.completedOptionDrag = function(evt, ui) {
-      var mover, newIdx, oldIdx, options, _ref6;
-      _ref6 = [ui.item.preservedStartPos, ui.item.index()], oldIdx = _ref6[0], newIdx = _ref6[1];
+      var mover, newIdx, oldIdx, options, _ref5;
+      _ref5 = [ui.item.preservedStartPos, ui.item.index()], oldIdx = _ref5[0], newIdx = _ref5[1];
       /*
       this is the funky part. I think the options template (which is a combination of Backbone and Rivets tech) and the JQuery DOM
       manipulation are stomping on each other. Below I am going to update the OPTIONS model and trigger the appropriate events,
@@ -588,8 +592,8 @@
     __extends(BuilderView, _super);
 
     function BuilderView() {
-      _ref6 = BuilderView.__super__.constructor.apply(this, arguments);
-      return _ref6;
+      _ref5 = BuilderView.__super__.constructor.apply(this, arguments);
+      return _ref5;
     }
 
     BuilderView.prototype.SUBVIEWS = [];
@@ -619,7 +623,7 @@
     };
 
     BuilderView.prototype.initialize = function(options) {
-      var newSubmit, selector, setter, _ref7, _ref8;
+      var newSubmit, selector, setter, _ref6, _ref7;
       $(document).keydown(this.captureDeleteAndEnter);
       $(document).tooltip({
         track: true,
@@ -648,7 +652,7 @@
       this.undoStack.bind('add remove', this.setUndoButton, this);
       this.render();
       this.collection.reset(this.bootstrapData);
-      if (_.pathGet((_ref7 = this.bootstrapData) != null ? _ref7[((_ref8 = this.bootstrapData) != null ? _ref8.length : void 0) - 1] : void 0, Formbuilder.options.mappings.FIELD_TYPE) !== 'submit_button' && Formbuilder.options.FORCE_BOTTOM_SUBMIT) {
+      if (_.pathGet((_ref6 = this.bootstrapData) != null ? _ref6[((_ref7 = this.bootstrapData) != null ? _ref7.length : void 0) - 1] : void 0, Formbuilder.options.mappings.FIELD_TYPE) !== 'submit_button' && Formbuilder.options.FORCE_BOTTOM_SUBMIT) {
         newSubmit = new FormbuilderModel;
         setter = {};
         setter[Formbuilder.options.mappings.LABEL] = 'Submit';
@@ -700,15 +704,15 @@
     };
 
     BuilderView.prototype.render = function() {
-      var subview, _i, _len, _ref7;
+      var subview, _i, _len, _ref6;
       this.$el.html(Formbuilder.templates['page']());
       this.$fbLeft = this.$el.find('.fb-left');
       this.$responseFields = this.$el.find('.fb-response-fields');
       this.bindWindowScrollEvent();
       this.hideShowNoResponseFields();
-      _ref7 = this.SUBVIEWS;
-      for (_i = 0, _len = _ref7.length; _i < _len; _i++) {
-        subview = _ref7[_i];
+      _ref6 = this.SUBVIEWS;
+      for (_i = 0, _len = _ref6.length; _i < _len; _i++) {
+        subview = _ref6[_i];
         new subview({
           parentView: this
         }).render();
@@ -873,8 +877,8 @@
     };
 
     BuilderView.prototype.hideShowNoResponseFields = function() {
-      var _ref7;
-      return this.$el.find(".fb-no-response-fields")[(this.collection.length === 1 && Formbuilder.options.FORCE_BOTTOM_SUBMIT && ((_ref7 = this.collection.models[0]) != null ? _ref7.is_last_submit() : void 0)) || this.collection.length === 0 ? 'show' : 'hide']();
+      var _ref6;
+      return this.$el.find(".fb-no-response-fields")[(this.collection.length === 1 && Formbuilder.options.FORCE_BOTTOM_SUBMIT && ((_ref6 = this.collection.models[0]) != null ? _ref6.is_last_submit() : void 0)) || this.collection.length === 0 ? 'show' : 'hide']();
     };
 
     BuilderView.prototype.addField = function(e) {
@@ -1015,12 +1019,12 @@
         data: payload,
         contentType: "application/json",
         success: function(data) {
-          var datum, _i, _len, _ref7;
+          var datum, _i, _len, _ref6;
           _this.updatingBatch = true;
           for (_i = 0, _len = data.length; _i < _len; _i++) {
             datum = data[_i];
-            if ((_ref7 = _this.collection.get(datum.cid)) != null) {
-              _ref7.set({
+            if ((_ref6 = _this.collection.get(datum.cid)) != null) {
+              _ref6.set({
                 id: datum.id
               });
             }
@@ -1077,7 +1081,20 @@
     };
 
     Formbuilder.getNextUniqueOptionId = function() {
-      return _.uniqueId("c");
+      return this.getNextUniqueGlobalId("c");
+    };
+
+    Formbuilder.getNextUniqueGlobalId = function(prefix) {
+      var nextId;
+      if (prefix == null) {
+        prefix = "";
+      }
+      nextId = ++Formbuilder.maxUsedId;
+      if (prefix !== "") {
+        return prefix + nextId;
+      } else {
+        return nextId;
+      }
     };
 
     Formbuilder.options = {
@@ -1163,10 +1180,10 @@
     };
 
     Formbuilder.registerField = function(name, opts) {
-      var x, _i, _len, _ref7;
-      _ref7 = ['view', 'edit'];
-      for (_i = 0, _len = _ref7.length; _i < _len; _i++) {
-        x = _ref7[_i];
+      var x, _i, _len, _ref6;
+      _ref6 = ['view', 'edit'];
+      for (_i = 0, _len = _ref6.length; _i < _len; _i++) {
+        x = _ref6[_i];
         opts[x] = _.template(opts[x]);
       }
       opts.field_type = name;
@@ -1241,37 +1258,131 @@
     */
 
 
-    Formbuilder.prototype.preprocessBootstrapDataForOptionsValidity = function(args) {
-      var bootstrapData, f, fields, i, opt, _i, _len, _results;
+    /*
+    preprocessBootstrapDataForOptionsValidity: (args) ->
+      bootstrapData = args.bootstrapData
+      if (bootstrapData instanceof Array)
+        fields = bootstrapData
+      else
+        fields = bootstrapData.fields
+    
+      for f,i in fields
+        if f.field_options? and f.field_options.options?
+          for opt in f.field_options.options
+            if (!opt.reasonOptionId?)
+              opt.reasonOptionId = Formbuilder.getNextUniqueOptionId()
+    */
+
+
+    /*
+    Uncovered a bug where element/option id's were colliding under certain circumstances. This leads to XML that looks ok at first
+    glance, and renders ok in Formbuilder, but when Thor/Disco attempt to use it they get quite understandably confused and have
+    to choose to only display one of the elements. Spent quite awhile trying to figure out why this is happening, as its hard to
+    reproduce. Best guess is that it's related to Underscore's uniqueId function, which we were using both
+    in Backbone models and as the source behind the reasonOptionId attribute.
+    
+    Hopeful solution - stop using _.uniqueId and instead:
+    1. when data first comes into Formbuilder, we take a pass through it. See the performInitialUniqueIdPass function. This
+       looks at all elements and options and detects collisions and missing id's, adding those elements to a list to come back
+       at on a second pass. Also tracks the maximum id encountered across all elements.
+    
+    2. added a new function, Formbuilder::getNextUniqueGlobalId, that is used as a replacement for _.uniqueId, based on the
+       maximum id calculated in step 1.
+    
+    3. for all the problem elements detected in step 1, we take a pass through those and plug valid id's into the bootstrap json
+       using getNextUniqueGlobalId. This is then passed off to the model and we proceed as normal. It's important to note
+       that given good bootstrap data, no alterations are made, so if we ever do allow form editing in Reason w/o db 
+       destruction, this won't be a problem.
+    
+    4. altered Formbuilder.getNextUniqueOptionId to use getNextUniqueGlobalId instead. This takes care of option id's.
+    
+    5. updated the FormbuilderModel constructor to use getNextUniqueGlobalId too. This one is a little trickier as a cid
+       is actually assigned in the guts of Backbone DeepModel; so when creating a new element, the constructor modification
+       will blow those away with unique ones we generate, while if we're dealing with stuff the user saved to the db earlier,
+       things are left alone. Again, this is to maintain consistent id's wherever possible.
+    */
+
+
+    Formbuilder.prototype.reassignElementIdentifier = function(fields, slot) {
+      return fields[slot].cid = Formbuilder.getNextUniqueGlobalId("c");
+    };
+
+    Formbuilder.prototype.reassignOptionIdentifier = function(fields, elSlot, optSlot) {
+      var f;
+      f = fields[elSlot];
+      if ((f.field_options != null) && (f.field_options.options != null)) {
+        return f.field_options.options[optSlot].reasonOptionId = Formbuilder.getNextUniqueOptionId();
+      }
+    };
+
+    Formbuilder.prototype.reassignIdentifiers = function(fields) {
+      var fixChunks, fixer, slotChunks, _i, _len, _ref6, _results;
+      _ref6 = this.elsAndOptsToReId;
+      _results = [];
+      for (_i = 0, _len = _ref6.length; _i < _len; _i++) {
+        fixer = _ref6[_i];
+        fixChunks = fixer.split(":");
+        if (fixChunks[0] === "element") {
+          _results.push(this.reassignElementIdentifier(fields, Number(fixChunks[1])));
+        } else if (fixChunks[0] === "option") {
+          slotChunks = fixChunks[1].split(",");
+          _results.push(this.reassignOptionIdentifier(fields, Number(slotChunks[0]), Number(slotChunks[1])));
+        } else {
+          _results.push(void 0);
+        }
+      }
+      return _results;
+    };
+
+    Formbuilder.prototype.trackDupes = function(identifier) {
+      if (!identifier || identifier === "") {
+        return false;
+      }
+      if (!Number.isInteger(identifier)) {
+        identifier = Number(identifier.replace(/\D/g, ''));
+      }
+      if (this.dupeIdTracker[identifier]) {
+        this.dupeIdTracker[identifier] = this.dupeIdTracker[identifier] + 1;
+      } else {
+        this.dupeIdTracker[identifier] = 1;
+      }
+      Formbuilder.maxUsedId = Math.max(Formbuilder.maxUsedId, identifier);
+      return this.dupeIdTracker[identifier] > 1;
+    };
+
+    Formbuilder.prototype.performInitialUniqueIdPass = function(args) {
+      var bootstrapData, f, fields, i, k, opt, _i, _j, _len, _len1, _ref6;
+      console.log("performInitialUniqueIdPass start...");
+      this.madeInitialIdAdjustments = false;
+      this.dupeIdTracker = {};
+      Formbuilder.maxUsedId = -1;
+      this.elsAndOptsToReId = [];
       bootstrapData = args.bootstrapData;
       if (bootstrapData instanceof Array) {
         fields = bootstrapData;
       } else {
         fields = bootstrapData.fields;
       }
-      _results = [];
       for (i = _i = 0, _len = fields.length; _i < _len; i = ++_i) {
         f = fields[i];
+        if ((f.cid == null) || this.trackDupes(f.cid)) {
+          this.elsAndOptsToReId.push("element:" + i);
+          if (f.field_type !== "submit_button") {
+            this.madeInitialIdAdjustments = true;
+          }
+        }
         if ((f.field_options != null) && (f.field_options.options != null)) {
-          _results.push((function() {
-            var _j, _len1, _ref7, _results1;
-            _ref7 = f.field_options.options;
-            _results1 = [];
-            for (_j = 0, _len1 = _ref7.length; _j < _len1; _j++) {
-              opt = _ref7[_j];
-              if (opt.reasonOptionId == null) {
-                _results1.push(opt.reasonOptionId = Formbuilder.getNextUniqueOptionId());
-              } else {
-                _results1.push(void 0);
-              }
+          _ref6 = f.field_options.options;
+          for (k = _j = 0, _len1 = _ref6.length; _j < _len1; k = ++_j) {
+            opt = _ref6[k];
+            if ((opt.reasonOptionId == null) || this.trackDupes(opt.reasonOptionId)) {
+              this.elsAndOptsToReId.push("option:" + i + "," + k);
+              this.madeInitialIdAdjustments = true;
             }
-            return _results1;
-          })());
-        } else {
-          _results.push(void 0);
+          }
         }
       }
-      return _results;
+      return this.reassignIdentifiers(fields);
     };
 
     function Formbuilder(instanceOpts) {
@@ -1284,8 +1395,11 @@
       args = _.extend(instanceOpts, {
         formBuilder: this
       });
-      this.preprocessBootstrapDataForOptionsValidity(args);
+      this.performInitialUniqueIdPass(args);
       this.mainView = new BuilderView(args);
+      if (this.madeInitialIdAdjustments) {
+        this.mainView.formSaved = false;
+      }
       this.debug.BuilderView = this.mainView;
     }
 
@@ -1858,13 +1972,18 @@ return __p
 
 this["Formbuilder"]["templates"]["partials/left_side"] = function(obj) {
 obj || (obj = {});
-var __t, __p = '', __e = _.escape;
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
 with (obj) {
 __p += '<div class=\'fb-left\'>\n  <ul class=\'fb-tabs\'>\n    <li class=\'active\'><a data-target=\'#addField\'><i class=\'fa fa-plus-circle\'></i> Add new field</a></li>\n    <li><a data-target=\'#editField\'><i class=\'fa fa-edit\'></i> Edit field</a></li>\n  </ul>\n\n  <div class=\'fb-tab-content\'>\n    ' +
 ((__t = ( Formbuilder.templates['partials/add_field']() )) == null ? '' : __t) +
 '\n    ' +
 ((__t = ( Formbuilder.templates['partials/edit_field']() )) == null ? '' : __t) +
-'\n  </div>\n\n    <script language="Javascript">\n    function debugMe() {\n      // next line hooks up debug button for reason integration\n      // var fb = window.formbuilderInstance;\n\n      console.log("----------------- MODEL START --------------------");\n      for (var i = 0 ; i < fb.mainView.collection.models.length ; i++) {\n        var currModel = fb.mainView.collection.models[i];\n        console.log("[" + i + "] -> [" + JSON.stringify(currModel.attributes) + "]");\n      }\n      console.log("----------------- MODEL END --------------------");\n      // fb.saveForm()\n                       // fb.isFormReadyToSave();\n\n    }\n    </script>\n\n    <p><input type="button" onClick="debugMe();" value="debug info (please ignore)">\n\n</div>\n';
+'\n  </div>\n\n\t  ';
+ if (false) { ;
+__p += '\n\n\n    <script language="Javascript">\n\t\tvar duplicateClientIdChecker;\n\t\tvar dupesFound;\n\n\t\tfunction trackDupes(cid) {\n\t\t\tif (duplicateClientIdChecker[cid] != null) {\n\t\t\t\tdupesFound = true;\n\t\t\t\tduplicateClientIdChecker[cid] = duplicateClientIdChecker[cid] + 1;\n\t\t\t\treturn true;\n\t\t\t} else {\n\t\t\t\tduplicateClientIdChecker[cid] = 1;\n\t\t\t\treturn false;\n\t\t\t}\n\t\t}\n    function debugMe() {\n      // next line hooks up debug button for reason integration\n      // var fb = window.formbuilderInstance;\n\n      console.log("----------------- MODEL START --------------------");\n\t\t\tduplicateClientIdChecker = {};\n\t\t\tdupesFound = false;\n      for (var i = 0 ; i < fb.mainView.collection.models.length ; i++) {\n        var currModel = fb.mainView.collection.models[i];\n        // console.log("[" + i + "] -> [" + JSON.stringify(currModel.attributes) + "] (" + currModel.cid + ")/(" + currModel.attributes.cid + ")");\n        console.log("[" + i + "] -> [" + JSON.stringify(currModel.attributes) + "] (" + currModel.attributes.cid + ")");\n\n\t\t\t\tif (currModel.field_options != null && currModel.field_options.options != null) {\n\t\t\t\t\tfor (var k = 0 ; k < currModel.field_options.options.length ; k++) {\n\t\t\t\t\t\tvar currOpt = currModel.field_options.options[k];\n\t\t\t\t\t\ttrackDupes(currOpt.reasonOptionId);\n\t\t\t\t\t}\n\t\t\t\t}\n\n\t\t\t\ttrackDupes(currModel.attributes.cid);\n      }\n      console.log("----------------- MODEL END --------------------");\n\n\t\t\tif (dupesFound) {\n\t\t\t\tconsole.log("------- DUPES FOUND, UH OH! ------");\n\t\t\t\tconsole.log (JSON.stringify(duplicateClientIdChecker));\n\t\t\t\tconsole.log("------- DUPES FOUND, END ------");\n\t\t\t} else {\n\t\t\t\tconsole.log("------- no dupes found ------");\n\t\t\t}\n\n      // fb.saveForm()\n                       // fb.isFormReadyToSave();\n\n    }\n    </script>\n\n\t<p><input type="button" onClick="debugMe();" value="debug info (please ignore)">\n\t';
+ } ;
+__p += '\n\t<!-- marker -->\n\n</div>\n';
 
 }
 return __p
