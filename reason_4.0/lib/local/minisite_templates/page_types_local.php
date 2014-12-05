@@ -7,7 +7,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'global_header' => 'global/global_header',
 		'global_navigation' => 'global/global_navigation',
 			'pre_banner' => '',
-			'banner_xtra' => '=',
+			'banner_xtra' => '',
 			'post_banner' => '',
 			'pre_main_head' => array(
 				'module' => 'feature/feature',
