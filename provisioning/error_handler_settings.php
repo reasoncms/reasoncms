@@ -47,7 +47,7 @@ $GLOBALS[ '_DEVELOPER_INFO' ] = array(
 if ( THIS_IS_A_DEVELOPMENT_REASON_INSTANCE  ){
 	$GLOBALS[ '_DEVELOPER_INFO' ] = array(
         'steve' => array(
-            'ip'	=> array('10.22.44.200','127.0.0.1'),
+            'ip'	=> '127.0.0.1',
             'pager'	=> '5634191556@vtext.com',
             'email'	=> 'steve.smith@luther.edu'
         )

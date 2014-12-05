@@ -130,10 +130,10 @@ class swimming_eventsType extends selectType
 	function load_options( $args = array())
 	{
 		$positions = array(
-			'BU' => 'Butterfly',
-			'BA' => 'Backstroke',
-			'BR' => 'Breaststroke',
-			'FR' => 'Freestyle',
+			'Fl' => 'Butterfly',
+			'Bk' => 'Backstroke',
+			'Br' => 'Breaststroke',
+			'Fr' => 'Freestyle',
 			'IM' => 'Individual Medley',
 			'D' => 'Diving',
 		);
