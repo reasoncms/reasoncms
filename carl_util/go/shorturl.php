@@ -95,6 +95,23 @@ class ShortURL
             return false;
     }
 
+	function get_long_URL_for_shortcut($shortcut)
+	{
+        $query = 'SELECT long_URL FROM redirects WHERE short_URL="' . $shortcut . '"';
+        
+        $results = mysql_query( $query, $this->db );
+        
+        if( mysql_num_rows( $results ) > 0 )
+        {
+            if( $row = mysql_fetch_row( $results ) )
+            {
+                return $row[0];
+            }
+        }
+        else
+            return "";
+	}
+
     function short_URL_exists()
     {
         $query = 'SELECT short_URL FROM redirects WHERE short_URL="' . $this->temp_short_URL . '"';
@@ -347,7 +364,7 @@ class ShortURL
     
     function print_form( $shortURLerror = false, $longURLerror = false )
     {
-        echo    '<p><form method="POST" action="?action=add">';
+        echo    '<p><form id="update_go_redirect_form" method="POST" action="?action=add">';
                 
         if( $longURLerror )
         {
@@ -370,11 +387,37 @@ class ShortURL
         else
         {
             echo    '<p>Enter the full URL (including "http://") you would like shortened:</p>';
-            
+
             if( $shortURLerror )
             {
                 echo    '<p><input type="text" size="80" name="longURL" value="' . $_POST['longURL'] . '" /></p>' . 
                         '<p>'.$_POST['shortURL'] . ' already exists.</p>';
+
+				if ($this->is_admin()) {
+					$existing_mapping = $this->get_long_URL_for_shortcut($_POST['shortURL']);
+					$inlineJs = <<<JS
+						<script language="JavaScript">
+							function executeReplacement() {
+								var shortcut = '${_POST["shortURL"]}';
+								var url = '${_POST["longURL"]}';
+
+								var form = $("form#update_go_redirect_form");
+								var shortcutInputField = form.find("input[name='shortURL']");
+								var urlInputField = form.find("input[name='longURL']");
+
+								shortcutInputField.val(shortcut);
+								urlInputField.val(url);
+								form.attr("action", "?action=replace");
+								form.submit();
+							}
+						</script>
+JS;
+					echo $inlineJs;
+					echo "<div style='border-style:solid; width:75%; padding:10px'>\"" . $_POST['shortURL'] . "\" is currently mapped to \"$existing_mapping\"." .
+						"<p>Would you like to delete the existing mapping for \"" . $_POST['shortURL'] . "\" " .
+						"and replace it with one for \"" . $_POST['longURL'] . "\"?</p>" .
+						"<p><input type=\"button\" onClick=\"executeReplacement();\" value=\"Yes; replace existing entry\"/></p></div>";
+				}
             }
             else
             {
@@ -403,6 +446,53 @@ class ShortURL
         
     }
     
+	function replace_entry()
+	{
+        if( $this->is_admin() )
+		{
+			$shortcut = $_POST['shortURL'];
+			$url = $_POST['longURL'];
+
+            $this->set_long_URL( $_POST['longURL'] );
+			$this->set_temp_short_URL( $_POST['shortURL'] );
+
+			if( $this->short_URL_exists() )
+			{
+				$query =    'UPDATE redirects SET ' . 
+							'long_URL="' . $this->long_URL . '" ' .
+							'WHERE short_URL="' . $this->temp_short_URL . '"';
+				
+				// echo $query . '<br />';
+				
+				$result = mysql_query( $query , $this->db ) 
+					or die( "Query failed : " . mysql_error());
+
+                array_push( $this->short_URLs, $this->temp_short_URL);
+				$this->show_results_and_form();
+			}
+			else
+			{
+				echo "<p>Error attempting this action</p>"; // should never happen, so cryptic...
+			}
+		}
+		else
+		{
+			# somehow a non-admin managed to submit this...
+			echo '<p>Replace action not allowed for this user.</p>';
+		}
+	}
+
+	function show_results_and_form()
+	{
+		$URLs = $this->get_short_URLs();
+	
+		foreach( $URLs as $URL )
+		{       
+			echo '<p>Shortened URL: <a href="' . $this->basedir . '/' . $URL . '">http://go.carleton.edu/' . $URL . '</a></p>';
+		}
+		
+		$this->print_form();
+	}
     
     function open_body()
     {
@@ -469,15 +559,7 @@ class ShortURL
                 {
                     if( $this->set_short_URL() )
                     {
-                        
-                        $URLs = $this->get_short_URLs();
-                    
-                        foreach( $URLs as $URL )
-                        {       
-                            echo '<p>Shortened URL: <a href="' . $this->basedir . '/' . $URL . '">http://go.carleton.edu/' . $URL . '</a></p>';
-                        }
-                        
-                        $this->print_form();
+						$this->show_results_and_form(); 
                     }
                     else
                     {
