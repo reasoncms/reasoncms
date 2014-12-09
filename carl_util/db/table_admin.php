@@ -2066,11 +2066,13 @@ class TableAdmin
 					if ($dataRow["id"] >= $targetMin && $dataRow["id"] <= $targetMax) {
 						foreach ($this->fileColumns as $fileCol => $fileLabel) {
 							$path = $tc->construct_file_storage_location($dataRow["id"], $fileCol, $dataRow[$fileCol]);
-							// echo "[$i]: include $fileLabel [" . $dataRow[$fileCol] . "] -> [" . $path . "]<P>";
-							$zipData[] = Array(
-												"actualPath" => $path,
-												"pathInZip" => "/row_" . $dataRow["id"] . "/" . $fileLabel . "/" . $dataRow[$fileCol]
-											);
+							if (file_exists($path)) {
+								// echo "[$i]: include $fileLabel [" . $dataRow[$fileCol] . "] -> [" . $path . "]<P>";
+								$zipData[] = Array(
+													"actualPath" => $path,
+													"pathInZip" => "/row_" . $dataRow["id"] . "/" . $fileLabel . "/" . $dataRow[$fileCol]
+												);
+							}
 						}
 					}
 					$i++;
