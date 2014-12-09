@@ -294,7 +294,7 @@ class ThorAdmin extends TableAdmin
 	{ 
 		$tc = $this->get_thor_core();
 		$values = $tc->get_thor_values_from_form($this);
-		$tc->update_values_for_primary_key($this->get_action_id(), $values);
+		$tc->update_values_for_primary_key($this->get_action_id(), $values, $this);
 	}
 	
 	/**
