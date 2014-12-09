@@ -162,6 +162,7 @@ class ThorCore
 	function append_thor_elements_to_form(&$disco_obj)
 	{
 		$xml = $this->get_thor_xml();
+		// echo "<PRE>" . $xml . "</PRE>";
 		if ($xml && $disco_obj)
 		{
 			foreach ($xml->document->tagChildren as $node)
@@ -319,7 +320,7 @@ class ThorCore
   			$result = db_query($query);
   			$insert_id = mysql_insert_id();
 
-			$this->handle_file_uploads($insert_id, $disco_obj);
+			$this->handle_file_uploads($insert_id, $disco_obj, true);
 
   			$GLOBALS['sqler']->mode = '';
   			if ($reconnect_db) connectDB($reconnect_db); // reconnect to default DB
@@ -353,28 +354,23 @@ class ThorCore
 		}
 	}
 
-	function delete_file_storage_for_form() {
-		$storage_location_base_dir = THOR_SUBMITTED_FILE_STORAGE_BASEDIR;
-		$form_specific_dir = $storage_location_base_dir . $this->get_thor_table() . "/";
+	// helper fxns to get at the various directories we use for storing files uploaded via thor
+	function get_thor_filestorage_base_storage_dir() { return THOR_SUBMITTED_FILE_STORAGE_BASEDIR; }
+	function get_thor_filestorage_form_specific_storage_dir() { return $this->get_thor_filestorage_base_storage_dir() . $this->get_thor_table() . "/"; }
+	function get_thor_filestorage_row_specific_storage_dir($row_id) { return $this->get_thor_filestorage_form_specific_storage_dir() . "row_" . $row_id . "/"; }
+	function get_thor_filestorage_row_and_col_specific_storage_dir($row_id, $col_id) { return $this->get_thor_filestorage_row_specific_storage_dir($row_id) . $col_id . "/"; }
 
-		rmdir_and_contents($form_specific_dir); // see reason_package/reason_4.0/lib/core/function_libraries/util.php
-	}
-
-	function delete_file_storage_for_row($row_id) {
-		$storage_location_base_dir = THOR_SUBMITTED_FILE_STORAGE_BASEDIR;
-		$form_specific_dir = $storage_location_base_dir . $this->get_thor_table() . "/";
-		$submission_dir = $form_specific_dir . "row_" . $row_id . "/";
-
-		rmdir_and_contents($submission_dir); // see reason_package/reason_4.0/lib/core/function_libraries/util.php
-	}
+	// for rmdir_and_contents, see reason_package/reason_4.0/lib/core/function_libraries/util.php
+	function delete_file_storage_for_form() { rmdir_and_contents($this->get_thor_filestorage_form_specific_storage_dir()); }
+	function delete_file_storage_for_row($row_id) { rmdir_and_contents($this->get_thor_filestorage_row_specific_storage_dir($row_id)); }
+	function delete_file_storage_for_row_and_col($row_id, $col_id) { rmdir_and_contents($this->get_thor_filestorage_row_and_col_specific_storage_dir($row_id, $col_id)); }
 
 	// given some data about a particular file submission in a form, returns the path (optionally creating the directories)
 	function construct_file_storage_location($row_id, $col_id, $filename, $create_dirs = false) {
-		$storage_location_base_dir = THOR_SUBMITTED_FILE_STORAGE_BASEDIR;
-		$form_specific_dir = $storage_location_base_dir . $this->get_thor_table() . "/";
-		$submission_dir = $form_specific_dir . "row_" . $row_id . "/";
-
-		$destination_dir = $submission_dir . $col_id . "/";
+		$storage_location_base_dir = $this->get_thor_filestorage_base_storage_dir();
+		$form_specific_dir = $this->get_thor_filestorage_form_specific_storage_dir();
+		$submission_dir = $this->get_thor_filestorage_row_specific_storage_dir($row_id);
+		$destination_dir = $this->get_thor_filestorage_row_and_col_specific_storage_dir($row_id, $col_id);
 
 		if ($create_dirs) {
 			$this->create_dirs_if_needed(Array(
@@ -388,8 +384,15 @@ class ThorCore
 		return $destination_dir . $filename;
 	}
 
-	function handle_file_uploads($insert_id, $disco_obj)
+	function handle_file_uploads($primary_key, $disco_obj, $initialSave)
 	{
+		if ($disco_obj == null) { return; }
+
+		// tough to decide, but going with "an update clears out any previous files stored" approach
+		if (!$initialSave) {
+			$this->delete_file_storage_for_row($primary_key);
+		}
+
 		$update_clauses = Array();
 
 		$xml = $this->get_thor_xml();
@@ -403,10 +406,10 @@ class ThorCore
 				if ($upload_data["tmp_name"] != "") {
 					$disco_el = $disco_obj->get_element($col_id);
 
-					if ($disco_el->state == "received") { // || $disco_el->state == "pending") {
+					if ($disco_el->state == "received") { // || $disco_el->state == "pending")
 						$source_file = $disco_el->tmp_full_path;
 						// $destination_file = $destination_dir . $upload_data["name"];
-						$destination_file = $this->construct_file_storage_location($insert_id, $col_id, $upload_data["name"], true);
+						$destination_file = $this->construct_file_storage_location($primary_key, $col_id, $upload_data["name"], true);
 
 						$success = rename($source_file, $destination_file);
 						if ($success) {
@@ -415,16 +418,18 @@ class ThorCore
 					} else {
 						// echo "ERROR - element not received (" . $disco_el->state . ")<P>";
 						// not sure what to do here...when would this occur, with paticularly large files?
+						$update_clauses[$col_id] = "";
 					}
 				} else {
 					// no file was uploaded for this; that's ok
+					$update_clauses[$col_id] = "";
 				}
 			}
 		}
 
 		if (count($update_clauses) > 0) {
   			$GLOBALS['sqler']->mode = 'get_query';
-  			$update = $GLOBALS['sqler']->update_one($this->get_thor_table(), $update_clauses, $insert_id);
+  			$update = $GLOBALS['sqler']->update_one($this->get_thor_table(), $update_clauses, $primary_key);
   			$result = db_query($update);
   			$GLOBALS['sqler']->mode = '';
 		}
@@ -432,9 +437,14 @@ class ThorCore
 	
 	/**
 	 * @todo more error checks
+	 * 
+	 * NOTE - disco_obj is usually a disco obj but it CAN BE NULL - for instance the call to this function
+	 * from language_placement_post.php doesn't have a reference to a disco object and so it passes in null. Right
+	 * now, disco_obj is only used for handling file uploads.
 	 */
-	function update_values_for_primary_key($primary_key, $values)
+	function update_values_for_primary_key($primary_key, $values, $disco_obj = null)
 	{
+		// echo "FIRING UPDATE [$primary_key]/[<PRE>"; var_dump($values); echo "</PRE>; " . ($disco_obj instanceof Disco ? "valid Disco passed in!" : "garbage...") . "<HR>"; die();
 		if ($this->get_thor_table() && !empty($values) && ($primary_key > 0))
 		{
 			if (!get_current_db_connection_name()) connectDB($this->get_db_conn());
@@ -443,6 +453,9 @@ class ThorCore
   			$GLOBALS['sqler']->mode = 'get_query';
   			$query = $GLOBALS['sqler']->update_one( $this->get_thor_table(), $values, $primary_key, 'id' );
   			$result = db_query($query);
+
+			$this->handle_file_uploads($primary_key, $disco_obj, false);
+
   			$GLOBALS['sqler']->mode = '';
   			if ($reconnect_db) connectDB($reconnect_db); // reconnect to default DB
   		}
