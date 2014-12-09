@@ -995,7 +995,7 @@ class ThorFormModel extends DefaultFormModel
 		
 		if ( $form_id && $this->_is_editable() ) // update
 		{
-			$thor_core->update_values_for_primary_key($form_id, $data, $this->get_view());
+			$thor_core->update_values_for_primary_key($form_id, $data, $this->get_view()); // updating for uploads
 			}
 		else // insert
 		{
