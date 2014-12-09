@@ -386,6 +386,7 @@ class ThorCore
 
 	function handle_file_uploads($primary_key, $disco_obj, $initialSave)
 	{
+		// svn weirdness
 		if ($disco_obj == null) { return; }
 
 		// tough to decide, but going with "an update clears out any previous files stored" approach
