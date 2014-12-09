@@ -168,8 +168,15 @@
 		
 		$head_items = $this->get_head_items();
 		$head_items->add_javascript(JQUERY_URL, true);
-		
-		$head_items->add_javascript('/reason/local/luther_2014/javascripts/tablesorter.min.js');
+	
+        	$head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/js/jquery.tablesorter.min.js');
+                $head_items->add_stylesheet(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/css/theme.ice.css');
+                $head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/addons/pager/jquery.tablesorter.pager.min.js');
+                $head_items->add_stylesheet(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/addons/pager/jquery.tablesorter.pager.css');
+                $head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/js/jquery.tablesorter.widgets.min.js');
+                $head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/js/jquery.tablesorter.widgets-filter-formatter.min.js');
+                $head_items->add_stylesheet(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/css/filter.formatter.css');
+
 		$head_items->add_javascript('/reason/local/luther_2014/javascripts/vendor/jquery.hoverIntent.min.js');
 		$head_items->add_stylesheet('/reason/local/luther_2014/javascripts/vendor/jquery.cluetip.css');
 		$head_items->add_javascript('/reason/local/luther_2014/javascripts/vendor/jquery.cluetip.min.js');		
@@ -180,7 +187,7 @@
 		{
 			$head_items->add_stylesheet(UNIVERSAL_CSS_PATH);
 		}
-		
+	
 		$head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'FancyBox/source/jquery.fancybox.js');
 		$head_items->add_stylesheet(REASON_PACKAGE_HTTP_BASE_PATH.'FancyBox/source/jquery.fancybox.css');
 		$head_items->add_head_item('script', array('type'=>'text/javascript'),
@@ -278,8 +285,7 @@
 	function run()
 	{
 		$this->sort_columns($this->_columns);
-		$this->handle_abbreviated_position_events();
-		
+		$this->handle_abbreviated_position_events();	
 		if (!empty($this->request['id']))
 		{
 			echo '<div id="athleticsPlayerInfo">';
@@ -365,7 +371,8 @@
 					// allows custom table sorting parser to be used for a given column
 					// the sorting parser is located in javascripts/jquery.init.js
 					// see http://tablesorter.com/docs/example-meta-headers.html
-					$str .= '<th class="{sorter: \'' . $k .'\'}">';   
+					//$str .= '<th class="{sorter: \'' . $k .'\'}">'; **removed meta-header
+					$str .= '<th class="'.$k.'">';     
 					$str .= $this->gen_custom_header($k);
 					$str .= '</th>';
 				}

@@ -5,7 +5,7 @@
 	<title>jQuery plugin: Tablesorter 2.0 - Resizable Columns Widget</title>
 
 	<!-- jQuery -->
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+	<script src="js/jquery-1.4.4.min.js"></script>
 
 	<!-- Demo stuff -->
 	<link rel="stylesheet" href="css/jq.css">
@@ -21,9 +21,16 @@
 	<!-- Tablesorter: optional -->
 	<!-- <script src="../addons/pager/jquery.tablesorter.pager.js"></script> -->
 
-	<style>
-	th.tablesorter-header.resizable-false { background-color: #e6bf99; }
-	</style>
+	<style id="css">th.tablesorter-header.resizable-false {
+	background-color: #e6bf99;
+}
+/* ensure box-sizing is set to content-box, if using jQuery versions older than 1.8;
+ this page is using jQuery 1.4 */
+*, *:before, *:after {
+	-moz-box-sizing: content-box;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box;
+}</style>
 
 <script id="js">$(function() {
 
@@ -39,7 +46,14 @@
 	$("table:last").tablesorter({
 		theme : 'blue',
 		// initialize zebra striping and resizable widgets on the table
-		widgets: [ "zebra", "resizable" ]
+		widgets: [ "zebra", "resizable" ],
+		widgetOptions: {
+			resizable: true,
+			// These are the default column widths which are used when the table is
+			// initialized or resizing is reset; note that the "Age" column is not
+			// resizable, but the width can still be set to 40px here
+			resizable_widths : [ '10%', '10%', '40px', '10%', '100px' ]
+		}
 	});
 
 });</script>
@@ -56,6 +70,9 @@
 	<p class="tip">
 		<em>NOTE!</em>
 		<ul>
+			<li><span class="label label-info">IMPORTANT</span> If using jQuery versions older than 1.8, css box-sizing for the table <em>MUST</em> be set as <code>box-sizing: content-box;</code> or the resizable widget will not work properly.</li>
+			<li>In <span class="version">v2.17.4</span>, modified the bindings so the mouse move will now work on the document instead of only within the table header; this makes interaction consistent with what the user expects.</li>
+			<li>In <span class="version">v2.15.12</span>, added <code>resizable_widths</code> option which allows the setting of default &amp; reset header widths.</li>
 			<li>As of tablesorter version 2.9+, this widget can no longer be applied to versions of tablesorter prior to version 2.8.</li>
 			<li>This widget now saves all changed column widths to local storage, or it falls back to a cookie! (v2.1)</li>
 			<li>Column width saving requires the new "$.tablesorter.storage()" function included with the "jquery.tablesorter.widgets.js" file (v2.1).</li>
@@ -74,7 +91,7 @@
 			<li>In order to save the resized widths, jQuery version 1.4.1+ should be used because jQuery's <code>parseJson()</code> function is needed.</li>
 			<li>Setting the <code>resizable_addLastColumn</code> widget option to <code>true</code> will add the resizable handle to the last column, see the "non-full" width table below (<span class="version">v2.9.0</span>).</li>
 		</ul>
-	</p>
+	<p>
 
 	<h1>Demo</h1>
 	<div id="demo">
@@ -200,6 +217,11 @@
 
 &lt;!-- tablesorter widget file - loaded after the plugin --&gt;
 &lt;script src=&quot;../js/jquery.tablesorter.widgets.js&quot;&gt;&lt;/script&gt;</pre>
+	</div>
+
+	<h1>CSS</h1>
+	<div id="css">
+		<pre class="prettyprint lang-css"></pre>
 	</div>
 
 	<h1>Javascript</h1>

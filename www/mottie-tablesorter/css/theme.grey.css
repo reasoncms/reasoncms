@@ -21,7 +21,7 @@
 	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#555), to(#3c3c3c));
 	background-image: -webkit-linear-gradient(top, #555, #3c3c3c);
 	background-image: -o-linear-gradient(top, #555, #3c3c3c);
-	background-image: linear-gradient(to bottom, #555,#3c3c3c); 
+	background-image: linear-gradient(to bottom, #555,#3c3c3c);
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#555555', endColorstr='#3c3c3c',GradientType=0 );
 	background-repeat: repeat-x;
 	border-right: #555 1px solid;
@@ -35,6 +35,10 @@
 .tablesorter-grey .tablesorter-header-inner {
 	position: relative;
 	padding: 4px 15px 4px 4px;
+}
+.tablesorter-grey .header,
+.tablesorter-grey .tablesorter-header {
+	cursor: pointer;
 }
 .tablesorter-grey .header i,
 .tablesorter-grey .tablesorter-header i {
@@ -50,7 +54,6 @@
 	background-position: center right;
 	padding: 4px;
 	white-space: normal;
-	cursor: pointer;
 }
 .tablesorter-grey th.headerSortUp,
 .tablesorter-grey th.tablesorter-headerSortUp,
@@ -77,6 +80,9 @@
 .tablesorter-grey .tablesorter-headerDesc i {
 	/* white desc arrow */
 	background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAAP///////yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7);
+}
+.tablesorter-grey thead .sorter-false {
+	cursor: default;
 }
 .tablesorter-grey thead .sorter-false i {
 	background-image: none;
@@ -131,10 +137,10 @@
 }
 
 /* Zebra Widget - row alternating colors */
-.tablesorter-grey tbody tr.odd td {
+.tablesorter-grey tbody tr.odd > td {
 	background-color: #5e5e5e;
 }
-.tablesorter-grey tbody tr.even td {
+.tablesorter-grey tbody tr.even > td {
 	background-color: #6d6d6d;
 }
 
@@ -199,7 +205,7 @@ caption {
 	line-height: 0;
 	cursor: pointer;
 }
-.tablesorter-grey .tablesorter-filter-row.hideme .tablesorter-filter {
+.tablesorter-grey .tablesorter-filter-row.hideme * {
 	height: 1px;
 	min-height: 0;
 	border: 0;
@@ -226,9 +232,14 @@ caption {
 	-o-transition: height 0.1s ease;
 	transition: height 0.1s ease;
 }
+/* rows hidden by filtering (needed for child rows) */
+.tablesorter .filtered {
+	display: none;
+}
 
 /* ajax error row */
 .tablesorter .tablesorter-errorRow td {
+	text-align: center;
 	cursor: pointer;
 	background-color: #e6bf99;
 }
