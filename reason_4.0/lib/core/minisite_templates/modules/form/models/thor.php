@@ -540,6 +540,13 @@ class ThorFormModel extends DefaultFormModel
 	{
 		$thor_core =& $this->get_thor_core_object();
 		$thor_values = $thor_core->get_thor_values_from_form($disco_obj);
+
+		// add any submitted files - this will have things show up in confirmation screens and in emails.
+		$attachmentSummaryData = $this->get_file_upload_summary_data();
+		foreach ($attachmentSummaryData as $col_id => $asd) {
+			$thor_values[$col_id] = $asd["filename"];
+		}
+
 		// Merge in any additional dynamic fields specified by the application
 		if (($dynamic = $disco_obj->get_show_submitted_data_dynamic_fields()) && is_array($dynamic) )	
 		{
@@ -877,23 +884,14 @@ class ThorFormModel extends DefaultFormModel
 			$email_data = $this->get_values_for_email();
 			$email_options = $this->get_options_for_email();
 
-			// if there were attachments, let's add some info about them to the text of the mail
-			if (isset($email_options["attachmentMetadata"])) {
-				$attachmentMetadata = $email_options["attachmentMetadata"];
-				foreach ($attachmentMetadata as $columnName => $filename) {
-					$email_data[$columnName] = $filename . " (attached)";
-				}
-				unset($email_options["attachmentMetadata"]);
-			}
-
 			$this->send_email($email_data, $email_options);
 
 			// clear out any attachments from the temp dir
 			if (!$this->should_save_form_data()) {
-				$attachments = isset($email_options["attachments"]) ? $email_options["attachments"] : Array();
+				$attachmentSummaryData = isset($email_options["attachmentSummaryData"]) ? $email_options["attachmentSummaryData"] : Array();
 
-				foreach($attachments as $fileName => $filePath) {
-					unlink($filePath);
+				foreach($attachmentSummaryData as $col_id => $asd) {
+					unlink($asd["path"]);
 				}
 			}
 		}
@@ -929,39 +927,50 @@ class ThorFormModel extends DefaultFormModel
 			//
 			// @todo - make this a configurable thing on the form? Maybe some people don't want every attachment emailed to them...
 			// @todo - add a mapping that indicates which file came in as part of which column
-			$rawXml = $this->get_form_entity()->get_value('thor_content');
-			$formXml = new XMLParser($rawXml);
-			$formXml->Parse();
-			$attachments = Array();
-			$attachmentMetadata = Array();
-			foreach ($formXml->document->tagChildren as $node) {	
-				if ($node->tagName == 'upload') {
-					$col_id = $node->tagAttrs['id'];
-					$col_label = $node->tagAttrs['label'];
-					$upload_data = $_FILES[$col_id];
-					if ($upload_data["tmp_name"] != "") {
-						$disco_el = $this->get_view()->get_element($col_id);
 
-						if ($disco_el->state == "received") {
-							if ($this->should_save_form_data()) {
-								$tc = $this->get_thor_core_object();
-								$attachments[$upload_data["name"]] = $tc->construct_file_storage_location($this->get_form_id(), $col_id, $upload_data["name"]);
-							} else {
-								$attachments[$upload_data["name"]] = $disco_el->tmp_full_path;
-							}
-							$attachmentMetadata[$col_label] = $upload_data["name"];
-						}
-					}
+			$attachmentSummaryData = $this->get_file_upload_summary_data();
+			if (count($attachmentSummaryData) > 0) {
+				$options["attachmentSummaryData"] = $attachmentSummaryData;
+
+				// actually attach the data to the email
+				$attachments = Array();
+				foreach($attachmentSummaryData as $col_id => $asd) {
+					$attachments[$asd["filename"]] = $asd["path"];
 				}
-			}
-
-			if (count($attachments) > 0) {
-				$options["attachments"] = $attachments;
-				$options["attachmentMetadata"] = $attachmentMetadata;
+				$options["attachments"] = $attachments; // store it here so the files actually get attached to the email
 			}
 		}
 
 		return $options;
+	}
+
+	function get_file_upload_summary_data()
+	{
+		$rawXml = $this->get_form_entity()->get_value('thor_content');
+		$formXml = new XMLParser($rawXml);
+		$formXml->Parse();
+		$attachmentData = Array();
+		foreach ($formXml->document->tagChildren as $node) {
+			if ($node->tagName == 'upload') {
+				$col_id = $node->tagAttrs['id'];
+				$col_label = $node->tagAttrs['label'];
+				$upload_data = $_FILES[$col_id];
+				if ($upload_data["tmp_name"] != "") {
+					$disco_el = $this->get_view()->get_element($col_id);
+
+					if ($disco_el->state == "received") {
+						$attachmentData[$col_id] = Array("label" => $col_label, "filename" => $upload_data["name"]);
+						if ($this->should_save_form_data()) {
+							$tc = $this->get_thor_core_object();
+							$attachmentData[$col_id]["path"] = $tc->construct_file_storage_location($this->get_form_id(), $col_id, $upload_data["name"]);
+						} else {
+							$attachmentData[$col_id]["path"] = $disco_el->tmp_full_path;
+						}
+					}
+				}
+			}
+		}
+		return $attachmentData;
 	}
 	
 	function save_form_data()
@@ -975,6 +984,7 @@ class ThorFormModel extends DefaultFormModel
 		$values =& $this->get_values_for_submitter_view();
 		$session =& get_reason_session();
 		if (!$session->has_started()) $session->start();
+
 		$session->set('form_confirm', $values);
 	}
 	
