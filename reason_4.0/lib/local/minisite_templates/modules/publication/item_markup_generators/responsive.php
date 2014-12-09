@@ -108,14 +108,13 @@ class ResponsiveItemMarkupGenerator extends PublicationItemMarkupGenerator
 
 	function get_social_sharing_section()
 	{
-		//$ret = '<p><strong>Share the love:</strong>';
+		$ret = '';
 		foreach($this->passed_vars['item_social_sharing'] as $social_sharing)
 		{
 			$ret .= '<a href="'.$social_sharing['href'].'">';
 			$ret .= '<img src="'. $social_sharing['icon'] . '" alt="'. $social_sharing['text'] . '" />';
 			$ret .= '</a>';
 		}
-	//	$ret .= '</p>';
 		return $ret;
 	}
 
@@ -169,14 +168,21 @@ class ResponsiveItemMarkupGenerator extends PublicationItemMarkupGenerator
 	{
 		foreach($this->passed_vars['item_images'] as $image)
 		{
-			$str .= '<div class="imageChunk">';
+			$str = '<div class="imageChunk">';
 			$rsi = new reasonSizedImage();
 			$rsi->set_id($image->id());
 			$rsi->set_width(600);
 			//$rsi->set_height(400);
 			//$rsi->set_crop_style('fill');
 			ob_start();
-			show_image( $rsi, false, true, true, '');
+			if (preg_match("/hide_caption/", $image->get_value('keywords')))
+			{
+				show_image( $rsi, false, true, false, '');
+			}
+			else 
+			{
+				show_image( $rsi, false, true, true, '');
+			}
 			$str .= ob_get_contents();
 			ob_end_clean();
 			$str .= '</div>';
