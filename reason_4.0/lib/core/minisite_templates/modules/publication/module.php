@@ -2546,6 +2546,8 @@ var $noncanonical_request_keys = array(
 		function show_style_string()
 		{
 			$class_string = ($this->related_mode) ? 'relatedPub' : 'publication';
+			if(empty($this->filters) && empty( $this->current_item_id ))
+				$class_string .= ' homePostsDisplay';
 			if(!empty( $this->current_item_id ) )
 				$class_string .= ' fullPostDisplay';
 			if(!empty($this->filters) && empty( $this->current_item_id ))
