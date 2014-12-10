@@ -3,7 +3,7 @@
 $(document).ready(function() {
 
 	// initialize Isotope
-	var $container = $('.sections').isotope({
+	var $container = $('.homePostsDisplay .sections').isotope({ // Let's use the Isotope effect on the home page only
 	   itemSelector: '.post',
 		masonry: {
 			columnWidth: '.grid-sizer'
