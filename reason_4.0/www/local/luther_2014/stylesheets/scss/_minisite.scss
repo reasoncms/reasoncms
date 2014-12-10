@@ -165,7 +165,7 @@
 		}
 		@media #{$large-up} {
 			#contentAndRelated {
-				// Minisite navigation is in "desktop" view at and below this range, resulting in 3 columns.
+				// Minisite navigation is in "desktop" view at and above this range, resulting in 3 columns.
 				@include grid-column($columns: 11, $collapse: true);
 				padding-left: $column-gutter / 2;
 				// background: red;
@@ -300,10 +300,6 @@
 		@include box-shadow(rgba(#000, .5) 0 0 4px);
 		position: relative;
 		z-index: 9;
-		
-		&.open {
-			//margin-bottom: $column-gutter;	
-		}
 
 		@media #{$large-up} {
 			@include box-shadow(0 0 0 0);
@@ -313,7 +309,7 @@
 			position: absolute;
 			top: -$header-height-mobile;
 			right: 0;
-			width: $header-height-mobile * 1.66;
+			width: auto;
 			height: $header-height-mobile;
 			display: block;
 			z-index: 12;
@@ -321,48 +317,46 @@
 			&.open {
 				background: lighten($minisite-nav-background, 5%);
 				@include box-shadow(rgba(#000, .2) -2px -2px 2px);
+				width: $header-height-mobile;
 
 				.fa-times {
-					display: block; 
-					width: $header-height-mobile;
-					margin-left:22%;
-					font-size: 1.2em;
+					display: block;
 				}
-				.fa-bars {display: none;}
-				.menu_help {display: none;}
-			}
-
-			h1 {
-				font-size: rem-calc(20);
-				color: $lc-blue-light;
-				
-				p {
-					font-weight: bold;
-					font-size:10px; 
-					width:39%; 
-					display: inline;
-					margin-bottom: 0;
-					margin-left: 10px;
-					position: relative;
-					top: -4px;
-					
-					i.fa-arrow-right{
-						font-size: 10px;
-						width: auto;
-					}
+	
+				h1,
+				.fa-bars {
+					display: none;
 				}
 			}
 
 			i {
 				font-size: rem-calc(20);
-				width: $header-height-mobile / 2; // get rid of divided by 2 if not using "menu" help text next to icon
+				width: $header-height-mobile;
 				margin-top: rem-calc(20);
 				text-align: center;				
+				
 				&.fa-times {
 					display: none;
 				}
 			}
-			span {
+
+			h1 {
+				font-size: rem-calc(10);
+				color: $lc-blue-light;
+				font-weight: bold;
+				display: inline;
+				margin: 0;
+				margin-right: - rem-calc(14);
+				position: relative;
+				top: - rem-calc(4);
+
+				i.fa-arrow-right{
+					font-size: rem-calc(10);
+					width: auto;
+				}
+			}
+
+			.screenreader {
 				@extend .screenreader;
 			}
 
@@ -373,8 +367,7 @@
 		}
 		
 		// Sidebar nav background color
-		#minisiteNavigation {	
-			//background: lighten($minisite-nav-background, 3%);
+		#minisiteNavigation {
 			background: lighten($minisite-nav-background, 4%);
 		}
 
@@ -503,10 +496,7 @@
 						}
 					}
 				}
-			
 			}
-			
-			
 		}
 		
 		.navListTop ul .navListItem {
