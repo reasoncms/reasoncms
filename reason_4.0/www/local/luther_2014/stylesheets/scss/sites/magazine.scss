@@ -12,14 +12,25 @@
 // Luther imports
 @import "extends";
 
-// GENERAL THEME STYLES 
+// TABLE OF CONTENTS
+//
+// 1. GENERAL THEME STYLES
+//    1A. HEADER
+//    1B. MINISITE NAVIGATION
+//
+// 2. PUBLICATION MODULE STYLES
+//    2A. SHARED STYLES
+//    2B. HOME PAGE 
+//    2C. FILTERED PAGE 
+//    2D. FULL ARTICLE PAGE 
 
+// 1. GENERAL THEME STYLES 
 .lutherMagazine {
 
 	#minisite {
 		position: relative;
 
-		// HEADER
+		// 1A. HEADER
 		#minisiteBanner {  // Mobile banner
 
 			@media #{$medium-and-below} {
@@ -52,7 +63,7 @@
 			}
 		}
 
-		// MINISITE NAVIGATION
+		// 1B. MINISITE NAVIGATION
 		#navWrap {
 
 			a.toggle {
@@ -163,18 +174,9 @@
 			}
 		}
 	}
-
-	// Issue drop down 
-	.issueMenu {
-
-		label.issueLabel {
-			@extend .screenreader;
-		}
-	}
 }
 
-
-// PUBLICATION MODULE STYLES
+// 2. PUBLICATION MODULE STYLES
 //
 // In luther_magazine.php, we give the home page the class of .siteHome. 
 // In this case, the home page is the entire publication module because all parts of the publication module run on the same "page".
@@ -183,12 +185,9 @@
 
 	#minisite {
 
-		.persistent {
-			display: none;
-		}
-
+		// 2A. SHARED STYLES
 		.pageTitle {
-			display: none;
+			display: none; // Hide page title on publication pages
 		}
 
 		#contentSections {
@@ -197,405 +196,33 @@
 
 		#navWrap {
 			@media #{$large-up} {
-				//background: purple;
 				position: absolute;
 				top: $column-gutter;
 				left: 0;
-			
-				// #minisiteNavigation {
-				// 	min-height: rem-calc(550);
-				// }
 			}
 		}
-
-		// COLUMN STRUCTURE
-
-		// Minisite Nav is sticky on the left positioned top
-		// Here we account for the left margin
 
 		#contentAndRelated {
 			@media #{$medium-and-below} {
 				margin-top: $column-gutter/2;
-				//border-top: 1px solid red;	
 			}
 
 			@media #{$large-up} {
 				width: 100%;
 				padding-left: 0;
-			}
+			}			
+		}
 
-			.sections {
-				clear: both;
-				margin-right: - $column-gutter/2;
-				margin-left: - $column-gutter/2;
-				//margin-right: - $column-gutter;
+		// Issue drop down 
+		.issueMenu {
 
-				@media #{$large-high-up} {
-					width: 86%;
-					margin: 0 auto;
-				}
-			}
-
-			// #featuredItems {
-			// 	margin-right: - $column-gutter/2;
-			// 	margin-left: - $column-gutter/2;
-			// }
-
-			// .sections,
-			// #featuredItems .content-block {
-			// 	@media #{$large-up} {
-			// 		margin-left: 31.25%;
-			// 	}
-			// 	@media #{$xlarge-up} {
-			// 		margin-left: 25%;
-			// 	}
-			// }
-
-			.fullPostDisplay {
-
-				@media #{$medium-up} {
-					width: 70%;
-					margin: 0 auto;
-				}
-
-				@media #{$large-up} {
-					width: 50%;
-					margin: 0 0 0 31.25%;
-				}
-
-				@media #{$xlarge-up} {
-					width: 50%;
-					margin: 0 auto;
-				}
-
-				.firstChunk,
-				.relatedItems,
-				.secondChunk {
-					width: 100% !important;
-					clear: left;
-				}
+			label.issueLabel {
+				@extend .screenreader;
 			}
 		}
 
-		// PUBLICATION MODULE STYLES
-
-		.publication {
-			
-			// SECTION WRAPPER
-			.sections {
-				margin: 0;
-
-				.section {
-					margin: 0;
-					padding: 0;
-					border: none;
-				}
-			}
-
-			// POSTS WRAPPAER
-			// .posts {
-			// 	margin: 0;
-			// 	margin-right: - $column-gutter;
-
-			// 	&:after {
-			// 		clear: none;
-			// 	}
-			// }
-
-			// POSTS COLUMN STRUCTURE, home page
-
-			.grid-sizer,
-			.post {
-				width: 100%;
-
-				@media #{$small-high-up} {
-					width: 50%;
-				}
-
-				@media #{$medium-high-up} {
-					width: 33.3333%;
-				}
-
-				@media #{$xlarge-up} {
-					width: 25%;
-				}
-
-				// @media #{$small-high-up} {
-				// 	width: 50%;
-				// }
-
-				// @media #{$large-high-up} {
-				// 	width: 33.3333%;
-				// }
-			}
-
-			// POST SUMMARY BLOCKS
-			.post {
-				border: none;
-				float: left;
-				//padding: 0 $column-gutter $column-gutter 0;
-				padding: $column-gutter/2;
-				
-				.inner {
-					@include box-shadow(rgba(black, .5) 0 0 2px);
-					@include clearfix;
-				}
-
-				.primaryImage {
-					img {
-						//max-width: 100%;
-					}
-				}
-				
-				.content-block {
-					position: relative;
-
-					> a {
-						display: block;
-						padding: $column-gutter/2;
-						color: $body-font-color !important;
-					}
-				}
-
-				.post-cats {
-					margin: 0;
-					text-align: center;
-				}
-
-				.post-cat a {
-					display: inline-block;
-					color: #FFF;
-					background: black;
-					padding: rem-calc(2) rem-calc(8);
-					@include border-radius($global-radius);
-					position: absolute;
-					top: - rem-calc(40);
-					right: $column-gutter/3;
-
-					@media #{$medium-up} {
-						padding: $column-gutter/5 $column-gutter/3;
-						top: - rem-calc(60);
-						right: $column-gutter/2;
-					}
-				}
-
-				.desc p {
-					margin-bottom: 0;
-				}
-			}
-
-			// FEATURED POST
-			#featuredItems {
-
-				.post {
-					width: 100%;
-					padding: 0;
-
-					@media #{$small-only} {
-						$mobile-feature-image-height: 224px;
-						$mobile-feature-image-width: 651px;
-
-						.primaryImage {
-							padding: 0;
-							height: $mobile-feature-image-height;
-						
-							img {
-								width: $mobile-feature-image-width;
-								max-width: 10000px !important;
-								height: $mobile-feature-image-height !important;
-								position: absolute;
-								left: 50%;
-								top: 0;
-								margin-left: - $mobile-feature-image-width/2;
-							}
-						}
-					}
-
-					@media #{$medium-only} {
-						$mobile-feature-image-height: 376px;
-						$mobile-feature-image-width: 1094px;
-
-						.primaryImage {
-							padding: 0;
-							height: $mobile-feature-image-height;
-						
-							img {
-								width: $mobile-feature-image-width;
-								max-width: 10000px !important;
-								height: $mobile-feature-image-height !important;
-								position: absolute;
-								left: 50%;
-								top: 0;
-								margin-left: - $mobile-feature-image-width/2;
-							}
-						}
-					}
-
-					.post-cat a {
-						@media #{$small-only} {
-							right: 0;
-						}
-					}
-
-					.content-block {
-						text-align: center;
-						padding: $column-gutter/2 0;
-
-						h4 {
-							font-size: $h3-font-size;
-
-							@media #{$medium-up} {
-								font-size: $h1-font-size;
-							}
-						}
-
-						.desc p {
-
-							@media #{$medium-up} {
-								font-size: rem-calc(18);
-							}
-						}
-
-						$triangle-size: rem-calc(30);
-						&:before {
-							display: block;
-							content: "";
-							width: 0; 
-							height: 0; 
-							border-left: $triangle-size solid transparent;
-							border-right: $triangle-size solid transparent;
-							border-bottom: $triangle-size solid #FFF;
-							position: absolute;
-							top: - $triangle-size;
-							left: 50%;
-							margin-left: - $triangle-size/2;
-						}
-						
-						&:after {
-							display: block;
-							width: rem-calc(200);
-							margin: $column-gutter/2 auto 0;
-							content: "";
-							border-bottom: 1px solid #CCC;
-
-						}
-						
-					}
-
-					.primaryImage {
-						position: relative;
-
-						// This is acts as the frosty minisite navigation background on the home page.
-						// Widths match the traditional ministive navigation widths set in minisite.scss 
-						@media #{$large-up} {
-							&:before {
-								content: "";
-								display: block;
-								height: 100%;
-								width: 100px;
-								width: 31.25%; // 5 columns
-								background: rgba(#FFF, .55);
-								position: absolute;
-								left: 0;
-								top: 0;
-							}
-						}
-
-						@media #{$xlarge-up} {
-							&:before {
-								width: 25%; // 4 columns
-							}
-						}
-					}
-				}
-			}
-
-			// UNIQUE SECTION STYLES
-
-			#features {
-
-				.inner {
-					border-top: 7px solid $lc-blue-light;
-				}
-
-				// @media #{$large-high-up} {
-				// 	.post {
-				// 		width: 33.3333%;
-
-				// 		&:nth-of-type(1),
-				// 		&:nth-of-type(2) {
-				// 			width: 66.6666%;
-				// 		}    	
-				// 	}
-				// }
-
-				.post-cats a {
-					background: $lc-blue-light;
-				}
-			}
-			
-			#alumni-profiles {
-				clear: both;
-
-				.inner {
-					border-top: 7px solid $lc-green;
-				}
-
-				// @media #{$large-high-up} {
-					
-				// 	.post {
-				// 		width: 33.33333%;
-
-				// 		&:nth-of-type(1),
-				// 		&:nth-of-type(2) {
-				// 			width: 66.666666%;
-
-				// 			.primaryImage {
-				// 				float: left;
-				// 				width: 50%;
-				// 			}
-
-				// 			.content-block {
-				// 				float: left;
-				// 				width: 50%;
-				// 			}
-
-				// 			.post-cats a {
-				// 				top: auto;
-				// 				bottom: 0;
-				// 				left: - rem-calc(200);
-				// 				right: auto;
-				// 			}
-				// 		}
-				// 	}
-				// }
-
-				.post-cats a {
-					background: $lc-green;
-				}
-			}
-
-			#class-notes {
-
-				.inner {
-					border-top: 7px solid $lc-red;
-				}
-
-				.post-cats a {
-					background: $lc-red;
-				}
-			}
-
-			#in-the-media {
-
-				.inner {
-					border-top: 7px solid $lc-yellow;
-				}
-
-				.post-cats a {
-					background: $lc-yellow;
-				}
-			}
+		.persistent {
+			display: none;
 		}
 
 		.searchAndFilterInterface {
@@ -603,9 +230,527 @@
 		}
 
 		.fullPostDisplay {
-			.searchAndFilterInterface {
-				display: block;
+
+		}
+
+		// SECTION WRAPPER
+		.sections {
+			margin: 0;
+
+			.section {
+				margin: 0;
+				padding: 0;
+				border: none;
 			}
 		}
 	}
 }
+
+// 2B. HOME PAGE
+// 
+// The publication home page has a class of .homePostsDisplay
+
+.siteHome #minisite .homePostsDisplay {
+
+	.sections {
+		clear: both;
+		margin-right: - $column-gutter/2;
+		margin-left: - $column-gutter/2;
+
+		@media #{$large-up} {
+			width: 85%;
+			max-width: 960px;
+			margin: 0 auto !important;
+		}
+
+		@media #{$xlarge-up} {
+			width: 80%;
+			max-width: none;
+		}
+	}
+
+	// #featuredItems {
+	// 	margin-right: - $column-gutter/2;
+	// 	margin-left: - $column-gutter/2;
+	// }
+
+	// .sections,
+	// #featuredItems .content-block {
+	// 	@media #{$large-up} {
+	// 		margin-left: 31.25%;
+	// 	}
+	// 	@media #{$xlarge-up} {
+	// 		margin-left: 25%;
+	// 	}
+	// }
+
+	// POSTS WRAPPAER
+	// .posts {
+	// 	margin: 0;
+	// 	margin-right: - $column-gutter;
+
+	// 	&:after {
+	// 		clear: none;
+	// 	}
+	// }
+
+	// POSTS COLUMN STRUCTURE, home page
+
+	.grid-sizer,
+	.post {
+		width: 100%;
+
+		@media #{$small-high-up} {
+			width: 50%;
+		}
+
+		@media #{$medium-high-up} {
+			width: 33.3333%;
+		}
+
+		@media #{$xlarge-up} {
+			width: 25%;
+		}
+
+		// @media #{$small-high-up} {
+		// 	width: 50%;
+		// }
+
+		// @media #{$large-high-up} {
+		// 	width: 33.3333%;
+		// }
+	}
+
+	// POST SUMMARY BLOCKS
+	.post {
+		border: none;
+		float: left;
+		//padding: 0 $column-gutter $column-gutter 0;
+		padding: $column-gutter/2;
+		
+		.inner {
+			@include box-shadow(rgba(black, .5) 0 0 2px);
+			@include clearfix;
+		}
+
+		.primaryImage {
+			img {
+				//max-width: 100%;
+			}
+		}
+		
+		.content-block {
+			position: relative;
+
+			> a {
+				display: block;
+				padding: $column-gutter/2;
+				color: $body-font-color !important;
+			}
+		}
+
+		.post-cats {
+			margin: 0;
+			text-align: center;
+		}
+
+		.post-cat a {
+			display: inline-block;
+			color: #FFF;
+			background: black;
+			padding: rem-calc(2) rem-calc(8);
+			@include border-radius($global-radius);
+			position: absolute;
+			top: - rem-calc(40);
+			right: $column-gutter/3;
+
+			@media #{$medium-up} {
+				padding: $column-gutter/5 $column-gutter/3;
+				top: - rem-calc(60);
+				right: $column-gutter/2;
+			}
+		}
+
+		.desc p {
+			margin-bottom: 0;
+		}
+	}
+
+
+	// FEATURED POST
+	#featuredItems {
+
+		.post {
+			width: 100%;
+			padding: 0;
+
+			@media #{$small-only} {
+				$mobile-feature-image-height: 224px;
+				$mobile-feature-image-width: 651px;
+
+				.primaryImage {
+					padding: 0;
+					height: $mobile-feature-image-height;
+				
+					img {
+						width: $mobile-feature-image-width;
+						max-width: 10000px !important;
+						height: $mobile-feature-image-height !important;
+						position: absolute;
+						left: 50%;
+						top: 0;
+						margin-left: - $mobile-feature-image-width/2;
+					}
+				}
+			}
+
+			@media #{$medium-only} {
+				$mobile-feature-image-height: 376px;
+				$mobile-feature-image-width: 1094px;
+
+				.primaryImage {
+					padding: 0;
+					height: $mobile-feature-image-height;
+				
+					img {
+						width: $mobile-feature-image-width;
+						max-width: 10000px !important;
+						height: $mobile-feature-image-height !important;
+						position: absolute;
+						left: 50%;
+						top: 0;
+						margin-left: - $mobile-feature-image-width/2;
+					}
+				}
+			}
+
+			.post-cat a {
+				@media #{$small-only} {
+					right: 0;
+				}
+			}
+
+			.content-block {
+				text-align: center;
+				padding: $column-gutter/2 0;
+
+				h4 {
+					font-size: $h3-font-size;
+
+					@media #{$medium-up} {
+						font-size: $h1-font-size;
+					}
+				}
+
+				.desc p {
+
+					@media #{$medium-up} {
+						font-size: rem-calc(18);
+					}
+				}
+
+				$triangle-size: rem-calc(30);
+				&:before {
+					display: block;
+					content: "";
+					width: 0; 
+					height: 0; 
+					border-left: $triangle-size solid transparent;
+					border-right: $triangle-size solid transparent;
+					border-bottom: $triangle-size solid #FFF;
+					position: absolute;
+					top: - $triangle-size;
+					left: 50%;
+					margin-left: - $triangle-size/2;
+				}
+				
+				&:after {
+					display: block;
+					width: rem-calc(200);
+					margin: $column-gutter/2 auto 0;
+					content: "";
+					border-bottom: 1px solid #CCC;
+
+				}
+				
+			}
+
+			.primaryImage {
+				position: relative;
+
+				// This is acts as the frosty minisite navigation background on the home page.
+				// Widths match the traditional ministive navigation widths set in minisite.scss 
+				@media #{$large-up} {
+					&:before {
+						content: "";
+						display: block;
+						height: 100%;
+						width: 100px;
+						width: 31.25%; // 5 columns
+						background: rgba(#FFF, .55);
+						position: absolute;
+						left: 0;
+						top: 0;
+					}
+				}
+
+				@media #{$xlarge-up} {
+					&:before {
+						width: 25%; // 4 columns
+					}
+				}
+			}
+		}
+	}
+
+	// UNIQUE SECTION STYLES
+
+	#features {
+
+		.primaryImage {
+			border-bottom: 7px solid $lc-blue-light;
+		}
+
+		// @media #{$small-high-up} {
+		// 	width: 50%;
+		// }
+
+		// @media #{$medium-high-up} {
+		// 	width: 33.3333%;
+		// }
+
+		// @media #{$xlarge-up} {
+		// 	width: 25%;
+		// }
+
+		// @media #{$medium-high-up} {
+		// 	.post {
+		// 		width: 33.3333%;
+
+		// 		&:nth-of-type(1),
+		// 		&:nth-of-type(2) {
+		// 			width: 66.6666%;
+		// 		}    	
+		// 	}
+		// }
+
+
+		@media #{$large-up} {
+			.post {
+				width: 33.3333%;
+
+				&:nth-of-type(1),
+				&:nth-of-type(2) {
+					width: 66.66666%;
+				}    	
+			}
+		}
+
+		@media #{$xlarge-up} {
+			.post {
+				width: 25%;
+
+				&:nth-of-type(1),
+				&:nth-of-type(2) {
+					width: 50%;
+				}    	
+			}
+		}
+
+		.post-cats a {
+			background: $lc-blue-light;
+		}
+	}
+	
+	#alumni-profiles {
+		clear: both;
+
+		.primaryImage {
+			border-bottom: 7px solid $lc-green;
+		}
+
+		@media #{$large-up} {
+
+			.post {
+				width: 33.3333333%;
+
+				&:nth-of-type(1),
+				&:nth-of-type(2) {
+					width: 66.666666%;
+
+					.primaryImage {
+						float: left;
+						width: 50%;
+						border-bottom: none;
+						border-right: 7px solid $lc-green;
+					}
+
+					.content-block {
+						float: left;
+						width: 50%;
+					}
+
+					.post-cats a {
+						top: auto;
+						bottom: 0;
+						left: - rem-calc(200);
+						right: auto;
+					}
+				}
+			}
+		}
+
+		@media #{$xlarge-up} {
+			
+			.post {
+				width: 25%;
+
+				&:nth-of-type(1),
+				&:nth-of-type(2) {
+					width: 50%;
+
+					.primaryImage {
+						float: left;
+						width: 50%;
+					}
+
+					.content-block {
+						float: left;
+						width: 50%;
+					}
+
+					.post-cats a {
+						top: auto;
+						bottom: 0;
+						left: - rem-calc(200);
+						right: auto;
+					}
+				}
+			}
+		}
+
+		// @media #{$large-high-up} {
+			
+		// 	.post {
+		// 		width: 33.33333%;
+
+		// 		&:nth-of-type(1),
+		// 		&:nth-of-type(2) {
+		// 			width: 66.666666%;
+
+		// 			.primaryImage {
+		// 				float: left;
+		// 				width: 50%;
+		// 			}
+
+		// 			.content-block {
+		// 				float: left;
+		// 				width: 50%;
+		// 			}
+
+		// 			.post-cats a {
+		// 				top: auto;
+		// 				bottom: 0;
+		// 				left: - rem-calc(200);
+		// 				right: auto;
+		// 			}
+		// 		}
+		// 	}
+		// }
+
+		.post-cats a {
+			background: $lc-green;
+		}
+	}
+
+	#class-notes {
+
+		.primaryImage {
+			border-bottom: 7px solid $lc-red;
+		}
+
+		.post-cats a {
+			background: $lc-red;
+		}
+	}
+
+	#in-the-media {
+
+		.primaryImage {
+			border-bottom: 7px solid $lc-yellow;
+		}
+
+		.post-cats a {
+			background: $lc-yellow;
+		}
+	}
+}
+
+//    2C. FILTERED PAGE 
+.siteHome #minisite .filteredPostsDisplay {
+	@media #{$large-up} {
+		margin-left: 31.25%;
+	}
+	@media #{$xlarge-up} {
+		margin-left: 25%;
+	}
+
+	.filterMessage {
+		padding-bottom: $column-gutter/2;
+		margin-bottom: $column-gutter/2;
+		border-bottom: 1px solid #CCC;
+		
+		h3 {
+			font-size: $h4-font-size;	
+			margin: 0;
+			strong {margin-right: rem-calc(12);}
+		}
+
+		span {
+			font-size: rem-calc(16);
+			white-space: nowrap;
+		}
+	}
+
+	.post {
+		.primaryImage {
+			width: 20%;
+			float: right;
+			margin: 0 0 rem-calc(16) rem-calc(16);
+
+			@media #{$medium-up} {
+				width: 200px;
+				float: left;
+				margin: 0 $column-gutter/2 $column-gutter/2 0;
+			}	
+		}
+	}
+}
+
+
+//    2D. FULL ARTICLE PAGE 
+.siteHome #minisite .fullPostDisplay {
+
+	@media #{$medium-up} {
+		width: 70%;
+		margin: 0 auto;
+	}
+
+	@media #{$large-up} {
+		width: 50%;
+		margin: 0 0 0 31.25%;
+	}
+
+	@media #{$xlarge-up} {
+		width: 50%;
+		margin: 0 auto;
+	}
+
+	.firstChunk,
+	.relatedItems,
+	.secondChunk {
+		width: 100% !important;
+		clear: left;
+	}
+}
+
