@@ -82,6 +82,7 @@
 
 				@media #{$large-up} {
 					padding: $column-gutter;
+					padding-top: 0;
 					//background: rgba(255,255,255,.5);
 					background: none;
 				}
@@ -379,6 +380,11 @@
 
 	// FEATURED POST
 	#featuredItems {
+
+		@media #{$large-up} {
+			margin-top: - $column-gutter;
+			//padding-top: 0;
+		}
 
 		.post {
 			width: 100%;
