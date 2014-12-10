@@ -1,0 +1,464 @@
+/* line 4, ../scss/font-awesome/_core.scss */
+.fa {
+  display: inline-block;
+  font-family: FontAwesome;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* line 10, ../scss/_extends.scss */
+.zero-out {
+  margin: 0;
+  padding: 0;
+}
+
+/* line 15, ../scss/_extends.scss */
+.screenreader, .lutherMagazine .issueMenu label.issueLabel {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  margin-bottom: 0;
+}
+
+/* line 19, ../scss/sites/magazine.scss */
+.lutherMagazine #minisite {
+  position: relative;
+}
+@media only screen and (max-width: 63.75em) {
+  /* line 29, ../scss/sites/magazine.scss */
+  .lutherMagazine #minisite #minisiteBanner #banner h1 {
+    position: static;
+    width: 70%;
+    height: 60px;
+    padding-top: 10px;
+  }
+  /* line 35, ../scss/sites/magazine.scss */
+  .lutherMagazine #minisite #minisiteBanner #banner h1 a {
+    width: 6.625rem;
+    height: 2.5rem;
+    background: url("../../images/magazine/logo_mobile_2x.png");
+    background-size: 100%;
+    position: relative;
+    display: block;
+  }
+  /* line 43, ../scss/sites/magazine.scss */
+  .lutherMagazine #minisite #minisiteBanner #banner h1 a span {
+    position: absolute;
+    left: -9999px;
+    top: -9999px;
+    margin-bottom: 0;
+  }
+}
+/* line 62, ../scss/sites/magazine.scss */
+.lutherMagazine #minisite #navWrap a.toggle h1 i {
+  display: none;
+}
+/* line 69, ../scss/sites/magazine.scss */
+.lutherMagazine #minisite #navWrap #minisiteNavigation {
+  background: #efefef;
+}
+@media only screen and (min-width: 63.8125em) {
+  /* line 69, ../scss/sites/magazine.scss */
+  .lutherMagazine #minisite #navWrap #minisiteNavigation {
+    padding: 2.5rem;
+    background: none;
+  }
+}
+@media only screen and (min-width: 63.8125em) {
+  /* line 80, ../scss/sites/magazine.scss */
+  .lutherMagazine #minisite #navWrap .navListTop li a {
+    padding: 0.5rem 0;
+  }
+}
+/* line 85, ../scss/sites/magazine.scss */
+.lutherMagazine #minisite #navWrap .navListTop a.home {
+  font-size: 1.5rem;
+}
+@media only screen and (min-width: 63.8125em) {
+  /* line 85, ../scss/sites/magazine.scss */
+  .lutherMagazine #minisite #navWrap .navListTop a.home {
+    padding-top: 0;
+    padding-bottom: 0;
+    background: transparent url("../../images/magazine/logo_1x.png");
+    border-bottom: none;
+    margin-bottom: 1.25rem;
+    width: 233px;
+    height: 88px;
+  }
+  /* line 97, ../scss/sites/magazine.scss */
+  .lutherMagazine #minisite #navWrap .navListTop a.home span {
+    position: absolute;
+    left: -9999px;
+    top: -9999px;
+    margin-bottom: 0;
+  }
+}
+@media only screen and (min-width: 63.8125em) {
+  /* line 112, ../scss/sites/magazine.scss */
+  .lutherMagazine #minisite #navWrap .navListTop ul a:hover {
+    background: none;
+  }
+  /* line 117, ../scss/sites/magazine.scss */
+  .lutherMagazine #minisite #navWrap .navListTop ul .open a:hover {
+    background: none !important;
+  }
+  /* line 124, ../scss/sites/magazine.scss */
+  .lutherMagazine #minisite #navWrap .navListTop ul ul a {
+    padding: 0 0 0.5rem 1.25rem;
+    border: none;
+  }
+  /* line 128, ../scss/sites/magazine.scss */
+  .lutherMagazine #minisite #navWrap .navListTop ul ul a:hover {
+    background: none;
+    text-decoration: underline;
+  }
+  /* line 137, ../scss/sites/magazine.scss */
+  .lutherMagazine #minisite #navWrap .navListTop ul .navListItem.open {
+    background: none;
+  }
+  /* line 144, ../scss/sites/magazine.scss */
+  .lutherMagazine #minisite #navWrap .navListTop ul .navListItem.accordion > a:before {
+    top: 0.90909rem;
+    right: 0;
+  }
+  /* line 156, ../scss/sites/magazine.scss */
+  .lutherMagazine #minisite #navWrap .jump a:before {
+    top: 0.90909rem;
+    right: 0;
+    color: #777777;
+  }
+}
+
+/* line 186, ../scss/sites/magazine.scss */
+.siteHome #minisite .persistent {
+  display: none;
+}
+/* line 190, ../scss/sites/magazine.scss */
+.siteHome #minisite .pageTitle {
+  display: none;
+}
+/* line 194, ../scss/sites/magazine.scss */
+.siteHome #minisite #contentSections {
+  margin-top: 0 !important;
+}
+@media only screen and (min-width: 63.8125em) {
+  /* line 198, ../scss/sites/magazine.scss */
+  .siteHome #minisite #navWrap {
+    position: absolute;
+    top: 2.5rem;
+    left: 0;
+  }
+}
+@media only screen and (max-width: 63.75em) {
+  /* line 216, ../scss/sites/magazine.scss */
+  .siteHome #minisite #contentAndRelated {
+    margin-top: 1.25rem;
+  }
+}
+@media only screen and (min-width: 63.8125em) {
+  /* line 216, ../scss/sites/magazine.scss */
+  .siteHome #minisite #contentAndRelated {
+    width: 100%;
+    padding-left: 0;
+  }
+}
+/* line 227, ../scss/sites/magazine.scss */
+.siteHome #minisite #contentAndRelated .sections {
+  clear: both;
+  margin-right: -1.25rem;
+  margin-left: -1.25rem;
+}
+@media only screen and (min-width: 80em) {
+  /* line 227, ../scss/sites/magazine.scss */
+  .siteHome #minisite #contentAndRelated .sections {
+    width: 86%;
+    margin: 0 auto;
+  }
+}
+@media only screen and (min-width: 40.063em) {
+  /* line 254, ../scss/sites/magazine.scss */
+  .siteHome #minisite #contentAndRelated .fullPostDisplay {
+    width: 70%;
+    margin: 0 auto;
+  }
+}
+@media only screen and (min-width: 63.8125em) {
+  /* line 254, ../scss/sites/magazine.scss */
+  .siteHome #minisite #contentAndRelated .fullPostDisplay {
+    width: 50%;
+    margin: 0 0 0 31.25%;
+  }
+}
+@media only screen and (min-width: 90.063em) {
+  /* line 254, ../scss/sites/magazine.scss */
+  .siteHome #minisite #contentAndRelated .fullPostDisplay {
+    width: 50%;
+    margin: 0 auto;
+  }
+}
+/* line 273, ../scss/sites/magazine.scss */
+.siteHome #minisite #contentAndRelated .fullPostDisplay .firstChunk,
+.siteHome #minisite #contentAndRelated .fullPostDisplay .relatedItems,
+.siteHome #minisite #contentAndRelated .fullPostDisplay .secondChunk {
+  width: 100% !important;
+  clear: left;
+}
+/* line 285, ../scss/sites/magazine.scss */
+.siteHome #minisite .publication .sections {
+  margin: 0;
+}
+/* line 288, ../scss/sites/magazine.scss */
+.siteHome #minisite .publication .sections .section {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+/* line 308, ../scss/sites/magazine.scss */
+.siteHome #minisite .publication .grid-sizer,
+.siteHome #minisite .publication .post {
+  width: 100%;
+}
+@media only screen and (min-width: 30em) {
+  /* line 308, ../scss/sites/magazine.scss */
+  .siteHome #minisite .publication .grid-sizer,
+  .siteHome #minisite .publication .post {
+    width: 50%;
+  }
+}
+@media only screen and (min-width: 60.0625em) {
+  /* line 308, ../scss/sites/magazine.scss */
+  .siteHome #minisite .publication .grid-sizer,
+  .siteHome #minisite .publication .post {
+    width: 33.3333%;
+  }
+}
+@media only screen and (min-width: 90.063em) {
+  /* line 308, ../scss/sites/magazine.scss */
+  .siteHome #minisite .publication .grid-sizer,
+  .siteHome #minisite .publication .post {
+    width: 25%;
+  }
+}
+/* line 333, ../scss/sites/magazine.scss */
+.siteHome #minisite .publication .post {
+  border: none;
+  float: left;
+  padding: 1.25rem;
+}
+/* line 339, ../scss/sites/magazine.scss */
+.siteHome #minisite .publication .post .inner {
+  -webkit-box-shadow: rgba(0, 0, 0, 0.5) 0 0 2px;
+  -moz-box-shadow: rgba(0, 0, 0, 0.5) 0 0 2px;
+  box-shadow: rgba(0, 0, 0, 0.5) 0 0 2px;
+  *zoom: 1;
+}
+/* line 165, ../../foundation/bower_components/foundation/scss/foundation/components/_global.scss */
+.siteHome #minisite .publication .post .inner:before, .siteHome #minisite .publication .post .inner:after {
+  content: " ";
+  display: table;
+}
+/* line 166, ../../foundation/bower_components/foundation/scss/foundation/components/_global.scss */
+.siteHome #minisite .publication .post .inner:after {
+  clear: both;
+}
+/* line 350, ../scss/sites/magazine.scss */
+.siteHome #minisite .publication .post .content-block {
+  position: relative;
+}
+/* line 353, ../scss/sites/magazine.scss */
+.siteHome #minisite .publication .post .content-block > a {
+  display: block;
+  padding: 1.25rem;
+  color: #444444 !important;
+}
+/* line 360, ../scss/sites/magazine.scss */
+.siteHome #minisite .publication .post .post-cats {
+  margin: 0;
+  text-align: center;
+}
+/* line 365, ../scss/sites/magazine.scss */
+.siteHome #minisite .publication .post .post-cat a {
+  display: inline-block;
+  color: #FFF;
+  background: black;
+  padding: 0.125rem 0.5rem;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  -ms-border-radius: 6px;
+  -o-border-radius: 6px;
+  border-radius: 6px;
+  position: absolute;
+  top: -2.5rem;
+  right: 0.83333rem;
+}
+@media only screen and (min-width: 40.063em) {
+  /* line 365, ../scss/sites/magazine.scss */
+  .siteHome #minisite .publication .post .post-cat a {
+    padding: 0.5rem 0.83333rem;
+    top: -3.75rem;
+    right: 1.25rem;
+  }
+}
+/* line 382, ../scss/sites/magazine.scss */
+.siteHome #minisite .publication .post .desc p {
+  margin-bottom: 0;
+}
+/* line 390, ../scss/sites/magazine.scss */
+.siteHome #minisite .publication #featuredItems .post {
+  width: 100%;
+  padding: 0;
+}
+@media only screen and (max-width: 40em) {
+  /* line 398, ../scss/sites/magazine.scss */
+  .siteHome #minisite .publication #featuredItems .post .primaryImage {
+    padding: 0;
+    height: 224px;
+  }
+  /* line 402, ../scss/sites/magazine.scss */
+  .siteHome #minisite .publication #featuredItems .post .primaryImage img {
+    width: 651px;
+    max-width: 10000px !important;
+    height: 224px !important;
+    position: absolute;
+    left: 50%;
+    top: 0;
+    margin-left: -325.5px;
+  }
+}
+@media only screen and (min-width: 40.063em) and (max-width: 63.75em) {
+  /* line 418, ../scss/sites/magazine.scss */
+  .siteHome #minisite .publication #featuredItems .post .primaryImage {
+    padding: 0;
+    height: 376px;
+  }
+  /* line 422, ../scss/sites/magazine.scss */
+  .siteHome #minisite .publication #featuredItems .post .primaryImage img {
+    width: 1094px;
+    max-width: 10000px !important;
+    height: 376px !important;
+    position: absolute;
+    left: 50%;
+    top: 0;
+    margin-left: -547px;
+  }
+}
+@media only screen and (max-width: 40em) {
+  /* line 434, ../scss/sites/magazine.scss */
+  .siteHome #minisite .publication #featuredItems .post .post-cat a {
+    right: 0;
+  }
+}
+/* line 440, ../scss/sites/magazine.scss */
+.siteHome #minisite .publication #featuredItems .post .content-block {
+  text-align: center;
+  padding: 1.25rem 0;
+}
+/* line 444, ../scss/sites/magazine.scss */
+.siteHome #minisite .publication #featuredItems .post .content-block h4 {
+  font-size: 1.6875rem;
+}
+@media only screen and (min-width: 40.063em) {
+  /* line 444, ../scss/sites/magazine.scss */
+  .siteHome #minisite .publication #featuredItems .post .content-block h4 {
+    font-size: 2.3125rem;
+  }
+}
+@media only screen and (min-width: 40.063em) {
+  /* line 452, ../scss/sites/magazine.scss */
+  .siteHome #minisite .publication #featuredItems .post .content-block .desc p {
+    font-size: 1.125rem;
+  }
+}
+/* line 460, ../scss/sites/magazine.scss */
+.siteHome #minisite .publication #featuredItems .post .content-block:before {
+  display: block;
+  content: "";
+  width: 0;
+  height: 0;
+  border-left: 1.875rem solid transparent;
+  border-right: 1.875rem solid transparent;
+  border-bottom: 1.875rem solid white;
+  position: absolute;
+  top: -1.875rem;
+  left: 50%;
+  margin-left: -0.9375rem;
+}
+/* line 474, ../scss/sites/magazine.scss */
+.siteHome #minisite .publication #featuredItems .post .content-block:after {
+  display: block;
+  width: 12.5rem;
+  margin: 1.25rem auto 0;
+  content: "";
+  border-bottom: 1px solid #CCC;
+}
+/* line 485, ../scss/sites/magazine.scss */
+.siteHome #minisite .publication #featuredItems .post .primaryImage {
+  position: relative;
+}
+@media only screen and (min-width: 63.8125em) {
+  /* line 491, ../scss/sites/magazine.scss */
+  .siteHome #minisite .publication #featuredItems .post .primaryImage:before {
+    content: "";
+    display: block;
+    height: 100%;
+    width: 100px;
+    width: 31.25%;
+    background: rgba(255, 255, 255, 0.55);
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+}
+@media only screen and (min-width: 90.063em) {
+  /* line 505, ../scss/sites/magazine.scss */
+  .siteHome #minisite .publication #featuredItems .post .primaryImage:before {
+    width: 25%;
+  }
+}
+/* line 517, ../scss/sites/magazine.scss */
+.siteHome #minisite .publication #features .inner {
+  border-top: 7px solid #1073ce;
+}
+/* line 532, ../scss/sites/magazine.scss */
+.siteHome #minisite .publication #features .post-cats a {
+  background: #1073ce;
+}
+/* line 537, ../scss/sites/magazine.scss */
+.siteHome #minisite .publication #alumni-profiles {
+  clear: both;
+}
+/* line 540, ../scss/sites/magazine.scss */
+.siteHome #minisite .publication #alumni-profiles .inner {
+  border-top: 7px solid #4a8512;
+}
+/* line 573, ../scss/sites/magazine.scss */
+.siteHome #minisite .publication #alumni-profiles .post-cats a {
+  background: #4a8512;
+}
+/* line 580, ../scss/sites/magazine.scss */
+.siteHome #minisite .publication #class-notes .inner {
+  border-top: 7px solid #9f2112;
+}
+/* line 584, ../scss/sites/magazine.scss */
+.siteHome #minisite .publication #class-notes .post-cats a {
+  background: #9f2112;
+}
+/* line 591, ../scss/sites/magazine.scss */
+.siteHome #minisite .publication #in-the-media .inner {
+  border-top: 7px solid #e8a500;
+}
+/* line 595, ../scss/sites/magazine.scss */
+.siteHome #minisite .publication #in-the-media .post-cats a {
+  background: #e8a500;
+}
+/* line 601, ../scss/sites/magazine.scss */
+.siteHome #minisite .searchAndFilterInterface {
+  display: none;
+}
+/* line 606, ../scss/sites/magazine.scss */
+.siteHome #minisite .fullPostDisplay .searchAndFilterInterface {
+  display: block;
+}
