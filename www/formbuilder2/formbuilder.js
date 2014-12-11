@@ -1124,7 +1124,10 @@
         MAX: 'field_options.max',
         MINLENGTH: 'field_options.minlength',
         MAXLENGTH: 'field_options.maxlength',
-        LENGTH_UNITS: 'field_options.min_max_length_units'
+        LENGTH_UNITS: 'field_options.min_max_length_units',
+        FILE_UPLOAD_EXTENSION_RESTRICTIONS: 'file_upload_extension_restrictions',
+        FILE_UPLOAD_TYPE_RESTRICTIONS: 'file_upload_type_restrictions',
+        FILE_UPLOAD_SIZE_RESTRICTION: 'file_upload_size_restriction'
       },
       dict: {
         ALL_CHANGES_SAVED: 'All changes saved',
@@ -1506,7 +1509,7 @@
   Formbuilder.registerField('file', {
     order: 55,
     view: "<input type='file' />",
-    edit: "",
+    edit: "<%= Formbuilder.templates['edit/file_restrictions']() %>",
     addButton: "<span class='symbol'><span class='fa fa-cloud-upload'></span></span> " + localPrettyName,
     instructionDetails: "<div class=\"instructionText\">Provides a way for a user to upload a file.</div>",
     prettyName: localPrettyName
@@ -1798,6 +1801,22 @@ __p += '\n<div class=\'fb-edit-section-header\'>Default Value</div>\n  <div clas
 return __p
 };
 
+this["Formbuilder"]["templates"]["edit/file_restrictions"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape;
+with (obj) {
+__p += '<div class=\'fb-edit-section-header\'>File Restrictions</div>\n<div>\n\tFor each of these fields, no restrictions of that type if left blank. Case-insensitive.\n\t<p/>\n\t<b>Extensions</b><br/>\n\tcomma-separated list of file extensions<br/>\n    <input placeholder="Ex: \'jpg,jpeg,png\'" type=\'text\' style="width:100%" data-rv-input=\'model.' +
+((__t = ( Formbuilder.options.mappings.FILE_UPLOAD_EXTENSION_RESTRICTIONS )) == null ? '' : __t) +
+'\' />\n\t<p>\n\t<b>MIME Types</b><br/>\n\tcomma-separated list of MIME type patterns<br/>\n    <input placeholder="Ex: \'application/pdf,image/*\'" type=\'text\' style="width:100%" data-rv-input=\'model.' +
+((__t = ( Formbuilder.options.mappings.FILE_UPLOAD_TYPE_RESTRICTIONS )) == null ? '' : __t) +
+'\' />\n\t<p>\n\t<b>Size</b><br/>\n\tSize specified with suffix. B=bytes, KB=kilobytes, MB=megabytes.<br/>\n    <input placeholder="Ex: \'1MB\'" type=\'text\' style="width:100%" data-rv-input=\'model.' +
+((__t = ( Formbuilder.options.mappings.FILE_UPLOAD_SIZE_RESTRICTION )) == null ? '' : __t) +
+'\' />\n</div>\n';
+
+}
+return __p
+};
+
 this["Formbuilder"]["templates"]["edit/integer_only"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
@@ -1980,8 +1999,8 @@ __p += '<div class=\'fb-left\'>\n  <ul class=\'fb-tabs\'>\n    <li class=\'activ
 '\n    ' +
 ((__t = ( Formbuilder.templates['partials/edit_field']() )) == null ? '' : __t) +
 '\n  </div>\n\n\t  ';
- if (false) { ;
-__p += '\n\n\n    <script language="Javascript">\n\t\tvar duplicateClientIdChecker;\n\t\tvar dupesFound;\n\n\t\tfunction trackDupes(cid) {\n\t\t\tif (duplicateClientIdChecker[cid] != null) {\n\t\t\t\tdupesFound = true;\n\t\t\t\tduplicateClientIdChecker[cid] = duplicateClientIdChecker[cid] + 1;\n\t\t\t\treturn true;\n\t\t\t} else {\n\t\t\t\tduplicateClientIdChecker[cid] = 1;\n\t\t\t\treturn false;\n\t\t\t}\n\t\t}\n    function debugMe() {\n      // next line hooks up debug button for reason integration\n      // var fb = window.formbuilderInstance;\n\n      console.log("----------------- MODEL START --------------------");\n\t\t\tduplicateClientIdChecker = {};\n\t\t\tdupesFound = false;\n      for (var i = 0 ; i < fb.mainView.collection.models.length ; i++) {\n        var currModel = fb.mainView.collection.models[i];\n        // console.log("[" + i + "] -> [" + JSON.stringify(currModel.attributes) + "] (" + currModel.cid + ")/(" + currModel.attributes.cid + ")");\n        console.log("[" + i + "] -> [" + JSON.stringify(currModel.attributes) + "] (" + currModel.attributes.cid + ")");\n\n\t\t\t\tif (currModel.field_options != null && currModel.field_options.options != null) {\n\t\t\t\t\tfor (var k = 0 ; k < currModel.field_options.options.length ; k++) {\n\t\t\t\t\t\tvar currOpt = currModel.field_options.options[k];\n\t\t\t\t\t\ttrackDupes(currOpt.reasonOptionId);\n\t\t\t\t\t}\n\t\t\t\t}\n\n\t\t\t\ttrackDupes(currModel.attributes.cid);\n      }\n      console.log("----------------- MODEL END --------------------");\n\n\t\t\tif (dupesFound) {\n\t\t\t\tconsole.log("------- DUPES FOUND, UH OH! ------");\n\t\t\t\tconsole.log (JSON.stringify(duplicateClientIdChecker));\n\t\t\t\tconsole.log("------- DUPES FOUND, END ------");\n\t\t\t} else {\n\t\t\t\tconsole.log("------- no dupes found ------");\n\t\t\t}\n\n      // fb.saveForm()\n                       // fb.isFormReadyToSave();\n\n    }\n    </script>\n\n\t<p><input type="button" onClick="debugMe();" value="debug info (please ignore)">\n\t';
+ if (true) { ;
+__p += '\n\n\n    <script language="Javascript">\n\t\tvar duplicateClientIdChecker;\n\t\tvar dupesFound;\n\n\t\tfunction trackDupes(cid) {\n\t\t\tif (duplicateClientIdChecker[cid] != null) {\n\t\t\t\tdupesFound = true;\n\t\t\t\tduplicateClientIdChecker[cid] = duplicateClientIdChecker[cid] + 1;\n\t\t\t\treturn true;\n\t\t\t} else {\n\t\t\t\tduplicateClientIdChecker[cid] = 1;\n\t\t\t\treturn false;\n\t\t\t}\n\t\t}\n    function debugMe() {\n      // next line hooks up debug button for reason integration\n      var fb = window.formbuilderInstance;\n\n      console.log("----------------- MODEL START --------------------");\n\t\t\tduplicateClientIdChecker = {};\n\t\t\tdupesFound = false;\n      for (var i = 0 ; i < fb.mainView.collection.models.length ; i++) {\n        var currModel = fb.mainView.collection.models[i];\n        // console.log("[" + i + "] -> [" + JSON.stringify(currModel.attributes) + "] (" + currModel.cid + ")/(" + currModel.attributes.cid + ")");\n        console.log("[" + i + "] -> [" + JSON.stringify(currModel.attributes) + "] (" + currModel.attributes.cid + ")");\n\n\t\t\t\tif (currModel.field_options != null && currModel.field_options.options != null) {\n\t\t\t\t\tfor (var k = 0 ; k < currModel.field_options.options.length ; k++) {\n\t\t\t\t\t\tvar currOpt = currModel.field_options.options[k];\n\t\t\t\t\t\ttrackDupes(currOpt.reasonOptionId);\n\t\t\t\t\t}\n\t\t\t\t}\n\n\t\t\t\ttrackDupes(currModel.attributes.cid);\n      }\n      console.log("----------------- MODEL END --------------------");\n\n\t\t\tif (dupesFound) {\n\t\t\t\tconsole.log("------- DUPES FOUND, UH OH! ------");\n\t\t\t\tconsole.log (JSON.stringify(duplicateClientIdChecker));\n\t\t\t\tconsole.log("------- DUPES FOUND, END ------");\n\t\t\t} else {\n\t\t\t\tconsole.log("------- no dupes found ------");\n\t\t\t}\n\n      // fb.saveForm()\n                       // fb.isFormReadyToSave();\n\n    }\n    </script>\n\n\t<p><input type="button" onClick="debugMe();" value="debug info (please ignore)">\n\t';
  } ;
 __p += '\n\t<!-- marker -->\n\n</div>\n';
 
