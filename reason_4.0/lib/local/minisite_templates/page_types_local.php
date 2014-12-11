@@ -52,6 +52,41 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'post_foot' => '',
 		'global_footer' => 'global/global_footer',
 	),
+	'standalone' => array (
+		'global_header' => '',
+		'global_navigation' => '',
+		'pre_main_head' => array(
+			'module' => 'feature/feature',
+			'width' => '1660',
+			'height' => '575',
+			'autoplay_timer' => 4,
+		),
+		'main_head' => '',
+		'main_post' => array(
+			'module' => 'luther_av',
+			'full_size' => true,
+		),
+		'main_post_2' => 'blurb',
+		'main_post_3' => 'luther_flickr_slideshow',
+		'call_to_action_blurb' => '',
+		'pre_sidebar' => '',
+		'pre_sidebar_2' => '',
+		'sidebar' => '',
+		'sidebar_2' =>'',
+		'post_sidebar' => '',
+		'post_sidebar_2' => '',
+		'post_sidebar_3' => '',
+		'navigation' => '',
+		'sub_nav' => '',
+		'contact_blurb' => '',
+		'sub_nav_2' => '',
+		'sub_nav_3' => '',
+		'edit_link' => '',
+		'pre_foot' => '',
+		'footer' => '',
+		'post_foot' => '',
+		'global_footer' => '',
+	),
 
 	/* Page types, in alphbetical order */
 
@@ -608,6 +643,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			),
 		),
 	),
+
 	'standalone_login_page_stripped' => array(
 		'global_header' => '',
 		'global_navigation' => '',
