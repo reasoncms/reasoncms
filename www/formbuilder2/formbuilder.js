@@ -1809,7 +1809,7 @@ __p += '<div class=\'fb-edit-section-header\'>File Restrictions</div>\n<div>\n\t
 ((__t = ( Formbuilder.options.mappings.FILE_UPLOAD_EXTENSION_RESTRICTIONS )) == null ? '' : __t) +
 '\' />\n\t<p>\n\t<b>MIME Types</b><br/>\n\tcomma-separated list of MIME type patterns<br/>\n    <input placeholder="Ex: \'application/pdf,image/*\'" type=\'text\' style="width:100%" data-rv-input=\'model.' +
 ((__t = ( Formbuilder.options.mappings.FILE_UPLOAD_TYPE_RESTRICTIONS )) == null ? '' : __t) +
-'\' />\n\t<p>\n\t<b>Size</b><br/>\n\tSize specified with suffix. B=bytes, KB=kilobytes, MB=megabytes.<br/>\n    <input placeholder="Ex: \'1MB\'" type=\'text\' style="width:100%" data-rv-input=\'model.' +
+'\' />\n\t<p>\n\t<b>Maximum Size</b><br/>\n\tSize specified with suffix. B=bytes, KB=kilobytes, MB=megabytes.<br/>\n    <input placeholder="Ex: \'1MB\'" type=\'text\' style="width:100%" data-rv-input=\'model.' +
 ((__t = ( Formbuilder.options.mappings.FILE_UPLOAD_SIZE_RESTRICTION )) == null ? '' : __t) +
 '\' />\n</div>\n';
 
