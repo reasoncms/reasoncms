@@ -11,6 +11,7 @@ include_once(TYR_INC.'tyr.php');
 require_once( INCLUDE_PATH . 'xml/xmlparser.php' );
 include_once ( SETTINGS_INC.'thor_settings.php' );
 include_once( CARL_UTIL_INC . 'db/db.php'); // Requires ConnectDB Functionality
+reason_include_once("function_libraries/file_utils.php");
 
 /**
  * ThorCore - essentially a thor replacement that does less than the old thor, but does it better.
@@ -1120,16 +1121,42 @@ class ThorCore
 		if ( $required ) $d->add_required($id);
 	}
 
+	function explodeTrimAndLowerTokenizedInputForUploadRestrictions($stuff)
+	{
+		$rv = Array();
+		$explodedStuff = explode(",",$stuff);
+		foreach ($explodedStuff as $stuffChunk) {
+			$rv[] = strtolower(trim($stuffChunk));
+		}
+		return $rv;
+	}
+
 	function _transform_upload($element, &$d)
 	{
+		// echo "RENDERING UPLOAD ELEMENT!<P>";
+		// var_dump("DATA FROM DB: <PRE>", $element, "</PRE>");
 		$id = $element->tagAttrs['id'];
 		$display_name = (!empty($element->tagAttrs['label'])) ? $element->tagAttrs['label'] : '';
 		$required = (!empty($element->tagAttrs['required'])) ? true : false;
 
 		$args = array(
 						'display_name' => $display_name,
-						// 'acceptable_types' => Array('application/pdf'),
+						'show_restriction_explanation' => true
 					);
+
+		if (!empty($element->tagAttrs['restrict_extensions'])) {
+			$args['acceptable_extensions'] = $this->explodeTrimAndLowerTokenizedInputForUploadRestrictions($element->tagAttrs['restrict_extensions']);
+		}
+
+		if (!empty($element->tagAttrs['restrict_types'])) {
+			$args['acceptable_types'] = $this->explodeTrimAndLowerTokenizedInputForUploadRestrictions($element->tagAttrs['restrict_types']);
+		}
+
+		if (!empty($element->tagAttrs['restrict_maxsize'])) {
+			$args['max_file_size'] = convertFormattedSizeToNumberOfBytes($element->tagAttrs['restrict_maxsize']);
+		}
+
+		// var_dump("FINAL ARGS: <PRE>", $args, "</PRE>");
 
 		$d->add_element($id, 'upload', $args);
 		if ( $required ) $d->add_required($id);
