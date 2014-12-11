@@ -94,6 +94,13 @@ class uploadType extends defaultType
 	 * @var int
 	 */
 	var $max_file_size = 20971520; // 20 MB
+
+	/**
+	 * should the element show type/extension/size restrictions? defaults to false for pre-existing forms. forms
+	 * created using thor/formbuilder override this to true by default (see reason_package/thor/thor.php)
+	 * @var boolean
+	 */
+	var $show_restriction_explanation = false;
 	
 	/** @access private */
 	var $type_valid_args = array(
@@ -104,7 +111,8 @@ class uploadType extends defaultType
 		'acceptable_types',
 		'acceptable_extensions',
 		'allow_upload_on_edit',
-		'max_file_size'
+		'max_file_size',
+		'show_restriction_explanation'
 	);
 	
 	/**
@@ -600,6 +608,7 @@ class uploadType extends defaultType
 		$current = $this->_get_current_file_info();
 		
 		return $this->_get_hidden_display($current).
+			$this->_get_restriction_display($current).
 			$this->_get_current_file_display($current).
 			$this->_get_upload_display($current);
 	}
@@ -640,6 +649,31 @@ class uploadType extends defaultType
 		}
 		
 		return $disp;
+	}
+
+	function _get_restriction_display($current)
+	{
+		if (!$this->show_restriction_explanation) { return ""; }
+
+		$rv = "";
+
+		if (count($this->acceptable_types) > 0) {
+			$rv .= ($rv == "" ? "" : "; ") . "type" . (count($this->acceptable_types) == 1 ? "" : "s") . " <i>" . implode(", ", $this->acceptable_types) . "</i>";
+		}
+
+		if (count($this->acceptable_extensions) > 0) {
+			$rv .= ($rv == "" ? "" : "; ") . "extension" . (count($this->acceptable_extensions) == 1 ? "" : "s") . " <i>" . implode(", ", $this->acceptable_extensions) . "</i>";
+		}
+
+		if (in_array("max_file_size", $this->get_set_args())) {
+			$rv .= ($rv == "" ? "" : "; ") . "maximum size <i>" . convertNumberOfBytesToFormattedSize($this->max_file_size) . "</i>";
+		}
+
+		if ($rv != "") {
+			$rv = "<div class=\"file_upload_restriction_explanation\">(restricted to " . $rv . ")</div>";
+		}
+
+		return $rv;
 	}
 	
 	/** @access private */
