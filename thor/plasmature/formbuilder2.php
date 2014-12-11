@@ -76,6 +76,9 @@ class formbuilder2Type extends textareaType
 
 		$this->mainFieldTranslators = array(
 			new AttributeTranslator("label"),
+			new RestrictableAttributeTranslator("file", "file_upload_extension_restrictions", "restrict_extensions"),
+			new RestrictableAttributeTranslator("file", "file_upload_type_restrictions", "restrict_types"),
+			new RestrictableAttributeTranslator("file", "file_upload_size_restriction", "restrict_maxsize"),
 			// new AttributeTranslator("cid", "id"),
 			new RegexTranslator("/^c(\w*)/",'id_${1}',"/^id_(\w*)/",'c${1}',"cid", "id"),
 			new RestrictableAttributeTranslator("text,paragraph", "default_value", "value"),
@@ -294,160 +297,8 @@ class formbuilder2Type extends textareaType
 		var_dump($rootXml->asXML());
 		// var_dump("-------OLD METHOD", $this->_OLD_json_to_xml($json));
 		die();
-		 */
+		*/
 
 		return $rootXml->asXML();
 	}
-	
-	/*
-	function _OLD_json_to_xml($json)
-	{
-		// var_dump("SUBMITTED JSON", $json);
-
-		$form_xml_obj = new  XMLParser('<form></form>');
-		$form_xml_obj->Parse();
-		$xml_doc = $form_xml_obj->document;
-
-		$decodedJson = json_decode($json);
-		// var_dump("DECODED JSON", $decodedJson);
-		$json_field_array = $decodedJson->fields;
-
-		foreach ($json_field_array as $field) {
-			// var_dump("JSON FIELD", $field);
-			if ($field->field_type == 'submit_button') continue;
-			
-			//build attrs
-			$attrs = (array) $field;
-
-			//remove field_type and field_options (handled separately)
-			unset($attrs['field_type'], $attrs['field_options']);
-			//set the way 'required' works
-			if ($attrs['required'] == true) $attrs['required'] = 'required';
-			else unset($attrs['required']);
-			//rename cid to id
-			$attrs["id"] = $attrs['cid'];
-			unset( $attrs['cid'] );
-
-			//construct the field tag
-			$xmlFieldTag = new XMLTag($this->fieldMapJtX[$field->field_type], $attrs);
-
-			//add options if necessary
-			if (isset($field->field_options) && (isset($field->field_options->options))) {// || property_exists($field->field_options->options))) {
-				foreach ($field->field_options->options as $option) {
-					// var_dump("INDIVIDUAL OPTION", $option);
-					if ($option->checked == true) $optionAttrs["selected"] = "selected";
-					$optionAttrs["label"] = $optionAttrs["value"] = $option->label;
-					$optionAttrs["id"] = 'o' . $option->reasonOptionId;
-					$xmlFieldTag->tagChildren[] = new XMLTag($this->optionMap[$xmlFieldTag->tagName], $optionAttrs);
-				}
-				//}
-
-			// } else {
-				// echo "<font color=red>dealing with options!</font><P>";
-			}
-
-			// special handling for hidden/comment fields...
-			$description = (isset($field->field_options) && isset($field->field_options->description)) ? $field->field_options->description : "";
-			if ($field->field_type == "hidden_field") {
-				$xmlFieldTag->tagAttrs["value"] = $field->field_options->description;
-			} else if ($field->field_type == "text_comment") {
-				$xmlFieldTag->tagData = $field->field_options->description;
-			}
-
-			//add this new tag to the document
-			$xml_doc->tagChildren[] = $xmlFieldTag;
-		}
-		$xml_doc->tagAttrs['submit'] = end($json_field_array)->field_type == 'submit_button'? end($json_field_array)->label : 'Submit';
-		$xml_doc->tagAttrs[$this->optionMemoryKey] = $decodedJson->maxUsedOptionId;
-		
-		// want to see what the xml we're about to save looks like?
-		// var_dump("XML", $xml_doc->GetXML());
-		// die();
-		
-		return('<?xml version="1.0" ?>' . $xml_doc->GetXML());
-	}
-
-	function _OLD_xml_to_json($xml)
-	{
-		$form_xml_obj = new  XMLParser($xml);
-		$form_xml_obj->Parse();
-
-		if ($form_xml_obj->document)
-		{
-			// var_dump("XML_OBJ", $form_xml_obj, "-----");
-
-			$maxOptionIdUsedInDB = 0;
-			foreach ($form_xml_obj->document->tagChildren as $k=>$v)
-			{
-				if (is_object($v)) {
-					$fieldName = $this->fieldMapXtJ[$v->tagName];
-					$jsonField = $v->tagAttrs;
-					$jsonField['field_type'] = $fieldName;
-
-					//rename id to cid
-					$jsonField["cid"] = $jsonField['id'];
-					unset( $jsonField['id'] );
-
-					//rename value of "required" to a boolean
-					$jsonField["required"] = (isset($jsonField["required"]) && $jsonField["required"] == "required");
-
-					//add options if necessary
-					if (!empty($v->tagChildren)){
-						foreach($v->tagChildren as $option){
-							$probeOptionId = (int) substr($option->tagAttrs["id"], 1); // the id in the db is like "o9" and we want just the "9" in the JSON
-							$maxOptionIdUsedInDB = max($maxOptionIdUsedInDB, $probeOptionId);
-
-							$jsonField["field_options"]["options"][] = array(
-								"checked" => isset($option->tagAttrs["selected"]) && $option->tagAttrs["selected"] == "selected" ? true : false, //to prevent 'null'
-								"label" => $option->tagAttrs["label"],
-								"reasonOptionId" => $probeOptionId
-								);
-						}
-					}
-					// var_dump("JSON", $jsonField, "-----");
-
-					// special handling for hidden/comment fields...
-					if ($jsonField['field_type'] == 'hidden_field') {
-						$jsonField['field_options'] = array( 'description' => $jsonField['value'] );
-						unset($jsonField['value']);
-					} else if ($jsonField['field_type'] == 'text_comment') {
-						$jsonField['field_options'] = array( 'description' => $v->tagData );
-					}
-
-
-					$form_json_obj[] = $jsonField; //push field onto form
-				}
-			}
-		}
-		else
-		{
-			// no xml - creating a new form
-		}
-
-		//add bottom submit
-		$form_json_obj[] = array(
-			'field_type' => 'submit_button',
-			'label' => $form_xml_obj->document ? $form_xml_obj->document->tagAttrs['submit'] : "Submit"
-		);
-
-		//wrap json in fields: label
-
-		$form_json_obj = array(
-			"fields" => $form_json_obj
-		);
-	
-		$optionMemoryKeyLowered = strtolower($this->optionMemoryKey);
-		if (isset($form_xml_obj->document->tagAttrs[$optionMemoryKeyLowered])) {
-			$form_json_obj[$this->optionMemoryKey] = $form_xml_obj->document->tagAttrs[$optionMemoryKeyLowered];
-		} else {
-			// pre-existing forms in the database won't have the maxUsedOptionId attribute set on them. For these we need to fake it by just
-			// looking at the actual highest value in use in the db
-			$form_json_obj[$this->optionMemoryKey] = $maxOptionIdUsedInDB;
-		}
-
-		// var_dump("CONVERTED TO JSON", $form_json_obj);
-
-		return json_encode($form_json_obj);
-	}
-	 */
 }
