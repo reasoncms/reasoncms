@@ -47,10 +47,10 @@ class MagazineItemMarkupGenerator extends ResponsiveItemMarkupGenerator
 		{
 			$this->markup_string .= '<div class="author">'.$this->get_author_section().'</div>'."\n";
 		}
-		if($this->should_show_date_section())
-		{
-			$this->markup_string .= '<time class="date">'.$this->get_date_section().'</time>'."\n";
-		}
+		// if($this->should_show_date_section())
+		// {
+		// 	$this->markup_string .= '<time class="date">'.$this->get_date_section().'</time>'."\n";
+		// }
 		$this->markup_string .= '</div>'."\n";
 		if($this->should_show_social_sharing_section())
 		{
@@ -64,10 +64,10 @@ class MagazineItemMarkupGenerator extends ResponsiveItemMarkupGenerator
 		{
 			$this->markup_string .= '<div class="text">'.$this->get_content_section().'</div>'."\n";
 		}
-		if($this->should_show_social_sharing_section())
-		{
-			$this->markup_string .= '<div class="social bottom">'.$this->get_social_sharing_section().'</div>'."\n";
-		}
+		// if($this->should_show_social_sharing_section())
+		// {
+		// 	$this->markup_string .= '<div class="social bottom">'.$this->get_social_sharing_section().'</div>'."\n";
+		//}
 		if($this->should_show_inline_editing_link())
 		{
 			$this->markup_string .= $this->get_close_inline_editing_section();
@@ -76,14 +76,14 @@ class MagazineItemMarkupGenerator extends ResponsiveItemMarkupGenerator
 		if($show_related_section)
 		{
 			$this->markup_string .= '<div class="relatedItems">'."\n";
-			if($this->should_show_images_section())
-			{
-				$this->markup_string .= '<div class="images">'.$this->get_images_section().'</div>'."\n";
-			}
-			if($this->should_show_related_events_section())
-			{
-				$this->markup_string .= '<div class="relatedEvents">'.$this->get_related_events_section().'</div>'."\n";
-			}
+			// if($this->should_show_images_section())
+			// {
+			// 	$this->markup_string .= '<div class="images">'.$this->get_images_section().'</div>'."\n";
+			// }
+			// if($this->should_show_related_events_section())
+			// {
+			// 	$this->markup_string .= '<div class="relatedEvents">'.$this->get_related_events_section().'</div>'."\n";
+			// }
 			if($this->should_show_assets_section())
 			{
 				$this->markup_string .= '<div class="assets">'.$this->get_assets_section().'</div>'."\n";
@@ -122,14 +122,30 @@ class MagazineItemMarkupGenerator extends ResponsiveItemMarkupGenerator
 
 	function get_social_sharing_section()
 	{
-		//$ret = '<p><strong>Share the love:</strong>';
+		$ret .= '<ul class="socialIcons">';
+		
 		foreach($this->passed_vars['item_social_sharing'] as $social_sharing)
 		{
+
+			// Change Social Media name into a css-class-friendly string
+			$name = $social_sharing['text'];
+			//Lower case everything
+			$name = strtolower($name);
+			//Make alphanumeric (removes all other characters)
+			$name = preg_replace("/[^a-z0-9_\s-]/", "", $name);
+			//Clean up multiple dashes or whitespaces
+			$name = preg_replace("/[\s-]+/", " ", $name);
+			//Convert whitespaces and underscore to dash
+			$name = preg_replace("/[\s_]/", "-", $name);
+
+			$ret .= '<li class="' . $name . '">';
 			$ret .= '<a href="'.$social_sharing['href'].'">';
-			$ret .= '<img src="'. $social_sharing['icon'] . '" alt="'. $social_sharing['text'] . '" />';
+			$ret .= '<span>' . $social_sharing['text'] . '</span>'; 
 			$ret .= '</a>';
+			$ret .= '</li>';
 		}
-	//	$ret .= '</p>';
+		
+		$ret .= '</ul>';
 		return $ret;
 	}
 
@@ -291,6 +307,13 @@ class MagazineItemMarkupGenerator extends ResponsiveItemMarkupGenerator
 	// 	if(!empty($this->passed_vars['current_issue']))
 	// 		$this->markup_string .= $this->get_current_issue_markup($this->passed_vars['current_issue']);
 	// }
+
+	function get_author_section()
+	{
+		return 'By <span class="name">'.$this->item->get_value( 'author' ).'</span>';
+	}
+
+
 
 	function get_search_and_filter_interface_markup()
 	{
