@@ -99,12 +99,17 @@
 
 				@media #{$large-up} {
 					padding-top: 0;
-					padding-bottom: 0;
-					background: transparent url("../../images/magazine/logo_1x.png");
+					//padding-bottom: 37.4%;
+					background: transparent url("../../images/magazine/logo_1x.png") no-repeat;
 					border-bottom: none;
 					margin-bottom: $column-gutter/2;
-					width: 233px;
-					height: 88px;
+					//width: 100%;
+					//background-size: 100%;
+					//height: 0;
+					// width: 233px;
+					// height: 88px;
+					width: 198px;
+					height: 74px;
 
 					span {
 						position: absolute;
@@ -120,6 +125,7 @@
 				.navListTop ul {  // TOP LEVEL page links
 
 					a {
+						border-color: rgba(#000, .2);
 						
 						&:hover {
 							background: none;
@@ -129,6 +135,12 @@
 					.open a:hover {
 						background: none !important;
 					}	
+
+					li:last-of-type {
+						a {
+							border-bottom: 1px solid rgba(#000, .2);
+						}
+					}
 				}
 				
 				.navListTop ul ul {  // SECOND LEVEL page links
@@ -182,11 +194,16 @@
 // In luther_magazine.php, we give the home page the class of .siteHome. 
 // In this case, the home page is the entire publication module because all parts of the publication module run on the same "page".
 
+// 2A. SHARED STYLES
 .siteHome {
 
 	#minisite {
 
-		// 2A. SHARED STYLES
+		.feedLink {
+			display: none;
+		}
+
+
 		.pageTitle {
 			display: none; // Hide page title on publication pages
 		}
@@ -226,10 +243,6 @@
 			display: none;
 		}
 
-		.searchAndFilterInterface {
-			display: none;
-		}
-
 		.fullPostDisplay {
 
 		}
@@ -244,6 +257,49 @@
 				border: none;
 			}
 		}
+
+		// Category Colors
+		.post-cats {
+			.features {
+				a {
+					background: rgba($lc-blue-light, .85);
+
+					&:hover {
+						background: $lc-blue-light;
+					}
+				}
+			}
+
+			.alumni-profiles {
+				a {
+					background: rgba($lc-green, .9);
+
+					&:hover {
+						background: $lc-green;
+					}
+				}
+			}
+
+			.in-the-media {
+				a {
+					background: rgba($lc-yellow, .9);
+
+					&:hover {
+						background: $lc-yellow;
+					}
+				}
+			}
+
+			.class-notes {
+				a {
+					background: rgba($lc-red, .9);
+
+					&:hover {
+						background: $lc-red;
+					}
+				}
+			}
+		}
 	}
 }
 
@@ -252,6 +308,10 @@
 // The publication home page has a class of .homePostsDisplay
 
 .siteHome #minisite .homePostsDisplay {
+
+	.searchAndFilterInterface {
+		display: none;
+	}
 
 	.sections {
 		clear: both;
@@ -355,20 +415,23 @@
 			text-align: center;
 		}
 
-		.post-cat a {
-			display: inline-block;
-			color: #FFF;
-			background: black;
-			padding: rem-calc(2) rem-calc(8);
-			@include border-radius($global-radius);
-			position: absolute;
-			top: - rem-calc(40);
-			right: $column-gutter/3;
+		.post-cat {
 
-			@media #{$medium-up} {
-				padding: $column-gutter/5 $column-gutter/3;
-				top: - rem-calc(60);
-				right: $column-gutter/2;
+			a {
+				display: block;
+				float: left;
+				color: #FFF;
+				padding: rem-calc(2) rem-calc(8);
+				//@include border-radius($global-radius);
+				position: absolute;
+				top: - rem-calc(47);
+				right: $column-gutter/3;
+
+				@media #{$medium-up} {
+					padding: rem-calc(4) rem-calc(12);
+					top: - rem-calc(56);
+					right: $column-gutter/2;
+				}
 			}
 		}
 
@@ -383,7 +446,6 @@
 
 		@media #{$large-up} {
 			margin-top: - $column-gutter;
-			//padding-top: 0;
 		}
 
 		.post {
@@ -431,8 +493,16 @@
 			}
 
 			.post-cat a {
-				@media #{$small-only} {
+				@media #{$small-up} {
 					right: 0;
+				}
+
+				@media #{$medium-up} {
+					right: rem-calc(10);
+				}
+
+				@media #{$large-up} {
+					right: rem-calc(30);
 				}
 			}
 
@@ -562,10 +632,6 @@
 				}    	
 			}
 		}
-
-		.post-cats a {
-			background: $lc-blue-light;
-		}
 	}
 	
 	#alumni-profiles {
@@ -597,9 +663,9 @@
 					}
 
 					.post-cats a {
-						top: auto;
-						bottom: 0;
-						left: - rem-calc(200);
+						top: 0;
+						//bottom: 0;
+						left: -50%;
 						right: auto;
 					}
 				}
@@ -663,10 +729,6 @@
 		// 		}
 		// 	}
 		// }
-
-		.post-cats a {
-			background: $lc-green;
-		}
 	}
 
 	#class-notes {
@@ -675,9 +737,7 @@
 			border-bottom: 7px solid $lc-red;
 		}
 
-		.post-cats a {
-			background: $lc-red;
-		}
+
 	}
 
 	#in-the-media {
@@ -685,12 +745,9 @@
 		.primaryImage {
 			border-bottom: 7px solid $lc-yellow;
 		}
-
-		.post-cats a {
-			background: $lc-yellow;
-		}
 	}
 }
+
 
 //    2C. FILTERED PAGE 
 .siteHome #minisite .filteredPostsDisplay {
@@ -699,6 +756,52 @@
 	}
 	@media #{$xlarge-up} {
 		margin-left: 25%;
+	}
+
+	// COLUMNS
+	.allPosts {
+
+		@media #{$medium-high-up} {
+			@include grid-column(11);
+			padding-left: 0;
+		}
+	}
+
+	.searchAndFilterInterface{
+
+		@media #{$medium-high-up} {
+			@include grid-column(5);
+			padding-right: 0;
+		}
+
+		.filterInterface {
+			ul {
+				margin: 0;
+
+				li {
+					margin-bottom: rem-calc(8);
+
+					a {
+						border: 1px solid #000;
+						padding: rem-calc(2) rem-calc(8);
+						@include border-radius($global-radius);
+					}
+
+					strong {
+						background: black;
+						color: #FFF;
+						padding: rem-calc(2) rem-calc(8);
+						@include border-radius($global-radius);
+					}
+				}
+			}
+		}
+
+		+ p {
+			clear: both;
+			//font-weight: 700;
+			padding-top: $column-gutter/2;
+		}
 	}
 
 	.filterMessage {
@@ -718,7 +821,25 @@
 		}
 	}
 
+	#featuredItems,
+	#featuredItems *,
+	#featuredItems *:before,
+	#featuredItems *:after,
+	.sections,
+	.sections *,
+	.sections *:before,
+	.sections *:after, {
+		clear: none !important;
+	}
+
 	.post {
+		clear: none;
+		$category-thumb-width: rem-calc(200) + $column-gutter/2;
+
+		@media #{$medium-up} {
+			padding-left: $category-thumb-width;
+		}
+
 		.primaryImage {
 			width: 20%;
 			float: right;
@@ -727,8 +848,30 @@
 			@media #{$medium-up} {
 				width: 200px;
 				float: left;
-				margin: 0 $column-gutter/2 $column-gutter/2 0;
+				margin: 0;
+				margin-left: - $category-thumb-width;
 			}	
+		}
+
+		.post-cats {
+			display: none;
+		}
+
+		.content-block {
+			position: relative;
+
+			@media #{$medium-up} {
+				padding-top: rem-calc(16);
+			}
+
+			> a {
+				display: block;
+				color: $body-font-color !important;
+			}
+
+			.date {
+				margin-bottom: rem-calc(4);
+			}
 		}
 	}
 }
@@ -757,6 +900,20 @@
 	.secondChunk {
 		width: 100% !important;
 		clear: left;
+	}
+
+	.postTitle {
+		text-align: center;
+		color: $lc-blue-light;
+		font-size: rem-calc(34);
+
+		@media #{$xlarge-up} {
+			font-size: rem-calc(46);
+		}
+	}
+
+	.postMeta {
+		text-align: center;
 	}
 }
 

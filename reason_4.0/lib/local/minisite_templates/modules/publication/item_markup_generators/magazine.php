@@ -16,6 +16,7 @@ class MagazineItemMarkupGenerator extends ResponsiveItemMarkupGenerator
 	{
 		$this->variables_needed[] = 'filter_interface_markup';
 		$this->variables_needed[] = 'search_interface_markup';
+		$this->variables_needed[] = 'current_issue';
 		return parent::get_variables_needed();
 	}
 
@@ -29,7 +30,8 @@ class MagazineItemMarkupGenerator extends ResponsiveItemMarkupGenerator
 		$this->markup_string .= $show_related_section ? ' hasRelated' : ' noRelated';
 		$this->markup_string .= '">';
 		$this->markup_string .= '<div class="primaryContent firstChunk">'."\n";
-
+		
+		//$this->markup_string .= $this->get_current_issue_title_markup();
 		
 		if($this->should_show_comment_added_section())
 		{
@@ -114,6 +116,8 @@ class MagazineItemMarkupGenerator extends ResponsiveItemMarkupGenerator
 		$this->markup_string .= '</div>'."\n"; //close second chunk
 		$this->markup_string .= '</div>'."\n"; //close fullPost div
 		$this->markup_string .= $this->get_search_and_filter_interface_markup();
+		
+
 	}
 
 	function get_social_sharing_section()
@@ -255,6 +259,38 @@ class MagazineItemMarkupGenerator extends ResponsiveItemMarkupGenerator
 		// else
 		// 	return false;
 	}
+
+	// function get_current_issue_title_markup()
+	// {
+	// 	$markup = '';
+	// 	if(!empty($this->passed_vars['current_issue']))
+	// 	{
+	// 		$markup .= '<div class="poopy">'."\n";
+	// 		$markup .= 'And the current issue is...'."\n";
+	// 		$markup .= '';
+	// 		//if(!empty($this->passed_vars['current_issue']))
+	// 			//$this->markup .= $this->get_current_issue_markup($this->passed_vars['current_issue']);
+	// 		//$issue = $this->passed_vars['current_issue'];
+	// 		//$markup .= '<div class="issueName"><h3>'.$this->_get_issue_label($this->passed_vars['current_issue']).'</h3></div>'."\n";
+	// 		$markup .= '</div>'."\n";
+
+	// 	}
+	// 	return $markup;
+	// }
+
+	// function get_current_issue_markup($issue)
+	// {
+	// 	$markup_string = '';
+	// 	$markup_string .= '<div class="issueName"><h3>'.$this->_get_issue_label($issue).'</h3></div>'."\n";
+	// 	return $markup_string;
+	// }
+
+	// function get_pre_list_markup()
+	// {
+	// 	//if this is an issued publication, show what issue we're looking at
+	// 	if(!empty($this->passed_vars['current_issue']))
+	// 		$this->markup_string .= $this->get_current_issue_markup($this->passed_vars['current_issue']);
+	// }
 
 	function get_search_and_filter_interface_markup()
 	{

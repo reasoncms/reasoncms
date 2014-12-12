@@ -31,20 +31,25 @@ class MagazinePublicationListMarkupGenerator extends PublicationListMarkupGenera
 		//$this->markup_strong .= $this->get_issue_title_markup();
 		//$this->markup_strong .= $this->get_issue_selector_markup();
 		//$this->markup_strong .= $this->get_issue_blurb_module_markup();
-		$this->markup_string .= $this->get_featured_items_markup();
-		$this->markup_string .= $this->get_list_markup();
+		
+		//$this->markup_string .= $this->get_all_filtered_posts_markup();
+		$this->markup_string .= $this->get_all_posts_markup();
+
+		//$this->markup_string .= $this->get_featured_items_markup();
+		//$this->markup_string .= $this->get_list_markup();
+		
 		$this->markup_string .= $this->get_post_list_markup();
 		$this->markup_string .= $this->get_search_and_filter_interface_markup();
 	}
 
 	//overloaded from generic3
-	function show_style_string()
-	{
-		$class_string = ($this->related_mode) ? 'relatedPub' : 'publication';
-		if(!empty( $this->current_item_id ) )
-			$class_string .= ' fullPostDisplay';
-		echo '<div id="'.$this->style_string.'" class="'.$class_string.'">'."\n";
-	}
+	// function show_style_string()
+	// {
+	// 	$class_string = ($this->related_mode) ? 'relatedPub' : 'publication';
+	// 	if(!empty( $this->current_item_id ) )
+	// 		$class_string .= ' fullPostDisplay';
+	// 	echo '<div id="'.$this->style_string.'" class="'.$class_string.'">'."\n";
+	// }
 
 	function get_issue_title_markup()
 	{
@@ -73,6 +78,38 @@ class MagazinePublicationListMarkupGenerator extends PublicationListMarkupGenera
 		{
 			$this->markup_string .= $this->get_filter_message_markup();
 		}
+	}
+
+	function get_all_posts_markup()
+	{
+		$markup_string .= '<div class="allPosts">'."\n";
+		$markup_string .= $this->get_featured_items_markup();
+		$markup_string .= $this->get_list_markup();
+		$markup_string .= '</div>'."\n";
+		return $markup_string;
+	}
+
+	function get_all_filtered_posts_markup()
+	{
+		// $markup_string .= '<div class="allPosts">'."\n";
+		// $markup_string .= $this->get_featured_items_markup();
+		// $markup_string .= $this->get_list_markup();
+		// $markup_string .= '</div>'."\n";
+		// return $markup_string;
+
+
+			if(!empty($this->passed_vars['current_filters']))
+			{
+				$markup_string = '<h1>This is filtered, yo!</h1>';
+				$markup_string .= '<div class="allPosts">'."\n";
+				$markup_string .= $this->get_featured_items_markup();
+				$markup_string .= $this->get_list_markup();
+				$markup_string .= '</div>'."\n";
+				return $markup_string;
+
+			}
+			return $markup_string;
+		// }
 	}
 
 	function get_pre_list_markup()
@@ -215,6 +252,7 @@ class MagazinePublicationListMarkupGenerator extends PublicationListMarkupGenera
 			{
 				if(!empty($this->passed_vars['list_item_markup_strings'][$item_id]) && !array_key_exists($item_id, $this->passed_vars['featured_item_markup_strings']))
 					$list_body .= '<article class="post"><div class="inner">'.$this->passed_vars['list_item_markup_strings'][$item_id].'</div></article>'."\n";
+					//$list_body .= $this->passed_vars['list_item_markup_strings'][$item_id];
 			}
 			if(!empty($list_body))
 			{
@@ -318,12 +356,12 @@ class MagazinePublicationListMarkupGenerator extends PublicationListMarkupGenera
 /////
 //  Issue methods
 /////
-	// function get_current_issue_markup($issue)
-	// {
-	// 	$markup_string = '';
-	// 	$markup_string .= '<div class="issueName"><h3>'.$this->_get_issue_label($issue).'</h3></div>'."\n";
-	// 	return $markup_string;
-	// }
+	function get_current_issue_markup($issue)
+	{
+		$markup_string = '';
+		$markup_string .= '<div class="issueName"><h3><span>From</span> '.$this->_get_issue_label($issue).'</h3></div>'."\n";
+		return $markup_string;
+	}
 	
 	function get_issue_links_markup()
 	{
