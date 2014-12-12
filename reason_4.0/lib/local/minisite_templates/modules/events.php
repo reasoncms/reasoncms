@@ -2458,8 +2458,6 @@ class EventsModule extends DefaultMinisiteModule
 			}
 			$results = array();
 		}
-		//echo(var_dump($cats[455710]));
-		//echo(var_dump($cats));
 		return $cats;
 	}
 	
@@ -2473,7 +2471,6 @@ class EventsModule extends DefaultMinisiteModule
 	 */
 	function alter_categories_checker_es($es)
 	{
-		//$es->set_sharing('owns');
 		return $es;
 	}
 	
