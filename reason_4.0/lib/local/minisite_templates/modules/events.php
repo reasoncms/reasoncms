@@ -2453,8 +2453,13 @@ class EventsModule extends DefaultMinisiteModule
 			{
 				unset($cats[$id]);
 			}
+			elseif(get_owner_site_id($id) != $this->site_id){
+				unset($cats[$id]);
+			}
 			$results = array();
 		}
+		//echo(var_dump($cats[455710]));
+		//echo(var_dump($cats));
 		return $cats;
 	}
 	
@@ -2468,6 +2473,7 @@ class EventsModule extends DefaultMinisiteModule
 	 */
 	function alter_categories_checker_es($es)
 	{
+		//$es->set_sharing('owns');
 		return $es;
 	}
 	
