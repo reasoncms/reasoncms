@@ -369,9 +369,9 @@
 			width: 33.3333%;
 		}
 
-		@media #{$xlarge-up} {
-			width: 25%;
-		}
+		// @media #{$xlarge-up} {
+		// 	width: 25%;
+		// }
 
 		// @media #{$small-high-up} {
 		// 	width: 50%;
@@ -622,16 +622,16 @@
 			}
 		}
 
-		@media #{$xlarge-up} {
-			.post {
-				width: 25%;
+		// @media #{$xlarge-up} {
+		// 	.post {
+		// 		width: 25%;
 
-				&:nth-of-type(1),
-				&:nth-of-type(2) {
-					width: 50%;
-				}    	
-			}
-		}
+		// 		&:nth-of-type(1),
+		// 		&:nth-of-type(2) {
+		// 			width: 50%;
+		// 		}    	
+		// 	}
+		// }
 	}
 	
 	#alumni-profiles {
@@ -672,34 +672,34 @@
 			}
 		}
 
-		@media #{$xlarge-up} {
+		// @media #{$xlarge-up} {
 			
-			.post {
-				width: 25%;
+		// 	.post {
+		// 		width: 25%;
 
-				&:nth-of-type(1),
-				&:nth-of-type(2) {
-					width: 50%;
+		// 		&:nth-of-type(1),
+		// 		&:nth-of-type(2) {
+		// 			width: 50%;
 
-					.primaryImage {
-						float: left;
-						width: 50%;
-					}
+		// 			.primaryImage {
+		// 				float: left;
+		// 				width: 50%;
+		// 			}
 
-					.content-block {
-						float: left;
-						width: 50%;
-					}
+		// 			.content-block {
+		// 				float: left;
+		// 				width: 50%;
+		// 			}
 
-					.post-cats a {
-						top: auto;
-						bottom: 0;
-						left: - rem-calc(200);
-						right: auto;
-					}
-				}
-			}
-		}
+		// 			.post-cats a {
+		// 				top: auto;
+		// 				bottom: 0;
+		// 				left: - rem-calc(200);
+		// 				right: auto;
+		// 			}
+		// 		}
+		// 	}
+		// }
 
 		// @media #{$large-high-up} {
 			
