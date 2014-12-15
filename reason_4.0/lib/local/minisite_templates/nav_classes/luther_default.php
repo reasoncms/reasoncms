@@ -56,7 +56,7 @@
 			{
 				$open = $this->is_open( $item );
 				$class = $this->get_item_class($item, $open, $depth, $counter);
-				$item_display = $this->show_item( $this->values[ $item  ], $depth );
+				$item_display = $this->luther_show_item( $this->values[ $item  ], $depth );
 				if (!empty($children) && $this->use_accordion_nav($this->values[ $item ]->get_value( 'custom_page' )) && $depth == 1)
 				{
 					$class = 'accordion ' . $class;
@@ -106,7 +106,7 @@
 			}
 		}
 		
-		function show_item( &$item , $depth, $options = false)
+		function luther_show_item( &$item , $depth, $options = false)
 		{
 			$class_attr = '';
 			if( $item->id() == $this->root_node() )

@@ -23,7 +23,6 @@ class VolunteerOtherModule extends LutherFacultyStaffModule
         } else {
             return false;
         }
-        return true;
     }
 
     function list_people($people)

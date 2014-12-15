@@ -231,6 +231,7 @@
 			$classes[] = 'body';
 			if($this->pages->root_node() == $this->page_id)
 				$classes[] = 'siteHome';
+			$classes[] = $this->get_page_type()->_page_type_name;
 			if($this->page_info->get_value('unique_name'))
 				$classes[] = 'uname_'.$this->page_info->get_value('unique_name');
 			return $classes;

@@ -3180,6 +3180,141 @@ body #wrapper #post-footer a {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* line 4, scss/font-awesome/_rotated-flipped.scss */
+.fa-rotate-90 {
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1);
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  -o-transform: rotate(90deg);
+  transform: rotate(90deg);
+}
+
+/* line 5, scss/font-awesome/_rotated-flipped.scss */
+.fa-rotate-180 {
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
+  -webkit-transform: rotate(180deg);
+  -moz-transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
+  -o-transform: rotate(180deg);
+  transform: rotate(180deg);
+}
+
+/* line 6, scss/font-awesome/_rotated-flipped.scss */
+.fa-rotate-270 {
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+  -webkit-transform: rotate(270deg);
+  -moz-transform: rotate(270deg);
+  -ms-transform: rotate(270deg);
+  -o-transform: rotate(270deg);
+  transform: rotate(270deg);
+}
+
+/* line 8, scss/font-awesome/_rotated-flipped.scss */
+.fa-flip-horizontal {
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=0);
+  -webkit-transform: scale(-1, 1);
+  -moz-transform: scale(-1, 1);
+  -ms-transform: scale(-1, 1);
+  -o-transform: scale(-1, 1);
+  transform: scale(-1, 1);
+}
+
+/* line 9, scss/font-awesome/_rotated-flipped.scss */
+.fa-flip-vertical {
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
+  -webkit-transform: scale(1, -1);
+  -moz-transform: scale(1, -1);
+  -ms-transform: scale(1, -1);
+  -o-transform: scale(1, -1);
+  transform: scale(1, -1);
+}
+
+/* line 10, scss/_extends.scss */
+.zero-out, body #wrapper #global-banner hgroup h1, body #wrapper #global-banner #mobile-nav ul, body #wrapper #global-nav .sections, body #wrapper #global-footer #global-footer-nav .column ul, body #wrapper #global-footer #global-footer-info .contact, #callToActionBlurb .blurb ul, #calendar .responsiveEventsList .views ul, .featuresModule .feature .featureInfo .featureTitle a,
+.featuresModule .feature .featureInfo .featureTitle .noLink, .featuresModule .feature .featureNavWrap .featureNav {
+  margin: 0;
+  padding: 0;
+}
+
+/* line 15, scss/_extends.scss */
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  margin-bottom: 0;
+}
+
+/* line 29, scss/page_types/_standalone.scss */
+body.standalone #wrapper #wrapper-col {
+  padding: 0;
+}
+/* line 31, scss/page_types/_standalone.scss */
+body.standalone #wrapper #wrapper-col #minisite {
+  border: 0;
+  padding: 0;
+}
+/* line 35, scss/page_types/_standalone.scss */
+body.standalone #wrapper #wrapper-col #minisite #minisiteBanner .breadcrumbs {
+  display: none;
+}
+/* line 39, scss/page_types/_standalone.scss */
+body.standalone #wrapper #wrapper-col #minisite #contentAndRelated {
+  padding: 0;
+}
+/* line 42, scss/page_types/_standalone.scss */
+body.standalone #wrapper #wrapper-col #minisite #contentAndRelated #contentFeature {
+  margin: 0;
+}
+@media only screen and (max-width: 40em) {
+  /* line 46, scss/page_types/_standalone.scss */
+  body.standalone #wrapper #wrapper-col #minisite #contentAndRelated #contentFeature .features {
+    padding: 0;
+    height: 224px;
+  }
+  /* line 50, scss/page_types/_standalone.scss */
+  body.standalone #wrapper #wrapper-col #minisite #contentAndRelated #contentFeature .features img {
+    width: 646px;
+    max-width: 10000px !important;
+    height: 224px !important;
+    position: absolute;
+    left: 50%;
+    top: 0;
+    margin-left: -323px;
+  }
+}
+/* line 63, scss/page_types/_standalone.scss */
+body.standalone #wrapper #wrapper-col #minisite #contentAndRelated #contentSections {
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+/* line 67, scss/page_types/_standalone.scss */
+body.standalone #wrapper #wrapper-col #minisite #contentAndRelated #contentSections #av {
+  max-width: 600px;
+  margin: 0 auto;
+}
+/* line 71, scss/page_types/_standalone.scss */
+body.standalone #wrapper #wrapper-col #minisite #contentAndRelated #contentSections #av .moduleNav ul li {
+  border-bottom: 0;
+  width: 100%;
+  padding: 0;
+}
+
+/* line 4, scss/font-awesome/_core.scss */
+.fa, #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .jump a:before, #minisite .continueReading a:after, #minisite .feedLink .feedInfo a:before, .assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a[href]:before, #childrenAndGrandchildren li ul .childDesc:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
+#calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
+#calendar .eventDetails .eventUrl:before,
+#calendar .eventDetails .calendarExport:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
+.featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, #policyModule .rootPolicyList .rootPolicyItem a:before, #policyModule .policy .decimal .closedAccordion .policyName:after, #policyModule .policy .decimal .openAccordion .policyName:after, #relatedPub .pubLinks a:before, .publication .post p.comments a:before, .publication .post p.more a:after, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after, th.header:after, .twitter-block li:before {
+  display: inline-block;
+  font-family: FontAwesome;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 /* line 10, scss/_extends.scss */
 .zero-out, body #wrapper #global-banner hgroup h1, body #wrapper #global-banner #mobile-nav ul, body #wrapper #global-nav .sections, body #wrapper #global-footer #global-footer-nav .column ul, body #wrapper #global-footer #global-footer-info .contact, #callToActionBlurb .blurb ul, #calendar .responsiveEventsList .views ul, .featuresModule .feature .featureInfo .featureTitle a,
 .featuresModule .feature .featureInfo .featureTitle .noLink, .featuresModule .feature .featureNavWrap .featureNav {
@@ -8406,6 +8541,11 @@ th.headerSortDown:after {
 /* line 22, scss/modules/_tagboard.scss */
 div#tagboard-embed {
   margin-top: -2.5rem;
+}
+
+/* line 26, scss/modules/_tagboard.scss */
+.tagboardLink {
+  text-align: center;
 }
 
 /* line 4, scss/font-awesome/_core.scss */

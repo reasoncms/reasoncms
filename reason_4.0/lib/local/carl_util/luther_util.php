@@ -197,6 +197,14 @@ function luther_get_image_url($image)
 	return $image;
 }
 
+function luther_process_inline_images($content)
+// add figure and figcaption to full-size images
+// replace deprecated img align left and right with class
+{
+	$content = preg_replace('-<img(.*)(align="(\w+))"-', '<img'.'$1'.'class="'.'$3'.'" ', $content);
+	return $content;
+}
+
 function luther_is_local_ip()
 // determine if ip address is luther college or Decorah area
 // used for ReachLocal remarketing pixel on admissions site
@@ -474,10 +482,10 @@ function get_sport_position_event_full_name($site_name)
 	else if ($site_name == 'sport_swimmingdiving_men' || $site_name == 'sport_swimmingdiving_women')
 	{
 		$positions = array(
-				'BU' => 'Butterfly',
-				'BA' => 'Backstroke',
-				'BR' => 'Breaststroke',
-				'FR' => 'Freestyle',
+				'Fl' => 'Butterfly',
+				'Bk' => 'Backstroke',
+				'Br' => 'Breaststroke',
+				'Fr' => 'Freestyle',
 				'IM' => 'Individual Medley',
 				'D' => 'Diving',
 		);
