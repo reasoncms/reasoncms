@@ -111,6 +111,8 @@
 
 		private function count_words($val)
 		{
+			$val = strip_tags($val);
+
 			preg_match_all($this->wordCountRegex, $val, $matches);
 			return count($matches[0]);
 		}
