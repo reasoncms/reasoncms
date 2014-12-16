@@ -16,7 +16,13 @@ $(document).ready(function()
 	// construct a regex using a variable put there by the php word_limiter plugin.
 	var wordCountingRegex = new RegExp(discoWordLimiterRegex, 'g');
 
+	function strip_tags(val) {
+		return val.replace(/<.*?>/g, '');
+	}
+
 	function count_words(val) {
+		val = strip_tags(val);
+
 		var result = val.match(wordCountingRegex);
 		return result == null ? 0 : result.length;
 	}
