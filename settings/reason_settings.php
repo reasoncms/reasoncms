@@ -39,14 +39,14 @@
 	 * The location of Apache's mime.types file - used by asset access manager to determine
 	 * what mime type to use when delivering reason managed assets
 	 */
-	define ( 'APACHE_MIME_TYPES', '/etc/mime.types' );
+	define ( 'APACHE_MIME_TYPES', '../../etc/mime.types' );
 	
 	/**
 	 * REASON_DB
 	 * This setting identifies connection name for the Reason database
 	 * Actual credentials and database info are kept in a separate xml file
 	 */
-	define( 'REASON_DB', 'reason_connection' );
+	define( 'REASON_DB', 'reason' );
 	
 	/**
 	 * REASON_SITE_DIRECTORY_OWNER
