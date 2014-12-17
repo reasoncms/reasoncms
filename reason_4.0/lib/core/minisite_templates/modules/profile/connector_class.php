@@ -205,13 +205,16 @@ class ProfileConnector
 				}
 			}
 		}
-
+		
+		// Merge the profile data into the connections array, pruning any branches without connections
 		if ($profile_ids)
 		{
 			$dir_data = $this->get_directory_data_for_profile_ids($profile_ids);
 			
 			foreach ($connections as $section => $tags)
+			{
 				foreach ($tags as $tag => $tag_data)
+				{
 					foreach ($tag_data['profiles'] as $rel => $profiles)
 					{
 						if ($section !== $this->get_section_id_from_relationship($rel)) continue;
@@ -222,13 +225,21 @@ class ProfileConnector
 								$connections[$section][$tag]['profiles'][$rel][$key] = $dir_data[$profile];	
 							} else {
 								unset($connections[$section][$tag]['profiles'][$rel][$key]);
-								if (empty($connections[$section][$tag]['profiles'][$rel]))
-									unset($connections[$section]);
 							}
 						}
+						if (empty($connections[$section][$tag]['profiles'][$rel]))
+						{
+							unset($connections[$section][$tag]['profiles'][$rel]);
+						}
+
 					}
+					if (empty($connections[$section][$tag]['profiles']))
+					{
+						unset($connections[$section][$tag]);
+					}
+				}
+			}
 		}
-				
 		return $connections;		
 	}
 	
