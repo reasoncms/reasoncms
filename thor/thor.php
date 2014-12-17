@@ -402,10 +402,45 @@ class ThorCore
 		{	
 			if ($node->tagName == 'upload') {
 				$col_id = $node->tagAttrs['id'];
-				// $col_label = $node->tagAttrs['label'];
 
+				$disco_el = $disco_obj->get_element($col_id);
+				/*
+				$col_label = $node->tagAttrs['label'];
+				echo "name=[" . $disco_el->file["name"] . "]<P>";
+				var_dump("<PRE>", $disco_el, "</PRE>");
+				if ($disco_el->state == "received") {
+					echo "\"$col_label\" state is received...<P>";
+				} else if ($disco_el->state == "pending") {
+					echo "\"$col_label\" state is pending...<P>";
+				} else {
+					echo "\"$col_label\" state has no state...<P>";
+				}
+				 */
+				// 2014-12-17 modification: this now supports a file that was uploaded but form could not be finished
+				// due to other errors. MUCH more user-friendly
+
+				// received is pretty standard - file was just uploaded. Pending can be, for instance:
+				// 1. file was submitted but other form errors (no input for required elements for instance) occurred
+				// 2. errors were corrected but a different file was not uploaded
+				if ($disco_el->state == "received" || $disco_el->state == "pending") {
+					$source_file = $disco_el->tmp_full_path;
+					$destination_file = $this->construct_file_storage_location($primary_key, $col_id, $disco_el->file["name"], true);
+					// echo "src [$source_file], dest [$destination_file]<P>";
+
+					$success = rename($source_file, $destination_file);
+					if ($success) {
+						$update_clauses[$col_id] = $disco_el->file["name"]; // just filename; rest can be reconstructed with construct_file_storage_location
+					}
+				} else {
+					// nothing was uploaded, or an error occurred?
+					$update_clauses[$col_id] = "";
+				}
+
+				/*
 				$upload_data = $_FILES[$col_id];
 				if ($upload_data["tmp_name"] != "") {
+					echo "TMP NAME [" . $upload_data["tmp_name"] . "]<P>";
+
 					$disco_el = $disco_obj->get_element($col_id);
 
 					if ($disco_el->state == "received") { // || $disco_el->state == "pending")
@@ -423,9 +458,11 @@ class ThorCore
 						$update_clauses[$col_id] = "";
 					}
 				} else {
+					echo "NO FILE UPLOADED FOR [$col_id]/[$col_label]<P>";
 					// no file was uploaded for this; that's ok
 					$update_clauses[$col_id] = "";
 				}
+				 */
 			}
 		}
 
