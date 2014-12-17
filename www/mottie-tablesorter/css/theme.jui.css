@@ -5,15 +5,17 @@
 .tablesorter-jui {
 	width: 100%;
 	border-collapse: separate;
-	border-spacing: 2px; /* adjust spacing between table cells */ 
+	border-spacing: 2px; /* adjust spacing between table cells */
 	margin: 10px 0 15px;
 	padding: 5px;
 	font-size: 0.8em;
 }
 
 /* header */
-.tablesorter-jui th,
-.tablesorter-jui thead td {
+.tablesorter-jui thead th,
+.tablesorter-jui thead td,
+.tablesorter-jui tfoot th,
+.tablesorter-jui tfoot td {
 	position: relative;
 	background-repeat: no-repeat;
 	background-position: right center;
@@ -21,12 +23,12 @@
 	font-weight: bold !important;
 	border-width: 1px !important;
 	text-align: left;
+	padding: 8px; /* wider than the icon */
 }
 .tablesorter-jui .header,
 .tablesorter-jui .tablesorter-header {
 	cursor: pointer;
 	white-space: normal;
-	padding: 8px; /* wider than the icon */
 }
 .tablesorter-jui .tablesorter-header-inner {
 	padding-right: 20px;
@@ -36,6 +38,13 @@
 	right: 3px;
 	top: 50%;
 	margin-top: -8px; /* half the icon height; older IE doesn't like this */
+}
+
+.tablesorter-jui thead .sorter-false {
+	cursor: default;
+}
+.tablesorter-jui thead tr .sorter-false .ui-icon {
+	display: none;
 }
 
 /* tfoot */
@@ -79,8 +88,8 @@
 }
 
 /* caption */
-caption {
-	background: #fff;
+.tablesorter-jui caption {
+	border: 0;
 }
 
 /* filter widget */
@@ -110,7 +119,7 @@ caption {
 	line-height: 0;
 	cursor: pointer;
 }
-.tablesorter-jui .tablesorter-filter-row.hideme .tablesorter-filter {
+.tablesorter-jui .tablesorter-filter-row.hideme * {
 	height: 1px;
 	min-height: 0;
 	border: 0;
@@ -137,9 +146,14 @@ caption {
 	-o-transition: height 0.1s ease;
 	transition: height 0.1s ease;
 }
+/* rows hidden by filtering (needed for child rows) */
+.tablesorter .filtered {
+	display: none;
+}
 
 /* ajax error row */
 .tablesorter .tablesorter-errorRow td {
+	text-align: center;
 	cursor: pointer;
 	background-color: #e6bf99;
 }
