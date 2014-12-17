@@ -1,5 +1,5 @@
-/*! Two digit year parser
- * Demo: http://jsfiddle.net/Mottie/abkNM/427/
+/*! Two digit year parser - 10/26/2014 (v2.18.0)
+ * Demo: http://mottie.github.io/tablesorter/docs/example-parsers-dates.html
  */
 /*jshint jquery:true */
 ;(function($){
@@ -10,23 +10,36 @@
 	// if the 2 digit year is 50 (2050 - 2020 < 50), then it becomes 2050.
 	var range = 50,
 
-	// ************
-	regxxxxyy = /(\d{1,2})[\/\s](\d{1,2})[\/\s](\d{2})/,
-	regyyxxxx = /(\d{2})[\/\s](\d{1,2})[\/\s](\d{1,2})/,
-	formatDate = function(s, regex, format){
-		s = s
-		// replace separators
-		.replace(/\s+/g," ").replace(/[-.,]/g, "/")
-		// reformat xx/xx/xx to mm/dd/19yy;
-		.replace(regex, format);
-		var d = new Date(s), y = d.getFullYear(),
-		now = new Date().getFullYear();
-		// if date > 50 years old (set range), add 100 years
-		// this will work when people start using "50" and mean "2050"
-		while (now - y > range) {
-			y += 100;
+	// no need to change any of the code below
+	ts = $.tablesorter,
+	now = new Date().getFullYear();
+
+	ts.dates = $.extend({}, ts.dates, {
+		regxxxxyy: /(\d{1,2})[\/\s](\d{1,2})[\/\s](\d{2})/,
+		regyyxxxx: /(\d{2})[\/\s](\d{1,2})[\/\s](\d{1,2})/
+	});
+
+	ts.formatDate = function(s, regex, format, table){
+		if (s) {
+			var y, rng,
+				n = s
+					// replace separators
+					.replace(/\s+/g," ").replace(/[-.,]/g, "/")
+					// reformat xx/xx/xx to mm/dd/19yy;
+					.replace(regex, format),
+				d = new Date(n);
+			if ( d instanceof Date && isFinite(d) ) {
+				y = d.getFullYear();
+				rng = table && table.config.dateRange || range;
+				// if date > 50 years old (set range), add 100 years
+				// this will work when people start using "50" and mean "2050"
+				while (now - y > rng) {
+					y += 100;
+				}
+				return d.setFullYear(y);
+			}
 		}
-		return d.setFullYear(y);
+		return s;
 	};
 
 	$.tablesorter.addParser({
@@ -34,9 +47,9 @@
 		is: function() {
 			return false;
 		},
-		format: function(s) {
+		format: function(s, table) {
 			// reformat dd/mm/yy to mm/dd/19yy;
-			return formatDate(s, regxxxxyy, "$2/$1/19$3");
+			return ts.formatDate(s, ts.dates.regxxxxyy, "$2/$1/19$3", table);
 		},
 		type: "numeric"
 	});
@@ -46,9 +59,9 @@
 		is: function() {
 			return false;
 		},
-		format: function(s) {
+		format: function(s, table) {
 			// reformat mm/dd/yy to mm/dd/19yy
-			return formatDate(s, regxxxxyy, "$1/$2/19$3");
+			return ts.formatDate(s, ts.dates.regxxxxyy, "$1/$2/19$3", table);
 		},
 		type: "numeric"
 	});
@@ -58,9 +71,9 @@
 		is: function() {
 			return false;
 		},
-		format: function(s) {
+		format: function(s, table) {
 			// reformat yy/mm/dd to mm/dd/19yy
-			return formatDate(s, regyyxxxx, "$2/$3/19$1");
+			return ts.formatDate(s, ts.dates.regyyxxxx, "$2/$3/19$1", table);
 		},
 		type: "numeric"
 	});
