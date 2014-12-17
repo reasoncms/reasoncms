@@ -1,0 +1,69 @@
+// Header Styles
+// Cloak, v1
+
+#banner {
+	padding-top: $column-gutter;
+	padding-bottom: $column-gutter;
+	padding: $column-gutter;
+
+	h1 {
+		font-family: $font-family-serif;
+		margin: 0;
+		padding-bottom: $column-gutter/2;
+
+	}
+
+	#navigationToggles {
+		@include zero-out();
+
+		li {
+			list-style-type: none;
+			display: inline-block;
+			margin: 0 rem-calc(6);
+
+			&.navJump {
+				a {
+					@include circle-icon-button();
+				}
+
+				.navJumpText {
+					@include screenreader();
+				}
+			}
+
+			&.searchToggle {
+				a {
+					@include circle-icon-button(rem-calc(15), rem-calc(10), $iron, $fa-var-search);
+				}
+
+				.searchJumpText {
+					@include screenreader();
+				}
+			}
+		}
+	}
+
+	#bannerXtra {
+
+		#search {
+
+
+
+			// Dropdown
+			// @include dropdown-container($content: content, $triangle: false, $max-width: 300px);
+			// //margin-left: 75px;
+
+			// // $triangle: flase does not work. Here we hide the triangle
+			// &:before {
+			// 	display: none;
+			// }
+			// &:after {
+			// 	display: none;
+			// }
+
+			// .search-inner {
+			// 	//@include dropdown-style();
+			// }
+		}
+	}
+}
