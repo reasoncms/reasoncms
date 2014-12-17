@@ -2453,6 +2453,9 @@ class EventsModule extends DefaultMinisiteModule
 			{
 				unset($cats[$id]);
 			}
+			elseif(get_owner_site_id($id) != $this->site_id){
+				unset($cats[$id]);
+			}
 			$results = array();
 		}
 		return $cats;
