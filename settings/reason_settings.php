@@ -913,6 +913,14 @@
 	 * 3. Relative path from within minisite_templates/modules/form/controllers/ directory
 	 */
 	define('REASON_FORMS_THOR_DEFAULT_CONTROLLER', 'thor.php');
+
+	/**
+	 * REASON_FORMS_THOR_DEFAULT_AKISMET_FILTER
+	 *
+	 * Indicates whether thor forms should apply akismet spam filtering by default within Reason.
+	 * 
+	 */
+	define ('REASON_FORMS_THOR_DEFAULT_AKISMET_FILTER', true);
 	
 	/**
 	 * REASON_LOKI_CSS_FILE
