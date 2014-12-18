@@ -129,44 +129,6 @@
 			echo '</div>'."\n";
 		}
 		
-		// function get_navjump_id()
-		// {
-		// 	$page_type = $this->get_page_type();
-		// 	$navJump = NULL;
-		// 	foreach($page_type->module_regions('navigation') as $region)
-		// 	{
-		// 		if($this->has_content($region))
-		// 		{
-		// 			$navJump = '#minisiteNavigation';
-		// 			break;
-		// 		}
-		// 	}
-		// 	if(empty($navJump))
-		// 	{
-		// 		foreach($page_type->module_regions(array('children', 'children_full_titles')) as $region)
-		// 		{
-		// 			if($this->has_content($region))
-		// 			{
-						
-		// 				$navJump = '#childrenModule1';
-		// 				break;
-		// 			}
-		// 		}
-		// 	}
-		// 	if(empty($navJump))
-		// 	{
-		// 		foreach($page_type->module_regions('children_and_grandchildren') as $region)
-		// 		{
-		// 			if($this->has_content($region))
-		// 			{
-		// 				$navJump = '#childrenAndGrandchildren';
-		// 				break;
-		// 			}
-		// 		}
-		// 	}
-		// 	return $navJump;
-		// }
-		
 		// function show_navbar()
 		// {
 		// 	$wrapperClasses = array();
