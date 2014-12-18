@@ -1,7 +1,6 @@
 // Minisite Styles
 // Cloak, v1
 
-
 // #breadcrumbs {
 
 // 	.breadcrumb {
@@ -28,7 +27,7 @@
 #banner {
 	//@include grid-row();
 	background: $vapor;
-	border-bottom: 1px solid $smoke;
+	border-bottom: 1px solid $gainsboro;
 	text-align: center;
 
 	h1 {
@@ -131,6 +130,6 @@
 
 #footer {
 	background: $vapor;
-	border-top: 1px solid $smoke;
+	border-top: 1px solid $gainsboro;
 	text-align: center;
 }
