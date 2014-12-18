@@ -8,14 +8,6 @@
 		list-style-type: none;
 	}
 
-	// li {
-	// 	padding-bottom: $column-gutter/2;
-
-	// 	&:last-child {
-	// 		padding-bottom: 0;
-	// 	}
-	// }
-		
 	li {
 		padding-bottom: $column-gutter/2;
 
@@ -68,5 +60,12 @@
 		// font-size: rem-calc(13);
 		font-size: rem-calc(14);
 		color: $jumbo;
+	}
+
+	h4 { 
+		// Assets by category has category heading that use H4
+		// Let's make the heading a little smaller
+		font-size: $h5-font-size;
+		margin-top: $column-gutter/2;
 	}
 }

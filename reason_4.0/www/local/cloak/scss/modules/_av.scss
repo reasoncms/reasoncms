@@ -1,0 +1,86 @@
+// Audio / Video Module Styles
+// Cloak, v1
+	
+#av {
+
+	.moduleNav {
+		
+		ul {
+			margin: 0 0 0 $column-gutter; // bump out the list to make room for icons
+			list-style-type: none;
+
+			li {
+				padding-bottom: $column-gutter/2; 
+
+				&:before {  // video play icon
+					@extend .fa;
+					content: $fa-var-youtube-play;
+					margin-left: -$column-gutter;
+					float: left;
+					margin-top: rem-calc(6);
+					color: $aluminum;
+				}
+		
+				.date {
+					font-size: rem-calc(14);
+					color: $jumbo;
+				}
+			}
+		}
+	}
+
+	// Subscribe to feed buttons
+	.podcast {
+		margin: 0;
+
+		a {
+			
+			@include button(
+				$padding: $button-tny,
+				$bg: $primary-color,
+				$radius: $global-radius,
+				$full-width: false,
+				$disabled: false
+			);
+
+			margin: 0 rem-calc(12) rem-calc(2) 0 !important;
+
+			&:before {  // download icon
+				@extend .fa;
+				color: $white;
+				margin-right: rem-calc(6);
+			}
+		}
+		
+		.feedLink {
+			&:before {
+				content: $fa-var-rss;
+			}
+		}
+
+		.subscribe {
+			&:before {
+				content: $fa-var-music;
+			}
+		}
+	}
+}
+
+// To customize the sidebar view of AV, use the following.
+
+// #relatedSections {
+
+// 	#av {
+
+// 		.moduleNav {
+
+// 			ul {
+
+
+// 				li {
+
+// 				}
+// 			}
+// 		}
+// 	}
+// }

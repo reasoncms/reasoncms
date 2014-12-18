@@ -1,0 +1,9 @@
+// Minisite Navigation Styles
+// Cloak, v1
+
+#minisiteNavigation {
+	ul {
+		@include zero-out();
+		list-style-type: none;
+	}
+}
