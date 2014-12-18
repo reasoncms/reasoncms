@@ -1051,6 +1051,7 @@ class ThorFormModel extends DefaultFormModel
 			$view_name = $GLOBALS['_form_view_class_names'][basename( (!empty($custom_view_filename)) ? $custom_view_filename : REASON_FORMS_THOR_DEFAULT_VIEW, '.php')];
 			$this->_view = new $view_name();
 			$this->_view->set_model($this);
+			$this->apply_disco_plugins($this->_view, $form);
 		}
 		return $this->get_view();
 	}
@@ -1089,7 +1090,26 @@ class ThorFormModel extends DefaultFormModel
 			return true;
 		}
 	}
-	
+
+	/**
+	 * Apply plugins to thor forms depending on the specifications of the form.
+	 * @param object $disco_obj: the disco form to which plugins will be applied.
+	 * @param object $form_obj: thor form entity
+	 * @return void
+	 */
+	function apply_disco_plugins($disco_obj, $form_obj)
+	{
+		// Only apply akismet spam filter if user is not logged in.
+		if (!reason_check_authentication()) {
+			$filter = (!$form_obj->get_value('apply_akismet_filter')) ? REASON_FORMS_THOR_DEFAULT_AKISMET_FILTER : $form_obj->get_value('apply_akismet_filter');
+			if ($filter == 'true')
+			{
+				include_once INCLUDE_PATH . '/disco/plugins/akismet/akismet.php';
+				$akismet_filter = new AkismetFilter($disco_obj);
+			}
+		}
+	}	
+
 	function get_magic_transform_array()
 	{
 		$disco =& $this->get_view();
