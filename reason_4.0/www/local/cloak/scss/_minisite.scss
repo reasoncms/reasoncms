@@ -53,6 +53,7 @@
 
 #meat {
 	@include grid-row();
+	padding-top: $column-gutter; // space between breadcrumb and content
 	padding-bottom: $column-gutter; // space between footer and content
 
 	#content {

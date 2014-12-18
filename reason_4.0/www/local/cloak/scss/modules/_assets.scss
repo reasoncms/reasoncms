@@ -1,0 +1,72 @@
+// Asset Styles
+// Cloak, v1
+
+.assets {
+
+	ul { 
+		margin: 0 0 0 $column-gutter; // bump out the list to make room for icons
+		list-style-type: none;
+	}
+
+	// li {
+	// 	padding-bottom: $column-gutter/2;
+
+	// 	&:last-child {
+	// 		padding-bottom: 0;
+	// 	}
+	// }
+		
+	li {
+		padding-bottom: $column-gutter/2;
+
+		&:last-of-type {
+			padding-bottom: 0;
+		}
+
+		&:before {  // download icon
+			@extend .fa;
+			content: $fa-var-download;
+			margin-left: -$column-gutter;
+			float: left;
+			margin-top: rem-calc(6);
+			color: $aluminum;
+		}
+
+		&.mp4 {
+			&:before {
+				content: $fa-var-file-video-o;
+			}
+		}
+
+		&.txt {
+			&:before {
+				content: $fa-var-file-text-o;
+			}
+		}
+
+		&.pdf {
+			&:before {
+				content: $fa-var-file-pdf-o;
+			}
+			
+		}
+	}
+
+	.name {
+		font-size: rem-calc(13);
+		color: $jumbo;
+		display: inline-block;
+
+		a {
+			font-size: rem-calc(16);
+			font-family: $header-font-family;
+			//display: inblock;
+		}
+	}
+	.date {
+		// display: inline-block;
+		// font-size: rem-calc(13);
+		font-size: rem-calc(14);
+		color: $jumbo;
+	}
+}

@@ -19,94 +19,8 @@
 	
 	class CloakTemplate extends HTML5ResponsiveTemplate
 	{
-		// var $doctype = '<!DOCTYPE html>';
-		// var $section_elements = array('content'=>'main','related'=>'aside');
-		// var $section_roles = array('content'=>'main','related'=>'complementary');
-		
-		// function alter_reason_page_type($page_type)
-		// {
-		// 	parent::alter_reason_page_type($page_type);
-		// 	if($regions = $page_type->module_regions(array('navigation', 'navigation_top')))
-		// 	{
-		// 		foreach($regions as $region)
-		// 		{
-		// 			if(!isset($module['module_params']['wrapper_element']))
-		// 				$page_type->set_region_parameter($region, 'wrapper_element', 'nav');
-		// 		}
-		// 	}
-		// 	if($regions = $page_type->module_regions('children'))
-		// 	{
-		// 		foreach($regions as $region)
-		// 		{
-		// 			if(!isset($module['module_params']['html5']))
-		// 				$page_type->set_region_parameter($region, 'html5', true);
-		// 		}
-		// 	}
-		// 	// Anything with publications?
-		// 	$ms = reason_get_module_sets();
-		// 	if($regions = $page_type->module_regions($ms->get('publication_item_display')))
-		// 	{
-		// 		foreach($regions as $region)
-		// 		{
-		// 			$module = $page_type->get_region($region);
-					
-		// 			if(isset($module['module_params']['markup_generator_info']))
-		// 				$markup_generators = $module['module_params']['markup_generator_info'];
-		// 			else
-		// 				$markup_generators = array();
-					
-		// 			if(empty($module['module_params']['related_mode']))
-		// 			{
-		// 				if(empty($markup_generators['item']))
-		// 				{
-		// 					$markup_generators['item'] = array (
-		// 						'classname' => 'ResponsiveItemMarkupGenerator', 
-		// 						'filename' => 'minisite_templates/modules/publication/item_markup_generators/responsive.php',
-		// 					);
-		// 				}
-		// 			}
-					
-		// 		}
-				
-		// 		$page_type->set_region_parameter($region, 'markup_generator_info', $markup_generators);
-		// 	}
-			
-		// 	// Need to create markup generator framework for publication chrome
-			
-		// 	if($regions = $page_type->module_regions($ms->get('event_display')))
-		// 	{
-		// 		foreach($regions as $region)
-		// 		{
-		// 			$module = $page_type->get_region($region);
-					
-		// 			// If uses archive list chrome
-		// 			if(
-		// 				(isset($module['module_params']['list_chrome_markup']) && 	'minisite_templates/modules/events_markup/archive/archive_events_list_chrome.php' == $module['module_params']['list_chrome_markup'])
-		// 				||
-		// 				'events_archive' == $module['module_name']
-		// 			)
-		// 			{
-		// 				$page_type->set_region_parameter($region, 'list_chrome_markup', 'minisite_templates/modules/events_markup/responsive/responsive_archive_list_chrome.php');
-		// 			}
-		// 			// If uses hybrid list chrome
-		// 			elseif(
-		// 				(isset($module['module_params']['list_chrome_markup']) && 'minisite_templates/modules/events_markup/hybrid/hybrid_events_list_chrome.php' == $module['module_params']['list_chrome_markup'])
-		// 				||
-		// 				'events_hybrid' == $module['module_name']
-		// 			)
-		// 			{
-		// 				$page_type->set_region_parameter($region, 'list_chrome_markup', 'minisite_templates/modules/events_markup/responsive/responsive_hybrid_list_chrome.php');
-		// 			}
-		// 			// If uses default list chrome
-		// 			elseif(!isset($module['module_params']['list_chrome_markup'])
-		// 				|| 'minisite_templates/modules/events_markup/default/events_list_chrome.php' == $module['module_params']['list_chrome_markup']
-		// 			)
-		// 			{
-		// 				$page_type->set_region_parameter($region, 'list_chrome_markup', 'minisite_templates/modules/events_markup/responsive/responsive_list_chrome.php');
-		// 			}
-		// 		}
-		// 	}
-		// }
+		// Don't include default Reason module styles. We'll include our own.
+		var $include_modules_css = false;
 
 		function get_meta_information()
 		{
@@ -130,7 +44,10 @@
 
 			echo '<h1><a href="'.$this->site_info->get_value('base_url').'"><span>'.$this->site_info->get_value('name').'</span></a></h1>'."\n";
 			
-			// Return search and navigation icons
+			// Include custom search and navigation icons...
+			// ...IF navigation is included on the page...
+			// ...OR if a module runs in banner_extra.
+
 			if($navJump = $this->get_navjump_id() || $this->has_content( 'banner_xtra' ))
 			{
 				echo '<ul id="navigationToggles">';
@@ -167,11 +84,11 @@
 		{
 		}
 
-		function cloak_you_are_here($delimiter = ' &gt; ')
+		function cloak_you_are_here($delimiter = ' <span class="delimiter">&raquo;</span> ')
 		{
 			echo '<div id="breadcrumbs" class="locationBarText">';
 			echo '<div class="breadcrumb">';
-			echo 'You are here: ';
+			echo '<span class="label">You are here:</span> ';
 			echo $this->_get_breadcrumb_markup($this->_get_breadcrumbs(), $this->site_info->get_value('base_breadcrumbs'), $delimiter);
 			echo '</div>'."\n";
 			echo '</div>'."\n";

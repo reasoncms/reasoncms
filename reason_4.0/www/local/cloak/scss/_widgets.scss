@@ -19,7 +19,7 @@ dialog {
 		
 		&:before {
 			@extend .fa;
-			content: $fa-var-times-circle;
+			content: $fa-var-times;
 		}
 
 		span {

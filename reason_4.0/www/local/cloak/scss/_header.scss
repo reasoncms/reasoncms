@@ -47,23 +47,8 @@
 
 		#search {
 
+			// Many Reveal Modal (lightbox) styles are set with variables in _settings.scss.
 
-
-			// Dropdown
-			// @include dropdown-container($content: content, $triangle: false, $max-width: 300px);
-			// //margin-left: 75px;
-
-			// // $triangle: flase does not work. Here we hide the triangle
-			// &:before {
-			// 	display: none;
-			// }
-			// &:after {
-			// 	display: none;
-			// }
-
-			// .search-inner {
-			// 	//@include dropdown-style();
-			// }
 		}
 	}
 }

@@ -13,7 +13,12 @@
 	padding: 0;
 }
 
-@mixin circle-icon-button($icon-size: rem-calc(15), $icon-padding: rem-calc(10), $icon-background: $iron, $icon-variable: $fa-var-navicon) {
+@mixin circle-icon-button(
+	$icon-size: rem-calc(15),
+	$icon-padding: rem-calc(10),
+	$icon-background: $iron,
+	$icon-variable: $fa-var-navicon
+	) {
 
 	display: inline-block;
 	margin: 0;
