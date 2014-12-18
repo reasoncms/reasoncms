@@ -117,7 +117,7 @@
 			$this->set_order (array ('name', 'db_flag', 'email_of_recipient', 'thor_content', 'thor_comment', 'magic_string_autofill_note',
 									 'magic_string_autofill', 'thank_you_note', 'thank_you_message', 'display_return_link', 'show_submitted_data', 
 									 'limiting_note', 'submission_limit', 'open_date', 'close_date',
-									 'advanced_options_header', 'thor_view', 'thor_view_custom', 'is_editable', 'allow_multiple', 'email_submitter', 'email_link', 'email_data', 'email_empty_fields', // advanced options
+									 'advanced_options_header', 'thor_view', 'thor_view_custom', 'is_editable', 'allow_multiple', 'email_submitter', 'email_link', 'email_data', 'email_empty_fields', 'apply_akismet_filter', // advanced options
 									 'unique_name', 'tableless'));
 		}
 
@@ -133,7 +133,8 @@
 			  	'email_submitter' => 'Email Form Results to Submitter?',
 			  	'email_link' => 'Include Edit Link When Possible?',
 			  	'email_data' => 'Include Submitted Data in E-mails?',
-			  	'email_empty_fields' => 'Include Empty Fields in E-mails?');
+			  	'email_empty_fields' => 'Include Empty Fields in E-mails?',
+				'apply_akismet_filter' => 'Apply Akismet Filtering?');
 			if(reason_user_has_privs($this->admin_page->user_id, 'edit_form_advanced_options'))
 			{
 				$this->add_element('advanced_options_header','comment',array('text'=>'<h3>Advanced Options</h3>') );
@@ -141,6 +142,8 @@
 				{
 					$this->set_display_name($k, $v);
 				}
+				$filter_current_setting = (REASON_FORMS_THOR_DEFAULT_AKISMET_FILTER ? 'yes' : 'no');
+				$this->set_element_properties('apply_akismet_filter', array('options' => array('' => 'Default (currently set to "' . $filter_current_setting  . '")', 'true' => 'Yes', 'false' => 'No'), 'add_empty_value_to_top' => false));
 				$this->setup_thor_view_element();
 			}
 			else
