@@ -41,14 +41,24 @@ class AkismetFilter
          */
         public function detect_spam()
         {
-                $form_contents = implode($this->disco_form->get_values(), '\n\n');
+		$form_contents = '';
+		foreach ($this->disco_form->get_values() as $k => $v) {
+			if (is_array($v)) {
+				$form_contents .= implode($v, ' ') . ' ';
+			} else {
+				// don't include hidden elements which contain objects as values
+				if ( ! ((get_class($this->disco_form->get_element($k)) == 'hiddenType') && (substr($v, 0, 3) == 'id_'))) { 
+					$form_contents .= $v . ' ';
+				}
+			}
+		}
                 $akismet_api_key = constant("AKISMET_API_KEY");
                 if (!empty($akismet_api_key)) {
                         $url = carl_construct_link();
-                        // $akismet = new Akismet($url, $akismet_api_key, $is_test=1); // for testing
+                        //$akismet = new Akismet($url, $akismet_api_key, $is_test=1); // for testing
                         $akismet = new Akismet($url, $akismet_api_key);
                         $akismet->setCommentContent($form_contents);
-			// $akismet->setCommentAuthor('viagra-test-123'); // for testing
+			//$akismet->setCommentAuthor('viagra-test-123'); // for testing
                         if ($akismet->isCommentSpam()) {
                         	$this->disco_form->set_error(NULL,
                         		'Spam detected in this submission. If this message was made in error, please contact an administrator.',
