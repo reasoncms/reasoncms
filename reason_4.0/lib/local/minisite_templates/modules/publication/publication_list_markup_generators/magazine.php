@@ -26,51 +26,31 @@ class MagazinePublicationListMarkupGenerator extends PublicationListMarkupGenera
 
 	function run()
 	{
-		//$this->markup_string .= $this->this_is_a_filtered_mofo();
+
+$this->markup_string .= $this->get_issue_selector_markup();
+
 		$this->markup_string .= $this->category_filter_title_markup();
+		$this->markup_string .= $this->get_all_posts_markup();
+		$this->markup_string .= $this->get_search_and_filter_interface_markup();
+
+		//$this->markup_string .= $this->get_post_list_markup();
+		
+		//$this->markup_string .= $this->this_is_a_filtered_mofo();
+		
 		//$this->markup_strong .= $this->get_issue_title_markup();
-		//$this->markup_strong .= $this->get_issue_selector_markup();
+		
 		//$this->markup_strong .= $this->get_issue_blurb_module_markup();
 		
 		//$this->markup_string .= $this->get_all_filtered_posts_markup();
-		$this->markup_string .= $this->get_all_posts_markup();
+		
 
 		//$this->markup_string .= $this->get_featured_items_markup();
 		//$this->markup_string .= $this->get_list_markup();
 		
-		$this->markup_string .= $this->get_post_list_markup();
-		$this->markup_string .= $this->get_search_and_filter_interface_markup();
+
 	}
 
-	//overloaded from generic3
-	// function show_style_string()
-	// {
-	// 	$class_string = ($this->related_mode) ? 'relatedPub' : 'publication';
-	// 	if(!empty( $this->current_item_id ) )
-	// 		$class_string .= ' fullPostDisplay';
-	// 	echo '<div id="'.$this->style_string.'" class="'.$class_string.'">'."\n";
-	// }
-
-	function get_issue_title_markup()
-	{
-		//if this is an issued publication, show what issue we're looking at
-		if(!empty($this->passed_vars['current_issue']))
-			$this->markup_string .= $this->get_current_issue_markup($this->passed_vars['current_issue']);
-	}
-
-	function get_issue_selector_markup()
-	{
-		//if there are other issues, display a "jump to other issues" dropdown
-		if(!empty($this->passed_vars['issues_by_date']))
-			$this->markup_string .= $this->get_issue_links_markup();
-	}
-
-	function get_issue_blurb_module_markup()
-	{
-		if(!empty($this->passed_vars['issue_blurbs']))
-			$this->markup_string .= $this->get_issue_blurbs_markup();
-	}
-
+	// DISPLAY THE CATEGORY PAGE TITLE IF ON A CATEGORY PAGE
 	function category_filter_title_markup()
 	{
 		//if we're listing filtered items ....
@@ -80,6 +60,7 @@ class MagazinePublicationListMarkupGenerator extends PublicationListMarkupGenera
 		}
 	}
 
+	// ALL POSTS WRAPPER
 	function get_all_posts_markup()
 	{
 		$markup_string .= '<div class="allPosts">'."\n";
@@ -89,97 +70,35 @@ class MagazinePublicationListMarkupGenerator extends PublicationListMarkupGenera
 		return $markup_string;
 	}
 
-	function get_all_filtered_posts_markup()
+	function get_featured_items_markup()
 	{
-		// $markup_string .= '<div class="allPosts">'."\n";
-		// $markup_string .= $this->get_featured_items_markup();
-		// $markup_string .= $this->get_list_markup();
-		// $markup_string .= '</div>'."\n";
-		// return $markup_string;
+		$markup_string = '';
+		$featured_items = $this->get_featured_items_to_show();
 
-
-			if(!empty($this->passed_vars['current_filters']))
-			{
-				$markup_string = '<h1>This is filtered, yo!</h1>';
-				$markup_string .= '<div class="allPosts">'."\n";
-				$markup_string .= $this->get_featured_items_markup();
-				$markup_string .= $this->get_list_markup();
-				$markup_string .= '</div>'."\n";
-				return $markup_string;
-
-			}
-			return $markup_string;
-		// }
-	}
-
-	function get_pre_list_markup()
-	{
-		if(!empty($this->passed_vars['search_string']))
-			$this->markup_string .= $this->get_search_header_markup();
+		if(!empty($featured_items))
+		{
+			$feature_header_string = '';
 			
-		//if we're just listing items from one section ....
-		if(!empty($this->passed_vars['current_section']))
-		{
-			//show what section we're looking at
-			$this->markup_string .= $this->get_current_section_markup($this->passed_vars['current_section']);
-						
-			//if we're just looking at the items in this section from one issue, provide a link to see items in this section from all issues
-			if(!empty($this->passed_vars['view_all_items_in_section_link']) && !empty($this->passed_vars['current_issue']) )
-				$this->markup_string .= $this->get_all_items_in_section_link_markup();
+			if(count($featured_items) > 1)
+			{
+				if (!empty($feature_header_string)) $feature_header_string .= 's';
+			}
+			
+			$markup_string = '<div id="featuredItems">'."\n";
+			if (!empty($feature_header_string)) $markup_string .= '<h3> '.$feature_header_string.' </h3>'."\n";
+			
+			$markup_string .= '<div class="posts">'."\n";
+			foreach($this->passed_vars['featured_item_markup_strings'] as $list_item_string)
+			{
+				$markup_string .= '<article class="post">'.$list_item_string.'</article>'."\n";
+			}
+			$markup_string .= '</div>'."\n";
+			$markup_string .= '</div>'."\n";
 		}
-	
+		
+		return $markup_string;
 	}
 
-	function get_search_and_filter_interface_markup()
-	{
-		$markup = '';
-		if(!empty($this->passed_vars['search_interface_markup']) || !empty($this->passed_vars['filter_interface_markup']))
-		{
-			$markup .= '<div class="searchAndFilterInterface">'."\n";
-			// if(!empty($this->passed_vars['search_interface_markup']))
-			// {
-			// 	$markup .= '<div class="searchInterface">'."\n";
-			// 	$markup .= $this->passed_vars['search_interface_markup'];
-			// 	$markup .= '</div>'."\n";
-			// }
-			if(!empty($this->passed_vars['filter_interface_markup']))
-			{
-				$markup .= '<div class="filterInterface">'."\n";
-				$markup .= $this->passed_vars['filter_interface_markup'];
-				$markup .= '</div>'."\n";
-			}
-			$markup .= '</div>'."\n";
-		}
-		return $markup;
-	}	
-	
-	// function get_post_list_markup()
-	// {
-	// 	$markup_string = '';
-		
-	// 	if(!empty($this->passed_vars['current_section']))
-	// 	{
-	// 		$markup_string .= '<div class="postList">'."\n";
-	// 		//provide links to other sections in the publication
-	// 		if(!empty($this->passed_vars['links_to_sections']))
-	// 			$this->markup_string .= $this->get_section_links_markup();
-	// 		$markup_string .= '<div class="back">'."\n";
-	// 		$main_list_name = $this->passed_vars['publication']->get_value('name');
-	// 	 	if(!empty($this->passed_vars['current_issue']))
-	// 			$main_list_name .= ': '.$this->passed_vars['current_issue']->get_value('name');
-	// 		$markup_string .= '<a href="'.$this->passed_vars['back_link'].'">Return to '.$main_list_name.'</a>'."\n";
-	// 	 	$markup_string .= '</div>'."\n"; //close back
-	// 	 	$markup_string .= '</div>'."\n"; // close postList
-	// 	}
-	// 	return $markup_string;
-	// }
-
-/////
-//  List item methods
-/////
-
-
-	
 	function get_list_markup()
 	{
 		$markup_string = '';
@@ -230,49 +149,47 @@ class MagazinePublicationListMarkupGenerator extends PublicationListMarkupGenera
 		return $markup_string;
 	}
 
-
-	
-	
-	/**
-	* Given a array of item ids, returns the markup for those items in the form of an unordered list.
-	* Helper function to {@link get_list_markup}.
-	* @param array $item_ids Array of ids of news item entities.
-	* @return string Markup for the given items.
-	*/	
 	function get_list_markup_for_these_items ($item_ids)
 	{
 
 		$markup_string = '';
 		if(!empty($this->passed_vars['list_item_markup_strings']) && !empty($item_ids))
 		{
-			/* this might seem somewhat backward but it's a reasonably efficient way 
-			to ensure that the ul in only output if there is in fact at least one list item to show */
 			$list_body = '';
 			foreach($item_ids as $item_id)
 			{
 				if(!empty($this->passed_vars['list_item_markup_strings'][$item_id]) && !array_key_exists($item_id, $this->passed_vars['featured_item_markup_strings']))
 					$list_body .= '<article class="post"><div class="inner">'.$this->passed_vars['list_item_markup_strings'][$item_id].'</div></article>'."\n";
-					//$list_body .= $this->passed_vars['list_item_markup_strings'][$item_id];
 			}
 			if(!empty($list_body))
 			{
-				//$markup_string .= '<div class="posts">'."\n";
 				$markup_string .= $list_body;
-				//$markup_string .= '</div>'."\n";
 			}
 		}
 		return $markup_string;
 	}
-	
-	// function get_search_header_markup()
-	// {
-	// 	if(!empty($this->passed_vars['search_string']))
-	// 	{
-	// 		return '<h3 class="searchTitle">Results for <span class="searchPhrase">"'.$this->passed_vars['search_string'].'"</span></h3>'."\n";
-	// 	}
-	// 	return '';
-	// }
-	
+
+	// ISSUES
+	function get_issue_title_markup()
+	{
+		//if this is an issued publication, show what issue we're looking at
+		if(!empty($this->passed_vars['current_issue']))
+			$this->markup_string .= $this->get_current_issue_markup($this->passed_vars['current_issue']);
+	}
+
+	function get_issue_selector_markup()
+	{
+		//if there are other issues, display a "jump to other issues" dropdown
+		if(!empty($this->passed_vars['issues_by_date']))
+			$this->markup_string .= $this->get_issue_links_markup();
+	}
+
+	function get_issue_blurb_module_markup()
+	{
+		if(!empty($this->passed_vars['issue_blurbs']))
+			$this->markup_string .= $this->get_issue_blurbs_markup();
+	}
+
 	function get_issue_blurbs_markup()
 	{
 		if(!empty($this->passed_vars['issue_blurbs']))
@@ -287,39 +204,51 @@ class MagazinePublicationListMarkupGenerator extends PublicationListMarkupGenera
 		}
 		return '';
 	}
+
+
+	function get_search_and_filter_interface_markup()
+	{
+		$markup = '';
+		if(!empty($this->passed_vars['search_interface_markup']) || !empty($this->passed_vars['filter_interface_markup']))
+		{
+			$markup .= '<div class="searchAndFilterInterface">'."\n";
+			// WE DON'T NEED SEARCH FOR NOW, BUT IT'S HERE IF WE WANT IT
+			// if(!empty($this->passed_vars['search_interface_markup']))
+			// {
+			// 	$markup .= '<div class="searchInterface">'."\n";
+			// 	$markup .= $this->passed_vars['search_interface_markup'];
+			// 	$markup .= '</div>'."\n";
+			// }
+			if(!empty($this->passed_vars['filter_interface_markup']))
+			{
+				$markup .= '<div class="filterInterface">'."\n";
+				$markup .= $this->passed_vars['filter_interface_markup'];
+				$markup .= '</div>'."\n";
+			}
+			$markup .= '</div>'."\n";
+		}
+		return $markup;
+	}	
+
+
+
+	
+	// function get_search_header_markup()
+	// {
+	// 	if(!empty($this->passed_vars['search_string']))
+	// 	{
+	// 		return '<h3 class="searchTitle">Results for <span class="searchPhrase">"'.$this->passed_vars['search_string'].'"</span></h3>'."\n";
+	// 	}
+	// 	return '';
+	// }
+	
+
 	
 //////
 // Featured item methods
 //////
 	
-	function get_featured_items_markup()
-	{
-		$markup_string = '';
-		$featured_items = $this->get_featured_items_to_show();
 
-		if(!empty($featured_items))
-		{
-			$feature_header_string = '';
-			
-			if(count($featured_items) > 1)
-			{
-				if (!empty($feature_header_string)) $feature_header_string .= 's';
-			}
-			
-			$markup_string = '<div id="featuredItems">'."\n";
-			if (!empty($feature_header_string)) $markup_string .= '<h3> '.$feature_header_string.' </h3>'."\n";
-			
-			$markup_string .= '<div class="posts">'."\n";
-			foreach($this->passed_vars['featured_item_markup_strings'] as $list_item_string)
-			{
-				$markup_string .= '<article class="post">'.$list_item_string.'</article>'."\n";
-			}
-			$markup_string .= '</div>'."\n";
-			$markup_string .= '</div>'."\n";
-		}
-		
-		return $markup_string;
-	}
 	
 	
 	/**
@@ -419,127 +348,19 @@ class MagazinePublicationListMarkupGenerator extends PublicationListMarkupGenera
 		return $markup_string;
 	}
 	
-	// function _get_issue_label($issue)
-	// {
-	// 	$name = $issue->get_value('name');
-	// 	if(!empty($this->passed_vars['links_to_issues'][$issue->id()]) )
-	// 	{
-	// 		$name = '<a href="'.$this->passed_vars['links_to_issues'][$issue->id()].'">'.$name.'</a>';
-	// 	}
-	// 	if($issue->get_value('show_hide') == 'hide')
-	// 			$name = '[Unpublished] '.$name;
-	// 	$date = prettify_mysql_datetime( $issue->get_value( 'datetime' ), $this->passed_vars['date_format'] );
-	// 	return $name.' <span class="date">('.$date.')</span>';
-	// }
-	
-	
-/////
-//  Section methods
-/////
-	// function get_current_section_markup($section)
-	// {
-	// 	$markup_string = '';
-	// 	$name = $section->get_value('name');
-	// 	$markup_string .= '<div class="curSection"><h3>'.$name.'</h3></div>'."\n";
-	// 	return $markup_string;
-	// }
-	
-	// function get_section_links_markup()
-	// {	
-	// 	$markup_string = '';
-	// 	if(!empty($this->passed_vars['sections']))
-	// 	{
-	// 		$markup_string .= '<div class="sectionMenu">'."\n";
-	// 		$markup_string .= '<h4 class="sectionMenuHead">Sections</h4>'."\n";
-	// 		$markup_string .= '<ul class="sections">'."\n";
-	// 		foreach($this->passed_vars['sections'] as $section_id => $section)
-	// 		{
-	// 			if(!empty($this->passed_vars['current_section']) && $this->passed_vars['current_section']->id() == $section_id)
-	// 			{
-	// 				$markup_string .= '<li class="current"><strong>'.$section->get_value('name').'</strong></li>';
-	// 			}
-	// 			else
-	// 			{
-	// 				$markup_string .=  '<li><a href="'.$this->passed_vars['links_to_sections'][$section_id].'">'.$section->get_value('name').'</a></li>';
-	// 			}
-	// 		}
-	// 		$markup_string .= '</ul>'."\n";	
-	// 		$markup_string .= '</div>'."\n";
-	// 	}
-	// 	return $markup_string;
-	// }
-	
-	// function get_all_items_in_section_link_markup()
-	// {
-	// 	$url = $this->passed_vars['view_all_items_in_section_link'];
-	// 	$link_text = 'View items in this section from all issues';	
-	// 	return '<div class="allIssues"><a href="'.$url.'">'.$link_text.'.</a></div>'."\n";
-	// }
+	function _get_issue_label($issue)
+	{
+		$name = $issue->get_value('name');
+		if(!empty($this->passed_vars['links_to_issues'][$issue->id()]) )
+		{
+			$name = '<a href="'.$this->passed_vars['links_to_issues'][$issue->id()].'">'.$name.'</a>';
+		}
+		if($issue->get_value('show_hide') == 'hide')
+				$name = '[Unpublished] '.$name;
+		return $name;
+	}
 	
 
-	// function get_section_ids_in_order()
-	// {
-	// 	$section_ids = array_keys($this->passed_vars['items_by_section']);		
-	// 	$ordered_sections = array(); 	 //this will be an array keyed by whatever we're sorting by, which maps to the section ids
-
-	// 	$keys_that_are_not_section_ids = array();
-	// 	foreach($section_ids as $section_id)
-	// 	{
-	// 		if(array_key_exists($section_id, $this->passed_vars['sections']))
-	// 		{
-	// 			$section = $this->passed_vars['sections'][$section_id];
-	// 			$ordered_sections[$section->get_value('name')] = $section_id;
-	// 		}
-	// 		else
-	// 			$keys_that_are_not_section_ids[] = $section_id;
-	// 	}
-		
-	// 	//ksort($ordered_sections);
-	// 	$ordered_sections = array_merge($ordered_sections, $keys_that_are_not_section_ids);
-		
-	// 	return $ordered_sections; 
-	// }
-	
-	
-	// function get_section_heading_markup($section_id)
-	// {
-	// 	$markup_string = '';
-	// 	if(!empty($this->passed_vars['items_by_section'][$section_id]))
-	// 	{
-	// 		$markup_string .= '<div class="sectionInfo">';
-	// 		$section_entity = $this->passed_vars['sections'][$section_id];
-	// 		$url = $this->passed_vars['links_to_sections'][$section_id];
-			
-	// 		if(!empty($url))
-	// 			$markup_string .= '<h2><a href="'.$url.'">'.$section_entity->get_value('name').'</a></h2>'."\n";
-	// 		else
-	// 			$markup_string .= '<h2>'.$section_entity->get_value('name').'</h2>'."\n";
-			
-	// 		$description = $section_entity->get_value('description');
-	// 		if(!empty($description))
-	// 		{
-	// 			$markup_string .= '<p class="sectionDesc">'.$description.'</p>'."\n";
-	// 		}
-	// 		$markup_string .= '</div>';
-	// 	}
-	// 	return $markup_string;		
-	// }
-	
-	// function get_section_footer_markup($section_id)
-	// {
-	// 	$markup_string = '';
-	// 	if(empty($this->passed_vars['current_section']) && !empty($this->passed_vars['items_by_section'][$section_id]))
-	// 	{
-	// 		$url = $this->passed_vars['links_to_sections'][$section_id];
-	// 		if(!empty($url))
-	// 		{
-	// 			$section_name = $this->passed_vars['sections'][$section_id]->get_value('name');
-	// 			$markup_string .= '<div class="sectionFoot"><span class="viewEntireSection">View all items in <a href="'.$url.'">'.$section_name.'</a>.</span></div>'."\n";
-	// 		}
-	// 	}
-	// 	return $markup_string;		
-	// }
-	
 	function get_filter_message_markup()
 	{
 		$markup_string = '';
@@ -579,15 +400,5 @@ class MagazinePublicationListMarkupGenerator extends PublicationListMarkupGenera
 		}
 		return $msg;
 	}
-
-	// function this_is_a_filtered_mofo()
-	// {	
-	// 	$msg = '';
-	// 	if(!empty($this->passed_vars['current_filters']))
-	// 	{
-	// 		$msg = '<h1>This is filtered, yo!</h1>';
-	// 	}
-	// 	return $msg;
-	// }
 }
 ?>

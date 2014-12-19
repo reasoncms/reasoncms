@@ -83,7 +83,6 @@
 				@media #{$large-up} {
 					padding: $column-gutter;
 					padding-top: 0;
-					//background: rgba(255,255,255,.5);
 					background: none;
 				}
 			}
@@ -233,6 +232,10 @@
 
 		// Issue drop down 
 		.issueMenu {
+			position: absolute;
+			top: 0;
+			left: 0;
+			z-index: 999999;
 
 			label.issueLabel {
 				@extend .screenreader;
@@ -525,7 +528,7 @@
 					}
 				}
 
-				$triangle-size: rem-calc(30);
+				$triangle-size: rem-calc(18);
 				&:before {
 					display: block;
 					content: "";
@@ -880,6 +883,36 @@
 //    2D. FULL ARTICLE PAGE 
 .siteHome #minisite .fullPostDisplay {
 
+	.topImage {
+		position: relative;
+		margin-bottom: $column-gutter;
+
+		@media #{$large-up} {
+
+		//	margin-top: - $column-gutter;
+
+			// This is acts as the frosty minisite navigation background on the home page.
+			// Widths match the traditional ministive navigation widths set in minisite.scss 
+			// &:before {
+			// 	content: "";
+			// 	display: block;
+			// 	height: 100%;
+			// 	width: 100px;
+			// 	width: 31.25%; // 5 columns
+			// 	background: rgba(#FFF, .55);
+			// 	position: absolute;
+			// 	left: 0;
+			// 	top: 0;
+			// }
+		}
+
+		@media #{$xlarge-up} {
+			&:before {
+				width: 25%; // 4 columns
+			}
+		}
+	}
+
 	// .postTitle,
 	// .postMeta,
 	// .text
@@ -891,15 +924,141 @@
 		}
 
 		@media #{$large-up} {
-			@include grid-column($columns:8,$center:false,$offset:5);
+			@include grid-column($columns:10,$center:true);
 			// width: 50%;
 			// margin: 0 0 0 31.25%;
+			//background: blue;
+		}
+
+		@media #{$large-high-up} {
+			@include grid-column($columns:9,$center:true);
+			//background: Red;
 		}
 
 		@media #{$xlarge-up} {
 			// width: 50%;
 			// margin: 0 auto;
-			@include grid-column($columns:8,$center:true,$offset:0);
+			@include grid-column($columns:8,$center:true);
+			//background: green;
+		}
+
+
+		.text {
+
+			p,
+			li {
+				line-height: 1.8;
+			}
+
+			h4 {
+				text-align: center;
+				font-size: $h3-font-size;
+				margin-bottom: $column-gutter;
+			}
+
+			h5 {
+				font-size: $h4-font-size;
+				color: $lc-blue-light;
+				font-weight: 400;
+			}
+
+			p {
+				font-size: rem-calc(16);
+			}
+
+			blockquote {
+				margin: 0 2%;
+				border: none;
+
+				@media #{$medium-up} {
+					margin: 0 10%;
+				}
+			}
+
+			blockquote * {
+				font-size: rem-calc(24);
+				font-family: $open-sans;
+				color: #000;
+				line-height: 1.5;
+
+				@media #{$medium-up} {
+					font-size: rem-calc(32);
+				}
+			}
+
+			img {
+				margin: 0;
+			}
+			
+			img.left,
+			img[align="left"],
+			img.right,
+			img[align="right"] {
+				max-width: 100%;
+				width: 100%;
+				float: none;
+				margin: 0 0 $column-gutter;
+			}
+
+			@media #{$medium-up} {
+
+				img {
+					max-width: 1040px;
+					width: 140%;
+					height: auto;
+					margin-left: -20%;
+					padding-left: $column-gutter/2;
+				}
+
+				img.left,
+				img[align="left"],
+				img.right,
+				img[align="right"] {
+					max-width: 100%;
+					width: 100%;
+					float: none;
+					margin: 0 0 $column-gutter;
+					padding: 0;
+				}
+			}
+
+			@media #{$large-up} {
+
+				img {
+					max-width: 1040px;
+					width: 140%;
+					height: auto;
+					margin-left: -20%;
+					padding-left: $column-gutter/2;
+				}
+
+				img.left,
+				img[align="left"] {
+					width: 100%;
+					max-width: 640px;	
+					margin: 0 5% $column-gutter -40%;
+					float: left;
+				}
+				img.right,
+				img[align="right"] {
+					width: 100%;
+					max-width: 640px;
+					margin: 0 -40% $column-gutter 5%;
+					float: right;
+				}
+			}
+
+			@media #{$large-high-up} {
+
+				img.left,
+				img[align="left"] {
+					margin-left: -50%;
+				}
+				img.right,
+				img[align="right"] {
+					margin-right: -50%;
+				}
+			}
 		}
 	}
 
