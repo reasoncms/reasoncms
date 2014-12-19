@@ -38,6 +38,7 @@
 										'thumbnail_crop' => '',
 										'parent_unique_name' => '',
 										'force_full_page_title' => false,
+										'blurbs_count' => 0,
 										'html5' => false,
 										'chunks' => 1,
 									);
@@ -72,7 +73,7 @@
 			}
 			
 			$this->es->set_order('sortable.sort_order ASC');
-			$this->offspring = $this->es->run_one(); 
+			$this->offspring = $this->es->run_one();
 			
 			if(isset($this->offspring[$this->get_parent_page_id()]))
 			{
@@ -339,6 +340,20 @@
 					echo "\n".'<div class="childDesc">'.$child->get_value( 'description' ).'</div>';
 				}
 			}
+			if(!empty($this->params['blurbs_count']))
+			{
+				if($blurbs = $this->get_blurbs_for_page($child, $this->params['blurbs_count']))
+				{
+					echo '<div class="childBlurbs">';
+					foreach($blurbs as $blurb)
+					{
+						echo '<div class="childBlurb">';
+						echo demote_headings($blurb->get_value('content'), 2);
+						echo '</div>';
+					}
+					echo '</div>';
+				}
+			}
 			echo '</li>'."\n";
 		}
 		
@@ -413,6 +428,22 @@
 			{
 				return reason_get_page_url($page->id()); // absolute to some other site or page tree is not available
 			}
+		}
+		
+		function get_blurbs_for_page($page, $count)
+		{
+			$cache = array();
+			if(!isset($cache[$page->id()]))
+			{
+				$es = new entity_selector();
+				$es->add_type(id_of('text_blurb'));
+				$es->add_right_relationship( $page->id(), relationship_id_of('minisite_page_to_text_blurb') );
+				$es->add_rel_sort_field( $page->id(), relationship_id_of('minisite_page_to_text_blurb'), 'rel_sort_order');
+				$es->set_order( 'rel_sort_order ASC' );
+				$es->set_num( (int) $count );
+				$cache[$page->id()] = $es->run_one();
+			}
+			return $cache[$page->id()];
 		}
 		
 		function last_modified()
