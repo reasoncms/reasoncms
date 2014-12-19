@@ -158,8 +158,8 @@ class MagazinePublicationListItemMarkupGenerator extends PublicationMarkupGenera
 				$markup_string .=  '<a href="' .$link_to_full_item. '">';
 			//$markup_string .= '<img src="'.WEB_PHOTOSTOCK.reason_get_image_filename( $image->id() ).'" width="'.$image->get_value( 'width' ).'" height="'.$image->get_value( 'height' ).'" alt="'.str_replace('"', "'", $image->get_value( 'description' )).'"/>';
 			
-			//$markup_string .= '<img src="http://dirks.luther.edu/reason/images/542544.jpg" />';
-				$markup_string .= '<img src="/reason/images/562005.jpg" />'; 
+			$markup_string .= '<img src="http://dirks.luther.edu/reason/images/542544.jpg" />';
+			//$markup_string .= '<img src="/reason/images/562005.jpg" />'; 
 
 			if(isset($link_to_full_item) &&  !empty($link_to_full_item))
 			$markup_string .=  '</a>';
