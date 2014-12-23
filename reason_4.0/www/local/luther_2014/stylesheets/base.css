@@ -6764,39 +6764,70 @@ form input[type="submit"]:active {
 
 /* Inline Images */
 /* line 97, scss/modules/_images.scss */
-#pageContent img, .fullPost .text img, #faq .answer img {
+#pageContent figure, #pageContent, .fullPost .text figure, .fullPost .text, #faq .answer figure, #faq .answer {
+  width: auto;
+  max-width: 100%;
+  margin: 0 auto 1rem;
+  display: table;
+}
+/* line 102, scss/modules/_images.scss */
+#pageContent figure.left, #pageContent.left, .fullPost .text figure.left, .fullPost .text.left, #faq .answer figure.left, #faq .answer.left {
+  margin-right: 2.5rem;
+}
+/* line 105, scss/modules/_images.scss */
+#pageContent figure.right, #pageContent.right, .fullPost .text figure.right, .fullPost .text.right, #faq .answer figure.right, #faq .answer.right {
+  margin-left: 2.5rem;
+}
+/* line 109, scss/modules/_images.scss */
+#pageContent figure img, #pageContent img, .fullPost .text figure img, .fullPost .text img, #faq .answer figure img, #faq .answer img {
   width: auto;
   max-width: 100%;
   margin: 0 auto 1rem;
 }
-/* line 105, scss/modules/_images.scss */
-#pageContent img.left, #pageContent img[align="left"], #pageContent img.right, #pageContent img[align="right"], .fullPost .text img.left, .fullPost .text img[align="left"], .fullPost .text img.right, .fullPost .text img[align="right"], #faq .answer img.left, #faq .answer img[align="left"], #faq .answer img.right, #faq .answer img[align="right"] {
+/* line 117, scss/modules/_images.scss */
+#pageContent figure img.left, #pageContent figure img[align="left"], #pageContent figure img.right, #pageContent figure img[align="right"], #pageContent img.left, #pageContent img[align="left"], #pageContent img.right, #pageContent img[align="right"], .fullPost .text figure img.left, .fullPost .text figure img[align="left"], .fullPost .text figure img.right, .fullPost .text figure img[align="right"], .fullPost .text img.left, .fullPost .text img[align="left"], .fullPost .text img.right, .fullPost .text img[align="right"], #faq .answer figure img.left, #faq .answer figure img[align="left"], #faq .answer figure img.right, #faq .answer figure img[align="right"], #faq .answer img.left, #faq .answer img[align="left"], #faq .answer img.right, #faq .answer img[align="right"] {
   float: none !important;
   clear: left;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 97, scss/modules/_images.scss */
-  #pageContent img, .fullPost .text img, #faq .answer img {
+  /* line 109, scss/modules/_images.scss */
+  #pageContent figure img, #pageContent img, .fullPost .text figure img, .fullPost .text img, #faq .answer figure img, #faq .answer img {
     width: auto;
     max-width: 100%;
     margin: 0 0 1rem;
   }
-  /* line 116, scss/modules/_images.scss */
-  #pageContent img.left, #pageContent img[align="left"], .fullPost .text img.left, .fullPost .text img[align="left"], #faq .answer img.left, #faq .answer img[align="left"] {
+  /* line 128, scss/modules/_images.scss */
+  #pageContent figure img.left, #pageContent figure img[align="left"], #pageContent img.left, #pageContent img[align="left"], .fullPost .text figure img.left, .fullPost .text figure img[align="left"], .fullPost .text img.left, .fullPost .text img[align="left"], #faq .answer figure img.left, #faq .answer figure img[align="left"], #faq .answer img.left, #faq .answer img[align="left"] {
     margin-right: 2.5rem;
     float: left !important;
   }
-  /* line 122, scss/modules/_images.scss */
-  #pageContent img.right, #pageContent img[align="right"], .fullPost .text img.right, .fullPost .text img[align="right"], #faq .answer img.right, #faq .answer img[align="right"] {
+  /* line 134, scss/modules/_images.scss */
+  #pageContent figure img.right, #pageContent figure img[align="right"], #pageContent img.right, #pageContent img[align="right"], .fullPost .text figure img.right, .fullPost .text figure img[align="right"], .fullPost .text img.right, .fullPost .text img[align="right"], #faq .answer figure img.right, #faq .answer figure img[align="right"], #faq .answer img.right, #faq .answer img[align="right"] {
     margin-left: 2.5rem;
     float: right !important;
   }
-  /* line 130, scss/modules/_images.scss */
-  #pageContent img.left, #pageContent img[align="left"], #pageContent img.right, #pageContent img[align="right"], .fullPost .text img.left, .fullPost .text img[align="left"], .fullPost .text img.right, .fullPost .text img[align="right"], #faq .answer img.left, #faq .answer img[align="left"], #faq .answer img.right, #faq .answer img[align="right"] {
+  /* line 142, scss/modules/_images.scss */
+  #pageContent figure img.left, #pageContent figure img[align="left"], #pageContent figure img.right, #pageContent figure img[align="right"], #pageContent img.left, #pageContent img[align="left"], #pageContent img.right, #pageContent img[align="right"], .fullPost .text figure img.left, .fullPost .text figure img[align="left"], .fullPost .text figure img.right, .fullPost .text figure img[align="right"], .fullPost .text img.left, .fullPost .text img[align="left"], .fullPost .text img.right, .fullPost .text img[align="right"], #faq .answer figure img.left, #faq .answer figure img[align="left"], #faq .answer figure img.right, #faq .answer figure img[align="right"], #faq .answer img.left, #faq .answer img[align="left"], #faq .answer img.right, #faq .answer img[align="right"] {
     max-width: 40%;
   }
 }
-/* line 138, scss/modules/_images.scss */
+/* line 147, scss/modules/_images.scss */
+#pageContent figure figcaption, #pageContent figcaption, .fullPost .text figure figcaption, .fullPost .text figcaption, #faq .answer figure figcaption, #faq .answer figcaption {
+  display: table-caption;
+  caption-side: bottom;
+  margin-top: -0.625rem;
+  padding: 0;
+  word-wrap: normal;
+  font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
+  font-size: 0.75rem;
+  font-style: italic;
+  color: #6f6f6f;
+}
+/* line 158, scss/modules/_images.scss */
+#pageContent figure figcaption a, #pageContent figcaption a, .fullPost .text figure figcaption a, .fullPost .text figcaption a, #faq .answer figure figcaption a, #faq .answer figcaption a {
+  color: #6f6f6f;
+}
+/* line 166, scss/modules/_images.scss */
 #pageContent .callout img,
 #pageContent .callOut img, .fullPost .text .callout img,
 .fullPost .text .callOut img, #faq .answer .callout img,
@@ -6804,18 +6835,18 @@ form input[type="submit"]:active {
   width: auto;
 }
 
-/* line 145, scss/modules/_images.scss */
+/* line 173, scss/modules/_images.scss */
 #relatedSections .blurb img {
   width: auto;
   max-width: 100%;
   margin: 0 0 1rem;
 }
-/* line 151, scss/modules/_images.scss */
+/* line 179, scss/modules/_images.scss */
 #relatedSections .blurb img.left, #relatedSections .blurb img[align="left"] {
   margin-right: 2.5rem;
   float: left !important;
 }
-/* line 157, scss/modules/_images.scss */
+/* line 185, scss/modules/_images.scss */
 #relatedSections .blurb img.right, #relatedSections .blurb img[align="right"] {
   margin-left: 2.5rem;
   float: right !important;

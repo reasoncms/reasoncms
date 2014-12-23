@@ -198,10 +198,64 @@ function luther_get_image_url($image)
 }
 
 function luther_process_inline_images($content)
-// add figure and figcaption to full-size images
+// add caption to full-size and thumbnail images
 // replace deprecated img align left and right with class
 {
-	$content = preg_replace('-<img(.*)(align="(\w+))"-', '<img'.'$1'.'class="'.'$3'.'" ', $content);
+	$count = 100;   // no accidental infinite loop
+	while (preg_match('/(<[ph]\d?.*?)(<img.*?\/>)(.*?<\/[ph]\d?>)/', $content, $matches) && $count > 0)
+	{
+		// move the img tag inside a <p> or <h1-6> to a position just before the tag
+		$content = preg_replace('/(<[ph]\d?.*?)(<img.*?\/>)(.*?<\/[ph]\d?>)/', '$2$1$3', $content);
+		$count--;
+	}
+
+	// replace deprecated img align left and right with class
+	$content = preg_replace('/<img(.*?)(align="(\w+))"/', '<img'.'$1'.'class="'.'$3'.'" ', $content, -1, $count);
+	
+	if ($count > 0)
+	{
+		preg_match_all('/<img\s(alt=".*?")?\s?(src=".*?)(\/reason\/images\/(\d+)(_tn)?\.(jpg|jpeg|gif|png)")\s?(class="(\w+)")?/', $content, $matches, PREG_SET_ORDER);
+		
+		$image_ids = array();
+		foreach ($matches as $val)
+		{
+			// If image appears more than once only add caption one time
+			if (array_search($val[4], $image_ids) === FALSE)
+			{
+				array_push($image_ids, $val[4]);
+				$content = luther_add_inline_caption($content, $val[4]);
+			}
+		}
+	}
+	return $content;
+}
+
+function luther_add_inline_caption($content, $image_id)
+{
+	$es = new entity_selector();
+	$es->add_type(id_of('image'));
+	$es->add_relation('entity.id = ' . $image_id);
+	$result = $es->run_one();
+	foreach( $result AS $id => $image )
+	{
+		if (!preg_match("/hide_caption/", $image->get_value('keywords')))
+		{
+			preg_match('/<img\s(alt="'.$image->get_value('description').'")?\s?(src=".*?)(\/reason\/images\/' . $id . '(_tn)?\.(jpg|jpeg|gif|png)")\s?(class="(\w+)")?\s*\/>/', $content, $matches);
+
+			if (count($matches) >= 8 && $matches[7] == "left")
+			{
+				$content = preg_replace('/<img\s(alt="'.$image->get_value('description').'")?\s?(src=".*?)(\/reason\/images\/' . $id . '(_tn)?\.(jpg|jpeg|gif|png)")\s?(class="(\w+)")?\s*\/>/', '<figure class="left"><img $1 $2$3 /><figcaption>'.$image->get_value('description').'</figcaption></figure>', $content);
+			}
+			else if (count($matches) >= 8 && $matches[7] == "right")
+			{
+				$content = preg_replace('/<img\s(alt="'.$image->get_value('description').'")?\s?(src=".*?)(\/reason\/images\/' . $id . '(_tn)?\.(jpg|jpeg|gif|png)")\s?(class="(\w+)")?\s*\/>/', '<figure class="right"><img $1 $2$3 /><figcaption>'.$image->get_value('description').'</figcaption></figure>', $content);
+			}
+			else
+			{
+				$content = preg_replace('/<img\s(alt="'.$image->get_value('description').'")?\s?(src=".*?)(\/reason\/images\/' . $id . '(_tn)?\.(jpg|jpeg|gif|png)")\s*\/>/', '<figure class="left">$0<figcaption>'.$image->get_value('description').'</figcaption></figure>', $content);
+			}			
+		}
+	}
 	return $content;
 }
 
