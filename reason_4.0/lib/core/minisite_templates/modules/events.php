@@ -2346,12 +2346,12 @@ class EventsModule extends DefaultMinisiteModule
 				$link_params = array('view'=>$view,'end_date'=>'');
 				if(in_array($view,$this->views_no_index))
 					$link_params['no_search'] = 1;
-				$opener = '<li><a href="'.$this->construct_link($link_params).'">';
+				$opener = '<li class="'.$view.'View"><a href="'.$this->construct_link($link_params).'">';
 				$closer = '</a></li>';
 			}
 			else
 			{
-				$opener = '<li class="current"><strong>';
+				$opener = '<li class="'.$view.'View current"><strong>';
 				$closer = '</strong></li>';
 				$on_defined_view = true;
 			}
