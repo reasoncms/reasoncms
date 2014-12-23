@@ -78,7 +78,7 @@
 		}
 		$name = reason_sanitize_value(unique_name_of($type_id), 'name', $raw_name);
 		// create entity record
-		$q = "INSERT INTO entity (name,creation_date,type,created_by,last_edited_by,state) VALUES ('".mysql_real_escape_string($name)."',NOW(),$type_id,$user_id,$user_id,'Live')";
+		$q = "INSERT INTO entity (name,creation_date,type,created_by,last_edited_by,state) VALUES ('".reason_sql_string_escape($name)."',NOW(),$type_id,$user_id,$user_id,'Live')";
 		if( $testmode )
 			echo $q.'<br /><br />';
 		else
@@ -132,7 +132,7 @@
 					// loop through all key-val pairs to create a sanitized array
 					foreach( $values[ $table ] as $key => $val )
 					{
-						$qparts[$key] = mysql_real_escape_string( $val );
+						$qparts[$key] = reason_sql_string_escape( $val );
 					}
 				}
 				// create the query
@@ -1345,7 +1345,7 @@
 		// check for table existence
 		$es = new entity_selector();
 		$es->add_type(id_of('content_table'));
-		$es->add_relation('`name` = "'.addslashes($source_table).'"');
+		$es->add_relation('`name` = "'.reason_sql_string_escape($source_table).'"');
 		$source_table_result = $es->run_one();
 		if(empty($source_table_result))
 		{
@@ -1355,7 +1355,7 @@
 		
 		$es = new entity_selector();
 		$es->add_type(id_of('content_table'));
-		$es->add_relation('`name` = "'.addslashes($destination_table).'"');
+		$es->add_relation('`name` = "'.reason_sql_string_escape($destination_table).'"');
 		$destination_table_result = $es->run_one();
 		if(empty($destination_table_result))
 		{
@@ -1385,7 +1385,7 @@
 		$es = new entity_selector();
 		$es->add_type(id_of('type'));
 		$es->add_left_relationship($destination_table_entity->id(),relationship_id_of('type_to_table'));
-		$es->add_relation('`entity`.`id` != "'.addslashes($type_id).'"');
+		$es->add_relation('`entity`.`id` != "'.reason_sql_string_escape($type_id).'"');
 		$other_types = $es->run_one();
 		
 		if(!empty($other_types))
@@ -1405,7 +1405,7 @@
 			trigger_error('Source table '.$source_table.' does not appear to have any fields associated with it in Reason. Unable to move its content in reason_move_table_fields()');
 		}
 		
-		$q = 'DESCRIBE `'.addslashes($destination_table).'`';
+		$q = 'DESCRIBE `'.reason_sql_string_escape($destination_table).'`';
 		$handle = db_query( $q, 'Unable to describe destination table in reason_move_table_fields()' );
 		$raw_dest_cols = array();
 		while($row = mysql_fetch_assoc($handle))
@@ -1438,7 +1438,7 @@
 		foreach($source_table_fields as $k=>$field)
 		{
 			$source_table_fields[$k]->set_value('_field_move_temp_name',$field->get_value('name').'_move_tmp');
-			$q = 'ALTER TABLE `'.addslashes($destination_table).'` ADD '.addslashes( $field->get_value('_field_move_temp_name') ).' '. $field->get_value('db_type');
+			$q = 'ALTER TABLE `'.reason_sql_string_escape($destination_table).'` ADD '.reason_sql_string_escape( $field->get_value('_field_move_temp_name') ).' '. $field->get_value('db_type');
 			db_query( $q, 'Unable to create new field '.$field->get_value('_field_move_temp_name').' in reason_move_table_fields()' );
 			$values = array();
 			foreach($field->get_values() as $f=>$v)
@@ -1450,13 +1450,13 @@
 			}
 			$id = reason_create_entity( id_of('master_admin'), id_of('field'), $user_id, $field->get_value('_field_move_temp_name'), $values);
 			$source_table_fields[$k]->set_value('_new_field_id',$id);
-			$query_parts[] = '`'.addslashes($destination_table).'`.`'.addslashes($field->get_value('_field_move_temp_name')).'` = `'.addslashes($source_table).'`.`'.addslashes($field->get_value('name')).'`';
+			$query_parts[] = '`'.reason_sql_string_escape($destination_table).'`.`'.reason_sql_string_escape($field->get_value('_field_move_temp_name')).'` = `'.reason_sql_string_escape($source_table).'`.`'.reason_sql_string_escape($field->get_value('name')).'`';
 		}
 		
 		// copy content of old fields to new fields
 		
 		
-		$q = 'UPDATE `'.addslashes($destination_table).'`, `'.addslashes($source_table).'`, `entity` SET '.implode(' , ',$query_parts).' WHERE `'.addslashes($destination_table).'`.`id` = `'.addslashes($source_table).'`.`id` AND `'.addslashes($destination_table).'`.`id` = `entity`.`id` AND `entity`.`type` = "'.addslashes($type_id).'";';
+		$q = 'UPDATE `'.reason_sql_string_escape($destination_table).'`, `'.reason_sql_string_escape($source_table).'`, `entity` SET '.implode(' , ',$query_parts).' WHERE `'.reason_sql_string_escape($destination_table).'`.`id` = `'.reason_sql_string_escape($source_table).'`.`id` AND `'.reason_sql_string_escape($destination_table).'`.`id` = `entity`.`id` AND `entity`.`type` = "'.reason_sql_string_escape($type_id).'";';
 		
 		db_query($q,'Attempt to move data between fields');
 		
@@ -1476,14 +1476,14 @@
 		foreach($source_table_fields as $field)
 		{
 			create_relationship( $field->get_value('_new_field_id'), $destination_table_entity->id(), relationship_id_of(	'field_to_entity_table' ) );
-			$q = 'ALTER TABLE `'.addslashes($destination_table).'` CHANGE '.addslashes($field->get_value('_field_move_temp_name')).' '.addslashes( $field->get_value('name') ).' '.$field->get_value('db_type') ;
+			$q = 'ALTER TABLE `'.reason_sql_string_escape($destination_table).'` CHANGE '.reason_sql_string_escape($field->get_value('_field_move_temp_name')).' '.reason_sql_string_escape( $field->get_value('name') ).' '.$field->get_value('db_type') ;
 			db_query( $q, 'Unable to change field name of '.$field->get_value('_field_move_temp_name').' in reason_move_table_fields()' );
 			reason_update_entity( $field->get_value('_new_field_id'), $user_id, array('name' => $field->get_value('name') ), false );
 		}
 		
 		// delete the rows from the source table
 		
-		$q = 'DELETE `'.addslashes($source_table).'` FROM `'.addslashes($source_table).'`, `entity` WHERE `'.addslashes($source_table).'`.`id` = `entity`.`id` AND `entity`.`type` = "'.addslashes($type_id).'"';
+		$q = 'DELETE `'.reason_sql_string_escape($source_table).'` FROM `'.reason_sql_string_escape($source_table).'`, `entity` WHERE `'.reason_sql_string_escape($source_table).'`.`id` = `entity`.`id` AND `entity`.`type` = "'.reason_sql_string_escape($type_id).'"';
 		
 		db_query($q,'Attempt to delete rows from '.$source_table.' in reason_move_table_fields()');
 		
