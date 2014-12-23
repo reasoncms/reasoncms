@@ -96,7 +96,7 @@
 				return array();
 			}
 			
-			$q = 'SELECT DISTINCT `last_edited_by` FROM `entity` WHERE `last_modified` >= "'.addslashes($since_datetime).'" AND `type` NOT IN ("'.id_of('comment_type').'","'.id_of('classified_type').'")';
+			$q = 'SELECT DISTINCT `last_edited_by` FROM `entity` WHERE `last_modified` >= "'.reason_sql_string_escape($since_datetime).'" AND `type` NOT IN ("'.id_of('comment_type').'","'.id_of('classified_type').'")';
 			$r = db_query( $q, 'Unable to get active users' );
 			$ids = array();
 			while($row = mysql_fetch_array( $r, MYSQL_ASSOC ))
@@ -109,7 +109,7 @@
 		
 		function _get_active_users_from_ids($ids, $affiliations)
 		{
-			@array_walk($ids,'addslashes');
+			@array_walk($ids,'reason_sql_string_escape');
 			
 			$es = new entity_selector();
 			$es->add_type(id_of('user'));
