@@ -1083,7 +1083,7 @@
 							$table_field = table_of($field,$this->type);
 						if(empty($table_field))
 							$table_field = $field;
-						$sub_search_array[] = $table_field . ' LIKE "%'.strtr(addslashes($chunk),array('*'=>'%')).'%"';
+						$sub_search_array[] = $table_field . ' LIKE "%'.strtr(reason_sql_string_escape($chunk),array('*'=>'%')).'%"';
 					}
 					$search_array[] = '('.implode(' OR ',$sub_search_array).')';
 				}
@@ -1096,7 +1096,7 @@
 			{
 				if (!empty($this->request['search_' . $psearch_frag]))
 				{
-					$psearch_string = str_replace('*','%',addslashes($this->request['search_' . $psearch_frag]));
+					$psearch_string = str_replace('*','%',reason_sql_string_escape($this->request['search_' . $psearch_frag]));
 					$this->es->add_relation('(' . $psearch_data['field'] . ' LIKE "' . $psearch_string . '")');
 				}
 			}
