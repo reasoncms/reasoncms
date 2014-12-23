@@ -19,6 +19,7 @@ if(!defined("_DBPHP3" ))
 	include_once( CARL_UTIL_INC . 'error_handler/error_handler.php' );
 	include_once( 'connectDB.php' );
 	include_once( 'db_query.php' );
+	include_once( 'sql_string_escape.php' );
 
 }
 ?>
