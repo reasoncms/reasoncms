@@ -94,7 +94,7 @@ class miniEventsGroupedByCategoryModule extends DefaultMinisiteModule
 			$page_types = array();
 			$rpts =& get_reason_page_types();
 			$page_types = $rpts->get_page_type_names_that_use_module($this->_events_modules);
-			$page_types = array_map('addslashes',array_unique($page_types));
+			$page_types = array_map('reason_sql_string_escape',array_unique($page_types));
 			$ps->add_relation('page_node.custom_page IN ("'.implode('","', $page_types).'")');
 			$ps->set_num(1);
 			$page_array = $ps->run_one();
@@ -231,7 +231,7 @@ class miniEventsGroupedByCategoryModule extends DefaultMinisiteModule
 		$ps = new entity_selector($this->site_id);
 		$ps->add_type( id_of('minisite_page') );
 		$ps->add_left_relationship($category->id(), relationship_id_of('page_to_category'));
-		$ps->add_relation('entity.id != "'.addslashes($this->page_id).'"');
+		$ps->add_relation('entity.id != "'.reason_sql_string_escape($this->page_id).'"');
 		$ps->set_num(1);
 		$pages = $ps->run_one();
 		if(!empty($pages))
