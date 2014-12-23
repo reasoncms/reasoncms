@@ -160,7 +160,7 @@
 			}
 			else
 			{
-				return '"'.addslashes($param).'"';
+				return '"'.reason_sql_string_escape($param).'"';
 			}
 		}
 		
