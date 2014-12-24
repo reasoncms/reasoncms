@@ -119,6 +119,7 @@ $black       : #000000;
 // $primary-color: #008CBA;
 // $secondary-color: #e7e7e7;
 // $alert-color: #f04124;
+$alert-color: red;
 // $success-color: #43AC6A;
 // $warning-color: #f08a24;
 // $info-color: #a0d3e8;
@@ -628,19 +629,19 @@ $button-lrg: rem-calc(16);
 // 11. Forms
 // - - - - - - - - - - - - - - - - - - - - - - - - -
 
-// $include-html-form-classes: $include-html-classes;
+$include-html-form-classes: false;
 
 // We use this to set the base for lots of form spacing and positioning styles
 // $form-spacing: rem-calc(16);
 
 // We use these to style the labels in different ways
 // $form-label-pointer: pointer;
-// $form-label-font-size: rem-calc(14);
-// $form-label-font-weight: $font-weight-normal;
+$form-label-font-size: rem-calc(16);
+$form-label-font-weight: 400;
 // $form-label-line-height: 1.5;
 // $form-label-font-color: scale-color($black, $lightness: 30%);
 // $form-label-small-transform: capitalize;
-// $form-label-bottom-margin: 0;
+// $form-label-bottom-margin: rem-calc(6);
 // $input-font-family: inherit;
 // $input-font-color: rgba(0,0,0,0.75);
 // $input-font-size: rem-calc(14);
@@ -690,7 +691,7 @@ $button-lrg: rem-calc(16);
 // $input-error-message-font-color-alt: $oil;
 
 // We use this to style the glowing effect of inputs when focused
-// $input-include-glowing-effect: true;
+$input-include-glowing-effect: false;
 // $glowing-effect-fade-time: 0.45s;
 // $glowing-effect-color: $input-focus-border-color;
 
@@ -946,7 +947,7 @@ $button-lrg: rem-calc(16);
 // We use these to set the list-item properties
 // $pagination-li-float: $default-float;
 // $pagination-li-height: rem-calc(24);
-// $pagination-li-font-color: $jet;
+$pagination-li-font-color: $aluminum;
 // $pagination-li-font-size: rem-calc(14);
 // $pagination-li-margin: rem-calc(5);
 
@@ -1120,7 +1121,7 @@ $reveal-overlay-bg: rgba($white, .45);
 $reveal-box-shadow: 0 0 4px rgba($black,.25);
 
 // We use these to style the reveal close button
-$reveal-close-font-size: rem-calc(24);
+$reveal-close-font-size: rem-calc(16);
 $reveal-close-top: rem-calc(8);
 $reveal-close-side: rem-calc(10);
 // $reveal-close-color: $base;
@@ -1128,7 +1129,7 @@ $reveal-close-side: rem-calc(10);
 
 // We use this to set the default radius used throughout the core.
 // $reveal-radius: $global-radius;
-// $reveal-round: $global-rounded;
+$reveal-round: $global-rounded;
 
 // We use these to control the modal border
 // $reveal-border-style: solid;
@@ -1320,8 +1321,8 @@ $reveal-border-color: $iron;
 
 // $include-html-tabs-classes: $include-html-classes;
 
-// $tabs-navigation-padding: rem-calc(16);
-// $tabs-navigation-bg-color: $silver  ;
+$tabs-navigation-padding: rem-calc(12);
+// $tabs-navigation-bg-color: $silver;
 // $tabs-navigation-active-bg-color: $white;
 // $tabs-navigation-hover-bg-color: scale-color($tabs-navigation-bg-color, $lightness: -6%);
 // $tabs-navigation-font-color: $jet;
