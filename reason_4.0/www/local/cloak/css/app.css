@@ -1,325 +1,3 @@
-/*! normalize.css v3.0.2 | MIT License | git.io/normalize */
-/**
- * 1. Set default font family to sans-serif.
- * 2. Prevent iOS text size adjust after orientation change, without disabling
- *    user zoom.
- */
-html {
-  font-family: sans-serif;
-  /* 1 */
-  -ms-text-size-adjust: 100%;
-  /* 2 */
-  -webkit-text-size-adjust: 100%;
-  /* 2 */ }
-
-/**
- * Remove default margin.
- */
-body {
-  margin: 0; }
-
-/* HTML5 display definitions
-   ========================================================================== */
-/**
- * Correct `block` display not defined for any HTML5 element in IE 8/9.
- * Correct `block` display not defined for `details` or `summary` in IE 10/11
- * and Firefox.
- * Correct `block` display not defined for `main` in IE 11.
- */
-article, aside, details, figcaption, figure, footer, header, hgroup, main, menu, nav, section, summary {
-  display: block; }
-
-/**
- * 1. Correct `inline-block` display not defined in IE 8/9.
- * 2. Normalize vertical alignment of `progress` in Chrome, Firefox, and Opera.
- */
-audio, canvas, progress, video {
-  display: inline-block;
-  /* 1 */
-  vertical-align: baseline;
-  /* 2 */ }
-
-/**
- * Prevent modern browsers from displaying `audio` without controls.
- * Remove excess height in iOS 5 devices.
- */
-audio:not([controls]) {
-  display: none;
-  height: 0; }
-
-/**
- * Address `[hidden]` styling not present in IE 8/9/10.
- * Hide the `template` element in IE 8/9/11, Safari, and Firefox < 22.
- */
-[hidden], template {
-  display: none; }
-
-/* Links
-   ========================================================================== */
-/**
- * Remove the gray background color from active links in IE 10.
- */
-a {
-  background-color: transparent; }
-
-/**
- * Improve readability when focused and also mouse hovered in all browsers.
- */
-a:active, a:hover {
-  outline: 0; }
-
-/* Text-level semantics
-   ========================================================================== */
-/**
- * Address styling not present in IE 8/9/10/11, Safari, and Chrome.
- */
-abbr[title] {
-  border-bottom: 1px dotted; }
-
-/**
- * Address style set to `bolder` in Firefox 4+, Safari, and Chrome.
- */
-b, strong {
-  font-weight: bold; }
-
-/**
- * Address styling not present in Safari and Chrome.
- */
-dfn {
-  font-style: italic; }
-
-/**
- * Address variable `h1` font-size and margin within `section` and `article`
- * contexts in Firefox 4+, Safari, and Chrome.
- */
-h1 {
-  font-size: 2em;
-  margin: 0.67em 0; }
-
-/**
- * Address styling not present in IE 8/9.
- */
-mark {
-  background: #ff0;
-  color: #000; }
-
-/**
- * Address inconsistent and variable font size in all browsers.
- */
-small {
-  font-size: 80%; }
-
-/**
- * Prevent `sub` and `sup` affecting `line-height` in all browsers.
- */
-sub, sup {
-  font-size: 75%;
-  line-height: 0;
-  position: relative;
-  vertical-align: baseline; }
-
-sup {
-  top: -0.5em; }
-
-sub {
-  bottom: -0.25em; }
-
-/* Embedded content
-   ========================================================================== */
-/**
- * Remove border when inside `a` element in IE 8/9/10.
- */
-img {
-  border: 0; }
-
-/**
- * Correct overflow not hidden in IE 9/10/11.
- */
-svg:not(:root) {
-  overflow: hidden; }
-
-/* Grouping content
-   ========================================================================== */
-/**
- * Address margin not present in IE 8/9 and Safari.
- */
-figure {
-  margin: 1em 40px; }
-
-/**
- * Address differences between Firefox and other browsers.
- */
-hr {
-  -moz-box-sizing: content-box;
-  box-sizing: content-box;
-  height: 0; }
-
-/**
- * Contain overflow in all browsers.
- */
-pre {
-  overflow: auto; }
-
-/**
- * Address odd `em`-unit font size rendering in all browsers.
- */
-code, kbd, pre, samp {
-  font-family: monospace, monospace;
-  font-size: 1em; }
-
-/* Forms
-   ========================================================================== */
-/**
- * Known limitation: by default, Chrome and Safari on OS X allow very limited
- * styling of `select`, unless a `border` property is set.
- */
-/**
- * 1. Correct color not being inherited.
- *    Known issue: affects color of disabled elements.
- * 2. Correct font properties not being inherited.
- * 3. Address margins set differently in Firefox 4+, Safari, and Chrome.
- */
-button, input, optgroup, select, textarea {
-  color: inherit;
-  /* 1 */
-  font: inherit;
-  /* 2 */
-  margin: 0;
-  /* 3 */ }
-
-/**
- * Address `overflow` set to `hidden` in IE 8/9/10/11.
- */
-button {
-  overflow: visible; }
-
-/**
- * Address inconsistent `text-transform` inheritance for `button` and `select`.
- * All other form control elements do not inherit `text-transform` values.
- * Correct `button` style inheritance in Firefox, IE 8/9/10/11, and Opera.
- * Correct `select` style inheritance in Firefox.
- */
-button, select {
-  text-transform: none; }
-
-/**
- * 1. Avoid the WebKit bug in Android 4.0.* where (2) destroys native `audio`
- *    and `video` controls.
- * 2. Correct inability to style clickable `input` types in iOS.
- * 3. Improve usability and consistency of cursor style between image-type
- *    `input` and others.
- */
-button, html input[type="button"], input[type="reset"], input[type="submit"] {
-  -webkit-appearance: button;
-  /* 2 */
-  cursor: pointer;
-  /* 3 */ }
-
-/**
- * Re-set default cursor for disabled elements.
- */
-button[disabled], html input[disabled] {
-  cursor: default; }
-
-/**
- * Remove inner padding and border in Firefox 4+.
- */
-button::-moz-focus-inner, input::-moz-focus-inner {
-  border: 0;
-  padding: 0; }
-
-/**
- * Address Firefox 4+ setting `line-height` on `input` using `!important` in
- * the UA stylesheet.
- */
-input {
-  line-height: normal; }
-
-/**
- * It's recommended that you don't attempt to style these elements.
- * Firefox's implementation doesn't respect box-sizing, padding, or width.
- *
- * 1. Address box sizing set to `content-box` in IE 8/9/10.
- * 2. Remove excess padding in IE 8/9/10.
- */
-input[type="checkbox"], input[type="radio"] {
-  box-sizing: border-box;
-  /* 1 */
-  padding: 0;
-  /* 2 */ }
-
-/**
- * Fix the cursor style for Chrome's increment/decrement buttons. For certain
- * `font-size` values of the `input`, it causes the cursor style of the
- * decrement button to change from `default` to `text`.
- */
-input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button {
-  height: auto; }
-
-/**
- * 1. Address `appearance` set to `searchfield` in Safari and Chrome.
- * 2. Address `box-sizing` set to `border-box` in Safari and Chrome
- *    (include `-moz` to future-proof).
- */
-input[type="search"] {
-  -webkit-appearance: textfield;
-  /* 1 */
-  -moz-box-sizing: content-box;
-  -webkit-box-sizing: content-box;
-  /* 2 */
-  box-sizing: content-box; }
-
-/**
- * Remove inner padding and search cancel button in Safari and Chrome on OS X.
- * Safari (but not Chrome) clips the cancel button when the search input has
- * padding (and `textfield` appearance).
- */
-input[type="search"]::-webkit-search-cancel-button, input[type="search"]::-webkit-search-decoration {
-  -webkit-appearance: none; }
-
-/**
- * Define consistent border, margin, and padding.
- */
-fieldset {
-  border: 1px solid #c0c0c0;
-  margin: 0 2px;
-  padding: 0.35em 0.625em 0.75em; }
-
-/**
- * 1. Correct `color` not being inherited in IE 8/9/10/11.
- * 2. Remove padding so people aren't caught out if they zero out fieldsets.
- */
-legend {
-  border: 0;
-  /* 1 */
-  padding: 0;
-  /* 2 */ }
-
-/**
- * Remove default vertical scrollbar in IE 8/9/10/11.
- */
-textarea {
-  overflow: auto; }
-
-/**
- * Don't inherit the `font-weight` (applied by a rule above).
- * NOTE: the default cannot safely be changed in Chrome and Safari on OS X.
- */
-optgroup {
-  font-weight: bold; }
-
-/* Tables
-   ========================================================================== */
-/**
- * Remove most spacing between table cells.
- */
-table {
-  border-collapse: collapse;
-  border-spacing: 0; }
-
-td, th {
-  padding: 0; }
-
 meta.foundation-version {
   font-family: "/5.5.0/"; }
 
@@ -538,7 +216,7 @@ select {
         right: 0;
         margin: 0 auto; } }
   .reveal-modal .close-reveal-modal, dialog .close-reveal-modal {
-    font-size: 1.5rem;
+    font-size: 1rem;
     line-height: 1;
     position: absolute;
     top: 0.5rem;
@@ -1012,7 +690,7 @@ blockquote, blockquote p {
     display: inherit !important; }
  }
 
-.fa, #banner #navigationToggles li.navJump a:before, #banner #navigationToggles li.searchToggle a:before, .assets li:before, #av .moduleNav ul li:before, #av .podcast a:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before, #calendar .eventDetails .eventUrl:before, #calendar .eventDetails .calendarExport:before, .reveal-modal .close-reveal-modal:before, dialog .close-reveal-modal:before {
+.fa, #banner #navigationToggles li.navJump a:before, #banner #navigationToggles li.searchToggle a:before, .reveal-modal .close-reveal-modal:before, dialog .close-reveal-modal:before, .assets li:before, #av .moduleNav ul li:before, #av .podcast a:before, #discoErrorNotice h3:before, #imageGallery .item .prevWrapper a:after, #imageGallery .item .nextWrapper a:after, #imageGallery .back:before, .loginLinkModule #footerLoginLink .login:after, .loginLinkModule #footerLoginLink .logout:after, #minisiteNavigation ul .navList .jump a:after {
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -1062,17 +740,6 @@ blockquote, blockquote p {
     -webkit-transform: rotate(359deg);
     transform: rotate(359deg); } }
 
-#banner {
-  background: #F6F6F6;
-  border-bottom: 1px solid #DDDDDD;
-  text-align: center; }
-  @media only screen and (min-width:60.0625em) {
-    #banner .navJump {
-      position: absolute;
-      left: -9999px;
-      top: -9999px;
-      margin-bottom: 0; } }
-
 #breadcrumbs {
   width: 100%;
   margin-left: auto;
@@ -1092,6 +759,26 @@ blockquote, blockquote p {
     width: 100%;
     float: left; }
 
+#contentHead {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 0;
+  margin-bottom: 0;
+  max-width: 87.5rem; }
+  #contentHead:before, #contentHead:after {
+    content: " ";
+    display: table; }
+  #contentHead:after {
+    clear: both; }
+  #contentHead div.pageTitle {
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem;
+    width: 100%;
+    float: left; }
+    #contentHead div.pageTitle h2 {
+      margin: 0; }
+
 #meat {
   width: 100%;
   margin-left: auto;
@@ -1099,8 +786,7 @@ blockquote, blockquote p {
   margin-top: 0;
   margin-bottom: 0;
   max-width: 87.5rem;
-  padding-top: 1.875rem;
-  padding-bottom: 1.875rem; }
+  padding-top: 1.875rem; }
   #meat:before, #meat:after {
     content: " ";
     display: table; }
@@ -1176,14 +862,10 @@ blockquote, blockquote p {
     width: 100%;
     float: left; }
 
-#footer {
-  background: #F6F6F6;
-  border-top: 1px solid #DDDDDD;
-  text-align: center; }
-
 #banner {
-  padding-top: 1.875rem;
-  padding-bottom: 1.875rem;
+  background: #F6F6F6;
+  border-bottom: 1px solid #DDDDDD;
+  text-align: center;
   padding: 1.875rem; }
   #banner h1 {
     font-family: "Merriweather", serif;
@@ -1196,6 +878,12 @@ blockquote, blockquote p {
       list-style-type: none;
       display: inline-block;
       margin: 0 0.375rem; }
+      @media only screen and (min-width:60.0625em) {
+        #banner #navigationToggles li.navJump {
+          position: absolute;
+          left: -9999px;
+          top: -9999px;
+          margin-bottom: 0; } }
       #banner #navigationToggles li.navJump a {
         display: inline-block;
         margin: 0;
@@ -1239,56 +927,583 @@ blockquote, blockquote p {
         top: -9999px;
         margin-bottom: 0; }
 
-.assets ul {
-  margin: 0 0 0 1.875rem;
-  list-style-type: none; }
-.assets li {
-  padding-bottom: 0.9375rem; }
-  .assets li:last-of-type {
-    padding-bottom: 0; }
-  .assets li:before {
-    content: "\f019";
-    margin-left: -1.875rem;
-    float: left;
-    margin-top: 0.375rem;
-    color: #999999; }
-  .assets li.mp4:before {
-    content: "\f1c8"; }
-  .assets li.txt:before {
-    content: "\f0f6"; }
-  .assets li.pdf:before {
-    content: "\f1c1"; }
-.assets .name {
-  font-size: 0.8125rem;
-  color: #888888;
-  display: inline-block; }
-  .assets .name a {
-    font-size: 1rem;
-    font-family: "Open Sans", sans-serif; }
-.assets .date {
-  font-size: 0.875rem;
-  color: #888888; }
-.assets h4 {
-  font-size: 1.0625rem;
-  margin-top: 0.9375rem; }
+h2.pageTitle {
+  margin: 0 0 1.875rem;
+  line-height: 1.3; }
 
-#av .moduleNav ul {
-  margin: 0 0 0 1.875rem;
-  list-style-type: none; }
-  #av .moduleNav ul li {
+#footer {
+  background: #F6F6F6;
+  border-top: 1px solid #DDDDDD;
+  text-align: center;
+  padding: 1.875rem; }
+
+@media only screen and (min-width:40.063em) {
+  .reveal-modal.tiny, dialog.tiny, dialog.tiny {
+    min-width: 560px; } }
+.reveal-modal .close-reveal-modal:before, dialog .close-reveal-modal:before, dialog .close-reveal-modal:before {
+  content: "\f00d"; }
+.reveal-modal .close-reveal-modal span, dialog .close-reveal-modal span, dialog .close-reveal-modal span {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  margin-bottom: 0; }
+
+.assets {
+  margin-bottom: 0.9375rem; }
+  .assets ul {
+    margin: 0 0 0 1.875rem;
+    list-style-type: none; }
+  .assets li {
     padding-bottom: 0.9375rem; }
-    #av .moduleNav ul li:before {
-      content: "\f16a";
+    .assets li:before {
+      content: "\f019";
       margin-left: -1.875rem;
       float: left;
       margin-top: 0.375rem;
       color: #999999; }
-    #av .moduleNav ul li .date {
-      font-size: 0.875rem;
-      color: #888888; }
-#av .podcast {
-  margin: 0; }
-  #av .podcast a {
+    .assets li.mp4:before {
+      content: "\f1c8"; }
+    .assets li.txt:before {
+      content: "\f0f6"; }
+    .assets li.pdf:before {
+      content: "\f1c1"; }
+  .assets .name {
+    font-size: 0.8125rem;
+    color: #888888;
+    display: inline-block; }
+    .assets .name a {
+      font-size: 1rem;
+      font-family: "Open Sans", sans-serif; }
+  .assets .date {
+    font-size: 0.875rem;
+    color: #888888; }
+  .assets h4 {
+    font-size: 1.0625rem;
+    margin-top: 0.9375rem; }
+
+#av {
+  margin-bottom: 1.875rem; }
+  #av .moduleNav ul {
+    margin: 0 0 0 1.875rem;
+    list-style-type: none; }
+    #av .moduleNav ul li {
+      padding-bottom: 0.9375rem; }
+      #av .moduleNav ul li:before {
+        content: "\f16a";
+        margin-left: -1.875rem;
+        float: left;
+        margin-top: 0.375rem;
+        color: #999999; }
+      #av .moduleNav ul li .date {
+        font-size: 0.875rem;
+        color: #888888; }
+  #av .podcast {
+    margin: 0; }
+    #av .podcast a {
+      border-style: solid;
+      border-width: 0;
+      cursor: pointer;
+      font-family: "Open Sans", sans-serif;
+      font-weight: 300;
+      line-height: normal;
+      margin: 0 0 1.25rem;
+      position: relative;
+      text-decoration: none;
+      text-align: center;
+      -webkit-appearance: none;
+      border-radius: 0;
+      display: inline-block;
+      padding-top: 0.25rem;
+      padding-right: 0.5rem;
+      padding-bottom: 0.3125rem;
+      padding-left: 0.5rem;
+      font-size: 0.6875rem;
+      background-color: #008CBA;
+      border-color: #007095;
+      color: #FFFFFF;
+      border-radius: 3px;
+      transition: background-color 300ms ease-out;
+      margin: 0 0.75rem 0.125rem 0 !important; }
+      #av .podcast a:hover, #av .podcast a:focus {
+        background-color: #007095; }
+      #av .podcast a:hover, #av .podcast a:focus {
+        color: #FFFFFF; }
+      #av .podcast a:before {
+        color: #FFFFFF;
+        margin-right: 0.375rem; }
+    #av .podcast .feedLink:before {
+      content: "\f09e"; }
+    #av .podcast .subscribe:before {
+      content: "\f001"; }
+
+.basicTabs {
+  margin-bottom: 0 !important;
+  margin-left: 0; }
+  .basicTabs:before, .basicTabs:after {
+    content: " ";
+    display: table; }
+  .basicTabs:after {
+    clear: both; }
+  .basicTabs li {
+    position: relative;
+    margin-bottom: 0 !important;
+    list-style: none;
+    float: left; }
+    .basicTabs li a, .basicTabs li strong {
+      outline: none;
+      display: block;
+      background: #EFEFEF;
+      color: #222222;
+      padding: 0.375rem 0.75rem;
+      font-family: "Open Sans", sans-serif;
+      font-size: 1rem;
+      border: 1px solid #CCCCCC;
+      border-radius: 3px;
+      margin: 0 0.375rem 0.375rem 0 !important; }
+      @media only screen and (min-width:63.8125em) {
+        .basicTabs li a, .basicTabs li strong {
+          padding: 0.75rem 1.5rem !important;
+          border-bottom: none;
+          border-radius: 3px 3px 0 0;
+          margin-bottom: 0; } }
+      .basicTabs li a:hover, .basicTabs li strong:hover {
+        background-color: #e1e1e1; }
+    .basicTabs li.current strong {
+      background: #FFFFFF;
+      color: #222222; }
+
+.blurb {
+  background: #F6F6F6;
+  border: 1px solid #DDDDDD;
+  padding: 0.9375rem;
+  margin-bottom: 1.875rem; }
+  .blurb:before, .blurb:after {
+    content: " ";
+    display: table; }
+  .blurb:after {
+    clear: both; }
+  .blurb *:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0; }
+
+.locationBarText span {
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.875rem; }
+.locationBarText a {
+  text-decoration: underline;
+  color: #008CBA; }
+.locationBarText .delimiter {
+  color: #666666;
+  font-weight: 300;
+  margin: 0 0.125rem;
+  display: inline-block; }
+
+/* Events Column Layouts */
+#calendar .responsiveEventsList .gridAndOptionsWrapper {
+  width: 100%;
+  float: left;
+  margin: -0.9375rem 0 0 0;
+  padding: 1rem;
+  clear: none; }
+#calendar .responsiveEventsList .datesAndSearch, #calendar .responsiveEventsList .options {
+  width: 100%; }
+
+#calendar .responsiveEventsList {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 0;
+  margin-bottom: 0;
+  max-width: 87.5rem; }
+  #calendar .responsiveEventsList:before, #calendar .responsiveEventsList:after {
+    content: " ";
+    display: table; }
+  #calendar .responsiveEventsList:after {
+    clear: both; }
+#calendar .views {
+  clear: both;
+  text-align: left;
+  margin-bottom: 1.875rem; }
+  #calendar .views:before, #calendar .views:after {
+    content: " ";
+    display: table; }
+  #calendar .views:after {
+    clear: both; }
+  #calendar .views h4 {
+    display: inline;
+    font-size: 0.75rem;
+    margin-right: 0.375rem; }
+    @media only screen and (min-width:40.063em) {
+      #calendar .views h4 {
+        font-size: 0.875rem; } }
+  #calendar .views ul {
+    margin: 0;
+    padding: 0;
+    display: inline-block; }
+    #calendar .views ul li {
+      display: inline-block;
+      margin: 0 0 0 0.375rem;
+      margin: 0;
+      padding: 0;
+      font-size: 0.75rem; }
+      @media only screen and (min-width:40.063em) {
+        #calendar .views ul li {
+          font-size: 0.875rem; } }
+      #calendar .views ul li a, #calendar .views ul li strong {
+        padding: 0.0625rem 0.75rem;
+        display: inline-block;
+        background: #EFEFEF;
+        border-right: 1px solid #DDDDDD; }
+      #calendar .views ul li a:hover {
+        background: #DDDDDD; }
+      #calendar .views ul li strong {
+        text-decoration: none;
+        font-weight: 400;
+        background: #008CBA;
+        color: #FFF; }
+      #calendar .views ul li:first-child a, #calendar .views ul li:first-child strong {
+        border-radius: 1000px 0 0 1000px;
+        padding-left: 1rem; }
+      #calendar .views ul li:last-child a, #calendar .views ul li:last-child strong {
+        border-radius: 0 1000px 1000px 0;
+        border-right: none;
+        padding-right: 1rem; }
+
+@media only screen and (max-width: 40em) {
+  .searchForm {
+    margin-top: 0.9375rem !important; } }
+.searchForm #minisiteSearchInput {
+  display: block;
+  background-color: #FFFFFF;
+  font-family: inherit;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #cccccc;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+  color: rgba(0, 0, 0, 0.75);
+  display: block;
+  font-size: 0.875rem;
+  margin: 0 0 1rem 0;
+  padding: 0.5rem;
+  height: 2.3125rem;
+  width: 100%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box; }
+  .searchForm #minisiteSearchInput:focus {
+    background: #fafafa;
+    border-color: #999999;
+    outline: none; }
+  .searchForm #minisiteSearchInput:disabled {
+    background-color: #DDDDDD;
+    cursor: default; }
+  .searchForm #minisiteSearchInput[disabled], .searchForm #minisiteSearchInput[readonly], fieldset[disabled] .searchForm #minisiteSearchInput {
+    background-color: #DDDDDD;
+    cursor: default; }
+  @media only screen and (min-width:40.063em) {
+    .searchForm #minisiteSearchInput {
+      width: 80%;
+      float: left;
+      margin-bottom: 0;
+      border-right: none; } }
+.searchForm .searchSubmitLink {
+  display: block;
+  text-align: center;
+  padding: 0.5rem;
+  height: 2.3125rem;
+  background: #008CBA;
+  color: #FFFFFF; }
+  @media only screen and (min-width:40.063em) {
+    .searchForm .searchSubmitLink {
+      width: 20%;
+      float: left;
+      margin-bottom: 0; } }
+
+#filtering .colon {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  margin-bottom: 0; }
+
+#form {
+  max-width: 600px;
+  border-top: 1px solid #ccc;
+  padding-top: 1.875rem; }
+
+#discoErrorNotice {
+  margin-bottom: 0.9375rem; }
+  #discoErrorNotice h3 {
+    font-size: 1.25rem;
+    font-weight: 400;
+    margin: 0 0 0.375rem;
+    color: red !important; }
+    #discoErrorNotice h3:before {
+      content: "\f071";
+      margin-right: 0.75rem; }
+  #discoErrorNotice ul {
+    border-style: solid;
+    border-width: 1px;
+    display: block;
+    font-weight: 300;
+    margin-bottom: 1.25rem;
+    position: relative;
+    padding: 0.875rem 1.5rem 0.875rem 0.875rem;
+    font-size: 0.8125rem;
+    transition: opacity 300ms ease-out;
+    background-color: #FFFFFF;
+    border-color: #dbdbdb;
+    color: #4f4f4f;
+    border-radius: 3px;
+    border-color: #ffcccc;
+    margin: 0;
+    font-weight: 700; }
+    #discoErrorNotice ul li {
+      display: inline; }
+      #discoErrorNotice ul li a {
+        font-weight: 400;
+        text-decoration: underline; }
+
+form .formElement, #form .formElement, #form #discoLinear .formElement {
+  margin: 0 0 1rem; }
+  form .formElement.error, #form .formElement.error, #form #discoLinear .formElement.error {
+    background: none !important;
+    padding: 0 !important; }
+    form .formElement.error .words, #form .formElement.error .words, #form #discoLinear .formElement.error .words {
+      background: #ffe5e5;
+      color: red; }
+    form .formElement.error input[type="text"], form .formElement.error input[type="password"], form .formElement.error input[type="date"], form .formElement.error input[type="datetime"], form .formElement.error input[type="datetime-local"], form .formElement.error input[type="month"], form .formElement.error input[type="week"], form .formElement.error input[type="email"], form .formElement.error input[type="number"], form .formElement.error input[type="search"], form .formElement.error input[type="tel"], form .formElement.error input[type="time"], form .formElement.error input[type="url"], form .formElement.error textarea, form .formElement.error .loki div.iframe_wrapper, form .formElement.error .loki textarea, form .formElement.error select, form .formElement.error .checkBoxGroup, form .formElement.error .radioButtons, #form .formElement.error input[type="text"], #form .formElement.error input[type="password"], #form .formElement.error input[type="date"], #form .formElement.error input[type="datetime"], #form .formElement.error input[type="datetime-local"], #form .formElement.error input[type="month"], #form .formElement.error input[type="week"], #form .formElement.error input[type="email"], #form .formElement.error input[type="number"], #form .formElement.error input[type="search"], #form .formElement.error input[type="tel"], #form .formElement.error input[type="time"], #form .formElement.error input[type="url"], #form .formElement.error textarea, #form .formElement.error .loki div.iframe_wrapper, #form .formElement.error .loki textarea, #form .formElement.error select, #form .formElement.error .checkBoxGroup, #form .formElement.error .radioButtons, #form #discoLinear .formElement.error input[type="text"], #form #discoLinear .formElement.error input[type="password"], #form #discoLinear .formElement.error input[type="date"], #form #discoLinear .formElement.error input[type="datetime"], #form #discoLinear .formElement.error input[type="datetime-local"], #form #discoLinear .formElement.error input[type="month"], #form #discoLinear .formElement.error input[type="week"], #form #discoLinear .formElement.error input[type="email"], #form #discoLinear .formElement.error input[type="number"], #form #discoLinear .formElement.error input[type="search"], #form #discoLinear .formElement.error input[type="tel"], #form #discoLinear .formElement.error input[type="time"], #form #discoLinear .formElement.error input[type="url"], #form #discoLinear .formElement.error textarea, #form #discoLinear .formElement.error .loki div.iframe_wrapper, #form #discoLinear .formElement.error .loki textarea, #form #discoLinear .formElement.error select, #form #discoLinear .formElement.error .checkBoxGroup, #form #discoLinear .formElement.error .radioButtons {
+      border: 1px solid red; }
+    form .formElement.error .checkBoxGroup, form .formElement.error .radioButtons, #form .formElement.error .checkBoxGroup, #form .formElement.error .radioButtons, #form #discoLinear .formElement.error .checkBoxGroup, #form #discoLinear .formElement.error .radioButtons {
+      padding: 10px; }
+  form .formElement .words, #form .formElement .words, #form #discoLinear .formElement .words {
+    font-size: 1rem;
+    color: #4d4d4d;
+    cursor: pointer;
+    display: block;
+    font-weight: 400;
+    line-height: 1.5;
+    margin-bottom: 0;
+    padding: 0.25rem 0.5rem; }
+    form .formElement .words .labelText, #form .formElement .words .labelText, #form #discoLinear .formElement .words .labelText {
+      display: inline-block; }
+    form .formElement .words .requiredIndicator, #form .formElement .words .requiredIndicator, #form #discoLinear .formElement .words .requiredIndicator {
+      font-weight: 300;
+      display: inline-block;
+      padding-left: 0.25rem; }
+  form .formElement input[type="text"], form .formElement input[type="password"], form .formElement input[type="date"], form .formElement input[type="datetime"], form .formElement input[type="datetime-local"], form .formElement input[type="month"], form .formElement input[type="week"], form .formElement input[type="email"], form .formElement input[type="number"], form .formElement input[type="search"], form .formElement input[type="tel"], form .formElement input[type="time"], form .formElement input[type="url"], form .formElement textarea, form .formElement .loki div.iframe_wrapper, form .formElement .loki textarea, #form .formElement input[type="text"], #form .formElement input[type="password"], #form .formElement input[type="date"], #form .formElement input[type="datetime"], #form .formElement input[type="datetime-local"], #form .formElement input[type="month"], #form .formElement input[type="week"], #form .formElement input[type="email"], #form .formElement input[type="number"], #form .formElement input[type="search"], #form .formElement input[type="tel"], #form .formElement input[type="time"], #form .formElement input[type="url"], #form .formElement textarea, #form .formElement .loki div.iframe_wrapper, #form .formElement .loki textarea, #form #discoLinear .formElement input[type="text"], #form #discoLinear .formElement input[type="password"], #form #discoLinear .formElement input[type="date"], #form #discoLinear .formElement input[type="datetime"], #form #discoLinear .formElement input[type="datetime-local"], #form #discoLinear .formElement input[type="month"], #form #discoLinear .formElement input[type="week"], #form #discoLinear .formElement input[type="email"], #form #discoLinear .formElement input[type="number"], #form #discoLinear .formElement input[type="search"], #form #discoLinear .formElement input[type="tel"], #form #discoLinear .formElement input[type="time"], #form #discoLinear .formElement input[type="url"], #form #discoLinear .formElement textarea, #form #discoLinear .formElement .loki div.iframe_wrapper, #form #discoLinear .formElement .loki textarea {
+    background-color: #FFFFFF;
+    font-family: inherit;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #cccccc;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+    color: rgba(0, 0, 0, 0.75);
+    display: block;
+    font-size: 0.875rem;
+    margin: 0 0 1rem 0;
+    padding: 0.5rem;
+    height: 2.3125rem;
+    width: 100%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    margin: 0; }
+    form .formElement input[type="text"]:focus, form .formElement input[type="password"]:focus, form .formElement input[type="date"]:focus, form .formElement input[type="datetime"]:focus, form .formElement input[type="datetime-local"]:focus, form .formElement input[type="month"]:focus, form .formElement input[type="week"]:focus, form .formElement input[type="email"]:focus, form .formElement input[type="number"]:focus, form .formElement input[type="search"]:focus, form .formElement input[type="tel"]:focus, form .formElement input[type="time"]:focus, form .formElement input[type="url"]:focus, form .formElement textarea:focus, form .formElement .loki div.iframe_wrapper:focus, form .formElement .loki textarea:focus, #form .formElement input[type="text"]:focus, #form .formElement input[type="password"]:focus, #form .formElement input[type="date"]:focus, #form .formElement input[type="datetime"]:focus, #form .formElement input[type="datetime-local"]:focus, #form .formElement input[type="month"]:focus, #form .formElement input[type="week"]:focus, #form .formElement input[type="email"]:focus, #form .formElement input[type="number"]:focus, #form .formElement input[type="search"]:focus, #form .formElement input[type="tel"]:focus, #form .formElement input[type="time"]:focus, #form .formElement input[type="url"]:focus, #form .formElement textarea:focus, #form .formElement .loki div.iframe_wrapper:focus, #form .formElement .loki textarea:focus, #form #discoLinear .formElement input[type="text"]:focus, #form #discoLinear .formElement input[type="password"]:focus, #form #discoLinear .formElement input[type="date"]:focus, #form #discoLinear .formElement input[type="datetime"]:focus, #form #discoLinear .formElement input[type="datetime-local"]:focus, #form #discoLinear .formElement input[type="month"]:focus, #form #discoLinear .formElement input[type="week"]:focus, #form #discoLinear .formElement input[type="email"]:focus, #form #discoLinear .formElement input[type="number"]:focus, #form #discoLinear .formElement input[type="search"]:focus, #form #discoLinear .formElement input[type="tel"]:focus, #form #discoLinear .formElement input[type="time"]:focus, #form #discoLinear .formElement input[type="url"]:focus, #form #discoLinear .formElement textarea:focus, #form #discoLinear .formElement .loki div.iframe_wrapper:focus, #form #discoLinear .formElement .loki textarea:focus {
+      background: #fafafa;
+      border-color: #999999;
+      outline: none; }
+    form .formElement input[type="text"]:disabled, form .formElement input[type="password"]:disabled, form .formElement input[type="date"]:disabled, form .formElement input[type="datetime"]:disabled, form .formElement input[type="datetime-local"]:disabled, form .formElement input[type="month"]:disabled, form .formElement input[type="week"]:disabled, form .formElement input[type="email"]:disabled, form .formElement input[type="number"]:disabled, form .formElement input[type="search"]:disabled, form .formElement input[type="tel"]:disabled, form .formElement input[type="time"]:disabled, form .formElement input[type="url"]:disabled, form .formElement textarea:disabled, form .formElement .loki div.iframe_wrapper:disabled, form .formElement .loki textarea:disabled, #form .formElement input[type="text"]:disabled, #form .formElement input[type="password"]:disabled, #form .formElement input[type="date"]:disabled, #form .formElement input[type="datetime"]:disabled, #form .formElement input[type="datetime-local"]:disabled, #form .formElement input[type="month"]:disabled, #form .formElement input[type="week"]:disabled, #form .formElement input[type="email"]:disabled, #form .formElement input[type="number"]:disabled, #form .formElement input[type="search"]:disabled, #form .formElement input[type="tel"]:disabled, #form .formElement input[type="time"]:disabled, #form .formElement input[type="url"]:disabled, #form .formElement textarea:disabled, #form .formElement .loki div.iframe_wrapper:disabled, #form .formElement .loki textarea:disabled, #form #discoLinear .formElement input[type="text"]:disabled, #form #discoLinear .formElement input[type="password"]:disabled, #form #discoLinear .formElement input[type="date"]:disabled, #form #discoLinear .formElement input[type="datetime"]:disabled, #form #discoLinear .formElement input[type="datetime-local"]:disabled, #form #discoLinear .formElement input[type="month"]:disabled, #form #discoLinear .formElement input[type="week"]:disabled, #form #discoLinear .formElement input[type="email"]:disabled, #form #discoLinear .formElement input[type="number"]:disabled, #form #discoLinear .formElement input[type="search"]:disabled, #form #discoLinear .formElement input[type="tel"]:disabled, #form #discoLinear .formElement input[type="time"]:disabled, #form #discoLinear .formElement input[type="url"]:disabled, #form #discoLinear .formElement textarea:disabled, #form #discoLinear .formElement .loki div.iframe_wrapper:disabled, #form #discoLinear .formElement .loki textarea:disabled {
+      background-color: #DDDDDD;
+      cursor: default; }
+    form .formElement input[type="text"][disabled], form .formElement input[type="text"][readonly], fieldset[disabled] form .formElement input[type="text"], form .formElement input[type="password"][disabled], form .formElement input[type="password"][readonly], fieldset[disabled] form .formElement input[type="password"], form .formElement input[type="date"][disabled], form .formElement input[type="date"][readonly], fieldset[disabled] form .formElement input[type="date"], form .formElement input[type="datetime"][disabled], form .formElement input[type="datetime"][readonly], fieldset[disabled] form .formElement input[type="datetime"], form .formElement input[type="datetime-local"][disabled], form .formElement input[type="datetime-local"][readonly], fieldset[disabled] form .formElement input[type="datetime-local"], form .formElement input[type="month"][disabled], form .formElement input[type="month"][readonly], fieldset[disabled] form .formElement input[type="month"], form .formElement input[type="week"][disabled], form .formElement input[type="week"][readonly], fieldset[disabled] form .formElement input[type="week"], form .formElement input[type="email"][disabled], form .formElement input[type="email"][readonly], fieldset[disabled] form .formElement input[type="email"], form .formElement input[type="number"][disabled], form .formElement input[type="number"][readonly], fieldset[disabled] form .formElement input[type="number"], form .formElement input[type="search"][disabled], form .formElement input[type="search"][readonly], fieldset[disabled] form .formElement input[type="search"], form .formElement input[type="tel"][disabled], form .formElement input[type="tel"][readonly], fieldset[disabled] form .formElement input[type="tel"], form .formElement input[type="time"][disabled], form .formElement input[type="time"][readonly], fieldset[disabled] form .formElement input[type="time"], form .formElement input[type="url"][disabled], form .formElement input[type="url"][readonly], fieldset[disabled] form .formElement input[type="url"], form .formElement textarea[disabled], form .formElement textarea[readonly], fieldset[disabled] form .formElement textarea, form .formElement .loki div.iframe_wrapper[disabled], form .formElement .loki div.iframe_wrapper[readonly], fieldset[disabled] form .formElement .loki div.iframe_wrapper, form .formElement .loki textarea[disabled], form .formElement .loki textarea[readonly], fieldset[disabled] form .formElement .loki textarea, #form .formElement input[type="text"][disabled], #form .formElement input[type="text"][readonly], fieldset[disabled] #form .formElement input[type="text"], #form .formElement input[type="password"][disabled], #form .formElement input[type="password"][readonly], fieldset[disabled] #form .formElement input[type="password"], #form .formElement input[type="date"][disabled], #form .formElement input[type="date"][readonly], fieldset[disabled] #form .formElement input[type="date"], #form .formElement input[type="datetime"][disabled], #form .formElement input[type="datetime"][readonly], fieldset[disabled] #form .formElement input[type="datetime"], #form .formElement input[type="datetime-local"][disabled], #form .formElement input[type="datetime-local"][readonly], fieldset[disabled] #form .formElement input[type="datetime-local"], #form .formElement input[type="month"][disabled], #form .formElement input[type="month"][readonly], fieldset[disabled] #form .formElement input[type="month"], #form .formElement input[type="week"][disabled], #form .formElement input[type="week"][readonly], fieldset[disabled] #form .formElement input[type="week"], #form .formElement input[type="email"][disabled], #form .formElement input[type="email"][readonly], fieldset[disabled] #form .formElement input[type="email"], #form .formElement input[type="number"][disabled], #form .formElement input[type="number"][readonly], fieldset[disabled] #form .formElement input[type="number"], #form .formElement input[type="search"][disabled], #form .formElement input[type="search"][readonly], fieldset[disabled] #form .formElement input[type="search"], #form .formElement input[type="tel"][disabled], #form .formElement input[type="tel"][readonly], fieldset[disabled] #form .formElement input[type="tel"], #form .formElement input[type="time"][disabled], #form .formElement input[type="time"][readonly], fieldset[disabled] #form .formElement input[type="time"], #form .formElement input[type="url"][disabled], #form .formElement input[type="url"][readonly], fieldset[disabled] #form .formElement input[type="url"], #form .formElement textarea[disabled], #form .formElement textarea[readonly], fieldset[disabled] #form .formElement textarea, #form .formElement .loki div.iframe_wrapper[disabled], #form .formElement .loki div.iframe_wrapper[readonly], fieldset[disabled] #form .formElement .loki div.iframe_wrapper, #form .formElement .loki textarea[disabled], #form .formElement .loki textarea[readonly], fieldset[disabled] #form .formElement .loki textarea, #form #discoLinear .formElement input[type="text"][disabled], #form #discoLinear .formElement input[type="text"][readonly], fieldset[disabled] #form #discoLinear .formElement input[type="text"], #form #discoLinear .formElement input[type="password"][disabled], #form #discoLinear .formElement input[type="password"][readonly], fieldset[disabled] #form #discoLinear .formElement input[type="password"], #form #discoLinear .formElement input[type="date"][disabled], #form #discoLinear .formElement input[type="date"][readonly], fieldset[disabled] #form #discoLinear .formElement input[type="date"], #form #discoLinear .formElement input[type="datetime"][disabled], #form #discoLinear .formElement input[type="datetime"][readonly], fieldset[disabled] #form #discoLinear .formElement input[type="datetime"], #form #discoLinear .formElement input[type="datetime-local"][disabled], #form #discoLinear .formElement input[type="datetime-local"][readonly], fieldset[disabled] #form #discoLinear .formElement input[type="datetime-local"], #form #discoLinear .formElement input[type="month"][disabled], #form #discoLinear .formElement input[type="month"][readonly], fieldset[disabled] #form #discoLinear .formElement input[type="month"], #form #discoLinear .formElement input[type="week"][disabled], #form #discoLinear .formElement input[type="week"][readonly], fieldset[disabled] #form #discoLinear .formElement input[type="week"], #form #discoLinear .formElement input[type="email"][disabled], #form #discoLinear .formElement input[type="email"][readonly], fieldset[disabled] #form #discoLinear .formElement input[type="email"], #form #discoLinear .formElement input[type="number"][disabled], #form #discoLinear .formElement input[type="number"][readonly], fieldset[disabled] #form #discoLinear .formElement input[type="number"], #form #discoLinear .formElement input[type="search"][disabled], #form #discoLinear .formElement input[type="search"][readonly], fieldset[disabled] #form #discoLinear .formElement input[type="search"], #form #discoLinear .formElement input[type="tel"][disabled], #form #discoLinear .formElement input[type="tel"][readonly], fieldset[disabled] #form #discoLinear .formElement input[type="tel"], #form #discoLinear .formElement input[type="time"][disabled], #form #discoLinear .formElement input[type="time"][readonly], fieldset[disabled] #form #discoLinear .formElement input[type="time"], #form #discoLinear .formElement input[type="url"][disabled], #form #discoLinear .formElement input[type="url"][readonly], fieldset[disabled] #form #discoLinear .formElement input[type="url"], #form #discoLinear .formElement textarea[disabled], #form #discoLinear .formElement textarea[readonly], fieldset[disabled] #form #discoLinear .formElement textarea, #form #discoLinear .formElement .loki div.iframe_wrapper[disabled], #form #discoLinear .formElement .loki div.iframe_wrapper[readonly], fieldset[disabled] #form #discoLinear .formElement .loki div.iframe_wrapper, #form #discoLinear .formElement .loki textarea[disabled], #form #discoLinear .formElement .loki textarea[readonly], fieldset[disabled] #form #discoLinear .formElement .loki textarea {
+      background-color: #DDDDDD;
+      cursor: default; }
+  form .formElement input[type="submit"], #form .formElement input[type="submit"], #form #discoLinear .formElement input[type="submit"] {
+    -webkit-appearance: none;
+    border-radius: 0; }
+  form .formElement input[type="checkbox"], form .formElement input[type="radio"], #form .formElement input[type="checkbox"], #form .formElement input[type="radio"], #form #discoLinear .formElement input[type="checkbox"], #form #discoLinear .formElement input[type="radio"] {
+    margin: 0.375rem 1rem 0 0; }
+  form .formElement .checkBoxGroup, form .formElement .radioButtons, #form .formElement .checkBoxGroup, #form .formElement .radioButtons, #form #discoLinear .formElement .checkBoxGroup, #form #discoLinear .formElement .radioButtons {
+    padding-left: 10px; }
+  form .formElement input[type="file"], #form .formElement input[type="file"], #form #discoLinear .formElement input[type="file"] {
+    width: 100%; }
+  form .formElement textarea, #form .formElement textarea, #form #discoLinear .formElement textarea {
+    max-width: 100%;
+    min-height: 7.5rem; }
+  form .formElement select, #form .formElement select, #form #discoLinear .formElement select {
+    -webkit-appearance: none !important;
+    border-radius: 0;
+    background-color: #FAFAFA;
+    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgeD0iMTJweCIgeT0iMHB4IiB3aWR0aD0iMjRweCIgaGVpZ2h0PSIzcHgiIHZpZXdCb3g9IjAgMCA2IDMiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDYgMyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+PHBvbHlnb24gcG9pbnRzPSI1Ljk5MiwwIDIuOTkyLDMgLTAuMDA4LDAgIi8+PC9zdmc+);
+    background-position: 100% center;
+    background-repeat: no-repeat;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #cccccc;
+    padding: 0.5rem;
+    font-size: 0.875rem;
+    font-family: "Open Sans", sans-serif;
+    color: rgba(0, 0, 0, 0.75);
+    line-height: normal;
+    border-radius: 0;
+    height: 2.3125rem; }
+    form .formElement select::-ms-expand, #form .formElement select::-ms-expand, #form #discoLinear .formElement select::-ms-expand {
+      display: none; }
+    form .formElement select.radius, #form .formElement select.radius, #form #discoLinear .formElement select.radius {
+      border-radius: 3px; }
+    form .formElement select:hover, #form .formElement select:hover, #form #discoLinear .formElement select:hover {
+      background-color: #f3f3f3;
+      border-color: #999999; }
+    form .formElement select:disabled, #form .formElement select:disabled, #form #discoLinear .formElement select:disabled {
+      background-color: #DDDDDD;
+      cursor: default; }
+  form .formElement fieldset, #form .formElement fieldset, #form #discoLinear .formElement fieldset {
+    border: 1px solid #DDDDDD;
+    padding: 1.25rem;
+    margin: 1.125rem 0; }
+    form .formElement fieldset legend, #form .formElement fieldset legend, #form #discoLinear .formElement fieldset legend {
+      font-weight: 700;
+      background: #FFFFFF;
+      padding: 0 0.1875rem;
+      margin: 0;
+      margin-left: -0.1875rem; }
+form .submitSection, #form .submitSection, #form #discoLinear .submitSection {
+  margin: 0 0 1rem; }
+  form .submitSection input[type="submit"], #form .submitSection input[type="submit"], #form #discoLinear .submitSection input[type="submit"] {
+    border-style: solid;
+    border-width: 0;
+    cursor: pointer;
+    font-family: "Open Sans", sans-serif;
+    font-weight: 300;
+    line-height: normal;
+    margin: 0 0 1.25rem;
+    position: relative;
+    text-decoration: none;
+    text-align: center;
+    -webkit-appearance: none;
+    border-radius: 0;
+    display: inline-block;
+    padding-top: 0.75rem;
+    padding-right: 1.5rem;
+    padding-bottom: 0.8125rem;
+    padding-left: 1.5rem;
+    font-size: 1rem;
+    background-color: #008CBA;
+    border-color: #007095;
+    color: #FFFFFF;
+    border-radius: 3px;
+    transition: background-color 300ms ease-out; }
+    form .submitSection input[type="submit"]:hover, form .submitSection input[type="submit"]:focus, #form .submitSection input[type="submit"]:hover, #form .submitSection input[type="submit"]:focus, #form #discoLinear .submitSection input[type="submit"]:hover, #form #discoLinear .submitSection input[type="submit"]:focus {
+      background-color: #007095; }
+    form .submitSection input[type="submit"]:hover, form .submitSection input[type="submit"]:focus, #form .submitSection input[type="submit"]:hover, #form .submitSection input[type="submit"]:focus, #form #discoLinear .submitSection input[type="submit"]:hover, #form #discoLinear .submitSection input[type="submit"]:focus {
+      color: #FFFFFF; }
+
+#imageGallery .persistent {
+  display: none; }
+#imageGallery .moduleNav .pagination {
+  display: block;
+  min-height: 1.5rem;
+  margin-left: -0.3125rem;
+  margin-bottom: 1.875rem;
+  padding: 0;
+  background: none; }
+  #imageGallery .moduleNav .pagination .next, #imageGallery .moduleNav .pagination .previous {
+    border: none;
+    margin: 0;
+    padding: 0; }
+  #imageGallery .moduleNav .pagination .pages a, #imageGallery .moduleNav .pagination .pages strong, #imageGallery .moduleNav .pagination .next, #imageGallery .moduleNav .pagination .previous {
+    height: 1.5rem;
+    color: #999999;
+    font-size: 0.875rem;
+    margin-left: 0.3125rem;
+    float: left;
+    display: block;
+    padding: 0.0625rem 0.625rem 0.0625rem;
+    background: none;
+    border-radius: 3px;
+    font-weight: normal;
+    line-height: inherit;
+    transition: background-color 300ms ease-out; }
+    #imageGallery .moduleNav .pagination .pages a:hover, #imageGallery .moduleNav .pagination .pages a:focus, #imageGallery .moduleNav .pagination .pages strong:hover, #imageGallery .moduleNav .pagination .pages strong:focus, #imageGallery .moduleNav .pagination .next:hover, #imageGallery .moduleNav .pagination .next:focus, #imageGallery .moduleNav .pagination .previous:hover, #imageGallery .moduleNav .pagination .previous:focus {
+      background: #e6e6e6; }
+  #imageGallery .moduleNav .pagination .pages strong {
+    height: auto;
+    padding: 0.0625rem 0.625rem 0.0625rem;
+    background: #008CBA;
+    color: #FFFFFF;
+    font-weight: 700;
+    cursor: default;
+    border-radius: 3px;
+    float: left;
+    margin-left: 0.3125rem; }
+    #imageGallery .moduleNav .pagination .pages strong:hover, #imageGallery .moduleNav .pagination .pages strong:focus {
+      background: #008CBA; }
+#imageGallery .moduleNav #imageGalleryItemList {
+  margin: 0;
+  margin-left: -1.875rem; }
+  #imageGallery .moduleNav #imageGalleryItemList li {
+    margin: 0;
+    margin-bottom: 1.875rem;
+    margin-left: 1.875rem; }
+    #imageGallery .moduleNav #imageGalleryItemList li img {
+      border: none; }
+  #imageGallery .moduleNav #imageGalleryItemList #imageGalleryNextPageItem {
+    position: absolute;
+    left: -9999px;
+    top: -9999px;
+    margin-bottom: 0; }
+#imageGallery .item {
+  margin-bottom: 1.875rem; }
+  #imageGallery .item .sequenceNum {
+    color: #999999;
+    margin-bottom: 1.875rem; }
+  #imageGallery .item .prevWrapper, #imageGallery .item .nextWrapper {
+    border: none;
+    overflow: visible;
+    height: auto; }
+    #imageGallery .item .prevWrapper .thumbnail, #imageGallery .item .nextWrapper .thumbnail {
+      height: auto;
+      margin-bottom: 0.3125rem; }
+    #imageGallery .item .prevWrapper a, #imageGallery .item .nextWrapper a {
+      position: static;
+      display: block;
+      width: 80px;
+      height: 40px;
+      padding: 10px 30px;
+      border-radius: 1000px;
+      background: #F5F5F5;
+      border: 1px solid #DDDDDD; }
+      #imageGallery .item .prevWrapper a:after, #imageGallery .item .nextWrapper a:after {
+        font-size: 1.25rem;
+        line-height: 1;
+        display: block;
+        color: white;
+        text-shadow: 0 0 1px #555555;
+        text-align: center; }
+      #imageGallery .item .prevWrapper a:hover, #imageGallery .item .nextWrapper a:hover {
+        background: #008CBA;
+        border-color: #008CBA; }
+        #imageGallery .item .prevWrapper a:hover:after, #imageGallery .item .nextWrapper a:hover:after {
+          color: #FFFFFF; }
+      #imageGallery .item .prevWrapper a img, #imageGallery .item .nextWrapper a img {
+        display: none; }
+  #imageGallery .item .prevWrapper a:after {
+    content: "\f053"; }
+  #imageGallery .item .nextWrapper a:after {
+    content: "\f054"; }
+#imageGallery .back {
+  margin-bottom: 1.875rem; }
+  #imageGallery .back:before {
+    content: "\f009";
+    margin-right: 0.375rem;
+    color: #008CBA; }
+
+.loginLinkModule {
+  margin-top: 0.9375rem; }
+  .loginLinkModule .editDiv, .loginLinkModule .inlineEditDiv {
+    display: inline-block; }
+  .loginLinkModule .editLink, .loginLinkModule .inlineEditLink {
     border-style: solid;
     border-width: 0;
     cursor: pointer;
@@ -1312,529 +1527,92 @@ blockquote, blockquote p {
     color: #FFFFFF;
     border-radius: 3px;
     transition: background-color 300ms ease-out;
-    margin: 0 0.75rem 0.125rem 0 !important; }
-    #av .podcast a:hover, #av .podcast a:focus {
+    margin: 0 0.25rem 0.9375rem; }
+    .loginLinkModule .editLink:hover, .loginLinkModule .editLink:focus, .loginLinkModule .inlineEditLink:hover, .loginLinkModule .inlineEditLink:focus {
       background-color: #007095; }
-    #av .podcast a:hover, #av .podcast a:focus {
+    .loginLinkModule .editLink:hover, .loginLinkModule .editLink:focus, .loginLinkModule .inlineEditLink:hover, .loginLinkModule .inlineEditLink:focus {
       color: #FFFFFF; }
-    #av .podcast a:before {
-      color: #FFFFFF;
-      margin-right: 0.375rem; }
-  #av .podcast .feedLink:before {
-    content: "\f09e"; }
-  #av .podcast .subscribe:before {
-    content: "\f001"; }
-
-.blurb {
-  background: #F6F6F6;
-  border: 1px solid #DDDDDD;
-  padding: 0.9375rem;
-  margin-bottom: 1.875rem; }
-  .blurb:before, .blurb:after {
-    content: " ";
-    display: table; }
-  .blurb:after {
-    clear: both; }
-  .blurb:last-of-type {
+  .loginLinkModule .inlineEditLink {
+    margin-left: 0.4375rem; }
+  .loginLinkModule .editDivider {
+    display: none; }
+  .loginLinkModule .inlineEnabled .clarifyingText {
+    position: absolute;
+    left: -9999px;
+    top: -9999px;
     margin-bottom: 0; }
-  .blurb *:last-child {
-    margin-bottom: 0;
-    padding-bottom: 0; }
+  .loginLinkModule .inlineEnabled .inlineEditLink {
+    background: #f08a24; }
+    .loginLinkModule .inlineEnabled .inlineEditLink:hover {
+      background: #d3700e; }
+  .loginLinkModule #footerLoginLink {
+    font-size: 0.875rem; }
+    .loginLinkModule #footerLoginLink .login:after {
+      content: "\f011";
+      margin-left: 0.25rem; }
+    .loginLinkModule #footerLoginLink .username {
+      font-weight: 700; }
+    .loginLinkModule #footerLoginLink .logout:after {
+      content: "\f011";
+      margin-left: 0.25rem; }
 
-.locationBarText span {
-  font-weight: 700;
-  text-transform: uppercase;
-  font-size: 0.875rem; }
-.locationBarText a {
-  text-decoration: underline; }
-.locationBarText .delimiter {
-  color: #666666;
-  font-weight: 300;
-  margin: 0 0.125rem;
-  display: inline-block; }
-
-/* Events Column Layouts */
-#calendar .responsiveEventsList .gridAndOptionsWrapper {
-  width: 100%;
-  float: left;
-  margin: -0.9375rem 0 0 0;
-  border-left: 1px solid #cccccc;
-  padding: 1rem;
-  clear: none; }
-#calendar .responsiveEventsList .datesAndSearch, #calendar .responsiveEventsList .options {
-  width: 100%; }
-
-@media only screen and (min-width:40.063em) {
-  .hasCon #calendar .responsiveEventsList .eventsMainContent {
-    float: left;
-    width: 60%; } }
-@media only screen and (min-width:63.8125em) {
-  .hasCon #calendar .responsiveEventsList .eventsMainContent {
-    float: left;
-    width: 67%; } }
-@media only screen and (min-width:40.063em) {
-  .hasCon #calendar .responsiveEventsList .gridAndOptionsWrapper {
-    margin-top: -1.875rem;
-    width: 40% !important; } }
-@media only screen and (min-width:63.8125em) {
-  .hasCon #calendar .responsiveEventsList .gridAndOptionsWrapper {
-    width: 33% !important; }
-    .hasCon #calendar .responsiveEventsList .gridAndOptionsWrapper .datesAndSearch {
-      width: 100%; } }
-
-@media only screen and (min-width:63.8125em) {
-  .hasConRel #calendar .eventsMainContent, .hasConNav #calendar .eventsMainContent {
-    float: left;
-    width: 60%; } }
-.hasConRel #calendar .gridAndOptionsWrapper, .hasConNav #calendar .gridAndOptionsWrapper {
-  border: none; }
-  @media only screen and (min-width:63.8125em) {
-    .hasConRel #calendar .gridAndOptionsWrapper, .hasConNav #calendar .gridAndOptionsWrapper {
-      margin-top: -1.875rem;
-      width: 40% !important;
-      border-left: 1px solid #ddd; } }
-
-.hasConRelNav #calendar .gridAndOptionsWrapper {
-  border: none;
-  width: 100%; }
-
-/* Event Calendar */
-#calendar .responsiveEventsList {
-  width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 0;
-  margin-bottom: 0;
-  max-width: 87.5rem;
-  /*.eventsListContent { // Event listings
-			width: 100%;
-
-			.focus { // Shows what you're currently browsing. Redundant.
-				display: none;
-			}
-
-			.newEventsError { // Shows errors.  "No events."
-
-			}
-
-			.ongoingblock {
-
-			}
-
-			.dayblock {
-
-			}
-
-			ul {
-				margin-left: 0;
-			}
-
-			.event {
-				display: block;
-				margin-bottom: 2px;
-				padding: rem-calc(16);
-				@include clearfix;
-				border-bottom: 1px dotted $iron;
-				position: relative;
-
-				&:nth-child(odd) {
-					//background: #efefef;
-				}
-				
-				a {
-					
-					max-width: 65%;
-					display: block;
-					float: left;
-
-					&:hover {
-						text-decoration: underline;
-
-						i { // Video feed icon
-							color: lighten(yellow, 10%);
-						}
-					}
-
-					i { // Video feed icon
-						color: yellow;
-						margin-left: rem-calc(6);
-					}
-				}
-
-				em {
-					&.through {
-						max-width: 65%;
-						display: block;
-						float: left;
-						clear: left;
-					}
-				}
-
-				.time {
-					font-weight: bold;
-					color: $jumbo;
-					position: absolute;
-					left: 70%;
-				}
-			}
-		}*/ }
-  #calendar .responsiveEventsList:before, #calendar .responsiveEventsList:after {
-    content: " ";
-    display: table; }
-  #calendar .responsiveEventsList:after {
-    clear: both; }
-  #calendar .responsiveEventsList .options {
-    margin: 0 5%;
-    margin-bottom: 4rem; }
-  #calendar .responsiveEventsList .search {
-    /*display: none;*/
-    /*margin-bottom: rem-calc(64);*/
-    margin-bottom: 2rem;
-    background: inherit;
-    float: inherit; }
-    @media only screen and (min-width:40.063em) {
-      #calendar .responsiveEventsList .search {
-        padding-left: 0.9375rem;
-        padding-right: 0.9375rem;
-        width: 133.3333333333%;
-        float: none; } }
-    #calendar .responsiveEventsList .search form .search {
-      margin-bottom: 0;
-      background: none; }
-    #calendar .responsiveEventsList .search form input[type="text"] {
-      padding-left: 0.9375rem;
-      padding-right: 0.9375rem;
-      width: 108.3333333333%;
-      float: left;
-      padding-left: 0.5rem; }
-    #calendar .responsiveEventsList .search form input[type="submit"] {
+#minisiteNavigation {
+  margin-bottom: 1.875rem; }
+  #minisiteNavigation ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    font-size: 0.9375rem; }
+    #minisiteNavigation ul .home {
       display: block;
-      position: relative;
-      z-index: 2;
-      text-align: center;
-      width: 100%;
-      padding-top: 0;
-      padding-bottom: 0;
-      border-style: solid;
-      border-width: 1px;
-      overflow: hidden;
-      font-size: 0.875rem;
-      height: 2.3125rem;
-      line-height: 2.3125rem;
-      padding-left: 0.9375rem;
-      padding-right: 0.9375rem;
-      width: 25%;
-      float: none; }
-    #calendar .responsiveEventsList .search .otherActions {
-      padding-left: 0.9375rem;
-      padding-right: 0.9375rem;
-      width: 133.3333333333%;
-      float: none; }
-  #calendar .responsiveEventsList .views {
-    text-align: center;
-    margin: -0.9375rem 0 0;
-    clear: both;
-    padding: 0.9375rem 0; }
-    #calendar .responsiveEventsList .views:before, #calendar .responsiveEventsList .views:after {
-      content: " ";
-      display: table; }
-    #calendar .responsiveEventsList .views:after {
-      clear: both; }
-    #calendar .responsiveEventsList .views h4 {
-      display: inline;
-      font-size: 0.75rem; }
-    #calendar .responsiveEventsList .views ul {
-      display: inline-block; }
-      #calendar .responsiveEventsList .views ul li {
-        display: inline-block;
-        margin: 0 0 0 0.375rem;
-        padding: 0; }
-        @media only screen and (min-width:40.063em) {
-          #calendar .responsiveEventsList .views ul li {
-            margin: 0 0 0 0.375rem; } }
-        #calendar .responsiveEventsList .views ul li:nth-child(4), #calendar .responsiveEventsList .views ul li:nth-child(5) {
-          display: none; }
-        #calendar .responsiveEventsList .views ul li a, #calendar .responsiveEventsList .views ul li strong {
-          padding: 0.0625rem 0.75rem;
-          border-radius: 1000px;
-          display: inline-block;
-          text-decoration: underline;
-          font-size: 0.75rem; }
-        #calendar .responsiveEventsList .views ul li a:hover {
-          background: #CCCCCC; }
-        #calendar .responsiveEventsList .views ul li strong {
-          text-decoration: none;
-          font-weight: 400;
-          background: #F6F6F6;
-          color: #FFF; }
-  #calendar .responsiveEventsList .nav {
-    clear: both;
-    text-align: center;
-    padding-bottom: 0.625rem;
-    font-size: 1.5rem;
-    line-height: 1.75; }
-  #calendar .responsiveEventsList .eventsListContent {
-    width: 100%; }
-    #calendar .responsiveEventsList .eventsListContent .focus {
-      background: #d6d6d6 !important;
-      padding: 0.9375rem; }
-      #calendar .responsiveEventsList .eventsListContent .focus h3 {
-        margin-top: -0.9375rem;
-        margin-left: -0.9375rem;
-        padding: 0.9375rem;
-        background: #F6F6F6;
-        color: #FFF;
-        display: inline-block;
-        font-size: 1rem; }
-      #calendar .responsiveEventsList .eventsListContent .focus ul {
-        margin-bottom: 0; }
-    #calendar .responsiveEventsList .eventsListContent #events {
-      margin-bottom: 1rem; }
-    #calendar .responsiveEventsList .eventsListContent .dayblock, #calendar .responsiveEventsList .eventsListContent .ongoingblock {
-      border-bottom: 1px solid #CCCCCC;
-      padding: 1rem 0;
-      position: relative; }
-      #calendar .responsiveEventsList .eventsListContent .dayblock:before, #calendar .responsiveEventsList .eventsListContent .dayblock:after, #calendar .responsiveEventsList .eventsListContent .ongoingblock:before, #calendar .responsiveEventsList .eventsListContent .ongoingblock:after {
-        content: " ";
-        display: table; }
-      #calendar .responsiveEventsList .eventsListContent .dayblock:after, #calendar .responsiveEventsList .eventsListContent .ongoingblock:after {
-        clear: both; }
-    #calendar .responsiveEventsList .eventsListContent h3.month {
-      margin-top: 1.875rem; }
-    #calendar .responsiveEventsList .eventsListContent .day {
-      display: block;
-      text-align: center;
-      font-size: 0.875rem;
-      font-weight: 600;
-      width: 3.125rem;
-      margin: 0;
-      position: absolute;
-      top: 1rem;
-      left: 0; }
-      #calendar .responsiveEventsList .eventsListContent .day .month {
-        display: block;
-        background: #888888;
-        color: #FFFFFF;
-        border-radius-top: 3px;
-        padding: 0.125rem; }
-      #calendar .responsiveEventsList .eventsListContent .day .date {
-        display: block;
-        background: #CCCCCC;
-        border-radius-bottom: 3px;
-        padding: 0.125rem; }
-    #calendar .responsiveEventsList .eventsListContent .dayEvents, #calendar .responsiveEventsList .eventsListContent .ongoingEvents {
-      margin: 0 0 0 4.375rem;
-      padding: 0; }
-      #calendar .responsiveEventsList .eventsListContent .dayEvents .event, #calendar .responsiveEventsList .eventsListContent .ongoingEvents .event {
-        padding-bottom: 0.625rem; }
-        #calendar .responsiveEventsList .eventsListContent .dayEvents .event:before, #calendar .responsiveEventsList .eventsListContent .dayEvents .event:after, #calendar .responsiveEventsList .eventsListContent .ongoingEvents .event:before, #calendar .responsiveEventsList .eventsListContent .ongoingEvents .event:after {
-          content: " ";
-          display: table; }
-        #calendar .responsiveEventsList .eventsListContent .dayEvents .event:after, #calendar .responsiveEventsList .eventsListContent .ongoingEvents .event:after {
-          clear: both; }
-        #calendar .responsiveEventsList .eventsListContent .dayEvents .event a, #calendar .responsiveEventsList .eventsListContent .ongoingEvents .event a {
-          font-weight: 400; }
-          #calendar .responsiveEventsList .eventsListContent .dayEvents .event a:hover, #calendar .responsiveEventsList .eventsListContent .ongoingEvents .event a:hover {
-            text-decoration: underline; }
-            #calendar .responsiveEventsList .eventsListContent .dayEvents .event a:hover i, #calendar .responsiveEventsList .eventsListContent .ongoingEvents .event a:hover i {
-              color: #ffff33; }
-          #calendar .responsiveEventsList .eventsListContent .dayEvents .event a i, #calendar .responsiveEventsList .eventsListContent .ongoingEvents .event a i {
-            color: yellow;
-            margin-left: 0.375rem; }
-        #calendar .responsiveEventsList .eventsListContent .dayEvents .event:last-child, #calendar .responsiveEventsList .eventsListContent .ongoingEvents .event:last-child {
-          padding-bottom: 0; }
-        #calendar .responsiveEventsList .eventsListContent .dayEvents .event .through, #calendar .responsiveEventsList .eventsListContent .dayEvents .event .ends, #calendar .responsiveEventsList .eventsListContent .ongoingEvents .event .through, #calendar .responsiveEventsList .eventsListContent .ongoingEvents .event .ends {
-          font-style: normal;
-          display: inline; }
-        #calendar .responsiveEventsList .eventsListContent .dayEvents .event time, #calendar .responsiveEventsList .eventsListContent .ongoingEvents .event time {
-          display: inline; }
-        #calendar .responsiveEventsList .eventsListContent .dayEvents .event .sep, #calendar .responsiveEventsList .eventsListContent .ongoingEvents .event .sep {
-          padding: 0 0.25rem; }
-        #calendar .responsiveEventsList .eventsListContent .dayEvents .event .location, #calendar .responsiveEventsList .eventsListContent .ongoingEvents .event .location {
-          font-family: "Open Sans", sans-serif;
-          font-weight: 300;
-          display: inline; }
-  #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGridWrapper {
-    margin-bottom: 1.875rem; }
-  #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid {
-    text-align: center; }
-    #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid a.previous, #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid h4, #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid a.next {
-      display: inline-block;
-      padding: 0 0.375rem; }
-    #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table {
-      border: none; }
-      #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table tr {
-        background: #FFF; }
-      #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table th, #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td {
-        text-align: center;
-        padding: 0; }
-      #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table th {
-        padding: 5% 0;
-        background: #dedede;
-        background: #FFF;
-        border: #FFF; }
-      #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td {
-        border-color: #DDDDDD;
-        border-image: none;
-        border-style: solid;
-        border-width: 1px; }
-        #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td:empty {
-          background: #d9d9d9; }
-        #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.hasEvent a {
-          color: red; }
-        #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.currentlyViewing {
-          background: #F6F6F6; }
-          #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.currentlyViewing a {
-            color: #FFF; }
-        #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.today {
-          background: white; }
-          #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.today a {
-            color: #FFF; }
-        #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td a {
-          color: #7b7b7b;
+      border-bottom: 1px solid #EFEFEF;
+      padding: 0.75rem 1rem;
+      text-transform: uppercase;
+      background: #008CBA;
+      color: #FFFFFF; }
+      #minisiteNavigation ul .home:hover {
+        background: #006687; }
+    #minisiteNavigation ul .navList {
+      background: #EFEFEF; }
+      #minisiteNavigation ul .navList li {
+        position: relative; }
+        #minisiteNavigation ul .navList li a, #minisiteNavigation ul .navList li strong {
+          line-height: 1.2;
           display: block;
-          padding: 28% 0; }
-  #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a, #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a {
-    margin: 0 5%;
-    display: block;
-    padding: 0; }
-    #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before {
-      margin: 0 0.5rem 1rem 0; }
-  #calendar .responsiveEventsList .gridAndOptionsWrapper .webcal:before {
-    content: "\f073"; }
-  #calendar .responsiveEventsList .gridAndOptionsWrapper .download:before {
-    content: "\f063"; }
-  #calendar .responsiveEventsList .gridAndOptionsWrapper .rss:before {
-    content: "\f09e"; }
+          border-bottom: 1px solid #FFFFFF;
+          padding: 0.75rem 1rem; }
+        #minisiteNavigation ul .navList li a:hover {
+          background: #F9F9F9; }
+      #minisiteNavigation ul .navList .open a, #minisiteNavigation ul .navList .open strong {
+        background: #DDDDDD; }
+      #minisiteNavigation ul .navList .open li a, #minisiteNavigation ul .navList .open li strong {
+        padding-left: 1.875rem; }
+      #minisiteNavigation ul .navList .open li li a, #minisiteNavigation ul .navList .open li li strong {
+        padding-left: 2.625rem; }
+      #minisiteNavigation ul .navList .open li li li a, #minisiteNavigation ul .navList .open li li li strong {
+        padding-left: 3.375rem; }
+      #minisiteNavigation ul .navList .jump a {
+        padding-right: 2.25rem; }
+        #minisiteNavigation ul .navList .jump a:after {
+          font-size: 0.75rem;
+          content: "\f08e";
+          position: absolute;
+          top: 0.9375rem;
+          right: 1rem;
+          color: #888888; }
 
-/* Events Mini */
-#miniCal #events {
-  margin-bottom: 1rem; }
-#miniCal .dayblock, #miniCal .ongoingblock {
-  border-bottom: 1px solid #CCCCCC;
-  padding: 1rem 0;
-  position: relative; }
-  #miniCal .dayblock:before, #miniCal .dayblock:after, #miniCal .ongoingblock:before, #miniCal .ongoingblock:after {
-    content: " ";
-    display: table; }
-  #miniCal .dayblock:after, #miniCal .ongoingblock:after {
-    clear: both; }
-#miniCal .day {
-  display: block;
-  text-align: center;
-  font-size: 0.875rem;
-  font-weight: 600;
-  width: 3.125rem;
-  margin: 0;
-  position: absolute;
-  top: 1rem;
-  left: 0; }
-  #miniCal .day .month {
-    display: block;
-    background: #888888;
-    color: #FFFFFF;
-    border-radius-top: 3px;
-    padding: 0.125rem; }
-  #miniCal .day .date {
-    display: block;
-    background: #CCCCCC;
-    border-radius-bottom: 3px;
-    padding: 0.125rem; }
-#miniCal .dayEvents, #miniCal .ongoingEvents {
-  margin: 0 0 0 4.375rem;
-  padding: 0; }
-  #miniCal .dayEvents .event, #miniCal .ongoingEvents .event {
-    padding-bottom: 0.625rem; }
-    #miniCal .dayEvents .event:before, #miniCal .dayEvents .event:after, #miniCal .ongoingEvents .event:before, #miniCal .ongoingEvents .event:after {
-      content: " ";
-      display: table; }
-    #miniCal .dayEvents .event:after, #miniCal .ongoingEvents .event:after {
-      clear: both; }
-    #miniCal .dayEvents .event a, #miniCal .ongoingEvents .event a {
-      font-weight: 400; }
-      #miniCal .dayEvents .event a:hover, #miniCal .ongoingEvents .event a:hover {
-        text-decoration: underline; }
-        #miniCal .dayEvents .event a:hover i, #miniCal .ongoingEvents .event a:hover i {
-          color: #ffff33; }
-      #miniCal .dayEvents .event a i, #miniCal .ongoingEvents .event a i {
-        color: yellow;
-        margin-left: 0.375rem; }
-    #miniCal .dayEvents .event:last-child, #miniCal .ongoingEvents .event:last-child {
-      padding-bottom: 0; }
-    #miniCal .dayEvents .event .through, #miniCal .dayEvents .event .ends, #miniCal .ongoingEvents .event .through, #miniCal .ongoingEvents .event .ends {
-      font-style: normal;
-      display: inline; }
-    #miniCal .dayEvents .event time, #miniCal .ongoingEvents .event time {
-      display: inline; }
-    #miniCal .dayEvents .event .sep, #miniCal .ongoingEvents .event .sep {
-      padding: 0 0.25rem; }
-    #miniCal .dayEvents .event .location, #miniCal .ongoingEvents .event .location {
-      font-family: "Open Sans", sans-serif;
-      font-weight: 300;
-      display: inline; }
-#miniCal .foot .more {
-  margin: 0; }
-  #miniCal .foot .more a:before {
-    content: "\f073";
-    margin-right: 0.375rem; }
-
-/* Events Single */
-#calendar .eventDetails .back a:before {
-  content: "\f137";
-  margin-right: 0.375rem; }
-#calendar .eventDetails .eventMeta li {
-  margin-left: 2.5rem; }
-  #calendar .eventDetails .eventMeta li:before {
-    width: 2rem;
-    margin-left: -2.25rem;
-    text-align: center; }
-  #calendar .eventDetails .eventMeta li .fa, #calendar .eventDetails .eventMeta #banner #navigationToggles li.navJump a:before, #banner #navigationToggles #calendar .eventDetails .eventMeta li.navJump a:before, #calendar .eventDetails .eventMeta #banner #navigationToggles li.searchToggle a:before, #banner #navigationToggles #calendar .eventDetails .eventMeta li.searchToggle a:before, #calendar .eventDetails .eventMeta li #av .podcast a:before, #av .podcast #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li #miniCal .foot .more a:before, #miniCal .foot .more #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li .back a:before, #calendar .eventDetails .back .eventMeta li a:before, #calendar .eventDetails .eventMeta li li:before, #calendar .eventDetails .eventMeta li .contact:before, #calendar .eventDetails .eventMeta li .eventUrl:before, #calendar .eventDetails .eventMeta li .calendarExport:before, #calendar .eventDetails .eventMeta li .reveal-modal .close-reveal-modal:before, .reveal-modal #calendar .eventDetails .eventMeta li .close-reveal-modal:before, #calendar .eventDetails .eventMeta li dialog .close-reveal-modal:before, dialog #calendar .eventDetails .eventMeta li .close-reveal-modal:before {
-    margin: 0 0.375rem; }
-#calendar .eventDetails .eventMeta .repeats:before {
-  content: "\f01e"; }
-#calendar .eventDetails .eventMeta .date:before {
-  content: "\f073"; }
-#calendar .eventDetails .eventMeta .time:before {
-  content: "\f017"; }
-#calendar .eventDetails .eventMeta .location:before {
-  content: "\f041"; }
-#calendar .eventDetails .images {
-  margin-bottom: 1.875rem;
-  display: inline-block; }
-  @media only screen and (min-width:40.063em) {
-    #calendar .eventDetails .images .imageChunk {
-      float: left;
-      width: 50%; }
-      #calendar .eventDetails .images .imageChunk:nth-child(2n+1) {
-        padding-right: 1rem;
-        clear: left; }
-      #calendar .eventDetails .images .imageChunk:nth-child(2n+2) {
-        padding-left: 1rem; } }
-#calendar .eventDetails .contact, #calendar .eventDetails .eventUrl, #calendar .eventDetails .calendarExport {
-  margin-bottom: 0; }
-  #calendar .eventDetails .contact:before, #calendar .eventDetails .eventUrl:before, #calendar .eventDetails .calendarExport:before {
-    margin-right: 0.375rem; }
-#calendar .eventDetails .contact:before {
-  content: "\f059"; }
-#calendar .eventDetails .eventUrl:before {
-  content: "\f05a"; }
-#calendar .eventDetails .calendarExport:before {
-  content: "\f073"; }
-#calendar .eventDetails .export {
-  margin-bottom: 1.25rem; }
-
-#minisiteNavigation ul {
-  margin: 0;
-  padding: 0;
-  list-style-type: none; }
-
-@media only screen and (min-width:40.063em) {
-  .reveal-modal.tiny, dialog.tiny, dialog.tiny {
-    min-width: 560px; } }
-.reveal-modal .close-reveal-modal:before, dialog .close-reveal-modal:before, dialog .close-reveal-modal:before {
-  content: "\f00d"; }
-.reveal-modal .close-reveal-modal span, dialog .close-reveal-modal span, dialog .close-reveal-modal span {
-  position: absolute;
-  left: -9999px;
-  top: -9999px;
-  margin-bottom: 0; }
+#meat .publication .persistent {
+  display: none; }
+#meat .publication .moduleNav ul li {
+  padding: 0.9375rem 0;
+  border-color: red; }
+  #meat .publication .moduleNav ul li .teaserImage {
+    float: right;
+    margin: 0 0 0.9375rem 0.9375rem; }
+  #meat .publication .moduleNav ul li .title {
+    margin: 0 0 0.5rem;
+    font-size: 1.25rem; }
+  #meat .publication .moduleNav ul li .date {
+    color: #999999;
+    font-size: 0.875rem;
+    margin: 0 0 0.5rem; }
