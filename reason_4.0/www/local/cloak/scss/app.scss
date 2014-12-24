@@ -1,5 +1,5 @@
 // Foundation
-@import "normalize";
+//@import "normalize";
 @import "settings";
 @import "foundation";
 
@@ -13,10 +13,8 @@
 
 // Cloak
 @import "mixins";
-@import "minisite";
-@import "header";
+@import "base";
 @import "modules";
-@import "widgets";
 
 // Or selectively include components
 // @import

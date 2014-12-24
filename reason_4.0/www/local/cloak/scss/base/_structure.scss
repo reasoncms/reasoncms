@@ -1,4 +1,4 @@
-// Minisite Styles
+// Structure Styles. Rocks the basic column layout.
 // Cloak, v1
 
 // #breadcrumbs {
@@ -26,19 +26,12 @@
 
 #banner {
 	//@include grid-row();
-	background: $vapor;
-	border-bottom: 1px solid $gainsboro;
-	text-align: center;
+
 
 	h1 {
 		//@include grid-column(12);
 	}
 
-	.navJump {
-		@media #{$medium-high-up} {
-			@include screenreader();
-		}
-	}
 }
 
 #breadcrumbs {
@@ -50,10 +43,25 @@
 	}
 }
 
+#contentHead {
+	@include grid-row();
+	//padding-top: $column-gutter; // space between header and content
+
+	div.pageTitle {
+		@include grid-column(12);
+
+		h2 {
+			margin: 0;
+
+		}
+	}
+}
+
 #meat {
 	@include grid-row();
 	padding-top: $column-gutter; // space between breadcrumb and content
-	padding-bottom: $column-gutter; // space between footer and content
+	// Let's try leaving $column-gutter as bottom margin to all content containers, and not use it here
+	//padding-bottom: $column-gutter; // space between footer and content
 
 	#content {
 		@include grid-column(12);
@@ -129,7 +137,5 @@
 }
 
 #footer {
-	background: $vapor;
-	border-top: 1px solid $gainsboro;
-	text-align: center;
+
 }

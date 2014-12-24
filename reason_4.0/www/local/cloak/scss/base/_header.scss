@@ -2,8 +2,9 @@
 // Cloak, v1
 
 #banner {
-	padding-top: $column-gutter;
-	padding-bottom: $column-gutter;
+	background: $vapor;
+	border-bottom: 1px solid $gainsboro;
+	text-align: center;
 	padding: $column-gutter;
 
 	h1 {
@@ -22,6 +23,11 @@
 			margin: 0 rem-calc(6);
 
 			&.navJump {
+
+				@media #{$medium-high-up} {
+					@include screenreader();
+				}
+
 				a {
 					@include circle-icon-button();
 				}
@@ -47,7 +53,10 @@
 
 		#search {
 
-			// Many Reveal Modal (lightbox) styles are set with variables in _settings.scss.
+			// Search uses Foundation's Reveal Modal
+			// http://foundation.zurb.com/docs/components/reveal.html
+			// Cloak sets many of the Reveal Modal's (lightbox) styles with variables in _settings.scss.
+			// Cloak's custom global Reveal Modal styles are set in _widgets.scss.
 
 		}
 	}
