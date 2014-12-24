@@ -7,7 +7,7 @@
 	*     extends HTML5ResponsiveTemplate (/lib/core/minisite_templates/html5_responsive.php)...
 	*     which extends DefaultTemplate (/lib/core/minisite_templates/default.php)
 	*  
-	*  To extend a function without copying the parent's code, use parent::functionName();
+	*  To extend a function without duplicating the parent's code, use parent::functionName();
 	*/
 
 	// include the MinisiteTemplate class
@@ -115,7 +115,50 @@
 			}
 		}
 
-		// Here we add cloak_you_are_here() to it's new location
+		// MOVE PAGE TITLE
+		// The default template runs main_head (which typially shows the page title) inside show_main_content_sections.
+		// Cloak removes main_head from show_main_content_sections, and moves it below the breadcrumbs in show_body_tableless.
+
+		// function show_main_content_sections()
+		// {
+		// 	if ($this->has_content( 'main' )) 
+		// 	{
+		// 		echo '<div class="contentMain">'."\n";
+		// 		$this->run_section( 'main' );
+		// 		echo '</div>'."\n";
+		// 	}
+		// 	if ($this->has_content( 'main_post' )) 
+		// 	{
+		// 		echo '<div class="contentPost">'."\n";
+		// 		$this->run_section( 'main_post' );
+		// 		echo '</div>'."\n";
+		// 	}
+		// 	if ($this->has_content( 'main_post_2' )) 
+		// 	{
+		// 		echo '<div class="contentPost2">'."\n";
+		// 		$this->run_section( 'main_post_2' );
+		// 		echo '</div>'."\n";
+		// 	}
+		// 	if ($this->has_content( 'main_post_3' )) 
+		// 	{
+		// 		echo '<div class="contentPost3">'."\n";
+		// 		$this->run_section( 'main_post_3' );
+		// 		echo '</div>'."\n";
+		// 	}
+		// }
+
+		// function cloak_show_main_head()
+		// {
+		// 	if ($this->has_content( 'main_head' )) 
+		// 	{
+		// 		echo '<div id="contentHead" class="contentHead">'."\n";
+		// 		$this->run_section( 'main_head' );
+		// 		echo '</div>'."\n";
+		// 	}
+		// }
+
+		// Adds cloak_you_are_here() to it's new location
+		// Adds cloak_show_main_head() to it's new location
 		function show_body_tableless()
 		{
 			$class = 'fullGraphicsView';
@@ -123,6 +166,7 @@
 			echo '<div id="bannerAndMeat">'."\n";
 			$this->show_banner();
 			$this->cloak_you_are_here();
+			//$this->cloak_show_main_head();
 			$this->show_meat();
 			echo '</div>'."\n";
 			$this->show_footer();
@@ -195,6 +239,7 @@
 			// Foundation also recommends including jQuery at the bottom of the body. But this causes conflicts
 			// with Reason scripts, like Features. Currently, we're just calling it in the head via in the normal Reason way.
 
+			echo '<script type="text/javascript" src="/reason/local/cloak/js/vendor/isotope.pkgd.min.js"></script>'."\n";
 			echo '<script type="text/javascript" src="/reason/local/cloak/js/vendor/fastclick.js"></script>'."\n";
 			echo '<script type="text/javascript" src="/reason/local/cloak/js/vendor/foundation.min.js"></script>'."\n";
 			echo '<script type="text/javascript" src="/reason/local/cloak/js/app.js"></script>'."\n";
