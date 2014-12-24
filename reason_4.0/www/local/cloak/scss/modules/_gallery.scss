@@ -1,0 +1,198 @@
+// Gallery Styles
+// Cloak, v1
+
+#imageGallery {
+	
+	// SEARCH & FILTERS
+	.persistent {
+		display: none;
+	}
+
+	// GALLERY ITEM LIST
+	.moduleNav {
+
+		// PAGINATION
+		// Foundaiton's pagnation mixins use different markup than Reason's.
+		// For maximum integration, we use Foundation pagination mixins and variables wherever possible.
+		.pagination {
+			display: block;
+			min-height: $pagination-height;
+			margin-#{$default-float}: $pagination-margin;
+			margin-bottom: $column-gutter;
+			padding: 0;
+			background: none;
+
+			&.above {
+
+			}
+
+			&.below {
+
+			}
+
+			.next,
+			.previous {
+				border: none;
+				margin: 0;
+				padding: 0;
+			}
+
+			.pages a,
+			.pages strong,
+			.next,
+			.previous { 
+				height: $pagination-li-height;
+				color: $pagination-li-font-color;
+				font-size: $pagination-li-font-size;
+				margin-#{$default-float}: $pagination-li-margin;
+				float: $pagination-li-float;
+				display: block;
+				padding: $pagination-link-pad;
+				background: none;
+				@include radius;
+				font-weight: normal;
+				line-height: inherit;
+				@include single-transition(background-color);
+
+				&:hover,
+				&:focus {
+					background: $pagination-link-active-bg;
+				}
+			}
+
+			.pages {
+
+				strong {
+					@include pagination-current-item($has-anchor: false);
+					float: $pagination-li-float;
+					margin-left: $pagination-li-margin;
+				}
+			}
+		}
+
+		// IMAGE LIST 
+		#imageGalleryItemList {
+			margin: 0;
+			margin-left: - $column-gutter;
+
+			li {
+				//border: 1px solid blue;
+				margin: 0;
+				margin-bottom: $column-gutter;
+				margin-left: $column-gutter;
+				//width: rem-calc(150); // Width for default thumbanil image size. If the module uses larger images, styles are output in the <head> to override this.
+			
+				img {
+					border: none;
+				}
+			}
+
+			#imageGalleryNextPageItem {
+				@include screenreader();
+			}
+		}
+	}
+
+
+	// FULL GALLERY ITEM
+
+	.item {
+		margin-bottom: $column-gutter;
+
+		.imageTitle {
+
+		}
+
+		.sequenceNum {
+			color: $aluminum;
+			margin-bottom: $column-gutter;
+		}
+
+		.prevWrapper,
+		.nextWrapper {
+			border: none;
+			overflow: visible;
+			height: auto;
+
+			.thumbnail {
+				height: auto;
+				margin-bottom: rem-calc(5);
+			}
+
+			a {
+				position: static;
+				display: block;
+				width: 80px;
+				height: 40px;
+				padding: 10px 30px;
+				border-radius: $global-rounded;
+				background: $white-smoke;
+				border: 1px solid $gainsboro;
+				
+				&:after {
+					@extend .fa;
+					font-size: rem-calc(20);
+					line-height: 1;
+					display: block;
+
+					// position: relative;
+					// top: 24px;
+					color: rgba($white, 1);
+					text-shadow: 0 0 1px $charcoal;
+					text-align: center;
+				}
+
+				&:hover {
+					background: $primary-color;
+					border-color: $primary-color;
+
+					&:after {
+						color: $white;
+					}
+				}
+				
+				img {
+					display: none;
+				}
+			}
+		}
+
+		.prevWrapper {
+
+			a {
+				
+				&:after {
+					content: $fa-var-chevron-left;
+				}
+			}
+		}
+
+		.nextWrapper {
+			a {
+				
+				&:after {
+					content: $fa-var-chevron-right;
+				}
+			}
+		}
+
+		.imageWrapper {
+
+		}
+
+		.imageCaptionWrapper {
+
+		}
+	}
+
+	.back {
+		margin-bottom: $column-gutter;
+
+		&:before {
+			@extend .fa;
+			content: $fa-var-th-large;
+			margin-right: rem-calc(6);
+			color: $anchor-font-color;
+		}
+	}
+}

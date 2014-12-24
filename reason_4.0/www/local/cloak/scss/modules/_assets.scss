@@ -3,6 +3,10 @@
 
 .assets {
 
+	// This margin, along with the bottom padding on each li, gives us the even margin we need
+	// to keep spacing uniform between page elements
+	margin-bottom: $column-gutter/2;
+
 	ul { 
 		margin: 0 0 0 $column-gutter; // bump out the list to make room for icons
 		list-style-type: none;
@@ -11,9 +15,9 @@
 	li {
 		padding-bottom: $column-gutter/2;
 
-		&:last-of-type {
-			padding-bottom: 0;
-		}
+		// &:last-of-type {
+		// 	padding-bottom: 0;
+		// }
 
 		&:before {  // download icon
 			@extend .fa;

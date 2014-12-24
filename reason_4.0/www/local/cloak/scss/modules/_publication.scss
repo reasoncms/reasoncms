@@ -1,0 +1,42 @@
+// Publication Styles
+// Cloak, v1
+
+#meat .publication {
+
+	.persistent {
+		display: none;
+	}
+
+	// List of Posts
+	.moduleNav {
+		
+		ul {
+		
+			li {
+				padding: $column-gutter/2 0;
+				border-color: red;
+
+				.teaserImage {
+					float: right;
+					margin: 0 0 $column-gutter/2 $column-gutter/2;
+				}
+
+				.title {
+					margin: 0 0 rem-calc(8);
+					font-size: $h4-font-size;
+
+				}
+
+				.date {
+					color: $aluminum;
+					font-size: rem-calc(14);
+					margin: 0 0 rem-calc(8);
+				}
+
+				.links {
+
+				}
+			}
+		}
+	}
+}

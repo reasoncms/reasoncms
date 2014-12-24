@@ -9,9 +9,10 @@
 	padding: $column-gutter/2;
 	margin-bottom: $column-gutter;
 
-	&:last-of-type {
-		margin-bottom: 0;
-	}
+	// Experiment. Keep bottom margin on last element.
+	// &:last-of-type {
+	// 	margin-bottom: 0;
+	// }
 
 	// The blurb has uniform padding around it.
 	// Here we remove the bottom margin and padding

@@ -2,8 +2,107 @@
 // Cloak, v1
 
 #minisiteNavigation {
+
+	margin-bottom: $column-gutter;
+
 	ul {
 		@include zero-out();
 		list-style-type: none;
+		font-size: rem-calc(15);
+
+		$nav-item-lr: rem-calc(12);
+		$nav-item-tb: rem-calc(16);
+
+		.home {
+			display: block;
+			border-bottom: 1px solid $silver;
+			padding: $nav-item-lr $nav-item-tb;
+			text-transform: uppercase;
+			background: $primary-color;
+			color: $white;
+
+			&:hover {
+				background: darken($primary-color, 10%);
+			}
+		}
+
+		.navList {
+			background: $silver;
+
+			li {
+				position: relative;
+
+				// Links (<a>) and current pages (<strong>)
+				// The default navigation class turns current pages into non-links
+				a,
+				strong {
+					line-height: 1.2;
+					display: block;
+					border-bottom: 1px solid $white;
+					padding: $nav-item-lr $nav-item-tb;
+				}
+
+				// Just links
+				a {
+					//color: $body-font-color;
+
+					&:hover {
+						background: $snow;
+					}
+				}
+
+				// Just current pages
+				strong {
+					//color: $primary-color;
+				}
+			}
+
+			.open {
+				
+				a,
+				strong {
+					background: $gainsboro;
+				}
+				
+
+				li {
+					a,
+					strong {
+						padding-left: $nav-item-lr * 2.5;
+					}
+
+					li {
+						a,
+						strong {
+							padding-left: $nav-item-lr * 3.5;
+						}
+
+						li {
+							a,
+							strong {
+								padding-left: $nav-item-lr * 4.5;
+							}
+						}
+					}
+				}
+			}
+
+			.jump {
+			
+				a {
+					padding-right: 2.25rem; 
+
+					&:after {
+						@extend .fa;
+						font-size: rem-calc(12);
+						content: $fa-var-external-link;
+						position: absolute;
+						top: $column-gutter / 2;
+						right: $nav-item-tb;
+						color: $jumbo;
+					}
+				}
+			}
+		}
 	}
 }
