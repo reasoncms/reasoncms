@@ -257,7 +257,7 @@ class mediaFileFeed extends defaultFeed
 		$this->feed->es->set_order('av.av_part_number ASC');
 		
 		$ok_formats = array_keys(reason_get_valid_formats_for_podcasting());
-		$ok_formats = array_map('addslashes',$ok_formats);
+		$ok_formats = array_map('reason_sql_string_escape',$ok_formats);
 		// this is a hack because .mp4s should be included even if the media_format field is "invalid".
 		$this->feed->es->add_relation('((av.media_format IN ("'.implode('","',$ok_formats).'")) OR (url.url LIKE "%.mp4") OR (mime_type IN("video/mp4","audio/mpeg")) )');
 		$this->feed->es->set_site(NULL);
