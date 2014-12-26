@@ -152,7 +152,7 @@ function check_URL_history( $request_uri )
 	$URL = '/'.trim_slashes($url_arr['path']).'/';
 	$URL = str_replace('//','/',$URL);
 	$query_string = (!empty($url_arr['query'])) ? '?'.$url_arr['query'] : '';
-	$query =  'SELECT * FROM URL_history WHERE url ="' . addslashes ( $URL ) . '" ORDER BY timestamp DESC';
+	$query =  'SELECT * FROM URL_history WHERE url ="' . reason_sql_string_escape ( $URL ) . '" ORDER BY timestamp DESC';
 	$results = db_query( $query );
 	$num_results = mysql_num_rows( $results );
 	
