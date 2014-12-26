@@ -1456,7 +1456,7 @@ class AdminPage
 		}
 		else
 		{
-			echo 'You are <strong>' . $user->get_value( 'name' ) .'</strong>';
+			echo 'You are <strong>' . reason_htmlspecialchars($user->get_value( 'name' )) .'</strong>';
 			if ($show_logout) echo ': <strong><a href="'.REASON_LOGIN_URL.'?logout=true" class="bannerLink">Logout</a></strong>';
 		}
 	} // }}}
