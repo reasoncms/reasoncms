@@ -210,7 +210,7 @@ class ReasonEntityLocks
 	{
 		$dbs = new DBSelector();
 		$dbs->add_table('entity_lock');
-		$dbs->add_relation('`entity_id` = "'.addslashes($this->_entity->id()).'"');
+		$dbs->add_relation('`entity_id` = "'.reason_sql_string_escape($this->_entity->id()).'"');
 		self::$_raw_locks[$this->_entity->id()] = $dbs->run('Error getting locks for entity '.$this->_entity->id().'.', false);
 	}
 	
@@ -784,7 +784,7 @@ class ReasonEntityLocks
 	{
 		$site_ids = array(0) + array_keys($sites);
 		array_walk($site_ids,'db_prep_walk');
-		$q = 'SELECT * from `relationship` WHERE `entity_a` = "'.addslashes($entity_a->id()).'" AND `entity_b` = "'.addslashes($entity_b->id()).'" AND `type` = "'.addslashes($allowable_relationship_id).'" AND `site` IN ('.implode(',',$site_ids).')';
+		$q = 'SELECT * from `relationship` WHERE `entity_a` = "'.reason_sql_string_escape($entity_a->id()).'" AND `entity_b` = "'.reason_sql_string_escape($entity_b->id()).'" AND `type` = "'.reason_sql_string_escape($allowable_relationship_id).'" AND `site` IN ('.implode(',',$site_ids).')';
 		$r = db_query( $q , 'error getting relationship info' );
 		if($r)
 			return mysql_fetch_array( $r , MYSQL_ASSOC );
@@ -998,7 +998,7 @@ class ReasonEntityLocks
 		
 		if($this->field_has_lock($field_name))
 		{
-			$sql = 'DELETE FROM `entity_lock` WHERE `entity_id` = "'.addslashes($this->_entity->id()).'" AND `field_name` = "'.addslashes($field_name).'"';
+			$sql = 'DELETE FROM `entity_lock` WHERE `entity_id` = "'.reason_sql_string_escape($this->_entity->id()).'" AND `field_name` = "'.reason_sql_string_escape($field_name).'"';
 			
 			// execute
 			if( db_query( $sql, 'Error removing field lock for entity '.$this->_entity->id(), false ) )
@@ -1044,7 +1044,7 @@ class ReasonEntityLocks
 		
 		if($this->relationship_has_lock($relationship_id, $direction))
 		{
-			$sql = 'DELETE FROM `entity_lock` WHERE `entity_id` = "'.addslashes($this->_entity->id()).'" AND `allowable_relationship_id` = "'.addslashes($relationship_id).'" AND `allowable_relationship_direction` = "'.addslashes($direction).'"';
+			$sql = 'DELETE FROM `entity_lock` WHERE `entity_id` = "'.reason_sql_string_escape($this->_entity->id()).'" AND `allowable_relationship_id` = "'.reason_sql_string_escape($relationship_id).'" AND `allowable_relationship_direction` = "'.reason_sql_string_escape($direction).'"';
 			
 			// execute
 			if( db_query( $sql, 'Error removing relationship lock for entity '.$this->_entity->id(), false ) )
@@ -1090,7 +1090,7 @@ class ReasonEntityLocks
 		
 		if(!empty($field_locks))
 		{
-			$sql = 'DELETE FROM `entity_lock` WHERE `entity_id` = "'.addslashes($this->_entity->id()).'" AND `field_name` != ""';
+			$sql = 'DELETE FROM `entity_lock` WHERE `entity_id` = "'.reason_sql_string_escape($this->_entity->id()).'" AND `field_name` != ""';
 			// execute
 			if( db_query( $sql, 'Error removing all field locks for entity '.$this->_entity->id(), false ) )
 			{
@@ -1134,7 +1134,7 @@ class ReasonEntityLocks
 		
 		if(!empty($rel_locks))
 		{
-			$sql = 'DELETE FROM `entity_lock` WHERE `entity_id` = "'.addslashes($this->_entity->id()).'" AND `allowable_relationship_id` != "0"';
+			$sql = 'DELETE FROM `entity_lock` WHERE `entity_id` = "'.reason_sql_string_escape($this->_entity->id()).'" AND `allowable_relationship_id` != "0"';
 			// execute
 			if( db_query( $sql, 'Error removing all relationship locks for entity '.$this->_entity->id(), false ) )
 			{
@@ -1179,7 +1179,7 @@ class ReasonEntityLocks
 		
 		if(!empty($raw_locks))
 		{
-			$sql = 'DELETE FROM `entity_lock` WHERE `entity_id` = "'.addslashes($this->_entity->id()).'"';
+			$sql = 'DELETE FROM `entity_lock` WHERE `entity_id` = "'.reason_sql_string_escape($this->_entity->id()).'"';
 			
 			// execute
 			if( db_query( $sql, 'Error removing all locks for entity '.$this->_entity->id(), false ) )
