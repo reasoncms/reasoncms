@@ -603,7 +603,7 @@ class reasonCalendar
 					$search_chunks[] = table_of($field, id_of('event_type')) . '  LIKE "%'.$date.'%"';
 				}
 			}
-			$prepped = addslashes($this->simple_search);
+			$prepped = reason_sql_string_escape($this->simple_search);
 			foreach($simple_search_text_fields as $field)
 			{
 				$search_chunks[] = table_of($field, id_of('event_type')) . ' LIKE "%'.$prepped.'%"';
@@ -1454,7 +1454,7 @@ class reasonCalendar
 		}
 		$test_es = carl_clone($this->base_es);
 		$test_es->set_num(1);
-		$test_es->add_relation( table_of('datetime', id_of('event_type')). ' < "'.addslashes($date).'"');
+		$test_es->add_relation( table_of('datetime', id_of('event_type')). ' < "'.reason_sql_string_escape($date).'"');
 		$test_es->limit_fields();
 		$test_es->exclude_tables_dynamically();
 		$test_es->set_cache_lifespan($this->_get_cache_lifespan_meta());
@@ -1490,7 +1490,7 @@ class reasonCalendar
 		}
 		$test_es = carl_clone($this->base_es);
 		$test_es->set_num(1);
-		$test_es->add_relation('event.last_occurence > "'.addslashes($date).'"');
+		$test_es->add_relation('event.last_occurence > "'.reason_sql_string_escape($date).'"');
 		$test_es->limit_fields();
 		$test_es->exclude_tables_dynamically();
 		$test_es->set_cache_lifespan($this->_get_cache_lifespan_meta());
