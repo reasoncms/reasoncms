@@ -186,7 +186,7 @@
 				$popup_alert = 'no';
 				$es = new entity_selector();
 				$es->add_type(id_of('user'));
-				$es->add_relation('entity.name = "'.$myname.'"');
+				$es->add_relation('entity.name = "'.reason_sql_string_escape($myname).'"');
 				$es->set_num(1);
 				$users = $es->run_one();
 				if(!empty($users))
