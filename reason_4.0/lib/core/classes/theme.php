@@ -303,7 +303,7 @@ array( 'entity_a' => $this->id , 'entity_b' => $old_template_id , 'type' => rela
 			{
 				$es = new entity_selector();
 				$es->add_type(id_of('css'));
-				$es->add_relation('url = "'.addslashes($css_url).'"');
+				$es->add_relation('url = "'.reason_sql_string_escape($css_url).'"');
 				$es->set_num(1);
 				$css_ents = $es->run_one();
 				if(!empty($css_ents))
