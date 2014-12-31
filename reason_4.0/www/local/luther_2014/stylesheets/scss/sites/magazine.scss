@@ -24,6 +24,8 @@
 //    2C. FILTERED PAGE 
 //    2D. FULL ARTICLE PAGE 
 
+$logo-width-widescreen: rem-calc(198);
+
 // 1. GENERAL THEME STYLES 
 .lutherMagazine {
 
@@ -64,6 +66,20 @@
 		}
 
 		// 1B. MINISITE NAVIGATION
+
+		#navWrap {  // Navigtaion column
+			@include grid-column($columns: 16, $collapse: true);
+			
+			@media #{$large-up} {
+				@include grid-column($columns: 5, $collapse: true);
+				display: block;
+			}
+
+			@media #{$large-high-up} {
+				@include grid-column($columns: 4, $collapse: true);
+			}
+		}
+
 		#navWrap {
 
 			a.toggle {
@@ -83,6 +99,7 @@
 				@media #{$large-up} {
 					padding: $column-gutter;
 					padding-top: 0;
+					padding-bottom: 0;
 					background: none;
 				}
 			}
@@ -107,7 +124,7 @@
 					//height: 0;
 					// width: 233px;
 					// height: 88px;
-					width: 198px;
+					width: $logo-width-widescreen;
 					height: 74px;
 
 					span {
@@ -125,9 +142,12 @@
 
 					a {
 						border-color: rgba(#000, .1);
+						//border: none;
+						//display: inline-block;
 						
 						&:hover {
 							background: none;
+							text-decoration: underline;
 						}
 					}
 
@@ -173,13 +193,14 @@
 				}
 				
 				.jump {
+
+					//display: inline-block;
 					
 					a {
 
 						&:before {
 							top: $column-gutter / 2.75;
-							right: 0;
-							color: lighten($body-font-color, 20%);
+							right: -24px;
 						}
 					}
 				}
@@ -782,21 +803,81 @@
 				margin: 0;
 
 				li {
-					margin-bottom: rem-calc(8);
+					margin-bottom: rem-calc(12);
 
-					a {
+					strong {
 						border: 1px solid #000;
 						padding: rem-calc(2) rem-calc(8);
 						@include border-radius($global-radius);
 					}
 
-					strong {
+					a {
+						//margin-left: rem-calc(12);
 						background: black;
 						color: #FFF;
 						padding: rem-calc(2) rem-calc(8);
 						@include border-radius($global-radius);
 					}
+
+					&:nth-of-type(1) {
+					// All
+						strong {
+							//background: black;
+							color: black;
+						}
+					}
+
+					&:nth-of-type(2) {
+						// Alumni Profiles
+						strong {
+							color: $lc-green;
+							border-color: $lc-green;
+							
+						}
+
+						a {
+							background: $lc-green;
+						}
+					}
+
+					&:nth-of-type(3) {
+						// Class Notes
+						strong {
+							color: $lc-red;
+							border-color: $lc-red;
+						}
+
+						a {
+							background: $lc-red;
+						}
+					}
+
+					&:nth-of-type(4) {
+						// Features
+						strong {
+							color: $lc-blue-light;
+							border-color: $lc-blue-light;
+						}
+
+						a {
+							background: $lc-blue-light;
+						}
+					}
+
+					&:nth-of-type(5) {
+						// In the Media
+						strong {
+							color: $lc-yellow;
+							border-color: $lc-yellow;
+						}
+
+						a {
+							background: $lc-yellow;
+						}
+					}
 				}
+
+				
 			}
 		}
 
@@ -913,47 +994,46 @@
 		}
 	}
 
-	// .postTitle,
-	// .postMeta,
-	// .text
+	// Article Column Structure
 	.fullPost {
+
 		@media #{$medium-up} {
-			// width: 70%;
-			// margin: 0 auto;
 			@include grid-column($columns:12,$center:true);
 		}
 
 		@media #{$large-up} {
-			@include grid-column($columns:10,$center:true);
-			// width: 50%;
-			// margin: 0 0 0 31.25%;
-			//background: blue;
+			@include grid-column($columns:11,$center:false,$push:5,$collapse:true);
+			margin: 0;
+			margin-top: - $column-gutter;
 		}
 
 		@media #{$large-high-up} {
-			@include grid-column($columns:9,$center:true);
-			//background: Red;
+			@include grid-column($columns:8,$center:true,$push:0,$collapse:true);
 		}
-
-		@media #{$xlarge-up} {
-			// width: 50%;
-			// margin: 0 auto;
-			@include grid-column($columns:8,$center:true);
-			//background: green;
-		}
-
 
 		.text {
+
+			> *:last-child {
+				padding-bottom: 0;
+				margin-bottom: 0;
+			}
 
 			p,
 			li {
 				line-height: 1.8;
 			}
 
-			h4 {
+			p.intro {
 				text-align: center;
 				font-size: $h3-font-size;
 				margin-bottom: $column-gutter;
+				font-family: $open-sans;
+			}
+
+			h4 {
+				font-size: $h3-font-size;
+				margin-bottom: $column-gutter;
+				margin-bottom: $column-gutter/2;
 			}
 
 			h5 {
@@ -978,7 +1058,7 @@
 			blockquote * {
 				font-size: rem-calc(24);
 				font-family: $open-sans;
-				color: #000;
+				color: rgba(black, .5);
 				line-height: 1.5;
 
 				@media #{$medium-up} {
@@ -1026,10 +1106,12 @@
 
 				img {
 					max-width: 1040px;
-					width: 140%;
+					width: 111%;
 					height: auto;
-					margin-left: -20%;
-					padding-left: $column-gutter/2;
+					margin-left: -5.5%;
+					margin-right: -5.5%;
+					padding-left: 0;
+					//padding-left: $column-gutter/2;
 				}
 
 				img.left,
@@ -1043,12 +1125,22 @@
 				img[align="right"] {
 					width: 100%;
 					max-width: 640px;
-					margin: 0 -40% $column-gutter 5%;
-					float: right;
+					// margin: 0 -40% $column-gutter 5%;
+					// float: right;
+					margin: 0 5% $column-gutter -40%;
+					float: left !important;
 				}
 			}
 
 			@media #{$large-high-up} {
+
+				img {
+					max-width: 1040px;
+					width: 140%;
+					height: auto;
+					margin-left: -20%;
+					padding-left: 0;
+				}
 
 				img.left,
 				img[align="left"] {
@@ -1056,7 +1148,8 @@
 				}
 				img.right,
 				img[align="right"] {
-					margin-right: -50%;
+					margin: 0 -40% $column-gutter 5%;
+					float: right !important;
 				}
 			}
 		}
@@ -1072,6 +1165,16 @@
 	.secondChunk {
 		width: 100% !important;
 		clear: left;
+		padding-right: 0;
+	}
+
+	.firstChunk {
+
+		@media #{$large-up} {
+			padding: $column-gutter 5%;
+			background: #efefef;			
+		}
+
 	}
 
 	.postTitle {
@@ -1080,8 +1183,13 @@
 		font-size: rem-calc(34);
 		margin-bottom: $column-gutter;
 
+		@media #{$large-up} {
+			//text-align: left;
+		}
+
 		@media #{$xlarge-up} {
 			font-size: rem-calc(46);
+			text-align: center;
 		}
 	}
 
@@ -1114,20 +1222,9 @@
 		}
 	}
 
-	.social.top {
+	.social.top,
+	.social.bottom {
 		text-align: center;
-		
-		// @media #{$medium-up} {
-		// 	position: absolute;
-		// 	left: 16px;
-		// 	top: 230px;
-		// }
-
-		// @media #{$medium-up} {
-		// 	left: 16px;
-		// 	top: 400px;
-		// }
-		
 	}
 
 	.socialIcons {
@@ -1136,12 +1233,6 @@
 
 		li {
 			display: inline-block;
-			
-			// @media #{$medium-up} {
-			// 	clear: left;
-			// 	margin: 0 0 rem-calc(8) 0;
-			// 	float: left;
-			// }
 
 			span {
 				@extend .screenreader;
@@ -1154,7 +1245,7 @@
 				border: 1px solid rgba(#000, .2);
 				//background: red;
 				color: rgba(#000, .2);
-				margin-right: $column-gutter/2;
+				margin: 0 $column-gutter/4;
 				width: auto;
 
 				&:before {
@@ -1165,7 +1256,6 @@
 					height: rem-calc(18);
 					display: block;
 					text-align: center;
-					
 				}
 
 				&:hover {
@@ -1218,6 +1308,106 @@
 					background: $lc-yellow;
 					border-color: $lc-yellow;
 					color: #FFF;
+				}
+			}
+		}
+	}
+
+	.relatedItems {
+
+		padding-left: 0;
+
+		.fromIssue,
+		.categories {
+			text-align: center;
+			font-size: $h5-font-size;
+			font-family: $open-sans;
+			font-weight: 300;
+
+			a {
+				text-decoration: underline;
+			}
+		}
+
+
+		.categories {
+			text-align: center;
+			font-size: $h5-font-size;
+			font-family: $open-sans;
+
+			h4,
+			ul,
+			li {
+				display: inline-block;
+				text-align: center;
+				font-size: $h5-font-size;
+				font-family: $open-sans;
+			}
+
+			ul {
+				margin: 0;
+				padding: 0;
+			}
+
+			li {
+				margin-left: rem-calc(6);
+			}
+		}
+
+	}
+
+	.searchAndFilterInterface {
+		margin: $column-gutter 0;
+		padding: $column-gutter 0 $column-gutter/2; 
+
+		border-top: 1px solid rgba(#000, .1);
+		border-bottom: 1px solid rgba(#000, .1);
+
+		text-align: center;
+
+		li {
+			display: inline-block;
+			margin: rem-calc(4);
+
+			a {
+				//border: 1px solid #000;
+				padding: rem-calc(2) rem-calc(8);
+				@include border-radius($global-radius);
+				color: #FFF
+			}
+
+			strong {
+				background: black;
+				color: #FFF;
+				padding: rem-calc(2) rem-calc(8);
+				@include border-radius($global-radius);
+			}
+
+			&:nth-of-type(1) {
+				// Alumni Profiles
+				a {
+					background: $lc-green;
+				}
+			}
+
+			&:nth-of-type(2) {
+				// Class Notes
+				a {
+					background: $lc-red;
+				}
+			}
+
+			&:nth-of-type(3) {
+				// Features
+				a {
+					background: $lc-blue-light;
+				}
+			}
+
+			&:nth-of-type(4) {
+				// In the Media
+				a {
+					background: $lc-yellow;
 				}
 			}
 		}
