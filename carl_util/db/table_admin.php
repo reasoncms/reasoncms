@@ -1238,11 +1238,13 @@ class TableAdmin
 
 	// returns true if this form contains any file elements
 	function form_contains_file_elements() {
-		$data_row = current($this->get_data());
-		foreach ($data_row as $k=>$v) {
-			$type = (!empty($this->_display_values[$k]['type'])) ? $this->_display_values[$k]['type'] : 'text';
-			if ($type == "file") {
-				return true;
+		if ($data_row = current($this->get_data()))
+		{
+			foreach ($data_row as $k=>$v) {
+				$type = (!empty($this->_display_values[$k]['type'])) ? $this->_display_values[$k]['type'] : 'text';
+				if ($type == "file") {
+					return true;
+				}
 			}
 		}
 		return false;
