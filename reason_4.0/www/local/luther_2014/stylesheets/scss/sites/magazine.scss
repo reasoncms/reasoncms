@@ -391,6 +391,20 @@ $logo-width-widescreen: rem-calc(198);
 			}
 		}
 
+		.image-block,
+		.category-block {
+			position: relative;
+		}
+
+		.category-block {
+			@include clearfix;
+			padding: $column-gutter/3;
+
+			@media #{$medium-up} {
+				padding: $column-gutter/2;
+			}
+		}
+
 		.post-cats {
 			margin: 0;
 			text-align: center;
@@ -403,16 +417,27 @@ $logo-width-widescreen: rem-calc(198);
 				float: left;
 				color: #FFF;
 				padding: rem-calc(2) rem-calc(8);
-				//@include border-radius($global-radius);
-				position: absolute;
-				top: - rem-calc(47);
-				right: $column-gutter/3;
 
 				@media #{$medium-up} {
 					padding: rem-calc(4) rem-calc(12);
-					top: - rem-calc(56);
-					right: $column-gutter/2;
 				}
+			}
+		}
+
+		.category-block .post-cat {
+			a {
+				float: right;
+			}
+		}
+
+		.image-block .post-cat {
+			position: absolute;
+			bottom: $column-gutter/3;
+			right: $column-gutter/3;
+
+			@media #{$medium-up} {
+				bottom: $column-gutter/2;
+				right: $column-gutter/2;
 			}
 		}
 
@@ -541,6 +566,7 @@ $logo-width-widescreen: rem-calc(198);
 				// This is acts as the frosty minisite navigation background on the home page.
 				// Widths match the traditional ministive navigation widths set in minisite.scss 
 				@media #{$large-up} {
+
 					&:before {
 						content: "";
 						display: block;
@@ -551,6 +577,10 @@ $logo-width-widescreen: rem-calc(198);
 						position: absolute;
 						left: 0;
 						top: 0;
+					}
+
+					img {
+						width: 100%;
 					}
 				}
 
@@ -567,7 +597,8 @@ $logo-width-widescreen: rem-calc(198);
 
 	#features {
 
-		.primaryImage {
+		.image-block,
+		.category-block {
 			border-bottom: 7px solid $lc-blue-light;
 		}
 
@@ -586,7 +617,8 @@ $logo-width-widescreen: rem-calc(198);
 	#alumni-profiles {
 		clear: both;
 
-		.primaryImage {
+		.image-block,
+		.category-block {
 			border-bottom: 7px solid $lc-green;
 		}
 
@@ -599,7 +631,7 @@ $logo-width-widescreen: rem-calc(198);
 				&:nth-of-type(2) {
 					width: 66.666666%;
 
-					.primaryImage {
+					.image-block {
 						float: left;
 						width: 50%;
 						border-bottom: none;
@@ -624,16 +656,16 @@ $logo-width-widescreen: rem-calc(198);
 
 	#class-notes {
 
-		.primaryImage {
+		.image-block,
+		.category-block {
 			border-bottom: 7px solid $lc-red;
 		}
-
-
 	}
 
 	#in-the-media {
 
-		.primaryImage {
+		.image-block,
+		.category-block {
 			border-bottom: 7px solid $lc-yellow;
 		}
 	}
@@ -848,6 +880,10 @@ $logo-width-widescreen: rem-calc(198);
 				position: absolute;
 				left: 0;
 				top: 0;
+			}
+
+			img {
+				width: 100%;
 			}
 		}
 

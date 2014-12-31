@@ -49,8 +49,11 @@ class MagazinePublicationListItemMarkupGenerator extends PublicationMarkupGenera
 		$markup_string = '';
 		$image = current($this->passed_vars['teaser_image']);
 		$link_to_full_item = isset($this->passed_vars['link_to_full_item']) ? $this->passed_vars['link_to_full_item'] : '';
+		
+	
 		if (!empty($image))
 		{
+			$markup_string .= '<div class="image-block">';
 			$markup_string .= '<figure class="primaryImage">';
 			if(isset($link_to_full_item) &&  !empty($link_to_full_item))
 				$markup_string .=  '<a href="' .$link_to_full_item. '">';
@@ -61,20 +64,16 @@ class MagazinePublicationListItemMarkupGenerator extends PublicationMarkupGenera
 				$markup_string .=  '</a>';
 			
 			$markup_string .= '</figure>';
+			$markup_string .= $this->get_item_category_markup();
+			$markup_string .= '</div>';
 		} 
 		else {
-			$markup_string .= '<figure class="primaryImage">';
-			if(isset($link_to_full_item) &&  !empty($link_to_full_item))
-				$markup_string .=  '<a href="' .$link_to_full_item. '">';
-			//$markup_string .= '<img src="'.WEB_PHOTOSTOCK.reason_get_image_filename( $image->id() ).'" width="'.$image->get_value( 'width' ).'" height="'.$image->get_value( 'height' ).'" alt="'.str_replace('"', "'", $image->get_value( 'description' )).'"/>';
-			
-			$markup_string .= '<img src="http://dirks.luther.edu/reason/images/542544.jpg" />';
-			//$markup_string .= '<img src="/reason/images/562005.jpg" />'; 
-
-			if(isset($link_to_full_item) &&  !empty($link_to_full_item))
-			$markup_string .=  '</a>';
-			$markup_string .= '</figure>';
+			$markup_string .= '<div class="category-block">';
+				$markup_string .= $this->get_item_category_markup();
+			$markup_string .= '</div>';
 		}
+		
+		
 		return $markup_string;
 	}
 
@@ -128,7 +127,7 @@ class MagazinePublicationListItemMarkupGenerator extends PublicationMarkupGenera
 		
 		$markup_string .=  '<div class="content-block">';
 		$markup_string .= $this->get_date_markup();
-		$markup_string .= $this->get_item_category_markup();
+		//$markup_string .= $this->get_item_category_markup();
 
 		if(isset($link_to_full_item) &&  !empty($link_to_full_item))
 			$markup_string .=  '<a href="' .$link_to_full_item. '">';
