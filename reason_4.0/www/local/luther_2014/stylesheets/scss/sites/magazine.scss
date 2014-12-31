@@ -115,15 +115,9 @@ $logo-width-widescreen: rem-calc(198);
 
 				@media #{$large-up} {
 					padding-top: 0;
-					//padding-bottom: 37.4%;
 					background: transparent url("../../images/magazine/logo_1x.png") no-repeat;
 					border-bottom: none;
 					margin-bottom: $column-gutter/2;
-					//width: 100%;
-					//background-size: 100%;
-					//height: 0;
-					// width: 233px;
-					// height: 88px;
 					width: $logo-width-widescreen;
 					height: 74px;
 
@@ -200,7 +194,7 @@ $logo-width-widescreen: rem-calc(198);
 
 						&:before {
 							top: $column-gutter / 2.75;
-							right: -24px;
+							right: 0;
 						}
 					}
 				}
@@ -349,38 +343,14 @@ $logo-width-widescreen: rem-calc(198);
 		}
 
 		@media #{$xlarge-up} {
-			width: 80%;
+			width: 78%;
 			max-width: none;
 		}
 	}
 
-	// #featuredItems {
-	// 	margin-right: - $column-gutter/2;
-	// 	margin-left: - $column-gutter/2;
-	// }
-
-	// .sections,
-	// #featuredItems .content-block {
-	// 	@media #{$large-up} {
-	// 		margin-left: 31.25%;
-	// 	}
-	// 	@media #{$xlarge-up} {
-	// 		margin-left: 25%;
-	// 	}
-	// }
-
-	// POSTS WRAPPAER
-	// .posts {
-	// 	margin: 0;
-	// 	margin-right: - $column-gutter;
-
-	// 	&:after {
-	// 		clear: none;
-	// 	}
-	// }
-
 	// POSTS COLUMN STRUCTURE, home page
 
+	// Sets base column width for isotope
 	.grid-sizer,
 	.post {
 		width: 100%;
@@ -392,25 +362,12 @@ $logo-width-widescreen: rem-calc(198);
 		@media #{$medium-high-up} {
 			width: 33.3333%;
 		}
-
-		// @media #{$xlarge-up} {
-		// 	width: 25%;
-		// }
-
-		// @media #{$small-high-up} {
-		// 	width: 50%;
-		// }
-
-		// @media #{$large-high-up} {
-		// 	width: 33.3333%;
-		// }
 	}
 
 	// POST SUMMARY BLOCKS
 	.post {
 		border: none;
 		float: left;
-		//padding: 0 $column-gutter $column-gutter 0;
 		padding: $column-gutter/2;
 		
 		.inner {
@@ -477,6 +434,7 @@ $logo-width-widescreen: rem-calc(198);
 			padding: 0;
 
 			@media #{$small-only} {
+				
 				$mobile-feature-image-height: 224px;
 				$mobile-feature-image-width: 651px;
 
@@ -497,6 +455,7 @@ $logo-width-widescreen: rem-calc(198);
 			}
 
 			@media #{$medium-only} {
+				
 				$mobile-feature-image-height: 376px;
 				$mobile-feature-image-width: 1094px;
 
@@ -550,6 +509,7 @@ $logo-width-widescreen: rem-calc(198);
 				}
 
 				$triangle-size: rem-calc(18);
+				
 				&:before {
 					display: block;
 					content: "";
@@ -611,30 +571,6 @@ $logo-width-widescreen: rem-calc(198);
 			border-bottom: 7px solid $lc-blue-light;
 		}
 
-		// @media #{$small-high-up} {
-		// 	width: 50%;
-		// }
-
-		// @media #{$medium-high-up} {
-		// 	width: 33.3333%;
-		// }
-
-		// @media #{$xlarge-up} {
-		// 	width: 25%;
-		// }
-
-		// @media #{$medium-high-up} {
-		// 	.post {
-		// 		width: 33.3333%;
-
-		// 		&:nth-of-type(1),
-		// 		&:nth-of-type(2) {
-		// 			width: 66.6666%;
-		// 		}    	
-		// 	}
-		// }
-
-
 		@media #{$large-up} {
 			.post {
 				width: 33.3333%;
@@ -645,17 +581,6 @@ $logo-width-widescreen: rem-calc(198);
 				}    	
 			}
 		}
-
-		// @media #{$xlarge-up} {
-		// 	.post {
-		// 		width: 25%;
-
-		// 		&:nth-of-type(1),
-		// 		&:nth-of-type(2) {
-		// 			width: 50%;
-		// 		}    	
-		// 	}
-		// }
 	}
 	
 	#alumni-profiles {
@@ -695,64 +620,6 @@ $logo-width-widescreen: rem-calc(198);
 				}
 			}
 		}
-
-		// @media #{$xlarge-up} {
-			
-		// 	.post {
-		// 		width: 25%;
-
-		// 		&:nth-of-type(1),
-		// 		&:nth-of-type(2) {
-		// 			width: 50%;
-
-		// 			.primaryImage {
-		// 				float: left;
-		// 				width: 50%;
-		// 			}
-
-		// 			.content-block {
-		// 				float: left;
-		// 				width: 50%;
-		// 			}
-
-		// 			.post-cats a {
-		// 				top: auto;
-		// 				bottom: 0;
-		// 				left: - rem-calc(200);
-		// 				right: auto;
-		// 			}
-		// 		}
-		// 	}
-		// }
-
-		// @media #{$large-high-up} {
-			
-		// 	.post {
-		// 		width: 33.33333%;
-
-		// 		&:nth-of-type(1),
-		// 		&:nth-of-type(2) {
-		// 			width: 66.666666%;
-
-		// 			.primaryImage {
-		// 				float: left;
-		// 				width: 50%;
-		// 			}
-
-		// 			.content-block {
-		// 				float: left;
-		// 				width: 50%;
-		// 			}
-
-		// 			.post-cats a {
-		// 				top: auto;
-		// 				bottom: 0;
-		// 				left: - rem-calc(200);
-		// 				right: auto;
-		// 			}
-		// 		}
-		// 	}
-		// }
 	}
 
 	#class-notes {
@@ -812,7 +679,6 @@ $logo-width-widescreen: rem-calc(198);
 					}
 
 					a {
-						//margin-left: rem-calc(12);
 						background: black;
 						color: #FFF;
 						padding: rem-calc(2) rem-calc(8);
@@ -822,7 +688,6 @@ $logo-width-widescreen: rem-calc(198);
 					&:nth-of-type(1) {
 					// All
 						strong {
-							//background: black;
 							color: black;
 						}
 					}
@@ -883,7 +748,6 @@ $logo-width-widescreen: rem-calc(198);
 
 		+ p {
 			clear: both;
-			//font-weight: 700;
 			padding-top: $column-gutter/2;
 		}
 	}
@@ -970,21 +834,21 @@ $logo-width-widescreen: rem-calc(198);
 
 		@media #{$large-up} {
 
-		//	margin-top: - $column-gutter;
+		margin-top: - $column-gutter;
 
 			// This is acts as the frosty minisite navigation background on the home page.
 			// Widths match the traditional ministive navigation widths set in minisite.scss 
-			// &:before {
-			// 	content: "";
-			// 	display: block;
-			// 	height: 100%;
-			// 	width: 100px;
-			// 	width: 31.25%; // 5 columns
-			// 	background: rgba(#FFF, .55);
-			// 	position: absolute;
-			// 	left: 0;
-			// 	top: 0;
-			// }
+			&:before {
+				content: "";
+				display: block;
+				height: 100%;
+				width: 100px;
+				width: 31.25%; // 5 columns
+				background: rgba(#FFF, .55);
+				position: absolute;
+				left: 0;
+				top: 0;
+			}
 		}
 
 		@media #{$xlarge-up} {
@@ -1183,10 +1047,6 @@ $logo-width-widescreen: rem-calc(198);
 		font-size: rem-calc(34);
 		margin-bottom: $column-gutter;
 
-		@media #{$large-up} {
-			//text-align: left;
-		}
-
 		@media #{$xlarge-up} {
 			font-size: rem-calc(46);
 			text-align: center;
@@ -1370,7 +1230,6 @@ $logo-width-widescreen: rem-calc(198);
 			margin: rem-calc(4);
 
 			a {
-				//border: 1px solid #000;
 				padding: rem-calc(2) rem-calc(8);
 				@include border-radius($global-radius);
 				color: #FFF
