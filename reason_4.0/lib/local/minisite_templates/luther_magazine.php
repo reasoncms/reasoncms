@@ -96,6 +96,7 @@
 			parent::do_org_foot();
 			// Isotope
 			//echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/foundation/foundation.magellan.js"></script>';
+			echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/vendor/imagesloaded.pkgd.min.js"></script>';
 			echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/vendor/isotope.pkgd.min.js"></script>';
 			echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/sites/magazine.js"></script>';
 			//echo '<script> $(document).foundation ({magellan : {threshold: 0} }); </script>';
