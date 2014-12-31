@@ -94,18 +94,25 @@
 			//echo $pi;
 			//echo preg_replace("|(\<img src=\".*?\").*?\/\>|", "\\1 />", $pi);
 			$avfilelist = $this->get_av_files($item);
+			if (empty($avfilelist))
+			{
+				return;
+			}
 			//echo "media works id = ".$item->id()."   ";
 			// Block any media files other than video
-			foreach( $avfilelist as $av_file )
+			else
 			{
-				//echo $av_file->get_value( 'name' )."\n";
-				//echo $av_file->get_value( 'media_format' )."\n";
-				//echo $av_file->get_value( 'av_type' )."\n";
-				if ($av_file->get_value( 'av_type' ) != 'Video')
+				foreach( $avfilelist as $av_file )
 				{
-					return;
+					//echo $av_file->get_value( 'name' )."\n";
+					//echo $av_file->get_value( 'media_format' )."\n";
+					//echo $av_file->get_value( 'av_type' )."\n";
+					if ($av_file->get_value( 'av_type' ) != 'Video')
+					{
+						return;
+					}
+					//print_r($av_file);
 				}
-				//print_r($av_file);
 			}
 			reset($avfilelist);
 			$vn = $_SERVER['REQUEST_URI'] . "video_" . strtolower(preg_replace('|[\'\"]|', '', preg_replace('| |', '_', current($avfilelist)->get_value('name'))));
