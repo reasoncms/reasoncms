@@ -507,26 +507,8 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'edit_link' => '',
 	),
 	'magazine_publication' => array(
-		// 'main_head' => 'publication/title',
-		// 'main'=>'publication/description',
-		// 'main_post' => array(
-		// 	'module' => 'publication',
-		// 	'markup_generator_info' =>array(
-		// 		'list' =>array (
-		// 			'classname' => 'SpotlightPublicationListMarkupGenerator',
-		// 			'filename' =>'minisite_templates/modules/publication/publication_list_markup_generators/spotlight.php'
-		// 		),
-		// 		'list_item' =>array (
-		// 			'classname' => 'SpotlightListItemMarkupGenerator',
-		// 			'filename' =>'minisite_templates/modules/publication/list_item_markup_generators/spotlight.php'
-		// 		),
-		// 	),
-		// ),
-		//'main_head' => 'publication/title',
 		'main'=>array(
 			'module'=>'publication',
-			// 'use_filters' => false,
-			// 'show_login_link' => false,
 			'module_displays_search_interface' => false,
 			'module_displays_filter_interface' => false,
 			'filter_displayer'=>'listnav.php',
