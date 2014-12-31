@@ -38,100 +38,10 @@ class MagazinePublicationListItemMarkupGenerator extends PublicationMarkupGenera
 	
 	function run ()
 	{	
-		//$this->markup_string .= $this->get_item_wrapper_markup();
 		$this->markup_string .= $this->get_teaser_image_markup();
-		//$this->markup_string .= $this->get_item_category_markup();
-		//$this->markup_string .= $this->get_title_markup();
-		//$this->markup_string .= $this->get_description_markup();
 		$this->markup_string .= $this->get_content_block_markup();
-		
-		//$this->markup_string .= $this->this_is_a_filtered_mofo();
-		
-		//$this->markup_string .= $this->get_section_markup();
-		//$this->markup_string .= $this->get_links_markup();
 	}
 
-	// function get_item_wrapper_markup()
-	// {
-
-	// 	foreach ($this->passed_vars['item_categories'] as $cat)
-	// 	{
-	// 		$name = $cat->get_value('name');
-
-	// 		// $section_entity = $this->passed_vars['sections'][$section_id];
-	// 		// $name = $section_entity->get_value('name');
-			
-	// 		// //Lower case everything
-	// 		$name = strtolower($name);
-	// 		// //Make alphanumeric (removes all other characters)
-	// 		$name = preg_replace("/[^a-z0-9_\s-]/", "", $name);
-	// 		// //Clean up multiple dashes or whitespaces
-	// 		$name = preg_replace("/[\s-]+/", " ", $name);
-	// 		// //Convert whitespaces and underscore to dash
-	// 		$name = preg_replace("/[\s_]/", "-", $name);
-	// 	}
-	// 	$categories_as_classes = implode("\n ", $name);
-		
-
-	// 	// // Change section name into a css-class-friendly string
-	// 	// $section_entity = $this->passed_vars['sections'][$section_id];
-	// 	// $name = $section_entity->get_value('name');
-	// 	// //Lower case everything
-	// 	// $name = strtolower($name);
-	// 	// //Make alphanumeric (removes all other characters)
-	// 	// $name = preg_replace("/[^a-z0-9_\s-]/", "", $name);
-	// 	// //Clean up multiple dashes or whitespaces
-	// 	// $name = preg_replace("/[\s-]+/", " ", $name);
-	// 	// //Convert whitespaces and underscore to dash
-	// 	// $name = preg_replace("/[\s_]/", "-", $name);
-
-	// 	//$markup_string .= '<article class="post '. $name .'"><div class="inner">'."\n";
-	// 	$markup_string .= '<article class="post"><div class="inner">'."\n";
-	// 	//$markup_string .= $name;
-	// 	$markup_string .= $this->get_teaser_image_markup();
-	// 	$markup_string .= $this->get_content_block_markup();
-	// 	$markup_string .= '</div></article>'."\n";
-	// 	return $markup_string;
-	// }
-	
-	function get_pre_markup()
-	{
-		return $this->get_teaser_image_markup();
-	}
-
-	// function this_is_a_filtered_mofo()
-	// {	
-	// 	$msg = '';
-	// 	$msg .= 'HI!';
-	// 	if(!empty($this->passed_vars['current_filters']))
-	// 	{
-	// 		$msg = '<h1>This is filtered, yo!</h1>';
-	// 	}
-	// 	return $msg;
-	// }
-	
-	function get_item_category_markup()
-	{
-		$link_markup = array();
-		$markup_string = '<ul class="post-cats">';
-		foreach ($this->passed_vars['item_categories'] as $cat)
-		{
-			$class_name = $cat->get_value('name');
-			// //Lower case everything
-			$class_name = strtolower($class_name);
-			// //Make alphanumeric (removes all other characters)
-			$class_name = preg_replace("/[^a-z0-9_\s-]/", "", $class_name);
-			// //Clean up multiple dashes or whitespaces
-			$class_name = preg_replace("/[\s-]+/", " ", $class_name);
-			// //Convert whitespaces and underscore to dash
-			$class_name = preg_replace("/[\s_]/", "-", $class_name);
-
-			$link_markup[] = '<li class="post-cat ' . $class_name . '"><a href="' . carl_make_link( array(), '', '', false, false) . $cat->get_value('category_url') . '">' . $cat->get_value('name') . '</a></li>';
-		}
-		$markup_string .= implode("\n ", $link_markup);
-		$markup_string .= '</ul>';
-		return $markup_string;
-	}
 
 	// FULL SIZE TEASER IMG MARKUP
 	function get_teaser_image_markup() // {{{
@@ -166,16 +76,6 @@ class MagazinePublicationListItemMarkupGenerator extends PublicationMarkupGenera
 			$markup_string .= '</figure>';
 		}
 		return $markup_string;
-	}
-
-	function get_date_markup()
-	{
-		$item = $this->passed_vars['item'];
-		if($item->get_value( 'datetime') && empty($this->passed_vars['current_issue']) && $this->passed_vars['use_dates_in_list'])
-		{
-			$datetime = prettify_mysql_datetime( $item->get_value( 'datetime' ), $this->passed_vars['date_format'] );
-			return  '<div class="date">'.$datetime.'</div>'."\n";
-		}
 	}
 
 	// CUSTOM TEASER IMG SIZE MARKUP
@@ -242,6 +142,29 @@ class MagazinePublicationListItemMarkupGenerator extends PublicationMarkupGenera
 		return $markup_string;
 	}
 	
+	function get_item_category_markup()
+	{
+		$link_markup = array();
+		$markup_string = '<ul class="post-cats">';
+		foreach ($this->passed_vars['item_categories'] as $cat)
+		{
+			$class_name = $cat->get_value('name');
+			// //Lower case everything
+			$class_name = strtolower($class_name);
+			// //Make alphanumeric (removes all other characters)
+			$class_name = preg_replace("/[^a-z0-9_\s-]/", "", $class_name);
+			// //Clean up multiple dashes or whitespaces
+			$class_name = preg_replace("/[\s-]+/", " ", $class_name);
+			// //Convert whitespaces and underscore to dash
+			$class_name = preg_replace("/[\s_]/", "-", $class_name);
+
+			$link_markup[] = '<li class="post-cat ' . $class_name . '"><a href="' . carl_make_link( array(), '', '', false, false) . $cat->get_value('category_url') . '">' . $cat->get_value('name') . '</a></li>';
+		}
+		$markup_string .= implode("\n ", $link_markup);
+		$markup_string .= '</ul>';
+		return $markup_string;
+	}
+
 	function get_title_markup()
 	{
 		$markup_string = '';
@@ -251,6 +174,17 @@ class MagazinePublicationListItemMarkupGenerator extends PublicationMarkupGenera
 		$markup_string .=  '</h4>'."\n";
 		return $markup_string;
 	}
+
+
+	function get_date_markup()
+	{
+		$item = $this->passed_vars['item'];
+		if($item->get_value( 'datetime') && empty($this->passed_vars['current_issue']) && $this->passed_vars['use_dates_in_list'])
+		{
+			$datetime = prettify_mysql_datetime( $item->get_value( 'datetime' ), $this->passed_vars['date_format'] );
+			return  '<div class="date">'.$datetime.'</div>'."\n";
+		}
+	}
 	
 	function get_description_markup()
 	{
@@ -258,23 +192,5 @@ class MagazinePublicationListItemMarkupGenerator extends PublicationMarkupGenera
 		if($item->get_value('description'))
 			return '<div class="desc">'.$item->get_value('description').'</div>'."\n";
 	}
-	
-	// function get_title_markup()
-	// {
-	// 	$markup_string = '';
-	// 	$item = $this->passed_vars['item'];
-	// 	$markup_string .=  '<h4 class="title">';
-	// 	$markup_string .= $item->get_value('release_title');
-	// 	$markup_string .=  '</h4>'."\n";
-	// 	return $markup_string;
-	// }
-	
-	// function get_description_markup()
-	// {
-	// 	$item = $this->passed_vars['item'];
-	// 	if($item->get_value('description'))
-	// 		return '<div class="desc">'.$item->get_value('description').'</div>'."\n";
-	// }
-
 }
 ?>

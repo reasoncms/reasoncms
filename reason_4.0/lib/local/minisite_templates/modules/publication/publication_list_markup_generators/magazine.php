@@ -27,27 +27,10 @@ class MagazinePublicationListMarkupGenerator extends PublicationListMarkupGenera
 	function run()
 	{
 
-$this->markup_string .= $this->get_issue_selector_markup();
-
+		//$this->markup_string .= $this->get_issue_selector_markup();
 		$this->markup_string .= $this->category_filter_title_markup();
 		$this->markup_string .= $this->get_all_posts_markup();
 		$this->markup_string .= $this->get_search_and_filter_interface_markup();
-
-		//$this->markup_string .= $this->get_post_list_markup();
-		
-		//$this->markup_string .= $this->this_is_a_filtered_mofo();
-		
-		//$this->markup_strong .= $this->get_issue_title_markup();
-		
-		//$this->markup_strong .= $this->get_issue_blurb_module_markup();
-		
-		//$this->markup_string .= $this->get_all_filtered_posts_markup();
-		
-
-		//$this->markup_string .= $this->get_featured_items_markup();
-		//$this->markup_string .= $this->get_list_markup();
-		
-
 	}
 
 	// DISPLAY THE CATEGORY PAGE TITLE IF ON A CATEGORY PAGE
@@ -69,6 +52,31 @@ $this->markup_string .= $this->get_issue_selector_markup();
 		$markup_string .= '</div>'."\n";
 		return $markup_string;
 	}
+
+	// CUSTOM SEARCH AND FILTER INTERFACE
+	function get_search_and_filter_interface_markup()
+	{
+		$markup = '';
+		if(!empty($this->passed_vars['search_interface_markup']) || !empty($this->passed_vars['filter_interface_markup']))
+		{
+			$markup .= '<div class="searchAndFilterInterface">'."\n";
+			// WE DON'T NEED SEARCH FOR NOW, BUT IT'S HERE IF WE WANT IT
+			// if(!empty($this->passed_vars['search_interface_markup']))
+			// {
+			// 	$markup .= '<div class="searchInterface">'."\n";
+			// 	$markup .= $this->passed_vars['search_interface_markup'];
+			// 	$markup .= '</div>'."\n";
+			// }
+			if(!empty($this->passed_vars['filter_interface_markup']))
+			{
+				$markup .= '<div class="filterInterface">'."\n";
+				$markup .= $this->passed_vars['filter_interface_markup'];
+				$markup .= '</div>'."\n";
+			}
+			$markup .= '</div>'."\n";
+		}
+		return $markup;
+	}	
 
 	function get_featured_items_markup()
 	{
@@ -205,86 +213,6 @@ $this->markup_string .= $this->get_issue_selector_markup();
 		return '';
 	}
 
-
-	function get_search_and_filter_interface_markup()
-	{
-		$markup = '';
-		if(!empty($this->passed_vars['search_interface_markup']) || !empty($this->passed_vars['filter_interface_markup']))
-		{
-			$markup .= '<div class="searchAndFilterInterface">'."\n";
-			// WE DON'T NEED SEARCH FOR NOW, BUT IT'S HERE IF WE WANT IT
-			// if(!empty($this->passed_vars['search_interface_markup']))
-			// {
-			// 	$markup .= '<div class="searchInterface">'."\n";
-			// 	$markup .= $this->passed_vars['search_interface_markup'];
-			// 	$markup .= '</div>'."\n";
-			// }
-			if(!empty($this->passed_vars['filter_interface_markup']))
-			{
-				$markup .= '<div class="filterInterface">'."\n";
-				$markup .= $this->passed_vars['filter_interface_markup'];
-				$markup .= '</div>'."\n";
-			}
-			$markup .= '</div>'."\n";
-		}
-		return $markup;
-	}	
-
-
-
-	
-	// function get_search_header_markup()
-	// {
-	// 	if(!empty($this->passed_vars['search_string']))
-	// 	{
-	// 		return '<h3 class="searchTitle">Results for <span class="searchPhrase">"'.$this->passed_vars['search_string'].'"</span></h3>'."\n";
-	// 	}
-	// 	return '';
-	// }
-	
-
-	
-//////
-// Featured item methods
-//////
-	
-
-	
-	
-	/**
-	* Determines which news items should be displayed as featured items, if any.  
-	* @return array Array of markup strings for featured items that should be shown, format $id => $markup_string.
-	*/	
-	// function get_featured_items_to_show()
-	// {
-	// 	if(empty($this->passed_vars['current_section']))
-	// 		return $this->passed_vars['featured_item_markup_strings'];
-	// 	else
-	// 	{
-	// 		$featured_items_in_this_section = array();
-
-	// 		foreach($this->passed_vars['featured_item_markup_strings'] as $id => $markup)
-	// 		{
-	// 			if(!empty($this->passed_vars['items_by_section'][$this->passed_vars['current_section']->id()]))
-	// 				$section_array = $this->passed_vars['items_by_section'][$this->passed_vars['current_section']->id()];
-	// 			elseif(!empty($this->passed_vars['no_section_key']) && isset($this->passed_vars['items_by_section'][$this->passed_vars['no_section_key']]) )
-	// 				$section_array = $this->passed_vars['items_by_section'][$this->passed_vars['no_section_key']];
-	// 			else
-	// 				$section_array = array();
-
-	// 			if(array_key_exists($id, $section_array))
-	// 			{
-	// 				$featured_items_in_this_section[$id] = $markup;
-	// 			}	
-	// 		}
-	// 		return $featured_items_in_this_section;
-	// 	}
-	// }
-
-	
-/////
-//  Issue methods
-/////
 	function get_current_issue_markup($issue)
 	{
 		$markup_string = '';
