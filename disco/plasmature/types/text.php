@@ -197,6 +197,26 @@ class money_solidTextType extends solidtextType
  * @package disco
  * @subpackage plasmature
  */
+// displays a money amount but allows changes, unlike money_solidText.
+// useful for displaying calculated fields
+class money_disabledChangeableType extends defaultType
+{
+	var $type = 'money_disabledchangeable';
+	var $currency_symbol = '$';
+	var $decimal_symbol = '.';
+	var $type_valid_args = array( 'currency_symbol','decimal_symbol' );
+	function get_display()
+	{
+		$str  = '<input type="hidden" name="'.$this->name.'" value="'.htmlspecialchars($this->get(),ENT_QUOTES).'"/>';
+		$str .= "\n".'<div class="solidText">' . $this->currency_symbol . htmlspecialchars($this->get(),ENT_QUOTES). '</div>';
+		return $str;
+	}
+}
+
+/**
+ * @package disco
+ * @subpackage plasmature
+ */
 class textareaType extends defaultType
 {
 	var $type = 'textarea';
