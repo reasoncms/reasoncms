@@ -11,9 +11,13 @@
  * proper encoding before calling this function.
  *
  * @param string $str
+ * @param resource $link_identifier
  * @return string
  */
-function carl_util_sql_string_escape($str)
+function carl_util_sql_string_escape($str, $link_identifier = NULL)
 {
-	return mysql_real_escape_string($str);
+	if(NULL === $link_identifier)
+		return mysql_real_escape_string($str);
+	return mysql_real_escape_string($str, $link_identifier);
+	
 }
