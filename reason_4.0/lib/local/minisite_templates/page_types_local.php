@@ -542,6 +542,32 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'footer' => '',
 		'edit_link' => '',
 	),
+	'magazine_publication' => array(
+		'main'=>array(
+			'module'=>'publication',
+			'module_displays_search_interface' => false,
+			'module_displays_filter_interface' => false,
+			'filter_displayer'=>'listnav.php',
+			'markup_generator_info' =>array(
+				'list' =>array (
+					'classname' => 'MagazinePublicationListMarkupGenerator',
+					'filename' =>'minisite_templates/modules/publication/publication_list_markup_generators/magazine.php'
+				),
+				'list_item' =>array (
+					'classname' => 'MagazinePublicationListItemMarkupGenerator',
+					'filename' =>'minisite_templates/modules/publication/list_item_markup_generators/magazine.php'
+				),
+				'featured_item' => array (
+					'classname' => 'MagazinePublicationListItemMarkupGenerator', 
+					'filename' =>'minisite_templates/modules/publication/list_item_markup_generators/magazine.php'
+				),
+				'item' => array (
+					'classname' => 'MagazineItemMarkupGenerator', 
+					'filename' =>'minisite_templates/modules/publication/item_markup_generators/magazine.php'
+				),
+			),
+		),
+	),
 	'net_price_calculator' => array(
 		'main_post' => 'net_price_calculator',
 	),

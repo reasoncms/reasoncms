@@ -30,7 +30,7 @@ $GLOBALS[ '_DEVELOPER_INFO' ] = array(
         'vagrant' => array(
                 'ip' => array(
                         '10.0.2.2',
-                        '192.168.56.1',
+                        //'192.168.56.1',
                         '127.0.0.1',
                 )
         ),
