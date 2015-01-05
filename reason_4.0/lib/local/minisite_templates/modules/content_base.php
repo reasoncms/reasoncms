@@ -32,7 +32,7 @@
 		{
 			$this->process();
 			echo '<div id="pageContent">';
-			$this->luther_process_images();
+			$this->content = luther_process_inline_images($this->content);
 			echo $this->content;
 			echo '</div>';
 		}

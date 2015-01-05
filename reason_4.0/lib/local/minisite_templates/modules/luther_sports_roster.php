@@ -63,7 +63,7 @@
 			'athlete_letter' => true,
 			'athlete_captain' => true,
         );
-        
+
 	var $table_header = array(
 			'athlete_first_name' => 'First',
 			'athlete_last_name' => 'Last',
@@ -73,7 +73,7 @@
 			'athlete_high_school' => 'High School',
 			'athlete_class_year' => 'Year',
 		);
-		
+
 	var $class_year = array(
 			'First Year' => 'Fy',
 			'Sophomore' => 'So',
@@ -156,31 +156,38 @@
                     'number_sort_desc',
                     'year_sort_asc',
                     'year_sort_desc')));
-	
+
 	var $site_name;
 	var $positions;
 
 	function init( $args = array() )
 	{
 		parent::init( $args );
-		
+
 		//Do standard initialization
-		
+
 		$head_items = $this->get_head_items();
-		//$head_items->add_javascript(JQUERY_URL, true);
-		
-		$head_items->add_javascript('/reason/local/luther_2014/javascripts/tablesorter.min.js');
-		//$head_items->add_javascript('/reason/local/luther_2014/javascripts/vendor/jquery.hoverIntent.min.js');
-		//$head_items->add_stylesheet('/reason/local/luther_2014/javascripts/vendor/jquery.cluetip.css');
-		//$head_items->add_javascript('/reason/local/luther_2014/javascripts/vendor/jquery.cluetip.min.js');		
+		$head_items->add_javascript(JQUERY_URL, true);
+
+        $head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/js/jquery.tablesorter.min.js');
+        $head_items->add_stylesheet(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/css/theme.ice.css');
+        $head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/addons/pager/jquery.tablesorter.pager.min.js');
+        $head_items->add_stylesheet(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/addons/pager/jquery.tablesorter.pager.css');
+        $head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/js/jquery.tablesorter.widgets.min.js');
+        $head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/js/jquery.tablesorter.widgets-filter-formatter.min.js');
+        $head_items->add_stylesheet(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/css/filter.formatter.css');
+
+		$head_items->add_javascript('/reason/local/luther_2014/javascripts/vendor/jquery.hoverIntent.min.js');
+		$head_items->add_stylesheet('/reason/local/luther_2014/javascripts/vendor/jquery.cluetip.css');
+		$head_items->add_javascript('/reason/local/luther_2014/javascripts/vendor/jquery.cluetip.min.js');
 		$head_items->add_javascript('/reason/local/luther_2014/javascripts/luther-sports-roster.js');
 		//$head_items->add_javascript('/reason/local/luther_2014/javascripts/luther-cluetip.js');
-		
+
 		if (defined(UNIVERSAL_CSS_PATH))
 		{
 			$head_items->add_stylesheet(UNIVERSAL_CSS_PATH);
 		}
-		
+
 		$head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'FancyBox/source/jquery.fancybox.js');
 		$head_items->add_stylesheet(REASON_PACKAGE_HTTP_BASE_PATH.'FancyBox/source/jquery.fancybox.css');
 		$head_items->add_head_item('script', array('type'=>'text/javascript'),
@@ -192,10 +199,10 @@
 				});
 			});'
 		);
-		
+
 		$site_id = new entity( $this->site_id );
 		$this->site_name = $site_id->get_value('unique_name');
-		
+
 		$es = new entity_selector($this->site_id);
 		$es->add_type(id_of('athlete_type'));
 		if (!empty($this->request['id']))   // individual
@@ -207,7 +214,7 @@
 			$es->add_relation('athlete_hide != "yes"');
 			$es->set_order('athlete_number, athlete_last_name, athlete_first_name'); // omit table name due to union query
 		}
-		
+
 		$es->add_left_relationship_field( 'athlete_to_image', 'entity', 'id', 'image_id', false); // get images and those with no image - uses union query
 
 		$players = $es->run_one();
@@ -233,7 +240,7 @@
 			$this->_add_crumb($pv['athlete_first_name'] . " " . $pv['athlete_last_name']);
 			if (($this->site_name == 'sport_baseball_men' || $this->site_name == 'sport_basketball_men' ||
 				$this->site_name == 'sport_football_men' || $this->site_name == 'sport_soccer_men' ||
-				$this->site_name == 'sport_basketball_women' || $this->site_name == 'sport_soccer_women' || 
+				$this->site_name == 'sport_basketball_women' || $this->site_name == 'sport_soccer_women' ||
 				$this->site_name == 'sport_softball_women' || $this->site_name == 'sport_volleyball_women') &&
 				$pv['athlete_number'] < 9999)
 			{
@@ -274,13 +281,12 @@
 			return false;
 		}
 	}
-	
+
 	function run()
 	{
 		$this->sort_columns($this->_columns);
-		//$this->handle_abbreviated_position_events();
 		$this->positions = get_sport_position_event_full_name($this->site_name);
-		
+
 		if (!empty($this->request['id']))
 		{
 			echo '<div id="athleticsPlayerInfo">';
@@ -300,13 +306,13 @@
 
 				echo '<a class="fancybox" title="' . htmlspecialchars($description, ENT_COMPAT) . '" rel="group" href="' . $url .'">
 					<img src="' . $thumb .'" alt="' . htmlspecialchars($description, ENT_COMPAT) . '" title="' . $player['name'] . '" /></a>';
-				
+
 			}
-			
+
 			echo '<ul class="no-bullet">';
 			foreach ( array_keys($this->_columns) as $col)
 			{
-				
+
 				if ($col != 'athlete_first_name' && $col != 'athlete_last_name' && $col != 'athlete_number' && $col != 'athlete_hometown_state')
 				{
 					$value = $player[$col];
@@ -325,7 +331,7 @@
 						{
 							$value = (string)((int)($player[$col] / 12) . '-' . $player[$col] % 12);
 						}
-						else 
+						else
 						{
 							$value = "";
 						}
@@ -336,7 +342,7 @@
 						{
 							$value = $player[$col];
 						}
-						else 
+						else
 						{
 							$value = "";
 						}
@@ -347,7 +353,7 @@
 			}
 			echo '</ul>';
 			echo '<hr>';
-			if (!empty($player['content'])) {	
+			if (!empty($player['content'])) {
 				echo $player['content']."\n";
 			}
 			echo '</div>', "\n";
@@ -365,7 +371,8 @@
 					// allows custom table sorting parser to be used for a given column
 					// the sorting parser is located in javascripts/jquery.init.js
 					// see http://tablesorter.com/docs/example-meta-headers.html
-					$str .= '<th class="{sorter: \'' . $k .'\'}">'."\n";   
+					//$str .= '<th class="{sorter: \'' . $k .'\'}">'; **removed meta-header
+					$str .= '<th class="'.$k.'">';
 					$str .= $this->gen_custom_header($k);
 					$str .= '</th>'."\n";
 				}
@@ -403,7 +410,7 @@
 								//$str .= '<a href="'.$player_link.'">'.$name.'</a>';
 								//$str .= "<a href=\"".$player_link. "\" class=\"cluetip_athlete\" title=\"". $player['athlete_first_name']." ".$player['athlete_last_name'] ."\" rel=\"#athlete".$player['id']."\">".$name."</a>";
 								$str .= '<a data-tooltip aria-haspopup href="' .$player_link. '" class="has-tip" title="'. get_athlete_tooltip($player, $this->site_name).'">'.$name.'</a>';
-								
+
 								if ($col == 'athlete_last_name' && $player['athlete_letter'] == 'yes'
 									&& $col == 'athlete_last_name' && $player['athlete_captain'] == 'yes')
 								{
@@ -426,7 +433,7 @@
 							{
 								$str .= preg_replace("|^Fy$|", "Fr", $this->class_year[$player[$col]]);
 								//$str .= $this->class_year[$player[$col]];
-								
+
 							}
 							else if ($col == 'athlete_height')
 							{
@@ -457,7 +464,7 @@
 							$str .= '</td>'."\n";
 						}
 						$str .= '</tr>'."\n";
-						
+
 						/*$ct .= "<div id=\"athlete".$player['id']."\">";
 						$ct .= "<p class=\"athlete_position_event\">". $this->positions[$player['athlete_position_event']];
 						if (!empty($player['image_id']))
@@ -466,7 +473,7 @@
 							$thumb = luther_get_image_url(WEB_PHOTOSTOCK . $player['image_id'] . '_tn.' . $image['image_type']);
 							$ct .= "<img class=\"athlete_image\" src=\"" . $thumb . "\" />";
 						}
-						$ct .= "</p>";					
+						$ct .= "</p>";
 						$ct .= "<p class=\"athlete_class_year\">". $player['athlete_class_year']."</p>";
 						$ct .= "<p class=\"athlete_hometown\">". $player['athlete_hometown_city'];
 						if (array_key_exists($player['athlete_hometown_state'], $this->statesAP))
@@ -474,7 +481,7 @@
 							$ct .= ", ". $this->statesAP[$player['athlete_hometown_state']];
 						}
 						$ct .= "</p>";
-						$ct .= "<p class=\"athlete_high_school\">". $player['athlete_high_school']."</p>";		
+						$ct .= "<p class=\"athlete_high_school\">". $player['athlete_high_school']."</p>";
 						$ct .= "</div>";*/
 
 				}
@@ -497,10 +504,10 @@
 			echo $str;
 		}
 	}
-	
+
 	function gen_custom_header($k)
 	{
-		
+
 		if ($k == 'athlete_position_event')
 		{
 			if ($this->site_id == id_of('sport_baseball_men') || $this->site_id == id_of('sport_football_men') ||
@@ -512,7 +519,7 @@
 				{
 					return 'Pos.';
 				}
-				else 
+				else
 				{
 					return 'Position';
 				}
@@ -520,7 +527,7 @@
 			else if ($this->site_id == id_of('sport_swimmingdiving_men') || $this->site_id == id_of('sport_swimmingdiving_women') ||
 				$this->site_id == id_of('sport_track_men') || $this->site_id == id_of('sport_track_women'))
 			{
-				
+
 				return 'Event';
 			}
 			else
@@ -534,7 +541,7 @@
 			{
 				return 'Ht.';
 			}
-			else 
+			else
 			{
 				return 'Height';
 			}
@@ -545,7 +552,7 @@
 			{
 				return 'Wt.';
 			}
-			else 
+			else
 			{
 				return 'Weight';
 			}
@@ -556,7 +563,7 @@
 			{
 				return 'B';
 			}
-			else 
+			else
 			{
 				return 'Bat';
 			}
@@ -567,7 +574,7 @@
 			{
 				return 'T';
 			}
-			else 
+			else
 			{
 				return 'Throw';
 			}
@@ -575,7 +582,7 @@
 		return $this->table_header[$k];
 
 	}
-	
+
 	function sort_columns(&$columns)
 	{
 		$sort_order = array('athlete_number' => 0, 'athlete_first_name' => 1,
@@ -604,8 +611,8 @@
 		}
 		$columns = $new_order;
 	}
-	
 
-	
+
+
 }
 ?>

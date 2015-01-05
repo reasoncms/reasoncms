@@ -1,5 +1,5 @@
 //
-// FEATRE STYLES
+// FEATURE STYLES
 //
 // @author Nathan Dirks
 //
@@ -19,11 +19,12 @@
 //////////////////////////////////////
 
 #wrapper {
-
-	.video {
-		@include flex-video-container();
+	#contentAndRelated {
+		.video {
+			@include flex-video-container();
+		}
 	}
-
+	
 	#av {
 
 		.moduleNav {

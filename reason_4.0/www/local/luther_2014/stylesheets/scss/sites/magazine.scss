@@ -1,0 +1,1311 @@
+// Foundation imports
+@import "settings";
+@import "foundation/components/grid";
+
+// Compass imports
+@import "compass/css3";
+
+// Font Awesome Imports
+@import "font-awesome/variables";
+@import "font-awesome/core";
+
+// Luther imports
+@import "extends";
+
+// TABLE OF CONTENTS
+//
+// 1. GENERAL THEME STYLES
+//    1A. HEADER
+//    1B. MINISITE NAVIGATION
+//
+// 2. PUBLICATION MODULE STYLES
+//    2A. SHARED STYLES
+//    2B. HOME PAGE 
+//    2C. FILTERED PAGE 
+//    2D. FULL ARTICLE PAGE 
+
+$logo-width-widescreen: rem-calc(198);
+
+// 1. GENERAL THEME STYLES 
+.lutherMagazine {
+
+	#minisite {
+		position: relative;
+
+		// 1A. HEADER
+		#minisiteBanner {  // Mobile banner
+
+			@media #{$medium-and-below} {
+
+				#banner {
+
+					h1 { // Hide minisite title, but keep readable by screenreaders
+						position: static;
+						width: 70%;
+						height: $header-height-mobile;
+						padding-top: 10px;
+
+						a  {
+							width: rem-calc(106);
+							height: rem-calc(40);
+							background: url('../../images/magazine/logo_mobile_2x.png');
+							background-size: 100%;
+							position: relative;
+							display: block;
+
+							span {
+								position: absolute;
+								left: -9999px;
+								top: -9999px;
+								margin-bottom: 0;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		// 1B. MINISITE NAVIGATION
+
+		#navWrap {  // Navigtaion column
+			@include grid-column($columns: 16, $collapse: true);
+			
+			@media #{$large-up} {
+				@include grid-column($columns: 5, $collapse: true);
+				display: block;
+			}
+
+			@media #{$large-high-up} {
+				@include grid-column($columns: 4, $collapse: true);
+			}
+		}
+
+		#navWrap {
+
+			a.toggle {
+
+				h1 {
+
+					i {
+						display: none;
+					}
+				}
+			}
+
+			// Sidebar nav background color
+			#minisiteNavigation {
+				background: #efefef;
+
+				@media #{$large-up} {
+					padding: $column-gutter;
+					padding-top: 0;
+					padding-bottom: 0;
+					background: none;
+				}
+			}
+			
+			@media #{$large-up} {
+				.navListTop li a {
+					padding: $column-gutter / 5 0;
+				}
+			}
+			
+			.navListTop a.home {  //  Large "home" link at the top of the nav
+				font-size: rem-calc(24);
+
+				@media #{$large-up} {
+					padding-top: 0;
+					background: transparent url("../../images/magazine/logo_1x.png") no-repeat;
+					border-bottom: none;
+					margin-bottom: $column-gutter/2;
+					width: $logo-width-widescreen;
+					height: 74px;
+
+					span {
+						position: absolute;
+						left: -9999px;
+						top: -9999px;
+						margin-bottom: 0;
+					}
+				}
+			}
+			
+			@media #{$large-up} {
+				
+				.navListTop ul {  // TOP LEVEL page links
+
+					a {
+						border-color: rgba(#000, .1);
+						//border: none;
+						//display: inline-block;
+						
+						&:hover {
+							background: none;
+							text-decoration: underline;
+						}
+					}
+
+					.open a:hover {
+						background: none !important;
+					}	
+
+					li:last-of-type {
+						a {
+							border-bottom: 1px solid rgba(#000, .1);
+						}
+					}
+				}
+				
+				.navListTop ul ul {  // SECOND LEVEL page links
+				
+					a {
+						padding: 0 0 $column-gutter / 5 $column-gutter / 2;
+						border: none;
+					
+						&:hover {
+							background: none;
+							text-decoration: underline;
+						}
+					}
+				}
+				
+				.navListTop ul .navListItem {
+
+					&.open {
+						background: none;
+					}
+
+					&.accordion {
+						> a {
+
+							&:before {
+								top: $column-gutter / 2.75;
+								right: 0;
+							}
+						}
+					}
+				}
+				
+				.jump {
+
+					//display: inline-block;
+					
+					a {
+
+						&:before {
+							top: $column-gutter / 2.75;
+							right: 0;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+// 2. PUBLICATION MODULE STYLES
+//
+// In luther_magazine.php, we give the home page the class of .siteHome. 
+// In this case, the home page is the entire publication module because all parts of the publication module run on the same "page".
+
+// 2A. SHARED STYLES
+.siteHome {
+
+	#minisite {
+
+		.feedLink {
+			display: none;
+		}
+
+
+		.pageTitle {
+			display: none; // Hide page title on publication pages
+		}
+
+		#contentSections {
+			margin-top: 0 !important;
+		}
+
+		#navWrap {
+			@media #{$large-up} {
+				position: absolute;
+				top: $column-gutter;
+				left: 0;
+			}
+		}
+
+		#contentAndRelated {
+			@media #{$medium-and-below} {
+				margin-top: $column-gutter/2;
+			}
+
+			@media #{$large-up} {
+				width: 100%;
+				padding-left: 0;
+			}			
+		}
+
+		// Issue drop down 
+		.issueMenu {
+			position: absolute;
+			top: 0;
+			left: 0;
+			z-index: 999999;
+
+			label.issueLabel {
+				@extend .screenreader;
+			}
+		}
+
+		.persistent {
+			display: none;
+		}
+
+		.fullPostDisplay {
+
+		}
+
+		// SECTION WRAPPER
+		.sections {
+			margin: 0;
+
+			.section {
+				margin: 0;
+				padding: 0;
+				border: none;
+			}
+		}
+
+		// Category Colors
+		.post-cats {
+			.features {
+				a {
+					background: rgba($lc-blue-light, .85);
+
+					&:hover {
+						background: $lc-blue-light;
+					}
+				}
+			}
+
+			.alumni-profiles {
+				a {
+					background: rgba($lc-green, .9);
+
+					&:hover {
+						background: $lc-green;
+					}
+				}
+			}
+
+			.in-the-media {
+				a {
+					background: rgba($lc-yellow, .9);
+
+					&:hover {
+						background: $lc-yellow;
+					}
+				}
+			}
+
+			.class-notes {
+				a {
+					background: rgba($lc-red, .9);
+
+					&:hover {
+						background: $lc-red;
+					}
+				}
+			}
+		}
+	}
+}
+
+// 2B. HOME PAGE
+// 
+// The publication home page has a class of .homePostsDisplay
+
+.siteHome #minisite .homePostsDisplay {
+
+	.searchAndFilterInterface {
+		display: none;
+	}
+
+	.sections {
+		clear: both;
+		margin-right: - $column-gutter/2;
+		margin-left: - $column-gutter/2;
+
+		@media #{$large-up} {
+			width: 85%;
+			max-width: 960px;
+			margin: 0 auto !important;
+		}
+
+		@media #{$xlarge-up} {
+			width: 78%;
+			max-width: none;
+		}
+	}
+
+	// POSTS COLUMN STRUCTURE, home page
+
+	// Sets base column width for isotope
+	.grid-sizer,
+	.post {
+		width: 100%;
+
+		@media #{$small-high-up} {
+			width: 50%;
+		}
+
+		@media #{$medium-high-up} {
+			width: 33.3333%;
+		}
+	}
+
+	// POST SUMMARY BLOCKS
+	.post {
+		border: none;
+		float: left;
+		padding: $column-gutter/2;
+		
+		.inner {
+			@include box-shadow(rgba(black, .5) 0 0 2px);
+			@include clearfix;
+		}
+
+		.primaryImage {
+			img {
+				//max-width: 100%;
+			}
+		}
+		
+		.content-block {
+			position: relative;
+
+			> a {
+				display: block;
+				padding: $column-gutter/2;
+				color: $body-font-color !important;
+			}
+		}
+
+		.image-block,
+		.category-block {
+			position: relative;
+		}
+
+		.category-block {
+			@include clearfix;
+			padding: $column-gutter/3;
+
+			@media #{$medium-up} {
+				padding: $column-gutter/2;
+			}
+		}
+
+		.post-cats {
+			margin: 0;
+			text-align: center;
+		}
+
+		.post-cat {
+
+			a {
+				display: block;
+				float: left;
+				color: #FFF;
+				padding: rem-calc(2) rem-calc(8);
+
+				@media #{$medium-up} {
+					padding: rem-calc(4) rem-calc(12);
+				}
+			}
+		}
+
+		.category-block .post-cat {
+			a {
+				float: right;
+			}
+		}
+
+		.image-block .post-cat {
+			position: absolute;
+			bottom: $column-gutter/3;
+			right: $column-gutter/3;
+
+			@media #{$medium-up} {
+				bottom: $column-gutter/2;
+				right: $column-gutter/2;
+			}
+		}
+
+		.desc p {
+			margin-bottom: 0;
+		}
+	}
+
+
+	// FEATURED POST
+	#featuredItems {
+
+		@media #{$large-up} {
+			margin-top: - $column-gutter;
+		}
+
+		.post {
+			width: 100%;
+			padding: 0;
+
+			@media #{$small-only} {
+				
+				$mobile-feature-image-height: 224px;
+				$mobile-feature-image-width: 651px;
+
+				.primaryImage {
+					padding: 0;
+					height: $mobile-feature-image-height;
+				
+					img {
+						width: $mobile-feature-image-width;
+						max-width: 10000px !important;
+						height: $mobile-feature-image-height !important;
+						position: absolute;
+						left: 50%;
+						top: 0;
+						margin-left: - $mobile-feature-image-width/2;
+					}
+				}
+			}
+
+			@media #{$medium-only} {
+				
+				$mobile-feature-image-height: 376px;
+				$mobile-feature-image-width: 1094px;
+
+				.primaryImage {
+					padding: 0;
+					height: $mobile-feature-image-height;
+				
+					img {
+						width: $mobile-feature-image-width;
+						max-width: 10000px !important;
+						height: $mobile-feature-image-height !important;
+						position: absolute;
+						left: 50%;
+						top: 0;
+						margin-left: - $mobile-feature-image-width/2;
+					}
+				}
+			}
+
+			.post-cat a {
+				@media #{$small-up} {
+					right: 0;
+				}
+
+				@media #{$medium-up} {
+					right: rem-calc(10);
+				}
+
+				@media #{$large-up} {
+					right: rem-calc(30);
+				}
+			}
+
+			.content-block {
+				text-align: center;
+				padding: $column-gutter/2 0;
+
+				h4 {
+					font-size: $h3-font-size;
+
+					@media #{$medium-up} {
+						font-size: $h1-font-size;
+					}
+				}
+
+				.desc p {
+
+					@media #{$medium-up} {
+						font-size: rem-calc(18);
+					}
+				}
+
+				$triangle-size: rem-calc(18);
+				
+				&:before {
+					display: block;
+					content: "";
+					width: 0; 
+					height: 0; 
+					border-left: $triangle-size solid transparent;
+					border-right: $triangle-size solid transparent;
+					border-bottom: $triangle-size solid #FFF;
+					position: absolute;
+					top: - $triangle-size;
+					left: 50%;
+					margin-left: - $triangle-size/2;
+				}
+				
+				&:after {
+					display: block;
+					width: rem-calc(200);
+					margin: $column-gutter/2 auto 0;
+					content: "";
+					border-bottom: 1px solid rgba(#000, .1);
+
+				}
+				
+			}
+
+			.primaryImage {
+				position: relative;
+
+				// This is acts as the frosty minisite navigation background on the home page.
+				// Widths match the traditional ministive navigation widths set in minisite.scss 
+				@media #{$large-up} {
+
+					&:before {
+						content: "";
+						display: block;
+						height: 100%;
+						width: 100px;
+						width: 31.25%; // 5 columns
+						background: rgba(#FFF, .55);
+						position: absolute;
+						left: 0;
+						top: 0;
+					}
+
+					img {
+						width: 100%;
+					}
+				}
+
+				@media #{$xlarge-up} {
+					&:before {
+						width: 25%; // 4 columns
+					}
+				}
+			}
+		}
+	}
+
+	// UNIQUE SECTION STYLES
+
+	#features {
+
+		.image-block,
+		.category-block {
+			border-bottom: 7px solid $lc-blue-light;
+		}
+
+		@media #{$large-up} {
+			.post {
+				width: 33.3333%;
+
+				&:nth-of-type(1),
+				&:nth-of-type(2) {
+					width: 66.66666%;
+				}    	
+			}
+		}
+	}
+	
+	#alumni-profiles {
+		clear: both;
+
+		.image-block,
+		.category-block {
+			border-bottom: 7px solid $lc-green;
+		}
+
+		@media #{$large-up} {
+
+			.post {
+				width: 33.3333333%;
+
+				&:nth-of-type(1),
+				&:nth-of-type(2) {
+					width: 66.666666%;
+
+					.image-block {
+						float: left;
+						width: 50%;
+						border-bottom: none;
+						border-right: 7px solid $lc-green;
+					}
+
+					.content-block {
+						float: left;
+						width: 50%;
+					}
+
+					.post-cats a {
+						top: 0;
+						//bottom: 0;
+						left: -50%;
+						right: auto;
+					}
+				}
+			}
+		}
+	}
+
+	#class-notes {
+
+		.image-block,
+		.category-block {
+			border-bottom: 7px solid $lc-red;
+		}
+	}
+
+	#in-the-media {
+
+		.image-block,
+		.category-block {
+			border-bottom: 7px solid $lc-yellow;
+		}
+	}
+}
+
+
+//    2C. FILTERED PAGE 
+.siteHome #minisite .filteredPostsDisplay {
+	@media #{$large-up} {
+		margin-left: 31.25%;
+	}
+	@media #{$xlarge-up} {
+		margin-left: 25%;
+	}
+
+	// COLUMNS
+	.allPosts {
+
+		@media #{$medium-high-up} {
+			@include grid-column(11);
+			padding-left: 0;
+		}
+	}
+
+	.searchAndFilterInterface{
+
+		@media #{$medium-high-up} {
+			@include grid-column(5);
+			padding-right: 0;
+		}
+
+		.filterInterface {
+			ul {
+				margin: 0;
+
+				li {
+					margin-bottom: rem-calc(12);
+
+					strong {
+						border: 1px solid #000;
+						padding: rem-calc(2) rem-calc(8);
+						@include border-radius($global-radius);
+					}
+
+					a {
+						background: black;
+						color: #FFF;
+						padding: rem-calc(2) rem-calc(8);
+						@include border-radius($global-radius);
+					}
+
+					&:nth-of-type(1) {
+					// All
+						strong {
+							color: black;
+						}
+					}
+
+					&:nth-of-type(2) {
+						// Alumni Profiles
+						strong {
+							color: $lc-green;
+							border-color: $lc-green;
+							
+						}
+
+						a {
+							background: $lc-green;
+						}
+					}
+
+					&:nth-of-type(3) {
+						// Class Notes
+						strong {
+							color: $lc-red;
+							border-color: $lc-red;
+						}
+
+						a {
+							background: $lc-red;
+						}
+					}
+
+					&:nth-of-type(4) {
+						// Features
+						strong {
+							color: $lc-blue-light;
+							border-color: $lc-blue-light;
+						}
+
+						a {
+							background: $lc-blue-light;
+						}
+					}
+
+					&:nth-of-type(5) {
+						// In the Media
+						strong {
+							color: $lc-yellow;
+							border-color: $lc-yellow;
+						}
+
+						a {
+							background: $lc-yellow;
+						}
+					}
+				}
+
+				
+			}
+		}
+
+		+ p {
+			clear: both;
+			padding-top: $column-gutter/2;
+		}
+	}
+
+	.filterMessage {
+		padding-bottom: $column-gutter/2;
+		margin-bottom: $column-gutter/2;
+		border-bottom: 1px solid rgba(#000, .1);
+		
+		h3 {
+			font-size: $h4-font-size;	
+			margin: 0;
+			strong {margin-right: rem-calc(12);}
+		}
+
+		span {
+			font-size: rem-calc(16);
+			white-space: nowrap;
+		}
+	}
+
+	#featuredItems,
+	#featuredItems *,
+	#featuredItems *:before,
+	#featuredItems *:after,
+	.sections,
+	.sections *,
+	.sections *:before,
+	.sections *:after, {
+		clear: none !important;
+	}
+
+	.post {
+		clear: none;
+		$category-thumb-width: rem-calc(200) + $column-gutter/2;
+
+		@media #{$medium-up} {
+			padding-left: $category-thumb-width;
+		}
+
+		.primaryImage {
+			width: 20%;
+			float: right;
+			margin: 0 0 rem-calc(16) rem-calc(16);
+
+			@media #{$medium-up} {
+				width: 200px;
+				float: left;
+				margin: 0;
+				margin-left: - $category-thumb-width;
+			}	
+		}
+
+		.post-cats {
+			display: none;
+		}
+
+		.content-block {
+			position: relative;
+
+			@media #{$medium-up} {
+				padding-top: rem-calc(16);
+			}
+
+			> a {
+				display: block;
+				color: $body-font-color !important;
+			}
+
+			.date {
+				margin-bottom: rem-calc(4);
+			}
+		}
+	}
+}
+
+
+//    2D. FULL ARTICLE PAGE 
+.siteHome #minisite .fullPostDisplay {
+
+	.topImage {
+		position: relative;
+		margin-bottom: $column-gutter;
+
+		@media #{$large-up} {
+
+		margin-top: - $column-gutter;
+
+			// This is acts as the frosty minisite navigation background on the home page.
+			// Widths match the traditional ministive navigation widths set in minisite.scss 
+			&:before {
+				content: "";
+				display: block;
+				height: 100%;
+				width: 100px;
+				width: 31.25%; // 5 columns
+				background: rgba(#FFF, .55);
+				position: absolute;
+				left: 0;
+				top: 0;
+			}
+
+			img {
+				width: 100%;
+			}
+		}
+
+		@media #{$xlarge-up} {
+			&:before {
+				width: 25%; // 4 columns
+			}
+		}
+	}
+
+	// Article Column Structure
+	.fullPost {
+
+		@media #{$medium-up} {
+			@include grid-column($columns:12,$center:true);
+		}
+
+		@media #{$large-up} {
+			@include grid-column($columns:11,$center:false,$push:5,$collapse:true);
+			margin: 0;
+			margin-top: - $column-gutter;
+		}
+
+		@media #{$large-high-up} {
+			@include grid-column($columns:8,$center:true,$push:0,$collapse:true);
+		}
+
+		.text {
+
+			> *:last-child {
+				padding-bottom: 0;
+				margin-bottom: 0;
+			}
+
+			p,
+			li {
+				line-height: 1.8;
+			}
+
+			p.intro {
+				text-align: center;
+				font-size: $h3-font-size;
+				margin-bottom: $column-gutter;
+				font-family: $open-sans;
+			}
+
+			h4 {
+				font-size: $h3-font-size;
+				margin-bottom: $column-gutter;
+				margin-bottom: $column-gutter/2;
+			}
+
+			h5 {
+				font-size: $h4-font-size;
+				color: $lc-blue-light;
+				font-weight: 400;
+			}
+
+			p {
+				font-size: rem-calc(16);
+			}
+
+			blockquote {
+				margin: 0 2%;
+				border: none;
+
+				@media #{$medium-up} {
+					margin: 0 10%;
+				}
+			}
+
+			blockquote * {
+				font-size: rem-calc(24);
+				font-family: $open-sans;
+				color: rgba(black, .5);
+				line-height: 1.5;
+
+				@media #{$medium-up} {
+					font-size: rem-calc(32);
+				}
+			}
+
+			img {
+				margin: 0;
+			}
+			
+			img.left,
+			img[align="left"],
+			img.right,
+			img[align="right"] {
+				max-width: 100%;
+				width: 100%;
+				float: none;
+				margin: 0 0 $column-gutter;
+			}
+
+			@media #{$medium-up} {
+
+				img {
+					max-width: 1040px;
+					width: 140%;
+					height: auto;
+					margin-left: -20%;
+					padding-left: $column-gutter/2;
+				}
+
+				img.left,
+				img[align="left"],
+				img.right,
+				img[align="right"] {
+					max-width: 100%;
+					width: 100%;
+					float: none;
+					margin: 0 0 $column-gutter;
+					padding: 0;
+				}
+			}
+
+			@media #{$large-up} {
+
+				img {
+					max-width: 1040px;
+					width: 111%;
+					height: auto;
+					margin-left: -5.5%;
+					margin-right: -5.5%;
+					padding-left: 0;
+					//padding-left: $column-gutter/2;
+				}
+
+				img.left,
+				img[align="left"] {
+					width: 100%;
+					max-width: 640px;	
+					margin: 0 5% $column-gutter -40%;
+					float: left;
+				}
+				img.right,
+				img[align="right"] {
+					width: 100%;
+					max-width: 640px;
+					// margin: 0 -40% $column-gutter 5%;
+					// float: right;
+					margin: 0 5% $column-gutter -40%;
+					float: left !important;
+				}
+			}
+
+			@media #{$large-high-up} {
+
+				img {
+					max-width: 1040px;
+					width: 140%;
+					height: auto;
+					margin-left: -20%;
+					padding-left: 0;
+				}
+
+				img.left,
+				img[align="left"] {
+					margin-left: -50%;
+				}
+				img.right,
+				img[align="right"] {
+					margin: 0 -40% $column-gutter 5%;
+					float: right !important;
+				}
+			}
+		}
+	}
+
+
+	.issueName {
+		display: none;
+	}
+
+	.firstChunk,
+	.relatedItems,
+	.secondChunk {
+		width: 100% !important;
+		clear: left;
+		padding-right: 0;
+	}
+
+	.firstChunk {
+
+		@media #{$large-up} {
+			padding: $column-gutter 5%;
+			background: #efefef;			
+		}
+
+	}
+
+	.postTitle {
+		text-align: center;
+		color: $lc-blue-light;
+		font-size: rem-calc(34);
+		margin-bottom: $column-gutter;
+
+		@media #{$xlarge-up} {
+			font-size: rem-calc(46);
+			text-align: center;
+		}
+	}
+
+	.postMeta {
+		text-align: center;
+	
+		&:after {
+			display: block;
+			width: rem-calc(200);
+			margin: $column-gutter auto;
+			
+			height: 1px;
+			background: rgba(#000, .1);
+			content: "";
+		}
+	}
+
+	.author {
+		text-transform: uppercase;
+		font-size: rem-calc(12);
+		margin: 0;
+		padding: 0;
+		border: none;
+
+		.name {
+			text-transform: none;
+			font-size: rem-calc(16);
+			display: inline-block;
+			margin-left: rem-calc(4);
+		}
+	}
+
+	.social.top,
+	.social.bottom {
+		text-align: center;
+	}
+
+	.socialIcons {
+		margin: 0;
+		@include clearfix;
+
+		li {
+			display: inline-block;
+
+			span {
+				@extend .screenreader;
+			}
+
+			a {
+				display: block;
+				padding: rem-calc(12);
+				@include border-radius($global-rounded);
+				border: 1px solid rgba(#000, .2);
+				//background: red;
+				color: rgba(#000, .2);
+				margin: 0 $column-gutter/4;
+				width: auto;
+
+				&:before {
+					@extend .fa;
+					line-height: 1;
+					font-size: rem-calc(18);
+					width: rem-calc(18);
+					height: rem-calc(18);
+					display: block;
+					text-align: center;
+				}
+
+				&:hover {
+					background: $lc-blue-light;
+					border-color: $lc-blue-light;
+					color: #FFF;
+				}
+			}
+
+			&.facebook a {
+
+				&:before {
+					content: $fa-var-facebook;
+				}
+			}
+
+			&.twitter a {
+
+				&:before {
+					content: $fa-var-twitter;
+				}
+
+				&:hover {
+					background: $lc-green;
+					border-color: $lc-green;
+					color: #FFF;
+				}
+			}
+		
+			&.google a {
+
+				&:before {
+					content: $fa-var-google-plus;
+				}
+
+				&:hover {
+					background: $lc-red;
+					border-color: $lc-red;
+					color: #FFF;
+				}
+			}
+
+			&.email a {
+
+				&:before {
+					content: $fa-var-envelope-o;
+				}
+
+				&:hover {
+					background: $lc-yellow;
+					border-color: $lc-yellow;
+					color: #FFF;
+				}
+			}
+		}
+	}
+
+	.relatedItems {
+
+		padding-left: 0;
+
+		.fromIssue,
+		.categories {
+			text-align: center;
+			font-size: $h5-font-size;
+			font-family: $open-sans;
+			font-weight: 300;
+
+			a {
+				text-decoration: underline;
+			}
+		}
+
+
+		.categories {
+			text-align: center;
+			font-size: $h5-font-size;
+			font-family: $open-sans;
+
+			h4,
+			ul,
+			li {
+				display: inline-block;
+				text-align: center;
+				font-size: $h5-font-size;
+				font-family: $open-sans;
+			}
+
+			ul {
+				margin: 0;
+				padding: 0;
+			}
+
+			li {
+				margin-left: rem-calc(6);
+			}
+		}
+
+	}
+
+	.searchAndFilterInterface {
+		margin: $column-gutter 0;
+		padding: $column-gutter 0 $column-gutter/2; 
+
+		border-top: 1px solid rgba(#000, .1);
+		border-bottom: 1px solid rgba(#000, .1);
+
+		text-align: center;
+
+		li {
+			display: inline-block;
+			margin: rem-calc(4);
+
+			a {
+				padding: rem-calc(2) rem-calc(8);
+				@include border-radius($global-radius);
+				color: #FFF
+			}
+
+			strong {
+				background: black;
+				color: #FFF;
+				padding: rem-calc(2) rem-calc(8);
+				@include border-radius($global-radius);
+			}
+
+			&:nth-of-type(1) {
+				// Alumni Profiles
+				a {
+					background: $lc-green;
+				}
+			}
+
+			&:nth-of-type(2) {
+				// Class Notes
+				a {
+					background: $lc-red;
+				}
+			}
+
+			&:nth-of-type(3) {
+				// Features
+				a {
+					background: $lc-blue-light;
+				}
+			}
+
+			&:nth-of-type(4) {
+				// In the Media
+				a {
+					background: $lc-yellow;
+				}
+			}
+		}
+	}
+}
+

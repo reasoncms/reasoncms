@@ -30,6 +30,7 @@
 			echo '<div id="tagboard-embed"></div>' . "\n";
 			echo '<script>var tagboardOptions = {tagboard:"' . $tagname . '", postCount: 50, mobilePostCount: 50, autoLoad: true};</script>' . "\n";
 			echo '<script src="https://tagboard.com/public/js/embed.js"></script>'."\n";
+			echo '<p class="tagboardLink"><a href="http://www.tagboard.com/' . $tagname . '">Click to see all posts on tagboard.com. </a></p>';
 		}
 	}
 ?>

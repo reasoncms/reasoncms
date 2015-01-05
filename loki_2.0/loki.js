@@ -12,7 +12,7 @@
  * $Date: 2005/08/26 15:20:32 $
  *
  * @author Moxiecode. Extracts made by NF starting 2005/10/14.
- * @copyright Copyright © 2004, Moxiecode Systems AB, All rights reserved.
+ * @copyright Copyright ï¿½ 2004, Moxiecode Systems AB, All rights reserved.
  */
 function TinyMCE() {};
 
@@ -15046,7 +15046,7 @@ UI.Image_Dialog = function()
 				: Util.URI.strip_https_and_http(img_item.link);
 
 			// Determine alt text
-			var alt = img_item.title;
+			var alt = img_item.description;
 		}
 		else // if ( this._tabset.get_name_of_selected_tab() == 'custom' )
 		{
@@ -15313,7 +15313,7 @@ UI.Image_Listbox = function()
 			: item.link;
 		var src = Util.URI.strip_https_and_http(uri);
 		image_elem.setAttribute('src', src);
-		image_elem.setAttribute('alt', '[Image: ' + item.title + ']');
+		image_elem.setAttribute('alt', '[Image: ' + item.description + ']');
 		Util.Image.set_max_size(image_elem, 125, 125); // this needs to be here for IE, and in the load handler for Gecko
 		Util.Event.add_event_listener(image_elem, 'load', function() { Util.Image.set_max_size(image_elem, 125, 125); });
 		item_chunk.appendChild(image_elem);

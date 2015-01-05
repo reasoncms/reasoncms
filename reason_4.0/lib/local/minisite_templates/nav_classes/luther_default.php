@@ -56,26 +56,16 @@
 			{
 				$open = $this->is_open( $item );
 				$class = $this->get_item_class($item, $open, $depth, $counter);
-				$item_display = $this->show_item( $this->values[ $item  ], $depth );
-				if (!empty($children) && preg_match("/^show_children/", $this->values[ $item ]->get_value( 'custom_page' )) && $depth == 1)
+				$item_display = $this->luther_show_item( $this->values[ $item  ], $depth );
+				if (!empty($children) && $this->use_accordion_nav($this->values[ $item ]->get_value( 'custom_page' )) && $depth == 1)
 				{
 					$class = 'accordion ' . $class;
 				}
 		
-				// enter a section heading in navigation if description begins with 'Section:'
-				// TODO: remove section header logic when section headers are no longer used
-				// I think we can just remove now since all navs will be transitioned on launch day.
-				/*if (preg_match("/(^Section:\s+)(.*?)$/", $this->values[ $item ]->get_value( 'description' ), $m))
-				{
-					echo '<li class="navListItem heading">'."\n";
-					echo $m[2]."\n";
-					echo '</li>'."\n";
-				}*/
-		
 				echo $this->prepend_icon($this->values[$item], $class);
 				echo $item_display;
 				if(( $open AND !empty( $children ))
-						|| (!empty($children) && preg_match("/^show_children/", $this->values[ $item ]->get_value( 'custom_page' )) && $depth == 1))
+						|| (!empty($children) && $this->use_accordion_nav($this->values[ $item ]->get_value( 'custom_page' )) && $depth == 1))
 				{
 					$shown_children = array();
 					$i = $counter;
@@ -116,7 +106,7 @@
 			}
 		}
 		
-		function show_item( &$item , $depth, $options = false)
+		function luther_show_item( &$item , $depth, $options = false)
 		{
 			$class_attr = '';
 			if( $item->id() == $this->root_node() )
@@ -130,7 +120,7 @@
 			}
 			$page_name = strip_tags($page_name,'<span><strong><em>');
 			if( $this->cur_page_id != $item->id() || $this->should_link_to_current_page()
-					|| (preg_match("/^show_children/", $item->get_value( 'custom_page' )) && $depth == 1))
+					|| ($this->use_accordion_nav($item->get_value( 'custom_page' )) && $depth == 1))
 			{
 				$link = $this->get_full_url($item->id());
 		
@@ -141,7 +131,7 @@
 				if(($this->cur_page_id == $item->id() ||
 						( $this->values[ $this->cur_page_id ]->get_value( 'parent_id' ) == $item->id() AND
 								$this->values[ $this->cur_page_id ]->get_value( 'nav_display' ) == 'No' )) AND
-						(!preg_match("/^show_children/", $item->get_value( 'custom_page' )) && $depth != 1))
+						(!$this->use_accordion_nav($item->get_value( 'custom_page' )) && $depth != 1))
 				{
 					$prepend = '<strong>';
 					$append = '</strong>';
@@ -179,6 +169,27 @@
 				
 		}
 		
+		function use_accordion_nav($custom_page)
+		// use accordion nav on show_children page types except for
+		// show_children_with_az_list and any show_children_with_first_images
+		{
+			if ($custom_page == 'show_children_with_az_list')
+			{
+				return false;
+			}
+			elseif (preg_match("/^show_children_with_first_images/", $custom_page))
+			{
+				return false;
+			}
+			elseif (preg_match("/^show_children/", $custom_page))
+			{
+				return true;
+			}
+			else 
+			{
+				return false;
+			}
+		}
 	}
 	
 	

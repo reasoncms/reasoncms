@@ -22,32 +22,66 @@
 			$posts = $es->run_one();
 
 			$number_tours = count($posts);
-			if ($number_tours > 1){
-				echo "<ul class='virtual-tour-list'> \n";
-			}
+			$i = 1;
+
+			echo "<div id='tabs'> \n";
+			echo "<div class='tabs-content'> \n";
+
+			echo "<div id='virtual-tour'> \n";
+			
 			foreach( $posts AS $post )
-			{				
+			{
+				if ($number_tours > 1)
+				{
+					if ($i == 1)
+					{
+						echo "<div class='content active' id='vtour". $i ."'> \n";
+					}
+					else 
+					{
+						echo "<div class='content' id='vtour". $i ."'> \n";
+					}
+				}
+				else 
+				{
+					echo "<div class='content active'> \n";
+				}	
+				
 				// uncompress zip file
 				$this->uncompress_file($post->_id, $post->get_value('file_type'));
+				$this->virtual_tour_javascript($post->_id);
+				echo "<p>" . $post->get_value('description') . "</p> \n";
+								
+				echo "</div>   <!-- class='content' -->\n";
 				
-				if ($number_tours == 1)
-				{
-					echo "<h3>" . $post->get_value('name') . "</h3>" . "\n";
-					echo "<div id=\"virtual-tour\">\n";
-					$this->virtual_tour_javascript($post->_id);
-					echo "</div>   <!-- id=\"virtual-tour\"-->\n";
-				}
-				elseif ($number_tours > 1)
-				{
-					echo "<li class='virtual-tour-container'>";
-					echo "<h4>" . $post->get_value('name') . "</h4>" . "\n";
-					echo "</li>   <!-- class=\"virtual-tour-container\"-->\n";
-				}
+				$i++;				
 			}
+			
+			echo "</div>   <!-- id='virtual-tour'-->\n";
+			echo "</div>   <!-- class='tabs-content'--> \n";
+			
 			if ($number_tours > 1)
 			{
-				echo "</ul>";
-			}			
+				$i = 1;
+				echo "<dl class='tabs' data-tab=''> \n";
+				foreach( $posts AS $post )
+				{	
+					if ($i == 1)
+					{
+						echo "<dd class='tab-title vtour". $i ." active'> \n";
+					}
+					else
+					{
+						echo "<dd class='tab-title vtour". $i ."'> \n";
+					}
+					//echo "<a href='#vtour". $i ."'>". $post->get_value('name') ."</a></dd> \n";
+					echo "<a href='#vtour". $i ."'><div class='crop'><img src='/reason/images/virtual_tours/". $post->_id ."/". $post->_id ."_07.jpg'></div><h5>". $post->get_value('name') ."</h5></a></dd> \n";
+					$i++;
+				}				
+				echo "</dl> \n";
+			}
+			echo "</div>   <!-- id='tabs'--> \n";
+			
 		}
 		
 		function has_content()
@@ -150,6 +184,7 @@
 			//]]>
 			</script>
 			';
+			
 			echo '<div id="' . $id . '-panoviewer"></div>';
 		}
 		

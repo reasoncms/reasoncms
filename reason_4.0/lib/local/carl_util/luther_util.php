@@ -295,6 +295,68 @@ function luther_get_image_url($image)
     return $image;
 }
 
+function luther_process_inline_images($content)
+// add caption to full-size and thumbnail images
+// replace deprecated img align left and right with class
+{
+	$count = 100;   // no accidental infinite loop
+	while (preg_match('/(<[ph]\d?.*?)(<img.*?\/>)(.*?<\/[ph]\d?>)/', $content, $matches) && $count > 0)
+	{
+		// move the img tag inside a <p> or <h1-6> to a position just before the tag
+		$content = preg_replace('/(<[ph]\d?.*?)(<img.*?\/>)(.*?<\/[ph]\d?>)/', '$2$1$3', $content);
+		$count--;
+	}
+
+	// replace deprecated img align left and right with class
+	$content = preg_replace('/<img(.*?)(align="(\w+))"/', '<img'.'$1'.'class="'.'$3'.'" ', $content, -1, $count);
+
+	if ($count > 0)
+	{
+		preg_match_all('/<img\s(alt=".*?")?\s?(src=".*?)(\/reason\/images\/(\d+)(_tn)?\.(jpg|jpeg|gif|png)")\s?(class="(\w+)")?/', $content, $matches, PREG_SET_ORDER);
+
+		$image_ids = array();
+		foreach ($matches as $val)
+		{
+			// If image appears more than once only add caption one time
+			if (array_search($val[4], $image_ids) === FALSE)
+			{
+				array_push($image_ids, $val[4]);
+				$content = luther_add_inline_caption($content, $val[4]);
+			}
+		}
+	}
+	return $content;
+}
+
+function luther_add_inline_caption($content, $image_id)
+{
+	$es = new entity_selector();
+	$es->add_type(id_of('image'));
+	$es->add_relation('entity.id = ' . $image_id);
+	$result = $es->run_one();
+	foreach( $result AS $id => $image )
+	{
+		if (!preg_match("/hide_caption/", $image->get_value('keywords')))
+		{
+			preg_match('/<img\s(alt="'.$image->get_value('description').'")?\s?(src=".*?)(\/reason\/images\/' . $id . '(_tn)?\.(jpg|jpeg|gif|png)")\s?(class="(\w+)")?\s*\/>/', $content, $matches);
+
+			if (count($matches) >= 8 && $matches[7] == "left")
+			{
+				$content = preg_replace('/<img\s(alt="'.$image->get_value('description').'")?\s?(src=".*?)(\/reason\/images\/' . $id . '(_tn)?\.(jpg|jpeg|gif|png)")\s?(class="(\w+)")?\s*\/>/', '<figure class="left"><img $1 $2$3 /><figcaption>'.$image->get_value('description').'</figcaption></figure>', $content);
+			}
+			else if (count($matches) >= 8 && $matches[7] == "right")
+			{
+				$content = preg_replace('/<img\s(alt="'.$image->get_value('description').'")?\s?(src=".*?)(\/reason\/images\/' . $id . '(_tn)?\.(jpg|jpeg|gif|png)")\s?(class="(\w+)")?\s*\/>/', '<figure class="right"><img $1 $2$3 /><figcaption>'.$image->get_value('description').'</figcaption></figure>', $content);
+			}
+			else
+			{
+				$content = preg_replace('/<img\s(alt="'.$image->get_value('description').'")?\s?(src=".*?)(\/reason\/images\/' . $id . '(_tn)?\.(jpg|jpeg|gif|png)")\s*\/>/', '<figure class="left">$0<figcaption>'.$image->get_value('description').'</figcaption></figure>', $content);
+			}
+		}
+	}
+	return $content;
+}
+
 function luther_is_local_ip()
 // determine if ip address is luther college or Decorah area
 // used for ReachLocal remarketing pixel on admissions site
@@ -526,86 +588,86 @@ function get_athlete_tooltip($player, $site_name)
 function get_sport_position_event_full_name($site_name)
 // replaces abbreviated position or event with the full name
 {
-    $positions = null;
-    if ($site_name == 'sport_baseball_men' || $site_name == 'sport_softball_women')
-    {
-        $positions = array(
-                'P' => 'Pitcher',
-                'C' => 'Catcher',
-                'IF' => 'Infield',
-                '1B' => 'First Base',
-                '2B' => 'Second Base',
-                '3B' => 'Third Base',
-                'SS' => 'Shortstop',
-                'OF' => 'Outfield',
-        );
-    }
-    else if ($site_name == 'sport_basketball_men' || $site_name == 'sport_basketball_women')
-    {
-        $positions = array(
-                'C' => 'Center',
-                'F' => 'Forward',
-                'G' => 'Guard',
-        );
-    }
-    else if ($site_name == 'sport_football_men' )
-    {
-        $positions = array(
-                'DB' => 'Defensive Back',
-                'DL' => 'Defensive Line',
-                'FB' => 'Fullback',
-                'K' => 'Kicker',
-                'LB' => 'Linebacker',
-                'OL' => 'Offensive Line',
-                'QB' => 'Quarterback',
-                'RB' => 'Running Back',
-                'TE' => 'Tight End',
-                'WR' => 'Wide Receiver',
-        );
-    }
-    else if ($site_name == 'sport_soccer_men' || $site_name == 'sport_soccer_women')
-    {
-        $positions = array(
-                'GK' => 'Goalkeeper',
-                'D' => 'Defender',
-                'MF' => 'Midfielder',
-                'F' => 'Forward',
-        );
-    }
-    else if ($site_name == 'sport_volleyball_women' )
-    {
-        $positions = array(
-                'DS' => 'Defensive Specialist',
-                'L' => 'Libero',
-                'MB' => 'Middle Blocker',
-                'OH' => 'Outside Hitter',
-                'R' => 'Right Side Hitter',
-                'S' => 'Setter',
-        );
-    }
-    else if ($site_name == 'sport_swimmingdiving_men' || $site_name == 'sport_swimmingdiving_women')
-    {
-        $positions = array(
-                'BU' => 'Butterfly',
-                'BA' => 'Backstroke',
-                'BR' => 'Breaststroke',
-                'FR' => 'Freestyle',
-                'IM' => 'Individual Medley',
-                'D' => 'Diving',
-        );
-    }
-    else if ($site_name == 'sport_trackfield_men' || $site_name == 'sport_trackfield_women')
-    {
-        $positions = array(
-                'D' => 'Distance',
-                'H' => 'Hurdles',
-                'J' => 'Jumps',
-                'MD' => 'Mid-distance',
-                'ME' => 'Multi-events',
-                'PV' => 'Pole Vault',
-                'S' => 'Sprints',
-                'T' => 'Throws',
-        );
-    }
-    return $positions;
+	$positions = null;
+	if ($site_name == 'sport_baseball_men' || $site_name == 'sport_softball_women')
+	{
+		$positions = array(
+				'P' => 'Pitcher',
+				'C' => 'Catcher',
+				'IF' => 'Infield',
+				'1B' => 'First Base',
+				'2B' => 'Second Base',
+				'3B' => 'Third Base',
+				'SS' => 'Shortstop',
+				'OF' => 'Outfield',
+		);
+	}
+	else if ($site_name == 'sport_basketball_men' || $site_name == 'sport_basketball_women')
+	{
+		$positions = array(
+				'C' => 'Center',
+				'F' => 'Forward',
+				'G' => 'Guard',
+		);
+	}
+	else if ($site_name == 'sport_football_men' )
+	{
+		$positions = array(
+				'DB' => 'Defensive Back',
+				'DL' => 'Defensive Line',
+				'FB' => 'Fullback',
+				'K' => 'Kicker',
+				'LB' => 'Linebacker',
+				'OL' => 'Offensive Line',
+				'QB' => 'Quarterback',
+				'RB' => 'Running Back',
+				'TE' => 'Tight End',
+				'WR' => 'Wide Receiver',
+		);
+	}
+	else if ($site_name == 'sport_soccer_men' || $site_name == 'sport_soccer_women')
+	{
+		$positions = array(
+				'GK' => 'Goalkeeper',
+				'D' => 'Defender',
+				'MF' => 'Midfielder',
+				'F' => 'Forward',
+		);
+	}
+	else if ($site_name == 'sport_volleyball_women' )
+	{
+		$positions = array(
+				'DS' => 'Defensive Specialist',
+				'L' => 'Libero',
+				'MB' => 'Middle Blocker',
+				'OH' => 'Outside Hitter',
+				'R' => 'Right Side Hitter',
+				'S' => 'Setter',
+		);
+	}
+	else if ($site_name == 'sport_swimmingdiving_men' || $site_name == 'sport_swimmingdiving_women')
+	{
+		$positions = array(
+				'Fl' => 'Butterfly',
+				'Bk' => 'Backstroke',
+				'Br' => 'Breaststroke',
+				'Fr' => 'Freestyle',
+				'IM' => 'Individual Medley',
+				'D' => 'Diving',
+		);
+	}
+	else if ($site_name == 'sport_trackfield_men' || $site_name == 'sport_trackfield_women')
+	{
+		$positions = array(
+				'D' => 'Distance',
+				'H' => 'Hurdles',
+				'J' => 'Jumps',
+				'MD' => 'Mid-distance',
+				'ME' => 'Multi-events',
+				'PV' => 'Pole Vault',
+				'S' => 'Sprints',
+				'T' => 'Throws',
+		);
+	}
+	return $positions;
 }

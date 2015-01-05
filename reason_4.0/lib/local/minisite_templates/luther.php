@@ -232,6 +232,7 @@
 			$classes[] = 'body';
 			if($this->pages->root_node() == $this->page_id)
 				$classes[] = 'siteHome';
+			$classes[] = $this->get_page_type()->_page_type_name;
 			if($this->page_info->get_value('unique_name'))
 				$classes[] = 'uname_'.$this->page_info->get_value('unique_name');
 			return $classes;
@@ -299,7 +300,7 @@
 
 				$this->show_luther_global_footer();
 
-			echo '</div>'."\n"; // End #wrapper
+			echo '</div>'."\n"; // End #wrapper-col
 			echo '</div>'."\n"; // End #wrapper
 			echo '</div>'."\n"; // End .inner-wrap
 			echo '</div>'."\n"; // End .off-canvas-wrap
@@ -535,13 +536,10 @@
 			if(!empty($wrapperClasses))
 			{
 				echo '<nav id="navWrap" class="'.implode(' ',$wrapperClasses).'">'."\n";
-
 				echo '<a class="toggle" href="#minisiteNavigation">'."\n";
-				echo '<h1 style="margin: 0; padding: 0;"><p class="menu_help">Menu <i class="fa fa-arrow-right"></i></p>'."\n";
+				echo '<h1><span class="screenreader">' . $this->site_info->get_value('name') . '</span> <span class="helper-text">Menu <i class="fa fa-arrow-right"></i></span></h1>'."\n";
 				echo '<i class="fa fa-bars"></i>'."\n";
 				echo '<i class="fa fa-times"></i>'."\n";
-				echo '<span>' . $this->site_info->get_value('name') . ' Navigation</span>'."\n";
-				echo '</h1>'."\n";
 				echo '</a>'."\n";
 			}
 

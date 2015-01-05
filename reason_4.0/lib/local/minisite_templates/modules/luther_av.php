@@ -3,17 +3,17 @@
  * @package reason
  * @subpackage minisite_modules
  */
- 
+
  /**
   * Include base class & other dependencies
   */
 	reason_include_once( 'minisite_templates/modules/av.php' );
-	
+
 	/**
 	 * Register the class so the template can instantiate it
 	 */
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'LutherAvModule';
-	
+
 	/**
 	 * A minisite module to display media works & media files
 	 */
@@ -25,12 +25,19 @@
 			'sort_direction'=>'DESC', // Normally this page shows items in reverse chronological order, but you can change this to ASC for formward chronological order
 			'sort_field'=>'dated.datetime',
 			'relationship_sort'=>true, // Says whether the module should pay attention to the 'sortable' nature of the minisite_page_to_av allowable relationship
+			'thumbnail_width'=>0,
+			'thumbnail_height'=>0,
+			'thumbnail_crop'=>'',
+			'default_video_height' => 360,
+			'num_per_page' => 15,
+			'offer_original_download_link' => false, // if true, present the user with a download link for the original file, along with the compressed versions
+			'show_media_first' => false,
 			'full_size'=>false,   // audio_video_full_size page type sets this to true
 		);
-		
+
 		function run()
-		{				
-			Generic3Module::run();	
+		{
+			Generic3Module::run();
 		}
 
 		function do_list()
@@ -42,8 +49,8 @@
 			}
 			echo '</ul>'."\n";
 		}
-		
-		function show_list_item( $item ) 
+
+		function show_list_item( $item )
 		{
 			echo '<li>';
 			if ($this->params['full_size'])
@@ -58,7 +65,7 @@
 				echo '<div class="figure" style="width: 125px">'."\n";
 				$this->show_list_item_pre( $item );
 				$this->show_list_item_name( $item );
-				echo '</div>'."\n";      	
+				echo '</div>'."\n";
 			}
 			else
 			{
@@ -81,27 +88,34 @@
 
 		//Called on by show_list_item()
 		function show_list_item_pre( $item )
-		{			
+		{
 			$protocol = on_secure_page() ? "https" : "http";
 			$pi = $this->get_primary_image( $item );
 			//echo $pi;
 			//echo preg_replace("|(\<img src=\".*?\").*?\/\>|", "\\1 />", $pi);
 			$avfilelist = $this->get_av_files($item);
+			if (empty($avfilelist))
+			{
+				return;
+			}
 			//echo "media works id = ".$item->id()."   ";
 			// Block any media files other than video
-			foreach( $avfilelist as $av_file )
+			else
 			{
-				//echo $av_file->get_value( 'name' )."\n";
-				//echo $av_file->get_value( 'media_format' )."\n";
-				//echo $av_file->get_value( 'av_type' )."\n";
-				if ($av_file->get_value( 'av_type' ) != 'Video')
+				foreach( $avfilelist as $av_file )
 				{
-					return;
+					//echo $av_file->get_value( 'name' )."\n";
+					//echo $av_file->get_value( 'media_format' )."\n";
+					//echo $av_file->get_value( 'av_type' )."\n";
+					if ($av_file->get_value( 'av_type' ) != 'Video')
+					{
+						return;
+					}
+					//print_r($av_file);
 				}
-				//print_r($av_file);
 			}
 			reset($avfilelist);
-			$vn = $_SERVER['REQUEST_URI'] . "video_" . strtolower(preg_replace('|[\'\"]|', '', preg_replace('| |', '_', current($avfilelist)->get_value('name')))); 
+			$vn = $_SERVER['REQUEST_URI'] . "video_" . strtolower(preg_replace('|[\'\"]|', '', preg_replace('| |', '_', current($avfilelist)->get_value('name'))));
 			//print($vn);
 			//print(current($avfilelist)->get_value('name'));
 			//print(current($avfilelist)->get_value('url'));
@@ -113,13 +127,13 @@
 			{
 				$url = preg_replace('|http://|', 'https://', $url);
 			}
-			else 
+			else
 			{
 				$url = preg_replace('|https://|', 'http://', $url);
 			}
 			if (current($avfilelist)->get_value('media_format') == 'Flash')
 			{
-				
+
 				if (preg_match("/(^https?:\/\/youtu\.be\/)((.*?)$)/", $url, $m))
 				{
 					$url = $protocol . "://www.youtube.com/watch?v=" . $m[2];
@@ -134,7 +148,7 @@
 						{
 							echo "<a href=\"" . $m[1] . "v/" . $m[3] . "&amp;hl=en&amp;rel=0&amp;fs=0&amp;autoplay=1&amp;showinfo=1\" onclick=\"return hs.htmlExpand(this, { slideshowGroup: -1, objectType: 'swf', width: " . current($avfilelist)->get_value('width') . ", objectWidth: " . current($avfilelist)->get_value('width') . ", objectHeight: " . current($avfilelist)->get_value('height') . ", preserveContent: false, outlineType: 'rounded-white', wrapperClassName: 'draggable-header no-footer', maincontentText: 'You need to upgrade your Flash player', swfOptions: { version: '7' } } )\" class=\"highslide\" name=\"" . $vn . "\"><img src=\"" . $protcol ."://img.youtube.com/vi/" . $m[3] . "/hqdefault.jpg\" /><img class=\"av-play\" title=\"Play Video: " . preg_replace('|\"|', '&quot;', $item->get_value( 'name' )) . "\" src=\"/images/play_44.png\" /></a>";
 						}
-						else 
+						else
 						{
 							echo "<a href=\"" . $m[1] . "embed/" . $m[3] . "?autoplay=1&amp;rel=0&amp;fs=1&amp;showinfo=1\" onclick=\"return hs.htmlExpand(this, { slideshowGroup: -1, objectType: 'iframe', width: '640', height: '418', objectLoadTime: 'after', outlineType: 'rounded-white', wrapperClassName: 'draggable-header no-footer'} )\" class=\"highslide\" name=\"" . $vn . "\"><img src=\"" . $protocol . "://img.youtube.com/vi/" . $m[3] . "/hqdefault.jpg\" /><img class=\"av-play\" title=\"Play Video: " . preg_replace('|\"|', '&quot;', $item->get_value( 'name' )) . "\" src=\"/images/play_44.png\" /></a>";
 						}
@@ -149,7 +163,7 @@
 						{
 							echo "<iframe width=\"420\" height=\"265\" src=\"" .$m[1] . "embed/" . $m[3] ."?autoplay=0&amp;rel=0&amp;fs=1&amp;showinfo=1\" frameborder=\"0\" allowfullscreen></iframe>"."\n";
 						}
-						else 
+						else
 						{
 							echo "<iframe width=\"444\" height=\"280\" src=\"" .$m[1] . "embed/" . $m[3] ."?autoplay=0&amp;rel=0&amp;fs=1&amp;showinfo=1\" frameborder=\"0\" allowfullscreen></iframe>"."\n";
 						}
@@ -173,7 +187,7 @@
 			}
 			//print_r($avfilelist);
 		}
-		
+
 		function get_primary_image( $item )
 		{
 			if(empty($this->parent->textonly))

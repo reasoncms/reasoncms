@@ -7,14 +7,14 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'global_header'	=> 'global/global_header',
 		'global_navigation' => 'global/global_navigation',
 			'pre_banner' => '',
-			'banner_xtra' => '=',
+			'banner_xtra' => '',
 			'post_banner' => '',
 			'pre_main_head' => array(
 				'module' => 'feature/feature',
 				'width' => '1200',
 				'height' => '575',
 				'autoplay_timer' => 4,
-				'autoplay' => true,
+				// 'autoplay' => true,
 			),
 			'post_main_head' => '',
 			'main_head' => 'page_title',
@@ -25,8 +25,9 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'call_to_action_blurb' => 'blurb_call_to_action',
 			'pre_sidebar' => 'blurb',
 			'pre_sidebar_2' => array(
-				'module' => 'image_sidebar', // default parameters set in alter_reason_pagetype in luther.php
+				'module' => 'image_sidebar_luther', // default parameters set in alter_reason_pagetype in luther.php
 				'thumbnail_width' => 600,
+				'caption_flag' => true,
 				//'thumbnail_height' => 400,
 				//'thumbnail_crop' => 'fill',
 				'num_to_display' => 3,
@@ -50,6 +51,41 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'footer' => 'maintained',
 			'post_foot' => '',
 		'global_footer' => 'global/global_footer',
+	),
+	'standalone' => array (
+		'global_header' => '',
+		'global_navigation' => '',
+		'pre_main_head' => array(
+			'module' => 'feature/feature',
+			'width' => '1660',
+			'height' => '575',
+			'autoplay_timer' => 4,
+		),
+		'main_head' => '',
+		'main_post' => array(
+			'module' => 'luther_av',
+			'full_size' => true,
+		),
+		'main_post_2' => 'blurb',
+		'main_post_3' => 'luther_flickr_slideshow',
+		'call_to_action_blurb' => '',
+		'pre_sidebar' => '',
+		'pre_sidebar_2' => '',
+		'sidebar' => '',
+		'sidebar_2' =>'',
+		'post_sidebar' => '',
+		'post_sidebar_2' => '',
+		'post_sidebar_3' => '',
+		'navigation' => '',
+		'sub_nav' => '',
+		'contact_blurb' => '',
+		'sub_nav_2' => '',
+		'sub_nav_3' => '',
+		'edit_link' => '',
+		'pre_foot' => '',
+		'footer' => '',
+		'post_foot' => '',
+		'global_footer' => '',
 	),
 
 	/* Page types, in alphbetical order */
@@ -512,6 +548,32 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'footer' => '',
 		'edit_link' => '',
 	),
+	'magazine_publication' => array(
+		'main'=>array(
+			'module'=>'publication',
+			'module_displays_search_interface' => false,
+			'module_displays_filter_interface' => false,
+			'filter_displayer'=>'listnav.php',
+			'markup_generator_info' =>array(
+				'list' =>array (
+					'classname' => 'MagazinePublicationListMarkupGenerator',
+					'filename' =>'minisite_templates/modules/publication/publication_list_markup_generators/magazine.php'
+				),
+				'list_item' =>array (
+					'classname' => 'MagazinePublicationListItemMarkupGenerator',
+					'filename' =>'minisite_templates/modules/publication/list_item_markup_generators/magazine.php'
+				),
+				'featured_item' => array (
+					'classname' => 'MagazinePublicationListItemMarkupGenerator', 
+					'filename' =>'minisite_templates/modules/publication/list_item_markup_generators/magazine.php'
+				),
+				'item' => array (
+					'classname' => 'MagazineItemMarkupGenerator', 
+					'filename' =>'minisite_templates/modules/publication/item_markup_generators/magazine.php'
+				),
+			),
+		),
+	),
 	'net_price_calculator' => array(
 		'main_post' => 'net_price_calculator',
 	),
@@ -613,6 +675,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			),
 		),
 	),
+
 	'standalone_login_page_stripped' => array(
 		'global_header' => '',
 		'global_navigation' => '',
@@ -654,6 +717,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'module' => 'tagboard',
 			'name_id'=>'HeyNorse/184201',
 		),
+		'main_head' => '',
 		'call_to_action_blurb' => '',
 		'pre_sidebar' => 'b',
 		'pre_sidebar_2' => '',
@@ -670,6 +734,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 				'module' => 'tagboard',
 				'name_id' => 'NorseSports/185650',
 		),
+		'main_head' => '',
 		'call_to_action_blurb' => '',
 		'pre_sidebar' => 'b',
 		'pre_sidebar_2' => '',
@@ -685,6 +750,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'main' => array(
 				'module' => 'tagboard',
 		),
+		'main_head' => '',
 		'call_to_action_blurb' => '',
 		'pre_sidebar' => 'b',
 		'pre_sidebar_2' => '',
@@ -715,7 +781,18 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'main_post_2' => 'transcript_request/transcript_request',
 	),
 	'virtual_tour' => array(
-		'main_post' => 'virtual_tour',
+		'post_main_head' => 'virtual_tour',
+		'main_post_2' => 'luther_image_slideshow',
+		'pre_sidebar_2' => '',
+	),
+	'virtual_tour_with_siblings_prev_next' => array(
+		'post_main_head' => 'virtual_tour',
+		'main_post_2' => 'luther_image_slideshow',
+		'main_post_3' => array(
+			'module' => 'siblings',
+			'previous_next' => true,
+		),
+		'pre_sidebar_2' => '',
 	),
 	'volunteer_other' => array(	// basically a copy of faculty
 		'main_post' => 'volunteer_other',

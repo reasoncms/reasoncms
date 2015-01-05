@@ -397,7 +397,7 @@ table tfoot tr td {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle .screenreader, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -1213,7 +1213,7 @@ ul.off-canvas-list li a {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle .screenreader, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -2251,7 +2251,7 @@ body #wrapper #post-footer a {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle .screenreader, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -2674,115 +2674,105 @@ body #wrapper #post-footer a {
     box-shadow: 0 0 0 0;
   }
 }
-/* line 312, scss/_minisite.scss */
+/* line 308, scss/_minisite.scss */
 #minisite #navWrap a.toggle {
   position: absolute;
   top: -60px;
   right: 0;
-  width: 99.6px;
+  width: auto;
   height: 60px;
   display: block;
   z-index: 12;
 }
-/* line 321, scss/_minisite.scss */
+/* line 317, scss/_minisite.scss */
 #minisite #navWrap a.toggle.open {
   background: #f6f6f6;
   -webkit-box-shadow: rgba(0, 0, 0, 0.2) -2px -2px 2px;
   -moz-box-shadow: rgba(0, 0, 0, 0.2) -2px -2px 2px;
   box-shadow: rgba(0, 0, 0, 0.2) -2px -2px 2px;
+  width: 60px;
 }
-/* line 325, scss/_minisite.scss */
+/* line 322, scss/_minisite.scss */
 #minisite #navWrap a.toggle.open .fa-times {
   display: block;
-  width: 60px;
-  margin-left: 22%;
-  font-size: 1.2em;
 }
-/* line 331, scss/_minisite.scss */
+/* line 327, scss/_minisite.scss */
+#minisite #navWrap a.toggle.open h1,
 #minisite #navWrap a.toggle.open .fa-bars {
   display: none;
 }
 /* line 332, scss/_minisite.scss */
-#minisite #navWrap a.toggle.open .menu_help {
-  display: none;
-}
-/* line 335, scss/_minisite.scss */
-#minisite #navWrap a.toggle h1 {
-  font-size: 1.25rem;
-  color: #1073ce;
-}
-/* line 339, scss/_minisite.scss */
-#minisite #navWrap a.toggle h1 p {
-  font-weight: bold;
-  font-size: 10px;
-  width: 39%;
-  display: inline;
-  margin-bottom: 0;
-  margin-left: 10px;
-  position: relative;
-  top: -4px;
-}
-/* line 349, scss/_minisite.scss */
-#minisite #navWrap a.toggle h1 p i.fa-arrow-right {
-  font-size: 10px;
-  width: auto;
-}
-/* line 356, scss/_minisite.scss */
 #minisite #navWrap a.toggle i {
   font-size: 1.25rem;
-  width: 30px;
+  width: 60px;
   margin-top: 1.25rem;
   text-align: center;
 }
-/* line 361, scss/_minisite.scss */
+/* line 338, scss/_minisite.scss */
 #minisite #navWrap a.toggle i.fa-times {
   display: none;
 }
+/* line 343, scss/_minisite.scss */
+#minisite #navWrap a.toggle h1 {
+  font-size: 0.625rem;
+  color: #1073ce;
+  font-weight: bold;
+  display: inline;
+  margin: 0;
+  margin-right: -0.875rem;
+  position: relative;
+  top: -0.25rem;
+}
+/* line 353, scss/_minisite.scss */
+#minisite #navWrap a.toggle h1 i.fa-arrow-right {
+  font-size: 0.625rem;
+  width: auto;
+}
 @media only screen and (min-width: 63.8125em) {
-  /* line 312, scss/_minisite.scss */
+  /* line 308, scss/_minisite.scss */
   #minisite #navWrap a.toggle {
     display: none;
   }
 }
-/* line 376, scss/_minisite.scss */
+/* line 370, scss/_minisite.scss */
 #minisite #navWrap #minisiteNavigation {
   background: #f3f3f3;
 }
-/* line 383, scss/_minisite.scss */
+/* line 376, scss/_minisite.scss */
 #minisite #navWrap #minisiteNavigation,
 #minisite #navWrap .subNavElements {
   display: none;
 }
 @media only screen and (min-width: 63.8125em) {
-  /* line 383, scss/_minisite.scss */
+  /* line 376, scss/_minisite.scss */
   #minisite #navWrap #minisiteNavigation,
   #minisite #navWrap .subNavElements {
     display: block !important;
   }
 }
-/* line 394, scss/_minisite.scss */
+/* line 387, scss/_minisite.scss */
 #minisite #navWrap.open #minisiteNavigation,
 #minisite #navWrap.open .subNavElements {
   display: block;
 }
-/* line 399, scss/_minisite.scss */
+/* line 392, scss/_minisite.scss */
 #minisite #navWrap .navListTop {
   margin: 0;
 }
-/* line 403, scss/_minisite.scss */
+/* line 396, scss/_minisite.scss */
 #minisite #navWrap .navListTop ul {
   margin: 0;
 }
-/* line 407, scss/_minisite.scss */
+/* line 400, scss/_minisite.scss */
 #minisite #navWrap .navListTop li {
   position: relative;
 }
-/* line 411, scss/_minisite.scss */
+/* line 404, scss/_minisite.scss */
 #minisite #navWrap .navListTop li a {
   display: block;
   padding: 0.90909rem 1.25rem;
 }
-/* line 416, scss/_minisite.scss */
+/* line 409, scss/_minisite.scss */
 #minisite #navWrap .navListTop a.home {
   font-size: 2rem;
   line-height: 1;
@@ -2793,12 +2783,12 @@ body #wrapper #post-footer a {
   padding-top: 1.875rem;
   padding-bottom: 1.875rem;
 }
-/* line 426, scss/_minisite.scss */
+/* line 419, scss/_minisite.scss */
 #minisite #navWrap .navListTop a.home strong {
   font-weight: 300;
 }
 @media only screen and (min-width: 63.8125em) {
-  /* line 416, scss/_minisite.scss */
+  /* line 409, scss/_minisite.scss */
   #minisite #navWrap .navListTop a.home {
     padding-top: 2.5rem;
     padding-bottom: 2.5rem;
@@ -2806,7 +2796,7 @@ body #wrapper #post-footer a {
     border-bottom: 6px solid #FFF;
   }
 }
-/* line 440, scss/_minisite.scss */
+/* line 433, scss/_minisite.scss */
 #minisite #navWrap .navListTop ul a {
   display: block;
   border-top: 1px solid #e1e1e1;
@@ -2814,56 +2804,56 @@ body #wrapper #post-footer a {
   font-weight: 300;
   font-size: 0.9375rem;
 }
-/* line 448, scss/_minisite.scss */
+/* line 441, scss/_minisite.scss */
 #minisite #navWrap .navListTop ul a:hover {
   background: rgba(0, 0, 0, 0.025);
   color: black;
 }
-/* line 458, scss/_minisite.scss */
+/* line 451, scss/_minisite.scss */
 #minisite #navWrap .navListTop ul .open a:hover {
   background: #f6f6f6 !important;
 }
-/* line 467, scss/_minisite.scss */
+/* line 460, scss/_minisite.scss */
 #minisite #navWrap .navListTop ul ul a {
   border: none;
   padding: 0.71429rem 1.25rem 0.71429rem 2.5rem;
   border-top: 1px solid #FFF;
   border-top: 1px solid #ececec;
 }
-/* line 473, scss/_minisite.scss */
+/* line 466, scss/_minisite.scss */
 #minisite #navWrap .navListTop ul ul a:hover {
   background: none;
   text-decoration: underline;
 }
-/* line 482, scss/_minisite.scss */
+/* line 475, scss/_minisite.scss */
 #minisite #navWrap .navListTop ul ul ul li a {
   padding-left: 3.75rem;
 }
-/* line 488, scss/_minisite.scss */
+/* line 481, scss/_minisite.scss */
 #minisite #navWrap .navListTop ul ul ul li ul li a {
   padding-left: 5rem;
 }
-/* line 494, scss/_minisite.scss */
+/* line 487, scss/_minisite.scss */
 #minisite #navWrap .navListTop ul ul ul li ul li ul li a {
   padding-left: 6.25rem;
 }
-/* line 500, scss/_minisite.scss */
+/* line 493, scss/_minisite.scss */
 #minisite #navWrap .navListTop ul ul ul li ul li ul li ul li a {
   padding-left: 7.5rem;
 }
-/* line 516, scss/_minisite.scss */
+/* line 506, scss/_minisite.scss */
 #minisite #navWrap .navListTop ul .navListItem.current > a {
   font-weight: 700;
 }
-/* line 522, scss/_minisite.scss */
+/* line 512, scss/_minisite.scss */
 #minisite #navWrap .navListTop ul .navListItem.open {
   background: #f8f8f8;
 }
-/* line 533, scss/_minisite.scss */
+/* line 523, scss/_minisite.scss */
 #minisite #navWrap .navListTop ul .navListItem.accordion > a {
   padding-right: 2.25rem;
 }
-/* line 536, scss/_minisite.scss */
+/* line 526, scss/_minisite.scss */
 #minisite #navWrap .navListTop ul .navListItem.accordion > a:before {
   content: "\f078";
   position: absolute;
@@ -2887,11 +2877,11 @@ body #wrapper #post-footer a {
   -o-transition-timing-function: ease-in;
   transition-timing-function: ease-in;
 }
-/* line 549, scss/_minisite.scss */
+/* line 539, scss/_minisite.scss */
 #minisite #navWrap .navListTop ul .navListItem.accordion ul.navList {
   display: none;
 }
-/* line 558, scss/_minisite.scss */
+/* line 548, scss/_minisite.scss */
 #minisite #navWrap .navListTop ul .navListItem.accordion.open > a:before {
   content: "\f078";
   -webkit-transform: rotate(-180deg);
@@ -2912,11 +2902,11 @@ body #wrapper #post-footer a {
   -o-transition-timing-function: ease-in;
   transition-timing-function: ease-in;
 }
-/* line 571, scss/_minisite.scss */
+/* line 561, scss/_minisite.scss */
 #minisite #navWrap .jump a {
   padding-right: 2.25rem;
 }
-/* line 574, scss/_minisite.scss */
+/* line 564, scss/_minisite.scss */
 #minisite #navWrap .jump a:before {
   content: "\f08e";
   position: absolute;
@@ -2924,7 +2914,7 @@ body #wrapper #post-footer a {
   right: 1.25rem;
   color: #777777;
 }
-/* line 595, scss/_minisite.scss */
+/* line 585, scss/_minisite.scss */
 #minisite #relatedSections .assets,
 #minisite #relatedSections .blurb,
 #minisite #relatedSections .relatedEvents,
@@ -2934,7 +2924,7 @@ body #wrapper #post-footer a {
   background: #f6f6f6;
   padding: 1.25rem;
 }
-/* line 599, scss/_minisite.scss */
+/* line 589, scss/_minisite.scss */
 #minisite #relatedSections .assets > *:last-child,
 #minisite #relatedSections .blurb > *:last-child,
 #minisite #relatedSections .relatedEvents > *:last-child,
@@ -2944,13 +2934,13 @@ body #wrapper #post-footer a {
   padding-bottom: 0;
   margin-bottom: 0;
 }
-/* line 605, scss/_minisite.scss */
+/* line 595, scss/_minisite.scss */
 #minisite #relatedSections h3,
 #minisite .relatedItems h3 {
   font-size: 1.4375rem;
   margin-top: 0;
 }
-/* line 616, scss/_minisite.scss */
+/* line 606, scss/_minisite.scss */
 #minisite #footer {
   position: relative;
   padding-left: 1.25rem;
@@ -2963,7 +2953,7 @@ body #wrapper #post-footer a {
   border: none;
 }
 @media only screen and (min-width: 63.8125em) {
-  /* line 616, scss/_minisite.scss */
+  /* line 606, scss/_minisite.scss */
   #minisite #footer {
     position: relative;
     padding-left: 0;
@@ -2971,7 +2961,7 @@ body #wrapper #post-footer a {
     width: 100%;
     float: left;
   }
-  /* line 627, scss/_minisite.scss */
+  /* line 617, scss/_minisite.scss */
   #minisite #footer #foot {
     position: relative;
     padding-left: 1.25rem;
@@ -2980,18 +2970,18 @@ body #wrapper #post-footer a {
     float: left;
   }
 }
-/* line 633, scss/_minisite.scss */
+/* line 623, scss/_minisite.scss */
 #minisite #footer #foot {
   clear: both;
 }
-/* line 637, scss/_minisite.scss */
+/* line 627, scss/_minisite.scss */
 #minisite #footer #maintained {
   color: #9d9d9d;
   display: block;
   margin-bottom: 1rem;
 }
 @media only screen and (min-width: 60.0625em) {
-  /* line 637, scss/_minisite.scss */
+  /* line 627, scss/_minisite.scss */
   #minisite #footer #maintained {
     width: 45%;
     float: left;
@@ -2999,27 +2989,27 @@ body #wrapper #post-footer a {
     padding-top: 4px;
   }
 }
-/* line 650, scss/_minisite.scss */
+/* line 640, scss/_minisite.scss */
 #minisite #footer .loginLinkModule {
   display: block;
 }
 @media only screen and (min-width: 60.0625em) {
-  /* line 650, scss/_minisite.scss */
+  /* line 640, scss/_minisite.scss */
   #minisite #footer .loginLinkModule {
     width: 45%;
     float: right;
     text-align: right;
   }
 }
-/* line 659, scss/_minisite.scss */
+/* line 649, scss/_minisite.scss */
 #minisite #footer .loginLinkModule .editDivider {
   display: none;
 }
-/* line 661, scss/_minisite.scss */
+/* line 651, scss/_minisite.scss */
 #minisite #footer .loginLinkModule div {
   display: inline;
 }
-/* line 665, scss/_minisite.scss */
+/* line 655, scss/_minisite.scss */
 #minisite #footer .loginLinkModule div a {
   background: #e9e9e9;
   padding: 0.3125rem 0.375rem;
@@ -3034,12 +3024,12 @@ body #wrapper #post-footer a {
   line-height: 1;
 }
 @media only screen and (min-width: 60.0625em) {
-  /* line 665, scss/_minisite.scss */
+  /* line 655, scss/_minisite.scss */
   #minisite #footer .loginLinkModule div a {
     margin-left: 0.25rem;
   }
 }
-/* line 678, scss/_minisite.scss */
+/* line 668, scss/_minisite.scss */
 #minisite #footer .loginLinkModule div a:hover {
   background: #d5d5d5;
   -webkit-transition-property: all;
@@ -3055,7 +3045,7 @@ body #wrapper #post-footer a {
   -o-transition-timing-function: ease;
   transition-timing-function: ease;
 }
-/* line 685, scss/_minisite.scss */
+/* line 675, scss/_minisite.scss */
 #minisite #footer .loginLinkModule #footerLoginLink {
   display: inline-block;
   font-size: 0.75rem;
@@ -3072,33 +3062,33 @@ body #wrapper #post-footer a {
   line-height: 1;
 }
 @media only screen and (min-width: 60.0625em) {
-  /* line 685, scss/_minisite.scss */
+  /* line 675, scss/_minisite.scss */
   #minisite #footer .loginLinkModule #footerLoginLink {
     margin: 0 0 0 0.25rem;
   }
 }
-/* line 700, scss/_minisite.scss */
+/* line 690, scss/_minisite.scss */
 #minisite #footer .loginLinkModule #footerLoginLink .username {
   font-weight: 400;
 }
-/* line 705, scss/_minisite.scss */
+/* line 695, scss/_minisite.scss */
 #minisite #footer .loginLinkModule #footerLoginLink a:hover {
   text-decoration: underline;
 }
-/* line 711, scss/_minisite.scss */
+/* line 701, scss/_minisite.scss */
 #minisite #footer .loginLinkModule.unauthenticated #footerLoginLink {
   margin: 0;
 }
-/* line 722, scss/_minisite.scss */
+/* line 712, scss/_minisite.scss */
 #minisite table tr,
 #minisite table td {
   font-weight: 300;
 }
-/* line 727, scss/_minisite.scss */
+/* line 717, scss/_minisite.scss */
 #minisite .continueReading {
   margin: 0;
 }
-/* line 730, scss/_minisite.scss */
+/* line 720, scss/_minisite.scss */
 #minisite .continueReading a {
   background: #eaf4fd;
   padding: 0.25rem 0.5rem;
@@ -3108,29 +3098,29 @@ body #wrapper #post-footer a {
   -o-border-radius: 6px;
   border-radius: 6px;
 }
-/* line 737, scss/_minisite.scss */
+/* line 727, scss/_minisite.scss */
 #minisite .continueReading a:after {
   content: "\f138";
   margin-left: 0.375rem;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 744, scss/_minisite.scss */
+  /* line 734, scss/_minisite.scss */
   #minisite .feedLink {
     display: inline;
     text-align: right;
   }
 }
-/* line 752, scss/_minisite.scss */
+/* line 742, scss/_minisite.scss */
 #minisite .feedLink .feedInfo a {
   color: transparent;
 }
-/* line 756, scss/_minisite.scss */
+/* line 746, scss/_minisite.scss */
 #minisite .feedLink .feedInfo a:before {
   content: "\f09e";
   display: block;
   color: #9f2112;
 }
-/* line 765, scss/_minisite.scss */
+/* line 755, scss/_minisite.scss */
 #minisite .pagination {
   margin-bottom: 2.5rem;
   *zoom: 1;
@@ -3145,24 +3135,159 @@ body #wrapper #post-footer a {
   clear: both;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 765, scss/_minisite.scss */
+  /* line 755, scss/_minisite.scss */
   #minisite .pagination {
     width: 50%;
     float: left;
   }
 }
-/* line 774, scss/_minisite.scss */
+/* line 764, scss/_minisite.scss */
 #minisite .pagination.above {
   dispaly: none;
 }
-/* line 785, scss/_minisite.scss */
+/* line 775, scss/_minisite.scss */
 #minisite .pagination .pages a,
 #minisite .pagination .pages strong {
   margin: 0 0.25rem;
 }
-/* line 794, scss/_minisite.scss */
+/* line 784, scss/_minisite.scss */
 #minisite .contentMain + .contentPost {
   margin-top: 2.5rem;
+}
+
+/* line 4, scss/font-awesome/_core.scss */
+.fa, #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .jump a:before, #minisite .continueReading a:after, #minisite .feedLink .feedInfo a:before, .assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a[href]:before, #childrenAndGrandchildren li ul .childDesc:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
+#calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
+#calendar .eventDetails .eventUrl:before,
+#calendar .eventDetails .calendarExport:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
+.featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, #policyModule .rootPolicyList .rootPolicyItem a:before, #policyModule .policy .decimal .closedAccordion .policyName:after, #policyModule .policy .decimal .openAccordion .policyName:after, #relatedPub .pubLinks a:before, .publication .post p.comments a:before, .publication .post p.more a:after, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after, th.header:after, .twitter-block li:before {
+  display: inline-block;
+  font-family: FontAwesome;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* line 4, scss/font-awesome/_rotated-flipped.scss */
+.fa-rotate-90 {
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1);
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  -o-transform: rotate(90deg);
+  transform: rotate(90deg);
+}
+
+/* line 5, scss/font-awesome/_rotated-flipped.scss */
+.fa-rotate-180 {
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
+  -webkit-transform: rotate(180deg);
+  -moz-transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
+  -o-transform: rotate(180deg);
+  transform: rotate(180deg);
+}
+
+/* line 6, scss/font-awesome/_rotated-flipped.scss */
+.fa-rotate-270 {
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+  -webkit-transform: rotate(270deg);
+  -moz-transform: rotate(270deg);
+  -ms-transform: rotate(270deg);
+  -o-transform: rotate(270deg);
+  transform: rotate(270deg);
+}
+
+/* line 8, scss/font-awesome/_rotated-flipped.scss */
+.fa-flip-horizontal {
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=0);
+  -webkit-transform: scale(-1, 1);
+  -moz-transform: scale(-1, 1);
+  -ms-transform: scale(-1, 1);
+  -o-transform: scale(-1, 1);
+  transform: scale(-1, 1);
+}
+
+/* line 9, scss/font-awesome/_rotated-flipped.scss */
+.fa-flip-vertical {
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
+  -webkit-transform: scale(1, -1);
+  -moz-transform: scale(1, -1);
+  -ms-transform: scale(1, -1);
+  -o-transform: scale(1, -1);
+  transform: scale(1, -1);
+}
+
+/* line 10, scss/_extends.scss */
+.zero-out, body #wrapper #global-banner hgroup h1, body #wrapper #global-banner #mobile-nav ul, body #wrapper #global-nav .sections, body #wrapper #global-footer #global-footer-nav .column ul, body #wrapper #global-footer #global-footer-info .contact, #callToActionBlurb .blurb ul, #calendar .responsiveEventsList .views ul, .featuresModule .feature .featureInfo .featureTitle a,
+.featuresModule .feature .featureInfo .featureTitle .noLink, .featuresModule .feature .featureNavWrap .featureNav {
+  margin: 0;
+  padding: 0;
+}
+
+/* line 15, scss/_extends.scss */
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  margin-bottom: 0;
+}
+
+/* line 29, scss/page_types/_standalone.scss */
+body.standalone #wrapper #wrapper-col {
+  padding: 0;
+}
+/* line 31, scss/page_types/_standalone.scss */
+body.standalone #wrapper #wrapper-col #minisite {
+  border: 0;
+  padding: 0;
+}
+/* line 35, scss/page_types/_standalone.scss */
+body.standalone #wrapper #wrapper-col #minisite #minisiteBanner .breadcrumbs {
+  display: none;
+}
+/* line 39, scss/page_types/_standalone.scss */
+body.standalone #wrapper #wrapper-col #minisite #contentAndRelated {
+  padding: 0;
+}
+/* line 42, scss/page_types/_standalone.scss */
+body.standalone #wrapper #wrapper-col #minisite #contentAndRelated #contentFeature {
+  margin: 0;
+}
+@media only screen and (max-width: 40em) {
+  /* line 46, scss/page_types/_standalone.scss */
+  body.standalone #wrapper #wrapper-col #minisite #contentAndRelated #contentFeature .features {
+    padding: 0;
+    height: 224px;
+  }
+  /* line 50, scss/page_types/_standalone.scss */
+  body.standalone #wrapper #wrapper-col #minisite #contentAndRelated #contentFeature .features img {
+    width: 646px;
+    max-width: 10000px !important;
+    height: 224px !important;
+    position: absolute;
+    left: 50%;
+    top: 0;
+    margin-left: -323px;
+  }
+}
+/* line 63, scss/page_types/_standalone.scss */
+body.standalone #wrapper #wrapper-col #minisite #contentAndRelated #contentSections {
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+/* line 67, scss/page_types/_standalone.scss */
+body.standalone #wrapper #wrapper-col #minisite #contentAndRelated #contentSections #av {
+  max-width: 600px;
+  margin: 0 auto;
+}
+/* line 71, scss/page_types/_standalone.scss */
+body.standalone #wrapper #wrapper-col #minisite #contentAndRelated #contentSections #av .moduleNav ul li {
+  border-bottom: 0;
+  width: 100%;
+  padding: 0;
 }
 
 /* line 4, scss/font-awesome/_core.scss */
@@ -3188,7 +3313,7 @@ body #wrapper #post-footer a {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle .screenreader, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -3235,7 +3360,7 @@ body #wrapper #post-footer a {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle .screenreader, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -3243,7 +3368,7 @@ body #wrapper #post-footer a {
 }
 
 /* line 23, scss/modules/_av.scss */
-#wrapper .video {
+#wrapper #contentAndRelated .video {
   position: relative;
   padding-top: 1.5625rem;
   padding-bottom: 67.5%;
@@ -3252,36 +3377,36 @@ body #wrapper #post-footer a {
   overflow: hidden;
 }
 /* line 28, ../foundation/bower_components/foundation/scss/foundation/components/_flex-video.scss */
-#wrapper .video.widescreen {
+#wrapper #contentAndRelated .video.widescreen {
   padding-bottom: 57.25%;
 }
 /* line 29, ../foundation/bower_components/foundation/scss/foundation/components/_flex-video.scss */
-#wrapper .video.vimeo {
+#wrapper #contentAndRelated .video.vimeo {
   padding-top: 0;
 }
 /* line 34, ../foundation/bower_components/foundation/scss/foundation/components/_flex-video.scss */
-#wrapper .video iframe,
-#wrapper .video object,
-#wrapper .video embed,
-#wrapper .video video {
+#wrapper #contentAndRelated .video iframe,
+#wrapper #contentAndRelated .video object,
+#wrapper #contentAndRelated .video embed,
+#wrapper #contentAndRelated .video video {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
 }
-/* line 31, scss/modules/_av.scss */
+/* line 32, scss/modules/_av.scss */
 #wrapper #av .moduleNav ul {
   margin: 0;
 }
-/* line 34, scss/modules/_av.scss */
+/* line 35, scss/modules/_av.scss */
 #wrapper #av .moduleNav ul li {
   border-bottom: 1px solid #e9e9e9;
   padding-bottom: 2.5rem;
   margin-bottom: 2.5rem;
 }
 @media only screen and (min-width: 30em) {
-  /* line 34, scss/modules/_av.scss */
+  /* line 35, scss/modules/_av.scss */
   #wrapper #av .moduleNav ul li {
     position: relative;
     padding-left: 1.25rem;
@@ -3289,28 +3414,28 @@ body #wrapper #post-footer a {
     width: 50%;
     float: left;
   }
-  /* line 44, scss/modules/_av.scss */
+  /* line 45, scss/modules/_av.scss */
   #wrapper #av .moduleNav ul li:nth-child(2n+1) {
     clear: left;
   }
 }
-/* line 49, scss/modules/_av.scss */
+/* line 50, scss/modules/_av.scss */
 #wrapper #av .moduleNav ul li:last-child {
   margin-bottom: 0;
 }
-/* line 53, scss/modules/_av.scss */
+/* line 54, scss/modules/_av.scss */
 #wrapper #av .moduleNav ul li .highslide {
   display: block;
   margin-bottom: 1.25rem;
   position: relative;
   max-width: 480px;
 }
-/* line 60, scss/modules/_av.scss */
+/* line 61, scss/modules/_av.scss */
 #wrapper #av .moduleNav ul li img {
   margin: 0 auto;
   display: block;
 }
-/* line 65, scss/modules/_av.scss */
+/* line 66, scss/modules/_av.scss */
 #wrapper #av .moduleNav ul li .av-play {
   width: 44px;
   height: 44px;
@@ -3320,22 +3445,22 @@ body #wrapper #post-footer a {
   margin-left: -22px;
   margin-top: -22px;
 }
-/* line 76, scss/modules/_av.scss */
+/* line 77, scss/modules/_av.scss */
 #wrapper #av .moduleNav ul li .desc *:last-child {
   margin-bottom: 0;
   padding-bottom: 0;
 }
-/* line 92, scss/modules/_av.scss */
+/* line 93, scss/modules/_av.scss */
 #wrapper #relatedSections #av .moduleNav ul {
   margin: 0;
 }
-/* line 95, scss/modules/_av.scss */
+/* line 96, scss/modules/_av.scss */
 #wrapper #relatedSections #av .moduleNav ul li {
   padding: 0;
   border-bottom: 0;
 }
 @media only screen and (min-width: 30em) {
-  /* line 95, scss/modules/_av.scss */
+  /* line 96, scss/modules/_av.scss */
   #wrapper #relatedSections #av .moduleNav ul li {
     position: relative;
     padding-left: 0;
@@ -3343,12 +3468,12 @@ body #wrapper #post-footer a {
     width: 100%;
     float: left;
   }
-  /* line 103, scss/modules/_av.scss */
+  /* line 104, scss/modules/_av.scss */
   #wrapper #relatedSections #av .moduleNav ul li:nth-child(2n+1) {
     clear: none;
   }
 }
-/* line 108, scss/modules/_av.scss */
+/* line 109, scss/modules/_av.scss */
 #wrapper #relatedSections #av .moduleNav ul li:last-child {
   padding-bottom: 0;
 }
@@ -3376,7 +3501,7 @@ body #wrapper #post-footer a {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle .screenreader, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -3496,7 +3621,7 @@ body #wrapper #post-footer a {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle .screenreader, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -3764,7 +3889,7 @@ footer .contactBlurb {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle .screenreader, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -4048,7 +4173,7 @@ footer .contactBlurb {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle .screenreader, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -4231,9 +4356,11 @@ footer .contactBlurb {
 }
 /* line 140, scss/modules/_events.scss */
 #calendar .responsiveEventsList .search {
-  display: none;
-  margin-bottom: 4rem;
-  background: #e9e9e9;
+  /*display: none;*/
+  /*margin-bottom: rem-calc(64);*/
+  margin-bottom: 2rem;
+  background: inherit;
+  float: inherit;
 }
 @media only screen and (min-width: 40.063em) {
   /* line 140, scss/modules/_events.scss */
@@ -4241,28 +4368,25 @@ footer .contactBlurb {
     position: relative;
     padding-left: 1.25rem;
     padding-right: 1.25rem;
-    width: 50%;
-    float: left;
+    width: 100%;
+    float: none;
   }
 }
-/* line 149, scss/modules/_events.scss */
-#calendar .responsiveEventsList .search h4 {
-  display: none;
-}
-/* line 152, scss/modules/_events.scss */
+/* line 154, scss/modules/_events.scss */
 #calendar .responsiveEventsList .search form .search {
   margin-bottom: 0;
   background: none;
 }
-/* line 156, scss/modules/_events.scss */
+/* line 158, scss/modules/_events.scss */
 #calendar .responsiveEventsList .search form input[type="text"] {
   position: relative;
   padding-left: 1.25rem;
   padding-right: 1.25rem;
   width: 81.25%;
   float: left;
+  padding-left: 0.5rem;
 }
-/* line 159, scss/modules/_events.scss */
+/* line 162, scss/modules/_events.scss */
 #calendar .responsiveEventsList .search form input[type="submit"] {
   display: block;
   position: relative;
@@ -4281,9 +4405,17 @@ footer .contactBlurb {
   padding-left: 1.25rem;
   padding-right: 1.25rem;
   width: 18.75%;
-  float: left;
+  float: none;
 }
-/* line 169, scss/modules/_events.scss */
+/* line 170, scss/modules/_events.scss */
+#calendar .responsiveEventsList .search .otherActions {
+  position: relative;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+  width: 100%;
+  float: none;
+}
+/* line 178, scss/modules/_events.scss */
 #calendar .responsiveEventsList .views {
   text-align: center;
   margin: -1.25rem 0 0;
@@ -4300,32 +4432,32 @@ footer .contactBlurb {
 #calendar .responsiveEventsList .views:after {
   clear: both;
 }
-/* line 178, scss/modules/_events.scss */
+/* line 187, scss/modules/_events.scss */
 #calendar .responsiveEventsList .views h4 {
   display: inline;
   font-size: 0.75rem;
 }
-/* line 184, scss/modules/_events.scss */
+/* line 193, scss/modules/_events.scss */
 #calendar .responsiveEventsList .views ul {
   display: inline-block;
 }
-/* line 188, scss/modules/_events.scss */
+/* line 197, scss/modules/_events.scss */
 #calendar .responsiveEventsList .views ul li {
   display: inline-block;
   margin: 0 0 0 0.375rem;
   padding: 0;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 188, scss/modules/_events.scss */
+  /* line 197, scss/modules/_events.scss */
   #calendar .responsiveEventsList .views ul li {
     margin: 0 0 0 0.375rem;
   }
 }
-/* line 198, scss/modules/_events.scss */
+/* line 207, scss/modules/_events.scss */
 #calendar .responsiveEventsList .views ul li:nth-child(4), #calendar .responsiveEventsList .views ul li:nth-child(5) {
   display: none;
 }
-/* line 203, scss/modules/_events.scss */
+/* line 212, scss/modules/_events.scss */
 #calendar .responsiveEventsList .views ul li a,
 #calendar .responsiveEventsList .views ul li strong {
   padding: 0.0625rem 0.75rem;
@@ -4338,18 +4470,18 @@ footer .contactBlurb {
   text-decoration: underline;
   font-size: 0.75rem;
 }
-/* line 212, scss/modules/_events.scss */
+/* line 221, scss/modules/_events.scss */
 #calendar .responsiveEventsList .views ul li a:hover {
   background: #e9e9e9;
 }
-/* line 217, scss/modules/_events.scss */
+/* line 226, scss/modules/_events.scss */
 #calendar .responsiveEventsList .views ul li strong {
   text-decoration: none;
   font-weight: 400;
   background: #1073ce;
   color: #FFF;
 }
-/* line 227, scss/modules/_events.scss */
+/* line 236, scss/modules/_events.scss */
 #calendar .responsiveEventsList .nav {
   clear: both;
   text-align: center;
@@ -4357,16 +4489,16 @@ footer .contactBlurb {
   font-size: 1.5rem;
   line-height: 1.75;
 }
-/* line 308, scss/modules/_events.scss */
+/* line 317, scss/modules/_events.scss */
 #calendar .responsiveEventsList .eventsListContent {
   width: 100%;
 }
-/* line 311, scss/modules/_events.scss */
+/* line 320, scss/modules/_events.scss */
 #calendar .responsiveEventsList .eventsListContent .focus {
   background: #f3f3f3 !important;
   padding: 1.25rem;
 }
-/* line 315, scss/modules/_events.scss */
+/* line 324, scss/modules/_events.scss */
 #calendar .responsiveEventsList .eventsListContent .focus h3 {
   margin-top: -1.25rem;
   margin-left: -1.25rem;
@@ -4376,15 +4508,15 @@ footer .contactBlurb {
   display: inline-block;
   font-size: 1rem;
 }
-/* line 325, scss/modules/_events.scss */
+/* line 334, scss/modules/_events.scss */
 #calendar .responsiveEventsList .eventsListContent .focus ul {
   margin-bottom: 0;
 }
-/* line 330, scss/modules/_events.scss */
+/* line 339, scss/modules/_events.scss */
 #calendar .responsiveEventsList .eventsListContent #events {
   margin-bottom: 1rem;
 }
-/* line 335, scss/modules/_events.scss */
+/* line 344, scss/modules/_events.scss */
 #calendar .responsiveEventsList .eventsListContent .dayblock,
 #calendar .responsiveEventsList .eventsListContent .ongoingblock {
   border-bottom: 1px solid #e9e9e9;
@@ -4404,11 +4536,11 @@ footer .contactBlurb {
 #calendar .responsiveEventsList .eventsListContent .ongoingblock:after {
   clear: both;
 }
-/* line 342, scss/modules/_events.scss */
+/* line 351, scss/modules/_events.scss */
 #calendar .responsiveEventsList .eventsListContent h3.month {
   margin-top: 2.5rem;
 }
-/* line 346, scss/modules/_events.scss */
+/* line 355, scss/modules/_events.scss */
 #calendar .responsiveEventsList .eventsListContent .day {
   display: block;
   text-align: center;
@@ -4420,7 +4552,7 @@ footer .contactBlurb {
   top: 1rem;
   left: 0;
 }
-/* line 357, scss/modules/_events.scss */
+/* line 366, scss/modules/_events.scss */
 #calendar .responsiveEventsList .eventsListContent .day .month {
   display: block;
   background: #9f2112;
@@ -4433,7 +4565,7 @@ footer .contactBlurb {
   border-top-right-radius: 6px;
   padding: 0.125rem;
 }
-/* line 365, scss/modules/_events.scss */
+/* line 374, scss/modules/_events.scss */
 #calendar .responsiveEventsList .eventsListContent .day .date {
   display: block;
   background: #e9e9e9;
@@ -4445,13 +4577,13 @@ footer .contactBlurb {
   border-bottom-right-radius: 6px;
   padding: 0.125rem;
 }
-/* line 378, scss/modules/_events.scss */
+/* line 387, scss/modules/_events.scss */
 #calendar .responsiveEventsList .eventsListContent .dayEvents,
 #calendar .responsiveEventsList .eventsListContent .ongoingEvents {
   margin: 0 0 0 4.375rem;
   padding: 0;
 }
-/* line 382, scss/modules/_events.scss */
+/* line 391, scss/modules/_events.scss */
 #calendar .responsiveEventsList .eventsListContent .dayEvents .event,
 #calendar .responsiveEventsList .eventsListContent .ongoingEvents .event {
   padding-bottom: 0.625rem;
@@ -4469,33 +4601,33 @@ footer .contactBlurb {
 #calendar .responsiveEventsList .eventsListContent .ongoingEvents .event:after {
   clear: both;
 }
-/* line 386, scss/modules/_events.scss */
+/* line 395, scss/modules/_events.scss */
 #calendar .responsiveEventsList .eventsListContent .dayEvents .event a,
 #calendar .responsiveEventsList .eventsListContent .ongoingEvents .event a {
   font-weight: 400;
 }
-/* line 392, scss/modules/_events.scss */
+/* line 401, scss/modules/_events.scss */
 #calendar .responsiveEventsList .eventsListContent .dayEvents .event a:hover,
 #calendar .responsiveEventsList .eventsListContent .ongoingEvents .event a:hover {
   text-decoration: underline;
 }
-/* line 395, scss/modules/_events.scss */
+/* line 404, scss/modules/_events.scss */
 #calendar .responsiveEventsList .eventsListContent .dayEvents .event a:hover i,
 #calendar .responsiveEventsList .eventsListContent .ongoingEvents .event a:hover i {
   color: #ffbd1c;
 }
-/* line 400, scss/modules/_events.scss */
+/* line 409, scss/modules/_events.scss */
 #calendar .responsiveEventsList .eventsListContent .dayEvents .event a i,
 #calendar .responsiveEventsList .eventsListContent .ongoingEvents .event a i {
   color: #e8a500;
   margin-left: 0.375rem;
 }
-/* line 410, scss/modules/_events.scss */
+/* line 419, scss/modules/_events.scss */
 #calendar .responsiveEventsList .eventsListContent .dayEvents .event:last-child,
 #calendar .responsiveEventsList .eventsListContent .ongoingEvents .event:last-child {
   padding-bottom: 0;
 }
-/* line 415, scss/modules/_events.scss */
+/* line 424, scss/modules/_events.scss */
 #calendar .responsiveEventsList .eventsListContent .dayEvents .event .through,
 #calendar .responsiveEventsList .eventsListContent .dayEvents .event .ends,
 #calendar .responsiveEventsList .eventsListContent .ongoingEvents .event .through,
@@ -4503,127 +4635,127 @@ footer .contactBlurb {
   font-style: normal;
   display: inline;
 }
-/* line 420, scss/modules/_events.scss */
+/* line 429, scss/modules/_events.scss */
 #calendar .responsiveEventsList .eventsListContent .dayEvents .event time,
 #calendar .responsiveEventsList .eventsListContent .ongoingEvents .event time {
   display: inline;
 }
-/* line 427, scss/modules/_events.scss */
+/* line 436, scss/modules/_events.scss */
 #calendar .responsiveEventsList .eventsListContent .dayEvents .event .sep,
 #calendar .responsiveEventsList .eventsListContent .ongoingEvents .event .sep {
   padding: 0 0.25rem;
 }
-/* line 433, scss/modules/_events.scss */
+/* line 442, scss/modules/_events.scss */
 #calendar .responsiveEventsList .eventsListContent .dayEvents .event .location,
 #calendar .responsiveEventsList .eventsListContent .ongoingEvents .event .location {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
   font-weight: 300;
   display: inline;
 }
-/* line 447, scss/modules/_events.scss */
+/* line 456, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGridWrapper {
   margin-bottom: 2.5rem;
 }
-/* line 451, scss/modules/_events.scss */
+/* line 460, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid {
   text-align: center;
 }
-/* line 457, scss/modules/_events.scss */
+/* line 466, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid a.previous,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid h4,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid a.next {
   display: inline-block;
   padding: 0 0.375rem;
 }
-/* line 462, scss/modules/_events.scss */
+/* line 471, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table {
   border: none;
 }
-/* line 464, scss/modules/_events.scss */
+/* line 473, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table tr {
   background: #FFF;
 }
-/* line 469, scss/modules/_events.scss */
+/* line 478, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table th,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td {
   text-align: center;
   padding: 0;
 }
-/* line 476, scss/modules/_events.scss */
+/* line 485, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table th {
   padding: 5% 0;
   background: #fbfbfb;
   background: #FFF;
   border: #FFF;
 }
-/* line 483, scss/modules/_events.scss */
+/* line 492, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td {
   border-color: #DDDDDD;
   border-image: none;
   border-style: solid;
   border-width: 1px;
 }
-/* line 489, scss/modules/_events.scss */
+/* line 498, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td:empty {
   background: #f6f6f6;
 }
-/* line 498, scss/modules/_events.scss */
+/* line 507, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.hasEvent a {
   color: #1073ce;
 }
-/* line 504, scss/modules/_events.scss */
+/* line 513, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.currentlyViewing {
   background: #1073ce;
 }
-/* line 508, scss/modules/_events.scss */
+/* line 517, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.currentlyViewing a {
   color: #FFF;
 }
-/* line 513, scss/modules/_events.scss */
+/* line 522, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.today {
   background: #3b99f0;
 }
-/* line 517, scss/modules/_events.scss */
+/* line 526, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.today a {
   color: #FFF;
 }
-/* line 522, scss/modules/_events.scss */
+/* line 531, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td a {
   color: #9d9d9d;
   display: block;
   padding: 28% 0;
 }
-/* line 534, scss/modules/_events.scss */
+/* line 543, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a {
   margin: 0 5%;
   display: block;
   padding: 0;
 }
-/* line 538, scss/modules/_events.scss */
+/* line 547, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before {
   margin: 0 0.5rem 1rem 0;
 }
-/* line 545, scss/modules/_events.scss */
+/* line 554, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .webcal:before {
   content: "\f073";
 }
-/* line 549, scss/modules/_events.scss */
+/* line 558, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .download:before {
   content: "\f063";
 }
-/* line 553, scss/modules/_events.scss */
+/* line 562, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .rss:before {
   content: "\f09e";
 }
 
 /* Events Mini */
-/* line 568, scss/modules/_events.scss */
+/* line 577, scss/modules/_events.scss */
 #miniCal #events {
   margin-bottom: 1rem;
 }
-/* line 573, scss/modules/_events.scss */
+/* line 582, scss/modules/_events.scss */
 #miniCal .dayblock,
 #miniCal .ongoingblock {
   border-bottom: 1px solid #e9e9e9;
@@ -4643,7 +4775,7 @@ footer .contactBlurb {
 #miniCal .ongoingblock:after {
   clear: both;
 }
-/* line 580, scss/modules/_events.scss */
+/* line 589, scss/modules/_events.scss */
 #miniCal .day {
   display: block;
   text-align: center;
@@ -4655,7 +4787,7 @@ footer .contactBlurb {
   top: 1rem;
   left: 0;
 }
-/* line 591, scss/modules/_events.scss */
+/* line 600, scss/modules/_events.scss */
 #miniCal .day .month {
   display: block;
   background: #9f2112;
@@ -4668,7 +4800,7 @@ footer .contactBlurb {
   border-top-right-radius: 6px;
   padding: 0.125rem;
 }
-/* line 599, scss/modules/_events.scss */
+/* line 608, scss/modules/_events.scss */
 #miniCal .day .date {
   display: block;
   background: #e9e9e9;
@@ -4680,13 +4812,13 @@ footer .contactBlurb {
   border-bottom-right-radius: 6px;
   padding: 0.125rem;
 }
-/* line 612, scss/modules/_events.scss */
+/* line 621, scss/modules/_events.scss */
 #miniCal .dayEvents,
 #miniCal .ongoingEvents {
   margin: 0 0 0 4.375rem;
   padding: 0;
 }
-/* line 616, scss/modules/_events.scss */
+/* line 625, scss/modules/_events.scss */
 #miniCal .dayEvents .event,
 #miniCal .ongoingEvents .event {
   padding-bottom: 0.625rem;
@@ -4704,33 +4836,33 @@ footer .contactBlurb {
 #miniCal .ongoingEvents .event:after {
   clear: both;
 }
-/* line 620, scss/modules/_events.scss */
+/* line 629, scss/modules/_events.scss */
 #miniCal .dayEvents .event a,
 #miniCal .ongoingEvents .event a {
   font-weight: 400;
 }
-/* line 626, scss/modules/_events.scss */
+/* line 635, scss/modules/_events.scss */
 #miniCal .dayEvents .event a:hover,
 #miniCal .ongoingEvents .event a:hover {
   text-decoration: underline;
 }
-/* line 629, scss/modules/_events.scss */
+/* line 638, scss/modules/_events.scss */
 #miniCal .dayEvents .event a:hover i,
 #miniCal .ongoingEvents .event a:hover i {
   color: #ffbd1c;
 }
-/* line 634, scss/modules/_events.scss */
+/* line 643, scss/modules/_events.scss */
 #miniCal .dayEvents .event a i,
 #miniCal .ongoingEvents .event a i {
   color: #e8a500;
   margin-left: 0.375rem;
 }
-/* line 644, scss/modules/_events.scss */
+/* line 653, scss/modules/_events.scss */
 #miniCal .dayEvents .event:last-child,
 #miniCal .ongoingEvents .event:last-child {
   padding-bottom: 0;
 }
-/* line 649, scss/modules/_events.scss */
+/* line 658, scss/modules/_events.scss */
 #miniCal .dayEvents .event .through,
 #miniCal .dayEvents .event .ends,
 #miniCal .ongoingEvents .event .through,
@@ -4738,50 +4870,50 @@ footer .contactBlurb {
   font-style: normal;
   display: inline;
 }
-/* line 654, scss/modules/_events.scss */
+/* line 663, scss/modules/_events.scss */
 #miniCal .dayEvents .event time,
 #miniCal .ongoingEvents .event time {
   display: inline;
 }
-/* line 661, scss/modules/_events.scss */
+/* line 670, scss/modules/_events.scss */
 #miniCal .dayEvents .event .sep,
 #miniCal .ongoingEvents .event .sep {
   padding: 0 0.25rem;
 }
-/* line 667, scss/modules/_events.scss */
+/* line 676, scss/modules/_events.scss */
 #miniCal .dayEvents .event .location,
 #miniCal .ongoingEvents .event .location {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
   font-weight: 300;
   display: inline;
 }
-/* line 678, scss/modules/_events.scss */
+/* line 687, scss/modules/_events.scss */
 #miniCal .foot .more {
   margin: 0;
 }
-/* line 681, scss/modules/_events.scss */
+/* line 690, scss/modules/_events.scss */
 #miniCal .foot .more a:before {
   content: "\f073";
   margin-right: 0.375rem;
 }
 
 /* Events Single */
-/* line 699, scss/modules/_events.scss */
+/* line 708, scss/modules/_events.scss */
 #calendar .eventDetails .back a:before {
   content: "\f137";
   margin-right: 0.375rem;
 }
-/* line 709, scss/modules/_events.scss */
+/* line 718, scss/modules/_events.scss */
 #calendar .eventDetails .eventMeta li {
   margin-left: 2.5rem;
 }
-/* line 712, scss/modules/_events.scss */
+/* line 721, scss/modules/_events.scss */
 #calendar .eventDetails .eventMeta li:before {
   width: 2rem;
   margin-left: -2.25rem;
   text-align: center;
 }
-/* line 723, scss/modules/_events.scss */
+/* line 732, scss/modules/_events.scss */
 #calendar .eventDetails .eventMeta li .fa, #calendar .eventDetails .eventMeta li #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .navListTop ul #calendar .eventDetails .eventMeta li .navListItem.accordion > a:before, #calendar .eventDetails .eventMeta li #minisite #navWrap .jump a:before, #minisite #navWrap .jump #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li #minisite .continueReading a:after, #minisite .continueReading #calendar .eventDetails .eventMeta li a:after, #calendar .eventDetails .eventMeta li #minisite .feedLink .feedInfo a:before, #minisite .feedLink .feedInfo #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta #callToActionBlurb .blurb ul li a:after, #callToActionBlurb .blurb ul #calendar .eventDetails .eventMeta li a:after, #calendar .eventDetails .eventMeta .childrenList li a[href]:before, .childrenList #calendar .eventDetails .eventMeta li a[href]:before, #calendar .eventDetails .eventMeta #childrenAndGrandchildren li ul .childDesc:before, #childrenAndGrandchildren #calendar .eventDetails .eventMeta li ul .childDesc:before, #calendar .eventDetails .eventMeta li .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport .eventDetails .eventMeta li a:before,
 #calendar .eventDetails .eventMeta li .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li #miniCal .foot .more a:before, #miniCal .foot .more #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li .back a:before, #calendar .eventDetails .back .eventMeta li a:before, #calendar .eventDetails .eventMeta li li:before, #calendar .eventDetails .eventMeta li .contact:before,
@@ -4791,68 +4923,68 @@ footer .contactBlurb {
 .featuresModule .feature .featureInfo .featureText #calendar .eventDetails .eventMeta li span:before, #calendar .eventDetails .eventMeta li #discoErrorNotice h3:before, #discoErrorNotice #calendar .eventDetails .eventMeta li h3:before, #calendar .eventDetails .eventMeta li #policyModule .rootPolicyList .rootPolicyItem a:before, #policyModule .rootPolicyList .rootPolicyItem #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li #policyModule .policy .decimal .closedAccordion .policyName:after, #policyModule .policy .decimal .closedAccordion #calendar .eventDetails .eventMeta li .policyName:after, #calendar .eventDetails .eventMeta li #policyModule .policy .decimal .openAccordion .policyName:after, #policyModule .policy .decimal .openAccordion #calendar .eventDetails .eventMeta li .policyName:after, #calendar .eventDetails .eventMeta li #relatedPub .pubLinks a:before, #relatedPub .pubLinks #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li .publication .post p.comments a:before, .publication .post p.comments #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li .publication .post p.more a:after, .publication .post p.more #calendar .eventDetails .eventMeta li a:after, #calendar .eventDetails .eventMeta li .publication .fullPost .commentAdded h4:before, .publication .fullPost .commentAdded #calendar .eventDetails .eventMeta li h4:before, #calendar .eventDetails .eventMeta li .publication .nextPrev .prev h4:before, .publication .nextPrev .prev #calendar .eventDetails .eventMeta li h4:before, #calendar .eventDetails .eventMeta li .publication .nextPrev .next h4:after, .publication .nextPrev .next #calendar .eventDetails .eventMeta li h4:after, #calendar .eventDetails .eventMeta li th.header:after {
   margin: 0 0.375rem;
 }
-/* line 728, scss/modules/_events.scss */
+/* line 737, scss/modules/_events.scss */
 #calendar .eventDetails .eventMeta .repeats:before {
   content: "\f01e";
 }
-/* line 732, scss/modules/_events.scss */
+/* line 741, scss/modules/_events.scss */
 #calendar .eventDetails .eventMeta .date:before {
   content: "\f073";
 }
-/* line 736, scss/modules/_events.scss */
+/* line 745, scss/modules/_events.scss */
 #calendar .eventDetails .eventMeta .time:before {
   content: "\f017";
 }
-/* line 740, scss/modules/_events.scss */
+/* line 749, scss/modules/_events.scss */
 #calendar .eventDetails .eventMeta .location:before {
   content: "\f041";
 }
-/* line 747, scss/modules/_events.scss */
+/* line 756, scss/modules/_events.scss */
 #calendar .eventDetails .images {
   margin-bottom: 2.5rem;
   display: inline-block;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 751, scss/modules/_events.scss */
+  /* line 760, scss/modules/_events.scss */
   #calendar .eventDetails .images .imageChunk {
     float: left;
     width: 50%;
   }
-  /* line 757, scss/modules/_events.scss */
+  /* line 766, scss/modules/_events.scss */
   #calendar .eventDetails .images .imageChunk:nth-child(2n+1) {
     padding-right: 1rem;
     clear: left;
   }
-  /* line 762, scss/modules/_events.scss */
+  /* line 771, scss/modules/_events.scss */
   #calendar .eventDetails .images .imageChunk:nth-child(2n+2) {
     padding-left: 1rem;
   }
 }
-/* line 771, scss/modules/_events.scss */
+/* line 780, scss/modules/_events.scss */
 #calendar .eventDetails .contact,
 #calendar .eventDetails .eventUrl,
 #calendar .eventDetails .calendarExport {
   margin-bottom: 0;
 }
-/* line 774, scss/modules/_events.scss */
+/* line 783, scss/modules/_events.scss */
 #calendar .eventDetails .contact:before,
 #calendar .eventDetails .eventUrl:before,
 #calendar .eventDetails .calendarExport:before {
   margin-right: 0.375rem;
 }
-/* line 781, scss/modules/_events.scss */
+/* line 790, scss/modules/_events.scss */
 #calendar .eventDetails .contact:before {
   content: "\f059";
 }
-/* line 787, scss/modules/_events.scss */
+/* line 796, scss/modules/_events.scss */
 #calendar .eventDetails .eventUrl:before {
   content: "\f05a";
 }
-/* line 793, scss/modules/_events.scss */
+/* line 802, scss/modules/_events.scss */
 #calendar .eventDetails .calendarExport:before {
   content: "\f073";
 }
-/* line 798, scss/modules/_events.scss */
+/* line 807, scss/modules/_events.scss */
 #calendar .eventDetails .export {
   margin-bottom: 1.5rem;
 }
@@ -4880,7 +5012,7 @@ footer .contactBlurb {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle .screenreader, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -5001,7 +5133,7 @@ footer .contactBlurb {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle .screenreader, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -5076,7 +5208,7 @@ footer .contactBlurb {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle .screenreader, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -5279,7 +5411,7 @@ footer .contactBlurb {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle .screenreader, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -6169,7 +6301,7 @@ form input[type="submit"]:active {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle .screenreader, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -6545,7 +6677,7 @@ form input[type="submit"]:active {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle .screenreader, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -6622,39 +6754,70 @@ form input[type="submit"]:active {
 
 /* Inline Images */
 /* line 97, scss/modules/_images.scss */
-#pageContent img, .fullPost .text img, #faq .answer img {
+#pageContent figure, #pageContent, .fullPost .text figure, .fullPost .text, #faq .answer figure, #faq .answer {
+  width: auto;
+  max-width: 100%;
+  margin: 0 auto 1rem;
+  display: table;
+}
+/* line 102, scss/modules/_images.scss */
+#pageContent figure.left, #pageContent.left, .fullPost .text figure.left, .fullPost .text.left, #faq .answer figure.left, #faq .answer.left {
+  margin-right: 2.5rem;
+}
+/* line 105, scss/modules/_images.scss */
+#pageContent figure.right, #pageContent.right, .fullPost .text figure.right, .fullPost .text.right, #faq .answer figure.right, #faq .answer.right {
+  margin-left: 2.5rem;
+}
+/* line 109, scss/modules/_images.scss */
+#pageContent figure img, #pageContent img, .fullPost .text figure img, .fullPost .text img, #faq .answer figure img, #faq .answer img {
   width: auto;
   max-width: 100%;
   margin: 0 auto 1rem;
 }
-/* line 105, scss/modules/_images.scss */
-#pageContent img.left, #pageContent img[align="left"], #pageContent img.right, #pageContent img[align="right"], .fullPost .text img.left, .fullPost .text img[align="left"], .fullPost .text img.right, .fullPost .text img[align="right"], #faq .answer img.left, #faq .answer img[align="left"], #faq .answer img.right, #faq .answer img[align="right"] {
+/* line 117, scss/modules/_images.scss */
+#pageContent figure img.left, #pageContent figure img[align="left"], #pageContent figure img.right, #pageContent figure img[align="right"], #pageContent img.left, #pageContent img[align="left"], #pageContent img.right, #pageContent img[align="right"], .fullPost .text figure img.left, .fullPost .text figure img[align="left"], .fullPost .text figure img.right, .fullPost .text figure img[align="right"], .fullPost .text img.left, .fullPost .text img[align="left"], .fullPost .text img.right, .fullPost .text img[align="right"], #faq .answer figure img.left, #faq .answer figure img[align="left"], #faq .answer figure img.right, #faq .answer figure img[align="right"], #faq .answer img.left, #faq .answer img[align="left"], #faq .answer img.right, #faq .answer img[align="right"] {
   float: none !important;
   clear: left;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 97, scss/modules/_images.scss */
-  #pageContent img, .fullPost .text img, #faq .answer img {
+  /* line 109, scss/modules/_images.scss */
+  #pageContent figure img, #pageContent img, .fullPost .text figure img, .fullPost .text img, #faq .answer figure img, #faq .answer img {
     width: auto;
     max-width: 100%;
     margin: 0 0 1rem;
   }
-  /* line 116, scss/modules/_images.scss */
-  #pageContent img.left, #pageContent img[align="left"], .fullPost .text img.left, .fullPost .text img[align="left"], #faq .answer img.left, #faq .answer img[align="left"] {
+  /* line 128, scss/modules/_images.scss */
+  #pageContent figure img.left, #pageContent figure img[align="left"], #pageContent img.left, #pageContent img[align="left"], .fullPost .text figure img.left, .fullPost .text figure img[align="left"], .fullPost .text img.left, .fullPost .text img[align="left"], #faq .answer figure img.left, #faq .answer figure img[align="left"], #faq .answer img.left, #faq .answer img[align="left"] {
     margin-right: 2.5rem;
     float: left !important;
   }
-  /* line 122, scss/modules/_images.scss */
-  #pageContent img.right, #pageContent img[align="right"], .fullPost .text img.right, .fullPost .text img[align="right"], #faq .answer img.right, #faq .answer img[align="right"] {
+  /* line 134, scss/modules/_images.scss */
+  #pageContent figure img.right, #pageContent figure img[align="right"], #pageContent img.right, #pageContent img[align="right"], .fullPost .text figure img.right, .fullPost .text figure img[align="right"], .fullPost .text img.right, .fullPost .text img[align="right"], #faq .answer figure img.right, #faq .answer figure img[align="right"], #faq .answer img.right, #faq .answer img[align="right"] {
     margin-left: 2.5rem;
     float: right !important;
   }
-  /* line 130, scss/modules/_images.scss */
-  #pageContent img.left, #pageContent img[align="left"], #pageContent img.right, #pageContent img[align="right"], .fullPost .text img.left, .fullPost .text img[align="left"], .fullPost .text img.right, .fullPost .text img[align="right"], #faq .answer img.left, #faq .answer img[align="left"], #faq .answer img.right, #faq .answer img[align="right"] {
+  /* line 142, scss/modules/_images.scss */
+  #pageContent figure img.left, #pageContent figure img[align="left"], #pageContent figure img.right, #pageContent figure img[align="right"], #pageContent img.left, #pageContent img[align="left"], #pageContent img.right, #pageContent img[align="right"], .fullPost .text figure img.left, .fullPost .text figure img[align="left"], .fullPost .text figure img.right, .fullPost .text figure img[align="right"], .fullPost .text img.left, .fullPost .text img[align="left"], .fullPost .text img.right, .fullPost .text img[align="right"], #faq .answer figure img.left, #faq .answer figure img[align="left"], #faq .answer figure img.right, #faq .answer figure img[align="right"], #faq .answer img.left, #faq .answer img[align="left"], #faq .answer img.right, #faq .answer img[align="right"] {
     max-width: 40%;
   }
 }
-/* line 138, scss/modules/_images.scss */
+/* line 147, scss/modules/_images.scss */
+#pageContent figure figcaption, #pageContent figcaption, .fullPost .text figure figcaption, .fullPost .text figcaption, #faq .answer figure figcaption, #faq .answer figcaption {
+  display: table-caption;
+  caption-side: bottom;
+  margin-top: -0.625rem;
+  padding: 0;
+  word-wrap: normal;
+  font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
+  font-size: 0.75rem;
+  font-style: italic;
+  color: #6f6f6f;
+}
+/* line 158, scss/modules/_images.scss */
+#pageContent figure figcaption a, #pageContent figcaption a, .fullPost .text figure figcaption a, .fullPost .text figcaption a, #faq .answer figure figcaption a, #faq .answer figcaption a {
+  color: #6f6f6f;
+}
+/* line 166, scss/modules/_images.scss */
 #pageContent .callout img,
 #pageContent .callOut img, .fullPost .text .callout img,
 .fullPost .text .callOut img, #faq .answer .callout img,
@@ -6662,18 +6825,18 @@ form input[type="submit"]:active {
   width: auto;
 }
 
-/* line 145, scss/modules/_images.scss */
+/* line 173, scss/modules/_images.scss */
 #relatedSections .blurb img {
   width: auto;
   max-width: 100%;
   margin: 0 0 1rem;
 }
-/* line 151, scss/modules/_images.scss */
+/* line 179, scss/modules/_images.scss */
 #relatedSections .blurb img.left, #relatedSections .blurb img[align="left"] {
   margin-right: 2.5rem;
   float: left !important;
 }
-/* line 157, scss/modules/_images.scss */
+/* line 185, scss/modules/_images.scss */
 #relatedSections .blurb img.right, #relatedSections .blurb img[align="right"] {
   margin-left: 2.5rem;
   float: right !important;
@@ -6702,7 +6865,7 @@ form input[type="submit"]:active {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle .screenreader, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -6873,7 +7036,7 @@ form input[type="submit"]:active {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle .screenreader, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -7040,7 +7203,7 @@ form input[type="submit"]:active {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle .screenreader, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -7762,11 +7925,36 @@ form input[type="submit"]:active {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle .screenreader, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
   margin-bottom: 0;
+}
+
+/* line 20, scss/modules/_siblings.scss */
+ul.siblingList {
+  margin: 0;
+}
+/* line 23, scss/modules/_siblings.scss */
+ul.siblingList.prevNext li {
+  display: inline;
+}
+/* line 26, scss/modules/_siblings.scss */
+ul.siblingList.prevNext li.previous > a[href]:before {
+  font-family: FontAwesome;
+  content: "\f137";
+  padding-right: 0.35rem;
+}
+/* line 32, scss/modules/_siblings.scss */
+ul.siblingList.prevNext li.next {
+  float: right;
+}
+/* line 34, scss/modules/_siblings.scss */
+ul.siblingList.prevNext li.next > a[href]:after {
+  font-family: FontAwesome;
+  content: "\f138";
+  padding-left: 0.35rem;
 }
 
 /* line 10, scss/_extends.scss */
@@ -7777,7 +7965,7 @@ form input[type="submit"]:active {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle .screenreader, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -7816,7 +8004,7 @@ form input[type="submit"]:active {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle .screenreader, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -8364,7 +8552,7 @@ th.headerSortDown:after {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle .screenreader, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -8374,6 +8562,11 @@ th.headerSortDown:after {
 /* line 22, scss/modules/_tagboard.scss */
 div#tagboard-embed {
   margin-top: -2.5rem;
+}
+
+/* line 26, scss/modules/_tagboard.scss */
+.tagboardLink {
+  text-align: center;
 }
 
 /* line 4, scss/font-awesome/_core.scss */
@@ -8399,7 +8592,7 @@ div#tagboard-embed {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle .screenreader, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -8486,7 +8679,7 @@ div#tagboard-embed {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle .screenreader, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -8540,27 +8733,169 @@ h4.flickr_subtitle {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle .screenreader, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
   margin-bottom: 0;
 }
 
-/* line 22, scss/modules/_virtual-tours.scss */
-#virtual-tour {
+/* line 141, scss/_mixins.scss */
+#tabs {
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  -ms-border-radius: 0;
+  -o-border-radius: 0;
+  border-radius: 0;
+}
+
+/* line 146, scss/_mixins.scss */
+.tabs .tab-title {
+  		/*&:nth-child(4n+1).active a {
+  			border-color: $lc-green;
+  		}
+  
+  		&:nth-child(4n+2).active a {
+  			border-color: $lc-red;
+  		}
+  
+  		&:nth-child(4n+3).active a {
+  			border-color: $lc-blue-light;
+  		}
+  		
+  		&:nth-child(4n+4).active a {
+  			border-color: $lc-yellow;
+  		}*/
+}
+/* line 148, scss/_mixins.scss */
+.tabs .tab-title a {
+  background: #FFF !important;
+  display: block;
+  padding: 0.71429rem 1.42857rem;
+  border-left: none;
+  border-right: none;
+  margin: 0;
+  width: auto;
+  float: left;
+  font-weight: 300;
+  -moz-border-radius-topleft: 6px;
+  -webkit-border-top-left-radius: 6px;
+  border-top-left-radius: 6px;
+  -moz-border-radius-topright: 6px;
+  -webkit-border-top-right-radius: 6px;
+  border-top-right-radius: 6px;
+}
+/* line 178, scss/_mixins.scss */
+.tabs .tab-title.active a {
+  border-left: none;
+  border-top-width: 6px;
+  border-top-style: solid;
+  border-color: #1073ce;
+  background: #f6f6f6 !important;
+  color: #444444 !important;
+}
+
+/* line 189, scss/_mixins.scss */
+.tabs-content {
+  margin-top: -0.1875rem;
+}
+/* line 192, scss/_mixins.scss */
+.tabs-content .content {
+  padding: 1.25rem;
+  background: #f6f6f6;
+  			/*&:nth-child(4n+1).active {
+  				border-color: $lc-green;
+  			}
+  
+  			&:nth-child(4n+2).active {
+  				border-color: $lc-red;
+  			}
+  
+  			&:nth-child(4n+3).active {
+  				border-color: $lc-blue-light;
+  			}
+  			
+  			&:nth-child(4n+4).active {
+  				border-color: $lc-yellow;
+  			}*/
+}
+/* line 196, scss/_mixins.scss */
+.tabs-content .content.active {
+  display: block;
+  border: none;
+  border-top: 3px solid #e9e9e9;
+  border-color: #1073ce;
+}
+
+/* line 26, scss/modules/_virtual-tours.scss */
+#tabs .tabs-content #virtual-tour {
   cursor: move;
   height: 64vw;
+  margin-bottom: 5px;
 }
 @media only screen and (min-width: 63.8125em) {
-  /* line 22, scss/modules/_virtual-tours.scss */
-  #virtual-tour {
+  /* line 26, scss/modules/_virtual-tours.scss */
+  #tabs .tabs-content #virtual-tour {
     height: 32vw;
   }
 }
 @media only screen and (min-width: 40.063em) and (max-width: 63.75em) {
-  /* line 22, scss/modules/_virtual-tours.scss */
-  #virtual-tour {
+  /* line 26, scss/modules/_virtual-tours.scss */
+  #tabs .tabs-content #virtual-tour {
     height: 48vw;
   }
+}
+/* line 36, scss/modules/_virtual-tours.scss */
+#tabs .tabs-content #virtual-tour > div {
+  height: inherit;
+}
+/* line 38, scss/modules/_virtual-tours.scss */
+#tabs .tabs-content #virtual-tour > div > div {
+  height: inherit;
+}
+/* line 42, scss/modules/_virtual-tours.scss */
+#tabs .tabs-content #virtual-tour p {
+  float: left;
+  width: 100%;
+  margin-bottom: 1.0rem;
+}
+/* line 47, scss/modules/_virtual-tours.scss */
+#tabs .tabs-content #virtual-tour .content {
+  padding: 0;
+}
+/* line 52, scss/modules/_virtual-tours.scss */
+#tabs .tabs .tab-title a {
+  background: none repeat scroll 0 0 #eeeeee;
+  display: block;
+  float: left;
+  margin-bottom: 2px;
+  padding: 0.2rem 0.2rem;
+  text-align: center;
+  width: 158px;
+  border: 1px solid #ffffff;
+  border-radius: 0;
+}
+/* line 62, scss/modules/_virtual-tours.scss */
+#tabs .tabs .tab-title a .crop {
+  width: 150px;
+  height: 75px;
+  overflow: hidden;
+}
+/* line 66, scss/modules/_virtual-tours.scss */
+#tabs .tabs .tab-title a .crop img {
+  height: 150px;
+  width: 150px;
+}
+/* line 71, scss/modules/_virtual-tours.scss */
+#tabs .tabs .tab-title a h5 {
+  margin: 0;
+  font-size: 0.95rem;
+}
+/* line 76, scss/modules/_virtual-tours.scss */
+#tabs .tabs .tab-title.active a {
+  background: none repeat scroll 0 0 #f6f6f6 !important;
+  border: 1px solid #e1e1e1;
 }

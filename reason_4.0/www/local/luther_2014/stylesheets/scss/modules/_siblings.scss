@@ -1,7 +1,7 @@
 //
 // SIBLING STYLES
 //
-// @author Nathan Dirks
+// @author Brian Jones
 //
 
 // Foundation imports
@@ -15,6 +15,28 @@
 @import "extends";
 @import "mixins";
 
-.siblingList {
-  
+// TODO: Needs additional styling 
+
+ul.siblingList {
+	margin: 0;
+	&.prevNext {
+		li {
+			display: inline;
+			&.previous {
+				> a[href]:before {
+					font-family: FontAwesome;
+					content: $fa-var-chevron-circle-left;
+					padding-right: 0.35rem;
+				}
+			}
+			&.next {
+				float: right;
+				> a[href]:after {
+					font-family: FontAwesome;
+					content: $fa-var-chevron-circle-right;
+					padding-left: 0.35rem;
+				}
+			}	
+		}
+	}
 }
