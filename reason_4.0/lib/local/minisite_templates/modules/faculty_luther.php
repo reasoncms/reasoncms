@@ -23,6 +23,7 @@ class LutherFacultyStaffModule extends FacultyStaffModule
     var $other_affiliation_flag = false;
     var $affiliations_to_use_other_aff_flag = array();
 */
+    var $volunteer_info;
     var $required_attributes = array('ds_email','ds_fullname','ds_lastname','ds_affiliation','ds_phone', 'ds_office', 'ds_title', 'ds_gecos', 'ds_cn');
 
     function list_people( $people ) // {{{ // {{{
@@ -35,10 +36,10 @@ class LutherFacultyStaffModule extends FacultyStaffModule
         $es->add_right_relationship( $this->cur_page->id(), relationship_id_of( 'page_to_volunteer' ));
         $es->add_rel_sort_field($this->cur_page->id(), relationship_id_of('page_to_volunteer'));
         $es->set_order('rel_sort_order');
-        $volunteer_info = $es->run_one();
-        if ( $volunteer_info ) {
+        $this->volunteer_info = $es->run_one();
+        if ( $this->volunteer_info ) {
             // $this->show_image_volunteer();
-            foreach ($volunteer_info as $vi) {
+            foreach ($this->volunteer_info as $vi) {
                 echo '<div class="facStaff">'."\n";
                 $this->show_volunteer_image($vi);
                 echo '<a name="'.$vi->get_value('name').'"></a>'."\n";
@@ -178,6 +179,20 @@ class LutherFacultyStaffModule extends FacultyStaffModule
             //show_image( $image_id, false,true,false );
             //echo "</div>\n";
             echo "</figure>\n";
+        }
+    }
+
+    /**
+     * For volunteers
+     * In the parent class, if a user doesn't have an affiliation (from the
+     * directory (ldap/AD)) then they are stripped from the sorted_people array.
+     * Since volunteers aren't in the directory by nature, they are auto-stripped.
+     */
+    function show_people()
+    {
+        parent :: show_people();
+        if (!$this->sorted_people && $this->volunteer_info) {
+            $this->list_people($people);
         }
     }
 }

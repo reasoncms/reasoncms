@@ -311,6 +311,8 @@ class DefaultFeatureView extends FeatureView
 		$image_anchor_start='<span class="noLink">';
 		$anchor_end='</span>';
 		$image_anchor_end='</span>';
+		$div_link_start = '';
+		$div_link_end = '';
 
 		if($has_anchor)
 		{

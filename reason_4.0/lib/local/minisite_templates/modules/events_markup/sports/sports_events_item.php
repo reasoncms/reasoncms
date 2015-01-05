@@ -140,10 +140,13 @@ class sportsEventsItemMarkup implements eventsItemMarkup
 		
 		$ret .= $this->get_location_markup($event);
 		$ret .= '</table>'."\n";
-		
+
 		if ($event->get_value('content'))
-			$ret .= $this->get_content_tooltip($event->get_value('content'));
-			//$ret .= '<div class="eventContent">'.$event->get_value( 'content' ).'</div>'."\n";
+		{
+			// $this->bundle->owner_site($event) will be defined for events borrowed to the sports landing page
+			$sport_id = $this->bundle->owner_site($event) ? $this->bundle->owner_site($event)->_id : $this->bundle->current_site_id();
+			$ret .= $this->get_content_tooltip($event->get_value('content'), $sport_id);
+		}
 		if ($event->get_value('sponsor'))
 			$ret .= '<p class="sponsor">Sponsor: '.$event->get_value('sponsor').'</p>'."\n";
 		$ret .= $this->get_contact_info_markup($event);
@@ -597,16 +600,16 @@ class sportsEventsItemMarkup implements eventsItemMarkup
 	/**
 	 * Insert Foundation tooltip with athlete info into main content
 	 * Luther College enhancement
-	 * @param object $content
+	 * @param object $content, int $sport_id
 	 * @return string
 	 */
-	function get_content_tooltip($content)
+	function get_content_tooltip($content, $sport_id)
 	{
-		$site_id = new entity( $this->bundle->current_site_id() );
+		$site_id = new entity( $sport_id );
 		$site_name = $site_id->get_value('unique_name');
 
 		// get a list of athletes
-		$es = new entity_selector($this->bundle->current_site_id());
+		$es = new entity_selector($sport_id);
 		$es->add_type(id_of('athlete_type'));
 		$es->add_relation('athlete_hide != "yes"');
 		$es->add_left_relationship_field( 'athlete_to_image', 'entity', 'id', 'image_id', false); // get images and those with no image - uses union query
