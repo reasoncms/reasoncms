@@ -3228,7 +3228,7 @@ body #wrapper #post-footer a {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle span, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle .screenreader, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -8818,11 +8818,11 @@ h4.flickr_subtitle {
   }
 }
 /* line 36, scss/modules/_virtual-tours.scss */
-#tabs .tabs-content #virtual-tour > div {
+#tabs .tabs-content #virtual-tour > div.content {
   height: inherit;
 }
 /* line 38, scss/modules/_virtual-tours.scss */
-#tabs .tabs-content #virtual-tour > div > div {
+#tabs .tabs-content #virtual-tour > div.content > div {
   height: inherit;
 }
 /* line 42, scss/modules/_virtual-tours.scss */
