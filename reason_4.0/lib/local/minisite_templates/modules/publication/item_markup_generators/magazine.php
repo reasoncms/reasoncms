@@ -213,7 +213,7 @@ class MagazineItemMarkupGenerator extends ResponsiveItemMarkupGenerator
 
 	function get_social_sharing_section()
 	{
-		$ret .= '<ul class="socialIcons">';
+		$ret = '<ul class="socialIcons">';
 		
 		foreach($this->passed_vars['item_social_sharing'] as $social_sharing)
 		{
@@ -245,7 +245,7 @@ class MagazineItemMarkupGenerator extends ResponsiveItemMarkupGenerator
 	{
 		foreach($this->passed_vars['item_images'] as $image)
 		{
-			$str .= '<div class="imageChunk">';
+			$str = '<div class="imageChunk">';
 			$rsi = new reasonSizedImage();
 			$rsi->set_id($image->id());
 			$rsi->set_width(1600);

@@ -125,7 +125,7 @@ class MagazinePublicationListItemMarkupGenerator extends PublicationMarkupGenera
 	function get_content_block_markup() {
 		$link_to_full_item = isset($this->passed_vars['link_to_full_item']) ? $this->passed_vars['link_to_full_item'] : '';
 		
-		$markup_string .=  '<div class="content-block">';
+		$markup_string =  '<div class="content-block">';
 		$markup_string .= $this->get_date_markup();
 		//$markup_string .= $this->get_item_category_markup();
 
@@ -183,6 +183,25 @@ class MagazinePublicationListItemMarkupGenerator extends PublicationMarkupGenera
 			$datetime = prettify_mysql_datetime( $item->get_value( 'datetime' ), $this->passed_vars['date_format'] );
 			return  '<div class="date">'.$datetime.'</div>'."\n";
 		}
+	}
+	
+	function get_issue_date_markup()
+	{
+		$item = $this->passed_vars['item'];
+		$issue_id = $item->_left_relationships_info['news_to_issue'][0]['entity_b'];
+		if (!empty($issue_id))
+		{
+			$es = new entity_selector();
+			$es->add_type( id_of('issue_type') );
+			$es->add_relation('entity.id = ' . $issue_id);
+			$result = $es->run_one();
+			foreach( $result AS $id => $issue )
+			{
+				return '<div class="date">'.$issue->get_value('name').'</div>'."\n";
+			}
+	
+		}
+	
 	}
 	
 	function get_description_markup()

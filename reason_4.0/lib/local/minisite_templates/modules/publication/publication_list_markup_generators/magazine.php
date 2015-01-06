@@ -46,7 +46,7 @@ class MagazinePublicationListMarkupGenerator extends PublicationListMarkupGenera
 	// ALL POSTS WRAPPER
 	function get_all_posts_markup()
 	{
-		$markup_string .= '<div class="allPosts">'."\n";
+		$markup_string = '<div class="allPosts">'."\n";
 		$markup_string .= $this->get_featured_items_markup();
 		$markup_string .= $this->get_list_markup();
 		$markup_string .= '</div>'."\n";
