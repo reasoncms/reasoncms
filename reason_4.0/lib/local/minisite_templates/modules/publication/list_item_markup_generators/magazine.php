@@ -158,7 +158,8 @@ class MagazinePublicationListItemMarkupGenerator extends PublicationMarkupGenera
 		$link_to_full_item = isset($this->passed_vars['link_to_full_item']) ? $this->passed_vars['link_to_full_item'] : '';
 		
 		$markup_string =  '<div class="content-block">';
-		$markup_string .= $this->get_date_markup();
+		//$markup_string .= $this->get_date_markup();
+		$markup_string .= $this->get_issue_date_markup();
 		//$markup_string .= $this->get_item_category_markup();
 
 		if(isset($link_to_full_item) &&  !empty($link_to_full_item))
