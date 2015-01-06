@@ -1,6 +1,5 @@
 $(document).ready(function() {
-    $("#directory").tablesorter();
-    
+
     $("#first_nameElement").focus();
     hide_all();
     input_error_check("#departElement");
@@ -19,7 +18,41 @@ $(document).ready(function() {
     {
         show_all();
     }
+
+    var tablesorteropts = {
+      theme: 'ice',
+      tabIndex: true,
+      widthFixed: false,
+      sortList: [[1,1]],
+      widgets : ["zebra", "columns", "filter", "resizeable"],
+      widgetOptions : {
+        columns : [ "primary", "secondary", "tertiary" ],
+        columns_thead : true,
+        filter_childRows : false,
+        filter_columnFilters : true,
+        filter_cssFilter : "tablesorter-filter",
+        filter_formatter : null,
+        filter_functions : {
+            // '.name' : true,
+            '.affiliation' : true,
+            // '.email' : true,
+            // '.spo' : true,
+            // '.phone' : true
+        },
+        filter_hideFilters : false,
+        filter_ignoreCase : true,
+        filter_liveSearch : true,
+        filter_reset : 'button.reset',
+        filter_searchDelay : 300,
+        filter_serversideFiltering: false,
+        filter_startsWith : false,
+        filter_useParsedData : false
+      }
+    };
+
+    $("#directory").tablesorter(tablesorteropts);
 });
+
 function show_all(){
     $("#searchforRow").show();
     $("#departRow").show();

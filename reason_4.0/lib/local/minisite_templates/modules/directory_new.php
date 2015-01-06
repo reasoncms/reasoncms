@@ -151,10 +151,17 @@ class DirectoryModule extends DefaultMinisiteModule {
         if($head_items =& $this->get_head_items()) {
 //            $head_items->add_stylesheet('/global_stock/css/campus_dir.css');
             $head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/directory.css');
-            //$head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/tableSorter.js');
-            $head_items->add_javascript( '/javascripts/jquery-1.6.1.min.js');
+            $head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/js/jquery.tablesorter.min.js');
 
-            //$head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/directory.js');
+            $head_items->add_stylesheet(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/css/theme.ice.css');
+            // $head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/addons/pager/jquery.tablesorter.pager.min.js');
+            // $head_items->add_stylesheet(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/addons/pager/jquery.tablesorter.pager.css');
+            $head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/js/jquery.tablesorter.widgets.min.js');
+            $head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/js/jquery.tablesorter.widgets-filter-formatter.min.js');
+            $head_items->add_stylesheet(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/css/filter.formatter.css');
+            // $head_items->add_javascript( '/javascripts/jquery-1.6.1.min.js');
+
+            $head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/directory.js');
 //            if (reason_check_authentication()) {
             // if ($this->user_netid) {
             //     $head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/directory.js');
@@ -162,8 +169,6 @@ class DirectoryModule extends DefaultMinisiteModule {
             //     $head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/directory_logout.js');
             // }
 
-            // iphone support; scales to screen and disables zooming
-            // $head_items->add_head_item('meta', array('name'=>'viewport','content'=>'width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;'));
         }
 
         // Allow any of the form elements (old or new) to be set from the URL or POST, and look like a submission
@@ -340,7 +345,7 @@ class DirectoryModule extends DefaultMinisiteModule {
             $this->form->remove_element('building');
             $this->form->remove_element('room');
             $this->form->remove_element('student_comment');
-            $this->form->remove_element('major');
+            // $this->form->remove_element('major');
             $this->form->remove_element('year');
             $this->form->remove_element('faculty_comment');
             $this->form->remove_element('pictures');
@@ -706,8 +711,7 @@ class DirectoryModule extends DefaultMinisiteModule {
                 //     }
                 // }
                 if (isset($data['termenrolled'])) {
-                    $terms = $this->format_terms($data['termenrolled']);
-                    echo "<li class='directoryTerms'><strong> Terms Enrolled:</strong>{$terms}</li>";
+                    echo $this->format_terms($data);
                 }
 
             //// Student markup
@@ -757,8 +761,7 @@ class DirectoryModule extends DefaultMinisiteModule {
                     echo $this->format_single_attribute($advisor_link,'Advisor','directoryAdvisor');
                 }
                 if (isset($data['termenrolled'])) {
-                    $terms = $this->format_terms($data['termenrolled']);
-                    echo "<li class='directoryTerms'><strong> Terms Enrolled:</strong>{$terms}</li>";
+                    echo $this->format_terms($data);
                 }
             }
             if (isset($data['postaladdress'])) {
@@ -868,10 +871,11 @@ class DirectoryModule extends DefaultMinisiteModule {
         $str .= '<table id="directory" class="tablesorter" border="0" cellpadding="0" cellspacing="0">';
             $str .= '<thead>';
                 $str .= '<tr>';
-                        $str .= '<th>Name</th>';
-                        $str .= '<th>Affiliation/Title</th>';
-                        $str .= '<th>Email</th>';
-                        $str .= '<th class="nowrap">Campus Phone</th>';
+                        $str .= '<th class="name">Name</th>';
+                        $str .= '<th class="affiliation">Affiliation/Title</th>';
+                        $str .= '<th class="email">Email</th>';
+                        $str .= '<th class="spo">SPO</th>';
+                        $str .= '<th class="phone nowrap">Campus Phone</th>';
                     if ($this->user_netid) {
                         $str .= '<th>Year</th>';
                     }
@@ -889,7 +893,7 @@ class DirectoryModule extends DefaultMinisiteModule {
               $str .= '<td>&nbsp;</td>';
           }
           if (isset ($data['edupersonprimaryaffiliation'][0])) {
-              $str .= '<td id="affilTitle">' .$data['edupersonprimaryaffiliation'][0];
+              $str .= '<td class="affilTitle">' .$data['edupersonprimaryaffiliation'][0];
               if (isset($data['title'][0])){
                     $str .= '<br>' . $data['title'][0] . '</td>';
               } else {
@@ -899,11 +903,15 @@ class DirectoryModule extends DefaultMinisiteModule {
               $str .= '<td>&nbsp;</td>';
           }
           if (isset ($data['mail'][0])) {
-              $str .= '<td>'.$this->format_email($data['mail'][0]) . '</td>';
+              $str .= '<td>'.$this->format_email($data, true) . '</td>';
           } else {
               $str .= '<td>&nbsp;</td>';
           }
-
+          if (isset ($data['studentpostoffice'])) {
+              $str .= '<td>'.$data['studentpostoffice'][0] . '</td>';
+          } else {
+              $str .= '<td>&nbsp;</td>';
+          }
           if (isset ($data['officephone'][0])) {
               if (!strpos($data['officephone'][0], ',')){
                 $str .= '<td class="nowrap">'.$data['officephone'][0].'</td>';
@@ -918,11 +926,11 @@ class DirectoryModule extends DefaultMinisiteModule {
           }
 //          if (reason_check_authentication()) {
           if ($this->user_netid) {
-          if (isset ($data['studentyearinschool'][0])) {
-              $str .= '<td>'.$data['studentyearinschool'][0] . '</td>';
-          } else {
-              $str .= '<td>&nbsp;</td>';
-          }
+              if (isset ($data['studentyearinschool'][0])) {
+                  $str .= '<td>'.$data['studentyearinschool'][0] . '</td>';
+              } else {
+                  $str .= '<td>&nbsp;</td>';
+              }
           }
           $str .= '</tr>';
           }
@@ -1078,10 +1086,9 @@ class DirectoryModule extends DefaultMinisiteModule {
      * @param  string $attribute LDAP attribute (lowercase)
      * @param  string $title     Label title
      * @param  string $li_class  <li> class
-     * @param  string $fa_class  Font-Awesome class
      * @return string            The markup
      */
-    private function format_single_attribute( $attribute, $label, $li_class)
+    private function format_single_attribute( $attribute, $label, $li_class )
     {
         return "<li class='{$li_class}'>
                     <span class='attribute'><strong>{$label}:</strong></span>
@@ -1169,35 +1176,28 @@ class DirectoryModule extends DefaultMinisiteModule {
         }
         $tel_link = "<a href='tel:{$tel}'>{$tel}</a>";
 
-        return $this->format_single_attribute($tel_link, $label, $class);
+        return $this->format_single_attribute( $tel_link, $label, $class );
     }
 
-    function format_cell($data) {
-        $cells = array();
-        if (isset($data['mobile'])) {
-            foreach ($data['mobile'] as $cell) {
-                if (isset($data['telephoneNumber']) && in_array($cell, $data['telephoneNumber']))
-                    continue;
-                else
-                    $cells[] = str_replace('+1 ', '', $cell);
-            }
-        }
-        return $cells;
-    }
+    // function format_cell($data) {
+    //     $cells = array();
+    //     if (isset($data['mobile'])) {
+    //         foreach ($data['mobile'] as $cell) {
+    //             if (isset($data['telephoneNumber']) && in_array($cell, $data['telephoneNumber']))
+    //                 continue;
+    //             else
+    //                 $cells[] = str_replace('+1 ', '', $cell);
+    //         }
+    //     }
+    //     return $cells;
+    // }
 
     function format_terms($data) {
         $terms = '';
-        $count = 0;
-        foreach ($data as $term) {
-            // if ($count > 0) {
-                $terms .= $term . "<br>";
-            // }
-            // else {
-            //     $terms .= $term. " ";
-            // }
-            $count = 1;
+        foreach ($data['termenrolled'] as $term) {
+            $terms .= "<span class='multipleAttrValues'>{$term}</span>";
         }
-        return $terms;
+        return $this->format_single_attribute( $terms, 'Terms Enrolled', 'directoryTerms' );
     }
 
     function format_title($data) {
@@ -1293,9 +1293,9 @@ class DirectoryModule extends DefaultMinisiteModule {
     function format_postal_address($data, $html = true) {
         $address = "<span class='attribute'><li class='directoryHomeAddress'><strong>Home Address:</strong></span>";
         if ($html) {
-            $address .= "<span class='attrValue'>{$data['postaladdress'][0]}</span>";
+            $address .= "<span class='multipleAttrValues'>{$data['postaladdress'][0]}</span>";
             if (isset( $data['l'] )) {
-                $address .= "<span class='attrValue'>{$data['l'][0]}";
+                $address .= "<span class='multipleAttrValues'>{$data['l'][0]}";
             }
             if (isset( $data['st'] )) {
                 $address .= ", {$data['st'][0]}";
@@ -1315,9 +1315,14 @@ class DirectoryModule extends DefaultMinisiteModule {
         }
     }
 
-    function format_email($data) {
+    function format_email( $data, $table = false ) {
         $email = '<a href="mailto:'.$data['mail'][0].'">'.$data['mail'][0].'</a>';
-        return $this->format_single_attribute($email, 'Email', 'directoryEmail');
+        if ( $table ) {
+            $markup = $email;
+        }else {
+            $markup = $this->format_single_attribute($email, 'Email', 'directoryEmail');
+        }
+        return $markup;
     }
 
     function format_status($data) {
@@ -1372,15 +1377,18 @@ class DirectoryModule extends DefaultMinisiteModule {
         ksort($affils);
         array_unshift($affils, $data['edupersonprimaryaffiliation'][0]);
         $affils = array_unique($affils);
-        if ( count($affils) > 1 )
-            $affils[0] = $affils[0].'*';
-        $affils_string = join("<br>", $affils);
         if ( count($affils) > 1 ) {
-            $affils_string .= "<sup>* Primary affiliation</sup>";
+            $affils[0] = $affils[0].'*';
+            $super_string = "<sup class='super'>* Primary affiliation</sup>";
             $label = 'Affiliations';
         } else {
             $label = 'Affiliation';
         }
+        foreach ($affils as $key => $value) {
+            $affils_string .= "<span class='multipleAttrValues'>{$value}</span>";
+        }
+        if (isset($super_string))
+            $affils_string .= $super_string;
         return $this->format_single_attribute($affils_string, $label, 'directoryAffiliations');
     }
 
