@@ -65,7 +65,7 @@ class MagazinePublicationListItemMarkupGenerator extends PublicationMarkupGenera
 			}
 			// else (on the home page)
 			else {
-				$markup_string .= '<img src="'.WEB_PHOTOSTOCK.reason_get_image_filename( $image->id() ).'" alt="'.str_replace('"', "'", $image->get_value( 'description' )).'"/>';
+				$markup_string .= '<img src="'.luther_get_image_url(WEB_PHOTOSTOCK.reason_get_image_filename( $image->id() )).'" alt="'.str_replace('"', "'", $image->get_value( 'description' )).'"/>';
 			}	
 
 			if(isset($link_to_full_item) &&  !empty($link_to_full_item))
