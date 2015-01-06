@@ -76,7 +76,7 @@ class MagazineItemMarkupGenerator extends ResponsiveItemMarkupGenerator
 
 			if($this->should_show_content_section())
 			{
-				$this->markup_string .= '<div class="text">'.$this->get_content_section().'</div>'."\n";
+				$this->markup_string .= '<div class="text">'.luther_process_inline_images($this->get_content_section()).'</div>'."\n";
 			}
 			
 			if($this->should_show_inline_editing_link())
