@@ -3317,7 +3317,7 @@ class EventsModule extends DefaultMinisiteModule
 				{
 					$field_parts = explode('.',trim($field));
 					
-					$parts[] = '`'.implode('`.`',$field_parts).'` LIKE "'.addslashes($string).'"';
+					$parts[] = '`'.implode('`.`',$field_parts).'` LIKE "'.reason_sql_string_escape($string).'"';
 				}
 				$where = '('.implode(' OR ',$parts).')';
 				$es->add_relation($where);
