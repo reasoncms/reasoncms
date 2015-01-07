@@ -209,16 +209,6 @@ class MagazinePublicationListItemMarkupGenerator extends PublicationMarkupGenera
 		$markup_string .=  '</h4>'."\n";
 		return $markup_string;
 	}
-
-	// function get_date_markup()
-	// {
-	// 	$item = $this->passed_vars['item'];
-	// 	if($item->get_value( 'datetime') && empty($this->passed_vars['current_issue']) && $this->passed_vars['use_dates_in_list'])
-	// 	{
-	// 		$datetime = prettify_mysql_datetime( $item->get_value( 'datetime' ), $this->passed_vars['date_format'] );
-	// 		return  '<div class="date">'.$datetime.'</div>'."\n";
-	// 	}
-	// }
 	
 	function get_issue_date_markup()
 	{

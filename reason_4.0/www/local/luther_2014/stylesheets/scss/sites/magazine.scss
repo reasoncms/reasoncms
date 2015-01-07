@@ -217,7 +217,6 @@ $logo-width-widescreen: rem-calc(198);
 			display: none;
 		}
 
-
 		.pageTitle {
 			display: none; // Hide page title on publication pages
 		}
@@ -989,6 +988,7 @@ $logo-width-widescreen: rem-calc(198);
 			img[align="left"],
 			img.right,
 			img[align="right"] {
+				display: block;
 				max-width: 100%;
 				width: 100%;
 				float: none;
