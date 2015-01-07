@@ -6831,13 +6831,14 @@ form input[type="submit"]:active {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
   font-size: 0.75rem;
   font-style: italic;
+  line-height: 1.5;
   color: #6f6f6f;
 }
-/* line 183, scss/modules/_images.scss */
+/* line 184, scss/modules/_images.scss */
 #pageContent figure figcaption a, .fullPost .text figure figcaption a, #faq .answer figure figcaption a {
   color: #6f6f6f;
 }
-/* line 191, scss/modules/_images.scss */
+/* line 192, scss/modules/_images.scss */
 #pageContent .callout img,
 #pageContent .callOut img, .fullPost .text .callout img,
 .fullPost .text .callOut img, #faq .answer .callout img,
@@ -6845,18 +6846,18 @@ form input[type="submit"]:active {
   width: auto;
 }
 
-/* line 198, scss/modules/_images.scss */
+/* line 199, scss/modules/_images.scss */
 #relatedSections .blurb img {
   width: auto;
   max-width: 100%;
   margin: 0 0 1rem;
 }
-/* line 204, scss/modules/_images.scss */
+/* line 205, scss/modules/_images.scss */
 #relatedSections .blurb img.left, #relatedSections .blurb img[align="left"] {
   margin-right: 2.5rem;
   float: left !important;
 }
-/* line 210, scss/modules/_images.scss */
+/* line 211, scss/modules/_images.scss */
 #relatedSections .blurb img.right, #relatedSections .blurb img[align="right"] {
   margin-left: 2.5rem;
   float: right !important;
