@@ -377,6 +377,7 @@ class EventsModule extends DefaultMinisiteModule
 	 						'natural_sort_categories' => false,
 	 						'form_include' => 'minisite_templates/modules/event_slot_registration/event_slot_registration_form.php',
 	 						'calendar_link_text' => 'More events',
+	 						'link_shared_events_to_parent_site' => false,
 	 						'wrapper_id' => '',
 						);
 	var $default_item_markup = 'minisite_templates/modules/events_markup/default/events_item.php';
@@ -1648,9 +1649,17 @@ class EventsModule extends DefaultMinisiteModule
 	 */
 	function get_event_link($event_id, $day = '')
 	{
-		if(is_object($event_id))
-			$event_id = $event_id->id();
-		return $this->events_page_url.$this->construct_link(array('event_id'=>$event_id,'date'=>$day));
+		$id = (is_object($event_id)) ? $event_id->id() : $event_id;
+		$base = $this->events_page_url;
+		
+		if ($this->params['link_shared_events_to_parent_site'])
+		{
+			$event = (is_object($event_id)) ? $event_id : new entity($event_id);
+			if ($owner = $this->get_owner_site_info($event))
+				$base = $owner->get_value('_link');
+		}
+		
+		return $base.$this->construct_link(array('event_id'=>$id,'date'=>$day));
 	}
 	
 	/**
@@ -3345,7 +3354,7 @@ class EventsModule extends DefaultMinisiteModule
 	 */
 	function get_full_calendar_link_markup()
 	{
-		if(empty($this->events_page_url))
+		if(empty($this->events_page_url) || empty($this->params['calendar_link_text']))
 			return '';
 		
 		return '<p class="more"><a href="'.$this->events_page_url.'">'.$this->params['calendar_link_text'].'</a></p>'."\n";
