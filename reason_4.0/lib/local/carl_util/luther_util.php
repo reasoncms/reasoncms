@@ -240,19 +240,19 @@ function luther_add_inline_caption($content, $image_id)
 	{
 		if (!preg_match("/hide_caption/", $image->get_value('keywords')))
 		{
-			preg_match('/<img\s(alt="'.$image->get_value('description').'")?\s?(src=".*?)(\/reason\/images\/' . $id . '(_tn)?\.(jpg|jpeg|gif|png)")\s?(class="(\w+)")?\s*\/>/', $content, $matches);
+			preg_match('/<img\s(alt="'.preg_quote($image->get_value('description')).'")?\s?(src=".*?)(\/reason\/images\/' . $id . '(_tn)?\.(jpg|jpeg|gif|png)")\s?(class="(\w+)")?\s*\/>/', $content, $matches);
 
 			if (count($matches) >= 8 && $matches[7] == "left")
 			{
-				$content = preg_replace('/<img\s(alt="'.$image->get_value('description').'")?\s?(src=".*?)(\/reason\/images\/' . $id . '(_tn)?\.(jpg|jpeg|gif|png)")\s?(class="(\w+)")?\s*\/>/', '<figure class="left"><img $1 $2$3 /><figcaption>'.$image->get_value('description').'</figcaption></figure>', $content);
+				$content = preg_replace('/<img\s(alt="'.preg_quote($image->get_value('description')).'")?\s?(src=".*?)(\/reason\/images\/' . $id . '(_tn)?\.(jpg|jpeg|gif|png)")\s?(class="(\w+)")?\s*\/>/', '<figure class="left"><img $1 $2$3 /><figcaption>'.$image->get_value('description').'</figcaption></figure>', $content);
 			}
 			else if (count($matches) >= 8 && $matches[7] == "right")
 			{
-				$content = preg_replace('/<img\s(alt="'.$image->get_value('description').'")?\s?(src=".*?)(\/reason\/images\/' . $id . '(_tn)?\.(jpg|jpeg|gif|png)")\s?(class="(\w+)")?\s*\/>/', '<figure class="right"><img $1 $2$3 /><figcaption>'.$image->get_value('description').'</figcaption></figure>', $content);
+				$content = preg_replace('/<img\s(alt="'.preg_quote($image->get_value('description')).'")?\s?(src=".*?)(\/reason\/images\/' . $id . '(_tn)?\.(jpg|jpeg|gif|png)")\s?(class="(\w+)")?\s*\/>/', '<figure class="right"><img $1 $2$3 /><figcaption>'.$image->get_value('description').'</figcaption></figure>', $content);
 			}
 			else
 			{
-				$content = preg_replace('/<img\s(alt="'.$image->get_value('description').'")?\s?(src=".*?)(\/reason\/images\/' . $id . '(_tn)?\.(jpg|jpeg|gif|png)")\s*\/>/', '<figure class="left">$0<figcaption>'.$image->get_value('description').'</figcaption></figure>', $content);
+				$content = preg_replace('/<img\s(alt="'.preg_quote($image->get_value('description')).'")?\s?(src=".*?)(\/reason\/images\/' . $id . '(_tn)?\.(jpg|jpeg|gif|png)")\s*\/>/', '<figure class="left">$0<figcaption>'.$image->get_value('description').'</figcaption></figure>', $content);
 			}			
 		}
 	}
