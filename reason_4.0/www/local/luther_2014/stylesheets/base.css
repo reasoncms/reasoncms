@@ -6833,11 +6833,11 @@ form input[type="submit"]:active {
   font-style: italic;
   color: #6f6f6f;
 }
-/* line 185, scss/modules/_images.scss */
+/* line 183, scss/modules/_images.scss */
 #pageContent figure figcaption a, .fullPost .text figure figcaption a, #faq .answer figure figcaption a {
   color: #6f6f6f;
 }
-/* line 193, scss/modules/_images.scss */
+/* line 191, scss/modules/_images.scss */
 #pageContent .callout img,
 #pageContent .callOut img, .fullPost .text .callout img,
 .fullPost .text .callOut img, #faq .answer .callout img,
@@ -6845,18 +6845,18 @@ form input[type="submit"]:active {
   width: auto;
 }
 
-/* line 200, scss/modules/_images.scss */
+/* line 198, scss/modules/_images.scss */
 #relatedSections .blurb img {
   width: auto;
   max-width: 100%;
   margin: 0 0 1rem;
 }
-/* line 206, scss/modules/_images.scss */
+/* line 204, scss/modules/_images.scss */
 #relatedSections .blurb img.left, #relatedSections .blurb img[align="left"] {
   margin-right: 2.5rem;
   float: left !important;
 }
-/* line 212, scss/modules/_images.scss */
+/* line 210, scss/modules/_images.scss */
 #relatedSections .blurb img.right, #relatedSections .blurb img[align="right"] {
   margin-left: 2.5rem;
   float: right !important;
