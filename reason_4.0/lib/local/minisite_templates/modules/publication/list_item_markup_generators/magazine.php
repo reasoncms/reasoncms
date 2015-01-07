@@ -158,9 +158,12 @@ class MagazinePublicationListItemMarkupGenerator extends PublicationMarkupGenera
 		$link_to_full_item = isset($this->passed_vars['link_to_full_item']) ? $this->passed_vars['link_to_full_item'] : '';
 		
 		$markup_string =  '<div class="content-block">';
-		//$markup_string .= $this->get_date_markup();
-		$markup_string .= $this->get_issue_date_markup();
-		//$markup_string .= $this->get_item_category_markup();
+
+		// if we're showing filtered items...
+		if(!empty($this->passed_vars['current_filters']))
+		{
+			$markup_string .= $this->get_issue_date_markup();
+		}
 
 		if(isset($link_to_full_item) &&  !empty($link_to_full_item))
 			$markup_string .=  '<a href="' .$link_to_full_item. '">';
@@ -206,17 +209,6 @@ class MagazinePublicationListItemMarkupGenerator extends PublicationMarkupGenera
 		$markup_string .=  '</h4>'."\n";
 		return $markup_string;
 	}
-
-
-	function get_date_markup()
-	{
-		$item = $this->passed_vars['item'];
-		if($item->get_value( 'datetime') && empty($this->passed_vars['current_issue']) && $this->passed_vars['use_dates_in_list'])
-		{
-			$datetime = prettify_mysql_datetime( $item->get_value( 'datetime' ), $this->passed_vars['date_format'] );
-			return  '<div class="date">'.$datetime.'</div>'."\n";
-		}
-	}
 	
 	function get_issue_date_markup()
 	{
@@ -232,9 +224,7 @@ class MagazinePublicationListItemMarkupGenerator extends PublicationMarkupGenera
 			{
 				return '<div class="date">'.$issue->get_value('name').'</div>'."\n";
 			}
-	
 		}
-	
 	}
 	
 	function get_description_markup()
