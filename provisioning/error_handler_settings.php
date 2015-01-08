@@ -44,17 +44,11 @@ $GLOBALS[ '_DEVELOPER_INFO' ] = array(
 
 */
 
-if ( THIS_IS_A_DEVELOPMENT_REASON_INSTANCE  ){
-	$GLOBALS[ '_DEVELOPER_INFO' ] = array(
-        'steve' => array(
-            'ip'	=> '127.0.0.1',
-            'pager'	=> '5634191556@vtext.com',
-            'email'	=> 'steve.smith@luther.edu'
-        )
-	);
-} else {
-    $GLOBALS[ '_DEVELOPER_INFO' ] = array('local' => array('ip' => array('127.0.0.1')));
-}
+$GLOBALS[ '_DEVELOPER_INFO' ] = array(
+    'ansible' => array(
+        'ip'   => array('127.0.0.1','192.168.56.1')
+    )
+);
 
 /* Where should the browser get sent if a fatal error occurs?
    Note that this may need to be changed based on where you unpacked Reason.
