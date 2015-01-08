@@ -76,7 +76,7 @@ class MagazineItemMarkupGenerator extends ResponsiveItemMarkupGenerator
 
 			if($this->should_show_content_section())
 			{
-				$this->markup_string .= '<div class="text">'.$this->get_content_section().'</div>'."\n";
+				$this->markup_string .= '<div class="text">'.luther_process_inline_images($this->get_content_section()).'</div>'."\n";
 			}
 			
 			if($this->should_show_inline_editing_link())
@@ -94,13 +94,11 @@ class MagazineItemMarkupGenerator extends ResponsiveItemMarkupGenerator
 			{
 				$this->markup_string .= '<div class="relatedEvents">'.$this->get_related_events_section().'</div>'."\n";
 			}
+
 			if($this->should_show_assets_section())
 			{
 				$this->markup_string .= '<div class="assets">'.$this->get_assets_section().'</div>'."\n";
 			}
-
-			// $this->markup_string .= '<div class="fromIssue">From <a href="#">Fall 2014</a></div>'."\n";
-
 
 			if($this->should_show_categories_section())
 			{
@@ -213,7 +211,7 @@ class MagazineItemMarkupGenerator extends ResponsiveItemMarkupGenerator
 
 	function get_social_sharing_section()
 	{
-		$ret .= '<ul class="socialIcons">';
+		$ret = '<ul class="socialIcons">';
 		
 		foreach($this->passed_vars['item_social_sharing'] as $social_sharing)
 		{
@@ -245,7 +243,7 @@ class MagazineItemMarkupGenerator extends ResponsiveItemMarkupGenerator
 	{
 		foreach($this->passed_vars['item_images'] as $image)
 		{
-			$str .= '<div class="imageChunk">';
+			$str = '<div class="imageChunk">';
 			$rsi = new reasonSizedImage();
 			$rsi->set_id($image->id());
 			$rsi->set_width(1600);
@@ -273,11 +271,23 @@ class MagazineItemMarkupGenerator extends ResponsiveItemMarkupGenerator
 	function get_back_to_section_link_markup()
 	{
 	}
+
+	function get_categories_section()
+	{
+		$ret = '<h4>Posted in</h4>';
+		$ret .= '<ul>';
+		foreach($this->passed_vars['item_categories'] as $category)
+		{
+			$ret .= '<li><a href="'.$category->get_value('category_url').'">'.$category->get_value('name').'</a></li>';
+		}
+		$ret .= '</ul>';
+		return $ret;
+	}
 	
 	// Here, we change the language of the link_markup sections
 	function get_back_link_markup()
 	{
-		return '<p class="fromIssue">From <a href="'.$this->passed_vars['back_link'].'">'.$this->get_main_list_name().'</a>.</p>';
+		return '<p class="fromIssue">From <a href="'.$this->passed_vars['back_link'].'">'.$this->get_main_list_name().'</a></p>';
 	}
 
 	function get_author_section()

@@ -27,6 +27,7 @@ class MagazinePublicationListItemMarkupGenerator extends PublicationMarkupGenera
 									'item_categories',
 									'publication',
 									'current_issue',
+									'current_filters',
 								  	'commenting_status',
 									);
 	
@@ -42,23 +43,30 @@ class MagazinePublicationListItemMarkupGenerator extends PublicationMarkupGenera
 		$this->markup_string .= $this->get_content_block_markup();
 	}
 
-
 	// FULL SIZE TEASER IMG MARKUP
 	function get_teaser_image_markup() // {{{
 	{
 		$markup_string = '';
 		$image = current($this->passed_vars['teaser_image']);
 		$link_to_full_item = isset($this->passed_vars['link_to_full_item']) ? $this->passed_vars['link_to_full_item'] : '';
-		
-	
+
 		if (!empty($image))
 		{
+
 			$markup_string .= '<div class="image-block">';
 			$markup_string .= '<figure class="primaryImage">';
 			if(isset($link_to_full_item) &&  !empty($link_to_full_item))
 				$markup_string .=  '<a href="' .$link_to_full_item. '">';
 				
-			$markup_string .= '<img src="'.WEB_PHOTOSTOCK.reason_get_image_filename( $image->id() ).'" alt="'.str_replace('"', "'", $image->get_value( 'description' )).'"/>';
+			// if we're showing filtered items...
+			if(!empty($this->passed_vars['current_filters']))
+			{
+				$markup_string .= $this->get_category_teaser_image_markup();
+			}
+			// else (on the home page)
+			else {
+				$markup_string .= '<img src="'.luther_get_image_url(WEB_PHOTOSTOCK.reason_get_image_filename( $image->id() )).'" alt="'.str_replace('"', "'", $image->get_value( 'description' )).'"/>';
+			}	
 
 			if(isset($link_to_full_item) &&  !empty($link_to_full_item))
 				$markup_string .=  '</a>';
@@ -73,7 +81,31 @@ class MagazinePublicationListItemMarkupGenerator extends PublicationMarkupGenera
 			$markup_string .= '</div>';
 		}
 		
-		
+		return $markup_string;
+	}
+
+	// CUSTOM TEASER IMG SIZE MARKUP for CATEGORY PAGES
+	function get_category_teaser_image_markup()
+	{
+		$markup_string = '';
+		$image = $this->passed_vars['teaser_image'];
+		if (!empty($image))
+		{
+
+			if(is_array($image))
+				$image = reset($image);
+			
+			$rsi = new reasonSizedImage();
+			$rsi->set_id($image->id());
+			$rsi->set_width(200);
+			$rsi->set_height(150);
+			$rsi->set_crop_style('fill');
+
+			ob_start();	
+			show_image( $rsi,true,false,false );
+			$markup_string .= ob_get_contents();
+			ob_end_clean();
+		}
 		return $markup_string;
 	}
 
@@ -125,9 +157,13 @@ class MagazinePublicationListItemMarkupGenerator extends PublicationMarkupGenera
 	function get_content_block_markup() {
 		$link_to_full_item = isset($this->passed_vars['link_to_full_item']) ? $this->passed_vars['link_to_full_item'] : '';
 		
-		$markup_string .=  '<div class="content-block">';
-		$markup_string .= $this->get_date_markup();
-		//$markup_string .= $this->get_item_category_markup();
+		$markup_string =  '<div class="content-block">';
+
+		// if we're showing filtered items...
+		if(!empty($this->passed_vars['current_filters']))
+		{
+			$markup_string .= $this->get_issue_date_markup();
+		}
 
 		if(isset($link_to_full_item) &&  !empty($link_to_full_item))
 			$markup_string .=  '<a href="' .$link_to_full_item. '">';
@@ -173,15 +209,21 @@ class MagazinePublicationListItemMarkupGenerator extends PublicationMarkupGenera
 		$markup_string .=  '</h4>'."\n";
 		return $markup_string;
 	}
-
-
-	function get_date_markup()
+	
+	function get_issue_date_markup()
 	{
 		$item = $this->passed_vars['item'];
-		if($item->get_value( 'datetime') && empty($this->passed_vars['current_issue']) && $this->passed_vars['use_dates_in_list'])
+		$issue_id = $item->_left_relationships_info['news_to_issue'][0]['entity_b'];
+		if (!empty($issue_id))
 		{
-			$datetime = prettify_mysql_datetime( $item->get_value( 'datetime' ), $this->passed_vars['date_format'] );
-			return  '<div class="date">'.$datetime.'</div>'."\n";
+			$es = new entity_selector();
+			$es->add_type( id_of('issue_type') );
+			$es->add_relation('entity.id = ' . $issue_id);
+			$result = $es->run_one();
+			foreach( $result AS $id => $issue )
+			{
+				return '<div class="date">'.$issue->get_value('name').'</div>'."\n";
+			}
 		}
 	}
 	
