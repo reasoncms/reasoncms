@@ -252,7 +252,7 @@ function luther_add_inline_caption($content, $image_id)
 			}
 			else
 			{
-				$content = preg_replace('/<img\s(alt="'.preg_quote($image->get_value('description')).'")?\s?(src=".*?)(\/reason\/images\/' . $id . '(_tn)?\.(jpg|jpeg|gif|png)")\s*\/>/', '<figure class="left">$0<figcaption>'.$image->get_value('description').'</figcaption></figure>', $content);
+				$content = preg_replace('/<img\s(alt="'.preg_quote($image->get_value('description')).'")?\s?(src=".*?)(\/reason\/images\/' . $id . '(_tn)?\.(jpg|jpeg|gif|png)")\s*\/>/', '<figure>$0<figcaption>'.$image->get_value('description').'</figcaption></figure>', $content);
 			}			
 		}
 	}
