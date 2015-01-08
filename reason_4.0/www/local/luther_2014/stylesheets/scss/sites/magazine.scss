@@ -17,6 +17,7 @@
 // 1. GENERAL THEME STYLES
 //    1A. HEADER
 //    1B. MINISITE NAVIGATION
+//    1C. FOOTER
 //
 // 2. PUBLICATION MODULE STYLES
 //    2A. SHARED STYLES
@@ -193,12 +194,77 @@ $logo-width-widescreen: rem-calc(198);
 					a {
 
 						&:before {
-							top: $column-gutter / 2.75;
-							right: 0;
+							// top: $column-gutter / 2.75;
+							// right: 0;
+							content: "";
 						}
 					}
 				}
 			}
+		}
+
+		// 1C. FOOTER
+
+		#footer {
+			background: #f5f5f5;
+			margin-top: $column-gutter;
+
+
+			.loginLinkModule div a,
+			.loginLinkModule #footerLoginLink {
+				background: rgba(white, .75);
+
+				&:hover {
+					background: white;
+				}
+			}
+		}
+
+		#preFoot {
+
+			padding: $column-gutter;
+			border-bottom: 1px solid #ddd;
+			margin-bottom: $column-gutter/1.5;
+
+			.uname_magazine_footer_links {
+				text-align: center;
+
+				p,
+				h4 {
+					display: inline-block;
+					margin: 0 rem-calc(12);
+				}
+
+				h4 {
+					font-family: $roboto;
+					font-weight: 300;
+					font-size: rem-calc(18);
+					color: #777;
+				}
+
+				ul {
+					margin: 0;
+					margin-top: $column-gutter;
+
+				}
+
+				li {
+					display: inline-block;
+					margin: rem-calc(6) rem-calc(16);
+					text-transform: uppercase;
+					font-size: rem-calc(14);
+					line-height: 1.3;
+
+
+					a {
+
+					}
+				}
+			}
+		}
+
+		#foot {
+			
 		}
 	}
 }
@@ -585,7 +651,7 @@ $logo-width-widescreen: rem-calc(198);
 						height: 100%;
 						width: 100px;
 						width: 31.25%; // 5 columns
-						background: rgba(#FFF, .55);
+						background: rgba(#FFF, .75);
 						position: absolute;
 						left: 0;
 						top: 0;
@@ -702,19 +768,33 @@ $logo-width-widescreen: rem-calc(198);
 		}
 	}
 
-	.searchAndFilterInterface{
+	.searchAndFilterInterface {
+		text-align: center;
 
 		@media #{$medium-high-up} {
 			@include grid-column(5);
 			padding-right: 0;
+			text-align: left;
 		}
 
 		.filterInterface {
+			margin-top: $column-gutter;
+
+			@media #{$medium-high-up} {
+				margin-top: 0;
+			}
+
 			ul {
 				margin: 0;
 
 				li {
 					margin-bottom: rem-calc(12);
+					display: inline-block;
+					margin: rem-calc(6);
+
+					@media #{$medium-high-up} {
+						display: block;
+					}
 
 					strong {
 						border: 1px solid #000;
@@ -865,6 +945,8 @@ $logo-width-widescreen: rem-calc(198);
 
 			.date {
 				margin-bottom: rem-calc(4);
+				color: #999;
+				font-weight: 300;
 			}
 		}
 	}
@@ -890,7 +972,7 @@ $logo-width-widescreen: rem-calc(198);
 				height: 100%;
 				width: 100px;
 				width: 31.25%; // 5 columns
-				background: rgba(#FFF, .55);
+				background: rgba(#FFF, .75);
 				position: absolute;
 				left: 0;
 				top: 0;
@@ -1324,6 +1406,7 @@ $logo-width-widescreen: rem-calc(198);
 
 
 		.categories {
+
 			text-align: center;
 			font-size: $h5-font-size;
 			font-family: $open-sans;
@@ -1357,6 +1440,10 @@ $logo-width-widescreen: rem-calc(198);
 		border-bottom: 1px solid rgba(#000, .1);
 
 		text-align: center;
+
+		ul {
+			margin-left: 0;
+		}
 
 		li {
 			display: inline-block;

@@ -8,6 +8,15 @@
 	
 	class Luther2014MagazineTemplate extends Luther2014Template
 	{
+
+		function alter_reason_page_type($page_type)
+		{
+			parent::alter_reason_page_type($page_type);
+
+			// Adds the magazine footer to pre_foot on every page
+			$page_type->set_region('pre_foot', 'blurb', 'blurb.php', array('blurb_unique_names_to_show' => 'magazine_footer_links'));
+		
+		}
 		
 		function do_org_head_items()
 		{
