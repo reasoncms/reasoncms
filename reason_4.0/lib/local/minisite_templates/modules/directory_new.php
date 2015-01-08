@@ -285,9 +285,6 @@ class DirectoryModule extends DefaultMinisiteModule {
         // Build and execute an LDAP query
         list($query, $query_desc) = $query_parts;
         $entries = $this->get_search_results($query);
-        //echo "\n Start of entries: "; // - burkaa
-        //pray($entries);
-        //echo " End of entries \n"; // - burkaa
 
         // If there aren't any results, try again with similarity searching
         if (!count($entries)) {
@@ -664,8 +661,8 @@ class DirectoryModule extends DefaultMinisiteModule {
              */
 
 
+            echo "<div class='directoryInfo' title>";
             if ( $affiliation != 'Student' ) {
-                echo "<div class='directoryInfo' title>";
                 if (is_array($data['title'])){
                     foreach ($data['title'] as $key => $value) {
                         echo "<h3 class='directoryTitle'>{$value}</h3>";
@@ -716,19 +713,23 @@ class DirectoryModule extends DefaultMinisiteModule {
 
             //// Student markup
             } else {
-                echo "<div class='directoryInfo' title>";
                 // Since this is a student, show class year and major(s) instead of title
                 /**
                  * @todo  check students
                  */
-                $maj = $this->format_majors($data);
-                echo "<h3 class='directoryTitle'>{$year} &bull; {$maj}</h3>";
+                // echo "<div class='directoryInfo' title>";
+                if (isset($year)) {
+                    // Since this is a student, show year and major(s) rather than department(s)
+                    $maj = $this->format_majors($data);
+                    echo "<h3 class='directoryTitle'>{$year} &bull; {$maj}</h3>";
+                }
                 echo "<ul class='directoryContact'>";
-                // Since this is a student, show major(s) rather than department(s)
 
                 // Since this is a student, show campus housing rather than office
-                $res = $data['studentresidencehallbldg'][0] .' '. $data['studentresidencehallroom'][0];
-                echo $this->format_single_attribute($res, 'Housing', 'directoryStudentResidence');
+                if (isset($data['studentresidencehallbldg'])) {
+                    $res = $data['studentresidencehallbldg'][0] .' '. $data['studentresidencehallroom'][0];
+                    echo $this->format_single_attribute($res, 'Housing', 'directoryStudentResidence');
+                }
                 // Since this is a student, show campus phone (so, useful) rather than office phone
                 if (isset( $data['studentresidencehallphone'])) {
                     echo $this->format_phone($data, 'residence');
@@ -862,7 +863,6 @@ class DirectoryModule extends DefaultMinisiteModule {
 //        echo '<p class="personPager"></p>';
         //echo $this->build_printable_link();
 
-        echo $this->form->show_form();
         echo $this->get_search_status($people, $desc);
         $str = '';
         $str .= '<p class="personPager"></p>';
@@ -874,7 +874,8 @@ class DirectoryModule extends DefaultMinisiteModule {
                         $str .= '<th class="name">Name</th>';
                         $str .= '<th class="affiliation">Affiliation/Title</th>';
                         $str .= '<th class="email">Email</th>';
-                        $str .= '<th class="spo">SPO</th>';
+                        if ($this->context != 'general')
+                            $str .= '<th class="spo">SPO</th>';
                         $str .= '<th class="phone nowrap">Campus Phone</th>';
                     if ($this->user_netid) {
                         $str .= '<th>Year</th>';
@@ -907,10 +908,12 @@ class DirectoryModule extends DefaultMinisiteModule {
           } else {
               $str .= '<td>&nbsp;</td>';
           }
-          if (isset ($data['studentpostoffice'])) {
-              $str .= '<td>'.$data['studentpostoffice'][0] . '</td>';
-          } else {
-              $str .= '<td>&nbsp;</td>';
+          if ($this->context != 'general') {
+            if (isset ($data['studentpostoffice'])) {
+                $str .= '<td>'.$data['studentpostoffice'][0] . '</td>';
+            } else {
+                $str .= '<td>&nbsp;</td>';
+            }
           }
           if (isset ($data['officephone'][0])) {
               if (!strpos($data['officephone'][0], ',')){
@@ -1023,54 +1026,69 @@ class DirectoryModule extends DefaultMinisiteModule {
                 'carlhomeemail','spouseName','alumClassYear','carlcohortyear','mobile',
                 'studentStatus');*/
 
-        $general_suppress = array('dn','ou','count','employeenumber','sn','givenname','edupersonnickname','displayname',
-                'studentpostoffice','telephoneNumber','spousename',
-                'homepostaladdress', 'address', 'telephonenumber', 'studentmajor', 'studentminor','studentresidencehallbldg','studentresidencehallphone',
-                'studentresidencehallroom','studentspecialization','studentyearinschool','studentadvisor',
-                'studentstatus','alumclassyear','postaladdress','l','st','postalcode','c',
-                'edupersonentitlement','mobile', 'termenrolled', 'gender', 'ocpostaladdress', 'ocl', 'ocst', 'ocpostalcode',
-                'occ', 'ocphone','privacyflag','creationdate','deleteafterdate','birthdate','lasttermattended',
-                'programstartdate','programenddate', 'lastupdate', 'childname');
+        $general_suppress = array('ou','count','sn','givenname','displayname','studentpostoffice',
+            'telephoneNumber','telephonenumber','studentmajor','studentminor','studentresidencehallbldg',
+            'studentresidencehallphone','studentresidencehallroom','studentspecialization',
+            'studentyearinschool','studentadvisor','studentstatus','alumclassyear','postaladdress',
+            'l','st','postalcode','lutherc','mobile','termenrolled','ocpostaladdress','privacyflag',
+            'birthdate','lastupdate');
 
-        $nr_suppress = array('dn','uid','ou','count','employeenumber','cn','sn','givenName','eduPersonNickname','displayName','mail','title',
-                'eduPersonPrimaryAffiliation','officebldg','officephone','studentPostOffice','telephoneNumber','spouseName',
-                'homePostalAddress', 'address', 'telephoneNumber', 'studentmajor', 'studentminor','studentresidencehallbldg','studentresidencehallphone',
-                'studentresidencehallroom','eduPersonPrimaryAffiliation','studentspecialization','studentyearinschool','studentadvisor',
-                'eduPersonAffiliation','studentStatus','alumClassYear','postaladdress','l','st','postalcode','c',
-                'eduPersonEntitlement','mobile', 'termenrolled', 'departmentname', 'gender', 'ocpostaladdress', 'ocl', 'ocst', 'ocpostalcode',
-                'occ', 'ocphone','privacyflag','creationdate','deleteafterdate','birthdate','lasttermattended',
-                'programstartdate','programenddate','lastupdate', 'childname');
+        $nr_suppress = array('ou','uid','cn','sn','givenName','displayName','mail','title',
+           'eduPersonPrimaryAffiliation','officebldg','officephone','studentPostOffice',
+           'telephoneNumber','studentmajor','studentminor','studentresidencehallbldg',
+           'studentresidencehallphone','studentresidencehallroom','eduPersonPrimaryAffiliation',
+           'studentspecialization','studentyearinschool','studentadvisor','eduPersonAffiliation',
+           'studentStatus','postaladdress','l','st','postalcode','mobile','termenrolled',
+           'departmentname','privacyflag','birthdate','lutherc','lastupdate','alumclassyear',
+           'alummajor');
 
-//      $temp_suppress = array('childname', 'spouse', 'mobile', 'telephoneNumber', 'homePostalAddress', 'st')
+        // $temp_suppress = array('childname', 'spouse', 'mobile', 'telephoneNumber', 'homePostalAddress', 'st');
+        if ( $this->user_netid )
+            $this->context = 'logged_in';
+        $affiliation = $this->get_user_affiliation($this->user_netid);
 
-//         foreach ($results as $key => $data) {
-//             // Remove the people who should be gone completely.
-//             if ($this->view != 'po' && isset($data['carlhideinfo']) && $data['carlhideinfo'][0] == 'TRUE') {
-//                 unset($results[$key]);
-//                 continue;
-//             }
+        foreach ($results as $key => $data) {
+            // Remove the people who should be gone completely.
+            // if ($this->view != 'po' && isset($data['carlhideinfo']) && $data['carlhideinfo'][0] == 'TRUE') {
+            //     unset($results[$key]);
+            //     continue;
+            // }
 
-//             if ($this->context == 'general') {
-//                 foreach ($general_suppress as $attr)
-//                     unset($results[$key][$attr]);
-//             }
+            if ($this->context == 'general') {
+                foreach ($general_suppress as $attr)
+                    unset($results[$key][$attr]);
+            }
 
-//             // Hiding No Release students for Luther
-//             if (isset($data['privacyflag'])) {
-//                 foreach ($nr_suppress as $attr)
-//                     unset($results[$key]);
-//             }
+            // Hiding No Release students for Luther
+            if (isset($data['privacyflag'])) {
+                foreach ($nr_suppress as $attr)
+                    unset($results[$key]);
+            }
 
-//             // Hiding Alumni from results
-//              if (isset($data['edupersonprimaryaffiliation'][0]) && ($data['edupersonprimaryaffiliation'][0] == 'Alumni')) {
-//                 foreach ($nr_suppress as $attr)
-//                     unset($results[$key]);
-//             }
+            // Hiding Alumni from results
+             if (isset($data['edupersonprimaryaffiliation'][0]) && ($data['edupersonprimaryaffiliation'][0] == 'Alumni')) {
+                foreach ($nr_suppress as $attr)
+                    unset($results[$key]);
+            }
 
-// //          // Hiding certain results about faculty/staff until we can fix/rewrite the linux box code which controls the display in user.php
-// //          foreach ($temp_suppress as $attr)
-// //                  unset ($results[$key]);
-//         }
+            if (isset($affiliation) && $affiliation == "Staff" || $affiliation == 'Faculty'){
+                echo 'booyah!';
+            }
+            if (isset($affiliation) && $affiliation == "Student"){
+                echo 'hoyoob!';
+            }
+            // Hiding certain results about faculty/staff until we can fix/rewrite the linux box code which controls the display in user.php
+            // foreach ($temp_suppress as $attr) {
+            //     unset ($results[$key]);
+            // }
+        }
+    }
+
+    function get_user_affiliation( $username )
+    {
+        $dir = new directory_service('ldap_luther');
+        $dir->search_by_attribute('uid', $username, $return = array('edupersonprimaryaffiliation'));
+        return $dir->get_first_value('edupersonprimaryaffiliation');
     }
 
     function make_search_link($text, $field, $value) {
@@ -1126,28 +1144,10 @@ class DirectoryModule extends DefaultMinisiteModule {
     }
 
     function format_majors($data) {
-        $count = 0;
-        // foreach ($data['studentmajor'] as $m) {
-        //     if ($count > 0) {
-        //         echo "<br>".$m;
-        //     }
-        //     else {
-        //         echo $m. " ";
-        //     }
-        //     $count = 1;
-        // }
-        //foreach ($data['studentmajor'] as $major)
-        //    $majors[] = $this->make_search_link('<span class="major">'.$this->majors[$major].'</span>', 'major', $major);
-        //if (isset($data['carlconcentration'])) {
-        //    foreach ($data['carlconcentration'] as $major)
-        //        $majors[] = $this->make_search_link('<span class="concentration">'.$this->majors[$major].'</span>', 'major', $major);
-        //}
-        //return '('.join(' / ', $majors).')';
         return join('/', $data['studentmajor']);
     }
 
     function format_phone($data, $type) {
-        // ['telephonenumber'][0], 'Home Phone', 'facStaffPhone', 'phone';
         switch ($type) {
             case 'office':
                 $tel    = $data['officephone'][0];
@@ -1172,25 +1172,12 @@ class DirectoryModule extends DefaultMinisiteModule {
             default:
                 $tel    = '';
                 $label  = '';
+                $class  = '';
                 break;
         }
         $tel_link = "<a href='tel:{$tel}'>{$tel}</a>";
-
         return $this->format_single_attribute( $tel_link, $label, $class );
     }
-
-    // function format_cell($data) {
-    //     $cells = array();
-    //     if (isset($data['mobile'])) {
-    //         foreach ($data['mobile'] as $cell) {
-    //             if (isset($data['telephoneNumber']) && in_array($cell, $data['telephoneNumber']))
-    //                 continue;
-    //             else
-    //                 $cells[] = str_replace('+1 ', '', $cell);
-    //         }
-    //     }
-    //     return $cells;
-    // }
 
     function format_terms($data) {
         $terms = '';
@@ -1304,11 +1291,11 @@ class DirectoryModule extends DefaultMinisiteModule {
                 $address .= " {$data['postalcode'][0]}";
             }
             $address .= "</span>"; // attrValue for second line of address
+            if (isset( $data['lutherc'] )) {
+                $address .= "<span class='multipleAttrValues'>{$data['lutherc'][0]}</span>";
+            }
             $address .= "</li></span>";
 
-            // $address .= "<li class='directoryHomeAddress'><i class='fa fa-map-marker'></i><strong> Home Address:</strong>{$street}";
-            // if (isset($city))
-                // $address .= "<br>{$city}, {$state} {$zip}</li>";
             return $address;
         } else {
             return $parts;
@@ -1325,21 +1312,21 @@ class DirectoryModule extends DefaultMinisiteModule {
         return $markup;
     }
 
-    function format_status($data) {
-        $statusFlag['F'] = false; // Full time
-        $statusFlag['N'] = false; // ?
-        $statusFlag['G'] = false; // Grad
-        $statusFlag['L'] = 'On Leave';
-        $statusFlag['R'] = 'On Leave'; // required
-        $statusFlag['W'] = 'Withdrawn'; // probably not used
-        $statusFlag['X'] = 'Early Finish';
-        $statusFlag['O'] = 'Off Campus Program';
+    // function format_status($data) {
+    //     $statusFlag['F'] = false; // Full time
+    //     $statusFlag['N'] = false; // ?
+    //     $statusFlag['G'] = false; // Grad
+    //     $statusFlag['L'] = 'On Leave';
+    //     $statusFlag['R'] = 'On Leave'; // required
+    //     $statusFlag['W'] = 'Withdrawn'; // probably not used
+    //     $statusFlag['X'] = 'Early Finish';
+    //     $statusFlag['O'] = 'Off Campus Program';
 
-        if (isset($data['studentStatus']))
-            return $statusFlag[$data['studentStatus'][0]];
-        else
-            return false;
-    }
+    //     if (isset($data['studentStatus']))
+    //         return $statusFlag[$data['studentStatus'][0]];
+    //     else
+    //         return false;
+    // }
 
     function format_affiliation($data) {
         // define the default sort order for affiliations
@@ -1362,6 +1349,7 @@ class DirectoryModule extends DefaultMinisiteModule {
         $stat['Emeritus'] = 17;
         $stat['Temp Help'] = 18;
         $stat['Contracted Services'] = 19;
+
         if ( isset($data['alummajor']) ){
             $fs_major_markup = join(' &bull; ', $data['alummajor']);
         }
@@ -1793,27 +1781,16 @@ class DirectoryModule extends DefaultMinisiteModule {
      * Perform an LDAP search based on the provided LDAP filter
      */
     function get_search_results($querystring) {
-        $attributes = array('dn','uid','ou','count','employeenumber','cn','sn','givenName','eduPersonNickname','displayName','mail','title',
-                'eduPersonPrimaryAffiliation','officebldg','officephone','studentPostOffice','telephoneNumber','spouseName', 'childName',
-                'homePostalAddress', 'address', 'telephoneNumber', 'studentmajor', 'studentminor','studentresidencehallbldg','studentresidencehallphone',
-                'studentresidencehallroom','eduPersonPrimaryAffiliation','studentspecialization','studentyearinschool','studentadvisor',
-                'eduPersonAffiliation','studentStatus','postaladdress','l','st','postalcode','lutherc',
-                'eduPersonEntitlement','mobile', 'termenrolled', 'departmentname', 'gender', 'ocpostaladdress', 'ocl', 'ocst', 'ocpostalcode',
-                'occ', 'ocphone','privacyflag','creationdate','deleteafterdate','birthdate','lasttermattended',
-                'programstartdate','programenddate','lastupdate', 'alumclassyear', 'alumOccupation', 'alummajor');
-
-        $logged_user = $this->user_netid;
-        if ($logged_user){
-            if ($logged_user == 'studentnet'){
-                $pass_hash = 'alum4pwd';
-            } else {
-                $logged_user_entity = new entity(get_user_id($logged_user));
-                $pass_hash = $logged_user_entity->get_value('user_password_hash');
-            }
-        }
+        $attributes = array('ou','uid','cn','sn','givenName','displayName','mail','title',
+           'eduPersonPrimaryAffiliation','officebldg','officephone','studentPostOffice',
+           'telephoneNumber','studentmajor','studentminor','studentresidencehallbldg',
+           'studentresidencehallphone','studentresidencehallroom','eduPersonPrimaryAffiliation',
+           'studentspecialization','studentyearinschool','studentadvisor','eduPersonAffiliation',
+           'studentStatus','postaladdress','l','st','postalcode','mobile','termenrolled',
+           'departmentname','privacyflag','birthdate','lutherc','lastupdate','alumclassyear',
+           'alummajor');
 
         $dir = new directory_service('ldap_luther_directory');
-        $dir->authenticate('webauth','daewoo$friendly$$cow');
         $dir->search_by_filter($querystring, $attributes);
 
         $dir->sort_records(array('sn', 'cn'));
