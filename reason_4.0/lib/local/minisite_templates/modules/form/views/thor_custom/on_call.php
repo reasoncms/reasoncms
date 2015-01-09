@@ -154,7 +154,9 @@ class AppDevOnCallForm extends DefaultThorForm
         $next_week = date(DateTime::ATOM, mktime(0, 0, 0, date("m"), date("d")+7, date("Y")));
 		
 		$onCall = $this->getPerson($today, $tomorrow);
-		if (($onCall != '') && (date("H") > 7) && (date("H") < 17)) {
+		$lt = new DateTime("now", new DateTimeZone('America/Chicago'));
+		$current_hour = $lt->format("H");
+		if (($onCall != '') && ($current_hour > 7) && ($current_hour < 17)) {
 		     // this is where we should send a text message and probably an email to the on-call person
 		     $developer_info = $this->get_developer_info($onCall);
 		     $this->notify_developer($developer_info, 'sms');
