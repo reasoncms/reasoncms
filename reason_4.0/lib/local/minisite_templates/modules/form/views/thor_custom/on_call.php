@@ -33,7 +33,7 @@ class AppDevOnCallForm extends DefaultThorForm
          * return $event->title->text;
 	 * @return void
 	 */
-	function getPerson($startDate, $endDate)
+	function getPerson($startDate, $endDate, $today_only)
 	{
 		    // Initialise the Google Client object
 			$this->client = new Google_Client();
@@ -69,7 +69,9 @@ class AppDevOnCallForm extends DefaultThorForm
 			    $event_end_time = $event->getEnd()->getDateTime();
 			    $event_status = $event->getStatus();
 			    $current_datetime = date(DateTime::ATOM, time());
-		    	if (($current_datetime >= $event_start_time) && ($current_datetime <= $event_end_time) && ($event_status == "confirmed")) {
+		    	if (($current_datetime >= $event_start_time) && ($current_datetime <= $event_end_time) && ($event_status == "confirmed") && $today_only) {
+		    		return $event->getSummary();
+		    	} else if (($event_status == "confirmed") && (! $today_only)) {
 		    		return $event->getSummary();
 		    	}
 			  }
@@ -153,7 +155,7 @@ class AppDevOnCallForm extends DefaultThorForm
         $tomorrow = date(DateTime::ATOM, mktime(0, 0, 0, date("m"), date("d")+1, date("Y")));
         $next_week = date(DateTime::ATOM, mktime(0, 0, 0, date("m"), date("d")+7, date("Y")));
 		
-		$onCall = $this->getPerson($today, $tomorrow);
+		$onCall = $this->getPerson($today, $tomorrow, True);
 		$lt = new DateTime("now", new DateTimeZone('America/Chicago'));
 		$current_hour = $lt->format("H");
 		if (($onCall != '') && ($current_hour > 7) && ($current_hour < 17)) {
@@ -164,7 +166,7 @@ class AppDevOnCallForm extends DefaultThorForm
 		 else {
 		     // this is where we would let the HD/requestor know that nobody is on-call at this time and
 		     //   send an email to the next available on call person (next available)
-		     $next_available = $this->getPerson($today, $next_week);
+		     $next_available = $this->getPerson($today, $next_week, False);
 		     $developer_info = $this->get_developer_info($next_available);
 		     $this->notify_developer($developer_info, 'email');
 		}
