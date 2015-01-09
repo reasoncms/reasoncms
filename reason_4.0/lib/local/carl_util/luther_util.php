@@ -210,9 +210,9 @@ function luther_process_inline_images($content)
 	}
 
 	// replace deprecated img align left and right with class
-	$content = preg_replace('/<img(.*?)(align="(\w+))"/', '<img'.'$1'.'class="'.'$3'.'" ', $content, -1, $count);
+	$content = preg_replace('/<img(.*?)(align="(\w+))"/', '<img'.'$1'.'class="'.'$3'.'" ', $content);
 	
-	if ($count > 0)
+	if ($count < 100)
 	{
 		preg_match_all('/<img\s(alt=".*?")?\s?(src=".*?)(\/reason\/images\/(\d+)(_tn)?\.(jpg|jpeg|gif|png)")\s?(class="(\w+)")?/', $content, $matches, PREG_SET_ORDER);
 		
