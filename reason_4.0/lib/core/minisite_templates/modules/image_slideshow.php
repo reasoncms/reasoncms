@@ -81,15 +81,18 @@
 			return true;
 		}
 		
+		function run_text_only() { echo $this->slideshow->getTextOutput(); }
+		function run_full_graphics() { echo $this->slideshow->getNormalOutput(); }
+
 		function run()
 		{	
 			if (!empty($this->textonly))
 			{
-				echo $this->slideshow->getTextOutput();
+				$this->run_text_only();
 			}
 			else
 			{
-				echo $this->slideshow->getNormalOutput();
+				$this->run_full_graphics();
 			}
 		}
 		
