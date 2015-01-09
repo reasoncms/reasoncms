@@ -2,31 +2,12 @@
 include_once('reason_header.php');
 reason_include_once('minisite_templates/modules/form/views/thor/default.php');
 
-
-require_once 'Zend/Loader.php';
-
-/**
- * @see Zend_Gdata
+/** 
+ * api dependencies
  */
-Zend_Loader::loadClass('Zend_Gdata');
-//include_once (ZendGdata-1.10.3/library/Zend/Loader.php)
 
-/**
- * @see Zend_Gdata_AuthSub
- */
-Zend_Loader::loadClass('Zend_Gdata_AuthSub');
-
-/**
- * @see Zend_Gdata_ClientLogin
- */
-Zend_Loader::loadClass('Zend_Gdata_ClientLogin');
-
-/**
- * @see Zend_Gdata_Calendar
- */
-Zend_Loader::loadClass('Zend_Gdata_Calendar');
-Zend_Loader::loadClass('Zend_Gdata_Extension_Visibility');
-
+require_once('google-api-php-client/src/Google_Client.php');
+require_once('google-api-php-client/src/contrib/Google_CalendarService.php');
 
 //include_once('disco/boxes/boxes.php');
 $GLOBALS[ '_form_view_class_names' ][ basename( __FILE__, '.php') ] = 'AppDevOnCallForm';
@@ -39,21 +20,9 @@ class AppDevOnCallForm extends DefaultThorForm
 {
 
 	var $info;
-	/**
-	* Returns a HTTP client object with the appropriate headers for communicating
-	* with Google using the ClientLogin credentials supplied.
-	* 
-	* @param  string $user The username, in e-mail address format, to authenticate
-	* @param  string $pass The password for the user specified
-	* @return Zend_Http_Client
-	*/    
-	function getClientLoginHttpClient($user, $pass) 
-	{
-		$service = Zend_Gdata_Calendar::AUTH_SERVICE_NAME;
-		$client = Zend_Gdata_ClientLogin::getHttpClient($user, $pass, $service);
-		return $client;
-	}
-	
+	var $client;
+	var $service;
+
 	/**
 	 * Outputs an HTML unordered list (ul), with each list item representing an
 	 * event on the authenticated user's calendar.  Includes the start time and
@@ -64,34 +33,56 @@ class AppDevOnCallForm extends DefaultThorForm
          * return $event->title->text;
 	 * @return void
 	 */
-	function getPerson($client, $startDate, $endDate)
+	function getPerson($startDate, $endDate, $today_only)
 	{
-          $startDate = date("c");	
-          $tomorrow_temp = mktime(0, 0, 0, date("m")  , date("d")+1, date("Y"));
-          $endDate = date("Y-m-d", $tomorrow_temp);
+		    // Initialise the Google Client object
+			$this->client = new Google_Client();
+			// Your 'Product name'
+			$this->client->setApplicationName('reason-softdev-on-call');
 
-          $gdataCal = new Zend_Gdata_Calendar($client);
-          $query = $gdataCal->newEventQuery();
-          $query->setUser('luther.edu_39333139333636353730@resource.calendar.google.com');
-          //$query->setUser('luther.edu_9530n4c10faloia8q6ov32ddek@group.calendar.google.com'); // TEST CALENDAR
-          $query->setVisibility('private');
-          $query->setProjection('full');
-          $query->setOrderby('starttime');
-          $query->setStartMin($startDate);
-          $query->setStartMax($endDate);
-          $query->setFutureevents(false);
-          $query->setSingleevents(false);
-          $query->setSortorder('a');
-          $eventFeed = $gdataCal->getCalendarEventFeed($query);
-          foreach ($eventFeed as $event) {
-            foreach ($event->when as $when) {
-              $eventStatusUrl = $event->getEventStatus()->__toString();
-              list($trash, $eventStatus) = explode('#', $eventStatusUrl); //$eventStatusUrl
-              if ($eventStatus == 'event.confirmed') {
-                return $event->title->text;
-              }
-            }
-          }
+			$this->client->setAssertionCredentials(
+				new Google_AssertionCredentials(
+					'561991832721-573m3493sj8k5n1rvcp9gpr7obuj0tgq@developer.gserviceaccount.com', // email you added to GA
+				    array('https://www.googleapis.com/auth/calendar.readonly'),
+				    file_get_contents(REASON_INC.'lib/local/keys/google-on-call-key.p12'),  // keyfile you downloaded
+				    'notasecret'
+				)
+			);
+			// other settings
+			$this->client->setClientId('561991832721-573m3493sj8k5n1rvcp9gpr7obuj0tgq.apps.googleusercontent.com');
+			// Return results as objects.
+			$this->client->setUseObjects(true);
+			$this->client->setAccessType('offline_access');  // this may be unnecessary?
+
+			// create analytics service
+			$this->service = new Google_CalendarService($this->client);
+			$events = $this->service->events->listEvents('luther.edu_39333139333636353730@resource.calendar.google.com',
+				                                         array(
+				                                         	'orderBy'=>'startTime',
+				                                         	'singleEvents'=>true,
+				                                         	'timeMin'=>$startDate,
+                              							 	'timeMax'=>$endDate,
+                              							 	'timeZone'=>'UTC'));
+			while(true) {
+			  foreach ($events->getItems() as $event) {
+			    $event_start_time = $event->getStart()->getDateTime();
+			    $event_end_time = $event->getEnd()->getDateTime();
+			    $event_status = $event->getStatus();
+			    $current_datetime = date(DateTime::ATOM, time());
+		    	if (($current_datetime >= $event_start_time) && ($current_datetime <= $event_end_time) && ($event_status == "confirmed") && $today_only) {
+		    		return $event->getSummary();
+		    	} else if (($event_status == "confirmed") && (! $today_only)) {
+		    		return $event->getSummary();
+		    	}
+			  }
+			  $pageToken = $events->getNextPageToken();
+			  if ($pageToken) {
+			    $optParams = array('pageToken' => $pageToken);
+			    $events = $this->service->events->listEvents('primary', $optParams);
+			  } else {
+			    break;
+			  }
+			}
 	}
 	
 	function get_user_info($username)
@@ -160,16 +151,14 @@ class AppDevOnCallForm extends DefaultThorForm
 	
 	function process()
 	{
-		$now = date("c");
+		$today = date(DateTime::ATOM, mktime(0, 0, 0, date("m"), date("d"), date("Y")));
+        $tomorrow = date(DateTime::ATOM, mktime(0, 0, 0, date("m"), date("d")+1, date("Y")));
+        $next_week = date(DateTime::ATOM, mktime(0, 0, 0, date("m"), date("d")+7, date("Y")));
 		
-		$tomorrow_temp = mktime(0, 0, 0, date("m")  , date("d")+1, date("Y"));
-		$tomorrow = date("Y-m-d", $tomorrow_temp);
-		$next_week_temp = mktime(0, 0, 0, date("m")  , date("d")+7, date("Y"));
-		$next_week = date("Y-m-d", $next_week_temp);
-		$client = $this->getClientLoginHttpClient('google_api_user@luther.edu', 'bTI1+9scGSkeORU');
-		
-		$onCall = $this->getPerson($client, $now, $tomorrow);
-		if (($onCall != '') && (date("H") > 7) && (date("H") < 17)) {
+		$onCall = $this->getPerson($today, $tomorrow, True);
+		$lt = new DateTime("now", new DateTimeZone('America/Chicago'));
+		$current_hour = $lt->format("H");
+		if (($onCall != '') && ($current_hour > 7) && ($current_hour < 17)) {
 		     // this is where we should send a text message and probably an email to the on-call person
 		     $developer_info = $this->get_developer_info($onCall);
 		     $this->notify_developer($developer_info, 'sms');
@@ -177,12 +166,7 @@ class AppDevOnCallForm extends DefaultThorForm
 		 else {
 		     // this is where we would let the HD/requestor know that nobody is on-call at this time and
 		     //   send an email to the next available on call person (next available)
-		     $next_available = $this->getPerson($client, $now, $next_week);
-
-                     if ($next_available == '') {
-                       $next_available = 'Ben';
-                     }
-
+		     $next_available = $this->getPerson($today, $next_week, False);
 		     $developer_info = $this->get_developer_info($next_available);
 		     $this->notify_developer($developer_info, 'email');
 		}
