@@ -166,9 +166,10 @@ class ResponsiveItemMarkupGenerator extends PublicationItemMarkupGenerator
 	// Here, we get rid of <h4>Images</h4>, <ul> and enlarge thumbanil size.
 	function get_images_section()
 	{
+		$str = '';
 		foreach($this->passed_vars['item_images'] as $image)
 		{
-			$str = '<div class="imageChunk">';
+			$str .= '<div class="imageChunk">';
 			$rsi = new reasonSizedImage();
 			$rsi->set_id($image->id());
 			$rsi->set_width(600);

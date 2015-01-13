@@ -23,19 +23,19 @@
   margin-bottom: 0;
 }
 
-/* line 32, ../scss/sites/magazine.scss */
+/* line 33, ../scss/sites/magazine.scss */
 .lutherMagazine #minisite {
   position: relative;
 }
 @media only screen and (max-width: 63.75em) {
-  /* line 42, ../scss/sites/magazine.scss */
+  /* line 43, ../scss/sites/magazine.scss */
   .lutherMagazine #minisite #minisiteBanner #banner h1 {
     position: static;
     width: 70%;
     height: 60px;
     padding-top: 10px;
   }
-  /* line 48, ../scss/sites/magazine.scss */
+  /* line 49, ../scss/sites/magazine.scss */
   .lutherMagazine #minisite #minisiteBanner #banner h1 a {
     width: 6.625rem;
     height: 2.5rem;
@@ -44,7 +44,7 @@
     position: relative;
     display: block;
   }
-  /* line 56, ../scss/sites/magazine.scss */
+  /* line 57, ../scss/sites/magazine.scss */
   .lutherMagazine #minisite #minisiteBanner #banner h1 a span {
     position: absolute;
     left: -9999px;
@@ -52,7 +52,7 @@
     margin-bottom: 0;
   }
 }
-/* line 70, ../scss/sites/magazine.scss */
+/* line 71, ../scss/sites/magazine.scss */
 .lutherMagazine #minisite #navWrap {
   position: relative;
   padding-left: 0;
@@ -61,7 +61,7 @@
   float: left;
 }
 @media only screen and (min-width: 63.8125em) {
-  /* line 70, ../scss/sites/magazine.scss */
+  /* line 71, ../scss/sites/magazine.scss */
   .lutherMagazine #minisite #navWrap {
     position: relative;
     padding-left: 0;
@@ -72,7 +72,7 @@
   }
 }
 @media only screen and (min-width: 80em) {
-  /* line 70, ../scss/sites/magazine.scss */
+  /* line 71, ../scss/sites/magazine.scss */
   .lutherMagazine #minisite #navWrap {
     position: relative;
     padding-left: 0;
@@ -81,16 +81,16 @@
     float: left;
   }
 }
-/* line 89, ../scss/sites/magazine.scss */
+/* line 90, ../scss/sites/magazine.scss */
 .lutherMagazine #minisite #navWrap a.toggle h1 i {
   display: none;
 }
-/* line 96, ../scss/sites/magazine.scss */
+/* line 97, ../scss/sites/magazine.scss */
 .lutherMagazine #minisite #navWrap #minisiteNavigation {
   background: #efefef;
 }
 @media only screen and (min-width: 63.8125em) {
-  /* line 96, ../scss/sites/magazine.scss */
+  /* line 97, ../scss/sites/magazine.scss */
   .lutherMagazine #minisite #navWrap #minisiteNavigation {
     padding: 2.5rem;
     padding-top: 0;
@@ -99,17 +99,17 @@
   }
 }
 @media only screen and (min-width: 63.8125em) {
-  /* line 108, ../scss/sites/magazine.scss */
+  /* line 109, ../scss/sites/magazine.scss */
   .lutherMagazine #minisite #navWrap .navListTop li a {
     padding: 0.5rem 0;
   }
 }
-/* line 113, ../scss/sites/magazine.scss */
+/* line 114, ../scss/sites/magazine.scss */
 .lutherMagazine #minisite #navWrap .navListTop a.home {
   font-size: 1.5rem;
 }
 @media only screen and (min-width: 63.8125em) {
-  /* line 113, ../scss/sites/magazine.scss */
+  /* line 114, ../scss/sites/magazine.scss */
   .lutherMagazine #minisite #navWrap .navListTop a.home {
     padding-top: 0;
     background: transparent url("../../images/magazine/logo_1x.png") no-repeat;
@@ -118,7 +118,7 @@
     width: 12.375rem;
     height: 74px;
   }
-  /* line 124, ../scss/sites/magazine.scss */
+  /* line 125, ../scss/sites/magazine.scss */
   .lutherMagazine #minisite #navWrap .navListTop a.home span {
     position: absolute;
     left: -9999px;
@@ -127,63 +127,113 @@
   }
 }
 @media only screen and (min-width: 63.8125em) {
-  /* line 137, ../scss/sites/magazine.scss */
+  /* line 138, ../scss/sites/magazine.scss */
   .lutherMagazine #minisite #navWrap .navListTop ul a {
     border-color: rgba(0, 0, 0, 0.1);
   }
-  /* line 142, ../scss/sites/magazine.scss */
+  /* line 143, ../scss/sites/magazine.scss */
   .lutherMagazine #minisite #navWrap .navListTop ul a:hover {
     background: none;
     text-decoration: underline;
   }
-  /* line 148, ../scss/sites/magazine.scss */
+  /* line 149, ../scss/sites/magazine.scss */
   .lutherMagazine #minisite #navWrap .navListTop ul .open a:hover {
     background: none !important;
   }
-  /* line 153, ../scss/sites/magazine.scss */
+  /* line 154, ../scss/sites/magazine.scss */
   .lutherMagazine #minisite #navWrap .navListTop ul li:last-of-type a {
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   }
-  /* line 161, ../scss/sites/magazine.scss */
+  /* line 162, ../scss/sites/magazine.scss */
   .lutherMagazine #minisite #navWrap .navListTop ul ul a {
     padding: 0 0 0.5rem 1.25rem;
     border: none;
   }
-  /* line 165, ../scss/sites/magazine.scss */
+  /* line 166, ../scss/sites/magazine.scss */
   .lutherMagazine #minisite #navWrap .navListTop ul ul a:hover {
     background: none;
     text-decoration: underline;
   }
-  /* line 174, ../scss/sites/magazine.scss */
+  /* line 175, ../scss/sites/magazine.scss */
   .lutherMagazine #minisite #navWrap .navListTop ul .navListItem.open {
     background: none;
   }
-  /* line 181, ../scss/sites/magazine.scss */
+  /* line 182, ../scss/sites/magazine.scss */
   .lutherMagazine #minisite #navWrap .navListTop ul .navListItem.accordion > a:before {
     top: 0.90909rem;
     right: 0;
   }
-  /* line 195, ../scss/sites/magazine.scss */
+  /* line 196, ../scss/sites/magazine.scss */
   .lutherMagazine #minisite #navWrap .jump a:before {
-    top: 0.90909rem;
-    right: 0;
+    content: "";
   }
 }
+/* line 208, ../scss/sites/magazine.scss */
+.lutherMagazine #minisite #footer {
+  background: #f5f5f5;
+  margin-top: 2.5rem;
+}
+/* line 214, ../scss/sites/magazine.scss */
+.lutherMagazine #minisite #footer .loginLinkModule div a,
+.lutherMagazine #minisite #footer .loginLinkModule #footerLoginLink {
+  background: rgba(255, 255, 255, 0.75);
+}
+/* line 217, ../scss/sites/magazine.scss */
+.lutherMagazine #minisite #footer .loginLinkModule div a:hover,
+.lutherMagazine #minisite #footer .loginLinkModule #footerLoginLink:hover {
+  background: white;
+}
+/* line 223, ../scss/sites/magazine.scss */
+.lutherMagazine #minisite #preFoot {
+  padding: 2.5rem;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 1.66667rem;
+}
+/* line 229, ../scss/sites/magazine.scss */
+.lutherMagazine #minisite #preFoot .uname_magazine_footer_links {
+  text-align: center;
+}
+/* line 233, ../scss/sites/magazine.scss */
+.lutherMagazine #minisite #preFoot .uname_magazine_footer_links p,
+.lutherMagazine #minisite #preFoot .uname_magazine_footer_links h4 {
+  display: inline-block;
+  margin: 0 0.75rem;
+}
+/* line 238, ../scss/sites/magazine.scss */
+.lutherMagazine #minisite #preFoot .uname_magazine_footer_links h4 {
+  font-family: "Roboto Slab", serif;
+  font-weight: 300;
+  font-size: 1.125rem;
+  color: #777;
+}
+/* line 245, ../scss/sites/magazine.scss */
+.lutherMagazine #minisite #preFoot .uname_magazine_footer_links ul {
+  margin: 0;
+  margin-top: 2.5rem;
+}
+/* line 251, ../scss/sites/magazine.scss */
+.lutherMagazine #minisite #preFoot .uname_magazine_footer_links li {
+  display: inline-block;
+  margin: 0.375rem 1rem;
+  text-transform: uppercase;
+  font-size: 0.875rem;
+  line-height: 1.3;
+}
 
-/* line 216, ../scss/sites/magazine.scss */
+/* line 282, ../scss/sites/magazine.scss */
 .siteHome #minisite .feedLink {
   display: none;
 }
-/* line 221, ../scss/sites/magazine.scss */
+/* line 286, ../scss/sites/magazine.scss */
 .siteHome #minisite .pageTitle {
   display: none;
 }
-/* line 225, ../scss/sites/magazine.scss */
+/* line 290, ../scss/sites/magazine.scss */
 .siteHome #minisite #contentSections {
   margin-top: 0 !important;
 }
 @media only screen and (min-width: 63.8125em) {
-  /* line 229, ../scss/sites/magazine.scss */
+  /* line 294, ../scss/sites/magazine.scss */
   .siteHome #minisite #navWrap {
     position: absolute;
     top: 2.5rem;
@@ -191,84 +241,84 @@
   }
 }
 @media only screen and (max-width: 63.75em) {
-  /* line 237, ../scss/sites/magazine.scss */
+  /* line 302, ../scss/sites/magazine.scss */
   .siteHome #minisite #contentAndRelated {
     margin-top: 1.25rem;
   }
 }
 @media only screen and (min-width: 63.8125em) {
-  /* line 237, ../scss/sites/magazine.scss */
+  /* line 302, ../scss/sites/magazine.scss */
   .siteHome #minisite #contentAndRelated {
     width: 100%;
     padding-left: 0;
   }
 }
-/* line 249, ../scss/sites/magazine.scss */
+/* line 314, ../scss/sites/magazine.scss */
 .siteHome #minisite .issueMenu {
   position: absolute;
   top: 0;
   left: 0;
   z-index: 999999;
 }
-/* line 260, ../scss/sites/magazine.scss */
+/* line 325, ../scss/sites/magazine.scss */
 .siteHome #minisite .persistent {
   display: none;
 }
-/* line 269, ../scss/sites/magazine.scss */
+/* line 334, ../scss/sites/magazine.scss */
 .siteHome #minisite .sections {
   margin: 0;
 }
-/* line 272, ../scss/sites/magazine.scss */
+/* line 337, ../scss/sites/magazine.scss */
 .siteHome #minisite .sections .section {
   margin: 0;
   padding: 0;
   border: none;
 }
-/* line 282, ../scss/sites/magazine.scss */
+/* line 347, ../scss/sites/magazine.scss */
 .siteHome #minisite .post-cats .features a {
   background: rgba(16, 115, 206, 0.85);
 }
-/* line 285, ../scss/sites/magazine.scss */
+/* line 350, ../scss/sites/magazine.scss */
 .siteHome #minisite .post-cats .features a:hover {
   background: #1073ce;
 }
-/* line 292, ../scss/sites/magazine.scss */
+/* line 357, ../scss/sites/magazine.scss */
 .siteHome #minisite .post-cats .alumni-profiles a {
   background: rgba(74, 133, 18, 0.9);
 }
-/* line 295, ../scss/sites/magazine.scss */
+/* line 360, ../scss/sites/magazine.scss */
 .siteHome #minisite .post-cats .alumni-profiles a:hover {
   background: #4a8512;
 }
-/* line 302, ../scss/sites/magazine.scss */
+/* line 367, ../scss/sites/magazine.scss */
 .siteHome #minisite .post-cats .in-the-media a {
   background: rgba(232, 165, 0, 0.9);
 }
-/* line 305, ../scss/sites/magazine.scss */
+/* line 370, ../scss/sites/magazine.scss */
 .siteHome #minisite .post-cats .in-the-media a:hover {
   background: #e8a500;
 }
-/* line 312, ../scss/sites/magazine.scss */
+/* line 377, ../scss/sites/magazine.scss */
 .siteHome #minisite .post-cats .class-notes a {
   background: rgba(159, 33, 18, 0.9);
 }
-/* line 315, ../scss/sites/magazine.scss */
+/* line 380, ../scss/sites/magazine.scss */
 .siteHome #minisite .post-cats .class-notes a:hover {
   background: #9f2112;
 }
 
-/* line 330, ../scss/sites/magazine.scss */
+/* line 395, ../scss/sites/magazine.scss */
 .siteHome #minisite .homePostsDisplay .searchAndFilterInterface {
   display: none;
 }
-/* line 334, ../scss/sites/magazine.scss */
+/* line 399, ../scss/sites/magazine.scss */
 .siteHome #minisite .homePostsDisplay .sections {
   clear: both;
   margin-right: -1.25rem;
   margin-left: -1.25rem;
 }
 @media only screen and (min-width: 63.8125em) {
-  /* line 334, ../scss/sites/magazine.scss */
+  /* line 399, ../scss/sites/magazine.scss */
   .siteHome #minisite .homePostsDisplay .sections {
     width: 85%;
     max-width: 960px;
@@ -276,38 +326,38 @@
   }
 }
 @media only screen and (min-width: 90.063em) {
-  /* line 334, ../scss/sites/magazine.scss */
+  /* line 399, ../scss/sites/magazine.scss */
   .siteHome #minisite .homePostsDisplay .sections {
     width: 78%;
     max-width: none;
   }
 }
-/* line 355, ../scss/sites/magazine.scss */
+/* line 420, ../scss/sites/magazine.scss */
 .siteHome #minisite .homePostsDisplay .grid-sizer,
 .siteHome #minisite .homePostsDisplay .post {
   width: 100%;
 }
 @media only screen and (min-width: 30em) {
-  /* line 355, ../scss/sites/magazine.scss */
+  /* line 420, ../scss/sites/magazine.scss */
   .siteHome #minisite .homePostsDisplay .grid-sizer,
   .siteHome #minisite .homePostsDisplay .post {
     width: 50%;
   }
 }
 @media only screen and (min-width: 60.0625em) {
-  /* line 355, ../scss/sites/magazine.scss */
+  /* line 420, ../scss/sites/magazine.scss */
   .siteHome #minisite .homePostsDisplay .grid-sizer,
   .siteHome #minisite .homePostsDisplay .post {
     width: 33.3333%;
   }
 }
-/* line 368, ../scss/sites/magazine.scss */
+/* line 433, ../scss/sites/magazine.scss */
 .siteHome #minisite .homePostsDisplay .post {
   border: none;
   float: left;
   padding: 1.25rem;
 }
-/* line 373, ../scss/sites/magazine.scss */
+/* line 438, ../scss/sites/magazine.scss */
 .siteHome #minisite .homePostsDisplay .post .inner {
   *zoom: 1;
   background: #f8f8f8;
@@ -336,30 +386,30 @@
 .siteHome #minisite .homePostsDisplay .post .inner:after {
   clear: both;
 }
-/* line 382, ../scss/sites/magazine.scss */
+/* line 447, ../scss/sites/magazine.scss */
 .siteHome #minisite .homePostsDisplay .post .inner:hover {
   background: #f1f1f1;
 }
-/* line 385, ../scss/sites/magazine.scss */
+/* line 450, ../scss/sites/magazine.scss */
 .siteHome #minisite .homePostsDisplay .post .inner:hover .title {
   text-decoration: underline;
 }
-/* line 397, ../scss/sites/magazine.scss */
+/* line 462, ../scss/sites/magazine.scss */
 .siteHome #minisite .homePostsDisplay .post .content-block {
   position: relative;
 }
-/* line 400, ../scss/sites/magazine.scss */
+/* line 465, ../scss/sites/magazine.scss */
 .siteHome #minisite .homePostsDisplay .post .content-block > a {
   display: block;
   padding: 1.25rem;
   color: #444444 !important;
 }
-/* line 408, ../scss/sites/magazine.scss */
+/* line 473, ../scss/sites/magazine.scss */
 .siteHome #minisite .homePostsDisplay .post .image-block,
 .siteHome #minisite .homePostsDisplay .post .category-block {
   position: relative;
 }
-/* line 412, ../scss/sites/magazine.scss */
+/* line 477, ../scss/sites/magazine.scss */
 .siteHome #minisite .homePostsDisplay .post .category-block {
   *zoom: 1;
   padding: 0.83333rem;
@@ -374,17 +424,17 @@
   clear: both;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 412, ../scss/sites/magazine.scss */
+  /* line 477, ../scss/sites/magazine.scss */
   .siteHome #minisite .homePostsDisplay .post .category-block {
     padding: 1.25rem;
   }
 }
-/* line 421, ../scss/sites/magazine.scss */
+/* line 486, ../scss/sites/magazine.scss */
 .siteHome #minisite .homePostsDisplay .post .post-cats {
   margin: 0;
   text-align: center;
 }
-/* line 428, ../scss/sites/magazine.scss */
+/* line 493, ../scss/sites/magazine.scss */
 .siteHome #minisite .homePostsDisplay .post .post-cat a {
   display: block;
   float: left;
@@ -392,50 +442,50 @@
   padding: 0.125rem 0.5rem;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 428, ../scss/sites/magazine.scss */
+  /* line 493, ../scss/sites/magazine.scss */
   .siteHome #minisite .homePostsDisplay .post .post-cat a {
     padding: 0.25rem 0.75rem;
   }
 }
-/* line 441, ../scss/sites/magazine.scss */
+/* line 506, ../scss/sites/magazine.scss */
 .siteHome #minisite .homePostsDisplay .post .category-block .post-cat a {
   float: right;
 }
-/* line 446, ../scss/sites/magazine.scss */
+/* line 511, ../scss/sites/magazine.scss */
 .siteHome #minisite .homePostsDisplay .post .image-block .post-cat {
   position: absolute;
   bottom: 0.83333rem;
   right: 0.83333rem;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 446, ../scss/sites/magazine.scss */
+  /* line 511, ../scss/sites/magazine.scss */
   .siteHome #minisite .homePostsDisplay .post .image-block .post-cat {
     bottom: 1.25rem;
     right: 1.25rem;
   }
 }
-/* line 457, ../scss/sites/magazine.scss */
+/* line 522, ../scss/sites/magazine.scss */
 .siteHome #minisite .homePostsDisplay .post .desc p {
   margin-bottom: 0;
 }
 @media only screen and (min-width: 63.8125em) {
-  /* line 464, ../scss/sites/magazine.scss */
+  /* line 529, ../scss/sites/magazine.scss */
   .siteHome #minisite .homePostsDisplay #featuredItems {
     margin-top: -2.5rem;
   }
 }
-/* line 470, ../scss/sites/magazine.scss */
+/* line 535, ../scss/sites/magazine.scss */
 .siteHome #minisite .homePostsDisplay #featuredItems .post {
   width: 100%;
   padding: 0;
 }
 @media only screen and (max-width: 40em) {
-  /* line 479, ../scss/sites/magazine.scss */
+  /* line 544, ../scss/sites/magazine.scss */
   .siteHome #minisite .homePostsDisplay #featuredItems .post .primaryImage {
     padding: 0;
     height: 224px;
   }
-  /* line 483, ../scss/sites/magazine.scss */
+  /* line 548, ../scss/sites/magazine.scss */
   .siteHome #minisite .homePostsDisplay #featuredItems .post .primaryImage img {
     width: 651px;
     max-width: 10000px !important;
@@ -447,12 +497,12 @@
   }
 }
 @media only screen and (min-width: 40.063em) and (max-width: 63.75em) {
-  /* line 500, ../scss/sites/magazine.scss */
+  /* line 565, ../scss/sites/magazine.scss */
   .siteHome #minisite .homePostsDisplay #featuredItems .post .primaryImage {
     padding: 0;
     height: 376px;
   }
-  /* line 504, ../scss/sites/magazine.scss */
+  /* line 569, ../scss/sites/magazine.scss */
   .siteHome #minisite .homePostsDisplay #featuredItems .post .primaryImage img {
     width: 1094px;
     max-width: 10000px !important;
@@ -464,45 +514,45 @@
   }
 }
 @media only screen {
-  /* line 516, ../scss/sites/magazine.scss */
+  /* line 581, ../scss/sites/magazine.scss */
   .siteHome #minisite .homePostsDisplay #featuredItems .post .post-cat a {
     right: 0;
   }
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 516, ../scss/sites/magazine.scss */
+  /* line 581, ../scss/sites/magazine.scss */
   .siteHome #minisite .homePostsDisplay #featuredItems .post .post-cat a {
     right: 0.625rem;
   }
 }
 @media only screen and (min-width: 63.8125em) {
-  /* line 516, ../scss/sites/magazine.scss */
+  /* line 581, ../scss/sites/magazine.scss */
   .siteHome #minisite .homePostsDisplay #featuredItems .post .post-cat a {
     right: 1.875rem;
   }
 }
-/* line 530, ../scss/sites/magazine.scss */
+/* line 595, ../scss/sites/magazine.scss */
 .siteHome #minisite .homePostsDisplay #featuredItems .post .content-block {
   text-align: center;
   padding: 1.25rem 0;
 }
-/* line 534, ../scss/sites/magazine.scss */
+/* line 599, ../scss/sites/magazine.scss */
 .siteHome #minisite .homePostsDisplay #featuredItems .post .content-block h4 {
   font-size: 1.6875rem;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 534, ../scss/sites/magazine.scss */
+  /* line 599, ../scss/sites/magazine.scss */
   .siteHome #minisite .homePostsDisplay #featuredItems .post .content-block h4 {
     font-size: 2.3125rem;
   }
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 542, ../scss/sites/magazine.scss */
+  /* line 607, ../scss/sites/magazine.scss */
   .siteHome #minisite .homePostsDisplay #featuredItems .post .content-block .desc p {
     font-size: 1.125rem;
   }
 }
-/* line 551, ../scss/sites/magazine.scss */
+/* line 616, ../scss/sites/magazine.scss */
 .siteHome #minisite .homePostsDisplay #featuredItems .post .content-block:before {
   display: block;
   content: "";
@@ -516,7 +566,7 @@
   left: 50%;
   margin-left: -0.5625rem;
 }
-/* line 565, ../scss/sites/magazine.scss */
+/* line 630, ../scss/sites/magazine.scss */
 .siteHome #minisite .homePostsDisplay #featuredItems .post .content-block:after {
   display: block;
   width: 12.5rem;
@@ -524,111 +574,111 @@
   content: "";
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
-/* line 576, ../scss/sites/magazine.scss */
+/* line 641, ../scss/sites/magazine.scss */
 .siteHome #minisite .homePostsDisplay #featuredItems .post .primaryImage {
   position: relative;
 }
 @media only screen and (min-width: 63.8125em) {
-  /* line 583, ../scss/sites/magazine.scss */
+  /* line 648, ../scss/sites/magazine.scss */
   .siteHome #minisite .homePostsDisplay #featuredItems .post .primaryImage:before {
     content: "";
     display: block;
     height: 100%;
     width: 100px;
     width: 31.25%;
-    background: rgba(255, 255, 255, 0.55);
+    background: rgba(255, 255, 255, 0.75);
     position: absolute;
     left: 0;
     top: 0;
   }
-  /* line 595, ../scss/sites/magazine.scss */
+  /* line 660, ../scss/sites/magazine.scss */
   .siteHome #minisite .homePostsDisplay #featuredItems .post .primaryImage img {
     width: 100%;
   }
 }
 @media only screen and (min-width: 90.063em) {
-  /* line 601, ../scss/sites/magazine.scss */
+  /* line 666, ../scss/sites/magazine.scss */
   .siteHome #minisite .homePostsDisplay #featuredItems .post .primaryImage:before {
     width: 25%;
   }
 }
-/* line 614, ../scss/sites/magazine.scss */
+/* line 679, ../scss/sites/magazine.scss */
 .siteHome #minisite .homePostsDisplay #features .image-block,
 .siteHome #minisite .homePostsDisplay #features .category-block {
   border-bottom: 7px solid #1073ce;
 }
 @media only screen and (min-width: 63.8125em) {
-  /* line 619, ../scss/sites/magazine.scss */
+  /* line 684, ../scss/sites/magazine.scss */
   .siteHome #minisite .homePostsDisplay #features .post {
     width: 33.3333%;
   }
-  /* line 623, ../scss/sites/magazine.scss */
+  /* line 688, ../scss/sites/magazine.scss */
   .siteHome #minisite .homePostsDisplay #features .post:nth-of-type(1), .siteHome #minisite .homePostsDisplay #features .post:nth-of-type(2) {
     width: 66.66666%;
   }
 }
-/* line 630, ../scss/sites/magazine.scss */
+/* line 695, ../scss/sites/magazine.scss */
 .siteHome #minisite .homePostsDisplay #alumni-profiles {
   clear: both;
 }
-/* line 634, ../scss/sites/magazine.scss */
+/* line 699, ../scss/sites/magazine.scss */
 .siteHome #minisite .homePostsDisplay #alumni-profiles .image-block,
 .siteHome #minisite .homePostsDisplay #alumni-profiles .category-block {
   border-bottom: 7px solid #4a8512;
 }
 @media only screen and (min-width: 63.8125em) {
-  /* line 640, ../scss/sites/magazine.scss */
+  /* line 705, ../scss/sites/magazine.scss */
   .siteHome #minisite .homePostsDisplay #alumni-profiles .post {
     width: 33.3333333%;
   }
-  /* line 644, ../scss/sites/magazine.scss */
+  /* line 709, ../scss/sites/magazine.scss */
   .siteHome #minisite .homePostsDisplay #alumni-profiles .post:nth-of-type(1), .siteHome #minisite .homePostsDisplay #alumni-profiles .post:nth-of-type(2) {
     width: 66.666666%;
   }
-  /* line 647, ../scss/sites/magazine.scss */
+  /* line 712, ../scss/sites/magazine.scss */
   .siteHome #minisite .homePostsDisplay #alumni-profiles .post:nth-of-type(1) .image-block, .siteHome #minisite .homePostsDisplay #alumni-profiles .post:nth-of-type(2) .image-block {
     float: left;
     width: 50%;
     border-bottom: none;
     border-right: 7px solid #4a8512;
   }
-  /* line 654, ../scss/sites/magazine.scss */
+  /* line 719, ../scss/sites/magazine.scss */
   .siteHome #minisite .homePostsDisplay #alumni-profiles .post:nth-of-type(1) .content-block, .siteHome #minisite .homePostsDisplay #alumni-profiles .post:nth-of-type(2) .content-block {
     float: left;
     width: 50%;
   }
-  /* line 659, ../scss/sites/magazine.scss */
+  /* line 724, ../scss/sites/magazine.scss */
   .siteHome #minisite .homePostsDisplay #alumni-profiles .post:nth-of-type(1) .post-cats a, .siteHome #minisite .homePostsDisplay #alumni-profiles .post:nth-of-type(2) .post-cats a {
     top: 0;
     left: -50%;
     right: auto;
   }
 }
-/* line 673, ../scss/sites/magazine.scss */
+/* line 738, ../scss/sites/magazine.scss */
 .siteHome #minisite .homePostsDisplay #class-notes .image-block,
 .siteHome #minisite .homePostsDisplay #class-notes .category-block {
   border-bottom: 7px solid #9f2112;
 }
-/* line 681, ../scss/sites/magazine.scss */
+/* line 746, ../scss/sites/magazine.scss */
 .siteHome #minisite .homePostsDisplay #in-the-media .image-block,
 .siteHome #minisite .homePostsDisplay #in-the-media .category-block {
   border-bottom: 7px solid #e8a500;
 }
 
 @media only screen and (min-width: 63.8125em) {
-  /* line 689, ../scss/sites/magazine.scss */
+  /* line 754, ../scss/sites/magazine.scss */
   .siteHome #minisite .filteredPostsDisplay {
     margin-left: 31.25%;
   }
 }
 @media only screen and (min-width: 90.063em) {
-  /* line 689, ../scss/sites/magazine.scss */
+  /* line 754, ../scss/sites/magazine.scss */
   .siteHome #minisite .filteredPostsDisplay {
     margin-left: 25%;
   }
 }
 @media only screen and (min-width: 60.0625em) {
-  /* line 698, ../scss/sites/magazine.scss */
+  /* line 763, ../scss/sites/magazine.scss */
   .siteHome #minisite .filteredPostsDisplay .allPosts {
     position: relative;
     padding-left: 1.25rem;
@@ -638,8 +688,12 @@
     padding-left: 0;
   }
 }
+/* line 771, ../scss/sites/magazine.scss */
+.siteHome #minisite .filteredPostsDisplay .searchAndFilterInterface {
+  text-align: center;
+}
 @media only screen and (min-width: 60.0625em) {
-  /* line 706, ../scss/sites/magazine.scss */
+  /* line 771, ../scss/sites/magazine.scss */
   .siteHome #minisite .filteredPostsDisplay .searchAndFilterInterface {
     position: relative;
     padding-left: 1.25rem;
@@ -647,17 +701,36 @@
     width: 31.25%;
     float: left;
     padding-right: 0;
+    text-align: left;
   }
 }
-/* line 714, ../scss/sites/magazine.scss */
+/* line 780, ../scss/sites/magazine.scss */
+.siteHome #minisite .filteredPostsDisplay .searchAndFilterInterface .filterInterface {
+  margin-top: 2.5rem;
+}
+@media only screen and (min-width: 60.0625em) {
+  /* line 780, ../scss/sites/magazine.scss */
+  .siteHome #minisite .filteredPostsDisplay .searchAndFilterInterface .filterInterface {
+    margin-top: 0;
+  }
+}
+/* line 787, ../scss/sites/magazine.scss */
 .siteHome #minisite .filteredPostsDisplay .searchAndFilterInterface .filterInterface ul {
   margin: 0;
 }
-/* line 717, ../scss/sites/magazine.scss */
+/* line 790, ../scss/sites/magazine.scss */
 .siteHome #minisite .filteredPostsDisplay .searchAndFilterInterface .filterInterface ul li {
   margin-bottom: 0.75rem;
+  display: inline-block;
+  margin: 0.375rem;
 }
-/* line 720, ../scss/sites/magazine.scss */
+@media only screen and (min-width: 60.0625em) {
+  /* line 790, ../scss/sites/magazine.scss */
+  .siteHome #minisite .filteredPostsDisplay .searchAndFilterInterface .filterInterface ul li {
+    display: block;
+  }
+}
+/* line 799, ../scss/sites/magazine.scss */
 .siteHome #minisite .filteredPostsDisplay .searchAndFilterInterface .filterInterface ul li strong {
   border: 1px solid #000;
   padding: 0.125rem 0.5rem;
@@ -667,7 +740,7 @@
   -o-border-radius: 6px;
   border-radius: 6px;
 }
-/* line 726, ../scss/sites/magazine.scss */
+/* line 805, ../scss/sites/magazine.scss */
 .siteHome #minisite .filteredPostsDisplay .searchAndFilterInterface .filterInterface ul li a {
   background: black;
   color: #FFF;
@@ -678,72 +751,72 @@
   -o-border-radius: 6px;
   border-radius: 6px;
 }
-/* line 735, ../scss/sites/magazine.scss */
+/* line 814, ../scss/sites/magazine.scss */
 .siteHome #minisite .filteredPostsDisplay .searchAndFilterInterface .filterInterface ul li:nth-of-type(1) strong {
   color: black;
 }
-/* line 742, ../scss/sites/magazine.scss */
+/* line 821, ../scss/sites/magazine.scss */
 .siteHome #minisite .filteredPostsDisplay .searchAndFilterInterface .filterInterface ul li:nth-of-type(2) strong {
   color: #4a8512;
   border-color: #4a8512;
 }
-/* line 748, ../scss/sites/magazine.scss */
+/* line 827, ../scss/sites/magazine.scss */
 .siteHome #minisite .filteredPostsDisplay .searchAndFilterInterface .filterInterface ul li:nth-of-type(2) a {
   background: #4a8512;
 }
-/* line 755, ../scss/sites/magazine.scss */
+/* line 834, ../scss/sites/magazine.scss */
 .siteHome #minisite .filteredPostsDisplay .searchAndFilterInterface .filterInterface ul li:nth-of-type(3) strong {
   color: #9f2112;
   border-color: #9f2112;
 }
-/* line 760, ../scss/sites/magazine.scss */
+/* line 839, ../scss/sites/magazine.scss */
 .siteHome #minisite .filteredPostsDisplay .searchAndFilterInterface .filterInterface ul li:nth-of-type(3) a {
   background: #9f2112;
 }
-/* line 767, ../scss/sites/magazine.scss */
+/* line 846, ../scss/sites/magazine.scss */
 .siteHome #minisite .filteredPostsDisplay .searchAndFilterInterface .filterInterface ul li:nth-of-type(4) strong {
   color: #1073ce;
   border-color: #1073ce;
 }
-/* line 772, ../scss/sites/magazine.scss */
+/* line 851, ../scss/sites/magazine.scss */
 .siteHome #minisite .filteredPostsDisplay .searchAndFilterInterface .filterInterface ul li:nth-of-type(4) a {
   background: #1073ce;
 }
-/* line 779, ../scss/sites/magazine.scss */
+/* line 858, ../scss/sites/magazine.scss */
 .siteHome #minisite .filteredPostsDisplay .searchAndFilterInterface .filterInterface ul li:nth-of-type(5) strong {
   color: #e8a500;
   border-color: #e8a500;
 }
-/* line 784, ../scss/sites/magazine.scss */
+/* line 863, ../scss/sites/magazine.scss */
 .siteHome #minisite .filteredPostsDisplay .searchAndFilterInterface .filterInterface ul li:nth-of-type(5) a {
   background: #e8a500;
 }
-/* line 794, ../scss/sites/magazine.scss */
+/* line 873, ../scss/sites/magazine.scss */
 .siteHome #minisite .filteredPostsDisplay .searchAndFilterInterface + p {
   clear: both;
   padding-top: 1.25rem;
 }
-/* line 800, ../scss/sites/magazine.scss */
+/* line 879, ../scss/sites/magazine.scss */
 .siteHome #minisite .filteredPostsDisplay .filterMessage {
   padding-bottom: 1.25rem;
   margin-bottom: 1.25rem;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
-/* line 805, ../scss/sites/magazine.scss */
+/* line 884, ../scss/sites/magazine.scss */
 .siteHome #minisite .filteredPostsDisplay .filterMessage h3 {
   font-size: 1.4375rem;
   margin: 0;
 }
-/* line 808, ../scss/sites/magazine.scss */
+/* line 887, ../scss/sites/magazine.scss */
 .siteHome #minisite .filteredPostsDisplay .filterMessage h3 strong {
   margin-right: 0.75rem;
 }
-/* line 811, ../scss/sites/magazine.scss */
+/* line 890, ../scss/sites/magazine.scss */
 .siteHome #minisite .filteredPostsDisplay .filterMessage span {
   font-size: 1rem;
   white-space: nowrap;
 }
-/* line 828, ../scss/sites/magazine.scss */
+/* line 907, ../scss/sites/magazine.scss */
 .siteHome #minisite .filteredPostsDisplay .post {
   *zoom: 1;
 }
@@ -757,19 +830,19 @@
   clear: both;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 828, ../scss/sites/magazine.scss */
+  /* line 907, ../scss/sites/magazine.scss */
   .siteHome #minisite .filteredPostsDisplay .post {
     padding-left: 13.75rem;
   }
 }
-/* line 837, ../scss/sites/magazine.scss */
+/* line 916, ../scss/sites/magazine.scss */
 .siteHome #minisite .filteredPostsDisplay .post .primaryImage {
   width: 20%;
   float: right;
   margin: 0 0 1rem 1rem;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 837, ../scss/sites/magazine.scss */
+  /* line 916, ../scss/sites/magazine.scss */
   .siteHome #minisite .filteredPostsDisplay .post .primaryImage {
     width: auto;
     float: left;
@@ -778,65 +851,67 @@
     display: block;
   }
 }
-/* line 851, ../scss/sites/magazine.scss */
+/* line 930, ../scss/sites/magazine.scss */
 .siteHome #minisite .filteredPostsDisplay .post .post-cats {
   display: none;
 }
-/* line 855, ../scss/sites/magazine.scss */
+/* line 934, ../scss/sites/magazine.scss */
 .siteHome #minisite .filteredPostsDisplay .post .content-block {
   position: relative;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 855, ../scss/sites/magazine.scss */
+  /* line 934, ../scss/sites/magazine.scss */
   .siteHome #minisite .filteredPostsDisplay .post .content-block {
     padding-top: 1rem;
   }
 }
-/* line 862, ../scss/sites/magazine.scss */
+/* line 941, ../scss/sites/magazine.scss */
 .siteHome #minisite .filteredPostsDisplay .post .content-block > a {
   display: block;
   color: #444444 !important;
 }
-/* line 867, ../scss/sites/magazine.scss */
+/* line 946, ../scss/sites/magazine.scss */
 .siteHome #minisite .filteredPostsDisplay .post .content-block .date {
   margin-bottom: 0.25rem;
+  color: #999;
+  font-weight: 300;
 }
 
-/* line 878, ../scss/sites/magazine.scss */
+/* line 959, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .topImage {
   position: relative;
   margin-bottom: 2.5rem;
 }
 @media only screen and (min-width: 63.8125em) {
-  /* line 878, ../scss/sites/magazine.scss */
+  /* line 959, ../scss/sites/magazine.scss */
   .siteHome #minisite .fullPostDisplay .topImage {
     margin-top: -2.5rem;
   }
-  /* line 888, ../scss/sites/magazine.scss */
+  /* line 969, ../scss/sites/magazine.scss */
   .siteHome #minisite .fullPostDisplay .topImage:before {
     content: "";
     display: block;
     height: 100%;
     width: 100px;
     width: 31.25%;
-    background: rgba(255, 255, 255, 0.55);
+    background: rgba(255, 255, 255, 0.75);
     position: absolute;
     left: 0;
     top: 0;
   }
-  /* line 900, ../scss/sites/magazine.scss */
+  /* line 981, ../scss/sites/magazine.scss */
   .siteHome #minisite .fullPostDisplay .topImage img {
     width: 100%;
   }
 }
 @media only screen and (min-width: 90.063em) {
-  /* line 906, ../scss/sites/magazine.scss */
+  /* line 987, ../scss/sites/magazine.scss */
   .siteHome #minisite .fullPostDisplay .topImage:before {
     width: 25%;
   }
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 913, ../scss/sites/magazine.scss */
+  /* line 994, ../scss/sites/magazine.scss */
   .siteHome #minisite .fullPostDisplay .fullPost {
     position: relative;
     padding-left: 1.25rem;
@@ -849,7 +924,7 @@
   }
 }
 @media only screen and (min-width: 63.8125em) {
-  /* line 913, ../scss/sites/magazine.scss */
+  /* line 994, ../scss/sites/magazine.scss */
   .siteHome #minisite .fullPostDisplay .fullPost {
     position: relative;
     padding-left: 0;
@@ -863,7 +938,7 @@
   }
 }
 @media only screen and (min-width: 80em) {
-  /* line 913, ../scss/sites/magazine.scss */
+  /* line 994, ../scss/sites/magazine.scss */
   .siteHome #minisite .fullPostDisplay .fullPost {
     position: relative;
     padding-left: 0;
@@ -877,51 +952,51 @@
     float: left;
   }
 }
-/* line 931, ../scss/sites/magazine.scss */
+/* line 1012, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .fullPost .text > *:last-child {
   padding-bottom: 0;
   margin-bottom: 0;
 }
-/* line 937, ../scss/sites/magazine.scss */
+/* line 1018, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .fullPost .text p,
 .siteHome #minisite .fullPostDisplay .fullPost .text li {
   line-height: 1.8;
 }
-/* line 941, ../scss/sites/magazine.scss */
+/* line 1022, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .fullPost .text p.intro {
   text-align: center;
   font-size: 1.6875rem;
   margin-bottom: 2.5rem;
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
 }
-/* line 948, ../scss/sites/magazine.scss */
+/* line 1029, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .fullPost .text h4 {
   font-size: 1.6875rem;
   margin-bottom: 2.5rem;
   margin-bottom: 1.25rem;
 }
-/* line 954, ../scss/sites/magazine.scss */
+/* line 1035, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .fullPost .text h5 {
   font-size: 1.4375rem;
   color: #1073ce;
   font-weight: 400;
 }
-/* line 960, ../scss/sites/magazine.scss */
+/* line 1041, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .fullPost .text p {
   font-size: 1rem;
 }
-/* line 964, ../scss/sites/magazine.scss */
+/* line 1045, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .fullPost .text blockquote {
   margin: 0 2%;
   border: none;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 964, ../scss/sites/magazine.scss */
+  /* line 1045, ../scss/sites/magazine.scss */
   .siteHome #minisite .fullPostDisplay .fullPost .text blockquote {
     margin: 0 10%;
   }
 }
-/* line 973, ../scss/sites/magazine.scss */
+/* line 1054, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .fullPost .text blockquote * {
   font-size: 1.5rem;
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
@@ -929,39 +1004,35 @@
   line-height: 1.5;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 973, ../scss/sites/magazine.scss */
+  /* line 1054, ../scss/sites/magazine.scss */
   .siteHome #minisite .fullPostDisplay .fullPost .text blockquote * {
     font-size: 2rem;
   }
 }
-/* line 984, ../scss/sites/magazine.scss */
-.siteHome #minisite .fullPostDisplay .fullPost .text img {
-  margin: 0;
+/* line 1065, ../scss/sites/magazine.scss */
+.siteHome #minisite .fullPostDisplay .fullPost .text figure {
+  margin: 0 0 2.5rem;
 }
-/* line 991, ../scss/sites/magazine.scss */
-.siteHome #minisite .fullPostDisplay .fullPost .text img.left,
-.siteHome #minisite .fullPostDisplay .fullPost .text img[align="left"],
-.siteHome #minisite .fullPostDisplay .fullPost .text img.right,
-.siteHome #minisite .fullPostDisplay .fullPost .text img[align="right"] {
+/* line 1070, ../scss/sites/magazine.scss */
+.siteHome #minisite .fullPostDisplay .fullPost .text figure.left
+figure.right {
+  display: block;
   max-width: 100%;
   width: 100%;
   float: none;
-  margin: 0 0 2.5rem;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 1000, ../scss/sites/magazine.scss */
-  .siteHome #minisite .fullPostDisplay .fullPost .text img {
+  /* line 1079, ../scss/sites/magazine.scss */
+  .siteHome #minisite .fullPostDisplay .fullPost .text figure {
     max-width: 1040px;
     width: 140%;
     height: auto;
     margin-left: -20%;
     padding-left: 1.25rem;
   }
-  /* line 1011, ../scss/sites/magazine.scss */
-  .siteHome #minisite .fullPostDisplay .fullPost .text img.left,
-  .siteHome #minisite .fullPostDisplay .fullPost .text img[align="left"],
-  .siteHome #minisite .fullPostDisplay .fullPost .text img.right,
-  .siteHome #minisite .fullPostDisplay .fullPost .text img[align="right"] {
+  /* line 1089, ../scss/sites/magazine.scss */
+  .siteHome #minisite .fullPostDisplay .fullPost .text figure.left,
+  .siteHome #minisite .fullPostDisplay .fullPost .text figure.right {
     max-width: 100%;
     width: 100%;
     float: none;
@@ -970,8 +1041,8 @@
   }
 }
 @media only screen and (min-width: 63.8125em) {
-  /* line 1022, ../scss/sites/magazine.scss */
-  .siteHome #minisite .fullPostDisplay .fullPost .text img {
+  /* line 1100, ../scss/sites/magazine.scss */
+  .siteHome #minisite .fullPostDisplay .fullPost .text figure {
     max-width: 1040px;
     width: 111%;
     height: auto;
@@ -979,17 +1050,15 @@
     margin-right: -5.5%;
     padding-left: 0;
   }
-  /* line 1033, ../scss/sites/magazine.scss */
-  .siteHome #minisite .fullPostDisplay .fullPost .text img.left,
-  .siteHome #minisite .fullPostDisplay .fullPost .text img[align="left"] {
+  /* line 1110, ../scss/sites/magazine.scss */
+  .siteHome #minisite .fullPostDisplay .fullPost .text figure.left {
     width: 100%;
     max-width: 640px;
     margin: 0 5% 2.5rem -40%;
     float: left;
   }
-  /* line 1040, ../scss/sites/magazine.scss */
-  .siteHome #minisite .fullPostDisplay .fullPost .text img.right,
-  .siteHome #minisite .fullPostDisplay .fullPost .text img[align="right"] {
+  /* line 1117, ../scss/sites/magazine.scss */
+  .siteHome #minisite .fullPostDisplay .fullPost .text figure.right {
     width: 100%;
     max-width: 640px;
     margin: 0 5% 2.5rem -40%;
@@ -997,31 +1066,29 @@
   }
 }
 @media only screen and (min-width: 80em) {
-  /* line 1052, ../scss/sites/magazine.scss */
-  .siteHome #minisite .fullPostDisplay .fullPost .text img {
+  /* line 1129, ../scss/sites/magazine.scss */
+  .siteHome #minisite .fullPostDisplay .fullPost .text figure {
     max-width: 1040px;
     width: 140%;
     height: auto;
     margin-left: -20%;
     padding-left: 0;
   }
-  /* line 1061, ../scss/sites/magazine.scss */
-  .siteHome #minisite .fullPostDisplay .fullPost .text img.left,
-  .siteHome #minisite .fullPostDisplay .fullPost .text img[align="left"] {
+  /* line 1137, ../scss/sites/magazine.scss */
+  .siteHome #minisite .fullPostDisplay .fullPost .text figure.left {
     margin-left: -50%;
   }
-  /* line 1065, ../scss/sites/magazine.scss */
-  .siteHome #minisite .fullPostDisplay .fullPost .text img.right,
-  .siteHome #minisite .fullPostDisplay .fullPost .text img[align="right"] {
+  /* line 1141, ../scss/sites/magazine.scss */
+  .siteHome #minisite .fullPostDisplay .fullPost .text figure.right {
     margin: 0 -40% 2.5rem 5%;
     float: right !important;
   }
 }
-/* line 1074, ../scss/sites/magazine.scss */
+/* line 1238, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .issueName {
   display: none;
 }
-/* line 1080, ../scss/sites/magazine.scss */
+/* line 1244, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .firstChunk,
 .siteHome #minisite .fullPostDisplay .relatedItems,
 .siteHome #minisite .fullPostDisplay .secondChunk {
@@ -1030,12 +1097,12 @@
   padding-right: 0;
 }
 @media only screen and (min-width: 63.8125em) {
-  /* line 1086, ../scss/sites/magazine.scss */
+  /* line 1250, ../scss/sites/magazine.scss */
   .siteHome #minisite .fullPostDisplay .firstChunk {
     padding: 2.5rem 5%;
   }
 }
-/* line 1095, ../scss/sites/magazine.scss */
+/* line 1259, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .postTitle {
   text-align: center;
   color: #1073ce;
@@ -1043,17 +1110,17 @@
   margin-bottom: 2.5rem;
 }
 @media only screen and (min-width: 90.063em) {
-  /* line 1095, ../scss/sites/magazine.scss */
+  /* line 1259, ../scss/sites/magazine.scss */
   .siteHome #minisite .fullPostDisplay .postTitle {
     font-size: 2.875rem;
     text-align: center;
   }
 }
-/* line 1107, ../scss/sites/magazine.scss */
+/* line 1271, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .postMeta {
   text-align: center;
 }
-/* line 1110, ../scss/sites/magazine.scss */
+/* line 1274, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .postMeta:after {
   display: block;
   width: 12.5rem;
@@ -1062,7 +1129,7 @@
   background: rgba(0, 0, 0, 0.1);
   content: "";
 }
-/* line 1121, ../scss/sites/magazine.scss */
+/* line 1285, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .author {
   text-transform: uppercase;
   font-size: 0.75rem;
@@ -1070,19 +1137,19 @@
   padding: 0;
   border: none;
 }
-/* line 1128, ../scss/sites/magazine.scss */
+/* line 1292, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .author .name {
   text-transform: none;
   font-size: 1rem;
   display: inline-block;
   margin-left: 0.25rem;
 }
-/* line 1137, ../scss/sites/magazine.scss */
+/* line 1301, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .social.top,
 .siteHome #minisite .fullPostDisplay .social.bottom {
   text-align: center;
 }
-/* line 1141, ../scss/sites/magazine.scss */
+/* line 1305, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .socialIcons {
   margin: 0;
   *zoom: 1;
@@ -1096,11 +1163,11 @@
 .siteHome #minisite .fullPostDisplay .socialIcons:after {
   clear: both;
 }
-/* line 1145, ../scss/sites/magazine.scss */
+/* line 1309, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .socialIcons li {
   display: inline-block;
 }
-/* line 1152, ../scss/sites/magazine.scss */
+/* line 1316, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .socialIcons li a {
   display: block;
   padding: 0.75rem;
@@ -1114,7 +1181,7 @@
   margin: 0 0.625rem;
   width: auto;
 }
-/* line 1162, ../scss/sites/magazine.scss */
+/* line 1326, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .socialIcons li a:before {
   line-height: 1;
   font-size: 1.125rem;
@@ -1123,51 +1190,51 @@
   display: block;
   text-align: center;
 }
-/* line 1172, ../scss/sites/magazine.scss */
+/* line 1336, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .socialIcons li a:hover {
   background: #1073ce;
   border-color: #1073ce;
   color: #FFF;
 }
-/* line 1181, ../scss/sites/magazine.scss */
+/* line 1345, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .socialIcons li.facebook a:before {
   content: "\f09a";
 }
-/* line 1188, ../scss/sites/magazine.scss */
+/* line 1352, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .socialIcons li.twitter a:before {
   content: "\f099";
 }
-/* line 1192, ../scss/sites/magazine.scss */
+/* line 1356, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .socialIcons li.twitter a:hover {
   background: #4a8512;
   border-color: #4a8512;
   color: #FFF;
 }
-/* line 1201, ../scss/sites/magazine.scss */
+/* line 1365, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .socialIcons li.google a:before {
   content: "\f0d5";
 }
-/* line 1205, ../scss/sites/magazine.scss */
+/* line 1369, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .socialIcons li.google a:hover {
   background: #9f2112;
   border-color: #9f2112;
   color: #FFF;
 }
-/* line 1214, ../scss/sites/magazine.scss */
+/* line 1378, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .socialIcons li.email a:before {
   content: "\f003";
 }
-/* line 1218, ../scss/sites/magazine.scss */
+/* line 1382, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .socialIcons li.email a:hover {
   background: #e8a500;
   border-color: #e8a500;
   color: #FFF;
 }
-/* line 1227, ../scss/sites/magazine.scss */
+/* line 1391, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .relatedItems {
   padding-left: 0;
 }
-/* line 1232, ../scss/sites/magazine.scss */
+/* line 1396, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .relatedItems .fromIssue,
 .siteHome #minisite .fullPostDisplay .relatedItems .categories {
   text-align: center;
@@ -1175,18 +1242,18 @@
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
   font-weight: 300;
 }
-/* line 1238, ../scss/sites/magazine.scss */
+/* line 1402, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .relatedItems .fromIssue a,
 .siteHome #minisite .fullPostDisplay .relatedItems .categories a {
   text-decoration: underline;
 }
-/* line 1244, ../scss/sites/magazine.scss */
+/* line 1408, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .relatedItems .categories {
   text-align: center;
   font-size: 1.125rem;
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
 }
-/* line 1251, ../scss/sites/magazine.scss */
+/* line 1416, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .relatedItems .categories h4,
 .siteHome #minisite .fullPostDisplay .relatedItems .categories ul,
 .siteHome #minisite .fullPostDisplay .relatedItems .categories li {
@@ -1195,16 +1262,16 @@
   font-size: 1.125rem;
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
 }
-/* line 1258, ../scss/sites/magazine.scss */
+/* line 1423, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .relatedItems .categories ul {
   margin: 0;
   padding: 0;
 }
-/* line 1263, ../scss/sites/magazine.scss */
+/* line 1428, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .relatedItems .categories li {
   margin-left: 0.375rem;
 }
-/* line 1270, ../scss/sites/magazine.scss */
+/* line 1435, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .searchAndFilterInterface {
   margin: 2.5rem 0;
   padding: 2.5rem 0 1.25rem;
@@ -1212,12 +1279,16 @@
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   text-align: center;
 }
-/* line 1279, ../scss/sites/magazine.scss */
+/* line 1444, ../scss/sites/magazine.scss */
+.siteHome #minisite .fullPostDisplay .searchAndFilterInterface ul {
+  margin-left: 0;
+}
+/* line 1448, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .searchAndFilterInterface li {
   display: inline-block;
   margin: 0.25rem;
 }
-/* line 1283, ../scss/sites/magazine.scss */
+/* line 1452, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .searchAndFilterInterface li a {
   padding: 0.125rem 0.5rem;
   -webkit-border-radius: 6px;
@@ -1227,7 +1298,7 @@
   border-radius: 6px;
   color: white;
 }
-/* line 1289, ../scss/sites/magazine.scss */
+/* line 1458, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .searchAndFilterInterface li strong {
   background: black;
   color: #FFF;
@@ -1238,19 +1309,19 @@
   -o-border-radius: 6px;
   border-radius: 6px;
 }
-/* line 1298, ../scss/sites/magazine.scss */
+/* line 1467, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .searchAndFilterInterface li:nth-of-type(1) a {
   background: #4a8512;
 }
-/* line 1305, ../scss/sites/magazine.scss */
+/* line 1474, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .searchAndFilterInterface li:nth-of-type(2) a {
   background: #9f2112;
 }
-/* line 1312, ../scss/sites/magazine.scss */
+/* line 1481, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .searchAndFilterInterface li:nth-of-type(3) a {
   background: #1073ce;
 }
-/* line 1319, ../scss/sites/magazine.scss */
+/* line 1488, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .searchAndFilterInterface li:nth-of-type(4) a {
   background: #e8a500;
 }

@@ -71,7 +71,7 @@
     - restart apache
 
   - name: copy reason config files for vagrant
-    copy: src={{ item }} dest=/vagrant/settings/{{ item }}
+    copy: src={{ item }} dest=/var/reason_package/settings/{{ item }}
     with_items:
       - dbs.xml
       - error_handler_settings.php
@@ -83,7 +83,7 @@
 
   - name: Apache enable rewrite
     command: a2enmod rewrite creates=/etc/apache2/mods-enabled/rewrite.load
-    notify: 
+    notify:
       - restart apache
       - update urls
 
