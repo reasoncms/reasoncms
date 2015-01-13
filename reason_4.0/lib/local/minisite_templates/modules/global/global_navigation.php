@@ -29,7 +29,7 @@
 					<li><a href="/parents">Parents</a></li>
 				</ul>
 				
-				<ul class="sections">
+				<ul class="minisites">
 					<li>
 						<a href="/admissions">Admissions</a>
 					</li>
