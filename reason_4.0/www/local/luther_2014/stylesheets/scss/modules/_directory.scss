@@ -1,0 +1,163 @@
+//
+// ASSET STYLES
+//
+// @author Gage Dykema
+//
+
+// Foundation imports
+@import "settings";
+@import "foundation/components/grid";
+
+// Compass imports
+@import "compass/css3";
+
+// Font Awesome Imports
+@import "font-awesome/variables";
+@import "font-awesome/core";
+
+// Luther imports
+@import "extends";
+@import "mixins";
+
+#directory{
+  margin: 0 0 $column-gutter;
+
+  .directoryName,
+  .directoryInfo {
+
+    @media
+    #{$medium-up} {
+      margin-left: rem-calc(200) !important;
+    }
+  }
+
+  .directoryName {
+    margin: 0;
+    font-size: $h3-font-size;
+    font-weight: 400;
+  }
+
+  .directoryInfo {
+
+  }
+
+  .directoryTitle {
+    font-size: $h5-font-size;
+    margin-bottom: 0px;
+  }
+
+  .directoryContact {
+    margin-top: $column-gutter/1.75;
+    margin-left: $column-gutter/2;
+
+    li {
+
+      margin-left: rem-calc(40);
+
+      strong {
+        @extend .screenreader;
+      }
+
+      &:before {
+        @extend .fa;
+        width: rem-calc(32);
+        margin-left: - rem-calc(36);
+        text-align: center;
+      }
+
+    }
+
+    .directoryOffice {
+
+      &:before {
+        content: $fa-var-map-marker;
+      }
+    }
+
+    .directoryPhone {
+      &:before {
+        content: $fa-var-phone;
+      }
+    }
+
+    .directoryEmail {
+      &:before {
+        content: $fa-var-at;
+      }
+    }
+
+    .directoryStudentResidence {
+      &:before {
+        content: $fa-var-building;
+      }
+    }
+
+    .directorySPO {
+      &:before {
+        content: $fa-var-envelope;
+      }
+    }
+
+    .directoryUsername {
+      &:before {
+        content: $fa-var-user;
+      }
+    }
+
+    .directoryAffiliations {
+      &:before {
+        content: $fa-var-users;
+      }
+    }
+
+    .directoryHomeAddress {
+      &:before {
+        content: $fa-var-home;
+      }
+    }
+
+    .directoryMobile {
+      &:before {
+        content: $fa-var-mobile;
+      }
+    }
+
+    .directoryBirthday {
+      &:before {
+        content: $fa-var-birthday-cake;
+      }
+    }
+
+    .directoryLastUpdate {
+      &:before {
+        content: $fa-var-history;
+      }
+    }
+
+    .directoryDepartment {
+      &:before {
+        content: $fa-var-university;
+      }
+    }
+
+    .directoryAdvisor {
+      &:before {
+        content: $fa-var-graduation-cap;
+      }
+    }
+
+    //.directoryAdvisor {
+    //  &:before {
+    //    content: $fa-var-comments;
+    //  }
+    //}
+
+    .directoryTerms {
+      &:before {
+        content: $fa-var-book;
+      }
+    }
+
+  }
+
+}
