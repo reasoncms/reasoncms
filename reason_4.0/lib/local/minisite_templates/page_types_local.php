@@ -594,7 +594,22 @@ $GLOBALS['_reason_page_types_local'] = array(
 	//'publication' => get_luther_publication(),
 	//'publication_feature_autoplay' => get_luther_publication("publication_feature_autoplay"),
 	//'publication_section_nav' => get_luther_publication("publication_section_nav"),
-
+	'siblings_prev_next' => array(
+		'post_main_head' => array(
+			'module' => 'image_sidebar',
+			'num_to_display' => 1,
+			'thumbnail_width' => 1200,
+			'thumbnail_height' => 575,
+			'thumbnail_crop' => 'fit',
+			'caption_flag' => false,
+		),
+		'main_post_2' => 'luther_image_slideshow',
+		'main_post_3' => array(
+			'module' => 'siblings',
+			'previous_next' => true,
+		),
+		'pre_sidebar_2' => '',
+	),
 	'sidebar_blurb' => array(
 		'main_4' => '',
 		'pre_sidebar_2' => 'main_blurb',
