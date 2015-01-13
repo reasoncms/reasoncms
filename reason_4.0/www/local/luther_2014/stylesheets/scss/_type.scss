@@ -149,6 +149,16 @@ blockquote {
 			background: rgba($lc-red, .25);
 			border: 1px solid rgba($lc-red, .45);
 		}
+		
+		&.callout-blue-light {
+			background: rgba($lc-blue-light, .25);
+			border: 1px solid rgba($lc-blue-light, .45);
+		}
+		
+		&.callout-blue-dark {
+			background: rgba($lc-blue-dark, .25);
+			border: 1px solid rgba($lc-blue-dark, .45);
+		}
 	}
 
 	h1,

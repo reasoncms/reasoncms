@@ -678,7 +678,33 @@ blockquote {
   background: rgba(159, 33, 18, 0.25);
   border: 1px solid rgba(159, 33, 18, 0.45);
 }
-/* line 159, scss/_type.scss */
+/* line 153, scss/_type.scss */
+#pageContent .callOut.callout-blue-light,
+#pageContent .callout.callout-blue-light, .fullPost .text .callOut.callout-blue-light,
+.fullPost .text .callout.callout-blue-light, #relatedSections .blurb .callOut.callout-blue-light,
+#relatedSections .blurb .callout.callout-blue-light, #contentSections .blurb .callOut.callout-blue-light,
+#contentSections .blurb .callout.callout-blue-light, #faq .answer .callOut.callout-blue-light,
+#faq .answer .callout.callout-blue-light, .facStaffContent .callOut.callout-blue-light,
+.facStaffContent .callout.callout-blue-light, .eventContent .callOut.callout-blue-light,
+.eventContent .callout.callout-blue-light, .flash-notice .callOut.callout-blue-light,
+.flash-notice .callout.callout-blue-light {
+  background: rgba(16, 115, 206, 0.25);
+  border: 1px solid rgba(16, 115, 206, 0.45);
+}
+/* line 158, scss/_type.scss */
+#pageContent .callOut.callout-blue-dark,
+#pageContent .callout.callout-blue-dark, .fullPost .text .callOut.callout-blue-dark,
+.fullPost .text .callout.callout-blue-dark, #relatedSections .blurb .callOut.callout-blue-dark,
+#relatedSections .blurb .callout.callout-blue-dark, #contentSections .blurb .callOut.callout-blue-dark,
+#contentSections .blurb .callout.callout-blue-dark, #faq .answer .callOut.callout-blue-dark,
+#faq .answer .callout.callout-blue-dark, .facStaffContent .callOut.callout-blue-dark,
+.facStaffContent .callout.callout-blue-dark, .eventContent .callOut.callout-blue-dark,
+.eventContent .callout.callout-blue-dark, .flash-notice .callOut.callout-blue-dark,
+.flash-notice .callout.callout-blue-dark {
+  background: rgba(0, 71, 137, 0.25);
+  border: 1px solid rgba(0, 71, 137, 0.45);
+}
+/* line 169, scss/_type.scss */
 #pageContent h1 strong,
 #pageContent h2 strong,
 #pageContent h3 strong,
@@ -714,22 +740,22 @@ blockquote {
 .flash-notice h5 strong {
   font-weight: 400;
 }
-/* line 164, scss/_type.scss */
+/* line 174, scss/_type.scss */
 #pageContent .flash-notice .callout, .fullPost .text .flash-notice .callout, #relatedSections .blurb .flash-notice .callout, #contentSections .blurb .flash-notice .callout, #faq .answer .flash-notice .callout, .facStaffContent .flash-notice .callout, .eventContent .flash-notice .callout, .flash-notice .flash-notice .callout {
   margin-bottom: 0;
 }
 
-/* line 170, scss/_type.scss */
+/* line 180, scss/_type.scss */
 #pageContent > *:last-child {
   margin-bottom: 0;
 }
-/* line 177, scss/_type.scss */
+/* line 187, scss/_type.scss */
 #pageContent .first-p-unaltered > *:last-child,
 #pageContent div > *:last-child {
   margin-bottom: 0;
 }
 
-/* line 187, scss/_type.scss */
+/* line 197, scss/_type.scss */
 .tableSorterWrap,
 .tableWrap {
   overflow-x: scroll !important;
@@ -737,21 +763,21 @@ blockquote {
   padding: 1px;
   margin-bottom: 2.5rem;
 }
-/* line 193, scss/_type.scss */
+/* line 203, scss/_type.scss */
 .tableSorterWrap table,
 .tableWrap table {
   border: none;
   width: 100%;
   margin-bottom: 0;
 }
-/* line 199, scss/_type.scss */
+/* line 209, scss/_type.scss */
 .tableSorterWrap .tablesorter,
 .tableWrap .tablesorter {
   overflow-x: scroll !important;
   border: none;
 }
 
-/* line 211, scss/_type.scss */
+/* line 221, scss/_type.scss */
 a.more,
 .pubLinks a,
 p.more a {
@@ -761,7 +787,7 @@ p.more a {
   font-weight: 700;
   text-transform: uppercase;
 }
-/* line 218, scss/_type.scss */
+/* line 228, scss/_type.scss */
 a.more:hover,
 .pubLinks a:hover,
 p.more a:hover {
@@ -769,41 +795,41 @@ p.more a:hover {
 }
 
 /* Feeds */
-/* line 225, scss/_type.scss */
+/* line 235, scss/_type.scss */
 #relatedPub .post h4 {
   font-family: "Roboto Slab", serif;
   font-size: 1.125rem;
   font-weight: 400;
 }
 
-/* line 231, scss/_type.scss */
+/* line 241, scss/_type.scss */
 time {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
   font-weight: 300;
 }
 
-/* line 236, scss/_type.scss */
+/* line 246, scss/_type.scss */
 p:empty {
   display: none !important;
 }
 
 /* Nav
 *******************************************/
-/* line 244, scss/_type.scss */
+/* line 254, scss/_type.scss */
 nav {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
 }
 
 /* Tooltips */
-/* line 250, scss/_type.scss */
+/* line 260, scss/_type.scss */
 .tooltip h5 {
   color: white;
 }
-/* line 253, scss/_type.scss */
+/* line 263, scss/_type.scss */
 .tooltip p {
   margin-bottom: 0;
 }
-/* line 256, scss/_type.scss */
+/* line 266, scss/_type.scss */
 .tooltip img {
   margin-bottom: 1.0rem;
   border: 0.5rem solid white;
@@ -1195,7 +1221,7 @@ ul.off-canvas-list li a {
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
 #calendar .eventDetails .eventUrl:before,
 #calendar .eventDetails .calendarExport:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
-.featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, #policyModule .rootPolicyList .rootPolicyItem a:before, #policyModule .policy .decimal .closedAccordion .policyName:after, #policyModule .policy .decimal .openAccordion .policyName:after, #relatedPub .pubLinks a:before, .publication .post p.comments a:before, .publication .post p.more a:after, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after, th.header:after, .twitter-block li:before {
+.featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, #pageContent ul.major-list, #policyModule .rootPolicyList .rootPolicyItem a:before, #policyModule .policy .decimal .closedAccordion .policyName:after, #policyModule .policy .decimal .openAccordion .policyName:after, #relatedPub .pubLinks a:before, .publication .post p.comments a:before, .publication .post p.more a:after, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after, th.header:after, .twitter-block li:before {
   display: inline-block;
   font-family: FontAwesome;
   font-style: normal;
@@ -2183,7 +2209,7 @@ body #wrapper #post-footer a {
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
 #calendar .eventDetails .eventUrl:before,
 #calendar .eventDetails .calendarExport:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
-.featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, #policyModule .rootPolicyList .rootPolicyItem a:before, #policyModule .policy .decimal .closedAccordion .policyName:after, #policyModule .policy .decimal .openAccordion .policyName:after, #relatedPub .pubLinks a:before, .publication .post p.comments a:before, .publication .post p.more a:after, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after, th.header:after, .twitter-block li:before {
+.featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, #pageContent ul.major-list, #policyModule .rootPolicyList .rootPolicyItem a:before, #policyModule .policy .decimal .closedAccordion .policyName:after, #policyModule .policy .decimal .openAccordion .policyName:after, #relatedPub .pubLinks a:before, .publication .post p.comments a:before, .publication .post p.more a:after, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after, th.header:after, .twitter-block li:before {
   display: inline-block;
   font-family: FontAwesome;
   font-style: normal;
@@ -3160,7 +3186,7 @@ body #wrapper #post-footer a {
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
 #calendar .eventDetails .eventUrl:before,
 #calendar .eventDetails .calendarExport:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
-.featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, #policyModule .rootPolicyList .rootPolicyItem a:before, #policyModule .policy .decimal .closedAccordion .policyName:after, #policyModule .policy .decimal .openAccordion .policyName:after, #relatedPub .pubLinks a:before, .publication .post p.comments a:before, .publication .post p.more a:after, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after, th.header:after, .twitter-block li:before {
+.featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, #pageContent ul.major-list, #policyModule .rootPolicyList .rootPolicyItem a:before, #policyModule .policy .decimal .closedAccordion .policyName:after, #policyModule .policy .decimal .openAccordion .policyName:after, #relatedPub .pubLinks a:before, .publication .post p.comments a:before, .publication .post p.more a:after, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after, th.header:after, .twitter-block li:before {
   display: inline-block;
   font-family: FontAwesome;
   font-style: normal;
@@ -3483,7 +3509,7 @@ body.standalone #wrapper #wrapper-col #minisite #contentAndRelated #contentSecti
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
 #calendar .eventDetails .eventUrl:before,
 #calendar .eventDetails .calendarExport:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
-.featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, #policyModule .rootPolicyList .rootPolicyItem a:before, #policyModule .policy .decimal .closedAccordion .policyName:after, #policyModule .policy .decimal .openAccordion .policyName:after, #relatedPub .pubLinks a:before, .publication .post p.comments a:before, .publication .post p.more a:after, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after, th.header:after, .twitter-block li:before {
+.featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, #pageContent ul.major-list, #policyModule .rootPolicyList .rootPolicyItem a:before, #policyModule .policy .decimal .closedAccordion .policyName:after, #policyModule .policy .decimal .openAccordion .policyName:after, #relatedPub .pubLinks a:before, .publication .post p.comments a:before, .publication .post p.more a:after, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after, th.header:after, .twitter-block li:before {
   display: inline-block;
   font-family: FontAwesome;
   font-style: normal;
@@ -4920,7 +4946,7 @@ footer .contactBlurb {
 #calendar .eventDetails .eventMeta li .eventUrl:before,
 #calendar .eventDetails .eventMeta li .calendarExport:before, #calendar .eventDetails .eventMeta li #facultyStaff .facStaff .facStaffContent .more:before, #facultyStaff .facStaff .facStaffContent #calendar .eventDetails .eventMeta li .more:before, #calendar .eventDetails .eventMeta li .featuresModule .feature .featureInfo .featureText a:before, .featuresModule .feature .featureInfo .featureText #calendar .eventDetails .eventMeta li a:before,
 #calendar .eventDetails .eventMeta li .featuresModule .feature .featureInfo .featureText span:before,
-.featuresModule .feature .featureInfo .featureText #calendar .eventDetails .eventMeta li span:before, #calendar .eventDetails .eventMeta li #discoErrorNotice h3:before, #discoErrorNotice #calendar .eventDetails .eventMeta li h3:before, #calendar .eventDetails .eventMeta li #policyModule .rootPolicyList .rootPolicyItem a:before, #policyModule .rootPolicyList .rootPolicyItem #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li #policyModule .policy .decimal .closedAccordion .policyName:after, #policyModule .policy .decimal .closedAccordion #calendar .eventDetails .eventMeta li .policyName:after, #calendar .eventDetails .eventMeta li #policyModule .policy .decimal .openAccordion .policyName:after, #policyModule .policy .decimal .openAccordion #calendar .eventDetails .eventMeta li .policyName:after, #calendar .eventDetails .eventMeta li #relatedPub .pubLinks a:before, #relatedPub .pubLinks #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li .publication .post p.comments a:before, .publication .post p.comments #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li .publication .post p.more a:after, .publication .post p.more #calendar .eventDetails .eventMeta li a:after, #calendar .eventDetails .eventMeta li .publication .fullPost .commentAdded h4:before, .publication .fullPost .commentAdded #calendar .eventDetails .eventMeta li h4:before, #calendar .eventDetails .eventMeta li .publication .nextPrev .prev h4:before, .publication .nextPrev .prev #calendar .eventDetails .eventMeta li h4:before, #calendar .eventDetails .eventMeta li .publication .nextPrev .next h4:after, .publication .nextPrev .next #calendar .eventDetails .eventMeta li h4:after, #calendar .eventDetails .eventMeta li th.header:after {
+.featuresModule .feature .featureInfo .featureText #calendar .eventDetails .eventMeta li span:before, #calendar .eventDetails .eventMeta li #discoErrorNotice h3:before, #discoErrorNotice #calendar .eventDetails .eventMeta li h3:before, #calendar .eventDetails .eventMeta li #pageContent ul.major-list, #pageContent #calendar .eventDetails .eventMeta li ul.major-list, #calendar .eventDetails .eventMeta li #policyModule .rootPolicyList .rootPolicyItem a:before, #policyModule .rootPolicyList .rootPolicyItem #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li #policyModule .policy .decimal .closedAccordion .policyName:after, #policyModule .policy .decimal .closedAccordion #calendar .eventDetails .eventMeta li .policyName:after, #calendar .eventDetails .eventMeta li #policyModule .policy .decimal .openAccordion .policyName:after, #policyModule .policy .decimal .openAccordion #calendar .eventDetails .eventMeta li .policyName:after, #calendar .eventDetails .eventMeta li #relatedPub .pubLinks a:before, #relatedPub .pubLinks #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li .publication .post p.comments a:before, .publication .post p.comments #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li .publication .post p.more a:after, .publication .post p.more #calendar .eventDetails .eventMeta li a:after, #calendar .eventDetails .eventMeta li .publication .fullPost .commentAdded h4:before, .publication .fullPost .commentAdded #calendar .eventDetails .eventMeta li h4:before, #calendar .eventDetails .eventMeta li .publication .nextPrev .prev h4:before, .publication .nextPrev .prev #calendar .eventDetails .eventMeta li h4:before, #calendar .eventDetails .eventMeta li .publication .nextPrev .next h4:after, .publication .nextPrev .next #calendar .eventDetails .eventMeta li h4:after, #calendar .eventDetails .eventMeta li th.header:after {
   margin: 0 0.375rem;
 }
 /* line 737, scss/modules/_events.scss */
@@ -4994,7 +5020,7 @@ footer .contactBlurb {
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
 #calendar .eventDetails .eventUrl:before,
 #calendar .eventDetails .calendarExport:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
-.featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, #policyModule .rootPolicyList .rootPolicyItem a:before, #policyModule .policy .decimal .closedAccordion .policyName:after, #policyModule .policy .decimal .openAccordion .policyName:after, #relatedPub .pubLinks a:before, .publication .post p.comments a:before, .publication .post p.more a:after, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after, th.header:after, .twitter-block li:before {
+.featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, #pageContent ul.major-list, #policyModule .rootPolicyList .rootPolicyItem a:before, #policyModule .policy .decimal .closedAccordion .policyName:after, #policyModule .policy .decimal .openAccordion .policyName:after, #relatedPub .pubLinks a:before, .publication .post p.comments a:before, .publication .post p.more a:after, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after, th.header:after, .twitter-block li:before {
   display: inline-block;
   font-family: FontAwesome;
   font-style: normal;
@@ -5115,7 +5141,7 @@ footer .contactBlurb {
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
 #calendar .eventDetails .eventUrl:before,
 #calendar .eventDetails .calendarExport:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
-.featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, #policyModule .rootPolicyList .rootPolicyItem a:before, #policyModule .policy .decimal .closedAccordion .policyName:after, #policyModule .policy .decimal .openAccordion .policyName:after, #relatedPub .pubLinks a:before, .publication .post p.comments a:before, .publication .post p.more a:after, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after, th.header:after, .twitter-block li:before {
+.featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, #pageContent ul.major-list, #policyModule .rootPolicyList .rootPolicyItem a:before, #policyModule .policy .decimal .closedAccordion .policyName:after, #policyModule .policy .decimal .openAccordion .policyName:after, #relatedPub .pubLinks a:before, .publication .post p.comments a:before, .publication .post p.more a:after, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after, th.header:after, .twitter-block li:before {
   display: inline-block;
   font-family: FontAwesome;
   font-style: normal;
@@ -6868,7 +6894,7 @@ form input[type="submit"]:active {
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
 #calendar .eventDetails .eventUrl:before,
 #calendar .eventDetails .calendarExport:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
-.featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, #policyModule .rootPolicyList .rootPolicyItem a:before, #policyModule .policy .decimal .closedAccordion .policyName:after, #policyModule .policy .decimal .openAccordion .policyName:after, #relatedPub .pubLinks a:before, .publication .post p.comments a:before, .publication .post p.more a:after, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after, th.header:after, .twitter-block li:before {
+.featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, #pageContent ul.major-list, #policyModule .rootPolicyList .rootPolicyItem a:before, #policyModule .policy .decimal .closedAccordion .policyName:after, #policyModule .policy .decimal .openAccordion .policyName:after, #relatedPub .pubLinks a:before, .publication .post p.comments a:before, .publication .post p.more a:after, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after, th.header:after, .twitter-block li:before {
   display: inline-block;
   font-family: FontAwesome;
   font-style: normal;
@@ -7034,12 +7060,61 @@ form input[type="submit"]:active {
   }
 }
 
+/* line 131, scss/modules/_misc.scss */
+#pageContent ul.major-list li {
+  list-style-type: none;
+}
+/* line 134, scss/modules/_misc.scss */
+#pageContent ul.major-list li:before {
+  padding-right: 7px;
+}
+/* line 138, scss/modules/_misc.scss */
+#pageContent ul.major-list .pre-law-major:before {
+  content: "\f0e3";
+}
+/* line 141, scss/modules/_misc.scss */
+#pageContent ul.major-list .pre-medicine-major:before {
+  content: "\f0f1";
+}
+/* line 144, scss/modules/_misc.scss */
+#pageContent ul.major-list .pre-optometry-major:before {
+  content: "\f06e";
+}
+/* line 147, scss/modules/_misc.scss */
+#pageContent ul.major-list .pre-veterinary-medicine-major:before {
+  content: "\f1b0";
+}
+/* line 150, scss/modules/_misc.scss */
+#pageContent ul.major-list .pre-dentistry-major:before {
+  content: "\f0f0";
+}
+/* line 153, scss/modules/_misc.scss */
+#pageContent ul.major-list .pre-engineering-major:before {
+  content: "\f197";
+}
+/* line 156, scss/modules/_misc.scss */
+#pageContent ul.major-list .pre-pharmacy-major:before {
+  content: "\f02b";
+}
+/* line 159, scss/modules/_misc.scss */
+#pageContent ul.major-list .pre-physical-therapy-major:before {
+  content: "\f004";
+}
+/* line 162, scss/modules/_misc.scss */
+#pageContent ul.major-list .pre-seminary-major:before {
+  content: "\f02d";
+}
+/* line 165, scss/modules/_misc.scss */
+#pageContent ul.major-list .other-major:before {
+  content: "\f19c";
+}
+
 /* line 4, scss/font-awesome/_core.scss */
 .fa, #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .jump a:before, #minisite .continueReading a:after, #minisite .feedLink .feedInfo a:before, .assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a[href]:before, #childrenAndGrandchildren li ul .childDesc:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
 #calendar .eventDetails .eventUrl:before,
 #calendar .eventDetails .calendarExport:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
-.featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, #policyModule .rootPolicyList .rootPolicyItem a:before, #policyModule .policy .decimal .closedAccordion .policyName:after, #policyModule .policy .decimal .openAccordion .policyName:after, #relatedPub .pubLinks a:before, .publication .post p.comments a:before, .publication .post p.more a:after, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after, th.header:after, .twitter-block li:before {
+.featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, #pageContent ul.major-list, #policyModule .rootPolicyList .rootPolicyItem a:before, #policyModule .policy .decimal .closedAccordion .policyName:after, #policyModule .policy .decimal .openAccordion .policyName:after, #relatedPub .pubLinks a:before, .publication .post p.comments a:before, .publication .post p.more a:after, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after, th.header:after, .twitter-block li:before {
   display: inline-block;
   font-family: FontAwesome;
   font-style: normal;
@@ -8555,7 +8630,7 @@ th.headerSortDown:after {
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
 #calendar .eventDetails .eventUrl:before,
 #calendar .eventDetails .calendarExport:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
-.featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, #policyModule .rootPolicyList .rootPolicyItem a:before, #policyModule .policy .decimal .closedAccordion .policyName:after, #policyModule .policy .decimal .openAccordion .policyName:after, #relatedPub .pubLinks a:before, .publication .post p.comments a:before, .publication .post p.more a:after, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after, th.header:after, .twitter-block li:before {
+.featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, #pageContent ul.major-list, #policyModule .rootPolicyList .rootPolicyItem a:before, #policyModule .policy .decimal .closedAccordion .policyName:after, #policyModule .policy .decimal .openAccordion .policyName:after, #relatedPub .pubLinks a:before, .publication .post p.comments a:before, .publication .post p.more a:after, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after, th.header:after, .twitter-block li:before {
   display: inline-block;
   font-family: FontAwesome;
   font-style: normal;
@@ -8595,7 +8670,7 @@ div#tagboard-embed {
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
 #calendar .eventDetails .eventUrl:before,
 #calendar .eventDetails .calendarExport:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
-.featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, #policyModule .rootPolicyList .rootPolicyItem a:before, #policyModule .policy .decimal .closedAccordion .policyName:after, #policyModule .policy .decimal .openAccordion .policyName:after, #relatedPub .pubLinks a:before, .publication .post p.comments a:before, .publication .post p.more a:after, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after, th.header:after, .twitter-block li:before {
+.featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, #pageContent ul.major-list, #policyModule .rootPolicyList .rootPolicyItem a:before, #policyModule .policy .decimal .closedAccordion .policyName:after, #policyModule .policy .decimal .openAccordion .policyName:after, #relatedPub .pubLinks a:before, .publication .post p.comments a:before, .publication .post p.more a:after, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after, th.header:after, .twitter-block li:before {
   display: inline-block;
   font-family: FontAwesome;
   font-style: normal;
@@ -8682,7 +8757,7 @@ div#tagboard-embed {
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
 #calendar .eventDetails .eventUrl:before,
 #calendar .eventDetails .calendarExport:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
-.featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, #policyModule .rootPolicyList .rootPolicyItem a:before, #policyModule .policy .decimal .closedAccordion .policyName:after, #policyModule .policy .decimal .openAccordion .policyName:after, #relatedPub .pubLinks a:before, .publication .post p.comments a:before, .publication .post p.more a:after, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after, th.header:after, .twitter-block li:before {
+.featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, #pageContent ul.major-list, #policyModule .rootPolicyList .rootPolicyItem a:before, #policyModule .policy .decimal .closedAccordion .policyName:after, #policyModule .policy .decimal .openAccordion .policyName:after, #relatedPub .pubLinks a:before, .publication .post p.comments a:before, .publication .post p.more a:after, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after, th.header:after, .twitter-block li:before {
   display: inline-block;
   font-family: FontAwesome;
   font-style: normal;
@@ -8736,7 +8811,7 @@ h4.flickr_subtitle {
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
 #calendar .eventDetails .eventUrl:before,
 #calendar .eventDetails .calendarExport:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
-.featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, #policyModule .rootPolicyList .rootPolicyItem a:before, #policyModule .policy .decimal .closedAccordion .policyName:after, #policyModule .policy .decimal .openAccordion .policyName:after, #relatedPub .pubLinks a:before, .publication .post p.comments a:before, .publication .post p.more a:after, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after, th.header:after, .twitter-block li:before {
+.featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, #pageContent ul.major-list, #policyModule .rootPolicyList .rootPolicyItem a:before, #policyModule .policy .decimal .closedAccordion .policyName:after, #policyModule .policy .decimal .openAccordion .policyName:after, #relatedPub .pubLinks a:before, .publication .post p.comments a:before, .publication .post p.more a:after, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after, th.header:after, .twitter-block li:before {
   display: inline-block;
   font-family: FontAwesome;
   font-style: normal;
