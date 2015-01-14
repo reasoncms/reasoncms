@@ -1043,8 +1043,10 @@ class DirectoryModule extends DefaultMinisiteModule {
            'alummajor');
 
         // $temp_suppress = array('childname', 'spouse', 'mobile', 'telephoneNumber', 'homePostalAddress', 'st');
-        if ( $this->user_netid )
+        if ( $this->user_netid ) {
             $this->context = 'logged_in';
+            $logged_user = $this->user_netid;
+        }
         $affiliation = $this->get_user_affiliation($this->user_netid);
 
         foreach ($results as $key => $data) {
@@ -1071,8 +1073,23 @@ class DirectoryModule extends DefaultMinisiteModule {
                     unset($results[$key]);
             }
 
-            if (isset($affiliation) && $affiliation == "Staff" || $affiliation == 'Faculty'){
-                echo 'booyah!';
+            // Faculty/Staff viewing Faculty/Staff
+            if ((isset($affiliation) && $affiliation == "Staff" || $affiliation == 'Faculty')
+                && $logged_user == $data['uid'][0]
+                && $data['edupersonprimaryaffiliation'][0] == 'Staff'
+                || $data['edupersonprimaryaffiliation'][0] == 'Faculty' ) {
+                echo "booyah! {$logged_user}";
+                pray($_REQUEST);
+            }
+            // Faculty/Staff viewing Student
+            if ((isset($affiliation) && $affiliation == "Staff" || $affiliation == 'Faculty')
+                && $logged_user == $data['uid'][0]
+                && $data['edupersonprimaryaffiliation'][0] == 'Student'
+                || $data['edupersonprimaryaffiliation'][0] == 'Student - Not Enrolled this Term'
+                || $data['edupersonprimaryaffiliation'][0] == 'Student - Not PLanning to Enroll'
+                || $data['edupersonprimaryaffiliation'][0] == 'Student - Previously Enrolled') {
+                echo "booyah! {$logged_user}";
+                pray($_REQUEST);
             }
             if (isset($affiliation) && $affiliation == "Student"){
                 echo 'hoyoob!';
