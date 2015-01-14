@@ -50,6 +50,16 @@
     margin-top: $column-gutter/1.75;
     margin-left: $column-gutter/2;
 
+    li span.attribute{
+      position: static;
+      width: 125px;
+      display: inline-block;
+
+      strong{
+        position: static;
+      }
+    }
+
     li {
 
       margin-left: rem-calc(40);
