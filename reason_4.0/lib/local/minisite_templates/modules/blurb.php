@@ -39,6 +39,7 @@ class BlurbModule extends DefaultMinisiteModule
 		'demote_headings' => 1,
 		'source_page' => '',
 		'footer_html' => '',
+		'after_each_html' => '',
 	);
 	var $es;
 	var $blurbs = array();
@@ -224,6 +225,12 @@ class BlurbModule extends DefaultMinisiteModule
 				echo '</div>'."\n";
 				echo '</div>'."\n";
 				$class = ('odd' == $class) ? 'even' : 'odd';
+				if(!empty($this->params['after_each_html']))
+				{
+					echo '<div class="postBlurb">';
+					echo $this->params['after_each_html'];
+					echo '</div>'."\n";
+				}
 			}
 		}
 		if(!empty($this->params['footer_html']))
