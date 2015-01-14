@@ -6883,51 +6883,60 @@ form input[type="submit"]:active {
   }
 }
 
-/* line 131, scss/modules/_misc.scss */
+/* line 130, scss/modules/_misc.scss */
+#pageContent ul.major-list {
+  margin-left: 0px;
+}
+/* line 132, scss/modules/_misc.scss */
 #pageContent ul.major-list li {
   list-style-type: none;
 }
-/* line 134, scss/modules/_misc.scss */
+/* line 135, scss/modules/_misc.scss */
 #pageContent ul.major-list li:before {
   padding-right: 7px;
 }
 /* line 138, scss/modules/_misc.scss */
+#pageContent ul.major-list div.major-icon {
+  display: inline-block;
+  width: 25px;
+}
+/* line 143, scss/modules/_misc.scss */
 #pageContent ul.major-list .pre-law-major:before {
   content: "\f0e3";
 }
-/* line 141, scss/modules/_misc.scss */
+/* line 146, scss/modules/_misc.scss */
 #pageContent ul.major-list .pre-medicine-major:before {
   content: "\f0f1";
 }
-/* line 144, scss/modules/_misc.scss */
+/* line 149, scss/modules/_misc.scss */
 #pageContent ul.major-list .pre-optometry-major:before {
   content: "\f06e";
 }
-/* line 147, scss/modules/_misc.scss */
+/* line 152, scss/modules/_misc.scss */
 #pageContent ul.major-list .pre-veterinary-medicine-major:before {
   content: "\f1b0";
 }
-/* line 150, scss/modules/_misc.scss */
+/* line 155, scss/modules/_misc.scss */
 #pageContent ul.major-list .pre-dentistry-major:before {
   content: "\f0f0";
 }
-/* line 153, scss/modules/_misc.scss */
+/* line 158, scss/modules/_misc.scss */
 #pageContent ul.major-list .pre-engineering-major:before {
   content: "\f197";
 }
-/* line 156, scss/modules/_misc.scss */
+/* line 161, scss/modules/_misc.scss */
 #pageContent ul.major-list .pre-pharmacy-major:before {
   content: "\f02b";
 }
-/* line 159, scss/modules/_misc.scss */
+/* line 164, scss/modules/_misc.scss */
 #pageContent ul.major-list .pre-physical-therapy-major:before {
   content: "\f004";
 }
-/* line 162, scss/modules/_misc.scss */
+/* line 167, scss/modules/_misc.scss */
 #pageContent ul.major-list .pre-seminary-major:before {
   content: "\f02d";
 }
-/* line 165, scss/modules/_misc.scss */
+/* line 170, scss/modules/_misc.scss */
 #pageContent ul.major-list .other-major:before {
   content: "\f19c";
 }
