@@ -1278,7 +1278,7 @@ class DirectoryModule extends DefaultMinisiteModule {
     }
 
     function format_postal_address($data, $html = true) {
-        $address = "<li class='directoryHomeAddress'><span class='attribute'><strong>Home Address:</strong></span>";
+        $address = "";
         if ($html) {
             $address .= "<span class='multipleAttrValues'>{$data['postaladdress'][0]}</span>";
             if (isset( $data['l'] )) {
@@ -1294,9 +1294,7 @@ class DirectoryModule extends DefaultMinisiteModule {
             if (isset( $data['lutherc'] )) {
                 $address .= "<span class='multipleAttrValues'>{$data['lutherc'][0]}</span>";
             }
-            $address .= "</span></li>";
-
-            return $address;
+            return $this->format_single_attribute($address, 'Home Address', 'directoryHomeAddress');
         } else {
             return $parts;
         }
