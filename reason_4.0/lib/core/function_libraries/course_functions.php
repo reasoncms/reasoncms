@@ -532,6 +532,36 @@ function get_courses_by_subjects($codes, $catalog_site = null)
 	return $courses;
 }
 
+/**
+  * Find courses by their id in the source data
+  *
+  * @param array $codes Array of ids
+  * @param string $catalog_site Optional unique name of a catalog site. If you pass this,
+  *				only courses associated with that site will be included.
+  */
+function get_courses_by_sourced_id($ids, $catalog_site = null)
+{
+	$courses = array();
+	if ($catalog_site && $site_id = id_of($catalog_site))
+		$es = new entity_selector($site_id);
+	else
+		$es = new entity_selector();
+	$es->description = 'Selecting courses by sourced_id';
+	$factory = new CourseTemplateEntityFactory();
+	$es->set_entity_factory($factory);
+	$es->add_type( id_of('course_template_type') );
+	$es->add_relation('sourced_id in ("'.join('","', $ids).'")');
+	$es->set_order('org_id, course_number');
+	$results = $es->run_one();
+	foreach ($results as $id => $entity)
+	{
+		if (isset($courses[$id])) continue;
+		$entity->include_source = 'subjects';
+		$courses[$id] = $entity;
+	}
+	return $courses;
+}
+
 function sort_courses_by_name($a, $b)
 {
 	$a_name = $a->get_value('name');
