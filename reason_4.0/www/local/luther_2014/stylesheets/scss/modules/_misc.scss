@@ -128,11 +128,16 @@
 //styles for majors list
 #pageContent{
 	ul.major-list{
+		margin-left: 0px;
 		li{
 			list-style-type: none;
 		}
 		li:before{
 			padding-right: 7px;
+		}
+		div.major-icon{
+			display: inline-block;
+			width: 25px;
 		}
 		@extend .fa;
 		.pre-law-major:before{
