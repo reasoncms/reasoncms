@@ -53,6 +53,11 @@ include_once( CARL_UTIL_INC . 'db/db.php' );
 			reset( $data );
 			foreach($data as $key => $val )
 			{
+				if (is_array($val))
+				{
+					trigger_error('Array value passed for key "'.$key.'" in SQLER insert.');
+					continue;
+				}
 				$fields .= '`'.$key.'`,';
 				$values .= ($val !== NULL) ? '"'.carl_util_sql_string_escape( $val ).'",' : 'NULL,';
 			}
