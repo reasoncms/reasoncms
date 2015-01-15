@@ -295,7 +295,8 @@ class FormController
 				exit;
 			}
 			
-			$this->_base_url = $url_parts[ 'scheme' ].'://'.$url_parts['host'].$url_parts['path'];
+			$host = (empty($url_parts['port'])) ? $url_parts['host'] : $url_parts['host'] .':'.$url_parts['port'];
+			$this->_base_url = $url_parts[ 'scheme' ].'://'.$host.$url_parts['path'];
 
 			if (empty($this->_request)) $this->set_request();
 			
