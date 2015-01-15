@@ -999,6 +999,54 @@
 		} // }}}
 		
 		/**
+		 * Generates a structured array of all error data, usable by show errors or
+		 * other functions
+		 */
+		function get_errors()
+		{
+			foreach( $this->_error_required AS $name )
+			{						
+				$errors[$name][] = array(
+					'type' => 'required',
+					'message' => $this->get_display_name($name,false).' is a required field.'
+					); 
+			}
+			foreach($this->_errors as $name => $value)
+			{
+				if (!$value) continue;
+				$errors[$name][] = array(
+					'type' => 'custom',
+					'message' => $this->_error_messages[$name]
+					); 
+				if($this->_is_element_group($name))
+				{
+					$member_names = $this->get_names_of_member_elements($name);
+					foreach($member_names as $member_name)
+					{
+						if (!empty($this->_error_messages[$member_name]))
+						{
+							$errors[$name][] = array(
+								'type' => 'custom',
+								'message' => $this->_error_messages[$member_name]
+								);
+						}
+					}
+				}
+			}
+			
+			// If we have some errors, sort them in element order, with errors that
+			// don't correspond to any elements at the top.
+			if (isset($errors))
+			{
+				$order = $this->get_order();
+				$sorted_errors = array_diff_key($errors, $order);
+				foreach ($order as $key)
+					if (isset($errors[$key])) $sorted_errors[$key] = $errors[$key];
+				return $sorted_errors;
+			}
+		}
+		
+		/**
 		* Display errors in a nice list.  
 		* Usually used internally in {@link show_form()}.  Part of the display phase.
 		*/
@@ -1322,6 +1370,53 @@
 			return $display_name;
 		}
 		
+		/**
+		* Set the html id of the element or element group.
+		* @param $element string Name of element or element group
+		* @param $value string html id to be used on the form
+		*/
+		function set_element_id( $element, $value ) // {{{
+		{
+			if (!preg_match('/^[a-zA-Z][\w:.-]*$/', $value))
+			{
+				trigger_error( $value.' is not a valid HTML id string', WARNING );
+				return;
+			}
+		
+			if ( $this->_is_element( $element ) )
+			{
+				$el =& $this->_elements[$element];
+				$el->set_id( $value );
+			}
+			elseif ($this->_is_element_group($element) )
+			{
+				$eg =& $this->_element_groups[$element];
+				$eg->set_id( $value );
+			}
+			else 
+				trigger_error( $element.' is not a defined element or element group', WARNING );
+		} // }}}
+
+		/**
+		* Get the html id of the element or element group.
+		* @param $element string Name of element or element group
+		*/
+		function get_element_id( $element ) // {{{
+		{
+			if ( $this->_is_element( $element ) )
+			{
+				$el =& $this->_elements[$element];
+				return $el->get_id();
+			}
+			elseif ($this->_is_element_group($element) )
+			{
+				$eg =& $this->_element_groups[$element];
+				return $eg->get_id();
+			}
+			else 
+				trigger_error( $element.' is not a defined element or element group', WARNING );
+		} // }}}
+
 		/**
 		* Set comments on an element or on an element group.  
 		* Generally form_comment() is used to format the string.
