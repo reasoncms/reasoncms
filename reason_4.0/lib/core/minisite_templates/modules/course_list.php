@@ -363,11 +363,15 @@ class CourseListModule extends DefaultMinisiteModule
 			return array();
 	}
 
+	/**
+	  * Find the categories attached to the current page.
+	  *
+	  * @return array of categories (id => name)
+	  */
 	protected function get_page_categories()
 	{
 		if (empty($this->page_categories))
 		{
-			// Get the categories attached to this page
 			$cat_es = new entity_selector();
 			$cat_es->description = 'Selecting categories for this page';
 			$cat_es->add_type( id_of('category_type'));
@@ -386,6 +390,11 @@ class CourseListModule extends DefaultMinisiteModule
 		return $this->page_categories;		
 	}
 	
+	/**
+	  * Find the subjects associated with the department associated with the current page.
+	  *
+	  * @return array of subject codes
+	  */
 	protected function get_site_subjects()
 	{
 		if (empty($this->site_subjects))
