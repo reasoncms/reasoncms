@@ -197,6 +197,37 @@ class DefaultForm extends Disco
 	}
 
 	/**
+	 * Handles ajax api requests to the form. If an action is passed in the module_api_action
+	 * parameter, look for and run a corresponding api_[action] method on the view or the model.
+	 */
+	function run_api()
+	{
+		$model =& $this->get_model();
+		$request = $model->get_request();
+		if (isset($request['module_api_action']))
+		{
+			$fn = 'api_'.$request['module_api_action'];
+			if (method_exists($this, $fn)) $this->$fn();
+			else if (method_exists($model, $fn)) $model->$fn();
+		exit;
+		}
+	}
+
+	function api_run_error_checks()
+	{
+		header('Content-type: application/json');
+		$this->run_load_phase();
+		$this->_run_all_error_checks();
+		if ( $this->_has_errors() )
+		{
+			echo json_encode(array('header_text' => $this->error_header_text, 'errors' => $this->get_errors()));
+		} else {
+			echo json_encode(array('errors' => false));
+		}
+		exit;
+	}
+
+	/**
 	 * Checks if the view or model has a method with name method - if so, run that method, otherwise trigger an error
 	 * @param string method name to invoke
 	 */
