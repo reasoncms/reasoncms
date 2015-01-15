@@ -20,13 +20,7 @@ include_once( TYR_INC . 'tyr.php');
 class ThorAdmin extends TableAdmin
 {
 	var $_thor_core;
-	
-	/**
-	 * @var array extra fields to display that are not actually thor elements described in xml
-	 * @todo we should grab this from the ThorCore probably
-	 */
-	var $extra_fields = array('id', 'submitted_by', 'submitter_ip', 'date_created', 'date_modified');
-	
+		
 	function ThorAdmin()
 	{
 	}
