@@ -240,26 +240,26 @@ function luther_add_inline_caption($content, $image_id, $caption)
 	{
 		if (preg_match("/hide_caption/", $image->get_value('keywords')))
 		{
-			preg_match('/<img\s('.preg_quote($caption).')?\s?(src=".*?)(\/reason\/images\/' . $id . '(_tn)?\.(jpg|jpeg|gif|png)")\s?(class="(\w+)")?\s*\/>/', $content, $matches);
+			preg_match('/<img\s('.preg_quote($caption, '/').')?\s?(src=".*?)(\/reason\/images\/' . $id . '(_tn)?\.(jpg|jpeg|gif|png)")\s?(class="(\w+)")?\s*\/>/', $content, $matches);
 			if (count($matches) >= 8 && ($matches[7] == "left" || $matches[7] == "right"))
 			{
-				$content = preg_replace('/<img\s('.preg_quote($caption).')?\s?(src=".*?)(\/reason\/images\/' . $id . '(_tn)?\.(jpg|jpeg|gif|png)")\s?(class="(\w+)")?\s*\/>/', '<figure $6><img alt="'.$image->get_value('description').'" $2$3 /></figure>', $content);
+				$content = preg_replace('/<img\s('.preg_quote($caption, '/').')?\s?(src=".*?)(\/reason\/images\/' . $id . '(_tn)?\.(jpg|jpeg|gif|png)")\s?(class="(\w+)")?\s*\/>/', '<figure $6><img alt="'.$image->get_value('description').'" $2$3 /></figure>', $content);
 			}
 			else
 			{
-				$content = preg_replace('/<img\s('.preg_quote($caption).')?\s?(src=".*?)(\/reason\/images\/' . $id . '(_tn)?\.(jpg|jpeg|gif|png)")\s*\/>/', '<figure><img alt="'.$image->get_value('description').'" $2$3 /></figure>', $content);
+				$content = preg_replace('/<img\s('.preg_quote($caption, '/').')?\s?(src=".*?)(\/reason\/images\/' . $id . '(_tn)?\.(jpg|jpeg|gif|png)")\s*\/>/', '<figure><img alt="'.$image->get_value('description').'" $2$3 /></figure>', $content);
 			}
 		}
 		else
 		{
-			preg_match('/<img\s('.preg_quote($caption).')?\s?(src=".*?)(\/reason\/images\/' . $id . '(_tn)?\.(jpg|jpeg|gif|png)")\s?(class="(\w+)")?\s*\/>/', $content, $matches);
+			preg_match('/<img\s('.preg_quote($caption, '/').')?\s?(src=".*?)(\/reason\/images\/' . $id . '(_tn)?\.(jpg|jpeg|gif|png)")\s?(class="(\w+)")?\s*\/>/', $content, $matches);
 			if (count($matches) >= 8 && ($matches[7] == "left" || $matches[7] == "right"))
 			{
-				$content = preg_replace('/<img\s('.preg_quote($caption).')?\s?(src=".*?)(\/reason\/images\/' . $id . '(_tn)?\.(jpg|jpeg|gif|png)")\s?(class="(\w+)")?\s*\/>/', '<figure $6><img alt="'.$image->get_value('description').'" $2$3 /><figcaption>'.$image->get_value('description').'</figcaption></figure>', $content);
+				$content = preg_replace('/<img\s('.preg_quote($caption, '/').')?\s?(src=".*?)(\/reason\/images\/' . $id . '(_tn)?\.(jpg|jpeg|gif|png)")\s?(class="(\w+)")?\s*\/>/', '<figure $6><img alt="'.$image->get_value('description').'" $2$3 /><figcaption>'.$image->get_value('description').'</figcaption></figure>', $content);
 			}
 			else
 			{
-				$content = preg_replace('/<img\s('.preg_quote($caption).')?\s?(src=".*?)(\/reason\/images\/' . $id . '(_tn)?\.(jpg|jpeg|gif|png)")\s*\/>/', '<figure><img alt="'.$image->get_value('description').'" $2$3 /><figcaption>'.$image->get_value('description').'</figcaption></figure>', $content);
+				$content = preg_replace('/<img\s('.preg_quote($caption, '/').')?\s?(src=".*?)(\/reason\/images\/' . $id . '(_tn)?\.(jpg|jpeg|gif|png)")\s*\/>/', '<figure><img alt="'.$image->get_value('description').'" $2$3 /><figcaption>'.$image->get_value('description').'</figcaption></figure>', $content);
 			}			
 		}
 	}
