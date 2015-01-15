@@ -109,6 +109,11 @@ class ThorFormModel extends DefaultFormModel
 		return ($_is_editable === 'yes');
 	}
 
+	function is_api()
+	{
+		return $this->api_request_is_present();
+	}
+
 	function is_admin()
 	{
 		return ($this->user_requested_admin() && $this->user_has_administrative_access() && $this->admin_view_is_available());
@@ -325,6 +330,15 @@ class ThorFormModel extends DefaultFormModel
 		$sk->set(true);
 		return $key;
 	}
+
+	/**
+	 * Determine whether an ajax API request is in progress
+	 */	
+	function api_request_is_present()
+	{
+		$api = $this->_module->get_api();
+		return ($api && ($api->get_name() == 'standalone'));
+	}
 	
 	/**
 	 * If the form submission was just completed - we should have a valid submission_key passed in the request
@@ -437,25 +451,21 @@ class ThorFormModel extends DefaultFormModel
 	
 	function &get_top_links()
 	{
-		if ($this->admin_view_is_available())
+		if (!$this->user_requested_admin() && $this->user_has_administrative_access() && ($this->get_values()))
 		{
-			if (!$this->user_requested_admin() && $this->user_has_administrative_access())
-			{
-				$link['Enter administrative view'] = carl_construct_link(array('form_admin_view' => 'true'), array('textonly', 'netid'));
-			}
-			elseif ($this->user_requested_admin() && $this->user_has_administrative_access())
-			{
-				$link['Exit administrative view'] = carl_construct_link(array('form_admin_view' => ''), array('textonly', 'netid'));
-			}	
+			$link['Enter administrative view'] = carl_construct_link(array('form_admin_view' => 'true'), array('textonly', 'netid'));
 		}
+		elseif ($this->user_requested_admin() && $this->user_has_administrative_access())
+		{
+			$link['Exit administrative view'] = carl_construct_link(array('form_admin_view' => ''), array('textonly', 'netid'));
+		}	
 		else $link = array();
 		return $link;
 	}
 	
 	function admin_view_is_available()
 	{
-		$form =& $this->get_form_entity();
-		return ($this->get_values());		
+		return true;		
 	}
 	
 	function &get_values_for_save()
@@ -501,6 +511,12 @@ class ThorFormModel extends DefaultFormModel
 			$thor_core =& $this->get_thor_core_object();
 			$thor_values = $this->_get_values_and_extra_email_fields($disco_obj);
 			$disco_hidden_fields =& $this->_get_disco_hidden_fields($disco_obj);
+			
+			// If a view has specified dynamic fields to show, they should show even if
+			// hidden, so subtract them from the list of disco_hidden_fields
+			if (($dynamic = $disco_obj->get_show_submitted_data_dynamic_fields()) && is_array($dynamic) )
+				$disco_hidden_fields = array_diff($disco_hidden_fields, $dynamic);
+				
 			$fields_to_hide =& $this->get_submitted_data_hidden_fields_submitter_view($disco_obj);
 			if (!empty($fields_to_hide)) $this->_hide_fields($thor_values, $fields_to_hide);
 			if (!empty($disco_hidden_fields)) $this->_hide_fields($thor_values, $disco_hidden_fields);
