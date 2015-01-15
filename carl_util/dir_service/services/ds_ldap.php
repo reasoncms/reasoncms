@@ -51,7 +51,8 @@ class ds_ldap extends ds_default {
 	* Sample dependencies for Eduperson schemas
 	*/
 	public $_gen_attr_depend = array(
-		'ds_username' => array('carlnetid'),
+		'ds_guid' => array('uidnumber'),
+		'ds_username' => array('uid'),
 		'ds_email' => array('mail'),
 		'ds_firstname' => array('givenname'),
 		'ds_lastname' => array('sn'),
@@ -313,8 +314,11 @@ class ds_ldap extends ds_default {
 					// will need to be modified for your own particular situation.  These values would work
 					// under an EduPerson LDAP schema
 					switch ($attr) {
+						case 'ds_guid':
+							$value = $record['uidnumber'];
+							break;
 						case 'ds_username':
-							$value = array();
+							$value = $record['uid'];
 							break;
 						case 'ds_email':
 							$value = (isset($record['mail'])) ? $record['mail'] : array();
@@ -457,8 +461,11 @@ class ds_ldap extends ds_default {
 		$filter = '';
 		if (isset($this->_gen_attr_depend[$attr])) {
 			switch ($attr) {
+				case 'ds_guid':
+					$attr = 'uidnumber';
+					break;
 				case 'ds_username':
-					$attr = '';
+					$attr = 'uid';
 					break;
 				case 'ds_email':
 					$attr = 'mail';
