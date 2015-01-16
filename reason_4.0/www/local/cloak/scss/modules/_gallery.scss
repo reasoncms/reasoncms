@@ -12,61 +12,7 @@
 	.moduleNav {
 
 		// PAGINATION
-		// Foundaiton's pagnation mixins use different markup than Reason's.
-		// For maximum integration, we use Foundation pagination mixins and variables wherever possible.
-		.pagination {
-			display: block;
-			min-height: $pagination-height;
-			margin-#{$default-float}: $pagination-margin;
-			margin-bottom: $column-gutter;
-			padding: 0;
-			background: none;
-
-			&.above {
-			}
-
-			&.below {
-			}
-
-			.next,
-			.previous {
-				border: none;
-				margin: 0;
-				padding: 0;
-			}
-
-			.pages a,
-			.pages strong,
-			.next,
-			.previous { 
-				height: $pagination-li-height;
-				color: $pagination-li-font-color;
-				font-size: $pagination-li-font-size;
-				margin-#{$default-float}: $pagination-li-margin;
-				float: $pagination-li-float;
-				display: block;
-				padding: $pagination-link-pad;
-				background: none;
-				@include radius;
-				font-weight: normal;
-				line-height: inherit;
-				@include single-transition(background-color);
-
-				&:hover,
-				&:focus {
-					background: $pagination-link-active-bg;
-				}
-			}
-
-			.pages {
-
-				strong {
-					@include pagination-current-item($has-anchor: false);
-					float: $pagination-li-float;
-					margin-left: $pagination-li-margin;
-				}
-			}
-		}
+		// See base/_common.scss
 
 		// IMAGE LIST 
 		#imageGalleryItemList {
