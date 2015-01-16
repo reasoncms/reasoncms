@@ -708,6 +708,78 @@
 	}
 }
 
+/* Events Mini */
+
+#miniCal {
+
+	#events {
+		margin-bottom: rem-calc(16);
+	}
+
+	$day-width: rem-calc(124);
+
+	.dayblock,
+	.ongoingblock {
+		@include clearfix;
+		position: relative;
+		padding: rem-calc(16) 0;
+	}
+
+	.day {
+		display: block;
+		font-size: rem-calc(14);
+		font-weight: 600;
+		display: inline-block;
+		padding: rem-calc(8) rem-calc(16);
+		margin: 0 0 $column-gutter/2;
+		background: $primary-color;
+		word-spacing: rem-calc(2);
+		color: white;
+	}
+
+	.dayEvents,
+	.ongoingEvents { 
+		margin: 0;
+		padding: 0;
+		list-style-type: none;
+
+		.event {
+			padding-bottom: rem-calc(10);
+			@include clearfix;
+			font-weight: 400;
+			text-transform: uppercase;
+			font-size: rem-calc(14);
+			color: $steel;
+
+			a { // Event title
+				font-weight: 700;
+				text-transform: none;
+				font-size: rem-calc(16);
+
+				&:hover {
+					text-decoration: underline;
+				}
+			}
+
+			&:last-child {
+				padding-bottom: 0;
+			}	
+		}
+	}
+
+	.foot {
+		margin-bottom: $column-gutter;
+		
+		.more {
+			margin: 0;
+			
+			a {
+				@include inline-icon($icon: $fa-var-calendar);
+			}
+		}
+	}
+}
+
 // #calendar {
 
 // 	.responsiveEventsList {
