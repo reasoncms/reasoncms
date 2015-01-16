@@ -400,11 +400,11 @@ meta.foundation-mq-topbar {
         font-size: 0.8125rem;
         padding-right: auto/3;
         padding-left: auto/3;
-        background-color: #008CBA;
-        border-color: #007095;
+        background-color: #2ea7a0;
+        border-color: #258680;
         color: #FFFFFF; }
         .top-bar-section ul li > a.button:hover, .top-bar-section ul li > a.button:focus {
-          background-color: #007095; }
+          background-color: #258680; }
         .top-bar-section ul li > a.button:hover, .top-bar-section ul li > a.button:focus {
           color: #FFFFFF; }
       .top-bar-section ul li > a.button.secondary {
@@ -443,11 +443,11 @@ meta.foundation-mq-topbar {
       font-size: 0.8125rem;
       padding-right: auto/3;
       padding-left: auto/3;
-      background-color: #008CBA;
-      border-color: #007095;
+      background-color: #2ea7a0;
+      border-color: #258680;
       color: #FFFFFF; }
       .top-bar-section ul li > button:hover, .top-bar-section ul li > button:focus {
-        background-color: #007095; }
+        background-color: #258680; }
       .top-bar-section ul li > button:hover, .top-bar-section ul li > button:focus {
         color: #FFFFFF; }
       .top-bar-section ul li > button.secondary {
@@ -487,10 +487,10 @@ meta.foundation-mq-topbar {
       background: #333333;
       color: #FFFFFF; }
     .top-bar-section ul li.active > a {
-      background: #008CBA;
+      background: #2ea7a0;
       color: #FFFFFF; }
       .top-bar-section ul li.active > a:hover {
-        background: #0078a0;
+        background: #28908a;
         color: #FFFFFF; }
   .top-bar-section .has-form {
     padding: auto/3; }
@@ -620,9 +620,9 @@ meta.foundation-mq-topbar {
       padding: 0 auto/3;
       line-height: auto;
       color: #FFFFFF;
-      background: #008CBA; }
+      background: #2ea7a0; }
       .top-bar-section li.active:not(.has-form) a:not(.button):hover {
-        background: #0078a0;
+        background: #28908a;
         color: #FFFFFF; }
     .top-bar-section .has-dropdown > a {
       padding-right: auto/31.25rem !important; }
@@ -719,7 +719,7 @@ meta.foundation-mq-topbar {
     background: #333333;
     color: #FFFFFF; }
   .no-js .top-bar-section ul li:active > a {
-    background: #008CBA;
+    background: #2ea7a0;
     color: #FFFFFF; }
   .no-js .top-bar-section .has-dropdown:hover > .dropdown {
     display: block;
@@ -898,11 +898,11 @@ div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, p, blockquote, t
 
 /* Default Link Styles */
 a {
-  color: #008CBA;
+  color: #2ea7a0;
   text-decoration: none;
   line-height: inherit; }
   a:hover, a:focus {
-    color: #0078a0; }
+    color: #28908a; }
   a img {
     border: none; }
 
@@ -1182,7 +1182,7 @@ blockquote, blockquote p {
     display: inherit !important; }
  }
 
-.fa, #banner #navigationToggles li.navJump a:before, #banner #navigationToggles li.searchToggle a:before, .reveal-modal .close-reveal-modal:before, dialog .close-reveal-modal:before, .assets li:before, #av .moduleNav ul li:before, #av .podcast a:before, #calendar .responsiveEventsList .iCalExport a:before, #calendar .responsiveEventsList .feedInfo a:before, #calendar .eventDetails .export .back a:before, #calendar .eventDetails .export .repetition:before, #calendar .eventDetails .export .date:before, #calendar .eventDetails .export .time:before, #calendar .eventDetails .export .duration:before, #calendar .eventDetails .export .eventLocation:before, #calendar .eventDetails .export .sponsor:before, #calendar .eventDetails .export .contact:before, #discoErrorNotice h3:before, #imageGallery .item .prevWrapper a:after, #imageGallery .item .nextWrapper a:after, #imageGallery .back:before, .editThis:before, .loginLinkModule #footerLoginLink .login:after, .loginLinkModule #footerLoginLink .logout:after, #minisiteNavigation ul .navList .jump a:after, #meat .publication .persistent #filtering .filterSet a:before, #meat .publication .persistent #filtering .filters ul li a:before, #meat .publication .persistent #filtering .filters ul li strong:before, #meat .publication .persistent .loginlogout a:after, #meat .publication .moduleNav .filterMessage h3 .clear a:before, #meat .publication .moduleNav .posts .post .links li.more a:before, #meat .publication .moduleNav .posts .post .links li.permalink a:before, #meat .publication .moduleNav .feedLink a:before, #meat .publication .moduleNav .feedLink .feedInfo a:before, #meat .publication.fullPostDisplay .fullPost .relatedItems .categories li a:before, #meat .publication.fullPostDisplay .fullPost .relatedItems .categories li strong:before, #meat .publication.fullPostDisplay .fullPost .secondChunk .nextPrev .prev a:before, #meat .publication.fullPostDisplay .fullPost .secondChunk .nextPrev .next a:after, #meat .publication.fullPostDisplay .back .mainBackLink a:before {
+.fa, #banner #navigationToggles li.navJump a:before, #banner #navigationToggles li.searchToggle a:before, .persistent #filtering .filterSet a:before, .persistent #filtering .filters ul li a:before, .persistent #filtering .filters ul li strong:before, .persistent .loginlogout a:after, .reveal-modal .close-reveal-modal:before, dialog .close-reveal-modal:before, .assets li:before, #av .moduleNav ul li:before, #av .podcast a:before, #calendar .responsiveEventsList .iCalExport a:before, #calendar .responsiveEventsList .feedInfo a:before, #calendar .eventDetails .export .back a:before, #calendar .eventDetails .export .repetition:before, #calendar .eventDetails .export .date:before, #calendar .eventDetails .export .time:before, #calendar .eventDetails .export .duration:before, #calendar .eventDetails .export .eventLocation:before, #calendar .eventDetails .export .sponsor:before, #calendar .eventDetails .export .contact:before, #miniCal .foot .more a:before, #discoErrorNotice h3:before, #imageGallery .item .prevWrapper a:after, #imageGallery .item .nextWrapper a:after, #imageGallery .back:before, .editThis:before, .loginLinkModule #footerLoginLink .login:after, .loginLinkModule #footerLoginLink .logout:after, #minisiteNavigation ul .navList .jump a:after, #meat .publication .back div a:before, #meat .publication .persistent #filtering .filterSet a:before, #meat .publication .persistent #filtering .filters ul li a:before, #meat .publication .persistent #filtering .filters ul li strong:before, #meat .publication .persistent .loginlogout a:after, #meat .publication .moduleNav .filterMessage h3 .clear a:before, #meat .publication .moduleNav .posts .post .links li.more a:before, #meat .publication .moduleNav .posts .post .links li.permalink a:before, #meat .publication .moduleNav .posts .post .links li.comments a:before, #meat .publication .moduleNav .feedLink a:before, #meat .publication .moduleNav .feedLink .feedInfo a:before, #meat .publication.fullPostDisplay .fullPost .relatedItems .relatedEvents ul li:before, #meat .publication.fullPostDisplay .fullPost .relatedItems .categories li a:before, #meat .publication.fullPostDisplay .fullPost .relatedItems .categories li strong:before, #meat .publication.fullPostDisplay .fullPost .secondChunk .nextPrev .prev a:before, #meat .publication.fullPostDisplay .fullPost .secondChunk .nextPrev .next a:after {
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -1305,15 +1305,18 @@ html, body, *:before, *:after {
     padding-right: 0.9375rem;
     width: 100%;
     float: left; }
-    #meat #navigation:before {
-      display: block;
-      content: "";
-      margin-top: -1.875rem;
-      height: 1.875rem;
-      visibility: hidden; }
-      @media only screen and (min-width:63.8125em) {
-        #meat #navigation:before {
-          display: none; } }
+    @media only screen and (min-width:40.0625em) and (max-width:60em) {
+      #meat #navigation {
+        background: #f3f3f3; } }
+    @media only screen and (min-width:40.0625em) and (max-width:60em) {
+      #meat #navigation #navInnerWrap {
+        position: relative;
+        padding-left: 0.9375rem;
+        padding-right: 0.9375rem;
+        width: 66.6666666667%;
+        left: 16.6666666667%;
+        right: auto;
+        float: left; } }
   @media only screen and (min-width:40.063em) {
     #meat.containsConRelNav #content {
       padding-left: 0.9375rem;
@@ -1381,6 +1384,46 @@ html, body, *:before, *:after {
     padding-right: 0.9375rem;
     width: 100%;
     float: left; }
+
+#meat .persistent {
+  margin-bottom: 1.875rem; }
+#meat .moduleNav {
+  margin-bottom: 1.875rem; }
+#meat.containsConRelNav .persistent {
+  padding-left: 0;
+  padding-right: 0;
+  width: 100%;
+  float: left; }
+#meat.containsConRelNav .moduleNav {
+  padding-left: 0;
+  padding-right: 0;
+  width: 100%;
+  float: left; }
+#meat.containsConNav .persistent, #meat.containsConRel .persistent, #meat.containsCon .persistent {
+  padding-left: 0;
+  padding-right: 0;
+  width: 100%;
+  float: left; }
+  @media only screen and (min-width:40.063em) {
+    #meat.containsConNav .persistent, #meat.containsConRel .persistent, #meat.containsCon .persistent {
+      padding-left: 0;
+      padding-right: 0;
+      width: 33.3333333333%;
+      float: left;
+      float: right;
+      padding-left: 0.9375rem; } }
+#meat.containsConNav .moduleNav, #meat.containsConRel .moduleNav, #meat.containsCon .moduleNav {
+  padding-left: 0;
+  padding-right: 0;
+  width: 100%;
+  float: left; }
+  @media only screen and (min-width:40.063em) {
+    #meat.containsConNav .moduleNav, #meat.containsConRel .moduleNav, #meat.containsCon .moduleNav {
+      padding-left: 0;
+      padding-right: 0;
+      width: 66.6666666667%;
+      float: left;
+      padding-right: 0.9375rem; } }
 
 .f-topbar-fixed #banner {
   padding: 0.9375rem;
@@ -1477,6 +1520,172 @@ h2.pageTitle {
   text-align: center;
   padding: 1.875rem; }
 
+.persistent {
+  margin-bottom: 1.875rem;
+  border: none; }
+  .persistent #filtering {
+    margin: 0;
+    background: #EFEFEF;
+    padding: 0.9375rem;
+    padding-bottom: 0; }
+    .persistent #filtering:before, .persistent #filtering:after {
+      content: " ";
+      display: table; }
+    .persistent #filtering:after {
+      clear: both; }
+    .persistent #filtering .searchForm {
+      margin: 0 0 0.9375rem 0 !important; }
+      .persistent #filtering .searchForm:before, .persistent #filtering .searchForm:after {
+        content: " ";
+        display: table; }
+      .persistent #filtering .searchForm:after {
+        clear: both; }
+      .persistent #filtering .searchForm label {
+        position: absolute;
+        left: -9999px;
+        top: -9999px;
+        margin-bottom: 0; }
+      .persistent #filtering .searchForm .search {
+        display: block;
+        background-color: #FFFFFF;
+        font-family: inherit;
+        border-style: solid;
+        border-width: 1px;
+        border-color: #cccccc;
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+        color: rgba(0, 0, 0, 0.75);
+        display: block;
+        font-size: 0.875rem;
+        margin: 0 0 1rem 0;
+        padding: 0.5rem;
+        height: 2.3125rem;
+        width: 100%;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        width: 80%;
+        float: left;
+        margin-bottom: 0;
+        border-right: none; }
+        .persistent #filtering .searchForm .search:focus {
+          background: #fafafa;
+          border-color: #999999;
+          outline: none; }
+        .persistent #filtering .searchForm .search:disabled {
+          background-color: #DDDDDD;
+          cursor: default; }
+        .persistent #filtering .searchForm .search[disabled], .persistent #filtering .searchForm .search[readonly], fieldset[disabled] .persistent #filtering .searchForm .search {
+          background-color: #DDDDDD;
+          cursor: default; }
+      .persistent #filtering .searchForm .submit {
+        display: block;
+        text-align: center;
+        padding: 0.5rem;
+        height: 2.3125rem;
+        background: #2ea7a0;
+        color: #FFFFFF;
+        width: 20%;
+        float: left;
+        border-radius: 0 3px 3px 0;
+        margin-bottom: 0; }
+        .persistent #filtering .searchForm .submit:hover {
+          background: #237f7a;
+          cursor: pointer; }
+      .persistent #filtering .searchForm a {
+        color: red; }
+    .persistent #filtering .filterSet {
+      margin: 0 0 0.9375rem 0 !important; }
+      .persistent #filtering .filterSet a {
+        display: block;
+        float: right;
+        line-height: 1;
+        margin-right: 1.5rem;
+        margin-bottom: 0.375rem;
+        padding: 0.25rem;
+        font-size: 0.75rem;
+        background: #FFFFFF;
+        border: 1px solid #CCCCCC;
+        border-top: 0;
+        border-radius: 0 0 3px 3px; }
+        .persistent #filtering .filterSet a:hover {
+          border-color: #999999; }
+        .persistent #filtering .filterSet a:before {
+          content: "\f057";
+          margin-right: 0.375rem;
+          color: inherit; }
+    .persistent #filtering .filters {
+      margin: 0 0 0.9375rem 0 !important; }
+      .persistent #filtering .filters h4 {
+        display: inline-block;
+        margin-right: 0.5rem;
+        font-weight: 400; }
+        @media only screen and (max-width: 40em) {
+          .persistent #filtering .filters h4 {
+            font-weight: 700; } }
+      .persistent #filtering .filters ul {
+        list-style-type: none;
+        margin: 0;
+        display: inline; }
+        .persistent #filtering .filters ul li {
+          display: inline-block;
+          margin-right: 0.5rem;
+          white-space: pre; }
+          .persistent #filtering .filters ul li a:before {
+            content: "\f114";
+            margin-right: 0.375rem;
+            color: #777777; }
+          .persistent #filtering .filters ul li strong:before {
+            content: "\f115";
+            margin-right: 0.375rem;
+            color: inherit; }
+  .persistent .loginlogout {
+    margin: 0.46875rem 0.9375rem 0 0;
+    text-align: right;
+    font-size: 0.875rem; }
+    .persistent .loginlogout a:after {
+      content: "\f023";
+      margin-left: 0.375rem;
+      color: inherit; }
+
+.moduleNav .pagination {
+  display: block;
+  min-height: 1.5rem;
+  margin-left: -0.3125rem;
+  margin-bottom: 1.875rem;
+  padding: 0 !important;
+  background: none !important; }
+  .moduleNav .pagination .next, .moduleNav .pagination .previous {
+    border: none !important;
+    margin: 0 !important;
+    padding: 0; }
+  .moduleNav .pagination .pages a, .moduleNav .pagination .pages strong, .moduleNav .pagination .next, .moduleNav .pagination .previous {
+    height: 1.5rem;
+    color: #999999;
+    font-size: 0.875rem;
+    margin-left: 0.3125rem;
+    float: left;
+    display: block;
+    padding: 0.0625rem 0.625rem 0.0625rem !important;
+    background: none;
+    border-radius: 3px;
+    font-weight: normal;
+    line-height: inherit;
+    transition: background-color 300ms ease-out; }
+    .moduleNav .pagination .pages a:hover, .moduleNav .pagination .pages a:focus, .moduleNav .pagination .pages strong:hover, .moduleNav .pagination .pages strong:focus, .moduleNav .pagination .next:hover, .moduleNav .pagination .next:focus, .moduleNav .pagination .previous:hover, .moduleNav .pagination .previous:focus {
+      background: #e6e6e6; }
+  .moduleNav .pagination .pages strong {
+    height: auto;
+    padding: 0.0625rem 0.625rem 0.0625rem;
+    background: #2ea7a0;
+    color: #FFFFFF;
+    font-weight: 700;
+    cursor: default;
+    border-radius: 3px;
+    float: left;
+    margin-left: 0.3125rem; }
+    .moduleNav .pagination .pages strong:hover, .moduleNav .pagination .pages strong:focus {
+      background: #2ea7a0; }
+
 @media only screen and (min-width:40.063em) {
   .reveal-modal.tiny, dialog.tiny, dialog.tiny {
     min-width: 560px; } }
@@ -1559,14 +1768,14 @@ h2.pageTitle {
       padding-bottom: 0.3125rem;
       padding-left: 0.5rem;
       font-size: 0.6875rem;
-      background-color: #008CBA;
-      border-color: #007095;
+      background-color: #2ea7a0;
+      border-color: #258680;
       color: #FFFFFF;
       border-radius: 3px;
       transition: background-color 300ms ease-out;
       margin: 0 0.75rem 0.125rem 0 !important; }
       #av .podcast a:hover, #av .podcast a:focus {
-        background-color: #007095; }
+        background-color: #258680; }
       #av .podcast a:hover, #av .podcast a:focus {
         color: #FFFFFF; }
       #av .podcast a:before {
@@ -1633,7 +1842,7 @@ h2.pageTitle {
   font-size: 0.875rem; }
 .locationBarText a {
   text-decoration: underline;
-  color: #008CBA; }
+  color: #2ea7a0; }
 .locationBarText .delimiter {
   color: #666666;
   font-weight: 300;
@@ -1724,7 +1933,7 @@ h2.pageTitle {
         #calendar .responsiveEventsList .views ul li strong {
           text-decoration: none;
           font-weight: 400;
-          background: #008CBA;
+          background: #2ea7a0;
           color: #FFF; }
         #calendar .responsiveEventsList .views ul li:first-child a, #calendar .responsiveEventsList .views ul li:first-child strong {
           border-radius: 1000px 0 0 1000px;
@@ -1745,10 +1954,10 @@ h2.pageTitle {
     #calendar .responsiveEventsList .nav .previous, #calendar .responsiveEventsList .nav .next {
       padding: 0.5rem 0.875rem;
       display: inline-block;
-      background: #008CBA;
+      background: #2ea7a0;
       color: #FFFFFF; }
       #calendar .responsiveEventsList .nav .previous:hover, #calendar .responsiveEventsList .nav .next:hover {
-        background: #009fd3; }
+        background: #34bbb3; }
     #calendar .responsiveEventsList .nav .previous {
       float: left; }
     #calendar .responsiveEventsList .nav .next {
@@ -1894,14 +2103,14 @@ h2.pageTitle {
       padding-bottom: 0.3125rem;
       padding-left: 0.5rem;
       font-size: 0.6875rem;
-      background-color: #008CBA;
-      border-color: #007095;
+      background-color: #2ea7a0;
+      border-color: #258680;
       color: #FFFFFF;
       border-radius: 3px;
       transition: background-color 300ms ease-out;
       margin: 0 0.75rem 0.125rem 0 !important; }
       #calendar .responsiveEventsList .iCalExport a:hover, #calendar .responsiveEventsList .iCalExport a:focus, #calendar .responsiveEventsList .feedInfo a:hover, #calendar .responsiveEventsList .feedInfo a:focus {
-        background-color: #007095; }
+        background-color: #258680; }
       #calendar .responsiveEventsList .iCalExport a:hover, #calendar .responsiveEventsList .iCalExport a:focus, #calendar .responsiveEventsList .feedInfo a:hover, #calendar .responsiveEventsList .feedInfo a:focus {
         color: #FFFFFF; }
       #calendar .responsiveEventsList .iCalExport a:before, #calendar .responsiveEventsList .feedInfo a:before {
@@ -1963,6 +2172,59 @@ h2.pageTitle {
 #calendar .eventDetails .export .contact:before {
   content: "\f059"; }
 
+/* Events Mini */
+#miniCal #events {
+  margin-bottom: 1rem; }
+#miniCal .dayblock, #miniCal .ongoingblock {
+  position: relative;
+  padding: 1rem 0; }
+  #miniCal .dayblock:before, #miniCal .dayblock:after, #miniCal .ongoingblock:before, #miniCal .ongoingblock:after {
+    content: " ";
+    display: table; }
+  #miniCal .dayblock:after, #miniCal .ongoingblock:after {
+    clear: both; }
+#miniCal .day {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  margin: 0 0 0.9375rem;
+  background: #2ea7a0;
+  word-spacing: 0.125rem;
+  color: white; }
+#miniCal .dayEvents, #miniCal .ongoingEvents {
+  margin: 0;
+  padding: 0;
+  list-style-type: none; }
+  #miniCal .dayEvents .event, #miniCal .ongoingEvents .event {
+    padding-bottom: 0.625rem;
+    font-weight: 400;
+    text-transform: uppercase;
+    font-size: 0.875rem;
+    color: #666666; }
+    #miniCal .dayEvents .event:before, #miniCal .dayEvents .event:after, #miniCal .ongoingEvents .event:before, #miniCal .ongoingEvents .event:after {
+      content: " ";
+      display: table; }
+    #miniCal .dayEvents .event:after, #miniCal .ongoingEvents .event:after {
+      clear: both; }
+    #miniCal .dayEvents .event a, #miniCal .ongoingEvents .event a {
+      font-weight: 700;
+      text-transform: none;
+      font-size: 1rem; }
+      #miniCal .dayEvents .event a:hover, #miniCal .ongoingEvents .event a:hover {
+        text-decoration: underline; }
+    #miniCal .dayEvents .event:last-child, #miniCal .ongoingEvents .event:last-child {
+      padding-bottom: 0; }
+#miniCal .foot {
+  margin-bottom: 1.875rem; }
+  #miniCal .foot .more {
+    margin: 0; }
+    #miniCal .foot .more a:before {
+      content: "\f073";
+      margin-right: 0.375rem;
+      color: inherit; }
+
 @media only screen and (max-width: 40em) {
   .searchForm {
     margin-top: 0.9375rem !important; } }
@@ -2005,7 +2267,7 @@ h2.pageTitle {
   text-align: center;
   padding: 0.5rem;
   height: 2.3125rem;
-  background: #008CBA;
+  background: #2ea7a0;
   color: #FFFFFF; }
   @media only screen and (min-width:40.063em) {
     .searchForm .searchSubmitLink {
@@ -2107,15 +2369,15 @@ form input[type="submit"], #form input[type="submit"], #form #discoLinear input[
   padding-bottom: 0.8125rem;
   padding-left: 1.5rem;
   font-size: 1rem;
-  background-color: #008CBA;
-  border-color: #007095;
+  background-color: #2ea7a0;
+  border-color: #258680;
   color: #FFFFFF;
   border-radius: 3px;
   transition: background-color 300ms ease-out;
   height: 2.3125rem;
   padding: 0 1.875rem; }
   form input[type="submit"]:hover, form input[type="submit"]:focus, #form input[type="submit"]:hover, #form input[type="submit"]:focus, #form #discoLinear input[type="submit"]:hover, #form #discoLinear input[type="submit"]:focus {
-    background-color: #007095; }
+    background-color: #258680; }
   form input[type="submit"]:hover, form input[type="submit"]:focus, #form input[type="submit"]:hover, #form input[type="submit"]:focus, #form #discoLinear input[type="submit"]:hover, #form #discoLinear input[type="submit"]:focus {
     color: #FFFFFF; }
 form input[type="checkbox"], form input[type="radio"], #form input[type="checkbox"], #form input[type="radio"], #form #discoLinear input[type="checkbox"], #form #discoLinear input[type="radio"] {
@@ -2196,44 +2458,6 @@ form .submitSection, #form .submitSection, #form #discoLinear .submitSection {
 
 #imageGallery .persistent {
   display: none; }
-#imageGallery .moduleNav .pagination {
-  display: block;
-  min-height: 1.5rem;
-  margin-left: -0.3125rem;
-  margin-bottom: 1.875rem;
-  padding: 0;
-  background: none; }
-  #imageGallery .moduleNav .pagination .next, #imageGallery .moduleNav .pagination .previous {
-    border: none;
-    margin: 0;
-    padding: 0; }
-  #imageGallery .moduleNav .pagination .pages a, #imageGallery .moduleNav .pagination .pages strong, #imageGallery .moduleNav .pagination .next, #imageGallery .moduleNav .pagination .previous {
-    height: 1.5rem;
-    color: #999999;
-    font-size: 0.875rem;
-    margin-left: 0.3125rem;
-    float: left;
-    display: block;
-    padding: 0.0625rem 0.625rem 0.0625rem;
-    background: none;
-    border-radius: 3px;
-    font-weight: normal;
-    line-height: inherit;
-    transition: background-color 300ms ease-out; }
-    #imageGallery .moduleNav .pagination .pages a:hover, #imageGallery .moduleNav .pagination .pages a:focus, #imageGallery .moduleNav .pagination .pages strong:hover, #imageGallery .moduleNav .pagination .pages strong:focus, #imageGallery .moduleNav .pagination .next:hover, #imageGallery .moduleNav .pagination .next:focus, #imageGallery .moduleNav .pagination .previous:hover, #imageGallery .moduleNav .pagination .previous:focus {
-      background: #e6e6e6; }
-  #imageGallery .moduleNav .pagination .pages strong {
-    height: auto;
-    padding: 0.0625rem 0.625rem 0.0625rem;
-    background: #008CBA;
-    color: #FFFFFF;
-    font-weight: 700;
-    cursor: default;
-    border-radius: 3px;
-    float: left;
-    margin-left: 0.3125rem; }
-    #imageGallery .moduleNav .pagination .pages strong:hover, #imageGallery .moduleNav .pagination .pages strong:focus {
-      background: #008CBA; }
 #imageGallery .moduleNav #imageGalleryItemList {
   margin: 0;
   margin-left: -1.875rem; }
@@ -2305,7 +2529,25 @@ form .submitSection, #form .submitSection, #form #discoLinear .submitSection {
   #imageGallery .back:before {
     content: "\f009";
     margin-right: 0.375rem;
-    color: #008CBA; }
+    color: #2ea7a0; }
+
+#images:before, #images:after {
+  content: " ";
+  display: table; }
+#images:after {
+  clear: both; }
+#images ul {
+  margin: 0; }
+  #images ul li {
+    list-style-type: none;
+    margin-bottom: 1.875rem; }
+    #images ul li img {
+      border: 1px solid #ccc;
+      padding: 0.375rem; }
+    #images ul li .caption {
+      font-style: italic;
+      font-weight: 300;
+      color: #999999; }
 
 .editThis {
   border-style: solid;
@@ -2326,13 +2568,13 @@ form .submitSection, #form .submitSection, #form #discoLinear .submitSection {
   padding-bottom: 0.8125rem;
   padding-left: 1.5rem;
   font-size: 1rem;
-  background-color: #008CBA;
-  border-color: #007095;
+  background-color: #2ea7a0;
+  border-color: #258680;
   color: #FFFFFF;
   border-radius: 3px;
   transition: background-color 300ms ease-out; }
   .editThis:hover, .editThis:focus {
-    background-color: #007095; }
+    background-color: #258680; }
   .editThis:hover, .editThis:focus {
     color: #FFFFFF; }
   .editThis:before {
@@ -2362,14 +2604,14 @@ form .submitSection, #form .submitSection, #form #discoLinear .submitSection {
     padding-bottom: 0.3125rem;
     padding-left: 0.5rem;
     font-size: 0.6875rem;
-    background-color: #008CBA;
-    border-color: #007095;
+    background-color: #2ea7a0;
+    border-color: #258680;
     color: #FFFFFF;
     border-radius: 3px;
     transition: background-color 300ms ease-out;
     margin: 0 0.25rem 0.9375rem; }
     .loginLinkModule .editLink:hover, .loginLinkModule .editLink:focus, .loginLinkModule .inlineEditLink:hover, .loginLinkModule .inlineEditLink:focus {
-      background-color: #007095; }
+      background-color: #258680; }
     .loginLinkModule .editLink:hover, .loginLinkModule .editLink:focus, .loginLinkModule .inlineEditLink:hover, .loginLinkModule .inlineEditLink:focus {
       color: #FFFFFF; }
   .loginLinkModule .inlineEditLink {
@@ -2417,10 +2659,10 @@ form .submitSection, #form .submitSection, #form #discoLinear .submitSection {
       border-bottom: 1px solid #EFEFEF;
       padding: 0.75rem 1rem;
       text-transform: uppercase;
-      background: #008CBA;
+      background: #2ea7a0;
       color: #FFFFFF; }
       #minisiteNavigation ul .home:hover {
-        background: #006687; }
+        background: #237f7a; }
     #minisiteNavigation ul .navList {
       background: #EFEFEF; }
       #minisiteNavigation ul .navList li {
@@ -2450,71 +2692,35 @@ form .submitSection, #form .submitSection, #form #discoLinear .submitSection {
           right: 1rem;
           color: #888888; }
 
-#meat .publication {
-  width: 100%;
-  margin-left: auto;
-  margin-right: auto;
+#meat .publication .date {
+  color: #999999;
+  font-size: 0.875rem; }
+#meat .publication .back {
   margin-top: 0;
-  margin-bottom: 0;
-  max-width: 87.5rem; }
-  #meat .publication:before, #meat .publication:after {
-    content: " ";
-    display: table; }
-  #meat .publication:after {
-    clear: both; }
-  #meat .publication .persistent {
-    margin-bottom: 1.875rem; }
-  #meat .publication .moduleNav {
-    margin-bottom: 1.875rem; }
-#meat.containsConRelNav .publication .persistent {
-  padding-left: 0;
-  padding-right: 0;
-  width: 100%;
-  float: left; }
-#meat.containsConRelNav .publication .moduleNav {
-  padding-left: 0;
-  padding-right: 0;
-  width: 100%;
-  float: left; }
-#meat.containsConNav .publication .persistent, #meat.containsConRel .publication .persistent, #meat.containsCon .publication .persistent {
-  padding-left: 0;
-  padding-right: 0;
-  width: 100%;
-  float: left; }
-  @media only screen and (min-width:40.063em) {
-    #meat.containsConNav .publication .persistent, #meat.containsConRel .publication .persistent, #meat.containsCon .publication .persistent {
-      padding-left: 0;
-      padding-right: 0;
-      width: 33.3333333333%;
-      float: left;
-      float: right;
-      padding-left: 0.9375rem; } }
-#meat.containsConNav .publication .moduleNav, #meat.containsConRel .publication .moduleNav, #meat.containsCon .publication .moduleNav {
-  padding-left: 0;
-  padding-right: 0;
-  width: 100%;
-  float: left; }
-  @media only screen and (min-width:40.063em) {
-    #meat.containsConNav .publication .moduleNav, #meat.containsConRel .publication .moduleNav, #meat.containsCon .publication .moduleNav {
-      padding-left: 0;
-      padding-right: 0;
-      width: 66.6666666667%;
-      float: left;
-      padding-right: 0.9375rem; } }
-
+  text-align: left; }
+  #meat .publication .back div a:before {
+    content: "\f112";
+    margin-right: 0.375rem;
+    color: inherit; }
 #meat .publication .persistent {
   border: none; }
   #meat .publication .persistent #filtering {
     margin: 0;
     background: #EFEFEF;
-    padding: 0.9375rem; }
+    padding: 0.9375rem;
+    padding-bottom: 0; }
     #meat .publication .persistent #filtering:before, #meat .publication .persistent #filtering:after {
       content: " ";
       display: table; }
     #meat .publication .persistent #filtering:after {
       clear: both; }
     #meat .publication .persistent #filtering .searchForm {
-      margin: 0 !important; }
+      margin: 0 0 0.9375rem 0 !important; }
+      #meat .publication .persistent #filtering .searchForm:before, #meat .publication .persistent #filtering .searchForm:after {
+        content: " ";
+        display: table; }
+      #meat .publication .persistent #filtering .searchForm:after {
+        clear: both; }
       #meat .publication .persistent #filtering .searchForm label {
         position: absolute;
         left: -9999px;
@@ -2557,49 +2763,62 @@ form .submitSection, #form .submitSection, #form #discoLinear .submitSection {
         text-align: center;
         padding: 0.5rem;
         height: 2.3125rem;
-        background: #008CBA;
+        background: #2ea7a0;
         color: #FFFFFF;
         width: 20%;
         float: left;
-        border-radius: 0 3px 3px 0; }
+        border-radius: 0 3px 3px 0;
+        margin-bottom: 0; }
         #meat .publication .persistent #filtering .searchForm .submit:hover {
-          background: #006687;
+          background: #237f7a;
           cursor: pointer; }
       #meat .publication .persistent #filtering .searchForm a {
         color: red; }
-    #meat .publication .persistent #filtering .filterSet a {
-      display: block;
-      float: right;
-      line-height: 1;
-      margin-right: 1.5rem;
-      margin-bottom: 0.375rem;
-      padding: 0.25rem;
-      font-size: 0.75rem;
-      background: #FFFFFF;
-      border: 1px solid #CCCCCC;
-      border-top: 0;
-      border-radius: 0 0 3px 3px; }
-      #meat .publication .persistent #filtering .filterSet a:hover {
-        border-color: #999999; }
-      #meat .publication .persistent #filtering .filterSet a:before {
-        content: "\f057";
-        margin-right: 0.375rem;
-        color: inherit; }
-    #meat .publication .persistent #filtering .filters ul {
-      list-style-type: none;
-      margin: 0; }
-      #meat .publication .persistent #filtering .filters ul li {
-        display: inline-block;
-        margin-right: 0.5rem;
-        white-space: pre; }
-        #meat .publication .persistent #filtering .filters ul li a:before {
-          content: "\f114";
-          margin-right: 0.375rem;
-          color: #777777; }
-        #meat .publication .persistent #filtering .filters ul li strong:before {
-          content: "\f115";
+    #meat .publication .persistent #filtering .filterSet {
+      margin: 0 0 0.9375rem 0 !important; }
+      #meat .publication .persistent #filtering .filterSet a {
+        display: block;
+        float: right;
+        line-height: 1;
+        margin-right: 1.5rem;
+        margin-bottom: 0.375rem;
+        padding: 0.25rem;
+        font-size: 0.75rem;
+        background: #FFFFFF;
+        border: 1px solid #CCCCCC;
+        border-top: 0;
+        border-radius: 0 0 3px 3px; }
+        #meat .publication .persistent #filtering .filterSet a:hover {
+          border-color: #999999; }
+        #meat .publication .persistent #filtering .filterSet a:before {
+          content: "\f057";
           margin-right: 0.375rem;
           color: inherit; }
+    #meat .publication .persistent #filtering .filters {
+      margin: 0 0 0.9375rem 0 !important; }
+      #meat .publication .persistent #filtering .filters h4 {
+        display: inline-block;
+        margin-right: 0.5rem;
+        font-weight: 400; }
+        @media only screen and (max-width: 40em) {
+          #meat .publication .persistent #filtering .filters h4 {
+            font-weight: 700; } }
+      #meat .publication .persistent #filtering .filters ul {
+        list-style-type: none;
+        margin: 0;
+        display: inline; }
+        #meat .publication .persistent #filtering .filters ul li {
+          display: inline-block;
+          margin-right: 0.5rem;
+          white-space: pre; }
+          #meat .publication .persistent #filtering .filters ul li a:before {
+            content: "\f114";
+            margin-right: 0.375rem;
+            color: #777777; }
+          #meat .publication .persistent #filtering .filters ul li strong:before {
+            content: "\f115";
+            margin-right: 0.375rem;
+            color: inherit; }
   #meat .publication .persistent .loginlogout {
     margin: 0.46875rem 0.9375rem 0 0;
     text-align: right;
@@ -2647,8 +2866,6 @@ form .submitSection, #form .submitSection, #form #discoLinear .submitSection {
     font-size: 1.625rem;
     font-weight: 400; }
   #meat .publication .moduleNav .posts .post .date {
-    color: #999999;
-    font-size: 0.875rem;
     margin: 0; }
   #meat .publication .moduleNav .posts .post .desc {
     margin-top: 1rem; }
@@ -2663,7 +2880,11 @@ form .submitSection, #form .submitSection, #form #discoLinear .submitSection {
         margin-right: 0.375rem;
         color: inherit; }
       #meat .publication .moduleNav .posts .post .links li.permalink a:before {
-        content: "\f097";
+        content: "\f02e";
+        margin-right: 0.375rem;
+        color: inherit; }
+      #meat .publication .moduleNav .posts .post .links li.comments a:before {
+        content: "\f075";
         margin-right: 0.375rem;
         color: inherit; }
 #meat .publication .moduleNav .feedLink a {
@@ -2685,14 +2906,14 @@ form .submitSection, #form .submitSection, #form #discoLinear .submitSection {
   padding-bottom: 0.3125rem;
   padding-left: 0.5rem;
   font-size: 0.6875rem;
-  background-color: #008CBA;
-  border-color: #007095;
+  background-color: #2ea7a0;
+  border-color: #258680;
   color: #FFFFFF;
   border-radius: 3px;
   transition: background-color 300ms ease-out;
   margin: 0 0.75rem 0.125rem 0 !important; }
   #meat .publication .moduleNav .feedLink a:hover, #meat .publication .moduleNav .feedLink a:focus {
-    background-color: #007095; }
+    background-color: #258680; }
   #meat .publication .moduleNav .feedLink a:hover, #meat .publication .moduleNav .feedLink a:focus {
     color: #FFFFFF; }
   #meat .publication .moduleNav .feedLink a:before {
@@ -2723,16 +2944,33 @@ form .submitSection, #form .submitSection, #form #discoLinear .submitSection {
       padding-right: 0;
       width: 100%;
       float: left; }
+      #meat .publication.fullPostDisplay .fullPost .firstChunk .text {
+        margin-top: 1.875rem; }
     #meat .publication.fullPostDisplay .fullPost .relatedItems {
       padding-left: 0;
       padding-right: 0;
       width: 100%;
       float: left; }
+      #meat .publication.fullPostDisplay .fullPost .relatedItems h4 {
+        color: #ff00ff;
+        font-size: 1.25rem; }
+      #meat .publication.fullPostDisplay .fullPost .relatedItems > div {
+        margin-bottom: 0.9375rem;
+        border: 1px solid blue; }
+      #meat .publication.fullPostDisplay .fullPost .relatedItems .relatedEvents ul {
+        margin: 0; }
+        #meat .publication.fullPostDisplay .fullPost .relatedItems .relatedEvents ul li {
+          list-style-type: none;
+          margin-bottom: 0.9375rem; }
+          #meat .publication.fullPostDisplay .fullPost .relatedItems .relatedEvents ul li:before {
+            content: "\f073";
+            margin-right: 0.375rem;
+            color: inherit; }
       #meat .publication.fullPostDisplay .fullPost .relatedItems .categories ul {
         margin: 0; }
       #meat .publication.fullPostDisplay .fullPost .relatedItems .categories li {
         display: inline-block;
-        margin-right: 0.5rem;
+        margin: 0 0.5rem 0.9375rem 0;
         white-space: pre; }
         #meat .publication.fullPostDisplay .fullPost .relatedItems .categories li a:before {
           content: "\f114";
@@ -2778,7 +3016,3 @@ form .submitSection, #form .submitSection, #form #discoLinear .submitSection {
           content: "\f101";
           margin-left: 0.375rem;
           color: inherit; }
-  #meat .publication.fullPostDisplay .back .mainBackLink a:before {
-    content: "\f112";
-    margin-right: 0.375rem;
-    color: inherit; }
