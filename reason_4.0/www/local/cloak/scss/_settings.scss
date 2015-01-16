@@ -115,14 +115,27 @@ $oil         : #333333;
 $jet         : #222222;
 $black       : #000000;
 
+$cloak-red: #b84041;
+$cloak-turquoise: #2ea7a0;
+$cloak-orange: #e4a242;
+$cloak-brown: #82572d;
+
 // We use these as default colors throughout
 // $primary-color: #008CBA;
+$primary-color: $cloak-turquoise;
 // $secondary-color: #e7e7e7;
 // $alert-color: #f04124;
 $alert-color: red;
 // $success-color: #43AC6A;
 // $warning-color: #f08a24;
 // $info-color: #a0d3e8;
+
+
+
+// $cloak-primary-color: $cloak-red;
+// $cloak-secondary-color: $cloak-green;
+// $cloak-teritary-color: $cloak-orange;
+
 
 // We use these to control various global styles
 // $body-bg: $white;

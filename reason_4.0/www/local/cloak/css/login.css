@@ -275,11 +275,11 @@ td {
 
 /* Default Link Styles */
 a {
-  color: #008CBA;
+  color: #2ea7a0;
   text-decoration: none;
   line-height: inherit; }
   a:hover, a:focus {
-    color: #0078a0; }
+    color: #28908a; }
   a img {
     border: none; }
 
@@ -646,13 +646,13 @@ blockquote p {
       padding-bottom: 0.8125rem;
       padding-left: 1.5rem;
       font-size: 1rem;
-      background-color: #008CBA;
-      border-color: #007095;
+      background-color: #2ea7a0;
+      border-color: #258680;
       color: #FFFFFF;
       border-radius: 3px;
       transition: background-color 300ms ease-out; }
       .cloakLogin #meat #login table input[type="submit"]:hover, .cloakLogin #meat #login table input[type="submit"]:focus {
-        background-color: #007095; }
+        background-color: #258680; }
       .cloakLogin #meat #login table input[type="submit"]:hover, .cloakLogin #meat #login table input[type="submit"]:focus {
         color: #FFFFFF; }
   .cloakLogin #meat #login .msg {
@@ -689,14 +689,14 @@ blockquote p {
     padding-right: 0;
     padding-left: 0;
     width: 100%;
-    background-color: #008CBA;
-    border-color: #007095;
+    background-color: #2ea7a0;
+    border-color: #258680;
     color: #FFFFFF;
     border-radius: 3px;
     transition: background-color 300ms ease-out;
     margin-bottom: 0; }
     .cloakLogin #meat #login .logoutLink:hover, .cloakLogin #meat #login .logoutLink:focus {
-      background-color: #007095; }
+      background-color: #258680; }
     .cloakLogin #meat #login .logoutLink:hover, .cloakLogin #meat #login .logoutLink:focus {
       color: #FFFFFF; }
   .cloakLogin #meat #login p.smallText {
