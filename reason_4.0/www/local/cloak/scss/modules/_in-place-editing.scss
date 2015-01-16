@@ -1,0 +1,14 @@
+// In-place Editing Styles
+// Cloak, v1
+
+// In-place Editing allows you to edit the content of your page from the front end.
+
+.editThis {
+	@include button($radius:$global-radius);
+
+	&:before {
+		@extend .fa;
+		content: $fa-var-pencil;
+		margin-right: rem-calc(6);
+	}
+}

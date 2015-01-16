@@ -23,11 +23,9 @@
 			background: none;
 
 			&.above {
-
 			}
 
 			&.below {
-
 			}
 
 			.next,
@@ -76,14 +74,18 @@
 			margin-left: - $column-gutter;
 
 			li {
-				//border: 1px solid blue;
 				margin: 0;
 				margin-bottom: $column-gutter;
 				margin-left: $column-gutter;
 				//width: rem-calc(150); // Width for default thumbanil image size. If the module uses larger images, styles are output in the <head> to override this.
 			
 				img {
-					border: none;
+					padding: rem-calc(4);
+					border: 1px solid $gainsboro;
+
+					&:hover {
+						border-color: $iron;
+					}
 				}
 			}
 
@@ -100,7 +102,6 @@
 		margin-bottom: $column-gutter;
 
 		.imageTitle {
-
 		}
 
 		.sequenceNum {
@@ -110,47 +111,47 @@
 
 		.prevWrapper,
 		.nextWrapper {
-			border: none;
-			overflow: visible;
-			height: auto;
+			@include clearfix;
+			float: none;
+			clear: none;
+			display: inline-block;
+			text-align: center;
+			width: 90px;
+			height: 90px;
+			overflow: hidden;
+			margin: 0 rem-calc(6) $column-gutter !important;
+			padding: rem-calc(4);
+			border: 1px solid $gainsboro;
 
+			&:hover {
+				border-color: $iron;
+			}
+		
 			.thumbnail {
-				height: auto;
-				margin-bottom: rem-calc(5);
 			}
 
 			a {
-				position: static;
 				display: block;
-				width: 80px;
-				height: 40px;
-				padding: 10px 30px;
-				border-radius: $global-rounded;
-				background: $white-smoke;
-				border: 1px solid $gainsboro;
-				
+				width: 100%;
+				height: 100%;
+
 				&:after {
 					@extend .fa;
 					font-size: rem-calc(20);
-					line-height: 1;
+					line-height: 80px;
 					display: block;
-
-					// position: relative;
-					// top: 24px;
 					color: rgba($white, 1);
 					text-shadow: 0 0 1px $charcoal;
 					text-align: center;
+					background: rgba(white,.125);
 				}
 
 				&:hover {
-					background: $primary-color;
-					border-color: $primary-color;
-
 					&:after {
-						color: $white;
+						background: transparent;
 					}
 				}
-				
+
 				img {
 					display: none;
 				}
@@ -158,9 +159,9 @@
 		}
 
 		.prevWrapper {
-
+			
 			a {
-				
+
 				&:after {
 					content: $fa-var-chevron-left;
 				}
@@ -168,8 +169,9 @@
 		}
 
 		.nextWrapper {
+			
 			a {
-				
+			
 				&:after {
 					content: $fa-var-chevron-right;
 				}
@@ -177,11 +179,16 @@
 		}
 
 		.imageWrapper {
+			clear: both;
+			text-align: left;
+			text-align: center;
 
+			.mainImage {
+				text-align: center;
+			}
 		}
 
 		.imageCaptionWrapper {
-
 		}
 	}
 

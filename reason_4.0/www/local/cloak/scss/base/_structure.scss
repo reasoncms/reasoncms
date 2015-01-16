@@ -1,6 +1,7 @@
-// Structure Styles. Rocks the basic column layout.
+// Structure Styles (resonsible for the basic column layout)
 // Cloak, v1
 
+// Helper styles (for debugging layouts)
 // #breadcrumbs {
 
 // 	.breadcrumb {
@@ -24,9 +25,19 @@
 // }
 
 
+html,
+body,
+*:before,
+*:after {
+  // Prevents auto-resizing of text in mobile browsers
+  -moz-text-size-adjust: none;
+  -ms-text-size-adjust: none;
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+}
+
 #banner {
 	//@include grid-row();
-
 
 	h1 {
 		//@include grid-column(12);
@@ -60,23 +71,59 @@
 #meat {
 	@include grid-row();
 	padding-top: $column-gutter; // space between breadcrumb and content
+	//border: 1px solid purple;
+	
 	// Let's try leaving $column-gutter as bottom margin to all content containers, and not use it here
 	//padding-bottom: $column-gutter; // space between footer and content
 
 	#content {
+		// @media #{$small-only} {
+		// 	@include grid-column($columns:10,$push:1);
+		// }
 		@include grid-column(12);
+		//border: 1px solid blue;
 	}
 
 	#related {
+		// @media #{$small-only} {
+		// 	@include grid-column($columns:10,$push:1);
+		// }
 		@include grid-column(12);
+		//border: 1px solid green;
 	}
 
 	#navigation {
+		// @media #{$small-only} {
+		// 	@include grid-column($columns:10,$push:1);
+		// }
 		@include grid-column(12);
+		//border: 1px solid orange;
+
+		&:before { 
+			display: block;
+			content: "";
+			margin-top: - $column-gutter;
+			height: $column-gutter;
+			visibility: hidden;
+
+			@media #{$large-up} {
+				display: none;
+			}
+		}
 	}
 
 	// 3 column layout. Page has content, related, and navigation.
 	&.containsConRelNav {
+		@media #{$medium-up} {
+			#content {
+				@include grid-column(8);
+			}
+
+			#related {
+				@include grid-column(4);
+			}
+		}
+
 		@media #{$medium-high-up} {
 		
 			#content {

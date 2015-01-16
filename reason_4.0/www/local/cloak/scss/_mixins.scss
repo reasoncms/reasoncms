@@ -44,6 +44,39 @@
 	}
 }
 
+// Feed button
+@mixin feed-button() {
+	@include button(
+		$padding: $button-tny,
+		$bg: $primary-color,
+		$radius: $global-radius,
+		$full-width: false,
+		$disabled: false
+	);
+	margin: 0 rem-calc(12) rem-calc(2) 0 !important;
+
+	&:before {  // download icon
+		@extend .fa;
+		color: $white;
+		margin-right: rem-calc(6);
+	}
+}
+
+// FontAwesome inline icon
+@mixin inline-icon($pseudo: before, $icon: $fa-var-bomb, $color: inherit) {
+	&:#{$pseudo} {
+		@extend .fa;
+		content: $icon;
+		@if $pseudo == after {
+			margin-left: rem-calc(6);	
+		}
+		@else {
+			margin-right: rem-calc(6);
+		}
+		color: $color;
+	}
+}
+
 // @mixin single-transition($property:all, $speed:300ms, $ease:ease-out) {
 //   @if $experimental {
 //     -webkit-transition: $property $speed $ease;

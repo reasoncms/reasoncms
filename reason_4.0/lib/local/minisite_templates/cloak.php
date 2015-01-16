@@ -36,7 +36,7 @@
 				$this->run_section( 'pre_banner' );
 				echo '</div>'."\n";
 			}
-			echo '<header id="banner" role="banner" aria-label="site">'."\n";
+			echo '<div class="sticky"><header id="banner" role="banner" aria-label="site" class="top-bar" data-topbar role="navigation" data-options="sticky_on: medium">'."\n";
 			if($this->should_show_parent_sites())
 			{
 				echo $this->get_parent_sites_markup();
@@ -66,7 +66,7 @@
 
 			$this->show_banner_xtra();
 			
-			echo '</header>'."\n";
+			echo '</header></div>'."\n";
 
 			if($this->has_content('post_banner'))
 			{
@@ -94,7 +94,7 @@
 			echo '</div>'."\n";
 		}
 
-		// Cloak adds search icon that toggles open the search bar.
+		// Cloak adds a search icon that toggles open the search bar.
 		//
 		// This function assumes you run the search module in the banner_xtra page location.
 		// If you run a different module in banner_xtra in your page_types file, you will probably want

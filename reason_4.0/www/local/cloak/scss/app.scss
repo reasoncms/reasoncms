@@ -1,20 +1,14 @@
+// APP STYLES (for export)
+// Cloak, v1
+
+// There are a few ways to reduce bloat in the complied css.
+// 1. Comment out @import "foundation"; and selectively import components, while keeping $include-html-classes: true
+// 2. Import all of foundation with @import "foundation"; and set $include-html-classes: false while selectively setting $include-html-{module}-classes: true as needed.
+// Cloak uses option #2.
+
 // Foundation
-//@import "normalize";
 @import "settings";
 @import "foundation";
-
-// Font Awesome
-@import "vendor/font-awesome/variables";
-@import "vendor/font-awesome/mixins";
-@import "vendor/font-awesome/core";
-@import "vendor/font-awesome/fixed-width";
-@import "vendor/font-awesome/list";
-@import "vendor/font-awesome/spinning";
-
-// Cloak
-@import "mixins";
-@import "base";
-@import "modules";
 
 // Or selectively include components
 // @import
@@ -53,3 +47,16 @@
 //   "foundation/components/type",
 //   "foundation/components/offcanvas",
 //   "foundation/components/visibility";
+
+// Font Awesome
+@import "vendor/font-awesome/variables";
+@import "vendor/font-awesome/mixins";
+@import "vendor/font-awesome/core";
+@import "vendor/font-awesome/fixed-width";
+@import "vendor/font-awesome/list";
+@import "vendor/font-awesome/spinning";
+
+// Cloak
+@import "mixins";
+@import "base";
+@import "modules";

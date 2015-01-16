@@ -23,7 +23,7 @@
 		}
 
 		// Let's just keep this stuff empty
-		// This is a login page, so we should keep it pretty simple
+		// This is a login page, so we should keep it nice and speedy
 
 		function cloak_you_are_here($delimiter = '')
 		{
@@ -44,6 +44,6 @@
 		function do_org_foot()
 		{	
 		}
-		
+
 	}
 ?>

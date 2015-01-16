@@ -136,10 +136,10 @@ select {
   border-radius: 3px;
   left: 0;
   background-color: #FFFFFF;
-  padding: 1.25rem;
+  padding: 2.34375rem;
   border: solid 1px #CCCCCC;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
-  padding: 1.875rem; }
+  padding: 3.515625rem; }
   @media only screen and (max-width: 40em) {
     .reveal-modal, dialog {
       min-height: 100vh; } }
@@ -216,7 +216,7 @@ select {
         right: 0;
         margin: 0 auto; } }
   .reveal-modal .close-reveal-modal, dialog .close-reveal-modal {
-    font-size: 1rem;
+    font-size: 1.25rem;
     line-height: 1;
     position: absolute;
     top: 0.5rem;
@@ -245,6 +245,498 @@ dialog {
   dialog, .reveal-modal, dialog {
     display: none;
     background: #FFFFFF !important; }
+ }
+
+meta.foundation-mq-topbar {
+  font-family: "/only screen and (min-width:40.063em)/";
+  width: 40.063em; }
+
+/* Wrapped around .top-bar to contain to grid width */
+.contain-to-grid {
+  width: 100%;
+  background: #333333; }
+  .contain-to-grid .top-bar {
+    margin-bottom: 0; }
+
+.fixed {
+  width: 100%;
+  left: 0;
+  position: fixed;
+  top: 0;
+  z-index: 99; }
+  .fixed.expanded:not(.top-bar) {
+    overflow-y: auto;
+    height: auto;
+    width: 100%;
+    max-height: 100%; }
+    .fixed.expanded:not(.top-bar) .title-area {
+      position: fixed;
+      width: 100%;
+      z-index: 99; }
+    .fixed.expanded:not(.top-bar) .top-bar-section {
+      z-index: 98;
+      margin-top: auto; }
+
+.top-bar {
+  overflow: hidden;
+  height: auto;
+  line-height: auto;
+  position: relative;
+  background: #333333;
+  margin-bottom: 0; }
+  .top-bar ul {
+    margin-bottom: 0;
+    list-style: none; }
+  .top-bar .row {
+    max-width: none; }
+  .top-bar form, .top-bar input {
+    margin-bottom: 0; }
+  .top-bar input {
+    height: 1.75rem;
+    padding-top: 0.35rem;
+    padding-bottom: 0.35rem;
+    font-size: 0.75rem; }
+  .top-bar .button, .top-bar button {
+    padding-top: 0.4125rem;
+    padding-bottom: 0.4125rem;
+    margin-bottom: 0;
+    font-size: 0.75rem; }
+    @media only screen and (max-width: 40em) {
+      .top-bar .button, .top-bar button {
+        position: relative;
+        top: -1px; } }
+  .top-bar .title-area {
+    position: relative;
+    margin: 0; }
+  .top-bar .name {
+    height: auto;
+    margin: 0;
+    font-size: 16px; }
+    .top-bar .name h1, .top-bar .name h2, .top-bar .name h3, .top-bar .name h4, .top-bar .name p, .top-bar .name span {
+      line-height: auto;
+      font-size: 1.0625rem;
+      margin: 0; }
+      .top-bar .name h1 a, .top-bar .name h2 a, .top-bar .name h3 a, .top-bar .name h4 a, .top-bar .name p a, .top-bar .name span a {
+        font-weight: 300;
+        color: #FFFFFF;
+        width: 75%;
+        display: block;
+        padding: 0 auto/3; }
+  .top-bar .toggle-topbar {
+    position: absolute;
+    right: 0;
+    top: 0; }
+    .top-bar .toggle-topbar a {
+      color: #FFFFFF;
+      text-transform: uppercase;
+      font-size: 0.8125rem;
+      font-weight: 700;
+      position: relative;
+      display: block;
+      padding: 0 auto/3;
+      height: auto;
+      line-height: auto; }
+    .top-bar .toggle-topbar.menu-icon {
+      top: 50%;
+      margin-top: -16px; }
+      .top-bar .toggle-topbar.menu-icon a {
+        height: 34px;
+        line-height: 33px;
+        padding: 0 auto/31.5625rem 0 auto/3;
+        color: #FFFFFF;
+        position: relative; }
+        .top-bar .toggle-topbar.menu-icon a span::after {
+          content: "";
+          position: absolute;
+          display: block;
+          height: 0;
+          top: 50%;
+          margin-top: -8px;
+          right: auto/3;
+          box-shadow: 0 0 0 1px #FFFFFF, 0 7px 0 1px #FFFFFF, 0 14px 0 1px #FFFFFF;
+          width: 16px; }
+        .top-bar .toggle-topbar.menu-icon a span:hover:after {
+          box-shadow: 0 0 0 1px "", 0 7px 0 1px "", 0 14px 0 1px ""; }
+  .top-bar.expanded {
+    height: auto;
+    background: transparent; }
+    .top-bar.expanded .title-area {
+      background: #333333; }
+    .top-bar.expanded .toggle-topbar a {
+      color: #888888; }
+      .top-bar.expanded .toggle-topbar a span::after {
+        box-shadow: 0 0 0 1px #888888, 0 7px 0 1px #888888, 0 14px 0 1px #888888; }
+
+.top-bar-section {
+  left: 0;
+  position: relative;
+  width: auto;
+  transition: left 300ms ease-out; }
+  .top-bar-section ul {
+    padding: 0;
+    width: 100%;
+    height: auto;
+    display: block;
+    font-size: 16px;
+    margin: 0; }
+  .top-bar-section .divider, .top-bar-section [role="separator"] {
+    border-top: solid 1px #1a1a1a;
+    clear: both;
+    height: 1px;
+    width: 100%; }
+  .top-bar-section ul li {
+    background: #333333; }
+    .top-bar-section ul li > a {
+      display: block;
+      width: 100%;
+      color: #FFFFFF;
+      padding: 12px 0 12px 0;
+      padding-left: auto/3;
+      font-family: "Open Sans", sans-serif;
+      font-size: 0.8125rem;
+      font-weight: 300;
+      text-transform: none; }
+      .top-bar-section ul li > a.button {
+        font-size: 0.8125rem;
+        padding-right: auto/3;
+        padding-left: auto/3;
+        background-color: #008CBA;
+        border-color: #007095;
+        color: #FFFFFF; }
+        .top-bar-section ul li > a.button:hover, .top-bar-section ul li > a.button:focus {
+          background-color: #007095; }
+        .top-bar-section ul li > a.button:hover, .top-bar-section ul li > a.button:focus {
+          color: #FFFFFF; }
+      .top-bar-section ul li > a.button.secondary {
+        background-color: #e7e7e7;
+        border-color: #b9b9b9;
+        color: #333333; }
+        .top-bar-section ul li > a.button.secondary:hover, .top-bar-section ul li > a.button.secondary:focus {
+          background-color: #b9b9b9; }
+        .top-bar-section ul li > a.button.secondary:hover, .top-bar-section ul li > a.button.secondary:focus {
+          color: #333333; }
+      .top-bar-section ul li > a.button.success {
+        background-color: #43AC6A;
+        border-color: #368a55;
+        color: #FFFFFF; }
+        .top-bar-section ul li > a.button.success:hover, .top-bar-section ul li > a.button.success:focus {
+          background-color: #368a55; }
+        .top-bar-section ul li > a.button.success:hover, .top-bar-section ul li > a.button.success:focus {
+          color: #FFFFFF; }
+      .top-bar-section ul li > a.button.alert {
+        background-color: red;
+        border-color: #cc0000;
+        color: #FFFFFF; }
+        .top-bar-section ul li > a.button.alert:hover, .top-bar-section ul li > a.button.alert:focus {
+          background-color: #cc0000; }
+        .top-bar-section ul li > a.button.alert:hover, .top-bar-section ul li > a.button.alert:focus {
+          color: #FFFFFF; }
+      .top-bar-section ul li > a.button.warning {
+        background-color: #f08a24;
+        border-color: #cf6e0e;
+        color: #FFFFFF; }
+        .top-bar-section ul li > a.button.warning:hover, .top-bar-section ul li > a.button.warning:focus {
+          background-color: #cf6e0e; }
+        .top-bar-section ul li > a.button.warning:hover, .top-bar-section ul li > a.button.warning:focus {
+          color: #FFFFFF; }
+    .top-bar-section ul li > button {
+      font-size: 0.8125rem;
+      padding-right: auto/3;
+      padding-left: auto/3;
+      background-color: #008CBA;
+      border-color: #007095;
+      color: #FFFFFF; }
+      .top-bar-section ul li > button:hover, .top-bar-section ul li > button:focus {
+        background-color: #007095; }
+      .top-bar-section ul li > button:hover, .top-bar-section ul li > button:focus {
+        color: #FFFFFF; }
+      .top-bar-section ul li > button.secondary {
+        background-color: #e7e7e7;
+        border-color: #b9b9b9;
+        color: #333333; }
+        .top-bar-section ul li > button.secondary:hover, .top-bar-section ul li > button.secondary:focus {
+          background-color: #b9b9b9; }
+        .top-bar-section ul li > button.secondary:hover, .top-bar-section ul li > button.secondary:focus {
+          color: #333333; }
+      .top-bar-section ul li > button.success {
+        background-color: #43AC6A;
+        border-color: #368a55;
+        color: #FFFFFF; }
+        .top-bar-section ul li > button.success:hover, .top-bar-section ul li > button.success:focus {
+          background-color: #368a55; }
+        .top-bar-section ul li > button.success:hover, .top-bar-section ul li > button.success:focus {
+          color: #FFFFFF; }
+      .top-bar-section ul li > button.alert {
+        background-color: red;
+        border-color: #cc0000;
+        color: #FFFFFF; }
+        .top-bar-section ul li > button.alert:hover, .top-bar-section ul li > button.alert:focus {
+          background-color: #cc0000; }
+        .top-bar-section ul li > button.alert:hover, .top-bar-section ul li > button.alert:focus {
+          color: #FFFFFF; }
+      .top-bar-section ul li > button.warning {
+        background-color: #f08a24;
+        border-color: #cf6e0e;
+        color: #FFFFFF; }
+        .top-bar-section ul li > button.warning:hover, .top-bar-section ul li > button.warning:focus {
+          background-color: #cf6e0e; }
+        .top-bar-section ul li > button.warning:hover, .top-bar-section ul li > button.warning:focus {
+          color: #FFFFFF; }
+    .top-bar-section ul li:hover:not(.has-form) > a {
+      background-color: #555555;
+      background: #333333;
+      color: #FFFFFF; }
+    .top-bar-section ul li.active > a {
+      background: #008CBA;
+      color: #FFFFFF; }
+      .top-bar-section ul li.active > a:hover {
+        background: #0078a0;
+        color: #FFFFFF; }
+  .top-bar-section .has-form {
+    padding: auto/3; }
+  .top-bar-section .has-dropdown {
+    position: relative; }
+    .top-bar-section .has-dropdown > a:after {
+      content: "";
+      display: block;
+      width: 0;
+      height: 0;
+      border: inset 5px;
+      border-color: transparent transparent transparent rgba(255, 255, 255, 0.4);
+      border-left-style: solid;
+      margin-right: auto/3;
+      margin-top: -4.5px;
+      position: absolute;
+      top: 50%;
+      right: 0; }
+    .top-bar-section .has-dropdown.moved {
+      position: static; }
+      .top-bar-section .has-dropdown.moved > .dropdown {
+        display: block;
+        position: static !important;
+        height: auto;
+        width: auto;
+        overflow: visible;
+        clip: auto;
+        position: absolute !important;
+        width: 100%; }
+      .top-bar-section .has-dropdown.moved > a:after {
+        display: none; }
+  .top-bar-section .dropdown {
+    padding: 0;
+    position: absolute;
+    left: 100%;
+    top: 0;
+    z-index: 99;
+    display: block;
+    position: absolute !important;
+    height: 1px;
+    width: 1px;
+    overflow: hidden;
+    clip: rect(1px, 1px, 1px, 1px); }
+    .top-bar-section .dropdown li {
+      width: 100%;
+      height: auto; }
+      .top-bar-section .dropdown li a {
+        font-weight: 300;
+        padding: 8px auto/3; }
+        .top-bar-section .dropdown li a.parent-link {
+          font-weight: 300; }
+      .top-bar-section .dropdown li.title h5, .top-bar-section .dropdown li.parent-link {
+        margin-bottom: 0;
+        margin-top: 0;
+        font-size: 1.125rem; }
+        .top-bar-section .dropdown li.title h5 a, .top-bar-section .dropdown li.parent-link a {
+          color: #FFFFFF;
+          display: block; }
+          .top-bar-section .dropdown li.title h5 a:hover, .top-bar-section .dropdown li.parent-link a:hover {
+            background: none; }
+      .top-bar-section .dropdown li.has-form {
+        padding: 8px auto/3; }
+      .top-bar-section .dropdown li .button, .top-bar-section .dropdown li button {
+        top: auto; }
+    .top-bar-section .dropdown label {
+      padding: 8px auto/3 2px;
+      margin-bottom: 0;
+      text-transform: uppercase;
+      color: #777777;
+      font-weight: 700;
+      font-size: 0.625rem; }
+
+.js-generated {
+  display: block; }
+
+@media only screen and (min-width:40.063em) {
+  .top-bar {
+    background: #333333;
+    overflow: visible; }
+    .top-bar:before, .top-bar:after {
+      content: " ";
+      display: table; }
+    .top-bar:after {
+      clear: both; }
+    .top-bar .toggle-topbar {
+      display: none; }
+    .top-bar .title-area {
+      float: left; }
+    .top-bar .name h1 a {
+      width: auto; }
+    .top-bar input, .top-bar .button, .top-bar button {
+      font-size: 0.875rem;
+      position: relative;
+      height: 1.75rem;
+      top: auto-1.75rem/2; }
+    .top-bar.expanded {
+      background: #333333; }
+
+  .contain-to-grid .top-bar {
+    max-width: 87.5rem;
+    margin: 0 auto;
+    margin-bottom: 0; }
+
+  .top-bar-section {
+    transition: none 0 0;
+    left: 0 !important; }
+    .top-bar-section ul {
+      width: auto;
+      height: auto !important;
+      display: inline; }
+      .top-bar-section ul li {
+        float: left; }
+        .top-bar-section ul li .js-generated {
+          display: none; }
+    .top-bar-section li.hover > a:not(.button) {
+      background-color: #555555;
+      background: #333333;
+      color: #FFFFFF; }
+    .top-bar-section li:not(.has-form) a:not(.button) {
+      padding: 0 auto/3;
+      line-height: auto;
+      background: #333333; }
+      .top-bar-section li:not(.has-form) a:not(.button):hover {
+        background-color: #555555;
+        background: #333333; }
+    .top-bar-section li.active:not(.has-form) a:not(.button) {
+      padding: 0 auto/3;
+      line-height: auto;
+      color: #FFFFFF;
+      background: #008CBA; }
+      .top-bar-section li.active:not(.has-form) a:not(.button):hover {
+        background: #0078a0;
+        color: #FFFFFF; }
+    .top-bar-section .has-dropdown > a {
+      padding-right: auto/31.25rem !important; }
+      .top-bar-section .has-dropdown > a:after {
+        content: "";
+        display: block;
+        width: 0;
+        height: 0;
+        border: inset 5px;
+        border-color: rgba(255, 255, 255, 0.4) transparent transparent transparent;
+        border-top-style: solid;
+        margin-top: -2.5px;
+        top: auto/2; }
+    .top-bar-section .has-dropdown.moved {
+      position: relative; }
+      .top-bar-section .has-dropdown.moved > .dropdown {
+        display: block;
+        position: absolute !important;
+        height: 1px;
+        width: 1px;
+        overflow: hidden;
+        clip: rect(1px, 1px, 1px, 1px); }
+    .top-bar-section .has-dropdown.hover > .dropdown, .top-bar-section .has-dropdown.not-click:hover > .dropdown {
+      display: block;
+      position: static !important;
+      height: auto;
+      width: auto;
+      overflow: visible;
+      clip: auto;
+      position: absolute !important; }
+    .top-bar-section .has-dropdown > a:focus + .dropdown {
+      display: block;
+      position: static !important;
+      height: auto;
+      width: auto;
+      overflow: visible;
+      clip: auto;
+      position: absolute !important; }
+    .top-bar-section .has-dropdown .dropdown li.has-dropdown > a:after {
+      border: none;
+      content: "\00bb";
+      top: 1rem;
+      margin-top: -1px;
+      right: 5px;
+      line-height: 1.2; }
+    .top-bar-section .dropdown {
+      left: 0;
+      top: auto;
+      background: transparent;
+      min-width: 100%; }
+      .top-bar-section .dropdown li a {
+        color: #FFFFFF;
+        line-height: auto;
+        white-space: nowrap;
+        padding: 12px auto/3;
+        background: #333333; }
+      .top-bar-section .dropdown li:not(.has-form):not(.active) > a:not(.button) {
+        color: #FFFFFF;
+        background: #333333; }
+      .top-bar-section .dropdown li:not(.has-form):not(.active):hover > a:not(.button) {
+        color: #FFFFFF;
+        background-color: #555555;
+        background: #333333; }
+      .top-bar-section .dropdown li label {
+        white-space: nowrap;
+        background: #333333; }
+      .top-bar-section .dropdown li .dropdown {
+        left: 100%;
+        top: 0; }
+    .top-bar-section > ul > .divider, .top-bar-section > ul > [role="separator"] {
+      border-bottom: none;
+      border-top: none;
+      border-right: solid 1px #4e4e4e;
+      clear: none;
+      height: auto;
+      width: 0; }
+    .top-bar-section .has-form {
+      background: #333333;
+      padding: 0 auto/3;
+      height: auto; }
+    .top-bar-section .right li .dropdown {
+      left: auto;
+      right: 0; }
+      .top-bar-section .right li .dropdown li .dropdown {
+        right: 100%; }
+    .top-bar-section .left li .dropdown {
+      right: auto;
+      left: 0; }
+      .top-bar-section .left li .dropdown li .dropdown {
+        left: 100%; }
+
+  .no-js .top-bar-section ul li:hover > a {
+    background-color: #555555;
+    background: #333333;
+    color: #FFFFFF; }
+  .no-js .top-bar-section ul li:active > a {
+    background: #008CBA;
+    color: #FFFFFF; }
+  .no-js .top-bar-section .has-dropdown:hover > .dropdown {
+    display: block;
+    position: static !important;
+    height: auto;
+    width: auto;
+    overflow: visible;
+    clip: auto;
+    position: absolute !important; }
+  .no-js .top-bar-section .has-dropdown > a:focus + .dropdown {
+    display: block;
+    position: static !important;
+    height: auto;
+    width: auto;
+    overflow: visible;
+    clip: auto;
+    position: absolute !important; }
  }
 
 .text-left {
@@ -690,7 +1182,7 @@ blockquote, blockquote p {
     display: inherit !important; }
  }
 
-.fa, #banner #navigationToggles li.navJump a:before, #banner #navigationToggles li.searchToggle a:before, .reveal-modal .close-reveal-modal:before, dialog .close-reveal-modal:before, .assets li:before, #av .moduleNav ul li:before, #av .podcast a:before, #discoErrorNotice h3:before, #imageGallery .item .prevWrapper a:after, #imageGallery .item .nextWrapper a:after, #imageGallery .back:before, .loginLinkModule #footerLoginLink .login:after, .loginLinkModule #footerLoginLink .logout:after, #minisiteNavigation ul .navList .jump a:after {
+.fa, #banner #navigationToggles li.navJump a:before, #banner #navigationToggles li.searchToggle a:before, .reveal-modal .close-reveal-modal:before, dialog .close-reveal-modal:before, .assets li:before, #av .moduleNav ul li:before, #av .podcast a:before, #calendar .responsiveEventsList .iCalExport a:before, #calendar .responsiveEventsList .feedInfo a:before, #calendar .eventDetails .export .back a:before, #calendar .eventDetails .export .repetition:before, #calendar .eventDetails .export .date:before, #calendar .eventDetails .export .time:before, #calendar .eventDetails .export .duration:before, #calendar .eventDetails .export .eventLocation:before, #calendar .eventDetails .export .sponsor:before, #calendar .eventDetails .export .contact:before, #discoErrorNotice h3:before, #imageGallery .item .prevWrapper a:after, #imageGallery .item .nextWrapper a:after, #imageGallery .back:before, .editThis:before, .loginLinkModule #footerLoginLink .login:after, .loginLinkModule #footerLoginLink .logout:after, #minisiteNavigation ul .navList .jump a:after, #meat .publication .persistent #filtering .filterSet a:before, #meat .publication .persistent #filtering .filters ul li a:before, #meat .publication .persistent #filtering .filters ul li strong:before, #meat .publication .persistent .loginlogout a:after, #meat .publication .moduleNav .filterMessage h3 .clear a:before, #meat .publication .moduleNav .posts .post .links li.more a:before, #meat .publication .moduleNav .posts .post .links li.permalink a:before, #meat .publication .moduleNav .feedLink a:before, #meat .publication .moduleNav .feedLink .feedInfo a:before, #meat .publication.fullPostDisplay .fullPost .relatedItems .categories li a:before, #meat .publication.fullPostDisplay .fullPost .relatedItems .categories li strong:before, #meat .publication.fullPostDisplay .fullPost .secondChunk .nextPrev .prev a:before, #meat .publication.fullPostDisplay .fullPost .secondChunk .nextPrev .next a:after, #meat .publication.fullPostDisplay .back .mainBackLink a:before {
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -698,7 +1190,7 @@ blockquote, blockquote p {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale; }
 
-.fa-fw {
+.fa-fw, #calendar .eventDetails .export .repetition:before, #calendar .eventDetails .export .date:before, #calendar .eventDetails .export .time:before, #calendar .eventDetails .export .duration:before, #calendar .eventDetails .export .eventLocation:before, #calendar .eventDetails .export .sponsor:before, #calendar .eventDetails .export .contact:before, #meat .publication .moduleNav .posts .post .links li a:before {
   width: 1.2857142857em;
   text-align: center; }
 
@@ -739,6 +1231,12 @@ blockquote, blockquote p {
   100% {
     -webkit-transform: rotate(359deg);
     transform: rotate(359deg); } }
+
+html, body, *:before, *:after {
+  -moz-text-size-adjust: none;
+  -ms-text-size-adjust: none;
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none; }
 
 #breadcrumbs {
   width: 100%;
@@ -807,6 +1305,28 @@ blockquote, blockquote p {
     padding-right: 0.9375rem;
     width: 100%;
     float: left; }
+    #meat #navigation:before {
+      display: block;
+      content: "";
+      margin-top: -1.875rem;
+      height: 1.875rem;
+      visibility: hidden; }
+      @media only screen and (min-width:63.8125em) {
+        #meat #navigation:before {
+          display: none; } }
+  @media only screen and (min-width:40.063em) {
+    #meat.containsConRelNav #content {
+      padding-left: 0.9375rem;
+      padding-right: 0.9375rem;
+      width: 66.6666666667%;
+      float: left; }
+
+    #meat.containsConRelNav #related {
+      padding-left: 0.9375rem;
+      padding-right: 0.9375rem;
+      width: 33.3333333333%;
+      float: left; }
+ }
   @media only screen and (min-width:60.0625em) {
     #meat.containsConRelNav #content {
       padding-left: 0.9375rem;
@@ -862,15 +1382,35 @@ blockquote, blockquote p {
     width: 100%;
     float: left; }
 
+.f-topbar-fixed #banner {
+  padding: 0.9375rem;
+  text-align: left; }
+  .f-topbar-fixed #banner h1 {
+    font-size: 1.375rem;
+    float: left;
+    padding: 0.25rem 0 0 0; }
+  .f-topbar-fixed #banner #navigationToggles {
+    float: right; }
+
 #banner {
   background: #F6F6F6;
   border-bottom: 1px solid #DDDDDD;
   text-align: center;
-  padding: 1.875rem; }
+  padding: 0.9375rem; }
+  @media only screen and (min-width:40.063em) {
+    #banner {
+      padding: 1.875rem 0.9375rem; } }
   #banner h1 {
+    font-size: 1.125rem;
     font-family: "Merriweather", serif;
     margin: 0;
     padding-bottom: 0.9375rem; }
+    @media only screen and (min-width:40.063em) {
+      #banner h1 {
+        font-size: 1.625rem; } }
+    @media only screen and (min-width:63.8125em) {
+      #banner h1 {
+        font-size: 2rem; } }
   #banner #navigationToggles {
     margin: 0;
     padding: 0; }
@@ -998,7 +1538,8 @@ h2.pageTitle {
         font-size: 0.875rem;
         color: #888888; }
   #av .podcast {
-    margin: 0; }
+    margin: 0;
+    clear: both; }
     #av .podcast a {
       border-style: solid;
       border-width: 0;
@@ -1099,9 +1640,32 @@ h2.pageTitle {
   margin: 0 0.125rem;
   display: inline-block; }
 
+@media all and (max-width: 720px) {
+  #calendar .responsiveEventsList .eventsListContent, #calendar .responsiveEventsList .gridAndOptionsWrapper {
+    background: green;
+    width: auto;
+    float: none;
+    margin-left: 0;
+    clear: both;
+    padding: 1px 0; }
+
+  #calendar .responsiveEventsList .datesAndSearch {
+    float: left;
+    width: 49%; }
+
+  #calendar .responsiveEventsList .options {
+    float: right;
+    width: 49%; }
+ }
+
+@media all and (max-width: 500px) {
+  #calendar .responsiveEventsList .datesAndSearch, #calendar .responsiveEventsList .options {
+    float: none;
+    width: auto; }
+ }
+
 /* Events Column Layouts */
 #calendar .responsiveEventsList .gridAndOptionsWrapper {
-  width: 100%;
   float: left;
   margin: -0.9375rem 0 0 0;
   padding: 1rem;
@@ -1121,54 +1685,283 @@ h2.pageTitle {
     display: table; }
   #calendar .responsiveEventsList:after {
     clear: both; }
-#calendar .views {
-  clear: both;
-  text-align: left;
-  margin-bottom: 1.875rem; }
-  #calendar .views:before, #calendar .views:after {
-    content: " ";
-    display: table; }
-  #calendar .views:after {
-    clear: both; }
-  #calendar .views h4 {
-    display: inline;
-    font-size: 0.75rem;
-    margin-right: 0.375rem; }
-    @media only screen and (min-width:40.063em) {
-      #calendar .views h4 {
-        font-size: 0.875rem; } }
-  #calendar .views ul {
-    margin: 0;
-    padding: 0;
-    display: inline-block; }
-    #calendar .views ul li {
-      display: inline-block;
-      margin: 0 0 0 0.375rem;
+  #calendar .responsiveEventsList .views {
+    clear: both;
+    text-align: left;
+    margin-bottom: 1.875rem; }
+    #calendar .responsiveEventsList .views:before, #calendar .responsiveEventsList .views:after {
+      content: " ";
+      display: table; }
+    #calendar .responsiveEventsList .views:after {
+      clear: both; }
+    #calendar .responsiveEventsList .views h4 {
+      display: inline;
+      font-size: 0.75rem;
+      margin-right: 0.375rem; }
+      @media only screen and (min-width:40.063em) {
+        #calendar .responsiveEventsList .views h4 {
+          font-size: 0.875rem; } }
+    #calendar .responsiveEventsList .views ul {
       margin: 0;
       padding: 0;
-      font-size: 0.75rem; }
-      @media only screen and (min-width:40.063em) {
-        #calendar .views ul li {
-          font-size: 0.875rem; } }
-      #calendar .views ul li a, #calendar .views ul li strong {
-        padding: 0.0625rem 0.75rem;
+      display: inline-block; }
+      #calendar .responsiveEventsList .views ul li {
         display: inline-block;
-        background: #EFEFEF;
-        border-right: 1px solid #DDDDDD; }
-      #calendar .views ul li a:hover {
-        background: #DDDDDD; }
-      #calendar .views ul li strong {
-        text-decoration: none;
-        font-weight: 400;
-        background: #008CBA;
-        color: #FFF; }
-      #calendar .views ul li:first-child a, #calendar .views ul li:first-child strong {
-        border-radius: 1000px 0 0 1000px;
-        padding-left: 1rem; }
-      #calendar .views ul li:last-child a, #calendar .views ul li:last-child strong {
-        border-radius: 0 1000px 1000px 0;
-        border-right: none;
-        padding-right: 1rem; }
+        margin: 0 0 0 0.375rem;
+        margin: 0;
+        padding: 0;
+        font-size: 0.75rem; }
+        @media only screen and (min-width:40.063em) {
+          #calendar .responsiveEventsList .views ul li {
+            font-size: 0.875rem; } }
+        #calendar .responsiveEventsList .views ul li a, #calendar .responsiveEventsList .views ul li strong {
+          padding: 0.0625rem 0.75rem;
+          display: inline-block;
+          background: #EFEFEF;
+          border-right: 1px solid #DDDDDD; }
+        #calendar .responsiveEventsList .views ul li a:hover {
+          background: #DDDDDD; }
+        #calendar .responsiveEventsList .views ul li strong {
+          text-decoration: none;
+          font-weight: 400;
+          background: #008CBA;
+          color: #FFF; }
+        #calendar .responsiveEventsList .views ul li:first-child a, #calendar .responsiveEventsList .views ul li:first-child strong {
+          border-radius: 1000px 0 0 1000px;
+          padding-left: 1rem; }
+        #calendar .responsiveEventsList .views ul li:last-child a, #calendar .responsiveEventsList .views ul li:last-child strong {
+          border-radius: 0 1000px 1000px 0;
+          border-right: none;
+          padding-right: 1rem; }
+  #calendar .responsiveEventsList .nav {
+    background: #EFEFEF;
+    text-align: center;
+    font-size: 0.875rem;
+    margin-bottom: 1.875rem;
+    line-height: 1; }
+    @media only screen and (min-width:40.063em) {
+      #calendar .responsiveEventsList .nav {
+        font-size: 1rem; } }
+    #calendar .responsiveEventsList .nav .previous, #calendar .responsiveEventsList .nav .next {
+      padding: 0.5rem 0.875rem;
+      display: inline-block;
+      background: #008CBA;
+      color: #FFFFFF; }
+      #calendar .responsiveEventsList .nav .previous:hover, #calendar .responsiveEventsList .nav .next:hover {
+        background: #009fd3; }
+    #calendar .responsiveEventsList .nav .previous {
+      float: left; }
+    #calendar .responsiveEventsList .nav .next {
+      float: right; }
+    #calendar .responsiveEventsList .nav strong {
+      display: inline-block;
+      padding: 0.5rem 0; }
+  #calendar .responsiveEventsList .eventsListContent .focus {
+    border-style: solid;
+    border-width: 1px;
+    display: block;
+    font-weight: 300;
+    margin-bottom: 1.25rem;
+    position: relative;
+    padding: 0.875rem 1.5rem 0.875rem 0.875rem;
+    font-size: 0.8125rem;
+    transition: opacity 300ms ease-out;
+    background-color: #F6F6F6;
+    border-color: #d4d4d4;
+    color: #4f4f4f;
+    border-radius: 3px;
+    border: none; }
+    #calendar .responsiveEventsList .eventsListContent .focus ul {
+      margin-bottom: 0; }
+    #calendar .responsiveEventsList .eventsListContent .focus h3 {
+      font-size: 1rem; }
+    #calendar .responsiveEventsList .eventsListContent .focus h4 {
+      font-size: 1rem;
+      display: inline; }
+    #calendar .responsiveEventsList .eventsListContent .focus a {
+      font-size: 0.75rem;
+      display: inline; }
+  #calendar .responsiveEventsList .eventsListContent .month {
+    font-family: "Merriweather", serif;
+    font-size: 1.25rem;
+    color: #999999;
+    border-top: 1px dotted #DDDDDD;
+    padding-top: 0.9375rem; }
+    #calendar .responsiveEventsList .eventsListContent .month:first-of-type {
+      border-top: none;
+      padding-top: 0; }
+  #calendar .responsiveEventsList .eventsListContent .day {
+    font-size: 1rem;
+    font-weight: 700; }
+  #calendar .responsiveEventsList .eventsListContent .dayEvents {
+    list-style-type: none;
+    margin: 0; }
+    #calendar .responsiveEventsList .eventsListContent .dayEvents .event {
+      margin: 0 0 0.9375rem 0.9375rem; }
+  #calendar .responsiveEventsList .gridAndOptionsWrapper {
+    margin: 0 0 1.875rem; }
+    #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGridWrapper {
+      margin: 0 0 1.875rem; }
+    #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid {
+      text-align: center; }
+      #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid a.previous, #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid h4, #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid a.next {
+        display: inline-block;
+        padding: 0 0.375rem; }
+      #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table {
+        border: none; }
+        #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table tr {
+          background: #FFF; }
+        #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table th, #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td {
+          text-align: center;
+          padding: 0; }
+        #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table th {
+          padding: 5% 0;
+          background: #dedede;
+          background: #FFF;
+          border: #FFF; }
+        #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td {
+          border-color: #DDDDDD;
+          border-image: none;
+          border-style: solid;
+          border-width: 1px; }
+          #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td:empty {
+            background: #d9d9d9; }
+          #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.hasEvent a {
+            color: red; }
+          #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.currentlyViewing {
+            background: #F6F6F6; }
+            #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.currentlyViewing a {
+              color: #FFF; }
+          #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.today {
+            background: white; }
+            #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.today a {
+              color: #FFF; }
+          #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td a {
+            color: #7b7b7b;
+            display: block;
+            padding: 28% 0; }
+    #calendar .responsiveEventsList .gridAndOptionsWrapper .dateJump {
+      margin: 0 0 1.875rem; }
+      #calendar .responsiveEventsList .gridAndOptionsWrapper .dateJump:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .dateJump:after {
+        content: " ";
+        display: table; }
+      #calendar .responsiveEventsList .gridAndOptionsWrapper .dateJump:after {
+        clear: both; }
+      #calendar .responsiveEventsList .gridAndOptionsWrapper .dateJump select[name="start_month"] {
+        width: 30%; }
+      #calendar .responsiveEventsList .gridAndOptionsWrapper .dateJump select[name="start_day"] {
+        width: 30%; }
+      #calendar .responsiveEventsList .gridAndOptionsWrapper .dateJump select[name="start_year"] {
+        width: 40%; }
+      #calendar .responsiveEventsList .gridAndOptionsWrapper .dateJump span {
+        width: 80%;
+        float: left;
+        padding-right: 0.875rem; }
+        @media only screen and (min-width:720px) and (max-width:77.4375em) {
+          #calendar .responsiveEventsList .gridAndOptionsWrapper .dateJump span {
+            width: 100%; } }
+      #calendar .responsiveEventsList .gridAndOptionsWrapper .dateJump input[type="submit"] {
+        padding: 0;
+        float: right;
+        width: 20%; }
+        @media only screen and (min-width:720px) and (max-width:77.4375em) {
+          #calendar .responsiveEventsList .gridAndOptionsWrapper .dateJump input[type="submit"] {
+            float: none;
+            width: 100%; } }
+    #calendar .responsiveEventsList .gridAndOptionsWrapper .search {
+      margin: 0 0 1.875rem; }
+  #calendar .responsiveEventsList .foot {
+    margin-bottom: 1.875rem; }
+  #calendar .responsiveEventsList .iCalExport, #calendar .responsiveEventsList .feedInfo {
+    margin: 0;
+    display: inline-block; }
+    #calendar .responsiveEventsList .iCalExport a, #calendar .responsiveEventsList .feedInfo a {
+      border-style: solid;
+      border-width: 0;
+      cursor: pointer;
+      font-family: "Open Sans", sans-serif;
+      font-weight: 300;
+      line-height: normal;
+      margin: 0 0 1.25rem;
+      position: relative;
+      text-decoration: none;
+      text-align: center;
+      -webkit-appearance: none;
+      border-radius: 0;
+      display: inline-block;
+      padding-top: 0.25rem;
+      padding-right: 0.5rem;
+      padding-bottom: 0.3125rem;
+      padding-left: 0.5rem;
+      font-size: 0.6875rem;
+      background-color: #008CBA;
+      border-color: #007095;
+      color: #FFFFFF;
+      border-radius: 3px;
+      transition: background-color 300ms ease-out;
+      margin: 0 0.75rem 0.125rem 0 !important; }
+      #calendar .responsiveEventsList .iCalExport a:hover, #calendar .responsiveEventsList .iCalExport a:focus, #calendar .responsiveEventsList .feedInfo a:hover, #calendar .responsiveEventsList .feedInfo a:focus {
+        background-color: #007095; }
+      #calendar .responsiveEventsList .iCalExport a:hover, #calendar .responsiveEventsList .iCalExport a:focus, #calendar .responsiveEventsList .feedInfo a:hover, #calendar .responsiveEventsList .feedInfo a:focus {
+        color: #FFFFFF; }
+      #calendar .responsiveEventsList .iCalExport a:before, #calendar .responsiveEventsList .feedInfo a:before {
+        color: #FFFFFF;
+        margin-right: 0.375rem; }
+    #calendar .responsiveEventsList .iCalExport .divider, #calendar .responsiveEventsList .feedInfo .divider {
+      display: none; }
+  #calendar .responsiveEventsList .iCalExport a:nth-of-type(1):before {
+    content: "\f073"; }
+  #calendar .responsiveEventsList .iCalExport a:nth-of-type(2):before {
+    content: "\f0ed"; }
+  #calendar .responsiveEventsList .feedInfo a:nth-of-type(1):before {
+    content: "\f09e"; }
+
+#calendar .eventDetails .export .back a {
+  text-transform: uppercase;
+  font-size: 0.75rem; }
+  #calendar .eventDetails .export .back a:before {
+    content: "\f100";
+    margin-right: 0.375rem; }
+#calendar .eventDetails .export .repetition, #calendar .eventDetails .export .date, #calendar .eventDetails .export .time, #calendar .eventDetails .export .duration, #calendar .eventDetails .export .eventLocation, #calendar .eventDetails .export .sponsor, #calendar .eventDetails .export .contact {
+  margin: 0; }
+  #calendar .eventDetails .export .repetition:before, #calendar .eventDetails .export .date:before, #calendar .eventDetails .export .time:before, #calendar .eventDetails .export .duration:before, #calendar .eventDetails .export .eventLocation:before, #calendar .eventDetails .export .sponsor:before, #calendar .eventDetails .export .contact:before {
+    content: "\f01e";
+    margin-right: 0.375rem; }
+#calendar .eventDetails .export .repetition {
+  border-style: solid;
+  border-width: 1px;
+  display: block;
+  font-weight: 300;
+  margin-bottom: 1.25rem;
+  position: relative;
+  padding: 0.875rem 1.5rem 0.875rem 0.875rem;
+  font-size: 0.8125rem;
+  transition: opacity 300ms ease-out;
+  background-color: #a0d3e8;
+  border-color: #74bfdd;
+  color: #4f4f4f;
+  border-radius: 3px; }
+  #calendar .eventDetails .export .repetition:before {
+    content: "\f01e"; }
+#calendar .eventDetails .export .date:before {
+  content: "\f073"; }
+#calendar .eventDetails .export .time:before {
+  content: "\f017"; }
+#calendar .eventDetails .export .duration:before {
+  content: "\f07e"; }
+#calendar .eventDetails .export .eventLocation:before {
+  content: "\f041"; }
+#calendar .eventDetails .export .eventLocation .eventMap {
+  display: inline-block; }
+#calendar .eventDetails .export .eventLocation strong {
+  margin-right: 0.25rem; }
+#calendar .eventDetails .export .eventLocation p {
+  display: inline;
+  margin: 0; }
+#calendar .eventDetails .export .sponsor:before {
+  content: "\f02e"; }
+#calendar .eventDetails .export .contact:before {
+  content: "\f059"; }
 
 @media only screen and (max-width: 40em) {
   .searchForm {
@@ -1227,8 +2020,8 @@ h2.pageTitle {
   margin-bottom: 0; }
 
 #form {
-  max-width: 600px;
-  border-top: 1px solid #ccc;
+  max-width: 37.5rem;
+  border-top: 1px solid #CCCCCC;
   padding-top: 1.875rem; }
 
 #discoErrorNotice {
@@ -1264,6 +2057,113 @@ h2.pageTitle {
         font-weight: 400;
         text-decoration: underline; }
 
+form input[type="text"], form input[type="password"], form input[type="date"], form input[type="datetime"], form input[type="datetime-local"], form input[type="month"], form input[type="week"], form input[type="email"], form input[type="number"], form input[type="search"], form input[type="tel"], form input[type="time"], form input[type="url"], form textarea, form .loki div.iframe_wrapper, form .loki textarea, #form input[type="text"], #form input[type="password"], #form input[type="date"], #form input[type="datetime"], #form input[type="datetime-local"], #form input[type="month"], #form input[type="week"], #form input[type="email"], #form input[type="number"], #form input[type="search"], #form input[type="tel"], #form input[type="time"], #form input[type="url"], #form textarea, #form .loki div.iframe_wrapper, #form .loki textarea, #form #discoLinear input[type="text"], #form #discoLinear input[type="password"], #form #discoLinear input[type="date"], #form #discoLinear input[type="datetime"], #form #discoLinear input[type="datetime-local"], #form #discoLinear input[type="month"], #form #discoLinear input[type="week"], #form #discoLinear input[type="email"], #form #discoLinear input[type="number"], #form #discoLinear input[type="search"], #form #discoLinear input[type="tel"], #form #discoLinear input[type="time"], #form #discoLinear input[type="url"], #form #discoLinear textarea, #form #discoLinear .loki div.iframe_wrapper, #form #discoLinear .loki textarea {
+  background-color: #FFFFFF;
+  font-family: inherit;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #cccccc;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+  color: rgba(0, 0, 0, 0.75);
+  display: block;
+  font-size: 0.875rem;
+  margin: 0 0 1rem 0;
+  padding: 0.5rem;
+  height: 2.3125rem;
+  width: 100%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 0; }
+  form input[type="text"]:focus, form input[type="password"]:focus, form input[type="date"]:focus, form input[type="datetime"]:focus, form input[type="datetime-local"]:focus, form input[type="month"]:focus, form input[type="week"]:focus, form input[type="email"]:focus, form input[type="number"]:focus, form input[type="search"]:focus, form input[type="tel"]:focus, form input[type="time"]:focus, form input[type="url"]:focus, form textarea:focus, form .loki div.iframe_wrapper:focus, form .loki textarea:focus, #form input[type="text"]:focus, #form input[type="password"]:focus, #form input[type="date"]:focus, #form input[type="datetime"]:focus, #form input[type="datetime-local"]:focus, #form input[type="month"]:focus, #form input[type="week"]:focus, #form input[type="email"]:focus, #form input[type="number"]:focus, #form input[type="search"]:focus, #form input[type="tel"]:focus, #form input[type="time"]:focus, #form input[type="url"]:focus, #form textarea:focus, #form .loki div.iframe_wrapper:focus, #form .loki textarea:focus, #form #discoLinear input[type="text"]:focus, #form #discoLinear input[type="password"]:focus, #form #discoLinear input[type="date"]:focus, #form #discoLinear input[type="datetime"]:focus, #form #discoLinear input[type="datetime-local"]:focus, #form #discoLinear input[type="month"]:focus, #form #discoLinear input[type="week"]:focus, #form #discoLinear input[type="email"]:focus, #form #discoLinear input[type="number"]:focus, #form #discoLinear input[type="search"]:focus, #form #discoLinear input[type="tel"]:focus, #form #discoLinear input[type="time"]:focus, #form #discoLinear input[type="url"]:focus, #form #discoLinear textarea:focus, #form #discoLinear .loki div.iframe_wrapper:focus, #form #discoLinear .loki textarea:focus {
+    background: #fafafa;
+    border-color: #999999;
+    outline: none; }
+  form input[type="text"]:disabled, form input[type="password"]:disabled, form input[type="date"]:disabled, form input[type="datetime"]:disabled, form input[type="datetime-local"]:disabled, form input[type="month"]:disabled, form input[type="week"]:disabled, form input[type="email"]:disabled, form input[type="number"]:disabled, form input[type="search"]:disabled, form input[type="tel"]:disabled, form input[type="time"]:disabled, form input[type="url"]:disabled, form textarea:disabled, form .loki div.iframe_wrapper:disabled, form .loki textarea:disabled, #form input[type="text"]:disabled, #form input[type="password"]:disabled, #form input[type="date"]:disabled, #form input[type="datetime"]:disabled, #form input[type="datetime-local"]:disabled, #form input[type="month"]:disabled, #form input[type="week"]:disabled, #form input[type="email"]:disabled, #form input[type="number"]:disabled, #form input[type="search"]:disabled, #form input[type="tel"]:disabled, #form input[type="time"]:disabled, #form input[type="url"]:disabled, #form textarea:disabled, #form .loki div.iframe_wrapper:disabled, #form .loki textarea:disabled, #form #discoLinear input[type="text"]:disabled, #form #discoLinear input[type="password"]:disabled, #form #discoLinear input[type="date"]:disabled, #form #discoLinear input[type="datetime"]:disabled, #form #discoLinear input[type="datetime-local"]:disabled, #form #discoLinear input[type="month"]:disabled, #form #discoLinear input[type="week"]:disabled, #form #discoLinear input[type="email"]:disabled, #form #discoLinear input[type="number"]:disabled, #form #discoLinear input[type="search"]:disabled, #form #discoLinear input[type="tel"]:disabled, #form #discoLinear input[type="time"]:disabled, #form #discoLinear input[type="url"]:disabled, #form #discoLinear textarea:disabled, #form #discoLinear .loki div.iframe_wrapper:disabled, #form #discoLinear .loki textarea:disabled {
+    background-color: #DDDDDD;
+    cursor: default; }
+  form input[type="text"][disabled], form input[type="text"][readonly], fieldset[disabled] form input[type="text"], form input[type="password"][disabled], form input[type="password"][readonly], fieldset[disabled] form input[type="password"], form input[type="date"][disabled], form input[type="date"][readonly], fieldset[disabled] form input[type="date"], form input[type="datetime"][disabled], form input[type="datetime"][readonly], fieldset[disabled] form input[type="datetime"], form input[type="datetime-local"][disabled], form input[type="datetime-local"][readonly], fieldset[disabled] form input[type="datetime-local"], form input[type="month"][disabled], form input[type="month"][readonly], fieldset[disabled] form input[type="month"], form input[type="week"][disabled], form input[type="week"][readonly], fieldset[disabled] form input[type="week"], form input[type="email"][disabled], form input[type="email"][readonly], fieldset[disabled] form input[type="email"], form input[type="number"][disabled], form input[type="number"][readonly], fieldset[disabled] form input[type="number"], form input[type="search"][disabled], form input[type="search"][readonly], fieldset[disabled] form input[type="search"], form input[type="tel"][disabled], form input[type="tel"][readonly], fieldset[disabled] form input[type="tel"], form input[type="time"][disabled], form input[type="time"][readonly], fieldset[disabled] form input[type="time"], form input[type="url"][disabled], form input[type="url"][readonly], fieldset[disabled] form input[type="url"], form textarea[disabled], form textarea[readonly], fieldset[disabled] form textarea, form .loki div.iframe_wrapper[disabled], form .loki div.iframe_wrapper[readonly], fieldset[disabled] form .loki div.iframe_wrapper, form .loki textarea[disabled], form .loki textarea[readonly], fieldset[disabled] form .loki textarea, #form input[type="text"][disabled], #form input[type="text"][readonly], fieldset[disabled] #form input[type="text"], #form input[type="password"][disabled], #form input[type="password"][readonly], fieldset[disabled] #form input[type="password"], #form input[type="date"][disabled], #form input[type="date"][readonly], fieldset[disabled] #form input[type="date"], #form input[type="datetime"][disabled], #form input[type="datetime"][readonly], fieldset[disabled] #form input[type="datetime"], #form input[type="datetime-local"][disabled], #form input[type="datetime-local"][readonly], fieldset[disabled] #form input[type="datetime-local"], #form input[type="month"][disabled], #form input[type="month"][readonly], fieldset[disabled] #form input[type="month"], #form input[type="week"][disabled], #form input[type="week"][readonly], fieldset[disabled] #form input[type="week"], #form input[type="email"][disabled], #form input[type="email"][readonly], fieldset[disabled] #form input[type="email"], #form input[type="number"][disabled], #form input[type="number"][readonly], fieldset[disabled] #form input[type="number"], #form input[type="search"][disabled], #form input[type="search"][readonly], fieldset[disabled] #form input[type="search"], #form input[type="tel"][disabled], #form input[type="tel"][readonly], fieldset[disabled] #form input[type="tel"], #form input[type="time"][disabled], #form input[type="time"][readonly], fieldset[disabled] #form input[type="time"], #form input[type="url"][disabled], #form input[type="url"][readonly], fieldset[disabled] #form input[type="url"], #form textarea[disabled], #form textarea[readonly], fieldset[disabled] #form textarea, #form .loki div.iframe_wrapper[disabled], #form .loki div.iframe_wrapper[readonly], fieldset[disabled] #form .loki div.iframe_wrapper, #form .loki textarea[disabled], #form .loki textarea[readonly], fieldset[disabled] #form .loki textarea, #form #discoLinear input[type="text"][disabled], #form #discoLinear input[type="text"][readonly], fieldset[disabled] #form #discoLinear input[type="text"], #form #discoLinear input[type="password"][disabled], #form #discoLinear input[type="password"][readonly], fieldset[disabled] #form #discoLinear input[type="password"], #form #discoLinear input[type="date"][disabled], #form #discoLinear input[type="date"][readonly], fieldset[disabled] #form #discoLinear input[type="date"], #form #discoLinear input[type="datetime"][disabled], #form #discoLinear input[type="datetime"][readonly], fieldset[disabled] #form #discoLinear input[type="datetime"], #form #discoLinear input[type="datetime-local"][disabled], #form #discoLinear input[type="datetime-local"][readonly], fieldset[disabled] #form #discoLinear input[type="datetime-local"], #form #discoLinear input[type="month"][disabled], #form #discoLinear input[type="month"][readonly], fieldset[disabled] #form #discoLinear input[type="month"], #form #discoLinear input[type="week"][disabled], #form #discoLinear input[type="week"][readonly], fieldset[disabled] #form #discoLinear input[type="week"], #form #discoLinear input[type="email"][disabled], #form #discoLinear input[type="email"][readonly], fieldset[disabled] #form #discoLinear input[type="email"], #form #discoLinear input[type="number"][disabled], #form #discoLinear input[type="number"][readonly], fieldset[disabled] #form #discoLinear input[type="number"], #form #discoLinear input[type="search"][disabled], #form #discoLinear input[type="search"][readonly], fieldset[disabled] #form #discoLinear input[type="search"], #form #discoLinear input[type="tel"][disabled], #form #discoLinear input[type="tel"][readonly], fieldset[disabled] #form #discoLinear input[type="tel"], #form #discoLinear input[type="time"][disabled], #form #discoLinear input[type="time"][readonly], fieldset[disabled] #form #discoLinear input[type="time"], #form #discoLinear input[type="url"][disabled], #form #discoLinear input[type="url"][readonly], fieldset[disabled] #form #discoLinear input[type="url"], #form #discoLinear textarea[disabled], #form #discoLinear textarea[readonly], fieldset[disabled] #form #discoLinear textarea, #form #discoLinear .loki div.iframe_wrapper[disabled], #form #discoLinear .loki div.iframe_wrapper[readonly], fieldset[disabled] #form #discoLinear .loki div.iframe_wrapper, #form #discoLinear .loki textarea[disabled], #form #discoLinear .loki textarea[readonly], fieldset[disabled] #form #discoLinear .loki textarea {
+    background-color: #DDDDDD;
+    cursor: default; }
+form input[type="submit"], #form input[type="submit"], #form #discoLinear input[type="submit"] {
+  -webkit-appearance: none;
+  border-radius: 0; }
+form input[type="submit"], #form input[type="submit"], #form #discoLinear input[type="submit"] {
+  border-style: solid;
+  border-width: 0;
+  cursor: pointer;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 300;
+  line-height: normal;
+  margin: 0 0 1.25rem;
+  position: relative;
+  text-decoration: none;
+  text-align: center;
+  -webkit-appearance: none;
+  border-radius: 0;
+  display: inline-block;
+  padding-top: 0.75rem;
+  padding-right: 1.5rem;
+  padding-bottom: 0.8125rem;
+  padding-left: 1.5rem;
+  font-size: 1rem;
+  background-color: #008CBA;
+  border-color: #007095;
+  color: #FFFFFF;
+  border-radius: 3px;
+  transition: background-color 300ms ease-out;
+  height: 2.3125rem;
+  padding: 0 1.875rem; }
+  form input[type="submit"]:hover, form input[type="submit"]:focus, #form input[type="submit"]:hover, #form input[type="submit"]:focus, #form #discoLinear input[type="submit"]:hover, #form #discoLinear input[type="submit"]:focus {
+    background-color: #007095; }
+  form input[type="submit"]:hover, form input[type="submit"]:focus, #form input[type="submit"]:hover, #form input[type="submit"]:focus, #form #discoLinear input[type="submit"]:hover, #form #discoLinear input[type="submit"]:focus {
+    color: #FFFFFF; }
+form input[type="checkbox"], form input[type="radio"], #form input[type="checkbox"], #form input[type="radio"], #form #discoLinear input[type="checkbox"], #form #discoLinear input[type="radio"] {
+  margin: 0.375rem 1rem 0 0; }
+form .checkBoxGroup, form .radioButtons, #form .checkBoxGroup, #form .radioButtons, #form #discoLinear .checkBoxGroup, #form #discoLinear .radioButtons {
+  padding-left: 10px; }
+form input[type="file"], #form input[type="file"], #form #discoLinear input[type="file"] {
+  width: 100%; }
+form textarea, #form textarea, #form #discoLinear textarea {
+  max-width: 100%;
+  min-height: 7.5rem; }
+form select, #form select, #form #discoLinear select {
+  -webkit-appearance: none !important;
+  border-radius: 0;
+  background-color: #FAFAFA;
+  background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgeD0iMTJweCIgeT0iMHB4IiB3aWR0aD0iMjRweCIgaGVpZ2h0PSIzcHgiIHZpZXdCb3g9IjAgMCA2IDMiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDYgMyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+PHBvbHlnb24gcG9pbnRzPSI1Ljk5MiwwIDIuOTkyLDMgLTAuMDA4LDAgIi8+PC9zdmc+);
+  background-position: 100% center;
+  background-repeat: no-repeat;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #cccccc;
+  padding: 0.5rem;
+  font-size: 0.875rem;
+  font-family: "Open Sans", sans-serif;
+  color: rgba(0, 0, 0, 0.75);
+  line-height: normal;
+  border-radius: 0;
+  height: 2.3125rem; }
+  form select::-ms-expand, #form select::-ms-expand, #form #discoLinear select::-ms-expand {
+    display: none; }
+  form select.radius, #form select.radius, #form #discoLinear select.radius {
+    border-radius: 3px; }
+  form select:hover, #form select:hover, #form #discoLinear select:hover {
+    background-color: #f3f3f3;
+    border-color: #999999; }
+  form select:disabled, #form select:disabled, #form #discoLinear select:disabled {
+    background-color: #DDDDDD;
+    cursor: default; }
+form fieldset, #form fieldset, #form #discoLinear fieldset {
+  border: 1px solid #DDDDDD;
+  padding: 1.25rem;
+  margin: 1.125rem 0; }
+  form fieldset legend, #form fieldset legend, #form #discoLinear fieldset legend {
+    font-weight: 700;
+    background: #FFFFFF;
+    padding: 0 0.1875rem;
+    margin: 0;
+    margin-left: -0.1875rem; }
 form .formElement, #form .formElement, #form #discoLinear .formElement {
   margin: 0 0 1rem; }
   form .formElement.error, #form .formElement.error, #form #discoLinear .formElement.error {
@@ -1291,113 +2191,8 @@ form .formElement, #form .formElement, #form #discoLinear .formElement {
       font-weight: 300;
       display: inline-block;
       padding-left: 0.25rem; }
-  form .formElement input[type="text"], form .formElement input[type="password"], form .formElement input[type="date"], form .formElement input[type="datetime"], form .formElement input[type="datetime-local"], form .formElement input[type="month"], form .formElement input[type="week"], form .formElement input[type="email"], form .formElement input[type="number"], form .formElement input[type="search"], form .formElement input[type="tel"], form .formElement input[type="time"], form .formElement input[type="url"], form .formElement textarea, form .formElement .loki div.iframe_wrapper, form .formElement .loki textarea, #form .formElement input[type="text"], #form .formElement input[type="password"], #form .formElement input[type="date"], #form .formElement input[type="datetime"], #form .formElement input[type="datetime-local"], #form .formElement input[type="month"], #form .formElement input[type="week"], #form .formElement input[type="email"], #form .formElement input[type="number"], #form .formElement input[type="search"], #form .formElement input[type="tel"], #form .formElement input[type="time"], #form .formElement input[type="url"], #form .formElement textarea, #form .formElement .loki div.iframe_wrapper, #form .formElement .loki textarea, #form #discoLinear .formElement input[type="text"], #form #discoLinear .formElement input[type="password"], #form #discoLinear .formElement input[type="date"], #form #discoLinear .formElement input[type="datetime"], #form #discoLinear .formElement input[type="datetime-local"], #form #discoLinear .formElement input[type="month"], #form #discoLinear .formElement input[type="week"], #form #discoLinear .formElement input[type="email"], #form #discoLinear .formElement input[type="number"], #form #discoLinear .formElement input[type="search"], #form #discoLinear .formElement input[type="tel"], #form #discoLinear .formElement input[type="time"], #form #discoLinear .formElement input[type="url"], #form #discoLinear .formElement textarea, #form #discoLinear .formElement .loki div.iframe_wrapper, #form #discoLinear .formElement .loki textarea {
-    background-color: #FFFFFF;
-    font-family: inherit;
-    border-style: solid;
-    border-width: 1px;
-    border-color: #cccccc;
-    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
-    color: rgba(0, 0, 0, 0.75);
-    display: block;
-    font-size: 0.875rem;
-    margin: 0 0 1rem 0;
-    padding: 0.5rem;
-    height: 2.3125rem;
-    width: 100%;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    margin: 0; }
-    form .formElement input[type="text"]:focus, form .formElement input[type="password"]:focus, form .formElement input[type="date"]:focus, form .formElement input[type="datetime"]:focus, form .formElement input[type="datetime-local"]:focus, form .formElement input[type="month"]:focus, form .formElement input[type="week"]:focus, form .formElement input[type="email"]:focus, form .formElement input[type="number"]:focus, form .formElement input[type="search"]:focus, form .formElement input[type="tel"]:focus, form .formElement input[type="time"]:focus, form .formElement input[type="url"]:focus, form .formElement textarea:focus, form .formElement .loki div.iframe_wrapper:focus, form .formElement .loki textarea:focus, #form .formElement input[type="text"]:focus, #form .formElement input[type="password"]:focus, #form .formElement input[type="date"]:focus, #form .formElement input[type="datetime"]:focus, #form .formElement input[type="datetime-local"]:focus, #form .formElement input[type="month"]:focus, #form .formElement input[type="week"]:focus, #form .formElement input[type="email"]:focus, #form .formElement input[type="number"]:focus, #form .formElement input[type="search"]:focus, #form .formElement input[type="tel"]:focus, #form .formElement input[type="time"]:focus, #form .formElement input[type="url"]:focus, #form .formElement textarea:focus, #form .formElement .loki div.iframe_wrapper:focus, #form .formElement .loki textarea:focus, #form #discoLinear .formElement input[type="text"]:focus, #form #discoLinear .formElement input[type="password"]:focus, #form #discoLinear .formElement input[type="date"]:focus, #form #discoLinear .formElement input[type="datetime"]:focus, #form #discoLinear .formElement input[type="datetime-local"]:focus, #form #discoLinear .formElement input[type="month"]:focus, #form #discoLinear .formElement input[type="week"]:focus, #form #discoLinear .formElement input[type="email"]:focus, #form #discoLinear .formElement input[type="number"]:focus, #form #discoLinear .formElement input[type="search"]:focus, #form #discoLinear .formElement input[type="tel"]:focus, #form #discoLinear .formElement input[type="time"]:focus, #form #discoLinear .formElement input[type="url"]:focus, #form #discoLinear .formElement textarea:focus, #form #discoLinear .formElement .loki div.iframe_wrapper:focus, #form #discoLinear .formElement .loki textarea:focus {
-      background: #fafafa;
-      border-color: #999999;
-      outline: none; }
-    form .formElement input[type="text"]:disabled, form .formElement input[type="password"]:disabled, form .formElement input[type="date"]:disabled, form .formElement input[type="datetime"]:disabled, form .formElement input[type="datetime-local"]:disabled, form .formElement input[type="month"]:disabled, form .formElement input[type="week"]:disabled, form .formElement input[type="email"]:disabled, form .formElement input[type="number"]:disabled, form .formElement input[type="search"]:disabled, form .formElement input[type="tel"]:disabled, form .formElement input[type="time"]:disabled, form .formElement input[type="url"]:disabled, form .formElement textarea:disabled, form .formElement .loki div.iframe_wrapper:disabled, form .formElement .loki textarea:disabled, #form .formElement input[type="text"]:disabled, #form .formElement input[type="password"]:disabled, #form .formElement input[type="date"]:disabled, #form .formElement input[type="datetime"]:disabled, #form .formElement input[type="datetime-local"]:disabled, #form .formElement input[type="month"]:disabled, #form .formElement input[type="week"]:disabled, #form .formElement input[type="email"]:disabled, #form .formElement input[type="number"]:disabled, #form .formElement input[type="search"]:disabled, #form .formElement input[type="tel"]:disabled, #form .formElement input[type="time"]:disabled, #form .formElement input[type="url"]:disabled, #form .formElement textarea:disabled, #form .formElement .loki div.iframe_wrapper:disabled, #form .formElement .loki textarea:disabled, #form #discoLinear .formElement input[type="text"]:disabled, #form #discoLinear .formElement input[type="password"]:disabled, #form #discoLinear .formElement input[type="date"]:disabled, #form #discoLinear .formElement input[type="datetime"]:disabled, #form #discoLinear .formElement input[type="datetime-local"]:disabled, #form #discoLinear .formElement input[type="month"]:disabled, #form #discoLinear .formElement input[type="week"]:disabled, #form #discoLinear .formElement input[type="email"]:disabled, #form #discoLinear .formElement input[type="number"]:disabled, #form #discoLinear .formElement input[type="search"]:disabled, #form #discoLinear .formElement input[type="tel"]:disabled, #form #discoLinear .formElement input[type="time"]:disabled, #form #discoLinear .formElement input[type="url"]:disabled, #form #discoLinear .formElement textarea:disabled, #form #discoLinear .formElement .loki div.iframe_wrapper:disabled, #form #discoLinear .formElement .loki textarea:disabled {
-      background-color: #DDDDDD;
-      cursor: default; }
-    form .formElement input[type="text"][disabled], form .formElement input[type="text"][readonly], fieldset[disabled] form .formElement input[type="text"], form .formElement input[type="password"][disabled], form .formElement input[type="password"][readonly], fieldset[disabled] form .formElement input[type="password"], form .formElement input[type="date"][disabled], form .formElement input[type="date"][readonly], fieldset[disabled] form .formElement input[type="date"], form .formElement input[type="datetime"][disabled], form .formElement input[type="datetime"][readonly], fieldset[disabled] form .formElement input[type="datetime"], form .formElement input[type="datetime-local"][disabled], form .formElement input[type="datetime-local"][readonly], fieldset[disabled] form .formElement input[type="datetime-local"], form .formElement input[type="month"][disabled], form .formElement input[type="month"][readonly], fieldset[disabled] form .formElement input[type="month"], form .formElement input[type="week"][disabled], form .formElement input[type="week"][readonly], fieldset[disabled] form .formElement input[type="week"], form .formElement input[type="email"][disabled], form .formElement input[type="email"][readonly], fieldset[disabled] form .formElement input[type="email"], form .formElement input[type="number"][disabled], form .formElement input[type="number"][readonly], fieldset[disabled] form .formElement input[type="number"], form .formElement input[type="search"][disabled], form .formElement input[type="search"][readonly], fieldset[disabled] form .formElement input[type="search"], form .formElement input[type="tel"][disabled], form .formElement input[type="tel"][readonly], fieldset[disabled] form .formElement input[type="tel"], form .formElement input[type="time"][disabled], form .formElement input[type="time"][readonly], fieldset[disabled] form .formElement input[type="time"], form .formElement input[type="url"][disabled], form .formElement input[type="url"][readonly], fieldset[disabled] form .formElement input[type="url"], form .formElement textarea[disabled], form .formElement textarea[readonly], fieldset[disabled] form .formElement textarea, form .formElement .loki div.iframe_wrapper[disabled], form .formElement .loki div.iframe_wrapper[readonly], fieldset[disabled] form .formElement .loki div.iframe_wrapper, form .formElement .loki textarea[disabled], form .formElement .loki textarea[readonly], fieldset[disabled] form .formElement .loki textarea, #form .formElement input[type="text"][disabled], #form .formElement input[type="text"][readonly], fieldset[disabled] #form .formElement input[type="text"], #form .formElement input[type="password"][disabled], #form .formElement input[type="password"][readonly], fieldset[disabled] #form .formElement input[type="password"], #form .formElement input[type="date"][disabled], #form .formElement input[type="date"][readonly], fieldset[disabled] #form .formElement input[type="date"], #form .formElement input[type="datetime"][disabled], #form .formElement input[type="datetime"][readonly], fieldset[disabled] #form .formElement input[type="datetime"], #form .formElement input[type="datetime-local"][disabled], #form .formElement input[type="datetime-local"][readonly], fieldset[disabled] #form .formElement input[type="datetime-local"], #form .formElement input[type="month"][disabled], #form .formElement input[type="month"][readonly], fieldset[disabled] #form .formElement input[type="month"], #form .formElement input[type="week"][disabled], #form .formElement input[type="week"][readonly], fieldset[disabled] #form .formElement input[type="week"], #form .formElement input[type="email"][disabled], #form .formElement input[type="email"][readonly], fieldset[disabled] #form .formElement input[type="email"], #form .formElement input[type="number"][disabled], #form .formElement input[type="number"][readonly], fieldset[disabled] #form .formElement input[type="number"], #form .formElement input[type="search"][disabled], #form .formElement input[type="search"][readonly], fieldset[disabled] #form .formElement input[type="search"], #form .formElement input[type="tel"][disabled], #form .formElement input[type="tel"][readonly], fieldset[disabled] #form .formElement input[type="tel"], #form .formElement input[type="time"][disabled], #form .formElement input[type="time"][readonly], fieldset[disabled] #form .formElement input[type="time"], #form .formElement input[type="url"][disabled], #form .formElement input[type="url"][readonly], fieldset[disabled] #form .formElement input[type="url"], #form .formElement textarea[disabled], #form .formElement textarea[readonly], fieldset[disabled] #form .formElement textarea, #form .formElement .loki div.iframe_wrapper[disabled], #form .formElement .loki div.iframe_wrapper[readonly], fieldset[disabled] #form .formElement .loki div.iframe_wrapper, #form .formElement .loki textarea[disabled], #form .formElement .loki textarea[readonly], fieldset[disabled] #form .formElement .loki textarea, #form #discoLinear .formElement input[type="text"][disabled], #form #discoLinear .formElement input[type="text"][readonly], fieldset[disabled] #form #discoLinear .formElement input[type="text"], #form #discoLinear .formElement input[type="password"][disabled], #form #discoLinear .formElement input[type="password"][readonly], fieldset[disabled] #form #discoLinear .formElement input[type="password"], #form #discoLinear .formElement input[type="date"][disabled], #form #discoLinear .formElement input[type="date"][readonly], fieldset[disabled] #form #discoLinear .formElement input[type="date"], #form #discoLinear .formElement input[type="datetime"][disabled], #form #discoLinear .formElement input[type="datetime"][readonly], fieldset[disabled] #form #discoLinear .formElement input[type="datetime"], #form #discoLinear .formElement input[type="datetime-local"][disabled], #form #discoLinear .formElement input[type="datetime-local"][readonly], fieldset[disabled] #form #discoLinear .formElement input[type="datetime-local"], #form #discoLinear .formElement input[type="month"][disabled], #form #discoLinear .formElement input[type="month"][readonly], fieldset[disabled] #form #discoLinear .formElement input[type="month"], #form #discoLinear .formElement input[type="week"][disabled], #form #discoLinear .formElement input[type="week"][readonly], fieldset[disabled] #form #discoLinear .formElement input[type="week"], #form #discoLinear .formElement input[type="email"][disabled], #form #discoLinear .formElement input[type="email"][readonly], fieldset[disabled] #form #discoLinear .formElement input[type="email"], #form #discoLinear .formElement input[type="number"][disabled], #form #discoLinear .formElement input[type="number"][readonly], fieldset[disabled] #form #discoLinear .formElement input[type="number"], #form #discoLinear .formElement input[type="search"][disabled], #form #discoLinear .formElement input[type="search"][readonly], fieldset[disabled] #form #discoLinear .formElement input[type="search"], #form #discoLinear .formElement input[type="tel"][disabled], #form #discoLinear .formElement input[type="tel"][readonly], fieldset[disabled] #form #discoLinear .formElement input[type="tel"], #form #discoLinear .formElement input[type="time"][disabled], #form #discoLinear .formElement input[type="time"][readonly], fieldset[disabled] #form #discoLinear .formElement input[type="time"], #form #discoLinear .formElement input[type="url"][disabled], #form #discoLinear .formElement input[type="url"][readonly], fieldset[disabled] #form #discoLinear .formElement input[type="url"], #form #discoLinear .formElement textarea[disabled], #form #discoLinear .formElement textarea[readonly], fieldset[disabled] #form #discoLinear .formElement textarea, #form #discoLinear .formElement .loki div.iframe_wrapper[disabled], #form #discoLinear .formElement .loki div.iframe_wrapper[readonly], fieldset[disabled] #form #discoLinear .formElement .loki div.iframe_wrapper, #form #discoLinear .formElement .loki textarea[disabled], #form #discoLinear .formElement .loki textarea[readonly], fieldset[disabled] #form #discoLinear .formElement .loki textarea {
-      background-color: #DDDDDD;
-      cursor: default; }
-  form .formElement input[type="submit"], #form .formElement input[type="submit"], #form #discoLinear .formElement input[type="submit"] {
-    -webkit-appearance: none;
-    border-radius: 0; }
-  form .formElement input[type="checkbox"], form .formElement input[type="radio"], #form .formElement input[type="checkbox"], #form .formElement input[type="radio"], #form #discoLinear .formElement input[type="checkbox"], #form #discoLinear .formElement input[type="radio"] {
-    margin: 0.375rem 1rem 0 0; }
-  form .formElement .checkBoxGroup, form .formElement .radioButtons, #form .formElement .checkBoxGroup, #form .formElement .radioButtons, #form #discoLinear .formElement .checkBoxGroup, #form #discoLinear .formElement .radioButtons {
-    padding-left: 10px; }
-  form .formElement input[type="file"], #form .formElement input[type="file"], #form #discoLinear .formElement input[type="file"] {
-    width: 100%; }
-  form .formElement textarea, #form .formElement textarea, #form #discoLinear .formElement textarea {
-    max-width: 100%;
-    min-height: 7.5rem; }
-  form .formElement select, #form .formElement select, #form #discoLinear .formElement select {
-    -webkit-appearance: none !important;
-    border-radius: 0;
-    background-color: #FAFAFA;
-    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgeD0iMTJweCIgeT0iMHB4IiB3aWR0aD0iMjRweCIgaGVpZ2h0PSIzcHgiIHZpZXdCb3g9IjAgMCA2IDMiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDYgMyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+PHBvbHlnb24gcG9pbnRzPSI1Ljk5MiwwIDIuOTkyLDMgLTAuMDA4LDAgIi8+PC9zdmc+);
-    background-position: 100% center;
-    background-repeat: no-repeat;
-    border-style: solid;
-    border-width: 1px;
-    border-color: #cccccc;
-    padding: 0.5rem;
-    font-size: 0.875rem;
-    font-family: "Open Sans", sans-serif;
-    color: rgba(0, 0, 0, 0.75);
-    line-height: normal;
-    border-radius: 0;
-    height: 2.3125rem; }
-    form .formElement select::-ms-expand, #form .formElement select::-ms-expand, #form #discoLinear .formElement select::-ms-expand {
-      display: none; }
-    form .formElement select.radius, #form .formElement select.radius, #form #discoLinear .formElement select.radius {
-      border-radius: 3px; }
-    form .formElement select:hover, #form .formElement select:hover, #form #discoLinear .formElement select:hover {
-      background-color: #f3f3f3;
-      border-color: #999999; }
-    form .formElement select:disabled, #form .formElement select:disabled, #form #discoLinear .formElement select:disabled {
-      background-color: #DDDDDD;
-      cursor: default; }
-  form .formElement fieldset, #form .formElement fieldset, #form #discoLinear .formElement fieldset {
-    border: 1px solid #DDDDDD;
-    padding: 1.25rem;
-    margin: 1.125rem 0; }
-    form .formElement fieldset legend, #form .formElement fieldset legend, #form #discoLinear .formElement fieldset legend {
-      font-weight: 700;
-      background: #FFFFFF;
-      padding: 0 0.1875rem;
-      margin: 0;
-      margin-left: -0.1875rem; }
 form .submitSection, #form .submitSection, #form #discoLinear .submitSection {
   margin: 0 0 1rem; }
-  form .submitSection input[type="submit"], #form .submitSection input[type="submit"], #form #discoLinear .submitSection input[type="submit"] {
-    border-style: solid;
-    border-width: 0;
-    cursor: pointer;
-    font-family: "Open Sans", sans-serif;
-    font-weight: 300;
-    line-height: normal;
-    margin: 0 0 1.25rem;
-    position: relative;
-    text-decoration: none;
-    text-align: center;
-    -webkit-appearance: none;
-    border-radius: 0;
-    display: inline-block;
-    padding-top: 0.75rem;
-    padding-right: 1.5rem;
-    padding-bottom: 0.8125rem;
-    padding-left: 1.5rem;
-    font-size: 1rem;
-    background-color: #008CBA;
-    border-color: #007095;
-    color: #FFFFFF;
-    border-radius: 3px;
-    transition: background-color 300ms ease-out; }
-    form .submitSection input[type="submit"]:hover, form .submitSection input[type="submit"]:focus, #form .submitSection input[type="submit"]:hover, #form .submitSection input[type="submit"]:focus, #form #discoLinear .submitSection input[type="submit"]:hover, #form #discoLinear .submitSection input[type="submit"]:focus {
-      background-color: #007095; }
-    form .submitSection input[type="submit"]:hover, form .submitSection input[type="submit"]:focus, #form .submitSection input[type="submit"]:hover, #form .submitSection input[type="submit"]:focus, #form #discoLinear .submitSection input[type="submit"]:hover, #form #discoLinear .submitSection input[type="submit"]:focus {
-      color: #FFFFFF; }
 
 #imageGallery .persistent {
   display: none; }
@@ -1447,7 +2242,10 @@ form .submitSection, #form .submitSection, #form #discoLinear .submitSection {
     margin-bottom: 1.875rem;
     margin-left: 1.875rem; }
     #imageGallery .moduleNav #imageGalleryItemList li img {
-      border: none; }
+      padding: 0.25rem;
+      border: 1px solid #DDDDDD; }
+      #imageGallery .moduleNav #imageGalleryItemList li img:hover {
+        border-color: #CCCCCC; }
   #imageGallery .moduleNav #imageGalleryItemList #imageGalleryNextPageItem {
     position: absolute;
     left: -9999px;
@@ -1459,45 +2257,87 @@ form .submitSection, #form .submitSection, #form #discoLinear .submitSection {
     color: #999999;
     margin-bottom: 1.875rem; }
   #imageGallery .item .prevWrapper, #imageGallery .item .nextWrapper {
-    border: none;
-    overflow: visible;
-    height: auto; }
-    #imageGallery .item .prevWrapper .thumbnail, #imageGallery .item .nextWrapper .thumbnail {
-      height: auto;
-      margin-bottom: 0.3125rem; }
+    float: none;
+    clear: none;
+    display: inline-block;
+    text-align: center;
+    width: 90px;
+    height: 90px;
+    overflow: hidden;
+    margin: 0 0.375rem 1.875rem !important;
+    padding: 0.25rem;
+    border: 1px solid #DDDDDD; }
+    #imageGallery .item .prevWrapper:before, #imageGallery .item .prevWrapper:after, #imageGallery .item .nextWrapper:before, #imageGallery .item .nextWrapper:after {
+      content: " ";
+      display: table; }
+    #imageGallery .item .prevWrapper:after, #imageGallery .item .nextWrapper:after {
+      clear: both; }
+    #imageGallery .item .prevWrapper:hover, #imageGallery .item .nextWrapper:hover {
+      border-color: #CCCCCC; }
     #imageGallery .item .prevWrapper a, #imageGallery .item .nextWrapper a {
-      position: static;
       display: block;
-      width: 80px;
-      height: 40px;
-      padding: 10px 30px;
-      border-radius: 1000px;
-      background: #F5F5F5;
-      border: 1px solid #DDDDDD; }
+      width: 100%;
+      height: 100%; }
       #imageGallery .item .prevWrapper a:after, #imageGallery .item .nextWrapper a:after {
         font-size: 1.25rem;
-        line-height: 1;
+        line-height: 80px;
         display: block;
         color: white;
         text-shadow: 0 0 1px #555555;
-        text-align: center; }
-      #imageGallery .item .prevWrapper a:hover, #imageGallery .item .nextWrapper a:hover {
-        background: #008CBA;
-        border-color: #008CBA; }
-        #imageGallery .item .prevWrapper a:hover:after, #imageGallery .item .nextWrapper a:hover:after {
-          color: #FFFFFF; }
+        text-align: center;
+        background: rgba(255, 255, 255, 0.125); }
+      #imageGallery .item .prevWrapper a:hover:after, #imageGallery .item .nextWrapper a:hover:after {
+        background: transparent; }
       #imageGallery .item .prevWrapper a img, #imageGallery .item .nextWrapper a img {
         display: none; }
   #imageGallery .item .prevWrapper a:after {
     content: "\f053"; }
   #imageGallery .item .nextWrapper a:after {
     content: "\f054"; }
+  #imageGallery .item .imageWrapper {
+    clear: both;
+    text-align: left;
+    text-align: center; }
+    #imageGallery .item .imageWrapper .mainImage {
+      text-align: center; }
 #imageGallery .back {
   margin-bottom: 1.875rem; }
   #imageGallery .back:before {
     content: "\f009";
     margin-right: 0.375rem;
     color: #008CBA; }
+
+.editThis {
+  border-style: solid;
+  border-width: 0;
+  cursor: pointer;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 300;
+  line-height: normal;
+  margin: 0 0 1.25rem;
+  position: relative;
+  text-decoration: none;
+  text-align: center;
+  -webkit-appearance: none;
+  border-radius: 0;
+  display: inline-block;
+  padding-top: 0.75rem;
+  padding-right: 1.5rem;
+  padding-bottom: 0.8125rem;
+  padding-left: 1.5rem;
+  font-size: 1rem;
+  background-color: #008CBA;
+  border-color: #007095;
+  color: #FFFFFF;
+  border-radius: 3px;
+  transition: background-color 300ms ease-out; }
+  .editThis:hover, .editThis:focus {
+    background-color: #007095; }
+  .editThis:hover, .editThis:focus {
+    color: #FFFFFF; }
+  .editThis:before {
+    content: "\f040";
+    margin-right: 0.375rem; }
 
 .loginLinkModule {
   margin-top: 0.9375rem; }
@@ -1558,6 +2398,15 @@ form .submitSection, #form .submitSection, #form #discoLinear .submitSection {
 
 #minisiteNavigation {
   margin-bottom: 1.875rem; }
+  #minisiteNavigation:before {
+    display: block;
+    content: "";
+    margin-top: -0.9375rem;
+    height: 0.9375rem;
+    visibility: hidden; }
+    @media only screen and (min-width:60.0625em) {
+      #minisiteNavigation:before {
+        display: none; } }
   #minisiteNavigation ul {
     margin: 0;
     padding: 0;
@@ -1601,18 +2450,335 @@ form .submitSection, #form .submitSection, #form #discoLinear .submitSection {
           right: 1rem;
           color: #888888; }
 
+#meat .publication {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 0;
+  margin-bottom: 0;
+  max-width: 87.5rem; }
+  #meat .publication:before, #meat .publication:after {
+    content: " ";
+    display: table; }
+  #meat .publication:after {
+    clear: both; }
+  #meat .publication .persistent {
+    margin-bottom: 1.875rem; }
+  #meat .publication .moduleNav {
+    margin-bottom: 1.875rem; }
+#meat.containsConRelNav .publication .persistent {
+  padding-left: 0;
+  padding-right: 0;
+  width: 100%;
+  float: left; }
+#meat.containsConRelNav .publication .moduleNav {
+  padding-left: 0;
+  padding-right: 0;
+  width: 100%;
+  float: left; }
+#meat.containsConNav .publication .persistent, #meat.containsConRel .publication .persistent, #meat.containsCon .publication .persistent {
+  padding-left: 0;
+  padding-right: 0;
+  width: 100%;
+  float: left; }
+  @media only screen and (min-width:40.063em) {
+    #meat.containsConNav .publication .persistent, #meat.containsConRel .publication .persistent, #meat.containsCon .publication .persistent {
+      padding-left: 0;
+      padding-right: 0;
+      width: 33.3333333333%;
+      float: left;
+      float: right;
+      padding-left: 0.9375rem; } }
+#meat.containsConNav .publication .moduleNav, #meat.containsConRel .publication .moduleNav, #meat.containsCon .publication .moduleNav {
+  padding-left: 0;
+  padding-right: 0;
+  width: 100%;
+  float: left; }
+  @media only screen and (min-width:40.063em) {
+    #meat.containsConNav .publication .moduleNav, #meat.containsConRel .publication .moduleNav, #meat.containsCon .publication .moduleNav {
+      padding-left: 0;
+      padding-right: 0;
+      width: 66.6666666667%;
+      float: left;
+      padding-right: 0.9375rem; } }
+
 #meat .publication .persistent {
-  display: none; }
-#meat .publication .moduleNav ul li {
-  padding: 0.9375rem 0;
-  border-color: red; }
-  #meat .publication .moduleNav ul li .teaserImage {
+  border: none; }
+  #meat .publication .persistent #filtering {
+    margin: 0;
+    background: #EFEFEF;
+    padding: 0.9375rem; }
+    #meat .publication .persistent #filtering:before, #meat .publication .persistent #filtering:after {
+      content: " ";
+      display: table; }
+    #meat .publication .persistent #filtering:after {
+      clear: both; }
+    #meat .publication .persistent #filtering .searchForm {
+      margin: 0 !important; }
+      #meat .publication .persistent #filtering .searchForm label {
+        position: absolute;
+        left: -9999px;
+        top: -9999px;
+        margin-bottom: 0; }
+      #meat .publication .persistent #filtering .searchForm .search {
+        display: block;
+        background-color: #FFFFFF;
+        font-family: inherit;
+        border-style: solid;
+        border-width: 1px;
+        border-color: #cccccc;
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+        color: rgba(0, 0, 0, 0.75);
+        display: block;
+        font-size: 0.875rem;
+        margin: 0 0 1rem 0;
+        padding: 0.5rem;
+        height: 2.3125rem;
+        width: 100%;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        width: 80%;
+        float: left;
+        margin-bottom: 0;
+        border-right: none; }
+        #meat .publication .persistent #filtering .searchForm .search:focus {
+          background: #fafafa;
+          border-color: #999999;
+          outline: none; }
+        #meat .publication .persistent #filtering .searchForm .search:disabled {
+          background-color: #DDDDDD;
+          cursor: default; }
+        #meat .publication .persistent #filtering .searchForm .search[disabled], #meat .publication .persistent #filtering .searchForm .search[readonly], fieldset[disabled] #meat .publication .persistent #filtering .searchForm .search {
+          background-color: #DDDDDD;
+          cursor: default; }
+      #meat .publication .persistent #filtering .searchForm .submit {
+        display: block;
+        text-align: center;
+        padding: 0.5rem;
+        height: 2.3125rem;
+        background: #008CBA;
+        color: #FFFFFF;
+        width: 20%;
+        float: left;
+        border-radius: 0 3px 3px 0; }
+        #meat .publication .persistent #filtering .searchForm .submit:hover {
+          background: #006687;
+          cursor: pointer; }
+      #meat .publication .persistent #filtering .searchForm a {
+        color: red; }
+    #meat .publication .persistent #filtering .filterSet a {
+      display: block;
+      float: right;
+      line-height: 1;
+      margin-right: 1.5rem;
+      margin-bottom: 0.375rem;
+      padding: 0.25rem;
+      font-size: 0.75rem;
+      background: #FFFFFF;
+      border: 1px solid #CCCCCC;
+      border-top: 0;
+      border-radius: 0 0 3px 3px; }
+      #meat .publication .persistent #filtering .filterSet a:hover {
+        border-color: #999999; }
+      #meat .publication .persistent #filtering .filterSet a:before {
+        content: "\f057";
+        margin-right: 0.375rem;
+        color: inherit; }
+    #meat .publication .persistent #filtering .filters ul {
+      list-style-type: none;
+      margin: 0; }
+      #meat .publication .persistent #filtering .filters ul li {
+        display: inline-block;
+        margin-right: 0.5rem;
+        white-space: pre; }
+        #meat .publication .persistent #filtering .filters ul li a:before {
+          content: "\f114";
+          margin-right: 0.375rem;
+          color: #777777; }
+        #meat .publication .persistent #filtering .filters ul li strong:before {
+          content: "\f115";
+          margin-right: 0.375rem;
+          color: inherit; }
+  #meat .publication .persistent .loginlogout {
+    margin: 0.46875rem 0.9375rem 0 0;
+    text-align: right;
+    font-size: 0.875rem; }
+    #meat .publication .persistent .loginlogout a:after {
+      content: "\f023";
+      margin-left: 0.375rem;
+      color: inherit; }
+#meat .publication .moduleNav .searchTitle {
+  text-transform: uppercase;
+  font-size: 0.9375rem;
+  font-weight: 700; }
+#meat .publication .moduleNav .filterMessage h3 {
+  text-transform: uppercase;
+  font-size: 0.9375rem;
+  font-weight: 700; }
+  #meat .publication .moduleNav .filterMessage h3 .clear {
+    font-weight: 700; }
+    #meat .publication .moduleNav .filterMessage h3 .clear a {
+      padding: 0 0.25rem;
+      display: inline-block; }
+      #meat .publication .moduleNav .filterMessage h3 .clear a:before {
+        content: "\f112";
+        margin-right: 0.375rem;
+        color: inherit; }
+#meat .publication .moduleNav .posts .post {
+  border-top: 2px solid #EEEEEE;
+  padding: 1.5625rem 0.9375rem; }
+  #meat .publication .moduleNav .posts .post:last-of-type {
+    border-bottom: 2px solid #EEEEEE; }
+  @media only screen and (min-width:40.063em) {
+    #meat .publication .moduleNav .posts .post {
+      padding: 1.5625rem 1.875rem;
+      border: 1px solid #EEEEEE;
+      box-shadow: rgba(0, 0, 0, 0.25) 0 1px 1px;
+      margin-bottom: 1.875rem; } }
+  #meat .publication .moduleNav .posts .post .teaserImage {
     float: right;
     margin: 0 0 0.9375rem 0.9375rem; }
-  #meat .publication .moduleNav ul li .title {
-    margin: 0 0 0.5rem;
-    font-size: 1.25rem; }
-  #meat .publication .moduleNav ul li .date {
+    @media only screen and (max-width: 40em) {
+      #meat .publication .moduleNav .posts .post .teaserImage {
+        max-width: 100px; } }
+  #meat .publication .moduleNav .posts .post .title {
+    margin: 0;
+    font-size: 1.625rem;
+    font-weight: 400; }
+  #meat .publication .moduleNav .posts .post .date {
     color: #999999;
     font-size: 0.875rem;
-    margin: 0 0 0.5rem; }
+    margin: 0; }
+  #meat .publication .moduleNav .posts .post .desc {
+    margin-top: 1rem; }
+  #meat .publication .moduleNav .posts .post .links {
+    margin: 0;
+    padding: 0; }
+    #meat .publication .moduleNav .posts .post .links li {
+      display: inline-block;
+      margin-right: 0.75rem; }
+      #meat .publication .moduleNav .posts .post .links li.more a:before {
+        content: "\f064";
+        margin-right: 0.375rem;
+        color: inherit; }
+      #meat .publication .moduleNav .posts .post .links li.permalink a:before {
+        content: "\f097";
+        margin-right: 0.375rem;
+        color: inherit; }
+#meat .publication .moduleNav .feedLink a {
+  border-style: solid;
+  border-width: 0;
+  cursor: pointer;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 300;
+  line-height: normal;
+  margin: 0 0 1.25rem;
+  position: relative;
+  text-decoration: none;
+  text-align: center;
+  -webkit-appearance: none;
+  border-radius: 0;
+  display: inline-block;
+  padding-top: 0.25rem;
+  padding-right: 0.5rem;
+  padding-bottom: 0.3125rem;
+  padding-left: 0.5rem;
+  font-size: 0.6875rem;
+  background-color: #008CBA;
+  border-color: #007095;
+  color: #FFFFFF;
+  border-radius: 3px;
+  transition: background-color 300ms ease-out;
+  margin: 0 0.75rem 0.125rem 0 !important; }
+  #meat .publication .moduleNav .feedLink a:hover, #meat .publication .moduleNav .feedLink a:focus {
+    background-color: #007095; }
+  #meat .publication .moduleNav .feedLink a:hover, #meat .publication .moduleNav .feedLink a:focus {
+    color: #FFFFFF; }
+  #meat .publication .moduleNav .feedLink a:before {
+    color: #FFFFFF;
+    margin-right: 0.375rem; }
+#meat .publication .moduleNav .feedLink .feedInfo a:before {
+  content: "\f09e";
+  margin-right: 0.375rem;
+  color: inherit; }
+#meat .publication.fullPostDisplay {
+  position: relative; }
+  #meat .publication.fullPostDisplay .persistent {
+    display: none; }
+  #meat .publication.fullPostDisplay .fullPost {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0;
+    margin-bottom: 0;
+    max-width: 87.5rem; }
+    #meat .publication.fullPostDisplay .fullPost:before, #meat .publication.fullPostDisplay .fullPost:after {
+      content: " ";
+      display: table; }
+    #meat .publication.fullPostDisplay .fullPost:after {
+      clear: both; }
+    #meat .publication.fullPostDisplay .fullPost .firstChunk {
+      padding-left: 0;
+      padding-right: 0;
+      width: 100%;
+      float: left; }
+    #meat .publication.fullPostDisplay .fullPost .relatedItems {
+      padding-left: 0;
+      padding-right: 0;
+      width: 100%;
+      float: left; }
+      #meat .publication.fullPostDisplay .fullPost .relatedItems .categories ul {
+        margin: 0; }
+      #meat .publication.fullPostDisplay .fullPost .relatedItems .categories li {
+        display: inline-block;
+        margin-right: 0.5rem;
+        white-space: pre; }
+        #meat .publication.fullPostDisplay .fullPost .relatedItems .categories li a:before {
+          content: "\f114";
+          margin-right: 0.375rem;
+          color: #777777; }
+        #meat .publication.fullPostDisplay .fullPost .relatedItems .categories li strong:before {
+          content: "\f115";
+          margin-right: 0.375rem;
+          color: inherit; }
+    #meat .publication.fullPostDisplay .fullPost .secondChunk {
+      padding-left: 0;
+      padding-right: 0;
+      width: 100%;
+      float: left; }
+      #meat .publication.fullPostDisplay .fullPost .secondChunk .nextPrev {
+        border-top: 6px solid #EFEFEF;
+        border-bottom: 2px solid #EFEFEF;
+        padding: 3.75rem 0;
+        font-size: 0.875rem;
+        text-transform: uppercase; }
+        #meat .publication.fullPostDisplay .fullPost .secondChunk .nextPrev a {
+          text-transform: none; }
+        #meat .publication.fullPostDisplay .fullPost .secondChunk .nextPrev .prev, #meat .publication.fullPostDisplay .fullPost .secondChunk .nextPrev .next {
+          width: 100%;
+          float: none;
+          text-align: center;
+          border: none;
+          padding: 0; }
+        #meat .publication.fullPostDisplay .fullPost .secondChunk .nextPrev .prev {
+          margin-bottom: 1.875rem; }
+          #meat .publication.fullPostDisplay .fullPost .secondChunk .nextPrev .prev.only {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 0; }
+          #meat .publication.fullPostDisplay .fullPost .secondChunk .nextPrev .prev a:before {
+            content: "\f100";
+            margin-right: 0.375rem;
+            color: inherit; }
+        #meat .publication.fullPostDisplay .fullPost .secondChunk .nextPrev .next.only {
+          width: 100%;
+          text-align: center; }
+        #meat .publication.fullPostDisplay .fullPost .secondChunk .nextPrev .next a:after {
+          content: "\f101";
+          margin-left: 0.375rem;
+          color: inherit; }
+  #meat .publication.fullPostDisplay .back .mainBackLink a:before {
+    content: "\f112";
+    margin-right: 0.375rem;
+    color: inherit; }

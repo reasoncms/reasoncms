@@ -2,7 +2,6 @@
 // Cloak, v1
 	
 #av {
-
 	margin-bottom: $column-gutter;
 
 	.moduleNav {
@@ -34,24 +33,10 @@
 	// Subscribe to feed buttons
 	.podcast {
 		margin: 0;
+		clear: both;
 
 		a {
-			
-			@include button(
-				$padding: $button-tny,
-				$bg: $primary-color,
-				$radius: $global-radius,
-				$full-width: false,
-				$disabled: false
-			);
-
-			margin: 0 rem-calc(12) rem-calc(2) 0 !important;
-
-			&:before {  // download icon
-				@extend .fa;
-				color: $white;
-				margin-right: rem-calc(6);
-			}
+			@include feed-button();
 		}
 		
 		.feedLink {

@@ -57,13 +57,38 @@
 // 	}
 // }
 
+@media all and (max-width:720px) {
+	#calendar .responsiveEventsList .eventsListContent, #calendar .responsiveEventsList .gridAndOptionsWrapper {
+		background: green;
+		width:auto;
+		float:none;
+		margin-left:0;
+		clear:both;
+		padding:1px 0;
+	}
+	#calendar .responsiveEventsList .datesAndSearch {
+		float:left;
+		width:49%;
+	}
+	#calendar .responsiveEventsList .options {
+		float:right;
+		width:49%;
+	}
+}
+@media all and (max-width:500px) {
+	#calendar .responsiveEventsList .datesAndSearch, #calendar .responsiveEventsList .options {
+		float:none;
+		width:auto;
+	}
+}
+
 /* Events Column Layouts */
 
 #calendar { // Override some Reason layout styles
 	.responsiveEventsList {
 
 		.gridAndOptionsWrapper {
-			width: 100%;
+		//	width: 100% !important;
 			float: left;
 			margin: -$column-gutter/2 0 0 0;
 			//border-left: 1px solid darken($iron, 0%);
@@ -143,23 +168,19 @@
 // 	}
 // }
 
-// /* Event Calendar */
+// CALENDAR LIST VIEW (main calendar page)
 
 #calendar {
 	
 	.responsiveEventsList {
 		@include grid-row();
-	}
-
+		
+		// VIEW SELECTOR
+		// Day, Week, Month, Year, All tabs
 		.views { 
-			// Day, Week, Month, Year, All tabs
 			@include clearfix;
 			clear: both;
-			//text-align: center;
 			text-align: left;
-			//margin: -$column-gutter/2 0 0;
-			//background: lighten($iron, 4%);
-			//padding: $column-gutter/2 0;
 			margin-bottom: $column-gutter;
 		
 			h4 {
@@ -190,9 +211,7 @@
 					a,
 					strong {
 						padding: rem-calc(1) rem-calc(12);
-						//border-radius: $global-rounded;
 						display: inline-block;
-						//text-decoration: underline;
 						
 						background: $silver;
 						border-right: 1px solid $gainsboro;
@@ -227,7 +246,466 @@
 			}
 		}
 
+		// SELECTED DAYS NAIVGATION
+		// "Starting Tues, January 6th, 2016 (today)"
+		.nav {
+			background: $silver;
+			text-align: center;
+			font-size: rem-calc(14);
+			margin-bottom: $column-gutter;
+			line-height: 1;
 
+			@media #{$medium-up} {
+				font-size: rem-calc(16);
+			}
+
+			.previous,
+			.next {
+				padding: rem-calc(8) rem-calc(14);
+				display: inline-block;
+				background: $primary-color;
+				color: $white;
+
+				&:hover {
+					background: lighten($primary-color, 5%);
+				}
+			}
+
+			.previous {
+				float: left;
+			}
+
+			.next {
+				float: right;
+			}
+
+			strong {
+				display: inline-block;
+				padding: rem-calc(8) 0;
+			}
+		}
+
+		// EVENT LISTINGS
+		.eventsListContent {
+
+			.focus {
+				@include alert($bg:$vapor,$radius:$global-radius);
+				border: none;
+
+				ul {
+					margin-bottom: 0;
+				}
+
+				h3 {
+					font-size: rem-calc(16);
+				}
+
+				h4 {
+					font-size: rem-calc(16);
+					display: inline;
+				}
+
+				a {
+					font-size: rem-calc(12);
+					display: inline;
+				}
+			}
+
+			.newEventsError { // Shows errors.  "No events."
+
+			}
+
+			.ongoingblock {
+
+			}		
+
+			.month {
+				font-family: $font-family-serif;
+				font-size: $h4-font-size;
+				color: $aluminum;
+				border-top: 1px dotted $gainsboro;
+				padding-top: $column-gutter/2;
+
+				&:first-of-type {
+					border-top: none;
+					padding-top: 0;
+				}
+			}
+
+			.day {
+				font-size: rem-calc(16);
+				font-weight: 700;
+			}
+			
+			.dayEvents {
+				list-style-type: none;
+				margin: 0;
+
+				.event {
+					margin: 0 0 $column-gutter/2 $column-gutter/2;
+				}
+			}
+		}
+
+		// SIDEBAR DATE PICKER / FILTER
+		.gridAndOptionsWrapper {
+			margin: 0 0 $column-gutter;
+
+			.calendarGridWrapper {
+				margin: 0 0 $column-gutter;
+			}
+
+			.calendarGrid {
+				text-align: center;
+
+				a.previous,
+				h4,
+				a.next {
+					display: inline-block;
+					padding: 0 rem-calc(6);
+				}
+
+				table {
+					border: none;
+
+					tr {
+						background: #FFF;
+					}
+
+					th,
+					td {
+						text-align: center;
+						padding: 0;
+					}
+
+					th {
+						padding: 5% 0;
+						background: lighten($iron, 7%);
+						background: #FFF;
+						border: #FFF;
+					}
+
+					td {
+						border-color: #DDDDDD;
+					    border-image: none;
+					    border-style: solid;
+					    border-width: 1px;
+
+					    &:empty {
+					    	background: lighten($iron, 5%);
+					    }
+
+						&.startDate {
+
+						}
+
+						&.hasEvent {
+							a {
+								color: red;
+								//font-weight: 700;
+							}
+						}
+
+					    &.currentlyViewing {
+					    	//background: rgba($vapor, .10);
+					    	background: $vapor;
+
+					    	a {
+					    		color: #FFF;	
+					    	}
+					    }
+
+					   	&.today {
+					    	//background: rgba(0,0,0,.08);
+					    	background: lighten($vapor, 15%);
+					    	//box-shadow: inset 0 0 1px #999;
+					    	a {
+					    		color: #FFF;
+					    	}
+					    }
+
+						a {
+							color: lighten($body-font-color, 35%);
+							display: block;
+							padding: 28% 0;
+						}
+
+					}
+				}
+			}
+
+		
+
+			$events_default_break_point_lower: 500px;
+			$events_default_break_point_upper: 720px;
+
+			$medium-only-events: "#{$screen} and (min-width:#{$events_default_break_point_upper}) and (max-width:#{upper-bound($large-low-range)})";
+			
+
+			.dateJump {
+				margin: 0 0 $column-gutter;
+				@include clearfix;
+
+				select {
+
+					&[name="start_month"] {
+						width: 30%;
+					}
+					&[name="start_day"] {
+						width: 30%;
+					}
+					&[name="start_year"] {
+						width: 40%;
+					}
+
+					// @media #{$medium-only-events} {
+					// 	&[name="start_month"] {
+					// 		width: 33.333%;
+					// 	}
+					// 	&[name="start_day"] {
+					// 		width: 33.333%;
+					// 	}
+					// 	&[name="start_year"] {
+					// 		width: 33.333%;
+					// 	}
+					// }
+				}
+
+				span {
+					width: 80%;
+					float: left;
+					padding-right: rem-calc(14);
+
+					@media #{$medium-only-events} {
+						width: 100%;
+						//white-space: normal !important;
+						//float: none;
+					}
+				}
+
+				input[type="submit"] {
+					padding: 0;
+					float: right;
+					width: 20%;
+
+					@media #{$medium-only-events} {
+						float: none;
+						width: 100%;
+					}
+				}
+			}
+
+			.search {
+				margin: 0 0 $column-gutter;
+			}
+		}
+
+		// FOOTER
+		.foot {
+			margin-bottom: $column-gutter;
+		}
+
+		// Subscribe to feed buttons
+		.iCalExport,
+		.feedInfo {
+			margin: 0;
+			display: inline-block;
+
+			a {
+				
+				@include button(
+					$padding: $button-tny,
+					$bg: $primary-color,
+					$radius: $global-radius
+				);
+
+				margin: 0 rem-calc(12) rem-calc(2) 0 !important;
+
+				&:before {  // feed icon
+					@extend .fa;
+					color: $white;
+					margin-right: rem-calc(6);
+				}
+			}
+			
+			// .feedLink {
+			// 	&:before {
+			// 		content: $fa-var-rss;
+			// 	}
+			// }
+
+			// .subscribe {
+			// 	&:before {
+			// 		content: $fa-var-music;
+			// 	}
+			// }
+
+			.divider {
+				display: none;
+			}
+		}
+
+		.iCalExport {
+			// "Subscribe to this calendar" icon
+			a:nth-of-type(1) {
+				&:before {
+					content: $fa-var-calendar;
+				}
+			}
+			
+			// "Download events (.ics)" icon
+			a:nth-of-type(2) {
+				&:before {
+					content: $fa-var-cloud-download;
+				}
+			}
+		}
+
+		.feedInfo {
+			// "xml" icon
+			a:nth-of-type(1) {
+				&:before {
+					content: $fa-var-rss;
+				}
+			}
+		}
+	}
+}
+
+// Full Event
+
+#calendar {
+	
+	.eventDetails {
+	
+		.export {
+
+			// Back to main calendar link
+			.back {
+				a {
+					text-transform: uppercase;
+					font-size: rem-calc(12);
+
+					&:before {
+						@extend .fa;
+						content: $fa-var-angle-double-left;
+						margin-right: rem-calc(6);
+					}
+				}
+			}
+
+			.description{
+
+			}
+
+			.repetition,
+			.date,
+			.time,
+			.duration,
+			.eventLocation,
+			.sponsor,
+			.contact {
+				&:before {
+					@extend .fa;
+					@extend .fa-fw;
+					content: $fa-var-repeat;
+					margin-right: rem-calc(6);
+				}
+
+				margin: 0;
+			}
+		
+			.repetition {
+				@include alert($bg:$info-color,$radius:$global-radius);
+
+				&:before {
+					content: $fa-var-repeat;
+				}
+			}
+
+			.date {
+				
+				&:before {
+					content: $fa-var-calendar;
+				}
+			}
+
+			.time {
+				
+				&:before {
+					content: $fa-var-clock-o;
+				}
+			}
+
+			.duration {
+				
+				&:before {
+					content: $fa-var-arrows-h;
+				}
+			}
+
+			.eventLocation {
+
+				&:before {
+					content: $fa-var-map-marker;
+				}
+
+				.eventMap {
+					display: inline-block;
+					//float: right;
+				}
+
+				strong {
+					margin-right: rem-calc(4);
+				}
+
+				p {
+					display: inline;
+					margin: 0;
+				}
+
+
+			}
+
+			.sponsor {
+				&:before {
+					content: $fa-var-bookmark;
+				}
+			}
+
+			.contact {
+				
+				&:before {
+					content: $fa-var-question-circle;
+				}
+			}
+		}
+		
+		.eventContent {
+
+		}
+
+		.dates {
+
+		}
+
+		.eventUrl {
+
+		}
+
+		.categories {
+
+		}
+
+		.audiences {
+
+		}
+
+		#slotInfo {
+
+		}
+
+	}
 }
 
 // #calendar {

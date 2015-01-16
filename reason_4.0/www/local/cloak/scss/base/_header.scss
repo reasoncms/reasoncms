@@ -1,17 +1,47 @@
 // Header Styles
 // Cloak, v1
 
+// Fixed position top banner
+.f-topbar-fixed #banner {
+	padding: $column-gutter/2;
+	//@include single-transition(padding);
+	text-align: left;
+	//@include single-transition(text-align);
+
+	h1 {
+		font-size: rem-calc(22);
+		//@include single-transition(font-size);
+		float: left;
+		padding: rem-calc(4) 0 0 0;
+	}
+
+	#navigationToggles {
+		float: right;
+	}
+}
+
 #banner {
 	background: $vapor;
 	border-bottom: 1px solid $gainsboro;
 	text-align: center;
-	padding: $column-gutter;
+	padding: $column-gutter/2;
+
+	@media #{$medium-up} { 
+		padding: $column-gutter $column-gutter/2;
+	}
 
 	h1 {
+		font-size: rem-calc(18);
+		@media #{$medium-up} {
+			font-size: rem-calc(26);
+		}
+		@media #{$large-up} {
+			font-size: rem-calc(32);
+		}
+
 		font-family: $font-family-serif;
 		margin: 0;
 		padding-bottom: $column-gutter/2;
-
 	}
 
 	#navigationToggles {
