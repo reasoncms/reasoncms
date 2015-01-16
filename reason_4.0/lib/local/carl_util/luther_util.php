@@ -125,17 +125,23 @@ function luther_video_audio_streaming($event_id, $imgVideo = null, $imgAudio = n
 	$cats = $es->run_one();
 	$vstream = '';
 	$astream = '';
+	$stretch_internet_site = 'lutheradmin';
+
 	foreach( $cats AS $cat )
 	{
+		if ($cat->get_value('name') == 'Athletics')
+		{
+			$stretch_internet_site = 'luther';
+		}
 		if ($cat->get_value('name') == 'Video Streaming')
 		{
 			if ($imgVideo != null)
 			{
-				$vstream = '<a title="Video Streaming" href="http://portal.stretchinternet.com/luther/"><img class="video_streaming" src="' . $imgVideo .'" alt="Video Streaming"></a>';
+				$vstream = '<a title="Video Streaming" href="http://portal.stretchinternet.com/' . $stretch_internet_site . '/"><img class="video_streaming" src="' . $imgVideo .'" alt="Video Streaming"></a>';
 			}
 			else
 			{
-				$vstream = '<a title="Video Streaming" href="http://portal.stretchinternet.com/luther/"><i class="fa fa-video-camera fa-fw"></i></a>';
+				$vstream = '<a title="Video Streaming" href="http://portal.stretchinternet.com/' . $stretch_internet_site . '/"><i class="fa fa-video-camera fa-fw"></i></a>';
 			}
 		}
 		if ($cat->get_value('name') == 'Audio Streaming')
