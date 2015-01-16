@@ -36,7 +36,7 @@
 				$this->run_section( 'pre_banner' );
 				echo '</div>'."\n";
 			}
-			echo '<div class="sticky"><header id="banner" role="banner" aria-label="site" class="top-bar" data-topbar role="navigation" data-options="sticky_on: medium">'."\n";
+			echo '<div class="sticky"><header id="banner" role="banner" aria-label="site" class="top-bar" data-topbar role="navigation" data-options="sticky_on: large">'."\n";
 			if($this->should_show_parent_sites())
 			{
 				echo $this->get_parent_sites_markup();
