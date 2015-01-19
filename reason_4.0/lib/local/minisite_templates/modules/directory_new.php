@@ -642,13 +642,16 @@ class DirectoryModule extends DefaultMinisiteModule {
             /**
               * @todo images
               */
-            if ( $image_class == 'directoryImage' ){
-                echo "<figure class='{$image_class}' title>";
+            if ( $image_class == 'directoryImage' or true){
+                //remove 'or true' from above when not testing
+                echo "<figure class='directoryImage' title>";
                 // @todo add foundation image expander
                 //
-                echo "<a href='/reason/images/589866.gif' title></a>";
+                //echo "<a href='/reason/images/589866.gif' title></a>";
+                echo '<a href="https://app.luther.edu/reason/scripts/dir_image.php?image=dykega01" class="highslide" onclick="return hs.expand(this, imageOptions)"><img src="https://app.luther.edu/reason/scripts/dir_image.php?image=dykega01" border="0" alt="" title="Click to enlarge" /></a>'; // temp image for testing
                 echo "</figure>";
                 echo "<a name={$data['uid']}></a>";
+
             }
             if (isset($data['cn'])) {
                 echo "<h2 class='directoryName'>".$this->format_name($data)."</h2>";
@@ -1109,7 +1112,7 @@ class DirectoryModule extends DefaultMinisiteModule {
     private function format_single_attribute( $attribute, $label, $li_class )
     {
         return "<li class='{$li_class}'>
-                    <span class='attribute'><strong>{$label}:</strong></span>
+                    <span class='attribute'><strong>{$label}: </strong></span>
                     <span class='attrValue'>{$attribute}</span>
                 </li>";
     }
@@ -1280,7 +1283,7 @@ class DirectoryModule extends DefaultMinisiteModule {
     function format_postal_address($data, $html = true) {
         $address = "<li class='directoryHomeAddress'><span class='attribute'><strong>Home Address:</strong></span>";
         if ($html) {
-            $address .= "<span class='multipleAttrValues'>{$data['postaladdress'][0]}</span>";
+            $address .= "<span class='attrValue'><span class='multipleAttrValues'>{$data['postaladdress'][0]}</span>";
             if (isset( $data['l'] )) {
                 $address .= "<span class='multipleAttrValues'>{$data['l'][0]}";
             }
