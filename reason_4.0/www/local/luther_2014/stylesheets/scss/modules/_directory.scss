@@ -31,19 +31,45 @@
     }
   }
 
+  figure {
+    width: 25%;
+    margin: 0 0 $paragraph-margin-bottom $paragraph-margin-bottom;
+    float: right;
+    //margin: 0 auto;
+
+    @media
+    #{$medium-up} {
+      float: left;
+      width: rem-calc(150);
+      margin: 0 $paragraph-margin-bottom $paragraph-margin-bottom 0;
+    }
+
+    img {
+      width: 100%;
+    }
+  }
+
   .directoryName {
     margin: 0;
     font-size: $h3-font-size;
     font-weight: 400;
   }
 
-  .directoryInfo {
-
-  }
-
   .directoryTitle {
     font-size: $h5-font-size;
     margin-bottom: 0px;
+  }
+
+  .directoryInfo {
+    h3.directoryTitle:last-of-type{
+      margin-bottom: 40px;
+    }
+    @media
+    #{$medium-up}{
+      h3.directoryTitle:last-of-type{
+        margin-bottom: 0px;
+      }
+    }
   }
 
   .directoryContact {
@@ -52,17 +78,38 @@
 
     li span.attribute{
       position: static;
-      width: 125px;
+      width: 95%;
+      @media
+      #{$medium-up} {
+        width: 20%;
+      }
       display: inline-block;
+      vertical-align: top;
 
       strong{
         position: static;
       }
     }
 
-    li {
+    span.attrValue{
+      display: inline-block;
+      width: 95%;
+      @media
+      #{$medium-up} {
+        width: 76%;
+      }
+      margin-left: 2px;
+    }
 
+    span.multipleAttrValues{
+      display: inline-block;
+      margin: 0 3px;
+      width: 100%;
+    }
+
+    li {
       margin-left: rem-calc(40);
+      vertical-align: top;
 
       strong {
         @extend .screenreader;
@@ -73,12 +120,14 @@
         width: rem-calc(32);
         margin-left: - rem-calc(36);
         text-align: center;
+        vertical-align: top;
+        position: relative;
+        top: 5px;
       }
 
     }
 
     .directoryOffice {
-
       &:before {
         content: $fa-var-map-marker;
       }
@@ -123,6 +172,7 @@
     .directoryHomeAddress {
       &:before {
         content: $fa-var-home;
+        margin-right: 5px;
       }
     }
 
@@ -156,11 +206,11 @@
       }
     }
 
-    //.directoryAdvisor {
+    // .directoryAdvisor {
     //  &:before {
     //    content: $fa-var-comments;
     //  }
-    //}
+    // }
 
     .directoryTerms {
       &:before {
@@ -169,5 +219,4 @@
     }
 
   }
-
 }
