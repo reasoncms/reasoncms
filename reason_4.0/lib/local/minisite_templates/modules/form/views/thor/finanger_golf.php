@@ -15,13 +15,18 @@ $GLOBALS['_form_view_class_names'][basename(__FILE__, '.php')] = 'FinangerGolfFo
  */
 class FinangerGolfForm extends CreditCardThorForm {
     var $package_options = array(
-        'golf' => 'Golf (includes cart, brunch, and dinner)',
-        'brunch and dinner' => 'Brunch and Dinner',
-        'dinner' => 'Dinner only'
+        'golf'              => 'Golf (includes cart, brunch, and dinner) – $105/person',
+        'brunch and dinner' => 'Brunch and Dinner – $45/person',
+        'dinner'            => 'Dinner only – $30/person'
     );
     var $dinner_options = array(
-        'chicken' => 'Chicken Almondine',
-        'salmon' => 'Grilled Fillet of Salmon'
+        'chicken'   => 'Chicken Italiano',
+        'salmon'    => 'Almond Dijon Grilled Salmon'
+    );
+    var $division_options = array(
+        'men'   => 'Men',
+        'women' => 'Women',
+        'co-ed' => 'Co-Ed'
     );
 
     function custom_init()
@@ -41,10 +46,10 @@ class FinangerGolfForm extends CreditCardThorForm {
 
         $this->change_element_type($this->get_element_name_from_label('Class 1'), 'year',
             array('display_name' => 'Class year (if applicable)', 'num_years_before_today' => '60', 'num_years_after_today' => '-1'));
-        $this->change_element_type($this->get_element_name_from_label('Package 1'), 'select_no_sort',
-            array('display_name' => 'Package', 'options' => $this->package_options, 'add_empty_value_to_top' => true));
-        $this->change_element_type($this->get_element_name_from_label('Dinner 1'), 'select_no_sort',
-            array('display_name' => 'Dinner', 'options' => $this->dinner_options, 'add_empty_value_to_top' => true));
+        $this->change_element_type($this->get_element_name_from_label('Package 1'), 'radio_no_sort',
+            array('display_name' => 'Please select one', 'options' => $this->package_options));
+        $this->change_element_type($this->get_element_name_from_label('Dinner 1'), 'radio_no_sort',
+            array('display_name' => 'Dinner Selection', 'options' => $this->dinner_options));
         $this->change_element_type($this->get_element_name_from_label('Diet 1'), 'text',
             array('display_name' => 'Dietary Restrictions'));
         $this->add_element('guest_1_wrapper', 'comment', array('text' => '<div id="guest_1_wrapper">'));
@@ -56,10 +61,10 @@ class FinangerGolfForm extends CreditCardThorForm {
         $this->move_element('guest_2_header', 'before', $this->get_element_name_from_label('First Name 2'));
         $this->change_element_type($this->get_element_name_from_label('Class 2'), 'year',
             array('display_name' => 'Class year (if applicable)', 'num_years_before_today' => '60', 'num_years_after_today' => '-1'));
-        $this->change_element_type($this->get_element_name_from_label('Package 2'), 'select_no_sort',
-            array('display_name' => 'Package', 'options' => $this->package_options, 'add_empty_value_to_top' => true));
-        $this->change_element_type($this->get_element_name_from_label('Dinner 2'), 'select_no_sort',
-            array('display_name' => 'Dinner', 'options' => $this->dinner_options, 'add_empty_value_to_top' => true));
+        $this->change_element_type($this->get_element_name_from_label('Package 2'), 'radio_no_sort',
+            array('display_name' => 'Please select one', 'options' => $this->package_options));
+        $this->change_element_type($this->get_element_name_from_label('Dinner 2'), 'radio_no_sort',
+            array('display_name' => 'Dinner Selection', 'options' => $this->dinner_options));
         $this->change_element_type($this->get_element_name_from_label('Diet 2'), 'text',
             array('display_name' => 'Dietary Restrictions'));
         $this->add_element('guest_2_wrapper', 'comment', array('text' => '<div id="guest_2_wrapper">'));
@@ -72,10 +77,10 @@ class FinangerGolfForm extends CreditCardThorForm {
         $this->move_element('guest_3_header', 'before', $this->get_element_name_from_label('First Name 3'));
         $this->change_element_type($this->get_element_name_from_label('Class 3'), 'year',
             array('display_name' => 'Class year (if applicable)', 'num_years_before_today' => '60', 'num_years_after_today' => '-1'));
-        $this->change_element_type($this->get_element_name_from_label('Package 3'), 'select_no_sort',
-            array('display_name' => 'Package', 'options' => $this->package_options, 'add_empty_value_to_top' => true));
-        $this->change_element_type($this->get_element_name_from_label('Dinner 3'), 'select_no_sort',
-            array('display_name' => 'Dinner', 'options' => $this->dinner_options, 'add_empty_value_to_top' => true));
+        $this->change_element_type($this->get_element_name_from_label('Package 3'), 'radio_no_sort',
+            array('display_name' => 'Please select one', 'options' => $this->package_options));
+        $this->change_element_type($this->get_element_name_from_label('Dinner 3'), 'radio_no_sort',
+            array('display_name' => 'Dinner Selection', 'options' => $this->dinner_options));
         $this->change_element_type($this->get_element_name_from_label('Diet 3'), 'text',
             array('display_name' => 'Dietary Restrictions'));
         $this->add_element('guest_3_wrapper', 'comment', array('text' => '<div id="guest_3_wrapper">'));
@@ -87,10 +92,10 @@ class FinangerGolfForm extends CreditCardThorForm {
         $this->move_element('guest_4_header', 'before', $this->get_element_name_from_label('First Name 4'));
         $this->change_element_type($this->get_element_name_from_label('Class 4'), 'year',
             array('display_name' => 'Class year (if applicable)', 'num_years_before_today' => '60', 'num_years_after_today' => '-1'));
-        $this->change_element_type($this->get_element_name_from_label('Package 4'), 'select_no_sort',
-            array('display_name' => 'Package', 'options' => $this->package_options, 'add_empty_value_to_top' => true));
-        $this->change_element_type($this->get_element_name_from_label('Dinner 4'), 'select_no_sort',
-            array('display_name' => 'Dinner', 'options' => $this->dinner_options, 'add_empty_value_to_top' => true));
+        $this->change_element_type($this->get_element_name_from_label('Package 4'), 'radio_no_sort',
+            array('display_name' => 'Please select one', 'options' => $this->package_options));
+        $this->change_element_type($this->get_element_name_from_label('Dinner 4'), 'radio_no_sort',
+            array('display_name' => 'Dinner Selection', 'options' => $this->dinner_options));
         $this->change_element_type($this->get_element_name_from_label('Diet 4'), 'text',
             array('display_name' => 'Dietary Restrictions'));
         $this->add_element('guest_4_wrapper', 'comment', array('text' => '<div id="guest_4_wrapper">'));
@@ -102,10 +107,10 @@ class FinangerGolfForm extends CreditCardThorForm {
         $this->move_element('guest_5_header', 'before', $this->get_element_name_from_label('First Name 5'));
         $this->change_element_type($this->get_element_name_from_label('Class 5'), 'year',
             array('display_name' => 'Class year (if applicable)', 'num_years_before_today' => '60', 'num_years_after_today' => '-1'));
-        $this->change_element_type($this->get_element_name_from_label('Package 5'), 'select_no_sort',
-            array('display_name' => 'Package', 'options' => $this->package_options, 'add_empty_value_to_top' => true));
-        $this->change_element_type($this->get_element_name_from_label('Dinner 5'), 'select_no_sort',
-            array('display_name' => 'Dinner', 'options' => $this->dinner_options, 'add_empty_value_to_top' => true));
+        $this->change_element_type($this->get_element_name_from_label('Package 5'), 'radio_no_sort',
+            array('display_name' => 'Please select one', 'options' => $this->package_options));
+        $this->change_element_type($this->get_element_name_from_label('Dinner 5'), 'radio_no_sort',
+            array('display_name' => 'Dinner Selection', 'options' => $this->dinner_options));
         $this->change_element_type($this->get_element_name_from_label('Diet 5'), 'text',
             array('display_name' => 'Dietary Restrictions'));
         $this->add_element('guest_5_wrapper', 'comment', array('text' => '<div id="guest_5_wrapper">'));
@@ -117,10 +122,10 @@ class FinangerGolfForm extends CreditCardThorForm {
         $this->move_element('guest_6_header', 'before', $this->get_element_name_from_label('First Name 6'));
         $this->change_element_type($this->get_element_name_from_label('Class 6'), 'year',
             array('display_name' => 'Class year (if applicable)', 'num_years_before_today' => '60', 'num_years_after_today' => '-1'));
-        $this->change_element_type($this->get_element_name_from_label('Package 6'), 'select_no_sort',
-            array('display_name' => 'Package', 'options' => $this->package_options, 'add_empty_value_to_top' => true));
-        $this->change_element_type($this->get_element_name_from_label('Dinner 6'), 'select_no_sort',
-            array('display_name' => 'Dinner', 'options' => $this->dinner_options, 'add_empty_value_to_top' => true));
+        $this->change_element_type($this->get_element_name_from_label('Package 6'), 'radio_no_sort',
+            array('display_name' => 'Please select one', 'options' => $this->package_options));
+        $this->change_element_type($this->get_element_name_from_label('Dinner 6'), 'radio_no_sort',
+            array('display_name' => 'Dinner Selection', 'options' => $this->dinner_options));
         $this->change_element_type($this->get_element_name_from_label('Diet 6'), 'text',
             array('display_name' => 'Dietary Restrictions'));
         $this->add_element('guest_6_wrapper', 'comment', array('text' => '<div id="guest_6_wrapper">'));
@@ -132,10 +137,10 @@ class FinangerGolfForm extends CreditCardThorForm {
         $this->move_element('guest_7_header', 'before', $this->get_element_name_from_label('First Name 7'));
         $this->change_element_type($this->get_element_name_from_label('Class 7'), 'year',
             array('display_name' => 'Class year (if applicable)', 'num_years_before_today' => '60', 'num_years_after_today' => '-1'));
-        $this->change_element_type($this->get_element_name_from_label('Package 7'), 'select_no_sort',
-            array('display_name' => 'Package', 'options' => $this->package_options, 'add_empty_value_to_top' => true));
-        $this->change_element_type($this->get_element_name_from_label('Dinner 7'), 'select_no_sort',
-            array('display_name' => 'Dinner', 'options' => $this->dinner_options, 'add_empty_value_to_top' => true));
+        $this->change_element_type($this->get_element_name_from_label('Package 7'), 'radio_no_sort',
+            array('display_name' => 'Please select one', 'options' => $this->package_options));
+        $this->change_element_type($this->get_element_name_from_label('Dinner 7'), 'radio_no_sort',
+            array('display_name' => 'Dinner Selection', 'options' => $this->dinner_options));
         $this->change_element_type($this->get_element_name_from_label('Diet 7'), 'text',
             array('display_name' => 'Dietary Restrictions'));
         $this->add_element('guest_7_wrapper', 'comment', array('text' => '<div id="guest_7_wrapper">'));
@@ -147,10 +152,10 @@ class FinangerGolfForm extends CreditCardThorForm {
         $this->move_element('guest_8_header', 'before', $this->get_element_name_from_label('First Name 8'));
         $this->change_element_type($this->get_element_name_from_label('Class 8'), 'year',
             array('display_name' => 'Class year (if applicable)', 'num_years_before_today' => '60', 'num_years_after_today' => '-1'));
-        $this->change_element_type($this->get_element_name_from_label('Package 8'), 'select_no_sort',
-            array('display_name' => 'Package', 'options' => $this->package_options, 'add_empty_value_to_top' => true));
-        $this->change_element_type($this->get_element_name_from_label('Dinner 8'), 'select_no_sort',
-            array('display_name' => 'Dinner', 'options' => $this->dinner_options, 'add_empty_value_to_top' => true));
+        $this->change_element_type($this->get_element_name_from_label('Package 8'), 'radio_no_sort',
+            array('display_name' => 'Please select one', 'options' => $this->package_options));
+        $this->change_element_type($this->get_element_name_from_label('Dinner 8'), 'radio_no_sort',
+            array('display_name' => 'Dinner Selection', 'options' => $this->dinner_options));
         $this->change_element_type($this->get_element_name_from_label('Diet 8'), 'text',
             array('display_name' => 'Dietary Restrictions'));
         $this->add_element('guest_8_wrapper', 'comment', array('text' => '<div id="guest_8_wrapper">'));
@@ -161,33 +166,21 @@ class FinangerGolfForm extends CreditCardThorForm {
         $this->change_element_type($this->get_element_name_from_label('Other'), 'textarea',
             array('display_name' => 'Other Comments/Notes'));
 
+        $this->change_element_type($this->get_element_name_from_label('Division 1'), 'radio_inline_no_sort',
+            array('display_name' => 'Division for Paring/Foursome 1', 'options' => $this->division_options));
         $this->change_element_type($this->get_element_name_from_label('Grouping 1'), 'textarea',
-            array('display_name' => 'Grouping 1'));
+            array('display_name' => 'Paring/Foursome 1'));
+        $this->change_element_type($this->get_element_name_from_label('Division 2'), 'radio_inline_no_sort',
+            array('display_name' => 'Division for Paring/Foursome 2', 'options' => $this->division_options));
         $this->change_element_type($this->get_element_name_from_label('Grouping 2'), 'textarea',
-            array('display_name' => 'Grouping 2'));
+            array('display_name' => 'Paring/Foursome 2'));
         $this->add_element('groupings_header', 'comment', array(
-            'text' => '<h3>Groupings</h3>
-                <ul>List the names of other golfers you\'d like to play with (if different than above)
-                <li>&bull; 4 names per group</li>
-                <li>&bull; Please include first and last names</li>
-                </ul>'));
-        $this->move_element('groupings_header', 'before', $this->get_element_name_from_label('Grouping 1'));
+            'text' => '<h3>Pairings/Foursomes</h3>
+                <p>Please list playing partners or foursomes (if different than above). Please include first names, last names, and class years (if applicable).</p>'));
+        $this->move_element('groupings_header', 'before', $this->get_element_name_from_label('Division 1'));
 
         parent::on_every_time();
 
-    }
-
-    /**
-     * Cleans any extra characters form the hidden field values and returns an int
-     *
-     * @param string The cost string
-     * @return int The cost cleaned (all chars removed and an int returned)
-     */
-    private function _cleanup_cost($label)
-    {
-        if (preg_match('/([\d\.,]+)/',$label, $match))
-            $this->set_value('payment_amount', '$'.$match[1]);
-            return($match[1]);
     }
 
     /**
