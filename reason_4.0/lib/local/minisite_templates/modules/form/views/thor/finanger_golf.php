@@ -15,7 +15,7 @@ $GLOBALS['_form_view_class_names'][basename(__FILE__, '.php')] = 'FinangerGolfFo
  */
 class FinangerGolfForm extends CreditCardThorForm {
     var $package_options = array(
-        'all' => 'Golf (includes brunch and dinner)',
+        'golf' => 'Golf (includes cart, brunch, and dinner)',
         'brunch and dinner' => 'Brunch and Dinner',
         'dinner' => 'Dinner only'
     );
@@ -162,6 +162,18 @@ class FinangerGolfForm extends CreditCardThorForm {
         $this->change_element_type($this->get_element_name_from_label('Other'), 'textarea',
             array('display_name' => 'Other Comments/Notes'));
 
+        $this->change_element_type($this->get_element_name_from_label('Grouping 1'), 'textarea',
+            array('display_name' => 'Grouping 1'));
+        $this->change_element_type($this->get_element_name_from_label('Grouping 2'), 'textarea',
+            array('display_name' => 'Grouping 2'));
+        $this->add_element('groupings_header', 'comment', array(
+            'text' => '<h3>Groupings</h3>
+                <ul>List the names of other golfers you\'d like to play with (if different than above)
+                <li>4 names per group</li>
+                <li>Please include first and last names</li>
+                </ul>'));
+        $this->move_element('groupings_header', 'before', $this->get_element_name_from_label('Grouping 1'));
+
     }
 
     /**
@@ -192,9 +204,8 @@ class FinangerGolfForm extends CreditCardThorForm {
 
         for ($i=1; $i < 9; $i++) {
             $package = $this->get_value_from_label('Package ' . $i);
-            echo $package;
             switch ( $package ) {
-                case 'all':
+                case 'golf':
                     $total = $total + $golf;
                     break;
                 case 'brunch and dinner':

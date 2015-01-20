@@ -30,8 +30,10 @@ function add_golfer(){
 function toggle_remove_golfer_link() {
     if ($("#guest2wrapperItem").is(":visible")) {
         $("#remove_golfer_link").show('500');
+        grouping_2_element.show('500');
     } else {
         $("#remove_golfer_link").hide('500');
+        grouping_2_element.hide('500');
     }
 }
 
@@ -85,6 +87,7 @@ function setTotal(){
 function hide_initial_items(){
     if ( !$(".words:contains('First Name 2')").next().find("input").val() ) {
         $("#guest2wrapperItem").hide();
+        grouping_2_element.hide();
     }
     if ( !$(".words:contains('First Name 3')").next().find("input").val() ) {
         $("#guest3wrapperItem").hide();
@@ -105,8 +108,4 @@ function hide_initial_items(){
         $("#guest8wrapperItem").hide();
     }
     toggle_remove_golfer_link();
-
-    grouping_1_element.hide();
-    grouping_2_element.hide();
-    // toggle_billing();
 }
