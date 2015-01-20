@@ -167,13 +167,13 @@ class FinangerGolfForm extends CreditCardThorForm {
             array('display_name' => 'Other Comments/Notes'));
 
         $this->change_element_type($this->get_element_name_from_label('Division 1'), 'radio_inline_no_sort',
-            array('display_name' => 'Division for Paring/Foursome 1', 'options' => $this->division_options));
+            array('display_name' => 'Division for Pairing/Foursome 1', 'options' => $this->division_options));
         $this->change_element_type($this->get_element_name_from_label('Grouping 1'), 'textarea',
-            array('display_name' => 'Paring/Foursome 1'));
+            array('display_name' => 'Pairing/Foursome 1'));
         $this->change_element_type($this->get_element_name_from_label('Division 2'), 'radio_inline_no_sort',
-            array('display_name' => 'Division for Paring/Foursome 2', 'options' => $this->division_options));
+            array('display_name' => 'Division for Pairing/Foursome 2', 'options' => $this->division_options));
         $this->change_element_type($this->get_element_name_from_label('Grouping 2'), 'textarea',
-            array('display_name' => 'Paring/Foursome 2'));
+            array('display_name' => 'Pairing/Foursome 2'));
         $this->add_element('groupings_header', 'comment', array(
             'text' => '<h3>Pairings/Foursomes</h3>
                 <p>Please list playing partners or foursomes (if different than above). Please include first names, last names, and class years (if applicable).</p>'));

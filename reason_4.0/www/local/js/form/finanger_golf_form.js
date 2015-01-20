@@ -4,10 +4,10 @@ $(function() {
     payment_amountElement = $(".words:contains('Payment Amount')").next().find('input');
     payment_amountElement.attr('readonly', 'readonly');
 
-    grouping_1_element  = $(".words:contains('Paring/Foursome 1')").parent();
-    division_1_element  = $(".words:contains('Division for Paring/Foursome 1')").parent();
-    grouping_2_element  = $(".words:contains('Paring/Foursome 2')").parent();
-    division_2_element  = $(".words:contains('Division for Paring/Foursome 2')").parent();
+    grouping_1_element  = $(".words:contains('Pairing/Foursome 1')").parent();
+    division_1_element  = $(".words:contains('Division for Pairing/Foursome 1')").parent();
+    grouping_2_element  = $(".words:contains('Pairing/Foursome 2')").parent();
+    division_2_element  = $(".words:contains('Division for Pairing/Foursome 2')").parent();
 
     draw_add_remove_golfer_buttons();
     toggle_remove_golfer_link();
