@@ -54,11 +54,12 @@
 					// now that we've got the form id, find out what site it belongs to
 					$form = new entity($formId);
 					$site = $form->get_owner();
-					
+
 					// and finally, make sure the logged in user has access to the site, and is an admin
 					$hasSiteAccess = reason_username_has_access_to_site($username, $site->id());
-					$isAdmin = user_is_a(get_user_id($username), id_of("admin_role"));
-					return $hasSiteAccess && $isAdmin;
+					// $isAdmin = user_is_a(get_user_id($username), id_of("admin_role"));
+					// return $hasSiteAccess && $isAdmin;
+					return $hasSiteAccess;
 				}
 			}
 
