@@ -434,8 +434,6 @@
 				}
 			}
 
-		
-
 			$events_default_break_point_lower: 500px;
 			$events_default_break_point_upper: 720px;
 
@@ -487,6 +485,7 @@
 					padding: 0;
 					float: right;
 					width: 20%;
+					margin: 0;
 
 					@media #{$medium-only-events} {
 						float: none;
@@ -497,6 +496,74 @@
 
 			.search {
 				margin: 0 0 $column-gutter;
+				@include clearfix;
+
+				#calendar_search {
+					display: block;
+					@include form-element();
+					width: 80%;
+					float: left;
+					margin-bottom: 0;
+					border-right: none;
+				}
+
+				input[type="submit"] {
+					display: block;
+					text-align: center;
+					padding: $form-spacing / 2;
+					height: ($input-font-size + ($form-spacing * 1.5) - rem-calc(1));
+					background: $primary-color;
+					color: $white;
+					width: 20%;
+					float: left;
+					border-radius: 0 $global-radius $global-radius 0;
+					margin-bottom: 0;
+
+					&:hover {
+						background: darken($primary-color, 10%);
+						cursor: pointer;
+					}
+				}
+			}
+
+			.options {
+				.categories {
+					
+					li {
+						list-style-type: none;
+						
+						a {
+							@include inline-icon($icon: $fa-var-folder);
+						}
+
+						strong {
+							@include inline-icon($icon: $fa-var-folder-open);
+						}
+					}
+				}
+
+				.audiences {
+
+					li {
+						list-style-type: none;
+
+						a {
+							@include inline-icon($icon: $fa-var-user);
+						}
+
+						strong {
+							@include inline-icon($icon: $fa-var-users);
+						}
+
+					}
+
+				}
+
+				.archive {
+					a {
+						// /@include inline-icon($icon: $fa-var-archive);
+					}
+				}
 			}
 		}
 
