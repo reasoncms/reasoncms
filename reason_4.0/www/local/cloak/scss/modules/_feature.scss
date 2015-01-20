@@ -1,0 +1,301 @@
+	// Modules Styles
+	// Cloak, v1
+
+.featuresModule {
+	
+	.features {
+		margin-bottom: $horizontal-gutter;
+	}
+
+	.feature {
+
+		.featureContent {
+
+			.featuredImage {
+
+			}
+
+			.featureInfo {
+				background-color: rgba(black, .5) !important;
+
+				.featureTitle {
+					font-family: $font-family-serif;
+
+					a.dest,
+					a.anchor,
+					span.noLink {
+						margin: 0;
+						padding: rem-calc(8) $column-gutter/3 0;
+						line-height: 1.2;
+						color: white;
+					}
+				}
+
+				.featureText {
+
+					a.dest,
+					a.anchor,
+					span.noLink {
+						margin: 0;
+						padding: rem-calc(8) $column-gutter/3;
+						line-height: 1.2;
+						color: white;
+
+						&:empty {  // Here we hide it if there's no content
+							display: none;
+						}
+					}
+					
+					// clear: none;
+					// display: inline;
+					// /*float: left;*/
+					// line-height: $h3-font-size;
+					// padding-top: 16px;
+				}
+
+				.featureNav {
+					@include clearfix;
+					padding: 0;
+					background: $jet;
+					font-size: rem-calc(14);
+					border-top: 1px solid rgba(white, .1);
+
+
+					.play-pause {
+						//background: //;
+
+						.button {
+							text-align: center;
+							margin: 0;
+							border-right: 1px solid rgba(white, .1);
+							display: block;
+							float: right;
+							padding: 0 10px;
+							color: rgba(white, .7);
+
+							&:hover {
+								background: $oil;
+								color: $white;
+							}
+
+							&.play {
+								@include inline-icon($icon: $fa-var-play);
+							}
+
+							&.pause {
+								@include inline-icon($icon: $fa-var-pause);
+							}
+
+						}
+					}
+
+					.navBlock {	
+
+						.navItem,
+						.button {
+							text-align: center;
+							margin: 0;
+							border-right: 1px solid rgba(white, .1);
+							display: block;
+							float: left;
+							padding: 0 10px;
+							color: rgba(white, .7);
+
+							&:hover {
+								background: $oil;
+								color: $white;
+							}
+
+							&.current {
+								background: $primary-color;	
+							}
+						}
+
+						.button {
+
+							&.prev {
+								@include inline-icon($icon: $fa-var-caret-left, $margin: false);
+							}
+							
+							&.next {
+								@include inline-icon($icon: $fa-var-caret-right, $margin: false);
+							}
+
+							span {
+								@include screenreader();
+							}
+
+							&.prev {
+							
+							}
+						}
+					} 
+				}
+			} 
+		}
+	}
+}
+
+
+// .featuresModule {
+
+// 	/* @media #{$small-only} {
+// 	.features {
+// 	padding: 0;
+// 	//height: 224px;
+// 	height: 306px;
+
+// 	img {
+// 	width: 640px;
+// 	max-width: 10000px !important;
+// 	//height: 224px !important;
+// 	height: 306px !important;
+// 	position: absolute;
+// 	margin-left: -320px;
+// 	}
+// 	}
+// 	}*/
+
+// 	.features {
+// 	}
+
+// 	.feature {
+
+// 		.featureContent {
+
+// 			.featuredImage {
+
+// 			}
+
+// 			.featureInfo {
+
+// 			}
+
+// 		}
+
+
+
+// 		.featureInfo {
+// 			position: relative;
+// 			background: none !important;
+// 			padding: $column-gutter/6 0;
+
+// 			@media #{$medium-up} {
+// 				position: absolute;
+// 				background: rgb(0,0,0) !important;
+// 				background: rgba(0,0,0,.75) !important;
+// 				padding: $column-gutter/3 $column-gutter/1.25;
+// 			}
+
+// 			@media #{$large-up} {
+// 				padding: $column-gutter/3 $column-gutter/1.75;
+// 			}
+
+// 			.featureTitle {
+// 				line-height: 1;
+// 				font-size: rem-calc(14);
+
+// 				@media #{$medium-up} {
+// 				font-size: $h3-font-size;
+
+// 				display: inline;
+// 			}
+
+// 			a,
+// 			.noLink {
+// 				@extend .zero-out;
+
+// 				@media #{$medium-up} {
+// 					display: inline;
+// 					/*loat: left;*/
+// 					} 
+// 				}
+// 		}
+
+// 		.featureText { // hide description text on mobile 
+// 			display: none;
+
+// 			@media #{$medium-up} { // show
+// 				clear: none;
+// 				display: inline;
+// 				/*float: left;*/
+// 				line-height: $h3-font-size;
+// 				padding-top: 16px;
+// 			}
+
+// 			a,
+// 			span { 
+
+// 				padding: 0;
+// 				display: inline;
+
+// 				&:before { // The little divider between the Heading and Description
+// 					@extend .fa;
+// 					content: $fa-var-angle-double-right;
+// 					margin: 0 .5rem;
+// 					display: inline-block;
+// 					color: rgba(255,255,255,.5);
+// 				}
+
+// 				&:empty {  // Here we hide it if there's no content
+// 					display: none;
+// 					}
+// 				}
+// 			}
+// 		} 
+
+// 		.featureNavWrap {
+// 			position: relative;
+// 			display: block;
+// 			padding: $column-gutter/6 0;
+// 			@include clearfix;
+
+// 			@media #{$medium-up} { // show
+// 				margin-top: 0;
+// 				padding: $column-gutter/6 0;
+// 				position: absolute;
+// 				top: $column-gutter/2;
+// 				right: $column-gutter/2;
+// 				}
+
+// 			.featureNav {
+// 			@extend .zero-out;
+// 			}
+
+// 			.play-pause,
+// 			.prev,
+// 			.next {
+// 				display: none;
+// 			}
+
+// 			.navBlock {
+
+// 				.navItem {
+
+// 					width: 14px;
+// 					height: 14px;
+// 					display: block;
+// 					float: left;
+// 					background: rgba(255,255,255,.5);
+// 					border-radius: $global-rounded;
+// 					box-shadow: 0 0 4px #000;
+// 					margin: 0 $column-gutter/3.5 0 0;
+
+// 					&.current {
+// 						background: #FFF;
+// 					}
+
+// 					@media #{$medium-up} {
+// 						width: 20px;
+// 						height: 20px;
+// 						margin: 0 0 0 $column-gutter/3.5;
+// 					}
+
+// 					span {
+// 						@extend .screenreader;
+// 					}
+// 				}
+// 			} 
+// 		}
+// 	}
+// }
