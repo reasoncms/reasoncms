@@ -61,15 +61,17 @@
 	}
 }
 
-@mixin inline-icon($pseudo: before, $icon: $fa-var-bomb, $color: inherit) {
+@mixin inline-icon($pseudo: before, $icon: $fa-var-bomb, $color: inherit, $margin: true) {
 	&:#{$pseudo} {
 		@extend .fa;
 		content: $icon;
-		@if $pseudo == after {
-			margin-left: rem-calc(6);	
-		}
-		@else {
-			margin-right: rem-calc(6);
+		@if $margin == true {
+			@if $pseudo == after {
+				margin-left: rem-calc(6);	
+			}
+			@else {
+				margin-right: rem-calc(6);
+			}
 		}
 		color: $color;
 	}
