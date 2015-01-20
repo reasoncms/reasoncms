@@ -83,13 +83,27 @@ function setTotal(){
 }
 
 function hide_initial_items(){
-    $("#guest2wrapperItem").hide();
-    $("#guest3wrapperItem").hide();
-    $("#guest4wrapperItem").hide();
-    $("#guest5wrapperItem").hide();
-    $("#guest6wrapperItem").hide();
-    $("#guest7wrapperItem").hide();
-    $("#guest8wrapperItem").hide();
+    if ( !$(".words:contains('First Name 2')").next().find("input").val() ) {
+        $("#guest2wrapperItem").hide();
+    }
+    if ( !$(".words:contains('First Name 3')").next().find("input").val() ) {
+        $("#guest3wrapperItem").hide();
+    }
+    if ( !$(".words:contains('First Name 4')").next().find("input").val() ) {
+        $("#guest4wrapperItem").hide();
+    }
+    if ( !$(".words:contains('First Name 5')").next().find("input").val() ) {
+        $("#guest5wrapperItem").hide();
+    }
+    if ( !$(".words:contains('First Name 6')").next().find("input").val() ) {
+        $("#guest6wrapperItem").hide();
+    }
+    if ( !$(".words:contains('First Name 7')").next().find("input").val() ) {
+        $("#guest7wrapperItem").hide();
+    }
+    if ( !$(".words:contains('First Name 8')").next().find("input").val() ) {
+        $("#guest8wrapperItem").hide();
+    }
     toggle_remove_golfer_link();
 
     grouping_1_element.hide();
