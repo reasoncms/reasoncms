@@ -44,7 +44,6 @@
 	}
 }
 
-// Feed button
 @mixin feed-button() {
 	@include button(
 		$padding: $button-tny,
@@ -62,7 +61,6 @@
 	}
 }
 
-// FontAwesome inline icon
 @mixin inline-icon($pseudo: before, $icon: $fa-var-bomb, $color: inherit) {
 	&:#{$pseudo} {
 		@extend .fa;
@@ -77,13 +75,110 @@
 	}
 }
 
-// @mixin single-transition($property:all, $speed:300ms, $ease:ease-out) {
-//   @if $experimental {
-//     -webkit-transition: $property $speed $ease;
-//     -moz-transition: $property $speed $ease;
-//   }
-//   transition: $property $speed $ease;
-// }
+@mixin cloak-alert($mode: alert, $symbol: null) {
+
+	@if $symbol != null {
+		@include inline-icon($icon: $symbol);
+
+		&:before {
+			line-height: 1;
+			font-size: rem-calc(20);
+			display: block;
+			text-align: center;
+			background: rgba(white, .25);
+			margin-top: - ($alert-padding-top + $alert-border-width);
+			margin-left: - ($alert-padding-top + $alert-border-width);
+			margin-right: - ($alert-padding-top + $alert-border-width);
+			margin-top: - $alert-padding-top;
+			margin-left: - $alert-padding-top;
+			margin-right: - $alert-padding-top;
+			margin-bottom: $alert-padding-top;
+			padding: rem-calc(12) 0;
+			border-bottom: 1px solid;
+		}
+	}
+	@if $mode == success {
+		@include alert($bg: $success-color, $radius: 6px);
+		&:before {
+			border-color: scale-color($success-color, $lightness: $alert-function-factor);
+		}
+	}
+	@if $mode == warning {
+		@include alert($bg: $warning-color, $radius: 6px);
+		&:before {
+			border-color: scale-color($warning-color, $lightness: $alert-function-factor);
+		}
+	}
+	@if $mode == alert {
+		@include alert($bg: $alert-color, $radius: 6px);
+		&:before {
+			border-color: scale-color($alert-color, $lightness: $alert-function-factor);
+		}
+	}
+	@if $mode == info {
+		@include alert($bg: $info-color, $radius: 6px);
+		&:before {
+			border-color: scale-color($info-color, $lightness: $alert-function-factor);
+		}
+	}
+	@if $mode == secondary {
+		@include alert($bg: $gainsboro, $radius: 6px);
+		&:before {
+			border-color: scale-color($gainsboro, $lightness: $alert-function-factor);
+		}
+	}
+
+	a {
+		text-decoration: underline;
+		font-weight: 700;
+		color: inherit;
+	}
+
+	*:last-child {
+		margin-bottom: 0;
+		padding-bottom: 0;
+	}
+}
+
+// Named anchor padding
+// Provides padding aboved named anchor links to keep them from hugging the top of the browser window
+
+// Provides padding equal to the column guttter
+@mixin anchor-padding-gutter {
+	&:before {
+		display: block;
+		content: "";
+		margin-top: - $column-gutter/2;
+		height: $column-gutter/2;
+		visibility: hidden;
+	}
+}
+
+// Provides padding to account for the sticky navigation menu
+@mixin anchor-padding-menu {
+	&:before { 
+		display: block;
+		content: "";
+		margin-top: - $column-gutter;
+		height: $column-gutter;
+		visibility: hidden;
+
+		@media #{$large-up} {
+			margin-top: - $column-gutter*4;
+			height: $column-gutter*4;
+		}
+	}
+}
+
+@mixin image-caption {
+	font-style: italic;
+	font-weight: 300;
+	color: $aluminum;
+	font-family: $font-family-serif;
+	font-size: rem-calc(14);
+	display: block;
+	margin-top: rem-calc(2);
+}
 
 // Equilateral triangles
 //
