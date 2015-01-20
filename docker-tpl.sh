@@ -13,7 +13,10 @@ KeepAlive On
 MaxKeepAliveRequests 100
 KeepAliveTimeout 5
 AccessFileName .htaccess
-ErrorLog "|/bin/more"
+ErrorLog "/usr/src/app/err.log"
+
+LogFormat "%h %l %u %t \"%r\" %>s %b" common
+CustomLog /usr/src/app/out.log common
 
 # These need to be set in /etc/apache2/envvars
 User \${APACHE_RUN_USER}
