@@ -65,7 +65,7 @@ function add_costs(){
 
     package_selection = $(".words:contains('Package')").next().find('option:selected');
     package_selection.each(function(){
-        if ($(this).val() == 'all') {
+        if ($(this).val() == 'golf') {
             total_cost = total_cost + golf_cost;
         };
         if ($(this).val() == 'brunch and dinner') {
