@@ -657,6 +657,8 @@ blockquote p {
     font-size: 1.0625rem;
     color: red;
     margin: 0; }
+    .cloakLogin #meat #login .msg p {
+      margin: 0; }
   .cloakLogin #meat #login .msg_extra {
     margin-top: 1rem; }
     .cloakLogin #meat #login .msg_extra * {
@@ -700,7 +702,8 @@ blockquote p {
   .cloakLogin #meat #login p.smallText {
     background: #EFEFEF;
     border: 1px solid #CCCCCC;
-    padding: 1.125rem 1.5rem; }
+    padding: 1.125rem 1.5rem;
+    font-size: 0.875rem; }
     @media only screen and (min-width: 30em) {
       .cloakLogin #meat #login p.smallText {
         margin-top: 0;
@@ -709,5 +712,3 @@ blockquote p {
         margin-bottom: 0;
         border: none;
         border-top: 1px solid #CCCCCC; } }
-    .cloakLogin #meat #login p.smallText.smallText {
-      font-size: 0.875rem; }

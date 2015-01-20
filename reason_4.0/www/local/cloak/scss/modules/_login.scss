@@ -97,6 +97,10 @@ $horizontal-gutter: rem-calc(36);
 		 		font-size: $h5-font-size;
 		 		color: $alert-color;
 		 		margin: 0;
+
+		 		p {
+		 			margin: 0;
+		 		}
 		 	}
 
 		 	.msg_extra {
@@ -120,6 +124,7 @@ $horizontal-gutter: rem-calc(36);
 		 		background: $silver;
 		 		border: 1px solid $iron;
 		 		padding: $horizontal-gutter/2 $column-gutter/2;
+		 		font-size: rem-calc(14);
 		 		
 		 		@media #{$small-high-up} {
 		 			margin-top: 0;
@@ -131,7 +136,6 @@ $horizontal-gutter: rem-calc(36);
 		 		}
 
 		 		&.smallText {
-		 			font-size: rem-calc(14);
 		 			//margin-top: rem-calc(16);
 		 		}
 		 	}
