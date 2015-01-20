@@ -3321,7 +3321,7 @@ body.standalone #wrapper #wrapper-col #minisite #contentAndRelated #contentSecti
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
 #calendar .eventDetails .eventUrl:before,
 #calendar .eventDetails .calendarExport:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
-.featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, #policyModule .rootPolicyList .rootPolicyItem a:before, #policyModule .policy .decimal .closedAccordion .policyName:after, #policyModule .policy .decimal .openAccordion .policyName:after, #relatedPub .pubLinks a:before, .publication .post p.comments a:before, .publication .post p.more a:after, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after, th.header:after, .twitter-block li:before {
+.featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, #pageContent ul.major-list, #policyModule .rootPolicyList .rootPolicyItem a:before, #policyModule .policy .decimal .closedAccordion .policyName:after, #policyModule .policy .decimal .openAccordion .policyName:after, #relatedPub .pubLinks a:before, .publication .post p.comments a:before, .publication .post p.more a:after, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after, th.header:after, .twitter-block li:before {
   display: inline-block;
   font-family: FontAwesome;
   font-style: normal;
@@ -8041,25 +8041,57 @@ form input[type="submit"]:active {
 ul.siblingList {
   margin: 0;
 }
-/* line 23, scss/modules/_siblings.scss */
-ul.siblingList.prevNext li {
-  display: inline;
+/* line 22, scss/modules/_siblings.scss */
+ul.siblingList.prevNext {
+  width: 100%;
 }
-/* line 26, scss/modules/_siblings.scss */
+/* line 24, scss/modules/_siblings.scss */
+ul.siblingList.prevNext li {
+  border: 1px solid white;
+  background-color: #e9e9e9;
+  width: 100%;
+  height: 71px;
+  display: inline-block;
+  font-size: 1.125rem;
+  font-weight: 300;
+}
+@media only screen and (min-width: 40.063em) {
+  /* line 24, scss/modules/_siblings.scss */
+  ul.siblingList.prevNext li {
+    width: 50%;
+  }
+}
+/* line 35, scss/modules/_siblings.scss */
+ul.siblingList.prevNext li a {
+  display: inline-block;
+  width: 100%;
+  height: 69px;
+  padding: 20px;
+}
+/* line 40, scss/modules/_siblings.scss */
+ul.siblingList.prevNext li a:hover {
+  background: gainsboro;
+}
+/* line 45, scss/modules/_siblings.scss */
 ul.siblingList.prevNext li.previous > a[href]:before {
+  color: rgba(68, 68, 68, 0.35);
   font-family: FontAwesome;
   content: "\f137";
-  padding-right: 0.35rem;
+  padding-right: 0.75rem;
+  padding-left: 0.35rem;
 }
-/* line 32, scss/modules/_siblings.scss */
+/* line 53, scss/modules/_siblings.scss */
 ul.siblingList.prevNext li.next {
   float: right;
+  text-align: right;
 }
-/* line 34, scss/modules/_siblings.scss */
+/* line 56, scss/modules/_siblings.scss */
 ul.siblingList.prevNext li.next > a[href]:after {
+  color: rgba(68, 68, 68, 0.35);
   font-family: FontAwesome;
   content: "\f138";
-  padding-left: 0.35rem;
+  padding-left: 0.75rem;
+  padding-right: 0.35rem;
 }
 
 /* line 10, scss/_extends.scss */
