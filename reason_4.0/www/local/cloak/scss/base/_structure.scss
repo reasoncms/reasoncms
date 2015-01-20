@@ -2,39 +2,43 @@
 // Cloak, v1
 
 // Helper styles (for debugging layouts)
-// #breadcrumbs {
+#breadcrumbs {
 
-// 	.breadcrumb {
-// 		background: orange;
-// 	}
-// }
+	.breadcrumb {
+		background: orange;
+	}
+}
 
-// #meat {
+#meat {
 
-// 	#content {
-// 		background: red;
-// 	}
+	// #content {
+	// 	background: red;
+	// }
 
-// 	#related {
-// 		background: blue;
-// 	}
+	// #related {
+	// 	background: blue;
+	// }
 
-// 	#navigation {
-// 		background: green;
-// 	}
+	// #navigation {
+	// 	background: green;
+	// }
 
-// 	#content {
-// 		border: 1px solid red;
-// 	}
+	#content {
+		border: 1px solid red;
+	}
 
-// 	#related {
-// 		border: 1px solid blue;
-// 	}
+	#related {
+		border: 1px solid blue;
+	}
 
-// 	#navigation {
-// 		border: 1px solid green;
-// 	}
-// }
+	#navigation {
+		border: 1px solid green;
+	}
+}
+
+#footer {
+	border: 1px solid purple;
+}
 
 
 html,
@@ -58,7 +62,8 @@ body,
 // BREADCRUMBS
 #breadcrumbs {
 	@include grid-row();
-	padding-top: $column-gutter; // space between header and content
+	//padding-top: $column-gutter;
+	padding-top: $horizontal-gutter; // space between header and content
 
 	.breadcrumb {
 		@include grid-column(12);
@@ -81,7 +86,8 @@ body,
 // MINISITE COLUMN LAYOUT
 #meat {
 	@include grid-row();
-	padding-top: $column-gutter; // space between breadcrumb and content
+	// padding-top: $column-gutter; 
+	padding-top: $horizontal-gutter; // space between breadcrumb and content
 
 	#content {
 		@include grid-column(12);
@@ -109,6 +115,7 @@ body,
 	// Page has content, related, and navigation.
 	&.containsConRelNav {
 		@media #{$medium-up} {
+			
 			#content {
 				@include grid-column(8);
 			}
@@ -188,11 +195,13 @@ body,
 #meat {
 
 	.persistent {
-		margin-bottom: $column-gutter;
+		//margin-bottom: $column-gutter;
+		//margin-bottom: $horizontal-gutter;
 	}
 
 	.moduleNav {
-		margin-bottom: $column-gutter;
+		//margin-bottom: $column-gutter;
+		//margin-bottom: $horizontal-gutter;
 	}
 		
 	// MINISITE COLUMN LAYOUT: Page has content, related, and navigation.
@@ -222,7 +231,7 @@ body,
 			@media #{$medium-up} {
 				@include grid-column($columns:4, $collapse:true);
 				float: right;
-				padding-left: $column-gutter/2;			
+				padding-left: $column-gutter/2;
 			}
 		}
 
@@ -236,7 +245,6 @@ body,
 		}
 	}
 }
-
 
 // FOOTER 
 #footer {

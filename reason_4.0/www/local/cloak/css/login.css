@@ -580,7 +580,7 @@ blockquote p {
     padding-top: 10%; } }
 .cloakLogin #banner,
 .cloakLogin #meat {
-  padding: 1.875rem; }
+  padding: 3rem; }
   @media only screen and (min-width: 30em) {
     .cloakLogin #banner,
     .cloakLogin #meat {
@@ -588,7 +588,7 @@ blockquote p {
       margin: 0 auto; } }
 .cloakLogin #banner {
   text-align: center;
-  padding: 0.9375rem 1.875rem;
+  padding: 1.5rem 3rem;
   border-bottom: 1px solid #CCCCCC;
   background: #EFEFEF; }
   @media only screen and (min-width: 30em) {
@@ -600,7 +600,7 @@ blockquote p {
   .cloakLogin #banner h1 {
     font-size: 1.25rem; }
 .cloakLogin #meat {
-  padding: 1.875rem;
+  padding: 3rem;
   max-width: 25rem;
   margin: 0 auto; }
   @media only screen and (min-width: 30em) {
@@ -701,8 +701,8 @@ blockquote p {
       color: #FFFFFF; }
   .cloakLogin #meat #login p.smallText {
     background: #EFEFEF;
-    margin: -1.875rem;
-    padding: 1.875rem; }
+    margin: -3rem;
+    padding: 3rem; }
     @media only screen and (min-width: 40.063em) {
       .cloakLogin #meat #login p.smallText {
         border-top: 1px solid #CCCCCC; } }

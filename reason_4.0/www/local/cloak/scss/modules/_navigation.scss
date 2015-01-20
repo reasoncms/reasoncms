@@ -2,20 +2,10 @@
 // Cloak, v1
 
 #minisiteNavigation {
-	margin-bottom: $column-gutter;
+	margin-bottom: $horizontal-gutter;
 
 	// Adds non-visible padding to the top of the minisite navigation when it's linked to from the mobile navigation
-	&:before { 
-		display: block;
-		content: "";
-		margin-top: - $column-gutter/2;
-		height: $column-gutter/2;
-		visibility: hidden;
-
-		@media #{$medium-high-up} {
-			display: none;
-		}
-	}
+	@include anchor-padding-gutter();
 
 	ul {
 		@include zero-out();
@@ -109,7 +99,7 @@
 						font-size: rem-calc(12);
 						content: $fa-var-external-link;
 						position: absolute;
-						top: $column-gutter / 2;
+						top: $horizontal-gutter / 2;
 						right: $nav-item-tb;
 						color: $jumbo;
 					}

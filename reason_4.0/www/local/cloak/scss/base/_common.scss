@@ -3,70 +3,21 @@
 
 // Common styles that are repeated throughout Reason
 
-
 .persistent {
-
-}
-
-.moduleNav {
-
-}
-
-.persistent {
-	margin-bottom: $column-gutter;
+	margin-bottom: $horizontal-gutter;
 	border: none;
 
 	#filtering {
+		// Form styles included in _form.scss
 		@include clearfix;
 		margin: 0;
 		background: $silver;
-		padding: $column-gutter/2;
+		padding: $horizontal-gutter/2;
 		padding-bottom: 0;
-
-		// Search form
-		.searchForm {
-			margin: 0 0 $column-gutter/2 0 !important;
-			@include clearfix;
-
-			label {
-				@include screenreader();
-			}
-
-			.search {
-				display: block;
-				@include form-element();
-				width: 80%;
-				float: left;
-				margin-bottom: 0;
-				border-right: none;
-			}
-
-			.submit {
-				display: block;
-				text-align: center;
-				padding: $form-spacing / 2;
-				height: ($input-font-size + ($form-spacing * 1.5) - rem-calc(1));
-				background: $primary-color;
-				color: $white;
-				width: 20%;
-				float: left;
-				border-radius: 0 $global-radius $global-radius 0;
-				margin-bottom: 0;
-
-				&:hover {
-					background: darken($primary-color, 10%);
-					cursor: pointer;
-				}
-			}
-
-			a {
-				color: red;
-			}
-		}
-
+		
 		// Category filter as a select dropdown
 		.filterSet {
-			margin: 0 0 $column-gutter/2 0 !important;
+			margin: 0 0 $horizontal-gutter/2 0 !important;
 			
 			.filterSelect {
 
@@ -96,7 +47,7 @@
 
 		// Category list navigation
 		.filters {
-			margin: 0 0 $column-gutter/2 0 !important;
+			margin: 0 0 $horizontal-gutter/2 0 !important;
 
 			h4 {
 				display: inline-block;
@@ -150,7 +101,7 @@
 		display: block;
 		min-height: $pagination-height;
 		margin-#{$default-float}: $pagination-margin;
-		margin-bottom: $column-gutter;
+		margin-bottom: $horizontal-gutter;
 		padding: 0 !important;
 		background: none !important;
 

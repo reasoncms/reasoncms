@@ -3,7 +3,7 @@
 
 // Fixed position top banner
 .f-topbar-fixed #banner {
-	padding: $column-gutter/2;
+	padding: $horizontal-gutter/2;
 	//@include single-transition(padding);
 	text-align: left;
 	//@include single-transition(text-align);
@@ -24,10 +24,10 @@
 	background: $vapor;
 	border-bottom: 1px solid $gainsboro;
 	text-align: center;
-	padding: $column-gutter/2;
+	padding: $horizontal-gutter/2 $column-gutter/2;
 
 	@media #{$medium-up} { 
-		padding: $column-gutter $column-gutter/2;
+		padding: $horizontal-gutter $column-gutter/2;
 	}
 
 	h1 {
@@ -41,7 +41,7 @@
 
 		font-family: $font-family-serif;
 		margin: 0;
-		padding-bottom: $column-gutter/2;
+		padding-bottom: $horizontal-gutter/2;
 	}
 
 	#navigationToggles {

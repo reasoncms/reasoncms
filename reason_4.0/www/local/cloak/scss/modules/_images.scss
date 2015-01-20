@@ -12,7 +12,7 @@
 
 		li {
 			list-style-type: none;
-			margin-bottom: $column-gutter;
+			margin-bottom: $horizontal-gutter;
 
 			img {
 				border: 1px solid #ccc;
@@ -20,15 +20,26 @@
 			}
 
 			.caption {
-				font-style: italic;
-				font-weight: 300;
-				color: $aluminum;
+				@include image-caption();
 			}
 		}
 	}
 }
 
 // Sidebar Images
-#maintained {
+.imageSidebarModule,
+.publication .images {
 	
+	.imageChunk,
+	li {
+		margin-bottom: $horizontal-gutter;
+
+		.tnImage {
+
+		}
+
+		.tnDesc {
+			@include image-caption();
+		}
+	}
 }

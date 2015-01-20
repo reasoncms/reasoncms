@@ -136,10 +136,10 @@ select {
   border-radius: 3px;
   left: 0;
   background-color: #FFFFFF;
-  padding: 2.34375rem;
+  padding: 2.25rem;
   border: solid 1px #CCCCCC;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
-  padding: 3.515625rem; }
+  padding: 3.375rem; }
   @media only screen and (max-width: 40em) {
     .reveal-modal, dialog {
       min-height: 100vh; } }
@@ -152,7 +152,7 @@ select {
   @media only screen and (min-width:40.063em) {
     .reveal-modal, dialog {
       width: 80%;
-      max-width: 87.5rem;
+      max-width: 91.25rem;
       left: 0;
       right: 0;
       margin: 0 auto; } }
@@ -168,35 +168,35 @@ select {
   @media only screen and (min-width:40.063em) {
     .reveal-modal.tiny, dialog.tiny {
       width: 30%;
-      max-width: 87.5rem;
+      max-width: 91.25rem;
       left: 0;
       right: 0;
       margin: 0 auto; } }
   @media only screen and (min-width:40.063em) {
     .reveal-modal.small, dialog.small {
       width: 40%;
-      max-width: 87.5rem;
+      max-width: 91.25rem;
       left: 0;
       right: 0;
       margin: 0 auto; } }
   @media only screen and (min-width:40.063em) {
     .reveal-modal.medium, dialog.medium {
       width: 60%;
-      max-width: 87.5rem;
+      max-width: 91.25rem;
       left: 0;
       right: 0;
       margin: 0 auto; } }
   @media only screen and (min-width:40.063em) {
     .reveal-modal.large, dialog.large {
       width: 70%;
-      max-width: 87.5rem;
+      max-width: 91.25rem;
       left: 0;
       right: 0;
       margin: 0 auto; } }
   @media only screen and (min-width:40.063em) {
     .reveal-modal.xlarge, dialog.xlarge {
       width: 95%;
-      max-width: 87.5rem;
+      max-width: 91.25rem;
       left: 0;
       right: 0;
       margin: 0 auto; } }
@@ -211,7 +211,7 @@ select {
     @media only screen and (min-width:40.063em) {
       .reveal-modal.full, dialog.full {
         width: 100vw;
-        max-width: 87.5rem;
+        max-width: 91.25rem;
         left: 0;
         right: 0;
         margin: 0 auto; } }
@@ -590,7 +590,7 @@ meta.foundation-mq-topbar {
       background: #333333; }
 
   .contain-to-grid .top-bar {
-    max-width: 87.5rem;
+    max-width: 91.25rem;
     margin: 0 auto;
     margin-bottom: 0; }
 
@@ -1182,7 +1182,7 @@ blockquote, blockquote p {
     display: inherit !important; }
  }
 
-.fa, #banner #navigationToggles li.navJump a:before, #banner #navigationToggles li.searchToggle a:before, .persistent #filtering .filterSet a:before, .persistent #filtering .filters ul li a:before, .persistent #filtering .filters ul li strong:before, .persistent .loginlogout a:after, .reveal-modal .close-reveal-modal:before, dialog .close-reveal-modal:before, .assets li:before, #av .moduleNav ul li:before, #av .podcast a:before, #calendar .responsiveEventsList .iCalExport a:before, #calendar .responsiveEventsList .feedInfo a:before, #calendar .eventDetails .export .back a:before, #calendar .eventDetails .export .repetition:before, #calendar .eventDetails .export .date:before, #calendar .eventDetails .export .time:before, #calendar .eventDetails .export .duration:before, #calendar .eventDetails .export .eventLocation:before, #calendar .eventDetails .export .sponsor:before, #calendar .eventDetails .export .contact:before, #miniCal .foot .more a:before, #discoErrorNotice h3:before, #imageGallery .item .prevWrapper a:after, #imageGallery .item .nextWrapper a:after, #imageGallery .back:before, .editThis:before, .loginLinkModule #footerLoginLink .login:after, .loginLinkModule #footerLoginLink .logout:after, #minisiteNavigation ul .navList .jump a:after, #meat .publication .back div a:before, #meat .publication .persistent #filtering .filterSet a:before, #meat .publication .persistent #filtering .filters ul li a:before, #meat .publication .persistent #filtering .filters ul li strong:before, #meat .publication .persistent .loginlogout a:after, #meat .publication .moduleNav .filterMessage h3 .clear a:before, #meat .publication .moduleNav .posts .post .links li.more a:before, #meat .publication .moduleNav .posts .post .links li.permalink a:before, #meat .publication .moduleNav .posts .post .links li.comments a:before, #meat .publication .moduleNav .feedLink a:before, #meat .publication .moduleNav .feedLink .feedInfo a:before, #meat .publication.fullPostDisplay .fullPost .relatedItems .relatedEvents ul li:before, #meat .publication.fullPostDisplay .fullPost .relatedItems .categories li a:before, #meat .publication.fullPostDisplay .fullPost .relatedItems .categories li strong:before, #meat .publication.fullPostDisplay .fullPost .secondChunk .nextPrev .prev a:before, #meat .publication.fullPostDisplay .fullPost .secondChunk .nextPrev .next a:after {
+.fa, #banner #navigationToggles li.navJump a:before, #banner #navigationToggles li.searchToggle a:before, .persistent #filtering .filterSet a:before, .persistent #filtering .filters ul li a:before, .persistent #filtering .filters ul li strong:before, .persistent .loginlogout a:after, .reveal-modal .close-reveal-modal:before, dialog .close-reveal-modal:before, .assets li:before, #av .moduleNav ul li:before, #av .podcast a:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .options .categories li a:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .options .categories li strong:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .options .audiences li a:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .options .audiences li strong:before, #calendar .responsiveEventsList .iCalExport a:before, #calendar .responsiveEventsList .feedInfo a:before, #calendar .eventDetails .export .back a:before, #calendar .eventDetails .export .repetition:before, #calendar .eventDetails .export .date:before, #calendar .eventDetails .export .time:before, #calendar .eventDetails .export .duration:before, #calendar .eventDetails .export .eventLocation:before, #calendar .eventDetails .export .sponsor:before, #calendar .eventDetails .export .contact:before, #miniCal .foot .more a:before, #discoErrorNotice h3:before, #imageGallery .item .prevWrapper a:after, #imageGallery .item .nextWrapper a:after, #imageGallery .back:before, .editThis:before, .loginLinkModule #footerLoginLink .login:after, .loginLinkModule #footerLoginLink .logout:after, #minisiteNavigation ul .navList .jump a:after, #meat .publication .back div a:before, #meat .publication .persistent .loginlogout a:after, #meat .publication .moduleNav .filterMessage h3 .clear a:before, #meat .publication .moduleNav .posts .post .links li.more a:before, #meat .publication .moduleNav .posts .post .links li.permalink a:before, #meat .publication .moduleNav .posts .post .links li.comments a:before, #meat .publication .moduleNav .feedLink a:before, #meat .publication .moduleNav .feedLink .feedInfo a:before, #meat .publication.fullPostDisplay .fullPost .firstChunk .commentAdded h4:before, #meat .publication.fullPostDisplay .fullPost .relatedItems .relatedEvents ul li:before, #meat .publication.fullPostDisplay .fullPost .relatedItems .categories li a:before, #meat .publication.fullPostDisplay .fullPost .relatedItems .categories li strong:before, #meat .publication.fullPostDisplay .fullPost .secondChunk .nextPrev .prev a:before, #meat .publication.fullPostDisplay .fullPost .secondChunk .nextPrev .next a:after, #meat .publication.fullPostDisplay .fullPost .secondChunk .addCommentForm .commentsOff:before, #meat .publication.fullPostDisplay .fullPost .secondChunk .addCommentForm .notPermitted .subContent:before, #meat .publication.fullPostDisplay .fullPost .secondChunk .addCommentForm .loginRequired .subContent:before {
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -1232,6 +1232,19 @@ blockquote, blockquote p {
     -webkit-transform: rotate(359deg);
     transform: rotate(359deg); } }
 
+#breadcrumbs .breadcrumb {
+  background: orange; }
+
+#meat #content {
+  border: 1px solid red; }
+#meat #related {
+  border: 1px solid blue; }
+#meat #navigation {
+  border: 1px solid green; }
+
+#footer {
+  border: 1px solid purple; }
+
 html, body, *:before, *:after {
   -moz-text-size-adjust: none;
   -ms-text-size-adjust: none;
@@ -1244,16 +1257,16 @@ html, body, *:before, *:after {
   margin-right: auto;
   margin-top: 0;
   margin-bottom: 0;
-  max-width: 87.5rem;
-  padding-top: 1.875rem; }
+  max-width: 91.25rem;
+  padding-top: 2.25rem; }
   #breadcrumbs:before, #breadcrumbs:after {
     content: " ";
     display: table; }
   #breadcrumbs:after {
     clear: both; }
   #breadcrumbs .breadcrumb {
-    padding-left: 0.9375rem;
-    padding-right: 0.9375rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
     width: 100%;
     float: left; }
 
@@ -1263,15 +1276,15 @@ html, body, *:before, *:after {
   margin-right: auto;
   margin-top: 0;
   margin-bottom: 0;
-  max-width: 87.5rem; }
+  max-width: 91.25rem; }
   #contentHead:before, #contentHead:after {
     content: " ";
     display: table; }
   #contentHead:after {
     clear: both; }
   #contentHead div.pageTitle {
-    padding-left: 0.9375rem;
-    padding-right: 0.9375rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
     width: 100%;
     float: left; }
     #contentHead div.pageTitle h2 {
@@ -1283,26 +1296,26 @@ html, body, *:before, *:after {
   margin-right: auto;
   margin-top: 0;
   margin-bottom: 0;
-  max-width: 87.5rem;
-  padding-top: 1.875rem; }
+  max-width: 91.25rem;
+  padding-top: 2.25rem; }
   #meat:before, #meat:after {
     content: " ";
     display: table; }
   #meat:after {
     clear: both; }
   #meat #content {
-    padding-left: 0.9375rem;
-    padding-right: 0.9375rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
     width: 100%;
     float: left; }
   #meat #related {
-    padding-left: 0.9375rem;
-    padding-right: 0.9375rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
     width: 100%;
     float: left; }
   #meat #navigation {
-    padding-left: 0.9375rem;
-    padding-right: 0.9375rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
     width: 100%;
     float: left; }
     @media only screen and (min-width:40.0625em) and (max-width:60em) {
@@ -1311,84 +1324,80 @@ html, body, *:before, *:after {
     @media only screen and (min-width:40.0625em) and (max-width:60em) {
       #meat #navigation #navInnerWrap {
         position: relative;
-        padding-left: 0.9375rem;
-        padding-right: 0.9375rem;
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
         width: 66.6666666667%;
         left: 16.6666666667%;
         right: auto;
         float: left; } }
   @media only screen and (min-width:40.063em) {
     #meat.containsConRelNav #content {
-      padding-left: 0.9375rem;
-      padding-right: 0.9375rem;
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
       width: 66.6666666667%;
       float: left; }
 
     #meat.containsConRelNav #related {
-      padding-left: 0.9375rem;
-      padding-right: 0.9375rem;
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
       width: 33.3333333333%;
       float: left; }
  }
   @media only screen and (min-width:60.0625em) {
     #meat.containsConRelNav #content {
-      padding-left: 0.9375rem;
-      padding-right: 0.9375rem;
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
       width: 50%;
       float: left;
       margin-left: 25%; }
 
     #meat.containsConRelNav #related {
-      padding-left: 0.9375rem;
-      padding-right: 0.9375rem;
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
       width: 25%;
       float: left; }
 
     #meat.containsConRelNav #navigation {
-      padding-left: 0.9375rem;
-      padding-right: 0.9375rem;
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
       width: 25%;
       float: left;
       margin-left: -100%; }
  }
   @media only screen and (min-width:60.0625em) {
     #meat.containsConNav #content {
-      padding-left: 0.9375rem;
-      padding-right: 0.9375rem;
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
       width: 75%;
       float: left;
       margin-left: 25%; }
 
     #meat.containsConNav #navigation {
-      padding-left: 0.9375rem;
-      padding-right: 0.9375rem;
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
       width: 25%;
       float: left;
       margin-left: -100%; }
  }
   @media only screen and (min-width:60.0625em) {
     #meat.containsConRel #content {
-      padding-left: 0.9375rem;
-      padding-right: 0.9375rem;
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
       width: 75%;
       float: left; }
 
     #meat.containsConRel #related {
-      padding-left: 0.9375rem;
-      padding-right: 0.9375rem;
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
       width: 25%;
       float: left; }
  }
   #meat.containsCon #content {
-    padding-left: 0.9375rem;
-    padding-right: 0.9375rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
     width: 100%;
     float: left; }
 
-#meat .persistent {
-  margin-bottom: 1.875rem; }
-#meat .moduleNav {
-  margin-bottom: 1.875rem; }
 #meat.containsConRelNav .persistent {
   padding-left: 0;
   padding-right: 0;
@@ -1411,7 +1420,7 @@ html, body, *:before, *:after {
       width: 33.3333333333%;
       float: left;
       float: right;
-      padding-left: 0.9375rem; } }
+      padding-left: 1.5rem; } }
 #meat.containsConNav .moduleNav, #meat.containsConRel .moduleNav, #meat.containsCon .moduleNav {
   padding-left: 0;
   padding-right: 0;
@@ -1423,10 +1432,10 @@ html, body, *:before, *:after {
       padding-right: 0;
       width: 66.6666666667%;
       float: left;
-      padding-right: 0.9375rem; } }
+      padding-right: 1.5rem; } }
 
 .f-topbar-fixed #banner {
-  padding: 0.9375rem;
+  padding: 1.125rem;
   text-align: left; }
   .f-topbar-fixed #banner h1 {
     font-size: 1.375rem;
@@ -1439,15 +1448,15 @@ html, body, *:before, *:after {
   background: #F6F6F6;
   border-bottom: 1px solid #DDDDDD;
   text-align: center;
-  padding: 0.9375rem; }
+  padding: 1.125rem 1.5rem; }
   @media only screen and (min-width:40.063em) {
     #banner {
-      padding: 1.875rem 0.9375rem; } }
+      padding: 2.25rem 1.5rem; } }
   #banner h1 {
     font-size: 1.125rem;
     font-family: "Merriweather", serif;
     margin: 0;
-    padding-bottom: 0.9375rem; }
+    padding-bottom: 1.125rem; }
     @media only screen and (min-width:40.063em) {
       #banner h1 {
         font-size: 1.625rem; } }
@@ -1511,90 +1520,33 @@ html, body, *:before, *:after {
         margin-bottom: 0; }
 
 h2.pageTitle {
-  margin: 0 0 1.875rem;
+  margin: 0 0 1.5rem;
   line-height: 1.3; }
 
 #footer {
   background: #F6F6F6;
   border-top: 1px solid #DDDDDD;
   text-align: center;
-  padding: 1.875rem; }
+  padding: 1.5rem 1.5rem; }
+  @media only screen and (min-width:40.063em) {
+    #footer {
+      padding: 2.25rem 3rem; } }
 
 .persistent {
-  margin-bottom: 1.875rem;
+  margin-bottom: 2.25rem;
   border: none; }
   .persistent #filtering {
     margin: 0;
     background: #EFEFEF;
-    padding: 0.9375rem;
+    padding: 1.125rem;
     padding-bottom: 0; }
     .persistent #filtering:before, .persistent #filtering:after {
       content: " ";
       display: table; }
     .persistent #filtering:after {
       clear: both; }
-    .persistent #filtering .searchForm {
-      margin: 0 0 0.9375rem 0 !important; }
-      .persistent #filtering .searchForm:before, .persistent #filtering .searchForm:after {
-        content: " ";
-        display: table; }
-      .persistent #filtering .searchForm:after {
-        clear: both; }
-      .persistent #filtering .searchForm label {
-        position: absolute;
-        left: -9999px;
-        top: -9999px;
-        margin-bottom: 0; }
-      .persistent #filtering .searchForm .search {
-        display: block;
-        background-color: #FFFFFF;
-        font-family: inherit;
-        border-style: solid;
-        border-width: 1px;
-        border-color: #cccccc;
-        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
-        color: rgba(0, 0, 0, 0.75);
-        display: block;
-        font-size: 0.875rem;
-        margin: 0 0 1rem 0;
-        padding: 0.5rem;
-        height: 2.3125rem;
-        width: 100%;
-        -webkit-box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        box-sizing: border-box;
-        width: 80%;
-        float: left;
-        margin-bottom: 0;
-        border-right: none; }
-        .persistent #filtering .searchForm .search:focus {
-          background: #fafafa;
-          border-color: #999999;
-          outline: none; }
-        .persistent #filtering .searchForm .search:disabled {
-          background-color: #DDDDDD;
-          cursor: default; }
-        .persistent #filtering .searchForm .search[disabled], .persistent #filtering .searchForm .search[readonly], fieldset[disabled] .persistent #filtering .searchForm .search {
-          background-color: #DDDDDD;
-          cursor: default; }
-      .persistent #filtering .searchForm .submit {
-        display: block;
-        text-align: center;
-        padding: 0.5rem;
-        height: 2.3125rem;
-        background: #2ea7a0;
-        color: #FFFFFF;
-        width: 20%;
-        float: left;
-        border-radius: 0 3px 3px 0;
-        margin-bottom: 0; }
-        .persistent #filtering .searchForm .submit:hover {
-          background: #237f7a;
-          cursor: pointer; }
-      .persistent #filtering .searchForm a {
-        color: red; }
     .persistent #filtering .filterSet {
-      margin: 0 0 0.9375rem 0 !important; }
+      margin: 0 0 1.125rem 0 !important; }
       .persistent #filtering .filterSet a {
         display: block;
         float: right;
@@ -1614,7 +1566,7 @@ h2.pageTitle {
           margin-right: 0.375rem;
           color: inherit; }
     .persistent #filtering .filters {
-      margin: 0 0 0.9375rem 0 !important; }
+      margin: 0 0 1.125rem 0 !important; }
       .persistent #filtering .filters h4 {
         display: inline-block;
         margin-right: 0.5rem;
@@ -1639,7 +1591,7 @@ h2.pageTitle {
             margin-right: 0.375rem;
             color: inherit; }
   .persistent .loginlogout {
-    margin: 0.46875rem 0.9375rem 0 0;
+    margin: 0.75rem 1.5rem 0 0;
     text-align: right;
     font-size: 0.875rem; }
     .persistent .loginlogout a:after {
@@ -1651,7 +1603,7 @@ h2.pageTitle {
   display: block;
   min-height: 1.5rem;
   margin-left: -0.3125rem;
-  margin-bottom: 1.875rem;
+  margin-bottom: 2.25rem;
   padding: 0 !important;
   background: none !important; }
   .moduleNav .pagination .next, .moduleNav .pagination .previous {
@@ -1698,15 +1650,15 @@ h2.pageTitle {
   margin-bottom: 0; }
 
 .assets {
-  margin-bottom: 0.9375rem; }
+  margin-bottom: 1.125rem; }
   .assets ul {
-    margin: 0 0 0 1.875rem;
+    margin: 0 0 0 1.5rem;
     list-style-type: none; }
   .assets li {
-    padding-bottom: 0.9375rem; }
+    padding-bottom: 1.125rem; }
     .assets li:before {
       content: "\f019";
-      margin-left: -1.875rem;
+      margin-left: -1.5rem;
       float: left;
       margin-top: 0.375rem;
       color: #999999; }
@@ -1728,26 +1680,32 @@ h2.pageTitle {
     color: #888888; }
   .assets h4 {
     font-size: 1.0625rem;
-    margin-top: 0.9375rem; }
+    margin-top: 1.125rem; }
 
 #av {
-  margin-bottom: 1.875rem; }
+  margin-bottom: 1.125rem; }
+  #av:before, #av:after {
+    content: " ";
+    display: table; }
+  #av:after {
+    clear: both; }
   #av .moduleNav ul {
-    margin: 0 0 0 1.875rem;
+    margin: 0 0 0 1.5rem;
     list-style-type: none; }
     #av .moduleNav ul li {
-      padding-bottom: 0.9375rem; }
+      padding-bottom: 1.5rem;
+      padding-bottom: 1.125rem; }
       #av .moduleNav ul li:before {
         content: "\f16a";
-        margin-left: -1.875rem;
+        margin-left: -1.5rem;
         float: left;
-        margin-top: 0.375rem;
+        margin-top: 0.25rem;
         color: #999999; }
       #av .moduleNav ul li .date {
         font-size: 0.875rem;
         color: #888888; }
   #av .podcast {
-    margin: 0;
+    margin: 0 0 1.125rem;
     clear: both; }
     #av .podcast a {
       border-style: solid;
@@ -1825,8 +1783,8 @@ h2.pageTitle {
 .blurb {
   background: #F6F6F6;
   border: 1px solid #DDDDDD;
-  padding: 0.9375rem;
-  margin-bottom: 1.875rem; }
+  padding: 1.125rem;
+  margin-bottom: 2.25rem; }
   .blurb:before, .blurb:after {
     content: " ";
     display: table; }
@@ -1876,7 +1834,7 @@ h2.pageTitle {
 /* Events Column Layouts */
 #calendar .responsiveEventsList .gridAndOptionsWrapper {
   float: left;
-  margin: -0.9375rem 0 0 0;
+  margin: -1.5rem 0 0 0;
   padding: 1rem;
   clear: none; }
 #calendar .responsiveEventsList .datesAndSearch, #calendar .responsiveEventsList .options {
@@ -1888,7 +1846,7 @@ h2.pageTitle {
   margin-right: auto;
   margin-top: 0;
   margin-bottom: 0;
-  max-width: 87.5rem; }
+  max-width: 91.25rem; }
   #calendar .responsiveEventsList:before, #calendar .responsiveEventsList:after {
     content: " ";
     display: table; }
@@ -1897,7 +1855,7 @@ h2.pageTitle {
   #calendar .responsiveEventsList .views {
     clear: both;
     text-align: left;
-    margin-bottom: 1.875rem; }
+    margin-bottom: 3rem; }
     #calendar .responsiveEventsList .views:before, #calendar .responsiveEventsList .views:after {
       content: " ";
       display: table; }
@@ -1946,7 +1904,7 @@ h2.pageTitle {
     background: #EFEFEF;
     text-align: center;
     font-size: 0.875rem;
-    margin-bottom: 1.875rem;
+    margin-bottom: 3rem;
     line-height: 1; }
     @media only screen and (min-width:40.063em) {
       #calendar .responsiveEventsList .nav {
@@ -1967,12 +1925,12 @@ h2.pageTitle {
       padding: 0.5rem 0; }
   #calendar .responsiveEventsList .eventsListContent .focus {
     border-style: solid;
-    border-width: 1px;
+    border-width: 0.0625rem;
     display: block;
     font-weight: 300;
     margin-bottom: 1.25rem;
     position: relative;
-    padding: 0.875rem 1.5rem 0.875rem 0.875rem;
+    padding: 0.875rem 0.875rem 0.875rem 0.875rem;
     font-size: 0.8125rem;
     transition: opacity 300ms ease-out;
     background-color: #F6F6F6;
@@ -1995,7 +1953,7 @@ h2.pageTitle {
     font-size: 1.25rem;
     color: #999999;
     border-top: 1px dotted #DDDDDD;
-    padding-top: 0.9375rem; }
+    padding-top: 1.5rem; }
     #calendar .responsiveEventsList .eventsListContent .month:first-of-type {
       border-top: none;
       padding-top: 0; }
@@ -2006,11 +1964,11 @@ h2.pageTitle {
     list-style-type: none;
     margin: 0; }
     #calendar .responsiveEventsList .eventsListContent .dayEvents .event {
-      margin: 0 0 0.9375rem 0.9375rem; }
+      margin: 0 0 1.5rem 1.5rem; }
   #calendar .responsiveEventsList .gridAndOptionsWrapper {
-    margin: 0 0 1.875rem; }
+    margin: 0 0 3rem; }
     #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGridWrapper {
-      margin: 0 0 1.875rem; }
+      margin: 0 0 3rem; }
     #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid {
       text-align: center; }
       #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid a.previous, #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid h4, #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid a.next {
@@ -2050,7 +2008,7 @@ h2.pageTitle {
             display: block;
             padding: 28% 0; }
     #calendar .responsiveEventsList .gridAndOptionsWrapper .dateJump {
-      margin: 0 0 1.875rem; }
+      margin: 0 0 3rem; }
       #calendar .responsiveEventsList .gridAndOptionsWrapper .dateJump:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .dateJump:after {
         content: " ";
         display: table; }
@@ -2072,15 +2030,87 @@ h2.pageTitle {
       #calendar .responsiveEventsList .gridAndOptionsWrapper .dateJump input[type="submit"] {
         padding: 0;
         float: right;
-        width: 20%; }
+        width: 20%;
+        margin: 0; }
         @media only screen and (min-width:720px) and (max-width:77.4375em) {
           #calendar .responsiveEventsList .gridAndOptionsWrapper .dateJump input[type="submit"] {
             float: none;
             width: 100%; } }
     #calendar .responsiveEventsList .gridAndOptionsWrapper .search {
-      margin: 0 0 1.875rem; }
+      margin: 0 0 3rem; }
+      #calendar .responsiveEventsList .gridAndOptionsWrapper .search:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .search:after {
+        content: " ";
+        display: table; }
+      #calendar .responsiveEventsList .gridAndOptionsWrapper .search:after {
+        clear: both; }
+      #calendar .responsiveEventsList .gridAndOptionsWrapper .search #calendar_search {
+        display: block;
+        background-color: #FFFFFF;
+        font-family: inherit;
+        border-style: solid;
+        border-width: 1px;
+        border-color: #cccccc;
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+        color: rgba(0, 0, 0, 0.75);
+        display: block;
+        font-size: 0.875rem;
+        margin: 0 0 1rem 0;
+        padding: 0.5rem;
+        height: 2.3125rem;
+        width: 100%;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        width: 80%;
+        float: left;
+        margin-bottom: 0;
+        border-right: none; }
+        #calendar .responsiveEventsList .gridAndOptionsWrapper .search #calendar_search:focus {
+          background: #fafafa;
+          border-color: #999999;
+          outline: none; }
+        #calendar .responsiveEventsList .gridAndOptionsWrapper .search #calendar_search:disabled {
+          background-color: #DDDDDD;
+          cursor: default; }
+        #calendar .responsiveEventsList .gridAndOptionsWrapper .search #calendar_search[disabled], #calendar .responsiveEventsList .gridAndOptionsWrapper .search #calendar_search[readonly], fieldset[disabled] #calendar .responsiveEventsList .gridAndOptionsWrapper .search #calendar_search {
+          background-color: #DDDDDD;
+          cursor: default; }
+      #calendar .responsiveEventsList .gridAndOptionsWrapper .search input[type="submit"] {
+        display: block;
+        text-align: center;
+        padding: 0.5rem;
+        height: 2.3125rem;
+        background: #2ea7a0;
+        color: #FFFFFF;
+        width: 20%;
+        float: left;
+        border-radius: 0 3px 3px 0;
+        margin-bottom: 0; }
+        #calendar .responsiveEventsList .gridAndOptionsWrapper .search input[type="submit"]:hover {
+          background: #237f7a;
+          cursor: pointer; }
+    #calendar .responsiveEventsList .gridAndOptionsWrapper .options .categories li {
+      list-style-type: none; }
+      #calendar .responsiveEventsList .gridAndOptionsWrapper .options .categories li a:before {
+        content: "\f07b";
+        margin-right: 0.375rem;
+        color: inherit; }
+      #calendar .responsiveEventsList .gridAndOptionsWrapper .options .categories li strong:before {
+        content: "\f07c";
+        margin-right: 0.375rem;
+        color: inherit; }
+    #calendar .responsiveEventsList .gridAndOptionsWrapper .options .audiences li {
+      list-style-type: none; }
+      #calendar .responsiveEventsList .gridAndOptionsWrapper .options .audiences li a:before {
+        content: "\f007";
+        margin-right: 0.375rem;
+        color: inherit; }
+      #calendar .responsiveEventsList .gridAndOptionsWrapper .options .audiences li strong:before {
+        content: "\f0c0";
+        margin-right: 0.375rem;
+        color: inherit; }
   #calendar .responsiveEventsList .foot {
-    margin-bottom: 1.875rem; }
+    margin-bottom: 3rem; }
   #calendar .responsiveEventsList .iCalExport, #calendar .responsiveEventsList .feedInfo {
     margin: 0;
     display: inline-block; }
@@ -2138,12 +2168,12 @@ h2.pageTitle {
     margin-right: 0.375rem; }
 #calendar .eventDetails .export .repetition {
   border-style: solid;
-  border-width: 1px;
+  border-width: 0.0625rem;
   display: block;
   font-weight: 300;
   margin-bottom: 1.25rem;
   position: relative;
-  padding: 0.875rem 1.5rem 0.875rem 0.875rem;
+  padding: 0.875rem 0.875rem 0.875rem 0.875rem;
   font-size: 0.8125rem;
   transition: opacity 300ms ease-out;
   background-color: #a0d3e8;
@@ -2189,7 +2219,7 @@ h2.pageTitle {
   font-weight: 600;
   display: inline-block;
   padding: 0.5rem 1rem;
-  margin: 0 0 0.9375rem;
+  margin: 0 0 1.5rem;
   background: #2ea7a0;
   word-spacing: 0.125rem;
   color: white; }
@@ -2217,7 +2247,7 @@ h2.pageTitle {
     #miniCal .dayEvents .event:last-child, #miniCal .ongoingEvents .event:last-child {
       padding-bottom: 0; }
 #miniCal .foot {
-  margin-bottom: 1.875rem; }
+  margin-bottom: 3rem; }
   #miniCal .foot .more {
     margin: 0; }
     #miniCal .foot .more a:before {
@@ -2227,7 +2257,7 @@ h2.pageTitle {
 
 @media only screen and (max-width: 40em) {
   .searchForm {
-    margin-top: 0.9375rem !important; } }
+    margin-top: 1.125rem !important; } }
 .searchForm #minisiteSearchInput {
   display: block;
   background-color: #FFFFFF;
@@ -2275,19 +2305,89 @@ h2.pageTitle {
       float: left;
       margin-bottom: 0; } }
 
-#filtering .colon {
-  position: absolute;
-  left: -9999px;
-  top: -9999px;
-  margin-bottom: 0; }
+#filtering form, #filtering .searchForm {
+  margin: 0 0 1.125rem 0 !important; }
+  #filtering form:before, #filtering form:after, #filtering .searchForm:before, #filtering .searchForm:after {
+    content: " ";
+    display: table; }
+  #filtering form:after, #filtering .searchForm:after {
+    clear: both; }
+  #filtering form label, #filtering form .colon, #filtering .searchForm label, #filtering .searchForm .colon {
+    position: absolute;
+    left: -9999px;
+    top: -9999px;
+    margin-bottom: 0; }
+  #filtering form #gallerySearchField, #filtering form .search, #filtering .searchForm #gallerySearchField, #filtering .searchForm .search {
+    display: block;
+    background-color: #FFFFFF;
+    font-family: inherit;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #cccccc;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+    color: rgba(0, 0, 0, 0.75);
+    display: block;
+    font-size: 0.875rem;
+    margin: 0 0 1rem 0;
+    padding: 0.5rem;
+    height: 2.3125rem;
+    width: 100%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 80%;
+    float: left;
+    margin-bottom: 0;
+    border-right: none; }
+    #filtering form #gallerySearchField:focus, #filtering form .search:focus, #filtering .searchForm #gallerySearchField:focus, #filtering .searchForm .search:focus {
+      background: #fafafa;
+      border-color: #999999;
+      outline: none; }
+    #filtering form #gallerySearchField:disabled, #filtering form .search:disabled, #filtering .searchForm #gallerySearchField:disabled, #filtering .searchForm .search:disabled {
+      background-color: #DDDDDD;
+      cursor: default; }
+    #filtering form #gallerySearchField[disabled], #filtering form #gallerySearchField[readonly], fieldset[disabled] #filtering form #gallerySearchField, #filtering form .search[disabled], #filtering form .search[readonly], fieldset[disabled] #filtering form .search, #filtering .searchForm #gallerySearchField[disabled], #filtering .searchForm #gallerySearchField[readonly], fieldset[disabled] #filtering .searchForm #gallerySearchField, #filtering .searchForm .search[disabled], #filtering .searchForm .search[readonly], fieldset[disabled] #filtering .searchForm .search {
+      background-color: #DDDDDD;
+      cursor: default; }
+  #filtering form .submit, #filtering form input[type="submit"], #filtering .searchForm .submit, #filtering .searchForm input[type="submit"] {
+    display: block;
+    text-align: center;
+    padding: 0.5rem;
+    height: 2.3125rem;
+    background: #2ea7a0;
+    color: #FFFFFF;
+    width: 20%;
+    float: left;
+    border-radius: 0 3px 3px 0;
+    margin-bottom: 0; }
+    #filtering form .submit:hover, #filtering form input[type="submit"]:hover, #filtering .searchForm .submit:hover, #filtering .searchForm input[type="submit"]:hover {
+      background: #237f7a;
+      cursor: pointer; }
+  #filtering form a, #filtering .searchForm a {
+    color: red; }
+#filtering .relFilters {
+  margin-bottom: 0 !important; }
 
 #form {
   max-width: 37.5rem;
   border-top: 1px solid #CCCCCC;
-  padding-top: 1.875rem; }
+  padding-top: 2.25rem; }
+
+form #tarbabypreRow, form #tarbabypreItem, form #tarbabyRow, form #tarbabyItem, form #noturlRow, form #noturlItem, form #antlionRow, form #antlionItem {
+  display: none; }
 
 #discoErrorNotice {
-  margin-bottom: 0.9375rem; }
+  margin-bottom: 1.125rem; }
+  #discoErrorNotice:before {
+    display: block;
+    content: "";
+    margin-top: -3rem;
+    height: 3rem;
+    visibility: hidden; }
+    @media only screen and (min-width:63.8125em) {
+      #discoErrorNotice:before {
+        margin-top: -12rem;
+        height: 12rem; } }
   #discoErrorNotice h3 {
     font-size: 1.25rem;
     font-weight: 400;
@@ -2298,12 +2398,12 @@ h2.pageTitle {
       margin-right: 0.75rem; }
   #discoErrorNotice ul {
     border-style: solid;
-    border-width: 1px;
+    border-width: 0.0625rem;
     display: block;
     font-weight: 300;
     margin-bottom: 1.25rem;
     position: relative;
-    padding: 0.875rem 1.5rem 0.875rem 0.875rem;
+    padding: 0.875rem 0.875rem 0.875rem 0.875rem;
     font-size: 0.8125rem;
     transition: opacity 300ms ease-out;
     background-color: #FFFFFF;
@@ -2375,7 +2475,7 @@ form input[type="submit"], #form input[type="submit"], #form #discoLinear input[
   border-radius: 3px;
   transition: background-color 300ms ease-out;
   height: 2.3125rem;
-  padding: 0 1.875rem; }
+  padding: 0 3rem; }
   form input[type="submit"]:hover, form input[type="submit"]:focus, #form input[type="submit"]:hover, #form input[type="submit"]:focus, #form #discoLinear input[type="submit"]:hover, #form #discoLinear input[type="submit"]:focus {
     background-color: #258680; }
   form input[type="submit"]:hover, form input[type="submit"]:focus, #form input[type="submit"]:hover, #form input[type="submit"]:focus, #form #discoLinear input[type="submit"]:hover, #form #discoLinear input[type="submit"]:focus {
@@ -2460,11 +2560,11 @@ form .submitSection, #form .submitSection, #form #discoLinear .submitSection {
   display: none; }
 #imageGallery .moduleNav #imageGalleryItemList {
   margin: 0;
-  margin-left: -1.875rem; }
+  margin-left: -3rem; }
   #imageGallery .moduleNav #imageGalleryItemList li {
     margin: 0;
-    margin-bottom: 1.875rem;
-    margin-left: 1.875rem; }
+    margin-bottom: 2.25rem;
+    margin-left: 3rem; }
     #imageGallery .moduleNav #imageGalleryItemList li img {
       padding: 0.25rem;
       border: 1px solid #DDDDDD; }
@@ -2476,10 +2576,10 @@ form .submitSection, #form .submitSection, #form #discoLinear .submitSection {
     top: -9999px;
     margin-bottom: 0; }
 #imageGallery .item {
-  margin-bottom: 1.875rem; }
+  margin-bottom: 2.25rem; }
   #imageGallery .item .sequenceNum {
     color: #999999;
-    margin-bottom: 1.875rem; }
+    margin-bottom: 2.25rem; }
   #imageGallery .item .prevWrapper, #imageGallery .item .nextWrapper {
     float: none;
     clear: none;
@@ -2488,7 +2588,7 @@ form .submitSection, #form .submitSection, #form #discoLinear .submitSection {
     width: 90px;
     height: 90px;
     overflow: hidden;
-    margin: 0 0.375rem 1.875rem !important;
+    margin: 0 0.375rem 2.25rem !important;
     padding: 0.25rem;
     border: 1px solid #DDDDDD; }
     #imageGallery .item .prevWrapper:before, #imageGallery .item .prevWrapper:after, #imageGallery .item .nextWrapper:before, #imageGallery .item .nextWrapper:after {
@@ -2525,7 +2625,7 @@ form .submitSection, #form .submitSection, #form #discoLinear .submitSection {
     #imageGallery .item .imageWrapper .mainImage {
       text-align: center; }
 #imageGallery .back {
-  margin-bottom: 1.875rem; }
+  margin-bottom: 2.25rem; }
   #imageGallery .back:before {
     content: "\f009";
     margin-right: 0.375rem;
@@ -2540,14 +2640,29 @@ form .submitSection, #form .submitSection, #form #discoLinear .submitSection {
   margin: 0; }
   #images ul li {
     list-style-type: none;
-    margin-bottom: 1.875rem; }
+    margin-bottom: 2.25rem; }
     #images ul li img {
       border: 1px solid #ccc;
       padding: 0.375rem; }
     #images ul li .caption {
       font-style: italic;
       font-weight: 300;
-      color: #999999; }
+      color: #999999;
+      font-family: "Merriweather", serif;
+      font-size: 0.875rem;
+      display: block;
+      margin-top: 0.125rem; }
+
+.imageSidebarModule .imageChunk, .imageSidebarModule li, .publication .images .imageChunk, .publication .images li {
+  margin-bottom: 2.25rem; }
+  .imageSidebarModule .imageChunk .tnDesc, .imageSidebarModule li .tnDesc, .publication .images .imageChunk .tnDesc, .publication .images li .tnDesc {
+    font-style: italic;
+    font-weight: 300;
+    color: #999999;
+    font-family: "Merriweather", serif;
+    font-size: 0.875rem;
+    display: block;
+    margin-top: 0.125rem; }
 
 .editThis {
   border-style: solid;
@@ -2582,7 +2697,7 @@ form .submitSection, #form .submitSection, #form #discoLinear .submitSection {
     margin-right: 0.375rem; }
 
 .loginLinkModule {
-  margin-top: 0.9375rem; }
+  margin-top: 1.125rem; }
   .loginLinkModule .editDiv, .loginLinkModule .inlineEditDiv {
     display: inline-block; }
   .loginLinkModule .editLink, .loginLinkModule .inlineEditLink {
@@ -2609,7 +2724,7 @@ form .submitSection, #form .submitSection, #form #discoLinear .submitSection {
     color: #FFFFFF;
     border-radius: 3px;
     transition: background-color 300ms ease-out;
-    margin: 0 0.25rem 0.9375rem; }
+    margin: 0 0.25rem 1.5rem; }
     .loginLinkModule .editLink:hover, .loginLinkModule .editLink:focus, .loginLinkModule .inlineEditLink:hover, .loginLinkModule .inlineEditLink:focus {
       background-color: #258680; }
     .loginLinkModule .editLink:hover, .loginLinkModule .editLink:focus, .loginLinkModule .inlineEditLink:hover, .loginLinkModule .inlineEditLink:focus {
@@ -2639,16 +2754,13 @@ form .submitSection, #form .submitSection, #form #discoLinear .submitSection {
       margin-left: 0.25rem; }
 
 #minisiteNavigation {
-  margin-bottom: 1.875rem; }
+  margin-bottom: 2.25rem; }
   #minisiteNavigation:before {
     display: block;
     content: "";
-    margin-top: -0.9375rem;
-    height: 0.9375rem;
+    margin-top: -1.5rem;
+    height: 1.5rem;
     visibility: hidden; }
-    @media only screen and (min-width:60.0625em) {
-      #minisiteNavigation:before {
-        display: none; } }
   #minisiteNavigation ul {
     margin: 0;
     padding: 0;
@@ -2688,7 +2800,7 @@ form .submitSection, #form .submitSection, #form #discoLinear .submitSection {
           font-size: 0.75rem;
           content: "\f08e";
           position: absolute;
-          top: 0.9375rem;
+          top: 1.125rem;
           right: 1rem;
           color: #888888; }
 
@@ -2704,123 +2816,8 @@ form .submitSection, #form .submitSection, #form #discoLinear .submitSection {
     color: inherit; }
 #meat .publication .persistent {
   border: none; }
-  #meat .publication .persistent #filtering {
-    margin: 0;
-    background: #EFEFEF;
-    padding: 0.9375rem;
-    padding-bottom: 0; }
-    #meat .publication .persistent #filtering:before, #meat .publication .persistent #filtering:after {
-      content: " ";
-      display: table; }
-    #meat .publication .persistent #filtering:after {
-      clear: both; }
-    #meat .publication .persistent #filtering .searchForm {
-      margin: 0 0 0.9375rem 0 !important; }
-      #meat .publication .persistent #filtering .searchForm:before, #meat .publication .persistent #filtering .searchForm:after {
-        content: " ";
-        display: table; }
-      #meat .publication .persistent #filtering .searchForm:after {
-        clear: both; }
-      #meat .publication .persistent #filtering .searchForm label {
-        position: absolute;
-        left: -9999px;
-        top: -9999px;
-        margin-bottom: 0; }
-      #meat .publication .persistent #filtering .searchForm .search {
-        display: block;
-        background-color: #FFFFFF;
-        font-family: inherit;
-        border-style: solid;
-        border-width: 1px;
-        border-color: #cccccc;
-        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
-        color: rgba(0, 0, 0, 0.75);
-        display: block;
-        font-size: 0.875rem;
-        margin: 0 0 1rem 0;
-        padding: 0.5rem;
-        height: 2.3125rem;
-        width: 100%;
-        -webkit-box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        box-sizing: border-box;
-        width: 80%;
-        float: left;
-        margin-bottom: 0;
-        border-right: none; }
-        #meat .publication .persistent #filtering .searchForm .search:focus {
-          background: #fafafa;
-          border-color: #999999;
-          outline: none; }
-        #meat .publication .persistent #filtering .searchForm .search:disabled {
-          background-color: #DDDDDD;
-          cursor: default; }
-        #meat .publication .persistent #filtering .searchForm .search[disabled], #meat .publication .persistent #filtering .searchForm .search[readonly], fieldset[disabled] #meat .publication .persistent #filtering .searchForm .search {
-          background-color: #DDDDDD;
-          cursor: default; }
-      #meat .publication .persistent #filtering .searchForm .submit {
-        display: block;
-        text-align: center;
-        padding: 0.5rem;
-        height: 2.3125rem;
-        background: #2ea7a0;
-        color: #FFFFFF;
-        width: 20%;
-        float: left;
-        border-radius: 0 3px 3px 0;
-        margin-bottom: 0; }
-        #meat .publication .persistent #filtering .searchForm .submit:hover {
-          background: #237f7a;
-          cursor: pointer; }
-      #meat .publication .persistent #filtering .searchForm a {
-        color: red; }
-    #meat .publication .persistent #filtering .filterSet {
-      margin: 0 0 0.9375rem 0 !important; }
-      #meat .publication .persistent #filtering .filterSet a {
-        display: block;
-        float: right;
-        line-height: 1;
-        margin-right: 1.5rem;
-        margin-bottom: 0.375rem;
-        padding: 0.25rem;
-        font-size: 0.75rem;
-        background: #FFFFFF;
-        border: 1px solid #CCCCCC;
-        border-top: 0;
-        border-radius: 0 0 3px 3px; }
-        #meat .publication .persistent #filtering .filterSet a:hover {
-          border-color: #999999; }
-        #meat .publication .persistent #filtering .filterSet a:before {
-          content: "\f057";
-          margin-right: 0.375rem;
-          color: inherit; }
-    #meat .publication .persistent #filtering .filters {
-      margin: 0 0 0.9375rem 0 !important; }
-      #meat .publication .persistent #filtering .filters h4 {
-        display: inline-block;
-        margin-right: 0.5rem;
-        font-weight: 400; }
-        @media only screen and (max-width: 40em) {
-          #meat .publication .persistent #filtering .filters h4 {
-            font-weight: 700; } }
-      #meat .publication .persistent #filtering .filters ul {
-        list-style-type: none;
-        margin: 0;
-        display: inline; }
-        #meat .publication .persistent #filtering .filters ul li {
-          display: inline-block;
-          margin-right: 0.5rem;
-          white-space: pre; }
-          #meat .publication .persistent #filtering .filters ul li a:before {
-            content: "\f114";
-            margin-right: 0.375rem;
-            color: #777777; }
-          #meat .publication .persistent #filtering .filters ul li strong:before {
-            content: "\f115";
-            margin-right: 0.375rem;
-            color: inherit; }
   #meat .publication .persistent .loginlogout {
-    margin: 0.46875rem 0.9375rem 0 0;
+    margin: 0.5625rem 1.5rem 0 0;
     text-align: right;
     font-size: 0.875rem; }
     #meat .publication .persistent .loginlogout a:after {
@@ -2844,96 +2841,106 @@ form .submitSection, #form .submitSection, #form #discoLinear .submitSection {
         content: "\f112";
         margin-right: 0.375rem;
         color: inherit; }
-#meat .publication .moduleNav .posts .post {
-  border-top: 2px solid #EEEEEE;
-  padding: 1.5625rem 0.9375rem; }
-  #meat .publication .moduleNav .posts .post:last-of-type {
-    border-bottom: 2px solid #EEEEEE; }
-  @media only screen and (min-width:40.063em) {
-    #meat .publication .moduleNav .posts .post {
-      padding: 1.5625rem 1.875rem;
-      border: 1px solid #EEEEEE;
-      box-shadow: rgba(0, 0, 0, 0.25) 0 1px 1px;
-      margin-bottom: 1.875rem; } }
-  #meat .publication .moduleNav .posts .post .teaserImage {
-    float: right;
-    margin: 0 0 0.9375rem 0.9375rem; }
+#meat .publication .moduleNav .posts {
+  margin: 0; }
+  #meat .publication .moduleNav .posts .post {
+    border-top: 2px solid #EEEEEE;
+    padding: 1.5rem 0;
+    list-style-type: none; }
     @media only screen and (max-width: 40em) {
-      #meat .publication .moduleNav .posts .post .teaserImage {
-        max-width: 100px; } }
-  #meat .publication .moduleNav .posts .post .title {
-    margin: 0;
-    font-size: 1.625rem;
-    font-weight: 400; }
-  #meat .publication .moduleNav .posts .post .date {
-    margin: 0; }
-  #meat .publication .moduleNav .posts .post .desc {
-    margin-top: 1rem; }
-  #meat .publication .moduleNav .posts .post .links {
-    margin: 0;
-    padding: 0; }
-    #meat .publication .moduleNav .posts .post .links li {
-      display: inline-block;
-      margin-right: 0.75rem; }
-      #meat .publication .moduleNav .posts .post .links li.more a:before {
-        content: "\f064";
-        margin-right: 0.375rem;
-        color: inherit; }
-      #meat .publication .moduleNav .posts .post .links li.permalink a:before {
-        content: "\f02e";
-        margin-right: 0.375rem;
-        color: inherit; }
-      #meat .publication .moduleNav .posts .post .links li.comments a:before {
-        content: "\f075";
-        margin-right: 0.375rem;
-        color: inherit; }
-#meat .publication .moduleNav .feedLink a {
-  border-style: solid;
-  border-width: 0;
-  cursor: pointer;
-  font-family: "Open Sans", sans-serif;
-  font-weight: 300;
-  line-height: normal;
-  margin: 0 0 1.25rem;
-  position: relative;
-  text-decoration: none;
-  text-align: center;
-  -webkit-appearance: none;
-  border-radius: 0;
-  display: inline-block;
-  padding-top: 0.25rem;
-  padding-right: 0.5rem;
-  padding-bottom: 0.3125rem;
-  padding-left: 0.5rem;
-  font-size: 0.6875rem;
-  background-color: #2ea7a0;
-  border-color: #258680;
-  color: #FFFFFF;
-  border-radius: 3px;
-  transition: background-color 300ms ease-out;
-  margin: 0 0.75rem 0.125rem 0 !important; }
-  #meat .publication .moduleNav .feedLink a:hover, #meat .publication .moduleNav .feedLink a:focus {
-    background-color: #258680; }
-  #meat .publication .moduleNav .feedLink a:hover, #meat .publication .moduleNav .feedLink a:focus {
-    color: #FFFFFF; }
-  #meat .publication .moduleNav .feedLink a:before {
+      #meat .publication .moduleNav .posts .post:last-of-type {
+        border-bottom: 2px solid #EEEEEE;
+        margin-bottom: 2.25rem; }
+ }
+    @media only screen and (min-width:40.063em) {
+      #meat .publication .moduleNav .posts .post {
+        padding: 2.25rem 2rem;
+        border: 1px solid #EEEEEE;
+        box-shadow: rgba(0, 0, 0, 0.25) 0 1px 1px;
+        margin-bottom: 2.25rem; } }
+    #meat .publication .moduleNav .posts .post .teaserImage {
+      float: right;
+      margin: 0 0 1.125rem 1.5rem; }
+      @media only screen and (max-width: 40em) {
+        #meat .publication .moduleNav .posts .post .teaserImage {
+          max-width: 100px; } }
+    #meat .publication .moduleNav .posts .post .title {
+      margin: 0;
+      font-size: 1.625rem;
+      font-weight: 400; }
+    #meat .publication .moduleNav .posts .post .date {
+      margin: 0; }
+    #meat .publication .moduleNav .posts .post .desc {
+      margin-top: 1rem; }
+    #meat .publication .moduleNav .posts .post .links {
+      margin: 0;
+      padding: 0; }
+      #meat .publication .moduleNav .posts .post .links li {
+        display: inline-block;
+        margin-right: 0.75rem; }
+        #meat .publication .moduleNav .posts .post .links li.more a:before {
+          content: "\f064";
+          margin-right: 0.375rem;
+          color: inherit; }
+        #meat .publication .moduleNav .posts .post .links li.permalink a:before {
+          content: "\f02e";
+          margin-right: 0.375rem;
+          color: inherit; }
+        #meat .publication .moduleNav .posts .post .links li.comments a:before {
+          content: "\f075";
+          margin-right: 0.375rem;
+          color: inherit; }
+#meat .publication .moduleNav .feedLink {
+  margin-bottom: 2.25rem; }
+  #meat .publication .moduleNav .feedLink a {
+    border-style: solid;
+    border-width: 0;
+    cursor: pointer;
+    font-family: "Open Sans", sans-serif;
+    font-weight: 300;
+    line-height: normal;
+    margin: 0 0 1.25rem;
+    position: relative;
+    text-decoration: none;
+    text-align: center;
+    -webkit-appearance: none;
+    border-radius: 0;
+    display: inline-block;
+    padding-top: 0.25rem;
+    padding-right: 0.5rem;
+    padding-bottom: 0.3125rem;
+    padding-left: 0.5rem;
+    font-size: 0.6875rem;
+    background-color: #2ea7a0;
+    border-color: #258680;
     color: #FFFFFF;
-    margin-right: 0.375rem; }
-#meat .publication .moduleNav .feedLink .feedInfo a:before {
-  content: "\f09e";
-  margin-right: 0.375rem;
-  color: inherit; }
+    border-radius: 3px;
+    transition: background-color 300ms ease-out;
+    margin: 0 0.75rem 0.125rem 0 !important; }
+    #meat .publication .moduleNav .feedLink a:hover, #meat .publication .moduleNav .feedLink a:focus {
+      background-color: #258680; }
+    #meat .publication .moduleNav .feedLink a:hover, #meat .publication .moduleNav .feedLink a:focus {
+      color: #FFFFFF; }
+    #meat .publication .moduleNav .feedLink a:before {
+      color: #FFFFFF;
+      margin-right: 0.375rem; }
+  #meat .publication .moduleNav .feedLink .feedInfo a:before {
+    content: "\f09e";
+    margin-right: 0.375rem;
+    color: inherit; }
 #meat .publication.fullPostDisplay {
   position: relative; }
   #meat .publication.fullPostDisplay .persistent {
     display: none; }
+  #meat .publication.fullPostDisplay .back {
+    margin-bottom: 2.25rem; }
   #meat .publication.fullPostDisplay .fullPost {
     width: 100%;
     margin-left: auto;
     margin-right: auto;
     margin-top: 0;
     margin-bottom: 0;
-    max-width: 87.5rem; }
+    max-width: 91.25rem; }
     #meat .publication.fullPostDisplay .fullPost:before, #meat .publication.fullPostDisplay .fullPost:after {
       content: " ";
       display: table; }
@@ -2944,33 +2951,87 @@ form .submitSection, #form .submitSection, #form #discoLinear .submitSection {
       padding-right: 0;
       width: 100%;
       float: left; }
+      @media only screen and (min-width:40.063em) {
+        #meat .publication.fullPostDisplay .fullPost .firstChunk {
+          padding-left: 0;
+          padding-right: 0;
+          width: 66.6666666667%;
+          float: left;
+          padding-right: 1.5rem; } }
+      #meat .publication.fullPostDisplay .fullPost .firstChunk .commentAdded {
+        border-style: solid;
+        border-width: 0.0625rem;
+        display: block;
+        font-weight: 300;
+        margin-bottom: 1.25rem;
+        position: relative;
+        padding: 0.875rem 0.875rem 0.875rem 0.875rem;
+        font-size: 0.8125rem;
+        transition: opacity 300ms ease-out;
+        background-color: #a0d3e8;
+        border-color: #74bfdd;
+        color: #4f4f4f;
+        border-radius: 6px; }
+        #meat .publication.fullPostDisplay .fullPost .firstChunk .commentAdded:before {
+          border-color: #74bfdd; }
+        #meat .publication.fullPostDisplay .fullPost .firstChunk .commentAdded a {
+          text-decoration: underline;
+          font-weight: 700;
+          color: inherit; }
+        #meat .publication.fullPostDisplay .fullPost .firstChunk .commentAdded *:last-child {
+          margin-bottom: 0;
+          padding-bottom: 0; }
+        #meat .publication.fullPostDisplay .fullPost .firstChunk .commentAdded h4 {
+          color: #222;
+          font-size: 1rem;
+          display: block;
+          padding: 0; }
+          #meat .publication.fullPostDisplay .fullPost .firstChunk .commentAdded h4:before {
+            content: "\f05a";
+            margin-right: 0.375rem;
+            color: inherit; }
       #meat .publication.fullPostDisplay .fullPost .firstChunk .text {
-        margin-top: 1.875rem; }
+        margin-top: 2.25rem; }
     #meat .publication.fullPostDisplay .fullPost .relatedItems {
       padding-left: 0;
       padding-right: 0;
       width: 100%;
-      float: left; }
-      #meat .publication.fullPostDisplay .fullPost .relatedItems h4 {
-        color: #ff00ff;
-        font-size: 1.25rem; }
+      float: left;
+      max-width: 400px;
+      margin: 0 auto;
+      float: none; }
       #meat .publication.fullPostDisplay .fullPost .relatedItems > div {
-        margin-bottom: 0.9375rem;
-        border: 1px solid blue; }
+        border-bottom: 1px solid #efefef; }
+      @media only screen and (min-width:40.063em) {
+        #meat .publication.fullPostDisplay .fullPost .relatedItems {
+          padding-left: 0;
+          padding-right: 0;
+          width: 33.3333333333%;
+          float: left;
+          padding-left: 1.5rem; } }
+      #meat .publication.fullPostDisplay .fullPost .relatedItems h4 {
+        font-size: 1.25rem;
+        margin-top: 0; }
+      #meat .publication.fullPostDisplay .fullPost .relatedItems > div {
+        margin-bottom: 1.125rem; }
       #meat .publication.fullPostDisplay .fullPost .relatedItems .relatedEvents ul {
         margin: 0; }
         #meat .publication.fullPostDisplay .fullPost .relatedItems .relatedEvents ul li {
           list-style-type: none;
-          margin-bottom: 0.9375rem; }
+          margin-bottom: 1.125rem; }
           #meat .publication.fullPostDisplay .fullPost .relatedItems .relatedEvents ul li:before {
             content: "\f073";
             margin-right: 0.375rem;
             color: inherit; }
+      #meat .publication.fullPostDisplay .fullPost .relatedItems .images ul {
+        margin: 0; }
+        #meat .publication.fullPostDisplay .fullPost .relatedItems .images ul li {
+          list-style-type: none; }
       #meat .publication.fullPostDisplay .fullPost .relatedItems .categories ul {
         margin: 0; }
       #meat .publication.fullPostDisplay .fullPost .relatedItems .categories li {
         display: inline-block;
-        margin: 0 0.5rem 0.9375rem 0;
+        margin: 0 0.5rem 1.125rem 0;
         white-space: pre; }
         #meat .publication.fullPostDisplay .fullPost .relatedItems .categories li a:before {
           content: "\f114";
@@ -2988,9 +3049,14 @@ form .submitSection, #form .submitSection, #form #discoLinear .submitSection {
       #meat .publication.fullPostDisplay .fullPost .secondChunk .nextPrev {
         border-top: 6px solid #EFEFEF;
         border-bottom: 2px solid #EFEFEF;
-        padding: 3.75rem 0;
-        font-size: 0.875rem;
-        text-transform: uppercase; }
+        padding: 4.5rem 0;
+        text-transform: uppercase;
+        margin-bottom: 2.25rem; }
+        #meat .publication.fullPostDisplay .fullPost .secondChunk .nextPrev h4 {
+          font-size: 0.875rem;
+          margin: 0; }
+        #meat .publication.fullPostDisplay .fullPost .secondChunk .nextPrev p {
+          margin: 0; }
         #meat .publication.fullPostDisplay .fullPost .secondChunk .nextPrev a {
           text-transform: none; }
         #meat .publication.fullPostDisplay .fullPost .secondChunk .nextPrev .prev, #meat .publication.fullPostDisplay .fullPost .secondChunk .nextPrev .next {
@@ -3000,7 +3066,7 @@ form .submitSection, #form .submitSection, #form #discoLinear .submitSection {
           border: none;
           padding: 0; }
         #meat .publication.fullPostDisplay .fullPost .secondChunk .nextPrev .prev {
-          margin-bottom: 1.875rem; }
+          margin-bottom: 2.25rem; }
           #meat .publication.fullPostDisplay .fullPost .secondChunk .nextPrev .prev.only {
             width: 100%;
             text-align: center;
@@ -3016,3 +3082,189 @@ form .submitSection, #form .submitSection, #form #discoLinear .submitSection {
           content: "\f101";
           margin-left: 0.375rem;
           color: inherit; }
+      #meat .publication.fullPostDisplay .fullPost .secondChunk .comments ul {
+        margin: 0; }
+        #meat .publication.fullPostDisplay .fullPost .secondChunk .comments ul:before, #meat .publication.fullPostDisplay .fullPost .secondChunk .comments ul:after {
+          content: " ";
+          display: table; }
+        #meat .publication.fullPostDisplay .fullPost .secondChunk .comments ul:after {
+          clear: both; }
+      #meat .publication.fullPostDisplay .fullPost .secondChunk .comments li {
+        background: none;
+        padding: 0;
+        margin: 0 0 2.25rem;
+        list-style-type: none; }
+        #meat .publication.fullPostDisplay .fullPost .secondChunk .comments li a[name^='comment']:before {
+          display: block;
+          content: "";
+          margin-top: -3rem;
+          height: 3rem;
+          visibility: hidden; }
+          @media only screen and (min-width:63.8125em) {
+            #meat .publication.fullPostDisplay .fullPost .secondChunk .comments li a[name^='comment']:before {
+              margin-top: -12rem;
+              height: 12rem; } }
+        #meat .publication.fullPostDisplay .fullPost .secondChunk .comments li .datetime {
+          float: right;
+          text-align: right;
+          width: 50%;
+          font-size: 0.875rem;
+          margin-bottom: 0.5rem; }
+        #meat .publication.fullPostDisplay .fullPost .secondChunk .comments li .author {
+          float: left;
+          width: 50%;
+          font-size: 1.125rem;
+          font-weight: 700;
+          margin-bottom: 0.5rem; }
+        #meat .publication.fullPostDisplay .fullPost .secondChunk .comments li .commentContent {
+          border: 1px solid #DDDDDD;
+          clear: both;
+          padding: 2.25rem;
+          border-radius: 3px;
+          line-height: 1.2 !important; }
+          #meat .publication.fullPostDisplay .fullPost .secondChunk .comments li .commentContent *:last-child {
+            padding-bottom: 0;
+            margin-bottom: 0; }
+      #meat .publication.fullPostDisplay .fullPost .secondChunk .comments, #meat .publication.fullPostDisplay .fullPost .secondChunk .addCommentForm {
+        max-width: 37.5rem;
+        margin: 0 auto; }
+      #meat .publication.fullPostDisplay .fullPost .secondChunk a[name="comments"]:before, #meat .publication.fullPostDisplay .fullPost .secondChunk a[name="addComment"]:before {
+        display: block;
+        content: "";
+        margin-top: -3rem;
+        height: 3rem;
+        visibility: hidden; }
+        @media only screen and (min-width:63.8125em) {
+          #meat .publication.fullPostDisplay .fullPost .secondChunk a[name="comments"]:before, #meat .publication.fullPostDisplay .fullPost .secondChunk a[name="addComment"]:before {
+            margin-top: -12rem;
+            height: 12rem; } }
+      #meat .publication.fullPostDisplay .fullPost .secondChunk .addCommentForm .commentsOff {
+        border-style: solid;
+        border-width: 0.0625rem;
+        display: block;
+        font-weight: 300;
+        margin-bottom: 1.25rem;
+        position: relative;
+        padding: 0.875rem 0.875rem 0.875rem 0.875rem;
+        font-size: 0.8125rem;
+        transition: opacity 300ms ease-out;
+        background-color: #a0d3e8;
+        border-color: #74bfdd;
+        color: #4f4f4f;
+        border-radius: 6px; }
+        #meat .publication.fullPostDisplay .fullPost .secondChunk .addCommentForm .commentsOff:before {
+          content: "\f204";
+          margin-right: 0.375rem;
+          color: inherit; }
+        #meat .publication.fullPostDisplay .fullPost .secondChunk .addCommentForm .commentsOff:before {
+          line-height: 1;
+          font-size: 1.25rem;
+          display: block;
+          text-align: center;
+          background: rgba(255, 255, 255, 0.25);
+          margin-top: -0.9375rem;
+          margin-left: -0.9375rem;
+          margin-right: -0.9375rem;
+          margin-top: -0.875rem;
+          margin-left: -0.875rem;
+          margin-right: -0.875rem;
+          margin-bottom: 0.875rem;
+          padding: 0.75rem 0;
+          border-bottom: 1px solid; }
+        #meat .publication.fullPostDisplay .fullPost .secondChunk .addCommentForm .commentsOff:before {
+          border-color: #74bfdd; }
+        #meat .publication.fullPostDisplay .fullPost .secondChunk .addCommentForm .commentsOff a {
+          text-decoration: underline;
+          font-weight: 700;
+          color: inherit; }
+        #meat .publication.fullPostDisplay .fullPost .secondChunk .addCommentForm .commentsOff *:last-child {
+          margin-bottom: 0;
+          padding-bottom: 0; }
+        #meat .publication.fullPostDisplay .fullPost .secondChunk .addCommentForm .commentsOff h4 {
+          padding: 0;
+          margin: 0;
+          font-size: 1rem; }
+      #meat .publication.fullPostDisplay .fullPost .secondChunk .addCommentForm .notPermitted .subContent {
+        border-style: solid;
+        border-width: 0.0625rem;
+        display: block;
+        font-weight: 300;
+        margin-bottom: 1.25rem;
+        position: relative;
+        padding: 0.875rem 0.875rem 0.875rem 0.875rem;
+        font-size: 0.8125rem;
+        transition: opacity 300ms ease-out;
+        background-color: #f08a24;
+        border-color: #de770f;
+        color: #FFFFFF;
+        border-radius: 6px; }
+        #meat .publication.fullPostDisplay .fullPost .secondChunk .addCommentForm .notPermitted .subContent:before {
+          content: "\f05e";
+          margin-right: 0.375rem;
+          color: inherit; }
+        #meat .publication.fullPostDisplay .fullPost .secondChunk .addCommentForm .notPermitted .subContent:before {
+          line-height: 1;
+          font-size: 1.25rem;
+          display: block;
+          text-align: center;
+          background: rgba(255, 255, 255, 0.25);
+          margin-top: -0.9375rem;
+          margin-left: -0.9375rem;
+          margin-right: -0.9375rem;
+          margin-top: -0.875rem;
+          margin-left: -0.875rem;
+          margin-right: -0.875rem;
+          margin-bottom: 0.875rem;
+          padding: 0.75rem 0;
+          border-bottom: 1px solid; }
+        #meat .publication.fullPostDisplay .fullPost .secondChunk .addCommentForm .notPermitted .subContent:before {
+          border-color: #de770f; }
+        #meat .publication.fullPostDisplay .fullPost .secondChunk .addCommentForm .notPermitted .subContent a {
+          text-decoration: underline;
+          font-weight: 700;
+          color: inherit; }
+        #meat .publication.fullPostDisplay .fullPost .secondChunk .addCommentForm .notPermitted .subContent *:last-child {
+          margin-bottom: 0;
+          padding-bottom: 0; }
+      #meat .publication.fullPostDisplay .fullPost .secondChunk .addCommentForm .loginRequired .subContent {
+        border-style: solid;
+        border-width: 0.0625rem;
+        display: block;
+        font-weight: 300;
+        margin-bottom: 1.25rem;
+        position: relative;
+        padding: 0.875rem 0.875rem 0.875rem 0.875rem;
+        font-size: 0.8125rem;
+        transition: opacity 300ms ease-out;
+        background-color: #f08a24;
+        border-color: #de770f;
+        color: #FFFFFF;
+        border-radius: 6px; }
+        #meat .publication.fullPostDisplay .fullPost .secondChunk .addCommentForm .loginRequired .subContent:before {
+          content: "\f011";
+          margin-right: 0.375rem;
+          color: inherit; }
+        #meat .publication.fullPostDisplay .fullPost .secondChunk .addCommentForm .loginRequired .subContent:before {
+          line-height: 1;
+          font-size: 1.25rem;
+          display: block;
+          text-align: center;
+          background: rgba(255, 255, 255, 0.25);
+          margin-top: -0.9375rem;
+          margin-left: -0.9375rem;
+          margin-right: -0.9375rem;
+          margin-top: -0.875rem;
+          margin-left: -0.875rem;
+          margin-right: -0.875rem;
+          margin-bottom: 0.875rem;
+          padding: 0.75rem 0;
+          border-bottom: 1px solid; }
+        #meat .publication.fullPostDisplay .fullPost .secondChunk .addCommentForm .loginRequired .subContent:before {
+          border-color: #de770f; }
+        #meat .publication.fullPostDisplay .fullPost .secondChunk .addCommentForm .loginRequired .subContent a {
+          text-decoration: underline;
+          font-weight: 700;
+          color: inherit; }
+        #meat .publication.fullPostDisplay .fullPost .secondChunk .addCommentForm .loginRequired .subContent *:last-child {
+          margin-bottom: 0;
+          padding-bottom: 0; }

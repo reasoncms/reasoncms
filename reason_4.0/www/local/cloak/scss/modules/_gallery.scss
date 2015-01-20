@@ -21,7 +21,7 @@
 
 			li {
 				margin: 0;
-				margin-bottom: $column-gutter;
+				margin-bottom: $horizontal-gutter;
 				margin-left: $column-gutter;
 				//width: rem-calc(150); // Width for default thumbanil image size. If the module uses larger images, styles are output in the <head> to override this.
 			
@@ -41,18 +41,17 @@
 		}
 	}
 
-
 	// FULL GALLERY ITEM
 
 	.item {
-		margin-bottom: $column-gutter;
+		margin-bottom: $horizontal-gutter;
 
 		.imageTitle {
 		}
 
 		.sequenceNum {
 			color: $aluminum;
-			margin-bottom: $column-gutter;
+			margin-bottom: $horizontal-gutter;
 		}
 
 		.prevWrapper,
@@ -65,7 +64,7 @@
 			width: 90px;
 			height: 90px;
 			overflow: hidden;
-			margin: 0 rem-calc(6) $column-gutter !important;
+			margin: 0 rem-calc(6) $horizontal-gutter !important;
 			padding: rem-calc(4);
 			border: 1px solid $gainsboro;
 
@@ -139,7 +138,7 @@
 	}
 
 	.back {
-		margin-bottom: $column-gutter;
+		margin-bottom: $horizontal-gutter;
 
 		&:before {
 			@extend .fa;

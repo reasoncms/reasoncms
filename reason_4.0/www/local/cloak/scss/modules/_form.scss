@@ -5,7 +5,7 @@
 .searchForm {
 
 	@media #{$small-only} {
-		margin-top: $column-gutter/2 !important;
+		margin-top: $horizontal-gutter/2 !important;
 	}
 	
 	#minisiteSearchInput {
@@ -38,23 +38,55 @@
 
 // MODULE SEARCH FORM
 #filtering {
-	
-	.searchLabel {
 
+	// Search form
+	form,
+	.searchForm {
+		margin: 0 0 $horizontal-gutter/2 0 !important;
+		@include clearfix;
+
+		label,
+		.colon {
+			@include screenreader();
+		}
+
+		#gallerySearchField,
+		.search {
+			display: block;
+			@include form-element();
+			width: 80%;
+			float: left;
+			margin-bottom: 0;
+			border-right: none;
+		}
+
+		.submit,
+		input[type="submit"] {
+			display: block;
+			text-align: center;
+			padding: $form-spacing / 2;
+			height: ($input-font-size + ($form-spacing * 1.5) - rem-calc(1));
+			background: $primary-color;
+			color: $white;
+			width: 20%;
+			float: left;
+			border-radius: 0 $global-radius $global-radius 0;
+			margin-bottom: 0;
+
+			&:hover {
+				background: darken($primary-color, 10%);
+				cursor: pointer;
+			}
+		}
+
+		a {
+			color: red;
+		}
 	}
 
-	.colon {
-		@include screenreader();
+	.relFilters {
+		margin-bottom: 0 !important;
 	}
-
-	input[type="text"] {
-
-	}
-
-	input[type="submit"] {
-
-	}	
-
 }
 
 // REASON FORMS
@@ -62,12 +94,27 @@
 #form {
 	max-width: rem-calc(600);
 	border-top: 1px solid $iron;
-	padding-top: $column-gutter;
+	padding-top: $horizontal-gutter;
+}
+
+// Honeypot Captcha fields
+form #tarbabypreRow,
+form #tarbabypreItem,
+form #tarbabyRow,
+form #tarbabyItem,
+form #noturlRow,
+form #noturlItem,
+form #antlionRow,
+form #antlionItem {
+	display: none;
 }
 
 // Submission errors. Displayed at the top of the form.
 #discoErrorNotice { 
-	margin-bottom: $column-gutter/2;
+	margin-bottom: $horizontal-gutter/2;
+
+	// Adds non-visible padding to the top of the named anchor to space it out from the top of the browser
+	@include anchor-padding-menu;
 
 	h3 {
 		font-size: $h4-font-size;
