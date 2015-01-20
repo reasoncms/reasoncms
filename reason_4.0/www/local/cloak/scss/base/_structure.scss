@@ -2,43 +2,43 @@
 // Cloak, v1
 
 // Helper styles (for debugging layouts)
-#breadcrumbs {
+// #breadcrumbs {
 
-	.breadcrumb {
-		background: orange;
-	}
-}
+// 	.breadcrumb {
+// 		background: orange;
+// 	}
+// }
 
-#meat {
+// #meat {
 
-	// #content {
-	// 	background: red;
-	// }
+// 	// #content {
+// 	// 	background: red;
+// 	// }
 
-	// #related {
-	// 	background: blue;
-	// }
+// 	// #related {
+// 	// 	background: blue;
+// 	// }
 
-	// #navigation {
-	// 	background: green;
-	// }
+// 	// #navigation {
+// 	// 	background: green;
+// 	// }
 
-	#content {
-		border: 1px solid red;
-	}
+// 	#content {
+// 		border: 1px solid red;
+// 	}
 
-	#related {
-		border: 1px solid blue;
-	}
+// 	#related {
+// 		border: 1px solid blue;
+// 	}
 
-	#navigation {
-		border: 1px solid green;
-	}
-}
+// 	#navigation {
+// 		border: 1px solid green;
+// 	}
+// }
 
-#footer {
-	border: 1px solid purple;
-}
+// #footer {
+// 	border: 1px solid purple;
+// }
 
 
 html,
@@ -193,16 +193,6 @@ body,
 // Some modules may override these defaults in their respective modules/_{module-name}.scss.
 
 #meat {
-
-	.persistent {
-		//margin-bottom: $column-gutter;
-		//margin-bottom: $horizontal-gutter;
-	}
-
-	.moduleNav {
-		//margin-bottom: $column-gutter;
-		//margin-bottom: $horizontal-gutter;
-	}
 		
 	// MINISITE COLUMN LAYOUT: Page has content, related, and navigation.
 	// Rather increasing the column number to 4, we make persistent and moduleNav 100%
