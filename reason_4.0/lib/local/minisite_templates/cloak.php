@@ -12,15 +12,74 @@
 
 	// include the MinisiteTemplate class
 	reason_include_once( 'minisite_templates/html5_responsive.php' );
-	//reason_include_once('classes/module_sets.php');
+	reason_include_once('classes/module_sets.php');
 	
 	// this variable must be the same as the class name
 	$GLOBALS[ '_minisite_template_class_names' ][ basename( __FILE__) ] = 'CloakTemplate';
 	
 	class CloakTemplate extends HTML5ResponsiveTemplate
 	{
-		// Don't include default Reason module styles. We'll include our own.
+		// Don't include default Reason module styles. We'll include our own. Some modules continue to show styles anyway.
 		var $include_modules_css = false;
+
+		function alter_reason_page_type($page_type)
+		{
+			// Make sure we do everything the parent template does.
+			parent::alter_reason_page_type($page_type); 
+
+			// GLOBAL MODULE SETTINGS
+			// Here we set custom paramaters without having to set them for each page type.
+
+			// Image Sidebar
+			// Find additional parameters for image_sidebar in minisite_templates/modules/image_sidebar.php
+			if($regions = $page_type->module_regions('image_sidebar'))
+			{
+				foreach($regions as $region)
+				{
+					if(!isset($module['module_params']['thumbnail_width']))
+						$page_type->set_region_parameter($region, 'thumbnail_width', 400);
+				}
+			}
+
+			// Publications
+			if($regions = $page_type->module_regions('publication'))
+			{
+				foreach($regions as $region)
+				{
+					if(!isset($module['module_params']['css']))
+						$page_type->set_region_parameter($region, 'css', false);
+				}
+			}
+
+			// Get's Cloak's custom item markup generator. Outputs larger thumbnails for attached images.
+			$ms = reason_get_module_sets();
+			if($regions = $page_type->module_regions($ms->get('publication_item_display')))
+			{
+				foreach($regions as $region)
+				{
+					$module = $page_type->get_region($region);
+					
+					if(isset($module['module_params']['markup_generator_info']))
+						//$markup_generators = $module['module_params']['markup_generator_info'];
+						$markup_generators = array();
+					else
+						$markup_generators = array();
+					
+					if(empty($module['module_params']['related_mode']))
+					{
+						if(empty($markup_generators['item']))
+						{
+							$markup_generators['item'] = array (
+								'classname' => 'CloakItemMarkupGenerator', 
+								'filename' => 'minisite_templates/modules/publication/item_markup_generators/cloak.php',
+							);
+						}
+					}
+					
+				}
+				$page_type->set_region_parameter($region, 'markup_generator_info', $markup_generators);
+			}
+		}
 
 		function get_meta_information()
 		{
