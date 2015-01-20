@@ -36,7 +36,6 @@ class FinangerGolfForm extends CreditCardThorForm {
     // style up the form and add comments et al
     function on_every_time()
     {
-        $this->remove_element('payment_amount'); // this isn't hiding for some reason (should be hidden in the parent class)
         $this->add_element('guest_1_header', 'comment', array('text' => '<h3>Golfer/Guest 1 Information</h3>'));
         $this->move_element('guest_1_header', 'before', $this->get_element_name_from_label('First Name 1'));
 
@@ -173,6 +172,8 @@ class FinangerGolfForm extends CreditCardThorForm {
                 <li>&bull; Please include first and last names</li>
                 </ul>'));
         $this->move_element('groupings_header', 'before', $this->get_element_name_from_label('Grouping 1'));
+
+        parent::on_every_time();
 
     }
 
