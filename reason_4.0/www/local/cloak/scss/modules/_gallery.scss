@@ -18,16 +18,18 @@
 }
 
 #imageGallery {
+	@include clearfix;
 	
 	// SEARCH & FILTERS
 	.persistent {
 		display: none;
 	}
-
+	
 	// GALLERY ITEM LIST
 	.moduleNav {
 
 		@include grid-column($columns:12, $collapse:true);
+
 		width: 100%;
 
 		// PAGINATION
