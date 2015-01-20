@@ -79,9 +79,11 @@ $include-html-global-classes: true;
 // $include-html-grid-classes: $include-html-classes;
 // $include-xl-html-grid-classes: false;
 
-$row-width: rem-calc(1400);
+$row-width: rem-calc(1460);
 $total-columns: 12;
 $column-gutter: rem-calc(30);
+$column-gutter: rem-calc(48);
+$horizontal-gutter: rem-calc(36);
 
 // c. Global
 // - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -129,8 +131,6 @@ $alert-color: red;
 // $success-color: #43AC6A;
 // $warning-color: #f08a24;
 // $info-color: #a0d3e8;
-
-
 
 // $cloak-primary-color: $cloak-red;
 // $cloak-secondary-color: $cloak-green;
@@ -368,10 +368,10 @@ $h6-font-size: 1rem;
 // $include-html-alert-classes: $include-html-classes;
 
 // We use this to control alert padding.
-// $alert-padding-top: rem-calc(14);
-// $alert-padding-default-float: $alert-padding-top;
-// $alert-padding-opposite-direction: $alert-padding-top + rem-calc(10);
-// $alert-padding-bottom: $alert-padding-top;
+$alert-padding-top: rem-calc(14);
+$alert-padding-default-float: $alert-padding-top;
+$alert-padding-opposite-direction: $alert-padding-top;
+$alert-padding-bottom: $alert-padding-top;
 
 // We use these to control text style.
 // $alert-font-weight: $font-weight-normal;
@@ -384,7 +384,7 @@ $h6-font-size: 1rem;
 
 // We use these to control border styles.
 // $alert-border-style: solid;
-// $alert-border-width: 1px;
+$alert-border-width: rem-calc(1);
 // $alert-border-color: scale-color($primary-color, $lightness: $alert-function-factor);
 // $alert-bottom-margin: rem-calc(20);
 
@@ -1131,7 +1131,7 @@ $reveal-overlay-bg: rgba($white, .45);
 // $reveal-position-top: rem-calc(100);
 // $reveal-default-width: 80%;
 // $reveal-max-width: $row-width;
-$reveal-modal-padding: $column-gutter*1.25;
+$reveal-modal-padding: $horizontal-gutter;
 $reveal-box-shadow: 0 0 4px rgba($black,.25);
 
 // We use these to style the reveal close button
