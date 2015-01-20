@@ -1,6 +1,22 @@
 // Gallery Styles
 // Cloak, v1
 
+// @todo: Fix search / gallery layout
+
+#meat {
+		
+	#imageGallery {
+		
+			.persistent {
+				@include grid-column($columns:12, $collapse:true);
+			}
+
+			.moduleNav {
+				@include grid-column($columns:12, $collapse:true);
+			}
+	}
+}
+
 #imageGallery {
 	
 	// SEARCH & FILTERS
@@ -10,6 +26,9 @@
 
 	// GALLERY ITEM LIST
 	.moduleNav {
+
+		@include grid-column($columns:12, $collapse:true);
+		width: 100%;
 
 		// PAGINATION
 		// See base/_common.scss

@@ -1232,19 +1232,6 @@ blockquote, blockquote p {
     -webkit-transform: rotate(359deg);
     transform: rotate(359deg); } }
 
-#breadcrumbs .breadcrumb {
-  background: orange; }
-
-#meat #content {
-  border: 1px solid red; }
-#meat #related {
-  border: 1px solid blue; }
-#meat #navigation {
-  border: 1px solid green; }
-
-#footer {
-  border: 1px solid purple; }
-
 html, body, *:before, *:after {
   -moz-text-size-adjust: none;
   -ms-text-size-adjust: none;
@@ -2556,25 +2543,42 @@ form .formElement, #form .formElement, #form #discoLinear .formElement {
 form .submitSection, #form .submitSection, #form #discoLinear .submitSection {
   margin: 0 0 1rem; }
 
+#meat #imageGallery .persistent {
+  padding-left: 0;
+  padding-right: 0;
+  width: 100%;
+  float: left; }
+#meat #imageGallery .moduleNav {
+  padding-left: 0;
+  padding-right: 0;
+  width: 100%;
+  float: left; }
+
 #imageGallery .persistent {
   display: none; }
-#imageGallery .moduleNav #imageGalleryItemList {
-  margin: 0;
-  margin-left: -3rem; }
-  #imageGallery .moduleNav #imageGalleryItemList li {
+#imageGallery .moduleNav {
+  padding-left: 0;
+  padding-right: 0;
+  width: 100%;
+  float: left;
+  width: 100%; }
+  #imageGallery .moduleNav #imageGalleryItemList {
     margin: 0;
-    margin-bottom: 2.25rem;
-    margin-left: 3rem; }
-    #imageGallery .moduleNav #imageGalleryItemList li img {
-      padding: 0.25rem;
-      border: 1px solid #DDDDDD; }
-      #imageGallery .moduleNav #imageGalleryItemList li img:hover {
-        border-color: #CCCCCC; }
-  #imageGallery .moduleNav #imageGalleryItemList #imageGalleryNextPageItem {
-    position: absolute;
-    left: -9999px;
-    top: -9999px;
-    margin-bottom: 0; }
+    margin-left: -3rem; }
+    #imageGallery .moduleNav #imageGalleryItemList li {
+      margin: 0;
+      margin-bottom: 2.25rem;
+      margin-left: 3rem; }
+      #imageGallery .moduleNav #imageGalleryItemList li img {
+        padding: 0.25rem;
+        border: 1px solid #DDDDDD; }
+        #imageGallery .moduleNav #imageGalleryItemList li img:hover {
+          border-color: #CCCCCC; }
+    #imageGallery .moduleNav #imageGalleryItemList #imageGalleryNextPageItem {
+      position: absolute;
+      left: -9999px;
+      top: -9999px;
+      margin-bottom: 0; }
 #imageGallery .item {
   margin-bottom: 2.25rem; }
   #imageGallery .item .sequenceNum {
