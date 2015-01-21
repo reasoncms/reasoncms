@@ -1298,27 +1298,26 @@ class DirectoryModule extends DefaultMinisiteModule {
     }
 
     function format_postal_address($data, $html = true) {
-        $address = "";
-        if ($html) {
-            $address .= "<span class='attrValue'><span class='multipleAttrValues'>{$data['postaladdress'][0]}</span>";
-            if (isset( $data['l'] )) {
-                $address .= "<span class='multipleAttrValues'>{$data['l'][0]}";
-            }
-            if (isset( $data['st'] )) {
-                $address .= ", {$data['st'][0]}";
-            }
-            if (isset( $data['postalcode'] )) {
-                $address .= " {$data['postalcode'][0]}";
-            }
-            $address .= "</span>"; // attrValue for second line of address
-            if (isset( $data['lutherc'] )) {
-                $address .= "<span class='multipleAttrValues'>{$data['lutherc'][0]}</span>";
-            }
-            return $this->format_single_attribute($address, 'Home Address', 'directoryHomeAddress');
-        } else {
-            return $parts;
+    if ($html) {
+        $address = "<span class='multipleAttrValues'>{$data['postaladdress'][0]}</span>";
+        if (isset( $data['l'] )) {
+            $address .= "<span class='multipleAttrValues'>{$data['l'][0]}";
         }
+        if (isset( $data['st'] )) {
+            $address .= ", {$data['st'][0]}";
+        }
+        if (isset( $data['postalcode'] )) {
+            $address .= " {$data['postalcode'][0]}";
+        }
+        $address .= "</span>"; // attrValue for second line of address
+        if (isset( $data['lutherc'] )) {
+            $address .= "<span class='multipleAttrValues'>{$data['lutherc'][0]}</span>";
+        }
+        return $this->format_single_attribute( $address, 'Home Address', 'directoryHomeAddress' );
+    } else {
+        return $parts;
     }
+}
 
     function format_email( $data, $table = false ) {
         $email = '<a href="mailto:'.$data['mail'][0].'">'.$data['mail'][0].'</a>';

@@ -4237,7 +4237,7 @@ footer .contactBlurb {
 }
 /* line 64, scss/modules/_directory.scss */
 #directory .directoryInfo h3.directoryTitle:last-of-type {
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 }
 @media only screen and (min-width: 40.063em) {
   /* line 69, scss/modules/_directory.scss */
@@ -4253,44 +4253,52 @@ footer .contactBlurb {
 /* line 79, scss/modules/_directory.scss */
 #directory .directoryContact li span.attribute {
   position: static;
-  width: 95%;
+  max-width: 95%;
+  min-width: 51%;
+  width: auto;
   display: inline-block;
   vertical-align: top;
 }
 @media only screen and (min-width: 40.063em) {
   /* line 79, scss/modules/_directory.scss */
   #directory .directoryContact li span.attribute {
-    width: 20%;
+    min-width: 0%;
+    max-width: 175px;
+    width: 36%;
   }
 }
-/* line 89, scss/modules/_directory.scss */
+/* line 93, scss/modules/_directory.scss */
 #directory .directoryContact li span.attribute strong {
   position: static;
 }
-/* line 94, scss/modules/_directory.scss */
+/* line 98, scss/modules/_directory.scss */
 #directory .directoryContact span.attrValue {
   display: inline-block;
-  width: 95%;
-  margin-left: 2px;
+  max-width: 95%;
+  min-width: 51%;
+  width: auto;
+  margin-left: 0px;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 94, scss/modules/_directory.scss */
+  /* line 98, scss/modules/_directory.scss */
   #directory .directoryContact span.attrValue {
-    width: 76%;
+    min-width: 0%;
+    width: 62%;
+    margin-left: 2px;
   }
 }
-/* line 104, scss/modules/_directory.scss */
+/* line 112, scss/modules/_directory.scss */
 #directory .directoryContact span.multipleAttrValues {
   display: inline-block;
-  margin: 0 3px;
+  margin: 0px;
   width: 100%;
 }
-/* line 110, scss/modules/_directory.scss */
+/* line 122, scss/modules/_directory.scss */
 #directory .directoryContact li {
   margin-left: 2.5rem;
   vertical-align: top;
 }
-/* line 118, scss/modules/_directory.scss */
+/* line 130, scss/modules/_directory.scss */
 #directory .directoryContact li:before {
   width: 2rem;
   margin-left: -2.25rem;
@@ -4299,60 +4307,59 @@ footer .contactBlurb {
   position: relative;
   top: 5px;
 }
-/* line 131, scss/modules/_directory.scss */
+/* line 143, scss/modules/_directory.scss */
 #directory .directoryContact .directoryOffice:before {
   content: "\f041";
 }
-/* line 137, scss/modules/_directory.scss */
+/* line 149, scss/modules/_directory.scss */
 #directory .directoryContact .directoryPhone:before {
   content: "\f095";
 }
-/* line 143, scss/modules/_directory.scss */
+/* line 155, scss/modules/_directory.scss */
 #directory .directoryContact .directoryEmail:before {
   content: "\f1fa";
 }
-/* line 149, scss/modules/_directory.scss */
+/* line 161, scss/modules/_directory.scss */
 #directory .directoryContact .directoryStudentResidence:before {
   content: "\f1ad";
 }
-/* line 155, scss/modules/_directory.scss */
+/* line 167, scss/modules/_directory.scss */
 #directory .directoryContact .directorySPO:before {
   content: "\f0e0";
 }
-/* line 161, scss/modules/_directory.scss */
+/* line 173, scss/modules/_directory.scss */
 #directory .directoryContact .directoryUsername:before {
   content: "\f007";
 }
-/* line 167, scss/modules/_directory.scss */
+/* line 179, scss/modules/_directory.scss */
 #directory .directoryContact .directoryAffiliations:before {
   content: "\f0c0";
 }
-/* line 173, scss/modules/_directory.scss */
+/* line 185, scss/modules/_directory.scss */
 #directory .directoryContact .directoryHomeAddress:before {
   content: "\f015";
-  margin-right: 5px;
 }
-/* line 180, scss/modules/_directory.scss */
+/* line 192, scss/modules/_directory.scss */
 #directory .directoryContact .directoryMobile:before {
   content: "\f10b";
 }
-/* line 186, scss/modules/_directory.scss */
+/* line 198, scss/modules/_directory.scss */
 #directory .directoryContact .directoryBirthday:before {
   content: "\f1fd";
 }
-/* line 192, scss/modules/_directory.scss */
+/* line 204, scss/modules/_directory.scss */
 #directory .directoryContact .directoryLastUpdate:before {
   content: "\f1da";
 }
-/* line 198, scss/modules/_directory.scss */
+/* line 210, scss/modules/_directory.scss */
 #directory .directoryContact .directoryDepartment:before {
   content: "\f19c";
 }
-/* line 204, scss/modules/_directory.scss */
+/* line 216, scss/modules/_directory.scss */
 #directory .directoryContact .directoryAdvisor:before {
   content: "\f19d";
 }
-/* line 216, scss/modules/_directory.scss */
+/* line 228, scss/modules/_directory.scss */
 #directory .directoryContact .directoryTerms:before {
   content: "\f02d";
 }
