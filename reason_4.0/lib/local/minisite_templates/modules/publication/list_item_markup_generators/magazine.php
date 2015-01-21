@@ -89,9 +89,13 @@ class MagazinePublicationListItemMarkupGenerator extends PublicationMarkupGenera
 	{
 		$markup_string = '';
 		$image = $this->passed_vars['teaser_image'];
-		if (!empty($image))
+		if (!file_exists($_SERVER['DOCUMENT_ROOT'] . WEB_PHOTOSTOCK.reason_get_image_filename( reset($image)->id(), 'tn' )))
 		{
-
+			// not cropped if image is pulled from www to staging or localhost
+			$markup_string .= '<img src="'.luther_get_image_url(WEB_PHOTOSTOCK.reason_get_image_filename( reset($image)->id(), "tn" )).'" width = "200" alt="'.str_replace('"', "'", reset($image)->get_value( 'description' )).'"/>';
+		}		
+		else if (!empty($image))
+		{
 			if(is_array($image))
 				$image = reset($image);
 			

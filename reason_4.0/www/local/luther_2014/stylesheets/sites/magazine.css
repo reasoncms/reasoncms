@@ -1325,3 +1325,23 @@ figure.right {
 .siteHome #minisite .fullPostDisplay .searchAndFilterInterface li:nth-of-type(4) a {
   background: #e8a500;
 }
+/* line 1498, ../scss/sites/magazine.scss */
+.siteHome #minisite .fullPostDisplay .searchAndFilterInterface .filterInterface ul li:nth-of-type(1) a {
+  background: black;
+}
+/* line 1505, ../scss/sites/magazine.scss */
+.siteHome #minisite .fullPostDisplay .searchAndFilterInterface .filterInterface ul li:nth-of-type(2) a {
+  background: #4a8512;
+}
+/* line 1512, ../scss/sites/magazine.scss */
+.siteHome #minisite .fullPostDisplay .searchAndFilterInterface .filterInterface ul li:nth-of-type(3) a {
+  background: #9f2112;
+}
+/* line 1519, ../scss/sites/magazine.scss */
+.siteHome #minisite .fullPostDisplay .searchAndFilterInterface .filterInterface ul li:nth-of-type(4) a {
+  background: #1073ce;
+}
+/* line 1526, ../scss/sites/magazine.scss */
+.siteHome #minisite .fullPostDisplay .searchAndFilterInterface .filterInterface ul li:nth-of-type(5) a {
+  background: #e8a500;
+}

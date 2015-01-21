@@ -325,6 +325,17 @@ class MagazineItemMarkupGenerator extends ResponsiveItemMarkupGenerator
 				$markup .= '<div class="filterInterface">'."\n";
 				$markup .= $this->passed_vars['filter_interface_markup'];
 				$markup .= '</div>'."\n";
+				
+				// restore link for current category
+				foreach($this->passed_vars['item_categories'] as $category)
+				{
+					$markup = preg_replace('/<li><strong>(.*?)<\/strong>\s?<\/li>/', '<li><a href="?filter1=category-' . $category->get_value('id') . '">' . $category->get_value('name') . '</a></li>', $markup);
+				}
+				// insert "All" link if not shown
+				if (!preg_match('/<a href="\?">All<\/a>/', $markup))
+				{
+					$markup = preg_replace('/<ul>/', '<ul><li><a href="?">All</a></li>', $markup);
+				}
 			}
 			$markup .= '</div>'."\n";
 		}
