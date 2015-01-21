@@ -62,7 +62,7 @@
 
   .directoryInfo {
     h3.directoryTitle:last-of-type{
-      margin-bottom: 40px;
+      margin-bottom: 20px;
     }
     @media
     #{$medium-up}{
@@ -78,10 +78,14 @@
 
     li span.attribute{
       position: static;
-      width: 95%;
+      max-width: 95%;
+      min-width: 51%;
+      width: auto;
       @media
       #{$medium-up} {
-        width: 20%;
+        min-width: 0%;
+        max-width: 175px; //might have to increase if the length of an attribute title excedes this length
+        width: 36%;
       }
       display: inline-block;
       vertical-align: top;
@@ -93,17 +97,25 @@
 
     span.attrValue{
       display: inline-block;
-      width: 95%;
+      max-width: 95%;
+      min-width: 51%;
+      width: auto;
+      margin-left: 0px;
       @media
       #{$medium-up} {
-        width: 76%;
+        min-width: 0%;
+        width: 62%;
+        margin-left: 2px;
       }
-      margin-left: 2px;
     }
 
     span.multipleAttrValues{
       display: inline-block;
-      margin: 0 3px;
+      margin: 0px;
+      // margin: 0 2px;
+      // &:first-child{
+      //   margin-left: 0px;
+      // }
       width: 100%;
     }
 
@@ -172,7 +184,7 @@
     .directoryHomeAddress {
       &:before {
         content: $fa-var-home;
-        margin-right: 5px;
+      //  margin-right: 4px;
       }
     }
 
