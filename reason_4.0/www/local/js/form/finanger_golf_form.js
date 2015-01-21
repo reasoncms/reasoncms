@@ -9,7 +9,7 @@ $(function() {
     grouping_2_element  = $(".words:contains('Pairing/Foursome 2')").parent();
     division_2_element  = $(".words:contains('Division for Pairing/Foursome 2')").parent();
 
-    draw_add_remove_golfer_buttons();
+    draw_buttons();
     toggle_remove_golfer_link();
     hide_initial_items();
 
@@ -18,10 +18,13 @@ $(function() {
     });
 });
 
-function draw_add_remove_golfer_buttons() {
-        $("#guest8wrapperItem").after('<a id="add_golfer_link" href="#" class="default-button" onclick="add_golfer(); return false;"><i class="fa fa-plus"></i> Add another golfer/guest</a>');
+function draw_buttons() {
         $("#guest8wrapperItem").after('<hr>');
-        $("#guest8wrapperItem").after('<a id="remove_golfer_link" href="#" onclick="remove_golfer(); return false;"><i class="fa fa-minus"></i> Remove golfer/guest</a>');
+        $("#guest8wrapperItem").after('<a id="add_golfer_link" href="#" class="button" onclick="add_golfer(); return false;"><i class="fa fa-plus"></i> Add another golfer/guest</a>');
+        $("#guest8wrapperItem").after('<p><a id="remove_golfer_link" href="#" onclick="remove_golfer(); return false;"><i class="fa fa-minus"></i> Remove golfer/guest</a></p>');
+        $(".words:contains('Other Comments/Notes')").parent().before('<a id="add_parirng_link" href="#" class="default-button" onclick="add_pairing(); return false;"><i class="fa fa-plus"></i> Add another pairing/foursome</a>');
+        $(".words:contains('Other Comments/Notes')").parent().before('<a id="remove_pairing_link" href="#" onclick="remove_pairing(); return false;"><i class="fa fa-minus"></i> Remove pairing/foursome</a>');
+        $(".words:contains('Other Comments/Notes')").parent().before('<hr>');
 }
 
 function add_golfer(){
@@ -51,6 +54,35 @@ function remove_golfer(){
     lastGolfer.contents().find("textarea").val('');
     toggle_remove_golfer_link();
     setTotal();
+}
+
+function add_pairing(){
+    $(".words:contains('Division for Pairing/Foursome 2')").parent().show('500');
+    $(".words:contains('Pairing/Foursome 2')").parent().show('500');
+    toggle_pairing_links();
+}
+
+function toggle_pairing_links() {
+    if ($(".words:contains('Division for Pairing/Foursome 2')").parent().is(":visible")) {
+        $("#remove_pairing_link").show('500');
+        division_2_element.show('500');
+        grouping_2_element.show('500');
+        $("#add_parirng_link").hide('500');
+    } else {
+        $("#remove_pairing_link").hide('500');
+        grouping_2_element.hide('500');
+        division_2_element.hide('500');
+        $("#add_parirng_link").show('500');
+    }
+}
+
+function remove_pairing(){
+    // hide the second pairing/guest fields and reset values
+    $(".words:contains('Division for Pairing/Foursome 2')").parent().hide();
+    $(".words:contains('Pairing/Foursome 2')").parent().hide('500');
+    $(".words:contains('Division for Pairing/Foursome 2')").parent().find("input:radio").attr('checked', false);
+    $(".words:contains('Pairing/Foursome 2')").parent().find("textarea").val('');
+    toggle_pairing_links();
 }
 
 function cleanup_cost(coststring){
@@ -118,4 +150,5 @@ function hide_initial_items(){
         $("#guest8wrapperItem").hide();
     }
     toggle_remove_golfer_link();
+    toggle_pairing_links();
 }
