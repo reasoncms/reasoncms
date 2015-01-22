@@ -259,6 +259,15 @@ class HeadItems
 
 	/**
 	 *
+	 * @param type $path
+	 * @return nothing
+	 */
+	function add_style_import_path( $path ) {
+		$this->style_import_paths[] = $path;
+	}
+
+	/**
+	 *
 	 * @param type $parser
 	 * @param type $url
 	 * @param type $variables
@@ -303,6 +312,13 @@ class HeadItems
 
 		try
 		{
+			$parser->scss->addImportPath(WEB_PATH);
+			$parser->scss->addImportPath($input_path);
+
+			foreach ($this->style_import_paths as $path) {
+				$parser->scss->addImportPath($path);
+			}
+
 			$parser->checkedCachedCompile($input_path, $output_path);
 		}
 		catch (Exception $ex)
