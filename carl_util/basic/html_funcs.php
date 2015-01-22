@@ -13,7 +13,14 @@
  */
 function tagTransform($xhtml, $tag_array)
 {
-	$output = preg_replace("/(<\/?)(\w+)([^>]*>)/e", "'\\1'._tagMap('\\2', \$tag_array ).stripslashes('\\3')", $xhtml);
+	$output = preg_replace_callback(
+		"/(<\/?)(\w+)([^>]*>)/",
+		function ($m) use ($tag_array) {
+			return $m[1] . _tagMap($m[2], $tag_array) . stripslashes($m[3]);
+		},
+		$xhtml
+	);
+
 	return $output;
 }
 
