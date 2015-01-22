@@ -67,6 +67,9 @@
     notify:
     - restart apache
 
+  - name: Assures /vagrant/settings dir exists
+    file: path=/vagrant/settings state=directory
+
   - name: copy reason config files for vagrant
     copy: src={{ item }} dest=/vagrant/settings/{{ item }}
     with_items:
