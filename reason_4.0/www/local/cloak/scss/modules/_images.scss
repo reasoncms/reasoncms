@@ -1,0 +1,34 @@
+// Image Module Styles
+// Cloak, v1
+
+// Image Module (images in the main content area)
+
+#images {
+	//margin-bottom: $column-gutter/2;
+	@include clearfix;
+
+	ul {
+		margin: 0;
+
+		li {
+			list-style-type: none;
+			margin-bottom: $column-gutter;
+
+			img {
+				border: 1px solid #ccc;
+				padding: rem-calc(6);
+			}
+
+			.caption {
+				font-style: italic;
+				font-weight: 300;
+				color: $aluminum;
+			}
+		}
+	}
+}
+
+// Sidebar Images
+#maintained {
+	
+}

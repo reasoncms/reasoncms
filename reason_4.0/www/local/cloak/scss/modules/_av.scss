@@ -1,0 +1,73 @@
+// Audio / Video Module Styles
+// Cloak, v1
+	
+#av {
+	margin-bottom: $column-gutter;
+
+	.moduleNav {
+		
+		ul {
+			margin: 0 0 0 $column-gutter; // bump out the list to make room for icons
+			list-style-type: none;
+
+			li {
+				padding-bottom: $column-gutter/2; 
+
+				&:before {  // video play icon
+					@extend .fa;
+					content: $fa-var-youtube-play;
+					margin-left: -$column-gutter;
+					float: left;
+					margin-top: rem-calc(6);
+					color: $aluminum;
+				}
+		
+				.date {
+					font-size: rem-calc(14);
+					color: $jumbo;
+				}
+			}
+		}
+	}
+
+	// Subscribe to feed buttons
+	.podcast {
+		margin: 0;
+		clear: both;
+
+		a {
+			@include feed-button();
+		}
+		
+		.feedLink {
+			&:before {
+				content: $fa-var-rss;
+			}
+		}
+
+		.subscribe {
+			&:before {
+				content: $fa-var-music;
+			}
+		}
+	}
+}
+
+// To customize the sidebar view of AV, use the following.
+
+// #relatedSections {
+
+// 	#av {
+
+// 		.moduleNav {
+
+// 			ul {
+
+
+// 				li {
+
+// 				}
+// 			}
+// 		}
+// 	}
+// }

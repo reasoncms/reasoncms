@@ -104,7 +104,10 @@ class ReasonUpgrader_44_EntitySanitization extends reasonUpgraderDefault impleme
 	public function process( $disco )
 	{
 		$s = get_microtime();
-		$q = 'SELECT * from entity where state = "Live" AND entity.id > ' . (int) $disco->get_value('starting_id') . ' LIMIT ' . (int) $disco->get_value('num_to_process');
+
+		// add ORDER BY clause to fix MyISAM/InnoDB default order assumption
+		$q = 'SELECT * from entity where state = "Live" AND entity.id > ' . (int) $disco->get_value('starting_id') . ' ORDER BY entity.id LIMIT ' . (int) $disco->get_value('num_to_process');
+
 		$result = db_query($q);
 		$num_rows = mysql_num_rows($result);
 		$updated_count = 0;

@@ -61,6 +61,8 @@ class ReasonDefaultHTMLPurifierConfig extends ReasonAbstractHTMLPurifierConfig
  		$config->set('HTML.DefinitionRev', $this->get_revision());
 		if ($this->enable_id) $config->set('Attr.EnableID', true);
 		if ($this->allow_blank_target) $config->set('Attr.AllowedFrameTargets', array('_blank'));
+		// call custom_config(), otherwise custom configuration impossible
+		$this->custom_config($config);
 		if ($this->allow_html5_tags) $this->add_html5_tags($config);
  	}
  	

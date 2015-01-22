@@ -1,0 +1,202 @@
+// Common Styles
+// Cloak, v1
+
+// Common styles that are repeated throughout Reason
+
+
+.persistent {
+
+}
+
+.moduleNav {
+
+}
+
+.persistent {
+	margin-bottom: $column-gutter;
+	border: none;
+
+	#filtering {
+		@include clearfix;
+		margin: 0;
+		background: $silver;
+		padding: $column-gutter/2;
+		padding-bottom: 0;
+
+		// Search form
+		.searchForm {
+			margin: 0 0 $column-gutter/2 0 !important;
+			@include clearfix;
+
+			label {
+				@include screenreader();
+			}
+
+			.search {
+				display: block;
+				@include form-element();
+				width: 80%;
+				float: left;
+				margin-bottom: 0;
+				border-right: none;
+			}
+
+			.submit {
+				display: block;
+				text-align: center;
+				padding: $form-spacing / 2;
+				height: ($input-font-size + ($form-spacing * 1.5) - rem-calc(1));
+				background: $primary-color;
+				color: $white;
+				width: 20%;
+				float: left;
+				border-radius: 0 $global-radius $global-radius 0;
+				margin-bottom: 0;
+
+				&:hover {
+					background: darken($primary-color, 10%);
+					cursor: pointer;
+				}
+			}
+
+			a {
+				color: red;
+			}
+		}
+
+		// Category filter as a select dropdown
+		.filterSet {
+			margin: 0 0 $column-gutter/2 0 !important;
+			
+			.filterSelect {
+
+			}
+
+			// Remove filter button
+			a {
+				display: block;
+				float: right;
+				line-height: 1;
+				margin-right: rem-calc(24);
+				margin-bottom: rem-calc(6);
+				padding: rem-calc(4);
+				font-size: rem-calc(12);
+				background: $white;
+				border: 1px solid $iron;
+				border-top: 0;
+				border-radius: 0 0 $global-radius $global-radius;
+
+				&:hover {
+					border-color: $aluminum;
+				}
+
+				@include inline-icon($icon: $fa-var-times-circle);
+			}
+		}
+
+		// Category list navigation
+		.filters {
+			margin: 0 0 $column-gutter/2 0 !important;
+
+			h4 {
+				display: inline-block;
+				margin-right: rem-calc(8);
+				font-weight: 400;
+
+				@media #{$small-only} {
+					font-weight: 700;
+				}
+			}
+
+			ul {
+				list-style-type: none;
+				margin: 0;
+				display: inline;
+
+				li {
+					display: inline-block;
+					margin-right: rem-calc(8);
+					white-space: pre;
+
+					a {
+						@include inline-icon($icon: $fa-var-folder-o, $color: $monsoon);
+					}
+
+					strong {
+						@include inline-icon($icon: $fa-var-folder-open-o, $color: inherit);
+					}
+				}
+			}
+		}
+	}
+
+	.loginlogout {
+		margin: $column-gutter/4 $column-gutter/2 0 0;
+		text-align: right;
+		font-size: rem-calc(14);
+
+		a {
+			@include inline-icon($pseudo: after, $icon: $fa-var-lock);
+		}
+	}
+}
+
+.moduleNav {
+
+	// PAGINATION
+	// Foundaiton's pagnation mixins use different markup than Reason's.
+	// For maximum integration, we use Foundation pagination mixins and variables wherever possible.
+	.pagination {
+		display: block;
+		min-height: $pagination-height;
+		margin-#{$default-float}: $pagination-margin;
+		margin-bottom: $column-gutter;
+		padding: 0 !important;
+		background: none !important;
+
+		&.above {
+		}
+
+		&.below {
+		}
+
+		.next,
+		.previous {
+			border: none !important;
+			margin: 0 !important;
+			padding: 0;
+		}
+
+		.pages a,
+		.pages strong,
+		.next,
+		.previous { 
+			height: $pagination-li-height;
+			color: $pagination-li-font-color;
+			font-size: $pagination-li-font-size;
+			margin-#{$default-float}: $pagination-li-margin;
+			float: $pagination-li-float;
+			display: block;
+			padding: $pagination-link-pad !important;
+			background: none;
+			@include radius;
+			font-weight: normal;
+			line-height: inherit;
+			@include single-transition(background-color);
+
+			&:hover,
+			&:focus {
+				background: $pagination-link-active-bg;
+			}
+		}
+
+		.pages {
+
+			strong {
+				@include pagination-current-item($has-anchor: false);
+				float: $pagination-li-float;
+				margin-left: $pagination-li-margin;
+			}
+		}
+	}
+}

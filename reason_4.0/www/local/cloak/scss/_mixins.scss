@@ -1,0 +1,115 @@
+// Cloak Mixins
+// Cloak, v1
+
+@mixin screenreader() {
+	position: absolute;
+	left: -9999px;
+	top: -9999px;
+	margin-bottom: 0;
+}
+
+@mixin zero-out() {
+	margin: 0;
+	padding: 0;
+}
+
+@mixin circle-icon-button(
+	$icon-size: rem-calc(15),
+	$icon-padding: rem-calc(10),
+	$icon-background: $iron,
+	$icon-variable: $fa-var-navicon
+	) {
+
+	display: inline-block;
+	margin: 0;
+	padding: $icon-padding;
+	line-height: 1 !important;
+	border-radius: $global-rounded;
+	background: $icon-background;
+	
+	&:before {
+		@extend .fa;
+		content: $icon-variable;
+		font-size: $icon-size;
+		width: $icon-size;
+		display: block;
+	}
+
+	&:hover {
+		background: darken($icon-background, 15%);
+	}
+
+	&:active {
+		background: lighten($icon-background, 5%);
+	}
+}
+
+// Feed button
+@mixin feed-button() {
+	@include button(
+		$padding: $button-tny,
+		$bg: $primary-color,
+		$radius: $global-radius,
+		$full-width: false,
+		$disabled: false
+	);
+	margin: 0 rem-calc(12) rem-calc(2) 0 !important;
+
+	&:before {  // download icon
+		@extend .fa;
+		color: $white;
+		margin-right: rem-calc(6);
+	}
+}
+
+// FontAwesome inline icon
+@mixin inline-icon($pseudo: before, $icon: $fa-var-bomb, $color: inherit) {
+	&:#{$pseudo} {
+		@extend .fa;
+		content: $icon;
+		@if $pseudo == after {
+			margin-left: rem-calc(6);	
+		}
+		@else {
+			margin-right: rem-calc(6);
+		}
+		color: $color;
+	}
+}
+
+// @mixin single-transition($property:all, $speed:300ms, $ease:ease-out) {
+//   @if $experimental {
+//     -webkit-transition: $property $speed $ease;
+//     -moz-transition: $property $speed $ease;
+//   }
+//   transition: $property $speed $ease;
+// }
+
+// Equilateral triangles
+//
+// $triangle-size - Used to set border-size. No default, set a px or em size.
+// $triangle-color - Used to set border-color which makes up triangle. No default
+// $triangle-direction - Used to determine which direction triangle points. Options: top, bottom, left, right
+@mixin css-triangle($triangle-size, $triangle-color, $triangle-direction) {
+  content: "";
+  display: block;
+  width: 0;
+  height: 0;
+  border: inset $triangle-size;
+  @if ($triangle-direction == top) {
+    border-color: $triangle-color transparent transparent transparent;
+    border-top-style: solid;
+  }
+  @if ($triangle-direction == bottom) {
+    border-color: transparent transparent $triangle-color transparent;
+    border-bottom-style: solid;
+  }
+  @if ($triangle-direction == left) {
+    border-color: transparent transparent transparent $triangle-color;
+    border-left-style: solid;
+  }
+  @if ($triangle-direction == right) {
+    border-color: transparent $triangle-color transparent transparent;
+    border-right-style: solid;
+  }
+}
