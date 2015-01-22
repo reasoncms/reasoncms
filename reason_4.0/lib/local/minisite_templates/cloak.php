@@ -1,22 +1,22 @@
 <?php
 
-   /* 
+   /*
 	*  CLOAK BASE TEMPLATE
 	*
 	*  CloakTemplate (/lib/local/minisite_templates/cloak.php)...
 	*     extends HTML5ResponsiveTemplate (/lib/core/minisite_templates/html5_responsive.php)...
 	*     which extends DefaultTemplate (/lib/core/minisite_templates/default.php)
-	*  
+	*
 	*  To extend a function without duplicating the parent's code, use parent::functionName();
 	*/
 
 	// include the MinisiteTemplate class
 	reason_include_once( 'minisite_templates/html5_responsive.php' );
 	//reason_include_once('classes/module_sets.php');
-	
+
 	// this variable must be the same as the class name
 	$GLOBALS[ '_minisite_template_class_names' ][ basename( __FILE__) ] = 'CloakTemplate';
-	
+
 	class CloakTemplate extends HTML5ResponsiveTemplate
 	{
 		// Don't include default Reason module styles. We'll include our own.
@@ -31,7 +31,7 @@
 		function show_banner()
 		{
 			if ($this->has_content( 'pre_banner' ))
-			{	
+			{
 				echo '<div id="preBanner">';
 				$this->run_section( 'pre_banner' );
 				echo '</div>'."\n";
@@ -43,7 +43,7 @@
 			}
 
 			echo '<h1><a href="'.$this->site_info->get_value('base_url').'"><span>'.$this->site_info->get_value('name').'</span></a></h1>'."\n";
-			
+
 			// Include custom search and navigation icons...
 			// ...IF navigation is included on the page...
 			// ...OR if a module runs in banner_extra.
@@ -65,7 +65,7 @@
 			}
 
 			$this->show_banner_xtra();
-			
+
 			echo '</header></div>'."\n";
 
 			if($this->has_content('post_banner'))
@@ -102,7 +102,7 @@
 		function show_banner_xtra()
 		{
 			if ($this->has_content( 'banner_xtra' ))
-			{	
+			{
 				echo '<div id="bannerXtra">';
 
 				// Foundation Reveal Modal (lightbox)
@@ -121,25 +121,25 @@
 
 		// function show_main_content_sections()
 		// {
-		// 	if ($this->has_content( 'main' )) 
+		// 	if ($this->has_content( 'main' ))
 		// 	{
 		// 		echo '<div class="contentMain">'."\n";
 		// 		$this->run_section( 'main' );
 		// 		echo '</div>'."\n";
 		// 	}
-		// 	if ($this->has_content( 'main_post' )) 
+		// 	if ($this->has_content( 'main_post' ))
 		// 	{
 		// 		echo '<div class="contentPost">'."\n";
 		// 		$this->run_section( 'main_post' );
 		// 		echo '</div>'."\n";
 		// 	}
-		// 	if ($this->has_content( 'main_post_2' )) 
+		// 	if ($this->has_content( 'main_post_2' ))
 		// 	{
 		// 		echo '<div class="contentPost2">'."\n";
 		// 		$this->run_section( 'main_post_2' );
 		// 		echo '</div>'."\n";
 		// 	}
-		// 	if ($this->has_content( 'main_post_3' )) 
+		// 	if ($this->has_content( 'main_post_3' ))
 		// 	{
 		// 		echo '<div class="contentPost3">'."\n";
 		// 		$this->run_section( 'main_post_3' );
@@ -149,7 +149,7 @@
 
 		// function cloak_show_main_head()
 		// {
-		// 	if ($this->has_content( 'main_head' )) 
+		// 	if ($this->has_content( 'main_head' ))
 		// 	{
 		// 		echo '<div id="contentHead" class="contentHead">'."\n";
 		// 		$this->run_section( 'main_head' );
@@ -172,7 +172,7 @@
 			$this->show_footer();
 			echo '</div>'."\n";
 		}
-		
+
 		// function show_navbar()
 		// {
 		// 	$wrapperClasses = array();
@@ -185,15 +185,15 @@
 		// 	}
 		// 	if(!empty($wrapperClasses))
 		// 		echo '<div id="navInnerWrap" class="'.implode(' ',$wrapperClasses).'">'."\n";
-		// 	if ($this->has_content( 'navigation' )) 
+		// 	if ($this->has_content( 'navigation' ))
 		// 	{
 		// 		$this->run_section( 'navigation' );
 		// 	}
 		// 	if ($this->has_content( 'sub_nav' ) || $this->has_content( 'sub_nav_2' ) || $this->has_content( 'sub_nav_3' ) )
 		// 	{
 		// 		echo '<div class="subNavElements">'."\n";
-		// 		if ($this->has_content( 'sub_nav' )) 
-		// 		{ 
+		// 		if ($this->has_content( 'sub_nav' ))
+		// 		{
 		// 			echo '<aside id="subNav" class="subNavBlock" role="complementary">'."\n";
 		// 			$this->run_section( 'sub_nav' );
 		// 			echo '</aside>'."\n";
@@ -232,7 +232,7 @@
 		// }
 
 		function do_org_foot()
-		{	
+		{
 			// FOUNDATION SCRIPTS AND DEPENDENCIES
 
 			// Foundation recommends placing scripts directly before end of body.
