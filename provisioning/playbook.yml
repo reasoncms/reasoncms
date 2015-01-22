@@ -77,7 +77,7 @@
       - error_handler_settings.php
 
   - name: copy apache config with rewrite FileInfo
-    copy: src=default dest=/etc/apache2/sites-available/default owner=root group=root mode=0644
+    copy: src=default dest=/etc/apache2/sites-available/000-default.conf owner=root group=root mode=0644
     notify:
     - restart apache
 
