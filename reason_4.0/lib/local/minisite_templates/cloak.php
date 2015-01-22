@@ -200,6 +200,14 @@
 			parent::get_css_files();
 		}
 
+		function get_css_files()
+		{
+			$this->head_items->add_style_import_path(WEB_PATH . 'reason/local/cloak/bower_components/foundation/scss');
+			$this->head_items->add_style_import_path(WEB_PATH . 'reason/local/cloak/scss');
+
+			parent::get_css_files();
+		}
+
 		function show_banner()
 		{
 			echo '<div class="sticky">'."\n";
