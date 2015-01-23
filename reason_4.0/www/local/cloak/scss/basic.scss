@@ -1,0 +1,64 @@
+// BASIC BOILERPLATE STYLES (for export)
+// Cloak, v1
+
+// This file is for a the basic, unbranded bolierplate site.
+
+// There are a few ways to reduce bloat in the complied css.
+// 1. Comment out @import "foundation"; and selectively import components, while keeping $include-html-classes: true
+// 2. Import all of foundation with @import "foundation"; and set $include-html-classes: false while selectively setting $include-html-{module}-classes: true as needed.
+// Cloak uses option #2.
+
+// Foundation
+@import "settings";
+@import "foundation";
+
+// Or selectively include components
+// @import
+//   "foundation/components/accordion",
+//   "foundation/components/alert-boxes",
+//   "foundation/components/block-grid",
+//   "foundation/components/breadcrumbs",
+//   "foundation/components/button-groups",
+//   "foundation/components/buttons",
+//   "foundation/components/clearing",
+//   "foundation/components/dropdown",
+//   "foundation/components/dropdown-buttons",
+//   "foundation/components/flex-video",
+//   "foundation/components/forms",
+//   "foundation/components/grid",
+//   "foundation/components/inline-lists",
+//   "foundation/components/joyride",
+//   "foundation/components/keystrokes",
+//   "foundation/components/labels",
+//   "foundation/components/magellan",
+//   "foundation/components/orbit",
+//   "foundation/components/pagination",
+//   "foundation/components/panels",
+//   "foundation/components/pricing-tables",
+//   "foundation/components/progress-bars",
+//   "foundation/components/reveal",
+//   "foundation/components/side-nav",
+//   "foundation/components/split-buttons",
+//   "foundation/components/sub-nav",
+//   "foundation/components/switch",
+//   "foundation/components/tables",
+//   "foundation/components/tabs",
+//   "foundation/components/thumbs",
+//   "foundation/components/tooltips",
+//   "foundation/components/top-bar",
+//   "foundation/components/type",
+//   "foundation/components/offcanvas",
+//   "foundation/components/visibility";
+
+// Font Awesome
+@import "vendor/font-awesome/variables";
+@import "vendor/font-awesome/mixins";
+@import "vendor/font-awesome/core";
+@import "vendor/font-awesome/fixed-width";
+@import "vendor/font-awesome/list";
+@import "vendor/font-awesome/spinning";
+
+// Cloak
+@import "mixins";
+@import "base";
+@import "modules";
