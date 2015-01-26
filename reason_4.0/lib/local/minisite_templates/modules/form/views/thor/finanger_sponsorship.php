@@ -47,7 +47,7 @@ class FinangerSponsorshipForm extends CreditCardThorForm {
     private function _cleanup_cost($label)
     {
         if (preg_match('/([\d\.,]+)/',$label, $match))
-            $this->set_value('payment_amount', '$'.$match[1]);
+            $this->set_value($this->get_element_name_from_label('payment_amount'), '$'.$match[1]);
             return($match[1]);
     }
 
@@ -58,30 +58,32 @@ class FinangerSponsorshipForm extends CreditCardThorForm {
      */
     function get_amount()
     {
-        $golf           = 105;
-        $brunch_dinner  = 45;
-        $dinner_only    = 30;
-        $total          = 0;
+        $sponsorships_amount    = 100;
+        $other_amount           = 0;
+        $total                  = 0;
 
-
-        for ($i=1; $i < 9; $i++) {
-            $package = $this->get_value_from_label('Package ' . $i);
-            switch ( $package ) {
-                case 'golf':
-                    $total = $total + $golf;
+        $sponsorships = $this->get_value_from_label('Please indicate number of sponsorships you wish to purchase');
+        switch ( $sponsorships ) {
+                case 'One - $100':
+                    $total = $sponsorships_amount * 1;
                     break;
-                case 'brunch and dinner':
-                    $total = $total + $brunch_dinner;
+                case 'Two - $200':
+                    $total = $sponsorships_amount * 2;
                     break;
-                case 'dinner':
-                    $total = $total + $dinner_only;
+                case 'Three - $300':
+                    $total = $sponsorships_amount * 3;
                     break;
-
-                default:
-                    $total = $total;
+                case 'Four - $400':
+                    $total = $sponsorships_amount * 4;
+                    break;
+                case 'Five - $500':
+                    $total = $sponsorships_amount * 5;
                     break;
             }
+        if ($this->get_value_from_label('Additional Donation')){
+            $other_amount = $this->_cleanup_cost($this->get_value_from_label('Additional Donation'));
         }
+        $total = $total + $other_amount;
         return $total;
     }
 
@@ -189,7 +191,7 @@ class FinangerSponsorshipForm extends CreditCardThorForm {
         // strip the dollar sign from the payment amount
         $pa = $this->get_value_from_label('Payment Amount');
         $pay_amount = substr($pa, 1);
-
+echo $pay_amount.' --> '.floatval($this->get_amount());
         if ($pay_amount != floatval($this->get_amount()))
         {
             $pa_element = $this->get_element_name_from_label('Payment Amount');
