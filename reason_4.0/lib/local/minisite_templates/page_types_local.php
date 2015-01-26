@@ -181,9 +181,9 @@ $GLOBALS['_reason_page_types_local'] = array(
 	'blurb_main_content_multiple' => array(
 		'main_post' => array(
 			'module' => 'blurb',
-			'num_to_display' => '10',
+			'num_to_display' => '30',
 			'exclude_shown_blurbs' => true,
-			'after_each_html'=> '<p style="width: 100%; border-bottom:1px solid grey; margin-bottom: 24px;"> .</p>',
+			'after_each_html'=> '<hr class="horizontal-rule-basic">',
 		),
 		'pre_sidebar' => array(
 			'module' => 'blurb',

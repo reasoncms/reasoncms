@@ -270,3 +270,11 @@ footer {
 		}
 	}
 }
+
+//Horizontal Rule Style
+hr.horizontal-rule-basic{
+	border: 0;
+	height: 1px;
+	background: #E9E9E9; 
+	margin-bottom: $column-gutter;
+}
