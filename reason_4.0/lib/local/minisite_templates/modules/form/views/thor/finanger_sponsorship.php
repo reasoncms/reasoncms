@@ -25,9 +25,16 @@ class FinangerSponsorshipForm extends CreditCardThorForm {
 
     function on_every_time()
     {
+        $this->change_element_type($this->get_element_name_from_label('State'), 'state_province');
         $this->add_element('same_billing', 'checkboxfirst');
         $this->move_element('same_billing', 'after', 'credit_card_name');
         $this->set_display_name('same_billing', 'Billing address is same as above');
+
+        $this->set_display_name($this->get_element_name_from_label('Sign 1'), 'Text for Tee/Green Sponsorship 1');
+        $this->set_display_name($this->get_element_name_from_label('Sign 2'), 'Text for Tee/Green Sponsorship 2');
+        $this->set_display_name($this->get_element_name_from_label('Sign 3'), 'Text for Tee/Green Sponsorship 3');
+        $this->set_display_name($this->get_element_name_from_label('Sign 4'), 'Text for Tee/Green Sponsorship 4');
+        $this->set_display_name($this->get_element_name_from_label('Sign 5'), 'Text for Tee/Green Sponsorship 5');
         parent::on_every_time();
     }
 
@@ -115,6 +122,49 @@ class FinangerSponsorshipForm extends CreditCardThorForm {
                 $this->set_error($this->get_element_name_from_label('Zip/Postal Code'), 'Since you checked "Billing address same as above", the Zip/Postal Code field is required');
             } else {
                 $this->set_value('billing_zip', $this->get_value_from_label('Zip/Postal Code'));
+            }
+        }
+
+        $sponsorship_value  = $this->get_value_from_label('Please indicate number of sponsorships you wish to purchase');
+        if ( $sponsorship_value ) {
+            switch ( $sponsorship_value ) {
+                case 'One - $100':
+                    if ( !$this->get_value_from_label('Sign 1') ) {
+                        $this->set_error($this->get_element_name_from_label('Sign 1'), '<br>Please provide text for Sign 1');
+                    }
+                    break;
+                case 'Two - $200':
+                    if ( !$this->get_value_from_label('Sign 2') ) {
+                        $this->set_error($this->get_element_name_from_label('Sign 1'), '<br>Please provide text for Sign 1');
+                        $this->set_error($this->get_element_name_from_label('Sign 2'), '<br>Please provide text for Sign 2');
+                    }
+                    break;
+                case 'Three - $300':
+                    if ( !$this->get_value_from_label('Sign 3') ) {
+                        $this->set_error($this->get_element_name_from_label('Sign 1'), '<br>Please provide text for Sign 1');
+                        $this->set_error($this->get_element_name_from_label('Sign 2'), '<br>Please provide text for Sign 2');
+                        $this->set_error($this->get_element_name_from_label('Sign 3'), '<br>Please provide text for Sign 3');
+                    }
+                    break;
+                case 'Four - $400':
+                    if ( !$this->get_value_from_label('Sign 4') ) {
+                        $this->set_error($this->get_element_name_from_label('Sign 1'), '<br>Please provide text for Sign 1');
+                        $this->set_error($this->get_element_name_from_label('Sign 2'), '<br>Please provide text for Sign 2');
+                        $this->set_error($this->get_element_name_from_label('Sign 3'), '<br>Please provide text for Sign 3');
+                        $this->set_error($this->get_element_name_from_label('Sign 4'), '<br>Please provide text for Sign 4');
+                    }
+                    break;
+                case 'Five - $500':
+                    if ( !$this->get_value_from_label('Sign 5') ) {
+                        $this->set_error($this->get_element_name_from_label('Sign 1'), '<br>Please provide text for Sign 1');
+                        $this->set_error($this->get_element_name_from_label('Sign 2'), '<br>Please provide text for Sign 2');
+                        $this->set_error($this->get_element_name_from_label('Sign 3'), '<br>Please provide text for Sign 3');
+                        $this->set_error($this->get_element_name_from_label('Sign 4'), '<br>Please provide text for Sign 4');
+                        $this->set_error($this->get_element_name_from_label('Sign 5'), '<br>Please provide text for Sign 5');
+                    }
+                    break;
+                default:
+                    break;
             }
         }
         parent::pre_error_check_actions();
