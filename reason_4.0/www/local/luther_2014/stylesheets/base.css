@@ -6518,7 +6518,7 @@ form input[type="submit"]:active {
 /* line 160, scss/modules/_image-galleries.scss */
 #contentSections #galleryimages .reason-image {
   width: 12.5rem;
-  height: 12.5rem;
+  height: 7.8125rem;
 }
 @media only screen and (max-width: 40em) {
   /* line 160, scss/modules/_image-galleries.scss */
