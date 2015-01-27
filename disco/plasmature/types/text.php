@@ -207,7 +207,7 @@ class money_disabledChangeableType extends defaultType
 	var $type_valid_args = array( 'currency_symbol','decimal_symbol' );
 	function get_display()
 	{
-		$str  = '<input type="hidden" name="'.$this->name.'" value="'.htmlspecialchars($this->get(),ENT_QUOTES).'"/>';
+		$str  = '<input type="hidden" name="'.$this->name.'" id="'.$this->get_id().'" value="'.htmlspecialchars($this->get(),ENT_QUOTES).'"/>';
 		$str .= "\n".'<div class="solidText">' . $this->currency_symbol . htmlspecialchars($this->get(),ENT_QUOTES). '</div>';
 		return $str;
 	}
@@ -281,7 +281,6 @@ class wysiwyg_disabledType extends textareaType
 	
 	function get_display()
 	{
-		$element_id = $this->name.'_"_area';
 		$str  = '<textarea name="'.htmlspecialchars($this->name, ENT_QUOTES).'" rows="'.$this->rows.'" cols="'.$this->cols.'" id="'.$this->get_id().'" disabled="disabled" >'.htmlspecialchars($this->get(),ENT_QUOTES,'UTF-8').'</textarea>';
 		$str .= $this->_get_javascript_block($this->get_id());
 		return $str;
