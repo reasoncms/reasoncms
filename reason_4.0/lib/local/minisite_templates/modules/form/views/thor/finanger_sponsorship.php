@@ -39,19 +39,6 @@ class FinangerSponsorshipForm extends CreditCardThorForm {
     }
 
     /**
-     * Cleans any extra characters form the hidden field values and returns an int
-     *
-     * @param string The cost string
-     * @return int The cost cleaned (all chars removed and an int returned)
-     */
-    private function _cleanup_cost($label)
-    {
-        if (preg_match('/([\d\.,]+)/',$label, $match))
-            $this->set_value($this->get_element_name_from_label('payment_amount'), '$'.$match[1]);
-            return($match[1]);
-    }
-
-    /**
      * Figure the total cost based on the options
      *
      * @return string The total for all charges
@@ -81,7 +68,7 @@ class FinangerSponsorshipForm extends CreditCardThorForm {
                     break;
             }
         if ($this->get_value_from_label('Additional Donation')){
-            $other_amount = $this->_cleanup_cost($this->get_value_from_label('Additional Donation'));
+            $other_amount = $this->get_value_from_label('Additional Donation');
         }
         $total = $total + $other_amount;
         return $total;
@@ -184,14 +171,13 @@ class FinangerSponsorshipForm extends CreditCardThorForm {
         }
 
         if ( $donation_value && !is_numeric($donation_value) ) {
-            $this->set_error($donation_element, "<br>Please enter a number for a donation amount");
+            $this->set_error($donation_element, "<br>Please enter a valid dollar amount for a donation amount");
         }
 
         // Check for javascript manipulation of the payment amount
         // strip the dollar sign from the payment amount
         $pa = $this->get_value_from_label('Payment Amount');
         $pay_amount = substr($pa, 1);
-echo $pay_amount.' --> '.floatval($this->get_amount());
         if ($pay_amount != floatval($this->get_amount()))
         {
             $pa_element = $this->get_element_name_from_label('Payment Amount');
