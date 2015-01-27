@@ -80,6 +80,25 @@ abstract class DefaultObjectCache
 	abstract public function clear();
 
 	/**
+	 * Sets a lock on a cache to indicate that it's being modified
+	 * @param How long the lock should be honored (seconds)
+	 * @return boolean success or failure
+	 */
+	abstract public function lock($expire_seconds);
+
+	/**
+	 * Clears a lock on a cache
+	 * @return boolean success or failure
+	 */
+	abstract public function unlock();
+
+	/**
+	 * Checks to see if a lock exists on a cache
+	 * @return boolean
+	 */
+	abstract public function is_locked();
+
+	/**
 	 * Run once per page load to verify settings, constants, and the basic cache type setup.
 	 *
 	 * Note this runs before any user params are provided for a type.
