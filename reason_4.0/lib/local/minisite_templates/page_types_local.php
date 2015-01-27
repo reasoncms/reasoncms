@@ -178,6 +178,18 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'exclude_shown_blurbs' => true,
 		),
 	),
+	'blurb_main_content_multiple' => array(
+		'main_post' => array(
+			'module' => 'blurb',
+			'num_to_display' => '30',
+			'exclude_shown_blurbs' => true,
+			'after_each_html'=> '<hr class="horizontal-rule-basic">',
+		),
+		'pre_sidebar' => array(
+			'module' => 'blurb',
+			'exclude_shown_blurbs' => true,
+		),
+	),
 	'caf_cam' => array(
 		'main_post' => 'caf_cam',
 	),
