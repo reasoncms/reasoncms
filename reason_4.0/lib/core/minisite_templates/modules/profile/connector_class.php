@@ -417,6 +417,14 @@ class ProfileConnector
 		$cache = new ReasonObjectCache('profiles_by_date', 86400);
 		if (!$refresh && $profiles = $cache->fetch()) return $profiles;
 		
+		// If we got here and the cache is locked, the cache doesn't exist but another 
+		// process is already rebuilding it, so we're kind of out of luck.
+		if ($cache->is_locked())
+		{
+			return array();
+		}
+		$cache->lock(200);
+
 		$ds = new directory_service('ldap_carleton');
 		$es = new entity_selector(id_of($this->config->profiles_site_unique_name));
 		$es->add_type(id_of('profile_type'));
@@ -454,7 +462,8 @@ class ProfileConnector
 		}
 		
 		$cache->set($profiles);
-
+		$cache->unlock();
+		
 		return $profiles;
 	}
 	
@@ -660,6 +669,14 @@ class ProfileConnector
 		if (!$rebuild && $this->slug_index = $cache->fetch()) return $this->slug_index;
 		
 		// Cache needs rebuilding
+		// If we got here and the cache is locked, the cache doesn't exist but another 
+		// process is already rebuilding it, so we're kind of out of luck.
+		if ($cache->is_locked())
+		{
+			return array();
+		}
+		$cache->lock(200);
+
 		$this->slug_index = array();
 		
 		foreach ($this->tag_cache as $id => $tag)
@@ -671,7 +688,7 @@ class ProfileConnector
 		}
 		
 		$cache->set($this->slug_index);
-		
+		$cache->unlock();
 		return $this->slug_index;
 	}
 
@@ -691,6 +708,14 @@ class ProfileConnector
 		
 		if (!$rebuild && $this->relation_index[$relation] = $cache->fetch()) return $this->relation_index[$relation];
 		
+		// If we got here and the cache is locked, the cache doesn't exist but another 
+		// process is already rebuilding it, so we're kind of out of luck.
+		if ($cache->is_locked())
+		{
+			return array();
+		}
+		$cache->lock(200);
+
 		$this->relation_index[$relation] = array();
 		
 		foreach ($this->tag_cache as $id => $tag)
@@ -702,6 +727,7 @@ class ProfileConnector
 		$this->customize_relation_index($relation);
 		
 		$cache->set($this->relation_index[$relation]);
+		$cache->unlock();
 		
 		return $this->relation_index[$relation];
 	}
@@ -724,12 +750,18 @@ class ProfileConnector
 	public function get_tag_cache($rebuild=false)
 	{
 		if (!$rebuild && $this->tag_cache) return $this->tag_cache;
-			
 		$cache = new ReasonObjectCache('profile_tag_cache_by_id', $this->cache_life);
 		if (!$rebuild && $this->tag_cache = $cache->fetch()) return $this->tag_cache;
 		
+		// If we got here and the cache is locked, the cache doesn't exist but another 
+		// process is already rebuilding it, so we're kind of out of luck.
+		if ($cache->is_locked())
+		{
+			return array();
+		}
+			
+		$cache->lock(200);
 		$this->tag_cache = array();
-		
 		foreach ($this->config->tag_section_relationship_names as $relationship)
 		{
 			$es = new entity_selector(id_of($this->config->profiles_site_unique_name));
@@ -796,6 +828,7 @@ class ProfileConnector
 		$this->customize_tag_cache();
 		
 		$cache->set($this->tag_cache);
+		$cache->unlock();
 		$this->refreshed = true;
 		
 		return $this->tag_cache;
