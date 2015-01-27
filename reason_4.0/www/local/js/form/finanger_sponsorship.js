@@ -21,6 +21,8 @@ $(function() {
     donation_selector.next().find('input:text').keyup(function(){
         setTotal();
     });
+    donation_selector.next().find('input:text').css('display', 'inline-block');
+    payment_amountElement.css('display', 'inline-block');
 });
 
 function same_billing() {
@@ -69,14 +71,14 @@ function add_costs(){
     }
 
     if ( donation_selector.next().find('input:text').val() ) {
-        donation = parseInt(donation_selector.next().find('input:text').val());
+        donation = parseFloat(donation_selector.next().find('input:text').val());
     }
     total = donation + tee_green_cost;
     return total;
 }
 
 function setTotal(){
-    payment_amountElement.val('$' + add_costs());
+    payment_amountElement.val(add_costs());
     payment_amountElement.effect('highlight');
 }
 
