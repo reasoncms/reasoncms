@@ -26,15 +26,22 @@ class FinangerSponsorshipForm extends CreditCardThorForm {
     function on_every_time()
     {
         $this->change_element_type($this->get_element_name_from_label('State'), 'state_province');
+        $this->change_element_type($this->get_element_name_from_label('Additional Donation'), 'money');
+        $this->change_element_type($this->get_element_name_from_label('Payment Amount'), 'money');
         $this->add_element('same_billing', 'checkboxfirst');
         $this->move_element('same_billing', 'after', 'credit_card_name');
         $this->set_display_name('same_billing', 'Billing address is same as above');
 
-        $this->set_display_name($this->get_element_name_from_label('Sign 1'), 'Text for Tee/Green Sponsorship 1');
-        $this->set_display_name($this->get_element_name_from_label('Sign 2'), 'Text for Tee/Green Sponsorship 2');
-        $this->set_display_name($this->get_element_name_from_label('Sign 3'), 'Text for Tee/Green Sponsorship 3');
-        $this->set_display_name($this->get_element_name_from_label('Sign 4'), 'Text for Tee/Green Sponsorship 4');
-        $this->set_display_name($this->get_element_name_from_label('Sign 5'), 'Text for Tee/Green Sponsorship 5');
+        $this->change_element_type($this->get_element_name_from_label('Sign 1'), 'textarea',
+            array('display_name' => 'Text for Tee/Green Sponsorship 1', 'comments' => 'Please indicate the exact wording you would like to appear on sign 1'));
+        $this->change_element_type($this->get_element_name_from_label('Sign 2'), 'textarea',
+            array('display_name' => 'Text for Tee/Green Sponsorship 2', 'comments' => 'Please indicate the exact wording you would like to appear on sign 2'));
+        $this->change_element_type($this->get_element_name_from_label('Sign 3'), 'textarea',
+            array('display_name' => 'Text for Tee/Green Sponsorship 3', 'comments' => 'Please indicate the exact wording you would like to appear on sign 3'));
+        $this->change_element_type($this->get_element_name_from_label('Sign 4'), 'textarea',
+            array('display_name' => 'Text for Tee/Green Sponsorship 4', 'comments' => 'Please indicate the exact wording you would like to appear on sign 4'));
+        $this->change_element_type($this->get_element_name_from_label('Sign 5'), 'textarea',
+            array('display_name' => 'Text for Tee/Green Sponsorship 5', 'comments' => 'Please indicate the exact wording you would like to appear on sign 5'));
         parent::on_every_time();
     }
 
@@ -177,8 +184,7 @@ class FinangerSponsorshipForm extends CreditCardThorForm {
         // Check for javascript manipulation of the payment amount
         // strip the dollar sign from the payment amount
         $pa = $this->get_value_from_label('Payment Amount');
-        $pay_amount = substr($pa, 1);
-        if ($pay_amount != floatval($this->get_amount()))
+        if ($pa != floatval($this->get_amount()))
         {
             $pa_element = $this->get_element_name_from_label('Payment Amount');
             $this->set_error($pa_element, '<br><strong>Incorrect Payment Amount</strong>. The amount set in the payment amount field does not equal the cost for all chosen options. Please check your math or <a href="http://enable-javascript.com/" target="_blank">enable javascript</a> to have the form automatically fill in this field.<br>');
