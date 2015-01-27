@@ -69,7 +69,7 @@ function add_costs(){
     }
 
     if ( donation_selector.next().find('input:text').val() ) {
-        donation = cleanup_cost(donation_selector.next().find('input:text').val());
+        donation = parseInt(donation_selector.next().find('input:text').val());
     }
     total = donation + tee_green_cost;
     return total;
