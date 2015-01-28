@@ -1320,7 +1320,11 @@ class DirectoryModule extends DefaultMinisiteModule {
 }
 
     function format_email( $data, $table = false ) {
+        if ( $this->context == 'general' ){
+            $email = str_replace('@', " &lt;AT&gt; ", $data['mail'][0]);
+        } else {
         $email = '<a href="mailto:'.$data['mail'][0].'">'.$data['mail'][0].'</a>';
+        }
         if ( $table ) {
             $markup = $email;
         }else {
