@@ -1,19 +1,45 @@
 // Common Styles
 // Cloak, v1
 
-// Common styles that are repeated throughout Reason
+// Common styles and elements that are repeated throughout Reason
 
+// Persistent is the search and filter interface that goes along with some modules
 .persistent {
 	margin-bottom: $horizontal-gutter;
 	border: none;
 
 	#filtering {
-		// Form styles included in _form.scss
 		@include clearfix;
 		margin: 0;
-		background: $silver;
+		background: $snow;
+		border: 1px solid $silver;
 		padding: $horizontal-gutter/2;
 		padding-bottom: 0;
+
+		.searchForm {
+			// Form styles included in _form.scss
+			
+			// Remove filter button
+			a {
+				display: block;
+				float: left;
+				line-height: 1;
+				margin-left: rem-calc(12);
+				//margin-bottom: rem-calc(6);
+				padding: rem-calc(4);
+				font-size: rem-calc(12);
+				background: $white;
+				border: 1px solid $iron;
+				border-top: 0;
+				border-radius: 0 0 $global-radius $global-radius;
+
+				&:hover {
+					border-color: $aluminum;
+				}
+
+				@include inline-icon($icon: $fa-var-times-circle);
+			}
+		}
 		
 		// Category filter as a select dropdown
 		.filterSet {
@@ -25,10 +51,11 @@
 			// Remove filter button
 			a {
 				display: block;
-				float: right;
+				float: left;
 				line-height: 1;
-				margin-right: rem-calc(24);
+				margin-left: rem-calc(12);
 				margin-bottom: rem-calc(6);
+				margin-bottom: $horizontal-gutter/2;
 				padding: rem-calc(4);
 				font-size: rem-calc(12);
 				background: $white;
@@ -149,4 +176,26 @@
 			}
 		}
 	}
+
+	.feedLink {
+
+		.feedInfo {
+
+			a {
+				@include feed-button();
+			}
+		}
+	}
+}
+
+#generic {
+	@include clearfix;
+	margin-bottom: $horizontal-gutter/2;
+
+	.back {
+	
+		a {
+			@include back-link();
+		}
+	}	
 }

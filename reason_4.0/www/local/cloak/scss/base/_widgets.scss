@@ -15,6 +15,11 @@ dialog {
 		}
 	}
 
+	.reveal-heading {
+		margin-top: -$reveal-modal-padding;
+		margin-bottom: $reveal-modal-padding;
+	}
+
 	.close-reveal-modal {
 		
 		&:before {

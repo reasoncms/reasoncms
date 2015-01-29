@@ -69,6 +69,9 @@ $site-title-color: $cloak-body;
 // User created content areas (or WYSIWYG areas) have their own set of typographic styles. Here we define which HTML elements wrap WYSIWYG areas.
 // We can then use variables in place of selectors so that any time a wysiwyg area is added we can just add it below and all styles are updated.
 
+// $contentArea: '';
+// $relatedArea
+
 $pageContent: '#pageContent';  // Normal page content
 $fullPost: '.fullPost .text';  // Full article
 $userComment: '.comments .commentContent'; // User comments

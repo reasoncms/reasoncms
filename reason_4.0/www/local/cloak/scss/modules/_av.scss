@@ -41,12 +41,6 @@
 		a {
 			@include feed-button();
 		}
-		
-		.feedLink {
-			&:before {
-				content: $fa-var-rss;
-			}
-		}
 
 		.subscribe {
 			&:before {

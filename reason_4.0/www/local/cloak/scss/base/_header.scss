@@ -27,11 +27,15 @@
 	padding: $horizontal-gutter/2 $column-gutter/2;
 
 	@media #{$medium-up} { 
-		padding: $horizontal-gutter $column-gutter/2;
+		padding: $horizontal-gutter $column-gutter/2 $horizontal-gutter/1.25;
 	}
 
 	h1 {
 		font-size: rem-calc(18);
+		font-family: $font-family-serif;
+		margin: 0;
+		padding-bottom: $horizontal-gutter/2;
+		
 		@media #{$medium-up} {
 			font-size: rem-calc(26);
 		}
@@ -39,9 +43,14 @@
 			font-size: rem-calc(32);
 		}
 
-		font-family: $font-family-serif;
-		margin: 0;
-		padding-bottom: $horizontal-gutter/2;
+		a {
+			color: $site-title-color;
+
+			&:hover {
+				color: darken($site-title-color, 10%);
+				text-decoration: underline;
+			}
+		}
 	}
 
 	#navigationToggles {
@@ -59,7 +68,11 @@
 				}
 
 				a {
-					@include circle-icon-button();
+					@include circle-icon-button(
+						$icon-background: $white,
+						$icon-variable: $fa-var-navicon,
+						$icon-border-color: $iron
+					);
 				}
 
 				.navJumpText {
@@ -69,7 +82,11 @@
 
 			&.searchToggle {
 				a {
-					@include circle-icon-button(rem-calc(15), rem-calc(10), $iron, $fa-var-search);
+					@include circle-icon-button(
+						$icon-background: $white,
+						$icon-variable: $fa-var-search,
+						$icon-border-color: $iron
+					);
 				}
 
 				.searchJumpText {
