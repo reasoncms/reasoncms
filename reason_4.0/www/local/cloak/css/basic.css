@@ -1289,15 +1289,15 @@ blockquote p {
 
   .show-for-print {
     display: inherit !important; } }
-.fa, #banner #navigationToggles li.navJump a:before, #banner #navigationToggles li.searchToggle a:before, #pageContent blockquote > *:first-child:not(cite):before, .fullPost .text blockquote > *:first-child:not(cite):before, .comments .commentContent blockquote > *:first-child:not(cite):before, .eventContent blockquote > *:first-child:not(cite):before, .blurb blockquote > *:first-child:not(cite):before, #faq .answer blockquote > *:first-child:not(cite):before, .facStaffContent blockquote > *:first-child:not(cite):before, .minutesContent blockquote > *:first-child:not(cite):before, .policyContent blockquote > *:first-child:not(cite):before, .policy .approvals blockquote > *:first-child:not(cite):before, .persistent #filtering .searchForm a:before, .persistent #filtering .filterSet a:before, .persistent #filtering .filters ul li a:before, .persistent #filtering .filters ul li strong:before, .persistent .loginlogout a:after, .reveal-modal .close-reveal-modal:before, dialog .close-reveal-modal:before, .assets li:before, #av .moduleNav ul li:before, #av .podcast a:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .options .categories li a:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .options .categories li strong:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .options .audiences li a:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .options .audiences li strong:before, #calendar .responsiveEventsList .iCalExport a:before,
+.fa, #banner #navigationToggles li.navJump a:before, #banner #navigationToggles li.searchToggle a:before, #pageContent blockquote > *:first-child:not(cite):before, .fullPost .text blockquote > *:first-child:not(cite):before, .comments .commentContent blockquote > *:first-child:not(cite):before, .eventContent blockquote > *:first-child:not(cite):before, .blurb blockquote > *:first-child:not(cite):before, #faq .answer blockquote > *:first-child:not(cite):before, .facStaffContent blockquote > *:first-child:not(cite):before, .minutesContent blockquote > *:first-child:not(cite):before, .policyContent blockquote > *:first-child:not(cite):before, .policy .approvals blockquote > *:first-child:not(cite):before, .persistent #filtering .searchForm a:before, .persistent #filtering .filterSet a:before, .persistent #filtering .filters ul li a:before, .persistent #filtering .filters ul li strong:before, .persistent .loginlogout a:after, .moduleNav .feedLink .feedInfo a:before, #generic .back a:before, .reveal-modal .close-reveal-modal:before, dialog .close-reveal-modal:before, .assets li:before, #av .moduleNav ul li:before, #av .podcast a:before, .classifiedSubmitLink a:before, .classifiedReturnToListingLink a:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .options .categories li a:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .options .categories li strong:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .options .audiences li a:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .options .audiences li strong:before, #calendar .responsiveEventsList .iCalExport a:before,
 #calendar .responsiveEventsList .feedInfo a:before, #calendar .eventDetails .export .back a:before, #calendar .eventDetails .export .repetition:before,
 #calendar .eventDetails .export .date:before,
 #calendar .eventDetails .export .time:before,
 #calendar .eventDetails .export .duration:before,
 #calendar .eventDetails .export .eventLocation:before,
 #calendar .eventDetails .export .sponsor:before,
-#calendar .eventDetails .export .contact:before, #miniCal .foot .more a:before, .featuresModule .feature .featureContent .featureInfo .featureNav .play-pause .button.play:before, .featuresModule .feature .featureContent .featureInfo .featureNav .play-pause .button.pause:before, .featuresModule .feature .featureContent .featureInfo .featureNav .navBlock .button.prev:before, .featuresModule .feature .featureContent .featureInfo .featureNav .navBlock .button.next:before, #discoErrorNotice h3:before, #imageGallery .item .prevWrapper a:after,
-#imageGallery .item .nextWrapper a:after, #imageGallery .back:before, .editThis:before, .loginLinkModule #footerLoginLink .login:after, .loginLinkModule #footerLoginLink .logout:after, #minisiteNavigation ul .navList .jump a:after, #meat .publication .back div a:before, #meat .publication .persistent .loginlogout a:after, #meat .publication .moduleNav .filterMessage h3 .clear a:before, #meat .publication .moduleNav .posts .post .links li.more a:before, #meat .publication .moduleNav .posts .post .links li.permalink a:before, #meat .publication .moduleNav .posts .post .links li.comments a:before, #meat .publication .moduleNav .feedLink a:before, #meat .publication .moduleNav .feedLink .feedInfo a:before, #meat .publication.fullPostDisplay .fullPost .firstChunk .commentAdded h4:before, #meat .publication.fullPostDisplay .fullPost .relatedItems .relatedEvents ul li:before, #meat .publication.fullPostDisplay .fullPost .relatedItems .categories li a:before, #meat .publication.fullPostDisplay .fullPost .relatedItems .categories li strong:before, #meat .publication.fullPostDisplay .fullPost .secondChunk .nextPrev .prev a:before, #meat .publication.fullPostDisplay .fullPost .secondChunk .nextPrev .next a:after, #meat .publication.fullPostDisplay .fullPost .secondChunk .addCommentForm .commentsOff:before, #meat .publication.fullPostDisplay .fullPost .secondChunk .addCommentForm .notPermitted .subContent:before, #meat .publication.fullPostDisplay .fullPost .secondChunk .addCommentForm .loginRequired .subContent:before {
+#calendar .eventDetails .export .contact:before, #miniCal .foot .more a:after, #facultyStaff .facStaff .facStaffInfo .facStaffPhone:before, #facultyStaff .facStaff .facStaffInfo .facStaffEmail:before, .featuresModule .feature .featureContent .featureInfo .featureNav .play-pause .button.play:before, .featuresModule .feature .featureContent .featureInfo .featureNav .play-pause .button.pause:before, .featuresModule .feature .featureContent .featureInfo .featureNav .navBlock .button.prev:before, .featuresModule .feature .featureContent .featureInfo .featureNav .navBlock .button.next:before, #discoErrorNotice h3:before, #imageGallery .item .prevWrapper a:after,
+#imageGallery .item .nextWrapper a:after, #imageGallery .back:before, .editThis:before, .loginLinkModule #footerLoginLink .login:after, .loginLinkModule #footerLoginLink .logout:after, .minutesList li:before, #minisiteNavigation ul .navList .jump a:after, #policyModule .rootPolicyList .rootPolicyItem:before, #policyModule .listLink a:before, #relatedPub .moduleNav .pubLinks li a:after, #meat .publication .back div a:before, #meat .publication .persistent .loginlogout a:after, #meat .publication .moduleNav .filterMessage h3 .clear a:before, #meat .publication .moduleNav .posts .post .links li.more a:before, #meat .publication .moduleNav .posts .post .links li.permalink a:before, #meat .publication .moduleNav .posts .post .links li.comments a:before, #meat .publication .moduleNav .feedLink a:before, #meat .publication .moduleNav .feedLink .feedInfo a:before, #meat .publication.fullPostDisplay .social p a:before, #meat .publication.fullPostDisplay .fullPost .firstChunk .commentAdded h4:before, #meat .publication.fullPostDisplay .fullPost .relatedItems .relatedEvents ul li:before, #meat .publication.fullPostDisplay .fullPost .relatedItems .categories li a:before, #meat .publication.fullPostDisplay .fullPost .relatedItems .categories li strong:before, #meat .publication.fullPostDisplay .fullPost .secondChunk .nextPrev .prev a:before, #meat .publication.fullPostDisplay .fullPost .secondChunk .nextPrev .next a:after, #meat .publication.fullPostDisplay .fullPost .secondChunk .addCommentForm .commentsOff:before, #meat .publication.fullPostDisplay .fullPost .secondChunk .addCommentForm .notPermitted .subContent:before, #meat .publication.fullPostDisplay .fullPost .secondChunk .addCommentForm .loginRequired .subContent:before {
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -1311,7 +1311,7 @@ blockquote p {
 #calendar .eventDetails .export .duration:before,
 #calendar .eventDetails .export .eventLocation:before,
 #calendar .eventDetails .export .sponsor:before,
-#calendar .eventDetails .export .contact:before, #meat .publication .moduleNav .posts .post .links li a:before {
+#calendar .eventDetails .export .contact:before, #facultyStaff .facStaff .facStaffInfo .facStaffPhone:before, #facultyStaff .facStaff .facStaffInfo .facStaffEmail:before, #meat .publication .moduleNav .posts .post .links li a:before {
   width: 1.2857142857em;
   text-align: center; }
 
@@ -1485,6 +1485,11 @@ blockquote p {
   padding-right: 0;
   width: 100%;
   float: left; }
+#meat.containsConRelNav #faq > .item {
+  padding-left: 0;
+  padding-right: 0;
+  width: 100%;
+  float: left; }
 #meat.containsConNav .persistent, #meat.containsConRel .persistent, #meat.containsCon .persistent {
   padding-left: 0;
   padding-right: 0;
@@ -1498,13 +1503,19 @@ blockquote p {
       float: left;
       float: right;
       padding-left: 1.5rem; } }
-#meat.containsConNav .moduleNav, #meat.containsConRel .moduleNav, #meat.containsCon .moduleNav {
+#meat.containsConNav .moduleNav,
+#meat.containsConNav #faq > .item, #meat.containsConRel .moduleNav,
+#meat.containsConRel #faq > .item, #meat.containsCon .moduleNav,
+#meat.containsCon #faq > .item {
   padding-left: 0;
   padding-right: 0;
   width: 100%;
   float: left; }
   @media only screen and (min-width: 40.063em) {
-    #meat.containsConNav .moduleNav, #meat.containsConRel .moduleNav, #meat.containsCon .moduleNav {
+    #meat.containsConNav .moduleNav,
+    #meat.containsConNav #faq > .item, #meat.containsConRel .moduleNav,
+    #meat.containsConRel #faq > .item, #meat.containsCon .moduleNav,
+    #meat.containsCon #faq > .item {
       padding-left: 0;
       padding-right: 0;
       width: 66.6666666667%;
@@ -1566,7 +1577,8 @@ blockquote p {
         border-radius: 1000px;
         background: #FFFFFF;
         border: 1px solid #CCCCCC;
-        color: #b84041; }
+        color: #b84041;
+        text-align: center; }
         #banner #navigationToggles li.navJump a:before {
           content: "";
           font-size: 0.9375rem;
@@ -1589,7 +1601,8 @@ blockquote p {
         border-radius: 1000px;
         background: #FFFFFF;
         border: 1px solid #CCCCCC;
-        color: #b84041; }
+        color: #b84041;
+        text-align: center; }
         #banner #navigationToggles li.searchToggle a:before {
           content: "";
           font-size: 0.9375rem;
@@ -1630,6 +1643,80 @@ h2.pageTitle {
   font-size: 1.0625rem; }
 #related h6 {
   font-size: 1rem; }
+
+#meat table.thor_data,
+#meat table.table_data {
+  background: #FFFFFF;
+  margin-bottom: 1.25rem;
+  border: solid 1px #DDDDDD;
+  table-layout: auto;
+  border: 1px solid #DDDDDD; }
+  #meat table.thor_data caption,
+  #meat table.table_data caption {
+    background: transparent;
+    color: #222222;
+    font-size: 1rem;
+    font-weight: bold; }
+  #meat table.thor_data thead,
+  #meat table.table_data thead {
+    background: #F5F5F5; }
+    #meat table.thor_data thead tr th,
+    #meat table.thor_data thead tr td,
+    #meat table.table_data thead tr th,
+    #meat table.table_data thead tr td {
+      padding: 0.5rem 0.625rem 0.625rem;
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: #222222; }
+  #meat table.thor_data tfoot,
+  #meat table.table_data tfoot {
+    background: #F5F5F5; }
+    #meat table.thor_data tfoot tr th,
+    #meat table.thor_data tfoot tr td,
+    #meat table.table_data tfoot tr th,
+    #meat table.table_data tfoot tr td {
+      padding: 0.5rem 0.625rem 0.625rem;
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: #222222; }
+  #meat table.thor_data tr th,
+  #meat table.thor_data tr td,
+  #meat table.table_data tr th,
+  #meat table.table_data tr td {
+    padding: 0.5625rem 0.625rem;
+    font-size: 0.875rem;
+    color: #222222;
+    text-align: left; }
+  #meat table.thor_data tr.even, #meat table.thor_data tr.alt, #meat table.thor_data tr:nth-of-type(even),
+  #meat table.table_data tr.even,
+  #meat table.table_data tr.alt,
+  #meat table.table_data tr:nth-of-type(even) {
+    background: #F9F9F9; }
+  #meat table.thor_data thead tr th,
+  #meat table.thor_data tfoot tr th,
+  #meat table.thor_data tfoot tr td,
+  #meat table.thor_data tbody tr th,
+  #meat table.thor_data tbody tr td,
+  #meat table.thor_data tr td,
+  #meat table.table_data thead tr th,
+  #meat table.table_data tfoot tr th,
+  #meat table.table_data tfoot tr td,
+  #meat table.table_data tbody tr th,
+  #meat table.table_data tbody tr td,
+  #meat table.table_data tr td {
+    display: table-cell;
+    line-height: 1.125rem; }
+  #meat table.thor_data tr.even,
+  #meat table.table_data tr.even {
+    background: #F9F9F9; }
+  #meat table.thor_data tr.odd,
+  #meat table.table_data tr.odd {
+    background: #FFFFFF; }
+  #meat table.thor_data td,
+  #meat table.thor_data th,
+  #meat table.table_data td,
+  #meat table.table_data th {
+    border: 1px solid #DDDDDD; }
 
 #pageContent, .fullPost .text, .comments .commentContent, .eventContent, .blurb, #faq .answer, .facStaffContent, .minutesContent, .policyContent, .policy .approvals {
   margin-bottom: 1rem; }
@@ -1788,7 +1875,8 @@ h2.pageTitle {
   border: none; }
   .persistent #filtering {
     margin: 0;
-    background: #EFEFEF;
+    background: #F9F9F9;
+    border: 1px solid #EFEFEF;
     padding: 1.125rem;
     padding-bottom: 0; }
     .persistent #filtering:before, .persistent #filtering:after {
@@ -1916,6 +2004,78 @@ h2.pageTitle {
     margin-left: 0.3125rem; }
     .moduleNav .pagination .pages strong:hover, .moduleNav .pagination .pages strong:focus {
       background: #b84041; }
+.moduleNav .feedLink .feedInfo a {
+  border-style: solid;
+  border-width: 0;
+  cursor: pointer;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 300;
+  line-height: normal;
+  margin: 0 0 1.25rem;
+  position: relative;
+  text-decoration: none;
+  text-align: center;
+  -webkit-appearance: none;
+  border-radius: 0;
+  display: inline-block;
+  padding-top: 0.25rem;
+  padding-right: 0.5rem;
+  padding-bottom: 0.3125rem;
+  padding-left: 0.5rem;
+  font-size: 0.6875rem;
+  background-color: #b84041;
+  border-color: #933334;
+  color: #FFFFFF;
+  border-radius: 3px;
+  transition: background-color 300ms ease-out;
+  margin: 0 0.75rem 0.125rem 0 !important; }
+  .moduleNav .feedLink .feedInfo a:hover, .moduleNav .feedLink .feedInfo a:focus {
+    background-color: #933334; }
+  .moduleNav .feedLink .feedInfo a:hover, .moduleNav .feedLink .feedInfo a:focus {
+    color: #FFFFFF; }
+  .moduleNav .feedLink .feedInfo a:before {
+    content: "";
+    margin-right: 0.375rem;
+    color: inherit; }
+
+#generic {
+  margin-bottom: 1.125rem; }
+  #generic:before, #generic:after {
+    content: " ";
+    display: table; }
+  #generic:after {
+    clear: both; }
+  #generic .back a {
+    border-style: solid;
+    border-width: 0;
+    cursor: pointer;
+    font-family: "Open Sans", sans-serif;
+    font-weight: 300;
+    line-height: normal;
+    margin: 0 0 1.25rem;
+    position: relative;
+    text-decoration: none;
+    text-align: center;
+    -webkit-appearance: none;
+    border-radius: 0;
+    display: inline-block;
+    padding-top: 0.25rem;
+    padding-right: 0.5rem;
+    padding-bottom: 0.3125rem;
+    padding-left: 0.5rem;
+    font-size: 0.6875rem;
+    background-color: #b84041;
+    border-color: #933334;
+    color: #FFFFFF;
+    transition: background-color 300ms ease-out; }
+    #generic .back a:hover, #generic .back a:focus {
+      background-color: #933334; }
+    #generic .back a:hover, #generic .back a:focus {
+      color: #FFFFFF; }
+    #generic .back a:before {
+      content: "";
+      margin-right: 0.375rem;
+      color: inherit; }
 
 @media only screen and (min-width: 40.063em) {
   .reveal-modal.tiny, dialog.tiny,
@@ -1934,6 +2094,92 @@ dialog .close-reveal-modal span {
   left: -9999px;
   top: -9999px;
   margin-bottom: 0; }
+
+#atoz > p {
+  border-bottom: 1px solid #DDDDDD;
+  padding-bottom: 1.125rem;
+  margin-bottom: 2.25rem; }
+  #atoz > p .jumpTo {
+    display: inline-block;
+    margin-right: 0.25rem; }
+  #atoz > p a {
+    text-align: center;
+    display: inline-block;
+    width: 2rem;
+    height: 2rem;
+    line-height: 2rem;
+    margin: 0 0.25rem 0.75rem 0;
+    border-radius: 1000px;
+    color: #FFFFFF;
+    background-color: #b84041; }
+    #atoz > p a:hover {
+      background-color: #6c2626; }
+#atoz ul {
+  margin-left: 0;
+  list-style-type: none; }
+  #atoz ul li {
+    padding-bottom: 2.25rem;
+    margin-left: 4rem; }
+    #atoz ul li:before, #atoz ul li:after {
+      content: " ";
+      display: table; }
+    #atoz ul li:after {
+      clear: both; }
+    #atoz ul li a[name] {
+      display: block; }
+      #atoz ul li a[name]:before {
+        display: block;
+        content: "";
+        margin-top: -3rem;
+        height: 3rem;
+        visibility: hidden; }
+        @media only screen and (min-width: 63.8125em) {
+          #atoz ul li a[name]:before {
+            margin-top: -12rem;
+            height: 12rem; } }
+    #atoz ul li .letter {
+      margin-bottom: 0.1875rem;
+      text-align: center;
+      display: inline-block;
+      width: 2rem;
+      height: 2rem;
+      line-height: 2rem;
+      border-radius: 1000px;
+      color: #FFFFFF;
+      background-color: #b84041;
+      margin-left: -4rem;
+      float: left; }
+    #atoz ul li ul {
+      float: left; }
+      #atoz ul li ul li {
+        padding-bottom: 0;
+        margin-left: 0; }
+
+#announcements .announcement {
+  border-style: solid;
+  border-width: 0.0625rem;
+  display: block;
+  font-weight: 300;
+  margin-bottom: 1.25rem;
+  position: relative;
+  padding: 0.875rem 0.875rem 0.875rem 0.875rem;
+  font-size: 0.8125rem;
+  transition: opacity 300ms ease-out;
+  background-color: #DDDDDD;
+  border-color: #bebebe;
+  color: #4f4f4f;
+  border-radius: 6px;
+  border-radius: 0;
+  margin-bottom: 0; }
+  #announcements .announcement:before {
+    border-color: #bebebe; }
+  #announcements .announcement a {
+    text-decoration: underline;
+    font-weight: 700;
+    color: inherit; }
+  #announcements .announcement *:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0; }
 
 .assets {
   margin-bottom: 1.125rem; }
@@ -2023,10 +2269,9 @@ dialog .close-reveal-modal span {
       #av .podcast a:hover, #av .podcast a:focus {
         color: #FFFFFF; }
       #av .podcast a:before {
-        color: #FFFFFF;
-        margin-right: 0.375rem; }
-    #av .podcast .feedLink:before {
-      content: ""; }
+        content: "";
+        margin-right: 0.375rem;
+        color: inherit; }
     #av .podcast .subscribe:before {
       content: ""; }
 
@@ -2102,6 +2347,209 @@ dialog .close-reveal-modal span {
     font-weight: 300;
     margin: 0 0.125rem;
     display: inline-block; }
+
+.childrenList {
+  margin: 0;
+  padding: 0;
+  margin-bottom: 2.25rem; }
+  .childrenList > li {
+    list-style-type: none;
+    background: #F5F5F5;
+    margin-bottom: 0.0625rem;
+    padding: 0.75rem 1rem; }
+    .childrenList > li a[href] {
+      position: relative;
+      display: block; }
+    .childrenList > li h4 {
+      line-height: inherit;
+      margin: 0;
+      font-weight: 700; }
+    .childrenList > li .childDesc {
+      color: #7b7b7b;
+      font-family: "Open Sans", sans-serif;
+      font-weight: 300; }
+  .childrenList a:hover {
+    text-decoration: underline; }
+
+.siblingsModule .siblingList {
+  margin: 0;
+  -webkit-columns: 4 17.5rem;
+  -moz-columns: 4 17.5rem;
+  columns: 4 17.5rem;
+  -webkit-column-gap: 3rem;
+  -moz-column-gap: 3rem;
+  column-gap: 3rem;
+  -webkit-column-rule: 1px dotted #ddd;
+  -moz-column-rule: 1px dotted #ddd;
+  column-rule: 1px dotted #ddd; }
+  .siblingsModule .siblingList li {
+    overflow: hidden;
+    list-style-type: none;
+    padding: 0 0 0.25rem; }
+    .siblingsModule .siblingList li a,
+    .siblingsModule .siblingList li strong {
+      background: #F5F5F5;
+      display: block;
+      padding: 0.5rem 0.75rem; }
+    .siblingsModule .siblingList li a:hover {
+      background: #b84041;
+      color: #FFFFFF; }
+    .siblingsModule .siblingList li strong {
+      background: #DDDDDD; }
+    .siblingsModule .siblingList li.odd {
+      clear: left; }
+
+#childrenAndGrandchildren .childrenList > li {
+  padding: 0;
+  border: 1px solid #999999; }
+  #childrenAndGrandchildren .childrenList > li > h3,
+  #childrenAndGrandchildren .childrenList > li > h4 {
+    padding: 0.75rem 1rem; }
+  #childrenAndGrandchildren .childrenList > li > .childDesc {
+    padding: 0 1rem 0.75rem;
+    margin-top: -0.625rem; }
+  #childrenAndGrandchildren .childrenList > li ul {
+    padding: 0.75rem 1rem;
+    margin: 0;
+    padding-top: 0.75rem; }
+    #childrenAndGrandchildren .childrenList > li ul li {
+      border: none;
+      list-style-type: none; }
+    #childrenAndGrandchildren .childrenList > li ul strong,
+    #childrenAndGrandchildren .childrenList > li ul h4 {
+      font-family: "Merriweather", serif;
+      display: inline;
+      font-weight: 400; }
+    #childrenAndGrandchildren .childrenList > li ul .childDesc {
+      display: inline;
+      margin: 0;
+      font-size: 0.875rem; }
+      #childrenAndGrandchildren .childrenList > li ul .childDesc:before {
+        content: "//";
+        margin: 0 0.375rem 0 0.25rem; }
+    #childrenAndGrandchildren .childrenList > li ul a {
+      margin: 0;
+      display: inline; }
+      #childrenAndGrandchildren .childrenList > li ul a:before {
+        content: ''; }
+
+.childrenListWithImages {
+  margin: 0; }
+  .childrenListWithImages:before, .childrenListWithImages:after {
+    content: " ";
+    display: table; }
+  .childrenListWithImages:after {
+    clear: both; }
+  .childrenListWithImages li {
+    clear: both;
+    display: block;
+    margin-bottom: 1.5rem;
+    background: red; }
+    @media only screen and (min-width: 30em) {
+      .childrenListWithImages li {
+        width: 50%;
+        float: left;
+        clear: none; } }
+    @media only screen and (min-width: 40.063em) {
+      .childrenListWithImages li {
+        width: 33.33333%; } }
+    @media only screen and (min-width: 90.063em) {
+      .childrenListWithImages li {
+        width: 25%; } }
+    .childrenListWithImages li a,
+    .childrenListWithImages li a[href] {
+      overflow: hidden;
+      background: green;
+      margin: 0;
+      margin-right: 1.5rem;
+      display: block; }
+      .childrenListWithImages li a:before, .childrenListWithImages li a:after,
+      .childrenListWithImages li a[href]:before,
+      .childrenListWithImages li a[href]:after {
+        content: " ";
+        display: table; }
+      .childrenListWithImages li a:after,
+      .childrenListWithImages li a[href]:after {
+        clear: both; }
+      .childrenListWithImages li a:before,
+      .childrenListWithImages li a[href]:before {
+        content: "";
+        position: static;
+        height: 0;
+        display: none !important; }
+      .childrenListWithImages li a:hover h4,
+      .childrenListWithImages li a[href]:hover h4 {
+        text-decoration: underline; }
+      .childrenListWithImages li a h4,
+      .childrenListWithImages li a[href] h4 {
+        padding: 0.75rem; }
+      .childrenListWithImages li a .childDesc,
+      .childrenListWithImages li a[href] .childDesc {
+        padding: 0 0.75rem 0.75rem; }
+
+.classifiedSubmitLink a {
+  border-style: solid;
+  border-width: 0;
+  cursor: pointer;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 300;
+  line-height: normal;
+  margin: 0 0 1.25rem;
+  position: relative;
+  text-decoration: none;
+  text-align: center;
+  -webkit-appearance: none;
+  border-radius: 0;
+  display: inline-block;
+  padding-top: 0.75rem;
+  padding-right: 1.5rem;
+  padding-bottom: 0.8125rem;
+  padding-left: 1.5rem;
+  font-size: 1rem;
+  background-color: #b84041;
+  border-color: #933334;
+  color: #FFFFFF;
+  transition: background-color 300ms ease-out; }
+  .classifiedSubmitLink a:hover, .classifiedSubmitLink a:focus {
+    background-color: #933334; }
+  .classifiedSubmitLink a:hover, .classifiedSubmitLink a:focus {
+    color: #FFFFFF; }
+  .classifiedSubmitLink a:before {
+    content: "";
+    margin-right: 0.375rem;
+    color: inherit; }
+
+.classifiedReturnToListingLink a {
+  border-style: solid;
+  border-width: 0;
+  cursor: pointer;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 300;
+  line-height: normal;
+  margin: 0 0 1.25rem;
+  position: relative;
+  text-decoration: none;
+  text-align: center;
+  -webkit-appearance: none;
+  border-radius: 0;
+  display: inline-block;
+  padding-top: 0.25rem;
+  padding-right: 0.5rem;
+  padding-bottom: 0.3125rem;
+  padding-left: 0.5rem;
+  font-size: 0.6875rem;
+  background-color: #b84041;
+  border-color: #933334;
+  color: #FFFFFF;
+  transition: background-color 300ms ease-out; }
+  .classifiedReturnToListingLink a:hover, .classifiedReturnToListingLink a:focus {
+    background-color: #933334; }
+  .classifiedReturnToListingLink a:hover, .classifiedReturnToListingLink a:focus {
+    color: #FFFFFF; }
+  .classifiedReturnToListingLink a:before {
+    content: "";
+    margin-right: 0.375rem;
+    color: inherit; }
 
 @media all and (max-width: 720px) {
   #calendar .responsiveEventsList .eventsListContent, #calendar .responsiveEventsList .gridAndOptionsWrapper {
@@ -2450,8 +2898,9 @@ dialog .close-reveal-modal span {
         color: #FFFFFF; }
       #calendar .responsiveEventsList .iCalExport a:before,
       #calendar .responsiveEventsList .feedInfo a:before {
-        color: #FFFFFF;
-        margin-right: 0.375rem; }
+        content: "";
+        margin-right: 0.375rem;
+        color: inherit; }
     #calendar .responsiveEventsList .iCalExport .divider,
     #calendar .responsiveEventsList .feedInfo .divider {
       display: none; }
@@ -2459,15 +2908,38 @@ dialog .close-reveal-modal span {
     content: ""; }
   #calendar .responsiveEventsList .iCalExport a:nth-of-type(2):before {
     content: ""; }
-  #calendar .responsiveEventsList .feedInfo a:nth-of-type(1):before {
-    content: ""; }
 
 #calendar .eventDetails .export .back a {
-  text-transform: uppercase;
-  font-size: 0.75rem; }
+  border-style: solid;
+  border-width: 0;
+  cursor: pointer;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 300;
+  line-height: normal;
+  margin: 0 0 1.25rem;
+  position: relative;
+  text-decoration: none;
+  text-align: center;
+  -webkit-appearance: none;
+  border-radius: 0;
+  display: inline-block;
+  padding-top: 0.25rem;
+  padding-right: 0.5rem;
+  padding-bottom: 0.3125rem;
+  padding-left: 0.5rem;
+  font-size: 0.6875rem;
+  background-color: #b84041;
+  border-color: #933334;
+  color: #FFFFFF;
+  transition: background-color 300ms ease-out; }
+  #calendar .eventDetails .export .back a:hover, #calendar .eventDetails .export .back a:focus {
+    background-color: #933334; }
+  #calendar .eventDetails .export .back a:hover, #calendar .eventDetails .export .back a:focus {
+    color: #FFFFFF; }
   #calendar .eventDetails .export .back a:before {
-    content: "";
-    margin-right: 0.375rem; }
+    content: "";
+    margin-right: 0.375rem;
+    color: inherit; }
 #calendar .eventDetails .export .repetition,
 #calendar .eventDetails .export .date,
 #calendar .eventDetails .export .time,
@@ -2536,16 +3008,25 @@ dialog .close-reveal-modal span {
   #miniCal .dayblock:after,
   #miniCal .ongoingblock:after {
     clear: both; }
-#miniCal .day {
+#miniCal h4.day {
   display: block;
   font-size: 0.875rem;
   font-weight: 600;
   display: inline-block;
-  padding: 0.5rem 1rem;
   margin: 0 0 1.125rem;
-  background: #b84041;
-  word-spacing: 0.125rem;
   color: white; }
+  #miniCal h4.day span {
+    padding: 0.5rem 1rem; }
+  #miniCal h4.day .daySpan {
+    position: absolute;
+    left: -9999px;
+    top: -9999px;
+    margin-bottom: 0; }
+  #miniCal h4.day .monthSpan {
+    background: #b84041; }
+  #miniCal h4.day .numberSpan {
+    background: #EEEEEE;
+    color: #b84041; }
 #miniCal .dayEvents,
 #miniCal .ongoingEvents {
   margin: 0;
@@ -2581,10 +3062,90 @@ dialog .close-reveal-modal span {
   margin-bottom: 2.25rem; }
   #miniCal .foot .more {
     margin: 0; }
-    #miniCal .foot .more a:before {
-      content: "";
+    #miniCal .foot .more a {
+      border-style: solid;
+      border-width: 0;
+      cursor: pointer;
+      font-family: "Open Sans", sans-serif;
+      font-weight: 300;
+      line-height: normal;
+      margin: 0 0 1.25rem;
+      position: relative;
+      text-decoration: none;
+      text-align: center;
+      -webkit-appearance: none;
+      border-radius: 0;
+      display: inline-block;
+      padding-top: 0.25rem;
+      padding-right: 0.5rem;
+      padding-bottom: 0.3125rem;
+      padding-left: 0.5rem;
+      font-size: 0.6875rem;
+      background-color: #b84041;
+      border-color: #933334;
+      color: #FFFFFF;
+      transition: background-color 300ms ease-out; }
+      #miniCal .foot .more a:hover, #miniCal .foot .more a:focus {
+        background-color: #933334; }
+      #miniCal .foot .more a:hover, #miniCal .foot .more a:focus {
+        color: #FFFFFF; }
+      #miniCal .foot .more a:after {
+        content: "";
+        margin-left: 0.375rem;
+        color: inherit; }
+
+#facultyStaff:before, #facultyStaff:after {
+  content: " ";
+  display: table; }
+#facultyStaff:after {
+  clear: both; }
+#facultyStaff .facStaff {
+  border-bottom: 1px solid #DDDDDD;
+  margin-bottom: 2.25rem; }
+  @media only screen and (min-width: 40.063em) {
+    #facultyStaff .facStaff .facStaffImage {
+      float: right;
+      margin: 0 0 1.125rem 1.5rem; } }
+  #facultyStaff .facStaff .facStaffName {
+    font-size: 1.5rem;
+    margin-bottom: 1.125rem; }
+  #facultyStaff .facStaff .facStaffInfo .label {
+    position: absolute;
+    left: -9999px;
+    top: -9999px;
+    margin-bottom: 0; }
+  #facultyStaff .facStaff .facStaffInfo .facStaffPhone {
+    margin-left: 1.5rem; }
+    #facultyStaff .facStaff .facStaffInfo .facStaffPhone:before {
+      content: "";
       margin-right: 0.375rem;
       color: inherit; }
+  #facultyStaff .facStaff .facStaffInfo .facStaffEmail {
+    margin-left: 1.5rem; }
+    #facultyStaff .facStaff .facStaffInfo .facStaffEmail:before {
+      content: "";
+      margin-right: 0.375rem;
+      color: inherit; }
+  #facultyStaff .facStaff .facStaffInfo .facStaffContent {
+    margin-top: 1.125rem; }
+
+#faq {
+  margin-bottom: 2.25rem; }
+  #faq:before, #faq:after {
+    content: " ";
+    display: table; }
+  #faq:after {
+    clear: both; }
+  #faq .moduleNav ul {
+    margin: 0 0 1.125rem 1.5rem; }
+    #faq .moduleNav ul:before, #faq .moduleNav ul:after {
+      content: " ";
+      display: table; }
+    #faq .moduleNav ul:after {
+      clear: both; }
+    #faq .moduleNav ul li {
+      list-style-type: decimal;
+      margin-bottom: 1.125rem; }
 
 .featuresModule .features {
   margin-bottom: 2.25rem; }
@@ -2811,6 +3372,59 @@ dialog .close-reveal-modal span {
     color: red; }
 #filtering .relFilters {
   margin-bottom: 0 !important; }
+
+.policyForm {
+  margin-bottom: 2.25rem; }
+  .policyForm:before, .policyForm:after {
+    content: " ";
+    display: table; }
+  .policyForm:after {
+    clear: both; }
+  .policyForm .rootMenu {
+    background-color: #FFFFFF;
+    font-family: inherit;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #cccccc;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+    color: rgba(0, 0, 0, 0.75);
+    display: block;
+    font-size: 0.875rem;
+    margin: 0 0 1rem 0;
+    padding: 0.5rem;
+    height: 2.3125rem;
+    width: 100%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 80%;
+    float: left;
+    margin-bottom: 0;
+    border-right: none; }
+    .policyForm .rootMenu:focus {
+      background: #fafafa;
+      border-color: #999999;
+      outline: none; }
+    .policyForm .rootMenu:disabled {
+      background-color: #DDDDDD;
+      cursor: default; }
+    .policyForm .rootMenu[disabled], .policyForm .rootMenu[readonly], fieldset[disabled] .policyForm .rootMenu {
+      background-color: #DDDDDD;
+      cursor: default; }
+  .policyForm .rootMenuSubmit {
+    display: block;
+    text-align: center;
+    padding: 0.5rem;
+    height: 2.3125rem;
+    background: #b84041;
+    color: #FFFFFF;
+    width: 20%;
+    float: left;
+    border-radius: 0 3px 3px 0;
+    margin-bottom: 0; }
+    .policyForm .rootMenuSubmit:hover {
+      background: #923334;
+      cursor: pointer; }
 
 #form {
   max-width: 37.5rem;
@@ -3702,6 +4316,24 @@ form .submitSection,
   text-decoration: underline;
   font-weight: 400; }
 
+.minutesList {
+  margin: 0; }
+  .minutesList li {
+    list-style-type: none;
+    font-weight: 700; }
+    .minutesList li:before {
+      content: "";
+      margin-right: 0.375rem;
+      color: inherit; }
+
+.minutesInfo {
+  margin: 0 0 1.125rem; }
+  .minutesInfo li {
+    list-style-type: none; }
+    .minutesInfo li em {
+      font-style: normal;
+      font-weight: 700; }
+
 #minisiteNavigation {
   margin-bottom: 2.25rem; }
   #minisiteNavigation:before {
@@ -3788,6 +4420,61 @@ form .submitSection,
     #minisiteNavigation ul ul ul ul ul ul li.open a:hover {
       background: #8f8f8f; }
 
+#policyModule .rootPolicyList {
+  list-style-type: none;
+  margin: 0 0 2.25rem; }
+  #policyModule .rootPolicyList .rootPolicyItem {
+    font-weight: 700; }
+    #policyModule .rootPolicyList .rootPolicyItem:before {
+      content: "";
+      margin-right: 0.375rem;
+      color: inherit; }
+#policyModule .policy {
+  border-bottom: 1px solid #DDDDDD;
+  padding-bottom: 1.125rem;
+  margin-bottom: 1.125rem; }
+  #policyModule .policy .approvals {
+    font-weight: 700; }
+  #policyModule .policy .revised {
+    font-weight: 700; }
+  #policyModule .policy .audiences {
+    font-weight: 700; }
+  #policyModule .policy .keywords {
+    font-weight: 700; }
+#policyModule .proximatePolicies {
+  padding-bottom: 2.25rem; }
+#policyModule .listLink a {
+  border-style: solid;
+  border-width: 0;
+  cursor: pointer;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 300;
+  line-height: normal;
+  margin: 0 0 1.25rem;
+  position: relative;
+  text-decoration: none;
+  text-align: center;
+  -webkit-appearance: none;
+  border-radius: 0;
+  display: inline-block;
+  padding-top: 0.25rem;
+  padding-right: 0.5rem;
+  padding-bottom: 0.3125rem;
+  padding-left: 0.5rem;
+  font-size: 0.6875rem;
+  background-color: #b84041;
+  border-color: #933334;
+  color: #FFFFFF;
+  transition: background-color 300ms ease-out; }
+  #policyModule .listLink a:hover, #policyModule .listLink a:focus {
+    background-color: #933334; }
+  #policyModule .listLink a:hover, #policyModule .listLink a:focus {
+    color: #FFFFFF; }
+  #policyModule .listLink a:before {
+    content: "";
+    margin-right: 0.375rem;
+    color: inherit; }
+
 #relatedPub:before, #relatedPub:after {
   content: " ";
   display: table; }
@@ -3815,7 +4502,40 @@ form .submitSection,
     #relatedPub .moduleNav .posts .post .desc * {
       font-size: 0.875rem; }
 #relatedPub .moduleNav .pubLinks {
-  margin-bottom: 2.25rem; }
+  margin: 0 0 2.25rem; }
+  #relatedPub .moduleNav .pubLinks li {
+    list-style-type: none; }
+    #relatedPub .moduleNav .pubLinks li a {
+      border-style: solid;
+      border-width: 0;
+      cursor: pointer;
+      font-family: "Open Sans", sans-serif;
+      font-weight: 300;
+      line-height: normal;
+      margin: 0 0 1.25rem;
+      position: relative;
+      text-decoration: none;
+      text-align: center;
+      -webkit-appearance: none;
+      border-radius: 0;
+      display: inline-block;
+      padding-top: 0.25rem;
+      padding-right: 0.5rem;
+      padding-bottom: 0.3125rem;
+      padding-left: 0.5rem;
+      font-size: 0.6875rem;
+      background-color: #b84041;
+      border-color: #933334;
+      color: #FFFFFF;
+      transition: background-color 300ms ease-out; }
+      #relatedPub .moduleNav .pubLinks li a:hover, #relatedPub .moduleNav .pubLinks li a:focus {
+        background-color: #933334; }
+      #relatedPub .moduleNav .pubLinks li a:hover, #relatedPub .moduleNav .pubLinks li a:focus {
+        color: #FFFFFF; }
+      #relatedPub .moduleNav .pubLinks li a:after {
+        content: "";
+        margin-left: 0.375rem;
+        color: inherit; }
 
 #meat .publication .date {
   color: #999999;
@@ -3823,10 +4543,37 @@ form .submitSection,
 #meat .publication .back {
   margin-top: 0;
   text-align: left; }
-  #meat .publication .back div a:before {
-    content: "";
-    margin-right: 0.375rem;
-    color: inherit; }
+  #meat .publication .back div a {
+    border-style: solid;
+    border-width: 0;
+    cursor: pointer;
+    font-family: "Open Sans", sans-serif;
+    font-weight: 300;
+    line-height: normal;
+    margin: 0 0 1.25rem;
+    position: relative;
+    text-decoration: none;
+    text-align: center;
+    -webkit-appearance: none;
+    border-radius: 0;
+    display: inline-block;
+    padding-top: 0.25rem;
+    padding-right: 0.5rem;
+    padding-bottom: 0.3125rem;
+    padding-left: 0.5rem;
+    font-size: 0.6875rem;
+    background-color: #b84041;
+    border-color: #933334;
+    color: #FFFFFF;
+    transition: background-color 300ms ease-out; }
+    #meat .publication .back div a:hover, #meat .publication .back div a:focus {
+      background-color: #933334; }
+    #meat .publication .back div a:hover, #meat .publication .back div a:focus {
+      color: #FFFFFF; }
+    #meat .publication .back div a:before {
+      content: "";
+      margin-right: 0.375rem;
+      color: inherit; }
 #meat .publication .persistent {
   border: none; }
   #meat .publication .persistent .loginlogout {
@@ -3934,8 +4681,9 @@ form .submitSection,
     #meat .publication .moduleNav .feedLink a:hover, #meat .publication .moduleNav .feedLink a:focus {
       color: #FFFFFF; }
     #meat .publication .moduleNav .feedLink a:before {
-      color: #FFFFFF;
-      margin-right: 0.375rem; }
+      content: "";
+      margin-right: 0.375rem;
+      color: inherit; }
   #meat .publication .moduleNav .feedLink .feedInfo a:before {
     content: "";
     margin-right: 0.375rem;
@@ -3946,6 +4694,53 @@ form .submitSection,
     display: none; }
   #meat .publication.fullPostDisplay .back {
     margin-bottom: 2.25rem; }
+  #meat .publication.fullPostDisplay .social {
+    margin: 0;
+    display: block; }
+    #meat .publication.fullPostDisplay .social:before, #meat .publication.fullPostDisplay .social:after {
+      content: " ";
+      display: table; }
+    #meat .publication.fullPostDisplay .social:after {
+      clear: both; }
+    #meat .publication.fullPostDisplay .social.top {
+      margin-top: 2.25rem; }
+    #meat .publication.fullPostDisplay .social.bottom {
+      margin-bottom: 2.25rem; }
+    #meat .publication.fullPostDisplay .social p {
+      margin: 0; }
+      #meat .publication.fullPostDisplay .social p span {
+        position: absolute;
+        left: -9999px;
+        top: -9999px;
+        margin-bottom: 0; }
+      #meat .publication.fullPostDisplay .social p a {
+        margin: 0 0.375rem;
+        display: inline-block;
+        margin: 0;
+        padding: 0.625rem;
+        line-height: 1 !important;
+        border-radius: 1000px;
+        background: #F9F9F9;
+        border: 1px solid #DDDDDD;
+        color: #b84041;
+        text-align: center; }
+        #meat .publication.fullPostDisplay .social p a:before {
+          content: "";
+          font-size: 0.9375rem;
+          width: 0.9375rem;
+          display: block; }
+        #meat .publication.fullPostDisplay .social p a:hover {
+          background: #e0e0e0; }
+        #meat .publication.fullPostDisplay .social p a:active {
+          background: white; }
+        #meat .publication.fullPostDisplay .social p a.facebook:before {
+          content: ""; }
+        #meat .publication.fullPostDisplay .social p a.twitter:before {
+          content: ""; }
+        #meat .publication.fullPostDisplay .social p a.google:before {
+          content: ""; }
+        #meat .publication.fullPostDisplay .social p a.email:before {
+          content: ""; }
   #meat .publication.fullPostDisplay .fullPost {
     width: 100%;
     margin-left: auto;

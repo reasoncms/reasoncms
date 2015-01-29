@@ -55,8 +55,8 @@ body {
   font-size: 100%; }
 
 body {
-  background: #fff;
-  color: #222;
+  background: #FFFFFF;
+  color: #555555;
   padding: 0;
   margin: 0;
   font-family: "Open Sans", sans-serif;
@@ -275,11 +275,11 @@ td {
 
 /* Default Link Styles */
 a {
-  color: #2ea7a0;
+  color: #b84041;
   text-decoration: none;
   line-height: inherit; }
   a:hover, a:focus {
-    color: #28908a; }
+    color: #9e3738; }
   a img {
     border: none; }
 
@@ -301,16 +301,16 @@ p {
 
 /* Default header styles */
 h1, h2, h3, h4, h5, h6 {
-  font-family: "Open Sans", sans-serif;
+  font-family: "Merriweather", serif;
   font-weight: 300;
-  font-style: 300;
+  font-style: normal;
   color: #222222;
   text-rendering: optimizeLegibility;
   margin-top: 0.2rem;
   margin-bottom: 0.5rem;
-  line-height: 1.4; }
+  line-height: 1.3; }
   h1 small, h2 small, h3 small, h4 small, h5 small, h6 small {
-    font-size: 60%;
+    font-size: 75%;
     color: #6f6f6f;
     line-height: 0; }
 
@@ -318,10 +318,10 @@ h1 {
   font-size: 1.875rem; }
 
 h2 {
-  font-size: 1.5rem; }
+  font-size: 1.6875rem; }
 
 h3 {
-  font-size: 1.3125rem; }
+  font-size: 1.125rem; }
 
 h4 {
   font-size: 0.9375rem; }
@@ -333,7 +333,7 @@ h6 {
   font-size: 1rem; }
 
 .subheader {
-  line-height: 1.4;
+  line-height: 1.3;
   color: #6f6f6f;
   font-weight: 300;
   margin-top: 0.2rem;
@@ -358,7 +358,7 @@ b {
   line-height: inherit; }
 
 small {
-  font-size: 60%;
+  font-size: 75%;
   line-height: inherit; }
 
 code {
@@ -430,7 +430,7 @@ abbr,
 acronym {
   text-transform: uppercase;
   font-size: 90%;
-  color: #222;
+  color: #555555;
   cursor: help; }
 
 abbr {
@@ -441,8 +441,8 @@ abbr {
 /* Blockquotes */
 blockquote {
   margin: 0 0 1.25rem;
-  padding: 0.5625rem 1.25rem 0 1.1875rem;
-  border-left: 1px solid #DDDDDD; }
+  padding: 3rem;
+  border-left: none; }
   blockquote cite {
     display: block;
     font-size: 0.8125rem;
@@ -482,7 +482,7 @@ blockquote p {
 
 @media only screen and (min-width: 40.063em) {
   h1, h2, h3, h4, h5, h6 {
-    line-height: 1.4; }
+    line-height: 1.3; }
 
   h1 {
     font-size: 2.5rem; }
@@ -491,7 +491,7 @@ blockquote p {
     font-size: 2.125rem; }
 
   h3 {
-    font-size: 1.625rem; }
+    font-size: 1.5rem; }
 
   h4 {
     font-size: 1.25rem; }
@@ -572,9 +572,6 @@ blockquote p {
 
   .show-for-print {
     display: inherit !important; } }
-#reasonDeveloper {
-  display: none; }
-
 @media only screen and (min-width: 30em) {
   .cloakLogin #wrapper {
     padding-top: 10%; } }
@@ -644,18 +641,18 @@ blockquote p {
       padding-bottom: 0.8125rem;
       padding-left: 1.5rem;
       font-size: 1rem;
-      background-color: #2ea7a0;
-      border-color: #258680;
+      background-color: #b84041;
+      border-color: #933334;
       color: #FFFFFF;
       border-radius: 3px;
       transition: background-color 300ms ease-out; }
       .cloakLogin #meat #login table input[type="submit"]:hover, .cloakLogin #meat #login table input[type="submit"]:focus {
-        background-color: #258680; }
+        background-color: #933334; }
       .cloakLogin #meat #login table input[type="submit"]:hover, .cloakLogin #meat #login table input[type="submit"]:focus {
         color: #FFFFFF; }
   .cloakLogin #meat #login .msg {
     font-size: 1.0625rem;
-    color: red;
+    color: #f04124;
     margin: 0; }
     .cloakLogin #meat #login .msg p {
       margin: 0; }
@@ -689,14 +686,14 @@ blockquote p {
     padding-right: 0;
     padding-left: 0;
     width: 100%;
-    background-color: #2ea7a0;
-    border-color: #258680;
+    background-color: #b84041;
+    border-color: #933334;
     color: #FFFFFF;
     border-radius: 3px;
     transition: background-color 300ms ease-out;
-    margin-bottom: 0; }
+    margin-bottom: 1.125rem; }
     .cloakLogin #meat #login .logoutLink:hover, .cloakLogin #meat #login .logoutLink:focus {
-      background-color: #258680; }
+      background-color: #933334; }
     .cloakLogin #meat #login .logoutLink:hover, .cloakLogin #meat #login .logoutLink:focus {
       color: #FFFFFF; }
   .cloakLogin #meat #login p.smallText {
