@@ -1,0 +1,15 @@
+// Classified Styles
+// Cloak, v1
+
+.classifiedSubmitLink {
+	a {
+		@include button();
+		@include inline-icon($icon: $fa-var-plus);
+	}
+}
+
+.classifiedReturnToListingLink {
+	a {
+		@include back-link();
+	}
+}

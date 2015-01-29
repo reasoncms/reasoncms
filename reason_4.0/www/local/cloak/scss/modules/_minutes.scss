@@ -1,0 +1,31 @@
+// Minutes Styles
+// Cloak, v1
+
+.minutesList {
+	margin: 0;
+
+	li {
+		list-style-type: none;
+		font-weight: 700;
+		@include inline-icon($icon: $fa-var-file-text-o);
+	}
+}
+
+h3.minutesHead {
+}
+
+.minutesInfo {
+	margin: 0 0 $horizontal-gutter/2;
+
+	li {
+		list-style-type: none;
+	
+		em {
+			font-style: normal;
+			font-weight: 700;
+		}
+	}
+}
+
+.minutesContent {
+}
