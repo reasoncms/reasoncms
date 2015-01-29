@@ -20,4 +20,11 @@
 		// Login Link is a module, so it's styles are
 		// found in modules/_login-link.scss.
 	}
+
+	.poweredBy {
+		a {
+			text-decoration: underline;
+			font-weight: 400;
+		}
+	}
 }
