@@ -43,3 +43,44 @@
 		}
 	}
 }
+
+// Inline images, added by TinyMCE
+#{$wysiwyg-all-areas} {
+	img {
+		width: auto;  // Allow inline image to display at native resolution,
+		max-width: 100%;  // but no bigger than its container.
+		margin: 0 0 $paragraph-margin-bottom; // space out the bottom
+		display: block;
+		clear: left;
+		
+		&.left,
+		&[align="left"],
+		&.right,
+		&[align="right"] { // On phones, we won't float the images to prevent skinny column wrapping text.
+			float: none !important;
+			clear: left;
+		}
+
+		@media #{$medium-up} {
+			
+			&.left,
+			&[align="left"] { // align left images left, and pad out the right.
+				margin-right: $column-gutter/2;
+				float: left !important;
+			}
+
+			&.right,
+			&[align="right"] { // align right images right, and pad out the left
+				margin-left: $column-gutter/2;
+				float: right !important;
+			}
+
+			&.left,  // If images are floated left or right, we cap their max-width at 40% max-width
+			&[align="left"],
+			&.right,
+			&[align="right"] {
+				max-width: 40%;
+			}
+		}
+	}
+}

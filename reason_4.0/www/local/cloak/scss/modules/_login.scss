@@ -5,11 +5,6 @@
 // Not included in cloadk/scss/_modules.scss or compiled in app.css,
 // since Login has it's own dedicated theme that doesn't use those files.
 
-#reasonDeveloper {display: none;}
-
-$column-gutter: rem-calc(48);
-$horizontal-gutter: rem-calc(36);
-
 .cloakLogin {
 
 	#wrapper {
@@ -117,7 +112,7 @@ $horizontal-gutter: rem-calc(36);
 
 		 	.logoutLink {
 		 		@include button($radius: $global-radius, $full-width: true);
-		 		margin-bottom: 0;
+		 		margin-bottom: $horizontal-gutter/2;
 		 	}
 
 		 	p.smallText {
