@@ -13,16 +13,16 @@ reason_include_once( 'classes/social.php' );
 /**
  * Register the integrator with Reason CMS.
  */
-$GLOBALS[ '_social_integrator_class_names' ][ basename( __FILE__, '.php' ) ] = 'ReasonTwitterIntegrator';
+$GLOBALS[ '_social_integrator_class_names' ][ basename( __FILE__, '.php' ) ] = 'ReasonInstagramIntegrator';
 
 /**
- * A class that provides ReasonCMS with Twitter integration.
+ * A class that provides ReasonCMS with Instagram integration.
  *
  * This is intended to be used as a singleton - obtain it like this:
  *
  * <code>
  * $sih = reason_get_social_integration_helper();
- * $twitter_integrator = $sih->get_integrator('twitter');
+ * $twitter_integrator = $sih->get_integrator('instagram');
  * </code>
  *
  * Currently this provides content manager integration and also implements:
@@ -30,83 +30,61 @@ $GLOBALS[ '_social_integrator_class_names' ][ basename( __FILE__, '.php' ) ] = '
  * - SocialAccountProfileLinks
  * - SocialSharingLinks
  *
- * @todo move oauth stuff into this class and modify the twitter feed models to use it.
- * @author Nathan White
+ * @author Matt Ryan
  */
-class ReasonTwitterIntegrator extends ReasonSocialIntegrator implements SocialAccountProfileLinks, SocialSharingLinks, SocialAccountPlatform
+class ReasonInstagramIntegrator extends ReasonSocialIntegrator implements SocialAccountProfileLinks, SocialAccountPlatform
 {
-	/****************** SocialAccountPlatform implementation ********************/
+	/****************** SocialAccountPlatformimplementation ********************/
 	public function get_platform_name()
 	{
-		return 'Twitter';
+		return 'Instagram';
 	}
 	public function get_platform_icon()
 	{
-		return REASON_HTTP_BASE_PATH . 'modules/social_account/images/twitter.png';
+		return REASON_HTTP_BASE_PATH . 'modules/social_account/images/instagram.png';
 	}
 	/****************** SocialAccountProfileLinks implementation ********************/
 	public function get_profile_link_text($social_entity_id)
 	{
-		return 'Visit on Twitter';
+		return 'Instagram photos and videos';
 	}
+	
 	public function get_profile_link_href($social_entity_id)
 	{
 		$social_entity = new entity($social_entity_id);
 		$username = $social_entity->get_value('account_id');
-		return 'http://www.twitter.com/'.$username;
+		return 'http://instagram.com/'.$username.'/';
 	}
 	public function get_profile_link_icon($social_entity_id)
 	{
 		return $this->get_platform_icon();
 	}
-
-	/****************** SocialSharingLinks implementation ***********************/
-	public function get_sharing_link_icon()
-	{
-		return $this->get_platform_icon();
-	}
-	
-	public function get_sharing_link_text()
-	{
-		return 'Twitter';
-	}
-	
-	/**
-	 * Return a URL encoded view of the current URL, right?
-	 * 
-	 * @param string URL if null we assume the current URL.
-	 */
-	public function get_sharing_link_href($url = NULL)
-	{
-		$url = (!is_null($url)) ? urlencode($url) : urlencode(get_current_url('http'));
-		return 'https://twitter.com/share?url=' . $url;
-	}
 	
 	/****************** SocialAccountContentManager implementation *********************/
 	
 	/**
-	 * Add / modify for elements for Facebook integration.
+	 * Add / modify for elements
 	 */
 	function social_account_on_every_time($cm)
 	{
 		$cm->change_element_type('account_type', 'protected');
 		$cm->change_element_type('account_details', 'protected');
-		$cm->set_display_name('account_id', 'Twitter username');
+		$cm->set_display_name('account_id', 'Instagram username');
 		$cm->add_required('account_id');
 			
 		// lets add a field showing the current link if one is available.		
 		$account_id = $cm->get_value('account_id');
 		if (!empty($account_id))
 		{
-			$link = 'http://www.twitter.com/'.$account_id;
-			$comment_text = '<a href="'.$link.'">'.$link.'</a>';
+			$link = 'http://instagram.com/'.$account_id.'/';
+			$comment_text = '<a href="'.reason_htmlspecialchars($link).'">'.reason_htmlspecialchars($link).'</a>';
 			$cm->add_element('account_link', 'commentWithLabel', array('text' => $comment_text));
 		}
 	}
 	
 	function social_account_pre_show_form($cm)
 	{
-		echo '<p class="platformInfo"><img src="'.htmlspecialchars($this->get_platform_icon()).'" alt="Twitter icon" width="25" height="25" class="platformIcon" /> Add/edit a Twitter profile.</p>';
+		echo '<p class="platformInfo"><img src="'.htmlspecialchars($this->get_platform_icon()).'" alt="Instagram icon" width="25" height="25" class="platformIcon" /> Add/edit an Instagram profile.</p>';
 	}
 	
 	/**
@@ -117,9 +95,9 @@ class ReasonTwitterIntegrator extends ReasonSocialIntegrator implements SocialAc
 	function social_account_run_error_checks($cm)
 	{
 		$account_id = $cm->get_value('account_id');
-		if ( !check_against_regexp($account_id, array('naturalnumber')) && !check_against_regexp($account_id, array('/^[a-z\d.]*$/i')) )
+		if ( !check_against_regexp($account_id, array('/^[a-z\d._]*$/i')) )
 		{
-			$cm->set_error('account_id', 'Invalid format for twitter username. Please enter a valid username');
+			$cm->set_error('account_id', 'Invalid format for Instagram username. Please enter a valid username');
 		}
 		// if we have a problem with account_id lets remove the account_link field.
 		if ($cm->has_error('account_id'))
