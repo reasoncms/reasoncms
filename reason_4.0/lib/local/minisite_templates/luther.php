@@ -247,7 +247,8 @@
 			$this->has_content( 'post_sidebar' ) ||
 			$this->has_content( 'post_sidebar_2' ) ||
 			$this->has_content( 'post_sidebar_3' ) ||
-			$this->has_content( 'call_to_action_blurb') )
+			$this->has_content( 'call_to_action_blurb') ||
+			$this->has_content( 'callout_blurb') )
 			{
 				return true;
 			}
@@ -350,6 +351,14 @@
 			if ($this->has_content( 'call_to_action_blurb' )) 
 			{
 				$this->run_section( 'call_to_action_blurb' );
+			}
+		}
+		
+		function show_luther_callout_blurb()
+		{
+			if ($this->has_content( 'callout_blurb' ))
+			{
+				$this->run_section( 'callout_blurb' );
 			}
 		}
 	
@@ -464,7 +473,8 @@
 				$this->has_content( 'post_sidebar' ) || 
 				$this->has_content( 'post_sidebar_2' ) || 
 				$this->has_content( 'post_sidebar_3' ) ||
-				$this->has_content( 'call_to_action_blurb') ) {
+				$this->has_content( 'call_to_action_blurb') ||
+				$this->has_content( 'callout_blurb') ) {
 			
 			echo '<div id="relatedSections">'."\n";
 
@@ -473,6 +483,11 @@
 					echo '<div id="callToActionBlurb">'."\n";
 					$this->run_section( 'call_to_action_blurb' );
 					echo '</div>'."\n";
+				}
+				
+				if($this->has_content( 'callout_blurb' ))
+				{
+					$this->run_section( 'callout_blurb' );
 				}
 			
 				if($this->has_content( 'pre_sidebar' ))
