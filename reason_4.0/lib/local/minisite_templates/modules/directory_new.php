@@ -650,7 +650,7 @@ class DirectoryModule extends DefaultMinisiteModule {
                 //echo "<a href='/reason/images/589866.gif' title></a>";
                 echo '<a href="https://app.luther.edu/reason/scripts/dir_image.php?image=dykega01" class="highslide" onclick="return hs.expand(this, imageOptions)"><img src="https://app.luther.edu/reason/scripts/dir_image.php?image=dykega01" border="0" alt="" title="Click to enlarge" /></a>'; // temp image for testing
                 echo "</figure>";
-                echo "<a name={$data['uid']}></a>";
+                echo "<a name={$data['uid'][0]}></a>";
 
             }
             if (isset($data['cn'])) {
@@ -665,7 +665,7 @@ class DirectoryModule extends DefaultMinisiteModule {
 
 
             echo "<div class='directoryInfo' title>";
-            if ( $affiliation != 'Student' ) {
+            if ( $affiliation != 'Student' && isset($data['title'])) {
                 if (is_array($data['title'])){
                     foreach ($data['title'] as $key => $value) {
                         echo "<h3 class='directoryTitle'>{$value}</h3>";
@@ -1393,6 +1393,7 @@ class DirectoryModule extends DefaultMinisiteModule {
         } else {
             $label = 'Affiliation';
         }
+        $affils_string = '';
         foreach ($affils as $key => $value) {
             $affils_string .= "<span class='multipleAttrValues'>{$value}</span>";
         }
