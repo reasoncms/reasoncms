@@ -1288,6 +1288,8 @@ $logo-width-widescreen: rem-calc(198);
 		margin: 0;
 		padding: 0;
 		border: none;
+		display: block;
+		margin-bottom: rem-calc(12);
 
 		.name {
 			text-transform: none;

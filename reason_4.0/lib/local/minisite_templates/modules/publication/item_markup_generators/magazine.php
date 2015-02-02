@@ -19,7 +19,7 @@ class MagazineItemMarkupGenerator extends ResponsiveItemMarkupGenerator
 	{
 
 		$show_related_section = ($this->should_show_related_events_section() || $this->should_show_images_section() || $this->should_show_assets_section() || $this->should_show_categories_section());
-		
+		$photographer = '';
 		$this->markup_string = '';
 
 
@@ -76,7 +76,13 @@ class MagazineItemMarkupGenerator extends ResponsiveItemMarkupGenerator
 
 			if($this->should_show_content_section())
 			{
-				$this->markup_string .= '<div class="text">'.luther_process_inline_images($this->get_content_section()).'</div>'."\n";
+				$this->markup_string .= '<div class="text">'.luther_process_inline_images($this->get_content_section(), $photographer).'</div>'."\n";
+			}
+			
+			// if there is a photographer field, show it after the author
+			if ($photographer != '')
+			{
+				$this->markup_string = preg_replace('/div class="author">By <span class="name">.*?<\/span><\/div>/',  '$0<div class="author">Photography by <span class="name">'. $photographer . '</span></div>', $this->markup_string);
 			}
 			
 			if($this->should_show_inline_editing_link())

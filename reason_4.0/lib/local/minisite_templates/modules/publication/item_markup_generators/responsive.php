@@ -51,7 +51,7 @@ class ResponsiveItemMarkupGenerator extends PublicationItemMarkupGenerator
 		}
 		if($this->should_show_content_section())
 		{
-			$this->markup_string .= '<div class="text">'.luther_process_inline_images($this->get_content_section()).'</div>'."\n";
+			$this->markup_string .= '<div class="text">'.luther_process_inline_images($this->get_content_section(), $photographer).'</div>'."\n";
 		}
 		if($this->should_show_social_sharing_section())
 		{

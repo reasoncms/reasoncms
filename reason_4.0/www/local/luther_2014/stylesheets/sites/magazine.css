@@ -1136,20 +1136,22 @@ figure.right {
   margin: 0;
   padding: 0;
   border: none;
+  display: block;
+  margin-bottom: 0.75rem;
 }
-/* line 1292, ../scss/sites/magazine.scss */
+/* line 1294, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .author .name {
   text-transform: none;
   font-size: 1rem;
   display: inline-block;
   margin-left: 0.25rem;
 }
-/* line 1301, ../scss/sites/magazine.scss */
+/* line 1303, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .social.top,
 .siteHome #minisite .fullPostDisplay .social.bottom {
   text-align: center;
 }
-/* line 1305, ../scss/sites/magazine.scss */
+/* line 1307, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .socialIcons {
   margin: 0;
   *zoom: 1;
@@ -1163,11 +1165,11 @@ figure.right {
 .siteHome #minisite .fullPostDisplay .socialIcons:after {
   clear: both;
 }
-/* line 1309, ../scss/sites/magazine.scss */
+/* line 1311, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .socialIcons li {
   display: inline-block;
 }
-/* line 1316, ../scss/sites/magazine.scss */
+/* line 1318, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .socialIcons li a {
   display: block;
   padding: 0.75rem;
@@ -1181,7 +1183,7 @@ figure.right {
   margin: 0 0.625rem;
   width: auto;
 }
-/* line 1326, ../scss/sites/magazine.scss */
+/* line 1328, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .socialIcons li a:before {
   line-height: 1;
   font-size: 1.125rem;
@@ -1190,51 +1192,51 @@ figure.right {
   display: block;
   text-align: center;
 }
-/* line 1336, ../scss/sites/magazine.scss */
+/* line 1338, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .socialIcons li a:hover {
   background: #1073ce;
   border-color: #1073ce;
   color: #FFF;
 }
-/* line 1345, ../scss/sites/magazine.scss */
+/* line 1347, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .socialIcons li.facebook a:before {
   content: "\f09a";
 }
-/* line 1352, ../scss/sites/magazine.scss */
+/* line 1354, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .socialIcons li.twitter a:before {
   content: "\f099";
 }
-/* line 1356, ../scss/sites/magazine.scss */
+/* line 1358, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .socialIcons li.twitter a:hover {
   background: #4a8512;
   border-color: #4a8512;
   color: #FFF;
 }
-/* line 1365, ../scss/sites/magazine.scss */
+/* line 1367, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .socialIcons li.google a:before {
   content: "\f0d5";
 }
-/* line 1369, ../scss/sites/magazine.scss */
+/* line 1371, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .socialIcons li.google a:hover {
   background: #9f2112;
   border-color: #9f2112;
   color: #FFF;
 }
-/* line 1378, ../scss/sites/magazine.scss */
+/* line 1380, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .socialIcons li.email a:before {
   content: "\f003";
 }
-/* line 1382, ../scss/sites/magazine.scss */
+/* line 1384, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .socialIcons li.email a:hover {
   background: #e8a500;
   border-color: #e8a500;
   color: #FFF;
 }
-/* line 1391, ../scss/sites/magazine.scss */
+/* line 1393, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .relatedItems {
   padding-left: 0;
 }
-/* line 1396, ../scss/sites/magazine.scss */
+/* line 1398, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .relatedItems .fromIssue,
 .siteHome #minisite .fullPostDisplay .relatedItems .categories {
   text-align: center;
@@ -1242,18 +1244,18 @@ figure.right {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
   font-weight: 300;
 }
-/* line 1402, ../scss/sites/magazine.scss */
+/* line 1404, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .relatedItems .fromIssue a,
 .siteHome #minisite .fullPostDisplay .relatedItems .categories a {
   text-decoration: underline;
 }
-/* line 1408, ../scss/sites/magazine.scss */
+/* line 1410, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .relatedItems .categories {
   text-align: center;
   font-size: 1.125rem;
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
 }
-/* line 1416, ../scss/sites/magazine.scss */
+/* line 1418, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .relatedItems .categories h4,
 .siteHome #minisite .fullPostDisplay .relatedItems .categories ul,
 .siteHome #minisite .fullPostDisplay .relatedItems .categories li {
@@ -1262,16 +1264,16 @@ figure.right {
   font-size: 1.125rem;
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
 }
-/* line 1423, ../scss/sites/magazine.scss */
+/* line 1425, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .relatedItems .categories ul {
   margin: 0;
   padding: 0;
 }
-/* line 1428, ../scss/sites/magazine.scss */
+/* line 1430, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .relatedItems .categories li {
   margin-left: 0.375rem;
 }
-/* line 1435, ../scss/sites/magazine.scss */
+/* line 1437, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .searchAndFilterInterface {
   margin: 2.5rem 0;
   padding: 2.5rem 0 1.25rem;
@@ -1279,16 +1281,16 @@ figure.right {
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   text-align: center;
 }
-/* line 1444, ../scss/sites/magazine.scss */
+/* line 1446, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .searchAndFilterInterface ul {
   margin-left: 0;
 }
-/* line 1448, ../scss/sites/magazine.scss */
+/* line 1450, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .searchAndFilterInterface li {
   display: inline-block;
   margin: 0.25rem;
 }
-/* line 1452, ../scss/sites/magazine.scss */
+/* line 1454, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .searchAndFilterInterface li a {
   padding: 0.125rem 0.5rem;
   -webkit-border-radius: 6px;
@@ -1298,7 +1300,7 @@ figure.right {
   border-radius: 6px;
   color: white;
 }
-/* line 1458, ../scss/sites/magazine.scss */
+/* line 1460, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .searchAndFilterInterface li strong {
   background: black;
   color: #FFF;
@@ -1309,39 +1311,39 @@ figure.right {
   -o-border-radius: 6px;
   border-radius: 6px;
 }
-/* line 1467, ../scss/sites/magazine.scss */
+/* line 1469, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .searchAndFilterInterface li:nth-of-type(1) a {
   background: #4a8512;
 }
-/* line 1474, ../scss/sites/magazine.scss */
+/* line 1476, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .searchAndFilterInterface li:nth-of-type(2) a {
   background: #9f2112;
 }
-/* line 1481, ../scss/sites/magazine.scss */
+/* line 1483, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .searchAndFilterInterface li:nth-of-type(3) a {
   background: #1073ce;
 }
-/* line 1488, ../scss/sites/magazine.scss */
+/* line 1490, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .searchAndFilterInterface li:nth-of-type(4) a {
   background: #e8a500;
 }
-/* line 1498, ../scss/sites/magazine.scss */
+/* line 1500, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .searchAndFilterInterface .filterInterface ul li:nth-of-type(1) a {
   background: black;
 }
-/* line 1505, ../scss/sites/magazine.scss */
+/* line 1507, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .searchAndFilterInterface .filterInterface ul li:nth-of-type(2) a {
   background: #4a8512;
 }
-/* line 1512, ../scss/sites/magazine.scss */
+/* line 1514, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .searchAndFilterInterface .filterInterface ul li:nth-of-type(3) a {
   background: #9f2112;
 }
-/* line 1519, ../scss/sites/magazine.scss */
+/* line 1521, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .searchAndFilterInterface .filterInterface ul li:nth-of-type(4) a {
   background: #1073ce;
 }
-/* line 1526, ../scss/sites/magazine.scss */
+/* line 1528, ../scss/sites/magazine.scss */
 .siteHome #minisite .fullPostDisplay .searchAndFilterInterface .filterInterface ul li:nth-of-type(5) a {
   background: #e8a500;
 }

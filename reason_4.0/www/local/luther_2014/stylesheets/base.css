@@ -3907,6 +3907,14 @@ footer .contactBlurb {
   }
 }
 
+/* line 275, scss/modules/_blurb.scss */
+hr.horizontal-rule-basic {
+  border: 0;
+  height: 1px;
+  background: #E9E9E9;
+  margin-bottom: 2.5rem;
+}
+
 /* line 10, scss/_extends.scss */
 .zero-out, body #wrapper #global-banner hgroup h1, body #wrapper #global-banner #mobile-nav ul, body #wrapper #global-nav .minisites, body #wrapper #global-footer #global-footer-nav .column ul, body #wrapper #global-footer #global-footer-info .contact, #callToActionBlurb .blurb ul, #calendar .responsiveEventsList .views ul, .featuresModule .feature .featureInfo .featureTitle a,
 .featuresModule .feature .featureInfo .featureTitle .noLink, .featuresModule .feature .featureNavWrap .featureNav {
@@ -6518,7 +6526,7 @@ form input[type="submit"]:active {
 /* line 160, scss/modules/_image-galleries.scss */
 #contentSections #galleryimages .reason-image {
   width: 12.5rem;
-  height: 12.5rem;
+  height: 7.8125rem;
 }
 @media only screen and (max-width: 40em) {
   /* line 160, scss/modules/_image-galleries.scss */

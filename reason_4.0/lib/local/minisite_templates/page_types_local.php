@@ -23,6 +23,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'main_post_2' => '',
 			'main_post_3' => '',
 			'call_to_action_blurb' => 'blurb_call_to_action',
+			'callout_blurb' => 'blurb_callout',
 			'pre_sidebar' => 'blurb',
 			'pre_sidebar_2' => array(
 				'module' => 'image_sidebar_luther', // default parameters set in alter_reason_pagetype in luther.php
@@ -172,6 +173,18 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'module' => 'blurb',
 			'num_to_display' => '1',
 			'exclude_shown_blurbs' => true,
+		),
+		'pre_sidebar' => array(
+			'module' => 'blurb',
+			'exclude_shown_blurbs' => true,
+		),
+	),
+	'blurb_main_content_multiple' => array(
+		'main_post' => array(
+			'module' => 'blurb',
+			'num_to_display' => '30',
+			'exclude_shown_blurbs' => true,
+			'after_each_html'=> '<hr class="horizontal-rule-basic">',
 		),
 		'pre_sidebar' => array(
 			'module' => 'blurb',

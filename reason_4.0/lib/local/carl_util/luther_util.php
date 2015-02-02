@@ -203,7 +203,7 @@ function luther_get_image_url($image)
 	return $image;
 }
 
-function luther_process_inline_images($content)
+function luther_process_inline_images($content, &$photographer)
 // add caption to full-size and thumbnail images
 // replace deprecated img align left and right with class
 {
@@ -223,20 +223,30 @@ function luther_process_inline_images($content)
 		preg_match_all('/<img\s(alt=".*?")?\s?(src=".*?)(\/reason\/images\/(\d+)(_tn)?\.(jpg|jpeg|gif|png)")\s?(class="(\w+)")?/', $content, $matches, PREG_SET_ORDER);
 		
 		$image_ids = array();
+		$photographer = '';
+		$photographers = array();
+		$i = 0;
 		foreach ($matches as $val)
 		{
 			// If image appears more than once only add caption one time
 			if (array_search($val[4], $image_ids) === FALSE)
 			{
 				array_push($image_ids, $val[4]);
-				$content = luther_add_inline_caption($content, $val[4], $val[1]);
+				$content = luther_add_inline_caption($content, $val[4], $val[1], $photographers[$i]);
+				$i++;
 			}
+			
+		}
+		// if all embedded photos have the same photographer set $photographer otherwise leave field blank
+		if (count(array_unique($photographers)) == 1)
+		{
+			$photographer = $photographers[0];
 		}
 	}
 	return $content;
 }
 
-function luther_add_inline_caption($content, $image_id, $caption)
+function luther_add_inline_caption($content, $image_id, $caption, &$photographer)
 {
 	$es = new entity_selector();
 	$es->add_type(id_of('image'));
@@ -268,6 +278,7 @@ function luther_add_inline_caption($content, $image_id, $caption)
 				$content = preg_replace('/<img\s('.preg_quote($caption, '/').')?\s?(src=".*?)(\/reason\/images\/' . $id . '(_tn)?\.(jpg|jpeg|gif|png)")\s*\/>/', '<figure><img alt="'.$image->get_value('description').'" $2$3 /><figcaption>'.$image->get_value('description').'</figcaption></figure>', $content);
 			}			
 		}
+		$photographer = $image->get_value('author');
 	}
 	return $content;
 }
