@@ -444,7 +444,6 @@ class ProfileConnector
 						error_log('No Advance ID for profile: '.$person->get_display_name());
 					else
 						$profiles[$person->get_first_ds_value('ds_affiliation')][$advid] = array(
-							'date' => $result->get_value('creation_date'),
 							'name' => $person->get_display_name(), 
 							'firstname' => $person->get_first_ds_value('ds_firstname'), 
 							'lastname' => $person->get_first_ds_value('ds_lastname'), 
@@ -452,6 +451,8 @@ class ProfileConnector
 							'netid' => $person->get_first_ds_value('ds_username'),
 							'mail' => $person->get_first_ds_value('ds_email'),
 							'major' => $person->get_majors(),
+							'date' => $result->get_value('creation_date'),
+							'updated' => $result->get_value('last_modified'),
 							);
 					//	if (!$result->get_value('advance_id'))
 					//		reason_update_entity( $result->id(), get_user_id('causal_agent'), array('advance_id' => $advid), false);
