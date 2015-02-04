@@ -86,7 +86,7 @@ class DorianJHCampConfirmation
 	* Available to scripts that use this class by calling get_error_message()
 	* @var string
 	*/
-	var $error_message = 'We\'re sorry.  Your gift was successfully processed, but there appears to have been an error generating your confirmation information.  Please contact the Development Office for assistance.';
+	var $error_message = 'We\'re sorry.  Your registration was successfully processed, but there appears to have been an error generating your confirmation information.  Please contact the Music Office for assistance.';
 
 	/**
 		* Setter for PayFlowPro transaction reference number
