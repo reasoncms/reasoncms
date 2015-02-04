@@ -1345,7 +1345,7 @@ class DirectoryModule extends DefaultMinisiteModule {
         if ( $this->context == 'general' ){
             $email = str_replace('@', " &lt;AT&gt; ", $data['mail'][0]);
         } else {
-        $email = '<a href="mailto:'.$data['mail'][0].'">'.$data['mail'][0].'</a>';
+            $email = '<a href="mailto:'.$data['mail'][0].'" target="__blank">'.$data['mail'][0].'</a>';
         }
         if ( $table ) {
             $markup = $email;
