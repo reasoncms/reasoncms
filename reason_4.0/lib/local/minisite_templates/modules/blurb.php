@@ -216,7 +216,7 @@ class BlurbModule extends DefaultMinisiteModule
 				}
 				else
 				{
-					echo demote_headings($blurb->get_value('content'), $this->params['demote_headings']);
+					echo demote_headings(luther_process_inline_images($blurb->get_value('content'), $photographer), $this->params['demote_headings']);
 					if( $editable )
 					{
 						$params = array_merge(array('blurb_id' => $blurb->id()), $inline_editing->get_activation_params($this));
