@@ -92,7 +92,7 @@
 
 // DEFAULT (ALL COLUMN LAYOUTS)
 // (Main content areas only -- no sidebars)
-#{$wysiwyg-content-area} {
+#{$wysiwyg-content-area}, #{$blurb-content} {
 
 	// Older code. Images with no figure wrapper.
 	img { // Images are full width on small screens
