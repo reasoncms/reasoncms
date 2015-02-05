@@ -719,7 +719,13 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'num_to_display' => 0,
 		)
 	),
-
+	'show_children_not_in_nav_with_first_images' => array(
+		'main_post' => array(
+			'module'=>'luther_children',
+			'provide_images' => true,
+			'show_only_pages_not_in_nav' => true,
+		),
+	),
 	'tagboard_full_HeyNorse' =>array(
 		'pre_main_head' => '',
 		'main' => array(
