@@ -3,7 +3,37 @@ $(document).foundation({
 	equalizer : { equalize_on_stack: false }
 });
 
+
+
 $(document).ready(function() {
+
+	// Add classes for showing/hiding the mobile navigtaion
+	var menuToggle = $('#globalNavToggle');
+	var menuBlock = $('#globalNav');
+
+	var searchToggle = $('#utilityNavToggle');
+	var searchBlock = $('#utilityNav');
+	
+	$(menuToggle).click(function(e) {
+		menuToggle.toggleClass('open');
+		if(menuBlock.hasClass('open')) {
+			menuBlock.removeClass('open').addClass('closed');
+		}
+		else {
+			menuBlock.removeClass('closed').addClass('open');
+		}
+		e.preventDefault();
+	});
+	$(searchToggle).click(function(e) {
+		searchToggle.toggleClass('open');
+		if(searchBlock.hasClass('open')) {
+			searchBlock.removeClass('open').addClass('closed');
+		}
+		else {
+			searchBlock.removeClass('closed').addClass('open');
+		}
+		e.preventDefault();
+	});
 
 	// SANS IMAGELOADED
 	// var $container = $('#imageGalleryItemList');

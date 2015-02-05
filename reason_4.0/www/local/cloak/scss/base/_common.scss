@@ -11,8 +11,8 @@
 	#filtering {
 		@include clearfix;
 		margin: 0;
-		background: $snow;
-		border: 1px solid $silver;
+		background: $white-smoke;
+		//border: 1px solid $silver;
 		padding: $horizontal-gutter/2;
 		padding-bottom: 0;
 
@@ -32,6 +32,7 @@
 				border: 1px solid $iron;
 				border-top: 0;
 				border-radius: 0 0 $global-radius $global-radius;
+				color: $alert-color;
 
 				&:hover {
 					border-color: $aluminum;
@@ -62,6 +63,7 @@
 				border: 1px solid $iron;
 				border-top: 0;
 				border-radius: 0 0 $global-radius $global-radius;
+				color: $alert-color;
 
 				&:hover {
 					border-color: $aluminum;

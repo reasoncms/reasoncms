@@ -27,11 +27,46 @@
 		height: ($input-font-size + ($form-spacing * 1.5) - rem-calc(1));
 		background: $primary-color;
 		color: $white;
+		width: 100%;
+		border-radius: $global-radius;
 
 		@media #{$medium-up} {
 			width: 20%;
 			float: left;
 			margin-bottom: 0;
+		}
+	}
+}
+
+.globalSearchForm {
+	
+	input.searchInputBox {
+		display: block;
+		@include form-element();
+		margin-bottom: $form-spacing/2;
+
+		@media #{$medium-up} {
+			width: 70%;
+			float: left;
+			margin-bottom: $form-spacing;
+			border-right: none;
+		}
+	}
+
+	input.searchSubmitLink {
+		display: block;
+		text-align: center;
+		padding: $form-spacing / 2;
+		height: ($input-font-size + ($form-spacing * 1.5) - rem-calc(1));
+		background: $primary-color;
+		color: $white;
+		width: 100%;
+		border-radius: $global-radius;
+
+		@media #{$medium-up} {
+			width: 30%;
+			float: left;
+			margin-bottom: $form-spacing;
 		}
 	}
 }
@@ -77,10 +112,6 @@
 				background: darken($primary-color, 10%);
 				cursor: pointer;
 			}
-		}
-
-		a {
-			color: red;
 		}
 	}
 
@@ -171,7 +202,11 @@ form #antlionItem {
 		li {
 			display: inline;
 
-			a {font-weight: 400; text-decoration: underline;}
+			a {
+				font-weight: 400; 
+				text-decoration: underline;
+				color: $alert-color;
+			}
 		}
 	}
 }
@@ -179,6 +214,19 @@ form #antlionItem {
 form,
 #form,
 #form #discoLinear {
+
+	#formAdminControlBox {
+		background: none;
+
+		p {
+			margin: 0;
+			padding: 0;
+
+			a {
+				@include admin-button();
+			}
+		}
+	}
 
 	// TEXT INPUTS
 	input[type="text"],
@@ -244,6 +292,7 @@ form,
 	select {
 	  @include form-select;
 	  height: ($input-font-size + ($form-spacing * 1.5) - rem-calc(1));
+	  background: $white;
 	}
 
 	// FIELDSETS
@@ -312,6 +361,33 @@ form,
 
 	.submitSection {
 		margin: 0 0 $form-spacing;
+	}
+}
+
+
+// Tabled disco forms
+#disco_form {
+
+	table#discoTable {
+		border: none;
+
+		th,
+		tr,
+		td {
+			background: none;
+			border: none;
+		}
+	}
+
+	tr {
+		.words {
+			@include form-label();
+			margin-right: 12px;
+		}
+		
+		.element input {
+			margin: 0 0 $form-spacing;
+		}
 	}
 }
 
@@ -472,91 +548,6 @@ form,
 			
 // 		}
 
-// 		/*@media #{$medium-up} {  // Styles for left-aligned labels and right-aligned inputs
-// 			padding: $form-spacing 0;
-
-// 			.words {
-// 			  @include grid-column($columns: 4, $float: left);
-// 			 }
-
-// 			.element {
-// 				@include grid-column($columns: 12);
-// 			}
-
-// 			td {
-// 				padding: .5em 1em .5em 0; 
-// 			}
-// 		}*/
-
-// 		// Loki comment editor
-// 		.loki {
-// 			border: none;
-// 			width: 100%;
-// 			padding: 0;
-// 			background: none !important;
-
-// 			.toolbar {
-// 				a {
-// 					border: 1px solid darken($lc-grey, 10%);
-// 					width: rem-calc(34);
-// 					display: inline-block;
-// 					margin: 0 0 rem-calc(8);
-// 					position: relative;
-
-// 					@media #{$medium-up} {
-// 						width: rem-calc(40);	
-// 					}
-
-// 					&:hover {
-// 						background: $lc-grey;
-// 						border: 1px solid darken($lc-grey, 15%);
-// 					}
-
-// 					&:first-child {
-// 						@include border-left-radius(4px);	
-// 					}
-
-// 					&:last-child {
-// 						@include border-right-radius(4px);	
-// 					}
-
-// 					& + a {
-// 						margin-left: -1px;
-// 					}
-
-// 					&:hover,
-// 					&:active {
-// 						z-index: 100;
-// 					}
-
-// 					&:active {
-// 						@include box-shadow(rgba(#000, .125) 0 3px 5px inset);
-// 					}
-					
-// 					img,
-// 					span {
-// 						margin: 8px auto;
-// 						display: block;
-
-// 						@media #{$medium-up} {
-// 							margin: 10px auto;
-// 						}
-
-// 					}
-// 				}
-// 			}
-
-// 			div.iframe_wrapper,
-// 			textarea {
-// 				//border: 1px solid $lc-grey;
-// 				//border: 1px solid;
-// 			}
-
-// 			.grippy_wrapper {
-// 				display: none;
-// 			}
-// 		}
-
 // 		&#commentcontentItem { // Let's not stripe the blog comment form -- it looks wonky with just two fields.
 // 			background: $lc-white;
 
@@ -567,14 +558,6 @@ form,
 // 					background: #FFF !important;
 // 				}
 // 			}
-// 		}
-
-// 		// Honeypot captcha fields. We hide these.
-// 		&#tarbabypreItem,
-// 		&#tarbabyItem,
-// 		&#noturlItem,
-// 		&#antlionItem {
-// 		    display: none;
 // 		}
 // 	}
 // }

@@ -47,6 +47,10 @@
 	&:active {
 		background: lighten($icon-background, 5%);
 	}
+
+	span {
+		@include screenreader;
+	}
 }
 
 @mixin inline-icon($pseudo: before, $icon: $fa-var-bomb, $color: inherit, $margin: true) {
@@ -65,6 +69,22 @@
 	}
 }
 
+@mixin admin-button() {
+	@include button(
+		$padding: $button-tny,
+		$bg: #333
+	);
+	@include inline-icon($pseudo: before, $icon: $fa-var-pencil);
+	@include single-transition(background);
+	color: $white;
+	font-weight: 400;
+	text-decoration: none;
+
+	&:hover {
+		background: #000;
+	}
+}
+
 @mixin feed-button() {
 	@include button(
 		$padding: $button-tny,
@@ -75,13 +95,29 @@
 	margin: 0 rem-calc(12) rem-calc(2) 0 !important;
 }
 
-@mixin more-link($more-link-bg: $primary-color) {
-	@include button($padding: $button-tny, $bg: $more-link-bg);
+@mixin more-link($more-link-bg: transparent) {
+	@include button($padding: $button-tny, $bg: $more-link-bg, $radius: $global-radius);
 	@include inline-icon($pseudo: after, $icon: $fa-var-chevron-circle-right);
+	border: 1px solid $primary-color;
+	color: $primary-color;
+	font-weight: 400;
+}
+
+// More links that are part of a longer sentence of unlinked text
+@mixin inline-more-link($more-link-color: $primary-color) {
+	font-size: rem-calc(14);
+
+	a {
+		color: $more-link-color;
+		font-weight: 700;
+		text-decoration: underline;
+		font-size: rem-calc(14);
+	}
+	//@include inline-icon($pseudo: after, $icon: $fa-var-chevron-circle-right, $color: $base);
 }
 
 @mixin back-link($more-link-bg: $primary-color) {
-	@include button($padding: $button-tny, $bg: $more-link-bg);
+	@include button($padding: $button-tny, $bg: $more-link-bg, $radius: $global-radius);
 	@include inline-icon($pseudo: before, $icon: $fa-var-chevron-circle-left);
 }
 

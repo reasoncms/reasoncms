@@ -1,75 +1,77 @@
 // Publication Styles
 // Cloak, v1
 
-// Column Layout
-// This has been moved to base/_common.scss.
-// Remove when sure that we didn't lose anything in the process
-//#meat {
+// Common
+@mixin publication-date() {
+	color: $aluminum;
+	font-size: rem-calc(14);
+}
 
-	// .publication {
-	// 	@include grid-row();
+// REALTED PUBLICATION (usually in the sidebar)
+#relatedPub {
+@include clearfix;
 
-	// 	.persistent {
-	// 		margin-bottom: $column-gutter;
-	// 	}
+	// @todo: make sure structure doesn't do anything weird with module nav in this instance
+	.moduleNav {
 
-	// 	.moduleNav {
-	// 		margin-bottom: $column-gutter;
-	// 	}
-	// }
-		
-	// // 3 column layout. Page has content, related, and navigation.
-	// &.containsConRelNav {
+		.posts {
+			margin: 0;
 
-	// 	.publication {
+			.post {
+				list-style-type: none;
+				border-top: 1px solid $silver;
+				padding: $horizontal-gutter/2 0;
+				
+				.teaserImage {
+					max-width: rem-calc(80);
+					float: right;
+					margin: 0 0 $horizontal-gutter/3 $column-gutter/3;
+					
+					.tnImage {
 
-	// 		.persistent {
-	// 			@include grid-column($columns:12, $collapse:true);
-	// 		}
+					}
+				}
 
-	// 		.moduleNav {
-	// 			@include grid-column($columns:12, $collapse:true);
-	// 		}
-	// 	}
-	// }
+				.date {
+					@include publication-date();
+				}
 
-	// // 2 column layout. Page has content and navigation.
-	// &.containsConNav,
-	// // 2 column layout. Page has content and related.
-	// &.containsConRel,
-	// // 1 column layout. Page has content.
-	// &.containsCon {
+				h4 {
+					font-size: $h3-font-size - $h3-font-reduction;
+				}
 
-	// 	.publication {
-		
-	// 		.persistent {
-	// 			@include grid-column($columns:12, $collapse:true);
+				.desc {
+					@include last-child-padding-collapse();
+					
+					* {
+						font-size: rem-calc(14);
+					}
+				}
+			}
+		}
 
-	// 			@media #{$medium-up} {
-	// 				@include grid-column($columns:4, $collapse:true);
-	// 				float: right;
-	// 				padding-left: $column-gutter/2;			
-	// 			}
-	// 		}
+		.pubLinks {
+			margin: 0 0 $horizontal-gutter;
 
-	// 		.moduleNav {
-	// 			@include grid-column($columns:12, $collapse:true);
+			li {
+				list-style-type: none;
+				
+				a {
+					@include more-link();
+				}
+			}
+		}
+	}
+}
 
-	// 			@media #{$medium-up} {
-	// 				@include grid-column($columns:8,$collapse:true);
-	// 				padding-right: $column-gutter/2;	
-	// 			}
-	// 		}
-	// 	}
-	// }
-//}
 
+
+// PUBLICATION
 #meat .publication {
 
 	// Common
 	.date {
-		color: $aluminum;
-		font-size: rem-calc(14);
+		@include publication-date();
 	}
 
 	.back {
@@ -79,7 +81,7 @@
 		div {
 			
 			a {
-				@include inline-icon($icon: $fa-var-mail-reply);
+				@include back-link();
 			}
 		}
 	}
@@ -87,6 +89,10 @@
 	// Search and Filter styles
 	.persistent {
 		border: none;
+
+		.addItemLink {
+
+		}
 
 		.loginlogout {
 			margin: $horizontal-gutter/4 $column-gutter/2 0 0;
@@ -116,9 +122,6 @@
 				text-transform: uppercase;
 				font-size: rem-calc(15);
 				font-weight: 700;
-				//margin-bottom: $column-gutter;
-				// @include alert($radius: $global-radius);
-				// background: red;
 
 				.clear {
 					font-weight: 700;
@@ -129,6 +132,63 @@
 						@include inline-icon($icon: $fa-var-mail-reply);
 					}
 				}
+			}
+		}
+
+		.issueName {
+
+		}
+
+		.issueMenu {
+			margin-bottom: $horizontal-gutter/2;
+			@include clearfix;
+			
+			form {
+				margin-bottom: $horizontal-gutter/3;
+
+				.issueLabel {
+					@include screenreader();
+				}
+				//margin-bottom: $horizontal-gutter/2;
+			}
+
+			.allIssuesLink a {
+				float: right;
+				@include more-link();
+			}
+		}
+
+		#featuredItems {
+
+		}
+
+		.sections {
+			margin: 0;
+
+			.section {
+				list-style-type: none;
+				margin-bottom: $horizontal-gutter;
+
+				.sectionInfo {
+
+					h3 a {
+						display: block;
+						border-bottom: 2px solid;
+					}
+
+					.sectionDesc {
+
+					}
+				}
+
+				.sectionFoot {
+					text-align: right;
+
+					.viewEntireSection {
+						@include inline-more-link();
+					}
+				}
+
 			}
 		}
 		
@@ -180,6 +240,7 @@
 				.links {
 					margin: 0;
 					padding: 0;
+					font-size: rem-calc(14);
 
 					li {
 						display: inline-block;
@@ -206,6 +267,10 @@
 			}
 		}
 
+		a[href="?"] {
+			@include back-link();
+		}
+
 		.feedLink {
 			margin-bottom: $horizontal-gutter;
 
@@ -230,6 +295,57 @@
 
 		.back {
 			margin-bottom: $horizontal-gutter;
+		}
+
+		.social {
+			margin: 0;
+			display: block;
+			@include clearfix;
+
+			&.top {
+				margin-top: $horizontal-gutter;
+			}
+
+			&.bottom {
+				margin-bottom: $horizontal-gutter;
+			}
+
+			p {
+				//display: inline-block;
+				margin: 0;
+
+				span {
+					@include screenreader();
+				}
+
+				a {
+					margin: 0 rem-calc(6);
+
+					@include circle-icon-button(
+						$icon-size: rem-calc(15),
+						$icon-padding: rem-calc(10),
+						$icon-background: $snow,
+						$icon-color: $primary-color,
+						$icon-border-color: $gainsboro
+					);
+
+					&.facebook:before {
+						content: $fa-var-facebook;
+					}
+
+					&.twitter:before {
+						content: $fa-var-twitter;
+					}
+
+					&.google:before {
+						content: $fa-var-google-plus;
+					}
+
+					&.email:before {
+						content: $fa-var-envelope-o;
+					}
+				}
+			}
 		}
 
 		.fullPost {
@@ -399,47 +515,47 @@
 				}
 
 				.comments {
-					ul {
+					
+					> ul {
 						margin: 0;
 						@include clearfix;
-					}
 
-					li {
-						background: none;
-						padding: 0;
-						margin: 0 0 $horizontal-gutter;
-						list-style-type: none;
+						> li {
+							background: none;
+							padding: 0;
+							margin: 0 0 $horizontal-gutter;
+							list-style-type: none;
 
-						a[name^='comment'] {
-							@include anchor-padding-menu();
-						}
+							a[name^='comment'] {
+								@include anchor-padding-menu();
+							}
 
-						.datetime {
-							float: right;
-							text-align: right;
-							width: 50%;
-							font-size: rem-calc(14);
-							margin-bottom: rem-calc(8);
-						}
+							.datetime {
+								float: right;
+								text-align: right;
+								width: 50%;
+								font-size: rem-calc(14);
+								margin-bottom: rem-calc(8);
+							}
 
-						.author {
-							float: left;
-							width: 50%;
-							font-size: rem-calc(18);
-							font-weight: 700;
-							margin-bottom: rem-calc(8);
-						}
+							.author {
+								float: left;
+								width: 50%;
+								font-size: rem-calc(18);
+								font-weight: 700;
+								margin-bottom: rem-calc(8);
+							}
 
-						.commentContent {
-							border: 1px solid $gainsboro;
-							clear: both;
-							padding: $horizontal-gutter;
-							border-radius: $global-radius;
-							line-height: 1.2 !important;
+							.commentContent {
+								border: 1px solid $gainsboro;
+								clear: both;
+								padding: $horizontal-gutter;
+								border-radius: $global-radius;
+								line-height: 1.2 !important;
 
-							*:last-child {
-								padding-bottom: 0;
-								margin-bottom: 0;
+								*:last-child {
+									margin-bottom: 0;
+								}
 							}
 						}
 					}

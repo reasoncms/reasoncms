@@ -1290,14 +1290,16 @@ blockquote p {
   .show-for-print {
     display: inherit !important; } }
 .fa, #banner #navigationToggles li.navJump a:before, #banner #navigationToggles li.searchToggle a:before, #pageContent blockquote > *:first-child:not(cite):before, .fullPost .text blockquote > *:first-child:not(cite):before, .comments .commentContent blockquote > *:first-child:not(cite):before, .eventContent blockquote > *:first-child:not(cite):before, .blurb blockquote > *:first-child:not(cite):before, #faq .answer blockquote > *:first-child:not(cite):before, .facStaffContent blockquote > *:first-child:not(cite):before, .minutesContent blockquote > *:first-child:not(cite):before, .policyContent blockquote > *:first-child:not(cite):before, .policy .approvals blockquote > *:first-child:not(cite):before, .persistent #filtering .searchForm a:before, .persistent #filtering .filterSet a:before, .persistent #filtering .filters ul li a:before, .persistent #filtering .filters ul li strong:before, .persistent .loginlogout a:after, .moduleNav .feedLink .feedInfo a:before, #generic .back a:before, .reveal-modal .close-reveal-modal:before, dialog .close-reveal-modal:before, .assets li:before, #av .moduleNav ul li:before, #av .podcast a:before, .classifiedSubmitLink a:before, .classifiedReturnToListingLink a:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .options .categories li a:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .options .categories li strong:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .options .audiences li a:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .options .audiences li strong:before, #calendar .responsiveEventsList .iCalExport a:before,
-#calendar .responsiveEventsList .feedInfo a:before, #calendar .eventDetails .export .back a:before, #calendar .eventDetails .export .repetition:before,
-#calendar .eventDetails .export .date:before,
-#calendar .eventDetails .export .time:before,
-#calendar .eventDetails .export .duration:before,
-#calendar .eventDetails .export .eventLocation:before,
-#calendar .eventDetails .export .sponsor:before,
-#calendar .eventDetails .export .contact:before, #miniCal .foot .more a:after, #facultyStaff .facStaff .facStaffInfo .facStaffPhone:before, #facultyStaff .facStaff .facStaffInfo .facStaffEmail:before, .featuresModule .feature .featureContent .featureInfo .featureNav .play-pause .button.play:before, .featuresModule .feature .featureContent .featureInfo .featureNav .play-pause .button.pause:before, .featuresModule .feature .featureContent .featureInfo .featureNav .navBlock .button.prev:before, .featuresModule .feature .featureContent .featureInfo .featureNav .navBlock .button.next:before, #discoErrorNotice h3:before, #imageGallery .item .prevWrapper a:after,
-#imageGallery .item .nextWrapper a:after, #imageGallery .back:before, .editThis:before, .loginLinkModule #footerLoginLink .login:after, .loginLinkModule #footerLoginLink .logout:after, .minutesList li:before, #minisiteNavigation ul .navList .jump a:after, #policyModule .rootPolicyList .rootPolicyItem:before, #policyModule .listLink a:before, #relatedPub .moduleNav .pubLinks li a:after, #meat .publication .back div a:before, #meat .publication .persistent .loginlogout a:after, #meat .publication .moduleNav .filterMessage h3 .clear a:before, #meat .publication .moduleNav .posts .post .links li.more a:before, #meat .publication .moduleNav .posts .post .links li.permalink a:before, #meat .publication .moduleNav .posts .post .links li.comments a:before, #meat .publication .moduleNav .feedLink a:before, #meat .publication .moduleNav .feedLink .feedInfo a:before, #meat .publication.fullPostDisplay .social p a:before, #meat .publication.fullPostDisplay .fullPost .firstChunk .commentAdded h4:before, #meat .publication.fullPostDisplay .fullPost .relatedItems .relatedEvents ul li:before, #meat .publication.fullPostDisplay .fullPost .relatedItems .categories li a:before, #meat .publication.fullPostDisplay .fullPost .relatedItems .categories li strong:before, #meat .publication.fullPostDisplay .fullPost .secondChunk .nextPrev .prev a:before, #meat .publication.fullPostDisplay .fullPost .secondChunk .nextPrev .next a:after, #meat .publication.fullPostDisplay .fullPost .secondChunk .addCommentForm .commentsOff:before, #meat .publication.fullPostDisplay .fullPost .secondChunk .addCommentForm .notPermitted .subContent:before, #meat .publication.fullPostDisplay .fullPost .secondChunk .addCommentForm .loginRequired .subContent:before {
+#calendar .responsiveEventsList .feedInfo a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .repetition:before, #calendar .eventDetails .date:before,
+#calendar .eventDetails .time:before,
+#calendar .eventDetails .duration:before,
+#calendar .eventDetails .eventLocation:before,
+#calendar .eventDetails .sponsor:before,
+#calendar .eventDetails .contact:before, #calendar .eventDetails .dates li:before, #calendar .eventDetails #slotInfo > ul .administer a:before, #miniCal .foot .more a:after, #facultyStaff .facStaff .facStaffInfo .facStaffPhone:before, #facultyStaff .facStaff .facStaffInfo .facStaffEmail:before, .featuresModule .feature .featureContent .featureInfo .featureNav .play-pause .button.play:before, .featuresModule .feature .featureContent .featureInfo .featureNav .play-pause .button.pause:before, .featuresModule .feature .featureContent .featureInfo .featureNav .navBlock .button.prev:before, .featuresModule .feature .featureContent .featureInfo .featureNav .navBlock .button.next:before, #discoErrorNotice h3:before, form #formAdminControlBox p a:before,
+#form #formAdminControlBox p a:before,
+#form #discoLinear #formAdminControlBox p a:before, #imageGallery .item .prevWrapper a:after,
+#imageGallery .item .nextWrapper a:after, #imageGallery .back:before, .editable .edit a:before,
+.editable .editThis:before, .editable.editing .note:before, .loginLinkModule #footerLoginLink .login:after, .loginLinkModule #footerLoginLink .logout:after, .minutesList li:before, #minisiteNavigation ul .navList .jump a:after, #policyModule .rootPolicyList .rootPolicyItem:before, #policyModule .listLink a:before, #relatedPub .moduleNav .pubLinks li a:after, #meat .publication .back div a:before, #meat .publication .persistent .loginlogout a:after, #meat .publication .moduleNav .filterMessage h3 .clear a:before, #meat .publication .moduleNav .issueMenu .allIssuesLink a:after, #meat .publication .moduleNav .posts .post .links li.more a:before, #meat .publication .moduleNav .posts .post .links li.permalink a:before, #meat .publication .moduleNav .posts .post .links li.comments a:before, #meat .publication .moduleNav a[href="?"]:before, #meat .publication .moduleNav .feedLink a:before, #meat .publication .moduleNav .feedLink .feedInfo a:before, #meat .publication.fullPostDisplay .social p a:before, #meat .publication.fullPostDisplay .fullPost .firstChunk .commentAdded h4:before, #meat .publication.fullPostDisplay .fullPost .relatedItems .relatedEvents ul li:before, #meat .publication.fullPostDisplay .fullPost .relatedItems .categories li a:before, #meat .publication.fullPostDisplay .fullPost .relatedItems .categories li strong:before, #meat .publication.fullPostDisplay .fullPost .secondChunk .nextPrev .prev a:before, #meat .publication.fullPostDisplay .fullPost .secondChunk .nextPrev .next a:after, #meat .publication.fullPostDisplay .fullPost .secondChunk .addCommentForm .commentsOff:before, #meat .publication.fullPostDisplay .fullPost .secondChunk .addCommentForm .notPermitted .subContent:before, #meat .publication.fullPostDisplay .fullPost .secondChunk .addCommentForm .loginRequired .subContent:before {
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -1305,13 +1307,12 @@ blockquote p {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale; }
 
-.fa-fw, #calendar .eventDetails .export .repetition:before,
-#calendar .eventDetails .export .date:before,
-#calendar .eventDetails .export .time:before,
-#calendar .eventDetails .export .duration:before,
-#calendar .eventDetails .export .eventLocation:before,
-#calendar .eventDetails .export .sponsor:before,
-#calendar .eventDetails .export .contact:before, #facultyStaff .facStaff .facStaffInfo .facStaffPhone:before, #facultyStaff .facStaff .facStaffInfo .facStaffEmail:before, #meat .publication .moduleNav .posts .post .links li a:before {
+.fa-fw, #calendar .eventDetails .repetition:before, #calendar .eventDetails .date:before,
+#calendar .eventDetails .time:before,
+#calendar .eventDetails .duration:before,
+#calendar .eventDetails .eventLocation:before,
+#calendar .eventDetails .sponsor:before,
+#calendar .eventDetails .contact:before, #facultyStaff .facStaff .facStaffInfo .facStaffPhone:before, #facultyStaff .facStaff .facStaffInfo .facStaffEmail:before, #meat .publication .moduleNav .posts .post .links li a:before {
   width: 1.2857142857em;
   text-align: center; }
 
@@ -1588,6 +1589,11 @@ blockquote p {
           background: #e6e6e6; }
         #banner #navigationToggles li.navJump a:active {
           background: white; }
+        #banner #navigationToggles li.navJump a span {
+          position: absolute;
+          left: -9999px;
+          top: -9999px;
+          margin-bottom: 0; }
       #banner #navigationToggles li.navJump .navJumpText {
         position: absolute;
         left: -9999px;
@@ -1612,6 +1618,11 @@ blockquote p {
           background: #e6e6e6; }
         #banner #navigationToggles li.searchToggle a:active {
           background: white; }
+        #banner #navigationToggles li.searchToggle a span {
+          position: absolute;
+          left: -9999px;
+          top: -9999px;
+          margin-bottom: 0; }
       #banner #navigationToggles li.searchToggle .searchJumpText {
         position: absolute;
         left: -9999px;
@@ -1875,8 +1886,7 @@ h2.pageTitle {
   border: none; }
   .persistent #filtering {
     margin: 0;
-    background: #F9F9F9;
-    border: 1px solid #EFEFEF;
+    background: #F5F5F5;
     padding: 1.125rem;
     padding-bottom: 0; }
     .persistent #filtering:before, .persistent #filtering:after {
@@ -1894,7 +1904,8 @@ h2.pageTitle {
       background: #FFFFFF;
       border: 1px solid #CCCCCC;
       border-top: 0;
-      border-radius: 0 0 3px 3px; }
+      border-radius: 0 0 3px 3px;
+      color: #f04124; }
       .persistent #filtering .searchForm a:hover {
         border-color: #999999; }
       .persistent #filtering .searchForm a:before {
@@ -1915,7 +1926,8 @@ h2.pageTitle {
         background: #FFFFFF;
         border: 1px solid #CCCCCC;
         border-top: 0;
-        border-radius: 0 0 3px 3px; }
+        border-radius: 0 0 3px 3px;
+        color: #f04124; }
         .persistent #filtering .filterSet a:hover {
           border-color: #999999; }
         .persistent #filtering .filterSet a:before {
@@ -2067,6 +2079,7 @@ h2.pageTitle {
     background-color: #b84041;
     border-color: #933334;
     color: #FFFFFF;
+    border-radius: 3px;
     transition: background-color 300ms ease-out; }
     #generic .back a:hover, #generic .back a:focus {
       background-color: #933334; }
@@ -2314,18 +2327,24 @@ dialog .close-reveal-modal span {
       background: #FFFFFF;
       color: #222222; }
 
-.blurb {
+.blurb,
+.issueBlurb {
   border: 1px solid #DDDDDD;
   padding: 1.125rem;
   margin-bottom: 2.25rem; }
-  .blurb:before, .blurb:after {
+  .blurb:before, .blurb:after,
+  .issueBlurb:before,
+  .issueBlurb:after {
     content: " ";
     display: table; }
-  .blurb:after {
+  .blurb:after,
+  .issueBlurb:after {
     clear: both; }
-  .blurb > *:last-child {
+  .blurb > *:last-child,
+  .issueBlurb > *:last-child {
     margin-bottom: 0; }
-    .blurb > *:last-child *:last-child {
+    .blurb > *:last-child *:last-child,
+    .issueBlurb > *:last-child *:last-child {
       margin-bottom: 0; }
 
 .locationBarText {
@@ -2355,86 +2374,61 @@ dialog .close-reveal-modal span {
   .childrenList > li {
     list-style-type: none;
     background: #F5F5F5;
-    margin-bottom: 0.0625rem;
-    padding: 0.75rem 1rem; }
+    margin-bottom: 0.0625rem; }
     .childrenList > li a[href] {
-      position: relative;
+      padding: 0.75rem 1rem;
       display: block; }
-    .childrenList > li h4 {
-      line-height: inherit;
-      margin: 0;
-      font-weight: 700; }
+      .childrenList > li a[href] h4 {
+        line-height: inherit;
+        margin: 0;
+        font-weight: 700;
+        color: #b84041; }
+      .childrenList > li a[href]:hover {
+        background: #e1e1e1; }
     .childrenList > li .childDesc {
       color: #7b7b7b;
       font-family: "Open Sans", sans-serif;
-      font-weight: 300; }
-  .childrenList a:hover {
-    text-decoration: underline; }
-
-.siblingsModule .siblingList {
-  margin: 0;
-  -webkit-columns: 4 17.5rem;
-  -moz-columns: 4 17.5rem;
-  columns: 4 17.5rem;
-  -webkit-column-gap: 3rem;
-  -moz-column-gap: 3rem;
-  column-gap: 3rem;
-  -webkit-column-rule: 1px dotted #ddd;
-  -moz-column-rule: 1px dotted #ddd;
-  column-rule: 1px dotted #ddd; }
-  .siblingsModule .siblingList li {
-    overflow: hidden;
-    list-style-type: none;
-    padding: 0 0 0.25rem; }
-    .siblingsModule .siblingList li a,
-    .siblingsModule .siblingList li strong {
-      background: #F5F5F5;
-      display: block;
-      padding: 0.5rem 0.75rem; }
-    .siblingsModule .siblingList li a:hover {
-      background: #b84041;
-      color: #FFFFFF; }
-    .siblingsModule .siblingList li strong {
-      background: #DDDDDD; }
-    .siblingsModule .siblingList li.odd {
-      clear: left; }
-
-#childrenAndGrandchildren .childrenList > li {
-  padding: 0;
-  border: 1px solid #999999; }
-  #childrenAndGrandchildren .childrenList > li > h3,
-  #childrenAndGrandchildren .childrenList > li > h4 {
-    padding: 0.75rem 1rem; }
-  #childrenAndGrandchildren .childrenList > li > .childDesc {
-    padding: 0 1rem 0.75rem;
-    margin-top: -0.625rem; }
-  #childrenAndGrandchildren .childrenList > li ul {
-    padding: 0.75rem 1rem;
-    margin: 0;
-    padding-top: 0.75rem; }
-    #childrenAndGrandchildren .childrenList > li ul li {
-      border: none;
-      list-style-type: none; }
-    #childrenAndGrandchildren .childrenList > li ul strong,
-    #childrenAndGrandchildren .childrenList > li ul h4 {
-      font-family: "Merriweather", serif;
-      display: inline;
-      font-weight: 400; }
-    #childrenAndGrandchildren .childrenList > li ul .childDesc {
-      display: inline;
-      margin: 0;
+      font-weight: 300;
       font-size: 0.875rem; }
-      #childrenAndGrandchildren .childrenList > li ul .childDesc:before {
-        content: "//";
-        margin: 0 0.375rem 0 0.25rem; }
-    #childrenAndGrandchildren .childrenList > li ul a {
-      margin: 0;
-      display: inline; }
-      #childrenAndGrandchildren .childrenList > li ul a:before {
-        content: ''; }
+
+#childrenAndGrandchildren .childrenList > li > h3,
+#childrenAndGrandchildren .childrenList > li > h4 {
+  background: #999999;
+  margin: 0 0 0.75rem; }
+#childrenAndGrandchildren .childrenList > li > .childDesc {
+  padding: 0 1rem 0.75rem; }
+#childrenAndGrandchildren .childrenList > li ul {
+  padding: 0 1rem;
+  margin: 0; }
+  #childrenAndGrandchildren .childrenList > li ul:before, #childrenAndGrandchildren .childrenList > li ul:after {
+    content: " ";
+    display: table; }
+  #childrenAndGrandchildren .childrenList > li ul:after {
+    clear: both; }
+  #childrenAndGrandchildren .childrenList > li ul li {
+    border: none;
+    list-style-type: none;
+    margin-bottom: 0.75rem; }
+  #childrenAndGrandchildren .childrenList > li ul strong,
+  #childrenAndGrandchildren .childrenList > li ul h4 {
+    font-family: "Merriweather", serif;
+    font-weight: 400;
+    padding: 0;
+    margin: 0; }
+    #childrenAndGrandchildren .childrenList > li ul strong a,
+    #childrenAndGrandchildren .childrenList > li ul h4 a {
+      padding: 0; }
+      #childrenAndGrandchildren .childrenList > li ul strong a:hover,
+      #childrenAndGrandchildren .childrenList > li ul h4 a:hover {
+        background: none; }
+  #childrenAndGrandchildren .childrenList > li ul .childDesc {
+    margin: 0;
+    font-size: 0.875rem; }
 
 .childrenListWithImages {
-  margin: 0; }
+  margin: 0;
+  margin-left: -1.5rem;
+  margin-bottom: 1.125rem; }
   .childrenListWithImages:before, .childrenListWithImages:after {
     content: " ";
     display: table; }
@@ -2443,26 +2437,16 @@ dialog .close-reveal-modal span {
   .childrenListWithImages li {
     clear: both;
     display: block;
-    margin-bottom: 1.5rem;
-    background: red; }
-    @media only screen and (min-width: 30em) {
-      .childrenListWithImages li {
-        width: 50%;
-        float: left;
-        clear: none; } }
-    @media only screen and (min-width: 40.063em) {
-      .childrenListWithImages li {
-        width: 33.33333%; } }
-    @media only screen and (min-width: 90.063em) {
-      .childrenListWithImages li {
-        width: 25%; } }
+    margin-bottom: 1.125rem;
+    background: none; }
     .childrenListWithImages li a,
     .childrenListWithImages li a[href] {
       overflow: hidden;
-      background: green;
+      background: #EFEFEF;
       margin: 0;
-      margin-right: 1.5rem;
-      display: block; }
+      margin-left: 1.5rem;
+      display: block;
+      padding: 0; }
       .childrenListWithImages li a:before, .childrenListWithImages li a:after,
       .childrenListWithImages li a[href]:before,
       .childrenListWithImages li a[href]:after {
@@ -2482,10 +2466,89 @@ dialog .close-reveal-modal span {
         text-decoration: underline; }
       .childrenListWithImages li a h4,
       .childrenListWithImages li a[href] h4 {
-        padding: 0.75rem; }
+        padding: 0.75rem 1rem; }
       .childrenListWithImages li a .childDesc,
       .childrenListWithImages li a[href] .childDesc {
-        padding: 0 0.75rem 0.75rem; }
+        padding: 0 1rem 0.75rem; }
+
+@media only screen and (min-width: 30em) {
+  .containsConRelNav .childrenListWithImages li {
+    width: 50%;
+    float: left;
+    clear: none; }
+    .containsConRelNav .childrenListWithImages li:nth-child(2n+1) {
+      clear: left; } }
+
+@media only screen and (min-width: 30em) {
+  .containsConNav .childrenListWithImages li,
+  .containsConRel .childrenListWithImages li {
+    width: 50%;
+    float: left;
+    clear: none; }
+    .containsConNav .childrenListWithImages li:nth-child(2n+1),
+    .containsConRel .childrenListWithImages li:nth-child(2n+1) {
+      clear: left; } }
+@media only screen and (min-width: 40.063em) {
+  .containsConNav .childrenListWithImages li,
+  .containsConRel .childrenListWithImages li {
+    width: 33.33333%; }
+    .containsConNav .childrenListWithImages li:nth-child(2n+1),
+    .containsConRel .childrenListWithImages li:nth-child(2n+1) {
+      clear: none; }
+    .containsConNav .childrenListWithImages li:nth-child(3n+1),
+    .containsConRel .childrenListWithImages li:nth-child(3n+1) {
+      clear: left; } }
+@media only screen and (min-width: 90.063em) {
+  .containsConNav .childrenListWithImages li,
+  .containsConRel .childrenListWithImages li {
+    width: 25%; }
+    .containsConNav .childrenListWithImages li:nth-child(3n+1),
+    .containsConRel .childrenListWithImages li:nth-child(3n+1) {
+      clear: none; }
+    .containsConNav .childrenListWithImages li:nth-child(4n+1),
+    .containsConRel .childrenListWithImages li:nth-child(4n+1) {
+      clear: left; } }
+
+@media only screen and (min-width: 30em) {
+  .containsCon .childrenListWithImages li {
+    width: 50%;
+    float: left;
+    clear: none; }
+    .containsCon .childrenListWithImages li:nth-child(2n+1) {
+      clear: left; } }
+@media only screen and (min-width: 40.063em) {
+  .containsCon .childrenListWithImages li {
+    width: 33.33333%; }
+    .containsCon .childrenListWithImages li:nth-child(2n+1) {
+      clear: none; }
+    .containsCon .childrenListWithImages li:nth-child(3n+1) {
+      clear: left; } }
+@media only screen and (min-width: 63.8125em) {
+  .containsCon .childrenListWithImages li {
+    width: 25%; }
+    .containsCon .childrenListWithImages li:nth-child(3n+1) {
+      clear: none; }
+    .containsCon .childrenListWithImages li:nth-child(4n+1) {
+      clear: left; } }
+
+.siblingsModule .siblingList {
+  margin: 0;
+  padding: 0;
+  margin-bottom: 2.25rem;
+  font-size: 0.875rem; }
+  .siblingsModule .siblingList li {
+    list-style-type: none;
+    background: #F5F5F5;
+    margin-bottom: 0.0625rem; }
+    .siblingsModule .siblingList li a,
+    .siblingsModule .siblingList li strong {
+      display: block;
+      padding: 0.5rem 0.75rem; }
+    .siblingsModule .siblingList li a:hover {
+      background: #e1e1e1; }
+    .siblingsModule .siblingList li strong {
+      background: #e6e6e6;
+      color: #b84041; }
 
 .classifiedSubmitLink a {
   border-style: solid;
@@ -2541,6 +2604,7 @@ dialog .close-reveal-modal span {
   background-color: #b84041;
   border-color: #933334;
   color: #FFFFFF;
+  border-radius: 3px;
   transition: background-color 300ms ease-out; }
   .classifiedReturnToListingLink a:hover, .classifiedReturnToListingLink a:focus {
     background-color: #933334; }
@@ -2551,27 +2615,29 @@ dialog .close-reveal-modal span {
     margin-right: 0.375rem;
     color: inherit; }
 
+/* Events Column Layouts */
 @media all and (max-width: 720px) {
-  #calendar .responsiveEventsList .eventsListContent, #calendar .responsiveEventsList .gridAndOptionsWrapper {
-    background: green;
+  #calendar .responsiveEventsList .eventsListContent,
+  #calendar .responsiveEventsList .gridAndOptionsWrapper {
     width: auto;
     float: none;
     margin-left: 0;
     clear: both;
-    padding: 1px 0; }
-
+    padding: 0; }
   #calendar .responsiveEventsList .datesAndSearch {
     float: left;
-    width: 49%; }
-
+    width: 50%;
+    padding-right: 1.5rem; }
   #calendar .responsiveEventsList .options {
     float: right;
-    width: 49%; } }
+    width: 49%;
+    width: 50%;
+    padding-left: 1.5rem; } }
 @media all and (max-width: 500px) {
-  #calendar .responsiveEventsList .datesAndSearch, #calendar .responsiveEventsList .options {
+  #calendar .responsiveEventsList .datesAndSearch,
+  #calendar .responsiveEventsList .options {
     float: none;
     width: auto; } }
-/* Events Column Layouts */
 #calendar .responsiveEventsList .gridAndOptionsWrapper {
   float: left;
   margin: -1.5rem 0 0 0;
@@ -2579,6 +2645,10 @@ dialog .close-reveal-modal span {
   clear: none; }
 #calendar .responsiveEventsList .datesAndSearch,
 #calendar .responsiveEventsList .options {
+  width: 100%; }
+
+.hasConRelNav #calendar .gridAndOptionsWrapper {
+  border: none;
   width: 100%; }
 
 #calendar .responsiveEventsList {
@@ -2737,19 +2807,22 @@ dialog .close-reveal-modal span {
           border-color: #DDDDDD;
           border-image: none;
           border-style: solid;
-          border-width: 1px; }
+          border-width: 1px;
+          background: #F6F6F6; }
           #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td:empty {
-            background: #d9d9d9; }
-          #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.hasEvent a {
-            color: red; }
+            background: #EFEFEF; }
           #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.currentlyViewing {
-            background: #F6F6F6; }
+            background: #FFFFFF; }
             #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.currentlyViewing a {
-              color: #FFF; }
+              color: #555555; }
           #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.today {
-            background: white; }
+            background: #b84041; }
             #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.today a {
-              color: #FFF; }
+              color: #FFF;
+              font-weight: 700; }
+          #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.hasEvent a {
+            font-weight: 700;
+            color: #b84041; }
           #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td a {
             color: #aeaeae;
             display: block;
@@ -2773,7 +2846,9 @@ dialog .close-reveal-modal span {
         padding-right: 0.875rem; }
         @media only screen and (min-width: 720px) and (max-width: 77.4375em) {
           #calendar .responsiveEventsList .gridAndOptionsWrapper .dateJump span {
-            width: 100%; } }
+            width: 100%;
+            padding-right: 0.4375rem;
+            margin-bottom: 0.5rem; } }
       #calendar .responsiveEventsList .gridAndOptionsWrapper .dateJump input[type="submit"] {
         padding: 0;
         float: right;
@@ -2909,7 +2984,7 @@ dialog .close-reveal-modal span {
   #calendar .responsiveEventsList .iCalExport a:nth-of-type(2):before {
     content: ""; }
 
-#calendar .eventDetails .export .back a {
+#calendar .eventDetails .back a {
   border-style: solid;
   border-width: 0;
   cursor: pointer;
@@ -2931,33 +3006,78 @@ dialog .close-reveal-modal span {
   background-color: #b84041;
   border-color: #933334;
   color: #FFFFFF;
+  border-radius: 3px;
   transition: background-color 300ms ease-out; }
-  #calendar .eventDetails .export .back a:hover, #calendar .eventDetails .export .back a:focus {
+  #calendar .eventDetails .back a:hover, #calendar .eventDetails .back a:focus {
     background-color: #933334; }
-  #calendar .eventDetails .export .back a:hover, #calendar .eventDetails .export .back a:focus {
+  #calendar .eventDetails .back a:hover, #calendar .eventDetails .back a:focus {
     color: #FFFFFF; }
-  #calendar .eventDetails .export .back a:before {
+  #calendar .eventDetails .back a:before {
     content: "";
     margin-right: 0.375rem;
     color: inherit; }
-#calendar .eventDetails .export .repetition,
-#calendar .eventDetails .export .date,
-#calendar .eventDetails .export .time,
-#calendar .eventDetails .export .duration,
-#calendar .eventDetails .export .eventLocation,
-#calendar .eventDetails .export .sponsor,
-#calendar .eventDetails .export .contact {
-  margin: 0; }
-  #calendar .eventDetails .export .repetition:before,
-  #calendar .eventDetails .export .date:before,
-  #calendar .eventDetails .export .time:before,
-  #calendar .eventDetails .export .duration:before,
-  #calendar .eventDetails .export .eventLocation:before,
-  #calendar .eventDetails .export .sponsor:before,
-  #calendar .eventDetails .export .contact:before {
+#calendar .eventDetails .images:before, #calendar .eventDetails .images:after {
+  content: " ";
+  display: table; }
+#calendar .eventDetails .images:after {
+  clear: both; }
+@media only screen and (max-width: 40em) {
+  #calendar .eventDetails .images {
+    margin-left: -1.5rem; } }
+@media only screen and (min-width: 40.063em) {
+  #calendar .eventDetails .images {
+    float: right;
+    width: 7.8125rem;
+    margin-left: 3rem; } }
+#calendar .eventDetails .images .tnBlock {
+  width: 7.8125rem;
+  margin-bottom: 1.125rem; }
+  @media only screen and (max-width: 40em) {
+    #calendar .eventDetails .images .tnBlock {
+      float: left;
+      margin-left: 1.5rem; } }
+  #calendar .eventDetails .images .tnBlock .tnDesc {
+    font-style: italic;
+    font-weight: 300;
+    color: #999999;
+    font-family: "Merriweather", serif;
+    font-size: 0.875rem;
+    display: block;
+    margin-top: 0.125rem; }
+@media only screen and (max-width: 40em) {
+  #calendar .eventDetails h3 {
+    clear: both; } }
+#calendar .eventDetails .repetition {
+  display: inline-block !important; }
+  #calendar .eventDetails .repetition:before {
     content: "";
-    margin-right: 0.375rem; }
-#calendar .eventDetails .export .repetition {
+    margin-right: 0.375rem;
+    color: inherit; }
+#calendar .eventDetails .date,
+#calendar .eventDetails .time,
+#calendar .eventDetails .duration,
+#calendar .eventDetails .eventLocation,
+#calendar .eventDetails .sponsor,
+#calendar .eventDetails .contact {
+  margin: 0;
+  margin-left: 3rem; }
+  #calendar .eventDetails .date:before,
+  #calendar .eventDetails .time:before,
+  #calendar .eventDetails .duration:before,
+  #calendar .eventDetails .eventLocation:before,
+  #calendar .eventDetails .sponsor:before,
+  #calendar .eventDetails .contact:before {
+    content: "";
+    margin-right: 0.375rem;
+    color: inherit; }
+  #calendar .eventDetails .date:before,
+  #calendar .eventDetails .time:before,
+  #calendar .eventDetails .duration:before,
+  #calendar .eventDetails .eventLocation:before,
+  #calendar .eventDetails .sponsor:before,
+  #calendar .eventDetails .contact:before {
+    margin-left: -1.5rem; }
+#calendar .eventDetails .repetition {
   border-style: solid;
   border-width: 0.0625rem;
   display: block;
@@ -2971,27 +3091,120 @@ dialog .close-reveal-modal span {
   border-color: #74bfdd;
   color: #4f4f4f;
   border-radius: 3px; }
-  #calendar .eventDetails .export .repetition:before {
+  #calendar .eventDetails .repetition:before {
     content: ""; }
-#calendar .eventDetails .export .date:before {
+#calendar .eventDetails .date:before {
   content: ""; }
-#calendar .eventDetails .export .time:before {
+#calendar .eventDetails .time:before {
   content: ""; }
-#calendar .eventDetails .export .duration:before {
+#calendar .eventDetails .duration:before {
   content: ""; }
-#calendar .eventDetails .export .eventLocation:before {
+#calendar .eventDetails .eventLocation:before {
   content: ""; }
-#calendar .eventDetails .export .eventLocation .eventMap {
-  display: inline-block; }
-#calendar .eventDetails .export .eventLocation strong {
-  margin-right: 0.25rem; }
-#calendar .eventDetails .export .eventLocation p {
+#calendar .eventDetails .eventLocation .eventMap {
+  display: inline-block;
+  float: right; }
+#calendar .eventDetails .eventLocation strong {
+  margin-right: 0.25rem;
+  margin-left: -0.25rem; }
+#calendar .eventDetails .eventLocation p {
   display: inline;
   margin: 0; }
-#calendar .eventDetails .export .sponsor:before {
+#calendar .eventDetails .sponsor:before {
   content: ""; }
-#calendar .eventDetails .export .contact:before {
+#calendar .eventDetails .contact:before {
   content: ""; }
+#calendar .eventDetails .export {
+  margin: 1.125rem 0; }
+#calendar .eventDetails .dates li {
+  display: inline-block;
+  padding-right: 0.375rem; }
+  #calendar .eventDetails .dates li:before {
+    content: "";
+    margin-right: 0.375rem;
+    color: inherit; }
+  #calendar .eventDetails .dates li:before {
+    font-size: 0.625rem;
+    position: relative;
+    top: -3px;
+    padding-right: 0.375rem; }
+#calendar .eventDetails .eventUrl {
+  margin-bottom: 1.125rem; }
+#calendar .eventDetails #slotInfo {
+  background: none;
+  border: none; }
+  #calendar .eventDetails #slotInfo > ul {
+    margin: 0; }
+    #calendar .eventDetails #slotInfo > ul > li {
+      margin-bottom: 2.25rem; }
+    #calendar .eventDetails #slotInfo > ul ul {
+      margin: 0; }
+    #calendar .eventDetails #slotInfo > ul li {
+      list-style-type: none; }
+    #calendar .eventDetails #slotInfo > ul .register a {
+      border-style: solid;
+      border-width: 0;
+      cursor: pointer;
+      font-family: "Open Sans", sans-serif;
+      font-weight: 300;
+      line-height: normal;
+      margin: 0 0 1.25rem;
+      position: relative;
+      text-decoration: none;
+      text-align: center;
+      -webkit-appearance: none;
+      border-radius: 0;
+      display: inline-block;
+      padding-top: 0.75rem;
+      padding-right: 1.5rem;
+      padding-bottom: 0.8125rem;
+      padding-left: 1.5rem;
+      font-size: 1rem;
+      background-color: #b84041;
+      border-color: #933334;
+      color: #FFFFFF;
+      transition: background-color 300ms ease-out; }
+      #calendar .eventDetails #slotInfo > ul .register a:hover, #calendar .eventDetails #slotInfo > ul .register a:focus {
+        background-color: #933334; }
+      #calendar .eventDetails #slotInfo > ul .register a:hover, #calendar .eventDetails #slotInfo > ul .register a:focus {
+        color: #FFFFFF; }
+    #calendar .eventDetails #slotInfo > ul .administer a {
+      border-style: solid;
+      border-width: 0;
+      cursor: pointer;
+      font-family: "Open Sans", sans-serif;
+      font-weight: 300;
+      line-height: normal;
+      margin: 0 0 1.25rem;
+      position: relative;
+      text-decoration: none;
+      text-align: center;
+      -webkit-appearance: none;
+      border-radius: 0;
+      display: inline-block;
+      padding-top: 0.25rem;
+      padding-right: 0.5rem;
+      padding-bottom: 0.3125rem;
+      padding-left: 0.5rem;
+      font-size: 0.6875rem;
+      background-color: #333;
+      border-color: #292929;
+      color: #FFFFFF;
+      transition: background-color 300ms ease-out;
+      transition: background 300ms ease-out;
+      color: #FFFFFF;
+      font-weight: 400;
+      text-decoration: none; }
+      #calendar .eventDetails #slotInfo > ul .administer a:hover, #calendar .eventDetails #slotInfo > ul .administer a:focus {
+        background-color: #292929; }
+      #calendar .eventDetails #slotInfo > ul .administer a:hover, #calendar .eventDetails #slotInfo > ul .administer a:focus {
+        color: #FFFFFF; }
+      #calendar .eventDetails #slotInfo > ul .administer a:before {
+        content: "";
+        margin-right: 0.375rem;
+        color: inherit; }
+      #calendar .eventDetails #slotInfo > ul .administer a:hover {
+        background: #000; }
 
 /* Events Mini */
 #miniCal #events {
@@ -3081,12 +3294,16 @@ dialog .close-reveal-modal span {
       padding-bottom: 0.3125rem;
       padding-left: 0.5rem;
       font-size: 0.6875rem;
-      background-color: #b84041;
-      border-color: #933334;
+      background-color: transparent;
+      border-color: transparent;
       color: #FFFFFF;
-      transition: background-color 300ms ease-out; }
+      border-radius: 3px;
+      transition: background-color 300ms ease-out;
+      border: 1px solid #b84041;
+      color: #b84041;
+      font-weight: 400; }
       #miniCal .foot .more a:hover, #miniCal .foot .more a:focus {
-        background-color: #933334; }
+        background-color: transparent; }
       #miniCal .foot .more a:hover, #miniCal .foot .more a:focus {
         color: #FFFFFF; }
       #miniCal .foot .more a:after {
@@ -3271,12 +3488,64 @@ dialog .close-reveal-modal span {
   padding: 0.5rem;
   height: 2.3125rem;
   background: #b84041;
-  color: #FFFFFF; }
+  color: #FFFFFF;
+  width: 100%;
+  border-radius: 3px; }
   @media only screen and (min-width: 40.063em) {
     .searchForm .searchSubmitLink {
       width: 20%;
       float: left;
       margin-bottom: 0; } }
+
+.globalSearchForm input.searchInputBox {
+  display: block;
+  background-color: #FFFFFF;
+  font-family: inherit;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #cccccc;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+  color: rgba(0, 0, 0, 0.75);
+  display: block;
+  font-size: 0.875rem;
+  margin: 0 0 1rem 0;
+  padding: 0.5rem;
+  height: 2.3125rem;
+  width: 100%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  margin-bottom: 0.5rem; }
+  .globalSearchForm input.searchInputBox:focus {
+    background: #fafafa;
+    border-color: #999999;
+    outline: none; }
+  .globalSearchForm input.searchInputBox:disabled {
+    background-color: #DDDDDD;
+    cursor: default; }
+  .globalSearchForm input.searchInputBox[disabled], .globalSearchForm input.searchInputBox[readonly], fieldset[disabled] .globalSearchForm input.searchInputBox {
+    background-color: #DDDDDD;
+    cursor: default; }
+  @media only screen and (min-width: 40.063em) {
+    .globalSearchForm input.searchInputBox {
+      width: 70%;
+      float: left;
+      margin-bottom: 1rem;
+      border-right: none; } }
+.globalSearchForm input.searchSubmitLink {
+  display: block;
+  text-align: center;
+  padding: 0.5rem;
+  height: 2.3125rem;
+  background: #b84041;
+  color: #FFFFFF;
+  width: 100%;
+  border-radius: 3px; }
+  @media only screen and (min-width: 40.063em) {
+    .globalSearchForm input.searchSubmitLink {
+      width: 30%;
+      float: left;
+      margin-bottom: 1rem; } }
 
 #filtering form,
 #filtering .searchForm {
@@ -3367,9 +3636,6 @@ dialog .close-reveal-modal span {
     #filtering .searchForm input[type="submit"]:hover {
       background: #923334;
       cursor: pointer; }
-  #filtering form a,
-  #filtering .searchForm a {
-    color: red; }
 #filtering .relFilters {
   margin-bottom: 0 !important; }
 
@@ -3482,8 +3748,69 @@ form #antlionItem {
       display: inline; }
       #discoErrorNotice ul li a {
         font-weight: 400;
-        text-decoration: underline; }
+        text-decoration: underline;
+        color: #f04124; }
 
+form #formAdminControlBox,
+#form #formAdminControlBox,
+#form #discoLinear #formAdminControlBox {
+  background: none; }
+  form #formAdminControlBox p,
+  #form #formAdminControlBox p,
+  #form #discoLinear #formAdminControlBox p {
+    margin: 0;
+    padding: 0; }
+    form #formAdminControlBox p a,
+    #form #formAdminControlBox p a,
+    #form #discoLinear #formAdminControlBox p a {
+      border-style: solid;
+      border-width: 0;
+      cursor: pointer;
+      font-family: "Open Sans", sans-serif;
+      font-weight: 300;
+      line-height: normal;
+      margin: 0 0 1.25rem;
+      position: relative;
+      text-decoration: none;
+      text-align: center;
+      -webkit-appearance: none;
+      border-radius: 0;
+      display: inline-block;
+      padding-top: 0.25rem;
+      padding-right: 0.5rem;
+      padding-bottom: 0.3125rem;
+      padding-left: 0.5rem;
+      font-size: 0.6875rem;
+      background-color: #333;
+      border-color: #292929;
+      color: #FFFFFF;
+      transition: background-color 300ms ease-out;
+      transition: background 300ms ease-out;
+      color: #FFFFFF;
+      font-weight: 400;
+      text-decoration: none; }
+      form #formAdminControlBox p a:hover, form #formAdminControlBox p a:focus,
+      #form #formAdminControlBox p a:hover,
+      #form #formAdminControlBox p a:focus,
+      #form #discoLinear #formAdminControlBox p a:hover,
+      #form #discoLinear #formAdminControlBox p a:focus {
+        background-color: #292929; }
+      form #formAdminControlBox p a:hover, form #formAdminControlBox p a:focus,
+      #form #formAdminControlBox p a:hover,
+      #form #formAdminControlBox p a:focus,
+      #form #discoLinear #formAdminControlBox p a:hover,
+      #form #discoLinear #formAdminControlBox p a:focus {
+        color: #FFFFFF; }
+      form #formAdminControlBox p a:before,
+      #form #formAdminControlBox p a:before,
+      #form #discoLinear #formAdminControlBox p a:before {
+        content: "";
+        margin-right: 0.375rem;
+        color: inherit; }
+      form #formAdminControlBox p a:hover,
+      #form #formAdminControlBox p a:hover,
+      #form #discoLinear #formAdminControlBox p a:hover {
+        background: #000; }
 form input[type="text"],
 form input[type="password"],
 form input[type="date"],
@@ -3880,7 +4207,8 @@ form select,
   color: rgba(0, 0, 0, 0.75);
   line-height: normal;
   border-radius: 0;
-  height: 2.3125rem; }
+  height: 2.3125rem;
+  background: #FFFFFF; }
   form select::-ms-expand,
   #form select::-ms-expand,
   #form #discoLinear select::-ms-expand {
@@ -4016,6 +4344,25 @@ form .formElement,
 form .submitSection,
 #form .submitSection,
 #form #discoLinear .submitSection {
+  margin: 0 0 1rem; }
+
+#disco_form table#discoTable {
+  border: none; }
+  #disco_form table#discoTable th,
+  #disco_form table#discoTable tr,
+  #disco_form table#discoTable td {
+    background: none;
+    border: none; }
+#disco_form tr .words {
+  font-size: 1rem;
+  color: #4d4d4d;
+  cursor: pointer;
+  display: block;
+  font-weight: 400;
+  line-height: 1.5;
+  margin-bottom: 0;
+  margin-right: 12px; }
+#disco_form tr .element input {
   margin: 0 0 1rem; }
 
 #meat #imageGallery .persistent {
@@ -4182,37 +4529,114 @@ form .submitSection,
     #pageContent img.left, #pageContent img[align="left"], #pageContent img.right, #pageContent img[align="right"], .fullPost .text img.left, .fullPost .text img[align="left"], .fullPost .text img.right, .fullPost .text img[align="right"], .comments .commentContent img.left, .comments .commentContent img[align="left"], .comments .commentContent img.right, .comments .commentContent img[align="right"], .eventContent img.left, .eventContent img[align="left"], .eventContent img.right, .eventContent img[align="right"], .blurb img.left, .blurb img[align="left"], .blurb img.right, .blurb img[align="right"], #faq .answer img.left, #faq .answer img[align="left"], #faq .answer img.right, #faq .answer img[align="right"], .facStaffContent img.left, .facStaffContent img[align="left"], .facStaffContent img.right, .facStaffContent img[align="right"], .minutesContent img.left, .minutesContent img[align="left"], .minutesContent img.right, .minutesContent img[align="right"], .policyContent img.left, .policyContent img[align="left"], .policyContent img.right, .policyContent img[align="right"], .policy .approvals img.left, .policy .approvals img[align="left"], .policy .approvals img.right, .policy .approvals img[align="right"] {
       max-width: 40%; } }
 
-.editThis {
-  border-style: solid;
-  border-width: 0;
-  cursor: pointer;
-  font-family: "Open Sans", sans-serif;
-  font-weight: 300;
-  line-height: normal;
-  margin: 0 0 1.25rem;
+.editable {
+  border: 1px dotted #000000;
+  margin-bottom: 2.25rem !important;
   position: relative;
-  text-decoration: none;
-  text-align: center;
-  -webkit-appearance: none;
-  border-radius: 0;
-  display: inline-block;
-  padding-top: 0.75rem;
-  padding-right: 1.5rem;
-  padding-bottom: 0.8125rem;
-  padding-left: 1.5rem;
-  font-size: 1rem;
-  background-color: #b84041;
-  border-color: #933334;
-  color: #FFFFFF;
-  border-radius: 3px;
-  transition: background-color 300ms ease-out; }
-  .editThis:hover, .editThis:focus {
-    background-color: #933334; }
-  .editThis:hover, .editThis:focus {
-    color: #FFFFFF; }
-  .editThis:before {
-    content: "";
-    margin-right: 0.375rem; }
+  padding-top: 48px; }
+  .editable .edit a,
+  .editable .editThis {
+    position: absolute !important;
+    display: block;
+    top: -1px;
+    right: -1px;
+    margin-bottom: 0;
+    background: #333;
+    line-height: 1;
+    padding: 0.4375rem;
+    border-radius: 0 0 0 3px;
+    color: #FFFFFF !important;
+    font-weight: 400;
+    text-decoration: none !important;
+    font-size: 0.75rem; }
+    .editable .edit a:before,
+    .editable .editThis:before {
+      content: "";
+      margin-right: 0.375rem;
+      color: inherit; }
+    .editable .edit a:hover,
+    .editable .editThis:hover {
+      background: black;
+      transition: background-color 300ms ease-out; }
+  .editable.editing {
+    border: 1px solid #CCCCCC;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+    padding: 0; }
+    .editable.editing form {
+      padding: 1.125rem 0.75rem 0; }
+      .editable.editing form table {
+        margin-bottom: 0 !important; }
+      .editable.editing form #editablecontentRow .words,
+      .editable.editing form #blurbedittextRow .words {
+        display: none; }
+      .editable.editing form input[type="submit"] {
+        padding-top: 0.25rem;
+        padding-right: 0.5rem;
+        padding-bottom: 0.3125rem;
+        padding-left: 0.5rem;
+        font-size: 0.6875rem;
+        height: auto;
+        background: none;
+        border: 2px solid #999999;
+        color: #666666;
+        font-weight: 700;
+        letter-spacing: 0.03125rem;
+        transition: color 300ms ease-out;
+        transition: border-color 300ms ease-out; }
+        .editable.editing form input[type="submit"]:hover {
+          color: black;
+          border-color: black; }
+      .editable.editing form td:empty {
+        display: none; }
+    .editable.editing .note {
+      border-style: solid;
+      border-width: 0.0625rem;
+      display: block;
+      font-weight: 300;
+      margin-bottom: 1.25rem;
+      position: relative;
+      padding: 0.875rem 0.875rem 0.875rem 0.875rem;
+      font-size: 0.8125rem;
+      transition: opacity 300ms ease-out;
+      background-color: #f04124;
+      border-color: #de2d0f;
+      color: #FFFFFF;
+      border-radius: 6px;
+      border-radius: 0 !important;
+      border: none !important;
+      margin-bottom: 0; }
+      .editable.editing .note:before {
+        content: "";
+        margin-right: 0.375rem;
+        color: inherit; }
+      .editable.editing .note:before {
+        line-height: 1;
+        font-size: 1.25rem;
+        display: block;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.25);
+        margin-top: -0.9375rem;
+        margin-left: -0.9375rem;
+        margin-right: -0.9375rem;
+        margin-top: -0.875rem;
+        margin-left: -0.875rem;
+        margin-right: -0.875rem;
+        margin-bottom: 0.875rem;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid; }
+      .editable.editing .note:before {
+        border-color: #de2d0f; }
+      .editable.editing .note a {
+        text-decoration: underline;
+        font-weight: 700;
+        color: inherit; }
+      .editable.editing .note *:last-child {
+        margin-bottom: 0;
+        padding-bottom: 0; }
+
+.blurb.editing #discoSubmitRow td[align="right"],
+#pageContent.editing #discoSubmitRow td[align="right"] {
+  display: none; }
 
 .loginLinkModule {
   margin-top: 1.125rem; }
@@ -4465,6 +4889,7 @@ form .submitSection,
   background-color: #b84041;
   border-color: #933334;
   color: #FFFFFF;
+  border-radius: 3px;
   transition: background-color 300ms ease-out; }
   #policyModule .listLink a:hover, #policyModule .listLink a:focus {
     background-color: #933334; }
@@ -4524,12 +4949,16 @@ form .submitSection,
       padding-bottom: 0.3125rem;
       padding-left: 0.5rem;
       font-size: 0.6875rem;
-      background-color: #b84041;
-      border-color: #933334;
+      background-color: transparent;
+      border-color: transparent;
       color: #FFFFFF;
-      transition: background-color 300ms ease-out; }
+      border-radius: 3px;
+      transition: background-color 300ms ease-out;
+      border: 1px solid #b84041;
+      color: #b84041;
+      font-weight: 400; }
       #relatedPub .moduleNav .pubLinks li a:hover, #relatedPub .moduleNav .pubLinks li a:focus {
-        background-color: #933334; }
+        background-color: transparent; }
       #relatedPub .moduleNav .pubLinks li a:hover, #relatedPub .moduleNav .pubLinks li a:focus {
         color: #FFFFFF; }
       #relatedPub .moduleNav .pubLinks li a:after {
@@ -4565,6 +4994,7 @@ form .submitSection,
     background-color: #b84041;
     border-color: #933334;
     color: #FFFFFF;
+    border-radius: 3px;
     transition: background-color 300ms ease-out; }
     #meat .publication .back div a:hover, #meat .publication .back div a:focus {
       background-color: #933334; }
@@ -4601,6 +5031,73 @@ form .submitSection,
         content: "";
         margin-right: 0.375rem;
         color: inherit; }
+#meat .publication .moduleNav .issueMenu {
+  margin-bottom: 1.125rem; }
+  #meat .publication .moduleNav .issueMenu:before, #meat .publication .moduleNav .issueMenu:after {
+    content: " ";
+    display: table; }
+  #meat .publication .moduleNav .issueMenu:after {
+    clear: both; }
+  #meat .publication .moduleNav .issueMenu form {
+    margin-bottom: 0.75rem; }
+    #meat .publication .moduleNav .issueMenu form .issueLabel {
+      position: absolute;
+      left: -9999px;
+      top: -9999px;
+      margin-bottom: 0; }
+  #meat .publication .moduleNav .issueMenu .allIssuesLink a {
+    float: right;
+    border-style: solid;
+    border-width: 0;
+    cursor: pointer;
+    font-family: "Open Sans", sans-serif;
+    font-weight: 300;
+    line-height: normal;
+    margin: 0 0 1.25rem;
+    position: relative;
+    text-decoration: none;
+    text-align: center;
+    -webkit-appearance: none;
+    border-radius: 0;
+    display: inline-block;
+    padding-top: 0.25rem;
+    padding-right: 0.5rem;
+    padding-bottom: 0.3125rem;
+    padding-left: 0.5rem;
+    font-size: 0.6875rem;
+    background-color: transparent;
+    border-color: transparent;
+    color: #FFFFFF;
+    border-radius: 3px;
+    transition: background-color 300ms ease-out;
+    border: 1px solid #b84041;
+    color: #b84041;
+    font-weight: 400; }
+    #meat .publication .moduleNav .issueMenu .allIssuesLink a:hover, #meat .publication .moduleNav .issueMenu .allIssuesLink a:focus {
+      background-color: transparent; }
+    #meat .publication .moduleNav .issueMenu .allIssuesLink a:hover, #meat .publication .moduleNav .issueMenu .allIssuesLink a:focus {
+      color: #FFFFFF; }
+    #meat .publication .moduleNav .issueMenu .allIssuesLink a:after {
+      content: "";
+      margin-left: 0.375rem;
+      color: inherit; }
+#meat .publication .moduleNav .sections {
+  margin: 0; }
+  #meat .publication .moduleNav .sections .section {
+    list-style-type: none;
+    margin-bottom: 2.25rem; }
+    #meat .publication .moduleNav .sections .section .sectionInfo h3 a {
+      display: block;
+      border-bottom: 2px solid; }
+    #meat .publication .moduleNav .sections .section .sectionFoot {
+      text-align: right; }
+      #meat .publication .moduleNav .sections .section .sectionFoot .viewEntireSection {
+        font-size: 0.875rem; }
+        #meat .publication .moduleNav .sections .section .sectionFoot .viewEntireSection a {
+          color: #b84041;
+          font-weight: 700;
+          text-decoration: underline;
+          font-size: 0.875rem; }
 #meat .publication .moduleNav .posts {
   margin: 0; }
   #meat .publication .moduleNav .posts .post {
@@ -4633,7 +5130,8 @@ form .submitSection,
       margin-top: 1rem; }
     #meat .publication .moduleNav .posts .post .links {
       margin: 0;
-      padding: 0; }
+      padding: 0;
+      font-size: 0.875rem; }
       #meat .publication .moduleNav .posts .post .links li {
         display: inline-block;
         margin-right: 0.75rem; }
@@ -4649,6 +5147,38 @@ form .submitSection,
           content: "";
           margin-right: 0.375rem;
           color: inherit; }
+#meat .publication .moduleNav a[href="?"] {
+  border-style: solid;
+  border-width: 0;
+  cursor: pointer;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 300;
+  line-height: normal;
+  margin: 0 0 1.25rem;
+  position: relative;
+  text-decoration: none;
+  text-align: center;
+  -webkit-appearance: none;
+  border-radius: 0;
+  display: inline-block;
+  padding-top: 0.25rem;
+  padding-right: 0.5rem;
+  padding-bottom: 0.3125rem;
+  padding-left: 0.5rem;
+  font-size: 0.6875rem;
+  background-color: #b84041;
+  border-color: #933334;
+  color: #FFFFFF;
+  border-radius: 3px;
+  transition: background-color 300ms ease-out; }
+  #meat .publication .moduleNav a[href="?"]:hover, #meat .publication .moduleNav a[href="?"]:focus {
+    background-color: #933334; }
+  #meat .publication .moduleNav a[href="?"]:hover, #meat .publication .moduleNav a[href="?"]:focus {
+    color: #FFFFFF; }
+  #meat .publication .moduleNav a[href="?"]:before {
+    content: "";
+    margin-right: 0.375rem;
+    color: inherit; }
 #meat .publication .moduleNav .feedLink {
   margin-bottom: 2.25rem; }
   #meat .publication .moduleNav .feedLink a {
@@ -4733,6 +5263,11 @@ form .submitSection,
           background: #e0e0e0; }
         #meat .publication.fullPostDisplay .social p a:active {
           background: white; }
+        #meat .publication.fullPostDisplay .social p a span {
+          position: absolute;
+          left: -9999px;
+          top: -9999px;
+          margin-bottom: 0; }
         #meat .publication.fullPostDisplay .social p a.facebook:before {
           content: ""; }
         #meat .publication.fullPostDisplay .social p a.twitter:before {

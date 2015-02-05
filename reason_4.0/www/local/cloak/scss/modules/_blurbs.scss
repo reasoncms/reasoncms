@@ -1,7 +1,8 @@
 // Blurb Styles
 // Cloak, v1
 
-.blurb {
+.blurb,
+.issueBlurb {
 
 	@include clearfix;
 	//background: $vapor;
@@ -23,4 +24,8 @@
 	// }
 	// Remove padding from the final tag and any tags inside it (to keep padding uniform)
 	@include last-child-padding-collapse();
+}
+
+.issueBlurbs {
+	.issueBlurb {}
 }

@@ -3,12 +3,89 @@
 
 // In-place Editing allows you to edit the content of your page from the front end.
 
-.editThis {
-	@include button($radius:$global-radius);
 
-	&:before {
-		@extend .fa;
-		content: $fa-var-pencil;
-		margin-right: rem-calc(6);
+.editable {
+	border: 1px dotted $black;
+	margin-bottom: $horizontal-gutter !important;
+	position: relative;
+	padding-top: 48px;
+
+	.edit a,
+	.editThis {
+		position: absolute !important;
+		display: block;
+		//width: 100%;
+		top: -1px;
+		right: -1px;
+		margin-bottom: 0;
+		background: #333;
+		line-height: 1;
+		padding: rem-calc(7);
+		@include inline-icon($icon: $fa-var-pencil);
+		border-radius: 0 0 0 $global-radius;
+		color: $white !important;
+		font-weight: 400;
+		text-decoration: none !important;
+		font-size: rem-calc(12);
+
+		&:hover {
+			background: black;
+			@include single-transition(background-color);
+		}
 	}
+
+	&.editing {
+		border: 1px solid $iron;
+		box-shadow: 0 0 12px rgba($black, .5);
+		padding: 0;
+
+		form {
+			padding: $horizontal-gutter/2 $column-gutter/4 0;
+
+			table {
+				margin-bottom: 0 !important;
+			}
+
+			#editablecontentRow .words,
+			#blurbedittextRow .words {
+				display: none;
+			}
+
+			input[type="submit"] {
+				@include button-size($padding:$button-tny);
+				height: auto;
+				background: none;
+				border: 2px solid $aluminum;
+				color: $steel;
+				font-weight: 700;
+				letter-spacing: rem-calc(.5);
+				@include single-transition(color);
+				@include single-transition(border-color);
+
+				&:hover {
+					color: black;
+					border-color: black;
+				}
+			}
+
+			td:empty {
+				display: none;
+			}
+		}
+		
+		.note {
+			@include cloak-alert($mode: alert, $symbol: $fa-var-warning);
+			border-radius: 0 !important;
+			border: none !important;
+			margin-bottom: 0;
+		}
+	}
+}
+
+.blurb.editing,
+#pageContent.editing {
+
+	 #discoSubmitRow td[align="right"] {
+	 	display: none;
+	 }
 }

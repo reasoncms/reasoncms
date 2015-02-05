@@ -30,6 +30,26 @@
 			// GLOBAL MODULE SETTINGS
 			// Here we set custom paramaters without having to set them for each page type.
 
+			// Global parameters for the children module
+			if($regions = $page_type->module_regions('children'))
+			{
+				foreach($regions as $region)
+				{
+					if(!isset($module['module_params']['thumbnail_width']))
+						$page_type->set_region_parameter($region, 'thumbnail_width', 600);
+					if(!isset($module['module_params']['thumbnail_height']))
+						$page_type->set_region_parameter($region, 'thumbnail_height', 400);
+					if(!isset($module['module_params']['thumbnail_crop']))
+						$page_type->set_region_parameter($region, 'thumbnail_crop', 'fill');
+					//if(!isset($module['module_params']['provide_images']))
+					//	$page_type->set_region_parameter($region, 'provide_images', true);
+					if(!isset($module['module_params']['description_part_of_link']))
+						$page_type->set_region_parameter($region, 'description_part_of_link', true);	
+					if(!isset($module['module_params']['html5']))
+						$page_type->set_region_parameter($region, 'html5', true);
+				}
+			}
+
 			// Image Sidebar
 			// Find additional parameters for image_sidebar in minisite_templates/modules/image_sidebar.php
 			if($regions = $page_type->module_regions('image_sidebar'))
@@ -52,6 +72,18 @@
 						$page_type->set_region_parameter($region, 'height', 460);
 					if(!isset($module['module_params']['autoplay_timer']))
 						$page_type->set_region_parameter($region, 'autoplay_timer', 4);
+				}
+			}
+
+			// Events Mini
+			if($regions = $page_type->module_regions('events_mini'))
+			{
+				foreach($regions as $region)
+				{
+					// if(!isset($module['module_params']['default_list_markup']))
+					// 	$page_type->set_region_parameter($region, 'default_list_markup', 'minisite_templates/modules/events_markup/mini/cloak_mini_events_list.php');
+					// if(!isset($module['module_params']['ideal_count']))
+					// 	$page_type->set_region_parameter($region, 'ideal_count', 2);
 				}
 			}
 
@@ -97,19 +129,33 @@
 
 		function get_meta_information()
 		{
-			parent::get_meta_information();
+			MinisiteTemplate::get_meta_information();
+			$this->add_head_item('meta',array('name'=>'viewport','content'=>'width=device-width, initial-scale=1.0' ) );
+			
 			$this->head_items->add_javascript('/reason/local/cloak/js/vendor/modernizr.js');
+			$this->head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/html5shiv/html5shiv-printshiv.js', true, array('before'=>'<!--[if lt IE 9]>','after'=>'<![endif]-->'));
+			$this->head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/respond/respond.min.js', false, array('before'=>'<!--[if lt IE 9]>','after'=>'<![endif]-->'));
+			$this->head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/ie8_fix_maxwidth.js', false, array('before'=>'<!--[if lt IE 9]>','after'=>'<![endif]-->'));
+			
+			// fitvids will move to the default template at some point, but for now it is here.
+		
+			$this->head_items->add_javascript(JQUERY_URL, true);
+			$this->head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'fitvids/jquery.fitvids_outside.js');
+			$this->head_items->add_head_item('script', array(), $content = '$(document).ready(function(){$("body").fitVids();});' );
 		}
 
 		function show_banner()
 		{
+			echo '<div class="sticky">'."\n";
+			//echo '<div class="top-bar" data-topbar role="navigation" data-options="sticky_on: large">'."\n";
 			if ($this->has_content( 'pre_banner' ))
 			{	
 				echo '<div id="preBanner">';
 				$this->run_section( 'pre_banner' );
 				echo '</div>'."\n";
 			}
-			echo '<div class="sticky"><header id="banner" role="banner" aria-label="site" class="top-bar" data-topbar role="navigation" data-options="sticky_on: large">'."\n";
+			echo '<header id="banner" role="banner" aria-label="site" class="top-bar" data-topbar role="navigation" data-options="sticky_on: large">'."\n";
+			//echo '<header id="banner">'."\n";
 			if($this->should_show_parent_sites())
 			{
 				echo $this->get_parent_sites_markup();
@@ -139,7 +185,9 @@
 
 			$this->show_banner_xtra();
 			
-			echo '</header></div>'."\n";
+			echo '</header>'."\n";
+			echo '</div>'."\n";
+		//	echo '</div>'."\n";
 
 			if($this->has_content('post_banner'))
 			{
@@ -181,8 +229,11 @@
 				// Foundation Reveal Modal (lightbox)
 				// http://foundation.zurb.com/docs/components/reveal.html
 				echo '<div id="search" class="reveal-modal tiny" data-reveal>';
+				// echo '<div class="reveal-heading">';
+				// echo 'Search';
 				$this->run_section( 'banner_xtra' );
 				echo '<a class="close-reveal-modal"><span>Close</span></a>';
+				// echo '</div>'."\n";
 				echo '</div>'."\n";
 				echo '</div>'."\n";
 			}
