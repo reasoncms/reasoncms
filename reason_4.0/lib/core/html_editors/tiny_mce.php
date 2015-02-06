@@ -68,7 +68,7 @@ class reasonTinyMCEIntegration extends reasonEditorIntegrationBase
 			$param['init_options']['reason_site_id'] = $site_id;
 			$param['init_options']['reason_http_base_path'] = REASON_HTTP_BASE_PATH;	
 		}
-		$param['init_options']['toolbar1'] = 'formatselect,|,bold,italic,|,hr,'.$cutcopypaste.'|,blockquote,|,numlist,bullist,|,indent,outdent,'.$tabletoolbar.'|,'.$imagetoolbar.',|,'.$linktoolbar.',unlink,|,anchor';
+		$param['init_options']['toolbar1'] = 'formatselect,|,bold,italic,|,hr,'.$cutcopypaste.'|,blockquote,|,numlist,bullist,|,'.$tabletoolbar.'|,'.$imagetoolbar.',|,'.$linktoolbar.',unlink,|,anchor';
 		$param['init_options']['plugins'] = 'anchor,link,paste,advlist';
 		if ($this->reason_plugins_available($user_id))
 		{
