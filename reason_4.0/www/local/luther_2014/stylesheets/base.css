@@ -6526,7 +6526,7 @@ form input[type="submit"]:active {
 /* line 160, scss/modules/_image-galleries.scss */
 #contentSections #galleryimages .reason-image {
   width: 12.5rem;
-  height: 7.8125rem;
+  height: 6.25rem;
 }
 @media only screen and (max-width: 40em) {
   /* line 160, scss/modules/_image-galleries.scss */
@@ -6788,77 +6788,77 @@ form input[type="submit"]:active {
 
 /* Inline Images */
 /* line 98, scss/modules/_images.scss */
-#pageContent img, .fullPost .text img, #faq .answer img {
+#pageContent img, .fullPost .text img, #faq .answer img, #contentSections .blurb img {
   width: auto;
   max-width: 100%;
   margin: 0 auto 1rem;
 }
 /* line 106, scss/modules/_images.scss */
-#pageContent img.left, #pageContent img[align="left"], #pageContent img.right, #pageContent img[align="right"], .fullPost .text img.left, .fullPost .text img[align="left"], .fullPost .text img.right, .fullPost .text img[align="right"], #faq .answer img.left, #faq .answer img[align="left"], #faq .answer img.right, #faq .answer img[align="right"] {
+#pageContent img.left, #pageContent img[align="left"], #pageContent img.right, #pageContent img[align="right"], .fullPost .text img.left, .fullPost .text img[align="left"], .fullPost .text img.right, .fullPost .text img[align="right"], #faq .answer img.left, #faq .answer img[align="left"], #faq .answer img.right, #faq .answer img[align="right"], #contentSections .blurb img.left, #contentSections .blurb img[align="left"], #contentSections .blurb img.right, #contentSections .blurb img[align="right"] {
   float: none !important;
   clear: left;
 }
 @media only screen and (min-width: 40.063em) {
   /* line 98, scss/modules/_images.scss */
-  #pageContent img, .fullPost .text img, #faq .answer img {
+  #pageContent img, .fullPost .text img, #faq .answer img, #contentSections .blurb img {
     width: auto;
     max-width: 100%;
     margin: 0 0 1rem;
   }
   /* line 117, scss/modules/_images.scss */
-  #pageContent img.left, #pageContent img[align="left"], .fullPost .text img.left, .fullPost .text img[align="left"], #faq .answer img.left, #faq .answer img[align="left"] {
+  #pageContent img.left, #pageContent img[align="left"], .fullPost .text img.left, .fullPost .text img[align="left"], #faq .answer img.left, #faq .answer img[align="left"], #contentSections .blurb img.left, #contentSections .blurb img[align="left"] {
     margin-right: 2.5rem;
     float: left !important;
   }
   /* line 123, scss/modules/_images.scss */
-  #pageContent img.right, #pageContent img[align="right"], .fullPost .text img.right, .fullPost .text img[align="right"], #faq .answer img.right, #faq .answer img[align="right"] {
+  #pageContent img.right, #pageContent img[align="right"], .fullPost .text img.right, .fullPost .text img[align="right"], #faq .answer img.right, #faq .answer img[align="right"], #contentSections .blurb img.right, #contentSections .blurb img[align="right"] {
     margin-left: 2.5rem;
     float: right !important;
   }
   /* line 131, scss/modules/_images.scss */
-  #pageContent img.left, #pageContent img[align="left"], #pageContent img.right, #pageContent img[align="right"], .fullPost .text img.left, .fullPost .text img[align="left"], .fullPost .text img.right, .fullPost .text img[align="right"], #faq .answer img.left, #faq .answer img[align="left"], #faq .answer img.right, #faq .answer img[align="right"] {
+  #pageContent img.left, #pageContent img[align="left"], #pageContent img.right, #pageContent img[align="right"], .fullPost .text img.left, .fullPost .text img[align="left"], .fullPost .text img.right, .fullPost .text img[align="right"], #faq .answer img.left, #faq .answer img[align="left"], #faq .answer img.right, #faq .answer img[align="right"], #contentSections .blurb img.left, #contentSections .blurb img[align="left"], #contentSections .blurb img.right, #contentSections .blurb img[align="right"] {
     max-width: 40%;
   }
 }
 /* line 138, scss/modules/_images.scss */
-#pageContent figure, .fullPost .text figure, #faq .answer figure {
+#pageContent figure, .fullPost .text figure, #faq .answer figure, #contentSections .blurb figure {
   width: auto;
   max-width: 100%;
   margin: 0 auto 1rem;
 }
 /* line 144, scss/modules/_images.scss */
-#pageContent figure.left, #pageContent figure.right, .fullPost .text figure.left, .fullPost .text figure.right, #faq .answer figure.left, #faq .answer figure.right {
+#pageContent figure.left, #pageContent figure.right, .fullPost .text figure.left, .fullPost .text figure.right, #faq .answer figure.left, #faq .answer figure.right, #contentSections .blurb figure.left, #contentSections .blurb figure.right {
   float: none !important;
   clear: left;
 }
 /* line 149, scss/modules/_images.scss */
-#pageContent figure img, .fullPost .text figure img, #faq .answer figure img {
+#pageContent figure img, .fullPost .text figure img, #faq .answer figure img, #contentSections .blurb figure img {
   margin: 0 !important;
 }
 @media only screen and (min-width: 40.063em) {
   /* line 138, scss/modules/_images.scss */
-  #pageContent figure, .fullPost .text figure, #faq .answer figure {
+  #pageContent figure, .fullPost .text figure, #faq .answer figure, #contentSections .blurb figure {
     width: auto;
     max-width: 100%;
     margin: 0 0 1rem;
   }
   /* line 158, scss/modules/_images.scss */
-  #pageContent figure.left, .fullPost .text figure.left, #faq .answer figure.left {
+  #pageContent figure.left, .fullPost .text figure.left, #faq .answer figure.left, #contentSections .blurb figure.left {
     margin-right: 2.5rem;
     float: left !important;
   }
   /* line 163, scss/modules/_images.scss */
-  #pageContent figure.right, .fullPost .text figure.right, #faq .answer figure.right {
+  #pageContent figure.right, .fullPost .text figure.right, #faq .answer figure.right, #contentSections .blurb figure.right {
     margin-left: 2.5rem;
     float: right !important;
   }
   /* line 169, scss/modules/_images.scss */
-  #pageContent figure.left, #pageContent figure.right, .fullPost .text figure.left, .fullPost .text figure.right, #faq .answer figure.left, #faq .answer figure.right {
+  #pageContent figure.left, #pageContent figure.right, .fullPost .text figure.left, .fullPost .text figure.right, #faq .answer figure.left, #faq .answer figure.right, #contentSections .blurb figure.left, #contentSections .blurb figure.right {
     max-width: 40%;
   }
 }
 /* line 174, scss/modules/_images.scss */
-#pageContent figure figcaption, .fullPost .text figure figcaption, #faq .answer figure figcaption {
+#pageContent figure figcaption, .fullPost .text figure figcaption, #faq .answer figure figcaption, #contentSections .blurb figure figcaption {
   margin-top: 0.625rem;
   padding: 0;
   word-wrap: normal;
@@ -6869,14 +6869,15 @@ form input[type="submit"]:active {
   color: #6f6f6f;
 }
 /* line 184, scss/modules/_images.scss */
-#pageContent figure figcaption a, .fullPost .text figure figcaption a, #faq .answer figure figcaption a {
+#pageContent figure figcaption a, .fullPost .text figure figcaption a, #faq .answer figure figcaption a, #contentSections .blurb figure figcaption a {
   color: #6f6f6f;
 }
 /* line 192, scss/modules/_images.scss */
 #pageContent .callout img,
 #pageContent .callOut img, .fullPost .text .callout img,
 .fullPost .text .callOut img, #faq .answer .callout img,
-#faq .answer .callOut img {
+#faq .answer .callOut img, #contentSections .blurb .callout img,
+#contentSections .blurb .callOut img {
   width: auto;
 }
 
