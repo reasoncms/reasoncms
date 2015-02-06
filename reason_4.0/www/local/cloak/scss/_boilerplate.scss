@@ -1,7 +1,8 @@
-// BRANDED STYLES (for export)
+// BASIC BOILERPLATE STYLES (for export)
 // Cloak, v1
 
-// This file is for a the branded version of Cloak.
+// This file includes everything needed for a the basic, unbranded bolierplate site.
+// It's the starting point for any custom theme or site css.
 
 // There are a few ways to reduce bloat in the complied css.
 // 1. Comment out @import "foundation"; and selectively import components, while keeping $include-html-classes: true
@@ -9,7 +10,7 @@
 // Cloak uses option #2.
 
 // Foundation
-@import "settings";
+@import "settings/settings";
 @import "foundation";
 
 // Or selectively include components
@@ -59,8 +60,6 @@
 @import "vendor/font-awesome/spinning";
 
 // Cloak
-@import "mixins";
-@import "base";
-@import "base/global_header";
-@import "modules";
-//@import "theme";
+@import "mixins/mixins";
+@import "base/base";
+@import "modules/modules";

@@ -1,0 +1,96 @@
+#banner {
+	@include screenreader();
+}
+
+#breadcrumbs {
+	@include screenreader();
+}
+
+.contentHead {
+	@include screenreader();
+}
+
+#postBanner {
+
+	.featuresModule {
+
+		.feature {
+
+			.featureContent {
+
+				.featureInfo {
+					text-align: center;
+					background: none !important;
+					bottom: rem-calc(64);
+
+
+					.featureTitle {
+						
+						@media #{$small-only} {
+							@include screenreader;
+						}
+
+						@media #{$medium-only} {
+							font-size: rem-calc(28);
+						}
+
+						@media #{$large-up} {
+							font-size: rem-calc(48);
+						}
+
+						font-family: $font-family-sans-serif;
+						font-weight: 700;
+						text-shadow: 2px 2px 2px black;
+
+						a.dest,
+						a.anchor,
+						span.noLink {
+							margin: 0;
+							padding: rem-calc(8) $column-gutter/3 rem-calc(64);
+							line-height: 1.2;
+							color: white;
+						}
+					}
+
+					.featureText {
+						display: inline-block;
+
+						a.dest,
+						a.anchor,
+						span.noLink {
+
+							@media #{$small-only} {
+								font-size: rem-calc(12);
+								@include button($padding: $button-tny);
+							}
+
+							@media #{$medium-only} {
+								font-size: rem-calc(18);
+								@include button($padding: $button-med);
+							}
+
+							@media #{$large-up} {
+								font-size: rem-calc(24);
+								@include button($padding: $button-lrg);
+							}
+
+							
+							margin: 0;
+							line-height: 1.2;
+							color: white;
+							@include inline-icon($pseudo: after, $icon: $fa-var-chevron-right);
+
+							&:empty {  // Here we hide it if there's no content
+								display: none;
+							}
+						}
+					}
+
+					.featureNav {
+						border: none !important;
+					}
+				}
+			}
+		}
+	}
+}
