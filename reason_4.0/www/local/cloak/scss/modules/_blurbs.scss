@@ -3,25 +3,12 @@
 
 .blurb,
 .issueBlurb {
-
 	@include clearfix;
 	//background: $vapor;
 	border: 1px solid $gainsboro;
 	padding: $horizontal-gutter/2;
 	margin-bottom: $horizontal-gutter;
 
-	// Experiment. Keep bottom margin on last element.
-	// &:last-of-type {
-	// 	margin-bottom: 0;
-	// }
-
-	// The blurb has uniform padding around it.
-	// Here we remove the bottom margin and padding
-	// from whatever the last element inside the blurb happens to be.
-	// > *:last-child {
-	// 	margin-bottom: 0;
-	// 	padding-bottom: 0;
-	// }
 	// Remove padding from the final tag and any tags inside it (to keep padding uniform)
 	@include last-child-padding-collapse();
 }

@@ -1,65 +1,25 @@
 // Structure Styles (resonsible for the basic column layout)
 // Cloak, v1
 
-// Helper styles (for debugging layouts)
-// #breadcrumbs {
-
-// 	.breadcrumb {
-// 		background: orange;
-// 	}
-// }
-
-// #meat {
-
-// 	// #content {
-// 	// 	background: red;
-// 	// }
-
-// 	// #related {
-// 	// 	background: blue;
-// 	// }
-
-// 	// #navigation {
-// 	// 	background: green;
-// 	// }
-
-// 	#content {
-// 		border: 1px solid red;
-// 	}
-
-// 	#related {
-// 		border: 1px solid blue;
-// 	}
-
-// 	#navigation {
-// 		border: 1px solid green;
-// 	}
-// }
-
-// #footer {
-// 	border: 1px solid purple;
-// }
-
-
-// html,
-// body,
-// *:before,
-// *:after {
-//   // Prevents auto-resizing of text in mobile browsers
-//   -moz-text-size-adjust: none;
-//   -ms-text-size-adjust: none;
-//   -webkit-text-size-adjust: none;
-//   text-size-adjust: none;
-// }
+// 1. BANNER
+// 2. BREADCRUMBS
+// 3. PAGE TITLE
+// 4. MINISITE COLUMN LAYOUT
+//   4a. 3 column layout.
+//   4b. 2 column layout.
+//   4c. 2 column layout.
+//   4d. 1 column layout.
+// 5. MODULE COLUMN LAYOUT
+// 6. FOOTER
+// 7. HELPER STYLES (for debugging layouts)
 
 // BANNER
 #banner {
-	
 	h1 {
 	}
 }
 
-// BREADCRUMBS
+// 2. BREADCRUMBS
 #breadcrumbs {
 	@include grid-row();
 	padding-top: $horizontal-gutter; // space between header and content
@@ -69,7 +29,7 @@
 	}
 }
 
-// PAGE TITLE
+// 3. PAGE TITLE
 #contentHead {
 	@include grid-row();
 
@@ -82,7 +42,7 @@
 	}
 }
 
-// MINISITE COLUMN LAYOUT
+// 4. MINISITE COLUMN LAYOUT
 #meat {
 	@include grid-row();
 	padding-top: $horizontal-gutter; // space between breadcrumb and content
@@ -97,19 +57,9 @@
 
 	#navigation {
 		@include grid-column(12);
-
-		// @media #{$medium-low-only} {
-		// 	background: #f3f3f3;
-		// }
-
-		// #navInnerWrap {
-		// 	@media #{$medium-low-only} {
-		// 		@include grid-column($columns: 8, $push: 2);
-		// 	}
-		// }
 	}
 
-	// MINISITE COLUMN LAYOUT: 3 column layout.
+	// 4a. MINISITE COLUMN LAYOUT: 3 column layout.
 	// Page has content, related, and navigation.
 	&.containsConRelNav {
 		@media #{$medium-up} {
@@ -141,7 +91,7 @@
 		}
 	}
 
-	// MINISITE COLUMN LAYOUT: 2 column layout.
+	// 4b. MINISITE COLUMN LAYOUT: 2 column layout.
 	// Page has content and navigation.
 	&.containsConNav {
 
@@ -159,7 +109,7 @@
 		}
 	}
 
-	// MINISITE COLUMN LAYOUT: 2 column layout. \
+	// 4c. MINISITE COLUMN LAYOUT: 2 column layout.
 	// Page has content and related.
 	&.containsConRel {
 
@@ -176,7 +126,7 @@
 
 	}
 
-	// MINISITE COLUMN LAYOUT: 1 column layout.
+	// 4d. MINISITE COLUMN LAYOUT: 1 column layout.
 	// Page has content.
 	&.containsCon {
 		#content {
@@ -185,7 +135,7 @@
 	}
 }
 
-// MODULE COLUMN LAYOUT
+// 5. MODULE COLUMN LAYOUT
 // Many modules follow the same markup scheme: one column for filtering, and one column for module content.
 // Here, we decide when to place them side by side, and when to linearize them.
 // Some modules may override these defaults in their respective modules/_{module-name}.scss.
@@ -242,3 +192,42 @@
 // FOOTER 
 #footer {
 }
+
+// Helper styles (for debugging layouts)
+// #breadcrumbs {
+
+// 	.breadcrumb {
+// 		background: orange;
+// 	}
+// }
+
+// #meat {
+
+// 	// #content {
+// 	// 	background: red;
+// 	// }
+
+// 	// #related {
+// 	// 	background: blue;
+// 	// }
+
+// 	// #navigation {
+// 	// 	background: green;
+// 	// }
+
+// 	#content {
+// 		border: 1px solid red;
+// 	}
+
+// 	#related {
+// 		border: 1px solid blue;
+// 	}
+
+// 	#navigation {
+// 		border: 1px solid green;
+// 	}
+// }
+
+// #footer {
+// 	border: 1px solid purple;
+// }

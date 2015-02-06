@@ -3,7 +3,16 @@
 
 // Common styles and elements that are repeated throughout Reason
 
+// 1. PERSISTENT FILTER
+// 2. MODULE NAV
+//   2a. PAGINATION
+//   2b. FEED LINKS
+// 3. GENERIC
+//   3b. BACK LINKS
+
+// 1. PERSISTENT FILTER
 // Persistent is the search and filter interface that goes along with some modules
+
 .persistent {
 	margin-bottom: $horizontal-gutter;
 	border: none;
@@ -120,11 +129,15 @@
 	}
 }
 
+// 2. MODULE NAV
+// Module Nav typically displays the module's main content. Many modules run pagination or feed links here.
+
 .moduleNav {
 
-	// PAGINATION
+	// 2a. PAGINATION
 	// Foundaiton's pagnation mixins use different markup than Reason's.
 	// For maximum integration, we use Foundation pagination mixins and variables wherever possible.
+
 	.pagination {
 		display: block;
 		min-height: $pagination-height;
@@ -179,6 +192,7 @@
 		}
 	}
 
+	// 2b. FEED LINKS
 	.feedLink {
 
 		.feedInfo {
@@ -190,10 +204,14 @@
 	}
 }
 
+// 3. GENERIC
+// Many older modules use #generic as a general module wrapper
+
 #generic {
 	@include clearfix;
 	margin-bottom: $horizontal-gutter/2;
 
+	// 3b. BACK LINKS
 	.back {
 	
 		a {
