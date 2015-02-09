@@ -21,6 +21,10 @@
 				list-style-type: none;
 				border-top: 1px solid $silver;
 				padding: $horizontal-gutter/2 0;
+
+				a:hover {
+					text-decoration: underline;
+				}
 				
 				.teaserImage {
 					max-width: rem-calc(80);
