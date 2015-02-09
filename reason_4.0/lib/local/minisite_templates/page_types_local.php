@@ -11,19 +11,25 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'width' => 1680,
 			'height' => 651,
 		),
-		'main' => 'events_mini',
-		// 'main_post' => array(
-		// 	'module' => 'publication',
-		// 	'related_mode' => 'true',
-		// 	// 'markup_generator_info' =>
-		// 	// array('list_item' => array(
-		// 	// 				'classname' => 'MinimalListItemMarkupGenerator', 
-		// 	// 				'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/minimal.php',
-		// 	// 				)
-		// 	// 	 ),
-		// 	'max_num_items' => 4,
-		// ),
-		'main_post_2' => array(
+		'main' => array(
+			'module' => 'events_mini',
+			'ideal_count' => 5,
+		),
+		'main_post' => array(
+			'module' => 'publication',
+			'related_mode' => 'true',
+			'related_title' => 'Muush',
+			'show_featured_items' => true,
+			// 'related_markup_generator_info' =>
+			// 	array('list_item' => array(
+			// 		'classname' => 'ListItemNoImageMarkupGenerator', 
+			// 		'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/no_image.php',
+			// 		),
+			//  	),
+			'max_num_items' => 4,
+		),
+		'main_post_2' => '',
+		'pre_sidebar' => array(
 			'module' => 'blurb',
 			'num_to_display' => 4,
 		),
@@ -32,12 +38,11 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'pre_banner' => 'announcements',
 		'banner_xtra' => 'search',
 		//'post_banner' => 'navigation_top',
-		'pre_sidebar' => array(
+		'sidebar' => array(
 			'module' => 'blurb',
 			'num_to_display' => 1,
 		),
-		'sidebar' => 'content',
-		'post_sidebar' => '',
+		'post_sidebar' => 'content',
 		'navigation' => '',
 		'footer' => 'maintained',
 		'sub_nav' => '',
