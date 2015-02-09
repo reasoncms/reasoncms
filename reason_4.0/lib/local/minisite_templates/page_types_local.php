@@ -13,7 +13,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 				'module' => 'feature/feature',
 				'width' => '1200',
 				'height' => '575',
-				'autoplay_timer' => 4,
+				'autoplay_timer' => 6,
 				// 'autoplay' => true,
 			),
 			'post_main_head' => '',
@@ -60,7 +60,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'module' => 'feature/feature',
 			'width' => '1660',
 			'height' => '575',
-			'autoplay_timer' => 4,
+			'autoplay_timer' => 6,
 		),
 		'main_head' => '',
 		'main_post' => array(
