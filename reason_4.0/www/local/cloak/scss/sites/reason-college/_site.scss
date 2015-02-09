@@ -156,7 +156,6 @@ $grr-color: #595353;
 			transition: max-height .8s ease-in-out, border .1s ease-in-out;
  			-webkit-transition: max-height .8s ease-in-out, border .1s ease-in-out;
 			background: $vapor;
-			border-bottom: 1px solid $vapor;
 
  			&.open {
  				max-height: 1000px;
@@ -198,6 +197,7 @@ $grr-color: #595353;
 			overflow: hidden;
 			transition: max-height .8s ease-in-out, border .1s ease-in-out;
  			-webkit-transition: max-height .8s ease-in-out, border .1s ease-in-out;
+ 			background: $white;
  		
  			&.open {
  				max-height: 1000px;

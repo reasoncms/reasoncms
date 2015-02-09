@@ -21,13 +21,18 @@
 }
 
 #banner {
-	background: $vapor;
+	background-color: $vapor;
 	border-bottom: 1px solid $gainsboro;
 	text-align: center;
 	padding: $horizontal-gutter/2 $column-gutter/2;
+	background-position: center center;
 
 	@media #{$medium-up} { 
 		padding: $horizontal-gutter $column-gutter/2 $horizontal-gutter/1.25;
+	}
+
+	@media #{$large-up} { 
+		//padding-top: $horizontal-gutter*1.5;
 	}
 
 	h1 {
@@ -40,14 +45,16 @@
 			font-size: rem-calc(26);
 		}
 		@media #{$large-up} {
-			font-size: rem-calc(32);
+			font-size: rem-calc(30);
 		}
 
 		a {
 			color: $site-title-color;
+			font-weight: 700;
+			text-shadow: 0 0 2px black;
 
 			&:hover {
-				color: darken($site-title-color, 10%);
+				//color: darken($site-title-color, 10%);
 				text-decoration: underline;
 			}
 		}
@@ -68,10 +75,13 @@
 				}
 
 				a {
+					box-shadow: 0 0 2px rgba(black, .25);
+
 					@include circle-icon-button(
 						$icon-background: $white,
 						$icon-variable: $fa-var-navicon,
-						$icon-border-color: $iron
+						$icon-border-color: $white,
+						$icon-padding: rem-calc(8)
 					);
 				}
 
@@ -82,10 +92,13 @@
 
 			&.searchToggle {
 				a {
+					box-shadow: 0 0 2px rgba(black, .25);
+
 					@include circle-icon-button(
 						$icon-background: $white,
 						$icon-variable: $fa-var-search,
-						$icon-border-color: $iron
+						$icon-border-color: $white,
+						$icon-padding: rem-calc(8)
 					);
 				}
 

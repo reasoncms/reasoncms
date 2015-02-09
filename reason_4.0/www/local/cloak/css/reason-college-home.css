@@ -1536,10 +1536,11 @@ blockquote p {
     float: right; }
 
 #banner {
-  background: #F6F6F6;
+  background-color: #F6F6F6;
   border-bottom: 1px solid #DDDDDD;
   text-align: center;
-  padding: 1.125rem 1.5rem; }
+  padding: 1.125rem 1.5rem;
+  background-position: center center; }
   @media only screen and (min-width: 40.063em) {
     #banner {
       padding: 2.25rem 1.5rem 1.8rem; } }
@@ -1553,11 +1554,12 @@ blockquote p {
         font-size: 1.625rem; } }
     @media only screen and (min-width: 63.8125em) {
       #banner h1 {
-        font-size: 2rem; } }
+        font-size: 1.875rem; } }
     #banner h1 a {
-      color: #555555; }
+      color: #fff;
+      font-weight: 700;
+      text-shadow: 0 0 2px black; }
       #banner h1 a:hover {
-        color: #3b3b3b;
         text-decoration: underline; }
   #banner #navigationToggles {
     margin: 0;
@@ -1573,13 +1575,14 @@ blockquote p {
           top: -9999px;
           margin-bottom: 0; } }
       #banner #navigationToggles li.navJump a {
+        box-shadow: 0 0 2px rgba(0, 0, 0, 0.25);
         display: inline-block;
         margin: 0;
-        padding: 0.625rem;
+        padding: 0.5rem;
         line-height: 1 !important;
         border-radius: 1000px;
         background: #FFFFFF;
-        border: 1px solid #CCCCCC;
+        border: 1px solid #FFFFFF;
         color: #b84041;
         text-align: center; }
         #banner #navigationToggles li.navJump a:before {
@@ -1602,13 +1605,14 @@ blockquote p {
         top: -9999px;
         margin-bottom: 0; }
       #banner #navigationToggles li.searchToggle a {
+        box-shadow: 0 0 2px rgba(0, 0, 0, 0.25);
         display: inline-block;
         margin: 0;
-        padding: 0.625rem;
+        padding: 0.5rem;
         line-height: 1 !important;
         border-radius: 1000px;
         background: #FFFFFF;
-        border: 1px solid #CCCCCC;
+        border: 1px solid #FFFFFF;
         color: #b84041;
         text-align: center; }
         #banner #navigationToggles li.searchToggle a:before {
@@ -5802,8 +5806,7 @@ form .submitSection,
       overflow: hidden;
       transition: max-height .8s ease-in-out, border .1s ease-in-out;
       -webkit-transition: max-height .8s ease-in-out, border .1s ease-in-out;
-      background: #F6F6F6;
-      border-bottom: 1px solid #F6F6F6; }
+      background: #F6F6F6; }
       #cloakHeader #utilityNav.open {
         max-height: 1000px;
         border-bottom: 1px solid #DDDDDD; }
@@ -5827,7 +5830,8 @@ form .submitSection,
       max-height: 0;
       overflow: hidden;
       transition: max-height .8s ease-in-out, border .1s ease-in-out;
-      -webkit-transition: max-height .8s ease-in-out, border .1s ease-in-out; }
+      -webkit-transition: max-height .8s ease-in-out, border .1s ease-in-out;
+      background: #FFFFFF; }
       #cloakHeader #globalNav.open {
         max-height: 1000px;
         border-bottom: 1px solid #DDDDDD; }
