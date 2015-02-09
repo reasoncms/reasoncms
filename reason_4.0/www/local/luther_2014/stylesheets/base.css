@@ -5178,9 +5178,13 @@ hr.horizontal-rule-basic {
 #faq #filtering {
   padding-bottom: 1.25rem;
 }
-/* line 27, scss/modules/_faq.scss */
+/* line 26, scss/modules/_faq.scss */
+#faq #filtering .searchForm {
+  display: block;
+}
+/* line 28, scss/modules/_faq.scss */
 #faq #filtering .searchForm .search {
-  border: 0.0625rem solid #c3c3c3;
+  border: 1px solid #c3c3c3;
   border-radius: 0.625rem;
   padding-left: 0.625rem;
   padding-right: 0.625rem;
@@ -5189,7 +5193,7 @@ hr.horizontal-rule-basic {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
   font-size: auto;
 }
-/* line 37, scss/modules/_faq.scss */
+/* line 38, scss/modules/_faq.scss */
 #faq #filtering .searchForm .submit {
   border: 0.0625rem solid white;
   border-radius: 0.3125rem;
@@ -5197,39 +5201,39 @@ hr.horizontal-rule-basic {
   color: white;
   font-weight: 300;
 }
-/* line 45, scss/modules/_faq.scss */
+/* line 46, scss/modules/_faq.scss */
 #faq #filtering .searchForm .submit:hover {
   background-color: #1280e6;
 }
-/* line 52, scss/modules/_faq.scss */
+/* line 53, scss/modules/_faq.scss */
 #faq .moduleNav ul {
   margin: 0;
 }
-/* line 54, scss/modules/_faq.scss */
+/* line 55, scss/modules/_faq.scss */
 #faq .moduleNav ul li {
   padding-top: 0.625rem;
 }
-/* line 56, scss/modules/_faq.scss */
+/* line 57, scss/modules/_faq.scss */
 #faq .moduleNav ul li div {
   display: none;
 }
-/* line 59, scss/modules/_faq.scss */
+/* line 60, scss/modules/_faq.scss */
 #faq .moduleNav ul li strong {
   display: inline-block;
   border-bottom: 1px solid #dddddd;
   padding-bottom: 0.625rem;
 }
-/* line 65, scss/modules/_faq.scss */
+/* line 66, scss/modules/_faq.scss */
 #faq .moduleNav ul li:first-child {
   padding-top: 0;
 }
-/* line 70, scss/modules/_faq.scss */
+/* line 71, scss/modules/_faq.scss */
 #faq .moduleNav ul li:last-child strong {
   border-bottom: none;
   padding-bottom: 0;
   display: inline-block;
 }
-/* line 77, scss/modules/_faq.scss */
+/* line 78, scss/modules/_faq.scss */
 #faq .moduleNav .feedLink {
   display: none;
 }
