@@ -24,8 +24,9 @@
 	#filtering {
 		padding-bottom: $column-gutter/2;
 		.searchForm {
+			display: block;
 			.search {
-				border: rem-calc(1) solid darken($lc-grey, 15%);
+				border: 1px solid darken($lc-grey, 15%);
 				border-radius: rem-calc(10);
 				padding-left: rem-calc(10);
 				padding-right: rem-calc(10);
