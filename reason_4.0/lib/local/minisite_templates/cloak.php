@@ -62,18 +62,18 @@
 			}
 
 			// Features
-			if($regions = $page_type->module_regions('feature/feature'))
-			{
-				foreach($regions as $region)
-				{
-					if(!isset($module['module_params']['width']))
-						$page_type->set_region_parameter($region, 'width', 700);
-					if(!isset($module['module_params']['width']))
-						$page_type->set_region_parameter($region, 'height', 460);
-					if(!isset($module['module_params']['autoplay_timer']))
-						$page_type->set_region_parameter($region, 'autoplay_timer', 4);
-				}
-			}
+			// if($regions = $page_type->module_regions('feature/feature'))
+			// {
+			// 	foreach($regions as $region)
+			// 	{
+			// 		if(!isset($module['module_params']['width']))
+			// 			$page_type->set_region_parameter($region, 'width', 700);
+			// 		if(!isset($module['module_params']['width']))
+			// 			$page_type->set_region_parameter($region, 'height', 460);
+			// 		if(!isset($module['module_params']['autoplay_timer']))
+			// 			$page_type->set_region_parameter($region, 'autoplay_timer', 4);
+			// 	}
+			// }
 
 			// Events Mini
 			if($regions = $page_type->module_regions('events_mini'))
