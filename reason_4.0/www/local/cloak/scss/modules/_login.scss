@@ -5,8 +5,6 @@
 // Not included in cloadk/scss/_modules.scss or compiled in app.css,
 // since Login has it's own dedicated theme that doesn't use those files.
 
-#reasonDeveloper {display: none;}
-
 .cloakLogin {
 
 	#wrapper {
@@ -17,7 +15,6 @@
 
 	#banner,
 	#meat {
-		padding: $column-gutter;
 
 		@media #{$small-high-up} {
 			max-width: rem-calc(400);
@@ -27,7 +24,7 @@
 
 	#banner {
 		text-align: center;
-		padding: $column-gutter/2 $column-gutter;
+		padding: $horizontal-gutter/2 $column-gutter/2;
 		border-bottom: 1px solid $iron;
 		background: $silver;
 
@@ -44,7 +41,7 @@
 	}
 
 	#meat {
-		padding: $column-gutter;
+		padding: $horizontal-gutter/2 $column-gutter/2 0 $column-gutter/2;
 		max-width: rem-calc(400);
 		margin: 0 auto;
 
@@ -56,7 +53,8 @@
 		#login {
 			
 			table {
-					width: 100%;
+				width: 100%;
+				margin-bottom: $horizontal-gutter/2;
 
 				tr {
 					display: block;
@@ -94,6 +92,10 @@
 		 		font-size: $h5-font-size;
 		 		color: $alert-color;
 		 		margin: 0;
+
+		 		p {
+		 			margin: 0;
+		 		}
 		 	}
 
 		 	.msg_extra {
@@ -110,21 +112,26 @@
 
 		 	.logoutLink {
 		 		@include button($radius: $global-radius, $full-width: true);
-		 		margin-bottom: 0;
+		 		margin-bottom: $horizontal-gutter/2;
 		 	}
 
 		 	p.smallText {
 		 		background: $silver;
-		 		margin: 0 -$column-gutter;
-		 		padding: $column-gutter;
+		 		border: 1px solid $iron;
+		 		padding: $horizontal-gutter/2 $column-gutter/2;
+		 		font-size: rem-calc(14);
 		 		
-		 		@media #{$medium-up} {
+		 		@media #{$small-high-up} {
+		 			margin-top: 0;
+			 		margin-left: -$column-gutter/2;
+			 		margin-right: -$column-gutter/2;
+			 		margin-bottom: 0;
+		 			border: none;
 		 			border-top: 1px solid $iron;
 		 		}
 
 		 		&.smallText {
-		 			font-size: rem-calc(14);
-		 			margin-top: rem-calc(16);
+		 			//margin-top: rem-calc(16);
 		 		}
 		 	}
 		}	

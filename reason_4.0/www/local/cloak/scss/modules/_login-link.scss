@@ -3,7 +3,7 @@
 
 .loginLinkModule {
 
-	margin-top: $column-gutter/2;
+	margin-top: $horizontal-gutter/2;
 
 	.editDiv,
 	.inlineEditDiv {
@@ -46,10 +46,21 @@
 	}
 
 	#footerLoginLink {
-
 		font-size: rem-calc(14);
 
 		.login {
+			@include button($bg: transparent,$radius: $global-radius, $padding: $button-tny);
+			//background: none;
+			border: 1px solid $primary-color;
+			color: $primary-color;
+			margin-bottom: 0;
+			font-weight: 400;
+
+			&:hover {
+				background: $primary-color;
+				color: $white;
+			}
+
 			&:after {
 				@extend .fa;
 				content: $fa-var-power-off;

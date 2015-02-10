@@ -1,75 +1,81 @@
 // Publication Styles
 // Cloak, v1
 
-// Column Layout
-// This has been moved to base/_common.scss.
-// Remove when sure that we didn't lose anything in the process
-//#meat {
+// Common
+@mixin publication-date() {
+	color: $aluminum;
+	font-size: rem-calc(14);
+}
 
-	// .publication {
-	// 	@include grid-row();
+// REALTED PUBLICATION (usually in the sidebar)
+#relatedPub {
+@include clearfix;
 
-	// 	.persistent {
-	// 		margin-bottom: $column-gutter;
-	// 	}
+	// @todo: make sure structure doesn't do anything weird with module nav in this instance
+	.moduleNav {
 
-	// 	.moduleNav {
-	// 		margin-bottom: $column-gutter;
-	// 	}
-	// }
-		
-	// // 3 column layout. Page has content, related, and navigation.
-	// &.containsConRelNav {
+		.posts {
+			margin: 0;
 
-	// 	.publication {
+			.post {
+				list-style-type: none;
+				border-top: 1px solid $silver;
+				padding: $horizontal-gutter/2 0;
 
-	// 		.persistent {
-	// 			@include grid-column($columns:12, $collapse:true);
-	// 		}
+				a:hover {
+					text-decoration: underline;
+				}
+				
+				.teaserImage {
+					max-width: rem-calc(80);
+					float: right;
+					margin: 0 0 $horizontal-gutter/3 $column-gutter/3;
+					
+					.tnImage {
 
-	// 		.moduleNav {
-	// 			@include grid-column($columns:12, $collapse:true);
-	// 		}
-	// 	}
-	// }
+					}
+				}
 
-	// // 2 column layout. Page has content and navigation.
-	// &.containsConNav,
-	// // 2 column layout. Page has content and related.
-	// &.containsConRel,
-	// // 1 column layout. Page has content.
-	// &.containsCon {
+				.date {
+					@include publication-date();
+				}
 
-	// 	.publication {
-		
-	// 		.persistent {
-	// 			@include grid-column($columns:12, $collapse:true);
+				h4 {
+					font-size: $h3-font-size - $h3-font-reduction;
+				}
 
-	// 			@media #{$medium-up} {
-	// 				@include grid-column($columns:4, $collapse:true);
-	// 				float: right;
-	// 				padding-left: $column-gutter/2;			
-	// 			}
-	// 		}
+				.desc {
+					@include last-child-padding-collapse();
+					
+					* {
+						font-size: rem-calc(14);
+					}
+				}
+			}
+		}
 
-	// 		.moduleNav {
-	// 			@include grid-column($columns:12, $collapse:true);
+		.pubLinks {
+			margin: 0 0 $horizontal-gutter;
 
-	// 			@media #{$medium-up} {
-	// 				@include grid-column($columns:8,$collapse:true);
-	// 				padding-right: $column-gutter/2;	
-	// 			}
-	// 		}
-	// 	}
-	// }
-//}
+			li {
+				list-style-type: none;
+				
+				a {
+					@include more-link();
+				}
+			}
+		}
+	}
+}
 
+
+
+// PUBLICATION
 #meat .publication {
 
 	// Common
 	.date {
-		color: $aluminum;
-		font-size: rem-calc(14);
+		@include publication-date();
 	}
 
 	.back {
@@ -79,132 +85,21 @@
 		div {
 			
 			a {
-				@include inline-icon($icon: $fa-var-mail-reply);
+				@include back-link();
 			}
 		}
 	}
 
 	// Search and Filter styles
-	// @todo: Figure out how much persistent styling we can pull out and make general
 	.persistent {
 		border: none;
 
-		#filtering {
-			@include clearfix;
-			margin: 0;
-			background: $silver;
-			padding: $column-gutter/2;
-			padding-bottom: 0;
+		.addItemLink {
 
-			// Search form
-			.searchForm {
-				margin: 0 0 $column-gutter/2 0 !important;
-				@include clearfix;
-
-				label {
-					@include screenreader();
-				}
-
-				.search {
-					display: block;
-					@include form-element();
-					width: 80%;
-					float: left;
-					margin-bottom: 0;
-					border-right: none;
-				}
-
-				.submit {
-					display: block;
-					text-align: center;
-					padding: $form-spacing / 2;
-					height: ($input-font-size + ($form-spacing * 1.5) - rem-calc(1));
-					background: $primary-color;
-					color: $white;
-					width: 20%;
-					float: left;
-					border-radius: 0 $global-radius $global-radius 0;
-					margin-bottom: 0;
-
-					&:hover {
-						background: darken($primary-color, 10%);
-						cursor: pointer;
-					}
-				}
-
-				a {
-					color: red;
-				}
-			}
-
-			// Category filter as a select dropdown
-			.filterSet {
-				margin: 0 0 $column-gutter/2 0 !important;
-				
-				.filterSelect {
-
-				}
-
-				// Remove filter button
-				a {
-					display: block;
-					float: right;
-					line-height: 1;
-					margin-right: rem-calc(24);
-					margin-bottom: rem-calc(6);
-					padding: rem-calc(4);
-					font-size: rem-calc(12);
-					background: $white;
-					border: 1px solid $iron;
-					border-top: 0;
-					border-radius: 0 0 $global-radius $global-radius;
-
-					&:hover {
-						border-color: $aluminum;
-					}
-
-					@include inline-icon($icon: $fa-var-times-circle);
-				}
-			}
-
-			// Category list navigation
-			.filters {
-				margin: 0 0 $column-gutter/2 0 !important;
-
-				h4 {
-					display: inline-block;
-					margin-right: rem-calc(8);
-					font-weight: 400;
-
-					@media #{$small-only} {
-						font-weight: 700;
-					}
-				}
-
-				ul {
-					list-style-type: none;
-					margin: 0;
-					display: inline;
-
-					li {
-						display: inline-block;
-						margin-right: rem-calc(8);
-						white-space: pre;
-
-						a {
-							@include inline-icon($icon: $fa-var-folder-o, $color: $monsoon);
-						}
-
-						strong {
-							@include inline-icon($icon: $fa-var-folder-open-o, $color: inherit);
-						}
-					}
-				}
-			}
 		}
 
 		.loginlogout {
-			margin: $column-gutter/4 $column-gutter/2 0 0;
+			margin: $horizontal-gutter/4 $column-gutter/2 0 0;
 			text-align: right;
 			font-size: rem-calc(14);
 
@@ -222,7 +117,6 @@
 			text-transform: uppercase;
 			font-size: rem-calc(15);
 			font-weight: 700;
-			//margin-bottom: $column-gutter;
 		}
 
 		// Heading when a filter is applied: "Posts tagged with 'Category 2'"
@@ -232,9 +126,6 @@
 				text-transform: uppercase;
 				font-size: rem-calc(15);
 				font-weight: 700;
-				//margin-bottom: $column-gutter;
-				// @include alert($radius: $global-radius);
-				// background: red;
 
 				.clear {
 					font-weight: 700;
@@ -247,27 +138,89 @@
 				}
 			}
 		}
+
+		.issueName {
+
+		}
+
+		.issueMenu {
+			margin-bottom: $horizontal-gutter/2;
+			@include clearfix;
+			
+			form {
+				margin-bottom: $horizontal-gutter/3;
+
+				.issueLabel {
+					@include screenreader();
+				}
+				//margin-bottom: $horizontal-gutter/2;
+			}
+
+			.allIssuesLink a {
+				float: right;
+				@include more-link();
+			}
+		}
+
+		#featuredItems {
+
+		}
+
+		.sections {
+			margin: 0;
+
+			.section {
+				list-style-type: none;
+				margin-bottom: $horizontal-gutter;
+
+				.sectionInfo {
+
+					h3 a {
+						display: block;
+						border-bottom: 2px solid;
+					}
+
+					.sectionDesc {
+
+					}
+				}
+
+				.sectionFoot {
+					text-align: right;
+
+					.viewEntireSection {
+						@include inline-more-link();
+					}
+				}
+
+			}
+		}
 		
 		.posts {
-		
+			margin: 0;
+
 			.post {
 				border-top: 2px solid $smoke;
-				padding: $column-gutter/1.2 $column-gutter/2; 
+				padding: $horizontal-gutter/1.5 0; 
+				list-style-type: none;
 
-				&:last-of-type {
-					border-bottom: 2px solid $smoke;
+				@media #{$small-only} {
+					&:last-of-type {
+						border-bottom: 2px solid $smoke;
+						margin-bottom: $horizontal-gutter;
+					}
 				}
 
 				@media #{$medium-up} {
-					padding: $column-gutter/1.2 $column-gutter;
+					padding: $horizontal-gutter $column-gutter/1.5; 
 					border: 1px solid $smoke;
 					box-shadow: rgba(black, .25) 0 1px 1px;
-					margin-bottom: $column-gutter;
+					margin-bottom: $horizontal-gutter;
 				}
 
 				.teaserImage {
 					float: right;
-					margin: 0 0 $column-gutter/2 $column-gutter/2;
+					margin: 0 0 $horizontal-gutter/2 $column-gutter/2;
 
 					@media #{$small-only} {
 						max-width: 100px;
@@ -277,7 +230,6 @@
 				.title {
 					margin: 0;
 					font-size: $h3-font-size;
-				//	font-size: $h2-font-size;
 					font-weight: 400;
 				}
 
@@ -292,6 +244,7 @@
 				.links {
 					margin: 0;
 					padding: 0;
+					font-size: rem-calc(14);
 
 					li {
 						display: inline-block;
@@ -318,7 +271,13 @@
 			}
 		}
 
+		a[href="?"] {
+			@include back-link();
+		}
+
 		.feedLink {
+			margin-bottom: $horizontal-gutter;
+
 			a {
 				@include feed-button();
 			}
@@ -338,32 +297,117 @@
 			display: none;
 		}
 
+		.back {
+			margin-bottom: $horizontal-gutter;
+		}
+
+		.social {
+			margin: 0;
+			display: block;
+			@include clearfix;
+
+			&.top {
+				margin-top: $horizontal-gutter;
+			}
+
+			&.bottom {
+				margin-bottom: $horizontal-gutter;
+			}
+
+			p {
+				//display: inline-block;
+				margin: 0;
+
+				span {
+					@include screenreader();
+				}
+
+				a {
+					margin: 0 rem-calc(6);
+
+					@include circle-icon-button(
+						$icon-size: rem-calc(15),
+						$icon-padding: rem-calc(10),
+						$icon-background: $snow,
+						$icon-color: $primary-color,
+						$icon-border-color: $gainsboro
+					);
+
+					&.facebook:before {
+						content: $fa-var-facebook;
+					}
+
+					&.twitter:before {
+						content: $fa-var-twitter;
+					}
+
+					&.google:before {
+						content: $fa-var-google-plus;
+					}
+
+					&.email:before {
+						content: $fa-var-envelope-o;
+					}
+				}
+			}
+		}
+
 		.fullPost {
 			@include grid-row();
 			
 			.firstChunk {
 				@include grid-column($columns:12,$collapse:true);
 
+				@media #{$medium-up} {
+					@include grid-column($columns:8,$collapse:true);
+					padding-right: $column-gutter/2;
+				}
+
+				.commentAdded {
+					@include cloak-alert($mode: info);
+
+					h4 {
+						color: $body-font-color;
+						font-size: rem-calc(16);
+						@include inline-icon($icon: $fa-var-info-circle);
+						display: block;
+						padding: 0;
+					}
+				}
+
+				.postTitle {
+				}
+
 				.date {
-					//margin-bottom: $column-gutter;
 				}
 
 				.text {
-					margin-top: $column-gutter;
+					margin-top: $horizontal-gutter;
 				}
 			}
 
 			.relatedItems {
 				@include grid-column($columns:12,$collapse:true);
+				max-width: 400px;
+				margin: 0 auto;
+				float: none;
+
+				> div {
+					border-bottom: 1px solid #efefef;
+				}
+
+				@media #{$medium-up} {
+					@include grid-column($columns:4,$collapse:true);
+					padding-left: $column-gutter/2;
+				}
 
 				h4 {
-					color: #ff00ff;
 					font-size: $h4-font-size;
+					margin-top: 0;
 				}
 
 				> div {
-					margin-bottom: $column-gutter/2;
-					border: 1px solid blue;
+					margin-bottom: $horizontal-gutter/2;
 				}
 
 				.relatedEvents {
@@ -373,7 +417,7 @@
 
 						li {
 							list-style-type: none;
-							margin-bottom: $column-gutter/2;
+							margin-bottom: $horizontal-gutter/2;
 							@include inline-icon($icon: $fa-var-calendar);
 						}
 					}
@@ -381,6 +425,13 @@
 
 				.images {
 
+					ul {
+						margin: 0;
+					
+						li {
+							list-style-type: none;
+						}
+					}
 				}
 
 				.assets {
@@ -394,7 +445,7 @@
 
 					li {
 						display: inline-block;
-						margin: 0 rem-calc(8) $column-gutter/2 0;
+						margin: 0 rem-calc(8) $horizontal-gutter/2 0;
 						white-space: pre;
 
 						a {
@@ -411,16 +462,21 @@
 			.secondChunk {
 				@include grid-column($columns:12,$collapse:true);
 
-				.back {
-
-				}
-
 				.nextPrev {
 					border-top: 6px solid $silver;
 					border-bottom: 2px solid $silver;
-					padding: $column-gutter*2 0;
-					font-size: rem-calc(14);
+					padding: $horizontal-gutter*2 0;
 					text-transform: uppercase;
+					margin-bottom: $horizontal-gutter;
+
+					h4 {
+						font-size: rem-calc(14);
+						margin: 0;
+					}
+
+					p {
+						margin: 0;
+					}
 
 					a {
 						text-transform: none;
@@ -436,7 +492,7 @@
 					}
 
 					.prev {				
-						margin-bottom: $column-gutter;
+						margin-bottom: $horizontal-gutter;
 						
 						&.only {
 							width: 100%;
@@ -460,10 +516,96 @@
 							@include inline-icon($pseudo: after, $icon: $fa-var-angle-double-right);
 						}
 					}
+				}
 
-					.comments {
+				.comments {
+					
+					> ul {
+						margin: 0;
+						@include clearfix;
+
+						> li {
+							background: none;
+							padding: 0;
+							margin: 0 0 $horizontal-gutter;
+							list-style-type: none;
+
+							a[name^='comment'] {
+								@include anchor-padding-menu();
+							}
+
+							.datetime {
+								float: right;
+								text-align: right;
+								width: 50%;
+								font-size: rem-calc(14);
+								margin-bottom: rem-calc(8);
+							}
+
+							.author {
+								float: left;
+								width: 50%;
+								font-size: rem-calc(18);
+								font-weight: 700;
+								margin-bottom: rem-calc(8);
+							}
+
+							.commentContent {
+								border: 1px solid $gainsboro;
+								clear: both;
+								padding: $horizontal-gutter;
+								border-radius: $global-radius;
+								line-height: 1.2 !important;
+
+								*:last-child {
+									margin-bottom: 0;
+								}
+							}
+						}
+					}
+				}
+				
+				.comments,
+				.addCommentForm {
+					max-width: rem-calc(600);
+					margin: 0 auto;
+				}
+
+				a[name="comments"],
+				a[name="addComment"] {
+					// Adds non-visible padding to the top of the named anchor to space it out from the top of the browser
+					@include anchor-padding-menu;
+				}
+
+				.addCommentForm {
+
+					// Comments on, but off for individual story
+					.commentsOff {
+						
+						@include cloak-alert($mode: info, $symbol: $fa-var-toggle-off);
+
+						h4 {
+							padding: 0;
+							margin: 0;
+							font-size: rem-calc(16);
+						}
 					}
 
+					// Comments on, but not for this user
+					.notPermitted {
+
+						.subContent {
+							@include cloak-alert($mode: warning, $symbol: $fa-var-ban);
+						}	
+					}
+
+					// Comments on, but login first
+					.loginRequired {
+
+						.subContent {
+							@include cloak-alert($mode: warning, $symbol: $fa-var-power-off);
+						}	
+					}
 				}
 			}
 		}

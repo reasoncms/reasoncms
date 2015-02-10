@@ -1,71 +1,35 @@
 // Structure Styles (resonsible for the basic column layout)
 // Cloak, v1
 
-// Helper styles (for debugging layouts)
-// #breadcrumbs {
-
-// 	.breadcrumb {
-// 		background: orange;
-// 	}
-// }
-
-// #meat {
-
-// 	#content {
-// 		background: red;
-// 	}
-
-// 	#related {
-// 		background: blue;
-// 	}
-
-// 	#navigation {
-// 		background: green;
-// 	}
-
-// 	#content {
-// 		border: 1px solid red;
-// 	}
-
-// 	#related {
-// 		border: 1px solid blue;
-// 	}
-
-// 	#navigation {
-// 		border: 1px solid green;
-// 	}
-// }
-
-
-html,
-body,
-*:before,
-*:after {
-  // Prevents auto-resizing of text in mobile browsers
-  -moz-text-size-adjust: none;
-  -ms-text-size-adjust: none;
-  -webkit-text-size-adjust: none;
-  text-size-adjust: none;
-}
+// 1. BANNER
+// 2. BREADCRUMBS
+// 3. PAGE TITLE
+// 4. MINISITE COLUMN LAYOUT
+//   4a. 3 column layout.
+//   4b. 2 column layout.
+//   4c. 2 column layout.
+//   4d. 1 column layout.
+// 5. MODULE COLUMN LAYOUT
+// 6. FOOTER
+// 7. HELPER STYLES (for debugging layouts)
 
 // BANNER
 #banner {
-	
 	h1 {
 	}
 }
 
-// BREADCRUMBS
+// 2. BREADCRUMBS
 #breadcrumbs {
 	@include grid-row();
-	padding-top: $column-gutter; // space between header and content
+	padding-top: $horizontal-gutter; // space between header and content
 
 	.breadcrumb {
 		@include grid-column(12);
 	}
 }
 
-// PAGE TITLE
+// 3. PAGE TITLE
 #contentHead {
 	@include grid-row();
 
@@ -78,10 +42,10 @@ body,
 	}
 }
 
-// MINISITE COLUMN LAYOUT
+// 4. MINISITE COLUMN LAYOUT
 #meat {
 	@include grid-row();
-	padding-top: $column-gutter; // space between breadcrumb and content
+	padding-top: $horizontal-gutter; // space between breadcrumb and content
 
 	#content {
 		@include grid-column(12);
@@ -93,22 +57,13 @@ body,
 
 	#navigation {
 		@include grid-column(12);
-
-		@media #{$medium-low-only} {
-			background: #f3f3f3;
-		}
-
-		#navInnerWrap {
-			@media #{$medium-low-only} {
-				@include grid-column($columns: 8, $push: 2);
-			}
-		}
 	}
 
-	// MINISITE COLUMN LAYOUT: 3 column layout.
+	// 4a. MINISITE COLUMN LAYOUT: 3 column layout.
 	// Page has content, related, and navigation.
 	&.containsConRelNav {
 		@media #{$medium-up} {
+			
 			#content {
 				@include grid-column(8);
 			}
@@ -136,7 +91,7 @@ body,
 		}
 	}
 
-	// MINISITE COLUMN LAYOUT: 2 column layout.
+	// 4b. MINISITE COLUMN LAYOUT: 2 column layout.
 	// Page has content and navigation.
 	&.containsConNav {
 
@@ -154,7 +109,7 @@ body,
 		}
 	}
 
-	// MINISITE COLUMN LAYOUT: 2 column layout. \
+	// 4c. MINISITE COLUMN LAYOUT: 2 column layout.
 	// Page has content and related.
 	&.containsConRel {
 
@@ -171,7 +126,7 @@ body,
 
 	}
 
-	// MINISITE COLUMN LAYOUT: 1 column layout.
+	// 4d. MINISITE COLUMN LAYOUT: 1 column layout.
 	// Page has content.
 	&.containsCon {
 		#content {
@@ -180,20 +135,12 @@ body,
 	}
 }
 
-// MODULE COLUMN LAYOUT
+// 5. MODULE COLUMN LAYOUT
 // Many modules follow the same markup scheme: one column for filtering, and one column for module content.
 // Here, we decide when to place them side by side, and when to linearize them.
 // Some modules may override these defaults in their respective modules/_{module-name}.scss.
 
 #meat {
-
-	.persistent {
-		margin-bottom: $column-gutter;
-	}
-
-	.moduleNav {
-		margin-bottom: $column-gutter;
-	}
 		
 	// MINISITE COLUMN LAYOUT: Page has content, related, and navigation.
 	// Rather increasing the column number to 4, we make persistent and moduleNav 100%
@@ -204,6 +151,10 @@ body,
 		}
 
 		.moduleNav {
+			@include grid-column($columns:12, $collapse:true);
+		}
+
+		#faq > .item {
 			@include grid-column($columns:12, $collapse:true);
 		}
 	}
@@ -222,11 +173,12 @@ body,
 			@media #{$medium-up} {
 				@include grid-column($columns:4, $collapse:true);
 				float: right;
-				padding-left: $column-gutter/2;			
+				padding-left: $column-gutter/2;
 			}
 		}
 
-		.moduleNav {
+		.moduleNav,
+		#faq > .item {
 			@include grid-column($columns:12, $collapse:true);
 
 			@media #{$medium-up} {
@@ -237,7 +189,45 @@ body,
 	}
 }
 
-
 // FOOTER 
 #footer {
 }
+
+// Helper styles (for debugging layouts)
+// #breadcrumbs {
+
+// 	.breadcrumb {
+// 		background: orange;
+// 	}
+// }
+
+// #meat {
+
+// 	// #content {
+// 	// 	background: red;
+// 	// }
+
+// 	// #related {
+// 	// 	background: blue;
+// 	// }
+
+// 	// #navigation {
+// 	// 	background: green;
+// 	// }
+
+// 	#content {
+// 		border: 1px solid red;
+// 	}
+
+// 	#related {
+// 		border: 1px solid blue;
+// 	}
+
+// 	#navigation {
+// 		border: 1px solid green;
+// 	}
+// }
+
+// #footer {
+// 	border: 1px solid purple;
+// }

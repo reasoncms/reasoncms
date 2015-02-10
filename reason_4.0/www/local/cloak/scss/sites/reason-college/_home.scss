@@ -1,0 +1,395 @@
+#banner {
+	@include screenreader();
+}
+
+.contentHead {
+	@include screenreader();
+}
+
+@mixin section-padding() {
+	padding-top: $horizontal-gutter;
+	padding-bottom: $horizontal-gutter;		
+
+	@media #{$large-up} {
+		padding-top: $horizontal-gutter*1.75;
+		padding-bottom: $horizontal-gutter*1.75;						
+	}
+}
+
+// Home page only
+.siteHome {
+
+	#breadcrumbs {
+		@include screenreader();
+	}
+
+	#postBanner {
+
+		.featuresModule {
+			// Force features to remain a certain height on mobile
+			@media #{$small-only} {
+				.features {
+					padding: 0;
+					height: 248px;
+				}
+
+				img {
+					width: 640px;
+					max-width: 10000px !important;
+					height: 248px !important;
+					position: absolute;
+					left: 50%;
+					top: 0;
+					margin-left: -320px;
+				}
+			}
+
+			@media #{$medium-only} {
+				.features {
+					padding: 0;
+					height: 395px;
+				}
+
+				img {
+					width: 1020px;
+					max-width: 10000px !important;
+					height: 395px !important;
+					position: absolute;
+					left: 50%;
+					top: 0;
+					margin-left: -510px;
+				}
+			}
+
+			.features {
+				margin-bottom: 0;
+			}
+
+			.feature {
+
+				.featureContent {
+
+					.featureInfo {
+						text-align: center;
+						background: none !important;
+
+						.featureTitle {
+							font-family: $font-family-sans-serif;
+							font-weight: 700;
+							text-shadow: 2px 2px 2px black;
+
+							a.dest,
+							a.anchor,
+							span.noLink {
+								margin: 0;
+								padding: rem-calc(8) $column-gutter;
+								line-height: 1.2;
+								color: white;
+
+								@media #{$small-only} {
+									@include screenreader;
+								}
+
+								@media #{$medium-only} {
+									font-size: rem-calc(32);
+									padding-bottom: $horizontal-gutter/2;
+								}
+
+								@media #{$large-up} {
+									font-size: rem-calc(48);
+									max-width: 900px;
+									margin: 0 auto;
+									padding-bottom: $horizontal-gutter;
+								}
+							}
+						}
+
+						.featureText {
+							display: inline-block;
+
+							a.dest,
+							a.anchor,
+							span.noLink {
+
+								@media #{$small-only} {
+									@include button($padding: $button-tny);
+									font-size: rem-calc(16);
+								}
+
+								@media #{$medium-only} {
+									font-size: rem-calc(18);
+									@include button($padding: $button-med);
+								}
+
+								@media #{$large-up} {
+									font-size: rem-calc(24);
+									@include button($padding: $button-lrg);
+									margin-bottom: $horizontal-gutter*2;
+								}
+
+								margin: 0;
+								line-height: 1.2;
+								color: white;
+								@include inline-icon($pseudo: after, $icon: $fa-var-chevron-right);
+
+								&:empty {  // Here we hide it if there's no content
+									display: none;
+								}
+							}
+						}
+
+						.featureNav {
+							border: none !important;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	#meat.containsConRel {
+		@include grid-row($behavior: nest-collapse);
+
+		#content {
+			@include grid-row();
+			padding: 0;
+			float: none;
+
+			// Events
+			.contentMain {
+				@include grid-column(12);
+
+				@media #{$large-up} {
+					@include grid-column(5);
+				}
+
+				#miniCal {
+					h3 {
+						@include screenreader;
+					}
+
+					@media #{$small-only} {
+						.dayblock:nth-of-type(1) {
+							padding-top: 0;
+						}
+					}
+
+					@media #{$medium-up} {
+						.dayblock {
+							padding-left: rem-calc(80) + $column-gutter/2;
+							position: relative;
+							min-height: rem-calc(80) + $horizontal-gutter;
+							border-top: 1px solid #efefef;
+
+							.day {
+								display: block;
+								width: rem-calc(80);
+								text-align: center;
+								position: absolute;
+								top: -1px;
+								left: 0;
+
+								span {
+									display: block;
+								}
+
+								.numberSpan {
+									font-size: rem-calc(24);
+									font-weight: 300;
+								}
+							}
+						}
+					}
+				}
+			}
+
+			// News
+			.contentPost {
+				@include grid-column(12);
+
+				@media #{$large-up} {
+					@include grid-column(7);
+				}
+
+				#relatedPub {
+					@include grid-row();
+					//background: blue;
+
+					.moduleNav {
+						@include grid-row();
+						padding: 0;
+					}
+
+					h3 {
+						@include screenreader;
+					}
+
+					#featuredItems,
+					.posts {
+						@include grid-row();
+					}
+
+					#featuredItems {
+
+						.posts {
+							margin-bottom: 0;
+						}
+
+						.post {
+							@include grid-column(12);
+							background: $cloak-orange;
+							color: $white;
+
+							a,
+							.date {
+								color: $white;
+							}
+
+							@media #{$medium-up} {
+								margin-bottom: $horizontal-gutter;
+							}
+						}
+					}
+
+					.posts {
+						margin-bottom: $horizontal-gutter;
+					}
+
+					.post {
+
+						border: none;
+
+						@media #{$small-only} {
+							@include grid-column(12);
+
+							&:nth-of-type(odd) {
+								background: rgba($cloak-orange, .15);
+							}
+						}
+
+						@media #{$medium-up} {
+							@include grid-column(4);
+							background: rgba($cloak-orange, .15);
+						}
+
+					// 	.teaserImage {
+					// 		display: block;
+					// 		width: 100%;
+					// 		float: none !important;
+					// 		max-width: 100%;
+					// 		margin: 0;
+					// 	}
+					}
+				}
+			}
+		}
+
+		#related {
+			@include grid-row($behavior: nest-collapse);
+			padding: 0;
+			text-align: center;
+			float: none;
+
+			// Feature Blurbs
+			#preSidebar {
+				width: 100% !important;
+				background: $primary-color;
+
+				.blurbs {
+					@include grid-row();
+					@include section-padding();
+
+					.blurb {
+						border: none;
+						color: $white;
+						
+
+						@media #{$medium-up} {
+							@include grid-column(6);
+						}
+
+						@media #{$large-up} {
+							@include grid-column(3);
+							margin-bottom: 0;
+							padding-top: 0;
+							padding-bottom: 0;
+						}
+						
+						h4 {
+							color: $white;
+							font-family: $font-family-serif;
+							font-size: rem-calc(24);
+						}
+
+						img {
+							border: 9px solid $white;
+							border-radius: $global-rounded;
+							width: 75%;
+							max-width: 300px;
+							margin: 0 auto $horizontal-gutter/2;
+						}
+					}
+				}
+			}
+
+			// Social Media
+			#sidebar {
+
+				.blurbs {
+					@include grid-row();
+					@include section-padding();
+
+					.blurb {
+						@include grid-column(12);
+						border: none;
+
+						h4 {
+							font-family: $font-family-sans-serif;
+							font-size: rem-calc(26);
+							margin: 0 0 $horizontal-gutter;
+						}
+
+						li {
+
+							&.facebook {
+
+								@include circle-icon-button(
+									$icon-size: rem-calc(15),
+									$icon-padding: rem-calc(10),
+									$icon-background: $snow,
+									$icon-variable: $fa-var-bomb,
+									$icon-color: $primary-color,
+									$icon-border-color: $gainsboro
+								);
+							}
+
+							&.twitter {}
+							&.youtube {}
+							&.flickr {}
+							&.instagram {}
+							&.linkedin {}
+
+						}
+					}
+				}
+			}
+
+			#postSidebar {
+				background: #eaf6f5 url('/reason/local/cloak/images/reason-college/seal.png') no-repeat center center;
+				@include section-padding();
+
+				#pageContent {
+					@include grid-row();
+					@include grid-column();
+					float: none;
+
+					h3 {
+						font-family: $font-family-sans-serif;
+						font-size: rem-calc(26);
+						margin: 0 0 $horizontal-gutter;
+					}
+				}
+			}
+		}
+	}
+}

@@ -3,7 +3,7 @@
 
 // Fixed position top banner
 .f-topbar-fixed #banner {
-	padding: $column-gutter/2;
+	padding: $horizontal-gutter/2;
 	//@include single-transition(padding);
 	text-align: left;
 	//@include single-transition(text-align);
@@ -21,27 +21,43 @@
 }
 
 #banner {
-	background: $vapor;
+	background-color: $vapor;
 	border-bottom: 1px solid $gainsboro;
 	text-align: center;
-	padding: $column-gutter/2;
+	padding: $horizontal-gutter/2 $column-gutter/2;
+	background-position: center center;
 
 	@media #{$medium-up} { 
-		padding: $column-gutter $column-gutter/2;
+		padding: $horizontal-gutter $column-gutter/2 $horizontal-gutter/1.25;
+	}
+
+	@media #{$large-up} { 
+		//padding-top: $horizontal-gutter*1.5;
 	}
 
 	h1 {
 		font-size: rem-calc(18);
+		font-family: $font-family-serif;
+		margin: 0;
+		padding-bottom: $horizontal-gutter/2;
+		
 		@media #{$medium-up} {
 			font-size: rem-calc(26);
 		}
 		@media #{$large-up} {
-			font-size: rem-calc(32);
+			font-size: rem-calc(30);
 		}
 
-		font-family: $font-family-serif;
-		margin: 0;
-		padding-bottom: $column-gutter/2;
+		a {
+			color: $site-title-color;
+			font-weight: 700;
+			text-shadow: 0 0 2px black;
+
+			&:hover {
+				//color: darken($site-title-color, 10%);
+				text-decoration: underline;
+			}
+		}
 	}
 
 	#navigationToggles {
@@ -59,7 +75,14 @@
 				}
 
 				a {
-					@include circle-icon-button();
+					box-shadow: 0 0 2px rgba(black, .25);
+
+					@include circle-icon-button(
+						$icon-background: $white,
+						$icon-variable: $fa-var-navicon,
+						$icon-border-color: $white,
+						$icon-padding: rem-calc(8)
+					);
 				}
 
 				.navJumpText {
@@ -69,7 +92,14 @@
 
 			&.searchToggle {
 				a {
-					@include circle-icon-button(rem-calc(15), rem-calc(10), $iron, $fa-var-search);
+					box-shadow: 0 0 2px rgba(black, .25);
+
+					@include circle-icon-button(
+						$icon-background: $white,
+						$icon-variable: $fa-var-search,
+						$icon-border-color: $white,
+						$icon-padding: rem-calc(8)
+					);
 				}
 
 				.searchJumpText {

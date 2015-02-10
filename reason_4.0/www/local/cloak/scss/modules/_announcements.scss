@@ -1,0 +1,11 @@
+// Announcement Styles
+// Cloak, v1
+	
+#announcements {
+
+	.announcement {
+		@include cloak-alert($mode: secondary);
+		border-radius: 0;
+		margin-bottom: 0;
+	}
+}

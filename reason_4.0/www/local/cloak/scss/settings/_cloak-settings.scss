@@ -1,0 +1,86 @@
+// Cloak Settings
+// Cloak, v1
+
+// _settings.scss is the default Foundation settings file.
+// To keep things clean, we have Cloak-specific settings here.
+
+// Table of Contents
+// Cloak Settings
+//
+// a. Base
+// b. Grid
+// c. Global
+// d. WYSIWIG area
+// e. 
+// 01. 
+
+// a. Base
+// - - - - - - - - - - - - - - - - - - - - - - - - -
+
+// Allows the use of rem-calc() or lower-bound() in your settings
+@import "foundation/functions";
+
+// b. Grid
+// - - - - - - - - - - - - - - - - - - - - - - - - -
+
+// Controls horizontal spacing
+$horizontal-gutter: rem-calc(36);
+
+// c. Global
+// - - - - - - - - - - - - - - - - - - - - - - - - -
+
+// Theme colors
+$cloak-body: #555555;
+$cloak-red: #b84041;
+$cloak-turquoise: #2ea7a0;
+$cloak-orange: #e4a242;
+$cloak-brown: #82572d;
+
+// $cloak-primary-color: $cloak-red;
+// $cloak-secondary-color: $cloak-green;
+// $cloak-teritary-color: $cloak-orange;
+
+// Module colors
+// $asset-color: ;
+// $av-color: ;
+// $basic-tabs-color: ;
+// $blurbs-color: ;
+$breadcrumbs-color: $cloak-red;
+// $children-color: ;
+// $events-color: ;
+// $feature-color: ;
+// $form-color: ;
+// $gallery-color: ;
+// $images-color: ;
+// $in-place-editing-color: ;
+// $login-link-color: ;
+// $login-color: ;
+// $maintained-color: ;
+$navigation-color: $cloak-red;
+// $publication-color: ;
+$site-title-color: #fff;
+// $-color: ;
+// $-color: ;
+// $-color: ;
+// $-color: ;
+
+// d. WYSIWIG Areas
+// - - - - - - - - - - - - - - - - - - - - - - - - -
+// User created content areas (or WYSIWYG areas) have their own set of typographic styles. Here we define which HTML elements wrap WYSIWYG areas.
+// We can then use variables in place of selectors so that any time a wysiwyg area is added we can just add it below and all styles are updated.
+
+// $contentArea: '';
+// $relatedArea
+
+$pageContent: '#pageContent';  // Normal page content
+$fullPost: '.fullPost .text';  // Full article
+$userComment: '.comments .commentContent'; // User comments
+$eventListing: '.eventContent'; // Event module wysiwyg
+$blurb: '.blurb'; // Blurbs
+$faqContent: '#faq .answer';
+$facultyStaff: '.facStaffContent'; // Faculty staff content
+$minutesContent: '.minutesContent'; // Minutes 
+$policyContent: '.policyContent'; // Policy content
+$policyApprovals: '.policy .approvals'; // Policy approvals
+
+$wysiwyg-all-areas: '#{$pageContent}, #{$fullPost}, #{$userComment}, #{$eventListing}, #{$blurb}, #{$faqContent}, #{$facultyStaff}, #{$minutesContent}, #{$policyContent}, #{$policyApprovals}';

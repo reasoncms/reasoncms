@@ -1,6 +1,11 @@
+// LOGIN THEME (for export)
+// Cloak, v1
+
+// This file is for a the basic login site.
+// To reduce bloat, we don't include _boilerplate -- only the components we need.
+
 // Foundation
-// To reduce bloat, we only include the Foundation components we need.
-@import "settings";
+@import "settings/settings";
 @import "foundation/components/buttons";
 @import "foundation/components/type";
 
@@ -12,5 +17,5 @@
 // @import "vendor/font-awesome/fixed-width";
 
 // Cloak
-@import "mixins";
+@import "mixins/mixins";
 @import "modules/login";

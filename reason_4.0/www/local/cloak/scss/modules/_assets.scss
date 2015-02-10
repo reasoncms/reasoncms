@@ -2,22 +2,21 @@
 // Cloak, v1
 
 .assets {
-
 	// This margin, along with the bottom padding on each li, gives us the even margin we need to keep spacing uniform between page elements
-	margin-bottom: $column-gutter/2;
+	margin-bottom: $horizontal-gutter/2;
 
 	ul { 
-		margin: 0 0 0 $column-gutter; // bump out the list to make room for icons
+		margin: 0 0 0 $column-gutter/2; // bump out the list to make room for icons
 		list-style-type: none;
 	}
 
 	li {
-		padding-bottom: $column-gutter/2;
+		padding-bottom: $horizontal-gutter/2;
 
 		&:before {  // download icon
 			@extend .fa;
 			content: $fa-var-download;
-			margin-left: -$column-gutter;
+			margin-left: - $column-gutter/2;
 			float: left;
 			margin-top: rem-calc(6);
 			color: $aluminum;
@@ -62,6 +61,6 @@
 		// Assets by category has category heading that use H4
 		// Let's make the heading a little smaller
 		font-size: $h5-font-size;
-		margin-top: $column-gutter/2;
+		margin-top: $horizontal-gutter/2;
 	}
 }

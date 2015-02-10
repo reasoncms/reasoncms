@@ -5,7 +5,11 @@
 	background: $vapor;
 	border-top: 1px solid $gainsboro;
 	text-align: center;
-	padding: $column-gutter;
+	padding: $horizontal-gutter/1.5 $column-gutter/2;
+
+	@media #{$medium-up} {
+		padding: $horizontal-gutter $column-gutter;
+	}
 
 	#maintained {
 		// Maintained is a module, so it's styles are
@@ -15,5 +19,12 @@
 	.loginLinkModule {
 		// Login Link is a module, so it's styles are
 		// found in modules/_login-link.scss.
+	}
+
+	.poweredBy {
+		a {
+			text-decoration: underline;
+			font-weight: 400;
+		}
 	}
 }

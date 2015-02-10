@@ -3,7 +3,8 @@
 
 // Custom styles for Foundation components that don't have variables
 
-// Modal
+// REVEAL MODAL
+// http://foundation.zurb.com/docs/components/reveal.html
 
 .reveal-modal,
 dialog {
@@ -13,6 +14,11 @@ dialog {
 		@media #{$medium-up} {
 			min-width: 560px;
 		}
+	}
+
+	.reveal-heading {
+		margin-top: -$reveal-modal-padding;
+		margin-bottom: $reveal-modal-padding;
 	}
 
 	.close-reveal-modal {

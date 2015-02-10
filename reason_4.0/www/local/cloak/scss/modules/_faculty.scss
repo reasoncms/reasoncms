@@ -1,0 +1,52 @@
+// Faculty Styles
+// Cloak, v1
+
+#facultyStaff {
+	@include clearfix;
+
+	.facStaff {
+		border-bottom: 1px solid $gainsboro;
+		margin-bottom: $horizontal-gutter;
+
+		.facStaffImage {
+			@media #{$medium-up} {
+				float: right;
+				margin: 0 0 $horizontal-gutter/2 $column-gutter/2;
+			}
+		}
+
+		.facStaffName {
+			font-size: $h3-font-size;
+			margin-bottom: $horizontal-gutter/2;
+		}
+
+		.facStaffInfo {
+			
+			.label {
+				@include screenreader;
+			}
+
+			.facStaffPhone {
+				margin-left: $column-gutter/2;
+
+				@include inline-icon($icon: $fa-var-phone);
+				&:before {
+					@extend .fa-fw;
+				}
+			}
+
+			.facStaffEmail {
+				margin-left: $column-gutter/2;
+
+				@include inline-icon($icon: $fa-var-desktop);
+				&:before {
+					@extend .fa-fw;
+				}
+			}
+
+			.facStaffContent {
+				margin-top: $horizontal-gutter/2;
+			}
+		}
+	}
+}

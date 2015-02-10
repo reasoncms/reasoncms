@@ -1,0 +1,24 @@
+// FAQ Styles
+// Cloak, v1
+
+#faq {
+	@include clearfix;
+	margin-bottom: $horizontal-gutter;
+
+	> .item {
+		
+	}
+
+	.moduleNav {
+
+		ul {
+		@include clearfix;
+			margin: 0 0 $horizontal-gutter/2 $column-gutter/2;
+
+			li {
+				list-style-type: decimal;
+				margin-bottom: $horizontal-gutter/2;
+			}
+		}
+	}
+}
