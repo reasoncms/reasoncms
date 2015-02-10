@@ -201,8 +201,16 @@ class ThorCore
 			{
 				foreach ($values as $k=>$v)
 				{
-					if ($disco_obj->get_element($k))
+					$kEl = $disco_obj->get_element($k);
+					if ($kEl)
 					{
+						if ("upload" == $kEl->type) {
+							$possibleExistingPath = $this->get_thor_filestorage_row_and_col_specific_storage_dir($primary_key, $k) . $v;
+
+							if (!empty($v) && file_exists($possibleExistingPath)) {
+								$kEl->tmp_full_path = $possibleExistingPath;
+							}
+						}
 						$disco_obj->set_value($k, $v);
 					}
 					elseif (isset($display_values[$k]['group_id']))
@@ -390,10 +398,13 @@ class ThorCore
 		// svn weirdness
 		if ($disco_obj == null) { return; }
 
+		/*
+		// 2015-02-10 -- changed behvior; we now delete based on 'delete_requested' in the plasmature element
 		// tough to decide, but going with "an update clears out any previous files stored" approach
 		if (!$initialSave) {
 			$this->delete_file_storage_for_row($primary_key);
 		}
+		*/
 
 		$update_clauses = Array();
 
@@ -419,18 +430,28 @@ class ThorCore
 				// 2014-12-17 modification: this now supports a file that was uploaded but form could not be finished
 				// due to other errors. MUCH more user-friendly
 
-				// received is pretty standard - file was just uploaded. Pending can be, for instance:
+				// "received" is pretty standard - file was just uploaded.
+				// "pending" can be, for instance:
 				// 1. file was submitted but other form errors (no input for required elements for instance) occurred
 				// 2. errors were corrected but a different file was not uploaded
+				// "ready" can be if the file was included in an earlier form submission and user didn't do anything with
+				// it when resubmitting / editing.
 				if ($disco_el->state == "received" || $disco_el->state == "pending") {
-					$source_file = $disco_el->tmp_full_path;
+					$this->delete_file_storage_for_row_and_col($primary_key, $col_id);
 					$destination_file = $this->construct_file_storage_location($primary_key, $col_id, $disco_el->file["name"], true);
+					$source_file = $disco_el->tmp_full_path;
 					// echo "src [$source_file], dest [$destination_file]<P>";
 
 					$success = rename($source_file, $destination_file);
 					if ($success) {
 						$update_clauses[$col_id] = $disco_el->file["name"]; // just filename; rest can be reconstructed with construct_file_storage_location
 					}
+				} else if ($disco_el->state == "ready") {
+					// file was previously uploaded; leave it alone
+				} else if ($disco_el->state == "delete_requested") {
+					// file was previously uploaded but user wants it deleted...
+					$this->delete_file_storage_for_row_and_col($primary_key, $col_id);
+					$update_clauses[$col_id] = "";
 				} else {
 					// nothing was uploaded, or an error occurred?
 					$update_clauses[$col_id] = "";
@@ -1170,8 +1191,6 @@ class ThorCore
 
 	function _transform_upload($element, &$d)
 	{
-		// echo "RENDERING UPLOAD ELEMENT!<P>";
-		// var_dump("DATA FROM DB: <PRE>", $element, "</PRE>");
 		$id = $element->tagAttrs['id'];
 		$display_name = (!empty($element->tagAttrs['label'])) ? $element->tagAttrs['label'] : '';
 		$required = (!empty($element->tagAttrs['required'])) ? true : false;
