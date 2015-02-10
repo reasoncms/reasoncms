@@ -5634,30 +5634,33 @@ form .submitSection,
         height: auto; } }
   #cloakHeader #globalLogo {
     margin: 0;
-    padding: 0;
-    background: #2ea7a0;
-    position: relative;
-    z-index: 1; }
-    @media only screen and (max-width: 40em) {
-      #cloakHeader #globalLogo {
-        width: 50%;
-        margin: 0 auto;
-        height: 4.25rem; } }
-    @media only screen and (min-width: 40.063em) and (max-width: 63.75em) {
-      #cloakHeader #globalLogo {
-        width: 33.3333%;
-        margin: 0 auto;
-        height: 5rem; } }
-    @media only screen and (min-width: 63.8125em) {
-      #cloakHeader #globalLogo {
-        width: 14.2857142857%;
-        height: 6.25rem;
-        display: block;
-        position: absolute;
-        top: 1.75rem;
-        left: 50%;
-        margin-left: -7.1428571429%;
-        z-index: 999999; } }
+    padding: 0; }
+    #cloakHeader #globalLogo a {
+      display: block;
+      background: #2ea7a0 url("/reason/local/cloak/images/reason-college/logo.png") no-repeat center center;
+      background-size: 168px 168px;
+      position: relative;
+      z-index: 9999; }
+      @media only screen and (max-width: 40em) {
+        #cloakHeader #globalLogo a {
+          width: 50%;
+          margin: 0 auto;
+          height: 4.25rem; } }
+      @media only screen and (min-width: 40.063em) and (max-width: 63.75em) {
+        #cloakHeader #globalLogo a {
+          width: 33.3333%;
+          margin: 0 auto;
+          height: 5rem; } }
+      @media only screen and (min-width: 63.8125em) {
+        #cloakHeader #globalLogo a {
+          width: 14.2857142857%;
+          height: 6.25rem;
+          display: block;
+          position: absolute;
+          top: 1.75rem;
+          left: 50%;
+          margin-left: -7.1428571429%;
+          z-index: 999999; } }
     #cloakHeader #globalLogo span {
       position: absolute;
       left: -9999px;
@@ -5930,7 +5933,6 @@ form .submitSection,
         display: none; }
     #cloakHeader #sectionNav {
       margin: 0;
-      background: rgba(0, 0, 0, 0.9);
       background: rgba(89, 83, 83, 0.86); }
       #cloakHeader #sectionNav:before, #cloakHeader #sectionNav:after {
         content: " ";
@@ -5953,7 +5955,9 @@ form .submitSection,
             border-left: 1px solid rgba(255, 255, 255, 0.3);
             color: #FFFFFF;
             font-size: 0.9375rem;
-            text-transform: uppercase; } }
+            text-transform: uppercase; }
+          #cloakHeader #sectionNav ul li:nth-child(4) a {
+            border-left: none; } }
 
 #banner {
   position: absolute;

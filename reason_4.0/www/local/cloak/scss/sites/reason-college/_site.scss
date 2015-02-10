@@ -25,31 +25,37 @@ $grr-color: #595353;
 	#globalLogo {
 		margin: 0;
 		padding: 0;
-		background: $cloak-turquoise;
-		position: relative;
-		z-index: 1;
 
-		@media #{$small-only} {
-			width: 50%;
-			margin: 0 auto;
-			height: rem-calc(68);
-		}
-
-		@media #{$medium-only} {
-			width: 33.3333%;
-			margin: 0 auto;
-			height: rem-calc(80);
-		}
-
-		@media #{$large-up} {
-			width: $section-nav-item-width;
-			height: rem-calc(100);
+		a {
 			display: block;
-			position: absolute;
-			top: rem-calc(28);
-			left: 50%;
-			margin-left: - ($section-nav-item-width/2);
-			z-index: 999999;
+			background: $cloak-turquoise url("/reason/local/cloak/images/reason-college/logo.png") no-repeat center center;
+			// background size is 1/2 the total image resolution
+			background-size: 168px 168px;
+			position: relative;
+			z-index: 9999;
+
+			@media #{$small-only} {
+				width: 50%;
+				margin: 0 auto;
+				height: rem-calc(68);
+			}
+
+			@media #{$medium-only} {
+				width: 33.3333%;
+				margin: 0 auto;
+				height: rem-calc(80);
+			}
+
+			@media #{$large-up} {
+				width: $section-nav-item-width;
+				height: rem-calc(100);
+				display: block;
+				position: absolute;
+				top: rem-calc(28);
+				left: 50%;
+				margin-left: - ($section-nav-item-width/2);
+				z-index: 999999;
+			}
 		}
 
 		span {
@@ -345,7 +351,6 @@ $grr-color: #595353;
 		#sectionNav {
 			margin: 0;
 			@include clearfix;
-			background: rgba(black, .9);
 			background: rgba($grr-color, .86);
 			
 			ul {
@@ -369,6 +374,12 @@ $grr-color: #595353;
 						color: $white;
 						font-size: rem-calc(15);
 						text-transform: uppercase;
+					}
+
+					&:nth-child(#{$section-nav-item-count/2 + 1}) {
+						a {
+							border-left: none;
+						}
 					}
 				}
 			}
