@@ -36,7 +36,7 @@ class uploadType extends defaultType
 	
 	/**
 	 * The state of the upload.
-	 * Possible values: "ready", "received", "pending", "existing"
+	 * Possible values: "ready", "received", "pending", "existing", "delete_requested"
 	 * @var string
 	 * @see $_state
 	 */
@@ -345,15 +345,24 @@ class uploadType extends defaultType
 		$this->file = $this->_get_uploaded_file();
 		$this->_generate_warnings();
 		$vars = $this->get_request();
-		
-		if ($this->file && !empty($this->file["name"])) {
-			$this->value = $this->_grab_value_from_upload();
-		} else if ($id = @$vars[$this->_get_upload_id_field()]) {
-			$this->value = $this->_grab_value_from_limbo($id);
-		} else if (!empty($this->existing_file)) {
-			$this->value = $this->_grab_value_from_existing_file();
+
+		if (@$vars["delete_existing_" . $this->name] == "confirm_delete") {
+			// if user/admin checked the checkbox to delete an existing file we need to set state accordingly,
+			// and clear out things like values so that required checks are observed.
+			$this->_state = $this->state = "delete_requested";
+			$this->value = null;
+			$this->tmp_full_path = null;
+			$this->existing_file = null;
+		} else {
+			if ($this->file && !empty($this->file["name"])) {
+				$this->value = $this->_grab_value_from_upload();
+			} else if ($id = @$vars[$this->_get_upload_id_field()]) {
+				$this->value = $this->_grab_value_from_limbo($id);
+			} else if (!empty($this->existing_file)) {
+				$this->value = $this->_grab_value_from_existing_file();
+			}
+			$this->state = $this->_state;
 		}
-		$this->state = $this->_state;
 	}
 	
 	/** @access private */
@@ -606,8 +615,11 @@ class uploadType extends defaultType
 	function get_display()
 	{
 		$current = $this->_get_current_file_info();
+
+		$js ="<script type=\"text/javascript\" src=\"".REASON_PACKAGE_HTTP_BASE_PATH."disco/plas_types/upload.js\"></script>\n";
 		
-		return $this->_get_hidden_display($current).
+		return $js .
+			$this->_get_hidden_display($current).
 			$this->_get_restriction_display($current).
 			$this->_get_current_file_display($current).
 			$this->_get_upload_display($current);
@@ -704,9 +716,12 @@ class uploadType extends defaultType
 	{
 		if (!$current)
 			return '';
+
 		
+		$deletionUi = '';
 		if ($current->path) {
 			$filename = $this->_get_display_filename($current);
+			$deletionUi = ' <span class="delete_existing_file"><input type="checkbox" value="confirm_delete" name="delete_existing_' . $this->name . '"> Delete</span>';
 			$size = format_bytes_as_human_readable($current->size);
 			$style = '';
 		} else {
@@ -717,6 +732,7 @@ class uploadType extends defaultType
 		return '<div class="uploaded_file"'.$style.'>'.
 			'<span class="filename">'.htmlspecialchars($filename).'</span> '.
 			'<span class="size"><span class="filesize">'.$size.
+			$deletionUi.
 			'</span></span></div>';
 	}
 	
@@ -747,7 +763,7 @@ class uploadType extends defaultType
 		} else if ($current) {
 			$label = ($replace_text)
 				? $replace_text
-				: "Upload a different file:";
+				: "Replace saved file:";
 		}
 		
 		$upload = '<div class="file_upload">';
