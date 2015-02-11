@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-    $("#first_nameElement").focus();
+    $("#first_nameElement").focusWithoutScrolling();
     hide_all();
     input_error_check("#departElement");
     input_error_check("#titleElement");
@@ -52,6 +52,20 @@ $(document).ready(function() {
 
     $("#directory").tablesorter(tablesorteropts);
 });
+
+$.fn.focusWithoutScrolling = function(){
+    var x = window.scrollX, y = window.scrollY;
+
+    // Multiply by 2 to ensure the cursor always ends up at the end;
+    // Opera sometimes sees a carriage return as 2 characters.
+    var strLength = this.val().length *2;
+    this.focus();
+    // set cursor to end of text
+    this[0].setSelectionRange(strLength, strLength);
+    window.scrollTo(x, y);
+    return this; //chainability
+
+};
 
 function show_all(){
     $("#searchforRow").show();
