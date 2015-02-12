@@ -1,14 +1,15 @@
 <?php
 
    /* 
-	*  CLOAK Branded TEMPLATE
+	*  REASON COLLEGE TEMPLATE
 	*
-	*   CloakBrandedTemplate (/lib/local/minisite_templates/cloak_branded.php)...
+	*   ReasonCollegeTemplate (/lib/local/minisite_templates/reason_college.php)...
 	*  	  extends CloakTemplate (/lib/local/minisite_templates/cloak.php)...
 	*     which extends HTML5ResponsiveTemplate (/lib/core/minisite_templates/html5_responsive.php)...
 	*     which extends DefaultTemplate (/lib/core/minisite_templates/default.php)
 	*  
 	*  To extend a function without duplicating the parent's code, use parent::functionName();
+	*  To override a parent's function but call a grandparent's function, use ClassName::functionName();. Ex: MinisiteTemplate::alter_reason_page_type($page_type); 
 	*/
 
 	// include the MinisiteTemplate class
@@ -16,9 +17,9 @@
 	//reason_include_once('classes/module_sets.php');
 	
 	// this variable must be the same as the class name
-	$GLOBALS[ '_minisite_template_class_names' ][ basename( __FILE__)  ] = 'CloakBrandedTemplate';
+	$GLOBALS[ '_minisite_template_class_names' ][ basename( __FILE__)  ] = 'ReasonCollegeTemplate';
 	
-	class CloakBrandedTemplate extends CloakTemplate
+	class ReasonCollegeTemplate extends CloakTemplate
 	{
 
 		function alter_reason_page_type($page_type)
@@ -30,7 +31,7 @@
 			// $page_type->set_region('pre_banner', 'global_header', 'global_header.php', array());
 			//$page_type->set_region('pre_bluebar', 'page_title', 'page_title.php', array());
 			//$page_type->set_region('new_page_location', 'global_header', 'global_header.php', array());
-			//$page_type->set_region('new_page_location', 'page_title', 'page_title.php', array());
+			//$page_type->set_region('new_page_location', 'test_module', '/minisite_templates/modules/test/test_module.php', array());
 
 		}
 
@@ -46,7 +47,7 @@
 			<div id="cloakHeader">
 				<div id="cloakMasthead">
 					<h1 id="globalLogo">
-						<a href="#">
+						<a href="/">
 							<span>Reason College</span>
 						</a>
 					</h1>
