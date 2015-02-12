@@ -24,7 +24,7 @@
 
 		function alter_reason_page_type($page_type)
 		{
-			parent::alter_reason_page_type($page_type);
+			CloakTemplate::alter_reason_page_type($page_type);
 
 			// $page_type->set_region('pre_foot', 'blurb', 'blurb.php', array('blurb_unique_names_to_show' => 'luther_sports_affiliations'));
 			// $page_type->set_region('page_location', 'module', 'module_file_name.php', array('module_parameter' => 'paremeter_value'));

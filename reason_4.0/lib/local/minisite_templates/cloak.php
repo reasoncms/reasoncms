@@ -127,10 +127,6 @@
 					{
 						if(empty($markup_generators['item']))
 						{
-							$markup_generators['list'] = array (
-								'classname' => 'CloakRelatedListMarkupGenerator', 
-								'filename' => 'minisite_templates/modules/publication/publication_list_markup_generators/teasdasdfst.php',
-							);
 							$markup_generators['item'] = array (
 								'classname' => 'CloakItemMarkupGenerator', 
 								'filename' => 'minisite_templates/modules/publication/item_markup_generators/cloak.php',
