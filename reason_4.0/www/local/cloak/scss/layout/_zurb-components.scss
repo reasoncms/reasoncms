@@ -1,7 +1,7 @@
-// Widgets
+// Foundation Overrides
 // Cloak, v1
 
-// Custom styles for Foundation components that don't have variables
+// Custom style overrides for Foundation components that don't have variables
 
 // REVEAL MODAL
 // http://foundation.zurb.com/docs/components/reveal.html
@@ -32,4 +32,8 @@ dialog {
 			@include screenreader();
 		}
 	}
+}
+
+.reveal-modal-bg {
+	position: fixed;
 }

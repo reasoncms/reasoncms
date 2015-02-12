@@ -132,6 +132,10 @@
 								color: white;
 								@include inline-icon($pseudo: after, $icon: $fa-var-chevron-right);
 
+								&:after {
+									background: green;
+								}
+
 								&:empty {  // Here we hide it if there's no content
 									display: none;
 								}
@@ -332,7 +336,9 @@
 
 							h4 {
 								margin: 0;
-								color: $primary-color;
+								color: $body-font-color;
+								font-weight: 400;
+								font-size: rem-calc(16);
 							}
 						}
 					}

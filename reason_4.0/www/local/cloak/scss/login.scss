@@ -5,7 +5,7 @@
 // To reduce bloat, we don't include _boilerplate -- only the components we need.
 
 // Foundation
-@import "settings/settings";
+@import "settings";
 @import "foundation/components/buttons";
 @import "foundation/components/type";
 
@@ -17,5 +17,5 @@
 // @import "vendor/font-awesome/fixed-width";
 
 // Cloak
-@import "mixins/mixins";
+@import "mixins";
 @import "modules/login";

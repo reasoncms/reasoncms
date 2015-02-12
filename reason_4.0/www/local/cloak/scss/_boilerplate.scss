@@ -1,4 +1,4 @@
-// BASIC BOILERPLATE STYLES (for export)
+// BASIC BOILERPLATE STYLES
 // Cloak, v1
 
 // This file includes everything needed for a the basic, unbranded bolierplate site.
@@ -10,7 +10,7 @@
 // Cloak uses option #2.
 
 // Foundation
-@import "settings/settings";
+@import "helpers/settings";
 @import "foundation";
 
 // Or selectively include components
@@ -60,6 +60,6 @@
 @import "vendor/font-awesome/spinning";
 
 // Cloak
-@import "mixins/mixins";
-@import "base/base";
+@import "helpers/mixins";
+@import "layout/layout";
 @import "modules/modules";

@@ -49,9 +49,8 @@
 		}
 
 		a {
-			color: $site-title-color;
+			color: $primary-color;
 			font-weight: 700;
-			text-shadow: 0 0 2px black;
 
 			&:hover {
 				//color: darken($site-title-color, 10%);

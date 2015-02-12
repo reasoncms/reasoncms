@@ -32,7 +32,7 @@ $grr-color: #595353;
 			// background size is 1/2 the total image resolution
 			background-size: 168px 168px;
 			position: relative;
-			z-index: 9999;
+			z-index: 1000;
 
 			@media #{$small-only} {
 				width: 50%;
@@ -384,6 +384,17 @@ $grr-color: #595353;
 					}
 				}
 			}
+		}
+	}
+}
+
+#banner {
+
+	h1 {
+
+		a {
+			color: $site-title-color;
+			text-shadow: 0 0 2px black;
 		}
 	}
 }
