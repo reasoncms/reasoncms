@@ -5178,9 +5178,13 @@ hr.horizontal-rule-basic {
 #faq #filtering {
   padding-bottom: 1.25rem;
 }
-/* line 27, scss/modules/_faq.scss */
+/* line 26, scss/modules/_faq.scss */
+#faq #filtering .searchForm {
+  display: block;
+}
+/* line 28, scss/modules/_faq.scss */
 #faq #filtering .searchForm .search {
-  border: 0.0625rem solid #c3c3c3;
+  border: 1px solid #c3c3c3;
   border-radius: 0.625rem;
   padding-left: 0.625rem;
   padding-right: 0.625rem;
@@ -5189,7 +5193,7 @@ hr.horizontal-rule-basic {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
   font-size: auto;
 }
-/* line 37, scss/modules/_faq.scss */
+/* line 38, scss/modules/_faq.scss */
 #faq #filtering .searchForm .submit {
   border: 0.0625rem solid white;
   border-radius: 0.3125rem;
@@ -5197,39 +5201,39 @@ hr.horizontal-rule-basic {
   color: white;
   font-weight: 300;
 }
-/* line 45, scss/modules/_faq.scss */
+/* line 46, scss/modules/_faq.scss */
 #faq #filtering .searchForm .submit:hover {
   background-color: #1280e6;
 }
-/* line 52, scss/modules/_faq.scss */
+/* line 53, scss/modules/_faq.scss */
 #faq .moduleNav ul {
   margin: 0;
 }
-/* line 54, scss/modules/_faq.scss */
+/* line 55, scss/modules/_faq.scss */
 #faq .moduleNav ul li {
   padding-top: 0.625rem;
 }
-/* line 56, scss/modules/_faq.scss */
+/* line 57, scss/modules/_faq.scss */
 #faq .moduleNav ul li div {
   display: none;
 }
-/* line 59, scss/modules/_faq.scss */
+/* line 60, scss/modules/_faq.scss */
 #faq .moduleNav ul li strong {
   display: inline-block;
   border-bottom: 1px solid #dddddd;
   padding-bottom: 0.625rem;
 }
-/* line 65, scss/modules/_faq.scss */
+/* line 66, scss/modules/_faq.scss */
 #faq .moduleNav ul li:first-child {
   padding-top: 0;
 }
-/* line 70, scss/modules/_faq.scss */
+/* line 71, scss/modules/_faq.scss */
 #faq .moduleNav ul li:last-child strong {
   border-bottom: none;
   padding-bottom: 0;
   display: inline-block;
 }
-/* line 77, scss/modules/_faq.scss */
+/* line 78, scss/modules/_faq.scss */
 #faq .moduleNav .feedLink {
   display: none;
 }
@@ -7076,53 +7080,115 @@ form input[type="submit"]:active {
 /* line 132, scss/modules/_misc.scss */
 #pageContent ul.major-list li {
   list-style-type: none;
+  font-family: "Roboto Slab", serif;
 }
-/* line 135, scss/modules/_misc.scss */
+/* line 136, scss/modules/_misc.scss */
 #pageContent ul.major-list li:before {
   padding-right: 7px;
 }
-/* line 138, scss/modules/_misc.scss */
+/* line 139, scss/modules/_misc.scss */
 #pageContent ul.major-list div.major-icon {
   display: inline-block;
   width: 25px;
+  font-family: "FontAwesome";
 }
-/* line 143, scss/modules/_misc.scss */
+/* line 145, scss/modules/_misc.scss */
+#pageContent ul.major-list .pre-law-major {
+  display: inline-block;
+  width: 25px;
+  font-family: "FontAwesome";
+}
+/* line 149, scss/modules/_misc.scss */
 #pageContent ul.major-list .pre-law-major:before {
   content: "\f0e3";
 }
-/* line 146, scss/modules/_misc.scss */
+/* line 153, scss/modules/_misc.scss */
+#pageContent ul.major-list .pre-medicine-major {
+  display: inline-block;
+  width: 25px;
+  font-family: "FontAwesome";
+}
+/* line 157, scss/modules/_misc.scss */
 #pageContent ul.major-list .pre-medicine-major:before {
   content: "\f0f1";
 }
-/* line 149, scss/modules/_misc.scss */
+/* line 161, scss/modules/_misc.scss */
+#pageContent ul.major-list .pre-optometry-major {
+  display: inline-block;
+  width: 25px;
+  font-family: "FontAwesome";
+}
+/* line 165, scss/modules/_misc.scss */
 #pageContent ul.major-list .pre-optometry-major:before {
   content: "\f06e";
 }
-/* line 152, scss/modules/_misc.scss */
+/* line 169, scss/modules/_misc.scss */
+#pageContent ul.major-list .pre-veterinary-medicine-major {
+  display: inline-block;
+  width: 25px;
+  font-family: "FontAwesome";
+}
+/* line 173, scss/modules/_misc.scss */
 #pageContent ul.major-list .pre-veterinary-medicine-major:before {
   content: "\f1b0";
 }
-/* line 155, scss/modules/_misc.scss */
+/* line 177, scss/modules/_misc.scss */
+#pageContent ul.major-list .pre-dentistry-major {
+  display: inline-block;
+  width: 25px;
+  font-family: "FontAwesome";
+}
+/* line 181, scss/modules/_misc.scss */
 #pageContent ul.major-list .pre-dentistry-major:before {
   content: "\f0f0";
 }
-/* line 158, scss/modules/_misc.scss */
+/* line 185, scss/modules/_misc.scss */
+#pageContent ul.major-list .pre-engineering-major {
+  display: inline-block;
+  width: 25px;
+  font-family: "FontAwesome";
+}
+/* line 189, scss/modules/_misc.scss */
 #pageContent ul.major-list .pre-engineering-major:before {
   content: "\f197";
 }
-/* line 161, scss/modules/_misc.scss */
+/* line 193, scss/modules/_misc.scss */
+#pageContent ul.major-list .pre-pharmacy-major {
+  display: inline-block;
+  width: 25px;
+  font-family: "FontAwesome";
+}
+/* line 197, scss/modules/_misc.scss */
 #pageContent ul.major-list .pre-pharmacy-major:before {
   content: "\f02b";
 }
-/* line 164, scss/modules/_misc.scss */
+/* line 201, scss/modules/_misc.scss */
+#pageContent ul.major-list .pre-physical-therapy-major {
+  display: inline-block;
+  width: 25px;
+  font-family: "FontAwesome";
+}
+/* line 205, scss/modules/_misc.scss */
 #pageContent ul.major-list .pre-physical-therapy-major:before {
   content: "\f004";
 }
-/* line 167, scss/modules/_misc.scss */
+/* line 209, scss/modules/_misc.scss */
+#pageContent ul.major-list .pre-seminary-major {
+  display: inline-block;
+  width: 25px;
+  font-family: "FontAwesome";
+}
+/* line 213, scss/modules/_misc.scss */
 #pageContent ul.major-list .pre-seminary-major:before {
   content: "\f02d";
 }
-/* line 170, scss/modules/_misc.scss */
+/* line 217, scss/modules/_misc.scss */
+#pageContent ul.major-list .other-major {
+  display: inline-block;
+  width: 25px;
+  font-family: "FontAwesome";
+}
+/* line 221, scss/modules/_misc.scss */
 #pageContent ul.major-list .other-major:before {
   content: "\f19c";
 }

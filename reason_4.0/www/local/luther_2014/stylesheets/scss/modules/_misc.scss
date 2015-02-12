@@ -131,6 +131,7 @@
 		margin-left: 0px;
 		li{
 			list-style-type: none;
+			font-family:"Roboto Slab", serif;
 		}
 		li:before{
 			padding-right: 7px;
@@ -138,37 +139,88 @@
 		div.major-icon{
 			display: inline-block;
 			width: 25px;
+			font-family: "FontAwesome";
 		}
 		@extend .fa;
-		.pre-law-major:before{
-			content: $fa-var-gavel;
+		.pre-law-major{
+			display: inline-block;
+			width: 25px;
+			font-family: "FontAwesome";
+			&:before{
+				content: $fa-var-gavel;
+			}
 		}
-		.pre-medicine-major:before{
-			content: $fa-var-stethoscope;
+		.pre-medicine-major{
+			display: inline-block;
+			width: 25px;
+			font-family: "FontAwesome";
+			&:before{
+				content: $fa-var-stethoscope;
+			}
 		}
-		.pre-optometry-major:before{
-			content: $fa-var-eye;
+		.pre-optometry-major{
+			display: inline-block;
+			width: 25px;
+			font-family: "FontAwesome";
+			&:before{
+				content: $fa-var-eye;
+			}
 		}
-		.pre-veterinary-medicine-major:before{
-			content: $fa-var-paw;
+		.pre-veterinary-medicine-major{
+			display: inline-block;
+			width: 25px;
+			font-family: "FontAwesome";
+			&:before{
+				content: $fa-var-paw;
+			}
 		}
-		.pre-dentistry-major:before{
-			content: $fa-var-user-md;
+		.pre-dentistry-major{
+			display: inline-block;
+			width: 25px;
+			font-family: "FontAwesome";
+			&:before{
+				content: $fa-var-user-md;
+			}
 		} 
-		.pre-engineering-major:before{
-			content: $fa-var-space-shuttle;
+		.pre-engineering-major{
+			display: inline-block;
+			width: 25px;
+			font-family: "FontAwesome";
+			&:before{
+				content: $fa-var-space-shuttle;
+			}
 		} 
-		.pre-pharmacy-major:before{
-			content: $fa-var-tag;
+		.pre-pharmacy-major{
+			display: inline-block;
+			width: 25px;
+			font-family: "FontAwesome";
+			&:before{
+				content: $fa-var-tag;
+			}
 		} 
-		.pre-physical-therapy-major:before{
-			content: $fa-var-heart;
+		.pre-physical-therapy-major{
+			display: inline-block;
+			width: 25px;
+			font-family: "FontAwesome";
+			&:before{
+				content: $fa-var-heart;
+			}
 		} 
-		.pre-seminary-major:before{
-			content: $fa-var-book;
+		.pre-seminary-major{
+			display: inline-block;
+			width: 25px;
+			font-family: "FontAwesome";
+			&:before{
+				content: $fa-var-book;
+			}
 		}
-		.other-major:before{
-			content: $fa-var-university;
+		.other-major{
+			display: inline-block;
+			width: 25px;
+			font-family: "FontAwesome";
+			&:before{
+				content: $fa-var-university;
+			}
 		} 
 	}
 }
