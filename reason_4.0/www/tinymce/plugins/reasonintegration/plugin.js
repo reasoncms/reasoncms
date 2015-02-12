@@ -1238,7 +1238,6 @@ ReasonAsset.prototype.bindReasonUI = function ()
     self.setSelected('asset', e.control.value());
 
     var assets = self.getAssets();
-
     var asset_id = 1 * e.control.value();
 
     for (var i = 0; i < assets.length; i++)
@@ -1248,9 +1247,7 @@ ReasonAsset.prototype.bindReasonUI = function ()
       if (asset.id == asset_id)
       {
         self.setSelected('asset_url', asset.url);
-
-        self.setDesc(asset.description);
-
+        self.setDesc(asset.name);
         break;
       }
     }

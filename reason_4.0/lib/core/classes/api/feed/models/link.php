@@ -269,22 +269,16 @@ class ReasonAssetListJSON extends ReasonLinksJSON implements ReasonFeedInterface
 	{
 		if ($assets = $this->get_assets())
 		{
-			$site = new entity($this->config('site_id'));
-			$asset_json['count'] = 0;
 			$asset_list = array();
+			$asset_json['site_id'] = $this->config('site_id');
+			$site = new entity($this->config('site_id'));
 			foreach($assets as $asset)
 			{
-				$asset_item = array();
-				$asset_item['id'] = strip_tags($asset->get_value('id'));
-				$asset_item['name'] = strip_tags($asset->get_value('name'));
-				$asset_item['description'] = strip_tags($asset->get_value('description'));
-				$asset_item['pubDate'] = strip_tags($asset->get_value('creation_date'));
-				$asset_item['lastMod'] = strip_tags($asset->get_value('last_modified'));
-				$asset_item['url'] = reason_get_asset_url($asset, $site);
-
-				$asset_list[] = $asset_item;
-
-				$asset_json['count']++;
+				array_push($asset_list, array(
+					'name' => strip_tags($asset->get_value('name')),
+					'url' => reason_get_asset_url($asset, $site),
+					'id' => strip_tags($asset->get_value('id')),
+				));
 			}
 			$asset_json['assets'] = $asset_list;
 			return json_encode($asset_json);
@@ -298,6 +292,7 @@ class ReasonAssetListJSON extends ReasonLinksJSON implements ReasonFeedInterface
 		{
 			$es = new entity_selector($this->config('site_id'));
 			$es->add_type(id_of('asset'));
+			$es->set_order('entity.name ASC');
 			$es->limit_tables();
 			$es->limit_fields('name');
 			$this->_assets = $es->run_one();
