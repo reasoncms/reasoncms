@@ -122,8 +122,8 @@ class DorianSHCampThreeForm extends FormStep
         $cur_year = date('Y');
         $this->change_element_type('credit_card_expiration_year', 'numrange', array('start' => $year, 'end' => $year+10, 'display_name' => 'Expiration Year'));
         // calculate the total_cost of the camp by adding lesson_cost (if present) to the camp_cost
-        $camp_cost = 449;
-        $per_lesson_cost = 37;
+        $camp_cost = 486;
+        $per_lesson_cost = 39;
         $lesson_cost = 0;
         $lesson_msg = '';
         if ($this->controller->get('private_lessons'))

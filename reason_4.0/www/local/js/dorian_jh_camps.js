@@ -18,12 +18,12 @@ $(document).ready(function() {
     hide_field('lessoninstrument1', '0');
     hide_field('lessoninstrument2', '0');
     chooseLessons();
-    $("input[name='choir_participant']").change(function(){toggle_fields('choir_participant',''); });
-    $("input[name='band_participant']").change(function(){toggle_fields('band_participant','bandinstrument'); });
-    $("input[name='orchestra_participant']").change(function(){toggle_fields('orchestra_participant','orchestrainstrument'); });
-    $("input[name='jazz_participant']").change(function(){toggle_fields('jazz_participant','jazzinstrument')});
-    $("input[name='wind_choir_participant']").change(function(){toggle_fields('wind_choir_participant','windchoirinstrument'); });
-    $("input[name='brass_choir_participant']").change(function(){toggle_fields('brass_choir_participant','brasschoirinstrument')});
+    $("input[name='choir_participant']").change(function() {toggle_fields('choir_participant',''); });
+    $("input[name='band_participant']").change(function() {toggle_fields('band_participant','bandinstrument'); });
+    $("input[name='orchestra_participant']").change(function() {toggle_fields('orchestra_participant','orchestrainstrument'); });
+    $("input[name='jazz_participant']").change(function() {toggle_fields('jazz_participant','jazzinstrument'); });
+    $("input[name='wind_choir_participant']").change(function() {toggle_fields('wind_choir_participant','windchoirinstrument'); });
+    $("input[name='brass_choir_participant']").change(function() {toggle_fields('brass_choir_participant','brasschoirinstrument'); });
 
     //orchestra requirements
     $("#period_oneElement").blur(function() { checkRequirements('period_one'); });
@@ -33,13 +33,13 @@ $(document).ready(function() {
     $("#period_sixElement").blur(function() { checkRequirements('period_six'); });
 
     //lesson choices
-    $("#radio_private_lessons_0").click(function(){chooseLessons();});
-    $("#radio_private_lessons_1").click(function(){chooseLessons();});
-    $("#radio_private_lessons_2").click(function(){chooseLessons();});
+    $("#radio_private_lessons_0").click(function(){ chooseLessons(); });
+    $("#radio_private_lessons_1").click(function(){ chooseLessons(); });
+    $("#radio_private_lessons_2").click(function(){ chooseLessons(); });
 
     toggle_billing_address();
 
-    $("input[name='billing_address']").change(function(){toggle_billing_address()});
+    $("input[name='billing_address']").change(function(){toggle_billing_address(); });
 });
 
 function hide_field(element, time)
