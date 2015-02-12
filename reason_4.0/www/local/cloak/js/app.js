@@ -1,5 +1,5 @@
 $(document).foundation({
-	reveal : {animation: 'fade',animation_speed: 50},
+	reveal : {animation: 'fade',animation_speed: 100},
 	equalizer : { equalize_on_stack: false }
 });
 
