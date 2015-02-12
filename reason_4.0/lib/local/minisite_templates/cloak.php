@@ -8,6 +8,7 @@
 	*     which extends DefaultTemplate (/lib/core/minisite_templates/default.php)
 	*  
 	*  To extend a function without duplicating the parent's code, use parent::functionName();
+	*  To override a parent's function but call a grandparent's function, use ClassName::functionName();. Ex: MinisiteTemplate::alter_reason_page_type($page_type); 
 	*/
 
 	// include the MinisiteTemplate class
@@ -24,13 +25,14 @@
 
 		function alter_reason_page_type($page_type)
 		{
-			// Make sure we do everything the parent template does.
-			parent::alter_reason_page_type($page_type); 
+			// Make sure we do everything the default template does.
+			MinisiteTemplate::alter_reason_page_type($page_type); 
 
 			// GLOBAL MODULE SETTINGS
 			// Here we set custom paramaters without having to set them for each page type.
+			// Any parameters in the page type file will take precedent.
 
-			// Global parameters for the children module
+			// Children
 			if($regions = $page_type->module_regions('children'))
 			{
 				foreach($regions as $region)
@@ -62,18 +64,20 @@
 			}
 
 			// Features
-			// if($regions = $page_type->module_regions('feature/feature'))
-			// {
-			// 	foreach($regions as $region)
-			// 	{
-			// 		if(!isset($module['module_params']['width']))
-			// 			$page_type->set_region_parameter($region, 'width', 700);
-			// 		if(!isset($module['module_params']['width']))
-			// 			$page_type->set_region_parameter($region, 'height', 460);
-			// 		if(!isset($module['module_params']['autoplay_timer']))
-			// 			$page_type->set_region_parameter($region, 'autoplay_timer', 4);
-			// 	}
-			// }
+			if($regions = $page_type->module_regions('feature/feature'))
+			{
+				foreach($regions as $region)
+				{
+					// if(!isset($module['module_params']['width']))
+					// 	$page_type->set_region_parameter($region, 'width', 700);
+					// if(!isset($module['module_params']['width']))
+					// 	$page_type->set_region_parameter($region, 'height', 460);
+					// if(!isset($module['module_params']['autoplay_timer']))
+					// 	$page_type->set_region_parameter($region, 'autoplay_timer', 4);
+					if(!isset($module['module_params']['view']))
+						$page_type->set_region_parameter($region, 'view', 'cloak');
+				}
+			}
 
 			// Events Mini
 			if($regions = $page_type->module_regions('events_mini'))
@@ -87,6 +91,16 @@
 				}
 			}
 
+			// Navigation
+			if($regions = $page_type->module_regions(array('navigation', 'navigation_top')))
+			{
+				foreach($regions as $region)
+				{
+					if(!isset($module['module_params']['wrapper_element']))
+						$page_type->set_region_parameter($region, 'wrapper_element', 'nav');
+				}
+			}
+
 			// Publications
 			if($regions = $page_type->module_regions('publication'))
 			{
@@ -97,7 +111,6 @@
 				}
 			}
 
-			// Get's Cloak's custom item markup generator. Outputs larger thumbnails for attached images.
 			$ms = reason_get_module_sets();
 			if($regions = $page_type->module_regions($ms->get('publication_item_display')))
 			{
@@ -106,8 +119,7 @@
 					$module = $page_type->get_region($region);
 					
 					if(isset($module['module_params']['markup_generator_info']))
-						//$markup_generators = $module['module_params']['markup_generator_info'];
-						$markup_generators = array();
+						$markup_generators = $module['module_params']['markup_generator_info'];
 					else
 						$markup_generators = array();
 					
@@ -115,15 +127,55 @@
 					{
 						if(empty($markup_generators['item']))
 						{
+							$markup_generators['list'] = array (
+								'classname' => 'CloakRelatedListMarkupGenerator', 
+								'filename' => 'minisite_templates/modules/publication/publication_list_markup_generators/teasdasdfst.php',
+							);
 							$markup_generators['item'] = array (
 								'classname' => 'CloakItemMarkupGenerator', 
 								'filename' => 'minisite_templates/modules/publication/item_markup_generators/cloak.php',
 							);
 						}
 					}
-					
 				}
+				
 				$page_type->set_region_parameter($region, 'markup_generator_info', $markup_generators);
+			}
+			
+			// Copied directly from html5_responsive.php
+			// Need to create markup generator framework for publication chrome
+			if($regions = $page_type->module_regions($ms->get('event_display')))
+			{
+				foreach($regions as $region)
+				{
+					$module = $page_type->get_region($region);
+					
+					// If uses archive list chrome
+					if(
+						(isset($module['module_params']['list_chrome_markup']) && 	'minisite_templates/modules/events_markup/archive/archive_events_list_chrome.php' == $module['module_params']['list_chrome_markup'])
+						||
+						'events_archive' == $module['module_name']
+					)
+					{
+						$page_type->set_region_parameter($region, 'list_chrome_markup', 'minisite_templates/modules/events_markup/responsive/responsive_archive_list_chrome.php');
+					}
+					// If uses hybrid list chrome
+					elseif(
+						(isset($module['module_params']['list_chrome_markup']) && 'minisite_templates/modules/events_markup/hybrid/hybrid_events_list_chrome.php' == $module['module_params']['list_chrome_markup'])
+						||
+						'events_hybrid' == $module['module_name']
+					)
+					{
+						$page_type->set_region_parameter($region, 'list_chrome_markup', 'minisite_templates/modules/events_markup/responsive/responsive_hybrid_list_chrome.php');
+					}
+					// If uses default list chrome
+					elseif(!isset($module['module_params']['list_chrome_markup'])
+						|| 'minisite_templates/modules/events_markup/default/events_list_chrome.php' == $module['module_params']['list_chrome_markup']
+					)
+					{
+						$page_type->set_region_parameter($region, 'list_chrome_markup', 'minisite_templates/modules/events_markup/responsive/responsive_list_chrome.php');
+					}
+				}
 			}
 		}
 
@@ -239,48 +291,6 @@
 			}
 		}
 
-		// MOVE PAGE TITLE
-		// The default template runs main_head (which typially shows the page title) inside show_main_content_sections.
-		// Cloak removes main_head from show_main_content_sections, and moves it below the breadcrumbs in show_body_tableless.
-
-		// function show_main_content_sections()
-		// {
-		// 	if ($this->has_content( 'main' )) 
-		// 	{
-		// 		echo '<div class="contentMain">'."\n";
-		// 		$this->run_section( 'main' );
-		// 		echo '</div>'."\n";
-		// 	}
-		// 	if ($this->has_content( 'main_post' )) 
-		// 	{
-		// 		echo '<div class="contentPost">'."\n";
-		// 		$this->run_section( 'main_post' );
-		// 		echo '</div>'."\n";
-		// 	}
-		// 	if ($this->has_content( 'main_post_2' )) 
-		// 	{
-		// 		echo '<div class="contentPost2">'."\n";
-		// 		$this->run_section( 'main_post_2' );
-		// 		echo '</div>'."\n";
-		// 	}
-		// 	if ($this->has_content( 'main_post_3' )) 
-		// 	{
-		// 		echo '<div class="contentPost3">'."\n";
-		// 		$this->run_section( 'main_post_3' );
-		// 		echo '</div>'."\n";
-		// 	}
-		// }
-
-		// function cloak_show_main_head()
-		// {
-		// 	if ($this->has_content( 'main_head' )) 
-		// 	{
-		// 		echo '<div id="contentHead" class="contentHead">'."\n";
-		// 		$this->run_section( 'main_head' );
-		// 		echo '</div>'."\n";
-		// 	}
-		// }
-
 		// Adds cloak_you_are_here() to it's new location
 		// Adds cloak_show_main_head() to it's new location
 		function show_body_tableless()
@@ -296,64 +306,6 @@
 			$this->show_footer();
 			echo '</div>'."\n";
 		}
-		
-		// function show_navbar()
-		// {
-		// 	$wrapperClasses = array();
-		// 	if ($this->has_content( 'navigation' )) {
-		// 		$wrapperClasses[] = 'hasNav';
-		// 	}
-		// 	if ($this->has_content( 'sub_nav' ) || $this->has_content( 'sub_nav_2' ) || $this->has_content( 'sub_nav_3' ) )
-		// 	{
-		// 		$wrapperClasses[] = 'hasSubNav';
-		// 	}
-		// 	if(!empty($wrapperClasses))
-		// 		echo '<div id="navInnerWrap" class="'.implode(' ',$wrapperClasses).'">'."\n";
-		// 	if ($this->has_content( 'navigation' )) 
-		// 	{
-		// 		$this->run_section( 'navigation' );
-		// 	}
-		// 	if ($this->has_content( 'sub_nav' ) || $this->has_content( 'sub_nav_2' ) || $this->has_content( 'sub_nav_3' ) )
-		// 	{
-		// 		echo '<div class="subNavElements">'."\n";
-		// 		if ($this->has_content( 'sub_nav' )) 
-		// 		{ 
-		// 			echo '<aside id="subNav" class="subNavBlock" role="complementary">'."\n";
-		// 			$this->run_section( 'sub_nav' );
-		// 			echo '</aside>'."\n";
-		// 		}
-		// 		if ($this->has_content( 'sub_nav_2' ))
-		// 		{
-		// 			echo '<aside id="subNav2" class="subNavBlock" role="complementary">'."\n";
-		// 			$this->run_section( 'sub_nav_2' );
-		// 			echo '</aside>'."\n";
-		// 		}
-		// 		if ($this->has_content( 'sub_nav_3' ))
-		// 		{
-		// 			echo '<aside id="subNav3" class="subNavBlock" role="complementary">'."\n";
-		// 			$this->run_section( 'sub_nav_3' );
-		// 			echo '</aside>'."\n";
-		// 		}
-		// 		echo '</div>'."\n";
-		// 	}
-		// 	if(!empty($wrapperClasses))
-		// 		echo '</div>'."\n";
-		// }
-
-		// function show_footer()
-		// {
-		// 	echo '<footer id="footer" role="contentInfo">'."\n";
-		// 	echo '<div class="module1">';
-		// 	$this->run_section( 'footer' );
-		// 	echo '</div>';
-		// 	echo '<div class="module2 lastModule">';
-		// 	$this->run_section( 'edit_link' );
-		// 	if ($this->has_content( 'post_foot' ))
-		// 		$this->run_section( 'post_foot' );
-		// 	echo '</div>';
-		// 	$this->show_reason_badge();
-		// 	echo '</footer>'."\n";
-		// }
 
 		function do_org_foot()
 		{	
