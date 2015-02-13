@@ -84,6 +84,14 @@ class profilePerson
 	}
 	
 	/**
+	 * @return boolean true / false whether or not the person is primarily requested affiliation
+	 */
+	public function is_primary_affil($affil)
+	{
+		return ($affiliations = $this->get_ds_value('ds_affiliation')) ? ($affil == $affiliations[0]) : FALSE;
+	}
+
+	/**
 	 * Translate a profile section name into an allowable relationship name
 	 *
 	 * @param string $section Profile section
