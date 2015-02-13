@@ -394,7 +394,7 @@ class FormController
 					$cs = $this->_request[  $this->_step_var_name ];
 					if( empty( $this->forms[ $cs ] ) )
 					{
-						trigger_error($cs.' is not a valid form step.');
+						trigger_error($cs.' is not a valid form step.', E_USER_NOTICE);
 					}
 					else
 					{
