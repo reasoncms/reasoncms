@@ -930,9 +930,7 @@ class ProfileModule extends DefaultMinisiteModule
 
 	/**
 	 * Get the real or assumed netid for the logged in user. Someone can pose
-	 * as the profile-holder if:
-	 *  1. They're an admin on the profile site
-	 *  2. The profile is an alum, and the person is in the alumni_profile_editors_group
+	 * as the profile-holder if they're an admin on the profile site
 	 */
 	protected function get_user_netid()
 	{
