@@ -2072,7 +2072,7 @@ class TableAdmin
 								// echo "[$i]: include $fileLabel [" . $dataRow[$fileCol] . "] -> [" . $path . "]<P>";
 								$zipData[] = Array(
 													"actualPath" => $path,
-													"pathInZip" => "/row_" . $dataRow["id"] . "/" . $fileLabel . "/" . $dataRow[$fileCol]
+													"pathInZip" => "row_" . $dataRow["id"] . "/" . $fileLabel . "/" . $dataRow[$fileCol]
 												);
 							}
 						}
