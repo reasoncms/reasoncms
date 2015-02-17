@@ -42,6 +42,7 @@ class FileObjectCache extends DefaultObjectCache
 		$result = fwrite($fh, serialize($object));
 		flock($fh, LOCK_UN);
 		fclose($fh);
+		error_log('CACHE '.$this->get_cache_name().' wrote '.filesize($cache_file).' bytes to '.$cache_file);
 		return ($result !== FALSE);
 	}
 
