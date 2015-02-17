@@ -29,7 +29,7 @@ class FileObjectCache extends DefaultObjectCache
 				   ? unserialize(file_get_contents($cache_file)) 
 				   : false;
 		}
-		if ($ret && $this->_read_log) error_log('CACHE '.str_replace("\n",' ',$this->get_cache_name()).' read '.filesize($cache_file).' bytes in '.$_SERVER['REQUEST_URI']."\n", 3, '/tmp/reason_cache.log');
+		if ($ret && $this->_read_log) error_log(date('Y-m-d H:i:s').' CACHE '.str_replace("\n",' ',$this->get_cache_name()).' read '.filesize($cache_file).' bytes in '.$_SERVER['REQUEST_URI']."\n", 3, '/tmp/reason_cache.log');
 		return $ret;
 	}
 
@@ -45,7 +45,7 @@ class FileObjectCache extends DefaultObjectCache
 		$result = fwrite($fh, serialize($object));
 		flock($fh, LOCK_UN);
 		fclose($fh);
-		if ($this->_write_log) error_log('CACHE '.str_replace("\n",' ',$this->get_cache_name()).' wrote '.filesize($cache_file).' bytes in '.$_SERVER['REQUEST_URI']."\n", 3, '/tmp/reason_cache.log');
+		if ($this->_write_log) error_log(date('Y-m-d H:i:s').' CACHE '.str_replace("\n",' ',$this->get_cache_name()).' wrote '.filesize($cache_file).' bytes in '.$_SERVER['REQUEST_URI']."\n", 3, '/tmp/reason_cache.log');
 		return ($result !== FALSE);
 	}
 
