@@ -14,7 +14,8 @@ include_once(CARL_UTIL_INC . 'basic/filesystem.php');
 class FileObjectCache extends DefaultObjectCache
 {	
 	private $_cache_dir;
-	private $_log = true;
+	private $_read_log = false;
+	private $_write_log = true;
 	
 	function &fetch()
 	{
@@ -28,7 +29,7 @@ class FileObjectCache extends DefaultObjectCache
 				   ? unserialize(file_get_contents($cache_file)) 
 				   : false;
 		}
-		if ($ret && $this->_log) error_log('CACHE '.$this->get_cache_name().' read '.filesize($cache_file).' bytes ('.$_SERVER['PHP_SELF'].")\n", 3, '/tmp/reason_cache.log');
+		if ($ret && $this->_write_log) error_log('CACHE '.$this->get_cache_name().' read '.filesize($cache_file).' bytes ('.$_SERVER['PHP_SELF'].")\n", 3, '/tmp/reason_cache.log');
 		return $ret;
 	}
 
@@ -44,7 +45,7 @@ class FileObjectCache extends DefaultObjectCache
 		$result = fwrite($fh, serialize($object));
 		flock($fh, LOCK_UN);
 		fclose($fh);
-		if ($this->_log) error_log('CACHE '.$this->get_cache_name().' wrote '.filesize($cache_file).' bytes '.$_SERVER['PHP_SELF'].")\n", 3, '/tmp/reason_cache.log');
+		if ($this->_read_log) error_log('CACHE '.$this->get_cache_name().' wrote '.filesize($cache_file).' bytes '.$_SERVER['PHP_SELF'].")\n", 3, '/tmp/reason_cache.log');
 		return ($result !== FALSE);
 	}
 
