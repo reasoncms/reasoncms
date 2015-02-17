@@ -8,7 +8,7 @@
  *
  * Example command-line usage:
  *
- * curl "http://yourdomain.com/reason/www/scripts/sitemap/sitemap.php" --connect-timeout 3600 --max-time 3600 -g > /path/to/webroot/sitemap.xml
+ * curl "http://yourdomain.com/reason/scripts/sitemap/sitemap.php" --connect-timeout 3600 --max-time 3600 -g > /path/to/webroot/sitemap.xml
  *
  * This script has a timeout of one hour. If things are taking longer than that, you could try upping the time limit in the curl
  * command and in this script, but a better solution would be to reqork the script for better performance.
@@ -21,7 +21,7 @@
  *
  * Example URL with advanced options:
  *
- * http://yourdomain.com/reason/www/scripts/sitemap/sitemap.php?default_priority=0.3&home_page_priority=0.8&page_type_priorities[events]=0.6&page_type_priorities[publication]=0.5&exclude_sites[]=login_site&exclude_sites[]=some_other_site
+ * http://yourdomain.com/reason/scripts/sitemap/sitemap.php?default_priority=0.3&home_page_priority=0.8&page_type_priorities[events]=0.6&page_type_priorities[publication]=0.5&exclude_sites[]=login_site&exclude_sites[]=some_other_site
  *
  * @package reason
  * @subpackage scripts
@@ -34,8 +34,8 @@
 	include_once('reason_header.php');
 	reason_include_once('classes/entity_selector.php');
 	reason_include_once('minisite_templates/nav_classes/default.php');
-	
-	
+
+
 	/**
 	 * Run the script... but only when
 	 */
@@ -44,11 +44,11 @@
 		$default_priority = 0.5;
 		if(!empty($_GET['default_priority']))
 			$default_priority = round((float) $_GET['default_priority'], 1);
-			
+
 		$home_page_priority = 0.5;
 		if(!empty($_GET['home_page_priority']))
 			$home_page_priority = round((float) $_GET['home_page_priority'], 1);
-		
+
 		$page_type_priorities = array();
 		if(!empty($_GET['page_type_priorities']))
 		{
@@ -58,7 +58,7 @@
 				$page_type_priorities[$page_type] = round((float) $priority, 1);
 			}
 		}
-		
+
 		$exclude_sites = array();
 		if(!empty($_GET['exclude_sites']))
 		{
@@ -69,8 +69,8 @@
 					$exclude_sites[] = id_of($site_name);
 			}
 		}
-		
-		// This script could take a while if the 
+
+		// This script could take a while if the
 		set_time_limit(3600);
 		$es = new entity_selector();
 		$es->add_type(id_of('site'));
@@ -80,16 +80,16 @@
 		if(!empty($exclude_sites))
 			$es->add_relation('`entity`.`id` NOT IN ("'.implode('","',$exclude_sites).'")');
 		$sites = $es->run_one();
-		
+
 		$info = array();
 		foreach($sites as $site_id=>$site)
 		{
 			$pages = new MinisiteNavigation();
 			$pages->site_info =& $site;
-			
+
 			//for a bot the order probably does not matter, and adding this line will slow things down
 			//$pages->order_by = 'sortable.sort_order'
-			
+
 			$pages->init( $site_id, id_of('minisite_page') );
 			foreach($pages->values as $page_id=>$page)
 			{
@@ -119,7 +119,7 @@
 				}
 			}
 		}
-		
+
 		header('Content-type: text/xml');
 		echo '<?xml version="1.0" encoding="UTF-8"?>'."\n";
 		echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'."\n";
@@ -153,5 +153,5 @@
 		echo '</body>';
 		echo '</html>';
 	}
-	
+
 ?>
