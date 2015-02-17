@@ -1,23 +1,23 @@
 <?php
 
-   /* 
+   /*
 	*  CLOAK BASE TEMPLATE
 	*
 	*  CloakTemplate (/lib/local/minisite_templates/cloak.php)...
 	*     extends HTML5ResponsiveTemplate (/lib/core/minisite_templates/html5_responsive.php)...
 	*     which extends DefaultTemplate (/lib/core/minisite_templates/default.php)
-	*  
+	*
 	*  To extend a function without duplicating the parent's code, use parent::functionName();
 	*  To override a parent's function but call a grandparent's function, use ClassName::functionName();. Ex: MinisiteTemplate::alter_reason_page_type($page_type); 
 	*/
 
 	// include the MinisiteTemplate class
 	reason_include_once( 'minisite_templates/html5_responsive.php' );
-	reason_include_once('classes/module_sets.php');
-	
+	//reason_include_once('classes/module_sets.php');
+
 	// this variable must be the same as the class name
 	$GLOBALS[ '_minisite_template_class_names' ][ basename( __FILE__) ] = 'CloakTemplate';
-	
+
 	class CloakTemplate extends HTML5ResponsiveTemplate
 	{
 		// Don't include default Reason module styles. We'll include our own. Some modules continue to show styles anyway.
@@ -192,12 +192,20 @@
 			$this->head_items->add_head_item('script', array(), $content = '$(document).ready(function(){$("body").fitVids();});' );
 		}
 
+		function get_css_files()
+		{
+			$this->head_items->add_style_import_path(WEB_PATH . 'reason/local/cloak/bower_components/foundation/scss');
+			$this->head_items->add_style_import_path(WEB_PATH . 'reason/local/cloak/scss');
+
+			parent::get_css_files();
+		}
+
 		function show_banner()
 		{
 			echo '<div class="sticky">'."\n";
 			//echo '<div class="top-bar" data-topbar role="navigation" data-options="sticky_on: large">'."\n";
 			if ($this->has_content( 'pre_banner' ))
-			{	
+			{
 				echo '<div id="preBanner">';
 				$this->run_section( 'pre_banner' );
 				echo '</div>'."\n";
@@ -210,7 +218,7 @@
 			}
 
 			echo '<h1><a href="'.$this->site_info->get_value('base_url').'"><span>'.$this->site_info->get_value('name').'</span></a></h1>'."\n";
-			
+
 			// Include custom search and navigation icons...
 			// ...IF navigation is included on the page...
 			// ...OR if a module runs in banner_extra.
@@ -232,10 +240,8 @@
 			}
 
 			$this->show_banner_xtra();
-			
-			echo '</header>'."\n";
-			echo '</div>'."\n";
-		//	echo '</div>'."\n";
+
+			echo '</header></div>'."\n";
 
 			if($this->has_content('post_banner'))
 			{
@@ -271,7 +277,7 @@
 		function show_banner_xtra()
 		{
 			if ($this->has_content( 'banner_xtra' ))
-			{	
+			{
 				echo '<div id="bannerXtra">';
 
 				// Foundation Reveal Modal (lightbox)
@@ -304,7 +310,7 @@
 		}
 
 		function do_org_foot()
-		{	
+		{
 			// FOUNDATION SCRIPTS AND DEPENDENCIES
 
 			// Foundation recommends placing scripts directly before end of body.

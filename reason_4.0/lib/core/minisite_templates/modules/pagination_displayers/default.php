@@ -80,7 +80,7 @@ class defaultPaginationDisplay
 		$prev_page = $this->current_page-1;
 		if(array_key_exists($prev_page,$this->pages))
 		{
-			$out[] = '<a href="'.$this->pages[$prev_page]['url'].'" title="'.$this->previous_item_text.'" class="previous">&lt;&lt; '.$this->previous_item_text.'</a>';
+			$out[] = '<a href="'.$this->pages[$prev_page]['url'].'" title="'.$this->previous_item_text.'" class="previous" rel="prev">&lt;&lt; '.$this->previous_item_text.'</a>';
 		}
 		$out[] = '<span class="pages">';
 		foreach($this->pages as $i=>$info)
@@ -91,7 +91,7 @@ class defaultPaginationDisplay
 		$next_page = $this->current_page+1;
 		if(array_key_exists($next_page,$this->pages))
 		{
-			$out[] = '<a href="'.$this->pages[$next_page]['url'].'" title="'.$this->next_item_text.'" class="next">'.$this->next_item_text.' &gt;&gt;</a>';
+			$out[] = '<a href="'.$this->pages[$next_page]['url'].'" title="'.$this->next_item_text.'" class="next" rel="next">'.$this->next_item_text.' &gt;&gt;</a>';
 		}
 		return implode(' ', $out);
 	}

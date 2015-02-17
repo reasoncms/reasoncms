@@ -7,7 +7,7 @@
 
 /**
  * Inputs and outputs head items. Can combine and cache javascript, css, and less files based on filemtime.
- * 
+ *
  * Methods:
  *
  * - add head items of various types
@@ -39,31 +39,31 @@ class HeadItems
 	 * @access private
 	 */
 	var $_top_head_items = array();
-	
+
 	/**
 	 * @var array
 	 * @access private
 	 */
 	var $_to_remove = array();
-	
+
 	/**
 	 * What elements does the class recognize?
 	 * @var array
 	 */
 	var $allowable_elements = array('base','link','meta','script','style','title');
-	
+
 	/**
 	 * What elements are self-closing?
 	 * @var array
 	 */
 	var $elements_that_may_have_content = array('script','style','title');
-	
+
 	/**
 	 * What elements are never self-closing?
 	 * @var array
 	 */
 	var	$elements_that_may_not_self_close = array('script','title');
-	
+
 	/**
 	 * Less variables that should be added to every less stylesheet
 	 *
@@ -73,13 +73,13 @@ class HeadItems
 	 * @var array key->value pairs
 	 */
 	protected $default_less_variables = array();
-	
+
 	/**
 	 * Less functions that should be added to every less stylesheet
 	 * @var array PHP callable functions
 	 */
 	protected $default_less_functions = array();
-	
+
 	/**
 	 * Should old css files created by less be deleted?
 	 *
@@ -89,7 +89,7 @@ class HeadItems
 	 * @var boolean
 	 */
 	protected $delete_old_less_css = true;
-	
+
 	/**
 	 *
 	 * @var array key->value pairs
@@ -115,14 +115,14 @@ class HeadItems
 	function HeadItems()
 	{
 	}
-	
+
 	/**
 	 * Adds a head item to the internal head items array
 	 * @param string $element name of element to add (i.e. link or script)
 	 * @param array $attributes element attributes
 	 * @param string $content content to appear between element open and close tags
 	 * @param boolean $add_to_top if true, places element at start of array rather than end
-	 * 
+	 *
 	 */
 	function add_head_item($element, $attributes, $content = '', $add_to_top = false, $wrapper = array('before'=>'','after'=>''))
 	{
@@ -138,7 +138,7 @@ class HeadItems
 			if($add_to_top)
 			{
 				array_unshift($this->_head_items, $item);
-				array_unshift($this->_top_head_items, $item); 
+				array_unshift($this->_top_head_items, $item);
 			}
 			else
 			{
@@ -147,7 +147,7 @@ class HeadItems
 		}
 		else trigger_error('The head item element ' . $element . ' was not added because it is not in the allowable elements array');
 	}
-	
+
 	/**
 	 * Quick interface to add_head_item for adding stylesheets
 	 * @param string $url
@@ -172,7 +172,7 @@ class HeadItems
 		}
 		$this->add_head_item('link', $attrs, '', $add_to_top, $wrapper);
 	}
-	
+
 	function add_default_less_variable($key,$value)
 	{
 		$this->default_less_variables[$key] = $value;
@@ -199,7 +199,7 @@ class HeadItems
 	{
 		$this->default_less_functions = $array;
 	}
-	
+
 	function add_default_scss_variable($key,$value)
 	{
 		$this->default_scss_variables[$key] = $value;
@@ -259,6 +259,15 @@ class HeadItems
 
 	/**
 	 *
+	 * @param type $path
+	 * @return nothing
+	 */
+	function add_style_import_path( $path ) {
+		$this->style_import_paths[] = $path;
+	}
+
+	/**
+	 *
 	 * @param type $parser
 	 * @param type $url
 	 * @param type $variables
@@ -303,6 +312,13 @@ class HeadItems
 
 		try
 		{
+			$parser->scss->addImportPath(WEB_PATH);
+			$parser->scss->addImportPath($input_path);
+
+			foreach ($this->style_import_paths as $path) {
+				$parser->scss->addImportPath($path);
+			}
+
 			$parser->checkedCachedCompile($input_path, $output_path);
 		}
 		catch (Exception $ex)
@@ -377,7 +393,7 @@ class HeadItems
 	 * Quick interface to add_head_item for adding javascript
 	 * @param string $url
 	 * @param boolean $add_to_top
-	 */	
+	 */
 	function add_javascript( $url, $add_to_top = false, $wrapper = array('before'=>'','after'=>''), $inline = false )
 	{
 		if($inline)
@@ -414,7 +430,7 @@ class HeadItems
 			$this->add_head_item('script', $attrs, '', $add_to_top, $wrapper);
 		}
 	}
-	
+
 	/**
 	 * Selectively removes head items by element type and attribute(s)
 	 * @param string $element type of head item to remove
@@ -441,7 +457,7 @@ class HeadItems
 			}
 		}
 	}
-	
+
 	/**
 	 * Remove head items by element type and attribute(s) just before head is displayed
 	 * @param string $element type of head item to remove
@@ -449,12 +465,12 @@ class HeadItems
 	 * @return void
 	 * @access public
 	 * @author Nathan White
-	 */	
+	 */
 	function remove_head_item($element, $attribute_limiter = false)
 	{
 		$this->_to_remove[] = array('e' => $element, 'a_l' => $attribute_limiter);
 	}
-	
+
 	/**
 	 * @access private
 	 */
@@ -468,7 +484,7 @@ class HeadItems
 			}
 		}
 	}
-	
+
 	/**
 	 * Returns head items array
 	 * @return array head items
@@ -477,7 +493,7 @@ class HeadItems
 	{
 		return $this->_head_items;
 	}
-	
+
 	/**
 	 * Returns html for head items
 	 * @return string html of head items
@@ -519,7 +535,7 @@ class HeadItems
 		$this->handle_duplicates($html_items);
 		return implode("\n",$html_items)."\n";
 	}
-	
+
 	/**
 	 * A clone of reason_htmlspecialchars for use outside Reason
 	 * @param string $string
@@ -530,7 +546,7 @@ class HeadItems
 		$string = str_replace(array('&amp;','&gt;','&lt;','&quot;','&#039;'),array('&','>','<','"',"'"),$string);
 		return htmlspecialchars($string, ENT_QUOTES, 'UTF-8' );
 	}
-	
+
 	/**
 	 * Modifies the html items array to remove exact duplicates - "add to top" items remain at the top when duplicates are found,
 	 * while the last instance of regular items is preserved. This is important because while javascript files such as jquery
