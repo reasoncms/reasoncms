@@ -43,6 +43,11 @@ abstract class DefaultObjectCache
 	 */
 	var $cache_id;
 
+	/**
+	 * @var string human-readable identifier for the cache
+	 */
+	var $cache_name;
+
 	final function __construct($dumb_key, $settings = NULL)
 	{
 		if ($dumb_key == 'do_not_instantiate_me_directly')
@@ -147,6 +152,23 @@ abstract class DefaultObjectCache
 		$this->cache_id = $hash;
 	}
 	
+	/**
+	 * @return string cache name
+	 */
+	 
+	function get_cache_name()
+	{
+		return $this->cache_name;
+	}
+	
+	/**
+	 * @return true
+	 */
+	function set_cache_name($name)
+	{
+		$this->cache_name = $name;
+	}
+
 	/**
 	 * @return true
 	 */	
