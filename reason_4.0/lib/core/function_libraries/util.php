@@ -274,11 +274,11 @@
 	}
 	
 	/**
-	 * We use a 10 minutes cache for this super common query. We update the cache in admin_actions.php whenever allowable relationships are added or changed.
+	 * We use a 1 hour cache for this super common query. We update the cache in admin_actions.php whenever allowable relationships are added or changed.
 	 */
 	function reason_get_relationship_names()
 	{
-		$cache = new ReasonObjectCache('reason_relationship_names', 600);
+		$cache = new ReasonObjectCache('reason_relationship_names', 3600);
 		if ($relationship_names =& $cache->fetch())
 		{
 			return $relationship_names;
@@ -296,6 +296,8 @@
 	 */
 	function reason_refresh_relationship_names()
 	{
+		$cache = new ReasonObjectCache('reason_relationship_names');
+		$cache->lock(10);
 		$dbq = new DBSelector();
 		$dbq->add_table('allowable_relationship');
 		$dbq->add_field('allowable_relationship', 'id');
@@ -308,11 +310,11 @@
 		mysql_free_result( $r );
 		if (!empty($retrieved))
 		{
-			$cache = new ReasonObjectCache('reason_relationship_names');
 			if ($result = $cache->set($retrieved))
 			{
 				relationship_id_of('site_to_type', false); // refresh the relationship_id_of static cache
 			}
+			$cache->unlock();
 			return $retrieved;
 		}
 		else
