@@ -113,12 +113,13 @@ $logo-width-widescreen: rem-calc(198);
 			
 			.navListTop a.home {  //  Large "home" link at the top of the nav
 				font-size: rem-calc(24);
+				margin-bottom: 2.25rem;
 
 				@media #{$large-up} {
 					padding-top: 0;
 					background: transparent url("../../images/magazine/logo_1x.png") no-repeat;
 					border-bottom: none;
-					margin-bottom: $column-gutter/2;
+					margin-bottom: $column-gutter * 1.5;
 					width: $logo-width-widescreen;
 					height: 74px;
 
@@ -313,9 +314,18 @@ $logo-width-widescreen: rem-calc(198);
 		// Issue drop down 
 		.issueMenu {
 			position: absolute;
-			top: 0;
-			left: 0;
+			top: 4.0rem;
+			left: 1.25rem;
 			z-index: 999999;
+			
+			form select {
+				padding: 0.25rem;
+			}
+			
+			@media #{$large-up} {
+				top: 5.3rem;
+				left: 2.5rem;
+			}
 
 			label.issueLabel {
 				@extend .screenreader;

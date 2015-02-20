@@ -580,6 +580,9 @@ $GLOBALS['_reason_page_types_local'] = array(
 				),
 			),
 		),
+		'sub_nav_2' => array(
+			'module'=>'publication/issues',	
+		),
 	),
 	'net_price_calculator' => array(
 		'main_post' => 'net_price_calculator',
