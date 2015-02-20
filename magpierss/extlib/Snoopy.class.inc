@@ -423,7 +423,7 @@ class Snoopy
 		if($this->use_gzip) {
 			// make sure PHP was built with --with-zlib
 			// and we can handle gzipp'ed data
-			if ( function_exists('gzinflate') ) {
+			if ( function_exists(gzinflate) ) {
 			   $headers .= "Accept-encoding: gzip\r\n";
 			}
 			else {
@@ -636,9 +636,13 @@ class Snoopy
 		}
 		if(!empty($body))	
 			$headers[] = "Content-length: ".strlen($body);
-		if(!empty($this->user) || !empty($this->pass))	
-			$headers[] = "Authorization: BASIC ".base64_encode($this->user.":".$this->pass);
+#		if(!empty($this->user) || !empty($this->pass))	
+#			$headers[] = "Authorization: BASIC ".base64_encode($this->user.":".$this->pass);
 			
+		if ($this->user and $this->pass) {
+			$cmdline_params .= " -u '$this->user:$this->pass' ";
+		}
+		
 		for($curr_header = 0; $curr_header < count($headers); $curr_header++) {
 			$cmdline_params .= " -H \"".$headers[$curr_header]."\"";
 		}
