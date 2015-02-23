@@ -6902,6 +6902,18 @@ form input[type="submit"]:active {
   float: right !important;
 }
 
+/* line 241, scss/modules/_images.scss */
+div.fancybox-inner div.standalone_image_info div.caption {
+  padding-top: 15px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  color: #444444;
+  font-style: normal;
+  margin-bottom: 5px;
+  line-height: 20px;
+}
+
 /* line 4, scss/font-awesome/_core.scss */
 .fa, #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .jump a:before, #minisite .continueReading a:after, #minisite .feedLink .feedInfo a:before, div.assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a[href]:before, #childrenAndGrandchildren li ul .childDesc:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
