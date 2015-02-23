@@ -129,9 +129,14 @@
 #pageContent{
 	ul.major-list{
 		margin-left: 0px;
+		width: 100%;
 		li{
 			list-style-type: none;
 			font-family:"Roboto Slab", serif;
+		}
+		strong{
+			display: inline-block;
+			width: 75%;
 		}
 		li:before{
 			padding-right: 7px;
@@ -140,10 +145,10 @@
 			display: inline-block;
 			width: 25px;
 			font-family: "FontAwesome";
+			vertical-align: top;
 		}
 		@extend .fa;
 		.pre-law-major{
-			display: inline-block;
 			width: 25px;
 			font-family: "FontAwesome";
 			&:before{
@@ -151,7 +156,6 @@
 			}
 		}
 		.pre-medicine-major{
-			display: inline-block;
 			width: 25px;
 			font-family: "FontAwesome";
 			&:before{
@@ -159,7 +163,6 @@
 			}
 		}
 		.pre-optometry-major{
-			display: inline-block;
 			width: 25px;
 			font-family: "FontAwesome";
 			&:before{
@@ -167,7 +170,6 @@
 			}
 		}
 		.pre-veterinary-medicine-major{
-			display: inline-block;
 			width: 25px;
 			font-family: "FontAwesome";
 			&:before{
@@ -175,7 +177,6 @@
 			}
 		}
 		.pre-dentistry-major{
-			display: inline-block;
 			width: 25px;
 			font-family: "FontAwesome";
 			&:before{
@@ -183,7 +184,6 @@
 			}
 		} 
 		.pre-engineering-major{
-			display: inline-block;
 			width: 25px;
 			font-family: "FontAwesome";
 			&:before{
@@ -191,7 +191,6 @@
 			}
 		} 
 		.pre-pharmacy-major{
-			display: inline-block;
 			width: 25px;
 			font-family: "FontAwesome";
 			&:before{
@@ -199,7 +198,6 @@
 			}
 		} 
 		.pre-physical-therapy-major{
-			display: inline-block;
 			width: 25px;
 			font-family: "FontAwesome";
 			&:before{
@@ -207,7 +205,6 @@
 			}
 		} 
 		.pre-seminary-major{
-			display: inline-block;
 			width: 25px;
 			font-family: "FontAwesome";
 			&:before{
@@ -215,7 +212,6 @@
 			}
 		}
 		.other-major{
-			display: inline-block;
 			width: 25px;
 			font-family: "FontAwesome";
 			&:before{
