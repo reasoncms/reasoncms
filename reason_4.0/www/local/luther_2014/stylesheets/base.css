@@ -192,7 +192,7 @@ ul li ul,
 ul li ol {
   margin-left: 1.25rem;
   margin-bottom: 0;
-  font-size: 1rem;
+  font-size: 0.95rem;
   /* Override nested font-size change */
 }
 /* line 279, ../foundation/bower_components/foundation/scss/foundation/components/_type.scss */
@@ -6902,6 +6902,18 @@ form input[type="submit"]:active {
   float: right !important;
 }
 
+/* line 241, scss/modules/_images.scss */
+div.fancybox-inner div.standalone_image_info div.caption {
+  padding-top: 15px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  color: #444444;
+  font-style: normal;
+  margin-bottom: 5px;
+  line-height: 20px;
+}
+
 /* line 4, scss/font-awesome/_core.scss */
 .fa, #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .jump a:before, #minisite .continueReading a:after, #minisite .feedLink .feedInfo a:before, div.assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a[href]:before, #childrenAndGrandchildren li ul .childDesc:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
@@ -7076,75 +7088,76 @@ form input[type="submit"]:active {
 /* line 130, scss/modules/_misc.scss */
 #pageContent ul.major-list {
   margin-left: 0px;
+  width: 100%;
 }
-/* line 132, scss/modules/_misc.scss */
+/* line 133, scss/modules/_misc.scss */
 #pageContent ul.major-list li {
   list-style-type: none;
   font-family: "Roboto Slab", serif;
 }
-/* line 136, scss/modules/_misc.scss */
+/* line 137, scss/modules/_misc.scss */
+#pageContent ul.major-list strong {
+  display: inline-block;
+  width: 75%;
+}
+/* line 141, scss/modules/_misc.scss */
 #pageContent ul.major-list li:before {
   padding-right: 7px;
 }
-/* line 139, scss/modules/_misc.scss */
+/* line 144, scss/modules/_misc.scss */
 #pageContent ul.major-list div.major-icon {
   display: inline-block;
   width: 25px;
   font-family: "FontAwesome";
+  vertical-align: top;
 }
-/* line 145, scss/modules/_misc.scss */
+/* line 151, scss/modules/_misc.scss */
 #pageContent ul.major-list .pre-law-major {
-  display: inline-block;
   width: 25px;
   font-family: "FontAwesome";
 }
-/* line 149, scss/modules/_misc.scss */
+/* line 154, scss/modules/_misc.scss */
 #pageContent ul.major-list .pre-law-major:before {
   content: "\f0e3";
 }
-/* line 153, scss/modules/_misc.scss */
+/* line 158, scss/modules/_misc.scss */
 #pageContent ul.major-list .pre-medicine-major {
-  display: inline-block;
   width: 25px;
   font-family: "FontAwesome";
 }
-/* line 157, scss/modules/_misc.scss */
+/* line 161, scss/modules/_misc.scss */
 #pageContent ul.major-list .pre-medicine-major:before {
   content: "\f0f1";
 }
-/* line 161, scss/modules/_misc.scss */
+/* line 165, scss/modules/_misc.scss */
 #pageContent ul.major-list .pre-optometry-major {
-  display: inline-block;
   width: 25px;
   font-family: "FontAwesome";
 }
-/* line 165, scss/modules/_misc.scss */
+/* line 168, scss/modules/_misc.scss */
 #pageContent ul.major-list .pre-optometry-major:before {
   content: "\f06e";
 }
-/* line 169, scss/modules/_misc.scss */
+/* line 172, scss/modules/_misc.scss */
 #pageContent ul.major-list .pre-veterinary-medicine-major {
-  display: inline-block;
   width: 25px;
   font-family: "FontAwesome";
 }
-/* line 173, scss/modules/_misc.scss */
+/* line 175, scss/modules/_misc.scss */
 #pageContent ul.major-list .pre-veterinary-medicine-major:before {
   content: "\f1b0";
 }
-/* line 177, scss/modules/_misc.scss */
+/* line 179, scss/modules/_misc.scss */
 #pageContent ul.major-list .pre-dentistry-major {
-  display: inline-block;
   width: 25px;
   font-family: "FontAwesome";
 }
-/* line 181, scss/modules/_misc.scss */
+/* line 182, scss/modules/_misc.scss */
 #pageContent ul.major-list .pre-dentistry-major:before {
   content: "\f0f0";
 }
-/* line 185, scss/modules/_misc.scss */
+/* line 186, scss/modules/_misc.scss */
 #pageContent ul.major-list .pre-engineering-major {
-  display: inline-block;
   width: 25px;
   font-family: "FontAwesome";
 }
@@ -7154,41 +7167,37 @@ form input[type="submit"]:active {
 }
 /* line 193, scss/modules/_misc.scss */
 #pageContent ul.major-list .pre-pharmacy-major {
-  display: inline-block;
   width: 25px;
   font-family: "FontAwesome";
 }
-/* line 197, scss/modules/_misc.scss */
+/* line 196, scss/modules/_misc.scss */
 #pageContent ul.major-list .pre-pharmacy-major:before {
   content: "\f02b";
 }
-/* line 201, scss/modules/_misc.scss */
+/* line 200, scss/modules/_misc.scss */
 #pageContent ul.major-list .pre-physical-therapy-major {
-  display: inline-block;
   width: 25px;
   font-family: "FontAwesome";
 }
-/* line 205, scss/modules/_misc.scss */
+/* line 203, scss/modules/_misc.scss */
 #pageContent ul.major-list .pre-physical-therapy-major:before {
   content: "\f004";
 }
-/* line 209, scss/modules/_misc.scss */
+/* line 207, scss/modules/_misc.scss */
 #pageContent ul.major-list .pre-seminary-major {
-  display: inline-block;
   width: 25px;
   font-family: "FontAwesome";
 }
-/* line 213, scss/modules/_misc.scss */
+/* line 210, scss/modules/_misc.scss */
 #pageContent ul.major-list .pre-seminary-major:before {
   content: "\f02d";
 }
-/* line 217, scss/modules/_misc.scss */
+/* line 214, scss/modules/_misc.scss */
 #pageContent ul.major-list .other-major {
-  display: inline-block;
   width: 25px;
   font-family: "FontAwesome";
 }
-/* line 221, scss/modules/_misc.scss */
+/* line 217, scss/modules/_misc.scss */
 #pageContent ul.major-list .other-major:before {
   content: "\f19c";
 }
