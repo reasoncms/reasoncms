@@ -211,7 +211,7 @@ function luther_process_inline_images($content, &$photographer)
 	while (preg_match('/(<[ph]\d?.*?)(<img.*?\/>)(.*?<\/[ph]\d?>)/', $content, $matches) && $count > 0)
 	{
 		// move the img tag inside a <p> or <h1-6> to a position just before the tag
-		$content = preg_replace('/(<[ph]\d?.*?)(<img.*?\/>)(.*?<\/[ph]\d?>)/', '$2$1$3', $content);
+		$content = preg_replace('/(<[ph]\d?.*?)(<a.*?>)?(<img.*?\/>)(<\/a>)?(.*?<\/[ph]\d?>)/', '$2$3$4$1$5', $content);
 		$count--;
 	}
 
