@@ -4819,7 +4819,8 @@ form .submitSection,
   .editable.editing {
     border: 1px solid #CCCCCC;
     box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
-    padding: 0; }
+    padding: 0;
+    background: #FFFFFF; }
     .editable.editing form {
       padding: 1.125rem 0.75rem 0; }
       .editable.editing form table {
