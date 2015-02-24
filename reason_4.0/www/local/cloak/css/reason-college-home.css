@@ -6482,10 +6482,6 @@ form .submitSection,
         content: "";
         margin-left: 0.375rem;
         color: inherit; }
-      .siteHome #postBanner .featuresModule .feature .featureContent .featureInfo .featureText a.dest:after,
-      .siteHome #postBanner .featuresModule .feature .featureContent .featureInfo .featureText a.anchor:after,
-      .siteHome #postBanner .featuresModule .feature .featureContent .featureInfo .featureText span.noLink:after {
-        background: green; }
       .siteHome #postBanner .featuresModule .feature .featureContent .featureInfo .featureText a.dest:empty,
       .siteHome #postBanner .featuresModule .feature .featureContent .featureInfo .featureText a.anchor:empty,
       .siteHome #postBanner .featuresModule .feature .featureContent .featureInfo .featureText span.noLink:empty {

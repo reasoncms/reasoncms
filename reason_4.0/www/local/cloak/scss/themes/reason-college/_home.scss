@@ -133,7 +133,7 @@
 								@include inline-icon($pseudo: after, $icon: $fa-var-chevron-right);
 
 								&:after {
-									background: green;
+									//background: green;
 								}
 
 								&:empty {  // Here we hide it if there's no content
