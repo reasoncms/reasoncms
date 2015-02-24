@@ -85,29 +85,30 @@
 	}
 }
 
-@mixin feed-button() {
+@mixin feed-button($feed-button-bg: $primary-color) {
 	@include button(
 		$padding: $button-tny,
-		$bg: $primary-color,
+		$bg: $feed-button-bg,
 		$radius: $global-radius
 	);
 	@include inline-icon($pseudo: before, $icon: $fa-var-rss);
 	margin: 0 rem-calc(12) rem-calc(2) 0 !important;
 }
 
-@mixin more-link($more-link-bg: transparent) {
-	@include button($padding: $button-tny, $bg: $more-link-bg, $radius: $global-radius);
+@mixin more-link($more-link-bg: $primary-color, $text-color: $white) {
+	@include button($padding: $button-sml, $bg: $more-link-bg, $radius: false);
 	@include inline-icon($pseudo: after, $icon: $fa-var-chevron-circle-right);
-	border: 1px solid $primary-color;
-	color: $primary-color;
+	color: $text-color;
 	font-weight: 400;
+	text-align: left;
 }
 
 // More links that are part of a longer sentence of unlinked text
-@mixin inline-more-link($more-link-color: $primary-color) {
+@mixin inline-more-link($more-link-color: transparent) {
 	font-size: rem-calc(14);
 
 	a {
+		border: 1px solid $primary-color;
 		color: $more-link-color;
 		font-weight: 700;
 		text-decoration: underline;
@@ -116,8 +117,8 @@
 	//@include inline-icon($pseudo: after, $icon: $fa-var-chevron-circle-right, $color: $base);
 }
 
-@mixin back-link($more-link-bg: $primary-color) {
-	@include button($padding: $button-tny, $bg: $more-link-bg, $radius: $global-radius);
+@mixin back-link($back-link-bg: $primary-color) {
+	@include button($padding: $button-tny, $bg: $back-link-bg, $radius: $global-radius);
 	@include inline-icon($pseudo: before, $icon: $fa-var-chevron-circle-left);
 }
 
@@ -132,9 +133,9 @@
 			display: block;
 			text-align: center;
 			background: rgba(white, .25);
-			margin-top: - ($alert-padding-top + $alert-border-width);
-			margin-left: - ($alert-padding-top + $alert-border-width);
-			margin-right: - ($alert-padding-top + $alert-border-width);
+			// margin-top: - ($alert-padding-top + $alert-border-width);
+			// margin-left: - ($alert-padding-top + $alert-border-width);
+			// margin-right: - ($alert-padding-top + $alert-border-width);
 			margin-top: - $alert-padding-top;
 			margin-left: - $alert-padding-top;
 			margin-right: - $alert-padding-top;

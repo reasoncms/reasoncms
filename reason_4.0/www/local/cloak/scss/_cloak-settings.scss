@@ -1,0 +1,143 @@
+// Cloak Settings
+// Cloak, v1
+
+// _settings.scss is the default Foundation settings file.
+// To keep things clean, we have Cloak-specific settings here.
+
+// Table of Contents
+// Cloak Settings
+//
+// a. Base
+// b. Grid
+// c. Global
+// d. WYSIWIG area
+// e. 
+// 01. 
+
+// a. Base
+// - - - - - - - - - - - - - - - - - - - - - - - - -
+
+// Allows the use of rem-calc() or lower-bound() in your settings
+@import "foundation/functions";
+
+// b. Grid
+// - - - - - - - - - - - - - - - - - - - - - - - - -
+
+// Controls horizontal spacing
+$horizontal-gutter: rem-calc(36);
+
+// c. Global
+// - - - - - - - - - - - - - - - - - - - - - - - - -
+
+// Theme colors
+$cloak-body: #555555;
+$cloak-red: #b84041;
+$cloak-turquoise: #2ea7a0;
+$cloak-orange: #e4a242;
+$cloak-brown: #82572d;
+
+$cloak-primary-color: $cloak-red;
+$cloak-secondary-color: $cloak-turquoise;
+$cloak-tertiary-color: $cloak-orange;
+
+// Module colors
+
+$a-to-z-primary-color: $cloak-primary-color;
+// $a-to-z-secondary-color: ;
+
+// $announcements-primary-color: ;
+// $announcements-secondary-color: ;
+
+$asset-primary-color: $cloak-secondary-color;
+// $asset-secondary-color: $cloak-red;
+
+$av-primary-color: $cloak-secondary-color;
+// $av-secondary-color: ;
+
+// $basic-tabs-primary-color: ;
+// $basic-tabs-secondary-color: ;
+
+$blurbs-primary-color: $cloak-primary-color;
+// $blurbs-secondary-color: ;
+
+$breadcrumb-primary-color: $cloak-primary-color;
+// $breadcrumb-seondary-color: ;
+
+$children-primary-color: $cloak-primary-color;
+// $children-secondary-color: ;
+
+$classified-primary-color: $cloak-primary-color;
+// $classified-secondary-color: ;
+
+$event-primary-color: $cloak-secondary-color;
+// $event-secondary-color: ;
+
+$faculty-primary-color: $cloak-primary-color;
+// $faculty-secondary-color: ;
+
+$faq-primary-color: $cloak-primary-color;
+// $faq-secondary-color: ;
+
+$feature-primary-color: $cloak-primary-color;
+// $feature-primary-color: ;
+
+$form-primary-color: $cloak-primary-color;
+// $form-secondary-color: ;
+
+$gallery-primary-color: $cloak-primary-color;
+// $gallery-secondary-color: ;
+
+$images-primary-color: $cloak-primary-color;
+// $images-secondary-color: ;
+
+// $in-place-editing-primary-color: ;
+// $in-place-editing-secondary-color: ;
+
+$login-link-primary-color: $cloak-primary-color;
+// $login-link-secondary-color: ;
+
+$login-primary-color: $cloak-primary-color;
+//$login-secondary-color: ;
+
+$maintained-priamry-color: $cloak-primary-color;
+// $maintained-secondary-color:
+
+$minutes-priamry-color: $cloak-primary-color;
+// $minutes-secondary-color:
+
+$navigation-primary-color: $cloak-primary-color;
+// $navigation-secondary-color:
+
+$policy-primary-color: $cloak-primary-color;
+// $policy-secondary-color:
+
+$publication-primary-color: $cloak-secondary-color;
+// $publication-secondary-color: ;
+
+
+$site-title-color: #fff;
+// $-color: ;
+// $-color: ;
+// $-color: ;
+// $-color: ;
+
+// d. WYSIWIG Areas
+// - - - - - - - - - - - - - - - - - - - - - - - - -
+// User created content areas (or WYSIWYG areas) have their own set of typographic styles. Here we define which HTML elements wrap WYSIWYG areas.
+// We can then use variables in place of selectors so that any time a wysiwyg area is added we can just add it below and all styles are updated.
+
+// $contentArea: '';
+// $relatedArea
+
+$pageContent: '#pageContent';  // Normal page content
+$fullPost: '.fullPost .text';  // Full article
+$userComment: '.comments .commentContent'; // User comments
+$eventListing: '.eventContent'; // Event module wysiwyg
+$blurb: '.blurb'; // Blurbs
+$faqContent: '#faq .answer';
+$facultyStaff: '.facStaffContent'; // Faculty staff content
+$minutesContent: '.minutesContent'; // Minutes 
+$policyContent: '.policyContent'; // Policy content
+$policyApprovals: '.policy .approvals'; // Policy approvals
+
+$wysiwyg-all-areas: '#{$pageContent}, #{$fullPost}, #{$userComment}, #{$eventListing}, #{$blurb}, #{$faqContent}, #{$facultyStaff}, #{$minutesContent}, #{$policyContent}, #{$policyApprovals}';
