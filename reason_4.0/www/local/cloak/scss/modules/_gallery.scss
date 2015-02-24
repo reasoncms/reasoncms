@@ -7,13 +7,13 @@
 		
 	#imageGallery {
 		
-			.persistent {
-				@include grid-column($columns:12, $collapse:true);
-			}
+		.persistent {
+			@include grid-column($columns:12, $collapse:true);
+		}
 
-			.moduleNav {
-				@include grid-column($columns:12, $collapse:true);
-			}
+		.moduleNav {
+			@include grid-column($columns:12, $collapse:true);
+		}
 	}
 }
 
@@ -27,13 +27,20 @@
 	
 	// GALLERY ITEM LIST
 	.moduleNav {
-
 		@include grid-column($columns:12, $collapse:true);
-
 		width: 100%;
 
 		// PAGINATION
-		// See base/_common.scss
+		// Colors set here. Everything else, see base/_common.scss
+		.pagination {
+
+			.pages {
+
+				strong {
+					background: $gallery-primary-color;
+				}
+			}	
+		}
 
 		// IMAGE LIST 
 		#imageGalleryItemList {
@@ -52,6 +59,15 @@
 
 					&:hover {
 						border-color: $iron;
+					}
+				}
+
+				a {
+					color: $body-font-color;
+
+					&:hover {
+						color: darken($body-font-color, 20%);
+						text-decoration: underline;
 					}
 				}
 			}
@@ -159,13 +175,9 @@
 	}
 
 	.back {
-		margin-bottom: $horizontal-gutter;
-
-		&:before {
-			@extend .fa;
-			content: $fa-var-th-large;
-			margin-right: rem-calc(6);
-			color: $anchor-font-color;
+		a {
+			@include back-link($back-link-bg: $gallery-primary-color);
+			@include inline-icon($icon: $fa-var-th-large);
 		}
 	}
 }

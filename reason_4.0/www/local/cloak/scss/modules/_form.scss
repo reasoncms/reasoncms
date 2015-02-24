@@ -25,10 +25,10 @@
 		text-align: center;
 		padding: $form-spacing / 2;
 		height: ($input-font-size + ($form-spacing * 1.5) - rem-calc(1));
-		background: $primary-color;
+		background: $form-primary-color;
 		color: $white;
 		width: 100%;
-		border-radius: $global-radius;
+		border-radius: 0 $global-radius $global-radius 0;
 
 		@media #{$medium-up} {
 			width: 20%;
@@ -58,10 +58,10 @@
 		text-align: center;
 		padding: $form-spacing / 2;
 		height: ($input-font-size + ($form-spacing * 1.5) - rem-calc(1));
-		background: $primary-color;
+		background: $form-primary-color;
 		color: $white;
 		width: 100%;
-		border-radius: $global-radius;
+		border-radius: 0 $global-radius $global-radius 0;
 
 		@media #{$medium-up} {
 			width: 30%;
@@ -101,15 +101,16 @@
 			text-align: center;
 			padding: $form-spacing / 2;
 			height: ($input-font-size + ($form-spacing * 1.5) - rem-calc(1));
-			background: $primary-color;
-			color: $white;
+			// Colors set by individual module color vairables
+			//background: inherit; 
+			//color: $white;
 			width: 20%;
 			float: left;
 			border-radius: 0 $global-radius $global-radius 0;
 			margin-bottom: 0;
 
 			&:hover {
-				background: darken($primary-color, 10%);
+				//background: darken($form-primary-color, 10%);
 				cursor: pointer;
 			}
 		}
@@ -139,7 +140,7 @@
 			text-align: center;
 			padding: $form-spacing / 2;
 			height: ($input-font-size + ($form-spacing * 1.5) - rem-calc(1));
-			background: $primary-color;
+			background: $policy-primary-color;
 			color: $white;
 			width: 20%;
 			float: left;
@@ -147,7 +148,7 @@
 			margin-bottom: 0;
 
 			&:hover {
-				background: darken($primary-color, 10%);
+				background: darken($policy-primary-color, 10%);
 				cursor: pointer;
 			}
 	}
@@ -257,7 +258,8 @@ form,
 
 	input[type="submit"] {
 		@include button(
-			$radius: $global-radius
+			$radius: $global-radius,
+			$bg: $form-primary-color
 		);
 		height: ($input-font-size + ($form-spacing * 1.5) - rem-calc(1));
 		padding: 0 $column-gutter;

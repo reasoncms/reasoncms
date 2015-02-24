@@ -21,11 +21,11 @@
 			border-bottom: 1px solid $silver;
 			padding: $nav-item-lr $nav-item-tb;
 			text-transform: uppercase;
-			background: $navigation-color;
+			background: $navigation-primary-color;
 			color: $white;
 
 			&:hover {
-				background: darken($navigation-color, 10%) !important;
+				background: darken($navigation-primary-color, 10%) !important;
 				cursor: pointer;
 			}
 		}
@@ -57,7 +57,7 @@
 
 				// Just current pages
 				strong {
-					color: $navigation-color;
+					color: $navigation-primary-color;
 				}
 			}
 

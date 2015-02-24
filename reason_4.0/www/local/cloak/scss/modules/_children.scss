@@ -27,7 +27,7 @@
 				line-height: inherit;
 				margin: 0;
 				font-weight: 700;
-				color: $primary-color;
+				color: $children-primary-color;
 			}
 
 			&:hover {
@@ -57,8 +57,18 @@
 
 		> h3,
 		> h4 {
-			background: $aluminum;
+			//background: pink;
 			margin: 0 0 $horizontal-gutter/3;
+			border-bottom: 1px solid $gainsboro;
+			background: $smoke;
+		}
+
+		a {
+			color: $children-primary-color;
+
+			&:hover {
+				color: dakren($children-primary-color, 10%);
+			}
 		}
 
 		> .childDesc {
@@ -282,7 +292,7 @@
 
 			strong {
 				background: darken($white-smoke, 6%);
-				color: $primary-color;
+				color: $children-primary-color;
 			}
 		}
 	}

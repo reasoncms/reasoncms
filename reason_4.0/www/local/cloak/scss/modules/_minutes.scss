@@ -1,31 +1,48 @@
 // Minutes Styles
 // Cloak, v1
 
-.minutesList {
-	margin: 0;
+#generic {
 
-	li {
-		list-style-type: none;
-		font-weight: 700;
-		@include inline-icon($icon: $fa-var-file-text-o);
-	}
-}
+	.minutesList {
+		margin: 0;
 
-h3.minutesHead {
-}
-
-.minutesInfo {
-	margin: 0 0 $horizontal-gutter/2;
-
-	li {
-		list-style-type: none;
-	
-		em {
-			font-style: normal;
+		li {
+			list-style-type: none;
 			font-weight: 700;
+			@include inline-icon($icon: $fa-var-file-text-o);
+
+			a {
+				color: $minutes-priamry-color;
+
+				&:hover {
+					color: darken($minutes-priamry-color, 10%);
+				}
+			}
 		}
 	}
+
+	h3.minutesHead {
+	}
+
+	.minutesInfo {
+		margin: 0 0 $horizontal-gutter/2;
+
+		li {
+			list-style-type: none;
+		
+			em {
+				font-style: normal;
+				font-weight: 700;
+			}
+		}
+	}
+
+	.minutesContent {
+	}
+
+	// There's no unique wrapper class around the Minutes module, so we can't target the back link specifically.
+	// It inherits the color of the standard back link.
+	.back {
+	}
 }
 
-.minutesContent {
-}

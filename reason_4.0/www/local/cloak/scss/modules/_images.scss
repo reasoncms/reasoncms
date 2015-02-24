@@ -7,20 +7,33 @@
 	//margin-bottom: $column-gutter/2;
 	@include clearfix;
 
-	ul {
-		margin: 0;
+	.moduleNav {
+		
+		.pagination {
 
-		li {
-			list-style-type: none;
-			margin-bottom: $horizontal-gutter;
+			.pages {
 
-			img {
-				border: 1px solid #ccc;
-				padding: rem-calc(6);
-			}
+				strong {
+					background: $images-primary-color;
+				}
+			}	
+		}
 
-			.caption {
-				@include image-caption();
+		ul {
+			margin: 0;
+
+			li {
+				list-style-type: none;
+				margin-bottom: $horizontal-gutter;
+
+				img {
+					border: 1px solid #ccc;
+					padding: rem-calc(6);
+				}
+
+				.caption {
+					@include image-caption();
+				}
 			}
 		}
 	}

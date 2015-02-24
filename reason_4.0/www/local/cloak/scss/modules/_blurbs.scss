@@ -11,6 +11,14 @@
 
 	// Remove padding from the final tag and any tags inside it (to keep padding uniform)
 	@include last-child-padding-collapse();
+
+	a {
+		color: $blurbs-primary-color !important;
+		
+		&:hover {
+			color: darken($blurbs-primary-color, 10%);
+		}
+	}
 }
 
 .issueBlurbs {

@@ -57,10 +57,6 @@ h2.pageTitle {
 	@include clearfix;
 	margin-bottom: $horizontal-gutter - $paragraph-margin-bottom;
 
-	> * {
-		//border: 1px solid green;	
-	}
-
 	a {
 		text-decoration: underline;
 		font-weight: 700;

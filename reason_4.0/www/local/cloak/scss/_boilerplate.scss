@@ -10,7 +10,7 @@
 // Cloak uses option #2.
 
 // Foundation
-@import "helpers/settings";
+@import "settings";
 @import "foundation";
 
 // @import "foundation";
@@ -62,6 +62,6 @@
 @import "vendor/font-awesome/spinning";
 
 // Cloak
-@import "helpers/mixins";
-@import "layout/layout";
-@import "modules/modules";
+@import "mixins";
+@import "layout";
+@import "modules";

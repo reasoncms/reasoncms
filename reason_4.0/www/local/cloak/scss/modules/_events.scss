@@ -8,8 +8,22 @@ $medium-only-events: "#{$screen} and (min-width:#{$events_default_break_point_up
 
 // EVENTS
 
-/* Events Column Layouts */
+// Event Colors
+// Color vairable set in _cloak-settings.scss
 
+#calendar,
+#miniCal {
+
+	a {
+		color: $event-primary-color;
+
+		&:hover {
+			color: darken($event-primary-color, 10%);
+		}
+	}
+}
+
+/* Events Column Layouts */
 #calendar { // Override some Reason layout styles
 	
 	.responsiveEventsList {
@@ -113,12 +127,12 @@ $medium-only-events: "#{$screen} and (min-width:#{$events_default_break_point_up
 					strong {
 						padding: rem-calc(1) rem-calc(12);
 						display: inline-block;
-						
 						background: $silver;
 						border-right: 1px solid $gainsboro;
 					}
 
 					a {
+						
 						&:hover {
 							background: $gainsboro;
 						}
@@ -127,7 +141,7 @@ $medium-only-events: "#{$screen} and (min-width:#{$events_default_break_point_up
 					strong {
 						text-decoration: none;
 						font-weight: 400;
-						background: $primary-color;
+						background: $event-primary-color;
 						color: #FFF;
 					}
 
@@ -164,11 +178,11 @@ $medium-only-events: "#{$screen} and (min-width:#{$events_default_break_point_up
 			.next {
 				padding: rem-calc(8) rem-calc(14);
 				display: inline-block;
-				background: $primary-color;
+				background: $event-primary-color;
 				color: $white;
 
 				&:hover {
-					background: lighten($primary-color, 5%);
+					background: lighten($event-primary-color, 5%);
 				}
 			}
 
@@ -311,7 +325,7 @@ $medium-only-events: "#{$screen} and (min-width:#{$events_default_break_point_up
 					    }
 
 					   	&.today {
-					    	background: $primary-color;
+					    	background: $event-primary-color;
 
 					    	a {
 					    		color: #FFF;
@@ -322,7 +336,7 @@ $medium-only-events: "#{$screen} and (min-width:#{$events_default_break_point_up
 					    &.hasEvent {
 							a {
 								font-weight: 700;
-								color: $primary-color;
+								color: $event-primary-color;
 							}
 						}
 
@@ -367,12 +381,14 @@ $medium-only-events: "#{$screen} and (min-width:#{$events_default_break_point_up
 				}
 
 				input[type="submit"] {
-					padding: 0;
+					@include button($bg: $event-primary-color, $radius: $global-radius);
 					float: right;
-					width: 20%;
+					width: 20%;	
+					padding: 0;
 					margin: 0;
 
 					@media #{$medium-only-events} {
+
 						float: none;
 						width: 100%;
 					}
@@ -397,7 +413,7 @@ $medium-only-events: "#{$screen} and (min-width:#{$events_default_break_point_up
 					text-align: center;
 					padding: $form-spacing / 2;
 					height: ($input-font-size + ($form-spacing * 1.5) - rem-calc(1));
-					background: $primary-color;
+					background: $event-primary-color;
 					color: $white;
 					width: 20%;
 					float: left;
@@ -405,7 +421,7 @@ $medium-only-events: "#{$screen} and (min-width:#{$events_default_break_point_up
 					margin-bottom: 0;
 
 					&:hover {
-						background: darken($primary-color, 10%);
+						background: darken($event-primary-color, 10%);
 						cursor: pointer;
 					}
 				}
@@ -464,7 +480,7 @@ $medium-only-events: "#{$screen} and (min-width:#{$events_default_break_point_up
 			display: inline-block;
 
 			a {
-				@include feed-button();
+				@include feed-button($feed-button-bg: $event-primary-color);
 			}
 
 			.divider {
@@ -744,12 +760,12 @@ $medium-only-events: "#{$screen} and (min-width:#{$events_default_break_point_up
 		}
 
 		.monthSpan {
-			background: $primary-color;
+			background: $event-primary-color;
 		}
 
 		.numberSpan {
 			background: $smoke;
-			color: $primary-color;
+			color: $event-primary-color;
 		}
 
 	}
@@ -791,7 +807,7 @@ $medium-only-events: "#{$screen} and (min-width:#{$events_default_break_point_up
 			margin: 0;
 			
 			a {
-				@include more-link();
+				@include more-link($more-link-bg: $event-primary-color);
 			}
 		}
 	}

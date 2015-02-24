@@ -2,6 +2,7 @@
 // Cloak, v1
 
 .assets {
+
 	// This margin, along with the bottom padding on each li, gives us the even margin we need to keep spacing uniform between page elements
 	margin-bottom: $horizontal-gutter/2;
 
@@ -39,6 +40,14 @@
 				content: $fa-var-file-pdf-o;
 			}
 			
+		}
+	}
+
+	a {
+		color: $asset-primary-color;
+
+		&:hover {
+			color: darken($asset-primary-color, 10%);
 		}
 	}
 

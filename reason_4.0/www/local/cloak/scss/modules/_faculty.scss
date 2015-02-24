@@ -4,6 +4,14 @@
 #facultyStaff {
 	@include clearfix;
 
+	a {
+		color: $faculty-primary-color;
+
+		&:hover {
+			color: darken($faculty-primary-color, 20%);
+		}
+	}
+
 	.facStaff {
 		border-bottom: 1px solid $gainsboro;
 		margin-bottom: $horizontal-gutter;

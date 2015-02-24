@@ -37,6 +37,14 @@
 
 		h1 {
 			font-size: $h4-font-size;
+			
+			a {
+				color: $login-primary-color;
+
+				&:hover {
+					color: $login-primary-color;
+				}
+			}
 		}
 	}
 
@@ -84,7 +92,7 @@
 				}
 
 				input[type="submit"] {
-					@include button($radius: $global-radius);
+					@include button($radius: $global-radius, $bg: $login-primary-color);
 				}
 			}
 
@@ -111,7 +119,7 @@
 		 	}
 
 		 	.logoutLink {
-		 		@include button($radius: $global-radius, $full-width: true);
+		 		@include button($radius: $global-radius, $full-width: true, $bg: $login-primary-color);
 		 		margin-bottom: $horizontal-gutter/2;
 		 	}
 
@@ -132,6 +140,14 @@
 
 		 		&.smallText {
 		 			//margin-top: rem-calc(16);
+		 		}
+		 	}
+
+		 	a {
+		 		color: $login-primary-color;
+
+		 		&:hover {
+		 			color: darken($login-primary-color, 10);
 		 		}
 		 	}
 		}	

@@ -11,6 +11,14 @@
 #relatedPub {
 @include clearfix;
 
+	a {
+		color: $publication-primary-color;
+
+		&:hover {
+			color: darken($publication-primary-color, 10%);
+		}
+	}
+
 	// @todo: make sure structure doesn't do anything weird with module nav in this instance
 	.moduleNav {
 
@@ -61,7 +69,7 @@
 				list-style-type: none;
 				
 				a {
-					@include more-link();
+					@include more-link($more-link-bg: $publication-primary-color);
 				}
 			}
 		}
@@ -85,7 +93,7 @@
 		div {
 			
 			a {
-				@include back-link();
+				@include back-link($back-link-bg: $publication-primary-color);
 			}
 		}
 	}
@@ -94,8 +102,23 @@
 	.persistent {
 		border: none;
 
-		.addItemLink {
+		
+		#filtering {
+			.searchForm {
+				// Form styles included in _form.scss	
+				.submit,
+				input[type="submit"] {
+					background: $publication-primary-color;
+					color: $white;
 
+					&:hover {
+						background: darken($publication-primary-color, 10%);
+					}
+				}
+			}
+		}
+
+		.addItemLink {
 		}
 
 		.loginlogout {
@@ -105,12 +128,25 @@
 
 			a {
 				@include inline-icon($pseudo: after, $icon: $fa-var-lock);
+				color: $publication-primary-color;
 			}
 		}
 	}
 
 	// List of Posts
 	.moduleNav {
+
+		// Pagination
+		// Colors set here. Everything else, see base/_common.scss
+		.pagination {
+
+			.pages {
+
+				strong {
+					background: $publication-primary-color;
+				}
+			}	
+		}
 
 		// Heading when a seach term is applied: "Results for 'News Story'"
 		.searchTitle {
@@ -134,6 +170,7 @@
 						padding: 0 rem-calc(4);
 						display: inline-block;
 						@include inline-icon($icon: $fa-var-mail-reply);
+						color: $publication-primary-color;
 					}
 				}
 			}
@@ -158,7 +195,7 @@
 
 			.allIssuesLink a {
 				float: right;
-				@include more-link();
+				@include more-link($more-link-bg: $publication-primary-color);
 			}
 		}
 
@@ -189,10 +226,9 @@
 					text-align: right;
 
 					.viewEntireSection {
-						@include inline-more-link();
+						@include inline-more-link($more-link-color: $publication-primary-color);
 					}
 				}
-
 			}
 		}
 		
@@ -231,6 +267,14 @@
 					margin: 0;
 					font-size: $h3-font-size;
 					font-weight: 400;
+
+					a {
+						color: $publication-primary-color;
+
+						&:hover {
+							color: darken($publication-primary-color, 10%);
+						}
+					}
 				}
 
 				.date {
@@ -251,8 +295,14 @@
 						margin-right: rem-calc(12);
 
 						a {
+							color: $publication-primary-color;
+
 							&:before {
 								@extend .fa-fw;
+							}
+
+							&:hover {
+								color: darken($publication-primary-color, 10%);
 							}
 						}
 
@@ -272,14 +322,14 @@
 		}
 
 		a[href="?"] {
-			@include back-link();
+			@include back-link($back-link-bg: $publication-primary-color);
 		}
 
 		.feedLink {
 			margin-bottom: $horizontal-gutter;
 
 			a {
-				@include feed-button();
+				@include feed-button($feed-button-bg: $publication-primary-color);
 			}
 			
 			.feedInfo a {
@@ -328,9 +378,9 @@
 					@include circle-icon-button(
 						$icon-size: rem-calc(15),
 						$icon-padding: rem-calc(10),
-						$icon-background: $snow,
-						$icon-color: $primary-color,
-						$icon-border-color: $gainsboro
+						$icon-background: $publication-primary-color,
+						$icon-color: $white,
+						$icon-border-color: transparent
 					);
 
 					&.facebook:before {
@@ -450,6 +500,11 @@
 
 						a {
 							@include inline-icon($icon: $fa-var-folder-o, $color: $monsoon);
+							color: $publication-primary-color;
+
+							&:hover {
+								color: darken($publication-primary-color, 10%);
+							}
 						}
 
 						strong {
@@ -480,6 +535,11 @@
 
 					a {
 						text-transform: none;
+						color: $publication-primary-color;
+
+						&:hover {
+							color: darken($publication-primary-color, 10%);
+						}
 					}
 
 					.prev,

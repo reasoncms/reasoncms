@@ -3,13 +3,15 @@
 
 .classifiedSubmitLink {
 	a {
-		@include button();
+		@include button($bg: $classified-primary-color);
 		@include inline-icon($icon: $fa-var-plus);
 	}
 }
 
 .classifiedReturnToListingLink {
 	a {
-		@include back-link();
+		@include back-link($back-link-bg: $classified-primary-color);
 	}
 }
+
+// Classified tables and pagination lack unique styling hooks. They inherit link colors from less sepecific sources.

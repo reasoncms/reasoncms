@@ -108,6 +108,7 @@
 
 					a {
 						@include inline-icon($icon: $fa-var-folder-o, $color: $monsoon);
+						color: inherit;
 					}
 
 					strong {

@@ -27,7 +27,7 @@
 						margin: 0;
 						padding: rem-calc(8) $column-gutter/3 0;
 						line-height: 1.2;
-						color: white;
+						color: $white;
 					}
 				}
 
@@ -53,7 +53,6 @@
 					background: $jet;
 					font-size: rem-calc(14);
 					border-top: 1px solid rgba(white, .1);
-
 
 					.play-pause {
 						//background: //;
@@ -92,8 +91,9 @@
 							border-right: 1px solid rgba(white, .1);
 							display: block;
 							float: left;
-							padding: 0 10px;
+							padding: rem-calc(4) rem-calc(10);
 							color: rgba(white, .7);
+							line-height: 1;
 
 							&:hover {
 								background: $oil;
@@ -101,7 +101,7 @@
 							}
 
 							&.current {
-								background: $primary-color;	
+								background: $feature-primary-color;	
 							}
 						}
 
@@ -117,10 +117,6 @@
 
 							span {
 								@include screenreader();
-							}
-
-							&.prev {
-							
 							}
 						}
 					} 

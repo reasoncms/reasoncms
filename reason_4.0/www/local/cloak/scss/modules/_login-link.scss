@@ -14,12 +14,16 @@
 	.inlineEditLink {
 		@include button(
 			$padding: $button-tny,
-			$bg: $primary-color,
-			$radius: $global-radius,
-			$full-width: false,
-			$disabled: false
+			$bg: $login-link-primary-color,
+			$radius: $global-radius
 		);
+		border: 1px solid $login-link-primary-color;
 		margin: 0 rem-calc(4) $column-gutter/2;
+		font-weight: 400;
+
+		&:hover {
+			border: 1px solid darken($login-link-primary-color, 10%);
+		}
 	}
 
 	.inlineEditLink {
@@ -37,10 +41,13 @@
 		}
 
 		.inlineEditLink {
-			background: $warning-color;
+			background: transparent;
+			color: $login-link-primary-color;
 
 			&:hover {
-				background: darken($warning-color, 10%);
+				background: darken($login-link-primary-color, 10%);
+				border: 1px solid darken($login-link-primary-color, 10%);
+				color: $white;
 			}
 		}
 	}
@@ -49,16 +56,15 @@
 		font-size: rem-calc(14);
 
 		.login {
-			@include button($bg: transparent,$radius: $global-radius, $padding: $button-tny);
-			//background: none;
-			border: 1px solid $primary-color;
-			color: $primary-color;
+			@include button($bg: $login-link-primary-color, $radius: $global-radius, $padding: $button-tny);
+			border: 1px solid $login-link-primary-color;
+			color: $white;
 			margin-bottom: 0;
 			font-weight: 400;
 
 			&:hover {
-				background: $primary-color;
-				color: $white;
+				color: $login-link-primary-color;
+				background: $white;
 			}
 
 			&:after {
@@ -73,6 +79,8 @@
 		}
 
 		.logout {
+			color: $login-link-primary-color;
+			
 			&:after {
 				@extend .fa;
 				content: $fa-var-power-off;

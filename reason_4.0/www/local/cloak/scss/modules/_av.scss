@@ -6,7 +6,46 @@
 	// This margin, along with the bottom padding on each li, gives us the even margin we need to keep spacing uniform between page elements
 	margin-bottom: $horizontal-gutter/2;
 
+	a {
+		color: $av-primary-color;
+
+		&:hover {
+			color: darken($av-primary-color, 10%);
+		}
+	}
+
+	.persistent {
+		
+		#filtering {
+
+			.searchForm {
+				// Form styles included in _form.scss	
+				.submit,
+				input[type="submit"] {
+					background: $av-primary-color;
+					color: $white;
+
+					&:hover {
+						background: darken($av-primary-color, 10%);
+					}
+				}
+			}
+		}
+	}
+
 	.moduleNav {
+
+		// PAGINATION
+		// Colors set here. Everything else, see base/_common.scss
+		.pagination {
+
+			.pages {
+
+				strong {
+					background: $av-primary-color;
+				}
+			}	
+		}
 		
 		ul {
 			margin: 0 0 0 $column-gutter/2; // bump out the list to make room for icons
@@ -31,6 +70,12 @@
 				}
 			}
 		}
+
+		> p {
+			a {
+				@include back-link($back-link-bg: $av-primary-color);
+			}
+		}
 	}
 
 	// Subscribe to feed buttons
@@ -39,7 +84,7 @@
 		clear: both;
 
 		a {
-			@include feed-button();
+			@include feed-button($feed-button-bg: $av-primary-color);
 		}
 
 		.subscribe {
