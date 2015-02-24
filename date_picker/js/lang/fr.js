@@ -45,16 +45,13 @@ var fdLocale = {
                 "Nov",
                 "D\u00E9c"
                 ],
-        /* Only stipulate the firstDayOfWeek should the first day not be Monday           
-        firstDayOfWeek:1,        
-         */         
         titles:[
                 "Mois pr\u00E9cedent",
                 "Mois suivant",
                 "Ann\u00E9e pr\u00E9cedente",
                 "Ann\u00E9e suivante",
                 "Aujourd\u2019hui",
-                "Voir Calendrier",
+                "Ouvrir Calendrier",
                 "sm",
                 "Semaine [[%0%]]/[[%1%]]",
                 "Semaine",
@@ -62,7 +59,12 @@ var fdLocale = {
                 "Cliquez et d\u00E9placez",
                 "Montre \u201C[[%0%]]\u201D en premier",
                 "Aujourd\u2019hui",
-                "Date désactivé"
+                "Date désactivé : "
                 ]
 };
+try { 
+        if("datePickerController" in window) { 
+                datePickerController.loadLanguage(); 
+        }; 
+} catch(err) {}; 
  
