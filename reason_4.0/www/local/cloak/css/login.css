@@ -1,5 +1,5 @@
 meta.foundation-version {
-  font-family: "/5.5.0/"; }
+  font-family: "/5.5.1/"; }
 
 meta.foundation-mq-small {
   font-family: "/only screen/";
@@ -97,8 +97,7 @@ img {
   clear: both; }
 
 .hide {
-  display: none !important;
-  visibility: hidden; }
+  display: none; }
 
 .invisible {
   visibility: hidden; }
@@ -501,77 +500,6 @@ blockquote p {
 
   h6 {
     font-size: 1rem; } }
-/*
- * Print styles.
- *
- * Inlined to avoid required HTTP connection: www.phpied.com/delay-loading-your-print-css/
- * Credit to Paul Irish and HTML5 Boilerplate (html5boilerplate.com)
-*/
-.print-only {
-  display: none !important; }
-
-@media print {
-  * {
-    background: transparent !important;
-    color: #000000 !important;
-    /* Black prints faster: h5bp.com/s */
-    box-shadow: none !important;
-    text-shadow: none !important; }
-
-  a,
-  a:visited {
-    text-decoration: underline; }
-
-  a[href]:after {
-    content: " (" attr(href) ")"; }
-
-  abbr[title]:after {
-    content: " (" attr(title) ")"; }
-
-  .ir a:after,
-  a[href^="javascript:"]:after,
-  a[href^="#"]:after {
-    content: ""; }
-
-  pre,
-  blockquote {
-    border: 1px solid #999999;
-    page-break-inside: avoid; }
-
-  thead {
-    display: table-header-group;
-    /* h5bp.com/t */ }
-
-  tr,
-  img {
-    page-break-inside: avoid; }
-
-  img {
-    max-width: 100% !important; }
-
-  @page {
-    margin: 0.5cm; }
-  p,
-  h2,
-  h3 {
-    orphans: 3;
-    widows: 3; }
-
-  h2,
-  h3 {
-    page-break-after: avoid; }
-
-  .hide-on-print {
-    display: none !important; }
-
-  .print-only {
-    display: block !important; }
-
-  .hide-for-print {
-    display: none !important; }
-
-  .show-for-print {
-    display: inherit !important; } }
 @media only screen and (min-width: 30em) {
   .cloakLogin #wrapper {
     padding-top: 10%; } }
@@ -593,6 +521,10 @@ blockquote p {
       background: none; } }
   .cloakLogin #banner h1 {
     font-size: 1.25rem; }
+    .cloakLogin #banner h1 a {
+      color: #b84041; }
+      .cloakLogin #banner h1 a:hover {
+        color: #b84041; }
 .cloakLogin #meat {
   padding: 1.125rem 1.5rem 0 1.5rem;
   max-width: 25rem;
@@ -634,6 +566,7 @@ blockquote p {
       text-decoration: none;
       text-align: center;
       -webkit-appearance: none;
+      -moz-appearance: none;
       border-radius: 0;
       display: inline-block;
       padding-top: 0.75rem;
@@ -674,6 +607,7 @@ blockquote p {
     text-decoration: none;
     text-align: center;
     -webkit-appearance: none;
+    -moz-appearance: none;
     border-radius: 0;
     display: inline-block;
     padding-top: 0.75rem;
@@ -709,3 +643,7 @@ blockquote p {
         margin-bottom: 0;
         border: none;
         border-top: 1px solid #CCCCCC; } }
+  .cloakLogin #meat #login a {
+    color: #b84041; }
+    .cloakLogin #meat #login a:hover {
+      color: #923334; }

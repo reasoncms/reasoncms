@@ -1204,17 +1204,17 @@ blockquote p {
   h6 {
     font-size: 1rem; } }
 .fa, #banner #navigationToggles li.navJump a:before, #banner #navigationToggles li.searchToggle a:before, .persistent #filtering .searchForm a:before, .persistent #filtering .filterSet a:before, .persistent #filtering .filters ul li a:before, .persistent #filtering .filters ul li strong:before, .persistent .loginlogout a:after, .moduleNav .feedLink .feedInfo a:before, #generic .back a:before, .reveal-modal .close-reveal-modal:before,
-dialog .close-reveal-modal:before, .assets li:before, #av .moduleNav ul li:before, #av .podcast a:before, .classifiedSubmitLink a:before, .classifiedReturnToListingLink a:before, #pageContent blockquote > *:first-child:not(cite):before, .fullPost .text blockquote > *:first-child:not(cite):before, .comments .commentContent blockquote > *:first-child:not(cite):before, .eventContent blockquote > *:first-child:not(cite):before, .blurb blockquote > *:first-child:not(cite):before, #faq .answer blockquote > *:first-child:not(cite):before, .facStaffContent blockquote > *:first-child:not(cite):before, .minutesContent blockquote > *:first-child:not(cite):before, .policyContent blockquote > *:first-child:not(cite):before, .policy .approvals blockquote > *:first-child:not(cite):before, #calendar .responsiveEventsList .gridAndOptionsWrapper .options .categories li a:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .options .categories li strong:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .options .audiences li a:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .options .audiences li strong:before, #calendar .responsiveEventsList .iCalExport a:before,
+dialog .close-reveal-modal:before, .assets li:before, #av .moduleNav ul li:before, #av .moduleNav > p a:before, #av .podcast a:before, .classifiedSubmitLink a:before, .classifiedReturnToListingLink a:before, #pageContent blockquote > *:first-child:not(cite):before, .fullPost .text blockquote > *:first-child:not(cite):before, .comments .commentContent blockquote > *:first-child:not(cite):before, .eventContent blockquote > *:first-child:not(cite):before, .blurb blockquote > *:first-child:not(cite):before, #faq .answer blockquote > *:first-child:not(cite):before, .facStaffContent blockquote > *:first-child:not(cite):before, .minutesContent blockquote > *:first-child:not(cite):before, .policyContent blockquote > *:first-child:not(cite):before, .policy .approvals blockquote > *:first-child:not(cite):before, #calendar .responsiveEventsList .gridAndOptionsWrapper .options .categories li a:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .options .categories li strong:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .options .audiences li a:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .options .audiences li strong:before, #calendar .responsiveEventsList .iCalExport a:before,
 #calendar .responsiveEventsList .feedInfo a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .repetition:before, #calendar .eventDetails .date:before,
 #calendar .eventDetails .time:before,
 #calendar .eventDetails .duration:before,
 #calendar .eventDetails .eventLocation:before,
 #calendar .eventDetails .sponsor:before,
-#calendar .eventDetails .contact:before, #calendar .eventDetails .dates li:before, #calendar .eventDetails #slotInfo > ul .administer a:before, #miniCal .foot .more a:after, #facultyStaff .facStaff .facStaffInfo .facStaffPhone:before, #facultyStaff .facStaff .facStaffInfo .facStaffEmail:before, .featuresModule .feature .featureContent .featureInfo .featureNav .play-pause .button.play:before, .featuresModule .feature .featureContent .featureInfo .featureNav .play-pause .button.pause:before, .featuresModule .feature .featureContent .featureInfo .featureNav .navBlock .button.prev:before, .featuresModule .feature .featureContent .featureInfo .featureNav .navBlock .button.next:before, #discoErrorNotice h3:before, form #formAdminControlBox p a:before,
+#calendar .eventDetails .contact:before, #calendar .eventDetails .dates li:before, #calendar .eventDetails #slotInfo > ul .administer a:before, #miniCal .foot .more a:after, #facultyStaff .facStaff .facStaffInfo .facStaffPhone:before, #facultyStaff .facStaff .facStaffInfo .facStaffEmail:before, #faq .moduleNav > p a:before, #faq .feedLink .feedInfo a:before, .featuresModule .feature .featureContent .featureInfo .featureNav .play-pause .button.play:before, .featuresModule .feature .featureContent .featureInfo .featureNav .play-pause .button.pause:before, .featuresModule .feature .featureContent .featureInfo .featureNav .navBlock .button.prev:before, .featuresModule .feature .featureContent .featureInfo .featureNav .navBlock .button.next:before, #discoErrorNotice h3:before, form #formAdminControlBox p a:before,
 #form #formAdminControlBox p a:before,
 #form #discoLinear #formAdminControlBox p a:before, #imageGallery .item .prevWrapper a:after,
-#imageGallery .item .nextWrapper a:after, #imageGallery .back:before, .editable .edit a:before,
-.editable .editThis:before, .editable.editing .note:before, .loginLinkModule #footerLoginLink .login:after, .loginLinkModule #footerLoginLink .logout:after, .minutesList li:before, #minisiteNavigation ul .navList .jump a:after, #policyModule .rootPolicyList .rootPolicyItem:before, #policyModule .listLink a:before, #relatedPub .moduleNav .pubLinks li a:after, #meat .publication .back div a:before, #meat .publication .persistent .loginlogout a:after, #meat .publication .moduleNav .filterMessage h3 .clear a:before, #meat .publication .moduleNav .issueMenu .allIssuesLink a:after, #meat .publication .moduleNav .posts .post .links li.more a:before, #meat .publication .moduleNav .posts .post .links li.permalink a:before, #meat .publication .moduleNav .posts .post .links li.comments a:before, #meat .publication .moduleNav a[href="?"]:before, #meat .publication .moduleNav .feedLink a:before, #meat .publication .moduleNav .feedLink .feedInfo a:before, #meat .publication.fullPostDisplay .social p a:before, #meat .publication.fullPostDisplay .fullPost .firstChunk .commentAdded h4:before, #meat .publication.fullPostDisplay .fullPost .relatedItems .relatedEvents ul li:before, #meat .publication.fullPostDisplay .fullPost .relatedItems .categories li a:before, #meat .publication.fullPostDisplay .fullPost .relatedItems .categories li strong:before, #meat .publication.fullPostDisplay .fullPost .secondChunk .nextPrev .prev a:before, #meat .publication.fullPostDisplay .fullPost .secondChunk .nextPrev .next a:after, #meat .publication.fullPostDisplay .fullPost .secondChunk .addCommentForm .commentsOff:before, #meat .publication.fullPostDisplay .fullPost .secondChunk .addCommentForm .notPermitted .subContent:before, #meat .publication.fullPostDisplay .fullPost .secondChunk .addCommentForm .loginRequired .subContent:before, #cloakHeader #globalNavigationToggles .globalNavToggle a:before, #cloakHeader #globalNavigationToggles .globalNavToggle a.open:before, #cloakHeader #globalNavigationToggles .utilityNavToggle a:before, #cloakHeader #globalNavigationToggles .utilityNavToggle a.open:before {
+#imageGallery .item .nextWrapper a:after, #imageGallery .back a:before, .editable .edit a:before,
+.editable .editThis:before, .editable.editing .note:before, .loginLinkModule #footerLoginLink .login:after, .loginLinkModule #footerLoginLink .logout:after, #generic .minutesList li:before, #minisiteNavigation ul .navList .jump a:after, #policyModule .rootPolicyList .rootPolicyItem:before, #policyModule .listLink a:before, #relatedPub .moduleNav .pubLinks li a:after, #meat .publication .back div a:before, #meat .publication .persistent .loginlogout a:after, #meat .publication .moduleNav .filterMessage h3 .clear a:before, #meat .publication .moduleNav .issueMenu .allIssuesLink a:after, #meat .publication .moduleNav .posts .post .links li.more a:before, #meat .publication .moduleNav .posts .post .links li.permalink a:before, #meat .publication .moduleNav .posts .post .links li.comments a:before, #meat .publication .moduleNav a[href="?"]:before, #meat .publication .moduleNav .feedLink a:before, #meat .publication .moduleNav .feedLink .feedInfo a:before, #meat .publication.fullPostDisplay .social p a:before, #meat .publication.fullPostDisplay .fullPost .firstChunk .commentAdded h4:before, #meat .publication.fullPostDisplay .fullPost .relatedItems .relatedEvents ul li:before, #meat .publication.fullPostDisplay .fullPost .relatedItems .categories li a:before, #meat .publication.fullPostDisplay .fullPost .relatedItems .categories li strong:before, #meat .publication.fullPostDisplay .fullPost .secondChunk .nextPrev .prev a:before, #meat .publication.fullPostDisplay .fullPost .secondChunk .nextPrev .next a:after, #meat .publication.fullPostDisplay .fullPost .secondChunk .addCommentForm .commentsOff:before, #meat .publication.fullPostDisplay .fullPost .secondChunk .addCommentForm .notPermitted .subContent:before, #meat .publication.fullPostDisplay .fullPost .secondChunk .addCommentForm .loginRequired .subContent:before, #cloakHeader #globalNavigationToggles .globalNavToggle a:before, #cloakHeader #globalNavigationToggles .globalNavToggle a.open:before, #cloakHeader #globalNavigationToggles .utilityNavToggle a:before, #cloakHeader #globalNavigationToggles .utilityNavToggle a.open:before {
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -1629,10 +1629,12 @@ dialog .close-reveal-modal:before, .assets li:before, #av .moduleNav ul li:befor
           display: inline-block;
           margin-right: 0.5rem;
           white-space: pre; }
-          .persistent #filtering .filters ul li a:before {
-            content: "";
-            margin-right: 0.375rem;
-            color: #777777; }
+          .persistent #filtering .filters ul li a {
+            color: inherit; }
+            .persistent #filtering .filters ul li a:before {
+              content: "";
+              margin-right: 0.375rem;
+              color: #777777; }
           .persistent #filtering .filters ul li strong:before {
             content: "";
             margin-right: 0.375rem;
@@ -1809,7 +1811,8 @@ dialog .close-reveal-modal span {
     color: #FFFFFF;
     background-color: #b84041; }
     #atoz > p a:hover {
-      background-color: #6c2626; }
+      background-color: #6c2626;
+      text-decoration: none; }
 #atoz ul {
   margin-left: 0;
   list-style-type: none; }
@@ -1833,6 +1836,11 @@ dialog .close-reveal-modal span {
           #atoz ul li a[name]:before {
             margin-top: -12rem;
             height: 12rem; } }
+    #atoz ul li a {
+      color: #b84041; }
+      #atoz ul li a:hover {
+        color: #6c2626;
+        text-decoration: underline; }
     #atoz ul li .letter {
       margin-bottom: 0.1875rem;
       text-align: center;
@@ -1865,8 +1873,8 @@ dialog .close-reveal-modal span {
   border-color: #bebebe;
   color: #4f4f4f;
   border-radius: 6px;
-  border-radius: 0;
-  margin-bottom: 0; }
+  border-radius: 0 !important;
+  margin: 0; }
   #announcements .announcement:before {
     border-color: #bebebe; }
   #announcements .announcement a {
@@ -1876,6 +1884,106 @@ dialog .close-reveal-modal span {
   #announcements .announcement *:last-child {
     margin-bottom: 0;
     padding-bottom: 0; }
+  #announcements .announcement .success {
+    border-style: solid;
+    border-width: 0.0625rem;
+    display: block;
+    font-weight: 300;
+    margin-bottom: 1.25rem;
+    position: relative;
+    padding: 0.875rem 0.875rem 0.875rem 0.875rem;
+    font-size: 0.8125rem;
+    transition: opacity 300ms ease-out;
+    background-color: #43AC6A;
+    border-color: #3a945b;
+    color: #FFFFFF;
+    border-radius: 6px;
+    margin: -0.875rem;
+    border-radius: 0 !important; }
+    #announcements .announcement .success:before {
+      border-color: #3a945b; }
+    #announcements .announcement .success a {
+      text-decoration: underline;
+      font-weight: 700;
+      color: inherit; }
+    #announcements .announcement .success *:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0; }
+  #announcements .announcement .info {
+    border-style: solid;
+    border-width: 0.0625rem;
+    display: block;
+    font-weight: 300;
+    margin-bottom: 1.25rem;
+    position: relative;
+    padding: 0.875rem 0.875rem 0.875rem 0.875rem;
+    font-size: 0.8125rem;
+    transition: opacity 300ms ease-out;
+    background-color: #a0d3e8;
+    border-color: #74bfdd;
+    color: #4f4f4f;
+    border-radius: 6px;
+    margin: -0.875rem;
+    border-radius: 0 !important; }
+    #announcements .announcement .info:before {
+      border-color: #74bfdd; }
+    #announcements .announcement .info a {
+      text-decoration: underline;
+      font-weight: 700;
+      color: inherit; }
+    #announcements .announcement .info *:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0; }
+  #announcements .announcement .warning {
+    border-style: solid;
+    border-width: 0.0625rem;
+    display: block;
+    font-weight: 300;
+    margin-bottom: 1.25rem;
+    position: relative;
+    padding: 0.875rem 0.875rem 0.875rem 0.875rem;
+    font-size: 0.8125rem;
+    transition: opacity 300ms ease-out;
+    background-color: #f08a24;
+    border-color: #de770f;
+    color: #FFFFFF;
+    border-radius: 6px;
+    margin: -0.875rem;
+    border-radius: 0 !important; }
+    #announcements .announcement .warning:before {
+      border-color: #de770f; }
+    #announcements .announcement .warning a {
+      text-decoration: underline;
+      font-weight: 700;
+      color: inherit; }
+    #announcements .announcement .warning *:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0; }
+  #announcements .announcement .alert {
+    border-style: solid;
+    border-width: 0.0625rem;
+    display: block;
+    font-weight: 300;
+    margin-bottom: 1.25rem;
+    position: relative;
+    padding: 0.875rem 0.875rem 0.875rem 0.875rem;
+    font-size: 0.8125rem;
+    transition: opacity 300ms ease-out;
+    background-color: #f04124;
+    border-color: #de2d0f;
+    color: #FFFFFF;
+    border-radius: 6px;
+    margin: -0.875rem;
+    border-radius: 0 !important; }
+    #announcements .announcement .alert:before {
+      border-color: #de2d0f; }
+    #announcements .announcement .alert a {
+      text-decoration: underline;
+      font-weight: 700;
+      color: inherit; }
+    #announcements .announcement .alert *:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0; }
 
 .assets {
   margin-bottom: 1.125rem; }
@@ -1896,6 +2004,10 @@ dialog .close-reveal-modal span {
       content: ""; }
     .assets li.pdf:before {
       content: ""; }
+  .assets a {
+    color: #2ea7a0; }
+    .assets a:hover {
+      color: #237f7a; }
   .assets .name {
     font-size: 0.8125rem;
     color: #888888;
@@ -1917,6 +2029,19 @@ dialog .close-reveal-modal span {
     display: table; }
   #av:after {
     clear: both; }
+  #av a {
+    color: #2ea7a0; }
+    #av a:hover {
+      color: #237f7a; }
+  #av .persistent #filtering .searchForm .submit,
+  #av .persistent #filtering .searchForm input[type="submit"] {
+    background: #2ea7a0;
+    color: #FFFFFF; }
+    #av .persistent #filtering .searchForm .submit:hover,
+    #av .persistent #filtering .searchForm input[type="submit"]:hover {
+      background: #237f7a; }
+  #av .moduleNav .pagination .pages strong {
+    background: #2ea7a0; }
   #av .moduleNav ul {
     margin: 0 0 0 1.5rem;
     list-style-type: none; }
@@ -1932,6 +2057,39 @@ dialog .close-reveal-modal span {
       #av .moduleNav ul li .date {
         font-size: 0.875rem;
         color: #888888; }
+  #av .moduleNav > p a {
+    border-style: solid;
+    border-width: 0;
+    cursor: pointer;
+    font-family: "Open Sans", sans-serif;
+    font-weight: 300;
+    line-height: normal;
+    margin: 0 0 1.25rem;
+    position: relative;
+    text-decoration: none;
+    text-align: center;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    border-radius: 0;
+    display: inline-block;
+    padding-top: 0.25rem;
+    padding-right: 0.5rem;
+    padding-bottom: 0.3125rem;
+    padding-left: 0.5rem;
+    font-size: 0.6875rem;
+    background-color: #2ea7a0;
+    border-color: #258680;
+    color: #FFFFFF;
+    border-radius: 3px;
+    transition: background-color 300ms ease-out; }
+    #av .moduleNav > p a:hover, #av .moduleNav > p a:focus {
+      background-color: #258680; }
+    #av .moduleNav > p a:hover, #av .moduleNav > p a:focus {
+      color: #FFFFFF; }
+    #av .moduleNav > p a:before {
+      content: "";
+      margin-right: 0.375rem;
+      color: inherit; }
   #av .podcast {
     margin: 0 0 1.125rem;
     clear: both; }
@@ -1955,14 +2113,14 @@ dialog .close-reveal-modal span {
       padding-bottom: 0.3125rem;
       padding-left: 0.5rem;
       font-size: 0.6875rem;
-      background-color: #b84041;
-      border-color: #933334;
+      background-color: #2ea7a0;
+      border-color: #258680;
       color: #FFFFFF;
       border-radius: 3px;
       transition: background-color 300ms ease-out;
       margin: 0 0.75rem 0.125rem 0 !important; }
       #av .podcast a:hover, #av .podcast a:focus {
-        background-color: #933334; }
+        background-color: #258680; }
       #av .podcast a:hover, #av .podcast a:focus {
         color: #FFFFFF; }
       #av .podcast a:before {
@@ -2030,6 +2188,12 @@ dialog .close-reveal-modal span {
     .blurb > *:last-child *:last-child,
     .issueBlurb > *:last-child *:last-child {
       margin-bottom: 0; }
+  .blurb a,
+  .issueBlurb a {
+    color: #b84041 !important; }
+    .blurb a:hover,
+    .issueBlurb a:hover {
+      color: #923334; }
 
 .locationBarText {
   font-size: 0.875rem; }
@@ -2077,8 +2241,13 @@ dialog .close-reveal-modal span {
 
 #childrenAndGrandchildren .childrenList > li > h3,
 #childrenAndGrandchildren .childrenList > li > h4 {
-  background: #999999;
-  margin: 0 0 0.75rem; }
+  margin: 0 0 0.75rem;
+  border-bottom: 1px solid #DDDDDD;
+  background: #EEEEEE; }
+#childrenAndGrandchildren .childrenList > li a {
+  color: #b84041; }
+  #childrenAndGrandchildren .childrenList > li a:hover {
+    color: dakren(#b84041, 10%); }
 #childrenAndGrandchildren .childrenList > li > .childDesc {
   padding: 0 1rem 0.75rem; }
 #childrenAndGrandchildren .childrenList > li ul {
@@ -2541,6 +2710,13 @@ h2.pageTitle {
       display: table-cell;
       line-height: 1.125rem; }
 
+#calendar a,
+#miniCal a {
+  color: #2ea7a0; }
+  #calendar a:hover,
+  #miniCal a:hover {
+    color: #237f7a; }
+
 /* Events Column Layouts */
 @media all and (max-width: 720px) {
   #calendar .responsiveEventsList .eventsListContent,
@@ -2629,7 +2805,7 @@ h2.pageTitle {
         #calendar .responsiveEventsList .views ul li strong {
           text-decoration: none;
           font-weight: 400;
-          background: #b84041;
+          background: #2ea7a0;
           color: #FFF; }
         #calendar .responsiveEventsList .views ul li:first-child a, #calendar .responsiveEventsList .views ul li:first-child strong {
           border-radius: 1000px 0 0 1000px;
@@ -2651,11 +2827,11 @@ h2.pageTitle {
     #calendar .responsiveEventsList .nav .next {
       padding: 0.5rem 0.875rem;
       display: inline-block;
-      background: #b84041;
+      background: #2ea7a0;
       color: #FFFFFF; }
       #calendar .responsiveEventsList .nav .previous:hover,
       #calendar .responsiveEventsList .nav .next:hover {
-        background: #c25050; }
+        background: #34bbb3; }
     #calendar .responsiveEventsList .nav .previous {
       float: left; }
     #calendar .responsiveEventsList .nav .next {
@@ -2742,13 +2918,13 @@ h2.pageTitle {
             #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.currentlyViewing a {
               color: #555555; }
           #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.today {
-            background: #b84041; }
+            background: #2ea7a0; }
             #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.today a {
               color: #FFF;
               font-weight: 700; }
           #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.hasEvent a {
             font-weight: 700;
-            color: #b84041; }
+            color: #2ea7a0; }
           #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td a {
             color: #aeaeae;
             display: block;
@@ -2776,10 +2952,38 @@ h2.pageTitle {
             padding-right: 0.4375rem;
             margin-bottom: 0.5rem; } }
       #calendar .responsiveEventsList .gridAndOptionsWrapper .dateJump input[type="submit"] {
-        padding: 0;
+        border-style: solid;
+        border-width: 0;
+        cursor: pointer;
+        font-family: "Open Sans", sans-serif;
+        font-weight: 300;
+        line-height: normal;
+        margin: 0 0 1.25rem;
+        position: relative;
+        text-decoration: none;
+        text-align: center;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        border-radius: 0;
+        display: inline-block;
+        padding-top: 0.75rem;
+        padding-right: 1.5rem;
+        padding-bottom: 0.8125rem;
+        padding-left: 1.5rem;
+        font-size: 1rem;
+        background-color: #2ea7a0;
+        border-color: #258680;
+        color: #FFFFFF;
+        border-radius: 3px;
+        transition: background-color 300ms ease-out;
         float: right;
         width: 20%;
+        padding: 0;
         margin: 0; }
+        #calendar .responsiveEventsList .gridAndOptionsWrapper .dateJump input[type="submit"]:hover, #calendar .responsiveEventsList .gridAndOptionsWrapper .dateJump input[type="submit"]:focus {
+          background-color: #258680; }
+        #calendar .responsiveEventsList .gridAndOptionsWrapper .dateJump input[type="submit"]:hover, #calendar .responsiveEventsList .gridAndOptionsWrapper .dateJump input[type="submit"]:focus {
+          color: #FFFFFF; }
         @media only screen and (min-width: 720px) and (max-width: 77.4375em) {
           #calendar .responsiveEventsList .gridAndOptionsWrapper .dateJump input[type="submit"] {
             float: none;
@@ -2828,14 +3032,14 @@ h2.pageTitle {
         text-align: center;
         padding: 0.5rem;
         height: 2.3125rem;
-        background: #b84041;
+        background: #2ea7a0;
         color: #FFFFFF;
         width: 20%;
         float: left;
         border-radius: 0 3px 3px 0;
         margin-bottom: 0; }
         #calendar .responsiveEventsList .gridAndOptionsWrapper .search input[type="submit"]:hover {
-          background: #923334;
+          background: #237f7a;
           cursor: pointer; }
     #calendar .responsiveEventsList .gridAndOptionsWrapper .options .categories li {
       list-style-type: none; }
@@ -2884,8 +3088,8 @@ h2.pageTitle {
       padding-bottom: 0.3125rem;
       padding-left: 0.5rem;
       font-size: 0.6875rem;
-      background-color: #b84041;
-      border-color: #933334;
+      background-color: #2ea7a0;
+      border-color: #258680;
       color: #FFFFFF;
       border-radius: 3px;
       transition: background-color 300ms ease-out;
@@ -2893,7 +3097,7 @@ h2.pageTitle {
       #calendar .responsiveEventsList .iCalExport a:hover, #calendar .responsiveEventsList .iCalExport a:focus,
       #calendar .responsiveEventsList .feedInfo a:hover,
       #calendar .responsiveEventsList .feedInfo a:focus {
-        background-color: #933334; }
+        background-color: #258680; }
       #calendar .responsiveEventsList .iCalExport a:hover, #calendar .responsiveEventsList .iCalExport a:focus,
       #calendar .responsiveEventsList .feedInfo a:hover,
       #calendar .responsiveEventsList .feedInfo a:focus {
@@ -3166,10 +3370,10 @@ h2.pageTitle {
     top: -9999px;
     margin-bottom: 0; }
   #miniCal h4.day .monthSpan {
-    background: #b84041; }
+    background: #2ea7a0; }
   #miniCal h4.day .numberSpan {
     background: #EEEEEE;
-    color: #b84041; }
+    color: #2ea7a0; }
 #miniCal .dayEvents,
 #miniCal .ongoingEvents {
   margin: 0;
@@ -3220,21 +3424,20 @@ h2.pageTitle {
       -moz-appearance: none;
       border-radius: 0;
       display: inline-block;
-      padding-top: 0.25rem;
-      padding-right: 0.5rem;
-      padding-bottom: 0.3125rem;
-      padding-left: 0.5rem;
-      font-size: 0.6875rem;
-      background-color: transparent;
-      border-color: transparent;
+      padding-top: 0.5rem;
+      padding-right: 1rem;
+      padding-bottom: 0.5625rem;
+      padding-left: 1rem;
+      font-size: 0.8125rem;
+      background-color: #2ea7a0;
+      border-color: #258680;
       color: #FFFFFF;
-      border-radius: 3px;
       transition: background-color 300ms ease-out;
-      border: 1px solid #b84041;
-      color: #b84041;
-      font-weight: 400; }
+      color: #FFFFFF;
+      font-weight: 400;
+      text-align: left; }
       #miniCal .foot .more a:hover, #miniCal .foot .more a:focus {
-        background-color: transparent; }
+        background-color: #258680; }
       #miniCal .foot .more a:hover, #miniCal .foot .more a:focus {
         color: #FFFFFF; }
       #miniCal .foot .more a:after {
@@ -3247,6 +3450,10 @@ h2.pageTitle {
   display: table; }
 #facultyStaff:after {
   clear: both; }
+#facultyStaff a {
+  color: #b84041; }
+  #facultyStaff a:hover {
+    color: #6c2626; }
 #facultyStaff .facStaff {
   border-bottom: 1px solid #DDDDDD;
   margin-bottom: 2.25rem; }
@@ -3284,6 +3491,17 @@ h2.pageTitle {
     display: table; }
   #faq:after {
     clear: both; }
+  #faq a {
+    color: #b84041; }
+    #faq a:hover {
+      color: #6c2626; }
+  #faq .persistent #filtering .searchForm .submit,
+  #faq .persistent #filtering .searchForm input[type="submit"] {
+    background: #b84041;
+    color: #FFFFFF; }
+    #faq .persistent #filtering .searchForm .submit:hover,
+    #faq .persistent #filtering .searchForm input[type="submit"]:hover {
+      background: #923334; }
   #faq .moduleNav ul {
     margin: 0 0 1.125rem 1.5rem; }
     #faq .moduleNav ul:before, #faq .moduleNav ul:after {
@@ -3294,6 +3512,73 @@ h2.pageTitle {
     #faq .moduleNav ul li {
       list-style-type: decimal;
       margin-bottom: 1.125rem; }
+  #faq .moduleNav > p a {
+    border-style: solid;
+    border-width: 0;
+    cursor: pointer;
+    font-family: "Open Sans", sans-serif;
+    font-weight: 300;
+    line-height: normal;
+    margin: 0 0 1.25rem;
+    position: relative;
+    text-decoration: none;
+    text-align: center;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    border-radius: 0;
+    display: inline-block;
+    padding-top: 0.25rem;
+    padding-right: 0.5rem;
+    padding-bottom: 0.3125rem;
+    padding-left: 0.5rem;
+    font-size: 0.6875rem;
+    background-color: #b84041;
+    border-color: #933334;
+    color: #FFFFFF;
+    border-radius: 3px;
+    transition: background-color 300ms ease-out; }
+    #faq .moduleNav > p a:hover, #faq .moduleNav > p a:focus {
+      background-color: #933334; }
+    #faq .moduleNav > p a:hover, #faq .moduleNav > p a:focus {
+      color: #FFFFFF; }
+    #faq .moduleNav > p a:before {
+      content: "";
+      margin-right: 0.375rem;
+      color: inherit; }
+  #faq .feedLink .feedInfo a {
+    border-style: solid;
+    border-width: 0;
+    cursor: pointer;
+    font-family: "Open Sans", sans-serif;
+    font-weight: 300;
+    line-height: normal;
+    margin: 0 0 1.25rem;
+    position: relative;
+    text-decoration: none;
+    text-align: center;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    border-radius: 0;
+    display: inline-block;
+    padding-top: 0.25rem;
+    padding-right: 0.5rem;
+    padding-bottom: 0.3125rem;
+    padding-left: 0.5rem;
+    font-size: 0.6875rem;
+    background-color: #b84041;
+    border-color: #933334;
+    color: #FFFFFF;
+    border-radius: 3px;
+    transition: background-color 300ms ease-out;
+    margin: 0 0.75rem 0.125rem 0 !important; }
+    #faq .feedLink .feedInfo a:hover, #faq .feedLink .feedInfo a:focus {
+      background-color: #933334; }
+    #faq .feedLink .feedInfo a:hover, #faq .feedLink .feedInfo a:focus {
+      color: #FFFFFF; }
+    #faq .feedLink .feedInfo a:before {
+      content: "";
+      margin-right: 0.375rem;
+      color: inherit; }
 
 .featuresModule .features {
   margin-bottom: 2.25rem; }
@@ -3307,7 +3592,7 @@ h2.pageTitle {
       margin: 0;
       padding: 0.5rem 1rem 0;
       line-height: 1.2;
-      color: white; }
+      color: #FFFFFF; }
   .featuresModule .feature .featureContent .featureInfo .featureText a.dest,
   .featuresModule .feature .featureContent .featureInfo .featureText a.anchor,
   .featuresModule .feature .featureContent .featureInfo .featureText span.noLink {
@@ -3355,8 +3640,9 @@ h2.pageTitle {
       border-right: 1px solid rgba(255, 255, 255, 0.1);
       display: block;
       float: left;
-      padding: 0 10px;
-      color: rgba(255, 255, 255, 0.7); }
+      padding: 0.25rem 0.625rem;
+      color: rgba(255, 255, 255, 0.7);
+      line-height: 1; }
       .featuresModule .feature .featureContent .featureInfo .featureNav .navBlock .navItem:hover,
       .featuresModule .feature .featureContent .featureInfo .featureNav .navBlock .button:hover {
         background: #333333;
@@ -3421,7 +3707,7 @@ h2.pageTitle {
   background: #b84041;
   color: #FFFFFF;
   width: 100%;
-  border-radius: 3px; }
+  border-radius: 0 3px 3px 0; }
   @media only screen and (min-width: 40.063em) {
     .searchForm .searchSubmitLink {
       width: 20%;
@@ -3471,7 +3757,7 @@ h2.pageTitle {
   background: #b84041;
   color: #FFFFFF;
   width: 100%;
-  border-radius: 3px; }
+  border-radius: 0 3px 3px 0; }
   @media only screen and (min-width: 40.063em) {
     .globalSearchForm input.searchSubmitLink {
       width: 30%;
@@ -3555,8 +3841,6 @@ h2.pageTitle {
     text-align: center;
     padding: 0.5rem;
     height: 2.3125rem;
-    background: #b84041;
-    color: #FFFFFF;
     width: 20%;
     float: left;
     border-radius: 0 3px 3px 0;
@@ -3565,7 +3849,6 @@ h2.pageTitle {
     #filtering form input[type="submit"]:hover,
     #filtering .searchForm .submit:hover,
     #filtering .searchForm input[type="submit"]:hover {
-      background: #923334;
       cursor: pointer; }
 #filtering .relFilters {
   margin-bottom: 0 !important; }
@@ -4322,6 +4605,8 @@ form .submitSection,
   width: 100%;
   float: left;
   width: 100%; }
+  #imageGallery .moduleNav .pagination .pages strong {
+    background: #b84041; }
   #imageGallery .moduleNav #imageGalleryItemList {
     margin: 0;
     margin-left: -3rem; }
@@ -4334,6 +4619,11 @@ form .submitSection,
         border: 1px solid #DDDDDD; }
         #imageGallery .moduleNav #imageGalleryItemList li img:hover {
           border-color: #CCCCCC; }
+      #imageGallery .moduleNav #imageGalleryItemList li a {
+        color: #555555; }
+        #imageGallery .moduleNav #imageGalleryItemList li a:hover {
+          color: #222222;
+          text-decoration: underline; }
     #imageGallery .moduleNav #imageGalleryItemList #imageGalleryNextPageItem {
       position: absolute;
       left: -9999px;
@@ -4397,27 +4687,60 @@ form .submitSection,
     text-align: center; }
     #imageGallery .item .imageWrapper .mainImage {
       text-align: center; }
-#imageGallery .back {
-  margin-bottom: 2.25rem; }
-  #imageGallery .back:before {
+#imageGallery .back a {
+  border-style: solid;
+  border-width: 0;
+  cursor: pointer;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 300;
+  line-height: normal;
+  margin: 0 0 1.25rem;
+  position: relative;
+  text-decoration: none;
+  text-align: center;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  border-radius: 0;
+  display: inline-block;
+  padding-top: 0.25rem;
+  padding-right: 0.5rem;
+  padding-bottom: 0.3125rem;
+  padding-left: 0.5rem;
+  font-size: 0.6875rem;
+  background-color: #b84041;
+  border-color: #933334;
+  color: #FFFFFF;
+  border-radius: 3px;
+  transition: background-color 300ms ease-out; }
+  #imageGallery .back a:hover, #imageGallery .back a:focus {
+    background-color: #933334; }
+  #imageGallery .back a:hover, #imageGallery .back a:focus {
+    color: #FFFFFF; }
+  #imageGallery .back a:before {
+    content: "";
+    margin-right: 0.375rem;
+    color: inherit; }
+  #imageGallery .back a:before {
     content: "";
     margin-right: 0.375rem;
-    color: #b84041; }
+    color: inherit; }
 
 #images:before, #images:after {
   content: " ";
   display: table; }
 #images:after {
   clear: both; }
-#images ul {
+#images .moduleNav .pagination .pages strong {
+  background: #b84041; }
+#images .moduleNav ul {
   margin: 0; }
-  #images ul li {
+  #images .moduleNav ul li {
     list-style-type: none;
     margin-bottom: 2.25rem; }
-    #images ul li img {
+    #images .moduleNav ul li img {
       border: 1px solid #ccc;
       padding: 0.375rem; }
-    #images ul li .caption {
+    #images .moduleNav ul li .caption {
       font-style: italic;
       font-weight: 300;
       color: #999999;
@@ -4548,9 +4871,6 @@ form .submitSection,
         display: block;
         text-align: center;
         background: rgba(255, 255, 255, 0.25);
-        margin-top: -0.9375rem;
-        margin-left: -0.9375rem;
-        margin-right: -0.9375rem;
         margin-top: -0.875rem;
         margin-left: -0.875rem;
         margin-right: -0.875rem;
@@ -4602,7 +4922,9 @@ form .submitSection,
     color: #FFFFFF;
     border-radius: 3px;
     transition: background-color 300ms ease-out;
-    margin: 0 0.25rem 1.5rem; }
+    border: 1px solid #b84041;
+    margin: 0 0.25rem 1.5rem;
+    font-weight: 400; }
     .loginLinkModule .editLink:hover, .loginLinkModule .editLink:focus,
     .loginLinkModule .inlineEditLink:hover,
     .loginLinkModule .inlineEditLink:focus {
@@ -4611,6 +4933,9 @@ form .submitSection,
     .loginLinkModule .inlineEditLink:hover,
     .loginLinkModule .inlineEditLink:focus {
       color: #FFFFFF; }
+    .loginLinkModule .editLink:hover,
+    .loginLinkModule .inlineEditLink:hover {
+      border: 1px solid #923334; }
   .loginLinkModule .inlineEditLink {
     margin-left: 0.4375rem; }
   .loginLinkModule .editDivider {
@@ -4621,9 +4946,12 @@ form .submitSection,
     top: -9999px;
     margin-bottom: 0; }
   .loginLinkModule .inlineEnabled .inlineEditLink {
-    background: #f08a24; }
+    background: transparent;
+    color: #b84041; }
     .loginLinkModule .inlineEnabled .inlineEditLink:hover {
-      background: #d3700e; }
+      background: #923334;
+      border: 1px solid #923334;
+      color: #FFFFFF; }
   .loginLinkModule #footerLoginLink {
     font-size: 0.875rem; }
     .loginLinkModule #footerLoginLink .login {
@@ -4646,50 +4974,59 @@ form .submitSection,
       padding-bottom: 0.3125rem;
       padding-left: 0.5rem;
       font-size: 0.6875rem;
-      background-color: transparent;
-      border-color: transparent;
+      background-color: #b84041;
+      border-color: #933334;
       color: #FFFFFF;
       border-radius: 3px;
       transition: background-color 300ms ease-out;
       border: 1px solid #b84041;
-      color: #b84041;
+      color: #FFFFFF;
       margin-bottom: 0;
       font-weight: 400; }
       .loginLinkModule #footerLoginLink .login:hover, .loginLinkModule #footerLoginLink .login:focus {
-        background-color: transparent; }
+        background-color: #933334; }
       .loginLinkModule #footerLoginLink .login:hover, .loginLinkModule #footerLoginLink .login:focus {
         color: #FFFFFF; }
       .loginLinkModule #footerLoginLink .login:hover {
-        background: #b84041;
-        color: #FFFFFF; }
+        color: #b84041;
+        background: #FFFFFF; }
       .loginLinkModule #footerLoginLink .login:after {
         content: "";
         margin-left: 0.25rem; }
     .loginLinkModule #footerLoginLink .username {
       font-weight: 700; }
-    .loginLinkModule #footerLoginLink .logout:after {
-      content: "";
-      margin-left: 0.25rem; }
+    .loginLinkModule #footerLoginLink .logout {
+      color: #b84041; }
+      .loginLinkModule #footerLoginLink .logout:after {
+        content: "";
+        margin-left: 0.25rem; }
 
 #maintained a {
   text-decoration: underline;
-  font-weight: 400; }
+  font-weight: 400;
+  color: #b84041; }
+  #maintained a:hover {
+    color: #923334;
+    text-decoration: underline; }
 
-.minutesList {
+#generic .minutesList {
   margin: 0; }
-  .minutesList li {
+  #generic .minutesList li {
     list-style-type: none;
     font-weight: 700; }
-    .minutesList li:before {
+    #generic .minutesList li:before {
       content: "";
       margin-right: 0.375rem;
       color: inherit; }
-
-.minutesInfo {
+    #generic .minutesList li a {
+      color: #b84041; }
+      #generic .minutesList li a:hover {
+        color: #923334; }
+#generic .minutesInfo {
   margin: 0 0 1.125rem; }
-  .minutesInfo li {
+  #generic .minutesInfo li {
     list-style-type: none; }
-    .minutesInfo li em {
+    #generic .minutesInfo li em {
       font-style: normal;
       font-weight: 700; }
 
@@ -4788,6 +5125,10 @@ form .submitSection,
       content: "";
       margin-right: 0.375rem;
       color: inherit; }
+  #policyModule .rootPolicyList a {
+    color: #b84041; }
+    #policyModule .rootPolicyList a:hover {
+      color: #923334; }
 #policyModule .policy {
   border-bottom: 1px solid #DDDDDD;
   padding-bottom: 1.125rem;
@@ -4802,6 +5143,10 @@ form .submitSection,
     font-weight: 700; }
 #policyModule .proximatePolicies {
   padding-bottom: 2.25rem; }
+  #policyModule .proximatePolicies a {
+    color: #b84041; }
+    #policyModule .proximatePolicies a:hover {
+      color: #923334; }
 #policyModule .listLink a {
   border-style: solid;
   border-width: 0;
@@ -4841,6 +5186,10 @@ form .submitSection,
   display: table; }
 #relatedPub:after {
   clear: both; }
+#relatedPub a {
+  color: #2ea7a0; }
+  #relatedPub a:hover {
+    color: #237f7a; }
 #relatedPub .moduleNav .posts {
   margin: 0; }
   #relatedPub .moduleNav .posts .post {
@@ -4883,21 +5232,20 @@ form .submitSection,
       -moz-appearance: none;
       border-radius: 0;
       display: inline-block;
-      padding-top: 0.25rem;
-      padding-right: 0.5rem;
-      padding-bottom: 0.3125rem;
-      padding-left: 0.5rem;
-      font-size: 0.6875rem;
-      background-color: transparent;
-      border-color: transparent;
+      padding-top: 0.5rem;
+      padding-right: 1rem;
+      padding-bottom: 0.5625rem;
+      padding-left: 1rem;
+      font-size: 0.8125rem;
+      background-color: #2ea7a0;
+      border-color: #258680;
       color: #FFFFFF;
-      border-radius: 3px;
       transition: background-color 300ms ease-out;
-      border: 1px solid #b84041;
-      color: #b84041;
-      font-weight: 400; }
+      color: #FFFFFF;
+      font-weight: 400;
+      text-align: left; }
       #relatedPub .moduleNav .pubLinks li a:hover, #relatedPub .moduleNav .pubLinks li a:focus {
-        background-color: transparent; }
+        background-color: #258680; }
       #relatedPub .moduleNav .pubLinks li a:hover, #relatedPub .moduleNav .pubLinks li a:focus {
         color: #FFFFFF; }
       #relatedPub .moduleNav .pubLinks li a:after {
@@ -4931,13 +5279,13 @@ form .submitSection,
     padding-bottom: 0.3125rem;
     padding-left: 0.5rem;
     font-size: 0.6875rem;
-    background-color: #b84041;
-    border-color: #933334;
+    background-color: #2ea7a0;
+    border-color: #258680;
     color: #FFFFFF;
     border-radius: 3px;
     transition: background-color 300ms ease-out; }
     #meat .publication .back div a:hover, #meat .publication .back div a:focus {
-      background-color: #933334; }
+      background-color: #258680; }
     #meat .publication .back div a:hover, #meat .publication .back div a:focus {
       color: #FFFFFF; }
     #meat .publication .back div a:before {
@@ -4946,14 +5294,25 @@ form .submitSection,
       color: inherit; }
 #meat .publication .persistent {
   border: none; }
+  #meat .publication .persistent #filtering .searchForm .submit,
+  #meat .publication .persistent #filtering .searchForm input[type="submit"] {
+    background: #2ea7a0;
+    color: #FFFFFF; }
+    #meat .publication .persistent #filtering .searchForm .submit:hover,
+    #meat .publication .persistent #filtering .searchForm input[type="submit"]:hover {
+      background: #237f7a; }
   #meat .publication .persistent .loginlogout {
     margin: 0.5625rem 1.5rem 0 0;
     text-align: right;
     font-size: 0.875rem; }
-    #meat .publication .persistent .loginlogout a:after {
-      content: "";
-      margin-left: 0.375rem;
-      color: inherit; }
+    #meat .publication .persistent .loginlogout a {
+      color: #2ea7a0; }
+      #meat .publication .persistent .loginlogout a:after {
+        content: "";
+        margin-left: 0.375rem;
+        color: inherit; }
+#meat .publication .moduleNav .pagination .pages strong {
+  background: #2ea7a0; }
 #meat .publication .moduleNav .searchTitle {
   text-transform: uppercase;
   font-size: 0.9375rem;
@@ -4966,7 +5325,8 @@ form .submitSection,
     font-weight: 700; }
     #meat .publication .moduleNav .filterMessage h3 .clear a {
       padding: 0 0.25rem;
-      display: inline-block; }
+      display: inline-block;
+      color: #2ea7a0; }
       #meat .publication .moduleNav .filterMessage h3 .clear a:before {
         content: "";
         margin-right: 0.375rem;
@@ -5001,21 +5361,20 @@ form .submitSection,
     -moz-appearance: none;
     border-radius: 0;
     display: inline-block;
-    padding-top: 0.25rem;
-    padding-right: 0.5rem;
-    padding-bottom: 0.3125rem;
-    padding-left: 0.5rem;
-    font-size: 0.6875rem;
-    background-color: transparent;
-    border-color: transparent;
+    padding-top: 0.5rem;
+    padding-right: 1rem;
+    padding-bottom: 0.5625rem;
+    padding-left: 1rem;
+    font-size: 0.8125rem;
+    background-color: #2ea7a0;
+    border-color: #258680;
     color: #FFFFFF;
-    border-radius: 3px;
     transition: background-color 300ms ease-out;
-    border: 1px solid #b84041;
-    color: #b84041;
-    font-weight: 400; }
+    color: #FFFFFF;
+    font-weight: 400;
+    text-align: left; }
     #meat .publication .moduleNav .issueMenu .allIssuesLink a:hover, #meat .publication .moduleNav .issueMenu .allIssuesLink a:focus {
-      background-color: transparent; }
+      background-color: #258680; }
     #meat .publication .moduleNav .issueMenu .allIssuesLink a:hover, #meat .publication .moduleNav .issueMenu .allIssuesLink a:focus {
       color: #FFFFFF; }
     #meat .publication .moduleNav .issueMenu .allIssuesLink a:after {
@@ -5035,7 +5394,8 @@ form .submitSection,
       #meat .publication .moduleNav .sections .section .sectionFoot .viewEntireSection {
         font-size: 0.875rem; }
         #meat .publication .moduleNav .sections .section .sectionFoot .viewEntireSection a {
-          color: #b84041;
+          border: 1px solid #b84041;
+          color: #2ea7a0;
           font-weight: 700;
           text-decoration: underline;
           font-size: 0.875rem; }
@@ -5065,6 +5425,10 @@ form .submitSection,
       margin: 0;
       font-size: 1.5rem;
       font-weight: 400; }
+      #meat .publication .moduleNav .posts .post .title a {
+        color: #2ea7a0; }
+        #meat .publication .moduleNav .posts .post .title a:hover {
+          color: #237f7a; }
     #meat .publication .moduleNav .posts .post .date {
       margin: 0; }
     #meat .publication .moduleNav .posts .post .desc {
@@ -5076,6 +5440,10 @@ form .submitSection,
       #meat .publication .moduleNav .posts .post .links li {
         display: inline-block;
         margin-right: 0.75rem; }
+        #meat .publication .moduleNav .posts .post .links li a {
+          color: #2ea7a0; }
+          #meat .publication .moduleNav .posts .post .links li a:hover {
+            color: #237f7a; }
         #meat .publication .moduleNav .posts .post .links li.more a:before {
           content: "";
           margin-right: 0.375rem;
@@ -5108,13 +5476,13 @@ form .submitSection,
   padding-bottom: 0.3125rem;
   padding-left: 0.5rem;
   font-size: 0.6875rem;
-  background-color: #b84041;
-  border-color: #933334;
+  background-color: #2ea7a0;
+  border-color: #258680;
   color: #FFFFFF;
   border-radius: 3px;
   transition: background-color 300ms ease-out; }
   #meat .publication .moduleNav a[href="?"]:hover, #meat .publication .moduleNav a[href="?"]:focus {
-    background-color: #933334; }
+    background-color: #258680; }
   #meat .publication .moduleNav a[href="?"]:hover, #meat .publication .moduleNav a[href="?"]:focus {
     color: #FFFFFF; }
   #meat .publication .moduleNav a[href="?"]:before {
@@ -5143,14 +5511,14 @@ form .submitSection,
     padding-bottom: 0.3125rem;
     padding-left: 0.5rem;
     font-size: 0.6875rem;
-    background-color: #b84041;
-    border-color: #933334;
+    background-color: #2ea7a0;
+    border-color: #258680;
     color: #FFFFFF;
     border-radius: 3px;
     transition: background-color 300ms ease-out;
     margin: 0 0.75rem 0.125rem 0 !important; }
     #meat .publication .moduleNav .feedLink a:hover, #meat .publication .moduleNav .feedLink a:focus {
-      background-color: #933334; }
+      background-color: #258680; }
     #meat .publication .moduleNav .feedLink a:hover, #meat .publication .moduleNav .feedLink a:focus {
       color: #FFFFFF; }
     #meat .publication .moduleNav .feedLink a:before {
@@ -5193,9 +5561,9 @@ form .submitSection,
         padding: 0.625rem;
         line-height: 1 !important;
         border-radius: 1000px;
-        background: #F9F9F9;
-        border: 1px solid #DDDDDD;
-        color: #b84041;
+        background: #2ea7a0;
+        border: 1px solid transparent;
+        color: #FFFFFF;
         text-align: center; }
         #meat .publication.fullPostDisplay .social p a:before {
           content: "";
@@ -5203,9 +5571,9 @@ form .submitSection,
           width: 0.9375rem;
           display: block; }
         #meat .publication.fullPostDisplay .social p a:hover {
-          background: #e0e0e0; }
+          background: #237f7a; }
         #meat .publication.fullPostDisplay .social p a:active {
-          background: white; }
+          background: #34bbb3; }
         #meat .publication.fullPostDisplay .social p a span {
           position: absolute;
           left: -9999px;
@@ -5318,10 +5686,14 @@ form .submitSection,
         display: inline-block;
         margin: 0 0.5rem 1.125rem 0;
         white-space: pre; }
-        #meat .publication.fullPostDisplay .fullPost .relatedItems .categories li a:before {
-          content: "";
-          margin-right: 0.375rem;
-          color: #777777; }
+        #meat .publication.fullPostDisplay .fullPost .relatedItems .categories li a {
+          color: #2ea7a0; }
+          #meat .publication.fullPostDisplay .fullPost .relatedItems .categories li a:before {
+            content: "";
+            margin-right: 0.375rem;
+            color: #777777; }
+          #meat .publication.fullPostDisplay .fullPost .relatedItems .categories li a:hover {
+            color: #237f7a; }
         #meat .publication.fullPostDisplay .fullPost .relatedItems .categories li strong:before {
           content: "";
           margin-right: 0.375rem;
@@ -5343,7 +5715,10 @@ form .submitSection,
         #meat .publication.fullPostDisplay .fullPost .secondChunk .nextPrev p {
           margin: 0; }
         #meat .publication.fullPostDisplay .fullPost .secondChunk .nextPrev a {
-          text-transform: none; }
+          text-transform: none;
+          color: #2ea7a0; }
+          #meat .publication.fullPostDisplay .fullPost .secondChunk .nextPrev a:hover {
+            color: #237f7a; }
         #meat .publication.fullPostDisplay .fullPost .secondChunk .nextPrev .prev,
         #meat .publication.fullPostDisplay .fullPost .secondChunk .nextPrev .next {
           width: 100%;
@@ -5450,9 +5825,6 @@ form .submitSection,
           display: block;
           text-align: center;
           background: rgba(255, 255, 255, 0.25);
-          margin-top: -0.9375rem;
-          margin-left: -0.9375rem;
-          margin-right: -0.9375rem;
           margin-top: -0.875rem;
           margin-left: -0.875rem;
           margin-right: -0.875rem;
@@ -5496,9 +5868,6 @@ form .submitSection,
           display: block;
           text-align: center;
           background: rgba(255, 255, 255, 0.25);
-          margin-top: -0.9375rem;
-          margin-left: -0.9375rem;
-          margin-right: -0.9375rem;
           margin-top: -0.875rem;
           margin-left: -0.875rem;
           margin-right: -0.875rem;
@@ -5538,9 +5907,6 @@ form .submitSection,
           display: block;
           text-align: center;
           background: rgba(255, 255, 255, 0.25);
-          margin-top: -0.9375rem;
-          margin-left: -0.9375rem;
-          margin-right: -0.9375rem;
           margin-top: -0.875rem;
           margin-left: -0.875rem;
           margin-right: -0.875rem;

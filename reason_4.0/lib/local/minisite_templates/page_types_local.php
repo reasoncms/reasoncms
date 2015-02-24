@@ -1,7 +1,7 @@
 <?php
 
 $GLOBALS['_reason_page_types_local'] = array(
-	'cloak_home' => array(
+	'reason_college_home' => array(
 		'pre_bluebar' => '',
 		'main_head' => 'page_title',
 		'post_banner' => array(
