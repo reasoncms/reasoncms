@@ -133,7 +133,7 @@
 								@include inline-icon($pseudo: after, $icon: $fa-var-chevron-right);
 
 								&:after {
-									//background: green;
+									background: green;
 								}
 
 								&:empty {  // Here we hide it if there's no content
@@ -190,7 +190,7 @@
 
 						.post {
 							@include grid-column(12);
-							background: $cloak-teritary-color;
+							background: $cloak-orange;
 							color: $white;
 							padding: 0;
 							overflow: hidden;
@@ -287,7 +287,7 @@
 								@include grid-column(12);
 
 								&:nth-of-type(odd) .postInner {
-									background: rgba($cloak-tertiary-color, .15);
+									background: rgba($cloak-orange, .15);
 								}
 							}
 
@@ -295,7 +295,7 @@
 								@include grid-column(4);
 
 								.postInner {
-									background: rgba($cloak-tertiary-color, .15);
+									background: rgba($cloak-orange, .15);
 								}
 							}
 
@@ -344,7 +344,7 @@
 					}
 
 					.pubLinks li a {
-						@include more-link($more-link-bg: $cloak-tertiary-color);
+						@include more-link($more-link-bg: $cloak-orange);
 					}
 				}
 			}
