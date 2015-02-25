@@ -3503,6 +3503,9 @@ h2.pageTitle {
     #facultyStaff .facStaff .facStaffInfo .facStaffContent {
       margin-top: 1.125rem;
       margin-bottom: 0; }
+      #facultyStaff .facStaff .facStaffInfo .facStaffContent > *:last-child {
+        margin-bottom: 0;
+        padding-bottom: 0; }
 
 #faq {
   margin-bottom: 2.25rem; }

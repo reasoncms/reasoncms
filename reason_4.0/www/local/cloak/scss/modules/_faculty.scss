@@ -58,6 +58,11 @@
 			.facStaffContent {
 				margin-top: $horizontal-gutter/2;
 				margin-bottom: 0;
+
+				> *:last-child {
+					margin-bottom: 0;
+					padding-bottom: 0;
+				}
 			}
 		}
 	}
