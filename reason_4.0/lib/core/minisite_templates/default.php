@@ -41,7 +41,7 @@ include_once( CARL_UTIL_INC . 'dev/timer.php' );
  * The default (and base) Reason minisite template class
  *
  * This class handles building Reason pages. It is responsible for two main things:
- *
+ * 
  * 1. Reading the page type of the current reason page, instantiating, and initializing
  *    the modules that are part of the page
  *
@@ -57,8 +57,8 @@ include_once( CARL_UTIL_INC . 'dev/timer.php' );
  *
  * Note that Templates *should not* obligate particular css. Coding css directly into the template
  * will make it a lot less flexible, as it means that you will be creating a new template for every
- * single little css change. It is much better practice to think of the template as the markup and
- * the theme (set up in the Reason database as a template + css) as where the markup and the style
+ * single little css change. It is much better practice to think of the template as the markup and 
+ * the theme (set up in the Reason database as a template + css) as where the markup and the style 
  * meet. This will enable you to use a single template for any number of similar themes.
  *
  * @todo Complete documenting this class
@@ -102,14 +102,14 @@ class MinisiteTemplate
 	 * @var object (entity)
 	 * @todo clean up modules so that this can be private
 	 */
-
+	 
 	/**
 	 * Whether or not the page shown by the template is public - populated in _handle_access_auth_check.
 	 *
 	 * @var boolean
 	 */
 	protected $page_is_public;
-
+	
 	var $page_info;
 	/**
 	 * The title of the current page
@@ -121,7 +121,7 @@ class MinisiteTemplate
 	 * @access private
 	 */
 	var $title;
-
+	
 	/**
 	 * A minisite navigation class, which contains a tree of all pages in the site
 	 * and can be asked for links, etc.
@@ -147,7 +147,7 @@ class MinisiteTemplate
 	var $nav_class = 'MinisiteNavigation';
 	/**
 	 * An array of breadcrumbs that can be displayed in the template.
-	 *
+	 * 
 	 * The last breadcrumb will be used in the <title> attribute.
 	 *
 	 * Do not address this array directly to set crumbs; use the method add_crumb() instead.
@@ -178,7 +178,7 @@ class MinisiteTemplate
 	 * @var boolean
 	 */
 	var $logged_in = false;
-
+	
 	/**
 	 * An array that maps section names to module names
 	 *
@@ -188,7 +188,7 @@ class MinisiteTemplate
 	 * @access private
 	 */
 	var $section_to_module = array();
-
+	
 	/**
 	 * An array of module objects
 	 *
@@ -196,7 +196,7 @@ class MinisiteTemplate
 	 * @access private
 	 */
 	var $_modules = array();
-
+	
 	/**
 	 * Head items object
 	 *
@@ -218,21 +218,21 @@ class MinisiteTemplate
 	var $head_items;
 	/**
 	 * A simple boolean that controls whether the default org name (the constant
-	 * FULL_ORGANIZATION_NAME, set in  settings/package_settings.php ) should be placed in the
+	 * FULL_ORGANIZATION_NAME, set in  settings/package_settings.php ) should be placed in the 
 	 * title of the page.
 	 * @var boolean
 	 * @access private
 	 */
 	var $use_default_org_name_in_page_title = false;
 	/**
-	 * This is a boolean that sends the default module into two different modes --
+	 * This is a boolean that sends the default module into two different modes -- 
 	 * table-based or non-table-based
-	 *
+	 * 
 	 * This is a really bad design necessitated by our coupling of logic and presentation --
 	 * we wanted to have logic shared by both table-based and non-table-based layouts.
 	 *
 	 * You probably should not rely on this variable being present in extensions to the class.
-	 *
+	 * 
 	 * @deprecated
 	 * @var boolean
 	 * @access private
@@ -249,7 +249,7 @@ class MinisiteTemplate
 	 * div?
 	 *
 	 * You should probably not rely on this variable in your extensions.
-	 *
+	 * 
 	 * @var array
 	 * @access private
 	 */
@@ -281,7 +281,7 @@ class MinisiteTemplate
 	 * Should the template cache the navigation object?
 	 *
 	 * The default template has the option to store the navigation object in a cache.
-	 * This can help speed things up (reducing queries and php processing) for sites that are
+	 * This can help speed things up (reducing queries and php processing) for sites that are 
 	 * large and have high traffic.
 	 *
 	 * This defaults to true as of Reason 4.2 to improve performance. The minisite_page content
@@ -329,24 +329,24 @@ class MinisiteTemplate
 	/**
 	 * Should the template add the basic Reason modules.css and modules_mod.css?
 	 *
-	 * These css files include basic styling for many common modules. If you want to style
+	 * These css files include basic styling for many common modules. If you want to style 
 	 * modules 100% from scratch, set this variable to false.
 	 *
 	 * @access private
 	 * @var boolean
 	 */
 	var $include_modules_css = true;
-
+	
 	/**
 	 * The page type
-	 *
+	 * 
 	 * Don't access this variable directly -- use $this->get_page_type(), which will set it up
 	 * if it has not already.
 	 *
 	 * @var object
 	 */
 	protected $page_type;
-
+	
 	/**
 	 * Set up the template
 	 *
@@ -366,7 +366,7 @@ class MinisiteTemplate
 			if(!$this->sess->has_started())
 				$this->sess->start();
 		}
-
+	
 		$this->site_id = $site_id;
 		$this->page_id = $page_id;
 		$this->site_info = new entity( $site_id );
@@ -381,7 +381,7 @@ class MinisiteTemplate
 			$this->display_404_page();
 			die();
 		}
-
+		
 		if ($this->use_navigation_cache)
 		{
 			$cache = new ReasonObjectCache($this->site_id . '_navigation_cache', 3600); // lifetime of 1 hour
@@ -399,7 +399,7 @@ class MinisiteTemplate
 			}
 		}
 		// lets check the persistent cache
-
+		
 		if (empty($this->pages) || !isset($this->pages->values[$this->page_info->id()]))
 		{
 			// lets setup $this->pages and place in the persistent cache
@@ -408,7 +408,7 @@ class MinisiteTemplate
 			$this->pages->site_info =& $this->site_info;
 			$this->pages->order_by = 'sortable.sort_order';
 			$this->pages->init( $this->site_id, id_of('minisite_page') );
-			if ($this->use_navigation_cache)
+			if ($this->use_navigation_cache) 
 			{
 				$page_object_cache[$this->nav_class] = $this->pages;
 				$cache->set($page_object_cache);
@@ -420,11 +420,11 @@ class MinisiteTemplate
 			$this->pages->site_info =& $this->site_info;
 			$this->pages->order_by = 'sortable.sort_order'; // in case it was changed in the request
 		}
-
+		
 		$this->_handle_access_auth_check();
-
+		
 		$this->textonly = '';
-
+		
 		if( $this->pages->values  )
 		{
 			if( !$this->page_id )
@@ -435,13 +435,13 @@ class MinisiteTemplate
 			$this->pages->force_open( $this->page_id );
 
 			$this->cur_page = new entity($this->page_id);
-
+			
 			$this->title = $this->cur_page->get_value('name');
-
+			
 			$this->get_css_files();
 
 			$this->get_meta_information();
-
+			
 			if( $this->sess->exists() )
 			{
 				if (USE_JS_LOGOUT_TIMER)
@@ -450,7 +450,7 @@ class MinisiteTemplate
 					$this->head_items->add_javascript(JQUERY_URL, true);
 					$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH . 'timer/timer.js');
 				}
-
+				
 				// we know that someone is logged in if the session exists
 				$this->logged_in = true;
 			}
@@ -468,7 +468,7 @@ class MinisiteTemplate
 			die();
 		}
 	} // }}}
-
+	
 	function _handle_access_auth_check()
 	{
 		$auth_username = reason_check_authentication();
@@ -493,7 +493,7 @@ class MinisiteTemplate
 			$this->page_is_public = (empty($auth_username)) ? true : $rpa->has_access(false, $this->page_id);
 		}
 	}
-
+	
 	function _display_403_page()
 	{
 		http_response_code(403);
@@ -507,7 +507,7 @@ class MinisiteTemplate
 			echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>403: Forbidden</title></head><body><h1>403: Forbidden</h1><p>You do not have access to this page.</p></body></html>';
 		}
 	}
-
+	
 	function _display_404_page()
 	{
 		http_response_code(404);
@@ -521,12 +521,12 @@ class MinisiteTemplate
 			echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>404: Forbidden</title></head><body><h1>404: Not Found</h1><p>This page was not found.</p></body></html>';
 		}
 	}
-
+	
 	// hook
 	function pre_load_modules()
 	{
 	}
-
+	
 	function set_theme( $t ) //{{{
 	{
 		$this->theme = $t;
@@ -542,7 +542,7 @@ class MinisiteTemplate
 		$es->add_right_relationship( $this->template_id, relationship_id_of('minisite_template_to_external_css') );
 		$es->set_order( 'sortable.sort_order' );
 		$css_files += $es->run_one();
-
+		
 		// Get css assoc with theme
 		$es = new entity_selector();
 		$es->description = 'Get CSS associated with theme';
@@ -568,7 +568,7 @@ class MinisiteTemplate
 					$url = $css->get_value( 'url' );
 				}
 				$media = $css->has_value('css_media') ? $css->get_value('css_media') : '';
-
+				
 				$this->head_items->add_stylesheet( $url, $media );
 			}
 		}
@@ -588,7 +588,7 @@ class MinisiteTemplate
 			{
 				if(empty($item->url))
 					continue;
-
+				
 				switch($item->type)
 				{
 					case 'js':
@@ -603,7 +603,7 @@ class MinisiteTemplate
 			}
 		}
 	}
-
+	
 	/**
 	 * Get the theme customizer class
 	 */
@@ -626,23 +626,25 @@ class MinisiteTemplate
 	{
 		// add the charset information
 		$this->head_items->add_head_item('meta',array('http-equiv'=>'Content-Type','content'=>'text/html; charset=UTF-8' ) );
-
+		
 		if($favicon_path = $this->_get_favicon_path() )
 		{
 			$this->head_items->add_head_item('link',array('rel'=>'shortcut icon','href'=>$favicon_path, ) );
 		}
-
+		
 		// array of meta tags to search for in the page entity
 		// key: entity field
 		// value: meta tag to use
 		$meta_tags = array(
 			'description' => 'description',
-			'author' => 'author',
-			'keywords' => 'keywords'
+			'author' => 'author'
 		);
 
-		// load meta elements from current page
+		if ( REASON_SHOW_META_KEYWORDS )
+			$meta_tags['keywords'] = 'keywords';
 
+		// load meta elements from current page
+		
 		$tags_added = array();
 		foreach( $meta_tags as $entity_field => $meta_name )
 		{
@@ -653,16 +655,18 @@ class MinisiteTemplate
 				$tags_added[] = $meta_name;
 			}
 		}
-
-		if(!in_array('keywords',$tags_added) && $this->pages->root_node() == $this->page_id)
+		
+		if ( !in_array('keywords',$tags_added)
+			&& $this->pages->root_node() == $this->page_id
+			&& REASON_SHOW_META_KEYWORDS )
 		{
 			$content = reason_htmlspecialchars( $this->site_info->get_value( 'keywords' ) );
 			$this->head_items->add_head_item('meta',array('name'=>'keywords','content'=>$content) );
 		}
-
-		if (!empty( $_REQUEST['no_search'] )
-			|| $this->site_info->get_value('site_state') != 'Live'
-			|| ( defined('THIS_IS_A_DEVELOPMENT_REASON_INSTANCE') && THIS_IS_A_DEVELOPMENT_REASON_INSTANCE )
+		
+		if (!empty( $_REQUEST['no_search'] ) 
+			|| $this->site_info->get_value('site_state') != 'Live' 
+			|| ( defined('THIS_IS_A_DEVELOPMENT_REASON_INSTANCE') && THIS_IS_A_DEVELOPMENT_REASON_INSTANCE ) 
 			|| !$this->cur_page->get_value('indexable'))
 		{
 			$this->head_items->add_head_item('meta',array('name'=>'robots','content'=>'none' ) );
@@ -682,7 +686,7 @@ class MinisiteTemplate
 		$this->show_body();
 		$this->end_page();
 	} // }}}
-
+	
 	/**
 	 * Run by generate_page.php if module_api is defined in the request.
 	 *
@@ -691,7 +695,7 @@ class MinisiteTemplate
 	function run_api()
 	{
 		if (!empty($this->section_to_module))
-		{
+		{	
 			foreach ($this->section_to_module as $section => $module)
 			{
 				$module =& $this->_get_module( $section );
@@ -705,7 +709,7 @@ class MinisiteTemplate
 			exit();
 		}
 	}
-
+	
 	/**
 	 * @return mixed string requested_api name or false
 	 */
@@ -713,7 +717,7 @@ class MinisiteTemplate
 	{
 		return (!empty($this->requested_api)) ? $this->requested_api : false;
 	}
-
+	
 	/**
 	 * @return mixed string requested_module_identified name or false
 	 */
@@ -721,7 +725,7 @@ class MinisiteTemplate
 	{
 		return (!empty($this->requested_identifier)) ? $this->requested_identifier : false;
 	}
-
+	
 	function change_module( $page_type, $section, $new_module ) // {{{
 	// allows runtime modification of module to use for a given
 	// type-section pair.
@@ -739,7 +743,7 @@ class MinisiteTemplate
 	{
 		trigger_error('alter_modules() is deprecated. Please use alter_page_type() instead');
 	} // }}}
-
+	
 	/**
 	 * @deprecated
 	 */
@@ -747,7 +751,7 @@ class MinisiteTemplate
 	{
 		return $page_type;
 	}
-
+	
 	/**
 	 * If the instantiated module extends alter_page_type - do our legacy work and throw an error.
 	 *
@@ -793,19 +797,19 @@ class MinisiteTemplate
 	function alter_reason_page_type($page_type)
 	{
 	}
-
+	
 	function additional_args( &$args ) // {{{
 	//if a module needs additional args
 	{
 	} // }}}
-
+	
 	function get_page_type()
 	{
 		if(!isset($this->page_type))
 		{
 			reason_include_once( 'classes/page_types.php');
 			$requested_page_type_name = ($this->cur_page->get_value('custom_page') !== FALSE) ? $this->cur_page->get_value('custom_page') : null;
-
+		
 			// get the fully composed page type - make sure to support legacy alter_page_type operations
 			$rpt =& get_reason_page_types();
 			$page_type = ($requested_page_type = $rpt->get_page_type($requested_page_type_name)) ? $requested_page_type : 	$rpt->get_page_type();
@@ -815,15 +819,15 @@ class MinisiteTemplate
 		}
 		return $this->page_type;
 	}
-
+	
 	function load_modules() // {{{
 	{
 		$page_type = $this->get_page_type();
 
-		if (extension_loaded('newrelic')) {
-			newrelic_name_transaction($page_type->get_name());
+		if (extension_loaded('newrelic')) { 
+			newrelic_name_transaction($page_type->get_name()); 
 		}
-
+		
 		// if an api was requested lets identify the region to run
 		if ($requested_api = $this->get_requested_api())
 		{
@@ -842,7 +846,7 @@ class MinisiteTemplate
 				$this->section_to_module[$region] = $module_name;
 			}
 		}
-
+		
 		if (!empty($this->section_to_module))
 		{
 			$canonicalizer = new reasonCanonicalizer();
@@ -850,7 +854,7 @@ class MinisiteTemplate
 			{
 				if( !empty( $module_name ) )
 				{
-					$region_info = $page_type->get_region($region);
+					$region_info = $page_type->get_region($region);				
 					$params = ($region_info['module_params'] != null) ? $region_info['module_params'] : array();
 					$module_class = (!empty($GLOBALS[ '_module_class_names' ][ $module_name ])) ? $GLOBALS[ '_module_class_names' ][ $module_name ] : '';
 					if( !empty( $module_class ) )
@@ -871,40 +875,40 @@ class MinisiteTemplate
 						$args[ 'textonly' ] = '';
 						$args[ 'api' ] = (!empty($module_api)) ? $module_api['api'] : false;
 						$args[ 'page_is_public' ] = $this->page_is_public;
-
+						
 						// this is used by a few templates to add some arguments.  leaving it in for backwards
 						// compatibility.  i believe that any usage of this can be done with page type parameteres now.
 						$this->additional_args( $args );
-
+						
 						// localizes the args array inside the module class.  this is basically another layer of backwards
 						// compatibility with old modules.
 						$this->_modules[ $region ]->prep_args( $args );
-
+						
 						// Pass a reference to the pages object into the module (so the module doesn't have to use the
 						// deprecated reference to the template)
 						$this->_modules[ $region ]->set_page_nav( $this->pages );
-
+						
 						// Pass a reference to the head items object into the module (so the module doesn't have to use the
 						// deprecated reference to the template)
 						$this->_modules[ $region ]->set_head_items( $this->head_items );
-
+						
 						// Pass a reference to the head items object into the module (so the module doesn't have to use the
 						// deprecated reference to the template)
-
+	
 						$breadcrumbs_obj =& $this->_get_crumbs_object();
 						$this->_modules[ $region ]->set_crumbs( $breadcrumbs_obj );
-
+						
 						// send and check parameters gathered above from the page_types
 						$this->_modules[ $region ]->handle_params( $params );
-
+						
 						// hook to run code before grabbing and sanitizing the _REQUEST.  this is important for something
 						// that might not know what variables will be coming through until a Disco class or some such thing
 						// has been loaded.
 						$this->_modules[ $region ]->pre_request_cleanup_init();
-
-						// Set the module request array based on the cleanup rules.
+						
+						// Set the module request array based on the cleanup rules. 
 						$this->_modules[ $region ]->request = $this->clean_external_vars($this->_modules[$region]->get_cleanup_rules());
-
+						
 						// init takes $args as a backwards compatibility feature.  otherwise, everything should be handled
 						// in prep_args
 						if ($this->should_benchmark()) $this->benchmark_start('init module ' . $module_name);
@@ -933,7 +937,7 @@ class MinisiteTemplate
 		}
 		$false = false;
 		return $false;
-
+		
 	} // }}}
 	function clean_vars( &$vars, $rules ) // {{{
 	// Returns an array which takes the values of the keys in Vars of
@@ -945,7 +949,7 @@ class MinisiteTemplate
 
 	function clean_external_vars($rules)
 	// Cleanup rules can include a 'method'
-	// parameter which indicates where the value should come from -- options are get, post, and
+	// parameter which indicates where the value should come from -- options are get, post, and 
 	// nothing/anything else, which means the $_REQUEST array.
 	{
 		$request = $cleanup_params = array();
@@ -971,8 +975,8 @@ class MinisiteTemplate
 						break;
 				}
 			} else {
-				$cleanup_params['prepped_request'][$param] = $rule;
-			}
+				$cleanup_params['prepped_request'][$param] = $rule;	
+			}	
 		}
 		foreach ($cleanup_params as $source => $rules)
 		{
@@ -981,8 +985,8 @@ class MinisiteTemplate
 		}
 		return $request;
 	} // }}}
-
-
+		
+	
 	function run_section( $sec ) // {{{
 	{
 		$module =& $this->_get_module( $sec );
@@ -1031,7 +1035,7 @@ class MinisiteTemplate
 		else
 			return false;
 	} // }}}
-
+	
 	function start_page() // {{{
 	{
 		$this->get_title();
@@ -1040,16 +1044,16 @@ class MinisiteTemplate
 		echo '<html xmlns="http://www.w3.org/1999/xhtml">'."\n";
 		echo '<head>'."\n";
 		//echo '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />' . "\n";
-
+		
 		$this->do_org_head_items();
 		$this->add_extra_head_content_structured();
 		echo $this->head_items->get_head_item_markup();
-
+		
 		if($this->cur_page->get_value('extra_head_content'))
 		{
 			echo "\n".$this->cur_page->get_value('extra_head_content')."\n";
 		}
-
+			
 		echo '</head>'."\n";
 
 		echo $this->create_body_tag();
@@ -1081,7 +1085,7 @@ class MinisiteTemplate
 	{
 		 return $this->doctype;
 	}
-
+	
 	function get_title()
 	{
 		$ret = '';
@@ -1090,7 +1094,7 @@ class MinisiteTemplate
 			$ret .= FULL_ORGANIZATION_NAME.': ';
 		}
 		$ret .= $this->site_info->get_value('name');
-
+		
 		if(carl_strtolower($this->site_info->get_value('name')) != carl_strtolower($this->title))
 		{
 			$ret .= ": " . $this->title;
@@ -1108,7 +1112,7 @@ class MinisiteTemplate
 		$this->head_items->add_head_item('title',array(),$ret, true);
 		//return $ret;
 	}
-
+	
 	/**
 	 * Produce the breadcrumbs ("you are here") block
 	 *
@@ -1122,7 +1126,7 @@ class MinisiteTemplate
 		echo $this->_get_breadcrumb_markup($this->_get_breadcrumbs(), $this->site_info->get_value('base_breadcrumbs'), $delimiter);
 		echo '</div>'."\n";
 	} // }}}
-
+	
 	/**
 	 * Generate the markup for the breadcrumbs portion of the page
 	 *
@@ -1166,7 +1170,7 @@ class MinisiteTemplate
 		}
 		return $crumbs;
 	}
-
+	
 	/**
 	 * Get the crumbs object
 	 *
@@ -1182,7 +1186,7 @@ class MinisiteTemplate
 		}
 		return $this->_crumbs;
 	}
-
+	
 	/**
 	 * Get the array of breadcrumbs from the breadcrumbs object
 	 *
@@ -1197,7 +1201,7 @@ class MinisiteTemplate
 	/**
 	 * Add a breadcrumb to the set of crumbs
 	 *
-	 * Note: Use of this function by modules is deprecated. Modules should use their _get_crumbs()
+	 * Note: Use of this function by modules is deprecated. Modules should use their _get_crumbs() 
 	 * method to access the shared breadcrumbs object instead.
 	 *
 	 * @param string $name
@@ -1209,7 +1213,7 @@ class MinisiteTemplate
 		if($crumbs = &$this->_get_crumbs_object())
 			$crumbs->add_crumb( $name, $link, $entity_id );
 	} // }}}
-
+	
 	function show_body()
 	{
 		if($this->use_tables)
@@ -1264,7 +1268,7 @@ class MinisiteTemplate
 		echo '</form>';
 	}
 	*/
-
+	
 	function show_banner()
 	{
 		if($this->use_tables)
@@ -1279,7 +1283,7 @@ class MinisiteTemplate
 	function show_banner_tableless() // {{{
 	{
 		if ($this->has_content( 'pre_banner' ))
-		{
+		{	
 			echo '<div id="preBanner">';
 			$this->run_section( 'pre_banner' );
 			echo '</div>'."\n";
@@ -1304,7 +1308,7 @@ class MinisiteTemplate
 		$add_class = ' fullGraphics';
 		echo '<div class="bannerAndMeat'.$add_class.'">'."\n";
 		if ($this->has_content( 'pre_banner' ))
-		{
+		{	
 			echo '<div id="preBanner">';
 			$this->run_section( 'pre_banner' );
 			echo '</div>'."\n";
@@ -1327,7 +1331,7 @@ class MinisiteTemplate
 		echo '</td>'."\n";
 		echo '<td class="bannerCol2">'."\n";
 		if ($this->has_content( 'banner_xtra' ))
-		{
+		{	
 			echo '<div class="bannerXtra">';
 			$this->run_section( 'banner_xtra' );
 			echo '</div>'."\n";
@@ -1406,15 +1410,15 @@ class MinisiteTemplate
 		{
 			$this->show_navbar_tableless();
 		}
-	}
+	}	
 	function show_navbar_tableless() // {{{
 	{
-		if ($this->has_content( 'navigation' ))
-		{
+		if ($this->has_content( 'navigation' )) 
+		{ 
 			$this->run_section( 'navigation' );
 		}
-		if ($this->has_content( 'sub_nav' ))
-		{
+		if ($this->has_content( 'sub_nav' )) 
+		{ 
 			echo '<div id="subNav">'."\n";
 			$this->run_section( 'sub_nav' );
 			echo '</div>'."\n";
@@ -1423,7 +1427,7 @@ class MinisiteTemplate
 		{
 			$this->run_section( 'sub_nav_2' );
 		}
-
+		
 		if ($this->has_content( 'sub_nav_3' ))
 		{
 			$this->run_section( 'sub_nav_3' );
@@ -1431,21 +1435,21 @@ class MinisiteTemplate
 	} // }}}
 	function show_navbar_tabled() // {{{
 	{
-		if ($this->has_content( 'navigation' ) || $this->has_content( 'sub_nav' ) || $this->has_content( 'sub_nav_2' ) || $this->has_content( 'sub_nav_3' ) )
+		if ($this->has_content( 'navigation' ) || $this->has_content( 'sub_nav' ) || $this->has_content( 'sub_nav_2' ) || $this->has_content( 'sub_nav_3' ) ) 
 		{
 			echo '<td valign="top" class="navigationTD">'."\n";
-			if ($this->has_content( 'navigation' ))
-			{
+			if ($this->has_content( 'navigation' )) 
+			{ 
 				//$_nav_timing_start = getmicrotime();
 				echo '<div class="navigation">'."\n";
 				$this->run_section( 'navigation' );
 				echo '</div>'."\n";
 				//$_nav_timing_end = getmicrotime();
 				//echo '<!-- nav start time: '.$_nav_timing_start.'   nav end time: '.$_nav_timing_end.'   total nav time: '.round(1000*($_nav_timing_end - $_nav_timing_start), 1).' ms -->'."\n";
-
+						
 			}
-			if ($this->has_content( 'sub_nav' ))
-			{
+			if ($this->has_content( 'sub_nav' )) 
+			{ 
 				echo '<div class="subNav">'."\n";
 				echo '<hr class="hideFromModern" />'."\n";
 				$this->run_section( 'sub_nav' );
@@ -1474,10 +1478,10 @@ class MinisiteTemplate
 	{
 		$this->show_main_content_sections();
 	} // }}}
-
+	
 	function show_main_content_tabled() // {{{
 	{
-		if ($this->has_content( 'main_head' ) || $this->has_content( 'main' ) || $this->has_content( 'main_post' ) || $this->has_content( 'main_post_2' ) || $this->has_content( 'main_post_3' ))
+		if ($this->has_content( 'main_head' ) || $this->has_content( 'main' ) || $this->has_content( 'main_post' ) || $this->has_content( 'main_post_2' ) || $this->has_content( 'main_post_3' )) 
 		{
 			echo '<td valign="top" class="contentTD">'."\n";
 			echo '<div class="content"><a name="content"></a>'."\n";
@@ -1488,31 +1492,31 @@ class MinisiteTemplate
 	} // }}}
 	function show_main_content_sections()
 	{
-		if ($this->has_content( 'main_head' ))
+		if ($this->has_content( 'main_head' )) 
 		{
 			echo '<div class="contentHead">'."\n";
 			$this->run_section( 'main_head' );
 			echo '</div>'."\n";
 		}
-		if ($this->has_content( 'main' ))
+		if ($this->has_content( 'main' )) 
 		{
 			echo '<div class="contentMain">'."\n";
 			$this->run_section( 'main' );
 			echo '</div>'."\n";
 		}
-		if ($this->has_content( 'main_post' ))
+		if ($this->has_content( 'main_post' )) 
 		{
 			echo '<div class="contentPost">'."\n";
 			$this->run_section( 'main_post' );
 			echo '</div>'."\n";
 		}
-		if ($this->has_content( 'main_post_2' ))
+		if ($this->has_content( 'main_post_2' )) 
 		{
 			echo '<div class="contentPost2">'."\n";
 			$this->run_section( 'main_post_2' );
 			echo '</div>'."\n";
 		}
-		if ($this->has_content( 'main_post_3' ))
+		if ($this->has_content( 'main_post_3' )) 
 		{
 			echo '<div class="contentPost3">'."\n";
 			$this->run_section( 'main_post_3' );
@@ -1528,19 +1532,19 @@ class MinisiteTemplate
 		trigger_error('show_nav_foot() is deprecated. It will go away in a future release of Reason.');
 		if ($this->has_content( 'sub_nav_2' ))
 			$this->run_section( 'sub_nav_2' );
-		if ($this->has_content( 'navigation' ))
+		if ($this->has_content( 'navigation' )) 
 		{
 			echo '<div class="navigation">'."\n";
 			$this->run_section( 'navigation' );
 			echo '</div>'."\n";
 		}
-		if ($this->has_content( 'sub_nav' ))
-		{
+		if ($this->has_content( 'sub_nav' )) 
+		{ 
 			echo '<div class="subNav">'."\n";
 			echo '<hr class="hideFromModern" />'."\n";
 			$this->run_section( 'sub_nav' );
 			echo '</div>'."\n";
-		}
+		} 
 	} // }}}
 	function show_sidebar()
 	{
@@ -1580,8 +1584,8 @@ class MinisiteTemplate
 		$show_pre_sidebar = $this->has_content( 'pre_sidebar' );
 		$show_post_sidebar = $this->has_content( 'post_sidebar' );
 		if ($show_sidebar || $show_pre_sidebar || $show_post_sidebar)
-		{
-			echo '<td valign="top" class="sidebarTD">'."\n";
+		{ 
+			echo '<td valign="top" class="sidebarTD">'."\n"; 
 			if($show_pre_sidebar)
 			{
 				echo '<div class="preSidebar">'."\n";
@@ -1644,13 +1648,13 @@ class MinisiteTemplate
 		// $this->show_reason_badge();
 		echo '</div>'."\n";
 	} // }}}
-
+	
 	function show_reason_badge()
 	{
-		echo '<div class="poweredBy">Powered by <a href="http://reasoncms.org" title="Reason Content Management System">Reason CMS</a></div>';
+		echo '<div class="poweredBy">Powered by <a href="http://reason.carleton.edu" title="Reason Content Management System">Reason CMS</a></div>';
 	}
-
-
+	
+	
 	/**
 	 * This function allows modules to add head items. They must add any head items during their init process.
 	 * @deprecated method should be called on the head_items object
@@ -1659,15 +1663,15 @@ class MinisiteTemplate
 	{
 		$this->head_items->add_head_item( $element, $attributes, $content, $add_to_top, $wrapper);
 	}
-
-	/**
+	
+	/** 
 	 * @deprecated method should be called on the head_items object
 	 */
 	function add_stylesheet( $url, $media = '', $add_to_top = false, $wrapper = array('before'=>'','after'=>'') )
 	{
 		$this->head_items->add_stylesheet( $url, $media, $add_to_top, $wrapper );
 	}
-
+	
 	/**
 	 * This function used to set up the head item markup. It has been replaced by direct access to the head items object.
 	 * @deprecated method should be called on the head_items object
@@ -1677,7 +1681,7 @@ class MinisiteTemplate
 		trigger_error('$this->get_head_items_markup() no longer works on templates. Use $this->head_items->get_head_item_markup() instead.');
 		return;
 	}
-
+	
 	/*this stuff comes from the tableless template. from here... */
 		function has_content_section()
 	{
@@ -1706,14 +1710,14 @@ class MinisiteTemplate
 	function show_banner_xtra()
 	{
 		if ($this->has_content( 'banner_xtra' ))
-		{
+		{	
 			echo '<div id="bannerXtra">';
 			$this->run_section( 'banner_xtra' );
 			echo '</div>'."\n";
 		}
 	}
 	/* ...down to here */
-
+	
 	function do_org_navigation()
 	{
 		// Just here as a shell for branding
@@ -1725,7 +1729,7 @@ class MinisiteTemplate
 	{
 		$this->do_org_navigation();
 	}
-
+	
 	function do_org_head_items()
 	{
 		// Just here as a hook for branding head items (js/css/etc.)
@@ -1786,7 +1790,7 @@ class MinisiteTemplate
 		}
 		return $this->parent_sites;
 	}
-
+	
 	/**
 	 * Return a reference to a singleton Timer class
 	 *
@@ -1806,13 +1810,13 @@ class MinisiteTemplate
 	 *
 	 * @param string name of benchmark to start
 	 * @return void
-	 */
+	 */	
 	function benchmark_start($name)
 	{
 		$timer =& $this->_get_timer();
 		$timer->start($name);
 	}
-
+	
 	/**
 	 * Stop timing a named benchmark
 	 *
@@ -1828,7 +1832,7 @@ class MinisiteTemplate
 	/**
 	 * Returns true if benchmarks_available() and benchmarks_enabled() return true;
 	 * @return boolean
-	 */
+	 */		
 	function should_benchmark()
 	{
 		if (!isset($this->_should_benchmark))
@@ -1838,10 +1842,10 @@ class MinisiteTemplate
 		}
 		return $this->_should_benchmark;
 	}
-
+	
 	/**
 	 * Show a link to enable benchmarks, or if enabled, the benchmarks themselves with a link to turn them off
-	 *
+	 * 
 	 * This is called by generate_page.php after page generation if is_developer returns true.
 	 */
 	function display_benchmark_section()
@@ -1861,7 +1865,7 @@ class MinisiteTemplate
 		//$encoded_target = urlencode(carl_make_link(array('_force_mime_type'=>'xhtml'),'','',false));
 		//echo '<p>Validate Markup: <a href="http://validator.w3.org/check?verbose=1&amp;uri='.$encoded_target.'">W3C</a> | <a href="http://html5.validator.nu/?doc='.$encoded_target.'">validator.nu</a></p>'."\n";
 	}
-
+	
 	/**
 	 * Generate page runs this method when it generates a page footer with developer information.
 	 */
