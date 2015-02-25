@@ -3455,49 +3455,51 @@ h2.pageTitle {
         margin-left: 0.375rem;
         color: inherit; }
 
-#facultyStaff:before, #facultyStaff:after {
-  content: " ";
-  display: table; }
-#facultyStaff:after {
-  clear: both; }
-#facultyStaff a {
-  color: #b84041; }
-  #facultyStaff a:hover {
-    color: #6c2626; }
-#facultyStaff .facStaff {
-  border-bottom: 1px solid #DDDDDD;
-  margin-bottom: 2.25rem; }
-  #facultyStaff .facStaff:before, #facultyStaff .facStaff:after {
+#facultyStaff {
+  border-top: 1px solid #EEEEEE; }
+  #facultyStaff:before, #facultyStaff:after {
     content: " ";
     display: table; }
-  #facultyStaff .facStaff:after {
+  #facultyStaff:after {
     clear: both; }
-  @media only screen and (min-width: 40.063em) {
-    #facultyStaff .facStaff .facStaffImage {
-      float: right;
-      margin: 0 0 1.125rem 1.5rem; } }
-  #facultyStaff .facStaff .facStaffName {
-    font-size: 1.5rem;
-    margin-bottom: 1.125rem; }
-  #facultyStaff .facStaff .facStaffInfo .label {
-    position: absolute;
-    left: -9999px;
-    top: -9999px;
-    margin-bottom: 0; }
-  #facultyStaff .facStaff .facStaffInfo .facStaffPhone {
-    margin-left: 1.5rem; }
-    #facultyStaff .facStaff .facStaffInfo .facStaffPhone:before {
-      content: "";
-      margin-right: 0.375rem;
-      color: inherit; }
-  #facultyStaff .facStaff .facStaffInfo .facStaffEmail {
-    margin-left: 1.5rem; }
-    #facultyStaff .facStaff .facStaffInfo .facStaffEmail:before {
-      content: "";
-      margin-right: 0.375rem;
-      color: inherit; }
-  #facultyStaff .facStaff .facStaffInfo .facStaffContent {
-    margin-top: 1.125rem; }
+  #facultyStaff a {
+    color: #b84041; }
+    #facultyStaff a:hover {
+      color: #6c2626; }
+  #facultyStaff .facStaff {
+    border-bottom: 1px solid #EEEEEE;
+    margin-bottom: 2.25rem; }
+    #facultyStaff .facStaff:before, #facultyStaff .facStaff:after {
+      content: " ";
+      display: table; }
+    #facultyStaff .facStaff:after {
+      clear: both; }
+    @media only screen and (min-width: 40.063em) {
+      #facultyStaff .facStaff .facStaffImage {
+        float: right;
+        margin: 0 0 1.125rem 1.5rem; } }
+    #facultyStaff .facStaff .facStaffName {
+      font-size: 1.5rem;
+      margin-bottom: 1.125rem; }
+    #facultyStaff .facStaff .facStaffInfo .label {
+      position: absolute;
+      left: -9999px;
+      top: -9999px;
+      margin-bottom: 0; }
+    #facultyStaff .facStaff .facStaffInfo .facStaffPhone {
+      margin-left: 1.5rem; }
+      #facultyStaff .facStaff .facStaffInfo .facStaffPhone:before {
+        content: "";
+        margin-right: 0.375rem;
+        color: inherit; }
+    #facultyStaff .facStaff .facStaffInfo .facStaffEmail {
+      margin-left: 1.5rem; }
+      #facultyStaff .facStaff .facStaffInfo .facStaffEmail:before {
+        content: "";
+        margin-right: 0.375rem;
+        color: inherit; }
+    #facultyStaff .facStaff .facStaffInfo .facStaffContent {
+      margin-top: 1.125rem; }
 
 #faq {
   margin-bottom: 2.25rem; }
