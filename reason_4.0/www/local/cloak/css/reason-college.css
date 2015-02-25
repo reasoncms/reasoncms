@@ -3467,6 +3467,11 @@ h2.pageTitle {
 #facultyStaff .facStaff {
   border-bottom: 1px solid #DDDDDD;
   margin-bottom: 2.25rem; }
+  #facultyStaff .facStaff:before, #facultyStaff .facStaff:after {
+    content: " ";
+    display: table; }
+  #facultyStaff .facStaff:after {
+    clear: both; }
   @media only screen and (min-width: 40.063em) {
     #facultyStaff .facStaff .facStaffImage {
       float: right;

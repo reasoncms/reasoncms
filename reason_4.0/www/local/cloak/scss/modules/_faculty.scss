@@ -13,6 +13,7 @@
 	}
 
 	.facStaff {
+		@include clearfix;
 		border-bottom: 1px solid $gainsboro;
 		margin-bottom: $horizontal-gutter;
 
