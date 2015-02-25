@@ -2218,11 +2218,11 @@ dialog .close-reveal-modal span {
 .childrenList {
   margin: 0;
   padding: 0;
-  margin-bottom: 2.25rem; }
+  margin-bottom: 2.25rem;
+  border-bottom: 1px solid #EEEEEE; }
   .childrenList > li {
     list-style-type: none;
-    background: #F5F5F5;
-    margin-bottom: 0.0625rem; }
+    border-top: 1px solid #EEEEEE; }
     .childrenList > li a[href] {
       padding: 0.75rem 1rem;
       display: block; }
@@ -2232,56 +2232,65 @@ dialog .close-reveal-modal span {
         font-weight: 700;
         color: #b84041; }
       .childrenList > li a[href]:hover {
-        background: #e1e1e1; }
+        background: #F6F6F6; }
     .childrenList > li .childDesc {
       color: #7b7b7b;
       font-family: "Open Sans", sans-serif;
       font-weight: 300;
       font-size: 0.875rem; }
 
-#childrenAndGrandchildren .childrenList > li > h3,
-#childrenAndGrandchildren .childrenList > li > h4 {
-  margin: 0 0 0.75rem;
-  border-bottom: 1px solid #DDDDDD;
-  background: #EEEEEE; }
-#childrenAndGrandchildren .childrenList > li a {
-  color: #b84041; }
-  #childrenAndGrandchildren .childrenList > li a:hover {
-    color: dakren(#b84041, 10%); }
-#childrenAndGrandchildren .childrenList > li > .childDesc {
-  padding: 0 1rem 0.75rem; }
-#childrenAndGrandchildren .childrenList > li ul {
-  padding: 0 1rem;
-  margin: 0; }
-  #childrenAndGrandchildren .childrenList > li ul:before, #childrenAndGrandchildren .childrenList > li ul:after {
-    content: " ";
-    display: table; }
-  #childrenAndGrandchildren .childrenList > li ul:after {
-    clear: both; }
-  #childrenAndGrandchildren .childrenList > li ul li {
-    border: none;
-    list-style-type: none;
-    margin-bottom: 0.75rem; }
-  #childrenAndGrandchildren .childrenList > li ul strong,
-  #childrenAndGrandchildren .childrenList > li ul h4 {
-    font-family: "Merriweather", serif;
-    font-weight: 400;
-    padding: 0;
-    margin: 0; }
-    #childrenAndGrandchildren .childrenList > li ul strong a,
-    #childrenAndGrandchildren .childrenList > li ul h4 a {
+#childrenAndGrandchildren .childrenList > li {
+  border-top: 1px solid #EEEEEE;
+  background: none;
+  padding-top: 1.125rem; }
+  #childrenAndGrandchildren .childrenList > li > h3,
+  #childrenAndGrandchildren .childrenList > li > h4 {
+    font-weight: 700;
+    padding: 0; }
+    #childrenAndGrandchildren .childrenList > li > h3 a,
+    #childrenAndGrandchildren .childrenList > li > h4 a {
       padding: 0; }
-      #childrenAndGrandchildren .childrenList > li ul strong a:hover,
-      #childrenAndGrandchildren .childrenList > li ul h4 a:hover {
+      #childrenAndGrandchildren .childrenList > li > h3 a:hover,
+      #childrenAndGrandchildren .childrenList > li > h4 a:hover {
         background: none; }
-  #childrenAndGrandchildren .childrenList > li ul .childDesc {
-    margin: 0;
-    font-size: 0.875rem; }
+  #childrenAndGrandchildren .childrenList > li a {
+    color: #b84041; }
+    #childrenAndGrandchildren .childrenList > li a:hover {
+      color: dakren(#b84041, 10%);
+      text-decoration: underline; }
+  #childrenAndGrandchildren .childrenList > li ul {
+    padding: 1.125rem 1.5rem;
+    margin: 0; }
+    #childrenAndGrandchildren .childrenList > li ul:before, #childrenAndGrandchildren .childrenList > li ul:after {
+      content: " ";
+      display: table; }
+    #childrenAndGrandchildren .childrenList > li ul:after {
+      clear: both; }
+    #childrenAndGrandchildren .childrenList > li ul li {
+      border: none;
+      list-style-type: none;
+      margin-bottom: 0.75rem; }
+    #childrenAndGrandchildren .childrenList > li ul strong,
+    #childrenAndGrandchildren .childrenList > li ul h4 {
+      font-family: "Open Sans", sans-serif;
+      font-weight: 700;
+      padding: 0;
+      margin: 0; }
+      #childrenAndGrandchildren .childrenList > li ul strong a,
+      #childrenAndGrandchildren .childrenList > li ul h4 a {
+        padding: 0; }
+        #childrenAndGrandchildren .childrenList > li ul strong a:hover,
+        #childrenAndGrandchildren .childrenList > li ul h4 a:hover {
+          background: none; }
+    #childrenAndGrandchildren .childrenList > li ul .childDesc {
+      margin: 0;
+      font-size: 0.875rem; }
 
 .childrenListWithImages {
   margin: 0;
   margin-left: -1.5rem;
-  margin-bottom: 1.125rem; }
+  margin-bottom: 1.125rem;
+  border: none; }
   .childrenListWithImages:before, .childrenListWithImages:after {
     content: " ";
     display: table; }
@@ -2291,7 +2300,8 @@ dialog .close-reveal-modal span {
     clear: both;
     display: block;
     margin-bottom: 1.125rem;
-    background: none; }
+    background: none;
+    border: none; }
     .childrenListWithImages li a,
     .childrenListWithImages li a[href] {
       overflow: hidden;
