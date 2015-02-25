@@ -53,6 +53,11 @@
 
 					&:hover {
 					}
+
+					&.cur {
+						padding: 0;
+						border-bottom: 0;
+					}
 				}
 
 				// Just current pages
@@ -154,7 +159,7 @@
 			background: darken($nav-bg-color, 32%);
 		}
 
-		// Fourth Level
+		// Fifth Level
 		ul ul ul ul ul li.open a,
 		ul ul ul ul ul li.open strong {
 			background: darken($nav-bg-color, 38%);

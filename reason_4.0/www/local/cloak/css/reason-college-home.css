@@ -5069,6 +5069,9 @@ form .submitSection,
         #minisiteNavigation ul .navList li a {
           color: #555555;
           color: #4b4b4b; }
+          #minisiteNavigation ul .navList li a.cur {
+            padding: 0;
+            border-bottom: 0; }
         #minisiteNavigation ul .navList li strong {
           color: #b84041; }
       #minisiteNavigation ul .navList .open li a,
