@@ -4,6 +4,7 @@
 #facultyStaff {
 	@include clearfix;
 	border-top: 1px solid $smoke;
+	margin-bottom: $horizontal-gutter;
 
 	a {
 		color: $faculty-primary-color;
@@ -17,9 +18,10 @@
 		@include clearfix;
 		border-bottom: 1px solid $smoke;
 		padding: $horizontal-gutter 0;
-		//margin-bottom: $horizontal-gutter;
 
 		.facStaffImage {
+			margin-bottom: $horizontal-gutter/2;
+
 			@media #{$medium-up} {
 				float: right;
 				margin: 0 0 $horizontal-gutter/2 $column-gutter/2;

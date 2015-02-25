@@ -3458,7 +3458,8 @@ h2.pageTitle {
         color: inherit; }
 
 #facultyStaff {
-  border-top: 1px solid #EEEEEE; }
+  border-top: 1px solid #EEEEEE;
+  margin-bottom: 2.25rem; }
   #facultyStaff:before, #facultyStaff:after {
     content: " ";
     display: table; }
@@ -3476,10 +3477,12 @@ h2.pageTitle {
       display: table; }
     #facultyStaff .facStaff:after {
       clear: both; }
-    @media only screen and (min-width: 40.063em) {
-      #facultyStaff .facStaff .facStaffImage {
-        float: right;
-        margin: 0 0 1.125rem 1.5rem; } }
+    #facultyStaff .facStaff .facStaffImage {
+      margin-bottom: 1.125rem; }
+      @media only screen and (min-width: 40.063em) {
+        #facultyStaff .facStaff .facStaffImage {
+          float: right;
+          margin: 0 0 1.125rem 1.5rem; } }
     #facultyStaff .facStaff .facStaffName {
       font-size: 1.5rem;
       margin-bottom: 1.125rem; }
