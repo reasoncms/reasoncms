@@ -16,7 +16,8 @@
 	.facStaff {
 		@include clearfix;
 		border-bottom: 1px solid $smoke;
-		margin-bottom: $horizontal-gutter;
+		padding: $horizontal-gutter 0;
+		//margin-bottom: $horizontal-gutter;
 
 		.facStaffImage {
 			@media #{$medium-up} {
@@ -56,6 +57,7 @@
 
 			.facStaffContent {
 				margin-top: $horizontal-gutter/2;
+				margin-bottom: 0;
 			}
 		}
 	}
