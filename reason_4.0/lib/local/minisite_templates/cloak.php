@@ -203,7 +203,7 @@
 		function show_banner()
 		{
 			echo '<div class="sticky">'."\n";
-			//echo '<div class="top-bar" data-topbar role="navigation" data-options="sticky_on: large">'."\n";
+
 			if ($this->has_content( 'pre_banner' ))
 			{
 				echo '<div id="preBanner">';
@@ -211,7 +211,6 @@
 				echo '</div>'."\n";
 			}
 			echo '<header id="banner" role="banner" aria-label="site" class="top-bar" data-topbar role="navigation" data-options="sticky_on: large">'."\n";
-			//echo '<header id="banner">'."\n";
 			if($this->should_show_parent_sites())
 			{
 				echo $this->get_parent_sites_markup();
@@ -241,7 +240,8 @@
 
 			$this->show_banner_xtra();
 
-			echo '</header></div>'."\n";
+			echo '</header>'."\n";
+			echo '</div>'."\n";
 
 			if($this->has_content('post_banner'))
 			{
@@ -319,7 +319,17 @@
 
 			echo '<script type="text/javascript" src="/reason/local/cloak/js/vendor/isotope.pkgd.min.js"></script>'."\n";
 			echo '<script type="text/javascript" src="/reason/local/cloak/js/vendor/fastclick.js"></script>'."\n";
-			echo '<script type="text/javascript" src="/reason/local/cloak/js/vendor/foundation.min.js"></script>'."\n";
+			
+			
+			// Foundation 5.5.1 has a topbar bug that keeps the topbar sticky in iOS, even when set otherwise.
+			// The bug has been reported and confirmed on GitHub. https://github.com/zurb/foundation/issues/6329
+			// We'll fix with the next release. In the meantime, a fix.
+			
+			// 5.5.1 Broken
+			//echo '<script type="text/javascript" src="/reason/local/cloak/bower_components/foundation/js/foundation.min.js"></script>'."\n";
+
+			// 5.5.1 Fixed (re-minified version using foundation.topbar.js v 5.5)
+			echo '<script type="text/javascript" src="/reason/local/cloak/js/vendor/foundation.fixed.min.js"></script>'."\n";	
 			echo '<script type="text/javascript" src="/reason/local/cloak/js/app.js"></script>'."\n";
 		}
 }
