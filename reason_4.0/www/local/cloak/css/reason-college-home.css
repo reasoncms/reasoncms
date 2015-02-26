@@ -6343,7 +6343,7 @@ form .submitSection,
   top: -9999px;
   margin-bottom: 0; }
 .siteHome #postBanner {
-  background: rgba(89, 83, 83, 0.95); }
+  background: rgba(89, 83, 83, 0.85); }
   @media only screen and (max-width: 40em) {
     .siteHome #postBanner .featuresModule .features {
       padding: 0;
