@@ -3656,12 +3656,13 @@ h2.pageTitle {
     .featuresModule .feature .featureContent .featureInfo .featureNav:after {
       clear: both; }
     .featuresModule .feature .featureContent .featureInfo .featureNav .play-pause .button {
-      text-align: center;
-      margin: 0;
-      border-right: 1px solid rgba(255, 255, 255, 0.1);
       display: block;
       float: right;
-      padding: 0 10px;
+      margin: 0;
+      padding: 0.625rem 1rem;
+      line-height: 1;
+      text-align: center;
+      border-right: 1px solid rgba(255, 255, 255, 0.1);
       color: rgba(255, 255, 255, 0.7); }
       .featuresModule .feature .featureContent .featureInfo .featureNav .play-pause .button:hover {
         background: #333333;
@@ -3676,14 +3677,14 @@ h2.pageTitle {
         color: inherit; }
     .featuresModule .feature .featureContent .featureInfo .featureNav .navBlock .navItem,
     .featuresModule .feature .featureContent .featureInfo .featureNav .navBlock .button {
-      text-align: center;
-      margin: 0;
-      border-right: 1px solid rgba(255, 255, 255, 0.1);
       display: block;
       float: left;
-      padding: 0.25rem 0.625rem;
-      color: rgba(255, 255, 255, 0.7);
-      line-height: 1; }
+      margin: 0;
+      padding: 0.625rem 1rem;
+      line-height: 1;
+      text-align: center;
+      border-right: 1px solid rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.7); }
       .featuresModule .feature .featureContent .featureInfo .featureNav .navBlock .navItem:hover,
       .featuresModule .feature .featureContent .featureInfo .featureNav .navBlock .button:hover {
         background: #333333;
