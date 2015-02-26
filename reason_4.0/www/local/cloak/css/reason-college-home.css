@@ -1208,6 +1208,7 @@ dialog .close-reveal-modal:before, .assets li:before, #av .moduleNav ul li:befor
 #calendar .responsiveEventsList .feedInfo a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .repetition:before, #calendar .eventDetails .date:before,
 #calendar .eventDetails .time:before,
 #calendar .eventDetails .duration:before,
+#calendar .eventDetails .location:before,
 #calendar .eventDetails .eventLocation:before,
 #calendar .eventDetails .sponsor:before,
 #calendar .eventDetails .contact:before, #calendar .eventDetails .dates li:before, #calendar .eventDetails #slotInfo > ul .administer a:before, #miniCal .foot .more a:after, #facultyStaff .facStaff .facStaffInfo .facStaffPhone:before, #facultyStaff .facStaff .facStaffInfo .facStaffEmail:before, #faq .moduleNav > p a:before, #faq .feedLink .feedInfo a:before, .featuresModule .feature .featureContent .featureInfo .featureNav .play-pause .button.play:before, .featuresModule .feature .featureContent .featureInfo .featureNav .play-pause .button.pause:before, .featuresModule .feature .featureContent .featureInfo .featureNav .navBlock .button.prev:before, .featuresModule .feature .featureContent .featureInfo .featureNav .navBlock .button.next:before, #discoErrorNotice h3:before, form #formAdminControlBox p a:before,
@@ -1227,6 +1228,7 @@ dialog .close-reveal-modal:before, .assets li:before, #av .moduleNav ul li:befor
 .fa-fw, #calendar .eventDetails .repetition:before, #calendar .eventDetails .date:before,
 #calendar .eventDetails .time:before,
 #calendar .eventDetails .duration:before,
+#calendar .eventDetails .location:before,
 #calendar .eventDetails .eventLocation:before,
 #calendar .eventDetails .sponsor:before,
 #calendar .eventDetails .contact:before, #facultyStaff .facStaff .facStaffInfo .facStaffPhone:before, #facultyStaff .facStaff .facStaffInfo .facStaffEmail:before, #meat .publication .moduleNav .posts .post .links li a:before {
@@ -3147,13 +3149,13 @@ h2.pageTitle {
   padding-bottom: 0.3125rem;
   padding-left: 0.5rem;
   font-size: 0.6875rem;
-  background-color: #b84041;
-  border-color: #933334;
+  background-color: #2ea7a0;
+  border-color: #258680;
   color: #FFFFFF;
   border-radius: 3px;
   transition: background-color 300ms ease-out; }
   #calendar .eventDetails .back a:hover, #calendar .eventDetails .back a:focus {
-    background-color: #933334; }
+    background-color: #258680; }
   #calendar .eventDetails .back a:hover, #calendar .eventDetails .back a:focus {
     color: #FFFFFF; }
   #calendar .eventDetails .back a:before {
@@ -3200,6 +3202,7 @@ h2.pageTitle {
 #calendar .eventDetails .date,
 #calendar .eventDetails .time,
 #calendar .eventDetails .duration,
+#calendar .eventDetails .location,
 #calendar .eventDetails .eventLocation,
 #calendar .eventDetails .sponsor,
 #calendar .eventDetails .contact {
@@ -3208,6 +3211,7 @@ h2.pageTitle {
   #calendar .eventDetails .date:before,
   #calendar .eventDetails .time:before,
   #calendar .eventDetails .duration:before,
+  #calendar .eventDetails .location:before,
   #calendar .eventDetails .eventLocation:before,
   #calendar .eventDetails .sponsor:before,
   #calendar .eventDetails .contact:before {
@@ -3217,10 +3221,17 @@ h2.pageTitle {
   #calendar .eventDetails .date:before,
   #calendar .eventDetails .time:before,
   #calendar .eventDetails .duration:before,
+  #calendar .eventDetails .location:before,
   #calendar .eventDetails .eventLocation:before,
   #calendar .eventDetails .sponsor:before,
   #calendar .eventDetails .contact:before {
     margin-left: -1.5rem; }
+#calendar .eventDetails .eventLocation .location {
+  margin: 0; }
+  #calendar .eventDetails .eventLocation .location:before {
+    margin: 0;
+    width: 0;
+    content: ""; }
 #calendar .eventDetails .repetition {
   border-style: solid;
   border-width: 0.0625rem;

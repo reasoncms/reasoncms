@@ -515,7 +515,7 @@ $medium-only-events: "#{$screen} and (min-width:#{$events_default_break_point_up
 		// Back to main calendar link
 		.back {
 			a {
-				@include back-link();
+				@include back-link($back-link-bg: $event-primary-color);
 			}
 		}
 
@@ -569,6 +569,7 @@ $medium-only-events: "#{$screen} and (min-width:#{$events_default_break_point_up
 		.date,
 		.time,
 		.duration,
+		.location,
 		.eventLocation,
 		.sponsor,
 		.contact {
@@ -579,6 +580,16 @@ $medium-only-events: "#{$screen} and (min-width:#{$events_default_break_point_up
 			&:before {
 				@extend .fa-fw;
 				margin-left: - $column-gutter/2;				
+			}
+		}
+
+		.eventLocation .location {
+			margin: 0;
+
+			&:before {
+				margin: 0;
+				width: 0;
+				content: "";			
 			}
 		}
 	
