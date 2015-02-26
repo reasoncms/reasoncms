@@ -126,7 +126,7 @@ select {
   margin-bottom: 1.25rem;
   position: relative;
   padding: 0.875rem 0.875rem 0.875rem 0.875rem;
-  font-size: 0.8125rem;
+  font-size: 0.9375rem;
   transition: opacity 300ms ease-out;
   background-color: #b84041;
   border-color: #9e3738;
@@ -989,15 +989,15 @@ a {
 p {
   font-family: inherit;
   font-weight: 300;
-  font-size: 1rem;
+  font-size: 1.125rem;
   line-height: 1.6;
-  margin-bottom: 1.25rem;
+  margin-bottom: 1.375rem;
   text-rendering: optimizeLegibility; }
   p.lead {
-    font-size: 1.21875rem;
+    font-size: 1.34375rem;
     line-height: 1.6; }
   p aside {
-    font-size: 0.875rem;
+    font-size: 1rem;
     line-height: 1.35;
     font-style: italic; }
 
@@ -1008,8 +1008,8 @@ h1, h2, h3, h4, h5, h6 {
   font-style: normal;
   color: #222222;
   text-rendering: optimizeLegibility;
-  margin-top: 0.2rem;
-  margin-bottom: 0.5rem;
+  margin-top: 0.3rem;
+  margin-bottom: 0.6rem;
   line-height: 1.3; }
   h1 small, h2 small, h3 small, h4 small, h5 small, h6 small {
     font-size: 75%;
@@ -1017,29 +1017,29 @@ h1, h2, h3, h4, h5, h6 {
     line-height: 0; }
 
 h1 {
-  font-size: 1.875rem; }
+  font-size: 2rem; }
 
 h2 {
-  font-size: 1.6875rem; }
+  font-size: 1.8125rem; }
 
 h3 {
-  font-size: 1.125rem; }
+  font-size: 1.25rem; }
 
 h4 {
-  font-size: 0.9375rem; }
-
-h5 {
   font-size: 1.0625rem; }
 
+h5 {
+  font-size: 1.1875rem; }
+
 h6 {
-  font-size: 1rem; }
+  font-size: 1.0625rem; }
 
 .subheader {
   line-height: 1.3;
   color: #6f6f6f;
   font-weight: 300;
-  margin-top: 0.2rem;
-  margin-bottom: 0.5rem; }
+  margin-top: 0.3rem;
+  margin-bottom: 0.6rem; }
 
 hr {
   border: solid #DDDDDD;
@@ -1077,9 +1077,9 @@ code {
 ul,
 ol,
 dl {
-  font-size: 1rem;
+  font-size: 1.125rem;
   line-height: 1.6;
-  margin-bottom: 1.25rem;
+  margin-bottom: 1.375rem;
   list-style-position: outside;
   font-family: inherit; }
 
@@ -1142,12 +1142,12 @@ abbr {
 
 /* Blockquotes */
 blockquote {
-  margin: 0 0 1.25rem;
+  margin: 0 0 1.375rem;
   padding: 3rem;
   border-left: none; }
   blockquote cite {
     display: block;
-    font-size: 0.8125rem;
+    font-size: 0.9375rem;
     color: #555555; }
     blockquote cite:before {
       content: "\2014 \0020"; }
@@ -1187,22 +1187,22 @@ blockquote p {
     line-height: 1.3; }
 
   h1 {
-    font-size: 2.5rem; }
+    font-size: 2.625rem; }
 
   h2 {
-    font-size: 2.125rem; }
+    font-size: 2.25rem; }
 
   h3 {
-    font-size: 1.5rem; }
+    font-size: 1.625rem; }
 
   h4 {
-    font-size: 1.25rem; }
+    font-size: 1.375rem; }
 
   h5 {
-    font-size: 1.0625rem; }
+    font-size: 1.1875rem; }
 
   h6 {
-    font-size: 1rem; } }
+    font-size: 1.0625rem; } }
 .fa, #banner #navigationToggles li.navJump a:before, #banner #navigationToggles li.searchToggle a:before, .persistent #filtering .searchForm a:before, .persistent #filtering .filterSet a:before, .persistent #filtering .filters ul li a:before, .persistent #filtering .filters ul li strong:before, .persistent .loginlogout a:after, .moduleNav .feedLink .feedInfo a:before, #generic .back a:before, .reveal-modal .close-reveal-modal:before,
 dialog .close-reveal-modal:before, .assets li:before, #av .moduleNav ul li:before, #av .moduleNav > p a:before, #av .podcast a:before, .classifiedSubmitLink a:before, .classifiedReturnToListingLink a:before, #pageContent blockquote > *:first-child:not(cite):before, .fullPost .text blockquote > *:first-child:not(cite):before, .comments .commentContent blockquote > *:first-child:not(cite):before, .eventContent blockquote > *:first-child:not(cite):before, .blurb blockquote > *:first-child:not(cite):before, #faq .answer blockquote > *:first-child:not(cite):before, .facStaffContent blockquote > *:first-child:not(cite):before, .minutesContent blockquote > *:first-child:not(cite):before, .policyContent blockquote > *:first-child:not(cite):before, .policy .approvals blockquote > *:first-child:not(cite):before, #calendar .responsiveEventsList .gridAndOptionsWrapper .options .categories li a:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .options .categories li strong:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .options .audiences li a:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .options .audiences li strong:before, #calendar .responsiveEventsList .iCalExport a:before,
 #calendar .responsiveEventsList .feedInfo a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .repetition:before, #calendar .eventDetails .date:before,
@@ -1460,7 +1460,7 @@ dialog .close-reveal-modal:before, .assets li:before, #av .moduleNav ul li:befor
     #banner {
       padding: 2.25rem 1.5rem 1.8rem; } }
   #banner h1 {
-    font-size: 1.125rem;
+    font-size: 1.625rem;
     font-family: "Merriweather", serif;
     margin: 0;
     padding-bottom: 1.125rem; }
@@ -1869,7 +1869,7 @@ dialog .close-reveal-modal span {
   margin-bottom: 1.25rem;
   position: relative;
   padding: 0.875rem 0.875rem 0.875rem 0.875rem;
-  font-size: 0.8125rem;
+  font-size: 0.9375rem;
   transition: opacity 300ms ease-out;
   background-color: #DDDDDD;
   border-color: #bebebe;
@@ -1894,7 +1894,7 @@ dialog .close-reveal-modal span {
     margin-bottom: 1.25rem;
     position: relative;
     padding: 0.875rem 0.875rem 0.875rem 0.875rem;
-    font-size: 0.8125rem;
+    font-size: 0.9375rem;
     transition: opacity 300ms ease-out;
     background-color: #43AC6A;
     border-color: #3a945b;
@@ -1919,7 +1919,7 @@ dialog .close-reveal-modal span {
     margin-bottom: 1.25rem;
     position: relative;
     padding: 0.875rem 0.875rem 0.875rem 0.875rem;
-    font-size: 0.8125rem;
+    font-size: 0.9375rem;
     transition: opacity 300ms ease-out;
     background-color: #a0d3e8;
     border-color: #74bfdd;
@@ -1944,7 +1944,7 @@ dialog .close-reveal-modal span {
     margin-bottom: 1.25rem;
     position: relative;
     padding: 0.875rem 0.875rem 0.875rem 0.875rem;
-    font-size: 0.8125rem;
+    font-size: 0.9375rem;
     transition: opacity 300ms ease-out;
     background-color: #f08a24;
     border-color: #de770f;
@@ -1969,7 +1969,7 @@ dialog .close-reveal-modal span {
     margin-bottom: 1.25rem;
     position: relative;
     padding: 0.875rem 0.875rem 0.875rem 0.875rem;
-    font-size: 0.8125rem;
+    font-size: 0.9375rem;
     transition: opacity 300ms ease-out;
     background-color: #f04124;
     border-color: #de2d0f;
@@ -2015,13 +2015,13 @@ dialog .close-reveal-modal span {
     color: #888888;
     display: inline-block; }
     .assets .name a {
-      font-size: 1rem;
+      font-size: 1.125rem;
       font-family: "Merriweather", serif; }
   .assets .date {
     font-size: 0.875rem;
     color: #888888; }
   .assets h4 {
-    font-size: 1.0625rem;
+    font-size: 1.1875rem;
     margin-top: 1.125rem; }
 
 #av {
@@ -2239,7 +2239,7 @@ dialog .close-reveal-modal span {
       color: #7b7b7b;
       font-family: "Open Sans", sans-serif;
       font-weight: 300;
-      font-size: 0.875rem; }
+      font-size: 0.9375rem; }
 
 #childrenAndGrandchildren .childrenList > li {
   border-top: 1px solid #EEEEEE;
@@ -2286,7 +2286,7 @@ dialog .close-reveal-modal span {
           background: none; }
     #childrenAndGrandchildren .childrenList > li ul .childDesc {
       margin: 0;
-      font-size: 0.875rem; }
+      font-size: 0.9375rem; }
 
 .childrenListWithImages {
   margin: 0;
@@ -2496,17 +2496,17 @@ h2.pageTitle {
   line-height: 1.3; }
 
 #related h1 {
-  font-size: 1.875rem; }
+  font-size: 2rem; }
 #related h2 {
-  font-size: 1.6875rem; }
+  font-size: 1.8125rem; }
 #related h3 {
-  font-size: 1.125rem; }
+  font-size: 1.25rem; }
 #related h4 {
-  font-size: 0.9375rem; }
-#related h5 {
   font-size: 1.0625rem; }
+#related h5 {
+  font-size: 1.1875rem; }
 #related h6 {
-  font-size: 1rem; }
+  font-size: 1.0625rem; }
 
 #meat table.thor_data,
 #meat table.table_data {
@@ -2529,7 +2529,7 @@ h2.pageTitle {
     #meat table.table_data thead tr th,
     #meat table.table_data thead tr td {
       padding: 0.5rem 0.625rem 0.625rem;
-      font-size: 0.875rem;
+      font-size: 1rem;
       font-weight: 700;
       color: #222222; }
   #meat table.thor_data tfoot,
@@ -2540,7 +2540,7 @@ h2.pageTitle {
     #meat table.table_data tfoot tr th,
     #meat table.table_data tfoot tr td {
       padding: 0.5rem 0.625rem 0.625rem;
-      font-size: 0.875rem;
+      font-size: 1rem;
       font-weight: 700;
       color: #222222; }
   #meat table.thor_data tr th,
@@ -2548,7 +2548,7 @@ h2.pageTitle {
   #meat table.table_data tr th,
   #meat table.table_data tr td {
     padding: 0.5625rem 0.625rem;
-    font-size: 0.875rem;
+    font-size: 1rem;
     color: #222222;
     text-align: left; }
   #meat table.thor_data tr.even, #meat table.thor_data tr.alt, #meat table.thor_data tr:nth-of-type(even),
@@ -2583,7 +2583,7 @@ h2.pageTitle {
     border: 1px solid #DDDDDD; }
 
 #pageContent, .fullPost .text, .comments .commentContent, .eventContent, .blurb, #faq .answer, .facStaffContent, .minutesContent, .policyContent, .policy .approvals {
-  margin-bottom: 1rem; }
+  margin-bottom: 0.875rem; }
   #pageContent:before, #pageContent:after, .fullPost .text:before, .fullPost .text:after, .comments .commentContent:before, .comments .commentContent:after, .eventContent:before, .eventContent:after, .blurb:before, .blurb:after, #faq .answer:before, #faq .answer:after, .facStaffContent:before, .facStaffContent:after, .minutesContent:before, .minutesContent:after, .policyContent:before, .policyContent:after, .policy .approvals:before, .policy .approvals:after {
     content: " ";
     display: table; }
@@ -2631,7 +2631,7 @@ h2.pageTitle {
       .policyContent table thead tr td, .policy .approvals table thead tr th,
       .policy .approvals table thead tr td {
         padding: 0.5rem 0.625rem 0.625rem;
-        font-size: 0.875rem;
+        font-size: 1rem;
         font-weight: 700;
         color: #222222; }
     #pageContent table tfoot, .fullPost .text table tfoot, .comments .commentContent table tfoot, .eventContent table tfoot, .blurb table tfoot, #faq .answer table tfoot, .facStaffContent table tfoot, .minutesContent table tfoot, .policyContent table tfoot, .policy .approvals table tfoot {
@@ -2648,7 +2648,7 @@ h2.pageTitle {
       .policyContent table tfoot tr td, .policy .approvals table tfoot tr th,
       .policy .approvals table tfoot tr td {
         padding: 0.5rem 0.625rem 0.625rem;
-        font-size: 0.875rem;
+        font-size: 1rem;
         font-weight: 700;
         color: #222222; }
     #pageContent table tr th,
@@ -2663,7 +2663,7 @@ h2.pageTitle {
     .policyContent table tr td, .policy .approvals table tr th,
     .policy .approvals table tr td {
       padding: 0.5625rem 0.625rem;
-      font-size: 0.875rem;
+      font-size: 1rem;
       color: #222222;
       text-align: left; }
     #pageContent table tr.even, #pageContent table tr.alt, #pageContent table tr:nth-of-type(even), .fullPost .text table tr.even, .fullPost .text table tr.alt, .fullPost .text table tr:nth-of-type(even), .comments .commentContent table tr.even, .comments .commentContent table tr.alt, .comments .commentContent table tr:nth-of-type(even), .eventContent table tr.even, .eventContent table tr.alt, .eventContent table tr:nth-of-type(even), .blurb table tr.even, .blurb table tr.alt, .blurb table tr:nth-of-type(even), #faq .answer table tr.even, #faq .answer table tr.alt, #faq .answer table tr:nth-of-type(even), .facStaffContent table tr.even, .facStaffContent table tr.alt, .facStaffContent table tr:nth-of-type(even), .minutesContent table tr.even, .minutesContent table tr.alt, .minutesContent table tr:nth-of-type(even), .policyContent table tr.even, .policyContent table tr.alt, .policyContent table tr:nth-of-type(even), .policy .approvals table tr.even, .policy .approvals table tr.alt, .policy .approvals table tr:nth-of-type(even) {
@@ -2744,7 +2744,6 @@ h2.pageTitle {
     padding-right: 1.5rem; }
   #calendar .responsiveEventsList .options {
     float: right;
-    width: 49%;
     width: 50%;
     padding-left: 1.5rem; } }
 @media all and (max-width: 500px) {
@@ -2802,10 +2801,10 @@ h2.pageTitle {
         margin: 0 0 0 0.375rem;
         margin: 0;
         padding: 0;
-        font-size: 0.75rem; }
+        font-size: 0.8125rem; }
         @media only screen and (min-width: 40.063em) {
           #calendar .responsiveEventsList .views ul li {
-            font-size: 0.875rem; } }
+            font-size: 0.9375rem; } }
         #calendar .responsiveEventsList .views ul li a,
         #calendar .responsiveEventsList .views ul li strong {
           padding: 0.0625rem 0.75rem;
@@ -2859,7 +2858,7 @@ h2.pageTitle {
     margin-bottom: 1.25rem;
     position: relative;
     padding: 0.875rem 0.875rem 0.875rem 0.875rem;
-    font-size: 0.8125rem;
+    font-size: 0.9375rem;
     transition: opacity 300ms ease-out;
     background-color: #F6F6F6;
     border-color: #d4d4d4;
@@ -2878,7 +2877,7 @@ h2.pageTitle {
       display: inline; }
   #calendar .responsiveEventsList .eventsListContent .month {
     font-family: "Merriweather", serif;
-    font-size: 1.25rem;
+    font-size: 1.375rem;
     color: #999999;
     border-top: 1px dotted #DDDDDD;
     padding-top: 1.5rem; }
@@ -3017,10 +3016,10 @@ h2.pageTitle {
         box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
         color: rgba(0, 0, 0, 0.75);
         display: block;
-        font-size: 0.875rem;
+        font-size: 0.9375rem;
         margin: 0 0 1rem 0;
         padding: 0.5rem;
-        height: 2.3125rem;
+        height: 2.375rem;
         width: 100%;
         -webkit-box-sizing: border-box;
         -moz-box-sizing: border-box;
@@ -3043,7 +3042,7 @@ h2.pageTitle {
         display: block;
         text-align: center;
         padding: 0.5rem;
-        height: 2.3125rem;
+        height: 2.375rem;
         background: #2ea7a0;
         color: #FFFFFF;
         width: 20%;
@@ -3238,7 +3237,7 @@ h2.pageTitle {
   margin-bottom: 1.25rem;
   position: relative;
   padding: 0.875rem 0.875rem 0.875rem 0.875rem;
-  font-size: 0.8125rem;
+  font-size: 0.9375rem;
   transition: opacity 300ms ease-out;
   background-color: #a0d3e8;
   border-color: #74bfdd;
@@ -3423,7 +3422,7 @@ h2.pageTitle {
     #miniCal .ongoingEvents .event a {
       font-weight: 700;
       text-transform: none;
-      font-size: 1rem; }
+      font-size: 1.125rem; }
       #miniCal .dayEvents .event a:hover,
       #miniCal .ongoingEvents .event a:hover {
         text-decoration: underline; }
@@ -3497,7 +3496,7 @@ h2.pageTitle {
           float: right;
           margin: 0 0 1.125rem 1.5rem; } }
     #facultyStaff .facStaff .facStaffName {
-      font-size: 1.5rem;
+      font-size: 1.625rem;
       margin-bottom: 1.125rem; }
     #facultyStaff .facStaff .facStaffInfo .label {
       position: absolute;
@@ -3715,10 +3714,10 @@ h2.pageTitle {
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
   color: rgba(0, 0, 0, 0.75);
   display: block;
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
   margin: 0 0 1rem 0;
   padding: 0.5rem;
-  height: 2.3125rem;
+  height: 2.375rem;
   width: 100%;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -3743,7 +3742,7 @@ h2.pageTitle {
   display: block;
   text-align: center;
   padding: 0.5rem;
-  height: 2.3125rem;
+  height: 2.375rem;
   background: #b84041;
   color: #FFFFFF;
   width: 100%;
@@ -3764,10 +3763,10 @@ h2.pageTitle {
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
   color: rgba(0, 0, 0, 0.75);
   display: block;
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
   margin: 0 0 1rem 0;
   padding: 0.5rem;
-  height: 2.3125rem;
+  height: 2.375rem;
   width: 100%;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -3793,7 +3792,7 @@ h2.pageTitle {
   display: block;
   text-align: center;
   padding: 0.5rem;
-  height: 2.3125rem;
+  height: 2.375rem;
   background: #b84041;
   color: #FFFFFF;
   width: 100%;
@@ -3840,10 +3839,10 @@ h2.pageTitle {
     box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
     color: rgba(0, 0, 0, 0.75);
     display: block;
-    font-size: 0.875rem;
+    font-size: 0.9375rem;
     margin: 0 0 1rem 0;
     padding: 0.5rem;
-    height: 2.3125rem;
+    height: 2.375rem;
     width: 100%;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -3884,7 +3883,7 @@ h2.pageTitle {
     display: block;
     text-align: center;
     padding: 0.5rem;
-    height: 2.3125rem;
+    height: 2.375rem;
     width: 20%;
     float: left;
     border-radius: 0 3px 3px 0;
@@ -3913,10 +3912,10 @@ h2.pageTitle {
     box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
     color: rgba(0, 0, 0, 0.75);
     display: block;
-    font-size: 0.875rem;
+    font-size: 0.9375rem;
     margin: 0 0 1rem 0;
     padding: 0.5rem;
-    height: 2.3125rem;
+    height: 2.375rem;
     width: 100%;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -3939,7 +3938,7 @@ h2.pageTitle {
     display: block;
     text-align: center;
     padding: 0.5rem;
-    height: 2.3125rem;
+    height: 2.375rem;
     background: #b84041;
     color: #FFFFFF;
     width: 20%;
@@ -3978,7 +3977,7 @@ form #antlionItem {
         margin-top: -12rem;
         height: 12rem; } }
   #discoErrorNotice h3 {
-    font-size: 1.25rem;
+    font-size: 1.375rem;
     font-weight: 400;
     margin: 0 0 0.375rem;
     color: #f04124 !important; }
@@ -3993,7 +3992,7 @@ form #antlionItem {
     margin-bottom: 1.25rem;
     position: relative;
     padding: 0.875rem 0.875rem 0.875rem 0.875rem;
-    font-size: 0.8125rem;
+    font-size: 0.9375rem;
     transition: opacity 300ms ease-out;
     background-color: #FFFFFF;
     border-color: #dbdbdb;
@@ -4126,10 +4125,10 @@ form .loki textarea,
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
   color: rgba(0, 0, 0, 0.75);
   display: block;
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
   margin: 0 0 1rem 0;
   padding: 0.5rem;
-  height: 2.3125rem;
+  height: 2.375rem;
   width: 100%;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -4412,7 +4411,7 @@ form input[type="submit"],
   color: #FFFFFF;
   border-radius: 3px;
   transition: background-color 300ms ease-out;
-  height: 2.3125rem;
+  height: 2.375rem;
   padding: 0 3rem; }
   form input[type="submit"]:hover, form input[type="submit"]:focus,
   #form input[type="submit"]:hover,
@@ -4462,12 +4461,12 @@ form select,
   border-width: 1px;
   border-color: #cccccc;
   padding: 0.5rem;
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
   font-family: "Open Sans", sans-serif;
   color: rgba(0, 0, 0, 0.75);
   line-height: normal;
   border-radius: 0;
-  height: 2.3125rem;
+  height: 2.375rem;
   background: #FFFFFF; }
   form select::-ms-expand,
   #form select::-ms-expand,
@@ -4813,7 +4812,7 @@ form .submitSection,
 #pageContent img, .fullPost .text img, .comments .commentContent img, .eventContent img, .blurb img, #faq .answer img, .facStaffContent img, .minutesContent img, .policyContent img, .policy .approvals img {
   width: auto;
   max-width: 100%;
-  margin: 0 0 1.25rem;
+  margin: 0 0 1.375rem;
   display: block;
   clear: left; }
   #pageContent img.left, #pageContent img[align="left"], #pageContent img.right, #pageContent img[align="right"], .fullPost .text img.left, .fullPost .text img[align="left"], .fullPost .text img.right, .fullPost .text img[align="right"], .comments .commentContent img.left, .comments .commentContent img[align="left"], .comments .commentContent img.right, .comments .commentContent img[align="right"], .eventContent img.left, .eventContent img[align="left"], .eventContent img.right, .eventContent img[align="right"], .blurb img.left, .blurb img[align="left"], .blurb img.right, .blurb img[align="right"], #faq .answer img.left, #faq .answer img[align="left"], #faq .answer img.right, #faq .answer img[align="right"], .facStaffContent img.left, .facStaffContent img[align="left"], .facStaffContent img.right, .facStaffContent img[align="right"], .minutesContent img.left, .minutesContent img[align="left"], .minutesContent img.right, .minutesContent img[align="right"], .policyContent img.left, .policyContent img[align="left"], .policyContent img.right, .policyContent img[align="right"], .policy .approvals img.left, .policy .approvals img[align="left"], .policy .approvals img.right, .policy .approvals img[align="right"] {
@@ -4897,7 +4896,7 @@ form .submitSection,
       margin-bottom: 1.25rem;
       position: relative;
       padding: 0.875rem 0.875rem 0.875rem 0.875rem;
-      font-size: 0.8125rem;
+      font-size: 0.9375rem;
       transition: opacity 300ms ease-out;
       background-color: #f04124;
       border-color: #de2d0f;
@@ -5087,7 +5086,7 @@ form .submitSection,
     margin: 0;
     padding: 0;
     list-style-type: none;
-    font-size: 0.9375rem; }
+    font-size: 1.0625rem; }
     #minisiteNavigation ul .home {
       display: block;
       border-bottom: 1px solid #EFEFEF;
@@ -5254,7 +5253,7 @@ form .submitSection,
       color: #999999;
       font-size: 0.875rem; }
     #relatedPub .moduleNav .posts .post h4 {
-      font-size: 1.125rem; }
+      font-size: 1.25rem; }
     #relatedPub .moduleNav .posts .post .desc > *:last-child {
       margin-bottom: 0; }
       #relatedPub .moduleNav .posts .post .desc > *:last-child *:last-child {
@@ -5471,7 +5470,7 @@ form .submitSection,
           max-width: 100px; } }
     #meat .publication .moduleNav .posts .post .title {
       margin: 0;
-      font-size: 1.5rem;
+      font-size: 1.625rem;
       font-weight: 400; }
       #meat .publication .moduleNav .posts .post .title a {
         color: #2ea7a0; }
@@ -5667,7 +5666,7 @@ form .submitSection,
         margin-bottom: 1.25rem;
         position: relative;
         padding: 0.875rem 0.875rem 0.875rem 0.875rem;
-        font-size: 0.8125rem;
+        font-size: 0.9375rem;
         transition: opacity 300ms ease-out;
         background-color: #a0d3e8;
         border-color: #74bfdd;
@@ -5711,7 +5710,7 @@ form .submitSection,
           float: left;
           padding-left: 1.5rem; } }
       #meat .publication.fullPostDisplay .fullPost .relatedItems h4 {
-        font-size: 1.25rem;
+        font-size: 1.375rem;
         margin-top: 0; }
       #meat .publication.fullPostDisplay .fullPost .relatedItems > div {
         margin-bottom: 1.125rem; }
@@ -5857,7 +5856,7 @@ form .submitSection,
         margin-bottom: 1.25rem;
         position: relative;
         padding: 0.875rem 0.875rem 0.875rem 0.875rem;
-        font-size: 0.8125rem;
+        font-size: 0.9375rem;
         transition: opacity 300ms ease-out;
         background-color: #a0d3e8;
         border-color: #74bfdd;
@@ -5900,7 +5899,7 @@ form .submitSection,
         margin-bottom: 1.25rem;
         position: relative;
         padding: 0.875rem 0.875rem 0.875rem 0.875rem;
-        font-size: 0.8125rem;
+        font-size: 0.9375rem;
         transition: opacity 300ms ease-out;
         background-color: #f08a24;
         border-color: #de770f;
@@ -5939,7 +5938,7 @@ form .submitSection,
         margin-bottom: 1.25rem;
         position: relative;
         padding: 0.875rem 0.875rem 0.875rem 0.875rem;
-        font-size: 0.8125rem;
+        font-size: 0.9375rem;
         transition: opacity 300ms ease-out;
         background-color: #f08a24;
         border-color: #de770f;

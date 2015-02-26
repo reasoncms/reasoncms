@@ -47,7 +47,6 @@ $medium-only-events: "#{$screen} and (min-width:#{$events_default_break_point_up
 
 			.options {
 				float:right;
-				width:49%;
 				width: 50%;
 				padding-left: $column-gutter/2;
 			}
@@ -117,10 +116,10 @@ $medium-only-events: "#{$screen} and (min-width:#{$events_default_break_point_up
 					margin: 0 0 0 rem-calc(6);
 					margin: 0;
 					padding: 0;
-					font-size: rem-calc(12);
+					font-size: rem-calc(13);
 
 					@media #{$medium-up} {
-						font-size: rem-calc(14);
+						font-size: rem-calc(15);
 					}
 
 					a,
@@ -806,7 +805,7 @@ $medium-only-events: "#{$screen} and (min-width:#{$events_default_break_point_up
 			a { // Event title
 				font-weight: 700;
 				text-transform: none;
-				font-size: rem-calc(16);
+				font-size: rem-calc(18);
 
 				&:hover {
 					text-decoration: underline;

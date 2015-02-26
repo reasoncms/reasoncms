@@ -10,7 +10,7 @@
 	ul {
 		@include zero-out();
 		list-style-type: none;
-		font-size: rem-calc(15);
+		font-size: rem-calc(17);
 
 		$nav-item-lr: rem-calc(12);
 		$nav-item-tb: rem-calc(16);

@@ -286,15 +286,15 @@ a {
 p {
   font-family: inherit;
   font-weight: 300;
-  font-size: 1rem;
+  font-size: 1.125rem;
   line-height: 1.6;
-  margin-bottom: 1.25rem;
+  margin-bottom: 1.375rem;
   text-rendering: optimizeLegibility; }
   p.lead {
-    font-size: 1.21875rem;
+    font-size: 1.34375rem;
     line-height: 1.6; }
   p aside {
-    font-size: 0.875rem;
+    font-size: 1rem;
     line-height: 1.35;
     font-style: italic; }
 
@@ -305,8 +305,8 @@ h1, h2, h3, h4, h5, h6 {
   font-style: normal;
   color: #222222;
   text-rendering: optimizeLegibility;
-  margin-top: 0.2rem;
-  margin-bottom: 0.5rem;
+  margin-top: 0.3rem;
+  margin-bottom: 0.6rem;
   line-height: 1.3; }
   h1 small, h2 small, h3 small, h4 small, h5 small, h6 small {
     font-size: 75%;
@@ -314,29 +314,29 @@ h1, h2, h3, h4, h5, h6 {
     line-height: 0; }
 
 h1 {
-  font-size: 1.875rem; }
+  font-size: 2rem; }
 
 h2 {
-  font-size: 1.6875rem; }
+  font-size: 1.8125rem; }
 
 h3 {
-  font-size: 1.125rem; }
+  font-size: 1.25rem; }
 
 h4 {
-  font-size: 0.9375rem; }
-
-h5 {
   font-size: 1.0625rem; }
 
+h5 {
+  font-size: 1.1875rem; }
+
 h6 {
-  font-size: 1rem; }
+  font-size: 1.0625rem; }
 
 .subheader {
   line-height: 1.3;
   color: #6f6f6f;
   font-weight: 300;
-  margin-top: 0.2rem;
-  margin-bottom: 0.5rem; }
+  margin-top: 0.3rem;
+  margin-bottom: 0.6rem; }
 
 hr {
   border: solid #DDDDDD;
@@ -374,9 +374,9 @@ code {
 ul,
 ol,
 dl {
-  font-size: 1rem;
+  font-size: 1.125rem;
   line-height: 1.6;
-  margin-bottom: 1.25rem;
+  margin-bottom: 1.375rem;
   list-style-position: outside;
   font-family: inherit; }
 
@@ -439,12 +439,12 @@ abbr {
 
 /* Blockquotes */
 blockquote {
-  margin: 0 0 1.25rem;
+  margin: 0 0 1.375rem;
   padding: 3rem;
   border-left: none; }
   blockquote cite {
     display: block;
-    font-size: 0.8125rem;
+    font-size: 0.9375rem;
     color: #555555; }
     blockquote cite:before {
       content: "\2014 \0020"; }
@@ -484,22 +484,22 @@ blockquote p {
     line-height: 1.3; }
 
   h1 {
-    font-size: 2.5rem; }
+    font-size: 2.625rem; }
 
   h2 {
-    font-size: 2.125rem; }
+    font-size: 2.25rem; }
 
   h3 {
-    font-size: 1.5rem; }
+    font-size: 1.625rem; }
 
   h4 {
-    font-size: 1.25rem; }
+    font-size: 1.375rem; }
 
   h5 {
-    font-size: 1.0625rem; }
+    font-size: 1.1875rem; }
 
   h6 {
-    font-size: 1rem; } }
+    font-size: 1.0625rem; } }
 @media only screen and (min-width: 30em) {
   .cloakLogin #wrapper {
     padding-top: 10%; } }
@@ -520,7 +520,7 @@ blockquote p {
       border-radius: 3px 3px 0 0;
       background: none; } }
   .cloakLogin #banner h1 {
-    font-size: 1.25rem; }
+    font-size: 1.375rem; }
     .cloakLogin #banner h1 a {
       color: #b84041; }
       .cloakLogin #banner h1 a:hover {
@@ -584,7 +584,7 @@ blockquote p {
       .cloakLogin #meat #login table input[type="submit"]:hover, .cloakLogin #meat #login table input[type="submit"]:focus {
         color: #FFFFFF; }
   .cloakLogin #meat #login .msg {
-    font-size: 1.0625rem;
+    font-size: 1.1875rem;
     color: #f04124;
     margin: 0; }
     .cloakLogin #meat #login .msg p {
