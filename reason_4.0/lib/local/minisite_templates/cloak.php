@@ -320,7 +320,6 @@
 			echo '<script type="text/javascript" src="/reason/local/cloak/js/vendor/isotope.pkgd.min.js"></script>'."\n";
 			echo '<script type="text/javascript" src="/reason/local/cloak/js/vendor/fastclick.js"></script>'."\n";
 			
-			
 			// Foundation 5.5.1 has a topbar bug that keeps the topbar sticky in iOS, even when set otherwise.
 			// The bug has been reported and confirmed on GitHub. https://github.com/zurb/foundation/issues/6329
 			// We'll fix with the next release. In the meantime, a fix.
