@@ -3806,6 +3806,13 @@ h2.pageTitle {
       float: left;
       margin-bottom: 1rem; } }
 
+.js #filtering form label,
+.js #filtering .searchForm label {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  margin-bottom: 0; }
+
 #filtering form,
 #filtering .searchForm {
   margin: 0 0 1.125rem 0 !important; }
@@ -3821,10 +3828,7 @@ h2.pageTitle {
   #filtering form .colon,
   #filtering .searchForm label,
   #filtering .searchForm .colon {
-    position: absolute;
-    left: -9999px;
-    top: -9999px;
-    margin-bottom: 0; }
+    display: block; }
   #filtering form #gallerySearchField,
   #filtering form .search,
   #filtering .searchForm #gallerySearchField,

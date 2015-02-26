@@ -72,6 +72,12 @@
 }
 
 // MODULE SEARCH FORM
+
+.js #filtering form label,
+.js #filtering .searchForm label {
+	@include screenreader();
+}
+
 #filtering {
 
 	// Search form
@@ -82,7 +88,7 @@
 
 		label,
 		.colon {
-			@include screenreader();
+			display: block;
 		}
 
 		#gallerySearchField,
@@ -93,6 +99,7 @@
 			float: left;
 			margin-bottom: 0;
 			border-right: none;
+
 		}
 
 		.submit,

@@ -3,8 +3,6 @@ $(document).foundation({
 	equalizer : { equalize_on_stack: false }
 });
 
-
-
 $(document).ready(function() {
 
 	// Add classes for showing/hiding the mobile navigtaion
@@ -34,6 +32,9 @@ $(document).ready(function() {
 		}
 		e.preventDefault();
 	});
+
+	// Adds "Search" text placeholder to module search filters
+	$(".searchForm .search").attr("placeholder", "Search");
 
 	// SANS IMAGELOADED
 	// var $container = $('#imageGalleryItemList');
