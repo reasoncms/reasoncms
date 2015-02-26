@@ -3287,44 +3287,61 @@ h2.pageTitle {
 #calendar .eventDetails .eventUrl {
   margin-bottom: 1.125rem; }
 #calendar .eventDetails #slotInfo {
-  background: none;
-  border: none; }
+  background: #F5F5F5;
+  border: 1px solid #EEEEEE;
+  border-radius: 3px;
+  padding: 1.5rem 1.125rem; }
+  #calendar .eventDetails #slotInfo h3 {
+    background: none;
+    border: none;
+    padding: 0;
+    color: #2ea7a0;
+    margin-bottom: 1.125rem; }
   #calendar .eventDetails #slotInfo > ul {
     margin: 0; }
     #calendar .eventDetails #slotInfo > ul > li {
-      margin-bottom: 2.25rem; }
-    #calendar .eventDetails #slotInfo > ul ul {
-      margin: 0; }
-    #calendar .eventDetails #slotInfo > ul li {
-      list-style-type: none; }
-    #calendar .eventDetails #slotInfo > ul .register a {
-      border-style: solid;
-      border-width: 0;
-      cursor: pointer;
-      font-family: "Open Sans", sans-serif;
-      font-weight: 300;
-      line-height: normal;
-      margin: 0 0 1.25rem;
-      position: relative;
-      text-decoration: none;
-      text-align: center;
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      border-radius: 0;
-      display: inline-block;
-      padding-top: 0.75rem;
-      padding-right: 1.5rem;
-      padding-bottom: 0.8125rem;
-      padding-left: 1.5rem;
-      font-size: 1rem;
-      background-color: #b84041;
-      border-color: #933334;
-      color: #FFFFFF;
-      transition: background-color 300ms ease-out; }
-      #calendar .eventDetails #slotInfo > ul .register a:hover, #calendar .eventDetails #slotInfo > ul .register a:focus {
-        background-color: #933334; }
-      #calendar .eventDetails #slotInfo > ul .register a:hover, #calendar .eventDetails #slotInfo > ul .register a:focus {
-        color: #FFFFFF; }
+      margin-bottom: 2.25rem;
+      background: #FFFFFF;
+      border-radius: 3px;
+      border: 1px solid #EEEEEE;
+      padding: 1.5rem 1.125rem; }
+      #calendar .eventDetails #slotInfo > ul > li h4 {
+        border: none; }
+      #calendar .eventDetails #slotInfo > ul > li > ul {
+        margin: 0; }
+        #calendar .eventDetails #slotInfo > ul > li > ul li {
+          list-style-type: none; }
+    #calendar .eventDetails #slotInfo > ul .register {
+      margin-top: 1rem; }
+      #calendar .eventDetails #slotInfo > ul .register a {
+        border-style: solid;
+        border-width: 0;
+        cursor: pointer;
+        font-family: "Open Sans", sans-serif;
+        font-weight: 300;
+        line-height: normal;
+        margin: 0 0 1.25rem;
+        position: relative;
+        text-decoration: none;
+        text-align: center;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        border-radius: 0;
+        display: inline-block;
+        padding-top: 0.75rem;
+        padding-right: 1.5rem;
+        padding-bottom: 0.8125rem;
+        padding-left: 1.5rem;
+        font-size: 1rem;
+        background-color: #b84041;
+        border-color: #933334;
+        color: #FFFFFF;
+        transition: background-color 300ms ease-out;
+        margin-bottom: 0; }
+        #calendar .eventDetails #slotInfo > ul .register a:hover, #calendar .eventDetails #slotInfo > ul .register a:focus {
+          background-color: #933334; }
+        #calendar .eventDetails #slotInfo > ul .register a:hover, #calendar .eventDetails #slotInfo > ul .register a:focus {
+          color: #FFFFFF; }
     #calendar .eventDetails #slotInfo > ul .administer a {
       border-style: solid;
       border-width: 0;
@@ -3363,6 +3380,56 @@ h2.pageTitle {
         color: inherit; }
       #calendar .eventDetails #slotInfo > ul .administer a:hover {
         background: #000; }
+  #calendar .eventDetails #slotInfo form,
+  #calendar .eventDetails #slotInfo .formResponse {
+    margin-bottom: 2.25rem;
+    background: #FFFFFF;
+    border-radius: 3px;
+    border: 1px solid #EEEEEE;
+    padding: 1.5rem 1.125rem;
+    background: #FFFFFF; }
+    #calendar .eventDetails #slotInfo form #eventdateItem .words,
+    #calendar .eventDetails #slotInfo .formResponse #eventdateItem .words {
+      font-size: 1.375rem;
+      padding: 0; }
+  #calendar .eventDetails #slotInfo .form #discoErrorNotice ul {
+    margin: 0 !important; }
+    #calendar .eventDetails #slotInfo .form #discoErrorNotice ul li {
+      margin: 0; }
+  #calendar .eventDetails #slotInfo .form .submitSection {
+    margin: 0; }
+    #calendar .eventDetails #slotInfo .form .submitSection input {
+      margin: 0; }
+  #calendar .eventDetails #slotInfo #cancel_link p {
+    margin-bottom: 0; }
+    #calendar .eventDetails #slotInfo #cancel_link p a {
+      border-style: solid;
+      border-width: 0;
+      cursor: pointer;
+      font-family: "Open Sans", sans-serif;
+      font-weight: 300;
+      line-height: normal;
+      margin: 0 0 1.25rem;
+      position: relative;
+      text-decoration: none;
+      text-align: center;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      border-radius: 0;
+      display: inline-block;
+      padding-top: 0.25rem;
+      padding-right: 0.5rem;
+      padding-bottom: 0.3125rem;
+      padding-left: 0.5rem;
+      font-size: 0.6875rem;
+      background-color: #b84041;
+      border-color: #933334;
+      color: #FFFFFF;
+      transition: background-color 300ms ease-out; }
+      #calendar .eventDetails #slotInfo #cancel_link p a:hover, #calendar .eventDetails #slotInfo #cancel_link p a:focus {
+        background-color: #933334; }
+      #calendar .eventDetails #slotInfo #cancel_link p a:hover, #calendar .eventDetails #slotInfo #cancel_link p a:focus {
+        color: #FFFFFF; }
 
 /* Events Mini */
 #miniCal #events {
