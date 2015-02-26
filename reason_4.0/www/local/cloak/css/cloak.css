@@ -3263,6 +3263,8 @@ h2.pageTitle {
 #calendar .eventDetails .eventLocation p {
   display: inline;
   margin: 0; }
+#calendar .eventDetails .location:before {
+  content: ""; }
 #calendar .eventDetails .sponsor:before {
   content: ""; }
 #calendar .eventDetails .contact:before {

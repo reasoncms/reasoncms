@@ -22,18 +22,18 @@
 	class ReasonCollegeTemplate extends CloakTemplate
 	{
 
-		function alter_reason_page_type($page_type)
-		{
-			CloakTemplate::alter_reason_page_type($page_type);
+		// function alter_reason_page_type($page_type)
+		// {
+		// 	CloakTemplate::alter_reason_page_type($page_type);
 
-			// $page_type->set_region('pre_foot', 'blurb', 'blurb.php', array('blurb_unique_names_to_show' => 'luther_sports_affiliations'));
-			// $page_type->set_region('page_location', 'module', 'module_file_name.php', array('module_parameter' => 'paremeter_value'));
-			// $page_type->set_region('pre_banner', 'global_header', 'global_header.php', array());
-			//$page_type->set_region('pre_bluebar', 'page_title', 'page_title.php', array());
-			//$page_type->set_region('new_page_location', 'global_header', 'global_header.php', array());
-			//$page_type->set_region('new_page_location', 'test_module', '/minisite_templates/modules/test/test_module.php', array());
+		// 	// $page_type->set_region('pre_foot', 'blurb', 'blurb.php', array('blurb_unique_names_to_show' => 'luther_sports_affiliations'));
+		// 	// $page_type->set_region('page_location', 'module', 'module_file_name.php', array('module_parameter' => 'paremeter_value'));
+		// 	// $page_type->set_region('pre_banner', 'global_header', 'global_header.php', array());
+		// 	//$page_type->set_region('pre_bluebar', 'page_title', 'page_title.php', array());
+		// 	//$page_type->set_region('new_page_location', 'global_header', 'global_header.php', array());
+		// 	//$page_type->set_region('new_page_location', 'test_module', '/minisite_templates/modules/test/test_module.php', array());
 
-		}
+		// }
 
 
 		function show_cloak_header()

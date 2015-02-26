@@ -644,6 +644,12 @@ $medium-only-events: "#{$screen} and (min-width:#{$events_default_break_point_up
 			}
 		}
 
+		.location {
+			&:before {
+				content: $fa-var-map-marker;
+			}
+		}
+
 		.sponsor {
 			&:before {
 				content: $fa-var-bookmark;
