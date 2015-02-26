@@ -3258,7 +3258,9 @@ h2.pageTitle {
   content: ""; }
 #calendar .eventDetails .eventLocation .eventMap {
   display: inline-block;
-  float: right; }
+  float: right;
+  margin-left: 0.25rem;
+  margin-bottom: 0.25rem; }
 #calendar .eventDetails .eventLocation strong {
   margin-right: 0.25rem;
   margin-left: -0.25rem; }

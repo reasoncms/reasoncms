@@ -631,6 +631,8 @@ $medium-only-events: "#{$screen} and (min-width:#{$events_default_break_point_up
 			.eventMap {
 				display: inline-block;
 				float: right;
+				margin-left: rem-calc(4);
+				margin-bottom: rem-calc(4);
 			}
 
 			strong {
