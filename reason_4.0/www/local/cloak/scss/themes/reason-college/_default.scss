@@ -1,7 +1,7 @@
 // Global Header Styles
 // Cloak, v1
 
-$grr-color: #595353;
+$nav-color: #595353;
 
 #cloakHeader {
 	margin: 0;
@@ -9,12 +9,12 @@ $grr-color: #595353;
 	position: relative;
 	//background: #595353;
 
-	$section-nav-item-count: 				6; // Must be an even number of nav items
+	$section-nav-item-count: 				6; // Must be an evenavn number of nav items
 	$section-nav-item-plus-logo-count: 		$section-nav-item-count + 1;
 	$section-nav-item-width: 				(100/$section-nav-item-plus-logo-count)/100*100%;
 
 	#cloakMasthead {
-		background: $grr-color;
+		background: $nav-color;
 		height: rem-calc(68);
 
 		@media #{$large-up} {
@@ -28,11 +28,15 @@ $grr-color: #595353;
 
 		a {
 			display: block;
-			background: $cloak-turquoise url("/reason/local/cloak/images/reason-college/logo.png") no-repeat center center;
+			background-image: url("/reason/local/cloak/images/reason-college/logo.png");
+			background-color: $cloak-turquoise;
+			background-repeat: no-repeat;
+			background-position: center center;
 			// background size is 1/2 the total image resolution
 			background-size: 168px 168px;
 			position: relative;
 			z-index: 1000;
+			@include single-transition(background-color);
 
 			@media #{$small-only} {
 				width: 50%;
@@ -56,6 +60,11 @@ $grr-color: #595353;
 				margin-left: - ($section-nav-item-width/2);
 				z-index: 999999;
 				background-size: 185px 185px;
+			}
+
+			&:hover {
+				background-color: darken($cloak-turquoise, 4%);
+				@include single-transition(background-color);
 			}
 		}
 
@@ -96,7 +105,7 @@ $grr-color: #595353;
 				@include circle-icon-button(
 					$icon-background: $white,
 					$icon-variable: $fa-var-times,
-					$icon-color: $grr-color,
+					$icon-color: $nav-color,
 					$icon-border-color: none
 				);
 
@@ -137,7 +146,7 @@ $grr-color: #595353;
 				@include circle-icon-button(
 					$icon-background: $white,
 					$icon-variable: $fa-var-times,
-					$icon-color: $grr-color,
+					$icon-color: $nav-color,
 					$icon-border-color: none
 				);
 
@@ -352,7 +361,7 @@ $grr-color: #595353;
 		#sectionNav {
 			margin: 0;
 			@include clearfix;
-			background: rgba($grr-color, .86);
+			background: rgba($nav-color, .95);
 			
 			ul {
 				margin: 0;
@@ -375,6 +384,12 @@ $grr-color: #595353;
 						color: $white;
 						font-size: rem-calc(15);
 						text-transform: uppercase;
+						@include single-transition(background);
+
+						&:hover {
+							background: darken($nav-color, 4%);
+							@include single-transition(background);
+						}
 					}
 
 					&:nth-child(#{$section-nav-item-count/2 + 1}) {

@@ -25,8 +25,11 @@
 
 	#postBanner {
 
+		background: #595353;
+
 		.featuresModule {
-			// Force features to remain a certain height on mobile
+			
+			// Force features to remain a certain height on smaller screens
 			@media #{$small-only} {
 				.features {
 					padding: 0;
@@ -59,6 +62,10 @@
 					top: 0;
 					margin-left: -510px;
 				}
+			}
+
+			@media #{$large-up} {
+				margin: 0 auto;
 			}
 
 			.features {

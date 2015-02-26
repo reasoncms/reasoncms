@@ -5985,10 +5985,14 @@ form .submitSection,
     padding: 0; }
     #cloakHeader #globalLogo a {
       display: block;
-      background: #2ea7a0 url("/reason/local/cloak/images/reason-college/logo.png") no-repeat center center;
+      background-image: url("/reason/local/cloak/images/reason-college/logo.png");
+      background-color: #2ea7a0;
+      background-repeat: no-repeat;
+      background-position: center center;
       background-size: 168px 168px;
       position: relative;
-      z-index: 1000; }
+      z-index: 1000;
+      transition: background-color 300ms ease-out; }
       @media only screen and (max-width: 40em) {
         #cloakHeader #globalLogo a {
           width: 50%;
@@ -6010,6 +6014,9 @@ form .submitSection,
           margin-left: -7.1428571429%;
           z-index: 999999;
           background-size: 185px 185px; } }
+      #cloakHeader #globalLogo a:hover {
+        background-color: #2a9791;
+        transition: background-color 300ms ease-out; }
     #cloakHeader #globalLogo span {
       position: absolute;
       left: -9999px;
@@ -6282,7 +6289,7 @@ form .submitSection,
         display: none; }
     #cloakHeader #sectionNav {
       margin: 0;
-      background: rgba(89, 83, 83, 0.86); }
+      background: rgba(89, 83, 83, 0.95); }
       #cloakHeader #sectionNav:before, #cloakHeader #sectionNav:after {
         content: " ";
         display: table; }
@@ -6304,7 +6311,11 @@ form .submitSection,
             border-left: 1px solid rgba(255, 255, 255, 0.3);
             color: #FFFFFF;
             font-size: 0.9375rem;
-            text-transform: uppercase; }
+            text-transform: uppercase;
+            transition: background 300ms ease-out; }
+            #cloakHeader #sectionNav ul li a:hover {
+              background: #4e4949;
+              transition: background 300ms ease-out; }
           #cloakHeader #sectionNav ul li:nth-child(4) a {
             border-left: none; } }
 
