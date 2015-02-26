@@ -268,3 +268,14 @@ function reason_get_media_placard_image_info($media_file,$media_work = null)
 	}
 	return null;
 }
+
+/*
+	check the uploaded image to make sure its dimensions are not too small (it should be at least bigger than the size of the thumbnail to be generated from it)
+*/
+function image_error_check($image_filename, $min_width, $min_height){ 
+	$image_is_okay = false;
+	if ($image_filename[0] > $min_width && $image_filename[1] > $min_height){
+		$image_is_okay = true;
+	}	
+	return $image_is_okay;
+	}
