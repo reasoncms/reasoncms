@@ -94,7 +94,8 @@
 								color: white;
 
 								@media #{$small-only} {
-									@include screenreader;
+									//@include screenreader;
+									padding: 0 $column-gutter/2 rem-calc(12);
 								}
 
 								@media #{$medium-only} {
@@ -119,7 +120,7 @@
 							span.noLink {
 
 								@media #{$small-only} {
-									@include button($padding: $button-tny);
+									@include button($padding: $button-med);
 									font-size: rem-calc(16);
 								}
 

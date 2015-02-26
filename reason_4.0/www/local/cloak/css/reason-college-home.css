@@ -6391,10 +6391,7 @@ form .submitSection,
           .siteHome #postBanner .featuresModule .feature .featureContent .featureInfo .featureTitle a.dest,
           .siteHome #postBanner .featuresModule .feature .featureContent .featureInfo .featureTitle a.anchor,
           .siteHome #postBanner .featuresModule .feature .featureContent .featureInfo .featureTitle span.noLink {
-            position: absolute;
-            left: -9999px;
-            top: -9999px;
-            margin-bottom: 0; } }
+            padding: 0 1.5rem 0.75rem; } }
         @media only screen and (min-width: 40.063em) and (max-width: 63.75em) {
           .siteHome #postBanner .featuresModule .feature .featureContent .featureInfo .featureTitle a.dest,
           .siteHome #postBanner .featuresModule .feature .featureContent .featureInfo .featureTitle a.anchor,
@@ -6435,11 +6432,11 @@ form .submitSection,
             -moz-appearance: none;
             border-radius: 0;
             display: inline-block;
-            padding-top: 0.25rem;
-            padding-right: 0.5rem;
-            padding-bottom: 0.3125rem;
-            padding-left: 0.5rem;
-            font-size: 0.6875rem;
+            padding-top: 0.75rem;
+            padding-right: 1.5rem;
+            padding-bottom: 0.8125rem;
+            padding-left: 1.5rem;
+            font-size: 1rem;
             background-color: #b84041;
             border-color: #933334;
             color: #FFFFFF;
