@@ -799,12 +799,11 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'caption_flag' => false,
 		),
 		'pre_sidebar_2' => array(
-			'module' => 'image_sidebar',
+			'module' => 'image_sidebar_luther',
 			'num_to_skip' => 1,
-			'thumbnail_width' => 600,
-			'thumbnail_height' => 400,
-			'thumbnail_crop' => 'fill',
+			'thumbnail_width' => 600,				
 			'num_to_display' => 0,
+			'caption_flag' => true,
 		)
 	),
 	'transcript_request' => array(
