@@ -645,10 +645,7 @@ class DirectoryModule extends DefaultMinisiteModule {
             if ( $image_class == 'directoryImage' or true){
                 //remove 'or true' from above when not testing
                 echo "<figure class='directoryImage' title>";
-                // @todo add foundation image expander
-                //
-                //echo "<a href='/reason/images/589866.gif' title></a>";
-                echo '<a href="https://app.luther.edu/reason/scripts/dir_image.php?image=dykega01" class="highslide" onclick="return hs.expand(this, imageOptions)"><img src="https://app.luther.edu/reason/scripts/dir_image.php?image=dykega01" border="0" alt="" title="Click to enlarge" /></a>'; // temp image for testing
+                echo '<img src="/reason/images/directory_photos/' . $data['uid'][0] . '.jpg" alt="' . $this->format_name($data) . '" title="' . $this->format_name($data) . '" />';
                 echo "</figure>";
                 echo "<a name={$data['uid']}></a>";
 
