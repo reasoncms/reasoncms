@@ -647,7 +647,7 @@ class DirectoryModule extends DefaultMinisiteModule {
                 echo "<figure class='directoryImage' title>";
                 echo '<img src="/reason/images/directory_photos/' . $data['uid'][0] . '.jpg" alt="' . $this->format_name($data) . '" title="' . $this->format_name($data) . '" />';
                 echo "</figure>";
-                echo "<a name={$data['uid']}></a>";
+                echo "<a name={$data['uid'][0]}></a>";
 
             }
             if (isset($data['cn'])) {
@@ -662,7 +662,7 @@ class DirectoryModule extends DefaultMinisiteModule {
 
 
             echo "<div class='directoryInfo' title>";
-            if ( $affiliation != 'Student' ) {
+            if ( $affiliation != 'Student' && isset($data['title'])) {
                 if (is_array($data['title'])){
                     foreach ($data['title'] as $key => $value) {
                         echo "<h3 class='directoryTitle'>{$value}</h3>";
@@ -1020,51 +1020,53 @@ class DirectoryModule extends DefaultMinisiteModule {
      *   should be seen
      **/
     function scrub_results(&$results) {
-        // Attributes which should be hidden from the external view
-        /*$ext_suppress = array('officebldg','studentPostOffice', 'homepostaladdress',
-                'address', 'telephoneNumber', 'studentmajor', 'carlconcentration',
-                'carlhomeemail','spouseName','alumClassYear','carlcohortyear','mobile',
-                'studentStatus');*/
+        // if viewing yourself, don't scrub anything – return all results
+        if ( $this->context == 'logged_in' && array_key_exists($this->user_netid, $results) && count($results) == 1) {
+                return;
+        }
+
+        $personal_info_group = array('postaladdress','l','st','postalcode','lutherc','telephonenumber','mobile','birthdate');
 
         $general_suppress = array('ou','count','sn','givenname','displayname','studentpostoffice',
-            'telephoneNumber','telephonenumber','studentmajor','studentminor','studentresidencehallbldg',
-            'studentresidencehallphone','studentresidencehallroom','studentspecialization',
-            'studentyearinschool','studentadvisor','studentstatus','alumclassyear','postaladdress',
-            'l','st','postalcode','lutherc','mobile','termenrolled','ocpostaladdress','privacyflag',
-            'birthdate','lastupdate');
+            'studentmajor','studentminor','studentresidencehallbldg','studentresidencehallphone',
+            'studentresidencehallroom','studentspecialization','studentyearinschool','studentadvisor',
+            'studentstatus','termenrolled','ocpostaladdress','privacyflag','lastupdate');
+        $general_suppress = array_merge($general_suppress, $personal_info_group);
 
         $nr_suppress = array('ou','uid','cn','sn','givenName','displayName','mail','title',
            'eduPersonPrimaryAffiliation','officebldg','officephone','studentPostOffice',
-           'telephoneNumber','studentmajor','studentminor','studentresidencehallbldg',
-           'studentresidencehallphone','studentresidencehallroom','eduPersonPrimaryAffiliation',
-           'studentspecialization','studentyearinschool','studentadvisor','eduPersonAffiliation',
-           'studentStatus','postaladdress','l','st','postalcode','mobile','termenrolled',
-           'departmentname','privacyflag','birthdate','lutherc','lastupdate','alumclassyear',
-           'alummajor');
+           'studentmajor','studentminor','studentresidencehallbldg','studentresidencehallphone',
+           'studentresidencehallroom','eduPersonPrimaryAffiliation','studentspecialization',
+           'studentyearinschool','studentadvisor','eduPersonAffiliation','studentStatus','termenrolled',
+           'departmentname','privacyflag','lastupdate','alumclassyear','alummajor');
+        $nr_suppress = array_merge($nr_suppress, $personal_info_group);
 
-        // $temp_suppress = array('childname', 'spouse', 'mobile', 'telephoneNumber', 'homePostalAddress', 'st');
-        if ( $this->user_netid ) {
-            $this->context = 'logged_in';
-            $logged_user = $this->user_netid;
-        }
+        $facstaff_viewing_facstaff_supress  = array('termenrolled');
+        $facstaff_viewing_facstaff_supress = array_merge($facstaff_viewing_facstaff_supress, $personal_info_group);
+
+        $facstaff_viewing_student_supress   = array('title','officebldg','officephone',
+            'departmentname','birthdate','');
+
+        $student_viewing_facstaff_supress   = array('studentresidencehallbldg','studentresidencehallphone',
+            'studentpostoffice','studentresidencehallroom','termenrolled');
+        $student_viewing_facstaff_supress = array_merge($student_viewing_facstaff_supress, $personal_info_group);
+
+        $student_viewing_student_supress    = array('title','departmentname','officebldg','officephone');
+        $student_viewing_student_supress = array_merge($student_viewing_student_supress, $personal_info_group);
+
         $affiliation = $this->get_user_affiliation($this->user_netid);
 
         foreach ($results as $key => $data) {
-            // Remove the people who should be gone completely.
-            // if ($this->view != 'po' && isset($data['carlhideinfo']) && $data['carlhideinfo'][0] == 'TRUE') {
-            //     unset($results[$key]);
-            //     continue;
-            // }
-
-            if ($this->context == 'general') {
-                foreach ($general_suppress as $attr)
-                    unset($results[$key][$attr]);
-            }
-
             // Hiding No Release students for Luther
             if (isset($data['privacyflag'])) {
                 foreach ($nr_suppress as $attr)
                     unset($results[$key]);
+            }
+
+            if ($this->context == 'general') {
+                foreach ($general_suppress as $attr){
+                    unset($results[$key][$attr]);
+                }
             }
 
             // Hiding Alumni from results
@@ -1075,29 +1077,49 @@ class DirectoryModule extends DefaultMinisiteModule {
 
             // Faculty/Staff viewing Faculty/Staff
             if ((isset($affiliation) && $affiliation == "Staff" || $affiliation == 'Faculty')
-                && $logged_user == $data['uid'][0]
                 && $data['edupersonprimaryaffiliation'][0] == 'Staff'
-                || $data['edupersonprimaryaffiliation'][0] == 'Faculty' ) {
-                echo "booyah! {$logged_user}";
-                pray($_REQUEST);
+                || $data['edupersonprimaryaffiliation'][0] == 'Faculty'
+                || $data['edupersonprimaryaffiliation'][0] == 'Emeritus' ) {
+                    foreach ($facstaff_viewing_facstaff_supress as $attr){
+                        unset($results[$key][$attr]);
+                    }
             }
             // Faculty/Staff viewing Student
             if ((isset($affiliation) && $affiliation == "Staff" || $affiliation == 'Faculty')
-                && $logged_user == $data['uid'][0]
-                && $data['edupersonprimaryaffiliation'][0] == 'Student'
+                && ( $data['edupersonprimaryaffiliation'][0] == 'Student'
                 || $data['edupersonprimaryaffiliation'][0] == 'Student - Not Enrolled this Term'
                 || $data['edupersonprimaryaffiliation'][0] == 'Student - Not PLanning to Enroll'
-                || $data['edupersonprimaryaffiliation'][0] == 'Student - Previously Enrolled') {
-                echo "booyah! {$logged_user}";
+                || $data['edupersonprimaryaffiliation'][0] == 'Student - Previously Enrolled')) {
                 pray($_REQUEST);
+                    echo '<hr><h5>Faculty/Staff viewing Student</h5>';
+                    foreach ($facstaff_viewing_student_supress as $attr){
+                        unset($results[$key][$attr]);
+                    }
             }
-            if (isset($affiliation) && $affiliation == "Student"){
-                echo 'hoyoob!';
+            // Student viewing Faculty/Staff
+            if ((isset($affiliation) && $affiliation == "Student"
+                || $affiliation == 'Student - Not Enrolled this Term'
+                || $affiliation == 'Student - Previously Enrolled')
+                && ($data['edupersonprimaryaffiliation'][0] == 'Staff'
+                || $data['edupersonprimaryaffiliation'][0] == 'Faculty'
+                || $data['edupersonprimaryaffiliation'][0] == 'Emeritus' )) {
+                    echo '<hr><h5>Student viewing Faculty/Staff</h5>';
+                    foreach ($student_viewing_facstaff_supress as $attr){
+                        unset($results[$key][$attr]);
+                    }
             }
-            // Hiding certain results about faculty/staff until we can fix/rewrite the linux box code which controls the display in user.php
-            // foreach ($temp_suppress as $attr) {
-            //     unset ($results[$key]);
-            // }
+            // Student viewing Student
+            if ((isset($affiliation) && $affiliation == "Student"
+                || $affiliation == 'Student - Not Enrolled this Term'
+                || $affiliation == 'Student - Not PLanning to Enroll')
+                && ($data['edupersonprimaryaffiliation'][0] == 'Student'
+                || $data['edupersonprimaryaffiliation'][0] == 'Student - Not Enrolled this Term'
+                || $data['edupersonprimaryaffiliation'][0] == 'Student - Previously Enrolled')) {
+                    echo '<hr><h5>Student viewing Student</h5>';
+                    foreach ($student_viewing_student_supress as $attr){
+                        unset($results[$key][$attr]);
+            }
+            }
         }
     }
 
@@ -1317,7 +1339,11 @@ class DirectoryModule extends DefaultMinisiteModule {
 }
 
     function format_email( $data, $table = false ) {
-        $email = '<a href="mailto:'.$data['mail'][0].'">'.$data['mail'][0].'</a>';
+        if ( $this->context == 'general' ){
+            $email = str_replace('@', " &lt;AT&gt; ", $data['mail'][0]);
+        } else {
+            $email = '<a href="mailto:'.$data['mail'][0].'" target="__blank">'.$data['mail'][0].'</a>';
+        }
         if ( $table ) {
             $markup = $email;
         }else {
@@ -1386,6 +1412,7 @@ class DirectoryModule extends DefaultMinisiteModule {
         } else {
             $label = 'Affiliation';
         }
+        $affils_string = '';
         foreach ($affils as $key => $value) {
             $affils_string .= "<span class='multipleAttrValues'>{$value}</span>";
         }
