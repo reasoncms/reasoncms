@@ -234,7 +234,7 @@ class tiny_mceType extends textareaType
 	 */	
 	private $base_init_options = array(
 		'mode' => 'exact',
-		'toolbar1' => 'formatselect,bold,italic,hr,blockquote,numlist,bullist,indent,outdent,image,link,unlink,anchor',
+		'toolbar1' => 'formatselect,bold,italic,hr,blockquote,numlist,bullist,image,link,unlink,anchor',
 		'plugins' => 'anchor,link,paste',
 		'dialog_type' => 'modal',
 		'theme' => 'modern',
