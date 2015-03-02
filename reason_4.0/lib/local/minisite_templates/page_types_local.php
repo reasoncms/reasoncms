@@ -282,6 +282,9 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'main_post_2' => 'luther_image_slideshow',
 		'pre_sidebar_2' => '',
 	),
+	'jenson_medal' => array(
+		'main_post' => 'jenson_medal_voting',
+	),
 	'landing' => array(
 		'pre_sidebar' => 'blurb',
 		'pre_sidebar_2' => get_luther_spotlight(),
