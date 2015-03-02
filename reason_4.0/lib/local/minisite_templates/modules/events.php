@@ -1372,13 +1372,17 @@ class EventsModule extends DefaultMinisiteModule
 			{
 				$this->rerun_calendar();
 				$this->events_by_date = $this->calendar->get_all_days();
-				if(count(current($this->events_by_date)) > 1)
-				{
-					$this->_no_events_message = '<p>This calendar has no events coming up. Here are the last events available:</p>'."\n";
-				}
-				else
-				{
-					$this->_no_events_message = '<p>This calendar has no events coming up. Here is the last event available:</p>'."\n";
+				$site = new entity($this->site_id);
+				$site_name = $site->get_value('unique_name');
+				if($site_name != "luther_home_201406"){
+					if(count(current($this->events_by_date)) > 1)
+					{
+						$this->_no_events_message = '<p>This calendar has no events coming up. Here are the last events available:</p>'."\n";
+					}
+					else
+					{
+						$this->_no_events_message = '<p>This calendar has no events coming up. Here is the last event available:</p>'."\n";
+					}
 				}
 				
 			}
