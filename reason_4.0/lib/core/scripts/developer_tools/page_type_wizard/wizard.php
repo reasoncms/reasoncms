@@ -3,8 +3,8 @@
 <head>
 </head>
 <link rel="stylesheet" type="text/css" href="./wizard.css" />
-<script src="/reason_package/jquery/jquery_latest.js" type="text/javascript"></script>
-<script src="/reason_package/reason_4.0/www/js/jquery.arrayMaker.js" type="text/javascript"></script>
+<script src="<?php echo JQUERY_URL; ?>" type="text/javascript"></script>
+<script src="<?php echo REASON_HTTP_BASE_PATH; ?>js/jquery.arrayMaker.js" type="text/javascript"></script>
 <script type="text/javascript">
 	jQuery(document).ready(function()
 		{
@@ -34,7 +34,7 @@
  * After making changes, several export options are provided.
  * It is useful as a tool to enable someone with little or no knowledge of PHP to create a page type.
  *
- * The wizard makes use of the disco multi-step form controller, reason session control, 
+ * The wizard makes use of the disco multi-step form controller, reason session control,
  * and the ReasonPageType and ReasonPageTypes classes. jQuery and the jQuery.arrayMaker.js file are required
  * for the parameter editing UI (otherwise users will have to edit raw JSON).
  *
@@ -104,7 +104,7 @@ $forms = array(
 	),
 );
 
-// Add, init, and run the forms. 
+// Add, init, and run the forms.
 $controller->add_forms( $forms );
 $controller->init();
 //$controller->set_request( $_REQUEST );
