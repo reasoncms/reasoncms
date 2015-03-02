@@ -19,11 +19,11 @@ class disabledDateType extends protectedType
 {
 	var $type = 'disabledDate';
 	var $format = 'F j, Y, g:i a';
-	
+
 	function grab()
 	{
 	}
-	
+
 	function get_display()
 	{
 		$year = substr( $this->get(), 0, 4 );
@@ -79,13 +79,13 @@ class yearType extends numrangeType
  	var $type = 'year';
 	var $start = 2000;
 	var $end = 2050;
-	
+
 	/**
 	 * The number of years before the current date to start the range.
 	 * Set this instead of {@link start} if you want to use a relative range.
 	 */
 	var $num_years_before_today;
-	
+
 	/**
 	 * The number of years after the current date to end the range.
 	 * Set this instead of {@link end} if you want to use a relative range.
@@ -93,14 +93,14 @@ class yearType extends numrangeType
 	var $num_years_after_today;
 	var $type_valid_args = array('num_years_before_today',
 		'num_years_after_today');
-	
+
 	function load_options( $args = array() )
 	{
 		$this->determine_start_year();
 		$this->determine_end_year();
 		parent::load_options();
 	}
-	
+
 	function determine_start_year()
 	{
 	 	if(!empty($this->num_years_before_today))
@@ -109,7 +109,7 @@ class yearType extends numrangeType
 			$this->start = $current_date['year'] - $this->num_years_before_today;
 		}
 	}
-	
+
 	function determine_end_year()
 	{
 		if(!empty($this->num_years_after_today))
@@ -327,7 +327,7 @@ class textDateTimeType extends textType
 				echo $var.' = '.$value.'<br />';
 		}
 	}
-	
+
 	/**
 	 * Augment a head items object to insert the date_picker head items
 	 *
@@ -338,11 +338,12 @@ class textDateTimeType extends textType
 		if (!defined("DATE_PICKER_HEAD_ITEMS_LOADED"))
 		{
 			define("DATE_PICKER_HEAD_ITEMS_LOADED", true);
-			$head_items->add_javascript(DATE_PICKER_HTTP_PATH.'js/datepicker.js');
-			$head_items->add_stylesheet(DATE_PICKER_HTTP_PATH. 'css/datepicker.css');
+			$head_items->add_javascript(DATE_PICKER_HTTP_PATH.'js/datepicker.min.js');
+			$head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/datepicker.js');
+			$head_items->add_stylesheet(DATE_PICKER_HTTP_PATH. 'css/datepicker.min.css');
 		}
 	}
-	
+
 	function display()
 	{
 	    if ($this->use_picker && !defined("DATE_PICKER_HEAD_ITEMS_LOADED") && !defined('_PLASMATURE_INCLUDED_DATEPICKER'))
@@ -352,9 +353,10 @@ class textDateTimeType extends textType
 	         * file that is built into the datepicker does not appear to work reliably when the date_picker is
 	         * added inline instead of into the head items
 	         */
-	        echo '<script type="text/javascript" src="'. DATE_PICKER_HTTP_PATH.'js/lang/en-us.js"></script>'."\n";
-	       	echo '<script type="text/javascript" src="'. DATE_PICKER_HTTP_PATH.'js/datepicker.js"></script>'."\n";
-           	echo '<link href="'.DATE_PICKER_HTTP_PATH. 'css/datepicker.css" rel="stylesheet" type="text/css" />'."\n";
+	        echo '<script type="text/javascript" src="'. DATE_PICKER_HTTP_PATH.'js/lang/en-US.js"></script>'."\n";
+	       	echo '<script type="text/javascript" src="'. DATE_PICKER_HTTP_PATH.'js/datepicker.min.js"></script>'."\n";
+	       	echo '<script type="text/javascript" src="'. REASON_HTTP_BASE_PATH.'js/datepicker.js"></script>'."\n";
+           	echo '<link href="'.DATE_PICKER_HTTP_PATH. 'css/datepicker.min.css" rel="stylesheet" type="text/css" />'."\n";
            	define('_PLASMATURE_INCLUDED_DATEPICKER', true);
 	    }
 	    parent::display();
@@ -431,9 +433,7 @@ class textDateTimeType extends textType
 	{
 	    // The classes on the year display activate the JavaScript
 	    // date picker.
-	    $class = ($this->use_picker)
-	        ? 'split-date fill-grid statusformat-l-cc-sp-d-sp-F-sp-Y'
-	        : null;
+	    $class = ($this->use_picker) ? 'datepicker' : null;
 		return $this->_get_display('year', $year_val, null, ' / ', 4,
 		    $class);
 	}
