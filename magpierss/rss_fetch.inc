@@ -81,7 +81,7 @@ require_once( MAGPIE_EXTLIB . 'Snoopy.class.inc');
     version will be return, if it exists (and if MAGPIE_CACHE_FRESH_ONLY is off)
 \*=======================================================================*/
 
-define('MAGPIE_VERSION', '0.72');
+define('MAGPIE_VERSION', '0.80a');
 
 $MAGPIE_ERROR = "";
 
@@ -102,7 +102,7 @@ function fetch_rss ($url) {
             return _response_to_rss( $resp );
         }
         else {
-            //error("Failed to fetch $url and cache is off");
+            error("Failed to fetch $url and cache is off");
             return false;
         }
     } 
@@ -153,7 +153,7 @@ function fetch_rss ($url) {
         // setup headers
         if ( $cache_status == 'STALE' ) {
             $rss = $cache->get( $cache_key );
-            if ( $rss and isset($rss->etag) and isset($rss->last_modified) ) {
+            if ( $rss and $rss->etag and $rss->last_modified ) {
                 $request_headers['If-None-Match'] = $rss->etag;
                 $request_headers['If-Last-Modified'] = $rss->last_modified;
             }
@@ -225,7 +225,7 @@ function fetch_rss ($url) {
     Purpose:    set MAGPIE_ERROR, and trigger error
 \*=======================================================================*/
 
-function error ($errormsg, $lvl=E_USER_NOTICE) {
+function error ($errormsg, $lvl=E_USER_WARNING) {
         global $MAGPIE_ERROR;
         
         // append PHP's error message if track_errors enabled
