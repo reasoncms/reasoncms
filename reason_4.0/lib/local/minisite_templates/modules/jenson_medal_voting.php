@@ -32,6 +32,11 @@ class JensonMedalModule extends DefaultMinisiteModule {
 				if ($head_items =& $this->get_head_items()) {
 						$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'jquery-ui-1.8.12.custom/css/redmond/jquery-ui-1.8.12.custom.css');
 						$head_items->add_javascript('/jquery/jquery_ui_latest.js');
+						$head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/js/jquery.tablesorter.min.js');
+			            $head_items->add_stylesheet(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/css/theme.ice.css');
+			            $head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/js/jquery.tablesorter.widgets.min.js');
+			            $head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/js/jquery.tablesorter.widgets-filter-formatter.min.js');
+			            $head_items->add_stylesheet(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/css/filter.formatter.css');
 						$head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/jenson_medal.js');
 				}
 
