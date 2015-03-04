@@ -159,7 +159,7 @@
             $this->change_element_type( 'content' , html_editor_name($this->admin_page->site_id) , html_editor_params($this->admin_page->site_id, $this->admin_page->user_id) );
 
             // get all the category options and split them in to three arrays: Main Event Categories, This Site's Categories, Other Borrowed Categories
-            $cats = $this->get_element('categories')->options;
+            $cats = $this->get_element('categories')->options;         
             foreach ($cats as $cat_id => $value) {
               if (get_owner_site_id($cat_id) == id_of('events')){
                 if ($value != 'Streamed Events') // hide the Streamed Events category, we will add it automatically if Audio Streaming or Video Streaming is selected
@@ -371,6 +371,9 @@
           $cats = $this->get_value('categories');
           if (in_array(id_of('audio_streaming_category'), $cats) || in_array(id_of('video_streaming_category'), $cats))
           {
+          	if(!in_array(id_of('streamed_events_category'), $this->_relationship_elements['categories']['options'])){
+          		array_push($this->_relationship_elements['categories']['options'],id_of('streamed_events_category'));
+          	}
             array_push($cats,(id_of('streamed_events_category')));
             $this->set_value('categories', $cats);
           }
