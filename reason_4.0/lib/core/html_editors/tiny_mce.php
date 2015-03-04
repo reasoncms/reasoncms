@@ -56,10 +56,10 @@ class reasonTinyMCEIntegration extends reasonEditorIntegrationBase
 		/* these will need to change when the link plugin is available */
 		$linkplugin = ($this->reason_plugins_available($user_id)) ? 'link' : 'link';
 		$linktoolbar = ($this->reason_plugins_available($user_id)) ? 'reasonlink' : 'link';
-		$blockformats = ($config == 'notables_plus_pre' || $config == 'all')
+		$blockformats = ($config == 'default' || $config == 'notables_plus_pre' || $config == 'all')
 		              ? 'Paragraph=p;Header 1=h3;Header 2=h4;Pre=pre'
 		              : 'Paragraph=p;Header 1=h3;Header 2=h4';
-		$tabletoolbar = ($config == 'all' || $config == 'all_minus_pre') ? '|,table,' : '';
+		$tabletoolbar = ($config == 'default' || $config == 'all' || $config == 'all_minus_pre') ? '|,table,' : '';
 		$cutcopypaste = ($config == 'default' || $config == 'all' || $config == 'all_minus_pre') ? '|,cut,copy,paste,' : '';
 		
 		/* load the basic reason image and link plug in options */
@@ -68,8 +68,8 @@ class reasonTinyMCEIntegration extends reasonEditorIntegrationBase
 			$param['init_options']['reason_site_id'] = $site_id;
 			$param['init_options']['reason_http_base_path'] = REASON_HTTP_BASE_PATH;	
 		}
-		$param['init_options']['toolbar1'] = 'formatselect,|,bold,italic,|,hr,'.$cutcopypaste.'|,blockquote,|,numlist,bullist,|,indent,outdent,'.$tabletoolbar.'|,'.$imagetoolbar.',|,'.$linktoolbar.',unlink,|,anchor';
-		$param['init_options']['plugins'] = 'anchor,link,paste,advlist,lists';
+		$param['init_options']['toolbar1'] = 'formatselect,|,bold,italic,|,hr,'.$cutcopypaste.'|,blockquote,|,numlist,bullist,|,'.$tabletoolbar.'|,'.$imagetoolbar.',|,'.$linktoolbar.',unlink,|,anchor,|,searchreplace';
+		$param['init_options']['plugins'] = 'anchor,link,paste,advlist,searchreplace,lists';
 		if ($this->reason_plugins_available($user_id))
 		{
 			$param['init_options']['external_plugins'] = '{ "reasonintegration": "' . REASON_HTTP_BASE_PATH . 'tinymce/plugins/reasonintegration/plugin.js" }';
@@ -88,6 +88,9 @@ class reasonTinyMCEIntegration extends reasonEditorIntegrationBase
 		{
 			$param['init_options']['toolbar1'] .= ',|,code';
 			$param['init_options']['plugins'] .= ',code';
+		}
+		if ($config != 'default') {
+			$param['init_options']['formats'] = '{ underline: {} }'; // prevents underlines being entered with a keyboard shortcut
 		}
 		return $param;
 	}
