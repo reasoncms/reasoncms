@@ -124,7 +124,7 @@ class JensonMedalModule extends DefaultMinisiteModule {
 						$this->form->change_element_type('your_name', 'solidtext');
 						$this->form->set_value('your_name', $formatted_name);
 				}
-				echo "<a href='/login/?logout=1'>Logout</a>";
+				echo "<p><a href='/login/?logout=1'>Logout</a></p>";
 				
 				if ($this->logged_user == 'smitst01' || $this->logged_user == 'einckmic' || $this->logged_user == 'jonebr01'){
 						self::display_results();
@@ -168,7 +168,7 @@ class JensonMedalModule extends DefaultMinisiteModule {
 		
 		function display_thankyou(){
 				$this->form->show_form = false;
-				echo "Thank you for voting. Please <a href='/login/?logout=1'>logout</a>.";
+				echo "<p>Thank you for voting. Please <a href='/login/?logout=1'>logout</a>.</p>";
 		}
 		
 		function display_results(){
