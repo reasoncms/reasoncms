@@ -1,6 +1,6 @@
 <?php
 $return_arr = array();
-$db_name = gethostname() == 'reason' ? 'reason_jenson_medal' : 'reasondev_jenson_medal';
+$dbname = gethostname() == 'reason' ? 'reason_jenson_medal' : 'reasondev_jenson_medal';
 $dbhost = 'database-1.luther.edu';
 $dbuser = 'jenson_user';
 $dbpass = '!jensonmedalisthebest!';
