@@ -1,17 +1,9 @@
 <?php
 $return_arr = array();
-
+$db_name = gethostname() == 'reason' ? 'reason_jenson_medal' : 'reasondev_jenson_medal';
 $dbhost = 'database-1.luther.edu';
 $dbuser = 'jenson_user';
 $dbpass = '!jensonmedalisthebest!';
-$dbname = 'reason_jenson_medal';
-
-/* for testin on reasondev
-$dbhost = 'localhost';
-$dbuser = 'jenson_user';
-$dbpass = '!jensonmedalisthebest!';
-$dbname = 'jenson_medal';
-*/
 
 $conn = mysql_connect($dbhost, $dbuser, $dbpass) or die ('Error connecting to mysql');
 mysql_select_db($dbname);
