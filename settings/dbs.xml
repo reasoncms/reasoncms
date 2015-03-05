@@ -2,18 +2,18 @@
 <!-- WARNING *** ENSURE THIS FILE IS NOT WEB ACCESSIBLE *** -->
 <databases>
 <database>
-<connection_name>reason</connection_name>
+<connection_name>reason_connection</connection_name>
 <db>reason</db>
-<user>root</user>
-<password>root</password>
-<host>localhost</host>
+<user>reason_user</user>
+<password>some_password</password>
+<host>127.0.0.1</host>
 </database>
 
 <database>
 <connection_name>thor_connection</connection_name>
 <db>reason</db>
-<user>root</user>
-<password>root</password>
-<host>localhost</host>
+<user>reason_user</user>
+<password>some_password</password>
+<host>127.0.0.1</host>
 </database>
 </databases>
