@@ -743,6 +743,10 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'module'=>'luther_children',
 			'provide_images' => true,
 			'show_only_pages_not_in_nav' => true,
+			'description_part_of_link'=>true,
+			'html5'=>true,
+			'thumbnail_height' => 150,
+			'thumbnail_width' => 150,
 		),
 	),
 	'tagboard_full_HeyNorse' =>array(
