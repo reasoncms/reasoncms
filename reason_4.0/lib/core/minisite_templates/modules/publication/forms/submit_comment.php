@@ -307,7 +307,7 @@ class commentForm extends Disco
 		if($this->publication->get_value('notify_upon_comment'))
 		{
 			$subject = 'New comment on '.strip_tags($this->publication->get_value('name'));
-			$message = 'A comment has beeen added to the post '.strip_tags($this->news_item->get_value('name'));
+			$message = 'A comment has been added to the post '.strip_tags($this->news_item->get_value('name'));
 			$message .= ' on '.strip_tags($this->publication->get_value('name'));
 			$message .= ' (site: '.strip_tags($this->site_info->get_value('name')).'.)';
 			$message .= "\n\n";
