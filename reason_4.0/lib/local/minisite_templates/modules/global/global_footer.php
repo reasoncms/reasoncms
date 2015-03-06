@@ -36,8 +36,8 @@
 							<h3>Academics</h3>
 							<ul>
 							<li><a href="/registrar/calendar/">Academic Calendar</a></li>
-							<li><a href="/academics/dean/">Dean's Office</a></li>
 							<li><a href="/careers/">Career Center</a></li>
+							<li><a href="/academics/dean/">Dean's Office</a></li>
 							<li><a href="/global-learning/">Global Learning</a></li>
 							<li><a href="/lis/">Library &amp; Technology</a></li>
 							</ul>
@@ -65,7 +65,7 @@
 						<div class="column">
 							<h3>Quick Links</h3>
 							<ul>
-							<li><a href="http://app.luther.edu/directory/">Directory</a></li>
+							<li><a href="http://directory.luther.edu/">Directory</a></li>
 							<li><a href="http://mail.luther.edu">Norse Mail</a></li>
 							<li><a href="http://calendar.luther.edu">Norse Calendar</a></li>
 							<li><a href="https://katie.luther.edu/">KATIE</a></li>
