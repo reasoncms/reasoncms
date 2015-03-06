@@ -85,7 +85,6 @@ class defaultEventsListMarkup implements eventsListMarkup
 					{
 						$ret .=  '<li class="event">';
 						$ret .= $this->bundle->list_item_markup($event, 'ongoing', $time);
-						$ret .= $this->get_location_markup($event);
 						$ret .= '</li>'."\n";
 					}
 				}
@@ -114,7 +113,6 @@ class defaultEventsListMarkup implements eventsListMarkup
 					{
 						$ret .= '<li class="event">';
 						$ret .= $this->bundle->list_item_markup($event, $day, $time);
-						$ret .= $this->get_location_markup($event);
 						$ret .= '</li>'."\n";
 					}
 				}
