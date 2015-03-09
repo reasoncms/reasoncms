@@ -5,7 +5,7 @@
  * @category Services
  * @package  Services_Zencoder
  * @author   Michael Christopher <m@zencoder.com>
- * @version  Release: 2.1.2
+ * @version  Release: 2.2.0
  * @license  http://creativecommons.org/licenses/MIT/MIT
  * @link     http://github.com/zencoder/zencoder-php
  * @access   private
@@ -26,14 +26,14 @@ spl_autoload_register('Services_Zencoder_autoload');
  * @category Services
  * @package  Services_Zencoder
  * @author   Michael Christopher <m@zencoder.com>
- * @version  Release: 2.1.2
+ * @version  Release: 2.2.0
  * @license  http://creativecommons.org/licenses/MIT/MIT
  * @link     http://github.com/zencoder/zencoder-php
  */
 
 class Services_Zencoder extends Services_Zencoder_Base
 {
-    const USER_AGENT = 'ZencoderPHP v2.1.2';
+    const USER_AGENT = 'ZencoderPHP v2.2.0';
 
     /**
     * Contains the HTTP communication class
@@ -118,8 +118,7 @@ class Services_Zencoder extends Services_Zencoder_Base
         $this->http = new Services_Zencoder_Http(
             $api_host,
             array("curlopts" => array(
-                CURLOPT_USERAGENT => self::USER_AGENT,
-                CURLOPT_CAINFO => dirname(__FILE__) . "/Zencoder/zencoder_ca_chain.crt",
+                CURLOPT_USERAGENT => self::USER_AGENT
                 ), "api_key" => $api_key, "debug" => $debug)
             );
         $this->accounts = new Services_Zencoder_Accounts($this);

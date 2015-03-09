@@ -154,7 +154,7 @@ class EditableContentModule extends ContentModule
 			{
 				$es = new entity_selector( $this->site_id );
 				$es->add_type( id_of( 'site_user_type' ) );
-				$es->add_relation( 'entity.name = "'.addslashes($net_id).'"' );
+				$es->add_relation( 'entity.name = "'.reason_sql_string_escape($net_id).'"' );
 				$es->add_right_relationship( $this->page_id, relationship_id_of( 'page_to_site_user' ) );
 				$es->set_num(1);
 				$result = $es->run_one();

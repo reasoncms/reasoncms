@@ -122,6 +122,8 @@ class reasonSizedImage
 	*/
 	var $locked=false;
 	
+	protected $use_absolute_urls = false;
+	
 	/** public methods **/
 	
 	/**
@@ -219,7 +221,9 @@ class reasonSizedImage
 				$image_type = $entity->get_value('original_image_type');
 			else
 				$image_type = $entity->get_value('image_type');
-			$this->_url = $this->get_image_dir_web_path() . $entity->id() . '/' . $filename . '.' . $image_type;	
+			$this->_url = $this->get_image_dir_web_path() . $entity->id() . '/' . $filename . '.' . $image_type;
+			if($this->use_absolute_urls)
+				$this->_url = '//' . HTTP_HOST_NAME . $this->_url;
 		}
 		return $this->_url;
 	}
@@ -617,6 +621,11 @@ class reasonSizedImage
 			}
 		}
 		else trigger_error('The method set_paths requires an absolute file system path AND the web path to setup the sized image output directory');
+	}
+	
+	function use_absolute_urls($use_absolute_urls = true)
+	{
+		$this->use_absolute_urls = $use_absolute_urls;
 	}
 	
 	/** Private Setters **/

@@ -33,25 +33,37 @@ $GLOBALS[ '_social_integrator_class_names' ][ basename( __FILE__, '.php' ) ] = '
  * @todo move oauth stuff into this class and modify the twitter feed models to use it.
  * @author Nathan White
  */
-class ReasonTwitterIntegrator extends ReasonSocialIntegrator implements SocialAccountProfileLinks, SocialSharingLinks
+class ReasonTwitterIntegrator extends ReasonSocialIntegrator implements SocialAccountProfileLinks, SocialSharingLinks, SocialAccountPlatform
 {
+	/****************** SocialAccountPlatform implementation ********************/
+	public function get_platform_name()
+	{
+		return 'Twitter';
+	}
+	public function get_platform_icon()
+	{
+		return REASON_HTTP_BASE_PATH . 'modules/social_account/images/twitter.png';
+	}
 	/****************** SocialAccountProfileLinks implementation ********************/
 	public function get_profile_link_text($social_entity_id)
 	{
 		return 'Visit on Twitter';
 	}
-	
 	public function get_profile_link_href($social_entity_id)
 	{
 		$social_entity = new entity($social_entity_id);
 		$username = $social_entity->get_value('account_id');
 		return 'http://www.twitter.com/'.$username;
 	}
+	public function get_profile_link_icon($social_entity_id)
+	{
+		return $this->get_platform_icon();
+	}
 
 	/****************** SocialSharingLinks implementation ***********************/
 	public function get_sharing_link_icon()
 	{
-		return REASON_HTTP_BASE_PATH . 'modules/social_account/images/twitter.png';
+		return $this->get_platform_icon();
 	}
 	
 	public function get_sharing_link_text()
@@ -94,7 +106,7 @@ class ReasonTwitterIntegrator extends ReasonSocialIntegrator implements SocialAc
 	
 	function social_account_pre_show_form($cm)
 	{
-		echo '<p>Add/edit a Twitter profile.</p>';
+		echo '<p class="platformInfo"><img src="'.htmlspecialchars($this->get_platform_icon()).'" alt="Twitter icon" width="25" height="25" class="platformIcon" /> Add/edit a Twitter profile.</p>';
 	}
 	
 	/**

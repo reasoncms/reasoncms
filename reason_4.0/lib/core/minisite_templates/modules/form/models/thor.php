@@ -109,6 +109,11 @@ class ThorFormModel extends DefaultFormModel
 		return ($_is_editable === 'yes');
 	}
 
+	function is_api()
+	{
+		return $this->api_request_is_present();
+	}
+
 	function is_admin()
 	{
 		return ($this->user_requested_admin() && $this->user_has_administrative_access() && $this->admin_view_is_available());
@@ -325,6 +330,15 @@ class ThorFormModel extends DefaultFormModel
 		$sk->set(true);
 		return $key;
 	}
+
+	/**
+	 * Determine whether an ajax API request is in progress
+	 */	
+	function api_request_is_present()
+	{
+		$api = $this->_module->get_api();
+		return ($api && ($api->get_name() == 'standalone'));
+	}
 	
 	/**
 	 * If the form submission was just completed - we should have a valid submission_key passed in the request
@@ -401,7 +415,7 @@ class ThorFormModel extends DefaultFormModel
 			if ($this->_is_editable())
 			{
 				$edit_link = carl_construct_link(array('form_id' => $v['id']), array('textonly', 'netid'));
-				$thor_values[$k]['Action'] = '<a href="'.$edit_link.'">Edit</a>';
+				$thor_values[$k] = array_merge(array('Action' => '<a href="'.$edit_link.'">Edit</a>'), $thor_values[$k]);
 			}
 			
 			if (isset($v['submitted_by'])) unset ($thor_values[$k]['submitted_by']);
@@ -437,25 +451,21 @@ class ThorFormModel extends DefaultFormModel
 	
 	function &get_top_links()
 	{
-		if ($this->admin_view_is_available())
+		if (!$this->user_requested_admin() && $this->user_has_administrative_access() && ($this->get_values()))
 		{
-			if (!$this->user_requested_admin() && $this->user_has_administrative_access())
-			{
-				$link['Enter administrative view'] = carl_construct_link(array('form_admin_view' => 'true'), array('textonly', 'netid'));
-			}
-			elseif ($this->user_requested_admin() && $this->user_has_administrative_access())
-			{
-				$link['Exit administrative view'] = carl_construct_link(array('form_admin_view' => ''), array('textonly', 'netid'));
-			}	
+			$link['Enter administrative view'] = carl_construct_link(array('form_admin_view' => 'true'), array('textonly', 'netid'));
 		}
+		elseif ($this->user_requested_admin() && $this->user_has_administrative_access())
+		{
+			$link['Exit administrative view'] = carl_construct_link(array('form_admin_view' => ''), array('textonly', 'netid'));
+		}	
 		else $link = array();
 		return $link;
 	}
 	
 	function admin_view_is_available()
 	{
-		$form =& $this->get_form_entity();
-		return ($this->get_values());		
+		return true;		
 	}
 	
 	function &get_values_for_save()
@@ -501,6 +511,12 @@ class ThorFormModel extends DefaultFormModel
 			$thor_core =& $this->get_thor_core_object();
 			$thor_values = $this->_get_values_and_extra_email_fields($disco_obj);
 			$disco_hidden_fields =& $this->_get_disco_hidden_fields($disco_obj);
+			
+			// If a view has specified dynamic fields to show, they should show even if
+			// hidden, so subtract them from the list of disco_hidden_fields
+			if (($dynamic = $disco_obj->get_show_submitted_data_dynamic_fields()) && is_array($dynamic) )
+				$disco_hidden_fields = array_diff($disco_hidden_fields, $dynamic);
+				
 			$fields_to_hide =& $this->get_submitted_data_hidden_fields_submitter_view($disco_obj);
 			if (!empty($fields_to_hide)) $this->_hide_fields($thor_values, $fields_to_hide);
 			if (!empty($disco_hidden_fields)) $this->_hide_fields($thor_values, $disco_hidden_fields);
@@ -540,8 +556,15 @@ class ThorFormModel extends DefaultFormModel
 	{
 		$thor_core =& $this->get_thor_core_object();
 		$thor_values = $thor_core->get_thor_values_from_form($disco_obj);
+
+		// add any submitted files - this will have things show up in confirmation screens and in emails.
+		$attachmentSummaryData = $this->get_file_upload_summary_data();
+		foreach ($attachmentSummaryData as $col_id => $asd) {
+			$thor_values[$col_id] = $asd["filename"];
+		}
+
 		// Merge in any additional dynamic fields specified by the application
-		if ($dynamic = $disco_obj->get_show_submitted_data_dynamic_fields())
+		if (($dynamic = $disco_obj->get_show_submitted_data_dynamic_fields()) && is_array($dynamic) )	
 		{
 			foreach ($dynamic as $element) 
 			{
@@ -649,6 +672,7 @@ class ThorFormModel extends DefaultFormModel
 				$this->_admin_obj->set_allow_edit(true);
 				$this->_admin_obj->set_allow_new(true);
 				$this->_admin_obj->set_allow_row_delete(true);
+				$this->_admin_obj->set_allow_download_files(true);
 			}
 		}
 		return $this->_admin_obj;
@@ -719,10 +743,14 @@ class ThorFormModel extends DefaultFormModel
 	
 	function &get_values_for_user()
 	{
-		if (!isset($this->_values_for_user))
+		$netid = $this->get_user_netid();
+		if (isset($this->_values_for_user['submitted_by']) && $this->_values_for_user['submitted_by'] == $netid)
+		{
+			return $this->_values_for_user;
+		}
+		else
 		{
 			$thor_core =& $this->get_thor_core_object();
-			$netid = $this->get_user_netid();
 			$this->_values_for_user = (!empty($netid)) ? $thor_core->get_values_for_user($netid) : false;
 		}
 		return $this->_values_for_user;
@@ -871,14 +899,24 @@ class ThorFormModel extends DefaultFormModel
 		{
 			$email_data = $this->get_values_for_email();
 			$email_options = $this->get_options_for_email();
+
 			$this->send_email($email_data, $email_options);
+
+			// clear out any attachments from the temp dir
+			if (!$this->should_save_form_data()) {
+				$attachmentSummaryData = isset($email_options["attachmentSummaryData"]) ? $email_options["attachmentSummaryData"] : Array();
+
+				foreach($attachmentSummaryData as $col_id => $asd) {
+					unlink($asd["path"]);
+				}
+			}
 		}
 		else
 		{
 			trigger_error('recipient e-mail could not be determined!');
 		}
 	}
-	
+
 	function get_options_for_email()
 	{
 		$email_link = $this->get_link_for_email();
@@ -898,7 +936,57 @@ class ThorFormModel extends DefaultFormModel
 			}
 			else trigger_error('The method get_custom_options_for_email, if defined in the view, needs to return an array.');
 		}
+
+		if ($this->should_email_data()) {
+			// were files a part of this submission? If saving to a database, they've already been relocated (see ThorCore::handle_file_uploads). If not,
+			// they are in a tmp dir. Either way lets run through the form and extract any attachments.
+			//
+			// @todo - make this a configurable thing on the form? Maybe some people don't want every attachment emailed to them...
+			// @todo - add a mapping that indicates which file came in as part of which column
+
+			$attachmentSummaryData = $this->get_file_upload_summary_data();
+			if (count($attachmentSummaryData) > 0) {
+				$options["attachmentSummaryData"] = $attachmentSummaryData;
+
+				// actually attach the data to the email
+				$attachments = Array();
+				foreach($attachmentSummaryData as $col_id => $asd) {
+					$attachments[$asd["filename"]] = $asd["path"];
+				}
+				$options["attachments"] = $attachments; // store it here so the files actually get attached to the email
+			}
+		}
+
 		return $options;
+	}
+
+	function get_file_upload_summary_data()
+	{
+		$rawXml = $this->get_form_entity()->get_value('thor_content');
+		$formXml = new XMLParser($rawXml);
+		$formXml->Parse();
+		$attachmentData = Array();
+		foreach ($formXml->document->tagChildren as $node) {
+			if ($node->tagName == 'upload') {
+				$col_id = $node->tagAttrs['id'];
+				$col_label = $node->tagAttrs['label'];
+				$upload_data = $_FILES[$col_id];
+				if ($upload_data["tmp_name"] != "") {
+					$disco_el = $this->get_view()->get_element($col_id);
+
+					if ($disco_el->state == "received") {
+						$attachmentData[$col_id] = Array("label" => $col_label, "filename" => $upload_data["name"]);
+						if ($this->should_save_form_data()) {
+							$tc = $this->get_thor_core_object();
+							$attachmentData[$col_id]["path"] = $tc->construct_file_storage_location($this->get_form_id(), $col_id, $upload_data["name"]);
+						} else {
+							$attachmentData[$col_id]["path"] = $disco_el->tmp_full_path;
+						}
+					}
+				}
+			}
+		}
+		return $attachmentData;
 	}
 	
 	function save_form_data()
@@ -912,6 +1000,7 @@ class ThorFormModel extends DefaultFormModel
 		$values =& $this->get_values_for_submitter_view();
 		$session =& get_reason_session();
 		if (!$session->has_started()) $session->start();
+
 		$session->set('form_confirm', $values);
 	}
 	
@@ -932,11 +1021,11 @@ class ThorFormModel extends DefaultFormModel
 		
 		if ( $form_id && $this->_is_editable() ) // update
 		{
-			$thor_core->update_values_for_primary_key($form_id, $data);
+			$thor_core->update_values_for_primary_key($form_id, $data, $this->get_view()); // updating for uploads
 			}
 		else // insert
 		{
-			$insert_id = $thor_core->insert_values($data);
+			$insert_id = $thor_core->insert_values($data, $this->get_view());
 			$this->set_form_id($insert_id);
 		}
 	}
@@ -978,6 +1067,7 @@ class ThorFormModel extends DefaultFormModel
 			$view_name = $GLOBALS['_form_view_class_names'][basename( (!empty($custom_view_filename)) ? $custom_view_filename : REASON_FORMS_THOR_DEFAULT_VIEW, '.php')];
 			$this->_view = new $view_name();
 			$this->_view->set_model($this);
+			$this->apply_disco_plugins($this->_view, $form);
 		}
 		return $this->get_view();
 	}
@@ -1016,7 +1106,26 @@ class ThorFormModel extends DefaultFormModel
 			return true;
 		}
 	}
-	
+
+	/**
+	 * Apply plugins to thor forms depending on the specifications of the form.
+	 * @param object $disco_obj: the disco form to which plugins will be applied.
+	 * @param object $form_obj: thor form entity
+	 * @return void
+	 */
+	function apply_disco_plugins($disco_obj, $form_obj)
+	{
+		// Only apply akismet spam filter if user is not logged in.
+		if (!reason_check_authentication()) {
+			$filter = (!$form_obj->get_value('apply_akismet_filter')) ? REASON_FORMS_THOR_DEFAULT_AKISMET_FILTER : $form_obj->get_value('apply_akismet_filter');
+			if ($filter == 'true')
+			{
+				include_once INCLUDE_PATH . '/disco/plugins/akismet/akismet.php';
+				$akismet_filter = new AkismetFilter($disco_obj);
+			}
+		}
+	}	
+
 	function get_magic_transform_array()
 	{
 		$disco =& $this->get_view();

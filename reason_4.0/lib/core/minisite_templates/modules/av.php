@@ -294,7 +294,7 @@
 			{
 				$es = new entity_selector();
 				$es->add_type(id_of('av'));
-				$es->add_relation('`entity`.`id` = "'.addslashes($entity->id()).'"');
+				$es->add_relation('`entity`.`id` = "'.reason_sql_string_escape($entity->id()).'"');
 				$es->add_right_relationship( $this->page_id, relationship_id_of('minisite_page_to_av') );
 				$es->set_num(1);
 				$es->limit_tables();

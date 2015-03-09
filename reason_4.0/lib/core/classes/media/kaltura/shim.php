@@ -129,7 +129,18 @@ class KalturaShim implements ShimInterface
 		
 		try {
 			$list = $client->flavorAsset->getFlavorAssetsWithParams($media_work->get_value('entry_id'));
-			return $list[0]->flavorAsset->fileExt;
+			if(!empty($list))
+			{
+				$first = reset($list);
+				if(!empty($first->flavorAsset->fileExt))
+					return $first->flavorAsset->fileExt;
+				else
+					return NULL;
+			}
+			else
+			{
+				return NULL;
+			}
 		}
 		catch (Exception $e)
 		{

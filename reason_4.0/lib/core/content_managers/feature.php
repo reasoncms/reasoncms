@@ -375,7 +375,7 @@ class FeatureManager extends ContentManager
 		{
 			$prepped = array();
 			foreach($types as $pt=>$type)
-				$prepped[] = addslashes($pt);
+				$prepped[] = reason_sql_string_escape($pt);
 			
 			$es = new entity_selector();
 			$es->add_type(id_of('minisite_page'));

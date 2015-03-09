@@ -36,7 +36,7 @@ class textType extends defaultType
 	
 	function get_display()
 	{
-		return '<input type="text" name="'.$this->name.'" value="'.str_replace('"', '&quot;', $this->get()).'" size="'.$this->size.'" maxlength="'.$this->maxlength.'" id="'.$this->name.'Element" class="text" />';
+		return '<input type="text" name="'.$this->name.'" value="'.str_replace('"', '&quot;', $this->get()).'" size="'.$this->size.'" maxlength="'.$this->maxlength.'" id="'.$this->get_id().'" class="text" />';
 	}
 }
 	
@@ -72,7 +72,7 @@ class solidtextType extends defaultType
 	
 	function get_display()
 	{
-		$str  = '<input type="hidden" name="'.$this->name.'" value="'.htmlspecialchars($this->get(),ENT_QUOTES).'"/>';
+		$str  = '<input type="hidden" name="'.$this->name.'" id="'.$this->get_id().'" value="'.htmlspecialchars($this->get(),ENT_QUOTES).'"/>';
 		$str .= "\n".'<div class="solidText">' . htmlspecialchars($this->get(),ENT_QUOTES). '</div>';
 		return $str;
 	}
@@ -98,7 +98,7 @@ class plainTextType extends defaultType
 	}
 	function get_display()
 	{
-		$str  = '<input type="hidden" name="'.$this->name.'" value="'.htmlspecialchars($this->get(),ENT_QUOTES).'" />'.htmlspecialchars($this->get(),ENT_QUOTES);
+		$str  = '<input type="hidden" name="'.$this->name.'" id="'.$this->get_id().'" value="'.htmlspecialchars($this->get(),ENT_QUOTES).'" />'.htmlspecialchars($this->get(),ENT_QUOTES);
 		return $str;
 	}
 }
@@ -125,7 +125,7 @@ class disabledTextType extends textType
 	}
 	function get_display()
 	{
-		$str  = '<input type="text" name="'.$this->name.'" value="'.htmlspecialchars($this->get(),ENT_QUOTES).'" size="'.$this->size.'" maxlength="'.$this->maxlength.'" disabled="disabled" />';
+		$str  = '<input type="text" name="'.$this->name.'" id="'.$this->get_id().'" value="'.htmlspecialchars($this->get(),ENT_QUOTES).'" size="'.$this->size.'" maxlength="'.$this->maxlength.'" disabled="disabled" />';
 		return $str;
 	}
 }
@@ -142,7 +142,7 @@ class passwordType extends defaultType
 	var $type_valid_args = array( 'size', 'maxlength' );
 	function get_display()
 	{
-		return '<input type="password" name="'.$this->name.'" value="'.htmlspecialchars($this->get(),ENT_QUOTES).'" size="'.$this->size.'" maxlength="'.$this->maxlength.'" />';
+		return '<input type="password" name="'.$this->name.'" id="'.$this->get_id().'" value="'.htmlspecialchars($this->get(),ENT_QUOTES).'" size="'.$this->size.'" maxlength="'.$this->maxlength.'" />';
 	}
 }
 
@@ -187,7 +187,27 @@ class money_solidTextType extends solidtextType
 	var $type_valid_args = array( 'currency_symbol','decimal_symbol' );
 	function get_display()
 	{
-		$str  = '<input type="hidden" name="'.$this->name.'" value="'.htmlspecialchars($this->get(),ENT_QUOTES).'"/>';
+		$str  = '<input type="hidden" name="'.$this->name.'" id="'.$this->get_id().'" value="'.htmlspecialchars($this->get(),ENT_QUOTES).'"/>';
+		$str .= "\n".'<div class="solidText">' . $this->currency_symbol . htmlspecialchars($this->get(),ENT_QUOTES). '</div>';
+		return $str;
+	}
+}
+
+/**
+ * @package disco
+ * @subpackage plasmature
+ */
+// displays a money amount but allows changes, unlike money_solidText.
+// useful for displaying calculated fields
+class money_disabledChangeableType extends defaultType
+{
+	var $type = 'money_disabledchangeable';
+	var $currency_symbol = '$';
+	var $decimal_symbol = '.';
+	var $type_valid_args = array( 'currency_symbol','decimal_symbol' );
+	function get_display()
+	{
+		$str  = '<input type="hidden" name="'.$this->name.'" id="'.$this->get_id().'" value="'.htmlspecialchars($this->get(),ENT_QUOTES).'"/>';
 		$str .= "\n".'<div class="solidText">' . $this->currency_symbol . htmlspecialchars($this->get(),ENT_QUOTES). '</div>';
 		return $str;
 	}
@@ -205,7 +225,7 @@ class textareaType extends defaultType
 	var $type_valid_args = array('rows', 'cols');
 	function get_display()
 	{
-		$str  = '<textarea name="'.$this->name.'" rows="'.$this->rows.'" cols="'.$this->cols.'">'.htmlspecialchars($this->get(),ENT_QUOTES,'UTF-8').'</textarea>';
+		$str  = '<textarea name="'.$this->name.'" id="'.$this->get_id().'" rows="'.$this->rows.'" cols="'.$this->cols.'">'.htmlspecialchars($this->get(),ENT_QUOTES,'UTF-8').'</textarea>';
 		return $str;
 	}
 	function grab()
@@ -261,10 +281,17 @@ class wysiwyg_disabledType extends textareaType
 	
 	function get_display()
 	{
-		$element_id = $this->name.'_"_area';
-		$str  = '<textarea name="'.htmlspecialchars($this->name, ENT_QUOTES).'" rows="'.$this->rows.'" cols="'.$this->cols.'" id="'.htmlspecialchars($element_id, ENT_QUOTES).'" disabled="disabled" >'.htmlspecialchars($this->get(),ENT_QUOTES,'UTF-8').'</textarea>';
-		$str .= $this->_get_javascript_block($element_id);
+		$str  = '<textarea name="'.htmlspecialchars($this->name, ENT_QUOTES).'" rows="'.$this->rows.'" cols="'.$this->cols.'" id="'.$this->get_id().'" disabled="disabled" >'.htmlspecialchars($this->get(),ENT_QUOTES,'UTF-8').'</textarea>';
+		$str .= $this->_get_javascript_block($this->get_id());
 		return $str;
+	}
+	
+	function get_id()
+	{
+		if (empty($this->id))
+			return htmlspecialchars($this->name.'_"_area', ENT_QUOTES);
+		else
+			return $this->id;
 	}
 	
 	function _get_javascript_block($element_id)
@@ -305,7 +332,7 @@ class wysiwyg_solidtextType extends solidtextType
 		
 	function get_display()
 	{
-		$str  = '<input type="hidden" name="'.$this->name.'" value="'.htmlspecialchars($this->get(),ENT_QUOTES).'"/>';
+		$str  = '<input type="hidden" name="'.$this->name.'" id="'.$this->get_id().'" value="'.htmlspecialchars($this->get(),ENT_QUOTES).'"/>';
 		$str .= "\n".'<div class="wysiwyg_solidText">' . $this->get(). '</div>';
 		return $str;
 	}

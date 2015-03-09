@@ -179,16 +179,28 @@ class ReasonMVCModule extends DefaultMinisiteModule
 		{
 			if ($type == 'controller') $class_name = 'ReasonMVCController'; // setup the default controller
 		}
-		
 		// instantiate and return it.
 		if (isset($class_name))
 		{
 			$obj = new $class_name;
-			if (!empty($params)) foreach($params as $k=>$v)
-			{
-				$obj->config($k, $v);
-			}
+			$this->configure_mvc($type, $obj, $params);
 			return $obj;
+		}
+	}
+	
+	/**
+	  * This may be overridden by extending modules to pass other useful things to models, views, or controllers
+	  * (e.g. passing head_items to a view).
+	  */
+	protected function configure_mvc($type, $obj, $params)
+	{
+		if (!empty($params)) foreach($params as $k=>$v)
+		{
+			$obj->config($k, $v);
+		}
+		if ($type == 'view' && empty($params['head_items']) && $head_items = $this->get_head_items())
+		{
+			$obj->config('head_items', $head_items);
 		}
 	}
 }

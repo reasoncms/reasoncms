@@ -961,6 +961,13 @@
 		'faqs' => array(
 			'main_post' => 'faqs',
 		),
+		'faqs_ordered_by_keywords' => array(
+			'main_post' => array(
+				'module' => 'faqs',
+				'order_field' => 'keywords',
+				'order_direction' => 'ASC',
+			),
+		),
 		'feature' => array(
 			'main_post' => 'feature/feature',
 		),
@@ -1355,6 +1362,30 @@
 				'module' => 'image_slideshow',
 				'width' => 500,
 				'height' => 375,
+				),
+			'sidebar' => '',
+		),
+		'image_slideshow_640x480' => array(
+			'main_post' => array(
+				'module' => 'image_slideshow',
+				'width' => 640,
+				'height' => 480,
+				),
+			'sidebar' => '',
+		),
+		'image_slideshow_720x540' => array(
+			'main_post' => array(
+				'module' => 'image_slideshow',
+				'width' => 720,
+				'height' => 540,
+				),
+			'sidebar' => '',
+		),
+		'image_slideshow_800x600' => array(
+			'main_post' => array(
+				'module' => 'image_slideshow',
+				'width' => 800,
+				'height' => 600,
 				),
 			'sidebar' => '',
 		),

@@ -115,7 +115,7 @@ if (isset ($_POST['verify']) && ($_POST['verify'] == 'Run'))
 	echo '<h3>Updating page types</h3>';
 	foreach(get_blog_to_publication_page_type_map() as $old=>$new)
 	{
-		$q = 'UPDATE page_node SET custom_page = "'.addslashes($new).'" WHERE page_node.custom_page = "'.addslashes($old).'"';
+		$q = 'UPDATE page_node SET custom_page = "'.reason_sql_string_escape($new).'" WHERE page_node.custom_page = "'.reason_sql_string_escape($old).'"';
 		if($r = db_query($q, 'Problem changing '.$old.' page types to '.$new.' page types'))
 		{
 			$num_updated = mysql_affected_rows();
@@ -151,8 +151,8 @@ function relationship_find_and_update($a_type, $b_type, $name, $updates = array(
 		{
 			$set_str .= (!empty($set_str)) ? ", " : '';
 			$where_str_body .= (!empty($where_str_body)) ? ") OR (" : "(";
-			$where_str_body .=  $k . ' != "' . addslashes($v) .'"';
-			$set_str .= $k .' = "'. addslashes($v) . '"';
+			$where_str_body .=  $k . ' != "' . reason_sql_string_escape($v) .'"';
+			$set_str .= $k .' = "'. reason_sql_string_escape($v) . '"';
 		}
 		$where_str_end = "))";
 		$q = 'UPDATE allowable_relationship SET ' . $set_str . ' WHERE ID='.$existing_rel_id.$where_str_start.$where_str_body.$where_str_end;

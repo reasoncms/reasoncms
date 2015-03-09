@@ -327,7 +327,8 @@ class tiny_mceType extends textareaType
 	function get_tiny_mce_init_string()
 	{	
 		$options = $this->base_init_options;
-    	$options['elements'] = $this->name;    	
+		//$options['elements'] = $this->name; 
+		$options['selector'] = 'textarea[name='.$this->name.']';
 		
 		// Merge in custom options
 		foreach($this->init_options as $option => $val) $options[$option] = $val;
@@ -340,10 +341,14 @@ class tiny_mceType extends textareaType
 			{
 				$parts[] = sprintf('%s : %s', $option, $val);
 			}
-			elseif (is_bool($val)) // handle booleans
+			else if (is_bool($val)) // handle booleans
 			{
 				$strval = ($val) ? 'true' : 'false';
 				$parts[] = sprintf('%s : %s', $option, $strval);
+			}
+			else if (strpos($val, 'function(') === 0) // functions
+			{
+				$parts[] = sprintf('%s : %s', $option, $val);
 			}
 			else // default for strings
 			{

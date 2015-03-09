@@ -15,14 +15,15 @@
 	 *
 	 * The controller inits and runs scenarios for the following supported modes:
 	 *
-	 * 'admin', 'form_complete', 'summary', 'form', 'unauthorized', 'closed'
+	 * 'api', 'admin', 'form_complete', 'summary', 'form', 'unauthorized', 'closed'
 	 *
-	 * 1. admin - The user wants to administer a form
-	 * 2. form_complete - The user has just completed the form
-	 * 3. summary - The user wants to see a listing of completed forms 
-	 * 4. form - The user wants to create or edit a form
-	 * 5. unauthorized - The user wants to do something but is unauthorized or not logged in
-	 * 6. closed - The form is closed to submissions
+	 * 1. api - The form has received an ajax API request
+	 * 2. admin - The user wants to administer a form
+	 * 3. form_complete - The user has just completed the form
+	 * 4. summary - The user wants to see a listing of completed forms 
+	 * 5. form - The user wants to create or edit a form
+	 * 6. unauthorized - The user wants to do something but is unauthorized or not logged in
+	 * 7. closed - The form is closed to submissions
 	 *
 	 * Simple customization:
 	 *
@@ -61,11 +62,21 @@
 	class DefaultFormController extends AbstractFormController
 	{
 		var $cleanup_rules = array('submission_key' => array('function' => 'turn_into_string'),
-								   'form_admin_view' => array('function' => 'check_against_array', 'extra_args' => array('true')),
-								   'form_id' => array('function' => 'turn_into_int'),
-								   'netid' => array('function' => 'turn_into_string'));
+									'form_admin_view' => array('function' => 'check_against_array', 'extra_args' => array('true')),
+									'form_id' => array('function' => 'turn_into_int'),
+									'netid' => array('function' => 'turn_into_string'),
+									'module_api' => array( 'function' => 'turn_into_string' ),
+									'module_identifier' => array( 'function' => 'turn_into_string' ),
+									'module_api_action' => array( 'function' => 'turn_into_string' ),
+								   );
 								   
-		var $supported_modes = array('admin', 'form_complete', 'summary', 'closed', 'form', 'unauthorized');
+		var $supported_modes = array('api', 'admin', 'form_complete', 'summary', 'closed', 'form', 'unauthorized');
+		
+		function init_api()
+		{
+			$view =& $this->get_view();
+			$view->init();		
+		}
 		
 		function init_admin()
 		{
@@ -121,8 +132,15 @@
 			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form.css');
 		}
 		
+		function run_api()
+		{
+			$view =& $this->get_view();
+			$view->run_api();
+		}
+
 		function pre_run()
 		{
+			if ($this->run_mode == 'run_api') return;
 			echo $this->check_view_and_invoke_method('get_module_header_html');
 			echo $this->check_view_and_invoke_method('get_top_links_html');
 		}
@@ -267,7 +285,9 @@
 		
 		function get_module_header_html()
 		{
-			return '<div id="form">';
+			$model = $this->get_model();
+			$module = $model->get_module();
+			return '<div id="form" class="'.$module->get_api_class_string().'">';
 		}
 		
 		function get_module_footer_html()

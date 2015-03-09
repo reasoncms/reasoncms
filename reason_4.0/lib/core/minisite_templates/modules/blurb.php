@@ -216,7 +216,7 @@ class BlurbModule extends DefaultMinisiteModule
 		$es = new entity_selector();
 		$es->add_type(id_of('minisite_page'));
 		$es->add_left_relationship( $blurb->id(), relationship_id_of('minisite_page_to_text_blurb') );
-		$es->add_relation('entity.id != "'.addslashes($this->page_id).'"');
+		$es->add_relation('entity.id != "'.reason_sql_string_escape($this->page_id).'"');
 		return $es->run_one();
 	}
 	

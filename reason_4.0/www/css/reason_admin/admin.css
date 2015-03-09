@@ -239,3 +239,8 @@ div.EntityInfo .entityInfoTable a.locationBarLinks {
 
 /* Change review module */
 #reviewChangesModule div.owner { font-size:0.85em; color:#555; }
+
+/* Tableless forms */
+#discoLinear div.formElement {
+    margin-bottom: 1.5em;
+}

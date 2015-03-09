@@ -167,7 +167,7 @@ class reasonCalendar
 	 * if a key-value pair is passed to the object that is not in this array, it is ignored
 	 * @var array
 	 */
-	protected $init_array_keys = array('site','ideal_count','start_date','view','categories','audiences','or_categories','end_date','automagic_window_snap_to_nearest_view','rels','simple_search','context_site','sharing_mode','default_view_min_days', 'es_callback','ongoing_count_all_occurrences','ongoing_count_pre_start_dates','ongoing_count_ends','cache_lifespan','cache_lifespan_meta');
+	protected $init_array_keys = array('site','ideal_count','start_date','view','categories','audiences','or_categories','end_date','automagic_window_snap_to_nearest_view','rels','simple_search','context_site','sharing_mode','show_statuses','default_view_min_days', 'es_callback','ongoing_count_all_occurrences','ongoing_count_pre_start_dates','ongoing_count_ends','cache_lifespan','cache_lifespan_meta');
 	/**
 	 * site entity that we are looking at
 	 *
@@ -325,6 +325,14 @@ class reasonCalendar
 	 * @access private
 	 */
 	protected $sharing_mode; // Possible values: 'all', 'shared_only', 'hybrid'
+	
+	/**
+	 * Which show/hide statuses should the calendar display?
+	 *
+	 * @var boolean
+	 * @access private
+	 */
+	protected $show_statuses = array('show');
 	
 	/**
 	 * A php callback that can be set to modify the entity selector of the calendar
@@ -548,7 +556,8 @@ class reasonCalendar
 		{
 			$this->es->set_env('site',$this->context_site->id());
 		}
-		$this->es->add_relation( table_of('show_hide', id_of('event_type')) .' = "show"' );
+		
+		$this->es->add_relation( table_of('show_hide', id_of('event_type')) .' in ("'.join('","', $this->show_statuses).'")' );
 		
 		if(!empty($this->es_callback))
 		{
@@ -594,7 +603,7 @@ class reasonCalendar
 					$search_chunks[] = table_of($field, id_of('event_type')) . '  LIKE "%'.$date.'%"';
 				}
 			}
-			$prepped = addslashes($this->simple_search);
+			$prepped = reason_sql_string_escape($this->simple_search);
 			foreach($simple_search_text_fields as $field)
 			{
 				$search_chunks[] = table_of($field, id_of('event_type')) . ' LIKE "%'.$prepped.'%"';
@@ -1445,7 +1454,7 @@ class reasonCalendar
 		}
 		$test_es = carl_clone($this->base_es);
 		$test_es->set_num(1);
-		$test_es->add_relation( table_of('datetime', id_of('event_type')). ' < "'.addslashes($date).'"');
+		$test_es->add_relation( table_of('datetime', id_of('event_type')). ' < "'.reason_sql_string_escape($date).'"');
 		$test_es->limit_fields();
 		$test_es->exclude_tables_dynamically();
 		$test_es->set_cache_lifespan($this->_get_cache_lifespan_meta());
@@ -1481,7 +1490,7 @@ class reasonCalendar
 		}
 		$test_es = carl_clone($this->base_es);
 		$test_es->set_num(1);
-		$test_es->add_relation('event.last_occurence > "'.addslashes($date).'"');
+		$test_es->add_relation('event.last_occurence > "'.reason_sql_string_escape($date).'"');
 		$test_es->limit_fields();
 		$test_es->exclude_tables_dynamically();
 		$test_es->set_cache_lifespan($this->_get_cache_lifespan_meta());

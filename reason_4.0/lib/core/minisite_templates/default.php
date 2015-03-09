@@ -1697,7 +1697,7 @@ class MinisiteTemplate
 	}
 	function has_related_section()
 	{
-		if( $this->has_content( 'pre_sidebar' ) || $this->has_content( 'sidebar' ) )
+		if( $this->has_content( 'pre_sidebar' ) || $this->has_content( 'sidebar' ) || $this->has_content( 'post_sidebar' ) )
 		{
 			return true;
 		}

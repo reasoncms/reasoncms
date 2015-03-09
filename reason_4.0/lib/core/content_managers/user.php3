@@ -14,7 +14,7 @@
 	class UserManager extends ContentManager
 	{
 		var $nice_labels = array(
-								'name'=>'username',
+								'name'=>'Username',
 								'user_surname'=>'Surname or Family Name',
 								'user_given_name'=>'Given/First Name',
 								'user_authoritative_source'=>'Authoritative Source',

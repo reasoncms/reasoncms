@@ -15,7 +15,7 @@
   */
 include_once('paths.php');
 include_once(CARL_UTIL_INC.'error_handler/error_handler.php');
-
+include_once( CARL_UTIL_INC . 'db/db.php' );
 /*
  * The SQLer
  *
@@ -23,7 +23,7 @@ include_once(CARL_UTIL_INC.'error_handler/error_handler.php');
  * The general data format is an associative array.  It takes care of the rest.
  * 
  * A singleton instance of SQLER is stored in $GLOBALS['sqler'] to reduce the need to constantly reinstantiate this class
- *
+ * 
  * @todo unify with db_query class so we aren't using mysql_query directly there and there.
  *
  * @author dave hendler
@@ -53,8 +53,13 @@ include_once(CARL_UTIL_INC.'error_handler/error_handler.php');
 			reset( $data );
 			foreach($data as $key => $val )
 			{
+				if (is_array($val))
+				{
+					trigger_error('Array value passed for key "'.$key.'" in SQLER insert.');
+					continue;
+				}
 				$fields .= '`'.$key.'`,';
-				$values .= ($val !== NULL) ? '"'.addslashes( $val ).'",' : 'NULL,';
+				$values .= ($val !== NULL) ? '"'.carl_util_sql_string_escape( $val ).'",' : 'NULL,';
 			}
 			$fields = substr( $fields, 0, -1 );
 			$values = substr( $values, 0, -1 );
@@ -95,7 +100,7 @@ include_once(CARL_UTIL_INC.'error_handler/error_handler.php');
 			foreach($data as $key => $val )
 			{
 				$set_these .= '`'.$key.'` = ';
-				$set_these .= ($val !== NULL) ? '"'.addslashes( $val ).'",' : 'NULL,';
+				$set_these .= ($val !== NULL) ? '"'.carl_util_sql_string_escape( $val ).'",' : 'NULL,';
 			}
 			$set_these = substr( $set_these, 0, -1 );
 
@@ -128,7 +133,7 @@ include_once(CARL_UTIL_INC.'error_handler/error_handler.php');
 		 */
 		function delete_one( $table, $id, $primary_key = 'id' ) // {{{
 		{
-			$q = 'DELETE FROM '.$table.' WHERE '.$primary_key.' = "'.addslashes($id).'" LIMIT 1';
+			$q = 'DELETE FROM '.$table.' WHERE '.$primary_key.' = "'.carl_util_sql_string_escape($id).'" LIMIT 1';
 			if ($this->mode == 'get_query') return $q;
 			else 
 			{

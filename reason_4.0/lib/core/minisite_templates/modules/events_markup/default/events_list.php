@@ -111,7 +111,7 @@ class defaultEventsListMarkup implements eventsListMarkup
 				{
 					foreach($events as $event)
 					{
-						$ret .= '<li class="event">';
+						$ret .= '<li class="event '.(($time == 'all_day') ? 'allDay' : 'hasTime').'">';
 						$ret .= $this->bundle->list_item_markup($event, $day, $time);
 						$ret .= '</li>'."\n";
 					}

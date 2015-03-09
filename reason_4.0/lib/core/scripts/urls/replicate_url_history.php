@@ -70,7 +70,7 @@ if(!empty($_GET['action']))
 		
 		$dbs = new DBSelector();
 		$dbs->add_table('URL_history');
-		$dbs->add_relation('page_id = "'.addslashes($old_page_id).'"');
+		$dbs->add_relation('page_id = "'.reason_sql_string_escape($old_page_id).'"');
 		$dbs->set_order('timestamp ASC');
 		$rows = $dbs->run();
 		//pray($rows);
@@ -81,9 +81,9 @@ if(!empty($_GET['action']))
 			if(!empty($row['url']))
 			{
 				$query = 'INSERT INTO URL_history SET ' . 
-						'url = "' . addslashes($row['url']) . '", ' .
-						'page_id = "' . addslashes($new_page_id) . '", ' .
-						'timestamp = "' . addslashes(time()) . '"';
+						'url = "' . reason_sql_string_escape($row['url']) . '", ' .
+						'page_id = "' . reason_sql_string_escape($new_page_id) . '", ' .
+						'timestamp = "' . reason_sql_string_escape(time()) . '"';
 		
 				$results = mysql_query( $query );
 		

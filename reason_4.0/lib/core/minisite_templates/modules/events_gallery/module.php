@@ -25,15 +25,15 @@
 				
 				if(!in_array('archived',$this->params['show']))
 				{
-					$es->add_relation('`last_occurence` >= "'.addslashes(date('Y-m-d')).'"');
+					$es->add_relation('`last_occurence` >= "'.reason_sql_string_escape(date('Y-m-d')).'"');
 				}
 				if(!in_array('upcoming',$this->params['show']))
 				{
-					$es->add_relation('`datetime` < "'.addslashes(date('Y-m-d',time() + (60*60*24))).'"');
+					$es->add_relation('`datetime` < "'.reason_sql_string_escape(date('Y-m-d',time() + (60*60*24))).'"');
 				}
 				if(!in_array('current',$this->params['show']))
 				{
-					$es->add_relation('(`last_occurence` < "'.addslashes(date('Y-m-d')).'" OR `datetime` >= "'.addslashes(date('Y-m-d',time() + (60*60*24))).'")');
+					$es->add_relation('(`last_occurence` < "'.reason_sql_string_escape(date('Y-m-d')).'" OR `datetime` >= "'.reason_sql_string_escape(date('Y-m-d',time() + (60*60*24))).'")');
 				}
 				$es->add_relation('`show_hide` = "show"');
 				$es->set_order($this->params['order']);

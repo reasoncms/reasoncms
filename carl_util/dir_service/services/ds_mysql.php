@@ -9,7 +9,7 @@
 /**
  * Include database connection library and parent class
  */
-include_once( CARL_UTIL_INC . 'db/connectDB.php' );
+include_once( CARL_UTIL_INC . 'db/db.php' );
 include_once('ds_default.php');
 
 /**
@@ -335,7 +335,7 @@ class ds_mysql extends ds_default {
 	* @param string $value User provided value
 	*/
 	function escape_input($value) {
-		return addslashes($value);
+		return carl_util_sql_string_escape($value);
 	}
 	
 	/**

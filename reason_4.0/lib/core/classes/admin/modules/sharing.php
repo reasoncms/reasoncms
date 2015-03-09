@@ -77,7 +77,7 @@
 			$nes = new entity_selector( );
 			$nes->add_type( id_of('type') );
 			$nes->add_right_relationship( $this->admin_page->site_id, relationship_id_of( 'site_cannot_edit_type' ) );
-			$nes->add_relation('`entity`.`id` = "'.addslashes($this->admin_page->type_id).'"');
+			$nes->add_relation('`entity`.`id` = "'.reason_sql_string_escape($this->admin_page->type_id).'"');
 			$nes->set_num(1);
 			$nes->limit_tables();
 			$nes->limit_fields();

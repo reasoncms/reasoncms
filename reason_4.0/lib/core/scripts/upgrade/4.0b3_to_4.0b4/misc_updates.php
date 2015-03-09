@@ -266,7 +266,7 @@ function add_indexes_b3_to_b4($test_mode = true)
 	echo '<ul>';
 	foreach(get_indexes_to_add_b3_to_b4() as $table=>$fields)
 	{
-		$handle = db_query('SHOW INDEX FROM `'.addslashes($table).'`');
+		$handle = db_query('SHOW INDEX FROM `'.reason_sql_string_escape($table).'`');
 		$results = array();
 		while($row = mysql_fetch_assoc($handle))
 		{
@@ -286,7 +286,7 @@ function add_indexes_b3_to_b4($test_mode = true)
 				}
 				else
 				{
-					if(db_query('ALTER TABLE `'.addslashes($table).'` ADD INDEX ( `'.addslashes($field).'` )'))
+					if(db_query('ALTER TABLE `'.reason_sql_string_escape($table).'` ADD INDEX ( `'.reason_sql_string_escape($field).'` )'))
 					{
 						echo '<li>Successfully added index on '.$table.'.'.$field.'.</li>';
 					}
