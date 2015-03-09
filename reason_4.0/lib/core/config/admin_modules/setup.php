@@ -104,6 +104,7 @@
 		'ClearCache'=>array('file'=>'clear_cache.php', 'class'=>'ReasonClearCacheModule'),
 		'Analytics'=>array('file'=>'analytics.php', 'class'=>'AnalyticsModule'),
 		'AnalyticsAbout'=>array('file'=>'analytics.php', 'class'=>'AnalyticsAboutModule'),
+		'ShareSiteOwnership'=>array('file'=>'share_site_ownership.php', 'class'=>'ShareSiteOwnershipModule'),
 );
 
 if (reason_file_exists('config/admin_modules/setup_local.php'))

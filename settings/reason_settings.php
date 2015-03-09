@@ -913,6 +913,14 @@
 	 * 3. Relative path from within minisite_templates/modules/form/controllers/ directory
 	 */
 	define('REASON_FORMS_THOR_DEFAULT_CONTROLLER', 'thor.php');
+
+	/**
+	 * REASON_FORMS_THOR_DEFAULT_AKISMET_FILTER
+	 *
+	 * Indicates whether thor forms should apply akismet spam filtering by default within Reason.
+	 * 
+	 */
+	define ('REASON_FORMS_THOR_DEFAULT_AKISMET_FILTER', true);
 	
 	/**
 	 * REASON_LOKI_CSS_FILE
@@ -1031,4 +1039,12 @@
 	 * With an API key, Reason can provide superior ip geolocation results.
 	 */
 	define('REASON_IPINFODB_API_KEY', '');
+
+	/**
+	 * REASON_PDF_DOWNLOAD_DISPOSITION_DEFAULT
+	 *
+	 * How should Reason handle when a user clicks on a pdf link? Set this to 'attachment' to force a download, or 'inline'
+	 * to attempt to display it in the browser.
+	 */
+	define('REASON_PDF_DOWNLOAD_DISPOSITION_DEFAULT', 'attachment');
 ?>

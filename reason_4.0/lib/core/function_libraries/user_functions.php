@@ -155,7 +155,7 @@ function reason_get_current_user_entity()
 		{
 			$es = new entity_selector();
 			$es->add_type(id_of('user'));
-			$es->add_relation('entity.name = "'.addslashes($username).'"');
+			$es->add_relation('entity.name = "'.reason_sql_string_escape($username).'"');
 			$es->set_num(1);
 			$result = $es->run_one();
 			if(!empty($result))

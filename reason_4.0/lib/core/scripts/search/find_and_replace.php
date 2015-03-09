@@ -514,7 +514,7 @@ class FindReplaceWizardHelper
 	
 	function get_search_term_for_query()
 	{
-		return str_replace('_','\_', addslashes($this->get_search_term()));
+		return str_replace('_','\_', reason_sql_string_escape($this->get_search_term()));
 	}
 	
 	function get_replace_term()

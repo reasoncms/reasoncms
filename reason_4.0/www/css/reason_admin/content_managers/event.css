@@ -1,0 +1,94 @@
+div#event_preview {
+    background-color: #E9EEF8;
+    border-radius: 5px;
+    margin: 15px 0 15px 15px;
+    padding: 15px;
+}
+
+div#event_preview h4 {
+	margin-top: 0;
+	font-size: 1em;	
+}
+
+div#event_preview ul {
+	list-style: none;
+	padding-left:0;
+}
+
+div#event_preview li {
+	padding-bottom: .5em;	
+	font-size: 0.85em;
+	clear: both;
+}
+
+div#event_preview li.current {
+	font-weight: bold;	
+}
+
+div#event_preview li.tentative_status {
+	color: #888;
+	font-style: italic;	
+}
+
+div#event_preview li.tentative_status a {
+	color: #888;
+}
+
+div#event_preview li span.preview_time {
+	float: left;	
+}
+
+div#event_preview li span.preview_name {
+	display: block;	
+	padding-left: 5.5em;
+}
+
+div#event_preview span.label {
+	font-variant: small-caps;
+	font-size: 0.8em;	
+}
+
+div#borrow_confirm_shade {
+	display: none;
+	position: fixed;
+	top: 0%;
+	left: 0%;
+	width: 100%;
+	height: 100%;
+	background-color: black;
+	z-index:1001;
+	-moz-opacity: 0.5;
+	-khtml-opacity: 0.5;
+	opacity:.50;
+	filter: alpha(opacity=50);
+}
+div#borrow_confirm {
+	display: none;
+	position: fixed;
+	top: 25%;
+	left: 25%;
+	width: 50%;
+	height: 50%;
+	padding: 16px;
+	background-color: white;
+	z-index:1002;
+	overflow: auto;
+}
+
+div#borrow_confirm p.buttons {
+	padding-top: 1em;	
+}
+
+div#borrow_confirm a {
+	background-color: #EEEEEE;
+	border: 1px solid #CCCCCC;
+	border-radius: 5px;
+	color: #444444;
+	padding: 0.2em 0.6em 0.4em;
+	text-decoration: none;
+}
+
+div#borrow_confirm a:hover {
+	background-color: #DDDDDD;	
+}
+

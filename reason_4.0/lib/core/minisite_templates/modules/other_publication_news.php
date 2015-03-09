@@ -115,15 +115,20 @@ class OtherPublicationNewsModule extends DefaultMinisiteModule
 	
 	function _get_featured_news_item_ids($pub_id)
 	{
-		$es = new entity_selector(); // try without site_id for now ... allows this to be used anywhere with a unique publication name
-		$es->add_type(id_of('news'));
-		$es->limit_tables('status');
-		$es->limit_fields('status.status');
-		$es->add_right_relationship($pub_id, relationship_id_of('publication_to_featured_post'));
-		$es->add_rel_sort_field($pub_id, relationship_id_of('publication_to_featured_post'), 'featured_sort_order' );
-		$es->set_order('featured_sort_order ASC');
-		$es->add_relation('status.status = "published"');
-		return array_keys( $es->run_one() );
+		static $cache = array();
+		if(!isset($cache[$pub_id]))
+		{
+			$es = new entity_selector(); // try without site_id for now ... allows this to be used anywhere with a unique publication name
+			$es->add_type(id_of('news'));
+			$es->limit_tables('status');
+			$es->limit_fields('status.status');
+			$es->add_right_relationship($pub_id, relationship_id_of('publication_to_featured_post'));
+			$es->add_rel_sort_field($pub_id, relationship_id_of('publication_to_featured_post'), 'featured_sort_order' );
+			$es->set_order('featured_sort_order ASC');
+			$es->add_relation('status.status = "published"');
+			$cache[$pub_id] = array_keys( $es->run_one() );
+		}
+		return $cache[$pub_id];
 	}
 	
 	function &set_order_and_limits(&$news_items)
@@ -136,6 +141,7 @@ class OtherPublicationNewsModule extends DefaultMinisiteModule
 		{
 			if(isset($news_items[$featured_id]))
 			{
+				$news_items[$featured_id]->set_value('_featured', true);
 				$source_name = $news_items[$featured_id]->get_value('source_name');
 				$sorted_and_limited_news_items[$source_name][$featured_id] =& $news_items[$featured_id];
 				$index++;
@@ -148,6 +154,7 @@ class OtherPublicationNewsModule extends DefaultMinisiteModule
 			if ($this->params['max_num_to_show'] != 0 && $index > $this->params['max_num_to_show']) break;
 			if(in_array($k,$featured_ids))
 				continue;
+			$news_items[$k]->set_value('_featured',false);
 			$index++;
 			$source_name = $news_items[$k]->get_value('source_name');
 			$sorted_and_limited_news_items[$source_name][$k] =& $news_items[$k];
@@ -165,6 +172,7 @@ class OtherPublicationNewsModule extends DefaultMinisiteModule
 		$site_id = $news_item_entity->get_value('site_id');
 		$site = new entity($site_id);
 		$site_unique_name = $site->get_value('unique_name');
+		
 		if (isset($this->augment_entity_handlers[$site_unique_name]))
 		{
 			$method_name = $this->augment_entity_handlers[$site_unique_name];
@@ -289,7 +297,10 @@ class OtherPublicationNewsModule extends DefaultMinisiteModule
 		echo '<ul>';
 		foreach ($news_items as $news_item)
 		{
-			echo '<li>';
+			$class = 'notFeatured';
+			if($news_item->has_value('_featured') && $news_item->get_value('_featured'))
+				$class = 'featured';
+			echo '<li class="' . $class . '">';
 			$this->show_news_item($news_item);
 			echo '</li>';
 		}

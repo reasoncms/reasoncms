@@ -79,6 +79,7 @@ class ObjectCache
 		$cache =& $this->set_cache();
 		if ($id && $cache)
 		{
+			$cache->set_cache_name($id);
 			$cache->set_cache_id(md5($id));
 			if ( !empty($lifespan) || ($lifespan = $this->get_default_lifespan())) $cache->set_cache_lifespan($lifespan);
 			if ($params = $this->get_cache_params())

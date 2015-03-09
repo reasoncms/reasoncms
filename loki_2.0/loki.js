@@ -12,7 +12,7 @@
  * $Date: 2005/08/26 15:20:32 $
  *
  * @author Moxiecode. Extracts made by NF starting 2005/10/14.
- * @copyright Copyright © 2004, Moxiecode Systems AB, All rights reserved.
+ * @copyright Copyright 2004, Moxiecode Systems AB, All rights reserved.
  */
 function TinyMCE() {};
 
@@ -6099,8 +6099,8 @@ Util.HTML_Parser = function SAX_HTML_Parser()
 			
 			if (next_char != '>') {
 				// oh my, what on earth?
-				throw new Util.HTML_Parser.Error('Opening tag not terminated ' +
-					'by ">".');
+				// throw new Util.HTML_Parser.Error('Opening tag not terminated by ">".');
+				console.log('Opening tag not terminated by ">".');
 			}
 		}
 		
@@ -6116,8 +6116,8 @@ Util.HTML_Parser = function SAX_HTML_Parser()
 				next_char = scan_character();
 				if (next_char != '>') {
 					// oh my, what on earth?
-					throw new Util.HTML_Parser.Error('Closing tag not ' +
-						'terminated by ">".');
+					//throw new Util.HTML_Parser.Error('Closing tag not terminated by ">".');
+					console.log('Closing tag not terminated by ">".');
 				}
 			}
 			
@@ -19051,6 +19051,7 @@ UI.Page_Link_Selector.Item_Selector = function(dialog, wrapper)
 							var options = {
 								method: 'get',
 								timeout: 10,
+								headers: {'X-Requested-With': 'Loki'},
 								
 								on_interactive: function(request)
 								{

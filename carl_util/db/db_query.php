@@ -20,6 +20,9 @@ include_once( CARL_UTIL_INC . 'db/connectDB.php' );
  *	- query tracking
  *	- query reporting
  *
+ *	Query tracking is memory expensive (4-5K per call), so if you want to use it, you need
+ *	to set $GLOBALS['_db_query_enable_tracking'] to true in your script.
+ *
  *	@param	$query	the query to run
  *	@param	$error_message	the custom error message
  *	@param	$die_on_error	boolean variable that determines whether to die on an error
@@ -29,9 +32,7 @@ include_once( CARL_UTIL_INC . 'db/connectDB.php' );
 function db_query( $query, $error_message = '', $die_on_error = true )
 {
 	// keep track of all queries
-	static $queries;
-	static $distinct_queries;
-	static $distinct_errors;
+	static $queries = array();
 	static $first_run = true;
 	
 	if ($first_run)
@@ -43,23 +44,11 @@ function db_query( $query, $error_message = '', $die_on_error = true )
 		$first_run = false;
 	}
 	
-	if( !isset( $queries ) OR empty( $queries ) )
-		$queries = array();
-	if( !isset( $distinct_errors ) OR empty( $distinct_errors ) )
-		$distinct_errors = array();
-	if( !isset( $distinct_queries ) OR empty( $distinct_queries ) )
-		$distinct_queries = array();
-
-	$queries[] = array('q' => $query, 'error' => $error_message );
-
-	if( !isset( $distinct_queries[ $query ] ) )
-		$distinct_queries[ $query ] = 0;
-	$distinct_queries[ $query ]++;
-
-	if( !isset( $distinct_errors[ $error_message ] ) )
-		$distinct_errors[ $error_message ] = 0;
-	$distinct_errors[ $error_message ]++;
-
+	if (!empty($GLOBALS['_db_query_enable_tracking']))
+	{
+		$queries[] = array('q' => $query, 'error' => $error_message );
+	}
+	
 	switch( $query )
 	{
 		// profiling and reporting cases
@@ -70,10 +59,26 @@ function db_query( $query, $error_message = '', $die_on_error = true )
 			return $queries;
 			break;
 		case 'REPORT DISTINCT QUERIES':
+			$distinct_queries = array();
+			foreach ($queries as $query)
+			{
+				if (isset($distinct_queries[$query['q']]))
+					$distinct_queries[$query['q']]++;
+				else
+					$distinct_queries[$query['q']] = 0;
+			}
 			arsort( $distinct_queries );
 			pray( $distinct_queries );
 			break;
 		case 'REPORT DISTINCT ERRORS':
+			$distinct_errors = array();
+			foreach ($queries as $query)
+			{
+				if (isset($distinct_errors[$query['error']]))
+					$distinct_errors[$query['error']]++;
+				else
+					$distinct_errors[$query['error']] = 0;
+			}
 			arsort( $distinct_errors );
 			pray( $distinct_errors );
 			break;

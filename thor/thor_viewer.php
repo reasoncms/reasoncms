@@ -189,7 +189,7 @@ class DiscoThorAdmin extends DiscoDefaultAdmin
 		$id = $this->get_id();
 		echo '<h3>Editing row id ' . $id . '</h3>';
 		$link = carl_make_link(array('table_row_action' => '', 'table_action_id' => ''));
-		echo '<p><a href="'.$link.'">Return to summary form data</a></p>';
+		echo '<p class="summaryReturn"><a href="'.$link.'">Return to summary form data</a></p>';
 	}
 	
 	function pre_show_form_delete()
@@ -203,7 +203,7 @@ class DiscoThorAdmin extends DiscoDefaultAdmin
 		$id = $this->get_id();
 		echo '<h3>Viewing row id ' . $id . '</h3>';
 		$link = carl_make_link(array('table_row_action' => '', 'table_action_id' => ''));
-		echo '<p><a href="'.$link.'">Return to summary form data</a></p>';
+		echo '<p class="summaryReturn"><a href="'.$link.'">Return to summary form data</a></p>';
 	}
 	
 	function on_every_time()

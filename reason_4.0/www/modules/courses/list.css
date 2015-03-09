@@ -1,0 +1,66 @@
+
+.prereqLabel {
+	font-style: italic;	
+}
+
+/* Inline Editing Styles */
+
+div.editRegion div.explain {
+	background-color: #f0f5ff;
+	border: 1px dotted #748fc2;
+	font-size: 90%;
+	padding: 0.3em 1.5em;
+	margin-top: 1em;
+}
+
+div.editRegion div.explain a.editThis {
+	background-color: #fff;
+	border: 1px dotted #748fc2;
+	padding: 0.3em;
+	text-decoration: none;
+}
+
+div#coursePicker {
+	border: 1px dotted #748fc2;
+	padding: 0.3em 1.5em;	
+}
+
+div.courseListCourse {
+	clear: both;	
+}
+
+div.courseListCourse input {
+
+}
+
+div.courseListCourse div.closed {
+	display: none;	
+}
+
+div.courseListCourse div.courseTitle {
+	display: inline-block;
+	max-width: 95%;
+	padding-left: 0.7em;
+	vertical-align: top;
+}
+
+div.courseListCourse label {
+}
+
+div.courseListCourse div.description {
+	font-size: 90%;
+	margin: 0 0 0.5em 1.5em;
+}
+
+div.courseListCourse a.courseRevealer {
+	cursor: pointer;
+	width: 1em;
+	padding-left: 0.5em;
+	display: inline-block;
+	color: #748fc2 !important;
+	/* background:transparent url(../../ui_images/item_open.gif) no-repeat right center; */
+}
+
+div.courseListCourse a.courseRevealer.closed {
+	/* background:transparent url(../../ui_images/item_closed.gif) no-repeat right center; */
+}

@@ -34,7 +34,7 @@
 		{
 			parent::run_error_checks();
 			$es = new entity_selector();
-			$es->add_relation('audience_integration.directory_service_value = "'.addslashes($this->get_value('directory_service_value')).'"');
+			$es->add_relation('audience_integration.directory_service_value = "'.reason_sql_string_escape($this->get_value('directory_service_value')).'"');
 			$es->add_relation('entity.id != '.$this->get_value('id'));
 			$es->set_num(1);
 			$conflicts = $es->run_one(id_of('audience_type'));

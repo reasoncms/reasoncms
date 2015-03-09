@@ -31,10 +31,10 @@ class imagesFeed extends defaultFeed
 		$start = !empty($_REQUEST['start']) ? turn_into_int($_REQUEST['start']) : '0';
 		if( !empty($_REQUEST['q']) )
 		{
-			$this->feed->es->add_relation('(entity.name LIKE "%'.addslashes($_REQUEST['q']) . '%"' .
-						      ' OR meta.description LIKE "%' . addslashes($_REQUEST['q']) . '%"'.
-							  ' OR meta.keywords LIKE "%' . addslashes($_REQUEST['q']) . '%"'.
-							  ' OR chunk.content LIKE "%' . addslashes($_REQUEST['q']) . '%"'.
+			$this->feed->es->add_relation('(entity.name LIKE "%'.reason_sql_string_escape($_REQUEST['q']) . '%"' .
+						      ' OR meta.description LIKE "%' . reason_sql_string_escape($_REQUEST['q']) . '%"'.
+							  ' OR meta.keywords LIKE "%' . reason_sql_string_escape($_REQUEST['q']) . '%"'.
+							  ' OR chunk.content LIKE "%' . reason_sql_string_escape($_REQUEST['q']) . '%"'.
 							  ')');
 		}
 		$this->feed->es->set_num( $num );

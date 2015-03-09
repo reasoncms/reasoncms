@@ -137,7 +137,7 @@ class pubUpdaterb5b6
 	{
 		$es = new entity_selector(id_of('master_admin'));
 		$es->add_type(id_of('content_table'));
-		$es->add_relation('entity.name = "'.addslashes($table_name).'"');
+		$es->add_relation('entity.name = "'.reason_sql_string_escape($table_name).'"');
 		$es->set_num(1);
 		$tables = $es->run_one();
 		if(empty($tables))
@@ -150,7 +150,7 @@ class pubUpdaterb5b6
 		$es = new entity_selector(id_of('master_admin'));
 		$es->add_type(id_of('field'));
 		$es->add_left_relationship($table->id(), relationship_id_of('field_to_entity_table'));
-		$es->add_relation('entity.name = "'.addslashes($field_name).'"');
+		$es->add_relation('entity.name = "'.reason_sql_string_escape($field_name).'"');
 		$es->set_num(1);
 		$fields = $es->run_one();
 		if(empty($fields))

@@ -451,7 +451,7 @@ class ds_reason extends ds_default {
 	* @return string
 	*/
 	function escape_input($value) {
-		return addslashes(ldap_unescape($value));
+		return reason_sql_string_escape(ldap_unescape($value));
 	}
 	
 	/**
@@ -468,7 +468,7 @@ class ds_reason extends ds_default {
 		if(!empty($username) && !empty($password))
 		{
 			$es = new entity_selector();
-			$es->add_relation('entity.name = "'.addslashes($username).'"');
+			$es->add_relation('entity.name = "'.reason_sql_string_escape($username).'"');
 			$es->add_relation('user.user_password_hash = "'.sha1($password).'"');
 			$es->add_relation($this->get_basic_limitation());
 			$es->set_num(1);
