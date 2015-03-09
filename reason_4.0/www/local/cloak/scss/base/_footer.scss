@@ -1,0 +1,19 @@
+// Footer Styles
+// Cloak, v1
+
+#footer {
+	background: $vapor;
+	border-top: 1px solid $gainsboro;
+	text-align: center;
+	padding: $column-gutter;
+
+	#maintained {
+		// Maintained is a module, so it's styles are
+		// found in modules/_maintained.scss.
+	}
+
+	.loginLinkModule {
+		// Login Link is a module, so it's styles are
+		// found in modules/_login-link.scss.
+	}
+}

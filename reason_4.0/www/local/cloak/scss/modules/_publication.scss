@@ -1,0 +1,471 @@
+// Publication Styles
+// Cloak, v1
+
+// Column Layout
+// This has been moved to base/_common.scss.
+// Remove when sure that we didn't lose anything in the process
+//#meat {
+
+	// .publication {
+	// 	@include grid-row();
+
+	// 	.persistent {
+	// 		margin-bottom: $column-gutter;
+	// 	}
+
+	// 	.moduleNav {
+	// 		margin-bottom: $column-gutter;
+	// 	}
+	// }
+		
+	// // 3 column layout. Page has content, related, and navigation.
+	// &.containsConRelNav {
+
+	// 	.publication {
+
+	// 		.persistent {
+	// 			@include grid-column($columns:12, $collapse:true);
+	// 		}
+
+	// 		.moduleNav {
+	// 			@include grid-column($columns:12, $collapse:true);
+	// 		}
+	// 	}
+	// }
+
+	// // 2 column layout. Page has content and navigation.
+	// &.containsConNav,
+	// // 2 column layout. Page has content and related.
+	// &.containsConRel,
+	// // 1 column layout. Page has content.
+	// &.containsCon {
+
+	// 	.publication {
+		
+	// 		.persistent {
+	// 			@include grid-column($columns:12, $collapse:true);
+
+	// 			@media #{$medium-up} {
+	// 				@include grid-column($columns:4, $collapse:true);
+	// 				float: right;
+	// 				padding-left: $column-gutter/2;			
+	// 			}
+	// 		}
+
+	// 		.moduleNav {
+	// 			@include grid-column($columns:12, $collapse:true);
+
+	// 			@media #{$medium-up} {
+	// 				@include grid-column($columns:8,$collapse:true);
+	// 				padding-right: $column-gutter/2;	
+	// 			}
+	// 		}
+	// 	}
+	// }
+//}
+
+#meat .publication {
+
+	// Common
+	.date {
+		color: $aluminum;
+		font-size: rem-calc(14);
+	}
+
+	.back {
+		margin-top: 0;
+		text-align: left;
+
+		div {
+			
+			a {
+				@include inline-icon($icon: $fa-var-mail-reply);
+			}
+		}
+	}
+
+	// Search and Filter styles
+	// @todo: Figure out how much persistent styling we can pull out and make general
+	.persistent {
+		border: none;
+
+		#filtering {
+			@include clearfix;
+			margin: 0;
+			background: $silver;
+			padding: $column-gutter/2;
+			padding-bottom: 0;
+
+			// Search form
+			.searchForm {
+				margin: 0 0 $column-gutter/2 0 !important;
+				@include clearfix;
+
+				label {
+					@include screenreader();
+				}
+
+				.search {
+					display: block;
+					@include form-element();
+					width: 80%;
+					float: left;
+					margin-bottom: 0;
+					border-right: none;
+				}
+
+				.submit {
+					display: block;
+					text-align: center;
+					padding: $form-spacing / 2;
+					height: ($input-font-size + ($form-spacing * 1.5) - rem-calc(1));
+					background: $primary-color;
+					color: $white;
+					width: 20%;
+					float: left;
+					border-radius: 0 $global-radius $global-radius 0;
+					margin-bottom: 0;
+
+					&:hover {
+						background: darken($primary-color, 10%);
+						cursor: pointer;
+					}
+				}
+
+				a {
+					color: red;
+				}
+			}
+
+			// Category filter as a select dropdown
+			.filterSet {
+				margin: 0 0 $column-gutter/2 0 !important;
+				
+				.filterSelect {
+
+				}
+
+				// Remove filter button
+				a {
+					display: block;
+					float: right;
+					line-height: 1;
+					margin-right: rem-calc(24);
+					margin-bottom: rem-calc(6);
+					padding: rem-calc(4);
+					font-size: rem-calc(12);
+					background: $white;
+					border: 1px solid $iron;
+					border-top: 0;
+					border-radius: 0 0 $global-radius $global-radius;
+
+					&:hover {
+						border-color: $aluminum;
+					}
+
+					@include inline-icon($icon: $fa-var-times-circle);
+				}
+			}
+
+			// Category list navigation
+			.filters {
+				margin: 0 0 $column-gutter/2 0 !important;
+
+				h4 {
+					display: inline-block;
+					margin-right: rem-calc(8);
+					font-weight: 400;
+
+					@media #{$small-only} {
+						font-weight: 700;
+					}
+				}
+
+				ul {
+					list-style-type: none;
+					margin: 0;
+					display: inline;
+
+					li {
+						display: inline-block;
+						margin-right: rem-calc(8);
+						white-space: pre;
+
+						a {
+							@include inline-icon($icon: $fa-var-folder-o, $color: $monsoon);
+						}
+
+						strong {
+							@include inline-icon($icon: $fa-var-folder-open-o, $color: inherit);
+						}
+					}
+				}
+			}
+		}
+
+		.loginlogout {
+			margin: $column-gutter/4 $column-gutter/2 0 0;
+			text-align: right;
+			font-size: rem-calc(14);
+
+			a {
+				@include inline-icon($pseudo: after, $icon: $fa-var-lock);
+			}
+		}
+	}
+
+	// List of Posts
+	.moduleNav {
+
+		// Heading when a seach term is applied: "Results for 'News Story'"
+		.searchTitle {
+			text-transform: uppercase;
+			font-size: rem-calc(15);
+			font-weight: 700;
+			//margin-bottom: $column-gutter;
+		}
+
+		// Heading when a filter is applied: "Posts tagged with 'Category 2'"
+		.filterMessage {
+			
+			h3 {
+				text-transform: uppercase;
+				font-size: rem-calc(15);
+				font-weight: 700;
+				//margin-bottom: $column-gutter;
+				// @include alert($radius: $global-radius);
+				// background: red;
+
+				.clear {
+					font-weight: 700;
+					
+					a {
+						padding: 0 rem-calc(4);
+						display: inline-block;
+						@include inline-icon($icon: $fa-var-mail-reply);
+					}
+				}
+			}
+		}
+		
+		.posts {
+		
+			.post {
+				border-top: 2px solid $smoke;
+				padding: $column-gutter/1.2 $column-gutter/2; 
+
+				&:last-of-type {
+					border-bottom: 2px solid $smoke;
+				}
+
+				@media #{$medium-up} {
+					padding: $column-gutter/1.2 $column-gutter;
+					border: 1px solid $smoke;
+					box-shadow: rgba(black, .25) 0 1px 1px;
+					margin-bottom: $column-gutter;
+				}
+
+				.teaserImage {
+					float: right;
+					margin: 0 0 $column-gutter/2 $column-gutter/2;
+
+					@media #{$small-only} {
+						max-width: 100px;
+					}
+				}
+
+				.title {
+					margin: 0;
+					font-size: $h3-font-size;
+				//	font-size: $h2-font-size;
+					font-weight: 400;
+				}
+
+				.date {
+					margin: 0;
+				}
+
+				.desc {
+					margin-top: rem-calc(16);
+				}
+
+				.links {
+					margin: 0;
+					padding: 0;
+
+					li {
+						display: inline-block;
+						margin-right: rem-calc(12);
+
+						a {
+							&:before {
+								@extend .fa-fw;
+							}
+						}
+
+						&.more a {
+							@include inline-icon($icon: $fa-var-share);
+						}
+
+						&.permalink a {
+							@include inline-icon($icon: $fa-var-bookmark);
+						}
+						&.comments a {
+							@include inline-icon($icon: $fa-var-comment);
+						}
+					}
+				}
+			}
+		}
+
+		.feedLink {
+			a {
+				@include feed-button();
+			}
+			
+			.feedInfo a {
+				@include inline-icon($icon: $fa-var-rss);
+			}
+		}
+	}
+
+	// Full Post
+
+	&.fullPostDisplay {
+		position: relative;
+
+		.persistent {
+			display: none;
+		}
+
+		.fullPost {
+			@include grid-row();
+			
+			.firstChunk {
+				@include grid-column($columns:12,$collapse:true);
+
+				.date {
+					//margin-bottom: $column-gutter;
+				}
+
+				.text {
+					margin-top: $column-gutter;
+				}
+			}
+
+			.relatedItems {
+				@include grid-column($columns:12,$collapse:true);
+
+				h4 {
+					color: #ff00ff;
+					font-size: $h4-font-size;
+				}
+
+				> div {
+					margin-bottom: $column-gutter/2;
+					border: 1px solid blue;
+				}
+
+				.relatedEvents {
+					
+					ul {
+						margin: 0;
+
+						li {
+							list-style-type: none;
+							margin-bottom: $column-gutter/2;
+							@include inline-icon($icon: $fa-var-calendar);
+						}
+					}
+				}
+
+				.images {
+
+				}
+
+				.assets {
+					// inherits styles from _assets.scss
+				}
+
+				.categories {
+					ul {
+						margin: 0;
+					}
+
+					li {
+						display: inline-block;
+						margin: 0 rem-calc(8) $column-gutter/2 0;
+						white-space: pre;
+
+						a {
+							@include inline-icon($icon: $fa-var-folder-o, $color: $monsoon);
+						}
+
+						strong {
+							@include inline-icon($icon: $fa-var-folder-open-o, $color: inherit);
+						}
+					}
+				}
+			}
+
+			.secondChunk {
+				@include grid-column($columns:12,$collapse:true);
+
+				.back {
+
+				}
+
+				.nextPrev {
+					border-top: 6px solid $silver;
+					border-bottom: 2px solid $silver;
+					padding: $column-gutter*2 0;
+					font-size: rem-calc(14);
+					text-transform: uppercase;
+
+					a {
+						text-transform: none;
+					}
+
+					.prev,
+					.next {
+						width: 100%;
+						float: none;
+						text-align: center;
+						border: none;
+						padding: 0;
+					}
+
+					.prev {				
+						margin-bottom: $column-gutter;
+						
+						&.only {
+							width: 100%;
+							text-align: center;
+							margin-bottom: 0;
+						}
+
+						a {
+							@include inline-icon($icon: $fa-var-angle-double-left);
+						}
+					}
+					
+					.next {
+
+						&.only {
+							width: 100%;
+							text-align: center;
+						}
+
+						a {
+							@include inline-icon($pseudo: after, $icon: $fa-var-angle-double-right);
+						}
+					}
+
+					.comments {
+					}
+
+				}
+			}
+		}
+	}
+}
