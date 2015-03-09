@@ -1,0 +1,132 @@
+// Login Module Styles
+// Cloak, v1
+
+// Imported by cloak/scss/login.scss.
+// Not included in cloadk/scss/_modules.scss or compiled in app.css,
+// since Login has it's own dedicated theme that doesn't use those files.
+
+#reasonDeveloper {display: none;}
+
+.cloakLogin {
+
+	#wrapper {
+		@media #{$small-high-up} {
+			padding-top: 10%;
+		}
+	}
+
+	#banner,
+	#meat {
+		padding: $column-gutter;
+
+		@media #{$small-high-up} {
+			max-width: rem-calc(400);
+			margin: 0 auto;
+		}
+	}
+
+	#banner {
+		text-align: center;
+		padding: $column-gutter/2 $column-gutter;
+		border-bottom: 1px solid $iron;
+		background: $silver;
+
+		@media #{$small-high-up} {
+			border: 1px solid $iron;
+			border-bottom: none;
+			border-radius: $global-radius $global-radius 0 0;
+			background: none;
+		}
+
+		h1 {
+			font-size: $h4-font-size;
+		}
+	}
+
+	#meat {
+		padding: $column-gutter;
+		max-width: rem-calc(400);
+		margin: 0 auto;
+
+		@media #{$small-high-up} {
+			border: 1px solid $iron;
+			border-radius: 0 0 $global-radius $global-radius;
+		}
+
+		#login {
+			
+			table {
+					width: 100%;
+
+				tr {
+					display: block;
+					margin-top: rem-calc(24);
+				}
+
+				td:first-child {
+					display: inline-block;
+					width: 30%;
+					margin-right: 5%;
+					font-weight: 600;
+					font-size: rem-calc(14);
+
+					@media #{$small-high-up} {
+						font-size: rem-calc(14);
+					}
+				}
+
+				td:last-child {
+					display: inline-block;
+					width: 65%;
+				}
+
+				input[type="text"],
+				input[type="password"] {
+					width: 100%;
+				}
+
+				input[type="submit"] {
+					@include button($radius: $global-radius);
+				}
+			}
+
+		 	.msg {
+		 		font-size: $h5-font-size;
+		 		color: $alert-color;
+		 		margin: 0;
+		 	}
+
+		 	.msg_extra {
+		 		margin-top: rem-calc(16);
+
+		 		* {
+		 			font-size: rem-calc(14);
+		 		}
+		 	}
+
+		 	.msg + .logoutLink {
+		 		margin-top: rem-calc(16);
+		 	}
+
+		 	.logoutLink {
+		 		@include button($radius: $global-radius, $full-width: true);
+		 		margin-bottom: 0;
+		 	}
+
+		 	p.smallText {
+		 		background: $silver;
+		 		margin: 0 -$column-gutter;
+		 		padding: $column-gutter;
+		 		
+		 		@media #{$medium-up} {
+		 			border-top: 1px solid $iron;
+		 		}
+
+		 		&.smallText {
+		 			font-size: rem-calc(14);
+		 			margin-top: rem-calc(16);
+		 		}
+		 	}
+		}	
+	}
+}

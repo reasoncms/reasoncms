@@ -1,0 +1,151 @@
+// Gallery Styles
+// Cloak, v1
+
+#imageGallery {
+	
+	// SEARCH & FILTERS
+	.persistent {
+		display: none;
+	}
+
+	// GALLERY ITEM LIST
+	.moduleNav {
+
+		// PAGINATION
+		// See base/_common.scss
+
+		// IMAGE LIST 
+		#imageGalleryItemList {
+			margin: 0;
+			margin-left: - $column-gutter;
+
+			li {
+				margin: 0;
+				margin-bottom: $column-gutter;
+				margin-left: $column-gutter;
+				//width: rem-calc(150); // Width for default thumbanil image size. If the module uses larger images, styles are output in the <head> to override this.
+			
+				img {
+					padding: rem-calc(4);
+					border: 1px solid $gainsboro;
+
+					&:hover {
+						border-color: $iron;
+					}
+				}
+			}
+
+			#imageGalleryNextPageItem {
+				@include screenreader();
+			}
+		}
+	}
+
+
+	// FULL GALLERY ITEM
+
+	.item {
+		margin-bottom: $column-gutter;
+
+		.imageTitle {
+		}
+
+		.sequenceNum {
+			color: $aluminum;
+			margin-bottom: $column-gutter;
+		}
+
+		.prevWrapper,
+		.nextWrapper {
+			@include clearfix;
+			float: none;
+			clear: none;
+			display: inline-block;
+			text-align: center;
+			width: 90px;
+			height: 90px;
+			overflow: hidden;
+			margin: 0 rem-calc(6) $column-gutter !important;
+			padding: rem-calc(4);
+			border: 1px solid $gainsboro;
+
+			&:hover {
+				border-color: $iron;
+			}
+		
+			.thumbnail {
+			}
+
+			a {
+				display: block;
+				width: 100%;
+				height: 100%;
+
+				&:after {
+					@extend .fa;
+					font-size: rem-calc(20);
+					line-height: 80px;
+					display: block;
+					color: rgba($white, 1);
+					text-shadow: 0 0 1px $charcoal;
+					text-align: center;
+					background: rgba(white,.125);
+				}
+
+				&:hover {
+					&:after {
+						background: transparent;
+					}
+				}
+
+				img {
+					display: none;
+				}
+			}
+		}
+
+		.prevWrapper {
+			
+			a {
+
+				&:after {
+					content: $fa-var-chevron-left;
+				}
+			}
+		}
+
+		.nextWrapper {
+			
+			a {
+			
+				&:after {
+					content: $fa-var-chevron-right;
+				}
+			}
+		}
+
+		.imageWrapper {
+			clear: both;
+			text-align: left;
+			text-align: center;
+
+			.mainImage {
+				text-align: center;
+			}
+		}
+
+		.imageCaptionWrapper {
+		}
+	}
+
+	.back {
+		margin-bottom: $column-gutter;
+
+		&:before {
+			@extend .fa;
+			content: $fa-var-th-large;
+			margin-right: rem-calc(6);
+			color: $anchor-font-color;
+		}
+	}
+}
