@@ -745,8 +745,9 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'show_only_pages_not_in_nav' => true,
 			'description_part_of_link'=>true,
 			'html5'=>true,
-			'thumbnail_height' => 150,
-			'thumbnail_width' => 150,
+			'thumbnail_crop' => 'fill',
+			'thumbnail_height' => 237,
+			'thumbnail_width' => 350,
 		),
 	),
 	'tagboard_full_HeyNorse' =>array(
