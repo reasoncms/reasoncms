@@ -10,7 +10,6 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'autoplay_timer' => 3,
 			'width' => 1680,
 			'height' => 651,
-
 		),
 		'main' => array(
 			'module' => 'publication',

@@ -74,8 +74,8 @@
 					// 	$page_type->set_region_parameter($region, 'height', 460);
 					// if(!isset($module['module_params']['autoplay_timer']))
 					// 	$page_type->set_region_parameter($region, 'autoplay_timer', 4);
-					if(!isset($module['module_params']['view']))
-						$page_type->set_region_parameter($region, 'view', 'cloak');
+					// if(!isset($module['module_params']['view']))
+					// 	$page_type->set_region_parameter($region, 'view', 'view_name');
 				}
 			}
 
@@ -329,6 +329,7 @@
 
 			// 5.5.1 Fixed (re-minified version using foundation.topbar.js v 5.5)
 			echo '<script type="text/javascript" src="/reason/local/cloak/js/vendor/foundation.fixed.min.js"></script>'."\n";	
+			
 			echo '<script type="text/javascript" src="/reason/local/cloak/js/app.js"></script>'."\n";
 		}
 }
