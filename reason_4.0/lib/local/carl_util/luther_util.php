@@ -2,6 +2,105 @@
 
 reason_include_once( 'function_libraries/root_finder.php');
 
+function get_majors_minors()
+{
+    return array(
+        'ACCTG' =>  'Accounting',
+        'AFRS'  =>  'Africana Studies',
+        'ANTH'  =>  'Anthropology',
+        'ART'   =>  'Art',
+        'ATHTR' =>  'Athletic Training',
+        'BIBL'  =>  'Biblical Languages',
+        'BIO'   =>  'Biology',
+        'BIO1'  =>  'Biology (plan 1)',
+        'BIO2'  =>  'Biology (plan 2)',
+        'CHEM'  =>  'Chemistry',
+        'CLAS'  =>  'Classics',
+        'CLAS1' =>  'Classics (plan 1)',
+        'CLAS2' =>  'Classics (plan 2)',
+        'COMS'  =>  'Communication Studies',
+        'CS'    =>  'Computer Science',
+        'DAN'   =>  'Dance',
+        'DEGR'  =>  'Degree Seeking',
+        'ECON1' =>  'Economics (plan 1)',
+        'ECON2' =>  'Economics (plan 2)',
+        'ELED'  =>  'Elementary Education',
+        'ENG1'  =>  'English (plan 1)',
+        'ENG2'  =>  'English (Writing - Plan 2)',
+        'ENG3'  =>  'English (Teaching - Plan 3)',
+        'ENVS'  =>  'Environmental Studies',
+        'FREN'  =>  'French',
+        'GER'   =>  'German',
+        'HIST1' =>  'History (plan 1)',
+        'HIST2' =>  'History (plan 2)',
+        'HLTH1' =>  'Health (plan 1)',
+        'HLTH2' =>  'Health (plan 2)',
+        'IMA'   =>  'Intermedia Arts',
+        'INDIV' =>  'Individualized Interdisciplinary',
+        'IS'    =>  'International Studies',
+        'MATH1' =>  'Mathematics (plan 1)',
+        'MATH2' =>  'Mathematics (plan 2)',
+        'MATH3' =>  'Mathematics (plan 3)',
+        'MGT'   =>  'Management',
+        'MSTAT' =>  'Mathematics/Statistics',
+        'MUS'   =>  'Music',
+        'NORST' =>  'Nordic Studies',
+        'NURS'  =>  'Nursing',
+        'PE1'   =>  'Physical Education (plan 1)',
+        'PE2'   =>  'Physical Education (plan 2)',
+        'PHIL'  =>  'Philosophy',
+        'PHYS'  =>  'Physics',
+        'POLS1' =>  'Political Science (plan 1)',
+        'POLS2' =>  'Political Science (plan 2)',
+        'PSYC'  =>  'Psychology',
+        'REL'   =>  'Religion',
+        'RUST'  =>  'Russian Studies',
+        'SOC'   =>  'Sociology',
+        'SPAN'  =>  'Spanish',
+        'SW'    =>  'Social Work',
+        'THD'   =>  'Theatre/Dance',
+        'THE'   =>  'Theatre',
+        'UNDEC' =>  'Undeclared',
+        'WGST'  =>  'Women and Gender Studies'
+    );
+}
+
+/**
+ * Removes plans from list of majors
+ */
+function cleaned_majors(){
+    $stripped_arr = array();
+    $majors = get_majors_minors();
+    // array of majors with separate plans
+    $prefix_plans = array(
+        'BIO'   =>  'BIO',
+        'CLAS'  =>  'CLAS',
+        'ECON'  =>  'ECON',
+        'ENG'   =>  'ENG',
+        'HIST'  =>  'HIST',
+        'HLTH'  =>  'HLTH',
+        'MATH'  =>  'MATH',
+        'PE'    =>  'PE',
+        'POLS'  =>  'POLS'
+    );
+    foreach ( $majors as $mk => $mv ) {
+        foreach ( $prefix_plans as $pk => $pv ) {
+            if ( strstr($mk, $pk) ){
+                // strip the digits from the $key
+                $newk = preg_replace('/\d/', '', $mk);
+                // strip the digits then and "plan" text from the value
+                $newv = preg_replace('/\(\w*\s?-?\s?[Pp]lan\s\d\)/', '', $mv);
+                // remove duplicate $keys
+                $stripped_arr[$newk] = $newv;
+                unset($majors[$mk]);
+            }
+        }
+    }
+    $cleaned = array_merge($majors, $stripped_arr);
+    asort($cleaned);
+    return $cleaned;
+}
+
 function get_statesAP()
 {
 	return array(
