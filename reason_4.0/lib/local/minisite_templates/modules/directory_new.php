@@ -149,25 +149,13 @@ class DirectoryModule extends DefaultMinisiteModule {
 
         parent::init( $args );
         if($head_items =& $this->get_head_items()) {
-//            $head_items->add_stylesheet('/global_stock/css/campus_dir.css');
-            $head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/directory.css');
             $head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/js/jquery.tablesorter.min.js');
-
             $head_items->add_stylesheet(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/css/theme.ice.css');
-            // $head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/addons/pager/jquery.tablesorter.pager.min.js');
-            // $head_items->add_stylesheet(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/addons/pager/jquery.tablesorter.pager.css');
             $head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/js/jquery.tablesorter.widgets.min.js');
             $head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/js/jquery.tablesorter.widgets-filter-formatter.min.js');
             $head_items->add_stylesheet(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/css/filter.formatter.css');
-            // $head_items->add_javascript( '/javascripts/jquery-1.6.1.min.js');
 
             $head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/directory.js');
-//            if (reason_check_authentication()) {
-            // if ($this->user_netid) {
-            //     $head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/directory.js');
-            // } else {
-            //     $head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/directory_logout.js');
-            // }
 
         }
 
