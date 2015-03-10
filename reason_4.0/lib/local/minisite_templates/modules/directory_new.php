@@ -18,7 +18,7 @@ class DirectoryModule extends DefaultMinisiteModule {
         'view'          =>  array('function' => 'turn_into_string'),
         'context'       =>  array('function' => 'turn_into_string'),
         'free'          =>  array('function' => 'turn_into_string'),
-        'id_number'     =>  array('function' => 'turn_into_string'),
+        // 'id_number'     =>  array('function' => 'turn_into_string'),
         'sort'          =>  array('function' => 'turn_into_string'),
         'netid'         =>  array('function' => 'turn_into_array'),
         'pagetitle'     =>  array('function' => 'turn_into_string'),
@@ -225,9 +225,7 @@ class DirectoryModule extends DefaultMinisiteModule {
                     $this->ldap_admin = true;
                 }
             }
-            if ($this->ldap_admin){
-                echo '<h6>¡LDAP_ADMIN!</h6>';
-            }
+
             // $separator = " &diams; ";
             $separator = "\t<strong>&sdot;</strong>\t";
 
@@ -271,6 +269,7 @@ class DirectoryModule extends DefaultMinisiteModule {
                 $q[$element] = $form->get_value($element);
         }
         foreach ($this->cleanup_rules as $name => $rule) {
+            // echo "NAME={$this->request[$rule]}<br>";
             if (isset($this->request[$name]))
                 $q[$name] = $this->request[$name];
         }
@@ -299,7 +298,7 @@ class DirectoryModule extends DefaultMinisiteModule {
 
         // If we have some results, call the appropriate display method
         if (count($entries) ) {
-            //$this->scrub_results($entries);
+            // $this->scrub_results($entries);
             //commenting out list to use only book
             switch ($this->view) {
                 case 'pdf':
@@ -376,7 +375,7 @@ class DirectoryModule extends DefaultMinisiteModule {
         else
             $status .= 'one match.';
         $status .= $this->result_comment;
-        $status .= ' <a class="newSearch" href="'.$this->search_url.'">New Search</a></p>';
+        // $status .= ' <a class="newSearch" href="'.$this->search_url.'">New Search</a></p>';
         return $status;
     }
     /*
@@ -1051,7 +1050,7 @@ class DirectoryModule extends DefaultMinisiteModule {
             'studentpostoffice','studentresidencehallroom','termenrolled');
         $student_viewing_facstaff_supress = array_merge($student_viewing_facstaff_supress, $personal_info_group);
 
-        $student_viewing_student_supress    = array('title','departmentname','officebldg','officephone');
+        $student_viewing_student_supress    = array('title','departmentname','officebldg','officephone', 'studentadvisor','termenrolled');
         $student_viewing_student_supress = array_merge($student_viewing_student_supress, $personal_info_group);
 
         $affiliation = $this->get_user_affiliation($this->user_netid);
@@ -1090,8 +1089,6 @@ class DirectoryModule extends DefaultMinisiteModule {
                 || $data['edupersonprimaryaffiliation'][0] == 'Student - Not Enrolled this Term'
                 || $data['edupersonprimaryaffiliation'][0] == 'Student - Not PLanning to Enroll'
                 || $data['edupersonprimaryaffiliation'][0] == 'Student - Previously Enrolled')) {
-                pray($_REQUEST);
-                    echo '<hr><h5>Faculty/Staff viewing Student</h5>';
                     foreach ($facstaff_viewing_student_supress as $attr){
                         unset($results[$key][$attr]);
                     }
@@ -1103,7 +1100,6 @@ class DirectoryModule extends DefaultMinisiteModule {
                 && ($data['edupersonprimaryaffiliation'][0] == 'Staff'
                 || $data['edupersonprimaryaffiliation'][0] == 'Faculty'
                 || $data['edupersonprimaryaffiliation'][0] == 'Emeritus' )) {
-                    echo '<hr><h5>Student viewing Faculty/Staff</h5>';
                     foreach ($student_viewing_facstaff_supress as $attr){
                         unset($results[$key][$attr]);
                     }
@@ -1115,10 +1111,9 @@ class DirectoryModule extends DefaultMinisiteModule {
                 && ($data['edupersonprimaryaffiliation'][0] == 'Student'
                 || $data['edupersonprimaryaffiliation'][0] == 'Student - Not Enrolled this Term'
                 || $data['edupersonprimaryaffiliation'][0] == 'Student - Previously Enrolled')) {
-                    echo '<hr><h5>Student viewing Student</h5>';
                     foreach ($student_viewing_student_supress as $attr){
                         unset($results[$key][$attr]);
-            }
+                    }
             }
         }
     }
@@ -1135,7 +1130,7 @@ class DirectoryModule extends DefaultMinisiteModule {
         // carry over any display params that are relevant
         if (isset($_REQUEST['pictures']))
             $params = '&pictures='.$_REQUEST['pictures'];
-        return sprintf('<a class="crossRef" href="?%s=%s%s" title="Search for %s">%s</a>', urlencode($field), urlencode($value), $params, strip_tags($text), $text);
+        return sprintf('<a class="crossRef" href="?%s=%s%s" title="Search for %s">%s</a>', $field, urlencode($value), $params, strip_tags($text), $text);
     }
 
     /**
@@ -1342,7 +1337,7 @@ class DirectoryModule extends DefaultMinisiteModule {
         if ( $this->context == 'general' ){
             $email = str_replace('@', " &lt;AT&gt; ", $data['mail'][0]);
         } else {
-            $email = '<a href="mailto:'.$data['mail'][0].'" target="__blank">'.$data['mail'][0].'</a>';
+            $email = "<a href='mailto:{$data['mail'][0]}' target='__blank'>{$data['mail'][0]}</a>";
         }
         if ( $table ) {
             $markup = $email;
@@ -1496,10 +1491,10 @@ class DirectoryModule extends DefaultMinisiteModule {
         // Where it reads 'luther.edu' it used to read 'carleton.edu' but removing this
         // in general fixes things because I am not sure we set up anything like this (whitepages?) - burkaa
         //$filter[] = '(edupersonentitlement=urn:mace:luther.edu:entl:whitepages)';
-        if(!empty($id_number)) {
-            $filter[] = "(carlColleagueid$cmp$id_number)";
-            $filter_desc[] = 'whose ID Number is ' . $this->format_search_key($id_number);
-        }
+        // if(!empty($id_number)) {
+        //     $filter[] = "(carlColleagueid$cmp$id_number)";
+        //     $filter_desc[] = 'whose ID Number is ' . $this->format_search_key($id_number);
+        // }
         /*
          * old name search
          * if(!empty($first_name)) {
