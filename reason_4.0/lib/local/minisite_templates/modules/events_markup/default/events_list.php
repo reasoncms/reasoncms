@@ -85,7 +85,10 @@ class defaultEventsListMarkup implements eventsListMarkup
 					{
 						$ret .=  '<li class="event">';
 						$ret .= $this->bundle->list_item_markup($event, 'ongoing', $time);
-						$ret .= $this->get_location_markup($event);
+						if (preg_match("/^https?:\/\/[A-Za-z0-9_\.]+\/events\/?/", get_current_url()))
+						{
+							$ret .= $this->get_location_markup($event);
+						}
 						$ret .= '</li>'."\n";
 					}
 				}
@@ -114,7 +117,10 @@ class defaultEventsListMarkup implements eventsListMarkup
 					{
 						$ret .= '<li class="event">';
 						$ret .= $this->bundle->list_item_markup($event, $day, $time);
-						$ret .= $this->get_location_markup($event);
+						if (preg_match("/^https?:\/\/[A-Za-z0-9_\.]+\/events\/?/", get_current_url()))
+						{
+							$ret .= $this->get_location_markup($event);
+						}
 						$ret .= '</li>'."\n";
 					}
 				}

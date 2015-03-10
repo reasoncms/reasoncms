@@ -28,9 +28,9 @@
 			$classes = array();
 			$classes[] = 'body lutherHome';
 			if($this->pages->root_node() == $this->page_id)
-				$classes[] = 'body lutherHome siteHome';
+				$classes[] = 'siteHome';
 			if($this->page_info->get_value('unique_name'))
-				$classes[] = 'lutherHome uname_'.$this->page_info->get_value('unique_name');
+				$classes[] = 'uname_'.$this->page_info->get_value('unique_name');
 			return $classes;
 		}
 

@@ -20,7 +20,7 @@ class DorianSHCampThreeForm extends FormStep
 	var $error;
 	var $expense_budget_number = '10-000-08520-12121';
         var $revenue_budget_number = '10-000-08520-22000';
-        
+
 
 	var $transaction_comment = 'Dorian Camp';
 	var $is_in_testing_mode; // This gets set using the value of the THIS_IS_A_DEVELOPMENT_REASON_INSTANCE constant or if the 'tm' (testing mode) request variable evaluates to an integer
@@ -117,12 +117,13 @@ class DorianSHCampThreeForm extends FormStep
 	// style up the form and add comments et al
 	function on_every_time()
 	{
+        $this->box_class = 'StackedBox';
         //Set expiration years
         $cur_year = date('Y');
         $this->change_element_type('credit_card_expiration_year', 'numrange', array('start' => $year, 'end' => $year+10, 'display_name' => 'Expiration Year'));
         // calculate the total_cost of the camp by adding lesson_cost (if present) to the camp_cost
-        $camp_cost = 449;
-        $per_lesson_cost = 37;
+        $camp_cost = 486;
+        $per_lesson_cost = 39;
         $lesson_cost = 0;
         $lesson_msg = '';
         if ($this->controller->get('private_lessons'))
@@ -155,7 +156,7 @@ class DorianSHCampThreeForm extends FormStep
 		{
 			$this->is_in_testing_mode = false;
 		}
-		
+
 		$this->change_element_type('credit_card_expiration_year','numrange',array('start'=>date('Y'),'end'=>(date('Y')+15),'display_name' => 'Expiration Year'));
 	}
 

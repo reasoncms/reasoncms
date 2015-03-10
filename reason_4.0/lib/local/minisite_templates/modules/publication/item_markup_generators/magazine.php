@@ -19,7 +19,7 @@ class MagazineItemMarkupGenerator extends ResponsiveItemMarkupGenerator
 	{
 
 		$show_related_section = ($this->should_show_related_events_section() || $this->should_show_images_section() || $this->should_show_assets_section() || $this->should_show_categories_section());
-		
+		$photographer = '';
 		$this->markup_string = '';
 
 
@@ -76,7 +76,13 @@ class MagazineItemMarkupGenerator extends ResponsiveItemMarkupGenerator
 
 			if($this->should_show_content_section())
 			{
-				$this->markup_string .= '<div class="text">'.luther_process_inline_images($this->get_content_section()).'</div>'."\n";
+				$this->markup_string .= '<div class="text">'.luther_process_inline_images($this->get_content_section(), $photographer).'</div>'."\n";
+			}
+			
+			// if there is a photographer field, show it after the author
+			if ($photographer != '')
+			{
+				$this->markup_string = preg_replace('/div class="author">By <span class="name">.*?<\/span><\/div>/',  '$0<div class="author">Photography by <span class="name">'. $photographer . '</span></div>', $this->markup_string);
 			}
 			
 			if($this->should_show_inline_editing_link())
@@ -241,9 +247,10 @@ class MagazineItemMarkupGenerator extends ResponsiveItemMarkupGenerator
 	// Here, we get rid of <h4>Images</h4>, <ul> and enlarge thumbanil size.
 	function get_images_section()
 	{
+		$str = '';
 		foreach($this->passed_vars['item_images'] as $image)
 		{
-			$str = '<div class="imageChunk">';
+			$str .= '<div class="imageChunk">';
 			$rsi = new reasonSizedImage();
 			$rsi->set_id($image->id());
 			$rsi->set_width(1600);
@@ -324,6 +331,17 @@ class MagazineItemMarkupGenerator extends ResponsiveItemMarkupGenerator
 				$markup .= '<div class="filterInterface">'."\n";
 				$markup .= $this->passed_vars['filter_interface_markup'];
 				$markup .= '</div>'."\n";
+				
+				// restore link for current category
+				foreach($this->passed_vars['item_categories'] as $category)
+				{
+					$markup = preg_replace('/<li><strong>(.*?)<\/strong>\s?<\/li>/', '<li><a href="?filter1=category-' . $category->get_value('id') . '">' . $category->get_value('name') . '</a></li>', $markup);
+				}
+				// insert "All" link if not shown
+				if (!preg_match('/<a href="\?">All<\/a>/', $markup))
+				{
+					$markup = preg_replace('/<ul>/', '<ul><li><a href="?">All</a></li>', $markup);
+				}
 			}
 			$markup .= '</div>'."\n";
 		}

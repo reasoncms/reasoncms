@@ -231,7 +231,7 @@
 							padding: 0 $column-gutter/2;
 						}
 
-						p:first-child { // Removes padding from the first paragraph, which wraps the image.
+						figure { // Removes padding from the first paragraph, which wraps the image.
 							padding: 0;
 							margin: 0;
 						}

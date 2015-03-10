@@ -39,6 +39,7 @@ class BlurbModule extends DefaultMinisiteModule
 		'demote_headings' => 1,
 		'source_page' => '',
 		'footer_html' => '',
+		'after_each_html' => '',
 	);
 	var $es;
 	var $blurbs = array();
@@ -153,7 +154,8 @@ class BlurbModule extends DefaultMinisiteModule
 			foreach($this->blurbs as $blurb)
 			{
 				if (preg_match("/[Cc]all [Tt]o [Aa]ction/", $blurb->get_value('name'))
-					|| preg_match("/[Cc]ontact [Ii]nformation/", $blurb->get_value('name')))
+					|| preg_match("/[Cc]ontact [Ii]nformation/", $blurb->get_value('name'))
+					|| preg_match("/callout_blurb/", $blurb->get_value('unique_name')))
 				{
 					$total_blurbs++;
 				}
@@ -184,7 +186,8 @@ class BlurbModule extends DefaultMinisiteModule
 		{
 
 			if (!preg_match("/[Cc]ontact [Ii]nformation/", $blurb->get_value('name'))
-					&& !preg_match("/[Cc]all [Tt]o [Aa]ction/", $blurb->get_value('name')))
+					&& !preg_match("/[Cc]all [Tt]o [Aa]ction/", $blurb->get_value('name'))
+					&& !preg_match("/callout_blurb/", $blurb->get_value('unique_name')))
 			{
 
 				$editable = ( $editing_available && $this->_blurb_is_editable($blurb) );
@@ -213,7 +216,7 @@ class BlurbModule extends DefaultMinisiteModule
 				}
 				else
 				{
-					echo demote_headings($blurb->get_value('content'), $this->params['demote_headings']);
+					echo demote_headings(luther_process_inline_images($blurb->get_value('content'), $photographer), $this->params['demote_headings']);
 					if( $editable )
 					{
 						$params = array_merge(array('blurb_id' => $blurb->id()), $inline_editing->get_activation_params($this));
@@ -224,6 +227,12 @@ class BlurbModule extends DefaultMinisiteModule
 				echo '</div>'."\n";
 				echo '</div>'."\n";
 				$class = ('odd' == $class) ? 'even' : 'odd';
+				if(!empty($this->params['after_each_html']))
+				{
+					echo '<div class="postBlurb">';
+					echo $this->params['after_each_html'];
+					echo '</div>'."\n";
+				}
 			}
 		}
 		if(!empty($this->params['footer_html']))

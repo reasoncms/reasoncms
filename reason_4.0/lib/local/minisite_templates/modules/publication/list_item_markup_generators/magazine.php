@@ -89,9 +89,13 @@ class MagazinePublicationListItemMarkupGenerator extends PublicationMarkupGenera
 	{
 		$markup_string = '';
 		$image = $this->passed_vars['teaser_image'];
-		if (!empty($image))
+		if (!file_exists($_SERVER['DOCUMENT_ROOT'] . WEB_PHOTOSTOCK.reason_get_image_filename( reset($image)->id(), 'tn' )))
 		{
-
+			// not cropped if image is pulled from www to staging or localhost
+			$markup_string .= '<img src="'.luther_get_image_url(WEB_PHOTOSTOCK.reason_get_image_filename( reset($image)->id(), "tn" )).'" width = "200" alt="'.str_replace('"', "'", reset($image)->get_value( 'description' )).'"/>';
+		}		
+		else if (!empty($image))
+		{
 			if(is_array($image))
 				$image = reset($image);
 			
@@ -212,10 +216,24 @@ class MagazinePublicationListItemMarkupGenerator extends PublicationMarkupGenera
 	
 	function get_issue_date_markup()
 	{
+		// Use a static array to store the key ($item->_id) with the value ($issue_id) 
+		// so that a featured news post can return the issue name.
+		// A featured news post calls get_issue_date_markup twice, first with access to $issue_id,
+		// and a second time where $issue_id cannot be determined, so the value from the array is used.
+		// This is a major hack, which may break in the future.
+		static $arr = array();
+		
 		$item = $this->passed_vars['item'];
 		$issue_id = $item->_left_relationships_info['news_to_issue'][0]['entity_b'];
+		
+		if (empty($issue_id))
+		{
+			$issue_id = $arr[$item->_id];
+		}
+		
 		if (!empty($issue_id))
 		{
+			$arr[$item->_id] = $issue_id;
 			$es = new entity_selector();
 			$es->add_type( id_of('issue_type') );
 			$es->add_relation('entity.id = ' . $issue_id);

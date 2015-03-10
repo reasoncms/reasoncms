@@ -270,7 +270,7 @@ $microformat-abbr-font-decoration: none !default;
         ol {
           margin-#{$default-float}: $list-nested-margin;
           margin-bottom: 0;
-          font-size: 1rem; /* Override nested font-size change */
+          font-size: $paragraph-font-size; /* Override nested font-size change */
         }
       }
       &.square,

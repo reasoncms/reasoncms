@@ -234,13 +234,13 @@ class tiny_mceType extends textareaType
 	 */	
 	private $base_init_options = array(
 		'mode' => 'exact',
-		'toolbar1' => 'formatselect,bold,italic,hr,blockquote,numlist,bullist,indent,outdent,image,link,unlink,anchor',
+		//'toolbar1' => 'formatselect,bold,italic,hr,blockquote,numlist,bullist,indent,outdent,image,link,unlink,anchor',
 		'plugins' => 'anchor,link,paste',
 		'dialog_type' => 'modal',
 		'theme' => 'modern',
 		'convert_urls' => false,
 		'menubar' => false,
-		'block_formats' => "Paragraph=p;Header 1=h3;Header 2=h4",
+		//'block_formats' => "Paragraph=p;Header 1=h3;Header 2=h4",
 	);
 	
 	/**
@@ -327,7 +327,7 @@ class tiny_mceType extends textareaType
 	function get_tiny_mce_init_string()
 	{	
 		$options = $this->base_init_options;
-    	$options['elements'] = $this->name;    	
+    	$options['elements'] = $this->name;  
 		
 		// Merge in custom options
 		foreach($this->init_options as $option => $val) $options[$option] = $val;

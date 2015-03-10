@@ -13,7 +13,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 				'module' => 'feature/feature',
 				'width' => '1200',
 				'height' => '575',
-				'autoplay_timer' => 4,
+				'autoplay_timer' => 6,
 				// 'autoplay' => true,
 			),
 			'post_main_head' => '',
@@ -23,6 +23,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'main_post_2' => '',
 			'main_post_3' => '',
 			'call_to_action_blurb' => 'blurb_call_to_action',
+			'callout_blurb' => 'blurb_callout',
 			'pre_sidebar' => 'blurb',
 			'pre_sidebar_2' => array(
 				'module' => 'image_sidebar_luther', // default parameters set in alter_reason_pagetype in luther.php
@@ -59,7 +60,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'module' => 'feature/feature',
 			'width' => '1660',
 			'height' => '575',
-			'autoplay_timer' => 4,
+			'autoplay_timer' => 6,
 		),
 		'main_head' => '',
 		'main_post' => array(
@@ -178,6 +179,18 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'exclude_shown_blurbs' => true,
 		),
 	),
+	'blurb_main_content_multiple' => array(
+		'main_post' => array(
+			'module' => 'blurb',
+			'num_to_display' => '30',
+			'exclude_shown_blurbs' => true,
+			'after_each_html'=> '<hr class="horizontal-rule-basic">',
+		),
+		'pre_sidebar' => array(
+			'module' => 'blurb',
+			'exclude_shown_blurbs' => true,
+		),
+	),
 	'caf_cam' => array(
 		'main_post' => 'caf_cam',
 	),
@@ -274,6 +287,9 @@ $GLOBALS['_reason_page_types_local'] = array(
 	'image_slideshow' => array(
 		'main_post_2' => 'luther_image_slideshow',
 		'pre_sidebar_2' => '',
+	),
+	'jenson_medal' => array(
+		'main_post' => 'jenson_medal_voting',
 	),
 	'landing' => array(
 		'pre_sidebar' => 'blurb',
@@ -573,6 +589,9 @@ $GLOBALS['_reason_page_types_local'] = array(
 				),
 			),
 		),
+		'sub_nav_2' => array(
+			'module'=>'publication/issues',	
+		),
 	),
 	'net_price_calculator' => array(
 		'main_post' => 'net_price_calculator',
@@ -600,7 +619,22 @@ $GLOBALS['_reason_page_types_local'] = array(
 	//'publication' => get_luther_publication(),
 	//'publication_feature_autoplay' => get_luther_publication("publication_feature_autoplay"),
 	//'publication_section_nav' => get_luther_publication("publication_section_nav"),
-
+	'siblings_prev_next' => array(
+		'post_main_head' => array(
+			'module' => 'image_sidebar',
+			'num_to_display' => 1,
+			'thumbnail_width' => 1200,
+			'thumbnail_height' => 575,
+			'thumbnail_crop' => 'fit',
+			'caption_flag' => false,
+		),
+		'main_post_2' => 'luther_image_slideshow',
+		'main_post_3' => array(
+			'module' => 'siblings',
+			'previous_next' => true,
+		),
+		'pre_sidebar_2' => '',
+	),
 	'sidebar_blurb' => array(
 		'main_4' => '',
 		'pre_sidebar_2' => 'main_blurb',
@@ -710,7 +744,13 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'num_to_display' => 0,
 		)
 	),
-
+	'show_children_not_in_nav_with_first_images' => array(
+		'main_post' => array(
+			'module'=>'luther_children',
+			'provide_images' => true,
+			'show_only_pages_not_in_nav' => true,
+		),
+	),
 	'tagboard_full_HeyNorse' =>array(
 		'pre_main_head' => '',
 		'main' => array(
@@ -768,12 +808,11 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'caption_flag' => false,
 		),
 		'pre_sidebar_2' => array(
-			'module' => 'image_sidebar',
+			'module' => 'image_sidebar_luther',
 			'num_to_skip' => 1,
-			'thumbnail_width' => 600,
-			'thumbnail_height' => 400,
-			'thumbnail_crop' => 'fill',
+			'thumbnail_width' => 600,				
 			'num_to_display' => 0,
+			'caption_flag' => true,
 		)
 	),
 	'transcript_request' => array(

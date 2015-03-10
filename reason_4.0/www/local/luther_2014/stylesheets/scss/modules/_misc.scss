@@ -124,3 +124,99 @@
 	}
 
 }
+
+//styles for majors list
+#pageContent{
+	ul.major-list{
+		margin-left: 0px;
+		width: 100%;
+		li{
+			list-style-type: none;
+			font-family:"Roboto Slab", serif;
+		}
+		strong{
+			display: inline-block;
+			width: 75%;
+		}
+		li:before{
+			padding-right: 7px;
+		}
+		div.major-icon{
+			display: inline-block;
+			width: 25px;
+			font-family: "FontAwesome";
+			vertical-align: top;
+		}
+		@extend .fa;
+		.pre-law-major{
+			width: 25px;
+			font-family: "FontAwesome";
+			&:before{
+				content: $fa-var-gavel;
+			}
+		}
+		.pre-medicine-major{
+			width: 25px;
+			font-family: "FontAwesome";
+			&:before{
+				content: $fa-var-stethoscope;
+			}
+		}
+		.pre-optometry-major{
+			width: 25px;
+			font-family: "FontAwesome";
+			&:before{
+				content: $fa-var-eye;
+			}
+		}
+		.pre-veterinary-medicine-major{
+			width: 25px;
+			font-family: "FontAwesome";
+			&:before{
+				content: $fa-var-paw;
+			}
+		}
+		.pre-dentistry-major{
+			width: 25px;
+			font-family: "FontAwesome";
+			&:before{
+				content: $fa-var-user-md;
+			}
+		} 
+		.pre-engineering-major{
+			width: 25px;
+			font-family: "FontAwesome";
+			&:before{
+				content: $fa-var-space-shuttle;
+			}
+		} 
+		.pre-pharmacy-major{
+			width: 25px;
+			font-family: "FontAwesome";
+			&:before{
+				content: $fa-var-tag;
+			}
+		} 
+		.pre-physical-therapy-major{
+			width: 25px;
+			font-family: "FontAwesome";
+			&:before{
+				content: $fa-var-heart;
+			}
+		} 
+		.pre-seminary-major{
+			width: 25px;
+			font-family: "FontAwesome";
+			&:before{
+				content: $fa-var-book;
+			}
+		}
+		.other-major{
+			width: 25px;
+			font-family: "FontAwesome";
+			&:before{
+				content: $fa-var-university;
+			}
+		} 
+	}
+}

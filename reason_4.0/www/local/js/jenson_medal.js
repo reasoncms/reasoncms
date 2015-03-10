@@ -1,7 +1,8 @@
 $(document).ready(function() {
 
 //    $.noConflict();
-    $("#votes").tablesorter();
+    if ($("#votes").length)
+        $("#votes").tablesorter();
     
     //autocomplete first choice name
     $('#first_choiceElement').autocomplete({
