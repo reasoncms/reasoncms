@@ -519,10 +519,6 @@ class DirectoryModule extends DefaultMinisiteModule {
         // }
 
         echo $this->get_search_status($people, $desc);
-        /**
-          * @todo  images
-          */
-        $image_class = ($this->form->get_value('pictures')) ? 'facStaffImage' : 'noImage';
 
         // Display any non-person results from the Telecomm database
         if (count($telecomm)) {
@@ -626,16 +622,11 @@ class DirectoryModule extends DefaultMinisiteModule {
             }
             echo '<div id="directory" title>';
             // if there is a picture, show it
-            /**
-              * @todo images
-              */
-            if ( $image_class == 'directoryImage' or true){
-                //remove 'or true' from above when not testing
+            if ( $this->user_netid ){
                 echo "<figure class='directoryImage' title>";
                 echo '<img src="/reason/images/directory_photos/' . $data['uid'][0] . '.jpg" alt="' . $this->format_name($data) . '" title="' . $this->format_name($data) . '" />';
                 echo "</figure>";
                 echo "<a name={$data['uid'][0]}></a>";
-
             }
             if (isset($data['cn'])) {
                 echo "<h2 class='directoryName'>".$this->format_name($data)."</h2>";
