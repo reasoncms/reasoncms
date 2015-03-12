@@ -8,12 +8,314 @@
 // Compass imports
 @import "compass/css3";
 
+// Font Awesome Imports
+@import "font-awesome/variables";
+@import "font-awesome/core";
+@import "font-awesome/mixins";
+@import "font-awesome/rotated-flipped";
+
 // Luther imports
 @import "extends";
 @import "mixins";
 
 $tab-default-color: $lc-blue-light;
 $tab-current-color: $lc-blue-dark;
+
+// Home page
+
+.siteHome {
+
+	#minisite {
+
+		// COLUMNS
+		&.hasConRelNav { /* 3 COLUMNS: Nav, Content, & Related */
+
+			// @media #{$medium-up} {
+			// 	#contentAndRelated { 
+			// 		// Minisite navigation is in "mobile" view at and below this range, resulting in 2 columns.
+			// 		#contentSections {
+			// 			@include grid-column($columns: 10, $collapse: true);
+			// 			padding-right: $column-gutter / 2;
+			// 		}
+					
+			// 		#relatedSections {
+			// 			@include grid-column($columns: 6, $collapse: true);
+			// 			padding-left: $column-gutter / 2;
+			// 		}
+			// 	}
+			// }
+
+			#contentFeature {
+				@include grid-row();
+			}
+
+			@media #{$large-up} {
+				#contentAndRelated {
+					// Minisite navigation is in "desktop" view is hidden on the homepage.
+					@include grid-column($columns: 16, $collapse: true);
+					// /padding-left: 0;
+
+					#contentSections {
+						@include grid-column($columns: 8, $collapse: true);
+						padding-right: 0;
+					}
+					
+					#relatedSections {
+						@include grid-column($columns: 8, $collapse: true);
+						padding-left: 0;
+					}
+				}
+			}
+
+			// @media #{$large-high-up} {
+			// 	#contentAndRelated {
+					
+			// 		// Content and sidebar are now side by side.
+			// 		#contentSections {
+			// 			@include grid-column($columns: 10, $collapse: true);
+			// 			padding-right: $column-gutter / 2;
+			// 		}
+					
+			// 		#relatedSections {
+			// 			@include grid-column($columns: 6, $collapse: true);
+			// 			padding-left: $column-gutter / 2;
+			// 		}
+			// 	}
+			// }
+			@media #{$xlarge-up} {
+				#contentAndRelated {
+					@include grid-column($columns: 16, $collapse: true);
+					//padding-left: $column-gutter / 2;
+
+					#contentSections {
+						@include grid-column($columns: 8, $collapse: true);
+						padding-right: $column-gutter / 2;
+					}
+					
+					#relatedSections {
+						@include grid-column($columns: 8, $collapse: true);
+						padding-left: $column-gutter / 2;
+					}
+				}
+			}
+		}
+
+		@media #{$large-up} {
+
+			#navWrap {
+				display: none;
+			}
+
+			#contentAndRelated {
+				//width: 100%;
+			}
+		}
+
+		.contentHead {
+			display: none !important;
+		}	
+
+		.give-now {
+			background: url('/reason/local/luther_2014/images/giving/give-now.jpg') no-repeat top left;
+			@include clearfix;
+			//height: 540px;
+			min-height: 540px;
+			// overflow: hidden;
+
+			.give-now-text {
+				@include clearfix;
+				
+				box-shadow: 0 2px 2px rgba(black,.2);
+
+				@media #{$medium-up} {
+					@include grid-column($columns:16, $collapse: true);
+					margin-top:  5%;
+					margin-bottom: $column-gutter/2;
+				}
+
+				@media #{$medium-only} {
+					height: 100%;
+					max-width: rem-calc(600);
+					margin: 5% auto $column-gutter/2;;
+					float: none;					
+				}
+
+				@media #{$large-up} {
+					@include grid-column($columns:14,$push:1);
+					box-shadow: none;
+				}
+
+				@media #{$large-high-up} {
+					@include grid-column($columns:12,$push:.5);
+				}
+
+				@media #{$xlarge-up} {
+					@include grid-column($columns:10.5,$push:.5);
+				}
+
+				.give-now-form {
+					//@include grid-column($columns:16);
+					background: rgba($lc-blue-light,.85);
+					padding: $column-gutter;
+					color: white;
+
+
+					
+					@media #{$large-up} {
+						width: 60%;
+						float: left;
+						
+						//@include grid-column($columns:10);
+					}
+					
+					h2 {
+						margin: 0 0 rem-calc(20) 0;
+						color: white;
+					}
+
+					form {
+						
+
+						.formElement {
+							padding: 0 0 rem-calc(20) 0;
+
+							//border: 1px solid white;
+
+							.words {
+								@extend .screenreader;
+
+							}
+
+							.element {
+								
+
+								input[type="text"] {
+									border: none;
+									padding: rem-calc(14);
+									height: auto;
+								}
+
+								table {
+									tbody {
+										
+										@media #{$medium-up} {
+											tr {
+												display: block;
+												width: 50%;
+												float: left;
+												padding: 0 rem-calc(20);
+											}
+										}
+
+										tr td label {
+											font-size: rem-calc(18);
+											font-family: $body-font-family !important;
+										}
+									}
+								}
+
+								.radioButtons {
+									font-weight: 700;
+								}
+							}
+						}
+
+						.submitSection {
+							padding: 0;
+							//border: 1px solid white;
+
+							input[type="submit"] {
+								width: 100%;
+								display: block;
+								border-radius: $global-rounded;
+								background: $lc-yellow;
+								@include button-size($padding: $button-med);
+								font-family: $body-font-family;
+								font-size: rem-calc(22) !important;
+							}
+						}
+					}
+
+					form table tr td {
+						color: white;
+					}
+				}
+
+				.other-ways {
+					background: white;
+					padding: $column-gutter;
+
+					@media #{$medium-up} {
+
+					}
+
+					@media #{$large-up} {
+						width: 40%;
+						float: left;
+						background: rgba(white,.9);
+					}
+
+					h3 {
+						margin: 0 0 rem-calc(8);
+						line-height: 1;
+
+						a {
+							line-height: 1;
+							font-weight: 700;
+							color: $lc-yellow;
+							font-size: rem-calc(18);
+							text-decoration: underline;
+
+							@media #{$small-only} {
+								background: #efefef;
+								padding: 16px 24px;
+								display: block;
+								border-radius: $global-rounded;
+								text-align: center;
+								text-decoration: none;
+								line-height: 1.5;
+							}
+						}
+
+						&:nth-of-type(2) {
+							margin-top: rem-calc(12);
+						}
+					}
+
+					ul {
+						display: none;
+						font-family: $header-font-family;
+						margin: 0;
+						font-size: rem-calc(14);
+
+						@media #{$medium-up} {
+							display: block;
+						}
+
+						li {
+							display: inline;
+
+							&:before {
+								@extend .fa;
+								content: $fa-var-circle;
+								font-size: rem-calc(6);
+								position: relative;
+								top: - rem-calc(3);
+								margin-right: rem-calc(4);
+							}
+						}
+					}
+				}
+			}	
+		}
+	}
+}
+
+
+
+#sidebar {
+	border: 1px solid $lc-blue-light;
+}
 
 #giving_form {
 
