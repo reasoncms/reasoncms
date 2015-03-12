@@ -19,6 +19,67 @@
 @import "extends";
 @import "mixins";
 
+.directoryHead {
+  ul {
+    margin: 0;
+    li {
+      display: inline-block;
+    }
+    a {
+      padding-right: rem-calc(5);
+        &:after {
+         @extend .fa;
+          width: rem-calc(25);
+          color: $anchor-font-color;
+          text-align: center;
+          vertical-align: top;
+          position: relative;
+          top: 5px;
+        }
+    }
+    #loggedUser {
+      &:after {
+        content: $fa-var-user;
+      }
+    }
+    #logIn {
+      &:after {
+        content: $fa-var-sign-in;
+      }
+    }
+    #logOut {
+      &:after {
+        content: $fa-var-sign-out;
+      }
+    }
+  }
+}
+
+#searchOptions.closedOptions {
+    &:after {
+      @extend .fa;
+      content: $fa-var-chevron-down;
+      color: $anchor-font-color;
+      font-size: 85%;
+      vertical-align: top;
+      position: absolute;
+      padding-top: rem-calc(10);
+      padding-left: rem-calc(5);
+    }
+}
+#searchOptions.openOptions {
+    &:after {
+      @extend .fa;
+      content: $fa-var-chevron-up;
+      color: $anchor-font-color;
+      font-size: 85%;
+      vertical-align: top;
+      position: absolute;
+      padding-top: rem-calc(10);
+      padding-left: rem-calc(5);
+    }
+}
+
 #directory{
   margin: 0 0 $column-gutter;
 

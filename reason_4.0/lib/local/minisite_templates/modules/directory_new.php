@@ -36,18 +36,10 @@ class DirectoryModule extends DefaultMinisiteModule {
     var $elements = array(
             'first_name' => array(
                 'display_name' => 'Name or Username',
-                'comments' => '<span class="formComment">e.g. john, smitjo, or smith <span>',
+                'comments' => '<span class="formComment"><a id="searchOptions" class="closedOptions" onclick="toggle_all(); return false;" href="#">More Options</a></span>',
                 'type' => 'text',
                 'size' => '15'
              ),
-            /*'last_name' => array('type' => 'text','size' => '15'),*/
-            //'more_comment' => array('type' => 'comment','text' => '<h3>More options</h3>'),
-
-            /*@todo add animated chevron*/
-            'more_comment' => array(
-                'type' => 'comment',
-                'text' => '<h2><a onclick="toggle_all(); return false;" href="#">Search Options</a></h2>'
-            ),
             'search_for' => array(
                 'display_name' => 'Search for',
                 'type' => 'select_no_sort',
@@ -202,7 +194,8 @@ class DirectoryModule extends DefaultMinisiteModule {
 
     function run()//{{{
     {
-        echo "<div class='directory_head'>";
+        echo "<div class='directoryHead'>";
+        echo "<ul>";
         if ($logged_user = $this->user_netid) {
             if (!$this->ldap_admin){
                 $ds = @ldap_connect('ldap.luther.edu', '389');
@@ -214,15 +207,14 @@ class DirectoryModule extends DefaultMinisiteModule {
                 }
             }
 
-            // $separator = " &diams; ";
-            $separator = "\t<strong>&sdot;</strong>\t";
-
-            echo "<i class='fa fa-user'></i>\t{$logged_user}{$separator}";
-            echo "<a href='./?netid[]={$logged_user}'>Your Entry</a>{$separator}";
-            echo "<a href='/login/?logout=1' class='button radius'>Log Out <i class='fa fa-sign-out'></i></a>";
+            echo "<li class='directoryHeadItem'><a id='loggedUser' href='./?netid[]={$logged_user}'>{$logged_user}</a></li>";
+            // echo "<li class='yourEntry'><a href='./?netid[]={$logged_user}'>Your Entry</a></li>";
+            $logout_link = carl_make_link(array('logout' => 1),'login');
+            echo "<li class='directoryHeadItem'><a id='logOut' href='{$logout_link}'>Log Out</a></li>";
         } else {
-            echo "<a href='/login/'>Log in <i class='fa fa-sign-in'></i></a>";
+            echo "<li class='directoryHeadItem'><a id='logIn' href='/login/'>Log in</a></li>";
         }
+        echo "</ul>";
         echo "</div>";
         $this->get_menu_data();
         $this->display_form();

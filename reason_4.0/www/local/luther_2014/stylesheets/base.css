@@ -1217,7 +1217,7 @@ ul.off-canvas-list li a {
   }
 }
 /* line 4, scss/font-awesome/_core.scss */
-.fa, #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .jump a:before, #minisite .continueReading a:after, #minisite .feedLink .feedInfo a:before, div.assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a[href]:before, #childrenAndGrandchildren li ul .childDesc:before, #directory .directoryContact li:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
+.fa, #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .jump a:before, #minisite .continueReading a:after, #minisite .feedLink .feedInfo a:before, div.assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a[href]:before, #childrenAndGrandchildren li ul .childDesc:before, .directoryHead ul a:after, #searchOptions.closedOptions:after, #searchOptions.openOptions:after, #directory .directoryContact li:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
 #calendar .eventDetails .eventUrl:before,
 #calendar .eventDetails .calendarExport:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
@@ -2205,7 +2205,7 @@ body #wrapper #post-footer a {
 }
 
 /* line 4, scss/font-awesome/_core.scss */
-.fa, #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .jump a:before, #minisite .continueReading a:after, #minisite .feedLink .feedInfo a:before, div.assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a[href]:before, #childrenAndGrandchildren li ul .childDesc:before, #directory .directoryContact li:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
+.fa, #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .jump a:before, #minisite .continueReading a:after, #minisite .feedLink .feedInfo a:before, div.assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a[href]:before, #childrenAndGrandchildren li ul .childDesc:before, .directoryHead ul a:after, #searchOptions.closedOptions:after, #searchOptions.openOptions:after, #directory .directoryContact li:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
 #calendar .eventDetails .eventUrl:before,
 #calendar .eventDetails .calendarExport:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
@@ -3182,7 +3182,7 @@ body #wrapper #post-footer a {
 }
 
 /* line 4, scss/font-awesome/_core.scss */
-.fa, #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .jump a:before, #minisite .continueReading a:after, #minisite .feedLink .feedInfo a:before, div.assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a[href]:before, #childrenAndGrandchildren li ul .childDesc:before, #directory .directoryContact li:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
+.fa, #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .jump a:before, #minisite .continueReading a:after, #minisite .feedLink .feedInfo a:before, div.assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a[href]:before, #childrenAndGrandchildren li ul .childDesc:before, .directoryHead ul a:after, #searchOptions.closedOptions:after, #searchOptions.openOptions:after, #directory .directoryContact li:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
 #calendar .eventDetails .eventUrl:before,
 #calendar .eventDetails .calendarExport:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
@@ -3317,7 +3317,7 @@ body.standalone #wrapper #wrapper-col #minisite #contentAndRelated #contentSecti
 }
 
 /* line 4, scss/font-awesome/_core.scss */
-.fa, #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .jump a:before, #minisite .continueReading a:after, #minisite .feedLink .feedInfo a:before, div.assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a[href]:before, #childrenAndGrandchildren li ul .childDesc:before, #directory .directoryContact li:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
+.fa, #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .jump a:before, #minisite .continueReading a:after, #minisite .feedLink .feedInfo a:before, div.assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a[href]:before, #childrenAndGrandchildren li ul .childDesc:before, .directoryHead ul a:after, #searchOptions.closedOptions:after, #searchOptions.openOptions:after, #directory .directoryContact li:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
 #calendar .eventDetails .eventUrl:before,
 #calendar .eventDetails .calendarExport:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
@@ -3505,7 +3505,7 @@ div.assets .name a {
 }
 
 /* line 4, scss/font-awesome/_core.scss */
-.fa, #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .jump a:before, #minisite .continueReading a:after, #minisite .feedLink .feedInfo a:before, div.assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a[href]:before, #childrenAndGrandchildren li ul .childDesc:before, #directory .directoryContact li:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
+.fa, #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .jump a:before, #minisite .continueReading a:after, #minisite .feedLink .feedInfo a:before, div.assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a[href]:before, #childrenAndGrandchildren li ul .childDesc:before, .directoryHead ul a:after, #searchOptions.closedOptions:after, #searchOptions.openOptions:after, #directory .directoryContact li:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
 #calendar .eventDetails .eventUrl:before,
 #calendar .eventDetails .calendarExport:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
@@ -4200,7 +4200,7 @@ hr.horizontal-rule-basic {
 }
 
 /* line 4, scss/font-awesome/_core.scss */
-.fa, #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .jump a:before, #minisite .continueReading a:after, #minisite .feedLink .feedInfo a:before, div.assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a[href]:before, #childrenAndGrandchildren li ul .childDesc:before, #directory .directoryContact li:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
+.fa, #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .jump a:before, #minisite .continueReading a:after, #minisite .feedLink .feedInfo a:before, div.assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a[href]:before, #childrenAndGrandchildren li ul .childDesc:before, .directoryHead ul a:after, #searchOptions.closedOptions:after, #searchOptions.openOptions:after, #directory .directoryContact li:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
 #calendar .eventDetails .eventUrl:before,
 #calendar .eventDetails .calendarExport:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
@@ -4229,62 +4229,118 @@ hr.horizontal-rule-basic {
   margin-bottom: 0;
 }
 
-/* line 22, scss/modules/_directory.scss */
+/* line 23, scss/modules/_directory.scss */
+.directoryHead ul {
+  margin: 0;
+}
+/* line 25, scss/modules/_directory.scss */
+.directoryHead ul li {
+  display: inline-block;
+}
+/* line 28, scss/modules/_directory.scss */
+.directoryHead ul a {
+  padding-right: 0.3125rem;
+}
+/* line 30, scss/modules/_directory.scss */
+.directoryHead ul a:after {
+  width: 1.5625rem;
+  color: #1073ce;
+  text-align: center;
+  vertical-align: top;
+  position: relative;
+  top: 5px;
+}
+/* line 41, scss/modules/_directory.scss */
+.directoryHead ul #loggedUser:after {
+  content: "\f007";
+}
+/* line 46, scss/modules/_directory.scss */
+.directoryHead ul #logIn:after {
+  content: "\f090";
+}
+/* line 51, scss/modules/_directory.scss */
+.directoryHead ul #logOut:after {
+  content: "\f08b";
+}
+
+/* line 59, scss/modules/_directory.scss */
+#searchOptions.closedOptions:after {
+  content: "\f078";
+  color: #1073ce;
+  font-size: 85%;
+  vertical-align: top;
+  position: absolute;
+  padding-top: 0.625rem;
+  padding-left: 0.3125rem;
+}
+
+/* line 71, scss/modules/_directory.scss */
+#searchOptions.openOptions:after {
+  content: "\f077";
+  color: #1073ce;
+  font-size: 85%;
+  vertical-align: top;
+  position: absolute;
+  padding-top: 0.625rem;
+  padding-left: 0.3125rem;
+}
+
+/* line 83, scss/modules/_directory.scss */
 #directory {
   margin: 0 0 2.5rem;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 26, scss/modules/_directory.scss */
+  /* line 87, scss/modules/_directory.scss */
   #directory .directoryName,
   #directory .directoryInfo {
     margin-left: 12.5rem !important;
   }
 }
-/* line 34, scss/modules/_directory.scss */
+/* line 95, scss/modules/_directory.scss */
 #directory figure {
   width: 25%;
   margin: 0 0 1.5rem 1.5rem;
   float: right;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 34, scss/modules/_directory.scss */
+  /* line 95, scss/modules/_directory.scss */
   #directory figure {
     float: left;
     width: 9.375rem;
     margin: 0 1.5rem 1.5rem 0;
   }
 }
-/* line 47, scss/modules/_directory.scss */
+/* line 108, scss/modules/_directory.scss */
 #directory figure img {
   width: 100%;
 }
-/* line 52, scss/modules/_directory.scss */
+/* line 113, scss/modules/_directory.scss */
 #directory .directoryName {
   margin: 0;
   font-size: 1.6875rem;
   font-weight: 400;
 }
-/* line 58, scss/modules/_directory.scss */
+/* line 119, scss/modules/_directory.scss */
 #directory .directoryTitle {
   font-size: 1.125rem;
   margin-bottom: 0px;
 }
-/* line 64, scss/modules/_directory.scss */
+/* line 125, scss/modules/_directory.scss */
 #directory .directoryInfo h3.directoryTitle:last-of-type {
   margin-bottom: 20px;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 69, scss/modules/_directory.scss */
+  /* line 130, scss/modules/_directory.scss */
   #directory .directoryInfo h3.directoryTitle:last-of-type {
     margin-bottom: 0px;
   }
 }
-/* line 75, scss/modules/_directory.scss */
+/* line 136, scss/modules/_directory.scss */
 #directory .directoryContact {
   margin-top: 1.42857rem;
   margin-left: 1.25rem;
 }
-/* line 79, scss/modules/_directory.scss */
+/* line 140, scss/modules/_directory.scss */
 #directory .directoryContact li span.attribute {
   position: static;
   max-width: 95%;
@@ -4294,18 +4350,18 @@ hr.horizontal-rule-basic {
   vertical-align: top;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 79, scss/modules/_directory.scss */
+  /* line 140, scss/modules/_directory.scss */
   #directory .directoryContact li span.attribute {
     min-width: 0%;
     max-width: 175px;
     width: 36%;
   }
 }
-/* line 93, scss/modules/_directory.scss */
+/* line 154, scss/modules/_directory.scss */
 #directory .directoryContact li span.attribute strong {
   position: static;
 }
-/* line 98, scss/modules/_directory.scss */
+/* line 159, scss/modules/_directory.scss */
 #directory .directoryContact span.attrValue {
   display: inline-block;
   max-width: 95%;
@@ -4314,25 +4370,25 @@ hr.horizontal-rule-basic {
   margin-left: 0px;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 98, scss/modules/_directory.scss */
+  /* line 159, scss/modules/_directory.scss */
   #directory .directoryContact span.attrValue {
     min-width: 0%;
     width: 62%;
     margin-left: 2px;
   }
 }
-/* line 112, scss/modules/_directory.scss */
+/* line 173, scss/modules/_directory.scss */
 #directory .directoryContact span.multipleAttrValues {
   display: inline-block;
   margin: 0px;
   width: 100%;
 }
-/* line 122, scss/modules/_directory.scss */
+/* line 183, scss/modules/_directory.scss */
 #directory .directoryContact li {
   margin-left: 2.5rem;
   vertical-align: top;
 }
-/* line 130, scss/modules/_directory.scss */
+/* line 191, scss/modules/_directory.scss */
 #directory .directoryContact li:before {
   width: 2rem;
   margin-left: -2.25rem;
@@ -4341,59 +4397,59 @@ hr.horizontal-rule-basic {
   position: relative;
   top: 5px;
 }
-/* line 143, scss/modules/_directory.scss */
+/* line 204, scss/modules/_directory.scss */
 #directory .directoryContact .directoryOffice:before {
   content: "\f041";
 }
-/* line 149, scss/modules/_directory.scss */
+/* line 210, scss/modules/_directory.scss */
 #directory .directoryContact .directoryPhone:before {
   content: "\f095";
 }
-/* line 155, scss/modules/_directory.scss */
+/* line 216, scss/modules/_directory.scss */
 #directory .directoryContact .directoryEmail:before {
   content: "\f1fa";
 }
-/* line 161, scss/modules/_directory.scss */
+/* line 222, scss/modules/_directory.scss */
 #directory .directoryContact .directoryStudentResidence:before {
   content: "\f1ad";
 }
-/* line 167, scss/modules/_directory.scss */
+/* line 228, scss/modules/_directory.scss */
 #directory .directoryContact .directorySPO:before {
   content: "\f0e0";
 }
-/* line 173, scss/modules/_directory.scss */
+/* line 234, scss/modules/_directory.scss */
 #directory .directoryContact .directoryUsername:before {
   content: "\f007";
 }
-/* line 179, scss/modules/_directory.scss */
+/* line 240, scss/modules/_directory.scss */
 #directory .directoryContact .directoryAffiliations:before {
   content: "\f0c0";
 }
-/* line 185, scss/modules/_directory.scss */
+/* line 246, scss/modules/_directory.scss */
 #directory .directoryContact .directoryHomeAddress:before {
   content: "\f015";
 }
-/* line 192, scss/modules/_directory.scss */
+/* line 253, scss/modules/_directory.scss */
 #directory .directoryContact .directoryMobile:before {
   content: "\f10b";
 }
-/* line 198, scss/modules/_directory.scss */
+/* line 259, scss/modules/_directory.scss */
 #directory .directoryContact .directoryBirthday:before {
   content: "\f1fd";
 }
-/* line 204, scss/modules/_directory.scss */
+/* line 265, scss/modules/_directory.scss */
 #directory .directoryContact .directoryLastUpdate:before {
   content: "\f1da";
 }
-/* line 210, scss/modules/_directory.scss */
+/* line 271, scss/modules/_directory.scss */
 #directory .directoryContact .directoryDepartment:before {
   content: "\f19c";
 }
-/* line 216, scss/modules/_directory.scss */
+/* line 277, scss/modules/_directory.scss */
 #directory .directoryContact .directoryAdvisor:before {
   content: "\f19d";
 }
-/* line 228, scss/modules/_directory.scss */
+/* line 289, scss/modules/_directory.scss */
 #directory .directoryContact .directoryTerms:before {
   content: "\f02d";
 }
@@ -5147,7 +5203,7 @@ hr.horizontal-rule-basic {
   text-align: center;
 }
 /* line 732, scss/modules/_events.scss */
-#calendar .eventDetails .eventMeta li .fa, #calendar .eventDetails .eventMeta li #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .navListTop ul #calendar .eventDetails .eventMeta li .navListItem.accordion > a:before, #calendar .eventDetails .eventMeta li #minisite #navWrap .jump a:before, #minisite #navWrap .jump #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li #minisite .continueReading a:after, #minisite .continueReading #calendar .eventDetails .eventMeta li a:after, #calendar .eventDetails .eventMeta li #minisite .feedLink .feedInfo a:before, #minisite .feedLink .feedInfo #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta #callToActionBlurb .blurb ul li a:after, #callToActionBlurb .blurb ul #calendar .eventDetails .eventMeta li a:after, #calendar .eventDetails .eventMeta .childrenList li a[href]:before, .childrenList #calendar .eventDetails .eventMeta li a[href]:before, #calendar .eventDetails .eventMeta #childrenAndGrandchildren li ul .childDesc:before, #childrenAndGrandchildren #calendar .eventDetails .eventMeta li ul .childDesc:before, #calendar .eventDetails .eventMeta li .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport .eventDetails .eventMeta li a:before,
+#calendar .eventDetails .eventMeta li .fa, #calendar .eventDetails .eventMeta li #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .navListTop ul #calendar .eventDetails .eventMeta li .navListItem.accordion > a:before, #calendar .eventDetails .eventMeta li #minisite #navWrap .jump a:before, #minisite #navWrap .jump #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li #minisite .continueReading a:after, #minisite .continueReading #calendar .eventDetails .eventMeta li a:after, #calendar .eventDetails .eventMeta li #minisite .feedLink .feedInfo a:before, #minisite .feedLink .feedInfo #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta #callToActionBlurb .blurb ul li a:after, #callToActionBlurb .blurb ul #calendar .eventDetails .eventMeta li a:after, #calendar .eventDetails .eventMeta .childrenList li a[href]:before, .childrenList #calendar .eventDetails .eventMeta li a[href]:before, #calendar .eventDetails .eventMeta #childrenAndGrandchildren li ul .childDesc:before, #childrenAndGrandchildren #calendar .eventDetails .eventMeta li ul .childDesc:before, #calendar .eventDetails .eventMeta li .directoryHead ul a:after, .directoryHead ul #calendar .eventDetails .eventMeta li a:after, #calendar .eventDetails .eventMeta li #searchOptions.closedOptions:after, #calendar .eventDetails .eventMeta li #searchOptions.openOptions:after, #calendar .eventDetails .eventMeta li .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport .eventDetails .eventMeta li a:before,
 #calendar .eventDetails .eventMeta li .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li #miniCal .foot .more a:before, #miniCal .foot .more #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li .back a:before, #calendar .eventDetails .back .eventMeta li a:before, #calendar .eventDetails .eventMeta li li:before, #calendar .eventDetails .eventMeta li .contact:before,
 #calendar .eventDetails .eventMeta li .eventUrl:before,
@@ -5223,7 +5279,7 @@ hr.horizontal-rule-basic {
 }
 
 /* line 4, scss/font-awesome/_core.scss */
-.fa, #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .jump a:before, #minisite .continueReading a:after, #minisite .feedLink .feedInfo a:before, div.assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a[href]:before, #childrenAndGrandchildren li ul .childDesc:before, #directory .directoryContact li:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
+.fa, #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .jump a:before, #minisite .continueReading a:after, #minisite .feedLink .feedInfo a:before, div.assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a[href]:before, #childrenAndGrandchildren li ul .childDesc:before, .directoryHead ul a:after, #searchOptions.closedOptions:after, #searchOptions.openOptions:after, #directory .directoryContact li:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
 #calendar .eventDetails .eventUrl:before,
 #calendar .eventDetails .calendarExport:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
@@ -5344,7 +5400,7 @@ hr.horizontal-rule-basic {
 }
 
 /* line 4, scss/font-awesome/_core.scss */
-.fa, #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .jump a:before, #minisite .continueReading a:after, #minisite .feedLink .feedInfo a:before, div.assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a[href]:before, #childrenAndGrandchildren li ul .childDesc:before, #directory .directoryContact li:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
+.fa, #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .jump a:before, #minisite .continueReading a:after, #minisite .feedLink .feedInfo a:before, div.assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a[href]:before, #childrenAndGrandchildren li ul .childDesc:before, .directoryHead ul a:after, #searchOptions.closedOptions:after, #searchOptions.openOptions:after, #directory .directoryContact li:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
 #calendar .eventDetails .eventUrl:before,
 #calendar .eventDetails .calendarExport:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
@@ -7114,7 +7170,7 @@ div.fancybox-inner div.standalone_image_info div.caption {
 }
 
 /* line 4, scss/font-awesome/_core.scss */
-.fa, #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .jump a:before, #minisite .continueReading a:after, #minisite .feedLink .feedInfo a:before, div.assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a[href]:before, #childrenAndGrandchildren li ul .childDesc:before, #directory .directoryContact li:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
+.fa, #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .jump a:before, #minisite .continueReading a:after, #minisite .feedLink .feedInfo a:before, div.assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a[href]:before, #childrenAndGrandchildren li ul .childDesc:before, .directoryHead ul a:after, #searchOptions.closedOptions:after, #searchOptions.openOptions:after, #directory .directoryContact li:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
 #calendar .eventDetails .eventUrl:before,
 #calendar .eventDetails .calendarExport:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
@@ -7402,7 +7458,7 @@ div.fancybox-inner div.standalone_image_info div.caption {
 }
 
 /* line 4, scss/font-awesome/_core.scss */
-.fa, #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .jump a:before, #minisite .continueReading a:after, #minisite .feedLink .feedInfo a:before, div.assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a[href]:before, #childrenAndGrandchildren li ul .childDesc:before, #directory .directoryContact li:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
+.fa, #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .jump a:before, #minisite .continueReading a:after, #minisite .feedLink .feedInfo a:before, div.assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a[href]:before, #childrenAndGrandchildren li ul .childDesc:before, .directoryHead ul a:after, #searchOptions.closedOptions:after, #searchOptions.openOptions:after, #directory .directoryContact li:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
 #calendar .eventDetails .eventUrl:before,
 #calendar .eventDetails .calendarExport:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
@@ -8950,7 +9006,7 @@ th.headerSortDown:after {
 }
 
 /* line 4, scss/font-awesome/_core.scss */
-.fa, #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .jump a:before, #minisite .continueReading a:after, #minisite .feedLink .feedInfo a:before, div.assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a[href]:before, #childrenAndGrandchildren li ul .childDesc:before, #directory .directoryContact li:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
+.fa, #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .jump a:before, #minisite .continueReading a:after, #minisite .feedLink .feedInfo a:before, div.assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a[href]:before, #childrenAndGrandchildren li ul .childDesc:before, .directoryHead ul a:after, #searchOptions.closedOptions:after, #searchOptions.openOptions:after, #directory .directoryContact li:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
 #calendar .eventDetails .eventUrl:before,
 #calendar .eventDetails .calendarExport:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
@@ -8990,7 +9046,7 @@ div#tagboard-embed {
 }
 
 /* line 4, scss/font-awesome/_core.scss */
-.fa, #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .jump a:before, #minisite .continueReading a:after, #minisite .feedLink .feedInfo a:before, div.assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a[href]:before, #childrenAndGrandchildren li ul .childDesc:before, #directory .directoryContact li:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
+.fa, #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .jump a:before, #minisite .continueReading a:after, #minisite .feedLink .feedInfo a:before, div.assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a[href]:before, #childrenAndGrandchildren li ul .childDesc:before, .directoryHead ul a:after, #searchOptions.closedOptions:after, #searchOptions.openOptions:after, #directory .directoryContact li:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
 #calendar .eventDetails .eventUrl:before,
 #calendar .eventDetails .calendarExport:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
@@ -9077,7 +9133,7 @@ div#tagboard-embed {
 }
 
 /* line 4, scss/font-awesome/_core.scss */
-.fa, #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .jump a:before, #minisite .continueReading a:after, #minisite .feedLink .feedInfo a:before, div.assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a[href]:before, #childrenAndGrandchildren li ul .childDesc:before, #directory .directoryContact li:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
+.fa, #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .jump a:before, #minisite .continueReading a:after, #minisite .feedLink .feedInfo a:before, div.assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a[href]:before, #childrenAndGrandchildren li ul .childDesc:before, .directoryHead ul a:after, #searchOptions.closedOptions:after, #searchOptions.openOptions:after, #directory .directoryContact li:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
 #calendar .eventDetails .eventUrl:before,
 #calendar .eventDetails .calendarExport:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
@@ -9131,7 +9187,7 @@ h4.flickr_subtitle {
 }
 
 /* line 4, scss/font-awesome/_core.scss */
-.fa, #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .jump a:before, #minisite .continueReading a:after, #minisite .feedLink .feedInfo a:before, div.assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a[href]:before, #childrenAndGrandchildren li ul .childDesc:before, #directory .directoryContact li:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
+.fa, #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .jump a:before, #minisite .continueReading a:after, #minisite .feedLink .feedInfo a:before, div.assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a[href]:before, #childrenAndGrandchildren li ul .childDesc:before, .directoryHead ul a:after, #searchOptions.closedOptions:after, #searchOptions.openOptions:after, #directory .directoryContact li:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
 #calendar .eventDetails .eventUrl:before,
 #calendar .eventDetails .calendarExport:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
