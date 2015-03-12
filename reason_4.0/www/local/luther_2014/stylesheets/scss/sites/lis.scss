@@ -1,0 +1,127 @@
+// Foundation imports
+@import "settings";
+@import "foundation/components/grid";
+
+// Compass imports
+@import "compass/css3";
+
+// Font Awesome Imports
+@import "font-awesome/variables";
+@import "font-awesome/core";
+
+// Luther imports
+@import "extends";
+@import "mixins";
+
+/* STRUCTURE */
+
+.lutherLis {
+
+	#lisAnnouncements {
+
+		@media
+		#{$large-up} {
+			margin-bottom: $column-gutter / 2;
+		}
+
+		.announcement {
+			padding: $column-gutter / 2;
+			padding-left: rem-calc(32) + $column-gutter;
+			color: $lc-red;
+			background: rgba($lc-red, .18);
+			position: relative;
+			border-top: 1px solid rgba($lc-red, .2);
+
+			&:nth-child(1) {
+				border-top: none;
+			}
+
+			span {
+
+			}
+
+			&:before {
+				@extend .fa;
+				content: $fa-var-info-circle;
+				font-size: rem-calc(32);
+				position: absolute;
+				top: $column-gutter/2;
+				left: $column-gutter/2;
+				float: left;
+				padding: 0;
+			}
+
+			*:last-child {
+				margin-bottom: 0;
+			}
+
+			&.lis {
+				
+			}
+
+			&.helpDesk {
+
+			}
+
+			&.library {
+
+			}
+
+			&.archives {
+
+			}
+		}
+	}
+
+	&.siteHome {
+
+		#postMainHead {
+			margin-top: $column-gutter;
+		}
+
+		@media
+		#{$medium-up} {
+			@include desktop-tabs();
+		}
+
+		#tabs {
+
+			@media
+			#{$medium-only}, #{$large-low-only} {
+				.tab-title a {
+					font-size: rem-calc(13);
+					padding: rem-calc(6) rem-calc(16);
+
+				}
+			}
+
+			.tabs-content {
+
+				@media
+				#{$medium-up} {
+					border-bottom: 2px solid #ccc;
+				}
+
+				h3 {
+					margin-top: rem-calc(12);
+				}
+
+				#fragment-1 {
+					span a {
+						font-size: rem-calc(14);
+					}
+
+					img {
+						float: right;
+					}
+				}
+
+				#lg_search_form {
+					input[type="submit"] {
+						margin-top: rem-calc(32);
+					}
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,81 @@
+//
+// STANDALONE PAGETYPE STYLES
+//
+// @author Brian Jones
+//
+
+// Foundation imports
+@import "settings";
+@import "foundation/components/grid";
+@import "foundation/components/inline-lists";
+@import "foundation/components/flex-video";
+
+// Compass imports
+@import "compass/css3";
+
+// Font Awesome Imports
+@import "font-awesome/core";
+@import "font-awesome/mixins";
+@import "font-awesome/rotated-flipped";
+@import "font-awesome/variables";
+
+// Luther imports
+@import "extends";
+@import "mixins";
+
+
+
+
+body.standalone #wrapper #wrapper-col {
+	padding: 0;	
+	#minisite {
+		border: 0;
+		padding: 0;
+		
+		#minisiteBanner .breadcrumbs {
+			display: none;
+		}
+		
+		#contentAndRelated {
+			padding: 0;
+		
+			#contentFeature {	
+				margin: 0;
+			
+				@media #{$small-only} {
+					.features {
+						padding: 0;
+						height: 224px;
+					
+						img {
+							width: 646px;
+							max-width: 10000px !important;
+							height: 224px !important;
+							position: absolute;
+							left: 50%;
+							top: 0;
+							margin-left: -323px;
+						}
+					}
+				}
+			}
+		
+			#contentSections {
+				padding-left: $column-gutter / 2;
+				padding-right: $column-gutter / 2;
+				
+				#av {
+					max-width: 600px;
+					margin: 0 auto;
+					
+					.moduleNav ul li {
+						border-bottom: 0;
+						width: 100%;
+						padding: 0;
+					}
+				}
+			}
+
+		}
+	}
+}

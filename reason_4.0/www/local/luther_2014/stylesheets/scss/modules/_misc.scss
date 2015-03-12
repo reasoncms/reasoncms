@@ -1,0 +1,222 @@
+//
+// MISC STYLES
+//
+// @author Nathan Dirks
+//
+
+// Foundation imports
+@import "settings";
+@import "foundation/components/grid";
+
+// Compass imports
+@import "compass/css3";
+
+// Font Awesome Imports
+@import "font-awesome/variables";
+@import "font-awesome/core";
+
+// Luther imports
+@import "extends";
+@import "mixins";
+
+// NORSE CALENDARS (aka embedded Google Calendars)
+// Use page type "Norse Calendar"
+
+.norseCalendar {
+	.iframeWrap {
+		position: relative;
+	    padding-bottom: 75%;
+	    height: 0;
+	    overflow: hidden;
+
+	    iframe {
+			position: absolute;
+			top:0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+	    }
+	}
+}
+
+// Sports rosters
+#athleticsPlayerInfo {
+  img {
+    padding-bottom: 1.5em;
+  }
+  ul {
+    font-weight: 300;
+  }
+}
+
+// WYSIWIG COLUMNS
+// This provides a two column layout for wysiwig content.
+//
+// Markup example:
+//
+// <div class="group two-column">
+// <div class="section">
+// ...text....
+// </div>
+// <div class="section">
+// ...text....
+// </div>
+// </div>
+
+@mixin two-columns {
+	.group.two-column .section {
+		@include grid-column(8);
+
+		&:nth-child(2n+1) {
+			clear: left;
+		}
+	}
+}
+
+.group.two-column {
+	@include grid-row();
+
+	.section {
+		h1,
+		h2,
+		h3 {
+			font-size: $h3-font-size;
+		}
+	}
+}
+	
+.hasConRelNav { /* 3 COLUMNS: Nav, Content, & Related */
+
+	@media
+	#{$small-high-only} {
+		@include two-columns;
+	}
+
+	@media
+	#{$large-high-up} {
+		@include two-columns;
+	}
+}
+
+.hasConNav { /* 2 COLUMNS: Nav & Content (no Related) */
+
+	@media
+	#{$small-high-up} {
+		@include two-columns;
+	}
+
+}
+
+.hasConRel { /* 2 COLUMNS: Content & Related (no Nav) */
+
+	@media
+	#{$small-high-up} {
+		@include two-columns;
+	}
+
+}
+
+.hasCon { /* 1 COLUMN: Content (no Nav or Related) */ 
+
+	@media
+	#{$small-high-up} {
+		@include two-columns;
+	}
+
+}
+
+//styles for majors list
+#pageContent{
+	ul.major-list{
+		margin-left: 0px;
+		width: 100%;
+		li{
+			list-style-type: none;
+			font-family:"Roboto Slab", serif;
+		}
+		strong{
+			display: inline-block;
+			width: 75%;
+		}
+		li:before{
+			padding-right: 7px;
+		}
+		div.major-icon{
+			display: inline-block;
+			width: 25px;
+			font-family: "FontAwesome";
+			vertical-align: top;
+		}
+		@extend .fa;
+		.pre-law-major{
+			width: 25px;
+			font-family: "FontAwesome";
+			&:before{
+				content: $fa-var-gavel;
+			}
+		}
+		.pre-medicine-major{
+			width: 25px;
+			font-family: "FontAwesome";
+			&:before{
+				content: $fa-var-stethoscope;
+			}
+		}
+		.pre-optometry-major{
+			width: 25px;
+			font-family: "FontAwesome";
+			&:before{
+				content: $fa-var-eye;
+			}
+		}
+		.pre-veterinary-medicine-major{
+			width: 25px;
+			font-family: "FontAwesome";
+			&:before{
+				content: $fa-var-paw;
+			}
+		}
+		.pre-dentistry-major{
+			width: 25px;
+			font-family: "FontAwesome";
+			&:before{
+				content: $fa-var-user-md;
+			}
+		} 
+		.pre-engineering-major{
+			width: 25px;
+			font-family: "FontAwesome";
+			&:before{
+				content: $fa-var-space-shuttle;
+			}
+		} 
+		.pre-pharmacy-major{
+			width: 25px;
+			font-family: "FontAwesome";
+			&:before{
+				content: $fa-var-tag;
+			}
+		} 
+		.pre-physical-therapy-major{
+			width: 25px;
+			font-family: "FontAwesome";
+			&:before{
+				content: $fa-var-heart;
+			}
+		} 
+		.pre-seminary-major{
+			width: 25px;
+			font-family: "FontAwesome";
+			&:before{
+				content: $fa-var-book;
+			}
+		}
+		.other-major{
+			width: 25px;
+			font-family: "FontAwesome";
+			&:before{
+				content: $fa-var-university;
+			}
+		} 
+	}
+}

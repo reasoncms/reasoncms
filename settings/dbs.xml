@@ -26,6 +26,14 @@
     </database>
 
     <database>
+        <connection_name>norsecard</connection_name>
+        <db>reason_norsecard</db>
+        <user>norsecard_user</user>
+        <password>KawSXRO`F[kB.bxQf|gk</password>
+        <host>database-1.luther.edu</host>
+    </database>
+
+    <database>
         <connection_name>admissions_applications_connection</connection_name>
         <db>admissions_applications</db>
         <user>reason_user</user>

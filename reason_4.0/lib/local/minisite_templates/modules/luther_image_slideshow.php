@@ -20,12 +20,15 @@
 		function init( $args = array() )
 		{
 			parent::init( $args );
-                        //if($hi =& $this->get_head_items())
-                        //{
-			//}
+			$head_items = $this->get_head_items();
+			$head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'FancyBox/source/jquery.fancybox.js');
+			$head_items->add_stylesheet(REASON_PACKAGE_HTTP_BASE_PATH.'FancyBox/source/jquery.fancybox.css');			
+			$head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'FancyBox/source/helpers/jquery.fancybox-thumbs.js');
+			$head_items->add_stylesheet(REASON_PACKAGE_HTTP_BASE_PATH.'FancyBox/source/helpers/jquery.fancybox-thumbs.css');
+			$head_items->add_javascript('/reason/local/luther_2014/javascripts/luther-image-galleries.js');
 		}
 		function run() // {{{
-		{
+	{
 			if(!empty($this->textonly))
 			{
 				$this->run_text_only();
@@ -55,49 +58,23 @@
 			
 			$max_dimensions = $this->get_max_dimensions();
 			
-			//echo '<div class="imageSlideshow">'."\n";
-			//echo '<div class="timedSlideshow" id="mySlideshow" style="height:'.$max_dimensions['height'].'px;width:'.$max_dimensions['width'].'px;"></div>'."\n";
-			//echo '<script type="text/javascript">'."\n";
-			//echo 'countArticle = 0;'."\n";
-			//echo 'var mySlideData = new Array();'."\n";
-			//echo '<div class="hidden-container">'."\n";
 			$i = 0;
-			echo "<div id=\"gallery\">\n";
-                        echo "<div class=\"gallery-info\">\n";
-
-			echo "<div id=\"gallerycontainer\">\n";
-                        echo "<ul id=\"galleryimages\">\n";
+			
+            echo "<div id=\"galleryimages\">\n";
 			foreach( $this->images AS $id => $image )
 			{
 				$show_text = $text;
-				echo "<li><div class=\"file_iframe_image\">\n";
-
-				//if ($i == 0)
-				//{
-			//		echo '<a id="thumb1" class="highslide" href="'; 
-			//	}
-			//	else
-			//	{
-					echo '<a class="highslide" href="'; 
-			//	}
-
-
-				echo WEB_PHOTOSTOCK . $id . '.' . $image->get_value('image_type');
-				//echo '" onclick="return hs.expand(this, inPageOptions)"><img src="';
-				echo '" onclick="return hs.expand(this, {dimmingOpacity: 0.8, slideshowGroup: 1})"><img src="';
-				echo WEB_PHOTOSTOCK . $id . '_tn.' .$image->get_value('image_type');
-				echo '" alt="';
-				echo htmlspecialchars( strip_tags($image->get_value('description')),ENT_QUOTES,'UTF-8' );
-				echo '"/></a>'."\n";
-				echo "</div class=\"file_iframe_image\"></li>\n";
+				echo "<div class=\"image reason-image\">\n";
+	
+				echo '<a class="fancybox-thumb" href="' . WEB_PHOTOSTOCK . $id . '.' . $image->get_value('image_type');
+				echo '" rel="gallery_image_slideshow"';
+				echo ' title="' .htmlspecialchars( strip_tags($image->get_value('description')),ENT_QUOTES,'UTF-8' ). '">';
+				echo '<img src="' . WEB_PHOTOSTOCK . $id . '_tn.' .$image->get_value('image_type') . '" title="Click to open gallery"/></a>'."\n";
+				echo "</div>  <!-- class=\"flickr-image\" -->\n";
 				$i++;
 			}
-                        echo "</ul id=\"galleryimages\">\n";
-			echo "</div id=\"gallerycontainer\">\n";
-                        echo "</div class=\"gallery-info\">\n";
-			echo "</div id=\"gallery\">\n";
-			//echo '</div>'."\n";
-			//echo '<div id="gallery-area" ></div>'."\n";
+            echo "</div>  <!-- id=\"galleryimages\" -->\n";			
+			
 		}
 		
 		function get_max_dimensions()

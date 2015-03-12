@@ -35,7 +35,7 @@ class GiftPageTwoForm extends FormStep
 		'spouse_last_name' => array(
 			'type' => 'text',
 			'size' => 20,
-			'comments' => '<br>if applicable',
+			// 'comments' => 'if applicable',
 		),
 		'luther_affiliation' => array(
 			'display_name' => 'I am a Luther',
@@ -46,20 +46,62 @@ class GiftPageTwoForm extends FormStep
 			'type' => 'numrange',
 			'start' => 1924,
 			'end' => 2010,
-			'comments' => '<br>Choose either your class or your spouse\'s class',
+			'comments' => '<div class="smallText comment">Choose either your class or your spouse\'s class.</div>',
+		),'address_note' => array(
+			'type' => 'comment',
+			'text' => '<h3>Address and Contact Information</h3>',
 		),
-		'estate_note' => array(
+		'address_type' => array(
+			'type' => 'radio_no_sort',
+			'options' => array('Home'=>'Home','Business'=>'Business'),
+			'default' => 'Home',
+		),
+		'street_address' => 'textarea',
+		'city' => array(
+			'type' => 'text',
+			'size'=>35,
+		),
+		'state_province' => array(
+			'type' => 'state_province',
+			'display_name' => 'State/Province',
+			'include_military_codes' => true,
+		),
+		'zip' => array(
+			'type' => 'text',
+			'display_name' => 'Zip/Postal Code',
+			'size'=>35,
+		),
+		'country' => array(
+			'type' => 'country',
+		),
+		'phone' => array(
+			'type' => 'text',
+			'size'=>20,
+		),
+		'phone_type' => array(
+			'type' => 'select_no_sort',
+			'options' => array('Home'=>'Home', 'Cell'=>'Cell','Business'=>'Business',),
+			'default' => 'Home',
+		),
+		'email' => array(
+			'type' => 'text',
+			'size'=>35,
+			'display_name' => 'E-mail',
+		),
+		'estate_header' => array(
 			'type' => 'comment',
 			'text' => '<h3>Estate Planning <em>(optional)</em></h3>',
 		),
 		'estate_plans' => array(
-			'type' => 'checkboxfirst',
-			'display_name' => 'I\'ve included Luther in my estate plans.',
+			'type' => 'checkboxgroup_no_sort',
+			'options' => array('have_estate_plans'=>'I\'ve included Luther in my estate plans.',
+				'send_estate_info'=>'Please send me information about including Luther in my estate plans.'),
+			'display_name' => '',
 		),
-		'estate_info' => array(
-			'type' => 'checkboxfirst',
-                        'display_name' => 'Please send me information about including Luther in my estate plans.',
-		),
+		// 'estate_info' => array(
+		// 	'type' => 'checkboxfirst',
+  //                       'display_name' => 'Please send me information about including Luther in my estate plans.',
+		// ),
 		'address_note' => array(
 			'type' => 'comment',
 			'text' => '<h3>Address and Contact Information</h3>',
@@ -123,7 +165,7 @@ class GiftPageTwoForm extends FormStep
 		'spouse_name_group' => array ( 'type' => 'inline',
 					'elements' => array( 'spouse_first_name', 'spouse_last_name'),
 					'args' => array('use_element_labels' => false,
-							'display_name' => 'Spouse&nbsp;Name'),
+							'display_name' => 'Spouse Name (if applicable)'),
 					),
 		'phone_group' => array ('type' => 'inline',
 					'elements' =>  array( 'phone', 'phone_type' ),
@@ -175,6 +217,7 @@ class GiftPageTwoForm extends FormStep
 	// style up the form and add comments et al
 	function on_every_time()
 	{
+		$this->box_class = 'StackedBox';
 		//add element groups
 		foreach($this->element_group_info as $name => $info)
 		{

@@ -1,0 +1,355 @@
+// Foundation imports
+@import "settings";
+@import "foundation/components/grid";
+
+// Compass imports
+@import "compass/css3";
+@import "compass/css3/opacity";
+@import "compass/css3/transition";
+
+// Font Awesome Imports
+@import "font-awesome/variables";
+@import "font-awesome/core";
+
+// Luther imports
+@import "extends";
+
+/* STRUCTURE */
+
+$lc-sports-grey: #333;
+$lc-sports-grey-alt: #999;
+$minisite-nav-background: $lc-sports-grey;
+$minisite-nav-color: $lc-white;
+
+.lutherSports {
+
+	// Give sports a really ominous looking dark background
+	@media
+	#{$large-up} {
+		@include background-image(linear-gradient(darken($lc-sports-grey, 4%), $lc-sports-grey));
+	}
+
+	// Change "more" links from red to blue.
+	a.more,
+	.pubLinks a,
+	p.more a {
+		color: $lc-blue-dark;
+
+		&:hover {
+			color: darken($lc-blue-dark, 10%);	
+		}
+	}
+
+	// Give the contact blurb a blue top border
+	.contactBlurb .blurbInner {
+		border-color: $lc-blue-dark;
+	}
+
+	// CUSTOM COLUMNS & BACKGROUND
+	#minisite {
+
+		// Custom theme elements for large screens. Small screens stay the same
+
+		// Take away the minisite background color, so that the ominous bg shows through.
+		// Fix some padding/margin issues due to no bg color.
+		@media
+		#{$large-up} {
+
+			margin: $column-gutter/2 0;
+			padding-top: 0;
+			border: none;
+			background: none;
+
+
+			// Add a white bg to the content, & fix padding
+			#contentAndRelated {
+					background: #FFF;
+					padding-right: 1.25rem !important;
+					padding-top: $column-gutter/2;
+			}
+		}
+	}
+
+	#emergencyPreempt {
+		margin-top: $column-gutter/2;
+		.callout-danger {
+			background: lighten($lc-red, 40%);
+		}
+	}
+
+	// CUSTOM GLOBAL BANNER
+	#wrapper {
+
+		// Darken the top of header
+		#global-banner {
+			border-color: darken($lc-blue-dark-compliment, 30%);
+		}
+
+		// Darken the menu bg color
+		#global-nav {
+			border-color: darken($lc-blue-dark-compliment, 20%);
+
+			.sections {
+				@media #{$large-up} {
+	
+					> li {
+						background: $lc-blue-dark;
+			
+						a {
+
+							&:hover {
+								background-color: darken($lc-blue-dark, 4%);
+							}
+						}		
+					}
+				}
+			}
+			
+			// @media #{$large-up} {
+			// 	//background: $lc-grey;
+			// }
+		}
+	}
+
+	// CUSTOM LOGO
+	// Luther Sports logo replaces the typeface logo
+	#wrapper #global-banner hgroup {
+
+		//@include background-image(linear-gradient($lc-blue-dark, #0a2345));
+		background: #0a2345;
+
+		$logo-width: 168px;
+		$logo-height: 75px;
+		
+		h1 {
+
+			a {
+				background: url('../../images/logo_mobile_1x.png') no-repeat;		
+			}
+			
+			@media #{$small-up-reitna} {
+			
+				a {				
+					background: url('../../images/logo_mobile_2x.png') no-repeat;
+					@include background-size($logo-width-mobile $logo-height-mobile);
+				}
+			}
+		
+			@media #{$large-up} {
+		
+				a {
+					width: $logo-width;
+					height: $logo-height;
+					background: url('../../images/logo_sports_1x.png') no-repeat;
+					top: ($header-height - $logo-height)/2;
+				}
+			}
+				
+			@media #{$large-up-reitna} {
+			
+				a {	
+					background: url('../../images/logo_2x.png') no-repeat;
+					@include background-size($logo-width $logo-height);
+				}
+			}							
+		}
+	}
+
+	// CUSTOM MINISITE NAV
+	#minisite {
+
+		#navWrap {
+
+			#minisiteNavigation {
+
+				// Unique navigation colors
+				// Paramaters are set at top of document
+				// Desktop only, mobile inherits global
+
+				@media #{$large-up} {
+					background: lighten($minisite-nav-background, 6%);
+
+					a {
+						color: $minisite-nav-color;
+					}
+
+					.navListTop a.home {  //  Large "home" link at the top of the nav
+						background: $lc-sports-grey-alt;
+						color: $lc-blue-dark;
+						border-bottom: none;
+					}
+
+					.navListTop ul a {  // Top level page links
+						border-top: 1px solid darken($minisite-nav-background, 7%);
+						color: $minisite-nav-color;
+
+						&:hover {
+							background: $minisite-nav-background;
+							color: $minisite-nav-color;
+						}								
+					}
+					
+					.navListTop ul ul {  // Second level page links
+					
+						a {
+							border-top: 1px solid darken($minisite-nav-background, 1%);
+						
+							&:hover {
+								background: lighten($minisite-nav-background, 4%);	
+							}	
+						}
+					}
+					
+					.navListTop ul .navListItem.open {  // Nav accordion in the open state
+						background: lighten($minisite-nav-background, 10%);
+						a {
+						
+							&:hover {
+								background: lighten($minisite-nav-background, 12%) !important;	
+							}
+						}
+					}	
+
+					.jump,
+					.accordion {
+						
+						a:before {
+							color: #FFF;
+						}
+					}
+				}
+			}
+
+			.socialProfileLinks {
+				background: $lc-blue-light;
+				background: $lc-sports-grey-alt;
+			}
+		}
+
+		// CUSTOM AFFILIATIONS BLURB
+		.uname_luther_sports_affiliations {
+			text-align: center;
+
+			p {
+				display: inline;
+			}
+
+			a {
+				display: inline-block;
+				margin: $column-gutter/2;
+			}
+
+			img {
+				width: rem-calc(100);
+			}
+		}
+	}
+
+	// Sports results/schedule table 
+	// .responsiveEventsList {
+
+	// 	table {
+	// 		border: none;
+
+	// 		tr th,
+	// 		tr td {
+	// 		    font-size: $base-font-size;
+	// 		    padding: rem-calc(15);
+
+	// 		    &.location {
+	// 				@media
+	// 				#{$small-only} {
+	// 					display: none;
+	// 				}
+	// 			}
+	// 		}
+
+	// 		td {
+
+	// 		}
+	// 	}
+
+	// 	.view-all {
+			
+	// 		ul {
+	// 			margin: 0;
+
+	// 			.more {
+
+	// 				&:after {
+	// 					@extend .fa;
+	// 					content: $fa-var-chevron-circle-right;
+	// 					margin-left: rem-calc(6);
+	// 				}
+	// 			}
+	// 		}
+	// 	}
+	// }
+
+	// CUSTOM FOOTERS
+
+	#foot {
+		// /margin-bottom: $column-gutter/2;
+	}
+
+	#preFoot {
+		clear: both;
+		width: 100%;
+
+		margin-bottom: $column-gutter/2;
+		background: $lc-grey;
+
+		&:before,
+		&:after {
+			display: block;
+			height: 1px;
+			background: darken($lc-grey, 5%);
+			content: "";
+		}
+
+		@media
+		#{$large-up} {
+			margin: 0 auto;
+			background: none;
+			
+			&:before,
+			&:after {
+				display: none;
+			}
+		}
+
+
+	}
+
+	@media
+	#{$large-up} {
+
+		.loginLinkModule {
+		
+			div {
+
+				a {	
+					background: #ccc;
+					background: rgba(255,255,255,.05) !important;
+					color: rgba(255,255,255,.5);
+
+					&:hover {
+						background: #ccc;
+						background: rgba(255,255,255,.25) !important;
+						color: rgba(255,255,255,.65);
+					}
+				}
+			}
+			
+			#footerLoginLink {
+				background: #ccc;
+				background: rgba(255,255,255,.05) !important;
+				color: rgba(255,255,255,.5);
+			}
+		}
+	}
+
+	#post-footer p {
+		color: #FFF !important;
+	}
+}

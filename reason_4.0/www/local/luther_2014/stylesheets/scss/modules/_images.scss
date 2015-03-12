@@ -1,0 +1,250 @@
+//
+// IMAGE STYLES
+//
+// @author Nathan Dirks
+//
+
+// Foundation imports
+@import "settings";
+@import "foundation/components/grid";
+
+// Compass imports
+@import "compass/css3";
+
+// Luther imports
+@import "extends";
+@import "mixins";
+
+/* Image Sidebar */
+
+.imageSidebarModule,
+.publication .images,
+.eventDetails .images {
+
+	.imageChunk {
+		padding-bottom: $column-gutter;
+		background: $lc-white;
+		max-width: $global-image-width;
+		margin: 0 auto;
+
+		&:last-child { // Take away bottom padding on last element to keep spacing even
+			padding-bottom: 0;
+		}
+	}
+
+	a { // semi-annoying image pop out effect
+		img {
+				@include transition-timing-function(ease);
+				//@include transition-property(max-width, margin, box-shadow);
+				@include transition-property(box-shadow);
+				@include transition-duration(.25s);
+		}
+
+		&:hover {
+			img {
+				//max-width: 102%;
+				//margin-left: -1%;
+				@include box-shadow(rgba(0,0,0,.25) 0 0 4px);
+			}	
+		}
+	}
+
+	.tnDesc { // Image captions
+		display: block;
+		margin-top: rem-calc(6);
+		padding: 0 rem-calc(6);
+		font-family: $header-font-family;
+		font-size: rem-calc(12);
+		font-style: italic;
+		color: $blockquote-font-color;
+
+		a {
+			color: $blockquote-font-color;
+		}
+	}
+}
+
+/* Top Images */
+
+#postMainHead {
+
+	.imageSidebarModule {
+
+		.imageChunk {
+			max-width: 100%; // override the image sidebar max-width, set above
+			max-height: 575px !important; // crop the image, since the module won't do it for us
+			overflow: hidden;
+
+			img {
+				//width: 100%;
+			}
+		}
+	}
+}
+
+
+
+/* Inline Images */
+
+// Inline images are a little tricky.
+// The goal is to have inline images look great at any screen size, any wysiwyg alignment, and in any column configuration.
+// Below is the ugly result.
+
+// DEFAULT (ALL COLUMN LAYOUTS)
+// (Main content areas only -- no sidebars)
+#{$wysiwyg-content-area}, #{$blurb-content} {
+
+	// Older code. Images with no figure wrapper.
+	img { // Images are full width on small screens
+		width: auto;  // display image at native resolution
+		max-width: 100%;  // but no bigger than its container
+		margin: 0 auto rem-calc(16); // space out the bottom
+		
+		&.left,
+		&[align="left"],
+		&.right,
+		&[align="right"] { // On phones, we won't float the images to prevent skinny column wrapping text.
+			float: none !important;
+			clear: left;
+		}
+
+		@media #{$medium-up} {  // Images are displayed at native resolution if align = none.
+			width: auto;
+			max-width: 100%;
+			margin: 0 0 rem-calc(16);
+
+			&.left,
+			&[align="left"] { // align left images left, and pad out the right
+				margin-right: $column-gutter;
+				float: left !important;
+			}
+
+			&.right,
+			&[align="right"] { // align right images right, and pad out the left
+				margin-left: $column-gutter;
+				float: right !important;
+			}
+
+			&.left,  // But if images are floated left or right, we cap their max-width at 40% max-width (since the column is so big, and there's no room to wrap text)
+			&[align="left"],
+			&.right,
+			&[align="right"] {
+				max-width: 40%;
+			}
+		}
+	}
+
+	// Newer code. Images with figure and figcaption.
+	figure {
+		width: auto;  // display image at native resolution
+		max-width: 100%;  // but no bigger than its container
+		margin: 0 auto rem-calc(16); // space out the bottom
+		
+		&.left,
+		&.right { // On phones, we won't float the images to prevent skinny column wrapping text.
+			float: none !important;
+			clear: left;
+		}
+
+		img {
+			margin: 0 !important;
+		}
+
+		@media #{$medium-up} {  // Images are displayed at native resolution if align = none.
+			width: auto;
+			max-width: 100%;
+			margin: 0 0 rem-calc(16);
+
+			&.left { // align left images left, and pad out the right
+				margin-right: $column-gutter;
+				float: left !important;
+			}
+
+			&.right { // align right images right, and pad out the left
+				margin-left: $column-gutter;
+				float: right !important;
+			}
+
+			&.left,  // But if images are floated left or right, we cap their max-width at 40% max-width (since the column is so big, and there's no room to wrap text)
+			&.right {
+				max-width: 40%;
+			}
+		}
+
+		figcaption {
+			margin-top: rem-calc(10);
+			padding: 0;
+			word-wrap: normal;
+			font-family: $header-font-family;
+			font-size: rem-calc(12);
+			font-style: italic;
+			line-height: 1.5;
+			color: $blockquote-font-color;
+	
+			a {
+				color: $blockquote-font-color;
+			}
+		}
+	}
+
+	.callout,
+	.callOut { // If images are in a callout, don't resize (Especially important for Ideas & Creations blog)
+		img {
+			width: auto;
+		}
+	}
+}
+
+#{$wysiwyg-related-area} {
+	img {
+		width: auto;  // display image at native resolution
+		max-width: 100%;  // but no bigger than its container
+		margin: 0 0 rem-calc(16); // space out the bottom
+
+		&.left,
+		&[align="left"] { // align left images left, and pad out the right
+			margin-right: $column-gutter;
+			float: left !important;
+		}
+
+		&.right,
+		&[align="right"] { // align right images right, and pad out the left
+			margin-left: $column-gutter;
+			float: right !important;
+		}
+	}
+}
+
+// // THREE COLUMNS
+// .hasConRelNav {
+
+// 	#{$wysiwyg-content-area} {
+	
+// 		img {
+
+// 			@media #{$medium-up} {
+// 				width: auto;
+// 				max-width: 100%; // Images with align = none are 100% max-width on medium (becuase the middle column is fairly narrow)...
+				
+// 				&.left, // Ff images are floated left or right, we allow cap them at 40% max-width (becuase the middle column is wider and there's room to wrap text)
+// 				&[align="left"],
+// 				&.right,
+// 				&[align="right"] {
+// 					max-width: 40%; 
+// 				}
+// 			}
+// 		}
+// 	}
+// }
+
+//FancyBox Images
+div.fancybox-inner div.standalone_image_info div.caption{
+	padding-top: 15px;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 13px;
+	font-weight: 400;
+	color: #444444;
+	font-style: normal;
+	margin-bottom: 5px;
+	line-height: 20px;
+}

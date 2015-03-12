@@ -4,7 +4,7 @@
     <database>
         <connection_name>reason_connection</connection_name>
         <db>reasondev_jonebr01_reason</db>
-        <user>reasondev_jonebr01_user</user>
+        <user>jonebr01_user</user>
         <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>
     </database>
@@ -12,7 +12,7 @@
     <database>
         <connection_name>thor_connection</connection_name>
         <db>reasondev_jonebr01_thor</db>
-        <user>reasondev_jonebr01_user</user>
+        <user>jonebr01_user</user>
         <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>
     </database>
@@ -20,7 +20,7 @@
     <database>
         <connection_name>reason_transactions</connection_name>
         <db>reasondev_jonebr01_transactions</db>
-        <user>reasondev_jonebr01_user</user>
+        <user>jonebr01_user</user>
         <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>
     </database>
@@ -28,7 +28,7 @@
     <database>
         <connection_name>admissions_applications_connection</connection_name>
         <db>reasondev_jonebr01_admissions_applications</db>
-        <user>reasondev_jonebr01_user</user>
+        <user>jonebr01_user</user>
         <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>
     </database>
@@ -36,7 +36,7 @@
     <database>
         <connection_name>all_band_connection</connection_name>
         <db>reasondev_jonebr01_all_band</db>
-        <user>reasondev_jonebr01_user</user>
+        <user>jonebr01_user</user>
         <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>
     </database>
@@ -44,7 +44,7 @@
     <database>
         <connection_name>discovery_camps_connection</connection_name>
         <db>reasondev_jonebr01_discovery_camps</db>
-        <user>reasondev_jonebr01_user</user>
+        <user>jonebr01_user</user>
         <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>
     </database>
@@ -52,7 +52,7 @@
     <database>
         <connection_name>homecoming_connection</connection_name>
         <db>reasondev_jonebr01_homecoming_registration</db>
-        <user>reasondev_jonebr01_user</user>
+        <user>jonebr01_user</user>
         <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>
     </database>
@@ -60,7 +60,7 @@
     <database>
         <connection_name>lfw_connection</connection_name>
         <db>reasondev_jonebr01_lfw_registration</db>
-        <user>reasondev_jonebr01_user</user>
+        <user>jonebr01_user</user>
         <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>
     </database>
@@ -68,7 +68,7 @@
     <database>
         <connection_name>jenson_medal_connection</connection_name>
         <db>reasondev_jonebr01_jenson_medal</db>
-        <user>reasondev_jonebr01_user</user>
+        <user>jonebr01_user</user>
         <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>
     </database>         
@@ -76,7 +76,7 @@
     <database>
         <connection_name>reason_gifts_connection</connection_name>
         <db>reasondev_jonebr01_gifts</db>
-        <user>reasondev_jonebr01_user</user>
+        <user>jonebr01_user</user>
         <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>
     </database>
@@ -84,7 +84,7 @@
     <database>
         <connection_name>dorian_vocal_connection</connection_name>
         <db>reasondev_jonebr01_dorian_vocal</db>
-        <user>reasondev_jonebr01_user</user>
+        <user>jonebr01_user</user>
         <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>
     </database>
@@ -92,7 +92,7 @@
     <database>
         <connection_name>dorian_jh_camp_connection</connection_name>
         <db>reasondev_jonebr01_dorian_jh_camp</db>
-        <user>reasondev_jonebr01_user</user>
+        <user>jonebr01_user</user>
         <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>
     </database>
@@ -100,21 +100,21 @@
     <database>
         <connection_name>dorian_sh_camp_connection</connection_name>
         <db>reasondev_jonebr01_dorian_sh_camp</db>
-        <user>reasondev_jonebr01_user</user>
+        <user>jonebr01_user</user>
         <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>
     </database>
     <database>
         <connection_name>transcript_connection</connection_name>
         <db>reasondev_jonebr01_transcript_requests</db>
-        <user>reasondev_jonebr01_user</user>
+        <user>jonebr01_user</user>
         <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>
     </database>
     <database>
         <connection_name>norge_connection</connection_name>
         <db>reasondev_jonebr01_norge_conference</db>
-        <user>reasondev_jonebr01_user</user>
+        <user>jonebr01_user</user>
         <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>
     </database>
@@ -122,7 +122,7 @@
     <database>
         <connection_name>royal_visit_connection</connection_name>
         <db>reasondev_jonebr01_royal_visit_payment</db>
-        <user>reasondev_jonebr01_user</user>
+        <user>jonebr01_user</user>
         <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>
     </database>

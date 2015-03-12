@@ -1,0 +1,260 @@
+//
+// SIBLING STYLES
+//
+// @author Nathan Dirks
+//
+
+// Foundation imports
+@import "settings";
+@import "foundation/components/grid";
+
+// Compass imports
+@import "compass/css3";
+
+// Luther imports
+@import "extends";
+@import "mixins";
+
+// Children
+
+// Basic Shows Children w/ or w/out descriptions.
+// Adds a little arrow icon next to each heading.
+
+.childrenList {
+	//border-top: 1px solid $lc-grey;
+	//padding: $column-gutter/2 0 0;
+	padding: 0;
+	margin: 0;
+
+	li {
+
+		a[href] {
+			margin-bottom: $column-gutter/2;
+			margin-left: rem-calc(32);
+			position: relative;
+			display: block;
+
+			&:before { // Adds a little arrow icon that moves right on hover
+				@extend .fa;
+				content: $fa-var-chevron-circle-right;
+				//content: $fa-var-angle-right;
+				position: absolute;
+				left: - rem-calc(32);
+				top: rem-calc(7);
+				@include transition-property(left);
+				@include transition-duration(.5s);
+				@include transition-timing-function(ease);
+
+				@media #{$medium-up} {
+					top: rem-calc(11);
+				}
+			}
+
+			&:hover,
+			&:focus {
+				&:before {
+					left: - rem-calc(28);
+					@include transition-property(left);
+					@include transition-duration(.5s);
+					@include transition-timing-function(ease);
+				}
+			}
+		}
+
+		h4 {
+			line-height: inherit;
+			margin: 0;
+		}
+
+		.childDesc {
+			color: lighten($body-font-color, 15%);
+			font-family: $body-font-family;
+			font-weight: 300;
+		}
+	}
+}
+
+// Children & Grandchildren
+
+// Children & Grandchildren use old xhtml markup (they don't have anchors wrapped
+// around the text and description like the HTML5 view of the children module does), so we need to style a bit differently.
+
+#childrenAndGrandchildren {
+
+	li {
+		margin-left: rem-calc(32);
+		
+		h4 {
+
+			a {
+				margin: 0;
+
+				&:before {
+					font-size: rem-calc(16);
+				}
+			}
+		}
+
+		.childDesc {
+			margin-bottom: rem-calc(12);
+		}
+
+		ul {
+			margin: rem-calc(4) 0 rem-calc(16);
+
+			li {
+				margin-left: 0;
+			}
+
+			strong {
+				font-family: $header-font-family;
+				font-weight: 400;
+				display: inline;
+			}
+
+			.childDesc {
+				display: inline;
+				margin: 0;
+				font-size: rem-calc(14);
+
+				&:before {
+					@extend .fa;
+					content: $fa-var-angle-double-right;
+					margin: 0 rem-calc(6) 0 rem-calc(4);
+				}
+			}
+
+			a {
+				color: $secondary-link-color;
+				margin: 0;
+				display: inline;
+
+				&:before {
+					content: '';
+				}
+
+				&:hover {
+					color: $anchor-secondary-font-color-hover;
+				}
+
+			}
+		}
+	}
+}
+
+// Children with Images
+
+.childrenListWithImages {
+
+	@include clearfix;
+
+	// Children with Images are displayed in columns, with heading & text below each image.
+	// We can override this layout with custom styles in specific sites or locations.
+
+	li {
+		clear: both;
+		display: block;
+		margin-bottom: $column-gutter/2;
+
+		@media #{$small-high-up} {  // 2 Columns for small-high screens
+			width: 50%;
+			float: left;
+			clear: none;
+			&:nth-child(2n+1) {
+				clear: left;
+			}
+		}
+
+		@media #{$medium-up} { // 3 Columns for medium screens
+			width: 33.33333%;
+			&:nth-child(2n+1) {
+				clear: none;
+			}
+			&:nth-child(3n+1) {
+				clear: left;
+			}
+		}
+
+		@media #{$xlarge-up} { // 4 Columns for xl screens
+			width: 25%;
+			&:nth-child(3n+1) {
+				clear: none;
+			}
+			&:nth-child(4n+1) {
+				clear: left;
+			}
+		}
+
+		a,
+		a[href] {  // Since the module uses the new HTML5 markup, the anchor is wrapped around both the heading and description.
+			//@include border-bottom-radius(4px);
+			overflow: hidden;
+			background: lighten($lc-grey, 3%);
+			margin: 0;
+			margin-right: $column-gutter/2;
+			display: block;
+			@include clearfix;
+
+			&:before {
+				content: "";
+				position: static;
+				height: 0;
+				display: none !important;
+			}
+
+			&:hover {
+
+				h4 {
+					text-decoration: underline;
+				}	
+			}
+
+			h4 {
+				padding: rem-calc(12);
+			}
+
+			.childDesc {
+				padding: 0 rem-calc(12) rem-calc(12);
+			}
+		}
+	}
+}
+
+.hasRelated .childrenListWithImages {
+
+	// If there's related content, we want to adjust the columns a bit when the sidebar is to the right of content
+
+	li {
+
+		@media #{$medium-up} { // 2 Columns for medium screens
+			width: 50%;
+			&:nth-child(3n+1) {
+				clear: none;
+			}
+			&:nth-child(2n+1) {
+				clear: left;
+			}
+		}
+
+		@media #{$large-up} { // 3 Columns for large screens
+			width: 33.333333%;
+			&:nth-child(2n+1) {
+				clear: none;
+			}
+			&:nth-child(3n+1) {
+				clear: left;
+			}
+		}
+
+		@media #{$large-high-up} { // 4 Columns for xl screens
+			width: 50%;
+			&:nth-child(3n+1) {
+				clear: none;
+			}
+			&:nth-child(2n+1) {
+				clear: left;
+			}
+		}
+	}
+}
+

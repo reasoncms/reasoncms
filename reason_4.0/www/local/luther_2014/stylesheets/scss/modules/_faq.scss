@@ -1,0 +1,82 @@
+//
+// FAQ STYLES
+//
+// @author Blaise Schaeffer
+//
+
+// Foundation imports
+@import "settings";
+@import "foundation/components/grid";
+
+// Compass imports
+@import "compass/css3";
+
+// Font Awesome Imports
+@import "font-awesome/variables";
+@import "font-awesome/core";
+
+// Luther imports
+@import "extends";
+@import "mixins";
+
+
+#faq {
+	#filtering {
+		padding-bottom: $column-gutter/2;
+		.searchForm {
+			display: block;
+			.search {
+				border: 1px solid darken($lc-grey, 15%);
+				border-radius: rem-calc(10);
+				padding-left: rem-calc(10);
+				padding-right: rem-calc(10);
+				outline: 0;	
+				height: rem-calc(28);
+				font-family: $navigation-font-family;
+				font-size: auto;
+			}
+			.submit {
+				border: rem-calc(1) solid $lc-white;
+				border-radius: rem-calc(5);
+				background-color: $lc-blue-light;
+				color: $lc-white;
+				font-weight: 300;
+
+
+				&:hover {
+					background-color: lighten($lc-blue-light, 5%);
+				}	
+			}
+		}
+	}
+	.moduleNav {
+		ul {
+			margin: 0;
+			li {
+				padding-top: $column-gutter/4;
+				div {
+					display: none;
+				}
+				strong {
+					display: inline-block;
+					border-bottom: $microformat-border-width $microformat-border-style $microformat-border-color;
+					padding-bottom: $column-gutter/4;
+				}
+			}
+			li:first-child {
+				padding-top: 0;
+			}
+			li:last-child {
+				//padding-bottom: 0;
+				strong {
+					border-bottom: none;
+					padding-bottom: 0;
+					display: inline-block;
+				}
+			}
+		}
+		.feedLink {
+			display: none;
+		}
+	}
+}

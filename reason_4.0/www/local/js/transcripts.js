@@ -5,8 +5,6 @@
 $(document).ready(function() {
     //hide  fields
    // hide_field('official_paper_comment');
-    hide_field('unofficial_email');
-    hide_field('unofficial_address');
     hide_field('official_email');
     hide_field('institution_name');
     hide_field('institution_attn');
@@ -26,11 +24,6 @@ $(document).ready(function() {
         showDeliveryInfo();
     });
 
-    toggle_unofficial_address();
-    $("input[name='unofficial']").change(function(){ 
-        toggle_unofficial_address()
-    });
-        
     toggle_billing_address();
     $("input[name='billing_address']").change(function(){
         toggle_billing_address()
@@ -38,21 +31,46 @@ $(document).ready(function() {
 
     // Show/hide and populate Country field based on state/province choice
     $("select#state_provinceElement").change(function(){
-        toggle_country_field("select#state_provinceElement","tr#countryRow" )});
+        toggle_country_field("select#state_provinceElement","#countryItem" )});
 
     // Set the initial state for the Country field
     $("select#state_provinceElement").change();
-    $("#countryRow").hide();
+    $("#countryItem").hide();
+
+    var tablesorteropts = {
+      theme: 'blue',
+      widthFixed: false,
+      sortList: [[0,0]],
+      widgets : ["zebra", "columns", "filter", "resizeable"],
+      widgetOptions : {
+        columns : [ "primary", "secondary", "tertiary" ],
+        columns_thead : true,
+        filter_childRows : false,
+        filter_columnFilters : true,
+        filter_cssFilter : "tablesorter-filter",
+        filter_formatter : null,
+        filter_hideFilters : false,
+        filter_ignoreCase : true,
+        filter_liveSearch : true,
+        filter_searchDelay : 300,
+        filter_serversideFiltering: false,
+        filter_startsWith : false,
+        filter_useParsedData : false
+      }
+    };
+    if (typeof table_id != 'undefined') {
+        $("#" + table_id).tablesorter(tablesorteropts);
+    }
 });
 
 function hide_field(element)
 {
-    element = "tr#"+element.replace(/_/g,"")+"Row";
+    element = "#"+element.replace(/_/g,"")+"Item";
     $(element).hide();
 }
 function show_field(element)
 {
-    element = "tr#"+element.replace(/_/g,"")+"Row";
+    element = "#"+element.replace(/_/g,"")+"Item";
     $(element).show();
 }
 function showDeliveryInfo()
@@ -112,57 +130,43 @@ function showDeliveryInfo()
         hide_field('country');
     }
 }
-function toggle_unofficial_address() {
-    var unofficial_type = $("input[name=unofficial]:checked").val();
-    switch(unofficial_type){
-        case 'email':
-            hide_field('unofficial_address');
-        break;
-        case 'postal':
-            show_field('unofficial_address');
-        break;
-        default:
-            hide_field('unofficial_address');
-        break;
-    }
-}
 function toggle_billing_address() {
     if (!$("input[name='billing_address']:checked").val() ||
         $("input[name='billing_address']:checked").val() == 'entered')
         {
-        $("tr#billingstreetaddressRow").hide();
-        $("tr#billingcityRow").hide();
-        $("tr#billingstateprovinceRow").hide();
-        $("tr#billingzipRow").hide();
-        $("tr#billingcountryRow").hide();
+        $("#billingstreetaddressItem").hide();
+        $("#billingcityItem").hide();
+        $("#billingstateprovinceItem").hide();
+        $("#billingzipItem").hide();
+        $("#billingcountryItem").hide();
     } else {
-        $("tr#billingstreetaddressRow").show();
-        $("tr#billingcityRow").show();
-        $("tr#billingstateprovinceRow").show();
-        $("tr#billingzipRow").show();
-        $("tr#billingcountryRow").show();
+        $("#billingstreetaddressItem").show();
+        $("#billingcityItem").show();
+        $("#billingstateprovinceItem").show();
+        $("#billingzipItem").show();
+        $("#billingcountryItem").show();
         $("select#billing_state_provinceElement").change();
     }
 }
-function toggle_country_field(stateElementSelector, countryRowSelector)
+function toggle_country_field(stateElementSelector, countryItemSelector)
 {
-	// Show/hide and populate Country field based on state/province choice
-	// If not US or Canada, show the Country field
-	if ($(stateElementSelector).val() == "XX")
-	{
-   	    $(countryRowSelector + " select").val('');
-    	$("#countryRow").show();
-   		$("tr#billingcountryRow").show();
-	}
-	// If US or Canada, populate Country but hide it
-	else
-	{
-	    //$(countryRowSelector).hide();
-	    // If a Canadian province...
-	    if (/^(?:AB|BC|MB|NB|NL|NT|NS|NU|ON|PE|QC|SK|YT)$/.test($(stateElementSelector).val()))
-		$(countryRowSelector + " select").val("CAN");
-	    // If anything else (other than unset)
-	    else if ($(stateElementSelector).val() != "")
-		$(countryRowSelector + " select").val('USA');
-	}
+    // Show/hide and populate Country field based on state/province choice
+    // If not US or Canada, show the Country field
+    if ($(stateElementSelector).val() == "XX")
+    {
+        $(countryItemSelector + " select").val('');
+        $("#countryItem").show();
+        $("#billingcountryItem").show();
+    }
+    // If US or Canada, populate Country but hide it
+    else
+    {
+        //$(countryItemSelector).hide();
+        // If a Canadian province...
+        if (/^(?:AB|BC|MB|NB|NL|NT|NS|NU|ON|PE|QC|SK|YT)$/.test($(stateElementSelector).val()))
+        $(countryItemSelector + " select").val("CAN");
+        // If anything else (other than unset)
+        else if ($(stateElementSelector).val() != "")
+        $(countryItemSelector + " select").val('USA');
+    }
 }

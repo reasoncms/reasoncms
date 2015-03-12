@@ -5,7 +5,7 @@
 	<title>jQuery plugin: Tablesorter 2.0 - jQuery UITheme Widget (jQuery UI)</title>
 
 	<!-- jQuery -->
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.2/jquery.min.js"></script>
+	<script src="js/jquery-latest.min.js"></script>
 
 	<!-- Demo stuff -->
 	<link rel="stylesheet" href="css/jq.css">
@@ -13,9 +13,17 @@
 	<script src="js/prettify.js"></script>
 	<script src="js/docs.js"></script>
 
+	<!-- jQuery UI theme switcher: https://github.com/pontikis/jui_theme_switch/ -->
+	<style>
+	.switcher_container { padding: 5px; }
+	.switcher_list { padding: 2px; }
+	.switcher_label { margin-right: 5px; }
+	</style>
+	<script src="js/jquery.jui_theme_switch.min.js"></script>
+
 	<!-- Tablesorter: required; also include any of the jQuery UI themes -->
-	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/cupertino/jquery-ui.css">
-	<link rel="stylesheet" href="../css/theme.jui.css">
+	<link id="ui-theme" rel="stylesheet" href="css/jquery-ui.min.css">
+	<link href="../css/theme.jui.css" rel="stylesheet">
 
 	<script src="../js/jquery.tablesorter.js"></script>
 	<script src="../js/jquery.tablesorter.widgets.js"></script>
@@ -29,6 +37,7 @@
 	$.extend($.tablesorter.themes.jui, {
 		// change default jQuery uitheme icons - find the full list of icons here: http://jqueryui.com/themeroller/ (hover over them for their name)
 		table      : 'ui-widget ui-widget-content ui-corner-all', // table classes
+		caption    : 'ui-widget-content ui-corner-all',
 		header     : 'ui-widget-header ui-corner-all ui-state-default', // header classes
 		footerRow  : '',
 		footerCells: '',
@@ -67,6 +76,15 @@
 
 });</script>
 
+	<script>
+	$(function(){
+		$('#switcher').jui_theme_switch({
+			stylesheet_link_id : 'ui-theme',
+			datasource_url     : 'assets/theme_switcher.json'
+		});
+	});
+	</script>
+
 </head>
 <body>
 
@@ -94,7 +112,7 @@
 			</li>
 			<li>Earlier widget versions required jQuery 1.4+. The UITheme widget for tablesorter 2.4+ requires jQuery 1.2.6+.</li>
 		</ul>
-	</p>
+	<p>
 
 	<h1>Demo</h1>
 	<br>
@@ -103,6 +121,7 @@
 	<br>
 
 	<div id="demo"><table class="tablesorter">
+	<caption>Some interesting caption</caption>
 	<thead>
 		<tr>
 			<th>First Name</th>
@@ -173,7 +192,7 @@
 		<pre class="prettyprint lang-html">&lt;!-- ui theme stylesheet - contents shown below --&gt;
 &lt;link rel=&quot;stylesheet&quot; href=&quot;../css/theme.jui.css&quot;&gt;
 &lt;!-- jQuery UI theme (cupertino example here) --&gt;
-&lt;link rel=&quot;stylesheet&quot; href=&quot;http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/cupertino/jquery-ui.css&quot;&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;css/jquery-ui.min.css&quot;&gt;
 
 &lt;!-- tablesorter plugin --&gt;
 &lt;script src=&quot;../js/jquery.tablesorter.js&quot;&gt;&lt;/script&gt;

@@ -5,7 +5,7 @@
 	<title>jQuery plugin: Tablesorter 2.0 - Pager plugin</title>
 
 	<!-- jQuery -->
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+	<script src="js/jquery-latest.min.js"></script>
 
 	<!-- Demo stuff -->
 	<link rel="stylesheet" href="css/jq.css">
@@ -16,6 +16,7 @@
 	<!-- Tablesorter: required -->
 	<link rel="stylesheet" href="../css/theme.blue.css">
 	<script src="../js/jquery.tablesorter.js"></script>
+	<script src="../js/jquery.tablesorter.widgets.js"></script>
 
 	<!-- Tablesorter: optional -->
 	<link rel="stylesheet" href="../addons/pager/jquery.tablesorter.pager.css">
@@ -48,7 +49,8 @@
 
 		// output string - default is '{page}/{totalPages}'
 		// possible variables: {page}, {totalPages}, {filteredPages}, {startRow}, {endRow}, {filteredRows} and {totalRows}
-		output: '{startRow} to {endRow} ({totalRows})',
+		// also {page:input} & {startRow:input} will add a modifiable input in place of the value
+		output: '{startRow:input} to {endRow} ({totalRows})',
 
 		// apply disabled classname to the pager arrows when the rows at either extreme is visible - default is true
 		updateArrows: true,
@@ -58,6 +60,12 @@
 
 		// Number of visible rows - default is 10
 		size: 10,
+
+		// Save pager page & size if the storage script is loaded (requires $.tablesorter.storage in jquery.tablesorter.widgets.js)
+		savePages : true,
+		
+		//defines custom storage key
+		storageKey:'tablesorter-pager',
 
 		// if true, the table will remain the same height no matter how many records are displayed. The space is made up by an empty
 		// table row set to a height to compensate; default is false
@@ -176,6 +184,13 @@
 		});
 
 });</script>
+	<script>
+	$(function(){
+		$('.clear').click(function(){
+			$('#display').html( new Array(6).join('<li>&nbsp;</li>') );
+		});
+	});
+	</script>
 </head>
 <body id="pager-demo">
 	<div id="banner">
@@ -190,14 +205,18 @@
 		<p class="tip">
 			<em>NOTE!</em> The following are not part of the original plugin:
 			<ul>
+				<li>In <span class="version">v2.17.6</span>, added <code>{startRow:input}</code> and <code>{page:input}</code> variables to the <code>output</code> option.</li>
 				<li>This pager plugin can be applied to the original tablesorter, but there is one exception - setting the <code>removeRows</code> option to false will break the sort.</li>
-				<li>There have been lots of changes made in version 2.1, please check out the <a href="https://github.com/Mottie/tablesorter/wiki/Change2">change log</a>.</li>
+				<li>There have been lots of changes made in version 2.1, please check out the <a href="https://github.com/Mottie/tablesorter/wiki/Changes">change log</a>.</li>
+				<li>In <span class="version">v2.11</span>, the <code>savePages</code> option was added to saves the current page size and number (requires storage script).</li>
 			</ul>
-		</p>
+		<p>
 
-		<h1>Triggered Events</h1>
+		<h1>Triggered Events &nbsp; <button class="clear">Clear</button></h1>
 		<ul id="display">
 			<li>Pager events will appear here.</li>
+			<li>&nbsp;</li>
+			<li>&nbsp;</li>
 			<li>&nbsp;</li>
 			<li>&nbsp;</li>
 		</ul>
@@ -247,226 +266,28 @@
 		</tr>
 	</tfoot>
 	<tbody>
-		<tr>
-			<td>Student01</td>
-			<td>Languages</td>
-			<td>male</td>
-			<td>80</td>
-			<td>70</td>
-			<td>75</td>
-			<td>80</td>
-			<td><button type="button" class="remove" title="Remove this row">X</button></td>
-		</tr>
-		<tr>
-			<td>Student02</td>
-			<td>Mathematics</td>
-			<td>male</td>
-			<td>90</td>
-			<td>88</td>
-			<td>100</td>
-			<td>90</td>
-			<td><button type="button" class="remove" title="Remove this row">X</button></td>
-		</tr>
-		<tr>
-			<td>Student03</td>
-			<td>Languages</td>
-			<td>female</td>
-			<td>85</td>
-			<td>95</td>
-			<td>80</td>
-			<td>85</td>
-			<td><button type="button" class="remove" title="Remove this row">X</button></td>
-		</tr>
-		<tr>
-			<td>Student04</td>
-			<td>Languages</td>
-			<td>male</td>
-			<td>60</td>
-			<td>55</td>
-			<td>100</td>
-			<td>100</td>
-			<td><button type="button" class="remove" title="Remove this row">X</button></td>
-		</tr>
-		<tr>
-			<td>Student05</td>
-			<td>Languages</td>
-			<td>female</td>
-			<td>68</td>
-			<td>80</td>
-			<td>95</td>
-			<td>80</td>
-			<td><button type="button" class="remove" title="Remove this row">X</button></td>
-		</tr>
-		<tr>
-			<td>Student06</td>
-			<td>Mathematics</td>
-			<td>male</td>
-			<td>100</td>
-			<td>99</td>
-			<td>100</td>
-			<td>90</td>
-			<td><button type="button" class="remove" title="Remove this row">X</button></td>
-		</tr>
-		<tr>
-			<td>Student07</td>
-			<td>Mathematics</td>
-			<td>male</td>
-			<td>85</td>
-			<td>68</td>
-			<td>90</td>
-			<td>90</td>
-			<td><button type="button" class="remove" title="Remove this row">X</button></td>
-		</tr>
-		<tr>
-			<td>Student08</td>
-			<td>Languages</td>
-			<td>male</td>
-			<td>100</td>
-			<td>90</td>
-			<td>90</td>
-			<td>85</td>
-			<td><button type="button" class="remove" title="Remove this row">X</button></td>
-		</tr>
-		<tr>
-			<td>Student09</td>
-			<td>Mathematics</td>
-			<td>male</td>
-			<td>80</td>
-			<td>50</td>
-			<td>65</td>
-			<td>75</td>
-			<td><button type="button" class="remove" title="Remove this row">X</button></td>
-		</tr>
-		<tr>
-			<td>Student10</td>
-			<td>Languages</td>
-			<td>male</td>
-			<td>85</td>
-			<td>100</td>
-			<td>100</td>
-			<td>90</td>
-			<td><button type="button" class="remove" title="Remove this row">X</button></td>
-		</tr>
-		<tr>
-			<td>Student11</td>
-			<td>Languages</td>
-			<td>male</td>
-			<td>86</td>
-			<td>85</td>
-			<td>100</td>
-			<td>100</td>
-			<td><button type="button" class="remove" title="Remove this row">X</button></td>
-		</tr>
-		<tr>
-			<td>Student12</td>
-			<td>Mathematics</td>
-			<td>female</td>
-			<td>100</td>
-			<td>75</td>
-			<td>70</td>
-			<td>85</td>
-			<td><button type="button" class="remove" title="Remove this row">X</button></td>
-		</tr>
-		<tr>
-			<td>Student13</td>
-			<td>Languages</td>
-			<td>female</td>
-			<td>100</td>
-			<td>80</td>
-			<td>100</td>
-			<td>90</td>
-			<td><button type="button" class="remove" title="Remove this row">X</button></td>
-		</tr>
-		<tr>
-			<td>Student14</td>
-			<td>Languages</td>
-			<td>female</td>
-			<td>50</td>
-			<td>45</td>
-			<td>55</td>
-			<td>90</td>
-			<td><button type="button" class="remove" title="Remove this row">X</button></td>
-		</tr>
-		<tr>
-			<td>Student15</td>
-			<td>Languages</td>
-			<td>male</td>
-			<td>95</td>
-			<td>35</td>
-			<td>100</td>
-			<td>90</td>
-			<td><button type="button" class="remove" title="Remove this row">X</button></td>
-		</tr>
-		<tr>
-			<td>Student16</td>
-			<td>Languages</td>
-			<td>female</td>
-			<td>100</td>
-			<td>50</td>
-			<td>30</td>
-			<td>70</td>
-			<td><button type="button" class="remove" title="Remove this row">X</button></td>
-		</tr>
-		<tr>
-			<td>Student17</td>
-			<td>Languages</td>
-			<td>female</td>
-			<td>80</td>
-			<td>100</td>
-			<td>55</td>
-			<td>65</td>
-			<td><button type="button" class="remove" title="Remove this row">X</button></td>
-		</tr>
-		<tr>
-			<td>Student18</td>
-			<td>Mathematics</td>
-			<td>male</td>
-			<td>30</td>
-			<td>49</td>
-			<td>55</td>
-			<td>75</td>
-			<td><button type="button" class="remove" title="Remove this row">X</button></td>
-		</tr>
-		<tr>
-			<td>Student19</td>
-			<td>Languages</td>
-			<td>male</td>
-			<td>68</td>
-			<td>90</td>
-			<td>88</td>
-			<td>70</td>
-			<td><button type="button" class="remove" title="Remove this row">X</button></td>
-		</tr>
-		<tr>
-			<td>Student20</td>
-			<td>Mathematics</td>
-			<td>male</td>
-			<td>40</td>
-			<td>45</td>
-			<td>40</td>
-			<td>80</td>
-			<td><button type="button" class="remove" title="Remove this row">X</button></td>
-		</tr>
-		<tr>
-			<td>Student21</td>
-			<td>Languages</td>
-			<td>male</td>
-			<td>50</td>
-			<td>45</td>
-			<td>100</td>
-			<td>100</td>
-			<td><button type="button" class="remove" title="Remove this row">X</button></td>
-		</tr>
-		<tr>
-			<td>Student22</td>
-			<td>Mathematics</td>
-			<td>male</td>
-			<td>100</td>
-			<td>99</td>
-			<td>100</td>
-			<td>90</td>
-			<td><button type="button" class="remove" title="Remove this row">X</button></td>
-		</tr>
+		<tr><td>Student01</td><td>Languages</td><td>male</td><td>80</td><td>70</td><td>75</td><td>80</td><td><button type="button" class="remove" title="Remove this row">X</button></td></tr>
+		<tr><td>Student02</td><td>Mathematics</td><td>male</td><td>90</td><td>88</td><td>100</td><td>90</td><td><button type="button" class="remove" title="Remove this row">X</button></td></tr>
+		<tr><td>Student03</td><td>Languages</td><td>female</td><td>85</td><td>95</td><td>80</td><td>85</td><td><button type="button" class="remove" title="Remove this row">X</button></td></tr>
+		<tr><td>Student04</td><td>Languages</td><td>male</td><td>60</td><td>55</td><td>100</td><td>100</td><td><button type="button" class="remove" title="Remove this row">X</button></td></tr>
+		<tr><td>Student05</td><td>Languages</td><td>female</td><td>68</td><td>80</td><td>95</td><td>80</td><td><button type="button" class="remove" title="Remove this row">X</button></td></tr>
+		<tr><td>Student06</td><td>Mathematics</td><td>male</td><td>100</td><td>99</td><td>100</td><td>90</td><td><button type="button" class="remove" title="Remove this row">X</button></td></tr>
+		<tr><td>Student07</td><td>Mathematics</td><td>male</td><td>85</td><td>68</td><td>90</td><td>90</td><td><button type="button" class="remove" title="Remove this row">X</button></td></tr>
+		<tr><td>Student08</td><td>Languages</td><td>male</td><td>100</td><td>90</td><td>90</td><td>85</td><td><button type="button" class="remove" title="Remove this row">X</button></td></tr>
+		<tr><td>Student09</td><td>Mathematics</td><td>male</td><td>80</td><td>50</td><td>65</td><td>75</td><td><button type="button" class="remove" title="Remove this row">X</button></td></tr>
+		<tr><td>Student10</td><td>Languages</td><td>male</td><td>85</td><td>100</td><td>100</td><td>90</td><td><button type="button" class="remove" title="Remove this row">X</button></td></tr>
+		<tr><td>Student11</td><td>Languages</td><td>male</td><td>86</td><td>85</td><td>100</td><td>100</td><td><button type="button" class="remove" title="Remove this row">X</button></td></tr>
+		<tr><td>Student12</td><td>Mathematics</td><td>female</td><td>100</td><td>75</td><td>70</td><td>85</td><td><button type="button" class="remove" title="Remove this row">X</button></td></tr>
+		<tr><td>Student13</td><td>Languages</td><td>female</td><td>100</td><td>80</td><td>100</td><td>90</td><td><button type="button" class="remove" title="Remove this row">X</button></td></tr>
+		<tr><td>Student14</td><td>Languages</td><td>female</td><td>50</td><td>45</td><td>55</td><td>90</td><td><button type="button" class="remove" title="Remove this row">X</button></td></tr>
+		<tr><td>Student15</td><td>Languages</td><td>male</td><td>95</td><td>35</td><td>100</td><td>90</td><td><button type="button" class="remove" title="Remove this row">X</button></td></tr>
+		<tr><td>Student16</td><td>Languages</td><td>female</td><td>100</td><td>50</td><td>30</td><td>70</td><td><button type="button" class="remove" title="Remove this row">X</button></td></tr>
+		<tr><td>Student17</td><td>Languages</td><td>female</td><td>80</td><td>100</td><td>55</td><td>65</td><td><button type="button" class="remove" title="Remove this row">X</button></td></tr>
+		<tr><td>Student18</td><td>Mathematics</td><td>male</td><td>30</td><td>49</td><td>55</td><td>75</td><td><button type="button" class="remove" title="Remove this row">X</button></td></tr>
+		<tr><td>Student19</td><td>Languages</td><td>male</td><td>68</td><td>90</td><td>88</td><td>70</td><td><button type="button" class="remove" title="Remove this row">X</button></td></tr>
+		<tr><td>Student20</td><td>Mathematics</td><td>male</td><td>40</td><td>45</td><td>40</td><td>80</td><td><button type="button" class="remove" title="Remove this row">X</button></td></tr>
+		<tr><td>Student21</td><td>Languages</td><td>male</td><td>50</td><td>45</td><td>100</td><td>100</td><td><button type="button" class="remove" title="Remove this row">X</button></td></tr>
+		<tr><td>Student22</td><td>Mathematics</td><td>male</td><td>100</td><td>99</td><td>100</td><td>90</td><td><button type="button" class="remove" title="Remove this row">X</button></td></tr>
 		<tr><td>Student23</td><td>Mathematics</td><td>male</td><td>82</td><td>77</td><td>0</td><td>79</td><td><button type="button" class="remove" title="Remove this row">X</button></td></tr>
 		<tr><td>Student24</td><td>Languages</td><td>female</td><td>100</td><td>91</td><td>13</td><td>82</td><td><button type="button" class="remove" title="Remove this row">X</button></td></tr>
 		<tr><td>Student25</td><td>Mathematics</td><td>male</td><td>22</td><td>96</td><td>82</td><td>53</td><td><button type="button" class="remove" title="Remove this row">X</button></td></tr>
@@ -578,7 +399,7 @@ td.tablesorter-pager {
     &lt;img src=&quot;next.png&quot; class=&quot;next&quot;/&gt;
     &lt;img src=&quot;last.png&quot; class=&quot;last&quot;/&gt;
     &lt;select class=&quot;pagesize&quot;&gt;
-      &lt;option selected=&quot;selected&quot; value=&quot;10&quot;&gt;10&lt;/option&gt;
+      &lt;option value=&quot;10&quot;&gt;10&lt;/option&gt;
       &lt;option value=&quot;20&quot;&gt;20&lt;/option&gt;
       &lt;option value=&quot;30&quot;&gt;30&lt;/option&gt;
       &lt;option value=&quot;40&quot;&gt;40&lt;/option&gt;
@@ -591,7 +412,7 @@ td.tablesorter-pager {
 	<a id="change-log"></a>
 	<h1>Pager Change Log</h1>
 	<ul>
-		<li>Moved to <a href="https://github.com/Mottie/tablesorter/wiki/Change2">wiki pages</a>.</li>
+		<li>Moved to <a href="https://github.com/Mottie/tablesorter/wiki/Changes">wiki pages</a>.</li>
 	</ul>
 
 <div class="next-up">

@@ -1,0 +1,472 @@
+//
+// FOUNDATION & LUTHER CUSTOM SETTINGS
+//
+
+// Foundation Variables
+//////////////////////////////////////////////////////////
+
+// Allows us to use rem-calc() in your settings
+@import "foundation/functions";
+
+// The default font-size is set to 100% of the browser style sheet (usually 16px)
+// for compatibility with brower-based text zoom or user-set defaults.
+$base-font-size: 100%;
+$base-line-height: 150%;
+
+// This is the default html and body font-size for the base rem value.
+$rem-base: 16px;
+
+// Use Open Sans font (we import it via the template instead)
+$include-open-sans: false;
+
+// Fonts
+$open-sans: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
+$roboto:  "Roboto Slab", serif;
+
+// Determine if CSS classes come through in the gem files
+$include-html-classes: false;
+$include-print-styles: false;
+$include-html-global-classes: false;
+$include-js-media-query-components: false;
+
+// Grid
+$site-max-width: rem-calc(1660);
+$include-html-grid-classes: false;
+
+$row-width: 100%;
+$column-gutter: rem-calc(40);
+$total-columns: 16;
+
+// Global styles
+$body-bg: #fff;
+$body-font-color: #444;
+$body-font-family: $roboto;
+$body-font-weight: normal;
+$body-font-style: normal;
+
+// We use these to make sure border radius matches unless we want it different.
+$global-radius: 6px;
+$global-rounded: 1000px;
+
+// foundation variables for this stylesheet only
+$inline-list-default-float-margin: 0;
+$inline-list-bottom-margin: 0;
+
+
+// Luther Variables
+//////////////////////////////////////////////////////////
+
+// Wysiwyg Areas
+// User created content areas (or WYWIWYG areas) have their own set of typographic styles. Here we define which HTML elements wrap WYSIWYG areas.
+// We can then use variables in place of selectors, so that any time a wysiwyg area is added, we can just add it below, and all styles are updated.
+
+$contentSections: '#contentSections';  // The main content div
+$relatedSections: '#relatedSections';  // The related content div
+
+$pageContent: '#pageContent';  // Normal page content wysiwyg
+$fullPost: '.fullPost .text';  // Full article wysiwyg
+$blurb-content: '#{$contentSections} .blurb';  // Main content blurb wysiwyg
+$blurb-related: '#{$relatedSections} .blurb';  // Sidebar blurb wysiwyg
+$faq-content: '#faq .answer';
+$facultyStaff: '.facStaffContent'; // Faculty staff module wysiwyg
+$eventEditor: '.eventContent'; // Event module wysiwyg
+$moduleWysiwyg: '#{$facultyStaff},#{$eventEditor}';
+
+$wysiwyg-all-areas: '#{$pageContent}, #{$fullPost}, #{$blurb-related}, #{$blurb-content}, #{$faq-content}, #{$moduleWysiwyg}, .flash-notice';
+$wysiwyg-content-area: '#{$pageContent}, #{$fullPost}, #{$faq-content}';
+$wysiwyg-related-area: #{$blurb-related};
+
+// global colors
+$lc-blue-dark: #004789;
+$lc-blue-dark-compliment: #6b9fd0;
+$lc-blue-light: #1073ce;
+$lc-blue-light-compliment: #a9cdee;
+
+$lc-blue-xtra-light: #d9ecfd;
+
+$lc-red: #9f2112;
+$lc-green: #4a8512;
+$lc-yellow: #e8a500;
+
+$lc-grey: #e9e9e9;
+
+$lc-white: #FFF;
+
+//$minisite-nav-background: #e5ecf0;
+$minisite-nav-background: $lc-grey;
+
+// Default Foundation color variables
+// @todo: Set these to real values
+$primary-color: #000;
+$secondary-color: #333;
+$alert-color: lighten($lc-red, 5%);
+$success-color: lighten($lc-green, 5%);
+$warning-color: red;
+$info-color: blue;
+
+// text colors
+$link-light-on-dark: #FFF;
+$primary-link-color: $lc-blue-light;
+$secondary-link-color: $lc-red;
+
+// global banner settings
+$header-height: 96px;
+$header-height-mobile: 60px;
+
+// logo settings
+$logo-height: 54px;
+$logo-width: 288px;
+$logo-height-mobile: 28px;
+$logo-width-mobile: 150px;
+
+// global navigation
+$num-global-nav-items: 8;
+
+// images
+$global-thumbnail-width: 125px;
+$global-image-width: 600px;
+
+// Typeography
+//////////////////////////////////////////////////////////
+
+// Heading font styles
+$header-font-family: $open-sans;
+$header-font-weight: 300;
+$header-font-style: normal;
+$header-font-color: #222;
+$header-line-height: 1.4;
+//$header-top-margin: .25rem;
+$header-top-margin: 0;
+//$header-bottom-margin: .75rem;
+$header-bottom-margin: 1rem;
+$header-text-rendering: optimizeLegibility;
+
+// Heading font sizes
+$h1-font-size: rem-calc(37);
+$h2-font-size: rem-calc(32);
+$h3-font-size: rem-calc(27);
+$h4-font-size: rem-calc(23);
+$h5-font-size: rem-calc(18);
+$h6-font-size: 1rem;
+
+// Subheading font styles
+$subheader-line-height: 1.4;
+$subheader-font-color: lighten($header-font-color, 30%);
+$subheader-font-weight: 300;
+$subheader-top-margin: .2rem;
+$subheader-bottom-margin: .5rem;
+
+// Other font sizes
+$font-size-18: rem-calc(18);
+$font-size-14: rem-calc(14);
+
+// A general <small> styling
+$small-font-size: 60%;
+$small-font-color: lighten($header-font-color, 30%);
+
+// Navigation font styles
+$navigation-font-family: $header-font-family;
+
+// Paragraph styles
+$paragraph-font-family: inherit;
+$paragraph-font-weight: 300;
+$paragraph-font-size: .95rem;
+$paragraph-line-height: 1.6;
+$paragraph-margin-bottom: rem-calc(24);
+$paragraph-aside-font-size: rem-calc(14);
+$paragraph-aside-line-height: 1.35;
+$paragraph-aside-font-style: italic;
+$paragraph-text-rendering: optimizeLegibility;
+
+// Styles for <code> tags
+$code-color: darken($alert-color, 15%);
+$code-font-family: Consolas, 'Liberation Mono', Courier, monospace !default;
+$code-font-weight: bold;
+
+// Anchor Styles
+$anchor-text-decoration: none;
+$anchor-font-color: $primary-link-color;
+$anchor-font-color-hover: darken($primary-link-color, 8%);
+$anchor-secondary-font-color-hover: lighten($secondary-link-color, 8%);
+
+// Styles for the <hr> element
+$hr-border-width: 1px;
+$hr-border-style: solid;
+$hr-border-color: #ddd;
+$hr-margin: rem-calc(20);
+
+// List Styles
+$list-style-position: outside;
+$list-side-margin: 2.1rem;
+$list-ordered-side-margin: 2.4rem;
+$list-side-margin-no-bullet: 0 !default;
+$list-nested-margin: rem-calc(20) !default;
+$definition-list-header-weight: bold !default;
+$definition-list-header-margin-bottom: .3rem !default;
+$definition-list-margin-bottom: rem-calc(12) !default;
+
+// Blockquote styles
+$blockquote-font-color: lighten($header-font-color, 30%) !default;
+$blockquote-font-family: $header-font-family;
+$blockquote-padding: rem-calc(9 20 0 19) !default;
+$blockquote-border: 1px solid #ddd !default;
+$blockquote-cite-font-size: rem-calc(13) !default;
+$blockquote-cite-font-color: lighten($header-font-color, 20%) !default;
+$blockquote-cite-link-color: $blockquote-cite-font-color !default;
+
+// Acronym styles
+$acronym-underline: 1px dotted #ddd !default;
+
+// We use these to control padding and margin
+$microformat-padding: rem-calc(10 12) !default;
+$microformat-margin: rem-calc(0 0 20 0) !default;
+
+// We use these to control the border styles
+$microformat-border-width: 1px !default;
+$microformat-border-style: solid !default;
+$microformat-border-color: #ddd !default;
+
+// We use these to control full name font styles
+$microformat-fullname-font-weight: bold !default;
+$microformat-fullname-font-size: rem-calc(15) !default;
+
+// We use this to control the summary font styles
+$microformat-summary-font-weight: bold !default;
+
+// We use this to control abbr padding
+$microformat-abbr-padding: rem-calc(0 1) !default;
+
+// We use this to control abbr font styles
+$microformat-abbr-font-weight: bold !default;
+$microformat-abbr-font-decoration: none !default;
+
+// Tables
+//////////////////////////////////////////////////////////
+
+// These control the background color for the table and even rows
+$table-bg: #fff;
+$table-even-row-bg: #efefef;
+
+// These control the table cell border style
+$table-border-style: solid;
+$table-border-size: 1px;
+$table-border-color: #ddd;
+
+// These control the table head styles
+$table-head-bg: #f5f5f5;
+$table-head-font-size: rem-calc(14);
+$table-head-font-color: #222;
+$table-head-font-weight: bold;
+$table-head-padding: rem-calc(8 10 10);
+
+// These control the row padding and font styles
+$table-row-padding: rem-calc(9 10);
+$table-row-font-size: rem-calc(15);
+$table-row-font-color: #222;
+$table-line-height: rem-calc(18);
+
+// These are for controlling the display and margin of tables
+$table-display: table-cell;
+$table-margin-bottom: $paragraph-margin-bottom;
+
+
+// Media Queries
+//////////////////////////////////////////////////////////
+
+// Define the lower and upper bounds for each media size
+$small-range: (0em, 40em); // 0, 640px
+$small-high-range: (30em, 40em); // 480px, 640px
+$medium-range: (40.063em, 63.75em); // 641px, 1020px
+$medium-low-range: (40.0625em, 60em); // 641px, 960px
+$medium-high-range: (60.0625em, 63.75em); // 961px, 1020px
+$large-range: (63.8125em, 90em); // 1021px, 1440px
+$large-low-range: (63.8125em, 79.9375em); // 1021px, 1279px
+$large-high-range: (80em, 90em); // 1280px, 1440px
+$xlarge-range: (90.063em, 120em); // 1441px, 1920px
+$xxlarge-range: (120.063em); // 1921px
+
+// M-to-the-Qs
+$screen: "only screen";
+
+$landscape: "#{$screen} and (orientation: landscape)";
+$portrait: "#{$screen} and (orientation: portrait)";
+
+$small-up: $screen;
+$small-only: "#{$screen} and (max-width: #{upper-bound($small-range)})";
+
+$small-high-up: "#{$screen} and (min-width:#{lower-bound($small-high-range)})";
+$small-high-only: "#{$screen} and (min-width:#{lower-bound($small-high-range)}) and (max-width: #{upper-bound($small-high-range)})";
+
+$medium-up: "#{$screen} and (min-width:#{lower-bound($medium-range)})";
+$medium-only: "#{$screen} and (min-width:#{lower-bound($medium-range)}) and (max-width:#{upper-bound($medium-range)})";
+
+$medium-low-up: "#{$screen} and (min-width:#{lower-bound($medium-low-range)})";
+$medium-low-only: "#{$screen} and (min-width:#{lower-bound($medium-low-range)}) and (max-width:#{upper-bound($medium-low-range)})";
+
+$medium-high-up: "#{$screen} and (min-width:#{lower-bound($medium-high-range)})";
+$medium-high-only: "#{$screen} and (min-width:#{lower-bound($medium-high-range)}) and (max-width:#{upper-bound($medium-high-range)})";
+
+$medium-and-below: "#{$screen} and (max-width:#{upper-bound($medium-range)})";
+
+$large-up: "#{$screen} and (min-width:#{lower-bound($large-range)})";
+$large-only: "#{$screen} and (min-width:#{lower-bound($large-range)}) and (max-width:#{upper-bound($large-range)})";
+
+$large-low-up: "#{$screen} and (min-width:#{lower-bound($large-low-range)})";
+$large-low-only: "#{$screen} and (min-width:#{lower-bound($large-low-range)}) and (max-width:#{upper-bound($large-low-range)})";
+
+$large-high-up: "#{$screen} and (min-width:#{lower-bound($large-high-range)})";
+$large-high-only: "#{$screen} and (min-width:#{lower-bound($large-high-range)}) and (max-width:#{upper-bound($large-high-range)})";
+
+$xlarge-up: "#{$screen} and (min-width:#{lower-bound($xlarge-range)})";
+$xlarge-only: "#{$screen} and (min-width:#{lower-bound($xlarge-range)}) and (max-width:#{upper-bound($xlarge-range)})";
+
+$xxlarge-up: "#{$screen} and (min-width:#{lower-bound($xxlarge-range)})";
+$xxlarge-only: "#{$screen} and (min-width:#{lower-bound($xxlarge-range)}) and (max-width:#{upper-bound($xxlarge-range)})";
+
+$small-up-reitna:
+   "#{$screen} and (-webkit-min-device-pixel-ratio: 2),
+	#{$screen} and (min--moz-device-pixel-ratio: 2),
+	#{$screen} and (-o-min-device-pixel-ratio: 2/1),
+	#{$screen} and (min-device-pixel-ratio: 2),
+	#{$screen} and (min-resolution: 192dpi),
+	#{$screen} and (min-resolution: 2dppx)";
+	
+$medium-up-reitna:
+   "#{$screen} and (-webkit-min-device-pixel-ratio: 2) and (min-width:#{lower-bound($medium-range)}),
+	#{$screen} and (min--moz-device-pixel-ratio: 2) and (min-width:#{lower-bound($medium-range)}),
+	#{$screen} and (-o-min-device-pixel-ratio: 2/1) and (min-width:#{lower-bound($medium-range)}),
+	#{$screen} and (min-device-pixel-ratio: 2) and (min-width:#{lower-bound($medium-range)}),
+	#{$screen} and (min-resolution: 192dpi) and (min-width:#{lower-bound($medium-range)}),
+	#{$screen} and (min-resolution: 2dppx) and (min-width:#{lower-bound($medium-range)})";
+	
+$large-up-reitna: 
+   "#{$screen} and (-webkit-min-device-pixel-ratio: 2) and (min-width:#{lower-bound($large-range)}),
+	#{$screen} and (min--moz-device-pixel-ratio: 2) and (min-width:#{lower-bound($large-range)}),
+	#{$screen} and (-o-min-device-pixel-ratio: 2/1) and (min-width:#{lower-bound($large-range)}),
+	#{$screen} and (min-device-pixel-ratio: 2) and (min-width:#{lower-bound($large-range)}),
+	#{$screen} and (min-resolution: 192dpi) and (min-width:#{lower-bound($large-range)}),
+	#{$screen} and (min-resolution: 2dppx) and (min-width:#{lower-bound($large-range)})";
+
+
+// Off-canvas
+//////////////////////////////////////////////////////////
+
+// Off Canvas Menu Variables
+$off-canvas-width: 70%;
+$off-canvas-bg: darken($lc-grey, 30%);
+
+// Off Canvas Menu List Variables
+// $off-canvas-label-padding: 0.3rem rem-calc(15);
+// $off-canvas-label-color: #999;
+// $off-canvas-label-text-transform: uppercase;
+// $off-canvas-label-font-weight: bold;
+// $off-canvas-label-bg: #444;
+// $off-canvas-label-border-top: 1px solid lighten(#444, 10%);
+// $off-canvas-label-border-bottom: none;
+// $off-canvas-label-margin:0;
+// $off-canvas-link-padding: rem-calc(10, 15);
+// $off-canvas-link-color: rgba(#FFF, 0.7);
+// $off-canvas-link-border-bottom: 1px solid darken($off-canvas-bg, 5%);
+
+// Off Canvas Back-Link Overlay
+// $off-canvas-overlay-transition: background 300ms ease;
+// $off-canvas-overlay-cursor: pointer;
+// $off-canvas-overlay-box-shadow: -4px 0 4px rgba(#000, 0.5), 4px 0 4px rgba(#000, 0.5);
+// $off-canvas-overlay-background: rgba(#FFF, 0.2);
+// $off-canvas-overlay-background-hover: rgba(#FFF, 0.05);
+
+$off-canvas-overlay-box-shadow: -4px 0 4px rgba(#000, 0.25), 4px 0 4px rgba(#000, 0.25);
+$off-canvas-overlay-background: none;
+$off-canvas-overlay-background-hover: rgba(#FFF, 0.05);
+
+// Transition Variabls
+$menu-slide: "transform 800ms ease";
+
+// Forms
+//////////////////////////////////////////////////////////
+
+$include-html-form-classes: false;
+
+// We use this to set the base for lots of form spacing and positioning styles
+//$form-spacing: rem-calc(16) !default;
+
+// We use these to style the labels in different ways
+//$form-label-pointer: pointer !default;
+$form-label-font-size: rem-calc(16) !default;
+//$form-label-font-weight: normal !default;
+//$form-label-font-color: lighten(#000, 30%) !default;
+$form-label-bottom-margin: rem-calc(12) !default;
+$input-font-family: $header-font-family;
+//$input-font-color: rgba(0,0,0,0.75) !default;
+//$input-font-size: rem-calc(14) !default;
+//$input-bg-color: #fff !default;
+//$input-focus-bg-color: darken(#fff, 2%) !default;
+//$input-border-color: darken(#fff, 20%) !default;
+//$input-focus-border-color: darken(#fff, 40%) !default;
+//$input-border-style: solid !default;
+//$input-border-width: 1px !default;
+//$input-disabled-bg: #ddd !default;
+//$input-box-shadow: inset 0 1px 2px rgba(0,0,0,0.1) !default;
+//$input-include-glowing-effect: true !default;
+
+// We use these to style the fieldset border and spacing.
+//$fieldset-border-style: solid !default;
+//$fieldset-border-width: 1px !default;
+//$fieldset-border-color: #ddd !default;
+//$fieldset-padding: rem-calc(20) !default;
+//$fieldset-margin: rem-calc(18 0) !default;
+
+// We use these to style the legends when you use them
+//$legend-bg: #fff !default;
+//$legend-font-weight: bold !default;
+//$legend-padding: rem-calc(0 3) !default;
+
+// We use these to style the prefix and postfix input elements
+//$input-prefix-bg: darken(#fff, 5%) !default;
+//$input-prefix-border-color: darken(#fff, 20%) !default;
+//$input-prefix-border-size: 1px !default;
+//$input-prefix-border-type: solid !default;
+//$input-prefix-overflow: hidden !default;
+//$input-prefix-font-color: #333 !default;
+//$input-prefix-font-color-alt: #fff !default;
+
+// We use these to style the error states for inputs and labels
+//$input-error-message-padding: rem-calc(6 9 9) !default;
+//$input-error-message-top: -1px;
+//$input-error-message-font-size: rem-calc(12) !default;
+//$input-error-message-font-weight: normal !default;
+//$input-error-message-font-style: italic !default;
+//$input-error-message-font-color: #fff !default;
+//$input-error-message-font-color-alt: #333 !default;
+
+// We use this to style the glowing effect of inputs when focused
+//$glowing-effect-fade-time: 0.45s !default;
+//$glowing-effect-color: $input-focus-border-color !default;
+
+// Select variables
+//$select-bg-color: #fafafa;
+
+
+// Tooltips
+//////////////////////////////////////////////////////////
+$include-html-tooltip-classes: $include-html-classes !default;
+
+$has-tip-border-bottom: none !default;
+$has-tip-font-weight: inherit !default;
+$has-tip-font-color: $primary-link-color !default;
+//$has-tip-border-bottom-hover: dotted 1px darken($primary-color, 20%) !default;
+//$has-tip-font-color-hover: $primary-color !default;
+//$has-tip-cursor-type: help !default;
+
+//$tooltip-padding: rem-calc(12) !default;
+$tooltip-bg: $subheader-font-color !default;
+//$tooltip-font-size: rem-calc(14) !default;
+//$tooltip-font-weight: normal !default;
+$tooltip-font-color: #fff !default;
+//$tooltip-line-height: 1.3 !default;
+//$tooltip-close-font-size: rem-calc(10) !default;
+//$tooltip-close-font-weight: normal !default;
+//$tooltip-close-font-color: #777 !default;
+//$tooltip-font-size-sml: rem-calc(14) !default;
+//$tooltip-radius: $global-radius !default;
+//$tooltip-pip-size: 5px !default;

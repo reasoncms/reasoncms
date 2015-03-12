@@ -1,0 +1,280 @@
+//
+// FEATRE STYLES
+//
+// @author Nathan Dirks
+//
+
+// Foundation imports
+@import "settings";
+@import "foundation/components/grid";
+
+// Compass imports
+@import "compass/css3";
+
+// Luther imports
+@import "extends";
+@import "mixins";
+
+// Blurbs
+//////////////////////////////////////
+
+/* Standard Text Blurbs */
+
+.blurb {
+
+	/* Ordinary Text Blurbs */
+	margin-bottom: $column-gutter;
+	@include clearfix;
+
+	&:last-child {
+		margin-bottom: 0;
+	}
+
+	.blurbInner {
+		*:last-child {
+			margin-bottom: 0;
+		}
+	}
+
+}
+
+/* Call to Action Blurbs */
+
+// Sample CTA Blurb Markup 
+//
+//<h3>Call to Action!</h3>
+//<ul>
+//<li><a href="#" class="cta-unique-name blue">Do this!</a></li>
+//<li><a href="#" class="cta-unique-name green">No, do this!</a></li>
+//<li><a href="#" class="cta-unique-name red">No! THIS!</a></li>
+//</ul>
+
+#callToActionBlurb {
+
+	.blurb {
+
+		background: none !important;
+		padding: 0 !important;
+
+		ul {
+			@extend .zero-out;
+
+			li {
+				margin-bottom: rem-calc(16);
+				list-style-type: none !important;
+				$cta-padding: rem-calc(18);
+				$cta-font-size: $font-size-18;
+				$cta-height: $cta-padding*2 + $cta-font-size;
+
+				a {
+					font-family: $open-sans;
+					font-size: $cta-font-size;
+					font-weight: 700;
+					display: block;
+					text-align: center;
+					background: $lc-blue-light;
+					color: $lc-white;
+					padding: $cta-padding;
+					position: relative;
+					line-height: 1;
+
+					@include border-radius($global-rounded);
+					@include transition-property(background);
+					@include transition-duration(.5s);
+					@include transition-timing-function(ease);
+
+					&:link {
+						text-decoration: none !important;
+					}
+
+					&:after {
+						@extend .fa;
+						line-height: 1 !important;
+						content: $fa-var-chevron-right;
+						display: block;
+						//float: right;
+						position: absolute;
+						top: 0;
+						right: 0;
+						background: rgba(white, .25);
+						font-size: $cta-font-size;
+						padding: $cta-padding;
+						height: $cta-height;
+						width: $cta-height;
+						@include border-radius($global-rounded);
+					}
+
+					&.blue {
+						background: $lc-blue-light;
+
+						&:hover {
+							background: darken($lc-blue-light, 8%);
+						}
+					}
+
+					&.red {
+						background: $lc-red;
+
+						&:hover {
+							background: darken($lc-red, 8%);
+						}
+					}
+
+					&.green {
+						background: $lc-green;
+
+						&:hover {
+							background: darken($lc-green, 8%);
+						}
+					}
+
+					&.yellow,
+					&.gold {
+						background: $lc-yellow;
+
+						&:hover {
+							background: darken($lc-yellow, 8%);
+						}
+					}
+
+				}
+
+				&:last-child {
+					margin-bottom: 0;
+				}
+			}
+		}    
+	}
+}
+
+.blurb {
+
+	/* Callout Blurbs */
+
+	&[class^='uname_callout_blurb'],
+	&[class*='uname_callout_blurb'] {
+
+		background: none !important;
+		padding: 0 !important;
+
+
+		.blurbInner {
+			border-top: 12px solid;
+			background: lighten($lc-grey, 6%);
+			@include box-shadow(rgba(0,0,0,.18) 0 2px 2px);
+			//padding-bottom: $column-gutter/3;
+			padding: $column-gutter/2 !important;
+
+			*:last-child {
+				margin-bottom: 0;
+			}
+		}
+
+		&:nth-child(4n+1) {
+			.blurbInner {
+				border-color: $lc-yellow;
+			}
+		}
+
+		&:nth-child(4n+2) {
+			.blurbInner {
+				border-color: $lc-green;
+			}
+		}
+
+		&:nth-child(4n+3) {
+			.blurbInner {
+				border-color: $lc-red;
+			}
+		}
+
+		&:nth-child(4n+4) {
+			.blurbInner {
+				border-color: $lc-blue-light;
+			}
+		}
+	}
+}
+
+
+// CONTACT BLURBS
+
+// All contact blurbs
+.contactBlurb {
+	margin: $column-gutter/2 0;
+
+	.blurbInner {
+		border-top: 12px solid;
+		background: lighten($lc-grey, 6%);
+		@include box-shadow(rgba(0,0,0,.18) 0 2px 2px);
+		padding: $column-gutter/2 !important;
+		border-color: $lc-red;
+
+		*:last-child {
+			margin-bottom: 0;
+		}
+	}
+
+	.vcard,
+	.contact-info {  // override Foundation vcard styles
+		border: none;
+		padding: 0;
+		margin: 0;
+		display: block;
+	}
+
+	h2 {
+		font-size: $h4-font-size;
+	}
+
+	h3 {
+		font-size: $h5-font-size;
+		font-weight: 400;
+		margin-bottom: 0;
+	}
+
+	*:last-child {
+		margin-bottom: 0;
+		padding-bottom: 0;
+	}
+}
+
+// Sidebar contact blurbs
+.subNavElements {
+	.contactBlurb {
+		display: none;  // hide on mobile
+
+		@media
+		#{$large-up} {
+			display: block;   // show on desktop
+			margin-top: $column-gutter;
+		}
+	}
+}
+
+// Footer contact blurbs
+footer {
+	.contactBlurb {
+		display: block; // show on mobile
+		margin-bottom: $column-gutter;
+
+		@media
+		#{$medium-only} {
+			@include grid-column($columns:10, $push:3);
+			@include clearfix;
+		}
+
+		@media
+		#{$large-up} {
+			display: none; // hide on desktop
+		}
+	}
+}
+
+//Horizontal Rule Style
+hr.horizontal-rule-basic{
+	border: 0;
+	height: 1px;
+	background: #E9E9E9; 
+	margin-bottom: $column-gutter;
+}

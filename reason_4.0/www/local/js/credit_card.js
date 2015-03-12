@@ -16,7 +16,7 @@ $(document).ready(function() {
     // get the reason_id of the row containing "Payment Amount"
     var payment_row_id = ($(".words:contains('Payment Amount')").parent().attr('id'));
     var payment_row_id = payment_row_id.replace(/id/i, "_id");
-    var payment_name = payment_row_id.replace(/row/i, "");
+    var payment_name = payment_row_id.replace(/Item/i, "");
     
     // if the form creator has included a hidden field with the value 'No Payment Option' hide the credit_card_info until needed
     if ($("input[name='no_payment_option']")) {
@@ -37,31 +37,31 @@ $(document).ready(function() {
 function toggle_credit_card_info(first_character){
 
     if(first_character == '$'){
-        $("#paymentnoteRow").show();
-        $("#creditcardtypeRow").show();
-        $("#creditcardnumberRow").show();
-        $("#creditcardexpirationmonthRow").show();
-        $("#creditcardexpirationyearRow").show();
-        $("#creditcardnameRow").show();
-        $("#billingstreetaddressRow").show();
-        $("#billingcityRow").show();
-        $("#billingstateprovinceRow").show();
-        $("#billingzipRow").show();
-        $("#billingcountryRow").show();
+        $("#paymentnoteItem").show();
+        $("#creditcardtypeItem").show();
+        $("#creditcardnumberItem").show();
+        $("#creditcardexpirationmonthItem").show();
+        $("#creditcardexpirationyearItem").show();
+        $("#creditcardnameItem").show();
+        $("#billingstreetaddressItem").show();
+        $("#billingcityItem").show();
+        $("#billingstateprovinceItem").show();
+        $("#billingzipItem").show();
+        $("#billingcountryItem").show();
     
     } else {
     
-        $("#paymentnoteRow").hide();
-        $("#creditcardtypeRow").hide();
-        $("#creditcardnumberRow").hide();
-        $("#creditcardexpirationmonthRow").hide();
-        $("#creditcardexpirationyearRow").hide();
-        $("#creditcardnameRow").hide();
-        $("#billingstreetaddressRow").hide();
-        $("#billingcityRow").hide();
-        $("#billingstateprovinceRow").hide();
-        $("#billingzipRow").hide();
-        $("#billingcountryRow").hide();
+        $("#paymentnoteItem").hide();
+        $("#creditcardtypeItem").hide();
+        $("#creditcardnumberItem").hide();
+        $("#creditcardexpirationmonthItem").hide();
+        $("#creditcardexpirationyearItem").hide();
+        $("#creditcardnameItem").hide();
+        $("#billingstreetaddressItem").hide();
+        $("#billingcityItem").hide();
+        $("#billingstateprovinceItem").hide();
+        $("#billingzipItem").hide();
+        $("#billingcountryItem").hide();
     
     }
 }

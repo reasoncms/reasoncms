@@ -20,7 +20,7 @@ class DorianSHCampThreeForm extends FormStep
 	var $error;
 	var $expense_budget_number = '10-000-08520-12121';
         var $revenue_budget_number = '10-000-08520-22000';
-        
+
 
 	var $transaction_comment = 'Dorian Camp';
 	var $is_in_testing_mode; // This gets set using the value of the THIS_IS_A_DEVELOPMENT_REASON_INSTANCE constant or if the 'tm' (testing mode) request variable evaluates to an integer
@@ -53,12 +53,7 @@ class DorianSHCampThreeForm extends FormStep
 			'type' => 'month',
 			'display_name' => 'Expiration Month',
 		),
-		'credit_card_expiration_year' => array(
-			'type' => 'numrange',
-			'start' => 2007,
-			'end' => 2022,
-			'display_name' => 'Expiration Year',
-		),
+		'credit_card_expiration_year' => 'text',
 		'credit_card_name' => array(
 			'type' => 'text',
 			'display_name' => 'Name as it appears on card',
@@ -122,33 +117,37 @@ class DorianSHCampThreeForm extends FormStep
 	// style up the form and add comments et al
 	function on_every_time()
 	{
-                // calculate the total_cost of the camp by adding lesson_cost (if present) to the camp_cost
-                $camp_cost = 449;
-                $per_lesson_cost = 37;
-                $lesson_cost = 0;
-                $lesson_msg = '';
-                if ($this->controller->get('private_lessons'))
-                {
-                    $lesson_cost = $per_lesson_cost * $this->controller->get('private_lessons');
-                    switch($this->controller->get('private_lessons')){
-                        case '1':
-                            $lesson_msg = '<br />(camp, plus $' . $per_lesson_cost . ' for 1 lesson)';
-                            break;
-                        case '2':
-                            $lesson_msg = '<br />(camp, plus $' . $per_lesson_cost*2 . ' for 2 lessons)';
-                            break;
-                        default:
-                            $lesson_msg = '';
-                    }
-                }
-                $total_cost = $camp_cost + $lesson_cost;
-                $this->change_element_type('payment_amount', 'radio_no_sort', array(
-                        'options' => array(
-                            '$40' => '$40 - Deposit only',
-                            '$' . $total_cost => '$' . $total_cost . ' - Total cost' . $lesson_msg
-                        )
-                    )
-                );
+        $this->box_class = 'StackedBox';
+        //Set expiration years
+        $cur_year = date('Y');
+        $this->change_element_type('credit_card_expiration_year', 'numrange', array('start' => $year, 'end' => $year+10, 'display_name' => 'Expiration Year'));
+        // calculate the total_cost of the camp by adding lesson_cost (if present) to the camp_cost
+        $camp_cost = 486;
+        $per_lesson_cost = 39;
+        $lesson_cost = 0;
+        $lesson_msg = '';
+        if ($this->controller->get('private_lessons'))
+        {
+            $lesson_cost = $per_lesson_cost * $this->controller->get('private_lessons');
+            switch($this->controller->get('private_lessons')){
+                case '1':
+                    $lesson_msg = '<br />(camp, plus $' . $per_lesson_cost . ' for 1 lesson)';
+                    break;
+                case '2':
+                    $lesson_msg = '<br />(camp, plus $' . $per_lesson_cost*2 . ' for 2 lessons)';
+                    break;
+                default:
+                    $lesson_msg = '';
+            }
+        }
+        $total_cost = $camp_cost + $lesson_cost;
+        $this->change_element_type('payment_amount', 'radio_no_sort', array(
+                'options' => array(
+                    '$40' => '$40 - Deposit only',
+                    '$' . $total_cost => '$' . $total_cost . ' - Total cost' . $lesson_msg
+                )
+            )
+        );
 		if(THIS_IS_A_DEVELOPMENT_REASON_INSTANCE || !empty( $this->_request[ 'tm' ] ) )
 		{
 			$this->is_in_testing_mode = true;
@@ -157,7 +156,7 @@ class DorianSHCampThreeForm extends FormStep
 		{
 			$this->is_in_testing_mode = false;
 		}
-		
+
 		$this->change_element_type('credit_card_expiration_year','numrange',array('start'=>date('Y'),'end'=>(date('Y')+15),'display_name' => 'Expiration Year'));
 	}
 
@@ -182,7 +181,7 @@ class DorianSHCampThreeForm extends FormStep
 		$txt = '<div id="campOverview">'."\n";
 
 		$txt .= '<p class="printConfirm">Print this confirmation for your records.</p>'."\n";
-		$txt .= '<h3>Thank you for registering for Dorain Camp</h3>';
+		$txt .= '<h3>Thank you for registering for Dorian Camp</h3>';
 		if (reason_unique_name_exists('dorian_sh_thank_you_blurb'))
 			$txt .= '<p>' . get_text_blurb_content('dorian_sh_thank_you_blurb'). '</p>';
 		$txt .= '<p>If you experience technical problems using the registration form, please contact the Luther College Music Office.</p>'."\n";
@@ -190,16 +189,16 @@ class DorianSHCampThreeForm extends FormStep
 		$txt .= '<li><strong>Date:</strong> '.date($this->date_format).'</li>'."\n";
 		$txt .= '<h4>Your Information</h4>';
 		$txt .= '<li><strong>Name:</strong> '.$this->controller->get('first_name').' '.$this->controller->get('last_name').'</li>'."\n";
-                $txt .= '<li><strong>Gender:</strong> '.$this->controller->get('gender').'</li>'."\n";
+        $txt .= '<li><strong>Gender:</strong> '.$this->controller->get('gender').'</li>'."\n";
 		$txt .= '<li><strong>Address:</strong>'."\n".$this->controller->get('address')."\n".$this->controller->get('city').' '.$this->controller->get('state_province').' '.$this->controller->get('zip').'</li>'."\n";
 		$txt .= '<li><strong>Home Phone:</strong> '.$this->controller->get('home_phone').'</li>'."\n";
 		$txt .= '<li><strong>E-mail:</strong> '.$this->controller->get('e-mail').'</li>'."\n";
-                $txt .= '<li><strong>School:</strong> '.$this->controller->get('school').'</li>'."\n";
-                $txt .= '<li><strong>Grade:</strong> '.$this->controller->get('grade').'</li>'."\n";
-                if ($this->controller->get('roomate_requested'))
-                {
-                    $txt .= '<li><strong>Requested Roomate(s) :</strong> '.$this->controller->get('roomate_requested').'</li>'."\n";
-                }
+        $txt .= '<li><strong>School:</strong> '.$this->controller->get('school').'</li>'."\n";
+        $txt .= '<li><strong>Grade:</strong> '.$this->controller->get('grade').'</li>'."\n";
+        if ($this->controller->get('roomate_requested'))
+        {
+            $txt .= '<li><strong>Requested Roomate(s) :</strong> '.$this->controller->get('roomate_requested').'</li>'."\n";
+        }
 		$txt .= '<h4>Participation</h4>';
 		if ($this->controller->get('band_participant'))
 		{
@@ -209,44 +208,43 @@ class DorianSHCampThreeForm extends FormStep
 		{
 			$txt .= '<li>You\'ll play ' .$this->controller->get('orchestra_instrument'). ' in orchestra.</li>'."\n";
 		}
-                if ($this->controller->get('jazz_participant'))
+        if ($this->controller->get('jazz_participant'))
 		{
 			$txt .= '<li>You\'ll play ' .$this->controller->get('jazz_instrument'). ' in jazz band.</li>'."\n";
 		}
-                if ($this->controller->get('wind_choir_participant'))
+        if ($this->controller->get('wind_choir_participant'))
 		{
 			$txt .= '<li>You\'ll play ' .$this->controller->get('wind_choir_instrument'). ' in wind choir.</li>'."\n";
 		}
-                if ($this->controller->get('workshops'))
-                {
-                    $txt .= '<li><strong>Workshops:</strong> '.$this->controller->get('workshops').'</li>'."\n";
-                }
-                if ($this->controller->get('private_lessons'))
+        if ($this->controller->get('workshops'))
+        {
+            $txt .= '<li><strong>Workshops:</strong> '.$this->controller->get('workshops').'</li>'."\n";
+        }
+        if ($this->controller->get('private_lessons'))
 		{
-			$txt .= '<li>You\'d like ' .$this->controller->get('private_lessons'). ' set(s) of private lessons for '
-                                . $this->controller->get('lesson_instrument_1');
-                                if ($this->controller->get('lesson_instrument_2'))
-                                {
-                                    $txt .= ' and ' . $this->controller->get('lesson_instrument_2');
-                                }
-                                $txt .= '</li>'."\n";
+			$txt .= '<li>You\'d like ' .$this->controller->get('private_lessons'). ' set(s) of private lessons for ' . $this->controller->get('lesson_instrument_1');
+            if ($this->controller->get('lesson_instrument_2'))
+            {
+                $txt .= ' and ' . $this->controller->get('lesson_instrument_2');
+            }
+            $txt .= '</li>'."\n";
 		}
 
 		$txt .= '<li><strong>Period 1:</strong> '.$this->controller->get('period_one').'</li>'."\n";
-                $txt .= '<li><strong>Period 2:</strong> '.$this->controller->get('period_two').'</li>'."\n";
-                $txt .= '<li><strong>Period 3:</strong></li>'."\n";
-                    $txt .= '<ul>';
-                    $txt .= '<li>'.$this->controller->get('period_three_first').' (first choice)'.'</li>'."\n";
-                    $txt .= '<li>'.$this->controller->get('period_three_second').' (second choice)'.'</li>'."\n";
-                    $txt .= '</ul>';
-                $txt .= '<li><strong>Period 4:</strong></li>'."\n";
-                    $txt .= '<ul>';
-                    $txt .= '<li>'.$this->controller->get('period_four_first').' (first choice)'.'</li>'."\n";
-                    $txt .= '<li>'.$this->controller->get('period_four_second').' (second choice)'.'</li>'."\n";
-                    $txt .= '</ul>';
-                $txt .= '<li><strong>Period 5:</strong> '.$this->controller->get('period_five').'</li>'."\n";
-                $txt .= '<li><strong>Period 6:</strong> '.$this->controller->get('period_six').'</li>'."\n";
-                $txt .= '<li><strong>Amt Paid:</strong> '.$this->controller->get('payment_amount').'</li>'."\n";
+        $txt .= '<li><strong>Period 2:</strong> '.$this->controller->get('period_two').'</li>'."\n";
+        $txt .= '<li><strong>Period 3:</strong></li>'."\n";
+        $txt .= '<ul>';
+        $txt .= '<li>'.$this->controller->get('period_three_first').' (first choice)'.'</li>'."\n";
+        $txt .= '<li>'.$this->controller->get('period_three_second').' (second choice)'.'</li>'."\n";
+        $txt .= '</ul>';
+        $txt .= '<li><strong>Period 4:</strong></li>'."\n";
+        $txt .= '<ul>';
+        $txt .= '<li>'.$this->controller->get('period_four_first').' (first choice)'.'</li>'."\n";
+        $txt .= '<li>'.$this->controller->get('period_four_second').' (second choice)'.'</li>'."\n";
+        $txt .= '</ul>';
+        $txt .= '<li><strong>Period 5:</strong> '.$this->controller->get('period_five').'</li>'."\n";
+        $txt .= '<li><strong>Period 6:</strong> '.$this->controller->get('period_six').'</li>'."\n";
+        $txt .= '<li><strong>Amt Paid:</strong> '.$this->controller->get('payment_amount').'</li>'."\n";
 		$txt .= '</ul>'."\n";
 		$txt .= '</div>'."\n";
 		return $txt;

@@ -60,12 +60,12 @@
 		function init( $args=array() )
 		{
 			$this->_init_legacy();	
- 			if ($this->model_is_usable())
- 			{
- 				$controller =& $this->get_form_controller();
- 				$controller->init();
- 			}
- 			else parent::init();
+			if ($this->model_is_usable())
+			{
+				$controller =& $this->get_form_controller();
+				$controller->init();
+			}
+			else parent::init();
 		}
 		
 		/**
@@ -73,17 +73,23 @@
 		 */
 		function run()
 		{
-			if ($this->model_is_usable())
+			if (reason_maintenance_mode() && !reason_check_privs('db_maintenance'))
+			{
+				echo '<div id="form">';
+				echo '<p><em>This web site is currently in maintenance mode, so forms are temporarily disabled. Please try again later.</em></p>';
+				echo '</div>';
+			}
+			else if ($this->model_is_usable())
 			{
 				$controller = $this->get_form_controller();
- 				$controller->run();
- 			}
- 			else // present a somewhat friendly error message
- 			{
- 				echo '<div id="form">';
- 				echo '<p>This page should display a form, but is not set up correctly. Please try again later.</p>';
- 				echo '</div>';
- 			}
+				$controller->run();
+			}
+			else // present a somewhat friendly error message
+			{
+				echo '<div id="form">';
+				echo '<p>This page should display a form, but is not set up correctly. Please try again later.</p>';
+				echo '</div>';
+			}
 		}
 
 		function model_is_usable()
@@ -121,12 +127,12 @@
 					include_once($model_filename);
 				}
 				else trigger_error('The forms module was unable to load a model - the model_filename in get_form_model is ' . $model_filename, FATAL);
-				$model_name = $GLOBALS[ '_form_model_class_names' ][ basename($model_filename, '.php')];		
- 				$model = new $model_name();
- 				$model->init_from_module($this);
- 				$this->form_model =& $model;
- 			}
- 			return $this->form_model;
+				$model_name = $GLOBALS[ '_form_model_class_names' ][ basename($model_filename, '.php')];	
+				$model = new $model_name();
+				$model->init_from_module($this);
+				$this->form_model =& $model;
+			}
+			return $this->form_model;
 		}
 
 		/**

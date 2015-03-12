@@ -116,6 +116,7 @@ class TranscriptPageTwoForm extends FormStep
 	// style up the form and add comments et al
 	function on_every_time()
 	{             
+        $this->box_class = 'StackedBox';
 		if( !$this->controller->get('amount'))
 		{
 			echo '<div id="transcriptSetupError">Sorry. There was a problem setting up payment for your form. Please return to <a href="?_step=TranscriptPageOneForm">Transcript Request Form</a> and try again.</div>';
@@ -177,52 +178,6 @@ class TranscriptPageTwoForm extends FormStep
 	
 	function get_confirmation_text()
 	{
-		// $txt = '<div id="reviewTranscriptRequest">'."\n";
-		// $txt .= '<ul>'."\n";
-		// $txt .= '<li><strong>Date:</strong> '.date($this->date_format).'</li>'."\n";
-		// $txt .= '<li><strong>Name:</strong> '.$this->controller->get('name').'</li>'."\n";
-		// $txt .= '<li><strong>Date of Birth:</strong> '.$this->controller->get('date_of_birth').'</li>'."\n";
-		// $txt .= '<li><strong>Lifetime Academic Transcript Fee:</strong> '.$this->controller->get('LATF').'</li>'."\n";
-		// $txt .= '<li><strong>Daytime Phone:</strong> '.$this->controller->get('daytime_phone').'</li>'."\n";
-		// $txt .= '<li><strong>Email:</strong> '.$this->controller->get('email').'</li>'."\n";
-  //               if($this->controller->get('unofficial')){
-		// 	$txt .= '<li><strong>Unofficial transcripts requested:</strong> Yes </li>'."\n";
-		// 	$txt .= '<li><strong>Mail to:</strong> '.$this->controller->get('unofficial_address').'</li>'."\n";
-  //               }
-		// // if ($this->controller->get('official_type') == 'paper'){
-		// if ($this->controller->get('number_of_official')){
-		// 	//$txt .= '<li><strong>Official paper transcripts requested:</strong> '.$this->controller->get('official_type').'</li>'."\n";
-		// 	$txt .= '<li><strong>Official paper transcripts requested:</strong> '.$this->controller->get('number_of_official').'</li>'."\n";
-  //                       $txt .= '<li><strong>Delivery Information:</strong> '.$this->controller->get('deliver_to').'</li>'."\n";
-  //                       $txt .= '<ul>'."\n";
-  //                       if ($this->controller->get('deliver_to') == 'institution'){
-  //                           $txt .= '<li><strong>Institution/Company:</strong><br>'.
-  //                               $this->controller->get('institution_name').'<br>'.
-  //                               'Attn: '. $this->controller->get('institution_attn') .'<br>';
-  //                       }
-  //                       $txt .= '<li><strong>Address:</strong><br />'.$this->controller->get('address').'<br />'
-  //                               .$this->controller->get('city').' '.$this->controller->get('state_province').' '
-  //                               .$this->controller->get('zip'). ' '.$this->controller->get('country').'</li>'."\n";
-  //                       $txt .= '<li><strong>Delivery Timeline: </strong>'.$this->controller->get('delivery_time').'</li>'."\n";
-  //                       $txt .= '</ul>'."\n";
-		// }
-//                if($this->controller->get('official_type') == 'eScrip'){
-//			$txt .= '<li><strong>Official eScrip-Safe transcripts requested:</strong> '.$this->controller->get('number_of_official').'</li>'."\n";
-//                        $txt .= '<li><strong>Delivery Information</strong></li>'."\n";
-//                        $txt .= '<ul>'."\n";
-//                        if ($this->controller->get('deliver_to') == 'institution'){
-//                            $txt .= '<li><strong>Institution/Company:</strong><br>'.
-//                                $this->controller->get('institution_name').'<br>'.
-//                                'Attn: '. $this->controller->get('institution_attn') .'<br>'.
-//                                $this->controller->get('institution_email').'</li>'."\n";
-//                        }else{ //deliver to requestor
-//                            $txt .= '<li><strong>Your E-mail Address:</strong>'.$this->controller->get('email').'</li>'."\n";
-//                        }
-//                        $txt .= '<li><strong>Delivery Timeline:</strong>'.$this->controller->get('delivery_time').'</li>'."\n";
-//                        $txt .= '</ul>'."\n";
-//		}
-//		$txt .= '</ul>'."\n";
-		// $txt .= '</div>'."\n"; 
 		$amount = $this->controller->get('amount');
 
         $name = $this->controller->get('name');
@@ -235,8 +190,8 @@ class TranscriptPageTwoForm extends FormStep
         $state_province = $this->controller->get('state_province');
         $zip = $this->controller->get('zip');
         $country = $this->controller->get('country');
-        $unofficial = $this->controller->get('unofficial');
-        $unofficial_address = $this->controller->get('unofficial_address');
+        //$unofficial = $this->controller->get('unofficial');
+        //$unofficial_address = $this->controller->get('unofficial_address');
         $delivery_type = $this->controller->get('delivery_type');
         $number_of_official = $this->controller->get('number_of_official');
         $deliver_to = $this->controller->get('deliver_to');
@@ -254,12 +209,12 @@ class TranscriptPageTwoForm extends FormStep
         $txt .= '<li><strong>Lifetime Academic Transcript Fee:</strong> ' . $latf . '</li>'."\n";
         $txt .= '<li><strong>Daytime Phone:</strong> ' . $daytime_phone . '</li>' . "\n";
         $txt .= '<li><strong>Email:</strong> ' . $email . '</li>' . "\n";
-        if ($unofficial != 'no' && $unofficial != '') {
+        /*if ($unofficial != 'no' && $unofficial != '') {
             $txt .= '<li><strong>Unofficial transcripts requested:</strong> Yes - '. $unofficial .' </li>' . "\n";
             if ($unofficial == 'postal') {
                 $txt .= '<li><strong>Mail to:</strong> ' . $unofficial_address . '</li>' . "\n";
                 }
-            }
+            }*/
         if ($delivery_type == 'postal') {
             if ($number_of_official) {
                 $txt .= '<li><strong>Official paper transcripts requested:</strong> ' . $number_of_official . '</li>' . "\n";
@@ -420,7 +375,7 @@ class TranscriptPageTwoForm extends FormStep
 				
 				//}
 				$mail_text = str_replace(array_keys($replacements),$replacements,$confirm_text);
-				$mail = new Email($this->controller->get('e-mail'),'registrar@luther.edu','registrar@luther.edu','Luther College Transcript Request',strip_tags($confirm_text_with_blurb),$confirm_text_with_blurb);
+				$mail = new Email($this->controller->get('email'),'registrar@luther.edu','registrar@luther.edu','Luther College Transcript Request',strip_tags($confirm_text_with_blurb),$confirm_text_with_blurb);
 				$mail->send();
 				
 				$mail2 = new Email('registrar@luther.edu', 'noreply@luther.edu','noreply@luther.edu', 'New Transcript Request '.date('mdY H:i:s'),strip_tags($mail_text), $mail_text);

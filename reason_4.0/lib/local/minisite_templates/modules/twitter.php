@@ -12,9 +12,11 @@
 		var $controller;
 		var $twitter_info;
 		var $tweet_html;
+		var $css = 'css/twitter/twitter.css'; // style sheet(s) to be added
 
 		function init( $args = array() )
 		{
+			$this->parent->add_stylesheet(REASON_HTTP_BASE_PATH.$this->css,'',true);
 			$this->model = new ReasonTwitterFeedModel();
 			$this->view =  new ReasonTwitterDefaultFeedView();
 		}
@@ -36,6 +38,7 @@
 					$twitter_name = $info->get_value('name');
 				}
 				$this->model->config('screen_name', $twitter_name);
+				$this->view->config('description',"");
 				$this->controller = new ReasonMVCController($this->model, $this->view);
 				$this->tweet_html = $this->controller->run();
 				if ( $this->tweet_html ){
@@ -48,16 +51,20 @@
 
 		function run()
 		{
+			echo '<div class="twitter-block">';
 			if ($this->site_id == id_of('connect'))
 			{
-				echo '<div class="section blue"><h1>Recent Tweets</h1></div>'."\n";
+				echo '<i class="fa fa-twitter"></i>' . "\n";
+				echo '<h3 class="recent-tweets">Recent Tweets:</h3>' . "\n";
 			}
 			else
 			{
-				echo '<header class="blue-stripe"><h1><span>Recent Tweets</span></h1></header>'."\n";
+				echo '<i class="fa fa-twitter"></i>' . "\n";
+				echo '<h3 class="recent-tweets">Recent Tweets:</h3>' . "\n";
 			}
-			echo '<div class="twitter-feed">';
+			//echo '<div class="twitter-feed">';
 			echo $this->tweet_html;
+			//echo '</div>';
 			echo '</div>';
 		}
 	}

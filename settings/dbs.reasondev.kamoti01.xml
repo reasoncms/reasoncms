@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="ISO-8859-15"?>
+<!-- WARNING *** ENSURE THIS FILE IS NOT WEB ACCESSIBLE *** -->
+<databases>
+    <database>
+        <connection_name>reason_connection</connection_name>
+        <db>reasondev_kamoti01_reason</db>
+        <user>kamoti01_user</user>
+        <password>8shtKGFGw4.v7cMm</password>
+        <host>database-1.luther.edu</host>
+    </database>
+
+    <database>
+        <connection_name>thor_connection</connection_name>
+        <db>reasondev_kamoti01_thor</db>
+        <user>kamoti01_user</user>
+        <password>8shtKGFGw4.v7cMm</password>
+        <host>database-1.luther.edu</host>
+    </database>
+
+    <database>
+        <connection_name>reason_transactions</connection_name>
+        <db>reasondev_kamoti01_transactions</db>
+        <user>kamoti01_user</user>
+        <password>8shtKGFGw4.v7cMm</password>
+        <host>database-1.luther.edu</host>
+    </database>
+
+    <database>
+        <connection_name>admissions_applications_connection</connection_name>
+        <db>reasondev_kamoti01_admissions_applications</db>
+        <user>kamoti01_user</user>
+        <password>8shtKGFGw4.v7cMm</password>
+        <host>database-1.luther.edu</host>
+    </database>
+    
+    <database>
+        <connection_name>all_band_connection</connection_name>
+        <db>reasondev_kamoti01_all_band</db>
+        <user>kamoti01_user</user>
+        <password>8shtKGFGw4.v7cMm</password>
+        <host>database-1.luther.edu</host>
+    </database>
+
+    <database>
+        <connection_name>discovery_camps_connection</connection_name>
+        <db>reasondev_kamoti01_discovery_camps</db>
+        <user>kamoti01_user</user>
+        <password>8shtKGFGw4.v7cMm</password>
+        <host>database-1.luther.edu</host>
+    </database>
+
+    <database>
+        <connection_name>homecoming_connection</connection_name>
+        <db>reasondev_kamoti01_homecoming_registration</db>
+        <user>kamoti01_user</user>
+        <password>8shtKGFGw4.v7cMm</password>
+        <host>database-1.luther.edu</host>
+    </database>
+
+    <database>
+        <connection_name>lfw_connection</connection_name>
+        <db>reasondev_kamoti01_lfw_registration</db>
+        <user>kamoti01_user</user>
+        <password>8shtKGFGw4.v7cMm</password>
+        <host>database-1.luther.edu</host>
+    </database>
+
+    <database>
+        <connection_name>jenson_medal_connection</connection_name>
+        <db>reasondev_kamoti01_jenson_medal</db>
+        <user>kamoti01_user</user>
+        <password>8shtKGFGw4.v7cMm</password>
+        <host>database-1.luther.edu</host>
+    </database>         
+    
+    <database>
+        <connection_name>reason_gifts_connection</connection_name>
+        <db>reasondev_kamoti01_gifts</db>
+        <user>kamoti01_user</user>
+        <password>8shtKGFGw4.v7cMm</password>
+        <host>database-1.luther.edu</host>
+    </database>
+
+    <database>
+        <connection_name>dorian_vocal_connection</connection_name>
+        <db>reasondev_kamoti01_dorian_vocal</db>
+        <user>kamoti01_user</user>
+        <password>8shtKGFGw4.v7cMm</password>
+        <host>database-1.luther.edu</host>
+    </database>
+
+    <database>
+        <connection_name>dorian_jh_camp_connection</connection_name>
+        <db>reasondev_kamoti01_dorian_jh_camp</db>
+        <user>kamoti01_user</user>
+        <password>8shtKGFGw4.v7cMm</password>
+        <host>database-1.luther.edu</host>
+    </database>
+
+    <database>
+        <connection_name>dorian_sh_camp_connection</connection_name>
+        <db>reasondev_kamoti01_dorian_sh_camp</db>
+        <user>kamoti01_user</user>
+        <password>8shtKGFGw4.v7cMm</password>
+        <host>database-1.luther.edu</host>
+    </database>
+    <database>
+        <connection_name>transcript_connection</connection_name>
+        <db>reasondev_kamoti01_transcript_requests</db>
+        <user>kamoti01_user</user>
+        <password>8shtKGFGw4.v7cMm</password>
+        <host>database-1.luther.edu</host>
+    </database>
+    <database>
+        <connection_name>norge_connection</connection_name>
+        <db>reasondev_kamoti01_norge_conference</db>
+        <user>kamoti01_user</user>
+        <password>8shtKGFGw4.v7cMm</password>
+        <host>database-1.luther.edu</host>
+    </database>
+
+    <database>
+        <connection_name>royal_visit_connection</connection_name>
+        <db>reasondev_kamoti01_royal_visit_payment</db>
+        <user>kamoti01_user</user>
+        <password>8shtKGFGw4.v7cMm</password>
+        <host>database-1.luther.edu</host>
+    </database>
+</databases>

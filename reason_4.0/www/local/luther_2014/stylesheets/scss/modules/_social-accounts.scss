@@ -1,0 +1,44 @@
+//
+// SOCIAL ACCOUNT STYLES
+//
+// @author Nathan Dirks
+//
+
+// Foundation imports
+@import "settings";
+@import "foundation/components/grid";
+
+// Compass imports
+@import "compass/css3";
+
+// Luther imports
+@import "extends";
+@import "mixins";
+
+// Social Links below Minisite Nav
+#subNav { 
+	
+	.socialProfileLinks {
+		@include clearfix;
+		background: darken($minisite-nav-background, 5%);
+		padding: $column-gutter / 2.75;
+		height: ($column-gutter / 2.75) * 2 + rem-calc(40);
+		
+		a {
+			width: rem-calc(40);
+			margin-right: $column-gutter / 2.75;
+			float: left;
+			display: block;
+			//@include transition-timing-function(ease);
+			//@include transition-property(all);
+			//@include transition-duration(.2s);
+
+			&:hover {
+				//width: rem-calc(44);
+				//margin-top: -2px;
+				//transform: scale(1.1);
+				//opacity: .75;
+			}
+		}
+  	}
+}

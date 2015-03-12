@@ -1,0 +1,57 @@
+/* line 4, scss/_ie8.scss */
+#global-nav {
+  visibility: hidden;
+}
+
+/* line 8, scss/_ie8.scss */
+.ie8-alert {
+  color: red;
+  font-size: 18px;
+  text-align: center;
+  height: 20px;
+}
+
+@media only screen and (max-width: 40em) {
+  /* line 17, scss/_ie9.scss */
+  .lt-ie10 .left-off-canvas-menu,
+  .no-csstransforms3d .left-off-canvas-menu {
+    left: -70%;
+  }
+  /* line 18, scss/_ie9.scss */
+  .lt-ie10 .right-off-canvas-menu,
+  .no-csstransforms3d .right-off-canvas-menu {
+    right: -70%;
+  }
+  /* line 21, scss/_ie9.scss */
+  .lt-ie10 .move-left > .inner-wrap,
+  .no-csstransforms3d .move-left > .inner-wrap {
+    right: 70%;
+  }
+  /* line 22, scss/_ie9.scss */
+  .lt-ie10 .move-right > .inner-wrap,
+  .no-csstransforms3d .move-right > .inner-wrap {
+    left: 70%;
+  }
+}
+@media only screen and (min-width: 40.063em) and (max-width: 63.75em) {
+  /* line 29, scss/_ie9.scss */
+  .lt-ie10 .left-off-canvas-menu,
+  .no-csstransforms3d .left-off-canvas-menu {
+    left: -70%;
+  }
+  /* line 30, scss/_ie9.scss */
+  .lt-ie10 .right-off-canvas-menu,
+  .no-csstransforms3d .right-off-canvas-menu {
+    right: -70%;
+  }
+  /* line 33, scss/_ie9.scss */
+  .lt-ie10 .move-left > .inner-wrap,
+  .no-csstransforms3d .move-left > .inner-wrap {
+    right: 70%;
+  }
+  /* line 34, scss/_ie9.scss */
+  .lt-ie10 .move-right > .inner-wrap,
+  .no-csstransforms3d .move-right > .inner-wrap {
+    left: 70%;
+  }
+}

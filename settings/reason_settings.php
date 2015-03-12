@@ -147,6 +147,12 @@
 		case 'www.luther.edu':
 		    define( 'THIS_IS_A_DEVELOPMENT_REASON_INSTANCE', false );
 		    break;
+		case 'luther.edu':
+		    define( 'THIS_IS_A_DEVELOPMENT_REASON_INSTANCE', false );
+		    break;
+		case 'reason.luther.edu':
+		    define( 'THIS_IS_A_DEVELOPMENT_REASON_INSTANCE', false );
+		    break;
 		case 'reasondev.luther.edu':
 		    define( 'THIS_IS_A_DEVELOPMENT_REASON_INSTANCE', true );
 		    break;
@@ -167,21 +173,12 @@
 	 * If this is set to false, Reason will work in either case, but it is better practice
 	 * to set it to true when possible to eliminate the possiblity of man-in-the-middle attacks.
 	 */
-	switch ($_SERVER['SERVER_NAME']) {
-	    case 'www.luther.edu':
-	        define('REASON_HOST_HAS_VALID_SSL_CERTIFICATE', true);
-	        break;
-	    case 'reasondev.luther.edu':
-	        define('REASON_HOST_HAS_VALID_SSL_CERTIFICATE', true);
-	        break; 
-	    default:
-	    	if (preg_match('/\.reasondev\.luther\.edu/', $_SERVER['SERVER_NAME'])){
-	    		define('REASON_HOST_HAS_VALID_SSL_CERTIFICATE', true);
-	    	} else {
-	        	define('REASON_HOST_HAS_VALID_SSL_CERTIFICATE', false);
-	        }
-	        break;
-	}
+	// Luther has a wildcard cert, so we may as well use it
+	if (preg_match('/luther\.edu/', $_SERVER['SERVER_NAME'])){
+		define('REASON_HOST_HAS_VALID_SSL_CERTIFICATE', true);
+	} else {
+    	define('REASON_HOST_HAS_VALID_SSL_CERTIFICATE', false);
+    }
 	
 	/**
 	 * REASON_SESSION_TIMEOUT
@@ -378,7 +375,7 @@
 	 * When images are uploaded to Reason, they are resized automatically.
 	 * This setting determines their maximum vertical size in pixels
 	 */
-	define('REASON_STANDARD_MAX_IMAGE_HEIGHT', 500);
+	define('REASON_STANDARD_MAX_IMAGE_HEIGHT', 800);
 	
 	/**
 	 * REASON_STANDARD_MAX_IMAGE_WIDTH
@@ -386,7 +383,7 @@
 	 * When images are uploaded to Reason, they are resized automatically.
 	 * This setting determines their maximum horizontal size in pixels
 	 */
-	define('REASON_STANDARD_MAX_IMAGE_WIDTH', 500);
+	define('REASON_STANDARD_MAX_IMAGE_WIDTH', 800);
 	
 	/**
 	 * REASON_STANDARD_MAX_THUMBNAIL_HEIGHT
@@ -394,7 +391,7 @@
 	 * When images are uploaded to Reason, thumbnails are automatically created.
 	 * This setting determines their maximum vertical size in pixels
 	 */
-	define('REASON_STANDARD_MAX_THUMBNAIL_HEIGHT', 125);
+	define('REASON_STANDARD_MAX_THUMBNAIL_HEIGHT', 300);
 	
 	/**
 	 * REASON_STANDARD_MAX_THUMBNAIL_WIDTH
@@ -402,7 +399,7 @@
 	 * When images are uploaded to Reason, thumbnails are automatically created.
 	 * This setting determines their maximum horizontal size in pixels
 	 */
-	define('REASON_STANDARD_MAX_THUMBNAIL_WIDTH', 125);
+	define('REASON_STANDARD_MAX_THUMBNAIL_WIDTH', 300);
 	
 	/**
 	 * Set custom auto thumbnail sizes on a site-by-site basis using this array
@@ -876,8 +873,9 @@
 	 *
 	 * [[lastmodified]] is replaced with the date the page was most recently modified
 	 */
-	define('REASON_DEFAULT_FOOTER_XHTML','<div id="maintainer">[[sitename]] pages maintained by [[maintainer]]</div><div id="lastUpdated">This page was last updated on [[lastmodified]]</div>');
-	
+	//define('REASON_DEFAULT_FOOTER_XHTML','<div id="maintainer">[[sitename]] site maintained by [[maintainer]]</div><div id="lastUpdated"> Page last updated: [[lastmodified]]</div>');
+	define('REASON_DEFAULT_FOOTER_XHTML','<div id="maintainer">[[sitename]] maintained by [[maintainer]]. <span id="lastUpdated"> Page last updated on [[lastmodified]]</span>.</div>');
+
 	/**
 	 * REASON_DEFAULT_FAVICON_PATH
 	 *
@@ -887,7 +885,7 @@
 	 *
 	 * In future releases there will likely be a way to specify favicons for individual sites.
 	 */
-	define('REASON_DEFAULT_FAVICON_PATH','/favicon.ico');
+	define('REASON_DEFAULT_FAVICON_PATH','/reason/local/favicon.ico');
 	
 	/**
 	 * REASON_PERFORMANCE_PROFILE_LOG

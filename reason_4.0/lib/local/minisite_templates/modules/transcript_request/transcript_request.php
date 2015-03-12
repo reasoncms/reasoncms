@@ -2,7 +2,7 @@
 /**
  * Transcript Request Module
  *
- * @author Steve Smith 
+ * @author Steve Smith
  * @since 2010-11-24
  * @package MinisiteModule
  */
@@ -36,7 +36,7 @@ class TranscriptRequestModule extends DefaultMinisiteModule
 		reason_include_once( 'minisite_templates/modules/transcript_request/page1.php' );
 		reason_include_once( 'minisite_templates/modules/transcript_request/page2.php' );
 		reason_include_once( 'minisite_templates/modules/transcript_request/page3.php' );
-		
+
 		$this->controller = new FormController;
 		$this->controller->set_session_class('Session_PHP');
 		$this->controller->set_session_name('REASON_SESSION');
@@ -86,8 +86,8 @@ class TranscriptRequestModule extends DefaultMinisiteModule
 		$this->controller->add_forms( $forms );
 		// */
 		$this->controller->init();
-	}	
-	
+	}
+
 	/**
 	 * Add possible forms variables that may come through to the list of vetted request vars
 	 * @return void
@@ -109,7 +109,7 @@ class TranscriptRequestModule extends DefaultMinisiteModule
 
 
 	function init( $args = array() ) //{{{
-	{	
+	{
 		parent::init( $args );
 
                 //$this->msg_uname = reason_unique_name_exists('transcript_login_blurb');
@@ -117,12 +117,23 @@ class TranscriptRequestModule extends DefaultMinisiteModule
 
 		if($head_items =& $this->get_head_items())
 		{
-			//$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/form.css');
+			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form.css');
+			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form_data.css');
+			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form_error.css');
+			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'local/css/transcripts.css');
 			$head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/transcripts.js');
+			$head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/table_to_csv_download.js');
 			$head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/disable_submit.js');
+			$head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/js/jquery.tablesorter.min.js');
+            $head_items->add_stylesheet(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/css/theme.blue.css');
+            $head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/addons/pager/jquery.tablesorter.pager.min.js');
+            $head_items->add_stylesheet(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/addons/pager/jquery.tablesorter.pager.css');
+            $head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/js/jquery.tablesorter.widgets.min.js');
+            $head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/js/jquery.tablesorter.widgets-filter-formatter.min.js');
+            $head_items->add_stylesheet(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/css/filter.formatter.css');
 		}
 	}//}}}
-	
+
 	/**
 	 * Set up the request for the controller and run the sucker
 	 * @return void
@@ -135,7 +146,7 @@ class TranscriptRequestModule extends DefaultMinisiteModule
 			$tc = new TranscriptConfirmation;
 			$tc->set_ref_number( $this->request[ 'r' ] );
 			$tc->set_hash( $this->request[ 'h' ] );
-			
+
 			if( $tc->validates() )
 			{
 				echo $tc->get_confirmation_text();
@@ -155,4 +166,3 @@ class TranscriptRequestModule extends DefaultMinisiteModule
 		}
 	} // }}}
 }
-?>

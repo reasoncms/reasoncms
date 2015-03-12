@@ -7,6 +7,12 @@
 	{
 		function init( $args = array() )
 		{
+			$head_items = $this->get_head_items();
+			$head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'FancyBox/source/jquery.fancybox.js');
+			$head_items->add_stylesheet(REASON_PACKAGE_HTTP_BASE_PATH.'FancyBox/source/jquery.fancybox.css');			
+			$head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'FancyBox/source/helpers/jquery.fancybox-thumbs.js');
+			$head_items->add_stylesheet(REASON_PACKAGE_HTTP_BASE_PATH.'FancyBox/source/helpers/jquery.fancybox-thumbs.css');
+			$head_items->add_javascript('/reason/local/luther_2014/javascripts/luther-image-galleries.js');
 		}
 		
 		function run()
@@ -30,7 +36,8 @@
 			"LutherMinistry" => array("524ba8e86f00754ce5216cf02345125e", "48a2c6cb8df8ca1f"),
 			"luthersustainability" => array("32deae8d61a176ea73d561995d903426", "d5805fcf8d221869"),
 			"lcenglish" => array("46cf018e33c5a48b6a58d4957c015434", "0a4cf78f67c7c6b3"),
-			"luther_cgl" => array("5b0b63d4c8d0a45c2b944a44baf98f56", "8e2244e3e8f07d71"));
+			"luther_cgl" => array("5b0b63d4c8d0a45c2b944a44baf98f56", "8e2244e3e8f07d71"),
+			"centerdiversity" => array("942928271f481701175c8c1a09844fa0", "947c1a24c20655f7"));
 
 			$site_id = $this->site_id;
 			$es = new entity_selector( $site_id );
@@ -42,6 +49,9 @@
 
 			$slideshowGroup = 0;
 			$number_slideshows = count($posts);
+			if ($number_slideshows > 1){
+				echo "<ul class='flickr-gallery-list'> \n";
+			}
 			foreach( $posts AS $post )
 			{
     				//echo $post->get_value( 'flickr_username' ).'<br />';
@@ -54,7 +64,7 @@
 					if (HTTP_HOST_NAME != 'localhost')
 					{
 						// 365 day cache expiration
-						$f->enableCache("fs", "/var/reason/reason_package/reason_4.0/www/local/phpFlickrCache", 31536000); 
+						$f->enableCache("fs", WEB_PATH . "/reason/local/phpFlickrCache", 31536000); 
 					}
 					$photos = $f->photosets_getPhotos($post->get_value('flickr_photoset_id'));
 					//foreach ((array)$photos['photoset']['photo'] as $photo)
@@ -64,20 +74,19 @@
 					//	echo "farm: " . $pinfo['farm'] . "<br />";
 					//	print_r($pinfo);
 					//}
-	
 					if ($number_slideshows == 1)
 					{
 						echo "<h3>" . $post->get_value('name') . "</h3>" . "\n";
-						echo "<ul id=\"galleryimages\">\n";
+						echo "<div id=\"galleryimages\">\n";
 					}
 					elseif ($number_slideshows > 1)
 					{
-						echo "<div class=\"flickr-set-container\">\n";
+						echo "<li class='flickr-set-list-elm'>";
+						echo "<div class=\"flickr-set-container\"> \n";
 					}
 					$photo_count = 1;
 					foreach ((array)$photos['photoset']['photo'] as $photo)
 					{
-						// see /javascripts/highslide/highslide-overrides.js for gallery declaration
 						$getInfo = $f->photos_getInfo($photo['id']);
 						$pinfo = $getInfo['photo'];
 						// free accounts don't fill in $pinfo['originalformat']
@@ -85,9 +94,9 @@
 						{
 							$pinfo['originalformat'] = 'jpg';
 						}
-						if (preg_match("/[A-Za-z0-9]+/", $pinfo['description']))
+						if (preg_match("/[A-Za-z0-9]+/", $pinfo['description']['_content']))
 						{
-							$description = "<b>" .$photo['title'] . "</b><br/> " . preg_replace("|\"|", "&quot;", $pinfo['description']);
+							$description = "<b>" .$photo['title'] . "</b><br/> " . preg_replace("|\"|", "&quot;", $pinfo['description']['_content']);
 						}
 						else
 						{
@@ -96,9 +105,8 @@
 						$description .= "<a href=\"http://farm" . $pinfo['farm'] . ".static.flickr.com/" . $photo['server'] . "/" . $photo['id'] . "_" . $pinfo['originalsecret'] . "_o." . $pinfo['originalformat'] . "\" title=\"High res\">&prop;</a>\n";
 						if ($number_slideshows == 1)
 						{
-							echo "<li>\n";
-						}
-						//elseif ($number_slideshows > 1 && $photo['isprimary']) 
+							echo "<div class=\"image flickr-image\">\n";
+						} 
 						elseif ($number_slideshows > 1 && $photo_count == 1)
 						{
 							echo "<div class=\"flickr-set\">\n";
@@ -107,15 +115,15 @@
 						{
 							echo "<div class=\"hidden-container\">\n";
 						}
-						echo "<a class=\"highslide\" href=\"http://farm" . $pinfo['farm'] . ".static.flickr.com/" . $photo['server'] . "/" . $photo['id'] . "_" . $photo['secret'] . "." . $pinfo['originalformat']  . "\" onclick=\"return hs.expand(this, galleryOptions[" . $slideshowGroup . "])\">\n";
-						echo "<img src=\"http://farm" . $pinfo['farm'] . ".static.flickr.com/" . $photo['server'] . "/" . $photo['id'] . "_" . $photo['secret'] . "_s." . $pinfo['originalformat']  . "\" title=\"Click to open gallery\" alt=\"" . htmlspecialchars($description, ENT_COMPAT) ."\" />\n";
+						
+						echo "<a class=\"fancybox-thumb\" href=\"http://farm" . $pinfo['farm'] . ".static.flickr.com/" . $photo['server'] . "/" . $photo['id'] . "_" . $photo['secret'] . "." . $pinfo['originalformat']  . "\" rel=\"gallery" . $slideshowGroup . "\" title=\"" . htmlspecialchars($description, ENT_COMPAT) ."\">\n";
+						echo "<img src=\"http://farm" . $pinfo['farm'] . ".static.flickr.com/" . $photo['server'] . "/" . $photo['id'] . "_" . $photo['secret'] . "_q." . $pinfo['originalformat']  . "\" title=\"Click to open gallery\" alt=\"" . htmlspecialchars($description, ENT_COMPAT) ."\" width='139px' height='139px'/>\n";
 						echo "</a>\n";
 	
 						if ($number_slideshows == 1)
 						{
-							echo "</li>\n";
+							echo "</div>   <!-- class=\"flickr-set\"-->\n";
 						}
-						//elseif ($number_slideshows > 1 && $photo['isprimary'])
 						elseif ($number_slideshows > 1 && $photo_count == 1)
 						{
 							echo "</div>   <!-- class=\"flickr-set\"-->\n";
@@ -128,24 +136,24 @@
 					}
 					if ($number_slideshows == 1)
 					{
-						echo "</ul>   <!-- id=\"galleryimages\"-->\n";
+						echo "</div>   <!-- id=\"galleryimages\"-->\n";
 					}
 					elseif ($number_slideshows > 1)
 					{
-						echo "<h4>" . $post->get_value('name') . "</h4>" . "\n";
+						echo "<h4 class='flickr_subtitle'>" . $post->get_value('name') . "</h4>" . "\n";
 						echo "</div>   <!-- class=\"flickr-set-container\"-->\n";
 					}
 					$slideshowGroup++;
-					if ($slideshowGroup % 3 == 0)
-					{
-						echo "<hr>\n";
-					}
-					// max gallery size is declared in /javascript/highslide/highslide-overrides.js
+					
 					if ($slideshowGroup > 49)
 					{
 						break;
 					}
 				}
+			}
+			if ($number_slideshows > 1)
+			{
+				echo "</ul>";
 			}
 			
 		}

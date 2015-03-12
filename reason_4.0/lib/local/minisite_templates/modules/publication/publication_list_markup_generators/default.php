@@ -1,18 +1,26 @@
 <?php
+/**
+ *  @package reason
+ *  @subpackage minisite_modules
+ */
+
+/**
+ * Include the parent class
+ */
 reason_include_once( 'minisite_templates/modules/publication/markup_generator.php' );
 	
 /**
 *  Generates the markup to display a list of news items or blog posts.  
 *  Helper class to the publication minisite module.  
 *
-*  @package reason
-*  @subpackage minisite_modules
 *  @author Meg Gibbs
 *
 *  @todo Make this more easily extensible.  What that may mean will become more clear when we actually start writing extensions,
 *        but this should certainly involve making most of the text variables instead of hard-coded text so that terminology can be changed
 *        without overloading functions.
 *  @todo Better HTML -- ids, classes for divs.
+*
+*  Luther edits include updating <ul class="posts"><li class="post"> to <div class="posts"><article class="post">
 */
 class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 {
@@ -27,7 +35,6 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 									'no_section_key', 
 									'current_issue',
 									'issues_by_date',
-									'issue_blurbs',
 									'links_to_issues',
 									'view_all_items_in_section_link',
 									'group_by_section',
@@ -36,8 +43,8 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 									'date_format',
 									'search_string',
 									'text_only',
-									'cur_page',
-									'site_id',
+									'issue_blurbs',
+									'current_filters',
 									);
 
 	function PublicationListMarkupGenerator ()
@@ -45,27 +52,18 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 	}
 
 	function run()
-	{		
+	{	
 		$this->markup_string .= $this->get_pre_list_markup();
 		$this->markup_string .= $this->get_list_markup();
 		$this->markup_string .= $this->get_post_list_markup();
-		//$this->markup_string .= '</div>'."\n";
 	}
 
 	function get_pre_list_markup()
 	{
-		if ($this->passed_vars['publication']->get_value('unique_name') == 'luther_alumni_magazine')
-		{
-			$this->passed_vars['links_to_sections'] = null;
-		}
-		
 		//if this is an issued publication, show what issue we're looking at
 		if(!empty($this->passed_vars['current_issue']))
 			$this->markup_string .= $this->get_current_issue_markup($this->passed_vars['current_issue']);
 				
-		if(!empty($this->passed_vars['issue_blurbs']))
-			$this->markup_string .= $this->get_issue_blurbs_markup();
-		
 		//if there are other issues, display a "jump to other issues" dropdown
 		if(!empty($this->passed_vars['issues_by_date']))
 			$this->markup_string .= $this->get_issue_links_markup();
@@ -73,7 +71,8 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 		if(!empty($this->passed_vars['search_string']))
 			$this->markup_string .= $this->get_search_header_markup();
 		
-		
+		if(!empty($this->passed_vars['issue_blurbs']))
+			$this->markup_string .= $this->get_issue_blurbs_markup();
 			
 		//if we're just listing items from one section ....
 		if(!empty($this->passed_vars['current_section']))
@@ -84,6 +83,12 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 			//if we're just looking at the items in this section from one issue, provide a link to see items in this section from all issues
 			if(!empty($this->passed_vars['view_all_items_in_section_link']) && !empty($this->passed_vars['current_issue']) )
 				$this->markup_string .= $this->get_all_items_in_section_link_markup();
+		}
+			
+		//if we're listing filtered items ....
+		if(!empty($this->passed_vars['current_filters']))
+		{
+			$this->markup_string .= $this->get_filter_message_markup();
 		}
 		
 		//show any featured items
@@ -98,8 +103,8 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 		{
 			$markup_string .= '<div class="postList">'."\n";
 			//provide links to other sections in the publication
-			//if(!empty($this->passed_vars['links_to_sections']))
-			//	$this->markup_string .= $this->get_section_links_markup();
+			if(!empty($this->passed_vars['links_to_sections']))
+				$this->markup_string .= $this->get_section_links_markup();
 			$markup_string .= '<div class="back">'."\n";
 			$main_list_name = $this->passed_vars['publication']->get_value('name');
 		 	if(!empty($this->passed_vars['current_issue']))
@@ -132,7 +137,7 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 			{
 				$list = $this->passed_vars['items_by_section'][$section_id];
 				if($do_section_headings && array_key_exists($section_id, $this->passed_vars['sections']))
-				{		
+				{	
 					$markup_string .= '<li class="section">'."\n";
 					$markup_string .= $this->get_section_heading_markup($section_id);
 					$markup_string .= $this->get_list_markup_for_these_items(array_keys($list));
@@ -147,24 +152,9 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 			if($do_section_headings)
 				$markup_string .= '</ul>'."\n"; 
 		}
-		
-		$markup_string = $this->luther_remove_permalink($markup_string);
-
 		return $markup_string;
 	}
 	
-	function luther_remove_permalink($markup_string)
-	{
-		// put Read more... at end of teaser
-		//$markup_string = preg_replace("|\<\/p\>\s?\<\/div\>\s?.*?\s?.*?\s?\<li class\=\"permalink\"\>\s?(\<a href\=\".*?)Permalink\<\/a\>\<\/li\>\s?<\/ul\>\s?|", "&nbsp;&nbsp;\\1 Read more...</a></p></div>", $markup_string);
-		//$markup_string = preg_replace("|(\<\/p\>)?\s?\<\/div\>\s?\<ul class\=\"links\"\>\s?.*?\s?\<li class\=\"permalink\"\>\s?(\<a href\=\".*?)Permalink\<\/a\>\<\/li\>\s?(\<li class\=\"comments\"\>\s?\<a href\=\".*?View comments \(\d+\).*?\<\/a\>\<\/li\>\s?)?<\/ul\>\s?|", "&nbsp;&nbsp;\\2Read more...</a></p></div>", $markup_string);
-		$markup_string = preg_replace("|(\<\/p\>)?\s?\<\/div\>\s?\<ul class\=\"links\"\>\s?.*?\s?\<li class\=\"permalink\"\>\s?(\<a href\=\".*?)Permalink\<\/a\>\<\/li\>\s?(\<li class\=\"comments.*?<\/a\>\<\/li\>\s?)?<\/ul\>\s?|", "&nbsp;&nbsp;\\2Read more...</a></p></div>", $markup_string);
-		// remove permalink on pages with no posts
-		$markup_string = preg_replace("|\<ul class\=\"links\"\>\s?\<li class\=\"permalink\"\>\s?\<a href\=\".*?Permalink\<\/a\>\<\/li\>\s?\<\/ul\>\s?|", "", $markup_string);
-		// remove permalink on news posts with no description
-		$markup_string = preg_replace("|\<ul class\=\"links\"\>\s?\<li class\=\"more\"\>\s?\<a href\=\".*?Read.*?\<\/a\>\<\/li\>\s?\<li class\=\"permalink\"\>\s?\<a href\=\".*?Permalink\<\/a\>\<\/li\>\s?(\<li class\=\"comments.*?\"\>\s?\<a href\=\".*?View comments \(\d+\)\<\/a\>\<\/li\>\s?)?\<\/ul\>\s?|", "", $markup_string);
-		return $markup_string;
-	}
 	
 	/**
 	* Given a array of item ids, returns the markup for those items in the form of an unordered list.
@@ -183,13 +173,13 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 			foreach($item_ids as $item_id)
 			{
 				if(!empty($this->passed_vars['list_item_markup_strings'][$item_id]) && !array_key_exists($item_id, $this->passed_vars['featured_item_markup_strings']))
-					$list_body .= '<li class="post">'.$this->passed_vars['list_item_markup_strings'][$item_id].'</li>'."\n";
+					$list_body .= '<article class="post">'.$this->passed_vars['list_item_markup_strings'][$item_id].'</article>'."\n";
 			}
 			if(!empty($list_body))
-			{		
-				$markup_string .= '<ul class="posts">'."\n";
+			{
+				$markup_string .= '<div class="posts">'."\n";
 				$markup_string .= $list_body;
-				$markup_string .= '</ul>'."\n";
+				$markup_string .= '</div>'."\n";
 			}
 		}
 		return $markup_string;
@@ -199,7 +189,7 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 	{
 		if(!empty($this->passed_vars['search_string']))
 		{
-			return '<h3>Results for "'.$this->passed_vars['search_string'].'"</h3>'."\n";
+			return '<h3 class="searchTitle">Results for <span class="searchPhrase">"'.$this->passed_vars['search_string'].'"</span></h3>'."\n";
 		}
 		return '';
 	}
@@ -240,17 +230,15 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 			$markup_string = '<div id="featuredItems">'."\n";
 			if (!empty($feature_header_string)) $markup_string .= '<h3> '.$feature_header_string.' </h3>'."\n";
 			
-			$markup_string .= '<ul class="posts">'."\n";
+			$markup_string .= '<div class="posts">'."\n";
 			foreach($this->passed_vars['featured_item_markup_strings'] as $list_item_string)
 			{
-				$markup_string .= '<li class="post">'.$list_item_string.'</li>'."\n";
+				$markup_string .= '<article class="post">'.$list_item_string.'</article>'."\n";
 			}
-			$markup_string .= '</ul>'."\n";
+			$markup_string .= '</div>'."\n";
 			$markup_string .= '</div>'."\n";
 		}
-		// put Read more... at end of teaser
-		$markup_string = $this->luther_remove_permalink($markup_string);
-		//$markup_string = preg_replace("|\<\/p\>\s?\<\/div\>\s?.*?\s?.*?\s?\<li class\=\"permalink\"\>\s?(\<a href\=\".*?)Permalink\<\/a\>\<\/li\>\s?<\/ul\>\s?|", "&nbsp;&nbsp;\\1Read more...</a></p></div>", $markup_string);
+		
 		return $markup_string;
 	}
 	
@@ -292,7 +280,7 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 	function get_current_issue_markup($issue)
 	{
 		$markup_string = '';
-		$markup_string .= '<div class="issueName"><h3>'.$this->_get_issue_label($issue).'</span></h3></div>'."\n";
+		$markup_string .= '<div class="issueName"><h3>'.$this->_get_issue_label($issue).'</h3></div>'."\n";
 		return $markup_string;
 	}
 	
@@ -315,6 +303,22 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 			$markup_string .= '<div class="issueMenu">'."\n";
 			$markup_string .= '<form action="'.htmlspecialchars(get_current_url(),ENT_QUOTES,'UTF-8').'">'."\n";
 			$markup_string .= '<label for="pubIssueMenuElement" class="issueLabel">Issue:</label>'."\n";
+
+			$markup_string .= '<script type="text/javascript">'."\n";
+			$markup_string .= '/* <![CDATA[ */'."\n";
+			$markup_string .= '
+			if (jQuery)
+			{
+				$(document).ready(function(){
+					$(".issueMenu input[type=\'submit\']").hide();
+					$(".issueMenu select[name=\'issue_id\']").change(function(){
+						$(this).parent("form").submit();
+					});
+				});
+			}';
+			$markup_string .= '/* ]]> */'."\n";
+			$markup_string .= '</script>';
+			
 			$markup_string .= '<select name="issue_id" id="pubIssueMenuElement">'."\n";
 			if (!$cur_issue_id)
 			{
@@ -327,7 +331,7 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 			}
 			$markup_string .= '</select>'."\n";
 			$markup_string .= ($this->passed_vars['text_only'] == 1) ? '<input type="hidden" name="textonly" value="1">' : '';
-			$markup_string .= '<input type="submit" name="go" value="Go" />'."\n";
+			$markup_string .= '<input type="submit" value="Go" />'."\n";
 			$markup_string .= '</form>'."\n";
 			$link = carl_make_link(array('issue_id' => 0));
 			$markup_string .= '<div class="allIssuesLink"><a href="'.$link.'">List all issues</a></div>';
@@ -357,27 +361,7 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 	{
 		$markup_string = '';
 		$name = $section->get_value('name');
-		
-		$es = new entity_selector();
-		$es->add_type(id_of('image'));
-		$es->add_right_relationship($section->get_value('id'), relationship_id_of('news_section_to_image'));
-		$result = $es->run_one();
-		foreach( $result AS $id => $image )
-		{
-			$url = WEB_PHOTOSTOCK . $id . '.' . $image->get_value('image_type');
-			if (!preg_match("/imagetop/", $image->get_value('keywords')))
-			{
-				$markup_string .= '<figure id="imagetopframe">'."\n";
-				$markup_string .= '<img src="' . $url . '" alt="' . $image->get_value('description') . '"/>';
-				$markup_string .= '</figure>'."\n";
-			}
-			else
-			{
-				$markup_string .= '<img src="' . $url . '" alt="' . $image->get_value('description') . '"/>';
-			}
-		}
-		
-		$markup_string .= '<div class="sectionInfo"><h3>'.$name.'</h3></div>'."\n";
+		$markup_string .= '<div class="curSection"><h3>'.$name.'</h3></div>'."\n";
 		return $markup_string;
 	}
 	
@@ -387,21 +371,18 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 		if(!empty($this->passed_vars['sections']))
 		{
 			$markup_string .= '<div class="sectionMenu">'."\n";
-			$markup_string .= '<h4>Sections</h4>'."\n";
-			$markup_string .= '<ul>'."\n";
+			$markup_string .= '<h4 class="sectionMenuHead">Sections</h4>'."\n";
+			$markup_string .= '<ul class="sections">'."\n";
 			foreach($this->passed_vars['sections'] as $section_id => $section)
 			{
-				$name = $section->get_value('name');
-				$markup_string .= '<li>';
 				if(!empty($this->passed_vars['current_section']) && $this->passed_vars['current_section']->id() == $section_id)
 				{
-					$markup_string .= '<strong>'.$name.'</strong>';
+					$markup_string .= '<li class="current"><strong>'.$section->get_value('name').'</strong></li>';
 				}
 				else
 				{
-					$markup_string .=  '<a href="'.$this->passed_vars['links_to_sections'][$section_id].'">'.$name.'</a>';
+					$markup_string .=  '<li><a href="'.$this->passed_vars['links_to_sections'][$section_id].'">'.$section->get_value('name').'</a></li>';
 				}
-				$markup_string .= '</li>'."\n";
 			}
 			$markup_string .= '</ul>'."\n";	
 			$markup_string .= '</div>'."\n";
@@ -451,9 +432,9 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 			$url = $this->passed_vars['links_to_sections'][$section_id];
 			
 			if(!empty($url))
-				$markup_string .= '<h3><a href="'.$url.'">'.$section_entity->get_value('name').'</a></h3>'."\n";
+				$markup_string .= '<h2><a href="'.$url.'">'.$section_entity->get_value('name').'</a></h2>'."\n";
 			else
-				$markup_string .= '<h3>'.$section_entity->get_value('name').'</h3>'."\n";
+				$markup_string .= '<h2>'.$section_entity->get_value('name').'</h2>'."\n";
 			
 			$description = $section_entity->get_value('description');
 			if(!empty($description))
@@ -470,7 +451,7 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 		$markup_string = '';
 		if(empty($this->passed_vars['current_section']) && !empty($this->passed_vars['items_by_section'][$section_id]))
 		{
-			//$url = $this->passed_vars['links_to_sections'][$section_id];
+			$url = $this->passed_vars['links_to_sections'][$section_id];
 			if(!empty($url))
 			{
 				$section_name = $this->passed_vars['sections'][$section_id]->get_value('name');
@@ -478,6 +459,46 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 			}
 		}
 		return $markup_string;		
+	}
+	
+	function get_filter_message_markup()
+	{
+		$markup_string = '';
+		if($msg = $this->_get_filter_message())
+		{
+			$markup_string .= '<div class="filterMessage">'."\n";
+			$markup_string .= '<h3>'.$msg.' <span class="clear">(<a href="./">All posts</a>)</span></h3>'."\n";
+			$markup_string .= '</div>'."\n";
+		}
+		return $markup_string;	
+	}
+	function _get_filter_message()
+	{
+		$msg = '';
+		if(!empty($this->passed_vars['current_filters']))
+		{
+			$parts = array();
+			foreach($this->passed_vars['current_filters'] as $filterkey => $entities)
+			{
+				foreach($entities as $e)
+				{
+					$parts[] = '&#8220;'.$e->get_value('name').'&#8221;';
+				}
+			}
+			$glue = ' ';
+			$num_parts = count($parts);
+			if($num_parts > 1)
+			{
+				$last_part = 'and '.array_pop($parts);
+				$parts[] = $last_part;
+				if($num_parts > 2)
+				{
+					$glue = ', ';
+				}
+			}
+			$msg = 'Posts tagged with '.implode($glue, $parts);
+		}
+		return $msg;
 	}
 }
 ?>

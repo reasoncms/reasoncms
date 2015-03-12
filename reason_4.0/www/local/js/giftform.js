@@ -9,14 +9,14 @@ $(document).ready(function() {
 	$("input[name='installment_type']").change(function(){toggle_recur_fields()});
 
 	// Set the initial state for employer name field
-	$("tr#employernameRow").hide();
+	$("#employernameItem").hide(500);
 	
 	// Show/hide employer name based on match status
 	$("input#checkbox_match_gift").change(function(){
 			if ($("input#checkbox_match_gift:checked").val())
-			$("tr#employernameRow").show();
+			$("#employernameItem").show(500);
 		else
-			$("tr#employernameRow").hide();
+			$("#employernameItem").hide(500);
 	});
 	
 	//$("input#checkbox_match_gift").change();
@@ -24,8 +24,8 @@ $(document).ready(function() {
 	
 	// Show/hide specific designations
 	toggle_specific_designations();
-	$("input#checkbox_specific_fund").change(function(){toggle_specific_designations()});
-	$("input#checkbox_norse_athletic_association").change(function(){toggle_specific_designations()});
+	$("input[name='specific_fund']").change(function(){toggle_specific_designations()});
+	$("input[name='norse_athletic_association']").change(function(){toggle_specific_designations()});
 	
 	
 	/** PageTwo **/
@@ -48,31 +48,31 @@ $(document).ready(function() {
 
 	// Show/hide and populate Country field based on state/province choice
 	$("select#state_provinceElement").change(function()
-		{toggle_country_field("select#state_provinceElement","tr#countryRow" )});
+		{toggle_country_field("select#state_provinceElement","#countryItem" )});
 	
 	// Set the initial state for the Country field
 	$("select#state_provinceElement").change();
-	$("#countryRow").hide();
+	$("#countryItem").hide(500);
 	
 	/** PageThree **/
 	
 	// Add the controls to open and close the gift detail.
 	if ($("div#giftForm h3#yearlyTotalsHeading").length)
 	{
-		$("div#giftForm div#reviewGiftDetails").hide();
+		$("div#giftForm div#reviewGiftDetails").hide(500);
 		
-		$("div#giftForm div#reviewGiftOverview p").append('<p><a id="showGiftDetails" href="#">Yearly totals for this gift</a></p>');
-		$("div#giftForm h3#yearlyTotalsHeading").append('<a id="hideGiftDetails" href="#">Close</a>');
+		$("div#giftForm div#reviewGiftOverview").append('<p><a id="showGiftDetails" href="#">Yearly totals for this gift</a></p>');
+		$("div#giftForm #reviewGiftDetails").append('<a id="hideGiftDetails" href="#"><i class="fa fa-times"></i></a>');
 
 		$("a#showGiftDetails").click(function(event){
-			$("a#showGiftDetails").hide();
-			$("div#reviewGiftDetails").show();
+			$("a#showGiftDetails").hide(500);
+			$("div#reviewGiftDetails").show(500);
 			event.preventDefault();
 		});
 	
 		$("a#hideGiftDetails").click(function(event){
-			$("a#showGiftDetails").show();
-			$("div#reviewGiftDetails").hide();
+			$("a#showGiftDetails").show(500);
+			$("div#reviewGiftDetails").hide(500);
 			event.preventDefault();
 		});
 	}
@@ -83,7 +83,7 @@ $(document).ready(function() {
 
 	// Show/hide and populate Country field based on state/province choice
 	$("select#billing_state_provinceElement").change(function()
-		{toggle_country_field("select#billing_state_provinceElement","tr#billingcountryRow" )});
+		{toggle_country_field("select#billing_state_provinceElement","#billingcountryItem" )});
 	
 	// Set the initial state for the Country field
 	$("select#billing_state_provinceElement").change();
@@ -130,46 +130,32 @@ function toggle_class_year()
 {
 	if ($("input#checkbox_luther_affiliation_0:checked").val() ||
 	    $("input#checkbox_luther_affiliation_3:checked").val())
-                $("tr#classyearRow").show();
+                $("#classyearItem").show(500);
         else
-                $("tr#classyearRow").hide();
+                $("#classyearItem").hide(500);
 }
 
-/*
-function toggle_class_year_note()
-{
-	if (($("input[name='spouse_first_name']").val() == "First" ||
-		$("input[name='spouse_last_name']").val() == "Last") &&
-		$("input#checkbox_luther_affilation_0:checked").val() ||
-		$("input#checkbox_luther_affilation_3:checked").val())
-	{
-		$("tr#classyearnoteRow").hide();
-	} else {
-		$("tr#classyearnoteRow").show();
-	}
-}
-*/
 
-function toggle_country_field(stateElementSelector, countryRowSelector)
+function toggle_country_field(stateElementSelector, countryItemSelector)
 {
 	// Show/hide and populate Country field based on state/province choice
 	// If not US or Canada, show the Country field
 	if ($(stateElementSelector).val() == "XX")
 	{
-   	    $(countryRowSelector + " select").val('');
-    	$("#countryRow").show();
-   		$("tr#billingcountryRow").show();
+   	    $(countryItemSelector + " select").val('');
+    	$("#countryItem").show(500);
+   		$("#billingcountryItem").show(500);
 	}
 	// If US or Canada, populate Country but hide it
 	else
 	{
-	    //$(countryRowSelector).hide();
+	    //$(countryItemSelector).hide(500);
 	    // If a Canadian province...
 	    if (/^(?:AB|BC|MB|NB|NL|NT|NS|NU|ON|PE|QC|SK|YT)$/.test($(stateElementSelector).val())) 
-		$(countryRowSelector + " select").val("CAN");
+		$(countryItemSelector + " select").val("CAN");
 	    // If anything else (other than unset)
 	    else if ($(stateElementSelector).val() != "")
-		$(countryRowSelector + " select").val('USA');
+		$(countryItemSelector + " select").val('USA');
 	}
 }
 
@@ -178,11 +164,9 @@ function toggle_recur_fields()
 	if (!$("input[name='installment_type']:checked").val() ||
 	     $("input[name='installment_type']:checked").val() == 'Onetime')
 	{
-		$("input#installment_start_date").parent().parent().hide();	
-		$("select#installment_end_dateElement").parent().parent().hide();	
+		$("#recurgroupItem").hide(500);
 	} else {
-		$("input#installment_start_date").parent().parent().show();	
-		$("select#installment_end_dateElement").parent().parent().show();	
+		$("#recurgroupItem").show(500);
 	}
 }
 
@@ -191,11 +175,11 @@ function toggle_recur_fields_old()
 	if (!$("input[name='installment_type']:checked").val() ||
 	     $("input[name='installment_type']:checked").val() == 'Onetime')
 	{
-		$("tr#installmentstartdateRow").hide();	
-		$("tr#installmentenddateRow").hide();	
+		$("#installmentstartdateItem").hide(500);	
+		$("#installmentenddateItem").hide(500);	
 	} else {
-		$("tr#installmentstartdateRow").show();	
-		$("tr#installmentenddateRow").show();	
+		$("#installmentstartdateItem").show(500);	
+		$("#installmentenddateItem").show(500);	
 	}
 }
 
@@ -204,54 +188,54 @@ function toggle_billing_address()
 	if (!$("input[name='billing_address']:checked").val() ||
 	     $("input[name='billing_address']:checked").val() == 'entered')
 	{
-		$("tr#billingstreetaddressRow").hide();	
-		$("tr#billingcityRow").hide();	
-		$("tr#billingstateprovinceRow").hide();	
-		$("tr#billingzipRow").hide();	
-		$("tr#billingcountryRow").hide();	
+		$("#billingstreetaddressItem").hide(500);	
+		$("#billingcityItem").hide(500);	
+		$("#billingstateprovinceItem").hide(500);	
+		$("#billingzipItem").hide(500);	
+		$("#billingcountryItem").hide(500);	
 	} else {
-		$("tr#billingstreetaddressRow").show();	
-		$("tr#billingcityRow").show();	
-		$("tr#billingstateprovinceRow").show();	
-		$("tr#billingzipRow").show();	
-		$("tr#billingcountryRow").show();
+		$("#billingstreetaddressItem").show(500);	
+		$("#billingcityItem").show(500);	
+		$("#billingstateprovinceItem").show(500);	
+		$("#billingzipItem").show(500);	
+		$("#billingcountryItem").show(500);
 		$("select#billing_state_provinceElement").change();
 	}
 }
 
 function toggle_specific_designations()
 {
-	if ($("input#checkbox_specific_fund:checked").val() ||
-		$("input#checkbox_specific_fund:checked").val() == 'entered')
+	if ($("input[name='specific_fund']:checked").val() ||
+	     $("input[name='specific_fund']:checked").val() == 'entered')
 		{
-			$("tr#designationnoteRow").show();
-			$("tr#aquaticcenterRow").show();
-			$("tr#scholarshipfundRow").show();
-			// $("tr#sesqstudyabroadfundRow").show();
-			$("tr#transformteachingfundRow").show();
-			$("tr#sustainablecommunitiesRow").show();
-			$("tr#norseathleticassociationRow").show();
-			$("tr#otherdesignationnoteRow").show();
-			$("tr#otherdesignationdetailsRow").show();
+			$("#designationnoteItem").show(500);
+			$("#baseballstadiumItem").show(500);
+			$("#softballstadiumItem").show(500);
+			$("#scholarshipfundItem").show(500);
+			$("#transformteachingfundItem").show(500);
+			$("#sustainablecommunitiesItem").show(500);
+			$("#norseathleticassociationItem").show(500);
+			$("#otherdesignationnoteItem").show(500);
+			$("#otherdesignationdetailsItem").show(500);
 		}
 		else
 		{
-			$("tr#designationnoteRow").hide();
-			$("tr#aquaticcenterRow").hide();
-			$("tr#scholarshipfundRow").hide();
-			// $("tr#sesqstudyabroadfundRow").hide();
-			$("tr#transformteachingfundRow").hide();
-			$("tr#sustainablecommunitiesRow").hide();
-			$("tr#norseathleticassociationRow").hide();
-			$("tr#otherdesignationnoteRow").hide();
-			$("tr#otherdesignationdetailsRow").hide();			
+			$("#designationnoteItem").hide(500);
+			$("#baseballstadiumItem").hide(500);
+			$("#softballstadiumItem").hide(500);
+			$("#scholarshipfundItem").hide(500);
+			$("#transformteachingfundItem").hide(500);
+			$("#sustainablecommunitiesItem").hide(500);
+			$("#norseathleticassociationItem").hide(500);
+			$("#otherdesignationnoteItem").hide(500);
+			$("#otherdesignationdetailsItem").hide(500);			
 		}
 		
-	if ($("input#checkbox_norse_athletic_association:checked").val()||
-		$("input#checkbox_norse_athletic_association:checked").val() == "entered")
+	if ($("input[name='norse_athletic_association']:checked").val()||
+		$("input[name='norse_athletic_association']:checked").val() == "entered")
 		{
-			$("tr#naadesignationdetailsRow").show();
+			$("#naadesignationdetailsItem").show(500);
 		} else {
-			$("tr#naadesignationdetailsRow").hide();
+			$("#naadesignationdetailsItem").hide(500);
 		}
 }

@@ -1,0 +1,81 @@
+//
+// ASSET STYLES
+//
+// @author Blaise Schaeffer
+//
+
+// Foundation imports
+@import "settings";
+@import "foundation/components/grid";
+
+// Compass imports
+@import "compass/css3";
+
+// Font Awesome Imports
+@import "font-awesome/variables";
+@import "font-awesome/core";
+
+// Luther imports
+@import "extends";
+@import "mixins";
+
+
+.twitter-block{
+
+	i {
+		font-size: $h3-font-size;
+		margin-top: rem-calc(4);
+		margin-right: $column-gutter/4;
+		padding-bottom: $column-gutter/2;
+		float: left;
+	}
+
+	h3 {
+		display: inline-block;
+		float: left;
+		//margin: 0;
+	}
+
+	.recent-tweets {
+		margin-bottom: 0;
+		margin-right: $column-gutter/4;
+	}
+
+	p,
+	ul {
+		clear: both;
+	}
+
+	.date {
+		display: block;			
+		color: darken($lc-grey, 15%);
+		font-weight: 300;
+	}
+
+	ul {
+		margin-left: 0px;
+		padding: 0px;
+		list-style: none;	
+	}
+
+	li:first-child {
+		padding-top: 0px;
+	}
+
+	li:last-child {
+		border-bottom: none;
+		padding-bottom: 0px;
+	}
+	
+	li {
+		border-bottom: $microformat-border-width $microformat-border-style $microformat-border-color;
+		padding-top: $column-gutter/2;
+		padding-bottom: $column-gutter/2;
+		&:before {
+			@extend .fa;
+			content: $fa-var-twitter-square;
+			color: $lc-grey;
+			padding-right: $column-gutter/6;
+		}
+	}	
+}

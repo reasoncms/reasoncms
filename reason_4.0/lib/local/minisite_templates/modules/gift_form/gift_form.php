@@ -116,7 +116,9 @@ class OnlineGiftModule extends DefaultMinisiteModule
 		
 		if($head_items =& $this->get_head_items())
 		{
-			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/giftform.css');
+			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form.css');
+
+			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'luther_2014/stylesheets/sites/giving.css');
 			$head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/giftform.js');
 			$head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/disable_submit.js');
 		}
@@ -143,6 +145,7 @@ class OnlineGiftModule extends DefaultMinisiteModule
 	 */
 	function run() // {{{
 	{
+		echo '<div id="giving_form">'."\n";
 		if( !empty( $this->request[ 'r' ] ) AND !empty( $this->request[ 'h' ] ) )
 		{
 			reason_include_once( 'minisite_templates/modules/gift_form/gift_confirmation.php' );
@@ -167,6 +170,7 @@ class OnlineGiftModule extends DefaultMinisiteModule
 			$this->controller->set_request( $this->request );
 			$this->controller->run();
 		}
+		echo '</div>'."\n";
 	} // }}}
 
 	function generate_navigation()

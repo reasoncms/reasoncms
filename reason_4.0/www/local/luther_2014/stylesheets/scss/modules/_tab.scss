@@ -1,0 +1,88 @@
+//
+// TAB WIGET STYLES
+//
+// @author Nathan Dirks
+//
+
+// Foundation imports
+@import "settings";
+@import "foundation/components/grid";
+
+// Compass imports
+@import "compass/css3";
+
+// Luther imports
+@import "extends";
+@import "mixins";
+
+// TAB LAYOUTS
+
+// All tabs
+
+#tabs {
+	overflow: hidden;
+	
+	.tabs {
+		@include clearfix;
+		margin: 0;
+		padding: 0;
+		background: #FFF;
+		
+		.tab-title {
+			margin: 0;
+			padding: 0;
+			display: block;	
+
+			&.active a {
+				font-weight: 700;
+				color: $body-font-color;
+			}
+		}
+	}
+
+	.tabs-content {
+
+		.content {
+			display: none;
+		
+			&.active {
+				display: block;
+			}
+		}
+	}			
+}
+
+// Mobile tabs for all small screens, then...
+@include moblie-tabs;
+
+.hasConRelNav { /* 3 COLUMNS: Nav, Content, & Related */
+	
+	@media
+	#{$large-high-up} {
+		@include desktop-tabs;
+	}
+}
+
+.hasConNav { /* 2 COLUMNS: Nav & Content (no Related) */
+
+	@media
+	#{$medium-up} {
+		@include desktop-tabs;
+	}
+}
+
+.hasConRel { /* 2 COLUMNS: Content & Related (no Nav) */
+
+	@media
+	#{$medium-up} {
+		@include desktop-tabs;
+	}
+}
+
+.hasCon { /* 1 COLUMN: Content (no Nav or Related) */ 
+
+	@media
+	#{$medium-up} {
+		@include desktop-tabs;
+	}
+}

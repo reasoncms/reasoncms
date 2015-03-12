@@ -13,7 +13,7 @@ include_once('reason_header.php');
 /**
  * A class that provides ReasonCMS with social integration.
  *
- * Integration classes should be in the social folder, and the filename must be the key of the integrator 
+ * Integration classes should be in the social folder, and the filename must be the key of the integrator
  * returned by the get_available_integrators method, followed by the php extension (eg - facebook.php).
  *
  * @todo add integration with something in config so you can turn on / off integrators and add local ones.
@@ -31,9 +31,13 @@ class ReasonSocialIntegrationHelper
 	{
 		return array('facebook' => 'Facebook',
 					 'twitter' => 'Twitter',
-					 'googleplus' => 'Google+');
+					 'googleplus' => 'Google+',
+					 'email' => 'Email Signup',
+					 'youtube' => 'YouTube',
+					 'linkedin' => 'LinkedIn',
+					 'tagboard' => 'Tagboard');
 	}
-	
+
 	/**
 	 * Returns the integrator class for an social_account entity.
 	 *
@@ -52,7 +56,7 @@ class ReasonSocialIntegrationHelper
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Return all the integrators that implement a particular interface.
 	 *
@@ -77,7 +81,7 @@ class ReasonSocialIntegrationHelper
 		}
 		return $this->_integrators_by_interface[$interface];
 	}
-	
+
 	/**
 	 * @return mixed integrator object or false if it couldn't be loaded.
 	 */
@@ -126,7 +130,7 @@ abstract class ReasonSocialIntegrator implements SocialAccountContentManager
 		$social_entity = new entity($social_entity_id);
 		return $social_entity->get_value('account_type');
 	}
-	
+
 	/**
 	 * Return a 300x300 png from www/modules/social_account/images/ folder.
 	 *
@@ -141,21 +145,21 @@ abstract class ReasonSocialIntegrator implements SocialAccountContentManager
 		$account_type = $social_entity->get_value('account_type');
 		return REASON_HTTP_BASE_PATH . 'modules/social_account/images/'.$account_type.'.png';
 	}
-	
+
 	/**
 	 * @param object
 	 */
 	public function social_account_on_every_time($cm)
 	{
 	}
-	
+
 	/**
 	 * @param object
 	 */
 	public function social_account_pre_show_form($cm)
 	{
 	}
-	
+
 	/**
 	 * @param object
 	 */
@@ -209,4 +213,3 @@ function reason_get_social_integration_helper()
 	}
 	return $si;
 }
-?>
