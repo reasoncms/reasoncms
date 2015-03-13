@@ -20,24 +20,23 @@
 			@include cloak-alert($mode: success);
 			margin: -$alert-padding-top;
 			border-radius: 0 !important;
-			border-bottom: $alert-padding-top*4 solid red;
 		}
 
 		.info {
 			@include cloak-alert($mode: info);
-			margin: - $alert-padding-top;
+			margin: -$alert-padding-top;
 			border-radius: 0 !important;
 		}
 
 		.warning {
 			@include cloak-alert($mode: warning);
-			margin: - $alert-padding-top;
+			margin: -$alert-padding-top;
 			border-radius: 0 !important;
 		}
 
 		.alert {
 			@include cloak-alert($mode: alert);
-			margin: - $alert-padding-top;
+			margin: -$alert-padding-top;
 			border-radius: 0 !important;
 		}
 	}
