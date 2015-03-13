@@ -636,7 +636,7 @@ $medium-only-events: "#{$screen} and (min-width:#{$events_default_break_point_up
 
 			strong {
 				margin-right: rem-calc(4);
-				margin-left: - rem-calc(4);
+				margin-left: -(rem-calc(4));
 			}
 
 			p {
