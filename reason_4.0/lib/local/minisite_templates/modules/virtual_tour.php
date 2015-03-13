@@ -9,6 +9,7 @@
 		{
 			$head_items = $this->get_head_items();
 			$head_items->add_javascript('/reason/local/luther_2014/javascripts/vendor/PTGuiViewer.js');
+			$head_items->add_javascript('/reason/local/luther_2014/javascripts/virtual_tour/virtual_tour.js');
 		}
 		
 		function run()
