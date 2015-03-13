@@ -57,7 +57,7 @@ body {
 
 body {
   background: #FFFFFF;
-  color: #555555;
+  color: #444444;
   padding: 0;
   margin: 0;
   font-family: "Open Sans", sans-serif;
@@ -1132,7 +1132,7 @@ abbr,
 acronym {
   text-transform: uppercase;
   font-size: 90%;
-  color: #555555;
+  color: #444444;
   cursor: help; }
 
 abbr {
@@ -1204,7 +1204,16 @@ blockquote p {
   h6 {
     font-size: 1.0625rem; } }
 .fa, #banner #navigationToggles li.navJump a:before, #banner #navigationToggles li.searchToggle a:before, .persistent #filtering .searchForm a:before, .persistent #filtering .filterSet a:before, .persistent #filtering .filters ul li a:before, .persistent #filtering .filters ul li strong:before, .persistent .loginlogout a:after, .moduleNav .feedLink .feedInfo a:before, #generic .back a:before, .reveal-modal .close-reveal-modal:before,
-dialog .close-reveal-modal:before, .assets li:before, #av .moduleNav ul li:before, #av .moduleNav > p a:before, #av .podcast a:before, .classifiedSubmitLink a:before, .classifiedReturnToListingLink a:before, #pageContent blockquote > *:first-child:not(cite):before, .fullPost .text blockquote > *:first-child:not(cite):before, .comments .commentContent blockquote > *:first-child:not(cite):before, .eventContent blockquote > *:first-child:not(cite):before, .blurb blockquote > *:first-child:not(cite):before, #faq .answer blockquote > *:first-child:not(cite):before, .facStaffContent blockquote > *:first-child:not(cite):before, .minutesContent blockquote > *:first-child:not(cite):before, .policyContent blockquote > *:first-child:not(cite):before, .policy .approvals blockquote > *:first-child:not(cite):before, #calendar .responsiveEventsList .gridAndOptionsWrapper .options .categories li a:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .options .categories li strong:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .options .audiences li a:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .options .audiences li strong:before, #calendar .responsiveEventsList .iCalExport a:before,
+dialog .close-reveal-modal:before, .assets li:before, #av .moduleNav ul li:before, #av .moduleNav > p a:before, #av .podcast a:before, .classifiedSubmitLink a:before, .classifiedReturnToListingLink a:before, #pageContent blockquote > *:first-child:not(cite):before,
+.fullPost .text blockquote > *:first-child:not(cite):before,
+.comments .commentContent blockquote > *:first-child:not(cite):before,
+.eventContent blockquote > *:first-child:not(cite):before,
+.blurb blockquote > *:first-child:not(cite):before,
+#faq .answer blockquote > *:first-child:not(cite):before,
+.facStaffContent blockquote > *:first-child:not(cite):before,
+.minutesContent blockquote > *:first-child:not(cite):before,
+.policyContent blockquote > *:first-child:not(cite):before,
+.policy .approvals blockquote > *:first-child:not(cite):before, #calendar .responsiveEventsList .gridAndOptionsWrapper .options .categories li a:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .options .categories li strong:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .options .audiences li a:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .options .audiences li strong:before, #calendar .responsiveEventsList .iCalExport a:before,
 #calendar .responsiveEventsList .feedInfo a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .repetition:before, #calendar .eventDetails .date:before,
 #calendar .eventDetails .time:before,
 #calendar .eventDetails .duration:before,
@@ -2207,7 +2216,7 @@ dialog .close-reveal-modal span {
     font-size: 0.875rem;
     margin-right: 0.125rem;
     background: none;
-    color: #555555;
+    color: #444444;
     padding: 0;
     text-align: left; }
   .locationBarText a {
@@ -2238,7 +2247,7 @@ dialog .close-reveal-modal span {
       .childrenList > li a[href]:hover {
         background: #F6F6F6; }
     .childrenList > li .childDesc {
-      color: #7b7b7b;
+      color: #6a6a6a;
       font-family: "Open Sans", sans-serif;
       font-weight: 300;
       font-size: 0.9375rem; }
@@ -2584,138 +2593,327 @@ h2.pageTitle {
   #meat table.table_data th {
     border: 1px solid #DDDDDD; }
 
-#pageContent, .fullPost .text, .comments .commentContent, .eventContent, .blurb, #faq .answer, .facStaffContent, .minutesContent, .policyContent, .policy .approvals {
+#pageContent,
+.fullPost .text,
+.comments .commentContent,
+.eventContent,
+.blurb,
+#faq .answer,
+.facStaffContent,
+.minutesContent,
+.policyContent,
+.policy .approvals {
   margin-bottom: 0.875rem; }
-  #pageContent:before, #pageContent:after, .fullPost .text:before, .fullPost .text:after, .comments .commentContent:before, .comments .commentContent:after, .eventContent:before, .eventContent:after, .blurb:before, .blurb:after, #faq .answer:before, #faq .answer:after, .facStaffContent:before, .facStaffContent:after, .minutesContent:before, .minutesContent:after, .policyContent:before, .policyContent:after, .policy .approvals:before, .policy .approvals:after {
+  #pageContent:before, #pageContent:after,
+  .fullPost .text:before,
+  .fullPost .text:after,
+  .comments .commentContent:before,
+  .comments .commentContent:after,
+  .eventContent:before,
+  .eventContent:after,
+  .blurb:before,
+  .blurb:after,
+  #faq .answer:before,
+  #faq .answer:after,
+  .facStaffContent:before,
+  .facStaffContent:after,
+  .minutesContent:before,
+  .minutesContent:after,
+  .policyContent:before,
+  .policyContent:after,
+  .policy .approvals:before,
+  .policy .approvals:after {
     content: " ";
     display: table; }
-  #pageContent:after, .fullPost .text:after, .comments .commentContent:after, .eventContent:after, .blurb:after, #faq .answer:after, .facStaffContent:after, .minutesContent:after, .policyContent:after, .policy .approvals:after {
+  #pageContent:after,
+  .fullPost .text:after,
+  .comments .commentContent:after,
+  .eventContent:after,
+  .blurb:after,
+  #faq .answer:after,
+  .facStaffContent:after,
+  .minutesContent:after,
+  .policyContent:after,
+  .policy .approvals:after {
     clear: both; }
-  #pageContent a, .fullPost .text a, .comments .commentContent a, .eventContent a, .blurb a, #faq .answer a, .facStaffContent a, .minutesContent a, .policyContent a, .policy .approvals a {
+  #pageContent a,
+  .fullPost .text a,
+  .comments .commentContent a,
+  .eventContent a,
+  .blurb a,
+  #faq .answer a,
+  .facStaffContent a,
+  .minutesContent a,
+  .policyContent a,
+  .policy .approvals a {
     text-decoration: underline;
     font-weight: 700;
     color: #b84041; }
-  #pageContent blockquote, .fullPost .text blockquote, .comments .commentContent blockquote, .eventContent blockquote, .blurb blockquote, #faq .answer blockquote, .facStaffContent blockquote, .minutesContent blockquote, .policyContent blockquote, .policy .approvals blockquote {
+  #pageContent blockquote,
+  .fullPost .text blockquote,
+  .comments .commentContent blockquote,
+  .eventContent blockquote,
+  .blurb blockquote,
+  #faq .answer blockquote,
+  .facStaffContent blockquote,
+  .minutesContent blockquote,
+  .policyContent blockquote,
+  .policy .approvals blockquote {
     clear: both;
     font-family: "Merriweather", serif;
     background: #F6F6F6; }
-    #pageContent blockquote cite, .fullPost .text blockquote cite, .comments .commentContent blockquote cite, .eventContent blockquote cite, .blurb blockquote cite, #faq .answer blockquote cite, .facStaffContent blockquote cite, .minutesContent blockquote cite, .policyContent blockquote cite, .policy .approvals blockquote cite {
+    #pageContent blockquote cite,
+    .fullPost .text blockquote cite,
+    .comments .commentContent blockquote cite,
+    .eventContent blockquote cite,
+    .blurb blockquote cite,
+    #faq .answer blockquote cite,
+    .facStaffContent blockquote cite,
+    .minutesContent blockquote cite,
+    .policyContent blockquote cite,
+    .policy .approvals blockquote cite {
       font-family: "Open Sans", sans-serif; }
-    #pageContent blockquote > *:first-child:not(cite):before, .fullPost .text blockquote > *:first-child:not(cite):before, .comments .commentContent blockquote > *:first-child:not(cite):before, .eventContent blockquote > *:first-child:not(cite):before, .blurb blockquote > *:first-child:not(cite):before, #faq .answer blockquote > *:first-child:not(cite):before, .facStaffContent blockquote > *:first-child:not(cite):before, .minutesContent blockquote > *:first-child:not(cite):before, .policyContent blockquote > *:first-child:not(cite):before, .policy .approvals blockquote > *:first-child:not(cite):before {
+    #pageContent blockquote > *:first-child:not(cite):before,
+    .fullPost .text blockquote > *:first-child:not(cite):before,
+    .comments .commentContent blockquote > *:first-child:not(cite):before,
+    .eventContent blockquote > *:first-child:not(cite):before,
+    .blurb blockquote > *:first-child:not(cite):before,
+    #faq .answer blockquote > *:first-child:not(cite):before,
+    .facStaffContent blockquote > *:first-child:not(cite):before,
+    .minutesContent blockquote > *:first-child:not(cite):before,
+    .policyContent blockquote > *:first-child:not(cite):before,
+    .policy .approvals blockquote > *:first-child:not(cite):before {
       content: "";
       margin-right: 0.375rem;
       color: #bcbcbc; }
-    #pageContent blockquote > *:last-child, .fullPost .text blockquote > *:last-child, .comments .commentContent blockquote > *:last-child, .eventContent blockquote > *:last-child, .blurb blockquote > *:last-child, #faq .answer blockquote > *:last-child, .facStaffContent blockquote > *:last-child, .minutesContent blockquote > *:last-child, .policyContent blockquote > *:last-child, .policy .approvals blockquote > *:last-child {
+    #pageContent blockquote > *:last-child,
+    .fullPost .text blockquote > *:last-child,
+    .comments .commentContent blockquote > *:last-child,
+    .eventContent blockquote > *:last-child,
+    .blurb blockquote > *:last-child,
+    #faq .answer blockquote > *:last-child,
+    .facStaffContent blockquote > *:last-child,
+    .minutesContent blockquote > *:last-child,
+    .policyContent blockquote > *:last-child,
+    .policy .approvals blockquote > *:last-child {
       margin-bottom: 0; }
-      #pageContent blockquote > *:last-child *:last-child, .fullPost .text blockquote > *:last-child *:last-child, .comments .commentContent blockquote > *:last-child *:last-child, .eventContent blockquote > *:last-child *:last-child, .blurb blockquote > *:last-child *:last-child, #faq .answer blockquote > *:last-child *:last-child, .facStaffContent blockquote > *:last-child *:last-child, .minutesContent blockquote > *:last-child *:last-child, .policyContent blockquote > *:last-child *:last-child, .policy .approvals blockquote > *:last-child *:last-child {
+      #pageContent blockquote > *:last-child *:last-child,
+      .fullPost .text blockquote > *:last-child *:last-child,
+      .comments .commentContent blockquote > *:last-child *:last-child,
+      .eventContent blockquote > *:last-child *:last-child,
+      .blurb blockquote > *:last-child *:last-child,
+      #faq .answer blockquote > *:last-child *:last-child,
+      .facStaffContent blockquote > *:last-child *:last-child,
+      .minutesContent blockquote > *:last-child *:last-child,
+      .policyContent blockquote > *:last-child *:last-child,
+      .policy .approvals blockquote > *:last-child *:last-child {
         margin-bottom: 0; }
-  #pageContent table, .fullPost .text table, .comments .commentContent table, .eventContent table, .blurb table, #faq .answer table, .facStaffContent table, .minutesContent table, .policyContent table, .policy .approvals table {
+  #pageContent table,
+  .fullPost .text table,
+  .comments .commentContent table,
+  .eventContent table,
+  .blurb table,
+  #faq .answer table,
+  .facStaffContent table,
+  .minutesContent table,
+  .policyContent table,
+  .policy .approvals table {
     background: #FFFFFF;
     margin-bottom: 1.25rem;
     border: solid 1px #DDDDDD;
     table-layout: auto; }
-    #pageContent table caption, .fullPost .text table caption, .comments .commentContent table caption, .eventContent table caption, .blurb table caption, #faq .answer table caption, .facStaffContent table caption, .minutesContent table caption, .policyContent table caption, .policy .approvals table caption {
+    #pageContent table caption,
+    .fullPost .text table caption,
+    .comments .commentContent table caption,
+    .eventContent table caption,
+    .blurb table caption,
+    #faq .answer table caption,
+    .facStaffContent table caption,
+    .minutesContent table caption,
+    .policyContent table caption,
+    .policy .approvals table caption {
       background: transparent;
       color: #222222;
       font-size: 1rem;
       font-weight: bold; }
-    #pageContent table thead, .fullPost .text table thead, .comments .commentContent table thead, .eventContent table thead, .blurb table thead, #faq .answer table thead, .facStaffContent table thead, .minutesContent table thead, .policyContent table thead, .policy .approvals table thead {
+    #pageContent table thead,
+    .fullPost .text table thead,
+    .comments .commentContent table thead,
+    .eventContent table thead,
+    .blurb table thead,
+    #faq .answer table thead,
+    .facStaffContent table thead,
+    .minutesContent table thead,
+    .policyContent table thead,
+    .policy .approvals table thead {
       background: #F5F5F5; }
       #pageContent table thead tr th,
-      #pageContent table thead tr td, .fullPost .text table thead tr th,
-      .fullPost .text table thead tr td, .comments .commentContent table thead tr th,
-      .comments .commentContent table thead tr td, .eventContent table thead tr th,
-      .eventContent table thead tr td, .blurb table thead tr th,
-      .blurb table thead tr td, #faq .answer table thead tr th,
-      #faq .answer table thead tr td, .facStaffContent table thead tr th,
-      .facStaffContent table thead tr td, .minutesContent table thead tr th,
-      .minutesContent table thead tr td, .policyContent table thead tr th,
-      .policyContent table thead tr td, .policy .approvals table thead tr th,
+      #pageContent table thead tr td,
+      .fullPost .text table thead tr th,
+      .fullPost .text table thead tr td,
+      .comments .commentContent table thead tr th,
+      .comments .commentContent table thead tr td,
+      .eventContent table thead tr th,
+      .eventContent table thead tr td,
+      .blurb table thead tr th,
+      .blurb table thead tr td,
+      #faq .answer table thead tr th,
+      #faq .answer table thead tr td,
+      .facStaffContent table thead tr th,
+      .facStaffContent table thead tr td,
+      .minutesContent table thead tr th,
+      .minutesContent table thead tr td,
+      .policyContent table thead tr th,
+      .policyContent table thead tr td,
+      .policy .approvals table thead tr th,
       .policy .approvals table thead tr td {
         padding: 0.5rem 0.625rem 0.625rem;
         font-size: 1rem;
         font-weight: 700;
         color: #222222; }
-    #pageContent table tfoot, .fullPost .text table tfoot, .comments .commentContent table tfoot, .eventContent table tfoot, .blurb table tfoot, #faq .answer table tfoot, .facStaffContent table tfoot, .minutesContent table tfoot, .policyContent table tfoot, .policy .approvals table tfoot {
+    #pageContent table tfoot,
+    .fullPost .text table tfoot,
+    .comments .commentContent table tfoot,
+    .eventContent table tfoot,
+    .blurb table tfoot,
+    #faq .answer table tfoot,
+    .facStaffContent table tfoot,
+    .minutesContent table tfoot,
+    .policyContent table tfoot,
+    .policy .approvals table tfoot {
       background: #F5F5F5; }
       #pageContent table tfoot tr th,
-      #pageContent table tfoot tr td, .fullPost .text table tfoot tr th,
-      .fullPost .text table tfoot tr td, .comments .commentContent table tfoot tr th,
-      .comments .commentContent table tfoot tr td, .eventContent table tfoot tr th,
-      .eventContent table tfoot tr td, .blurb table tfoot tr th,
-      .blurb table tfoot tr td, #faq .answer table tfoot tr th,
-      #faq .answer table tfoot tr td, .facStaffContent table tfoot tr th,
-      .facStaffContent table tfoot tr td, .minutesContent table tfoot tr th,
-      .minutesContent table tfoot tr td, .policyContent table tfoot tr th,
-      .policyContent table tfoot tr td, .policy .approvals table tfoot tr th,
+      #pageContent table tfoot tr td,
+      .fullPost .text table tfoot tr th,
+      .fullPost .text table tfoot tr td,
+      .comments .commentContent table tfoot tr th,
+      .comments .commentContent table tfoot tr td,
+      .eventContent table tfoot tr th,
+      .eventContent table tfoot tr td,
+      .blurb table tfoot tr th,
+      .blurb table tfoot tr td,
+      #faq .answer table tfoot tr th,
+      #faq .answer table tfoot tr td,
+      .facStaffContent table tfoot tr th,
+      .facStaffContent table tfoot tr td,
+      .minutesContent table tfoot tr th,
+      .minutesContent table tfoot tr td,
+      .policyContent table tfoot tr th,
+      .policyContent table tfoot tr td,
+      .policy .approvals table tfoot tr th,
       .policy .approvals table tfoot tr td {
         padding: 0.5rem 0.625rem 0.625rem;
         font-size: 1rem;
         font-weight: 700;
         color: #222222; }
     #pageContent table tr th,
-    #pageContent table tr td, .fullPost .text table tr th,
-    .fullPost .text table tr td, .comments .commentContent table tr th,
-    .comments .commentContent table tr td, .eventContent table tr th,
-    .eventContent table tr td, .blurb table tr th,
-    .blurb table tr td, #faq .answer table tr th,
-    #faq .answer table tr td, .facStaffContent table tr th,
-    .facStaffContent table tr td, .minutesContent table tr th,
-    .minutesContent table tr td, .policyContent table tr th,
-    .policyContent table tr td, .policy .approvals table tr th,
+    #pageContent table tr td,
+    .fullPost .text table tr th,
+    .fullPost .text table tr td,
+    .comments .commentContent table tr th,
+    .comments .commentContent table tr td,
+    .eventContent table tr th,
+    .eventContent table tr td,
+    .blurb table tr th,
+    .blurb table tr td,
+    #faq .answer table tr th,
+    #faq .answer table tr td,
+    .facStaffContent table tr th,
+    .facStaffContent table tr td,
+    .minutesContent table tr th,
+    .minutesContent table tr td,
+    .policyContent table tr th,
+    .policyContent table tr td,
+    .policy .approvals table tr th,
     .policy .approvals table tr td {
       padding: 0.5625rem 0.625rem;
       font-size: 1rem;
       color: #222222;
       text-align: left; }
-    #pageContent table tr.even, #pageContent table tr.alt, #pageContent table tr:nth-of-type(even), .fullPost .text table tr.even, .fullPost .text table tr.alt, .fullPost .text table tr:nth-of-type(even), .comments .commentContent table tr.even, .comments .commentContent table tr.alt, .comments .commentContent table tr:nth-of-type(even), .eventContent table tr.even, .eventContent table tr.alt, .eventContent table tr:nth-of-type(even), .blurb table tr.even, .blurb table tr.alt, .blurb table tr:nth-of-type(even), #faq .answer table tr.even, #faq .answer table tr.alt, #faq .answer table tr:nth-of-type(even), .facStaffContent table tr.even, .facStaffContent table tr.alt, .facStaffContent table tr:nth-of-type(even), .minutesContent table tr.even, .minutesContent table tr.alt, .minutesContent table tr:nth-of-type(even), .policyContent table tr.even, .policyContent table tr.alt, .policyContent table tr:nth-of-type(even), .policy .approvals table tr.even, .policy .approvals table tr.alt, .policy .approvals table tr:nth-of-type(even) {
+    #pageContent table tr.even, #pageContent table tr.alt, #pageContent table tr:nth-of-type(even),
+    .fullPost .text table tr.even,
+    .fullPost .text table tr.alt,
+    .fullPost .text table tr:nth-of-type(even),
+    .comments .commentContent table tr.even,
+    .comments .commentContent table tr.alt,
+    .comments .commentContent table tr:nth-of-type(even),
+    .eventContent table tr.even,
+    .eventContent table tr.alt,
+    .eventContent table tr:nth-of-type(even),
+    .blurb table tr.even,
+    .blurb table tr.alt,
+    .blurb table tr:nth-of-type(even),
+    #faq .answer table tr.even,
+    #faq .answer table tr.alt,
+    #faq .answer table tr:nth-of-type(even),
+    .facStaffContent table tr.even,
+    .facStaffContent table tr.alt,
+    .facStaffContent table tr:nth-of-type(even),
+    .minutesContent table tr.even,
+    .minutesContent table tr.alt,
+    .minutesContent table tr:nth-of-type(even),
+    .policyContent table tr.even,
+    .policyContent table tr.alt,
+    .policyContent table tr:nth-of-type(even),
+    .policy .approvals table tr.even,
+    .policy .approvals table tr.alt,
+    .policy .approvals table tr:nth-of-type(even) {
       background: #F9F9F9; }
     #pageContent table thead tr th,
     #pageContent table tfoot tr th,
     #pageContent table tfoot tr td,
     #pageContent table tbody tr th,
     #pageContent table tbody tr td,
-    #pageContent table tr td, .fullPost .text table thead tr th,
+    #pageContent table tr td,
+    .fullPost .text table thead tr th,
     .fullPost .text table tfoot tr th,
     .fullPost .text table tfoot tr td,
     .fullPost .text table tbody tr th,
     .fullPost .text table tbody tr td,
-    .fullPost .text table tr td, .comments .commentContent table thead tr th,
+    .fullPost .text table tr td,
+    .comments .commentContent table thead tr th,
     .comments .commentContent table tfoot tr th,
     .comments .commentContent table tfoot tr td,
     .comments .commentContent table tbody tr th,
     .comments .commentContent table tbody tr td,
-    .comments .commentContent table tr td, .eventContent table thead tr th,
+    .comments .commentContent table tr td,
+    .eventContent table thead tr th,
     .eventContent table tfoot tr th,
     .eventContent table tfoot tr td,
     .eventContent table tbody tr th,
     .eventContent table tbody tr td,
-    .eventContent table tr td, .blurb table thead tr th,
+    .eventContent table tr td,
+    .blurb table thead tr th,
     .blurb table tfoot tr th,
     .blurb table tfoot tr td,
     .blurb table tbody tr th,
     .blurb table tbody tr td,
-    .blurb table tr td, #faq .answer table thead tr th,
+    .blurb table tr td,
+    #faq .answer table thead tr th,
     #faq .answer table tfoot tr th,
     #faq .answer table tfoot tr td,
     #faq .answer table tbody tr th,
     #faq .answer table tbody tr td,
-    #faq .answer table tr td, .facStaffContent table thead tr th,
+    #faq .answer table tr td,
+    .facStaffContent table thead tr th,
     .facStaffContent table tfoot tr th,
     .facStaffContent table tfoot tr td,
     .facStaffContent table tbody tr th,
     .facStaffContent table tbody tr td,
-    .facStaffContent table tr td, .minutesContent table thead tr th,
+    .facStaffContent table tr td,
+    .minutesContent table thead tr th,
     .minutesContent table tfoot tr th,
     .minutesContent table tfoot tr td,
     .minutesContent table tbody tr th,
     .minutesContent table tbody tr td,
-    .minutesContent table tr td, .policyContent table thead tr th,
+    .minutesContent table tr td,
+    .policyContent table thead tr th,
     .policyContent table tfoot tr th,
     .policyContent table tfoot tr td,
     .policyContent table tbody tr th,
     .policyContent table tbody tr td,
-    .policyContent table tr td, .policy .approvals table thead tr th,
+    .policyContent table tr td,
+    .policy .approvals table thead tr th,
     .policy .approvals table tfoot tr th,
     .policy .approvals table tfoot tr td,
     .policy .approvals table tbody tr th,
@@ -2929,7 +3127,7 @@ h2.pageTitle {
           #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.currentlyViewing {
             background: #FFFFFF; }
             #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.currentlyViewing a {
-              color: #555555; }
+              color: #444444; }
           #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.today {
             background: #2ea7a0; }
             #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.today a {
@@ -2939,7 +3137,7 @@ h2.pageTitle {
             font-weight: 700;
             color: #2ea7a0; }
           #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td a {
-            color: #aeaeae;
+            color: #9d9d9d;
             display: block;
             padding: 28% 0; }
     #calendar .responsiveEventsList .gridAndOptionsWrapper .dateJump {
@@ -4732,9 +4930,9 @@ form .submitSection,
         #imageGallery .moduleNav #imageGalleryItemList li img:hover {
           border-color: #CCCCCC; }
       #imageGallery .moduleNav #imageGalleryItemList li a {
-        color: #555555; }
+        color: #444444; }
         #imageGallery .moduleNav #imageGalleryItemList li a:hover {
-          color: #222222;
+          color: #111111;
           text-decoration: underline; }
     #imageGallery .moduleNav #imageGalleryItemList #imageGalleryNextPageItem {
       position: absolute;
@@ -4878,23 +5076,140 @@ form .submitSection,
     display: block;
     margin-top: 0.125rem; }
 
-#pageContent img, .fullPost .text img, .comments .commentContent img, .eventContent img, .blurb img, #faq .answer img, .facStaffContent img, .minutesContent img, .policyContent img, .policy .approvals img {
+#pageContent img,
+.fullPost .text img,
+.comments .commentContent img,
+.eventContent img,
+.blurb img,
+#faq .answer img,
+.facStaffContent img,
+.minutesContent img,
+.policyContent img,
+.policy .approvals img {
   width: auto;
   max-width: 100%;
   margin: 0 0 1.375rem;
   display: block;
   clear: left; }
-  #pageContent img.left, #pageContent img[align="left"], #pageContent img.right, #pageContent img[align="right"], .fullPost .text img.left, .fullPost .text img[align="left"], .fullPost .text img.right, .fullPost .text img[align="right"], .comments .commentContent img.left, .comments .commentContent img[align="left"], .comments .commentContent img.right, .comments .commentContent img[align="right"], .eventContent img.left, .eventContent img[align="left"], .eventContent img.right, .eventContent img[align="right"], .blurb img.left, .blurb img[align="left"], .blurb img.right, .blurb img[align="right"], #faq .answer img.left, #faq .answer img[align="left"], #faq .answer img.right, #faq .answer img[align="right"], .facStaffContent img.left, .facStaffContent img[align="left"], .facStaffContent img.right, .facStaffContent img[align="right"], .minutesContent img.left, .minutesContent img[align="left"], .minutesContent img.right, .minutesContent img[align="right"], .policyContent img.left, .policyContent img[align="left"], .policyContent img.right, .policyContent img[align="right"], .policy .approvals img.left, .policy .approvals img[align="left"], .policy .approvals img.right, .policy .approvals img[align="right"] {
+  #pageContent img.left, #pageContent img[align="left"], #pageContent img.right, #pageContent img[align="right"],
+  .fullPost .text img.left,
+  .fullPost .text img[align="left"],
+  .fullPost .text img.right,
+  .fullPost .text img[align="right"],
+  .comments .commentContent img.left,
+  .comments .commentContent img[align="left"],
+  .comments .commentContent img.right,
+  .comments .commentContent img[align="right"],
+  .eventContent img.left,
+  .eventContent img[align="left"],
+  .eventContent img.right,
+  .eventContent img[align="right"],
+  .blurb img.left,
+  .blurb img[align="left"],
+  .blurb img.right,
+  .blurb img[align="right"],
+  #faq .answer img.left,
+  #faq .answer img[align="left"],
+  #faq .answer img.right,
+  #faq .answer img[align="right"],
+  .facStaffContent img.left,
+  .facStaffContent img[align="left"],
+  .facStaffContent img.right,
+  .facStaffContent img[align="right"],
+  .minutesContent img.left,
+  .minutesContent img[align="left"],
+  .minutesContent img.right,
+  .minutesContent img[align="right"],
+  .policyContent img.left,
+  .policyContent img[align="left"],
+  .policyContent img.right,
+  .policyContent img[align="right"],
+  .policy .approvals img.left,
+  .policy .approvals img[align="left"],
+  .policy .approvals img.right,
+  .policy .approvals img[align="right"] {
     float: none !important;
     clear: left; }
   @media only screen and (min-width: 40.063em) {
-    #pageContent img.left, #pageContent img[align="left"], .fullPost .text img.left, .fullPost .text img[align="left"], .comments .commentContent img.left, .comments .commentContent img[align="left"], .eventContent img.left, .eventContent img[align="left"], .blurb img.left, .blurb img[align="left"], #faq .answer img.left, #faq .answer img[align="left"], .facStaffContent img.left, .facStaffContent img[align="left"], .minutesContent img.left, .minutesContent img[align="left"], .policyContent img.left, .policyContent img[align="left"], .policy .approvals img.left, .policy .approvals img[align="left"] {
+    #pageContent img.left, #pageContent img[align="left"],
+    .fullPost .text img.left,
+    .fullPost .text img[align="left"],
+    .comments .commentContent img.left,
+    .comments .commentContent img[align="left"],
+    .eventContent img.left,
+    .eventContent img[align="left"],
+    .blurb img.left,
+    .blurb img[align="left"],
+    #faq .answer img.left,
+    #faq .answer img[align="left"],
+    .facStaffContent img.left,
+    .facStaffContent img[align="left"],
+    .minutesContent img.left,
+    .minutesContent img[align="left"],
+    .policyContent img.left,
+    .policyContent img[align="left"],
+    .policy .approvals img.left,
+    .policy .approvals img[align="left"] {
       margin-right: 1.5rem;
       float: left !important; }
-    #pageContent img.right, #pageContent img[align="right"], .fullPost .text img.right, .fullPost .text img[align="right"], .comments .commentContent img.right, .comments .commentContent img[align="right"], .eventContent img.right, .eventContent img[align="right"], .blurb img.right, .blurb img[align="right"], #faq .answer img.right, #faq .answer img[align="right"], .facStaffContent img.right, .facStaffContent img[align="right"], .minutesContent img.right, .minutesContent img[align="right"], .policyContent img.right, .policyContent img[align="right"], .policy .approvals img.right, .policy .approvals img[align="right"] {
+    #pageContent img.right, #pageContent img[align="right"],
+    .fullPost .text img.right,
+    .fullPost .text img[align="right"],
+    .comments .commentContent img.right,
+    .comments .commentContent img[align="right"],
+    .eventContent img.right,
+    .eventContent img[align="right"],
+    .blurb img.right,
+    .blurb img[align="right"],
+    #faq .answer img.right,
+    #faq .answer img[align="right"],
+    .facStaffContent img.right,
+    .facStaffContent img[align="right"],
+    .minutesContent img.right,
+    .minutesContent img[align="right"],
+    .policyContent img.right,
+    .policyContent img[align="right"],
+    .policy .approvals img.right,
+    .policy .approvals img[align="right"] {
       margin-left: 1.5rem;
       float: right !important; }
-    #pageContent img.left, #pageContent img[align="left"], #pageContent img.right, #pageContent img[align="right"], .fullPost .text img.left, .fullPost .text img[align="left"], .fullPost .text img.right, .fullPost .text img[align="right"], .comments .commentContent img.left, .comments .commentContent img[align="left"], .comments .commentContent img.right, .comments .commentContent img[align="right"], .eventContent img.left, .eventContent img[align="left"], .eventContent img.right, .eventContent img[align="right"], .blurb img.left, .blurb img[align="left"], .blurb img.right, .blurb img[align="right"], #faq .answer img.left, #faq .answer img[align="left"], #faq .answer img.right, #faq .answer img[align="right"], .facStaffContent img.left, .facStaffContent img[align="left"], .facStaffContent img.right, .facStaffContent img[align="right"], .minutesContent img.left, .minutesContent img[align="left"], .minutesContent img.right, .minutesContent img[align="right"], .policyContent img.left, .policyContent img[align="left"], .policyContent img.right, .policyContent img[align="right"], .policy .approvals img.left, .policy .approvals img[align="left"], .policy .approvals img.right, .policy .approvals img[align="right"] {
+    #pageContent img.left, #pageContent img[align="left"], #pageContent img.right, #pageContent img[align="right"],
+    .fullPost .text img.left,
+    .fullPost .text img[align="left"],
+    .fullPost .text img.right,
+    .fullPost .text img[align="right"],
+    .comments .commentContent img.left,
+    .comments .commentContent img[align="left"],
+    .comments .commentContent img.right,
+    .comments .commentContent img[align="right"],
+    .eventContent img.left,
+    .eventContent img[align="left"],
+    .eventContent img.right,
+    .eventContent img[align="right"],
+    .blurb img.left,
+    .blurb img[align="left"],
+    .blurb img.right,
+    .blurb img[align="right"],
+    #faq .answer img.left,
+    #faq .answer img[align="left"],
+    #faq .answer img.right,
+    #faq .answer img[align="right"],
+    .facStaffContent img.left,
+    .facStaffContent img[align="left"],
+    .facStaffContent img.right,
+    .facStaffContent img[align="right"],
+    .minutesContent img.left,
+    .minutesContent img[align="left"],
+    .minutesContent img.right,
+    .minutesContent img[align="right"],
+    .policyContent img.left,
+    .policyContent img[align="left"],
+    .policyContent img.right,
+    .policyContent img[align="right"],
+    .policy .approvals img.left,
+    .policy .approvals img[align="left"],
+    .policy .approvals img.right,
+    .policy .approvals img[align="right"] {
       max-width: 40%; } }
 
 .editable {
@@ -5177,8 +5492,8 @@ form .submitSection,
           border-bottom: 1px solid #FFFFFF;
           padding: 0.75rem 1rem; }
         #minisiteNavigation ul .navList li a {
-          color: #555555;
-          color: #4b4b4b; }
+          color: #444444;
+          color: #3a3a3a; }
           #minisiteNavigation ul .navList li a.cur {
             padding: 0;
             border-bottom: 0; }
@@ -5751,7 +6066,7 @@ form .submitSection,
           margin-bottom: 0;
           padding-bottom: 0; }
         #meat .publication.fullPostDisplay .fullPost .firstChunk .commentAdded h4 {
-          color: #555555;
+          color: #444444;
           font-size: 1rem;
           display: block;
           padding: 0; }
@@ -6804,7 +7119,7 @@ form .submitSection,
               padding: 1.125rem 1.5rem; }
             .siteHome #meat.containsConRel #content .contentMain #relatedPub #normalItems .post h4 {
               margin: 0;
-              color: #555555;
+              color: #444444;
               font-weight: 400;
               font-size: 1rem; }
         .siteHome #meat.containsConRel #content .contentMain #relatedPub .pubLinks li a {

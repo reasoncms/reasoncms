@@ -58,7 +58,16 @@
 }
 
 // Inline images, added by TinyMCE
-#{$wysiwyg-all-areas} {
+#pageContent,
+.fullPost .text,
+.comments .commentContent,
+.eventContent,
+.blurb,
+#faq .answer,
+.facStaffContent,
+.minutesContent,
+.policyContent,
+.policy .approvals {
 	img {
 		width: auto;  // Allow inline image to display at native resolution,
 		max-width: 100%;  // but no bigger than its container.

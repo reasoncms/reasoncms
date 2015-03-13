@@ -53,7 +53,16 @@ h2.pageTitle {
 	}
 }
 
-#{$wysiwyg-all-areas} {
+#pageContent,
+.fullPost .text,
+.comments .commentContent,
+.eventContent,
+.blurb,
+#faq .answer,
+.facStaffContent,
+.minutesContent,
+.policyContent,
+.policy .approvals {
 	@include clearfix;
 	margin-bottom: $horizontal-gutter - $paragraph-margin-bottom;
 

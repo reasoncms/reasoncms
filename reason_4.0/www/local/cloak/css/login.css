@@ -56,7 +56,7 @@ body {
 
 body {
   background: #FFFFFF;
-  color: #555555;
+  color: #444444;
   padding: 0;
   margin: 0;
   font-family: "Open Sans", sans-serif;
@@ -429,7 +429,7 @@ abbr,
 acronym {
   text-transform: uppercase;
   font-size: 90%;
-  color: #555555;
+  color: #444444;
   cursor: help; }
 
 abbr {
