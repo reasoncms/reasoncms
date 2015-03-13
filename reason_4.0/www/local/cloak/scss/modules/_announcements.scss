@@ -20,8 +20,7 @@
 			@include cloak-alert($mode: success);
 			margin: - $alert-padding-top;
 			border-radius: 0 !important;
-			border-bottom: 10px solid red;
-			padding: $alert-padding-top;
+			border-bottom: $alert-padding-top solid red;
 		}
 
 		.info {
