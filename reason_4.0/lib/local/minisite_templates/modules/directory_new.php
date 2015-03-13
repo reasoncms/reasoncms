@@ -170,7 +170,7 @@ class DirectoryModule extends DefaultMinisiteModule {
         $this->form->elements = $this->elements;
         $this->form->actions = array('Search');
         $this->form->error_header_text = 'Search error';
-        $this->form->add_callback(array(&$this, 'show_results'),'process');
+        $this->form->add_callback(array(&$this, 'show_results'),'post_show_form');
         $this->form->add_callback(array(&$this, 'display_form_help'),'post_show_form');
         $this->form->add_callback(array(&$this, 'run_error_checks'),'run_error_checks');
         $this->form->add_callback(array(&$this, 'on_every_time'),'on_every_time');
