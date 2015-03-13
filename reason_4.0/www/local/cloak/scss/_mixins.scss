@@ -133,9 +133,9 @@
 			display: block;
 			text-align: center;
 			background: rgba(white, .25);
-			margin-top: - $alert-padding-top;
-			margin-left: - $alert-padding-top;
-			margin-right: - $alert-padding-top;
+			margin-top: -$alert-padding-top;
+			margin-left: -$alert-padding-top;
+			margin-right: -$alert-padding-top;
 			margin-bottom: $alert-padding-top;
 			padding: rem-calc(12) 0;
 			border-bottom: 1px solid;
@@ -202,7 +202,7 @@
 	&:before {
 		display: block;
 		content: "";
-		margin-top: - $column-gutter/2;
+		margin-top: -($column-gutter/2);
 		height: $column-gutter/2;
 		visibility: hidden;
 	}
@@ -213,12 +213,12 @@
 	&:before { 
 		display: block;
 		content: "";
-		margin-top: - $column-gutter;
+		margin-top: -$column-gutter;
 		height: $column-gutter;
 		visibility: hidden;
 
 		@media #{$large-up} {
-			margin-top: - $column-gutter*4;
+			margin-top: -($column-gutter*4);
 			height: $column-gutter*4;
 		}
 	}

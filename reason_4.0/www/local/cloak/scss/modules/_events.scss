@@ -578,7 +578,7 @@ $medium-only-events: "#{$screen} and (min-width:#{$events_default_break_point_up
 
 			&:before {
 				@extend .fa-fw;
-				margin-left: - $column-gutter/2;				
+				margin-left: -($column-gutter/2);				
 			}
 		}
 

@@ -58,7 +58,7 @@
 				&:before {  // video play icon
 					@extend .fa;
 					content: $fa-var-youtube-play;
-					margin-left: - $column-gutter/2;
+					margin-left: -($column-gutter/2);
 					float: left;
 					margin-top: rem-calc(4);
 					color: $aluminum;
