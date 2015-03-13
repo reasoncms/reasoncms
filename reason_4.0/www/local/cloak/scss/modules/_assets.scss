@@ -17,7 +17,7 @@
 		&:before {  // download icon
 			@extend .fa;
 			content: $fa-var-download;
-			margin-left: - $column-gutter/2;
+			margin-left: -$column-gutter/2;
 			float: left;
 			margin-top: rem-calc(6);
 			color: $aluminum;
