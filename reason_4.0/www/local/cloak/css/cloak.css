@@ -2005,8 +2005,8 @@ dialog .close-reveal-modal span {
     padding-bottom: 1.125rem; }
     .assets li:before {
       content: "";
-      margin-left: -1.5rem;
       float: left;
+      margin-left: -1.5rem;
       margin-top: 0.375rem;
       color: #999999; }
     .assets li.mp4:before {
