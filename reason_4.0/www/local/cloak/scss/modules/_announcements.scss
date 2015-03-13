@@ -18,7 +18,7 @@
 
 		.success {
 			@include cloak-alert($mode: success);
-			margin: - $alert-padding-top;
+			margin: -$alert-padding-top;
 			border-radius: 0 !important;
 			border-bottom: $alert-padding-top*4 solid red;
 		}
