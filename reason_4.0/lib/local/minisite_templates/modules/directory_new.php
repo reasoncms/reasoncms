@@ -214,7 +214,7 @@ class DirectoryModule extends DefaultMinisiteModule {
 
             echo "<li class='directoryHeadItem'><a id='loggedUser' href='./?netid[]={$logged_user}'>{$logged_user}</a></li>";
             // echo "<li class='yourEntry'><a href='./?netid[]={$logged_user}'>Your Entry</a></li>";
-            $logout_link = carl_make_link(array('logout' => 1),'login');
+            $logout_link = carl_make_link(array('logout' => 1),'/login/');
             echo "<li class='directoryHeadItem'><a id='logOut' href='{$logout_link}'>Log Out</a></li>";
         } else {
             echo "<li class='directoryHeadItem'><a id='logIn' href='/login/'>Log in</a></li>";
