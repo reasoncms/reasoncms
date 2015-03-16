@@ -31,6 +31,7 @@ class DirectoryModule extends DefaultMinisiteModule {
     var $pdf_fonts;
     var $user_netid;
     var $photos;
+    var $passables = array('netid');
     var $search_url;
     var $result_comment;
     var $elements = array(
@@ -151,19 +152,23 @@ class DirectoryModule extends DefaultMinisiteModule {
 
         }
 
-        // Allow any of the form elements (old or new) to be set from the URL or POST, and look like a submission
-        // foreach ($_REQUEST as $key => $val) {
-        //     if (isset($this->elements[$key])) {
-        //         $_REQUEST['submitted'] = true;
-        //     }
-        //     else if (isset($this->old_form_keys[$key])) {
-        //         $_REQUEST[$this->old_form_keys[$key]] = $val;
-        //         $_REQUEST['submitted'] = true;
-        //     }
-        //     else if (isset($this->cleanup_rules[$key])) {
-        //         $_REQUEST['submitted'] = true;
-        //     }
-        // }
+        // Allow any of the form elements to be set from the URL or POST, and look like a submission
+		foreach ($_REQUEST as $key => $val) {
+			if (isset($this->elements[$key])) {
+				$_REQUEST['submitted'] = true;
+			}
+			else if (isset($this->cleanup_rules[$key])) {
+				$_REQUEST['submitted'] = true;
+			}
+		}
+		
+		if ($this->context == 'logged_in')
+		{
+			$_REQUEST['csrf_token'] = $_SESSION['csrf_token'];
+			$_POST['csrf_token'] = $_SESSION['csrf_token'];
+		}
+		//  clear existing netid param on form submit
+		$_SERVER['REQUEST_URI'] = '/directory/';
 
         $this->form = new disco();
         $this->form->box_class = 'StackedBox';
