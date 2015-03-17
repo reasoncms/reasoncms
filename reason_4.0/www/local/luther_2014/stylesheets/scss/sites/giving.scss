@@ -30,21 +30,6 @@ $tab-current-color: $lc-blue-dark;
 		// COLUMNS
 		&.hasConRelNav { /* 3 COLUMNS: Nav, Content, & Related */
 
-			// @media #{$medium-up} {
-			// 	#contentAndRelated { 
-			// 		// Minisite navigation is in "mobile" view at and below this range, resulting in 2 columns.
-			// 		#contentSections {
-			// 			@include grid-column($columns: 10, $collapse: true);
-			// 			padding-right: $column-gutter / 2;
-			// 		}
-					
-			// 		#relatedSections {
-			// 			@include grid-column($columns: 6, $collapse: true);
-			// 			padding-left: $column-gutter / 2;
-			// 		}
-			// 	}
-			// }
-
 			#contentFeature {
 				@include grid-row();
 			}
@@ -53,7 +38,6 @@ $tab-current-color: $lc-blue-dark;
 				#contentAndRelated {
 					// Minisite navigation is in "desktop" view is hidden on the homepage.
 					@include grid-column($columns: 16, $collapse: true);
-					// /padding-left: 0;
 
 					#contentSections {
 						@include grid-column($columns: 8, $collapse: true);
@@ -82,6 +66,7 @@ $tab-current-color: $lc-blue-dark;
 			// 		}
 			// 	}
 			// }
+
 			@media #{$xlarge-up} {
 				#contentAndRelated {
 					@include grid-column($columns: 16, $collapse: true);
@@ -107,7 +92,6 @@ $tab-current-color: $lc-blue-dark;
 			}
 
 			#contentAndRelated {
-				//width: 100%;
 			}
 		}
 
@@ -118,9 +102,7 @@ $tab-current-color: $lc-blue-dark;
 		.give-now {
 			background: url('/reason/local/luther_2014/images/giving/give-now.jpg') no-repeat top left;
 			@include clearfix;
-			//height: 540px;
 			min-height: 540px;
-			// overflow: hidden;
 
 			.give-now-text {
 				@include clearfix;
@@ -154,18 +136,13 @@ $tab-current-color: $lc-blue-dark;
 				}
 
 				.give-now-form {
-					//@include grid-column($columns:16);
 					background: rgba($lc-blue-light,.85);
 					padding: $column-gutter;
 					color: white;
 
-
-					
 					@media #{$large-up} {
 						width: 60%;
 						float: left;
-						
-						//@include grid-column($columns:10);
 					}
 					
 					h2 {
@@ -179,16 +156,12 @@ $tab-current-color: $lc-blue-dark;
 						.formElement {
 							padding: 0 0 rem-calc(20) 0;
 
-							//border: 1px solid white;
-
 							.words {
 								@extend .screenreader;
-
 							}
 
 							.element {
 								
-
 								input[type="text"] {
 									border: none;
 									padding: rem-calc(14);
@@ -222,7 +195,6 @@ $tab-current-color: $lc-blue-dark;
 
 						.submitSection {
 							padding: 0;
-							//border: 1px solid white;
 
 							input[type="submit"] {
 								width: 100%;
@@ -232,6 +204,14 @@ $tab-current-color: $lc-blue-dark;
 								@include button-size($padding: $button-med);
 								font-family: $body-font-family;
 								font-size: rem-calc(22) !important;
+
+								&:hover {
+									background: lighten($lc-yellow, 3%);
+								}
+
+								&:active {
+									background: darken($lc-yellow, 3%);
+								}
 							}
 						}
 					}
@@ -244,10 +224,6 @@ $tab-current-color: $lc-blue-dark;
 				.other-ways {
 					background: white;
 					padding: $column-gutter;
-
-					@media #{$medium-up} {
-
-					}
 
 					@media #{$large-up} {
 						width: 40%;
@@ -267,8 +243,9 @@ $tab-current-color: $lc-blue-dark;
 							text-decoration: underline;
 
 							@media #{$small-only} {
-								background: #efefef;
-								padding: 16px 24px;
+								//background: #efefef;
+								border: 2px solid $lc-yellow;
+								padding: rem-calc(16) rem-calc(24);
 								display: block;
 								border-radius: $global-rounded;
 								text-align: center;
@@ -309,12 +286,6 @@ $tab-current-color: $lc-blue-dark;
 			}	
 		}
 	}
-}
-
-
-
-#sidebar {
-	border: 1px solid $lc-blue-light;
 }
 
 #giving_form {
