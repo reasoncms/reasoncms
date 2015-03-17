@@ -630,7 +630,7 @@ button.disabled.alert:hover, button.disabled.alert:focus, button[disabled].alert
   /* line 310, ../scss/sites/giving.scss */
   #minisite #contentAndRelated .contentHead .breadcrumbs,
   #minisite #contentAndRelated .contentHead .pageTitle {
-    padding-right: 13.75rem;
+    padding-right: 18.75rem;
   }
 }
 
@@ -703,11 +703,11 @@ button.disabled.alert:hover, button.disabled.alert:focus, button[disabled].alert
   -o-transition-timing-function: ease;
   transition-timing-function: ease;
 }
-/* line 271, ../scss/_mixins.scss */
+/* line 269, ../scss/_mixins.scss */
 .give-now-mini h2 a:link {
   text-decoration: none !important;
 }
-/* line 275, ../scss/_mixins.scss */
+/* line 273, ../scss/_mixins.scss */
 .give-now-mini h2 a:hover {
   background: #3b6a0e !important;
 }
@@ -717,7 +717,7 @@ button.disabled.alert:hover, button.disabled.alert:focus, button[disabled].alert
   margin-left: 0.375rem;
   color: inherit;
 }
-/* line 281, ../scss/_mixins.scss */
+/* line 279, ../scss/_mixins.scss */
 .give-now-mini h2 a:after {
   line-height: 1 !important;
   display: block;
