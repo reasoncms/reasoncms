@@ -412,8 +412,8 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'call_to_action_blurb' => '',
 		'sidebar' => array(
 			'module' => 'feature/feature',
-			'width' => '800',
-			'height' => '500',
+			'width' => '975',
+			'height' => '650',
 			'autoplay_timer' => 4,
 			// 'autoplay' => true,
 		),
