@@ -279,17 +279,16 @@
       }
     }
 
-    // .directoryAdvisor {
-    //  &:before {
-    //    content: $fa-var-comments;
-    //  }
-    // }
-
     .directoryTerms {
       &:before {
         content: $fa-var-book;
       }
     }
 
+    .directoryFacultySite {
+      &:before {
+        content: $fa-var-laptop;
+      }
+    }
   }
 }

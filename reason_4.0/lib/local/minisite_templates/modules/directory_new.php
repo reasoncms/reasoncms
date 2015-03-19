@@ -662,6 +662,10 @@ class DirectoryModule extends DefaultMinisiteModule {
                 if (isset($data['mail'])) {
                     echo $this->format_email($data);
                 }
+                if ($this->get_faculty_site($data['uid'][0])) {
+                    $site = $this->get_faculty_site($data['uid'][0]);
+                    echo $this->format_single_attribute($site, 'Website', 'directoryFacultySite');
+                }
                 if (isset($data['uid'])) {
                     echo $this->format_single_attribute($data['uid'][0], 'Username', 'directoryUsername');
                 }
@@ -1851,6 +1855,27 @@ class DirectoryModule extends DefaultMinisiteModule {
             }
         }
         return $depts;
+    }
+
+    function get_faculty_site($faculty) {
+        // find all the sites
+
+        $es = new entity_selector();
+        $es->description = 'Getting all live sites for search';
+        $es->add_type( id_of( 'site' ) );
+        $es->add_relation('site.site_state = "Live"');
+        $es->add_relation("site.base_url = '/{$faculty}/'");
+        $es->limit_fields('base_url');
+        $results = $es->run_one();
+        if ($results) {
+            foreach ($results as $site) {
+                $base_url = $site->get_value('base_url');
+                $url = "<a href='{$base_url}'>www.luther.edu{$base_url}</a>";
+                return $url;
+            }
+        } else {
+            return false;
+        }
     }
 
     /** Find all of the Reason sites whose department matches one of those passed
