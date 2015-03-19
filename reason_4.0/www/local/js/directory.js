@@ -37,7 +37,7 @@ $(document).ready(function() {
         filter_hideFilters : false,
         filter_ignoreCase : true,
         filter_liveSearch : true,
-        filter_reset : 'button.reset',
+        filter_reset : '.filterReset',
         filter_searchDelay : 300,
         filter_serversideFiltering: false,
         filter_startsWith : false,

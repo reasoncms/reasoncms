@@ -843,6 +843,7 @@ class DirectoryModule extends DefaultMinisiteModule {
         $str = '';
         $str .= '<p class="personPager"></p>';
         $str .= '<div id="searchResults" class="photoBook">';
+        $str .= '<a class="filterReset" class="button">Reset Filters</a>';
 
         $str .= '<table id="directory" class="tablesorter" border="0" cellpadding="0" cellspacing="0">';
             $str .= '<thead>';
