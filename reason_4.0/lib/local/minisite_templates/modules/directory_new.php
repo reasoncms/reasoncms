@@ -893,14 +893,15 @@ class DirectoryModule extends DefaultMinisiteModule {
             }
           }
           if (isset ($data['officephone'][0])) {
+              $tel_link = "<a href='tel:{$data['officephone'][0]}'>{$data['officephone'][0]}</a>";
               if (!strpos($data['officephone'][0], ',')){
-                $str .= '<td class="nowrap">'.$data['officephone'][0].'</td>';
+                $str .= '<td class="nowrap">'.$tel_link.'</td>';
               } else {
                 $cleaned = str_replace(',', '<br>', $data['officephone'][0]);
                 $str .= '<td>' . $cleaned . '</td>';
               }
           } elseif (isset ($data['studentresidencehallphone'][0])) {
-              $str .= '<td id="phone">'.$data['studentresidencehallphone'][0].'</td>';
+              $str .= '<td id="phone">'.$tel_link.'</td>';
           } else {
               $str .= '<td>&nbsp;</td>';
           }
