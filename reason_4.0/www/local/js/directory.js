@@ -2,7 +2,6 @@ $(document).ready(function() {
 
     $("#first_nameElement").focusWithoutScrolling();
     hide_all();
-    clearOptions();
     input_error_check("#departElement");
     input_error_check("#titleElement");
     input_error_check("#phone_numberElement");
@@ -10,12 +9,13 @@ $(document).ready(function() {
     if ($("#search_forElement").val() != "anyone") {
         show_all();
     }
-    if ($("#majorElement").val() != "any") {
+    if ($("#majorElement").length && $("#majorElement").val() != "any") {
         show_all();
     }
-    if ($("#yearElement").val() != "any") {
+    if ($("#yearElement").length && $("#yearElement").val() != "any") {
         show_all();
     }
+    clearOptions();
 
     var tablesorteropts = {
       theme: 'ice',
@@ -89,7 +89,6 @@ function hide_all() {
     $("#majorItem").hide();
     $("#yearItem").hide();
     $("#facultycommentItem").hide();
-    clearOptions();
 }
 function toggle_all() {
     $("#searchforItem").toggle();
@@ -111,6 +110,9 @@ function clearOptions()
     if ($("#searchforItem").is(':visible')) {
         $(".searchOptions").addClass("openOptions").removeClass("closedOptions");
         $(".openOptions").text('Clear Options');
+    } else {
+        $(".searchOptions").addClass("closedOptions").removeClass("openOptions");
+        $(".closedOptions").text('More Options');
         $("#search_forElement").val('anyone');
         $("#departElement").val('');
         $("#titleElement").val('');
@@ -119,13 +121,10 @@ function clearOptions()
         $("#roomElement").val('');
         $("#majorElement").val('any');
         $("#yearElement").val('any');
-    } else {
-        $(".searchOptions").addClass("closedOptions").removeClass("openOptions");
-        $(".closedOptions").text('More Options');
     }
 }
 function input_error_check(html_id) {
-    if ($(html_id).val().length > 0) {
+    if ( $(html_id).length && $(html_id).val() ) {
         show_all();
     }
 }
