@@ -37,7 +37,7 @@ class DirectoryModule extends DefaultMinisiteModule {
     var $elements = array(
             'first_name' => array(
                 'display_name' => 'Name or Username',
-                'comments' => '<span class="formComment"><a id="searchOptions" class="closedOptions" onclick="toggle_all(); return false;" href="#">More Options</a></span>',
+                'comments' => '<span class="formComment"><a class="searchOptions"  onclick="toggle_all(); return false;" href="#">More Options</a></span>',
                 'type' => 'text',
                 'size' => '15'
              ),
@@ -55,7 +55,7 @@ class DirectoryModule extends DefaultMinisiteModule {
             'phone_number' => array(
                 'type' => 'text',
                 'size' => '15',
-                'comments' => '<span class="formComment">e.g. 4444<span>'
+                'comments' => '<span class="formComment">e.g. 4444</span>'
             ),
             /*fist_name now does all types of names, including user name so email should go with that
              * 'email_address' => array('type' => 'text','size' => '15',
@@ -66,7 +66,7 @@ class DirectoryModule extends DefaultMinisiteModule {
                 'type' => 'text',
                 'size' => '15',
                 'display_name' => 'Building (Office / Residence)',
-                'comments' => '<span class="formComment">e.g. miller<span>'
+                'comments' => '<span class="formComment">e.g. miller</span>'
             ),
             'student_comment' => array(
                 'type' => 'comment',
@@ -92,12 +92,12 @@ class DirectoryModule extends DefaultMinisiteModule {
             'depart' => array(
                 'display_name' => 'Department',
                 'type' => 'text','size' => '15',
-                'comments' => '<span class="formComment">e.g. english<span>'
+                'comments' => '<span class="formComment">e.g. english</span>'
             ),
             'title' => array(
                 'type' => 'text',
                 'size' => '15',
-                'comments' => '<span class="formComment">e.g. dean<span>'
+                'comments' => '<span class="formComment">e.g. dean</span>'
             ),
 
             /*'exact' => array(
