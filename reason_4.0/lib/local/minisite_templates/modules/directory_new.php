@@ -190,8 +190,9 @@ class DirectoryModule extends DefaultMinisiteModule {
     {
         // if ($this->user_netid == ""){
         $form = $this->form;
-        cleaned_majors();
-        $form->change_element_type('major', 'chosen_select_multiple', array('options' => cleaned_majors()));
+        $this->majors = cleaned_majors();
+        $this->majors = array('any' => 'Any') + $this->majors;
+        $form->change_element_type('major', 'select_no_sort', array('options' => $this->majors));
         $form->set_display_name('depart','Faculty/Staff Department');
         $form->set_display_name('title','Faculty/Staff Title');
         // }
@@ -199,8 +200,9 @@ class DirectoryModule extends DefaultMinisiteModule {
 
     function run()//{{{
     {
-        echo "<div class='directoryHead'>";
-        echo "<ul>";
+        echo "<div class='directoryHead'>\n";
+        echo "<ul>\n";
+        $combined_array = array_merge($_REQUEST, $_SESSION);
         if ($logged_user = $this->user_netid) {
             if (!$this->ldap_admin){
                 $ds = @ldap_connect('ldap.luther.edu', '389');
@@ -212,15 +214,17 @@ class DirectoryModule extends DefaultMinisiteModule {
                 }
             }
 
-            echo "<li class='directoryHeadItem'><a id='loggedUser' href='./?netid[]={$logged_user}'>{$logged_user}</a></li>";
+            echo "<li class='directoryHeadItem'><a id='loggedUser' href='./?netid[]={$logged_user}'>{$logged_user}</a></li>\n";
             // echo "<li class='yourEntry'><a href='./?netid[]={$logged_user}'>Your Entry</a></li>";
-            $logout_link = carl_make_link(array('logout' => 1),'/login/');
-            echo "<li class='directoryHeadItem'><a id='logOut' href='{$logout_link}'>Log Out</a></li>";
+            $combined_array['logout'] = 1;
+            $logout_link = carl_make_link($combined_array,'/login/');
+            echo "<li class='directoryHeadItem'><a id='logOut' href='{$logout_link}'>Log Out</a></li>\n";
         } else {
-            echo "<li class='directoryHeadItem'><a id='logIn' href='/login/'>Log in</a></li>";
+            $login_link = carl_make_link($combined_array, '/login/');
+            echo "<li class='directoryHeadItem'><a id='logIn' href='{$login_link}'>Log In</a></li>\n";
         }
-        echo "</ul>";
-        echo "</div>";
+        echo "</ul>\n";
+        echo "</div>\n";
         $this->get_menu_data();
         $this->display_form();
     } //}}}
@@ -326,20 +330,13 @@ class DirectoryModule extends DefaultMinisiteModule {
             $this->form->remove_element('building');
             $this->form->remove_element('room');
             $this->form->remove_element('student_comment');
-            // $this->form->remove_element('major');
+            $this->form->remove_element('major');
             $this->form->remove_element('year');
             $this->form->remove_element('faculty_comment');
             $this->form->remove_element('pictures');
             // $this->form->remove_element('display_as');
         }
-
         echo '<div id="campusDirForm">';
-        // Prominent login link for off-campus mobile users
-//        if ($this->context == 'external' && !reason_check_authentication()) {
-        /* Removing login button for now */
-        // if ($this->context == 'external' && !$this->user_netid) {
-            // echo '<div class="directory_head"><a href="/login/">Log in <i class="fa fa-sign-in"></i></a></div>';
-        // }
         $this->form->run();
         echo '</div>';
     } //}}}
@@ -775,7 +772,7 @@ class DirectoryModule extends DefaultMinisiteModule {
 
             echo "</div>";  //.directoryInfo;
             echo '</div>';  //.directory
-            echo '</div>';  //#directory_person directory
+            // echo '</div>';  //#directory_person directory
         } /* endforeach */
     }//}}}
 
@@ -857,7 +854,7 @@ class DirectoryModule extends DefaultMinisiteModule {
                             $str .= '<th class="spo">SPO</th>';
                         $str .= '<th class="phone nowrap">Campus Phone</th>';
                     if ($this->user_netid) {
-                        $str .= '<th>Year</th>';
+                        $str .= '<th class="year">Year</th>';
                     }
                 $str .= '</tr>';
             $str .= '</thead>';
