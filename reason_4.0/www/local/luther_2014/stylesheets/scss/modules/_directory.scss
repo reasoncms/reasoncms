@@ -14,6 +14,8 @@
 // Font Awesome Imports
 @import "font-awesome/variables";
 @import "font-awesome/core";
+@import "font-awesome/mixins";
+@import "font-awesome/rotated-flipped";
 
 // Luther imports
 @import "extends";
@@ -54,29 +56,26 @@
     }
   }
 }
-
-#searchOptions.closedOptions {
+.searchOptions.openOptions {
     &:after {
       @extend .fa;
       content: $fa-var-chevron-down;
-      color: $anchor-font-color;
-      font-size: 85%;
-      vertical-align: top;
-      position: absolute;
-      padding-top: rem-calc(10);
-      padding-left: rem-calc(5);
+      @include rotate(-180deg);
+      @include transition-property(transform);
+      @include transition-duration(.4s);
+      @include transition-timing-function(ease-in);
+      padding-left: rem-calc(3);
     }
 }
-#searchOptions.openOptions {
+.searchOptions.closedOptions {
     &:after {
       @extend .fa;
-      content: $fa-var-chevron-up;
-      color: $anchor-font-color;
-      font-size: 85%;
-      vertical-align: top;
-      position: absolute;
-      padding-top: rem-calc(10);
-      padding-left: rem-calc(5);
+      content: $fa-var-chevron-down;
+      @include rotate(0);
+      @include transition-property(transform);
+      @include transition-duration(.4s);
+      @include transition-timing-function(ease-in);
+      padding-left: rem-calc(3);
     }
 }
 
