@@ -176,6 +176,7 @@ class DirectoryModule extends DefaultMinisiteModule {
         $this->form->actions = array('Search');
         $this->form->error_header_text = 'Search error';
         $this->form->add_callback(array(&$this, 'show_results'),'post_show_form');
+        $this->form->add_callback(array(&$this, 'query_checks'),'process');
         $this->form->add_callback(array(&$this, 'display_form_help'),'post_show_form');
         $this->form->add_callback(array(&$this, 'run_error_checks'),'run_error_checks');
         $this->form->add_callback(array(&$this, 'on_every_time'),'on_every_time');
@@ -188,11 +189,12 @@ class DirectoryModule extends DefaultMinisiteModule {
 
     function on_every_time()
     {
-        // if ($this->user_netid == ""){
         $form = $this->form;
-        $this->majors = cleaned_majors();
-        $this->majors = array('any' => 'Any') + $this->majors;
-        $form->change_element_type('major', 'select_no_sort', array('options' => $this->majors));
+        if ($this->user_netid != '') {
+            $this->majors = cleaned_majors();
+            $this->majors = array('any' => 'Any') + $this->majors;
+            $form->change_element_type('major', 'select_no_sort', array('options' => $this->majors));
+        }
         $form->set_display_name('depart','Faculty/Staff Department');
         $form->set_display_name('title','Faculty/Staff Title');
         // }
@@ -250,7 +252,7 @@ class DirectoryModule extends DefaultMinisiteModule {
         $form->set_error('first_name','You did not specify anything to search for.');
     }
 
-    function show_results(&$form) {
+    function query_checks(&$form) {
         // Assemble all the data that's come in via the form or the URL into $q
         $elements = $form->get_element_names();
         foreach ($elements as $element) {
@@ -280,6 +282,40 @@ class DirectoryModule extends DefaultMinisiteModule {
             $entries = $this->get_search_results($query);
             $this->result_comment = '<p></p><div style="color:red"><strong>Note:</strong> No exact matches were found; these are entries similar to what you searched for.</div><p></p>';
         }
+        return $entries;
+    }
+
+    function show_results(&$form) {
+        $entries = $this->query_checks($form);
+        // // Assemble all the data that's come in via the form or the URL into $q
+        // $elements = $form->get_element_names();
+        // foreach ($elements as $element) {
+        //     if ($form->get_value($element))
+        //         $q[$element] = $form->get_value($element);
+        // }
+        // foreach ($this->cleanup_rules as $name => $rule) {
+        //     // echo "NAME={$this->request[$rule]}<br>";
+        //     if (isset($this->request[$name]))
+        //         $q[$name] = $this->request[$name];
+        // }
+        // $query_parts = $this->build_query($q);
+        // if (!$query_parts) {
+        //     $form->set_error('first_name', 'You do not appear to be searching for anything.  Please try again.');
+        //     return;
+        // }
+        // // Get results from the Telecomm database
+        // $telecomm = $this->get_telecomm_data($q);
+
+        // // Build and execute an LDAP query
+        // list($query, $query_desc) = $query_parts;
+        // $entries = $this->get_search_results($query);
+
+        // // If there aren't any results, try again with similarity searching
+        // if (!count($entries)) {
+        //     list($query, $query_desc) = $this->build_query($q, 'approx');
+        //     $entries = $this->get_search_results($query);
+        //     $this->result_comment = '<p></p><div style="color:red"><strong>Note:</strong> No exact matches were found; these are entries similar to what you searched for.</div><p></p>';
+        // }
 
         // Preformed scrub_entries before the count returned is taken so that flagged
         // students do not appear on count of results
@@ -901,6 +937,7 @@ class DirectoryModule extends DefaultMinisiteModule {
                 $str .= '<td>' . $cleaned . '</td>';
               }
           } elseif (isset ($data['studentresidencehallphone'][0])) {
+              $tel_link = "<a href='tel:{$data['officephone'][0]}'>{$data['studentresidencehallphone'][0]}</a>";
               $str .= '<td id="phone">'.$tel_link.'</td>';
           } else {
               $str .= '<td>&nbsp;</td>';
