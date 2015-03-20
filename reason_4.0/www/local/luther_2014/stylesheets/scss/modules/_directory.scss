@@ -278,6 +278,12 @@
       }
     }
 
+    .directoryMinor {
+      &:before {
+        content: $fa-var-book;
+      }
+    }
+
     .directoryTerms {
       &:before {
         content: $fa-var-book;

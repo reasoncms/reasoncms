@@ -726,7 +726,7 @@ class DirectoryModule extends DefaultMinisiteModule {
                     echo $this->format_affiliation( $data );
                 }
                 if (isset($data['studentminor'])) {
-                    echo "<li class='directoryMajors'><i class='fa fa-book'></i><strong>Minor:</strong>{$this->format_minors($data)}</li>";
+                    echo $this->format_single_attribute($data['studentminor'][0], 'Minor', 'directoryMinor');
                 }
                 if (isset($data['studentspecialization'])) {
                     echo $this->format_single_attribute($data['studentspecialization'][0], 'Specialization', 'directorySpecialization');

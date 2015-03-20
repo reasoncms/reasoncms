@@ -4524,10 +4524,14 @@ hr.horizontal-rule-basic {
   content: "\f19d";
 }
 /* line 282, scss/modules/_directory.scss */
-#directory .directoryContact .directoryTerms:before {
+#directory .directoryContact .directoryMinor:before {
   content: "\f02d";
 }
 /* line 288, scss/modules/_directory.scss */
+#directory .directoryContact .directoryTerms:before {
+  content: "\f02d";
+}
+/* line 294, scss/modules/_directory.scss */
 #directory .directoryContact .directoryFacultySite:before {
   content: "\f109";
 }
