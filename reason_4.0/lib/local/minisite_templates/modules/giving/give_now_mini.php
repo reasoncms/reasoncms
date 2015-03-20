@@ -25,7 +25,7 @@
 	  		<div class="give-now-form">
 		  		<!-- <h2><a data-options="align: bottom" data-dropdown="give-dropdown"><strong>Give</strong> Today</a></h2> -->
 				<!-- <div id="give-dropdown" class="f-dropdown" data-dropdown-content> -->
-				<div id="give-dropdown">
+				<!-- <div id="give-dropdown"> -->
 					<div id="form">
 						<form method="post" action="/x/" enctype="application/x-www-form-urlencoded" id="disco_form" name="disco_form" >
 							<div id="discoLinear" class="thorTable">
@@ -43,7 +43,7 @@
 							<input type="hidden" name="submitted" value="true" />
 						</form>
 					</div>
-				</div>
+				<!-- </div> -->
 		  	</div>
 		 </div>
   	</div>

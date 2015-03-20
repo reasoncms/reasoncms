@@ -419,17 +419,17 @@ $tab-current-color: $lc-blue-dark;
 		}
 	}
 
-	#give-dropdown {
-		width: 100%;
-		max-width: 100%;
+	// #give-dropdown {
+	// 	// width: 100%;
+	// 	// max-width: 100%;
 
-		// &.f-dropdown {
-		// 	border-radius: $global-radius;
-		// }
+	// 	// &.f-dropdown {
+	// 	// 	border-radius: $global-radius;
+	// 	// }
 
-		// @media #{$small-only} {
-		// 	padding: $column-gutter/3;
-		// }
+	// 	// @media #{$small-only} {
+	// 	// 	padding: $column-gutter/3;
+	// 	// }
 
 		#form {
 			@include grid-column(16);
@@ -470,6 +470,8 @@ $tab-current-color: $lc-blue-dark;
 							position: absolute;
 							bottom: 0;
 							left: 0;
+							color: darken($lc-yellow, 18%);
+							color: white;
 						}
 				
 						input[type="text"] {
@@ -528,7 +530,7 @@ $tab-current-color: $lc-blue-dark;
 				}
 			}
 		}
-	}
+	// }
 }
 
 //	3. GIVING FORM
