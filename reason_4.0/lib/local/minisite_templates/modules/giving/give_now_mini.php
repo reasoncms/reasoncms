@@ -23,16 +23,17 @@
  	<div class="give-now-mini">
  		<div class="give-now-text">
 	  		<div class="give-now-form">
-		  		<h2><a data-options="align: bottom" data-dropdown="give-dropdown"><strong>Give</strong> Today</a></h2>
-				<div id="give-dropdown" class="f-dropdown" data-dropdown-content>
+		  		<!-- <h2><a data-options="align: bottom" data-dropdown="give-dropdown"><strong>Give</strong> Today</a></h2> -->
+				<!-- <div id="give-dropdown" class="f-dropdown" data-dropdown-content> -->
+				<div id="give-dropdown">
 					<div id="form">
 						<form method="post" action="/x/" enctype="application/x-www-form-urlencoded" id="disco_form" name="disco_form" >
 							<div id="discoLinear" class="thorTable">
-								<div class="formElement" id="KPxIGpTV9nidItem">
+								<div class="formElement" id="giftamountItem">
 									<div class="words"><span class="labelText">Gift Amount</span></div>
 									<div class="element">
-										<a name="KPxIGpTV9n_id_error"></a>
-										<input type="text" name="KPxIGpTV9n_id" value="" size="30" maxlength="" placeholder="Enter amount" id="KPxIGpTV9n_idElement" class="text" />
+										<a name="gift_amount_error"></a>
+										<span class="currency">$</span> <input type="text" placeholder="Give today!" name="gift_amount" value="" size="50" maxlength="256" id="gift_amountElement" class="text">
 									</div>
 								</div>
 								<div class="submitSection">

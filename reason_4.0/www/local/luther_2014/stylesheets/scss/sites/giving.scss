@@ -394,7 +394,7 @@ $tab-current-color: $lc-blue-dark;
 
 .give-now-mini {
 	@include grid-row();
-	max-width: rem-calc(360);
+	max-width: 100%;
 	margin-top: $column-gutter;
 	
 	@media #{$medium-up} {	
@@ -402,7 +402,7 @@ $tab-current-color: $lc-blue-dark;
 		top: $column-gutter/4;
 		right: $column-gutter/2;
 		margin: 0;
-		width: rem-calc(220);
+		width: rem-calc(280);
 	}
 
 	@media #{$large-up} {
@@ -423,17 +423,19 @@ $tab-current-color: $lc-blue-dark;
 		width: 100%;
 		max-width: 100%;
 
-		&.f-dropdown {
-			border-radius: $global-radius;
-		}
+		// &.f-dropdown {
+		// 	border-radius: $global-radius;
+		// }
 
-		@media #{$small-only} {
-			padding: $column-gutter/3;
-		}
+		// @media #{$small-only} {
+		// 	padding: $column-gutter/3;
+		// }
 
 		#form {
 			@include grid-column(16);
 			padding: $column-gutter/4;
+			border: 1px solid rgba(black, .1);
+			border-radius: $global-radius;
 
 			form {
 				@include grid-row();
@@ -442,31 +444,50 @@ $tab-current-color: $lc-blue-dark;
 
 					@include grid-column(9);
 					padding: 0;
+					padding-right: rem-calc(10);
 
-					@media #{$medium-up} {
-						@include grid-column(16);
-						padding: 0;
-					}
+					// @media #{$medium-up} {
+					// 	@include grid-column(16);
+					// 	padding: 0;
+					// }
 
 					.words {
 						@extend .screenreader;
 					}
 
 					.element {
+						position: relative;
+
+						.currency {
+							//width: 14px;
+							display: block;
+							background: $lc-yellow;
+							height: auto;
+							padding: rem-calc(9) rem-calc(12);
+							font-size: rem-calc(16);
+							line-height: 1;
+							font-weight: 400;
+							position: absolute;
+							bottom: 0;
+							left: 0;
+						}
 				
 						input[type="text"] {
-							padding: rem-calc(6);
+							padding: rem-calc(6) rem-calc(6) rem-calc(6) rem-calc(39);
 							height: 34px;
 							border-color: rgba(black, .125);
+							//border-right: none !important;
 
 							@media #{$small-only} { 
-								border-right: none !important;
+								
 							}
 						}
 
-						@media #{$medium-up} { 
-							margin-bottom: $column-gutter/4;
-						}
+						// @media #{$medium-up} { 
+						// 	margin-bottom: $column-gutter/4;
+						// }
+
+
 					}
 				}
 
@@ -474,15 +495,16 @@ $tab-current-color: $lc-blue-dark;
 					@include grid-column(7);
 					padding: 0;
 
-					@media #{$medium-up} {
-						@include grid-column(16);
-						padding: 0;
-					}
+					// @media #{$medium-up} {
+					// 	@include grid-column(16);
+					// 	padding: 0;
+					// }
 
 					input[type="submit"] {
 						width: 100%;
 						display: block;
 						border-radius: 0 $global-radius $global-radius 0;
+						border-radius: $global-radius;
 						background: $lc-yellow;
 						font-family: $body-font-family;
 						padding-top: rem-calc(6);
@@ -491,9 +513,9 @@ $tab-current-color: $lc-blue-dark;
 						font-size: rem-calc(14) !important;
 						height: 34px;
 
-						@media #{$medium-up} { 
-							border-radius: $global-radius;
-						}
+						// @media #{$medium-up} { 
+						// 	//border-radius: $global-radius;
+						// }
 
 						&:hover {
 							background: lighten($lc-yellow, 3%);
