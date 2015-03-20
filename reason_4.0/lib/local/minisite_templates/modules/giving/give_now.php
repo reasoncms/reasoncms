@@ -28,14 +28,17 @@
 		  		<h2>Make a <strong>Difference</strong> Today</h2>
 		  		
 					<div id="form">
-						<form method="post" action="/x/" enctype="application/x-www-form-urlencoded" id="disco_form" name="disco_form" >
+					
+					<form method="post" action="/x/" enctype="application/x-www-form-urlencoded" id="disco_form" name="disco_form" >
 					<div id="discoLinear" class="thorTable">
-					<div class="formElement" id="KPxIGpTV9nidItem">
-					<div class="words"><span class="labelText">Gift Amount</span></div>
-					<div class="element">
-					<a name="KPxIGpTV9n_id_error"></a>
-					<input type="text" name="KPxIGpTV9n_id" value="" size="30" maxlength="" id="KPxIGpTV9n_idElement" class="text" /></div>
+					
+					<div class="formElement" id="giftamountItem">
+					  <div class="words"><span class="labelText">Gift Amount</span></div>
+					  <div class="element">
+					    <a name="gift_amount_error"></a>
+					    <span class="currency">$</span> <input type="text" placeholder="Enter amount" name="gift_amount" value="" size="50" maxlength="256" id="gift_amountElement" class="text">   </div>
 					</div>
+
 					<div class="formElement" id="lyUo3sK6b6idItem">
 					<div class="words"><span class="labelText">Frequency</span></div>
 					<div class="element">

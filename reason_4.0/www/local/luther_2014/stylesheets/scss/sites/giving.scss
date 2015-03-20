@@ -229,11 +229,26 @@ $tab-current-color: $lc-blue-dark;
 						}
 
 						.element {
+							position: relative;
+
+							.currency {
+								//width: 14px;
+								display: block;
+								background: $lc-yellow;
+								height: auto;
+								padding: rem-calc(14) rem-calc(18);
+								font-size: rem-calc(20);
+								line-height: 1;
+								font-weight: 400;
+								position: absolute;
+								bottom: 0;
+								left: 0;
+							}
 							
 							input[type="text"] {
 								border: none;
-								padding: rem-calc(14);
-								height: auto;
+								padding: rem-calc(14) rem-calc(14) rem-calc(14) rem-calc(61);
+								height: rem-calc(48);
 							}
 
 							table {
