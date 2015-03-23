@@ -128,3 +128,11 @@ function input_error_check(html_id) {
         show_all();
     }
 }
+
+function createEmailLink() {
+    $(".emailLink").each(function(){
+        link = $(this).html();
+        link = link.replace('<i class="fa fa-at"></i>', '@');
+        $(this).attr('href','mailto:'+link);
+    });
+}

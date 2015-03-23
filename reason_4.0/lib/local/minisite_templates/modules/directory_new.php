@@ -1351,7 +1351,10 @@ class DirectoryModule extends DefaultMinisiteModule {
 
     function format_email( $data, $table = false ) {
         if ( $this->context == 'general' ){
-            $email = str_replace('@', " &lt;AT&gt; ", $data['mail'][0]);
+            // replace the @ symbol with font-awesome to prevent spam harvesters
+            // then make it a link with javascript
+            $email = str_replace('@', "<i class='fa fa-at'></i>", $data['mail'][0]);
+            $email = "<a class='emailLink' onmouseover=createEmailLink(); target='__blank'>{$email}</a>";
         } else {
             $email = "<a href='mailto:{$data['mail'][0]}' target='__blank'>{$data['mail'][0]}</a>";
         }
