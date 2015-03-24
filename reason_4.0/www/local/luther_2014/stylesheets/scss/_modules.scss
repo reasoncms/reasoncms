@@ -3,9 +3,9 @@
 //
 // @author Nathan Dirks
 //
-// Wherever possible, we don't inlclude Reason default module styles (via $include_modules_css = false 
-// in luther.php or by setting "include css" parameters to false in page_types_local.php).  We do this 
-// to keep from having to override legacy styles. But some modules require styles for basic funcationalty, 
+// Wherever possible, we don't inlclude Reason default module styles (via $include_modules_css = false
+// in luther.php or by setting "include css" parameters to false in page_types_local.php).  We do this
+// to keep from having to override legacy styles. But some modules require styles for basic funcationalty,
 // and are included in <head> when they run.
 //
 // This file includes all the individual module .scss files. It then gets pulled into base.scss.
@@ -19,6 +19,7 @@
 @import "modules/az";
 @import "modules/blurb";
 @import "modules/children";
+@import "modules/directory";
 @import "modules/events";
 @import "modules/faculty";
 @import "modules/faq";

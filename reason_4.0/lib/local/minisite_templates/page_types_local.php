@@ -4,7 +4,7 @@ reason_include_once( 'carl_util/luther_util.php' );
 $GLOBALS['_reason_page_types_local'] = array(
 
 	'default' => array(
-		'global_header' => 'global/global_header',
+		'global_header'	=> 'global/global_header',
 		'global_navigation' => 'global/global_navigation',
 			'pre_banner' => '',
 			'banner_xtra' => '',
@@ -202,7 +202,13 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'main_post' => 'content',
 	),
 	'directory' => array(
-		'main' => 'directory',  // todo: MAKE DIRECTORY CODE RESPONSIVE-ABLE
+		'main' => 'directory_new',  // todo: MAKE DIRECTORY CODE RESPONSIVE-ABLE
+		'pre_sidebar' => '',
+		'pre_sidebar_2' => '',
+		'sidebar' => '',
+		'sidebar_2' => '',
+		'post_sidebar' => '',
+		'sub_nav' => '',
 	),
 	'discovery_camps' => array(
 		'main_post' => 'discovery_camps/discovery_camps',
