@@ -322,7 +322,7 @@ class DirectoryModule extends DefaultMinisiteModule {
         $this->scrub_results($entries);
 
         // If we have some results, call the appropriate display method
-        if (count($entries) ) {
+        if (count($entries) || count($entries) == 0 ) {
             // $this->scrub_results($entries);
             //commenting out list to use only book
             switch ($this->view) {
