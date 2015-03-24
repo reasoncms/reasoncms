@@ -162,11 +162,11 @@ class DirectoryModule extends DefaultMinisiteModule {
 			}
 		}
 		
-		if ($this->context == 'logged_in')
-		{
+		// if ($this->context == 'logged_in')
+		// {
 			$_REQUEST['csrf_token'] = $_SESSION['csrf_token'];
 			$_POST['csrf_token'] = $_SESSION['csrf_token'];
-		}
+		// }
 		//  clear existing netid param on form submit
 		$_SERVER['REQUEST_URI'] = '/directory/';
 
@@ -282,6 +282,10 @@ class DirectoryModule extends DefaultMinisiteModule {
             $entries = $this->get_search_results($query);
             $this->result_comment = '<p></p><div style="color:red"><strong>Note:</strong> No exact matches were found; these are entries similar to what you searched for.</div><p></p>';
         }
+        $this->scrub_results($entries);
+        if (!count($entries)){
+            $form->set_error('first_name', 'Your search for '.$query_desc.' did not find any matches.  Please try again.');
+        }
         return $entries;
     }
 
@@ -320,9 +324,10 @@ class DirectoryModule extends DefaultMinisiteModule {
         // Preformed scrub_entries before the count returned is taken so that flagged
         // students do not appear on count of results
         $this->scrub_results($entries);
+        // $query_desc = 'foopy';
 
         // If we have some results, call the appropriate display method
-        if (count($entries) || count($entries) == 0 ) {
+        if (count($entries)) {
             // $this->scrub_results($entries);
             //commenting out list to use only book
             switch ($this->view) {
@@ -345,9 +350,11 @@ class DirectoryModule extends DefaultMinisiteModule {
                         $this->display_results($entries, $query_desc, $telecomm);
             }
             // $form->show_form = false;
-        } else {
+        }/* else {
+            echo $form->get_value('first_name');
             $form->set_error('first_name', 'Your search for '.$query_desc.' did not find any matches.  Please try again.');
-        }
+            echo ' → wha?!';
+        }*/
     }
 
     function display_form() //{{{
