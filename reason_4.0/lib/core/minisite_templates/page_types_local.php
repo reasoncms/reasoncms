@@ -44,7 +44,6 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'edit_link' => 'login_link',
 		'pre_banner' => 'announcements',
 		'banner_xtra' => 'search',
-		//'post_banner' => 'navigation_top',
 		'sidebar' => array(
 			'module' => 'blurb',
 			'num_to_display' => 1,
