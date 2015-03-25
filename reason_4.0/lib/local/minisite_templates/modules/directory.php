@@ -668,10 +668,10 @@ class DirectoryModule extends DefaultMinisiteModule {
             }
             echo '<div id="directory" title>';
             // if there is a picture, show it
-            $dir_photos_location = REASON_HTTP_BASE_PATH.'images/directory_photos/';
-            if ( $this->user_netid && file_exists($dir_photos_location.$data['uid'][0].'jpg') ){
+            $photo_file = PHOTOSTOCK.'/directory_photos/'.$data['uid'][0].'jpg';
+            if ( $this->user_netid && file_exists($photo_file) ){
                 echo "<figure class='directoryImage' title>";
-                echo '<img src="/reason/images/directory_photos/' . $data['uid'][0] . '.jpg" alt="' . $this->format_name($data) . '" title="' . $this->format_name($data) . '" />';
+                echo '<img src="'.$photo_file.'" alt="' . $this->format_name($data) . '" title="' . $this->format_name($data) . '" />';
                 echo "</figure>";
                 echo "<a name={$data['uid'][0]}></a>";
             }
