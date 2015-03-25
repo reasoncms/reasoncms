@@ -331,7 +331,8 @@ class DirectoryModule extends DefaultMinisiteModule {
         // Preformed scrub_entries before the count returned is taken so that flagged
         // students do not appear on count of results
         $this->scrub_results($entries);
-        // $query_desc = 'foopy';
+        $query_desc = (isset($query_desc)) ? $query_desc : '' ;
+        $telecomm = (isset($telecomm)) ? $telecomm : '' ;
 
         // If we have some results, call the appropriate display method
         if (count($entries)) {
@@ -565,33 +566,34 @@ class DirectoryModule extends DefaultMinisiteModule {
         echo $this->get_search_status($people, $desc);
 
         // Display any non-person results from the Telecomm database
-        if (count($telecomm)) {
-            foreach ($telecomm as $name => $data) {
-                echo '<div class="person">';
-                echo '<div class="personBody '.$image_class.'">';
-                echo '<div class="personHeader">';
-                echo '<ul>';
-                echo '<li class="personName">' . $name . '</li>';
-                if (isset($data[0])) {
-                    echo '<li class="officePhone">' . $data[0] . '</li>';
-                    unset ($data[0]);
-                }
-                if (isset($sites[$name]))
-                    echo '<li class="officeSite"><a href="' . $sites[$name]['url'] . '">Web Site</a></li>';
-                echo '</div>';
-                echo '<div class="officeNumbers">';
-                echo '<ul>';
-                foreach ($data as $name => $number)
-                    echo '<li><span class="officeService">'.$name.'</span><span class="officeNumber">' . $number . '</span></li>';
-                echo '</ul>';
-                echo '</div>';
-                echo '</div>';
-                echo '</div>';
-            }
-        }
+        // if (count($telecomm)) {
+        //     foreach ($telecomm as $name => $data) {
+        //         echo '<div class="person">';
+        //         echo '<div class="personBody '.$image_class.'">';
+        //         echo '<div class="personHeader">';
+        //         echo '<ul>';
+        //         echo '<li class="personName">' . $name . '</li>';
+        //         if (isset($data[0])) {
+        //             echo '<li class="officePhone">' . $data[0] . '</li>';
+        //             unset ($data[0]);
+        //         }
+        //         if (isset($sites[$name]))
+        //             echo '<li class="officeSite"><a href="' . $sites[$name]['url'] . '">Web Site</a></li>';
+        //         echo '</div>';
+        //         echo '<div class="officeNumbers">';
+        //         echo '<ul>';
+        //         foreach ($data as $name => $number)
+        //             echo '<li><span class="officeService">'.$name.'</span><span class="officeNumber">' . $number . '</span></li>';
+        //         echo '</ul>';
+        //         echo '</div>';
+        //         echo '</div>';
+        //         echo '</div>';
+        //     }
+        // }
         // Show all of the people results
         foreach ( $people as $data ) {
-            if ( isset($data['edupersonprimaryaffiliation'][0]) ){
+            $affiliation = '';
+            if ( isset($data['edupersonprimaryaffiliation'][0]) && isset($data['studentyearinschool'][0]) ){
                 switch ( $data['edupersonprimaryaffiliation'][0] ) {
                     case 'Student':
                         $affiliation    = 'Student';
@@ -666,7 +668,8 @@ class DirectoryModule extends DefaultMinisiteModule {
             }
             echo '<div id="directory" title>';
             // if there is a picture, show it
-            if ( $this->user_netid ){
+            $dir_photos_location = REASON_HTTP_BASE_PATH.'images/directory_photos/';
+            if ( $this->user_netid && file_exists($dir_photos_location.$data['uid'][0].'jpg') ){
                 echo "<figure class='directoryImage' title>";
                 echo '<img src="/reason/images/directory_photos/' . $data['uid'][0] . '.jpg" alt="' . $this->format_name($data) . '" title="' . $this->format_name($data) . '" />';
                 echo "</figure>";
@@ -746,8 +749,12 @@ class DirectoryModule extends DefaultMinisiteModule {
                 // echo "<div class='directoryInfo' title>";
                 if (isset($year)) {
                     // Since this is a student, show year and major(s) rather than department(s)
-                    $maj = $this->format_majors($data);
-                    echo "<h3 class='directoryTitle'>{$year} &bull; {$maj}</h3>";
+                    $student_title = "<h3 class='directoryTitle'>{$year}";
+                    if (isset($data['studentmajor'])){
+                        $maj = $this->format_majors($data);
+                        $student_title .=  " &bull; {$maj}</h3>";
+                    }
+                    echo $student_title;
                 }
                 echo "<ul class='directoryContact'>";
 
@@ -951,7 +958,7 @@ class DirectoryModule extends DefaultMinisiteModule {
                 $str .= '<td>' . $cleaned . '</td>';
               }
           } elseif (isset ($data['studentresidencehallphone'][0])) {
-              $tel_link = "<a href='tel:{$data['officephone'][0]}'>{$data['studentresidencehallphone'][0]}</a>";
+              $tel_link = "<a href='tel:{$data['studentresidencehallphone'][0]}'>{$data['studentresidencehallphone'][0]}</a>";
               $str .= '<td id="phone">'.$tel_link.'</td>';
           } else {
               $str .= '<td>&nbsp;</td>';
@@ -1117,7 +1124,7 @@ class DirectoryModule extends DefaultMinisiteModule {
             if ((isset($affiliation) && $affiliation == "Staff" || $affiliation == 'Faculty')
                 && ( $data['edupersonprimaryaffiliation'][0] == 'Student'
                 || $data['edupersonprimaryaffiliation'][0] == 'Student - Not Enrolled this Term'
-                || $data['edupersonprimaryaffiliation'][0] == 'Student - Not PLanning to Enroll'
+                || $data['edupersonprimaryaffiliation'][0] == 'Student - Not Planning to Enroll'
                 || $data['edupersonprimaryaffiliation'][0] == 'Student - Previously Enrolled')) {
                     foreach ($facstaff_viewing_student_supress as $attr){
                         unset($results[$key][$attr]);
@@ -1208,7 +1215,7 @@ class DirectoryModule extends DefaultMinisiteModule {
     }
 
     function format_majors($data) {
-        return join('/', $data['studentmajor']);
+            return join('/', $data['studentmajor']);
     }
 
     function format_phone($data, $type) {
@@ -1398,25 +1405,26 @@ class DirectoryModule extends DefaultMinisiteModule {
 
     function format_affiliation($data) {
         // define the default sort order for affiliations
-        $stat['Faculty'] = 1;
-        $stat['Staff'] = 2;
-        $stat['Alumni'] = 3;
-        $stat['Faculty Spouse'] = 4;
-        $stat['Staff Spouse'] = 5;
-        $stat['parent'] = 6;
-        $stat['Student'] = 7;
-        $stat['Student - Not Enrolled this Term'] = 8;
-        $stat['Student - Not Planning to Enroll'] = 9;
-        $stat['Student - Previously Enrolled'] = 10;
-        $stat['trustee'] = 11;
-        $stat['affiliate'] = 12;
-        $stat['Employee Child'] = 13;
-        $stat['Former Staff'] = 14;
-        $stat['Former Staff Spouse'] = 15;
-        $stat['Former Employee Child'] = 16;
-        $stat['Emeritus'] = 17;
-        $stat['Temp Help'] = 18;
-        $stat['Contracted Services'] = 19;
+        $stat['Faculty']                        = 1;
+        $stat['Staff']                          = 2;
+        $stat['Alumni']                         = 3;
+        $stat['Faculty Spouse']                 = 4;
+        $stat['Staff Spouse']                   = 5;
+        $stat['parent']                         = 6;
+        $stat['Student']                        = 7;
+        $stat['Student - Not Enrolled this Term']   = 8;
+        $stat['Student - Not Planning to Enroll']   = 9;
+        $stat['Student - Previously Enrolled']  = 10;
+        $stat['Student - Planning to Enroll']   = 11;
+        $stat['trustee']                        = 12;
+        $stat['affiliate']                      = 13;
+        $stat['Employee Child']                 = 14;
+        $stat['Former Staff']                   = 15;
+        $stat['Former Staff Spouse']            = 16;
+        $stat['Former Employee Child']          = 17;
+        $stat['Emeritus']                       = 18;
+        $stat['Temp Help']                      = 19;
+        $stat['Contracted Services']            = 20;
 
         if ( isset($data['alummajor']) ){
             $fs_major_markup = join(' &bull; ', $data['alummajor']);
