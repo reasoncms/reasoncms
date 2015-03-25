@@ -2,7 +2,6 @@
 $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'DirectoryModule';
 reason_include_once( 'minisite_templates/modules/default.php' );
 reason_include_once( 'classes/object_cache.php' );
-reason_include_once( 'carl_util/luther_util.php');
 
 // was told to include this DISCO_INC - burkaa
 include_once(DISCO_INC.'disco.php');
@@ -10,18 +9,18 @@ include_once(DISCO_INC.'disco.php');
 define ('MAX_RESULTS', 100);
 
 class DirectoryModule extends DefaultMinisiteModule {
-    var $ldap_admin = false;
-    // Allowed addresses for Post Office non-FERPA-restricted view:
+	var $ldap_admin = false;
+	// Allowed addresses for Post Office non-FERPA-restricted view:
     var $po = array('10.10.190.34','10.22.2.234'/*'192.203.196.2','192.203.196.3','192.203.196.4'*/);
 
     var $cleanup_rules = array(
-        'view'          =>  array('function' => 'turn_into_string'),
-        'context'       =>  array('function' => 'turn_into_string'),
-        'free'          =>  array('function' => 'turn_into_string'),
-        // 'id_number'     =>  array('function' => 'turn_into_string'),
-        'sort'          =>  array('function' => 'turn_into_string'),
-        'netid'         =>  array('function' => 'turn_into_array'),
-        'pagetitle'     =>  array('function' => 'turn_into_string'),
+            'view' => array('function' => 'turn_into_string'),
+            'context' => array('function' => 'turn_into_string'),
+            'free' => array('function' => 'turn_into_string'),
+            'id_number' => array('function' => 'turn_into_string'),
+            'sort' => array('function' => 'turn_into_string'),
+            'netid' => array('function' => 'turn_into_array'),
+            'pagetitle' => array('function' => 'turn_into_string'),
     );
     var $form;
     var $view;
@@ -31,74 +30,106 @@ class DirectoryModule extends DefaultMinisiteModule {
     var $pdf_fonts;
     var $user_netid;
     var $photos;
-    var $passables = array('netid');
     var $search_url;
     var $result_comment;
     var $elements = array(
             'first_name' => array(
                 'display_name' => 'Name or Username',
-                'comments' => '<span class="formComment"><a class="searchOptions"  onclick="toggle_all(); return false;" href="#">More Options</a></span>',
+                'comments' => '<span class="formComment">e.g. john, smitjo, or smith <span>',
                 'type' => 'text',
                 'size' => '15'
              ),
+            /*'last_name' => array('type' => 'text','size' => '15'),*/
+            //'more_comment' => array('type' => 'comment','text' => '<h3>More options</h3>'),
+            'more_comment' => array('type' => 'comment','text' => '<a onclick="toggle_all(); return false;" href="#">Show/Hide more options</a>'),
             'search_for' => array(
-                'display_name' => 'Search for',
-                'type' => 'select_no_sort',
-                'options' => array(
-                    'anyone'=>'Anyone',
-                    'student'=>'Students only',
-                    'faculty'=>'Faculty only',
-                    'staff'=>'Staff only',
-                    //'alumni'=>'Alumni only',
-                ),
+                            'display_name' => 'Search for',
+                            'type' => 'select_no_sort',
+                            'options' => array('anyone'=>'Anyone',
+                                            'student'=>'Students only',
+                                            'faculty'=>'Faculty only',
+                                            'staff'=>'Staff only',
+                                            //'alumni'=>'Alumni only',
+                            ),
             ),
-            'phone_number' => array(
-                'type' => 'text',
-                'size' => '15',
-                'comments' => '<span class="formComment">e.g. 4444</span>'
-            ),
+            'phone_number' => array('type' => 'text','size' => '15',
+                            'comments' => '<span class="formComment">e.g. 4444<span>'),
             /*fist_name now does all types of names, including user name so email should go with that
              * 'email_address' => array('type' => 'text','size' => '15',
                             'comments' => '<span class="formComment">e.g. mheiman<span>'),*/
             // room now searches for buildings (like residence halls and offices)
             //'building' => array('type' => 'text','size' => '15'),
             'room' => array(
-                'type' => 'text',
-                'size' => '15',
-                'display_name' => 'Building (Office / Residence)',
-                'comments' => '<span class="formComment">e.g. miller</span>'
-            ),
-            'student_comment' => array(
-                'type' => 'comment',
-                'text' => '<h3>Students</h3>'
-            ),
+                            'type' => 'text',
+                            'size' => '15',
+                            'display_name' => 'Building (Office / Residence)',
+                            'comments' => '<span class="formComment">e.g. miller<span>'),
+            'student_comment' => array('type' => 'comment','text' => '<h3>Students</h3>'),
             'major' => array(
-                'display_name' => 'Major / Minor',
-                'type' => 'text'
-            ),
-            'year' => array(
-                'type' => 'select_no_sort',
-                'options' => array(
-                    'any'=>'Any',
-                    'FY'=>'First-Year',
-                    'SO'=>'Sophomore',
-                    'JR'=>'Junior',
-                    'SR'=>'Senior',
-                ),
-            ),
+                            'display_name' => 'Major / Minor',
+                            //'type' => 'text','size' => '15'),
+                            'type' => 'select_no_sort',
+                            'options' => array('any'=>'Any', 'acctg'=>'Accounting',
+                                            'afrs'=>'Africana Studies',
+                                            'anth'=>'Anthropology',
+                                            'art'=>'Art',
+                                            'athtr'=>'Athletic Training',
+                                            'bibl'=>'Biblical Languages',
+                                            'bio'=>'Biology',
+                                            'chem'=>'Chemistry',
+                                            'clas'=>'Classics',
+                                            'coms'=>'Communication Studies',
+                                            'cs'=>'Computer Science',
+                                            'econ'=>'Economics',
+                                            'eled'=>'Elementary Education',
+                                            'eng'=>'English',
+                                            'envs'=>'Environmental Studies',
+                                            'fren'=>'French',
+                                            'ger'=>'German',
+                                            'hist'=>'History',
+                                            'hlth'=>'Health',
+                                            //'indiv'=>'Individualized Interdisciplinary',
+                                            'math'=>'Mathematics',
+                                            'mgt'=>'Management',
+                                            'mis'=>'Management Info Systems',
+                                            'mus'=>'Music',
+                                            'nurs'=>'Nursing',
+                                            'pe'=>'Physical Education',
+                                            'phil'=>'Philosophy',
+                                            'phys'=>'Physics',
+                                            'pols'=>'Political Science',
+                                            'psyc'=>'Psychology',
+                                            'rel'=>'Religion',
+                                            'rust'=>'Russian Studies',
+                                            'scst'=>'Scandinavian Studies',
+                                            'sw'=>'Social Work',
+                                            'soc'=>'Sociology',
+                                            'span'=>'Spanish',
+                                            'spth'=>'Speech/Theatre',
+                                            'mstat'=>'Statistics',
+                                            'thd'=>'Theatre/Dance',
+                                            'und'=>'Undecided',
+                                            'wgst'=>'Women and Gender Studies',
+                            )),
+            'year' => array(//'type' => 'text','size' => '15',
+                            'type' => 'select_no_sort',
+                            'options' => array('any'=>'Any', 'FY'=>'First-Year',
+                                            'SO'=>'Sophomore',
+                                            'JR'=>'Junior',
+                                            'SR'=>'Senior',
+                            ),
+                            //'comments' => '<span class="formComment">e.g. FY, SO, JR, SR<span>'
+                            ),
             'faculty_comment' => array('type' => 'comment','text' => '<h3>Faculty/Staff</h3>'),
         // doesn't work for now, so removing for now
             //'department' => array('type' => 'text','size' => '15'),
             'depart' => array(
-                'display_name' => 'Department',
-                'type' => 'text','size' => '15',
-                'comments' => '<span class="formComment">e.g. english</span>'
-            ),
-            'title' => array(
-                'type' => 'text',
-                'size' => '15',
-                'comments' => '<span class="formComment">e.g. dean</span>'
-            ),
+                            'display_name' => 'Department',
+                            'type' => 'text','size' => '15',
+                            'comments' => '<span class="formComment">e.g. english<span>'),
+            //'office' => array('type' => 'text','size' => '15'),
+            'title' => array('type' => 'text','size' => '15',
+                            'comments' => '<span class="formComment">e.g. dean<span>'),
 
             /*'exact' => array(
                             'display_name' => 'Find matches only at the beginning of fields.',
@@ -114,119 +145,134 @@ class DirectoryModule extends DefaultMinisiteModule {
             //),
 
             'display_as' => array(
-                'display_name' => 'Display as',
-                'type' => 'select_no_sort',
-                //'options' => array('list'=>'Directory Listing',
-                //                'book'=>'Photo Book',
-                'options' => array(
-                    'book'=>'Sortable Table of Search Results',
-                    'list'=>'List of Individual Entries'
-                ),
-            ),
+					'display_name' => 'Display as',
+					'type' => 'select_no_sort',
+					//'options' => array('list'=>'Directory Listing',
+					//                'book'=>'Photo Book',
+					'options' => array('book'=>'Sortable Table of Search Results',
+									   'list'=>'List of Individual Entries',),
+			),
     );
-
+    // These are fields from the old directory form that people might try to pass in a URL,
+    // mapped to the appropriate field in the new form.
+    var $old_form_keys = array(
+            'dept' => 'department',
+            'givenName' => 'first_name',
+            'sn' => 'last_name',
+            'phone'=>'phone_number',
+            'email'=>'email_address',
+            'target'=>'search_for',
+            'display'=>'display_as',
+    );
+	
     function init( $args = array() ) //{{{
     {
-            // force_secure();
+			// force_secure();
         // If the IP address isn't local and there's no user, then we get the
         // restricted off-campus view.
         // changed carleton 137.22. to luther 192.203. - burkaa
-        // $this->context = (strncmp('192.203.',$_SERVER['REMOTE_ADDR'],7) <> 0) ? 'external' : 'internal';
-        // $this->context = luther_is_luther_ip() ? 'external' : 'internal';
-        $this->context = 'general';
-        if ($this->user_netid = reason_check_authentication()) $this->context = 'logged_in';
+        $this->context = (strncmp('192.203.',$_SERVER['REMOTE_ADDR'],7) <> 0) ? 'external' : 'internal';
+        if ($this->user_netid = reason_check_authentication()) $this->context = 'internal';
         if (isset($this->request['context']) && THIS_IS_A_DEVELOPMENT_REASON_INSTANCE) $this->context = $this->request['context'];
 
         if (isset($this->request['view'])) $this->view = $this->request['view'];
         if (in_array($_SERVER['REMOTE_ADDR'],$this->po) && ($this->view <> 'pdf')) $this->view = 'po';
 
+
         parent::init( $args );
         if($head_items =& $this->get_head_items()) {
-            $head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/js/jquery.tablesorter.min.js');
-            $head_items->add_stylesheet(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/css/theme.ice.css');
-            $head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/js/jquery.tablesorter.widgets.min.js');
-            $head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/js/jquery.tablesorter.widgets-filter-formatter.min.js');
-            $head_items->add_stylesheet(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/css/filter.formatter.css');
-
-            $head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/directory.js');
-
+//            $head_items->add_stylesheet('/global_stock/css/campus_dir.css');
+            $head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/directory.css');
+            //$head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/tableSorter.js');
+            $head_items->add_javascript( '/javascripts/jquery-1.6.1.min.js');
+            
+            //$head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/directory.js');
+//            if (reason_check_authentication()) {
+            if ($this->user_netid) {
+                $head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/directory.js');
+            } else {
+                $head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/directory_logout.js');
+            }
+            
+            // iphone support; scales to screen and disables zooming
+            $head_items->add_head_item('meta', array('name'=>'viewport','content'=>'width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;'));
         }
 
-        // Allow any of the form elements to be set from the URL or POST, and look like a submission
-		foreach ($_REQUEST as $key => $val) {
-			if (isset($this->elements[$key])) {
-				$_REQUEST['submitted'] = true;
-			}
-			else if (isset($this->cleanup_rules[$key])) {
-				$_REQUEST['submitted'] = true;
-			}
-		}
-		
-		// if ($this->context == 'logged_in')
-		// {
-			$_REQUEST['csrf_token'] = $_SESSION['csrf_token'];
-			$_POST['csrf_token'] = $_SESSION['csrf_token'];
-		// }
-		//  clear existing netid param on form submit
-		$_SERVER['REQUEST_URI'] = '/directory/';
+        // Allow any of the form elements (old or new) to be set from the URL or POST, and look like a submission
+        foreach ($_REQUEST as $key => $val) {
+            if (isset($this->elements[$key])) {
+                $_REQUEST['submitted'] = true;
+            }
+            else if (isset($this->old_form_keys[$key])) {
+                $_REQUEST[$this->old_form_keys[$key]] = $val;
+                $_REQUEST['submitted'] = true;
+            }
+            else if (isset($this->cleanup_rules[$key])) {
+                $_REQUEST['submitted'] = true;
+            }
+        }
 
         $this->form = new disco();
-        $this->form->box_class = 'StackedBox';
         $this->form->elements = $this->elements;
         $this->form->actions = array('Search');
         $this->form->error_header_text = 'Search error';
-        $this->form->add_callback(array(&$this, 'show_results'),'post_show_form');
-        $this->form->add_callback(array(&$this, 'query_checks'),'process');
+        $this->form->add_callback(array(&$this, 'show_results'),'process');
         $this->form->add_callback(array(&$this, 'display_form_help'),'post_show_form');
-        $this->form->add_callback(array(&$this, 'run_error_checks'),'run_error_checks');
-        $this->form->add_callback(array(&$this, 'on_every_time'),'on_every_time');
+		$this->form->add_callback(array(&$this, 'run_error_checks'),'run_error_checks');
+		$this->form->add_callback(array(&$this, 'on_every_time'),'on_every_time');
         $this->form->init();
         $this->get_menu_data();
         $url_parts = parse_url( get_current_url() );
         $this->search_url = $url_parts['path'];
 
     }//}}}
-
-    function on_every_time()
-    {
-        $form = $this->form;
-        if ($this->user_netid != '') {
-            $this->majors = cleaned_majors();
-            $this->majors = array('any' => 'Any') + $this->majors;
-            $form->change_element_type('major', 'select_no_sort', array('options' => $this->majors));
-        }
-        $form->set_display_name('depart','Faculty/Staff Department');
-        $form->set_display_name('title','Faculty/Staff Title');
-        // }
-    }
-
+	
+	function on_every_time(){
+			if ($this->user_netid == ""){
+				$form = $this->form;
+				$form->set_display_name('depart','Faculty/Staff Department');
+				$form->set_display_name('title','Faculty/Staff Title');
+			}
+	}
+	
     function run()//{{{
     {
-        echo "<div class='directoryHead'>\n";
-        echo "<ul>\n";
-        $combined_array = array_merge($_REQUEST, $_SESSION);
-        if ($logged_user = $this->user_netid) {
-            if (!$this->ldap_admin){
-                $ds = @ldap_connect('ldap.luther.edu', '389');
-                $attr = array("member");
-                $result = @ldap_search($ds, 'cn=ldapadmins,dc=luther,dc=edu', "member=uid=$logged_user,ou=People,dc=luther,dc=edu", $attr);
-                $admin = @ldap_get_entries($ds, $result);
-                if (isset($admin[0])){
-                    $this->ldap_admin = true;
-                }
-            }
-
-            echo "<li class='directoryHeadItem'><a id='loggedUser' href='./?netid[]={$logged_user}'>{$logged_user}</a></li>\n";
-            // echo "<li class='yourEntry'><a href='./?netid[]={$logged_user}'>Your Entry</a></li>";
-            $combined_array['logout'] = 1;
-            $logout_link = carl_make_link($combined_array,'/login/');
-            echo "<li class='directoryHeadItem'><a id='logOut' href='{$logout_link}'>Log Out</a></li>\n";
-        } else {
-            $login_link = carl_make_link($combined_array, '/login/');
-            echo "<li class='directoryHeadItem'><a id='logIn' href='{$login_link}'>Log In</a></li>\n";
-        }
-        echo "</ul>\n";
-        echo "</div>\n";
+		
+//	if ($logged_user = reason_check_authentication()) {
+	if ($logged_user = $this->user_netid) {
+		if (!$this->ldap_admin){
+			$ds = @ldap_connect('ldap.luther.edu', '389');
+			$attr = array("member");
+			$result = @ldap_search($ds, 'cn=ldapadmins,dc=luther,dc=edu', "member=uid=$logged_user,ou=People,dc=luther,dc=edu", $attr);
+			$admin = @ldap_get_entries($ds, $result);
+			if (isset($admin[0])){
+				$this->ldap_admin = true;
+			}
+		}
+			
+		echo "<p class='directory_head'>";
+//		echo "Logged in as <b>" . $logged_user . "</b> ::  ";
+		echo "Logged in as <b>" . $this->user_netid . "</b> ::  ";
+		echo '<a href="./help/">Help</a> | ';
+                //below is test code to see if $ldap_admin is indeed an emptry array if not admin
+                //array_push($ldap_admin, "testEntry");
+                //print_r($ldap_admin);
+                //it is empty, but it still exists so check must be for empty not if it exists
+		//if ($ldap_admin){
+//                if (isset($ldap_admin[0])){
+                if ($this->ldap_admin){
+//                if ($ldap_admin[0]!=null){
+			echo "<a href='./admin.php?mode=pending&name=".$logged_user."'>Admin</a>";
+			echo " | ";
+		}
+		echo "<a href='./?netid[]=" . $logged_user . "'>Your Entry</a>";
+		echo " | ";
+		// edit entry link
+//		echo "<a href='./user.php?mode=edit&name=" . $logged_user . "'>Edit Entry</a>";
+//		echo " | ";
+		echo "<a href='/login/?logout=1'>Logout</a>";
+		echo "</p>";
+		}
         $this->get_menu_data();
         $this->display_form();
     } //}}}
@@ -238,11 +284,11 @@ class DirectoryModule extends DefaultMinisiteModule {
         $not_sufficient = array('room','exact','pictures','display_as','view','context');
         $elements = $form->get_element_names();
         foreach ($elements as $element) {
-            $value = $form->get_value($element);
-            if (in_array($element,$not_sufficient)) continue;
-            if ($element == 'first_name' && $value != "" && strlen($value) < 2 ){
-                    $form->set_error('first_name', 'The search string must be at least 2 characters long.');
-            }
+			$value = $form->get_value($element);
+			if (in_array($element,$not_sufficient)) continue;
+			if ($element == 'first_name' && $value != "" && strlen($value) < 2 ){
+					$form->set_error('first_name', 'The search string must be at least 2 characters long.');					
+			}
             if ($form->get_value($element)) return true;
         }
         foreach ($this->cleanup_rules as $name => $rule) {
@@ -252,7 +298,7 @@ class DirectoryModule extends DefaultMinisiteModule {
         $form->set_error('first_name','You did not specify anything to search for.');
     }
 
-    function query_checks(&$form) {
+    function show_results(&$form) {
         // Assemble all the data that's come in via the form or the URL into $q
         $elements = $form->get_element_names();
         foreach ($elements as $element) {
@@ -260,7 +306,6 @@ class DirectoryModule extends DefaultMinisiteModule {
                 $q[$element] = $form->get_value($element);
         }
         foreach ($this->cleanup_rules as $name => $rule) {
-            // echo "NAME={$this->request[$rule]}<br>";
             if (isset($this->request[$name]))
                 $q[$name] = $this->request[$name];
         }
@@ -275,6 +320,9 @@ class DirectoryModule extends DefaultMinisiteModule {
         // Build and execute an LDAP query
         list($query, $query_desc) = $query_parts;
         $entries = $this->get_search_results($query);
+        //echo "\n Start of entries: "; // - burkaa
+        //pray($entries);
+        //echo " End of entries \n"; // - burkaa
 
         // If there aren't any results, try again with similarity searching
         if (!count($entries)) {
@@ -282,53 +330,14 @@ class DirectoryModule extends DefaultMinisiteModule {
             $entries = $this->get_search_results($query);
             $this->result_comment = '<p></p><div style="color:red"><strong>Note:</strong> No exact matches were found; these are entries similar to what you searched for.</div><p></p>';
         }
-        $this->scrub_results($entries);
-        if (!count($entries)){
-            $form->set_error('first_name', 'Your search for '.$query_desc.' did not find any matches.  Please try again.');
-        }
-        return $entries;
-    }
-
-    function show_results(&$form) {
-        $entries = $this->query_checks($form);
-        // // Assemble all the data that's come in via the form or the URL into $q
-        // $elements = $form->get_element_names();
-        // foreach ($elements as $element) {
-        //     if ($form->get_value($element))
-        //         $q[$element] = $form->get_value($element);
-        // }
-        // foreach ($this->cleanup_rules as $name => $rule) {
-        //     // echo "NAME={$this->request[$rule]}<br>";
-        //     if (isset($this->request[$name]))
-        //         $q[$name] = $this->request[$name];
-        // }
-        // $query_parts = $this->build_query($q);
-        // if (!$query_parts) {
-        //     $form->set_error('first_name', 'You do not appear to be searching for anything.  Please try again.');
-        //     return;
-        // }
-        // // Get results from the Telecomm database
-        // $telecomm = $this->get_telecomm_data($q);
-
-        // // Build and execute an LDAP query
-        // list($query, $query_desc) = $query_parts;
-        // $entries = $this->get_search_results($query);
-
-        // // If there aren't any results, try again with similarity searching
-        // if (!count($entries)) {
-        //     list($query, $query_desc) = $this->build_query($q, 'approx');
-        //     $entries = $this->get_search_results($query);
-        //     $this->result_comment = '<p></p><div style="color:red"><strong>Note:</strong> No exact matches were found; these are entries similar to what you searched for.</div><p></p>';
-        // }
 
         // Preformed scrub_entries before the count returned is taken so that flagged
         // students do not appear on count of results
         $this->scrub_results($entries);
-        // $query_desc = 'foopy';
-
+		
         // If we have some results, call the appropriate display method
-        if (count($entries)) {
-            // $this->scrub_results($entries);
+        if (count($entries) ) {
+            //$this->scrub_results($entries);
             //commenting out list to use only book
             switch ($this->view) {
                 case 'pdf':
@@ -349,12 +358,10 @@ class DirectoryModule extends DefaultMinisiteModule {
                     else
                         $this->display_results($entries, $query_desc, $telecomm);
             }
-            // $form->show_form = false;
-        }/* else {
-            echo $form->get_value('first_name');
+            $form->show_form = false;
+        } else {
             $form->set_error('first_name', 'Your search for '.$query_desc.' did not find any matches.  Please try again.');
-            echo ' → wha?!';
-        }*/
+        }
     }
 
     function display_form() //{{{
@@ -367,7 +374,7 @@ class DirectoryModule extends DefaultMinisiteModule {
 //        $this->form->set_value('exact', true);
 
         //$this->form->set_value('display_as', 'book');
-        if ($this->context == 'general') {
+        if ($this->context == 'external') {
             $this->form->remove_element('phone_number');
             $this->form->remove_element('email_address');
             $this->form->remove_element('building');
@@ -377,9 +384,16 @@ class DirectoryModule extends DefaultMinisiteModule {
             $this->form->remove_element('year');
             $this->form->remove_element('faculty_comment');
             $this->form->remove_element('pictures');
-            // $this->form->remove_element('display_as');
+            //$this->form->remove_element('display_as');
         }
+
         echo '<div id="campusDirForm">';
+        // Prominent login link for off-campus mobile users
+//        if ($this->context == 'external' && !reason_check_authentication()) {
+        /* Removing login button for now */
+        // if ($this->context == 'external' && !$this->user_netid) {
+        //     echo '<p class="directory_head" id="mobileLogin"><a href="./help/">Help</a>&nbsp;|&nbsp;<a href="/login/">Login for full access</a></p>';
+        // }
         $this->form->run();
         echo '</div>';
     } //}}}
@@ -394,13 +408,13 @@ class DirectoryModule extends DefaultMinisiteModule {
         if (count($people) > MAX_RESULTS)
 //            $status .= 'more than '. MAX_RESULTS .' matches. Showing the first '. MAX_RESULTS .'.';
             $status .= count($people) . ' matches. Showing the first '. MAX_RESULTS .'.';
-
+		
         elseif (count($people) > 1)
             $status .= count($people).' matches.';
         else
             $status .= 'one match.';
         $status .= $this->result_comment;
-        // $status .= ' <a class="newSearch" href="'.$this->search_url.'">New Search</a></p>';
+        $status .= ' <a class="newSearch" href="'.$this->search_url.'">New Search</a></p>';
         return $status;
     }
     /*
@@ -551,13 +565,14 @@ class DirectoryModule extends DefaultMinisiteModule {
 
     function display_results($people, $desc, $telecomm) //{{{
     {
-        // if (count($people) > 1){
-        //     echo $this->form->show_form();
-        // }
-
+		if (count($people) > 1){
+			echo $this->form->show_form();
+		}
         echo $this->get_search_status($people, $desc);
-
-        // Display any non-person results from the Telecomm database
+        $image_class = ($this->form->get_value('pictures')) ? '' : 'noImage';
+        echo '<p class="personPager"></p>';
+        echo '<div id="searchResults">';
+        // Display any non-person results from the Telecomm database	
         if (count($telecomm)) {
             foreach ($telecomm as $name => $data) {
                 echo '<div class="person">';
@@ -583,240 +598,287 @@ class DirectoryModule extends DefaultMinisiteModule {
             }
         }
         // Show all of the people results
-        foreach ( $people as $data ) {
-            if ( isset($data['edupersonprimaryaffiliation'][0]) ){
-                switch ( $data['edupersonprimaryaffiliation'][0] ) {
-                    case 'Student':
-                        $affiliation    = 'Student';
-                        switch ($data['studentyearinschool'][0]) {
-                            case 'FR':
-                                $year = 'First-Year';
-                                break;
-                            case 'FY':
-                                $year = 'First-Year';
-                                break;
-                            case 'SO':
-                                $year = 'Sophomore';
-                                break;
-                            case 'JR':
-                                $year = 'Junior';
-                                break;
-                            case 'SR':
-                                $year = 'Senior';
-                                break;
-                        }
-                        break;
-                    case 'Student - Not Enrolled this Term':
-                        $affiliation    = 'Student';
-                        switch ($data['studentyearinschool'][0]) {
-                            case 'FR':
-                                $year = 'First-Year';
-                                break;
-                            case 'FY':
-                                $year = 'First-Year';
-                                break;
-                            case 'SO':
-                                $year = 'Sophomore';
-                                break;
-                            case 'JR':
-                                $year = 'Junior';
-                                break;
-                            case 'SR':
-                                $year = 'Senior';
-                                break;
-                        }
-                        break;
-                    case 'Student - Previously Enrolled':
-                        $affiliation    = 'Student';
-                        switch ($data['studentyearinschool'][0]) {
-                            case 'FR':
-                                $year = 'First-Year';
-                                break;
-                            case 'FY':
-                                $year = 'First-Year';
-                                break;
-                            case 'SO':
-                                $year = 'Sophomore';
-                                break;
-                            case 'JR':
-                                $year = 'Junior';
-                                break;
-                            case 'SR':
-                                $year = 'Senior';
-                                break;
-                        }
-                        break;
-                    case 'Faculty':
-                        $affiliation    = 'Faculty';
-                        break;
-                    case 'Staff':
-                        $affiliation    = 'Staff';
-                        break;
-                    case 'Emeritus':
-                        $affiliation    = 'Emeritus';
-                        break;
-                }
-            }
-            echo '<div id="directory" title>';
-            // if there is a picture, show it
-            if ( $this->user_netid ){
-                echo "<figure class='directoryImage' title>";
-                echo '<img src="/reason/images/directory_photos/' . $data['uid'][0] . '.jpg" alt="' . $this->format_name($data) . '" title="' . $this->format_name($data) . '" />';
-                echo "</figure>";
-                echo "<a name={$data['uid'][0]}></a>";
-            }
+        foreach ($people as $data) {
+            // person, personBody, personHeader
+            //echo '<div class="person">';
+            //not how we do images, look at img.php
+            //if ($this->form->get_value('pictures') != false) {
+            //echo '<div class="personPhoto">';
+            //echo '<img src="/stock/ldapimage.php?id='.$data['uid'][0].'">';
+            //echo '</div>';
+            //}
+            //echo '<div class="personBody '.$image_class.'">';
+            //echo '<div class="personHeader">';
+            //echo '<ul>';
+
+
+
+            //echo '<li class="personName">' . $this->format_name($data) . '</li>';
+            //if (isset($data['alumClassYear'])) {
+            //    echo '<li class="personYear">'.$data['alumClassYear'][0].'</li>';
+            //} else {
+            //    if ($affil = $this->format_affiliation($data))
+            //        echo '<li class="personAffil">'.$affil.'</li>';
+            //}
+            //if (isset($data['studentmajor']) && $data['edupersonprimaryaffiliation'][0] == 'Student*') {
+            //if (isset($data['studentmajor'])) {
+                //echo '<li class="personMajor">'. $this->format_majors($data) .'</li>';
+            //    echo '<li class="personMajor">'. $data['studentmajor'][0] .'</li>';
+            //}
+            // test area START -------------------------------------------
+            //if ($this->form->get_value('pictures') != false) {
+                //echo '<div class="personPhoto">';
+                //echo 'Image Testing';
+                //header("Content-type: image/jpg");
+                //readfile($photo_dir.$_GET[$data['uid'][0]].".jpg");
+                //$_SESSION['load_img'] = 0;
+                //echo '</div>';
+            //}
+
+
+            ///*****//echo '<td>';
+            echo '<div id="directory_person">';
+            echo '<table cellspacing="0" cellpadding="5" border="0" align="center">';
+            echo "<tr valign=top>";
+            echo '<td>';
+            echo '<table cellspacing="0" cellpadding="3" border="0">';
+            //old picture testing things burkaab
+            //$logged_user = reason_check_authentication();
+            //if ($logged_user != "" && $data['edupersonprimaryaffiliation'][0] != 'Alumni') {
+                //echo "<tr valign=top><td><b>Photo: </b></td><td>";
+                //readfile("/var/person_photos/burkaa01.jpg")
+                //header("Content-type: image/jpg");
+                ////////echo "<img src='".readfile("/var/person_photos/burkaa01.jpg")."' width=141>";
+                //readfile("/var/person_photos/burkaa01.jpg");
+                //echo "<img src='/stock/dir_img.php?image=".$data['uid'][0]."'>";
+                ////echo "<img src='/stock/dir_img.php?image=burkaa01'>";
+                //echo "</td></tr>";
+            //}
+
             if (isset($data['cn'])) {
-                echo "<h2 class='directoryName'>".$this->format_name($data)."</h2>";
+                echo "<tr valign=top><td><b>Name: </b></td><td>".$data['cn'][0]."</td></tr>";
             }
-            // include schema.org person and organization markup for non-students
-            // this causes duplication of effort (only in code writing),
-            // but maybe we can deal with that later
-            /**
-             * @todo  schema.org
-             */
-
-
-            echo "<div class='directoryInfo' title>";
-            if ( $affiliation != 'Student' && isset($data['title'])) {
-                if (is_array($data['title'])){
-                    foreach ($data['title'] as $key => $value) {
-                        echo "<h3 class='directoryTitle'>{$value}</h3>";
-                    }
-                } else {
-                    /**
-                      * @todo check for one value
-                      */
-                    echo "<h3 class='directoryTitle'>{$value}</h3>";
-                }
-                echo "<ul class='directoryContact'>";
-
-                if ( isset($data['departmentname']) ){
-                    echo $this->format_single_attribute($data['departmentname'][0], 'Department', 'directoryDepartment');
-                }
-                if ( isset($data['officebldg']) ){
-                    echo $this->format_single_attribute($data['officebldg'][0], 'Office Location', 'directoryOffice');
-                }
-                if ( isset($data['officephone']) ){
-                    echo $this->format_phone($data, 'office');
-                }
-                if (isset($data['mail'])) {
-                    echo $this->format_email($data);
-                }
-                if ($this->get_faculty_site($data['uid'][0])) {
-                    $site = $this->get_faculty_site($data['uid'][0]);
-                    echo $this->format_single_attribute($site, 'Website', 'directoryFacultySite');
-                }
-                if (isset($data['uid'])) {
-                    echo $this->format_single_attribute($data['uid'][0], 'Username', 'directoryUsername');
-                }
-                if (isset($data['edupersonaffiliation'])) {
-                    echo $this->format_affiliation($data);
-                }
-                // if ($data['uid'][0] == $this->user_netid){
-                //     if (isset ($data['edupersonprimaryaffiliation']) && $this->user_netid && ($data['edupersonprimaryaffiliation'][0] == 'Faculty' || $data['edupersonprimaryaffiliation'][0] == 'Staff')){
-                //             $advisees = $this->get_search_results('(&(|(studentAdvisor='.$data['uid'][0].')))');
-                //             if (!empty($advisees)){
-                //                     echo "<tr valign=top><td><b>Advisees: </b></td><td>";
-                //                     foreach ($advisees as $advisee){
-                //                             $advisee_uid = $advisee['uid'][0];
-                //                             $advisee_displayname = $advisee['displayname'][0];
-                //                             echo "<a href=\"?netid[]=".$advisee_uid."\">".$advisee_displayname."</a><br>";
-                //                     }
-                //                     echo "</td></tr>";
-                //             }
-                //     }
-                // }
-                if (isset($data['termenrolled'])) {
-                    echo $this->format_terms($data);
-                }
-
-            //// Student markup
-            } else {
-                // Since this is a student, show class year and major(s) instead of title
-                /**
-                 * @todo  check students
-                 */
-                // echo "<div class='directoryInfo' title>";
-                if (isset($year)) {
-                    // Since this is a student, show year and major(s) rather than department(s)
-                    $maj = $this->format_majors($data);
-                    echo "<h3 class='directoryTitle'>{$year} &bull; {$maj}</h3>";
-                }
-                echo "<ul class='directoryContact'>";
-
-                // Since this is a student, show campus housing rather than office
-                if (isset($data['studentresidencehallbldg'])) {
-                    $res = $data['studentresidencehallbldg'][0] .' '. $data['studentresidencehallroom'][0];
-                    echo $this->format_single_attribute($res, 'Housing', 'directoryStudentResidence');
-                }
-                // Since this is a student, show campus phone (so, useful) rather than office phone
-                if (isset( $data['studentresidencehallphone'])) {
-                    echo $this->format_phone($data, 'residence');
-                }
-                if (isset($data['mail'])) {
-                    echo $this->format_email($data);
-                }
-                /**
-                 * @todo  check studentPostOffice
-                 */
-                if (isset($data['studentpostoffice'])) {
-                    echo $this->format_single_attribute($data['studentpostoffice'][0], 'SPO', 'directorySPO');
-                }
-                if (isset($data['uid'])) {
-                    echo $this->format_single_attribute($data['uid'][0], 'Username', 'directoryUsername');
-                }
-                if (isset($data['edupersonaffiliation'])) {
-                    echo $this->format_affiliation( $data );
-                }
-                if (isset($data['studentminor'])) {
-                    echo $this->format_single_attribute($data['studentminor'][0], 'Minor', 'directoryMinor');
-                }
-                if (isset($data['studentspecialization'])) {
-                    echo $this->format_single_attribute($data['studentspecialization'][0], 'Specialization', 'directorySpecialization');
-                }
-                if (isset($data['studentadvisor'])) {
-                    $advisor = $this->get_search_results('(&(|(uid='.$data['studentadvisor'][0].')))');
-                    $advisor_displayname = $advisor[$data['studentadvisor'][0]]['displayname'][0];
-                    $advisor_link = '<a href="?netid[]='.$data['studentadvisor'][0].'">'.$advisor_displayname.'</a>';
-                    echo $this->format_single_attribute($advisor_link,'Advisor','directoryAdvisor');
-                }
-                if (isset($data['termenrolled'])) {
-                    echo $this->format_terms($data);
-                }
+            if (isset($data['uid'])) {
+                echo "<tr valign=top><td><b>Username: </b></td><td>".$data['uid'][0]."</td></tr>";
             }
+            if (isset($data['mail'])) {
+					$email = $this->format_email($data['mail'][0]);
+//                echo "<tr valign=top><td><b>E-mail: </b></td><td><a href=\"mailto:" .$data['mail'][0]. "\">" . $data['mail'][0] . "</a></td></tr>";
+                echo "<tr valign=top><td><b>E-mail: </b></td><td>" . $email . "</td></tr>";
+						
+            }
+            if (isset($data['edupersonprimaryaffiliation'])) {
+                echo "<tr valign=top><td><b>Affiliation: </b></td><td>".$data['edupersonprimaryaffiliation'][0]."</td></tr>";
+            }
+            //alumni additions
+            if (isset($data['alumClassYear'])) {
+                echo "<tr valign=top><td><b>Class Year: </b></td><td>".$data['alumClassYear'][0]."</td></tr>";
+            }
+//            if (isset($data['alumOccupation'])) {
+//                echo "<tr valign=top><td><b>Class Year: </b></td><td>".$data['alumOccupation'][0]."</td></tr>";
+//            }
+
+            if (isset($data['edupersonaffiliation'])) {
+                echo "<tr valign=top><td><b>All Affiliations: </b></td><td>";
+                if ($affil = $this->format_affiliation($data))
+                    echo $affil;
+                echo "</td></tr>";
+            }
+            if (isset($data['studentresidencehallbldg'])) {
+                echo "<tr valign=top><td><b>Housing: </b></td><td>".$data['studentresidencehallbldg'][0]." Room ".$data['studentresidencehallroom'][0]."</td></tr>";
+            }
+            if (isset($data['studentresidencehallphone'])) {
+                echo "<tr valign=top><td><b>Campus Phone: </b></td><td>".$data['studentresidencehallphone'][0]."</td></tr>";
+            }
+            if (isset($data['studentmajor'])) {
+                echo "<tr valign=top><td><b>Major(s): </b></td><td>";
+                echo $this->format_majors($data)."</td></tr>";
+            }
+            if (isset($data['studentminor'])) {
+                echo "<tr valign=top><td><b>Minor(s): </b></td><td>";
+                echo $this->format_minors($data)."</td></tr>";
+            }
+            if (isset($data['studentspecialization'])) {
+                echo "<tr valign=top><td><b>Specialization: </b></td><td>".$data['studentspecialization'][0]."</td></tr>";
+            }
+            if (isset($data['studentyearinschool'])) {
+                echo "<tr valign=top><td><b>Year In School: </b></td><td>".$data['studentyearinschool'][0]."</td></tr>";
+            }
+            if (isset($data['studentadvisor'])) {
+				$advisor = $this->get_search_results('(&(|(uid='.$data['studentadvisor'][0].')))');
+				$advisor_displayname = $advisor[$data['studentadvisor'][0]]['displayname'][0];
+                echo "<tr valign=top><td><b>Advisor: </b></td><td><a href=\"?netid[]=".$data['studentadvisor'][0]."\">".$advisor_displayname."</a></td></tr>";
+            }
+            if (isset($data['studentpostoffice'])) {
+                //echo '<li class="personMajor">'. $this->format_majors($data) .'</li>';
+                echo "<tr valign=top><td><b>SPO: </b></td><td>".$data['studentpostoffice'][0]."</td></tr>";
+                //echo '<li class="personMajor">'. $data['studentpostoffice'][0] .'</li>';
+            }
+            if (isset($data['title'])) {
+                echo "<tr valign=top><td><b>Title: </b></td><td>".$data['title'][0]."</td></tr>";
+            }
+            if (isset($data['officebldg'])) {
+                echo "<tr valign=top><td><b>Office Location: </b></td><td>".$data['officebldg'][0]."</td></tr>";
+            }
+            if (isset($data['officephone'])) {
+                echo "<tr valign=top><td><b>Office Phone: </b></td><td>".$data['officephone'][0]."</td></tr>";
+            }
+			if ($data['uid'][0] == $this->user_netid){
+				if (isset ($data['edupersonprimaryaffiliation']) && $this->user_netid && ($data['edupersonprimaryaffiliation'][0] == 'Faculty' || $data['edupersonprimaryaffiliation'][0] == 'Staff')){
+						$advisees = $this->get_search_results('(&(|(studentAdvisor='.$data['uid'][0].')))');
+						if (!empty($advisees)){
+								echo "<tr valign=top><td><b>Advisees: </b></td><td>";
+								foreach ($advisees as $advisee){
+										$advisee_uid = $advisee['uid'][0];
+										$advisee_displayname = $advisee['displayname'][0];
+										echo "<a href=\"?netid[]=".$advisee_uid."\">".$advisee_displayname."</a><br>";
+								}
+								echo "</td></tr>";
+						}
+				}
+			}
             if (isset($data['postaladdress'])) {
-                echo $this->format_postal_address( $data );
+                echo "<tr valign=top><td><b>Home Address: </b></td><td>"
+                .$data['postaladdress'][0].
+                "<br>"
+                .$data['l'][0];
+				if (isset($data['st'])){
+                echo ", "
+                .$data['st'][0];
+				}
+				if (isset($data['postalcode'])){
+                echo "<br>"
+                .$data['postalcode'][0];
+				}
+                if (isset($data['lutherc'])){
+				echo "<br>"
+                . $data['lutherc'][0];
+				}
+                "</td></tr>";
             }
             if (isset($data['telephonenumber'])) {
-                echo $this->format_phone( $data, 'home' );
+                echo "<tr valign=top><td><b>Home Phone: </b></td><td>".$data['telephonenumber'][0]."</td></tr>";
             }
-            if (isset($data['mobile'])) {
-                echo $this->format_phone( $data, 'mobile' );
+			if (isset($data['mobile'])) {
+                echo "<tr valign=top><td><b>Mobile Phone: </b></td><td>".$data['mobile'][0]."</td></tr>";
             }
-            if (isset($data['birthdate'])) {
-                echo $this->format_single_attribute($data['birthdate'][0],'Birthdate','directoryBirthday');
+            if (isset($data['spousename'])) {
+                echo "<tr valign=top><td><b>Spouse: </b></td><td>".$data['spousename'][0]."</td></tr>";
+            } 
+            if (isset($data['childname'])) {
+                echo "<tr valign=top><td><b>Children: </b></td><td>";
+                echo $this->format_misc($data['childname'])."</td></tr>";
             }
-            if (isset($data['lastupdate'])) {
-                echo $this->format_single_attribute($data['lastupdate'][0],'Refreshed Date','directoryLastUpdate');
+            if (isset($data['employeenumber'])) {
+                echo "<tr valign=top><td><b>Luther ID: </b></td><td>".$data['employeenumber'][0]."</td></tr>";
+            }
+            if (isset($data['studentstatus'])) {
+                echo "<tr valign=top><td><b>Student Status: </b></td><td>".$data['studentstatus'][0]."</td></tr>";
+            }
+            if (isset($data['departmentname'])) {
+                echo "<tr valign=top><td><b>Department: </b></td><td>".$data['departmentname'][0]."</td></tr>";
+            }
+            if (isset($data['gender'])) {
+                echo "<tr valign=top><td><b>Gender: </b></td><td>".$data['gender'][0]."</td></tr>";
+            }
+            if (isset($data['termenrolled'])) {
+                echo "<tr valign=top><td><b>Terms Enrolled: </b></td><td>";
+                echo $this->format_misc($data['termenrolled'])."</td></tr>";
+            }
+            if (isset($data['ocpostaladdress'])) {
+                echo "<tr valign=top><td><b>Off Campus Address: </b></td><td>"
+                .$data['ocpostaladdress'][0].
+				"<br>"
+				.$data['ocl'][0].
+				", "
+				.$data['ocst'][0].
+				"<br>"
+				.$data['ocpostalcode'][0];
+				if (isset($data['occ'])){
+					echo "<br>"
+					.$data['occ'][0];
+				}
+				echo "</td></tr>";
+            }
+            if (isset($data['ocphone'])) {
+                echo "<tr valign=top><td><b>Off Campus Phone: </b></td><td>".$data['ocphone'][0]."</td></tr>";
             }
             if (isset($data['privacyflag'])) {
-                echo $this->format_single_attribute($data['privacyflag'][0],'Privacy Flag','directoryPrivacyFlag');
+                echo "<tr valign=top><td><b>Privacy Flag: </b></td><td>".$data['privacyflag'][0]."</td></tr>";
             }
+            if (isset($data['creationdate'])) {
+                echo "<tr valign=top><td><b>Creation Date: </b></td><td>".$data['creationdate'][0]."</td></tr>";
+            }
+            if (isset($data['deleteafterdate'])) {
+                echo "<tr valign=top><td><b>Delete After Date: </b></td><td>".$data['deleteafterdate'][0]."</td></tr>";
+            }
+            if (isset($data['birthdate'])) {
+                echo "<tr valign=top><td><b>Birth Date: </b></td><td>".$data['birthdate'][0]."</td></tr>";
+            }
+            if (isset($data['lasttermattended'])) {
+                echo "<tr valign=top><td><b>Last Term Attended: </b></td><td>".$data['lasttermattended'][0]."</td></tr>";
+            }
+            if (isset($data['programstartdate'])) {
+                echo "<tr valign=top><td><b>Program Start Date: </b></td><td>".$data['programstartdate'][0]."</td></tr>";
+            }
+            if (isset($data['programenddate'])) {
+                echo "<tr valign=top><td><b>Program End Date: </b></td><td>".$data['programenddate'][0]."</td></tr>";
+            }
+            if (isset($data['studentstatusdate'])) {
+                echo "<tr valign=top><td><b>Student Status Date: </b></td><td>".$data['studentstatusdate'][0]."</td></tr>";
+            }
+            if (isset($data['lastupdate'])) {
+                echo "<tr valign=top><td><b>Refreshed Date: </b></td><td>".$data['lastupdate'][0]."</td></tr>";
+            }
+			
+            echo '</table>';
+			echo '<hr>';
+            echo '</td>';
 
-            echo "</ul>"; // .directoryContact
 
 //            $logged_user = reason_check_authentication();
-            // $logged_user = $this->user_netid;
-            // if ($logged_user != "" && $data['edupersonprimaryaffiliation'][0] != 'Student - Previously Enrolled' && $data['edupersonprimaryaffiliation'][0] != 'Alumni' && $data['edupersonprimaryaffiliation'][0] != 'Student - Planning to Enroll') {
-            //     echo "<td id='pic_td' align='right'>";
-            //     echo "<img width='141px' src='/reason/scripts/dir_image.php?image=".$data['uid'][0]."'>";
-            //     echo "</td>";
-            // }
+            $logged_user = $this->user_netid;
+            //if ($data['uid'][0] == "burkaa01") {
+            //if(!empty($search_for) && $search_for != 'anyone')
+            if ($logged_user != "" && $data['edupersonprimaryaffiliation'][0] != 'Student - Previously Enrolled' && $data['edupersonprimaryaffiliation'][0] != 'Alumni' && $data['edupersonprimaryaffiliation'][0] != 'Student - Planning to Enroll') {
+                echo "<td id='pic_td' align='right'>";
+                echo "<img width='141px' src='/reason/scripts/dir_image.php?image=".$data['uid'][0]."'>";
+                echo "</td>";
+            }
 
-            echo "</div>";  //.directoryInfo;
-            echo '</div>';  //.directory
-            // echo '</div>';  //#directory_person directory
+
+            echo '</tr></table>';
+
+            echo '</div>'; //#directory_person
+            //*********echo '</td>';
+            // test area END ---------------------------------------------
+            //if (isset($data['mail'])) {
+            //    echo '<li class="personEmail">'. $this->format_email($data['mail'][0]) .'</li>';
+            //}
+            //echo '</ul>';
+            //echo '</div>'; //personHeader
+
+            // If this is faculty or staff - DELETED
+            
+
+            //echo '<div class="personContacts">';
+            //PHONES
+            //echo '<ul class="personPhones">';
+            //if ($phone = $this->format_phone($data))
+            //    echo '<li class="personCampusPhone">'.$phone.'</li>';
+            //if ($cells = $this->format_cell($data))
+             //   foreach ($cells as $cell)
+            //        echo '<li class="personCellPhone">cell: '.$cell.'</li>';
+            //echo '</ul>';
+            //echo '</div>';
+            //echo '</div>'; // personBody
+            //echo '</div>'; // person
+
         } /* endforeach */
+        echo '</div>'; // searchResults
+
+        echo '<p class="personPager"></p>';
+        echo '<p class="searchFoot"><a class="newSearch" href="'.$this->search_url.'">New Search</a></p>';
     }//}}}
 
     function display_results_photobook($people, $desc) //{{{
@@ -882,30 +944,28 @@ class DirectoryModule extends DefaultMinisiteModule {
 //        echo '<p class="personPager"></p>';
         //echo $this->build_printable_link();
 
+		echo $this->form->show_form();
         echo $this->get_search_status($people, $desc);
         $str = '';
         $str .= '<p class="personPager"></p>';
         $str .= '<div id="searchResults" class="photoBook">';
-        $str .= '<a class="filterReset" class="button">Reset Filters</a>';
-
+       
         $str .= '<table id="directory" class="tablesorter" border="0" cellpadding="0" cellspacing="0">';
             $str .= '<thead>';
                 $str .= '<tr>';
-                        $str .= '<th class="name">Name</th>';
-                        $str .= '<th class="affiliation">Affiliation/Title</th>';
-                        $str .= '<th class="email">Email</th>';
-                        if ($this->context != 'general')
-                            $str .= '<th class="spo">SPO</th>';
-                        $str .= '<th class="phone nowrap">Campus Phone</th>';
+                        $str .= '<th>Name</th>';
+                        $str .= '<th>Affiliation/Title</th>';
+                        $str .= '<th>E-mail</th>';
+                        $str .= '<th class="nowrap">Campus Phone</th>';
                     if ($this->user_netid) {
-                        $str .= '<th class="year">Year</th>';
+                        $str .= '<th>Year</th>';
                     }
                 $str .= '</tr>';
             $str .= '</thead>';
         $str .= '<tbody>';
-
-        // splicing the array to only show the first MAX_RESULTS results
-        array_splice($people, MAX_RESULTS);
+		
+		// splicing the array to only show the first MAX_RESULTS results
+		array_splice($people, MAX_RESULTS);
         foreach($people as $data) {
           $str .= '<tr class="">';
           if (isset ($data['uid'][0])) {
@@ -914,53 +974,45 @@ class DirectoryModule extends DefaultMinisiteModule {
               $str .= '<td>&nbsp;</td>';
           }
           if (isset ($data['edupersonprimaryaffiliation'][0])) {
-              $str .= '<td class="affilTitle">' .$data['edupersonprimaryaffiliation'][0];
-              if (isset($data['title'][0])){
-                    $str .= '<br>' . $data['title'][0] . '</td>';
-              } else {
-                    $str .= '</td>';
-              }
+              $str .= '<td id="affilTitle">' .$data['edupersonprimaryaffiliation'][0];
+			  if (isset($data['title'][0])){
+					$str .= '<br>' . $data['title'][0] . '</td>';  
+			  } else {
+					$str .= '</td>';
+			  }
           } else {
               $str .= '<td>&nbsp;</td>';
           }
           if (isset ($data['mail'][0])) {
-              $str .= '<td>'.$this->format_email($data, true) . '</td>';
+              $str .= '<td>'.$this->format_email($data['mail'][0]) . '</td>';
           } else {
               $str .= '<td>&nbsp;</td>';
           }
-          if ($this->context != 'general') {
-            if (isset ($data['studentpostoffice'])) {
-                $str .= '<td>'.$data['studentpostoffice'][0] . '</td>';
-            } else {
-                $str .= '<td>&nbsp;</td>';
-            }
-          }
+
           if (isset ($data['officephone'][0])) {
-              $tel_link = "<a href='tel:{$data['officephone'][0]}'>{$data['officephone'][0]}</a>";
-              if (!strpos($data['officephone'][0], ',')){
-                $str .= '<td class="nowrap">'.$tel_link.'</td>';
-              } else {
-                $cleaned = str_replace(',', '<br>', $data['officephone'][0]);
-                $str .= '<td>' . $cleaned . '</td>';
-              }
+			  if (!strpos($data['officephone'][0], ',')){
+				$str .= '<td class="nowrap">'.$data['officephone'][0].'</td>';
+			  } else { 
+				$cleaned = str_replace(',', '<br>', $data['officephone'][0]);
+				$str .= '<td>' . $cleaned . '</td>';	  
+			  }
           } elseif (isset ($data['studentresidencehallphone'][0])) {
-              $tel_link = "<a href='tel:{$data['officephone'][0]}'>{$data['studentresidencehallphone'][0]}</a>";
-              $str .= '<td id="phone">'.$tel_link.'</td>';
+              $str .= '<td id="phone">'.$data['studentresidencehallphone'][0].'</td>';
           } else {
               $str .= '<td>&nbsp;</td>';
           }
 //          if (reason_check_authentication()) {
           if ($this->user_netid) {
-              if (isset ($data['studentyearinschool'][0])) {
-                  $str .= '<td>'.$data['studentyearinschool'][0] . '</td>';
-              } else {
-                  $str .= '<td>&nbsp;</td>';
-              }
+          if (isset ($data['studentyearinschool'][0])) {
+              $str .= '<td>'.$data['studentyearinschool'][0] . '</td>';
+          } else {
+              $str .= '<td>&nbsp;</td>';
+          }
           }
           $str .= '</tr>';
           }
         $str .= '</table>';
-
+        
         echo $str;
         echo '</div>'; // searchResults
         echo '<p class="personPager"></p>';
@@ -1042,53 +1094,48 @@ class DirectoryModule extends DefaultMinisiteModule {
      *   should be seen
      **/
     function scrub_results(&$results) {
-        // if viewing yourself, don't scrub anything – return all results
-        if ( $this->context == 'logged_in' && array_key_exists($this->user_netid, $results) && count($results) == 1) {
-                return;
-        }
+        // Attributes which should be hidden from the external view
+        /*$ext_suppress = array('officebldg','studentPostOffice', 'homepostaladdress',
+                'address', 'telephoneNumber', 'studentmajor', 'carlconcentration',
+                'carlhomeemail','spouseName','alumClassYear','carlcohortyear','mobile',
+                'studentStatus');*/
 
-        $personal_info_group = array('postaladdress','l','st','postalcode','lutherc','telephonenumber','mobile','birthdate');
+        $ext_suppress = array('dn','ou','count','employeenumber','sn','givenname','edupersonnickname','displayname',
+                'studentpostoffice','telephoneNumber','spousename',
+                'homepostaladdress', 'address', 'telephonenumber', 'studentmajor', 'studentminor','studentresidencehallbldg','studentresidencehallphone',
+                'studentresidencehallroom','studentspecialization','studentyearinschool','studentadvisor',
+                'studentstatus','alumclassyear','postaladdress','l','st','postalcode','c',
+                'edupersonentitlement','mobile', 'termenrolled', 'gender', 'ocpostaladdress', 'ocl', 'ocst', 'ocpostalcode',
+                'occ', 'ocphone','privacyflag','creationdate','deleteafterdate','birthdate','lasttermattended',
+                'programstartdate','programenddate', 'lastupdate', 'childname');
 
-        $general_suppress = array('ou','count','sn','givenname','displayname','studentpostoffice',
-            'studentmajor','studentminor','studentresidencehallbldg','studentresidencehallphone',
-            'studentresidencehallroom','studentspecialization','studentyearinschool','studentadvisor',
-            'studentstatus','termenrolled','ocpostaladdress','privacyflag','lastupdate');
-        $general_suppress = array_merge($general_suppress, $personal_info_group);
-
-        $nr_suppress = array('ou','uid','cn','sn','givenName','displayName','mail','title',
-           'eduPersonPrimaryAffiliation','officebldg','officephone','studentPostOffice',
-           'studentmajor','studentminor','studentresidencehallbldg','studentresidencehallphone',
-           'studentresidencehallroom','eduPersonPrimaryAffiliation','studentspecialization',
-           'studentyearinschool','studentadvisor','eduPersonAffiliation','studentStatus','termenrolled',
-           'departmentname','privacyflag','lastupdate','alumclassyear','alummajor');
-        $nr_suppress = array_merge($nr_suppress, $personal_info_group);
-
-        $facstaff_viewing_facstaff_supress  = array('termenrolled');
-        $facstaff_viewing_facstaff_supress = array_merge($facstaff_viewing_facstaff_supress, $personal_info_group);
-
-        $facstaff_viewing_student_supress   = array('title','officebldg','officephone',
-            'departmentname','birthdate','');
-
-        $student_viewing_facstaff_supress   = array('studentresidencehallbldg','studentresidencehallphone',
-            'studentpostoffice','studentresidencehallroom','termenrolled');
-        $student_viewing_facstaff_supress = array_merge($student_viewing_facstaff_supress, $personal_info_group);
-
-        $student_viewing_student_supress    = array('title','departmentname','officebldg','officephone', 'studentadvisor','termenrolled');
-        $student_viewing_student_supress = array_merge($student_viewing_student_supress, $personal_info_group);
-
-        $affiliation = $this->get_user_affiliation($this->user_netid);
+        $nr_suppress = array('dn','uid','ou','count','employeenumber','cn','sn','givenName','eduPersonNickname','displayName','mail','title',
+                'eduPersonPrimaryAffiliation','officebldg','officephone','studentPostOffice','telephoneNumber','spouseName',
+                'homePostalAddress', 'address', 'telephoneNumber', 'studentmajor', 'studentminor','studentresidencehallbldg','studentresidencehallphone',
+                'studentresidencehallroom','eduPersonPrimaryAffiliation','studentspecialization','studentyearinschool','studentadvisor',
+                'eduPersonAffiliation','studentStatus','alumClassYear','postaladdress','l','st','postalcode','c',
+                'eduPersonEntitlement','mobile', 'termenrolled', 'departmentname', 'gender', 'ocpostaladdress', 'ocl', 'ocst', 'ocpostalcode',
+                'occ', 'ocphone','privacyflag','creationdate','deleteafterdate','birthdate','lasttermattended',
+                'programstartdate','programenddate','lastupdate', 'childname');
+		
+//		$temp_suppress = array('childname', 'spouse', 'mobile', 'telephoneNumber', 'homePostalAddress', 'st')
 
         foreach ($results as $key => $data) {
+            // Remove the people who should be gone completely.
+            if ($this->view != 'po' && isset($data['carlhideinfo']) && $data['carlhideinfo'][0] == 'TRUE') {
+                unset($results[$key]);
+                continue;
+            }
+
+            if ($this->context == 'external') {
+                foreach ($ext_suppress as $attr)
+                    unset($results[$key][$attr]);
+            }
+
             // Hiding No Release students for Luther
             if (isset($data['privacyflag'])) {
                 foreach ($nr_suppress as $attr)
                     unset($results[$key]);
-            }
-
-            if ($this->context == 'general') {
-                foreach ($general_suppress as $attr){
-                    unset($results[$key][$attr]);
-                }
             }
 
             // Hiding Alumni from results
@@ -1096,56 +1143,11 @@ class DirectoryModule extends DefaultMinisiteModule {
                 foreach ($nr_suppress as $attr)
                     unset($results[$key]);
             }
-
-            // Faculty/Staff viewing Faculty/Staff
-            if ((isset($affiliation) && $affiliation == "Staff" || $affiliation == 'Faculty')
-                && $data['edupersonprimaryaffiliation'][0] == 'Staff'
-                || $data['edupersonprimaryaffiliation'][0] == 'Faculty'
-                || $data['edupersonprimaryaffiliation'][0] == 'Emeritus' ) {
-                    foreach ($facstaff_viewing_facstaff_supress as $attr){
-                        unset($results[$key][$attr]);
-                    }
-            }
-            // Faculty/Staff viewing Student
-            if ((isset($affiliation) && $affiliation == "Staff" || $affiliation == 'Faculty')
-                && ( $data['edupersonprimaryaffiliation'][0] == 'Student'
-                || $data['edupersonprimaryaffiliation'][0] == 'Student - Not Enrolled this Term'
-                || $data['edupersonprimaryaffiliation'][0] == 'Student - Not PLanning to Enroll'
-                || $data['edupersonprimaryaffiliation'][0] == 'Student - Previously Enrolled')) {
-                    foreach ($facstaff_viewing_student_supress as $attr){
-                        unset($results[$key][$attr]);
-                    }
-            }
-            // Student viewing Faculty/Staff
-            if ((isset($affiliation) && $affiliation == "Student"
-                || $affiliation == 'Student - Not Enrolled this Term'
-                || $affiliation == 'Student - Previously Enrolled')
-                && ($data['edupersonprimaryaffiliation'][0] == 'Staff'
-                || $data['edupersonprimaryaffiliation'][0] == 'Faculty'
-                || $data['edupersonprimaryaffiliation'][0] == 'Emeritus' )) {
-                    foreach ($student_viewing_facstaff_supress as $attr){
-                        unset($results[$key][$attr]);
-                    }
-            }
-            // Student viewing Student
-            if ((isset($affiliation) && $affiliation == "Student"
-                || $affiliation == 'Student - Not Enrolled this Term'
-                || $affiliation == 'Student - Not PLanning to Enroll')
-                && ($data['edupersonprimaryaffiliation'][0] == 'Student'
-                || $data['edupersonprimaryaffiliation'][0] == 'Student - Not Enrolled this Term'
-                || $data['edupersonprimaryaffiliation'][0] == 'Student - Previously Enrolled')) {
-                    foreach ($student_viewing_student_supress as $attr){
-                        unset($results[$key][$attr]);
-                    }
-            }
+			
+//			// Hiding certain results about faculty/staff until we can fix/rewrite the linux box code which controls the display in user.php
+//			foreach ($temp_suppress as $attr)
+//					unset ($results[$key]);
         }
-    }
-
-    function get_user_affiliation( $username )
-    {
-        $dir = new directory_service('ldap_luther');
-        $dir->search_by_attribute('uid', $username, $return = array('edupersonprimaryaffiliation'));
-        return $dir->get_first_value('edupersonprimaryaffiliation');
     }
 
     function make_search_link($text, $field, $value) {
@@ -1153,22 +1155,7 @@ class DirectoryModule extends DefaultMinisiteModule {
         // carry over any display params that are relevant
         if (isset($_REQUEST['pictures']))
             $params = '&pictures='.$_REQUEST['pictures'];
-        return sprintf('<a class="crossRef" href="?%s=%s%s" title="Search for %s">%s</a>', $field, urlencode($value), $params, strip_tags($text), $text);
-    }
-
-    /**
-     * [format_single_attribute description]
-     * @param  string $attribute LDAP attribute (lowercase)
-     * @param  string $title     Label title
-     * @param  string $li_class  <li> class
-     * @return string            The markup
-     */
-    private function format_single_attribute( $attribute, $label, $li_class )
-    {
-        return "<li class='{$li_class}'>
-                    <span class='attribute'><strong>{$label}: </strong></span>
-                    <span class='attrValue'>{$attribute}</span>
-                </li>";
+        return sprintf('<a class="crossRef" href="?%s=%s%s" title="Search for %s">%s</a>', urlencode($field), urlencode($value), $params, strip_tags($text), $text);
     }
 
     function format_name($data) {
@@ -1187,6 +1174,19 @@ class DirectoryModule extends DefaultMinisiteModule {
         return $name;
     }
 
+    function format_misc($data) {
+        $count = 0;
+        foreach ($data as $m) {
+            if ($count > 0) {
+                echo "<br>".$m;
+            }
+            else {
+                echo $m. " ";
+            }
+            $count = 1;
+        }
+    }
+
     function format_minors($data) {
         $count = 0;
         foreach ($data['studentminor'] as $m) {
@@ -1201,60 +1201,76 @@ class DirectoryModule extends DefaultMinisiteModule {
     }
 
     function format_majors($data) {
-        return join('/', $data['studentmajor']);
-    }
-
-    function format_phone($data, $type) {
-        switch ($type) {
-            case 'office':
-                $tel    = $data['officephone'][0];
-                $label  = 'Office Phone';
-                $class  = 'directoryPhone';
-                break;
-            case 'residence':
-                $tel    = $data['studentresidencehallphone'][0];
-                $label  = 'Campus Phone';
-                $class  = 'directoryPhone';
-                break;
-            case 'home':
-                $tel    = $data['telephonenumber'][0];
-                $label  = 'Home Phone';
-                $class  = 'directoryPhone';
-                break;
-            case 'mobile':
-                $tel    = $data['mobile'][0];
-                $label  = 'Mobile Phone';
-                $class  = 'directoryMobile';
-                break;
-            default:
-                $tel    = '';
-                $label  = '';
-                $class  = '';
-                break;
-        }
-        $tel_link = "<a href='tel:{$tel}'>{$tel}</a>";
-        return $this->format_single_attribute( $tel_link, $label, $class );
-    }
-
-    function format_terms($data) {
-        $terms = '';
-        foreach ($data['termenrolled'] as $term) {
-            $terms .= "<span class='multipleAttrValues'>{$term}</span>";
-        }
-        return $this->format_single_attribute( $terms, 'Terms Enrolled', 'directoryTerms' );
-    }
-
-    function format_title($data) {
         $count = 0;
-        foreach ($data['title'] as $title => $value) {
+        foreach ($data['studentmajor'] as $m) {
             if ($count > 0) {
-                $title_string = join(' &bull; ', $data['title']);
-            } else {
-                $title_string = $value;
+                echo "<br>".$m;
             }
-            $count++;
+            else {
+                echo $m. " ";
+            }
+            $count = 1;
         }
-        return $title_string;
+        //foreach ($data['studentmajor'] as $major)
+        //    $majors[] = $this->make_search_link('<span class="major">'.$this->majors[$major].'</span>', 'major', $major);
+        //if (isset($data['carlconcentration'])) {
+        //    foreach ($data['carlconcentration'] as $major)
+        //        $majors[] = $this->make_search_link('<span class="concentration">'.$this->majors[$major].'</span>', 'major', $major);
+        //}
+        //return '('.join(' / ', $majors).')';
+    }
+
+    function format_phone($data) {
+        $phones = array();
+        if ($data['edupersonprimaryaffiliation'][0] == 'student') {
+            if (isset($data['telephoneNumber']))
+                $phones = $data['telephoneNumber'];
+        } else {
+            if (isset($data['telephonenumber']))
+                $phones = $data['telephonenumber'];
+        }
+
+        foreach ($phones as $phone) {
+            // Strip out all but the extension for internal viewers,
+            // except on students with 222 exchanges and Northfield addresses
+            // who need full numbers listed.
+            if ($this->context <> 'external' &&
+                    !($data['edupersonprimaryaffiliation'][0] == 'student' &&
+                            isset($data['homepostaladdress']) &&
+                            stristr($data['homepostaladdress'][0],'Northfield')) &&
+                    strpos($phone, '+1 507 222') !== FALSE) {
+                $phonetemp = str_replace('+1 507 222 ', '', $phone);
+                // add the "x" except on extensions starting with '9' which are
+                // voice mailboxes requiring special access dialing:
+                $prefix = (substr($phonetemp,0,1) == '9') ? '3737** ' : 'x';
+                $display[] = $prefix.$phonetemp;
+            }
+            // For external viewers, just strip out the +1
+            else {
+                $phonetemp = str_replace('+1 ', '', $phone);
+                // .. unless it's one of those special mailboxes
+                if (substr($phonetemp,4,1) == '222 9')
+                    $phonetemp = substr($phonetemp,0,8).'3737 '.substr($phonetemp,8,4);
+                $display[] = $phonetemp;
+            }
+        }
+        if (isset($display))
+            return join(' / ',$display);
+        else
+            return '';
+    }
+
+    function format_cell($data) {
+        $cells = array();
+        if (isset($data['mobile'])) {
+            foreach ($data['mobile'] as $cell) {
+                if (isset($data['telephoneNumber']) && in_array($cell, $data['telephoneNumber']))
+                    continue;
+                else
+                    $cells[] = str_replace('+1 ', '', $cell);
+            }
+        }
+        return $cells;
     }
 
     function termCmp($a,$b) {
@@ -1334,60 +1350,40 @@ class DirectoryModule extends DefaultMinisiteModule {
         return 'Off campus: '. $range_str;
     }
 
-    function format_postal_address($data, $html = true) {
-    if ($html) {
-        $address = "<span class='multipleAttrValues'>{$data['postaladdress'][0]}</span>";
-        if (isset( $data['l'] )) {
-            $address .= "<span class='multipleAttrValues'>{$data['l'][0]}";
-        }
-        if (isset( $data['st'] )) {
-            $address .= ", {$data['st'][0]}";
-        }
-        if (isset( $data['postalcode'] )) {
-            $address .= " {$data['postalcode'][0]}";
-        }
-        $address .= "</span>"; // attrValue for second line of address
-        if (isset( $data['lutherc'] )) {
-            $address .= "<span class='multipleAttrValues'>{$data['lutherc'][0]}</span>";
-        }
-        return $this->format_single_attribute( $address, 'Home Address', 'directoryHomeAddress' );
-    } else {
-        return $parts;
-    }
-}
-
-    function format_email( $data, $table = false ) {
-        if ( $this->context == 'general' ){
-            // replace the @ symbol with font-awesome to prevent spam harvesters
-            // then make it a link with javascript
-            $email = str_replace('@', "<i class='fa fa-at'></i>", $data['mail'][0]);
-            $email = "<a class='emailLink' onmouseover=createEmailLink(); target='__blank'>{$email}</a>";
+    function format_postal_address($address, $html = true) {
+        $parts = split('\$', $address);
+        if ($html) {
+            $return = '';
+            foreach ($parts as $part)
+                $return .= '<li>'.$part.'</li>'."\n";
+            return $return;
         } else {
-            $email = "<a href='mailto:{$data['mail'][0]}' target='__blank'>{$data['mail'][0]}</a>";
+            return $parts;
         }
-        if ( $table ) {
-            $markup = $email;
-        }else {
-            $markup = $this->format_single_attribute($email, 'Email', 'directoryEmail');
-        }
-        return $markup;
     }
 
-    // function format_status($data) {
-    //     $statusFlag['F'] = false; // Full time
-    //     $statusFlag['N'] = false; // ?
-    //     $statusFlag['G'] = false; // Grad
-    //     $statusFlag['L'] = 'On Leave';
-    //     $statusFlag['R'] = 'On Leave'; // required
-    //     $statusFlag['W'] = 'Withdrawn'; // probably not used
-    //     $statusFlag['X'] = 'Early Finish';
-    //     $statusFlag['O'] = 'Off Campus Program';
+    function format_email($address) {
+//        if ($this->context == 'external')
+//            return str_replace('.', '&nbsp;&#046;&nbsp;', str_replace('@', '&nbsp;&lt;&#065;&#084;&gt;&nbsp;', $address));
+//        else
+            return '<a href="mailto:'.$address.'">'.$address.'</a>';
+    }
 
-    //     if (isset($data['studentStatus']))
-    //         return $statusFlag[$data['studentStatus'][0]];
-    //     else
-    //         return false;
-    // }
+    function format_status($data) {
+        $statusFlag['F'] = false; // Full time
+        $statusFlag['N'] = false; // ?
+        $statusFlag['G'] = false; // Grad
+        $statusFlag['L'] = 'On Leave';
+        $statusFlag['R'] = 'On Leave'; // required
+        $statusFlag['W'] = 'Withdrawn'; // probably not used
+        $statusFlag['X'] = 'Early Finish';
+        $statusFlag['O'] = 'Off Campus Program';
+
+        if (isset($data['studentStatus']))
+            return $statusFlag[$data['studentStatus'][0]];
+        else
+            return false;
+    }
 
     function format_affiliation($data) {
         // define the default sort order for affiliations
@@ -1405,41 +1401,21 @@ class DirectoryModule extends DefaultMinisiteModule {
         $stat['affiliate'] = 12;
         $stat['Employee Child'] = 13;
         $stat['Former Staff'] = 14;
-        $stat['Former Staff Spouse'] = 15;
-        $stat['Former Employee Child'] = 16;
-        $stat['Emeritus'] = 17;
-        $stat['Temp Help'] = 18;
-        $stat['Contracted Services'] = 19;
-
-        if ( isset($data['alummajor']) ){
-            $fs_major_markup = join(' &bull; ', $data['alummajor']);
-        }
+        $stat['Former Employee Child'] = 15;
+        $stat['Emeritus'] = 16;
+        $stat['Temp Help'] = 17;
+        $stat['Contracted Services'] = 18;
+        
 
         $affils = array();
         foreach ($data['edupersonaffiliation'] as $affil) {
-            if ($affil == 'Alumni') {
-                $affils[$stat[$affil]] = 'Alum – '.$fs_major_markup.' ('.$data['alumclassyear'][0].')';
-            } else {
+            if ($affil == 'alum' && isset($data['carlcohortyear']))
+                $affils[$stat[$affil]] = 'Alum ('.$data['carlcohortyear'][0].')';
+            else
                 $affils[$stat[$affil]] = ucfirst($affil);
-            }
         }
         ksort($affils);
-        array_unshift($affils, $data['edupersonprimaryaffiliation'][0]);
-        $affils = array_unique($affils);
-        if ( count($affils) > 1 ) {
-            $affils[0] = $affils[0].'*';
-            $super_string = "<sup class='super'>* Primary affiliation</sup>";
-            $label = 'Affiliations';
-        } else {
-            $label = 'Affiliation';
-        }
-        $affils_string = '';
-        foreach ($affils as $key => $value) {
-            $affils_string .= "<span class='multipleAttrValues'>{$value}</span>";
-        }
-        if (isset($super_string))
-            $affils_string .= $super_string;
-        return $this->format_single_attribute($affils_string, $label, 'directoryAffiliations');
+        return join('<br>', $affils);
     }
 
     function format_search_key($key) {
@@ -1448,9 +1424,9 @@ class DirectoryModule extends DefaultMinisiteModule {
 
     function display_form_help() //{{{
     {
-            /**
-             * Removed until we decide to add these features (Steve)
-             */
+			/** 
+			 * Removed until we decide to add these features (Steve)
+			 */
 //        if ($blurb = get_text_blurb_content('campus_directory_help_blurb')) {
 //            echo '<div id="campusDirHelp">';
 //            if ($this->context == 'external')
@@ -1507,20 +1483,20 @@ class DirectoryModule extends DefaultMinisiteModule {
  * They were creating a query string, thereby killing the check to see if the query string
  * was null.
  * Also, they remove some good results from our ldap
- *
+ * 
  * Steve Smith
- *
+ * 
  *      $filter[] = '(!(ou=Null temporary OU))'; // exclude temporary accounts
- *      $filter[] = '(!(description=Left feed*))'; // exclude expired accounts
- *
+ *      $filter[] = '(!(description=Left feed*))'; // exclude expired accounts 
+ * 
  */
         // Where it reads 'luther.edu' it used to read 'carleton.edu' but removing this
         // in general fixes things because I am not sure we set up anything like this (whitepages?) - burkaa
         //$filter[] = '(edupersonentitlement=urn:mace:luther.edu:entl:whitepages)';
-        // if(!empty($id_number)) {
-        //     $filter[] = "(carlColleagueid$cmp$id_number)";
-        //     $filter_desc[] = 'whose ID Number is ' . $this->format_search_key($id_number);
-        // }
+        if(!empty($id_number)) {
+            $filter[] = "(carlColleagueid$cmp$id_number)";
+            $filter_desc[] = 'whose ID Number is ' . $this->format_search_key($id_number);
+        }
         /*
          * old name search
          * if(!empty($first_name)) {
@@ -1804,8 +1780,8 @@ class DirectoryModule extends DefaultMinisiteModule {
 
     /** In some contexts (like the top of the printable photobook) a custom page title can be
      *   displayed.  This function figures out whether:
-     *  a) a page title has been passed in the query, or
-     *  b) the search being made is such that there's a logical title for the result set
+     *	a) a page title has been passed in the query, or
+     *	b) the search being made is such that there's a logical title for the result set
      **/
     function determine_page_title() {
         if (isset($this->request['pagetitle']))
@@ -1839,28 +1815,76 @@ class DirectoryModule extends DefaultMinisiteModule {
         }
     }
 
-    /**
-     * Perform an LDAP search based on the provided LDAP filter
+    /** Perform an LDAP search based on the provided LDAP filter
      */
     function get_search_results($querystring) {
-        $attributes = array('ou','uid','cn','sn','givenName','displayName','mail','title',
-           'eduPersonPrimaryAffiliation','officebldg','officephone','studentPostOffice',
-           'telephoneNumber','studentmajor','studentminor','studentresidencehallbldg',
-           'studentresidencehallphone','studentresidencehallroom','eduPersonPrimaryAffiliation',
-           'studentspecialization','studentyearinschool','studentadvisor','eduPersonAffiliation',
-           'studentStatus','postaladdress','l','st','postalcode','mobile','termenrolled',
-           'departmentname','privacyflag','birthdate','lutherc','lastupdate','alumclassyear',
-           'alummajor');
+        /*$attributes = array('dn','uid','ou','cn','sn','givenName','eduPersonNickname','displayName','mail','title',
+			'eduPersonPrimaryAffiliation','officebldg','studentPostOffice','telephoneNumber','spouseName','carlHideInfo',
+			'homePostalAddress', 'carlStudentPermanentAddress', 'telephoneNumber', 'studentmajor', 'carlConcentration', 'eduPersonPrimaryAffiliation',
+			'eduPersonAffiliation','studentStatus','alumClassYear','carlCohortYear','carlHomeEmail','carlFacultyLeaveTerm','carlHidePersonalInfo',
+			'eduPersonEntitlement','mobile');*/
+        $attributes = array('dn','uid','ou','count','employeenumber','cn','sn','givenName','eduPersonNickname','displayName','mail','title',
+                'eduPersonPrimaryAffiliation','officebldg','officephone','studentPostOffice','telephoneNumber','spouseName', 'childName',
+                'homePostalAddress', 'address', 'telephoneNumber', 'studentmajor', 'studentminor','studentresidencehallbldg','studentresidencehallphone',
+                'studentresidencehallroom','eduPersonPrimaryAffiliation','studentspecialization','studentyearinschool','studentadvisor',
+                'eduPersonAffiliation','studentStatus','alumClassYear','postaladdress','l','st','postalcode','lutherc',
+                'eduPersonEntitlement','mobile', 'termenrolled', 'departmentname', 'gender', 'ocpostaladdress', 'ocl', 'ocst', 'ocpostalcode',
+                'occ', 'ocphone','privacyflag','creationdate','deleteafterdate','birthdate','lasttermattended',
+                'programstartdate','programenddate','lastupdate', 'alumClassYear', 'alumOccupation');
 
+//        $logged_user = reason_check_authentication();
+        $logged_user = $this->user_netid;
+        if ($logged_user){
+            if ($logged_user == 'studentnet'){
+                $pass_hash = 'alum4pwd';
+            } else {
+                $logged_user_entity = new entity(get_user_id($logged_user));
+                $pass_hash = $logged_user_entity->get_value('user_password_hash');
+            }
+        }
+
+
+    		// $password = (isset($_SESSION)) ? $_SESSION['password'] : '';
+        // $password = $logged_user->get_value('user_password_hash');
+        
+
+        //$lookup_login = 'uid='.$logged_user.',ou=People,dc=luther,dc=edu'; /// username is get login norsekey
+        //$lookup_pass = $password; /// get login password
+
+
+        // $dir = new directory_service('ldap_luther_directory');
+        $dir = new directory_service('ldap_luther');
+
+        $dir->authenticate($logged_user,$pass_hash);
+        //$dir->bind_test($logged_user, $password);
+        //$dir->authenticate_two();
+
+//		$dir->serv_inst['ldap_luther']->set_conn_param('lookup_dn', $lookup_login);
+//        $dir->serv_inst['ldap_luther']->set_conn_param('lookup_password',$lookup_pass);
+
+ 
+/*
         $dir = new directory_service('ldap_luther_directory');
-        $dir->search_by_filter($querystring, $attributes);
+        echo 'Here';
+		$dir->serv_inst['ldap_luther_directory']->set_params($logged_user,$lookup_pass);
 
+        $dir->serv_inst['ldap_luther_directory']->set_conn_param('lookup_dn',$lookup_login);
+        $dir->serv_inst['ldap_luther_directory']->set_conn_param('lookup_password',$lookup_pass);
+*/        
+        //$dir->serv_inst['ldap_luther']->set_conn_param('lookup_dn','cn=webauth,dc=luther,dc=edu');
+        //$dir->serv_inst['ldap_luther']->set_conn_param('lookup_password','daewoo$friendly$$cow');
+
+        $dir->search_by_filter($querystring, $attributes);
+        //just by a sinlge attribute
+        //$dir->search_by_attribute('sn', 'burk', $attributes);
+
+		
         $dir->sort_records(array('sn', 'cn'));
         $entries = $dir->get_records();
 
         return $entries;
     }
-
+	
     /** Query the Telecommunications database for data relevant to the requested office or dept
      */
     function get_telecomm_data($q) {
@@ -1901,27 +1925,6 @@ class DirectoryModule extends DefaultMinisiteModule {
             }
         }
         return $depts;
-    }
-
-    function get_faculty_site($faculty) {
-        // find all the sites
-
-        $es = new entity_selector();
-        $es->description = 'Getting all live sites for search';
-        $es->add_type( id_of( 'site' ) );
-        $es->add_relation('site.site_state = "Live"');
-        $es->add_relation("site.base_url = '/{$faculty}/'");
-        $es->limit_fields('base_url');
-        $results = $es->run_one();
-        if ($results) {
-            foreach ($results as $site) {
-                $base_url = $site->get_value('base_url');
-                $url = "<a href='{$base_url}'>www.luther.edu{$base_url}</a>";
-                return $url;
-            }
-        } else {
-            return false;
-        }
     }
 
     /** Find all of the Reason sites whose department matches one of those passed

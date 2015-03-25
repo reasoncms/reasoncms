@@ -202,7 +202,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'main_post' => 'content',
 	),
 	'directory' => array(
-		'main' => 'directory_new',  // todo: MAKE DIRECTORY CODE RESPONSIVE-ABLE
+		'main' => 'directory',  // todo: MAKE DIRECTORY CODE RESPONSIVE-ABLE
 		'pre_sidebar' => '',
 		'pre_sidebar_2' => '',
 		'sidebar' => '',
