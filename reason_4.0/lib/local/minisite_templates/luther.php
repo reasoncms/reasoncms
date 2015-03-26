@@ -217,6 +217,8 @@
 			echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/foundation/foundation.offcanvas.js"></script>';
 			echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/foundation/foundation.tab.js"></script>';
 			echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/foundation/foundation.tooltip.js"></script>';
+			echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/foundation/foundation.tooltip.js"></script>';
+			echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/foundation/foundation.dropdown.js"></script>';
 			
 			// Initialize Foundation javascript
 			echo '<script> $(document).foundation(); </script>';
@@ -426,7 +428,7 @@
 			if ($this->has_content( 'post_main_head' )) 
 			{
 				echo '<div id="postMainHead">'."\n";
-			$this->run_section( 'post_main_head' );
+				$this->run_section( 'post_main_head' );
 				echo '</div>'."\n";
 			}
 				
