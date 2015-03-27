@@ -9,6 +9,7 @@
 		{
 			$head_items = $this->get_head_items();
 			$head_items->add_javascript('/reason/local/luther_2014/javascripts/vendor/PTGuiViewer.js');
+			$head_items->add_javascript('/reason/local/luther_2014/javascripts/virtual_tour/virtual_tour.js');
 		}
 		
 		function run()
@@ -26,6 +27,7 @@
 
 			echo "<div id='tabs'> \n";
 			echo "<div class='tabs-content'> \n";
+			echo '<div id ="vtHelp"> <img width="450px" height="300px" src="'. REASON_HTTP_BASE_PATH . 'local/luther_2014/images/vtHelp.jpeg"><a class="vtHelpClose" onclick="hideVTHelp()"></a></div>';
 
 			echo "<div id='virtual-tour'> \n";
 			
@@ -56,7 +58,6 @@
 				
 				$i++;				
 			}
-			
 			echo "</div>   <!-- id='virtual-tour'-->\n";
 			echo "</div>   <!-- class='tabs-content'--> \n";
 			
@@ -190,3 +191,4 @@
 		
 	}
 ?>
+<?php
