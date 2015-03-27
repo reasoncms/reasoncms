@@ -960,6 +960,29 @@ x9b.style.visibility="hidden";
 x9b.style.opacity="0.2";
 x9b.style.cursor="pointer";
 xei.appendChild(x9b);
+
+var x12b=document.createElement("span");
+x12b.className = "fa-stack fa-lg vtHelpIcon";
+x12b.style.display="block";
+x12b.style.position="absolute";
+x12b.style.top="4px";
+x12b.style.right="65px";
+x12b.style.opacity="0.5";
+x12b.style.cursor="pointer";
+x12b.style.width="39px";
+this.xGL=x12b;
+var x11b=document.createElement("i");
+x11b.className = "fa fa-circle fa-stack-2x";
+x11b.style.opacity="inherit";
+x11b.style.fontSize="50px";
+var x10b=document.createElement("i");
+x10b.className = "fa fa-question fa-inverse fa-stack-1x";
+x10b.style.opacity="inherit";
+x10b.style.fontSize="50px";
+x12b.appendChild(x11b);
+x12b.appendChild(x10b);
+xei.appendChild(x12b);
+
 var xph=document.createElement("img");
 this.xNe=xph;
 xph.src="data:image/png;base64,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";
@@ -1039,6 +1062,9 @@ x9b.addEventListener("click", function(xfe){return xwc.x0d(xfe? xfe : window.eve
 xph.addEventListener("click", function(xfe){return xwc.x0d(xfe? xfe : window.event)}, false);
 x9b.addEventListener("mouseover", function(xfe){this.style.opacity=0.5}, false);
 x9b.addEventListener("mouseout", function(xfe){this.style.opacity=0.2}, false);
+x12b.addEventListener("mouseover", function(xfe){this.style.opacity=0.7}, false);
+x12b.addEventListener("mouseout", function(xfe){this.style.opacity=0.5}, false);
+x12b.addEventListener("click",showVTHelp);
 xph.addEventListener("mouseover", function(xfe){this.style.opacity=0.5}, false);
 xph.addEventListener("mouseout", function(xfe){this.style.opacity=0.2}, false);
 xYe.addEventListener("contextmenu", function(xfe){
@@ -1130,6 +1156,7 @@ p1.xWd=function()
 {
 var xgf=this.xcb();
 this.xGh.style.visibility=(xgf || (!this.xrc))?"hidden":"visible";
+this.xGL.style.visibility=(xgf || (!this.xrc))?"hidden":"visible";
 this.xNe.style.visibility=xgf?"visible":"hidden";
 }
 p1.xUh=function(xgf)

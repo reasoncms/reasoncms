@@ -23,6 +23,32 @@
 
 #tabs {
 	.tabs-content {
+		position: relative;
+		#vtHelp {
+			display: none;
+			z-index: 10;
+			position: absolute;
+			top: 23%;
+			left: 23%;
+			opacity: .7;
+			a.vtHelpClose{
+				display: block;
+				width: 100%;
+				height: 26px;
+				z-index: 20;
+				position: relative;
+				top: -25px;
+			}
+			a.vtHelpClose:hover{
+				background-color: #1073CE;
+				opacity: 0.4;
+			}
+		}
+		.vtHelpShow{
+			@media #{$medium-up} {
+				display: block !important;
+			}
+		}
 		#virtual-tour {
 			cursor: move;
 			height: 64vw;
@@ -46,6 +72,12 @@
 			}
 			.content {
 				padding: 0;
+				span.vtHelpIcon{
+					display:none !important;
+					@media #{$medium-up} {
+						display:block !important;
+					}
+				}
 			}
 		}
 	}

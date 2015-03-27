@@ -17,19 +17,24 @@ function checkCookie() {
     var user = getCookie("viewedHelp");
     if (user != "") {
     	//user has seen help so we can hide it, or not show it
-//        alert("Welcome again " + user);
-    	
-    	
     } else {
     	//user has not seen help so dont hide it, or show it
-//        user = prompt("Please enter your name:", "");
-//        if (user != "" && user != null) {
-//            setCookie("username", user, 365);
-//        }
-    	
+        setCookie("viewedHelp", "true");
+	showVTHelp();
     }
 }
 
+function showVTHelp() {
+	if(!($("#vtHelp").hasClass("vtHelpShow"))){
+		$("#vtHelp").addClass("vtHelpShow");
+	}
+}
+
+function hideVTHelp() {
+	if( $("#vtHelp").hasClass("vtHelpShow")){
+		$("#vtHelp").removeClass("vtHelpShow");
+	}
+}
 $(document).ready(function() {
-	alert("here");
+	checkCookie();
 });

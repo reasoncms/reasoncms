@@ -9051,43 +9051,86 @@ h4.flickr_subtitle {
   border-color: #1073ce;
 }
 
-/* line 26, scss/modules/_virtual-tours.scss */
+/* line 25, scss/modules/_virtual-tours.scss */
+#tabs .tabs-content {
+  position: relative;
+}
+/* line 27, scss/modules/_virtual-tours.scss */
+#tabs .tabs-content #vtHelp {
+  display: none;
+  z-index: 10;
+  position: absolute;
+  top: 23%;
+  left: 23%;
+  opacity: .7;
+}
+/* line 34, scss/modules/_virtual-tours.scss */
+#tabs .tabs-content #vtHelp a.vtHelpClose {
+  display: block;
+  width: 100%;
+  height: 26px;
+  z-index: 20;
+  position: relative;
+  top: -25px;
+}
+/* line 42, scss/modules/_virtual-tours.scss */
+#tabs .tabs-content #vtHelp a.vtHelpClose:hover {
+  background-color: #1073CE;
+  opacity: 0.4;
+}
+@media only screen and (min-width: 40.063em) {
+  /* line 47, scss/modules/_virtual-tours.scss */
+  #tabs .tabs-content .vtHelpShow {
+    display: block !important;
+  }
+}
+/* line 52, scss/modules/_virtual-tours.scss */
 #tabs .tabs-content #virtual-tour {
   cursor: move;
   height: 64vw;
   margin-bottom: 5px;
 }
 @media only screen and (min-width: 63.8125em) {
-  /* line 26, scss/modules/_virtual-tours.scss */
+  /* line 52, scss/modules/_virtual-tours.scss */
   #tabs .tabs-content #virtual-tour {
     height: 32vw;
   }
 }
 @media only screen and (min-width: 40.063em) and (max-width: 63.75em) {
-  /* line 26, scss/modules/_virtual-tours.scss */
+  /* line 52, scss/modules/_virtual-tours.scss */
   #tabs .tabs-content #virtual-tour {
     height: 48vw;
   }
 }
-/* line 36, scss/modules/_virtual-tours.scss */
+/* line 62, scss/modules/_virtual-tours.scss */
 #tabs .tabs-content #virtual-tour > div.content {
   height: inherit;
 }
-/* line 38, scss/modules/_virtual-tours.scss */
+/* line 64, scss/modules/_virtual-tours.scss */
 #tabs .tabs-content #virtual-tour > div.content > div {
   height: inherit;
 }
-/* line 42, scss/modules/_virtual-tours.scss */
+/* line 68, scss/modules/_virtual-tours.scss */
 #tabs .tabs-content #virtual-tour p {
   float: left;
   width: 100%;
   margin-bottom: 1.0rem;
 }
-/* line 47, scss/modules/_virtual-tours.scss */
+/* line 73, scss/modules/_virtual-tours.scss */
 #tabs .tabs-content #virtual-tour .content {
   padding: 0;
 }
-/* line 52, scss/modules/_virtual-tours.scss */
+/* line 75, scss/modules/_virtual-tours.scss */
+#tabs .tabs-content #virtual-tour .content span.vtHelpIcon {
+  display: none !important;
+}
+@media only screen and (min-width: 40.063em) {
+  /* line 75, scss/modules/_virtual-tours.scss */
+  #tabs .tabs-content #virtual-tour .content span.vtHelpIcon {
+    display: block !important;
+  }
+}
+/* line 84, scss/modules/_virtual-tours.scss */
 #tabs .tabs .tab-title a {
   background: none repeat scroll 0 0 #eeeeee;
   display: block;
@@ -9099,23 +9142,23 @@ h4.flickr_subtitle {
   border: 1px solid #ffffff;
   border-radius: 0;
 }
-/* line 62, scss/modules/_virtual-tours.scss */
+/* line 94, scss/modules/_virtual-tours.scss */
 #tabs .tabs .tab-title a .crop {
   width: 150px;
   height: 75px;
   overflow: hidden;
 }
-/* line 66, scss/modules/_virtual-tours.scss */
+/* line 98, scss/modules/_virtual-tours.scss */
 #tabs .tabs .tab-title a .crop img {
   height: 150px;
   width: 150px;
 }
-/* line 71, scss/modules/_virtual-tours.scss */
+/* line 103, scss/modules/_virtual-tours.scss */
 #tabs .tabs .tab-title a h5 {
   margin: 0;
   font-size: 0.95rem;
 }
-/* line 76, scss/modules/_virtual-tours.scss */
+/* line 108, scss/modules/_virtual-tours.scss */
 #tabs .tabs .tab-title.active a {
   background: none repeat scroll 0 0 #f6f6f6 !important;
   border: 1px solid #e1e1e1;
