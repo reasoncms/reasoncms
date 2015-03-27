@@ -1,0 +1,299 @@
+//
+// ASSET STYLES
+//
+// @author Gage Dykema
+//
+
+// Foundation imports
+@import "settings";
+@import "foundation/components/grid";
+
+// Compass imports
+@import "compass/css3";
+
+// Font Awesome Imports
+@import "font-awesome/variables";
+@import "font-awesome/core";
+@import "font-awesome/mixins";
+@import "font-awesome/rotated-flipped";
+
+// Luther imports
+@import "extends";
+@import "mixins";
+
+.directoryHead {
+  ul {
+    margin: 0;
+    li {
+      display: inline-block;
+    }
+    a {
+      padding-right: rem-calc(5);
+        &:after {
+         @extend .fa;
+          width: rem-calc(25);
+          color: $anchor-font-color;
+          text-align: center;
+          vertical-align: top;
+          position: relative;
+          top: 5px;
+        }
+    }
+    #loggedUser {
+      &:after {
+        content: $fa-var-user;
+      }
+    }
+    #logIn {
+      &:after {
+        content: $fa-var-sign-in;
+      }
+    }
+    #logOut {
+      &:after {
+        content: $fa-var-sign-out;
+      }
+    }
+  }
+}
+.searchOptions.openOptions {
+    &:after {
+      @extend .fa;
+      content: $fa-var-chevron-down;
+      @include rotate(-180deg);
+      @include transition-property(transform);
+      @include transition-duration(.4s);
+      @include transition-timing-function(ease-in);
+      padding-left: rem-calc(3);
+    }
+}
+.searchOptions.closedOptions {
+    &:after {
+      @extend .fa;
+      content: $fa-var-chevron-down;
+      @include rotate(0);
+      @include transition-property(transform);
+      @include transition-duration(.4s);
+      @include transition-timing-function(ease-in);
+      padding-left: rem-calc(3);
+    }
+}
+
+#directory{
+  margin: 0 0 $column-gutter;
+
+  .directoryName,
+  .directoryInfo {
+
+    @media
+    #{$medium-up} {
+      margin-left: rem-calc(200) !important;
+    }
+  }
+
+  figure {
+    width: 25%;
+    margin: 0 0 $paragraph-margin-bottom $paragraph-margin-bottom;
+    float: right;
+    //margin: 0 auto;
+
+    @media
+    #{$medium-up} {
+      float: left;
+      width: rem-calc(150);
+      margin: 0 $paragraph-margin-bottom $paragraph-margin-bottom 0;
+    }
+
+    img {
+      width: 100%;
+    }
+  }
+
+  .directoryName {
+    margin: 0;
+    font-size: $h3-font-size;
+    font-weight: 400;
+  }
+
+  .directoryTitle {
+    font-size: $h5-font-size;
+    margin-bottom: 0px;
+  }
+
+  .directoryInfo {
+    h3.directoryTitle:last-of-type{
+      margin-bottom: 20px;
+    }
+    @media
+    #{$medium-up}{
+      h3.directoryTitle:last-of-type{
+        margin-bottom: 0px;
+      }
+    }
+  }
+
+  .directoryContact {
+    margin-top: $column-gutter/1.75;
+    margin-left: $column-gutter/2;
+
+    li span.attribute{
+      position: static;
+      max-width: 95%;
+      min-width: 51%;
+      width: auto;
+      @media
+      #{$medium-up} {
+        min-width: 0%;
+        max-width: 175px; //might have to increase if the length of an attribute title excedes this length
+        width: 36%;
+      }
+      display: inline-block;
+      vertical-align: top;
+
+      strong{
+        position: static;
+      }
+    }
+
+    span.attrValue{
+      display: inline-block;
+      max-width: 95%;
+      min-width: 51%;
+      width: auto;
+      margin-left: 0px;
+      @media
+      #{$medium-up} {
+        min-width: 0%;
+        width: 62%;
+        margin-left: 2px;
+      }
+    }
+
+    span.multipleAttrValues{
+      display: inline-block;
+      margin: 0px;
+      // margin: 0 2px;
+      // &:first-child{
+      //   margin-left: 0px;
+      // }
+      width: 100%;
+    }
+
+    li {
+      margin-left: rem-calc(40);
+      vertical-align: top;
+
+      strong {
+        @extend .screenreader;
+      }
+
+      &:before {
+        @extend .fa;
+        width: rem-calc(32);
+        margin-left: - rem-calc(36);
+        text-align: center;
+        vertical-align: top;
+        position: relative;
+        top: 5px;
+      }
+
+    }
+
+    .directoryOffice {
+      &:before {
+        content: $fa-var-map-marker;
+      }
+    }
+
+    .directoryPhone {
+      &:before {
+        content: $fa-var-phone;
+      }
+    }
+
+    .directoryEmail {
+      &:before {
+        content: $fa-var-at;
+      }
+    }
+
+    .directoryStudentResidence {
+      &:before {
+        content: $fa-var-building;
+      }
+    }
+
+    .directorySPO {
+      &:before {
+        content: $fa-var-envelope;
+      }
+    }
+
+    .directoryUsername {
+      &:before {
+        content: $fa-var-user;
+      }
+    }
+
+    .directoryAffiliations {
+      &:before {
+        content: $fa-var-users;
+      }
+    }
+
+    .directoryHomeAddress {
+      &:before {
+        content: $fa-var-home;
+      //  margin-right: 4px;
+      }
+    }
+
+    .directoryMobile {
+      &:before {
+        content: $fa-var-mobile;
+      }
+    }
+
+    .directoryBirthday {
+      &:before {
+        content: $fa-var-birthday-cake;
+      }
+    }
+
+    .directoryLastUpdate {
+      &:before {
+        content: $fa-var-history;
+      }
+    }
+
+    .directoryDepartment {
+      &:before {
+        content: $fa-var-university;
+      }
+    }
+
+    .directoryAdvisor {
+      &:before {
+        content: $fa-var-graduation-cap;
+      }
+    }
+
+    .directoryMinor {
+      &:before {
+        content: $fa-var-book;
+      }
+    }
+
+    .directoryTerms {
+      &:before {
+        content: $fa-var-book;
+      }
+    }
+
+    .directoryFacultySite {
+      &:before {
+        content: $fa-var-laptop;
+      }
+    }
+  }
+}

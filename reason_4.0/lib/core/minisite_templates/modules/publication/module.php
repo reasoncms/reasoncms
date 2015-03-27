@@ -280,6 +280,28 @@ var $noncanonical_request_keys = array(
 			$this->parent->add_stylesheet(REASON_HTTP_BASE_PATH.$this->css,'',true);
 		}
 		
+		// Add fancybox display
+		// Do standard initialization
+		$head_items = $this->get_head_items();
+
+		if (defined(UNIVERSAL_CSS_PATH))
+		{
+			$head_items->add_stylesheet(UNIVERSAL_CSS_PATH);
+		}
+		$head_items->add_javascript(JQUERY_URL, true);
+		$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'modules/image_sidebar/styles.css');
+		$head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'FancyBox/source/jquery.fancybox.js');
+		$head_items->add_stylesheet(REASON_PACKAGE_HTTP_BASE_PATH.'FancyBox/source/jquery.fancybox.css');
+		$head_items->add_head_item('script', array('type'=>'text/javascript'),
+				'$(document).ready(function() {
+				$(".fancybox").fancybox({
+					helpers		: {
+					title	: { type : \'inside\' },
+					}
+				});
+			});'
+		);
+		
 		if (!$this->related_mode)
 		{
 			// Register this module for inline editing
@@ -289,8 +311,6 @@ var $noncanonical_request_keys = array(
 			// Only load inline_editing javascript if inline editing is available for the module and active for the module
 			if ($inline_edit->available_for_module($this) && $inline_edit->active_for_module($this))
 			{
-				$head_items =& $this->get_head_items();
-				$head_items->add_javascript(JQUERY_URL, true);
 				$head_items->add_javascript(REASON_HTTP_BASE_PATH . 'modules/publications/inline_editing.js');
 			}
 		}

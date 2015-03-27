@@ -4,7 +4,7 @@ reason_include_once( 'carl_util/luther_util.php' );
 $GLOBALS['_reason_page_types_local'] = array(
 
 	'default' => array(
-		'global_header' => 'global/global_header',
+		'global_header'	=> 'global/global_header',
 		'global_navigation' => 'global/global_navigation',
 			'pre_banner' => '',
 			'banner_xtra' => '',
@@ -202,7 +202,13 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'main_post' => 'content',
 	),
 	'directory' => array(
-		'main' => 'directory',  // todo: MAKE DIRECTORY CODE RESPONSIVE-ABLE
+		'main' => 'directory',
+		'pre_sidebar' => '',
+		'pre_sidebar_2' => '',
+		'sidebar' => '',
+		'sidebar_2' => '',
+		'post_sidebar' => '',
+		'sub_nav' => '',
 	),
 	'discovery_camps' => array(
 		'main_post' => 'discovery_camps/discovery_camps',
@@ -399,6 +405,30 @@ $GLOBALS['_reason_page_types_local'] = array(
 		),
 		'post_sidebar_2' => 'luther_flickr_slideshow',
 		'post_sidebar_3' => 'twitter',
+	),
+	'landing_giving' => array(
+		'pre_main_head' => 'giving/give_now', // Giving module here
+		'main_post' => array(
+			'module'=>'children',
+			'provide_images' => true,
+			'description_part_of_link' => false,
+		),
+		'pre_sidebar' => '',
+		'pre_sidebar_2' => '',
+		'call_to_action_blurb' => '',
+		'sidebar' => array(
+			'module' => 'feature/feature',
+			'width' => '800',
+			'height' => '500',
+			'autoplay_timer' => 4,
+			// 'autoplay' => true,
+		),
+		'sidebar_2' => array(
+			'module' => 'events_mini',
+			'ideal_count' => 4,
+		),
+		'post_sidebar_2' => '',
+		'post_sidebar_3' => '',
 	),
 	'landing_library' => array (
 		'main' => 'luther_tab_widget',

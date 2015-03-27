@@ -1,6 +1,7 @@
 <?php
 
 reason_include_once('minisite_templates/modules/publication/item_markup_generators/default.php');
+reason_include_once( 'minisite_templates/modules/image_sidebar_luther.php' );
 
 class ResponsiveItemMarkupGenerator extends PublicationItemMarkupGenerator
 {
@@ -163,31 +164,50 @@ class ResponsiveItemMarkupGenerator extends PublicationItemMarkupGenerator
 		return $markup_string;
 	}
 
-	// Here, we get rid of <h4>Images</h4>, <ul> and enlarge thumbanil size.
+	// Here, we get rid of <h4>Images</h4>, <ul> and enlarge thumbnail size.
 	function get_images_section()
 	{
 		$str = '';
 		foreach($this->passed_vars['item_images'] as $image)
 		{
+			$url = luther_get_image_url(WEB_PHOTOSTOCK . $image->id() . '.' . $image->get_value('image_type'));
+			$thumb = luther_get_image_url(WEB_PHOTOSTOCK . $image->id() . '_tn.' . $image->get_value('image_type'));
+			$orig = luther_get_image_url(WEB_PHOTOSTOCK . $image->id() . '_orig.' . $image->get_value('image_type'));
+			$description = $image->get_value('content') != '' ? $image->get_value('content') :$image->get_value('description');
+			
+			if (file_exists($_SERVER['DOCUMENT_ROOT'] . $orig))   // link to high res original if it exists
+			{
+				$description .= '<a href="' . $orig . '" title="High res">&prop;</a>';
+			}
+			
 			$str .= '<div class="imageChunk">';
 			$rsi = new reasonSizedImage();
-			$rsi->set_id($image->id());
-			$rsi->set_width(600);
-			//$rsi->set_height(400);
-			//$rsi->set_crop_style('fill');
-			ob_start();
-			if (preg_match("/hide_caption/", $image->get_value('keywords')))
+			if(!empty($rsi))
 			{
-				show_image( $rsi, false, true, false, '');
+				$rsi->set_id($image->id());
+				$rsi->set_width(600);
+				//$rsi->set_height(400);
+				//$rsi->set_crop_style('fill');
+				
+				// use the sized image for the thumbnail
+				$thumb = $rsi->get_URL();
 			}
-			else 
+	
+			$str .= '<div class="tnImage">';
+			$str .= '<a class="fancybox" title="' . htmlspecialchars($description, ENT_COMPAT) . '" rel="group" href="' . $url .'">
+					<img src="' . $thumb . '" alt="' . htmlspecialchars($description, ENT_COMPAT) . '" title="' . $image->get_value('name') . '" /></a>';
+			$str .=  "</div>";
+			
+			if (!preg_match("/hide_caption/", $image->get_value('keywords')))
 			{
-				show_image( $rsi, false, true, true, '');
+				$str .= '<div class="tnDesc smallText">';
+				$str .= $image->get_value('description');
+				$str .= "</div>";	
 			}
-			$str .= ob_get_contents();
-			ob_end_clean();
+			
 			$str .= '</div>';
 		}
+
 		return $str;
 	}
 

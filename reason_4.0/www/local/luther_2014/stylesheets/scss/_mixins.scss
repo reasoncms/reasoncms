@@ -218,3 +218,77 @@
 		}			
 	}
 }
+
+@mixin default-transition($property:all, $duration:.5s, $timing:ease) {
+	transition-property: $property;
+	transition-duration: $duration;
+	transition-timing-function: $timing;
+}
+
+@mixin fa-icon($pseudo: before, $fa: $fa-var-bomb, $color: inherit, $margin: true, $distance: rem-calc(6)) {
+	&:#{$pseudo} {
+		@extend .fa;
+		content: $fa;
+		@if $margin == true {
+			@if $pseudo == after {
+				margin-left: $distance;	
+			}
+			@else {
+				margin-right: $distance;
+			}
+		}
+		color: $color;
+	}
+}
+
+@mixin cta-button(
+	$bg: $lc-blue-light,
+	$color: white,
+	$icon: $fa-var-bomb,
+	$padding: rem-calc(18),
+	$font-size: rem-calc(18),
+	$height: ($padding*2 + $font-size)
+	){
+
+		font-family: $open-sans;
+		font-size: $font-size;
+		font-weight: 700;
+		display: block;
+		text-align: center;
+		background: $bg;
+		color: $color;
+		padding: $padding;
+		position: relative;
+		line-height: 1;
+		border-radius: $global-rounded;
+
+		@include transition-property(background);
+		@include transition-duration(.5s);
+		@include transition-timing-function(ease);
+
+		&:link {
+			text-decoration: none !important;
+		}
+
+		&:hover {
+			background: darken($bg, 6%) !important;
+		}
+
+		@include fa-icon($fa: $icon, $pseudo: after, $margin: true);
+
+		&:after {
+			line-height: 1 !important;
+			display: block;
+			position: absolute;
+			top: 0;
+			right: 0;
+			background: rgba(white, .25);
+			font-size: $font-size;
+			padding: $padding;
+			height: $height;
+			width: $height;
+			border-radius: $global-rounded;
+		}
+
+
+}
