@@ -123,6 +123,7 @@
 		
 		function rename_tour_jpegs($id)
 		{
+			if (is_dir(REASON_PATH . 'data/images/virtual_tours/' . $id))
 			{
 				$files = glob(REASON_PATH . 'data/images/virtual_tours/' . $id . '/*.jpg', GLOB_MARK);
 				foreach ($files as $file)
