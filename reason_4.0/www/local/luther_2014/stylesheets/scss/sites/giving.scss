@@ -8,6 +8,12 @@
 // Compass imports
 @import "compass/css3";
 
+// Font Awesome Imports
+@import "font-awesome/variables";
+@import "font-awesome/core";
+@import "font-awesome/mixins";
+@import "font-awesome/rotated-flipped";
+
 // Luther imports
 @import "extends";
 @import "mixins";
@@ -15,6 +21,519 @@
 $tab-default-color: $lc-blue-light;
 $tab-current-color: $lc-blue-dark;
 
+//	1. HOME PAGE
+//	2. GIVE NOW FORM
+//		2a. Give Now (Home Page)
+//		2b. Give Now Mini
+//	3. GIVING FORM
+
+
+//	1. HOME PAGE
+.siteHome {
+
+	#minisite {
+
+		// COLUMNS
+		&.hasConRelNav { /* 3 COLUMNS: Nav, Content, & Related */
+
+			#contentFeature {
+				@include grid-row();
+			}
+
+			@media #{$medium-up} {
+				#contentAndRelated {
+					//background: green;
+					// Minisite navigation is in "desktop" view is hidden on the homepage.
+					@include grid-column($columns: 16, $collapse: true);
+
+					#contentSections {
+						@include grid-column($columns: 16);
+						//padding-right: 0;
+					}
+					
+					#relatedSections {
+						@include grid-column($columns: 16);
+						//padding-left: 0;
+					}
+				}
+			}
+
+			@media #{$large-up} {
+				#contentAndRelated {
+					//background: red;
+					// Minisite navigation is in "desktop" view is hidden on the homepage.
+					@include grid-column($columns: 16, $collapse: true);
+
+					#contentSections {
+						@include grid-column($columns: 8, $collapse: true);
+						padding-right: 0;
+					}
+					
+					#relatedSections {
+						@include grid-column($columns: 8, $collapse: true);
+						padding-left: 0;
+					}
+				}
+			}
+
+			// @media #{$large-high-up} {
+			// 	#contentAndRelated {
+					
+			// 		// Content and sidebar are now side by side.
+			// 		#contentSections {
+			// 			@include grid-column($columns: 10, $collapse: true);
+			// 			padding-right: $column-gutter / 2;
+			// 		}
+					
+			// 		#relatedSections {
+			// 			@include grid-column($columns: 6, $collapse: true);
+			// 			padding-left: $column-gutter / 2;
+			// 		}
+			// 	}
+			// }
+
+			@media #{$xlarge-up} {
+				#contentAndRelated {
+					@include grid-column($columns: 16, $collapse: true);
+					//padding-left: $column-gutter / 2;
+
+					#contentSections {
+						@include grid-column($columns: 8, $collapse: true);
+						padding-right: $column-gutter / 2;
+					}
+					
+					#relatedSections {
+						@include grid-column($columns: 8, $collapse: true);
+						padding-left: $column-gutter / 2;
+					}
+				}
+			}
+
+			.childrenListWithImages {
+
+				//@include clearfix;
+
+				// Children with Images are displayed in columns, with heading & text below each image.
+				// We can override this layout with custom styles in specific sites or locations.
+
+				li {
+					// clear: both;
+					// display: block;
+					// margin-bottom: $column-gutter/2;
+
+					// @media #{$small-high-up} {  // 2 Columns for small-high screens
+					// 	width: 50%;
+					// 	float: left;
+					// 	clear: none;
+					// 	&:nth-child(2n+1) {
+					// 		clear: left;
+					// 	}
+					// }
+
+					@media #{$medium-up} { // 2 Columns for medium screens
+						width: 50%;
+						float: left;
+						clear: none;
+						&:nth-child(2n+1) {
+							clear: left;
+						}
+					}
+				}
+			}
+		}
+
+		// Hide the nav on desktop. We still want it for mobile, so it stays in the markup.
+		@media #{$large-up} {
+			#navWrap {
+				display: none;
+			}
+		}
+
+		.contentHead {
+			display: none !important;
+		}
+
+		.featuresModule {
+			margin: 0 auto;
+		}	
+	}
+}
+
+//	2. GIVE NOW FORM
+
+//  2a. Give Now (Home Page)
+.siteHome #minisite {
+
+	.give-now-mini {
+		display: none;
+	}
+
+	.give-now {
+		background: url('/reason/local/luther_2014/images/giving/give-now.jpg') no-repeat top left;
+		@include clearfix;
+		min-height: 540px;
+
+		.give-now-text {
+			@include clearfix;
+			
+			box-shadow: 0 2px 2px rgba(black,.2);
+
+			@media #{$medium-up} {
+				@include grid-column($columns:16, $collapse: true);
+				margin-top:  5%;
+				margin-bottom: $column-gutter/2;
+			}
+
+			@media #{$medium-only} {
+				height: 100%;
+				max-width: rem-calc(600);
+				margin: 5% auto $column-gutter/2;;
+				float: none;					
+			}
+
+			@media #{$large-up} {
+				@include grid-column($columns:14,$push:1);
+				box-shadow: none;
+			}
+
+			@media #{$large-high-up} {
+				@include grid-column($columns:12,$push:.5);
+			}
+
+			@media #{$xlarge-up} {
+				@include grid-column($columns:10.5,$push:.5);
+			}
+
+			.give-now-form {
+				background: rgba($lc-blue-light,.85);
+				padding: $column-gutter;
+				color: white;
+
+				@media #{$large-up} {
+					width: 60%;
+					float: left;
+				}
+				
+				h2 {
+					margin: 0 0 rem-calc(20) 0;
+					color: white;
+				}
+
+				form {
+
+					.formElement {
+						padding: 0 0 rem-calc(20) 0;
+
+						.words {
+							@extend .screenreader;
+						}
+
+						.element {
+							position: relative;
+
+							.currency {
+								//width: 14px;
+								display: block;
+								background: $lc-yellow;
+								height: auto;
+								padding: rem-calc(14) rem-calc(18);
+								font-size: rem-calc(20);
+								line-height: 1;
+								font-weight: 400;
+								position: absolute;
+								bottom: 0;
+								left: 0;
+							}
+							
+							input[type="text"] {
+								border: none;
+								padding: rem-calc(14) rem-calc(14) rem-calc(14) rem-calc(61);
+								height: rem-calc(48);
+							}
+
+							table {
+								tbody {
+									
+									@media #{$medium-up} {
+										tr {
+											display: block;
+											width: 50%;
+											float: left;
+											padding: 0 rem-calc(20);
+										}
+									}
+
+									tr td label {
+										font-size: rem-calc(18);
+										font-family: $body-font-family !important;
+									}
+								}
+							}
+
+							.radioButtons {
+								font-weight: 700;
+							}
+						}
+					}
+
+					.submitSection {
+						padding: 0;
+
+						input[type="submit"] {
+							width: 100%;
+							display: block;
+							border-radius: $global-rounded;
+							background: $lc-yellow;
+							@include button-size($padding: $button-med);
+							font-family: $body-font-family;
+							font-size: rem-calc(22) !important;
+
+							&:hover {
+								background: lighten($lc-yellow, 3%);
+							}
+
+							&:active {
+								background: darken($lc-yellow, 3%);
+							}
+						}
+					}
+				}
+
+				form table tr td {
+					color: white;
+				}
+			}
+
+			.other-ways {
+				background: white;
+				padding: $column-gutter;
+
+				@media #{$large-up} {
+					width: 40%;
+					float: left;
+					background: rgba(white,.9);
+				}
+
+				h3 {
+					margin: 0 0 rem-calc(8);
+					line-height: 1;
+
+					a {
+						line-height: 1;
+						font-weight: 700;
+						color: $lc-blue-light;
+						font-size: rem-calc(18);
+						text-decoration: underline;
+
+						@media #{$small-only} {
+							//background: #efefef;
+							color: $lc-blue-light;
+							border: 2px solid $lc-blue-light;
+							padding: rem-calc(16) rem-calc(24);
+							display: block;
+							border-radius: $global-rounded;
+							text-align: center;
+							text-decoration: none;
+							line-height: 1.5;
+						}
+					}
+
+					&:nth-of-type(2) {
+						margin-top: rem-calc(12);
+					}
+				}
+
+				ul {
+					display: none;
+					font-family: $header-font-family;
+					margin: 0;
+					
+
+					@media #{$medium-up} {
+						display: block;
+					}
+
+					li {
+						font-size: rem-calc(14);
+						line-height: rem-calc(14);
+						display: inline;
+						line-height: 1;
+						position: relative;
+						padding-right: rem-calc(2);
+						//border: 1px solid blue;
+
+						&:before {
+							@extend .fa;
+							content: $fa-var-circle;
+							margin-right: rem-calc(6);
+							font-size: 8px;
+							vertical-align: center;
+							position: relative;
+							top: -2px;
+
+						}
+					}
+				}
+			}
+		}	
+	}
+}
+
+
+//  2b. Give Now Mini
+
+// Add spacing for the absolute positioned gift form
+#minisite #contentAndRelated .contentHead {
+	@media #{$medium-up} {
+		.breadcrumbs,
+		.pageTitle {
+			padding-right: rem-calc(300);
+		}
+	}
+}
+
+.give-now-mini {
+	@include grid-row();
+	max-width: 100%;
+	margin-top: $column-gutter;
+	
+	@media #{$medium-up} {	
+		position: absolute;
+		top: $column-gutter/4;
+		right: $column-gutter/2;
+		margin: 0;
+		width: rem-calc(280);
+	}
+
+	@media #{$large-up} {
+		top: 0;
+		right: 0;
+	}
+
+	h2 {
+		margin: 0;
+		padding: 0;
+		
+		a {
+			@include cta-button($bg: $lc-green, $padding: rem-calc(12), $font-size: rem-calc(14), $icon: $fa-var-chevron-down);
+		}
+	}
+
+	// #give-dropdown {
+	// 	// width: 100%;
+	// 	// max-width: 100%;
+
+	// 	// &.f-dropdown {
+	// 	// 	border-radius: $global-radius;
+	// 	// }
+
+	// 	// @media #{$small-only} {
+	// 	// 	padding: $column-gutter/3;
+	// 	// }
+
+		#form {
+			@include grid-column(16);
+			padding: $column-gutter/4;
+			border: 1px solid rgba(black, .1);
+			border-radius: $global-radius;
+
+			form {
+				@include grid-row();
+
+				.formElement {
+
+					@include grid-column(9);
+					padding: 0;
+					padding-right: rem-calc(10);
+
+					// @media #{$medium-up} {
+					// 	@include grid-column(16);
+					// 	padding: 0;
+					// }
+
+					.words {
+						@extend .screenreader;
+					}
+
+					.element {
+						position: relative;
+
+						.currency {
+							//width: 14px;
+							display: block;
+							background: $lc-yellow;
+							height: auto;
+							padding: rem-calc(9) rem-calc(12);
+							font-size: rem-calc(16);
+							line-height: 1;
+							font-weight: 400;
+							position: absolute;
+							bottom: 0;
+							left: 0;
+							color: darken($lc-yellow, 18%);
+							color: white;
+						}
+				
+						input[type="text"] {
+							padding: rem-calc(6) rem-calc(6) rem-calc(6) rem-calc(39);
+							height: 34px;
+							border-color: rgba(black, .125);
+							//border-right: none !important;
+
+							@media #{$small-only} { 
+								
+							}
+						}
+
+						// @media #{$medium-up} { 
+						// 	margin-bottom: $column-gutter/4;
+						// }
+
+
+					}
+				}
+
+				.submitSection {
+					@include grid-column(7);
+					padding: 0;
+
+					// @media #{$medium-up} {
+					// 	@include grid-column(16);
+					// 	padding: 0;
+					// }
+
+					input[type="submit"] {
+						width: 100%;
+						display: block;
+						border-radius: 0 $global-radius $global-radius 0;
+						border-radius: $global-radius;
+						background: $lc-yellow;
+						font-family: $body-font-family;
+						padding-top: rem-calc(6);
+						padding-bottom: rem-calc(6);
+						line-height: 1.4;
+						font-size: rem-calc(14) !important;
+						height: 34px;
+
+						// @media #{$medium-up} { 
+						// 	//border-radius: $global-radius;
+						// }
+
+						&:hover {
+							background: lighten($lc-yellow, 3%);
+						}
+
+						&:active {
+							background: darken($lc-yellow, 3%);
+						}
+					}
+				}
+			}
+		}
+	// }
+}
+
+//	3. GIVING FORM
 #giving_form {
 
 	// Form Navigation
