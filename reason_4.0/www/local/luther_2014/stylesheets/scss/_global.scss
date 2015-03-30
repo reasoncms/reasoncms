@@ -358,6 +358,7 @@ body {
 				
 				&.left-off-canvas-menu {
 					height: inherit;      // removes gray box below main top nav on mac localhost
+					z-index: 97;
 				}
 			}
 			
