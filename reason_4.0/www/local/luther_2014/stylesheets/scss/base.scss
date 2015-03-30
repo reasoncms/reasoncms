@@ -1,4 +1,42 @@
-// The following bring in all base styles CSS for luther.edu.
+// The following imports bring in all styles for luther.edu.
+
+/* 1. RESET & NORMALIZE
+ *************************************/
+
+// include the Eric Meyer reset
+@import "reset";
+
+// include Normalize to normalize unnormal things
+@import "normalize";
+
+
+/* 2. FOUNDATION
+ *************************************/
+@import "settings";
+@import "foundation";
+
+
+/* 3. COMPASS
+ *************************************/
+@import "compass/css3";
+@import "compass/css3/opacity";
+@import "compass/css3/transition";
+
+
+/* 4. FONT AWESOME
+ *************************************/
+@import "font-awesome/variables";
+@import "font-awesome/core";
+@import "font-awesome/mixins";
+@import "font-awesome/rotated-flipped";
+
+
+/* 5. LUTHER
+ *************************************/
+
+// include mixins / extends
+@import "extends";
+@import "mixins";
 
 // include typography
 @import "type";

@@ -213,12 +213,13 @@
 			//
 
 			echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/vendor/fastclick.js"></script>';
-			echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/foundation/foundation.js"></script>';
-			echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/foundation/foundation.offcanvas.js"></script>';
-			echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/foundation/foundation.tab.js"></script>';
-			echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/foundation/foundation.tooltip.js"></script>';
-			echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/foundation/foundation.tooltip.js"></script>';
-			echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/foundation/foundation.dropdown.js"></script>';
+			echo '<script type="text/javascript" src="/reason/local/luther_2014/foundation/bower_components/foundation/js/foundation.min.js"></script>';
+			//echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/foundation/foundation.js"></script>';
+			//echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/foundation/foundation.offcanvas.js"></script>';
+			//echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/foundation/foundation.tab.js"></script>';
+			//echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/foundation/foundation.tooltip.js"></script>';
+			//echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/foundation/foundation.tooltip.js"></script>';
+			//echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/foundation/foundation.dropdown.js"></script>';
 			
 			// Initialize Foundation javascript
 			echo '<script> $(document).foundation(); </script>';

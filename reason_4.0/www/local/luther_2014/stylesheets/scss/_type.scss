@@ -3,25 +3,9 @@
 //
 // @author Nathan Dirks
 //
-// Typography variables can be set in Luther's _settings.scss.  Those variables are used in Foudnation's _type.scss 
-// and are written to our stylesheet when we set the parameter $include-html-type-classes to true (see line 9 below).
+// Typography variables can be set in _settings.scss.  Those variables are used in Foudnation's _type.scss 
+// and are written to our stylesheet when we set the parameter $include-html-type-classes to true in settings.
 // To keep from editing Foundation's _type.scss, we add any overrides or additional type styles below.
-
-$include-html-type-classes: true;
-$include-html-table-classes: true;
-$include-html-tooltip-classes: true;
-
-// Foundaton imports
-@import "settings";
-@import "foundation/components/type";
-@import "foundation/components/tables";
-
-// Compass Imports
-@import "compass/css3";
-
-// Luther imports
-@import "extends";
-@import "mixins";
 
 /* Luther Custom Typography 
 *******************************************/

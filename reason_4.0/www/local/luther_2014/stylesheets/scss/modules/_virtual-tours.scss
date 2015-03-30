@@ -1,23 +1,8 @@
 //
-// ASSET STYLES
+// VIRTUAL TOUR STYLES
 //
 // @author Brian Jones
 //
-
-// Foundation imports
-@import "settings";
-@import "foundation/components/grid";
-
-// Compass imports
-@import "compass/css3";
-
-// Font Awesome Imports
-@import "font-awesome/variables";
-@import "font-awesome/core";
-
-// Luther imports
-@import "extends";
-@import "mixins";
 
 @include desktop-tabs;
 

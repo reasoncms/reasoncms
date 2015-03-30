@@ -23,17 +23,31 @@ define( 'PHP_ERROR_LOG_FILE', '/tmp/php-errors-'.$host );
  *
  **/
 
-// Example:
+/* Example:
 
 $GLOBALS[ '_DEVELOPER_INFO' ] = array(
+	'joe' => array(
+		'email' => 'joe@company.com', //error alerts are sent to these emails
+		'ip' => array(	//enter any IP addresses that this person works from
+			'111.22.333.444',
+			'111.22.33.444',
+			'111.222.33.444',
+		),
+		'pager' => '6512785288@tmomail.net',  //emergency error alerts are sent to pagers, if specified
+	),
+	'jane' => array(
+		'ip' => array(
+			'11.22.333.444',
+		)
+		//note: emails and pagers are optional
+	),
 
-        'vagrant' => array(
-                'ip' => array(
-                        '10.0.2.2',
-                        //'192.168.56.1',
-                        '127.0.0.1',
-                )
-        ),
+*/
+
+$GLOBALS[ '_DEVELOPER_INFO' ] = array(
+    'ansible' => array(
+        'ip'   => array('127.0.0.1','192.168.56.1')
+    )
 );
 
 /* Where should the browser get sent if a fatal error occurs?
@@ -43,33 +57,33 @@ $GLOBALS[ '_DEVELOPER_INFO' ] = array(
 define( 'OHSHI_SCRIPT', REASON_PACKAGE_HTTP_BASE_PATH . 'oops.php');
 
 /*
-        
-        MAINTENANCE MODE
-        
-        This variable triggers maintenance mode.  Do not change this lightly.  When set to false, all sites behave
-        normally.  However, when this is set to true, all non-developer users will see the maintenance page which is
-        stored in MAINTENTANCE_MODE_URL.  The developers are listed above.  IP address checks are used to determine
-        who you are.
-        
-        $GLOBALS['_maintenance_estimate'] allows you to provide a time that the maintenance should be completed.  A nice message
-        with the estimated time will be shown on the maintenance page.  Additionally, it's intelligent enough not to
-        show negative times.  Make sure you know the form of mktime() before using it.  An absolute time is needed since
-        a relative one would keep changing with each request.  Make sure you pay attention to the timezone as well.
-        mktime uses the machine's local time zone.
-        
-        BIG NOTE: Maintenance mode should only be used when new code is being deployed to a production environment.
-        Most changes should be thoroughly tested in a development environment.  There are times when major components
-        need to be moved and there will certainly be downtime as files are being moved and/or databases are being
-        changed or synchronized.  To further drive the point home:
-        
-        ********* THIS TAKES DOWN ALL SERVICES THAT USE THE ERROR HANDLER -- INCLUDING REASON SITES -- UNTIL IT IS SWITCHED OFF. ************
-        
+
+	MAINTENANCE MODE
+
+	This variable triggers maintenance mode.  Do not change this lightly.  When set to false, all sites behave
+	normally.  However, when this is set to true, all non-developer users will see the maintenance page which is
+	stored in MAINTENTANCE_MODE_URL.  The developers are listed above.  IP address checks are used to determine
+	who you are.
+
+	$GLOBALS['_maintenance_estimate'] allows you to provide a time that the maintenance should be completed.  A nice message
+	with the estimated time will be shown on the maintenance page.  Additionally, it's intelligent enough not to
+	show negative times.  Make sure you know the form of mktime() before using it.  An absolute time is needed since
+	a relative one would keep changing with each request.  Make sure you pay attention to the timezone as well.
+	mktime uses the machine's local time zone.
+
+	BIG NOTE: Maintenance mode should only be used when new code is being deployed to a production environment.
+	Most changes should be thoroughly tested in a development environment.  There are times when major components
+	need to be moved and there will certainly be downtime as files are being moved and/or databases are being
+	changed or synchronized.  To further drive the point home:
+
+	********* THIS TAKES DOWN ALL SERVICES THAT USE THE ERROR HANDLER -- INCLUDING REASON SITES -- UNTIL IT IS SWITCHED OFF. ************
+
 */
 
 /* allow other files that use error_handler to activate maintenance mode.  if they set the var up,
 we don't want this one overwriting it */
 if( !defined( 'MAINTENANCE_MODE_ON' ) )
-        define('MAINTENANCE_MODE_ON', false);
+	define('MAINTENANCE_MODE_ON', false);
 
 /* Where should the browser get sent if maintenance mode is on?
    Note that this may need to be changed based on where you unpacked Reason.

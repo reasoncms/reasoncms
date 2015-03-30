@@ -250,45 +250,43 @@
 	$height: ($padding*2 + $font-size)
 	){
 
-		font-family: $open-sans;
-		font-size: $font-size;
-		font-weight: 700;
+	font-family: $open-sans;
+	font-size: $font-size;
+	font-weight: 700;
+	display: block;
+	text-align: center;
+	background: $bg;
+	color: $color;
+	padding: $padding;
+	position: relative;
+	line-height: 1;
+	border-radius: $global-rounded;
+
+	@include transition-property(background);
+	@include transition-duration(.5s);
+	@include transition-timing-function(ease);
+
+	&:link {
+		text-decoration: none !important;
+	}
+
+	&:hover {
+		background: darken($bg, 6%) !important;
+	}
+
+	@include fa-icon($fa: $icon, $pseudo: after, $margin: true);
+
+	&:after {
+		line-height: 1 !important;
 		display: block;
-		text-align: center;
-		background: $bg;
-		color: $color;
+		position: absolute;
+		top: 0;
+		right: 0;
+		background: rgba(white, .25);
+		font-size: $font-size;
 		padding: $padding;
-		position: relative;
-		line-height: 1;
+		height: $height;
+		width: $height;
 		border-radius: $global-rounded;
-
-		@include transition-property(background);
-		@include transition-duration(.5s);
-		@include transition-timing-function(ease);
-
-		&:link {
-			text-decoration: none !important;
-		}
-
-		&:hover {
-			background: darken($bg, 6%) !important;
-		}
-
-		@include fa-icon($fa: $icon, $pseudo: after, $margin: true);
-
-		&:after {
-			line-height: 1 !important;
-			display: block;
-			position: absolute;
-			top: 0;
-			right: 0;
-			background: rgba(white, .25);
-			font-size: $font-size;
-			padding: $padding;
-			height: $height;
-			width: $height;
-			border-radius: $global-rounded;
-		}
-
-
+	}
 }
