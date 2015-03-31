@@ -552,7 +552,7 @@ button.disabled.alert:hover, button.disabled.alert:focus, button[disabled].alert
 /* line 234, ../scss/sites/giving.scss */
 .siteHome #minisite .give-now .give-now-text .give-now-form form .formElement .element .currency {
   display: block;
-  background: #e8a500;
+  background: #4a8512;
   height: auto;
   padding: 0.875rem 1.125rem;
   font-size: 1.25rem;
@@ -595,7 +595,7 @@ button.disabled.alert:hover, button.disabled.alert:focus, button[disabled].alert
   width: 100%;
   display: block;
   border-radius: 1000px;
-  background: #e8a500;
+  background: #4a8512;
   padding-top: 1rem;
   padding-right: 2rem;
   padding-bottom: 1.0625rem;
@@ -607,11 +607,11 @@ button.disabled.alert:hover, button.disabled.alert:focus, button[disabled].alert
 }
 /* line 291, ../scss/sites/giving.scss */
 .siteHome #minisite .give-now .give-now-text .give-now-form form .submitSection input[type="submit"]:hover {
-  background: #f7b000;
+  background: #519214;
 }
 /* line 295, ../scss/sites/giving.scss */
 .siteHome #minisite .give-now .give-now-text .give-now-form form .submitSection input[type="submit"]:active {
-  background: #d99a00;
+  background: #437810;
 }
 /* line 302, ../scss/sites/giving.scss */
 .siteHome #minisite .give-now .give-now-text .give-now-form form table tr td {
@@ -843,7 +843,7 @@ button.disabled.alert:hover, button.disabled.alert:focus, button[disabled].alert
 /* line 461, ../scss/sites/giving.scss */
 .give-now-mini #form form .formElement .element .currency {
   display: block;
-  background: #e8a500;
+  background: #4a8512;
   height: auto;
   padding: 0.5625rem 0.75rem;
   font-size: 1rem;
@@ -852,7 +852,7 @@ button.disabled.alert:hover, button.disabled.alert:focus, button[disabled].alert
   position: absolute;
   bottom: 0;
   left: 0;
-  color: #8c6400;
+  color: #1d3407;
   color: white;
 }
 /* line 477, ../scss/sites/giving.scss */
@@ -876,7 +876,7 @@ button.disabled.alert:hover, button.disabled.alert:focus, button[disabled].alert
   display: block;
   border-radius: 0 6px 6px 0;
   border-radius: 6px;
-  background: #e8a500;
+  background: #4a8512;
   font-family: "Roboto Slab", serif;
   padding-top: 0.375rem;
   padding-bottom: 0.375rem;
@@ -886,11 +886,11 @@ button.disabled.alert:hover, button.disabled.alert:focus, button[disabled].alert
 }
 /* line 522, ../scss/sites/giving.scss */
 .give-now-mini #form form .submitSection input[type="submit"]:hover {
-  background: #f7b000;
+  background: #519214;
 }
 /* line 526, ../scss/sites/giving.scss */
 .give-now-mini #form form .submitSection input[type="submit"]:active {
-  background: #d99a00;
+  background: #437810;
 }
 
 /* line 540, ../scss/sites/giving.scss */
