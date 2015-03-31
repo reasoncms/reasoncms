@@ -13,25 +13,6 @@
 // 5. Minisite Footer
 //
 
-// Foundation imports
-@import "settings";
-@import "foundation/components/grid";
-@import "foundation/components/inline-lists";
-@import "foundation/components/flex-video";
-
-// Compass imports
-@import "compass/css3";
-
-// Font Awesome Imports
-@import "font-awesome/core";
-@import "font-awesome/mixins";
-@import "font-awesome/rotated-flipped";
-@import "font-awesome/variables";
-
-// Luther imports
-@import "extends";
-@import "mixins";
-
 .no-js {
 	.navListTop .navList .navListItem.open {
 		.navList {display: block !important;}

@@ -885,4 +885,3 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'main_post' => 'webcams',
 	),
 );
-?>

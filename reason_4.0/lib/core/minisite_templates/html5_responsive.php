@@ -1,7 +1,5 @@
 <?php
-	/* 
-		Default template with the compact bluebar
-	*/
+
 	// include the MinisiteTemplate class
 	reason_include_once( 'minisite_templates/default.php' );
 	reason_include_once('classes/module_sets.php');
