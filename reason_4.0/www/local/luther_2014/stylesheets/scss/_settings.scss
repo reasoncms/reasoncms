@@ -26,8 +26,9 @@ $roboto:  "Roboto Slab", serif;
 // Determine if CSS classes come through in the gem files
 $include-html-classes: false;
 $include-print-styles: false;
-$include-html-global-classes: false;
-$include-js-media-query-components: false;
+$include-html-global-classes: true;
+// This variable has been removed from foundation
+//$include-js-media-query-components: false;
 
 // Grid
 $site-max-width: rem-calc(1660);
@@ -479,13 +480,13 @@ $large-up-reitna:
 
 // Dropdown
 
-$include-html-button-classes: true;
+//$include-html-button-classes: $include-html-classes;
 
 // We use these to controls height and width styles.
 // $f-dropdown-max-width: 200px;
 // $f-dropdown-height: auto;
 // $f-dropdown-max-height: none;
-$f-dropdown-margin-top: 12px;
+// $f-dropdown-margin-top: 12px;
 
 // We use this to control the background color
 // $f-dropdown-bg: #fff;
@@ -494,12 +495,12 @@ $f-dropdown-margin-top: 12px;
 // $f-dropdown-border-style: solid;
 // $f-dropdown-border-width: 1px;
 // $f-dropdown-border-color: darken(#fff, 20%);
-$f-dropdown-border-color: rgba(black, .125);
+// $f-dropdown-border-color: rgba(black, .125);
 
 // We use these to style the triangle pip.
-$f-dropdown-triangle-size: 0;
+// $f-dropdown-triangle-size: 0;
 // $f-dropdown-triangle-color: #fff;
-$f-dropdown-triangle-side-offset: 40px;
+// $f-dropdown-triangle-side-offset: 40px;
 
 // We use these to control styles for the list elements.
 // $f-dropdown-list-style: none;
@@ -680,7 +681,7 @@ $input-font-family: $header-font-family;
 
 // Keystrokes
 
-// $include-html-type-classes: $include-html-classes;
+$include-html-type-classes: true;
 
 // We use these to control text styles.
 // $keystroke-font: "Consolas", "Menlo", "Courier", monospace;
@@ -926,7 +927,7 @@ $menu-slide: "transform 800ms ease";
 
 // Reveal
 
-// $include-html-reveal-classes: $include-html-classes;
+$include-html-reveal-classes: true;
 
 // We use these to control the style of the reveal overlay.
 // $reveal-overlay-bg: rgba(#000, .45);
@@ -1051,7 +1052,7 @@ $menu-slide: "transform 800ms ease";
 
 // Tables
 
-// $include-html-table-classes: $include-html-classes;
+$include-html-table-classes: true;
 
 // These control the background color for the table and even rows
 // $table-bg: #fff;
@@ -1115,7 +1116,7 @@ $menu-slide: "transform 800ms ease";
 // $thumb-transition-speed: 200ms;
 
 // Tooltips
-$include-html-tooltip-classes: $include-html-classes !default;
+$include-html-tooltip-classes: true;
 
 $has-tip-border-bottom: none !default;
 $has-tip-font-weight: inherit !default;

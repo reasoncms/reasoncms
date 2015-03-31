@@ -4,31 +4,6 @@
 // @author Nathan Dirks
 //
 // These styles handle the structure for global strcutre shared by all sites, i.e. the global header, nav, footer, and main content column.
-//
-// Table of Contents...
-// 1.
-
-// Foundation imports
-@import "settings";
-@import "foundation/components/dropdown";
-@import "foundation/components/grid";
-@import "foundation/components/inline-lists";
-@import "foundation/components/offcanvas";
-@import "foundation/components/forms";
-@import "foundation/components/tooltips";
-
-// Compass imports
-@import "compass/css3";
-@import "compass/css3/opacity";
-@import "compass/css3/transition";
-
-// Font Awesome Imports
-@import "font-awesome/variables";
-@import "font-awesome/core";
-
-// Luther imports
-@import "extends";
-@import "mixins";
 
 //#reasonDeveloper {display: none;}
 
@@ -383,6 +358,7 @@ body {
 				
 				&.left-off-canvas-menu {
 					height: inherit;      // removes gray box below main top nav on mac localhost
+					z-index: 97;
 				}
 			}
 			
