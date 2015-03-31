@@ -23,7 +23,7 @@ include_once('paths.php');
 // if ($_SERVER['REASON_ENVIRONMENT'] == 'development_local'){
 //     $available_services = array('reason');
 // } else {
-    $available_services = array('reason');
+    $available_services = array('ldap_luther','reason','ldap_luther_alumni', 'ldap_luther_directory');
 // }
 
 $service_names_to_paths = array(
@@ -33,8 +33,10 @@ $service_names_to_paths = array(
     'reason'=>REASON_INC.'hooks/dir_service.php',
     'ldap_luther'=>REASON_INC.'lib/local/carl_util/dir_service/services/ds_ldap_luther.php',
     'ldap_luther_alumni'=>REASON_INC.'lib/local/carl_util/dir_service/services/ds_ldap_luther_alumni.php',
-    //'ldap_luther_directory' => '/usr/local/webapps/reason_package/carl_util/dir_service/services/ds_ldap_luther_directory.php',
+    // 'ldap_luther_directory' => '/usr/local/webapps/reason_package/carl_util/dir_service/services/ds_ldap_luther_directory.php',
      'ldap_luther_directory' => REASON_INC . 'lib/local/carl_util/dir_service/services/ds_ldap_luther_directory.php',
+
     );
+
 
 ?>
