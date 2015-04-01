@@ -9,7 +9,7 @@ images_dir = "images"
 javascripts_dir = "javascripts"
 
 # Add additional folders for compass to watch
-add_import_path "stylesheets/scss/dependencies"
+add_import_path "stylesheets/scss/resets"
 add_import_path "stylesheets/scss/modules"
 add_import_path "stylesheets/scss/font-awesome/"
 add_import_path "stylesheets/scss/sites"
