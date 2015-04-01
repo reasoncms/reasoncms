@@ -234,7 +234,7 @@ $tab-current-color: $lc-blue-dark;
 							.currency {
 								//width: 14px;
 								display: block;
-								background: $lc-yellow;
+								background: $lc-green;
 								height: auto;
 								padding: rem-calc(14) rem-calc(18);
 								font-size: rem-calc(20);
@@ -283,17 +283,17 @@ $tab-current-color: $lc-blue-dark;
 							width: 100%;
 							display: block;
 							border-radius: $global-rounded;
-							background: $lc-yellow;
+							background: $lc-green;
 							@include button-size($padding: $button-med);
 							font-family: $body-font-family;
 							font-size: rem-calc(22) !important;
 
 							&:hover {
-								background: lighten($lc-yellow, 3%);
+								background: lighten($lc-green, 3%);
 							}
 
 							&:active {
-								background: darken($lc-yellow, 3%);
+								background: darken($lc-green, 3%);
 							}
 						}
 					}
@@ -461,7 +461,7 @@ $tab-current-color: $lc-blue-dark;
 						.currency {
 							//width: 14px;
 							display: block;
-							background: $lc-yellow;
+							background: $lc-green;
 							height: auto;
 							padding: rem-calc(9) rem-calc(12);
 							font-size: rem-calc(16);
@@ -470,7 +470,7 @@ $tab-current-color: $lc-blue-dark;
 							position: absolute;
 							bottom: 0;
 							left: 0;
-							color: darken($lc-yellow, 18%);
+							color: darken($lc-green, 18%);
 							color: white;
 						}
 				
@@ -507,7 +507,7 @@ $tab-current-color: $lc-blue-dark;
 						display: block;
 						border-radius: 0 $global-radius $global-radius 0;
 						border-radius: $global-radius;
-						background: $lc-yellow;
+						background: $lc-green;
 						font-family: $body-font-family;
 						padding-top: rem-calc(6);
 						padding-bottom: rem-calc(6);
@@ -520,11 +520,11 @@ $tab-current-color: $lc-blue-dark;
 						// }
 
 						&:hover {
-							background: lighten($lc-yellow, 3%);
+							background: lighten($lc-green, 3%);
 						}
 
 						&:active {
-							background: darken($lc-yellow, 3%);
+							background: darken($lc-green, 3%);
 						}
 					}
 				}

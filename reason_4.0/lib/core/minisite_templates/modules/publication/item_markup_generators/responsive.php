@@ -94,5 +94,5 @@ class ResponsiveItemMarkupGenerator extends PublicationItemMarkupGenerator
 		$this->markup_string .= '</div>'."\n"; //close second chunk
 		$this->markup_string .= '</div>'."\n"; //close fullPost div
 	}
+
 }
-?>

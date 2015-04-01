@@ -195,7 +195,6 @@
 			$this->head_items->add_stylesheet('https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700');
 			$this->head_items->add_stylesheet('https://fonts.googleapis.com/css?family=Open+Sans:300italic,300,400,400italic,600,600italic,700,700italic,800,800italic');
 			$this->head_items->add_stylesheet('/reason/local/luther_2014/stylesheets/fonts/font-awesome/css/font-awesome.css');
-			$this->head_items->add_stylesheet('/reason/local/luther_2014/stylesheets/dependencies/dependencies.css');
 			$this->head_items->add_stylesheet('/reason/local/luther_2014/stylesheets/base.css');
 			//$this->head_items->add_stylesheet('/reason/local/luther_2014/stylesheets/ie.css');
 
@@ -213,12 +212,7 @@
 			//
 
 			echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/vendor/fastclick.js"></script>';
-			echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/foundation/foundation.js"></script>';
-			echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/foundation/foundation.offcanvas.js"></script>';
-			echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/foundation/foundation.tab.js"></script>';
-			echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/foundation/foundation.tooltip.js"></script>';
-			echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/foundation/foundation.tooltip.js"></script>';
-			echo '<script type="text/javascript" src="/reason/local/luther_2014/javascripts/foundation/foundation.dropdown.js"></script>';
+			echo '<script type="text/javascript" src="/reason/local/luther_2014/foundation/bower_components/foundation/js/foundation.min.js"></script>';
 			
 			// Initialize Foundation javascript
 			echo '<script> $(document).foundation(); </script>';

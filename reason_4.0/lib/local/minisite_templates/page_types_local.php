@@ -419,7 +419,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'sidebar' => array(
 			'module' => 'feature/feature',
 			'width' => '800',
-			'height' => '500',
+			'height' => '383',
 			'autoplay_timer' => 4,
 			// 'autoplay' => true,
 		),
@@ -885,4 +885,3 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'main_post' => 'webcams',
 	),
 );
-?>
