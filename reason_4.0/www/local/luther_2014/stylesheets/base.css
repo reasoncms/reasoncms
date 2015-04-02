@@ -4532,6 +4532,11 @@ hr.horizontal-rule-basic {
   margin-bottom: 2.5rem;
 }
 
+/* line 272, scss/modules/_blurb.scss */
+.contentPost .blurbs {
+  margin-top: -2.5rem;
+}
+
 /* line 12, scss/modules/_children.scss */
 .childrenList {
   padding: 0;
