@@ -30,7 +30,7 @@ class GiftPageOneForm extends FormStep
 		'installment_type' => array(
 			'type' => 'radio_no_sort',
 			'display_name' => '&nbsp;',
-			'options' => array('Onetime'=>'One time','Monthly'=>'Every month','Quarterly'=>'Every quarter','Yearly'=>'Every year'),
+			'options' => array('Monthly'=>'Every month','Quarterly'=>'Every quarter','Onetime'=>'One time',),
 		),
 		'installment_start_date' => array(
 			'display_name' => 'Starting',
