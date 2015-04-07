@@ -46,10 +46,6 @@
 				<div id="installment_type_container" class="radioButtons">
 				<table border="0" cellpadding="1" cellspacing="0">
 					<tr>
-						<td valign="top"><input type="radio" id="radio_installment_type_0" name="installment_type" value="Onetime" /></td>
-						<td valign="top"><label for="radio_installment_type_0">One time</label></td>
-					</tr>
-					<tr>
 						<td valign="top"><input type="radio" id="radio_installment_type_1" name="installment_type" value="Monthly" /></td>
 						<td valign="top"><label for="radio_installment_type_1">Every month</label></td>
 					</tr>
@@ -58,8 +54,8 @@
 						<td valign="top"><label for="radio_installment_type_2">Every quarter</label></td>
 					</tr>
 					<tr>
-						<td valign="top"><input type="radio" id="radio_installment_type_3" name="installment_type" value="Yearly" /></td>
-						<td valign="top"><label for="radio_installment_type_3">Every year</label></td>
+						<td valign="top"><input type="radio" id="radio_installment_type_0" name="installment_type" value="Onetime" /></td>
+						<td valign="top"><label for="radio_installment_type_0">One time</label></td>
 					</tr>
 				</table>
 			</div>
