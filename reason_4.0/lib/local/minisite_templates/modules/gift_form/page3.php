@@ -196,7 +196,7 @@ class GiftPageThreeForm extends FormStep {
     }
 
     function pre_show_form() {
-        echo '<div id="giftForm" class="pageTwo">' . "\n";
+        echo '<div id="giftForm" class="pageThree">' . "\n";
         if ($this->is_in_testing_mode) {
             echo '<div class="announcement">';
             echo 'Testing mode on. ' . "\n";
