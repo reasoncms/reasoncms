@@ -46,29 +46,14 @@ class GiftPageOneForm extends FormStep
          'type' => 'comment',
          'text' => '<h3>Designation</h3>',
         ),
-  //       'designation' => array(
-		// 	'type' => 'radio_no_sort',
-		// 	'display_name' => '<h3>Designation</h3>',
-  //           'options'=>array(
-  //               'annual_fund' => '<a href="/giving/annual/" target="_blank">Annual Fund<a/> (please use my gift where it is needed most)',
-  //               'specific_fund' => '<a href="/giving/choices/" target="_blank">Designated Giving</a> (I have something specific in mind)' )
-		// ),
-  //       'specific_designation' => array(
-  //           'type' => 'checkboxgroup_with_other_no_sort',
-  //           'display_name' => 'If more than one designation is specified, your gift will be divided equally unless you indicate otherwise in the comments section below.',
-  //           'options' => array(
-  //               'baseball_stadium' => '<a href="/giving/priorities/stadiums/" target="_blank">Baseball Stadium</a>',
-  //               'softball_stadium'  => '<a href="/giving/priorities/stadiums/" target="_blank">Softball Stadium</a>',
-  //               'scholarship_fund' => '<a href="/giving/choices/scholarship/" target="_blank">Scholarship Support</a>, general',
-  //           )
-  //       ),
 		'annual_fund' => array(
 			'type' => 'checkboxfirst',
-			'display_name' => '<a href="/giving/annual/" target="_blank">Annual Fund<a/> (please use my gift where it is needed most)',
+            'comments' => '(please use my gift where it is needed most)'
 		),
+        'annual_fund_amount' => 'money',
        'specific_fund' => array(
 			'type' => 'checkboxfirst',
-			'display_name' => '<a href="/giving/choices/" target="_blank">Designated Giving</a> (I have something specific in mind)',
+            'comments' => '(I have something specific in mind)',
 		),
         'designation_note' => array(
                 'type' => 'comment',
@@ -76,29 +61,8 @@ class GiftPageOneForm extends FormStep
                            will be divided equally unless you indicate otherwise
                            in the comments section below.'
         ),
-        'baseball_stadium' => array(
-        		'type' => 'checkboxfirst',
-        		'display_name' => '<a href="/giving/priorities/stadiums/" target="_blank">Baseball Stadium</a>',
-        ),
-        'softball_stadium' => array(
-                'type' => 'checkboxfirst',
-                'display_name' => '<a href="/giving/priorities/stadiums/" target="_blank">Softball Stadium</a>',
-        ),
-        'scholarship_fund' => array(
-                'type' => 'checkboxfirst',
-                'display_name' => '<a href="/giving/choices/scholarship/" target="_blank">Scholarship Support</a>, general',
-        ),
-        'transform_teaching_fund' => array(
-                'type' => 'checkboxfirst',
-                'display_name' => '<a href="/giving/sesquicentennialfund/?story_id=268591" target="_blank">The Fund for Transformational Teaching and Learning</a>',
-        ),
-        'sustainable_communities' => array(
-                'type' => 'checkboxfirst',
-                'display_name' => '<a href="/giving/sesquicentennialfund/?story_id=268629" target="_blank">Luther Center for Sustainable Communities</a>',
-        ),
         'norse_athletic_association' => array(
         		'type' => 'checkboxfirst',
-        		'display_name' => '<a href="/naa/" target="_blank">Norse Athletic Association</a>',
         ),
         'naa_designation_details' => array(
                 'type' => 'select_no_sort',
@@ -126,13 +90,25 @@ class GiftPageOneForm extends FormStep
                     'Wrestling' => 'Wrestling',
                 ),
         ),
-        'other_designation_note' => array(
-                'type' => 'comment',
-                'text' => 'Comments/Other Designation',             
+        'naa_designation_amount' => 'money',
+        'baseball_stadium' => array(
+        		'type' => 'checkboxfirst',
         ),
-        'other_designation_details' => array(
+        'baseball_stadium_amount' => 'money',
+        'softball_stadium' => array(
+                'type' => 'checkboxfirst',
+        ),
+        'softball_stadium_amount' => 'money',
+        'scholarship_fund' => array(
+                'type' => 'checkboxfirst',
+                'comments' => 'general',
+        ),
+        'scholarship_fund_amount' => 'money',
+        'other' => 'checkboxfirst', 
+        'other_amount' => 'money',
+        'comments_special_instructions' => array(
                 'type' => 'textarea',
-                'display_name' => '&nbsp;',
+                'display_name' => 'Comments/Special Instructions',
         ),
         'matching_gift_header' => array(
 			'type' => 'comment',
@@ -211,6 +187,26 @@ class GiftPageOneForm extends FormStep
 	function on_every_time()
 	{
         $this->box_class = 'StackedBox';
+
+        // if a text blurb with the unique name convention of giving_program_hover_blurb
+        // exists, then replace the display name with a tooltip 
+        foreach ($this->elements as $element => $value) {
+            $blurb_unique_name = "{$element}_hover_blurb";
+            if ( $blurb_unique_name == reason_unique_name_exists($blurb_unique_name) ){
+                $blurb = get_text_blurb_content($blurb_unique_name);
+                $display_name = $this->get_display_name($element);
+                $this->set_element_properties($element, array('display_name' => '<span data-tooltip aria-haspopup="true" class="has-tip" title="'.$blurb.'">'.$display_name.'</span>'));
+            }
+        }
+        // this one is a special case, so we'll just call it explicitly
+        // the name of the element is actually, specific_fund. If we changed 
+        // it the element name to match the display name we'd have to do a lot of 
+        // db rewrites
+        if (reason_unique_name_exists('designated_giving_hover_blurb')) {
+            $display_name = $this->get_display_name('specific_fund');
+            $this->set_display_name('specific_fund', '<span data-tooltip aria-haspopup="true" class="has-tip" title="'.get_text_blurb_content('designated_giving_hover_blurb').'">Designated Giving</span>');
+        }
+
 		$this->set_value('submitter_ip', $_SERVER[ 'REMOTE_ADDR' ]);
 
 		if(!$this->get_value('installment_start_date'))
