@@ -174,9 +174,31 @@ class GiftPageOneForm extends FormStep
 	var $element_group_info = array(	
 		'recur_group' => array ('type' => 'inline',
 			'elements' =>  array( 'installment_start_date', 'installment_end_date' ),
-			'args' => array('use_element_labels' => true,'use_group_display_name' => false,
-				'rows' => array('','')
+			'args' => array('use_element_labels' => true,'use_group_display_name' => false, 'rows' => array('','') ),
+		),
+        'annual_fund_group' => array('type' => 'inline',
+            'elements' => array('annual_fund', 'annual_fund_amount'),
+            'args' => array('use_element_labels' => false, 'use_group_display_name' => false)
+        ),
+        'naa_group' => array('type' => 'inline',
+            'elements' => array('naa_designation_details', 'naa_designation_amount'),
+            'args' => array('use_element_labels' => false, 'use_group_display_name' => false)
+        ),
+        'baseball_group' => array('type' => 'inline',
+            'elements' => array('baseball_stadium', 'baseball_stadium_amount'),
+            'args' => array('use_element_labels' => false, 'use_group_display_name' => false)
+        ),
+        'softball_group' => array('type' => 'inline',
+            'elements' => array('softball_stadium', 'softball_stadium_amount'),
+            'args' => array('use_element_labels' => false, 'use_group_display_name' => false)
+        ),
+        'scholarship_group' => array('type' => 'inline',
+            'elements' => array('scholarship_fund', 'scholarship_fund_amount'),
+            'args' => array('use_element_labels' => false, 'use_group_display_name' => false)
 			),
+        'other_group' => array('type' => 'inline',
+            'elements' => array('other', 'other_amount'),
+            'args' => array('use_element_labels' => false, 'use_group_display_name' => false)
 		),
    	);
 
@@ -235,16 +257,21 @@ class GiftPageOneForm extends FormStep
 			$this->add_element_group( $info['type'], $name, $info['elements'], $info['args']);
 		}
 		$this->move_element('recur_group','after','installment_type');
-		
+        $this->move_element('annual_fund_group', 'after', 'designation_header');
+        $this->move_element('naa_group', 'after', 'norse_athletic_association');
+        $this->move_element('baseball_group', 'after', 'naa_group');
+        $this->move_element('softball_group', 'after', 'baseball_group');
+        $this->move_element('scholarship_group', 'after', 'softball_group');
+        $this->move_element('other_group', 'after', 'scholarship_group');
 	}
 
 	function pre_show_form()
 	{
-		// echo '<div id="giftForm" class="pageOne">'."\n";
+		echo '<div id="giftForm" class="pageOne">'."\n";
 	}
 	function post_show_form()
 	{
-		// echo '</div>'."\n";
+		echo '</div>'."\n";
 	}
 	function run_error_checks()
 	{
