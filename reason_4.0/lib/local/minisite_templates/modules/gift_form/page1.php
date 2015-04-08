@@ -130,34 +130,24 @@ class GiftPageOneForm extends FormStep
 			'display_name'=>'&nbsp;',
 			'comments'=>'<div class="smallText comment">Employer name</div>',
 		),
-		'existing_pledge_header' => array(
-			'type' => 'comment',
-			'text' => '<h3>Is this a payment on an existing pledge?</h3>',
-		),
-		'existing_pledge' => array(
-			'type' => 'radio_inline_no_sort',
-			'options' => array('Yes'=>'Yes','No'=>'No'),
-			'display_name'=>'&nbsp;',
-		),
-        'gift_prompt_header' => array(
-                'type' => 'comment',
-                'text' => '<h3>What prompted you to make this gift?</h3>'
-        ),
         'gift_prompt' => array(
-        	'type' => 'textarea',
-			'rows' => 5,
-			'cols' => 35,
-			'display_name' => '',
+        	'type' => 'select_no_sort',
+			'display_name' => '<h3>What prompted you to make this gift?</h3>',
+            'add_null_value_to_top' => true,
+            'options' => array(
+                'mailing'       =>'Recieved a mailing', 
+                'email'         => 'Recieved an email', 
+                'staff_visit'   => 'Development staff visit', 
+                'other'         => 'Other')
         ),
-
-        'dedication_header' => array(
-			'type' => 'comment',
-			'text' => '<h3>Dedication <em>(optional)</em></h3>'
+        'gift_prompt_details' => array(
+            'type' => 'text',
+            'display_name' => '&nbsp;',
 		),
 		'dedication' => array(
 			'type' => 'radio_no_sort',
 			'options' => array('Memory'=>'In memory of','Honor'=>'In honor of'),
-			'display_name' => '',
+			'display_name' => '<h3>Dedication <em>(optional)</em></h3>',
 		),
 		'dedication_details' => array(
 			'type' => 'text',
