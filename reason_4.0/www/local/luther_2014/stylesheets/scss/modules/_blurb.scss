@@ -267,3 +267,8 @@ hr.horizontal-rule-basic{
 	background: #E9E9E9; 
 	margin-bottom: $column-gutter;
 }
+
+//Main Content Blurbs
+.contentPost .blurbs{
+	margin-top: $column-gutter * -1;
+}
