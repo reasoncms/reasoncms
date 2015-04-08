@@ -112,14 +112,17 @@ class GiftPageOneForm extends FormStep
         ),
         'matching_gift_header' => array(
 			'type' => 'comment',
-			'text' => '<h3>Will your gift be matched by your employer?</h3>
-				  <p><a href="http://www.matchinggifts.com/luther/" 
-				  title="Matching Gift Search Site" target="_new"
-				  >Click to see if your employer has a matching program.</a></p>',
+			'text' => '<h3>Will your gift be matched by your employer?</h3>'
 		),
 		'match_gift' => array(
 			'type' => 'checkboxfirst',
 			'display_name' => 'My (or my spouse\'s) employer will match my gift',
+            'comments' => 
+                '<p><a data-reveal-id="matchingGiftsIframe">Click to see if your employer has a matching program.</a></p>
+                <div class="reveal-modal medium" id="matchingGiftsIframe" data-reveal="">
+                    <iframe height="500px" width="100%" src="//www.matchinggifts.com/luther_iframe"></iframe>
+                    <a class="close-reveal-modal">×</a>
+                </div>',
 		),
 		'employer_name' => array(
 			'type' => 'text',
