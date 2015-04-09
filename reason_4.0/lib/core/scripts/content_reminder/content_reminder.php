@@ -11,7 +11,7 @@
  * Extensions should include the original class in these calls.
  */
 include_once( 'reason_header.php' );
-reason_include_once( 'scripts/reason_content_reminder/classes/default.php' );
+reason_include_once( 'classes/content_reminder.php' );
 
 /**
  * Script for running the Content Reminder.
