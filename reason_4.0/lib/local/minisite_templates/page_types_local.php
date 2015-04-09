@@ -182,7 +182,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 	'blurb_main_content_multiple' => array(
 		'main_post' => array(
 			'module' => 'blurb',
-			'num_to_display' => '30',
+			'num_to_display' => '50',
 			'exclude_shown_blurbs' => true,
 			'after_each_html'=> '<hr class="horizontal-rule-basic">',
 		),
