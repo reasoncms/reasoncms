@@ -111,7 +111,7 @@ form {
 	// Basic select styling
 	select {
 		//-webkit-appearance: none !important;
-		background: 
+		background:
         $select-bg-color;
         //url('data:image/svg+xml;base64, PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgeD0iMHB4IiB5PSIwcHgiIHdpZHRoPSI2cHgiIGhlaWdodD0iM3B4IiB2aWV3Qm94PSIwIDAgNiAzIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCA2IDMiIHhtbDpzcGFjZT0icHJlc2VydmUiPjxwb2x5Z29uIHBvaW50cz0iNS45OTIsMCAyLjk5MiwzIC0wLjAwOCwwICIvPjwvc3ZnPg==') no-repeat;
 		background-position-x: 97%;
@@ -120,11 +120,11 @@ form {
 		padding: $form-spacing / 2;
 		font-size: $input-font-size;
 		@include radius(0);
-		&.radius { 
+		&.radius {
 			@include radius($global-radius);
 		}
 		&:hover {
-			background: 
+			background:
           		darken($select-bg-color, 3%);
           		//url('data:image/svg+xml;base64, PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgeD0iMHB4IiB5PSIwcHgiIHdpZHRoPSI2cHgiIGhlaWdodD0iM3B4IiB2aWV3Qm94PSIwIDAgNiAzIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCA2IDMiIHhtbDpzcGFjZT0icHJlc2VydmUiPjxwb2x5Z29uIHBvaW50cz0iNS45OTIsMCAyLjk5MiwzIC0wLjAwOCwwICIvPjwvc3ZnPg==') no-repeat;
 			background-position-x: 97%;
@@ -154,7 +154,7 @@ form {
 	.submitSection {
 		@include grid-row();
 		padding: $form-spacing 0;
-		margin: 0 !important;	
+		margin: 0 !important;
 	}
 
 	#discoLinear .formElement {
@@ -178,7 +178,7 @@ form {
 			}
 		}
 
-		// Changes the text label bg to red if there's an error 
+		// Changes the text label bg to red if there's an error
 		&.error {
 			background: none !important; // removes Reason's defult yellow error row
 			padding: $form-spacing 0 !important;
@@ -312,7 +312,7 @@ form {
 			.radioButton {
 				margin: 0.5em .75em .5em 1em;
 			}
-			
+
 		}
 
 		/*@media #{$medium-up} {  // Styles for left-aligned labels and right-aligned inputs
@@ -327,7 +327,7 @@ form {
 			}
 
 			td {
-				padding: .5em 1em .5em 0; 
+				padding: .5em 1em .5em 0;
 			}
 		}*/
 
@@ -347,7 +347,7 @@ form {
 					position: relative;
 
 					@media #{$medium-up} {
-						width: rem-calc(40);	
+						width: rem-calc(40);
 					}
 
 					&:hover {
@@ -356,11 +356,11 @@ form {
 					}
 
 					&:first-child {
-						@include border-left-radius(4px);	
+						@include border-left-radius(4px);
 					}
 
 					&:last-child {
-						@include border-right-radius(4px);	
+						@include border-right-radius(4px);
 					}
 
 					& + a {
@@ -375,7 +375,7 @@ form {
 					&:active {
 						@include box-shadow(rgba(#000, .125) 0 3px 5px inset);
 					}
-					
+
 					img,
 					span {
 						margin: 8px auto;
@@ -421,7 +421,7 @@ form {
 		}
 	}
 
-	//  Removes deafult table styles from radios and checkboxes 
+	//  Removes deafult table styles from radios and checkboxes
 	//  A temporary fix until we get tables out of radio/checkbox markup
 	table {
 		margin-bottom: 0;
@@ -435,7 +435,7 @@ form {
 		}
 
 		td {
-			padding: .5em 0 .5em 1em; 
+			padding: .5em 0 .5em 1em;
 		}
 	}
 
@@ -445,7 +445,7 @@ form {
 }
 
 // Submission errors -- displayed at the top of the form.
-#discoErrorNotice { 
+#discoErrorNotice {
 	font-family: $header-font-family;
 	margin-bottom: $column-gutter/2;
 
@@ -474,4 +474,34 @@ form {
 			a {font-weight: 400; text-decoration: underline;}
 		}
 	}
+}
+
+//Credit card forms
+#creditcardtypeiconItem{
+	.formCCType{
+		font-size: 35px;
+		margin-right: 5px;
+
+		&.nonSelectedCCType{
+			color: #C9C9C9;
+		}
+	}
+
+	.fa-cc-visa.selectedCCType{
+		color: #273990;
+	}
+	.fa-cc-mastercard.selectedCCType{
+		color: #EC2C20;
+		//color: #FCAA2C;
+	}
+	.fa-cc-amex.selectedCCType{
+		color: #0871BC;
+	}
+	.fa-cc-discover.selectedCCType{
+		color: #FF6600;
+	}
+}
+
+#creditcardtypeItem{
+	display:none;
 }

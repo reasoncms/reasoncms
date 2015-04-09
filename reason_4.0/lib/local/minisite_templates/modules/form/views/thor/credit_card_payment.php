@@ -1,4 +1,4 @@
-<?php  
+<?php
 
 reason_include_once('minisite_templates/modules/form/views/thor/luther_default.php');
 include_once(WEB_PATH.'stock/pfproclass.php'); //<<<< Change this
@@ -25,17 +25,17 @@ $GLOBALS[ '_form_view_class_names' ][ basename( __FILE__, '.php') ] = 'CreditCar
  *****0818201 Steve Smith
  *
  * - Confirmation Sender
- *    (optional)  If present, the contents of this field will be used as the sender for the 
+ *    (optional)  If present, the contents of this field will be used as the sender for the
  *                confirmation message. If absent, Email of Recipient in the content manager will be
  *                used. If that's not set, a generic address will be used.
  *
  * - Confirmation Subject
- *    (optional)  If present, the contents of this field will be used as the subject for the 
+ *    (optional)  If present, the contents of this field will be used as the subject for the
  *                confirmation message.
  *
  * This view also makes use of other thor form settings:
  *
- * - Email of Recipient (if defined) will be used as the return address for confirmation emails (first 
+ * - Email of Recipient (if defined) will be used as the return address for confirmation emails (first
  *                address only)
  * - Thank You Message will be used as the introductory text for confirmation emails
  *
@@ -45,9 +45,9 @@ $GLOBALS[ '_form_view_class_names' ][ basename( __FILE__, '.php') ] = 'CreditCar
  * @subpackage thor_view
  * @author Mark Heiman
  * @author Steve Smith
- * 
+ *
  */
- 
+
 class CreditCardThorForm extends DefaultThorForm
 {
 	var $_log_errors = true;
@@ -55,7 +55,7 @@ class CreditCardThorForm extends DefaultThorForm
 	var $database_transformations = array('credit_card_number'=>'obscure_credit_card_number',);
 	var $is_in_testing_mode; // This gets set using the value of the THIS_IS_A_DEVELOPMENT_REASON_INSTANCE constant or if the 'tm' (testing mode) request variable evaluates to an integer
 	var $payment_element;
-	//var $budget_number_element; 
+	//var $budget_number_element;
 	var $expense_budget_number;
 	var $revenue_budget_number;
 	var $transaction_comment;
@@ -71,13 +71,18 @@ class CreditCardThorForm extends DefaultThorForm
 			'size'=>10,
 			'display_name'=>'Payment Amount Placeholder',
 		),
-		'credit_card_type' => array(
-			'type' => 'radio_no_sort',
-			'options' => array('Visa'=>'Visa','MasterCard'=>'MasterCard','American Express'=>'American Express','Discover'=>'Discover'),
-		),
 		'credit_card_number' => array(
 			'type' => 'text',
 			'size'=>35,
+		),
+		'credit_card_type' => array(
+			'type' => 'radio_no_sort',
+			'options' => array('Visa'=>'Visa','MasterCard'=>'MasterCard','American Express'=>'American Express','Discover'=>'Discover','none'=>'none'),
+			'label' => 'Credit Card Type',
+		),
+		'credit_card_type_icon' => array(
+			'type' => 'comment',
+			'text' => "<i class='fa fa-cc-visa formCCType' id='visaIcon'></i><i class='fa fa-cc-mastercard formCCType' id='mastercardIcon'></i><i class='fa fa-cc-amex formCCType' id='amexIcon'></i><i class='fa fa-cc-discover formCCType' id='discoverIcon'></i>",
 		),
 		'credit_card_expiration_month' => array(
 			'type' => 'month',
@@ -150,6 +155,7 @@ class CreditCardThorForm extends DefaultThorForm
 	  $model =& $this->get_model();
 	  $head_items = $model->get_head_items();
 	  $head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/disable_submit.js');
+    $head_items->add_javascript(REASON_HTTP_BASE_PATH.'local/luther_2014/javascripts/creditcard.js');
 	}
 
 
@@ -160,7 +166,7 @@ class CreditCardThorForm extends DefaultThorForm
 
 		// Don't take credit cards on an unencrypted connection!+
 		// if( !on_secure_page() )
-		// {		
+		// {
 
 		// 	header( 'Location: '.get_current_url( 'https' ) );
 		// 	exit;
@@ -188,7 +194,7 @@ class CreditCardThorForm extends DefaultThorForm
 
 			if ( !isset( $_POST['ccprepopulate'] ) && ( !isset( $_POST['credit_card_name'] )))  { header("Location: /getdowngiveback/register/"); echo 'Redirecting to list.'; die ; }
 
-			if ( isset( $_POST['ccprepopulate'] ))	
+			if ( isset( $_POST['ccprepopulate'] ))
 			{
 						$this->set_value($this->get_element_name_from_label('Item List'), $_POST['ccpaymentdetail']);
 						$this->set_value('payment_amount', $_POST['ccpaymentamount']);
@@ -199,11 +205,11 @@ class CreditCardThorForm extends DefaultThorForm
 
 		}
 		//if (!preg_match('/\d{2}-\d{4}-\d{4}-\d{4}/', $this->get_value($this->budget_number_element)))
-		//	{	
+		//	{
 		//		$this->set_error('credit_card_type','Form Setup Error: Hidden "Budget Number" field must contain a number in the form: 10-0000-0000-0000');
 		//	}
 		//} else {
-		//	$this->set_error('credit_card_type','Form Setup Error: Hidden "Budget Number" field is required in Reason form.');		
+		//	$this->set_error('credit_card_type','Form Setup Error: Hidden "Budget Number" field is required in Reason form.');
 		//}
 
 
@@ -253,7 +259,7 @@ class CreditCardThorForm extends DefaultThorForm
 					$this->set_value('payment_amount', '$'.$match[1]);
 					$this->set_display_name('payment_amount', 'Payment Amount');
 				} else {
-					$this->set_error('payment_amount','Form Setup Error: Hidden "Payment Amount" field in Reason form does not contain any numbers.');		
+					$this->set_error('payment_amount','Form Setup Error: Hidden "Payment Amount" field in Reason form does not contain any numbers.');
 				}
 			} else {
 				$this->remove_element('payment_amount');
@@ -263,7 +269,7 @@ class CreditCardThorForm extends DefaultThorForm
 			$this->payment_element = 'payment_amount';
 		}
 
-		// Make sure the form creator has included an expense_budget_number and a revenue_budget_number field, and that they contain 
+		// Make sure the form creator has included an expense_budget_number and a revenue_budget_number field, and that they contain
 		// properly formatted budget numbers.
 		// Modified by SLS
 
@@ -273,26 +279,26 @@ class CreditCardThorForm extends DefaultThorForm
 
 		if ($this->expense_budget_number = $this->get_element_name_from_label('Expense Budget Number'))
 		{
-			// scott 9/4/2009 - Chuck Rhia says we want to use open text on some of the Budget Numbers.... 
+			// scott 9/4/2009 - Chuck Rhia says we want to use open text on some of the Budget Numbers....
 			// if (!preg_match('/\d{2}-\d{4}-\d{4}-\d{4}/', $this->get_value($this->budget_number_element)))
 			if ( strlen( $this->get_value( $this->expense_budget_number) ) <1 )
 			{
 				$this->set_error('credit_card_type','Form Setup Error: Hidden "Expense Budget Number" field must contain a number in the form: 10-0000-0000-0000');
 			}
 		} else {
-			$this->set_error('credit_card_type','Form Setup Error: Hidden "Expense Budget Number" field is required in Reason form.');		
+			$this->set_error('credit_card_type','Form Setup Error: Hidden "Expense Budget Number" field is required in Reason form.');
 		}
 
 		if ($this->revenue_budget_number = $this->get_element_name_from_label('Revenue Budget Number'))
 		{
-			// scott 9/4/2009 - Chuck Rhia says we want to use open text on some of the Budget Numbers.... 
+			// scott 9/4/2009 - Chuck Rhia says we want to use open text on some of the Budget Numbers....
 			// if (!preg_match('/\d{2}-\d{4}-\d{4}-\d{4}/', $this->get_value($this->budget_number_element)))
 			if ( strlen( $this->get_value( $this->revenue_budget_number) ) <1 )
 			{
 				$this->set_error('credit_card_type','Form Setup Error: Hidden "Revenue Budget Number" field must contain a number in the form: 10-0000-0000-0000');
 			}
 		} else {
-			$this->set_error('credit_card_type','Form Setup Error: Hidden "Revenue Budget Number" field is required in Reason form.');		
+			$this->set_error('credit_card_type','Form Setup Error: Hidden "Revenue Budget Number" field is required in Reason form.');
 		}
 
 		// Make the date range for card expiration sane
@@ -312,7 +318,7 @@ class CreditCardThorForm extends DefaultThorForm
 	function run_error_checks()
 	{
 		// Validate the e-mail address field if used
-		if (($email_name = $this->get_element_name_from_label('Your Email')) && $this->get_value($email_name)) 
+		if (($email_name = $this->get_element_name_from_label('Your Email')) && $this->get_value($email_name))
 			if (!check_against_regexp($this->get_value($email_name), array('email'))) $this->set_error($email_name, 'Please enter a valid email address.');
 
 		// Make sure we have a payment amount; look for a dollar sign first, then any number
@@ -323,6 +329,13 @@ class CreditCardThorForm extends DefaultThorForm
 			$payment_amount = preg_replace('/[^\d\.]/','',$match[1] );
 		} else {
 			$this->set_error($this->payment_element, 'Could not work out payment amount. Please contact the form maintainer.');
+		}
+
+		// Check card type error
+		if ($ccType = $this->get_value('credit_card_type')){
+			if ($ccType === "none"){
+				$this->set_error("credit_card_number", 'Please enter a valid credit card number.');
+			}
 		}
 
 		// This is where we process the credit card, so that the form can't be submitted unless the payment
@@ -395,14 +408,14 @@ class CreditCardThorForm extends DefaultThorForm
 
 				$query = 'INSERT INTO transactions SET
 					REFNUM = "'.$pfresult['PNREF'].'",
-					source = "'.addslashes( $pf->comment2 ). '", 
-					amount = "'.addslashes( $pf->amount ). '", 
-					name_on_card = "'.addslashes( $this->get_value('credit_card_name') ). '", 
-					billing_address = "'.addslashes( $billing_address ). '", 
-					card_number = "'.addslashes( obscure_credit_card_number( $this->get_value('credit_card_number') ) ). '", 
-					card_expiration = "'.addslashes( $expiration_mmyy ). '"'; 
+					source = "'.addslashes( $pf->comment2 ). '",
+					amount = "'.addslashes( $pf->amount ). '",
+					name_on_card = "'.addslashes( $this->get_value('credit_card_name') ). '",
+					billing_address = "'.addslashes( $billing_address ). '",
+					card_number = "'.addslashes( obscure_credit_card_number( $this->get_value('credit_card_number') ) ). '",
+					card_expiration = "'.addslashes( $expiration_mmyy ). '"';
 
-				$dbresult = db_query($query, 'We were unable to record your transaction in our database. 
+				$dbresult = db_query($query, 'We were unable to record your transaction in our database.
 					Your credit card has been charged, but you should contact the owner of this form
 					to verify that your payment was received.', false);
 
@@ -415,7 +428,7 @@ class CreditCardThorForm extends DefaultThorForm
 	{
 		$model =& $this->get_model();
 
-		// Figure out who would get an email confirmation (either through a 
+		// Figure out who would get an email confirmation (either through a
 		// Your Email field or by knowing the netid of the submitter
 		if (!$recipient = $this->get_value_from_label('Your Email'))
 		{
@@ -455,13 +468,13 @@ class CreditCardThorForm extends DefaultThorForm
 			}
 
 			$submission_time = date("Y-m-d H:i:s");
-			$values .= sprintf("\n<strong>%s:</strong>\t	%s\n", 'Form Submission Time', $submission_time);	
+			$values .= sprintf("\n<strong>%s:</strong>\t	%s\n", 'Form Submission Time', $submission_time);
 			$html_body = $thank_you . nl2br($values);
 			$txt_body = html_entity_decode(strip_tags($html_body));
 
 			$mailer = new Email($recipient, $sender, $sender, $subject, $txt_body, $html_body);
 			$mailer->send();
-		}		
+		}
 	}
 
 
@@ -482,7 +495,3 @@ function obscure_credit_card_number( $cc_num )
 
 
 ?>
-
-
-
-
