@@ -152,8 +152,6 @@ class contentReminder {
 		//Only if $options were given:
 		if (!empty($options)) {
 			
-			$return = '';
-			
 			//Show help if requested:
 			if (isset($options['h']) || isset($options['help']))
 				$this->show_help();
