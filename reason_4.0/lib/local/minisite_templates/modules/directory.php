@@ -909,7 +909,8 @@ class DirectoryModule extends DefaultMinisiteModule {
             $str .= '<thead>';
                 $str .= '<tr>';
                         $str .= '<th class="name">Name</th>';
-                        $str .= '<th class="affiliation">Affiliation/Title</th>';
+                        $str .= '<th class="title">Title</th>';
+                        $str .= '<th class="affiliation">Affiliation</th>';
                         $str .= '<th class="email">Email</th>';
                         if ($this->context != 'general')
                             $str .= '<th class="spo">SPO</th>';
@@ -930,13 +931,13 @@ class DirectoryModule extends DefaultMinisiteModule {
           } else {
               $str .= '<td>&nbsp;</td>';
           }
+          if (isset($data['title'][0])){
+                $str .= '<td>' . $data['title'][0] . '</td>';
+          } else {
+                $str .= '<td>&nbsp;</td>';
+          }
           if (isset ($data['edupersonprimaryaffiliation'][0])) {
-              $str .= '<td class="affilTitle">' .$data['edupersonprimaryaffiliation'][0];
-              if (isset($data['title'][0])){
-                    $str .= '<br>' . $data['title'][0] . '</td>';
-              } else {
-                    $str .= '</td>';
-              }
+              $str .= '<td class="affilTitle">' .$data['edupersonprimaryaffiliation'][0].'</td>';
           } else {
               $str .= '<td>&nbsp;</td>';
           }
