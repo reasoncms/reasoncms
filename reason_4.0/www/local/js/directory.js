@@ -21,7 +21,6 @@ $(document).ready(function() {
       theme: 'ice',
       tabIndex: true,
       widthFixed: false,
-      sortList: [[1,1]],
       widgets : ["zebra", "columns", "filter", "resizeable"],
       widgetOptions : {
         columns : [ "primary", "secondary", "tertiary" ],
