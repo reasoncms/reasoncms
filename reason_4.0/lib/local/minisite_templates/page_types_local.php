@@ -643,6 +643,56 @@ $GLOBALS['_reason_page_types_local'] = array(
 	//'publication' => get_luther_publication(),
 	//'publication_feature_autoplay' => get_luther_publication("publication_feature_autoplay"),
 	//'publication_section_nav' => get_luther_publication("publication_section_nav"),
+	
+	'show_children_with_first_images_vertical' => array(
+		'main_post' => array(
+			'module'=>'luther_children',
+			'provide_images'=>true,
+			'description_part_of_link'=>true,
+			'html5'=>true,
+			'thumbnail_crop'=>'fill',
+			'thumbnail_height'=>518,
+			'thumbnail_width'=>405,
+		),
+	),
+	'show_children_with_first_images_hide_image_sidebar' => array(
+		'main_post' => array(
+			'module'=>'children',
+			'provide_images' => true,
+		),
+		'pre_sidebar_2' => '',
+	),
+	'show_children_top_image' => array(
+		'main_post' => 'children',
+		'post_main_head' => array(
+			'module' => 'image_sidebar',
+			'num_to_display' => 1,
+			'thumbnail_width' => 1200,
+			'thumbnail_height' => 575,
+			'thumbnail_crop' => 'fit',
+			'caption_flag' => false,
+		),
+		'pre_sidebar_2' => array(
+			'module' => 'image_sidebar',
+			'num_to_skip' => 1,
+			'thumbnail_width' => 600,
+			'thumbnail_height' => 400,
+			'thumbnail_crop' => 'fill',
+			'num_to_display' => 0,
+		)
+	),
+	'show_children_not_in_nav_with_first_images' => array(
+		'main_post' => array(
+			'module'=>'luther_children',
+			'provide_images' => true,
+			'show_only_pages_not_in_nav' => true,
+			'description_part_of_link'=>true,
+			'html5'=>true,
+			'thumbnail_crop' => 'fill',
+			'thumbnail_height' => 237,
+			'thumbnail_width' => 350,
+		),
+	),
 	'siblings_prev_next' => array(
 		'post_main_head' => array(
 			'module' => 'image_sidebar',
@@ -748,48 +798,6 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'main_post' => 'content',
 		'pre_sidebar' => 'main_blurb',
 		'main_4' => '',
-	),
-	'show_children_with_first_images_vertical' => array(
-		'main_post' => array(
-			'module'=>'luther_children',
-			'provide_images'=>true,
-			'description_part_of_link'=>true,
-			'html5'=>true,
-			'thumbnail_crop'=>'fill',
-			'thumbnail_height'=>518,
-			'thumbnail_width'=>405,
-		),
-	),
-	'show_children_top_image' => array(
-		'main_post' => 'children',
-		'post_main_head' => array(
-			'module' => 'image_sidebar',
-			'num_to_display' => 1,
-			'thumbnail_width' => 1200,
-			'thumbnail_height' => 575,
-			'thumbnail_crop' => 'fit',
-			'caption_flag' => false,
-		),
-		'pre_sidebar_2' => array(
-			'module' => 'image_sidebar',
-			'num_to_skip' => 1,
-			'thumbnail_width' => 600,
-			'thumbnail_height' => 400,
-			'thumbnail_crop' => 'fill',
-			'num_to_display' => 0,
-		)
-	),
-	'show_children_not_in_nav_with_first_images' => array(
-		'main_post' => array(
-			'module'=>'luther_children',
-			'provide_images' => true,
-			'show_only_pages_not_in_nav' => true,
-			'description_part_of_link'=>true,
-			'html5'=>true,
-			'thumbnail_crop' => 'fill',
-			'thumbnail_height' => 237,
-			'thumbnail_width' => 350,
-		),
 	),
 	'tagboard_full_HeyNorse' =>array(
 		'pre_main_head' => '',
