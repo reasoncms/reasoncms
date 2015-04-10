@@ -285,7 +285,7 @@ select {
 @media only screen and (-webkit-min-device-pixel-ratio: 2) and (min-width: 63.8125em), only screen and (min--moz-device-pixel-ratio: 2) and (min-width: 63.8125em), only screen and (-o-min-device-pixel-ratio: 2 / 1) and (min-width: 63.8125em), only screen and (min-device-pixel-ratio: 2) and (min-width: 63.8125em), only screen and (min-resolution: 192dpi) and (min-width: 63.8125em), only screen and (min-resolution: 2dppx) and (min-width: 63.8125em) {
   /* line 150, ../scss/sites/sports.scss */
   .lutherSports #wrapper #global-banner hgroup h1 a {
-    background: url("../../images/logo_2x.png") no-repeat;
+    background: url("../../images/logo_sports_2x.png") no-repeat;
     -webkit-background-size: 168px 75px;
     -moz-background-size: 168px 75px;
     -o-background-size: 168px 75px;
