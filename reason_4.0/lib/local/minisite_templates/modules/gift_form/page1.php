@@ -64,33 +64,33 @@ class GiftPageOneForm extends FormStep
         'norse_athletic_association' => array(
         		'type' => 'checkboxfirst',
         ),
-        'naa_designation_details' => array(
+        'norse_athletic_association_details' => array(
                 'type' => 'select_no_sort',
                 'display_name' => '&nbsp;',
-                'add_null_value_to_top' => true,
                 'options' => array(
-                    'Baseball' => 'Baseball',
-                    'Basketball, men\'s' => 'Basketball, men\'s',
-                    'Basketball, women\'s' => 'Basketball, women\'s',
-                    'Cross Country, men\'s' => 'Cross Country, men\'s',
-                    'Cross Country, women\'s' => 'Cross Country, women\'s',
-                    'Football' => 'Football',
-                    'Golf, men\'s' => 'Golf, men\'s', 
-                    'Golf, women\'s' => 'Golf, women\'s',
-                    'Soccer, men\'s' => 'Soccer, men\'s',
-                    'Soccer, women\'s' => 'Soccer, women\'s',
-                    'Softball' => 'Softball',
-                    'Swimming & Diving, men\'s' => 'Swimming & Diving, men\'s',
-                    'Swimming & Diving, women\'s' => 'Swimming & Diving, women\'s',
-                    'Tennis, men\'s' => 'Tennis, men\'s',
-                    'Tennis, women\'s' => 'Tennis, women\'s',
-                    'Track & Field, men\'s' => 'Track & Field, men\'s',
-                    'Track & Field, women\'s' => 'Track & Field, women\'s',
-                    'Volleyball' => 'Volleyball',
-                    'Wrestling' => 'Wrestling',
+                    'General'                      => 'General',
+                    'Baseball'                     => 'Baseball',
+                    'Basketball (men)'             => 'Basketball (men)',
+                    'Basketball (women)'           => 'Basketball (women)',
+                    'Cross Country (men)'          => 'Cross Country (men)',
+                    'Cross Country (women)'        => 'Cross Country (women)',
+                    'Football'                     => 'Football',
+                    'Golf (men)'                   => 'Golf (men)', 
+                    'Golf (women)'                 => 'Golf (women)',
+                    'Soccer (men)'                 => 'Soccer (men)',
+                    'Soccer (women)'               => 'Soccer (women)',
+                    'Softball'                     => 'Softball',
+                    'Swimming & Diving (men)'      => 'Swimming & Diving (men)',
+                    'Swimming & Diving (women)'    => 'Swimming & Diving (women)',
+                    'Tennis (men)'                 => 'Tennis (men)',
+                    'Tennis (women)'               => 'Tennis (women)',
+                    'Track & Field (men)'          => 'Track & Field (men)',
+                    'Track & Field (women)'        => 'Track & Field (women)',
+                    'Volleyball'                   => 'Volleyball',
+                    'Wrestling'                    => 'Wrestling',
                 ),
         ),
-        'naa_designation_amount' => 'money',
+        'norse_athletic_association_amount' => 'money',
         'baseball_stadium' => array(
         		'type' => 'checkboxfirst',
         ),
@@ -135,9 +135,9 @@ class GiftPageOneForm extends FormStep
 			'display_name' => '<h3>What prompted you to make this gift?</h3>',
             'add_null_value_to_top' => true,
             'options' => array(
-                'mailing'       =>'Recieved a mailing', 
-                'email'         => 'Recieved an email', 
-                'staff_visit'   => 'Development staff visit', 
+                'mailing'       => 'Recieved a mailing',
+                'email'         => 'Recieved an email',
+                'staff_visit'   => 'Development staff visit',
                 'other'         => 'Other')
         ),
         'gift_prompt_details' => array(
@@ -173,8 +173,8 @@ class GiftPageOneForm extends FormStep
             'elements' => array('annual_fund', 'annual_fund_amount'),
             'args' => array('use_element_labels' => false, 'use_group_display_name' => false)
         ),
-        'naa_group' => array('type' => 'inline',
-            'elements' => array('naa_designation_details', 'naa_designation_amount'),
+        'norse_athletic_association_group' => array('type' => 'inline',
+            'elements' => array('norse_athletic_association_details', 'norse_athletic_association_amount'),
             'args' => array('use_element_labels' => false, 'use_group_display_name' => false)
         ),
         'baseball_group' => array('type' => 'inline',
@@ -221,6 +221,11 @@ class GiftPageOneForm extends FormStep
             $display_name = $this->get_display_name('specific_fund');
             $this->set_display_name('specific_fund', '<span data-tooltip aria-haspopup="true" class="has-tip" title="'.get_text_blurb_content('designated_giving_hover_blurb').'">Designated Giving</span>');
         }
+        // same goes for scholarship fund
+        if (reason_unique_name_exists('scholarship_fund_hover_blurb')) {
+            $display_name = $this->get_display_name('scholarship_fund');
+            $this->set_display_name('scholarship_fund', '<span data-tooltip aria-haspopup="true" class="has-tip" title="'.get_text_blurb_content('designated_giving_hover_blurb').'">Scholarship / Endowment</span>');
+        }
 
 		$this->set_value('submitter_ip', $_SERVER[ 'REMOTE_ADDR' ]);
 
@@ -251,8 +256,8 @@ class GiftPageOneForm extends FormStep
 		}
 		$this->move_element('recur_group','after','installment_type');
         $this->move_element('annual_fund_group', 'after', 'designation_header');
-        $this->move_element('naa_group', 'after', 'norse_athletic_association');
-        $this->move_element('baseball_group', 'after', 'naa_group');
+        $this->move_element('norse_athletic_association_group', 'after', 'norse_athletic_association');
+        $this->move_element('baseball_group', 'after', 'norse_athletic_association_group');
         $this->move_element('softball_group', 'after', 'baseball_group');
         $this->move_element('scholarship_group', 'after', 'softball_group');
         $this->move_element('other_group', 'after', 'scholarship_group');

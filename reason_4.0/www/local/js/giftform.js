@@ -230,11 +230,10 @@ function toggle_specific_designations()
 		$("#othergroupItem").hide(500);
 		$("#commentsspecialinstructionsItem").hide(500);
 	}
-	if ( $("input[name='norse_athletic_association']:checked").val() || $("input[name='norse_athletic_association']:checked").val() == "true" )
-	{
-		$("#naagroupItem").show(500);
+	if ( $("input[name='norse_athletic_association']:checked").val() || $("input[name='norse_athletic_association']:checked").val() == "true" ) {
+		$("#norseathleticassociationgroupItem").show(500);
 	} else {
-		$("#naagroupItem").hide(500);
+		$("#norseathleticassociationgroupItem").hide(500);
 	}
 }
 
