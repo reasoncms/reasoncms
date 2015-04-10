@@ -298,6 +298,10 @@ class DirectoryModule extends DefaultMinisiteModule {
 
     function show_results(&$form) {
         $entries = $this->query_checks($form);
+        // since we're calling this in post_show_form callback, lets not do anything if
+        // there are no entries
+        if (!$entries) return;
+
         // // Assemble all the data that's come in via the form or the URL into $q
         // $elements = $form->get_element_names();
         // foreach ($elements as $element) {
@@ -691,15 +695,17 @@ class DirectoryModule extends DefaultMinisiteModule {
             echo "<div class='directoryInfo' title>";
             // Faculty/Staff specific markup
             if ( $affiliation != 'Student') {
-                if (is_array($data['title'])){
-                    foreach ($data['title'] as $key => $value) {
+                if ( isset($data['title']) ) {
+                    if (is_array($data['title'])){
+                        foreach ($data['title'] as $key => $value) {
+                            echo "<h3 class='directoryTitle'>{$value}</h3>";
+                        }
+                    } else {
+                        /**
+                          * @todo check for one value
+                          */
                         echo "<h3 class='directoryTitle'>{$value}</h3>";
                     }
-                } else {
-                    /**
-                      * @todo check for one value
-                      */
-                    echo "<h3 class='directoryTitle'>{$value}</h3>";
                 }
                 echo "<ul class='directoryContact'>";
 
