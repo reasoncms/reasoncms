@@ -43,20 +43,16 @@ class GiftPageTwoForm extends FormStep
 			'options' => array('Alumnus/Spouse'=>'Alumnus/a or Spouse','Parent'=>'Parent','Friend'=>'Friend','Student'=>'Student','Faculty/Staff'=>'Faculty/Staff',),
 		),
 		'class_year' => array(
-			'type' => 'numrange',
-			'start' => 1924,
-			'end' => 2010,
-			'comments' => '<div class="smallText comment">Choose either your class or your spouse\'s class.</div>',
-		),'address_note' => array(
+			'type' => 'text',
+			'size' => 4,
+			'comments' => '<span class="smallText comment">(YYYY)</span><div class="smallText comment">Choose either your class or your spouse\'s class.</div>',
+		),
+		'address_note' => array(
 			'type' => 'comment',
 			'text' => '<h3>Address and Contact Information</h3>',
 		),
-		'address_type' => array(
-			'type' => 'radio_no_sort',
-			'options' => array('Home'=>'Home','Business'=>'Business'),
-			'default' => 'Home',
-		),
-		'street_address' => 'textarea',
+		'address_1' => 'text',
+		'address_2' => 'text',
 		'city' => array(
 			'type' => 'text',
 			'size'=>35,
@@ -86,7 +82,7 @@ class GiftPageTwoForm extends FormStep
 		'email' => array(
 			'type' => 'text',
 			'size'=>35,
-			'display_name' => 'E-mail',
+			'display_name' => 'Email',
 		),
 		'estate_header' => array(
 			'type' => 'comment',
@@ -102,47 +98,47 @@ class GiftPageTwoForm extends FormStep
 		// 	'type' => 'checkboxfirst',
   //                       'display_name' => 'Please send me information about including Luther in my estate plans.',
 		// ),
-		'address_note' => array(
-			'type' => 'comment',
-			'text' => '<h3>Address and Contact Information</h3>',
-		),
-		'address_type' => array(
-			'type' => 'radio_no_sort',
-			'options' => array('Home'=>'Home','Business'=>'Business'),
-			'default' => 'Home',
-		),
-		'street_address' => 'textarea',
-		'city' => array(
-			'type' => 'text',
-			'size'=>35,
-		),
-		'state_province' => array(
-			'type' => 'state_province',
-			'display_name' => 'State/Province',
-			'include_military_codes' => true,
-		),
-		'zip' => array(
-			'type' => 'text',
-			'display_name' => 'Zip/Postal Code',
-			'size'=>35,
-		),
-		'country' => array(
-			'type' => 'country',
-		),
-		'phone' => array(
-			'type' => 'text',
-			'size'=>20,
-		),
-		'phone_type' => array(
-			'type' => 'select_no_sort',
-			'options' => array('Home'=>'Home', 'Cell'=>'Cell','Business'=>'Business',),
-			'default' => 'Home',
-		),
-		'email' => array(
-			'type' => 'text',
-			'size'=>35,
-			'display_name' => 'E-mail',
-		),
+		// 'address_note' => array(
+		// 	'type' => 'comment',
+		// 	'text' => '<h3>Address and Contact Information</h3>',
+		// ),
+		// 'address_type' => array(
+		// 	'type' => 'radio_no_sort',
+		// 	'options' => array('Home'=>'Home','Business'=>'Business'),
+		// 	'default' => 'Home',
+		// ),
+		// 'street_address' => 'textarea',
+		// 'city' => array(
+		// 	'type' => 'text',
+		// 	'size'=>35,
+		// ),
+		// 'state_province' => array(
+		// 	'type' => 'state_province',
+		// 	'display_name' => 'State/Province',
+		// 	'include_military_codes' => true,
+		// ),
+		// 'zip' => array(
+		// 	'type' => 'text',
+		// 	'display_name' => 'Zip/Postal Code',
+		// 	'size'=>35,
+		// ),
+		// 'country' => array(
+		// 	'type' => 'country',
+		// ),
+		// 'phone' => array(
+		// 	'type' => 'text',
+		// 	'size'=>20,
+		// ),
+		// 'phone_type' => array(
+		// 	'type' => 'select_no_sort',
+		// 	'options' => array('Home'=>'Home', 'Cell'=>'Cell','Business'=>'Business',),
+		// 	'default' => 'Home',
+		// ),
+		// 'email' => array(
+		// 	'type' => 'text',
+		// 	'size'=>35,
+		// 	'display_name' => 'E-mail',
+		// ),
 		'advance_id'=>array(
 			'type' => 'hidden',
 		),
@@ -179,7 +175,7 @@ class GiftPageTwoForm extends FormStep
 		'last_name',
 		'luther_affiliation',
 		'address_type',
-		'street_address',
+		'address_1',
 		'city',
 		'state_province',
 		'zip',
@@ -229,7 +225,7 @@ class GiftPageTwoForm extends FormStep
 		$this->add_comments('email','<div class="smallText comment">A confirmation email will be sent to this address.</div>');
 		// $this->change_element_type('class_year','numrange',array('start'=>1924,'end'=>(date('Y')+5)));
 		// $this->pre_fill_form();
-					}
+	}
 	// function pre_fill_form()
 	// {
 	// 	//$userid = 'polgreet_1976'; // An alumnus
