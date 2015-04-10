@@ -262,6 +262,7 @@ function show_amount_fields() {
 		if ( checked_boxes.length > 1 ) {
 			amount_selector = $("#"+$(this).prop('name')+"_amountElement");
 			$(amount_selector).parent().show();
+			$(".inlineElement").find("input[id*='amountElement']:visible").first().effect('highlight');
 		} else {
 			amount_selector = $("#"+$(this).prop('name')+"_amountElement");
 			$(amount_selector).parent().hide();

@@ -127,6 +127,8 @@ class OnlineGiftModule extends DefaultMinisiteModule
 		{
 			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form.css');
 
+			$head_items->add_stylesheet(JQUERY_UI_CSS_URL);
+			$head_items->add_javascript(JQUERY_UI_URL);
 			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'luther_2014/stylesheets/sites/giving.css');
 			$head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/giftform.js');
 			$head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/disable_submit.js');
