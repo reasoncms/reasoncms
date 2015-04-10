@@ -11,6 +11,8 @@ $(document).ready(function() {
 		
 		$("input[name='installment_type']").change(function(){ toggle_recur_fields(); });
 
+		$(".inlineElement").find("input[id*='amountElement']").blur(function(){ add_amounts(); });
+
 		// Set the initial state for employer name field
 		$("#employernameItem").hide(500);
 		
@@ -252,19 +254,40 @@ function toggle_gift_prompt() {
 }
 
 function show_amount_fields() {
-	amount_elements = $(".inlineElement").find("input[id*='amountElement']").parent().hide();
+	$(".inlineElement").find("input[id*='amountElement']").parent().hide();
 	// if more than one designation is checked,
 	// show designation amount boxes for those checked.
 	// Look for all checkboxes ignore matching gifts and specific funds checkboxes
-	checked_boxes = $("input[type='checkbox']:checked").not("#checkbox_specific_fund").not("#checkbox_match_gift");
+	var checked_boxes = $("input[type='checkbox']:checked").not("#checkbox_specific_fund").not("#checkbox_match_gift");
 	checked_boxes.each(function(){
 		if ( checked_boxes.length > 1 ) {
 			amount_selector = $("#"+$(this).prop('name')+"_amountElement");
 			$(amount_selector).parent().show();
+			// clear any existing _amountElement values
+			$(".inlineElement").find("input[id*='amountElement']").val('');
+			// get the first open *_amountElement and fill it with the init ial gift amount
+			$(".inlineElement").find("input[id*='amountElement']:visible").first().val($('#gift_amountElement').val());
 			$(".inlineElement").find("input[id*='amountElement']:visible").first().effect('highlight');
 		} else {
 			amount_selector = $("#"+$(this).prop('name')+"_amountElement");
 			$(amount_selector).parent().hide();
+			// clear all _amountElement values
+			$(".inlineElement").find("input[id*='amountElement']").val('');
 		}
 	});
 }
+
+function add_amounts() {
+	var initial_gift_amount = $("#gift_amountElement").val();
+	var total = 0;
+
+	
+}
+
+// function show_naa_amount_field() {
+// 		if ($("#norse_athletic_association_detailsElement").val() !== '') {
+// 			$("#norse_athletic_association_amountElement").parent().show();
+// 		} else {
+// 			$("#norse_athletic_association_amountElement").parent().hide();
+// 		}
+//}
