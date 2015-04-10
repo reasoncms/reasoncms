@@ -177,9 +177,11 @@ blockquote {
 // Tables
 
 // Provide overflow:scroll for Tablesorter & #pageContent tables
+// changed overflow-x: auto so the scroll bars aren't persistent
+// in Windows
 .tableSorterWrap,
 .tableWrap {
-	overflow-x: scroll !important;
+	overflow-x: auto !important;
 	border: 1px solid $lc-grey;
 	padding: 1px;
 	margin-bottom: $column-gutter;
@@ -191,7 +193,7 @@ blockquote {
 	}
 
 	.tablesorter {
-		overflow-x: scroll !important;
+		overflow-x: auto !important;
 		border: none;
 	}
 }
