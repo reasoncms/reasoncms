@@ -182,7 +182,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 	'blurb_main_content_multiple' => array(
 		'main_post' => array(
 			'module' => 'blurb',
-			'num_to_display' => '30',
+			'num_to_display' => '50',
 			'exclude_shown_blurbs' => true,
 			'after_each_html'=> '<hr class="horizontal-rule-basic">',
 		),
@@ -604,17 +604,17 @@ $GLOBALS['_reason_page_types_local'] = array(
 					'filename' =>'minisite_templates/modules/publication/list_item_markup_generators/magazine.php'
 				),
 				'featured_item' => array (
-					'classname' => 'MagazinePublicationListItemMarkupGenerator', 
+					'classname' => 'MagazinePublicationListItemMarkupGenerator',
 					'filename' =>'minisite_templates/modules/publication/list_item_markup_generators/magazine.php'
 				),
 				'item' => array (
-					'classname' => 'MagazineItemMarkupGenerator', 
+					'classname' => 'MagazineItemMarkupGenerator',
 					'filename' =>'minisite_templates/modules/publication/item_markup_generators/magazine.php'
 				),
 			),
 		),
 		'sub_nav_2' => array(
-			'module'=>'publication/issues',	
+			'module'=>'publication/issues',
 		),
 	),
 	'net_price_calculator' => array(
@@ -749,6 +749,17 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'pre_sidebar' => 'main_blurb',
 		'main_4' => '',
 	),
+	'show_children_with_first_images_vertical' => array(
+		'main_post' => array(
+			'module'=>'luther_children',
+			'provide_images'=>true,
+			'description_part_of_link'=>true,
+			'html5'=>true,
+			'thumbnail_crop'=>'fill',
+			'thumbnail_height'=>518,
+			'thumbnail_width'=>405,
+		),
+	),
 	'show_children_top_image' => array(
 		'main_post' => 'children',
 		'post_main_head' => array(
@@ -839,7 +850,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'pre_sidebar_2' => array(
 			'module' => 'image_sidebar_luther',
 			'num_to_skip' => 1,
-			'thumbnail_width' => 600,				
+			'thumbnail_width' => 600,
 			'num_to_display' => 0,
 			'caption_flag' => true,
 		)

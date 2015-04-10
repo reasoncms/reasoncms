@@ -28,9 +28,9 @@ class GiftPageOneForm extends FormStep
 			'size'=>12,
 		),
 		'installment_type' => array(
-			'type' => 'radio_no_sort',
+			'type' => 'radio_inline_no_sort',
 			'display_name' => '&nbsp;',
-			'options' => array('Monthly'=>'Every month','Quarterly'=>'Every quarter','Onetime'=>'One time',),
+			'options' => array('Monthly'=>'Every month','Quarterly'=>'Every quarter','Onetime'=>'One time'),
 		),
 		'installment_start_date' => array(
 			'display_name' => 'Starting',
@@ -46,29 +46,14 @@ class GiftPageOneForm extends FormStep
          'type' => 'comment',
          'text' => '<h3>Designation</h3>',
         ),
-  //       'designation' => array(
-		// 	'type' => 'radio_no_sort',
-		// 	'display_name' => '<h3>Designation</h3>',
-  //           'options'=>array(
-  //               'annual_fund' => '<a href="/giving/annual/" target="_blank">Annual Fund<a/> (please use my gift where it is needed most)',
-  //               'specific_fund' => '<a href="/giving/choices/" target="_blank">Designated Giving</a> (I have something specific in mind)' )
-		// ),
-  //       'specific_designation' => array(
-  //           'type' => 'checkboxgroup_with_other_no_sort',
-  //           'display_name' => 'If more than one designation is specified, your gift will be divided equally unless you indicate otherwise in the comments section below.',
-  //           'options' => array(
-  //               'baseball_stadium' => '<a href="/giving/priorities/stadiums/" target="_blank">Baseball Stadium</a>',
-  //               'softball_stadium'  => '<a href="/giving/priorities/stadiums/" target="_blank">Softball Stadium</a>',
-  //               'scholarship_fund' => '<a href="/giving/choices/scholarship/" target="_blank">Scholarship Support</a>, general',
-  //           )
-  //       ),
 		'annual_fund' => array(
 			'type' => 'checkboxfirst',
-			'display_name' => '<a href="/giving/annual/" target="_blank">Annual Fund<a/> (please use my gift where it is needed most)',
+            'comments' => '(please use my gift where it is needed most)'
 		),
+        'annual_fund_amount' => 'money',
        'specific_fund' => array(
 			'type' => 'checkboxfirst',
-			'display_name' => '<a href="/giving/choices/" target="_blank">Designated Giving</a> (I have something specific in mind)',
+            'comments' => '(I have something specific in mind)',
 		),
         'designation_note' => array(
                 'type' => 'comment',
@@ -76,29 +61,8 @@ class GiftPageOneForm extends FormStep
                            will be divided equally unless you indicate otherwise
                            in the comments section below.'
         ),
-        'baseball_stadium' => array(
-        		'type' => 'checkboxfirst',
-        		'display_name' => '<a href="/giving/priorities/stadiums/" target="_blank">Baseball Stadium</a>',
-        ),
-        'softball_stadium' => array(
-                'type' => 'checkboxfirst',
-                'display_name' => '<a href="/giving/priorities/stadiums/" target="_blank">Softball Stadium</a>',
-        ),
-        'scholarship_fund' => array(
-                'type' => 'checkboxfirst',
-                'display_name' => '<a href="/giving/choices/scholarship/" target="_blank">Scholarship Support</a>, general',
-        ),
-        'transform_teaching_fund' => array(
-                'type' => 'checkboxfirst',
-                'display_name' => '<a href="/giving/sesquicentennialfund/?story_id=268591" target="_blank">The Fund for Transformational Teaching and Learning</a>',
-        ),
-        'sustainable_communities' => array(
-                'type' => 'checkboxfirst',
-                'display_name' => '<a href="/giving/sesquicentennialfund/?story_id=268629" target="_blank">Luther Center for Sustainable Communities</a>',
-        ),
         'norse_athletic_association' => array(
         		'type' => 'checkboxfirst',
-        		'display_name' => '<a href="/naa/" target="_blank">Norse Athletic Association</a>',
         ),
         'naa_designation_details' => array(
                 'type' => 'select_no_sort',
@@ -126,24 +90,39 @@ class GiftPageOneForm extends FormStep
                     'Wrestling' => 'Wrestling',
                 ),
         ),
-        'other_designation_note' => array(
-                'type' => 'comment',
-                'text' => 'Comments/Other Designation',             
+        'naa_designation_amount' => 'money',
+        'baseball_stadium' => array(
+        		'type' => 'checkboxfirst',
         ),
-        'other_designation_details' => array(
+        'baseball_stadium_amount' => 'money',
+        'softball_stadium' => array(
+                'type' => 'checkboxfirst',
+        ),
+        'softball_stadium_amount' => 'money',
+        'scholarship_fund' => array(
+                'type' => 'checkboxfirst',
+                'comments' => 'general',
+        ),
+        'scholarship_fund_amount' => 'money',
+        'other' => 'checkboxfirst', 
+        'other_amount' => 'money',
+        'comments_special_instructions' => array(
                 'type' => 'textarea',
-                'display_name' => '&nbsp;',
+                'display_name' => 'Comments/Special Instructions',
         ),
         'matching_gift_header' => array(
 			'type' => 'comment',
-			'text' => '<h3>Will your gift be matched by your employer?</h3>
-				  <p><a href="http://www.matchinggifts.com/luther/" 
-				  title="Matching Gift Search Site" target="_new"
-				  >Click to see if your employer has a matching program.</a></p>',
+			'text' => '<h3>Will your gift be matched by your employer?</h3>'
 		),
 		'match_gift' => array(
 			'type' => 'checkboxfirst',
 			'display_name' => 'My (or my spouse\'s) employer will match my gift',
+            'comments' => 
+                '<p><a data-reveal-id="matchingGiftsIframe">Click to see if your employer has a matching program.</a></p>
+                <div class="reveal-modal medium" id="matchingGiftsIframe" data-reveal="">
+                    <iframe height="500px" width="100%" src="//www.matchinggifts.com/luther_iframe"></iframe>
+                    <a class="close-reveal-modal">×</a>
+                </div>',
 		),
 		'employer_name' => array(
 			'type' => 'text',
@@ -151,34 +130,24 @@ class GiftPageOneForm extends FormStep
 			'display_name'=>'&nbsp;',
 			'comments'=>'<div class="smallText comment">Employer name</div>',
 		),
-		'existing_pledge_header' => array(
-			'type' => 'comment',
-			'text' => '<h3>Is this a payment on an existing pledge?</h3>',
-		),
-		'existing_pledge' => array(
-			'type' => 'radio_inline_no_sort',
-			'options' => array('Yes'=>'Yes','No'=>'No'),
-			'display_name'=>'&nbsp;',
-		),
-        'gift_prompt_header' => array(
-                'type' => 'comment',
-                'text' => '<h3>What prompted you to make this gift?</h3>'
-        ),
         'gift_prompt' => array(
-        	'type' => 'textarea',
-			'rows' => 5,
-			'cols' => 35,
-			'display_name' => '',
+        	'type' => 'select_no_sort',
+			'display_name' => '<h3>What prompted you to make this gift?</h3>',
+            'add_null_value_to_top' => true,
+            'options' => array(
+                'mailing'       =>'Recieved a mailing', 
+                'email'         => 'Recieved an email', 
+                'staff_visit'   => 'Development staff visit', 
+                'other'         => 'Other')
         ),
-
-        'dedication_header' => array(
-			'type' => 'comment',
-			'text' => '<h3>Dedication <em>(optional)</em></h3>'
+        'gift_prompt_details' => array(
+            'type' => 'text',
+            'display_name' => '&nbsp;',
 		),
 		'dedication' => array(
 			'type' => 'radio_no_sort',
 			'options' => array('Memory'=>'In memory of','Honor'=>'In honor of'),
-			'display_name' => '',
+			'display_name' => '<h3>Dedication <em>(optional)</em></h3>',
 		),
 		'dedication_details' => array(
 			'type' => 'text',
@@ -198,9 +167,31 @@ class GiftPageOneForm extends FormStep
 	var $element_group_info = array(	
 		'recur_group' => array ('type' => 'inline',
 			'elements' =>  array( 'installment_start_date', 'installment_end_date' ),
-			'args' => array('use_element_labels' => true,'use_group_display_name' => false,
-				'rows' => array('','')
+			'args' => array('use_element_labels' => true,'use_group_display_name' => false, 'rows' => array('','') ),
+		),
+        'annual_fund_group' => array('type' => 'inline',
+            'elements' => array('annual_fund', 'annual_fund_amount'),
+            'args' => array('use_element_labels' => false, 'use_group_display_name' => false)
+        ),
+        'naa_group' => array('type' => 'inline',
+            'elements' => array('naa_designation_details', 'naa_designation_amount'),
+            'args' => array('use_element_labels' => false, 'use_group_display_name' => false)
+        ),
+        'baseball_group' => array('type' => 'inline',
+            'elements' => array('baseball_stadium', 'baseball_stadium_amount'),
+            'args' => array('use_element_labels' => false, 'use_group_display_name' => false)
+        ),
+        'softball_group' => array('type' => 'inline',
+            'elements' => array('softball_stadium', 'softball_stadium_amount'),
+            'args' => array('use_element_labels' => false, 'use_group_display_name' => false)
+        ),
+        'scholarship_group' => array('type' => 'inline',
+            'elements' => array('scholarship_fund', 'scholarship_fund_amount'),
+            'args' => array('use_element_labels' => false, 'use_group_display_name' => false)
 			),
+        'other_group' => array('type' => 'inline',
+            'elements' => array('other', 'other_amount'),
+            'args' => array('use_element_labels' => false, 'use_group_display_name' => false)
 		),
    	);
 
@@ -211,6 +202,26 @@ class GiftPageOneForm extends FormStep
 	function on_every_time()
 	{
         $this->box_class = 'StackedBox';
+
+        // if a text blurb with the unique name convention of giving_program_hover_blurb
+        // exists, then replace the display name with a tooltip 
+        foreach ($this->elements as $element => $value) {
+            $blurb_unique_name = "{$element}_hover_blurb";
+            if ( $blurb_unique_name == reason_unique_name_exists($blurb_unique_name) ){
+                $blurb = get_text_blurb_content($blurb_unique_name);
+                $display_name = $this->get_display_name($element);
+                $this->set_element_properties($element, array('display_name' => '<span data-tooltip aria-haspopup="true" class="has-tip" title="'.$blurb.'">'.$display_name.'</span>'));
+            }
+        }
+        // this one is a special case, so we'll just call it explicitly
+        // the name of the element is actually, specific_fund. If we changed 
+        // it the element name to match the display name we'd have to do a lot of 
+        // db rewrites
+        if (reason_unique_name_exists('designated_giving_hover_blurb')) {
+            $display_name = $this->get_display_name('specific_fund');
+            $this->set_display_name('specific_fund', '<span data-tooltip aria-haspopup="true" class="has-tip" title="'.get_text_blurb_content('designated_giving_hover_blurb').'">Designated Giving</span>');
+        }
+
 		$this->set_value('submitter_ip', $_SERVER[ 'REMOTE_ADDR' ]);
 
 		if(!$this->get_value('installment_start_date'))
@@ -239,16 +250,21 @@ class GiftPageOneForm extends FormStep
 			$this->add_element_group( $info['type'], $name, $info['elements'], $info['args']);
 		}
 		$this->move_element('recur_group','after','installment_type');
-		
+        $this->move_element('annual_fund_group', 'after', 'designation_header');
+        $this->move_element('naa_group', 'after', 'norse_athletic_association');
+        $this->move_element('baseball_group', 'after', 'naa_group');
+        $this->move_element('softball_group', 'after', 'baseball_group');
+        $this->move_element('scholarship_group', 'after', 'softball_group');
+        $this->move_element('other_group', 'after', 'scholarship_group');
 	}
 
 	function pre_show_form()
 	{
-		// echo '<div id="giftForm" class="pageOne">'."\n";
+		echo '<div id="giftForm" class="pageOne">'."\n";
 	}
 	function post_show_form()
 	{
-		// echo '</div>'."\n";
+		echo '</div>'."\n";
 	}
 	function run_error_checks()
 	{

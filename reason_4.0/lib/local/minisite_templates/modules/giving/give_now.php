@@ -43,21 +43,21 @@
 		
 			<div class="formElement">
 			<div class="element">	
-				<div id="installment_type_container" class="radioButtons">
-				<table border="0" cellpadding="1" cellspacing="0">
-					<tr>
-						<td valign="top"><input type="radio" id="radio_installment_type_1" name="installment_type" value="Monthly" /></td>
-						<td valign="top"><label for="radio_installment_type_1">Every month</label></td>
-					</tr>
-					<tr>
-						<td valign="top"><input type="radio" id="radio_installment_type_2" name="installment_type" value="Quarterly" /></td>
-						<td valign="top"><label for="radio_installment_type_2">Every quarter</label></td>
-					</tr>
-					<tr>
-						<td valign="top"><input type="radio" id="radio_installment_type_0" name="installment_type" value="Onetime" /></td>
-						<td valign="top"><label for="radio_installment_type_0">One time</label></td>
-					</tr>
-				</table>
+				<div id="installment_type_container" class="radioButtons inLineRadioButtons">
+				<!-- <table border="0" cellpadding="1" cellspacing="0"> -->
+					<!-- <tr> -->
+						<span class="radioItem"><input type="radio" id="radio_installment_type_1" name="installment_type" value="Monthly" /></span>
+						<span class="radioItem"><label for="radio_installment_type_1">Every month</label></span>
+					<!-- </tr>
+					<tr> -->
+						<span class="radioItem"><input type="radio" id="radio_installment_type_2" name="installment_type" value="Quarterly" /></span>
+						<span class="radioItem"><label for="radio_installment_type_2">Every quarter</label></span>
+					<!-- </tr>
+					<tr> -->
+						<span class="radioItem"><input type="radio" id="radio_installment_type_0" name="installment_type" value="Onetime" /></span>
+						<span class="radioItem"><label for="radio_installment_type_0">One time</label></span>
+					<!-- </tr>
+				</table> -->
 			</div>
 			</div>
 			</div>

@@ -4,90 +4,98 @@
 
 $(document).ready(function() {
 	/** PageOne **/
-	toggle_recur_fields();
-	
-	$("input[name='installment_type']").change(function(){toggle_recur_fields()});
-
-	// Set the initial state for employer name field
-	$("#employernameItem").hide(500);
-	
-	// Show/hide employer name based on match status
-	$("input#checkbox_match_gift").change(function(){
-			if ($("input#checkbox_match_gift:checked").val())
-			$("#employernameItem").show(500);
-		else
-			$("#employernameItem").hide(500);
-	});
-	
-	//$("input#checkbox_match_gift").change();
-	$("input#checkbox_annual_fund").change();
-	
-	// Show/hide specific designations
-	toggle_specific_designations();
-	$("input[name='specific_fund']").change(function(){toggle_specific_designations()});
-	$("input[name='norse_athletic_association']").change(function(){toggle_specific_designations()});
-	
-	
-	/** PageTwo **/
-	
-	set_name_field_prompt();
-	$("input[name$='_name']").focus(function(){clear_name_field_prompt($(this))});
-	$("input[name$='_name']").blur(function(){set_name_field_prompt()});
-	$("form#disco_form").submit(function(){
-		clear_name_field_prompt($("input[name='first_name']"));
-		clear_name_field_prompt($("input[name='last_name']"));	
-	});
-	
-	
-	// Show class year when alum affiliation chosen
-	toggle_class_year();
-		
-	$("input#checkbox_luther_affiliation_0").change(function(){toggle_class_year()});
-	$("input#checkbox_luther_affiliation_3").change(function(){toggle_class_year()});
-	
-
-	// Show/hide and populate Country field based on state/province choice
-	$("select#state_provinceElement").change(function()
-		{toggle_country_field("select#state_provinceElement","#countryItem" )});
-	
-	// Set the initial state for the Country field
-	$("select#state_provinceElement").change();
-	$("#countryItem").hide(500);
-	
-	/** PageThree **/
-	
-	// Add the controls to open and close the gift detail.
-	if ($("div#giftForm h3#yearlyTotalsHeading").length)
+	if ($("div#giftForm.pageOne").length)
 	{
-		$("div#giftForm div#reviewGiftDetails").hide(500);
+		toggle_recur_fields();
+		$("input[type='checkbox']").not("#checkbox_specific_fund").not("#checkbox_match_gift").change(function(){ show_amount_fields(); });
 		
-		$("div#giftForm div#reviewGiftOverview").append('<p><a id="showGiftDetails" href="#">Yearly totals for this gift</a></p>');
-		$("div#giftForm #reviewGiftDetails").append('<a id="hideGiftDetails" href="#"><i class="fa fa-times"></i></a>');
+		$("input[name='installment_type']").change(function(){ toggle_recur_fields(); });
 
-		$("a#showGiftDetails").click(function(event){
-			$("a#showGiftDetails").hide(500);
-			$("div#reviewGiftDetails").show(500);
-			event.preventDefault();
+		// Set the initial state for employer name field
+		$("#employernameItem").hide(500);
+		
+		// Show/hide employer name based on match status
+		$("input#checkbox_match_gift").change(function(){
+				if ($("input#checkbox_match_gift:checked").val())
+				$("#employernameItem").show(500);
+			else
+				$("#employernameItem").hide(500);
 		});
-	
-		$("a#hideGiftDetails").click(function(event){
-			$("a#showGiftDetails").show(500);
-			$("div#reviewGiftDetails").hide(500);
-			event.preventDefault();
-		});
+		
+		//$("input#checkbox_match_gift").change();
+		$("input#checkbox_annual_fund").change();
+		
+		// Show/hide specific designations
+		toggle_specific_designations();
+		$("input[name='specific_fund']").change(function(){ toggle_specific_designations(); });
+		$("input[name='norse_athletic_association']").change(function(){ toggle_specific_designations(); });
+		$("input[name='other']").change(function(){ toggle_specific_designations(); });
+
+		toggle_gift_prompt();
+		$("#gift_promptElement").change(function(){ toggle_gift_prompt(); });
+
 	}
 	
-	toggle_billing_address();
-	
-	$("input[name='billing_address']").change(function(){toggle_billing_address()});
+	/** PageTwo **/
+	if ($("div#giftForm.pageTwo").length) {
+		set_name_field_prompt();
+		$("input[name$='_name']").focus(function(){ clear_name_field_prompt($(this)); });
+		$("input[name$='_name']").blur(function(){ set_name_field_prompt(); });
+		$("form#disco_form").submit(function(){
+			clear_name_field_prompt($("input[name='first_name']"));
+			clear_name_field_prompt($("input[name='last_name']"));	
+		});
+		
+		
+		// Show class year when alum affiliation chosen
+		toggle_class_year();
+			
+		$("input#checkbox_luther_affiliation_0").change(function(){ toggle_class_year(); });
+		$("input#checkbox_luther_affiliation_3").change(function(){ toggle_class_year(); });
+		
 
-	// Show/hide and populate Country field based on state/province choice
-	$("select#billing_state_provinceElement").change(function()
-		{toggle_country_field("select#billing_state_provinceElement","#billingcountryItem" )});
-	
-	// Set the initial state for the Country field
-	$("select#billing_state_provinceElement").change();
-	
+		// Show/hide and populate Country field based on state/province choice
+		$("select#state_provinceElement").change(function(){ toggle_country_field("select#state_provinceElement","#countryItem" ); });
+		
+		// Set the initial state for the Country field
+		$("select#state_provinceElement").change();
+		$("#countryItem").hide(500);
+	}
+
+	/** PageThree **/
+	if ($("div#giftForm.pageThree").length) {
+		// Add the controls to open and close the gift detail.
+		if ($("div#giftForm h3#yearlyTotalsHeading").length)
+		{
+			$("div#giftForm div#reviewGiftDetails").hide(500);
+			
+			$("div#giftForm div#reviewGiftOverview").append('<p><a id="showGiftDetails" href="#">Yearly totals for this gift</a></p>');
+			$("div#giftForm #reviewGiftDetails").append('<a id="hideGiftDetails" href="#"><i class="fa fa-times"></i></a>');
+
+			$("a#showGiftDetails").click(function(event){
+				$("a#showGiftDetails").hide(500);
+				$("div#reviewGiftDetails").show(500);
+				event.preventDefault();
+			});
+		
+			$("a#hideGiftDetails").click(function(event){
+				$("a#showGiftDetails").show(500);
+				$("div#reviewGiftDetails").hide(500);
+				event.preventDefault();
+			});
+		}
+		
+		toggle_billing_address();
+		
+		$("input[name='billing_address']").change(function(){ toggle_billing_address(); });
+
+		// Show/hide and populate Country field based on state/province choice
+		$("select#billing_state_provinceElement").change(function(){ toggle_country_field("select#billing_state_provinceElement","#billingcountryItem"); });
+		
+		// Set the initial state for the Country field
+		$("select#billing_state_provinceElement").change();
+	}
+
 	/** PageFour **/
 	$("p.printConfirm").html("<input type='submit' value='"+ $("p.printConfirm").html() + "' />");
 	$("p.printConfirm input").click(function(event){
@@ -205,37 +213,58 @@ function toggle_billing_address()
 
 function toggle_specific_designations()
 {
-	if ($("input[name='specific_fund']:checked").val() ||
-	     $("input[name='specific_fund']:checked").val() == 'entered')
-		{
-			$("#designationnoteItem").show(500);
-			$("#baseballstadiumItem").show(500);
-			$("#softballstadiumItem").show(500);
-			$("#scholarshipfundItem").show(500);
-			$("#transformteachingfundItem").show(500);
-			$("#sustainablecommunitiesItem").show(500);
-			$("#norseathleticassociationItem").show(500);
-			$("#otherdesignationnoteItem").show(500);
-			$("#otherdesignationdetailsItem").show(500);
-		}
-		else
-		{
-			$("#designationnoteItem").hide(500);
-			$("#baseballstadiumItem").hide(500);
-			$("#softballstadiumItem").hide(500);
-			$("#scholarshipfundItem").hide(500);
-			$("#transformteachingfundItem").hide(500);
-			$("#sustainablecommunitiesItem").hide(500);
-			$("#norseathleticassociationItem").hide(500);
-			$("#otherdesignationnoteItem").hide(500);
-			$("#otherdesignationdetailsItem").hide(500);			
-		}
-		
-	if ($("input[name='norse_athletic_association']:checked").val()||
-		$("input[name='norse_athletic_association']:checked").val() == "entered")
-		{
-			$("#naadesignationdetailsItem").show(500);
+	if ( $("input[name='specific_fund']:checked").val() || $("input[name='specific_fund']:checked").val() == 'true' ) {
+		$("#designationnoteItem").show(500);
+		$("#norseathleticassociationItem").show(500);
+		$("#baseballgroupItem").show(500);
+		$("#softballgroupItem").show(500);
+		$("#scholarshipgroupItem").show(500);
+		$("#othergroupItem").show(500);
+		$("#commentsspecialinstructionsItem").show(500);
+	} else {
+		$("#designationnoteItem").hide(500);
+		$("#norseathleticassociationItem").hide(500);
+		$("#baseballgroupItem").hide(500);
+		$("#softballgroupItem").hide(500);
+		$("#scholarshipgroupItem").hide(500);
+		$("#othergroupItem").hide(500);
+		$("#commentsspecialinstructionsItem").hide(500);
+	}
+	if ( $("input[name='norse_athletic_association']:checked").val() || $("input[name='norse_athletic_association']:checked").val() == "true" )
+	{
+		$("#naagroupItem").show(500);
+	} else {
+		$("#naagroupItem").hide(500);
+	}
+}
+
+function toggle_gift_prompt() {
+	if ($("#gift_promptElement").val() == 'staff_visit') {
+		$("#giftpromptdetailsItem").show(500);
+		$("#gift_prompt_detailsElement").parent().prev().html('Name of development officer');
+	}
+	else if ($("#gift_promptElement").val() == 'other') {
+		$("#giftpromptdetailsItem").show(500);
+		$("#gift_prompt_detailsElement").parent().prev().html('Please tell us more');
+	} else {
+		$("#giftpromptdetailsItem").hide(500);
+		$("#gift_prompt_detailsElement").val('');
+	}
+}
+
+function show_amount_fields() {
+	amount_elements = $(".inlineElement").find("input[id*='amountElement']").parent().hide();
+	// if more than one designation is checked,
+	// show designation amount boxes for those checked.
+	// Look for all checkboxes ignore matching gifts and specific funds checkboxes
+	checked_boxes = $("input[type='checkbox']:checked").not("#checkbox_specific_fund").not("#checkbox_match_gift");
+	checked_boxes.each(function(){
+		if ( checked_boxes.length > 1 ) {
+			amount_selector = $("#"+$(this).prop('name')+"_amountElement");
+			$(amount_selector).parent().show();
 		} else {
-			$("#naadesignationdetailsItem").hide(500);
+			amount_selector = $("#"+$(this).prop('name')+"_amountElement");
+			$(amount_selector).parent().hide();
 		}
+	});
 }
