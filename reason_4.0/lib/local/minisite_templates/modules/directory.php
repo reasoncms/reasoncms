@@ -689,7 +689,8 @@ class DirectoryModule extends DefaultMinisiteModule {
 
 
             echo "<div class='directoryInfo' title>";
-            if ( $affiliation != 'Student' && isset($data['title'])) {
+            // Faculty/Staff specific markup
+            if ( $affiliation != 'Student') {
                 if (is_array($data['title'])){
                     foreach ($data['title'] as $key => $value) {
                         echo "<h3 class='directoryTitle'>{$value}</h3>";
@@ -908,7 +909,8 @@ class DirectoryModule extends DefaultMinisiteModule {
             $str .= '<thead>';
                 $str .= '<tr>';
                         $str .= '<th class="name">Name</th>';
-                        $str .= '<th class="affiliation">Affiliation/Title</th>';
+                        $str .= '<th class="title">Title</th>';
+                        $str .= '<th class="affiliation">Affiliation</th>';
                         $str .= '<th class="email">Email</th>';
                         if ($this->context != 'general')
                             $str .= '<th class="spo">SPO</th>';
@@ -929,13 +931,13 @@ class DirectoryModule extends DefaultMinisiteModule {
           } else {
               $str .= '<td>&nbsp;</td>';
           }
+          if (isset($data['title'][0])){
+                $str .= '<td>' . $data['title'][0] . '</td>';
+          } else {
+                $str .= '<td>&nbsp;</td>';
+          }
           if (isset ($data['edupersonprimaryaffiliation'][0])) {
-              $str .= '<td class="affilTitle">' .$data['edupersonprimaryaffiliation'][0];
-              if (isset($data['title'][0])){
-                    $str .= '<br>' . $data['title'][0] . '</td>';
-              } else {
-                    $str .= '</td>';
-              }
+              $str .= '<td class="affilTitle">' .$data['edupersonprimaryaffiliation'][0].'</td>';
           } else {
               $str .= '<td>&nbsp;</td>';
           }
