@@ -70,30 +70,13 @@
 		</div>
 		</div>
 		</div>
-
-		<div class="other-ways equal-height">
-			<h3><a href="#">Other Ways to Give</a></h3>
-			<ul>
-				<li>Phone</li>
-				<li>Mail</li>
-				<li>Electronic Funds Transfer</li>
-				<li>Stock Transfer</li>
-				<li>Payroll Deduction</li>
-				<li>Employer Matching Gifts</li>
-				<li>Planned Gifts</li>
-			</ul>
-
-			<h3><a href="#">Gift Types / Areas of Support</a></h3>
-	  		<ul>
-	  			<li>Annual Fund Gifts</li>
-	  			<li>Reunion Gifts</li>
-	  			<li>Senior Giving Campaign</li>
-	  			<li>Planned Gifts</li>
-	  			<li>Memorial/Honorary Gifts</li>
-	  			<li>Norse Athletic Association Memberships</li>
-	  			<li>Endowment/Scholarship Support</li>
-	  		</ul>
-		</div>
+		
+			<?php 		
+		if ( 'giving_other_ways_to_give_blurb' == reason_unique_name_exists('giving_other_ways_to_give_blurb') )
+		{
+    		echo get_text_blurb_content('giving_other_ways_to_give_blurb');
+		}
+			?>
 
 	</div>
 	</div>
