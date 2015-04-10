@@ -30,7 +30,6 @@ $(document).ready(function() {
         filter_cssFilter : "tablesorter-filter",
         filter_formatter : null,
         filter_functions : {
-            '.affiliation' : true,
             '.year': true,
         },
         filter_hideFilters : false,
