@@ -209,7 +209,7 @@ class contentReminder {
 				if (!empty($default))
 					$this->from_email_address = $default;
 				else
-					$this->stop_error('No from/reply-to address is set (a). No emails sent.');
+					$this->stop_error('No from/reply-to address is set. No emails sent.');
 			}
 				
 			//Set to simulate execution, printing out messages:
