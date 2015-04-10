@@ -689,7 +689,8 @@ class DirectoryModule extends DefaultMinisiteModule {
 
 
             echo "<div class='directoryInfo' title>";
-            if ( $affiliation != 'Student' && isset($data['title'])) {
+            // Faculty/Staff specific markup
+            if ( $affiliation != 'Student') {
                 if (is_array($data['title'])){
                     foreach ($data['title'] as $key => $value) {
                         echo "<h3 class='directoryTitle'>{$value}</h3>";
