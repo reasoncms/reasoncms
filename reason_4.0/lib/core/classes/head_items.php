@@ -313,7 +313,7 @@ class HeadItems
 		try
 		{
 			$parser->scss->addImportPath(WEB_PATH);
-			$parser->scss->addImportPath($input_path);
+			$parser->scss->addImportPath( pathinfo ( $input_path, PATHINFO_DIRNAME ) );
 
 			foreach ($this->style_import_paths as $path) {
 				$parser->scss->addImportPath($path);

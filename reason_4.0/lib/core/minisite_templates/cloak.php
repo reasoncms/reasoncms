@@ -194,8 +194,8 @@
 
 		function get_css_files()
 		{
-			$this->head_items->add_style_import_path(WEB_PATH . 'reason/local/cloak/bower_components/foundation/scss');
-			$this->head_items->add_style_import_path(WEB_PATH . 'reason/local/cloak/scss');
+			$this->head_items->add_style_import_path(WEB_PATH . substr(REASON_HTTP_BASE_PATH, 1) . 'cloak/bower_components/foundation/scss');
+			$this->head_items->add_style_import_path(WEB_PATH . substr(REASON_HTTP_BASE_PATH, 1) . 'cloak/scss');
 
 			parent::get_css_files();
 		}
