@@ -28,10 +28,12 @@ $(document).ready(function() {
 		$("input#checkbox_annual_fund").change();
 		
 		// Show/hide specific designations
-		toggle_specific_designations();
-		$("input[name='specific_fund']").change(function(){ toggle_specific_designations(); });
-		$("input[name='norse_athletic_association']").change(function(){ toggle_specific_designations(); });
-		$("input[name='other']").change(function(){ toggle_specific_designations(); });
+		// toggle_specific_designations();
+		// $("input[name='specific_fund']").change(function(){ toggle_specific_designations(); });
+		toggle_naa_designation_details();
+		$("input[name='norse_athletic_association']").change(function(){ toggle_naa_designation_details(); });
+		toggle_other_designations_details();
+		$("input[name='other']").change(function(){ toggle_other_designations_details(); });
 
 		toggle_gift_prompt();
 		$("#gift_promptElement").change(function(){ toggle_gift_prompt(); });
@@ -218,24 +220,37 @@ function toggle_specific_designations()
 	if ( $("input[name='specific_fund']:checked").val() || $("input[name='specific_fund']:checked").val() == 'true' ) {
 		$("#designationnoteItem").show(500);
 		$("#norseathleticassociationItem").show(500);
-		$("#baseballgroupItem").show(500);
-		$("#softballgroupItem").show(500);
+		// $("#baseballgroupItem").show(500);
+		// $("#softballgroupItem").show(500);
 		$("#scholarshipgroupItem").show(500);
 		$("#othergroupItem").show(500);
 		$("#commentsspecialinstructionsItem").show(500);
 	} else {
 		$("#designationnoteItem").hide(500);
 		$("#norseathleticassociationItem").hide(500);
-		$("#baseballgroupItem").hide(500);
-		$("#softballgroupItem").hide(500);
+		// $("#baseballgroupItem").hide(500);
+		// $("#softballgroupItem").hide(500);
 		$("#scholarshipgroupItem").hide(500);
 		$("#othergroupItem").hide(500);
 		$("#commentsspecialinstructionsItem").hide(500);
 	}
+}
+
+function toggle_naa_designation_details() {
 	if ( $("input[name='norse_athletic_association']:checked").val() || $("input[name='norse_athletic_association']:checked").val() == "true" ) {
-		$("#norseathleticassociationgroupItem").show(500);
+		$("#norseathleticassociationdetailsItem").show();
 	} else {
-		$("#norseathleticassociationgroupItem").hide(500);
+		$("#norseathleticassociationdetailsItem").hide();
+		$("#norse_athletic_association_detailsElement").val('General');
+	}
+}
+
+function toggle_other_designations_details() {
+	if ( $("input[name='other']:checked").val() || $("input[name='other']:checked").val() == "true" ) {
+		$("#otherdesignationdetailsItem").show();
+	} else {
+		$("#otherdesignationdetailsItem").hide();
+		$("#other_designation_detailsElement").val('');
 	}
 }
 
@@ -283,11 +298,3 @@ function add_amounts() {
 
 	
 }
-
-// function show_naa_amount_field() {
-// 		if ($("#norse_athletic_association_detailsElement").val() !== '') {
-// 			$("#norse_athletic_association_amountElement").parent().show();
-// 		} else {
-// 			$("#norse_athletic_association_amountElement").parent().hide();
-// 		}
-//}

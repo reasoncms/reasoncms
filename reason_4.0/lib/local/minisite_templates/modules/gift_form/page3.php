@@ -61,13 +61,13 @@ class GiftPageThreeForm extends FormStep {
             'type' => 'comment',
             'text' => '<h3>Payment Method</h3>',
         ),
-        'credit_card_type' => array(
-            'type' => 'radio_no_sort',
-            'options' => array('Visa' => 'Visa', 'MasterCard' => 'MasterCard', 'American Express' => 'American Express', 'Discover' => 'Discover'),
-        ),
         'credit_card_number' => array(
             'type' => 'text',
             'size' => 35,
+        ),
+        'credit_card_type' => array(
+            'type' => 'radio_no_sort',
+            'options' => array('Visa' => 'Visa', 'MasterCard' => 'MasterCard', 'American Express' => 'American Express', 'Discover' => 'Discover'),
         ),
         'credit_card_expiration_month' => array(
             'type' => 'month',
@@ -312,20 +312,20 @@ class GiftPageThreeForm extends FormStep {
                 }
                 $txt .= '</li>' . "\n";
             }
-            if ($this->controller->get('baseball_stadium')) {
-                $txt .= '<li>Baseball Stadium' . "\n";
-                if ($this->controller->get('baseball_stadium_amount')) {
-                    $txt .= ': $'.$this->controller->get('baseball_stadium_amount');
-                }
-                $txt .= '</li>'."\n";
-            }
-            if ($this->controller->get('softball_stadium')) {
-                $txt .= '<li>Softball Stadium' . "\n";
-                if ($this->controller->get('softball_stadium_amount')) {
-                    $txt .= ': $'.$this->controller->get('softball_stadium_amount');
-                }
-                $txt .= '</li>'."\n";
-            }
+            // if ($this->controller->get('baseball_stadium')) {
+            //     $txt .= '<li>Baseball Stadium' . "\n";
+            //     if ($this->controller->get('baseball_stadium_amount')) {
+            //         $txt .= ': $'.$this->controller->get('baseball_stadium_amount');
+            //     }
+            //     $txt .= '</li>'."\n";
+            // }
+            // if ($this->controller->get('softball_stadium')) {
+            //     $txt .= '<li>Softball Stadium' . "\n";
+            //     if ($this->controller->get('softball_stadium_amount')) {
+            //         $txt .= ': $'.$this->controller->get('softball_stadium_amount');
+            //     }
+            //     $txt .= '</li>'."\n";
+            // }
             if ($this->controller->get('scholarship_fund')) {
                 $txt .= '<li>The Scholarship Fund' . "\n";
                 if ($this->controller->get('scholarship_fund_amount')) {
@@ -334,9 +334,9 @@ class GiftPageThreeForm extends FormStep {
                 $txt .= '</li>'."\n";
             }
             if ($this->controller->get('other_designation_details')) {
-                $txt .= '<li>Comments/Other Designation: ' . strip_tags($this->controller->get('other_designation_details'));
-                if ($this->controller->get('naa_designation_amount')) {
-                    $txt .= ' – $'.$this->controller->get('naa_designation_amount');
+                $txt .= '<li>Other Designation: ' . strip_tags($this->controller->get('other_designation_details'));
+                if ($this->controller->get('other_amount')) {
+                    $txt .= ' – $'.$this->controller->get('other_amount');
                 }
             }
             $txt .= '</ul>' . "\n"; // Designated specifics end
