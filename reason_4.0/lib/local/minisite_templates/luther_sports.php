@@ -36,9 +36,9 @@
 			$classes = array();
 			$classes[] = 'body lutherSports';
 			if($this->pages->root_node() == $this->page_id)
-				$classes[] = 'body lutherSports siteHome';
+				$classes[] = 'siteHome';
 			if($this->page_info->get_value('unique_name'))
-				$classes[] = 'lutherSports uname_'.$this->page_info->get_value('unique_name');
+				$classes[] = 'uname_'.$this->page_info->get_value('unique_name');
 			return $classes;
 		}
 		function you_are_here($delimiter = ' <span>&raquo;</span> ')
