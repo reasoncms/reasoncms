@@ -88,6 +88,7 @@ function hideRest(selected){
   var cardTypes = ["mastercard","visa","discover","amex"];
   for (i = 0; i < cardTypes.length; i++) {
     if(cardTypes[i] != selected){
+      $("#"+cardTypes[i]+"Icon").removeClass("selectedCCType");
       $("#"+cardTypes[i]+"Icon").addClass("nonSelectedCCType");
     }
   }
