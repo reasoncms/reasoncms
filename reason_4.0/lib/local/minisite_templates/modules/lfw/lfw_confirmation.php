@@ -8,7 +8,7 @@
 * Include necessary stuff
 */
 include_once('reason_header.php');
-include_once(WEB_PATH.'stock/lfwPFclass.php');
+include_once(WEB_PATH.'reason/local/stock/lfwPFclass.php');
 
 /**
 * HomecomingConfirmation, Steve Smith, 02 June 2010

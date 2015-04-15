@@ -8,7 +8,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-include_once(WEB_PATH.'stock/transcriptPFclass.php');
+include_once(WEB_PATH.'reason/local/stock/transcriptPFclass.php');
 
 class TranscriptPageTwoForm extends FormStep
 {

@@ -14,7 +14,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-include_once(WEB_PATH . 'stock/giftclass.php');
+include_once(WEB_PATH.'reason/local/stock/giftclass.php');
 include_once(TYR_INC . 'tyr.php');
 reason_include_once('classes/repeat_transaction_helper.php');
 

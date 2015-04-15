@@ -1,7 +1,7 @@
 <?php
 
 reason_include_once('minisite_templates/modules/form/views/thor/luther_default.php');
-include_once(WEB_PATH.'stock/pfproclass.php'); //<<<< Change this
+include_once(WEB_PATH.'reason/local/stock/pfproclass.php'); //<<<< Change this
 $GLOBALS[ '_form_view_class_names' ][ basename( __FILE__, '.php') ] = 'CreditCardThorForm';
 
 /**

@@ -8,7 +8,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-include_once(WEB_PATH.'stock/discovery_camps.php');
+include_once(WEB_PATH.'reason/local/stock/discovery_camps.php');
 include_once(TYR_INC . 'tyr.php');
 
 class DiscoveryCampsTwo extends FormStep

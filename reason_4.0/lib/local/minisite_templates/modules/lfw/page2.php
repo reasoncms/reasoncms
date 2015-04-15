@@ -8,7 +8,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-include_once(WEB_PATH.'stock/lfwPFclass.php');
+include_once(WEB_PATH.'reason/local/stock/lfwPFclass.php');
 
 class LFWFormPageTwo extends FormStep
 {
@@ -349,7 +349,7 @@ class LFWFormPageTwo extends FormStep
 										'<th class="col1">Year</th>'=>'',
 										'<th>Amount</th>'=>'',
 										'</td><td>'=>': ',
-										'Ð'=>'-',
+										'ï¿½'=>'-',
 										'<h3>'=>'--------------------'."\n\n",
 										'</h3>'=>'',
 										'<br />'=>"\n",

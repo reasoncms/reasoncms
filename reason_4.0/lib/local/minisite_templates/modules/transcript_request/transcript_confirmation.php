@@ -8,7 +8,7 @@
 * Include necessary stuff
 */
 include_once('reason_header.php');
-include_once(WEB_PATH.'stock/transcriptPFclass.php');
+include_once(WEB_PATH.'reason/local/stock/transcriptPFclass.php');
 
 /**
 * TranscriptConfirmation, Steve Smith, 02 June 2010

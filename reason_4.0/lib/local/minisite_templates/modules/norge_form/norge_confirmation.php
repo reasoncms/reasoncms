@@ -8,7 +8,7 @@
 * Include necessary stuff
 */
 include_once('reason_header.php');
-include_once(WEB_PATH.'stock/norgePFclass.php');
+include_once(WEB_PATH.'reason/local/stock/norgePFclass.php');
 
 /**
 * GiftConfirmation, Matt Ryan, 29 March 2005
