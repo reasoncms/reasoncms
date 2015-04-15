@@ -10,7 +10,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-include_once(WEB_PATH . 'stock/allBandPFclass.php');
+include_once(WEB_PATH.'reason/local/stock/allBandPFclass.php');
 include_once(TYR_INC . 'tyr.php');
 
 //reason_include_once( 'classes/repeat_transaction_helper.php' );

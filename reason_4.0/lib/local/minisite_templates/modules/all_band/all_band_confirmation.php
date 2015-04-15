@@ -8,7 +8,7 @@
 * Include necessary stuff
 */
 include_once('reason_header.php');
-include_once(WEB_PATH.'stock/allBandPFclass.php');
+include_once(WEB_PATH.'reason/local/stock/allBandPFclass.php');
 
 /**
 * GiftConfirmation, Matt Ryan, 29 March 2005

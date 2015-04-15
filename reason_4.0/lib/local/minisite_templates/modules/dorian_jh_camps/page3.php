@@ -9,7 +9,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-include_once(WEB_PATH.'stock/dorian_jh_camps.php');
+include_once(WEB_PATH.'reason/local/stock/dorian_jh_camps.php');
 include_once(TYR_INC . 'tyr.php');
 //reason_include_once( 'classes/repeat_transaction_helper.php' );
 
