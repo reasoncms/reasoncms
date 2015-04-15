@@ -67,7 +67,12 @@ class GiftPageThreeForm extends FormStep {
         ),
         'credit_card_type' => array(
             'type' => 'radio_no_sort',
-            'options' => array('Visa' => 'Visa', 'MasterCard' => 'MasterCard', 'American Express' => 'American Express', 'Discover' => 'Discover'),
+            'options' => array('Visa' => 'Visa', 'MasterCard' => 'MasterCard', 'American Express' => 'American Express', 'Discover' => 'Discover', 'none'=>'none'),
+            'label' => 'Credit Card Type'
+        ),
+        'credit_card_type_icon' => array(
+            'type' => 'comment',
+            'text' => "<i class='fa fa-cc-visa formCCType' id='visaIcon'></i><i class='fa fa-cc-mastercard formCCType' id='mastercardIcon'></i><i class='fa fa-cc-amex formCCType' id='amexIcon'></i><i class='fa fa-cc-discover formCCType' id='discoverIcon'></i>",
         ),
         'credit_card_expiration_month' => array(
             'type' => 'month',
