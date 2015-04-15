@@ -44,7 +44,7 @@ class GiftPageOneForm extends FormStep
 		),
         'designation_header' => array(
          'type' => 'comment',
-         'text' => '<h3>Designation</h3>',
+         'text' => '<h3>Designation</h3><p><em>If you choose more than one designation, you may choose how to split the gift</em></p>',
         ),
 		'annual_fund' => array(
 			'type' => 'checkboxfirst',
