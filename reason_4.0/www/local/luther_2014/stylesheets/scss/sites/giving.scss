@@ -626,7 +626,7 @@ $tab-current-color: $lc-blue-dark;
 
 			h3 {
 				margin-top: rem-calc(16);
-				border-bottom: 1px solid lighten($body-font-color, 30%);
+				// border-bottom: 1px solid lighten($body-font-color, 30%);
 				display: inline-block;
 				color: $body-font-color;
 
@@ -656,9 +656,37 @@ $tab-current-color: $lc-blue-dark;
 				}
 			}
 
+			div > span.currency {
+					font-size: rem-calc(20);
+					font-weight: 400;
+				}
+
 			#installment_end_dateElement {
 				margin-left: rem-calc(6);
 			}
+			.inlineElement {
+				vertical-align: center;
+				label {
+					margin: 0;
+				}
+				span.currency {
+					font-size: rem-calc(20);
+					font-weight: 400;
+					padding-left: 1rem;
+				}
+			}
+		}
+		div#norseathleticassociationdetailsItem > .element, div#otherdesignationdetailsItem > .element, {
+			padding-left: 2rem;
+			max-width: 600px;
+		}
+
+		#annual_fund_amountElement, 
+		#norse_athletic_association_amountElement, 
+		#scholarship_fund_amountElement, 
+		#other_amountElement {
+			width: 5rem;
+			display: inline-block;
 		}
 
 		#giftamountheaderItem {

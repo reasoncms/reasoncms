@@ -174,7 +174,6 @@ class GiftPageTwoForm extends FormStep
 		'first_name',
 		'last_name',
 		'luther_affiliation',
-		'address_type',
 		'address_1',
 		'city',
 		'state_province',

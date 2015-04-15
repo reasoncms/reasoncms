@@ -38,6 +38,17 @@ $(document).ready(function() {
 		toggle_gift_prompt();
 		$("#gift_promptElement").change(function(){ toggle_gift_prompt(); });
 
+		// add a span class around the money elements's "$"
+		$("#gift_amountElement").parent().contents().filter(function() {
+			return this.nodeType === 3 }).wrap('<span class="currency"></span>');
+		$(".inlineElement input[name$='_amount']").parent().contents().filter(function() {
+			return this.nodeType === 3 }).wrap('<span class="currency"></span>');
+		$("#checkbox_annual_fund").parent().contents().filter(function() {
+			return this.nodeType === 3 }).last().wrap('<span class="comment">&nbsp;</span>');
+		$("#checkbox_scholarship_fund").parent().contents().filter(function() {
+			return this.nodeType === 3 }).last().wrap('<span class="comment">&nbsp;</span>');
+		$(".inlineElement input[name$='_amount']").attr('placeholder', 'Amount');
+		$("#other_designation_detailsElement").attr('placeholder', 'Other Designation');
 	}
 	
 	/** PageTwo **/
