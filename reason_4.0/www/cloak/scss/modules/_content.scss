@@ -1,0 +1,101 @@
+// Content Styles
+// Cloak, v1
+
+// Configure Typography styles in _settings.scss.
+
+h1,
+h3,
+h5 {
+	font-family: $header-font-family;
+}
+
+h2,
+h4 {
+	font-family: $body-font-family;
+}
+
+h2.pageTitle {
+	margin: 0 0 $horizontal-gutter/1.5;
+	line-height: 1.3;
+}
+
+#related {
+	h1 { font-size: $h1-font-size - $h1-font-reduction; }
+    h2 { font-size: $h2-font-size - $h2-font-reduction; }
+    h3 { font-size: $h3-font-size - $h3-font-reduction; }
+    h4 { font-size: $h4-font-size - $h4-font-reduction; }
+    h5 { font-size: $h5-font-size - $h5-font-reduction; }
+    h6 { font-size: $h6-font-size - $h6-font-reduction; }
+}
+
+#meat table.thor_data,
+#meat table.table_data {
+	
+	@include table;
+
+	// Even though everything below comes in through the mixin above,
+	// we need to be more specific in a few cases in order to 
+	// override some default Reason CSS.
+	
+	border: $table-border-size $table-border-style $table-border-color;
+
+	tr.even {
+		background: $table-even-row-bg; 
+	}
+
+	tr.odd {
+		background: $table-bg;
+	}
+
+	td,
+	th {
+		border: $table-border-size $table-border-style $table-border-color;
+	}
+}
+
+#pageContent,
+.fullPost .text,
+.comments .commentContent,
+.eventContent,
+.blurb,
+#faq .answer,
+.facStaffContent,
+.minutesContent,
+.policyContent,
+.policy .approvals {
+	@include clearfix;
+	margin-bottom: $horizontal-gutter - $paragraph-margin-bottom;
+
+	a {
+		text-decoration: underline;
+		font-weight: 700;
+		color: $cloak-red;
+	}
+
+	blockquote {
+		clear: both;
+		font-family: $header-font-family;
+		background: $vapor;
+
+		cite {
+			font-family: $body-font-family;
+		}
+
+		// TinyMCE in Reason wraps blockquotes around the exisitng tag (usually a paragraph).
+		// Here, we add a quote icon to the first tag within the blockquote, as long as it's not the <cite> tag.
+		> *:first-child {
+			&:not(cite) {
+				@include inline-icon($icon: $fa-var-quote-left, $color: lighten($blockquote-font-color, 30%));
+			}
+		}
+
+		// Remove padding from the final tag and any tags inside it (to keep padding uniform)
+		@include last-child-padding-collapse();
+	}
+
+	table {
+		// Foundation table mixin, from bower_components/foundation/scss/foundation/components/_tables.scss.
+		// Set table variables in _settings.scss
+		@include table;
+	}
+}

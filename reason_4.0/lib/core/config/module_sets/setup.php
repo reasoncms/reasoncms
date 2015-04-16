@@ -17,6 +17,7 @@ $ms->add(
 		'event_slot_registration',
 		'events_archive',
 		'events_hybrid',
+		'events_instancewide',
 		'events_schedule',
 		'events_verbose',
 	),

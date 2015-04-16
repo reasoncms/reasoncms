@@ -1,0 +1,71 @@
+// Faculty Styles
+// Cloak, v1
+
+#facultyStaff {
+	@include clearfix;
+	border-top: 1px solid $smoke;
+	margin-bottom: $horizontal-gutter;
+
+	a {
+		color: $faculty-primary-color;
+
+		&:hover {
+			color: darken($faculty-primary-color, 20%);
+		}
+	}
+
+	.facStaff {
+		@include clearfix;
+		border-bottom: 1px solid $smoke;
+		padding: $horizontal-gutter 0;
+
+		.facStaffImage {
+			margin-bottom: $horizontal-gutter/2;
+
+			@media #{$medium-up} {
+				float: right;
+				margin: 0 0 $horizontal-gutter/2 $column-gutter/2;
+			}
+		}
+
+		.facStaffName {
+			font-size: $h3-font-size;
+			margin-bottom: $horizontal-gutter/2;
+		}
+
+		.facStaffInfo {
+			
+			.label {
+				@include screenreader;
+			}
+
+			.facStaffPhone {
+				margin-left: $column-gutter/2;
+
+				@include inline-icon($icon: $fa-var-phone);
+				&:before {
+					@extend .fa-fw;
+				}
+			}
+
+			.facStaffEmail {
+				margin-left: $column-gutter/2;
+
+				@include inline-icon($icon: $fa-var-laptop);
+				&:before {
+					@extend .fa-fw;
+				}
+			}
+
+			.facStaffContent {
+				margin-top: $horizontal-gutter/2;
+				margin-bottom: 0;
+
+				> *:last-child {
+					margin-bottom: 0;
+					padding-bottom: 0;
+				}
+			}
+		}
+	}
+}

@@ -289,7 +289,29 @@ class HeadItems
 		}
 
 		$input_path = WEB_PATH.substr($url, 1);
-		if(!file_exists($input_path))
+		$ok = false;
+		if(file_exists($input_path))
+		{
+			$ok = true;
+		}
+		else
+		{
+			if(strpos($url,REASON_HTTP_BASE_PATH) === 0)
+			{
+				// see if it's local
+				$local_url = REASON_HTTP_BASE_PATH.'local/'.substr($url, strlen(REASON_HTTP_BASE_PATH));
+				$local_input_path = WEB_PATH.substr($local_url, 1);
+				echo $local_input_path;
+				if(file_exists($local_input_path))
+				{
+					$input_path = $local_input_path;
+					$ok = true;
+				}
+				
+			}
+		}
+
+		if(!$ok)
 		{
 			trigger_error('Stylesheet not found at "'.$input_path.'". Stylesheet not added.');
 			return false;
@@ -313,7 +335,7 @@ class HeadItems
 		try
 		{
 			$parser->scss->addImportPath(WEB_PATH);
-			$parser->scss->addImportPath($input_path);
+			$parser->scss->addImportPath( pathinfo ( $input_path, PATHINFO_DIRNAME ) );
 
 			foreach ($this->style_import_paths as $path) {
 				$parser->scss->addImportPath($path);

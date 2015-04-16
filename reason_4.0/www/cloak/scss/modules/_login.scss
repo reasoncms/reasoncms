@@ -1,0 +1,155 @@
+// Login Module Styles
+// Cloak, v1
+
+// Imported by cloak/scss/login.scss.
+// Not included in cloadk/scss/_modules.scss or compiled in app.css,
+// since Login has it's own dedicated theme that doesn't use those files.
+
+.cloakLogin {
+
+	#wrapper {
+		@media #{$small-high-up} {
+			padding-top: 10%;
+		}
+	}
+
+	#banner,
+	#meat {
+
+		@media #{$small-high-up} {
+			max-width: rem-calc(400);
+			margin: 0 auto;
+		}
+	}
+
+	#banner {
+		text-align: center;
+		padding: $horizontal-gutter/2 $column-gutter/2;
+		border-bottom: 1px solid $iron;
+		background: $silver;
+
+		@media #{$small-high-up} {
+			border: 1px solid $iron;
+			border-bottom: none;
+			border-radius: $global-radius $global-radius 0 0;
+			background: none;
+		}
+
+		h1 {
+			font-size: $h4-font-size;
+			
+			a {
+				color: $login-primary-color;
+
+				&:hover {
+					color: $login-primary-color;
+				}
+			}
+		}
+	}
+
+	#meat {
+		padding: $horizontal-gutter/2 $column-gutter/2 0 $column-gutter/2;
+		max-width: rem-calc(400);
+		margin: 0 auto;
+
+		@media #{$small-high-up} {
+			border: 1px solid $iron;
+			border-radius: 0 0 $global-radius $global-radius;
+		}
+
+		#login {
+			
+			table {
+				width: 100%;
+				margin-bottom: $horizontal-gutter/2;
+
+				tr {
+					display: block;
+					margin-top: rem-calc(24);
+				}
+
+				td:first-child {
+					display: inline-block;
+					width: 30%;
+					margin-right: 5%;
+					font-weight: 600;
+					font-size: rem-calc(14);
+
+					@media #{$small-high-up} {
+						font-size: rem-calc(14);
+					}
+				}
+
+				td:last-child {
+					display: inline-block;
+					width: 65%;
+				}
+
+				input[type="text"],
+				input[type="password"] {
+					width: 100%;
+				}
+
+				input[type="submit"] {
+					@include button($radius: $global-radius, $bg: $login-primary-color);
+				}
+			}
+
+		 	.msg {
+		 		font-size: $h5-font-size;
+		 		color: $alert-color;
+		 		margin: 0;
+
+		 		p {
+		 			margin: 0;
+		 		}
+		 	}
+
+		 	.msg_extra {
+		 		margin-top: rem-calc(16);
+
+		 		* {
+		 			font-size: rem-calc(14);
+		 		}
+		 	}
+
+		 	.msg + .logoutLink {
+		 		margin-top: rem-calc(16);
+		 	}
+
+		 	.logoutLink {
+		 		@include button($radius: $global-radius, $full-width: true, $bg: $login-primary-color);
+		 		margin-bottom: $horizontal-gutter/2;
+		 	}
+
+		 	p.smallText {
+		 		background: $silver;
+		 		border: 1px solid $iron;
+		 		padding: $horizontal-gutter/2 $column-gutter/2;
+		 		font-size: rem-calc(14);
+		 		
+		 		@media #{$small-high-up} {
+		 			margin-top: 0;
+			 		margin-left: -$column-gutter/2;
+			 		margin-right: -$column-gutter/2;
+			 		margin-bottom: 0;
+		 			border: none;
+		 			border-top: 1px solid $iron;
+		 		}
+
+		 		&.smallText {
+		 			//margin-top: rem-calc(16);
+		 		}
+		 	}
+
+		 	a {
+		 		color: $login-primary-color;
+
+		 		&:hover {
+		 			color: darken($login-primary-color, 10);
+		 		}
+		 	}
+		}	
+	}
+}
