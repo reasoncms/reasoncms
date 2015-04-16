@@ -1,0 +1,31 @@
+// Breadcrumb Styles
+// Cloak, v1
+
+.locationBarText {
+	font-size: rem-calc(14);
+
+	.label {
+		font-weight: 700;
+		text-transform: uppercase;
+		font-size: rem-calc(14);
+		margin-right: rem-calc(2);
+
+		// Remove Foundation's default "label" styles
+		background: none;
+		color: $body-font-color;
+		padding: 0;
+		text-align: left;
+	}
+
+	a {
+		text-decoration: underline;
+		color: $breadcrumb-primary-color;
+	}
+
+	.delimiter {
+		color: $steel;
+		font-weight: 300;
+		margin: 0 rem-calc(2);
+		display: inline-block;
+	}
+}

@@ -1,0 +1,573 @@
+// Form Styles
+// Cloak, v1
+
+// MINISITE SEARCH FORM
+.searchForm {
+
+	@media #{$small-only} {
+		margin-top: $horizontal-gutter/2 !important;
+	}
+	
+	#minisiteSearchInput {
+		display: block;
+		@include form-element();
+
+		@media #{$medium-up} {
+			width: 80%;
+			float: left;
+			margin-bottom: 0;
+			border-right: none;
+		}
+	}
+
+	.searchSubmitLink {
+		display: block;
+		text-align: center;
+		padding: $form-spacing / 2;
+		height: ($input-font-size + ($form-spacing * 1.5) - rem-calc(1));
+		background: $form-primary-color;
+		color: $white;
+		width: 100%;
+		border-radius: 0 $global-radius $global-radius 0;
+
+		@media #{$medium-up} {
+			width: 20%;
+			float: left;
+			margin-bottom: 0;
+		}
+	}
+}
+
+.globalSearchForm {
+	
+	input.searchInputBox {
+		display: block;
+		@include form-element();
+		margin-bottom: $form-spacing/2;
+
+		@media #{$medium-up} {
+			width: 70%;
+			float: left;
+			margin-bottom: $form-spacing;
+			border-right: none;
+		}
+	}
+
+	input.searchSubmitLink {
+		display: block;
+		text-align: center;
+		padding: $form-spacing / 2;
+		height: ($input-font-size + ($form-spacing * 1.5) - rem-calc(1));
+		background: $form-primary-color;
+		color: $white;
+		width: 100%;
+		border-radius: 0 $global-radius $global-radius 0;
+
+		@media #{$medium-up} {
+			width: 30%;
+			float: left;
+			margin-bottom: $form-spacing;
+		}
+	}
+}
+
+// MODULE SEARCH FORM
+
+.js #filtering form label,
+.js #filtering .searchForm label {
+	@include screenreader();
+}
+
+#filtering {
+
+	// Search form
+	form,
+	.searchForm {
+		margin: 0 0 $horizontal-gutter/2 0 !important;
+		@include clearfix;
+
+		label,
+		.colon {
+			display: block;
+		}
+
+		#gallerySearchField,
+		.search {
+			display: block;
+			@include form-element();
+			width: 80%;
+			float: left;
+			margin-bottom: 0;
+			border-right: none;
+
+		}
+
+		.submit,
+		input[type="submit"] {
+			display: block;
+			text-align: center;
+			padding: $form-spacing / 2;
+			height: ($input-font-size + ($form-spacing * 1.5) - rem-calc(1));
+			// Colors set by individual module color vairables
+			//background: inherit; 
+			//color: $white;
+			width: 20%;
+			float: left;
+			border-radius: 0 $global-radius $global-radius 0;
+			margin-bottom: 0;
+
+			&:hover {
+				//background: darken($form-primary-color, 10%);
+				cursor: pointer;
+			}
+		}
+	}
+
+	.relFilters {
+		margin-bottom: 0 !important;
+	}
+}
+
+
+// POLICY SEARCH FORM 
+.policyForm {
+	@include clearfix;
+	margin-bottom: $horizontal-gutter;
+
+	.rootMenu {
+			@include form-element();
+			width: 80%;
+			float: left;
+			margin-bottom: 0;
+			border-right: none;
+	}
+
+	.rootMenuSubmit {
+			display: block;
+			text-align: center;
+			padding: $form-spacing / 2;
+			height: ($input-font-size + ($form-spacing * 1.5) - rem-calc(1));
+			background: $policy-primary-color;
+			color: $white;
+			width: 20%;
+			float: left;
+			border-radius: 0 $global-radius $global-radius 0;
+			margin-bottom: 0;
+
+			&:hover {
+				background: darken($policy-primary-color, 10%);
+				cursor: pointer;
+			}
+	}
+}
+
+// REASON FORMS
+
+#form {
+	max-width: rem-calc(600);
+	border-top: 1px solid $iron;
+	padding-top: $horizontal-gutter;
+}
+
+// Honeypot Captcha fields
+form #tarbabypreRow,
+form #tarbabypreItem,
+form #tarbabyRow,
+form #tarbabyItem,
+form #noturlRow,
+form #noturlItem,
+form #antlionRow,
+form #antlionItem {
+	display: none;
+}
+
+// Submission errors. Displayed at the top of the form.
+#discoErrorNotice { 
+	margin-bottom: $horizontal-gutter/2;
+
+	// Adds non-visible padding to the top of the named anchor to space it out from the top of the browser
+	@include anchor-padding-menu;
+
+	h3 {
+		font-size: $h4-font-size;
+		font-weight: 400;
+		margin: 0 0 rem-calc(6);
+		color: $alert-color !important;
+
+		&:before {
+			  @extend .fa;
+			  content: $fa-var-exclamation-triangle;
+			  margin-right: rem-calc(12);
+		}
+	}
+
+	ul {
+		@include alert($bg: $white, $radius: $global-radius);
+		border-color: lighten($alert-color, 40%);
+		margin: 0;
+		font-weight: 700;
+
+		li {
+			display: inline;
+
+			a {
+				font-weight: 400; 
+				text-decoration: underline;
+				color: $alert-color;
+			}
+		}
+	}
+}
+
+form,
+#form,
+#form #discoLinear {
+
+	#formAdminControlBox {
+		background: none;
+
+		p {
+			margin: 0;
+			padding: 0;
+
+			a {
+				@include admin-button();
+			}
+		}
+	}
+
+	// TEXT INPUTS
+	input[type="text"],
+	input[type="password"],
+	input[type="date"],
+	input[type="datetime"],
+	input[type="datetime-local"],
+	input[type="month"],
+	input[type="week"],
+	input[type="email"],
+	input[type="number"],
+	input[type="search"],
+	input[type="tel"],
+	input[type="time"],
+	input[type="url"],
+	textarea,
+	.loki div.iframe_wrapper,
+	.loki textarea {
+		@include form-element();
+		margin: 0;
+	}
+
+	// SUBMIT
+	input[type="submit"] {
+		-webkit-appearance: none;
+		border-radius: 0;
+	}
+
+	input[type="submit"] {
+		@include button(
+			$radius: $global-radius,
+			$bg: $form-primary-color
+		);
+		height: ($input-font-size + ($form-spacing * 1.5) - rem-calc(1));
+		padding: 0 $column-gutter;
+	}
+
+	// RADIOS & CHECKBOXES
+	input[type="checkbox"],
+	input[type="radio"] {
+	  margin: rem-calc(6) $form-spacing 0 0;
+	}
+
+	.checkBoxGroup,
+	.radioButtons {
+		padding-left: 10px;
+	}
+
+	// FILE INPUT
+	// Normalize file input width
+	input[type="file"] {
+	  width:100%;
+	}
+
+	// TEXTAREA
+	// Not allow resize out of parent
+	textarea {
+		max-width: 100%;
+		min-height: rem-calc(120);
+	}
+
+	// SELECTS
+	// Add height value for select elements to match text input height
+	select {
+	  @include form-select;
+	  height: ($input-font-size + ($form-spacing * 1.5) - rem-calc(1));
+	  background: $white;
+	}
+
+	// FIELDSETS
+	fieldset {
+	  @include fieldset;
+	}
+
+	// FORM STRUCTURE
+	.formElement {
+		margin: 0 0 $form-spacing;
+
+		// ERRORS
+		&.error {
+			background: none !important; // removes Reason's defult yellow error row
+			padding: 0 !important;
+
+			.words {
+				background: lighten($alert-color, 35%);
+				color: $alert-color;
+			}
+
+			input[type="text"],
+			input[type="password"],
+			input[type="date"],
+			input[type="datetime"],
+			input[type="datetime-local"],
+			input[type="month"],
+			input[type="week"],
+			input[type="email"],
+			input[type="number"],
+			input[type="search"],
+			input[type="tel"],
+			input[type="time"],
+			input[type="url"],
+			textarea,
+			.loki div.iframe_wrapper,
+			.loki textarea,
+			select,
+			.checkBoxGroup,
+			.radioButtons {
+				border: 1px solid $alert-color;
+			}
+
+			.checkBoxGroup,
+			.radioButtons {
+				padding: 10px;
+			}
+		}
+
+		// LABELS
+		.words {
+			@include form-label();
+			padding: rem-calc(4) rem-calc(8);
+
+			.labelText {
+				display: inline-block;
+			}
+
+			.requiredIndicator {
+				font-weight: 300;
+				display: inline-block;
+				padding-left: rem-calc(4);
+			}
+		}
+	}
+
+	.submitSection {
+		margin: 0 0 $form-spacing;
+	}
+}
+
+
+// Tabled disco forms
+#disco_form {
+
+	table#discoTable {
+		border: none;
+
+		th,
+		tr,
+		td {
+			background: none;
+			border: none;
+		}
+	}
+
+	tr {
+		.words {
+			@include form-label();
+			margin-right: 12px;
+		}
+		
+		.element input {
+			margin: 0 0 $form-spacing;
+		}
+	}
+}
+
+
+// @todo: Take what's needed from below and delete
+
+// .form,
+// #form,
+// form {
+
+// 	// Sets a header font for all possible labels
+// 	div,
+// 	.words,
+// 	input,
+// 	label,
+// 	select {
+// 		font-family: $header-font-family;
+// 	}
+
+
+// 	textarea,
+// 	.loki div.iframe_wrapper,
+// 	.loki textarea
+// 	 {
+// 		height: auto;
+// 	}
+
+// }
+
+// 2. LUTHER FORM STYLES & Foundation overrides
+// Form styles unique to Reason form markup
+
+// .form,
+// #form,
+// form {
+
+// 	.formElement {
+// 		// Styles for the "content" row -- often used for headings
+// 		&.noLabel {
+// 			//border-top: 4px solid $lc-grey;
+
+// 			h1,
+// 			h2,
+// 			h3 { // Styles headings to look the same
+// 				font-size: $h3-font-size;
+// 				color: $lc-blue-light;
+// 				//color: $body-font-color;
+// 			}
+
+// 			> :last-child { // removes bottom spacing from the last element to keep row spacing even
+// 				margin: 0;
+// 				padding: 0;
+// 			}
+// 		}
+
+// 		// Labels
+// 		.words {
+// 			@include form-label;
+// 			font-weight: 600;
+// 			display: inline-block;
+
+// 			.labelText {
+// 				display: inline-block;
+// 			}
+
+// 			.requiredIndicator {
+// 				font-weight: 300;
+// 				display: inline-block;
+// 				padding-left: rem-calc(4);
+// 				color: darken($lc-grey, 40%);
+// 			}
+// 		}
+
+// 		.element {
+// 			//background: #efefef !important;
+
+// 			// .inlineElement,
+// 			// input[size="2"],
+// 			// input[size="4"] {
+
+// 			// 	input {
+// 			// 		width: auto !important;
+// 			// 		max-width: auto !important;
+// 			// 		display: inline;
+// 			// 	}
+// 			// }
+
+// 			input[size="2"],
+// 			input[size="4"],
+// 			input[size="12"],
+// 			input[size="15"],
+// 			input[size="20"] {
+// 				//background: orange !important;
+// 				width: auto !important;
+// 				max-width: auto !important;
+// 				display: inline-block;
+// 				margin: 0 rem-calc(12) 0 0;
+// 			}
+
+// 			input[size="2"],
+// 			input[size="4"]
+// 			{
+// 				margin: 0 rem-calc(6);
+// 			}
+// 		}
+
+// 		.comment {
+// 			padding: $form-spacing 0;
+// 			font-weight: 300;
+// 			font-style: italic;
+
+// 			&.smallText {
+// 				font-size: rem-calc(14);
+// 			}
+// 		}
+
+// 		// > input[type="checkbox"] {
+// 		// 	margin: 0.5em .75em .5em 1em;
+// 		// 	float: left;
+// 		// 	display: block;
+
+// 		// 	+ label {
+// 		// 		//display: inline;
+// 		// 		display: block;
+// 		// 		float: left;
+// 		// 		background: red;
+// 		// 	}
+// 		// }
+
+// 		 > input[type="checkbox"] {
+// 		 	margin: 0.5em .75em .5em 1em;
+// 			// float: left;
+// 			// display: block;
+// 			// display: inline;
+// 		 }
+
+// 		> .radioItem {
+// 			display: inline-block;
+// 		}
+
+// 		input[type="checkbox"] + label,
+// 		input[type="radio"] + label {
+// 			display: inline;
+// 			margin-left: 50px;
+// 			// margin-#{$default-float}: $form-spacing * .5;
+// 			// margin-#{$opposite-direction}: $form-spacing;
+// 			// margin-bottom: 0;
+// 			// vertical-align: baseline;
+// 		}
+
+// 		// RADIO BUTTONS, ungrouped
+// 		.radioItem {
+// 			margin-right: rem-calc(18);
+
+// 			.radioButton {
+// 				margin: 0.5em .75em .5em 1em;
+// 			}
+			
+// 		}
+
+// 		&#commentcontentItem { // Let's not stripe the blog comment form -- it looks wonky with just two fields.
+// 			background: $lc-white;
+
+// 			&:nth-child(even) {
+// 			 	background: none !important;
+
+// 				&.error {
+// 					background: #FFF !important;
+// 				}
+// 			}
+// 		}
+// 	}
+// }
+
