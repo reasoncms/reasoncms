@@ -670,7 +670,7 @@ class DirectoryModule extends DefaultMinisiteModule {
                         break;
                 }
             }
-            echo '<div id="directory" title>';
+            echo '<div class="directoryEntry" title>';
             // if there is a picture, show it
             $file_ending = 'directory_photos/'.$data['uid'][0].'.jpg';
             $photo_file = PHOTOSTOCK.$file_ending;

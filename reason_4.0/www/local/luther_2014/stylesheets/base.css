@@ -1529,7 +1529,7 @@ ul.off-canvas-list li a {
 /* 4. FONT AWESOME
  *************************************/
 /* line 4, scss/font-awesome/_core.scss */
-.fa, #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .jump a:before, #minisite .continueReading a:after, #minisite .feedLink .feedInfo a:before, div.assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a[href]:before, #childrenAndGrandchildren li ul .childDesc:before, .directoryHead ul a:after, .searchOptions.openOptions:after, .searchOptions.closedOptions:after, #directory .directoryContact li:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
+.fa, #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .jump a:before, #minisite .continueReading a:after, #minisite .feedLink .feedInfo a:before, div.assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a[href]:before, #childrenAndGrandchildren li ul .childDesc:before, .directoryHead ul a:after, .searchOptions.openOptions:after, .searchOptions.closedOptions:after, .directoryEntry .directoryContact li:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
 #calendar .eventDetails .eventUrl:before,
 #calendar .eventDetails .calendarExport:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
@@ -1603,7 +1603,7 @@ ul.off-canvas-list li a {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle .screenreader, #directory .directoryContact li strong, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle .screenreader, .directoryEntry .directoryContact li strong, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -3890,7 +3890,7 @@ body #wrapper #post-footer a {
 }
 
 /* line 4, scss/font-awesome/_core.scss */
-.fa, #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .jump a:before, #minisite .continueReading a:after, #minisite .feedLink .feedInfo a:before, div.assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a[href]:before, #childrenAndGrandchildren li ul .childDesc:before, .directoryHead ul a:after, .searchOptions.openOptions:after, .searchOptions.closedOptions:after, #directory .directoryContact li:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
+.fa, #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .jump a:before, #minisite .continueReading a:after, #minisite .feedLink .feedInfo a:before, div.assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a[href]:before, #childrenAndGrandchildren li ul .childDesc:before, .directoryHead ul a:after, .searchOptions.openOptions:after, .searchOptions.closedOptions:after, .directoryEntry .directoryContact li:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
 #calendar .eventDetails .eventUrl:before,
 #calendar .eventDetails .calendarExport:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
@@ -3962,7 +3962,7 @@ body #wrapper #post-footer a {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle .screenreader, #directory .directoryContact li strong, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle .screenreader, .directoryEntry .directoryContact li strong, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -4887,59 +4887,64 @@ hr.horizontal-rule-basic {
   padding-left: 0.1875rem;
 }
 
+/* line 66, scss/modules/_directory.scss */
+.directoryEntry {
+  min-height: 200px;
+}
 @media only screen and (min-width: 40.063em) {
   /* line 68, scss/modules/_directory.scss */
-  #directory .directoryName,
-  #directory .directoryInfo {
+  .directoryEntry .directoryName,
+  .directoryEntry .directoryInfo {
     margin-left: 12.5rem !important;
   }
 }
-/* line 76, scss/modules/_directory.scss */
-#directory figure {
+/* line 77, scss/modules/_directory.scss */
+.directoryEntry figure {
   width: 25%;
   margin: 0 0 1.5rem 1.5rem;
   float: right;
+  margin-top: 7px;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 76, scss/modules/_directory.scss */
-  #directory figure {
+  /* line 77, scss/modules/_directory.scss */
+  .directoryEntry figure {
     float: left;
     width: 9.375rem;
-    margin: 0 1.5rem 1.5rem 0;
+    margin: 7px 1.5rem 1.5rem 0;
   }
 }
-/* line 89, scss/modules/_directory.scss */
-#directory figure img {
+/* line 91, scss/modules/_directory.scss */
+.directoryEntry figure img {
   width: 100%;
 }
-/* line 94, scss/modules/_directory.scss */
-#directory .directoryName {
+/* line 96, scss/modules/_directory.scss */
+.directoryEntry .directoryName {
   margin: 0;
   font-size: 1.6875rem;
   font-weight: 400;
 }
-/* line 100, scss/modules/_directory.scss */
-#directory .directoryTitle {
+/* line 102, scss/modules/_directory.scss */
+.directoryEntry .directoryTitle {
   font-size: 1.125rem;
   margin-bottom: 0px;
 }
-/* line 106, scss/modules/_directory.scss */
-#directory .directoryInfo h3.directoryTitle:last-of-type {
+/* line 108, scss/modules/_directory.scss */
+.directoryEntry .directoryInfo h3.directoryTitle:last-of-type {
   margin-bottom: 20px;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 111, scss/modules/_directory.scss */
-  #directory .directoryInfo h3.directoryTitle:last-of-type {
+  /* line 113, scss/modules/_directory.scss */
+  .directoryEntry .directoryInfo h3.directoryTitle:last-of-type {
     margin-bottom: 0px;
   }
 }
-/* line 117, scss/modules/_directory.scss */
-#directory .directoryContact {
+/* line 119, scss/modules/_directory.scss */
+.directoryEntry .directoryContact {
   margin-top: 1.42857rem;
   margin-left: 1.25rem;
 }
-/* line 121, scss/modules/_directory.scss */
-#directory .directoryContact li span.attribute {
+/* line 123, scss/modules/_directory.scss */
+.directoryEntry .directoryContact li span.attribute {
   position: static;
   max-width: 95%;
   min-width: 51%;
@@ -4948,19 +4953,19 @@ hr.horizontal-rule-basic {
   vertical-align: top;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 121, scss/modules/_directory.scss */
-  #directory .directoryContact li span.attribute {
+  /* line 123, scss/modules/_directory.scss */
+  .directoryEntry .directoryContact li span.attribute {
     min-width: 0%;
     max-width: 175px;
     width: 36%;
   }
 }
-/* line 135, scss/modules/_directory.scss */
-#directory .directoryContact li span.attribute strong {
+/* line 137, scss/modules/_directory.scss */
+.directoryEntry .directoryContact li span.attribute strong {
   position: static;
 }
-/* line 140, scss/modules/_directory.scss */
-#directory .directoryContact span.attrValue {
+/* line 142, scss/modules/_directory.scss */
+.directoryEntry .directoryContact span.attrValue {
   display: inline-block;
   max-width: 95%;
   min-width: 51%;
@@ -4968,26 +4973,26 @@ hr.horizontal-rule-basic {
   margin-left: 0px;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 140, scss/modules/_directory.scss */
-  #directory .directoryContact span.attrValue {
+  /* line 142, scss/modules/_directory.scss */
+  .directoryEntry .directoryContact span.attrValue {
     min-width: 0%;
     width: 62%;
     margin-left: 2px;
   }
 }
-/* line 154, scss/modules/_directory.scss */
-#directory .directoryContact span.multipleAttrValues {
+/* line 156, scss/modules/_directory.scss */
+.directoryEntry .directoryContact span.multipleAttrValues {
   display: inline-block;
   margin: 0px;
   width: 100%;
 }
-/* line 164, scss/modules/_directory.scss */
-#directory .directoryContact li {
+/* line 166, scss/modules/_directory.scss */
+.directoryEntry .directoryContact li {
   margin-left: 2.5rem;
   vertical-align: top;
 }
-/* line 172, scss/modules/_directory.scss */
-#directory .directoryContact li:before {
+/* line 174, scss/modules/_directory.scss */
+.directoryEntry .directoryContact li:before {
   width: 2rem;
   margin-left: -2.25rem;
   text-align: center;
@@ -4995,68 +5000,68 @@ hr.horizontal-rule-basic {
   position: relative;
   top: 5px;
 }
-/* line 185, scss/modules/_directory.scss */
-#directory .directoryContact .directoryOffice:before {
+/* line 187, scss/modules/_directory.scss */
+.directoryEntry .directoryContact .directoryOffice:before {
   content: "\f041";
 }
-/* line 191, scss/modules/_directory.scss */
-#directory .directoryContact .directoryPhone:before {
+/* line 193, scss/modules/_directory.scss */
+.directoryEntry .directoryContact .directoryPhone:before {
   content: "\f095";
 }
-/* line 197, scss/modules/_directory.scss */
-#directory .directoryContact .directoryEmail:before {
+/* line 199, scss/modules/_directory.scss */
+.directoryEntry .directoryContact .directoryEmail:before {
   content: "\f1fa";
 }
-/* line 203, scss/modules/_directory.scss */
-#directory .directoryContact .directoryStudentResidence:before {
+/* line 205, scss/modules/_directory.scss */
+.directoryEntry .directoryContact .directoryStudentResidence:before {
   content: "\f1ad";
 }
-/* line 209, scss/modules/_directory.scss */
-#directory .directoryContact .directorySPO:before {
+/* line 211, scss/modules/_directory.scss */
+.directoryEntry .directoryContact .directorySPO:before {
   content: "\f0e0";
 }
-/* line 215, scss/modules/_directory.scss */
-#directory .directoryContact .directoryUsername:before {
+/* line 217, scss/modules/_directory.scss */
+.directoryEntry .directoryContact .directoryUsername:before {
   content: "\f007";
 }
-/* line 221, scss/modules/_directory.scss */
-#directory .directoryContact .directoryAffiliations:before {
+/* line 223, scss/modules/_directory.scss */
+.directoryEntry .directoryContact .directoryAffiliations:before {
   content: "\f0c0";
 }
-/* line 227, scss/modules/_directory.scss */
-#directory .directoryContact .directoryHomeAddress:before {
+/* line 229, scss/modules/_directory.scss */
+.directoryEntry .directoryContact .directoryHomeAddress:before {
   content: "\f015";
 }
-/* line 234, scss/modules/_directory.scss */
-#directory .directoryContact .directoryMobile:before {
+/* line 236, scss/modules/_directory.scss */
+.directoryEntry .directoryContact .directoryMobile:before {
   content: "\f10b";
 }
-/* line 240, scss/modules/_directory.scss */
-#directory .directoryContact .directoryBirthday:before {
+/* line 242, scss/modules/_directory.scss */
+.directoryEntry .directoryContact .directoryBirthday:before {
   content: "\f1fd";
 }
-/* line 246, scss/modules/_directory.scss */
-#directory .directoryContact .directoryLastUpdate:before {
+/* line 248, scss/modules/_directory.scss */
+.directoryEntry .directoryContact .directoryLastUpdate:before {
   content: "\f1da";
 }
-/* line 252, scss/modules/_directory.scss */
-#directory .directoryContact .directoryDepartment:before {
+/* line 254, scss/modules/_directory.scss */
+.directoryEntry .directoryContact .directoryDepartment:before {
   content: "\f19c";
 }
-/* line 258, scss/modules/_directory.scss */
-#directory .directoryContact .directoryAdvisor:before {
+/* line 260, scss/modules/_directory.scss */
+.directoryEntry .directoryContact .directoryAdvisor:before {
   content: "\f19d";
 }
-/* line 264, scss/modules/_directory.scss */
-#directory .directoryContact .directoryMinor:before {
+/* line 266, scss/modules/_directory.scss */
+.directoryEntry .directoryContact .directoryMinor:before {
   content: "\f02d";
 }
-/* line 270, scss/modules/_directory.scss */
-#directory .directoryContact .directoryTerms:before {
+/* line 272, scss/modules/_directory.scss */
+.directoryEntry .directoryContact .directoryTerms:before {
   content: "\f02d";
 }
-/* line 276, scss/modules/_directory.scss */
-#directory .directoryContact .directoryFacultySite:before {
+/* line 278, scss/modules/_directory.scss */
+.directoryEntry .directoryContact .directoryFacultySite:before {
   content: "\f109";
 }
 
@@ -6220,7 +6225,7 @@ hr.horizontal-rule-basic {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle .screenreader, #directory .directoryContact li strong, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle .screenreader, .directoryEntry .directoryContact li strong, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
