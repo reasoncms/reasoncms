@@ -863,6 +863,21 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'caption_flag' => true,
 		)
 	),
+	'top_image_with_image_slideshow' => array(
+		'post_main_head' => array(
+			'module' => 'image_sidebar',
+			'num_to_display' => 1,
+			'thumbnail_width' => 1200,
+			'thumbnail_height' => 575,
+			'thumbnail_crop' => 'fit',
+			'caption_flag' => false,
+		),
+		'main_post_2' => array(
+			'module' => 'luther_image_slideshow',
+			'num_to_skip'=> 1,
+		),
+		'pre_sidebar_2' => '',
+	),
 	'transcript_request' => array(
 		'main_post' => 'policy_related',
 		'main_post_2' => 'transcript_request/transcript_request',
