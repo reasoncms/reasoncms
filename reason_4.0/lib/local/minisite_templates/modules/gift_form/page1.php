@@ -1,4 +1,5 @@
 <?php
+include_once('designation_radio_group.php');
 ////////////////////////////////////////////////////////////////////////////////
 //
 //    Matt Ryan
@@ -18,10 +19,12 @@ class GiftPageOneForm extends FormStep
 	var $error;
 	
 	var $elements = array(
-		'gift_amount_header' => array(
-			'type' => 'comment',
-			'text' => '<h3>Gift Amount</h3>',
-		),
+        'gift_amount_header' => array(
+            'type' => 'comment',
+            'text' => '<h3>Gift Amount</h3>',
+        ),
+        // 'dddddd' => array(
+        //     'type'      => 'designations',
 		'gift_amount' => array(
 			'type' => 'money',
 			'display_name' => '',
@@ -44,13 +47,18 @@ class GiftPageOneForm extends FormStep
 		),
         'designation_header' => array(
          'type' => 'comment',
-         'text' => '<h3>Designation</h3><p><em>If you choose more than one designation, you may choose how to split the gift</em></p>',
+         'text' => '<h3>Designation</h3>',
         ),
-		'annual_fund' => array(
-			'type' => 'checkboxfirst',
-            'comments' => '(please use my gift where it is needed most)'
-		),
-        'annual_fund_amount' => 'money',
+        'split_designation' => array(
+            'type'          =>'checkboxfirst',
+            'display_name'  => 'I\'d like to split my gift',
+        ),
+        'designation' => 'text',
+		// 'annual_fund' => array(
+		// 	'type' => 'checkboxfirst',
+  //           'comments' => '(please use my gift where it is needed most)'
+		// ),
+        // 'annual_fund_amount' => 'money',
   //      'specific_fund' => array(
 		// 	'type' => 'checkboxfirst',
   //           'comments' => '(I have something specific in mind)',
@@ -61,36 +69,37 @@ class GiftPageOneForm extends FormStep
   //                          will be divided equally unless you indicate otherwise
   //                          in the comments section below.'
   //       ),
-        'norse_athletic_association' => array(
-        		'type' => 'checkboxfirst',
-        ),
-        'norse_athletic_association_details' => array(
-                'type' => 'select_no_sort',
-                'display_name' => '&nbsp;',
-                'options' => array(
-                    'General'                      => 'General',
-                    'Baseball'                     => 'Baseball',
-                    'Basketball (men)'             => 'Basketball (men)',
-                    'Basketball (women)'           => 'Basketball (women)',
-                    'Cross Country (men)'          => 'Cross Country (men)',
-                    'Cross Country (women)'        => 'Cross Country (women)',
-                    'Football'                     => 'Football',
-                    'Golf (men)'                   => 'Golf (men)', 
-                    'Golf (women)'                 => 'Golf (women)',
-                    'Soccer (men)'                 => 'Soccer (men)',
-                    'Soccer (women)'               => 'Soccer (women)',
-                    'Softball'                     => 'Softball',
-                    'Swimming & Diving (men)'      => 'Swimming & Diving (men)',
-                    'Swimming & Diving (women)'    => 'Swimming & Diving (women)',
-                    'Tennis (men)'                 => 'Tennis (men)',
-                    'Tennis (women)'               => 'Tennis (women)',
-                    'Track & Field (men)'          => 'Track & Field (men)',
-                    'Track & Field (women)'        => 'Track & Field (women)',
-                    'Volleyball'                   => 'Volleyball',
-                    'Wrestling'                    => 'Wrestling',
-                ),
-        ),
-        'norse_athletic_association_amount' => 'money',
+        // 'norse_athletic_association' => array(
+        // 		'type' => 'checkboxfirst',
+        // ),
+        'norse_athletic_association_details' => 'hidden',
+        // 'norse_athletic_association_details' => array(
+        //         'type' => 'select_no_sort',
+        //         'display_name' => '&nbsp;',
+        //         'options' => array(
+        //             'General'                      => 'General',
+        //             'Baseball'                     => 'Baseball',
+        //             'Basketball (men)'             => 'Basketball (men)',
+        //             'Basketball (women)'           => 'Basketball (women)',
+        //             'Cross Country (men)'          => 'Cross Country (men)',
+        //             'Cross Country (women)'        => 'Cross Country (women)',
+        //             'Football'                     => 'Football',
+        //             'Golf (men)'                   => 'Golf (men)', 
+        //             'Golf (women)'                 => 'Golf (women)',
+        //             'Soccer (men)'                 => 'Soccer (men)',
+        //             'Soccer (women)'               => 'Soccer (women)',
+        //             'Softball'                     => 'Softball',
+        //             'Swimming & Diving (men)'      => 'Swimming & Diving (men)',
+        //             'Swimming & Diving (women)'    => 'Swimming & Diving (women)',
+        //             'Tennis (men)'                 => 'Tennis (men)',
+        //             'Tennis (women)'               => 'Tennis (women)',
+        //             'Track & Field (men)'          => 'Track & Field (men)',
+        //             'Track & Field (women)'        => 'Track & Field (women)',
+        //             'Volleyball'                   => 'Volleyball',
+        //             'Wrestling'                    => 'Wrestling',
+        //         ),
+        // ),
+        // 'norse_athletic_association_amount' => 'money',
         // 'baseball_stadium' => array(
         // 		'type' => 'checkboxfirst',
         // ),
@@ -99,21 +108,17 @@ class GiftPageOneForm extends FormStep
         //         'type' => 'checkboxfirst',
         // ),
         // 'softball_stadium_amount' => 'money',
-        'scholarship_fund' => array(
-                'type' => 'checkboxfirst',
-                'comments' => 'general',
-        ),
-        'scholarship_fund_amount' => 'money',
-        'other' => 'checkboxfirst', 
-        'other_amount' => 'money',
-        'other_designation_details' => array(
-            'type' => 'text',
-            'display_name' => '&nbsp;',
-        ),
-        'comments_special_instructions' => array(
-                'type' => 'textarea',
-                'display_name' => 'Comments / Special Instructions',
-        ),
+        // 'scholarship_fund' => array(
+        //         'type' => 'checkboxfirst',
+        //         'comments' => 'general',
+        // ),
+        // 'scholarship_fund_amount' => 'money',
+        // 'other' => 'checkboxfirst', 
+        // 'other_amount' => 'money',
+        // 'other_designation_details' => array(
+        //     'type' => 'text',
+        //     'display_name' => '&nbsp;',
+        // ),
         'matching_gift_header' => array(
 			'type' => 'comment',
 			'text' => '<h3>Will your gift be matched by your employer?</h3>'
@@ -173,14 +178,17 @@ class GiftPageOneForm extends FormStep
 			'elements' =>  array( 'installment_start_date', 'installment_end_date' ),
 			'args' => array('use_element_labels' => true,'use_group_display_name' => false, 'rows' => array('','') ),
 		),
-        'annual_fund_group' => array('type' => 'inline',
-            'elements' => array('annual_fund', 'annual_fund_amount'),
-            'args' => array('use_element_labels' => false, 'use_group_display_name' => false)
-        ),
-        'norse_athletic_association_group' => array('type' => 'inline',
-            'elements' => array('norse_athletic_association', 'norse_athletic_association_amount'),
-            'args' => array('use_element_labels' => false, 'use_group_display_name' => false)
-        ),
+        // 'designation_group' => array('type' => 'inline',
+        //     'elements'  => array('designation' => 'norse_athletic_association_details'),
+        // ),
+        // 'annual_fund_group' => array('type' => 'inline',
+        //     'elements' => array('annual_fund', 'annual_fund_amount'),
+        //     'args' => array('use_element_labels' => false, 'use_group_display_name' => false)
+        // ),
+        // 'norse_athletic_association_group' => array('type' => 'inline',
+        //     'elements' => array('norse_athletic_association', 'norse_athletic_association_amount'),
+        //     'args' => array('use_element_labels' => false, 'use_group_display_name' => false)
+        // ),
         // 'baseball_group' => array('type' => 'inline',
         //     'elements' => array('baseball_stadium', 'baseball_stadium_amount'),
         //     'args' => array('use_element_labels' => false, 'use_group_display_name' => false)
@@ -189,47 +197,63 @@ class GiftPageOneForm extends FormStep
         //     'elements' => array('softball_stadium', 'softball_stadium_amount'),
         //     'args' => array('use_element_labels' => false, 'use_group_display_name' => false)
         // ),
-        'scholarship_group' => array('type' => 'inline',
-            'elements' => array('scholarship_fund', 'scholarship_fund_amount'),
-            'args' => array('use_element_labels' => false, 'use_group_display_name' => false)
-			),
-        'other_group' => array('type' => 'inline',
-            'elements' => array('other', 'other_amount'),
-            'args' => array('use_element_labels' => false, 'use_group_display_name' => false)
-		),
+        // 'scholarship_group' => array('type' => 'inline',
+        //     'elements' => array('scholarship_fund', 'scholarship_fund_amount'),
+        //     'args' => array('use_element_labels' => false, 'use_group_display_name' => false)
+        // ),
+        // 'other_group' => array('type' => 'inline',
+        //     'elements' => array('other', 'other_amount'),
+        //     'args' => array('use_element_labels' => false, 'use_group_display_name' => false)
+        // ),
    	);
 
 	var $display_name = 'Gift Info';
 	var $error_header_text = 'Please check your form.';
 
+    function get_tooltip_text($label) {
+        $tool_label = strtolower($label);
+        $tool_label = str_replace(' ', '_',$tool_label);
+        $blurb_unique_name = "{$tool_label}_hover_blurb";
+        if ( $blurb_unique_name == reason_unique_name_exists($blurb_unique_name) ){
+            $blurb = get_text_blurb_content($blurb_unique_name);
+            return '<span data-tooltip aria-haspopup="true" class="has-tip tip-right" title="'.$blurb.'">'.$label.'</span>';
+        } else {
+            return $label;
+        }
+    }
+
 	// style up the form and add comments et al
 	function on_every_time()
 	{
+        // pray($this);
         $this->box_class = 'StackedBox';
+
+        if ($this->get_value('gift_amount') < '50' && $this->get_value('installment_type') == 'Onetime') {
+            $this->change_element_type('split_designation', 'hidden');
+        }
+
+        $opts = array(
+            'Annual Fund'  => $this->get_tooltip_text('Annual Fund'),
+            'Norse Athletic Association'  => $this->get_tooltip_text('Norse Athletic Association'),
+            'Scholarship Fund'  => $this->get_tooltip_text('Scholarship Fund'));
+
+        $this->change_element_type('designation', 'designations', array(
+            'options' => $opts, 'display_name' => '', 'other_label' => $this->get_tooltip_text('Other')));
+
+        // $this->add_element_group('inline', 'designation_group', array('designation', 'norse_athletic_association_details'));
 
         // if a text blurb with the unique name convention of giving_program_hover_blurb
         // exists, then replace the display name with a tooltip 
-        foreach ($this->elements as $element => $value) {
-            $blurb_unique_name = "{$element}_hover_blurb";
-            if ( $blurb_unique_name == reason_unique_name_exists($blurb_unique_name) ){
-                $blurb = get_text_blurb_content($blurb_unique_name);
-                $display_name = $this->get_display_name($element);
-                $this->set_element_properties($element, array('display_name' => '<span data-tooltip aria-haspopup="true" class="has-tip" title="'.$blurb.'">'.$display_name.'</span>'));
-            }
-        }
-        // this one is a special case, so we'll just call it explicitly
-        // the name of the element is actually, specific_fund. If we changed 
-        // it the element name to match the display name we'd have to do a lot of 
-        // db rewrites
-        // if (reason_unique_name_exists('designated_giving_hover_blurb')) {
-        //     $display_name = $this->get_display_name('specific_fund');
-        //     $this->set_display_name('specific_fund', '<span data-tooltip aria-haspopup="true" class="has-tip" title="'.get_text_blurb_content('designated_giving_hover_blurb').'">Designated Giving</span>');
+        // foreach ($this->elements as $element => $value) {
+        //     $blurb_unique_name = "{$element}_hover_blurb";
+        //     if ( $blurb_unique_name == reason_unique_name_exists($blurb_unique_name) ){
+        //         $blurb = get_text_blurb_content($blurb_unique_name);
+        //         $display_name = $this->get_display_name($element);
+        //         $this->set_element_properties($element, array('display_name' => '<span data-tooltip aria-haspopup="true" class="has-tip" title="'.$blurb.'">'.$display_name.'</span>'));
+        //     }
         // }
-        // same goes for scholarship fund
-        // if (reason_unique_name_exists('scholarship_fund_hover_blurb')) {
-        //     $display_name = $this->get_display_name('scholarship_fund');
-        //     $this->set_display_name('scholarship_fund', '<span data-tooltip aria-haspopup="true" class="has-tip" title="'.get_text_blurb_content('designated_giving_hover_blurb').'">Scholarship / Endowment</span>');
-        // }
+
+
 
 		$this->set_value('submitter_ip', $_SERVER[ 'REMOTE_ADDR' ]);
 
@@ -259,13 +283,13 @@ class GiftPageOneForm extends FormStep
 			$this->add_element_group( $info['type'], $name, $info['elements'], $info['args']);
 		}
 		$this->move_element('recur_group','after','installment_type');
-        $this->move_element('annual_fund_group', 'after', 'designation_header');
-        $this->move_element('norse_athletic_association_group', 'after', 'annual_fund_group');
+        // $this->move_element('annual_fund_group', 'after', 'designation_header');
+        // $this->move_element('norse_athletic_association_group', 'after', 'annual_fund_group');
         // $this->move_element('baseball_group', 'after', 'norse_athletic_association_group');
         // $this->move_element('softball_group', 'after', 'baseball_group');
-        $this->move_element('scholarship_group', 'after', 'norse_athletic_association_group');
-        $this->move_element('other_group', 'after', 'scholarship_group');
-        $this->move_element('norse_athletic_association_details', 'after', 'norse_athletic_association_group');
+        // $this->move_element('scholarship_group', 'after', 'norse_athletic_association_group');
+        // $this->move_element('other_group', 'after', 'scholarship_group');
+        // $this->move_element('norse_athletic_association_details', 'after', 'norse_athletic_association_group');
 	}
 
 	function pre_show_form()
