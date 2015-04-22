@@ -476,6 +476,11 @@ form {
 	}
 }
 
+//Remove Spacing above forms in contentPost section
+.contentPost #form {
+	margin-top: $column-gutter * -1;
+}
+
 //Credit card forms
 #creditcardtypeiconItem{
 	.formCCType{

@@ -7089,33 +7089,38 @@ form input[type="submit"]:active {
   text-decoration: underline;
 }
 
-/* line 481, scss/modules/_form.scss */
+/* line 480, scss/modules/_form.scss */
+.contentPost #form {
+  margin-top: -2.5rem;
+}
+
+/* line 486, scss/modules/_form.scss */
 #creditcardtypeiconItem .formCCType {
   font-size: 35px;
   margin-right: 5px;
 }
-/* line 485, scss/modules/_form.scss */
+/* line 490, scss/modules/_form.scss */
 #creditcardtypeiconItem .formCCType.nonSelectedCCType {
   color: #C9C9C9;
 }
-/* line 490, scss/modules/_form.scss */
+/* line 495, scss/modules/_form.scss */
 #creditcardtypeiconItem .fa-cc-visa.selectedCCType {
   color: #273990;
 }
-/* line 493, scss/modules/_form.scss */
+/* line 498, scss/modules/_form.scss */
 #creditcardtypeiconItem .fa-cc-mastercard.selectedCCType {
   color: #EC2C20;
 }
-/* line 497, scss/modules/_form.scss */
+/* line 502, scss/modules/_form.scss */
 #creditcardtypeiconItem .fa-cc-amex.selectedCCType {
   color: #0871BC;
 }
-/* line 500, scss/modules/_form.scss */
+/* line 505, scss/modules/_form.scss */
 #creditcardtypeiconItem .fa-cc-discover.selectedCCType {
   color: #FF6600;
 }
 
-/* line 505, scss/modules/_form.scss */
+/* line 510, scss/modules/_form.scss */
 #creditcardtypeItem {
   display: none;
 }
