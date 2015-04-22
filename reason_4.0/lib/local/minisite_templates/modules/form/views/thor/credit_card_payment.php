@@ -94,6 +94,10 @@ class CreditCardThorForm extends DefaultThorForm
 			'end' => 2020,
 			'display_name' => 'Expiration Year',
 		),
+		'credit_card_security_code' => array(
+			'type' => 'text',
+			'size' => 4,
+		),
 		'credit_card_name' => array(
 			'type' => 'text',
 			'display_name' => 'Name as it appears on card',
@@ -141,12 +145,12 @@ class CreditCardThorForm extends DefaultThorForm
 		'credit_card_number',
 		'credit_card_expiration_month',
 		'credit_card_expiration_year',
+		'credit_card_security_code',
 		'credit_card_name',
 		'billing_street_address',
 		'billing_city',
 		'billing_zip',
 		'billing_state_province',
-
 
 	);
 
@@ -368,6 +372,7 @@ class CreditCardThorForm extends DefaultThorForm
 				$payment_amount,
 				$this->get_value('credit_card_number'),
 				$expiration_mmyy,
+                $this->get_value('credit_card_security_code'),
 				$this->get_value($this->revenue_budget_number),
 				$this->get_value('credit_card_name'),
 				$this->get_value($this->expense_budget_number),

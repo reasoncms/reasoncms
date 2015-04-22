@@ -52,7 +52,12 @@ class DorianJHCampsThreeForm extends FormStep
             'display_name' => 'Expiration Month',
         ),
         'credit_card_expiration_year' => 'text',
-        'credit_card_name' => array(
+		'credit_card_security_code' => array(
+			'type' => 'text',
+			'size' => 4,
+			'form_comment' => "hello",
+		),
+		'credit_card_name' => array(
             'type' => 'text',
             'display_name' => 'Name as it appears on card',
             'size'=>35,
@@ -103,6 +108,7 @@ class DorianJHCampsThreeForm extends FormStep
         'credit_card_number',
         'credit_card_expiration_month',
         'credit_card_expiration_year',
+    	'credit_card_security_code',
         'credit_card_name',
         'billing_address',
     );
@@ -119,6 +125,7 @@ class DorianJHCampsThreeForm extends FormStep
         //Set expiration years
         $cur_year = date('Y');
         $this->change_element_type('credit_card_expiration_year', 'numrange', array('start' => $year, 'end' => $year+10, 'display_name' => 'Expiration Year'));
+        $this->set_comments('credit_card_security_code', form_comment('The card security code is located on the back of MasterCard, Visa and Discover credit or debit cards and is typically a separate group of 3 digits to the right of the signature strip. On American Express cards, the card security code is a printed, not embossed, group of four digits on the front towards the right.'));
         // calculate the total_cost of the camp by adding lesson_cost (if present) to the camp_cost
         $camp_cost = 486;
         $per_lesson_cost = 39;
@@ -311,6 +318,7 @@ class DorianJHCampsThreeForm extends FormStep
                 $this->get_value('payment_amount'),
                 $this->get_value('credit_card_number'),
                 $expiration_mmyy,
+            	$this->get_value('credit_card_security_code'),
                 $this->revenue_budget_number,
                 $this->get_value('credit_card_name'),
                 $this->expense_budget_number,
