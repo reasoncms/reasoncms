@@ -61,7 +61,7 @@
 			ksort( $this->alpha );
 
 			echo '<div id="atoz">'."\n";
-			echo '<p class="alpha"><span class="label">Jump to:</span> ';
+			echo '<p class="alpha"><span class="jumpTo label">Jump to:</span> ';
 			foreach($this->alpha as $keyletter => $keywords )
 			{
 				echo '<a href="#'.strtolower($keyletter).'">'.$keyletter.'</a> ';
@@ -71,7 +71,7 @@
 			foreach( $this->alpha as $keyletter => $keywords )
 			{
 				ksort( $keywords );
-				echo "\t".'<li><a name="'.strtolower($keyletter).'"></a>'.$keyletter.'<ul>'."\n";
+				echo "\t".'<li><a name="'.strtolower($keyletter).'"></a><span class="letter">'.$keyletter.'</span><ul>'."\n";
 				foreach( $keywords as $word => $sites )
 				{
 					asort( $sites );

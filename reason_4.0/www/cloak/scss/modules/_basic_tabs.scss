@@ -1,0 +1,51 @@
+// Basic Tabs Module Styles
+// Cloak, v1
+
+// Basic Tabs in Reason is distinct from Foundation's Tabs (http://foundation.zurb.com/docs/components/tabs.html)
+// Currently, Foundation doesn't include a tab mixin, but we've used Foundation's Tab variables from _settings.scss.
+// This allows for easy customization and for both widgets to look similar (in case you need to use both).
+	
+.basicTabs {
+	@include clearfix;
+	margin-bottom: 0 !important;
+	margin-left: 0;
+
+	li {
+		position: relative;
+		margin-bottom: 0 !important;
+		list-style: none;
+		float: left;
+		
+		a,
+		strong {
+			outline: none;
+			display: block;
+			background: $tabs-navigation-bg-color;
+			color: $tabs-navigation-font-color;
+			padding: $tabs-navigation-padding/2 $tabs-navigation-padding;
+			font-family: $tabs-navigation-font-family;
+			font-size: $tabs-navigation-font-size;
+			border: 1px solid $iron;
+			border-radius: $global-radius;
+			margin: 0 rem-calc(6) rem-calc(6) 0 !important;
+
+			@media #{$large-up} {
+				padding: $tabs-navigation-padding $tabs-navigation-padding * 2 !important;
+				border-bottom: none;
+				border-radius: $global-radius $global-radius 0 0;
+				margin-bottom: 0;
+			}
+			
+			&:hover {
+				background: {
+					color: $tabs-navigation-hover-bg-color;
+				}
+			}
+		}
+
+		&.current strong {
+			background: $tabs-navigation-active-bg-color;
+			color: $tabs-navigation-active-font-color;
+		}
+	}
+}

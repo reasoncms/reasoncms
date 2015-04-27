@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package reason
  * @subpackage content_managers
@@ -17,7 +18,6 @@
 	 * Register content manager with Reason
 	 */
 	$GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'ImageManager';
-
 	/**
 	 * A content manager for images
 	 */
@@ -28,8 +28,11 @@
 		var $thumbnail_width = REASON_STANDARD_MAX_THUMBNAIL_WIDTH;
 		var $thumbnail_height = REASON_STANDARD_MAX_THUMBNAIL_HEIGHT;
 
-		var $min_width = 0;
-		var $min_height = 0;
+		/* 
+		 *   Set the minimum allowable size of uploaded image (found in reason_settings.php) 
+		 */
+		var $min_width = REASON_STANDARD_MIN_IMAGE_WIDTH;
+		var $min_height = REASON_STANDARD_MIN_IMAGE_HEIGHT;
 		
 		// for image conversion
 		var $max_width = REASON_STANDARD_MAX_IMAGE_WIDTH;
@@ -93,7 +96,7 @@
 			$image->get_head_items($this->head_items);
 			$this->add_element('default_thumbnail', 'checkbox', 
 					array('description' => 'Generate thumbnail from full-size image'));
-		
+
 			$this->change_element_type( 'width','hidden' );
 			$this->change_element_type( 'height','hidden' );
 			$this->change_element_type( 'size','hidden' );
@@ -117,7 +120,10 @@
 			
 			if(!$this->get_value('datetime'))
 				$this->set_comments( 'datetime', form_comment('This may be automatically determined from the image file.') );
-			//determine if user should be able to upload full-sized images
+
+			/*
+			 *	determine if user should be able to upload full-sized images and have the option of ignoring the check for the minimum allowable size of the image.			    */
+
 			if( user_is_a($this->admin_page->user_id, id_of('admin_role'))
 				|| user_is_a($this->admin_page->user_id, id_of('power_user_role') ) )
 			{
@@ -131,6 +137,9 @@
 			{
 				$this->add_element( 'do_not_resize', 'checkbox', array('description' => 'Upload this image at full resolution &amp; size. (Use with caution &ndash; it is easy to accidentally upload an overly-large image.)'));
 				$this->set_display_name( 'do_not_resize', '&nbsp;');
+				$this->add_element( 'ignore_min_img_size_check', 'checkbox', array('description' => 'Ignore minimum size check and upload image of any size.'));
+				$this->set_display_name( 'ignore_min_img_size_check', '&nbsp;');
+
 
 			}
 
@@ -147,9 +156,9 @@
 			
 			
 			/* 
-			    Include javascript that handles hiding/showing various fields when appropriate,
-			    i.e. hide the thumbnail option before a main image has been uploaded etc. 
-			*/
+			 *   Include javascript that handles hiding/showing various fields when appropriate,
+			 *   i.e. hide the thumbnail option before a main image has been uploaded etc. 
+			 */
 			$this->head_items->add_javascript(JQUERY_URL, true);
 			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH .'content_managers/image_manager.js');
 			$this->head_items->add_stylesheet(REASON_HTTP_BASE_PATH .'css/reason_admin/content_managers/image.css');
@@ -185,6 +194,7 @@
 					'name',
 					'image',
 					'do_not_resize',
+					'ignore_min_img_size_check',
 					'thumbnail',
 					'default_thumbnail',
 					'author_description',
@@ -193,14 +203,15 @@
 					'author',
 					'keywords',
 					'datetime',
-					'original_image_format',
+					'original_image_format',	
 				)
 			);
 			
 		} // }}}
-		
-		// This method is useful for debugging uploads; it maintains the same
-		// upload session when you "Save & Continue Editing".
+		/*
+		 *   This method is useful for debugging uploads; it maintains the same
+		 *   upload session when you "Save & Continue Editing".
+		 */
 		/*
 		function get_continuation_state_parameters()
 		{
@@ -227,23 +238,41 @@
 		 * reason they have not yet been converted. Sets appropriate error upon failure to convert 
 		 * image. 
 		 */
-		function run_error_checks() // {{{
+		function run_error_checks()
 		{
 			$image = $this->get_element('image');
 			$thumbnail = $this->get_element('thumbnail');
+			$image_info = @getimagesize( $image->tmp_full_path );
 
-            // nothing uploaded 
+	    // nothing uploaded 
             if( empty($image->tmp_full_path) && empty($thumbnail->tmp_full_path) )
             {
                 return;
             }
-            // If the form is good, make sure the image is suitable.
-            // 1. If the image isn't in a web-friendly format try to convert it
-            // 2. Check that the image size meets minimum requirements
+            /* 
+	     *	If the ignore minimum size check option is not checked, go ahead and check that the dimensions of the image are not too small.
+	     */
+
+	   if(!(empty($image->tmp_full_path) && empty($thumbnail->tmp_full_path)))
+	   {
+		  if(!isset($_POST['ignore_min_img_size_check']))
+		  {
+			   if(!image_error_check($image_info, $this->min_width, $this->min_height))
+			   $this->set_error('image','Your image is not large enough; it needs to be at least 
+                            '.$this->min_width.' x '.$this->min_height.' pixels in size.');
+              
+		  }
+	   }
+            /*
+		 If the form is good, make sure the image is suitable.
+            	 1. If the image isn't in a web-friendly format try to convert it
+	   */
             if( !$this->_has_errors() )
             {
-                // Image should have already been converted (in receive.php) -- if not,
-                // convert them here
+                /*
+		 *	 Image should have already been converted (in receive.php) -- if not,
+                 *	 convert them here
+		 */
                 if ($extension = get_extension( $image->tmp_full_path ))
                 {
                     if (!in_array($extension, $this->image_types))
@@ -260,19 +289,15 @@
                     }
                 }
                 
-                if ($info = $this->get_image_specs($image->tmp_full_path))
-                {
-                    if ($info['width'] < $this->min_width && $info['height'] < $this->min_height)
-                        $this->set_error('image','Your image is not large enough; it needs to be at least 
-                            '.$this->min_width.'x'.$this->min_height.' pixels in size.');
-                }
-		    }
+
+
+	     }
 		    
-		    if( empty($image->tmp_full_path) AND empty( $image->existing_file ) )
-			{
-				$this->set_error( 'image', 'Please upload an image' );
-			}
-		} // }}}
+	     if( empty($image->tmp_full_path) AND empty( $image->existing_file ) )
+	     {
+	           $this->set_error( 'image', 'Please upload an image' );
+	     }
+	} 
 		
 		/**
 		 * Converts and resizes non web-friendly image (both original and standard) using image_funcs. 
@@ -321,9 +346,11 @@
 			}
 			else
 			{
-				// If converted image is too large, store it as an original and resize the standard.
-				// This may occur when a non-web compatible image is uploaded as a thumbnail, with JS off
-				// If an original already existed, don't overwrite it 
+				/*     
+				 *     If converted image is too large, store it as an original and resize the standard.
+				 *     This may occur when a non-web compatible image is uploaded as a thumbnail, with JS off
+				 *     If an original already existed, don't overwrite it 
+				 */
 				if( $image_info = $this->get_image_specs($image->tmp_full_path)	)
 				{
 					if( $image_info['width'] > $this->max_width || $image_info['height'] > $this->max_height )
@@ -403,8 +430,10 @@
 				$this->handle_custom_thumbnail($id, $thumbnail);
 			}
 			
-			// if default thumbnail is checked, or no thumbnail exists in database,
-			// create a thumbnail from main image
+			/*
+			*	 if default thumbnail is checked, or no thumbnail exists in database,
+			*	 create a thumbnail from main image
+			*/
 			$thumb_name = PHOTOSTOCK.reason_format_image_filename($id,
 				$this->get_value("thumbnail_image_type"), "thumbnail");
 			if( $this->get_value('default_thumbnail') || (!file_exists($thumb_name) && $this->auto_create_thumbnails) )
@@ -448,8 +477,10 @@
 			$this->set_value('width', $image_info['width'] );
 			$this->set_value('height', $image_info['height'] );
 			
-			// store old filename before possibly changing image_type
-			// in case we're changing an extension -- we'll delete the old file
+			/*
+			*	 store old filename before possibly changing image_type
+			*	 in case we're changing an extension -- we'll delete the old file
+			*/
 			$old_filename = PHOTOSTOCK . reason_get_image_filename($id);
 			
 			if(array_key_exists($image_info['image_type'],$this->image_types))
@@ -529,8 +560,10 @@
 					$this->set_value('datetime',$exif_data['DateTime'] );
 				}
 			}
-			// only set the width and height to the thumbnail size if a 
-			// width and height are not already set up
+			/*
+			*	only set the width and height to the thumbnail size if a 
+			*	width and height are not already set up
+			*/
 			if( !$this->get_value( 'width' ) AND !$this->get_value( 'height' ) )
 			{
 				$this->set_value('width', $image_info['width']);

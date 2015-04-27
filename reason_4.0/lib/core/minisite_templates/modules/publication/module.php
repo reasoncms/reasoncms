@@ -19,9 +19,9 @@ reason_include_once( 'classes/page_types.php' );
 reason_include_once( 'classes/inline_editing.php' );
 /**
 * A minisite module to handle publications, including blogs, issued newsletters, and newsletters.
-* 
+*
 * This module attempts to separate logic and markup as much as possible in order to maximize flexibility in markup;
-* the logic is handled by this class, while the markup is created by easily extensible markup generator classes.  
+* the logic is handled by this class, while the markup is created by easily extensible markup generator classes.
 *
 * @package reason
 * @subpackage minisite_modules
@@ -34,12 +34,12 @@ reason_include_once( 'classes/inline_editing.php' );
 * @todo Alter language from being blog-oriented to being publication-oriented.
 * @todo fix featured items/issues interaction
 * @todo improve mathod of removing featured items from other item lists so that specified number of items in section remains correct
-*/	
+*/
 class PublicationModule extends Generic3Module
 {
 ////////
 // VARIABLES
-////////	
+////////
 
 	//generic 3 variable overrides
 	var $query_string_frag = 'story';
@@ -51,16 +51,16 @@ class PublicationModule extends Generic3Module
 	var $make_current_page_link_in_nav_when_on_item = true;
 	var $back_link_text = 'Return to ';
 	var $feed_url;
-	
+
 	var $style_string = 'blog';
 	var $use_pagination = true;
 	var $no_items_text = 'This publication does not have any news items yet.';
 	var $date_format = 'F j, Y \a\t g:i a';		//will be replaced if 'date_format' field for publication is set
-	var $num_per_page = 12;	
+	var $num_per_page = 12;
 	var $max_num_items = '';
 	var $minimum_date_strtotime_format;
 	var $minimum_date;
-	
+
 	// Filter settings
 	var $use_filters = true;
 	var $filter_types = array(	'category'=>array(	'type'=>'category_type',
@@ -69,11 +69,11 @@ class PublicationModule extends Generic3Module
 							);
 	var $search_fields = array('entity.name','chunk.content','meta.keywords','meta.description','chunk.author','press_release.release_title');
 	var $search_field_size = 10;
-	
-	
+
+
 	//variables original to this module
 	var $publication;	//entity of the current publication
-	var $item;			//entity of the news item being viewed 
+	var $item;			//entity of the news item being viewed
 	var $user_netID; 	//current user's net_ID
 	var $session;		//reason session
 	var $additional_query_string_frags = array ('comment_posted', 'issue', 'section');
@@ -85,13 +85,13 @@ class PublicationModule extends Generic3Module
 	var $no_section_key = 'no_section';		//key to be used in the items_by_section array when there are no sections.
 	var $group_by_section = true;			//whether or not items should be grouped by section when displayed
 	var $show_module_title = false; // page title module generally handles this
-	
+
 	// related mode variables - page type configurable
 	var $related_mode = false;      // in related_mode, related publication items are aggregated
 	var $related_order = ''; 		// allows for keywords for custom order and special considerations for related items
 	var $related_title; // page type can provide specific title or keyword which will be used instead of the default
 	var $limit_by_page_categories = false; // by default page to category relationship is ignored - can be enabled in page type
-	
+
 	var $related_publications;
 	var $related_publications_links = array();
 	var $related_categories;
@@ -108,29 +108,29 @@ class PublicationModule extends Generic3Module
 	var $_unauthorized_message = NULL;
 	var $_items_by_section = array(); // a place to cache items organized by section
 	var $_blurbs_by_issue; // a place to cache blurbs organized by issue
-	var $_comment_group_helper; // The helper for the publication's comment group	
+	var $_comment_group_helper; // The helper for the publication's comment group
 	var $_comment_has_errors;
 	protected $_item_images = array();
 	protected $_item_media = array();
-		
-	/** 
-	* Stores the default class names and file names of the markup generator classes used by the module.  
+
+	/**
+	* Stores the default class names and file names of the markup generator classes used by the module.
 	* Format:  $markup_generator_type => array($classname, $filename)
 	* @var array
-	*/		
-	var $markup_generator_info = array( 'item' => array ('classname' => 'PublicationItemMarkupGenerator', 
+	*/
+	var $markup_generator_info = array( 'item' => array ('classname' => 'PublicationItemMarkupGenerator',
 														 'filename' => 'minisite_templates/modules/publication/item_markup_generators/default.php',
 														 //'settings' => array()
 														 ),
-										'list_item' => array ('classname' => 'PublicationListItemMarkupGenerator', 
+										'list_item' => array ('classname' => 'PublicationListItemMarkupGenerator',
 										                      'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/default.php',
 										                      //'settings' => array()
 										                      ),
-										'list' => array ('classname' => 'PublicationListMarkupGenerator', 
+										'list' => array ('classname' => 'PublicationListMarkupGenerator',
 										                 'filename' => 'minisite_templates/modules/publication/publication_list_markup_generators/default.php',
 										                 //'settings' => array()
 										                 ),
-										'featured_item' => array ('classname' => 'PublicationListItemMarkupGenerator', 
+										'featured_item' => array ('classname' => 'PublicationListItemMarkupGenerator',
 										                          'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/default.php',
 										                          ),
 										'issue_list' => array ('classname' => 'PublicationIssueListMarkupGenerator',
@@ -140,27 +140,27 @@ class PublicationModule extends Generic3Module
 															  'filename' => 'minisite_templates/modules/publication/persistent_markup/default.php',
 															  ),
 								   	   );
-								   	   
-	var $related_markup_generator_info = array( 'list_item' => array ('classname' => 'RelatedListItemMarkupGenerator', 
+
+	var $related_markup_generator_info = array( 'list_item' => array ('classname' => 'RelatedListItemMarkupGenerator',
 										                  'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/related_item.php',
 										         ),
-												'list' => array ('classname' => 'RelatedListMarkupGenerator', 
+												'list' => array ('classname' => 'RelatedListMarkupGenerator',
 										                 'filename' => 'minisite_templates/modules/publication/publication_list_markup_generators/related_list.php',
 										                 ),
-										        'featured_item' => array ('classname' => 'RelatedListItemMarkupGenerator', 
+										        'featured_item' => array ('classname' => 'RelatedListItemMarkupGenerator',
 										                          'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/related_item.php',
 										                          ),
-										        'persistent' => array ('classname' => 'EmptyMarkupGenerator', 
+										        'persistent' => array ('classname' => 'EmptyMarkupGenerator',
 										                          'filename' => 'minisite_templates/modules/publication/empty_markup_generator.php',
 										                          ),
 								   	   			);
 
-	/** 
+	/**
 	* Maps the names of variables needed by the markup generator classes to the name of the method that generates them.
 	* Same as {@link $item_specific_variables_to_pass}, but these methods cannot take any parameters.
 	* @var array
-	*/		    									
-	var $variables_to_pass = array (   'site' => 'get_site_entity', 
+	*/
+	var $variables_to_pass = array (   'site' => 'get_site_entity',
 									   'list_item_markup_strings' => 'get_list_item_markup_strings',
 									   'featured_item_markup_strings' => 'get_featured_item_markup_strings',
 									  //links
@@ -172,7 +172,7 @@ class PublicationModule extends Generic3Module
 									   'comment_group_helper' => 'get_comment_group_helper',
 									   'comment_moderation_state' => 'get_comment_moderation_state',
 									   //issues
-									   'current_issue' => 'get_current_issue', 
+									   'current_issue' => 'get_current_issue',
 									   'issues_by_date' => 'get_issues',
 									   'links_to_issues' => 'get_links_to_issues',
 									   'issue_blurbs' => 'get_current_issue_blurbs',
@@ -180,7 +180,7 @@ class PublicationModule extends Generic3Module
 									   'current_section' => 'get_current_section',
 									   'sections' => 'get_sections_issue_aware',
 									   'group_by_section' => 'use_group_by_section_view',
-									   'items_by_section' => 'get_items_by_section', 
+									   'items_by_section' => 'get_items_by_section',
 									   'links_to_sections' => 'get_links_to_sections',
 									   'view_all_items_in_section_link' => 'get_all_items_in_section_link',
 									   'links_to_current_publications' => 'get_links_to_current_publications',
@@ -197,13 +197,13 @@ class PublicationModule extends Generic3Module
 									   'use_filters' => 'get_use_filters_value',
 									   'filtering_markup' => 'get_filtering_markup',
 									);
-	
+
 	/**
 	* Maps the names of variables needed by the markup generator classes to the name of the method that generates them.
 	* Same as {@link variables_to_pass}, but these methods require a news item entity as a parameter.
 	* @var array
 	*/
-	var $item_specific_variables_to_pass = array (	 'item_comment_count' => 'count_comments', 
+	var $item_specific_variables_to_pass = array (	 'item_comment_count' => 'count_comments',
 													 'link_to_full_item' => 'get_link_to_full_item',
 													 'link_to_related_item' => 'get_link_to_related_item',
 													 'permalink' => 'construct_permalink',
@@ -224,10 +224,10 @@ class PublicationModule extends Generic3Module
 													 'previous_post' => 'get_next_post',
 													 'next_post' => 'get_previous_post',
 												);
-											   
+
 
 	//var $acceptable_params
-	
+
 var $noncanonical_request_keys = array(
 								'filters',
 								'search',
@@ -241,23 +241,23 @@ var $noncanonical_request_keys = array(
 
 ////////
 // INIT-RELATED METHODS
-////////	
+////////
 
 	/**
-	*	Extended from generic3 so that the generic3 init function is called on ONLY if there is actually 
-	*   a publication associated with the page.  We don't want any orphaned news items showing up.  
+	*	Extended from generic3 so that the generic3 init function is called on ONLY if there is actually
+	*   a publication associated with the page.  We don't want any orphaned news items showing up.
 	*/
-	function init( $args = array() ) 
+	function init( $args = array() )
 	{
 		$this->set_defaults_from_parameters($this->params);
 		$this->set_show_featured_items();
 		$this->set_minimum_date();
-	
+
 		if ($this->related_mode) $this->init_related( $args );
 		elseif (!empty($this->publication)) parent::init( $args );
 		else
 		{
-			//make sure that there's a publication associated with this page before we do anything else.  
+			//make sure that there's a publication associated with this page before we do anything else.
 			$pub_es = new entity_selector( $this->site_id );
 			$pub_es->description = 'Selecting publications for this page';
 			$pub_es->add_type( id_of('publication_type') );
@@ -279,13 +279,13 @@ var $noncanonical_request_keys = array(
 		{
 			$this->parent->add_stylesheet(REASON_HTTP_BASE_PATH.$this->css,'',true);
 		}
-		
+
 		if (!$this->related_mode)
 		{
 			// Register this module for inline editing
 			$inline_edit =& get_reason_inline_editing($this->page_id);
 			$inline_edit->register_module($this, $this->user_can_inline_edit());
-			
+
 			// Only load inline_editing javascript if inline editing is available for the module and active for the module
 			if ($inline_edit->available_for_module($this) && $inline_edit->active_for_module($this))
 			{
@@ -295,16 +295,16 @@ var $noncanonical_request_keys = array(
 			}
 		}
 	}
-	
+
 	function set_show_featured_items()
 	{
 		if (isset($this->params['show_featured_items'])) $this->show_featured_items = $this->params['show_featured_items']; // set from parameter if present
 		if (!isset($this->show_featured_items))
-		{	
+		{
 			$this->show_featured_items = ($this->related_mode) ? false : true;
 		}
 	}
-	
+
 	function set_minimum_date()
 	{
 		if (isset($this->params['minimum_date_strtotime_format']))
@@ -318,12 +318,12 @@ var $noncanonical_request_keys = array(
 			}
 			elseif (!$min_date || ($min_date == -1))
 			{
-				trigger_error('A minimum date value was not set as the value of minimum_date_strtime_format 
+				trigger_error('A minimum date value was not set as the value of minimum_date_strtime_format
 							  ('.$this->params['minimum_date_strtotime_format'].') is not a valid argument for strtotime.');
 			}
 			elseif ($min_date > $cur_timestamp)
 			{
-				trigger_error('A minimum date value was not set. The value of minimum_date_strtime_format 
+				trigger_error('A minimum date value was not set. The value of minimum_date_strtime_format
 							  ('.$this->params['minimum_date_strtotime_format'].') must reference a date in the past.');
 			}
 		}
@@ -341,13 +341,13 @@ var $noncanonical_request_keys = array(
 		if (!$this->use_pagination && empty($this->max_num_items)) $this->max_num_items = $this->num_per_page;
 		$this->style_string = 'relatedPub';
 		unset ($this->request[ $this->query_string_frag.'_id' ] );
-		
-		$publication_ids = (!empty($this->params['related_publication_unique_names'])) 
+
+		$publication_ids = (!empty($this->params['related_publication_unique_names']))
 						   ? $this->build_ids_from_unique_names($this->params['related_publication_unique_names'])
 						   : array();
-		
+
 		$pub_es = new entity_selector();
-		
+
 		$pub_es->description = 'Selecting publications for this page';
 		$pub_es->add_type( id_of('publication_type') );
 		$pub_es->enable_multivalue_results();
@@ -366,7 +366,7 @@ var $noncanonical_request_keys = array(
 			$pub_es->enable_multivalue_results();
 			$pub_es->limit_tables();
 			$pub_es->limit_fields();
-			$pub_es->add_right_relationship_field('page_to_publication', 'entity', 'id', 'page_id');	
+			$pub_es->add_right_relationship_field('page_to_publication', 'entity', 'id', 'page_id');
 			$publications = $pub_es->run_one();
 		}
 		if (!empty($publications)) // lets make sure the pages are live
@@ -377,10 +377,10 @@ var $noncanonical_request_keys = array(
 		if (!empty($publications))
 		{
 			$this->related_publications = $publications;
-			
+
 			if ($this->limit_by_page_categories)
 			{
-				$category_ids = (!empty($this->params['related_category_unique_names'])) 
+				$category_ids = (!empty($this->params['related_category_unique_names']))
 								? $this->build_ids_from_unique_names($this->params['related_category_unique_names'])
 								: array();
 				// grab categories in which to limit related news items
@@ -404,7 +404,7 @@ var $noncanonical_request_keys = array(
 			trigger_error('Publication module unable to find an active publication to display.');
 		}
 	}
-		
+
 	/**
 	 * Crawl through a set of entites and look at a related_id_field - this is needed because there is not a reliable way to
 	 * add an entity id through add_right_relationship_field or add_left_relationship_field in a manner that ensures the entity
@@ -429,7 +429,7 @@ var $noncanonical_request_keys = array(
 		$es->limit_fields();
 		$es->add_relation('entity.id IN (' . implode(",", $all_entity_ids) . ')');
 		$es->add_relation('entity.state != "Live"');
-		$result = $es->run_one("", "All");		
+		$result = $es->run_one("", "All");
 		if ($result) // we have non live entities that we need to filter out
 		{
 			$filtered_entities = array();
@@ -450,7 +450,7 @@ var $noncanonical_request_keys = array(
 		}
 		else return $entities;
 	}
-	
+
 	/**
 	 * Checks to make sure the page_id for a publication runs the publication module in a region and it is not set to related mode.
 	 * @param array publication entities with page_id populated
@@ -493,13 +493,13 @@ var $noncanonical_request_keys = array(
 		}
 		return $publications;
 	}
-	
+
 	/**
 	 * Build array of entities from an array of unique_names (or a string with one unique name)
 	 */
 	function build_ids_from_unique_names($unique_names)
 	{
-		$unique_names = (is_array($unique_names)) ? $unique_names : array($unique_names);	
+		$unique_names = (is_array($unique_names)) ? $unique_names : array($unique_names);
 		foreach($unique_names as $unique_name)
 		{
 			$id = id_of($unique_name);
@@ -507,7 +507,7 @@ var $noncanonical_request_keys = array(
 		}
 		return (isset($ids)) ? $ids : array();
 	}
-	
+
 	/**
 	 * Crumb for publication should use the release title and not the name of the item
 	 * @author Nathan White
@@ -531,16 +531,16 @@ var $noncanonical_request_keys = array(
 	{
 		// This is a slight hack to get publications to default to *not* limiting to the current site. This should allow publications to be displayed anywhere.
 		$this->base_params['limit_to_current_site'] = false;
-		
+
 		// all params that could be provided in page_types
-		$potential_params = array('use_filters', 'use_pagination', 'num_per_page', 'max_num_items', 'minimum_date_strtotime_format', 'show_login_link', 
+		$potential_params = array('use_filters', 'use_pagination', 'num_per_page', 'max_num_items', 'minimum_date_strtotime_format', 'show_login_link',
 		      					  'show_module_title', 'related_mode', 'related_order', 'date_format', 'related_title',
 		      					  'limit_by_page_categories', 'related_publication_unique_names', 'related_category_unique_names','css',
 		      					  'show_featured_items','jump_to_item_if_only_one_result','authorization','comment_form_file_location','post_form_file_location',);
-		$markup_params = 	array('markup_generator_info' => $this->markup_generator_info, 
+		$markup_params = 	array('markup_generator_info' => $this->markup_generator_info,
 							      'item_specific_variables_to_pass' => $this->item_specific_variables_to_pass,
 							      'variables_to_pass' => $this->variables_to_pass);
-		
+
 		$params_to_add = array_diff_assoc_recursive($params, $markup_params + $potential_params);
 		if (!empty($params_to_add))
 		{
@@ -577,15 +577,15 @@ var $noncanonical_request_keys = array(
 			}
 		}
 	}
-	
+
 	//extended generic3 hook
-	function pre_es_additional_init_actions() 
+	function pre_es_additional_init_actions()
 	{
 		if ($this->related_mode) $this->related_pre_es_additional_init_actions();
 		else
 		{
 			$this->module_title = ($this->show_module_title) ? $this->publication->get_value('name') : '';
-			
+
 			// allow parameter override
 			if (!empty($this->params['num_per_page']))
 			{
@@ -595,11 +595,11 @@ var $noncanonical_request_keys = array(
 			{
 				$this->num_per_page = $this->publication->get_value('posts_per_page');
 			}
-			
+
 			$date_format = $this->publication->get_value('date_format');
 			if(!empty($date_format))
 				$this->date_format = $this->publication->get_value('date_format');
-					
+
 			$publication_type = $this->publication->get_value('publication_type');
 			$publication_descriptor = 'publication';
 			$news_item_descriptor = 'news items';
@@ -625,26 +625,26 @@ var $noncanonical_request_keys = array(
 			{
 				$publication_descriptor = 'issue';
 			}
-			
+
 			if(!empty($this->request['search']))
 			{
 				$news_item_descriptor .= ' that match the search phrase "'.reason_htmlspecialchars($this->request['search']).'"';
 			}
-		
+
 			$this->no_items_text = 'This '.$publication_descriptor.' does not have any '.$news_item_descriptor.'.';
-				
+
 			$this->back_link_text = $this->back_link_text.$this->publication->get_value('name');
-			
-			if($this->make_current_page_link_in_nav_when_on_item 
+
+			if($this->make_current_page_link_in_nav_when_on_item
 				&&	(!empty($this->request[$this->query_string_frag.'_id']) || !empty($this->request['section_id']) || !empty($this->request['issue_id']) ) )
 			{
 				$this->parent->pages->make_current_page_a_link();
 			}
-			
+
 			$this->_handle_authorization();
 		}
 	}
-	
+
 	function _handle_authorization()
 	{
 		if(!empty($this->params['authorization']))
@@ -659,7 +659,7 @@ var $noncanonical_request_keys = array(
 			{
 				$netid = $this->get_user_netid();
 				$item_id = !empty($this->request[ $this->query_string_frag.'_id' ]) ? $this->request[ $this->query_string_frag.'_id' ] : NULL;
-				
+
 				$auth = new $GLOBALS[ '_reason_publication_auth_classes' ][$this->params['authorization']]();
 				$auth->set_username($netid);
 				$auth->set_item_id($item_id);
@@ -702,7 +702,7 @@ var $noncanonical_request_keys = array(
 			$this->_add_open_graph_tags_for_item();
 		}
 	}
-	
+
 	/**
 	 * Add basic metadata using the open graph protocol (http://ogp.me/).
 	 *
@@ -753,12 +753,12 @@ var $noncanonical_request_keys = array(
 				{
 					$head_items->add_head_item('meta',array( 'property' => 'og:image', 'content' => 'http://'.$_SERVER['HTTP_HOST'].$image_url));
 					if (HTTPS_AVAILABLE) $head_items->add_head_item('meta',array( 'property' => 'og:image:secure_url', 'content' => 'https://'.$_SERVER['HTTP_HOST'].$image_url));
-				}	
+				}
 			}
 			if (!empty($site_name)) $head_items->add_head_item('meta',array( 'property' => 'og:site_name', 'content' => $site_name));
 		}
 	}
-	
+
 	protected function _init_markup_generators()
 	{
 		/* if(!$this->_ok_to_show)
@@ -770,7 +770,7 @@ var $noncanonical_request_keys = array(
 		{
 			$persistent_markup_generator = $this->set_up_generator_of_type('persistent');
 			$persistent_markup_generator->add_head_items($head_items);
-			
+
 			if ($this->issue_list_should_be_displayed())
 			{
 				$issue_markup_generator = $this->set_up_generator_of_type('issue_list');
@@ -802,15 +802,15 @@ var $noncanonical_request_keys = array(
 		else
 		{
 			$item = new entity($this->current_item_id);
-			
+
 			$persistent_markup_generator = $this->set_up_generator_of_type('persistent', $item);
 			$persistent_markup_generator->add_head_items($head_items);
-			
+
 			$item_markup_generator = $this->set_up_generator_of_type('item', $item);
 			$item_markup_generator->add_head_items($head_items);
 		}
 	}
-	
+
 	/**
 	 * Makes sure the section id is okay - intelligently redirects if not.
 	 *
@@ -825,7 +825,7 @@ var $noncanonical_request_keys = array(
 	 * - if the section id is not valid, and multiple section ids (or none) exist, redirect without the section
 	 *
 	 * @return void
-	 */	
+	 */
 	function init_section()
 	{
 		$requested_section = (!empty($this->request['section_id'])) ? $this->request['section_id'] : false;
@@ -880,7 +880,7 @@ var $noncanonical_request_keys = array(
 			}
 		}
 	}
-	
+
 	/**
 	 * init_issue_for_item checks the item and any issue id it was passed - if an issue does not exist or is
 	 * invalid, the user is redirected to a url with the most recent valid issue for the item
@@ -890,7 +890,7 @@ var $noncanonical_request_keys = array(
 		$user_issue_keys = $all_issue_keys = array();
 		$requested_issue = (!empty($this->request['issue_id'])) ? $this->request['issue_id'] : false;
 		$requested_section = (!empty($this->request['section_id'])) ? $this->request['section_id'] : false;
-		
+
 		// if we have an item
 		if ($this->current_item_id)
 		{
@@ -901,7 +901,7 @@ var $noncanonical_request_keys = array(
 		}
 		else
 		{
-			if ($requested_issue) 
+			if ($requested_issue)
 			{
 				$all_issues =& $this->get_all_issues();
 				$user_issues =& $this->get_issues();
@@ -918,7 +918,7 @@ var $noncanonical_request_keys = array(
 					return true;
 				}
 			}
-		}	
+		}
 		if ((!empty($user_issue_keys) || !empty($all_issue_keys))) // item is in an issue
 		{
 			if (!empty($user_issue_keys) && in_array($requested_issue, $user_issue_keys))
@@ -955,7 +955,7 @@ var $noncanonical_request_keys = array(
 			}
 		}
 	}
-	
+
 	function _should_restrict_to_current_issue()
 	{
 		if(empty($this->current_item_id) && empty($this->request['section_id'])&& empty($this->request['issue_id']) && empty($this->request['search']) && empty($this->request['filter1']) && empty($this->request['filter2']) && empty($this->request['filter3']))
@@ -963,7 +963,7 @@ var $noncanonical_request_keys = array(
 		else
 			return false;
 	}
-	
+
 	function _get_issue_css($issue_id)
 	{
 		$css = array();
@@ -989,7 +989,7 @@ var $noncanonical_request_keys = array(
 		}
 		return $css;
 	}
-	
+
 	function _add_css_urls_to_head($css)
 	{
 		foreach($css as $url)
@@ -997,7 +997,7 @@ var $noncanonical_request_keys = array(
 			$this->parent->add_stylesheet( $url );
 		}
 	}
-	
+
 	/**
 	 * pre_es_additional_init_actions when module is in related mode
 	 * @author Nathan White
@@ -1018,9 +1018,9 @@ var $noncanonical_request_keys = array(
 			$this->module_title = $pub->get_value('name');
 		}
 		else $this->module_title = 'Related posts';
-		
+
 		// use date format for publication if there is only one and the date_format was not set by the page type
-		
+
 		if (!isset($this->params['date_format']) && (count($this->related_publications) == 1) )
 		{
 			$pub = current($this->related_publications);
@@ -1028,7 +1028,7 @@ var $noncanonical_request_keys = array(
 			if(!empty($date_format)) $this->date_format = $date_format;
 		}
 	}
-	
+
 	/**
 	 * Tweaks to do_pagination
 	 *
@@ -1048,8 +1048,8 @@ var $noncanonical_request_keys = array(
 			parent::do_pagination();
 		}
 	}
-	
-	/**	
+
+	/**
 	* Adds any query string fragments from the publication module to the cleanup_rules.
 	* @return array $cleanup_rules
 	*/
@@ -1068,7 +1068,7 @@ var $noncanonical_request_keys = array(
 	{
 		$this->type = id_of('news');
 	}
-	
+
 	//overloaded generic3 hook ... we've added the news_to_blog relation to the es,  issue_id & section_id relations when appropriate
 	function alter_es() // {{{
 	{
@@ -1089,7 +1089,7 @@ var $noncanonical_request_keys = array(
 					{
 						// limit to shown issues in publication here so that people can't discover unpublished stories through search, etc.
 						$this->es->add_left_relationship(array_keys($issues), relationship_id_of('news_to_issue') );
-						
+
 					}
 				}
 				else
@@ -1106,14 +1106,14 @@ var $noncanonical_request_keys = array(
 				$this->es->add_relation('dated.datetime > "' . $this->minimum_date . '"');
 			}
 		}
-		$this->es->add_relation( 'status.status = "published"' );	
+		$this->es->add_relation( 'status.status = "published"' );
 		$this->further_alter_es();
 		if(!empty($this->max_num_items))
 		{
 			$this->es->set_num($this->max_num_items);
 		}
 	} // }}}
-	
+
 	function related_alter_es()
 	{
 		$this->es->set_env('site', $this->site_id);
@@ -1132,7 +1132,7 @@ var $noncanonical_request_keys = array(
 		$table_limit_array = (!empty($this->minimum_date)) ? array('status', 'dated') : array('status');
 		$this->related_order_and_limit($this->es, $table_limit_array);
 	}
-	
+
 	/**
 	 * If we are dealing with publications that have issues, make sure that the items listed are part of a visible issue
 	 */
@@ -1210,18 +1210,18 @@ var $noncanonical_request_keys = array(
 		$es->limit_fields($field_limit_array);
 		$es->set_order($order_string);
 	}
-	
+
 	function further_alter_es()
 	{
 	}
-	
+
 	function post_es_additional_init_actions()
 	{
 		if ($this->related_mode) $this->related_post_es_additional_init_actions();
 		$this->_init_social_media_integration();
 		$this->_init_markup_generators();
 	}
-	
+
 	/**
 	 * take the set of items selected, and replaces it with a set that includes the multivalue publication and category ids that
 	 * match the limitations of the page
@@ -1245,7 +1245,7 @@ var $noncanonical_request_keys = array(
 		}
 	}
 
-	//overloaded generic3 function	
+	//overloaded generic3 function
 	function has_content() // {{{
 	{
 		if ($this->related_mode) return $this->has_content_related();
@@ -1254,7 +1254,7 @@ var $noncanonical_request_keys = array(
 		else
 			return true;
 	} // }}}
-	
+
 	/**
 	 * has content function for module when running in related mode
 	 * @author Nathan White
@@ -1262,16 +1262,16 @@ var $noncanonical_request_keys = array(
 	function has_content_related()
 	{
 		if (empty($this->items)) return false;
-		else 
+		else
 		{
 			return true;
 		}
 	}
-	
+
 
 ////////
 // DISPLAY INDIVIDUAL ITEM METHODS
-////////	
+////////
 
 	//overloaded generic3 function
 	/**
@@ -1279,13 +1279,13 @@ var $noncanonical_request_keys = array(
 	*   @param $item the news item entity
 	*/
 	function show_item_content( $item )
-	{	
+	{
 		if( !$this->_ok_to_view )
 		{
 			echo $this->_unauthorized_message;
 			return;
 		}
-		
+
 		//if this is an issued publication, we want to say what issue we're viewing
 		$current_issue = $this->get_current_issue();
 		if(!empty($current_issue) )
@@ -1293,7 +1293,7 @@ var $noncanonical_request_keys = array(
 			$list_markup_generator = $this->set_up_generator_of_type('list');
 			echo $list_markup_generator->get_current_issue_markup($current_issue);
 		}
-			
+
 		// Show a disco inline editing form if it is available and active, otherwise show the page normally
 		$inline_edit =& get_reason_inline_editing($this->page_id);
 		if ($inline_edit->available_for_module($this) && $inline_edit->active_for_module($this))
@@ -1306,7 +1306,7 @@ var $noncanonical_request_keys = array(
 			echo $item_markup_generator->get_markup();
 		}
 	}
-	
+
 	//this is the function used to generate the variable needed by the list_markup_generator
 	function get_site_entity()
 	{
@@ -1316,13 +1316,13 @@ var $noncanonical_request_keys = array(
 	{
 		return $this->publication;
 	}
-	
+
 ////////
 // DISPLAY LIST METHODS
 ////////
 
-	
-		
+
+
 	function show_persistent()
 	{
 		if(!empty($this->current_item_id) && $this->request['story_id'] == $this->current_item_id)
@@ -1337,7 +1337,7 @@ var $noncanonical_request_keys = array(
 		}
 		echo $persistent_markup_generator->get_markup();
 	}
-	
+
 	function get_use_filters_value()
 	{
 		return $this->use_filters;
@@ -1351,24 +1351,24 @@ var $noncanonical_request_keys = array(
 		else
 			return false;
 	}
-	
+
 	function issue_list_should_be_displayed()
 	{
 		return (!$this->related_mode && $this->has_issues() && isset($this->request['issue_id']) && ($this->request['issue_id'] === 0));
 	}
-	
+
 	// overloaded generic3 function
-	/** 
+	/**
 	* Gets the markup for the list from the list markup generator.
 	* If there are no items in the list, displays links to other issues if appropriate
-	*/ 
+	*/
 	function do_list()
-	{	
+	{
 		if( !$this->_ok_to_view )
 		{
 			echo $this->_unauthorized_message;
 			return;
-		}	
+		}
 		if ($this->issue_list_should_be_displayed())
 		{
 			$issue_markup_generator = $this->set_up_generator_of_type('issue_list');
@@ -1424,8 +1424,8 @@ var $noncanonical_request_keys = array(
 				trigger_error('No markup generator classname found for "'.$type.'". Empty markup generator substituted.');
 				$markup_generator = new EmptyMarkupGenerator();
 			}
-			$markup_generator_settings = (!empty($this->markup_generator_info[$type]['settings'])) 
-								     ? $this->markup_generator_info[$type]['settings'] 
+			$markup_generator_settings = (!empty($this->markup_generator_info[$type]['settings']))
+								     ? $this->markup_generator_info[$type]['settings']
 								     : '';
 			if (!empty($markup_generator_settings)) $markup_generator->set_passed_variables($markup_generator_settings);
 			$markup_generator->set_passed_variables($this->get_values_to_pass($markup_generator, $item));
@@ -1434,9 +1434,9 @@ var $noncanonical_request_keys = array(
 		}
 		return $this->markup_generators[$type][$item_id];
 	}
-	
+
 	/**
-	*  Helper function to set_up_generator_of_type; passes appropriate variables from the module to the 
+	*  Helper function to set_up_generator_of_type; passes appropriate variables from the module to the
 	*  markup generator
 	*  @param object $markup_generator The markup generator object
 	*  @return An array of values to pass, formatted $variable_name => value
@@ -1480,21 +1480,21 @@ var $noncanonical_request_keys = array(
 		}
 		return $values_to_pass;
 	}
-	
+
 //////////
 ///  METHODS TO ADD NEW ITEMS
 //////////
 
-		/**	
+		/**
 		* Returns the text for the "add post" link.
 		* Overloads the Generic3 hook.
 		* @return string text for the "add post" link.
-		*/	
+		*/
 		function get_add_item_link()
 		{
 			if ($this->related_mode) return false;
 			$netid = $this->get_user_netid();
-			
+
 			$ph = $this->get_post_group_helper();
 			if($ph->group_has_members())
 			{
@@ -1517,14 +1517,14 @@ var $noncanonical_request_keys = array(
 					}
 				}
 				else // No login required to post
-				{ 
+				{
 					return $this->make_add_item_link();
 				}
 			}
-			else 
+			else
 				return '';
 		}
-		
+
 		/**
 		*  Helper function to get_add_item_link() - returns the markup for the add item link.
 		*  @return string the add item link
@@ -1551,10 +1551,10 @@ var $noncanonical_request_keys = array(
 			//not using construct_link because we don't want to include a page value
 			return '<div class="addItemLink"><a href ="?'.implode('&amp;',$link).'">Post to '.$this->publication->get_value('name').'</a></div>'."\n";
 		}
-		
+
 		/**
 		 * Checks to make sure that the given news item is OK to display.
-		 * 
+		 *
 		 * This should return true if the entity looks OK to be shown and false if it does not.
 		 *
 		 * It also does some checks and may redirect to make URLs sane (IE link given with wrong section).
@@ -1582,21 +1582,21 @@ var $noncanonical_request_keys = array(
 				return true;
 			}
 		}
-		
-		/**	
-		* Displays the Blog Post Submission Disco form if a user is authorized to post to the blog. 
+
+		/**
+		* Displays the Blog Post Submission Disco form if a user is authorized to post to the blog.
 		* Overloads the Generic3 hook.
-		*/	
+		*/
 		function add_item()
-		{	
+		{
 			$posting_group_helper = $this->get_post_group_helper();
-						
+
 			if($posting_group_helper->group_has_members())
 			{
 				if($posting_group_helper->requires_login())
 				{
 					$netid = $this->get_user_netid();
-					
+
 					if(!empty($netid))
 					{
 						if($posting_group_helper->has_authorization($netid))
@@ -1618,21 +1618,21 @@ var $noncanonical_request_keys = array(
 			}
 		}
 
-		/**	
-		* Helper function to add_item() - initializes & runs a BlogPostSubmissionForm object 
+		/**
+		* Helper function to add_item() - initializes & runs a BlogPostSubmissionForm object
 		* @param string user's netID
-		*/	
+		*/
 		function build_post_form($net_id)
 		{
 			reason_include_once($this->post_form_file_location);
-			
+
 			$identifier = basename( $this->post_form_file_location, '.php');
 			if(empty($GLOBALS[ '_publication_post_forms' ][ $identifier ]))
 			{
 				trigger_error('Post forms must identify their class name in the $GLOBALS array; the form located at '.$this->post_form_file_location.' does not and therefore cannot be run.');
 				return '';
 			}
-			
+
 			$form_class = $GLOBALS[ '_publication_post_forms' ][ $identifier ];
 
 			$hold_posts_for_review = ($this->publication->get_value('hold_posts_for_review') == 'yes') ? true : false;
@@ -1647,7 +1647,7 @@ var $noncanonical_request_keys = array(
 
 ///////////////
 //  ISSUE FUNCTIONS
-///////////////	
+///////////////
 		/**
 		* Returns true if the publication can have issues related to it and has issues related to it.
 		* This function only checks to see if a publication has issues if it SHOULD be able to have issues.
@@ -1664,7 +1664,7 @@ var $noncanonical_request_keys = array(
 			}
 			return false;
 		}
-		
+
 		/**
 		* Returns an array of the issues associated with this publication.
 		* Format: $issue_id => $issue_entity
@@ -1686,7 +1686,7 @@ var $noncanonical_request_keys = array(
 			}
 			return $this->issues;
 		}
-		
+
 		function &get_all_issues()
 		{
 			if (empty($this->all_issues))
@@ -1710,14 +1710,14 @@ var $noncanonical_request_keys = array(
 			}
 			return $this->all_issues;
 		}
-		
+
 		function &get_visible_issues()
 		{
 			$issues =& $this->get_issues();
 			$visible_issues = ($issues) ? $this->filter_hidden_issues($issues, false) : false;
 			return $visible_issues;
 		}
-		
+
 		function &filter_hidden_issues($issues, $site_users_have_access = true)
 		{
 			if ($site_users_have_access && user_has_access_to_site($this->site_id)) return $issues;
@@ -1727,10 +1727,10 @@ var $noncanonical_request_keys = array(
 				{
 					if ($v->get_value('show_hide') == 'show') $visible_issues[$k] = $v;
 				}
-				return $visible_issues;	
+				return $visible_issues;
 			}
 		}
-			
+
 		/**
 		* Returns an array of the issues associated with the current item id.
 		* Format: $issue_id => $issue_entity
@@ -1758,7 +1758,7 @@ var $noncanonical_request_keys = array(
 			}
 			return $issues[$this->current_item_id];
 		}
-		
+
 		/**
 		* Returns an array of the visible issues associated with the current item id.
 		* Format: $issue_id => $issue_entity
@@ -1777,7 +1777,7 @@ var $noncanonical_request_keys = array(
 			}
 			return $visible_issues[$this->current_item_id];
 		}
-		
+
 //		/**
 //		*  Creates an issues array keyed by date instead of by id
 //		*  @return array array of issues, formatted $datetime => $issue_entity
@@ -1791,7 +1791,7 @@ var $noncanonical_request_keys = array(
 //			}
 //			return array();
 //		}
-		
+
 		/**
 		* Returns an array of links to each issue for this publication.
 		* Format $issue_id => $issue_entity
@@ -1810,7 +1810,7 @@ var $noncanonical_request_keys = array(
 			}
 			return $links;
 		}
-		
+
 		function get_link_to_issue($issue)
 		{
 			if(is_object($issue))
@@ -1822,7 +1822,7 @@ var $noncanonical_request_keys = array(
 				return $this->construct_link(NULL, array( 'issue_id'=>$issue, 'page'=> '1'  ) );
 			}
 		}
-		
+
 		/**
 		* Returns a copy of the issue entity that's currently being viewed.
 		* If you want the issue with the most recent datetime, use {@link get_most_recent_issue()}.
@@ -1838,7 +1838,7 @@ var $noncanonical_request_keys = array(
 			else
 				return false;
 		}
-	
+
 		/**
 		* Returns a copy of the issue entity with the most recent datetime.
 		* @return object the most recent issue entity
@@ -1848,12 +1848,12 @@ var $noncanonical_request_keys = array(
 			$issues =& $this->get_visible_issues();
 			if ($issues)
 			{
-				reset($issues); // make sure pointer is at first element		
+				reset($issues); // make sure pointer is at first element
 				return current($issues);
 			}
 			else return false;
 		}
-		
+
 		/**
 		* Returns the blurbs attached to the current issue
 		* @todo make the issue_to_text_blurb relationship sortable
@@ -1896,7 +1896,7 @@ var $noncanonical_request_keys = array(
 			}
 			return false;
 		}
-		
+
 		/**
 		*  Returns an array of the news sections associated with this publication. If there is a current issue selected, only return those sections that have posts in the current issue.
 		*  Format: $section_id => $section_entity
@@ -1947,7 +1947,7 @@ var $noncanonical_request_keys = array(
 			}
 			return $this->sections;
 		}
-		
+
 		/**
 		*  Returns an array of all the items in the publication organized by section id.
 		*  Format: [$section_id][$item_id] = $item_entity
@@ -1974,12 +1974,12 @@ var $noncanonical_request_keys = array(
 								$this->_items_by_section[$section->id()][$item->id()] = $item;
 							}
 						}
-					}	
+					}
 				}
 				else
 					$this->_items_by_section[$this->no_section_key][$item->id()] = $item;
 			}
-			
+
 			if (!empty($this->_items_by_section) && $this->has_sections() && $this->use_group_by_section_view())
 			{
 				$section_order = array_keys($this->get_sections());
@@ -1994,8 +1994,8 @@ var $noncanonical_request_keys = array(
 			}
 			return $this->_items_by_section;
 		}
-		
-		
+
+
 		/**
 		*  Returns an array of the links to every section of this publication.
 		*  Format: $section_id => $link_to_section
@@ -2025,7 +2025,7 @@ var $noncanonical_request_keys = array(
 			$link_args['section_id'] = $section_id;
 			return $this->construct_link(NULL, $link_args );
 		}
-		
+
 		/**
 		*  Return an array of the links to the sections that this news item is associated with.
 		*  Format $section_id => ($section_name, $url)
@@ -2045,7 +2045,7 @@ var $noncanonical_request_keys = array(
 			}
 			return $section_links;
 		}
-		
+
 		/**
 		* Returns an array of the sections of this publication that this news item is associated with.
 		* Format: $section_id => $section_entity
@@ -2055,16 +2055,16 @@ var $noncanonical_request_keys = array(
 		function find_sections_for_this_item($item)
 		{
 			$related_sections_for_this_pub = array();
-			
+
 			$all_related_sections = $item->get_left_relationship( 'news_to_news_section' );
 			if(!empty($all_related_sections))
 			{
 				foreach($all_related_sections as $section)
 				{
 					$sections = $this->get_sections();
-					
+
 					//check to make sure that this section is associated with this publication
-					if(array_key_exists($section->id(), $sections))	
+					if(array_key_exists($section->id(), $sections))
 					{
 						$related_sections_for_this_pub[$section->id()] = $section;
 					}
@@ -2072,13 +2072,13 @@ var $noncanonical_request_keys = array(
 			}
 			return $related_sections_for_this_pub;
 		}
-		
+
 		/**
 		* Returns a copy of the news section entity that's currently being viewed.
 		* @return object the news section entity that's currently being viewed.
 		*/
 		function get_current_section()
-		{	
+		{
 			$sections = $this->get_sections();
 			if(!empty($sections) && !empty($this->request['section_id']))
 			{
@@ -2089,10 +2089,10 @@ var $noncanonical_request_keys = array(
 		}
 
 		/**
-		* If a section is specified in the request {@link request}, this constructs a link to view all all of the news 
+		* If a section is specified in the request {@link request}, this constructs a link to view all all of the news
 		* items in this publication that are in the specified section regardless of what issue they're in.
 		* "Link" in this case just means the url; no <a> tag, no name.
-		* @todo Change this so that it has a section id as a parameter and looks for that rather than checking for a 
+		* @todo Change this so that it has a section id as a parameter and looks for that rather than checking for a
 		*        section id in the {@link request}.
 		* @return string Link to all news items in this section, regardless of issue.
 		*/
@@ -2105,9 +2105,9 @@ var $noncanonical_request_keys = array(
 			else
 				return false;
 		}
-		
+
 		/**
-		*  Determines whether or not news items should be grouped by section on the main list.  
+		*  Determines whether or not news items should be grouped by section on the main list.
 		*  @return boolean True if news items should be grouped by section.
 		*/
 		function use_group_by_section_view()
@@ -2143,7 +2143,7 @@ var $noncanonical_request_keys = array(
 			}
 			return $this->_comment_group_helper;
 		}
-		
+
 		/**
 		*  Returns the group entity that represents the users authorized to comment in this publication.
 		*  Helper function to {@link get_comment_group_helper()}.
@@ -2156,7 +2156,7 @@ var $noncanonical_request_keys = array(
 			$es->add_type( id_of('group_type') );
 			$es->add_right_relationship( $this->publication->id(), relationship_id_of('publication_to_authorized_commenting_group') );
 			$es->set_num(1);
-			$groups = $es->run_one();	
+			$groups = $es->run_one();
 			if(!empty($groups))
 			{
 				$comment_group = current($groups);
@@ -2167,7 +2167,7 @@ var $noncanonical_request_keys = array(
 				return new entity(id_of('nobody_group'));
 			}
 		}
-		
+
 		function get_comment_moderation_state()
 		{
 			if($this->publication->get_value('hold_comments_for_review') == 'yes')
@@ -2177,7 +2177,7 @@ var $noncanonical_request_keys = array(
 			else
 				return false;
 		}
-		
+
 		/**
 		*  Finds the group that represents users who can post news items to this publication.
 		*  @return entity the group that represents users who can post news items to this publication.
@@ -2199,7 +2199,7 @@ var $noncanonical_request_keys = array(
 				return new entity(id_of('nobody_group'));
 			}
 		}
-		
+
 		/**
 		*  Instantiates a group helper for the group that represents users who can post news items to this publication.
 		*  @return entity the group helper for users who can post to this publication
@@ -2207,7 +2207,7 @@ var $noncanonical_request_keys = array(
 		function get_post_group_helper()
 		{
 			reason_include_once( 'classes/group_helper.php' );
-			
+
 			$group = $this->get_post_group();
 			$post_group_helper = new group_helper();
 			$post_group_helper->set_group_by_entity($group);
@@ -2239,7 +2239,7 @@ var $noncanonical_request_keys = array(
 				return false;
 			}
 		}
-		
+
 		function get_login_logout_link()
 		{
 			if ($this->show_login_link)
@@ -2266,7 +2266,7 @@ var $noncanonical_request_keys = array(
 			}
 			else parent::get_login_logout_link();
 		}
-		
+
 		function show_filtering()
 		{
 			if($this->params['module_displays_search_interface'] || $this->params['module_displays_filter_interface'])
@@ -2282,14 +2282,14 @@ var $noncanonical_request_keys = array(
 				}
 			}
 		}
-		
+
 		function get_filtering_markup()
 		{
 			ob_start();
 			$this->show_filtering();
 			return ob_get_clean();
 		}
-		
+
 		function get_pagination_markup($class = '')
 		{
 			if($this->use_pagination && ( $this->show_list_with_details || empty( $this->current_item_id ) ) )
@@ -2320,7 +2320,7 @@ var $noncanonical_request_keys = array(
 
 		/**
 		*  Uses a list item markup generator to get the markup for each item of the list.
-		*  @return array Array of markup strings, formatted $item_id => markup string of that item 
+		*  @return array Array of markup strings, formatted $item_id => markup string of that item
 		*/
 		function get_list_item_markup_strings()
 		{
@@ -2353,11 +2353,11 @@ var $noncanonical_request_keys = array(
 			}
 			return $list_item_markup_strings;
 		}
-		
+
 		/**
 		*  Uses a featured item markup generator to get the markup for each featured item of the publication.
-		*  @return array Array of markup strings, formatted $item_id => markup string of that item 
-		*/		
+		*  @return array Array of markup strings, formatted $item_id => markup string of that item
+		*/
 		function get_featured_item_markup_strings()
 		{
 			$featured_item_markup_strings = array();
@@ -2369,7 +2369,7 @@ var $noncanonical_request_keys = array(
 			//$es->add_right_relationship( $this->publication->id(), relationship_id_of('publication_to_featured_post') );
 			//$temp = $es->run();
 			//$featured_items = current($temp);
-			
+
 			if (!empty($featured_items))
 			{
 				foreach($featured_items as $id => $entity)
@@ -2381,7 +2381,7 @@ var $noncanonical_request_keys = array(
 
 			return $featured_item_markup_strings;
 		}
-		
+
 		/**
 		* Returns entity selector with featured items for the current publication - stored in a static variable
 		* so that the entity selector will not be run multiple times by different modules or the same publication
@@ -2407,7 +2407,7 @@ var $noncanonical_request_keys = array(
 				return $featured_items[$this->publication->id()];
 			}
 		}
-		
+
 		/**
 		 * Grab featured items from related publications and populate $featured_items[$pub_id]
 		 *
@@ -2452,7 +2452,7 @@ var $noncanonical_request_keys = array(
 					$es->add_left_relationship( $related_pub_id, relationship_id_of('news_to_publication') );
 					$es->add_rel_sort_field($related_pub_id, relationship_id_of('publication_to_featured_post'), 'featured_sort_order');
 					$es->set_order('featured_sort_order ASC');
-					
+
 					$fi = $es->run_one();
 					if (!empty($fi))
 					{
@@ -2467,12 +2467,12 @@ var $noncanonical_request_keys = array(
 			}
 			return $featured_items;
 		}
-		
+
 		/**
 		* Checks to see if there are existing values in $REQUEST for the given query strings.
 		* @param $query_strings Array of variables whose values should be preserved in the new query string
 		* @return array Query string variables with corresponding values
-		*/	
+		*/
 		function get_query_string_values($query_strings)
 		{
 			$link_args = array();
@@ -2494,8 +2494,8 @@ var $noncanonical_request_keys = array(
 			}
 			return $link_args;
 		}
-		
-		
+
+
 		//overloaded from generic 3 so that we can preserve issue and section values in the links
 		function get_pages_for_pagination_markup()
 		{
@@ -2508,7 +2508,7 @@ var $noncanonical_request_keys = array(
 			}
 			return $pages;
 		}
-		
+
 		function get_search_interface_markup()
 		{
 			$markup = $this->get_filter_markup();
@@ -2516,7 +2516,7 @@ var $noncanonical_request_keys = array(
 				return $markup['search'];
 			return '';
 		}
-		
+
 		function get_filter_interface_markup()
 		{
 			$markup = $this->get_filter_markup();
@@ -2524,15 +2524,15 @@ var $noncanonical_request_keys = array(
 				return $markup['filter'];
 			return '';
 		}
-		
-		/**	
+
+		/**
 		* Returns the number of comments associated with a news item.
 		* @param entity news item
 		* @return int number of comments associated with news item
-		*/	
+		*/
 		function count_comments($item)
 		{
-			
+
 			$es = new entity_selector( $this->site_id );
 			$es->description = 'Counting comments for this news item';
 			$es->add_type( id_of('comment_type') );
@@ -2550,7 +2550,7 @@ var $noncanonical_request_keys = array(
 			$link = carl_make_link( array($this->query_string_frag.'_id'=>$item->id()), '', '', true, false );
 			return $link;
 		}
-		
+
 		function get_link_to_full_item(&$item)
 		{
 			if($this->related_mode)
@@ -2563,68 +2563,72 @@ var $noncanonical_request_keys = array(
 				return $this->construct_link($item, $link_args);
 			}
 		}
-		
+
 		function get_link_to_full_item_other_pub(&$item)
 		{
 			$link_args = $this->get_query_string_values(array('issue_id', 'section_id'));
 			return $this->construct_link($item, $link_args);
 		}
-	
+
 		// THIS STUFF SHOULD ALL BE IN MARKUP GENERATORS
-		
+
 		//overloaded from generic3
 		function show_style_string()
 		{
 			$class_string = ($this->related_mode) ? 'relatedPub' : 'publication';
+			if(empty($this->filters) && empty( $this->current_item_id ))
+				$class_string .= ' homePostsDisplay';
 			if(!empty( $this->current_item_id ) )
 				$class_string .= ' fullPostDisplay';
+			if(!empty($this->filters) && empty( $this->current_item_id ))
+				$class_string .= ' filteredPostsDisplay';
 			echo '<div id="'.$this->style_string.'" class="'.$class_string.'">'."\n";
 		}
-		
+
 		//overloaded from generic3
 		function show_back_link()
 		{
 			echo '<div class="back">';
-			
+
 			$main_list_name = $this->publication->get_value('name');
 			$current_issue = $this->get_current_issue();
 			if(!empty($current_issue))
 				$main_list_name .= ', '.$current_issue->get_value('name');
 			echo '<div class="mainBackLink"><a href="'.$this->construct_back_link().'">Return to '.$main_list_name.'</a></div>';
-			
-			
+
+
 			$current_section = $this->get_current_section();
 			if(!empty($current_section))
 			{
 				$section_name = $current_section->get_value('name').' ('.$main_list_name.')';
 				echo '<div class="sectionBackLink"><a href="'.$this->construct_back_to_section_link().'">Return to '.$section_name.'</a></div>';
 			}
-			
+
 			$back_to_filter_link = $this->construct_back_to_filters_link();
 			if(!empty($back_to_filter_link))
 			{
 				echo '<div class="filtersBackLink"><a href="'.$back_to_filter_link.'">Return to your search/category results</a></div>';
 			}
-			
+
 			echo '</div>';
 		}
-		
+
 		function show_item_name( $item ) // {{{
 		{
 			//emptied out so that item markup generator can handle it
 		} // }}}
-		
+
 		function get_inline_editing_info()
 		{
 			$inline_edit =& get_reason_inline_editing($this->page_id);
-			
+
 			$url = carl_make_link($inline_edit->get_activation_params($this));
 			$available = $inline_edit->available_for_module($this);
 			$active = $inline_edit->active_for_module($this);
-			
+
 			return array('url' => $url, 'available' => $available, 'active' => $active);
 		}
-		
+
 		function construct_back_link()
 		{
 			//need to go back to page 1, since we could have a page value wherever we are now
@@ -2641,39 +2645,39 @@ var $noncanonical_request_keys = array(
 					$args['search'] = '';
 				}
 			}
-			return $this->construct_link(NULL, $this->get_query_string_values($args));	
+			return $this->construct_link(NULL, $this->get_query_string_values($args));
 		}
-		
+
 		function construct_back_to_section_link()
 		{
 			if(!empty($this->request['section_id']) && !empty($this->request[$this->query_string_frag.'_id']) )
 			{
 				$args = array('section_id');
-				
+
 				//if we're looking at a section from an issue, we want to still just be looking at items from that issue
 				if(!empty($this->issue_id))
 				{
 					$args[] = 'issue_id';
-				}	
-				
+				}
+
 				return $this->construct_link(NULL, $this->get_query_string_values($args));
 			}
-			else 
+			else
 				return false;
 		}
-		
+
 		function construct_back_to_filters_link()
 		{
 			if((!empty($this->filters) || !empty($this->request['search'])) && !empty($this->issue_id) && !empty($this->request[$this->query_string_frag.'_id']) )
 			{
 				$args = array('filter1','filter2','filter3', 'search', 'issue_id' => '');
-				
+
 				return $this->construct_link(NULL, $this->get_query_string_values($args));
 			}
-			else 
+			else
 				return false;
 		}
-	
+
 		function get_teaser_image($item)
 		{
 			if (!isset($this->_teasers[$item->id()]))
@@ -2688,14 +2692,14 @@ var $noncanonical_request_keys = array(
 			}
 			return $this->_teasers[$item->id()];
 		}
-		
+
 		function get_item_number($item)
 		{
 			$item_keys = array_keys($this->items);
 			$item_order_by_key = array_flip($item_keys);
 			return (in_array($item->id(), $item_keys)) ? $item_order_by_key[$item->id()] : false;
 		}
-	
+
 		function get_link_to_related_item(&$item)
 		{
 			$pub_id_field = $item->get_value('publication_id');
@@ -2860,7 +2864,7 @@ var $noncanonical_request_keys = array(
 			}
 			return $cats;
 		}
-		
+
 		/**
 		 * Get social sharing links from social sharing integrators that support social sharing links.
 		 *
@@ -2877,7 +2881,7 @@ var $noncanonical_request_keys = array(
 		 */
 		function get_item_social_sharing($item)
 		{
-			if ($this->page_is_public() && 
+			if ($this->page_is_public() &&
 				$this->publication->has_value('enable_social_sharing') && (
 				$this->publication->get_value('enable_social_sharing') == 'yes' )
 				)
@@ -2924,20 +2928,20 @@ var $noncanonical_request_keys = array(
 					trigger_error('Comment forms must identify their class name in the $GLOBALS array; the form located at '.$this->comment_form_file_location.' does not and therefore cannot be run.');
 					return '';
 				}
-				
+
 				$form_class = $GLOBALS[ '_publication_comment_forms' ][ $identifier ];
-				
+
 				ob_start();
 				$form = new $form_class($this->site_id, $item, $this->get_comment_moderation_state(), $this->publication);
 				$form->set_username($this->get_user_netid());
 				$form->run();
 				if ($form->has_errors())
 					$this->_comment_has_errors = 'yes';
-				else 
+				else
 					$this->_comment_has_errors = 'no';
 				$content = ob_get_contents();
 				ob_end_clean();
-				
+
 				return $content;
 			}
 			return '';
@@ -2968,7 +2972,7 @@ var $noncanonical_request_keys = array(
 		function get_commentability_status_full_check($item)
 		{
 			$group_helper = &$this->get_comment_group_helper();
-			
+
 			if(!$group_helper->group_has_members())
 			{
 				return 'publication_comments_off';
@@ -2981,13 +2985,13 @@ var $noncanonical_request_keys = array(
 			{
 				return'open_comments';
 			}
-		
+
 			$netid = $this->get_user_netid();
 			if(empty($netid))
 			{
 				return 'login_required';
 			}
-		
+
 			if($group_helper->has_authorization($netid))
 			{
 				return 'user_has_permission';
@@ -3017,14 +3021,14 @@ var $noncanonical_request_keys = array(
 			}
 			return $this->user_netID;
 		}
-		
+
 		function alter_relationship_checker_es($es)
 		{
 			$es->add_left_relationship( $this->publication->id(), relationship_id_of('news_to_publication') );
 			$es->add_relation('status.status = "published"');
 			return $es;
 		}
-		
+
 		function get_sanitized_search_string()
 		{
 			if(!empty($this->request['search']))
@@ -3038,7 +3042,7 @@ var $noncanonical_request_keys = array(
 		{
 			return $this->textonly;
 		}
-		
+
 		function get_previous_post($entity)
 		{
 			$p = $this->get_previous_item($entity->id());
@@ -3053,11 +3057,11 @@ var $noncanonical_request_keys = array(
 				$p->set_value('link_url',$this->get_link_to_full_item($p));
 			return $p;
 		}
-		
+
 		//////////////////////////////////////////
 		// Inline Editing Functions
 		//////////////////////////////////////////
-		
+
 		/**
 		 * Determines whether or not the user can inline edit.
 		 *
@@ -3090,10 +3094,10 @@ var $noncanonical_request_keys = array(
 			}
 			return $this->_user_can_inline_edit;
 		}
-		
+
 		/**
 		* Checks to see if the user's id matches the auther of the current item.
-		*/ 
+		*/
 		function user_is_author()
 		{
 			if (isset($this->current_item_id) && ($netid = reason_check_authentication()))
@@ -3109,7 +3113,7 @@ var $noncanonical_request_keys = array(
 			}
 			return false;
 		}
-		
+
 		function show_inline_editing_form()
 		{
 			echo '<div class="editable editing">';
@@ -3121,30 +3125,30 @@ var $noncanonical_request_keys = array(
 			$form->strip_tags_from_user_input = true;
 			$form->allowable_HTML_tags = REASON_DEFAULT_ALLOWED_TAGS;
 			$form->actions = array('save' => 'Save', 'save_and_finish' => 'Save and Finish Editing');
-			
+
 			$this->init_field($form, 'title_of_story', 'name', $item, 'text', 'solidtext');
 			//$form->add_element('title_of_story', 'text');
 			$form->set_display_name('title_of_story', 'Title');
 			$form->set_value('title_of_story', $item_title);
-			
+
 			$this->init_field($form, 'editable_content', 'content', $item, html_editor_name($this->site_id), 'wysiwyg_disabled', html_editor_params($this->site_id, get_user_id($this->get_user_netid())));
 			//$form->add_element('editable_content', html_editor_name($this->site_id), html_editor_params($this->site_id, get_user_id($this->get_user_netid())));
 			$form->set_display_name('editable_content','Content');
 			$form->set_value('editable_content', $item_content);
-			
+
 			$this->init_field($form, 'description_of_story', 'description', $item, html_editor_name($this->site_id), 'wysiwyg_disabled', html_editor_params($this->site_id, get_user_id($this->get_user_netid())));
 			//$form->add_element('description_of_story', html_editor_name($this->site_id), html_editor_params($this->site_id, get_user_id($this->get_user_netid())));
 			$form->set_display_name('description_of_story', 'Excerpt/Teaser (displayed on post listings; not required):');
 			$form->set_value('description_of_story', $item_description);
-			
+
 			$form->add_callback(array(&$this, 'process_editable'),'process');
 			$form->add_callback(array(&$this, 'where_to_editable'), 'where_to');
 			$form->add_callback(array(&$this, 'run_error_checks_editable'), 'run_error_checks');
 			$form->run();
 			echo '</div>';
 		}
-		
-		
+
+
 		/**
 		* Inits a disco form element as a locked or unlocked field.
 		*/
@@ -3181,7 +3185,7 @@ var $noncanonical_request_keys = array(
 			$archive = ($disco->get_chosen_action() == 'save_and_finish') ? true : false;
 			reason_update_entity($this->current_item_id, get_user_id($this->get_user_netid()), $values, $archive );
 		}
-		
+
 		// Callback for disco edit form
 		function where_to_editable(&$disco)
 		{
@@ -3195,8 +3199,8 @@ var $noncanonical_request_keys = array(
 				$url = carl_make_redirect($inline_edit->get_deactivation_params($this));
 			}
 			return $url;
-		}		
-		
+		}
+
 		function run_error_checks_editable(&$disco)
 		{
 		}

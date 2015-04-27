@@ -1,0 +1,233 @@
+// Structure Styles (resonsible for the basic column layout)
+// Cloak, v1
+
+// 1. BANNER
+// 2. BREADCRUMBS
+// 3. PAGE TITLE
+// 4. MINISITE COLUMN LAYOUT
+//   4a. 3 column layout.
+//   4b. 2 column layout.
+//   4c. 2 column layout.
+//   4d. 1 column layout.
+// 5. MODULE COLUMN LAYOUT
+// 6. FOOTER
+// 7. HELPER STYLES (for debugging layouts)
+
+// BANNER
+#banner {
+	h1 {
+	}
+}
+
+// 2. BREADCRUMBS
+#breadcrumbs {
+	@include grid-row();
+	padding-top: $horizontal-gutter; // space between header and content
+
+	.breadcrumb {
+		@include grid-column(12);
+	}
+}
+
+// 3. PAGE TITLE
+#contentHead {
+	@include grid-row();
+
+	div.pageTitle {
+		@include grid-column(12);
+
+		h2 {
+			margin: 0;
+		}
+	}
+}
+
+// 4. MINISITE COLUMN LAYOUT
+#meat {
+	@include grid-row();
+	padding-top: $horizontal-gutter; // space between breadcrumb and content
+
+	#content {
+		@include grid-column(12);
+	}
+
+	#related {
+		@include grid-column(12);
+	}
+
+	#navigation {
+		@include grid-column(12);
+	}
+
+	// 4a. MINISITE COLUMN LAYOUT: 3 column layout.
+	// Page has content, related, and navigation.
+	&.containsConRelNav {
+		@media #{$medium-up} {
+			
+			#content {
+				@include grid-column(8);
+			}
+
+			#related {
+				@include grid-column(4);
+			}
+		}
+
+		@media #{$medium-high-up} {
+		
+			#content {
+				@include grid-column(6);
+				margin-left: 25%;
+			}
+
+			#related {
+				@include grid-column(3);
+			}
+
+			#navigation {
+				@include grid-column(3);
+				margin-left: -100%;
+			}
+		}
+	}
+
+	// 4b. MINISITE COLUMN LAYOUT: 2 column layout.
+	// Page has content and navigation.
+	&.containsConNav {
+
+		@media #{$medium-high-up} {
+
+			#content {
+				@include grid-column(9);
+				margin-left: 25%;
+			}
+
+			#navigation {
+				@include grid-column(3);
+				margin-left: -100%;
+			}
+		}
+	}
+
+	// 4c. MINISITE COLUMN LAYOUT: 2 column layout.
+	// Page has content and related.
+	&.containsConRel {
+
+		@media #{$medium-high-up} {
+
+			#content {
+				@include grid-column(9);
+			}
+
+			#related {
+				@include grid-column(3);
+			}
+		}
+
+	}
+
+	// 4d. MINISITE COLUMN LAYOUT: 1 column layout.
+	// Page has content.
+	&.containsCon {
+		#content {
+			@include grid-column(12);
+		}
+	}
+}
+
+// 5. MODULE COLUMN LAYOUT
+// Many modules follow the same markup scheme: one column for filtering, and one column for module content.
+// Here, we decide when to place them side by side, and when to linearize them.
+// Some modules may override these defaults in their respective modules/_{module-name}.scss.
+
+#meat {
+		
+	// MINISITE COLUMN LAYOUT: Page has content, related, and navigation.
+	// Rather increasing the column number to 4, we make persistent and moduleNav 100%
+	&.containsConRelNav {
+
+		.persistent {
+			@include grid-column($columns:12, $collapse:true);
+		}
+
+		.moduleNav {
+			@include grid-column($columns:12, $collapse:true);
+		}
+
+		#faq > .item {
+			@include grid-column($columns:12, $collapse:true);
+		}
+	}
+
+	// We allow persistent and moduleNav to display slide by side in instances where there are only 2 or fewer columns in MINISITE COLUMN LAYOUT.
+	// MINISITE COLUMN LAYOUT: 2 column layout. Page has content and navigation.
+	&.containsConNav,
+	// MINISITE COLUMN LAYOUT: 2 column layout. Page has content and related.
+	&.containsConRel,
+	// MINISITE COLUMN LAYOUT:  1 column layout. Page has content.
+	&.containsCon {
+
+		.persistent {
+			@include grid-column($columns:12, $collapse:true);
+
+			@media #{$medium-up} {
+				@include grid-column($columns:4, $collapse:true);
+				float: right;
+				padding-left: $column-gutter/2;
+			}
+		}
+
+		.moduleNav,
+		#faq > .item {
+			@include grid-column($columns:12, $collapse:true);
+
+			@media #{$medium-up} {
+				@include grid-column($columns:8,$collapse:true);
+				padding-right: $column-gutter/2;	
+			}
+		}
+	}
+}
+
+// FOOTER 
+#footer {
+}
+
+// Helper styles (for debugging layouts)
+// #breadcrumbs {
+
+// 	.breadcrumb {
+// 		background: orange;
+// 	}
+// }
+
+// #meat {
+
+// 	// #content {
+// 	// 	background: red;
+// 	// }
+
+// 	// #related {
+// 	// 	background: blue;
+// 	// }
+
+// 	// #navigation {
+// 	// 	background: green;
+// 	// }
+
+// 	#content {
+// 		border: 1px solid red;
+// 	}
+
+// 	#related {
+// 		border: 1px solid blue;
+// 	}
+
+// 	#navigation {
+// 		border: 1px solid green;
+// 	}
+// }
+
+// #footer {
+// 	border: 1px solid purple;
+// }

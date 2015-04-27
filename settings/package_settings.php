@@ -163,4 +163,7 @@ define('JQUERY_UI_CSS_URL',JQUERY_HTTP_PATH.'css/smoothness/jquery-ui.min.css');
 
 // Define the path to Less PHP
 define('LESSPHP_INC',INCLUDE_PATH.'lessphp/');
+
+// Define the path to Scss PHP
+define('SCSSPHP_INC',INCLUDE_PATH.'scssphp/');
 ?>

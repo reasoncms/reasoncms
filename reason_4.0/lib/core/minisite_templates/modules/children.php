@@ -334,6 +334,7 @@
 			}
 			else
 			{
+				echo $image_markup;
 				echo '<h4><a href="'.$link.'"'.$title_attr.'>'.$page_name.'</a></h4>';
 				if ( $child->get_value( 'description' ))
 				{

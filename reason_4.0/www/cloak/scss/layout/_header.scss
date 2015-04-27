@@ -1,0 +1,122 @@
+// Header Styles
+// Cloak, v1
+
+// Fixed position top banner
+.f-topbar-fixed #banner {
+	padding: $horizontal-gutter/2;
+	//@include single-transition(padding);
+	text-align: left;
+	//@include single-transition(text-align);
+
+	h1 {
+		font-size: rem-calc(22);
+		//@include single-transition(font-size);
+		float: left;
+		padding: rem-calc(4) 0 0 0;
+	}
+
+	#navigationToggles {
+		float: right;
+	}
+}
+
+#banner {
+	background-color: $vapor;
+	border-bottom: 1px solid $gainsboro;
+	text-align: center;
+	padding: $horizontal-gutter/2 $column-gutter/2;
+	background-position: center center;
+
+	@media #{$medium-up} { 
+		padding: $horizontal-gutter $column-gutter/2 $horizontal-gutter/1.25;
+	}
+
+	@media #{$large-up} { 
+		//padding-top: $horizontal-gutter*1.5;
+	}
+
+	h1 {
+		font-size: rem-calc(26);
+		font-family: $font-family-serif;
+		margin: 0;
+		padding-bottom: $horizontal-gutter/2;
+		
+		@media #{$medium-up} {
+			font-size: rem-calc(26);
+		}
+		@media #{$large-up} {
+			font-size: rem-calc(30);
+		}
+
+		a {
+			color: $primary-color;
+			font-weight: 700;
+
+			&:hover {
+				//color: darken($site-title-color, 10%);
+				text-decoration: underline;
+			}
+		}
+	}
+
+	#navigationToggles {
+		@include zero-out();
+
+		li {
+			list-style-type: none;
+			display: inline-block;
+			margin: 0 rem-calc(6);
+
+			&.navJump {
+
+				@media #{$medium-high-up} {
+					@include screenreader();
+				}
+
+				a {
+					box-shadow: 0 0 2px rgba(black, .25);
+
+					@include circle-icon-button(
+						$icon-background: $white,
+						$icon-variable: $fa-var-navicon,
+						$icon-border-color: $white,
+						$icon-padding: rem-calc(8)
+					);
+				}
+
+				.navJumpText {
+					@include screenreader();
+				}
+			}
+
+			&.searchToggle {
+				a {
+					box-shadow: 0 0 2px rgba(black, .25);
+
+					@include circle-icon-button(
+						$icon-background: $white,
+						$icon-variable: $fa-var-search,
+						$icon-border-color: $white,
+						$icon-padding: rem-calc(8)
+					);
+				}
+
+				.searchJumpText {
+					@include screenreader();
+				}
+			}
+		}
+	}
+
+	#bannerXtra {
+
+		#search {
+
+			// Search uses Foundation's Reveal Modal
+			// http://foundation.zurb.com/docs/components/reveal.html
+			// Cloak sets many of the Reveal Modal's (lightbox) styles with variables in _settings.scss.
+			// Cloak's custom global Reveal Modal styles are set in _widgets.scss.
+
+		}
+	}
+}
