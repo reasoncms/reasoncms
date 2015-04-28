@@ -198,5 +198,27 @@ class ObjectCache
 		$result = ($cache) ? $cache->clear() : false;
 		return $result;
 	}
+	
+	function lock($expire_seconds)
+	{
+		$cache =& $this->get_cache();
+		$result = ($cache) ? $cache->lock($expire_seconds) : false;
+		return $result;
+	}
+
+	function unlock()
+	{
+		$cache =& $this->get_cache();
+		$result = ($cache) ? $cache->unlock() : false;
+		return $result;
+	}
+	
+	function is_locked()
+	{
+		$cache =& $this->get_cache();
+		$result = ($cache) ? $cache->is_locked() : false;
+		return $result;
+	}
+
 }
 ?>

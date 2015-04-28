@@ -15,7 +15,7 @@ class FileObjectCache extends DefaultObjectCache
 {	
 	private $_cache_dir;
 	private $_read_log = false;
-	private $_write_log = true;
+	private $_write_log = false;
 	
 	function &fetch()
 	{
@@ -38,16 +38,22 @@ class FileObjectCache extends DefaultObjectCache
 	 */
 	function set(&$object)
 	{
-		if ($this->_write_log) error_log(date('Y-m-d H:i:s').' CACHE '.str_replace("\n",' ',$this->get_cache_name()).' writing in '.$_SERVER['REQUEST_URI']."\n", 3, '/tmp/reason_cache.log');
+		// if ($this->_write_log) error_log(date('Y-m-d H:i:s').' CACHE '.str_replace("\n",' ',$this->get_cache_name()).' writing in '.$_SERVER['REQUEST_URI']."\n", 3, '/tmp/reason_cache.log');
 		$cache_file = $this->_get_cache_file();
 		if (!is_dir(dirname($cache_file))) mkdir_recursive(dirname($cache_file));
-		$fh = fopen($cache_file,"w");
-		flock($fh, LOCK_EX);
-		$result = fwrite($fh, serialize($object));
-		flock($fh, LOCK_UN);
-		fclose($fh);
-		if ($this->_write_log) error_log(date('Y-m-d H:i:s').' CACHE '.str_replace("\n",' ',$this->get_cache_name()).' wrote '.filesize($cache_file).' bytes in '.$_SERVER['REQUEST_URI']."\n", 3, '/tmp/reason_cache.log');
-		return ($result !== FALSE);
+		if ($fh = fopen($cache_file,"w"))
+		{
+			flock($fh, LOCK_EX);
+			$result = fwrite($fh, serialize($object));
+			flock($fh, LOCK_UN);
+			fclose($fh);
+			if ($this->_write_log) error_log(date('Y-m-d H:i:s').' CACHE '.str_replace("\n",' ',$this->get_cache_name()).' wrote '.filesize($cache_file).' bytes in '.$_SERVER['REQUEST_URI']."\n", 3, '/tmp/reason_cache.log');
+			return ($result !== FALSE);
+		}
+		else
+		{
+			trigger_error('Could not open cache file for writing: '.$cache_file);
+		}
 	}
 
 	function clear()
