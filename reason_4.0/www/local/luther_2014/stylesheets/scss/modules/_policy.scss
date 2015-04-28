@@ -133,11 +133,30 @@
 				}
 			}
 		}
+		ul.bullet{
+			list-style-type: disc;
+		}
+		ol.decimal{
+			list-style-type: decimal;
+		}
+		ol.lowerAlpha{
+			list-style-type: lower-alpha;
+		}
+		ol.upperAlpha{
+			list-style-type: upper-alpha;
+		}
+		ol.lowerRoman{
+			list-style-type: lower-roman;
+		}
+		ol.upperRoman{
+			list-style-type: upper-roman;
+		}
 		//Closing the comment above
-		.decimal {
+		.decimal, .bullet, .lowerAlpha, .upperAlpha, .lowerRoman, .upperRoman  {
 			margin: 0;
 			.sub_policy {
 				.policyContent {
+					padding-left: $column-gutter;
 					.contentMain {
 						border-bottom: $microformat-border-width $microformat-border-style $microformat-border-color;
 						margin-bottom: $column-gutter/4;
