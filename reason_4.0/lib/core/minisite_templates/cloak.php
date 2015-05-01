@@ -180,7 +180,7 @@
 			MinisiteTemplate::get_meta_information();
 			$this->add_head_item('meta',array('name'=>'viewport','content'=>'width=device-width, initial-scale=1.0' ) );
 			
-			$this->head_items->add_javascript('/reason/local/cloak/js/vendor/modernizr.js');
+			$this->head_items->add_javascript('/reason/cloak/js/vendor/modernizr.js');
 			$this->head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/html5shiv/html5shiv-printshiv.js', true, array('before'=>'<!--[if lt IE 9]>','after'=>'<![endif]-->'));
 			$this->head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/respond/respond.min.js', false, array('before'=>'<!--[if lt IE 9]>','after'=>'<![endif]-->'));
 			$this->head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/ie8_fix_maxwidth.js', false, array('before'=>'<!--[if lt IE 9]>','after'=>'<![endif]-->'));
@@ -317,20 +317,20 @@
 			// Foundation also recommends including jQuery at the bottom of the body. But this causes conflicts
 			// with Reason scripts, like Features. Currently, we're just calling it in the head via in the normal Reason way.
 
-			echo '<script type="text/javascript" src="/reason/local/cloak/js/vendor/isotope.pkgd.min.js"></script>'."\n";
-			echo '<script type="text/javascript" src="/reason/local/cloak/js/vendor/fastclick.js"></script>'."\n";
+			echo '<script type="text/javascript" src="/reason/cloak/js/vendor/isotope.pkgd.min.js"></script>'."\n";
+			echo '<script type="text/javascript" src="/reason/cloak/js/vendor/fastclick.js"></script>'."\n";
 			
 			// Foundation 5.5.1 has a topbar bug that keeps the topbar sticky in iOS, even when set otherwise.
 			// The bug has been reported and confirmed on GitHub. https://github.com/zurb/foundation/issues/6329
 			// We'll fix with the next release. In the meantime, a fix.
 			
 			// 5.5.1 Broken
-			//echo '<script type="text/javascript" src="/reason/local/cloak/bower_components/foundation/js/foundation.min.js"></script>'."\n";
+			//echo '<script type="text/javascript" src="/reason/cloak/bower_components/foundation/js/foundation.min.js"></script>'."\n";
 
 			// 5.5.1 Fixed (re-minified version using foundation.topbar.js v 5.5)
-			echo '<script type="text/javascript" src="/reason/local/cloak/js/vendor/foundation.fixed.min.js"></script>'."\n";	
+			echo '<script type="text/javascript" src="/reason/cloak/js/vendor/foundation.fixed.min.js"></script>'."\n";	
 			
-			echo '<script type="text/javascript" src="/reason/local/cloak/js/app.js"></script>'."\n";
+			echo '<script type="text/javascript" src="/reason/cloak/js/app.js"></script>'."\n";
 		}
 }
 ?>
