@@ -9574,6 +9574,11 @@ h4.flickr_subtitle {
   }
 }
 /* line 69, scss/modules/_virtual-tours.scss */
+#tabs .tabs .tab-title {
+  display: inline-block;
+  vertical-align: top;
+}
+/* line 72, scss/modules/_virtual-tours.scss */
 #tabs .tabs .tab-title a {
   background: none repeat scroll 0 0 #eeeeee;
   display: block;
@@ -9585,34 +9590,34 @@ h4.flickr_subtitle {
   border: 1px solid #ffffff;
   border-radius: 0;
 }
-/* line 79, scss/modules/_virtual-tours.scss */
+/* line 82, scss/modules/_virtual-tours.scss */
 #tabs .tabs .tab-title a .crop {
   width: 150px;
   height: 75px;
   overflow: hidden;
 }
-/* line 83, scss/modules/_virtual-tours.scss */
+/* line 86, scss/modules/_virtual-tours.scss */
 #tabs .tabs .tab-title a .crop img {
   height: 150px;
   width: 150px;
 }
-/* line 88, scss/modules/_virtual-tours.scss */
+/* line 91, scss/modules/_virtual-tours.scss */
 #tabs .tabs .tab-title a h5 {
   margin: 0;
   font-size: 0.95rem;
 }
-/* line 94, scss/modules/_virtual-tours.scss */
+/* line 98, scss/modules/_virtual-tours.scss */
 #tabs .tabs .tab-title.active a {
   background: none repeat scroll 0 0 #f6f6f6 !important;
   border: 1px solid #e1e1e1;
 }
-/* line 99, scss/modules/_virtual-tours.scss */
+/* line 103, scss/modules/_virtual-tours.scss */
 #tabs .tabs .tab-title.active div.crop {
   opacity: 0.4;
   filter: alpha(opacity=40);
   background-color: #000;
 }
-/* line 104, scss/modules/_virtual-tours.scss */
+/* line 108, scss/modules/_virtual-tours.scss */
 #tabs .tabs .tab-title.active div.crop img {
   opacity: 0.4;
   filter: alpha(opacity=40);

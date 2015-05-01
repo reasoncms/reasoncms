@@ -66,31 +66,35 @@
 			}
 		}
 	}
-	.tabs .tab-title a {
-		background: none repeat scroll 0 0 #eeeeee;
-		display: block;
-		float: left;
-		margin-bottom: 2px;
-		padding: 0.2rem 0.2rem;
-		text-align: center;
-		width: 158px;
-		border: 1px solid #ffffff;
-		border-radius: 0;
-		.crop {
-			width: 150px;
-			height: 75px;
-			overflow: hidden;
-			img {
-				height: 150px;
-				width: 150px;		
+	.tabs .tab-title {
+		display: inline-block;
+		vertical-align: top;
+		a {
+			background: none repeat scroll 0 0 #eeeeee;
+			display: block;
+			float: left;
+			margin-bottom: 2px;
+			padding: 0.2rem 0.2rem;
+			text-align: center;
+			width: 158px;
+			border: 1px solid #ffffff;
+			border-radius: 0;
+			.crop {
+				width: 150px;
+				height: 75px;
+				overflow: hidden;
+				img {
+					height: 150px;
+					width: 150px;		
+				}
+			}
+			h5 {
+				margin: 0;
+				font-size: 0.95rem;
 			}
 		}
-		h5 {
-			margin: 0;
-			font-size: 0.95rem;
-		}
 	}
-	.tabs .tab-title.active{
+	.tabs .tab-title.active {
 		a {
 			background: none repeat scroll 0 0 #f6f6f6 !important;
 			border: 1px solid #e1e1e1;
