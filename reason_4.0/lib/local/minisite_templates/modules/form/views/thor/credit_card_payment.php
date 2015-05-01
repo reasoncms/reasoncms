@@ -2,6 +2,7 @@
 
 reason_include_once('minisite_templates/modules/form/views/thor/luther_default.php');
 include_once(WEB_PATH.'reason/local/stock/pfproclass.php'); //<<<< Change this
+reason_include_once('minisite_templates/modules/form/credit_card_shim.php');
 $GLOBALS[ '_form_view_class_names' ][ basename( __FILE__, '.php') ] = 'CreditCardThorForm';
 
 /**
@@ -61,105 +62,11 @@ class CreditCardThorForm extends DefaultThorForm
 	var $transaction_comment;
 
 
-	var $elements = array(
-		'payment_note' => array(
-			'type' => 'comment',
-			'text' => '<strong>Payment Method</strong>',
-		),
-		'payment_amount' => array(
-			'type' => 'text',
-			'size'=>10,
-			'display_name'=>'Payment Amount Placeholder',
-		),
-		'credit_card_number' => array(
-			'type' => 'text',
-			'size'=>35,
-		),
-		'credit_card_type' => array(
-			'type' => 'radio_no_sort',
-			'options' => array('Visa'=>'Visa','MasterCard'=>'MasterCard','American Express'=>'American Express','Discover'=>'Discover','none'=>'none'),
-			'label' => 'Credit Card Type',
-		),
-		'credit_card_type_icon' => array(
-			'type' => 'comment',
-			'text' => "<i class='fa fa-cc-visa formCCType' id='visaIcon'></i><i class='fa fa-cc-mastercard formCCType' id='mastercardIcon'></i><i class='fa fa-cc-amex formCCType' id='amexIcon'></i><i class='fa fa-cc-discover formCCType' id='discoverIcon'></i>",
-		),
-		'credit_card_expiration_month' => array(
-			'type' => 'month',
-			'display_name' => 'Expiration Month',
-		),
-		'credit_card_expiration_year' => array(
-			'type' => 'numrange',
-			'start' => 2020,
-			'end' => 2020,
-			'display_name' => 'Expiration Year',
-		),
-		'credit_card_security_code' => array(
-			'type' => 'text',
-			'size' => 4,
-		),
-		'credit_card_name' => array(
-			'type' => 'text',
-			'display_name' => 'Name as it appears on card',
-			'size'=>35,
-		),
-		'billing_street_address' => array(
-			'type' => 'textarea',
-			'rows' => 2,
-			'cols' => 35,
-			'display_name' => '<nobr>Billing Street Address</nobr>',
-		),
-		'billing_city' => array(
-			'type' => 'text',
-			'size'=>35,
-			'display_name' => 'Billing City',
-		),
-		'billing_state_province' => array(
-			'type' => 'state_province',
-			'display_name' => 'Billing State/Province',
-		),
-		'billing_zip' => array(
-			'type' => 'text',
-			'display_name' => 'Billing Zip/Postal Code',
-			'size'=>35,
-		),
-		'billing_country' => array(
-			'type' => 'text',
-			'default' => 'United States',
-			'size'=>35,
-			'display_name' => 'Billing Country',
-		),
-		'confirmation_text' => array(
-			'type' => 'hidden',
-		),
-		'result_refnum' => array(
-			'type' => 'hidden',
-		),
-		'result_authcode' => array(
-			'type' => 'hidden',
-		),
-	);
-	var $required = array(
-		'payment_amount',
-		'credit_card_type',
-		'credit_card_number',
-		'credit_card_expiration_month',
-		'credit_card_expiration_year',
-		'credit_card_security_code',
-		'credit_card_name',
-		'billing_street_address',
-		'billing_city',
-		'billing_zip',
-		'billing_state_province',
-
-	);
-
 	function custom_init()
 	{
-	  $model =& $this->get_model();
-	  $head_items = $model->get_head_items();
-	  $head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/disable_submit.js');
-    $head_items->add_javascript(REASON_HTTP_BASE_PATH.'local/luther_2014/javascripts/creditcard.js');
+		$credit_card_shim = new creditCardShim();
+		$credit_card_shim->init_form($this);
+		$this->add_callback(array(&$credit_card_shim, 'show_credit_card'), 'on_every_time');
 	}
 
 
@@ -167,6 +74,10 @@ class CreditCardThorForm extends DefaultThorForm
 	{
 
 		parent :: on_every_time();
+		
+		//$credit_card_shim = new creditCardShim();
+		//$credit_card_shim->init_form($this);
+		
 
 		// Don't take credit cards on an unencrypted connection!+
 		// if( !on_secure_page() )
@@ -175,13 +86,6 @@ class CreditCardThorForm extends DefaultThorForm
 		// 	header( 'Location: '.get_current_url( 'https' ) );
 		// 	exit;
 		// }
-
-
-
-
-
-
-
 
 		// If we have a field called Item List, then make it and the payment amount read only
 		if ( strlen($this->get_element_name_from_label('Item List')) > 0 )
@@ -466,10 +370,10 @@ class CreditCardThorForm extends DefaultThorForm
 			{
 				foreach ($email_values as $key => $val)
 				{
-				   if(!empty($this->get_value_from_label($val['label']))){
-					$values .= sprintf("\n<strong>%s:</strong>\t   %s\n", $val['label'], $val['value']);
-				   }
-			        }
+					if (!($this->get_value_from_label($val['label']))){
+						$values .= sprintf("\n<strong>%s:</strong>\t   %s\n", $val['label'], $val['value']);
+					}
+				}
 			}
 
 			$submission_time = date("Y-m-d H:i:s");

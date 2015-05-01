@@ -1,4 +1,4 @@
-<?
+<?php
 require('pfproclass.php');
 //require_once( CARL_UTIL_INC . 'db/db.php');
 require_once( 'carl_util/db/db.php' );

@@ -1,6 +1,7 @@
 <?
 reason_include_once('minisite_templates/modules/form/views/thor/luther_default.php');
 include_once(WEB_PATH.'reason/local/stock/pfproclass.php'); //<<<< Change this
+reason_include_once('minisite_templates/modules/form/credit_card_shim.php');
 $GLOBALS[ '_form_view_class_names' ][ basename( __FILE__, '.php') ] = 'CreditCardThorForm';
 
 /**
@@ -53,98 +54,13 @@ class CreditCardThorForm extends LutherDefaultThorForm
 	var $expense_budget_number;
 	var $revenue_budget_number;
 	var $transaction_comment;
-	
-
-	var $elements = array(
-		'payment_note' => array(
-			'type' => 'comment',
-			'text' => '<strong>Payment Method</strong>',
-		),
-		'payment_amount' => array(
-			'type' => 'text',
-			'size'=>10,
-			'display_name'=>'Payment Amount Placeholder',
-		),
-		'credit_card_type' => array(
-			'type' => 'radio_no_sort',
-			'options' => array('Visa'=>'Visa','MasterCard'=>'MasterCard','American Express'=>'American Express','Discover'=>'Discover'),
-		),
-		'credit_card_number' => array(
-			'type' => 'text',
-			'size'=>35,
-		),
-		'credit_card_expiration_month' => array(
-			'type' => 'month',
-			'display_name' => 'Expiration Month',
-		),
-		'credit_card_expiration_year' => array(
-			'type' => 'numrange',
-			'start' => 2020,
-			'end' => 2020,
-			'display_name' => 'Expiration Year',
-		),
-		'credit_card_name' => array(
-			'type' => 'text',
-			'display_name' => 'Name as it appears on card',
-			'size'=>35,
-		),
-		'billing_street_address' => array(
-			'type' => 'textarea',
-			'rows' => 2,
-			'cols' => 35,
-			'display_name' => '<nobr>Billing Street Address</nobr>',
-		),
-		'billing_city' => array(
-			'type' => 'text',
-			'size'=>35,
-			'display_name' => 'Billing City',
-		),
-		'billing_state_province' => array(
-			'type' => 'state_province',
-			'display_name' => 'Billing State/Province',
-		),
-		'billing_zip' => array(
-			'type' => 'text',
-			'display_name' => 'Billing Zip/Postal Code',
-			'size'=>35,
-		),
-		'billing_country' => array(
-			'type' => 'text',
-			'default' => 'United States',
-			'size'=>35,
-			'display_name' => 'Billing Country',
-		),
-		'confirmation_text' => array(
-			'type' => 'hidden',
-		),
-		'result_refnum' => array(
-			'type' => 'hidden',
-		),
-		'result_authcode' => array(
-			'type' => 'hidden',
-		),
-	);
-	var $required = array(
-		'payment_amount',
-		'credit_card_type',
-		'credit_card_number',
-		'credit_card_expiration_month',
-		'credit_card_expiration_year',
-		'credit_card_name',
-		'billing_street_address',
-		'billing_city',
-		'billing_zip',
-		'billing_state_province',
-
-
-	);
 
 
 	function custom_init()
 	{
-	  $model =& $this->get_model();
-	  $head_items = $model->get_head_items();
-	  $head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/disable_submit.js');
+		$credit_card_shim = new creditCardShim();
+		$credit_card_shim->init_form($this);
+		$this->add_callback(array(&$credit_card_shim, 'show_credit_card'), 'on_every_time');
 	}
 			
 	
@@ -281,8 +197,6 @@ class CreditCardThorForm extends LutherDefaultThorForm
 			$this->set_error('credit_card_type','Form Setup Error: Hidden "Revenue Budget Number" field is required in Reason form.');
 		}
 
-		// Make the date range for card expiration sane
-		$this->change_element_type('credit_card_expiration_year','numrange',array('start'=>date('Y'),'end'=>(date('Y')+15),'display_name' => 'Expiration Year'));
 	}
 		
 	function pre_show_form()

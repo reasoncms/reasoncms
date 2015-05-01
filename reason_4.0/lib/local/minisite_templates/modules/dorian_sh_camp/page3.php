@@ -12,6 +12,7 @@
 include_once(WEB_PATH.'reason/local/stock/dorian_sh_camp.php');
 include_once(TYR_INC . 'tyr.php');
 //reason_include_once( 'classes/repeat_transaction_helper.php' );
+reason_include_once('minisite_templates/modules/form/credit_card_shim.php');
 
 class DorianSHCampThreeForm extends FormStep
 {
@@ -25,90 +26,6 @@ class DorianSHCampThreeForm extends FormStep
 	var $transaction_comment = 'Dorian Camp';
 	var $is_in_testing_mode; // This gets set using the value of the THIS_IS_A_DEVELOPMENT_REASON_INSTANCE constant or if the 'tm' (testing mode) request variable evaluates to an integer
 
-	// the usual disco member data
-	var $elements = array(
-		'review_note' => array(
-			'type' => 'comment',
-			'text' => '<h3>Payment Information</h3>',
-                 ),
-                'deposit_note' => array(
-                    'type' => 'comment',
-                    'text' => 'Please choose your payment amount. If you choose to only pay the deposit, the balance is due on registration day.
-                        No refund of deposit after June 4. More information will follow.'
-                ),
-                'payment_amount' => 'hidden',
-		'payment_note' => array(
-			'type' => 'comment',
-			'text' => '<h3>Payment Method</h3>',
-		),
-		'credit_card_type' => array(
-			'type' => 'radio_no_sort',
-			'options' => array('Visa'=>'Visa','MasterCard'=>'MasterCard','American Express'=>'American Express','Discover'=>'Discover'),
-		),
-		'credit_card_number' => array(
-			'type' => 'text',
-			'size'=>35,
-		),
-		'credit_card_expiration_month' => array(
-			'type' => 'month',
-			'display_name' => 'Expiration Month',
-		),
-		'credit_card_expiration_year' => 'text',
-		'credit_card_name' => array(
-			'type' => 'text',
-			'display_name' => 'Name as it appears on card',
-			'size'=>35,
-		),
-		'billing_address' => array(
-			'type' => 'radio_no_sort',
-			'options' => array('entered'=>'Use address provided on previous page','new'=>'Use a different address'),
-			'display_name' => 'Billing Address',
-			'default' => 'entered',
-		),
-		'billing_street_address' => array(
-			'type' => 'textarea',
-			'rows' => 3,
-			'cols' => 35,
-			'display_name' => 'Street Address',
-		),
-		'billing_city' => array(
-			'type' => 'text',
-			'size'=>35,
-			'display_name' => 'City',
-		),
-		'billing_state_province' => array(
-			'type' => 'state_province',
-			'display_name' => 'State/Province',
-			'include_military_codes' => true,
-		),
-		'billing_zip' => array(
-			'type' => 'text',
-			'display_name' => 'Zip/Postal Code',
-			'size'=>35,
-		),
-		'billing_country' => array(
-			'type' => 'country',
-			'display_name' => 'Country',
-		),
-		'confirmation_text' => array(
-			'type' => 'hidden',
-		),
-		'result_refnum' => array(
-			'type' => 'hidden',
-		),
-		'result_authcode' => array(
-			'type' => 'hidden',
-		),
-	);
-	var $required = array(
-		'credit_card_type',
-		'credit_card_number',
-		'credit_card_expiration_month',
-		'credit_card_expiration_year',
-		'credit_card_name',
-		'billing_address',
-	);
-
 	var $date_format = 'j F Y';
 	var $display_name = 'Payment';
 	var $error_header_text = 'Please check your form.';
@@ -117,10 +34,14 @@ class DorianSHCampThreeForm extends FormStep
 	// style up the form and add comments et al
 	function on_every_time()
 	{
+		$this->add_element('review_note', 'comment', array('text' => '<h3>Payment Information</h3>'));
+		$this->add_element('deposit_note', 'comment', array('text' => 'Please choose your payment amount. If you choose to only pay the deposit, the balance is due on registration day. No refund of deposit after June 4. More information will follow.'));
+		
+		$credit_card_shim = new creditCardShim();
+		$credit_card_shim->show_credit_card(&$this);
+		 
         $this->box_class = 'StackedBox';
-        //Set expiration years
-        $cur_year = date('Y');
-        $this->change_element_type('credit_card_expiration_year', 'numrange', array('start' => $year, 'end' => $year+10, 'display_name' => 'Expiration Year'));
+        
         // calculate the total_cost of the camp by adding lesson_cost (if present) to the camp_cost
         $camp_cost = 486;
         $per_lesson_cost = 39;
@@ -157,7 +78,6 @@ class DorianSHCampThreeForm extends FormStep
 			$this->is_in_testing_mode = false;
 		}
 
-		$this->change_element_type('credit_card_expiration_year','numrange',array('start'=>date('Y'),'end'=>(date('Y')+15),'display_name' => 'Expiration Year'));
 	}
 
 	function pre_show_form()

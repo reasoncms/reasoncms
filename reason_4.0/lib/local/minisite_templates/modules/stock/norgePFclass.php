@@ -1,4 +1,4 @@
-<?
+<?php
 // PayFlowPro processing class
 // This class encapsulates some of the work of handling a real-time transaction.
 // The process is already fairly abstract -- what this class mostly does is provide
