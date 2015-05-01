@@ -77,7 +77,7 @@ class ReasonUpgrader_46_AddCloakTheme implements reasonUpgraderInterface
                 ),
                 array(
                     'name' => 'Cloak Login',
-                    'url' => 'cloak/scss/cloak_login.scss',
+                    'url' => 'cloak/scss/login.scss',
                     'css_relative_to_reason_http_base' => 'true',
                     'unique_name' => 'cloak_login_css',
                 ),
