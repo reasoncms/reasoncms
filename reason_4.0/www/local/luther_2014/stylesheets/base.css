@@ -5521,126 +5521,144 @@ hr.horizontal-rule-basic {
   display: inline;
 }
 /* line 416, scss/modules/_events.scss */
+#calendar .responsiveEventsList .eventsListContent .dayEvents .event .description,
+#calendar .responsiveEventsList .eventsListContent .ongoingEvents .event .description {
+  font-size: 0.95rem;
+  font-weight: 300;
+  line-height: 1.3;
+  margin: 0.5rem 0 0.5rem 0;
+}
+/* line 421, scss/modules/_events.scss */
+#calendar .responsiveEventsList .eventsListContent .dayEvents .event .description + time,
+#calendar .responsiveEventsList .eventsListContent .ongoingEvents .event .description + time {
+  font-weight: 500;
+}
+/* line 423, scss/modules/_events.scss */
+#calendar .responsiveEventsList .eventsListContent .dayEvents .event .description + time + span + span.location,
+#calendar .responsiveEventsList .eventsListContent .ongoingEvents .event .description + time + span + span.location {
+  font-weight: 500;
+}
+/* line 429, scss/modules/_events.scss */
 #calendar .responsiveEventsList .eventsListContent .dayEvents .event time,
 #calendar .responsiveEventsList .eventsListContent .ongoingEvents .event time {
   display: inline;
 }
-/* line 423, scss/modules/_events.scss */
+/* line 436, scss/modules/_events.scss */
 #calendar .responsiveEventsList .eventsListContent .dayEvents .event .sep,
 #calendar .responsiveEventsList .eventsListContent .ongoingEvents .event .sep {
   padding: 0 0.25rem;
 }
-/* line 429, scss/modules/_events.scss */
+/* line 442, scss/modules/_events.scss */
 #calendar .responsiveEventsList .eventsListContent .dayEvents .event .location,
 #calendar .responsiveEventsList .eventsListContent .ongoingEvents .event .location {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
   font-weight: 300;
   display: inline;
 }
-/* line 443, scss/modules/_events.scss */
+/* line 456, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGridWrapper {
   margin-bottom: 2.5rem;
 }
-/* line 447, scss/modules/_events.scss */
+/* line 460, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid {
   text-align: center;
 }
-/* line 453, scss/modules/_events.scss */
+/* line 466, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid a.previous,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid h4,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid a.next {
   display: inline-block;
   padding: 0 0.375rem;
 }
-/* line 458, scss/modules/_events.scss */
+/* line 471, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table {
   border: none;
 }
-/* line 460, scss/modules/_events.scss */
+/* line 473, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table tr {
   background: #FFF;
 }
-/* line 465, scss/modules/_events.scss */
+/* line 478, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table th,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td {
   text-align: center;
   padding: 0;
 }
-/* line 472, scss/modules/_events.scss */
+/* line 485, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table th {
   padding: 5% 0;
   background: #fbfbfb;
   background: #FFF;
   border: #FFF;
 }
-/* line 479, scss/modules/_events.scss */
+/* line 492, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td {
   border-color: #DDDDDD;
   border-image: none;
   border-style: solid;
   border-width: 1px;
 }
-/* line 485, scss/modules/_events.scss */
+/* line 498, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td:empty {
   background: #f6f6f6;
 }
-/* line 494, scss/modules/_events.scss */
+/* line 507, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.hasEvent a {
   color: #1073ce;
 }
-/* line 500, scss/modules/_events.scss */
+/* line 513, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.currentlyViewing {
   background: #1073ce;
 }
-/* line 504, scss/modules/_events.scss */
+/* line 517, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.currentlyViewing a {
   color: #FFF;
 }
-/* line 509, scss/modules/_events.scss */
+/* line 522, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.today {
   background: #3b99f0;
 }
-/* line 513, scss/modules/_events.scss */
+/* line 526, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.today a {
   color: #FFF;
 }
-/* line 518, scss/modules/_events.scss */
+/* line 531, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td a {
   color: #9d9d9d;
   display: block;
   padding: 28% 0;
 }
-/* line 530, scss/modules/_events.scss */
+/* line 543, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a {
   margin: 0 5%;
   display: block;
   padding: 0;
 }
-/* line 534, scss/modules/_events.scss */
+/* line 547, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before {
   margin: 0 0.5rem 1rem 0;
 }
-/* line 541, scss/modules/_events.scss */
+/* line 554, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .webcal:before {
   content: "\f073";
 }
-/* line 545, scss/modules/_events.scss */
+/* line 558, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .download:before {
   content: "\f063";
 }
-/* line 549, scss/modules/_events.scss */
+/* line 562, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .rss:before {
   content: "\f09e";
 }
 
 /* Events Mini */
-/* line 564, scss/modules/_events.scss */
+/* line 577, scss/modules/_events.scss */
 #miniCal #events {
   margin-bottom: 1rem;
 }
-/* line 569, scss/modules/_events.scss */
+/* line 582, scss/modules/_events.scss */
 #miniCal .dayblock,
 #miniCal .ongoingblock {
   border-bottom: 1px solid #e9e9e9;
@@ -5660,7 +5678,7 @@ hr.horizontal-rule-basic {
 #miniCal .ongoingblock:after {
   clear: both;
 }
-/* line 576, scss/modules/_events.scss */
+/* line 589, scss/modules/_events.scss */
 #miniCal .day {
   display: block;
   text-align: center;
@@ -5672,7 +5690,7 @@ hr.horizontal-rule-basic {
   top: 1rem;
   left: 0;
 }
-/* line 587, scss/modules/_events.scss */
+/* line 600, scss/modules/_events.scss */
 #miniCal .day .month {
   display: block;
   background: #9f2112;
@@ -5685,7 +5703,7 @@ hr.horizontal-rule-basic {
   border-top-right-radius: 6px;
   padding: 0.125rem;
 }
-/* line 595, scss/modules/_events.scss */
+/* line 608, scss/modules/_events.scss */
 #miniCal .day .date {
   display: block;
   background: #e9e9e9;
@@ -5697,13 +5715,13 @@ hr.horizontal-rule-basic {
   border-bottom-right-radius: 6px;
   padding: 0.125rem;
 }
-/* line 608, scss/modules/_events.scss */
+/* line 621, scss/modules/_events.scss */
 #miniCal .dayEvents,
 #miniCal .ongoingEvents {
   margin: 0 0 0 4.375rem;
   padding: 0;
 }
-/* line 612, scss/modules/_events.scss */
+/* line 625, scss/modules/_events.scss */
 #miniCal .dayEvents .event,
 #miniCal .ongoingEvents .event {
   padding-bottom: 0.625rem;
@@ -5721,33 +5739,33 @@ hr.horizontal-rule-basic {
 #miniCal .ongoingEvents .event:after {
   clear: both;
 }
-/* line 616, scss/modules/_events.scss */
+/* line 629, scss/modules/_events.scss */
 #miniCal .dayEvents .event a,
 #miniCal .ongoingEvents .event a {
   font-weight: 400;
 }
-/* line 622, scss/modules/_events.scss */
+/* line 635, scss/modules/_events.scss */
 #miniCal .dayEvents .event a:hover,
 #miniCal .ongoingEvents .event a:hover {
   text-decoration: underline;
 }
-/* line 625, scss/modules/_events.scss */
+/* line 638, scss/modules/_events.scss */
 #miniCal .dayEvents .event a:hover i,
 #miniCal .ongoingEvents .event a:hover i {
   color: #ffbd1c;
 }
-/* line 630, scss/modules/_events.scss */
+/* line 643, scss/modules/_events.scss */
 #miniCal .dayEvents .event a i,
 #miniCal .ongoingEvents .event a i {
   color: #e8a500;
   margin-left: 0.375rem;
 }
-/* line 640, scss/modules/_events.scss */
+/* line 653, scss/modules/_events.scss */
 #miniCal .dayEvents .event:last-child,
 #miniCal .ongoingEvents .event:last-child {
   padding-bottom: 0;
 }
-/* line 645, scss/modules/_events.scss */
+/* line 658, scss/modules/_events.scss */
 #miniCal .dayEvents .event .through,
 #miniCal .dayEvents .event .ends,
 #miniCal .ongoingEvents .event .through,
@@ -5755,50 +5773,50 @@ hr.horizontal-rule-basic {
   font-style: normal;
   display: inline;
 }
-/* line 650, scss/modules/_events.scss */
+/* line 663, scss/modules/_events.scss */
 #miniCal .dayEvents .event time,
 #miniCal .ongoingEvents .event time {
   display: inline;
 }
-/* line 657, scss/modules/_events.scss */
+/* line 670, scss/modules/_events.scss */
 #miniCal .dayEvents .event .sep,
 #miniCal .ongoingEvents .event .sep {
   padding: 0 0.25rem;
 }
-/* line 663, scss/modules/_events.scss */
+/* line 676, scss/modules/_events.scss */
 #miniCal .dayEvents .event .location,
 #miniCal .ongoingEvents .event .location {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
   font-weight: 300;
   display: inline;
 }
-/* line 674, scss/modules/_events.scss */
+/* line 687, scss/modules/_events.scss */
 #miniCal .foot .more {
   margin: 0;
 }
-/* line 677, scss/modules/_events.scss */
+/* line 690, scss/modules/_events.scss */
 #miniCal .foot .more a:before {
   content: "\f073";
   margin-right: 0.375rem;
 }
 
 /* Events Single */
-/* line 695, scss/modules/_events.scss */
+/* line 708, scss/modules/_events.scss */
 #calendar .eventDetails .back a:before {
   content: "\f137";
   margin-right: 0.375rem;
 }
-/* line 705, scss/modules/_events.scss */
+/* line 718, scss/modules/_events.scss */
 #calendar .eventDetails .eventMeta li {
   margin-left: 2.5rem;
 }
-/* line 708, scss/modules/_events.scss */
+/* line 721, scss/modules/_events.scss */
 #calendar .eventDetails .eventMeta li:before {
   width: 2rem;
   margin-left: -2.25rem;
   text-align: center;
 }
-/* line 719, scss/modules/_events.scss */
+/* line 732, scss/modules/_events.scss */
 #calendar .eventDetails .eventMeta li .fa, #calendar .eventDetails .eventMeta li #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .navListTop ul #calendar .eventDetails .eventMeta li .navListItem.accordion > a:before, #calendar .eventDetails .eventMeta li #minisite #navWrap .jump a:before, #minisite #navWrap .jump #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li #minisite .continueReading a:after, #minisite .continueReading #calendar .eventDetails .eventMeta li a:after, #calendar .eventDetails .eventMeta li #minisite .feedLink .feedInfo a:before, #minisite .feedLink .feedInfo #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta #callToActionBlurb .blurb ul li a:after, #callToActionBlurb .blurb ul #calendar .eventDetails .eventMeta li a:after, #calendar .eventDetails .eventMeta .childrenList li a[href]:before, .childrenList #calendar .eventDetails .eventMeta li a[href]:before, #calendar .eventDetails .eventMeta #childrenAndGrandchildren li ul .childDesc:before, #childrenAndGrandchildren #calendar .eventDetails .eventMeta li ul .childDesc:before, #calendar .eventDetails .eventMeta li .directoryHead ul a:after, .directoryHead ul #calendar .eventDetails .eventMeta li a:after, #calendar .eventDetails .eventMeta li .searchOptions.openOptions:after, #calendar .eventDetails .eventMeta li .searchOptions.closedOptions:after, #calendar .eventDetails .eventMeta li .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport .eventDetails .eventMeta li a:before,
 #calendar .eventDetails .eventMeta li .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li #miniCal .foot .more a:before, #miniCal .foot .more #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li .back a:before, #calendar .eventDetails .back .eventMeta li a:before, #calendar .eventDetails .eventMeta li li:before, #calendar .eventDetails .eventMeta li .contact:before,
@@ -5808,68 +5826,68 @@ hr.horizontal-rule-basic {
 .featuresModule .feature .featureInfo .featureText #calendar .eventDetails .eventMeta li span:before, #calendar .eventDetails .eventMeta li #discoErrorNotice h3:before, #discoErrorNotice #calendar .eventDetails .eventMeta li h3:before, #calendar .eventDetails .eventMeta li #pageContent ul.major-list, #pageContent #calendar .eventDetails .eventMeta li ul.major-list, #calendar .eventDetails .eventMeta li #policyModule .rootPolicyList .rootPolicyItem a:before, #policyModule .rootPolicyList .rootPolicyItem #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li #policyModule .policy .decimal .closedAccordion .policyName:after, #policyModule .policy .decimal .closedAccordion #calendar .eventDetails .eventMeta li .policyName:after, #calendar .eventDetails .eventMeta li #policyModule .policy .decimal .openAccordion .policyName:after, #policyModule .policy .decimal .openAccordion #calendar .eventDetails .eventMeta li .policyName:after, #calendar .eventDetails .eventMeta li #relatedPub .pubLinks a:before, #relatedPub .pubLinks #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li .publication .post p.comments a:before, .publication .post p.comments #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li .publication .post p.more a:after, .publication .post p.more #calendar .eventDetails .eventMeta li a:after, #calendar .eventDetails .eventMeta li .publication .fullPost .commentAdded h4:before, .publication .fullPost .commentAdded #calendar .eventDetails .eventMeta li h4:before, #calendar .eventDetails .eventMeta li .publication .nextPrev .prev h4:before, .publication .nextPrev .prev #calendar .eventDetails .eventMeta li h4:before, #calendar .eventDetails .eventMeta li .publication .nextPrev .next h4:after, .publication .nextPrev .next #calendar .eventDetails .eventMeta li h4:after, #calendar .eventDetails .eventMeta li th.header:after {
   margin: 0 0.375rem;
 }
-/* line 724, scss/modules/_events.scss */
+/* line 737, scss/modules/_events.scss */
 #calendar .eventDetails .eventMeta .repeats:before {
   content: "\f01e";
 }
-/* line 728, scss/modules/_events.scss */
+/* line 741, scss/modules/_events.scss */
 #calendar .eventDetails .eventMeta .date:before {
   content: "\f073";
 }
-/* line 732, scss/modules/_events.scss */
+/* line 745, scss/modules/_events.scss */
 #calendar .eventDetails .eventMeta .time:before {
   content: "\f017";
 }
-/* line 736, scss/modules/_events.scss */
+/* line 749, scss/modules/_events.scss */
 #calendar .eventDetails .eventMeta .location:before {
   content: "\f041";
 }
-/* line 743, scss/modules/_events.scss */
+/* line 756, scss/modules/_events.scss */
 #calendar .eventDetails .images {
   margin-bottom: 2.5rem;
   display: inline-block;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 747, scss/modules/_events.scss */
+  /* line 760, scss/modules/_events.scss */
   #calendar .eventDetails .images .imageChunk {
     float: left;
     width: 50%;
   }
-  /* line 753, scss/modules/_events.scss */
+  /* line 766, scss/modules/_events.scss */
   #calendar .eventDetails .images .imageChunk:nth-child(2n+1) {
     padding-right: 1rem;
     clear: left;
   }
-  /* line 758, scss/modules/_events.scss */
+  /* line 771, scss/modules/_events.scss */
   #calendar .eventDetails .images .imageChunk:nth-child(2n+2) {
     padding-left: 1rem;
   }
 }
-/* line 767, scss/modules/_events.scss */
+/* line 780, scss/modules/_events.scss */
 #calendar .eventDetails .contact,
 #calendar .eventDetails .eventUrl,
 #calendar .eventDetails .calendarExport {
   margin-bottom: 0;
 }
-/* line 770, scss/modules/_events.scss */
+/* line 783, scss/modules/_events.scss */
 #calendar .eventDetails .contact:before,
 #calendar .eventDetails .eventUrl:before,
 #calendar .eventDetails .calendarExport:before {
   margin-right: 0.375rem;
 }
-/* line 777, scss/modules/_events.scss */
+/* line 790, scss/modules/_events.scss */
 #calendar .eventDetails .contact:before {
   content: "\f059";
 }
-/* line 783, scss/modules/_events.scss */
+/* line 796, scss/modules/_events.scss */
 #calendar .eventDetails .eventUrl:before {
   content: "\f05a";
 }
-/* line 789, scss/modules/_events.scss */
+/* line 802, scss/modules/_events.scss */
 #calendar .eventDetails .calendarExport:before {
   content: "\f073";
 }
-/* line 794, scss/modules/_events.scss */
+/* line 807, scss/modules/_events.scss */
 #calendar .eventDetails .export {
   margin-bottom: 1.5rem;
 }
