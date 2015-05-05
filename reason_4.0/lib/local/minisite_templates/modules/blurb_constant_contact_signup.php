@@ -185,10 +185,10 @@
 							$emailTitle = $this->newsletter_names[$emailName];
 							$emailInfo = $this->newsletter_codes[$emailTitle];
 							echo '<li>'.$emailInfo['listname'].'</li>';
+							add_contact($emailInfo['token'], $emailInfo['listname'], $email);	
 						}
 						echo '</ul>';
-						echo '</div>';
-						//add_contact($emailInfo['token'], $emailInfo['listname'], $email);	
+						echo '</div>';	
 					}
 				}
 			}
