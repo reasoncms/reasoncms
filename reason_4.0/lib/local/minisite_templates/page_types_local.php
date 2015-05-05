@@ -24,6 +24,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'main_post_3' => '',
 			'call_to_action_blurb' => 'blurb_call_to_action',
 			'callout_blurb' => 'blurb_callout',
+			'constant_contact_signup_blurb' => 'blurb_constant_contact_signup',
 			'pre_sidebar' => 'blurb',
 			'pre_sidebar_2' => array(
 				'module' => 'image_sidebar_luther', // default parameters set in alter_reason_pagetype in luther.php
