@@ -185,12 +185,6 @@ class DorianJHCampsThreeForm extends FormStep
                     $this->set_value('billing_zip', $this->controller->get('zip'));
                 }
 
-
-        // Process credit card
-        $pf = new dorian_jh;
-        $credit_card_shim = new creditCardShim();
-        $credit_card_shim->process_credit_card(&$this, &$pf);
-        return;
         
         if( !$this->_has_errors() )
         {
