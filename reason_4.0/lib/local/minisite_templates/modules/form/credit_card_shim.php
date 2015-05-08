@@ -21,9 +21,13 @@ class creditCardShim
 		$disco->add_element('credit_card_type_icon', 'comment', array('text' => "<i class='fa fa-cc-visa formCCType' id='visaIcon'></i><i class='fa fa-cc-mastercard formCCType' id='mastercardIcon'></i><i class='fa fa-cc-amex formCCType' id='amexIcon'></i><i class='fa fa-cc-discover formCCType' id='discoverIcon'></i>"));
 		$disco->add_element('credit_card_expiration_month', 'month', array('display_name' => 'Expiration Month'));
 		$disco->add_element('credit_card_expiration_year', 'text');
-		$disco->add_element('credit_card_security_code', 'text', array('size' => 4));
-		$disco->set_comments('credit_card_security_code', form_comment('The card security code is located on the back of MasterCard, Visa and Discover credit or debit cards and is typically a separate group of 3 digits to the right of the signature strip. On American Express cards, the card security code is a printed, not embossed, group of four digits on the front towards the right.'));
-		
+		$disco->add_element('credit_card_security_code', 'text', array('size' => 4, 'display_name' => 'Security Code'));
+		$disco->set_comments('credit_card_security_code', form_comment('
+			<p class="formComment"><a data-reveal-id="cvv2Iframe">What\'s this?</a></p>
+			<div class="reveal-modal medium" id="cvv2Iframe" data-reveal="">
+                <iframe height="300px" width="100%" src="https://www.cvvnumber.com/cvv.html"></iframe>
+                <a class="close-reveal-modal">×</a>
+            </div>'));
 		$disco->add_element('credit_card_name', 'text', array('display_name' => 'Name as it appears on card', 'size' => 35));
 		// Currently the billing address is not needed since a product is not being delivered.
 		//$disco->add_element('billing_address', 'radio_no_sort', array('display_name' => 'Billing Address', 'default' => 'entered', 'options' => array('entered' => 'Use address provided on previous page', 'new' => 'Use a different address')));
@@ -47,7 +51,8 @@ class creditCardShim
 		
 		$year = date('Y');
 		$disco->change_element_type('credit_card_expiration_year', 'numrange', array('start' => $year, 'end' => $year + 15, 'display_name' => 'Expiration Year'));
-		
+		$disco->add_element_group('inline', 'expiration_group', array('credit_card_expiration_month', 'credit_card_expiration_year'), array('use_element_labels' => false, 'display_name' => 'Expiration mm/yyyy'));
+		$disco->move_element('expiration_group', 'before', 'credit_card_security_code');
 		
 	}
 

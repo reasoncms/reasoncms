@@ -208,9 +208,6 @@ class CreditCardThorForm extends DefaultThorForm
 		} else {
 			$this->set_error('credit_card_type','Form Setup Error: Hidden "Revenue Budget Number" field is required in Reason form.');
 		}
-
-		// Make the date range for card expiration sane
-		$this->change_element_type('credit_card_expiration_year','numrange',array('start'=>date('Y'),'end'=>(date('Y')+15),'display_name' => 'Expiration Year'));
 	}
 
 	function pre_show_form()
