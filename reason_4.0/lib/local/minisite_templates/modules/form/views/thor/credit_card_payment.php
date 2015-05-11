@@ -74,59 +74,6 @@ class CreditCardThorForm extends DefaultThorForm
 	{
 
 		parent :: on_every_time();
-		
-		//$credit_card_shim = new creditCardShim();
-		//$credit_card_shim->init_form($this);
-		
-
-		// Don't take credit cards on an unencrypted connection!+
-		// if( !on_secure_page() )
-		// {
-
-		// 	header( 'Location: '.get_current_url( 'https' ) );
-		// 	exit;
-		// }
-
-		// If we have a field called Item List, then make it and the payment amount read only
-		if ( strlen($this->get_element_name_from_label('Item List')) > 0 )
-		{
-			$this->change_element_type('payment_amount', 'solidtext');
-			$this->change_element_type($this->get_element_name_from_label('Item List'), 'solidtext');
-		}
-
-
-		// Scott Bassford 7/6/2009 - if we have a field called "Item List" then prepopulate fields, if no data then push the to the first page somehow
-		if ($this->budget_number_element = $this->get_element_name_from_label('Item List'))
-		{
-
-
-			if ( !isset( $_POST['ccprepopulate'] ) && ( !isset( $_POST['credit_card_name'] )))  { header("Location: /getdowngiveback/register/"); echo 'Redirecting to list.'; die ; }
-
-			if ( isset( $_POST['ccprepopulate'] ))
-			{
-						$this->set_value($this->get_element_name_from_label('Item List'), $_POST['ccpaymentdetail']);
-						$this->set_value('payment_amount', $_POST['ccpaymentamount']);
-						$this->change_element_type('payment_amount', 'solidtext');
-						$this->change_element_type($this->get_element_name_from_label('Item List'), 'solidtext');
-			}
-
-
-		}
-		//if (!preg_match('/\d{2}-\d{4}-\d{4}-\d{4}/', $this->get_value($this->budget_number_element)))
-		//	{
-		//		$this->set_error('credit_card_type','Form Setup Error: Hidden "Budget Number" field must contain a number in the form: 10-0000-0000-0000');
-		//	}
-		//} else {
-		//	$this->set_error('credit_card_type','Form Setup Error: Hidden "Budget Number" field is required in Reason form.');
-		//}
-
-
-
-
-
-
-
-
 
 		// Turn on test mode when appropriate
 		if(THIS_IS_A_DEVELOPMENT_REASON_INSTANCE || !empty( $this->_request[ 'tm' ] ) )
