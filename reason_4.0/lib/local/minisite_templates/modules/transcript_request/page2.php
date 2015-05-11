@@ -35,7 +35,7 @@ class TranscriptPageTwoForm extends FormStep
 		$this->add_element('review_note', 'comment', array('text' => 'Transcript overview'));
 		
 		$credit_card_shim = new creditCardShim();
-		$credit_card_shim->show_credit_card(&$this);
+		$credit_card_shim->show_credit_card($this);
 		
         $this->box_class = 'StackedBox';
 		if( !$this->controller->get('amount'))

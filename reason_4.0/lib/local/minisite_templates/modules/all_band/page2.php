@@ -108,7 +108,7 @@ class AllBandTwo extends FormStep {
     // style up the form and add comments et al
     function on_every_time() {
         $credit_card_shim = new creditCardShim();
-        $credit_card_shim->show_credit_card(&$this);
+        $credit_card_shim->show_credit_card($this);
         
         $this->change_element_type('payment_amount', 'solidtext');
         $this->set_value('payment_amount', '$' . $this->get_total_cost());

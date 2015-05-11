@@ -126,10 +126,8 @@ class OnlineGiftModule extends DefaultMinisiteModule
 		if($head_items =& $this->get_head_items())
 		{
 			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form.css');
-
 			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'luther_2014/stylesheets/sites/giving.css');
 			$head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/giftform.js');
-			$head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/disable_submit.js');
 		}
 		// Insert refresh headers when in kiosk mode
 		if ($this->params['kiosk_mode'])

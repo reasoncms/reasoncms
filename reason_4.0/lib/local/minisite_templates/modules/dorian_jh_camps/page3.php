@@ -36,7 +36,7 @@ class DorianJHCampsThreeForm extends FormStep
     	$this->add_element('deposit_note', 'comment', array('text' => 'Please choose your payment amount. If you choose to only pay the deposit, the balance is due on registration day. No refund of deposit after June 4. More information will follow.'));
     	 
     	$credit_card_shim = new creditCardShim();
-    	$credit_card_shim->show_credit_card(&$this);
+    	$credit_card_shim->show_credit_card($this);
     	
         $this->box_class = 'StackedBox';
         // calculate the total_cost of the camp by adding lesson_cost (if present) to the camp_cost

@@ -32,7 +32,7 @@ class LFWFormPageTwo extends FormStep
 		$this->add_element('review_note', 'comment', array('text' => 'Lutheran Festival of Writing registration overview'));
 		
 		$credit_card_shim = new creditCardShim();
-		$credit_card_shim->show_credit_card(&$this);
+		$credit_card_shim->show_credit_card($this);
 		
 		if( !$this->controller->get('amount'))
 		{
