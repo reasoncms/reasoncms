@@ -14,7 +14,9 @@ class creditCardShim
 
 	function show_credit_card(&$disco)
 	{
-		$disco->add_element('payment_amount', 'hidden');
+		// let's keep the payment_amount handling in credit_card_payment.php file it's easier to access there and 
+		// new forms will inherit it. Custom forms will have their own field names to create a "payment amount"
+		// $disco->add_element('payment_amount', 'hidden');
 		$disco->add_element('payment_note', 'comment', array('text' => '<h3>Payment Method</h3>'));
 		$disco->add_element('credit_card_name', 'text', array('display_name' => 'Name as it appears on card', 'size' => 35));
 		$disco->add_element('credit_card_number', 'text', array('size' => 35));
@@ -40,7 +42,7 @@ class creditCardShim
 		$disco->add_element('result_refnum', 'hidden');
 		$disco->add_element('result_authcode', 'hidden');
 		
-		$disco->add_required('payment_amount');
+		// $disco->add_required('payment_amount');
 		$disco->add_required('credit_card_type');
 		$disco->add_required('credit_card_number');
 		$disco->add_required('credit_card_expiration_month');
@@ -54,7 +56,7 @@ class creditCardShim
 		$disco->add_element_group('inline', 'expiration_group', array('credit_card_expiration_month', 'credit_card_expiration_year'), array('use_element_labels' => false, 'display_name' => 'Expiration mm/yyyy'));
 		$disco->move_element('expiration_group', 'before', 'credit_card_security_code');
 	}
-
+	
 }
 
 ?>
