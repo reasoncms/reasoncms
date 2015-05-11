@@ -119,7 +119,7 @@ class NorgeFormTwo extends FormStep
 		$this->add_element('review_note', 'comment', array('text' => '<h3>Payment Information</h3>'));
 		
 		$credit_card_shim = new creditCardShim();
-		$credit_card_shim->show_credit_card(&$this);
+		$credit_card_shim->show_credit_card($this);
 		
                // determine which budget numbers to use
                 // $revenue_budget_number before June 1, 10-000-33700-22000
