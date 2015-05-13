@@ -64,16 +64,19 @@ class GolfOutingForm extends CreditCardThorForm {
         $total          = 0;
         $golf_cost      = 0;
         $dinner_cost    = 0;
+        $lunch_cost     = 0;
         $brunch_cost    = 0;
 
         if ($this->get_element_name_from_label('Golf Registration'))
             $golf_cost = $this->_cleanup_cost($this->get_value_from_label('Golf Registration'));
         if ($this->get_element_name_from_label('Dinner Registration'))
             $dinner_cost = $this->_cleanup_cost($this->get_value_from_label('Dinner Registration'));
+        if ($this->get_element_name_from_label('Lunch Registration'))
+            $dinner_cost = $this->_cleanup_cost($this->get_value_from_label('Lunch Registration'));
         if ($this->get_element_name_from_label('Brunch Registration'))
             $brunch_cost = $this->_cleanup_cost($this->get_value_from_label('Brunch Registration'));
 
-        $total = ($golf_cost + $dinner_cost + $brunch_cost);
+        $total = ($golf_cost + $dinner_cost + $lunch_cost + $brunch_cost);
         return $total;
     }
 
