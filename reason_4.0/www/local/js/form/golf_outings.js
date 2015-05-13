@@ -6,9 +6,11 @@ $(function() {
 
     golf_registration_selector      = $(".words:contains('Golf Registration')");
     dinner_registration_selector    = $(".words:contains('Dinner Registration')");
+    lunch_registration_selector     = $(".words:contains('Lunch Registration')");
     brunch_registration_selector    = $(".words:contains('Brunch Registration')");
     golfer_names_selector           = $(".words:contains('Golfer Name(s)')");
-    dinner_names_selector            = $(".words:contains('Dinner Name(s)')");
+    dinner_names_selector           = $(".words:contains('Dinner Name(s)')");
+    lunch_names_selector            = $(".words:contains('Lunch Name(s)')");
     brunch_names_selector           = $(".words:contains('Brunch Name(s)')");
 
     
@@ -23,6 +25,12 @@ $(function() {
     toggle_dinner_names();
     dinner_registration_selector.next().find('input:radio').change(function(){
         toggle_dinner_names();
+        toggle_billing();
+    });
+    
+    toggle_lunch_names();
+    lunch_registration_selector.next().find('input:radio').change(function(){
+        toggle_lunch_names();
         toggle_billing();
     });
     
@@ -50,6 +58,13 @@ function toggle_dinner_names(){
         dinner_names_selector.parent().hide(500);
     } else {
         dinner_names_selector.parent().show(500);
+    }
+}
+function toggle_lunch_names(){
+    if (typeof lunch_registration_selector.next().find('input:radio:checked').val() === 'undefined') {
+        lunch_names_selector.parent().hide(500);
+    } else {
+        lunch_names_selector.parent().show(500);
     }
 }
 function toggle_brunch_names(){
@@ -142,17 +157,20 @@ function cleanup_cost(coststring){
 function add(){
     golf_cost       = 0;
     dinner_cost     = 0;
+    lunch_cost      = 0;
     brunch_cost     = 0;
     total_cost      = 0;
 
     if (golf_registration_selector.next().find('input:radio:checked'))
         golf_cost   = cleanup_cost(golf_registration_selector.next().find('input:radio:checked').val());
     if (dinner_registration_selector.next().find('input:radio:checked'))
-            dinner_cost   = cleanup_cost(dinner_registration_selector.next().find('input:radio:checked').val());
+        dinner_cost   = cleanup_cost(dinner_registration_selector.next().find('input:radio:checked').val());
+    if (lunch_registration_selector.next().find('input:radio:checked'))
+        lunch_cost   = cleanup_cost(lunch_registration_selector.next().find('input:radio:checked').val());
     if (brunch_registration_selector.next().find('input:radio:checked'))
             brunch_cost   = cleanup_cost(brunch_registration_selector.next().find('input:radio:checked').val());
 
-    total_cost = golf_cost + dinner_cost + brunch_cost;
+    total_cost = golf_cost + dinner_cost + lunch_cost + brunch_cost;
     
     return total_cost;
 }
@@ -165,6 +183,7 @@ function setTotal(){
 function hide_initial_items(){
     toggle_golfer_names('hide');
     toggle_dinner_names('hide');
+    toggle_lunch_names('hide');
     toggle_brunch_names('hide');
     toggle_billing();
 }
