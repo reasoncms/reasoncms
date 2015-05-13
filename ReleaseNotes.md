@@ -17,7 +17,7 @@ Reason CMS 4.6 Release Notes
 
 ##### SEO
 - [#76](https://github.com/carleton/reason_package/pull/76) – Since meta keywords in <head> are no longer beneficial for SEO, we've added a new keyword, ```REASON_SHOW_META_KEYWORDS```. It defaults to false.
-- [#79](https://github.com/carleton/reason_package/pull/79) – rel attributes for blog post prev/next links
+- [#79](https://github.com/carleton/reason_package/pull/79) – rel attributes for blog list pagination prev/next links
 - [#81](https://github.com/carleton/reason_package/pull/81) – Better page title logic
 
 ##### TinyMCE integration
