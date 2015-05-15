@@ -284,7 +284,7 @@
 	 * To disable the search module, comment out this line or set its value to an empty string.
 	 * (e.g. for Google, use the string 'http://www.google.com/search'.)
 	 */
-	define('REASON_SEARCH_ENGINE_URL','http://www.google.com/search');
+	define('REASON_SEARCH_ENGINE_URL', '//www.google.com/search');
 
 	/**
 	 * REASON_SEARCH_FORM_METHOD
