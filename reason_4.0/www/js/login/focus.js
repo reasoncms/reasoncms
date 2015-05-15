@@ -26,7 +26,7 @@ $(document).ready(function()
 		$(this).bind("blur", turnOff);
 	});
 	
-	$("#loginModule input[name=username]").each(function()
+	$("#login input[name=username]").each(function()
 	{
 		if (!disable)
 		{
