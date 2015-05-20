@@ -19,25 +19,25 @@ $(function() {
     toggle_golfer_names();
     golf_registration_selector.next().find('input:radio').change(function(){
         toggle_golfer_names();
-        toggle_billing();
+        set_payment_amount();
     });
 
     toggle_dinner_names();
     dinner_registration_selector.next().find('input:radio').change(function(){
         toggle_dinner_names();
-        toggle_billing();
+        set_payment_amount();
     });
     
     toggle_lunch_names();
     lunch_registration_selector.next().find('input:radio').change(function(){
         toggle_lunch_names();
-        toggle_billing();
+        set_payment_amount();
     });
     
     toggle_brunch_names();
     brunch_registration_selector.next().find('input:radio').change(function(){
         toggle_brunch_names();
-        toggle_billing();
+        set_payment_amount();
     });
 
     same_billing();
@@ -75,43 +75,15 @@ function toggle_brunch_names(){
     }
 }
 
-function toggle_billing(){
+function set_payment_amount(){
     if (golf_registration_selector.next().find('input:radio:checked')
-        || reunion_dinner_selector.next().find('input:radio:checked')
-        || booklet_selector.next().find('input:radio:checked'))
+        || dinner_registration_selector.next().find('input:radio:checked')
+        || lunch_registration_selector.next().find('input:radio:checked')
+        || brunch_registration_selector.next().find('input:radio:checked'))
     {
-        $("#hrItem").show(500);
-        $("#paymentnoteItem").show(500);
-        $("#paymentamountItem").show(500);
-        $("#creditcardtypeItem").show(500);
-        $("#creditcardnumberItem").show(500);
-        $("#creditcardexpirationmonthItem").show(500);
-        $("#creditcardexpirationyearItem").show(500);
-        $("#creditcardnameItem").show(500);
-        $("#samebillingItem").show(500);
-        // $("#billingstreetaddressItem").show(500);
-        // $("#billingcityItem").show(500);
-        // $("#billingstateprovinceItem").show(500);
-        // $("#billingzipItem").show(500);
-        // $("#billingcountryItem").show(500);
         setTotal();
         needs_payment = true;
-        same_billing();
     } else {
-        $("#hrItem").hide(500);
-        $("#paymentnoteItem").hide(500);
-        $("#paymentamountItem").hide(500);
-        $("#creditcardtypeItem").hide(500);
-        $("#creditcardnumberItem").hide(500);
-        $("#creditcardexpirationmonthItem").hide(500);
-        $("#creditcardexpirationyearItem").hide(500);
-        $("#creditcardnameItem").hide(500);
-        $("#samebillingItem").hide(500);
-        $("#billingstreetaddressItem").hide(500);
-        $("#billingcityItem").hide(500);
-        $("#billingstateprovinceItem").hide(500);
-        $("#billingzipItem").hide(500);
-        $("#billingcountryItem").hide(500);
         payment_amountElement.val("");
     }
 }
@@ -185,5 +157,5 @@ function hide_initial_items(){
     toggle_dinner_names('hide');
     toggle_lunch_names('hide');
     toggle_brunch_names('hide');
-    toggle_billing();
+    set_payment_amount();
 }
