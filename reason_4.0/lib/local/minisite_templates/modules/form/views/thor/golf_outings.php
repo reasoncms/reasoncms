@@ -31,6 +31,8 @@ class GolfOutingForm extends CreditCardThorForm {
         $head_items->add_javascript('/reason/local/js/form/golf_outings.js');
         $head_items->add_javascript(JQUERY_UI_URL);
         $head_items->add_stylesheet(JQUERY_UI_CSS_URL);
+
+        parent::custom_init();
     } 
 
     /**
