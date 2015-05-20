@@ -1,7 +1,7 @@
 <?
 
 reason_include_once('minisite_templates/modules/form/views/thor/credit_card_payment.php');
-include_once(WEB_PATH . 'stock/pfproclass.php');
+include_once(WEB_PATH.'reason/local/stock/pfproclass.php');
 include_once '/usr/local/webapps/reason/reason_package_local/carl_util/dir_service/services/ds_mysql_royal_visit.php';
 $GLOBALS['_form_view_class_names'][basename(__FILE__, '.php')] = 'RoyalVisitPaymentForm';
 

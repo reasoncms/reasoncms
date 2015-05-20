@@ -298,6 +298,10 @@ class DirectoryModule extends DefaultMinisiteModule {
 
     function show_results(&$form) {
         $entries = $this->query_checks($form);
+        // since we're calling this in post_show_form callback, lets not do anything if
+        // there are no entries
+        if (!$entries) return;
+
         // // Assemble all the data that's come in via the form or the URL into $q
         // $elements = $form->get_element_names();
         // foreach ($elements as $element) {
@@ -666,7 +670,7 @@ class DirectoryModule extends DefaultMinisiteModule {
                         break;
                 }
             }
-            echo '<div id="directory" title>';
+            echo '<div class="directoryEntry" title>';
             // if there is a picture, show it
             $file_ending = 'directory_photos/'.$data['uid'][0].'.jpg';
             $photo_file = PHOTOSTOCK.$file_ending;
@@ -689,16 +693,19 @@ class DirectoryModule extends DefaultMinisiteModule {
 
 
             echo "<div class='directoryInfo' title>";
-            if ( $affiliation != 'Student' && isset($data['title'])) {
-                if (is_array($data['title'])){
-                    foreach ($data['title'] as $key => $value) {
+            // Faculty/Staff specific markup
+            if ( $affiliation != 'Student') {
+                if ( isset($data['title']) ) {
+                    if (is_array($data['title'])){
+                        foreach ($data['title'] as $key => $value) {
+                            echo "<h3 class='directoryTitle'>{$value}</h3>";
+                        }
+                    } else {
+                        /**
+                          * @todo check for one value
+                          */
                         echo "<h3 class='directoryTitle'>{$value}</h3>";
                     }
-                } else {
-                    /**
-                      * @todo check for one value
-                      */
-                    echo "<h3 class='directoryTitle'>{$value}</h3>";
                 }
                 echo "<ul class='directoryContact'>";
 
@@ -908,7 +915,8 @@ class DirectoryModule extends DefaultMinisiteModule {
             $str .= '<thead>';
                 $str .= '<tr>';
                         $str .= '<th class="name">Name</th>';
-                        $str .= '<th class="affiliation">Affiliation/Title</th>';
+                        $str .= '<th class="title">Title</th>';
+                        $str .= '<th class="affiliation">Affiliation</th>';
                         $str .= '<th class="email">Email</th>';
                         if ($this->context != 'general')
                             $str .= '<th class="spo">SPO</th>';
@@ -929,13 +937,13 @@ class DirectoryModule extends DefaultMinisiteModule {
           } else {
               $str .= '<td>&nbsp;</td>';
           }
+          if (isset($data['title'][0])){
+                $str .= '<td>' . $data['title'][0] . '</td>';
+          } else {
+                $str .= '<td>&nbsp;</td>';
+          }
           if (isset ($data['edupersonprimaryaffiliation'][0])) {
-              $str .= '<td class="affilTitle">' .$data['edupersonprimaryaffiliation'][0];
-              if (isset($data['title'][0])){
-                    $str .= '<br>' . $data['title'][0] . '</td>';
-              } else {
-                    $str .= '</td>';
-              }
+              $str .= '<td class="affilTitle">' .$data['edupersonprimaryaffiliation'][0].'</td>';
           } else {
               $str .= '<td>&nbsp;</td>';
           }

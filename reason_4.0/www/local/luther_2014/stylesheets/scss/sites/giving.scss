@@ -234,7 +234,7 @@ $tab-current-color: $lc-blue-dark;
 							.currency {
 								//width: 14px;
 								display: block;
-								background: $lc-green;
+								background: lighten($lc-green, 3%);
 								height: auto;
 								padding: rem-calc(14) rem-calc(18);
 								font-size: rem-calc(20);
@@ -257,15 +257,18 @@ $tab-current-color: $lc-blue-dark;
 									@media #{$medium-up} {
 										tr {
 											display: block;
-											width: 50%;
+											//width: 33%;
 											float: left;
-											padding: 0 rem-calc(20);
+											padding: 0 rem-calc(10);
 										}
 									}
 
 									tr td label {
-										font-size: rem-calc(18);
+										font-size: rem-calc(15);
 										font-family: $body-font-family !important;
+									}
+									td {
+										padding: 0.5em 0 0.5em 0.5em;
 									}
 								}
 							}
@@ -283,17 +286,17 @@ $tab-current-color: $lc-blue-dark;
 							width: 100%;
 							display: block;
 							border-radius: $global-rounded;
-							background: $lc-green;
+							background: lighten($lc-green, 3%);
 							@include button-size($padding: $button-med);
 							font-family: $body-font-family;
 							font-size: rem-calc(22) !important;
 
 							&:hover {
-								background: lighten($lc-green, 3%);
+								background: $lc-green;
 							}
 
 							&:active {
-								background: darken($lc-green, 3%);
+								background: lighten($lc-green, 3%);
 							}
 						}
 					}

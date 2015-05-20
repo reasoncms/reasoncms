@@ -155,7 +155,8 @@ class BlurbModule extends DefaultMinisiteModule
 			{
 				if (preg_match("/[Cc]all [Tt]o [Aa]ction/", $blurb->get_value('name'))
 					|| preg_match("/[Cc]ontact [Ii]nformation/", $blurb->get_value('name'))
-					|| preg_match("/callout_blurb/", $blurb->get_value('unique_name')))
+					|| preg_match("/callout_blurb/", $blurb->get_value('unique_name'))
+					|| preg_match("/constant_contact_signup_blurb/", $blurb->get_value('unique_name')))
 				{
 					$total_blurbs++;
 				}
@@ -187,7 +188,8 @@ class BlurbModule extends DefaultMinisiteModule
 
 			if (!preg_match("/[Cc]ontact [Ii]nformation/", $blurb->get_value('name'))
 					&& !preg_match("/[Cc]all [Tt]o [Aa]ction/", $blurb->get_value('name'))
-					&& !preg_match("/callout_blurb/", $blurb->get_value('unique_name')))
+					&& !preg_match("/callout_blurb/", $blurb->get_value('unique_name'))
+					&& !preg_match("/constant_contact_signup_blurb/", $blurb->get_value('unique_name')))
 			{
 
 				$editable = ( $editing_available && $this->_blurb_is_editable($blurb) );

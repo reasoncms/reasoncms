@@ -63,9 +63,7 @@
     }
 }
 
-#directory{
-  margin: 0 0 $column-gutter;
-
+.directoryEntry{
   .directoryName,
   .directoryInfo {
 
@@ -74,18 +72,20 @@
       margin-left: rem-calc(200) !important;
     }
   }
+  min-height: 200px;
 
   figure {
     width: 25%;
     margin: 0 0 $paragraph-margin-bottom $paragraph-margin-bottom;
     float: right;
+    margin-top: 7px;
     //margin: 0 auto;
 
     @media
     #{$medium-up} {
       float: left;
       width: rem-calc(150);
-      margin: 0 $paragraph-margin-bottom $paragraph-margin-bottom 0;
+      margin: 7px $paragraph-margin-bottom $paragraph-margin-bottom 0;
     }
 
     img {

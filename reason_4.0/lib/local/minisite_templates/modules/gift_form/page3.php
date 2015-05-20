@@ -14,7 +14,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-include_once(WEB_PATH . 'stock/giftclass.php');
+include_once(WEB_PATH.'reason/local/stock/giftclass.php');
 include_once(TYR_INC . 'tyr.php');
 reason_include_once('classes/repeat_transaction_helper.php');
 
@@ -61,13 +61,25 @@ class GiftPageThreeForm extends FormStep {
             'type' => 'comment',
             'text' => '<h3>Payment Method</h3>',
         ),
-        'credit_card_type' => array(
-            'type' => 'radio_no_sort',
-            'options' => array('Visa' => 'Visa', 'MasterCard' => 'MasterCard', 'American Express' => 'American Express', 'Discover' => 'Discover'),
+        'credit_card_name' => array(
+            'type' => 'text',
+            'display_name' => 'Name as it appears on card',
+            'size' => 35,
         ),
         'credit_card_number' => array(
             'type' => 'text',
             'size' => 35,
+        ),
+                'credit_card_type' => array(
+            'type' => 'radio_no_sort',
+            'options' => array('Visa'=>'Visa','MasterCard'=>'MasterCard','American Express'=>'American Express','Discover'=>'Discover', 'none'=>'none'),
+        ),
+        'credit_card_type_icon' => array(
+            'type' => 'comment',
+            'text' => "<i class='fa fa-cc-visa formCCType' id='visaIcon'></i>
+                        <i class='fa fa-cc-mastercard formCCType' id='mastercardIcon'></i>
+                        <i class='fa fa-cc-amex formCCType' id='amexIcon'></i>
+                        <i class='fa fa-cc-discover formCCType' id='discoverIcon'></i>"
         ),
         'credit_card_expiration_month' => array(
             'type' => 'month',
@@ -79,42 +91,41 @@ class GiftPageThreeForm extends FormStep {
             'end' => 2022,
             'display_name' => 'Expiration Year',
         ),
-        'credit_card_name' => array(
-            'type' => 'text',
-            'display_name' => 'Name as it appears on card',
-            'size' => 35,
+        'credit_card_security_code' => array(
+            'size' => 4,
+            'display_name' => 'Security Code',
         ),
-        'billing_address' => array(
-            'type' => 'radio_no_sort',
-            'options' => array('entered' => 'Use address provided on previous page', 'new' => 'Use a different address'),
-            'display_name' => 'Billing Address',
-            'default' => 'entered',
-        ),
-        'billing_street_address' => array(
-            'type' => 'textarea',
-            'rows' => 3,
-            'cols' => 35,
-            'display_name' => 'Street Address',
-        ),
-        'billing_city' => array(
-            'type' => 'text',
-            'size' => 35,
-            'display_name' => 'City',
-        ),
-        'billing_state_province' => array(
-            'type' => 'state_province',
-            'display_name' => 'State/Province',
-            'include_military_codes' => true,
-        ),
-        'billing_zip' => array(
-            'type' => 'text',
-            'display_name' => 'Zip/Postal Code',
-            'size' => 35,
-        ),
-        'billing_country' => array(
-            'type' => 'country',
-            'display_name' => 'Country',
-        ),
+    //     'billing_address' => array(
+    //         'type' => 'radio_no_sort',
+    //         'options' => array('entered' => 'Use address provided on previous page', 'new' => 'Use a different address'),
+    //         'display_name' => 'Billing Address',
+    //         'default' => 'entered',
+    //     ),
+    //     'billing_street_address' => array(
+    //         'type' => 'textarea',
+    //         'rows' => 3,
+    //         'cols' => 35,
+    //         'display_name' => 'Street Address',
+    //     ),
+    //     'billing_city' => array(
+    //         'type' => 'text',
+    //         'size' => 35,
+    //         'display_name' => 'City',
+    //     ),
+    //     'billing_state_province' => array(
+    //         'type' => 'state_province',
+    //         'display_name' => 'State/Province',
+    //         'include_military_codes' => true,
+    //     ),
+    //     'billing_zip' => array(
+    //         'type' => 'text',
+    //         'display_name' => 'Zip/Postal Code',
+    //         'size' => 35,
+    //     ),
+    //     'billing_country' => array(
+    //         'type' => 'country',
+    //         'display_name' => 'Country',
+    //     ),
         'confirmation_text' => array(
             'type' => 'hidden',
         ),
@@ -131,7 +142,7 @@ class GiftPageThreeForm extends FormStep {
         'credit_card_expiration_month',
         'credit_card_expiration_year',
         'credit_card_name',
-        'billing_address',
+    //     'billing_address',
     );
     var $actions = array(
         'previous_step' => 'Make Changes To Your Gift',
@@ -149,7 +160,21 @@ class GiftPageThreeForm extends FormStep {
 
     // style up the form and add comments et al
     function on_every_time() {
+
+        $this->set_comments('credit_card_security_code', form_comment('
+            <p><a data-reveal-id="cvv2Iframe">What\'s this?</a></p>
+            <div class="reveal-modal medium" id="cvv2Iframe" data-reveal="">
+                <iframe height="300px" width="100%" src="https://www.cvvnumber.com/cvv.html"></iframe>
+                <a class="close-reveal-modal">×</a>
+            </div>'));
+
+        $year = date('Y');
+        $this->change_element_type('credit_card_expiration_year', 'numrange', array('start' => $year, 'end' => $year + 15, 'display_name' => 'Expiration Year'));
+        $this->add_element_group('inline', 'expiration_group', array('credit_card_expiration_month', 'credit_card_expiration_year'), array('use_element_labels' => false, 'display_name' => 'Expiration mm/yyyy'));
+        $this->move_element('expiration_group', 'before', 'credit_card_security_code');
+
         $this->box_class = 'StackedBox';
+
         if (!$this->controller->get('gift_amount')) {
             echo '<div id="giftFormSetupError">You can\'t complete this step without having set up a gift; please go back to <a href="?_step=GiftPageOneForm">Gift Info</a> and provide a gift amount.</div>';
             $this->show_form = false;
@@ -179,8 +204,6 @@ class GiftPageThreeForm extends FormStep {
         } else {
             $this->is_in_testing_mode = false;
         }
-
-        $this->change_element_type('credit_card_expiration_year', 'numrange', array('start' => date('Y'), 'end' => (date('Y') + 15), 'display_name' => 'Expiration Year'));
     }
 
     function post_error_check_actions() {
@@ -196,7 +219,7 @@ class GiftPageThreeForm extends FormStep {
     }
 
     function pre_show_form() {
-        echo '<div id="giftForm" class="pageTwo">' . "\n";
+        echo '<div id="giftForm" class="pageThree">' . "\n";
         if ($this->is_in_testing_mode) {
             echo '<div class="announcement">';
             echo 'Testing mode on. ' . "\n";
@@ -434,16 +457,11 @@ class GiftPageThreeForm extends FormStep {
                     $immediate_amount,
                     $this->get_value('credit_card_number'),
                     $expiration_mmyy,
+                    $this->get_value('credit_card_security_code'),
                     $this->revenue_budget_number,
                     $this->get_value('credit_card_name'),
                     $this->expense_budget_number,
-                    $this->transaction_comment,
-                    $this->get_value('billing_street_address'),
-                    $this->get_value('billing_city'),
-                    $this->get_value('billing_state_province'),
-                    $this->get_value('billing_zip'),
-                    $this->controller->get('email'),
-                    $this->controller->get('phone')
+                    $this->transaction_comment
             );
 
             $this->instantiate_helper();

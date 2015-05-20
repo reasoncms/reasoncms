@@ -1,6 +1,6 @@
 <?php
 
-//include_once(WEB_PATH.'stock/study_skills_assessment.php');
+//include_once(WEB_PATH.'reason/local/stock/study_skills_assessment.php');
 include_once(TYR_INC . 'tyr.php');
 
 class StudySkillsAssessmentTwoForm extends FormStep {

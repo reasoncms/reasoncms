@@ -13,7 +13,11 @@
 		{
 			parent::alter_reason_page_type($page_type);
 
-			$page_type->set_region('post_main_head', 'giving/give_now_mini', 'minisite_templates/modules/giving/give_now_mini.php', array());
+			if (!preg_match('/\/giving\/givenow/', get_current_url()))
+			{
+				$page_type->set_region('post_main_head', 'giving/give_now_mini', 'minisite_templates/modules/giving/give_now_mini.php', array());
+		
+			}
 		}
 
 		function do_org_head_items()

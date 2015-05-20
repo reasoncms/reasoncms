@@ -44,7 +44,7 @@ class OnlineGiftModule extends DefaultMinisiteModule
 		$this->controller->show_back_button = false;
 		$this->controller->clear_form_data_on_finish = true;
 		$this->controller->allow_arbitrary_start = true;
-		//*
+
 		$forms = array(
 			'GiftPageOneForm' => array(
 				'next_steps' => array(
@@ -74,7 +74,7 @@ class OnlineGiftModule extends DefaultMinisiteModule
 			),
 		);
 		$this->controller->add_forms( $forms );
-		// */
+
 		$this->controller->init();
 	}
 	/**
@@ -114,13 +114,23 @@ class OnlineGiftModule extends DefaultMinisiteModule
 			return;
 		}
 		
+		if ( !empty( $this->request[ 'gift_amount' ]))
+		{
+			$this->controller->set_form_data('gift_amount', $this->request[ 'gift_amount' ]);
+		}
+		if ( !empty( $this->request[ 'installment_type' ]))
+		{
+			$this->controller->set_form_data('installment_type', $this->request[ 'installment_type' ]);
+		}
+		
 		if($head_items =& $this->get_head_items())
 		{
 			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form.css');
-
 			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'luther_2014/stylesheets/sites/giving.css');
 			$head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/giftform.js');
 			$head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/disable_submit.js');
+			$head_items->add_javascript(REASON_HTTP_BASE_PATH.'local/luther_2014/javascripts/creditcard.js');
+
 		}
 		// Insert refresh headers when in kiosk mode
 		if ($this->params['kiosk_mode'])
@@ -143,7 +153,7 @@ class OnlineGiftModule extends DefaultMinisiteModule
 	 * Set up the request for the controller and run the sucker
 	 * @return void
 	 */
-	function run() // {{{
+	function run()
 	{
 		echo '<div id="giving_form">'."\n";
 		if( !empty( $this->request[ 'r' ] ) AND !empty( $this->request[ 'h' ] ) )
@@ -164,14 +174,14 @@ class OnlineGiftModule extends DefaultMinisiteModule
 			connectDB( REASON_DB );
 		}
 		else
-		{
+		{		
 			echo $this->generate_navigation();
 			
 			$this->controller->set_request( $this->request );
 			$this->controller->run();
 		}
 		echo '</div>'."\n";
-	} // }}}
+	}
 
 	function generate_navigation()
 	{

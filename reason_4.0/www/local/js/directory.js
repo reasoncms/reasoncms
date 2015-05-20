@@ -21,7 +21,6 @@ $(document).ready(function() {
       theme: 'ice',
       tabIndex: true,
       widthFixed: false,
-      sortList: [[1,1]],
       widgets : ["zebra", "columns", "filter", "resizeable"],
       widgetOptions : {
         columns : [ "primary", "secondary", "tertiary" ],
@@ -31,7 +30,6 @@ $(document).ready(function() {
         filter_cssFilter : "tablesorter-filter",
         filter_formatter : null,
         filter_functions : {
-            '.affiliation' : true,
             '.year': true,
         },
         filter_hideFilters : false,

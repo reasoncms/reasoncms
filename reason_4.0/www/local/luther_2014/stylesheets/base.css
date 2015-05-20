@@ -1529,11 +1529,11 @@ ul.off-canvas-list li a {
 /* 4. FONT AWESOME
  *************************************/
 /* line 4, scss/font-awesome/_core.scss */
-.fa, #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .jump a:before, #minisite .continueReading a:after, #minisite .feedLink .feedInfo a:before, div.assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a[href]:before, #childrenAndGrandchildren li ul .childDesc:before, .directoryHead ul a:after, .searchOptions.openOptions:after, .searchOptions.closedOptions:after, #directory .directoryContact li:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
+.fa, #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .jump a:before, #minisite .continueReading a:after, #minisite .feedLink .feedInfo a:before, div.assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a[href]:before, #childrenAndGrandchildren li ul .childDesc:before, .directoryHead ul a:after, .searchOptions.openOptions:after, .searchOptions.closedOptions:after, .directoryEntry .directoryContact li:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
 #calendar .eventDetails .eventUrl:before,
 #calendar .eventDetails .calendarExport:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
-.featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, #pageContent ul.major-list, #policyModule .rootPolicyList .rootPolicyItem a:before, #policyModule .policy .decimal .closedAccordion .policyName:after, #policyModule .policy .decimal .openAccordion .policyName:after, #relatedPub .pubLinks a:before, .publication .post p.comments a:before, .publication .post p.more a:after, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after, th.header:after, .twitter-block li:before {
+.featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, #pageContent ul.major-list, #policyModule .rootPolicyList .rootPolicyItem a:before, #policyModule .policy .decimal .closedAccordion .policyName:after, #policyModule .policy .bullet .closedAccordion .policyName:after, #policyModule .policy .lowerAlpha .closedAccordion .policyName:after, #policyModule .policy .upperAlpha .closedAccordion .policyName:after, #policyModule .policy .lowerRoman .closedAccordion .policyName:after, #policyModule .policy .upperRoman .closedAccordion .policyName:after, #policyModule .policy .decimal .openAccordion .policyName:after, #policyModule .policy .bullet .openAccordion .policyName:after, #policyModule .policy .lowerAlpha .openAccordion .policyName:after, #policyModule .policy .upperAlpha .openAccordion .policyName:after, #policyModule .policy .lowerRoman .openAccordion .policyName:after, #policyModule .policy .upperRoman .openAccordion .policyName:after, #relatedPub .pubLinks a:before, .publication .post p.comments a:before, .publication .post p.more a:after, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after, th.header:after, .twitter-block li:before {
   display: inline-block;
   font-family: FontAwesome;
   font-style: normal;
@@ -1603,7 +1603,7 @@ ul.off-canvas-list li a {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle .screenreader, #directory .directoryContact li strong, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle .screenreader, .directoryEntry .directoryContact li strong, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -1961,29 +1961,29 @@ blockquote {
   margin-bottom: 0;
 }
 
-/* line 181, scss/_type.scss */
+/* line 183, scss/_type.scss */
 .tableSorterWrap,
 .tableWrap {
-  overflow-x: scroll !important;
+  overflow-x: auto !important;
   border: 1px solid #e9e9e9;
   padding: 1px;
   margin-bottom: 2.5rem;
 }
-/* line 187, scss/_type.scss */
+/* line 189, scss/_type.scss */
 .tableSorterWrap table,
 .tableWrap table {
   border: none;
   width: 100%;
   margin-bottom: 0;
 }
-/* line 193, scss/_type.scss */
+/* line 195, scss/_type.scss */
 .tableSorterWrap .tablesorter,
 .tableWrap .tablesorter {
-  overflow-x: scroll !important;
+  overflow-x: auto !important;
   border: none;
 }
 
-/* line 205, scss/_type.scss */
+/* line 207, scss/_type.scss */
 a.more,
 .pubLinks a,
 p.more a {
@@ -1993,7 +1993,7 @@ p.more a {
   font-weight: 700;
   text-transform: uppercase;
 }
-/* line 212, scss/_type.scss */
+/* line 214, scss/_type.scss */
 a.more:hover,
 .pubLinks a:hover,
 p.more a:hover {
@@ -2001,41 +2001,41 @@ p.more a:hover {
 }
 
 /* Feeds */
-/* line 219, scss/_type.scss */
+/* line 221, scss/_type.scss */
 #relatedPub .post h4 {
   font-family: "Roboto Slab", serif;
   font-size: 1.125rem;
   font-weight: 400;
 }
 
-/* line 225, scss/_type.scss */
+/* line 227, scss/_type.scss */
 time {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
   font-weight: 300;
 }
 
-/* line 230, scss/_type.scss */
+/* line 232, scss/_type.scss */
 p:empty {
   display: none !important;
 }
 
 /* Nav
 *******************************************/
-/* line 238, scss/_type.scss */
+/* line 240, scss/_type.scss */
 nav {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
 }
 
 /* Tooltips */
-/* line 244, scss/_type.scss */
+/* line 246, scss/_type.scss */
 .tooltip h5 {
   color: white;
 }
-/* line 247, scss/_type.scss */
+/* line 249, scss/_type.scss */
 .tooltip p {
   margin-bottom: 0;
 }
-/* line 250, scss/_type.scss */
+/* line 252, scss/_type.scss */
 .tooltip img {
   margin-bottom: 1.0rem;
   border: 0.5rem solid white;
@@ -2325,6 +2325,7 @@ body #wrapper #global-banner #search-nav ul li.search .gsc-input-box:focus {
 /* line 236, scss/_global.scss */
 body #wrapper #global-banner #search-nav ul li.search .gsc-input input.gsc-input {
   height: 2rem !important;
+  margin-top: 0px !important;
   padding: 0 0.5rem !important;
   border: 1px solid #e9e9e9 !important;
   border-right: none !important;
@@ -2340,11 +2341,11 @@ body #wrapper #global-banner #search-nav ul li.search .gsc-input input.gsc-input
   -webkit-border-bottom-left-radius: 4px;
   border-bottom-left-radius: 4px;
 }
-/* line 246, scss/_global.scss */
+/* line 247, scss/_global.scss */
 body #wrapper #global-banner #search-nav ul li.search .gsc-input input.gsc-input:focus {
   border-color: #d0d0d0;
 }
-/* line 253, scss/_global.scss */
+/* line 254, scss/_global.scss */
 body #wrapper #global-banner #search-nav ul li.search .gsst_b {
   padding: 0;
   height: 2rem;
@@ -2352,7 +2353,7 @@ body #wrapper #global-banner #search-nav ul li.search .gsst_b {
   border-bottom: 1px solid #e9e9e9 !important;
   background: #FFF;
 }
-/* line 262, scss/_global.scss */
+/* line 263, scss/_global.scss */
 body #wrapper #global-banner #search-nav ul li.search .gsc-search-button input.gsc-search-button {
   border: none;
   margin: 0;
@@ -2373,40 +2374,40 @@ body #wrapper #global-banner #search-nav ul li.search .gsc-search-button input.g
   border-bottom-right-radius: 4px;
   background: #1073ce url("../images/search-1x.png") 0.5rem no-repeat;
 }
-/* line 274, scss/_global.scss */
+/* line 275, scss/_global.scss */
 body #wrapper #global-banner #search-nav ul li.search .gsc-search-button input.gsc-search-button:hover, body #wrapper #global-banner #search-nav ul li.search .gsc-search-button input.gsc-search-button:active {
   background-color: #1280e6;
 }
 @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 2 / 1), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
-  /* line 262, scss/_global.scss */
+  /* line 263, scss/_global.scss */
   body #wrapper #global-banner #search-nav ul li.search .gsc-search-button input.gsc-search-button {
     background-image: url("../images/search-2x.png");
     background-size: 50%;
   }
 }
-/* line 288, scss/_global.scss */
+/* line 289, scss/_global.scss */
 body #wrapper #global-banner #search-nav a {
   font-size: 0.875rem;
 }
-/* line 292, scss/_global.scss */
+/* line 293, scss/_global.scss */
 body #wrapper #global-banner #search-nav a:link, body #wrapper #global-banner #search-nav a:visited {
   color: #1073ce;
   color: rgba(16, 115, 206, 0.8);
 }
 @media only screen and (min-width: 63.8125em) {
-  /* line 292, scss/_global.scss */
+  /* line 293, scss/_global.scss */
   body #wrapper #global-banner #search-nav a:link, body #wrapper #global-banner #search-nav a:visited {
     color: white;
     color: rgba(255, 255, 255, 0.8);
   }
 }
-/* line 300, scss/_global.scss */
+/* line 301, scss/_global.scss */
 body #wrapper #global-banner #search-nav a:hover {
   color: #1073ce;
   color: #1073ce;
 }
 @media only screen and (min-width: 63.8125em) {
-  /* line 300, scss/_global.scss */
+  /* line 301, scss/_global.scss */
   body #wrapper #global-banner #search-nav a:hover {
     color: white;
     color: white;
@@ -2427,13 +2428,13 @@ body #wrapper #global-banner #search-nav a:hover {
     display: block;
     border: none;
   }
-  /* line 322, scss/_global.scss */
+  /* line 323, scss/_global.scss */
   body #wrapper #global-banner #search-nav ul {
     padding: 0;
     text-align: left;
     display: block;
   }
-  /* line 329, scss/_global.scss */
+  /* line 330, scss/_global.scss */
   body #wrapper #global-banner #search-nav ul li.search {
     display: inline-block;
     margin: 0 0 0 1em;
@@ -2442,12 +2443,12 @@ body #wrapper #global-banner #search-nav a:hover {
     top: 0.5rem;
   }
 }
-/* line 342, scss/_global.scss */
+/* line 343, scss/_global.scss */
 body #wrapper #global-nav {
   clear: both;
 }
 @media only screen and (min-width: 63.8125em) {
-  /* line 342, scss/_global.scss */
+  /* line 343, scss/_global.scss */
   body #wrapper #global-nav {
     display: block;
     position: relative;
@@ -2470,33 +2471,33 @@ body #wrapper #global-nav {
   body #wrapper #global-nav:after {
     clear: both;
   }
-  /* line 359, scss/_global.scss */
+  /* line 360, scss/_global.scss */
   body #wrapper #global-nav.left-off-canvas-menu {
     height: inherit;
     z-index: 97;
   }
 }
-/* line 365, scss/_global.scss */
+/* line 366, scss/_global.scss */
 body #wrapper #global-nav h2 {
   display: none;
 }
-/* line 372, scss/_global.scss */
+/* line 373, scss/_global.scss */
 body #wrapper #global-nav a:link, body #wrapper #global-nav a:visited {
   color: white;
   color: rgba(255, 255, 255, 0.8);
 }
-/* line 378, scss/_global.scss */
+/* line 379, scss/_global.scss */
 body #wrapper #global-nav .audiences {
   margin: 0;
   padding: 1.11111rem;
   background: #f6f6f6;
   font-size: 0.875rem;
 }
-/* line 386, scss/_global.scss */
+/* line 387, scss/_global.scss */
 body #wrapper #global-nav .audiences li {
   display: inline-block;
 }
-/* line 388, scss/_global.scss */
+/* line 389, scss/_global.scss */
 body #wrapper #global-nav .audiences li a {
   background: #3b99f0;
   padding: 0.25rem 1rem;
@@ -2508,13 +2509,13 @@ body #wrapper #global-nav .audiences li a {
   margin: 0.375rem 0.125rem;
   display: inline-block;
 }
-/* line 395, scss/_global.scss */
+/* line 396, scss/_global.scss */
 body #wrapper #global-nav .audiences li a:hover {
   color: white;
   color: white;
 }
 @media only screen and (min-width: 63.8125em) {
-  /* line 378, scss/_global.scss */
+  /* line 379, scss/_global.scss */
   body #wrapper #global-nav .audiences {
     padding: 0;
     position: absolute;
@@ -2539,7 +2540,7 @@ body #wrapper #global-nav .audiences li a:hover {
   body #wrapper #global-nav .audiences > li > * {
     display: block;
   }
-  /* line 412, scss/_global.scss */
+  /* line 413, scss/_global.scss */
   body #wrapper #global-nav .audiences li a {
     background: none;
     padding: 0;
@@ -2551,19 +2552,19 @@ body #wrapper #global-nav .audiences li a:hover {
     border-radius: 0;
   }
 }
-/* line 426, scss/_global.scss */
+/* line 427, scss/_global.scss */
 body #wrapper #global-nav .minisites {
   border-top: 1px solid #c5c5c5;
   -webkit-box-shadow: rgba(0, 0, 0, 0.2) 0 4px 4px;
   -moz-box-shadow: rgba(0, 0, 0, 0.2) 0 4px 4px;
   box-shadow: rgba(0, 0, 0, 0.2) 0 4px 4px;
 }
-/* line 433, scss/_global.scss */
+/* line 434, scss/_global.scss */
 body #wrapper #global-nav .minisites li {
   background-color: #e9e9e9;
   border-bottom: 1px solid #c5c5c5;
 }
-/* line 437, scss/_global.scss */
+/* line 438, scss/_global.scss */
 body #wrapper #global-nav .minisites li a {
   color: #1073ce;
   font-weight: 600;
@@ -2571,65 +2572,65 @@ body #wrapper #global-nav .minisites li a {
   display: block;
   padding: 1.25rem;
 }
-/* line 444, scss/_global.scss */
+/* line 445, scss/_global.scss */
 body #wrapper #global-nav .minisites li a .fa-fw {
   margin-right: 0.75rem;
   color: #909090;
 }
-/* line 449, scss/_global.scss */
+/* line 450, scss/_global.scss */
 body #wrapper #global-nav .minisites li a:hover {
   background-color: #d0d0d0;
 }
 @media only screen and (min-width: 63.8125em) {
-  /* line 437, scss/_global.scss */
+  /* line 438, scss/_global.scss */
   body #wrapper #global-nav .minisites li a {
     color: white;
     color: white;
     font-weight: 400;
     font-size: 0.875rem;
   }
-  /* line 458, scss/_global.scss */
+  /* line 459, scss/_global.scss */
   body #wrapper #global-nav .minisites li a:hover {
     color: white;
     color: white;
   }
 }
 @media only screen and (min-width: 90.063em) {
-  /* line 437, scss/_global.scss */
+  /* line 438, scss/_global.scss */
   body #wrapper #global-nav .minisites li a {
     font-size: 0.9375rem;
   }
 }
-/* line 469, scss/_global.scss */
+/* line 470, scss/_global.scss */
 body #wrapper #global-nav .minisites li ul {
   /* subnav */
   display: none;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 479, scss/_global.scss */
+  /* line 480, scss/_global.scss */
   body #wrapper #global-nav .minisites li a {
     border: none;
   }
-  /* line 486, scss/_global.scss */
+  /* line 487, scss/_global.scss */
   body #wrapper #global-nav .minisites li ul li {
     border: none;
     display: inline;
   }
-  /* line 490, scss/_global.scss */
+  /* line 491, scss/_global.scss */
   body #wrapper #global-nav .minisites li ul li a {
     display: inline-block;
     padding: 0;
   }
 }
 @media only screen and (min-width: 63.8125em) {
-  /* line 426, scss/_global.scss */
+  /* line 427, scss/_global.scss */
   body #wrapper #global-nav .minisites {
     border-top: none;
     -webkit-box-shadow: 0px 0px 5px #333333;
     -moz-box-shadow: 0px 0px 5px #333333;
     box-shadow: 0px 0px 5px #333333;
   }
-  /* line 507, scss/_global.scss */
+  /* line 508, scss/_global.scss */
   body #wrapper #global-nav .minisites > li {
     border-bottom: none;
     width: 12.5%;
@@ -2637,7 +2638,7 @@ body #wrapper #global-nav .minisites li ul {
     position: relative;
     background: #1073ce;
   }
-  /* line 514, scss/_global.scss */
+  /* line 515, scss/_global.scss */
   body #wrapper #global-nav .minisites > li a {
     font-weight: 600;
     display: block;
@@ -2645,24 +2646,24 @@ body #wrapper #global-nav .minisites li ul {
     padding: 1em 0;
     text-align: center;
   }
-  /* line 522, scss/_global.scss */
+  /* line 523, scss/_global.scss */
   body #wrapper #global-nav .minisites > li a i {
     display: none;
   }
-  /* line 526, scss/_global.scss */
+  /* line 527, scss/_global.scss */
   body #wrapper #global-nav .minisites > li a:hover {
     background-color: #0f68bb;
   }
-  /* line 531, scss/_global.scss */
+  /* line 532, scss/_global.scss */
   body #wrapper #global-nav .minisites > li ul {
     /* subnav */
     display: none;
   }
-  /* line 535, scss/_global.scss */
+  /* line 536, scss/_global.scss */
   body #wrapper #global-nav .minisites > li.open {
     background: #FFF;
   }
-  /* line 542, scss/_global.scss */
+  /* line 543, scss/_global.scss */
   body #wrapper #global-nav .minisites > li.open ul {
     padding: 12px;
     margin: 0;
@@ -2672,22 +2673,22 @@ body #wrapper #global-nav .minisites li ul {
     background: #efefef;
     width: 300px;
   }
-  /* line 554, scss/_global.scss */
+  /* line 555, scss/_global.scss */
   body #wrapper #global-nav .minisites > li:last-child > a {
     border-right: none;
   }
 }
 @media only screen and (min-width: 63.8125em) {
-  /* line 561, scss/_global.scss */
+  /* line 562, scss/_global.scss */
   body #wrapper #emergencyPreempt {
     margin-top: 2.5rem;
   }
-  /* line 567, scss/_global.scss */
+  /* line 568, scss/_global.scss */
   body #wrapper #emergencyPreempt .callout {
     margin-bottom: 0;
   }
 }
-/* line 577, scss/_global.scss */
+/* line 578, scss/_global.scss */
 body #wrapper #global-footer {
   width: 100%;
   margin-left: auto;
@@ -2706,7 +2707,7 @@ body #wrapper #global-footer:before, body #wrapper #global-footer:after {
 body #wrapper #global-footer:after {
   clear: both;
 }
-/* line 580, scss/_global.scss */
+/* line 581, scss/_global.scss */
 body #wrapper #global-footer #footerInner {
   position: relative;
   padding-left: 0;
@@ -2714,26 +2715,26 @@ body #wrapper #global-footer #footerInner {
   width: 100%;
   float: left;
 }
-/* line 585, scss/_global.scss */
+/* line 586, scss/_global.scss */
 body #wrapper #global-footer #global-footer-nav,
 body #wrapper #global-footer #global-footer-info {
   color: white;
   color: white;
 }
-/* line 590, scss/_global.scss */
+/* line 591, scss/_global.scss */
 body #wrapper #global-footer #global-footer-nav a:link, body #wrapper #global-footer #global-footer-nav a:visited,
 body #wrapper #global-footer #global-footer-info a:link,
 body #wrapper #global-footer #global-footer-info a:visited {
   color: white;
   color: rgba(255, 255, 255, 0.75);
 }
-/* line 593, scss/_global.scss */
+/* line 594, scss/_global.scss */
 body #wrapper #global-footer #global-footer-nav a:hover,
 body #wrapper #global-footer #global-footer-info a:hover {
   color: white;
   color: white;
 }
-/* line 599, scss/_global.scss */
+/* line 600, scss/_global.scss */
 body #wrapper #global-footer #global-footer-nav {
   background: #1073ce;
   padding-left: 1.25rem;
@@ -2757,25 +2758,25 @@ body #wrapper #global-footer #global-footer-nav:after {
   clear: both;
 }
 @media only screen and (min-width: 63.8125em) {
-  /* line 599, scss/_global.scss */
+  /* line 600, scss/_global.scss */
   body #wrapper #global-footer #global-footer-nav {
     border-left: 7px solid #a9cdee;
     border-right: 7px solid #a9cdee;
   }
 }
-/* line 610, scss/_global.scss */
+/* line 611, scss/_global.scss */
 body #wrapper #global-footer #global-footer-nav h3 {
   font-size: 1.125rem;
   font-weight: 700;
   color: white;
   color: white;
 }
-/* line 616, scss/_global.scss */
+/* line 617, scss/_global.scss */
 body #wrapper #global-footer #global-footer-nav ul {
   font-family: "Roboto Slab", serif;
   font-weight: 300;
 }
-/* line 621, scss/_global.scss */
+/* line 622, scss/_global.scss */
 body #wrapper #global-footer #global-footer-nav .column {
   padding-bottom: 2.5rem;
   position: relative;
@@ -2785,7 +2786,7 @@ body #wrapper #global-footer #global-footer-nav .column {
   float: left;
 }
 @media only screen and (min-width: 30em) and (max-width: 40em) {
-  /* line 621, scss/_global.scss */
+  /* line 622, scss/_global.scss */
   body #wrapper #global-footer #global-footer-nav .column {
     position: relative;
     padding-left: 1.25rem;
@@ -2793,13 +2794,13 @@ body #wrapper #global-footer #global-footer-nav .column {
     width: 50%;
     float: left;
   }
-  /* line 627, scss/_global.scss */
+  /* line 628, scss/_global.scss */
   body #wrapper #global-footer #global-footer-nav .column:nth-child(odd) {
     clear: left;
   }
 }
 @media only screen and (min-width: 40.063em) and (max-width: 63.75em) {
-  /* line 621, scss/_global.scss */
+  /* line 622, scss/_global.scss */
   body #wrapper #global-footer #global-footer-nav .column {
     position: relative;
     padding-left: 1.25rem;
@@ -2807,13 +2808,13 @@ body #wrapper #global-footer #global-footer-nav .column {
     width: 33.33333%;
     float: left;
   }
-  /* line 634, scss/_global.scss */
+  /* line 635, scss/_global.scss */
   body #wrapper #global-footer #global-footer-nav .column:nth-child(3n+1) {
     clear: left;
   }
 }
 @media only screen and (min-width: 63.8125em) {
-  /* line 621, scss/_global.scss */
+  /* line 622, scss/_global.scss */
   body #wrapper #global-footer #global-footer-nav .column {
     position: relative;
     padding-left: 1.25rem;
@@ -2822,12 +2823,12 @@ body #wrapper #global-footer #global-footer-nav .column {
     float: left;
   }
 }
-/* line 644, scss/_global.scss */
+/* line 645, scss/_global.scss */
 body #wrapper #global-footer #global-footer-nav .column ul {
   color: white;
   color: rgba(255, 255, 255, 0.75);
 }
-/* line 653, scss/_global.scss */
+/* line 654, scss/_global.scss */
 body #wrapper #global-footer #global-footer-info {
   width: 100%;
   margin-left: auto;
@@ -2851,25 +2852,25 @@ body #wrapper #global-footer #global-footer-info:after {
   clear: both;
 }
 @media only screen and (min-width: 63.8125em) {
-  /* line 653, scss/_global.scss */
+  /* line 654, scss/_global.scss */
   body #wrapper #global-footer #global-footer-info {
     border-left: 7px solid #6b9fd0;
     border-right: 7px solid #6b9fd0;
   }
 }
-/* line 666, scss/_global.scss */
+/* line 667, scss/_global.scss */
 body #wrapper #global-footer #global-footer-info nav ul {
   font-size: 0.875rem;
 }
-/* line 669, scss/_global.scss */
+/* line 670, scss/_global.scss */
 body #wrapper #global-footer #global-footer-info nav ul a {
   font-weight: 700;
 }
-/* line 672, scss/_global.scss */
+/* line 673, scss/_global.scss */
 body #wrapper #global-footer #global-footer-info nav ul a:hover {
   text-decoration: underline;
 }
-/* line 679, scss/_global.scss */
+/* line 680, scss/_global.scss */
 body #wrapper #global-footer #global-footer-info .utility-nav {
   position: relative;
   padding-left: 1.25rem;
@@ -2877,38 +2878,38 @@ body #wrapper #global-footer #global-footer-info .utility-nav {
   width: 100%;
   float: left;
 }
-/* line 682, scss/_global.scss */
+/* line 683, scss/_global.scss */
 body #wrapper #global-footer #global-footer-info .utility-nav ul {
   padding: 0;
   margin: 0 0 1.66667rem;
   border-bottom: 1px dashed rgba(255, 255, 255, 0.125);
   line-height: 1;
 }
-/* line 689, scss/_global.scss */
+/* line 690, scss/_global.scss */
 body #wrapper #global-footer #global-footer-info .utility-nav ul li {
   margin-bottom: 1.66667rem;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 695, scss/_global.scss */
+  /* line 696, scss/_global.scss */
   body #wrapper #global-footer #global-footer-info .utility-nav ul li {
     display: inline;
   }
-  /* line 698, scss/_global.scss */
+  /* line 699, scss/_global.scss */
   body #wrapper #global-footer #global-footer-info .utility-nav ul li a {
     display: inline-block;
     border-right: 1px solid rgba(255, 255, 255, 0.25);
     margin-bottom: 1.66667rem;
   }
-  /* line 703, scss/_global.scss */
+  /* line 704, scss/_global.scss */
   body #wrapper #global-footer #global-footer-info .utility-nav ul li a span {
     margin: 0 0.75rem;
   }
-  /* line 709, scss/_global.scss */
+  /* line 710, scss/_global.scss */
   body #wrapper #global-footer #global-footer-info .utility-nav ul li:last-child > a {
     border: none;
   }
 }
-/* line 717, scss/_global.scss */
+/* line 718, scss/_global.scss */
 body #wrapper #global-footer #global-footer-info .contact {
   position: relative;
   padding-left: 1.25rem;
@@ -2920,17 +2921,17 @@ body #wrapper #global-footer #global-footer-info .contact {
   font-size: 0.75rem;
   letter-spacing: .65px;
 }
-/* line 725, scss/_global.scss */
+/* line 726, scss/_global.scss */
 body #wrapper #global-footer #global-footer-info .contact .sep {
   display: inline-block;
   margin: 0 0.5rem;
   font-weight: 700;
 }
-/* line 732, scss/_global.scss */
+/* line 733, scss/_global.scss */
 body #wrapper #global-footer #global-footer-info .phone {
   display: block;
 }
-/* line 738, scss/_global.scss */
+/* line 739, scss/_global.scss */
 body #wrapper #post-footer {
   width: 100%;
   margin-left: auto;
@@ -2952,7 +2953,7 @@ body #wrapper #post-footer:before, body #wrapper #post-footer:after {
 body #wrapper #post-footer:after {
   clear: both;
 }
-/* line 744, scss/_global.scss */
+/* line 745, scss/_global.scss */
 body #wrapper #post-footer p {
   position: relative;
   padding-left: 1.25rem;
@@ -2965,12 +2966,12 @@ body #wrapper #post-footer p {
   color: #777777;
   font-weight: 300;
 }
-/* line 753, scss/_global.scss */
+/* line 754, scss/_global.scss */
 body #wrapper #post-footer a {
   text-decoration: underline;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 759, scss/_global.scss */
+  /* line 760, scss/_global.scss */
   body #wrapper #post-footer p {
     text-align: left;
     margin-bottom: 0;
@@ -2980,13 +2981,13 @@ body #wrapper #post-footer a {
     width: 50%;
     float: left;
   }
-  /* line 765, scss/_global.scss */
+  /* line 766, scss/_global.scss */
   body #wrapper #post-footer .powered-by {
     text-align: right;
   }
 }
 @media only screen and (min-width: 63.8125em) {
-  /* line 777, scss/_global.scss */
+  /* line 778, scss/_global.scss */
   body .off-canvas-wrap.move-right > .inner-wrap {
     -webkit-transform: translate3d(0, 0, 0);
     -moz-transform: translate3d(0, 0, 0);
@@ -2994,7 +2995,7 @@ body #wrapper #post-footer a {
     -o-transform: translate3d(0, 0, 0);
     transform: translate3d(0, 0, 0);
   }
-  /* line 785, scss/_global.scss */
+  /* line 786, scss/_global.scss */
   body .off-canvas-wrap.move-right a.exit-off-canvas {
     display: none;
   }
@@ -3889,11 +3890,11 @@ body #wrapper #post-footer a {
 }
 
 /* line 4, scss/font-awesome/_core.scss */
-.fa, #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .jump a:before, #minisite .continueReading a:after, #minisite .feedLink .feedInfo a:before, div.assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a[href]:before, #childrenAndGrandchildren li ul .childDesc:before, .directoryHead ul a:after, .searchOptions.openOptions:after, .searchOptions.closedOptions:after, #directory .directoryContact li:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
+.fa, #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .jump a:before, #minisite .continueReading a:after, #minisite .feedLink .feedInfo a:before, div.assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a[href]:before, #childrenAndGrandchildren li ul .childDesc:before, .directoryHead ul a:after, .searchOptions.openOptions:after, .searchOptions.closedOptions:after, .directoryEntry .directoryContact li:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
 #calendar .eventDetails .eventUrl:before,
 #calendar .eventDetails .calendarExport:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
-.featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, #pageContent ul.major-list, #policyModule .rootPolicyList .rootPolicyItem a:before, #policyModule .policy .decimal .closedAccordion .policyName:after, #policyModule .policy .decimal .openAccordion .policyName:after, #relatedPub .pubLinks a:before, .publication .post p.comments a:before, .publication .post p.more a:after, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after, th.header:after, .twitter-block li:before {
+.featuresModule .feature .featureInfo .featureText span:before, #discoErrorNotice h3:before, #pageContent ul.major-list, #policyModule .rootPolicyList .rootPolicyItem a:before, #policyModule .policy .decimal .closedAccordion .policyName:after, #policyModule .policy .bullet .closedAccordion .policyName:after, #policyModule .policy .lowerAlpha .closedAccordion .policyName:after, #policyModule .policy .upperAlpha .closedAccordion .policyName:after, #policyModule .policy .lowerRoman .closedAccordion .policyName:after, #policyModule .policy .upperRoman .closedAccordion .policyName:after, #policyModule .policy .decimal .openAccordion .policyName:after, #policyModule .policy .bullet .openAccordion .policyName:after, #policyModule .policy .lowerAlpha .openAccordion .policyName:after, #policyModule .policy .upperAlpha .openAccordion .policyName:after, #policyModule .policy .lowerRoman .openAccordion .policyName:after, #policyModule .policy .upperRoman .openAccordion .policyName:after, #relatedPub .pubLinks a:before, .publication .post p.comments a:before, .publication .post p.more a:after, .publication .fullPost .commentAdded h4:before, .publication .nextPrev .prev h4:before, .publication .nextPrev .next h4:after, th.header:after, .twitter-block li:before {
   display: inline-block;
   font-family: FontAwesome;
   font-style: normal;
@@ -3961,7 +3962,7 @@ body #wrapper #post-footer a {
 }
 
 /* line 15, scss/_extends.scss */
-.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle .screenreader, #directory .directoryContact li strong, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle .screenreader, .directoryEntry .directoryContact li strong, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
   position: absolute;
   left: -9999px;
   top: -9999px;
@@ -4532,6 +4533,45 @@ hr.horizontal-rule-basic {
   margin-bottom: 2.5rem;
 }
 
+/* line 272, scss/modules/_blurb.scss */
+.contentPost .blurbs {
+  margin-top: -2.5rem;
+}
+
+/* line 278, scss/modules/_blurb.scss */
+.ccBlurb h3 {
+  margin-bottom: 0px;
+}
+/* line 281, scss/modules/_blurb.scss */
+.ccBlurb .blurb {
+  margin-bottom: 0px;
+  padding-left: 0px !important;
+  background-color: white !important;
+}
+/* line 286, scss/modules/_blurb.scss */
+.ccBlurb ul {
+  list-style-type: disc;
+}
+/* line 288, scss/modules/_blurb.scss */
+.ccBlurb ul li {
+  font-weight: 300;
+}
+/* line 292, scss/modules/_blurb.scss */
+.ccBlurb .formElement.hideCCCheckbox {
+  display: none;
+}
+/* line 295, scss/modules/_blurb.scss */
+.ccBlurb div.ccSuccess {
+  padding-top: 5px;
+  padding-left: 5px;
+  background: rgba(16, 115, 206, 0.25);
+  border: 1px solid rgba(16, 115, 206, 0.45);
+}
+/* line 300, scss/modules/_blurb.scss */
+.ccBlurb div.ccSuccess p.ccThankYou {
+  margin-bottom: 12px;
+}
+
 /* line 12, scss/modules/_children.scss */
 .childrenList {
   padding: 0;
@@ -4882,62 +4922,63 @@ hr.horizontal-rule-basic {
 }
 
 /* line 66, scss/modules/_directory.scss */
-#directory {
-  margin: 0 0 2.5rem;
+.directoryEntry {
+  min-height: 200px;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 70, scss/modules/_directory.scss */
-  #directory .directoryName,
-  #directory .directoryInfo {
+  /* line 68, scss/modules/_directory.scss */
+  .directoryEntry .directoryName,
+  .directoryEntry .directoryInfo {
     margin-left: 12.5rem !important;
   }
 }
-/* line 78, scss/modules/_directory.scss */
-#directory figure {
+/* line 77, scss/modules/_directory.scss */
+.directoryEntry figure {
   width: 25%;
   margin: 0 0 1.5rem 1.5rem;
   float: right;
+  margin-top: 7px;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 78, scss/modules/_directory.scss */
-  #directory figure {
+  /* line 77, scss/modules/_directory.scss */
+  .directoryEntry figure {
     float: left;
     width: 9.375rem;
-    margin: 0 1.5rem 1.5rem 0;
+    margin: 7px 1.5rem 1.5rem 0;
   }
 }
 /* line 91, scss/modules/_directory.scss */
-#directory figure img {
+.directoryEntry figure img {
   width: 100%;
 }
 /* line 96, scss/modules/_directory.scss */
-#directory .directoryName {
+.directoryEntry .directoryName {
   margin: 0;
   font-size: 1.6875rem;
   font-weight: 400;
 }
 /* line 102, scss/modules/_directory.scss */
-#directory .directoryTitle {
+.directoryEntry .directoryTitle {
   font-size: 1.125rem;
   margin-bottom: 0px;
 }
 /* line 108, scss/modules/_directory.scss */
-#directory .directoryInfo h3.directoryTitle:last-of-type {
+.directoryEntry .directoryInfo h3.directoryTitle:last-of-type {
   margin-bottom: 20px;
 }
 @media only screen and (min-width: 40.063em) {
   /* line 113, scss/modules/_directory.scss */
-  #directory .directoryInfo h3.directoryTitle:last-of-type {
+  .directoryEntry .directoryInfo h3.directoryTitle:last-of-type {
     margin-bottom: 0px;
   }
 }
 /* line 119, scss/modules/_directory.scss */
-#directory .directoryContact {
+.directoryEntry .directoryContact {
   margin-top: 1.42857rem;
   margin-left: 1.25rem;
 }
 /* line 123, scss/modules/_directory.scss */
-#directory .directoryContact li span.attribute {
+.directoryEntry .directoryContact li span.attribute {
   position: static;
   max-width: 95%;
   min-width: 51%;
@@ -4947,18 +4988,18 @@ hr.horizontal-rule-basic {
 }
 @media only screen and (min-width: 40.063em) {
   /* line 123, scss/modules/_directory.scss */
-  #directory .directoryContact li span.attribute {
+  .directoryEntry .directoryContact li span.attribute {
     min-width: 0%;
     max-width: 175px;
     width: 36%;
   }
 }
 /* line 137, scss/modules/_directory.scss */
-#directory .directoryContact li span.attribute strong {
+.directoryEntry .directoryContact li span.attribute strong {
   position: static;
 }
 /* line 142, scss/modules/_directory.scss */
-#directory .directoryContact span.attrValue {
+.directoryEntry .directoryContact span.attrValue {
   display: inline-block;
   max-width: 95%;
   min-width: 51%;
@@ -4967,25 +5008,25 @@ hr.horizontal-rule-basic {
 }
 @media only screen and (min-width: 40.063em) {
   /* line 142, scss/modules/_directory.scss */
-  #directory .directoryContact span.attrValue {
+  .directoryEntry .directoryContact span.attrValue {
     min-width: 0%;
     width: 62%;
     margin-left: 2px;
   }
 }
 /* line 156, scss/modules/_directory.scss */
-#directory .directoryContact span.multipleAttrValues {
+.directoryEntry .directoryContact span.multipleAttrValues {
   display: inline-block;
   margin: 0px;
   width: 100%;
 }
 /* line 166, scss/modules/_directory.scss */
-#directory .directoryContact li {
+.directoryEntry .directoryContact li {
   margin-left: 2.5rem;
   vertical-align: top;
 }
 /* line 174, scss/modules/_directory.scss */
-#directory .directoryContact li:before {
+.directoryEntry .directoryContact li:before {
   width: 2rem;
   margin-left: -2.25rem;
   text-align: center;
@@ -4994,67 +5035,67 @@ hr.horizontal-rule-basic {
   top: 5px;
 }
 /* line 187, scss/modules/_directory.scss */
-#directory .directoryContact .directoryOffice:before {
+.directoryEntry .directoryContact .directoryOffice:before {
   content: "\f041";
 }
 /* line 193, scss/modules/_directory.scss */
-#directory .directoryContact .directoryPhone:before {
+.directoryEntry .directoryContact .directoryPhone:before {
   content: "\f095";
 }
 /* line 199, scss/modules/_directory.scss */
-#directory .directoryContact .directoryEmail:before {
+.directoryEntry .directoryContact .directoryEmail:before {
   content: "\f1fa";
 }
 /* line 205, scss/modules/_directory.scss */
-#directory .directoryContact .directoryStudentResidence:before {
+.directoryEntry .directoryContact .directoryStudentResidence:before {
   content: "\f1ad";
 }
 /* line 211, scss/modules/_directory.scss */
-#directory .directoryContact .directorySPO:before {
+.directoryEntry .directoryContact .directorySPO:before {
   content: "\f0e0";
 }
 /* line 217, scss/modules/_directory.scss */
-#directory .directoryContact .directoryUsername:before {
+.directoryEntry .directoryContact .directoryUsername:before {
   content: "\f007";
 }
 /* line 223, scss/modules/_directory.scss */
-#directory .directoryContact .directoryAffiliations:before {
+.directoryEntry .directoryContact .directoryAffiliations:before {
   content: "\f0c0";
 }
 /* line 229, scss/modules/_directory.scss */
-#directory .directoryContact .directoryHomeAddress:before {
+.directoryEntry .directoryContact .directoryHomeAddress:before {
   content: "\f015";
 }
 /* line 236, scss/modules/_directory.scss */
-#directory .directoryContact .directoryMobile:before {
+.directoryEntry .directoryContact .directoryMobile:before {
   content: "\f10b";
 }
 /* line 242, scss/modules/_directory.scss */
-#directory .directoryContact .directoryBirthday:before {
+.directoryEntry .directoryContact .directoryBirthday:before {
   content: "\f1fd";
 }
 /* line 248, scss/modules/_directory.scss */
-#directory .directoryContact .directoryLastUpdate:before {
+.directoryEntry .directoryContact .directoryLastUpdate:before {
   content: "\f1da";
 }
 /* line 254, scss/modules/_directory.scss */
-#directory .directoryContact .directoryDepartment:before {
+.directoryEntry .directoryContact .directoryDepartment:before {
   content: "\f19c";
 }
 /* line 260, scss/modules/_directory.scss */
-#directory .directoryContact .directoryAdvisor:before {
+.directoryEntry .directoryContact .directoryAdvisor:before {
   content: "\f19d";
 }
 /* line 266, scss/modules/_directory.scss */
-#directory .directoryContact .directoryMinor:before {
+.directoryEntry .directoryContact .directoryMinor:before {
   content: "\f02d";
 }
 /* line 272, scss/modules/_directory.scss */
-#directory .directoryContact .directoryTerms:before {
+.directoryEntry .directoryContact .directoryTerms:before {
   content: "\f02d";
 }
 /* line 278, scss/modules/_directory.scss */
-#directory .directoryContact .directoryFacultySite:before {
+.directoryEntry .directoryContact .directoryFacultySite:before {
   content: "\f109";
 }
 
@@ -5466,6 +5507,7 @@ hr.horizontal-rule-basic {
 #calendar .responsiveEventsList .eventsListContent .ongoingEvents .event {
   padding-bottom: 0.625rem;
   *zoom: 1;
+  line-height: 1.4;
 }
 /* line 165, ../foundation/bower_components/foundation/scss/foundation/components/_global.scss */
 #calendar .responsiveEventsList .eventsListContent .dayEvents .event:before, #calendar .responsiveEventsList .eventsListContent .dayEvents .event:after,
@@ -5479,33 +5521,38 @@ hr.horizontal-rule-basic {
 #calendar .responsiveEventsList .eventsListContent .ongoingEvents .event:after {
   clear: both;
 }
-/* line 382, scss/modules/_events.scss */
+/* line 383, scss/modules/_events.scss */
 #calendar .responsiveEventsList .eventsListContent .dayEvents .event a,
 #calendar .responsiveEventsList .eventsListContent .ongoingEvents .event a {
   font-weight: 400;
 }
-/* line 388, scss/modules/_events.scss */
+/* line 389, scss/modules/_events.scss */
 #calendar .responsiveEventsList .eventsListContent .dayEvents .event a:hover,
 #calendar .responsiveEventsList .eventsListContent .ongoingEvents .event a:hover {
   text-decoration: underline;
 }
-/* line 391, scss/modules/_events.scss */
+/* line 392, scss/modules/_events.scss */
 #calendar .responsiveEventsList .eventsListContent .dayEvents .event a:hover i,
 #calendar .responsiveEventsList .eventsListContent .ongoingEvents .event a:hover i {
   color: #ffbd1c;
 }
-/* line 396, scss/modules/_events.scss */
+/* line 397, scss/modules/_events.scss */
 #calendar .responsiveEventsList .eventsListContent .dayEvents .event a i,
 #calendar .responsiveEventsList .eventsListContent .ongoingEvents .event a i {
   color: #e8a500;
   margin-left: 0.375rem;
 }
-/* line 406, scss/modules/_events.scss */
+/* line 403, scss/modules/_events.scss */
+#calendar .responsiveEventsList .eventsListContent .dayEvents .event .title,
+#calendar .responsiveEventsList .eventsListContent .ongoingEvents .event .title {
+  margin: 0 0 0.25rem 0;
+}
+/* line 408, scss/modules/_events.scss */
 #calendar .responsiveEventsList .eventsListContent .dayEvents .event:last-child,
 #calendar .responsiveEventsList .eventsListContent .ongoingEvents .event:last-child {
   padding-bottom: 0;
 }
-/* line 411, scss/modules/_events.scss */
+/* line 413, scss/modules/_events.scss */
 #calendar .responsiveEventsList .eventsListContent .dayEvents .event .through,
 #calendar .responsiveEventsList .eventsListContent .dayEvents .event .ends,
 #calendar .responsiveEventsList .eventsListContent .ongoingEvents .event .through,
@@ -5513,127 +5560,134 @@ hr.horizontal-rule-basic {
   font-style: normal;
   display: inline;
 }
-/* line 416, scss/modules/_events.scss */
+/* line 418, scss/modules/_events.scss */
+#calendar .responsiveEventsList .eventsListContent .dayEvents .event .description,
+#calendar .responsiveEventsList .eventsListContent .ongoingEvents .event .description {
+  font-size: 0.95rem;
+  font-weight: 300;
+  margin: 0.5rem 0 0.5rem 0;
+}
+/* line 424, scss/modules/_events.scss */
 #calendar .responsiveEventsList .eventsListContent .dayEvents .event time,
 #calendar .responsiveEventsList .eventsListContent .ongoingEvents .event time {
   display: inline;
 }
-/* line 423, scss/modules/_events.scss */
+/* line 431, scss/modules/_events.scss */
 #calendar .responsiveEventsList .eventsListContent .dayEvents .event .sep,
 #calendar .responsiveEventsList .eventsListContent .ongoingEvents .event .sep {
   padding: 0 0.25rem;
 }
-/* line 429, scss/modules/_events.scss */
+/* line 437, scss/modules/_events.scss */
 #calendar .responsiveEventsList .eventsListContent .dayEvents .event .location,
 #calendar .responsiveEventsList .eventsListContent .ongoingEvents .event .location {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
   font-weight: 300;
   display: inline;
 }
-/* line 443, scss/modules/_events.scss */
+/* line 451, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGridWrapper {
   margin-bottom: 2.5rem;
 }
-/* line 447, scss/modules/_events.scss */
+/* line 455, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid {
   text-align: center;
 }
-/* line 453, scss/modules/_events.scss */
+/* line 461, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid a.previous,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid h4,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid a.next {
   display: inline-block;
   padding: 0 0.375rem;
 }
-/* line 458, scss/modules/_events.scss */
+/* line 466, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table {
   border: none;
 }
-/* line 460, scss/modules/_events.scss */
+/* line 468, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table tr {
   background: #FFF;
 }
-/* line 465, scss/modules/_events.scss */
+/* line 473, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table th,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td {
   text-align: center;
   padding: 0;
 }
-/* line 472, scss/modules/_events.scss */
+/* line 480, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table th {
   padding: 5% 0;
   background: #fbfbfb;
   background: #FFF;
   border: #FFF;
 }
-/* line 479, scss/modules/_events.scss */
+/* line 487, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td {
   border-color: #DDDDDD;
   border-image: none;
   border-style: solid;
   border-width: 1px;
 }
-/* line 485, scss/modules/_events.scss */
+/* line 493, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td:empty {
   background: #f6f6f6;
 }
-/* line 494, scss/modules/_events.scss */
+/* line 502, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.hasEvent a {
   color: #1073ce;
 }
-/* line 500, scss/modules/_events.scss */
+/* line 508, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.currentlyViewing {
   background: #1073ce;
 }
-/* line 504, scss/modules/_events.scss */
+/* line 512, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.currentlyViewing a {
   color: #FFF;
 }
-/* line 509, scss/modules/_events.scss */
+/* line 517, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.today {
   background: #3b99f0;
 }
-/* line 513, scss/modules/_events.scss */
+/* line 521, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td.today a {
   color: #FFF;
 }
-/* line 518, scss/modules/_events.scss */
+/* line 526, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .calendarGrid table td a {
   color: #9d9d9d;
   display: block;
   padding: 28% 0;
 }
-/* line 530, scss/modules/_events.scss */
+/* line 538, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a {
   margin: 0 5%;
   display: block;
   padding: 0;
 }
-/* line 534, scss/modules/_events.scss */
+/* line 542, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before {
   margin: 0 0.5rem 1rem 0;
 }
-/* line 541, scss/modules/_events.scss */
+/* line 549, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .webcal:before {
   content: "\f073";
 }
-/* line 545, scss/modules/_events.scss */
+/* line 553, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .download:before {
   content: "\f063";
 }
-/* line 549, scss/modules/_events.scss */
+/* line 557, scss/modules/_events.scss */
 #calendar .responsiveEventsList .gridAndOptionsWrapper .rss:before {
   content: "\f09e";
 }
 
 /* Events Mini */
-/* line 564, scss/modules/_events.scss */
+/* line 572, scss/modules/_events.scss */
 #miniCal #events {
   margin-bottom: 1rem;
 }
-/* line 569, scss/modules/_events.scss */
+/* line 577, scss/modules/_events.scss */
 #miniCal .dayblock,
 #miniCal .ongoingblock {
   border-bottom: 1px solid #e9e9e9;
@@ -5653,7 +5707,7 @@ hr.horizontal-rule-basic {
 #miniCal .ongoingblock:after {
   clear: both;
 }
-/* line 576, scss/modules/_events.scss */
+/* line 584, scss/modules/_events.scss */
 #miniCal .day {
   display: block;
   text-align: center;
@@ -5665,7 +5719,7 @@ hr.horizontal-rule-basic {
   top: 1rem;
   left: 0;
 }
-/* line 587, scss/modules/_events.scss */
+/* line 595, scss/modules/_events.scss */
 #miniCal .day .month {
   display: block;
   background: #9f2112;
@@ -5678,7 +5732,7 @@ hr.horizontal-rule-basic {
   border-top-right-radius: 6px;
   padding: 0.125rem;
 }
-/* line 595, scss/modules/_events.scss */
+/* line 603, scss/modules/_events.scss */
 #miniCal .day .date {
   display: block;
   background: #e9e9e9;
@@ -5690,13 +5744,13 @@ hr.horizontal-rule-basic {
   border-bottom-right-radius: 6px;
   padding: 0.125rem;
 }
-/* line 608, scss/modules/_events.scss */
+/* line 616, scss/modules/_events.scss */
 #miniCal .dayEvents,
 #miniCal .ongoingEvents {
   margin: 0 0 0 4.375rem;
   padding: 0;
 }
-/* line 612, scss/modules/_events.scss */
+/* line 620, scss/modules/_events.scss */
 #miniCal .dayEvents .event,
 #miniCal .ongoingEvents .event {
   padding-bottom: 0.625rem;
@@ -5714,33 +5768,33 @@ hr.horizontal-rule-basic {
 #miniCal .ongoingEvents .event:after {
   clear: both;
 }
-/* line 616, scss/modules/_events.scss */
+/* line 624, scss/modules/_events.scss */
 #miniCal .dayEvents .event a,
 #miniCal .ongoingEvents .event a {
   font-weight: 400;
 }
-/* line 622, scss/modules/_events.scss */
+/* line 630, scss/modules/_events.scss */
 #miniCal .dayEvents .event a:hover,
 #miniCal .ongoingEvents .event a:hover {
   text-decoration: underline;
 }
-/* line 625, scss/modules/_events.scss */
+/* line 633, scss/modules/_events.scss */
 #miniCal .dayEvents .event a:hover i,
 #miniCal .ongoingEvents .event a:hover i {
   color: #ffbd1c;
 }
-/* line 630, scss/modules/_events.scss */
+/* line 638, scss/modules/_events.scss */
 #miniCal .dayEvents .event a i,
 #miniCal .ongoingEvents .event a i {
   color: #e8a500;
   margin-left: 0.375rem;
 }
-/* line 640, scss/modules/_events.scss */
+/* line 648, scss/modules/_events.scss */
 #miniCal .dayEvents .event:last-child,
 #miniCal .ongoingEvents .event:last-child {
   padding-bottom: 0;
 }
-/* line 645, scss/modules/_events.scss */
+/* line 653, scss/modules/_events.scss */
 #miniCal .dayEvents .event .through,
 #miniCal .dayEvents .event .ends,
 #miniCal .ongoingEvents .event .through,
@@ -5748,121 +5802,121 @@ hr.horizontal-rule-basic {
   font-style: normal;
   display: inline;
 }
-/* line 650, scss/modules/_events.scss */
+/* line 658, scss/modules/_events.scss */
 #miniCal .dayEvents .event time,
 #miniCal .ongoingEvents .event time {
   display: inline;
 }
-/* line 657, scss/modules/_events.scss */
+/* line 665, scss/modules/_events.scss */
 #miniCal .dayEvents .event .sep,
 #miniCal .ongoingEvents .event .sep {
   padding: 0 0.25rem;
 }
-/* line 663, scss/modules/_events.scss */
+/* line 671, scss/modules/_events.scss */
 #miniCal .dayEvents .event .location,
 #miniCal .ongoingEvents .event .location {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
   font-weight: 300;
   display: inline;
 }
-/* line 674, scss/modules/_events.scss */
+/* line 682, scss/modules/_events.scss */
 #miniCal .foot .more {
   margin: 0;
 }
-/* line 677, scss/modules/_events.scss */
+/* line 685, scss/modules/_events.scss */
 #miniCal .foot .more a:before {
   content: "\f073";
   margin-right: 0.375rem;
 }
 
 /* Events Single */
-/* line 695, scss/modules/_events.scss */
+/* line 703, scss/modules/_events.scss */
 #calendar .eventDetails .back a:before {
   content: "\f137";
   margin-right: 0.375rem;
 }
-/* line 705, scss/modules/_events.scss */
+/* line 713, scss/modules/_events.scss */
 #calendar .eventDetails .eventMeta li {
   margin-left: 2.5rem;
 }
-/* line 708, scss/modules/_events.scss */
+/* line 716, scss/modules/_events.scss */
 #calendar .eventDetails .eventMeta li:before {
   width: 2rem;
   margin-left: -2.25rem;
   text-align: center;
 }
-/* line 719, scss/modules/_events.scss */
+/* line 727, scss/modules/_events.scss */
 #calendar .eventDetails .eventMeta li .fa, #calendar .eventDetails .eventMeta li #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .navListTop ul #calendar .eventDetails .eventMeta li .navListItem.accordion > a:before, #calendar .eventDetails .eventMeta li #minisite #navWrap .jump a:before, #minisite #navWrap .jump #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li #minisite .continueReading a:after, #minisite .continueReading #calendar .eventDetails .eventMeta li a:after, #calendar .eventDetails .eventMeta li #minisite .feedLink .feedInfo a:before, #minisite .feedLink .feedInfo #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta #callToActionBlurb .blurb ul li a:after, #callToActionBlurb .blurb ul #calendar .eventDetails .eventMeta li a:after, #calendar .eventDetails .eventMeta .childrenList li a[href]:before, .childrenList #calendar .eventDetails .eventMeta li a[href]:before, #calendar .eventDetails .eventMeta #childrenAndGrandchildren li ul .childDesc:before, #childrenAndGrandchildren #calendar .eventDetails .eventMeta li ul .childDesc:before, #calendar .eventDetails .eventMeta li .directoryHead ul a:after, .directoryHead ul #calendar .eventDetails .eventMeta li a:after, #calendar .eventDetails .eventMeta li .searchOptions.openOptions:after, #calendar .eventDetails .eventMeta li .searchOptions.closedOptions:after, #calendar .eventDetails .eventMeta li .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport .eventDetails .eventMeta li a:before,
 #calendar .eventDetails .eventMeta li .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li #miniCal .foot .more a:before, #miniCal .foot .more #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li .back a:before, #calendar .eventDetails .back .eventMeta li a:before, #calendar .eventDetails .eventMeta li li:before, #calendar .eventDetails .eventMeta li .contact:before,
 #calendar .eventDetails .eventMeta li .eventUrl:before,
 #calendar .eventDetails .eventMeta li .calendarExport:before, #calendar .eventDetails .eventMeta li #facultyStaff .facStaff .facStaffContent .more:before, #facultyStaff .facStaff .facStaffContent #calendar .eventDetails .eventMeta li .more:before, #calendar .eventDetails .eventMeta li .featuresModule .feature .featureInfo .featureText a:before, .featuresModule .feature .featureInfo .featureText #calendar .eventDetails .eventMeta li a:before,
 #calendar .eventDetails .eventMeta li .featuresModule .feature .featureInfo .featureText span:before,
-.featuresModule .feature .featureInfo .featureText #calendar .eventDetails .eventMeta li span:before, #calendar .eventDetails .eventMeta li #discoErrorNotice h3:before, #discoErrorNotice #calendar .eventDetails .eventMeta li h3:before, #calendar .eventDetails .eventMeta li #pageContent ul.major-list, #pageContent #calendar .eventDetails .eventMeta li ul.major-list, #calendar .eventDetails .eventMeta li #policyModule .rootPolicyList .rootPolicyItem a:before, #policyModule .rootPolicyList .rootPolicyItem #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li #policyModule .policy .decimal .closedAccordion .policyName:after, #policyModule .policy .decimal .closedAccordion #calendar .eventDetails .eventMeta li .policyName:after, #calendar .eventDetails .eventMeta li #policyModule .policy .decimal .openAccordion .policyName:after, #policyModule .policy .decimal .openAccordion #calendar .eventDetails .eventMeta li .policyName:after, #calendar .eventDetails .eventMeta li #relatedPub .pubLinks a:before, #relatedPub .pubLinks #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li .publication .post p.comments a:before, .publication .post p.comments #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li .publication .post p.more a:after, .publication .post p.more #calendar .eventDetails .eventMeta li a:after, #calendar .eventDetails .eventMeta li .publication .fullPost .commentAdded h4:before, .publication .fullPost .commentAdded #calendar .eventDetails .eventMeta li h4:before, #calendar .eventDetails .eventMeta li .publication .nextPrev .prev h4:before, .publication .nextPrev .prev #calendar .eventDetails .eventMeta li h4:before, #calendar .eventDetails .eventMeta li .publication .nextPrev .next h4:after, .publication .nextPrev .next #calendar .eventDetails .eventMeta li h4:after, #calendar .eventDetails .eventMeta li th.header:after {
+.featuresModule .feature .featureInfo .featureText #calendar .eventDetails .eventMeta li span:before, #calendar .eventDetails .eventMeta li #discoErrorNotice h3:before, #discoErrorNotice #calendar .eventDetails .eventMeta li h3:before, #calendar .eventDetails .eventMeta li #pageContent ul.major-list, #pageContent #calendar .eventDetails .eventMeta li ul.major-list, #calendar .eventDetails .eventMeta li #policyModule .rootPolicyList .rootPolicyItem a:before, #policyModule .rootPolicyList .rootPolicyItem #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li #policyModule .policy .decimal .closedAccordion .policyName:after, #policyModule .policy .decimal .closedAccordion #calendar .eventDetails .eventMeta li .policyName:after, #calendar .eventDetails .eventMeta li #policyModule .policy .bullet .closedAccordion .policyName:after, #policyModule .policy .bullet .closedAccordion #calendar .eventDetails .eventMeta li .policyName:after, #calendar .eventDetails .eventMeta li #policyModule .policy .lowerAlpha .closedAccordion .policyName:after, #policyModule .policy .lowerAlpha .closedAccordion #calendar .eventDetails .eventMeta li .policyName:after, #calendar .eventDetails .eventMeta li #policyModule .policy .upperAlpha .closedAccordion .policyName:after, #policyModule .policy .upperAlpha .closedAccordion #calendar .eventDetails .eventMeta li .policyName:after, #calendar .eventDetails .eventMeta li #policyModule .policy .lowerRoman .closedAccordion .policyName:after, #policyModule .policy .lowerRoman .closedAccordion #calendar .eventDetails .eventMeta li .policyName:after, #calendar .eventDetails .eventMeta li #policyModule .policy .upperRoman .closedAccordion .policyName:after, #policyModule .policy .upperRoman .closedAccordion #calendar .eventDetails .eventMeta li .policyName:after, #calendar .eventDetails .eventMeta li #policyModule .policy .decimal .openAccordion .policyName:after, #policyModule .policy .decimal .openAccordion #calendar .eventDetails .eventMeta li .policyName:after, #calendar .eventDetails .eventMeta li #policyModule .policy .bullet .openAccordion .policyName:after, #policyModule .policy .bullet .openAccordion #calendar .eventDetails .eventMeta li .policyName:after, #calendar .eventDetails .eventMeta li #policyModule .policy .lowerAlpha .openAccordion .policyName:after, #policyModule .policy .lowerAlpha .openAccordion #calendar .eventDetails .eventMeta li .policyName:after, #calendar .eventDetails .eventMeta li #policyModule .policy .upperAlpha .openAccordion .policyName:after, #policyModule .policy .upperAlpha .openAccordion #calendar .eventDetails .eventMeta li .policyName:after, #calendar .eventDetails .eventMeta li #policyModule .policy .lowerRoman .openAccordion .policyName:after, #policyModule .policy .lowerRoman .openAccordion #calendar .eventDetails .eventMeta li .policyName:after, #calendar .eventDetails .eventMeta li #policyModule .policy .upperRoman .openAccordion .policyName:after, #policyModule .policy .upperRoman .openAccordion #calendar .eventDetails .eventMeta li .policyName:after, #calendar .eventDetails .eventMeta li #relatedPub .pubLinks a:before, #relatedPub .pubLinks #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li .publication .post p.comments a:before, .publication .post p.comments #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li .publication .post p.more a:after, .publication .post p.more #calendar .eventDetails .eventMeta li a:after, #calendar .eventDetails .eventMeta li .publication .fullPost .commentAdded h4:before, .publication .fullPost .commentAdded #calendar .eventDetails .eventMeta li h4:before, #calendar .eventDetails .eventMeta li .publication .nextPrev .prev h4:before, .publication .nextPrev .prev #calendar .eventDetails .eventMeta li h4:before, #calendar .eventDetails .eventMeta li .publication .nextPrev .next h4:after, .publication .nextPrev .next #calendar .eventDetails .eventMeta li h4:after, #calendar .eventDetails .eventMeta li th.header:after {
   margin: 0 0.375rem;
 }
-/* line 724, scss/modules/_events.scss */
+/* line 732, scss/modules/_events.scss */
 #calendar .eventDetails .eventMeta .repeats:before {
   content: "\f01e";
 }
-/* line 728, scss/modules/_events.scss */
+/* line 736, scss/modules/_events.scss */
 #calendar .eventDetails .eventMeta .date:before {
   content: "\f073";
 }
-/* line 732, scss/modules/_events.scss */
+/* line 740, scss/modules/_events.scss */
 #calendar .eventDetails .eventMeta .time:before {
   content: "\f017";
 }
-/* line 736, scss/modules/_events.scss */
+/* line 744, scss/modules/_events.scss */
 #calendar .eventDetails .eventMeta .location:before {
   content: "\f041";
 }
-/* line 743, scss/modules/_events.scss */
+/* line 751, scss/modules/_events.scss */
 #calendar .eventDetails .images {
   margin-bottom: 2.5rem;
   display: inline-block;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 747, scss/modules/_events.scss */
+  /* line 755, scss/modules/_events.scss */
   #calendar .eventDetails .images .imageChunk {
     float: left;
     width: 50%;
   }
-  /* line 753, scss/modules/_events.scss */
+  /* line 761, scss/modules/_events.scss */
   #calendar .eventDetails .images .imageChunk:nth-child(2n+1) {
     padding-right: 1rem;
     clear: left;
   }
-  /* line 758, scss/modules/_events.scss */
+  /* line 766, scss/modules/_events.scss */
   #calendar .eventDetails .images .imageChunk:nth-child(2n+2) {
     padding-left: 1rem;
   }
 }
-/* line 767, scss/modules/_events.scss */
+/* line 775, scss/modules/_events.scss */
 #calendar .eventDetails .contact,
 #calendar .eventDetails .eventUrl,
 #calendar .eventDetails .calendarExport {
   margin-bottom: 0;
 }
-/* line 770, scss/modules/_events.scss */
+/* line 778, scss/modules/_events.scss */
 #calendar .eventDetails .contact:before,
 #calendar .eventDetails .eventUrl:before,
 #calendar .eventDetails .calendarExport:before {
   margin-right: 0.375rem;
 }
-/* line 777, scss/modules/_events.scss */
+/* line 785, scss/modules/_events.scss */
 #calendar .eventDetails .contact:before {
   content: "\f059";
 }
-/* line 783, scss/modules/_events.scss */
+/* line 791, scss/modules/_events.scss */
 #calendar .eventDetails .eventUrl:before {
   content: "\f05a";
 }
-/* line 789, scss/modules/_events.scss */
+/* line 797, scss/modules/_events.scss */
 #calendar .eventDetails .calendarExport:before {
   content: "\f073";
 }
-/* line 794, scss/modules/_events.scss */
+/* line 802, scss/modules/_events.scss */
 #calendar .eventDetails .export {
   margin-bottom: 1.5rem;
 }
@@ -6210,7 +6264,22 @@ hr.horizontal-rule-basic {
   }
 }
 
-/* line 24, scss/modules/_form.scss */
+/* line 10, scss/_extends.scss */
+.zero-out, body #wrapper #global-banner hgroup h1, body #wrapper #global-banner #mobile-nav ul, body #wrapper #global-nav .minisites, body #wrapper #global-footer #global-footer-nav .column ul, body #wrapper #global-footer #global-footer-info .contact, #callToActionBlurb .blurb ul, #calendar .responsiveEventsList .views ul, .featuresModule .feature .featureInfo .featureTitle a,
+.featuresModule .feature .featureInfo .featureTitle .noLink, .featuresModule .feature .featureNavWrap .featureNav {
+  margin: 0;
+  padding: 0;
+}
+
+/* line 15, scss/_extends.scss */
+.screenreader, body #wrapper #global-banner hgroup span, body #wrapper #global-banner #mobile-nav ul a span, #minisite #minisiteBanner #banner h1, #minisite #navWrap a.toggle .screenreader, .directoryEntry .directoryContact li strong, #calendar .responsiveEventsList .eventsListContent .day .today, #miniCal .day .today, #calendar .eventDetails .eventMeta li strong, #facultyStaff .facStaff .facStaffContact li strong, .featuresModule .feature .featureNavWrap .navBlock .navItem span {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  margin-bottom: 0;
+}
+
+/* line 33, scss/modules/_form.scss */
 .form div,
 .form .words,
 .form input,
@@ -6228,7 +6297,7 @@ form label,
 form select {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
 }
-/* line 44, scss/modules/_form.scss */
+/* line 53, scss/modules/_form.scss */
 .form input[type="text"],
 .form input[type="password"],
 .form input[type="date"],
@@ -6292,8 +6361,8 @@ form .loki textarea {
   padding: 0.5rem;
   height: 2.3125rem;
   width: 100%;
-  -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
   box-sizing: border-box;
   -webkit-transition: -webkit-box-shadow 0.45s, border-color 0.45s ease-in-out;
   -moz-transition: -moz-box-shadow 0.45s, border-color 0.45s ease-in-out;
@@ -6458,7 +6527,7 @@ form .loki div.iframe_wrapper[disabled],
 form .loki textarea[disabled] {
   background-color: #dddddd;
 }
-/* line 68, scss/modules/_form.scss */
+/* line 77, scss/modules/_form.scss */
 .form input[type="text"],
 .form input[type="password"],
 .form input[type="date"],
@@ -6500,19 +6569,19 @@ form input[type="time"],
 form input[type="url"] {
   max-width: 600px;
 }
-/* line 73, scss/modules/_form.scss */
+/* line 82, scss/modules/_form.scss */
 .form input[type="file"],
 #form input[type="file"],
 form input[type="file"] {
   margin: 0 0 1rem 0;
 }
-/* line 93, scss/modules/_form.scss */
+/* line 102, scss/modules/_form.scss */
 .form input[type="file"],
 #form input[type="file"],
 form input[type="file"] {
   width: 100%;
 }
-/* line 98, scss/modules/_form.scss */
+/* line 107, scss/modules/_form.scss */
 .form fieldset,
 #form fieldset,
 form fieldset {
@@ -6530,7 +6599,7 @@ form fieldset legend {
   margin: 0;
   margin-left: -0.1875rem;
 }
-/* line 103, scss/modules/_form.scss */
+/* line 112, scss/modules/_form.scss */
 .form select,
 #form select,
 form select {
@@ -6545,14 +6614,14 @@ form select {
   width: auto;
   max-width: 100%;
 }
-/* line 114, scss/modules/_form.scss */
+/* line 123, scss/modules/_form.scss */
 .form select.radius,
 #form select.radius,
 form select.radius {
   -webkit-border-radius: 6px;
   border-radius: 6px;
 }
-/* line 117, scss/modules/_form.scss */
+/* line 126, scss/modules/_form.scss */
 .form select:hover,
 #form select:hover,
 form select:hover {
@@ -6561,7 +6630,7 @@ form select:hover {
   background-position-y: center;
   border-color: #999999;
 }
-/* line 132, scss/modules/_form.scss */
+/* line 141, scss/modules/_form.scss */
 .form textarea,
 .form .loki div.iframe_wrapper,
 .form .loki textarea,
@@ -6574,7 +6643,7 @@ form .loki textarea {
   height: auto;
 }
 
-/* line 145, scss/modules/_form.scss */
+/* line 154, scss/modules/_form.scss */
 .form .submitSection,
 #form .submitSection,
 form .submitSection {
@@ -6603,13 +6672,13 @@ form .submitSection:after {
 form .submitSection:after {
   clear: both;
 }
-/* line 151, scss/modules/_form.scss */
+/* line 160, scss/modules/_form.scss */
 .form #discoLinear .formElement,
 #form #discoLinear .formElement,
 form #discoLinear .formElement {
   margin: 0;
 }
-/* line 154, scss/modules/_form.scss */
+/* line 163, scss/modules/_form.scss */
 .form #discoLinear .formElement .words,
 #form #discoLinear .formElement .words,
 form #discoLinear .formElement .words {
@@ -6620,7 +6689,7 @@ form #discoLinear .formElement .words {
   font-weight: normal;
   margin-bottom: 0.75rem;
 }
-/* line 160, scss/modules/_form.scss */
+/* line 169, scss/modules/_form.scss */
 .form .formElement,
 #form .formElement,
 form .formElement {
@@ -6644,7 +6713,7 @@ form .formElement {
   			}
   
   			td {
-  				padding: .5em 1em .5em 0; 
+  				padding: .5em 1em .5em 0;
   			}
   		}*/
 }
@@ -6663,28 +6732,28 @@ form .formElement:after {
 form .formElement:after {
   clear: both;
 }
-/* line 165, scss/modules/_form.scss */
+/* line 174, scss/modules/_form.scss */
 .form .formElement#requiredtextItem,
 #form .formElement#requiredtextItem,
 form .formElement#requiredtextItem {
   display: none;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 165, scss/modules/_form.scss */
+  /* line 174, scss/modules/_form.scss */
   .form .formElement#requiredtextItem,
   #form .formElement#requiredtextItem,
   form .formElement#requiredtextItem {
     padding-left: 1.75rem;
   }
 }
-/* line 173, scss/modules/_form.scss */
+/* line 182, scss/modules/_form.scss */
 .form .formElement.error,
 #form .formElement.error,
 form .formElement.error {
   background: none !important;
   padding: 1rem 0 !important;
 }
-/* line 178, scss/modules/_form.scss */
+/* line 187, scss/modules/_form.scss */
 .form .formElement.error .words .labelText,
 #form .formElement.error .words .labelText,
 form .formElement.error .words .labelText {
@@ -6696,7 +6765,15 @@ form .formElement.error .words .labelText {
   padding: 0.25rem 0.375rem;
   background: #fad4d0 !important;
 }
-/* line 192, scss/modules/_form.scss */
+/* line 196, scss/modules/_form.scss */
+.form .formElement.noLabel,
+#form .formElement.noLabel,
+form .formElement.noLabel {
+  font-size: 0.95 rem;
+  font-weight: 300;
+  line-height: 27 px;
+}
+/* line 204, scss/modules/_form.scss */
 .form .formElement.noLabel h1,
 .form .formElement.noLabel h2,
 .form .formElement.noLabel h3,
@@ -6709,14 +6786,14 @@ form .formElement.noLabel h3 {
   font-size: 1.6875rem;
   color: #1073ce;
 }
-/* line 198, scss/modules/_form.scss */
+/* line 210, scss/modules/_form.scss */
 .form .formElement.noLabel > :last-child,
 #form .formElement.noLabel > :last-child,
 form .formElement.noLabel > :last-child {
   margin: 0;
   padding: 0;
 }
-/* line 205, scss/modules/_form.scss */
+/* line 217, scss/modules/_form.scss */
 .form .formElement .words,
 #form .formElement .words,
 form .formElement .words {
@@ -6729,13 +6806,13 @@ form .formElement .words {
   font-weight: 600;
   display: inline-block;
 }
-/* line 210, scss/modules/_form.scss */
+/* line 222, scss/modules/_form.scss */
 .form .formElement .words .labelText,
 #form .formElement .words .labelText,
 form .formElement .words .labelText {
   display: inline-block;
 }
-/* line 214, scss/modules/_form.scss */
+/* line 226, scss/modules/_form.scss */
 .form .formElement .words .requiredIndicator,
 #form .formElement .words .requiredIndicator,
 form .formElement .words .requiredIndicator {
@@ -6744,7 +6821,7 @@ form .formElement .words .requiredIndicator {
   padding-left: 0.25rem;
   color: #838383;
 }
-/* line 240, scss/modules/_form.scss */
+/* line 252, scss/modules/_form.scss */
 .form .formElement .element input[size="2"],
 .form .formElement .element input[size="4"],
 .form .formElement .element input[size="12"],
@@ -6765,7 +6842,7 @@ form .formElement .element input[size="20"] {
   display: inline-block;
   margin: 0 0.75rem 0 0;
 }
-/* line 250, scss/modules/_form.scss */
+/* line 262, scss/modules/_form.scss */
 .form .formElement .element input[size="2"],
 .form .formElement .element input[size="4"],
 #form .formElement .element input[size="2"],
@@ -6774,7 +6851,7 @@ form .formElement .element input[size="2"],
 form .formElement .element input[size="4"] {
   margin: 0 0.375rem;
 }
-/* line 255, scss/modules/_form.scss */
+/* line 267, scss/modules/_form.scss */
 .form .formElement .comment,
 #form .formElement .comment,
 form .formElement .comment {
@@ -6782,25 +6859,25 @@ form .formElement .comment {
   font-weight: 300;
   font-style: italic;
 }
-/* line 260, scss/modules/_form.scss */
+/* line 272, scss/modules/_form.scss */
 .form .formElement .comment.smallText,
 #form .formElement .comment.smallText,
 form .formElement .comment.smallText {
   font-size: 0.875rem;
 }
-/* line 278, scss/modules/_form.scss */
+/* line 290, scss/modules/_form.scss */
 .form .formElement > input[type="checkbox"],
 #form .formElement > input[type="checkbox"],
 form .formElement > input[type="checkbox"] {
   margin: 0.5em .75em .5em 1em;
 }
-/* line 285, scss/modules/_form.scss */
+/* line 297, scss/modules/_form.scss */
 .form .formElement > .radioItem,
 #form .formElement > .radioItem,
 form .formElement > .radioItem {
   display: inline-block;
 }
-/* line 290, scss/modules/_form.scss */
+/* line 302, scss/modules/_form.scss */
 .form .formElement input[type="checkbox"] + label,
 .form .formElement input[type="radio"] + label,
 #form .formElement input[type="checkbox"] + label,
@@ -6810,19 +6887,19 @@ form .formElement input[type="radio"] + label {
   display: inline;
   margin-left: 50px;
 }
-/* line 300, scss/modules/_form.scss */
+/* line 312, scss/modules/_form.scss */
 .form .formElement .radioItem,
 #form .formElement .radioItem,
 form .formElement .radioItem {
   margin-right: 1.125rem;
 }
-/* line 303, scss/modules/_form.scss */
+/* line 315, scss/modules/_form.scss */
 .form .formElement .radioItem .radioButton,
 #form .formElement .radioItem .radioButton,
 form .formElement .radioItem .radioButton {
   margin: 0.5em .75em .5em 1em;
 }
-/* line 326, scss/modules/_form.scss */
+/* line 338, scss/modules/_form.scss */
 .form .formElement .loki,
 #form .formElement .loki,
 form .formElement .loki {
@@ -6831,7 +6908,7 @@ form .formElement .loki {
   padding: 0;
   background: none !important;
 }
-/* line 333, scss/modules/_form.scss */
+/* line 345, scss/modules/_form.scss */
 .form .formElement .loki .toolbar a,
 #form .formElement .loki .toolbar a,
 form .formElement .loki .toolbar a {
@@ -6842,21 +6919,21 @@ form .formElement .loki .toolbar a {
   position: relative;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 333, scss/modules/_form.scss */
+  /* line 345, scss/modules/_form.scss */
   .form .formElement .loki .toolbar a,
   #form .formElement .loki .toolbar a,
   form .formElement .loki .toolbar a {
     width: 2.5rem;
   }
 }
-/* line 344, scss/modules/_form.scss */
+/* line 356, scss/modules/_form.scss */
 .form .formElement .loki .toolbar a:hover,
 #form .formElement .loki .toolbar a:hover,
 form .formElement .loki .toolbar a:hover {
   background: #e9e9e9;
   border: 1px solid #c3c3c3;
 }
-/* line 349, scss/modules/_form.scss */
+/* line 361, scss/modules/_form.scss */
 .form .formElement .loki .toolbar a:first-child,
 #form .formElement .loki .toolbar a:first-child,
 form .formElement .loki .toolbar a:first-child {
@@ -6867,7 +6944,7 @@ form .formElement .loki .toolbar a:first-child {
   -webkit-border-bottom-left-radius: 4px;
   border-bottom-left-radius: 4px;
 }
-/* line 353, scss/modules/_form.scss */
+/* line 365, scss/modules/_form.scss */
 .form .formElement .loki .toolbar a:last-child,
 #form .formElement .loki .toolbar a:last-child,
 form .formElement .loki .toolbar a:last-child {
@@ -6878,13 +6955,13 @@ form .formElement .loki .toolbar a:last-child {
   -webkit-border-bottom-right-radius: 4px;
   border-bottom-right-radius: 4px;
 }
-/* line 357, scss/modules/_form.scss */
+/* line 369, scss/modules/_form.scss */
 .form .formElement .loki .toolbar a + a,
 #form .formElement .loki .toolbar a + a,
 form .formElement .loki .toolbar a + a {
   margin-left: -1px;
 }
-/* line 362, scss/modules/_form.scss */
+/* line 374, scss/modules/_form.scss */
 .form .formElement .loki .toolbar a:hover, .form .formElement .loki .toolbar a:active,
 #form .formElement .loki .toolbar a:hover,
 #form .formElement .loki .toolbar a:active,
@@ -6892,7 +6969,7 @@ form .formElement .loki .toolbar a:hover,
 form .formElement .loki .toolbar a:active {
   z-index: 100;
 }
-/* line 366, scss/modules/_form.scss */
+/* line 378, scss/modules/_form.scss */
 .form .formElement .loki .toolbar a:active,
 #form .formElement .loki .toolbar a:active,
 form .formElement .loki .toolbar a:active {
@@ -6900,7 +6977,7 @@ form .formElement .loki .toolbar a:active {
   -moz-box-shadow: rgba(0, 0, 0, 0.125) 0 3px 5px inset;
   box-shadow: rgba(0, 0, 0, 0.125) 0 3px 5px inset;
 }
-/* line 371, scss/modules/_form.scss */
+/* line 383, scss/modules/_form.scss */
 .form .formElement .loki .toolbar a img,
 .form .formElement .loki .toolbar a span,
 #form .formElement .loki .toolbar a img,
@@ -6911,7 +6988,7 @@ form .formElement .loki .toolbar a span {
   display: block;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 371, scss/modules/_form.scss */
+  /* line 383, scss/modules/_form.scss */
   .form .formElement .loki .toolbar a img,
   .form .formElement .loki .toolbar a span,
   #form .formElement .loki .toolbar a img,
@@ -6921,31 +6998,31 @@ form .formElement .loki .toolbar a span {
     margin: 10px auto;
   }
 }
-/* line 389, scss/modules/_form.scss */
+/* line 401, scss/modules/_form.scss */
 .form .formElement .loki .grippy_wrapper,
 #form .formElement .loki .grippy_wrapper,
 form .formElement .loki .grippy_wrapper {
   display: none;
 }
-/* line 394, scss/modules/_form.scss */
+/* line 406, scss/modules/_form.scss */
 .form .formElement#commentcontentItem,
 #form .formElement#commentcontentItem,
 form .formElement#commentcontentItem {
   background: white;
 }
-/* line 397, scss/modules/_form.scss */
+/* line 409, scss/modules/_form.scss */
 .form .formElement#commentcontentItem:nth-child(even),
 #form .formElement#commentcontentItem:nth-child(even),
 form .formElement#commentcontentItem:nth-child(even) {
   background: none !important;
 }
-/* line 400, scss/modules/_form.scss */
+/* line 412, scss/modules/_form.scss */
 .form .formElement#commentcontentItem:nth-child(even).error,
 #form .formElement#commentcontentItem:nth-child(even).error,
 form .formElement#commentcontentItem:nth-child(even).error {
   background: #FFF !important;
 }
-/* line 410, scss/modules/_form.scss */
+/* line 422, scss/modules/_form.scss */
 .form .formElement#tarbabypreItem, .form .formElement#tarbabyItem, .form .formElement#noturlItem, .form .formElement#antlionItem,
 #form .formElement#tarbabypreItem,
 #form .formElement#tarbabyItem,
@@ -6957,7 +7034,7 @@ form .formElement#noturlItem,
 form .formElement#antlionItem {
   display: none;
 }
-/* line 417, scss/modules/_form.scss */
+/* line 429, scss/modules/_form.scss */
 .form table,
 #form table,
 form table {
@@ -6965,7 +7042,7 @@ form table {
   border: none;
   background: none;
 }
-/* line 424, scss/modules/_form.scss */
+/* line 436, scss/modules/_form.scss */
 .form table tr.even,
 .form table tr.alt,
 .form table tr:nth-of-type(2n),
@@ -6977,13 +7054,13 @@ form table tr.alt,
 form table tr:nth-of-type(2n) {
   background: none !important;
 }
-/* line 428, scss/modules/_form.scss */
+/* line 440, scss/modules/_form.scss */
 .form table td,
 #form table td,
 form table td {
   padding: .5em 0 .5em 1em;
 }
-/* line 433, scss/modules/_form.scss */
+/* line 445, scss/modules/_form.scss */
 .form input[type="submit"],
 #form input[type="submit"],
 form input[type="submit"] {
@@ -7021,24 +7098,24 @@ form input[type="submit"]:active {
   background-color: #238dee;
 }
 
-/* line 439, scss/modules/_form.scss */
+/* line 451, scss/modules/_form.scss */
 #discoErrorNotice {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
   margin-bottom: 1.25rem;
 }
-/* line 443, scss/modules/_form.scss */
+/* line 455, scss/modules/_form.scss */
 #discoErrorNotice h3 {
   font-size: 1.125rem;
   font-weight: 600;
   margin: 0 0 0.375rem;
   color: #b62615 !important;
 }
-/* line 449, scss/modules/_form.scss */
+/* line 461, scss/modules/_form.scss */
 #discoErrorNotice h3:before {
   content: "\f071";
   margin-right: 0.75rem;
 }
-/* line 456, scss/modules/_form.scss */
+/* line 468, scss/modules/_form.scss */
 #discoErrorNotice ul {
   border-style: solid;
   border-width: 1px;
@@ -7057,14 +7134,50 @@ form input[type="submit"]:active {
   margin: 0;
   font-weight: 600;
 }
-/* line 462, scss/modules/_form.scss */
+/* line 474, scss/modules/_form.scss */
 #discoErrorNotice ul li {
   display: inline;
 }
-/* line 465, scss/modules/_form.scss */
+/* line 477, scss/modules/_form.scss */
 #discoErrorNotice ul li a {
   font-weight: 400;
   text-decoration: underline;
+}
+
+/* line 483, scss/modules/_form.scss */
+.contentPost #form {
+  margin-top: -2.5rem;
+}
+
+/* line 489, scss/modules/_form.scss */
+#creditcardtypeiconItem .formCCType {
+  font-size: 35px;
+  margin-right: 5px;
+}
+/* line 493, scss/modules/_form.scss */
+#creditcardtypeiconItem .formCCType.nonSelectedCCType {
+  color: #C9C9C9;
+}
+/* line 498, scss/modules/_form.scss */
+#creditcardtypeiconItem .fa-cc-visa.selectedCCType {
+  color: #273990;
+}
+/* line 501, scss/modules/_form.scss */
+#creditcardtypeiconItem .fa-cc-mastercard.selectedCCType {
+  color: #EC2C20;
+}
+/* line 505, scss/modules/_form.scss */
+#creditcardtypeiconItem .fa-cc-amex.selectedCCType {
+  color: #0871BC;
+}
+/* line 508, scss/modules/_form.scss */
+#creditcardtypeiconItem .fa-cc-discover.selectedCCType {
+  color: #FF6600;
+}
+
+/* line 513, scss/modules/_form.scss */
+#creditcardtypeItem {
+  display: none;
 }
 
 /* Image galleries include image slideshows and flickr slideshows */
@@ -7870,52 +7983,80 @@ div.fancybox-inner div.standalone_image_info div.caption {
   border-top: 1px solid #dddddd;
   padding-top: 1.25rem;
 }
-/* line 137, scss/modules/_policy.scss */
-#policyModule .policy .decimal {
+/* line 136, scss/modules/_policy.scss */
+#policyModule .policy ul.bullet {
+  list-style-type: disc;
+}
+/* line 139, scss/modules/_policy.scss */
+#policyModule .policy ol.decimal {
+  list-style-type: decimal;
+}
+/* line 142, scss/modules/_policy.scss */
+#policyModule .policy ol.lowerAlpha {
+  list-style-type: lower-alpha;
+}
+/* line 145, scss/modules/_policy.scss */
+#policyModule .policy ol.upperAlpha {
+  list-style-type: upper-alpha;
+}
+/* line 148, scss/modules/_policy.scss */
+#policyModule .policy ol.lowerRoman {
+  list-style-type: lower-roman;
+}
+/* line 151, scss/modules/_policy.scss */
+#policyModule .policy ol.upperRoman {
+  list-style-type: upper-roman;
+}
+/* line 155, scss/modules/_policy.scss */
+#policyModule .policy .decimal, #policyModule .policy .bullet, #policyModule .policy .lowerAlpha, #policyModule .policy .upperAlpha, #policyModule .policy .lowerRoman, #policyModule .policy .upperRoman {
   margin: 0;
 }
-/* line 141, scss/modules/_policy.scss */
-#policyModule .policy .decimal .sub_policy .policyContent .contentMain {
+/* line 158, scss/modules/_policy.scss */
+#policyModule .policy .decimal .sub_policy .policyContent, #policyModule .policy .bullet .sub_policy .policyContent, #policyModule .policy .lowerAlpha .sub_policy .policyContent, #policyModule .policy .upperAlpha .sub_policy .policyContent, #policyModule .policy .lowerRoman .sub_policy .policyContent, #policyModule .policy .upperRoman .sub_policy .policyContent {
+  padding-left: 2.5rem;
+}
+/* line 160, scss/modules/_policy.scss */
+#policyModule .policy .decimal .sub_policy .policyContent .contentMain, #policyModule .policy .bullet .sub_policy .policyContent .contentMain, #policyModule .policy .lowerAlpha .sub_policy .policyContent .contentMain, #policyModule .policy .upperAlpha .sub_policy .policyContent .contentMain, #policyModule .policy .lowerRoman .sub_policy .policyContent .contentMain, #policyModule .policy .upperRoman .sub_policy .policyContent .contentMain {
   border-bottom: 1px solid #dddddd;
   margin-bottom: 0.625rem;
 }
-/* line 144, scss/modules/_policy.scss */
-#policyModule .policy .decimal .sub_policy .policyContent .contentMain h5 {
+/* line 163, scss/modules/_policy.scss */
+#policyModule .policy .decimal .sub_policy .policyContent .contentMain h5, #policyModule .policy .bullet .sub_policy .policyContent .contentMain h5, #policyModule .policy .lowerAlpha .sub_policy .policyContent .contentMain h5, #policyModule .policy .upperAlpha .sub_policy .policyContent .contentMain h5, #policyModule .policy .lowerRoman .sub_policy .policyContent .contentMain h5, #policyModule .policy .upperRoman .sub_policy .policyContent .contentMain h5 {
   border-bottom: none;
   margin-left: 1.25rem;
   margin-bottom: 0;
 }
-/* line 150, scss/modules/_policy.scss */
-#policyModule .policy .decimal .sub_policy .policyContent .contentMain p {
+/* line 169, scss/modules/_policy.scss */
+#policyModule .policy .decimal .sub_policy .policyContent .contentMain p, #policyModule .policy .bullet .sub_policy .policyContent .contentMain p, #policyModule .policy .lowerAlpha .sub_policy .policyContent .contentMain p, #policyModule .policy .upperAlpha .sub_policy .policyContent .contentMain p, #policyModule .policy .lowerRoman .sub_policy .policyContent .contentMain p, #policyModule .policy .upperRoman .sub_policy .policyContent .contentMain p {
   border-bottom: none;
   margin-left: 1.25rem;
   margin-bottom: 0.625rem;
 }
-/* line 155, scss/modules/_policy.scss */
-#policyModule .policy .decimal .sub_policy .policyContent .contentMain p:last-child {
+/* line 174, scss/modules/_policy.scss */
+#policyModule .policy .decimal .sub_policy .policyContent .contentMain p:last-child, #policyModule .policy .bullet .sub_policy .policyContent .contentMain p:last-child, #policyModule .policy .lowerAlpha .sub_policy .policyContent .contentMain p:last-child, #policyModule .policy .upperAlpha .sub_policy .policyContent .contentMain p:last-child, #policyModule .policy .lowerRoman .sub_policy .policyContent .contentMain p:last-child, #policyModule .policy .upperRoman .sub_policy .policyContent .contentMain p:last-child {
   margin-bottom: 0;
   padding-bottom: 0.625rem;
 }
-/* line 159, scss/modules/_policy.scss */
-#policyModule .policy .decimal .sub_policy .policyContent .contentMain ul {
+/* line 178, scss/modules/_policy.scss */
+#policyModule .policy .decimal .sub_policy .policyContent .contentMain ul, #policyModule .policy .bullet .sub_policy .policyContent .contentMain ul, #policyModule .policy .lowerAlpha .sub_policy .policyContent .contentMain ul, #policyModule .policy .upperAlpha .sub_policy .policyContent .contentMain ul, #policyModule .policy .lowerRoman .sub_policy .policyContent .contentMain ul, #policyModule .policy .upperRoman .sub_policy .policyContent .contentMain ul {
   margin-bottom: 0.625rem;
 }
-/* line 162, scss/modules/_policy.scss */
-#policyModule .policy .decimal .sub_policy .policyContent .contentMain + .contentMain {
+/* line 181, scss/modules/_policy.scss */
+#policyModule .policy .decimal .sub_policy .policyContent .contentMain + .contentMain, #policyModule .policy .bullet .sub_policy .policyContent .contentMain + .contentMain, #policyModule .policy .lowerAlpha .sub_policy .policyContent .contentMain + .contentMain, #policyModule .policy .upperAlpha .sub_policy .policyContent .contentMain + .contentMain, #policyModule .policy .lowerRoman .sub_policy .policyContent .contentMain + .contentMain, #policyModule .policy .upperRoman .sub_policy .policyContent .contentMain + .contentMain {
   border-bottom: none;
 }
-/* line 167, scss/modules/_policy.scss */
-#policyModule .policy .decimal .sub_policy .policyName {
+/* line 186, scss/modules/_policy.scss */
+#policyModule .policy .decimal .sub_policy .policyName, #policyModule .policy .bullet .sub_policy .policyName, #policyModule .policy .lowerAlpha .sub_policy .policyName, #policyModule .policy .upperAlpha .sub_policy .policyName, #policyModule .policy .lowerRoman .sub_policy .policyName, #policyModule .policy .upperRoman .sub_policy .policyName {
   color: #1073ce;
   width: 94%;
 }
-/* line 170, scss/modules/_policy.scss */
-#policyModule .policy .decimal .sub_policy .policyName:hover {
+/* line 189, scss/modules/_policy.scss */
+#policyModule .policy .decimal .sub_policy .policyName:hover, #policyModule .policy .bullet .sub_policy .policyName:hover, #policyModule .policy .lowerAlpha .sub_policy .policyName:hover, #policyModule .policy .upperAlpha .sub_policy .policyName:hover, #policyModule .policy .lowerRoman .sub_policy .policyName:hover, #policyModule .policy .upperRoman .sub_policy .policyName:hover {
   cursor: pointer;
   color: #004789;
 }
-/* line 178, scss/modules/_policy.scss */
-#policyModule .policy .decimal .closedAccordion .policyName:after {
+/* line 197, scss/modules/_policy.scss */
+#policyModule .policy .decimal .closedAccordion .policyName:after, #policyModule .policy .bullet .closedAccordion .policyName:after, #policyModule .policy .lowerAlpha .closedAccordion .policyName:after, #policyModule .policy .upperAlpha .closedAccordion .policyName:after, #policyModule .policy .lowerRoman .closedAccordion .policyName:after, #policyModule .policy .upperRoman .closedAccordion .policyName:after {
   content: "\f078";
   color: #444444;
   font-size: 55%;
@@ -7924,8 +8065,8 @@ div.fancybox-inner div.standalone_image_info div.caption {
   padding-top: 0.625rem;
   padding-left: 0.3125rem;
 }
-/* line 192, scss/modules/_policy.scss */
-#policyModule .policy .decimal .openAccordion .policyName:after {
+/* line 211, scss/modules/_policy.scss */
+#policyModule .policy .decimal .openAccordion .policyName:after, #policyModule .policy .bullet .openAccordion .policyName:after, #policyModule .policy .lowerAlpha .openAccordion .policyName:after, #policyModule .policy .upperAlpha .openAccordion .policyName:after, #policyModule .policy .lowerRoman .openAccordion .policyName:after, #policyModule .policy .upperRoman .openAccordion .policyName:after {
   content: "\f077";
   color: #444444;
   font-size: 55%;
@@ -7934,16 +8075,16 @@ div.fancybox-inner div.standalone_image_info div.caption {
   padding-top: 0.625rem;
   padding-left: 0.3125rem;
 }
-/* line 210, scss/modules/_policy.scss */
+/* line 229, scss/modules/_policy.scss */
 #policyModule .proximatePolicies {
   padding-top: 0.625rem;
   padding-bottom: 0.41667rem;
 }
-/* line 213, scss/modules/_policy.scss */
+/* line 232, scss/modules/_policy.scss */
 #policyModule .proximatePolicies .previous {
   padding-top: 0.3125rem;
 }
-/* line 219, scss/modules/_policy.scss */
+/* line 238, scss/modules/_policy.scss */
 #policyModule .listLink p a {
   border-top: 1px solid #dddddd;
   padding-top: 0.09375rem;
@@ -9516,6 +9657,11 @@ h4.flickr_subtitle {
   }
 }
 /* line 69, scss/modules/_virtual-tours.scss */
+#tabs .tabs .tab-title {
+  display: inline-block;
+  vertical-align: top;
+}
+/* line 72, scss/modules/_virtual-tours.scss */
 #tabs .tabs .tab-title a {
   background: none repeat scroll 0 0 #eeeeee;
   display: block;
@@ -9527,34 +9673,34 @@ h4.flickr_subtitle {
   border: 1px solid #ffffff;
   border-radius: 0;
 }
-/* line 79, scss/modules/_virtual-tours.scss */
+/* line 82, scss/modules/_virtual-tours.scss */
 #tabs .tabs .tab-title a .crop {
   width: 150px;
   height: 75px;
   overflow: hidden;
 }
-/* line 83, scss/modules/_virtual-tours.scss */
+/* line 86, scss/modules/_virtual-tours.scss */
 #tabs .tabs .tab-title a .crop img {
   height: 150px;
   width: 150px;
 }
-/* line 88, scss/modules/_virtual-tours.scss */
+/* line 91, scss/modules/_virtual-tours.scss */
 #tabs .tabs .tab-title a h5 {
   margin: 0;
   font-size: 0.95rem;
 }
-/* line 94, scss/modules/_virtual-tours.scss */
+/* line 98, scss/modules/_virtual-tours.scss */
 #tabs .tabs .tab-title.active a {
   background: none repeat scroll 0 0 #f6f6f6 !important;
   border: 1px solid #e1e1e1;
 }
-/* line 99, scss/modules/_virtual-tours.scss */
+/* line 103, scss/modules/_virtual-tours.scss */
 #tabs .tabs .tab-title.active div.crop {
   opacity: 0.4;
   filter: alpha(opacity=40);
   background-color: #000;
 }
-/* line 104, scss/modules/_virtual-tours.scss */
+/* line 108, scss/modules/_virtual-tours.scss */
 #tabs .tabs .tab-title.active div.crop img {
   opacity: 0.4;
   filter: alpha(opacity=40);
