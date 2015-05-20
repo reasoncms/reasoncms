@@ -9,7 +9,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 include_once(WEB_PATH.'reason/local/stock/transcriptPFclass.php');
-reason_include_once('minisite_templates/modules/form/credit_card_shim.php');
 
 class TranscriptPageTwoForm extends FormStep
 {
@@ -29,13 +28,131 @@ class TranscriptPageTwoForm extends FormStep
 	var $display_name = 'Transcript Review / Card Info';
 	var $error_header_text = 'Please check your form.';
 	var $database_transformations = array('credit_card_number'=>'obscure_credit_card_number',);
+        // the usual disco member data
+    var $elements = array(
+        'review_note' => array(
+            'type' => 'comment',
+            'text' => 'Transcript overview',
+        ),
+        'payment_note' => array(
+            'type' => 'comment',
+            'text' => '<h3>Payment Method</h3>',
+        ),
+        'payment_amount' => array(
+            'type' => 'solidtext',
+        ),
+        'credit_card_name' => array(
+            'type' => 'text',
+            'display_name' => 'Name as it appears on card',
+            'size'=>35,
+        ),
+        'credit_card_number' => array(
+            'type' => 'text',
+            'size'=>35,
+        ),
+        'credit_card_type' => array(
+            'type' => 'radio_no_sort',
+            'options' => array('Visa'=>'Visa','MasterCard'=>'MasterCard','American Express'=>'American Express','Discover'=>'Discover', 'none'=>'none'),
+        ),
+        'credit_card_type_icon' => array(
+            'type' => 'comment',
+            'text' => "<i class='fa fa-cc-visa formCCType' id='visaIcon'></i>
+                        <i class='fa fa-cc-mastercard formCCType' id='mastercardIcon'></i>
+                        <i class='fa fa-cc-amex formCCType' id='amexIcon'></i>
+                        <i class='fa fa-cc-discover formCCType' id='discoverIcon'></i>"),
+        'credit_card_expiration_month' => array(
+            'type' => 'month',
+            'display_name' => 'Expiration Month',
+        ),
+        'credit_card_expiration_year' => array(
+            'type' => 'numrange',
+            'start' => 2010,
+            'end' => 2016,
+            'display_name' => 'Expiration Year',
+        ),
+        'credit_card_security_code' => array(
+            'size' => 4,
+            'display_name' => 'Security Code',
+        ),
+        // 'billing_address' => array(
+        //     'type' => 'radio_no_sort',
+        //     'options' => array('entered'=>'Use address provided on previous page','new'=>'Use a different address'),
+        //     'display_name' => 'Billing Address',
+        //     'default' => 'entered',
+        // ),
+        // 'billing_street_address' => array(
+        //     'type' => 'textarea',
+        //     'rows' => 3,
+        //     'cols' => 35,
+        //     'display_name' => 'Street Address',
+        // ),
+        // 'billing_city' => array(
+        //     'type' => 'text',
+        //     'size'=>35,
+        //     'display_name' => 'City',
+        // ),
+        // 'billing_state_province' => array(
+        //     'type' => 'state_province',
+        //     'display_name' => 'State/Province',
+        //     'include_military_codes' => true,
+        // ),
+        // 'billing_zip' => array(
+        //     'type' => 'text',
+        //     'display_name' => 'Zip/Postal Code',
+        //     'size'=>35,
+        // ),
+        // 'billing_country' => array(
+        //     'type' => 'country',
+        //     'display_name' => 'Country',
+        // ),
+        'confirmation_text' => array(
+            'type' => 'hidden',
+        ),
+        'result_refnum' => array(
+            'type' => 'hidden',
+        ),
+        'result_authcode' => array(
+            'type' => 'hidden',
+        ),
+    );
+    var $required = array(
+        'credit_card_type',
+        'credit_card_number',
+        'credit_card_expiration_month',
+        'credit_card_expiration_year',
+        'credit_card_name',
+        // 'billing_address',
+    );
+
 	// style up the form and add comments et al
 	function on_every_time()
-	{ 
-		$this->add_element('review_note', 'comment', array('text' => 'Transcript overview'));
+	{
+        $this->set_comments('credit_card_security_code', form_comment('
+            <p><a data-reveal-id="cvv2Iframe">What\'s this?</a></p>
+            <div class="reveal-modal medium" id="cvv2Iframe" data-reveal="">
+                <iframe height="300px" width="100%" src="https://www.cvvnumber.com/cvv.html"></iframe>
+                <a class="close-reveal-modal">×</a>
+            </div>'));
+        $this->add_element('payment_amount', 'solidtext');
+        $this->move_element('payment_amount', 'above', 'credit_card_name');
+        $this->add_element('review_note', 'comment', array('text' => 'Transcript overview'));
+
+        $year = date('Y');
+        $this->change_element_type('credit_card_expiration_year', 'numrange', array('start' => $year, 'end' => $year + 15, 'display_name' => 'Expiration Year'));
+        $this->add_element_group('inline', 'expiration_group', array('credit_card_expiration_month', 'credit_card_expiration_year'), array('use_element_labels' => false, 'display_name' => 'Expiration mm/yyyy'));
+        $this->move_element('expiration_group', 'before', 'credit_card_security_code');
+        
+        if ($this->show_form)
+        {
+            $text = $this->get_brief_review_text();
+            $text .= '<p class="changeRequestButton"><a href="?_step=TranscriptPageOneForm">Change Transcript Request Information</a></p>'."\n";
+            $this->change_element_type( 'review_note', 'comment', array('text'=>$text) );
+            $this->move_element('review_note', 'before','payment_amount');
+        }
+
 		
-		$credit_card_shim = new creditCardShim();
-		$credit_card_shim->show_credit_card($this);
+		// $credit_card_shim = new creditCardShim();
+		// $credit_card_shim->show_credit_card($this);
 		
         $this->box_class = 'StackedBox';
 		if( !$this->controller->get('amount'))
@@ -64,15 +181,15 @@ class TranscriptPageTwoForm extends FormStep
 		
 	}
 	
-	function post_error_check_actions()
-	{
-		if ($this->show_form)
-		{
-			$text = $this->get_brief_review_text();
-			$text .= '<p class="changeRequestButton"><a href="?_step=TranscriptPageOneForm">Change Transcript Request Information</a></p>'."\n";
-			$this->change_element_type( 'review_note', 'comment', array('text'=>$text) );
-		}
-	}
+	// function post_error_check_actions()
+	// {
+	// 	if ($this->show_form)
+	// 	{
+	// 		$text = $this->get_brief_review_text();
+	// 		$text .= '<p class="changeRequestButton"><a href="?_step=TranscriptPageOneForm">Change Transcript Request Information</a></p>'."\n";
+	// 		$this->change_element_type( 'review_note', 'comment', array('text'=>$text) );
+	// 	}
+	// }
 	
 	function pre_show_form()
 	{
@@ -174,17 +291,22 @@ class TranscriptPageTwoForm extends FormStep
 	
 	function run_error_checks()
 	{
-		if ($this->get_value('billing_address') == 'new'
-                        && (!$this->get_value('billing_street_address')
-                        || !$this->get_value('billing_city')
-                        || !$this->get_value('billing_state_province')
-                        || !$this->get_value('billing_zip')
-                        || !$this->get_value('billing_country') ) )
-		{
-			$this->set_error('billing_address','Please enter your full billing address if the address you entered on the previous page was not the billing address for your credit card.');
-		}
+		// if ($this->get_value('billing_address') == 'new'
+  //                       && (!$this->get_value('billing_street_address')
+  //                       || !$this->get_value('billing_city')
+  //                       || !$this->get_value('billing_state_province')
+  //                       || !$this->get_value('billing_zip')
+  //                       || !$this->get_value('billing_country') ) )
+		// {
+		// 	$this->set_error('billing_address','Please enter your full billing address if the address you entered on the previous page was not the billing address for your credit card.');
+		// }
 
-		
+		// Check card type error
+        if ($ccType = $this->get_value('credit_card_type')){
+            if ($ccType === "none"){
+                $this->set_error("credit_card_number", 'Please enter a valid credit card number.');
+            }
+        }
 		// Process credit card
 		if( !$this->_has_errors() )
 		{
@@ -228,6 +350,7 @@ class TranscriptPageTwoForm extends FormStep
 				$this->controller->get('amount'),
 				$this->get_value('credit_card_number'),
 				$expiration_mmyy,
+                $this->get_value('credit_card_security_code'),
 				$this->revenue_budget_number,
 				$this->get_value('credit_card_name'),
 				$this->expense_budget_number,

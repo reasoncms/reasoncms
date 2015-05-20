@@ -132,6 +132,9 @@ class TranscriptRequestModule extends DefaultMinisiteModule
             $head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/js/jquery.tablesorter.widgets-filter-formatter.min.js');
             $head_items->add_stylesheet(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/css/filter.formatter.css');
 		}
+		if ($this->controller->get_current_step() == "TranscriptPageTwoForm") {
+			$head_items->add_javascript(REASON_HTTP_BASE_PATH.'local/luther_2014/javascripts/creditcard.js');
+		}
 	}//}}}
 
 	/**
