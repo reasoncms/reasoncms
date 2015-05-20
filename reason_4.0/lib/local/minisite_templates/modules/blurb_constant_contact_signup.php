@@ -94,8 +94,11 @@
 						if( $editing_item )
 							echo ' editing';
 						echo ' '.$class;
-						echo '">';
-
+						echo '"';
+						if( $blurb->get_value('content') == ""){
+							echo ' style="display: none;" ';
+						}
+						echo '>';
 						echo '<div class="blurbInner">';
 					
 						if($editing_item)
