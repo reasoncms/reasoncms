@@ -9,7 +9,7 @@
  * 
  * The 'default' library is implicit and shouldn't be included in this array.
  */
-$GLOBALS['NEW_MEDIA_WORK_INTEGRATION_LIBRARIES'] = array();
+$GLOBALS['NEW_MEDIA_WORK_INTEGRATION_LIBRARIES'] = array('youtube','vimeo');
 
 /**
  * Specify integration libraries with which users have the ability to upload videos.
