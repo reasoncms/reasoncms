@@ -69,7 +69,7 @@ class reasonTinyMCEIntegration extends reasonEditorIntegrationBase
 			$param['init_options']['reason_http_base_path'] = REASON_HTTP_BASE_PATH;	
 		}
 		$param['init_options']['toolbar1'] = 'formatselect,|,bold,italic,|,hr,'.$cutcopypaste.'|,blockquote,|,numlist,bullist,|,'.$tabletoolbar.'|,'.$imagetoolbar.',|,'.$linktoolbar.',unlink,|,anchor,|,searchreplace';
-		$param['init_options']['plugins'] = 'anchor,link,paste,advlist,searchreplace,lists';
+		$param['init_options']['plugins'] = 'anchor,link,paste,advlist,searchreplace,lists,hr';
 		if ($this->reason_plugins_available($user_id))
 		{
 			$param['init_options']['external_plugins'] = '{ "reasonintegration": "' . REASON_HTTP_BASE_PATH . 'tinymce/plugins/reasonintegration/plugin.js" }';

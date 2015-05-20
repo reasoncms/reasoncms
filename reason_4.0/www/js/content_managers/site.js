@@ -45,7 +45,7 @@ function changeTinyPreview(editor_options_element) {
 		'external_plugins' : { "reasonintegration": "/reason/tinymce/plugins/reasonintegration/plugin.js" },
 		'contextmenu' : "inserttable | cell row column deletetable",
 		'toolbar1' : "formatselect,|,bold,italic,|,hr,|,cut,copy,paste,|,blockquote,|,numlist,bullist,|,table,|,reasonimage,|,reasonlink,unlink,|,anchor,|,searchreplace,|,code",
-		'plugins' : "contextmenu,table,anchor,link,paste,advlist,code,searchreplace,lists",
+		'plugins' : "contextmenu,table,anchor,link,paste,advlist,code,searchreplace,lists,hr",
 		'block_formats' : "Paragraph=p;Header 1=h3;Header 2=h4;Pre=pre",
 		'formats' : { "underline": {} }
 	};
