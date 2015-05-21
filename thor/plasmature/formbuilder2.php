@@ -53,6 +53,7 @@ class formbuilder2Type extends textareaType
 	var $fieldMapJtX;
 
 	var $USE_MINIFIED_SCRIPTS = false;
+/*
 	var $scripts = array(
 		'vendorpath'   => '/reason_package/www/formbuilder2/vendor/js/vendor.js',
 		'fbpath'       => '/reason_package/www/formbuilder2/formbuilder.js',
@@ -63,6 +64,7 @@ class formbuilder2Type extends textareaType
 		'vendorpath' => '/reason_package/www/formbuilder2/vendor/css/vendor.css',
 		'fbpath' => '/reason_package/www/formbuilder2/formbuilder.css'
 	);
+*/
 
 	// var $optionMemoryKey = "maxUsedOptionId";
 	
@@ -70,6 +72,17 @@ class formbuilder2Type extends textareaType
 	var $optionTranslators;
 
 	function formbuilder2Type() {
+		$this->scripts = array(
+			'vendorpath'   => REASON_PACKAGE_HTTP_BASE_PATH . 'formbuilder2/vendor/js/vendor.js',
+			'fbpath'       => REASON_PACKAGE_HTTP_BASE_PATH . 'formbuilder2/formbuilder.js',
+			'fbinitpath'   => REASON_PACKAGE_HTTP_BASE_PATH . 'formbuilder2/formbuilder-init.js'
+		);
+
+		$this->style = array(
+			'vendorpath' => REASON_PACKAGE_HTTP_BASE_PATH . 'formbuilder2/vendor/css/vendor.css',
+			'fbpath' => REASON_PACKAGE_HTTP_BASE_PATH .'formbuilder2/formbuilder.css'
+		);
+
 		$this->useMinified();
 
 		$this->fieldMapJtX = array_flip($this->fieldMapXtJ);
