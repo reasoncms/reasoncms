@@ -195,7 +195,10 @@ form {
 		// Styles for the "content" row -- often used for headings
 		&.noLabel {
 			//border-top: 4px solid $lc-grey;
-
+			
+			font-size: 0.95 rem;
+			font-weight: 300;
+			line-height: 27 px;
 			h1,
 			h2,
 			h3 { // Styles headings to look the same
@@ -474,6 +477,11 @@ form {
 			a {font-weight: 400; text-decoration: underline;}
 		}
 	}
+}
+
+//Remove Spacing above forms in contentPost section
+.contentPost #form {
+	margin-top: $column-gutter * -1;
 }
 
 //Credit card forms

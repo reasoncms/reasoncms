@@ -1,7 +1,7 @@
 <?php
 
 reason_include_once('minisite_templates/modules/form/views/thor/credit_card_payment.php');
-include_once(WEB_PATH . 'stock/pfproclass.php');
+include_once(WEB_PATH.'reason/local/stock/pfproclass.php');
 
 $GLOBALS['_form_view_class_names'][basename(__FILE__, '.php')] = 'IowaPrairieConferenceForm';
 

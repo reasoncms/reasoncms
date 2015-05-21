@@ -1,7 +1,8 @@
 <?php
 
 reason_include_once('minisite_templates/modules/form/views/thor/luther_default.php');
-include_once(WEB_PATH.'stock/pfproclass.php'); //<<<< Change this
+include_once(WEB_PATH.'reason/local/stock/pfproclass.php'); //<<<< Change this
+reason_include_once('minisite_templates/modules/form/credit_card_shim.php');
 $GLOBALS[ '_form_view_class_names' ][ basename( __FILE__, '.php') ] = 'CreditCardThorForm';
 
 /**
@@ -61,101 +62,11 @@ class CreditCardThorForm extends DefaultThorForm
 	var $transaction_comment;
 
 
-	var $elements = array(
-		'payment_note' => array(
-			'type' => 'comment',
-			'text' => '<strong>Payment Method</strong>',
-		),
-		'payment_amount' => array(
-			'type' => 'text',
-			'size'=>10,
-			'display_name'=>'Payment Amount Placeholder',
-		),
-		'credit_card_number' => array(
-			'type' => 'text',
-			'size'=>35,
-		),
-		'credit_card_type' => array(
-			'type' => 'radio_no_sort',
-			'options' => array('Visa'=>'Visa','MasterCard'=>'MasterCard','American Express'=>'American Express','Discover'=>'Discover','none'=>'none'),
-			'label' => 'Credit Card Type',
-		),
-		'credit_card_type_icon' => array(
-			'type' => 'comment',
-			'text' => "<i class='fa fa-cc-visa formCCType' id='visaIcon'></i><i class='fa fa-cc-mastercard formCCType' id='mastercardIcon'></i><i class='fa fa-cc-amex formCCType' id='amexIcon'></i><i class='fa fa-cc-discover formCCType' id='discoverIcon'></i>",
-		),
-		'credit_card_expiration_month' => array(
-			'type' => 'month',
-			'display_name' => 'Expiration Month',
-		),
-		'credit_card_expiration_year' => array(
-			'type' => 'numrange',
-			'start' => 2020,
-			'end' => 2020,
-			'display_name' => 'Expiration Year',
-		),
-		'credit_card_name' => array(
-			'type' => 'text',
-			'display_name' => 'Name as it appears on card',
-			'size'=>35,
-		),
-		'billing_street_address' => array(
-			'type' => 'textarea',
-			'rows' => 2,
-			'cols' => 35,
-			'display_name' => '<nobr>Billing Street Address</nobr>',
-		),
-		'billing_city' => array(
-			'type' => 'text',
-			'size'=>35,
-			'display_name' => 'Billing City',
-		),
-		'billing_state_province' => array(
-			'type' => 'state_province',
-			'display_name' => 'Billing State/Province',
-		),
-		'billing_zip' => array(
-			'type' => 'text',
-			'display_name' => 'Billing Zip/Postal Code',
-			'size'=>35,
-		),
-		'billing_country' => array(
-			'type' => 'text',
-			'default' => 'United States',
-			'size'=>35,
-			'display_name' => 'Billing Country',
-		),
-		'confirmation_text' => array(
-			'type' => 'hidden',
-		),
-		'result_refnum' => array(
-			'type' => 'hidden',
-		),
-		'result_authcode' => array(
-			'type' => 'hidden',
-		),
-	);
-	var $required = array(
-		'payment_amount',
-		'credit_card_type',
-		'credit_card_number',
-		'credit_card_expiration_month',
-		'credit_card_expiration_year',
-		'credit_card_name',
-		'billing_street_address',
-		'billing_city',
-		'billing_zip',
-		'billing_state_province',
-
-
-	);
-
 	function custom_init()
 	{
-	  $model =& $this->get_model();
-	  $head_items = $model->get_head_items();
-	  $head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/disable_submit.js');
-    $head_items->add_javascript(REASON_HTTP_BASE_PATH.'local/luther_2014/javascripts/creditcard.js');
+		$credit_card_shim = new creditCardShim();
+		$credit_card_shim->init_form($this);
+		$this->add_callback(array(&$credit_card_shim, 'show_credit_card'), 'on_every_time');
 	}
 
 
@@ -163,62 +74,6 @@ class CreditCardThorForm extends DefaultThorForm
 	{
 
 		parent :: on_every_time();
-
-		// Don't take credit cards on an unencrypted connection!+
-		// if( !on_secure_page() )
-		// {
-
-		// 	header( 'Location: '.get_current_url( 'https' ) );
-		// 	exit;
-		// }
-
-
-
-
-
-
-
-
-		// If we have a field called Item List, then make it and the payment amount read only
-		if ( strlen($this->get_element_name_from_label('Item List')) > 0 )
-		{
-			$this->change_element_type('payment_amount', 'solidtext');
-			$this->change_element_type($this->get_element_name_from_label('Item List'), 'solidtext');
-		}
-
-
-		// Scott Bassford 7/6/2009 - if we have a field called "Item List" then prepopulate fields, if no data then push the to the first page somehow
-		if ($this->budget_number_element = $this->get_element_name_from_label('Item List'))
-		{
-
-
-			if ( !isset( $_POST['ccprepopulate'] ) && ( !isset( $_POST['credit_card_name'] )))  { header("Location: /getdowngiveback/register/"); echo 'Redirecting to list.'; die ; }
-
-			if ( isset( $_POST['ccprepopulate'] ))
-			{
-						$this->set_value($this->get_element_name_from_label('Item List'), $_POST['ccpaymentdetail']);
-						$this->set_value('payment_amount', $_POST['ccpaymentamount']);
-						$this->change_element_type('payment_amount', 'solidtext');
-						$this->change_element_type($this->get_element_name_from_label('Item List'), 'solidtext');
-			}
-
-
-		}
-		//if (!preg_match('/\d{2}-\d{4}-\d{4}-\d{4}/', $this->get_value($this->budget_number_element)))
-		//	{
-		//		$this->set_error('credit_card_type','Form Setup Error: Hidden "Budget Number" field must contain a number in the form: 10-0000-0000-0000');
-		//	}
-		//} else {
-		//	$this->set_error('credit_card_type','Form Setup Error: Hidden "Budget Number" field is required in Reason form.');
-		//}
-
-
-
-
-
-
-
-
 
 		// Turn on test mode when appropriate
 		if(THIS_IS_A_DEVELOPMENT_REASON_INSTANCE || !empty( $this->_request[ 'tm' ] ) )
@@ -300,9 +155,6 @@ class CreditCardThorForm extends DefaultThorForm
 		} else {
 			$this->set_error('credit_card_type','Form Setup Error: Hidden "Revenue Budget Number" field is required in Reason form.');
 		}
-
-		// Make the date range for card expiration sane
-		$this->change_element_type('credit_card_expiration_year','numrange',array('start'=>date('Y'),'end'=>(date('Y')+15),'display_name' => 'Expiration Year'));
 	}
 
 	function pre_show_form()
@@ -368,14 +220,15 @@ class CreditCardThorForm extends DefaultThorForm
 				$payment_amount,
 				$this->get_value('credit_card_number'),
 				$expiration_mmyy,
+                $this->get_value('credit_card_security_code'),
 				$this->get_value($this->revenue_budget_number),
 				$this->get_value('credit_card_name'),
 				$this->get_value($this->expense_budget_number),
 				$model->get_form_name(),
-                                $this->get_value('billing_street_address'),
-                                $this->get_value('billing_city'),
-                                $this->get_value('billing_state_province'),
-                                $this->get_value('billing_zip'),
+                                // $this->get_value('billing_street_address'),
+                                // $this->get_value('billing_city'),
+                                // $this->get_value('billing_state_province'),
+                                // $this->get_value('billing_zip'),
                                 $this->get_value($email_name)
 			);
 
@@ -461,10 +314,10 @@ class CreditCardThorForm extends DefaultThorForm
 			{
 				foreach ($email_values as $key => $val)
 				{
-				   if(!empty($this->get_value_from_label($val['label']))){
-					$values .= sprintf("\n<strong>%s:</strong>\t   %s\n", $val['label'], $val['value']);
-				   }
-			        }
+					if (!($this->get_value_from_label($val['label']))){
+						$values .= sprintf("\n<strong>%s:</strong>\t   %s\n", $val['label'], $val['value']);
+					}
+				}
 			}
 
 			$submission_time = date("Y-m-d H:i:s");

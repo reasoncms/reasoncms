@@ -24,6 +24,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'main_post_3' => '',
 			'call_to_action_blurb' => 'blurb_call_to_action',
 			'callout_blurb' => 'blurb_callout',
+			'constant_contact_signup_blurb' => 'blurb_constant_contact_signup',
 			'pre_sidebar' => 'blurb',
 			'pre_sidebar_2' => array(
 				'module' => 'image_sidebar_luther', // default parameters set in alter_reason_pagetype in luther.php
@@ -862,6 +863,21 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'num_to_display' => 0,
 			'caption_flag' => true,
 		)
+	),
+	'top_image_with_image_slideshow' => array(
+		'post_main_head' => array(
+			'module' => 'image_sidebar',
+			'num_to_display' => 1,
+			'thumbnail_width' => 1200,
+			'thumbnail_height' => 575,
+			'thumbnail_crop' => 'fit',
+			'caption_flag' => false,
+		),
+		'main_post_2' => array(
+			'module' => 'luther_image_slideshow',
+			'num_to_skip'=> 1,
+		),
+		'pre_sidebar_2' => '',
 	),
 	'transcript_request' => array(
 		'main_post' => 'policy_related',

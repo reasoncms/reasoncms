@@ -6,9 +6,11 @@ $(function() {
 
     golf_registration_selector      = $(".words:contains('Golf Registration')");
     dinner_registration_selector    = $(".words:contains('Dinner Registration')");
+    lunch_registration_selector     = $(".words:contains('Lunch Registration')");
     brunch_registration_selector    = $(".words:contains('Brunch Registration')");
     golfer_names_selector           = $(".words:contains('Golfer Name(s)')");
-    dinner_names_selector            = $(".words:contains('Dinner Name(s)')");
+    dinner_names_selector           = $(".words:contains('Dinner Name(s)')");
+    lunch_names_selector            = $(".words:contains('Lunch Name(s)')");
     brunch_names_selector           = $(".words:contains('Brunch Name(s)')");
 
     
@@ -17,19 +19,25 @@ $(function() {
     toggle_golfer_names();
     golf_registration_selector.next().find('input:radio').change(function(){
         toggle_golfer_names();
-        toggle_billing();
+        set_payment_amount();
     });
 
     toggle_dinner_names();
     dinner_registration_selector.next().find('input:radio').change(function(){
         toggle_dinner_names();
-        toggle_billing();
+        set_payment_amount();
+    });
+    
+    toggle_lunch_names();
+    lunch_registration_selector.next().find('input:radio').change(function(){
+        toggle_lunch_names();
+        set_payment_amount();
     });
     
     toggle_brunch_names();
     brunch_registration_selector.next().find('input:radio').change(function(){
         toggle_brunch_names();
-        toggle_billing();
+        set_payment_amount();
     });
 
     same_billing();
@@ -52,6 +60,13 @@ function toggle_dinner_names(){
         dinner_names_selector.parent().show(500);
     }
 }
+function toggle_lunch_names(){
+    if (typeof lunch_registration_selector.next().find('input:radio:checked').val() === 'undefined') {
+        lunch_names_selector.parent().hide(500);
+    } else {
+        lunch_names_selector.parent().show(500);
+    }
+}
 function toggle_brunch_names(){
     if (typeof brunch_registration_selector.next().find('input:radio:checked').val() === 'undefined') {
         brunch_names_selector.parent().hide(500);
@@ -60,43 +75,15 @@ function toggle_brunch_names(){
     }
 }
 
-function toggle_billing(){
+function set_payment_amount(){
     if (golf_registration_selector.next().find('input:radio:checked')
-        || reunion_dinner_selector.next().find('input:radio:checked')
-        || booklet_selector.next().find('input:radio:checked'))
+        || dinner_registration_selector.next().find('input:radio:checked')
+        || lunch_registration_selector.next().find('input:radio:checked')
+        || brunch_registration_selector.next().find('input:radio:checked'))
     {
-        $("#hrItem").show(500);
-        $("#paymentnoteItem").show(500);
-        $("#paymentamountItem").show(500);
-        $("#creditcardtypeItem").show(500);
-        $("#creditcardnumberItem").show(500);
-        $("#creditcardexpirationmonthItem").show(500);
-        $("#creditcardexpirationyearItem").show(500);
-        $("#creditcardnameItem").show(500);
-        $("#samebillingItem").show(500);
-        // $("#billingstreetaddressItem").show(500);
-        // $("#billingcityItem").show(500);
-        // $("#billingstateprovinceItem").show(500);
-        // $("#billingzipItem").show(500);
-        // $("#billingcountryItem").show(500);
         setTotal();
         needs_payment = true;
-        same_billing();
     } else {
-        $("#hrItem").hide(500);
-        $("#paymentnoteItem").hide(500);
-        $("#paymentamountItem").hide(500);
-        $("#creditcardtypeItem").hide(500);
-        $("#creditcardnumberItem").hide(500);
-        $("#creditcardexpirationmonthItem").hide(500);
-        $("#creditcardexpirationyearItem").hide(500);
-        $("#creditcardnameItem").hide(500);
-        $("#samebillingItem").hide(500);
-        $("#billingstreetaddressItem").hide(500);
-        $("#billingcityItem").hide(500);
-        $("#billingstateprovinceItem").hide(500);
-        $("#billingzipItem").hide(500);
-        $("#billingcountryItem").hide(500);
         payment_amountElement.val("");
     }
 }
@@ -142,17 +129,20 @@ function cleanup_cost(coststring){
 function add(){
     golf_cost       = 0;
     dinner_cost     = 0;
+    lunch_cost      = 0;
     brunch_cost     = 0;
     total_cost      = 0;
 
     if (golf_registration_selector.next().find('input:radio:checked'))
         golf_cost   = cleanup_cost(golf_registration_selector.next().find('input:radio:checked').val());
     if (dinner_registration_selector.next().find('input:radio:checked'))
-            dinner_cost   = cleanup_cost(dinner_registration_selector.next().find('input:radio:checked').val());
+        dinner_cost   = cleanup_cost(dinner_registration_selector.next().find('input:radio:checked').val());
+    if (lunch_registration_selector.next().find('input:radio:checked'))
+        lunch_cost   = cleanup_cost(lunch_registration_selector.next().find('input:radio:checked').val());
     if (brunch_registration_selector.next().find('input:radio:checked'))
             brunch_cost   = cleanup_cost(brunch_registration_selector.next().find('input:radio:checked').val());
 
-    total_cost = golf_cost + dinner_cost + brunch_cost;
+    total_cost = golf_cost + dinner_cost + lunch_cost + brunch_cost;
     
     return total_cost;
 }
@@ -165,6 +155,7 @@ function setTotal(){
 function hide_initial_items(){
     toggle_golfer_names('hide');
     toggle_dinner_names('hide');
+    toggle_lunch_names('hide');
     toggle_brunch_names('hide');
-    toggle_billing();
+    set_payment_amount();
 }

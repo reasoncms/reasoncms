@@ -244,7 +244,8 @@
 			$this->has_content( 'post_sidebar_2' ) ||
 			$this->has_content( 'post_sidebar_3' ) ||
 			$this->has_content( 'call_to_action_blurb') ||
-			$this->has_content( 'callout_blurb') )
+			$this->has_content( 'callout_blurb') ||
+			$this->has_content( 'constant_contact_signup_blurb'))
 			{
 				return true;
 			}
@@ -355,6 +356,14 @@
 			if ($this->has_content( 'callout_blurb' ))
 			{
 				$this->run_section( 'callout_blurb' );
+			}
+		}
+		
+		function show_luther_constant_contact_signup_blurb()
+		{
+			if($this->has_content( 'constant_contact_signup_blurb' ))
+			{
+				$this->run_section( ' constant_contact_signup_blurb' );
 			}
 		}
 	
@@ -470,7 +479,8 @@
 				$this->has_content( 'post_sidebar_2' ) || 
 				$this->has_content( 'post_sidebar_3' ) ||
 				$this->has_content( 'call_to_action_blurb') ||
-				$this->has_content( 'callout_blurb') ) {
+				$this->has_content( 'callout_blurb') ||
+				$this->has_content( 'constant_contact_signup_blurb')) {
 			
 			echo '<div id="relatedSections">'."\n";
 
@@ -484,6 +494,11 @@
 				if($this->has_content( 'callout_blurb' ))
 				{
 					$this->run_section( 'callout_blurb' );
+				}
+
+				if($this->has_content( 'constant_contact_signup_blurb' ))
+				{
+					$this->run_section( 'constant_contact_signup_blurb' );
 				}
 			
 				if($this->has_content( 'pre_sidebar' ))

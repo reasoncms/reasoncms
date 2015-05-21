@@ -31,9 +31,16 @@ function getCreditCardType(accountNumber)
   return result;
 }
 
-function showCreditCardType()
+function showCreditCardType(event)
 {
-  var value   = event.target.value;
+  e = event || window.event
+  if (e === undefined){
+    value = $("#credit_card_numberElement")[0].value;
+  }
+  else {
+    var targ = e.target || e.srcElement;
+    var value = targ.value;
+  }
   if(value === undefined){
     value = $("#credit_card_numberElement")[0].value;
   }
@@ -88,6 +95,7 @@ function hideRest(selected){
   var cardTypes = ["mastercard","visa","discover","amex"];
   for (i = 0; i < cardTypes.length; i++) {
     if(cardTypes[i] != selected){
+      $("#"+cardTypes[i]+"Icon").removeClass("selectedCCType");
       $("#"+cardTypes[i]+"Icon").addClass("nonSelectedCCType");
     }
   }
