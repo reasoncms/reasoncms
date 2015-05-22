@@ -14,6 +14,8 @@ include_once(CARL_UTIL_INC . 'basic/filesystem.php');
 class FileObjectCache extends DefaultObjectCache
 {	
 	private $_cache_dir;
+	private $_read_log = false;
+	private $_write_log = false;
 	
 	function &fetch()
 	{
@@ -23,10 +25,11 @@ class FileObjectCache extends DefaultObjectCache
 		if (file_exists($cache_file))
 		{
 			$last_modified = filemtime($cache_file);
-			$ret = (($lifespan == -1) || ((time() - $last_modified) < $lifespan))
+			$ret = (($lifespan == -1) || ((time() - $last_modified) < $lifespan) || $this->is_locked())
 				   ? unserialize(file_get_contents($cache_file)) 
 				   : false;
 		}
+		if ($ret && $this->_read_log) error_log(date('Y-m-d H:i:s').' CACHE '.str_replace("\n",' ',$this->get_cache_name()).' read '.filesize($cache_file).' bytes in '.$_SERVER['REQUEST_URI']."\n", 3, '/tmp/reason_cache.log');
 		return $ret;
 	}
 
@@ -35,14 +38,22 @@ class FileObjectCache extends DefaultObjectCache
 	 */
 	function set(&$object)
 	{
+		// if ($this->_write_log) error_log(date('Y-m-d H:i:s').' CACHE '.str_replace("\n",' ',$this->get_cache_name()).' writing in '.$_SERVER['REQUEST_URI']."\n", 3, '/tmp/reason_cache.log');
 		$cache_file = $this->_get_cache_file();
 		if (!is_dir(dirname($cache_file))) mkdir_recursive(dirname($cache_file));
-		$fh = fopen($cache_file,"w");
-		flock($fh, LOCK_EX);
-		$result = fwrite($fh, serialize($object));
-		flock($fh, LOCK_UN);
-		fclose($fh);
-		return ($result !== FALSE);
+		if ($fh = fopen($cache_file,"w"))
+		{
+			flock($fh, LOCK_EX);
+			$result = fwrite($fh, serialize($object));
+			flock($fh, LOCK_UN);
+			fclose($fh);
+			if ($this->_write_log) error_log(date('Y-m-d H:i:s').' CACHE '.str_replace("\n",' ',$this->get_cache_name()).' wrote '.filesize($cache_file).' bytes in '.$_SERVER['REQUEST_URI']."\n", 3, '/tmp/reason_cache.log');
+			return ($result !== FALSE);
+		}
+		else
+		{
+			trigger_error('Could not open cache file for writing: '.$cache_file);
+		}
 	}
 
 	function clear()
@@ -50,6 +61,43 @@ class FileObjectCache extends DefaultObjectCache
 		$cache_file = $this->_get_cache_file();
 		if(file_exists($cache_file)) return unlink( $cache_file );
 	}	
+
+	function lock($expire_seconds)
+	{
+		$lock_file = $this->_get_cache_file().'.lock';
+		if (!is_dir(dirname($lock_file))) mkdir_recursive(dirname($lock_file));
+		$fh = fopen($lock_file,"w");
+		flock($fh, LOCK_EX);
+		$result = fwrite($fh, time() + $expire_seconds);
+		flock($fh, LOCK_UN);
+		fclose($fh);
+		return ($result !== FALSE);		
+	}
+	
+	function unlock()
+	{
+		$lock_file = $this->_get_cache_file().'.lock';
+		if(file_exists($lock_file)) return unlink( $lock_file );	
+	}
+	
+	function is_locked()
+	{
+		$lock_file = $this->_get_cache_file().'.lock';
+		if (file_exists($lock_file))
+		{
+			$expires = file_get_contents($lock_file);
+			if ($expires > time())
+			{
+				return true;
+			}
+			else
+			{
+				$this->unlock();
+			}
+		} else {
+		}
+		return false;
+	}
 	
 	function validate()
 	{

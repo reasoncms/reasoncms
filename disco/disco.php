@@ -64,12 +64,24 @@
 	 * - simple class structure and hooks to facilitate extension
 	 * - error checking cycle (enter data, check for errors, repeat)
 	 *
-	 * ODisco is a more object oriented Disco system.  All elements are actually objects that know
+	 * Disco is an object oriented forms system.  All elements are objects that know
 	 * about themselves and their capabilities.  There is a standard interface to the object
 	 * so Disco knows that each object will definitely, for example, have a grab() method.
 	 * 
-	 * 2005-02-03 - Major change to some internals in progress.  I'm removing all references to $_REQUEST and instead using
-	 * an internal copy of whatever is passed to Disco, $this->_request.  Adding a $this->set_request( $r ) method.
+	 * Simple usage:
+	 *
+	 * <code>
+	 * include_once('paths.php');
+	 * include_once(DISCO_INC.'disco.php');
+	 * 
+	 * $d = new disco();
+	 * $d->add_element('first_name');
+	 * $d->add_element('last_name');
+	 * $d->add_element('favorite_color','radio',array('options'=>array('blue'=>'Blue','green'=>'Green','red'=>'Red','yellow'=>'Yellow')));
+	 * $d->run();
+	 * </code>
+	 *
+	 * See the plasmature subdirectory for the full set of available elements. Or roll your own.
 	 * 
  	 * @author Dave Hendler
 	 * @package disco
@@ -462,8 +474,8 @@
 				$this->chosen_action = '';
 				foreach( $HTTP_VARS AS $key => $val )
 				{
-					if( preg_match( '/__button_/' , $key ) )
-						$this->chosen_action = preg_replace( '/__button_/' , '' , $key );
+					if( 0 === strpos( $key, '__button_') )
+						$this->chosen_action = substr($key, strlen('__button_'));
 				}
 				
 				if (empty($this->form_action))
@@ -987,6 +999,54 @@
 		} // }}}
 		
 		/**
+		 * Generates a structured array of all error data, usable by show errors or
+		 * other functions
+		 */
+		function get_errors()
+		{
+			foreach( $this->_error_required AS $name )
+			{						
+				$errors[$name][] = array(
+					'type' => 'required',
+					'message' => $this->get_display_name($name,false).' is a required field.'
+					); 
+			}
+			foreach($this->_errors as $name => $value)
+			{
+				if (!$value) continue;
+				$errors[$name][] = array(
+					'type' => 'custom',
+					'message' => $this->_error_messages[$name]
+					); 
+				if($this->_is_element_group($name))
+				{
+					$member_names = $this->get_names_of_member_elements($name);
+					foreach($member_names as $member_name)
+					{
+						if (!empty($this->_error_messages[$member_name]))
+						{
+							$errors[$name][] = array(
+								'type' => 'custom',
+								'message' => $this->_error_messages[$member_name]
+								);
+						}
+					}
+				}
+			}
+			
+			// If we have some errors, sort them in element order, with errors that
+			// don't correspond to any elements at the top.
+			if (isset($errors))
+			{
+				$order = $this->get_order();
+				$sorted_errors = array_diff_key($errors, $order);
+				foreach ($order as $key)
+					if (isset($errors[$key])) $sorted_errors[$key] = $errors[$key];
+				return $sorted_errors;
+			}
+		}
+		
+		/**
 		* Display errors in a nice list.  
 		* Usually used internally in {@link show_form()}.  Part of the display phase.
 		*/
@@ -1297,19 +1357,66 @@
 				$element_object = $this->get_element($element_name);
 				$element_display_name = trim($element_object->display_name);
 				if($empty_ok || !empty($element_display_name))
-					$display_name = prettify_string($element_display_name);
+					$display_name = $element_display_name;
 			}
 			elseif($this->_is_element_group($element_name))
 			{
 				$element_group_object = $this->get_element_group($element_name);
 				$group_display_name = trim($element_group_object->display_name);
 				if($empty_ok || !empty($group_display_name))
-					$display_name = prettify_string($group_display_name);
+					$display_name = $group_display_name;
 			}
 			
 			return $display_name;
 		}
 		
+		/**
+		* Set the html id of the element or element group.
+		* @param $element string Name of element or element group
+		* @param $value string html id to be used on the form
+		*/
+		function set_element_id( $element, $value ) // {{{
+		{
+			if (!preg_match('/^[a-zA-Z][\w:.-]*$/', $value))
+			{
+				trigger_error( $value.' is not a valid HTML id string', WARNING );
+				return;
+			}
+		
+			if ( $this->_is_element( $element ) )
+			{
+				$el =& $this->_elements[$element];
+				$el->set_id( $value );
+			}
+			elseif ($this->_is_element_group($element) )
+			{
+				$eg =& $this->_element_groups[$element];
+				$eg->set_id( $value );
+			}
+			else 
+				trigger_error( $element.' is not a defined element or element group', WARNING );
+		} // }}}
+
+		/**
+		* Get the html id of the element or element group.
+		* @param $element string Name of element or element group
+		*/
+		function get_element_id( $element ) // {{{
+		{
+			if ( $this->_is_element( $element ) )
+			{
+				$el =& $this->_elements[$element];
+				return $el->get_id();
+			}
+			elseif ($this->_is_element_group($element) )
+			{
+				$eg =& $this->_element_groups[$element];
+				return $eg->get_id();
+			}
+			else 
+				trigger_error( $element.' is not a defined element or element group', WARNING );
+		} // }}}
+
 		/**
 		* Set comments on an element or on an element group.  
 		* Generally form_comment() is used to format the string.

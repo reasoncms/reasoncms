@@ -60,8 +60,8 @@ else
 			
 			if(!empty($_REQUEST['limit_field']) && !empty($_REQUEST['limit_value']) )
 			{
-				$limit_field = addslashes($_REQUEST['limit_field']);
-				$limit_value = addslashes($_REQUEST['limit_value']);
+				$limit_field = reason_sql_string_escape($_REQUEST['limit_field']);
+				$limit_value = reason_sql_string_escape($_REQUEST['limit_value']);
 				if(empty($_REQUEST['limit_type']) || $_REQUEST['limit_type'] != 'exact')
 				{
 					$relation = $limit_field.' LIKE "%'.$limit_value.'%"';

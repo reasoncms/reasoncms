@@ -116,7 +116,7 @@ class tameURLHistory
 			$unique_urls = array_unique($urls);
 			foreach ($unique_urls as $url) // check URL history table to see if any of these URLs currently resolve to external URL pages
 			{
-				$query =  'SELECT * FROM URL_history WHERE url ="' . addslashes ( $url ) . '" ORDER BY timestamp DESC limit 1';
+				$query =  'SELECT * FROM URL_history WHERE url ="' . reason_sql_string_escape ( $url ) . '" ORDER BY timestamp DESC limit 1';
 				$result = db_query($query, 'error in query');
 				$latest_row = ($result) ? mysql_fetch_assoc($result) : false;
 				if ($latest_row)
@@ -198,9 +198,9 @@ class tameURLHistory
 	{
 		$query =  'SELECT * FROM URL_history WHERE url ="" OR url IS NULL 
 														   OR url = "/" 
-														   OR url LIKE "%' .addslashes("//"). '%"
-														   OR url LIKE "%' .addslashes("http:"). '%" 
-														   OR url LIKE "%' .addslashes("https:"). '%" 
+														   OR url LIKE "%' .reason_sql_string_escape("//"). '%"
+														   OR url LIKE "%' .reason_sql_string_escape("http:"). '%" 
+														   OR url LIKE "%' .reason_sql_string_escape("https:"). '%" 
 														   ORDER BY timestamp DESC';
 		$result = db_query($query, 'error in query');
 		while ($row = mysql_fetch_assoc($result))
@@ -262,7 +262,7 @@ class tameURLHistory
 			    		$id = $row['id'];
 			    		$page_id = $row['page_id'];
 			    		$timestamp = $row['timestamp'];
-			    		$url = addslashes($row['url']);
+			    		$url = reason_sql_string_escape($row['url']);
 			    		$qry = 'SELECT id FROM URL_history where id != '.$id.' AND page_id = '.$page_id.' AND url = "'.$url.'" AND timestamp = '.$timestamp;
 			    		$daresult = db_query($qry);
 			    		if ($daresult) 

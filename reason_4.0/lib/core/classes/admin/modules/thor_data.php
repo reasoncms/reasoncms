@@ -58,6 +58,7 @@
 					$ta->set_allow_new(true); // can we make sure its valid first?
 				}
 				$ta->set_allow_row_delete(true);
+				$ta->set_allow_download_files(true);
 				$ta->init_thor_admin();
 			}
 		}

@@ -1,6 +1,6 @@
 <?php
 /**
- * A class that encapsulates version checking -- both on the client (installed 
+ * A class that encapsulates version checking -- both on the client (installed
  * copy of Reason) side and on the server (i.e. "mothership") side
  * @package reason
  * @subpackage classes
@@ -14,7 +14,7 @@ include_once(CARL_UTIL_INC.'cache/object_cache.php');
 include_once(CARL_UTIL_INC.'basic/url_funcs.php');
 
 /**
- * A class that encapsulates version checking -- both on the client (installed 
+ * A class that encapsulates version checking -- both on the client (installed
  * copy of Reason) side and on the server (i.e. "mothership") side
  *
  * Client-side usage:
@@ -40,7 +40,7 @@ include_once(CARL_UTIL_INC.'basic/url_funcs.php');
  * Note for the maintainers of the Reason core:
  *
  * Immediately *before* a release, the following change will need to be made:
- * 
+ *
  * -- A new bleeding-edge version will need to be added to the output of get_all_versions(),
  * and the current (stable) version will need to be shifted up one version
  *
@@ -59,9 +59,9 @@ class reasonVersionCheck
 	 */
 	function get_current_version_id()
 	{
-		return '4.5';
+		return '4.6';
 	}
-	
+
 	/**
 	 * Get an array of all versions
 	 *
@@ -85,11 +85,12 @@ class reasonVersionCheck
 			'4.2'=>'old',
 			'4.3'=>'old',
 			'4.4'=>'old',
-			'4.5'=>'current',
-			'4.6'=>'bleeding',
+			'4.5'=>'old',
+			'4.6'=>'current',
+			'4.7'=>'bleeding',
 		);
 	}
-	
+
 	/**
 	 * Find out information about whether the current version is up-to-date
 	 *
@@ -114,19 +115,19 @@ class reasonVersionCheck
 	function check()
 	{
 		static $version_info = array();
-		
+
 		if(empty($version_info))
 		{
 			$version_info = $this->_get_version_info();
 		}
-		
+
 		return $version_info;
 	}
-	
+
 	function _get_version_info()
 	{
 		$version = $this->get_current_version_id();
-		
+
 		$cache = new ObjectCache();
 		$cache->init('ReasonVersionCheckCache', 86400); // cache for 1 day
 		$obj = $cache->fetch();
@@ -139,10 +140,10 @@ class reasonVersionCheck
 		}
 		return $obj->get_data();
 	}
-	
+
 	function _fetch_response_from_remote_server($version)
 	{
-		$url = 'https://apps.carleton.edu/opensource/reason/version_check.php?version='.urlencode($this->get_current_version_id());
+		$url = 'https://reasoncms.org/reason/version_check.php?version='.urlencode($this->get_current_version_id());
 		$response = carl_util_get_url_contents($url,false,'','',5); // 5 seconds max to try
 		if (!empty($response))
 		{
@@ -151,7 +152,7 @@ class reasonVersionCheck
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Determine what data should be used in the response for a given version
 	 * @param string $version
@@ -160,22 +161,22 @@ class reasonVersionCheck
 	function _get_version_response_array($version)
 	{
 		$versions = $this->get_all_versions();
-	
+
 		if(empty($version))
 		{
 			return array('code'=>'no_version_provided','message'=>'No version provided','url'=>'','status'=>404);
 		}
-		
+
 		if(!isset($versions[$version]))
 		{
 			return array('code'=>'version_not_recognized','message'=>'The version "'.$version.'" is not recognized','url'=>'','status'=>404);
 		}
-		
+
 		$current = array_search('current',$versions);
-		
+
 		if(empty($current))
 			trigger_error('No current version found in list of versions. This is a serious error.');
-		
+
 		switch($versions[$version])
 		{
 			case 'old':
@@ -191,9 +192,9 @@ class reasonVersionCheck
 				trigger_error('An unexpected version state was encountered: '.$versions[$version]);
 				return array('code'=>'internal_error','message'=>'Sorry, we encountered an internal error in the Reason version checker. (Version given: '.$version.')','url'=>'','status'=>500);
 		}
-		
+
 	}
-	
+
 	/**
 	 * Build the response for a given version
 	 * @param string $version
@@ -221,7 +222,7 @@ class ReasonVersionCheckData
 	}
 	function set_data($data)
 	{
-		$this->_data = $data;	
+		$this->_data = $data;
 	}
 	function get_data()
 	{

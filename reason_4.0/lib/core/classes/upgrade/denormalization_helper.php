@@ -133,7 +133,7 @@ class denormalizationUpgradeHelper
 	{
 		$es = new entity_selector();
 		$es->add_type(id_of('content_table'));
-		$es->add_relation('entity.name = "'.addslashes($table_name).'"');
+		$es->add_relation('entity.name = "'.reason_sql_string_escape($table_name).'"');
 		$es->set_num(1);
 		$results = $es->run_one();
 		

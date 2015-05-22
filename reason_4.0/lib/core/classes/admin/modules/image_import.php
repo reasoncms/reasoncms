@@ -90,7 +90,19 @@
 			$f->user_id = $this->admin_page->user_id;
 			$f->site_id = $this->admin_page->site_id;
 			$f->add_element('cancel_text','comment',array('text'=>'<a href="'.$this->admin_page->make_link(  array( 'cur_module' => 'Lister' , 'id' => '') ).'">Cancel batch import</a>'));
+			$f->init();
+			$this->set_initial_values($f);
 			$f->run();
+		}
+		function set_initial_values($form)
+		{
+			foreach($form->get_values() as $key=>$value)
+			{
+				if(empty($value) && isset($this->admin_page->request['prefill_'.$key]))
+				{
+					$form->set_value($key, $this->admin_page->request['prefill_'.$key]);
+				}
+			}
 		}
 	} // }}}
 ?>

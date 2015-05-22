@@ -961,6 +961,13 @@
 		'faqs' => array(
 			'main_post' => 'faqs',
 		),
+		'faqs_ordered_by_keywords' => array(
+			'main_post' => array(
+				'module' => 'faqs',
+				'order_field' => 'keywords',
+				'order_direction' => 'ASC',
+			),
+		),
 		'feature' => array(
 			'main_post' => 'feature/feature',
 		),
@@ -1358,6 +1365,30 @@
 				),
 			'sidebar' => '',
 		),
+		'image_slideshow_640x480' => array(
+			'main_post' => array(
+				'module' => 'image_slideshow',
+				'width' => 640,
+				'height' => 480,
+				),
+			'sidebar' => '',
+		),
+		'image_slideshow_720x540' => array(
+			'main_post' => array(
+				'module' => 'image_slideshow',
+				'width' => 720,
+				'height' => 540,
+				),
+			'sidebar' => '',
+		),
+		'image_slideshow_800x600' => array(
+			'main_post' => array(
+				'module' => 'image_slideshow',
+				'width' => 800,
+				'height' => 600,
+				),
+			'sidebar' => '',
+		),
 		'image_slideshow_before_content' => array(
 			'main' => 'image_slideshow',
 			'main_post' => 'content',
@@ -1588,6 +1619,61 @@
 		),
 		'random_sidebar_images' => array(
 			'sidebar' => array('module' => 'image_sidebar', 'num_to_display' => 3, 'caption_flag' => false, 'rand_flag' => true)
+		),
+		'reason_college_home' => array(
+			'pre_bluebar' => '',
+			'main_head' => 'page_title',
+			'post_banner' => array(
+				'module' => 'feature/feature',
+				'shuffle' => false,
+				'autoplay_timer' => 3,
+				'width' => 1680,
+				'height' => 651,
+			),
+			'main' => array(
+				'module' => 'publication',
+					'show_featured_items' => true,
+					'related_mode' => 'true',
+					'markup_generator_info' => array(
+						'list' => array(
+							'classname' => 'CloakRelatedListMarkupGenerator', 
+							'filename' => 'minisite_templates/modules/publication/publication_list_markup_generators/cloak_related_list.php',
+						),
+						'list_item' => array(
+							'classname' => 'CloakMinimalWithImageListItemMarkupGenerator',
+							'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/cloak_minimal_with_image.php',
+						),
+						'featured_item' => array(
+							'classname' => 'CloakWithImageListItemMarkupGenerator', 
+							'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/cloak_with_image.php',
+						),
+					),
+				'max_num_items' => 4,
+			),
+			'main_post' => array(
+				'module' => 'events_mini',
+				'ideal_count' => 5,
+			),
+			'main_post_2' => '',
+			'pre_sidebar' => array(
+				'module' => 'blurb',
+				'num_to_display' => 4,
+			),
+			'main_post_3' => '',
+			'edit_link' => 'login_link',
+			'pre_banner' => 'announcements',
+			'banner_xtra' => 'search',
+			'sidebar' => array(
+				'module' => 'blurb',
+				'num_to_display' => 1,
+			),
+			'post_sidebar' => 'content',
+			'navigation' => '',
+			'footer' => 'maintained',
+			'sub_nav' => '',
+			'sub_nav_2' => '',
+			'sub_nav_3' => '',
+			'post_foot' => '',
 		),
 		'related_policies' => array(
 			'main_post' => 'policy_related',

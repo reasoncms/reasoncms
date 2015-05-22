@@ -92,7 +92,7 @@ class reason_iCalendar
 		$icalendar_header = "";
 		$icalendar_header .= 'BEGIN:VCALENDAR' . "\r\n";
 		$icalendar_header .= 'VERSION:2.0' . "\r\n";
-		$icalendar_header .= 'PRODID:-//Reason 4.0//EN' . "\r\n";
+		$icalendar_header .= 'PRODID:-//Reason 4.5//EN' . "\r\n";
 		if (!empty($title)) $icalendar_header .= 'X-WR-CALNAME;VALUE=TEXT:'. $this->_fold_text($title) . "\r\n";
 		if (defined("REASON_DEFAULT_TIMEZONE") && ( (boolean) REASON_DEFAULT_TIMEZONE ) && $this->use_x_wr_timezone)
 		{
@@ -115,13 +115,18 @@ class reason_iCalendar
 		$icalendar_event = "";
 		$icalendar_event .= 'BEGIN:VEVENT' . "\r\n";  
 		$icalendar_event .= 'UID:'.$this->_fold_text(str_replace(array('-',' ',':'),'',$event->get_value('creation_date')).'-'.$event->id().'@'.REASON_ICALENDAR_UID_DOMAIN)."\r\n";
-	 
+
 		//SUMMARY
 		if (strlen($event -> get_value('name')) != 0)
 			$icalendar_event .= 'SUMMARY:' . $this -> _fold_text($event -> get_value('name')) . "\r\n";
+		
 		//DESCRIPTION
+		// if "brief description of event" (field: description) was specified, use that. Otherwise, use the "full event information" (field: content)
 		if (strlen($event -> get_value('description')) != 0)
 			$icalendar_event .= 'DESCRIPTION:' . $this -> _fold_text($event -> get_value('description')) . "\r\n";
+		else if (strlen($event -> get_value('content')) != 0)
+			$icalendar_event .= 'DESCRIPTION:' . $this -> _fold_text($event -> get_value('content')) . "\r\n";
+		
 		//LOCATION
 		if (strlen($event -> get_value('location')) != 0)
 			$icalendar_event .= 'LOCATION:' . $this -> _fold_text($event -> get_value('location')) . "\r\n";
@@ -183,6 +188,8 @@ class reason_iCalendar
 		{
 			$text = unhtmlentities($text);
 		}
+
+		/*
 		$folded_text = "";
 		while (strlen($text) > 75)
 		{
@@ -190,6 +197,18 @@ class reason_iCalendar
 			$text = substr($text, 75);
 		}
 		$folded_text .= $text;
+		 */
+
+		// 2014-08-14: rewritten to handle multibyte strings
+		$folded_text = "";
+		$break_at = 75;
+		$encoding = "UTF-8";
+		while (mb_strlen($text, $encoding) > $break_at) {
+			$folded_text .= mb_substr($text, 0, $break_at, $encoding) . "\r\n ";
+			$text = mb_substr($text, $break_at, mb_strlen($text, $encoding), $encoding);
+		}
+		$folded_text .= $text;
+
 		return $folded_text;
 	}
 	

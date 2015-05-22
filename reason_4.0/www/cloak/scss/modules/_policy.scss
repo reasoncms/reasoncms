@@ -1,0 +1,81 @@
+// Policy Styles
+// Cloak, v1
+
+#policyModule {
+
+
+
+	// List
+	.rootPolicyList {
+		list-style-type: none;
+		margin: 0 0 $horizontal-gutter;
+
+		.rootPolicyItem {
+			@include inline-icon($icon: $fa-var-paperclip);
+			font-weight: 700;
+		}
+
+		a {
+			color: $policy-primary-color;
+
+			&:hover {
+				color: darken($policy-primary-color, 10%);
+			}
+		}
+	}
+
+	// Item
+	.policyForm {
+
+	}
+
+	.policy {
+		border-bottom: 1px solid $gainsboro;
+		padding-bottom: $horizontal-gutter/2;
+		margin-bottom: $horizontal-gutter/2;
+
+		.policyName {
+
+		}
+
+		.policyContent {
+
+		}
+
+		.approvals {
+			font-weight: 700;
+		}
+
+		.revised {
+			font-weight: 700;
+		}
+
+		.audiences {
+			font-weight: 700;
+		}
+
+		.keywords {
+			font-weight: 700;
+		}
+
+	}
+
+	.proximatePolicies {
+		padding-bottom: $horizontal-gutter;
+
+		a {
+			color: $policy-primary-color;
+
+			&:hover {
+				color: darken($policy-primary-color, 10%);
+			}
+		}
+	}
+
+	.listLink {
+		
+		a {
+			@include back-link($back-link-bg: $policy-primary-color);
+		}
+	}
+}

@@ -20,14 +20,15 @@ $GLOBALS[ '_form_model_class_names' ][ basename( __FILE__, '.php') ] = 'DefaultF
  *
  * It provides is_* methods for our basic form modes:
  *
- * 'admin', 'form_complete', 'summary', 'form', 'unauthorized', 'closed'
+ * 'api', 'admin', 'form_complete', 'summary', 'form', 'unauthorized', 'closed'
  *
- * 1. admin - The user wants to administer a form
- * 2. form_complete - The user has just completed the form
- * 3. summary - The user wants to see a listing of completed forms 
- * 4. form - The user wants to create or edit a form
- * 5. unauthorized - The user wants to do something but is unauthorized or not logged in
- * 6. closed - The form is closed to submissions
+ * 1. api - We've received an ajax API request
+ * 2. admin - The user wants to administer a form
+ * 3. form_complete - The user has just completed the form
+ * 4. summary - The user wants to see a listing of completed forms 
+ * 5. form - The user wants to create or edit a form
+ * 6. unauthorized - The user wants to do something but is unauthorized or not logged in
+ * 7. closed - The form is closed to submissions
  *
  * The default is_* methods return false for everything - so nothing will be done.
  * 
@@ -61,6 +62,8 @@ class DefaultFormModel extends AbstractFormModel
 	var $_params;
 	var $_form_submission_key;
 	var $_disco_field_name = array();
+	var $_request_vars;
+	var $_module;
 	
 	function DefaultFormModel()
 	{
@@ -76,6 +79,7 @@ class DefaultFormModel extends AbstractFormModel
 		if (isset($module->page_id)) $this->set_page_id($module->page_id);
 		if (isset($module->parent->head_items)) $this->set_head_items($module->parent->head_items);
 		if (isset($module->params)) $this->set_params($module->params);
+		$this->_module = $module;
 		$this->localize($module);
 	}
 	
@@ -84,10 +88,21 @@ class DefaultFormModel extends AbstractFormModel
 	 */
 	function handle_request_vars(&$request_vars)
 	{
+		$this->_request_vars = $request_vars;
 		if (isset($request_vars['netid']) && !empty($request_vars['netid'])) $this->set_spoofed_netid_if_allowed($request_vars['netid']);
 		if (isset($request_vars['form_admin_view']) && ($request_vars['form_admin_view'] == 'true')) $this->set_user_requested_admin(true);
 		if (isset($request_vars['form_id']) && (strlen($request_vars['form_id']) > 0)) $this->set_requested_form_id($request_vars['form_id']);
 		if (isset($request_vars['submission_key']) && !empty($request_vars['submission_key'])) $this->set_form_submission_key($request_vars['submission_key']);
+	}
+	
+	function get_module()
+	{
+		return $this->_module;
+	}
+	
+	function get_request()
+	{
+		return $this->_request_vars;
 	}
 	
 	/**
@@ -98,6 +113,11 @@ class DefaultFormModel extends AbstractFormModel
 		return false;
 	}
 
+	function is_api()
+	{
+		return false;
+	}
+	
 	function is_admin()
 	{
 		return false;
@@ -329,6 +349,7 @@ class DefaultFormModel extends AbstractFormModel
 	 * - origin_link: link indicating where the URL where the form was filled out
 	 * - access_link: link indicating where the form can be accessed for view/edit
 	 * - email_empty_fields: boolean indicating whether or not to email empty fields
+	 * - attachments: array of filename => filepath for message attachments
 	 *
 	 * @param array data - key/value pairs of the data to e-mail
 	 * @param array options - allows various parameters to be optionally passed
@@ -348,6 +369,7 @@ class DefaultFormModel extends AbstractFormModel
 			$messages[0]['from'] = (isset($options['from'])) ? $options['from'] : TYR_REPLY_TO_EMAIL_ADDRESS;
 			$messages[0]['reply-to'] = (isset($options['reply-to'])) ? $options['reply-to'] : TYR_REPLY_TO_EMAIL_ADDRESS;
 			$messages[0]['subject'] = (isset($options['subject'])) ? $options['subject'] : 'Response to Form';
+			if (!empty($options['attachments'])) $messages['0']['attachments'] = $options['attachments'];
 			$tyr = new Tyr($messages, $data);
 			$tyr->add_disclaimer = (isset($options['disclaimer']) && ($options['disclaimer'] == false) ) ? false : true;
 			$tyr->run();

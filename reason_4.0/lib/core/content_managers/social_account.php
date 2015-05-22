@@ -44,6 +44,8 @@ class SocialAccountManager extends ContentManager
 	 */
 	function alter_data()
 	{
+		if(!empty($this->head_items))
+			$this->head_items->add_stylesheet(REASON_HTTP_BASE_PATH .'css/reason_admin/content_managers/social_account.css');
 		if ($account_type = $this->get_account_type())
 		{
 			$integrator = $this->social_helper()->get_integrator($account_type);
@@ -90,14 +92,21 @@ class SocialAccountManager extends ContentManager
 		$options = $this->social_helper()->get_available_integrators();
 		if (!empty($options))
 		{
+			echo '<div class="socialAccountTypeSelector">';
 			echo '<p>Which social account would you like to create?</p>';
 			echo '<ul>';
 			foreach ($options as $k => $v)
 			{
 				$link = carl_make_link(array('account_type' => $k));
-				echo '<li><a href="'.$link.'">'.$v.'</a></li>';
+				$image = '';
+				if($integrator = $this->social_helper()->get_integrator($k, 'SocialAccountPlatform'))
+				{
+					$image = '<img src="'.htmlspecialchars($integrator->get_platform_icon()).'" alt="'.htmlspecialchars($v).' icon" height="25" width="25" /> ';
+				}
+				echo '<li><a href="'.$link.'">'.$image.$v.'</a></li>';
 			}
 			echo '</ul>';
+			echo '</div>';
 		}
 		else echo '<p>This installation of Reason CMS does not have any social account options enabled.</p>';
 	}

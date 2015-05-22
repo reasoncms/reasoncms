@@ -96,10 +96,10 @@ class DefaultFeatureView extends FeatureView
 			$head_items->add_javascript(JQUERY_URL, true);
 			if ($this->has_av)
 			{
-				$head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH."nyroModal/js/jquery.nyroModal-1.6.2.min.js");
+				$head_items->add_javascript($this->absolutify_url_if_needed(REASON_PACKAGE_HTTP_BASE_PATH."nyroModal/js/jquery.nyroModal-1.6.2.min.js"));
 			}
-			$head_items->add_javascript(REASON_HTTP_BASE_PATH . 'js/feature.js');
-			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH . 'css/features/feature_responsive.css');
+			$head_items->add_javascript($this->absolutify_url_if_needed(REASON_HTTP_BASE_PATH . 'js/feature.js'));
+			$head_items->add_stylesheet($this->absolutify_url_if_needed(REASON_HTTP_BASE_PATH . 'css/features/feature_responsive.css'));
 			$head_items->add_head_item("style",array("type"=>"text/css"),"
 			.featuresModule { max-width: ".$width."px; }
 			.features { padding-bottom:" . round($height/$width*100, 5) . "%; }
@@ -203,7 +203,7 @@ class DefaultFeatureView extends FeatureView
 		$title="";
 		$ids=array();
 		$titles=array();
-		$arrow="&lt;";
+		$arrow=$this->get_arrow_html('prev');
 		$class="button prev";
 		$looping=$this->_view_params['looping'];
 		
@@ -247,7 +247,7 @@ class DefaultFeatureView extends FeatureView
 		}
 		else if($direction=="next")
 		{
-			$arrow="&gt;";
+			$arrow=$this->get_arrow_html('next');
 			$class="button next";
 			if( $curr_index== ($n-1) && $looping=="on" )
 			{
@@ -270,6 +270,14 @@ class DefaultFeatureView extends FeatureView
 
 
 	}// end build_arrow_nav_str function
+	
+	function get_arrow_html($direction)
+	{
+		if($direction=="prev")
+			return "&lt;";
+		elseif($direction=="next")
+			return "&gt;";
+	}
 	
 
 

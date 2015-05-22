@@ -43,6 +43,11 @@ abstract class DefaultObjectCache
 	 */
 	var $cache_id;
 
+	/**
+	 * @var string human-readable identifier for the cache
+	 */
+	var $cache_name;
+
 	final function __construct($dumb_key, $settings = NULL)
 	{
 		if ($dumb_key == 'do_not_instantiate_me_directly')
@@ -78,6 +83,25 @@ abstract class DefaultObjectCache
 	 * @return boolean success or failure
 	 */
 	abstract public function clear();
+
+	/**
+	 * Sets a lock on a cache to indicate that it's being modified
+	 * @param How long the lock should be honored (seconds)
+	 * @return boolean success or failure
+	 */
+	abstract public function lock($expire_seconds);
+
+	/**
+	 * Clears a lock on a cache
+	 * @return boolean success or failure
+	 */
+	abstract public function unlock();
+
+	/**
+	 * Checks to see if a lock exists on a cache
+	 * @return boolean
+	 */
+	abstract public function is_locked();
 
 	/**
 	 * Run once per page load to verify settings, constants, and the basic cache type setup.
@@ -128,6 +152,23 @@ abstract class DefaultObjectCache
 		$this->cache_id = $hash;
 	}
 	
+	/**
+	 * @return string cache name
+	 */
+	 
+	function get_cache_name()
+	{
+		return $this->cache_name;
+	}
+	
+	/**
+	 * @return true
+	 */
+	function set_cache_name($name)
+	{
+		$this->cache_name = $name;
+	}
+
 	/**
 	 * @return true
 	 */	

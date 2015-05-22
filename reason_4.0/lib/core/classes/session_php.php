@@ -124,7 +124,7 @@
 				}
 				else
 				{
-					if( empty( $_COOKIE[ $this->sess_name.'_EXISTS' ] ) )
+					if( !$this->exists() )
 					{
 						setcookie( $this->sess_name.'_EXISTS', 'true', 0, '/', $this->_transform_domain($_SERVER['SERVER_NAME']), 0 );
 					}
@@ -133,9 +133,16 @@
 					
 					if ($sid_override) {
 						session_id($sid_override);
-						session_start();
+						$started = session_start();
 					} else if (!session_id()) {
-						session_start();
+						$started = session_start();
+					}
+					
+					if (!$started) 
+					{
+						error_log('Failed to start session '.$this->sess_name.'; sid_override='.$sid_override);
+						// this seems to be problematic:
+						// return false;
 					}
 					
 					$this->__session_ref =& $_SESSION;
@@ -154,10 +161,9 @@
 					}
 					else
 					{
-						if( $this->has_expired() )
+						// If the session has expired, but is still active, destroy it and start over
+						if( $this->has_expired() && $this->exists() )
 						{
-							// Super common -- no need to trigger an error here -- mr
-							//trigger_error( 'Session has expired' );
 							$this->destroy();
 							$this->error_num = ERR_SESS_EXPIRED;
 							return false;
@@ -180,7 +186,7 @@
 				$popup_alert = 'no';
 				$es = new entity_selector();
 				$es->add_type(id_of('user'));
-				$es->add_relation('entity.name = "'.$myname.'"');
+				$es->add_relation('entity.name = "'.reason_sql_string_escape($myname).'"');
 				$es->set_num(1);
 				$users = $es->run_one();
 				if(!empty($users))

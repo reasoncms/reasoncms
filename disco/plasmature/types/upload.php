@@ -36,7 +36,7 @@ class uploadType extends defaultType
 	
 	/**
 	 * The state of the upload.
-	 * Possible values: "ready", "received", "pending", "existing"
+	 * Possible values: "ready", "received", "pending", "existing", "delete_requested"
 	 * @var string
 	 * @see $_state
 	 */
@@ -94,6 +94,13 @@ class uploadType extends defaultType
 	 * @var int
 	 */
 	var $max_file_size = 20971520; // 20 MB
+
+	/**
+	 * should the element show type/extension/size restrictions? defaults to false for pre-existing forms. forms
+	 * created using thor/formbuilder override this to true by default (see reason_package/thor/thor.php)
+	 * @var boolean
+	 */
+	var $show_restriction_explanation = false;
 	
 	/** @access private */
 	var $type_valid_args = array(
@@ -104,7 +111,8 @@ class uploadType extends defaultType
 		'acceptable_types',
 		'acceptable_extensions',
 		'allow_upload_on_edit',
-		'max_file_size'
+		'max_file_size',
+		'show_restriction_explanation'
 	);
 	
 	/**
@@ -337,15 +345,24 @@ class uploadType extends defaultType
 		$this->file = $this->_get_uploaded_file();
 		$this->_generate_warnings();
 		$vars = $this->get_request();
-		
-		if ($this->file && !empty($this->file["name"])) {
-			$this->value = $this->_grab_value_from_upload();
-		} else if ($id = @$vars[$this->_get_upload_id_field()]) {
-			$this->value = $this->_grab_value_from_limbo($id);
-		} else if (!empty($this->existing_file)) {
-			$this->value = $this->_grab_value_from_existing_file();
+
+		if (@$vars["delete_existing_" . $this->name] == "confirm_delete") {
+			// if user/admin checked the checkbox to delete an existing file we need to set state accordingly,
+			// and clear out things like values so that required checks are observed.
+			$this->_state = $this->state = "delete_requested";
+			$this->value = null;
+			$this->tmp_full_path = null;
+			$this->existing_file = null;
+		} else {
+			if ($this->file && !empty($this->file["name"])) {
+				$this->value = $this->_grab_value_from_upload();
+			} else if ($id = @$vars[$this->_get_upload_id_field()]) {
+				$this->value = $this->_grab_value_from_limbo($id);
+			} else if (!empty($this->existing_file)) {
+				$this->value = $this->_grab_value_from_existing_file();
+			}
+			$this->state = $this->_state;
 		}
-		$this->state = $this->_state;
 	}
 	
 	/** @access private */
@@ -598,8 +615,12 @@ class uploadType extends defaultType
 	function get_display()
 	{
 		$current = $this->_get_current_file_info();
+
+		$js ="<script type=\"text/javascript\" src=\"".REASON_PACKAGE_HTTP_BASE_PATH."disco/plas_types/upload.js\"></script>\n";
 		
-		return $this->_get_hidden_display($current).
+		return $js .
+			$this->_get_hidden_display($current).
+			$this->_get_restriction_display($current).
 			$this->_get_current_file_display($current).
 			$this->_get_upload_display($current);
 	}
@@ -641,6 +662,31 @@ class uploadType extends defaultType
 		
 		return $disp;
 	}
+
+	function _get_restriction_display($current)
+	{
+		if (!$this->show_restriction_explanation) { return ""; }
+
+		$rv = "";
+
+		if (count($this->acceptable_types) > 0) {
+			$rv .= ($rv == "" ? "" : "; ") . "type" . (count($this->acceptable_types) == 1 ? "" : "s") . " <i>" . implode(", ", $this->acceptable_types) . "</i>";
+		}
+
+		if (count($this->acceptable_extensions) > 0) {
+			$rv .= ($rv == "" ? "" : "; ") . "extension" . (count($this->acceptable_extensions) == 1 ? "" : "s") . " <i>" . implode(", ", $this->acceptable_extensions) . "</i>";
+		}
+
+		if (in_array("max_file_size", $this->get_set_args())) {
+			$rv .= ($rv == "" ? "" : "; ") . "maximum size <i>" . convertNumberOfBytesToFormattedSize($this->max_file_size) . "</i>";
+		}
+
+		if ($rv != "") {
+			$rv = "<div class=\"file_upload_restriction_explanation\">(restricted to " . $rv . ")</div>";
+		}
+
+		return $rv;
+	}
 	
 	/** @access private */
 	function _get_display_filename($current=null)
@@ -670,9 +716,12 @@ class uploadType extends defaultType
 	{
 		if (!$current)
 			return '';
+
 		
+		$deletionUi = '';
 		if ($current->path) {
 			$filename = $this->_get_display_filename($current);
+			$deletionUi = ' <span class="delete_existing_file"><input type="checkbox" value="confirm_delete" name="delete_existing_' . $this->name . '"> Delete</span>';
 			$size = format_bytes_as_human_readable($current->size);
 			$style = '';
 		} else {
@@ -683,6 +732,7 @@ class uploadType extends defaultType
 		return '<div class="uploaded_file"'.$style.'>'.
 			'<span class="filename">'.htmlspecialchars($filename).'</span> '.
 			'<span class="size"><span class="filesize">'.$size.
+			$deletionUi.
 			'</span></span></div>';
 	}
 	
@@ -713,7 +763,7 @@ class uploadType extends defaultType
 		} else if ($current) {
 			$label = ($replace_text)
 				? $replace_text
-				: "Upload a different file:";
+				: "Replace saved file:";
 		}
 		
 		$upload = '<div class="file_upload">';

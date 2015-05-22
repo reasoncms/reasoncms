@@ -222,8 +222,15 @@
 			$this->set_display_name( 'dates', 'Event Occurs On' );
 			$this->set_display_name( 'week_of_month', 'On the' );
 			$this->set_display_name( 'month_day_of_week', ' ' );
-			$this->set_display_name( 'show_hide', 'Show or Hide?' );
-			$this->set_comments(	 'show_hide', form_comment( 'Hidden items will not show up in the events listings.' ));
+			$this->set_display_name( 'show_hide', 'Event Status' );
+			$this->change_element_type( 'show_hide', 'radio_no_sort', array( 
+				'options' => array( 
+				//	'tentative' => 'This event is tentative; only display it on calendar planning views.',
+					'show' => 'Publish this event',
+					'hide' => 'Hide this event from all calendars', 
+				//	'cancelled' => 'This event has been cancelled; display it with an appropriate flag.' 
+				), 
+				'add_empty_value_to_top' => false, ) );
 			$this->set_display_name( 'end_date', 'Repeat this event until' );
 			$this->set_comments(	 'end_date', form_comment( 'Month/Day/Year' ));
 			$this->set_comments(	 'end_date', form_comment( 'If no date is chosen, this event will repeat indefinitely.' ));
@@ -384,7 +391,7 @@
 		
 		function set_event_field_order()
 		{
-			$this->set_order (array ('this_event_is_comment','this_event_is', 'date_and_time', 'datetime', 'hours', 'minutes', 'recurrence', 'frequency', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'monthly_repeat', 'week_of_month', 'month_day_of_week', 'end_date', 'term_only', 'dates', 'hr1', 'info_head', 'name', 'description', 'location_head', 'location', 'address', 'auto_update_coordinates', 'latitude', 'longitude', 'other_info_head', 'sponsor', 'contact_username', 'contact_organization', 'url', 'content', 'keywords', 'categories', 'hr2', 'audiences_heading','audiences',  'show_hide', 'no_share', 'hr3', 'registration',  ));
+			$this->set_order (array ('this_event_is_comment','this_event_is', 'date_and_time', 'datetime', 'hours', 'minutes', 'recurrence', 'frequency', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'monthly_repeat', 'week_of_month', 'month_day_of_week', 'end_date', 'term_only', 'dates', 'show_hide', 'hr1', 'info_head', 'name', 'description', 'location_head', 'location', 'address', 'auto_update_coordinates', 'latitude', 'longitude', 'other_info_head', 'sponsor', 'contact_username', 'contact_organization', 'url', 'content', 'keywords', 'categories', 'hr2', 'audiences_heading','audiences','no_share', 'hr3', 'registration',  ));
 		}
 		
 		function _should_offer_split()

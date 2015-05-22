@@ -19,6 +19,22 @@
 	 */
 	class PolicyModule extends DefaultMinisiteModule
 	{
+		// in general, edit_id refers to the policy id for inline editing. But, there are some magic values
+		// that are used for things like triggering metadata (approvals, last revised date, audiences) and
+		// the "I have reviewed this policy" special form.
+		const CUSTOM_EDIT_ID_METADATA = '-1';
+		const CUSTOM_EDIT_ID_REVIEWED_DATE = '-2';
+
+		// navigation anchors
+		const ANCHOR_LAST_REVIEWED = "lastReviewedSection";
+
+		// disco form actions
+		const ACTION_CANCEL = "cancel";
+		const ACTION_DEBUG = "debug";
+		const ACTION_MARK_POLICY_REVIEWED = "mark_policy_as_reviewed";
+
+		const UNSET_DATE = "never";
+
 		var $cleanup_rules = array(
 			'policy_id' => array('function' => 'turn_into_int'),
 			'audience_id' => array('function' => 'turn_into_int'),
@@ -484,7 +500,7 @@
 			
 			if ($editable)
 			{
-				if ($inline_edit->active_for_module($this) && '-1' == $cur_policy_edit_id)
+				if ($inline_edit->active_for_module($this) && self::CUSTOM_EDIT_ID_METADATA == $cur_policy_edit_id)
 				{
 					$this->run_policy_metadata_form($policy);
 				}
@@ -493,7 +509,7 @@
 					echo '<div class="editRegion">'."\n";
 					$this->display_metadata($policy);
 					$activation_params = $inline_edit->get_activation_params($this);
-					$activation_params['edit_id'] = '-1';
+					$activation_params['edit_id'] = self::CUSTOM_EDIT_ID_METADATA;
 					$url = carl_make_link($activation_params);
 					echo '<p><a href="'.$url.'#metadataEdit" class="editThis">Edit Policy Approvals, Etc.</a></p>'."\n";
 					echo '</div>'."\n";
@@ -502,6 +518,22 @@
 			else
 			{
 				$this->display_metadata($policy);
+			}
+
+			if ($editable)
+			{
+				if ($inline_edit->active_for_module($this) && self::CUSTOM_EDIT_ID_REVIEWED_DATE == $cur_policy_edit_id)
+				{
+					$this->run_policy_reviewed_date_form($policy);
+				}
+				else
+				{
+					$this->display_last_reviewed_date($policy, true);
+				}
+			}
+			else
+			{
+				$this->display_last_reviewed_date($policy, false);
 			}
 			
 			$depts = $this->get_departments($policy);
@@ -516,7 +548,48 @@
 			}
 			echo '</div>'."\n";
 		}
+
+		protected function prettifyEvenEmptyMysqlDatetime($d)
+		{
+			$prettyDate = prettify_mysql_datetime($d);
+			if ("" == $prettyDate) { $prettyDate = self::UNSET_DATE; }
+			return $prettyDate;
+		}
+
+		private function createLastReviewedDateHeader($policy) {
+			$prettyDate = $this->prettifyEvenEmptyMysqlDatetime($policy->get_value("last_reviewed_date"));
+			$title = "";
+			if ($prettyDate == self::UNSET_DATE) {
+				$title = "Not Reviewed";
+			} else {
+				$title = "Last Reviewed: " . $prettyDate;
+			}
+			return "<h4>" . $title . "</h4>";
+		}
 		
+		protected function display_last_reviewed_date($policy, $showEditLink)
+		{
+			$prettyDate = $this->prettifyEvenEmptyMysqlDatetime($policy->get_value("last_reviewed_date"));
+			echo "<div class=\"reviewInfo\">\n";
+			echo "<a name=\"" . self::ANCHOR_LAST_REVIEWED . "\"></a>\n";
+			echo $this->createLastReviewedDateHeader($policy);
+			/*
+			echo "<p>" . (($prettyDate == self::UNSET_DATE)
+				? "This policy does not have a last reviewed date."
+				: "This policy was last reviewed on $prettyDate") . ".</p>\n";
+			 */
+			if ($showEditLink) {
+				$inline_edit =& get_reason_inline_editing($this->page_id);
+
+				$activation_params = $inline_edit->get_activation_params($this);
+				$activation_params['edit_id'] = self::CUSTOM_EDIT_ID_REVIEWED_DATE;
+				$url = carl_make_link($activation_params);
+
+				echo '<p><a href="'.$url.'#' . self::ANCHOR_LAST_REVIEWED . '" class="editThis">Update policy reviewed date</a></p>'."\n";
+			}
+			echo "</div>\n";
+		}
+
 		protected function display_metadata($policy)
 		{
 			if ($approvals = $this->get_approvals($policy))
@@ -803,8 +876,8 @@
 			$this->init_field($form, 'last_revised_date', $policy, 'textDate', 'solidtext');
 			$form->set_value('last_revised_date', $policy->get_value('last_revised_date'));
 		
-			$this->init_field($form, 'last_reviewed_date', $policy, 'checkbox', 'solidtext');
-			$form->set_display_name('last_reviewed_date', 'I have reviewed this policy');				
+			// $this->init_field($form, 'last_reviewed_date', $policy, 'checkbox', 'solidtext');
+			// $form->set_display_name('last_reviewed_date', 'I have reviewed this policy');				
 		
 			$this->init_field($form, 'keywords', $policy, 'text', 'solidtext');
 			$form->set_value('keywords', $policy->get_value('keywords'));
@@ -855,12 +928,74 @@
 			$form->add_callback(array(&$this, '_where_to_policy_metadata'), 'where_to');
 			$form->run();	
 		}
+
+		function run_policy_reviewed_date_form($policy)
+		{
+			$prettyDate = $this->prettifyEvenEmptyMysqlDatetime($policy->get_value("last_reviewed_date"));
+
+			echo "<div class=\"reviewInfo\">\n";
+			echo "<a name=\"" . self::ANCHOR_LAST_REVIEWED . "\"></a>\n";
+			echo $this->createLastReviewedDateHeader($policy);
+
+			/*
+			echo "<p>" . (($prettyDate == self::UNSET_DATE)
+				? "This item does not have a last reviewed date."
+				: "This item was last reviewed on $prettyDate") . ".</p>\n";
+			 */
+
+			echo "<p>By clicking \"I Agree\", you affirm that you have reviewed this policy and that it is up-to-date. Clicking \"I Agree\" will set the policy's last reviewed date to " . date("M jS, Y") . ".</p>\n";
+
+			$this->edit_policy = $policy;
+			
+			$form = new Disco();
+			$form->set_box_class("StackedBox");
+			$form->actions = array(self::ACTION_CANCEL => 'Cancel', self::ACTION_MARK_POLICY_REVIEWED => 'I Agree');
+			if (THIS_IS_A_DEVELOPMENT_REASON_INSTANCE) {
+				$form->actions[self::ACTION_DEBUG] = 'Set back to 0000-00-00 for testing purposes.';
+			}
+			
+			$form->add_callback(array(&$this, '_process_policy_reviewed_date'),'process');
+			$form->add_callback(array(&$this, '_where_to_policy_reviewed_date'), 'where_to');
+			$form->run();	
+			echo "</div>\n";
+		}
+
+		function _process_policy_reviewed_date(&$disco)
+		{
+			$chosenAction = $disco->get_chosen_action();
+
+			if (self::ACTION_CANCEL == $chosenAction)
+			{
+				// user cancelled; no need to do anything, the where_to callback will just bounce them back to the back with inline editing disabled
+			}
+			else if (self::ACTION_DEBUG == $chosenAction)
+			{
+				$saveVals['last_reviewed_date'] = "0000-00-00";
+				reason_update_entity($this->request['policy_id'], $this->get_update_entity_user_id(), $saveVals, false);
+			}
+			else if (self::ACTION_MARK_POLICY_REVIEWED == $chosenAction)
+			{
+				$saveVals['last_reviewed_date'] = carl_date('Y-m-d');
+				reason_update_entity($this->request['policy_id'], $this->get_update_entity_user_id(), $saveVals, true);
+			}
+		}
+
+		function _where_to_policy_reviewed_date(&$disco)
+		{
+			$inline_edit =& get_reason_inline_editing($this->page_id);
+			$deactivation_params = $inline_edit->get_deactivation_params($this);
+			$deactivation_params['edit_id'] = '';
+			$url = carl_make_redirect($deactivation_params);
+			$url .= '#' . self::ANCHOR_LAST_REVIEWED; // keep them viewing this section so they can see the result of their edit
+			return $url;
+		}		
 		
 		function _process_policy_metadata(&$disco)
 		{
 			$values['approvals'] = tidy($disco->get_value('approvals'));
 			$values['last_revised_date'] = tidy($disco->get_value('last_revised_date'));
-			$values['last_reviewed_date'] = carl_date('Y-m-d');
+			// moved this into it's own section. Also, this appears to not have taken the checkbox into account at all? bug.
+			// $values['last_reviewed_date'] = carl_date('Y-m-d');
 			$values['keywords'] = tidy($disco->get_value('keywords'));
 
 			foreach ($this->all_audiences as $audience)

@@ -20,6 +20,12 @@ class Feature_Helper
 	var $height;
 	var $crop_style="fill";
 	var $media_works_type="Video";
+	protected $use_absolute_urls = false;
+	
+	function use_absolute_urls($use_absolute_urls = true)
+	{
+		$this->use_absolute_urls = $use_absolute_urls;
+	}
 	
 	/**
 	* @return array of media works associated with the feature
@@ -263,6 +269,7 @@ class Feature_Helper
 		$options['horizontal']="center";
 		$options['vertical']="center";
 		$rsi->set_blit($watermark,$options);
+		$rsi->use_absolute_urls($this->use_absolute_urls);
 		$url = $rsi->get_url();
 		return $url;		
 	}
@@ -300,6 +307,8 @@ class Feature_Helper
 			//get a blank image with a play button blitted into it
 			// set the av_image_alt to "play"
 			$ret['av_img_url']=$this->get_watermark_relative_path($this->media_works_type);
+			if($this->use_absolute_urls)
+				$ret['av_img_url'] = '//' . HTTP_HOST_NAME . $ret['av_img_url'];
 			$ret['av_img_alt']="play";
 			$ret['av_img_id']="none";
 		}

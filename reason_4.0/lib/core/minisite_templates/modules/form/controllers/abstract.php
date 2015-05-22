@@ -56,6 +56,11 @@
 		 * @var array request
 		 */
 		var $request;
+
+		/**
+		 * @var string run_mode
+		 */
+		var $run_mode;
 		
 		function AbstractFormController()
 		{
@@ -156,9 +161,9 @@
 		
 		function run()
 		{
+			$this->run_mode = $this->_get_mode_with_prefix('run_');
 			echo $this->check_view_and_invoke_method('pre_run');
-			$run_mode = $this->_get_mode_with_prefix('run_');
-			if ($run_mode) echo $this->check_view_and_invoke_method($run_mode);
+			if ($this->run_mode) echo $this->check_view_and_invoke_method($this->run_mode);
 			echo $this->check_view_and_invoke_method('post_run');
 		}
 

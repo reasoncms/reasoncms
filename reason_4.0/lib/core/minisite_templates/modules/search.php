@@ -85,7 +85,7 @@
 				return $this->params['search_engine_url'];
 			if(defined('REASON_SEARCH_ENGINE_URL'))
 				return REASON_SEARCH_ENGINE_URL;
-			return 'http://www.google.com/search';
+			return '//www.google.com/search';
 		}
 		function get_seach_form_input_field_name()
 		{

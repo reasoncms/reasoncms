@@ -536,6 +536,11 @@ class DBFormModel extends DefaultFormModel
 		$admin_obj->init($this->get_db_conn(), $this->get_table_name());
 	}
 	
+	function set_admin_object($admin_object)
+	{
+		$this->_admin_obj = $admin_object;	
+	}
+	
 	function &get_admin_object()
 	{
 		if (!isset($this->_admin_obj))
@@ -569,23 +574,26 @@ class DBFormModel extends DefaultFormModel
 	
 	function &get_values_for_user()
 	{
-		if (!isset($this->_values_for_user))
+		$netid = $this->get_user_netid();
+		
+		if (isset($this->_values_for_user['submitted_by']) && $this->_values_for_user['submitted_by'] == $netid)
 		{
-			$netid = $this->get_user_netid();
-			if ($netid)
+			return $this->_values_for_user;
+		}
+		else if ($netid)
+		{
+			$qry = $this->get_select_by_key_sql($netid, 'submitted_by');
+			$result = $this->perform_query($qry);
+			if ($result)
 			{
-				$qry = $this->get_select_by_key_sql($netid, 'submitted_by');
-				$result = $this->perform_query($qry);
-				if ($result)
+				while ($row = mysql_fetch_assoc($result))
 				{
-					while ($row = mysql_fetch_assoc($result))
-					{
-						$this->_values_for_user[] = $row;
-					}
+					$this->_values_for_user[] = $row;
 				}
 			}
-			if (!isset($this->_values_for_user)) $this->_values_for_user = false;
 		}
+		if (!isset($this->_values_for_user)) $this->_values_for_user = false;
+		
 		return $this->_values_for_user;
 	}
 	

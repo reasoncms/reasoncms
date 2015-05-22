@@ -67,7 +67,24 @@ class FeatureView
 		{
 			$this->_view_params['height']=$this->default_height;
 		}
+		if(!isset($view_params['absolute_urls']))
+		{
+			$this->_view_params['absolute_urls']=false;
+		}
 	}// end set function
+	
+	function absolutify_url_if_needed($url)
+	{
+		if($this->_view_params['absolute_urls'])
+		{
+			// If it starts with a slash but not two slashes, add the domain
+			if(strpos($url, '/') === 0 && strpos($url, '//') !== 0)
+				return '//' . HTTP_HOST_NAME . $url;
+			//Otherwise, return as-is
+			return $url;
+		}
+		return $url;
+	}
 	
 	
 	/**

@@ -311,7 +311,32 @@ class ZencoderMediaWorkContentManagerModifier implements MediaWorkContentManager
 			{
 				$msg .= ' An email will be sent when processing is complete.';
 			}
-			$msg .= '<br /><img src="'.REASON_HTTP_BASE_PATH.'modules/av/in_progress_bar.gif" width="220" height="19" alt="" />';
+			$msg .= '<br /><img src="'.REASON_HTTP_BASE_PATH.'modules/av/in_progress_bar.gif" width="220" height="19" alt="" style="vertical-align:middle;" />';
+			
+			if(method_exists($this->shim, 'get_progress'))
+			{
+				$work = new entity($this->manager->get_value('id'));
+				$progress = $this->shim->get_progress($work);
+				if(!empty($progress) && !empty($progress->state))
+				{
+					$translations = array(
+						'pending' => 'Transferring',
+						'waiting' => 'Transferring',
+						'processing' => '',
+						'finished' => 'Finishing',
+						'failed' => 'Failed',
+						'cancelled' => 'Cancelled',
+					);
+					$msg .= ' <span class="smallText">';
+					if(isset($translations[$progress->state]))
+						$msg .= $translations[$progress->state] . ' ';
+					else
+						$msg .= htmlspecialchars() . ' ';
+					if(!empty($progress->progress))
+						$msg .= htmlspecialchars(round($progress->progress,1)).'% done';
+					$msg .= ' <a href="'.htmlspecialchars(get_current_url()).'">refresh</a></span>';
+				}
+			}
 			$this->manager->add_element( 'status_report' , 'commentWithLabel' , array('text'=>$msg));
 		}
 		

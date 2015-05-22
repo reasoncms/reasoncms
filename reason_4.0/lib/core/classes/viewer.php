@@ -427,7 +427,7 @@
 						$key = 'search_' . $name;
 						if( !empty( $this->admin_page->request[ $key ] ) )
 						{
-							$value = addslashes($this->admin_page->request[ $key ]);
+							$value = reason_sql_string_escape($this->admin_page->request[ $key ]);
 							$this->active_filters = true;
 							$alias = isset( $this->alias[ $name ] ) ? $this->alias[ $name ] : '';
 							if( $alias )  //first, check aliases
