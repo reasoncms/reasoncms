@@ -225,10 +225,10 @@ class CreditCardThorForm extends DefaultThorForm
 				$this->get_value('credit_card_name'),
 				$this->get_value($this->expense_budget_number),
 				$model->get_form_name(),
-                                $this->get_value('billing_street_address'),
-                                $this->get_value('billing_city'),
-                                $this->get_value('billing_state_province'),
-                                $this->get_value('billing_zip'),
+                                // $this->get_value('billing_street_address'),
+                                // $this->get_value('billing_city'),
+                                // $this->get_value('billing_state_province'),
+                                // $this->get_value('billing_zip'),
                                 $this->get_value($email_name)
 			);
 
