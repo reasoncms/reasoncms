@@ -51,7 +51,7 @@
 				
 				// uncompress zip file
 				$this->uncompress_file($post->_id, $post->get_value('file_type'));
-				$this->virtual_tour_javascript($post->_id);
+				$this->virtual_tour_javascript($post->_id, $post->get_value('keywords'));
 				echo "<p>" . $post->get_value('description') . "</p> \n";
 								
 				echo "</div>   <!-- class='content' -->\n";
@@ -134,8 +134,34 @@
 			}
 		}
 		
-		function virtual_tour_javascript($id)
+		function virtual_tour_javascript($id, $keywords)
 		{
+			$pan = 0;
+			$tilt = 0;
+			$fov = 90;
+				
+			// pan, tilt, and fov is stored in keywords field
+			$ka = explode(',', $keywords);
+			foreach($ka as $key => $value)
+			{
+				$ka[$key] = trim($value);
+				if (preg_match("/pan:?\s?(\d+)/", $value, $matches))
+				{
+					$pan = $matches[1];
+					unset($ka[$key]);
+				}
+				else if (preg_match("/tilt:?\s?(\d+)/", $value, $matches))
+				{
+					$tilt = $matches[1];
+					unset($ka[$key]);
+				}
+				if (preg_match("/fov:?\s?(\d+)/", $value, $matches))
+				{
+					$fov = $matches[1];
+					unset($ka[$key]);
+				}
+			}
+			
 			echo '
 			<script type="text/javascript">
 			//<![CDATA[
@@ -158,13 +184,13 @@
 			viewer.setVars({
 				pano: "/reason/images/virtual_tours/' . $id . '/' . $id . '_",
 				format: "14faces",
-				pan: 0,
+				pan: ' . $pan . ',
 				minpan: -180,
 				maxpan: 180,
-				tilt:0,
+				tilt: ' . $tilt . ',
 				mintilt: -83.23424494649227,
 				maxtilt: 83.23424494649227,
-				fov: 90,
+				fov: ' . $fov . ',
 				minfov: 10,
 				maxfov: 120,
 				autorotatespeed: 0,

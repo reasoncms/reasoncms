@@ -16,6 +16,7 @@ $GLOBALS['_form_view_class_names'][basename(__FILE__, '.php')] = 'FinangerSponso
 class FinangerSponsorshipForm extends CreditCardThorForm {
     function custom_init()
     {
+    	parent::custom_init();
         $model =& $this->get_model();
         $head_items = $model->get_head_items();
         $head_items->add_javascript('/reason/local/js/form/finanger_sponsorship.js');
@@ -28,9 +29,6 @@ class FinangerSponsorshipForm extends CreditCardThorForm {
         $this->change_element_type($this->get_element_name_from_label('State'), 'state_province');
         $this->change_element_type($this->get_element_name_from_label('Additional Donation'), 'money');
         $this->change_element_type($this->get_element_name_from_label('Payment Amount'), 'money');
-        $this->add_element('same_billing', 'checkboxfirst');
-        $this->move_element('same_billing', 'after', 'credit_card_name');
-        $this->set_display_name('same_billing', 'Billing address is same as above');
 
         $this->change_element_type($this->get_element_name_from_label('Sign 1'), 'textarea',
             array('display_name' => 'Text for Tee/Green Sponsorship 1', 'comments' => 'Please indicate the exact wording you would like to appear on sign 1'));
@@ -83,43 +81,6 @@ class FinangerSponsorshipForm extends CreditCardThorForm {
 
     function pre_error_check_actions()
     {
-        // make the address fields required if "Same address as above is selected"
-        // set the billing info based on that info
-        if ($this->get_value('same_billing') == true)
-        {
-            // remove from required so we don't show redundant error messages
-            $this->remove_required('billing_street_address');
-            $this->remove_required('billing_city');
-            $this->remove_required('billing_state_province');
-            $this->remove_required('billing_zip');
-
-            // Add error messages if "Same address as above" is checked
-            // if the information is not provided check for address fields
-            if ($this->get_value_from_label('Address') == "")
-            {
-                $this->set_error($this->get_element_name_from_label('Address'), 'Since you checked "Billing address same as above", the Street Address field is required');
-            } else {
-                $this->set_value('billing_street_address', $this->get_value_from_label('Street Address'));
-            }
-            if ($this->get_value_from_label('City') == "")
-            {
-                $this->set_error($this->get_element_name_from_label('City'), 'Since you checked "Billing address same as above", the City field is required');
-            } else {
-                $this->set_value('billing_city', $this->get_value_from_label('City'));
-            }
-            if ($this->get_value_from_label('State/Province') == "")
-            {
-                $this->set_error($this->get_element_name_from_label('State/Province'), 'Since you checked "Billing address same as above", the State/Province field is required');
-            } else {
-                $this->set_value('billing_state_province', $this->get_value_from_label('State/Province'));
-            }
-            if ($this->get_value_from_label('Zip/Postal Code') == "")
-            {
-                $this->set_error($this->get_element_name_from_label('Zip/Postal Code'), 'Since you checked "Billing address same as above", the Zip/Postal Code field is required');
-            } else {
-                $this->set_value('billing_zip', $this->get_value_from_label('Zip/Postal Code'));
-            }
-        }
 
         $sponsorship_value  = $this->get_value_from_label('Please indicate number of sponsorships you wish to purchase');
         if ( $sponsorship_value ) {
