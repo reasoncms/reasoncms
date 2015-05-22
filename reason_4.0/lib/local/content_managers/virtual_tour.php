@@ -48,6 +48,34 @@
 						'existing_entity' => $this->_id,
 						'allow_upload_on_edit' => true));
 			}
+			
+			// default initial placement of viewer
+			$pan = 0;
+			$tilt = 0;
+			$fov = 90;
+			
+			// pan, tilt, and fov is stored in keywords field
+			$ka = explode(',', $this->get_value('keywords'));
+			foreach($ka as $key => $value)
+			{
+				$ka[$key] = trim($value);
+				if (preg_match("/pan:?\s?(\d+)/", $value, $matches))
+				{
+					$pan = $matches[1];
+					unset($ka[$key]);		
+				}
+				else if (preg_match("/tilt:?\s?(\d+)/", $value, $matches))
+				{
+					$tilt = $matches[1];
+					unset($ka[$key]);
+				}
+				if (preg_match("/fov:?\s?(\d+)/", $value, $matches))
+				{
+					$fov = $matches[1];
+					unset($ka[$key]);
+				}
+			}
+			$this->set_value('keywords', implode(", ", $ka));
 				
 			$this->add_element('virtual_tour', 'VirtualTourUpload', $params);
 			$asset = $this->get_element('virtual_tour');
@@ -64,7 +92,19 @@
 			$this->change_element_type( 'file_type', 'hidden' );
 			$this->change_element_type( 'mime_type', 'hidden' );
 			
-			$this->add_restriction_selector();	
+			$this->add_restriction_selector();
+
+			$this->add_element( 'pan', 'text', array('size' => 4));
+			$this->set_comments( 'pan', form_comment('Alter the initial camera pan (default = 0)'));
+			$this->set_value('pan', $pan);
+
+			$this->add_element( 'tilt', 'text', array('size' => 4));
+			$this->set_comments( 'tilt', form_comment('Alter the initial camera tilt (default = 0)'));
+			$this->set_value('tilt', $tilt);
+			
+			$this->add_element( 'fov', 'text', array('size' => 4));
+			$this->set_comments( 'fov', form_comment('Alter the initial camera field of view (default = 90)'));
+			$this->set_value('fov', $fov);
 		
 		}
 		
@@ -233,6 +273,34 @@
 			
 			// make sure to ignore the 'virtual_tour' field
 			$this->_process_ignore[] = 'virtual_tour';
+			
+			// put pan, tilt, and fov info put into keyword
+			$kw = $this->get_value("keywords");
+			if (preg_match("/^\d+$/", $this->get_value("pan"), $matches) && $matches[0] != "0")
+			{
+				if ($kw != "")
+				{
+					$kw = $kw . ', ';
+				}
+				$kw = $kw . 'pan ' . $this->get_value("pan");
+			}
+			if (preg_match("/^\d+$/", $this->get_value("tilt"), $matches) && $matches[0] != "0")
+			{
+				if ($kw != "")
+				{
+					$kw = $kw . ', ';
+				}
+				$kw = $kw . 'tilt ' . $this->get_value("tilt");
+			}
+			if (preg_match("/^\d+$/", $this->get_value("fov"), $matches) && $matches[0] != "90")
+			{
+				if ($kw != "")
+				{
+					$kw = $kw . ', ';
+				}
+				$kw = $kw . 'fov ' . $this->get_value("fov");
+			}
+			$this->set_value('keywords', $kw);
 
 			parent::process();
 		}
