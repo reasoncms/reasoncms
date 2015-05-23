@@ -31,6 +31,7 @@ class FinangerGolfForm extends CreditCardThorForm {
 
     function custom_init()
     {
+        parent::custom_init();
         $model =& $this->get_model();
         $head_items = $model->get_head_items();
         $head_items->add_javascript('/reason/local/js/form/finanger_golf_form.js');
@@ -271,17 +272,6 @@ class FinangerGolfForm extends CreditCardThorForm {
                                    $values .= sprintf("\n<strong>%s:</strong>\t    %s\n", $val['label'],$this->get_value('credit_card_type'));
                                    $val['label']='Name as it appears on card';
                                    $values .= sprintf("\n<strong>%s:</strong>\t    %s\n", $val['label'],$this->get_value('credit_card_name'));
-                                   $val['label']='Billing Street Address';
-                                   $values .= sprintf("\n<strong>%s:</strong>\t    %s\n", $val['label'],$this->get_value('billing_street_address'));
-                                   $val['label']='Billing City';
-                                   $values .= sprintf("\n<strong>%s:</strong>\t    %s\n", $val['label'],$this->get_value('billing_city'));
-                                   $val['label']='Billing State/Province';
-                                   $values .= sprintf("\n<strong>%s:</strong>\t    %s\n", $val['label'],$this->get_value('billing_state_province'));
-                                   $val['label']='Billing Zip/Postal Code';
-                                   $values .= sprintf("\n<strong>%s:</strong>\t    %s\n", $val['label'],$this->get_value('billing_city'));
-                                   $val['label']='Billing Country';
-                                   $values .= sprintf("\n<strong>%s:</strong>\t    %s\n", $val['label'],$this->get_value('billing_country'));
-
                              }
 
                       }
