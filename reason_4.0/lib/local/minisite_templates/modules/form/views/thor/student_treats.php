@@ -10,9 +10,10 @@ class StudentTreatsThorForm extends CreditCardThorForm {
     var $process_actions = array('email_form_data','save_submitted_data_to_session', 'save_form_data', 'email_form_data_to_submitter');
 
     function custom_init(){
-	$model =& $this->get_model();
-	$head_items = $model->get_head_items();
-	$head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/student_treats.js');
+        parent::custom_init();
+	   $model =& $this->get_model();
+	   $head_items = $model->get_head_items();
+	   $head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/student_treats.js');
 	}
    function should_my_custom_process(){
 	return true;
@@ -353,9 +354,8 @@ function run_error_checks(){
 			$this->set_error(($this->get_element_name_from_label('#' . $i . ' Date For Delivery')), ('The delivery date must be at least two weeks later than the order date: #' . $i . ' Date For Delivery.')); 
 
 		}
-
-}
-	parent::run_error_checks();		
+    }
+	parent::run_error_checks();
 }
 
 function email_form_data(){ 
