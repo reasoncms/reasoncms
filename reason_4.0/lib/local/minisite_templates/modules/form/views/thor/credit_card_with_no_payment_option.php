@@ -101,7 +101,15 @@ class CreditCardNoPaymentThorForm extends CreditCardThorForm {
 						$model = & $this->get_model();
 
 						$pf->set_info(
-								$payment_amount, $this->get_value('credit_card_number'), $expiration_mmyy, $this->get_value($this->revenue_budget_number), $this->get_value('credit_card_name'), $this->get_value($this->expense_budget_number), $model->get_form_name(), $this->get_value('billing_street_address'), $this->get_value('billing_city'), $this->get_value('billing_state_province'), $this->get_value('billing_zip'), $this->get_value($email_name)
+								$payment_amount, 
+								$this->get_value('credit_card_number'), 
+								$expiration_mmyy, 
+								$this->get_value('credit_card_security_code'),
+								$this->get_value($this->revenue_budget_number), 
+								$this->get_value('credit_card_name'), 
+								$this->get_value($this->expense_budget_number), 
+								$model->get_form_name(), 
+								$this->get_value($email_name)
 						);
 
 						/* THIS IS WHERE THE TRANSACTION TAKES PLACE */
@@ -119,18 +127,11 @@ class CreditCardNoPaymentThorForm extends CreditCardThorForm {
 								//// DO YOUR OWN LOGGING HERE
 								connectDB('reason_transactions');
 
-								$billing_address = $this->get_value('billing_street_address') . "\n" .
-										$this->get_value('billing_city') . ", " .
-										$this->get_value('billing_state_province') . "  " .
-										$this->get_value('billing_zip') . "\n" .
-										$this->get_value('billing_country') . "\n";
-
 								$query = 'INSERT INTO transactions SET
 								REFNUM = "' . $this->pfresult['PNREF'] . '",
 								source = "' . addslashes($pf->comment2) . '", 
 								amount = "' . addslashes($pf->amount) . '", 
 								name_on_card = "' . addslashes($this->get_value('credit_card_name')) . '", 
-								billing_address = "' . addslashes($billing_address) . '", 
 								card_number = "' . addslashes(obscure_credit_card_number($this->get_value('credit_card_number'))) . '", 
 								card_expiration = "' . addslashes($expiration_mmyy) . '"';
 
