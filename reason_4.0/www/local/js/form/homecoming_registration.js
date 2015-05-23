@@ -41,11 +41,6 @@ $(document).ready(function(){
         toggle_guest_class_year();
     });
 
-    same_billing();
-    $("#checkbox_same_billing").change(function(){
-        same_billing();
-    });
-
     toggle_billing();
     reunion_dinner_selector.next().find('select').change(function(){
         toggle_billing();
@@ -60,12 +55,12 @@ function toggle_50_year_options(show_or_hide){
     if (show_or_hide == 'show')
     {
         $("#50yearreunionheaderItem").show(500);
-        $(".words:contains('50th Reunion Luncheon')").parent().show(500);
+        $(".words:contains('50 Year Reunion Reception')").parent().show(500);
         $(".words:contains('Ride in Parade')").parent().show(500);
         booklet_selector.parent().show(500);
     } else {
         $("#50yearreunionheaderItem").hide(500);
-        $(".words:contains('50th Reunion Luncheon')").parent().hide(500);
+        $(".words:contains('50 Year Reunion Reception')").parent().hide(500);
         $(".words:contains('Ride in Parade')").parent().hide(500);
         booklet_selector.parent().hide(500);
     }
@@ -80,30 +75,26 @@ function toggle_billing(){
         $("#paymentnoteItem").show(500);
         // $("#paymentamountItem").show(500);
         $(".words:contains('Payment Amount')").parent().show(500);
-        $("#creditcardtypeItem").show(500);
-        $("#creditcardnumberItem").show(500);
-        $("#creditcardexpirationmonthItem").show(500);
-        $("#creditcardexpirationyearItem").show(500);
         $("#creditcardnameItem").show(500);
-        $("#samebillingItem").show(500);
+        $("#creditcardnumberItem").show(500);
+        $("#creditcardtypeiconItem").show(500);
+        $("#expirationgroupItem").show(500);
+        $("#creditcardsecuritycodeItem").show(500);
+        // $("#creditcardtypeItem").show(500);
+        // $("#creditcardexpirationmonthItem").show(500);
+        // $("#creditcardexpirationyearItem").show(500);
         setTotal();
         needs_payment = true;
-        same_billing();
     } else {
         $("#hrItem").hide(500);
         $("#paymentnoteItem").hide(500);
         $(".words:contains('Payment Amount')").parent().hide(500);
-        $("#creditcardtypeItem").hide(500);
-        $("#creditcardnumberItem").hide(500);
-        $("#creditcardexpirationmonthItem").hide(500);
-        $("#creditcardexpirationyearItem").hide(500);
+        // $("#creditcardtypeItem").hide(500);
         $("#creditcardnameItem").hide(500);
-        $("#samebillingItem").hide(500);
-        $("#billingstreetaddressItem").hide(500);
-        $("#billingcityItem").hide(500);
-        $("#billingstateprovinceItem").hide(500);
-        $("#billingzipItem").hide(500);
-        $("#billingcountryItem").hide(500);
+        $("#creditcardnumberItem").hide(500);
+        $("#creditcardtypeiconItem").hide(500);
+        $("#expirationgroupItem").hide(500);
+        $("#creditcardsecuritycodeItem").hide(500);
         payment_amountElement.val("");
     }
 }
@@ -261,24 +252,6 @@ function toggle_reunion_reservations(){
             toggle_50_year_options('hide');
             reunion_dinner_cost = 0;
             // toggle_billing('hide');
-    }
-}
-
-function same_billing() {
-    if (needs_payment == true) {
-        if ($("#checkbox_same_billing").is(':checked')){
-            $("#billingstreetaddressItem").hide(500);
-            $("#billingcityItem").hide(500);
-            $("#billingstateprovinceItem").hide(500);
-            $("#billingzipItem").hide(500);
-            $("#billingcountryItem").hide(500);
-        } else {
-            $("#billingstreetaddressItem").show(500);
-            $("#billingcityItem").show(500);
-            $("#billingstateprovinceItem").show(500);
-            $("#billingzipItem").show(500);
-            $("#billingcountryItem").show(500);
-        }
     }
 }
 
