@@ -83,8 +83,6 @@ class HomecomingRegistrationForm extends CreditCardNoPaymentThorForm {
         $this->change_element_type($parade, 'radio_inline_no_sort');
         $this->add_element('hr', 'hr');
         $this->move_element('hr', 'after', $this->get_element_name_from_label('50th Reunion Booklet'));
-        $this->add_element('same_billing', 'checkboxfirst', array('display_name' => 'Billing address is same as above'));
-        $this->move_element('same_billing', 'after', 'credit_card_name');
     }
 
     /**
@@ -197,5 +195,6 @@ class HomecomingRegistrationForm extends CreditCardNoPaymentThorForm {
         } else {
             $this->set_value($this->get_element_name_from_label('REFNUM'), '');
         }
+        parent::run_error_checks();
     }
 }
