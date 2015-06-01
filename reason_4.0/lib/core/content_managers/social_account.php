@@ -16,12 +16,7 @@ include_once('reason_header.php');
 reason_include_once('classes/social.php');
 		
 /**
- * A content manager for social accounts. Currently we support the following -
- *
- * - Facebook
- * - Twitter
- *
- * @todo support pinterest
+ * A content manager for social accounts
  */
 class SocialAccountManager extends ContentManager
 {
@@ -101,7 +96,8 @@ class SocialAccountManager extends ContentManager
 				$image = '';
 				if($integrator = $this->social_helper()->get_integrator($k, 'SocialAccountPlatform'))
 				{
-					$image = '<img src="'.htmlspecialchars($integrator->get_platform_icon()).'" alt="'.htmlspecialchars($v).' icon" height="25" width="25" /> ';
+					if(method_exists($integrator, 'get_platform_icon'))
+						$image = '<img src="'.htmlspecialchars($integrator->get_platform_icon()).'" alt="'.htmlspecialchars($v).' icon" height="25" width="25" /> ';
 				}
 				echo '<li><a href="'.$link.'">'.$image.$v.'</a></li>';
 			}
