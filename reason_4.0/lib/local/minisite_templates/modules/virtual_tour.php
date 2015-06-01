@@ -145,7 +145,7 @@
 			foreach($ka as $key => $value)
 			{
 				$ka[$key] = trim($value);
-				if (preg_match("/pan:?\s?(\d+)/", $value, $matches))
+				if (preg_match("/pan:?\s?(\-?\d+)/", $value, $matches))
 				{
 					$pan = $matches[1];
 					unset($ka[$key]);

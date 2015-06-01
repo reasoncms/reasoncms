@@ -59,7 +59,7 @@
 			foreach($ka as $key => $value)
 			{
 				$ka[$key] = trim($value);
-				if (preg_match("/pan:?\s?(\d+)/", $value, $matches))
+				if (preg_match("/pan:?\s?(\-?\d+)/", $value, $matches))
 				{
 					$pan = $matches[1];
 					unset($ka[$key]);		
@@ -276,7 +276,7 @@
 			
 			// put pan, tilt, and fov info put into keyword
 			$kw = $this->get_value("keywords");
-			if (preg_match("/^\d+$/", $this->get_value("pan"), $matches) && $matches[0] != "0")
+			if (preg_match("/^\-?\d+$/", $this->get_value("pan"), $matches) && $matches[0] != "0")
 			{
 				if ($kw != "")
 				{
