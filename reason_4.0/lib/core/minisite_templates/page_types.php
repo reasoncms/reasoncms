@@ -2015,6 +2015,9 @@
 			),
 			'sidebar' => 'blurb',
 		),
+		'social_accounts' => array(
+			'main_post' => 'social_account/social_account',
+		),
 		'standalone_login_page' => array(
 			'main_post' => 'login',
 		),
