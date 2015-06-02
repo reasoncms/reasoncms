@@ -101,9 +101,27 @@ function hideRest(selected){
   }
 }
 
+function detectIE() {
+  var ua = window.navigator.userAgent;
+  var msie = ua.indexOf("MSIE ");
+
+  if (msie > 0) {     // If Internet Explorer < 10, return version number
+      console.log(parseInt(ua.substring(msie + 5, ua.indexOf(".", msie))),10);
+      return true;
+  }
+  else {                 // If another browser, return 0
+      console.log('otherbrowser');
+      return false;
+  }
+}
+
 document.addEventListener("DOMContentLoaded", function(){
-  showCreditCardType();
-  var textbox = document.getElementById("credit_card_numberElement");
-  textbox.addEventListener("keyup", showCreditCardType, false);
-  textbox.addEventListener("blur", showCreditCardType, false);
+  if (detectIE() === false) {
+    showCreditCardType();
+    var textbox = document.getElementById("credit_card_numberElement");
+    textbox.addEventListener("keyup", showCreditCardType, false);
+    textbox.addEventListener("blur", showCreditCardType, false);
+  } else {
+    return;
+  }
 }, false);
