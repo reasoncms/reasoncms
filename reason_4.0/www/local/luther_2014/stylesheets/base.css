@@ -9681,26 +9681,25 @@ h4.flickr_subtitle {
 }
 /* line 86, scss/modules/_virtual-tours.scss */
 #tabs .tabs .tab-title a .crop img {
-  height: 150px;
   width: 150px;
 }
-/* line 91, scss/modules/_virtual-tours.scss */
+/* line 90, scss/modules/_virtual-tours.scss */
 #tabs .tabs .tab-title a h5 {
   margin: 0;
   font-size: 0.95rem;
 }
-/* line 98, scss/modules/_virtual-tours.scss */
+/* line 97, scss/modules/_virtual-tours.scss */
 #tabs .tabs .tab-title.active a {
   background: none repeat scroll 0 0 #f6f6f6 !important;
   border: 1px solid #e1e1e1;
 }
-/* line 103, scss/modules/_virtual-tours.scss */
+/* line 102, scss/modules/_virtual-tours.scss */
 #tabs .tabs .tab-title.active div.crop {
   opacity: 0.4;
   filter: alpha(opacity=40);
   background-color: #000;
 }
-/* line 108, scss/modules/_virtual-tours.scss */
+/* line 107, scss/modules/_virtual-tours.scss */
 #tabs .tabs .tab-title.active div.crop img {
   opacity: 0.4;
   filter: alpha(opacity=40);
