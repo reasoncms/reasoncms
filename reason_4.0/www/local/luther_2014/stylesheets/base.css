@@ -7175,11 +7175,6 @@ form input[type="submit"]:active {
   color: #FF6600;
 }
 
-/* line 513, scss/modules/_form.scss */
-#creditcardtypeItem {
-  display: none;
-}
-
 /* Image galleries include image slideshows and flickr slideshows */
 /* line 23, scss/modules/_image-galleries.scss */
 #relatedSections #galleryimages .flickr-image {
