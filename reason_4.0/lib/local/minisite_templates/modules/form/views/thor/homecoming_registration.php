@@ -30,10 +30,10 @@ $GLOBALS['_form_view_class_names'][basename(__FILE__, '.php')] = 'HomecomingRegi
 class HomecomingRegistrationForm extends CreditCardNoPaymentThorForm {
     function custom_init() 
     { 
-        parent::custom_init();
         $model =& $this->get_model(); 
         $head_items = $model->get_head_items(); 
         $head_items->add_javascript('/reason/local/js/form/homecoming_registration.js');
+        parent::custom_init();
         $head_items->add_javascript(JQUERY_UI_URL);
         $head_items->add_stylesheet(JQUERY_UI_CSS_URL);
     } 
