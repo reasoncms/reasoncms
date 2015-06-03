@@ -1083,11 +1083,6 @@ form input[type="submit"]:active {
   color: #FF6600;
 }
 
-/* line 513, ../scss/modules/_form.scss */
-#creditcardtypeItem {
-  display: none;
-}
-
 /* line 10, ../scss/_extends.scss */
 .zero-out {
   margin: 0;

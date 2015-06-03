@@ -105,23 +105,29 @@ function detectIE() {
   var ua = window.navigator.userAgent;
   var msie = ua.indexOf("MSIE ");
 
-  if (msie > 0) {     // If Internet Explorer < 10, return version number
-      console.log(parseInt(ua.substring(msie + 5, ua.indexOf(".", msie))),10);
+  if (msie > 0) { /* If Internet Explorer < 10, return version number */
+      // console.log(parseInt(ua.substring(msie + 5, ua.indexOf(".", msie))),10);
       return true;
   }
-  else {                 // If another browser, return 0
-      console.log('otherbrowser');
+  else { /* If another browser, return 0 */
+      // console.log('otherbrowser');
       return false;
   }
 }
 
 document.addEventListener("DOMContentLoaded", function(){
+  var cardTypesRadioElement = document.getElementById("creditcardtypeItem");
+  var cardTypesIcons = document.getElementById("creditcardtypeiconItem");
+
   if (detectIE() === false) {
+    cardTypesRadioElement.style.display = "none";
     showCreditCardType();
     var textbox = document.getElementById("credit_card_numberElement");
     textbox.addEventListener("keyup", showCreditCardType, false);
     textbox.addEventListener("blur", showCreditCardType, false);
   } else {
+    cardTypesIcons.style.display = "none";
+    $('input[type=radio]#radio_credit_card_type_4').parent().parent().remove();
     return;
   }
 }, false);
