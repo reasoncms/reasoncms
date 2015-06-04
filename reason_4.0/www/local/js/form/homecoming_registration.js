@@ -86,7 +86,7 @@ function toggle_billing(){
         }
         $("#expirationgroupItem").show(500);
         $("#creditcardsecuritycodeItem").show(500);
-        $("#creditcardtypeItem").show(500);
+        // $("#creditcardtypeItem").show(500);
         // $("#creditcardexpirationmonthItem").show(500);
         // $("#creditcardexpirationyearItem").show(500);
         setTotal();

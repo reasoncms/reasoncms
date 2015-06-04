@@ -49,6 +49,7 @@ class CreditCardNoPaymentThorForm extends CreditCardThorForm {
 						$this->remove_required('credit_card_number');
 						$this->remove_required('credit_card_expiration_month');
 						$this->remove_required('credit_card_expiration_year');
+						$this->remove_required('credit_card_security_code');
 						$this->remove_required('credit_card_name');
 						$this->remove_required('billing_street_address');
 						$this->remove_required('billing_city');
