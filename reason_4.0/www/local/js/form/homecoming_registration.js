@@ -77,7 +77,13 @@ function toggle_billing(){
         $(".words:contains('Payment Amount')").parent().show(500);
         $("#creditcardnameItem").show(500);
         $("#creditcardnumberItem").show(500);
-        $("#creditcardtypeiconItem").show(500);
+        if ( detectIE() === true ) {
+            $("#creditcardtypeItem").show(500);
+            $("#creditcardtypeiconItem").hide(500);
+        } else {
+            $("#creditcardtypeItem").hide(500);
+            $("#creditcardtypeiconItem").show(500);
+        }
         $("#expirationgroupItem").show(500);
         $("#creditcardsecuritycodeItem").show(500);
         // $("#creditcardtypeItem").show(500);
@@ -89,7 +95,8 @@ function toggle_billing(){
         $("#hrItem").hide(500);
         $("#paymentnoteItem").hide(500);
         $(".words:contains('Payment Amount')").parent().hide(500);
-        // $("#creditcardtypeItem").hide(500);
+        $("#creditcardtypeItem").hide(500);
+        $("#creditcardtypeiconItem").hide(500);
         $("#creditcardnameItem").hide(500);
         $("#creditcardnumberItem").hide(500);
         $("#creditcardtypeiconItem").hide(500);

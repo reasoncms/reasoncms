@@ -75,8 +75,24 @@
 					{
 						echo "<dd class='tab-title vtour". $i ."'> \n";
 					}
-					//echo "<a href='#vtour". $i ."'>". $post->get_value('name') ."</a></dd> \n";
-					echo "<a href='#vtour". $i ."'><div class='crop'><img src='/reason/images/virtual_tours/". $post->_id ."/". $post->_id ."_07.jpg'></div><h5>". $post->get_value('name') ."</h5></a></dd> \n";
+					
+					$es = new entity_selector( $this->site_id );
+					$es->add_type( id_of('image') );
+					$es->add_right_relationship( $post->_id, relationship_id_of('virtual_tour_to_image') );
+					$es->set_num (1);
+					$result = $es->run_one();
+					$image = current($result);
+						
+					if ($result != null)
+					{
+						$thumb = luther_get_image_url(WEB_PHOTOSTOCK . $image->id() . '_tn.' . $image->get_value('image_type'));
+						echo "<a href='#vtour". $i ."'><div class='crop'><img src='" . $thumb . "'></div><h5>". $post->get_value('name') ."</h5></a></dd> \n";
+					}
+					else
+					{
+						echo "<a href='#vtour". $i ."'><div class='crop'><img src='/reason/images/virtual_tours/". $post->_id ."/". $post->_id ."_07.jpg'></div><h5>". $post->get_value('name') ."</h5></a></dd> \n";
+					}
+					
 					$i++;
 				}				
 				echo "</dl> \n";
