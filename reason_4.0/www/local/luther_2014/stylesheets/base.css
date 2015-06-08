@@ -8805,10 +8805,10 @@ ul.siblingList.prevNext li {
   border: 1px solid white;
   background-color: #e9e9e9;
   width: 100%;
-  height: 71px;
   display: inline-block;
   font-size: 1.125rem;
   font-weight: 300;
+  line-height: 1.2;
 }
 @media only screen and (min-width: 40.063em) {
   /* line 13, scss/modules/_siblings.scss */
@@ -8816,37 +8816,56 @@ ul.siblingList.prevNext li {
     width: 50%;
   }
 }
-/* line 24, scss/modules/_siblings.scss */
+/* line 25, scss/modules/_siblings.scss */
 ul.siblingList.prevNext li a {
   display: inline-block;
   width: 100%;
-  height: 69px;
   padding: 20px;
 }
-/* line 29, scss/modules/_siblings.scss */
+/* line 30, scss/modules/_siblings.scss */
 ul.siblingList.prevNext li a:hover {
   background: gainsboro;
 }
-/* line 34, scss/modules/_siblings.scss */
+/* line 35, scss/modules/_siblings.scss */
+ul.siblingList.prevNext li.previous > a[href] {
+  padding-right: 0.75rem;
+  padding-left: 2.35rem;
+  display: inline-block;
+}
+/* line 40, scss/modules/_siblings.scss */
 ul.siblingList.prevNext li.previous > a[href]:before {
+  display: inline-block;
   color: rgba(68, 68, 68, 0.35);
   font-family: FontAwesome;
   content: "\f137";
-  padding-right: 0.75rem;
-  padding-left: 0.35rem;
+  position: absolute;
+  left: 30px;
 }
-/* line 42, scss/modules/_siblings.scss */
+@media only screen and (min-width: 40.063em) {
+  /* line 40, scss/modules/_siblings.scss */
+  ul.siblingList.prevNext li.previous > a[href]:before {
+    left: 10px;
+  }
+}
+/* line 53, scss/modules/_siblings.scss */
 ul.siblingList.prevNext li.next {
   float: right;
   text-align: right;
 }
-/* line 45, scss/modules/_siblings.scss */
+/* line 56, scss/modules/_siblings.scss */
+ul.siblingList.prevNext li.next > a[href] {
+  padding-left: 0.75rem;
+  padding-right: 2.35rem;
+  display: inline-block;
+}
+/* line 61, scss/modules/_siblings.scss */
 ul.siblingList.prevNext li.next > a[href]:after {
+  display: inline-block;
   color: rgba(68, 68, 68, 0.35);
   font-family: FontAwesome;
   content: "\f138";
-  padding-left: 0.75rem;
-  padding-right: 0.35rem;
+  position: absolute;
+  padding-left: 0.9rem;
 }
 
 /* line 10, scss/modules/_social-accounts.scss */
