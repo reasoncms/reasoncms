@@ -166,7 +166,7 @@
 					$pan = $matches[1];
 					unset($ka[$key]);
 				}
-				else if (preg_match("/tilt:?\s?(\d+)/", $value, $matches))
+				else if (preg_match("/tilt:?\s?(\-?\d+)/", $value, $matches))
 				{
 					$tilt = $matches[1];
 					unset($ka[$key]);

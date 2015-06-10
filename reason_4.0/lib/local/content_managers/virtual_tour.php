@@ -64,7 +64,7 @@
 					$pan = $matches[1];
 					unset($ka[$key]);		
 				}
-				else if (preg_match("/tilt:?\s?(\d+)/", $value, $matches))
+				else if (preg_match("/tilt:?\s?(\-?\d+)/", $value, $matches))
 				{
 					$tilt = $matches[1];
 					unset($ka[$key]);
@@ -284,7 +284,7 @@
 				}
 				$kw = $kw . 'pan ' . $this->get_value("pan");
 			}
-			if (preg_match("/^\d+$/", $this->get_value("tilt"), $matches) && $matches[0] != "0")
+			if (preg_match("/^\-?\d+$/", $this->get_value("tilt"), $matches) && $matches[0] != "0")
 			{
 				if ($kw != "")
 				{
