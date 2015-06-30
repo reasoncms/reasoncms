@@ -9718,3 +9718,34 @@ h4.flickr_subtitle {
   opacity: 0.4;
   filter: alpha(opacity=40);
 }
+
+@-webkit-keyframes fadeIn {
+  /* line 116, scss/modules/_virtual-tours.scss */
+  from {
+    opacity: 0;
+  }
+
+  /* line 119, scss/modules/_virtual-tours.scss */
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  /* line 125, scss/modules/_virtual-tours.scss */
+  from {
+    opacity: 0;
+  }
+
+  /* line 128, scss/modules/_virtual-tours.scss */
+  to {
+    opacity: 1;
+  }
+}
+
+/* line 132, scss/modules/_virtual-tours.scss */
+.tabs-content > #virtual-tour .content.active {
+  -webkit-animation: fadeIn 1.4s;
+  animation: fadeIn 1.4s;
+  opacity: 1;
+}

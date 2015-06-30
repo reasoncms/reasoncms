@@ -37,8 +37,4 @@ function hideVTHelp() {
 }
 $(document).ready(function() {
 	checkCookie();
-	  $("dd.tab-title").click(function() {
-		    $("#virtual-tour").fadeOut(3000);
-		  });
-
 });
