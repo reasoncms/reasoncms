@@ -34,7 +34,7 @@ class EventsInstancewideModule extends EventsModule
 	{
 		$type = new entity(id_of('event_type'));
 		if($type->get_value('feed_url_string'))
-			echo '<div class="feedInfo"><a class="rss" href="/'.REASON_GLOBAL_FEEDS_PATH.
+			echo '<div class="feedInfo"><a class="rss" href="/'.MINISITE_FEED_DIRECTORY_NAME.
 			'/'.$type->get_value('feed_url_string').'" title="RSS feed for this site\'s events">RSS</a></div>';
 	}
 
