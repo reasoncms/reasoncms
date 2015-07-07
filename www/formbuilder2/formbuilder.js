@@ -859,7 +859,16 @@
           top: 20
         },
         distance: 15,
-        helper: function() {
+        helper: "clone",
+        start: function(e, ui) {
+          var draggedElement;
+          draggedElement = $(ui.helper[0]);
+          return draggedElement.css({
+            "height": "80px",
+            "width": _this.$responseFields.width()
+          });
+        },
+        old_helper: function() {
           var $helper;
           $helper = $("<div class='response-field-draggable-helper' />");
           $helper.css({
@@ -1355,7 +1364,7 @@
 
     Formbuilder.prototype.performInitialUniqueIdPass = function(args) {
       var bootstrapData, f, fields, i, k, opt, _i, _j, _len, _len1, _ref6;
-      console.log("performInitialUniqueIdPass start...");
+      console.log("performInitialUniqueIdPass start with draggable fix...");
       this.madeInitialIdAdjustments = false;
       this.dupeIdTracker = {};
       Formbuilder.maxUsedId = -1;
