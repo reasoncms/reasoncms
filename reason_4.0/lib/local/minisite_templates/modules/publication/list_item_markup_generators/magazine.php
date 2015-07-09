@@ -215,33 +215,16 @@ class MagazinePublicationListItemMarkupGenerator extends PublicationMarkupGenera
 	}
 	
 	function get_issue_date_markup()
-	{
-		// Use a static array to store the key ($item->_id) with the value ($issue_id) 
-		// so that a featured news post can return the issue name.
-		// A featured news post calls get_issue_date_markup twice, first with access to $issue_id,
-		// and a second time where $issue_id cannot be determined, so the value from the array is used.
-		// This is a major hack, which may break in the future.
-		static $arr = array();
-		
+	{		
 		$item = $this->passed_vars['item'];
-		$issue_id = $item->_left_relationships_info['news_to_issue'][0]['entity_b'];
-		
-		if (empty($issue_id))
+
+		$es = new entity_selector();
+		$es->add_type(id_of('issue_type'));
+		$es->add_right_relationship($item->_id, relationship_id_of('news_to_issue'));
+		$result = $es->run_one();
+		foreach( $result AS $id => $issue )
 		{
-			$issue_id = $arr[$item->_id];
-		}
-		
-		if (!empty($issue_id))
-		{
-			$arr[$item->_id] = $issue_id;
-			$es = new entity_selector();
-			$es->add_type( id_of('issue_type') );
-			$es->add_relation('entity.id = ' . $issue_id);
-			$result = $es->run_one();
-			foreach( $result AS $id => $issue )
-			{
-				return '<div class="date">'.$issue->get_value('name').'</div>'."\n";
-			}
+			return '<div class="date">'.$issue->get_value('name').'</div>'."\n";
 		}
 	}
 	
