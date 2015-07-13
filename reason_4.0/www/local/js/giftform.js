@@ -11,6 +11,8 @@ $(document).ready(function() {
 		
 		$("input[name='installment_type']").change(function(){ toggle_recur_fields(); });
 
+		$(".inlineElement").find("input[id*='amountElement']").blur(function(){ add_amounts(); });
+
 		// Set the initial state for employer name field
 		$("#employernameItem").hide(500);
 		
@@ -26,14 +28,27 @@ $(document).ready(function() {
 		$("input#checkbox_annual_fund").change();
 		
 		// Show/hide specific designations
-		toggle_specific_designations();
-		$("input[name='specific_fund']").change(function(){ toggle_specific_designations(); });
-		$("input[name='norse_athletic_association']").change(function(){ toggle_specific_designations(); });
-		$("input[name='other']").change(function(){ toggle_specific_designations(); });
+		// toggle_specific_designations();
+		// $("input[name='specific_fund']").change(function(){ toggle_specific_designations(); });
+		toggle_naa_designation_details();
+		$("input[name='norse_athletic_association']").change(function(){ toggle_naa_designation_details(); });
+		toggle_other_designations_details();
+		$("input[name='other']").change(function(){ toggle_other_designations_details(); });
 
 		toggle_gift_prompt();
 		$("#gift_promptElement").change(function(){ toggle_gift_prompt(); });
 
+		// add a span class around the money elements's "$"
+		$("#gift_amountElement").parent().contents().filter(function() {
+			return this.nodeType === 3 }).wrap('<span class="currency"></span>');
+		$(".inlineElement input[name$='_amount']").parent().contents().filter(function() {
+			return this.nodeType === 3 }).wrap('<span class="currency"></span>');
+		$("#checkbox_annual_fund").parent().contents().filter(function() {
+			return this.nodeType === 3 }).last().wrap('<span class="comment">&nbsp;</span>');
+		$("#checkbox_scholarship_fund").parent().contents().filter(function() {
+			return this.nodeType === 3 }).last().wrap('<span class="comment">&nbsp;</span>');
+		$(".inlineElement input[name$='_amount']").attr('placeholder', 'Amount');
+		$("#other_designation_detailsElement").attr('placeholder', 'Other Designation');
 	}
 	
 	/** PageTwo **/
@@ -216,25 +231,37 @@ function toggle_specific_designations()
 	if ( $("input[name='specific_fund']:checked").val() || $("input[name='specific_fund']:checked").val() == 'true' ) {
 		$("#designationnoteItem").show(500);
 		$("#norseathleticassociationItem").show(500);
-		$("#baseballgroupItem").show(500);
-		$("#softballgroupItem").show(500);
+		// $("#baseballgroupItem").show(500);
+		// $("#softballgroupItem").show(500);
 		$("#scholarshipgroupItem").show(500);
 		$("#othergroupItem").show(500);
 		$("#commentsspecialinstructionsItem").show(500);
 	} else {
 		$("#designationnoteItem").hide(500);
 		$("#norseathleticassociationItem").hide(500);
-		$("#baseballgroupItem").hide(500);
-		$("#softballgroupItem").hide(500);
+		// $("#baseballgroupItem").hide(500);
+		// $("#softballgroupItem").hide(500);
 		$("#scholarshipgroupItem").hide(500);
 		$("#othergroupItem").hide(500);
 		$("#commentsspecialinstructionsItem").hide(500);
 	}
-	if ( $("input[name='norse_athletic_association']:checked").val() || $("input[name='norse_athletic_association']:checked").val() == "true" )
-	{
-		$("#naagroupItem").show(500);
+}
+
+function toggle_naa_designation_details() {
+	if ( $("input[name='norse_athletic_association']:checked").val() || $("input[name='norse_athletic_association']:checked").val() == "true" ) {
+		$("#norseathleticassociationdetailsItem").show();
 	} else {
-		$("#naagroupItem").hide(500);
+		$("#norseathleticassociationdetailsItem").hide();
+		$("#norse_athletic_association_detailsElement").val('General');
+	}
+}
+
+function toggle_other_designations_details() {
+	if ( $("input[name='other']:checked").val() || $("input[name='other']:checked").val() == "true" ) {
+		$("#otherdesignationdetailsItem").show();
+	} else {
+		$("#otherdesignationdetailsItem").hide();
+		$("#other_designation_detailsElement").val('');
 	}
 }
 
@@ -253,18 +280,32 @@ function toggle_gift_prompt() {
 }
 
 function show_amount_fields() {
-	amount_elements = $(".inlineElement").find("input[id*='amountElement']").parent().hide();
+	$(".inlineElement").find("input[id*='amountElement']").parent().hide();
 	// if more than one designation is checked,
 	// show designation amount boxes for those checked.
 	// Look for all checkboxes ignore matching gifts and specific funds checkboxes
-	checked_boxes = $("input[type='checkbox']:checked").not("#checkbox_specific_fund").not("#checkbox_match_gift");
+	var checked_boxes = $("input[type='checkbox']:checked").not("#checkbox_specific_fund").not("#checkbox_match_gift");
 	checked_boxes.each(function(){
 		if ( checked_boxes.length > 1 ) {
 			amount_selector = $("#"+$(this).prop('name')+"_amountElement");
 			$(amount_selector).parent().show();
+			// clear any existing _amountElement values
+			$(".inlineElement").find("input[id*='amountElement']").val('');
+			// get the first open *_amountElement and fill it with the init ial gift amount
+			$(".inlineElement").find("input[id*='amountElement']:visible").first().val($('#gift_amountElement').val());
+			$(".inlineElement").find("input[id*='amountElement']:visible").first().effect('highlight');
 		} else {
 			amount_selector = $("#"+$(this).prop('name')+"_amountElement");
 			$(amount_selector).parent().hide();
+			// clear all _amountElement values
+			$(".inlineElement").find("input[id*='amountElement']").val('');
 		}
 	});
+}
+
+function add_amounts() {
+	var initial_gift_amount = $("#gift_amountElement").val();
+	var total = 0;
+
+	
 }
