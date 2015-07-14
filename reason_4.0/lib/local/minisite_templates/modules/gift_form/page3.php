@@ -61,19 +61,15 @@ class GiftPageThreeForm extends FormStep {
             'type' => 'comment',
             'text' => '<h3>Payment Method</h3>',
         ),
-<<<<<<< HEAD
-=======
         'credit_card_name' => array(
             'type' => 'text',
             'display_name' => 'Name as it appears on card',
             'size' => 35,
         ),
->>>>>>> develop
         'credit_card_number' => array(
             'type' => 'text',
             'size' => 35,
         ),
-<<<<<<< HEAD
         'credit_card_type' => array(
             'type' => 'radio_no_sort',
             'options' => array('Visa' => 'Visa', 'MasterCard' => 'MasterCard', 'American Express' => 'American Express', 'Discover' => 'Discover', 'none'=>'none'),
@@ -82,18 +78,6 @@ class GiftPageThreeForm extends FormStep {
         'credit_card_type_icon' => array(
             'type' => 'comment',
             'text' => "<i class='fa fa-cc-visa formCCType' id='visaIcon'></i><i class='fa fa-cc-mastercard formCCType' id='mastercardIcon'></i><i class='fa fa-cc-amex formCCType' id='amexIcon'></i><i class='fa fa-cc-discover formCCType' id='discoverIcon'></i>",
-=======
-                'credit_card_type' => array(
-            'type' => 'radio_no_sort',
-            'options' => array('Visa'=>'Visa','MasterCard'=>'MasterCard','American Express'=>'American Express','Discover'=>'Discover', 'none'=>'none'),
-        ),
-        'credit_card_type_icon' => array(
-            'type' => 'comment',
-            'text' => "<i class='fa fa-cc-visa formCCType' id='visaIcon'></i>
-                        <i class='fa fa-cc-mastercard formCCType' id='mastercardIcon'></i>
-                        <i class='fa fa-cc-amex formCCType' id='amexIcon'></i>
-                        <i class='fa fa-cc-discover formCCType' id='discoverIcon'></i>"
->>>>>>> develop
         ),
         'credit_card_expiration_month' => array(
             'type' => 'month',
