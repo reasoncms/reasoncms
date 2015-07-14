@@ -144,8 +144,9 @@ class GiftPageOneForm extends FormStep
 			'display_name' => '<h3>What prompted you to make this gift?</h3>',
             'add_null_value_to_top' => true,
             'options' => array(
-                'mailing'       => 'Recieved a mailing',
-                'email'         => 'Recieved an email',
+                'mailing'       => 'Received a mailing',
+                'email'         => 'Received an email',
+                'phonathon'     => 'Received a Phonathon call',
                 'staff_visit'   => 'Development staff visit',
                 'other'         => 'Other')
         ),
