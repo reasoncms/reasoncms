@@ -274,17 +274,9 @@ class GiftPageThreeForm extends FormStep {
         if ((intval($this->controller->get('gift_amount')) <= 100) && !$this->get_value('mail_receipt')) {
             if (reason_unique_name_exists('giving_form_100_dollars')){
                 $txt .= get_text_blurb_content('giving_form_100_dollars') . "\n";
-			} else {
-				$txt .= '<p>This e-receipt will serve as confirmation of your online gift to Luther College. This e-receipt gives us
-						the opportunity to continue to reduce our paper usage and helps us to achieve our sustainability goals. Thank
-						you for doing your part!</p>' . "\n";
-                $txt .= '<p>Of course, if you\'d prefer to receive a paper receipt, we can take care of that for you.
-						Simply email Nicole Waskow at waskni01@luther.edu and we will send one to you via US Mail.</p>' . "\n";
 			}
         }
         $txt .= '<p>Luther College is, for tax deduction purposes, a 501(c)(3) organization.</p>' . "\n";
-        $txt .= '<p>If you have questions about the giving process or experience technical problems using
-			the online giving form, please contact the Luther College Development Office.</p>' . "\n";
         $txt .= '<ul>' . "\n";
         $txt .= '<li><strong>Date:</strong> ' . date($this->date_format) . '</li>' . "\n";
         $txt .= '<h4>Your Information</h4>' . "\n";
