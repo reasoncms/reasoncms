@@ -72,41 +72,46 @@ class publicationIssuesModule extends PublicationModule
 		
 		if(count($this->issues) > 1 )
 		{
-			$markup_string .= '<div class="issueMenu">'."\n";
-			$markup_string .= '<form action="'.htmlspecialchars(get_current_url(),ENT_QUOTES,'UTF-8').'">'."\n";
-			$markup_string .= '<label for="pubIssueMenuElement" class="issueLabel">Issue:</label>'."\n";
+			$homepage = "/magazine/";
+			$currentpage = $_SERVER['REQUEST_URI'];
+			if($homepage==$currentpage)
+			{
+				$markup_string .= '<div class="issueMenu">'."\n";
+				$markup_string .= '<form action="'.htmlspecialchars(get_current_url(),ENT_QUOTES,'UTF-8').'">'."\n";
+				$markup_string .= '<label for="pubIssueMenuElement" class="issueLabel">Issue:</label>'."\n";
 
-			$markup_string .= '<script type="text/javascript">'."\n";
-			$markup_string .= '/* <![CDATA[ */'."\n";
-			$markup_string .= '
-			if (jQuery)
-			{
-				$(document).ready(function(){
-					$(".issueMenu input[type=\'submit\']").hide();
-					$(".issueMenu select[name=\'issue_id\']").change(function(){
-						$(this).parent("form").submit();
+				$markup_string .= '<script type="text/javascript">'."\n";
+				$markup_string .= '/* <![CDATA[ */'."\n";
+				$markup_string .= '
+				if (jQuery)
+				{
+					$(document).ready(function(){
+						$(".issueMenu input[type=\'submit\']").hide();
+						$(".issueMenu select[name=\'issue_id\']").change(function(){
+							$(this).parent("form").submit();
+						});
 					});
-				});
-			}';
-			$markup_string .= '/* ]]> */'."\n";
-			$markup_string .= '</script>';
-			
-			$markup_string .= '<select name="issue_id" id="pubIssueMenuElement">'."\n";
-			if (!$cur_issue_id)
-			{
-				$markup_string .= '<option value="'.$cur_issue_id.'" selected="selected">Select Issue</option>'."\n";
+				}';
+				$markup_string .= '/* ]]> */'."\n";
+				$markup_string .= '</script>';
+				
+				$markup_string .= '<select name="issue_id" id="pubIssueMenuElement">'."\n";
+				if (!$cur_issue_id)
+				{
+					$markup_string .= '<option value="'.$cur_issue_id.'" selected="selected">Select Issue</option>'."\n";
+				}
+				foreach($this->issues as $id => $issue)
+				{
+					$selected = ($cur_issue_id == $id) ? ' selected="selected"' : '';
+					$markup_string .= '<option value="'.$id.'"'.$selected.'>'.strip_tags($this->_get_issue_label($issue)).'</option>'."\n";
+				}
+				$markup_string .= '</select>'."\n";
+				$markup_string .= '<input type="submit" value="Go" />'."\n";
+				$markup_string .= '</form>'."\n";
+				$link = carl_make_link(array('issue_id' => 0));
+				//$markup_string .= '<div class="allIssuesLink"><a href="'.$link.'">List all issues</a></div>';
+				$markup_string .= '</div>'."\n";
 			}
-			foreach($this->issues as $id => $issue)
-			{
-				$selected = ($cur_issue_id == $id) ? ' selected="selected"' : '';
-				$markup_string .= '<option value="'.$id.'"'.$selected.'>'.strip_tags($this->_get_issue_label($issue)).'</option>'."\n";
-			}
-			$markup_string .= '</select>'."\n";
-			$markup_string .= '<input type="submit" value="Go" />'."\n";
-			$markup_string .= '</form>'."\n";
-			$link = carl_make_link(array('issue_id' => 0));
-			//$markup_string .= '<div class="allIssuesLink"><a href="'.$link.'">List all issues</a></div>';
-			$markup_string .= '</div>'."\n";
 		}
 		return $markup_string;
 	}
