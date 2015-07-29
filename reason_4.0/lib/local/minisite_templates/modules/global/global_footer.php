@@ -65,7 +65,7 @@
 						<div class="column">
 							<h3>Quick Links</h3>
 							<ul>
-							<li><a href="http://directory.luther.edu/">Directory</a></li>
+							<li><a href="http://luther.edu/directory/">Directory</a></li>
 							<li><a href="http://mail.luther.edu">Norse Mail</a></li>
 							<li><a href="http://calendar.luther.edu">Norse Calendar</a></li>
 							<li><a href="https://katie.luther.edu/">KATIE</a></li>
