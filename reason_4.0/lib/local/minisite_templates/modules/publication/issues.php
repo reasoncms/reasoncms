@@ -72,9 +72,12 @@ class publicationIssuesModule extends PublicationModule
 		
 		if(count($this->issues) > 1 )
 		{
-			$homepage = "/magazine/";
+			$homepage = "/magazine/?filter1=category-592289";
+			$classnotes = "/magazine/?filter1=category-592295";
 			$currentpage = $_SERVER['REQUEST_URI'];
-			if($homepage==$currentpage)
+			if($homepage==$currentpage || $classnotes==$currentpage)
+			{}
+			else
 			{
 				$markup_string .= '<div class="issueMenu">'."\n";
 				$markup_string .= '<form action="'.htmlspecialchars(get_current_url(),ENT_QUOTES,'UTF-8').'">'."\n";
