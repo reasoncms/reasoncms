@@ -15,6 +15,7 @@
 		var $start_depth = 0;
 		var $display_parent_of_open_branch = true;
 		var $link_to_current_page = true;
+		var $cur_depth = 0;
 		
 		function get_home_page_link_text()
 		{
@@ -56,7 +57,8 @@
 			{
 				$open = $this->is_open( $item );
 				$class = $this->get_item_class($item, $open, $depth, $counter);
-				$item_display = $this->luther_show_item( $this->values[ $item  ], $depth );
+				$this->cur_depth = $depth;
+				$item_display = $this->show_item( $this->values[ $item  ], false );
 				if (!empty($children) && $this->use_accordion_nav($this->values[ $item ]->get_value( 'custom_page' )) && $depth == 1)
 				{
 					$class = 'accordion ' . $class;
@@ -106,7 +108,7 @@
 			}
 		}
 		
-		function luther_show_item( &$item , $depth, $options = false)
+		function show_item( &$item, $options = false)
 		{
 			$class_attr = '';
 			if( $item->id() == $this->root_node() )
@@ -120,7 +122,7 @@
 			}
 			$page_name = strip_tags($page_name,'<span><strong><em>');
 			if( $this->cur_page_id != $item->id() || $this->should_link_to_current_page()
-					|| ($this->use_accordion_nav($item->get_value( 'custom_page' )) && $depth == 1))
+					|| ($this->use_accordion_nav($item->get_value( 'custom_page' )) && $this->cur_depth == 1))
 			{
 				$link = $this->get_full_url($item->id());
 		
@@ -131,7 +133,7 @@
 				if(($this->cur_page_id == $item->id() ||
 						( $this->values[ $this->cur_page_id ]->get_value( 'parent_id' ) == $item->id() AND
 								$this->values[ $this->cur_page_id ]->get_value( 'nav_display' ) == 'No' )) AND
-						(!$this->use_accordion_nav($item->get_value( 'custom_page' )) && $depth != 1))
+						(!$this->use_accordion_nav($item->get_value( 'custom_page' )) && $this->cur_depth != 1))
 				{
 					$prepend = '<strong>';
 					$append = '</strong>';

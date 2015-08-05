@@ -3223,7 +3223,8 @@ this.xSe(xAe,xPg,this.xac);
 }
 p1.xs=function(xfe)
 {
-this.log("Error: WebGL context lost");
+//this.log(Error: WebGL context lost");	
+this.log("This feature is not supported in your current browser. Please use Chrome.");
 }
 p1.xTe=function(xfe)
 {

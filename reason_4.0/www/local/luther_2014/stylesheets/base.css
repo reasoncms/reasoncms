@@ -1529,7 +1529,7 @@ ul.off-canvas-list li a {
 /* 4. FONT AWESOME
  *************************************/
 /* line 4, scss/font-awesome/_core.scss */
-.fa, #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .jump a:before, #minisite .continueReading a:after, #minisite .feedLink .feedInfo a:before, div.assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a[href]:before, #childrenAndGrandchildren li ul .childDesc:before, .directoryHead ul a:after, .searchOptions.openOptions:after, .searchOptions.closedOptions:after, .directoryEntry .directoryContact li:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
+.fa, #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .jump-external a:before, #minisite .continueReading a:after, #minisite .feedLink .feedInfo a:before, div.assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a[href]:before, #childrenAndGrandchildren li ul .childDesc:before, .directoryHead ul a:after, .searchOptions.openOptions:after, .searchOptions.closedOptions:after, .directoryEntry .directoryContact li:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
 #calendar .eventDetails .eventUrl:before,
 #calendar .eventDetails .calendarExport:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
@@ -3646,11 +3646,11 @@ body #wrapper #post-footer a {
   transition-timing-function: ease-in;
 }
 /* line 542, scss/_minisite.scss */
-#minisite #navWrap .jump a {
+#minisite #navWrap .jump-external a {
   padding-right: 2.25rem;
 }
 /* line 545, scss/_minisite.scss */
-#minisite #navWrap .jump a:before {
+#minisite #navWrap .jump-external a:before {
   content: "\f08e";
   position: absolute;
   top: 1.25rem;
@@ -3890,7 +3890,7 @@ body #wrapper #post-footer a {
 }
 
 /* line 4, scss/font-awesome/_core.scss */
-.fa, #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .jump a:before, #minisite .continueReading a:after, #minisite .feedLink .feedInfo a:before, div.assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a[href]:before, #childrenAndGrandchildren li ul .childDesc:before, .directoryHead ul a:after, .searchOptions.openOptions:after, .searchOptions.closedOptions:after, .directoryEntry .directoryContact li:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
+.fa, #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .jump-external a:before, #minisite .continueReading a:after, #minisite .feedLink .feedInfo a:before, div.assets li:before, #callToActionBlurb .blurb ul li a:after, .childrenList li a[href]:before, #childrenAndGrandchildren li ul .childDesc:before, .directoryHead ul a:after, .searchOptions.openOptions:after, .searchOptions.closedOptions:after, .directoryEntry .directoryContact li:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before, #miniCal .foot .more a:before, #calendar .eventDetails .back a:before, #calendar .eventDetails .eventMeta li:before, #calendar .eventDetails .contact:before,
 #calendar .eventDetails .eventUrl:before,
 #calendar .eventDetails .calendarExport:before, #facultyStaff .facStaff .facStaffContact li:before, #facultyStaff .facStaff .facStaffContent .more:before, .featuresModule .feature .featureInfo .featureText a:before,
@@ -5846,7 +5846,7 @@ hr.horizontal-rule-basic {
   text-align: center;
 }
 /* line 727, scss/modules/_events.scss */
-#calendar .eventDetails .eventMeta li .fa, #calendar .eventDetails .eventMeta li #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .navListTop ul #calendar .eventDetails .eventMeta li .navListItem.accordion > a:before, #calendar .eventDetails .eventMeta li #minisite #navWrap .jump a:before, #minisite #navWrap .jump #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li #minisite .continueReading a:after, #minisite .continueReading #calendar .eventDetails .eventMeta li a:after, #calendar .eventDetails .eventMeta li #minisite .feedLink .feedInfo a:before, #minisite .feedLink .feedInfo #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta #callToActionBlurb .blurb ul li a:after, #callToActionBlurb .blurb ul #calendar .eventDetails .eventMeta li a:after, #calendar .eventDetails .eventMeta .childrenList li a[href]:before, .childrenList #calendar .eventDetails .eventMeta li a[href]:before, #calendar .eventDetails .eventMeta #childrenAndGrandchildren li ul .childDesc:before, #childrenAndGrandchildren #calendar .eventDetails .eventMeta li ul .childDesc:before, #calendar .eventDetails .eventMeta li .directoryHead ul a:after, .directoryHead ul #calendar .eventDetails .eventMeta li a:after, #calendar .eventDetails .eventMeta li .searchOptions.openOptions:after, #calendar .eventDetails .eventMeta li .searchOptions.closedOptions:after, #calendar .eventDetails .eventMeta li .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport .eventDetails .eventMeta li a:before,
+#calendar .eventDetails .eventMeta li .fa, #calendar .eventDetails .eventMeta li #minisite #navWrap .navListTop ul .navListItem.accordion > a:before, #minisite #navWrap .navListTop ul #calendar .eventDetails .eventMeta li .navListItem.accordion > a:before, #calendar .eventDetails .eventMeta li #minisite #navWrap .jump-external a:before, #minisite #navWrap .jump-external #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li #minisite .continueReading a:after, #minisite .continueReading #calendar .eventDetails .eventMeta li a:after, #calendar .eventDetails .eventMeta li #minisite .feedLink .feedInfo a:before, #minisite .feedLink .feedInfo #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta #callToActionBlurb .blurb ul li a:after, #callToActionBlurb .blurb ul #calendar .eventDetails .eventMeta li a:after, #calendar .eventDetails .eventMeta .childrenList li a[href]:before, .childrenList #calendar .eventDetails .eventMeta li a[href]:before, #calendar .eventDetails .eventMeta #childrenAndGrandchildren li ul .childDesc:before, #childrenAndGrandchildren #calendar .eventDetails .eventMeta li ul .childDesc:before, #calendar .eventDetails .eventMeta li .directoryHead ul a:after, .directoryHead ul #calendar .eventDetails .eventMeta li a:after, #calendar .eventDetails .eventMeta li .searchOptions.openOptions:after, #calendar .eventDetails .eventMeta li .searchOptions.closedOptions:after, #calendar .eventDetails .eventMeta li .responsiveEventsList .gridAndOptionsWrapper .iCalExport a:before, #calendar .responsiveEventsList .gridAndOptionsWrapper .iCalExport .eventDetails .eventMeta li a:before,
 #calendar .eventDetails .eventMeta li .responsiveEventsList .gridAndOptionsWrapper .feedInfo a:before,
 #calendar .responsiveEventsList .gridAndOptionsWrapper .feedInfo .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li #miniCal .foot .more a:before, #miniCal .foot .more #calendar .eventDetails .eventMeta li a:before, #calendar .eventDetails .eventMeta li .back a:before, #calendar .eventDetails .back .eventMeta li a:before, #calendar .eventDetails .eventMeta li li:before, #calendar .eventDetails .eventMeta li .contact:before,
 #calendar .eventDetails .eventMeta li .eventUrl:before,
@@ -9717,4 +9717,35 @@ h4.flickr_subtitle {
 #tabs .tabs .tab-title.active div.crop img {
   opacity: 0.4;
   filter: alpha(opacity=40);
+}
+
+@-webkit-keyframes fadeIn {
+  /* line 116, scss/modules/_virtual-tours.scss */
+  from {
+    opacity: 0;
+  }
+
+  /* line 119, scss/modules/_virtual-tours.scss */
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  /* line 125, scss/modules/_virtual-tours.scss */
+  from {
+    opacity: 0;
+  }
+
+  /* line 128, scss/modules/_virtual-tours.scss */
+  to {
+    opacity: 1;
+  }
+}
+
+/* line 132, scss/modules/_virtual-tours.scss */
+.tabs-content > #virtual-tour .content.active {
+  -webkit-animation: fadeIn 1.4s;
+  animation: fadeIn 1.4s;
+  opacity: 1;
 }

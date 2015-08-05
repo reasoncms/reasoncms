@@ -68,7 +68,7 @@
 			{
 				$open = $this->is_open( $item );
 				$class = $this->get_item_class($item, $open, $depth, $counter);
-				$item_display = $this->show_item( $this->values[ $item  ], $depth );
+				$item_display = $this->show_item( $this->values[ $item  ], $depth, false );
 				if (!empty($children) && preg_match("/^show_children/", $this->values[ $item ]->get_value( 'custom_page' )) && $depth == 1)
 				{
 					$class = 'accordion ' . $class;
