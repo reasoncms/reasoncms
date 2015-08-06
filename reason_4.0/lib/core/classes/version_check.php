@@ -180,7 +180,7 @@ class reasonVersionCheck
 		switch($versions[$version])
 		{
 			case 'old':
-				return array('code'=>'version_out_of_date','message'=>'You are running an out-of-date version of Reason ('.$version.'). Please update it to the latest stable version ('.$current.').','url'=>'http://apps.carleton.edu/opensource/reason/download/','status'=>200);
+				return array('code'=>'version_out_of_date','message'=>'You are running an out-of-date version of Reason ('.$version.'). Please update it to the latest stable version ('.$current.').','url'=>'http://reasoncms.org/get-started/download/','status'=>200);
 				break;
 			case 'current':
 				return array('code'=>'version_up_to_date','message'=>'Your version of Reason is up to date.','url'=>'','status'=>200);
