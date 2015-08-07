@@ -59,7 +59,7 @@ class reasonVersionCheck
 	 */
 	function get_current_version_id()
 	{
-		return '4.5';
+		return '4.6';
 	}
 
 	/**
@@ -85,8 +85,9 @@ class reasonVersionCheck
 			'4.2'=>'old',
 			'4.3'=>'old',
 			'4.4'=>'old',
-			'4.5'=>'current',
-			'4.6'=>'bleeding',
+			'4.5'=>'old',
+			'4.6'=>'current',
+			'4.7'=>'bleeding',
 		);
 	}
 
@@ -179,7 +180,7 @@ class reasonVersionCheck
 		switch($versions[$version])
 		{
 			case 'old':
-				return array('code'=>'version_out_of_date','message'=>'You are running an out-of-date version of Reason ('.$version.'). Please update it to the latest stable version ('.$current.').','url'=>'http://apps.carleton.edu/opensource/reason/download/','status'=>200);
+				return array('code'=>'version_out_of_date','message'=>'You are running an out-of-date version of Reason ('.$version.'). Please update it to the latest stable version ('.$current.').','url'=>'http://reasoncms.org/get-started/download/','status'=>200);
 				break;
 			case 'current':
 				return array('code'=>'version_up_to_date','message'=>'Your version of Reason is up to date.','url'=>'','status'=>200);

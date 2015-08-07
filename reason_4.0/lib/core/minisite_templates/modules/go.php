@@ -35,6 +35,10 @@ class GoModule extends DefaultMinisiteModule
 			{
 				$go->send_email();
 			}
+			elseif( $this->request['action'] == 'replace' )
+			{
+				$go->replace_entry();
+			}
 		}
 		else
 		{

@@ -22,7 +22,7 @@ require_once PLASMATURE_TYPES_INC."default.php";
 class optionType extends defaultType
 {
 	var $type = 'option';
-	var $type_valid_args = array('options', 'sort_options','disabled_options','add_empty_value_to_top');
+	var $type_valid_args = array('options', 'sort_options','disabled_options','add_empty_value_to_top', 'add_other', 'other_label', 'other_options');
 	/**
 	 * The possible values of this element.
 	 * Format: value as it should be stored => value as it should be displayed.
@@ -45,6 +45,19 @@ class optionType extends defaultType
 	 */
 	var $sort_options = true;
 	var $add_empty_value_to_top = false;
+	/**
+	 * Whether to add an "Other" option to the end of the options list
+	 */
+	var $add_other = false;
+	/**
+	 * Default label text for the Other option
+	 */
+	var $other_label = 'Other: ';
+	/**
+	 * If this is set to an array, the other option will allow the user to choose from one of the values;
+	 * otherwise, the user can enter anything at all.
+	 */
+	var $other_options = array();
 	
 	protected function _array_val_ok()
 	{
@@ -64,16 +77,11 @@ class optionType extends defaultType
 		{
 			$this->set_options( $this->options );
 		}
-		//pray($this->options);
-		/* if($this->add_empty_value_to_top)
-			$this->options = array(''=>'--') + $this->options; */
 		$this->load_options();
 		if($this->sort_options)
 		{
-			//echo $this->type.' '.$this->name.' sorting<br />';
 			asort( $this->options );
 		}
-		//pray($this->options);
 	}
 	/**
 	 *  Hook for child classes that have a default set of options (e.g. {@link stateType}, {@link languageType}).
@@ -130,10 +138,20 @@ class optionType extends defaultType
 	 */
 	function get_value_for_display()
 	{
-		if(!empty($this->value) && !empty($this->options[$this->value]))
-			return $this->options[$this->value];
-		else
-			return false;
+		if (!empty($this->value))
+		{
+			if (!empty($this->options[$this->value]))
+				return $this->options[$this->value];
+			
+			if ($this->add_other)
+			{
+				if ($this->other_options && !empty($this->other_options[$this->value]))
+					return $this->other_options[$this->value];
+				else if (empty($this->other_options))
+					return $this->value;
+			}
+		}
+		return false;
 	}
 	
 	
@@ -146,6 +164,32 @@ class optionType extends defaultType
 	{
 		$value = parent::grab_value();
 		
+		/* We can detect that the Other field has content for us if:
+		   1. $value['__other__'] is set (radio groups)
+		   2. '__other__' is an array value in $value (checkbox groups)
+		   3. $value = '__other__'
+		   */
+		if ($this->add_other && ((is_array($value) && (isset($value['__other__']) || array_search('__other__', $value))) || $value == '__other__' ))
+		{
+			$http_vars = $this->get_request();
+			if ( !empty( $http_vars[ $this->name .'_other' ] ) )
+			{
+				$other_value = trim($http_vars[ $this->name .'_other' ]);
+				if ($this->_array_val_ok() && is_array($value))
+				{
+					$value[$this->name .'_other'] = $other_value;
+					if (isset($value['__other__']))
+						unset($value['__other__']);
+					else if ($key = array_search('__other__', $value))
+						unset($value[$key]);
+				}
+				elseif ($this->_string_val_ok())
+					$value = $other_value;
+				elseif (!$this->_string_val_ok() && $this->_array_val_ok())
+					$value = array($other_value);
+			}
+		}
+
 		if($this->_array_val_ok() && !empty($this->disabled_options) )
 		{
 			$val_array = is_array($this->value) ? $this->value : array($this->value);
@@ -182,6 +226,7 @@ class optionType extends defaultType
 		}
 		return NULL;
 	}
+		
 	protected function _validate_submitted_value($value)
 	{
 		// NULL is always OK?
@@ -191,6 +236,15 @@ class optionType extends defaultType
 		if($this->add_empty_value_to_top && '' === $value)
 			return true;
 		
+		// If Other entry is enabled, the value is either one of other_options or anything at all
+		if ($this->add_other && !isset($this->options[$value]))
+		{
+			if (!empty($this->other_options) && !isset($this->other_options[$value]))
+				return false;
+			else
+				return true;
+		}
+
 		if(!isset($this->options[$value]))
 		{
 			trigger_error('Unrecognized value -- ('.gettype($value).') "'.$value.'" -- submitted for '.$this->name.'. This may be an attempt to probe for vulnerabilities. Future changes to plasmature will likely block unrecognized values like this.' );
@@ -262,6 +316,18 @@ class optionType extends defaultType
 		
 		return isset($this->options[$value]);
 	}
+
+	/**
+	  * Make sure the other value is visible in the request
+	  **/
+	function get_cleanup_rules()
+	{
+		$rules = parent::get_cleanup_rules();
+		if ($this->add_other)
+			return array_merge($rules, array( $this->name . '_other' => array('function' => 'turn_into_string' )));
+		else
+			return $rules;
+	}
 	
 	/* function set( $value )
 	{
@@ -305,8 +371,10 @@ class option_no_sortType extends optionType
 class radioType extends optionType
 {
 	var $type = 'radio';
-	var $type_valid_args = array( 'sub_labels' );
+	var $type_valid_args = array( 'sub_labels', 'tableless' );
 	var $sub_labels = array();
+	var $tableless = false;
+	
 	protected function _array_val_ok()
 	{
 		return false;
@@ -315,37 +383,97 @@ class radioType extends optionType
 	{
 		$i = 0;
 		$str = '<div id="'.$this->name.'_container" class="radioButtons">'."\n";
-		$str .= '<table border="0" cellpadding="1" cellspacing="0">'."\n";
+		if (!$this->tableless) $str .= '<table border="0" cellpadding="1" cellspacing="0">'."\n";
+		$checked = false;
 		if($this->add_empty_value_to_top)
 		{
-			$str .= $this->_get_radio_row('','--',$i++);
+			$str .= $this->_get_radio_item('','--',$i++);
+			if ( '' === $this->value ) $checked = true;
 		}
 		foreach( $this->options as $key => $val )
 		{
-			if (!empty($this->sub_labels[$key])) $str .= $this->_get_sub_label_row($key);
-			$str .= $this->_get_radio_row($key,$val,$i++);
+			if (!empty($this->sub_labels[$key])) $str .= $this->_get_sub_label_item($key);
+			$str .= $this->_get_radio_item($key,$val,$i++);
+			if ( $this->_is_current_value($key) ) $checked = true;
 		}
-		$str .= '</table>'."\n";
+		if ($this->add_other) $str .= $this->_get_other_item($i++, $checked);
+		if (!$this->tableless) $str .= '</table>'."\n";
 		$str .= '</div>'."\n";
 		return $str;
 	}
-	protected function _get_radio_row($key,$val,$count)
+	
+	protected function _get_radio_item($key,$val,$count)
 	{
 		$str = '';
 		$id = 'radio_'.$this->name.'_'.$count;
-		$str .= '<tr>'."\n".'<td valign="top"><input type="radio" id="'.$id.'" name="'.$this->name.'" value="'.htmlspecialchars($key, ENT_QUOTES).'"';
+		if ($this->tableless)
+			$str .= '<div class="radioItem"><span class="radioButton"><input type="radio" id="'.$id.'" name="'.$this->name.'" value="'.htmlspecialchars($key, ENT_QUOTES).'"';
+		else
+			$str .= '<tr>'."\n".'<td valign="top"><input type="radio" id="'.$id.'" name="'.$this->name.'" value="'.htmlspecialchars($key, ENT_QUOTES).'"';
+			
 		if ( $this->_is_current_value($key) )
 			$str .= ' checked="checked"';
 		if ( $this->_is_disabled_option($key) )
 			$str .= ' disabled="disabled"';
-		$str .= ' /></td>'."\n".'<td valign="top"><label for="'.$id.'">'.$val.'</label></td>'."\n".'</tr>'."\n";
+		if ($this->tableless)
+			$str .= ' /></span><label for="'.$id.'">'.$val.'</label></div> '."\n";
+		else
+			$str .= ' /></td>'."\n".'<td valign="top"><label for="'.$id.'">'.$val.'</label></td>'."\n".'</tr>'."\n";
 		return $str;
 	}
 	
-	protected function _get_sub_label_row($key)
+	protected function _get_sub_label_item($key)
 	{
 		if (!empty($this->sub_labels[$key]))
-			return '<tr class="sublabel">'."\n".'<td colspan="2">'.$this->sub_labels[$key].'</td>'."\n".'</tr>'."\n";
+		{
+			if ($this->tableless)
+				return '<div class="radioItem sublabel">'.$this->sub_labels[$key].'</div>'."\n";
+			else
+				return '<tr class="sublabel">'."\n".'<td colspan="2">'.$this->sub_labels[$key].'</td>'."\n".'</tr>'."\n";
+		}
+	}
+	
+	protected function _get_other_item($count, $checked)
+	{
+		$id = 'radio_'.$this->name.'_'.$count;
+		if ($this->tableless)
+			$str = '<div class="radioItem radioItemOther"><span class="radioButton"><input type="radio" id="'.$id.'" name="'.$this->name.'" value="__other__"';
+		else
+			$str = '<tr>'."\n".'<td valign="top"><input type="radio" id="'.$id.'" name="'.$this->name.'" value="__other__"';
+		
+		if ( !$checked && $this->value)
+		{
+			$other_value = $this->value;
+			$str .= ' checked="checked"';
+		} else {
+			$other_value = '';
+		}
+		
+		if ($this->tableless)
+			$str .= ' /></span><label for="'.$id.'">'.$this->other_label.'</label> '."\n";
+		else
+			$str .= '></td>'."\n".'<td valign="top"><label for="'.$id.'">'.$this->other_label.'</label>';
+		
+		if (empty($this->other_options))
+		{
+			$str .= '<input type="text" name="'.$this->name.'_other" value="'.str_replace('"', '&quot;', $other_value).'"  />';
+		}
+		else
+		{
+			$str .= '<select name="'.$this->name.'_other" class="other">';
+			foreach($this->other_options as $k => $v)
+			{
+				$selected = ($k == $other_value) ? ' selected="selected"' : '';
+				$str .= '<option value="'.htmlspecialchars($k, ENT_QUOTES).'"'.$selected.'>'.strip_tags($v).'</option>'."\n";
+			}
+			$str .= '</select>';
+		}
+		if ($this->tableless)
+			$str .= '</div>'."\n";
+		else
+			$str .= '</td>'."\n".'</tr>'."\n";
+		
+		return $str;
 	}
 }
 
@@ -354,51 +482,10 @@ class radioType extends optionType
  * @package disco
  * @subpackage plasmature
  */
-class radio_inlineType extends optionType
+class radio_inlineType extends radioType
 {
 	var $type = 'radio_inline';
-	var $type_valid_args = array( 'sub_labels' );
-	var $sub_labels = array();
-
-	protected function _array_val_ok()
-	{
-		return false;
-	}
-	function get_display()
-	{
-		$i = 0;
-		$str = '<div id="'.$this->name.'_container" class="radioButtons inlineRadioButtons">'."\n";
-		if($this->add_empty_value_to_top)
-		{
-			$str .= $this->_get_radio_span('','--',$i++);
-		}
-		foreach( $this->options as $key => $val )
-		{
-			if (!empty($this->sub_labels[$key])) $str .= $this->_get_sub_label_span($key);
-			$str .= $this->_get_radio_span($key,$val,$i++);
-		}
-		$str .= '</div>'."\n";
-		return $str;
-	}
-	
-	protected function _get_radio_span($key,$val,$count)
-	{
-		$str = '';
-		$id = 'radio_'.$this->name.'_'.$count;
-		$str .= '<span class="radioItem"><span class="radioButton"><input type="radio" id="'.$id.'" name="'.$this->name.'" value="'.htmlspecialchars($key, ENT_QUOTES).'"';
-		if ( $this->_is_current_value($key) )
-			$str .= ' checked="checked"';
-		if ( $this->_is_disabled_option($key) )
-			$str .= ' disabled="disabled"';
-		$str .= ' /></span> <label for="'.$id.'">'.$val.'</label></span> '."\n";
-		return $str;
-	}
-
-	protected function _get_sub_label_span($key)
-	{
-		if (!empty($this->sub_labels[$key]))
-			return '<span class="radioItem sublabel">'.$this->sub_labels[$key].'</span>'."\n";
-	}
+	var $tableless = true;
 }
 
 /**
@@ -417,11 +504,11 @@ class radio_no_sortType extends radioType
  * @package disco
  * @subpackage plasmature
  */
-class radio_inline_no_sortType extends radio_inlineType
+class radio_inline_no_sortType extends radioType
 {
 	var $type = 'radio_inline_no_sort';
+	var $tableless = true;
 	var $sort_options = false;
-	
 }
 
 /**
@@ -429,119 +516,10 @@ class radio_inline_no_sortType extends radio_inlineType
  * @package disco
  * @subpackage plasmature
  */
-class radio_with_otherType extends optionType
+class radio_with_otherType extends radioType
 {
 	var $type = 'radio_with_other';
-	var $other_label = 'Other: ';
-	var $other_options = array();
-	var $type_valid_args = array( 'other_label', 'other_options' );
-	protected function _array_val_ok()
-	{
-		return false;
-	}
-	function get_display()
-	{
-		$i = 0;
-		$str = '<div id="'.$this->name.'_container" class="radioButtons">'."\n";
-		$str .= '<table border="0" cellpadding="1" cellspacing="0">'."\n";
-		$checked = false;
-		if($this->add_empty_value_to_top)
-		{
-			$str .= $this->_get_radio_row('','--',$i++);
-			if ( '' === $this->value )
-				$checked = true;
-		}
-		foreach( $this->options as $key => $val )
-		{
-			$str .= $this->_get_radio_row($key,$val,$i++);
-			if ( $this->_is_current_value($key) )
-				$checked = true;
-		}
-		$id = 'radio_'.$this->name.'_'.$i++;
-		$str .= '<tr>'."\n".'<td valign="top"><input type="radio" id="'.$id.'" name="'.$this->name.'" value="__other__"';
-		if ( !$checked && $this->value)
-		{
-			$other_value = $this->value;
-			$str .= ' checked="checked"';
-		} else {
-			$other_value = '';
-		}
-		$str .= '></td>'."\n".'<td valign="top"><label for="'.$id.'">'.$this->other_label.'</label>';
-		if(empty($this->other_options))
-		{
-			$str .= '<input type="text" name="'.$this->name.'_other" value="'.str_replace('"', '&quot;', $other_value).'"  />';
-		}
-		else
-		{
-			$str .= '<select name="'.$this->name.'_other" class="other">';
-			foreach($this->other_options as $k => $v)
-			{
-				$selected = ($k == $other_value) ? ' selected="selected"' : '';
-				$str .= '<option value="'.htmlspecialchars($k, ENT_QUOTES).'"'.$selected.'>'.strip_tags($v).'</option>'."\n";
-			}
-			$str .= '</select>';
-		}
-		$str .= '</td>'."\n".'</tr>'."\n";
-		$str .= '</table>'."\n";
-		$str .= '</div>'."\n";
-		return $str;
-	}
-	protected function _get_radio_row($key,$val,$count)
-	{
-		$str = '';
-		$id = 'radio_'.$this->name.'_'.$count;
-		$str .= '<tr>'."\n".'<td valign="top"><input type="radio" id="'.$id.'" name="'.$this->name.'" value="'.htmlspecialchars($key, ENT_QUOTES).'"';
-		if ( $this->_is_current_value($key) )
-			$str .= ' checked="checked"';
-		if ( $this->_is_disabled_option($key) )
-			$str .= ' disabled="disabled"';
-		$str .= ' /></td>'."\n".'<td valign="top"><label for="'.$id.'">'.$val.'</label></td>'."\n".'</tr>'."\n";
-		return $str;
-	}
-	function grab_value()
-	{
-		$return = parent::grab_value();
-		if ($return == '__other__')
-		{
-			$http_vars = $this->get_request();
-			if ( isset( $http_vars[ $this->name .'_other' ] ) )
-			{
-				$return = trim($http_vars[ $this->name .'_other' ]);
-				if(!empty($this->other_options) && !isset($this->other_options[$return]))
-					$this->set_error(strip_tags($this->display_name).': Please choose a value other than "'.htmlspecialchars($return,ENT_QUOTES).'".');
-				if($this->_is_disabled_option($return) && !$this->_is_current_value($return))
-					$this->set_error(strip_tags($this->display_name).': Please choose a value other than "'.htmlspecialchars($return,ENT_QUOTES).'".');
-			}
-			else
-				$return = NULL;
-		}
-		
-		return $return;
-	}
-	
-	protected function _validate_submitted_value($value)
-	{
-		if('__other__' == $value)
-		{
-			return true;
-		}
-		return parent::_validate_submitted_value($value);
-	}
-	function set( $value )
-	{
-		$this->value = $value;
-	}
-
-	/**
-	  * Make sure the other value is visible in the request
-	  **/
-	function get_cleanup_rules()
-	{
-		return array( 
-			$this->name => array('function' => 'turn_into_string' ),
-			$this->name . '_other' => array('function' => 'turn_into_string' ),
-			);
-	}
+	var $add_other = true;
 }
 
 /**
@@ -549,9 +527,30 @@ class radio_with_otherType extends optionType
  * @package disco
  * @subpackage plasmature
  */
-class radio_with_other_no_sortType extends radio_with_otherType
+class radio_with_other_no_sortType extends radioType
 {
 	var $type = 'radio_with_other_no_sort';
+	var $add_other = true;
+	var $sort_options = false;
+}
+
+class radio_inline_with_otherType extends radioType
+{
+	var $type = 'radio_inline_with_other';
+	var $tableless = true;
+	var $add_other = true;
+}
+
+/**
+ * Same as {@link radio_inline_with_otherType}, but doesn't sort {@link options}.
+ * @package disco
+ * @subpackage plasmature
+ */
+class radio_inline_with_other_no_sortType extends radioType
+{
+	var $type = 'radio_inline_with_other_no_sort';
+	var $tableless = true;
+	var $add_other = true;
 	var $sort_options = false;
 }
 
@@ -564,6 +563,10 @@ class radio_with_other_no_sortType extends radio_with_otherType
 class checkboxgroupType extends optionType
 {
 	var $type = 'checkboxgroup';
+	var $type_valid_args = array( 'sub_labels', 'tableless' );
+	var $sub_labels = array();
+	var $tableless = false;
+
 	protected function _string_val_ok()
 	{
 		return false;
@@ -571,34 +574,114 @@ class checkboxgroupType extends optionType
 	function get_display()
 	{
 		$str = '<div class="checkBoxGroup">'."\n";
-		$str .= '<table border="0" cellpadding="1" cellspacing="0">'."\n";
+		if (!$this->tableless) $str .= '<table border="0" cellpadding="1" cellspacing="0">'."\n";
 		$i = 0;
 		
 		if($this->add_empty_value_to_top)
 		{
-			$str .= $this->_get_checkbox_row('','--',$i++);
+			$str .= $this->_get_checkbox_item('','--',$i++);
 		}
+		
 		foreach( $this->options as $key => $val )
 		{
-			$str .= $this->_get_checkbox_row($key,$val,$i++);
+			if (!empty($this->sub_labels[$key])) $str .= $this->_get_sub_label_item($key);
+			$str .= $this->_get_checkbox_item($key,$val,$i++);
 		}
-		$str .= '</table>'."\n";
+		
+		if ($this->add_other) $str .= $this->_get_other_item($i++);
+		
+		if (!$this->tableless) $str .= '</table>'."\n";
 		$str .= '</div>'."\n";
 		return $str;
 	}
 	
-	protected function _get_checkbox_row($key,$val,$count)
+	protected function _get_checkbox_item($key,$val,$count)
 	{
 		$id = 'checkbox_'.$this->name.'_'.$count;
-		$str = '';
-		$str .= '<tr><td valign="top"><input type="checkbox" id="'.$id.'" name="'.$this->name.'['.$count.']" value="'.htmlspecialchars($key, ENT_QUOTES).'"';
+		if ($this->tableless)
+			$str = '<div class="checkboxItem">';
+		else
+			$str = '<tr><td valign="top">';
+			
+		$str .= '<input type="checkbox" id="'.$id.'" name="'.$this->name.'['.$count.']" value="'.htmlspecialchars($key, ENT_QUOTES).'"';
+
 		if ( $this->_is_current_value($key) )
 			$str .= ' checked="checked"';
 		if ( $this->_is_disabled_option($key) )
 			$str .= ' disabled="disabled"';
-		$str .= ' /></td><td valign="top"><label for="'.$id.'">'.$val."</label></td></tr>\n";
+		
+		if ($this->tableless)
+			$str .= ' />';
+		else
+			$str .= ' /></td><td valign="top">';
+		
+		$str .= '<label for="'.$id.'">'.$val.'</label>';
+		
+		if ($this->tableless)
+			$str .= '</div>'."\n";
+		else
+			$str .= '</td></tr>'."\n";
+			
 		return $str;
 	}
+	
+	protected function _get_other_item($count)
+	{
+		// Identify any set values that aren't supported by the option list
+		if (is_array($this->value))
+			$val_array = $this->value;
+		else if (!empty($this->value))
+			$val_array = array($this->value);
+		else
+			$val_array = array();
+			
+		$value = array_diff($val_array, array_keys($this->options));
+		
+		$id = 'checkbox_'.$this->name.'_'.$count;
+		
+		if ($this->tableless)
+			$str = '<div class="checkboxItem checkboxItemOther">'."\n";
+		else
+			$str = '<tr>'."\n".'<td valign="top">';
+			
+		$str .= '<span class="checkBox"><input type="checkbox" id="'.$id.'" name="'.$this->name.'['.$count.']" value="__other__"';
+		
+		if (!empty($value))
+		{
+			$other_value = reset($value);
+			$str .= ' checked="checked"';
+		} else {
+			$other_value = '';
+		}
+		
+		if ($this->tableless)
+			$str .= ' /></span>';
+		else
+			$str .= ' /></td><td valign="top">';
+		
+		$str .= '<label for="'.$id.'">'.$this->other_label.'</label>';
+		
+		$str .= '<input type="text" name="'.$this->name.'_other" value="'.str_replace('"', '&quot;', $other_value).'"  />';
+		
+		if ($this->tableless)
+			$str .= '</div>'."\n";
+		else
+			$str .= '</td></tr>'."\n";
+			
+		return $str;
+	}
+	
+	protected function _get_sub_label_item($key)
+	{
+		if (!empty($this->sub_labels[$key]))
+		{
+			if ($this->tableless)
+				return '<div class="checkboxItem sublabel">'.$this->sub_labels[$key].'</div>'."\n";
+			else
+				return '<tr class="sublabel">'."\n".'<td colspan="2">'.$this->sub_labels[$key].'</td>'."\n".'</tr>'."\n";
+		}
+	}
+	
 	/**
 	 * Finds the value of this element from userland (in {@link _request}) and returns it
 	 * @return mixed array, integer, or string if available, otherwise NULL if no value from userland
@@ -644,7 +727,9 @@ class checkboxgroupType extends optionType
 	}
 	function get_cleanup_rules()
 	{
-		return array( $this->name => array('function' => 'turn_into_array' ));
+		$rules = parent::get_cleanup_rules();
+		$rules[$this->name] = array('function' => 'turn_into_array' );
+		return $rules;
 	}
 }
 
@@ -667,84 +752,7 @@ class checkboxgroup_no_sortType extends checkboxgroupType
 class checkboxgroup_with_otherType extends checkboxgroupType
 {
 	var $type = 'checkboxgroup_with_other';
-	var $other_label = 'Other: ';
-	var $type_valid_args = array( 'other_label' );
-
-	function get_display()
-	{
-		$str = '<div class="checkBoxGroup">'."\n";
-		$str .= '<table border="0" cellpadding="1" cellspacing="0">'."\n";
-		$i = 0;
-		$value = $this->value;
-		foreach( $this->options as $key => $val )
-		{
-			$id = 'checkbox_'.$this->name.'_'.$i;
-			$str .= '<tr><td valign="top"><input type="checkbox" id="'.$id.'" name="'.$this->name.'['.$i.']" value="'.htmlspecialchars($key, ENT_QUOTES).'"';
-			if ( is_array($value) ) {
-				$value_key = array_search($key, $value);
-				if ( $value_key !== false )
-				{
-					$str .= ' checked="checked"';
-					unset($value[$value_key]);
-				}
-			}
-			else {
-				if ( $key == $value )
-				{
-					$str .= ' checked="checked"';
-					unset($value);
-				}
-			}
-			$str .= ' /></td><td valign="top"><label for="'.$id.'">'.$val."</label></td></tr>\n";
-			$i++;
-		}
-		$id = 'checkbox_'.$this->name.'_'.$i;
-		$str .= '<tr>'."\n".'<td valign="top"><input type="checkbox" id="'.$id.'" name="'.$this->name.'['.$i.']" value="other"';
-		
-		// We've been unsetting the values as we used them above, so if anything's left, it's for the other field.
-		if (!empty($value))
-		{
-			$other_value = (is_array($value)) ? reset($value) : $value;
-			$str .= ' checked="checked"';
-		} else {
-			$other_value = '';
-		}
-		$str .= '></td>'."\n".'<td valign="top"><label for="'.$id.'">'.$this->other_label.'</label>';
-		$str .= '<input type="text" name="'.$this->name.'_other" value="'.str_replace('"', '&quot;', $other_value).'"  /></td>'."\n".'</tr>'."\n";
-		$str .= '</table>'."\n";
-		$str .= '</div>'."\n";
-		return $str;
-	}
-	
-	/**
-	 * Inject other values back into the return array
-	 **/
-	function grab()
-	{
-		$request = $this->get_request();
-		if ( !isset($request[ $this->name ]) )
-			$this->set( array() );
-		else
-		{
-			$key = array_search('other',$request[ $this->name ]);
-			if ($key !== false)
-			{
-				if (isset($request[ $this->name.'_other']))
-					$request[ $this->name ][$key] = trim($request[ $this->name.'_other']);
-			}
-			$this->set( $request[ $this->name ] );
-		}
-	}
-	/**
-	  * Make sure the other value is visible in the request
-	  **/
-	function get_cleanup_rules()
-	{
-		return array( 
-			$this->name => array('function' => 'turn_into_array' ),
-			$this->name . '_other' => array('function' => 'turn_into_string' ),
-			);
-	}
+	var $add_other = true;
 }
 
 /**
@@ -766,36 +774,7 @@ class checkboxgroup_with_other_no_sortType extends checkboxgroup_with_otherType
 class checkboxgroup_inlineType extends checkboxgroupType
 {
 	var $type = 'checkboxgroup_inline';
-
-	function get_display()
-	{
-		$str = '<div class="checkBoxGroup">'."\n";
-		$i = 0;
-		
-		if($this->add_empty_value_to_top)
-		{
-			$str .= $this->_get_checkbox_row('','--',$i++);
-		}
-		foreach( $this->options as $key => $val )
-		{
-			$str .= $this->_get_checkbox_row($key,$val,$i++);
-		}
-		$str .= '</div>'."\n";
-		return $str;
-	}
-	
-	protected function _get_checkbox_row($key,$val,$count)
-	{
-		$id = 'checkbox_'.$this->name.'_'.$count;
-		$str = '';
-		$str .= '<span class="checkboxItem"><span class="checkBox"><input type="checkbox" id="'.$id.'" name="'.$this->name.'['.$count.']" value="'.htmlspecialchars($key, ENT_QUOTES).'"';
-		if ( $this->_is_current_value($key) )
-			$str .= ' checked="checked"';
-		if ( $this->_is_disabled_option($key) )
-			$str .= ' disabled="disabled"';
-		$str .= ' /></span><label for="'.$id.'">'.$val."</label></span>\n";
-		return $str;
-	}	
+	var $tableless = true;
 }
 
 /**

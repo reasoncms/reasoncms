@@ -44,13 +44,10 @@ class MinisitePageManager extends parent_childManager
 	{
 		parent::init_head_items();
 		if ($this->has_url()) {
-			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.
-				'content_managers/page_parent_url.js');
+			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'content_managers/page_parent_url.js');
+			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'content_managers/page.js');
 		}
-		$this->head_items->add_stylesheet(REASON_ADMIN_CSS_DIRECTORY.
-				'content_managers/minisite_page.css');
-		$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.
-				'content_managers/page.js');
+		$this->head_items->add_stylesheet(REASON_ADMIN_CSS_DIRECTORY.'content_managers/minisite_page.css');
 	}
 	
 	/**
@@ -61,7 +58,7 @@ class MinisitePageManager extends parent_childManager
 	 */
 	function has_url()
 	{
-		return !$this->get_value('is_link');
+		return !($this->get_value('is_link') || !empty( $_REQUEST[ 'is_link' ]));
 	}
 	
 	/**
@@ -217,22 +214,22 @@ class MinisitePageManager extends parent_childManager
 		
 		if( reason_user_has_privs( $this->admin_page->user_id, 'publish' ) )
 		{
-			if( $this->get_value( 'parent_id' ) != $this->admin_page->id AND !$this->is_new_entity() )
+			if( !$this->is_new_entity() )
 			{
 				$this->change_element_type( 'state','select',array( 'options' => array( 'Live' => 'Live', 'Pending' => 'Pending' ) ) );
 				$this->add_required( 'state' );
 			} 
-			/* Why are we creating a special new state element for new pages? Figure out if we can
-			   just use the state element all the time. */
-			elseif ( $this->is_new_entity() )
+			else
 			{
+				/* Why are we creating a special new state element for new pages? Figure out if we can
+			   	just use the state element all the time. */
 				$this->add_element( 'state_action','select',array( 'options' => array( 'Live' => 'Live','Pending' => 'Pending' ), 'default' => 'Live' ) );
 				$this->set_display_name( 'state_action', 'state' );
 				$this->add_required( 'state_action' );
 			}
 		}	
-
-		if ($this->entity->has_right_relation_of_type('minisite_page_parent') && $this->get_value('state') == 'Live')
+		$is_home = $this->get_value( 'id' ) == $this->get_value('parent_id');
+		if ($this->entity->has_right_relation_of_type('minisite_page_parent') && $this->get_value('state') == 'Live' && (!$is_home || count($this->entity->get_right_relationship('minisite_page_parent')) > 1 ) )
 		{
 			$this->set_comments('state', form_comment('The state cannot be changed because this page has live children'));
 			$this->change_element_type('state', 'solidtext');
@@ -313,7 +310,7 @@ class MinisitePageManager extends parent_childManager
 		else
 		{
 			// loop through all elements making them hidden, except for the important link fields
-			$fields = array( 'name', 'url', 'parent_id', 'nav_display', 'description' );
+			$fields = array( 'name', 'url', 'parent_id', 'nav_display', 'description', 'administrator_section_heading', 'unique_name', );
 			foreach($this->get_element_names() as $element_name)
 			{
 				if( !in_array( $element_name, $fields ) )

@@ -77,6 +77,9 @@ class AdminPage
 	// logged in user
 	var $authenticated_user_id = false;
 	
+	// for performance tracking:
+	var $start_time;
+	
 	/**
 	 * Sites the current user has access to
 	 *
@@ -102,6 +105,8 @@ class AdminPage
 	
 	function AdminPage( ) // {{{
 	{
+		$this->start_time = microtime(true);
+		
 		// init what to show.  by default, show everything.
 		$this->show = array(
 			'leftbar' => true,
@@ -1456,7 +1461,7 @@ class AdminPage
 		}
 		else
 		{
-			echo 'You are <strong>' . $user->get_value( 'name' ) .'</strong>';
+			echo 'You are <strong>' . reason_htmlspecialchars($user->get_value( 'name' )) .'</strong>';
 			if ($show_logout) echo ': <strong><a href="'.REASON_LOGIN_URL.'?logout=true" class="bannerLink">Logout</a></strong>';
 		}
 	} // }}}
@@ -1518,6 +1523,14 @@ class AdminPage
 	{
 		echo '</td></tr></table>' . "\n";
 		echo '</div>'."\n";
+		
+		if (defined('THIS_IS_A_DEVELOPMENT_REASON_INSTANCE') && THIS_IS_A_DEVELOPMENT_REASON_INSTANCE)
+		{
+			echo '<div id="reasonDeveloper" style="background-color:#ddd;color:#555;font-size:0.75em;padding:1px 1em;">';
+			$time = round((microtime(true) - $this->start_time)*1000, 2);
+			printf('<p>%s ms | %s</p>', $time, format_bytes_as_human_readable(memory_get_peak_usage(true)));
+			echo '</div>';
+		}
 		echo '</body>' . "\n";
 		echo '</html>' . "\n";
 	}

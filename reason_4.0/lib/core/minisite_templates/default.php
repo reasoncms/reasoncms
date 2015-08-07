@@ -35,6 +35,7 @@ reason_include_once( 'classes/crumbs.php' );
 reason_include_once( 'classes/api/factory.php' );
 reason_include_once( 'classes/object_cache.php' );
 reason_include_once( 'classes/canonicalizer.php' );
+reason_include_once( 'classes/title_tag_parser.php' );
 include_once( CARL_UTIL_INC . 'dev/timer.php' );
 
 /**
@@ -216,14 +217,6 @@ class MinisiteTemplate
 	 * @todo clean up modules so that this can be a private variable
 	 */
 	var $head_items;
-	/**
-	 * A simple boolean that controls whether the default org name (the constant
-	 * FULL_ORGANIZATION_NAME, set in  settings/package_settings.php ) should be placed in the
-	 * title of the page.
-	 * @var boolean
-	 * @access private
-	 */
-	var $use_default_org_name_in_page_title = false;
 	/**
 	 * This is a boolean that sends the default module into two different modes --
 	 * table-based or non-table-based
@@ -637,9 +630,11 @@ class MinisiteTemplate
 		// value: meta tag to use
 		$meta_tags = array(
 			'description' => 'description',
-			'author' => 'author',
-			'keywords' => 'keywords'
+			'author' => 'author'
 		);
+
+		if ( REASON_SHOW_META_KEYWORDS )
+			$meta_tags['keywords'] = 'keywords';
 
 		// load meta elements from current page
 
@@ -654,7 +649,9 @@ class MinisiteTemplate
 			}
 		}
 
-		if(!in_array('keywords',$tags_added) && $this->pages->root_node() == $this->page_id)
+		if ( !in_array('keywords',$tags_added)
+			&& $this->pages->root_node() == $this->page_id
+			&& REASON_SHOW_META_KEYWORDS )
 		{
 			$content = reason_htmlspecialchars( $this->site_info->get_value( 'keywords' ) );
 			$this->head_items->add_head_item('meta',array('name'=>'keywords','content'=>$content) );
@@ -1071,42 +1068,57 @@ class MinisiteTemplate
 	{
 		$classes = array();
 		$classes[] = 'fullGraphics';
-		if($this->pages->root_node() == $this->page_id)
+		if($this->is_minisite_home_page())
 			$classes[] = 'siteHome';
 		if($this->page_info->get_value('unique_name'))
 			$classes[] = 'uname_'.$this->page_info->get_value('unique_name');
 		return $classes;
 	}
+
 	function get_doctype()
 	{
 		 return $this->doctype;
 	}
 
-	function get_title()
+	function is_minisite_home_page ()
 	{
-		$ret = '';
-		if($this->use_default_org_name_in_page_title)
-		{
-			$ret .= FULL_ORGANIZATION_NAME.': ';
-		}
-		$ret .= $this->site_info->get_value('name');
+		return $this->pages->root_node() == $this->page_id;
+	}
 
-		if(carl_strtolower($this->site_info->get_value('name')) != carl_strtolower($this->title))
-		{
-			$ret .= ": " . $this->title;
-		}
+	function is_secondary_page ()
+	{
+		return !$this->is_minisite_home_page() && !$this->is_item_page();
+	}
+
+	function is_item_page ()
+	{
 		$crumbs = &$this->_get_crumbs_object();
-		// Take the last-added crumb and add it to the page title
-		if($last_crumb = $crumbs->get_last_crumb() )
-		{
-			if(empty($last_crumb['id']) || $last_crumb['id'] != $this->page_id)
-			{
-				$ret .= ': '.$last_crumb['page_name'];
-			}
-		}
-		$ret = reason_htmlspecialchars(strip_tags($ret));
-		$this->head_items->add_head_item('title',array(),$ret, true);
-		//return $ret;
+		$last_crumb = $crumbs->get_last_crumb();
+		return empty($last_crumb['id']) || $last_crumb['id'] != $this->page_id;
+	}
+
+	function get_title_tag_pattern_for ($zone)
+	{
+		$zone_key = $zone .'_title_pattern';
+
+		if ( array_key_exists($zone_key, $this->site_info->_values) && $this->site_info->_values[$zone_key] )
+			return $this->site_info->_values[$zone_key];
+
+		return constant('REASON_' . strtoupper($zone) . '_TITLE_PATTERN');
+	}
+
+	function get_title ()
+	{
+		if ( $this->is_minisite_home_page() )
+			$pattern = 'home';
+		elseif ( $this->is_secondary_page() )
+			$pattern = 'secondary';
+		elseif ( $this->is_item_page() )
+			$pattern = 'item';
+
+		$parser = new TitleTagParser($this->get_title_tag_pattern_for($pattern), $this);
+
+		$this->head_items->add_head_item('title', array(), $parser->render(), true);
 	}
 
 	/**
@@ -1697,7 +1709,7 @@ class MinisiteTemplate
 	}
 	function has_related_section()
 	{
-		if( $this->has_content( 'pre_sidebar' ) || $this->has_content( 'sidebar' ) )
+		if( $this->has_content( 'pre_sidebar' ) || $this->has_content( 'sidebar' ) || $this->has_content( 'post_sidebar' ) )
 		{
 			return true;
 		}

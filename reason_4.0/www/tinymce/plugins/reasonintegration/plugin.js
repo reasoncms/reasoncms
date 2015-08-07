@@ -635,13 +635,14 @@ ReasonImageDialogItem.prototype.displayItem = function ( selected ) {
 
 
 
-ReasonLink = function(controlSelectors, placeholderSelector) {
+ReasonLink = function(controlSelectors, placeholderSelector, page_url) {
 	this.whenLoadedFuncs = [];
 	this._throbber;
 	this._selected = {};
 	this._disabled = {};
 	this._siteId = tinymce.activeEditor.settings.reason_site_id;
 	this._reason_http_base_path = tinymce.activeEditor.settings.reason_http_base_path;
+	this.page_url = page_url;
 	this.getControlReferences(controlSelectors, placeholderSelector);
 	this.initControlVals();
 	this.insertReasonUI();
@@ -656,22 +657,14 @@ ReasonLink.prototype.getControlReferences = function(controlSelectors, placehold
   if (!this.window) {
     this.window = this.getWindow(controlSelectors.tabPanel);
     this.targetPanel = this.getControl(placeholderSelector);
-    this.hrefControls = [this.getControl(controlSelectors.href)];
-    this.emailControl = this.getControl(controlSelectors.email);
-    this.descriptionControls = tinymce.map(controlSelectors.description, function(item) {
-      return self.getControl(item);
-    });
   }
 
   this.formControls = {
-    Anchors: this.getControl('anchors'),
+    //Sites: this.getControl('sites'),
     Pages: this.getControl('pages'),
-    //Types: this.getControl('types'),
-    Sites: this.getControl('sites'),
-    Description: this.getControl('title_3')
+    Anchors: this.getControl('anchors'),
+    Description: this.getControl('page_description')
   };
-
-  this.descriptionControls[2] = this.getControl('title_3');
 };
 /**
  * Turns an object of params to a query string. Very facile implementation.
@@ -689,17 +682,13 @@ ReasonLink.prototype.jsonURL = function (params) {
 
 ReasonLink.prototype.getFormControl = function() { return this._formControl; };
 ReasonLink.prototype.setFormControl = function(formctl) { this._formControl = formctl; };
-ReasonLink.prototype.setSites = function(sites) { this._sites = sites; };
-ReasonLink.prototype.getSites = function() { return this._sites; };
-ReasonLink.prototype.setTypes = function(types) { this._types = types; };
-ReasonLink.prototype.getTypes = function() { return this._types; };
+//ReasonLink.prototype.setSites = function(sites) { this._sites = sites; };
+//ReasonLink.prototype.getSites = function() { return this._sites; };
 ReasonLink.prototype.setPages = function(pages) { this._pages = pages; };
 ReasonLink.prototype.getPages = function() { return this._pages; };
 ReasonLink.prototype.setDesc = function(desc) {
   this._desc = desc;
-  tinymce.each(this.descriptionControls, function(v) {v.value(desc);});
 };
-ReasonLink.prototype.setHref = function(url) { this.hrefControls[0].value(url); };
 ReasonLink.prototype.getDesc = function() { return this._desc; };
 ReasonLink.prototype.setAnchors = function(anchors) { this._anchors = anchors; };
 ReasonLink.prototype.getAnchors = function() { return this._anchors; };
@@ -718,12 +707,9 @@ ReasonLink.prototype.setDisabled = function(type, value) {
     this._disabled[type] = value;
 };
 
-ReasonLink.prototype.fetchSites = function(callback) {
-  this.fetchItems({type: "siteList", site_id: this._siteId}, callback);
-};
-ReasonLink.prototype.fetchTypes = function(callback) {
-  this.fetchItems({type: "typeList", site_id: this._siteId}, callback);
-};
+//ReasonLink.prototype.fetchSites = function(callback) {
+//  this.fetchItems({type: "siteList", site_id: this._siteId}, callback);
+//};
 ReasonLink.prototype.fetchPages = function(siteId, callback) {
   this.fetchItems({type: "pageList", site_id: siteId}, callback);
 };
@@ -763,17 +749,17 @@ ReasonLink.prototype.scrapeForAnchors = function(response) {
 ReasonLink.prototype.parseItems = function (type, response) {
   var result;
   switch (type) {
-    case "anchorList":
-      result = this.scrapeForAnchors(response);
-      this.setAnchors(result);
-      break;
+//    case "siteList":
+//      result = JSON.parse(response);
+//      this.setSites([{treeName: "(Select a site)", url: "0"}].concat(result.sites));
+//      break;
     case "pageList":
       result = JSON.parse(response);
       this.setPages([{treeName: "(Select a page)", url: "0"}].concat(this.flattenTree(result, 0)));
       break;
-    case "siteList":
-      result = JSON.parse(response);
-      this.setSites([{treeName: "(Select a site)", url: "0"}].concat(result.sites));
+    case "anchorList":
+      result = this.scrapeForAnchors(response);
+      this.setAnchors(result);
       break;
   }
 };
@@ -821,9 +807,9 @@ ReasonLink.prototype.flattenTree = function(tree, depth) {
 };
 
 ReasonLink.prototype.treeName = function(page) {
-  var prefix = "";
+  var prefix = '';
     for (var i=0; i <= page.depth; i++) {
-        prefix += "—";
+        prefix += "\u2014";
     }
     return (prefix + " " + page.name);
 };
@@ -845,51 +831,13 @@ ReasonLink.prototype.updateValues = function(items, selectedItem) {
 ReasonLink.prototype.bindReasonUI = function () {
   var self = this;
 
-  this.hrefControls[0].on('change', function() {
-    self.setSelected({});
-    self.updateForm();
-  });
-
-  this.emailControl.on('change', function() {
-    self.setHref("mailto:" + self.emailControl.value());
-    self.setSelected({});
-    self.initControlVals();
-    self.updateForm();
-  });
-
-  this.descriptionControls[0].on('change', function() {
-    self.setDesc(self.descriptionControls[0].value());
-  });
-  this.descriptionControls[1].on('change', function() {
-    self.setDesc(self.descriptionControls[1].value());
-  });
-  this.descriptionControls[2].on('change', function() {
-    self.setDesc(self.descriptionControls[2].value());
-  });
-
-  this.formControls.Anchors.on('select', function(e) {
-    self.setSelected('anchor', e.control.value());
-    self.setHref(self.makeURL());
-  });
-  this.formControls.Pages.on('select', function(e) {
-    if (e.control.value() == "0")
-      return;
-    self.setSelected('page', e.control.value());
-    self.setHref(self.makeURL());
-    self.setDesc(e.control.text().replace(/\u2014* /, ""));
-    self.startThrobber();
-    self.fetchAnchors(self._siteId, e.control.value(), function() {
-      self.stopThrobber();
-      self.setDisabled('anchors', false);
-      self.updateForm();
-    });
-  });
+/*
   this.formControls.Sites.on('select', function(e) {
+    self.setSelected({});
     if (e.control.value() == "0")
       return;
-    self.emailControl.value('');
-    self.setHref('');
     self.setSelected('site', e.control.value());
+    self.setDesc('');
 	self.startThrobber();
     self.fetchPages(e.control.value(), function() {
       self.stopThrobber();
@@ -897,20 +845,41 @@ ReasonLink.prototype.bindReasonUI = function () {
       self.updateForm();
     });
   });
+*/
+
+  this.formControls.Pages.on('select', function(e) {
+    if (e.control.value() == "0")
+      return;
+    self.setSelected('page', e.control.value());
+    self.setSelected('anchor', '');
+    self.setDesc(e.control.text().replace(/\u2014* /, ''));
+    self.startThrobber();
+    self.fetchAnchors(self._siteId, e.control.value(), function() {
+      self.stopThrobber();
+      self.setDisabled('anchors', false);
+      self.updateForm();
+    });
+  });
+
+  this.formControls.Anchors.on('select', function(e) {
+    self.setSelected('anchor', e.control.value());
+  });
 };
 
 ReasonLink.prototype.initControlVals = function() {
-  this.setDisabled('pages', true);
-  this.setDisabled('anchors', true);
+  //this.setDisabled('pages', true);
+  //this.setDisabled('anchors', true);
   this.setPages([{name: "(Select a page)", url: "0"}]);
   this.setAnchors([{name: "(No anchor)", url: "0"}]);  
 };
 
 ReasonLink.prototype.makeURL = function () {
-  var page = this.getSelected().page, anchor = this.getSelected().anchor || "";
+  var page = this.getSelected().page || '';
+  var anchor = this.getSelected().anchor || '';
   return "//" + window.location.hostname + page + anchor;
 };
 
+/*
 ReasonLink.prototype.constructSites = function() {
   var sites = this.getSites(),
       selected = this.getSelected().site;
@@ -923,20 +892,7 @@ ReasonLink.prototype.constructSites = function() {
     disabled: !!this.getDisabled().sites
   };
 };
-
-ReasonLink.prototype.constructTypes = function() {
-  var types = this.getTypes(),
-      selected = this.getSelected().type;
-
-  return {
-    name: "types",
-    label: "Type",
-    type: "listbox",
-    flex: 1,
-    values: this.updateValues(types, selected),
-    disabled: !!this.getDisabled().types
-  };
-};
+*/
 
 ReasonLink.prototype.constructPages = function() {
   var pages = this.getPages();
@@ -961,7 +917,7 @@ ReasonLink.prototype.constructAnchors = function() {
     label: "Anchor",
     type: "listbox",
     flex: 1,
-    values: this.updateValues(anchors),
+    values: this.updateValues(anchors, selected),
     disabled: !!this.getDisabled().anchors
   };
 };
@@ -970,7 +926,7 @@ ReasonLink.prototype.constructDescription = function() {
   var currentDesc = this.getDesc();
 
   return {
-    name: 'title_3',
+    name: 'page_description',
     type: 'textbox',
     size: 40,
     flex: 1,
@@ -981,17 +937,15 @@ ReasonLink.prototype.constructDescription = function() {
 
 ReasonLink.prototype.constructFormObj = function() {
   var formObj = {
-    type: "form",
-    name: "reasonLinkForm",
+    type: 'form',
+    name: 'reasonLinkForm',
     items: [
-      this.constructSites(),
-      //this.constructTypes(),
+      //this.constructSites(),
       this.constructPages(),
       this.constructAnchors(),
       this.constructDescription()
     ]
   };
-  window.formObj = formObj;
   return formObj;
 };
 
@@ -1016,10 +970,55 @@ ReasonLink.prototype.getThrobber = function() {
 ReasonLink.prototype.insertReasonUI = function() {
   var self = this;
   this.startThrobber();
+/*
   this.fetchSites(function() {
   	self.stopThrobber();
     self.addFormObj(self.constructFormObj());
     self.bindReasonUI();
+  });
+*/
+  this.fetchPages(this._siteId, function() {
+    var selected_url = this.page_url;
+
+    if(selected_url)
+    {
+      var pages = this.getPages();
+
+      var anchor_idx = selected_url.indexOf('#');
+      var anchor = (anchor_idx != -1) ? selected_url.substring(anchor_idx) : '';
+
+      selected_url = selected_url.replace('//' + window.location.hostname, '');
+
+      selected_url = selected_url.replace(/#.*$/, '');
+
+      delete this.page_url;
+
+      for (var i = 0; i < pages.length; i++)
+      {
+        var page = pages[i];
+
+        if (page.url == selected_url)
+        {
+          this.setSelected('page', page.url);
+
+          this.setSelected('anchor', anchor);
+
+          this.fetchAnchors(this._siteId, page.url, function() {
+            self.stopThrobber();
+            self.addFormObj(self.constructFormObj());
+            self.bindReasonUI();
+          });
+
+          break;
+        }
+      }
+    }
+    else
+    {
+      self.stopThrobber();
+      self.addFormObj(self.constructFormObj());
+      self.bindReasonUI();
+    }
   });
 };
 
@@ -1057,6 +1056,378 @@ ReasonLink.prototype.updateForm = function() {
   this.bindReasonUI();
 };
 
+ReasonAsset = function (controlSelectors, placeholderSelector)
+{
+  this.whenLoadedFuncs = [];
+  this._throbber;
+  this._selected = {};
+  this._siteId = tinymce.activeEditor.settings.reason_site_id;
+  this._reason_http_base_path = tinymce.activeEditor.settings.reason_http_base_path;
+  this.getControlReferences(controlSelectors, placeholderSelector);
+  this.insertReasonUI();
+};
+
+ReasonAsset.prototype = new ReasonPlugin();
+
+ReasonAsset.prototype.constructor = ReasonAsset;
+
+ReasonAsset.prototype.getControlReferences = function (controlSelectors, placeholderSelector)
+{
+  var self = this;
+
+  if (!this.window)
+  {
+    this.window = this.getWindow(controlSelectors.tabPanel);
+    this.targetPanel = this.getControl(placeholderSelector);
+  }
+
+  this.formControls = {
+    Assets: this.getControl('assets'),
+    Description: this.getControl('asset_description')
+  };
+};
+
+/**
+ * Turns an object of params to a query string. Very facile implementation.
+ * @param {Object} params mapping of query variable names and values.
+ **/
+ReasonAsset.prototype.jsonURL = function (params)
+{
+  urlString = this._reason_http_base_path + 'displayers/generate_json.php?';
+
+  for (var i in params)
+  {
+    if (params.hasOwnProperty(i))
+    {
+      urlString += i + '=' + params[i] + '&';
+    }
+  }
+
+  return urlString;
+};
+
+ReasonAsset.prototype.getFormControl = function ()
+{
+  return this._formControl;
+};
+
+ReasonAsset.prototype.setFormControl = function (formctl)
+{
+  this._formControl = formctl;
+};
+
+ReasonAsset.prototype.setAssets = function (assets)
+{
+  this._assets = assets;
+};
+
+ReasonAsset.prototype.getAssets = function ()
+{
+  return this._assets;
+};
+
+ReasonAsset.prototype.setDesc = function (desc)
+{
+  this._desc = desc;
+};
+
+ReasonAsset.prototype.getDesc = function ()
+{
+  return this._desc;
+};
+
+ReasonAsset.prototype.getSelected = function ()
+{
+  return this._selected;
+};
+
+ReasonAsset.prototype.setSelected = function (type, id)
+{
+  if (typeof type == 'object')
+  {
+    this._selected = type;
+  }
+  else
+  {
+    this._selected[type] = id;
+  }
+};
+
+ReasonAsset.prototype.fetchAssets = function (callback)
+{
+  this.fetchItems(
+  {
+    type: 'assetList',
+    site_id: this._siteId
+  }, callback);
+};
+
+ReasonAsset.prototype.parseItems = function (type, response)
+{
+  var result;
+  switch (type)
+  {
+  case 'assetList':
+    result = JSON.parse(response);
+    this.setAssets([
+    {
+      name: '(select an asset)',
+      id: '0'
+    }].concat(result.assets));
+    break;
+  }
+};
+
+ReasonAsset.prototype.fetchItems = function (options, callback)
+{
+  var url = this.jsonURL(options);
+
+  tinymce.util.XHR.send(
+  {
+    'url': url,
+    'content_type': '',
+    'success': function (response, xhr)
+    {
+      this.parseItems(options.type, response);
+      callback.call(this);
+      this.loaded(options.type);
+    },
+    'error': function (type, req, o)
+    {
+      this.parseItems(options.type,
+      {});
+      callback.call(this);
+      this.loaded(options.type);
+    },
+    'success_scope': this,
+    'error_scope': this
+  });
+};
+
+ReasonAsset.prototype.updateValues = function (items, selectedItem)
+{
+  var values = [];
+
+  for (var i = 0; i < items.length; i++)
+  {
+    var text = items[i].name,
+      value = items[i].id;
+
+    values.push(
+    {
+      text: text,
+      value: value,
+      selected: (value == selectedItem)
+    });
+  }
+
+  return values;
+};
+
+ReasonAsset.prototype.bindReasonUI = function ()
+{
+  var self = this;
+
+  this.formControls.Assets.on('select', function (e)
+  {
+    if (e.control.value() == '0')
+    {
+      return;
+    }
+
+    self.setSelected('asset', e.control.value());
+
+    var assets = self.getAssets();
+    var asset_id = 1 * e.control.value();
+
+    for (var i = 0; i < assets.length; i++)
+    {
+      var asset = assets[i];
+
+      if (asset.id == asset_id)
+      {
+        self.setSelected('asset_url', asset.url);
+        self.setDesc(asset.name);
+        break;
+      }
+    }
+
+    self.updateForm();
+  });
+};
+
+ReasonAsset.prototype.constructAssets = function ()
+{
+  var assets = this.getAssets(),
+    selected = this.getSelected().asset,
+    selected_url = this.asset_url;
+
+  if(selected_url)
+  {
+    selected_url = selected_url.replace("//" + window.location.hostname, "");
+
+    delete this.asset_url;
+
+    for (var i = 0; i < assets.length; i++)
+    {
+      var asset = assets[i];
+
+      if (asset.url == selected_url)
+      {
+        selected = asset.id;
+
+        this.setSelected('asset', selected);
+        this.setSelected('asset_url', asset.url);
+
+        break;
+      }
+    }
+  }
+
+  return {
+    name: 'assets',
+    label: 'Asset',
+    type: 'listbox',
+    flex: 1,
+    values: this.updateValues(assets, selected)
+  };
+};
+
+ReasonAsset.prototype.constructDescription = function ()
+{
+  var currentDesc = this.getDesc();
+
+  return {
+    name: 'asset_description',
+    label: 'Description',
+    type: 'textbox',
+    size: 40,
+    flex: 1,
+    value: currentDesc
+  };
+};
+
+ReasonAsset.prototype.constructFormObj = function ()
+{
+  var formObj = {
+    type: 'form',
+    name: 'reasonAssetPanel',
+    items: [
+      this.constructAssets(),
+      this.constructDescription()
+    ]
+  };
+
+  return formObj;
+};
+
+ReasonAsset.prototype.startThrobber = function ()
+{
+  throbber = this.getThrobber();
+
+  throbber.show();
+}
+
+ReasonAsset.prototype.stopThrobber = function ()
+{
+  throbber = this.getThrobber();
+
+  throbber.hide();
+}
+
+ReasonAsset.prototype.getThrobber = function ()
+{
+  if (!this._throbber)
+  {
+    this._throbber = new tinymce.ui.Throbber(this.targetPanel.getEl());
+  }
+
+  return this._throbber;
+}
+
+ReasonAsset.prototype.insertReasonUI = function ()
+{
+  var self = this;
+
+  this.startThrobber();
+
+  this.fetchAssets(function ()
+  {
+    self.stopThrobber();
+
+    self.addFormObj(self.constructFormObj());
+
+    self.bindReasonUI();
+  });
+};
+
+ReasonAsset.prototype.addFormObj = function (obj)
+{
+  var newForm = this.targetPanel.append(obj).items()[0];
+
+  this.targetPanel.renderTo().reflow().postRender();
+
+  this.setFormControl(newForm);
+
+  this.getControlReferences();
+
+  this.saveLayoutRect();
+
+  return newForm;
+};
+
+ReasonAsset.prototype.saveLayoutRect = function ()
+{
+  this.layoutRects = tinymce.map(this.formControls, function (v)
+  {
+    return [v.layoutRect(), v.parent().layoutRect()];
+  });
+};
+
+ReasonAsset.prototype.updateForm = function ()
+{
+  var i = 0;
+
+  tinymce.each(this.formControls, function (v, k)
+  {
+    var methodName = 'construct' + k;
+
+    v.before(tinymce.ui.Factory.create(this[methodName]())).remove();
+  }, this);
+
+  this.getControlReferences();
+
+  tinymce.each(this.formControls, function (v)
+  {
+    v.parent().layoutRect(this.layoutRects[i][1]);
+    v.layoutRect(this.layoutRects[i][0]);
+    v.parent().reflow();
+    v.reflow();
+    i++;
+  }, this);
+
+  this.bindReasonUI();
+};
+
+ReasonAsset.prototype.makeURL = function () {
+  var asset_id = this.getSelected().asset;
+  var assets = this.getAssets();
+  var asset_url = '';
+
+  for (var i = 0; i < assets.length; i++)
+  {
+    var asset = assets[i];
+
+    if (asset.id == asset_id)
+    {
+      asset_url = asset.url;
+
+      break;
+    }
+  }
+
+  return "//" + window.location.hostname + asset_url;
+};
 
 
 /**
@@ -1175,124 +1546,320 @@ tinymce.PluginManager.add('reasonintegration', function(editor, url) {
     });
   }
 
-/***************************************************
- * REASONLINK
- ***************************************************/
-  function showLinkDialog() {
-		var data = {}, selection = editor.selection, dom = editor.dom, selectedElm, anchorElm, initialText;
-		var win, linkListCtrl, relListCtrl, targetListCtrl;
+  /***************************************************
+   * Reason Link
+   ***************************************************/
+  function showLinkDialog()
+  {
+    // get selection element
+    var selectionElement = editor.selection.getNode();
 
-		selectedElm = selection.getNode();
-		anchorElm = dom.getParent(selectedElm, 'a[href]');
-		if (anchorElm) {
-			selection.select(anchorElm);
-		}
+    // get parent anchor element of selection element
+    var anchorElement = editor.dom.getParent(selectionElement, 'a[href]');
 
-		data.text = initialText = selection.getContent({format: 'text'});
-		data.href = anchorElm ? dom.getAttrib(anchorElm, 'href') : '';
-		data.target = anchorElm ? dom.getAttrib(anchorElm, 'target') : '';
-		data.rel = anchorElm ? dom.getAttrib(anchorElm, 'rel') : '';
-		
-		if ((/^mailto:/).test(data.href))
-		{
-			data.title = anchorElm ? dom.getAttrib(anchorElm, 'title') : '';
-			data.email = data.href.slice(7);
-		}
-		data.title_2 = anchorElm ? dom.getAttrib(anchorElm, 'title') : '';
-		
-		if (selectedElm.nodeName == "IMG") {
-			data.text = initialText = " ";
-		}
+    // if anchor element present, select anchor element
+    if (anchorElement)
+    {
+      editor.selection.select(anchorElement);
+    }
 
-    if (!data.text) {
-      tinymce.activeEditor.windowManager.alert({title: "Insert a link", text: "You must first select some text in order to insert a link."});
+    // collect selection data
+    var data = {};
+
+    // get selection text
+    data.text = editor.selection.getContent(
+    {
+      format: 'text'
+    });
+
+    // check for selected image
+    if (selectionElement.nodeName == 'IMG')
+    {
+      data.text = '';
+    }
+
+    // confirm some text has been selected ...
+    if (!data.text)
+    {
+      // ... alert user to select some text
+      tinymce.activeEditor.windowManager.alert(
+      {
+        title: 'Insert/edit a link',
+        text: 'You must first select some text to insert a link.'
+      });
+
       return;
     }
 
+    // get anchor 'title' attribute
+    var title = anchorElement ? editor.dom.getAttrib(anchorElement, 'title') : '';
 
-    win = editor.windowManager.open({
-      title: 'Create a link',
-      data: data,
+    // get anchor 'href' attribute
+    var href = anchorElement ? editor.dom.getAttrib(anchorElement, 'href') : '';
+
+    // initial active tab
+    var initialTab = 0;
+
+    // check for "//reason.kzoo.edu" ...
+    var pageAssetRE = new RegExp("^\/\/" + window.location.hostname);
+
+    if (pageAssetRE.test(href))
+    {
+      // check for "/assets/" ...
+      var assetsRE = new RegExp("\/assets\/");
+
+      if (!assetsRE.test(href))
+      {
+        // set page url
+        data.page_url = href;
+
+        // set page description
+        data.page_description = title;
+
+        // ... open page panel
+        initialTab = 0;
+      }
+      else
+      {
+        // set asset url
+        data.asset_url = href;
+
+        // set asset description
+        data.asset_description = title;
+
+        // ... open assets panel
+        initialTab = 1;
+      }
+    }
+    else
+    {
+      // check for valid URL ...
+      // https://gist.github.com/dperini/729294
+      var validUrl = /^(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?$/i;
+
+      if (validUrl.test(href))
+      {
+        // set href
+        data.href = href;
+
+        // set web description
+        data.web_description = title;
+
+        // ... open web address panel
+        initialTab = 2;
+      }
+
+      // check for email address ...
+      if ((/^mailto:/).test(href))
+      {
+        // set email description
+        data.email_description = title;
+
+        // extract email address from 'href'
+        data.email = href.slice(7);
+
+        // ... open email address panel
+        initialTab = 3;
+      }
+    }
+
+    // open insert/edit link tab panel interface
+    var win = editor.windowManager.open(
+    {
+      title: 'Insert/edit a link',
       name: 'reasonLinkWindow',
+      data: data,
+      defaults: {
+        // set initial active tab
+        activeTab: initialTab
+      },
+      bodyType: 'tabpanel',
       body: [
-        // Add from Reason
+        // an existing page
         {
-          title: "an existing item",
-          name: "reasonLinkPanel",
-          type: "form",
-          minWidth: "700",
-          minHeight: "375",
-          items: []
+          title: 'an existing page',
+          name: 'reasonPagePanel',
+          type: 'form',
+          minWidth: 700,
+          minHeight: 375,
+          items: [
+            // generate dynamically
+          ]
         },
-
-        // Add from the Web
+        // an existing asset
         {
-          title: "a web address",
-          type: "form",
-          items: [{
+          title: 'an existing asset',
+          name: 'reasonAssetPanel',
+          type: 'form',
+          minWidth: 700,
+          minHeight: 375,
+          items: [
+            // generate dynamically
+          ]
+        },
+        // a web address
+        {
+          title: 'a web address',
+          name: 'reasonWebAddressPanel',
+          type: 'form',
+          items: [
+          {
             name: 'href',
             type: 'textbox',
-            filetype: 'image',
             size: 40,
             autofocus: true,
             label: 'Destination web address'
-          }, {
-            name: 'title_2',
+          },
+          {
+            name: 'web_description',
             type: 'textbox',
             size: 40,
             label: 'Description'
           }]
         },
+        // an email address
         {
-          title: "an email address",
-          type: "form",
-          items: [{
+          title: 'an email address',
+          name: 'reasonEmailAddressPanel',
+          type: 'form',
+          items: [
+          {
             name: 'email',
             type: 'textbox',
-            filetype: 'image',
             size: 40,
             autofocus: true,
             label: 'Email address'
-          }, {
-            name: 'title',
+          },
+          {
+            name: 'email_description',
             type: 'textbox',
             size: 40,
             label: 'Description'
           }]
         }
       ],
-      bodyType: 'tabpanel',
-      onPostRender: function(e) {
-        var target_panel = 'reasonLinkPanel',
+      onPostRender: function (e)
+      {
+        switch (initialTab)
+        {
+        case 0:
+          // render 'an existing page' panel only once
+          var target_panel = 'reasonPagePanel',
             controls_to_bind = {
-              tabPanel: "reasonLinkWindow",
-              href: ["href"],
-              description: ["title", "title_2"],
-              email: "email"
+              tabPanel: 'reasonLinkWindow',
+              href: 'href',
+              description: 'page_description'
             };
-        reasonLinkPlugin = new ReasonLink(controls_to_bind, target_panel, 'link', e);
+          this.reasonPagePlugin = new ReasonLink(controls_to_bind, target_panel, data.page_url);
+          this.reasonPagePlugin.setDesc(data.page_description);
+
+          // use tab name as source, reasonPagePanel
+          this.source = 'reasonPagePanel';
+          break;
+        case 1:
+          // render 'an existing asset' panel only once
+          var target_panel = 'reasonAssetPanel',
+            controls_to_bind = {
+              tabPanel: 'reasonLinkWindow',
+              href: 'href',
+              description: 'asset_description'
+            };
+          this.reasonAssetPlugin = new ReasonAsset(controls_to_bind, target_panel);
+          this.reasonAssetPlugin.setDesc(data.asset_description);
+          this.reasonAssetPlugin.asset_url = data.asset_url;
+
+          // use tab name as source, reasonAssetPanel
+          this.source = 'reasonAssetPanel';
+          break;
+        case 2:
+          // use tab name as source, reasonWebAddressPanel
+          this.source = 'reasonWebAddressPanel';
+          break;
+        case 3:
+          // use tab name as source, reasonEmailAddressPanel
+          this.source = 'reasonEmailAddressPanel';
+          break;
+        }
       },
-      onSubmit: function(e) {
-       var data = win.toJSON(), href = data.href, title = data.title;
-				function insertLink() {
-						editor.execCommand('mceInsertLink', false, {
-							href: href,
-							//target: data.target,
-              title: title,
-							rel: data.rel ? data.rel : null
-						});
-				}
+      onShowTab: function (e)
+      {
+        // use tab name as source
+        this.source = e.control.name();
 
-				if (!href) {
-					editor.execCommand('unlink');
-					return;
-				}
+        // if rendering 'an existing page' tab ...
+        if (this.source == 'reasonPagePanel')
+        {
+          // render 'an existing page' tab only once
+          if (this.reasonPagePlugin === undefined)
+          {
+            var target_panel = 'reasonPagePanel',
+              controls_to_bind = {
+                tabPanel: 'reasonLinkWindow',
+                href: 'href',
+                description: 'page_description'
+              };
+            this.reasonPagePlugin = new ReasonLink(controls_to_bind, target_panel, data.page_url);
+            this.reasonPagePlugin.setDesc(data.page_description);
+          }
+        }
 
-				insertLink();
+        // if rendering 'an existing asset' tab ...
+        if (this.source == 'reasonAssetPanel')
+        {
+          // render 'an existing asset' tab only once
+          if (this.reasonAssetPlugin === undefined)
+          {
+            var target_panel = 'reasonAssetPanel',
+              controls_to_bind = {
+                tabPanel: 'reasonLinkWindow',
+                href: 'href',
+                description: 'asset_description'
+              };
+            this.reasonAssetPlugin = new ReasonAsset(controls_to_bind, target_panel);
+            this.reasonAssetPlugin.setDesc(data.asset_description);
+            this.reasonAssetPlugin.asset_url = data.asset_url;
+          }
+        }
+      },
+      onSubmit: function (e)
+      {
+        var data = win.toJSON();
+
+        // use source to handle insert/edit
+        switch (this.source)
+        {
+        case 'reasonPagePanel':
+          // construct anchor data, existing page
+          data = {href: this.reasonPagePlugin.makeURL(), title: data.page_description};
+          break;
+        case 'reasonAssetPanel':
+          // construct anchor data, existing asset
+          data = {href: this.reasonAssetPlugin.makeURL(), title: data.asset_description};
+          break;
+        case 'reasonWebAddressPanel':
+          // construct anchor data, web address
+          data = {href: data.href, title: data.web_description};
+          break;
+        case 'reasonEmailAddressPanel':
+          // construct anchor data, email address
+          data = {href: 'mailto:' + data.email, title: data.email_description};
+          break;
+        }
+
+        if (!data.href)
+        {
+          editor.execCommand('unlink');
+          return;
+        }
+
+        editor.execCommand('mceInsertLink', false,
+        {
+          href: data.href,
+          title: data.title
+        });
       }
     });
   }
-
 
 /***************************************************
  * Buttons

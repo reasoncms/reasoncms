@@ -106,7 +106,7 @@
 		{
 			$es = new entity_selector();
 			$es->add_type(id_of('content_table'));
-			$es->add_relation('entity.name = "'.addslashes($this->get_value('name')).'"');
+			$es->add_relation('entity.name = "'.reason_sql_string_escape($this->get_value('name')).'"');
 			$es->set_num(1);
 			$tables = $es->run_one();
 			if(empty($tables))
@@ -157,7 +157,7 @@
 		{
 			if( $this->get_value('name') && !$this->_old_entity->get_value('name') && !$this->_table_is_in_db($this->get_value('name')) )
 			{
-				$q = "CREATE TABLE ".addslashes($this->get_value('name'))." (id int unsigned primary key)" ;
+				$q = "CREATE TABLE ".reason_sql_string_escape($this->get_value('name'))." (id int unsigned primary key)" ;
 				db_query( $q, 'Unable to create new table' );
 			}
 			

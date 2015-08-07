@@ -107,6 +107,11 @@ class ReasonAdminToolsModule extends DefaultModule
 					'description' => 'Migrate a publication from old-style news (e.g. no publication entity, single news page per site) to the modern blog/publication format.',
 					'safety_level' => 'safe',
 				),
+				'?cur_module=ShareSiteOwnership' => array(  
+					'title' => 'Share Site Ownership',
+					'description' => 'Assign some or all of a user\'s sites to another user as well.',
+					'safety_level' => 'safe',
+				),
 				REASON_HTTP_BASE_PATH.'scripts/move/move_entities_among_sites.php' => array(
 					'title' => 'Move Entities',
 					'description' => 'Move entities from one site to another. Additional steps required if moving pages or assets.',

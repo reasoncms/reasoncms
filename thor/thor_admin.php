@@ -20,13 +20,7 @@ include_once( TYR_INC . 'tyr.php');
 class ThorAdmin extends TableAdmin
 {
 	var $_thor_core;
-	
-	/**
-	 * @var array extra fields to display that are not actually thor elements described in xml
-	 * @todo we should grab this from the ThorCore probably
-	 */
-	var $extra_fields = array('id', 'submitted_by', 'submitter_ip', 'date_created', 'date_modified');
-	
+		
 	function ThorAdmin()
 	{
 	}
@@ -198,7 +192,7 @@ class ThorAdmin extends TableAdmin
 		$tc =& $this->get_thor_core();
 		echo '<h3>Viewing row id ' . $id . '</h3>';
 		$link = carl_make_link(array('table_row_action' => '', 'table_action_id' => ''));
-		echo '<p><a href="'.$link.'">Return to summary form data</a></p>';
+		echo '<p class="summaryReturn"><a href="'.$link.'">Return to summary form data</a></p>';
 		
 		$data = $tc->get_values_for_primary_key($this->get_action_id());
 		unset ($data['id']); // lets not show the id in this view
@@ -224,7 +218,7 @@ class ThorAdmin extends TableAdmin
 		$id = $this->get_action_id();
 		echo '<h3>Editing row id ' . $id . '</h3>';
 		$link = carl_make_link(array('table_row_action' => '', 'table_action_id' => ''));
-		echo '<p><a href="'.$link.'">Return to summary form data</a></p>';
+		echo '<p class="summaryReturn"><a href="'.$link.'">Return to summary form data</a></p>';
 		if ($this->show_hidden_fields_in_edit_view)
 		{
 			$elements = $this->get_element_names();
@@ -284,7 +278,7 @@ class ThorAdmin extends TableAdmin
 		$values['submitted_by'] = reason_check_authentication();
 		$values['submitter_ip'] = $_SERVER['REMOTE_ADDR'];
 		$values['date_created'] = get_mysql_datetime();
-		$tc->insert_values($values);
+		$tc->insert_values($values, $this);
 	}
 	
 	/**
@@ -294,7 +288,7 @@ class ThorAdmin extends TableAdmin
 	{ 
 		$tc = $this->get_thor_core();
 		$values = $tc->get_thor_values_from_form($this);
-		$tc->update_values_for_primary_key($this->get_action_id(), $values);
+		$tc->update_values_for_primary_key($this->get_action_id(), $values, $this); // updating this call to support file uploads
 	}
 	
 	/**

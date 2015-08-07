@@ -1,0 +1,1 @@
+/usr/sbin/apachectl -f apache.conf -d . -e info -D FOREGROUND

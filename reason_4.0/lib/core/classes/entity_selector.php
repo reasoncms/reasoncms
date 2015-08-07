@@ -737,7 +737,7 @@
 				$this->add_relation( $relationship_name . '.entity_b IN (' . implode(',',$prepped_entity_ids) . ')' );
 			}
 			else
-				$this->add_relation( $relationship_name . '.entity_b = "' . addslashes($entity_id) . '"');
+				$this->add_relation( $relationship_name . '.entity_b = "' . reason_sql_string_escape($entity_id) . '"');
 			if($relationship_type)
 			{
 				$this->add_relation( $relationship_name . '.type = ' . $relationship_type );
@@ -1432,7 +1432,7 @@
 			$this->add_field( $t , $field , $alias );
 			if( $this->_env['restrict_site'] AND !empty($this->_env['site']) )
 			{
-				$this->add_relation( '(' . $r . '.site=0 OR ' . $r . '.site=' . addslashes($this->_env['site']) . ')' );
+				$this->add_relation( '(' . $r . '.site=0 OR ' . $r . '.site=' . reason_sql_string_escape($this->_env['site']) . ')' );
 			}
 			if ($limit_results === false)
 			{	

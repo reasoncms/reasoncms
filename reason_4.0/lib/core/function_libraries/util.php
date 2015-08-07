@@ -99,17 +99,17 @@
 		if (isset( $retrieved[ $id ] ) ) return $retrieved[ $id ];
 		else
 		{
-			if($report_not_found_error) trigger_error('Entity id provided ('.id.') does not have a unique name');
+			if($report_not_found_error) trigger_error('Entity id provided ('.$id.') does not have a unique name');
 			return false;
 		}
 	}
 	
 	/**
-	 * We use a 10 minutes cache for this super common query. We update the cache in admin_actions.php whenever unique names are added or changed.
+	 * We use a 1 hour cache for this super common query. We update the cache in admin_actions.php whenever unique names are added or changed.
 	 */
 	function reason_get_unique_names()
 	{
-		$cache = new ReasonObjectCache('reason_unique_names', 600);
+		$cache = new ReasonObjectCache('reason_unique_names', 3600);
 		if ($unique_names =& $cache->fetch())
 		{
 			return $unique_names;
@@ -127,6 +127,10 @@
 	 */
 	function reason_refresh_unique_names()
 	{
+		$cache = new ReasonObjectCache('reason_unique_names');
+		$cache->lock(10);
+		
+		$retrieved = array();
 		$dbq = new DBSelector();
 		$dbq->add_table('entity');
 		$dbq->add_field('entity', 'id');
@@ -137,23 +141,22 @@
 		$r = db_query( $dbq->get_query(),'Error getting unique names in reason_refresh_unique_names' );
 		while( $row = mysql_fetch_array( $r ))
 		{
-			$retrieved[ $row[ 'unique_name' ] ] = $row[ 'id' ];
+			$retrieved[ $row[ 'unique_name' ] ] = (int) $row[ 'id' ];
 		}
 		mysql_free_result( $r );
 		if (!empty($retrieved))
 		{
-			$cache = new ReasonObjectCache('reason_unique_names');
 			if ($result = $cache->set($retrieved))
 			{
 				id_of('site', false); // refresh the id_of static cache
 			}
-			return $retrieved;
 		}
 		else
 		{
 			trigger_error('reason_refresh_unique_names did not update the cache because no unique names were retrieved');
 		}
-		return array();
+		$cache->unlock();
+		return $retrieved;
 	}
 	
 	/**
@@ -271,11 +274,11 @@
 	}
 	
 	/**
-	 * We use a 10 minutes cache for this super common query. We update the cache in admin_actions.php whenever allowable relationships are added or changed.
+	 * We use a 1 hour cache for this super common query. We update the cache in admin_actions.php whenever allowable relationships are added or changed.
 	 */
 	function reason_get_relationship_names()
 	{
-		$cache = new ReasonObjectCache('reason_relationship_names', 600);
+		$cache = new ReasonObjectCache('reason_relationship_names', 3600);
 		if ($relationship_names =& $cache->fetch())
 		{
 			return $relationship_names;
@@ -293,6 +296,8 @@
 	 */
 	function reason_refresh_relationship_names()
 	{
+		$cache = new ReasonObjectCache('reason_relationship_names');
+		$cache->lock(10);
 		$dbq = new DBSelector();
 		$dbq->add_table('allowable_relationship');
 		$dbq->add_field('allowable_relationship', 'id');
@@ -300,16 +305,16 @@
 		$r = db_query( $dbq->get_query(),'Error getting relationship anmes in reason_refresh_relationship_names' );
 		while( $row = mysql_fetch_array( $r ))
 		{
-			$retrieved[ $row[ 'name' ] ] = $row[ 'id' ];
+			$retrieved[ $row[ 'name' ] ] = (int) $row[ 'id' ];
 		}
 		mysql_free_result( $r );
 		if (!empty($retrieved))
 		{
-			$cache = new ReasonObjectCache('reason_relationship_names');
 			if ($result = $cache->set($retrieved))
 			{
 				relationship_id_of('site_to_type', false); // refresh the relationship_id_of static cache
 			}
+			$cache->unlock();
 			return $retrieved;
 		}
 		else
@@ -345,7 +350,7 @@
 		$es->add_type(id_of('content_table'));
 		$es->limit_fields('entity.name');
 		$es->limit_tables();
-		$es->add_relation('entity.name = "'.addslashes($table_name).'"');
+		$es->add_relation('entity.name = "'.reason_sql_string_escape($table_name).'"');
 		$results = $es->run_one();
 		return (!empty($results));
 	}
@@ -359,7 +364,7 @@
 	function get_allowable_relationships_for_type($type_id)
 	{
 		$ret = array();
-		$q = 'SELECT * FROM allowable_relationship WHERE (relationship_a = "' . addslashes($type_id) . '" OR relationship_b = "'.addslashes($type_id).'")';
+		$q = 'SELECT * FROM allowable_relationship WHERE (relationship_a = "' . reason_sql_string_escape($type_id) . '" OR relationship_b = "'.reason_sql_string_escape($type_id).'")';
 		$r = db_query( $q , "Error getting relationships for type: $type_id" );
 		while( $row = mysql_fetch_assoc( $r ))
 		{
@@ -400,7 +405,7 @@
 				$row = mysql_fetch_array( $r , MYSQL_ASSOC );
 				if(!empty($row[ 'id']))
 				{
-					$cache[$type_id] = $row[ 'id'];
+					$cache[$type_id] = (int) $row[ 'id'];
 				}
 			}
 			if (!isset($cache[$type_id]))
@@ -434,7 +439,7 @@
 				$row = mysql_fetch_array( $r , MYSQL_ASSOC );
 				if(!empty($row[ 'id']))
 				{
-					$cache[$type_id] = $row[ 'id'];
+					$cache[$type_id] = (int) $row[ 'id'];
 				}
 			}
 			if (!isset($cache[$type_id]))
@@ -467,7 +472,7 @@
 			$row = mysql_fetch_array( $r , MYSQL_ASSOC );
 			if(!empty($row[ 'id']))
 			{
-				$cache[$type_id] = $row[ 'id'];
+				$cache[$type_id] = (int) $row[ 'id'];
 			}
 			else
 			{
@@ -799,7 +804,7 @@
 			}
 			else
 			{
-				$dbq->add_relation( 'r.entity_a = "'.addslashes($site_id).'"');
+				$dbq->add_relation( 'r.entity_a = "'.reason_sql_string_escape($site_id).'"');
 			}
 			$dbq->add_relation( 'r.entity_b = entity.id');
 			if (!reason_relationship_names_are_unique())
@@ -1118,7 +1123,7 @@
 			$es->limit_tables('entity');
 			$es->limit_fields();
 			$es->add_type(id_of('user'));
-			$es->add_relation('entity.name = "'.addslashes($username).'"');
+			$es->add_relation('entity.name = "'.reason_sql_string_escape($username).'"');
 			$es->set_num(1);
 			$result = $es->run_one();
 			if ($result)
@@ -1667,7 +1672,7 @@
 		{
 			$es = new entity_selector();
 			$es->add_type(id_of('minisite_template'));
-			$es->add_relation('entity.name = "'.addslashes($name).'"');
+			$es->add_relation('entity.name = "'.reason_sql_string_escape($name).'"');
 			$es->set_num(1);
 			$templates = $es->run_one();
 			if(!empty($templates))
@@ -1990,7 +1995,7 @@
 		$cache = array();
 		if(!isset($cache[$alrel_id]))
 		{
-			$q = 'SELECT * FROM `allowable_relationship` WHERE `id` = "' . addslashes($alrel_id) . '"';
+			$q = 'SELECT * FROM `allowable_relationship` WHERE `id` = "' . reason_sql_string_escape($alrel_id) . '"';
 			$r = db_query( $q , 'error getting relationship info' );
 			$cache[$alrel_id] = mysql_fetch_array( $r , MYSQL_ASSOC );
 		}
@@ -2030,6 +2035,27 @@
 		
 		return $cache[$user_id];
 	}
+	
+	/**
+	 * Escape a string for use in a Reason db sql statement
+	 *
+	 * Note that calling this function *may* prompt the creation of a Reason database connection
+	 * when the $ensure_db_connection parameter is set to true. (true is the default).
+	 *
+	 * @param string $str
+	 * @param boolean $ensure_db_connection Create a Reason DB connection if none exists to ensure proper escaping
+	 * @return string
+	 */
+	function reason_sql_string_escape($str, $ensure_db_connection = true)
+	{
+		// If there is no connection, connect to the reason db
+		if ($ensure_db_connection && get_current_db_connection_name() == '')
+		{
+			connectDB(REASON_DB);
+		}
+		return mysql_real_escape_string($str);
+	}
+
 	/**
 	 * Factory function for grabbing and setting up the theme customizer for a given site
 	 *
@@ -2218,5 +2244,43 @@
 			return $sanitized_value_array;
 		}
 		return $raw_value_array;
+	}
+
+	/**
+	 * Delete a file, or a folder and its contents (recursive algorithm)
+	 *
+	 * @author      Aidan Lister <aidan@php.net>
+	 * @version     1.0.3
+	 * @link        http://aidanlister.com/2004/04/recursively-deleting-a-folder-in-php/
+	 * @param       string   $dirname    Directory to delete
+	 * @return      bool     Returns TRUE on success, FALSE on failure
+	 */
+	function rmdir_and_contents($dirname)
+	{
+		// Sanity check
+		if (!file_exists($dirname)) {
+			return false;
+		}
+	  
+		// Simple delete for a file
+		if (is_file($dirname) || is_link($dirname)) {
+			return unlink($dirname);
+		}
+	  
+		// Loop through the folder
+		$dir = dir($dirname);
+		while (false !== $entry = $dir->read()) {
+			// Skip pointers
+			if ($entry == '.' || $entry == '..') {
+				continue;
+			}
+	  
+			// Recurse
+			rmdir_and_contents($dirname . DIRECTORY_SEPARATOR . $entry);
+		}
+	  
+		// Clean up
+		$dir->close();
+		return rmdir($dirname);
 	}
 ?>

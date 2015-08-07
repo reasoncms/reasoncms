@@ -81,8 +81,8 @@ function relationship_find_and_update($a_type, $b_type, $name, $updates = array(
 		{
 			$set_str .= (!empty($set_str)) ? ", " : '';
 			$where_str_body .= (!empty($where_str_body)) ? ") OR (" : "(";
-			$where_str_body .=  $k . ' != "' . addslashes($v) .'"';
-			$set_str .= $k .' = "'. addslashes($v) . '"';
+			$where_str_body .=  $k . ' != "' . reason_sql_string_escape($v) .'"';
+			$set_str .= $k .' = "'. reason_sql_string_escape($v) . '"';
 		}
 		$where_str_end = "))";
 		$q = 'UPDATE allowable_relationship SET ' . $set_str . ' WHERE ID='.$existing_rel_id.$where_str_start.$where_str_body.$where_str_end;

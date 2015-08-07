@@ -1,0 +1,16 @@
+// Mainted Module Styles
+// Cloak, v1
+
+#maintained {
+	
+	a {
+		text-decoration: underline;
+		font-weight: 400;
+		color: $maintained-priamry-color;
+
+		&:hover {
+			color: darken($maintained-priamry-color, 10%);
+			text-decoration: underline;
+		}
+	}
+}

@@ -17,7 +17,7 @@
  *
  * @package carl_util
  */
- 
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 // The following constants should be customized for your installation of the reason_package
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -34,14 +34,14 @@ domain_define( 'WEBMASTER_NAME', 'Joanne Q. Webmaster' );
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
  * The location of the database credentials file
- * 
+ *
  * SECURITY ALERT: this file MUST be outside of the web tree - otherwise your database credentials are accessible to everyone
  */
 domain_define( 'DB_CREDENTIALS_FILEPATH', SETTINGS_INC. 'dbs.xml' );
 
 /**
  * The locations of the http credentials file - this need not be defined unless you have web resources behind https authentication
- * 
+ *
  * SECURITY ALERT: this file MUST be outside of the web tree - otherwise your database credentials are accessible to everyone
  */
 domain_define( 'HTTP_CREDENTIALS_FILEPATH', '' );
@@ -78,8 +78,8 @@ domain_define( 'WEB_PATH', rtrim($_SERVER['DOCUMENT_ROOT'], "/") . '/' );
 /**
  * REASON_PACKAGE_HTTP_BASE_PATH
  * This setting identifies the location of the reason_package web-available directory from the web root
- * This path should be an alias to the reason_package www folder, which should be 
- * located outside the web root. 
+ * This path should be an alias to the reason_package www folder, which should be
+ * located outside the web root.
  *
  * The location of the reason_package www folder is /reason_package/www/
  */
@@ -157,10 +157,13 @@ define('HTML_PURIFIER_INC',INCLUDE_PATH.'htmlpurifier/');
 // Define the path to jquery
 define('JQUERY_INC',INCLUDE_PATH.'jquery/');
 define('JQUERY_HTTP_PATH','/jquery/');
-define('JQUERY_URL',JQUERY_HTTP_PATH.'jquery_latest.js');
-define('JQUERY_UI_URL',JQUERY_HTTP_PATH.'jquery_ui_latest.js');
-define('JQUERY_UI_CSS_URL',JQUERY_HTTP_PATH.'css/smoothness/jquery-ui.css');
+define('JQUERY_URL',JQUERY_HTTP_PATH.'jquery-1.11.2.min.js');
+define('JQUERY_UI_URL',JQUERY_HTTP_PATH.'jquery-ui-1.11.3.min.js');
+define('JQUERY_UI_CSS_URL',JQUERY_HTTP_PATH.'css/smoothness/jquery-ui.min.css');
 
 // Define the path to Less PHP
 define('LESSPHP_INC',INCLUDE_PATH.'lessphp/');
+
+// Define the path to Scss PHP
+define('SCSSPHP_INC',INCLUDE_PATH.'scssphp/');
 ?>

@@ -1,6 +1,12 @@
 <?php
 
-if(!defined('VIMEO_UPLOADING_ENABLED')) define('VIMEO_UPLOADING_ENABLED', false);
+if(!defined('VIMEO_UPLOADING_ENABLED'))
+{
+	if(isset($GLOBALS['UPLOADABLE_MEDIA_WORK_INTEGRATION_LIBRARIES']) && in_array('vimeo', $GLOBALS['UPLOADABLE_MEDIA_WORK_INTEGRATION_LIBRARIES']))
+		define('VIMEO_UPLOADING_ENABLED', true);
+	else
+		define('VIMEO_UPLOADING_ENABLED', false);
+}
 
 /**
  * These four constants are only relevant if VIMEO_UPLOADING_ENABLED is set to true.

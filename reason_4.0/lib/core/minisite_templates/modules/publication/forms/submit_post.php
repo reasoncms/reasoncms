@@ -336,7 +336,7 @@ class BlogPostSubmissionForm extends Disco
 		if($this->publication->get_value('notify_upon_post'))
 		{
 			$subject = 'New post on '.strip_tags($this->publication->get_value('name'));
-			$message = 'A post has beeen added to '.strip_tags($this->publication->get_value('name'));
+			$message = 'A post has been added to '.strip_tags($this->publication->get_value('name'));
 			$message .= ' on the site '.strip_tags($this->site_info->get_value('name')).'.';
 			$message .= "\n\n";
 

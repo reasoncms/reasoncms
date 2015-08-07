@@ -40,7 +40,7 @@ function root_finder( $site_id )
  */
 function is_site_root( $page_id )
 {
-    $query = 'SELECT * FROM relationship WHERE entity_a="' . addslashes($page_id) . '" AND type="' . relationship_id_of( 'minisite_page_parent' ) . '"';
+    $query = 'SELECT * FROM relationship WHERE entity_a="' . reason_sql_string_escape($page_id) . '" AND type="' . relationship_id_of( 'minisite_page_parent' ) . '"';
     $results = db_query( $query );
     while( $row = mysql_fetch_array( $results ) )
     {   

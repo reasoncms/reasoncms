@@ -107,17 +107,21 @@
 		}
 	}
 
-	/**
-	 * Escape/encode reserved LDAP filter characters for inclusion in an LDAP filter
-	 *
-	 * replaces '\\','@','*','(', and ')' with, respectively, '\5c','\40',	'\2a', '\28', and '\29'.
-	 *
-	 * @param string $string_to_be_escaped
-	 * @return string $escaped_string
-	 */
-	function ldap_escape($value)
+	// php 5.6 provides a function ldap_escape.
+	if ( !function_exists('ldap_escape') )
 	{
-		return str_replace(array('\\','@','*','(',')'), array('\5c','\40',	'\2a', '\28','\29'), $value);
+		/**
+		 * Escape/encode reserved LDAP filter characters for inclusion in an LDAP filter
+		 *
+		 * replaces '\\','@','*','(', and ')' with, respectively, '\5c','\40',	'\2a', '\28', and '\29'.
+		 *
+		 * @param string $string_to_be_escaped
+		 * @return string $escaped_string
+		 */
+		function ldap_escape($value)
+		{
+			return str_replace(array('\\','@','*','(',')'), array('\5c','\40',	'\2a', '\28','\29'), $value);
+		}
 	}
 	
 	/**

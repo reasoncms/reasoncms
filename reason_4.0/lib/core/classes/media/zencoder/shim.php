@@ -960,6 +960,27 @@ class ZencoderShim implements ShimInterface
 		$ret .= HTTP_HOST_NAME . REASON_HTTP_BASE_PATH . '/media/zencoder/zencoder_final_notification_receiver.php';
 		return $ret;
 	}
+	/**
+	 * If able to get progress:
+	 * Return array('state'=> (string) $state, 'progress' => (float) $percentage)
+	 * States: pending, waiting, processing, finished, failed, cancelled
+	 *
+	 * If unable to get progress: returns false
+	 */
+	public function get_progress($media_work)
+	{
+		if($media_work->get_value('entry_id'))
+		{
+			try {
+				$zencoder = new Services_Zencoder(ZENCODER_FULL_ACCESS_KEY);
+					
+				$progress = $zencoder->jobs->progress($media_work->get_value('entry_id'));
+				return $progress;
+			} catch (Services_Zencoder_Exception $e) {
+				return false;	
+			}
+		}
+	}
 }
 // 4 more lines
 // to get to 

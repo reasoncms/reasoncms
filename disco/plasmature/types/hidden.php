@@ -35,7 +35,7 @@ class hiddenType extends defaultType
 	
 	function get_display()
 	{
-		$str = '<input type="hidden" id="'.$this->name.'Element" name="'.$this->name.'" value="'.htmlspecialchars($this->get(),ENT_QUOTES).'" />';
+		$str = '<input type="hidden" id="'.$this->get_id().'" name="'.$this->name.'" value="'.htmlspecialchars($this->get(),ENT_QUOTES).'" />';
 		return $str;
 	}
 }

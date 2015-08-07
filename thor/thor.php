@@ -11,6 +11,7 @@ include_once(TYR_INC.'tyr.php');
 require_once( INCLUDE_PATH . 'xml/xmlparser.php' );
 include_once ( SETTINGS_INC.'thor_settings.php' );
 include_once( CARL_UTIL_INC . 'db/db.php'); // Requires ConnectDB Functionality
+reason_include_once("function_libraries/file_utils.php");
 
 /**
  * ThorCore - essentially a thor replacement that does less than the old thor, but does it better.
@@ -162,6 +163,7 @@ class ThorCore
 	function append_thor_elements_to_form(&$disco_obj)
 	{
 		$xml = $this->get_thor_xml();
+		// echo "<PRE>" . $xml . "</PRE>";
 		if ($xml && $disco_obj)
 		{
 			foreach ($xml->document->tagChildren as $node)
@@ -173,6 +175,10 @@ class ThorCore
 				elseif ($node->tagName == 'optiongroup') $this->_transform_optiongroup($node, $disco_obj);
 				elseif ($node->tagName == 'hidden') $this->_transform_hidden($node, $disco_obj);
 				elseif ($node->tagName == 'comment') $this->_transform_comment($node, $disco_obj);
+				elseif ($node->tagName == 'upload') {
+					$disco_obj->form_enctype = "multipart/form-data";
+					$this->_transform_upload($node, $disco_obj);
+				}
 			}
 			$this->_transform_submit($xml->document->tagAttrs, $disco_obj);
 		}
@@ -195,8 +201,16 @@ class ThorCore
 			{
 				foreach ($values as $k=>$v)
 				{
-					if ($disco_obj->get_element($k))
+					$kEl = $disco_obj->get_element($k);
+					if ($kEl)
 					{
+						if ("upload" == $kEl->type) {
+							$possibleExistingPath = $this->get_thor_filestorage_row_and_col_specific_storage_dir($primary_key, $k) . $v;
+
+							if (!empty($v) && file_exists($possibleExistingPath)) {
+								$kEl->tmp_full_path = $possibleExistingPath;
+							}
+						}
 						$disco_obj->set_value($k, $v);
 					}
 					elseif (isset($display_values[$k]['group_id']))
@@ -297,9 +311,11 @@ class ThorCore
 
 	/**
 	 * Insert a row - we automatically add the date created timestamp
+	 *
+	 * @param $disco_obj reference to the disco object. Added Nov 2014
 	 * @return id of row inserted
 	 */
-	function insert_values($values)
+	function insert_values($values, $disco_obj)
 	{
 		if ($this->get_thor_table() && $values)
 		{
@@ -312,8 +328,12 @@ class ThorCore
   			$query = $GLOBALS['sqler']->insert( $this->get_thor_table(), $values );
   			$result = db_query($query);
   			$insert_id = mysql_insert_id();
+
+			$this->handle_file_uploads($insert_id, $disco_obj, true);
+
   			$GLOBALS['sqler']->mode = '';
   			if ($reconnect_db) connectDB($reconnect_db); // reconnect to default DB
+
   			return $insert_id;
   		}
   		elseif (!$this->get_thor_table())
@@ -327,12 +347,164 @@ class ThorCore
   			return NULL;
   		}
 	}
+
+	function create_dirs_if_needed($dirs)
+	{
+		foreach($dirs as $d) {
+			$this->create_dir_if_needed($d);
+		}
+	}
+
+	function create_dir_if_needed($dir)
+	{
+		if (!file_exists($dir)) {
+			mkdir($dir);
+			// chmod($dir, 0666);
+		}
+	}
+
+	// helper fxns to get at the various directories we use for storing files uploaded via thor
+	function get_thor_filestorage_base_storage_dir() { return THOR_SUBMITTED_FILE_STORAGE_BASEDIR; }
+	function get_thor_filestorage_form_specific_storage_dir() { return $this->get_thor_filestorage_base_storage_dir() . $this->get_thor_table() . "/"; }
+	function get_thor_filestorage_row_specific_storage_dir($row_id) { return $this->get_thor_filestorage_form_specific_storage_dir() . "row_" . $row_id . "/"; }
+	function get_thor_filestorage_row_and_col_specific_storage_dir($row_id, $col_id) { return $this->get_thor_filestorage_row_specific_storage_dir($row_id) . $col_id . "/"; }
+
+	// for rmdir_and_contents, see reason_package/reason_4.0/lib/core/function_libraries/util.php
+	function delete_file_storage_for_form() { rmdir_and_contents($this->get_thor_filestorage_form_specific_storage_dir()); }
+	function delete_file_storage_for_row($row_id) { rmdir_and_contents($this->get_thor_filestorage_row_specific_storage_dir($row_id)); }
+	function delete_file_storage_for_row_and_col($row_id, $col_id) { rmdir_and_contents($this->get_thor_filestorage_row_and_col_specific_storage_dir($row_id, $col_id)); }
+
+	// given some data about a particular file submission in a form, returns the path (optionally creating the directories)
+	function construct_file_storage_location($row_id, $col_id, $filename, $create_dirs = false) {
+		$storage_location_base_dir = $this->get_thor_filestorage_base_storage_dir();
+		$form_specific_dir = $this->get_thor_filestorage_form_specific_storage_dir();
+		$submission_dir = $this->get_thor_filestorage_row_specific_storage_dir($row_id);
+		$destination_dir = $this->get_thor_filestorage_row_and_col_specific_storage_dir($row_id, $col_id);
+
+		if ($create_dirs) {
+			$this->create_dirs_if_needed(Array(
+								$storage_location_base_dir,
+								$form_specific_dir,
+								$submission_dir,
+								$destination_dir
+							));
+		}
+
+		return $destination_dir . $filename;
+	}
+
+	function handle_file_uploads($primary_key, $disco_obj, $initialSave)
+	{
+		// svn weirdness
+		if ($disco_obj == null) { return; }
+
+		/*
+		// 2015-02-10 -- changed behvior; we now delete based on 'delete_requested' in the plasmature element
+		// tough to decide, but going with "an update clears out any previous files stored" approach
+		if (!$initialSave) {
+			$this->delete_file_storage_for_row($primary_key);
+		}
+		*/
+
+		$update_clauses = Array();
+
+		$xml = $this->get_thor_xml();
+		foreach ($xml->document->tagChildren as $node)
+		{	
+			if ($node->tagName == 'upload') {
+				$col_id = $node->tagAttrs['id'];
+
+				$disco_el = $disco_obj->get_element($col_id);
+				/*
+				$col_label = $node->tagAttrs['label'];
+				echo "name=[" . $disco_el->file["name"] . "]<P>";
+				var_dump("<PRE>", $disco_el, "</PRE>");
+				if ($disco_el->state == "received") {
+					echo "\"$col_label\" state is received...<P>";
+				} else if ($disco_el->state == "pending") {
+					echo "\"$col_label\" state is pending...<P>";
+				} else {
+					echo "\"$col_label\" state has no state...<P>";
+				}
+				 */
+				// 2014-12-17 modification: this now supports a file that was uploaded but form could not be finished
+				// due to other errors. MUCH more user-friendly
+
+				// "received" is pretty standard - file was just uploaded.
+				// "pending" can be, for instance:
+				// 1. file was submitted but other form errors (no input for required elements for instance) occurred
+				// 2. errors were corrected but a different file was not uploaded
+				// "ready" can be if the file was included in an earlier form submission and user didn't do anything with
+				// it when resubmitting / editing.
+				if ($disco_el->state == "received" || $disco_el->state == "pending") {
+					$this->delete_file_storage_for_row_and_col($primary_key, $col_id);
+					$destination_file = $this->construct_file_storage_location($primary_key, $col_id, $disco_el->file["name"], true);
+					$source_file = $disco_el->tmp_full_path;
+					// echo "src [$source_file], dest [$destination_file]<P>";
+
+					$success = rename($source_file, $destination_file);
+					if ($success) {
+						$update_clauses[$col_id] = $disco_el->file["name"]; // just filename; rest can be reconstructed with construct_file_storage_location
+					}
+				} else if ($disco_el->state == "ready") {
+					// file was previously uploaded; leave it alone
+				} else if ($disco_el->state == "delete_requested") {
+					// file was previously uploaded but user wants it deleted...
+					$this->delete_file_storage_for_row_and_col($primary_key, $col_id);
+					$update_clauses[$col_id] = "";
+				} else {
+					// nothing was uploaded, or an error occurred?
+					$update_clauses[$col_id] = "";
+				}
+
+				/*
+				$upload_data = $_FILES[$col_id];
+				if ($upload_data["tmp_name"] != "") {
+					echo "TMP NAME [" . $upload_data["tmp_name"] . "]<P>";
+
+					$disco_el = $disco_obj->get_element($col_id);
+
+					if ($disco_el->state == "received") { // || $disco_el->state == "pending")
+						$source_file = $disco_el->tmp_full_path;
+						// $destination_file = $destination_dir . $upload_data["name"];
+						$destination_file = $this->construct_file_storage_location($primary_key, $col_id, $upload_data["name"], true);
+
+						$success = rename($source_file, $destination_file);
+						if ($success) {
+							$update_clauses[$col_id] = $upload_data["name"]; // just filename; rest can be reconstructed with construct_file_storage_location
+						}
+					} else {
+						// echo "ERROR - element not received (" . $disco_el->state . ")<P>";
+						// not sure what to do here...when would this occur, with paticularly large files?
+						$update_clauses[$col_id] = "";
+					}
+				} else {
+					echo "NO FILE UPLOADED FOR [$col_id]/[$col_label]<P>";
+					// no file was uploaded for this; that's ok
+					$update_clauses[$col_id] = "";
+				}
+				 */
+			}
+		}
+
+		if (count($update_clauses) > 0) {
+  			$GLOBALS['sqler']->mode = 'get_query';
+  			$update = $GLOBALS['sqler']->update_one($this->get_thor_table(), $update_clauses, $primary_key);
+  			$result = db_query($update);
+  			$GLOBALS['sqler']->mode = '';
+		}
+	}
 	
 	/**
 	 * @todo more error checks
+	 * 
+	 * NOTE - disco_obj is usually a disco obj but it CAN BE NULL - for instance the call to this function
+	 * from language_placement_post.php doesn't have a reference to a disco object and so it passes in null. Right
+	 * now, disco_obj is only used for handling file uploads.
 	 */
-	function update_values_for_primary_key($primary_key, $values)
+	function update_values_for_primary_key($primary_key, $values, $disco_obj = null)
 	{
+		// echo "FIRING UPDATE [$primary_key]/[<PRE>"; var_dump($values); echo "</PRE>; " . ($disco_obj instanceof Disco ? "valid Disco passed in!" : "garbage...") . "<HR>"; die();
 		if ($this->get_thor_table() && !empty($values) && ($primary_key > 0))
 		{
 			if (!get_current_db_connection_name()) connectDB($this->get_db_conn());
@@ -341,6 +513,9 @@ class ThorCore
   			$GLOBALS['sqler']->mode = 'get_query';
   			$query = $GLOBALS['sqler']->update_one( $this->get_thor_table(), $values, $primary_key, 'id' );
   			$result = db_query($query);
+
+			$this->handle_file_uploads($primary_key, $disco_obj, false);
+
   			$GLOBALS['sqler']->mode = '';
   			if ($reconnect_db) connectDB($reconnect_db); // reconnect to default DB
   		}
@@ -467,6 +642,8 @@ class ThorCore
 		$table = $this->get_thor_table();
 		if ($this->get_thor_table() && (strlen($primary_key) > 0) )
 		{
+			$this->delete_file_storage_for_row($primary_key);
+
 			if (!get_current_db_connection_name()) connectDB($this->get_db_conn());
 			$reconnect_db = (get_current_db_connection_name() != $this->get_db_conn()) ? get_current_db_connection_name() : false;
 			if ($reconnect_db) connectDB($this->get_db_conn());
@@ -666,6 +843,8 @@ class ThorCore
 	{
 		if ($this->get_thor_table() && $this->table_exists())
 		{
+			$this->delete_file_storage_for_form();
+
 			$sql = $this->get_delete_table_sql();
 			if (!get_current_db_connection_name()) connectDB($this->get_db_conn());
 			$reconnect_db = (get_current_db_connection_name() != $this->get_db_conn()) ? get_current_db_connection_name() : false;
@@ -744,6 +923,9 @@ class ThorCore
 				foreach ($node_children as $node2) {
 					$db_structure[$node2->tagAttrs['id']]['type'] = 'tinytext';
 				}
+			}
+			elseif ($node->tagName == 'upload') {
+				$db_structure[$node->tagAttrs['id']]['type'] = 'tinytext';
 			}
 		}
 		return $db_structure;
@@ -843,6 +1025,14 @@ class ThorCore
 			$options[] = $child_attrs['value'];
 		}
 		$display_values[$id] = array('label' => $label, 'type' => $type, 'options' => $options);
+		return $display_values;
+	}
+
+	function _build_display_upload($element_obj)
+	{
+		$element_attrs = $element_obj->tagAttrs;
+		$type = 'file';
+		$display_values[$element_attrs['id']] = array('label' => $element_attrs['label'], 'type' => $type);
 		return $display_values;
 	}
 	
@@ -986,6 +1176,45 @@ class ThorCore
 		}
 
 		$d->add_element($id, 'checkboxgroup_no_sort', $args);
+		if ( $required ) $d->add_required($id);
+	}
+
+	function explodeTrimAndLowerTokenizedInputForUploadRestrictions($stuff)
+	{
+		$rv = Array();
+		$explodedStuff = explode(",",$stuff);
+		foreach ($explodedStuff as $stuffChunk) {
+			$rv[] = strtolower(trim($stuffChunk));
+		}
+		return $rv;
+	}
+
+	function _transform_upload($element, &$d)
+	{
+		$id = $element->tagAttrs['id'];
+		$display_name = (!empty($element->tagAttrs['label'])) ? $element->tagAttrs['label'] : '';
+		$required = (!empty($element->tagAttrs['required'])) ? true : false;
+
+		$args = array(
+						'display_name' => $display_name,
+						'show_restriction_explanation' => true
+					);
+
+		if (!empty($element->tagAttrs['restrict_extensions'])) {
+			$args['acceptable_extensions'] = $this->explodeTrimAndLowerTokenizedInputForUploadRestrictions($element->tagAttrs['restrict_extensions']);
+		}
+
+		if (!empty($element->tagAttrs['restrict_types'])) {
+			$args['acceptable_types'] = $this->explodeTrimAndLowerTokenizedInputForUploadRestrictions($element->tagAttrs['restrict_types']);
+		}
+
+		if (!empty($element->tagAttrs['restrict_maxsize'])) {
+			$args['max_file_size'] = convertFormattedSizeToNumberOfBytes($element->tagAttrs['restrict_maxsize']);
+		}
+
+		// var_dump("FINAL ARGS: <PRE>", $args, "</PRE>");
+
+		$d->add_element($id, 'upload', $args);
 		if ( $required ) $d->add_required($id);
 	}
 	

@@ -180,6 +180,8 @@ class ds_default {
 	* @param string $filter Search filter
 	*/
 	function parse_filter($filter) {
+		// replace any newlines and tabs; allows us to use pretty syntax
+		$filter = str_replace(array("\r\n","\n","\r","\t"), '', $filter);
 		// strip any outside parens if present
 		if (preg_match('/^\s*\(\s*(.+?)\s*\)\s*$/x', $filter, $matches)) 
 			$filter = $matches[1];

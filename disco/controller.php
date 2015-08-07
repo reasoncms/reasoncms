@@ -295,7 +295,8 @@ class FormController
 				exit;
 			}
 			
-			$this->_base_url = $url_parts[ 'scheme' ].'://'.$url_parts['host'].$url_parts['path'];
+			$host = (empty($url_parts['port'])) ? $url_parts['host'] : $url_parts['host'] .':'.$url_parts['port'];
+			$this->_base_url = $url_parts[ 'scheme' ].'://'.$host.$url_parts['path'];
 
 			if (empty($this->_request)) $this->set_request();
 			
@@ -393,7 +394,7 @@ class FormController
 					$cs = $this->_request[  $this->_step_var_name ];
 					if( empty( $this->forms[ $cs ] ) )
 					{
-						trigger_error($cs.' is not a valid form step.');
+						trigger_error($cs.' is not a valid form step.', E_USER_NOTICE);
 					}
 					else
 					{
@@ -566,7 +567,15 @@ class FormController
 	 * @return void
 	 */
 	function run() // {{{
-	{	
+	{
+
+		if (reason_maintenance_mode() && !reason_check_privs('db_maintenance'))
+		{
+			echo '<div id="form">';
+			echo '<p><em>This web site is currently in maintenance mode, forms are temporarily disabled. Please try again later.</em></p>';
+			echo '</div>';
+			exit;
+		}
 		$this->determine_step();
 
 		if( empty( $this->_request[ $this->_step_var_name ] ) )

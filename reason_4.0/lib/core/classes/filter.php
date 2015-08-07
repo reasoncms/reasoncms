@@ -74,7 +74,7 @@
 					
 					if( isset( $this->page->request[ $key ] ) AND $this->page->request[ $key ] )
 						$this->set_value( $key , $this->page->request[ $key ] );
-					$this->set_display_name( $key , $field );
+					$this->set_display_name( $key , prettify_string($field) );
 				}
 			}
 			foreach( $this->page->module->viewer->request as $key => $value )

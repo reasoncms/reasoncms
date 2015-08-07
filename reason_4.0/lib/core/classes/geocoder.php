@@ -125,21 +125,6 @@ class geocoder
 			{
 				if (!isset($attempted_ips[$ip]))
 				{
-					$request = 'http://freegeoip.net/json/'.urlencode($ip);
-					$response = carl_util_get_url_contents($request, false, '', '', 5); // must finish in 5 seconds or we move on
-					if ($response && ($decoded = json_decode($response, true)))
-					{
-						$pieces = array();
-						$address = array();
-						if (!empty($decoded['city'])) $address['city'] = ucwords(strtolower($decoded['city']));
-						if (!empty($decoded['region_name'])) $address['region'] = ucwords(strtolower($decoded['region_name']));
-						if (!empty($decoded['country_name'])) $address['country'] = ucwords(strtolower($decoded['country_name']));
-						if (!empty($decoded['zipcode'])) $address['postal_code'] = $decoded['zipcode'];
-						if (!empty($decoded['latitude'])) $address['geocoord']['lat'] = $decoded['latitude'];
-						if (!empty($decoded['longitude'])) $address['geocoord']['lon'] = $decoded['longitude'];
-						error_log('GEOCODE: Retrieved '.$ip.' from freegeoip.net');
-					}					
-
 					if (empty($address) && defined("REASON_IPINFODB_API_KEY") && constant("REASON_IPINFODB_API_KEY"))
 					{
 						$request = 'http://api.ipinfodb.com/v3/ip-city/?key='.REASON_IPINFODB_API_KEY.'&ip='.urlencode($ip).'&format=json';
@@ -158,6 +143,24 @@ class geocoder
 						}
 					}
 					
+					if (empty($address)) 
+					{
+						$request = 'http://freegeoip.net/json/'.urlencode($ip);
+						$response = carl_util_get_url_contents($request, false, '', '', 5); // must finish in 5 seconds or we move on
+						if ($response && ($decoded = json_decode($response, true)))
+						{
+							$pieces = array();
+							$address = array();
+							if (!empty($decoded['city'])) $address['city'] = ucwords(strtolower($decoded['city']));
+							if (!empty($decoded['region_name'])) $address['region'] = ucwords(strtolower($decoded['region_name']));
+							if (!empty($decoded['country_name'])) $address['country'] = ucwords(strtolower($decoded['country_name']));
+							if (!empty($decoded['zipcode'])) $address['postal_code'] = $decoded['zipcode'];
+							if (!empty($decoded['latitude'])) $address['geocoord']['lat'] = $decoded['latitude'];
+							if (!empty($decoded['longitude'])) $address['geocoord']['lon'] = $decoded['longitude'];
+							error_log('GEOCODE: Retrieved '.$ip.' from freegeoip.net');
+						}
+					}
+
 					if (empty($address)) // fall back to the free service api.hostip.info if the address was not meaningfully populated
 					{
 						$request = 'http://api.hostip.info/?position=true&ip='.urlencode($ip);

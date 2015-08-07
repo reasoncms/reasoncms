@@ -34,8 +34,17 @@ $GLOBALS[ '_social_integrator_class_names' ][ basename( __FILE__, '.php' ) ] = '
  *
  * @author Nathan White
  */
-class ReasonFacebookIntegrator extends ReasonSocialIntegrator implements SocialAccountProfileLinks, SocialSharingLinks
+class ReasonFacebookIntegrator extends ReasonSocialIntegrator implements SocialAccountProfileLinks, SocialSharingLinks, SocialAccountPlatform
 {
+	/****************** SocialAccountPlatform implementation ********************/
+	public function get_platform_name()
+	{
+		return 'Facebook';
+	}
+	public function get_platform_icon()
+	{
+		return REASON_HTTP_BASE_PATH . 'modules/social_account/images/facebook.png';
+	}
 	/****************** SocialAccountProfileLinks implementation ********************/
 	public function get_profile_link_text($social_entity_id)
 	{
@@ -50,11 +59,15 @@ class ReasonFacebookIntegrator extends ReasonSocialIntegrator implements SocialA
 		$details = json_decode($social_entity->get_value('account_details'), true);
 		return $details['link'];
 	}
+	public function get_profile_link_icon($social_entity_id)
+	{
+		return $this->get_platform_icon();
+	}
 
 	/****************** SocialSharingLinks implementation ***********************/
 	public function get_sharing_link_icon()
 	{
-		return REASON_HTTP_BASE_PATH . 'modules/social_account/images/facebook.png';
+		return $this->get_platform_icon();
 	}
 	
 	public function get_sharing_link_text()
@@ -102,7 +115,7 @@ class ReasonFacebookIntegrator extends ReasonSocialIntegrator implements SocialA
 	
 	function social_account_pre_show_form($cm)
 	{
-		echo '<p>Add/edit a Facebook page or profile that has a public link available.</p>';
+		echo '<p class="platformInfo"><img src="'.htmlspecialchars($this->get_platform_icon()).'" alt="Facebook icon" width="25" height="25" class="platformIcon" /> Add/edit a Facebook page or profile that has a public link available.</p>';
 	}
 	
 	/**

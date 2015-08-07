@@ -23,15 +23,28 @@ class ReasonSocialIntegrationHelper
 	/**
 	 * Returns an array describing available social accounts.
 	 *
-	 * @todo could generate dynamically by reading social directory - or maybe by reading a config file.
-	 *
 	 * @return array
 	 */
 	function get_available_integrators()
 	{
-		return array('facebook' => 'Facebook',
-					 'twitter' => 'Twitter',
-					 'googleplus' => 'Google+');
+		static $integrators = NULL;
+		if(NULL === $integrators)
+		{
+			$files = reason_get_merged_fileset('classes/social/');
+			foreach($files as $file)
+			{
+				$account_type = basename($file,'.php');
+				if($integrator = $this->get_integrator($account_type))
+				{
+					if($integrator instanceof SocialAccountPlatform)
+						$integrators[$account_type] = $integrator->get_platform_name();
+					else
+						$integrators[$account_type] = $account_type;
+				}
+				
+			}
+		}
+		return $integrators;
 	}
 	
 	/**
@@ -162,6 +175,11 @@ abstract class ReasonSocialIntegrator implements SocialAccountContentManager
 	public function social_account_run_error_checks($cm)
 	{
 	}
+}
+
+interface SocialAccountPlatform {
+	public function get_platform_name();
+	public function get_platform_icon();
 }
 
 /**

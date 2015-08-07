@@ -8,6 +8,40 @@ reason_include_once('classes/media/interfaces/media_work_previewer_modifier_inte
  */
 class ZencoderMediaWorkPreviewerModifier implements MediaWorkPreviewerModifierInterface
 {
+	
+	private static $storage_class;
+
+	/**
+	 * Zencoder integration has been designed to work with either Amazon S3 or Reason file
+	 * storage.
+	 */
+	public static function get_storage_class()
+	{
+		if (!self::$storage_class)
+		{
+			self::$storage_class = self::_get_storage_class();
+		}
+		return self::$storage_class;
+	}
+
+	private static function _get_storage_class()
+	{
+		if (strcasecmp(ZENCODER_FILE_STORAGE_OPTION, 'reason') == 0) 
+		{
+			reason_include_once('classes/media/media_file_storage/reason_file_storage.php');
+			return new ReasonMediaFileStorageClass();
+		}
+		elseif (strcasecmp(ZENCODER_FILE_STORAGE_OPTION, 's3') == 0)
+		{
+			reason_include_once('classes/media/media_file_storage/s3_file_storage.php');
+			return new S3MediaFileStorageClass();
+		}
+		else
+		{
+			trigger_error('Invalid storage option for Zencoder: '.ZENCODER_FILE_STORAGE_OPTION);
+			return false;
+		}
+	}	
 	/**
 	 * The previewer this modifier class will modify.
 	 */
@@ -51,6 +85,7 @@ class ZencoderMediaWorkPreviewerModifier implements MediaWorkPreviewerModifierIn
 		
 		$this->_add_file_preview($this->previewer->_entity);
 		$this->_add_embed_code($this->previewer->_entity);
+		$this->_add_original_link($this->previewer->_entity);
 		$vals = $this->previewer->_entity->get_values();
 		unset($vals['salt']);
 		$this->previewer->show_all_values($vals);
@@ -129,6 +164,23 @@ class ZencoderMediaWorkPreviewerModifier implements MediaWorkPreviewerModifierIn
 		echo '<td class="listRow' . $this->previewer->_row . ' col2"><input id="'.$field.'Element" type="text" readonly="readonly" size="50" value="'.htmlspecialchars($value).'"></td>';
 
 		echo '</tr>';
+	}
+
+	private function _add_original_link($entity)
+	{
+		if(empty($this->previewer->admin_page))
+			return;
+		
+		$owner = $entity->get_owner();
+		if($owner->id() != $this->previewer->admin_page->site_id)
+			return;
+		
+		$storage_class = self::get_storage_class();
+		$original = $entity->get_value('original_filename');		
+		$url = $storage_class->get_base_url().$storage_class->get_path(false, $original, $entity, 'original');	
+		$url = '<a href="'.$url.'">'.$url.'</a>';
+		$this->previewer->show_item_default( 'link_to_original', $url);
+
 	}
 }
 ?>

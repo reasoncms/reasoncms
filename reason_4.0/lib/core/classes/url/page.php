@@ -293,7 +293,8 @@ class reasonPageURL extends reasonURL
 		}
 		else
 		{
-			trigger_error('a live page with id ' . $page_id . ' could not be found in the reason database.');
+			// This should be handled by the code receiving the return value, not errored.
+			// trigger_error('a live page with id ' . $page_id . ' could not be found in the reason database.',E_USER_NOTICE);
 			return false;
 		}
 		return $page;

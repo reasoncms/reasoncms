@@ -363,7 +363,7 @@
 			$es = new entity_selector();
 			$es->add_type( $item->get_value('type') );
 			$es->add_right_relationship( $item->id(), reason_get_archive_relationship_id($item->get_value('type')) );
-			$es->add_relation('entity.last_modified < "'.addslashes($start_date).'"');
+			$es->add_relation('entity.last_modified < "'.reason_sql_string_escape($start_date).'"');
 			$es->set_order('entity.last_modified DESC');
 			$es->set_num(1);
 			$starts = $es->run_one(false,'Archived');
@@ -374,7 +374,7 @@
 			$es = new entity_selector();
 			$es->add_type( $item->get_value('type') );
 			$es->add_right_relationship( $item->id(), reason_get_archive_relationship_id($item->get_value('type')) );
-			$es->add_relation('entity.last_modified <= "'.addslashes($end_date).' 23:59:59"');
+			$es->add_relation('entity.last_modified <= "'.reason_sql_string_escape($end_date).' 23:59:59"');
 			$es->set_order('entity.last_modified DESC');
 			$es->set_num(1);
 			$ends = $es->run_one(false,'Archived');

@@ -167,7 +167,7 @@ class miniEventsModule extends EventsModule
 		{
 			$page_types = array_merge($page_types, page_types_that_use_module($module_name));
 		}
-		$page_types = array_map('addslashes',array_unique($page_types));
+		$page_types = array_map('reason_sql_string_escape',array_unique($page_types));
 		$ps->add_relation('page_node.custom_page IN ("'.implode('","', $page_types).'")');
 		$page_array = $ps->run_one();
 		reset($page_array);
