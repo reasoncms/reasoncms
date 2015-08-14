@@ -12,10 +12,15 @@ $(document).ready(function(){
     alumni_dinner_selector  = $(".words:contains('Friday's Alumni Dinner')");
     attended_selector       = $(".words:contains('Attended Luther')");
     booklet_selector        = $(".words:contains('50th Reunion Booklet')");
+    booklet_selector_1      = $(".words:contains('40th Reunion Booklet')");
     guest_class_selector    = $(".words:contains('Guest Class Year')");
     restrictions_selector   = $(".words:contains('dining restrictions')");
+    reunion_dinner_element  = $(".words:contains('Reunion Dinner/Reception')").next().find('select');
     reunion_dinner_selector = $(".words:contains('Reunion Dinner/Reception')");
     reunion_class_selector  = $(".words:contains('Reunion Class Year')");
+    friday_luncheon_elem    = $(".words:contains('Friday's Luncheon')").next().find('select');
+    saturday_luncheon_elem  = $(".words:contains('Saturday's Luncheon')").next().find('select');
+    fifty_year_recept_elem    = $(".words:contains('50 Year Reunion Reception')").next().find('select');
 
     
     hide_initial_items();
@@ -42,11 +47,28 @@ $(document).ready(function(){
     });
 
     toggle_billing();
-    reunion_dinner_selector.next().find('select').change(function(){
+    reunion_dinner_element.change(function(){
+        toggle_dining_restrictions();
         toggle_billing();
     });
 
+    friday_luncheon_elem.change(function() {
+        toggle_dining_restrictions();
+    });
+
+    saturday_luncheon_elem.change(function() {
+        toggle_dining_restrictions();
+    });
+
+    fifty_year_recept_elem.change(function() {
+        toggle_dining_restrictions();
+    });
+
     booklet_selector.next().find('select').change(function(){
+        toggle_billing();
+    });
+
+    booklet_selector_1.next().find('select').change(function(){
         toggle_billing();
     });
 });
@@ -63,6 +85,19 @@ function toggle_50_year_options(show_or_hide){
         $(".words:contains('50 Year Reunion Reception')").parent().hide(500);
         $(".words:contains('Ride in Parade')").parent().hide(500);
         booklet_selector.parent().hide(500);
+    }
+}
+
+function toggle_40_year_options(show_or_hide){
+    if (show_or_hide == 'show')
+    {
+        $("#40yearreunionheaderItem").show(500);
+        $(".words:contains('40 Year Reunion Reception')").parent().show(500);
+        booklet_selector_1.parent().show(500);
+    } else {
+        $("#40yearreunionheaderItem").hide(500);
+        $(".words:contains('40 Year Reunion Reception')").parent().hide(500);
+        booklet_selector_1.parent().hide(500);
     }
 }
 
@@ -107,7 +142,9 @@ function toggle_billing(){
 }
 
 function toggle_dining_restrictions(){
-    if (alumni_dinner_element.val() >= 1)
+    if ( alumni_dinner_element.val() >= 1 || reunion_dinner_element.val() >= 1 
+        || friday_luncheon_elem.val() >= 1 || saturday_luncheon_elem.val() >= 1 
+        || fifty_year_recept_elem.val() >= 1 )
     {
         restrictions_selector.parent().show(500);
     } else {
@@ -168,95 +205,110 @@ function toggle_reunion_reservations(){
             saturday_luncheon_element.show(500);
             reunion_reservations_element.hide(500);
             toggle_50_year_options('hide');
+            toggle_40_year_options('hide');
             break;
         case 70:
             friday_luncheon_element.hide(500);
             saturday_luncheon_element.show(500);
             reunion_reservations_element.hide(500);
             toggle_50_year_options('hide');
+            toggle_40_year_options('hide');
             break;
         case 65:
             friday_luncheon_element.hide(500);
             saturday_luncheon_element.show(500);
             reunion_reservations_element.hide(500);
             toggle_50_year_options('hide');
+            toggle_40_year_options('hide');
             break;
         case 60:
             friday_luncheon_element.hide(500);
             saturday_luncheon_element.show(500);
             reunion_reservations_element.hide(500);
             toggle_50_year_options('hide');
+            toggle_40_year_options('hide');
             break;
         case 55:
             friday_luncheon_element.hide(500);
             saturday_luncheon_element.show(500);
             reunion_reservations_element.show(500);
             toggle_50_year_options('hide');
+            toggle_40_year_options('hide');
             break;
         case 50:
             friday_luncheon_element.show(500);
             saturday_luncheon_element.show(500);
             reunion_reservations_element.show(500);
             toggle_50_year_options('show');
+            toggle_40_year_options('hide');
             break;
         case 45:
             friday_luncheon_element.hide(500);
             saturday_luncheon_element.hide(500);
             reunion_reservations_element.show(500);
             toggle_50_year_options('hide');
+            toggle_40_year_options('hide');
             break;
         case 40:
             friday_luncheon_element.hide(500);
             saturday_luncheon_element.hide(500);
             reunion_reservations_element.show(500);
             toggle_50_year_options('hide');
+            toggle_40_year_options('show');
             break;
         case 35:
             friday_luncheon_element.hide(500);
             saturday_luncheon_element.hide(500);
             reunion_reservations_element.show(500);
             toggle_50_year_options('hide');
-            break;
+            toggle_40_year_options('hide');
         case 30:
             friday_luncheon_element.hide(500);
             saturday_luncheon_element.hide(500);
             reunion_reservations_element.show(500);
             toggle_50_year_options('hide');
+            toggle_40_year_options('hide');
             break;
         case 25:
             friday_luncheon_element.hide(500);
             saturday_luncheon_element.hide(500);
             reunion_reservations_element.show(500);
             toggle_50_year_options('hide');
+            toggle_40_year_options('hide');
             break;
         case 20:
             saturday_luncheon_element.hide(500);
             reunion_reservations_element.show(500);
             toggle_50_year_options('hide');
+            toggle_40_year_options('hide');
             break;
         case 15:
             friday_luncheon_element.hide(500);
             saturday_luncheon_element.hide(500);
             reunion_reservations_element.show(500);
             toggle_50_year_options('hide');
+            toggle_40_year_options('hide');
             break;
         case 10:
             friday_luncheon_element.hide(500);
             saturday_luncheon_element.hide(500);
             reunion_reservations_element.show(500);
             toggle_50_year_options('hide');
+            toggle_40_year_options('hide');
             break;
         case 5:
             friday_luncheon_element.hide(500);
             saturday_luncheon_element.hide(500);
             reunion_reservations_element.show(500);
             toggle_50_year_options('hide');
+            toggle_40_year_options('hide');
             break;
         default:
             friday_luncheon_element.hide(500);
             saturday_luncheon_element.hide(500);
             reunion_reservations_element.hide(500);
             toggle_50_year_options('hide');
+            toggle_40_year_options('hide');
             reunion_dinner_cost = 0;
             // toggle_billing('hide');
     }
@@ -298,6 +350,7 @@ function add(){
 
     booklet_cost        = 0;
     booklet_quantity    = 0;
+    booklet_quantity_1  = 0;
     booklet_cost        = cleanup_cost($('input[value~="Booklet"][value~="cost"]').val());
     booklet_quantity    = booklet_selector.next().find('select').val();
     if (booklet_quantity > 0) {
@@ -305,9 +358,15 @@ function add(){
     } else {
         booklet_quantity = 0;
     }
+    booklet_quantity_1  = booklet_selector_1.next().find('select').val();
+    if (booklet_quantity_1 > 0) {
+        booklet_quantity_1 = parseInt(booklet_quantity_1);
+    } else {
+        booklet_quantity_1 = 0;
+    }
 
     total_cost = 0;
-    total_cost = (alumni_dinner_cost * alumni_dinner_quantity) + (booklet_cost * booklet_quantity) + (parsed_reunion_dinner_cost * reunion_dinner_quantity);
+    total_cost = (alumni_dinner_cost * alumni_dinner_quantity) + (booklet_cost * booklet_quantity) + (booklet_cost * booklet_quantity_1) + (parsed_reunion_dinner_cost * reunion_dinner_quantity);
     
     return total_cost;
 }
@@ -319,6 +378,7 @@ function setTotal(){
 
 function hide_initial_items(){
     toggle_50_year_options('hide');
+    toggle_40_year_options('hide');
     restrictions_selector.parent().hide();
     attended_selector.parent().hide();
     guest_class_selector.parent().hide();

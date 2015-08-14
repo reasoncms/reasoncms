@@ -60,6 +60,12 @@ class HomecomingRegistrationForm extends CreditCardNoPaymentThorForm {
         $txt = $this->get_display_name($booklet_element).' - $'.$booklet_cost.'/booklet';
         $this->set_display_name($booklet_element, $txt);
 
+        $booklet_element = $this->get_element_name_from_label('40th Reunion Booklet');
+        $booklet_cost = $this->_cleanup_cost($this->get_value_from_label('Booklet cost'));
+        $txt = $this->get_display_name($booklet_element).' - $'.$booklet_cost.'/booklet';
+        $this->set_display_name($booklet_element, $txt);
+
+
         $this->add_element('your_information_header', 'comment', array('text'=>'<h4>Your Information</h4>'));
         $this->move_element('your_information_header', 'before', $this->get_element_name_from_label('Current First Name'));
         $this->add_element('guest_information_header', 'comment', array('text'=>'<h4>Spouse/Guest Information</h4>'));
@@ -80,6 +86,7 @@ class HomecomingRegistrationForm extends CreditCardNoPaymentThorForm {
         $this->change_element_type($dining_restrictions, 'textarea', array('display_name'=>
           'Do you or any of your guests have any dining restrictions?'));
         $parade = $this->get_element_name_from_label('Ride in Parade?');
+        $this->move_element($dining_restrictions, 'before', $parade);
         $this->change_element_type($parade, 'radio_inline_no_sort');
         $this->add_element('hr', 'hr');
         $this->move_element('hr', 'after', $this->get_element_name_from_label('50th Reunion Booklet'));
@@ -171,6 +178,7 @@ class HomecomingRegistrationForm extends CreditCardNoPaymentThorForm {
         $total = 0;
         $total = (($alumni_dinner_cost * intval($this->get_value_from_label('Friday\'s Alumni Dinner')))
                 + ($reunion_cost * intval($this->get_value_from_label('Saturday\'s Reunion Dinner/Reception')))
+                + ($booklet_cost * intval($this->get_value_from_label('40th Reunion Booklet')))
                 + ($booklet_cost * intval($this->get_value_from_label('50th Reunion Booklet'))));
         return $total;
     }
