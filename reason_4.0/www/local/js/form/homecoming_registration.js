@@ -15,8 +15,12 @@ $(document).ready(function(){
     booklet_selector_1      = $(".words:contains('40th Reunion Booklet')");
     guest_class_selector    = $(".words:contains('Guest Class Year')");
     restrictions_selector   = $(".words:contains('dining restrictions')");
+    reunion_dinner_element  = $(".words:contains('Reunion Dinner/Reception')").next().find('select');
     reunion_dinner_selector = $(".words:contains('Reunion Dinner/Reception')");
     reunion_class_selector  = $(".words:contains('Reunion Class Year')");
+    friday_luncheon_elem    = $(".words:contains('Friday's Luncheon')").next().find('select');
+    saturday_luncheon_elem  = $(".words:contains('Saturday's Luncheon')").next().find('select');
+    fifty_year_recept_elem    = $(".words:contains('50 Year Reunion Reception')").next().find('select');
 
     
     hide_initial_items();
@@ -43,8 +47,21 @@ $(document).ready(function(){
     });
 
     toggle_billing();
-    reunion_dinner_selector.next().find('select').change(function(){
+    reunion_dinner_element.change(function(){
+        toggle_dining_restrictions();
         toggle_billing();
+    });
+
+    friday_luncheon_elem.change(function() {
+        toggle_dining_restrictions();
+    });
+
+    saturday_luncheon_elem.change(function() {
+        toggle_dining_restrictions();
+    });
+
+    fifty_year_recept_elem.change(function() {
+        toggle_dining_restrictions();
     });
 
     booklet_selector.next().find('select').change(function(){
@@ -125,7 +142,9 @@ function toggle_billing(){
 }
 
 function toggle_dining_restrictions(){
-    if (alumni_dinner_element.val() >= 1)
+    if ( alumni_dinner_element.val() >= 1 || reunion_dinner_element.val() >= 1 
+        || friday_luncheon_elem.val() >= 1 || saturday_luncheon_elem.val() >= 1 
+        || fifty_year_recept_elem.val() >= 1 )
     {
         restrictions_selector.parent().show(500);
     } else {
