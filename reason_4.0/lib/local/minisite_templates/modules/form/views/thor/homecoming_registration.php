@@ -178,7 +178,7 @@ class HomecomingRegistrationForm extends CreditCardNoPaymentThorForm {
         $total = 0;
         $total = (($alumni_dinner_cost * intval($this->get_value_from_label('Friday\'s Alumni Dinner')))
                 + ($reunion_cost * intval($this->get_value_from_label('Saturday\'s Reunion Dinner/Reception')))
-                //+ ($booklet_cost * intval($this->get_value_from_label('40th Reunion Booklet'))))
+                + ($booklet_cost * intval($this->get_value_from_label('40th Reunion Booklet')))
                 + ($booklet_cost * intval($this->get_value_from_label('50th Reunion Booklet'))));
         return $total;
     }
