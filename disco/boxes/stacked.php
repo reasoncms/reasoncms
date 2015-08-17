@@ -41,6 +41,8 @@ class StackedBox extends Box // {{{
 		 if(!empty($id)) 
 			$markup .= ' id="'.$id.'Item"';
 		$markup .= '>'."\n";
+		// drop in a named anchor for error jumping
+		$markup .= '<a name="'.$key.'_error"></a>'."\n";
 		$markup .= '<div class="words">';
 		if($use_label)
 		{
