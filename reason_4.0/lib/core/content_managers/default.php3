@@ -53,6 +53,8 @@
 		var $_locked_fields = array();
 		var $_lock_indicated_fields = array();
 
+		var $box_class = 'StackedBox';
+
 		function init( $externally_set_up = false)
 		{
 			if ( !isset( $this->_inited_head_items ) OR empty( $this->_inited_head_items ))

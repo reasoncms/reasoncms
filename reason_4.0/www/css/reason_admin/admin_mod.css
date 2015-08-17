@@ -387,10 +387,10 @@ div.treeItemWrapDepth15 {
 div.treeItemWrapDepth16 {
 	margin-left:32em;
 }
-form tr.error td {
+form tr.error td, #discoLinear div.formElement.error {
 	background-color:#FFC;
 }
-form tr.error td.words {
+form tr.error td.words, #discoLinear div.formElement.error {
 	font-weight:bold;
 	color:#900;
 }
