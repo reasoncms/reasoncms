@@ -7,7 +7,7 @@
 
 $(document).ready(function()
 {	
-	var footer_row = $("tr#customfooterRow");
+  var footer_row = $('[id^="customfooter"]');
 	var select_elem = $("select#use_custom_footerElement");
 	
 	if ( $(select_elem).val() != 'yes' ) $(footer_row).hide(); // hide initially if necessary
