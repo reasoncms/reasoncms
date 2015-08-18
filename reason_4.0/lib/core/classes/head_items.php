@@ -365,6 +365,7 @@ class HeadItems
 				foreach ($this->style_import_paths as $path) {
 					$parser->scss->addImportPath($path);
 				}
+				$parser->checkedCachedCompile($input_path, $output_path);
 			} else {
 				$parser->checkedCachedCompile($input_path, $output_path);
 			}		
