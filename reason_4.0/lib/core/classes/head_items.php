@@ -358,14 +358,17 @@ class HeadItems
 
 		try
 		{
-			$parser->scss->addImportPath(WEB_PATH);
-			$parser->scss->addImportPath( pathinfo ( $input_path, PATHINFO_DIRNAME ) );
-
-			foreach ($this->style_import_paths as $path) {
-				$parser->scss->addImportPath($path);
-			}
-
-			$parser->checkedCachedCompile($input_path, $output_path);
+			if ( get_class($parser) !== 'lessc' )
+			{
+				$parser->scss->addImportPath(WEB_PATH);
+				$parser->scss->addImportPath( pathinfo ( $input_path, PATHINFO_DIRNAME ) );
+				foreach ($this->style_import_paths as $path) {
+					$parser->scss->addImportPath($path);
+				}
+				$parser->checkedCachedCompile($input_path, $output_path);
+			} else {
+				$parser->checkedCachedCompile($input_path, $output_path);
+			}		
 		}
 		catch (Exception $ex)
 		{
