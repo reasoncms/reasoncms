@@ -16,7 +16,7 @@ reason_include_once( 'minisite_templates/modules/publication/publication_list_ma
 
 class MagazinePublicationListMarkupGenerator extends PublicationListMarkupGenerator
 {
-
+	var $combined_list = array();
 	function get_variables_needed()
 	{
 		$this->variables_needed[] = 'filter_interface_markup';
@@ -38,7 +38,7 @@ class MagazinePublicationListMarkupGenerator extends PublicationListMarkupGenera
 	{
 		//if we're listing filtered items ....
 		if(!empty($this->passed_vars['current_filters']))
-		{
+		{			
 			$this->markup_string .= $this->get_filter_message_markup();
 		}
 	}
@@ -47,8 +47,15 @@ class MagazinePublicationListMarkupGenerator extends PublicationListMarkupGenera
 	function get_all_posts_markup()
 	{
 		$markup_string = '<div class="allPosts">'."\n";
-		$markup_string .= $this->get_featured_items_markup();
-		$markup_string .= $this->get_list_markup();
+		if(!empty($this->passed_vars['current_filters']))
+		{
+			$markup_string .= $this->get_category_list_markup();
+		}
+		else
+		{
+			$markup_string .= $this->get_featured_items_markup();
+			$markup_string .= $this->get_list_markup();
+		}
 		$markup_string .= '</div>'."\n";
 		return $markup_string;
 	}
@@ -175,6 +182,36 @@ class MagazinePublicationListMarkupGenerator extends PublicationListMarkupGenera
 			}
 		}
 		return $markup_string;
+	}
+	
+	function get_category_list_markup()
+	// Luther customized to put featured post at the top of each issue group
+	{
+		$markup_string = '';
+		// Need to reorder posts so that featured posts in the features category are at the beginning of each issue list
+		if (!empty($this->passed_vars['list_item_markup_strings'])
+				&& !empty($this->passed_vars['issues_by_date']))
+		{
+			foreach($this->passed_vars['issues_by_date'] as $id => $issue)
+			{
+				foreach($this->passed_vars['featured_item_markup_strings'] as $featured_id => $featured_markup)
+				{
+					if (strpos($featured_markup, $issue->get_value('name')) !== false)
+					{
+						$markup_string .= '<article class="post"><div class="inner">'.$featured_markup.'</div></article>'."\n";
+					}
+				}
+				foreach($this->passed_vars['list_item_markup_strings'] as $list_id => $list_markup)
+				{
+					if (strpos($list_markup, $issue->get_value('name')) !== false
+						&& !array_key_exists($list_id, $this->passed_vars['featured_item_markup_strings']))
+					{
+						$markup_string .= '<article class="post"><div class="inner">'.$list_markup.'</div></article>'."\n";
+					}
+				}
+			}
+			return $markup_string;
+		}
 	}
 
 	// ISSUES
