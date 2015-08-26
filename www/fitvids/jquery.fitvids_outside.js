@@ -15,6 +15,7 @@
 * 1. It recognizes Reason media work iframes
 * 2. By default, it acts equivalently to img {max-width:100%;} rather than img {width:100%;}.
 *    Reverting to width:100% behavior is as simple as adding this (or more specific) CSS:
+* 3. Checks for the nofitvids class in the each loop rather than the selector (much faster)
 *
 * .fluid-width-video-wrapper-outer {
 * 	max-width:none;
@@ -50,33 +51,32 @@
 
     ref.parentNode.insertBefore(div,ref);
 
-    var $style = $(div.getElementsByTagName('style')[0]);
-
-
     if ( options ) {
       $.extend( settings, options );
     }
 
     return this.each(function(){
-      var selectors = [
-        "iframe[src*='player.vimeo.com']:not('.nofitvids, .nofitvids *')",
-        "iframe[src*='www.youtube.com']:not('.nofitvids, .nofitvids *')",
-        "iframe[src*='www.youtube-nocookie.com']:not('.nofitvids, .nofitvids *')",
-        "iframe[src*='www.kickstarter.com']:not('.nofitvids, .nofitvids *')",
-        "iframe[class*='media_work_iframe']:not('.nofitvids, .nofitvids *')",
-        "iframe.video[class*='media_file_iframe']:not('.nofitvids, .nofitvids *')",
-        "object:not('.nofitvids, .nofitvids *')",
-        "embed:not('.nofitvids, .nofitvids *')"
-      ];
-
       if (settings.customSelector) {
         selectors.push(settings.customSelector);
       }
+      
+      var selectors = [
+        "iframe[src*='player.vimeo.com']",
+        "iframe[src*='www.youtube.com']",
+        "iframe[src*='www.youtube-nocookie.com']",
+        "iframe[src*='www.kickstarter.com']",
+        "iframe[class*='media_work_iframe']",
+        "iframe.video[class*='media_file_iframe']",
+        "object",
+        "embed"
+      ];
 
-      var $allVideos = $(this).find(' ' + selectors.join(',')), // search for iframes/objects/embeds
-          videoIDCounter = 0;
+      var $allVideos = $(this).find(' ' + selectors.join(',')); // search for iframes/objects/embeds
+      var videoIDCounter = 0;
 
       $allVideos.each(function(){
+      	if ($(this).hasClass('nofitvids')) return true;
+      
         var $this = $(this);
 
         //  |<---- deal with quicktime ------------------>|                                                                            |<------------- already been fitvidded ----------------->|
@@ -86,8 +86,8 @@
             width = !isNaN(parseInt($this.attr('width'), 10)) ? parseInt($this.attr('width'), 10) : $this.width(),
             aspectRatio = height / width;
 
-        //if |<--- is audio ----->| or |<-- isn't video & is short (for legacy av embeds) -->| then die
-        if ($this.hasClass('audio') || (!$this.hasClass('video') && height < 100)) { return; } 
+        //if |<--- is audio ----->| or |<-- isn't video & is short (for legacy av embeds) -->| then skip
+        if ($this.hasClass('audio') || (!$this.hasClass('video') && height < 100)) { return true; } 
         
         var videoID = 'fitvid' + videoIDCounter++;
 
@@ -97,7 +97,7 @@
         //$this.removeAttr('height').removeAttr('width'); removed after extensive testing: 
         //CSS ALWAYS overrides non-css inline attributes (like height="300"). av.js uses these to store ratio data, so fitvids should leave them alone.
 
-        $style.append("." + videoID + ' { max-width: ' + width + 'px;}');
+        div.innerHTML = div.innerHTML + '<style>.' + videoID + ' { max-width: ' + width + 'px;}</style>';
       });
     });
   };

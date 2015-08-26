@@ -529,7 +529,6 @@
 				$this->on_first_time();
 				$this->_run_callbacks('on_first_time');
 			}
-			
 			$this->on_every_time();
 			$this->_run_callbacks('on_every_time');
 			
@@ -700,7 +699,6 @@
 					if(!$value AND (!strlen($value) > 0))
 						$element_has_error = true;
 				}
-				
 				if($element_has_error)
 				{
 					$this->_error_required[ $element_name ] = $element_name;
@@ -1077,7 +1075,8 @@
 				
 				foreach($errors as $name)
 				{
-					echo $this->get_error_message_and_link($name);
+					if (!$this->_element_is_in_group($name))
+						echo $this->get_error_message_and_link($name);
 					if($this->_is_element_group($name))
 					{
 						$member_names = $this->get_names_of_member_elements($name);

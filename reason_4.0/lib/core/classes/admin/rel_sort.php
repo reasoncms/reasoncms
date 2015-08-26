@@ -173,6 +173,7 @@ class RelationshipSort
 		$resultcount = count($result);
 		$read_next = false;
 		$rowcounter = 0;
+		$relationship_id_1 = $relationship_id_2 = $new_rel_sort_order = $old_rel_sort_order = null;
 		foreach ($result as $k=>$v)
 		{
 			if ($read_next == true)

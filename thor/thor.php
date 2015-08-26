@@ -556,11 +556,12 @@ class ThorCore
 	function get_rows_for_key($key, $key_column, $sort_field = '', $sort_order = '')
 	{
 		$table = $this->get_thor_table();
-		if ($this->get_thor_table() && (strlen($key) > 0) )
+		if ($this->get_thor_table() && (strlen($key) > 0) && $this->table_exists())
 		{
 			if (!get_current_db_connection_name()) connectDB($this->get_db_conn());
 			$reconnect_db = (get_current_db_connection_name() != $this->get_db_conn()) ? get_current_db_connection_name() : false;
 			if ($reconnect_db) connectDB($this->get_db_conn());
+			
 			$q = $this->get_select_by_key_sql($key, $key_column, $sort_field, $sort_order);
   			$res = mysql_query($q);
   			if ($res && mysql_num_rows($res) > 0)
@@ -708,7 +709,7 @@ class ThorCore
 	
 	function get_table_exists_sql()
 	{
-		return 'SHOW TABLES LIKE "'.$this->get_thor_table().'"';
+		return 'SELECT TABLE_NAME FROM `information_schema`.`TABLES` WHERE `TABLE_SCHEMA` = "'.get_database_name().'" AND `TABLE_NAME` = "'.$this->get_thor_table().'"';
 	}
 
 	function get_column_exists_sql($column)

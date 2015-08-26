@@ -325,6 +325,12 @@
 				'width' => 640,
 			),
 		),
+		'audio_video_simple_860_wide' => array(
+			'main_post' => array(
+				'module' => 'av_simple',
+				'width' => 860,
+			),
+		),
 		'audio_video_simple_sidebar' => array(
 			'sidebar' => array(
 				'module' => 'av_simple',

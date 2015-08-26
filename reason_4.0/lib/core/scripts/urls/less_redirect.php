@@ -20,6 +20,7 @@ if (!empty($_GET['basename']) && ctype_alnum($_GET['basename']))
 	$path = '/'.trim_slashes(WEB_PATH).'/'.trim_slashes(WEB_TEMP).'/less_compiled/'. substr($_GET['basename'], 0, 2).'/'.$_GET['basename'] . '_';
 	if ($result = glob($path."*.css"))
 	{
+		$cur_timestamp = 0;
 		foreach ($result as $afile)
 		{
 			$css_filename = basename($afile, ".css");

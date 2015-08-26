@@ -8,7 +8,7 @@
 /**
  * Register the module
  */
-$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'LoginNewModule';
+$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'LoginBaseModule';
 
 /**
  * Include dependencies
@@ -21,6 +21,8 @@ include_once( CARL_UTIL_INC . 'dir_service/directory.php' );
  * This module that handles login to Reason authentication using installed directory services. 
  * It has been designed to be easily extended to use other authentication methods as your
  * site requires.
+ *
+ * April 2014: Refactored slightly to support two-factor authentication
  *
  * @todo Figure out if there is a more secure way to handle the msg_uname request value... right now if you know the unique name of a text blurb you can display its content. This makes the content of uniquely named text blurbs marely obscure rather than truly secure. (luckily there are likely not that many uniquely named text blurbs, but this should still be resolved in a better way somehow.)
  */
@@ -52,6 +54,7 @@ class LoginBaseModule extends DefaultMinisiteModule
 	
 	protected $sess;
 	protected $logged_in;
+	protected $auth_username;
 	protected $headline;
 	protected $msg;
 	protected $status_msg;
@@ -62,6 +65,7 @@ class LoginBaseModule extends DefaultMinisiteModule
 	protected $current_url = '';
 	protected $msg_extra = '';
 	protected $verbose_logging = false; // Useful for debugging login issues
+	protected $enable_two_factor_login = false;
 	
 	public function init( $args = array() )
 	{
@@ -129,12 +133,24 @@ class LoginBaseModule extends DefaultMinisiteModule
 				if( $this->test_cookie_exists() )
 				{
 					if ($this->verbose_logging) error_log('LOGIN: Test cookie exists');
-					$this->do_login();
+					if ($this->check_authentication() && !$this->should_check_secondary_auth())
+					{
+						if ($this->do_login())
+							$this->do_logged_in();
+					}
 				}
 				else
 				{
 					if ($this->verbose_logging) error_log('LOGIN: NO test cookie');
 					$this->status_msg = 'It appears that you do not have cookies enabled.  Please enable cookies and try logging in again';
+				}
+			}
+			else if ($this->secondary_auth_in_progress() )
+			{
+				if ($this->check_secondary_authentication())
+				{
+					if ($this->do_login())
+						$this->do_logged_in();
 				}
 			}
 			// (Apparent) first visit to login page
@@ -180,6 +196,10 @@ class LoginBaseModule extends DefaultMinisiteModule
 				}
 				else
 					echo '<a href="'.$url.'">Use Secure Login</a>';
+			}
+			else if ($this->should_check_secondary_auth() && $this->login_in_progress() && $this->auth_username)
+			{
+				$this->display_secondary_auth();
 			}
 			else
 			{
@@ -326,47 +346,78 @@ class LoginBaseModule extends DefaultMinisiteModule
 		}
 	}
 	
+	protected function display_secondary_auth()
+	{
+		// Stub for inserting your own second-factor interface
+	}
+	
 	protected function login_in_progress()
 	{
 		return (isset( $this->request[ 'username' ] ) AND isset( $this->request[ 'password' ] ));
 	}
 	
-	protected function do_login()
+	/**
+	 * Whether or not to enable two-factor auth for this login. Default is whatever is
+	 * in the enable_two_factor_login class var, but you could extend this to have more
+	 * complicated logic (e.g. check a directory flag)
+	 */
+	protected function should_check_secondary_auth()
+	{
+		return $this->enable_two_factor_login;
+	}
+	
+	protected function secondary_auth_in_progress()
+	{
+		// Stub for detecting your own second-factor login
+	}
+
+	protected function check_authentication()
 	{
 		$auth = new directory_service($this->params[ 'auth_service' ]);
 		
 		// succesful login
 		if( $auth->authenticate( $this->request['username'], $this->request['password'] ) )
 		{
-			$this->sess->start();
-			$this->logged_in = true;
-			$this->sess->set( 'username', strtolower(trim($this->request['username'])) );
-			$this->log_authentication_event('login succeeded', $this->request['username']);
-			$this->clear_test_cookie();
-			
-			// pop user back to the top of the page.  this makes sure that the session
-			// info is available to all modules
-			if( !empty( $this->dest_page ) )
-			{
-				header( 'Location: '.$this->get_dest_page_link(true));
-				exit;
-			} else {
-				$this->do_logged_in();
-			}
+			if ($this->verbose_logging) error_log('LOGIN: check_authentication succeeded');
+			$this->auth_username = $this->request['username'];
+			return $this->auth_username;
 		}
 		// failed login
 		else
 		{
+			if ($this->verbose_logging) error_log('LOGIN: check_authentication failed');
 			$this->log_authentication_event('login failed', $this->request['username']);
 			$this->status_msg = 'The username and password you provided do not match.  Please try again.';
+			return false;
+		}
+	}
+	
+	protected function check_secondary_authentication()
+	{
+		// Stub for checking the status of secondary auth attempt
+		// If successful, set $this->auth_username and return true.
+	}
+
+	protected function do_login()
+	{		
+		if ($this->sess->start())
+		{
+			if ($this->verbose_logging) error_log('LOGIN: do_login storing '.$this->auth_username.' in session.');
+			$this->sess->set( 'username', strtolower(trim($this->auth_username)) );
+			$this->log_authentication_event('login succeeded', $this->auth_username);
+			return true;
+		} else {
+			if ($this->sess->get( '_sess_expire_time' ) && $this->verbose_logging)
+				error_log('LOGIN: Session exists; expires: '.$this->sess->get( '_sess_expire_time' ));
+			if ($this->verbose_logging) error_log('LOGIN: do_login cannot start session: '.$this->sess->get_error_msg($this->sess->error()));
+			trigger_error('Could not start session in do_login()');	
+			return false;
 		}
 	}
 
 	protected function do_logged_in()
 	{
 		$this->logged_in = true;
-		$this->headline = 'You\'re logged in!';
-		$this->status_msg = 'You are logged in as <strong>'.$this->get_authenticated_identity().'</strong>. ';
 		$this->clear_test_cookie();
 		if( !empty( $this->dest_page ) )
 		{
@@ -384,6 +435,8 @@ class LoginBaseModule extends DefaultMinisiteModule
 				}
 			}
 		}
+		$this->headline = 'You\'re logged in!';
+		$this->status_msg = 'You are logged in as <strong>'.$this->get_authenticated_identity().'</strong>. ';
 	}
 	
 	protected function do_logout()
@@ -396,6 +449,7 @@ class LoginBaseModule extends DefaultMinisiteModule
 		if( !isset( $this->request[ 'noredirect' ] ) && $this->dest_page )
 		{
 			$this->clear_test_cookie();
+			if ($this->verbose_logging) error_log('LOGIN: do_logout redirecting to '.$this->get_dest_page_link(false));
 			header( 'Location: '.$this->get_dest_page_link(false));
 			exit;
 		}
@@ -521,10 +575,10 @@ class LoginBaseModule extends DefaultMinisiteModule
 			$current_parts = parse_url( get_current_url() );
 			$parts = parse_url( $this->dest_page );
 			
-			if ($parts['host'] != $current_parts['host'] && !in_array($parts['host'], $this->params['allowable_domains']))
+			if (isset($parts['host']) && isset($current_parts['host']) && $parts['host'] != $current_parts['host'] && !in_array($parts['host'], $this->params['allowable_domains']))
 				return '';
 				
-			$host = $parts['host'];
+			$host = (isset($parts['port'])) ? $parts['host'] : $_SERVER['HTTP_HOST'];
 			$port = (isset($parts['port']) && !empty($parts['port'])) ? ":".$parts['port'] : '';
 			$query = (isset($parts['query']) && !empty($parts['query'])) ? '?'.$parts['query'] : '';
 			$fragment = (isset($parts['fragment']) ? '#' . $parts['fragment'] : '');

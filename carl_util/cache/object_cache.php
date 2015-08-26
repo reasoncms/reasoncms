@@ -27,6 +27,19 @@ require_once(CARL_UTIL_INC.'basic/misc.php');
  * 	$obj =& $cache->fetch();
  * </code>
  *
+ * If your cache generation process is expensive (more than a couple of seconds), you may want
+ * to lock the cache while rebuilding it. If a cache is locked, any processes requesting the
+ * cache will receive stale data until the cache is unlocked. This prevents multiple processes
+ * from kicking off separate rebuilding events. Locking is currently only available for file caches.
+ *
+ * <code>
+ *	$cache = new ObjectCache($unique_id, 3600);
+ * 	$cache->lock(200);
+ *  // Rebuild cache here
+ *  $cache->set($data);
+ *  $cache->unlock();
+ * </code>
+ *
  * More advanced usage - setup a mysql database cache (with connection params) for use by another object.
  *
  * <code>

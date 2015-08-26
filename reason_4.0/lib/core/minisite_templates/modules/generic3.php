@@ -164,7 +164,9 @@
 			'pagination_displayer'=>'window.php',
 			'wrapper_id_string'=>'',
 			'straight_join_filter_threshold' => 4,
-			'max_filters' => 3
+			'max_filters' => 3,
+			'filter_types' => array(),
+			'limit_by_related_types'=>array(),
 		);
 		var $jump_to_item_if_only_one_result = true;
 		var $has_feed = false;
@@ -208,6 +210,12 @@
 			{
 				$this->style_string = $this->params['wrapper_id_string'];
 			}
+
+			if(!empty($this->params['filter_types']))
+			{
+				$this->filter_types = $this->params['filter_types'];
+				$this->use_filters = true;
+			}
 			
 			$this->additional_init_actions();
 			$this->pre_es_additional_init_actions();
@@ -216,6 +224,7 @@
 			{
 				$this->es = $this->_create_primary_entity_selector();
 				$this->alter_es();
+				$this->do_related_entities_limit();
 				
 				// We want to "archive" a version of the entity selector
 				// just before the filters are applied
@@ -854,6 +863,9 @@
 			}
 		}
 
+		/**
+		 * @todo check relationship direction rather than assuming left
+		 */
 		function get_filter_entities()
 		{
 			if(is_null($this->filter_entities))
@@ -948,15 +960,99 @@
 			return $ret;
 		}
 
+		/**
+		 * This method checks the 'limit_by_related_types' parameter, which allows you to
+		 * specify a type that the page and the displayed entities need to have in common,
+		 * along with the appropriate relationships, e.g.:
+		 *
+		 *		'limit_by_related_types' => array(
+		 *				'carleton_club_type' => array(
+		 *					'page_rel' => array('carleton_club_to_primary_page'),
+		 *					'entity_rel' => array('image_to_carleton_club'),
+		 *					)),
+		 *
+		 * @return array list of relationships and ids
+		 */
+		function do_related_entities_limit()
+		{
+			// Figure out what entities of the specified types the page may have in common with images
+			if(!empty($this->params['limit_by_related_types']))
+			{
+				foreach ($this->params['limit_by_related_types'] as $type => $rels)
+				{
+					if (!$type_id = id_of($type))
+					{
+						trigger_error('Invalid type name "'.$type.' in limit_by_related_types page type parameter.');
+						continue;
+					}
+				
+					$related = array();
+					$relations = get_allowable_relationships_for_type($type_id);
+				
+					if (!isset($rels['page_rel']) || !is_array($rels['page_rel']))
+					{
+						trigger_error('limit_by_related_types page type parameter incorrectly formed: missing page_rel.');
+						continue;
+					}
+					foreach ($rels['page_rel'] as $rel_name)
+					{
+						if (!$rel_id = relationship_id_of($rel_name))
+						{
+							trigger_error('Invalid relationship name "'.$rel_name.' in limit_by_related_types page type parameter.');
+							continue;
+						}
+					
+						// Find all the entities of the requested types that are associated with 
+						// the current page.
+						$entities = $this->parent->cur_page->get_relationship($rel_name);
+						foreach ($entities as $entity)
+						{
+							$related[$type][] = $entity->id();
+						}
+					}
+
+					if (!empty($related))
+					{
+						if (!isset($rels['entity_rel']) || !is_array($rels['entity_rel']))
+						{
+							trigger_error('limit_by_related_types page type parameter incorrectly formed: missing entity_rel.');
+							continue;
+						}
+								
+						foreach ($rels['entity_rel'] as $rel_name)
+						{
+							if (!$rel_id = relationship_id_of($rel_name))
+							{
+								trigger_error('Invalid relationship name "'.$rel_name.' in limit_by_related_types page type parameter.');
+								continue;
+							}
+
+							if ($relations[$rel_id]['relationship_a'] != $type_id)
+							{
+								$this->es->add_left_relationship($related[$type], $rel_id);
+							}
+							else
+							{
+								$this->es->add_right_relationship($related[$type], $rel_id);
+							}
+						}
+					}
+				}
+			}
+		}
+
 		function _redirect_from_old_url($request)
 		{
+			$redirect_params = array();
 			foreach( $this->request as $key => $vals)
 			{
-				
 				if( $key == 'filters')
 				{
 					foreach($vals as $filter_key => $filter)
-					$redirect_params['filter'.$filter_key] = $filter['type'].'-'.$filter['id'];
+					{
+						if (isset($filter['type']) && isset($filter['id']))
+							$redirect_params['filter'.$filter_key] = $filter['type'].'-'.$filter['id'];
+					}
 				} 
 				else
 				{
@@ -991,7 +1087,6 @@
 
 		function do_filters_rels()
 		{
-			
 			$filter_entities = $this->get_filter_entities();
 
 			foreach($this->filters as $key => $values)

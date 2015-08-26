@@ -17,6 +17,10 @@
 		var $issues = array();	//[$publicationID][$issueID]=issue_entity;
 		var $news_sections = array();   //[$publicationID][$sectionID]=section_entity;
 
+		function init_head_items() {
+			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'content_managers/news_content_manager.js');
+		}
+
 /////
 // ALTER_DATA & HELPER METHODS
 ////
@@ -94,17 +98,47 @@
 			{	
 				$this->add_relationship_element('choose_categories', id_of('category_type'), relationship_id_of('news_to_category'), 'right', 'checkbox');
 			}
+
+			// add some custom UI to associate embed handlers
+			$embedHandlers = $this->get_site_entities('news_post_embed_handler_type');
+			if (!empty($embedHandlers)) {
+				$this->add_relationship_element('embed_handler', id_of('news_post_embed_handler_type'), relationship_id_of('news_post_to_embed_handler'), 'right', 'select');
+				$this->set_display_name('embed_handler', 'Template');
+				$this->set_element_properties( 'embed_handler', array('empty_value_label' => 'Default' ) );
+				// $this -> set_comments ('embed_handler', form_comment('If a template doesn\'t seem to be working as expected, please contact a Reason administrator. New publications may need to have templates enabled.'));
+			}
+
+			// add some custom UI to make the "is a story a link" functionality a little easier on the content folks
+			$this->add_element('is_link_story', 'radio_no_sort', array(
+				"display_name" => "Type of Post",
+				"options" => array(
+					0 => "Standard <span class='smallText'>(Full content is part of post)</span>",
+					1 => "External Link <span class='smallText'>(Full content is somewhere else on the web)</span>",
+				)
+			));
+			$this->set_value("is_link_story", $this->get_value("linkpost_url") == "" ? 0 : 1);
+			$this->set_display_name("linkpost_url", "Link URL");
+
+			$orgs = $this->get_site_entities('organization_type');
+			if (!empty($orgs)) {
+				$this->add_relationship_element('link_org', id_of('organization_type'), relationship_id_of('news_post_to_url_organization'), 'right', 'select');
+				$this->set_display_name('link_org', 'Link Organization');
+			}
 			
 			$order = array ('name', 
-							'release_title', 
+							'release_title',
 							'subtitle', 
 							'news_type', 
 							'author', 
 							'author_description', 
 							'location', 
 							'datetime', 
-							'description', 
+							'description',
+							'is_link_story',
+							'embed_handler',
 							'content',
+							'linkpost_url',
+							'link_org',
 							'choose_categories',
 							'keywords', 
 							'names', 
@@ -127,6 +161,15 @@
 			$this -> set_order (array_merge($order, $publication_elements));		
 			$this->make_site_specific_changes();			
 		} // }}}
+
+		function get_site_entities($entity_type) {
+			$es = new entity_selector($this->get_value('site_id'));
+			$es->description = 'Finding the entities of type ' . $entity_type . ' on this site';
+			$es->add_type(id_of($entity_type));
+			$es->set_order('entity.name ASC');
+			$entities = $es->run_one();
+			return $entities;
+		}
 		
 		function make_site_specific_changes()
 		{
@@ -362,6 +405,22 @@
 			parent::run_error_checks();
 			$this->run_publication_issue_and_section_checks();
 			$this->run_publication_association_error_check();
+			$this->run_is_story_a_link_error_check();
+		}
+
+		// if user said story is not a link, we need to clear out linkpost_url - we use that to preset the "is it a link" radio
+		// next time they come in.
+		//
+		// basically if a news/post has a value in linkpost_url it's a link. otherwise it ain't.
+		//
+		// we could also clear out content/description if the story IS a link but that's not necessary and having some history there
+		// is potentially useful, at some small risk of confusion. Realistically it's not like news/posts are likely to switch back
+		// and forth here so not worth spending too much time thinking about it!
+		function run_is_story_a_link_error_check()
+		{
+			if (!isset($_REQUEST["is_link_story"]) || intval($_REQUEST["is_link_story"]) == 0) {
+				$this->set_value("linkpost_url", "");
+			}
 		}
 		
 		/**
