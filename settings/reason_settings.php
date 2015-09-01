@@ -1054,4 +1054,23 @@
 	 * With an API key, Reason can provide superior ip geolocation results.
 	 */
 	define('REASON_IPINFODB_API_KEY', '');
+	
+	/**
+	 * _REASON_TREAT_AS_EXTERNAL_LINKS
+	 *
+	 * Optionally provide exceptions to the internal link rule and treat listed sites
+	 * within the luther.edu domain as external links instead.
+	 *
+	 */
+	$GLOBALS['_REASON_TREAT_AS_EXTERNAL_LINKS'] = array(
+			"my.luther.edu",
+			"katie.luther.edu",
+			"myplannedgift.luther.edu",
+			"tickets.luther.edu",
+			"lisguides.luther.edu",
+			"nordic.luther.edu",
+			"norlie.luther.edu",
+			"studyaway.luther.edu",
+			"apc.luther.edu"
+	);
 ?>
