@@ -533,7 +533,7 @@ class GiftPageThreeForm extends FormStep {
                     '<br />' => "\n",
                 );
                 $mail_text = str_replace(array_keys($replacements), $replacements, $confirm_text);
-                $email_to_development = new Email(array('oelrva01@luther.edu','waskni01@luther.edu'), 'noreply@luther.edu', 'noreply@luther.edu', 'New Online Gift ' . date('mdY H:i:s'), strip_tags($mail_text), $mail_text);
+                $email_to_development = new Email('waskni01@luther.edu', 'noreply@luther.edu', 'noreply@luther.edu', 'New Online Gift ' . date('mdY H:i:s'), strip_tags($mail_text), $mail_text);
                 $email_to_development->send();
                 $email_to_giver = new Email($this->controller->get('email'), 'giving@luther.edu', 'giving@luther.edu', 'Luther College Online Gift Confirmation', strip_tags($mail_text), $mail_text);
                 $email_to_giver->send();
