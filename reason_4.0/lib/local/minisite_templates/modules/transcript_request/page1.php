@@ -360,7 +360,7 @@ class TranscriptPageOneForm extends FormStep {
        $deliver_time = $this->get_value('delivery_time');
 
        if ($this->get_value('LATF') == 'Not paid') {
-            $pay_amount = $pay_amount + ($official_number * 5);
+            $pay_amount = $pay_amount + ($official_number * 6);
         }
         $this->set_value('amount', $pay_amount);
 
