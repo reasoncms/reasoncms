@@ -276,7 +276,7 @@ class CourseListModule extends DefaultMinisiteModule
 				}
 				$details[] = 'offered ' . join(', ', $terms);
 			} else {
-				$details[] = 'not offered 2014–15';
+				$details[] = 'not offered 2015–16';
 			}
 		}
 
