@@ -122,10 +122,10 @@ class OnlineGiftModule extends DefaultMinisiteModule
 		{
 			$this->controller->set_form_data('installment_type', $this->request[ 'installment_type' ]);
 		}
-		
+
 		if($head_items =& $this->get_head_items())
 		{
-			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form.css');
+			// $head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form.css');
 
 			$head_items->add_stylesheet(JQUERY_UI_CSS_URL);
 			$head_items->add_javascript(JQUERY_UI_URL);
