@@ -84,7 +84,7 @@ class ReasonFacebookIntegrator extends ReasonSocialIntegrator implements SocialA
 		$cm->change_element_type('account_details', 'protected');
 		$cm->set_display_name('account_id', 'Facebook ID');
 		$cm->add_required('account_id');
-		$cm->set_comments('account_id', form_comment('This is usually the number at the end of your Facebook profile or page. If you cannot find it, try your username instead.'));
+		$cm->set_comments('account_id', form_comment('This is usually the username of your public Facebook profile or page.'));
 			
 		// lets add a field showing the current link if one is available.
 		
@@ -120,23 +120,9 @@ class ReasonFacebookIntegrator extends ReasonSocialIntegrator implements SocialA
 		}
 		else
 		{
-			// lets actually look this up at graph search.
-			if ($details = $this->get_graph_info($account_id))
+			if ($details = $this->get_facebook_url($account_id))
 			{
-				if (isset($details['link']))
-				{
-					$existing_details = json_decode($cm->get_value('account_details'), true);
-					$existing_details['link'] = $details['link'];
-					$cm->set_value('account_details', json_encode($existing_details));
-					if (isset($details['id']) && ($details['id'] != $account_id))
-					{
-						$cm->set_value('account_id', $details['id']);
-					}
-				}
-				else
-				{
-					$cm->set_error('account_id', 'Facebook does have a public link associated with that Facebook ID. Make sure you entered the ID correctly.');
-				}
+				$cm->set_value("account_details", '{"link":"https://www.facebook.com/'.$account_id.'"}');
 			}
 			else
 			{
@@ -155,16 +141,14 @@ class ReasonFacebookIntegrator extends ReasonSocialIntegrator implements SocialA
 	}
 	
 	/**
-	 * Get info on a facebook graph id.
+	 * Get info on a facebook username.
 	 *
-	 * @return mixed array key value pairs for facebook graph id or boolean FALSE
+	 * @return facebook url based on username or boolean FALSE
 	 */
-	private function get_graph_info($id)
+	private function get_facebook_url($id)
 	{
-		$url = 'http://graph.facebook.com/'.$id;
-		$json = carl_util_get_url_contents($url, false, '', '', 10, 5, true, false);
-		if ($json) return json_decode($json, true);
-		else return false;
+		exec("curl -s -o /dev/null -I -w \"%{http_code}\" https://www.facebook.com/".$id, $ret);
+		return ($ret[0] == 200 || $ret[0] == 301) ? "https://www.facebook.com/".$id : false;
 	}
 }
 ?>
