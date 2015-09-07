@@ -70,16 +70,14 @@ class GiftPageThreeForm extends FormStep {
             'type' => 'text',
             'size' => 35,
         ),
-                'credit_card_type' => array(
+        'credit_card_type' => array(
             'type' => 'radio_no_sort',
-            'options' => array('Visa'=>'Visa','MasterCard'=>'MasterCard','American Express'=>'American Express','Discover'=>'Discover', 'none'=>'none'),
+            'options' => array('Visa' => 'Visa', 'MasterCard' => 'MasterCard', 'American Express' => 'American Express', 'Discover' => 'Discover', 'none'=>'none'),
+            'label' => 'Credit Card Type'
         ),
         'credit_card_type_icon' => array(
             'type' => 'comment',
-            'text' => "<i class='fa fa-cc-visa formCCType' id='visaIcon'></i>
-                        <i class='fa fa-cc-mastercard formCCType' id='mastercardIcon'></i>
-                        <i class='fa fa-cc-amex formCCType' id='amexIcon'></i>
-                        <i class='fa fa-cc-discover formCCType' id='discoverIcon'></i>"
+            'text' => "<i class='fa fa-cc-visa formCCType' id='visaIcon'></i><i class='fa fa-cc-mastercard formCCType' id='mastercardIcon'></i><i class='fa fa-cc-amex formCCType' id='amexIcon'></i><i class='fa fa-cc-discover formCCType' id='discoverIcon'></i>",
         ),
         'credit_card_expiration_month' => array(
             'type' => 'month',
@@ -213,7 +211,7 @@ class GiftPageThreeForm extends FormStep {
             if (!$this->_has_errors() && $this->controller->get('installment_type') != 'Onetime') {
                 $text .= build_gift_review_detail_output($this->helper, $this->date_format);
             }
-            $text .= '<p class="changeGiftButton"><a href="?_step=GiftPageOneForm">Change Gift Setup</a></p>' . "\n";
+            $text .= '<a title="Modify Gift" href="?_step=GiftPageOneForm">Modify Gift</a>' . "\n";
             $this->change_element_type('review_note', 'comment', array('text' => $text));
         }
     }
@@ -260,17 +258,9 @@ class GiftPageThreeForm extends FormStep {
         if ((intval($this->controller->get('gift_amount')) <= 100) && !$this->get_value('mail_receipt')) {
             if (reason_unique_name_exists('giving_form_100_dollars')){
                 $txt .= get_text_blurb_content('giving_form_100_dollars') . "\n";
-			} else {
-				$txt .= '<p>This e-receipt will serve as confirmation of your online gift to Luther College. This e-receipt gives us
-						the opportunity to continue to reduce our paper usage and helps us to achieve our sustainability goals. Thank
-						you for doing your part!</p>' . "\n";
-                $txt .= '<p>Of course, if you\'d prefer to receive a paper receipt, we can take care of that for you.
-						Simply email Nicole Waskow at waskni01@luther.edu and we will send one to you via US Mail.</p>' . "\n";
 			}
         }
         $txt .= '<p>Luther College is, for tax deduction purposes, a 501(c)(3) organization.</p>' . "\n";
-        $txt .= '<p>If you have questions about the giving process or experience technical problems using
-			the online giving form, please contact the Luther College Development Office.</p>' . "\n";
         $txt .= '<ul>' . "\n";
         $txt .= '<li><strong>Date:</strong> ' . date($this->date_format) . '</li>' . "\n";
         $txt .= '<h4>Your Information</h4>' . "\n";
@@ -284,7 +274,7 @@ class GiftPageThreeForm extends FormStep {
         if ($this->controller->get('spouse_last_name') != 'Last') {
             $txt .= $this->controller->get('spouse_last_name') . '</li>' . "\n";
         }
-        $txt .= '<li>'."\n".'<strong>' . $this->controller->get('address_type') . ' Address:</strong>' . "\n" . $this->controller->get('street_address') . "\n" . $this->controller->get('city') . ' ' . $this->controller->get('state_province') . ' ' . $this->controller->get('zip') . "\n" . $this->controller->get('country') . "\n" .'</li>' . "\n";
+        $txt .= '<li>'."\n".'<strong> Address:</strong>' . "\n" . $this->controller->get('address_1') . "\n" . $this->controller->get('address_2') . "\n" . $this->controller->get('city') . ' ' . $this->controller->get('state_province') . ' ' . $this->controller->get('zip') . "\n" . $this->controller->get('country') . "\n" .'</li>' . "\n";
         $txt .= '<li><strong>' . $this->controller->get('phone_type') . ' Phone:</strong> ' . $this->controller->get('phone') . '</li>' . "\n";
         $txt .= '<li><strong>E-mail:</strong> ' . $this->controller->get('email') . '</li>' . "\n";
         $txt .= '<li><strong>Luther Affiliation:</strong> ';
@@ -315,46 +305,61 @@ class GiftPageThreeForm extends FormStep {
         if ($this->controller->get('match_gift') && $this->controller->get('employer_name')) {
             $txt .= '<li><strong>Employer Matching:</strong> My employer, ' . strip_tags($this->controller->get('employer_name')) . ', will match my gift.</li>' . "\n";
         }
-        if ($this->controller->get('existing_pledge')) {
-            $txt .= '<li><strong>This is a payment on an existing pledge:</strong> ' . strip_tags($this->controller->get('existing_pledge')) . '</li>' . "\n";
-        }
         if (($this->controller->get('annual_fund') || ($this->controller->get('specific_fund')))) {
             $txt .= '<li>'."\n".'<strong>Designation</strong> ' . "\n";
             $txt .= '<ul>' . "\n";
             if ($this->controller->get('annual_fund')) {
                 $txt .= '<li>The Annual Fund</li>' . "\n";
-            }
-            if ($this->controller->get('baseball_stadium')) {
-                $txt .= '<li>Baseball Stadium</li>' . "\n";
-            }
-            if ($this->controller->get('softball_stadium')) {
-                $txt .= '<li>Softball Stadium</li>' . "\n";
-            }
-            if ($this->controller->get('scholarship_fund')) {
-                $txt .= '<li>The Scholarship Fund, </li>' . "\n";
-            }
-            if ($this->controller->get('transform_teaching_fund')) {
-                $txt .= '<li>The Fund for Transformational Teaching and Learning</li>' . "\n";
-            }
-            if ($this->controller->get('sustainable_communities')) {
-                $txt .= '<li>Luther Center for Sustainable Communities</li>' . "\n";
+                if ($this->controller->get('annual_fund_amount')) {
+                    $txt .= ': $'.$this->controller->get('annual_fund_amount');
+                }
+                $txt .= '</li>'."\n";
             }
             if ($this->controller->get('norse_athletic_association')) {
                 $txt .= '<li>The Norse Athletic Association';
-                if ($this->controller->get('naa_designation_details')
-                    ); {
-                    $txt .= ': ' . strip_tags($this->controller->get('naa_designation_details'));
+                if ($this->controller->get('norse_athletic_association_details')) {
+                    $txt .= ': ' . strip_tags($this->controller->get('norse_athletic_association_details'));
+                    if ($this->controller->get('norse_athletic_association_amount')) {
+                        $txt .= ' – $'.$this->controller->get('norse_athletic_association_amount');
+                    }
                 }
                 $txt .= '</li>' . "\n";
             }
+            // if ($this->controller->get('baseball_stadium')) {
+            //     $txt .= '<li>Baseball Stadium' . "\n";
+            //     if ($this->controller->get('baseball_stadium_amount')) {
+            //         $txt .= ': $'.$this->controller->get('baseball_stadium_amount');
+            //     }
+            //     $txt .= '</li>'."\n";
+            // }
+            // if ($this->controller->get('softball_stadium')) {
+            //     $txt .= '<li>Softball Stadium' . "\n";
+            //     if ($this->controller->get('softball_stadium_amount')) {
+            //         $txt .= ': $'.$this->controller->get('softball_stadium_amount');
+            //     }
+            //     $txt .= '</li>'."\n";
+            // }
+            if ($this->controller->get('scholarship_fund')) {
+                $txt .= '<li>The Scholarship Fund' . "\n";
+                if ($this->controller->get('scholarship_fund_amount')) {
+                    $txt .= ': $'.$this->controller->get('scholarship_fund_amount');
+                }
+                $txt .= '</li>'."\n";
+            }
             if ($this->controller->get('other_designation_details')) {
-                $txt .= '<li>Comments/Other Designation: ' . strip_tags($this->controller->get('other_designation_details')) . '</li>' . "\n";
+                $txt .= '<li>Other Designation: ' . strip_tags($this->controller->get('other_designation_details'));
+                if ($this->controller->get('other_amount')) {
+                    $txt .= ' – $'.$this->controller->get('other_amount');
+                }
             }
             $txt .= '</ul>' . "\n"; // Designated specifics end
             $txt .= '</li>' . "\n"; //Designated giving end
         }
         if ($this->controller->get('gift_prompt')) {
             $txt .= '<li><strong>Gift Prompt:</strong> ' . strip_tags($this->controller->get('gift_prompt')) . '</li>' ."\n";
+            if ($this->controller->get('gift_prompt_details')) {
+                $txt .= '<ul><li>'.$this->controller->get('gift_prompt_details').'</li></ul>'."\n";
+            }
         }
         if ($this->controller->get('dedication') && $this->controller->get('dedication_details')) {
             $txt .= '<li><strong>Dedication:</strong> This gift is in ';
@@ -364,7 +369,9 @@ class GiftPageThreeForm extends FormStep {
             if ($this->controller->get('dedication') == 'Honor') {
                 $txt .= 'honor';
             }
-            $txt .= ' of ' . $this->controller->get('dedication_details') . '</li>' . "\n";
+            if ($this->controller->get('dedication_details'));
+                $txt .= ' of ' . $this->controller->get('dedication_details');
+            $txt .= '</li>' . "\n";
         }
 
         if ($this->get_value('result_refnum')) {
@@ -407,7 +414,8 @@ class GiftPageThreeForm extends FormStep {
             $this->set_error('billing_address', 'Please enter your full billing address if the address you entered on the previous page was not the billing address for your credit card.');
         }
         if ($this->get_value('billing_address') == 'entered') {
-            $this->set_value('billing_street_address', $this->controller->get('street_address'));
+            $address = $this->controller->get('address_1') .' '. $this->controller->get('address_1');
+            $this->set_value('billing_street_address', $address);
             $this->set_value('billing_city', $this->controller->get('city'));
             $this->set_value('billing_state_province', $this->controller->get('state_province'));
             $this->set_value('billing_zip', $this->controller->get('zip'));
