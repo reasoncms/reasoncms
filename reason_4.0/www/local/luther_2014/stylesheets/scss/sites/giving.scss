@@ -619,7 +619,6 @@ $tab-current-color: $lc-blue-dark;
 				}
 			}
 
-
 			p a {
 				text-decoration: underline;
 			}
@@ -637,7 +636,7 @@ $tab-current-color: $lc-blue-dark;
 					border: none;
 				}
 			}
-
+			
 			@media
 			#{$small-only} {
 				.inlineElement input {
@@ -657,10 +656,19 @@ $tab-current-color: $lc-blue-dark;
 			}
 
 			div > span.currency {
-					font-size: rem-calc(20);
-					font-weight: 400;
+				font-size: rem-calc(20);
+				font-weight: 400;
+			}
+			
+			#installment_type_container.radioButtons.inlineRadioButtons .radioItem {
+				display: block;
+				margin-bottom: 1.0rem;
+				@media
+				#{$medium-up} {
+					display: inline;
 				}
-
+			}
+			
 			#installment_end_dateElement {
 				margin-left: rem-calc(6);
 			}
@@ -680,10 +688,46 @@ $tab-current-color: $lc-blue-dark;
 			padding-left: 2rem;
 			max-width: 600px;
 		}
+		
+		#gift_designation_container .radioItem {		
+			min-height: 2.0rem;
+			margin-top: 0.75rem;
+			select  {
+				padding: 0;
+				margin: .75rem 0 0 3.5rem;
+				display: block;
+			}
+			&.radioItemOther {
+				margin-top: 0.75rem;
+				input[name="gift_designation_other"] {
+					margin: .75rem 0 0 3.5rem;
+					display: block;
+					max-width: 85%;
+				}
+			}
+			
+			@media
+			#{$medium-up} {
+				select {
+					margin: 0 0 0 0.75rem;
+					display: inline;
+				}
+				&.radioItemOther {
+					margin-top: 0.25rem;
+					input[name="gift_designation_other"] {
+						margin: 0 0 0 0.75rem;
+						display: inline;
+						max-width: 60%;
+					}
+				}
+			}
+		}
+		
 
 		#annual_fund_amountElement, 
 		#norse_athletic_association_amountElement, 
-		#scholarship_fund_amountElement, 
+		#scholarship_fund_amountElement,
+		input.splitAmount, 
 		#other_amountElement {
 			width: 5rem;
 			display: inline-block;

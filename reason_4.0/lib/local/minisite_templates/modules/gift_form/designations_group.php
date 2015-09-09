@@ -1,4 +1,4 @@
-<?
+<?php
 include_once('paths.php');
 // require_once PLASMATURE_TYPES_INC."default.php";
 require_once PLASMATURE_TYPES_INC.'options.php';

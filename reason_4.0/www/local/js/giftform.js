@@ -7,6 +7,12 @@ $(document).ready(function() {
 	if ($("div#giftForm.pageOne").length)
 	{
 		toggle_recur_fields();
+		toggle_split_option();		
+		$("input#gift_amountElement").keyup(function(){toggle_split_option()});
+		$("input#checkbox_split_gift").change(function(){toggle_split_designation()});
+		$("#gift_designation_container").keyup(function(){total_split_gifts()});
+		
+		
 		$("input[type='checkbox']").not("#checkbox_specific_fund").not("#checkbox_match_gift").change(function(){ show_amount_fields(); });
 		
 		$("input[name='installment_type']").change(function(){ toggle_recur_fields(); });
@@ -23,18 +29,10 @@ $(document).ready(function() {
 			else
 				$("#employernameItem").hide(500);
 		});
-		
+				
 		//$("input#checkbox_match_gift").change();
 		$("input#checkbox_annual_fund").change();
-		
-		// Show/hide specific designations
-		// toggle_specific_designations();
-		// $("input[name='specific_fund']").change(function(){ toggle_specific_designations(); });
-		toggle_naa_designation_details();
-		$("input[name='norse_athletic_association']").change(function(){ toggle_naa_designation_details(); });
-		toggle_other_designations_details();
-		$("input[name='other']").change(function(){ toggle_other_designations_details(); });
-
+				
 		toggle_gift_prompt();
 		$("#gift_promptElement").change(function(){ toggle_gift_prompt(); });
 
@@ -226,45 +224,6 @@ function toggle_billing_address()
 	}
 }
 
-function toggle_specific_designations()
-{
-	if ( $("input[name='specific_fund']:checked").val() || $("input[name='specific_fund']:checked").val() == 'true' ) {
-		$("#designationnoteItem").show(500);
-		$("#norseathleticassociationItem").show(500);
-		// $("#baseballgroupItem").show(500);
-		// $("#softballgroupItem").show(500);
-		$("#scholarshipgroupItem").show(500);
-		$("#othergroupItem").show(500);
-		$("#commentsspecialinstructionsItem").show(500);
-	} else {
-		$("#designationnoteItem").hide(500);
-		$("#norseathleticassociationItem").hide(500);
-		// $("#baseballgroupItem").hide(500);
-		// $("#softballgroupItem").hide(500);
-		$("#scholarshipgroupItem").hide(500);
-		$("#othergroupItem").hide(500);
-		$("#commentsspecialinstructionsItem").hide(500);
-	}
-}
-
-function toggle_naa_designation_details() {
-	if ( $("input[name='norse_athletic_association']:checked").val() || $("input[name='norse_athletic_association']:checked").val() == "true" ) {
-		$("#norseathleticassociationdetailsItem").show();
-	} else {
-		$("#norseathleticassociationdetailsItem").hide();
-		$("#norse_athletic_association_detailsElement").val('General');
-	}
-}
-
-function toggle_other_designations_details() {
-	if ( $("input[name='other']:checked").val() || $("input[name='other']:checked").val() == "true" ) {
-		$("#otherdesignationdetailsItem").show();
-	} else {
-		$("#otherdesignationdetailsItem").hide();
-		$("#other_designation_detailsElement").val('');
-	}
-}
-
 function toggle_gift_prompt() {
 	if ($("#gift_promptElement").val() == 'staff_visit') {
 		$("#giftpromptdetailsItem").show(500);
@@ -278,6 +237,7 @@ function toggle_gift_prompt() {
 		$("#gift_prompt_detailsElement").val('');
 	}
 }
+
 
 function show_amount_fields() {
 	$(".inlineElement").find("input[id*='amountElement']").parent().hide();
@@ -305,7 +265,101 @@ function show_amount_fields() {
 
 function add_amounts() {
 	var initial_gift_amount = $("#gift_amountElement").val();
-	var total = 0;
+	var total = 0;	
+}
 
+/* If the split gift option is hidden, show it if the total gift amount
+is $50 or more. */
+function toggle_split_option()
+{
+if ($("input#checkbox_split_gift").prop('checked')) return;
+
+var amount = $('input#gift_amountElement').val().match(/[\d\.,]+/);
+$('div#splitgiftItem').toggle(amount && Number(amount[0].replace(',','')) >= 50);
+}
+
+/* Rebuild the designation element as an interface for gift splitting */
+function toggle_split_designation()
+{	
+	if ($("input#checkbox_split_gift").prop('checked')) 
+	{
+		// Read the split_designations element and convert any data there into an object
+		var designations = {};
+		if ($("input#split_designationsElement").val())
+		{
+			designations = JSON.parse($("input#split_designationsElement").val())
+		}
 	
+		// Add a class to indicate our state
+		$('#gift_designation_container').addClass('split');
+	
+		// Hide the designation radio buttons
+		$('#gift_designation_container span.radioButton').hide();
+
+		// Loop through each of the designations and add a text field
+		$('#gift_designation_container div.radioItem').each(function(){
+			$(this).prepend('<span class="splitText">$ <input type="text" class="splitAmount" name="gift_designation_split[]" /></span>');
+			
+			// If this option was selected already, prefill with the gift amount
+			if ($('span.radioButton input', $(this)).prop('checked'))
+			{
+				$('input.splitAmount', $(this)).val($('input#gift_amountElement').val());
+			}
+			
+			// If there's a value in the designations object for this field, set that
+			if (designations[$('span.radioButton input', $(this)).prop('value')])
+			{
+				$('input.splitAmount', $(this)).val(designations[$('span.radioButton input', $(this)).prop('value')]);
+			}
+		});
+		
+		// Move the gift total below the designations
+		$("div#splitgiftItem").after($("div#giftamountItem"));
+		
+		$("div#giftamountItem div.words").html('Gift Total:');
+	}
+	else
+	// Undo the splitting interface
+	{
+		// Remove the class to indicate our state
+		$('#gift_designation_container').removeClass('split');
+
+		// Show the designation radio buttons
+		$('#gift_designation_container span.radioButton').show();
+
+		// Remove the text boxes
+		$('#gift_designation_container span.splitText').remove();
+	
+		// Move the gift total back to the top
+		$("div#giftamountheaderItem").after($("div#giftamountItem"));
+		
+		$("div#giftamountItem div.words").html('');
+		
+		// Clear the designation description element
+		$("input#split_designationsElement").val('');
+	}
+}
+
+/* Add up the split gift amounts and put them in the gift_amount element,
+	and put a JSON representation of the gift amounts into the split_designations
+	element. */
+function total_split_gifts()
+{
+	if ($('#gift_designation_container').hasClass('split'))
+	{
+		var total = 0;
+		var designations = {};
+		
+		$('#gift_designation_container div.radioItem').each(function(){
+			var amount = $('input.splitAmount', $(this)).val().match(/[\d\.,]+/);
+			if (amount)
+			{
+				total = total + Number(amount[0].replace(',',''));
+				designations[$('input[type="radio"]', $(this)).prop('value')] = amount;
+			}
+		});
+	
+		$("input#gift_amountElement").val(total);
+		$("input#split_designationsElement").val(JSON.stringify(designations));
+	}
 }
