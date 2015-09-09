@@ -182,6 +182,9 @@ if ((array_key_exists('annual_fund', $this->trans_details))||(array_key_exists('
 			}
 	}
 	$qstring .= "'";
+	if (array_key_exists('comments_special_instructions', $this->trans_details)) {
+		$qstring .= ", comments = '".addslashes($this->trans_details['comments_special_instructions'])."' ";
+	}
 }
 if (array_key_exists('dedication', $this->trans_details))
 {
