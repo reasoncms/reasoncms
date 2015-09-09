@@ -347,7 +347,7 @@ class GiftPageThreeForm extends FormStep {
                 }
                 $txt .= '</li>' . "\n";
             }
-            if ($this->controller->get('other_designation_details')) {
+            if ($this->controller->get('comments_special_instructions')) {
                 $txt .= '<li>Comments/Special Instructions: ' . strip_tags($this->controller->get('comments_special_instructions')) . '</li>' . "\n";
             }
             $txt .= '</ul>' . "\n"; // Designated specifics end
