@@ -314,7 +314,7 @@ function toggle_split_designation()
 		});
 		
 		// Move the gift total below the designations
-		$("div#splitgiftItem").after($("div#giftamountItem"));
+		$("div#giftdesignationItem").after($("div#giftamountItem"));
 		
 		$("div#giftamountItem div.words").html('Gift Total:');
 	}
