@@ -7,7 +7,8 @@ $(document).ready(function() {
 	if ($("div#giftForm.pageOne").length)
 	{
 		toggle_recur_fields();
-		toggle_split_option();		
+		toggle_split_option();
+		toggle_split_designation();
 		$("input#gift_amountElement").keyup(function(){toggle_split_option()});
 		$("input#checkbox_split_gift").change(function(){toggle_split_designation()});
 		$("#gift_designation_container").keyup(function(){total_split_gifts()});
@@ -272,10 +273,10 @@ function add_amounts() {
 is $50 or more. */
 function toggle_split_option()
 {
-if ($("input#checkbox_split_gift").prop('checked')) return;
+	if ($("input#checkbox_split_gift").prop('checked')) return;
 
-var amount = $('input#gift_amountElement').val().match(/[\d\.,]+/);
-$('div#splitgiftItem').toggle(amount && Number(amount[0].replace(',','')) >= 50);
+	var amount = $('input#gift_amountElement').val().match(/[\d\.,]+/);
+	$('div#splitgiftItem').toggle(amount && Number(amount[0].replace(',','')) >= 50);
 }
 
 /* Rebuild the designation element as an interface for gift splitting */
