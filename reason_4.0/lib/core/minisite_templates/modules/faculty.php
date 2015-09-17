@@ -57,12 +57,26 @@
 			// How to crop the image to fit the size requirements; 'fill' or 'fit'
 			'thumbnail_crop' => '',
 			'ignore_affiliations' => false,
+			// optional affiliation display order and naming. Set a label to null or '' to hide an affiliation.
+			'affiliations' => array(),
+			// optional affiliation names for use in navigation
+			'affiliation_nav_names' => array(),
 		);
 				
 		function has_content() // {{{
 		{
 			return true;
 		} // }}}
+
+		function init( $args = array() )
+		{
+			parent::init($args);
+			if (!empty($this->params['affiliations']))
+				$this->affiliations = $this->params['affiliations'];
+			if (!empty($this->params['affiliation_nav_names']))
+				$this->affiliation_nav_names = $this->params['affiliation_nav_names'];
+		}
+		
 		function run() // {{{
 		{
 			$this->show_faculty_page();
@@ -235,7 +249,6 @@
 		} // }}}
 		function show_people() // {{{
 		{
-
 			$this->clean_sorted_people();
 			$this->determine_heads_use();
 			if($this->heads) $this->show_section_links();
@@ -247,7 +260,10 @@
 					if($this->heads)
 					{
 						if (isset($this->affiliations[$affiliation]))
-							$display = $this->affiliations[$affiliation];
+						{
+							if (!$display = $this->affiliations[$affiliation])
+								continue;
+						}
 						else
 							$display = ucwords($affiliation);
 
@@ -279,11 +295,16 @@
 				echo '</div>'."\n";
 			}
 		} // }}}
+		
+		/**
+		  * Hide an affiliation if it is empty, or its label in the $affiliations var is empty.
+		  *
+		  */
 		function clean_sorted_people() // {{{
 		{
 			foreach($this->sorted_people as $affiliation=>$people)
 			{
-				if(empty($people))
+				if(empty($people) || (array_key_exists($affiliation, $this->affiliations) && empty($this->affiliations[$affiliation])))
 					unset($this->sorted_people[$affiliation]);
 			}
 		} // }}}
