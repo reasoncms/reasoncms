@@ -160,7 +160,7 @@ class ThorCore
 		return (isset($labels[$name])) ? $labels[$name] : false;
 	}
 	
-	function append_thor_elements_to_form(&$disco_obj)
+	function append_thor_elements_to_form(&$disco_obj, $include_submit = true)
 	{
 		$xml = $this->get_thor_xml();
 		// echo "<PRE>" . $xml . "</PRE>";
@@ -168,6 +168,7 @@ class ThorCore
 		{
 			foreach ($xml->document->tagChildren as $node)
 			{
+				// echo "running on [" . $node->tagName . "]...<br>";
 				if ($node->tagName == 'input') $this->_transform_input($node, $disco_obj);
 				elseif ($node->tagName == 'textarea') $this->_transform_textarea($node, $disco_obj);
 				elseif ($node->tagName == 'radiogroup') $this->_transform_radiogroup($node, $disco_obj);
@@ -180,7 +181,10 @@ class ThorCore
 					$this->_transform_upload($node, $disco_obj);
 				}
 			}
-			$this->_transform_submit($xml->document->tagAttrs, $disco_obj);
+
+			if ($include_submit) {
+				$this->_transform_submit($xml->document->tagAttrs, $disco_obj);
+			}
 		}
 		else
 		{
@@ -518,6 +522,8 @@ class ThorCore
 
   			$GLOBALS['sqler']->mode = '';
   			if ($reconnect_db) connectDB($reconnect_db); // reconnect to default DB
+
+			return $result;
   		}
   		elseif (!$this->get_thor_table())
   		{
