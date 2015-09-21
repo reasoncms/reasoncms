@@ -36,7 +36,8 @@ class ReasonSocialIntegrationHelper
 					 'youtube' => 'YouTube',
 					 'linkedin' => 'LinkedIn',
 					 'tagboard' => 'Tagboard',
-					 'instagram' => 'Instagram');
+					 'instagram' => 'Instagram',
+					 'streaming' => "Streaming");
 	}
 
 	/**
