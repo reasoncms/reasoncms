@@ -73,7 +73,7 @@ class GiftPageThreeForm extends FormStep {
         'credit_card_type' => array(
             'type' => 'radio_no_sort',
             'options' => array('Visa' => 'Visa', 'MasterCard' => 'MasterCard', 'American Express' => 'American Express', 'Discover' => 'Discover', 'none'=>'none'),
-            'label' => 'Credit Card Type'
+            'display_name' => 'Credit Card Type'
         ),
         'credit_card_type_icon' => array(
             'type' => 'comment',
@@ -90,6 +90,7 @@ class GiftPageThreeForm extends FormStep {
             'display_name' => 'Expiration Year',
         ),
         'credit_card_security_code' => array(
+            'type' => 'text',
             'size' => 4,
             'display_name' => 'Security Code',
         ),
@@ -274,7 +275,7 @@ class GiftPageThreeForm extends FormStep {
         if ($this->controller->get('spouse_last_name') != 'Last') {
             $txt .= $this->controller->get('spouse_last_name') . '</li>' . "\n";
         }
-        $txt .= '<li>'."\n".'<strong> Address:</strong>' . "\n" . $this->controller->get('address_1') . "\n" . $this->controller->get('address_2') . "\n" . $this->controller->get('city') . ' ' . $this->controller->get('state_province') . ' ' . $this->controller->get('zip') . "\n" . $this->controller->get('country') . "\n" .'</li>' . "\n";
+        $txt .= '<li>'."\n".'<strong>Address:</strong>' . "\n" . $this->controller->get('address_1') . "\n" . $this->controller->get('address_2') . "\n" . $this->controller->get('city') . ' ' . $this->controller->get('state_province') . ' ' . $this->controller->get('zip') . "\n" . $this->controller->get('country') . "\n" .'</li>' . "\n";
         $txt .= '<li><strong>' . $this->controller->get('phone_type') . ' Phone:</strong> ' . $this->controller->get('phone') . '</li>' . "\n";
         $txt .= '<li><strong>E-mail:</strong> ' . $this->controller->get('email') . '</li>' . "\n";
         $txt .= '<li><strong>Luther Affiliation:</strong> ';
@@ -405,21 +406,21 @@ class GiftPageThreeForm extends FormStep {
     }
 
     function run_error_checks() {
-        if ($this->get_value('billing_address') == 'new'
-                && (!$this->get_value('billing_street_address')
-                || !$this->get_value('billing_city')
-                || !$this->get_value('billing_state_province')
-                || !$this->get_value('billing_zip')
-                || !$this->get_value('billing_country') )) {
-            $this->set_error('billing_address', 'Please enter your full billing address if the address you entered on the previous page was not the billing address for your credit card.');
-        }
-        if ($this->get_value('billing_address') == 'entered') {
-            $address = $this->controller->get('address_1') .' '. $this->controller->get('address_1');
-            $this->set_value('billing_street_address', $address);
-            $this->set_value('billing_city', $this->controller->get('city'));
-            $this->set_value('billing_state_province', $this->controller->get('state_province'));
-            $this->set_value('billing_zip', $this->controller->get('zip'));
-        }
+        // if ($this->get_value('billing_address') == 'new'
+        //         && (!$this->get_value('billing_street_address')
+        //         || !$this->get_value('billing_city')
+        //         || !$this->get_value('billing_state_province')
+        //         || !$this->get_value('billing_zip')
+        //         || !$this->get_value('billing_country') )) {
+        //     $this->set_error('billing_address', 'Please enter your full billing address if the address you entered on the previous page was not the billing address for your credit card.');
+        // }
+        // if ($this->get_value('billing_address') == 'entered') {
+        //     $address = $this->controller->get('address_1') .' '. $this->controller->get('address_1');
+        //     $this->set_value('billing_street_address', $address);
+        //     $this->set_value('billing_city', $this->controller->get('city'));
+        //     $this->set_value('billing_state_province', $this->controller->get('state_province'));
+        //     $this->set_value('billing_zip', $this->controller->get('zip'));
+        // }
 
         if ($this->controller->get('installment_type') != 'Onetime') {
             $expire_timestamp = mktime(0, 0, 0, $this->get_value('credit_card_expiration_month') + 1, 1, $this->get_value('credit_card_expiration_year'));
