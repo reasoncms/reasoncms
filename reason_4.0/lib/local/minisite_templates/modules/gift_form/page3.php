@@ -964,21 +964,21 @@ background: #CC0000 !important;
     }
 
     function run_error_checks() {
-        //if ($this->get_value('billing_address') == 'new'
-        //        && (!$this->get_value('billing_street_address')
-        //        || !$this->get_value('billing_city')
-        //        || !$this->get_value('billing_state_province')
-        //        || !$this->get_value('billing_zip')
-        //        || !$this->get_value('billing_country') )) {
-        //    $this->set_error('billing_address', 'Please enter your full billing address if the address you entered on the previous page was not the billing address for your credit card.');
-        //}
-        //if ($this->get_value('billing_address') == 'entered') {
-        //    $address = $this->controller->get('address_1') .' '. $this->controller->get('address_1');
-        //    $this->set_value('billing_street_address', $address);
-        //    $this->set_value('billing_city', $this->controller->get('city'));
-        //    $this->set_value('billing_state_province', $this->controller->get('state_province'));
-        //    $this->set_value('billing_zip', $this->controller->get('zip'));
-        //}
+        // if ($this->get_value('billing_address') == 'new'
+        //         && (!$this->get_value('billing_street_address')
+        //         || !$this->get_value('billing_city')
+        //         || !$this->get_value('billing_state_province')
+        //         || !$this->get_value('billing_zip')
+        //         || !$this->get_value('billing_country') )) {
+        //     $this->set_error('billing_address', 'Please enter your full billing address if the address you entered on the previous page was not the billing address for your credit card.');
+        // }
+        // if ($this->get_value('billing_address') == 'entered') {
+        //     $address = $this->controller->get('address_1') .' '. $this->controller->get('address_1');
+        //     $this->set_value('billing_street_address', $address);
+        //     $this->set_value('billing_city', $this->controller->get('city'));
+        //     $this->set_value('billing_state_province', $this->controller->get('state_province'));
+        //     $this->set_value('billing_zip', $this->controller->get('zip'));
+        // }
 
         if ($this->controller->get('installment_type') != 'Onetime') {
             $expire_timestamp = mktime(0, 0, 0, $this->get_value('credit_card_expiration_month') + 1, 1, $this->get_value('credit_card_expiration_year'));

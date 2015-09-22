@@ -97,6 +97,10 @@ class GiftPageOneForm extends FormStep
             'default'       =>  'annual_fund',
             'display_name'  =>  '&nbsp;'
         ),
+        'comments_special_instructions' =>  array(
+            'type'          =>  'textarea',
+            'display_name'  =>  'Comments / Special instructions',
+        ),
         'matching_gift_header' => array(
 			'type' => 'comment',
 			'text' => '<h3>Will your gift be matched by your employer?</h3>'
@@ -185,7 +189,7 @@ class GiftPageOneForm extends FormStep
             $this->set_element_properties('gift_designation', array( 'default' => 'norse_athletic_association' ));
         }
         if ($this->get_value('gift_amount') < '50' && $this->get_value('installment_type') == 'Onetime') {
-            $this->change_element_type('split_designation', 'hidden');
+            $this->change_element_type('split_gift', 'hidden');
         }
 
         $opts = array(

@@ -42,11 +42,11 @@ class designationsType extends radio_with_other_no_sortType
         $str .= '></span>'."\n".'<label for="'.$id.'">'.$this->other_label.'</label>';
         if(empty($this->other_options))
         {
-            $str .= '<input type="text" name="'.$this->name.'_other" value="'.str_replace('"', '&quot;', $other_value).'"  />';
+            $str .= '<input type="text" name="'.$this->name.'_other" id="'.$this->name.'_otherElement" value="'.str_replace('"', '&quot;', $other_value).'"  />';
         }
         else
         {
-            $str .= '<select name="'.$this->name.'_other" class="other">';
+            $str .= '<select name="'.$this->name.'_other" id="'.$this->name.'_otherElement" class="other">';
             foreach($this->other_options as $k => $v)
             {
                 $selected = ($k == $other_value) ? ' selected="selected"' : '';
@@ -70,9 +70,22 @@ class designationsType extends radio_with_other_no_sortType
             $str .= ' checked="checked"';
             $checked = true;
         }
+        $req = $this->get_request();
         $str .= ' /></span>'."\n".'<label for="'.$id.'">'.$val.'</label>'."\n";
-        if ( $key === 'norse_athletic_association' ){
-            $str .= '<select name="'.$this->name.'_naa_details" class="naa_details">';
+        if ( isset($req['split_gift']) && $key === 'norse_athletic_association') {
+            $str .= '<select name="'.$this->name.'_naa_details" id="'.$this->name.'_naa_detailsElement" class="naa_details">';
+            foreach ($this->naa_options as $k => $v) {
+                if ( $k == $this->value && $checked ) {
+                    $selected = ' selected="selected"';
+                } else {
+                    $selected = '';
+                }
+                $str .= '<option value="'.htmlspecialchars($k, ENT_QUOTES).'"'.$selected.'>'.strip_tags($v).'</option>'."\n";
+            }
+            $str .= '</select>'."\n";
+        }
+        elseif ( $key === 'norse_athletic_association' ){
+            $str .= '<select name="'.$this->name.'_naa_details" id="'.$this->name.'_naa_detailsElement" class="naa_details">';
             foreach ($this->naa_options as $k => $v) {
                 if ( $k == $this->value && $checked ) {
                     $selected = ' selected="selected"';
@@ -89,8 +102,20 @@ class designationsType extends radio_with_other_no_sortType
     function grab_value()
     {
         $return = parent::grab_value();
-        if ( $return == 'norse_athletic_association' ) {
-            $http_vars = $this->get_request();
+        $http_vars = $this->get_request();
+        $splits = json_decode($http_vars['split_designations']);
+        if ( isset($http_vars['split_gift']) && isset($splits->norse_athletic_association)) {
+            if ( isset( $http_vars[ $this->name .'_naa_details' ] ) )
+            {
+                $return = trim($http_vars[ $this->name .'_naa_details' ]);
+                if(!empty($this->naa_options) && !isset($this->naa_options[$return]))
+                    $this->set_error(strip_tags($this->display_name).': Please choose a value other than "'.htmlspecialchars($return,ENT_QUOTES).'".');
+                if($this->_is_disabled_option($return) && !$this->_is_current_value($return))
+                    $this->set_error(strip_tags($this->display_name).': Please choose a value other than "'.htmlspecialchars($return,ENT_QUOTES).'".');
+            }
+            else
+                $return = NULL;
+        } elseif ( $return == 'norse_athletic_association' ) {
             if ( isset( $http_vars[ $this->name .'_naa_details' ] ) )
             {
                 $return = trim($http_vars[ $this->name .'_naa_details' ]);
