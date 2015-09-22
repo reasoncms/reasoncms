@@ -7,14 +7,14 @@ $(document).ready(function() {
 	if ($("div#giftForm.pageOne").length)
 	{
 		toggle_recur_fields();
-		toggle_designation_details();
+		// toggle_designation_details();
 		toggle_split_option();
 		toggle_split_designation();
 		$("input#gift_amountElement").keyup(function(){toggle_split_option()});
 		$("input#checkbox_split_gift").change(function(){toggle_split_designation()});
 		$("#gift_designation_container").keyup(function(){total_split_gifts()});
 
-		$("input[name='gift_designation']").change(function(){ toggle_designation_details(); });
+		// $("input[name='gift_designation']").change(function(){ toggle_designation_details(); });
 
 		$("input[type='checkbox']").not("#checkbox_specific_fund").not("#checkbox_match_gift").change(function(){ show_amount_fields(); });
 
@@ -190,22 +190,22 @@ function toggle_country_field(stateElementSelector, countryItemSelector)
 	}
 }
 
-function toggle_designation_details()
-{
-	val = $("input[name='gift_designation']:checked").val();
-	if ( val && val == 'norse_athletic_association')
-	{
-		$("#gift_designation_naa_detailsElement").show(500);
-	} else {
-		$("#gift_designation_naa_detailsElement").hide(500);
-	}
-	if ( val && val == '__other__')
-	{
-		$("#gift_designation_otherElement").show(500);
-	} else {
-		$("#gift_designation_otherElement").hide(500);
-	}
-}
+// function toggle_designation_details()
+// {
+// 	val = $("input[name='gift_designation']:checked").val();
+// 	if ( val && val == 'norse_athletic_association')
+// 	{
+// 		$("#gift_designation_naa_detailsElement").show(500);
+// 	} else {
+// 		$("#gift_designation_naa_detailsElement").hide(500);
+// 	}
+// 	if ( val && val == '__other__')
+// 	{
+// 		$("#gift_designation_otherElement").show(500);
+// 	} else {
+// 		$("#gift_designation_otherElement").hide(500);
+// 	}
+// }
 
 function toggle_recur_fields()
 {
