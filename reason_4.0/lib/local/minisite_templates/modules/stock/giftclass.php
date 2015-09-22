@@ -158,18 +158,18 @@ var $giver_id;
 			if (array_key_exists(`split_designations`, $this->trans_details)) {
 				$qstring .= ", split_designations = '".addslashes($this->trans_details['split_designations'])."', ";
 			}
-			if (array_key_exists(`annual_fund_split`, $this->trans_details)) {
-				$qstring .= ", annual_fund_split = '".addslashes($this->trans_details['annual_fund_split'])."', ";
-			}
-			if (array_key_exists(`naa_split`, $this->trans_details)) {
-				$qstring .= ", naa_split = '".addslashes($this->trans_details['naa_split'])."', ";
-			}
-			if (array_key_exists(`scholarship_fund_split`, $this->trans_details)) {
-				$qstring .= ", scholarship_fund_split = '".addslashes($this->trans_details['scholarship_fund_split'])."', ";
-			}
-			if (array_key_exists(`other_split`, $this->trans_details)) {
-				$qstring .= ", other_split = '".addslashes($this->trans_details['other_split'])."', ";
-			}
+			// if (array_key_exists(`annual_fund_split`, $this->trans_details)) {
+			// 	$qstring .= ", annual_fund_split = '".addslashes($this->trans_details['annual_fund_split'])."', ";
+			// }
+			// if (array_key_exists(`naa_split`, $this->trans_details)) {
+			// 	$qstring .= ", naa_split = '".addslashes($this->trans_details['naa_split'])."', ";
+			// }
+			// if (array_key_exists(`scholarship_fund_split`, $this->trans_details)) {
+			// 	$qstring .= ", scholarship_fund_split = '".addslashes($this->trans_details['scholarship_fund_split'])."', ";
+			// }
+			// if (array_key_exists(`other_split`, $this->trans_details)) {
+			// 	$qstring .= ", other_split = '".addslashes($this->trans_details['other_split'])."', ";
+			// }
 		}
 		// if ((array_key_exists('annual_fund', $this->trans_details))||(array_key_exists('specific_fund', $this->trans_details))){
 		// 		$qstring .= ", designation = '";
