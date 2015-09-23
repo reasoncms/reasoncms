@@ -35,7 +35,10 @@ class ReasonSocialIntegrationHelper
 					 'email' => 'Email Signup',
 					 'youtube' => 'YouTube',
 					 'linkedin' => 'LinkedIn',
-					 'tagboard' => 'Tagboard');
+					 'tagboard' => 'Tagboard',
+					 'instagram' => 'Instagram',
+					 'escores' => 'EScores Signup',
+					 'streaming' => "Streaming");
 	}
 
 	/**

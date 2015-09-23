@@ -145,7 +145,7 @@
 					} else {
 						$host = REASON_HOST;
 					}
-					if ( preg_match( '/'.$host.'/', $url ) )
+					if ( preg_match( '/'.$host.'/', $url ) && !in_array(parse_url($url, PHP_URL_HOST), $GLOBALS['_REASON_TREAT_AS_EXTERNAL_LINKS']))
 					// Note: virtual or absolute urls will be jump-external instead of jump-internal if running on localhost
 					{
 						$class .= ' jump-internal';

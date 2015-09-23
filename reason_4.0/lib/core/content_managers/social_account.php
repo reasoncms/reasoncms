@@ -20,6 +20,7 @@ reason_include_once('classes/social.php');
  *
  * - Facebook
  * - Twitter
+ * - Instagram
  *
  * @todo support pinterest
  */
