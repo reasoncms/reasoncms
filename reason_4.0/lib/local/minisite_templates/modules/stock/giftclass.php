@@ -136,80 +136,46 @@ var $giver_id;
 		credit_card_number = '".addslashes($this->trans_details['credit_card_number'])."',
 		credit_card_expiration_month = '".addslashes($this->trans_details['credit_card_expiration_month'])."',
 		credit_card_expiration_year = '".addslashes($this->trans_details['credit_card_expiration_year'])."',
-		credit_card_name = '".addslashes($this->trans_details['credit_card_name'])."',
-		billing_address = '".addslashes($this->trans_details['billing_address'])."' ";
+		credit_card_name = '".addslashes($this->trans_details['credit_card_name'])."'";
+		// billing_address = '".addslashes($this->trans_details['billing_address'])."' ";
 		if (array_key_exists('match_gift', $this->trans_details)) {
-			$qstring .= ",
-			match_gift = '". (($this->trans_details['match_gift'] == true) ? 'Yes': 'NULL')."',
-			employer_name = '".addslashes($this->trans_details['employer_name'])."' ";
+			$qstring .= ", match_gift = '". (($this->trans_details['match_gift'] == true) ? 'Yes': 'NULL')."'";
+			$qstring .= ", employer_name = '".addslashes($this->trans_details['employer_name'])."'";
 		}
 		if (array_key_exists('estate_plans', $this->trans_details)) {
-			$qstring .= ",
-			have_estate_plans = '". (($this->trans_details['have_estate_plans'] == true) ? 'Yes': 'NULL')."'
-			send_estate_info = '". (($this->trans_details['send_estate_info'] == true) ? 'Yes': 'NULL')."' ";
-		}
-		// if (array_key_exists('estate_info', $this->trans_details)) {
-		// 	$qstring .= ",
-		// 	estate_info = '". (($this->trans_details['estate_info'] == true) ? 'Yes': 'NULL')."' ";
-		// }
-		if (array_key_exists('split_gift', $this->trans_details)) {
-			$qstring .= ", 'Yes'";
-
-			if (array_key_exists(`split_designations`, $this->trans_details)) {
-				$qstring .= ", split_designations = '".addslashes($this->trans_details['split_designations'])."', ";
+			if ( isset($this->trans_details['estate_plans'][0]) ) {
+				$qstring .= ", have_estate_plans = 'Yes'";
 			}
-			// if (array_key_exists(`annual_fund_split`, $this->trans_details)) {
-			// 	$qstring .= ", annual_fund_split = '".addslashes($this->trans_details['annual_fund_split'])."', ";
-			// }
-			// if (array_key_exists(`naa_split`, $this->trans_details)) {
-			// 	$qstring .= ", naa_split = '".addslashes($this->trans_details['naa_split'])."', ";
-			// }
-			// if (array_key_exists(`scholarship_fund_split`, $this->trans_details)) {
-			// 	$qstring .= ", scholarship_fund_split = '".addslashes($this->trans_details['scholarship_fund_split'])."', ";
-			// }
-			// if (array_key_exists(`other_split`, $this->trans_details)) {
-			// 	$qstring .= ", other_split = '".addslashes($this->trans_details['other_split'])."', ";
-			// }
+			if ( isset($this->trans_details['estate_plans'][1]) ) {
+				$qstring .= ", send_estate_info = 'Yes'";
+			}
 		}
-		// if ((array_key_exists('annual_fund', $this->trans_details))||(array_key_exists('specific_fund', $this->trans_details))){
-		// 		$qstring .= ", designation = '";
-		// 	if (isset($this->trans_details['annual_fund'])){
-		// 		$qstring .= "Annual Fund|";
-		// 	}
-		// 	if (array_key_exists('specific_fund', $this->trans_details)){
-		// 			if (isset($this->trans_details['aquatic_center'])){
-		// 				$qstring .= "Aquatic Center|";
-		// 			}
-		// 			if (isset($this->trans_details['sesq_scholarship_fund'])){
-		// 				$qstring .= "Sesquicentennial Scholarship Fund|";
-		// 			}
-		// 			if (isset($this->trans_details['sesq_study_abroad_fund'])){
-		// 				$qstring .= "Sesquicentennial Study Abroad Scholarship Fund|";
-		// 			}
-		// 			if (isset($this->trans_details['transform_teaching_fund'])){
-		// 				$qstring .= "Fund for Transformational Teaching and Learning|";
-		// 			}
-		// 			if (isset($this->trans_details['norse_athletic_association'])){
-		// 				if (isset($this->trans_details['naa_designation_details'])){
-		// 					$qstring .= "NAA: ".addslashes($this->trans_details['naa_designation_details'])."|";
-		// 				} else {
-		// 					$qstring .= "NAA|";
-		// 				}
-		// 			}
-		// 			if (isset($this->trans_details['other_designation_details'])){
-		// 				$qstring .= "Other: ".addslashes($this->trans_details['other_designation_details']);
-		// 			}
-		// 	}
-		// 	$qstring .= "'";
-		// }
+		if (array_key_exists('split_gift', $this->trans_details)) {
+			$qstring .= ", split_gift = '". (($this->trans_details['split_gift'] == true) ? 'Yes': 'NULL')."'";
+
+			if (array_key_exists('split_designations', $this->trans_details)) {
+				$qstring .= ", split_designations = '".addslashes($this->trans_details['split_designations'])."'";
+			}
+		}
+		if (array_key_exists('comments_special_instructions', $this->trans_details)) {
+			$qstring .= ", comments = '". addslashes($this->trans_details['comments_special_instructions'])."'";
+		}
+		if (array_key_exists('gift_prompt', $this->trans_details)) {
+			$qstring .= ", gift_prompt = '". addslashes($this->trans_details['gift_prompt'])."'";
+			if (array_key_exists('gift_prompt_details', $this->trans_details)) {
+				$qstring .= ", gift_prompt_details = '". addslashes($this->trans_details['gift_prompt_details'])."'";
+			}
+		}
 		if (array_key_exists('dedication', $this->trans_details))
 		{
-			$qstring .= ", dedication = '".addslashes($this->trans_details['dedication'])."' ";
-			$qstring .= ", dedication_details = '".addslashes($this->trans_details['dedication_details'])."' ";
+			$qstring .= ", dedication = '".addslashes($this->trans_details['dedication'])."'";
+			$qstring .= ", dedication_details = '".addslashes($this->trans_details['dedication_details'])."'";
 		}
-		if (array_key_exists('printed_notification_choice', $this->trans_details)) {
-			$qstring .= ",
-			tax_receipt = '".addslashes($this->trans_details['printed_notification_choice'])."' ";
+		if (array_key_exists('mail_receipt', $this->trans_details)) {
+			$qstring .= ", mail_receipt = '".addslashes($this->trans_details['mail_receipt'])."' ";
+		}
+		if (array_key_exists('installment_notification', $this->trans_details)) {
+			$qstring .= ", email_new_charges = '".addslashes($this->trans_details['installment_notification'])."' ";
 		}
 		// if (array_key_exists('billing_street_address', $this->trans_details)) {
 		// 	$qstring .= ",
@@ -237,6 +203,7 @@ var $giver_id;
 			$qresult = db_query($qstring);
 
 
+
 			if (isset($this->trans_details['gift_amount']) && ($this->trans_details['installment_type'] == 'Onetime')){
 				$qstring = "INSERT INTO `gift_transaction` SET
 				created=NOW(),
@@ -249,6 +216,7 @@ var $giver_id;
 					if (empty($gift->insert_id)) return("Error recording transaction details.");
 				*/
 				$qresult = db_query($qstring);
+
 			}
 
 
@@ -267,6 +235,7 @@ var $giver_id;
 				if (empty($gift->insert_id)) return("Error recording transaction details.");
 			*/
 				$qresult = db_query($qstring);
+
 			}
 			connectDB(REASON_DB);
 	}
