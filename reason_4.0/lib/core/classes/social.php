@@ -37,7 +37,8 @@ class ReasonSocialIntegrationHelper
 					 'linkedin' => 'LinkedIn',
 					 'tagboard' => 'Tagboard',
 					 'instagram' => 'Instagram',
-					 'escores' => 'EScores Signup');
+					 'escores' => 'EScores Signup',
+					 'streaming' => "Streaming");
 	}
 
 	/**
