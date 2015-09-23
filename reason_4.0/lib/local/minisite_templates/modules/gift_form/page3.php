@@ -70,16 +70,14 @@ class GiftPageThreeForm extends FormStep {
             'type' => 'text',
             'size' => 35,
         ),
-                'credit_card_type' => array(
+        'credit_card_type' => array(
             'type' => 'radio_no_sort',
-            'options' => array('Visa'=>'Visa','MasterCard'=>'MasterCard','American Express'=>'American Express','Discover'=>'Discover', 'none'=>'none'),
+            'options' => array('Visa' => 'Visa', 'MasterCard' => 'MasterCard', 'American Express' => 'American Express', 'Discover' => 'Discover', 'none'=>'none'),
+            'display_name' => 'Credit Card Type'
         ),
         'credit_card_type_icon' => array(
             'type' => 'comment',
-            'text' => "<i class='fa fa-cc-visa formCCType' id='visaIcon'></i>
-                        <i class='fa fa-cc-mastercard formCCType' id='mastercardIcon'></i>
-                        <i class='fa fa-cc-amex formCCType' id='amexIcon'></i>
-                        <i class='fa fa-cc-discover formCCType' id='discoverIcon'></i>"
+            'text' => "<i class='fa fa-cc-visa formCCType' id='visaIcon'></i><i class='fa fa-cc-mastercard formCCType' id='mastercardIcon'></i><i class='fa fa-cc-amex formCCType' id='amexIcon'></i><i class='fa fa-cc-discover formCCType' id='discoverIcon'></i>",
         ),
         'credit_card_expiration_month' => array(
             'type' => 'month',
@@ -92,6 +90,7 @@ class GiftPageThreeForm extends FormStep {
             'display_name' => 'Expiration Year',
         ),
         'credit_card_security_code' => array(
+            'type' => 'text',
             'size' => 4,
             'display_name' => 'Security Code',
         ),
@@ -160,7 +159,6 @@ class GiftPageThreeForm extends FormStep {
 
     // style up the form and add comments et al
     function on_every_time() {
-
         $this->set_comments('credit_card_security_code', form_comment('
             <p><a data-reveal-id="cvv2Iframe">What\'s this?</a></p>
             <div class="reveal-modal medium" id="cvv2Iframe" data-reveal="">
@@ -213,7 +211,7 @@ class GiftPageThreeForm extends FormStep {
             if (!$this->_has_errors() && $this->controller->get('installment_type') != 'Onetime') {
                 $text .= build_gift_review_detail_output($this->helper, $this->date_format);
             }
-            $text .= '<p class="changeGiftButton"><a href="?_step=GiftPageOneForm">Change Gift Setup</a></p>' . "\n";
+            $text .= '<a title="Modify Gift" href="?_step=GiftPageOneForm">Modify Gift</a>' . "\n";
             $this->change_element_type('review_note', 'comment', array('text' => $text));
         }
     }
@@ -253,24 +251,28 @@ class GiftPageThreeForm extends FormStep {
 
         $txt = '<div id="reviewGiftOverview">' . "\n";
 
-        $txt .= '<p class="printConfirm">Print this confirmation for your records.</p>' . "\n";
-        $txt .= '<h3>Thank you for your gift to Luther College</h3>' . "\n";
-        if (reason_unique_name_exists('giving_form_thank_you_blurb'))
-            $txt .= get_text_blurb_content('giving_form_thank_you_blurb') . "\n";
+        //$txt .= '<p class="printConfirm">Print this confirmation for your records.</p>' . "\n";
+        $txt .= '
+          <table class="row" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 100%; position: relative; display: block; padding: 0px;">
+            <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
+              <td class="wrapper last" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; position: relative; color: #444444; font-family: "Roboto Slab","Helvetica Neue","Helvetica",Arial,sans-serif; font-size: 16px; font-weight: 300; line-height: 20px; text-rendering: optimizelegibility; margin: 0; padding: 10px 0px 0px;" align="left" valign="top">
+                 <table class="twelve columns" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 580px; margin: 0 auto; padding: 0;">
+                   <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
+                     <td style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; color: #444444; font-family: "Roboto Slab","Helvetica Neue","Helvetica",Arial,sans-serif; font-size: 16px; font-weight: 300; line-height: 20px; text-rendering: optimizelegibility; margin: 0; padding: 0px 0px 10px;" align="left" valign="top">
+                       <h3 style="color: #444444; font-family: "Open Sans","Helvetica Neue","Helvetica",Arial,sans-serif; font-size: 32px; font-weight: 300; text-align: left; line-height: 1.7; text-rendering: optimizelegibility; word-break: normal; margin: 0; padding: 0;" align="left">Thank you for your gift to Luther College
+                       </h3>
+';
+        if (reason_unique_name_exists('giving_form_thank_you_blurb')) {
+	    $txt .= '<p style="color: #444444; font-family: inherit; font-size: 1.05rem; font-weight: 300; text-align: left; line-height: 1.7; text-ren
+dering: optimizelegibility; margin: 0 0 10px; padding: 0;" align="left">';
+            $txt .= strip_tags(get_text_blurb_content('giving_form_thank_you_blurb')) . "</p>\n";
+	}
         if ((intval($this->controller->get('gift_amount')) <= 100) && !$this->get_value('mail_receipt')) {
             if (reason_unique_name_exists('giving_form_100_dollars')){
                 $txt .= get_text_blurb_content('giving_form_100_dollars') . "\n";
-			} else {
-				$txt .= '<p>This e-receipt will serve as confirmation of your online gift to Luther College. This e-receipt gives us
-						the opportunity to continue to reduce our paper usage and helps us to achieve our sustainability goals. Thank
-						you for doing your part!</p>' . "\n";
-                $txt .= '<p>Of course, if you\'d prefer to receive a paper receipt, we can take care of that for you.
-						Simply email Nicole Waskow at waskni01@luther.edu and we will send one to you via US Mail.</p>' . "\n";
 			}
         }
         $txt .= '<p>Luther College is, for tax deduction purposes, a 501(c)(3) organization.</p>' . "\n";
-        $txt .= '<p>If you have questions about the giving process or experience technical problems using
-			the online giving form, please contact the Luther College Development Office.</p>' . "\n";
         $txt .= '<ul>' . "\n";
         $txt .= '<li><strong>Date:</strong> ' . date($this->date_format) . '</li>' . "\n";
         $txt .= '<h4>Your Information</h4>' . "\n";
@@ -284,13 +286,13 @@ class GiftPageThreeForm extends FormStep {
         if ($this->controller->get('spouse_last_name') != 'Last') {
             $txt .= $this->controller->get('spouse_last_name') . '</li>' . "\n";
         }
-        $txt .= '<li>'."\n".'<strong>' . $this->controller->get('address_type') . ' Address:</strong>' . "\n" . $this->controller->get('street_address') . "\n" . $this->controller->get('city') . ' ' . $this->controller->get('state_province') . ' ' . $this->controller->get('zip') . "\n" . $this->controller->get('country') . "\n" .'</li>' . "\n";
+        $txt .= '<li>'."\n".'<strong>Address:</strong>' . "\n" . $this->controller->get('address_1') . "\n" . $this->controller->get('address_2') . "\n" . $this->controller->get('city') . ' ' . $this->controller->get('state_province') . ' ' . $this->controller->get('zip') . "\n" . $this->controller->get('country') . "\n" .'</li>' . "\n";
         $txt .= '<li><strong>' . $this->controller->get('phone_type') . ' Phone:</strong> ' . $this->controller->get('phone') . '</li>' . "\n";
         $txt .= '<li><strong>E-mail:</strong> ' . $this->controller->get('email') . '</li>' . "\n";
         $txt .= '<li><strong>Luther Affiliation:</strong> ';
             $txt .= implode(', ', $this->controller->get('luther_affiliation')) . '</li>' . "\n";
         if ($this->controller->get('class_year')) {
-            $txt .= '<li><strong>Class:</strong>' . $this->controller->get('class_year') . '</li>' . "\n";
+            $txt .= '<li><strong>Class:</strong> ' . $this->controller->get('class_year') . '</li>' . "\n";
         }
         foreach ($this->controller->get('estate_plans') as $plan) {
             if ($plan == 'have_estate_plans') {
@@ -312,50 +314,79 @@ class GiftPageThreeForm extends FormStep {
             }
             $txt .= '.</li>' . "\n";
         }
+
+        // Build the Designation text
+        $designation    = $this->controller->get('gift_designation');
+        $naa_opts       = $this->controller->get_form('GiftPageOneForm')->naa_opts;
+        if ( $this->controller->get('split_gift') == true ){
+            $txt .= "<li><strong>Designation Details:</strong></li>\n";
+            $txt .= "<ul>\n";
+            $splits = json_decode($this->controller->get('split_designations'));
+            if ( $splits->{'annual_fund'} ){
+                $txt .= "<li><strong>Annual Fund:</strong> $".$splits->{'annual_fund'}[0]."</li>\n";
+            }
+            if ( $splits->{'norse_athletic_association'} ){
+                $txt .= "<li><strong>Norse Athletic Association:</strong> $".$splits->{'norse_athletic_association'}[0]." – ".$naa_opts[$splits->{'naa_details'}]."</li>\n";
+            }
+            if ( $splits->{'scholarship_fund'} ){
+                $txt .= "<li><strong>Scholarship Fund:</strong> $".$splits->{'scholarship_fund'}[0]."</li>\n";
+            }
+            if ( $splits->{'__other__'} ){
+                $txt .= "<li><strong>Other:</strong> $".$splits->{'__other__'}[0];
+                if ( $splits->{'other_details'} ){
+                    $txt .= " – ".$splits->{'other_details'}."</li>\n";
+                } else {
+                    $txt .= "</li>\n";
+                }
+            }
+            $txt .= "</ul>\n";
+        } else {
+            // if the value of a signal designation is an naa_opts key, then the gift is for the NAA,
+            // otherwise the values are 'annual_fund' or 'scholarship_fund', any other text comes from the
+            // other_details text and can be anything
+            if ( array_key_exists($designation, $naa_opts) ) {
+                $desig_txt = "Norse Athletic Association – {$naa_opts[$designation]}";
+            }
+            elseif ( $designation == "annual_fund" )
+                $desig_txt = "Annual Fund";
+            elseif ( $designation == "scholarship_fund" )
+                $desig_txt = "Scholarship Fund";
+            else
+                $desig_txt = "Other – {$designation}";
+
+            $txt .= "<li><strong>Designation:</strong> {$desig_txt}</li>\n";
+        }
+        if ($this->controller->get('comments_special_instructions'))
+            $txt .= "<li><strong>Comments / Special Instructions:</strong> {$this->controller->get('comments_special_instructions')}</li>\n";
         if ($this->controller->get('match_gift') && $this->controller->get('employer_name')) {
             $txt .= '<li><strong>Employer Matching:</strong> My employer, ' . strip_tags($this->controller->get('employer_name')) . ', will match my gift.</li>' . "\n";
         }
-        if ($this->controller->get('existing_pledge')) {
-            $txt .= '<li><strong>This is a payment on an existing pledge:</strong> ' . strip_tags($this->controller->get('existing_pledge')) . '</li>' . "\n";
-        }
-        if (($this->controller->get('annual_fund') || ($this->controller->get('specific_fund')))) {
-            $txt .= '<li>'."\n".'<strong>Designation</strong> ' . "\n";
-            $txt .= '<ul>' . "\n";
-            if ($this->controller->get('annual_fund')) {
-                $txt .= '<li>The Annual Fund</li>' . "\n";
-            }
-            if ($this->controller->get('baseball_stadium')) {
-                $txt .= '<li>Baseball Stadium</li>' . "\n";
-            }
-            if ($this->controller->get('softball_stadium')) {
-                $txt .= '<li>Softball Stadium</li>' . "\n";
-            }
-            if ($this->controller->get('scholarship_fund')) {
-                $txt .= '<li>The Scholarship Fund, </li>' . "\n";
-            }
-            if ($this->controller->get('transform_teaching_fund')) {
-                $txt .= '<li>The Fund for Transformational Teaching and Learning</li>' . "\n";
-            }
-            if ($this->controller->get('sustainable_communities')) {
-                $txt .= '<li>Luther Center for Sustainable Communities</li>' . "\n";
-            }
-            if ($this->controller->get('norse_athletic_association')) {
-                $txt .= '<li>The Norse Athletic Association';
-                if ($this->controller->get('naa_designation_details')
-                    ); {
-                    $txt .= ': ' . strip_tags($this->controller->get('naa_designation_details'));
-                }
-                $txt .= '</li>' . "\n";
-            }
-            if ($this->controller->get('comments_special_instructions')) {
-                $txt .= '<li>Comments/Special Instructions: ' . strip_tags($this->controller->get('comments_special_instructions')) . '</li>' . "\n";
-            }
-            $txt .= '</ul>' . "\n"; // Designated specifics end
-            $txt .= '</li>' . "\n"; //Designated giving end
-        }
         if ($this->controller->get('gift_prompt')) {
-            $txt .= '<li><strong>Gift Prompt:</strong> ' . strip_tags($this->controller->get('gift_prompt')) . '</li>' ."\n";
+            $prompt = strip_tags($this->controller->get('gift_prompt'));
+            switch ($prompt) {
+                case 'mailing':
+                    $prompt_txt = 'Received a mailing';
+                    break;
+                case 'email':
+                    $prompt_txt = 'Received an email';
+                    break;
+                case 'phonathon':
+                    $prompt_txt = 'Received a Phonathon call';
+                    break;
+                case 'staff_visit':
+                    $prompt_txt = 'Development staff visit';
+                    if ($this->controller->get('gift_prompt_details'))
+                        $prompt_txt .= ' - ' . strip_tags($this->controller->get('gift_prompt_details'));
+                    break;
+                case 'other':
+                    $prompt_txt = 'Other';
+                    if ($this->controller->get('gift_prompt_details'))
+                        $prompt_txt .= ' – ' . strip_tags($this->controller->get('gift_prompt_details'));
+                    break;
+            }
+            $txt .= '<li><strong>Gift Prompt:</strong> '.$prompt_txt.'</li>' . "\n";
         }
+
         if ($this->controller->get('dedication') && $this->controller->get('dedication_details')) {
             $txt .= '<li><strong>Dedication:</strong> This gift is in ';
             if ($this->controller->get('dedication') == 'Memory') {
@@ -364,7 +395,9 @@ class GiftPageThreeForm extends FormStep {
             if ($this->controller->get('dedication') == 'Honor') {
                 $txt .= 'honor';
             }
-            $txt .= ' of ' . $this->controller->get('dedication_details') . '</li>' . "\n";
+            if ($this->controller->get('dedication_details'));
+                $txt .= ' of ' . $this->controller->get('dedication_details');
+            $txt .= '</li>' . "\n";
         }
 
         if ($this->get_value('result_refnum')) {
@@ -382,8 +415,554 @@ class GiftPageThreeForm extends FormStep {
             $txt .= '<li><strong>Transaction Notifications:</strong> You will ' . $insert_txt . 'receive email notifications when installments occur on this gift</li>' . "\n";
         }
         $txt .= '</ul>' . "\n";
+
+        $txt .= '
+                      </td>
+                      <td class="expander" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; visibility: hidden; width: 0px; color: #444444; font-family: "Roboto Slab","Helvetica Neue","Helvetica",Arial,sans-serif; font-size: 16px; font-weight: 300; line-height: 20px; text-rendering: optimizelegibility; margin: 0; padding: 0;" align="left" valign="top">
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+        ';
+
         $txt .= '</div>' . "\n";
         return $txt;
+    }
+
+    function get_confirmation_header() {
+    return '
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width" />
+  </head>
+  <body style="width: 100% !important; min-width: 100%; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; color: #444444; font-family: "Roboto Slab","Helvetica Neue","Helvetica",Arial,sans-serif; font-size: 16px; font-weight: 300; text-align: left; line-height: 20px; text-rendering: optimizelegibility; margin: 0; padding: 0;"><style type="text/css">
+@font-face {
+font-family: "Open Sans"; font-style: normal; font-weight: 300; src: local("Open Sans Light"), local("OpenSans-Light"), url("https://fonts.gstatic.com/s/opensans/v13/DXI1ORHCpsQm3Vp6mXoaTYnF5uFdDttMLvmWuJdhhgs.ttf") format("truetype");
+}
+@font-face {
+font-family: "Open Sans"; font-style: normal; font-weight: 400; src: local("Open Sans"), local("OpenSans"), url("https://fonts.gstatic.com/s/opensans/v13/cJZKeOuBrn4kERxqtaUH3aCWcynf_cDxXwCLxiixG1c.ttf") format("truetype");
+}
+@font-face {
+font-family: "Open Sans"; font-style: normal; font-weight: 600; src: local("Open Sans Semibold"), local("OpenSans-Semibold"), url("https://fonts.gstatic.com/s/opensans/v13/MTP_ySUJH_bn48VBG8sNSonF5uFdDttMLvmWuJdhhgs.ttf") format("truetype");
+}
+@font-face {
+font-family: "Open Sans"; font-style: normal; font-weight: 700; src: local("Open Sans Bold"), local("OpenSans-Bold"), url("https://fonts.gstatic.com/s/opensans/v13/k3k702ZOKiLJc3WVjuplzInF5uFdDttMLvmWuJdhhgs.ttf") format("truetype");
+}
+@font-face {
+font-family: "Open Sans"; font-style: normal; font-weight: 800; src: local("Open Sans Extrabold"), local("OpenSans-Extrabold"), url("https://fonts.gstatic.com/s/opensans/v13/EInbV5DfGHOiMmvb1Xr-honF5uFdDttMLvmWuJdhhgs.ttf") format("truetype");
+}
+@font-face {
+font-family: "Open Sans"; font-style: italic; font-weight: 300; src: local("Open Sans Light Italic"), local("OpenSansLight-Italic"), url("https://fonts.gstatic.com/s/opensans/v13/PRmiXeptR36kaC0GEAetxrfB31yxOzP-czbf6AAKCVo.ttf") format("truetype");
+}
+@font-face {
+font-family: "Open Sans"; font-style: italic; font-weight: 400; src: local("Open Sans Italic"), local("OpenSans-Italic"), url("https://fonts.gstatic.com/s/opensans/v13/xjAJXh38I15wypJXxuGMBp0EAVxt0G0biEntp43Qt6E.ttf") format("truetype");
+}
+@font-face {
+font-family: "Open Sans"; font-style: italic; font-weight: 600; src: local("Open Sans Semibold Italic"), local("OpenSans-SemiboldItalic"), url("https://fonts.gstatic.com/s/opensans/v13/PRmiXeptR36kaC0GEAetxi8cqLH4MEiSE0ROcU-qHOA.ttf") format("truetype");
+}
+@font-face {
+font-family: "Open Sans"; font-style: italic; font-weight: 700; src: local("Open Sans Bold Italic"), local("OpenSans-BoldItalic"), url("https://fonts.gstatic.com/s/opensans/v13/PRmiXeptR36kaC0GEAetxp_TkvowlIOtbR7ePgFOpF4.ttf") format("truetype");
+}
+@font-face {
+font-family: "Open Sans"; font-style: italic; font-weight: 800; src: local("Open Sans Extrabold Italic"), local("OpenSans-ExtraboldItalic"), url("https://fonts.gstatic.com/s/opensans/v13/PRmiXeptR36kaC0GEAetxlDMrAYtoOisqqMDW9M_Mqc.ttf") format("truetype");
+}
+@font-face {
+font-family: "Roboto Slab"; font-style: normal; font-weight: 100; src: local("Roboto Slab Thin"), local("RobotoSlab-Thin"), url("http://fonts.gstatic.com/s/robotoslab/v6/MEz38VLIFL-t46JUtkIEgH4UHu-c0cTZKOwO_f6u1Os.ttf") format("truetype");
+}
+@font-face {
+font-family: "Roboto Slab"; font-style: normal; font-weight: 300; src: local("Roboto Slab Light"), local("RobotoSlab-Light"), url("http://fonts.gstatic.com/s/robotoslab/v6/dazS1PrQQuCxC3iOAJFEJbfB31yxOzP-czbf6AAKCVo.ttf") format("truetype");
+}
+@font-face {
+font-family: "Roboto Slab"; font-style: normal; font-weight: 400; src: local("Roboto Slab Regular"), local("RobotoSlab-Regular"), url("http://fonts.gstatic.com/s/robotoslab/v6/y7lebkjgREBJK96VQi37Zp0EAVxt0G0biEntp43Qt6E.ttf") format("truetype");
+}
+@font-face {
+font-family: "Roboto Slab"; font-style: normal; font-weight: 700; src: local("Roboto Slab Bold"), local("RobotoSlab-Bold"), url("http://fonts.gstatic.com/s/robotoslab/v6/dazS1PrQQuCxC3iOAJFEJZ_TkvowlIOtbR7ePgFOpF4.ttf") format("truetype");
+}
+a:hover {
+color: #0d5ea8 !important;
+}
+a:active {
+color: #1073ce !important;
+}
+a:visited {
+color: #1073ce !important;
+}
+h1 a:active {
+color: #2ba6cb !important;
+}
+h2 a:active {
+color: #2ba6cb !important;
+}
+h3 a:active {
+color: #2ba6cb !important;
+}
+h4 a:active {
+color: #2ba6cb !important;
+}
+h5 a:active {
+color: #2ba6cb !important;
+}
+h6 a:active {
+color: #2ba6cb !important;
+}
+h1 a:visited {
+color: #2ba6cb !important;
+}
+h2 a:visited {
+color: #2ba6cb !important;
+}
+h3 a:visited {
+color: #2ba6cb !important;
+}
+h4 a:visited {
+color: #2ba6cb !important;
+}
+h5 a:visited {
+color: #2ba6cb !important;
+}
+h6 a:visited {
+color: #2ba6cb !important;
+}
+table.button:hover td {
+background: #2795b6 !important;
+}
+table.button:visited td {
+background: #2795b6 !important;
+}
+table.button:active td {
+background: #2795b6 !important;
+}
+table.button:hover td a {
+color: #fff !important;
+}
+table.button:visited td a {
+color: #fff !important;
+}
+table.button:active td a {
+color: #fff !important;
+}
+table.button:hover td {
+background: #2795b6 !important;
+}
+table.tiny-button:hover td {
+background: #2795b6 !important;
+}
+table.small-button:hover td {
+background: #2795b6 !important;
+}
+table.medium-button:hover td {
+background: #2795b6 !important;
+}
+table.large-button:hover td {
+background: #2795b6 !important;
+}
+table.button:hover td a {
+color: #ffffff !important;
+}
+table.button:active td a {
+color: #ffffff !important;
+}
+table.button td a:visited {
+color: #ffffff !important;
+}
+table.tiny-button:hover td a {
+color: #ffffff !important;
+}
+table.tiny-button:active td a {
+color: #ffffff !important;
+}
+table.tiny-button td a:visited {
+color: #ffffff !important;
+}
+table.small-button:hover td a {
+color: #ffffff !important;
+}
+table.small-button:active td a {
+color: #ffffff !important;
+}
+table.small-button td a:visited {
+color: #ffffff !important;
+}
+table.medium-button:hover td a {
+color: #ffffff !important;
+}
+table.medium-button:active td a {
+color: #ffffff !important;
+}
+table.medium-button td a:visited {
+color: #ffffff !important;
+}
+table.large-button:hover td a {
+color: #ffffff !important;
+}
+table.large-button:active td a {
+color: #ffffff !important;
+}
+table.large-button td a:visited {
+color: #ffffff !important;
+}
+table.secondary:hover td {
+background: #d0d0d0 !important; color: #555;
+}
+table.secondary:hover td a {
+color: #555 !important;
+}
+table.secondary td a:visited {
+color: #555 !important;
+}
+table.secondary:active td a {
+color: #555 !important;
+}
+table.success:hover td {
+background: #457a1a !important;
+}
+table.alert:hover td {
+background: #970b0e !important;
+}
+table.facebook:hover td {
+background: #2d4473 !important;
+}
+table.twitter:hover td {
+background: #0087bb !important;
+}
+table.google-plus:hover td {
+background: #CC0000 !important;
+}
+@media only screen and (max-width: 600px) {
+  table[class="body"] img {
+    width: auto !important; height: auto !important;
+  }
+  table[class="body"] center {
+    min-width: 0 !important;
+  }
+  table[class="body"] .container {
+    width: 95% !important;
+  }
+  table[class="body"] .row {
+    width: 100% !important; display: block !important;
+  }
+  table[class="body"] .wrapper {
+    display: block !important; padding-right: 0 !important;
+  }
+  table[class="body"] .columns {
+    table-layout: fixed !important; float: none !important; width: 100% !important; padding-right: 0px !important; padding-left: 0px !important; display: block !important;
+  }
+  table[class="body"] .column {
+    table-layout: fixed !important; float: none !important; width: 100% !important; padding-right: 0px !important; padding-left: 0px !important; display: block !important;
+  }
+  table[class="body"] .wrapper.first .columns {
+    display: table !important;
+  }
+  table[class="body"] .wrapper.first .column {
+    display: table !important;
+  }
+  table[class="body"] table.columns td {
+    width: 100% !important;
+  }
+  table[class="body"] table.column td {
+    width: 100% !important;
+  }
+  table[class="body"] .columns td.one {
+    width: 8.333333% !important;
+  }
+  table[class="body"] .column td.one {
+    width: 8.333333% !important;
+  }
+  table[class="body"] .columns td.two {
+    width: 16.666666% !important;
+  }
+  table[class="body"] .column td.two {
+    width: 16.666666% !important;
+  }
+  table[class="body"] .columns td.three {
+    width: 25% !important;
+  }
+  table[class="body"] .column td.three {
+    width: 25% !important;
+  }
+  table[class="body"] .columns td.four {
+    width: 33.333333% !important;
+  }
+  table[class="body"] .column td.four {
+    width: 33.333333% !important;
+  }
+  table[class="body"] .columns td.five {
+    width: 41.666666% !important;
+  }
+  table[class="body"] .column td.five {
+    width: 41.666666% !important;
+  }
+  table[class="body"] .columns td.six {
+    width: 50% !important;
+  }
+  table[class="body"] .column td.six {
+    width: 50% !important;
+  }
+  table[class="body"] .columns td.seven {
+    width: 58.333333% !important;
+  }
+  table[class="body"] .column td.seven {
+    width: 58.333333% !important;
+  }
+  table[class="body"] .columns td.eight {
+    width: 66.666666% !important;
+  }
+  table[class="body"] .column td.eight {
+    width: 66.666666% !important;
+  }
+  table[class="body"] .columns td.nine {
+    width: 75% !important;
+  }
+  table[class="body"] .column td.nine {
+    width: 75% !important;
+  }
+  table[class="body"] .columns td.ten {
+    width: 83.333333% !important;
+  }
+  table[class="body"] .column td.ten {
+    width: 83.333333% !important;
+  }
+  table[class="body"] .columns td.eleven {
+    width: 91.666666% !important;
+  }
+  table[class="body"] .column td.eleven {
+    width: 91.666666% !important;
+  }
+  table[class="body"] .columns td.twelve {
+    width: 100% !important;
+  }
+  table[class="body"] .column td.twelve {
+    width: 100% !important;
+  }
+  table[class="body"] td.offset-by-one {
+    padding-left: 0 !important;
+  }
+  table[class="body"] td.offset-by-two {
+    padding-left: 0 !important;
+  }
+  table[class="body"] td.offset-by-three {
+    padding-left: 0 !important;
+  }
+  table[class="body"] td.offset-by-four {
+    padding-left: 0 !important;
+  }
+  table[class="body"] td.offset-by-five {
+    padding-left: 0 !important;
+  }
+  table[class="body"] td.offset-by-six {
+    padding-left: 0 !important;
+  }
+  table[class="body"] td.offset-by-seven {
+    padding-left: 0 !important;
+  }
+  table[class="body"] td.offset-by-eight {
+    padding-left: 0 !important;
+  }
+  table[class="body"] td.offset-by-nine {
+    padding-left: 0 !important;
+  }
+  table[class="body"] td.offset-by-ten {
+    padding-left: 0 !important;
+  }
+  table[class="body"] td.offset-by-eleven {
+    padding-left: 0 !important;
+  }
+  table[class="body"] table.columns td.expander {
+    width: 1px !important;
+  }
+  table[class="body"] .right-text-pad {
+    padding-left: 10px !important;
+  }
+  table[class="body"] .text-pad-right {
+    padding-left: 10px !important;
+  }
+  table[class="body"] .left-text-pad {
+    padding-right: 10px !important;
+  }
+  table[class="body"] .text-pad-left {
+    padding-right: 10px !important;
+  }
+  table[class="body"] .hide-for-small {
+    display: none !important;
+  }
+  table[class="body"] .show-for-desktop {
+    display: none !important;
+  }
+  table[class="body"] .show-for-small {
+    display: inherit !important;
+  }
+  table[class="body"] .hide-for-desktop {
+    display: inherit !important;
+  }
+  table[class="body"] .right-text-pad {
+    padding-left: 10px !important;
+  }
+  table[class="body"] .left-text-pad {
+    padding-right: 10px !important;
+  }
+}
+</style>
+      <table class="body" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; height: 100%; width: 100%; color: #444444; font-family: "Roboto Slab","Helvetica Neue","Helvetica",Arial,sans-serif; font-size: 16px; font-weight: 300; line-height: 20px; text-rendering: optimizelegibility; margin: 0; padding: 0;"><tr style="vertical-align: top; text-align: left; padding: 0;" align="left"><td class="center" align="center" valign="top" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: center; color: #444444; font-family: "Roboto Slab","Helvetica Neue","Helvetica",Arial,sans-serif; font-size: 16px; font-weight: 300; line-height: 20px; text-rendering: optimizelegibility; margin: 0; padding: 0;">
+
+        <center style="width: 100%; min-width: 580px;">
+
+          <table class="row header" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 100%; position: relative; background: #12488b; padding: 0px;" bgcolor="#12488b"><tr style="vertical-align: top; text-align: left; padding: 0;" align="left"><td class="center" align="center" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: center; color: #444444; font-family: "Roboto Slab","Helvetica Neue","Helvetica",Arial,sans-serif; font-size: 16px; font-weight: 300; line-height: 20px; text-rendering: optimizelegibility; margin: 0; padding: 0;" valign="top">
+
+               <center style="width: 100%; min-width: 580px;">
+
+                  <table class="container" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: inherit; width: 580px; margin: 0 auto; padding: 0;">
+                    <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
+                      <td class="wrapper last" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; position: relative; color: #444444; font-family: "Roboto Slab","Helvetica Neue","Helvetica",Arial,sans-serif; font-size: 16px; font-weight: 300; line-height: 20px; text-rendering: optimizelegibility; margin: 0; padding: 10px 0px 0px;" align="left" valign="top">
+
+                        <table class="twelve columns" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 580px; margin: 0 auto; padding: 0;">
+                          <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
+                            <td class="six sub-columns" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; min-width: 0px; width: 50%; color: #444444; font-family: "Roboto Slab","Helvetica Neue","Helvetica",Arial,sans-serif; font-size: 16px; font-weight: 300; line-height: 20px; text-rendering: optimizelegibility; margin: 0; padding: 0px 10px 10px 0px;" align="left" valign="top">
+                              <img src="http://www.luther.edu/reason/local/luther_2014/images/logo_1x.png" style="max-width: 200px; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: auto; float: left; clear: both; display: block;" align="left" />
+                            </td>
+                            <td class="six sub-columns last" align="right" style="text-align: right; vertical-align: middle; word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; min-width: 0px; width: 50%; color: #444444; font-family: "Roboto Slab","Helvetica Neue","Helvetica",Arial,sans-serif; font-size: 16px; font-weight: 300; line-height: 20px; text-rendering: optimizelegibility; margin: 0; padding: 0px 0px 10px;" valign="middle">
+                              <span class="template-label" style="color: #ffffff; font-weight: bold; font-size: 12px;">Giving Gift Form</span>
+                            </td>
+                            <td class="expander" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; visibility: hidden; width: 0px; color: #444444; font-family: "Roboto Slab","Helvetica Neue","Helvetica",Arial,sans-serif; font-size: 16px; font-weight: 300; line-height: 20px; text-rendering: optimizelegibility; margin: 0; padding: 0;" align="left" valign="top">
+                            </td>
+                          </tr>
+                        </table>
+
+                       </td>
+                     </tr>
+                   </table>
+                </center>
+              </td>
+            </tr>
+          </table>
+
+          <table class="container" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: inherit; width: 580px; margin: 0 auto; padding: 0;">
+            <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
+              <td style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; color: #444444; font-family: "Roboto Slab","Helvetica Neue","Helvetica",Arial,sans-serif; font-size: 16px; font-weight: 300; line-height: 20px; text-rendering: optimizelegibility; margin: 0; padding: 0;" align="left" valign="top">
+
+                <!-- content start -->
+                <table class="row" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 100%; position: relative; display: block; padding: 0px;">
+                  <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
+                    <td class="wrapper last" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; position: relative; color: #444444; font-family: "Roboto Slab","Helvetica Neue","Helvetica",Arial,sans-serif; font-size: 16px; font-weight: 300; line-height: 20px; text-rendering: optimizelegibility; margin: 0; padding: 10px 0px 0px;" align="left" valign="top">
+
+                      <table class="twelve columns" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 580px; margin: 0 auto; padding: 0;">
+                        <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
+                          <td style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; color: #444444; font-family: "Roboto Slab","Helvetica Neue","Helvetica",Arial,sans-serif; font-size: 16px; font-weight: 300; line-height: 20px; text-rendering: optimizelegibility; margin: 0; padding: 0px 0px 10px;" align="left" valign="top">
+
+                             <img width="580" height="300" src="http://www.luther.edu/reason/images/646636.jpg" style="outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: auto; max-width: 100%; float: left; clear: both; display: block;" align="left" />
+                          </td>
+                          <td class="expander" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; visibility: hidden; width: 0px; color: #444444; font-family: "Roboto Slab","Helvetica Neue","Helvetica",Arial,sans-serif; font-size: 16px; font-weight: 300; line-height: 20px; text-rendering: optimizelegibility; margin: 0; padding: 0;" align="left" valign="top">
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+    ';
+    }
+
+    function get_confirmation_footer() {
+    return '
+                <table class="row" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 100%; position: relative; display: block; padding: 0px;">
+                  <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
+                    <td class="wrapper last" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; position: relative; color: #444444; font-family: "Roboto Slab","Helvetica Neue","Helvetica",Arial,sans-serif; font-size: 16px; font-weight: 300; line-height: 20px; text-rendering: optimizelegibility; margin: 0; padding: 10px 0px 0px;" align="left" valign="top">
+
+                      <table class="three columns" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 130px; margin: 0 auto; padding: 0;">
+                        <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
+                          <td style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; color: #444444; font-family: "Roboto Slab","Helvetica Neue","Helvetica",Arial,sans-serif; font-size: 16px; font-weight: 300; line-height: 20px; text-rendering: optimizelegibility; margin: 0; padding: 0px 0px 10px;" align="left" valign="top">
+                          </td>
+                          <td class="expander" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; visibility: hidden; width: 0px; color: #444444; font-family: "Roboto Slab","Helvetica Neue","Helvetica",Arial,sans-serif; font-size: 16px; font-weight: 300; line-height: 20px; text-rendering: optimizelegibility; margin: 0; padding: 0;" align="left" valign="top">
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+
+                <table class="row footer" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 100%; position: relative; display: block; padding: 0px;">
+                  <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
+                    <td class="wrapper" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; position: relative; color: #444444; font-family: "Roboto Slab","Helvetica Neue","Helvetica",Arial,sans-serif; font-size: 16px; font-weight: 300; line-height: 20px; text-rendering: optimizelegibility; background: #ebebeb; margin: 0; padding: 10px 20px 0px 0px;" align="left" bgcolor="#ebebeb" valign="top">
+
+                      <table class="six columns" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 280px; margin: 0 auto; padding: 0;">
+                        <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
+                          <td class="left-text-pad" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; color: #444444; font-family: "Roboto Slab","Helvetica Neue","Helvetica",Arial,sans-serif; font-size: 16px; font-weight: 300; line-height: 20px; text-rendering: optimizelegibility; margin: 0; padding: 0px 0px 10px 10px;" align="left" valign="top">
+
+                            <h5 style="color: #444444; font-family: "Open Sans","Helvetica Neue","Helvetica",Arial,sans-serif; font-size: 24px; font-weight: 300; text-align: left; line-height: 1.7; text-rendering: optimizelegibility; word-break: normal; margin: 0; padding: 0 0 10px;" align="left">Connect With Us
+                            </h5>
+
+                            <table class="table" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; padding: 0;">
+                              <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
+                                <td style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; color: #444444; font-family: "Roboto Slab","Helvetica Neue","Helvetica",Arial,sans-serif; font-size: 16px; font-weight: 300; line-height: 20px; text-rendering: optimizelegibility; margin: 0; padding: 0px 0px 10px;" align="left" valign="top">
+                                 </td>
+                                 <th width="100">
+                                   <a href="https://www.facebook.com/luthercollege" style="color: #1073ce; text-decoration: none;"><img src="http://www.luther.edu/reason/modules/social_account/images/facebook.png" style="max-width: 60px; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: auto; float: left; clear: both; display: block; border: none;" align="left" /></a>
+                                 </th>
+                                 <th width="100">
+                                   <a href="https://twitter.com/luthercollege" style="color: #1073ce; text-decoration: none;"><img src="http://www.luther.edu/reason/modules/social_account/images/twitter.png" style="max-width: 60px; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: auto; float: left; clear: both; display: block; border: none;" align="left" /></a>
+                                 </th>
+                                 <th width="100">
+                                   <a href="https://plus.google.com/106145735238161370551/posts" style="color: #1073ce; text-decoration: none;"><img src="http://www.luther.edu/reason/modules/social_account/images/googleplus.png" style="max-width: 60px; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: auto; float: left; clear: both; display: block; border: none;" align="left" /></a>
+                                 </th>
+                               </tr>
+                             </table>
+                           </td>
+                           <td class="expander" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; visibility: hidden; width: 0px; color: #444444; font-family: "Roboto Slab","Helvetica Neue","Helvetica",Arial,sans-serif; font-size: 16px; font-weight: 300; line-height: 20px; text-rendering: optimizelegibility; margin: 0; padding: 0;" align="left" valign="top">
+                           </td>
+                         </tr>
+                       </table>
+                     </td>
+                     <td class="wrapper last" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; position: relative; color: #444444; font-family: "Roboto Slab","Helvetica Neue","Helvetica",Arial,sans-serif; font-size: 16px; font-weight: 300; line-height: 20px; text-rendering: optimizelegibility; background: #ebebeb; margin: 0; padding: 10px 0px 0px;" align="left" bgcolor="#ebebeb" valign="top">
+
+                       <table class="six columns" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 280px; margin: 0 auto; padding: 0;">
+                         <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
+                           <td class="last right-text-pad" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; color: #444444; font-family: "Roboto Slab","Helvetica Neue","Helvetica",Arial,sans-serif; font-size: 16px; font-weight: 300; line-height: 20px; text-rendering: optimizelegibility; margin: 0; padding: 0px 0px 10px;" align="left" valign="top">
+                             <h5 style="color: #444444; font-family: "Open Sans","Helvetica Neue","Helvetica",Arial,sans-serif; font-size: 24px; font-weight: 300; text-align: left; line-height: 1.7; text-rendering: optimizelegibility; word-break: normal; margin: 0; padding: 0 0 10px;" align="left">Contact Info
+                             </h5>
+                             <p style="color: #444444; font-family: inherit; font-size: 1.05rem; font-weight: 300; text-align: left; line-height: 1.7; text-rendering: optimizelegibility; margin: 0 0 10px; padding: 0;" align="left">Development Office</p>
+                             <p style="color: #444444; font-family: inherit; font-size: 1.05rem; font-weight: 300; text-align: left; line-height: 1.7; text-rendering: optimizelegibility; margin: 0 0 10px; padding: 0;" align="left">Phone: <a href="tel:563-387-1862" style="color: #1073ce; text-decoration: none;">563-387-1862</a></p>
+                             <p style="color: #444444; font-family: inherit; font-size: 1.05rem; font-weight: 300; text-align: left; line-height: 1.7; text-rendering: optimizelegibility; margin: 0 0 10px; padding: 0;" align="left">Email: <a href="mailto:giving@luther.edu" style="color: #1073ce; text-decoration: none;">giving@luther.edu</a></p>
+                           </td>
+                           <td class="expander" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; visibility: hidden; width: 0px; color: #444444; font-family: "Roboto Slab","Helvetica Neue","Helvetica",Arial,sans-serif; font-size: 16px; font-weight: 300; line-height: 20px; text-rendering: optimizelegibility; margin: 0; padding: 0;" align="left" valign="top">
+                           </td>
+                         </tr>
+                       </table>
+                     </td>
+                  </tr>
+                </table>
+
+                <table class="row" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 100%; position: relative; display: block; padding: 0px;">
+                  <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
+                    <td class="wrapper last" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; position: relative; color: #444444; font-family: "Roboto Slab","Helvetica Neue","Helvetica",Arial,sans-serif; font-size: 16px; font-weight: 300; line-height: 20px; text-rendering: optimizelegibility; margin: 0; padding: 10px 0px 0px;" align="left" valign="top">
+
+                      <table class="twelve columns" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 580px; margin: 0 auto; padding: 0;">
+                        <tr style="vertical-align: top; text-align: left; padding: 0;" align="left">
+                          <td align="center" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; color: #444444; font-family: "Roboto Slab","Helvetica Neue","Helvetica",Arial,sans-serif; font-size: 16px; font-weight: 300; line-height: 20px; text-rendering: optimizelegibility; margin: 0; padding: 0px 0px 10px;" valign="top">
+                            <center style="width: 100%; min-width: 580px;">
+                              <p style="text-align: center; color: #444444; font-family: inherit; font-size: 1.05rem; font-weight: 300; line-height: 1.7; text-rendering: optimizelegibility; margin: 0 0 10px; padding: 0;" align="center">© 2015 <a href="https:www.luther.edu" style="color: #1073ce; text-decoration: none;">Luther College</a>. All rights reserved.</p>
+                            </center>
+                          </td>
+                          <td class="expander" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; visibility: hidden; width: 0px; color: #444444; font-family: "Roboto Slab","Helvetica Neue","Helvetica",Arial,sans-serif; font-size: 16px; font-weight: 300; line-height: 20px; text-rendering: optimizelegibility; margin: 0; padding: 0;" align="left" valign="top">
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table><!-- container end below --></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </center>
+  </td>
+</tr>
+</table>
+</body>
+</html>
+    ';
     }
 
     function instantiate_helper() {
@@ -398,20 +977,21 @@ class GiftPageThreeForm extends FormStep {
     }
 
     function run_error_checks() {
-        if ($this->get_value('billing_address') == 'new'
-                && (!$this->get_value('billing_street_address')
-                || !$this->get_value('billing_city')
-                || !$this->get_value('billing_state_province')
-                || !$this->get_value('billing_zip')
-                || !$this->get_value('billing_country') )) {
-            $this->set_error('billing_address', 'Please enter your full billing address if the address you entered on the previous page was not the billing address for your credit card.');
-        }
-        if ($this->get_value('billing_address') == 'entered') {
-            $this->set_value('billing_street_address', $this->controller->get('street_address'));
-            $this->set_value('billing_city', $this->controller->get('city'));
-            $this->set_value('billing_state_province', $this->controller->get('state_province'));
-            $this->set_value('billing_zip', $this->controller->get('zip'));
-        }
+        // if ($this->get_value('billing_address') == 'new'
+        //         && (!$this->get_value('billing_street_address')
+        //         || !$this->get_value('billing_city')
+        //         || !$this->get_value('billing_state_province')
+        //         || !$this->get_value('billing_zip')
+        //         || !$this->get_value('billing_country') )) {
+        //     $this->set_error('billing_address', 'Please enter your full billing address if the address you entered on the previous page was not the billing address for your credit card.');
+        // }
+        // if ($this->get_value('billing_address') == 'entered') {
+        //     $address = $this->controller->get('address_1') .' '. $this->controller->get('address_1');
+        //     $this->set_value('billing_street_address', $address);
+        //     $this->set_value('billing_city', $this->controller->get('city'));
+        //     $this->set_value('billing_state_province', $this->controller->get('state_province'));
+        //     $this->set_value('billing_zip', $this->controller->get('zip'));
+        // }
 
         if ($this->controller->get('installment_type') != 'Onetime') {
             $expire_timestamp = mktime(0, 0, 0, $this->get_value('credit_card_expiration_month') + 1, 1, $this->get_value('credit_card_expiration_year'));
@@ -511,8 +1091,10 @@ class GiftPageThreeForm extends FormStep {
                 }
                 $this->set_value('result_authcode', $result['AUTHCODE']);
 
-                $confirm_text = $this->get_confirmation_text();
-                $confirm_text .= build_gift_review_detail_output($this->helper, $this->date_format);
+                $confirm_text = $this->get_confirmation_header();
+                $confirm_text .= $this->get_confirmation_text();
+                $confirm_text .= $this->get_confirmation_footer();
+                //$confirm_text .= build_gift_review_detail_output($this->helper, $this->date_format);
 
                 $this->set_value('confirmation_text', $confirm_text);
                 $pf->set_confirmation_text($confirm_text);
@@ -533,14 +1115,14 @@ class GiftPageThreeForm extends FormStep {
                     '<br />' => "\n",
                 );
                 $mail_text = str_replace(array_keys($replacements), $replacements, $confirm_text);
-                $email_to_development = new Email('waskni01@luther.edu', 'noreply@luther.edu', 'noreply@luther.edu', 'New Online Gift ' . date('mdY H:i:s'), strip_tags($mail_text), $mail_text);
-                $email_to_development->send();
-                $email_to_giver = new Email($this->controller->get('email'), 'giving@luther.edu', 'giving@luther.edu', 'Luther College Online Gift Confirmation', strip_tags($mail_text), $mail_text);
+                //$email_to_development = new Email('waskni01@luther.edu', 'noreply@luther.edu', 'noreply@luther.edu', 'New Online Gift ' . date('mdY H:i:s'), strip_tags($mail_text), $mail_text);
+                //$email_to_development->send();
+                $email_to_giver = new Email($this->controller->get('email'), 'giving@luther.edu', 'giving@luther.edu', 'Luther College Online Gift Confirmation' . date('m.d.y: H:i:s'), strip_tags($mail_text), $confirm_text);
                 $email_to_giver->send();
-                if ($this->controller->get('estate_plans')) {
-                    $email_to_estate_plans = new Email('kelly.wedmann@luther.edu', 'noreply@luther.edu', 'noreply@luther.edu', 'New Online Gift ' . date('mdY H:i:s'), strip_tags($mail_text), $mail_text);
-                    $email_to_estate_plans->send();
-                }
+                //if ($this->controller->get('estate_plans')) {
+                 //   $email_to_estate_plans = new Email('kelly.wedmann@luther.edu', 'noreply@luther.edu', 'noreply@luther.edu', 'New Online Gift ' . date('mdY H:i:s'), strip_tags($mail_text), $mail_text);
+                  //  $email_to_estate_plans->send();
+                //}
             }
         }
     }
@@ -671,3 +1253,4 @@ function trim_hours_from_datetime($datetime) {
 }
 
 ?>
+

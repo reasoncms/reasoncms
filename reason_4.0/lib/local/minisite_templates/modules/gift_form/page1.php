@@ -1,4 +1,5 @@
 <?php
+include_once('designations_group.php');
 ////////////////////////////////////////////////////////////////////////////////
 //
 //    Matt Ryan
@@ -16,12 +17,53 @@ class GiftPageOneForm extends FormStep
 {
 	var $_log_errors = true;
 	var $error;
-	
+    var $gift_types = array(
+        'annual_fund'   =>  array(
+            'name'  =>  'annual_fund',
+            'desc'  =>  'Annual Fund'
+        ),
+        'norse_athletic_association'    =>  array(
+            'name'  =>  'norse_athletic_association',
+            'desc'  =>  'Norse Athletic Association'
+        ),
+        'scholarship_fund'  =>  array(
+            'name'  =>  'scholarship_fund',
+            'desc'  =>  'Scholarship Fund'
+        ),
+        'other' =>  array(
+            'name'  =>  'other',
+            'desc'  =>  'Other',
+            'other_label'   =>  'Other'
+        )
+    );
+    var $naa_opts = array(
+        'general'               => 'General',
+        'baseball'              => 'Baseball',
+        'basketball_men'        => 'Basketball (men)',
+        'basketball_women'      => 'Basketball (women)',
+        'cross_country_men'     => 'Cross Country (men)',
+        'cross_country_women'   => 'Cross Country (women)',
+        'football'              => 'Football',
+        'golf_men'              => 'Golf (men)',
+        'golf_women'            => 'Golf (women)',
+        'soccer_men'            => 'Soccer (men)',
+        'soccer_women'          => 'Soccer (women)',
+        'softball'              => 'Softball',
+        'swimming_diving_men'   => 'Swimming & Diving (men)',
+        'swimming_diving_women' => 'Swimming & Diving (women)',
+        'tennis_men'            => 'Tennis (men)',
+        'tennis_women'          => 'Tennis (women)',
+        'track_field_men'       => 'Track & Field (men)',
+        'track_field_women'     => 'Track & Field (women)',
+        'volleyball'            => 'Volleyball',
+        'wrestling'             => 'Wrestling'
+    );
+
 	var $elements = array(
-		'gift_amount_header' => array(
-			'type' => 'comment',
-			'text' => '<h3>Gift Amount</h3>',
-		),
+        'gift_amount_header' => array(
+            'type' => 'comment',
+            'text' => '<h3>Gift Amount</h3>',
+        ),
 		'gift_amount' => array(
 			'type' => 'money',
 			'display_name' => '',
@@ -42,73 +84,22 @@ class GiftPageOneForm extends FormStep
 			'display_name' => 'Ending',
 			'options' => array('indefinite'=>'No end date'),
 		),
-		'designation_header' => array(
+        'designation_header' => array(
          'type' => 'comment',
          'text' => '<h3>Designation</h3>',
         ),
-		'annual_fund' => array(
-			'type' => 'checkboxfirst',
-            'comments' => '(please use my gift where it is needed most)'
-		),
-        'annual_fund_amount' => 'money',
-       'specific_fund' => array(
-			'type' => 'checkboxfirst',
-            'comments' => '(I have something specific in mind)',
-		),
-        'designation_note' => array(
-                'type' => 'comment',
-                'text' => 'If more than one designation is specified, your gift
-                           will be divided equally unless you indicate otherwise
-                           in the comments section below.'
+        'split_gift' => array(
+            'type'          =>'checkboxfirst',
+            'display_name'  => 'I\'d like to split my gift',
         ),
-        'norse_athletic_association' => array(
-        		'type' => 'checkboxfirst',
+        'gift_designation'       => array(
+            'type'          =>  'hidden',
+            'default'       =>  'annual_fund',
+            'display_name'  =>  '&nbsp;'
         ),
-        'naa_designation_details' => array(
-                'type' => 'select_no_sort',
-                'display_name' => '&nbsp;',
-                'add_null_value_to_top' => true,
-                'options' => array(
-                    'Baseball' => 'Baseball',
-                    'Basketball, men\'s' => 'Basketball, men\'s',
-                    'Basketball, women\'s' => 'Basketball, women\'s',
-                    'Cross Country, men\'s' => 'Cross Country, men\'s',
-                    'Cross Country, women\'s' => 'Cross Country, women\'s',
-                    'Football' => 'Football',
-                    'Golf, men\'s' => 'Golf, men\'s', 
-                    'Golf, women\'s' => 'Golf, women\'s',
-                    'Soccer, men\'s' => 'Soccer, men\'s',
-                    'Soccer, women\'s' => 'Soccer, women\'s',
-                    'Softball' => 'Softball',
-                    'Swimming & Diving, men\'s' => 'Swimming & Diving, men\'s',
-                    'Swimming & Diving, women\'s' => 'Swimming & Diving, women\'s',
-                    'Tennis, men\'s' => 'Tennis, men\'s',
-                    'Tennis, women\'s' => 'Tennis, women\'s',
-                    'Track & Field, men\'s' => 'Track & Field, men\'s',
-                    'Track & Field, women\'s' => 'Track & Field, women\'s',
-                    'Volleyball' => 'Volleyball',
-                    'Wrestling' => 'Wrestling',
-                ),
-        ),
-        'naa_designation_amount' => 'money',
-        'baseball_stadium' => array(
-        		'type' => 'checkboxfirst',
-        ),
-        'baseball_stadium_amount' => 'money',
-        'softball_stadium' => array(
-                'type' => 'checkboxfirst',
-        ),
-        'softball_stadium_amount' => 'money',
-        'scholarship_fund' => array(
-                'type' => 'checkboxfirst',
-                'comments' => 'general',
-        ),
-        'scholarship_fund_amount' => 'money',
-        'other' => 'checkboxfirst', 
-        'other_amount' => 'money',
-        'comments_special_instructions' => array(
-                'type' => 'textarea',
-                'display_name' => 'Comments/Special Instructions',
+        'comments_special_instructions' =>  array(
+            'type'          =>  'textarea',
+            'display_name'  =>  'Comments / Special instructions',
         ),
         'matching_gift_header' => array(
 			'type' => 'comment',
@@ -117,12 +108,6 @@ class GiftPageOneForm extends FormStep
 		'match_gift' => array(
 			'type' => 'checkboxfirst',
 			'display_name' => 'My (or my spouse\'s) employer will match my gift',
-            'comments' => 
-                '<p><a data-reveal-id="matchingGiftsIframe">Click to see if your employer has a matching program.</a></p>
-                <div class="reveal-modal medium" id="matchingGiftsIframe" data-reveal="">
-                    <iframe height="500px" width="100%" src="//www.matchinggifts.com/luther_iframe"></iframe>
-                    <a class="close-reveal-modal">×</a>
-                </div>',
 		),
 		'employer_name' => array(
 			'type' => 'text',
@@ -135,9 +120,10 @@ class GiftPageOneForm extends FormStep
 			'display_name' => '<h3>What prompted you to make this gift?</h3>',
             'add_null_value_to_top' => true,
             'options' => array(
-                'mailing'       =>'Recieved a mailing', 
-                'email'         => 'Recieved an email', 
-                'staff_visit'   => 'Development staff visit', 
+                'mailing'       => 'Received a mailing',
+                'email'         => 'Received an email',
+                'phonathon'     => 'Received a Phonathon call',
+                'staff_visit'   => 'Development staff visit',
                 'other'         => 'Other')
         ),
         'gift_prompt_details' => array(
@@ -153,74 +139,63 @@ class GiftPageOneForm extends FormStep
 			'type' => 'text',
 			'display_name' => '&nbsp;',
 		),
-		'refby'=>array(
-			'type'=>'hidden',
-		),
-		'submitter_ip'=>'hidden',
+		'refby'=> 'protected',
+		'submitter_ip'=>'protected',
+        'split_designations'    =>  array(
+            'type'  =>  'hidden',
+            'userland_changeable'   =>  true,
+        ),
 	);
+    public $box_class = 'StackedBox';
 
 	/**
 	* Stores all the information necessary to instantiate each element group.
 	* Format: element_group_name => element info
 	* @var array
 	*/
-	var $element_group_info = array(	
+	var $element_group_info = array(
 		'recur_group' => array ('type' => 'inline',
 			'elements' =>  array( 'installment_start_date', 'installment_end_date' ),
 			'args' => array('use_element_labels' => true,'use_group_display_name' => false, 'rows' => array('','') ),
-		),
-        'annual_fund_group' => array('type' => 'inline',
-            'elements' => array('annual_fund', 'annual_fund_amount'),
-            'args' => array('use_element_labels' => false, 'use_group_display_name' => false)
-        ),
-        'naa_group' => array('type' => 'inline',
-            'elements' => array('naa_designation_details', 'naa_designation_amount'),
-            'args' => array('use_element_labels' => false, 'use_group_display_name' => false)
-        ),
-        'baseball_group' => array('type' => 'inline',
-            'elements' => array('baseball_stadium', 'baseball_stadium_amount'),
-            'args' => array('use_element_labels' => false, 'use_group_display_name' => false)
-        ),
-        'softball_group' => array('type' => 'inline',
-            'elements' => array('softball_stadium', 'softball_stadium_amount'),
-            'args' => array('use_element_labels' => false, 'use_group_display_name' => false)
-        ),
-        'scholarship_group' => array('type' => 'inline',
-            'elements' => array('scholarship_fund', 'scholarship_fund_amount'),
-            'args' => array('use_element_labels' => false, 'use_group_display_name' => false)
-			),
-        'other_group' => array('type' => 'inline',
-            'elements' => array('other', 'other_amount'),
-            'args' => array('use_element_labels' => false, 'use_group_display_name' => false)
 		),
    	);
 
 	var $display_name = 'Gift Info';
 	var $error_header_text = 'Please check your form.';
 
+    function init( $externally_set_up = false )
+    {
+        parent::init( $externally_set_up );
+        $this->setup_gift_designations();
+    }
+
+    function get_tooltip_text($label) {
+        $tool_label = strtolower($label);
+        $tool_label = str_replace(' ', '_',$tool_label);
+        $blurb_unique_name = "{$tool_label}_hover_blurb";
+        if ( $blurb_unique_name == reason_unique_name_exists($blurb_unique_name) ){
+            $blurb = get_text_blurb_content($blurb_unique_name);
+            return '<span data-tooltip aria-haspopup="true" class="has-tip tip-right" title="'.$blurb.'">'.$label.'</span>';
+        } else {
+            return $label;
+        }
+    }
+
 	// style up the form and add comments et al
 	function on_every_time()
 	{
-        $this->box_class = 'StackedBox';
+        if ( isset($_SERVER['HTTP_REFERER']) && strrpos($_SERVER['HTTP_REFERER'], '/norse-athletic-association', -1) )
+        {
+            $this->set_element_properties('gift_designation', array( 'default' => 'norse_athletic_association' ));
+        }
+        if ($this->get_value('gift_amount') < '50' && $this->get_value('installment_type') == 'Onetime') {
+            $this->change_element_type('split_gift', 'hidden');
+        }
 
-        // if a text blurb with the unique name convention of giving_program_hover_blurb
-        // exists, then replace the display name with a tooltip 
-        foreach ($this->elements as $element => $value) {
-            $blurb_unique_name = "{$element}_hover_blurb";
-            if ( $blurb_unique_name == reason_unique_name_exists($blurb_unique_name) ){
-                $blurb = get_text_blurb_content($blurb_unique_name);
-                $display_name = $this->get_display_name($element);
-                $this->set_element_properties($element, array('display_name' => '<span data-tooltip aria-haspopup="true" class="has-tip" title="'.$blurb.'">'.$display_name.'</span>'));
-            }
-        }
-        // this one is a special case, so we'll just call it explicitly
-        // the name of the element is actually, specific_fund. If we changed 
-        // it the element name to match the display name we'd have to do a lot of 
-        // db rewrites
-        if (reason_unique_name_exists('designated_giving_hover_blurb')) {
-            $display_name = $this->get_display_name('specific_fund');
-            $this->set_display_name('specific_fund', '<span data-tooltip aria-haspopup="true" class="has-tip" title="'.get_text_blurb_content('designated_giving_hover_blurb').'">Designated Giving</span>');
-        }
+        $opts = array(
+            'annual_fund'  => $this->get_tooltip_text('Annual Fund'),
+            'naa'  => $this->get_tooltip_text('Norse Athletic Association'),
+            'scholarship_fund'  => $this->get_tooltip_text('Scholarship Fund'));
 
 		$this->set_value('submitter_ip', $_SERVER[ 'REMOTE_ADDR' ]);
 
@@ -233,7 +208,7 @@ class GiftPageOneForm extends FormStep
 		$options['indefinite'] = 'No End Date';
 		for($i = 0; $i <= 72; $i++)
 		{
-			
+
 			$timestamp = strtotime(date('Y-m').'-1 +'.$i.' months');
 			$options[date('Y-m-t',$timestamp)] = date('F Y',$timestamp);
 		}
@@ -249,13 +224,15 @@ class GiftPageOneForm extends FormStep
 		{
 			$this->add_element_group( $info['type'], $name, $info['elements'], $info['args']);
 		}
-		$this->move_element('recur_group','after','installment_type');
-        $this->move_element('annual_fund_group', 'after', 'designation_header');
-        $this->move_element('naa_group', 'after', 'norse_athletic_association');
-        $this->move_element('baseball_group', 'after', 'naa_group');
-        $this->move_element('softball_group', 'after', 'baseball_group');
-        $this->move_element('scholarship_group', 'after', 'softball_group');
-        $this->move_element('other_group', 'after', 'scholarship_group');
+        $this->move_element('recur_group','after','installment_type');
+
+        $this->get_element('match_gift')->set_comments(
+            '<p><a data-reveal-id="matchingGiftsIframe">Click to see if your employer has a matching program.</a></p>
+            <div class="reveal-modal medium" id="matchingGiftsIframe" data-reveal="">
+                <iframe height="500px" width="100%" src="//www.matchinggifts.com/luther_iframe"></iframe>
+                <a class="close-reveal-modal">×</a>
+            </div>','before'
+        );
 	}
 
 	function pre_show_form()
@@ -293,12 +270,49 @@ class GiftPageOneForm extends FormStep
 			{
 				$this->set_error('installment_start_date','Please make sure the ending date is on or after the starting date for your gift installments');
 			}
-		}		
+		}
 		if($this->get_value('match_gift') && $this->get_value('match_gift') == 'Yes' && !$this->get_value('employer_name') )
 		{
 			$this->set_error('match_gift','Please enter the name of your employer if you would like it to match your gift');
 		}
 	}
-}
 
-?>
+    /**
+     * Given the list of designations set by the module, set up the designation element. Based
+     * on the designations available, the element can be a simple set of options, options with
+     * a fill-in Other, or completely absent.
+     */
+    function setup_gift_designations()
+    {
+        // if ($types = $this->controller->module->gift_types)
+        if ($types = $this->gift_types)
+        {
+            foreach ($types as $slug => $type)
+            {
+                if ($slug == 'other') continue;
+                pray($slug);
+                $options[$type['name']] = $this->get_tooltip_text($type['desc']);
+            }
+
+            $params = array('options'=>$options);
+
+            if (isset($types['other']))
+            {
+                $params['other_label'] = $this->get_tooltip_text($type['desc']);
+                $params['naa_options'] = $this->naa_opts;
+                $element_type = 'designations';
+            }
+            else
+            {
+                $element_type = 'radio_inline_no_sort';
+            }
+
+            $this->change_element_type('gift_designation', $element_type, $params);
+        }
+        // If there aren't any types, hide the whole section
+        else
+        {
+            $this->change_element_type('gift_designation_note', 'hidden');
+        }
+    }
+}
