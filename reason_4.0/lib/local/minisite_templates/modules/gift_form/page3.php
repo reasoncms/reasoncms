@@ -159,7 +159,6 @@ class GiftPageThreeForm extends FormStep {
 
     // style up the form and add comments et al
     function on_every_time() {
-
         $this->set_comments('credit_card_security_code', form_comment('
             <p><a data-reveal-id="cvv2Iframe">What\'s this?</a></p>
             <div class="reveal-modal medium" id="cvv2Iframe" data-reveal="">
@@ -293,7 +292,7 @@ dering: optimizelegibility; margin: 0 0 10px; padding: 0;" align="left">';
         $txt .= '<li><strong>Luther Affiliation:</strong> ';
             $txt .= implode(', ', $this->controller->get('luther_affiliation')) . '</li>' . "\n";
         if ($this->controller->get('class_year')) {
-            $txt .= '<li><strong>Class:</strong>' . $this->controller->get('class_year') . '</li>' . "\n";
+            $txt .= '<li><strong>Class:</strong> ' . $this->controller->get('class_year') . '</li>' . "\n";
         }
         foreach ($this->controller->get('estate_plans') as $plan) {
             if ($plan == 'have_estate_plans') {
@@ -315,65 +314,79 @@ dering: optimizelegibility; margin: 0 0 10px; padding: 0;" align="left">';
             }
             $txt .= '.</li>' . "\n";
         }
+
+        // Build the Designation text
+        $designation    = $this->controller->get('gift_designation');
+        $naa_opts       = $this->controller->get_form('GiftPageOneForm')->naa_opts;
+        if ( $this->controller->get('split_gift') == true ){
+            $txt .= "<li><strong>Designation Details:</strong></li>\n";
+            $txt .= "<ul>\n";
+            $splits = json_decode($this->controller->get('split_designations'));
+            if ( $splits->{'annual_fund'} ){
+                $txt .= "<li><strong>Annual Fund:</strong> $".$splits->{'annual_fund'}[0]."</li>\n";
+            }
+            if ( $splits->{'norse_athletic_association'} ){
+                $txt .= "<li><strong>Norse Athletic Association:</strong> $".$splits->{'norse_athletic_association'}[0]." – ".$naa_opts[$splits->{'naa_details'}]."</li>\n";
+            }
+            if ( $splits->{'scholarship_fund'} ){
+                $txt .= "<li><strong>Scholarship Fund:</strong> $".$splits->{'scholarship_fund'}[0]."</li>\n";
+            }
+            if ( $splits->{'__other__'} ){
+                $txt .= "<li><strong>Other:</strong> $".$splits->{'__other__'}[0];
+                if ( $splits->{'other_details'} ){
+                    $txt .= " – ".$splits->{'other_details'}."</li>\n";
+                } else {
+                    $txt .= "</li>\n";
+                }
+            }
+            $txt .= "</ul>\n";
+        } else {
+            // if the value of a signal designation is an naa_opts key, then the gift is for the NAA,
+            // otherwise the values are 'annual_fund' or 'scholarship_fund', any other text comes from the
+            // other_details text and can be anything
+            if ( array_key_exists($designation, $naa_opts) ) {
+                $desig_txt = "Norse Athletic Association – {$naa_opts[$designation]}";
+            }
+            elseif ( $designation == "annual_fund" )
+                $desig_txt = "Annual Fund";
+            elseif ( $designation == "scholarship_fund" )
+                $desig_txt = "Scholarship Fund";
+            else
+                $desig_txt = "Other – {$designation}";
+
+            $txt .= "<li><strong>Designation:</strong> {$desig_txt}</li>\n";
+        }
+        if ($this->controller->get('comments_special_instructions'))
+            $txt .= "<li><strong>Comments / Special Instructions:</strong> {$this->controller->get('comments_special_instructions')}</li>\n";
         if ($this->controller->get('match_gift') && $this->controller->get('employer_name')) {
             $txt .= '<li><strong>Employer Matching:</strong> My employer, ' . strip_tags($this->controller->get('employer_name')) . ', will match my gift.</li>' . "\n";
         }
-        if (($this->controller->get('annual_fund') || ($this->controller->get('specific_fund')))) {
-            $txt .= '<li>'."\n".'<strong>Designation</strong> ' . "\n";
-            $txt .= '<ul>' . "\n";
-            if ($this->controller->get('annual_fund')) {
-                $txt .= '<li>The Annual Fund</li>' . "\n";
-                if ($this->controller->get('annual_fund_amount')) {
-                    $txt .= ': $'.$this->controller->get('annual_fund_amount');
-                }
-                $txt .= '</li>'."\n";
-            }
-            if ($this->controller->get('norse_athletic_association')) {
-                $txt .= '<li>The Norse Athletic Association';
-                if ($this->controller->get('norse_athletic_association_details')) {
-                    $txt .= ': ' . strip_tags($this->controller->get('norse_athletic_association_details'));
-                    if ($this->controller->get('norse_athletic_association_amount')) {
-                        $txt .= ' – $'.$this->controller->get('norse_athletic_association_amount');
-                    }
-                }
-                $txt .= '</li>' . "\n";
-            }
-            // if ($this->controller->get('baseball_stadium')) {
-            //     $txt .= '<li>Baseball Stadium' . "\n";
-            //     if ($this->controller->get('baseball_stadium_amount')) {
-            //         $txt .= ': $'.$this->controller->get('baseball_stadium_amount');
-            //     }
-            //     $txt .= '</li>'."\n";
-            // }
-            // if ($this->controller->get('softball_stadium')) {
-            //     $txt .= '<li>Softball Stadium' . "\n";
-            //     if ($this->controller->get('softball_stadium_amount')) {
-            //         $txt .= ': $'.$this->controller->get('softball_stadium_amount');
-            //     }
-            //     $txt .= '</li>'."\n";
-            // }
-            if ($this->controller->get('scholarship_fund')) {
-                $txt .= '<li>The Scholarship Fund' . "\n";
-                if ($this->controller->get('scholarship_fund_amount')) {
-                    $txt .= ': $'.$this->controller->get('scholarship_fund_amount');
-                }
-                $txt .= '</li>'."\n";
-            }
-            if ($this->controller->get('other_designation_details')) {
-                $txt .= '<li>Other Designation: ' . strip_tags($this->controller->get('other_designation_details'));
-                if ($this->controller->get('other_amount')) {
-                    $txt .= ' – $'.$this->controller->get('other_amount');
-                }
-            }
-            $txt .= '</ul>' . "\n"; // Designated specifics end
-            $txt .= '</li>' . "\n"; //Designated giving end
-        }
         if ($this->controller->get('gift_prompt')) {
-            $txt .= '<li><strong>Gift Prompt:</strong> ' . strip_tags($this->controller->get('gift_prompt')) . '</li>' ."\n";
-            if ($this->controller->get('gift_prompt_details')) {
-                $txt .= '<ul><li>'.$this->controller->get('gift_prompt_details').'</li></ul>'."\n";
+            $prompt = strip_tags($this->controller->get('gift_prompt'));
+            switch ($prompt) {
+                case 'mailing':
+                    $prompt_txt = 'Received a mailing';
+                    break;
+                case 'email':
+                    $prompt_txt = 'Received an email';
+                    break;
+                case 'phonathon':
+                    $prompt_txt = 'Received a Phonathon call';
+                    break;
+                case 'staff_visit':
+                    $prompt_txt = 'Development staff visit';
+                    if ($this->controller->get('gift_prompt_details'))
+                        $prompt_txt .= ' - ' . strip_tags($this->controller->get('gift_prompt_details'));
+                    break;
+                case 'other':
+                    $prompt_txt = 'Other';
+                    if ($this->controller->get('gift_prompt_details'))
+                        $prompt_txt .= ' – ' . strip_tags($this->controller->get('gift_prompt_details'));
+                    break;
             }
+            $txt .= '<li><strong>Gift Prompt:</strong> '.$prompt_txt.'</li>' . "\n";
         }
+
         if ($this->controller->get('dedication') && $this->controller->get('dedication_details')) {
             $txt .= '<li><strong>Dedication:</strong> This gift is in ';
             if ($this->controller->get('dedication') == 'Memory') {
@@ -417,7 +430,7 @@ dering: optimizelegibility; margin: 0 0 10px; padding: 0;" align="left">';
         $txt .= '</div>' . "\n";
         return $txt;
     }
-    
+
     function get_confirmation_header() {
     return '
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -850,7 +863,7 @@ background: #CC0000 !important;
                 </table>
     ';
     }
-    
+
     function get_confirmation_footer() {
     return '
                 <table class="row" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 100%; position: relative; display: block; padding: 0px;">
@@ -949,7 +962,7 @@ background: #CC0000 !important;
 </table>
 </body>
 </html>
-    ';	
+    ';
     }
 
     function instantiate_helper() {
