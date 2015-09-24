@@ -175,7 +175,7 @@ class GiftPageOneForm extends FormStep
         $blurb_unique_name = "{$tool_label}_hover_blurb";
         if ( $blurb_unique_name == reason_unique_name_exists($blurb_unique_name) ){
             $blurb = get_text_blurb_content($blurb_unique_name);
-            return '<span data-tooltip aria-haspopup="true" class="has-tip tip-right" title="'.$blurb.'">'.$label.'</span>';
+            return '<span data-tooltip aria-haspopup="true" class="has-tip tip-bottom" title="'.$blurb.'">'.$label.'</span>';
         } else {
             return $label;
         }
