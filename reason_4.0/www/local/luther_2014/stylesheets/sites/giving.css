@@ -1012,18 +1012,14 @@ select {
     margin: 0 0 0 0.75rem;
     display: inline;
   }
-  /* line 715, ../scss/sites/giving.scss */
-  #giving_form #disco_form #gift_designation_container .radioItem.radioItemOther {
-    margin-top: 0.25rem;
-  }
-  /* line 717, ../scss/sites/giving.scss */
+  /* line 716, ../scss/sites/giving.scss */
   #giving_form #disco_form #gift_designation_container .radioItem.radioItemOther input[name="gift_designation_other"] {
     margin: 0 0 0 0.75rem;
     display: inline;
     max-width: 60%;
   }
 }
-/* line 731, ../scss/sites/giving.scss */
+/* line 730, ../scss/sites/giving.scss */
 #giving_form #disco_form #annual_fund_amountElement,
 #giving_form #disco_form #norse_athletic_association_amountElement,
 #giving_form #disco_form #scholarship_fund_amountElement,
@@ -1032,21 +1028,21 @@ select {
   width: 5rem;
   display: inline-block;
 }
-/* line 738, ../scss/sites/giving.scss */
+/* line 737, ../scss/sites/giving.scss */
 #giving_form #disco_form #giftamountheaderItem h3 {
   margin-top: 0;
 }
-/* line 745, ../scss/sites/giving.scss */
+/* line 744, ../scss/sites/giving.scss */
 #giving_form #disco_form #giftamountItem.error input {
   background: #fad4d0 !important;
   border: 1px solid #f4aba2 !important;
 }
-/* line 751, ../scss/sites/giving.scss */
+/* line 750, ../scss/sites/giving.scss */
 #giving_form #disco_form #namegroupItem {
   margin-top: 2.5rem;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 755, ../scss/sites/giving.scss */
+  /* line 754, ../scss/sites/giving.scss */
   #giving_form #disco_form #reviewnoteItem {
     background: #e0effd;
     background: #f3f3f3;
@@ -1059,11 +1055,11 @@ select {
     border-radius: 6px;
   }
 }
-/* line 767, ../scss/sites/giving.scss */
+/* line 766, ../scss/sites/giving.scss */
 #giving_form #disco_form #reviewnoteItem #reviewGiftOverview .summary {
   font-size: 1.5rem;
 }
-/* line 774, ../scss/sites/giving.scss */
+/* line 773, ../scss/sites/giving.scss */
 #giving_form #disco_form #showGiftDetails,
 #giving_form #disco_form .changeGiftButton a {
   transition-property: all;
@@ -1099,7 +1095,7 @@ select {
   box-shadow: rgba(0, 0, 0, 0.5) 1px 1px 1px inset;
   background-color: #238dee;
 }
-/* line 780, ../scss/sites/giving.scss */
+/* line 779, ../scss/sites/giving.scss */
 #giving_form #disco_form #reviewGiftDetails {
   background: #FFF;
   position: relative;
@@ -1115,18 +1111,18 @@ select {
   box-shadow: rgba(0, 0, 0, 0.25) 0 0 4px;
 }
 @media only screen and (max-width: 40em) {
-  /* line 780, ../scss/sites/giving.scss */
+  /* line 779, ../scss/sites/giving.scss */
   #giving_form #disco_form #reviewGiftDetails {
     padding: 0.5rem;
   }
 }
-/* line 793, ../scss/sites/giving.scss */
+/* line 792, ../scss/sites/giving.scss */
 #giving_form #disco_form #reviewGiftDetails h3 {
   margin-left: 0 !important;
   margin-top: 0 !important;
   margin-right: 3.75rem;
 }
-/* line 799, ../scss/sites/giving.scss */
+/* line 798, ../scss/sites/giving.scss */
 #giving_form #disco_form #reviewGiftDetails #hideGiftDetails {
   display: block;
   position: absolute;
@@ -1134,21 +1130,21 @@ select {
   top: 1.25rem;
   font-size: 1.5rem;
 }
-/* line 807, ../scss/sites/giving.scss */
+/* line 806, ../scss/sites/giving.scss */
 #giving_form #disco_form #reviewGiftDetails table {
   margin-bottom: 1.25rem;
 }
-/* line 811, ../scss/sites/giving.scss */
+/* line 810, ../scss/sites/giving.scss */
 #giving_form #disco_form #reviewGiftDetails table tr,
 #giving_form #disco_form #reviewGiftDetails table td {
   border: 1px solid #e9e9e9;
   padding: 0.75rem;
 }
-/* line 817, ../scss/sites/giving.scss */
+/* line 816, ../scss/sites/giving.scss */
 #giving_form #disco_form #reviewGiftDetails #givingTotalsDisclaimer {
   margin-bottom: 0;
 }
-/* line 824, ../scss/sites/giving.scss */
+/* line 823, ../scss/sites/giving.scss */
 #giving_form .announcement {
   clear: both;
   background: #e9e9e9;
