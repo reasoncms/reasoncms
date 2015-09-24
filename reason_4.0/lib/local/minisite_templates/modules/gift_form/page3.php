@@ -252,21 +252,11 @@ class GiftPageThreeForm extends FormStep {
         $txt = '<div id="reviewGiftOverview">' . "\n";
 
         //$txt .= '<p class="printConfirm">Print this confirmation for your records.</p>' . "\n";
-        if (reason_unique_name_exists('giving_thank_you_email_image')) {
-            $id = id_of('giving_thank_you_email_image');
-            $txt .= "<img src='".WEB_PHOTOSTOCK.$id.".jpg?_nocache=1443102106' alt='Students Holding Thank You Sign'>";
-        }
-        if (reason_unique_name_exists('giving_form_thank_you_blurb')) {
-	    $txt .= '<p style="color: #444444; font-family: inherit; font-size: 1.05rem; font-weight: 300; text-align: left; line-height: 1.7; text-ren
-dering: optimizelegibility; margin: 0 0 10px; padding: 0;" align="left">';
-            $txt .= strip_tags(get_text_blurb_content('giving_form_thank_you_blurb')) . "</p>\n";
-	   }
         if ((intval($this->controller->get('gift_amount')) <= 100) && !$this->get_value('mail_receipt')) {
             if (reason_unique_name_exists('giving_form_100_dollars')){
                 $txt .= get_text_blurb_content('giving_form_100_dollars') . "\n";
 			}
         }
-        $txt .= '<p>Luther College is, for tax deduction purposes, a 501(c)(3) organization.</p>' . "\n";
         $txt .= '<ul>' . "\n";
         $txt .= '<li><strong>Date:</strong> ' . date($this->date_format) . '</li>' . "\n";
         $txt .= '</ul>' . "\n";
@@ -570,8 +560,18 @@ dering: optimizelegibility; margin: 0 0 10px; padding: 0;" align="left">';
                     '<br />' => "\n",
                 );
                 $mail_text = str_replace(array_keys($replacements), $replacements, $confirm_text);
-                //$email_to_development = new Email('waskni01@luther.edu', 'noreply@luther.edu', 'noreply@luther.edu', 'New Online Gift ' . date('mdY H:i:s'), strip_tags($mail_text), $mail_text);
-                //$email_to_development->send();
+                $email_to_development = new Email('slylth@outlook.com', 'noreply@luther.edu', 'noreply@luther.edu', 'New Online Gift ' . date('mdY H:i:s'), strip_tags($mail_text), $mail_text);
+                $email_to_development->send();
+                // add some niceties to the submitter's email
+                if (reason_unique_name_exists('giving_thank_you_email_image')) {
+                $id = id_of('giving_thank_you_email_image');
+                $confirm_text .= "<img src='http://".$_SERVER['SERVER_NAME'].WEB_PHOTOSTOCK.$id.".jpg?_nocache=1443102106' alt='Students Holding Thank You Sign'>";
+                }
+                if (reason_unique_name_exists('giving_form_thank_you_blurb')) {
+                $confirm_text .= '<p style="color: #444444; font-family: inherit; font-size: 1.05rem; font-weight: 300; text-align: left; line-height: 1.7; text-rendering: optimizelegibility; margin: 0 0 10px; padding: 0;" align="left">';
+                    $confirm_text .= strip_tags(get_text_blurb_content('giving_form_thank_you_blurb')) . "</p>\n";
+                    $confirm_text .= '<p>Luther College is, for tax deduction purposes, a 501(c)(3) organization.</p>' . "\n";
+               }
                 $email_to_giver = new Email($this->controller->get('email'), 'giving@luther.edu', 'giving@luther.edu', 'Luther College Online Gift Confirmation' . date('m.d.y: H:i:s'), strip_tags($mail_text), $confirm_text);
                 $email_to_giver->send();
                 //if ($this->controller->get('estate_plans')) {
