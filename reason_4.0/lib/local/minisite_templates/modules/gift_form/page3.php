@@ -548,9 +548,7 @@ dering: optimizelegibility; margin: 0 0 10px; padding: 0;" align="left">';
                 }
                 $this->set_value('result_authcode', $result['AUTHCODE']);
 
-                $confirm_text = $this->get_confirmation_header();
                 $confirm_text .= $this->get_confirmation_text();
-                $confirm_text .= $this->get_confirmation_footer();
                 //$confirm_text .= build_gift_review_detail_output($this->helper, $this->date_format);
 
                 $this->set_value('confirmation_text', $confirm_text);
