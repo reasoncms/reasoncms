@@ -159,7 +159,6 @@ class GiftPageThreeForm extends FormStep {
 
     // style up the form and add comments et al
     function on_every_time() {
-        echo $this->get_confirmation_text();
         $this->set_comments('credit_card_security_code', form_comment('
             <p><a data-reveal-id="cvv2Iframe">What\'s this?</a></p>
             <div class="reveal-modal medium" id="cvv2Iframe" data-reveal="">
