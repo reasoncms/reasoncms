@@ -254,7 +254,7 @@ class GiftPageThreeForm extends FormStep {
         //$txt .= '<p class="printConfirm">Print this confirmation for your records.</p>' . "\n";
         if (reason_unique_name_exists('giving_thank_you_email_image')) {
             $id = id_of('giving_thank_you_email_image');
-            $txt .= "<img src='".WEB_PHOTOSTOCK.$id.".jpg?_nocache=1443102106' alt='Students Holding Thank You Sign'>";
+            $txt .= "<img src='http://".$_SERVER['SERVER_NAME'].WEB_PHOTOSTOCK.$id.".jpg' alt='Students Holding Thank You Sign'>";
         }
         if (reason_unique_name_exists('giving_form_thank_you_blurb')) {
 	    $txt .= '<p style="color: #444444; font-family: inherit; font-size: 1.05rem; font-weight: 300; text-align: left; line-height: 1.7; text-ren
