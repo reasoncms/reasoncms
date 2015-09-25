@@ -576,11 +576,11 @@ class GiftPageThreeForm extends FormStep {
                     '/<p>This e-receipt.*College.<\/p>/' => '',
                 );
                 $mail_text = preg_replace(array_keys($reg_replacements), $reg_replacements, $confirm_text);
-                $mail_text = str_replace(array_keys($replacements), $replacements, $confirm_text);
-                $email_to_development = new Email('waskni01@luther.edu', 'noreply@luther.edu', 'noreply@luther.edu', 'New Online Gift ' . date('mdY H:i:s'), strip_tags($mail_text), $mail_text);
-                $email_to_development->send();
+                $mail_text = str_replace(array_keys($replacements), $replacements, $mail_text);
                 $email_to_giver = new Email($this->controller->get('email'), 'giving@luther.edu', 'giving@luther.edu', 'Luther College Online Gift Confirmation' . date('m.d.y: H:i:s'), strip_tags($mail_text), $confirm_text);
                 $email_to_giver->send();
+                $email_to_development = new Email('waskni01@luther.edu', 'noreply@luther.edu', 'noreply@luther.edu', 'New Online Gift ' . date('mdY H:i:s'), strip_tags($mail_text), $mail_text);
+                $email_to_development->send();
                 if ($this->controller->get('estate_plans')) {
                    $email_to_estate_plans = new Email('kelly.wedmann@luther.edu', 'noreply@luther.edu', 'noreply@luther.edu', 'New Online Gift ' . date('mdY H:i:s'), strip_tags($mail_text), $mail_text);
                    $email_to_estate_plans->send();
