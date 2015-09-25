@@ -524,13 +524,24 @@ select {
 }
 /* line 276, ../scss/sites/giving.scss */
 .siteHome #minisite .give-now .give-now-text .give-now-form form .formElement .element .radioButtons {
-  font-weight: 700;
+  font-weight: 600;
+  display: inline-flex;
+}
+@media only screen and (min-width: 40.063em) {
+  /* line 276, ../scss/sites/giving.scss */
+  .siteHome #minisite .give-now .give-now-text .give-now-form form .formElement .element .radioButtons {
+    font-weight: 700;
+  }
 }
 /* line 282, ../scss/sites/giving.scss */
+.siteHome #minisite .give-now .give-now-text .give-now-form form .formElement .element .radioButtons .radioItem:nth-child(odd) {
+  margin-right: 0.5rem;
+}
+/* line 289, ../scss/sites/giving.scss */
 .siteHome #minisite .give-now .give-now-text .give-now-form form .submitSection {
   padding: 0;
 }
-/* line 285, ../scss/sites/giving.scss */
+/* line 292, ../scss/sites/giving.scss */
 .siteHome #minisite .give-now .give-now-text .give-now-form form .submitSection input[type="submit"] {
   width: 100%;
   display: block;
@@ -545,37 +556,37 @@ select {
   font-family: "Roboto Slab", serif;
   font-size: 1.375rem !important;
 }
-/* line 294, ../scss/sites/giving.scss */
+/* line 301, ../scss/sites/giving.scss */
 .siteHome #minisite .give-now .give-now-text .give-now-form form .submitSection input[type="submit"]:hover {
   background: #4a8512;
 }
-/* line 298, ../scss/sites/giving.scss */
+/* line 305, ../scss/sites/giving.scss */
 .siteHome #minisite .give-now .give-now-text .give-now-form form .submitSection input[type="submit"]:active {
   background: #519214;
 }
-/* line 305, ../scss/sites/giving.scss */
+/* line 312, ../scss/sites/giving.scss */
 .siteHome #minisite .give-now .give-now-text .give-now-form form table tr td {
   color: white;
 }
-/* line 310, ../scss/sites/giving.scss */
+/* line 317, ../scss/sites/giving.scss */
 .siteHome #minisite .give-now .give-now-text .other-ways {
   background: white;
   padding: 2.5rem;
 }
 @media only screen and (min-width: 63.8125em) {
-  /* line 310, ../scss/sites/giving.scss */
+  /* line 317, ../scss/sites/giving.scss */
   .siteHome #minisite .give-now .give-now-text .other-ways {
     width: 40%;
     float: left;
     background: rgba(255, 255, 255, 0.9);
   }
 }
-/* line 320, ../scss/sites/giving.scss */
+/* line 327, ../scss/sites/giving.scss */
 .siteHome #minisite .give-now .give-now-text .other-ways h3 {
   margin: 0 0 0.5rem;
   line-height: 1;
 }
-/* line 324, ../scss/sites/giving.scss */
+/* line 331, ../scss/sites/giving.scss */
 .siteHome #minisite .give-now .give-now-text .other-ways h3 a {
   line-height: 1;
   font-weight: 700;
@@ -584,7 +595,7 @@ select {
   text-decoration: underline;
 }
 @media only screen and (max-width: 40em) {
-  /* line 324, ../scss/sites/giving.scss */
+  /* line 331, ../scss/sites/giving.scss */
   .siteHome #minisite .give-now .give-now-text .other-ways h3 a {
     color: #1073ce;
     border: 2px solid #1073ce;
@@ -596,23 +607,23 @@ select {
     line-height: 1.5;
   }
 }
-/* line 344, ../scss/sites/giving.scss */
+/* line 351, ../scss/sites/giving.scss */
 .siteHome #minisite .give-now .give-now-text .other-ways h3:nth-of-type(2) {
   margin-top: 0.75rem;
 }
-/* line 349, ../scss/sites/giving.scss */
+/* line 356, ../scss/sites/giving.scss */
 .siteHome #minisite .give-now .give-now-text .other-ways ul {
   display: none;
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
   margin: 0;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 349, ../scss/sites/giving.scss */
+  /* line 356, ../scss/sites/giving.scss */
   .siteHome #minisite .give-now .give-now-text .other-ways ul {
     display: block;
   }
 }
-/* line 359, ../scss/sites/giving.scss */
+/* line 366, ../scss/sites/giving.scss */
 .siteHome #minisite .give-now .give-now-text .other-ways ul li {
   font-size: 0.875rem;
   line-height: 0.875rem;
@@ -621,7 +632,7 @@ select {
   position: relative;
   padding-right: 0.125rem;
 }
-/* line 368, ../scss/sites/giving.scss */
+/* line 375, ../scss/sites/giving.scss */
 .siteHome #minisite .give-now .give-now-text .other-ways ul li:before {
   content: "\f111";
   margin-right: 0.375rem;
@@ -632,14 +643,14 @@ select {
 }
 
 @media only screen and (min-width: 40.063em) {
-  /* line 392, ../scss/sites/giving.scss */
+  /* line 399, ../scss/sites/giving.scss */
   #minisite #contentAndRelated .contentHead .breadcrumbs,
   #minisite #contentAndRelated .contentHead .pageTitle {
     padding-right: 18.75rem;
   }
 }
 
-/* line 398, ../scss/sites/giving.scss */
+/* line 405, ../scss/sites/giving.scss */
 .give-now-mini {
   width: 100%;
   margin-left: auto;
@@ -661,7 +672,7 @@ select {
   clear: both;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 398, ../scss/sites/giving.scss */
+  /* line 405, ../scss/sites/giving.scss */
   .give-now-mini {
     position: absolute;
     top: 0.625rem;
@@ -671,18 +682,18 @@ select {
   }
 }
 @media only screen and (min-width: 63.8125em) {
-  /* line 398, ../scss/sites/giving.scss */
+  /* line 405, ../scss/sites/giving.scss */
   .give-now-mini {
     top: 0;
     right: 0;
   }
 }
-/* line 416, ../scss/sites/giving.scss */
+/* line 423, ../scss/sites/giving.scss */
 .give-now-mini h2 {
   margin: 0;
   padding: 0;
 }
-/* line 420, ../scss/sites/giving.scss */
+/* line 427, ../scss/sites/giving.scss */
 .give-now-mini h2 a {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Arial, sans-serif;
   font-size: 0.875rem;
@@ -736,7 +747,7 @@ select {
   width: 2.375rem;
   border-radius: 1000px;
 }
-/* line 437, ../scss/sites/giving.scss */
+/* line 444, ../scss/sites/giving.scss */
 .give-now-mini #form {
   position: relative;
   padding-left: 1.25rem;
@@ -747,7 +758,7 @@ select {
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 6px;
 }
-/* line 443, ../scss/sites/giving.scss */
+/* line 450, ../scss/sites/giving.scss */
 .give-now-mini #form form {
   width: 100%;
   margin-left: auto;
@@ -766,7 +777,7 @@ select {
 .give-now-mini #form form:after {
   clear: both;
 }
-/* line 446, ../scss/sites/giving.scss */
+/* line 453, ../scss/sites/giving.scss */
 .give-now-mini #form form .formElement {
   position: relative;
   padding-left: 1.25rem;
@@ -776,11 +787,11 @@ select {
   padding: 0;
   padding-right: 0.625rem;
 }
-/* line 461, ../scss/sites/giving.scss */
+/* line 468, ../scss/sites/giving.scss */
 .give-now-mini #form form .formElement .element {
   position: relative;
 }
-/* line 464, ../scss/sites/giving.scss */
+/* line 471, ../scss/sites/giving.scss */
 .give-now-mini #form form .formElement .element .currency {
   display: block;
   background: #4a8512;
@@ -795,13 +806,13 @@ select {
   color: #1d3407;
   color: white;
 }
-/* line 480, ../scss/sites/giving.scss */
+/* line 487, ../scss/sites/giving.scss */
 .give-now-mini #form form .formElement .element input[type="text"] {
   padding: 0.375rem 0.375rem 0.375rem 2.4375rem;
   height: 34px;
   border-color: rgba(0, 0, 0, 0.125);
 }
-/* line 499, ../scss/sites/giving.scss */
+/* line 506, ../scss/sites/giving.scss */
 .give-now-mini #form form .submitSection {
   position: relative;
   padding-left: 1.25rem;
@@ -810,7 +821,7 @@ select {
   float: left;
   padding: 0;
 }
-/* line 508, ../scss/sites/giving.scss */
+/* line 515, ../scss/sites/giving.scss */
 .give-now-mini #form form .submitSection input[type="submit"] {
   width: 100%;
   display: block;
@@ -824,39 +835,39 @@ select {
   font-size: 0.875rem !important;
   height: 34px;
 }
-/* line 525, ../scss/sites/giving.scss */
+/* line 532, ../scss/sites/giving.scss */
 .give-now-mini #form form .submitSection input[type="submit"]:hover {
   background: #519214;
 }
-/* line 529, ../scss/sites/giving.scss */
+/* line 536, ../scss/sites/giving.scss */
 .give-now-mini #form form .submitSection input[type="submit"]:active {
   background: #437810;
 }
 
-/* line 543, ../scss/sites/giving.scss */
+/* line 550, ../scss/sites/giving.scss */
 #giving_form #formNavigation {
   margin-bottom: 2.5rem;
 }
-/* line 547, ../scss/sites/giving.scss */
+/* line 554, ../scss/sites/giving.scss */
 #giving_form #formNavigation ul {
   margin: 0;
 }
-/* line 550, ../scss/sites/giving.scss */
+/* line 557, ../scss/sites/giving.scss */
 #giving_form #formNavigation ul li {
   display: inline-block;
 }
 @media only screen and (max-width: 40em) {
-  /* line 550, ../scss/sites/giving.scss */
+  /* line 557, ../scss/sites/giving.scss */
   #giving_form #formNavigation ul li {
     display: block;
   }
 }
-/* line 560, ../scss/sites/giving.scss */
+/* line 567, ../scss/sites/giving.scss */
 #giving_form #formNavigation ul li.current a {
   background: #004789;
   position: relative;
 }
-/* line 564, ../scss/sites/giving.scss */
+/* line 571, ../scss/sites/giving.scss */
 #giving_form #formNavigation ul li.current a:after {
   content: "";
   display: block;
@@ -871,7 +882,7 @@ select {
   margin-top: -8px;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 574, ../scss/sites/giving.scss */
+  /* line 581, ../scss/sites/giving.scss */
   #giving_form #formNavigation ul li.current a:after {
     content: "";
     display: block;
@@ -887,7 +898,7 @@ select {
     margin-left: -10px;
   }
 }
-/* line 586, ../scss/sites/giving.scss */
+/* line 593, ../scss/sites/giving.scss */
 #giving_form #formNavigation ul li a {
   display: block;
   background: #1073ce;
@@ -895,41 +906,41 @@ select {
   border: 1px solid #FFF;
   color: #FFF;
 }
-/* line 597, ../scss/sites/giving.scss */
+/* line 604, ../scss/sites/giving.scss */
 #giving_form #discoErrorNotice {
   margin-top: 2.5rem;
 }
-/* line 604, ../scss/sites/giving.scss */
+/* line 611, ../scss/sites/giving.scss */
 #giving_form #disco_form .formElement {
   background: none;
 }
-/* line 607, ../scss/sites/giving.scss */
+/* line 614, ../scss/sites/giving.scss */
 #giving_form #disco_form .formElement div:empty {
   display: none;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 604, ../scss/sites/giving.scss */
+  /* line 611, ../scss/sites/giving.scss */
   #giving_form #disco_form .formElement {
     padding-left: 2.5rem !important;
   }
-  /* line 617, ../scss/sites/giving.scss */
+  /* line 624, ../scss/sites/giving.scss */
   #giving_form #disco_form .formElement h3,
   #giving_form #disco_form .formElement h3 + p {
     margin-left: -2.5rem !important;
   }
 }
-/* line 622, ../scss/sites/giving.scss */
+/* line 629, ../scss/sites/giving.scss */
 #giving_form #disco_form .formElement p a {
   text-decoration: underline;
 }
-/* line 626, ../scss/sites/giving.scss */
+/* line 633, ../scss/sites/giving.scss */
 #giving_form #disco_form .formElement h3 {
   margin-top: 1rem;
   display: inline-block;
   color: #444444;
 }
 @media only screen and (max-width: 40em) {
-  /* line 626, ../scss/sites/giving.scss */
+  /* line 633, ../scss/sites/giving.scss */
   #giving_form #disco_form .formElement h3 {
     background: #efefef;
     padding: 0.375rem 0.75rem;
@@ -937,89 +948,89 @@ select {
   }
 }
 @media only screen and (max-width: 40em) {
-  /* line 642, ../scss/sites/giving.scss */
+  /* line 649, ../scss/sites/giving.scss */
   #giving_form #disco_form .formElement .inlineElement input {
     margin-bottom: 0.375rem;
   }
 }
-/* line 653, ../scss/sites/giving.scss */
+/* line 660, ../scss/sites/giving.scss */
 #giving_form #disco_form .formElement#annualfundItem label, #giving_form #disco_form .formElement#specificfundItem label, #giving_form #disco_form .formElement#matchgiftItem label, #giving_form #disco_form .formElement#existingpledgeItem label {
   margin: 0;
 }
-/* line 658, ../scss/sites/giving.scss */
+/* line 665, ../scss/sites/giving.scss */
 #giving_form #disco_form .formElement div > span.currency {
   font-size: 1.25rem;
   font-weight: 400;
 }
-/* line 663, ../scss/sites/giving.scss */
+/* line 670, ../scss/sites/giving.scss */
 #giving_form #disco_form .formElement #installment_type_container.radioButtons.inlineRadioButtons .radioItem {
   display: block;
   margin-bottom: 1.0rem;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 663, ../scss/sites/giving.scss */
+  /* line 670, ../scss/sites/giving.scss */
   #giving_form #disco_form .formElement #installment_type_container.radioButtons.inlineRadioButtons .radioItem {
     display: inline;
   }
 }
-/* line 672, ../scss/sites/giving.scss */
+/* line 679, ../scss/sites/giving.scss */
 #giving_form #disco_form .formElement #installment_end_dateElement {
   margin-left: 0.375rem;
 }
-/* line 675, ../scss/sites/giving.scss */
+/* line 682, ../scss/sites/giving.scss */
 #giving_form #disco_form .formElement .inlineElement {
   vertical-align: center;
 }
-/* line 677, ../scss/sites/giving.scss */
+/* line 684, ../scss/sites/giving.scss */
 #giving_form #disco_form .formElement .inlineElement label {
   margin: 0;
 }
-/* line 680, ../scss/sites/giving.scss */
+/* line 687, ../scss/sites/giving.scss */
 #giving_form #disco_form .formElement .inlineElement span.currency {
   font-size: 1.25rem;
   font-weight: 400;
   padding-left: 1rem;
 }
-/* line 687, ../scss/sites/giving.scss */
+/* line 694, ../scss/sites/giving.scss */
 #giving_form #disco_form div#norseathleticassociationdetailsItem > .element, #giving_form #disco_form div#otherdesignationdetailsItem > .element {
   padding-left: 2rem;
   max-width: 600px;
 }
-/* line 692, ../scss/sites/giving.scss */
+/* line 699, ../scss/sites/giving.scss */
 #giving_form #disco_form #gift_designation_container .radioItem {
   min-height: 2.0rem;
   margin-top: 0.75rem;
 }
-/* line 695, ../scss/sites/giving.scss */
+/* line 702, ../scss/sites/giving.scss */
 #giving_form #disco_form #gift_designation_container .radioItem select {
   padding: 0;
   margin: .75rem 0 0 3.5rem;
   display: block;
 }
-/* line 700, ../scss/sites/giving.scss */
+/* line 707, ../scss/sites/giving.scss */
 #giving_form #disco_form #gift_designation_container .radioItem.radioItemOther {
   margin-top: 0.75rem;
 }
-/* line 702, ../scss/sites/giving.scss */
+/* line 709, ../scss/sites/giving.scss */
 #giving_form #disco_form #gift_designation_container .radioItem.radioItemOther input[name="gift_designation_other"] {
   margin: .75rem 0 0 3.5rem;
   display: block;
   max-width: 85%;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 711, ../scss/sites/giving.scss */
+  /* line 718, ../scss/sites/giving.scss */
   #giving_form #disco_form #gift_designation_container .radioItem select {
     margin: 0 0 0 0.75rem;
     display: inline;
   }
-  /* line 716, ../scss/sites/giving.scss */
+  /* line 723, ../scss/sites/giving.scss */
   #giving_form #disco_form #gift_designation_container .radioItem.radioItemOther input[name="gift_designation_other"] {
     margin: 0 0 0 0.75rem;
     display: inline;
     max-width: 60%;
   }
 }
-/* line 730, ../scss/sites/giving.scss */
+/* line 737, ../scss/sites/giving.scss */
 #giving_form #disco_form #annual_fund_amountElement,
 #giving_form #disco_form #norse_athletic_association_amountElement,
 #giving_form #disco_form #scholarship_fund_amountElement,
@@ -1028,21 +1039,21 @@ select {
   width: 5rem;
   display: inline-block;
 }
-/* line 737, ../scss/sites/giving.scss */
+/* line 744, ../scss/sites/giving.scss */
 #giving_form #disco_form #giftamountheaderItem h3 {
   margin-top: 0;
 }
-/* line 744, ../scss/sites/giving.scss */
+/* line 751, ../scss/sites/giving.scss */
 #giving_form #disco_form #giftamountItem.error input {
   background: #fad4d0 !important;
   border: 1px solid #f4aba2 !important;
 }
-/* line 750, ../scss/sites/giving.scss */
+/* line 757, ../scss/sites/giving.scss */
 #giving_form #disco_form #namegroupItem {
   margin-top: 2.5rem;
 }
 @media only screen and (min-width: 40.063em) {
-  /* line 754, ../scss/sites/giving.scss */
+  /* line 761, ../scss/sites/giving.scss */
   #giving_form #disco_form #reviewnoteItem {
     background: #e0effd;
     background: #f3f3f3;
@@ -1055,11 +1066,11 @@ select {
     border-radius: 6px;
   }
 }
-/* line 766, ../scss/sites/giving.scss */
+/* line 773, ../scss/sites/giving.scss */
 #giving_form #disco_form #reviewnoteItem #reviewGiftOverview .summary {
   font-size: 1.5rem;
 }
-/* line 773, ../scss/sites/giving.scss */
+/* line 780, ../scss/sites/giving.scss */
 #giving_form #disco_form #showGiftDetails,
 #giving_form #disco_form .changeGiftButton a {
   transition-property: all;
@@ -1095,7 +1106,7 @@ select {
   box-shadow: rgba(0, 0, 0, 0.5) 1px 1px 1px inset;
   background-color: #238dee;
 }
-/* line 779, ../scss/sites/giving.scss */
+/* line 786, ../scss/sites/giving.scss */
 #giving_form #disco_form #reviewGiftDetails {
   background: #FFF;
   position: relative;
@@ -1111,18 +1122,18 @@ select {
   box-shadow: rgba(0, 0, 0, 0.25) 0 0 4px;
 }
 @media only screen and (max-width: 40em) {
-  /* line 779, ../scss/sites/giving.scss */
+  /* line 786, ../scss/sites/giving.scss */
   #giving_form #disco_form #reviewGiftDetails {
     padding: 0.5rem;
   }
 }
-/* line 792, ../scss/sites/giving.scss */
+/* line 799, ../scss/sites/giving.scss */
 #giving_form #disco_form #reviewGiftDetails h3 {
   margin-left: 0 !important;
   margin-top: 0 !important;
   margin-right: 3.75rem;
 }
-/* line 798, ../scss/sites/giving.scss */
+/* line 805, ../scss/sites/giving.scss */
 #giving_form #disco_form #reviewGiftDetails #hideGiftDetails {
   display: block;
   position: absolute;
@@ -1130,21 +1141,21 @@ select {
   top: 1.25rem;
   font-size: 1.5rem;
 }
-/* line 806, ../scss/sites/giving.scss */
+/* line 813, ../scss/sites/giving.scss */
 #giving_form #disco_form #reviewGiftDetails table {
   margin-bottom: 1.25rem;
 }
-/* line 810, ../scss/sites/giving.scss */
+/* line 817, ../scss/sites/giving.scss */
 #giving_form #disco_form #reviewGiftDetails table tr,
 #giving_form #disco_form #reviewGiftDetails table td {
   border: 1px solid #e9e9e9;
   padding: 0.75rem;
 }
-/* line 816, ../scss/sites/giving.scss */
+/* line 823, ../scss/sites/giving.scss */
 #giving_form #disco_form #reviewGiftDetails #givingTotalsDisclaimer {
   margin-bottom: 0;
 }
-/* line 823, ../scss/sites/giving.scss */
+/* line 830, ../scss/sites/giving.scss */
 #giving_form .announcement {
   clear: both;
   background: #e9e9e9;
