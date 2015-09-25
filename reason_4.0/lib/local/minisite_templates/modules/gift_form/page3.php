@@ -20,14 +20,17 @@ reason_include_once('classes/repeat_transaction_helper.php');
 
 class GiftPageThreeForm extends FormStep {
 
-    var $_log_errors = true;
-    var $no_session = array('credit_card_number');
+    var $_log_errors        = true;
+    var $no_session         = array('credit_card_number');
     var $error;
-    var $expense_budget_number = '10-202-60500-51111';
-    var $revenue_budget_number = 'Online Giving';
-    var $transaction_comment = 'Online gift';
+    var $expense_budget_number  = '10-202-60500-51111';
+    var $revenue_budget_number  = 'Online Giving';
+    var $transaction_comment    = 'Online gift';
     var $is_in_testing_mode; // This gets set using the value of the THIS_IS_A_DEVELOPMENT_REASON_INSTANCE constant or if the 'tm' (testing mode) request variable evaluates to an integer
     // the usual disco member data
+    var $thank_you_image_id = '';
+    var $thanks_blurb       = '';
+    var $one_hundred_blurb  = '';
     var $elements = array(
         'review_note' => array(
             'type' => 'comment',
@@ -253,17 +256,18 @@ class GiftPageThreeForm extends FormStep {
 
         //$txt .= '<p class="printConfirm">Print this confirmation for your records.</p>' . "\n";
         if (reason_unique_name_exists('giving_thank_you_email_image')) {
-            $id = id_of('giving_thank_you_email_image');
-            $txt .= "<img src='http://".$_SERVER['SERVER_NAME'].WEB_PHOTOSTOCK.$id.".jpg' alt='Students Holding Thank You Sign'>";
+            $this->thank_you_image_id = id_of('giving_thank_you_email_image');
+            $txt .= "<img src='http://".$_SERVER['SERVER_NAME'].WEB_PHOTOSTOCK.$this->thank_you_image_id.".jpg' alt='Students Holding Thank You Sign'>";
         }
         if (reason_unique_name_exists('giving_form_thank_you_blurb')) {
-	    $txt .= '<p style="color: #444444; font-family: inherit; font-size: 1.05rem; font-weight: 300; text-align: left; line-height: 1.7; text-ren
-dering: optimizelegibility; margin: 0 0 10px; padding: 0;" align="left">';
-            $txt .= strip_tags(get_text_blurb_content('giving_form_thank_you_blurb')) . "</p>\n";
+            $this->thanks_blurb = strip_tags(get_text_blurb_content('giving_form_thank_you_blurb'));
+            $txt .= '<p style="color: #444444; font-family: inherit; font-size: 1.05rem; font-weight: 300; text-align: left; line-height: 1.7; text-rendering: optimizelegibility; margin: 0 0 10px; padding: 0;" align="left">';
+            $txt .= $this->thanks_blurb . "</p>\n";
 	   }
         if ((intval($this->controller->get('gift_amount')) <= 100) && !$this->get_value('mail_receipt')) {
             if (reason_unique_name_exists('giving_form_100_dollars')){
-                $txt .= get_text_blurb_content('giving_form_100_dollars') . "\n";
+                $this->one_hundred_blurb = get_text_blurb_content('giving_form_100_dollars');
+                $txt .= $this->one_hundred_blurb . "\n";
 			}
         }
         $txt .= '<p>Luther College is, for tax deduction purposes, a 501(c)(3) organization.</p>' . "\n";
@@ -554,30 +558,33 @@ dering: optimizelegibility; margin: 0 0 10px; padding: 0;" align="left">';
                 $this->set_value('confirmation_text', $confirm_text);
                 $pf->set_confirmation_text($confirm_text);
 
-                // This is where we send the confirmation email.
-                // for now we are filtering out obviously bad/non-carleton email addresses
-                // NOTE: REMOVE THIS FILTER BEFORE WE GO LIVE
-                //if(strstr( $this->controller->get('email'), 'carleton.edu' ) )
-                //{
+                // prep emails
                 $replacements = array(
-                    '<th class="col1">Date</th>' => '',
-                    '<th class="col1">Year</th>' => '',
-                    '<th>Amount</th>' => '',
-                    '</td><td>' => ': ',
+                    // '<th class="col1">Date</th>' => '',
+                    // '<th class="col1">Year</th>' => '',
+                    // '<th>Amount</th>' => '',
+                    // '</td><td>' => ': ',
                     '–' => '-',
-                    //'<h3>'=>'--------------------'."\n\n",
-                    //'</h3>'=>'',
+                    "Your Information" => "Donor Info",
+                    '<p>Luther College is, for tax deduction purposes, a 501(c)(3) organization.</p>' => '',
+                    '<p>Thank You!</p>' => '',
                     '<br />' => "\n",
                 );
+                $reg_replacements = array(
+                    '/<img .*>/'        => '',
+                    '/<p style.*<\/p>/' => '',
+                    '/<p>This e-receipt.*College.<\/p>/' => '',
+                );
+                $mail_text = preg_replace(array_keys($reg_replacements), $reg_replacements, $confirm_text);
                 $mail_text = str_replace(array_keys($replacements), $replacements, $confirm_text);
-                //$email_to_development = new Email('waskni01@luther.edu', 'noreply@luther.edu', 'noreply@luther.edu', 'New Online Gift ' . date('mdY H:i:s'), strip_tags($mail_text), $mail_text);
-                //$email_to_development->send();
+                $email_to_development = new Email('waskni01@luther.edu', 'noreply@luther.edu', 'noreply@luther.edu', 'New Online Gift ' . date('mdY H:i:s'), strip_tags($mail_text), $mail_text);
+                $email_to_development->send();
                 $email_to_giver = new Email($this->controller->get('email'), 'giving@luther.edu', 'giving@luther.edu', 'Luther College Online Gift Confirmation' . date('m.d.y: H:i:s'), strip_tags($mail_text), $confirm_text);
                 $email_to_giver->send();
-                //if ($this->controller->get('estate_plans')) {
-                 //   $email_to_estate_plans = new Email('kelly.wedmann@luther.edu', 'noreply@luther.edu', 'noreply@luther.edu', 'New Online Gift ' . date('mdY H:i:s'), strip_tags($mail_text), $mail_text);
-                  //  $email_to_estate_plans->send();
-                //}
+                if ($this->controller->get('estate_plans')) {
+                   $email_to_estate_plans = new Email('kelly.wedmann@luther.edu', 'noreply@luther.edu', 'noreply@luther.edu', 'New Online Gift ' . date('mdY H:i:s'), strip_tags($mail_text), $mail_text);
+                   $email_to_estate_plans->send();
+                }
             }
         }
     }
