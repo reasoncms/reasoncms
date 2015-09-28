@@ -59,13 +59,31 @@ class ReasonUploadType extends uploadType
 		reason_add_async_upload_constraints($this->upload_sid, $this->name,
 			$constraints);
 		
-		if (isset($args["head_items"]))
+		if (isset($args["head_items"])) {
 			$this->get_head_items($args["head_items"]);
+		} else {
+			_embed_plupload_stylesheet();
+		}
 		
 		_reason_upload_handle_entity($this, "asset",
 			"reason_get_asset_filesystem_location", "reason_get_asset_url");
 		
 		return parent::additional_init_actions($args);
+	}
+
+	function _get_upload_display($current, $add_text=null, $replace_text=null) {
+		return _get_plupload_dom_stubs($this->_can_add_file($current), $current, $this->name, $add_text, $replace_text);
+	}
+
+	function get_display() {
+		$current = $this->_get_current_file_info();
+
+		// marker - reason upload element
+		return _get_plupload_js_setup_snippet($this->upload_sid, $this->name) . 
+			$this->_get_hidden_display($current).
+			$this->_get_restriction_display($current).
+			$this->_get_current_file_display($current).
+			$this->_get_upload_display($current);
 	}
 	
 	function register_fields()
@@ -76,12 +94,16 @@ class ReasonUploadType extends uploadType
 	
 	function _get_uploaded_file()
 	{
-		return _reason_get_disco_uploaded_file($this->name, $this->upload_sid);
+		// echo "trying to get uploaded file with name [" . $this->name . "], sid [" . $this->upload_sid . "]<BR>";
+		$uploaded_file = _reason_get_disco_uploaded_file($this->name, $this->upload_sid);
+		// echo "<PRE>"; var_dump($uploaded_file); echo "</PRE>";
+		return $uploaded_file;
 	}
 	
 	function get_head_items(&$head)
 	{
 		_populate_flash_upload_head_items($head);
+		_embed_plupload_stylesheet($head);
 	}
 	
 	function _get_hidden_display($current)
@@ -130,6 +152,21 @@ class ReasonImageUploadType extends image_uploadType
 	/** @access private */
 	var $existing_entity;
 
+	function get_display() {
+		$current = $this->_get_current_file_info();
+
+		// marker - image upload element
+		return _get_plupload_js_setup_snippet($this->upload_sid, $this->name) . 
+			$this->_get_hidden_display($current).
+			$this->_get_restriction_display($current).
+			$this->_get_current_file_display($current).
+			$this->_get_upload_display($current);
+	}
+
+	function _get_upload_display($current, $add_text=null, $replace_text=null) {
+		return _get_plupload_dom_stubs($this->_can_add_file($current), $current, $this->name, $add_text, $replace_text);
+	}
+
 	function additional_init_actions($args=array())
 	{
 		$auth = @$args['authenticator'];
@@ -148,15 +185,19 @@ class ReasonImageUploadType extends image_uploadType
 			$constraints['convert_to_image'] = true;
 		}
 		
+		// echo "SETTING CONSTRAINTS FOR [" . $this->upload_sid . "]/[" . $this->name . "]...<P><PRE>"; var_dump($constraints); echo "</PRE>";
 		reason_add_async_upload_constraints($this->upload_sid, $this->name,
 			$constraints);
 			
-		if (isset($args["head_items"]))
+		if (isset($args["head_items"])) {
 			$this->get_head_items($args["head_items"]);
+		} else {
+			_embed_plupload_stylesheet();
+		}
 		
 		_reason_upload_handle_entity($this, "image",
 		    "reason_get_image_path", "reason_get_image_url");
-		
+
 		return parent::additional_init_actions($args);
 	}
 	
@@ -196,6 +237,7 @@ class ReasonImageUploadType extends image_uploadType
 	function get_head_items(&$head)
 	{
 		_populate_flash_upload_head_items($head);
+		_embed_plupload_stylesheet($head);
 	}
 	
 	function _get_hidden_display($current)
@@ -406,20 +448,19 @@ function _populate_flash_upload_head_items(&$head)
 	if ($GLOBALS['_disco_upload_head_items_shown'])
 		return;
 	
-	$flash_uri = REASON_FLASH_UPLOAD_URI.'swfupload.swf';
     $scripts = array(
-		'swfupload.js',
-		'upload_support.js',
-		'jquery.swfupload.js',
-		'jquery.uploadbutton.js',
-		'jquery.uploadqueue.js',
-		'rich_upload.js?swf='.urlencode($flash_uri)
+		REASON_PACKAGE_HTTP_BASE_PATH."plupload/plupload-2.1.4/js/plupload.full.min.js",
+		REASON_FLASH_UPLOAD_URI . 'upload_support.js',
+		REASON_HTTP_BASE_PATH."js/plupload_setup.js"
 	);
-	
-	$head->add_javascript(JQUERY_URL);
-	$head->add_stylesheet(REASON_FLASH_UPLOAD_URI.'rich_upload.css');
 	foreach ($scripts as $script) {
-		$head->add_javascript(REASON_FLASH_UPLOAD_URI.$script);
+		if ($head && $head->get_num_times_markup_has_been_fetched() == 0) {
+			// echo "INCLUDING [$script] with head_items technique!<P>";
+			$head->add_javascript($script);
+		} else {
+			// echo "INCLUDING [$script] with inline technique!<P>";
+			echo "<script src='$script'></script>";
+		}
 	}
 	
 	$GLOBALS['_disco_upload_head_items_shown'] = true;
@@ -479,8 +520,10 @@ function _get_disco_async_upload_session($authenticator)
 		$sid = reason_create_async_upload_session($authenticator);
 		$GLOBALS['_disco_upload_session'] = $sid;
 		$GLOBALS['_disco_upload_session_sent'] = false;
+		// echo "GENERATED NEW SID ($sid)<BR>";
 	} else {
 		$sid = $GLOBALS['_disco_upload_session'];
+		// echo "GETTING SID FROM DISCO_UPLOAD_SESSION ($sid)<BR>";
 	}
 	
 	return $sid;
@@ -543,6 +586,7 @@ function _reason_get_disco_uploaded_file($name, $async_sid,
 	$want_original=false)
 {
 	$upload = reason_get_uploaded_file($name, $async_sid);
+	// echo "upload:<BR><PRE>"; var_dump($upload); echo "</PRE>";
 	if (!$upload || !$upload->get_filename())
 		return null;
 	
@@ -561,4 +605,74 @@ function _reason_get_disco_uploaded_file($name, $async_sid,
 		"size" => filesize($path),
 		"type" => $upload->get_mime_type("application/octet-stream")
 	);
+}
+
+function _embed_plupload_stylesheet($head_items = null)
+{
+	// echo "EMBEDDING STYLESHEET WITH [" . ($head_items ? "head_items" : "inline") . "] technique...<P>";
+	if ($head_items && $head_items->get_num_times_markup_has_been_fetched() == 0) {
+		// echo "<script>console.log('embedding stylesheet with head_items...');</script>";
+		$head_items->add_stylesheet(REASON_PACKAGE_HTTP_BASE_PATH . 'plupload/css/reason_plupload.css');
+	} else {
+		// echo "<script>console.log('embedding stylesheet inline...');</script>";
+		echo "<link rel='stylesheet' type='text/css' href='" . REASON_PACKAGE_HTTP_BASE_PATH . "plupload/css/reason_plupload.css'>";
+	}
+}
+
+function _get_plupload_js_setup_snippet($upload_sid, $element_name)
+{
+	// $js = "<script type=\"text/javascript\">var pluploadSubmissionUrl = '" . REASON_HTTP_BASE_PATH . "scripts/upload/receive.php?user_id=0&upload_sid=" . $upload_sid . "';</script>";
+	// $js .= "<script type=\"text/javascript\">var pluploadFieldName = '" . $element_name . "'; console.log('setting pluploadFieldName to " . $element_name . "...');</script>";
+
+	// can i use the same submissionUrl for different elements? Not sure about that yet...
+
+	// var pluploadConfig = {submissionUrl: "{$REASON_HTTP_BASE_PATH}scripts/upload/receive.php?user_id=0&upload_sid={$upload_sid}", fieldNames: []};
+	$submitUrl = REASON_HTTP_BASE_PATH . "scripts/upload/receive.php?user_id=0&upload_sid=" . $upload_sid;
+	$destructionUrl = REASON_HTTP_BASE_PATH . "scripts/upload/destroy.php?upload_sid=" . $upload_sid;
+
+	$js = <<<JAVASCRIPT
+		<script type="text/javascript">
+			if (!window.console) { console = {log: function() {}}; }
+			console.log("creating pluploadConfig inline...[{$upload_sid}], [{$element_name}]");
+			if (!pluploadConfig) {
+				var pluploadConfig = [];
+			}
+			// pluploadConfig.fieldNames.push("{$element_name}");
+			pluploadConfig.push({submissionUrl: "{$submitUrl}", destructionUrl: "{$destructionUrl}", fieldName: "{$element_name}"});
+
+		</script>
+JAVASCRIPT;
+	// $js = "CREATING PLUPLOADCONFIG<P>" . $js;
+	return $js;
+}
+
+function _get_plupload_dom_stubs($can_add_file, $current, $element_name, $add_text=null, $replace_text=null) {
+	if (!$can_add_file)
+		return '';
+
+	$label = null;
+	if (!$current && $add_text) {
+		$label = $add_text;
+	} else if ($current) {
+		$label = ($replace_text)
+			? $replace_text
+			: "Replace saved file:";
+	}
+
+	$uploadEl = "";
+
+	$uploadEl .= "<div id='upload_filelist_" . $element_name . "' style='display:none'></div>";
+
+	$uploadEl .= "<div id='file_upload_" . $element_name . "'>";
+
+	if ($label) {
+		$uploadEl .= '<span class="smallText">'.$label."</span><br />";
+	}
+	// $uploadEl .= "<a id='upload_browse_" . $element_name . "' href='javascript:;'>[Browse...]</a>";
+	$uploadEl .= "<div class='plupload_dropzone' id='upload_browse_" . $element_name . "'><span class='default_text'>Click to add file, or drag/drop onto this zone...</span></div>";
+
+	$uploadEl .= "<pre class='plupload_error_console' id='upload_console_" . $element_name . "'></pre>";
+	$uploadEl .= "</div>";
+
+	return $uploadEl;
 }
