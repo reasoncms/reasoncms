@@ -1,0 +1,35 @@
+div.plupload_dropzone {
+	width: 350px;
+	height: 100px;
+	border: dashed;
+	cursor: pointer;
+	text-align: center;
+	display: inline-block;
+	overflow: hidden;
+	font-size: 12px;
+	line-height: 100px;
+}
+
+div.plupload_dropzone.loadedItem {
+	width: auto;
+	height: auto;
+	text-align: start;
+	line-height: normal;
+	background-color: lightgrey;
+}
+
+div.plupload_dropzone.loadedItem span.default_text {
+	display: none;
+}
+
+div.hover_dropzone {
+	background-color: yellow;
+}
+
+div.plupload_dropzone span.default_text {
+  pointer-events: none;
+}
+
+.plupload_error_console {
+	color: red;
+}
