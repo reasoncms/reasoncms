@@ -732,7 +732,7 @@ class uploadType extends defaultType
 		return '<div class="uploaded_file"'.$style.'>'.
 			'<span class="filename">'.htmlspecialchars($filename).'</span> '.
 			'<span class="size"><span class="filesize">'.$size.
-			$deletionUi.
+			// $deletionUi.
 			'</span></span></div>';
 	}
 	
@@ -940,7 +940,7 @@ class image_uploadType extends uploadType
 			'(<span class="filesize">'.$disk_size.'</span>)';
 		
 		return '<div class="uploaded_file uploaded_image"'.$div_style.'>'.
-			'<span class="smallText">Uploaded image:</span><br />'.
+			// '<span class="smallText">Uploaded image:</span><br />'.
 			'<img src="'.$uri.'"'.$img_style.' class="representation" />'.
 			'<br /><span class="size">'.$image_size.'</span></div>';
 	}
