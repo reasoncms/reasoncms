@@ -12,7 +12,7 @@ class designationsType extends radio_with_other_no_sortType
     var $type = 'designations';
     var $other_label = 'Other: ';
     var $other_options = array();
-    var $type_valid_args = array( 'other_label', 'other_options' , 'naa_options');
+    var $type_valid_args = array( 'other_label', 'other_options' , 'naa_options', 'sub_label');
     protected function _array_val_ok()
     {
         return false;
@@ -39,10 +39,12 @@ class designationsType extends radio_with_other_no_sortType
         } else {
             $other_value = '';
         }
-        $str .= '></span>'."\n".'<label for="'.$id.'">'.$this->other_label.'</label>';
+        $str .= '></span>'."\n".'<label for="'.$id.'">'.$this->other_label;
         if(empty($this->other_options))
         {
             $str .= '<input type="text" name="'.$this->name.'_other" id="'.$this->name.'_otherElement" value="'.str_replace('"', '&quot;', $other_value).'"  />';
+            if ( $other_sub_label = $this->get_sub_label('other') )
+                $str .= '<div class="sublabel">'.$other_sub_label.'</div></label>'."\n";
         }
         else
         {
@@ -58,6 +60,20 @@ class designationsType extends radio_with_other_no_sortType
         $str .= '</div>'."\n";
         return $str;
     }
+
+    function get_sub_label($label)
+    {
+        $tool_label = strtolower($label);
+        $tool_label = str_replace(' ', '_',$tool_label);
+        $blurb_unique_name = "{$tool_label}_hover_blurb";
+        if ( $blurb_unique_name == reason_unique_name_exists($blurb_unique_name) ){
+            $blurb = get_text_blurb_content($blurb_unique_name);
+            return strip_tags($blurb);
+        } else {
+            return false;
+        }
+    }
+
     protected function _get_radio_row($key,$val,$count)
     {
         $str = '';
@@ -96,9 +112,10 @@ class designationsType extends radio_with_other_no_sortType
             }
             $str .= '</select>'."\n";
         }
-        $str .= '</div>'."\n";
+        $str .= '<div class="sublabel">'.$this->get_sub_label($key).'</div></div>'."\n";
         return $str;
     }
+
     function grab_value()
     {
         $return = parent::grab_value();

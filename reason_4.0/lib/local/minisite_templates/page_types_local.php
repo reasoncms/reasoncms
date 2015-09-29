@@ -269,7 +269,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'pre_sidebar_2' => '',
 	),
 	'gift_page_engine' => array(
-		'main_post' => 'gift_form/gift_form',
+		'main' => 'gift_form/gift_form',
 		'post_main_head' => array(
 			'module' => 'image_sidebar',
 			'num_to_display' => 1,

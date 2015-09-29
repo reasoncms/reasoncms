@@ -50,7 +50,7 @@ $tab-current-color: $lc-blue-dark;
 						@include grid-column($columns: 16);
 						//padding-right: 0;
 					}
-					
+
 					#relatedSections {
 						@include grid-column($columns: 16);
 						//padding-left: 0;
@@ -68,7 +68,7 @@ $tab-current-color: $lc-blue-dark;
 						@include grid-column($columns: 8, $collapse: true);
 						padding-right: 0;
 					}
-					
+
 					#relatedSections {
 						@include grid-column($columns: 8, $collapse: true);
 						padding-left: 0;
@@ -78,13 +78,13 @@ $tab-current-color: $lc-blue-dark;
 
 			// @media #{$large-high-up} {
 			// 	#contentAndRelated {
-					
+
 			// 		// Content and sidebar are now side by side.
 			// 		#contentSections {
 			// 			@include grid-column($columns: 10, $collapse: true);
 			// 			padding-right: $column-gutter / 2;
 			// 		}
-					
+
 			// 		#relatedSections {
 			// 			@include grid-column($columns: 6, $collapse: true);
 			// 			padding-left: $column-gutter / 2;
@@ -101,7 +101,7 @@ $tab-current-color: $lc-blue-dark;
 						@include grid-column($columns: 8, $collapse: true);
 						padding-right: $column-gutter / 2;
 					}
-					
+
 					#relatedSections {
 						@include grid-column($columns: 8, $collapse: true);
 						padding-left: $column-gutter / 2;
@@ -155,7 +155,7 @@ $tab-current-color: $lc-blue-dark;
 
 		.featuresModule {
 			margin: 0 auto;
-		}	
+		}
 	}
 }
 
@@ -175,7 +175,7 @@ $tab-current-color: $lc-blue-dark;
 
 		.give-now-text {
 			@include clearfix;
-			
+
 			box-shadow: 0 2px 2px rgba(black,.2);
 
 			@media #{$medium-up} {
@@ -188,7 +188,7 @@ $tab-current-color: $lc-blue-dark;
 				height: 100%;
 				max-width: rem-calc(600);
 				margin: 5% auto $column-gutter/2;;
-				float: none;					
+				float: none;
 			}
 
 			@media #{$large-up} {
@@ -213,7 +213,7 @@ $tab-current-color: $lc-blue-dark;
 					width: 60%;
 					float: left;
 				}
-				
+
 				h2 {
 					margin: 0 0 rem-calc(20) 0;
 					color: white;
@@ -244,7 +244,7 @@ $tab-current-color: $lc-blue-dark;
 								bottom: 0;
 								left: 0;
 							}
-							
+
 							input[type="text"] {
 								border: none;
 								padding: rem-calc(14) rem-calc(14) rem-calc(14) rem-calc(61);
@@ -253,7 +253,7 @@ $tab-current-color: $lc-blue-dark;
 
 							table {
 								tbody {
-									
+
 									@media #{$medium-up} {
 										tr {
 											display: block;
@@ -357,7 +357,7 @@ $tab-current-color: $lc-blue-dark;
 					display: none;
 					font-family: $header-font-family;
 					margin: 0;
-					
+
 
 					@media #{$medium-up} {
 						display: block;
@@ -385,7 +385,7 @@ $tab-current-color: $lc-blue-dark;
 					}
 				}
 			}
-		}	
+		}
 	}
 }
 
@@ -406,8 +406,8 @@ $tab-current-color: $lc-blue-dark;
 	@include grid-row();
 	max-width: 100%;
 	margin-top: $column-gutter;
-	
-	@media #{$medium-up} {	
+
+	@media #{$medium-up} {
 		position: absolute;
 		top: $column-gutter/4;
 		right: $column-gutter/2;
@@ -423,7 +423,6 @@ $tab-current-color: $lc-blue-dark;
 	h2 {
 		margin: 0;
 		padding: 0;
-		
 		a {
 			@include cta-button($bg: $lc-green, $padding: rem-calc(12), $font-size: rem-calc(14), $icon: $fa-var-chevron-down);
 		}
@@ -483,19 +482,19 @@ $tab-current-color: $lc-blue-dark;
 							color: darken($lc-green, 18%);
 							color: white;
 						}
-				
+
 						input[type="text"] {
 							padding: rem-calc(6) rem-calc(6) rem-calc(6) rem-calc(39);
 							height: 34px;
 							border-color: rgba(black, .125);
 							//border-right: none !important;
 
-							@media #{$small-only} { 
-								
+							@media #{$small-only} {
+
 							}
 						}
 
-						// @media #{$medium-up} { 
+						// @media #{$medium-up} {
 						// 	margin-bottom: $column-gutter/4;
 						// }
 
@@ -525,7 +524,7 @@ $tab-current-color: $lc-blue-dark;
 						font-size: rem-calc(14) !important;
 						height: 34px;
 
-						// @media #{$medium-up} { 
+						// @media #{$medium-up} {
 						// 	//border-radius: $global-radius;
 						// }
 
@@ -601,6 +600,12 @@ $tab-current-color: $lc-blue-dark;
 		}
 	}
 
+	#reviewGiftOverview {
+		figure {
+			margin: 0 0 1rem;
+		}
+	}
+
 	#discoErrorNotice {
 		margin-top: $column-gutter;
 	}
@@ -643,7 +648,7 @@ $tab-current-color: $lc-blue-dark;
 					border: none;
 				}
 			}
-			
+
 			@media
 			#{$small-only} {
 				.inlineElement input {
@@ -666,7 +671,7 @@ $tab-current-color: $lc-blue-dark;
 				font-size: rem-calc(20);
 				font-weight: 400;
 			}
-			
+
 			#installment_type_container.radioButtons.inlineRadioButtons .radioItem {
 				display: block;
 				margin-bottom: 1.0rem;
@@ -675,7 +680,7 @@ $tab-current-color: $lc-blue-dark;
 					display: inline;
 				}
 			}
-			
+
 			#installment_end_dateElement {
 				margin-left: rem-calc(6);
 			}
@@ -695,8 +700,8 @@ $tab-current-color: $lc-blue-dark;
 			padding-left: 2rem;
 			max-width: 600px;
 		}
-		
-		#gift_designation_container .radioItem {		
+
+		#gift_designation_container .radioItem {
 			min-height: 2.0rem;
 			margin-top: 0.75rem;
 			select  {
@@ -712,7 +717,12 @@ $tab-current-color: $lc-blue-dark;
 					max-width: 85%;
 				}
 			}
-			
+			.sublabel {
+				padding: 1rem 0 1rem 6.5rem;
+				font-weight: lighter;
+				font-style: italic;
+			}
+
 			@media
 			#{$medium-up} {
 				select {
@@ -728,12 +738,12 @@ $tab-current-color: $lc-blue-dark;
 				}
 			}
 		}
-		
 
-		#annual_fund_amountElement, 
-		#norse_athletic_association_amountElement, 
+
+		#annual_fund_amountElement,
+		#norse_athletic_association_amountElement,
 		#scholarship_fund_amountElement,
-		input.splitAmount, 
+		input.splitAmount,
 		#other_amountElement {
 			width: 5rem;
 			display: inline-block;
@@ -744,7 +754,7 @@ $tab-current-color: $lc-blue-dark;
 			h3 {
 				margin-top: 0;
 			}
-			
+
 		}
 
 		#giftamountItem.error {
@@ -759,7 +769,7 @@ $tab-current-color: $lc-blue-dark;
 		}
 
 		#reviewnoteItem {
-			
+
 			@media
 			#{$medium-up} {
 				background: lighten($lc-blue-light, 50%);
@@ -790,7 +800,7 @@ $tab-current-color: $lc-blue-dark;
 			margin-bottom: $column-gutter;
 			@include border-radius($global-radius);
 			@include box-shadow(rgba(0,0,0,.25) 0 0 4px);
-			
+
 			@media
 			#{$small-only} {
 				padding: rem-calc(8);

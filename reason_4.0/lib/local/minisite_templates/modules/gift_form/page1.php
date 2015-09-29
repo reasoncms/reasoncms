@@ -290,15 +290,14 @@ class GiftPageOneForm extends FormStep
             foreach ($types as $slug => $type)
             {
                 if ($slug == 'other') continue;
-                pray($slug);
-                $options[$type['name']] = $this->get_tooltip_text($type['desc']);
+                $options[$type['name']] = $type['desc'];
             }
 
             $params = array('options'=>$options);
 
             if (isset($types['other']))
             {
-                $params['other_label'] = $this->get_tooltip_text($type['desc']);
+                $params['other_label'] = $type['desc'];
                 $params['naa_options'] = $this->naa_opts;
                 $element_type = 'designations';
             }
