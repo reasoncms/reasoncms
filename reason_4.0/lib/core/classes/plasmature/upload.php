@@ -656,7 +656,7 @@ function _get_plupload_dom_stubs($can_add_file, $current, $element_name, $add_te
 	} else if ($current) {
 		$label = ($replace_text)
 			? $replace_text
-			: "Replace saved file:";
+			: "To replace saved file, click on or drag a file onto the box below:";
 	}
 
 	$uploadEl = "";
