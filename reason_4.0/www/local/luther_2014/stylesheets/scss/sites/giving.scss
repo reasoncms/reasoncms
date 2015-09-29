@@ -274,13 +274,17 @@ $tab-current-color: $lc-blue-dark;
 							}
 
 							.radioButtons {
-								font-weight: 600;
-								display: inline-flex;
-								@media #{$medium-up} {
-									font-weight: 700;
-								}
-								.radioItem:nth-child(odd) {
-									margin-right: 0.5rem;
+								.radioItem {
+									font-weight: 600;
+									display: block;
+									margin-bottom: 1.0rem;
+									margin-right: 0;
+									@media #{$medium-up} {
+										display: inline;
+									}
+									.radioButton {
+										margin-right: 0.35rem;
+									}
 								}
 							}
 						}
