@@ -97,27 +97,7 @@ class ProfileDisplayModule extends DefaultMinisiteModule
 		
 		$this->pc = new $this->config->connector_class();
 		
-		// Go through all the parameters and grab all the profiles that match what's being requested.
-		// We'll sort through them and throw out any that don't apply at the run stage -- it's
-		// more efficient that way.
-		
-		if ($this->params['get_site_profiles'])
-			$this->get_site_profiles();
-
-		if ($this->params['get_page_profiles'])
-			$this->get_page_profiles();
-
-		foreach ($this->params['get_profiles_by_tags'] as $tag)
-			$this->get_tag_profiles($tag);
-		
-		if ($this->params['get_profiles_by_page_categories'])
-			$this->get_page_category_profiles();
-		
-		if ($this->params['get_profiles_by_majors'])
-			$this->get_profiles_by_major($this->params['get_profiles_by_majors']);
-
-		if ($this->params['get_profiles_by_site_subjects'])
-			$this->get_profiles_by_site_subjects();
+		$this->get_profiles();
 
 		if ($this->params['randomize'])
 			shuffle($this->profiles);
@@ -187,6 +167,32 @@ class ProfileDisplayModule extends DefaultMinisiteModule
 					echo $html;
 			}
 		}
+	}
+	
+	/**
+	  * Go through all the parameters and grab all the profiles that match what's being requested.
+	  * We'll sort through them and throw out any that don't apply at the run stage -- it's
+	  * more efficient that way.
+	  */	
+	protected function get_profiles()
+	{
+		if ($this->params['get_site_profiles'])
+			$this->get_site_profiles();
+
+		if ($this->params['get_page_profiles'])
+			$this->get_page_profiles();
+
+		foreach ($this->params['get_profiles_by_tags'] as $tag)
+			$this->get_tag_profiles($tag);
+		
+		if ($this->params['get_profiles_by_page_categories'])
+			$this->get_page_category_profiles();
+		
+		if ($this->params['get_profiles_by_majors'])
+			$this->get_profiles_by_major($this->params['get_profiles_by_majors']);
+
+		if ($this->params['get_profiles_by_site_subjects'])
+			$this->get_profiles_by_site_subjects();
 	}
 	
 	/**
@@ -288,6 +294,11 @@ class ProfileDisplayModule extends DefaultMinisiteModule
 			if ($name = $this->pc->get_section_name($section, $person))
 			{
 				if ($data = $person->get_profile_field($section))
+				{
+					$fields[$section]['name'] = $name;
+					$fields[$section]['content'] = $data;
+				}
+				else if ($data = $this->get_tags_html($person, $section))
 				{
 					$fields[$section]['name'] = $name;
 					$fields[$section]['content'] = $data;
