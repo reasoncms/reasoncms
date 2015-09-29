@@ -566,9 +566,9 @@ class GiftPageThreeForm extends FormStep {
                     "Your Information" => "Donor Info",
                     '<br />' => "\n",
                 );
-                $dev_mail_text = preg_replace(array_keys($reg_replacements), $reg_replacements, $dev_mail_text);
                 $email_to_giver = new Email($this->controller->get('email'), 'giving@luther.edu', 'giving@luther.edu', 'Luther College Online Gift Confirmation' . date('m.d.y: H:i:s'), strip_tags($confirm_text), $confirm_text);
                 $email_to_giver->send();
+                $dev_mail_text = str_replace(array_keys($replacements), $replacements, $dev_mail_text);
                 $email_to_development = new Email('waskni01@luther.edu', 'noreply@luther.edu', 'noreply@luther.edu', 'New Online Gift ' . date('mdY H:i:s'), strip_tags($dev_mail_text), $dev_mail_text);
                 $email_to_development->send();
                 if ($this->controller->get('estate_plans')) {
