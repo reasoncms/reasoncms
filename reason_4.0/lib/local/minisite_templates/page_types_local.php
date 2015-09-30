@@ -277,6 +277,8 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'thumbnail_crop' => 'fit',
 			'caption_flag' => false,
 		),
+		'main_post_2' => 'blurb_callout',
+		'callout_blurb' => '',
 		'pre_sidebar_2' => '',
 	),
 	'homecoming_registration' => array(
