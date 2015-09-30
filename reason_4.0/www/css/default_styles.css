@@ -1,0 +1,79 @@
+@import url("default_styles_mod.css");
+
+.hide {
+	position:absolute;
+	display:block;
+	width:100px;
+	left:-9999px;
+}
+.bannerTable {
+	background-color: #E4EDF7;
+}
+#breadcrumbs {
+	background-color: #E4EDF7;
+	color:#666;
+	padding:10px 10px 0 20px;
+}
+#breadcrumbs a {
+	color:#5889C0;
+}
+.siteName {
+	padding-left: 20px;
+	padding-top: 12px;
+	padding-bottom: 10px;
+	margin: 0px;
+	font-size: 24px;
+}
+.nocrumbs .siteName {
+	padding-top: 20px;
+}
+.siteLink {
+	color: #5889C0;
+	text-decoration: none;
+}
+.layout {
+	padding: 17px;
+}
+.navigation {
+	margin-bottom: 10px;
+}
+.sidebar {
+	margin-left: 17px;
+}
+#footer {
+	padding-top: 10px;
+	padding-left: 10px;
+	padding-right: 10px;
+	text-align: right;
+	margin-top: 50px;
+}
+.bannerXtra {
+	text-align: right;
+	margin: 6px;
+	white-space: nowrap;
+}
+.bannerCol1 {
+	width: 100%;
+}
+.bannerCol2 {
+	vertical-align: bottom;
+}
+.subNav {
+	margin-top: 30px;
+	margin-left: 7px;
+	margin-right: 15px;
+	margin-bottom: 15px;
+}
+.pageTitle {
+	margin-top: 0px;
+	padding-top: 0px;
+}
+.contentMain li, .contentPost li { 
+	margin-top: 10px;
+}
+.contentPost {
+	clear: both;
+}
+.thorTable .words {
+	font-weight: bold;
+}

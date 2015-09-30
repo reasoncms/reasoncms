@@ -1,0 +1,27 @@
+.socialAccountTypeSelector ul {
+	list-style:none;
+	margin:0;
+	padding:0;
+}
+.socialAccountTypeSelector ul>li {
+	margin:0.5em 0;
+	padding:0;
+}
+.socialAccountTypeSelector ul>li>a {
+	display:inline-block;
+	min-width:180px;
+	padding:0.75em 1em;
+	background:#ddd;
+	text-decoration:none;
+	color:#000;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+}
+.socialAccountTypeSelector ul>li>a:hover, .socialAccountTypeSelector ul>li>a:focus, .socialAccountTypeSelector ul>li>a:active {
+	background:#eee;
+}
+.socialAccountTypeSelector ul>li>a img, .platformInfo img.platformIcon {
+	vertical-align:middle;
+	margin-right:0.5em;
+}

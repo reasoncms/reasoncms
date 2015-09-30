@@ -1,0 +1,34 @@
+<fieldtypes>
+	<input title="Text Field" width="293" desc="INSERT TEXT FIELD (SMALL AMOUNT OF TEXT)">
+		<label type="input" value="Label: (Required)" />
+		<value type="input" value="Default Value:" />
+		<required type="checkbox" value="Required Field:" />
+	</input>
+	<hidden title="Hidden Field" width="293" desc="INSERT HIDDEN FIELD">
+		<label type="input" value="Hidden Label: (Required)" />
+		<value type="input" value="Value:  (Required)" />
+	</hidden>
+	<textarea title="TextArea Field" width="293" desc="INSERT TEXTAREA (LARGE AMOUNT OF TEXT)">
+		<label type="input" value="Label:  (Required)" />
+		<value type="textarea" value="Default Value:" />
+		<required type="checkbox" value="Required Field:" />
+	</textarea>
+	<optiongroup title="Select Box Field" width="300" desc="INSERT SELECT FIELD">
+		<label type="input" value="Label:  (Required)" />
+		<value type="datagrid" value="Default Values:" />
+		<required type="checkbox" value="Required Field:" />
+	</optiongroup> 
+	<checkboxgroup title="Check Box Field" width="300" desc="INSERT CHECKBOX (GROUP)">
+		<label type="input" value="Label: (Required)" />
+		<value type="datagrid" value="Default Values:" />
+		<required type="checkbox" value="Required Field:" />
+	</checkboxgroup>
+	<radiogroup title="Radio Button Field" width="300" desc="INSERT RADIO BUTTON (GROUP)">
+		<label type="input" value="Label: (Required)" />
+		<value type="datagrid" value="Default Values:" />
+		<required type="checkbox" value="Required Field:" />
+	</radiogroup>
+	<comment title="Text Description/Comment" width="293" desc="INSERT TEXT DESCRIPTION/COMMENT">
+		<value type="textarea" value="Value: (Required)" />
+	</comment>
+</fieldtypes>

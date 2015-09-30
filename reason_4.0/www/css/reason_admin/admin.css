@@ -1,0 +1,246 @@
+@import url(admin_mod.css);
+
+.nav, .nav:visited, .nav:active {
+	text-decoration: none;
+	color: #009
+}
+.bannerLink, .bannerLink:visited {
+	color: #fff;
+	text-decoration: underline;
+}
+.banner {
+	background-color: #748FC2;
+}
+.banner a {
+	color:#fff;
+}
+
+.hidden {
+	display: none;
+}
+
+table.banner {
+	width: 100%;
+	border: 0px;
+}
+
+table.banner td {
+	padding: 8px;
+	margin: 0px;
+}
+
+table.banner td.crumbs span {
+	white-space: nowrap;
+}
+
+a.stopPosing {
+	font-size:0.9em;
+	padding:5px 5px 3px 5px;
+	background:#607db2;
+	border-top:1px solid #8097c1;
+	border-bottom:1px solid #586d94;
+	text-decoration:none;
+	margin-right:1em;
+}
+
+.id {
+	right: 100%;
+	text-align: right;
+}
+body {
+	background-color: #FFFFFF;
+	margin: 0px;
+}
+.idLink {
+	color: #FFFFFF;
+	text-decoration: underline;
+}
+.listRow1 td {
+	background-color: #E9EEF8;
+	background-image: url(../../ui_images/1px_white.gif);
+	background-repeat: repeat-x;
+	/* background-color: #FFFBDA; */
+	/* background-color: #EAEFE0; */
+}
+.listRow2 td {
+	background-color: #D9E2F4;
+	background-image: url(../../ui_images/1px_white.gif);
+	background-repeat: repeat-x;
+	/* background-color: #FAEEBF; */
+	/* background-color: #D6DEC6; */
+}
+form {
+	margin: 0px;
+	padding: 0px;
+}
+.siteMenu {
+	background-color: #D9E2F4;
+}
+.viewMenu {
+}
+.navSelect {
+	font-weight: bold;
+}
+.typeNav {
+	margin-bottom: 20px;
+}
+.contentArea {
+	padding: 20px;
+}
+.header3 {
+	margin-bottom: 15px;
+}
+.nav {
+	text-decoration: none;
+}
+.nav:hover {
+	text-decoration:underline;
+}
+.viewFilter {
+	margin-right: 15px;
+	margin-bottom: 15px;
+}
+.list {
+	margin-top: 5px;
+}
+.roundedContent {
+	padding-right: 10px;
+	padding-left: 10px;
+} 
+.listHead {
+	background-color: #C5D2EB;
+	background-image: url(../../ui_images/1px_white.gif);
+	background-repeat: repeat-x;
+	/* background-color: #F6E5A1; */
+	/* background-color: #C0CBA8; */
+}
+.addLink {
+	margin-bottom: 15px;
+}
+.infoTail {
+	margin: 0px;
+	padding: 0px;
+}.assocHead {
+	font-weight: bold;
+}
+.oldBrowserAlert {
+	font-weight: bold;
+	color: #CC0000;
+}
+.highlightRow {
+	background-color: #FFFFCC;
+	background-image: url(../../ui_images/1px_white.gif);
+	background-repeat: repeat-x;
+}
+.maintained {
+	text-align: right;
+	padding-top: 50px;
+	padding-right: 25px;
+	padding-bottom: 25px;
+	padding-left: 25px;
+}
+.solidText {
+	color: #666666;
+}
+textarea {
+	width: 100%;
+}
+div#allRels {
+	margin: 2em;
+}
+div#allRels table td {
+	vertical-align: top;
+	border-top: 2px solid white;
+}
+div#allRels td.id, div#allRels td.a, div#allRels td.b {
+	text-align: center;
+}
+div#allRels td.name a:link, div#allRels td.id {
+	font-weight: bold;
+}
+div#allRels tr.odd td {
+	background-color:#E3EDFF;
+}
+div#allRels tr.even td {
+	background-color:#F0F5FF;
+}
+.editor #discoTable tr.nonVisibleRow {
+	display:block;
+    position:absolute;
+    left:-9999px;
+}
+h2.pageTitle {
+	margin-top:0;
+	font-size:1.385em;
+}
+
+.uploaded_file {
+  font-size: 90%;
+  margin-bottom: 0.7em;
+}
+
+.uploaded_file .filename {
+  background: #EEE;
+	color: #333;
+	border: 1px solid #CCC;
+	padding: 2px 4px;
+}
+
+.uploaded_file .size {
+  padding: 3px 0;
+	margin-left: 0.3em;
+	font-size: 90%;
+}
+
+.uploaded_image .size {
+	margin: 0.1em 0 0 0;
+}
+
+.submit_waiting, .submitting {
+	display: inline-block;
+	border-top-width: 2px;
+	border-top-style: solid;
+	padding: 2px 4px;
+	font-size: 90%;
+}
+
+.submit_waiting {
+	background: #FEF5AD;
+	border-top-color: #F4EA53;
+}
+
+.submitting {
+	background: #C1FAB1;
+	border-top: 2px solid #9AE466;
+}
+.eventSplitLink {
+	color:#777;
+}
+
+/* Entity Info Tables */
+div.EntityInfo span.edit_preview_links {
+	font-size: .7em;
+}
+div.EntityInfo table {
+	border-width: 1px;
+	border-style: solid;
+	border-collapse: collapse;
+}
+div.EntityInfo table td, div.EntityInfo table th {
+	border-width: 1px;
+	border-style: solid;
+	padding: 3px;
+	text-align: left;
+}
+div.EntityInfo .entityInfoTable a.locationBarLinks {
+	color: #000000;
+}
+
+
+/* Change review module */
+#reviewChangesModule div.owner { font-size:0.85em; color:#555; }
+
+/* Tableless forms */
+#discoLinear div.formElement {
+    margin-bottom: 1.5em;
+}

@@ -1,0 +1,45 @@
+body {
+	background:#fff; margin:0; padding:0; 
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:100%;
+}
+
+body#tinymce {
+	margin: 8px;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:0.8125em;
+}
+
+#breadcrumbs, .locationBarText {
+	background-color:#231e5f;
+	font-size:0.625em;
+	padding:3px 16px;
+	text-align:left;
+}
+#breadcrumbs a, .locationBarText a {
+	color:#fff;
+}
+
+#wrapper #breadcrumbs {
+	font-size:0.769em;
+}
+/* IMPORTANT NOTE: this sets the default text size to 13px across all browsers. To set any text inside the wrapper you should use ems, assuming 13px as the base value */
+/* So, for anything inside #wrapper: */
+/* 8px = 0.615em; 9px = 0.692em; 10px = 0.769em; 11px = 0.846em; 12px = 0.923em; 13px = 1em; 14px = 1.077em; 15px = 1.154em; 16px = 1.231em; 17px = 1.308em; 18px = 1.385em; 19px = 1.462em; 20px = 1.538em; 21px = 1.615em; 22px = 1.692em; 23px = 1.77em; 24px = 1.846em; 25px = 1.923em; 26px = 2em; */
+/* If the html does not have a wrapper div, you may want to create one and either give it id "wrapper" or add a stylesheet that gives it the same rule as below */
+#wrapper { font-size:0.8125em; }
+
+h1 { font-size:2.462em; }
+h2 { font-size:1.846em; }
+h3 { font-size:1.385em; }
+h4 { font-size:1.077em; }
+h5 { font-size:0.923em; }
+h6 { font-size:0.769em; }
+.smallText { font-size:0.769em; }
+.callOut { background: #ffc; margin: 1em; padding: 1em; border: 1px dashed #fc0; }
+img.lokiInserted { margin:10px; }
+ol.upperRoman { list-style-type: upper-roman; }
+ol.lowerRoman { list-style-type: lower-roman; }
+ol.upperAlpha { list-style-type: upper-alpha; }
+ol.lowerAlpha { list-style-type: lower-alpha; }
+ol.decimal { list-style-type: decimal; }

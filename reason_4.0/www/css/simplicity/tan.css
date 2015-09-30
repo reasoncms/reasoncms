@@ -1,0 +1,16 @@
+@import url("blue.css");
+body {
+	background-color:#ded7bd;
+}
+div#wrapper {
+	border:1px solid #b5a56c;
+}
+div#banner {
+	border-bottom:1px solid #b5a56c;
+	background-color:#f2efe1;
+}
+div#banner h1 a {
+	text-decoration:none;
+	font-weight:normal;
+	color:#8a5100;
+}

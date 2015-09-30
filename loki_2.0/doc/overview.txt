@@ -1,0 +1,20 @@
+Overview of Loki 2.0
+Nathanael Fillmore
+2006-10-02
+
+This document is intended to give an overview of the Loki codebase so that developers
+other than me don't get lost. Please excuse my writing's stylistic faults: I'm writing
+quickly. For more information, of course, consult the comments on each file. Most of the
+classes and functions are documented using JSDoc.
+
+Loki 2.0 has a small amount of php code and a much larger amount of js code. The php code
+basically just loads the js code, inits the js Loki object, and passes various parameters
+to it.
+
+The js code is organized into two groups, Util and UI. The code in Util is independent of Loki,
+and mostly consists of classes intended to abstract away browser differences. The classes in
+Util are mostly grouped around existing js or dom objects, e.g. Util.Node, Util.Object, 
+Util.Selection.  
+
+The code in UI is what actually implements Loki. The primary class, by which all others are 
+ultimately driven, is UI.Loki. UI.Loki

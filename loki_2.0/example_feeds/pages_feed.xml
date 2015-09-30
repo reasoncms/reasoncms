@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+<channel>
+
+<title>One is the lonliest number</title>
+<description>That you've ever seen.</description>
+<link>/global_stock/php/loki/example_feeds/link_one.html</link>
+<generator>Reason</generator>
+<copyright>Carleton College, 2005</copyright>
+
+<item>
+<title>Eheu fugaces, Postume, Postume</title>
+<pubDate>Fri, 12 Mar 2004 16:59:52 -0600</pubDate>
+<link>/global_stock/php/loki/example_feeds/link_one.html</link>
+</item>
+
+<item>
+<title>labuntur anni nec pietas moram</title>
+<description>rugis et instanti senectae</description>
+<pubDate>Fri, 12 Mar 2004 16:59:52 -0600</pubDate>
+<link>/global_stock/php/loki/example_feeds/link_two.html</link>
+<isSelected>true</isSelected>
+</item>
+
+<item>
+<title>Adferet</title>
+<description>Indomitaeque morti</description>
+<pubDate>Fri, 12 Mar 2004 16:59:52 -0600</pubDate>
+<link>/global_stock/php/loki/example_feeds/link_three.html</link>
+</item>
+
+<item>
+<title>non, si trecenis</title>
+<description>quotquot eunt dies, amice, places inlacrimabilem Plutona tauris, qui ter amplum Geryonen Tityonque tristi compescit undia, scilicet omnibus quicumque terrae munere uescimur enauiganda, siue reges siue inopes erimus coloni.</description>
+<pubDate>Wed, 17 Mar 2004 15:22:08 -0600</pubDate>
+<link>/global_stock/php/loki/example_feeds/link_four.html</link>
+</item>
+
+</channel>
+</rss>

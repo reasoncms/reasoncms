@@ -1,0 +1,35 @@
+.listbox .items_chunk {
+	/*height:310px;*/
+	height:325px;
+	padding:3px 0 0 3px;
+}
+.listbox .items_chunk .item_chunk {
+	height:145px;
+	height:153px;
+	width:125px;
+	padding:6px 3px 3px 3px;
+	clear:right;
+	float:left;
+	text-align:center;
+
+	/* margin:0px 4px 4px 0px; */
+	/* background-color:#FFFFFF;
+	background-color:#EEEEEE; */
+}
+/* div#image_listbox div.legend {
+	background-color:#3366FF;
+	padding-bottom:1em;
+} */
+* html .listbox .items_chunk .force_clear_for_ie {
+	clear:both;
+}
+.listbox .items_chunk .selected, .listbox .items_chunk .selected:hover {
+	background-image:url(../images/selected_image_bg.gif);
+	background-repeat:no-repeat;
+	border:1px solid #E3E3E3;
+	cursor:default;
+}
+.listbox .items_chunk a:hover {
+	background:transparent url(../images/hover_image_bg.gif) no-repeat;
+	border:1px solid #E3E3E3;
+}

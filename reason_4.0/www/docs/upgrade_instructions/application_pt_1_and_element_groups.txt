@@ -1,0 +1,11 @@
+Files changed as part of admissions application pt 1 redo:
+
+disco/disco_db.php
+disco/boxes/boxes.php
+disco/disco.php
+disco/element_group.php
+disco/plasmature/plasmature.php
+reason_4.0/lib/core/classes/entity.php
+reason_4.0/lib/core/minisite_templates/page_types.php
+reason_4.0/lib/core/minisite_templates/modules/admissions_application_pt_1
+reason_4.0/lib/local/settings.php

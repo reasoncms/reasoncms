@@ -1,0 +1,3 @@
+Reason Design Philosophy
+
+Reason is really 3 interacting systems: a flexible database structure, a framework for creating dynamic websites, and a generic administrative website.  Additionally, there is much code to facilitate all 3 of these systems.  Flexibility has always been the primary concern for the system.  Performance has generally been second.  The purpose of the system is to allow developers to quickly assemble dynamic, database-driven websites without having to reinvent the wheel every time.

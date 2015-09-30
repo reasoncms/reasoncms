@@ -1,0 +1,97 @@
+#mySlideshow
+{
+	/* width: 500px;
+	height: 500px; */
+	z-index:5;
+	display: none;
+	overflow:hidden;
+	position: relative;
+}
+
+#mySlideshow img
+{
+	border: 0;
+	margin: 0;
+}
+
+#mySlideshow #slideInfoZone
+{
+	position: absolute;
+	z-index: 10;
+	width: 100%;
+	margin: 0px;
+	left: 0;
+	bottom: 0;
+	height: 3em;
+	background: #333;
+	color: #fff;
+	text-indent: 0;
+}
+
+#slideInfoZone h2
+{
+	padding: 0;
+	font-size: 80%;
+	margin: 0;
+	margin: 2px 5px;
+	font-weight: strong;
+	color: inherit;
+}
+
+#slideInfoZone p
+{
+	padding: 0;
+	font-size: 60%;
+	margin: 2px 5px;
+	color: #eee;
+}
+
+#mySlideshow a
+{
+	font-size: 100%;
+	text-decoration: none;
+	color: inherit;
+}
+
+#mySlideshow a.right, #mySlideshow a.left
+{
+	position: absolute;
+	height: 100%;
+	width: 40%;
+	cursor: pointer;
+	z-index:10;
+	filter:alpha(opacity=20);
+	-moz-opacity:0.2;
+	-khtml-opacity: 0.2;
+	opacity: 0.2;
+}
+
+* html #mySlideshow a.right, * html #mySlideshow a.left
+{
+	filter:alpha(opacity=50);
+}
+
+#mySlideshow a.right:hover, #mySlideshow a.left:hover
+{
+	filter:alpha(opacity=80);
+	-moz-opacity:0.8;
+	-khtml-opacity: 0.8;
+	opacity: 0.8;
+}
+
+#mySlideshow a.left
+{
+	left: 0;
+	top: 0;
+	background: url('img/fleche1.gif') no-repeat top left;
+}
+
+#mySlideshow a.right
+{
+	right: 0;
+	top: 0;
+	background: url('img/fleche2.gif') no-repeat top right;
+}
+.timedSlideshow a.global {
+	cursor:auto;
+}

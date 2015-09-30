@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ISO-8859-15"?>
+<!-- WARNING *** ENSURE THIS FILE IS NOT WEB ACCESSIBLE *** -->
+<databases>
+<database>
+<connection_name>reason_connection</connection_name>
+<db>reason</db>
+<user>reason_user</user>
+<password>some_password</password>
+<host>your.mysql.hostname.or.ip.address</host>
+</database>
+
+<database>
+<connection_name>thor_connection</connection_name>
+<db>reason</db>
+<user>reason_user</user>
+<password>some_password</password>
+<host>your.mysql.hostname.or.ip.address</host>
+</database>
+</databases>

@@ -1,0 +1,18 @@
+#imageRow a.upload {
+	font-size:1.2em;
+	display:inline-block;
+	padding:0.4em 0.6em;
+	background:#eee;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	border-bottom:1px solid #ccc;
+	border-right:1px solid #ddd;
+	text-decoration:none;
+	color:#222;
+	margin-right:8px;
+}
+tr#imageRow td, tr#thumbnailRow td, tr#descriptionRow td {
+	border-top:1px solid #ddd;
+	padding-top:10px;
+}

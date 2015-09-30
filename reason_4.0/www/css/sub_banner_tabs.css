@@ -1,0 +1,37 @@
+div#postBanner div#topNavigation ul {
+	margin:0;
+	padding:0;
+	list-style:none;
+	display:inline;
+}
+div#postBanner div#topNavigation ul li.navListItem {
+	float:left;
+	margin:0;
+}
+div#postBanner div#topNavigation ul li a, div#postBanner div#topNavigation ul li strong {
+	display:block;
+	padding:.3em .5em;
+	float:left;
+}
+div#postBanner div#topNavigation ul li a strong {
+	display:inline;
+	padding:0;
+}
+/* Start self-clearning rules */
+/* :after rules force elements to self-clear in standards-compliant browsers */
+div#postBanner div#topNavigation:after {
+    content:".";
+    display:block;
+    visibility:hidden;
+    clear:both;
+    height:0;
+}
+/* These rules force layout in IE 6 & 7, which in turn forces the elements to self-clear */
+div#postBanner div#topNavigation {
+	display:inline-block; /* for some reason this doesn't work in IE 7 */
+	overflow:hidden; /* this one works in IE 7 */
+}
+/* Hide from IE Mac \*/
+div#postBanner div#topNavigation {
+	display:block;
+}

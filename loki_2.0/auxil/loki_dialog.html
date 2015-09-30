@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Loki Dialog</title>
+    <link rel="stylesheet" href="../css/Dialog.css" type="text/css"
+        media="screen" title="Dialogs" charset="utf-8" />
+    <link rel="stylesheet" href="../css/Pretty_Forms.css" type="text/css"
+        media="screen" title="Pretty forms" charset="utf-8" />
+    <script type="text/javascript" charset="utf-8">
+        function notify_loki_of_existence() {
+            var postback;
+            var opener = window.opener;
+            
+            while (opener) {
+                postback = opener._loki_dialog_postback;
+                if (postback) {
+                    postback(window);
+                }
+                
+                opener = (opener.parent !== opener) ? opener.parent : null;
+            }
+        }
+        
+        if (window.addEventListener) {
+            window.addEventListener('load', notify_loki_of_existence, false);
+        } else if (window.attachEvent) {
+            window.attachEvent('onload', notify_loki_of_existence);
+        }
+    </script>
+</head>
+<body></body>
+</html>

@@ -1,0 +1,29 @@
+@charset "UTF-8";
+/* CSS Document */
+
+div.words{
+	font-weight: bold;
+	margin-bottom: 10px;
+}
+
+div.submitSection{
+	margin: 15px 0 10px 0;
+}
+
+p.required_indicator{
+	display: none;
+}
+
+div#graph1.graph{
+	width:600px;
+	min-height:500px;
+	display:block;
+}
+
+div#responses{
+	font-weight: bold;
+	width:600px;
+	height:20px;
+	display:block;
+	margin-top:5px;
+}

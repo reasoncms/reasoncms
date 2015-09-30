@@ -1,0 +1,15 @@
+body {
+	margin: 0px;
+	padding: 0px;
+}
+.searchForm, .fullGraphicsLink, .navigation, .editDiv {
+	display: none;
+}
+#footer, .maintained, .content, .sidebar {
+	margin: 0px;
+	padding: 0px;
+}
+.layout {
+	margin-bottom: 0px;
+	padding-bottom: 0px;
+}

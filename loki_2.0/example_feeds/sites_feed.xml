@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+<channel>
+
+<title>Carleton College Athletics Images</title>
+<description>Images from Athletics</description>
+<link>http://webdev.acs.carleton.edu/athletics/</link>
+<generator>Reason</generator>
+<copyright>Carleton College, 2005</copyright>
+
+<item>
+<title>Nate's Kant Minisite</title>
+<description>Nate's Kant Minisite</description>
+<pubDate>Fri, 12 Mar 2004 16:59:52 -0600</pubDate>
+<link>/global_stock/php/loki/example_feeds/types_feed.xml</link>
+</item>
+
+<item>
+<title>Athletics</title>
+<description>The athletics site</description>
+<pubDate>Fri, 12 Mar 2004 16:59:52 -0600</pubDate>
+<link>/global_stock/php/loki/example_feeds/types_feed.xml</link>
+</item>
+
+<item>
+<title>News</title>
+<description>The news site.</description>
+<pubDate>Fri, 12 Mar 2004 16:59:52 -0600</pubDate>
+<link>/global_stock/php/loki/example_feeds/types_feed.xml</link>
+<isSelected>true</isSelected>
+</item>
+
+</channel>
+</rss>

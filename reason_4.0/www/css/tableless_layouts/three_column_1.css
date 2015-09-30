@@ -1,0 +1,164 @@
+/*
+This layout is based on the Position Is Everything "One True Layout,"
+which was developed by Alex Robinson and has been released into the public domain.
+More information about this layout scheme is available here:
+http://www.positioniseverything.net/articles/onetruelayout/
+*/
+
+@media all {
+body {
+	margin:0;
+	text-align:center; /* IE 6 Doesn't "get" auto margins */
+}
+h1,h2 {
+	margin:0px;
+}
+div#breadcrumbs {
+	text-align:left;
+	/* background-color:transparent;
+	color:#000; */
+}
+/* div#breadcrumbs a {
+	color:#0000cc;
+} */
+div#wrapper {
+	/* width:90%; */
+	min-width:30em;
+	/* max-width:53em; */
+	margin-left:auto;
+	margin-right:auto;
+	margin-bottom:5em;
+	margin-top:0;
+	padding-left:15px;
+	text-align:left; /* Fixes the text-align:center applied to body */
+}
+div#banner {
+	padding-right:16px;
+}
+div#meat, div#footer {
+	padding-right:16px;
+}
+
+/* Start self-clearning rules */
+/* :after rules force elements to self-clear in standards-compliant browsers */
+div#meat:after, div#banner:after {
+    content:".";
+    display:block;
+    visibility:hidden;
+    clear:both;
+    height:0;
+}
+/* These rules force layout in IE 6 & 7, which in turn forces the elements to self-clear */
+* html div#meat, * html div#banner {
+	display:inline-block; /* for some reason this doesn't work in IE 7 */
+	/* overflow:hidden; /* this one works in IE 7 */
+	/* zoom:1; */
+}
+div#meat, div#banner {
+	min-height:1px; /* this one works in IE 7 */
+}
+/* Hide from IE Mac \*/
+div#meat, div#banner {
+	display:block;
+}
+/* End hide from IE Mac */
+/* End self-clearing rules */
+
+div#content {
+	float:left;
+	width:100%;
+	margin:1em 0 3em 0;
+}
+div#banner h1 {
+	float:left;
+}
+div#meat div#content {
+	width:100%;
+}
+div#meat.containsConRel div#content {
+	width:75%;
+}
+div#meat.containsNavigation div#content {
+	margin-left:25%;
+}
+div#meat.containsConNav div#content {
+	width:75%;
+}
+* html div#meat.containsNavigation div#content {
+	display: inline;
+}
+div#meat.containsConRelNav div#content {
+	width:50%;
+}
+/* div#meat.containsNavigation.containsRelated div#content, div#meat.containsConRelNav div#content {
+	width:50%;
+} */
+div#related {
+	float:left;
+	width:25%;
+	margin:1em 0 1em 0;
+}
+div#navigation {
+	float:left;
+	margin:0px;
+	width:25%;
+	margin-left:-100%;
+}
+div#content div {
+	margin:1em 1em 1em .5em;
+}
+div#content div div {
+	margin:0px;
+}
+div#footer div {
+	padding:1em;
+}
+div#footer div div {
+	padding:0;
+}
+
+div#content li {
+	margin-top:.33em;
+	margin-bottom:.33em;
+}
+p.textOnlyLink {
+	border:none;
+}
+div#bannerXtra {
+	float:right;
+}
+div#content ul.childrenList li {
+	margin-bottom:.75em;
+}
+div#content ul.childrenList h4 {
+	margin-bottom:.1em;
+}
+div#content ul.childrenList div.childDesc {
+	margin:0;
+}
+div#related>div, div#subNav>div {
+	margin:1em;
+}
+* html div#related div#sidebar, * html div#related div#preSidebar {
+	margin:1em;
+}
+div#related div#pageContent, div#related div#databasesRecent, div#subNav div.blurb, div#related div.blurb {
+	padding:0 .75em 0 .75em;
+}
+* html #content, * html #related, * html #navigation { overflow-x: hidden; }
+* html #content div#contentHead, * html #content div#contentMain, * html #content div#contentPost, * html #related div#sidebar, * html #related div#preSidebar, * html #navigation div#minisiteNavigation, * html #navigation div#subNav, * html #navigation p.textOnlyLink { position: relative; }
+
+/* Provide appropriate neutering of styles for the text only/printer friendly views */
+
+div#wrapper.textOnlyView * {
+	background-image:none !important;
+}
+div#wrapper.textOnlyView, div#wrapper.textOnlyView div#meat, div#wrapper.textOnlyView div#meat.containsNavigation, div#wrapper.textOnlyView div#meat.containsRelated, div#wrapper.textOnlyView div#navigation, div#wrapper.textOnlyView div#related, div#wrapper.textOnlyView div#content, div#wrapper.textOnlyView div#footer, div#wrapper.textOnlyView div#banner, div#wrapper.textOnlyView div#meat.containsRelated div#content, div#wrapper.textOnlyView div#meat.containsNavigation div#content, div#wrapper.textOnlyView div#meat.containsNavigation.containsRelated div#content, div#wrapper.textOnlyView div.blurb {
+	margin:0 !important;
+	padding:0 !important;
+	float:none !important;
+	clear:both !important;
+	width:90% !important;
+	background:none !important;
+}
+}

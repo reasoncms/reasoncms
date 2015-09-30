@@ -1,0 +1,46 @@
+The News Site
+
+The News site is designed very similarly to the athletics site.  It is based on two pages, index.php and textonly.php.  These pages are basically the same except that textonly.php is a page meant for accessability that is image free.  For the remainder of this document, I won't make any distinctions between the two.  Everything that is said about one can be said about the other (the exception of course being anything said about images).
+
+
+Main Structure
+
+The pages in the news site can be divided into three main types: 1)The main page, 2)Other module pages and 3)Content (news story) pages.  There are three variables that will tell you which page you are supposed to be showing.  These are module, content, and id.  This could have been done without using the content variable, but it got in there for debugging purposes and never left.  The following is a list of what happens for each combination of variables.
+
+Good Combinations:
+
+None of the three are set:  We are on the main page .
+Only Module is set:  We are on a module page.
+All three are set:  We are on a content page.
+
+Bad Combinations:
+
+Only id is set:  This will just display the main page, however, if you want the main page, you should set no variables.
+Only content is set:  Will show the main page in a weird way.
+Only id and content are set:  Same result as above.
+Only id and module are set:  The module page will be shown.
+Only module and content are set:  A mysql error will appear in the main part of the page.
+
+When updating the pages, you should stick to making links from the three good combinations listed at the top.  
+
+The three types of pages:
+
+1. The Main Page.  
+The main page is the most complex part of the site.  It uses 5 viewers to show the different lists of entities.  It uses a news_viewer to display the main entities on the page.  Although this viewer is used for the modules on all the module pages, it is heavily overloaded so that all these things are shown differently.  In all honesty, different viewers should have been used here, or at least, the show_item function should have been divided into different functions.  In any case, For the main page, it uses a static variable $num to keep track of which row we are on.  Originally, the news site was going to show three large news items and three smaller ones.  However, that idea was scratched and now the news site just uses that variable to put a div tag around the first item.  However, you can still see some of the original idea in the structure.  The news items selected here are of the "news" type.  This also differs from the module pages in that the list that says more news at the bottom does not take you to the second page of items, but rather to the news module. 
+At the bottom of the page you see three short list of new items.  These are created by the mini_news_viewer.  The athletics links take you to the appropriate story on the athletics site while the others take you to the story in the appropriate module.  Also, on the side there is a list of features.  This is created by the feature_viewer.  
+
+2. The Module Page.
+The module page is a fairly simple implementation of the viewer.  With the execption of the av page, each page uses the news_viewer to display all items (the av page uses an av lister which is very similar).  The paging occurs at the bottom of the page on the first page, and on the top and bottom for all additional pages.  Also, if a news type has an intro text, this is shown only on the first page of each module.
+
+3. The Content Page.
+This page just shows the content of a news item.
+
+
+Misc Info:
+
+The Last Modified:
+At the bottom of each page, there is a line that says "Last updated on … ".  This is taken by checking all news items on the page and using the most recently modified date in that list.  For instance, if we are on a content page, it just checks that one entity and uses that date.  If we are on the main page, it checks all entities in all five listers and uses the most recent of that date.  This happens in the function check_last_modified in the news viewer.  The variable $GLOBALS[ 'lm' ] is used to keep track of this.  
+
+Contact Info:
+The contact info is kept in the database as the entity with unique_name "media_relations_contact_info".  Originally we were going to use ldap, but later decided just to keep it in our database for now.
+

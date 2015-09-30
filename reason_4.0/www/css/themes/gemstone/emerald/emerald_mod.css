@@ -1,0 +1,64 @@
+body {
+	background-color:#85A31D;
+	background-image:url(green_shadow_top.gif);
+}
+div.bannerAndMeat {
+	border:1px solid #405200;
+	background-color:#F5FCD1;
+}
+div.textOnly {
+	border:none;
+	background-color:transparent;
+}
+div.fullGraphics div.banner {
+	background-color:#658200;
+	color:#fff;
+	border-bottom:1px solid #405200;
+	background-image:url(green_shade_2.gif);
+}
+div.fullGraphics div.banner h1 a {
+	color:#fff;
+}
+div.fullGraphics div#footer {
+	color:#fff;
+}
+div.fullGraphics div#footer a {
+	color:#fff;
+}
+div.fullGraphics div.contentMain div#blogDescription {
+	background-color:#CCDB96;
+}
+div.fullGraphics div.contentHead h2 {
+	background-color:#A4BB54;
+	background-image:url(green_shadow.gif);
+	border-bottom:1px solid #658200;
+}
+div.fullGraphics div.navigation {
+	background-color:#A4BB54;
+	border-right:1px dotted #F5FCD1;
+}
+div.fullGraphics div.navigation ul a {
+	color:#001D6C;
+}
+div.fullGraphics div.navigation ul a:visited {
+	color:#004216;
+}
+div.fullGraphics div.navigation ul a:hover {
+	background-color:#BBCA74;
+}
+div.fullGraphics div.navigation ul ul a, div.fullGraphics div.navigation ul ul strong {
+	border-top:1px dotted #F5FCD1;
+}
+div.fullGraphics div#blog div.moduleNav ul li {
+	border-top:1px dotted #658200;
+}
+div.fullGraphics div#blog div.moduleNav ul li ul.links {
+	list-style-image:url(pointer_green_small.gif);
+}
+div.fullGraphics div#blog div.item div.comments ul li {
+	background-color:#CCDB96;
+	background-image:url(quote_green_left.gif);
+}
+div.fullGraphics div.sidebar, div.fullGraphics div.preSidebar {
+	border-color:#658200;
+}

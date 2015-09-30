@@ -1,0 +1,19 @@
+#eventsGalleryModule.bigList ul.events {
+	margin:0;
+	padding:0;
+	list-style:none;
+}
+#eventsGalleryModule.bigList ul.events li.event {
+	float:left;
+}
+#eventsGalleryModule.bigList ul.events li.event a {
+	display:block;
+	width:280px;
+	height:280px;
+	padding:10px;
+	margin:10px;
+	background:#eee;
+}
+#eventsGalleryModule.bigList ul.events li.event a:hover, #eventsGalleryModule.bigList ul.events li.event a:active, #eventsGalleryModule.bigList ul.events li.event a:focus {
+	background:#ddd;
+}

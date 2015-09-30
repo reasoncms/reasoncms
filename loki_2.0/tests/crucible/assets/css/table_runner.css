@@ -1,0 +1,179 @@
+/*
+ * Portions from the Blueprint CSS framework (blueprintcss.org)
+ * Used under the MIT license.
+ * Copyright © 2007-2008 blueprintcss.org.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sub-license, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice, and every other copyright notice found in this
+ * software, and all the attributions in every file, and this permission notice
+ * shall be included in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
+/* reset.css */
+html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, code, del, dfn, em, img, q, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {margin:0;padding:0;border:0;font-weight:inherit;font-style:inherit;font-size:100%;font-family:inherit;vertical-align:baseline;}
+body {line-height:1.5;}
+table {border-collapse:separate;border-spacing:0;}
+caption, th, td {text-align:left;font-weight:normal;}
+table, td, th {vertical-align:middle;}
+blockquote:before, blockquote:after, q:before, q:after {content:"";}
+blockquote, q {quotes:"" "";}
+a img {border:none;}
+
+/* typography.css */
+body {font-size:75%;color:#222;background:#fff;font-family:"Helvetica Neue", Arial, Helvetica, sans-serif;}
+h1, h2, h3, h4, h5, h6 {font-weight:normal;color:#111;}
+h1 {font-size:3em;line-height:1;margin-bottom:0.5em;}
+h2 {font-size:2em;margin-bottom:0.75em;}
+h3 {font-size:1.5em;line-height:1;margin-bottom:1em;}
+h4 {font-size:1.2em;line-height:1.25;margin-bottom:1.25em;}
+h5 {font-size:1em;font-weight:bold;margin-bottom:1.5em;}
+h6 {font-size:1em;font-weight:bold;}
+h1 img, h2 img, h3 img, h4 img, h5 img, h6 img {margin:0;}
+p {margin:0 0 1.5em;}
+p img.left {float:left;margin:1.5em 1.5em 1.5em 0;padding:0;}
+p img.right {float:right;margin:1.5em 0 1.5em 1.5em;}
+a:focus, a:hover {color:#000;}
+a {color:#009;text-decoration:underline;}
+blockquote {margin:1.5em;color:#666;font-style:italic;}
+table {margin-bottom:1.4em;width:100%;}
+th {font-weight:bold;}
+thead th {background:#c3d9ff;}
+
+div#crucible_results {
+  font-size: 14px;
+  margin: 4em 6em;
+  border-color: #DDD;
+  border-style: solid;
+  border-top-width: 5px;
+  border-bottom-width: 5px;
+  padding: 1em 0;
+  background: white;
+  position: relative;
+}
+
+div#crucible_results h1 {
+  font-size: 170%;
+  color: #666;
+}
+
+div#crucible_results h2 {
+  font-size: 120%;
+  color: #666;
+  border-top: 1px solid #CCC;
+  padding-top: 5px;
+  margin: 2em 0 5px 0;
+}
+
+div#crucible_results #crucible_status {
+  position: absolute;
+  top: 8px;
+  right: 6px;
+}
+
+div#crucible_results #crucible_start {
+  background-color: #DBF7C5;
+  font-size: 130%;
+  padding: 0.3em;
+  text-align: center;
+  margin: 0 auto 0 auto;
+  width: 8em;
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  cursor: pointer;
+}
+
+div#crucible_results #crucible_start:hover {
+    background-color: #C8F7A4;
+    color: #111;
+}
+
+div#crucible_results table.tests {
+  margin: 0;
+  padding: 0;
+  border-collapse: collapse;
+}
+
+div#crucible_results table td, div#crucible_results table th {
+  padding: 4px 6px;
+  border: 0px solid #CCC;
+  border-top-width: 1px;
+  border-bottom-width: 1px;
+}
+
+div#crucible_results table.tests td.message {
+  padding-left: 28px;
+}
+
+div#crucible_results .ready {
+  background-color: #E7F1FC;
+}
+
+div#crucible_results .pass {
+  background-color: #E7FADF;
+}
+
+div#crucible_results .fail {
+  background-color: #FAF8C4;
+  color: #514721;
+}
+
+div#crucible_results .exception {
+  background-color: #FBE3E4;
+  color: #8A1F11;
+}
+
+div#crucible_results table.tests tr.ready td {
+  background: #E7F1FC url("../icons/arrow.png") no-repeat scroll 5px center;
+}
+
+div#crucible_results table.tests tr.pass td {
+  background: #E7FADF url("../icons/tick.png") no-repeat scroll 5px center;
+}
+
+div#crucible_results table.tests tr.fail td {
+  background: #FAF8C4 url("../icons/exclamation.png") no-repeat scroll 5px center;
+}
+
+div#crucible_results table.tests tr.exception td {
+  background: #FBE3E4 url("../icons/cross.png") no-repeat scroll 5px center;
+}
+
+div#crucible_results table.tests tr.busy td {
+  background: #F2E7FA url("../icons/gear.png") no-repeat scroll 5px center;
+}
+
+div#crucible_results table.tests tr.prompt td {
+  background: #E7F1FC url("../icons/question.png") no-repeat scroll 5px center;
+}
+
+div#crucible_results table.tests tr.log td {
+  background: #F9EFF9 url("../icons/information.png") no-repeat scroll 5px center;
+}
+
+table#crucible_tally {
+  border-collapse: collapse;
+  width: auto;
+}
+
+table#crucible_tally tr th {
+  padding-right: 10px;
+}
+
+table#crucible_tally tr td {
+  padding-left: 10px;
+}

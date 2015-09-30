@@ -1,0 +1,48 @@
+table.thor_data, table.table_data {
+	border-spacing: 0px;
+	border-bottom: 1px solid #000;
+}
+
+table.thor_data th, table.table_data th {
+	text-align: left;
+	padding: .3em;
+	border: 1px solid #000;
+	border-left: none;
+}
+
+table.thor_data td, table.table_data td {
+	padding: .3em;
+	border-right: 1px solid #000;
+}
+
+table.thor_data td.first, table.thor_data th.first, table.table_data td.first, table.table_data th.first {
+	border-left: 1px solid #000;	
+}
+
+table.thor_data td.filterButtons, table.table_data td.filterButtons {
+	border: 1px solid #000;
+}
+table.thor_data tbody tr.odd, table.table_data tbody tr.odd {
+	background-color:#E3EDFF;
+}
+
+table.thor_data tr.even, table.table_data tr.even {
+	background-color:#F0F5FF;
+}
+
+#form div.formDataAdmin, #form div.loginlogout {
+	padding:.5em;
+	border:1px solid #ccc;
+	clear:both;
+}
+#form div.formDataAdmin p {
+	margin:0;
+}
+
+#formAdminControlBox {
+	background: #dfdfdf;
+}
+
+#formAdminControlBox p {
+	padding: 3px;
+}

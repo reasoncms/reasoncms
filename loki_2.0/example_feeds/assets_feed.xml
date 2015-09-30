@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+<channel>
+
+<title>Carleton College Athletics Images</title>
+<description>Images from Athletics</description>
+<link>http://webdev.acs.carleton.edu/athletics/</link>
+<generator>Reason</generator>
+<copyright>Carleton College, 2005</copyright>
+
+<item>
+<title>sfdgsdfg</title>
+
+<description>sdfgdfsgsdfg</description>
+<pubDate>Fri, 12 Mar 2004 16:59:52 -0600</pubDate>
+<link>http://webdev.acs.carleton.edu/global_stock/photostock/8723_tn.jpg</link>
+</item>
+
+<item>
+<title>Stapp, Gunnar: Mug Shot</title>
+<description>foo foo foo</description>
+<pubDate>Fri, 12 Mar 2004 16:59:52 -0600</pubDate>
+<isSelected>true</isSelected>
+<link>http://webdev.acs.carleton.edu/global_stock/photostock/2291_tn.jpg</link>
+
+</item>
+
+<item>
+<title>Bunnelle, Kurt: Mug Shot</title>
+<description>asdfasdf</description>
+<pubDate>Fri, 12 Mar 2004 16:59:52 -0600</pubDate>
+<link>http://webdev.acs.carleton.edu/global_stock/photostock/2198_tn.jpg</link>
+</item>
+
+<item>
+<title>asd</title>
+<description>really freaking long title for this stupid picture which nobody likes, even though it's kind of pretty, but everyone hates minnesota winters, so it's not very popular in main stream culture at the moment...tape</description>
+
+<pubDate>Wed, 17 Mar 2004 15:22:08 -0600</pubDate>
+<link>http://webdev.acs.carleton.edu/global_stock/photostock/3597_tn.jpg</link>
+</item>
+
+</channel>
+</rss>

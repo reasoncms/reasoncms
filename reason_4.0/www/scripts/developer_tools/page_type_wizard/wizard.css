@@ -1,0 +1,63 @@
+table, pre, #display {
+	background-color:#E3EDFF;
+	border:1px solid black;
+	margin-left:auto;
+	margin-right:auto;
+	width:80%;
+	padding: 10px;
+}
+
+h3, p {
+	width: 80%;
+	margin-left: auto;
+	margin-right: auto;
+	text-align:center;
+}
+
+tr > td > h2 {
+	border-bottom:1px solid black;
+	margin-bottom:-3px;
+	margin-top:20px;
+	text-align:left;
+}
+
+.radioButtons > * {
+	border: none;
+}
+
+.removeRowDisabled {
+		color: gray;
+		text-decoration: none;
+}
+pre {
+ white-space: pre-wrap;       /* css-3 */
+ white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+ white-space: -pre-wrap;      /* Opera 4-6 */
+ white-space: -o-pre-wrap;    /* Opera 7 */
+ word-wrap: break-word;       /* Internet Explorer 5.5+ */
+}
+.arrayRows {
+}
+
+input {
+	margin: 2px;
+}
+
+.row > .row {
+	padding-left: 25px;
+}
+
+.alert, .badJSON {
+	background: url(dialog-warning.png) left 7px no-repeat;
+	display: block;
+	margin-left: -25px;	
+}
+.alert{
+	padding: 5px 5px 5px 25px;
+}
+.badJSON {
+	padding: 10px 5px 5px 25px;
+}
+.alertNotice {
+	display: inline;
+}

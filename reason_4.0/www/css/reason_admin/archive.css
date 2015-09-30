@@ -1,0 +1,18 @@
+
+.listRow1 {
+	background-color: #E9EEF8;
+	background-image: url(../../ui_images/1px_white.gif);
+	background-repeat: repeat-x;
+	/* background-color: #FFFBDA; */
+	/* background-color: #EAEFE0; */
+}
+.listRow1 + .listRow1, .highlightRow + .highlightRow, .listHead + .listHead  {
+	border-left:1px solid #fff;
+}
+.highlightRow {
+	background-color: #d6ddef;
+	background-image: url(../../ui_images/1px_white.gif);
+	background-repeat: repeat-x;
+	/* background-color: #FAEEBF; */
+	/* background-color: #D6DEC6; */
+}

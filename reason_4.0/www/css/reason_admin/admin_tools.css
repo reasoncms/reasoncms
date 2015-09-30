@@ -1,0 +1,38 @@
+#adminToolsModule {
+	margin-left:2em;
+}
+#adminToolsModule h3 {
+	font-weight:normal;
+}
+#adminToolsModule div.tool {
+	padding:0.8em 1em;
+	margin-bottom:2px;
+}
+#adminToolsModule div.tool h4, #adminToolsModule div.tool p {
+	margin:0;
+}
+#adminToolsModule div.tool p {
+	font-size:0.9em;
+}
+#adminToolsModule span.safetyLevel {
+	font-weight:normal;
+	font-size:0.9em;
+}
+#adminToolsModule div.safe {
+	background-color:#f3ffe5;
+}
+#adminToolsModule div.safe span.safetyLevel, #adminToolsModule .key .safe strong {
+	color:#5d921d;
+}
+#adminToolsModule div.careful {
+        background-color:#fff7d8;
+}
+#adminToolsModule div.careful span.safetyLevel, #adminToolsModule .key .careful strong {
+        color:#cea500;
+}
+#adminToolsModule div.experimental {
+        background-color:#fae1e1;
+}
+#adminToolsModule div.experimental span.safetyLevel, #adminToolsModule .key .experimental strong {
+        color:#fa4848;
+}

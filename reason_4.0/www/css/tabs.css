@@ -1,0 +1,96 @@
+
+div.tabbed_content {
+
+}
+div.panel_container
+{
+	float:left;
+	width:40%;
+	display:inline;
+}
+div.tabs {
+	float:left;
+	width:33%;
+	display:inline;
+}
+
+
+/*
+div.panel_container
+{
+	float:left;
+	width:66%;
+	margin-left:33%;
+	display:inline;
+}
+div.tabs {
+	width:33%;
+	margin-left:-99%;
+}
+*/
+ul.tabs {
+	margin: 1em 0 0 0;
+	padding: 0;
+	list-style: none;
+	border-bottom: 1px solid #999;
+	border-left: 1px solid #999;
+	text-align:center;
+}
+ul.tabs li {
+	float:top;
+	margin: 0;
+	padding: 0;
+	border: 1px solid #999;
+	border-left: none;
+	background-color: #e0e0e0;
+}
+ul.tabs li a {
+	display:inline-block;
+	height:1%;
+}
+ul.tabs li a {
+	text-decoration: none;
+	color: #000;
+	display: block;
+	padding: 0.5em 0.25em;
+	border: 1px solid #fff; /*--Gives the bevel look with a 1px white border inside the list item--*/
+	border-right:none;
+	outline: none;
+
+}
+ul.tabs li a:hover {
+	background: #ccc;
+}
+html ul.tabs li.active_tab, html ul.tabs li.active_tab a:hover  { /*--Makes sure that the active tab does not listen to the hover properties--*/
+	background: #fff;
+	border-bottom: 1px solid #fff; /*--Makes the active tab look like it's connected with its content--*/
+	border-right:none;
+}
+
+.active_tab
+{
+	display:block;
+}
+.inactive_tab
+{
+	display:none;
+}
+
+.tab_container {
+	border: 1px solid #999;
+	/* border-left: none; */
+	float: top; 
+	width: 66%;
+	background-color: #fff;
+	min-height:14em;
+	margin-left:-1px;
+	max-height:35em;
+	overflow:auto;
+}
+* html .tab_container {
+	height:14em;
+	overflow: hidden;
+}
+.tab_content {
+	padding: 20px;
+}

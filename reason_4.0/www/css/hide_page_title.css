@@ -1,0 +1,8 @@
+div.contentHead .pageTitle
+{ 
+	width: 0px;
+	position: absolute;
+	left: -1000px;
+	overflow: hidden;
+}
+				

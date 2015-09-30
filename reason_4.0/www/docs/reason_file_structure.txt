@@ -1,0 +1,637 @@
+/usr/local/webapps/apps/global_stock/php:
+boxes - box code used in disco
+charts - PHP/Flash tools (both open source code and my utility scripts)
+dave - Utility code
+db - database libraries
+db.php - central include file for files in /db
+db_selector.php - simple object wrapper for creating SQL
+disco - form management system
+EditorHeader.php3 - deprecated, i think
+edit.php3 - deprecated
+error_handler.php - the PHP error handler, doing logging, developer info, and the ohshi page
+form_funcs.php3
+form_process - form to email utility, used by Thor, the WYSIWYG form creation tool
+globalFunctions.php3
+http_vars.php3 - old function for stuffing request vars into an array
+imager.php3
+ldap - LDAP libraries
+loki - the WYSIWYG HTML editor
+loki_old
+loki_v3
+magpierss - open source RSS feed parser
+makeDate.php3
+misc - misc functions and libs
+plasmature - the widget system
+reason - old reason code
+reason2 - old reason code
+reason3 - current reason code
+reason_header.php - simple script accessible anywhere to start up Reason (sets constants, includes files)
+rss
+thor - WYSIWYG form editor
+tidy.php3 - Tidy functions
+util - alias for /dave
+
+/usr/local/webapps/apps/global_stock/php/boxes:
+boxes.php - the boxes library
+test_box.php
+
+/usr/local/webapps/apps/global_stock/php/charts:
+chart_funcs.php - My code to make using the charts easier
+charts.php - open source PHP lib for charts
+charts.swf - the Flash file
+
+/usr/local/webapps/apps/global_stock/php/dave:
+browser.php - Browser-specific libraries (user agent sniffing, cookie capability)
+cache.php - the simple caching object used by the minisite system
+debug.php3 - old debugging object.  not very useful anymore
+misc.inc - various and sundry useful string maniplation and other functions
+misc.php3
+pray.php3 - variable dumper function
+prp.php - another variable dumper function
+sqler.inc - simple functions to easily create insert, update, and delete SQL queries
+sqler.php3
+tidy_old.php3
+tidy.php3 - tidy functions (may be the real tidy functions)
+timer.php3 - old, not so useful profiling tool
+util.php3 - old, not super useful utility functions
+
+/usr/local/webapps/apps/global_stock/php/db:
+authorize.php - the authorize() function
+connectDB.php - connectDB() and get_db_credentials() functions
+db_query.php - the db_query() function
+
+/usr/local/webapps/apps/global_stock/php/disco:
+controller.php - multi-page form controller class
+controller_step.php - form that is used in the context of a multi-page form class
+disco_db.php - old disco extension that simplified table editing and row creation
+disco_is_dead.php3 - old
+disco.php3 - base disco class
+multi_page_disco.php - older multi-page disco attempt
+prev_disco.php3 - old
+
+/usr/local/webapps/apps/global_stock/php/form_process:
+email.php - email class, suports HTML emails easily
+form_process.php - sends email based on incoming POST data, the usual form action of a Thor form
+ldap_test.php
+tyr.php - performs the mail-merge-y actions for Thor
+
+/usr/local/webapps/apps/global_stock/php/ldap:
+ldap_old.php
+ldap.php - LDAP helper object and functions
+
+/usr/local/webapps/apps/global_stock/php/loki:
+blank.php
+css
+dialogs
+exampleResults.php3
+exampleUsage.php3
+functions.php3
+hel_blank.php
+images
+js
+lokiOptions.php3
+object.php - The Loki display and post-processing classes.
+
+****** most Loki files removed from list as there were lots of images and files that i don't know much about *****
+
+/usr/local/webapps/apps/global_stock/php/magpierss:
+extlib
+rss_cache.inc
+rss_fetch.inc - the main file to include when using Magpie RSS stuff
+rss_parse.inc
+rss_utils.inc
+
+/usr/local/webapps/apps/global_stock/php/magpierss/extlib:
+Snoopy.class.inc - used by magpie
+
+/usr/local/webapps/apps/global_stock/php/misc:
+residential_policies.php3
+
+/usr/local/webapps/apps/global_stock/php/plasmature:
+date.php - deprecated, i believe
+plasmature_old.php3
+plasmature.php - main repository of form widgets used by Disco.
+
+/usr/local/webapps/apps/global_stock/php/reason:
+OLD
+
+/usr/local/webapps/apps/global_stock/php/reason2:
+OLD
+
+/usr/local/webapps/apps/global_stock/php/reason3:
+admin_actions.php3 - library of entity management functions, things like create_entity(), update_entity(), create_relationship() and so on
+classes - directory containing class files used throughout reason
+content_deleters - each file contains code that can be run when a particular type of entity is deleted - basically, specific deletion actions for types
+content_listers - custom lister objects for the backend
+content_managers - custom forms for the backend
+content_post_deleters - custom actions to happen after the basic deletion happens (it's important to have 2 separate hooks for deletion actions)
+content_previewers - custom preview modules for the backend
+content_sorters - custom sorting code
+disco.php3 - overloaded, specialized disco class for use in Reason
+display_name_handlers - older, but still somewhat used, hooks for code to do special entity name display
+docs - some documentation
+factories.php - few functions intended to be "factory" style functions that create the correct kind of object and/or return a reference to the singleton object
+feeds - custom feeds for types
+finish_actions - custom code to be run at Finish time on the bckend
+function_libraries - general libraries useful for Reason
+header.php3 - the startup file.  includes necessary libraries, sets up constants, and the like
+micro_scripts - random and sundry small scripts, sometimes used in various places
+minisite_templates - most custom minisite templates and modules live in here.  this is the place for minisite code
+modules - old, badly named directory.  only important thing in here is the image code
+page_templates - old
+reason_session.php - special function for getting the Reason session object that exists.  kind of implements a singleton object
+settings.php3 - Reason config and settings
+util.php3 - Low level database API functions.  getting entities by ID, getting entity tables, and all kinds of other stuff
+
+/usr/local/webapps/apps/global_stock/php/reason3/classes:
+admin - specific class code for the backend/admin
+archive - old
+auth_ldap.php - Authentication class that implements LDAP auth
+auth_ldap_prospect.php - Auth class used for prospective accounts
+auth.php - General auth class that needs to be extended for use
+calendar.php - class used by events to handle event logic and the like
+crypto.php - early attempt at implementing (de|en)cryption.  never completed
+entity.php3 - The entity class - important often used class to store entity data.  used all over the place
+entity_selector.php3 - Bulk entity data retriever.  Also used a lot.  Descended from db_selector class
+filter.php3 - list filter, i think
+htmlparser.inc - don't know
+pdfdoc.php - PDF writer
+reason_rss.php - class used to create RSS feeds from Reason data
+repeat_transaction_helper.php - used by gift engine to determine how recurring transactions will work
+session_cookie.php - unimplemented cookie based sessioning
+session.php - abstract class defining an interface for sessions
+session_php.php - the most used session class Reason.  wraps PHP sessions up in a more useful form
+session_reason.php - empty
+url_manager.php - class that generates .htaccess files
+viewer.php3 - very abstract data viewer - extended by lists
+voicepdf.php - special voice PDR writer?
+
+/usr/local/webapps/apps/global_stock/php/reason3/classes/admin:
+admin_disco.php - disco forms that are used on the backend
+admin_module.php - backend "modules" file.  some defined here, some included from /modules/
+admin_page.php - the core class that runs the backend.  
+modules - directory of more backend modules
+
+/usr/local/webapps/apps/global_stock/php/reason3/classes/admin/modules:
+archive.php - backend Archive module
+associator.php - the associator/relationship management module
+doAssociate.php - create/delte a relationship/association
+doBorrow.php - handle creation/deletion of borrowed items
+editor.php - The module that handles the actual editing of entities (uses content managers)
+sorter.php - Sorting module
+
+/usr/local/webapps/apps/global_stock/php/reason3/classes/archive:
+calendar.php
+
+/usr/local/webapps/apps/global_stock/php/reason3/content_deleters:
+entity_table.php3 - special deleter for entity tables
+field.php3 - special deleter for fields
+minisite_page.php - deleter for minisite pages
+
+/usr/local/webapps/apps/global_stock/php/reason3/content_listers:
+--- This directory contains a bunch of extended classes that are used to modify the  behavior of the base lister object
+for different types in reason.  Columns can be added/removed, filters/searches can be modified, and the like ---
+associate.php
+box_score.php3
+building.php3
+dave_lister.php3
+db_vendor.php3
+debug.php3
+default.php3 - the top of the content_lister tree - most content_listers extend this class
+event.php3
+field.php3
+image_list.php3
+image.php3
+list_no_delete.php
+list_no_delete.php3
+multiple_root_tree.php
+news.php3
+page.php3
+page_tree.php3
+player.php3
+season.php3
+sharing.php
+sport_lister.php3
+sport.php3
+tonian_asset_lister.php3
+tonian_issue_lister.php3
+tonian_news_lister.php3
+tree.php3
+voice_article.php
+
+/usr/local/webapps/apps/global_stock/php/reason3/content_managers:
+address.php3
+adventure_page.php3
+asset.php
+associator.php3
+athletics_event.php3
+athletics_page.php3
+av_file.php3
+av.php3
+bug.php
+club_sport.php3
+course.php
+database.php3
+default.php3 - the base content manager, most extend from this
+dept_resource.php3
+entity_table.php3
+event.php3
+faculty_staff.php3
+faq.php3
+field.php3
+foo.php3
+image.php3
+issue.php3
+job.php
+many_to_one.php3
+minisite_page.old.php3
+minisite_page.php3
+minutes.php3
+news.php3
+new_student_resource.php3
+non_reason_site.php3
+OCSPage.php3
+OCSSidebar.php3
+offices_depts.php3
+page_node.php3
+parent_child.php3
+player.php3
+policy.php3
+project.php3
+sidebar_feature.php3
+site.php3
+site_user.php3
+sport.php3
+text_blurb.php3
+thor.php3
+type.php3
+user.php3
+
+/usr/local/webapps/apps/global_stock/php/reason3/content_post_deleters:
+event.php3
+update_rewrites.php
+
+/usr/local/webapps/apps/global_stock/php/reason3/content_previewers:
+archive
+default.php
+faculty_staff.php
+image_previewer.php
+page.php
+type.php
+
+/usr/local/webapps/apps/global_stock/php/reason3/content_previewers/archive:
+image_previewer.php
+
+/usr/local/webapps/apps/global_stock/php/reason3/content_sorters:
+athletics_features.php
+athletics_page.php
+page.php
+project.php
+
+/usr/local/webapps/apps/global_stock/php/reason3/display_name_handlers:
+default.php3
+event.php3
+image.php3
+sport.php3
+
+/usr/local/webapps/apps/global_stock/php/reason3/docs: removed listing
+
+/usr/local/webapps/apps/global_stock/php/reason3/feeds:
+club_sports.php
+default.php - base feed object
+events.php
+images.php
+jobs.php
+news.php
+page_tree.php
+regex_sites.php
+sites.php
+
+/usr/local/webapps/apps/global_stock/php/reason3/finish_actions: (special actions to run once an entity is finished)
+update_adventure_rewrites.php
+update_rewrites.php - this file runs the URL updating code in bizarre way - it actually runs the code from the command
+line.  this could probably now be changed since we have a better URL manager.  However, this is important since pages
+and sites both use this to make sure that, upon finish/publish, URLs get updated
+
+/usr/local/webapps/apps/global_stock/php/reason3/function_libraries:
+access_log_functions.php - used for webstats RSS feed creation
+access_log_regex_builder.php - used for webstats
+asset_functions.php - display helper function for assets
+relationship_finder.php - relationship finding utility
+root_finder.php - finds root node given a page
+term_ranger.php - handles terms/trimester logic for Carleton's academic schedule
+URL_History.php - all the code for the URL History / permanent URL stuff
+url_utils.php - one function that gets the HTML output of a Reason page
+
+/usr/local/webapps/apps/global_stock/php/reason3/micro_scripts: (various scripts, some old, some still in use)
+access_log_functions.php
+IGNORE.php
+restore_last_mod_dates_4_04.php
+site_link_select.php
+sync_all_voice_articles.php
+sync_all_voice_department_articles.php
+sync_all_voice_department_stories.php
+update_global_rewrites.php
+update_rewrites_asset.php
+update_rewrites_carletonian.php
+update_rewrites_hierarchy.php
+update_rewrites_minisite_page.php
+update_rewrites_page_node.php
+url_populate.php
+voice_article_link.php
+voice_to_reason_sync.php
+vtr_sync.php
+
+/usr/local/webapps/apps/global_stock/php/reason3/minisite_templates:
+aar.php3
+alumni_adventures.php3
+alumni_gateway.php3
+alumni.php3
+alumni_reunion.php3
+archive
+art_gallery.php3
+art.php3
+brian2.php3
+calendar_wallpapers.php3
+daf.php3
+dean_of_the_college.php3
+default.php3 - this is the base minisite template which creates most of the minisite framework
+default.php3.20041004
+example.php3
+flat_nav.php3
+giving.php3
+inside_carleton.php3
+japanese_garden.php3
+jasons_template.php3
+modules - here live all the modules
+nav_classes - special classes are used for navigation and they live in here
+page_types.php - this file is brittle and lists all the page_type to module mappings
+sap_subsite.php3
+summer_academic_programs.php3
+summer_academic_programs_sub.php3
+tableless.php3
+tonian.php3
+unbranded.php3
+webdev.php3
+wellstone.php3
+
+/usr/local/webapps/apps/global_stock/php/reason3/minisite_templates/archive:
+alumni.php3
+brian2.php3
+brian_old.php3
+brian.php3
+default_2004_09_01.php3
+default.php3
+department_old_2.php3
+department.php3
+example.php3
+flat_nav.php3
+summer_academic_programs.php3
+summer_academic_programs_sub.php3
+webdev.php3
+wellstone.php3
+
+/usr/local/webapps/apps/global_stock/php/reason3/minisite_templates/modules:
+alumni_adventure.php
+alumni_adventures_past.php
+alumni_adventures_summary.php
+alumni_features_large.php
+alumni_features_small.php
+alumni_gallery.php
+alumni_polls_front.php
+application_status.php
+app_status_title.php
+archive
+assets.php
+atoz.php
+av.php
+bet.php
+blurb.php
+blurbs_if_logged_in.php
+box_scores_mini.php
+browse_courses.php
+catalog_entry.php
+children_and_grandchildren.php
+children_full_titles.php
+children.php
+child_sites.php
+child_sites_top_pages.php
+club_sports
+club_sports_old.php
+combined_dept_faculty.php
+committees_all.php
+content_base.php
+content_from.php
+content.php
+content.php.20041004
+courses.php
+courses_separate.php
+courses_with_related.php
+custom_form.php
+databases_by_category.php
+databases.php
+databases_recently_added.php
+default.php - the basic module - all modules extend from this guy.
+default.php.20041004
+disco_module.php
+edit.php
+edit.php.20041004
+event_registration.php
+events_academic_calendar.php
+events_archive.php
+event_signup.php
+events_mini_more.php
+events_mini.php
+events_parent_cs.php
+events_parent_math.php
+events_parent.php
+events.php
+events_sitewide.php
+events_verbose.php
+events_workshops.php
+exhibit_archive.php
+exhibit_forecast.php
+exhibit_jump.php
+exhibit.php
+faculty_math_cs.php
+faculty_old.php
+faculty.php
+faqs.php
+form_content.php
+form.php
+gallery_entire_site.php
+gallery_horizons.php
+gallery.php
+gallery_single_page.php
+gathering_registration_2004
+generic2.php
+generic3.php
+generic.php
+gift.php
+gift_work
+giving_front_page_features.php
+goodsell_gazette_archive.php
+goodsell_gazette.php
+go.php
+image_sidebar.php
+images.php
+job_form_student.php
+jobs_all.php
+jobs_faculty.php
+jobs_faculty_staff.php
+jobs.php
+jobs_student.php
+live_sites.php
+login.php
+maintained.php
+minutes.php
+mpl_form.php
+navigation.php
+news2.php
+news_all.php
+news_by_category.php
+news_currently.php
+news_doc.php
+news_insideCarleton.php
+news_mini.php
+news_parent.php
+news.php
+news_proofing_multipage.php
+news_proofing.php
+news_rand_aaf.php
+news_rand.php
+news_top.php
+new_student_resources.php
+news_via_categories.php
+page_title.php
+policy.php
+policy_related_all.php
+policy_related.php
+projects.php
+prospective_account
+residential_staff.php
+resource.php
+reunion_attendance.php
+room_checkout.php
+SACRecForm.php
+search.php
+siblings.php
+sitemap.php
+tasks.php
+textonly_toggle.php
+textonly_toggle_top.php
+tonian
+virtual_tour.php
+voice_articles.php
+
+/usr/local/webapps/apps/global_stock/php/reason3/minisite_templates/modules/archive:
+assets.php
+courses_older.php
+courses.php
+courses_separate.php
+databases_by_category.php
+databases_older.php
+databases.php
+databases_recently_added.php
+event_registration.php
+events.php
+events_verbose.php
+exhibit_archive.php
+gallery.php
+generic2.php
+jobs.php
+news_proofing.php
+SACRecForm.php
+
+/usr/local/webapps/apps/global_stock/php/reason3/minisite_templates/modules/club_sports:
+club_sports_form.php
+module.php
+
+/usr/local/webapps/apps/global_stock/php/reason3/minisite_templates/modules/gathering_registration_2004:
+gathering_form_cc_info.php
+gathering_form_first_page.php
+gathering_form_template.php
+gathering_form_thanks.php
+module.php
+templates
+
+/usr/local/webapps/apps/global_stock/php/reason3/minisite_templates/modules/gathering_registration_2004/templates:
+email_form.php
+info_table.php
+
+/usr/local/webapps/apps/global_stock/php/reason3/minisite_templates/modules/gift_work:
+gift_confirmation.php
+page1.php
+page2.php
+page3.php
+
+/usr/local/webapps/apps/global_stock/php/reason3/minisite_templates/modules/prospective_account:
+form.php
+
+/usr/local/webapps/apps/global_stock/php/reason3/minisite_templates/modules/tonian:
+archives.php
+breadcrumbs.php
+front.php
+issue_date.php
+issue_description.php
+issue_number.php
+list_categories.php
+list.php
+list_sections.php
+maintained.php
+mini_stories_viewer.php
+page.php
+paper_address.php
+paper_title.php
+pdfs.php
+pdfs_viewer.php
+related_stories_viewer.php
+search.php
+sidebar_advertisement.php
+sidebar_all_issues.php
+sidebar_current_issue.php
+stories.php
+stories_viewer.php
+story.php
+
+/usr/local/webapps/apps/global_stock/php/reason3/minisite_templates/nav_classes:
+aar_top.php3
+adventures.php3
+all_open.php3
+default.php3 - the default navigation code for the minisite system
+flat_nav.php3
+no_root.php3
+tonian.php3
+
+/usr/local/webapps/apps/global_stock/php/reason3/modules:
+images.php3 - the most often used image display function
+
+/usr/local/webapps/apps/global_stock/php/reason3/page_templates:
+brian.php3
+default.php3
+example.php3
+test.php3
+webdev.php3
+
+/usr/local/webapps/apps/global_stock/php/rss:
+cafeRSS.php
+default_template.txt
+example.php
+license.txt
+readme.html
+rss_cache
+
+/usr/local/webapps/apps/global_stock/php/rss/rss_cache:
+http___webapps.acs.carleton.edu_voice_voice_features.php.xml.cache
+
+/usr/local/webapps/apps/global_stock/php/thor: (WYSIWYG form editor)
+badWords.txt
+boxes_thor.php
+disco_thor.php
+editAttributes.xml
+getXML.php
+setXML.php
+testThor.php
+thorBAK.swf
+thor.php
+thor.swf

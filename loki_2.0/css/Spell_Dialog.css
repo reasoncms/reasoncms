@@ -1,0 +1,82 @@
+/*
+div.options {
+	float:left;
+	width:30%;
+}
+*/
+td.options_td {
+	width:30%;
+}
+div.options label {
+	display:block;
+}
+div.options select, div.options input {
+	width:100%;
+}
+/*
+div.actions {
+	float:left;
+	width:20%;
+}
+*/
+td.actions_td {
+	width:20%;
+}
+div.actions {
+	text-align:center;
+}
+div.actions button {
+	/*width:90%;*/
+	width:10em;
+	margin:.25em 5%;
+	display:block;
+}
+div.actions div.ignore {
+	margin-top:.75em;
+}
+/*
+div.document {
+	float:left;
+	width:49%;
+}
+td.document_td {
+	width:49%;
+}
+*/
+/* div.fieldset input, div.fieldset button, div.fieldset select, div.fieldset iframe, div.fieldset label {
+	display: block;
+	width: 100%;
+} */
+div.fieldset:after {
+    content: "."; 
+    display: block; 
+    height: 0; 
+    clear: both; 
+    visibility: hidden;
+}
+
+div.fieldset {display: inline-block;}
+
+/* Hides from IE-mac \*/
+* html .div.fieldset {height: 1%;}
+div.fieldset {display: block;}
+/* End hide from IE-mac */
+
+
+/* input, button, select, iframe, label {
+	display: block;
+	width: 100%;
+}
+
+.submit_and_cancel_chunk button {
+	display: inline;
+	width: auto;
+}
+
+.center_td {
+	11em;
+}
+
+.left_td {
+	33%;
+} */

@@ -1,0 +1,67 @@
+div.actions {
+  font-size: 85%;
+}
+
+div.swfupload-container {
+  z-index: 1000;	
+}
+
+.upload_queue div.empty {
+  color: #4B4C47;
+}
+
+.upload_queue {
+	font-size: 90%;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.upload_queue li {
+  margin-bottom: 0.3em;
+  overflow: hidden;
+  color: #333;
+  font-size: 90%;
+}
+
+.upload_queue div {
+  float: left;
+  margin-right: 0.6em;
+  padding: 2px 0;
+}
+
+.upload_queue .file span {
+  margin-right: 0.5em;
+}
+
+.upload_queue .file .size {
+  color: #444;
+  margin-right: 0;
+  font-size: 90%;
+}
+
+.upload_queue .progress { 
+  width: 140px;
+  padding: 1px;
+  background: #EEE;
+  border: 1px solid #CCC;
+}
+
+.upload_queue .progress .amount {
+  float: none;
+  margin: 0;
+  background: #4667B9;
+  font-size: 80%;
+}
+
+.upload_queue .progress div.done {
+  background: #80C253;
+}
+
+.upload_queue .progress div.failed {
+  background: #A23D38;
+}
+
+.upload_queue .failure {
+  color: #612A26;
+}

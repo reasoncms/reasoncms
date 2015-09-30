@@ -1,0 +1,1705 @@
+/* Things may seem a bit out-of-order.
+This is because the top half of this css used to be in modules_mod, and to ensure that the cascade
+is preserved, the contents of modules_mod was placed precisely where the import statement used to be. */
+
+/* Start of old modules_mod.css */
+
+/* Basic Text formatting */
+.blockEmphasis {
+	background-color:#f2e3ab;
+	border:1px dotted #d99742;
+	padding:1em;
+}
+a img {
+	border:none;
+}
+
+/* Navigation Module */
+
+.navListItem {
+	margin-left: 0px;
+	padding-left: 0px;
+	margin-top: 4px;
+	margin-bottom: 4px;
+	list-style-type: none;
+}
+.navList {
+	margin: 0px;
+	padding: 0px 0px 0px 2em;
+}
+.navListTop {
+	margin: 0px;
+	padding: 0px;
+}
+a.navLink:visited {
+	color: #000099;
+}
+a.navLink:hover {
+	color: #CC0000;
+}
+
+/* Faculty Module */
+
+.facStaff {
+	border-top-width: 1px;
+	border-top-style: solid;
+	border-top-color: #8AA3D0;
+	clear: both;
+}
+.facStaffImage {
+	float: right;
+	margin-right: 10px;
+	margin-left: 10px;
+}
+div#facultyStaff div#deptInfo h4 {
+	margin: 10px 0px 0px;
+	padding: 0px;	
+}
+div#facultyStaff div#deptInfo ul {
+	margin-top: 5px;
+	margin-bottom: 0px;
+	padding: 0px;
+	margin-left: 20px;
+	list-style-type: none;
+}
+div#facultyStaff div#deptInfo li {
+	margin-top: 2px;
+	margin-bottom: 0px;
+}
+#facultyStaff a.tel {
+	color: inherit;
+	text-decoration:none;
+}
+#facultyStaff a.tel>strong {
+	font-weight:normal;
+}
+
+/* Search Module */
+
+.searchSubmitLink {
+	text-decoration: none;
+	background-color: #D9E2F4;
+	padding: 2px;
+	border: 1px solid #748FC2;
+	color: #385790;
+	margin-right: 10px;
+}
+a.searchSubmitLink:hover {
+	background-color: #748FC2;
+	color: #FFFFFF;
+}
+
+/* Policy Module */
+
+.rootPolicyList {
+	margin: 0px;
+	padding: 0px;
+}
+.rootPolicyItem {
+	margin-bottom: 7px;
+	list-style-type: none;
+}
+div.policy ol.upperAlpha {
+  list-style-type: upper-alpha;
+}
+div.policy ol.lowerAlpha {
+  list-style-type: lower-alpha;
+}
+div.policy ol.upperRoman {
+  list-style-type: upper-roman;
+}
+div.policy ol.lowerRoman {
+  list-style-type: lower-roman;
+}
+div.policy ol.decimal {
+	list-style-type: decimal;
+}
+div#policyModule div.keywords {
+	display:none;
+}
+
+/* News */
+
+div.teaserImage {
+	float: right;
+	margin-left: 1em;
+}
+
+.NewsImages {
+	float: right;
+}
+
+.newsItem {
+	clear: right;
+}
+
+div#news div.author {
+	font-size: 90%;
+}
+div#newsViaCats ul {
+	list-style-type: none;
+	margin: 0px;
+	padding: 0px;
+	border-bottom: 1px solid #C8D5EF;
+	background-color:#F0F5FF;
+}
+div#newsViaCats ul li {
+	padding: 1em;
+	border-top: 1px solid #C8D5EF;
+	clear: left;}
+div#newsViaCats ul h4 {
+	margin: 0px;
+}
+div#newsViaCats div.tnImage {
+	margin: 0em .5em .5em 0em;
+	float: left;
+}
+div#newsViaCats div.clear {
+	clear: left;
+}
+
+/* News by category */
+div#newsByCategory div.moduleNav ul {
+	padding:0px;
+	margin:0px;
+	list-style:none;
+}
+div#newsByCategory div.moduleNav ul li {
+	margin:.75em 0px .75em 0px;
+}
+div#newsByCategory div.moduleNav ul li p {
+	margin:0px;
+}
+div#newsByCategory p.date, div#newsByCategory p.author {
+	font-style:italic;
+}
+div#newsByCategory div.multiple div {
+	float:right;
+	width:30%;
+	clear:right;
+}
+div#newsByCategory div.multiple div h4, div#newsByCategory div.back {
+	border-top:1px dotted #748FC2;
+	padding-top:.5em;
+}
+div#newsByCategory div.multiple div div {
+	float:none;
+	width:auto;
+	clear:none;
+}
+div#newsByCategory div.multiple div.text {
+	float:left;
+	width:65%;
+	clear:left;
+}
+div#newsByCategory div.multiple div.assets {
+	padding:0px;
+	margin:0px;
+	border:none;
+	background-color:transparent;
+}
+div#newsByCategory div.back {
+	clear:both;
+}
+div#newsByCategory div.multiple div.images ul {
+	padding:0px;
+	margin:.5em 0px .5em 0px;
+	list-style:none;
+}
+/* news mini random */
+div#newsMiniRandom {
+	margin:1em;
+}
+div#newsMiniRandom div.moduleNav ul {
+	padding:0;
+	margin:0;
+	list-style:none;
+}
+div#newsMiniRandom div.moduleNav ul p {
+	margin:.25em 0;
+}
+div#newsMiniRandom div.moduleNav ul div.teaserImage {
+	float:none;
+	margin:0;
+	padding:0;
+}
+
+/* News one at a time */
+div#newsOneAtATime div.pagination.above {
+	display:none;
+}
+div#newsOneAtATime div.moduleNav ul {
+	margin-left:0;
+	padding-left:0;
+	list-style:none;
+	margin-bottom:3em;
+}
+div#newsOneAtATime div.moduleNav ul div.desc p {
+	margin:0;
+}
+div#newsOneAtATime div.moduleNav ul div.more {
+	margin-top:.75em;
+}
+div#newsOneAtATime div.primaryImage {
+	margin-bottom:.75em;
+}
+div#newsOneAtATime div.multiple div {
+	float:right;
+	width:30%;
+	clear:right;
+}
+div#newsOneAtATime div.multiple div div {
+	float:none;
+	width:auto;
+	clear:none;
+}
+div#newsOneAtATime div.multiple div.text {
+	float:left;
+	width:65%;
+	clear:left;
+}
+div#newsOneAtATime div.multiple div.assets {
+	padding:0px;
+	margin:0px;
+	border:none;
+	background-color:transparent;
+}
+div#newsOneAtATime div.back, div#newsOneAtATime div.multiple div.addCommentForm {
+	clear:both;
+}
+div#newsOneAtATime div.multiple div.images ul {
+	padding:0px;
+	margin:.5em 0px .5em 0px;
+	list-style:none;
+}
+div#newsOneAtATime div.multiple div.images h4 {
+	position:absolute;
+	left:-9999px;
+}
+
+
+/* Children */
+
+ul.childrenList {
+	margin-top: 10px;
+	margin-left: 0px;
+	padding-top: 10px;
+	padding-left: 0px;
+	border-top-width: 1px;
+	border-top-style: solid;
+	border-top-color: #748FC2;
+	clear: both;
+	list-style: none;
+}
+.childrenList li {
+	list-style-type: none;
+	margin-bottom: 5px;
+	display:inline-block; /* This is important for ie5-7 haslayout */
+}
+.childrenList li {
+	display:block; /* This is important for ie5-7 haslayout -- do not combine with above rule */
+}
+.childrenList li:after {
+    content:".";
+    display:block;
+    visibility:hidden;
+    clear:left;
+    height:0px;
+}
+.childrenList h4 {
+	margin: 0px;
+	padding: 0px;
+}
+ul.childrenList img {
+	float:left;
+	margin:0 1em 0 0;
+}
+
+/* Siblings */
+
+ul.siblingList {
+	margin-top: 10px;
+	margin-left: 0px;
+	padding-top: 10px;
+	padding-left: 0px;
+	border-top-width: 1px;
+	border-top-style: solid;
+	border-top-color: #748FC2;
+	clear: both;
+}
+.siblingList li {
+	list-style-type: none;
+	margin-bottom: 7px;
+}
+
+/* Pullquotes (advanced)*/
+
+p.pullQuoteRight { 
+	float: right;
+	clear: both;
+	width: 200px;
+	text-align: center;
+	font-weight: bold;
+	font-style: italic;
+	background-color: #E9EEF8;
+	padding: 15px;
+	margin: 10px;
+	border-top: medium double #8AA3D0;
+	border-bottom: medium double #8AA3D0;
+}
+
+/* Text Only Toggle */
+.textOnlyLink {
+	margin-top: 18px;
+	padding-top: 15px;
+	padding-left: 26px;
+	padding-bottom: 10px;
+	padding-right: 7px;
+	background-image: url(../ui_images/printer.gif);
+	background-repeat: no-repeat;
+	background-position: 10px 17px;
+	border-top-width: 1px;
+	border-top-style: solid;
+	border-top-color: #8AA3D0;
+	text-align: left;
+}
+
+
+
+/* Mini News */
+.sidebarTD #miniNews  {
+	border-left-width: 1px;
+	border-left-style: solid;
+	border-left-color: #8AA3D0;
+	padding-left: 14px;
+}
+
+/* Minutes Module */
+
+ul.minutesInfo {
+	margin-left: 0px;
+	padding-left: 0px;
+	padding-bottom: 8px;
+	list-style-type: none;
+	border-top-width: 1px;
+	border-top-style: dotted;
+	border-top-color: #748FC2;
+	border-bottom-width: 1px;
+	border-bottom-style: dotted;
+	border-bottom-color: #748FC2;
+}
+ul.minutesInfo strong {
+	font-style: normal;
+}
+h3.minutesHead {
+	margin: 0px;
+	padding: 0px;
+}
+p.minutesBack {
+	padding-top: 8px;
+	border-top-width: 1px;
+	border-top-style: dotted;
+	border-top-color: #748FC2;
+}
+ul.minutesList li.yearEnd {
+	margin-top: 18px;
+	padding-top: 12px;
+	border-top-width: 1px;
+	border-top-style: dashed;
+	border-top-color: #748FC2;
+}
+ul.minutesList {
+	margin-left: 0px;
+	padding-left: 0px;
+}
+ul.minutesList li {
+	list-style-type: none;
+}
+
+/* Committees Module */
+
+ul.committeeList {
+	margin-left: 0px;
+	padding-left: 0px;
+	list-style-type: none;
+}
+ul.committeeList li h3 {
+	margin: 0px;
+	padding: 0px;
+}
+
+/* Room Checkout Module */
+
+div.roomCheckout ul {
+	list-style-type: none;
+}
+/* Events Module */
+div#calendar div#events h4 {
+	margin: .5em 0 0 0;
+}
+div#calendar div#events h3 {
+	font-weight: normal;
+	color: #748FC2;
+	margin-bottom: 10px;
+	margin-top: 1.5em;
+	font-style: italic;
+	clear:none;
+}
+div#calendar div#events ul {
+	margin-top: 0px;
+}
+div#calendar div#events ul li {
+	margin-top: 3px;
+}
+div#calendar div#events ul {
+	list-style-type: none;
+	margin-left: 1em;
+	padding-left: 0px;
+}
+div#calendar div#events ul {
+	margin-left: 2em;
+}
+div.eventDetails p.repetition {
+	font-weight: bold;
+}
+div.eventDetails p.back {
+	padding: 0.75em;
+	float: right;
+	margin: 0px 10px 10px;
+	border: 1px solid #92AAD6;
+}
+div#calendar div.eventDetails div.export {
+	margin:1em 0;
+}
+div.eventDetails div.eventLocation div.eventMap {
+	float:left;
+	margin-right:1em;
+}
+div.eventDetails div.eventLocation {
+	display:inline-block;
+}
+div.eventDetails div.eventLocation {
+	display:block;
+	margin:1em 0;
+}
+div.eventDetails div.eventLocation:after {
+	clear: both;
+	content: ".";
+	display: block;
+	height: 0;
+	visibility: hidden;
+}
+div#calendar div.nav {
+	/* background-color: #C8D5EF;
+	border:1px solid #748FC2; */
+	padding: 7px;
+	background-color: #748FC2;
+	margin-bottom:0;
+	color:#fff;
+	clear:left;
+}
+div#calendar div.nav.empty {
+	padding:0;
+	border:none;
+	border-top:3px solid #748FC2;
+}
+div#calendar div.foot {
+	clear: both;
+}
+div#calendar div.nav a {
+	font-size: 130%;
+	font-weight: bold;
+	text-decoration: none;
+	background-color:#C8D5EF;
+	padding:.2em;
+}
+div#calendar div.nav a:hover {
+	color: #990000;
+}
+div#calendar div.gridAndOptions {
+
+	display: none; /* for ie 5 mac only */
+	
+	/* Mac IE can't see what's inside this hack \*/
+	display: block;
+	/* end hack */
+	
+	float: right;
+	width: 16em;
+	margin-left: 7px;
+	margin-bottom: 12px;
+	background-color:#ECF5FA;
+	margin-top:2px;
+	border: 1px solid #748FC2;
+	clear:left;
+}
+div#calendar div.gridAndOptions div.calendarGrid {
+	width:13em;
+	margin:1em;
+}
+div#calendar div.foot div.gridAndOptions {
+	display: block;
+	float: none;
+	width: 100%;
+	margin-left: 0px;
+	margin-top: 12px;
+	/* Mac IE can't see what's inside this hack \*/
+	display: none;
+	/* end hack */
+}
+div#calendar div.foot div.iCalExport img
+{
+	vertical-align: bottom;
+}
+div#calendar div.options ul {
+	margin: 0px;
+	margin-top: 7px;
+	margin-left: 0px;
+	padding: 0px;
+	margin-left: 24px;
+	list-style-image: url(../ui_images/blue_disc.gif);
+	list-style-position: outside;
+}
+div#calendar div.options ul li {
+	margin: 0px;
+	padding-top: 3px;
+	padding-bottom: 2px;
+	margin-left: 0px;
+	font-size: 95%;
+}
+	
+div#calendar div.views h4 {
+	position:absolute;
+	left:-9999px;
+}
+div#calendar div.views ul {
+	margin:0;
+	padding:0;
+	list-style:none;
+}
+div#calendar div.views ul li {
+	margin:0;
+	padding:0;
+	float:left;
+}
+div#calendar div.views ul li a, div#calendar div.views ul li strong, div#calendar div.views h4 {
+	padding:.4em .75em;
+	display:block;
+}
+div#calendar div.views ul li a, div#calendar div.views ul li strong {
+	margin-right:3px;
+}
+div#calendar div.views ul li a {
+	background-color:#C8D5EF;
+	color:#00c;
+	text-decoration:none;
+}
+div#calendar div.views ul li a:hover {
+	background-color:#B4C7E6;
+	text-decoration:underline;
+}
+div#calendar div.views ul li strong {
+	background:#748FC2 url(../ui_images/calendar_selected_view_bg.gif) repeat-x;
+	color:#fff;
+}
+
+
+	/* Self-Clearing 
+	---------------- */
+	
+	div#calendar div.views:after
+	{
+		clear: both;
+		content: ".";
+		display: block;
+		height: 0;
+		visibility: hidden;
+	}
+	
+	div#calendar div.views { display: inline-block; }
+	div#calendar div.views { display: block; }
+
+
+div#calendar div.options h4, div#calendar div.dateJump h4, div#calendar div.gridAndOptions div.search h4 {
+	margin: 0px;
+	padding: 0px;
+	font-size: 110%;
+	font-style: italic;
+	clear:both;
+}
+div#calendar div.options div, div#calendar div.dateJump, div#calendar div.gridAndOptions div.search {
+	padding-top: 3px;
+	margin-bottom: 12px;
+	margin: 7px;
+	margin-top: 15px;
+	clear:both;
+}
+div#calendar div.gridAndOptions input.search {
+	width:8em;
+}
+div#calendar div.options div {
+	padding-top: 10px;
+	border-top-width: 1px;
+	border-top-style: dashed;
+	border-top-color: #748FC2;
+}
+div#calendar div.calendarGrid td a {
+	text-decoration:none;
+}
+div#calendar div.calendarGrid td a:hover {
+	text-decoration:underline;
+}
+div#calendar div.eventDetails div.images {
+	background-color:#E3EDFF;
+	border: 1px solid #748FC2;
+}
+div#calendar div.eventDetails div.dates ul {
+	max-height:15em;
+	overflow:auto;
+}
+div#calendar div.calendarGrid td.today {
+	border:1px solid #000;
+	background-color:transparent;
+}
+div#calendar div.calendarGrid td.hasEvent {
+	font-weight:bold;
+}
+div#calendar div.calendarGrid td.currentlyViewing {
+	background-color:#C8D5EF;
+	color:#000;
+}
+div#calendar div.calendarGrid td.currentlyViewing a {
+	color:#00C;
+}
+
+div#calendar .focus {
+	background-color:#E3EDFF;
+}
+div#calendar .focus:after {
+    content:".";
+    display:block;
+    visibility:hidden;
+    clear:left;
+    height:0px;
+}
+* html div#calendar .focus {
+	height:1%;
+}
+div#calendar div.focus form {
+	margin:0;
+	display:inline;
+}
+div#calendar div.focus li h4 {
+	font-size:110%;
+}
+div#calendar div.focus li.search h4 {
+	display:inline;
+	margin:0;
+}
+div#calendar div.focus form input#calendar_search_above {
+	font-weight:bold;
+	font-size:120%;
+	background-color:#E3EDFF;
+}
+div#calendar .focus h3, div#calendar .focus h4 {
+	margin:0;
+}
+div#calendar .focus {
+	border-bottom:1px solid #8da6d3;
+}
+div#calendar .focus h3 {
+	width:5.5em;
+	float:left;
+	margin:.6em;
+	font-weight:normal;
+	font-style:italic;
+	font-size:95%;
+}
+div#calendar .focus ul {
+	margin:0 0 0 6.25em;
+	padding:0;
+	list-style:none;
+	border-left:1px solid #8da6d3;
+}
+div#calendar .focus ul li {
+	margin:0;
+	padding:.5em;
+}
+div#calendar .focus ul li {
+	border-top:1px solid #8da6d3;
+}
+div#calendar .focus ul li.first {
+	border-top:none;
+}
+div#calendar .focus .otherActions, div#calendar .focus .clear, div#calendar .search .otherActions  {
+	font-size:88%;
+}
+div.eventDetails div.eventContent {
+	border-top-width: 1px;
+	border-top-style: solid;
+	border-top-color: #748FC2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #748FC2;
+}
+div#miniCal {
+	background-color: #F0F5FF;
+	padding: 0px;
+	border-color: #C8D5EF;
+	border-style: solid;
+	border-width: 1px;
+}
+div#miniCal div#events h4 {
+	font-size: 90%;
+	margin: 8px 0px 0px 0px;
+	padding: 3px 8px 0px 8px;
+	border-top: solid #C8D5EF 1px;
+}
+div#miniCal div#events ul {
+	font-size: 90%;
+	padding: 0px;
+	margin: 4px 8px 4px 8px;
+	list-style-type: none;
+}
+div#miniCal div#events ul li {
+	margin: 0px 0px 5px;
+}
+div#miniCal h3 {
+	margin: 8px;
+}
+div#miniCal div.foot p.more {
+	margin: 8px;
+}
+
+/* Assets */
+div.assets {
+	background-color: #E9EEF8;
+	padding: 10px;
+	margin: 20px 20px 10px 10px;
+	border: 1px solid #748FC2;
+}
+div.assets h3 {
+	margin: 0px;
+	padding: 0px 0px 5px;
+	font-size: 120%;
+	border-bottom-width: 1px;
+	border-bottom-style: dashed;
+	border-bottom-color: #748FC2;
+}
+div.assets ul {
+	margin: 0px;
+	padding: 0px;
+	list-style-type: none;
+}
+div.assets ul li {
+	margin-top: 10px;
+}
+div.assets ul li div.name, div.assets ul li div.description  {
+	font-size: 85%;
+}
+div.assets ul li div.name {
+	color: #666666;
+	font-style: italic;
+}
+div.assets ul li div.author {
+	font-weight:bold;
+}
+div.assets ul li div.name strong {
+	font-size: 120%;
+	font-style: normal;
+}
+div.assets ul li div.author, div.assets ul li div.date {
+	color:#333;
+	font-size:92%;
+}
+div.assets ul li div.description {
+	margin-left: 1.5em;
+}
+div.contentPost div.assets {
+	background-color: transparent;
+	padding: 0px;
+	margin: 0px;
+	border: none;
+}
+div.contentPost div.assets h3 {
+	display: none;
+}
+/* Feeds */
+div.feedInfo {
+	margin-top: 2em;
+	margin-bottom: .5em;
+	text-align: right;
+}
+div.feedInfo a {
+	background-color: #FF9900;
+	background-image:url(../ui_images/feed_icon_16px_dual.gif);
+	background-repeat:no-repeat;
+	background-position:-239px center;
+	padding: 2px 4px 2px 19px;
+	border: 1px solid #DC5B06;
+	font-size: 12px;
+	text-transform: uppercase;
+	color: #FFFFFF;
+	text-decoration: none;
+	font-weight: bold;
+}
+div.feedInfo a:hover {
+	background-color: #FF6600;
+	border: 1px solid #CC3300;
+	background-position:1px center;
+}
+div.feedHelp
+{
+	text-align:right;
+	margin-bottom:2em;
+	font-size:90%;
+}
+/* Club Sports */
+div#clubSport div.images {
+	background-color: #E3EDFF;
+	padding: 5px;
+	float: right;
+	border: 1px solid #C8D5EF;
+	margin-left: 20px;
+	margin-bottom: 5px;
+	text-align: center;
+}
+div#clubSport div.images div.tnImage {
+	margin: 10px 10px 2px;
+}
+div#clubSport div.images div.tnDesc {
+	margin: 2px 10px 10px;
+}
+/* Jobs */
+td.navigationTD div#allJobs {
+	padding: 10px;
+	border: 1px solid #C8D5EF;
+	border-top: none;
+}
+
+/* Voice Articles */
+div#voiceArticles h4 {
+	margin-bottom: 0px;
+}
+div#voiceArticles ul {
+	padding: 0px;
+	margin: 0px 0px 0px 1.5em;
+}
+div#voiceArticles ul li {
+	margin-top: 10px;
+}
+/* Databases */
+div#databases h3 {
+	margin: 0.6em 0px 0px 0px;
+	padding: 0px;
+	/* Mac IE can't see what's inside this hack \*/
+	float: left;
+	/* end hack */
+	color: #73A900
+}
+div#databases ul.moduleNav {
+	margin: 0px 0px 15px 0px;
+	padding-left: 3.5em;
+	border-top: 1px dotted #92AAD6;
+}
+div#databases ul.moduleNav ul, div#databasesByCategory ul ul {
+	list-style: none;
+	margin: 0px;
+	padding: 0px;
+}
+div#databases ul.moduleNav ul li, div#databasesByCategory ul ul li {
+	margin: 3px 0px;
+	padding: 0px;
+}
+div#databases div#filtering, div#faq div#filtering {
+	margin-bottom: 10px;
+	background-color: #E3EDFF;
+	border: 1px dotted #92AAD6;
+}
+div#databases div#filtering form, div#faq div#filtering form {
+	margin: 10px;
+	padding: 0px;
+}
+div#databases div#filtering div, div#faq div#filtering div {
+	margin: 5px;
+}
+div#databases div#dbJump {
+	margin-bottom: 5px;
+	font-style: italic;
+}
+div#databases div#dbJump a {
+	font-weight: bold;
+	font-style: normal;
+}
+div#databases option.type, div#faq option.type {
+	font-weight: bold;
+}
+div#databases div.top, div#databasesByCategory div.top {
+	float:right;
+}
+div#databases div.top a, div#databasesByCategory div.top a {
+	display:block;
+	padding:5px 0px 10px 20px;
+}
+div#databases div.top a:hover, div#databasesByCategory div.top a:hover {
+	color:#CC0000;
+}
+div#databasesByCategory ul.moduleNav {
+	margin: 0px;
+	padding: 0px;
+	list-style: none;
+	border-top: 1px solid #92AAD6;
+}
+div#databasesByCategory ul.moduleNav li div, div#databasesByCategory ul#db_category_links li {
+	font-size: 85%;
+}
+div#databasesByCategory h4 {
+	border-top: 1px dotted #92AAD6;
+	padding-top:.25em;
+	clear:both;
+}
+div#databasesByCategory ul#db_category_links li {
+	display:inline;
+	white-space:nowrap;
+	padding:0px 6px 0px 10px;
+	background-image:url(../ui_images/blue_disc.gif);
+	background-repeat:no-repeat;
+	background-position:left center;
+}
+div#databasesByCategory ul#db_category_links {
+	margin:0px;
+	padding:0px;
+}
+div#databasesRecent ul {
+	list-style: none;
+	padding: 0px;
+	margin: 0px;
+}
+div#databasesRecent ul li {
+	margin: 7px 0px 7px 0px;
+}
+div#databasesRecent h4 {
+	margin: 7px 0px 0px 0px;
+}
+div#databasesRecent ul li div {
+	font-size: 85%;
+}
+/* FAQs */
+div#faq div.moduleNav h3 {
+	padding-top: .75em;
+	border-top: 1px solid #92AAD6;
+}
+div#faq h3.faqName {
+	padding: 7px 0px 16px 40px;
+	margin: 0px;
+	background-image:url(../ui_images/q.gif);
+	background-repeat:no-repeat;
+	background-position: 0px 7px;
+}
+div#faq ul.meta {
+	color: #999999;
+	font-style:italic;
+}
+div#faq div.answer {
+	padding: 0px 0px 0px 40px;
+	background-image:url(../ui_images/a.gif);
+	background-repeat:no-repeat;
+}
+div#faq div.moduleNav ul div {
+	color: #999999;
+	font-size:x-small;
+}
+/* Projects */
+div#projects p#projectOrdering {
+	border:2px solid #666666;
+	padding:.5em;
+}
+div#projects div#projectDetails {
+	background-color:#F0F5FF;
+	padding:0em 1.5em 1.5em 1.5em;
+	border:1px solid #999999;
+	margin-bottom:5em;
+}
+div#projects div#projectDetails h4 {
+	border-bottom:1px solid #5877B2;
+	padding-bottom:.25em;
+	margin:1.75em 0px .5em 0px;
+}
+div#projects ul {
+	margin:0px;
+	padding:0px;
+	list-style-type:none;
+}
+div#projects ul ul {
+	margin-left:2em;
+	list-style-type:disc;
+}
+div#projects ul ul ul {
+	list-style-type:circle;
+}
+div#projects ul ul ul ul {
+	list-style-type:square;
+}
+div#projects ul ul ul ul ul {
+	list-style-type:disc;
+}
+div#projects ul ul li {
+	margin:7px 0px 0px 0px;
+}
+div#projects ul ul li strong {
+	color:#666666;
+	font-size:88%;
+	text-transform:uppercase;
+	font-style:italic;
+}
+/* Child Sites */
+div#childSites ul {
+	list-style-type:none;
+	margin:0px;
+	padding:0px;
+}
+div#childSites ul li {
+	margin-top:1em;
+}
+div#childSites ul ul {
+	margin:.3em 0px 0px 3px;
+	padding:0px;
+	list-style-type:none;
+}
+div#childSites ul h4 {
+	margin:0px;
+	padding:0px;
+}
+div#childSites ul ul li {
+	display:inline;
+	padding:0px .5em 0px .5em;
+	border-left:1px dotted #000000;
+}
+
+
+
+/* Application Status */
+div#applicationStatus table {
+	border:1px solid #4C6BA5;
+	margin: 1em 0em 1em 0em;
+}
+div#applicationStatus table td, div#applicationStatus table th {
+	padding:12px;
+	text-align:left;
+}
+div#applicationStatus table td {
+	background-color:#F0F5FF;
+	background-image:url(../ui_images/1px_white.gif);
+	background-repeat:repeat-x;
+}
+div#applicationStatus table tr.even td {
+	background-color:#D9E5FB;
+}
+div#applicationStatus table th {
+	background-color:#4C6BA5;
+	color:#FFFFFF;
+	padding:7px 12px 8px 12px;
+}
+div#applicationStatus table td.received {
+	padding:0em;
+}
+div#applicationStatus table td div.received {
+	background-image:url(../ui_images/checkmark_green.gif);
+	background-repeat:no-repeat;
+	background-position:center left;
+	margin-left:12px;
+	padding:12px 12px 12px 22px;
+}
+
+/* Login Page */
+div#login {
+	border:1px solid #748FC2;
+	background-color:#F0F5FF;
+	width:25em;
+	padding:1.5em;
+}
+div#login form {
+	margin:0px;
+	padding:0px;
+}
+div#login h4 {
+	margin-top:0px;
+}
+
+/* Editable Content */
+.editable div.iframe.editorData {
+	width:100%;
+}
+.editable table#discoTable {
+	width:100%;
+}
+
+.editable .words{
+	width: 20%;
+}
+
+.editable div.editRegion {
+	border:1px dotted #aaa;
+	padding:0 .65em;
+}
+.editable div.editRegion a.editThis {
+	padding:.3em;
+	border:1px dotted #748FC2;
+	background-color:#F0F5FF;
+	font-size:90%;
+	text-decoration:none;
+}
+.editable .policy #discoTable textarea {
+	width: 100%;
+}
+div#content .editing #discoTable textarea {
+    width: 100%;
+}
+
+/* this makes publications play nicely with filtering. */
+.publication .editable #disco_form{
+	float: left;
+}
+
+/* Images */
+div#images div.moduleNav ul {
+	padding:0px;
+	margin:0px;
+	list-style:none;
+}
+
+
+/* Audio/Video */
+div#av div.moduleNav ul {
+	list-style-type:none;
+	margin:0px;
+	padding:0px;
+}
+div#av div.moduleNav ul li.item {
+	clear:both;
+	margin:1em 0px 1em 0px;
+	border-top:1px dotted #92AAD6;
+	padding-top:1em;
+}
+div#av div.moduleNav ul li img, div#av div.item img {
+	float:right;
+	margin:0 0 .5em .75em;
+}
+div#av div.item div.avFiles ul li.current {
+	background:#dedede url(../ui_images/grey_to_white_fade.gif) repeat-x bottom left;
+	padding:1em 1em 1em 1.5em;
+}
+div#av div.item div.avFiles ul {
+	margin:0 0 .5em 0;
+	padding:0;
+	list-style-type:none;
+}
+div#av div.item div.avFiles ul li {
+	margin:0;
+	padding:.25em 1em .25em 1.5em;
+}
+div#av div.moduleNav ul li.item em {
+	color:#454545;
+}
+div#av div.avFiles ul {
+	border-top:1px solid #ddd;
+}
+div#av div.item div.avFiles {
+	margin-top:1em;
+}
+div#av div.item div.techNote {
+	font-size:82%;
+	margin:.5em 0;
+}
+div#av div.item p.direct a {
+	padding:.3em .5em;
+	background-color:#CCC;
+	border:1px dotted #ababab;
+}
+div#av div.item p.direct a.download {
+	background:#CCC url(../ui_images/arrow_down_grey.gif) no-repeat 3px center;
+	padding-left:20px;
+}
+div#av div.item p.direct a.stream {
+	background:#CCC url(../ui_images/arrow_right_grey.gif) no-repeat 3px center;
+	padding-left:20px;
+}
+div#av .podcast a {
+	background:transparent url(../ui_images/feed_icon_16px_dual.gif) no-repeat 3px center;
+	padding:3px;
+	padding-left:25px;
+	white-space:nowrap;
+}
+div#av .podcast {
+	margin-top:2em;
+}
+div#av .podcast a:hover {
+	background-color:#FFFFCC;
+}
+
+/* Menus */
+div#menus h3 {
+	margin:0px;
+	padding:.3em;
+	background-color:#92AAD6;
+	color:#FFFFFF;
+}
+div#menus div#mealTypes {
+	background-color:#D6E3F6;
+	padding:5px;
+	white-space:nowrap;
+	margin-bottom:1em;
+}
+div#menus div#mealTypes h4 {
+	display:inline;
+	font-size:small;
+	font-weight:normal;
+}
+div#menus div#mealTypes ul {
+	list-style-type:none;
+	display:inline;
+	margin:0px;
+	padding:0px;
+}
+div#menus div#mealTypes ul li {
+	margin:0px;
+	padding:5px;
+	display:inline;
+}
+div#menus div#mealTypes ul li strong {
+	background-color:#ffffff;
+	padding:5px;
+}
+div#menus div.dining_locations {
+	margin-right:13em;
+}
+div#menus div.dining_locations:after {
+    content:".";
+    display:block;
+    visibility:hidden;
+    clear:both;
+    height:0px;
+}
+* html div#menus div.dining_locations {
+	height:1%;
+}
+div#menus div.dining_location {
+	float:left;
+	width:42%;
+	margin:1em 1em 0px 0px;
+	padding:0px 0px 0px 1em;
+	border-left:1px dotted #92AAD6;
+}
+div#menus div.dining_location h4 {
+	margin-top:0px;
+}
+div#menus div.dining_location ul {
+	list-style:none;
+	margin-left:0px;
+	padding-left:0px;
+}
+div#menus div.dining_location ul ul {
+	list-style-type:circle;
+	margin-left:2em;
+}
+/* basic Calendar Grid stuff */
+div.calendarGrid {
+	text-align:center;
+	float:right;
+	background-color:#ffffff;
+	border:1px solid #92AAD6;
+	padding:.5em;
+	width:12em; /*This is removed below */
+}
+/* commented backslash hack hides this block from Mac IE 5 \*/
+div.calendarGrid {
+	width:auto;
+}
+/* end hack */
+div.calendarGrid h4 {
+	display:inline;
+	margin:0px;
+	margin-right:.3em;
+	margin-left:.3em;
+	font-size:100%;
+}
+div.calendarGrid a.previous, div.calendarGrid a.next {
+	text-decoration:none;
+	font-size:125%;
+}
+div.calendarGrid td {
+	margin:0px;
+	padding:.1em;
+	text-align:center;
+}
+div.calendarGrid th {
+	font-size:90%;
+	color:#666666;
+}
+div.calendarGrid td a {
+	padding:.1em;
+}
+div.calendarGrid td.today {
+	background-color:#D6E3F6;
+}
+div.calendarGrid td.currentlyViewing {
+	background-color:#496389;
+	color:#ffffff;
+}
+div.calendarGrid td.currentlyViewing a {
+	color:#ffffff;
+}
+
+/* Research Guides */
+div#researchGuides div.subjects {
+	float:right;
+	border:1px solid #92AAD6;
+	padding:1em;
+	width:12em;
+}
+div#researchGuides div.subjects h3 {
+	font-style:italic;
+	margin:0px;
+	font-size:100%;
+}
+div#researchGuides div.subjects ul {
+	list-style:none;
+	padding:0px;
+	margin:0px;
+}
+div#researchGuides div.subjects ul li {
+	padding:0px;
+	margin:.4em;
+}
+
+/* Magpie Feed */
+div#rss_content h3 {
+	color:#FFFFCC;
+	padding:.25em .5em;
+	font-weight:normal;
+	clear:both;
+	background:#3F659E url(../ui_images/subtle_blue_fade.png) repeat-x;
+	border-bottom:1px solid #365788;
+	font-size:110%;
+}
+div#rss_content ul h3 {
+	color:#000;
+	background:none;
+	padding:0;
+	font-weight:bold;
+	clear:none;
+	border:none;
+}
+div#rss_content ul {
+	margin-left:0;
+	padding-left:0;
+	list-style-type:none;
+}
+div#rss_content ul li {
+	clear:both;
+	border-bottom:1px dotted #8AA3D0;
+	padding-bottom:.75em;
+	font-size:90%;
+}
+div#rss_content ul h4, div#rss_content ul p {
+	margin:.33em 0;
+}
+div#rss_content ul li ul {
+	list-style-type:disc;
+	margin-left:3em;
+}
+div#rss_content ul li ul li {
+	margin-top:0;
+	margin-bottom:0;
+	border:none;
+	padding-bottom:0;
+	clear:none;
+	font-size:100%;
+}
+div#rss_content img {
+	max-width:100%;
+	max-height:200px;
+}
+div#rss_content ul li div.desc {
+	margin-left:1.5em;
+}
+div#rss_content div.pagination {
+	font-size:120%;
+}
+div#rss_content div.pagination a {
+	padding:.25em .33em;
+	border:1px solid #8AA3D0;
+}
+div#rss_content div.pagination a:hover {
+	background-color:#8AA3D0;
+}
+div#rss_content div.pagination a.prev, div#rss_content div.pagination a.next {
+	border:none;
+}
+div#rss_content div.pagination strong a, div#rss_content div.pagination strong a:hover {
+	background-color:#8AA3D0;
+	text-decoration:none;
+	color:#000;
+	cursor:default;
+}
+div#related div#rss_content ul li div.desc {
+	margin:0;
+}
+div#related div#rss_content ul li {
+	overflow:hidden;
+}
+
+div#feedParticipants, div#rss_nav {
+	border:1px solid #ccc;
+	padding:1em;
+}
+div#feedParticipants h4, div#rss_nav h4 {
+	margin:0;
+}
+div#feedParticipants ul, div#rss_nav ul {
+	margin:.75em 0;
+	padding-left:1.5em;
+	margin-left:0;
+	color:#999;
+}
+div#feedParticipants ul li, div#rss_nav ul li {
+	margin-top:.4em;
+}
+
+/* Announcements */
+div#announcements {
+	background:#F6E887 url(../ui_images/announcements_shadow.gif) repeat-x left bottom;
+	border-top:1px solid #000;
+	border-bottom:1px solid #666;
+}
+div#announcements div.announcement {
+	padding:.5em 1em;
+	background:transparent url(../ui_images/announcements_highlight.gif) repeat-x left top;
+}
+/* Editor Demo Module */
+div#editorDemo div.echoBack {
+	margin:1em;
+	padding:.5em 1em;
+	background-color:#ddd;
+	border:1px solid #aaa;
+}
+
+/* Social accounts module - default view */
+div.socialProfileLinks img {
+	width: 2em;
+	height: auto;
+	margin: 0 .2em;
+}
+
+/* End of old modules_mod.css */
+/* Beginning of old modules.css */
+
+/* General hiding */
+.hide {
+	display:block;
+	position:absolute;
+	left:-9999px;
+	width:1000px;
+}
+
+/* Navigation & Policy Modules are in modules_mod.css */
+
+a.navLink {
+	color: #000099;
+}
+
+/* Images Module */
+
+.imageChunk {
+	margin-bottom: 17px;
+	text-align: center;
+}
+
+/* Faculty Module */
+
+.facStaffHead {
+	margin-top: 35px;
+	margin-bottom: 5px;
+}
+.facStaff {
+	margin-top: 15px;
+	margin-bottom: 15px;
+	padding-top: 15px;
+	clear: both;
+}
+.facStaffName {
+	font-weight: bold;
+}
+.facStaffLeave {
+	font-style: italic;
+}
+.facStaffInfo {
+	margin-left: 20px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+.facStaffContent {
+	margin-top: 10px;
+}
+.facStaffImage {
+	display: table;
+	margin-bottom: 15px;
+}
+div.facStaffName span.degrees {
+	font-weight: normal;
+}
+
+.facStaffNavLinks {
+	padding-top: 1.5em;
+	font-size: 80%;
+	color: #BBBBBB;
+}
+
+/* Self-clearing */
+
+.facStaff:after {
+	content:".";
+	display:block;
+	visibility:hidden;
+	clear:both;
+	height:0;
+}
+
+.facStaff {
+	display: inline-block;
+}
+
+.facStaff {
+	display: block;
+}
+
+/* Search Module */
+
+.seachForm {
+	margin: 0px;
+	padding: 0px;
+}
+.searchSubmitLink {
+	font-weight: bold;
+}
+
+/* Edit Module */
+
+.editLink {
+}
+
+.editDiv {	
+	margin:1em 0;
+	font-weight: bold;	
+}
+
+.editDiv.inlineEnabled {
+	font-weight: normal;
+}
+
+.inlineEditDiv.inlineEnabled  {
+	font-weight: bold;	
+}
+
+/* Blurb Module */
+
+.blurb {
+	margin-top: 15px;
+}
+.blurbs .editing td {
+	padding:0;
+}
+.blurbs .editable {
+	border:1px dotted #aaa;
+}
+.blurbs .editable .edit {
+	margin-top:1em;
+	text-align:right;
+}
+.blurbs .editable .edit a {
+	padding:0.3em 0.5em;
+	border:1px dotted #aaa;
+	background-color:#eee;
+	text-decoration:none;
+}
+.blurbs .editable .edit a:hover {
+	background-color:#ddd;
+}
+.blurbs .editing {
+	border:1px solid #666;
+	padding:0.5em 0;
+}
+.blurbs .editing td.words {
+	width:0;
+	overflow:hidden;
+}
+
+/* News Module */
+
+.newsItemName {
+	font-weight: bold;	
+}
+.NewsImages {
+	margin: 10px;
+}
+div.newsItemDesc li {
+	margin: 0px;
+	padding: 0px;
+}
+div.newsItemDesc ul, div.newsItemDesc ol {
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+div#news div.author {
+	font-style: italic;
+	color: #666666;
+}
+
+/* AV Module */
+
+.avName {
+	font-weight: bold;	
+}
+.avFiles {
+	margin: 0px;
+	padding: 0px;
+	
+}.avFile {
+	margin: 0px;
+	padding: 0px;
+	list-style-type: none;
+}
+
+/* Pullquotes (basic) */
+
+p.pullQuoteRight { 
+	font-weight: bold;
+	font-style: italic;
+	background-color: #E9EEF8;
+}
+
+/* Minutes Module */
+
+ul.minutesInfo li.keywords {
+	display: none;
+}
+/* Events Module */
+div#calendar div.eventDetails div.images {
+	float: right;
+	margin: 0px 10px 10px 10px;
+	padding: 10px;
+	text-align:center;
+}
+div#calendar div.eventDetails div.images div.tnDesc {
+	margin: 3px 0px 8px 0px;
+}
+div#projects li.overdue {
+	color:#990000;
+}
+
+/* Publications module */
+form #tarbabypreRow, form #tarbabypreItem, form #tarbabyRow, form #tarbabyItem, form #noturlRow, form #noturlItem, form #antlionRow, form #antlionItem  {
+	display:none;
+}
+
+/* End of old modules.css */

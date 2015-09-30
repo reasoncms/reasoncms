@@ -1,0 +1,3 @@
+RewriteEngine On
+RewriteCond %{DOCUMENT_ROOT}/reason/local/$0 -f
+RewriteRule ^(.*)$ ./local/$0

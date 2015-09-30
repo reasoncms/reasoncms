@@ -1,0 +1,278 @@
+@import url(3columns.css);
+@import url(modules.css);
+
+/*
+* @author Bedrich Rios
+* @version 1.0
+*/
+
+body 
+{ 
+	background: #dbd3bf;
+	margin: 0px;	
+}
+
+div#breadcrumbs
+{
+	background: #464646;
+	color: #999999;
+	padding: 6px 20px;
+	font-size: 60%;
+	font-family: Verdana;
+}
+
+div#breadcrumbs a { color: #D5D5D5; }
+div#wrapper.fullGraphicsView div#bannerAndMeat { margin-top: -20px; }
+
+div#wrapper.fullGraphicsView div#meat 
+{
+	margin: 20px 30px;
+	background-color: #f7f1dd;
+	border: 1px solid #e3decf;
+}
+
+/* ================= banner rules ================= */
+
+div#wrapper.fullGraphicsView div#banner
+{
+	height: 100px;
+	background: url("images/banner.jpg") repeat-x top left #464646;
+}
+
+div#wrapper.fullGraphicsView div#banner h1 { float: left; }
+
+div#wrapper.fullGraphicsView div#banner h1 a
+{
+	color: white;
+	text-decoration: none;
+	font-family: "Bookman Old Style", Bookman, "ITC Bookman", Bookface, "Bookman Antique", Bookprint, "Revival 710", "Century Schoolbook", Georgia, Times, "Times New Roman", serif;
+	font-size: 150%;
+	font-weight: normal;
+	margin-left: 30px;
+}
+
+div#wrapper.fullGraphicsView div#bannerXtra
+{
+	float: right;
+	/* width: 200px; */
+	height: 60px;
+	background:transparent url("images/search_bg_1.gif") top left no-repeat;
+	margin: 40px 30px 0px 0px;
+}
+
+div#wrapper.fullGraphicsView div#bannerXtra form {
+	background:transparent url("images/search_bg_2.gif") top right no-repeat;
+	padding: 20px 13px 0px 30px;
+	margin:0;
+}
+div#wrapper.fullGraphicsView div#bannerXtra form input { border: 1px solid #520404; }
+
+div#wrapper.fullGraphicsView div#bannerXtra form a
+{
+	font-family: Verdana;
+	font-size: 90%;
+	font-weight: normal;
+	color: white;
+	background-color: #c00e0e;
+	border: 1px solid #520404;
+}
+
+/* ================= content rules ================= */
+
+div#wrapper.fullGraphicsView div#content a { color: #6e0404; }
+div#wrapper.fullGraphicsView div#content
+{
+	font-family: Verdana;
+	font-size: 80%;
+	line-height: 1.5em;
+	color: #333333;
+}
+
+div#wrapper.fullGraphicsView div#content div.contentHead h2
+{
+	
+	font-family: "Bookman Old Style", Bookman, "ITC Bookman", Bookface, "Bookman Antique", Bookprint, "Revival 710", "Century Schoolbook", Georgia, Times, "Times New Roman", serif;
+	font-size: 170%;
+	font-weight: normal;
+	margin-bottom: 0px;
+}
+
+div#wrapper.fullGraphicsView div#content div.contentMain div#pageContent hr { border:none; border-top:1px solid #bbb; }
+div#wrapper.fullGraphicsView div#content div.contentMain, div#wrapper.fullGraphicsView div#content div.contentHead, div#wrapper.fullGraphicsView div#content div.contentPost { padding: 0px 20px; }
+
+/* ================= related rules ================= */
+
+div#wrapper.fullGraphicsView div#sidebar { margin: 20px 0px; }
+div#related div#sidebar div.imageChunk div.tnImage a img 
+{ 
+	margin-top: 10px; 
+	border: 1px solid #e3decf;
+}
+
+div#related div#sidebar div.imageChunk div.tnImage
+{
+	background: white;
+	border: 1px solid #e3decf;
+	border-bottom: none;
+	margin: 0px 20px;
+}
+
+div#related div#sidebar div.imageChunk div.tnDesc a
+{
+	text-decoration: none;
+	font-family: "Bookman Old Style", Bookman, "ITC Bookman", Bookface, "Bookman Antique", Bookprint, "Revival 710", "Century Schoolbook", Georgia, Times, "Times New Roman", serif;
+	font-size: 70%;
+	color: black;
+	display: block;
+	padding: 5px;
+	margin: 0px 20px;
+	background-color: white;
+	border: 1px solid #e3decf;
+	border-top: none;
+}
+
+/* ================= navigation rules ================= */
+
+div#wrapper.fullGraphicsView div#minisiteNavigation
+{
+	font-family: Verdana;
+	font-weight: normal;
+	font-size: 90%;
+	padding: 15px 0px;
+}
+
+div#wrapper.fullGraphicsView div#minisiteNavigation div.list ul { margin: 0px 5px 5px -20px; }
+
+/* Rules for the STRONG opened link */
+div#wrapper.fullGraphicsView div#minisiteNavigation div.list ul.navListTop li.open strong.home, div#wrapper.fullGraphicsView div#minisiteNavigation div.list ul.navListTop li.open ul.navList li.open strong 
+{
+	display: block;
+	text-decoration: none;
+	color: #6e0404;
+	padding: 6px 12px;
+	background-color: white;
+	border: 1px solid #e2dbc9;
+	margin: 0px 5px 0px 7px;
+}
+
+/* Rules for the closed links */
+div#wrapper.fullGraphicsView div#minisiteNavigation div.list ul.navListTop li.open ul.navList li.navListItem a, div#wrapper.fullGraphicsView div#minisiteNavigation div.list ul.navListTop li.navListItem a.home
+{
+	display: block;
+	text-decoration: none;
+	color: white;
+	padding: 6px 12px;
+	background-color: #6e0404;
+	border: 1px solid #520404;
+}
+
+/* rule for the home link when is not the current one */
+div#wrapper.fullGraphicsView div#minisiteNavigation div.list ul.navListTop li.navListItem a.home { margin: 0px 5px 0px 7px; }
+
+/* rule for the current STRONG link */
+div#wrapper.fullGraphicsView div#minisiteNavigation ul li ul li.current strong { margin: 0px !important; }
+div#wrapper.fullGraphicsView div#minisiteNavigation ul li ul li.open a { margin: 0px; }
+
+/* rule for children links */
+div#wrapper.fullGraphicsView div#minisiteNavigation ul li ul li ul li a
+{ 
+	margin: 0px -5px 0px 5px !important; 
+	background: #c00e0e !important;
+	color: white !important;
+	border: 1px solid #e2dbc8 !important;
+}
+
+div#wrapper.fullGraphicsView div#minisiteNavigation ul li ul li.open a 
+{ 
+	background: #c00e0e !important; 
+	border: 1px solid #e2dbc8 !important;
+}
+
+div#wrapper.fullGraphicsView div#minisiteNavigation ul li ul li ul li.current {  margin: 5px -5px 5px 5px; }
+div#wrapper.fullGraphicsView div#minisiteNavigation ul li ul li ul li.current strong { background: white !important; }
+
+/* hover rules */
+div#wrapper.fullGraphicsView div#minisiteNavigation div.list a:hover 
+{
+	color: #660000 !important;
+	background-color: white !important;
+	border: 1px solid #e2dbc9 !important;
+	text-decoration: none;
+}
+
+/*** printer-friendly rules ***/
+
+div#wrapper.fullGraphicsView div#navigation p.textOnlyLink 
+{ 
+	border: none; 
+	text-align: right; 
+	margin: 0px 10px 0px 0px;
+}
+
+div#wrapper.fullGraphicsView div#navigation p.textOnlyLink a
+{
+	font-family: Verdana;
+	font-size: 70%;
+	color: #660000;
+}
+
+/*** blurb rules ***/
+
+div#wrapper.fullGraphicsView div#navigation div.blurbs
+{
+	font-family: Verdana;
+	font-size: 80%;
+	color: #666666;
+	border: 1px solid #e2dbc9;
+	background-color: white;
+	padding:  1px 1em;
+	margin: 0px 10px 10px 20px;
+}
+
+/* ================= footer rules ================= */
+
+div#footer
+{
+	font-family: Verdana;
+	font-size: 70%;
+	color: gray;
+	text-align: center;
+}
+
+div#footer a { color: #660000; }
+
+/* ================= IE6 fixes ================= */
+
+/*** fixes rendering problems in IE6 ***/
+div#meat.containsConRelNav * { position: relative; } 
+div#meat.containsConNav div#navigation * { position: relative; } 
+
+/*** layout ***/
+
+* html div#breadcrumbs 
+{ 
+	height: 3em; 
+	padding-left: 35px;
+}
+
+
+* html div#wrapper.fullGraphicsView div#navigation div.blurbs { margin-left: 10px;}
+* html div#meat.containsConNav div#navigation { padding-left: 32px; }
+* html div#meat.containsConRelNav div#navigation { padding-left: 10px; }
+
+/*** banner ***/
+
+* html div#wrapper.fullGraphicsView div#bannerXtra { margin: 20px 15px 0px 0px; }
+* html div#wrapper.fullGraphicsView div#banner { height: 80px;}
+
+/*** content ***/
+
+* html div#wrapper.fullGraphicsView div#content div.contentHead { margin-top: 20px; }
+* html div#wrapper.fullGraphicsView div#content div.contentMain { margin-bottom: 20px; }
+
+/*** navigation ***/
+
+* html div#wrapper.fullGraphicsView div#minisiteNavigation div.list ul.navListTop li.navListItem a.home { margin: 0px 5px 0px 9px; }
+* html div#wrapper.fullGraphicsView div#minisiteNavigation ul li ul li ul li a { margin: 0px -5px 0px -10px !important} 
+* html div#wrapper.fullGraphicsView div#minisiteNavigation ul li ul li ul li.current {  margin: 5px -5px 5px -9px; }
+* html div#wrapper.fullGraphicsView div#navigation p.textOnlyLink { margin: 0px 7px 0px 7px; }

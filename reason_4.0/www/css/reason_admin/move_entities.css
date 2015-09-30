@@ -1,0 +1,33 @@
+body {
+	padding: 10px;
+}
+
+table#entity_mover {
+	border-style:none;
+	border-collapse:collapse;
+}
+table#entity_mover th {
+	background-color:grey;
+	color:white;
+	padding:.5ex;
+	text-align: left;
+}
+table#entity_mover th a {
+	color:white;
+}
+
+table#entity_mover td {
+	padding:.5ex;
+}
+table#entity_mover tr {
+	border:1px solid grey;
+}
+
+table#entity_mover td.id, table#entity_mover td.created {
+	font-size:80%;	
+}
+
+.small {
+	font-size:75%;
+}
+

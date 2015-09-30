@@ -1,0 +1,70 @@
+body {
+	background-color:#A72C1C;
+	background-image:url(shadow_top_red.gif);
+}
+#breadcrumbs {
+	color:#DE9C95;
+}
+#breadcrumbs a {
+	color:#FDF6F6;
+}
+div.bannerAndMeat {
+	border:1px solid #540700;
+	background-color:#FDF6F6;
+}
+div.textOnly {
+	border:none;
+	background-color:transparent;
+}
+div.fullGraphics div.banner {
+	background-color:#850B00;
+	color:#ffffff;
+	border-bottom:1px solid #540700;
+	background-image:url(shade_2_red.gif);
+}
+div.fullGraphics div.banner h1 a {
+	color:#ffffff;
+}
+div.fullGraphics div#footer {
+	color:#ffffff;
+}
+div.fullGraphics div#footer a {
+	color:#ffffff;
+}
+div.fullGraphics div.contentMain div#blogDescription {
+	background-color:#DE9C95;
+}
+div.fullGraphics div.contentHead h2 {
+	background-color:#BE5D53;
+	background-image:url(shadow_red.gif);
+	border-bottom:1px solid #540700;
+}
+div.fullGraphics div.navigation {
+	background-color:#BE5D53;
+	border-right:1px dotted #FDF6F6;
+}
+div.fullGraphics div.navigation ul a {
+	color:#006;
+}
+div.fullGraphics div.navigation ul a:visited {
+	color:#300;
+}
+div.fullGraphics div.navigation ul a:hover {
+	background-color:#CD7B73;
+}
+div.fullGraphics div.navigation ul ul a, div.fullGraphics div.navigation ul ul strong {
+	border-top:1px dotted #FDF6F6;
+}
+div.fullGraphics div#blog div.moduleNav ul li {
+	border-top:1px dotted #850B00;
+}
+div.fullGraphics div#blog div.moduleNav ul li ul.links {
+	list-style-image:url(pointer_small_red.gif);
+}
+div.fullGraphics div#blog div.item div.comments ul li {
+	background-color:#DE9C95;
+	background-image:url(quote_left_red.gif);
+}
+div.fullGraphics div.sidebar, div.fullGraphics div.preSidebar {
+	border-color:#540700;
+}

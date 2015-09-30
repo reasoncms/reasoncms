@@ -1,0 +1,59 @@
+/* ================= blurbs ================= */
+
+div#wrapper.fullGraphicsView div#content div.contentPost div.blurbs { margin: 0px 30px 0px 20px; }
+
+/* ================= calendar ================= */
+
+div#wrapper.fullGraphicsView div#content div#calendar, div#wrapper.fullGraphicsView div#content div#imageGallery { margin: 20px 30px 20px 20px; }
+
+div#wrapper.fullGraphicsView div#content div#calendar div.gridAndOptions
+{
+	background: #464646;
+	border: 1px solid white;
+	color: #AAAAAA;
+}
+
+div#wrapper.fullGraphicsView div#content div#calendar div.gridAndOptions a
+{
+	color: white;
+}
+
+div#wrapper.fullGraphicsView div#content div#calendar div.gridAndOptions div.calendarGrid
+{
+	background: #white;
+	color: #666666;
+}
+
+div#wrapper.fullGraphicsView div#content div#calendar div.gridAndOptions div.calendarGrid a
+{
+	color: #6e0404;
+}
+
+/* ================= pictures ================= */
+
+div#wrapper.fullGraphicsView div#content div#imageGallery div.pagination 
+{ 
+	background-color: #f7f1dd;
+	border: 1px solid #dbd3bf; 
+}
+
+div#wrapper.fullGraphicsView div#imageGallery ul#imageGalleryItemList { padding: 0px; }
+div#wrapper.fullGraphicsView div#imageGallery ul#imageGalleryItemList li img, div#wrapper.fullGraphicsView div#imageGallery div.prevWrapper, div#wrapper.fullGraphicsView div#imageGallery div.nextWrapper, div#wrapper.fullGraphicsView div#imageGallery div.imageWrapper img { border: 1px solid #dbd3bf; }
+
+div#wrapper.fullGraphicsView div#imageGallery ul#imageGalleryItemList li  a 
+{ 
+	text-decoration: none;
+	color: black;
+}
+	
+div#wrapper.fullGraphicsView div#imageGallery ul#imageGalleryItemList li 
+{ 
+	background: white;
+	padding: 10px 9px 20px 9px;
+	border: 1px solid #e3decf;
+	font-family: "Bookman Old Style";
+	font-size: 120%;
+	word-break: none;
+}
+
+div#wrapper.fullGraphicsView div#content div#imageGallery div.moduleNav { position: relative; } /* IE rendering fix */

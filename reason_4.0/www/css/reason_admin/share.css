@@ -1,0 +1,23 @@
+@import url(share_mod.css);
+
+.listRow1 td {
+	background-color: #EAEFE0;
+	background-image: url(../../ui_images/1px_white.gif);
+	background-repeat: repeat-x;
+	/* background-color: #FFFBDA; */
+	/* background-color: #EAEFE0; */
+}
+.listRow2 td {
+	background-color: #D6DEC6;
+	background-image: url(../../ui_images/1px_white.gif);
+	background-repeat: repeat-x;
+	/* background-color: #FAEEBF; */
+	/* background-color: #D6DEC6; */
+}
+.listHead {
+	background-color: #C5CDB5;
+	background-image: url(../../ui_images/1px_white.gif);
+	background-repeat: repeat-x;
+	/* background-color: #FAEEBF; */
+	/* background-color: #D6DEC6; */
+}

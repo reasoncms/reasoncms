@@ -1,0 +1,183 @@
+// Gallery Styles
+// Cloak, v1
+
+// @todo: Fix search / gallery layout
+
+#meat {
+		
+	#imageGallery {
+		
+		.persistent {
+			@include grid-column($columns:12, $collapse:true);
+		}
+
+		.moduleNav {
+			@include grid-column($columns:12, $collapse:true);
+		}
+	}
+}
+
+#imageGallery {
+	@include clearfix;
+	
+	// SEARCH & FILTERS
+	.persistent {
+		display: none;
+	}
+	
+	// GALLERY ITEM LIST
+	.moduleNav {
+		@include grid-column($columns:12, $collapse:true);
+		width: 100%;
+
+		// PAGINATION
+		// Colors set here. Everything else, see base/_common.scss
+		.pagination {
+
+			.pages {
+
+				strong {
+					background: $gallery-primary-color;
+				}
+			}	
+		}
+
+		// IMAGE LIST 
+		#imageGalleryItemList {
+			margin: 0;
+			margin-left: -($column-gutter);
+
+			li {
+				margin: 0;
+				margin-bottom: $horizontal-gutter;
+				margin-left: $column-gutter;
+				//width: rem-calc(150); // Width for default thumbanil image size. If the module uses larger images, styles are output in the <head> to override this.
+			
+				img {
+					padding: rem-calc(4);
+					border: 1px solid $gainsboro;
+
+					&:hover {
+						border-color: $iron;
+					}
+				}
+
+				a {
+					color: $body-font-color;
+
+					&:hover {
+						color: darken($body-font-color, 20%);
+						text-decoration: underline;
+					}
+				}
+			}
+
+			#imageGalleryNextPageItem {
+				@include screenreader();
+			}
+		}
+	}
+
+	// FULL GALLERY ITEM
+
+	.item {
+		margin-bottom: $horizontal-gutter;
+
+		.imageTitle {
+		}
+
+		.sequenceNum {
+			color: $aluminum;
+			margin-bottom: $horizontal-gutter;
+		}
+
+		.prevWrapper,
+		.nextWrapper {
+			@include clearfix;
+			float: none;
+			clear: none;
+			display: inline-block;
+			text-align: center;
+			width: 90px;
+			height: 90px;
+			overflow: hidden;
+			margin: 0 rem-calc(6) $horizontal-gutter !important;
+			padding: rem-calc(4);
+			border: 1px solid $gainsboro;
+
+			&:hover {
+				border-color: $iron;
+			}
+		
+			.thumbnail {
+			}
+
+			a {
+				display: block;
+				width: 100%;
+				height: 100%;
+
+				&:after {
+					@extend .fa;
+					font-size: rem-calc(20);
+					line-height: 80px;
+					display: block;
+					color: rgba($white, 1);
+					text-shadow: 0 0 1px $charcoal;
+					text-align: center;
+					background: rgba(white,.125);
+				}
+
+				&:hover {
+					&:after {
+						background: transparent;
+					}
+				}
+
+				img {
+					display: none;
+				}
+			}
+		}
+
+		.prevWrapper {
+			
+			a {
+
+				&:after {
+					content: $fa-var-chevron-left;
+				}
+			}
+		}
+
+		.nextWrapper {
+			
+			a {
+			
+				&:after {
+					content: $fa-var-chevron-right;
+				}
+			}
+		}
+
+		.imageWrapper {
+			clear: both;
+			text-align: left;
+			text-align: center;
+
+			.mainImage {
+				text-align: center;
+			}
+		}
+
+		.imageCaptionWrapper {
+		}
+	}
+
+	.back {
+		a {
+			@include back-link($back-link-bg: $gallery-primary-color);
+			@include inline-icon($icon: $fa-var-th-large);
+		}
+	}
+}

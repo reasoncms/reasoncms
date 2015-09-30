@@ -1,0 +1,136 @@
+/* .tabset div#pane_wrapper {
+	background-image:url(../images/1px_grey.gif);
+	background-repeat:repeat-y;
+	background-position:20% 0;
+} */
+
+.tabset div#pane_wrapper:after {
+    content: "."; 
+    display: block; 
+    height: 0; 
+    clear: both; 
+    visibility: hidden;
+}
+
+.tabset div.tabs_chunk, .tabset div.tabpanel_chunk.selected {display: inline-block;}
+
+/* Hides from IE-mac \*/
+* html .tabset div.tabs_chunk, * html .tabset div.tabpanel_chunk.selected {height: 1%;}
+.tabset div.tabs_chunk, .tabset div.tabpanel_chunk.selected {display: block;}
+/* End hide from IE-mac */
+
+#types_pane {
+	width: 175px;
+	float: left;
+	height: 10em;
+	overflow:auto;
+	/* background-color:#f0f3f7; */
+	background-color:#eee;
+	border-right:1px solid #999;
+}
+#types_pane ul {
+	padding:0;
+	list-style:none;
+	margin:0;
+}
+#links_pane {
+	/* float:left; */
+	padding: .67em 0 0 1.25em;
+	/*width: 100%;*/
+	height: 10em;
+	overflow: auto;
+}
+
+#links_pane ul li:hover {
+	background: transparent;
+}
+
+#pane_wrapper {
+	margin:1em 0 0 0;
+	border:1px solid #999;
+	background:#f3f3f3 url(../images/pane_wrapper_bg.gif) repeat-x left bottom;
+	height: 10em;
+}
+
+#pane_wrapper .message {
+	display: block;
+	text-align: center;
+	vertical-align: middle;
+	height: 2em;
+	line-height: 2em;
+	color: #333;
+	margin: 4em auto;
+}
+
+#pane_wrapper .error {
+	width: 80%;
+	margin: 1em auto;
+}
+
+#pane_wrapper.contains_types p.error {
+	width: auto;
+	margin-left: 190px;
+	margin-right: 15px;
+}
+
+#types_pane a {
+	display:block;
+	color:black;
+	text-decoration:none;
+	padding:.25em .5em;
+	padding-left:14px;
+	
+	cursor: pointer;
+}
+#types_pane li {
+	border-bottom: 1px solid #ccc;
+}
+#types_pane li.selected {
+	background:#797979 url(../images/type_selected_shadow.gif) repeat-x left bottom;
+}
+#types_pane li.selected a {
+	cursor: default;
+	margin-right: 0;
+	background: transparent;
+	/*background: transparent url(../images/type_selected_5.gif) no-repeat 4px center;*/
+	color: white;
+	border-color: #797979;
+}
+#types_pane a:hover {
+	background-color: #d1d1d1;
+}
+
+#links_pane label, #links_pane select, #links_pane input {
+	display: block;
+}
+#links_pane select#links_select {
+	margin-bottom:1em;
+}
+
+/* Hide links_pane unless selected */
+/*
+#links_pane>div {
+	display:none;
+}
+#links_pane>div.selected, #links_pane>div.selected {
+	display:block;
+}
+*/
+
+#sites_pane label {
+	margin-right: 1em;
+}
+
+#sites_pane span.progress_text {
+	display: block;
+	margin: 1em 0;
+	text-align: center;
+	color: #333;
+}
+
+.fieldset { /* XXX: need to make a fake elem or some such, not use this hack! */
+	clear:both;
+}
+#other_options {
+	display:none;
+}

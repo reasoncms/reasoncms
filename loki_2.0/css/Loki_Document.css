@@ -1,0 +1,111 @@
+body {
+	margin: 1ex;
+	
+	/* Some reasonable defaults for standard layouts for people who don't really
+	 * define their own document style sheets. */
+	background: white;
+	color: black;
+	font-family: Helvetica, Arial, sans-serif;
+}
+
+.loki__is_really_a_br {
+	display:block;
+	clear:both;
+}
+
+/* for A fake named anchors (copied from TinyMCE) */
+a.loki__named_anchor { 
+	width: 12px;
+	/* orig, pretty much works: line-height: 6px; */
+	line-height: 40px;
+	overflow: hidden;
+	padding-left: 12px;
+	background-image: url('/global_stock/php/loki/images/nav/anchor.gif');
+	background-position: bottom;
+	background-repeat: no-repeat;
+}
+
+/* For IMG named anchors ones (works) */
+img.loki__named_anchor {
+	width: 12px;
+	line-height: 6px;
+	overflow: hidden;
+	/*padding-left: 12px;
+	background-image: url('../images/anchor_symbol.gif');
+	background-position: bottom;
+	background-repeat: no-repeat;*/
+}
+
+table.loki__borderless_table {
+	border-width: 1px;
+	border-color: #BCBCBC;
+	border-style: dotted;
+	border-collapse: collapse;
+}
+
+table.loki__borderless_table td, table.loki__borderless_table th {
+	/* somehow it would be nice to get there to be more 
+	space between the table border and the individual cell
+   	borders, like I believe there was in old Loki */
+	border-width: 1px;
+	border-color: #BCBCBC;
+	border-style: dotted;
+	border-collapse: collapse;
+}
+
+blockquote {
+	/* border: 1px #BCBCBC dotted;
+	background: lightblue; */
+	/*
+	background-color: rgb(223,223,223);
+	background-image: url('../images/nav/blockquote.gif');
+	background-repeat: no-repeat;
+	background-position: top left;
+	padding-left: 23px;
+	*/
+	padding-left: 1ex;
+	border-left: solid lightgrey 1px;
+	/*background-image: url('../images/blockquote.gif');
+	background-repeat: no-repeat;
+	background-position: 0% -10%;
+	margin-left: 26px;*/
+	margin: 1em;
+}
+
+.loki__hr_container {
+	position: relative;
+}
+
+.loki__hr_container span {
+	display: none;
+	
+	cursor: pointer !important;
+}
+
+.loki__hr_container a.loki__delete {
+	display: block;
+	height: 16px;
+	width: 16px;
+	
+	position: absolute;
+	top: -8px;
+	right: 0px;
+	
+	background: url('../images/close.gif') top;
+	
+	cursor: pointer !important;
+}
+
+.loki__hr_container a.loki__delete:hover {
+	background-position: bottom;
+}
+
+.loki__table { display: table; border: 1px solid black; }
+.loki__tbody { display: table-row-group }
+.loki__tr { display: table-row; border: 1px solid black; }
+/* the padding in the next two is essential for the cells to be easily editable */
+.loki__th { display: table-cell; font-weight: bold; text-align: center; vertical-align: top; border: 1px solid black; padding: .5ex; }
+.loki__td { display: table-cell; text-align: left; vertical-align: top; border: 1px solid black; padding: .5ex;
+}
+
+/* <div class="loki_table border" loki:summary="afsdf"><div class="loki_tbody"><div class="loki_tr"><div class="loki_td">in td 1</div><div class="loki_td">in td 2a</div><div class="loki_td">in td 3<br></div></div><div class="loki_tr"><div class="loki_td">tr 2, td 1</div><div class="loki_td">td 2</div><div class="loki_td">td 3<br></div></div></div></div> */

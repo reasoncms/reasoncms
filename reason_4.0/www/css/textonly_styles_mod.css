@@ -1,0 +1,8 @@
+.layout, .navigation, .banner, .layout p.fullGraphicsLink {
+	background-color: #FFFFFF;
+	background-image: none;
+	border-top: 3px solid #8AA3D0;
+	border-right: none;
+	border-bottom: none;
+	border-left: none;
+}

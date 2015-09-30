@@ -1,0 +1,49 @@
+		#jQueryChildrenSort td
+		{
+			background-color: #D9E2F4;
+			border-bottom: solid white 1px;
+			padding: 8px;
+			margin-left: auto;
+			margin-right: auto;
+		}
+		
+		/*         etc           */
+
+		.drop {
+			background-color: Blue;
+			color: White;
+			margin: 3px;
+			padding: 10px;
+			-moz-border-radius: 1em;
+			-webkit-border-radius: 1em;
+			border-radius: 1em;
+		}
+
+		.active {
+			background-color: orange;
+			cursor: crosshair;
+		}
+		.tDnD_whileDrag td {
+			opacity: 0.3;
+		}
+		.dropTarget td
+		{
+			padding: 4px !important;
+			background-color: #f0ffab;
+			border-top: 3px dashed black !important;
+			border-bottom: 3px dashed black !important;
+		}
+		.dropTarget td
+		{
+			border-right: none;
+			border-left: 3px dashed black;
+		}
+		.dropTarget td.entityName
+		{
+			border-left: none !important;
+			border-right: 3px dashed black !important;
+		}
+		.highlightedTarget 
+		{
+			color: red;
+		}

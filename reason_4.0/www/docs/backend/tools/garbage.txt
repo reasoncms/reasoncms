@@ -1,0 +1,59 @@
+The Garbage Collector
+
+Code Location: WEB_TREE/admin/scripts/garbage_collector.php3
+-- Notice this code is in the web admin directory.  It is NOT in global_stock.
+
+Garbage in Reason is one of two things: deleted entities that haven't been
+touched in over a week and empty pending items that haven't been touched in
+the same time or longer.  Currently, pending items aren't touched.  The code
+could easily be changed to garbage collect pending items.  The Garbage
+Collector runs once a day through a cron job and finds all old entities and
+deletes them.  Update: Pending items are now being deleted if they haven't
+been modified in 28 days.
+
+The GC code:
+Since this is being run from the command line instead of from Apache, we have
+to include a few things that are usually included by an auto-prepended file or
+through some header file.  
+
+The current query being used to find items to delete is this:
+SELECT
+	id,
+	name,
+	DATE_FORMAT(last_modified,'%M %e, %Y %r') AS last_modified
+FROM
+	entity
+WHERE
+	( state = 'Deleted' AND 
+	  last_modified < DATE_SUB(NOW(), INTERVAL 7 DAY) ) OR
+	( state = 'Pending' AND 
+	  last_modified < DATE_SUB(NOW(), INTERVAL 28 DAY ) )";
+	
+Really, all it does is grab the ids of entities that are deleted and have not
+been modified in 7 days and the pending items that haven't been modified in
+28 days. I then loop through the ids to delete and delete all
+of them, saving the output to an array to dump out at the end.
+
+
+The crontab entry:
+
+4 4 * * * ~/bin/php -d include_path=/usr/local/webapps/www/global_stock/php:.
+/usr/local/webapps/www/admin/scripts/garbage_collector.php3 > 
+~/garbage/webapps_garbage_dump.txt
+
+It's pretty long.  Here's the breakdown.  The first line has two things: When
+to run the GC and the program that runs it.  For more information about how
+crontab determines the time to run things, look at the man pages. 4 4 * * *
+means run every day at 4:04 AM.   Notice that here I am using the
+compiled version of PHP - this avoids all the problems of authenticating
+through the web server.  Currently, the compiled PHP executable is in my
+(Dave's) directory in the bin directory.  A few options need to be passed to
+this: the include_path and the script to run.  The include_path is usually set
+up in an .htaccess file, but since this is being run from the command line, no
+htaccess is hit.  So it runs the file and dumps the output to some file,
+currently set to a file in my home directory.  This is to have some record
+of what was deleted the last time the GC was run.
+
+In my crontab entry, there are two of these crontabs: one for webapps and one
+for webdev.  The differences between the files are pretty simple - they just
+connect to different databases and do their work on those databases.

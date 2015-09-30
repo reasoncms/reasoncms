@@ -1,0 +1,230 @@
+div.publication div.moduleNav ul, div.publication div.fullPost div.comments>ul {
+	margin-left:0px;
+	padding-left:0px;
+	list-style-type:none;
+}
+div.publication div.moduleNav ul li {
+	border-top:1px solid #92AAD6;
+}
+div.publication div.moduleNav ul li ul {
+	padding-left:2em;
+	list-style-type:disc;
+	margin:0;
+}
+div.publication div.moduleNav ul li ul li {
+	border:none;
+	margin:0;
+}
+div.publication div.moduleNav ul li h4 {
+	margin-bottom:.33em;
+}
+div.publication div.moduleNav ul ul.links {
+	list-style-image:url(../../ui_images/tiny_arrow.gif);
+	margin-left:20px;
+}
+div.publication div.moduleNav ul ul.links li {
+	font-size:87%;
+	border-top:none;
+	margin:0px;
+}
+div.publication div.moduleNav div.filterMessage span.clear {
+	font-size:0.84em;
+	font-weight:normal;
+	opacity:0.7;
+}
+div.publication div.fullPost div.comments>ul>li {
+	padding:1em;
+	margin:.5em 0px .5em 0px;
+	background-color:#F0F5FF;
+}
+div.publication div.fullPost div.commentAdded h4 {
+	color:#C33C06;
+	margin:0px;
+	display:inline;
+	padding-right:1em;
+}
+div.publication div.fullPost div.commentAdded {
+	padding:.33em;
+	border:1px solid #C33C06;
+}
+div.publication div.fullPost div.addCommentForm table#discoTable {
+	width:100%;
+}
+div.publication div.fullPost div.addCommentForm table#discoTable #commentcontentRow textarea {
+	height:10em;
+}
+div.publication div.fullPost div.addCommentForm #disco_form, div.publication div.fullPost div.addCommentForm #disco_form div.formElement {
+	margin-bottom:1em;
+}
+
+div.publication div.fullPost div.primaryContent {
+	width:70%;
+	float:left;
+}
+div.publication div.fullPost div.relatedItems {
+	float:right;
+	width:28%;
+	clear:right;
+}
+div.publication .fullPost .media {
+	margin:1em 0;
+}
+div.publication .fullPost .media>ul, div.publication .fullPost .media>ul>li {
+	margin:0;
+	padding:0;
+	list-style:none;
+	display:block;
+}
+div.publication div.fullPost .media .playingMedia {
+	margin:0.5em 0;
+}
+div.publication div.fullPost .media .playingMedia {
+	outline-style:none;
+	box-shadow:none;
+	border-color:transparent;
+}
+div.publication div.fullPost .media img.placard {
+	display:none;
+}
+div.publication div.fullPost .media .galleryActive>li {
+	display:inline-block;
+	list-style:none;
+	padding:0;
+	margin:0 1px 1px 0;
+	vertical-align:top;
+	font-size:0.846em;
+}
+div.publication div.fullPost .media .galleryActive>li a {
+	display:block;
+	padding:1em;
+	background-color:#eee;
+	background-color:rgba(0,0,0,0.08);
+}
+div.publication div.fullPost .media .galleryActive>li a:hover, div.publication div.fullPost .media .galleryActive>li a:active, div.publication div.fullPost .media .galleryActive>li a:focus {
+	background-color:#ccc;
+	background-color:rgba(0,0,0,0.24);
+}
+div.publication div.fullPost .media .galleryActive>li.showing a {
+	background-color:#ddd;
+	background-color:rgba(0,0,0,0.16);
+	text-decoration:none;
+	color:#333;
+	cursor:default;
+}
+div.publication div.fullPost div.images h4 {
+	display:block;
+	position:absolute;
+	left:-9999px;
+	width:100px;
+}
+div.publication div.fullPost div.images ul {
+	padding:0px;
+	margin:.5em 0px .5em 0px;
+	list-style:none;
+	text-align:center;
+}
+div.publication .primaryContent div.nextPrev h4, div.publication .primaryContent .nextPrev p {
+	margin:0;
+	font-size:1em;
+}
+div.publication .primaryContent .nextPrev {
+	display:inline-block;
+}
+div.publication .primaryContent .nextPrev, div#content div.publication .primaryContent .nextPrev {
+	display:block;
+	margin:2em 0;
+}
+div.publication .primaryContent .nextPrev:after {
+    content:".";
+    display:block;
+    visibility:hidden;
+    clear:both;
+    height:0;
+}
+div.publication .primaryContent .nextPrev .next {
+	width:47%;
+	float:right;
+}
+div.publication .primaryContent .nextPrev .prev {
+	width:47%;
+	padding-right:3%;
+	border-right:1px solid #ddd;
+	float:left;
+	text-align:right;
+}
+div.publication .primaryContent .nextPrev .next.only, div.publication .primaryContent .nextPrev .prev.only {
+	width:auto;
+	float:none;
+	padding:0;
+	border:none;
+	text-align:left;
+}
+div.publication .primaryContent .nextPrev .next.only {
+	text-align:right;
+}
+div.publication div.persistent {
+	float:right;
+	width:28%;
+	border-left:1px dotted #92AAD6;
+}
+div.publication div#filtering, div.publication div.persistent div.loginlogout, div.publication div.addItemLink {
+	margin-left:.5em;
+}
+div.publication div.addItemLink {
+	margin-bottom:1em;
+}
+div.publication div.back {
+	clear:left;
+	margin:2em 0;
+}
+div.publication .primaryContent div.back {
+	text-align:right;
+	margin:1.5em 0;
+}
+
+/* lets style the social section */
+div.publication div.fullPost div.social {
+}
+
+div.publication div.fullPost div.social p {
+	font-size: .9em;
+}
+
+div.publication div.fullPost div.social img {
+	width: 1.3em;
+	margin: 0 .2em;
+	height: auto;
+	vertical-align: middle;
+}
+
+/* lets hide the "List All Issues" link */
+div.publication div.allIssuesLink
+{
+	display:block;
+	position:absolute;
+	left:-9999px;
+	width:100px;
+}
+
+/* --- Related Publication defaults --- */
+
+div.relatedPub div.moduleNav ul {
+	margin:0px;
+	padding:0px;
+	list-style-type:none;
+}
+div.relatedPub div.moduleNav ul li {
+	margin:1em 0;
+}
+div.relatedPub div.moduleNav ul li h4 {
+	margin:0;
+	font-size:1em;
+}
+div.relatedPub div.moduleNav ul li .date {
+	font-size:0.8125em;
+}
+div.relatedPub div.moduleNav ul ul.links li {
+	font-size:87%;
+	border-top:none;
+	margin:0px;
+}

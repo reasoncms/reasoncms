@@ -1,0 +1,136 @@
+a {
+	color:#273789;
+}
+body {
+	background-color:#bebebe;
+	padding:8px;
+	margin:0;
+}
+form {
+	margin:0;
+	padding:0;
+}
+body, input, button, table {
+	/* Unless explicitly directed to, IE doesn't change the appearance
+	   of form elements along with the appearance of the rest of the
+	   body */
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:12px;
+	line-height:14px;
+}
+.fieldset {
+	/* From the default Firefox stylesheet (firefox/res/forms.css),
+	   which behaves how we want. These should really be put into
+	   a separate stylesheet for Util.Fieldset */
+	display: block;
+	margin-left: 2px;
+	margin-right: 2px;
+	padding: 0.35em 0.625em 0.75em;
+	border: 2px groove ThreeDFace;
+	
+	/* custom styles */
+	margin: .5em 0;
+	border:none;
+	background-color:#ddd;
+	border:1px solid #7a7a7a;
+	padding:.5em 1em .75em;
+}
+.fieldset .legend, .fieldset h2 {
+	/* From the default Firefox stylesheet (firefox/res/forms.css),
+	   which behaves how we want. These should really be put into
+	   a separate stylesheet for Util.Fieldset */
+	padding-left: 2px;
+	padding-right: 2px;
+	border: none;
+
+	/* custom styles */
+	font-weight:bold;
+	color:#900;
+	font-size: 115%;
+	margin-bottom: 2px;
+	margin-top:0;
+
+	/*margin-top: -1.5ex;*/
+}
+.fieldset .fieldset legend {
+	color:#000000;
+	font-size:100%;
+}
+.fieldset h3 {
+	font-size:100%;
+	margin-bottom:2px;
+}
+.fieldset input, .fieldset label {
+	vertical-align:middle;
+}
+.fieldset .fieldset {
+	/* display:inline; */
+	background-color:#EEEEEE;
+	border:1px solid #A1A1A1;
+	margin-right:.5em;
+	clear:none;
+	float:left;
+	display:block;
+}
+
+.item_select_and_options {
+}
+.submit_and_cancel_chunk {
+	margin:.4em;
+	float:right;
+}
+.remove_chunk {
+	margin:.4em;
+	float:left;
+}
+.remove_chunk button {
+	padding:.33em;
+}
+.submit_and_cancel_chunk button {
+	padding:.33em;
+	margin-right:.67em;
+}
+.submit_and_cancel_chunk button.ok {
+	font-weight:bold;
+}
+div.clearer {
+	clear:both;
+}
+h1 {
+	font-size:120%;
+	margin:0 0 .5em 0;
+}
+.comment {
+	font-size:85%;
+}
+.field {
+	margin:.5em 0;
+}
+
+.progress_large {
+	width: 200px;
+	padding: 0.4em;
+	margin: auto;
+	text-align: center;
+}
+
+.progress_large p {
+	margin: 0.2em 0 0 0;
+	font-weight: bold;
+	text-align: center;
+}
+
+.error {
+	background: url('../images/error.png') #FFF9BB 4px 4px no-repeat;
+	border: 1px solid #333;
+	padding: 4px 5px 4px 25px;
+	color: black;
+	margin: 0;
+	min-height: 16px;
+	line-height: 16px;
+}
+
+.error a.action {
+    display: block;
+    margin-top: 2px;
+}

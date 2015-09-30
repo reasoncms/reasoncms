@@ -1,0 +1,65 @@
+/* Stylesheet for basic tabs
+
+Example css for styling them up in a theme:
+
+div.basicTabs li a {
+	text-decoration:none;
+}
+div.basicTabs li a:hover {
+	text-decoration:underline;
+}
+div.basicTabs ul {
+	border-bottom:2px solid #999;
+}
+div.basicTabs li a, div.basicTabs li strong {
+	background-color:#ddd;
+}
+div.basicTabs li.current a, div.basicTabs li.current strong {
+	background-color:#999;
+	color:#fff;
+}
+div.basicTabs li.current a strong {
+	display:inline;
+	padding:0;
+	background-color:transparent;
+	color:inherit;
+}
+
+*/
+ 
+div.basicTabs ul {
+	margin:0;
+	padding:0;
+	list-style:none;
+	display:inline;
+}
+div.basicTabs li {
+	float:left;
+	margin:0;
+	padding:0;
+}
+div.basicTabs li a, div.basicTabs li strong {
+	padding:.3em .5em;
+	margin:0 4px 0 0;
+	float:left;
+}
+
+/* Start self-clearning rules */
+/* :after rules force elements to self-clear in standards-compliant browsers */
+div.basicTabs ul:after {
+    content:".";
+    display:block;
+    visibility:hidden;
+    clear:both;
+    height:0;
+}
+/* These rules force layout in IE 6 & 7, which in turn forces the elements to self-clear */
+div.basicTabs ul {
+	display:inline-block; /* for some reason this doesn't work in IE 7 */
+	overflow:hidden; /* this one works in IE 7 */
+}
+/* Hide from IE Mac \*/
+div.basicTabs ul {
+	display:block;
+}
+/* end hide */

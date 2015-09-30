@@ -1,0 +1,42 @@
+The minisites are a concept that we came up with in order to deal with making very simple sites in an efficient manner.  Since the conception of this idea, the concept of a minisite has expanded to handle more and more cases with more diverse sites.  
+
+Originally, the minisite template was divided into separate parts.  Each part was specifically designed to handle a single task.  There were functions such as show_images() which were basically used just to show images, and just to show them in a specific part of the page.  However, with more and more minisites, we came to need more flexibility.  For instance, the Wellstone site had a page that was used to put up all the photos from the symposium.  This left us with basically nothing in the middle of the page, and a long column of photos going down the side.  What we really wanted was for the photos to just come up in the middle in multiple columns.  Another example is when we decided to start using minisites for department pages.  We came up with faculty and staff pages that queried ldap for staff and course information.  
+
+However, the only way we had to do this was to overload the entire template just to change one or two pages!  Not only this, but these were common ideas that we thought would be nice for many different types of pages.  The idea we came up with to solve this problem was to rewrite the minisite template using the idea of modularization.  
+
+Setting up the Modules
+
+With the new system, instead of hard coding a definition of each section, we simply give all the major sections a name.  Each name is then mapped to a module (or in some cases, mapped to nothing).  Each individual module then takes care of its own stuff.  We define different page types in file REASON_INC/minisite_templates/page_types.php.  This file defines the variable $page_types, which contains all different page types that are defined.  The default page_type is defined in $page_types[ 'default' ].  You will notice that none of the other page types define all of the sections.  It is unnecessary to redefine a section in a custom page type if you wish to use the same module as the default.  This makes defining a new page type easy.  Say you want to create a new custom page called foo.  The foo module (which we'll assume is defined properly in the file REASON_INC/minisite_templates/modules/foo.php) just prints out "foo" in the content area.  In order to set this up, we would add something like this to the $page_types array
+
+'foo' => array( 'main' => 'foo' )
+
+The first foo says that the name of the custom page is "foo".  The array can be more than one index although here it is just one.  The rest of it says that in the main section we run the module contained in the file REASON_INC/minisite_templates/modules/foo.php.  It is important to note that the second "foo" here does not define the name of the class but rather the name of the file that contains it.  There are also other ways we could define the custom foo page that would give different results.  For instance:
+
+'foo' => array( 'sidebar' => 'foo' )
+
+would leave the main part of the page alone and replace the sidebar with the foo module.  Also:
+
+'foo' => array( 'main' => 'foo', 'sidebar' => 'foo' )
+
+would replace both the main section and sidebar section with the foo module.  
+
+Defining Modules
+
+Defining modules for the minisites is pretty simple, there are just a few things that need to be noted.  First, at the beginning of each module class, you will see a line that looks like this:
+
+$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'DefaultMinisiteModule';
+
+This line may seem sort of ridiculous, but it is entirely necessary.  All this does is say to the minisite template, "for the sections that are set up to use this file, use the class 'DefaultMinisiteModule'".  The reason things are done this way is that some pages might want to use certain modules multiple times.  By setting up this variable, we don't need to include the file multiple times (giving us a php error).  
+
+All minisite modules should extend the default module (you may need to do an include_once in the module page).  The default minisite module has three main functions that can be overloaded.  The first is init().  The init() function of the default module takes a few args and sets them up in the module.  The most notable of these variables is the request variable.  Allowing the module to access any request variable it needs using $this->request.  Usually, if you overload this function, you would want to call parent::init() first and then do whatever other initialization you want.  The second is has_content().  In the default minisite module, this returns true all the time, although you can overload it so that in certain cases it won't return true.  This is helpful in terms of page speed and cleanliness of the html that the page outputs.  For instance, if you're on a gallery page that has no images, it will return false.  This gets rid of the div tags around where the module would be called and also ignores the run() function when it would normally be called.  Finally, we have the run() function.  This function does the output of the module.  It can pretty much do anything it wants and should always be overloaded.  
+
+The guts of the Default Minisite Module
+
+I won't go into detail about most of the functions in the class since most of them are basically the same.  If you look at a function such as show_meat(), what you will see is mostly html, and in between, you will see the functions has_content() and run_section() called.  Most of the display functions follow this same sort of pattern.
+
+One of the functions worth focusing on is the init() function.  This function sets up a good deal of variables.  First we get the css.  We not only get the css associated with each template, but with each site as well.  Then we set up an object that extends the tree_viewer to be used for the navigation.  Then we load some meta tags and other values and then load the modules.  
+
+The load_modules() function is not one that should ever be overloaded.  It checks the current page to see if it's a custom page.  If it is, it loads that section, otherwise, it loads the default (see above: $page_types array).  Then, the default page type is merged with the custom page.  Note that if the page is using the default page type, it is simply merging the default with the default, which doesn't change anything.  This is then stored in the class variable $section_to_module.  Now, for each of these variables, we loop through and do an include_once for each of the files.  Then, $this->_modules[ {section name}] is instantiated to be a new module of the appropriate type.  The function additional_args() is then called.  The purpose of this function is to allow custom minisite templates to include more arguments if necessary.  After this, the init() function of the module is called.  
+
+A few other brief functions.  The has_content() function takes the name of a section as an argument.  If there's a module associated with that section it calls the has content function for that module.  Otherwise, it return false.  The run_section() function is similar.  It gets the appropriate module for that section and runs it.  If it doesn't find one, it does nothing.  The _get_module() function works by just checking the section_to_module array, which was set up in the load_modules() function.  
+

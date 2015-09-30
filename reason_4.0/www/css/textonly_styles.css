@@ -1,0 +1,122 @@
+@import url(textonly_styles_mod.css);
+
+body{
+	margin: 20px;
+	background-color: #FFFFFF;
+	background-image: none;
+	color: #000;
+}
+#wrapper {
+	background: #FFFFFF;
+}
+a:link, a:hover, a:visited {
+	color: #203F7A;
+}
+div#footer {
+	background-color: #FFFFFF;
+	border: none;
+	background-image: none;
+}
+.maintained {
+	color: #666666;
+}
+.bannerXtra {
+	text-align: left;
+}
+h1.siteName a.sitelink {
+	color: #385790;
+	text-decoration: none;
+	background-image: none;
+	display: inline;
+	visibility: visible;
+	background: none;
+}
+h1 a, h1 a:visited{
+	color: #203F7A;
+	text-decoration: none;
+}
+body h1 {
+	margin-bottom: 10px;
+	padding-bottom: 0px;
+}
+h1.siteName {
+	text-align: left;
+	margin-left: 0px;
+	padding-left: 0px;
+	margin-top: 10px;
+	padding-top: 0px;
+	background: none;
+}
+p.fullGraphicsLink {
+	padding-top: 10px;
+}
+div, td, body {
+	text-align: left;
+}
+div.layout {
+	margin: 0px;
+	padding: 35px 0px;
+	width: auto;
+	background-image: none;
+	background-color:transparent;
+	border:none;
+}
+.content, .contentPost {
+	margin: 0px 0px 20px;
+	padding: 0px;
+	background-image: none;
+}
+div.bannerAndMeat {
+	margin: 0px;
+	padding: 0px;
+	width: auto;
+	background-image: none;
+	border: 0px;
+}
+.layout p.fullGraphicsLink {
+	margin-top: 40px;
+	margin-bottom: 20px;
+}
+div.sidebar, div.bannerInfo, h1.siteName, a.siteLink {
+	padding-top: 0px;
+	margin-top: 0px;
+	margin-left: 0px;
+	padding-left: 0px;
+	background: none;
+}
+.banner h1.siteName {
+	padding-top: 10px;
+	background-image: none;
+}
+div.layout {
+	padding: 10px 0px 0px 0px;
+	background-image: none;
+}
+div#giveNow {
+	padding:0px;
+	background-image:none;
+}
+div.banner {
+	height:auto;
+	background-image:none;
+	background-color:transparent;
+	border:none;
+}
+div.navigation ul a, div.navigation ul a:hover {
+	background:transparent;
+	color:#0000CC;
+	text-decoration:underline;
+	display:inline;
+	border:none;
+	padding-top:0px;
+	padding-bottom:0px;
+}
+div.navigation ul ul a, div.navigation ul ul strong {
+	border:none;
+}
+div.subNav, div#givingFrontPageFeatures ul li {
+	background:none !important;
+}
+p.pullQuoteRight {
+	background-image:none;
+}

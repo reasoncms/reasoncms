@@ -1,0 +1,206 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>Reason Installation Documentation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" href="css/reason_setupgrade/reason_setupgrade.css" type="text/css">
+<style type="text/css">
+div.callOut {
+	padding: 1em;
+	margin: 2em;
+	border: 1px solid #000;
+}
+</style>
+</head>
+<body>
+<div class="contentHead">
+<h1 class="pageTitle">Reason Install Documentation</h1>
+<p><em>Current for Reason 4.4 - Updated July 26, 2013</em></p>
+</div>
+<div class="contentMain" id="pageContent">
+<h3>Index</h3>
+<ul><li><a href="#installation">Installation</a>
+<ul><li><a href="#intro">Introduction</a></li>
+<li><a href="#requirements">Requirements</a></li>
+<li><a href="#server_configuration">Server Configuration</a></li>
+<li><a href="#reason_config">Setting Up Reason</a></li>
+<li><a href="#database_setup">Setting up Databases</a></li>
+<li><a href="#settings">Configuring Reason Settings</a></li>
+<li><a href="#custom_404">Creating a Custom 404 Error Page</a></li>
+<li><a href="#cron_jobs">Setting up Cron Jobs</a></li>
+<li><a href="#final_setup">Final Setup</a></li>
+</ul></li>
+<li><a href="#windows">Windows-Specific Issues</a></li>
+<li><a href="#help">Need Help?</a></li>
+</ul><h2><a href="#installation" name="installation" id="installation"></a>Installation</h2>
+<h3><a id="intro" name="intro"></a>Introduction</h3>
+<p>Reason is a web content management system designed for educational institutions. It was created by the Web Services Group at Carleton College.</p>
+<p>By using the install.sh shell script and the <a href="setup.php">Reason setup script</a>, you can likely get a working install running without using the instructions in this document. If you need assistance with installation, you are welcome to <a href="http://groups.google.com/group/reason-discussion">join our google discussion group</a>. Questions are often answered quickly by the Reason community.</p>
+<h3><a id="requirements" name="requirements"></a>Requirements</h3>
+<p>Reason requires the following packages:</p>
+<ul><li><strong><a href="http://httpd.apache.org/">Apache HTTPD with mod_rewrite enabled</a></strong> - Works with the 1.3, 2.0, and 2.2 branches.</li>
+<li><strong><a href="http://www.php.net/">PHP 5.1</a> with</strong></li>
+<li style="list-style:none;">
+<ul><li><strong>libtidy OR Tidy at the command line</strong></li>
+<li><strong>libcurl<br /></strong></li>
+</ul></li>
+<li><strong><a href="http://www.mysql.com/">MySQL</a></strong> - Works with 5 and probably 4.1+</li>
+<li><strong><a href="http://www.imagemagick.org/script/index.php">ImageMagick</a> (preferred) or <a href="http://www.boutell.com/gd/">GDlib</a></strong></li>
+</ul><p>Reason has been installed under Linux, Mac OS X, and Windows. If you're attempting to install Reason under Windows, please read <a href="#windows">Windows-Specific Issues</a>.</p>
+<h3><a id="server_configuration" name="server_configuration"></a>Server Configuration</h3>
+<p>When you unpack the Reason distribution you should place the 'reason_package' outside of the web tree. You should then create two symlinks in order to make the www folder for the reason_package and the www folder for reason web accessible.</p>
+<div class="callOut">
+<p><strong>Create a symbolic link called reason from within your web tree to /reason_package/reason_4.0/www/</strong></p>
+<ul><li>ln -s /path/to/reason_package/reason_4.0/www/ /path/to/web/root/reason</li>
+</ul><p><strong>Create a symbolic link called reason_package from within your web tree to /reason_package/www/</strong></p>
+<ul><li>ln -s /path/to/reason_package/www/ /path/to/web/root/reason_package</li>
+</ul><p>If you are attempting to install Reason on Windows, please see <a href="#windows">Windows-Specific Issues</a></p>
+</div>
+<p>Reason requires that the reason_package directory be a part of the include_path. Typically this can be done in either the httpd.conf or an .htaccess file (php_value include_path .:/path/to/your/reason_package/) or in your php.ini file (include_path = ".:/path/to/your/reason_package/"). If you are unable to modify the php.ini file, but you have access to a directory that is within the include path, place symbolic links to paths.php and reason_header.php within some directory in the include path.</p>
+<p>Your default php.ini file is probably fine as long as:</p>
+<ol><li>phpinfo() shows mysql support</li>
+<li>safe_mode is set to OFF</li>
+<li>file_uploads is set to ON</li>
+<li>output_buffer = 4096 (or greater) so that reason is able to send appropriate headers for asset downloads (such as .pdf &amp; .doc files)</li>
+<li>memory_limit set to 64MB or greater</li>
+<li>mbstring extension is installed</li>
+<li>ctype extension is installed (almost always the case since php 4.2.0 unless you explicitly disabled it)</li>
+</ol><p>We recommend the following:</p>
+<ol><li>register_globals set to OFF</li>
+<li>allow_call_time_pass_reference set to OFF</li>
+</ol><p>Reason will use libtidy if installed. If this library is not a part of your PHP installation, you should make sure the command-line binary for tidy is available, and set the path in package_settings.php. Note that your version of tidy needs to support the show-body-only option (should be set to yes in your tidy.conf file).</p>
+<p>Reason uses the error handler in carl_util and controls error reporting / display accordingly. The settings you specify in php.ini apply only to applications that do not use the error handler within carl_util. When setting up Reason, it can be useful to have "display_errors" turned on in case the error handler itself is not being properly loaded.</p>
+<p>To simplify installation, Reason is originally setup to operate in an insecure mode that does not require an SSL certificate. For a production instance of Reason, after configuring your server to support SSL, you should set the HTTPS_AVAILABLE constant in the package_settings.php file to true.</p>
+<p>Your web server must obey .htaccess files containing the directive types "Limit", "FileInfo", and "Options" are needed. To permit this you'll need an "AllowOverride Limit FileInfo Options" line either in an appropriate &lt;VirtualHost&gt; or &lt;Directory&gt; block.</p>
+<p>Reason will work without modification to your httpd.conf file in many environments, but there are a number of customizations that a savvy administrator may want to make. For an example virtual host setup, consult <a href="server_configuration.txt">server_configuation.txt</a> in the same directory as this file.</p>
+<h3><a id="reason_config" name="reason_config"></a>Configuring Reason</h3>
+<p>It is recommended that you install Reason by running install.sh at the command line, followed by the <a href="setup.php">setup script</a>, which will guide you through many of the steps outlined below. After you have Reason running, you may further <a href="#settings">configure settings files</a>, <a href="#custom_404">setup 404 handling</a> and <a href="#cron_jobs">generate cron-based cleanup jobs</a>. These steps are especially important if you are setting up a production instance of Reason.</p>
+<h3><a id="database_setup" name="database_setup"></a>Setting up Databases</h3>
+<p>If you are unable to use install.sh to setup your databases automatically, you'll need to connect to MySQL to setup a database for Reason. We'll use the same database for Thor, Reason CMS's form utility. You'll need to log into MySQL with a user who has privileges to create databases and grant privileges to other users. You can do these operations from the command line or using a tool such as phpMyAdmin.</p>
+<div class="callOut">
+<p><strong>Connect to your MySQL instance</strong></p>
+<p><strong>Create a database for Reason (and Thor):</strong></p>
+<ul><li>create database reason;</li>
+</ul><p><strong>Setup a username/password for Reason to connect:</strong></p>
+<ul><li>grant all privileges on reason.* to reason_user@webhost identified by 'some_password';</li>
+<li>flush privileges;</li>
+</ul></div>
+<p>Next we are going to populate the Reason database with some basic information needed for an empty Reason instance. There are many ways you could import the reason4.4.sql file using phpMyAdmin or from within MySQL.</p>
+<p>Here is one way to import the database from the command line:</p>
+<div class="callOut">
+<p><strong>Change into the directory that contains the file reason4.4.sql. From within /reason_package:</strong></p>
+<ul><li>cd ./reason_4.0/data/dbs</li>
+</ul><p><strong>Import reason4.4.sql into the database named reason - fill in your own credentials:</strong></p>
+<ul><li>cat reason4.4.sql | mysql -u reason_user --password=some_password -h your.mysql.hostname.or.ip.address reason</li>
+</ul></div>
+<p>The database connection information to connect to the databases you just created must be defined in a simple XML file. This file is in the reason_package/settings/ directory and is called dbs.xml. It should be configured with appropriate credentials. Leave the connection names as reason_connection and thor_connection.</p>
+<p>Here is the format for the credentials XML file:</p>
+<div class="callOut">
+<p>&lt;databases&gt;<br />
+&lt;database&gt;<br />
+&lt;connection_name&gt;reason_connection&lt;/connection_name&gt;<br />
+&lt;db&gt;reason&lt;/db&gt;<br />
+&lt;user&gt;reason_user&lt;/user&gt;<br />
+&lt;password&gt;some_password&lt;/password&gt;<br />
+&lt;host&gt;your.mysql.hostname.or.ip.address&lt;/host&gt;<br />
+&lt;/database&gt;</p>
+<p>&lt;database&gt;<br />
+&lt;connection_name&gt;thor_connection&lt;/connection_name&gt;<br />
+&lt;db&gt;reason&lt;/db&gt;<br />
+&lt;user&gt;reason_user&lt;/user&gt;<br />
+&lt;password&gt;some_password&lt;/password&gt;<br />
+&lt;host&gt;your.mysql.hostname.or.ip.address&lt;/host&gt;<br />
+&lt;/database&gt;<br />
+&lt;/databases&gt;</p>
+</div>
+<h3><a id="settings" name="settings"></a>Configuring Reason Settings</h3>
+<p>To initially setup Reason, you'll need to configure the error handler:</p>
+<h4>reason_package/settings/error_handler_settings.php</h4>
+<p>Near the top of the file, an array specifies Reason developer e-mail and IP addresses. Set this up with your own local information, so that developers see onscreen warning, and are properly notified via e-mail of more serious errors. You will not see useful error messages or be able to setup Reason until you setup $GLOBALS['DEVELOPER_INFO'] in this file with your own IP address.</p>
+<p>You can optionally configure these files after installation:</p>
+<ul><li>reason_package/settings/package_settings.php</li>
+<li>reason_package/settings/reason_settings.php</li>
+<li>reason_package/settings/thor_settings.php</li>
+<li>reason_package/settings/tyr_settings.php</li>
+<li>reason_package/settings/akismet_settings.php</li>
+<li>reason_package/settings/recaptcha_settings.php</li>
+<li>reason_package/settings/google_api_settings.php</li>
+<li>reason_package/settings/kaltura_integration_settings.php</li>
+<li>reason_package/settings/dir_service_config.php</li>
+</ul><h4>reason_package/settings/package_settings.php</h4>
+<p>Defines constants for the utilities in the reason_package folder, and provides a place to customize information specific to your organization. Each constant is documented within the file. The constants you'll want to configure include:</p>
+<ul><li>FULL_ORGANIZATION_NAME</li>
+<li>SHORT_ORGANIZATION_NAME</li>
+<li>ORGANIZATION_HOME_PAGE_URI</li>
+<li>WEBMASTER_EMAIL_ADDRESS</li>
+<li>WEBMASTER_NAME</li>
+</ul><p>In some cases, you may need to alter other constants defined in package_settings.php as part of the setup process. These include DB_CREDENTIALS_FILEPATH, HTTP_CREDENTIALS_FILEPATH, IMAGEMAGICK_PATH, TIDY_EXE, and HTTPS_AVAILABLE.</p>
+<p>For a production instance of Reason, we recommend you setup SSL and set HTTPS_AVAILABLE to true.</p>
+<p>If Reason sites are going to be placed behind areas that require http authentication, then the <strong>HTTP_CREDENTIALS_FILEPATH</strong> constant must be defined. The constant should reference a file outside the web tree which defines $http_authentication_username and $http_authentication_password. These variables are used by curl to access areas behind http authentication.</p>
+<h4><strong>reason_package/settings/reason_settings.php</strong></h4>
+<p>The reason_settings.php file is well-commented and should be configured according to your reason setup.</p>
+<p>The following constants should be verified for accuracy - if they are incorrect Reason may not properly function:</p>
+<ul><li><strong>APACHE_MIME_TYPES</strong> - location of your apache mime.types file</li>
+<li><strong>REASON_DB</strong> - The connection name specified in your XML credentials file - defaults to reason_connection.</li>
+<li><strong>REASON_SITE_DIRECTORY_OWNER</strong> - Should be the user/group that Apache runs as</li>
+</ul><h4>reason_package/settings/thor_settings.php</h4>
+<p>Defines the connection name in your specified in the XML credentials file for Thor connections. Also allows you to enable the JavaScript powered form builder (currently in beta).</p>
+<h4>reason_package/settings/tyr_settings.php</h4>
+<p>This file configures how emails are addressed when generated by Reason forms. The reply to email address defaults to the WEBMASTER_EMAIL_ADDRESS. You can change that entry with the TYR_REPLY_TO_EMAIL_ADDRESS in this file.</p>
+<h4>reason_package/settings/akismet_settings.php</h4>
+<p>You can provide an akismet API key in this file - if you do so, anonymous comment forms in Reason will be protected by akismet. To get an API key, <a href="http://akismet.com">visit akismet.com</a>.</p>
+<h4>reason_package/settings/recaptcha_settings.php</h4>
+<p>You can provide a recaptcha API key in this file - if you do so, anonymous comment forms in Reason will be protected by recaptcha. To get an API key, <a href="http://www.google.com/recaptcha">visit google.com/recaptcha</a>.</p>
+<h4>reason_package/settings/google_api_settings.php</h4>
+<p>Configure this file to enable google analytics integration - instructions are found in the comments of the settings file.</p>
+<h4>reason_package/settings/kaltura_integration_settings.php</h4>
+<p>Configure this file to enable kaltura integration - instructions are found in the comments of the settings file.</p>
+<h4>reason_package/settings/dir_service_config.php</h4>
+<p>Reason has a built-in user system, but can also support authentication and directory lookups from external directory service systems. You can leave this file untouched to use the Reason user system for authentication and directory information. To implement your own system, see /reason_package/carl_util/dir_service/directory.php.</p>
+<h3><strong><a id="custom_404" name="custom_404"></a>Creating a Custom 404 Error Page</strong></h3>
+<p>Reason includes a custom 404 error page. The 404 error page includes functionality which will redirect requests for resources that have moved to their new location. To take advantage of the 404 functionality, you must use a custom 404 error page, and have the following two choices.</p>
+<ol><li>
+<p>Change your apache config to use the custom 404 page included within the reason package (/reason_package/reason_4.0/www/errors/404.php)</p>
+<p><strong>OR</strong></p>
+</li>
+<li>Change the ERROR_404_PAGE setting in the reason settings file to reference a custom 404 page that includes the following lines at the top:
+<ul><li>include_once( 'reason_header.php' );</li>
+<li>reason_include( 'scripts/urls/404action.php' );</li>
+</ul></li>
+</ol><p>If you choose not to make these changes you'll see your web server's default 404 page.</p>
+<h3><a id="cron_jobs" name="cron_jobs"></a>Setting up Cron Jobs</h3>
+<p>To keep the server happy, it is a good idea to setup nightly garbage collection of old objects. To schedule this job create a script in your /etc/cron.daily folder like the following:</p>
+<div class="callOut">
+<p>#!/bin/sh</p>
+<p>/path/to/bin/php -d include_path=/include/path/to/reason_package/ /path/to/reason_package/reason_4.0/lib/core/scripts/db_maintenance/garbage_collector.php &gt; /tmp/reason_garbage/web_garbage_dump.`date +\%Y\%m\%d`.txt</p>
+</div>
+<p>Note that you must create the folder /tmp/reason_garbage. In addition, make sure to substitute values specific to your site for the /path/to/ values.</p>
+<h3><a id="final_setup" name="final_setup"></a>Final setup</h3>
+<p>The <a href="setup.php">setup script</a>, after it is able to verify Reason is setup properly, will create a login site, and an administrative user with username "admin" and a random password.</p>
+<p><strong>Write down the password!</strong></p>
+<p>The user created by the script has a unique name and will only be created once. For extra security, delete or move the script from the web tree after it has been run.</p>
+<p>Once everything is configured the setup script will provide you with a link to sign in to the Reason administrative interface. Enjoy.</p>
+<h3><a id="windows" name="windows"></a>Windows-Specific Issues</h3>
+<p><strong>We recommend running Reason CMS under linux. While reported bugs are fixed, Reason isn't actively tested in a Windows environment during development.</strong></p>
+<p>Reason relies heavily on filesystem support for symbolic links, making a Windows implementation somewhat difficult. Several workarounds for this limitation do exist, however, depending on which operating system used.</p>
+<h4>Windows XP</h4>
+<p>Administrators wishing to install Reason in a Windows XP environment will need to be able to create NTFS junctions (similar to symlinks in linux). They will also need to run a version of PHP that correctly handles junctions. In our testing, PHP 4.2.8 through 4.3.0 have buggy support for junctions.</p>
+<p><strong>Junctions in XP are extremely volatile: use caution.</strong> You should not attempt to manage an NTFS junction unless you have a firm grasp of what you're doing. See the Wikipedia article, <a href="http://en.wikipedia.org/wiki/NTFS_junction_point">NTFS Junction Point</a>.</p>
+<p>Creation of NTFS junctions was not supported by Microsoft until Windows Vista. An official, but unsupported, set of tools were released by Microsoft as part of the Windows Server 2003 Administration Kit. We recommend the use of a third-party tool instead, Junction Link Magic (<a href="http://www.rekenwonder.com/linkmagic.htm">http://www.rekenwonder.com/linkmagic.htm</a>).</p>
+<p>To install Reason in Windows XP, you must create a junction to Reason's www folder, a junction from WEB_PHOTOSTOCK to PHOTOSTOCK as well as a junction for each package Reason uses: Thor, Loki, jQuery, flvplayer, and Date Picker. Each host folder should be empty, and both the host and target folders should reside on the same logical drive.</p>
+<div class="callOut">
+<p><strong>A reason install on Windows should have junctions that look similar to those below:</strong></p>
+<ul><li>htdocs/reason -&gt; reason_package/reason_4.0/www</li>
+<li>htdocs/reason_package -&gt; reason_package/www</li>
+<li>htdocs/loki_2.0 -&gt; reason_package/loki_2.0</li>
+<li>htdocs/jquery -&gt; reason_package/jquery</li>
+<li>htdocs/flvplayer -&gt; reason_package/flvplayer</li>
+<li>htdocs/date_picker -&gt; reason_package/date_picker</li>
+<li>htdocs/thor -&gt; reason_package/thor</li>
+<li>htdocs/reason/images -&gt; reason_package/reason_4.0/data/images</li>
+</ul></div>
+<h3><a id="help" name="help"></a>Need Help?</h3>
+<p>You can ask questions using the <a href="http://groups.google.com/group/reason-discussion">Reason Discussion Group @ Google Groups</a> (http://groups.google.com/group/reason-discussion). Thank you for your interest in Reason.</p>
+</div></div>
+</body>
+</html>
