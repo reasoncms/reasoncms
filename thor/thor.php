@@ -774,7 +774,7 @@ class ThorCore
   				if (mysql_num_rows($res) > 0) $this->_table_exists = true;
   				else $this->_table_exists = false;
   				if ($reconnect_db) connectDB($reconnect_db); // reconnect to default DB
-  			}
+			}
   			else
   			{
   				trigger_error('table_exists called but no table has been defined via the thorCore set_thor_table method');
@@ -820,9 +820,10 @@ class ThorCore
 			if (!get_current_db_connection_name()) connectDB($this->get_db_conn());
 			$reconnect_db = (get_current_db_connection_name() != $this->get_db_conn()) ? get_current_db_connection_name() : false;
 			if ($reconnect_db) connectDB($this->get_db_conn());
-			$res = db_query($sql);
+			if ($res = db_query($sql))
+				$this->_table_exists = true;
 			if ($reconnect_db) connectDB($reconnect_db); // reconnect to default DB
-			return true;
+			return $this->_table_exists;
 		}
 		else
   		{
