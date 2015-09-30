@@ -40,7 +40,7 @@
         <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>
     </database>
-    
+
     <database>
         <connection_name>all_band_connection</connection_name>
         <db>all_band</db>
@@ -79,11 +79,19 @@
         <user>reason_user</user>
         <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>
-    </database>         
-    
+    </database>
+
     <database>
         <connection_name>reason_gifts_connection</connection_name>
         <db>reason_gifts</db>
+        <user>reason_user</user>
+        <password>8shtKGFGw4.v7cMm</password>
+        <host>database-1.luther.edu</host>
+    </database>
+
+    <database>
+        <connection_name>reason_giving_form_connection</connection_name>
+        <db>reason_giving_form</db>
         <user>reason_user</user>
         <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>
@@ -120,7 +128,7 @@
         <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>
     </database>
-    
+
     <database>
         <connection_name>norge_connection</connection_name>
         <db>norge_conference</db>

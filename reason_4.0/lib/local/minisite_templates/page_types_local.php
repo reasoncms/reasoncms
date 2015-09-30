@@ -269,7 +269,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'pre_sidebar_2' => '',
 	),
 	'gift_page_engine' => array(
-		'main_post' => 'gift_form/gift_form',
+		'main' => 'gift_form/gift_form',
 		'post_main_head' => array(
 			'module' => 'image_sidebar',
 			'num_to_display' => 1,
@@ -413,6 +413,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'module'=>'children',
 			'provide_images' => true,
 			'description_part_of_link' => false,
+			'exclude' => array('give_now_page', 'giving_methods_page', 'giving_types_page')
 		),
 		'pre_sidebar' => '',
 		'pre_sidebar_2' => '',
@@ -644,7 +645,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 	//'publication' => get_luther_publication(),
 	//'publication_feature_autoplay' => get_luther_publication("publication_feature_autoplay"),
 	//'publication_section_nav' => get_luther_publication("publication_section_nav"),
-	
+
 	'show_children_with_first_images_vertical' => array(
 		'main_post' => array(
 			'module'=>'luther_children',

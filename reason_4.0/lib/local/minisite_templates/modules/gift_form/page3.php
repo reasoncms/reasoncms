@@ -20,14 +20,17 @@ reason_include_once('classes/repeat_transaction_helper.php');
 
 class GiftPageThreeForm extends FormStep {
 
-    var $_log_errors = true;
-    var $no_session = array('credit_card_number');
+    var $_log_errors        = true;
+    var $no_session         = array('credit_card_number');
     var $error;
-    var $expense_budget_number = '10-202-60500-51111';
-    var $revenue_budget_number = 'Online Giving';
-    var $transaction_comment = 'Online gift';
+    var $expense_budget_number  = '10-202-60500-51111';
+    var $revenue_budget_number  = 'Online Giving';
+    var $transaction_comment    = 'Online gift';
     var $is_in_testing_mode; // This gets set using the value of the THIS_IS_A_DEVELOPMENT_REASON_INSTANCE constant or if the 'tm' (testing mode) request variable evaluates to an integer
     // the usual disco member data
+    var $thank_you_image_id = '';
+    var $thanks_blurb       = '';
+    var $one_hundred_blurb  = '';
     var $elements = array(
         'review_note' => array(
             'type' => 'comment',
@@ -70,16 +73,14 @@ class GiftPageThreeForm extends FormStep {
             'type' => 'text',
             'size' => 35,
         ),
-                'credit_card_type' => array(
+        'credit_card_type' => array(
             'type' => 'radio_no_sort',
-            'options' => array('Visa'=>'Visa','MasterCard'=>'MasterCard','American Express'=>'American Express','Discover'=>'Discover', 'none'=>'none'),
+            'options' => array('Visa' => 'Visa', 'MasterCard' => 'MasterCard', 'American Express' => 'American Express', 'Discover' => 'Discover', 'none'=>'none'),
+            'display_name' => 'Credit Card Type'
         ),
         'credit_card_type_icon' => array(
             'type' => 'comment',
-            'text' => "<i class='fa fa-cc-visa formCCType' id='visaIcon'></i>
-                        <i class='fa fa-cc-mastercard formCCType' id='mastercardIcon'></i>
-                        <i class='fa fa-cc-amex formCCType' id='amexIcon'></i>
-                        <i class='fa fa-cc-discover formCCType' id='discoverIcon'></i>"
+            'text' => "<i class='fa fa-cc-visa formCCType' id='visaIcon'></i><i class='fa fa-cc-mastercard formCCType' id='mastercardIcon'></i><i class='fa fa-cc-amex formCCType' id='amexIcon'></i><i class='fa fa-cc-discover formCCType' id='discoverIcon'></i>",
         ),
         'credit_card_expiration_month' => array(
             'type' => 'month',
@@ -92,6 +93,7 @@ class GiftPageThreeForm extends FormStep {
             'display_name' => 'Expiration Year',
         ),
         'credit_card_security_code' => array(
+            'type' => 'text',
             'size' => 4,
             'display_name' => 'Security Code',
         ),
@@ -159,8 +161,8 @@ class GiftPageThreeForm extends FormStep {
     );
 
     // style up the form and add comments et al
-    function on_every_time() {
-
+    function on_every_time()
+    {
         $this->set_comments('credit_card_security_code', form_comment('
             <p><a data-reveal-id="cvv2Iframe">What\'s this?</a></p>
             <div class="reveal-modal medium" id="cvv2Iframe" data-reveal="">
@@ -213,7 +215,7 @@ class GiftPageThreeForm extends FormStep {
             if (!$this->_has_errors() && $this->controller->get('installment_type') != 'Onetime') {
                 $text .= build_gift_review_detail_output($this->helper, $this->date_format);
             }
-            $text .= '<p class="changeGiftButton"><a href="?_step=GiftPageOneForm">Change Gift Setup</a></p>' . "\n";
+            $text .= '<a title="Modify Gift" href="?_step=GiftPageOneForm">Modify Gift</a>' . "\n";
             $this->change_element_type('review_note', 'comment', array('text' => $text));
         }
     }
@@ -249,31 +251,28 @@ class GiftPageThreeForm extends FormStep {
         return $txt;
     }
 
-    function get_confirmation_text() {
-
+    function get_confirmation_text($dev_email_text = false)
+    {
         $txt = '<div id="reviewGiftOverview">' . "\n";
-
-        $txt .= '<p class="printConfirm">Print this confirmation for your records.</p>' . "\n";
-        $txt .= '<h3>Thank you for your gift to Luther College</h3>' . "\n";
-        if (reason_unique_name_exists('giving_form_thank_you_blurb'))
-            $txt .= get_text_blurb_content('giving_form_thank_you_blurb') . "\n";
-        if ((intval($this->controller->get('gift_amount')) <= 100) && !$this->get_value('mail_receipt')) {
+        if (reason_unique_name_exists('giving_thank_you_email_image') && !$dev_email_text) {
+            $this->thank_you_image_id = id_of('giving_thank_you_email_image');
+            $txt .= "<figure><img src='https://".$_SERVER['SERVER_NAME'].WEB_PHOTOSTOCK.$this->thank_you_image_id.".jpg' alt='Students Holding Thank You Sign'></figure>";
+        }
+        if (reason_unique_name_exists('giving_form_thank_you_blurb') && !$dev_email_text) {
+            $this->thanks_blurb = get_text_blurb_content('giving_form_thank_you_blurb');
+            $txt .= $this->thanks_blurb;
+	   }
+        if ((intval($this->controller->get('gift_amount')) <= 100) && !$this->get_value('mail_receipt') && !$dev_email_text) {
             if (reason_unique_name_exists('giving_form_100_dollars')){
-                $txt .= get_text_blurb_content('giving_form_100_dollars') . "\n";
-			} else {
-				$txt .= '<p>This e-receipt will serve as confirmation of your online gift to Luther College. This e-receipt gives us
-						the opportunity to continue to reduce our paper usage and helps us to achieve our sustainability goals. Thank
-						you for doing your part!</p>' . "\n";
-                $txt .= '<p>Of course, if you\'d prefer to receive a paper receipt, we can take care of that for you.
-						Simply email Nicole Waskow at waskni01@luther.edu and we will send one to you via US Mail.</p>' . "\n";
+                $this->one_hundred_blurb = get_text_blurb_content('giving_form_100_dollars');
+                $txt .= $this->one_hundred_blurb . "\n";
 			}
         }
-        $txt .= '<p>Luther College is, for tax deduction purposes, a 501(c)(3) organization.</p>' . "\n";
-        $txt .= '<p>If you have questions about the giving process or experience technical problems using
-			the online giving form, please contact the Luther College Development Office.</p>' . "\n";
         $txt .= '<ul>' . "\n";
         $txt .= '<li><strong>Date:</strong> ' . date($this->date_format) . '</li>' . "\n";
+        $txt .= '</ul>' . "\n";
         $txt .= '<h4>Your Information</h4>' . "\n";
+        $txt .= '<ul>' . "\n";
         $txt .= '<li><strong>Name:</strong> ' . $this->controller->get('first_name') . ' ' . $this->controller->get('last_name') . '</li>' . "\n";
         if (($this->controller->get('spouse_first_name') != 'First') || ($this->controller->get('spouse_last_name') != 'Last')) {
             $txt .= '<li><strong>Spouse Name:</strong> ';
@@ -284,23 +283,27 @@ class GiftPageThreeForm extends FormStep {
         if ($this->controller->get('spouse_last_name') != 'Last') {
             $txt .= $this->controller->get('spouse_last_name') . '</li>' . "\n";
         }
-        $txt .= '<li>'."\n".'<strong>' . $this->controller->get('address_type') . ' Address:</strong>' . "\n" . $this->controller->get('street_address') . "\n" . $this->controller->get('city') . ' ' . $this->controller->get('state_province') . ' ' . $this->controller->get('zip') . "\n" . $this->controller->get('country') . "\n" .'</li>' . "\n";
+        $txt .= '<li>'."\n".'<strong>Address:</strong>' . "\n" . $this->controller->get('address_1') . "\n" . $this->controller->get('address_2') . "\n" . $this->controller->get('city') . ' ' . $this->controller->get('state_province') . ' ' . $this->controller->get('zip') . "\n" . $this->controller->get('country') . "\n" .'</li>' . "\n";
         $txt .= '<li><strong>' . $this->controller->get('phone_type') . ' Phone:</strong> ' . $this->controller->get('phone') . '</li>' . "\n";
         $txt .= '<li><strong>E-mail:</strong> ' . $this->controller->get('email') . '</li>' . "\n";
         $txt .= '<li><strong>Luther Affiliation:</strong> ';
             $txt .= implode(', ', $this->controller->get('luther_affiliation')) . '</li>' . "\n";
         if ($this->controller->get('class_year')) {
-            $txt .= '<li><strong>Class:</strong>' . $this->controller->get('class_year') . '</li>' . "\n";
+            $txt .= '<li><strong>Class:</strong> ' . $this->controller->get('class_year') . '</li>' . "\n";
         }
-        foreach ($this->controller->get('estate_plans') as $plan) {
-            if ($plan == 'have_estate_plans') {
-                $txt .= '<li><strong>Estate Plans:</strong> I\'ve included Luther in my estate plans</li>' . "\n";
-            }
-            if ($plan == 'send_estate_info') {
-                $txt .= '<li><strong>Estate Information:</strong> I would like information about including Luther in my estate planning</li>' . "\n";
+        if ($this->controller->get('estate_plans')){
+            foreach ($this->controller->get('estate_plans') as $plan) {
+                if ($plan == 'have_estate_plans') {
+                    $txt .= '<li><strong>Estate Plans:</strong> I\'ve included Luther in my estate plans</li>' . "\n";
+                }
+                if ($plan == 'send_estate_info') {
+                    $txt .= '<li><strong>Estate Information:</strong> I would like information about including Luther in my estate planning</li>' . "\n";
+                }
             }
         }
+        $txt .= '</ul>' . "\n";
         $txt .= '<h4>Gift Details</h4>' . "\n";
+        $txt .= '<ul>' . "\n";
         if ($this->controller->get('installment_type') == 'Onetime') {
             $txt .= '<li><strong>One time gift:</strong> $' . number_format($this->controller->get('gift_amount'), 2, '.', ',') . '</li>' . "\n";
             if ($this->controller->get('mail_receipt') == true)
@@ -312,50 +315,81 @@ class GiftPageThreeForm extends FormStep {
             }
             $txt .= '.</li>' . "\n";
         }
+
+        // Build the Designation text
+        // if multiple designation areas
+        $designation    = $this->controller->get('gift_designation');
+        $naa_opts       = $this->controller->get_form('GiftPageOneForm')->naa_opts;
+        if ( $this->controller->get('split_gift') == true && $this->controller->get('split_designations') ){
+            $txt .= "<li><strong>Designation Details:</strong></li>\n";
+            $txt .= "<ul>\n";
+            $splits = json_decode($this->controller->get('split_designations'));
+            // pray($this->controller);
+            if ( isset($splits->{'annual_fund'}) ){
+                $txt .= "<li><strong>Annual Fund:</strong> $".$splits->{'annual_fund'}[0]."</li>\n";
+            }
+            if ( isset($splits->{'norse_athletic_association'}) ){
+                $txt .= "<li><strong>Norse Athletic Association:</strong> $".$splits->{'norse_athletic_association'}[0]." – ".$naa_opts[$splits->{'naa_details'}]."</li>\n";
+            }
+            if ( isset($splits->{'scholarship_fund'}) ){
+                $txt .= "<li><strong>Scholarship Fund:</strong> $".$splits->{'scholarship_fund'}[0]."</li>\n";
+            }
+            if ( isset($splits->{'__other__'}) ){
+                $txt .= "<li><strong>Other:</strong> $".$splits->{'__other__'}[0];
+                if ( $splits->{'other_details'} ){
+                    $txt .= " – ".$splits->{'other_details'}."</li>\n";
+                } else {
+                    $txt .= "</li>\n";
+                }
+            }
+            $txt .= "</ul>\n";
+        } else {
+            // or the value of a signal designation is an naa_opts key, then the gift is for the NAA,
+            // otherwise the values are 'annual_fund' or 'scholarship_fund', any other text comes from the
+            // other_details text and can be anything
+            if ( array_key_exists($designation, $naa_opts) ) {
+                $desig_txt = "Norse Athletic Association – {$naa_opts[$designation]}";
+            }
+            elseif ( $designation == "annual_fund" )
+                $desig_txt = "Annual Fund";
+            elseif ( $designation == "scholarship_fund" )
+                $desig_txt = "Scholarship Fund";
+            else
+                $desig_txt = "Other – {$designation}";
+
+            $txt .= "<li><strong>Designation:</strong> {$desig_txt}</li>\n";
+        }
+        if ($this->controller->get('comments_special_instructions'))
+            $txt .= "<li><strong>Comments / Special Instructions:</strong> {$this->controller->get('comments_special_instructions')}</li>\n";
         if ($this->controller->get('match_gift') && $this->controller->get('employer_name')) {
             $txt .= '<li><strong>Employer Matching:</strong> My employer, ' . strip_tags($this->controller->get('employer_name')) . ', will match my gift.</li>' . "\n";
         }
-        if ($this->controller->get('existing_pledge')) {
-            $txt .= '<li><strong>This is a payment on an existing pledge:</strong> ' . strip_tags($this->controller->get('existing_pledge')) . '</li>' . "\n";
-        }
-        if (($this->controller->get('annual_fund') || ($this->controller->get('specific_fund')))) {
-            $txt .= '<li>'."\n".'<strong>Designation</strong> ' . "\n";
-            $txt .= '<ul>' . "\n";
-            if ($this->controller->get('annual_fund')) {
-                $txt .= '<li>The Annual Fund</li>' . "\n";
-            }
-            if ($this->controller->get('baseball_stadium')) {
-                $txt .= '<li>Baseball Stadium</li>' . "\n";
-            }
-            if ($this->controller->get('softball_stadium')) {
-                $txt .= '<li>Softball Stadium</li>' . "\n";
-            }
-            if ($this->controller->get('scholarship_fund')) {
-                $txt .= '<li>The Scholarship Fund, </li>' . "\n";
-            }
-            if ($this->controller->get('transform_teaching_fund')) {
-                $txt .= '<li>The Fund for Transformational Teaching and Learning</li>' . "\n";
-            }
-            if ($this->controller->get('sustainable_communities')) {
-                $txt .= '<li>Luther Center for Sustainable Communities</li>' . "\n";
-            }
-            if ($this->controller->get('norse_athletic_association')) {
-                $txt .= '<li>The Norse Athletic Association';
-                if ($this->controller->get('naa_designation_details')
-                    ); {
-                    $txt .= ': ' . strip_tags($this->controller->get('naa_designation_details'));
-                }
-                $txt .= '</li>' . "\n";
-            }
-            if ($this->controller->get('comments_special_instructions')) {
-                $txt .= '<li>Comments/Special Instructions: ' . strip_tags($this->controller->get('comments_special_instructions')) . '</li>' . "\n";
-            }
-            $txt .= '</ul>' . "\n"; // Designated specifics end
-            $txt .= '</li>' . "\n"; //Designated giving end
-        }
         if ($this->controller->get('gift_prompt')) {
-            $txt .= '<li><strong>Gift Prompt:</strong> ' . strip_tags($this->controller->get('gift_prompt')) . '</li>' ."\n";
+            $prompt = strip_tags($this->controller->get('gift_prompt'));
+            switch ($prompt) {
+                case 'mailing':
+                    $prompt_txt = 'Received a mailing';
+                    break;
+                case 'email':
+                    $prompt_txt = 'Received an email';
+                    break;
+                case 'phonathon':
+                    $prompt_txt = 'Received a Phonathon call';
+                    break;
+                case 'staff_visit':
+                    $prompt_txt = 'Development staff visit';
+                    if ($this->controller->get('gift_prompt_details'))
+                        $prompt_txt .= ' - ' . strip_tags($this->controller->get('gift_prompt_details'));
+                    break;
+                case 'other':
+                    $prompt_txt = 'Other';
+                    if ($this->controller->get('gift_prompt_details'))
+                        $prompt_txt .= ' – ' . strip_tags($this->controller->get('gift_prompt_details'));
+                    break;
+            }
+            $txt .= '<li><strong>Gift Prompt:</strong> '.$prompt_txt.'</li>' . "\n";
         }
+
         if ($this->controller->get('dedication') && $this->controller->get('dedication_details')) {
             $txt .= '<li><strong>Dedication:</strong> This gift is in ';
             if ($this->controller->get('dedication') == 'Memory') {
@@ -364,7 +398,9 @@ class GiftPageThreeForm extends FormStep {
             if ($this->controller->get('dedication') == 'Honor') {
                 $txt .= 'honor';
             }
-            $txt .= ' of ' . $this->controller->get('dedication_details') . '</li>' . "\n";
+            if ($this->controller->get('dedication_details'));
+                $txt .= ' of ' . $this->controller->get('dedication_details');
+            $txt .= '</li>' . "\n";
         }
 
         if ($this->get_value('result_refnum')) {
@@ -379,9 +415,13 @@ class GiftPageThreeForm extends FormStep {
             } else {
                 $insert_txt = '';
             }
+            if (!$dev_email_text)
             $txt .= '<li><strong>Transaction Notifications:</strong> You will ' . $insert_txt . 'receive email notifications when installments occur on this gift</li>' . "\n";
         }
         $txt .= '</ul>' . "\n";
+        if (!$dev_email_text)
+            $txt .= '<p>Luther College is, for tax deduction purposes, a 501(c)(3) organization.</p>' . "\n";
+
         $txt .= '</div>' . "\n";
         return $txt;
     }
@@ -398,20 +438,21 @@ class GiftPageThreeForm extends FormStep {
     }
 
     function run_error_checks() {
-        if ($this->get_value('billing_address') == 'new'
-                && (!$this->get_value('billing_street_address')
-                || !$this->get_value('billing_city')
-                || !$this->get_value('billing_state_province')
-                || !$this->get_value('billing_zip')
-                || !$this->get_value('billing_country') )) {
-            $this->set_error('billing_address', 'Please enter your full billing address if the address you entered on the previous page was not the billing address for your credit card.');
-        }
-        if ($this->get_value('billing_address') == 'entered') {
-            $this->set_value('billing_street_address', $this->controller->get('street_address'));
-            $this->set_value('billing_city', $this->controller->get('city'));
-            $this->set_value('billing_state_province', $this->controller->get('state_province'));
-            $this->set_value('billing_zip', $this->controller->get('zip'));
-        }
+        // if ($this->get_value('billing_address') == 'new'
+        //         && (!$this->get_value('billing_street_address')
+        //         || !$this->get_value('billing_city')
+        //         || !$this->get_value('billing_state_province')
+        //         || !$this->get_value('billing_zip')
+        //         || !$this->get_value('billing_country') )) {
+        //     $this->set_error('billing_address', 'Please enter your full billing address if the address you entered on the previous page was not the billing address for your credit card.');
+        // }
+        // if ($this->get_value('billing_address') == 'entered') {
+        //     $address = $this->controller->get('address_1') .' '. $this->controller->get('address_1');
+        //     $this->set_value('billing_street_address', $address);
+        //     $this->set_value('billing_city', $this->controller->get('city'));
+        //     $this->set_value('billing_state_province', $this->controller->get('state_province'));
+        //     $this->set_value('billing_zip', $this->controller->get('zip'));
+        // }
 
         if ($this->controller->get('installment_type') != 'Onetime') {
             $expire_timestamp = mktime(0, 0, 0, $this->get_value('credit_card_expiration_month') + 1, 1, $this->get_value('credit_card_expiration_year'));
@@ -511,35 +552,28 @@ class GiftPageThreeForm extends FormStep {
                 }
                 $this->set_value('result_authcode', $result['AUTHCODE']);
 
-                $confirm_text = $this->get_confirmation_text();
-                $confirm_text .= build_gift_review_detail_output($this->helper, $this->date_format);
+                $confirm_text .= $this->get_confirmation_text();
+                $dev_mail_text = $this->get_confirmation_text(true);
+                //$confirm_text .= build_gift_review_detail_output($this->helper, $this->date_format);
 
                 $this->set_value('confirmation_text', $confirm_text);
                 $pf->set_confirmation_text($confirm_text);
 
-                // This is where we send the confirmation email.
-                // for now we are filtering out obviously bad/non-carleton email addresses
-                // NOTE: REMOVE THIS FILTER BEFORE WE GO LIVE
-                //if(strstr( $this->controller->get('email'), 'carleton.edu' ) )
-                //{
+                // prep emails
                 $replacements = array(
-                    '<th class="col1">Date</th>' => '',
-                    '<th class="col1">Year</th>' => '',
-                    '<th>Amount</th>' => '',
                     '</td><td>' => ': ',
                     '–' => '-',
-                    //'<h3>'=>'--------------------'."\n\n",
-                    //'</h3>'=>'',
+                    "Your Information" => "Donor Info",
                     '<br />' => "\n",
                 );
-                $mail_text = str_replace(array_keys($replacements), $replacements, $confirm_text);
-                $email_to_development = new Email('waskni01@luther.edu', 'noreply@luther.edu', 'noreply@luther.edu', 'New Online Gift ' . date('mdY H:i:s'), strip_tags($mail_text), $mail_text);
-                $email_to_development->send();
-                $email_to_giver = new Email($this->controller->get('email'), 'giving@luther.edu', 'giving@luther.edu', 'Luther College Online Gift Confirmation', strip_tags($mail_text), $mail_text);
+                $email_to_giver = new Email($this->controller->get('email'), 'giving@luther.edu', 'giving@luther.edu', 'Luther College Online Gift Confirmation' . date('m.d.y: H:i:s'), strip_tags($confirm_text), $confirm_text);
                 $email_to_giver->send();
+                $dev_mail_text = str_replace(array_keys($replacements), $replacements, $dev_mail_text);
+                $email_to_development = new Email('waskni01@luther.edu', 'noreply@luther.edu', 'noreply@luther.edu', 'New Online Gift ' . date('mdY H:i:s'), strip_tags($dev_mail_text), $dev_mail_text);
+                $email_to_development->send();
                 if ($this->controller->get('estate_plans')) {
-                    $email_to_estate_plans = new Email('kelly.wedmann@luther.edu', 'noreply@luther.edu', 'noreply@luther.edu', 'New Online Gift ' . date('mdY H:i:s'), strip_tags($mail_text), $mail_text);
-                    $email_to_estate_plans->send();
+                   $email_to_estate_plans = new Email('kelly.wedmann@luther.edu', 'noreply@luther.edu', 'noreply@luther.edu', 'New Online Gift ' . date('mdY H:i:s'), strip_tags($dev_mail_text), $dev_mail_text);
+                   $email_to_estate_plans->send();
                 }
             }
         }
@@ -671,3 +705,4 @@ function trim_hours_from_datetime($datetime) {
 }
 
 ?>
+
