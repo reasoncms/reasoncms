@@ -84,7 +84,7 @@
 						}
 						elseif(count($uniqueNameArr) == 5){
 							$listName = $this->newsletter_codes[$this->newsletter_names[$uniqueNameArr[4]]]['listname'];
-							echo '<h3>Sign up for the "'.$blurb->get_value('name').'"</h3>';
+							echo '<h3>'.$blurb->get_value('name').'</h3>';
 						}
 						echo '<div class="blurb number'.$i;
 						if($blurb->get_value('unique_name'))
