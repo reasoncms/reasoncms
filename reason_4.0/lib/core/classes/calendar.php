@@ -588,7 +588,7 @@ class reasonCalendar
 		//$this->max_event = $this->es->get_max('last_occurence');
 		//$this->min_event = $this->es->get_min('datetime');
 		
-		//$this->es->set_order('dated.datetime ASC');
+		$this->es->set_order('datetime ASC');
 		if(!empty($this->simple_search))
 		{
 			$simple_search_text_fields = array('name','description','keywords','content','author','location','sponsor','contact_organization');
