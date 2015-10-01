@@ -80,11 +80,11 @@
 					$uniqueNameArr = explode("_",$uniqueName);	
 					if($_POST["ccEmail"] == "" || !preg_match("/@.+\..+/", $_POST["ccEmail"]) || $_POST['ccEmailList']==""){
 						if(count($uniqueNameArr) > 5){
-							echo '<h3>Signup for our Email Newsletter(s)!</h3>';
+							echo '<h3>Signup for our Email Newsletter(s)</h3>';
 						}
 						elseif(count($uniqueNameArr) == 5){
 							$listName = $this->newsletter_codes[$this->newsletter_names[$uniqueNameArr[4]]]['listname'];
-							echo '<h3>Sign up for the "'.$listName.'"!</h3>';
+							echo '<h3>Sign up for the "'.$blurb->get_value('name').'"</h3>';
 						}
 						echo '<div class="blurb number'.$i;
 						if($blurb->get_value('unique_name'))
