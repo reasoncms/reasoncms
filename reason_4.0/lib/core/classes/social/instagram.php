@@ -33,7 +33,7 @@ $GLOBALS[ '_social_integrator_class_names' ][ basename( __FILE__, '.php' ) ] = '
  * @todo move oauth stuff into this class and modify the instagram feed models to use it.
  * @author Nathan White
  */
-class ReasonInstagramIntegrator extends ReasonSocialIntegrator implements SocialAccountProfileLinks, SocialSharingLinks
+class ReasonInstagramIntegrator extends ReasonSocialIntegrator implements SocialAccountProfileLinks
 {
 	/****************** SocialAccountProfileLinks implementation ********************/
 	public function get_profile_link_text($social_entity_id)
