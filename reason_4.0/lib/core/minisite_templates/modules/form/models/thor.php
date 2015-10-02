@@ -38,6 +38,7 @@ class ThorFormModel extends DefaultFormModel
 	var $_admin_obj;
 	var $_summary_obj;
 	var $_is_usable;
+	var $_is_editable;
 	var $_view;
 	var $_admin_view;
 
@@ -104,9 +105,12 @@ class ThorFormModel extends DefaultFormModel
 
 	function _is_editable()
 	{
-		$form =& $this->get_form_entity();
-		$_is_editable = $form->get_value('is_editable');
-		return ($_is_editable === 'yes');
+		if (!isset($this->_is_editable))
+		{
+			$form =& $this->get_form_entity();
+			$this->_is_editable = ($form->get_value('is_editable') === 'yes');
+		}
+		return $this->_is_editable;
 	}
 
 	function is_api()
