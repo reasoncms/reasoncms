@@ -29,8 +29,9 @@ class ds_ldap extends ds_default {
         	'port' => 389,
 		'ldap_version' => 3,
 		'use_tls' => true,
+		'opt_referrals' => 0,
 		'lookup_dn' => 'cn=lookupaccount,ou=People,dc=yourhost,dc=edu',
-        	'lookup_password' => 'password',
+    	'lookup_password' => 'password',
 		);
 	
 	/**
@@ -417,32 +418,40 @@ class ds_ldap extends ds_default {
         */
         function replace_generic_attrs($tree)
         {
-
-                foreach ($tree as $key => $val)
-                {
-                        if (is_array(current($val)))
-                        // if this is not a leaf node
-                        {
-                                $tree[$key] = $this->replace_generic_attrs($val);
-                        } else {
-                        // if this is a leaf node
-                               $map = $this->map_generic_attr($val[0],$key,'',$val[1]);
-			       // If the map passes back an attribute name, do a simple substitution
-				if (!empty($map['attr']))
-					$tree[$key] = array($map['attr'],$val[1]); 
-				// If the map passes back a filter,
-				if (!empty($map['filter'])) {
-					// parse the filter into a tree
-					$parse_result = $this->parse_filter($map['filter']);
-					// then tack the new subtree onto the full filter in place of the old leaf node.
-					foreach ($parse_result as $repkey=>$subtree) {
-						$tree[$repkey] = $subtree;
-						// The new subtree may have a different operator key than the old one
-						if ($repkey != $key) unset ($tree[$key]);
+			foreach ($tree as $key => $val)
+			{
+				if (is_array(current($val)))
+				// if this is not a leaf node
+				{
+						$tree[$key] = $this->replace_generic_attrs($val);
+				}
+				else if (isset($val[0]))
+				{
+				// if this is a leaf node
+					$map = $this->map_generic_attr($val[0],$key,'',$val[1]);
+					// If the map passes back an attribute name, do a simple substitution
+					if (!empty($map['attr']))
+						$tree[$key] = array($map['attr'],$val[1]); 
+					// If the map passes back a filter,
+					if (!empty($map['filter']))
+					{
+						// parse the filter into a tree
+						$parse_result = $this->parse_filter($map['filter']);
+						// then tack the new subtree onto the full filter in place of the old leaf node.
+						foreach ($parse_result as $repkey=>$subtree)
+						{
+							$tree[$repkey] = $subtree;
+							// The new subtree may have a different operator key than the old one
+							if ($repkey != $key) unset ($tree[$key]);
+						}
 					}
 				}
-                        }
-                }
+				else
+				{
+					trigger_error('Invalid node format for '.$key.'=>'.json_encode($val).' in replace_generic_attrs()');
+				}
+
+			}
 		return $tree;
         }
 	

@@ -855,6 +855,20 @@ class TableAdmin
 	{
 		return $this->no_data_message;
 	}
+
+	function get_field_name_from_label($label)
+	{
+		static $labels;
+		if (!empty($labels[$label])) return $labels[$label];
+	
+		foreach ($this->_display_values as $field => $details)
+			$labels[$details['label']] = $field;
+
+		if (!empty($labels[$label])) return $labels[$label];
+		
+		return false;
+	}
+			
 	/**
 	 * @return boolean true if the row count of unfiltered data is greater than 0
 	 */
@@ -1876,7 +1890,7 @@ class TableAdmin
 			}
 			else return $field;
 		}
-		
+
 		function get_fields_to_show()
 		{
 			if (isset($this->fields_to_show))

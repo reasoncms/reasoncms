@@ -354,7 +354,7 @@ class CourseImportEngine
 				if (substr($row['CRS_NAME'], -1) == 'L') continue;
 
 				$found = false;
-				$coursetableyear = 2014;
+				$coursetableyear = 2015;
 				while ($coursetableyear > 2009)
 				{
 					$coursetable = 'course'.$coursetableyear;
@@ -406,7 +406,7 @@ class CourseImportEngine
 	{
 		echo "get_course_section_data $org_id\n";
 		$data = array();
-		$coursetable = 'course2014';
+		$coursetable = 'course2015';
 		$restore_conn = get_current_db_connection_name();
 		connectDB('reg_catalog_new');	
 		mysql_set_charset('utf8');

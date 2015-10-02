@@ -21,6 +21,10 @@
 		private $headItems;
 		private $echoHeadItems;
 
+		private $suppressSlideMarginCss = false;
+		private $addJqueryToHead = false;
+		private $addFlexsliderToHead = true;
+
 		function __construct($params = Array()) {
 			$this->params = $params;
 
@@ -30,6 +34,18 @@
 			} else {
 				$this->maxWidth = -1;
 				$this->maxHeight = -1;
+			}
+
+			if (isset($params['suppressSlideMarginCss'])) {
+				$this->suppressSlideMarginCss = $params['suppressSlideMarginCss'];
+			}
+
+			if (isset($params['addJqueryToHead'])) {
+				$this->addJqueryToHead = $params['addJqueryToHead'];
+			}
+
+			if (isset($params['addFlexsliderToHead'])) {
+				$this->addFlexsliderToHead = $params['addFlexsliderToHead'];
 			}
 
 			// when called from, say, a module like ImageSlideshowModule, headItems are passed in.
@@ -134,9 +150,14 @@
 		}
 
 		function prepStaticJsAndCss() {
-			$this->headItems->add_javascript(JQUERY_URL, true);
-			$this->headItems->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH . 'FlexSlider/jquery.flexslider.js');
-			$this->headItems->add_stylesheet(REASON_PACKAGE_HTTP_BASE_PATH . 'FlexSlider/flexslider.css');
+			if ($this->addJqueryToHead) {
+				$this->headItems->add_javascript(JQUERY_URL, true);
+			}
+
+			if ($this->addFlexsliderToHead) {
+				$this->headItems->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH . 'FlexSlider/jquery.flexslider.js');
+				$this->headItems->add_stylesheet(REASON_PACKAGE_HTTP_BASE_PATH . 'FlexSlider/flexslider.css');
+			}
 		}
 
 		function prepSliderHookupJs() {
@@ -148,7 +169,7 @@
 																			
     								$(".flexslider").flexslider({ 
     									'. $this->getFlexsliderProperties() . '
-    								
+
     									after: function(slider){
     										handleResizing();
     									}
@@ -217,14 +238,16 @@
 						max-height:100% !important;
 						-ms-filter:inherit; This line needed to force IE8 to fade out slides
 						/* opacity:inherit; /*This line needed to force IE8 to fade out captions*/
-					}
-					ul.slides {
+					}' .
+
+					($this->suppressSlideMarginCss ? '' : 'ul.slides {
 						margin-left: 0 !important;
 						margin-right: 0 !important;
 						margin-top: 0 !important;
 						margin-bottom: 0 !important;
-					}
-					div.flexslider-img {
+						}') .
+
+					'div.flexslider-img {
 						-ms-filter:inherit; /*This line needed to force IE8 to fade out slides*/
 					}
 					p.flex-caption {
@@ -371,8 +394,12 @@
 				} elseif ($param == 'show_direction_nav') {
 					$flag = $value ? 'true' : 'false';
 					$properties .= 'directionNav: '. $flag .', ';
+				} elseif ($param == 'animation') {
+					$properties .= "animation: '" . $value . "', ";
 				} 
+
 			}
+			// $properties .= "animation: 'slide', ";
 			return $properties;
 		}
 	}

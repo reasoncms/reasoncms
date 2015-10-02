@@ -63,7 +63,7 @@
 	function id_of( $unique_name, $static_cache = true, $report_not_found_error = true )
 	{
 		static $retrieved = array();
-		if( !$static_cache || empty( $retrieved ) )
+		if( !$static_cache OR empty( $retrieved ) )
 		{
 			$retrieved = reason_get_unique_names();
 		}
@@ -96,7 +96,7 @@
 			$unique_names = reason_get_unique_names();
 			$retrieved = array_flip($unique_names);
 		}
-		if (isset( $retrieved[ $id ] ) ) return $retrieved[ $id ];
+		if (isset( $retrieved[ (int) $id ] ) ) return $retrieved[ (int) $id ];
 		else
 		{
 			if($report_not_found_error) trigger_error('Entity id provided ('.$id.') does not have a unique name');
@@ -1147,6 +1147,7 @@
 	*/
 	function user_is_a( $user_id, $role_id ) // {{{
 	{
+		trigger_error('user_is_a() is deprecated - please update your code to use reason_user_has_privs()');
 		$user = new entity( $user_id );
 		if( $user->has_left_relation_with_entity( new entity( $role_id ), relationship_id_of( 'user_to_user_role' ) ) )
 			return true;
@@ -1196,6 +1197,8 @@
 	 *   - The privilege to switch between WYSIWYG view and HTML view in the HTML editor
 	 * - switch_theme
 	 *   - The privilege to change the site's theme (if the site's theme is not locked by an administrator)
+	 * - pose_as_non_admin_user
+	 *   - The privilege to interact with the Reason edministrative interface as if they were any non-admin user
 	 * - pose_as_other_user
 	 *   - The privilege to interact with the Reason edministrative interface as if they were someone else. NOTE: This is a *very* powerful privilege, as it amounts to superuser rights!
 	 * - assign_any_page_type
@@ -1232,6 +1235,8 @@
 	 *   - The privilege edit any locked field or relationship
 	 * - customize_all_themes
 	 *   - The privilege to customize any site's theme
+         * - suppress_staff_listings
+         *   - The privilege to prevent the listing of a faculty/staff type
 	 *
 	 * @param integer $user_id The Reason entity id of the user
 	 * @param string $privilege
@@ -1320,7 +1325,21 @@
 		return false;
 	}
 	
-	
+	/**
+	 * Determine if a given user can pose as another given user
+	 *
+	 * @param integer $user_id_1 The reason id of the user who wants to pose
+	 * @param integer $user_id_2 The reason id of the user they want to pose as
+	 * @return boolean True if OK, false if not OK
+	 */
+	function reason_user_can_pose_as($user_id_1, $user_id_2)
+	{
+		if(reason_user_has_privs($user_id_1,'pose_as_other_user'))
+			return true;
+		if(reason_user_has_privs($user_id_1,'pose_as_non_admin_user') && !in_array('admin_role',reason_user_roles($user_id_2)))
+			return true;
+		return false;
+	}
 	
 	/**
 	 * Get the way user privileges are assigned to roles
@@ -1337,8 +1356,120 @@
 				'contribute_only_role'=>array('add','edit_pending','delete_pending',),
 				'editor_user_role'=>array('add','edit_pending','delete_pending','edit','delete','publish','borrow','expunge','switch_theme',),
 				'power_user_role'=>array('add','edit_pending','delete_pending','edit','delete','publish','borrow','expunge','switch_theme','edit_html','upload_full_size_image',),
-				'admin_role'=>array('add','edit_pending','delete_pending','edit','delete','publish','borrow','expunge','duplicate','edit_html','switch_theme','pose_as_other_user','assign_any_page_type','edit_head_items','edit_unique_names','edit_fragile_slugs','edit_home_page_nav_link','edit_form_advanced_options','manage_allowable_relationships','view_sensitive_data','manage_integration_settings','edit_raw_ldap_filters','upload_full_size_image','upgrade','db_maintenance','update_urls','bypass_locks','manage_locks','customize_all_themes',),
+				'super_user_role'=>array('add','edit_pending','delete_pending','edit','delete','publish','borrow','expunge','switch_theme','edit_html','upload_full_size_image','pose_as_non_admin_user',),
+				'admin_role'=>array('add','edit_pending','delete_pending','edit','delete','publish','borrow','expunge','duplicate','edit_html','switch_theme','pose_as_other_user','assign_any_page_type','edit_head_items','edit_unique_names','edit_fragile_slugs','edit_home_page_nav_link','edit_form_advanced_options','manage_allowable_relationships','view_sensitive_data','manage_integration_settings','edit_raw_ldap_filters','upload_full_size_image','upgrade','db_maintenance','update_urls','bypass_locks','manage_locks','customize_all_themes','suppress_staff_listings',),
 		);
+	}
+	
+	/* Get info about available user privileges
+	 *
+	 * @param mixed NULL for all, string priv name for info on a single privilege
+	 * @return mixed keys: privilege name, values: array of attributes
+	 */
+	function reason_get_privs_info($priv_name = NULL)
+	{
+		static $all_privs = array(
+			'add' => array(
+				'description' => 'The privilege to create new (pending) entities',
+			),
+			'edit_pending' => array(
+				'description' => 'The privilege to edit pending entities',
+			),
+			'delete_pending' => array(
+				'description' => 'The privilege to delete pending entities (e.g. mark them as "deleted")',
+			),
+			'edit' => array(
+				'description' => 'The privilege to edit live entities',
+			),
+			'delete' => array(
+				'description' => 'The privilege to delete live entities (e.g. mark them as "deleted")',
+			),
+			'publish' => array(
+				'description' => 'The privilege to publish entities (e.g. change their state from pending to live)',
+			),
+			'borrow' => array(
+				'description' => 'The privilege to borrow entities from other sites',
+			),
+			'expunge' => array(
+				'description' => 'The privilege to expunge deleted entities from the Reason database (That, is remove them forever)',
+			),
+			'duplicate' => array(
+				'description' => 'The privilege to duplicate entities',
+			),
+			'edit_html' => array(
+				'description' => 'The privilege to switch between WYSIWYG view and HTML view in the HTML editor',
+			),
+			'switch_theme' => array(
+				'description' => 'The privilege to change the site\'s theme (if the site\'s theme is not locked by an administrator)',
+			),
+			'pose_as_non_admin_user' => array(
+				'description' => 'The privilege to interact with the Reason edministrative interface as if they were any non-admin user',
+			),
+			'pose_as_other_user' => array(
+				'description' => 'The privilege to interact with the Reason edministrative interface as if they were someone else. NOTE: This is a *very* powerful privilege, as it amounts to superuser rights!',
+			),
+			'assign_any_page_type' => array(
+				'description' => 'The privilege to choose from all Reason page types, rather than a select few',
+			),
+			'edit_head_items' => array(
+				'description' => 'The privilege to insert arbitrary HTML into the page head (css, scripts, meta tags, etc.)',
+			),
+			'edit_unique_names' => array(
+				'description' => 'The privilege to give Reason entities unique names. This is necessary for creating sites and types.',
+			),
+			'edit_fragile_slugs' => array(
+				'description' => 'The privilege to modify a slug that may cause broken links if changed (e.g. publication feed URL slugs)',
+			),
+			'edit_home_page_nav_link' => array(
+				'description' => 'The privilege to insert a custom link to site home pages in the navigation (instead of the standard "Sitename Home")',
+			),
+			'edit_form_advanced_options' => array(
+				'description' => 'The privilege to edit advanced options in the thor form content manager',
+			),
+			'manage_allowable_relationships' => array(
+				'description' => 'The privilege to modify, create, and delete the set of relationships can be made between Reason entities. NOTE: This is very powerful, and should only be given to highly trustworthy individuals',
+			),
+			'view_sensitive_data' => array(
+				'description' => 'The privilege to view any data in Reason (like a fulltext search of the entire Reason db)',
+			),
+			'manage_integration_settings' => array(
+				'description' => 'The privilege to modify or override foreign keys and other values in Reason that pertain to integration with external data sources',
+			),
+			'edit_raw_ldap_filters' => array(
+				'description' => 'The privilege to write full LDAP filters/queries (e.g. in the construction of dynamic groups)',
+			),
+			'upload_full_size_image' => array(
+				'description' => 'The privilege to keep images from being resized upon upload, thereby retaining their original dimensions',
+			),
+			'upgrade' => array(
+				'description' => 'The privilege to run Reason\'s upgrade scripts',
+			),
+			'db_maintenance' => array(
+				'description' => 'The privilege to run standard database cleanup and sanity-checking scripts',
+			),
+			'update_urls' => array(
+				'description' => 'The privilege to run Reason\'s .htaccess regeneration script',
+			),
+			'bypass_locks' => array(
+				'description' => 'The privilege edit any locked field or relationship',
+			),
+			'manage_locks' => array(
+				'description' => 'The privilege edit any locked field or relationship',
+			),
+			'customize_all_themes' => array(
+				'description' => 'The privilege to customize any site\'s theme',
+			),
+			'suppress_staff_listings' => array(
+				'description' => 'The privilege to prevent the listing of a Faculty/Staff type',
+			),
+		);
+		
+		if(empty($priv_name))
+			return $all_privs;
+		elseif(isset($all_privs[$priv_name]))
+			return $all_privs[$priv_name];
+		else
+			return NULL;
 	}
 
 	function get_owner_site_id( $entity_id ) //{{{
@@ -1852,28 +1983,36 @@
 	 * Note that this only supports .png icons at the moment.
 	 * If someone wants to use other file types, feel free to add support and contribute back. :)
 	 *
-	 * @param mixed $type id, unique name, or entity (entity will offer best performance in tight loops)
+	 * @param mixed $type id, unique name, or entity (unique_name or entity will offer best performance in tight loops)
 	 * @param boolean $use_default Provide the url of a default icon if none available
 	 * @return string URL of the icon (html encoded), or an empty string if none found and $use_default set to false
 	 * @todo add support for image types other than .png (will need some sort of hierarchy of formats)
 	 */
 	function reason_get_type_icon_url($type,$use_default = true)
 	{
-		if(!is_object($type))
+		if(is_numeric($type))
 		{
-			if(is_numeric($type))
-				$type = new entity($type);
-			elseif(is_string($type))
-				$type = new entity(id_of($type));
-			else
-			{
-				trigger_error('$type not an object, integer, or string');
-				$type = NULL;
-			}
+			$type = new entity($type);
 		}
-		if(isset($type) && $type->get_values() && $type->get_value('unique_name') && (file_exists(REASON_INC.'www/ui_images/types/'.$type->get_value('unique_name').'.png') || file_exists(REASON_INC.'www/local/ui_images/types/'.$type->get_value('unique_name').'.png') ) )
+		else if(is_string($type))
 		{
-			return REASON_HTTP_BASE_PATH.'ui_images/types/'.reason_htmlspecialchars($type->get_value('unique_name')).'.png';
+			$unique = $type;
+		}
+		
+		if(is_object($type))
+		{
+			$unique = $type->get_value('unique_name');
+		}
+		
+		if (empty($unique))
+		{
+			trigger_error('$type not an object, integer, or string');
+			$unique = NULL;
+		}
+		
+		if($unique && (file_exists(REASON_INC.'www/ui_images/types/'.$unique.'.png') || file_exists(REASON_INC.'www/local/ui_images/types/'.$unique.'.png') ) )
+		{
+			return REASON_HTTP_BASE_PATH.'ui_images/types/'.reason_htmlspecialchars($unique).'.png';
 		}
 		elseif($use_default)
 		{

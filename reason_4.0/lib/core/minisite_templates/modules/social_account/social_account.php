@@ -26,9 +26,19 @@ class ReasonSocialAccountModule extends ReasonMVCModule
 	var $model = 'minisite_templates/modules/social_account/models/profile_links.php';
 	var $view = 'minisite_templates/modules/social_account/views/profile_links.php';
 	
+	
+	var $acceptable_params = array(
+		'model' => '',
+		'view' => '',
+	);
+	
 	// set everything up and get the model data.
 	function init( $args = array() )
 	{
+		if(!empty($this->params['model']))
+			$this->model = $this->params['model'];
+		if(!empty($this->params['view']))
+			$this->view = $this->params['view'];
 		$controller = $this->get_controller();
 		$model = $controller->model();
 		$model->config('site_id', $this->site_id);

@@ -120,12 +120,8 @@
 			
 			if(!$this->get_value('datetime'))
 				$this->set_comments( 'datetime', form_comment('This may be automatically determined from the image file.') );
-
-			/*
-			 *	determine if user should be able to upload full-sized images and have the option of ignoring the check for the minimum allowable size of the image.			    */
-
-			if( user_is_a($this->admin_page->user_id, id_of('admin_role'))
-				|| user_is_a($this->admin_page->user_id, id_of('power_user_role') ) )
+			//determine if user should be able to upload full-sized images
+			if( reason_user_has_privs($this->admin_page->user_id, 'upload_full_size_image') )
 			{
 				$full_sizer = true;
 			}

@@ -64,8 +64,7 @@ class reasonLoki2Integration extends reasonEditorIntegrationBase
 		}
 		
 		// user is admin
-		if( !empty($user_id) && (user_is_a($user_id, id_of('admin_role'))
-					|| user_is_a($user_id, id_of('power_user_role') ) ) )
+		if( !empty($user_id) && (reason_user_has_privs($user_id, 'edit_html') ) )
 		{
 			$params['widgets'] .= ' +source +debug';
 		}

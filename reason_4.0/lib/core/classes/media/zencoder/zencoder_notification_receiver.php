@@ -301,7 +301,14 @@ function create_image_entity($media_work, $username)
  */
 function set_error($media_work)
 {
-	reason_update_entity($media_work->id(), $media_work->get_owner()->id(), array('transcoding_status' => 'error'), false);
+	if (is_object($media_work))
+	{
+		reason_update_entity($media_work->id(), $media_work->get_owner()->id(), array('transcoding_status' => 'error'), false);
+	}
+	else
+	{
+		trigger_error('set_error() called with non-entity');
+	}
 }
 
 /**

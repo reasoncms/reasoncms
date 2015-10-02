@@ -41,6 +41,8 @@
 										'blurbs_count' => 0,
 										'html5' => false,
 										'chunks' => 1,
+										'heading' => '',
+										'footer' => '',
 									);
 		var $offspring = array();
 		var $az = array();
@@ -176,6 +178,10 @@
 		
 		function run()
 		{
+			if(!empty($this->params['heading']))
+			{
+				echo '<div class="heading">'.$this->params['heading'].'</div>'."\n";
+			}
 			/* If the page has no entries, say so */
 			if( empty($this->offspring ) )
 			{
@@ -243,6 +249,10 @@
 				}
 				if($this->params['html5'])
 					echo '</nav>'."\n";
+			if(!empty($this->params['footer']))
+			{
+				echo '<div class="footer">'.$this->params['footer'].'</div>'."\n";
+			}
 			}
 		}
 		

@@ -22,7 +22,7 @@ require_once PLASMATURE_TYPES_INC."default.php";
 class optionType extends defaultType
 {
 	var $type = 'option';
-	var $type_valid_args = array('options', 'sort_options','disabled_options','add_empty_value_to_top', 'add_other', 'other_label', 'other_options');
+	var $type_valid_args = array('options', 'sort_options','disabled_options','add_empty_value_to_top', 'add_other', 'other_label', 'other_options', 'empty_value_label', );
 	/**
 	 * The possible values of this element.
 	 * Format: value as it should be stored => value as it should be displayed.
@@ -58,6 +58,10 @@ class optionType extends defaultType
 	 * otherwise, the user can enter anything at all.
 	 */
 	var $other_options = array();
+	/**
+	 * What label should the empty value get?
+	 */
+	var $empty_value_label = '--';
 	
 	protected function _array_val_ok()
 	{
@@ -232,6 +236,12 @@ class optionType extends defaultType
 		// NULL is always OK?
 		if(is_null($value))
 			return true;
+
+		if(!is_scalar($value))
+		{
+			trigger_error('Illegal value -- ('.gettype($value).') "'.$value.'" -- submitted for '.$this->name.'. This may be an attempt to probe for vulnerabilities.' );
+			return false;
+		}
 		
 		if($this->add_empty_value_to_top && '' === $value)
 			return true;
@@ -387,7 +397,7 @@ class radioType extends optionType
 		$checked = false;
 		if($this->add_empty_value_to_top)
 		{
-			$str .= $this->_get_radio_item('','--',$i++);
+			$str .= $this->_get_radio_item('',$this->empty_value_label,$i++);
 			if ( '' === $this->value ) $checked = true;
 		}
 		foreach( $this->options as $key => $val )
@@ -579,7 +589,7 @@ class checkboxgroupType extends optionType
 		
 		if($this->add_empty_value_to_top)
 		{
-			$str .= $this->_get_checkbox_item('','--',$i++);
+			$str .= $this->_get_checkbox_item('',$this->empty_value_label,$i++);
 		}
 		
 		foreach( $this->options as $key => $val )
@@ -835,7 +845,7 @@ class selectType extends optionType
 		$select_count = 0;
 		if($this->add_empty_value_to_top)
 		{
-			$str .= $this->_get_option_html('','--',$select_count);
+			$str .= $this->_get_option_html('',$this->empty_value_label,$select_count);
 		}
 		foreach( $this->options as $key => $val )
 		{
@@ -1179,7 +1189,7 @@ class select_multipleType extends selectType
 		{
 			if($this->add_empty_value_to_top)
 			{
-				$str .= $this->_get_checkbox_html('','--');
+				$str .= $this->_get_checkbox_html('',$this->empty_value_label);
 			}
 			foreach( $this->options as $key => $val )
 			{
@@ -1193,7 +1203,7 @@ class select_multipleType extends selectType
 			$select_count = 0;
 			if($this->add_empty_value_to_top)
 			{
-				$str .= $this->_get_option_html('','--',$select_count);
+				$str .= $this->_get_option_html('',$this->empty_value_label,$select_count);
 			}
 			foreach( $this->options as $key => $val )
 			{

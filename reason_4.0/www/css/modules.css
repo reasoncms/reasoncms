@@ -14,6 +14,10 @@ a img {
 	border:none;
 }
 
+.media_work_iframe.audio {
+	max-width:100%;
+}
+
 /* Navigation Module */
 
 .navListItem {
@@ -489,6 +493,33 @@ div.eventDetails div.eventLocation:after {
 	height: 0;
 	visibility: hidden;
 }
+div.eventDetails .reasonMaintainerPanel {
+	background:#eee;
+	padding:1em;
+	margin-top:3em;
+	opacity:0.8;
+}
+div.eventDetails .reasonMaintainerPanel:hover, div.eventDetails .reasonMaintainerPanel:active, div.eventDetails .reasonMaintainerPanel:focus {
+	/* opacity:1; */
+}
+div.eventDetails .reasonMaintainerPanel h4 {
+	font-size:.9em;
+	color:#555;
+	font-style:italic;
+	font-weight:normal;
+	margin:0 0 .25em 0;
+}
+div.eventDetails .reasonMaintainerPanel .borrowThis a.borrowThisLink {
+	display:inline-block;
+	padding:.125em .5em;
+	text-decoration:none;
+	background:#d8d8d8;
+	color:#000;
+	border-radius:.25em;
+}
+div.eventDetails .reasonMaintainerPanel .borrowThis a.borrowThisLink:hover, div.eventDetails .reasonMaintainerPanel .borrowThis a.borrowThisLink:active, div.eventDetails .reasonMaintainerPanel .borrowThis a.borrowThisLink:focus {
+	background:#fff;
+}
 div#calendar div.nav {
 	/* background-color: #C8D5EF;
 	border:1px solid #748FC2; */
@@ -733,6 +764,9 @@ div#calendar .focus ul li.first {
 }
 div#calendar .focus .otherActions, div#calendar .focus .clear, div#calendar .search .otherActions  {
 	font-size:88%;
+}
+div#calendar .focus .otherActions .clear {
+	font-size:100%;
 }
 div.eventDetails div.eventContent {
 	border-top-width: 1px;
@@ -1668,6 +1702,10 @@ div#news div.author {
 	margin: 0px;
 	padding: 0px;
 	list-style-type: none;
+}
+
+iframe.media_work_iframe.audio {
+    max-width:100%;
 }
 
 /* Pullquotes (basic) */

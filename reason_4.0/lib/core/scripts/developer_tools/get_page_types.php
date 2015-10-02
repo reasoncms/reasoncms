@@ -58,21 +58,21 @@ echo '<p><label for="sitePicker">Site:</label> <select id="sitePicker" name="sit
 echo '<option value="">All</option>';
 foreach($sites as $id => $site)
 {
-	echo '<option value="'.$id.'"'.($id == $_REQUEST['site_id'] ? ' selected="selected"' : '').'>'.strip_tags($site->get_value('name')).'</option>';
+	echo '<option value="'.$id.'"'.((isset($_REQUEST['site_id']) && $id == $_REQUEST['site_id']) ? ' selected="selected"' : '').'>'.strip_tags($site->get_value('name')).'</option>';
 }
 echo '</select></p>';
 echo '<p><label for="siteTypePicker">Site Type:</label> <select id="siteTypePicker" name="site_type_id">';
 echo '<option value="">All</option>';
 foreach($site_types as $id => $site_type)
 {
-	echo '<option value="'.$id.'"'.($id == $_REQUEST['site_type_id'] ? ' selected="selected"' : '').'>'.strip_tags($site_type->get_value('name')).'</option>';
+	echo '<option value="'.$id.'"'.((isset($_REQUEST['site_type_id']) && $id == $_REQUEST['site_type_id']) ? ' selected="selected"' : '').'>'.strip_tags($site_type->get_value('name')).'</option>';
 }
 echo '</select></p>';
 echo '<p><label for="themePicker">Theme:</label> <select id="themePicker" name="theme_id">';
 echo '<option value="">All</option>';
 foreach($themes as $id => $theme)
 {
-	echo '<option value="'.$id.'"'.($id == $_REQUEST['theme_id'] ? ' selected="selected"' : '').'>'.strip_tags($theme->get_value('name')).'</option>';
+	echo '<option value="'.$id.'"'.((isset($_REQUEST['theme_id']) && $id == $_REQUEST['theme_id']) ? ' selected="selected"' : '').'>'.strip_tags($theme->get_value('name')).'</option>';
 }
 echo '</select></p>';
 echo '<input type="submit" value="Submit">';

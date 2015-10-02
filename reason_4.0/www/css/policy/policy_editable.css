@@ -1,0 +1,24 @@
+#policyModule .reviewInfo {
+	background-color:#eee;
+	padding:1em;
+	margin:1em 0;
+}
+#policyModule .reviewInfo h4 {
+	margin-top:0;
+}
+#policyModule .reviewInfo>p:last-child {
+	margin-bottom:0;
+}
+#policyModule .reviewInfo a.editThis {
+	display:inline-block;
+	background:#888;
+	color:#fff;
+	text-decoration:none;
+	padding:0.33em 0.67em;
+	-webkit-border-radius:0.33em;
+	-moz-border-radius:0.33em;
+	border-radius:0.33em;
+}
+#policyModule .reviewInfo a.editThis:hover, #policyModule .reviewInfo a.editThis:active, #policyModule .reviewInfo a.editThis:focus {
+	background:#666;
+}

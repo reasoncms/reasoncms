@@ -638,6 +638,13 @@
 	define( 'PUBLICATION_SOCIAL_SHARING_DEFAULT', false);
 
 	/**
+	* PUBLICATION_SOCIAL_SHARING_INCLUDES_EMAIL
+	* This setting identifies whether social sharing on publications will 
+	* include email sharing via the publication module's email sharing feature
+	*/
+	define( 'PUBLICATION_SOCIAL_SHARING_INCLUDES_EMAIL', true);
+	
+	/**
 	 * REASON_WEB_ADMIN_PATH
 	 * This setting identifies the location of the Reason admin area
 	 * It should be in the form of foo.host_name.bar/http/path/to/admin/area/

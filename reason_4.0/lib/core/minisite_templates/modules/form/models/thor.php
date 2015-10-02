@@ -1152,7 +1152,7 @@ class ThorFormModel extends DefaultFormModel
 		$display_values =& $thor_core->get_column_labels_indexed_by_name();
 		foreach ($display_values as $key => $label)
 		{
-			$normalized_label = strtolower(str_replace(" ", "_", $label));
+			$normalized_label = strtolower(str_replace(array(' ',':'), array('_',''), $label));
 			if (isset($transform_array[$label]) || isset($transform_array[$normalized_label]))
 			{
 				$value = (isset($transform_array[$label])) ? $transform_array[$label] : $transform_array[$normalized_label];
