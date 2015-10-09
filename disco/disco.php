@@ -1718,19 +1718,7 @@
 				$element_object->set_name( $element_name );
 				$element_object->set_db_type( $db_type );
 				$element_object->init( $args );
-				if( $element_object->register_fields() )
-				{
-					foreach( $element_object->register_fields() AS $field )
-					{
-						$this->_ignored_fields[] = $field;
-					}
-				}
-				//store in the $_elements array
-				$this->_elements[ $element_name ] = $element_object;
-				//create an entry in the $_errors array
-				$this->_errors[ $element_name ] = false;
-				//add to the form order
-				$this->_order[$element_name] = $element_name;
+				$this->add_element_object($element_object);
 				return true;
 			}
 			else
@@ -1771,6 +1759,28 @@
 				$this->add_element( $element_name, $type, $args );
 			}
 		 }
+		 
+		/**
+		 * Add an initialized element object to the form.
+		 * Normally used by add_element(), but useful if you're cloning your own elements.
+		 * @param object $element_object
+		 */
+		protected function add_element_object($element_object)
+		{
+			if( $element_object->register_fields() )
+			{
+				foreach( $element_object->register_fields() AS $field )
+				{
+					$this->_ignored_fields[] = $field;
+				}
+			}
+			//store in the $_elements array
+			$this->_elements[ $element_object->name ] = $element_object;
+			//create an entry in the $_errors array
+			$this->_errors[ $element_object->name ] = false;
+			//add to the form order
+			$this->_order[$element_object->name] = $element_object->name;		
+		} 
 		 
 		/**
 		* Completely removes an element from the form.
