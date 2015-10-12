@@ -508,7 +508,7 @@ function google_analytics()
 
 	ga('create', 'UA-129020-8', 'auto', {'allowLinker': true});
 	ga('require', 'linker');
-	ga('linker:autoLink', ['luthercollege.hiretouch.com', 'lutherbookshop.com'] );
+	ga('linker:autoLink', ['hiretouch.com', 'lutherbookshop.com'] );
 	ga('send', 'pageview');"."\n";
 
 	echo '</script>'."\n";
