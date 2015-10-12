@@ -1135,7 +1135,7 @@ class ThorCore
 					  'size' => $size,
 					  'default' => array(),
 					  'display_name' => $display_name,
-					  'add_null_value_to_top' => !$required);
+					  'add_null_value_to_top' => true);
 					  
 		$element_children = $element->tagChildren;
 		foreach ($element_children as $element_child)
