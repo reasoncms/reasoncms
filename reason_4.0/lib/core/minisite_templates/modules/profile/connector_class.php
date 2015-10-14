@@ -42,7 +42,7 @@ class ProfileConnector
 	protected $config;
 	
 	/** Storage for cached data */
-	protected $tag_cache;
+	protected $tag_cache = array();
 	protected $slug_index;
 	protected $relation_index;
 
@@ -755,6 +755,8 @@ class ProfileConnector
 
 		$this->slug_index = array();
 		
+		if (empty($this->tag_cache)) $this->get_tag_cache();
+		
 		foreach ($this->tag_cache as $id => $tag)
 		{
 			if (!empty($tag['slug']))
@@ -763,7 +765,7 @@ class ProfileConnector
 				trigger_error('No slug for tag id '.$id);
 		}
 		
-		$cache->set($this->slug_index);
+		if (!empty($this->slug_index)) $cache->set($this->slug_index);
 		$cache->unlock();
 		return $this->slug_index;
 	}
@@ -794,6 +796,8 @@ class ProfileConnector
 
 		$this->relation_index[$relation] = array();
 		
+		if (empty($this->tag_cache)) $this->get_tag_cache();
+		
 		foreach ($this->tag_cache as $id => $tag)
 		{
 			if (isset($tag['profiles'][$relation]))
@@ -802,7 +806,7 @@ class ProfileConnector
 
 		$this->customize_relation_index($relation);
 		
-		$cache->set($this->relation_index[$relation]);
+		if (!empty($this->relation_index[$relation])) $cache->set($this->relation_index[$relation]);
 		$cache->unlock();
 		
 		return $this->relation_index[$relation];
