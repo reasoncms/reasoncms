@@ -299,6 +299,12 @@ $(document).ready(function() {
 
 function renderUploadPreview(suffix, info) {
 	console.log("rendering preview for [" + suffix + "] with " +JSON.stringify(info) + "...");
+
+	if (info == undefined) {
+		$('#upload_console_' + suffix).html("Unknown error occurred during upload.");
+		return;
+	}
+
 	$(".uploaded_file").show();
 	var image = $("img.representation").attr("src", info.uri);
 
