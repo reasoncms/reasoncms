@@ -79,7 +79,7 @@ $(document).ready(function() {
     // Add analytics tracking to call to action buttons
 	$('li').on('click', "a[class^=cta-]", function(e) {
     	if ((label = $(this).attr("class").match(/^cta\-([A-Za-z0-9_\-]+)/)[1]) != "button") {
-    		_gaq.push(["_trackEvent", "call-to-action", "click", $(location).attr('pathname') + "button_" + label]);
+    		ga('send', 'event', 'call-to-action', 'click', $(location).attr('pathname') + 'button_' + label]);
     	}   	
     	setTimeout(function() { 
     		window.location.href = e.target.href;
