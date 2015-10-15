@@ -970,19 +970,39 @@ class ThorFormModel extends DefaultFormModel
 		$formXml = new XMLParser($rawXml);
 		$formXml->Parse();
 		$attachmentData = Array();
+
+		$tc = $this->get_thor_core_object();
 		foreach ($formXml->document->tagChildren as $node) {
 			if ($node->tagName == 'upload') {
 				$col_id = $node->tagAttrs['id'];
 				$col_label = $node->tagAttrs['label'];
-				$upload_data = $_FILES[$col_id];
-				if ($upload_data["tmp_name"] != "") {
-					$disco_el = $this->get_view()->get_element($col_id);
 
-					if ($disco_el->state == "received") {
-						$attachmentData[$col_id] = Array("label" => $col_label, "filename" => $upload_data["name"]);
+				$disco_el = $this->get_view()->get_element($col_id);
+				if ($disco_el->state == "received") {
+					if (isset($_FILES[$col_id])) {
+						// old way - before plupload. To test this flow, change reason_package/thor/thor.php to use the "upload" type instead of "ReasonUpload" in _transform_upload. Keep it around in case there are pages
+						// that are using the old upload type
+						$upload_data = $_FILES[$col_id];
+						if ($upload_data["tmp_name"] != "") {
+							$attachmentData[$col_id] = Array("label" => $col_label, "filename" => $upload_data["name"]);
+							if ($this->should_save_form_data()) {
+								$attachmentData[$col_id]["path"] = $tc->construct_file_storage_location($this->get_form_id(), $col_id, $upload_data["name"]);
+							} else {
+								$attachmentData[$col_id]["path"] = $disco_el->tmp_full_path;
+							}
+						}
+					} else {
+						// new way - $_FILES is empty when we use plupload
+						$attachmentData[$col_id] = Array("label" => $col_label,
+														"filename" => $disco_el->file["name"]);
 						if ($this->should_save_form_data()) {
-							$tc = $this->get_thor_core_object();
-							$attachmentData[$col_id]["path"] = $tc->construct_file_storage_location($this->get_form_id(), $col_id, $upload_data["name"]);
+							$probePath = $tc->construct_file_storage_location($this->get_form_id(), $col_id, "");
+							if (file_exists($probePath)) {
+								$globResults = glob($probePath . "*");
+								if (count($globResults) > 0) {
+									$attachmentData[$col_id]["path"] = $globResults[0];
+								}
+							}
 						} else {
 							$attachmentData[$col_id]["path"] = $disco_el->tmp_full_path;
 						}
