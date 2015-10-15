@@ -12,6 +12,7 @@ require_once( INCLUDE_PATH . 'xml/xmlparser.php' );
 include_once ( SETTINGS_INC.'thor_settings.php' );
 include_once( CARL_UTIL_INC . 'db/db.php'); // Requires ConnectDB Functionality
 reason_include_once("function_libraries/file_utils.php");
+reason_include_once("classes/plasmature/upload.php");
 
 /**
  * ThorCore - essentially a thor replacement that does less than the old thor, but does it better.
@@ -1222,7 +1223,8 @@ class ThorCore
 
 		// var_dump("FINAL ARGS: <PRE>", $args, "</PRE>");
 
-		$d->add_element($id, 'upload', $args);
+		// $d->add_element($id, 'upload', $args);
+		$d->add_element($id, 'ReasonUpload', $args);
 		if ( $required ) $d->add_required($id);
 	}
 	
