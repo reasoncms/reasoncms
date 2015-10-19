@@ -91,7 +91,7 @@ class ReasonUpgrader_47_PublicationUpgradeChanges implements reasonUpgraderInter
 		return "<p>This upgrade:<ul>" .
 			"<li>creates an 'Embed Handler' entity type, and a NewsPost->EmbedHandler relationship, used in giving a custom look and feel on a per-story basis to a Publication Post" .
 			"<li>Updated News/Post entities to allow them to serve as external links" .
-			"</u></p>";
+			"</ul></p>";
 	}
 
 	private function echoYesNo($test) {
