@@ -627,8 +627,10 @@ function _get_plupload_js_setup_snippet($upload_sid, $element_name)
 	// can i use the same submissionUrl for different elements? Not sure about that yet...
 
 	// var pluploadConfig = {submissionUrl: "{$REASON_HTTP_BASE_PATH}scripts/upload/receive.php?user_id=0&upload_sid={$upload_sid}", fieldNames: []};
-	$submitUrl = REASON_HTTP_BASE_PATH . "scripts/upload/receive.php?user_id=0&upload_sid=" . $upload_sid;
-	$destructionUrl = REASON_HTTP_BASE_PATH . "scripts/upload/destroy.php?upload_sid=" . $upload_sid;
+	$user_id = isset($_REQUEST['user_id']) ? $_REQUEST['user_id'] : 0;
+
+	$submitUrl = REASON_HTTP_BASE_PATH . "scripts/upload/receive.php?user_id=" . $user_id . "&upload_sid=" . $upload_sid;
+	$destructionUrl = REASON_HTTP_BASE_PATH . "scripts/upload/destroy.php?user_id=" . $user_id . "&upload_sid=" . $upload_sid;
 
 	$js = <<<JAVASCRIPT
 		<script type="text/javascript">
