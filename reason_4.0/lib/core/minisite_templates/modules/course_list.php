@@ -228,7 +228,7 @@ class CourseListModule extends DefaultMinisiteModule
 	
 	protected function get_course_html($course)
 	{
-		$course->set_academic_year_limit(2014);
+		$course->set_academic_year_limit(2015);
 		if ($course->get_last_offered_academic_year() < 2011) return null;
 		
 		$html = '<div class="courseContainer">'."\n";
@@ -274,9 +274,9 @@ class CourseListModule extends DefaultMinisiteModule
 					list($year,$termcode) = explode('/', $term);
 					$terms[] = $term_names[$termcode].' '.(2000 + $year);
 				}
-				$details[] = 'offered ' . join(', ', $terms);
+				$details[] = 'Offered ' . join(', ', $terms);
 			} else {
-				$details[] = 'not offered 2015–16';
+				$details[] = 'Not offered 2015–16';
 			}
 		}
 
