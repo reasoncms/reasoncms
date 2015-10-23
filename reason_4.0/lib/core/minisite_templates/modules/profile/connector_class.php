@@ -904,14 +904,21 @@ class ProfileConnector
 			}
 		}
 
-		// Run any local tag cache customizations
-		$this->customize_tag_cache();
+		if (!empty($this->tag_cache))
+		{
+			// Run any local tag cache customizations
+			$this->customize_tag_cache();
 		
-		$cache->set($this->tag_cache);
-		$cache->unlock();
-		$this->refreshed = true;
+			$cache->set($this->tag_cache);
+			$cache->unlock();
+			$this->refreshed = true;
 		
-		return $this->tag_cache;
+			return $this->tag_cache;
+		}
+		else
+		{
+			return array();
+		}
 	}		
 
 	/** This method allows you to add any local data to your tag cache while it is being generated.
