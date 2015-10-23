@@ -149,7 +149,7 @@ class ProfileConnectorModule extends DefaultMinisiteModule
 				{
 					$str .= '<li><span class="affiliation">'.$this->pc->affiliations[$affil].':</span>';
 					$str .= '<ul class="profiles">';
-					$this->shuffle_assoc($profiles);
+					$this->order_profiles($profiles);
 					$count = 0;
 					foreach ($profiles as $slug => $profile)
 					{
@@ -168,6 +168,17 @@ class ProfileConnectorModule extends DefaultMinisiteModule
 		}
 		$str .= '</div>';
 		return $str;
+	}
+
+	/**
+	 * Order the profiles in the preferred way. Default is shuffled, but extending classes
+	 * can impose a different order.
+	 * 
+	 * @param array list of profiles; modified by reference
+	 */
+	protected function order_profiles(&$profiles)
+	{
+		$this->shuffle_assoc($profiles);
 	}
 
 	protected function get_profile_list_item($profile, $classes=array())
