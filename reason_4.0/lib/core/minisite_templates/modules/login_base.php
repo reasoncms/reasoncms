@@ -269,7 +269,7 @@ class LoginBaseModule extends DefaultMinisiteModule
 			{
 				echo '<h2>'.$this->headline.'</h2>'."\n";
 				if (isset($dest_txt))
-					echo '<p class="destinationInfo">Signing in for: <a href="'.$this->dest_page.'" title="'.htmlspecialchars($this->dest_page).'">'.htmlspecialchars($dest_txt).'</a></p>'."\n";
+					echo '<p class="destinationInfo">Signing in for: <a href="'.htmlspecialchars($this->dest_page, ENT_QUOTES).'" title="'.htmlspecialchars($this->dest_page, ENT_QUOTES).'">'.htmlspecialchars($dest_txt).'</a></p>'."\n";
 
 			}
 			else
@@ -287,7 +287,7 @@ class LoginBaseModule extends DefaultMinisiteModule
 		else 
 		{ 
 			if (!empty( $this->msg ) && isset($dest_txt))
-				echo '<p class="destinationInfo below">Signing in for: <a href="'.$this->dest_page.'" title="'.htmlspecialchars($this->dest_page).'">'.htmlspecialchars($dest_txt).'</a></p>'."\n";
+				echo '<p class="destinationInfo below">Signing in for: <a href="'.htmlspecialchars($this->dest_page, ENT_QUOTES).'" title="'.htmlspecialchars($this->dest_page, ENT_QUOTES).'">'.htmlspecialchars($dest_txt).'</a></p>'."\n";
 		}
 
 		
@@ -430,7 +430,7 @@ class LoginBaseModule extends DefaultMinisiteModule
 					exit;	
 				} else {				
 					$dest_txt = $this->get_dest_page_text();
-					$cleaned_dest_page = htmlspecialchars($this->dest_page);
+					$cleaned_dest_page = htmlspecialchars($this->dest_page, ENT_QUOTES);
 					$this->status_msg .= 'Proceed to <a href="'.$cleaned_dest_page.'" title="'.$cleaned_dest_page.'">'.htmlspecialchars($dest_txt).'</a>';
 				}
 			}
