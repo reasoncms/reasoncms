@@ -308,17 +308,17 @@ function renderUploadPreview(suffix, info) {
 		}
 	}
 
-	// resize the shim
-	var shim = $(selectorStart + "div.moxie-shim-html5");
-	var browseBtn = $(selectorStart + "div#upload_browse_" + suffix);
-	shim.width(browseBtn.width());
-	shim.height(browseBtn.height());
-
 	if (info.formattedSize != null) {
 		$(selectorStart + '.filesize').text(info.formattedSize);
 	} else {
 		$(selectorStart + '.filesize').text(format_size(info.size));
 	}
+	
+	// resize the shim
+	var shim = $(selectorStart + "div.moxie-shim-html5");
+	var browseBtn = $(selectorStart + "div#upload_browse_" + suffix);
+	shim.width(browseBtn.width());
+	shim.height(browseBtn.height());
 }
 
 function repositionPreview(suffix) {
