@@ -217,39 +217,6 @@ $(document).ready(function() {
 			$(this).removeClass("hover_dropzone");
 		});
 
-		/*
-		// early tests in rolling my own drag-n-drop before realizing plupload basically does it for free
-		var dropzone = $("#upload_browse_" + cfg.fieldName);
-		dropzone.on('dragenter', function(e) {
-			e.stopPropagation();
-			e.preventDefault();
-			$(this).css("background-color", "yellow");
-		});
-
-		dropzone.on('dragover', function (e) {
-			 e.stopPropagation();
-			 e.preventDefault();
-		});
-
-		dropzone.on('drop', (function(up) { return function (e) {
-			$(this).css("background-color", "white");
-			 e.preventDefault();
-			 var files = e.originalEvent.dataTransfer.files;
-		 
-			 //We need to send dropped files to Server
-			 // handleFileUpload(files,obj);
-				if (files.length != 1) {
-					alert('you can only drop a single file');
-				} else {
-					var firstFile = files[0];
-					var fd = new FormData();
-					fd.append('file', firstFile);
-					up.addFile(fd);
-					kickoffUpload(up);
-				}
-		} })(uploader));
-		*/
-
 		// prevent form submission while uploads are pending
 		// reason_package/reason_4.0/www/flash_upload/rich_upload.js
         var form = dropzone.parents("form").eq(0);
@@ -363,7 +330,7 @@ var uploadsPending = 0;
 var onUploadCompletion = null;
 function kickoffUpload(uploader) {
 	console.log("STARTING UPLOAD FOR [" + uploader.settings.multipart_params.rvFieldName + "] / [" + uploader.id + "]");
-	$("div.moxie-shim-html5").hide();
+	// $("div.moxie-shim-html5").hide();
 	// console.log(uploader);
 	uploader.start();
 	uploadsPending++;
@@ -380,8 +347,29 @@ $(document).on('dragover', function (e) {
   e.stopPropagation();
   e.preventDefault();
 });
-$(document).on('drop', function (e) 
-{
-    e.stopPropagation();
-    e.preventDefault();
+$(document).on('drop', function (e) {
+	if (isDropOnPlupload(e.target)) {
+		console.log("drop was on plupload!");
+	} else {
+		console.log("drop was outside!");
+		e.stopPropagation();
+		e.preventDefault();
+	}
 });
+
+// firefox workaround...
+function isDropOnPlupload(pageElement) {
+	var el = $(pageElement);
+
+	var parentId = el.parent().attr("id");
+	var grandparentId = el.parent().parent().attr("id");
+
+	parentId = parentId ? parentId : "";
+	grandparentId = grandparentId ? grandparentId : "";
+
+	if (parentId.indexOf("file_upload_") == 0 || grandparentId.indexOf("file_upload_") == 0) {
+		return true;
+	} else {
+		return false;
+	}
+}
