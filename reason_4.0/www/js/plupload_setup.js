@@ -55,7 +55,7 @@ function setupRevertInterface(suffix) {
 }
 
 function storeRevertData(suffix) {
-	var container = $("div#upload_filelist_" + suffix).prev("div.uploaded_file");
+	var container = $("div#upload_filelist_" + suffix).prevAll("div.uploaded_file");
 	var img = container.children("img.representation");
 	var filesize = container.find("span.filesize");
 
@@ -298,19 +298,34 @@ $(document).ready(function() {
 });
 
 function renderUploadPreview(suffix, info) {
-	console.log("rendering preview for [" + suffix + "] with " +JSON.stringify(info) + "...");
+	console.log("WITH FIXES: rendering preview for [" + suffix + "] with " +JSON.stringify(info) + "...");
+
+	var selectorStart = "div#file_upload_" + suffix + " ";
 
 	if (info == undefined) {
 		$('#upload_console_' + suffix).html("Unknown error occurred during upload.");
 		return;
 	}
 
-	$(".uploaded_file").show();
-	var image = $("img.representation").attr("src", info.uri);
+	var image = $(selectorStart + "img.representation").attr("src", info.uri);
+
+	// profile uploads for instance has the representation elsewhere...
+	if (image.length == 0) {
+		image = $("img.representation").attr("src", info.uri);
+		if (image.length != 0) {
+			selectorStart = "";
+		}
+	}
+
+	// we normally want to reposition the preview so that it is the dropzone - but if we have a croppable element (like profile photos)
+	// we can't do that. So, check for one of the croppable hidden fields. Little ugly, but works.
+	if ($('input[name="_reason_upload_orig_h"]').length == 0) { repositionPreview(suffix); }
+
+	$(selectorStart + ".uploaded_file").show();
 
 	if (image.length == 0) {
 		console.log("NON-IMAGE-PREVIEW!");
-		$("div.uploaded_file span.filename").html(info.filename);
+		$(selectorStart + "div.uploaded_file span.filename").html(info.filename);
 	} else {
 		console.log("IMAGE-PREVIEW!");
 		var dims = info.dimensions;
@@ -318,26 +333,24 @@ function renderUploadPreview(suffix, info) {
 
 		if (dims) {
 			image.css(dims);
-			$('.dimensions').html(dims.width + "x" + dims.height);
+			$(selectorStart + '.dimensions').html(dims.width + "x" + dims.height);
 		}
 		if (orig_dims) {
-			$('input[name="_reason_upload_orig_h"]').val(orig_dims.height);
-			$('input[name="_reason_upload_orig_w"]').val(orig_dims.width);
+			$('span#' + suffix + 'Item input[name="_reason_upload_orig_h"]').val(orig_dims.height);
+			$('span#' + suffix + 'Item input[name="_reason_upload_orig_w"]').val(orig_dims.width);
 		}
 	}
 
 	if (info.formattedSize != null) {
-		$('.filesize').text(info.formattedSize);
+		$(selectorStart + '.filesize').text(info.formattedSize);
 	} else {
-		$('.filesize').text(format_size(info.size));
+		$(selectorStart + '.filesize').text(format_size(info.size));
 	}
-
-	repositionPreview(suffix);
 }
 
 function repositionPreview(suffix) {
 	// let's try to stuff the preview image into the plupload click/drop zone...
-	var previewImg = $("div#upload_filelist_" + suffix).prev("div.uploaded_file");
+	var previewImg = $("div#upload_filelist_" + suffix).prevAll("div.uploaded_file");
 	if (previewImg.length == 1){
 		previewImg.detach();
 		var dropzone = $("div#upload_browse_" + suffix);
