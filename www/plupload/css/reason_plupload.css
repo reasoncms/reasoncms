@@ -8,6 +8,8 @@ div.plupload_dropzone {
 	overflow: hidden;
 	font-size: 12px;
 	line-height: 100px;
+	max-width: 100%;
+	box-sizing: border-box;
 }
 
 div.plupload_dropzone.loadedItem {
