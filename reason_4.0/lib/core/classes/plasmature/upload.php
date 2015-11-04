@@ -607,15 +607,22 @@ function _reason_get_disco_uploaded_file($name, $async_sid,
 	);
 }
 
+$pluploadStylesheetEmbedder = 1;
 function _embed_plupload_stylesheet($head_items = null)
 {
-	// echo "EMBEDDING STYLESHEET WITH [" . ($head_items ? "head_items" : "inline") . "] technique...<P>";
-	if ($head_items && $head_items->get_num_times_markup_has_been_fetched() == 0) {
-		// echo "<script>console.log('embedding stylesheet with head_items...');</script>";
-		$head_items->add_stylesheet(REASON_PACKAGE_HTTP_BASE_PATH . 'plupload/css/reason_plupload.css');
+	global $pluploadStylesheetEmbedder;
+	if ($pluploadStylesheetEmbedder == 0) {
+		// echo "EMBEDDING STYLESHEET WITH [" . ($head_items ? "head_items" : "inline") . "] technique...<p>";
+		if ($head_items && $head_items->get_num_times_markup_has_been_fetched() == 0) {
+			// echo "<script>console.log('embedding stylesheet with head_items...');</script>";
+			$head_items->add_stylesheet(REASON_PACKAGE_HTTP_BASE_PATH . 'plupload/css/reason_plupload.css');
+		} else {
+			// echo "<script>console.log('embedding stylesheet inline...');</script>";
+			echo "<link rel='stylesheet' type='text/css' href='" . REASON_PACKAGE_HTTP_BASE_PATH . "plupload/css/reason_plupload.css'>";
+		}
+		$pluploadStylesheetEmbedder++;
 	} else {
-		// echo "<script>console.log('embedding stylesheet inline...');</script>";
-		echo "<link rel='stylesheet' type='text/css' href='" . REASON_PACKAGE_HTTP_BASE_PATH . "plupload/css/reason_plupload.css'>";
+		// echo "SKIP STYLESHEET EMBED - ALRAD DONE!<P>";
 	}
 }
 
