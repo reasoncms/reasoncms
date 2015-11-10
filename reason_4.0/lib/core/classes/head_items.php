@@ -120,8 +120,15 @@ class HeadItems
 	 */
 	protected $delete_old_scss_css = true;
 
+	private $markup_fetched_num_times;
+	
 	function HeadItems()
 	{
+		$this->markup_fetched_num_times = 0;
+	}
+
+	public function get_num_times_markup_has_been_fetched() {
+		return $this->markup_fetched_num_times;
 	}
 
 	/**
