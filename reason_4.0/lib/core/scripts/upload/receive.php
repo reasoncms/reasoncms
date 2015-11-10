@@ -61,6 +61,9 @@ foreach (array_keys($_FILES) as $name) {
 	$file = reason_get_uploaded_file($name);
 	$filename = $file->get_filename();
 	
+	// gotta set this before checking for constraints as those are based on the actual disco/plasmature field name, not the generic "file" that comes through from plupload...
+	if (isset($_POST["rvFieldName"])) { $name = $_POST["rvFieldName"]; }
+	
 	$constraints = (!empty($session['constraints'][$name]))
 		? $session['constraints'][$name]
 		: null;
@@ -83,8 +86,7 @@ foreach (array_keys($_FILES) as $name) {
 	$filesize = $file->get_size();
 	
 	if (!$file->move($temp_path)) {
-		final_response(500, "Failed to place the uploaded file in temporary ".
-			"storage.");
+		responseWrapper(500, "Failed to place the uploaded file in temporary storage.");
 	}
 	
 	$img_info = @getimagesize($temp_path);
@@ -108,7 +110,7 @@ foreach (array_keys($_FILES) as $name) {
 		}
 		else
 		{
-			final_response(501, 'Unable to convert the uploaded file to a web-friendly image');
+			responseWrapper(501, 'Unable to convert the uploaded file to a web-friendly image');
 		}
 	}
 	if ($img_info)
@@ -133,7 +135,7 @@ foreach (array_keys($_FILES) as $name) {
 					//Make sure the image won't make php crash:
 					if(image_is_too_big($temp_path))
 					{
-						final_response(422, "The uploaded image's dimensions are too large for the server to process. Try a smaller image.");
+						responseWrapper(422, "The uploaded image's dimensions are too large for the server to process. Try a smaller image.");
 					}
 
 				
@@ -204,26 +206,26 @@ function check_constraints($constraints, $file) {
 	
 	if (!empty($constraints['mime_types'])) {
 		if (!$file->mime_type_matches($constraints['mime_types'])) {
-			final_response(415, "File is not of an allowed type.");
+			responseWrapper(415, "File is not of an allowed type.");
 		}
 	}
 	if (!empty($constraints['extensions'])) {
 		$filename_parts = explode('.', $file->get_filename());
 		$extension = strtolower(end($filename_parts));
 		if (!in_array($extension, $constraints['extensions'])) {
-			final_response(415, "File is not of an allowed type.");
+			responseWrapper(415, "File is not of an allowed type.");
 		}
 	}
 	if (!empty($constraints['max_size'])) {
 		if ($file->get_size() > (int) $constraints['max_size']) {
-			final_response(413, "File is unacceptably large.");
+			responseWrapper(413, "File is unacceptably large.");
 		}
 	}
 	if (!empty($constraints['validator'])) {
 		list($file, $callback) = $constraints['validator'];
 		reason_include_once($file);
 		if (!call_user_func($callback, $file)) {
-			final_response(406, "Invalid or unacceptable file uploaded.");
+			responseWrapper(406, "Invalid or unacceptable file uploaded.");
 		}
 	}
 }
