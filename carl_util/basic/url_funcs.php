@@ -200,9 +200,17 @@ function get_current_url( $scheme = '' )
 	return $url;
 }
 
+/**
+ * Determine if request used HTTPS
+ * 
+ * Looks for HTTPS or HTTP_X_FORWARDED_PROTO in $_SERVER
+ * 
+ * @return boolean TRUE if request was via https, FALSE if via http
+ */
 function on_secure_page()
 {
-	return (!empty( $_SERVER['HTTPS'] ) AND strtolower( $_SERVER['HTTPS'] ) == 'on' );
+	return array_key_exists("HTTPS", $_SERVER) && $_SERVER["HTTPS"] == "on" ||
+		array_key_exists("HTTP_X_FORWARDED_PROTO", $_SERVER) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https';
 }
 
 function urlencode_array_keys_and_values($array)
