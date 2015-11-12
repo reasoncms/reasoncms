@@ -180,7 +180,7 @@ function is_developer()
 		return $_SESSION['carl_util_error_handler_override'];
 	
 	if(!empty($_SERVER['REMOTE_ADDR']))
-		return is_developer_ip_address($_SERVER['REMOTE_ADDR']);
+		return is_developer_ip_address(get_user_ip_address());
 	
 	return false;
 }
