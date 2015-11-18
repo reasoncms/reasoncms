@@ -2109,6 +2109,7 @@ class TableAdmin
 				foreach ($this->data as $dataRow) {
 					if ($dataRow["id"] >= $targetMin && $dataRow["id"] <= $targetMax) {
 						foreach ($this->fileColumns as $fileCol => $fileLabel) {
+							$fileLabel = substr(str_replace('/','_', $fileLabel), 0, 20);
 							$path = $tc->construct_file_storage_location($dataRow["id"], $fileCol, $dataRow[$fileCol]);
 							if (file_exists($path)) {
 								// echo "[$i]: include $fileLabel [" . $dataRow[$fileCol] . "] -> [" . $path . "]<P>";
