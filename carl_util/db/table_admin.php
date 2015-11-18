@@ -221,6 +221,10 @@ class TableAdmin
 	 */
 	 var $_table_data;
 	/**
+	 * @var string target for file downloads
+	 */
+	 var $file_download_base_url = '/thor/getFormFile.php';	 
+	/**
 	 * @var array cleanup rules
 	 */
 	var $cleanup_rules = array('table_sort_order' => array('function' => 'check_against_array', 'extra_args' => array('asc', 'ASC', 'desc', 'DESC')),
@@ -339,7 +343,7 @@ class TableAdmin
 					$fileCols[$k] = $this->_display_values[$k]["label"];
 				}
 			}
-			$this->batch_download_form = new DiscoAdminBatchDownloader($this->get_table_name(), $fileCols, $data);
+			$this->batch_download_form = new DiscoAdminBatchDownloader($this->get_table_name(), $fileCols, $data, $this->file_download_base_url);
 			break;
 		case "archive":
 			break;
@@ -1125,9 +1129,8 @@ class TableAdmin
 			// if it's a file, let's make it downloadable
 			$type = (!empty($this->_display_values[$k]['type'])) ? $this->_display_values[$k]['type'] : 'text';
 			if ($type == "file") {
-				$v = "<a href='/thor/getFormFile.php?table=" . $this->get_table_name() . "&row=$row_id&col=$k&filename=$v'>$v</a>";
-				// $link_params = array('table_row_action' => 'download_file', 'table_action_id' => $row_id, 'table_action' => '', 'download_col' => $k);
-				// $v = "<a href='" . carl_make_link($link_params) . "'>$v</a> (" . carl_make_link($link_params) . ")";
+				$link_params = array('table' => $this->get_table_name(), 'row' => $row_id, 'col' => $k, 'filename' => $v);
+				$v = "<a href='" . carl_make_link($link_params, $this->file_download_base_url) . "'>$v</a>";
 			}
 
 			$ret .= '<td'.$first.'>'.$v.'</td>';
@@ -2031,12 +2034,17 @@ class TableAdmin
 	 */
 	class DiscoAdminBatchDownloader extends Disco
 	{
+		/**
+		 * @var string target for file downloads
+		 */
+		var $file_download_base_url = '/thor/getFormFile.php';	 
 		var $actions = array( 'disco_confirm_export' => 'Generate Zip...');
-		function __construct($tableName, $fileColumns, $data)
+		function __construct($tableName, $fileColumns, $data, $url = null)
 		{
 			$this->tableName = $tableName;
 			$this->fileColumns = $fileColumns;
 			$this->data = $data;
+			if (!is_null($url)) $this->file_download_base_url = $url;
 
 			usort($this->data, Array("DiscoAdminBatchDownloader", "cmp"));
 
@@ -2129,7 +2137,9 @@ class TableAdmin
 					$zip->close();
 
 					// use an iframe to serve up the zip - getFormFile will return it to the user and delete it when done
-					echo '<iframe src="/thor/getFormFile.php?mode=fetch_zip&table=' . $this->tableName . '&zipfile=' . $zipPath . '" id="zipper" style="display:none"></iframe>';
+					$link_params = array('mode' => 'fetch_zip', 'table' => $this->tableName, 'zipfile' => $zipPath);
+
+					echo '<iframe src="'.carl_make_link($link_params, $this->file_download_base_url).'" id="zipper" style="display:none"></iframe>';
 				} else {
 					echo "No matching files were found<P>";
 				}
