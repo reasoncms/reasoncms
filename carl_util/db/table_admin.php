@@ -1047,7 +1047,7 @@ class TableAdmin
 	 * @return string HTML for the header row
 	 */
 	function gen_header_row($header_row)
-	{
+	{pray($this->_display_values);
 		if (isset($this->fields_to_show)) $this->limit_columns($header_row);
 		$first = ' class="first"';
 		$order_display_name = array('asc' => 'Sort Ascending', 'desc' => 'Sort Descending');
@@ -1599,9 +1599,7 @@ class TableAdmin
 	}
 	
 	/**
-	 * Returns an array that describes the label and plasmature type, indexed by column name
-	 * 
-	 * If an admin form is present and defines the get_field_display_name method, it will be used to build column labels.
+	 * Returns an array that describes the label and plasmature type, indexed by column name 
 	 */
 	function _build_display_values()
 	{
@@ -1610,28 +1608,50 @@ class TableAdmin
   		$res = mysql_query($q);
   		connectDB($this->get_orig_db_conn()); // reconnect to default DB
   		
+  		$this->_display_values = array();
   		while($field = mysql_fetch_assoc($res))
   		{
-  			$field_name = $field['Field'];
-  			$type = $field['Type'];
-  			if (substr($type, 0, 4) == 'enum')
-  			{
-  				preg_match_all("/'(.*?)'/", $type, $matches);
-   				$display_values[$field['Field']]['options'] = $matches[1];
-   				$display_values[$field['Field']]['type'] = 'enum';
-  			}
-  			else
-  			{
-  				$display_values[$field['Field']]['type'] = $type;
-  			}
-  			if ($this->admin_form && method_exists($this->admin_form, 'get_field_display_name'))
-  			{
-  				$display_values[$field['Field']]['label'] = $this->admin_form->get_field_display_name($field_name);
-  			}
-  			else $display_values[$field['Field']]['label'] = $field_name;
+  			$this->set_field_display_type($field['Field'], $field['Type']);
+  			$this->set_field_display_name($field['Field'], $field['Field']);
   		}
-  		$this->_display_values = (isset($display_values)) ? $display_values : array();
 	}
+	
+	/** 
+	 * Called by _build_display_values, which passes the field name and db column type to be
+	 * used to set the data type for this column. You can override this if you need custom
+	 * type handling for a particular field.
+	 */
+	function set_field_display_type($field, $type)
+	{
+		if (substr($type, 0, 4) == 'enum')
+		{
+			preg_match_all("/'(.*?)'/", $type, $matches);
+			$this->_display_values[$field]['options'] = $matches[1];
+			$this->_display_values[$field]['type'] = 'enum';
+		}
+		else
+		{
+			$this->_display_values[$field]['type'] = $type;
+		}
+	}
+
+	/** 
+	 * Called by _build_display_values, which passes the field name that is
+	 * used to set the display name for this column. You can override this if you need custom
+	 * name handling for a particular field.
+	 *
+	 * If an admin form is present and defines the get_field_display_name method, 
+	 * it will be used to build column labels.
+	 */
+	function set_field_display_name($field, $field_name)
+	{
+		if ($this->admin_form && method_exists($this->admin_form, 'get_field_display_name'))
+		{
+			$this->_display_values[$field]['label'] = $this->admin_form->get_field_display_name($field);
+		}
+		else $this->_display_values[$field]['label'] = $field_name;
+	}
+
 	
 	/** 
 	 * Returns an array that describes the label and gives a plasmature type of text
