@@ -40,14 +40,14 @@
 			$username = reason_check_authentication();
 
 			if (!$username) {
-				$this->error("this page requires authentication");
+				$this->error("This page requires authentication.");
 			} else {
 				// next, figure out the form id
 				$matches = Array();
 				$res = preg_match("/form_(\d*)/", $this->table, $matches);
 
 				if (count($matches) != 2) {
-					$this->error("invalid table name");
+					$this->error("invalid table name.");
 				} else {
 					$formId = $matches[1];
 
@@ -68,7 +68,7 @@
 
 		function serveFile() {
 			if ($this->missingParams()) {
-				$this->error("Required parameters are missing");
+				$this->error("Required parameters are missing.");
 			} else if ($this->checkPermissions()) {
 				$tc = new ThorCore("", $this->table);
 
@@ -85,7 +85,7 @@
 				}
 
 				if (!file_exists($path)) {
-					$this->error("Unable to find this file");
+					$this->error("Unable to find this file.");
 				} else {
 					header('Content-disposition: attachment; filename=' . $attachmentFilename);
 					// header('Content-type: text/plain');
@@ -105,11 +105,17 @@
 		}
 
 		function error($s) {
-			echo $s;
+			echo '<p>'.$s.'</p>';
 		}
 	}
 
-	$ffd = new FormFileDownloader();
-	$ffd->setup();
-	$ffd->serveFile();
+	// If this file is being accessed directly, instantiate and run the downloader. 
+	// Otherwise the file has been included, and we should let the includer decide what
+	// to do.
+	if (realpath(__FILE__) == realpath($_SERVER['DOCUMENT_ROOT'].$_SERVER['SCRIPT_NAME']))
+	{
+		$ffd = new FormFileDownloader();
+		$ffd->setup();
+		$ffd->serveFile();
+	}
 ?>
