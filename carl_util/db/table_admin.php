@@ -1047,7 +1047,7 @@ class TableAdmin
 	 * @return string HTML for the header row
 	 */
 	function gen_header_row($header_row)
-	{pray($this->_display_values);
+	{
 		if (isset($this->fields_to_show)) $this->limit_columns($header_row);
 		$first = ' class="first"';
 		$order_display_name = array('asc' => 'Sort Ascending', 'desc' => 'Sort Descending');
