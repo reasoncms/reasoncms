@@ -12,16 +12,30 @@ reason_include_once( 'classes/quote_helper.php' );
 $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'QuoteModule';
 	
 /**
- * The quote module displays a single random quote, and provides an option to refresh the quote
+ * The quote module displays quotes and is backwards compatible with older versions of the quote module.
+ * Now with JSON support, and pseudo random quote generation.
  *
  * If changing class names or the HTML generation structure, make sure to modify the html generation
  * portions of quote_retrieve.js so that dynamically created quotes maintain the same structure.
  * 
- * @author Nathan White
+ * @author Tate Bosler
  */
 	class QuoteModule extends DefaultMinisiteModule
 	{
+		
+		static function setup_supported_apis()
+		{
+			$quote_api = new ReasonAPI(array('json', 'html'));
+			self::add_api('quote', $quote_api);
+		}
+		
 		var $quotes;
+		
+		/**
+		 * If enable_javascript_refresh is set to true, num_to_display will be ignored (set to 1).
+		 * 
+		 * @todo implement multi-quote javascript refresh
+		 */
 		var $acceptable_params = array ('page_category_mode' => false,
 										'cache_lifespan' => 0,
 										'num_to_display' => NULL,
@@ -33,6 +47,8 @@ $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'QuoteModule
 										'footer_html' => '',
 										'header_html' => '');
 		
+		var $cleanup_rules = array('last_quote' => 'turn_into_int');
+		
 		function init( $args = array() )
 		{	
 			$qh = new QuoteHelper($this->site_id, $this->page_id);
@@ -43,43 +59,16 @@ $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'QuoteModule
 			
 			// javascript refresh mode currently forces display to a single quote
 			$num_to_display = ($this->params['enable_javascript_refresh']) ? 1 : $this->params['num_to_display'];
+			if($this->request['last_quote'] > 0) $qh->set_unavailable_quote_id($this->request['last_quote']);
 			$this->quotes =& $qh->get_quotes($num_to_display, $this->params['rand_flag']);
-			$this->init_head_items();
-		}
-		
-		function init_head_items()
-		{
-			if ($this->quotes && $this->params['enable_javascript_refresh'])
-			{
-				$quote = current($this->quotes);
-				$quote_id = $quote->id();
-				$page_cat_mode = ($this->params['page_category_mode']) ? 1 : 0;
-				$prefer_short_quotes = ($this->params['prefer_short_quotes']) ? 1 : 0;
-				
-				$cache_lifespan = ($this->params['cache_lifespan'] > 0) ? $this->params['cache_lifespan'] : 0;
-				
-				// all these parameters are sent in integer format so the javascript can accept only numeric params for security
-				$qry_string = '?site_id='.$this->site_id.
-							  '&page_id='.$this->page_id.
-							  '&quote_id='.$quote_id.
-							  '&page_category_mode='.$page_cat_mode.
-							  '&cache_lifespan='.$cache_lifespan.
-							  '&prefer_short_quotes='.$prefer_short_quotes;
-				
-				if ($head_items =& $this->get_head_items())
-				{
-					$head_items->add_javascript($this->get_head_item_base_path() . JQUERY_URL);
-					$head_items->add_javascript($this->get_head_item_base_path() . REASON_HTTP_BASE_PATH . 'js/quote/quote_retrieve.js'.$qry_string); // pass params in qry string
-				}
+			
+			$head_items =& $this->get_head_items();
+			// if enabled, add API JS to head items
+			if($this->params['enable_javascript_refresh']) {
+				$head_items->add_javascript(JQUERY_URL, true); // load jquery - specify load first
+				$head_items->add_javascript(WEB_JAVASCRIPT_PATH . 'jquery.reasonAjax.js'); // our quote.js file requires jquery.reasonAjax.js
+				$head_items->add_javascript(WEB_JAVASCRIPT_PATH . 'modules/quote/quote.js');
 			}
-		}
-		
-		/**
-		 * For most instances we don't want a base path so this returns an empty string in the base module.
-		 */
-		function get_head_item_base_path()
-		{	
-			return '';
 		}
 		
 		function has_content()
@@ -92,7 +81,7 @@ $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'QuoteModule
 		
 		function run()
 		{
-			echo '<div id="quotes">';
+			echo '<div id="quotes" class="quotes '.$this->get_api_class_string().'">';
 			if (!empty($this->params['header_html']))
 			{
 				echo '<div id="quotes_header">'."\n";
@@ -116,6 +105,30 @@ $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'QuoteModule
 			echo '</div>';
 		}
 		
+		function run_api()
+		{
+			$api = $this->get_api();
+			if ($api->get_name() == 'quote')
+			{
+				if ($api->get_content_type() == 'json') {
+					$quotes = array();
+					foreach($this->quotes as $quote) {
+						$quotes[] = array("reasonID" => $quote->id(), "text" => $this->get_quote_content_plaintext($quote), "author" => $this->get_quote_author_plaintext($quote));
+					}
+					$api->set_content(json_encode(array('quotes' => $quotes)));
+				}
+				if ($api->get_content_type() == 'html') {
+					$content = "";
+					foreach($this->quotes as $quote) {
+						$content .= '<p>'.$this->get_quote_html().'</p>';
+					}
+					$api->set_content($content);
+				}
+				$api->run();
+			}
+			else parent::run_api(); // support other apis defined by parents
+		}
+		
 		function get_quote_html(&$quote)
 		{
 			$quote_content = $this->get_quote_content_html($quote);
@@ -129,10 +142,17 @@ $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'QuoteModule
 		{
 			$short_description = ($this->params['prefer_short_quotes']) ? $quote->get_value('description') : '';
 			$quote_text = ($short_description) ? $short_description : $quote->get_value('content');
-			$quote_html = '<span class="quoteText">';
+			$quote_html = '<span class="quoteText" data-quote-id="'.$quote->id().'">';
 			$quote_html .= $quote_text;
 			$quote_html .= '</span>';
 			return $quote_html;
+		}
+		
+		function get_quote_content_plaintext(&$quote)
+		{
+			$short_description = ($this->params['prefer_short_quotes']) ? $quote->get_value('description') : '';
+			$quote_text = ($short_description) ? $short_description : $quote->get_value('content');
+			return $quote_text;
 		}
 		
 		function get_quote_author_html(&$quote)
@@ -141,6 +161,11 @@ $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'QuoteModule
 			$author_html .= $quote->get_value('author');
 			$author_html .= '</span>';
 			return $author_html;
+		}
+		
+		function get_quote_author_plaintext(&$quote)
+		{
+			return $quote->get_value('author');
 		}
 		
 		function get_quote_divider_html(&$quote)
