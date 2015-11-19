@@ -87,7 +87,7 @@
 				if (!file_exists($path)) {
 					$this->error("Unable to find this file.");
 				} else {
-					header('Content-disposition: attachment; filename=' . $attachmentFilename);
+					header('Content-disposition: attachment; filename="' . $attachmentFilename.'"');
 					// header('Content-type: text/plain');
 					readfile($path);
 
