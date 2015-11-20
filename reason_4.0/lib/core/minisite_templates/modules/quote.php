@@ -59,7 +59,8 @@ $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'QuoteModule
 			
 			// javascript refresh mode currently forces display to a single quote
 			$num_to_display = ($this->params['enable_javascript_refresh']) ? 1 : $this->params['num_to_display'];
-			if($this->request['last_quote'] > 0) $qh->set_unavailable_quote_id($this->request['last_quote']);
+			if(!empty($this->request['last_quote']) && $this->request['last_quote'] > 0) 
+				$qh->set_unavailable_quote_id($this->request['last_quote']);
 			$this->quotes =& $qh->get_quotes($num_to_display, $this->params['rand_flag']);
 			
 			$head_items =& $this->get_head_items();
