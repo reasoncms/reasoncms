@@ -209,7 +209,9 @@ class ThorCore
 					$kEl = $disco_obj->get_element($k);
 					if ($kEl)
 					{
-						if ("upload" == $kEl->type) {
+						$uploadClassName = "UploadType";
+						// if ("upload" == $kEl->type || "ReasonUpload" == $kEl->type) {
+						if ($uploadClassName == get_class($kEl) || is_subclass_of($kEl, $uploadClassName)) {
 							$possibleExistingPath = $this->get_thor_filestorage_row_and_col_specific_storage_dir($primary_key, $k) . $v;
 
 							if (!empty($v) && file_exists($possibleExistingPath)) {
