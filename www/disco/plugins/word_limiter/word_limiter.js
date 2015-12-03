@@ -27,48 +27,35 @@ $(document).ready(function()
 		return result == null ? 0 : result.length;
 	}
 
+	var originalLimiterFormat = {};
 
-    /* 
-        - Displays how many words remain to be used once user gets within threshold (20 now) words of limit (hidden otherwise). 
-        - Warns user when over the word limit 
-    */
-    
     function count_and_update(text_element, cur_text)
     {
 		// console.log("count_and_update firing on [" + text_element.attr("name") + "]/[" + cur_text + "]");
         var limit_note = text_element.siblings('div.wordInputLimitNote');
-        var over_limit_note = text_element.siblings('div.overWordLimitNote');
+        // var over_limit_note = text_element.siblings('div.overWordLimitNote');
         var current_text = cur_text;
-        var word_limit = parseInt(limit_note.children('span.wordLimit').html());
-        var words_remaining_element = limit_note.children('span.wordsRemaining');
-        var auto_show_hide = limit_note.hasClass("autoShowHide");
-
-		var threshold = 20;
+        var word_limit_min = parseInt(limit_note.children('span.minWordLimit').html());
+        var word_limit_max = parseInt(limit_note.children('span.maxWordLimit').html());
+        // var words_remaining_element = limit_note.children('span.wordsRemaining');
 
 		var words_so_far = count_words(current_text);
 
-		var words_remaining = word_limit - words_so_far;
-		words_remaining_element.html(words_remaining);
-		var over_limit = -words_remaining;
-		// display over-limit warning
-		if(words_remaining < 0)
-		{
-			limit_note.hide();
-			over_limit_note.children('span.numWordsOver').html(over_limit);
-			over_limit_note.show();
+        limit_note.children('span.wordsEntered').html(words_so_far);
+		// console.log("entered [" + words_so_far + "] words. limits are [" + word_limit_min + "] -> [" + word_limit_max + "]");
+
+		if (originalLimiterFormat[text_element.attr("name")] == undefined) {
+			originalLimiterFormat[text_element.attr("name")] = {
+				"fewColor": limit_note.children('span.tooFew').css('color'),
+				"manyColor": limit_note.children('span.tooMany').css('color')
+			};
 		}
-		// display caution
-		else if( !auto_show_hide || (words_remaining < threshold) )
-		{
-			limit_note.show();
-			over_limit_note.hide();
+
+
+		if (word_limit_min != -1) {
+			limit_note.children('span.tooFew').css('color', words_so_far < word_limit_min ? 'red' : originalLimiterFormat[text_element.attr("name")].fewColor);
 		}
-		// not "close" to limit, so hide everything
-		else if(auto_show_hide)
-		{
-			limit_note.hide();
-			over_limit_note.hide();   
-		}
+		limit_note.children('span.tooMany').css('color', words_so_far > word_limit_max ? 'red' : originalLimiterFormat[text_element.attr("name")].manyColor);
     }
 
 	var inputAreas = $('div.wordInputLimitNote').siblings('textarea, :text');
