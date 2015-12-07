@@ -58,7 +58,8 @@ class FeatureModule extends DefaultMinisiteModule
 		'max' => 0,
 		'width' => 400,
 		'height' => 300,
-		'view' => 'DefaultFeatureView'
+		'view' => 'DefaultFeatureView',
+		'absolute_urls' => false,
 	);
 	
 	var $cleanup_rules = array('feature'=>'turn_into_int');
@@ -331,6 +332,7 @@ class FeatureModule extends DefaultMinisiteModule
 		$this->features_view_params['height']=$this->params['height'];
 		$this->features_view_params['condensed_nav']=false;
 		$this->features_view_params['looping']=$this->params['looping'];//or off
+		$this->features_view_params['absolute_urls']=$this->params['absolute_urls'];//or off
 	}
 
 	/**
@@ -338,6 +340,12 @@ class FeatureModule extends DefaultMinisiteModule
 	 */
 	function _build_view_data()
 	{
+		$url_keys = array(
+			'feature_image_url',
+			'destination_url',
+			'feature_av_img_url',
+		);
+		
 		$features=$this->get_features();
 		$params=$this->get_view_params();
 		$data=array();
@@ -345,7 +353,7 @@ class FeatureModule extends DefaultMinisiteModule
  		$show_feature=true;
 		$fh= new Feature_Helper();
 		$width=$this->params['width'];
-		$height=$this->params['height'];	
+		$height=$this->params['height'];
 		
 		//build the data needed by the view layer
 		foreach($features as $feature)
@@ -373,8 +381,8 @@ class FeatureModule extends DefaultMinisiteModule
 
 			$d['bg_color']=$feature->get_value('bg_color');
 
-			$d['w']=$params['width']; 
-			$d['h']=$params['height']; 
+			$d['w']=$width; 
+			$d['h']=$height; 
 			$d['crop_style']=$feature->get_value('crop_style');;
 
 			$params="?id=".$d['id']."&amp;w=".$d['w']."&amp;h=".$d['h']."&amp;crop=".$d['crop_style'];
@@ -462,7 +470,6 @@ class FeatureModule extends DefaultMinisiteModule
 			}
 			
 			$d['current_object_type']=$feature->get_value('current_object_type');
-			
 
 			$data[$feature->get_value('id')]=$d;
 		}//end foreach loop through $features
@@ -485,6 +492,7 @@ class FeatureModule extends DefaultMinisiteModule
 		$rsi->set_width($width);
 		$rsi->set_height($height);
 		$rsi->set_crop_style($crop_style);
+		$rsi->use_absolute_urls($this->params['absolute_urls']);
 	 	$ret = $rsi->get_url_and_alt();
 		return $ret;
 	}
@@ -495,6 +503,7 @@ class FeatureModule extends DefaultMinisiteModule
 		$width=$this->params['width'];
 		$height=$this->params['height'];
 		$fh= new Feature_Helper();
+		$fh->use_absolute_urls($this->params['absolute_urls']);
 		$av_info=$fh->get_av_info($media_works_id,$width,$height);
 		return $av_info;
 	}

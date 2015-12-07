@@ -88,7 +88,7 @@
 			}
 			
 			$d = new disco();
-			$d->add_element('referer','hidden');
+			$d->add_element('referer','hidden', array('userland_changeable' => true));
 			if($_SERVER['HTTP_REFERER'])
 			{
 				$d->set_value('referer',$_SERVER['HTTP_REFERER']);

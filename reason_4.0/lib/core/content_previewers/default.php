@@ -269,7 +269,7 @@
 		} // }}}
 		function _get_rel_list_display_name($entity,$rel_name,$direction)
 		{
-			return $entity->get_display_name();
+			return $entity->get_display_name() . ' (ID: '.$entity->id().')';
 		}
 		function get_left_relationships() // {{{
 		{

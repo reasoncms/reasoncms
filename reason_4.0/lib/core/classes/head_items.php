@@ -89,6 +89,14 @@ class HeadItems
 	 * @var boolean
 	 */
 	protected $delete_old_less_css = true;
+	
+	/**
+	 * Should less output have an absolute URL (e.g. including the domain name)?
+	 *
+	 * @var boolean
+	 */
+	protected $use_absolute_url_for_less_output = false;
+	
 
 	/**
 	 *
@@ -199,6 +207,10 @@ class HeadItems
 	{
 		$this->default_less_functions = $array;
 	}
+	function use_absolute_url_for_less_output($use_absolute_url_for_less_output = true)
+	{
+		$this->use_absolute_url_for_less_output = $use_absolute_url_for_less_output;
+	}
 
 	function add_default_scss_variable($key,$value)
 	{
@@ -289,7 +301,29 @@ class HeadItems
 		}
 
 		$input_path = WEB_PATH.substr($url, 1);
-		if(!file_exists($input_path))
+		$ok = false;
+		if(file_exists($input_path))
+		{
+			$ok = true;
+		}
+		else
+		{
+			if(strpos($url,REASON_HTTP_BASE_PATH) === 0)
+			{
+				// see if it's local
+				$local_url = REASON_HTTP_BASE_PATH.'local/'.substr($url, strlen(REASON_HTTP_BASE_PATH));
+				$local_input_path = WEB_PATH.substr($local_url, 1);
+				echo $local_input_path;
+				if(file_exists($local_input_path))
+				{
+					$input_path = $local_input_path;
+					$ok = true;
+				}
+				
+			}
+		}
+
+		if(!$ok)
 		{
 			trigger_error('Stylesheet not found at "'.$input_path.'". Stylesheet not added.');
 			return false;
@@ -299,6 +333,18 @@ class HeadItems
 		$first2 = substr($hash, 0, 2);
 
 		$output_filename = $hash.'_'.filemtime($input_path).'.css';
+		
+		$output_url = WEB_TEMP.'less_compiled/'.$first2.'/'.$output_filename;
+		
+		if($this->use_absolute_url_for_less_output)
+			$output_url = '//' . HTTP_HOST_NAME . $output_url;
+		
+		$base_output_directory = WEB_PATH.substr(WEB_TEMP, 1).'less_compiled/';
+		if(!file_exists($base_output_directory))
+			mkdir($base_output_directory);
+		$output_directory = $base_output_directory.$first2.'/';
+		if(!file_exists($output_directory))
+			mkdir($output_directory);
 		$output_url = WEB_TEMP.'compiled/'.$first2.'/'.$output_filename;
 		$output_directory = WEB_PATH.substr(WEB_TEMP, 1).'compiled/' . $first2 .'/';
 		$output_path = $output_directory.$output_filename;
@@ -312,14 +358,17 @@ class HeadItems
 
 		try
 		{
-			$parser->scss->addImportPath(WEB_PATH);
-			$parser->scss->addImportPath($input_path);
-
-			foreach ($this->style_import_paths as $path) {
-				$parser->scss->addImportPath($path);
-			}
-
-			$parser->checkedCachedCompile($input_path, $output_path);
+			if ( get_class($parser) !== 'lessc' )
+			{
+				$parser->scss->addImportPath(WEB_PATH);
+				$parser->scss->addImportPath( pathinfo ( $input_path, PATHINFO_DIRNAME ) );
+				foreach ($this->style_import_paths as $path) {
+					$parser->scss->addImportPath($path);
+				}
+				$parser->checkedCachedCompile($input_path, $output_path);
+			} else {
+				$parser->checkedCachedCompile($input_path, $output_path);
+			}		
 		}
 		catch (Exception $ex)
 		{

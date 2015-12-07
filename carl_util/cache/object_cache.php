@@ -79,6 +79,7 @@ class ObjectCache
 		$cache =& $this->set_cache();
 		if ($id && $cache)
 		{
+			$cache->set_cache_name($id);
 			$cache->set_cache_id(md5($id));
 			if ( !empty($lifespan) || ($lifespan = $this->get_default_lifespan())) $cache->set_cache_lifespan($lifespan);
 			if ($params = $this->get_cache_params())
@@ -197,5 +198,27 @@ class ObjectCache
 		$result = ($cache) ? $cache->clear() : false;
 		return $result;
 	}
+	
+	function lock($expire_seconds)
+	{
+		$cache =& $this->get_cache();
+		$result = ($cache) ? $cache->lock($expire_seconds) : false;
+		return $result;
+	}
+
+	function unlock()
+	{
+		$cache =& $this->get_cache();
+		$result = ($cache) ? $cache->unlock() : false;
+		return $result;
+	}
+	
+	function is_locked()
+	{
+		$cache =& $this->get_cache();
+		$result = ($cache) ? $cache->is_locked() : false;
+		return $result;
+	}
+
 }
 ?>

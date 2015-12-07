@@ -125,7 +125,7 @@ else
 			while( list( ,$f ) = each( $fields ) )
 			{
 				if( $d[$f] )
-					$q->add_relation( $f.' = "'.addslashes($d[$f]).'"' );
+					$q->add_relation( $f.' = "'.reason_sql_string_escape($d[$f]).'"' );
 				else
 					$q->add_relation( $f.' IS NULL' );
 			}

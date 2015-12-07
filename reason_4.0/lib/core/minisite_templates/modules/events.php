@@ -377,6 +377,7 @@ class EventsModule extends DefaultMinisiteModule
 	 						'natural_sort_categories' => false,
 	 						'form_include' => 'minisite_templates/modules/event_slot_registration/event_slot_registration_form.php',
 	 						'calendar_link_text' => 'More events',
+	 						'link_shared_events_to_parent_site' => false,
 	 						'wrapper_id' => '',
 						);
 	var $default_item_markup = 'minisite_templates/modules/events_markup/default/events_item.php';
@@ -513,7 +514,9 @@ class EventsModule extends DefaultMinisiteModule
 			$this->init_list();
 		}
 		else
-			$this->init_event();		
+		{
+			$this->init_event();
+		}
 		$inline_edit =& get_reason_inline_editing($this->page_id);
 		$inline_edit->register_module($this, $this->user_can_inline_edit());
 		if ($inline_edit->active_for_module($this))
@@ -567,7 +570,10 @@ class EventsModule extends DefaultMinisiteModule
 		
 		// get_run_output() should be the very last thing done before the end of init()
 		// This is done to allow the markup classes to add head items
-		$this->get_run_output();
+		if($this->has_content())
+		{
+			$this->get_run_output();
+		}
 	}
 	
 	/**
@@ -1643,9 +1649,17 @@ class EventsModule extends DefaultMinisiteModule
 	 */
 	function get_event_link($event_id, $day = '')
 	{
-		if(is_object($event_id))
-			$event_id = $event_id->id();
-		return $this->events_page_url.$this->construct_link(array('event_id'=>$event_id,'date'=>$day));
+		$id = (is_object($event_id)) ? $event_id->id() : $event_id;
+		$base = $this->events_page_url;
+		
+		if ($this->params['link_shared_events_to_parent_site'])
+		{
+			$event = (is_object($event_id)) ? $event_id : new entity($event_id);
+			if ($owner = $this->get_owner_site_info($event))
+				$base = $owner->get_value('_link');
+		}
+		
+		return $base.$this->construct_link(array('event_id'=>$id,'date'=>$day));
 	}
 	
 	/**
@@ -2341,12 +2355,12 @@ class EventsModule extends DefaultMinisiteModule
 				$link_params = array('view'=>$view,'end_date'=>'');
 				if(in_array($view,$this->views_no_index))
 					$link_params['no_search'] = 1;
-				$opener = '<li><a href="'.$this->construct_link($link_params).'">';
+				$opener = '<li class="'.$view.'View"><a href="'.$this->construct_link($link_params).'">';
 				$closer = '</a></li>';
 			}
 			else
 			{
-				$opener = '<li class="current"><strong>';
+				$opener = '<li class="'.$view.'View current"><strong>';
 				$closer = '</strong></li>';
 				$on_defined_view = true;
 			}
@@ -3312,7 +3326,7 @@ class EventsModule extends DefaultMinisiteModule
 				{
 					$field_parts = explode('.',trim($field));
 					
-					$parts[] = '`'.implode('`.`',$field_parts).'` LIKE "'.addslashes($string).'"';
+					$parts[] = '`'.implode('`.`',$field_parts).'` LIKE "'.reason_sql_string_escape($string).'"';
 				}
 				$where = '('.implode(' OR ',$parts).')';
 				$es->add_relation($where);
@@ -3340,7 +3354,7 @@ class EventsModule extends DefaultMinisiteModule
 	 */
 	function get_full_calendar_link_markup()
 	{
-		if(empty($this->events_page_url))
+		if(empty($this->events_page_url) || empty($this->params['calendar_link_text']))
 			return '';
 		
 		return '<p class="more"><a href="'.$this->events_page_url.'">'.$this->params['calendar_link_text'].'</a></p>'."\n";
@@ -4255,6 +4269,10 @@ class EventsModule extends DefaultMinisiteModule
 	 */
 	function user_is_slot_admin($event)
 	{
+		if($event->get_value('contact_username') && $event->get_value('contact_username') == reason_check_authentication())
+		{
+			return true;
+		}
 		return $this->user_can_inline_edit_event($event->id());
 	}
  	/**

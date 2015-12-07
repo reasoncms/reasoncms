@@ -1,0 +1,72 @@
+// FAQ Styles
+// Cloak, v1
+
+#faq {
+	@include clearfix;
+	margin-bottom: $horizontal-gutter;
+
+	a {
+		color: $faq-primary-color;
+
+		&:hover {
+			color: darken($faq-primary-color, 20%);
+		}
+	}
+
+	// Filtering
+	.persistent {
+		
+		#filtering {
+
+			.searchForm {
+				// Form styles included in _form.scss	
+				.submit,
+				input[type="submit"] {
+					background: $faq-primary-color;
+					color: $white;
+
+					&:hover {
+						background: darken($faq-primary-color, 10%);
+					}
+				}
+			}
+		}
+	}
+
+	// FAQ Answer
+	> .item {
+		
+	}
+
+	// FAQ Questions
+	.moduleNav {
+
+		ul {
+		@include clearfix;
+			margin: 0 0 $horizontal-gutter/2 $column-gutter/2;
+
+			li {
+				list-style-type: decimal;
+				margin-bottom: $horizontal-gutter/2;
+			}
+		}
+
+		> p {
+			
+			a {
+				@include back-link($back-link-bg: $faq-primary-color);
+			}
+		}
+	}
+
+	// 2b. FEED LINKS
+	.feedLink {
+
+		.feedInfo {
+
+			a {
+				@include feed-button($feed-button-bg: $faq-primary-color);
+			}
+		}
+	}
+}

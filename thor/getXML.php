@@ -15,7 +15,7 @@ if ( !empty($_REQUEST['tmp_id']) )
 	$dbs = new DBSelector();
 	$dbs->add_table('thor');
 	$dbs->add_field('thor', 'content');
-	$dbs->add_relation('thor.id = ' . addslashes($_REQUEST['tmp_id']));
+	$dbs->add_relation('thor.id = ' . carl_util_sql_string_escape($_REQUEST['tmp_id']));
 	$results = $dbs->run();
 
 	if ( count($results) > 0 )

@@ -31,8 +31,8 @@
 			$this -> add_required ('status');
 			$this -> add_required ('show_hide');
 			
-			$this -> set_display_name ('release_title', 'title');
-			$this -> set_display_name ('datetime', 'date');
+			$this -> set_display_name ('release_title', 'Title');
+			$this -> set_display_name ('datetime', 'Date');
 			$this -> set_display_name ('show_hide', 'Show or Hide?');
 			if($this->_is_element('enable_comment_notification')) $this -> set_display_name ('enable_comment_notification', 'Email me when new comments are added to this news item:');
 		

@@ -99,7 +99,7 @@ class Compiler
 
     protected $numberPrecision = 5;
 
-    protected $formatter = 'Leafo\ScssPhp\Formatter\Nested';
+    protected $formatter = 'Leafo\ScssPhp\Formatter\Expanded';
 
     /**
      * Compile scss

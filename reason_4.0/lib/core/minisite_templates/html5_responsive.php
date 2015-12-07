@@ -229,7 +229,7 @@
 		}
 		function show_footer()
 		{
-			echo '<footer id="footer" role="contentInfo">'."\n";
+			echo '<footer id="footer" role="contentinfo">'."\n";
 			echo '<div class="module1">';
 			$this->run_section( 'footer' );
 			echo '</div>';

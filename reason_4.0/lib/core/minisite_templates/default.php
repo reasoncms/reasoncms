@@ -1659,7 +1659,7 @@ class MinisiteTemplate
 
 	function show_reason_badge()
 	{
-		echo '<div class="poweredBy">Powered by <a href="http://reason.carleton.edu" title="Reason Content Management System">Reason CMS</a></div>';
+		echo '<div class="poweredBy">Powered by <a href="http://reasoncms.org" title="Reason Content Management System">Reason CMS</a></div>';
 	}
 
 
@@ -1709,7 +1709,7 @@ class MinisiteTemplate
 	}
 	function has_related_section()
 	{
-		if( $this->has_content( 'pre_sidebar' ) || $this->has_content( 'sidebar' ) )
+		if( $this->has_content( 'pre_sidebar' ) || $this->has_content( 'sidebar' ) || $this->has_content( 'post_sidebar' ) )
 		{
 			return true;
 		}

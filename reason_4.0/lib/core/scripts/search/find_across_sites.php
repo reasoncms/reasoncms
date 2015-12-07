@@ -78,7 +78,7 @@ $d->actions = array('Search');
 $d->run();
 if(!empty($_REQUEST['search_string']))
 {
-	$sql_search_string = addslashes($_REQUEST['search_string']);
+	$sql_search_string = reason_sql_string_escape($_REQUEST['search_string']);
 	$use_fields = array('id','name','last_modified');
 
 	echo '<h2>Search results</h2>';

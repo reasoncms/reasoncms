@@ -284,7 +284,7 @@
 	 * To disable the search module, comment out this line or set its value to an empty string.
 	 * (e.g. for Google, use the string 'http://www.google.com/search'.)
 	 */
-	define('REASON_SEARCH_ENGINE_URL','http://www.google.com/search');
+	define('REASON_SEARCH_ENGINE_URL', '//www.google.com/search');
 
 	/**
 	 * REASON_SEARCH_FORM_METHOD
@@ -932,6 +932,15 @@
 	define('REASON_FORMS_THOR_DEFAULT_CONTROLLER', 'thor.php');
 
 	/**
+	 * REASON_FORMS_THOR_DEFAULT_AKISMET_FILTER
+	 *
+	 * Indicates whether thor forms should apply akismet spam filtering by default within Reason.
+	 * 
+	 */
+	define ('REASON_FORMS_THOR_DEFAULT_AKISMET_FILTER', true);
+	
+
+	/**
 	 * REASON_LOKI_CSS_FILE
 	 *
 	 * If this constant is a non-empty string, Reason will instruct Loki 2+ to add a stylesheet to the content editing pane.
@@ -1049,27 +1058,35 @@
 	 */
 	define('REASON_IPINFODB_API_KEY', '');
 
-  /**
-   * REASON_SHOW_META_KEYWORDS
-   *
-   * Show meta keywords in <head>. meta keywords are deprecated and no longer beneficial for SEO.
-   */
-  define('REASON_SHOW_META_KEYWORDS', false);
+	/**
+	 * REASON_PDF_DOWNLOAD_DISPOSITION_DEFAULT
+	 *
+	 * How should Reason handle when a user clicks on a pdf link? Set this to 'attachment' to force a download, or 'inline'
+	 * to attempt to display it in the browser.
+	 */
+	define('REASON_PDF_DOWNLOAD_DISPOSITION_DEFAULT', 'attachment');
 
-  /**
-   * REASON_HOME_TITLE_PATTERN
-   *
-   */
-  define('REASON_HOME_TITLE_PATTERN', '[minisite_name] | [organization_name]');
+	/**
+	 * REASON_SHOW_META_KEYWORDS
+	 *
+	 * Show meta keywords in <head>. meta keywords are deprecated and no longer beneficial for SEO.
+	 */
+	define('REASON_SHOW_META_KEYWORDS', false);
 
-  /**
-   * REASON_SECONDARY_TITLE_PATTERN
-   *
-   */
-  define('REASON_SECONDARY_TITLE_PATTERN', '[minisite_name]: [page_title] | [organization_name]');
-
-  /**
-   * REASON_ITEM_TITLE_PATTERN
-   *
-   */
-  define('REASON_ITEM_TITLE_PATTERN', '[item_name] | [minisite_name] | [organization_name]');
+	/**
+	 * REASON_HOME_TITLE_PATTERN
+	 *
+	 */
+	define('REASON_HOME_TITLE_PATTERN', '[minisite_name] | [organization_name]');
+	
+	/**
+	 * REASON_SECONDARY_TITLE_PATTERN
+	 *
+	 */
+	define('REASON_SECONDARY_TITLE_PATTERN', '[minisite_name]: [page_title] | [organization_name]');
+	
+	/**
+	 * REASON_ITEM_TITLE_PATTERN
+	 *
+	 */
+	define('REASON_ITEM_TITLE_PATTERN', '[item_name] | [minisite_name] | [organization_name]');

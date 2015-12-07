@@ -107,7 +107,9 @@ class defaultEventsItemMarkup implements eventsItemMarkup
 		    $ret .= '<div class="images">';
 		    foreach( $images AS $image )
 		    {
+				 $ret .= '<div class="tnBlock">';
 				 $ret .= get_show_image_html( $image, false, true, true, '' );
+				 $ret .=  "</div>";
 		    }
 		    $ret .=  "</div>";
 		}
@@ -396,7 +398,7 @@ class defaultEventsItemMarkup implements eventsItemMarkup
 		$ret = '';
 		if($ical_link = $this->bundle->ical_link($event))
 		{
-			echo '<div class="export">'."\n";
+			$ret .= '<div class="export">'."\n";
 			if($event->get_value('recurrence') == 'none' || !$this->bundle->request_date() )
 			{
 				$ret .= '<a href="'.$ical_link.'">Import into your calendar program</a>';

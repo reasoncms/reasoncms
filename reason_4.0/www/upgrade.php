@@ -133,13 +133,13 @@ if(!empty($_GET['upgrade_step']) && isset($upgrade_steps[$_GET['upgrade_step']])
 }
 else
 {
-	$str = '<p>Each new version of Reason includes a set of scripts that you should ';
+	$str = '<p>Each new version of Reason CMS includes a set of scripts that you should ';
 	$str .= 'run to update your database to work with the latest version of the Reason code base. ';
 	$str .= 'The scripts are designed to be used from one release to the next; you cannot necessarily update ';
-	$str .= 'a Reason database across multiple steps after downloading the most current code base.</p>';
-	$str .= '<p>If you have trouble upgrading and you are using an old version of Reason, try downloading ';
+	$str .= 'a Reason CMS database across multiple steps after downloading the most current code base.</p>';
+	$str .= '<p>If you have trouble upgrading and you are using an old version of Reason CMS, try downloading ';
 	$str .= 'the point release after the one you are currently using and upgrade incrementally.</p>';
-	$str .= '<p><a href="http://apps.carleton.edu/opensource/reason/download/">Reason download page</a></p>';
+	$str .= '<p><a href="http://reasoncms.org/get-started/download/">Reason CMS download page</a></p>';
 	$str .= '<h2>Reason Upgrade Scripts</h2>';
 	$str .= '<ul>';
 	foreach($upgrade_steps as $k => $v)

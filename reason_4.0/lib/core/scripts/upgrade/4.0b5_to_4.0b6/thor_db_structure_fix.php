@@ -418,7 +418,7 @@ class ThorTableUpdate
 		{
 			if (isset($option->tagAttrs['value']))
 			{
-				$enum['options'][$index] = addslashes($option->tagAttrs['value']);
+				$enum['options'][$index] = reason_sql_string_escape($option->tagAttrs['value']);
 			}
 			//if (isset($option->tagAttrs['selected']))
 			//{

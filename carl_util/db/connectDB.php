@@ -27,14 +27,9 @@ $GLOBALS['_current_db_connection_name'] = '';
  * All parameters except for dbName are deprecated.
  *
  * @param string $dbName A database connector name - this maps to an entry in the XML file
- * @param string $dbuser Deprecated - is now ignored
- * @param string $dbpasswd Deprecated - is now ignored
- * @param string $dbhost Deprecated - is now ignored
  * @return resource database connection resource
- *
- * @todo remove the $dbuse, $dbpasswd, and $dbhost parameters entirely to remove a potential source of confusion
  */
-function connectDB($dbName, $dbuser = '', $dbpasswd = '', $dbhost='')
+function connectDB($dbName)
 {
 	$db_info = get_db_credentials( $dbName );
 	// try to connect to server
@@ -71,7 +66,8 @@ function connectDB($dbName, $dbuser = '', $dbpasswd = '', $dbhost='')
 	}
 
 	// set character set for connection to UTF-8
-	mysql_set_charset("utf8", $db);
+	if(!empty($db_info[ 'charset' ]))
+		mysql_set_charset($db_info[ 'charset' ], $db);
 
 	$GLOBALS['_current_db_connection_name'] = $dbName;
 	return $db;
@@ -151,6 +147,11 @@ function get_db_credentials( $conn_name, $lack_of_creds_is_fatal = true )
 												{
 													$reader->read();
 													if ($reader->nodeType == XMLReader::TEXT) $database['host'] = $reader->value;
+												}
+												elseif ($reader->name == 'charset')
+												{
+													$reader->read();
+													if ($reader->nodeType == XMLReader::TEXT) $database['charset'] = $reader->value;
 												}
 											}
 											if ( ($reader->nodeType == XMLReader::END_ELEMENT) && ($reader->name == 'database') ) break;

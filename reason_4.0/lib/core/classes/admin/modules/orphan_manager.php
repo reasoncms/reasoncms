@@ -127,7 +127,7 @@ class reason_orphan_manager_interactive
 			$owns_rel_id = get_owns_relationship_id($types);
 			
 			// If there is an existing entry in the relationship table, delete it
-			$q = 'DELETE FROM `relationship` WHERE `entity_b` = "'.addslashes($orphan_id).'" AND `type` = "'.addslashes($owns_rel_id).'"';
+			$q = 'DELETE FROM `relationship` WHERE `entity_b` = "'.reason_sql_string_escape($orphan_id).'" AND `type` = "'.reason_sql_string_escape($owns_rel_id).'"';
 			$r = db_query($q, 'Unable to delete old owns relationship');
 			
 			// create new ownership entry

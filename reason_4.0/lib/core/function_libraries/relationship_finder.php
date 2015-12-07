@@ -118,7 +118,7 @@ function relationship_finder( $entity_a, $entity_b, $name = 'owns' )
 	$query = 'SELECT id FROM allowable_relationship WHERE ' . 
 				'relationship_a="' . $a_id . '" ' .
 				'AND relationship_b="' . $b_id . '" ' .
-				'AND name="' . addslashes($name) . '"';
+				'AND name="' . reason_sql_string_escape($name) . '"';
 	$results = db_query( $query );
 	$num = mysql_num_rows( $results );
 	if( $num < 1 )

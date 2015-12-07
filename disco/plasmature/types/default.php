@@ -79,6 +79,11 @@ class defaultType
 	 * The value of this plasmature element.
 	 * @var string
 	 */
+	var $id;
+	/** 
+	 * The html id this plasmature element.
+	 * @var string
+	 */
 	var $value;
 	/** 
 	 * The database field type that the value of this plasmature element will be stored in.
@@ -643,6 +648,26 @@ class defaultType
 		$this->name = $name;
 		if(!$this->display_name)
 			$this->display_name = prettify_string($name);
+	}
+
+	/**
+	 * Returns the html id for this element. If {@link id} is set, use that;
+	 * otherwise, construct a default id from the element name.
+	 */
+	function get_id()
+	{
+		if (empty($this->id))
+			return $this->name.'Element';
+		else
+			return $this->id;
+	}
+
+	/**
+	 * Sets the html id ( {@link id}) for an instance of this element type.
+	 */
+	function set_id($id)
+	{
+		$this->id = $id;
 	}
 
 	/**

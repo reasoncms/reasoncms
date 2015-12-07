@@ -28,6 +28,9 @@
 		{
 			$this->head_items->add_javascript(JQUERY_URL, true); // uses jquery - jquery should be at top
 			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH .'content_managers/site.js');
+			$this->head_items->add_javascript(TINYMCE_HTTP_PATH.'tinymce.min.js');
+			$this->head_items->add_stylesheet(REASON_HTTP_BASE_PATH . 'tinymce/css/external.css');
+			$this->head_items->add_stylesheet(REASON_TINYMCE_CONTENT_CSS_PATH);
 		}
 		
 		function alter_data() // {{{
@@ -155,9 +158,14 @@
 			// if this is a new site, set the loki buttons to 'no tables'
 			if( $this->is_new_entity() )
 				$this->set_value( 'loki_default','notables' );
-
 			$this->set_comments( 'loki_default',form_comment('The HTML editor options available when editing content on the site.'));
 			$this->set_order(array('name','unique_name','primary_maintainer','base_url','domain','base_breadcrumbs','description','keywords','department','site_state','loki_default','other_base_urls','use_page_caching','theme','allow_site_to_change_theme','site_type','use_custom_footer','custom_footer','title_patterns_header','home_title_pattern','secondary_title_pattern','item_title_pattern',));
+			if ( html_editor_name($this->get_value('id')) == 'tiny_mce' )
+			{
+				$this->add_element('tiny_preview','text', array('display_name'=>''));
+				$this->set_value('tiny_preview','<p>A preview to show the TinyMCE editor\'s options for this site.</p><p>Though mostly functional, this content will not be saved and has no effect on the site\'s setup.</p><p>* The "source code" button will only show for users with that privilege.</p>');
+				$this->move_element('tiny_preview', 'after', 'loki_default');
+			}
 		} // }}}
 		function alter_editor_options_field()
 		{

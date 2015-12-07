@@ -1,6 +1,7 @@
 <?php
 require_once(SETTINGS_INC.'media_integration/kaltura_settings.php');
 reason_include_once('classes/media/interfaces/media_work_previewer_modifier_interface.php');
+reason_include_once('classes/media/kaltura/shim.php');
 
 /**
  * A class that modifies the given Media Work content previewer for kaltura-integrated 
@@ -55,6 +56,7 @@ class KalturaMediaWorkPreviewerModifier implements MediaWorkPreviewerModifierInt
 		{
 			$this->_add_file_preview($this->previewer->_entity);
 			$this->_add_embed_code($this->previewer->_entity);
+			$this->_show_original_link($this->previewer->_entity);
 		}
 		elseif ($this->previewer->_entity->get_value('transcoding_status') == 'converting')
 		{
@@ -139,6 +141,39 @@ class KalturaMediaWorkPreviewerModifier implements MediaWorkPreviewerModifierInt
 		if( $field != '&nbsp;' ) echo ':';
 		echo '</td>';
 		echo '<td class="listRow' . $this->previewer->_row . ' col2"><input id="'.$field.'Element" type="text" readonly="readonly" size="50" value="'.htmlspecialchars($value).'"></td>';
+
+		echo '</tr>';
+	}
+	
+	private function _show_original_link($entity)
+	{
+		if(empty($this->previewer->admin_page))
+			return;
+		
+		$owner = $entity->get_owner();
+		if($owner->id() != $this->previewer->admin_page->site_id)
+			return;
+		
+		echo '<tr id="original_link_Row">';
+		$this->previewer->_row = $this->previewer->_row%2;
+		$this->previewer->_row++;
+
+		echo '<td class="listRow' . $this->previewer->_row . ' col1">';
+		echo 'Original file URL:';
+		echo '</td>';
+		echo '<td class="listRow' . $this->previewer->_row . ' col2">';
+		
+		$shim = new KalturaShim();
+		$file_ext = $shim->get_source_file_extension($entity);
+		if($orig_url = $shim->get_original_data_url($entity->get_value('entry_id')))
+		{
+			echo '<a href="'.htmlspecialchars($orig_url).'">'.htmlspecialchars($orig_url).'</a>';
+			if(!empty($file_ext))
+				echo ' (.'.$file_ext.')'."\n";
+		}
+		else
+			echo '(No original available)';
+		echo '</td>';
 
 		echo '</tr>';
 	}
