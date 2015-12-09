@@ -76,7 +76,7 @@
 			to site visitors. Description and Keywords are visible to search engines, and can affect how 
 			easily this page can be found by searching.</p>'));
 		
-			$this->change_element_type('meta_description', 'textarea', array('rows' => 4));
+			
 		$limiter = new DiscoInputLimiter($this);
 		$limiter->suggest_limit('meta_description', 156);
 		$limiter->auto_show_hide('meta_description', false);
@@ -185,7 +185,7 @@
 			{
 				$wysiwyg_settings_desc['widgets'] = array('strong','em','lists','link','assets');
 			} */
-			$this -> change_element_type ('meta_description', $editor_name , $wysiwyg_settings_desc );
+			//$this -> change_element_type ('meta_description', $editor_name , $wysiwyg_settings_desc );
 			$this -> set_comments ('meta_description', form_comment('A brief summary of the page. For best results when the page is indexed by search engines, try to not exceed 156 characters.') );
 			$this -> change_element_type ('description', $editor_name , $wysiwyg_settings_desc );
 			$this -> set_comments ('description', form_comment('A brief summary of the news item; this is what appears on lists of news items'));
