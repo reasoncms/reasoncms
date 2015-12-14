@@ -176,7 +176,15 @@ h2.pageTitle {
 
 .uploaded_file {
   font-size: 90%;
+  margin-top: 0.3em;
   margin-bottom: 0.7em;
+}
+
+#imageItem.formElement,
+#imageItem.formElement .uploaded_file,
+#imageItem.formElement .uploaded_file img {
+	max-width: 100%;
+	height: auto !important; 
 }
 
 .uploaded_file .filename {
@@ -243,4 +251,10 @@ div.EntityInfo .entityInfoTable a.locationBarLinks {
 /* Tableless forms */
 #discoLinear div.formElement {
     margin-bottom: 1.5em;
+}
+#discoLinear div.formElement .element {
+	margin-top: 0.3em;
+}
+#discoLinear span.datetimeAt {
+	display: inline-block;
 }
