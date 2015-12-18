@@ -1019,6 +1019,13 @@
 	define('REASON_SIZED_IMAGE_CUSTOM_DIR_WEB_PATH', REASON_HTTP_BASE_PATH.'sized_images_custom/');
 
 	/**
+	 * REASON_TEMP_UPLOAD_DIR
+	 *
+	 * Full file system path to the directory where Reason's should temporarily store uploaded files
+	 */
+	define('REASON_TEMP_UPLOAD_DIR', REASON_DATA_DIR.'tmpUploads/');
+
+	/**
 	 * REASON_ENTITY_LOCKS_ENABLED
 	 *
 	 * This setting turns entity locking on and off.
