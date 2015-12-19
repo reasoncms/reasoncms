@@ -80,8 +80,19 @@ foreach (array_keys($_FILES) as $name) {
 	}
 	
 	$unique_name = sha1(uniqid(mt_rand(), true));
-	$temp_uri = WEB_TEMP.$unique_name.strtolower($extension);
-	$temp_path = $_SERVER['DOCUMENT_ROOT'].$temp_uri;
+	// $temp_uri = WEB_TEMP.$unique_name.strtolower($extension);
+	// $temp_path = $_SERVER['DOCUMENT_ROOT'].$temp_uri;
+
+	$temp_uri = "";
+	$tempfileName = $unique_name . strtolower($extension);
+	if (! file_exists(REASON_TEMP_UPLOAD_DIR)) {
+		mkdir(REASON_TEMP_UPLOAD_DIR);
+	}
+	$temp_path = REASON_TEMP_UPLOAD_DIR . $tempfileName;
+	// temp_uri [/reason_package/reason_4.0/www/tmp/d532732f13c11fee550e8e65040f87023f5344c1.jpeg]
+	// temp path [/usr/local/webapps/branches/slote-apps/reason_package/reason_4.0/www/tmp/d532732f13c11fee550e8e65040f87023f5344c1.jpeg]
+	//
+	// echo "temp uri [" . $temp_uri . "], temp path [" . $temp_path . "]";
 	$unscaled_path = null;
 	$filesize = $file->get_size();
 	
@@ -104,9 +115,11 @@ foreach (array_keys($_FILES) as $name) {
 		if( $temp_path = convert_to_image($temp_path, $convert_to) )
 		{
 			$img_info = @getimagesize($temp_path);
-			$temp_uri = change_extension( $temp_uri, $convert_to );
+			// $temp_uri = change_extension( $temp_uri, $convert_to );
 			$filename = change_extension( $filename, $convert_to );
 			$filesize = filesize($temp_path);
+
+			$tempfileName = change_extension($tempfileName, $convert_to);
 		}
 		else
 		{
@@ -181,7 +194,8 @@ foreach (array_keys($_FILES) as $name) {
 	$response[$name] = array(
 		'index' => $index,
 		'filename' => sanitize_filename_for_web_hosting($filename),
-		'uri' => $temp_uri,
+		// 'uri' => $temp_uri, // SECURITY RISK TO EXPOSE THIS!!!
+		'tempName' => $tempfileName,
 		'size' => $filesize
 	);
 	

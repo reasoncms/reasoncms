@@ -638,6 +638,7 @@ function _get_plupload_js_setup_snippet($upload_sid, $element_name)
 
 	$submitUrl = REASON_HTTP_BASE_PATH . "scripts/upload/receive.php?user_id=" . $user_id . "&upload_sid=" . $upload_sid;
 	$destructionUrl = REASON_HTTP_BASE_PATH . "scripts/upload/destroy.php?user_id=" . $user_id . "&upload_sid=" . $upload_sid;
+	$previewUrl = REASON_HTTP_BASE_PATH . "scripts/upload/getTempFile.php?f=";
 
 	$js = <<<JAVASCRIPT
 		<script type="text/javascript">
@@ -647,7 +648,7 @@ function _get_plupload_js_setup_snippet($upload_sid, $element_name)
 				var pluploadConfig = [];
 			}
 			// pluploadConfig.fieldNames.push("{$element_name}");
-			pluploadConfig.push({submissionUrl: "{$submitUrl}", destructionUrl: "{$destructionUrl}", fieldName: "{$element_name}"});
+			pluploadConfig.push({submissionUrl: "{$submitUrl}", destructionUrl: "{$destructionUrl}", previewUrl: "{$previewUrl}", fieldName: "{$element_name}"});
 
 		</script>
 JAVASCRIPT;
