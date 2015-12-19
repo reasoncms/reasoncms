@@ -22,6 +22,9 @@ function setupRevertInterface(suffix) {
 				// console.log("MATCH");
 				// console.log(cfg.destructionUrl);
 
+				d = revertData[suffix];
+				// console.log("USE REVERT DATA [" + JSON.stringify(d) + "]");
+
 				$.ajax({
 					type: "POST",
 					url: cfg.destructionUrl,
@@ -265,7 +268,15 @@ $(document).ready(function() {
 });
 
 function renderUploadPreview(suffix, info) {
-	console.log("WITH FIXES: rendering preview for [" + suffix + "] with " +JSON.stringify(info) + "...");
+	// console.log("WITH FIXES: rendering preview for [" + suffix + "] with " +JSON.stringify(info) + "...");
+
+	var cfg = null;;
+	for (var i = 0 ; i < pluploadConfig.length ; i++) {
+		if ((pluploadConfig[i]).fieldName == suffix) {
+			cfg = pluploadConfig[i];
+			break;
+		}
+	}
 
 	var selectorStart = "div#file_upload_" + suffix + " ";
 
@@ -274,11 +285,20 @@ function renderUploadPreview(suffix, info) {
 		return;
 	}
 
-	var image = $(selectorStart + "img.representation").attr("src", info.uri);
+	var previewImgSrc;
+
+	if (info.uri != null) {
+		console.log("use full uri");
+		previewImgSrc = info.uri;
+	} else {
+		console.log("use preview img");
+		previewImgSrc = cfg.previewUrl + info.tempName;
+	}
+	var image = $(selectorStart + "img.representation").attr("src", previewImgSrc);
 
 	// profile uploads for instance has the representation elsewhere...
 	if (image.length == 0) {
-		image = $("img.representation").attr("src", info.uri);
+		image = $("img.representation").attr("src", previewImgSrc);
 		if (image.length != 0) {
 			selectorStart = "";
 		}
@@ -291,10 +311,10 @@ function renderUploadPreview(suffix, info) {
 	$(selectorStart + ".uploaded_file").show();
 
 	if (image.length == 0) {
-		console.log("NON-IMAGE-PREVIEW!");
+		// console.log("NON-IMAGE-PREVIEW!");
 		$(selectorStart + "div.uploaded_file span.filename").html(info.filename);
 	} else {
-		console.log("IMAGE-PREVIEW!");
+		// console.log("IMAGE-PREVIEW!");
 		var dims = info.dimensions;
 		var orig_dims = info.orig_dimensions;
 
