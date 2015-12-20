@@ -69,7 +69,7 @@ class FinishModule extends DefaultModule // {{{
 		$es = new entity_selector( $this->admin_page->site_id );
 		$es->add_type( $this->admin_page->type_id );
 		$es->add_right_relationship( $this->admin_page->id, $this->rel_id );
-		$es->add_relation('last_modified = "'.$original->get_value( 'last_modified' ).'"');
+		$es->add_relation('entity.last_modified = "'.$original->get_value( 'last_modified' ).'"');
 		$es->set_num(1);
 		$similar_archived = $es->run_one('','Archived');
 
