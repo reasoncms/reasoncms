@@ -556,6 +556,7 @@ class HeadItems
 	 */
 	function get_head_item_markup()
 	{
+		$this->markup_fetched_num_times++;
 		if (empty($this->_head_items)) return '';
 		$this->_remove_head_items_at_end();
 		$allowable_elements =& $this->allowable_elements;
