@@ -324,7 +324,9 @@
 					}
 				}
 				if(!$this->params['html5'])
+				{
 					echo $image_markup;
+				}
 			}
 			if($this->params['description_part_of_link'])
 			{
@@ -344,7 +346,8 @@
 			}
 			else
 			{
-				echo $image_markup;
+				if($this->params['html5'])
+					echo $image_markup;
 				echo '<h4><a href="'.$link.'"'.$title_attr.'>'.$page_name.'</a></h4>';
 				if ( $child->get_value( 'description' ))
 				{
