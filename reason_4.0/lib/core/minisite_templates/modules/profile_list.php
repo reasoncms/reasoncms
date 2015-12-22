@@ -30,13 +30,6 @@ class ProfileDisplayModule extends DefaultMinisiteModule
 		// Alternate page to draw profiles from
 		'source_page_unique_name' => null,
 		
-		// Retrieve profiles of people with one of the listed majors
-		'get_profiles_by_majors' => array(),
-		
-		// Retrieve profiles of people whose major matches the subject associated with the
-		// office/department entity associated with this site.
-		'get_profiles_by_site_subjects' => false,
-		
 		// Retrieve profiles of people with a particular interest tag
 		'get_profiles_by_tags' => array(),
 
@@ -188,11 +181,6 @@ class ProfileDisplayModule extends DefaultMinisiteModule
 		if ($this->params['get_profiles_by_page_categories'])
 			$this->get_page_category_profiles();
 		
-		if ($this->params['get_profiles_by_majors'])
-			$this->get_profiles_by_major($this->params['get_profiles_by_majors']);
-
-		if ($this->params['get_profiles_by_site_subjects'])
-			$this->get_profiles_by_site_subjects();
 	}
 	
 	/**
@@ -426,62 +414,6 @@ class ProfileDisplayModule extends DefaultMinisiteModule
 				$this->get_tag_profiles($cat->get_value('slug'));	
 			}
 		}
-	}
-	
-	/**
-	  * Find profiles of people with particular majors and add them to our collection.
-	  *
-	  * @param array $codes  Array of major codes
-	  */
-	protected function get_profiles_by_major($codes)
-	{
-		$all_profiles = $this->pc->get_profiles_by_date();
-		foreach ($all_profiles as $affil => $profiles)
-		{
-			if ($affil != 'student' && $affil != 'alum') continue;
-			foreach ($profiles as $advid => $data)
-			{
-				if (isset($data['major']['majors']) && array_intersect($codes, array_keys($data['major']['majors'])))
-				{
-					$person = new $this->config->person_class($data['netid']);
-					$id = $person->get_profile_id();
-					if (isset($this->profiles[$id])) continue;
-					$this->profiles[$id] = $person;
-				}
-			}
-		}
-	}
-
-	/**
-	  * Find profiles whose major matches any subjects associated with the office/department
-	  * entity attached to the current site and add them to our collection.
-	  *
-	  */
-	protected function get_profiles_by_site_subjects()
-	{
-		if (!relationship_id_of('office_department_has_site') || !relationship_id_of('office_department_to_subject'))
-		{
-			trigger_error('Your Reason instance does not have the appropriate relationships to use get_profiles_by_site_subjects');
-			return;
-		}
-		
-		$es = new entity_selector();
-		$es->description = 'Selecting department for site';
-		$es->add_type( id_of( 'office_department_type' ) );
-		$es->add_left_relationship($this->site_id, relationship_id_of('office_department_has_site') );
-		$depts = $es->run_one();
-		foreach ($depts as $dept_id => $dept)
-		{
-			$es2 = new entity_selector();
-			$es2->description = 'Selecting subjects for department';
-			$es2->add_type( id_of( 'subject_type' ) );
-			$es2->add_right_relationship($dept_id, relationship_id_of('office_department_to_subject') );
-			$subjects = $es2->run_one();
-			foreach ($subjects as $sub_id => $subject) 
-				if ($subject->get_value('sync_name')) $codes[] = $subject->get_value('sync_name');
-		}
-		
-		if (isset($codes)) $this->get_profiles_by_major($codes);
 	}
 
 	protected function sort_profiles_by_name($a, $b)
