@@ -122,6 +122,12 @@ function db_query( $query, $error_message = '', $die_on_error = true )
 				$body = $error_message.'<br />';
 				$body .= 'Query: "'.str_replace("\n",' ',$query).'"<br />';
 				$body .= 'Error: "'.mysql_error().'" (errno: "'.mysql_errno().'")';
+				// Flatten debug data to take up less space
+				foreach (debug_backtrace(0) as $dkey => $call)
+				{
+					$backtrace[] = '...'.substr($call['file'], -40).':'.$call['line'].'  '.$call['function'].'()';
+				}
+
 				$errorlevel = MEDIUM;
 				if( $die_on_error )
 				{
