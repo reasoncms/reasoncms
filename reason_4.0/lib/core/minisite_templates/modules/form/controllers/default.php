@@ -158,7 +158,11 @@
 			{
 				echo $this->check_view_and_invoke_method('get_view_submission_list_html');
 			}
-			if ($this->check_view_and_model_and_invoke_method('should_show_thank_you_message'))
+                        if ($this->check_view_and_model_and_invoke_method('should_show_submission_limit_message'))
+                        {
+                                echo $this->check_view_and_invoke_method('get_view_submission_limit_html');
+                        }
+ 			if ($this->check_view_and_model_and_invoke_method('should_show_thank_you_message'))
 			{
 				echo $this->check_view_and_invoke_method('get_thank_you_html');
 			}
@@ -252,13 +256,16 @@
 		{
 			include_once(TYR_INC.'tyr.php');
 			$tyr = new Tyr();
-        	$model =& $this->get_model();
-			
-			$html = '<div class="submitted_data">';
-        	$html .= '<h3>You submitted:</h3>';
-        	$html .= $tyr->make_html_table($model->get_values_for_show_submitted_data(), false);
-        	$html .= '</div>';
-        	return $html;
+			$model =& $this->get_model();
+			$html = '';
+			if ($values = $model->get_values_for_show_submitted_data())
+			{
+				$html .= '<div class="submitted_data">';
+				$html .= '<h3>You submitted:</h3>';
+				$html .= $tyr->make_html_table($values, false);
+				$html .= '</div>';
+			}
+			return $html;
 		}
 		
 		function get_thank_you_html()
@@ -272,6 +279,11 @@
 			return '<p class="summary_view_link"><a href="'.$view_link.'">View Your Submission List</a></p>';
 		}
 		
+                function get_view_submission_limit_html()
+                {
+                        return '<p class="submission_limit">This form permits only one submission per user.</p>';
+                }
+
 		function get_create_new_submission_html()
 		{
 			$create_link = carl_construct_link( array('form_id' => '0'), array('textonly', 'netid') );
