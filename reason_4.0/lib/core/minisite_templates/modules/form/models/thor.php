@@ -125,12 +125,15 @@ class ThorFormModel extends DefaultFormModel
 		
 	function is_form_complete()
 	{
-		return ($this->get_form_submission_key() && $this->form_submission_is_complete() && !$this->is_admin());
+		return ( !$this->is_admin() &&
+			($this->get_form_submission_key() && $this->form_submission_is_complete() )
+			|| ( $this->user_has_submitted() && !$this->_is_editable() && !$this->form_allows_multiple() && !$this->should_show_summary() )
+			);
 	}
 		
 	function is_summary()
 	{
-		return ($this->form_allows_multiple() && $this->user_has_submitted() && !$this->get_form_id() && ($this->get_form_id() !== 0));
+		return ($this->should_show_summary() && $this->user_has_submitted() && !$this->get_form_id() && ($this->get_form_id() !== 0));
 	}
 		
 	function is_form()
@@ -258,7 +261,7 @@ class ThorFormModel extends DefaultFormModel
 	
 	function should_show_submission_list_link()
 	{
-		return ($this->form_allows_multiple() && $this->user_has_submitted());
+		return ($this->should_show_summary() && $this->user_has_submitted());
 	}
 			
 	function should_show_thank_you_message()
@@ -267,6 +270,18 @@ class ThorFormModel extends DefaultFormModel
 		$thank_you_message = $form->get_value('thank_you_message');
 		return ($thank_you_message); // does the thank you message have content?
 	}
+
+        function should_show_summary()
+        {
+                $form =& $this->get_form_entity();
+                $should_show_summary = $form->get_value('allow_multiple');
+                return ($should_show_summary == 'yes');
+        }
+
+        function should_show_submission_limit_message()
+        {
+		return ($this->user_has_submitted() && !$this->form_allows_multiple()); 
+        }
 	
 	function set_form_id_if_valid($form_id)
 	{
@@ -363,7 +378,7 @@ class ThorFormModel extends DefaultFormModel
 	{
 		$form =& $this->get_form_entity();
 		$allows_multiple = $form->get_value('allow_multiple');
-		return ($allows_multiple == 'yes');
+		return ($allows_multiple != 'no');
 	}
 	
 	function form_requires_authentication()
