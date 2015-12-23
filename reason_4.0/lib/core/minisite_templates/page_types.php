@@ -2120,7 +2120,10 @@
         'user_settings' => array(
         	'main_post' => 'user_settings/user_settings'
         ),
-	);
+		'course_catalog_page' => array(
+			'main' => 'catalog/subject_page'
+			),
+		);
 	
 	$GLOBALS['_reason_deprecated_modules'] = array(
 				'form_custom/form_custom',
