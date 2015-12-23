@@ -474,11 +474,17 @@
 			$filters['general'] = array();
 			if(!empty($general_filter_pieces))
 			{
-				$filters['general']['filter'] = '(|'.implode('',$general_filter_pieces).')';
+				if (count($general_filter_pieces) > 1)
+					$filters['general']['filter'] = '(|'.implode('',$general_filter_pieces).')';
+				else
+					$filters['general']['filter'] = reset($general_filter_pieces);
 			}
 			if(!empty($general_group_filter_pieces))
 			{
-				$filters['general']['group_filter'] = '(|'.implode('',$general_group_filter_pieces).')';
+				if (count($general_group_filter_pieces) > 1)
+					$filters['general']['group_filter'] = '(|'.implode('',$general_group_filter_pieces).')';
+				else
+					$filters['general']['group_filter'] = reset($general_group_filter_pieces);
 			}
 		}
 		return $filters;
@@ -538,7 +544,7 @@
 	{
 		$usernames = explode(',', trim($this->group->get_value('authorized_usernames')));
 		$string = '';
-		foreach($usernames as $key=>$username)
+		foreach($usernames as $username)
 		{
 			$username = trim($username);
 			if(!empty($username))
@@ -546,6 +552,9 @@
 				$string .= '(ds_username='.trim($username).')';
 			}
 		}
+		if (count($usernames) > 1)
+			$string = '(|'.$string.')';
+		
 		return $string;
 	}
 	/**
@@ -578,4 +587,3 @@
 		}
 	}
 }
-?>
