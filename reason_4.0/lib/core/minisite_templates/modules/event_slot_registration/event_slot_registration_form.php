@@ -49,17 +49,15 @@ class EventSlotRegistrationForm extends Disco{
 	var $error_checks = array(
 		'email' => array(
 			'email_is_correctly_formatted' => 'The email address you entered does not appear to be valid.  Please check to make sure you entered it correctly',
-			'already_registered' => 'This email address has already been registered for this event. If you have a question, please contact the event organizer for more information.',
-		),
+		 ),
 	);
-
+	
 	var $delimiter1;
 	var $delimiter2;
 	var $event;
 	var $request_array;
 	var $cancel_link;
-
-	var $show_error_jumps = false;	
+	
 	var $show_date_change_link = false;
 	var $include_time_in_email = true;
 	
@@ -72,22 +70,6 @@ class EventSlotRegistrationForm extends Disco{
 		$this->delimiter1 = $delimiter1;
 		$this->delimiter2 = $delimiter2;
 		$this->cancel_link = $cancel_link;
-	}
-
-	function already_registered()
-	{
-		$slot_entity = get_entity_by_id($this->request_array['slot_id']);
-		$registrants = explode($this->delimiter1, $slot_entity['registrant_data']);
-
-		$lc_email = strtolower($this->get_value('email'));
-		foreach ($registrants as $registrant => $value) {
-			$regs = explode($this->delimiter2, $value);
-			if (in_array($lc_email, array_map('strtolower', $regs)))
-			{
-				return false;
-			}
-		}
-		return true;
 	}
 	
 	function email_is_correctly_formatted()
@@ -159,10 +141,22 @@ class EventSlotRegistrationForm extends Disco{
 	{
 		$slot_entity = get_entity_by_id($this->request_array['slot_id']);
 	
-		$dir = new directory_service();
-		$dir->search_by_attribute('ds_username', $this->event->get_value('contact_username'), array('ds_email','ds_fullname','ds_phone',));
-		$to = $dir->get_first_value('ds_email');
-
+		if ($notifications = $slot_entity['notification_email'])
+		{
+			$tos = array();
+			$dir = new directory_service();
+			$addresses = preg_split('/[\s,;]+/', $notifications);
+			foreach ($addresses as $address)
+			{
+				if (strpos($address, '@'))
+					$tos[] = $address;
+				else
+				{
+					if ($dir->search_by_attribute('ds_username', $address, array('ds_email','ds_fullname','ds_phone',)))
+						$tos[] = $dir->get_first_value('ds_email');
+				}
+			}
+		}
 		$subject = 'Event Registration: '.$this->get_value('name').' for '.$this->event->get_value('name');
 		$body = $this->get_value('name').' has registered for '.$this->event->get_value('name')."\n\n";
 		$body .= 'Name: '.$this->get_value('name')."\n";
@@ -184,10 +178,18 @@ class EventSlotRegistrationForm extends Disco{
 		$slot = $slot_entity['name'];
 		$body .= 'Slot: '.$slot."\n\n";
 		
-		// to person who should get registration
-		mail($to,$subject,$body,"From: ".strip_tags($this->get_value('email')));
+		// to person who should get registration notifications
+		if (!empty($tos))
+		{
+			mail(join(',', $tos),$subject,$body,'From: '.strip_tags($this->get_value('email')));
+			$sender = 'From: '.reset($tos);
+		}
+		else
+		{
+			$sender = null;
+		}
 		// to person who filled out email
-		mail(strip_tags($this->get_value('email')),$subject,$body,"From: ".strip_tags($to)); 
+		mail(strip_tags($this->get_value('email')),$subject,$body,$sender); 
 	
 	}
 	
