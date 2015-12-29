@@ -343,9 +343,6 @@ class HeadItems
 		
 		$output_url = WEB_TEMP.'less_compiled/'.$first2.'/'.$output_filename;
 		
-		if($this->use_absolute_url_for_less_output)
-			$output_url = '//' . HTTP_HOST_NAME . $output_url;
-		
 		$base_output_directory = WEB_PATH.substr(WEB_TEMP, 1).'less_compiled/';
 		if(!file_exists($base_output_directory))
 			mkdir($base_output_directory);
@@ -358,6 +355,10 @@ class HeadItems
 		if (!file_exists($output_directory))
 		{
 			mkdir($output_directory, 0777, true);
+		}
+
+		if ($this->use_absolute_url_for_less_output) {
+			$output_url = '//' . HTTP_HOST_NAME . $output_url;
 		}
 
 		// Track our modified time so we know to delete older files.
