@@ -1510,7 +1510,10 @@ class AdminPage
 		$this->head_items->add_javascript(JQUERY_URL, true);
 		$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'jump_navigation.js');
 		$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'disable_submit.js?id=disco_form&reset_time=60000');
-		$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'admin_spin_icon.js');
+		if($spinner_js = file_get_contents(WEB_PATH.WEB_JAVASCRIPT_PATH.'admin_spin_icon.js'))
+		{
+			$this->head_items->add_head_item('script', array(), str_replace('[[REASON_HTTP_BASE_PATH]]',REASON_HTTP_BASE_PATH,$spinner_js));
+		}
 		// add the charset information - this should maybe just be in the head function code since we really want it on top
 		$this->head_items->add_head_item('meta',array('http-equiv'=>'Content-Type','content'=>'text/html; charset=UTF-8' ), '', true );
 	}
