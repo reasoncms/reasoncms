@@ -342,10 +342,7 @@ class HeadItems
 		$output_filename = $hash.'_'.filemtime($input_path).'.css';
 		
 		$output_url = WEB_TEMP.'less_compiled/'.$first2.'/'.$output_filename;
-		
-		if($this->use_absolute_url_for_less_output)
-			$output_url = '//' . HTTP_HOST_NAME . $output_url;
-		
+
 		$base_output_directory = WEB_PATH.substr(WEB_TEMP, 1).'less_compiled/';
 		if(!file_exists($base_output_directory))
 			mkdir($base_output_directory);
@@ -360,7 +357,11 @@ class HeadItems
 			mkdir($output_directory, 0777, true);
 		}
 
-		// Track our modified time so we know to delete older files.
+        if ($this->use_absolute_url_for_less_output) {
+            $output_url = '//' . HTTP_HOST_NAME . $output_url;
+        }
+
+        // Track our modified time so we know to delete older files.
 		$mtime = $delete_cached && file_exists($output_path) ? filemtime($output_path) : null;
 
 		try
@@ -488,26 +489,41 @@ class HeadItems
 	}
 
 	/**
-	 * Selectively removes head items by element type and attribute(s)
+	 * Removes head items by one of the following matching methods:
+	 *    - element type and attribute matches
+	 *    - element type and inline content match
+	 *
 	 * @param string $element type of head item to remove
-	 * @param array $attribute_limiter optional array of key / value pairs which must correspond to the attributes of an item to be deleted
+	 * @param array $attribute_limiter optional array of key / value pairs which
+	 *     must correspond to the attributes of an item to be deleted
+	 * @param string $content optional, use in combination with $element to strip
+	 *     out an inline fragment, like "<script>myFunc('param');</script>"
 	 * @return void
 	 * @access private
 	 * @author Nathan White
 	 */
-	function _remove_head_item($element, $attribute_limiter = false)
+	function _remove_head_item($element, $attribute_limiter = false, $content = '')
 	{
 		$head_items =& $this->_head_items;
-		foreach ($head_items as $k=>$item)
-		{
-			if (strtolower($element) === $item['element'])
-			{
-				$diff_array = is_array($attribute_limiter) ? array_diff_assoc($attribute_limiter, $item['attributes']) : array();
-				{
-					if (empty($diff_array))
-					{
-						unset ($head_items[$k]);
-						if (isset($this->_top_head_items[$k])) unset ($this->_top_head_items[$k]);
+		foreach ($head_items as $k => $item) {
+			if (strtolower($element) === $item['element']) {
+
+				$has_attribute_match = false;
+				if (!empty($attribute_limiter)) {
+					$attribute_diffs = array_diff_assoc($attribute_limiter, $item['attributes']);
+					$has_attribute_match = empty($attribute_diffs);
+				}
+
+				$has_inline_content_match = false;
+				if (!empty($content)) {
+					$has_inline_content_match = $content === $item['content'];
+				}
+
+				if ($has_attribute_match || $has_inline_content_match) {
+					unset($head_items[$k]);
+
+					if (isset($this->_top_head_items[$k])) {
+						unset($this->_top_head_items[$k]);
 					}
 				}
 			}
@@ -517,14 +533,17 @@ class HeadItems
 	/**
 	 * Remove head items by element type and attribute(s) just before head is displayed
 	 * @param string $element type of head item to remove
-	 * @param array $attribute_limiter optional array of key / value pairs which must correspond to the attributes of an item to be deleted
+	 * @param array $attribute_limiter optional array of key / value pairs which
+	 *     must correspond to the attributes of an item to be deleted
+	 * @param string $content optional, use in combination with $element to strip
+	 *     out an inline fragment, like "<script>myFunc('param');</script>"
 	 * @return void
 	 * @access public
 	 * @author Nathan White
 	 */
-	function remove_head_item($element, $attribute_limiter = false)
+	function remove_head_item($element, $attribute_limiter = false, $content = '')
 	{
-		$this->_to_remove[] = array('e' => $element, 'a_l' => $attribute_limiter);
+		$this->_to_remove[] = array('e' => $element, 'a_l' => $attribute_limiter, 'content' => $content);
 	}
 
 	/**
@@ -536,7 +555,7 @@ class HeadItems
 		{
 			foreach ($this->_to_remove as $v)
 			{
-				$this->_remove_head_item($v['e'], $v['a_l']);
+				$this->_remove_head_item($v['e'], $v['a_l'], $v['content']);
 			}
 		}
 	}
