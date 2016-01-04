@@ -280,8 +280,6 @@ class AdminPage
 	//leftbar if id is present
 	{
 		echo '<div class="managerNav">';
-		echo '<div class="roundedTop"> <img src="'. REASON_ADMIN_IMAGES_DIRECTORY .'trans.gif" alt="" class="roundedCorner" />';
-		echo '</div>'. "\n";
 		echo '<div class="managerList">';
 		if( !empty( $this->request[ CM_VAR_PREFIX . 'id' ] ) )
 		{
@@ -305,8 +303,6 @@ class AdminPage
 			echo '</ul>';
 		}
 		echo '</div>';
-		echo '<div class="roundedBottom"> <img src="'. REASON_ADMIN_IMAGES_DIRECTORY .'trans.gif" alt="" class="roundedCorner" />'; 
-		echo '</div>';	
 		echo '</div>';
 	}
 	
@@ -1379,7 +1375,7 @@ class AdminPage
 	function main_area()
 	//displays the main area of the page.  First does its own stuff then calls the module to do its stuff.
 	{
-		echo '<div class="contentArea">';		
+		echo '<div class="contentArea" role="main">';		
 		if( $this->show[ 'title' ] )
 		{
 			$this->title();
@@ -1396,9 +1392,8 @@ class AdminPage
 	function banner()
 	//the top banner.  doesn't really do much except display some stuff and the show the user
 	{
-		echo '<table class="banner">' . "\n";
-		echo '<tr>' . "\n";
-		echo '<td class="crumbs"> '.REASON_ADMIN_LOGO_MARKUP;
+		echo '<header class="banner">' . "\n";
+		echo '<div class="crumbs"> '.REASON_ADMIN_LOGO_MARKUP;
 		echo '<span>';
 		echo '<strong> :: <a href="'.$this->make_link(array('cur_module'=>'about_reason')).'" class="bannerLink">Reason '. reason_get_version() .'</a></strong>';
 		if($this->site_id != id_of('master_admin'))
@@ -1409,12 +1404,11 @@ class AdminPage
 				echo ' :: <a href="'.carl_construct_link(array('site_id'=>id_of('master_admin')), array('user_id')).'">Master Admin</a>';
 			}
 		}
-		echo '</span></td>' . "\n";
-		echo '<td class="id">';
+		echo '</span></div>' . "\n";
+		echo '<div class="user">';
 		$this->show_user();
-		echo '</td>' . "\n";
-		echo '</tr>' . "\n";
-		echo '</table>' . "\n";
+		echo '</div>' . "\n";
+		echo '</header>' . "\n";
 	}
 	
 	function show_user()
@@ -1473,7 +1467,7 @@ class AdminPage
 		if (defined('UNIVERSAL_CSS_PATH') && UNIVERSAL_CSS_PATH != '') $this->head_items->add_stylesheet(UNIVERSAL_CSS_PATH);
 		
 		// add admin CSS
-		$this->head_items->add_stylesheet(REASON_ADMIN_CSS_DIRECTORY.'admin.css');
+		$this->head_items->add_stylesheet(REASON_ADMIN_CSS_DIRECTORY.'admin.css?v=2');
 					
 		// add javascript logout timer
 		if (!isset($_SERVER['REMOTE_USER']) && USE_JS_LOGOUT_TIMER) // if we are not logged in via http authentication
@@ -1489,12 +1483,15 @@ class AdminPage
 		$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'admin_spin_icon.js');
 		// add the charset information - this should maybe just be in the head function code since we really want it on top
 		$this->head_items->add_head_item('meta',array('http-equiv'=>'Content-Type','content'=>'text/html; charset=UTF-8' ), '', true );
+		$this->head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/html5shiv/html5shiv-printshiv.js', true, array('before'=>'<!--[if lt IE 9]>','after'=>'<![endif]-->'));
+		$this->head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/respond/respond.min.js', false, array('before'=>'<!--[if lt IE 9]>','after'=>'<![endif]-->'));
+		$this->head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/ie8_fix_maxwidth.js', false, array('before'=>'<!--[if lt IE 9]>','after'=>'<![endif]-->'));
 	}
 	
 	function head()
 	//page head.  prints out basic top html stuff
 	{
-		echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">'."\n";
+		echo '<!DOCTYPE html>'."\n";
 		echo '<html xmlns="http://www.w3.org/1999/xhtml">'."\n";
 		echo '<head>'."\n";
 		echo '<title>Reason';
@@ -1507,10 +1504,10 @@ class AdminPage
 		echo '</head>' . "\n";
 		echo '<body>' . "\n";
 		echo '<div id="wrapper">'."\n";
+		echo '<a href="#adminWrap" class="skipLink">Skip to main content</a>';
 		if( $this->show[ 'banner' ] ) $this->banner();
 		if( $this->show[ 'sitebar' ] ) $this->sitebar();
-		echo '<table cellpadding="0" cellspacing="0" border="0" id="adminLayoutTable">';
-		echo '<tr><td valign="top" width="20%">';
+		echo '<div class="layout">';
 	}
 	
 	function finish_page()
@@ -1521,7 +1518,7 @@ class AdminPage
 	function foot()
 	//botton o' page
 	{
-		echo '</td></tr></table>' . "\n";
+		echo '</div>' . "\n";
 		echo '</div>'."\n";
 		
 		if (defined('THIS_IS_A_DEVELOPMENT_REASON_INSTANCE') && THIS_IS_A_DEVELOPMENT_REASON_INSTANCE)
@@ -1533,12 +1530,6 @@ class AdminPage
 		}
 		echo '</body>' . "\n";
 		echo '</html>' . "\n";
-	}
-	
-	function new_column()
-	//creates a new column
-	{
-		echo '</td><td valign="top">';
 	}
 
 	/**
@@ -1800,15 +1791,18 @@ class AdminPage
 	//does its thang
 	{
 		$this->head();
-	
-		if( $this->show[ 'leftbar' ] )
-		{
-			$this->leftbar();
-			$this->new_column();
-		}
 
+		echo '<div class="menuJump"><a href="#menu">Menu</a></div>';
+		$classes = array();
+		$classes[] = $this->show[ 'main' ] ? 'hasMain' : 'noMain';
+		$classes[] = $this->show[ 'leftbar' ] ? 'hasLeftbar' : 'noLeftbar';
+		echo '<div id="adminWrap" class="adminWrap '.implode($classes, ' ').'">';
 		if( $this->show[ 'main' ] )
 			$this->main_area();
+		echo '<a name="menu"></a>';
+		if( $this->show[ 'leftbar' ] )
+			$this->leftbar();
+		echo '</div>';
 		$this->foot();
 	} // }}}
 	function select_user() // {{{
