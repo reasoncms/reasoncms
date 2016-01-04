@@ -340,16 +340,8 @@ class HeadItems
 		$first2 = substr($hash, 0, 2);
 
 		$output_filename = $hash.'_'.filemtime($input_path).'.css';
-		
-		$output_url = WEB_TEMP.'less_compiled/'.$first2.'/'.$output_filename;
-
-		$base_output_directory = WEB_PATH.substr(WEB_TEMP, 1).'less_compiled/';
-		if(!file_exists($base_output_directory))
-			mkdir($base_output_directory);
-		$output_directory = $base_output_directory.$first2.'/';
-		if(!file_exists($output_directory))
-			mkdir($output_directory);
 		$output_url = WEB_TEMP.'compiled/'.$first2.'/'.$output_filename;
+		
 		$output_directory = WEB_PATH.substr(WEB_TEMP, 1).'compiled/' . $first2 .'/';
 		$output_path = $output_directory.$output_filename;
 		if (!file_exists($output_directory))
