@@ -15,6 +15,8 @@
 
 		$imgInfo = @getimagesize($path);
 
+		@ob_end_flush(); // readfile will not present memory issues if we disable output buffering
+
 		if ($imgInfo !== false) {
 			header('Content-Type:'.$imgInfo["mime"]);
 			header('Content-Length: ' . filesize($path));
