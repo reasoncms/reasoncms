@@ -392,8 +392,12 @@ class ZencoderMediaWorkContentManagerModifier implements MediaWorkContentManager
 						$filename = end($filename_parts);
 						$this->manager->set_value('tmp_file_name', $filename);
 						
-						// convert filePath to web accessible url
-						$filePath = carl_construct_link(array(), array(), WEB_TEMP.$filename);
+						// convert filePath to web accessible url -- as of Jan 2016, this needs to go through the
+						// getTempFile script since temp files are no longer directly web accessible.
+						// $filePath = carl_construct_link(array(), array(), WEB_TEMP.$filename);
+						$filePath = carl_construct_link(array("f" => $filename), array(), REASON_HTTP_BASE_PATH . "scripts/upload/getTempFile.php");
+						// echo("filepath [" . $filePath . "]<p>encoded [" . urlencode($filePath) . "]<P>special [" . htmlspecialchars($filePath) . "]<hr>");
+
 						$this->_process_work($filePath, false);
 					}
 				}

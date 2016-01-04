@@ -28,12 +28,14 @@ function post_upload(val)
 
 $(document).ready(function() 
 {	
+	/*
 	// temporarily disable direct uploads on media works
 	$("<tr/>").html("<td colspan=2>There is currently an issue with uploading files to Reason directly. Web Services Group is working on fixing the issue, but if you need to upload a file now, you can use the webpub method described here.</td>").insertBefore($("tr#uploadfileRow"));
 	$("tr#uploadfileRow").css("display", "none");
 	setTimeout(function() {
 		$("tr#importfileRow").css("display", "table-row");
 	}, 100);
+	*/
 
 	$.my_extension_data = {
 		vid_extensions : new Array("flv", "f4v", "mov", "wmv", "qt", "m4v", "avi", "3gp", "asf", "wvm", "mpg", "m1v", "m2v", "mkv", "webm", "ogv", "m4v"),
