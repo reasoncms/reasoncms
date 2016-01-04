@@ -1,6 +1,6 @@
 <?php
 /**
- * Given an md5 css basename, if we have a file in the less_compiled directory with the basename, serve it using a 301 redirect.
+ * Given an md5 css basename, if we have a file in the compiled directory with the basename, serve it using a 301 redirect.
  *
  * If not, do a basic 404.
  *
@@ -17,7 +17,7 @@ include_once( CARL_UTIL_INC . 'basic/url_funcs.php' );
 
 if (!empty($_GET['basename']) && ctype_alnum($_GET['basename']))
 {	
-	$path = '/'.trim_slashes(WEB_PATH).'/'.trim_slashes(WEB_TEMP).'/less_compiled/'. substr($_GET['basename'], 0, 2).'/'.$_GET['basename'] . '_';
+	$path = '/'.trim_slashes(WEB_PATH).'/'.trim_slashes(WEB_TEMP).'/compiled/'. substr($_GET['basename'], 0, 2).'/'.$_GET['basename'] . '_';
 	if ($result = glob($path."*.css"))
 	{
 		$cur_timestamp = 0;
