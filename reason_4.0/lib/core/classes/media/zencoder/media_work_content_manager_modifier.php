@@ -525,11 +525,11 @@ class ZencoderMediaWorkContentManagerModifier implements MediaWorkContentManager
 			$authenticator = array("reason_username_has_access_to_site", $this->manager->get_value("site_id"));
 			$params = array('authenticator' => $authenticator,
 							'acceptable_extensions' => $this->recognized_extensions,
-							'max_file_size' => $this->_get_actual_max_upload_size(),
+							'max_file_size' => reason_get_actual_max_upload_size(),
 							'head_items' => &$this->manager->head_items);
 			$this->manager->add_element( 'upload_file', 'ReasonUpload', $params);
 			
-			$this->manager->set_comments('upload_file',form_comment('If the file is on your computer, browse to it here.').form_comment('File must have one of the following extensions: .'.implode(', .', $this->recognized_extensions)).form_comment('<div class="maxUploadSizeNotice">Maximum file size for uploading is '.format_bytes_as_human_readable($this->_get_actual_max_upload_size()).'. </div>') );
+			$this->manager->set_comments('upload_file',form_comment('If the file is on your computer, browse to it here.').form_comment('File must have one of the following extensions: .'.implode(', .', $this->recognized_extensions)).form_comment('<div class="maxUploadSizeNotice">Maximum file size for uploading is '.format_bytes_as_human_readable(reason_get_actual_max_upload_size()).'. </div>') );
 			
 			$this->manager->add_element('upload_url');
 			$this->manager->add_comments('upload_url', form_comment('Or, you can place the media in any web-accessible location and paste its web address in here. <em>Tip: try pasting the address into another tab first, to make sure you have the address right!</em>'));
@@ -542,32 +542,8 @@ class ZencoderMediaWorkContentManagerModifier implements MediaWorkContentManager
 		}
 	}	
 	
-	// helper function used in _add_file_upload_element()
-	function _get_actual_max_upload_size()
-	{
-		$sizes = array();
-		$post_max_size = get_php_size_setting_as_bytes('post_max_size');
-		$upload_max_filesize = get_php_size_setting_as_bytes('upload_max_filesize');
-		$reason_max_media_upload = MEDIA_MAX_UPLOAD_FILESIZE_MEGS*1024*1024;
-		
-		if($post_max_size < $reason_max_media_upload || $upload_max_filesize < $reason_max_media_upload)
-		{
-			if($post_max_size < $upload_max_filesize)
-			{
-				trigger_error('post_max_size in php.ini is less than Reason setting MEDIA_MAX_UPLOAD_FILESIZE_MEGS; using post_max_size as max upload value');
-				return $post_max_size;
-			}
-			else
-			{
-				trigger_error('upload_max_filesize in php.ini is less than Reason setting MEDIA_MAX_UPLOAD_FILESIZE_MEGS; using upload_max_filesize as max upload value');
-				return $upload_max_filesize;
-			}
-		}
-		else
-		{
-			return $reason_max_media_upload;
-		}
-	}
+	// moved into carl_util/basic/misc.php and renamed to reason_get_actual_max_upload_size
+	// function _get_actual_max_upload_size()
 	
 	/**
 	 * Cleans up a filename by removing all bad characters and replacing spaces with an underscore.
