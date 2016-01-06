@@ -3036,7 +3036,7 @@ var $noncanonical_request_keys = array(
 		}
 		function get_item_categories($item)
 		{
-			$es = new entity_selector();
+			$es = new entity_selector($this->site_id);
 			$es->description = 'Selecting categories for news item';
 			$es->add_type( id_of('category_type') );
 			$es->set_env('site',$this->site_id);
