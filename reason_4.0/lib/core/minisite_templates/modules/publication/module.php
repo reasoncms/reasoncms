@@ -3056,10 +3056,7 @@ var $noncanonical_request_keys = array(
 			{
 				foreach(array_keys($cats) as $id)
 				{
-					$url = '?filters[1][type]=category&filters[1][id]='.$id;
-					if($this->textonly)
-						$url .= '&amp;textonly=1';
-					$cats[$id]->set_value('category_url',$url);
+					$cats[$id]->set_value('category_url','?filter1=category-'.$id);
 				}
 			}
 			return $cats;
