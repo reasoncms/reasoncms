@@ -405,10 +405,12 @@
 		
 		/**
 		 * Should include only those items needed by the minisite navigation builder
+		 * 
+		 * @todo Figure out why $columns is set.
 		 */
 		function grab_request() // {{{
 		{
-			$request = array_diff( conditional_stripslashes($_REQUEST), conditional_stripslashes($_COOKIE) );
+			$request = array_diff_key( conditional_stripslashes($_REQUEST), conditional_stripslashes($_COOKIE) );
 			$columns = (isset($this->columns)) ? array_keys($this->columns) : array('');
 			$cleanup_rules = array('site_id' => array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => true)),
 								   'page_id' => array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => true)),
