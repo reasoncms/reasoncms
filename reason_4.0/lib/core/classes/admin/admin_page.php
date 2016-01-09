@@ -1751,9 +1751,9 @@ class AdminPage
 		if( !empty( $id ) )
 			$es->add_relation( 'entity.id > '.$id );
 		if( !empty( $start_datetime ) )
-			$es->add_relation( 'last_modified >= "'.$start_datetime.'"' );
+			$es->add_relation( 'entity.last_modified >= "'.$start_datetime.'"' );
 		$es->set_num( 1 );							// just get one result
-		$es->set_order( 'last_modified ASC, entity.id ASC' );		// order by last modified to get oldest
+		$es->set_order( 'entity.last_modified ASC, entity.id ASC' );		// order by last modified to get oldest
 		$tmp = $es->run_one(false,'Pending', 'Unable to get oldest pending entity for this type' );
 		list( ,$e ) = each( $tmp );
 		return $e;
