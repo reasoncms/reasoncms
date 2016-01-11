@@ -36,7 +36,7 @@ class textType extends defaultType
 	
 	function get_display()
 	{
-		return '<input type="text" name="'.$this->name.'" value="'.str_replace('"', '&quot;', $this->get()).'" size="'.$this->size.'" maxlength="'.$this->maxlength.'" id="'.$this->get_id().'" class="text" />';
+		return '<input type="text" name="'.$this->name.'" value="'.str_replace('"', '&quot;', $this->get()).'" size="'.$this->size.'" maxlength="'.$this->maxlength.'" id="'.$this->name.'Element" class="text" aria-label="'.$this->display_name.'" />';
 	}
 }
 	
@@ -142,7 +142,7 @@ class passwordType extends defaultType
 	var $type_valid_args = array( 'size', 'maxlength' );
 	function get_display()
 	{
-		return '<input type="password" name="'.$this->name.'" id="'.$this->get_id().'" value="'.htmlspecialchars($this->get(),ENT_QUOTES).'" size="'.$this->size.'" maxlength="'.$this->maxlength.'" />';
+		return '<input type="password" name="'.$this->name.'" id="'.$this->get_id().'" value="'.htmlspecialchars($this->get(),ENT_QUOTES).'" size="'.$this->size.'" maxlength="'.$this->maxlength.'" aria-label="'.$this->display_name.'" />';
 	}
 }
 
@@ -225,7 +225,7 @@ class textareaType extends defaultType
 	var $type_valid_args = array('rows', 'cols');
 	function get_display()
 	{
-		$str  = '<textarea name="'.$this->name.'" id="'.$this->get_id().'" rows="'.$this->rows.'" cols="'.$this->cols.'">'.htmlspecialchars($this->get(),ENT_QUOTES,'UTF-8').'</textarea>';
+		$str  = '<textarea name="'.$this->name.'" id="'.$this->get_id().'" aria-label="'.$this->display_name.'" rows="'.$this->rows.'" cols="'.$this->cols.'">'.htmlspecialchars($this->get(),ENT_QUOTES,'UTF-8').'</textarea>';
 		return $str;
 	}
 	function grab()
