@@ -884,5 +884,32 @@ if (!defined("ENT_QUOTES")) define("ENT_QUOTES", 3);
 		}
 		return 1;
 	}
+	
+	// checks the various settings to return an actual value for maximum file upload size
+	function reason_get_actual_max_upload_size()
+	{
+		$sizes = array();
+		$post_max_size = get_php_size_setting_as_bytes('post_max_size');
+		$upload_max_filesize = get_php_size_setting_as_bytes('upload_max_filesize');
+		$reason_max_media_upload = MEDIA_MAX_UPLOAD_FILESIZE_MEGS*1024*1024;
+
+		if($post_max_size < $reason_max_media_upload || $upload_max_filesize < $reason_max_media_upload)
+		{
+			if($post_max_size < $upload_max_filesize)
+			{
+				trigger_error('post_max_size in php.ini is less than Reason setting MEDIA_MAX_UPLOAD_FILESIZE_MEGS; using post_max_size as max upload value');
+				return $post_max_size;
+			}
+			else
+			{
+				trigger_error('upload_max_filesize in php.ini is less than Reason setting MEDIA_MAX_UPLOAD_FILESIZE_MEGS; using upload_max_filesize as max upload value');
+				return $upload_max_filesize;
+			}
+		}
+		else
+		{
+			return $reason_max_media_upload;
+		}
+	}
 }
 ?>
