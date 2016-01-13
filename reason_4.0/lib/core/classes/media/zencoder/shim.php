@@ -170,7 +170,8 @@ class ZencoderShim implements ShimInterface
  		$media_work_to_delete = new entity($media_work->id());
  	
  		$filename = $this->_sanitize_filename(basename($filepath));
-		$filepath = str_replace(basename($filepath), rawurlencode(basename($filepath)), $filepath);
+		// $filepath = str_replace(basename($filepath), rawurlencode(basename($filepath)), $filepath);
+		$filepath = $this->encode_url($filepath);
 		
  		// First, get the height of the video to determine which ouputs we want Zencoder to produce.
  		if (strpos($filepath, 'http://') === 0 || $at_remote_url)
@@ -496,6 +497,15 @@ class ZencoderShim implements ShimInterface
  		$output = self::get_storage_class()->add_additional_outputs($output, $filename, $media_work, $this, 'Video');
  		return $output;
  	}
+
+	private function encode_url($filepath) {
+		if (strpos(basename($filepath), "getTempFile.php?f=") === false) {
+			$filepath = str_replace(basename($filepath), rawurlencode(basename($filepath)), $filepath);
+		} else {
+			// not encoding...
+		}
+		return $filepath;
+	}
  	 	
  	/**
  	 * Uploads an audio file to Zencoder.  Zencoder will encode .ogg and .mp3 file.  If the 
@@ -515,7 +525,8 @@ class ZencoderShim implements ShimInterface
  		$media_work_to_delete = new entity($media_work->id());
 
  		$filename = $this->_sanitize_filename(basename($filepath));
- 		$filepath = str_replace(basename($filepath), rawurlencode(basename($filepath)), $filepath);
+ 		// $filepath = str_replace(basename($filepath), rawurlencode(basename($filepath)), $filepath);
+		$filepath = $this->encode_url($filepath);
  		$extension = end((explode('.', $filename)));
  		$needs_deleting = false;
  		if (strpos($filepath, 'http://') === 0 || $at_remote_url)
