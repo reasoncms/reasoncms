@@ -7,6 +7,8 @@
  * @package reason
  * @subpackage function_libraries
  */
+
+include_once(CARL_UTIL_INC.'cache/object_cache.php');
  
 class CourseTemplateEntityFactory
 {
@@ -57,7 +59,7 @@ class CourseTemplateType extends Entity
 			}
 		}
 
-		uasort($this->sections, 'sort_courses_by_date');
+		uasort($this->sections, 'sort_courses_by_number_and_date');
 		
 		// If an academic year limit has been set, only return those that match
 		if ($this->limit_to_year && $honor_limit)
@@ -76,6 +78,26 @@ class CourseTemplateType extends Entity
 		}
 
 		return $this->sections;
+	}
+	
+	/**
+	 * Return the distinct titles associated with this course's sections. Honors year
+	 * limits.  Used primarily to find courses with sections that have different titles.
+	 */
+	public function get_value_section_titles($refresh = true)
+	{
+		$titles = array();
+		if ($sections = $this->get_sections())
+		{
+			foreach ($sections as $key => $section)
+			{
+				if (!in_array($section->get_value('title'), $titles))
+				{
+					$titles[$key] = $section->get_value('title');
+				}
+			}
+		}
+		return $titles;
 	}
 	
 	/**
@@ -295,20 +317,48 @@ class CourseTemplateType extends Entity
 		return (isset($session)) ? $session : null;
 	}
 
+	public function get_section_by_id($id)
+	{
+		if ($sections = $this->get_sections(false))
+		{
+			if (isset($sections[$id])) return $sections[$id];
+		}
+		return false;
+	}
+
 	protected function fetch_external_data()
 	{
-		if (empty($this->external_data) && !is_array($this->external_data))
+		if (empty($this->external_data))
 		{
-			$query = 'SELECT * FROM IDM_CRS WHERE COURSES_ID = '.$this->get_value('sourced_id');
-			connectdb( 'reg_catalog_new' );
-			if ($result = mysql_query($query))
+			// Do we want to check for the empty array here?
+			if ($cache = $this->get_value('cache'))
 			{
-				$this->external_data = mysql_fetch_assoc($result);	
-			} else {
-				// Indicate that we've tried and failed to retrieve the data, so we don't keep trying
-				$this->external_data = array();
+				$this->external_data = json_decode($cache, true);
 			}
-			connectdb( REASON_DB );
+			
+			if (!isset($this->external_data))
+			{
+				$query = 'SELECT * FROM IDM_CRS WHERE COURSES_ID = '.$this->get_value('sourced_id');
+				connectdb( 'reg_catalog_new' );
+				if ($result = mysql_query($query))
+				{
+					$this->external_data = mysql_fetch_assoc($result);
+					$this->external_data['timestamp'] = time();
+				} else {
+					// Indicate that we've tried and failed to retrieve the data, so we don't keep trying
+					$this->external_data = array();
+				}
+				connectdb( REASON_DB );
+				if (!empty($this->external_data))
+				{
+					$this->set_value('cache', json_encode($this->external_data));
+					reason_update_entity( 
+						$this->id(), 
+						$this->get_value('last_edited_by'), 
+						array('cache' => $this->get_value('cache')),
+						false);
+				}
+			}
 		}
 	}
 }
@@ -391,42 +441,79 @@ class CourseSectionType extends Entity
 		}
 	}
 	
-	protected function fetch_external_data()
+	protected function fetch_external_data($refresh = false)
 	{
-		if (!isset($this->external_data['section']))
+		if (empty($this->external_data['section']))
 		{
-			$query = 'SELECT * FROM IDM_COURSE WHERE COURSE_SECTIONS_ID = '.$this->get_value('sourced_id');
-			connectdb( 'reg_catalog_new' );
-			if ($result = mysql_query($query))
+			if ($cache = $this->get_value('cache'))
 			{
-				$this->external_data['section'] = mysql_fetch_assoc($result);	
-			} else {
-				// Indicate that we've tried and failed to retrieve the data, so we don't keep trying
-				$this->external_data['section'] = array();
+				$this->external_data = json_decode($cache, true);
 			}
-			connectdb( REASON_DB );
+			
+			if ($refresh || !isset($this->external_data['section']))
+			{
+				$query = 'SELECT * FROM IDM_COURSE WHERE COURSE_SECTIONS_ID = '.$this->get_value('sourced_id');
+				connectdb( 'reg_catalog_new' );
+				if ($result = mysql_query($query))
+				{
+					$this->external_data['section'] = mysql_fetch_assoc($result);
+					$this->external_data['timestamp'] = time();
+				} else {
+					// Indicate that we've tried and failed to retrieve the data, so we don't keep trying
+					$this->external_data['section'] = array();
+				}
+				connectdb( REASON_DB );
+				if (!empty($this->external_data['section']))
+					$this->update_cache();
+			}
 		}
 	}
 	
-	protected function fetch_faculty_data()
+	protected function fetch_faculty_data($refresh = false)
 	{
-		if (!isset($this->external_data['faculty']))
+		if (empty($this->external_data['faculty']))
 		{
-			$this->external_data['faculty'] = array();
-			$query = 'SELECT Id, First_Name, NickName, Last_Name, Carleton_Name, Fac_Catalog_Name FROM IDM_CRS_SEC_FACULTY, EmployeesByPosition_All 
-				WHERE CSF_COURSE_SECTION = '.$this->get_value('sourced_id') .'
-				AND CSF_FACULTY = EmployeesByPosition_All.Id';
-			connectdb( 'reg_catalog_new' );
-			if ($result = mysql_query($query))
+			if ($cache = $this->get_value('cache'))
 			{
-				while ($row = mysql_fetch_assoc($result))
-				{
-					$this->external_data['faculty'][$row['Id']] = $row;	
-				}
+				$this->external_data = json_decode($cache, true);
 			}
-			connectdb( REASON_DB );
+
+			if ($refresh || !isset($this->external_data['faculty']))
+			{
+				$this->external_data['faculty'] = array();
+				$query = 'SELECT Id, First_Name, NickName, Last_Name, Carleton_Name, Fac_Catalog_Name FROM IDM_CRS_SEC_FACULTY, EmployeesByPosition_All 
+					WHERE CSF_COURSE_SECTION = '.$this->get_value('sourced_id') .'
+					AND CSF_FACULTY = EmployeesByPosition_All.Id';
+				connectdb( 'reg_catalog_new' );
+				mysql_set_charset('utf8');
+				if ($result = mysql_query($query))
+				{
+					while ($row = mysql_fetch_assoc($result))
+					{
+						$this->external_data['faculty'][$row['Id']] = $row;	
+					}
+					$this->external_data['timestamp'] = time();
+				}
+				connectdb( REASON_DB );
+				if (!empty($this->external_data['faculty']))
+					$this->update_cache();
+			}
 		}
 		
+	}
+	
+	protected function update_cache()
+	{
+		$encoded = json_encode($this->external_data);
+		if ($encoded != $this->get_value('cache'))
+		{
+			$this->set_value('cache', json_encode($this->external_data));
+			reason_update_entity( 
+				$this->id(), 
+				$this->get_value('last_edited_by'), 
+				array('cache' => $this->get_value('cache')),
+				false);
+		}
 	}
 }
 
@@ -457,20 +544,23 @@ function get_page_courses($page_id)
   * Find courses that are owned or borrowed by the specified site.
   *
   */
-function get_site_courses($site_id)
+function get_site_courses($site)
 {
 	$courses = array();
-	$es = new entity_selector( $site_id );
-	$es->description = 'Selecting courses on site';
-	$factory = new CourseTemplateEntityFactory();
-	$es->set_entity_factory($factory);
-	$es->add_type( id_of('course_template_type') );
-	$results = $es->run_one();
-	foreach ($results as $id => $entity)
+	if ($site && (is_int($site) || $site = id_of($site)))
 	{
-		if (isset($courses[$id])) continue;
-		$entity->include_source = 'site_courses';
-		$courses[$id] = $entity;
+		$es = new entity_selector( $site );
+		$es->description = 'Selecting courses on site';
+		$factory = new CourseTemplateEntityFactory();
+		$es->set_entity_factory($factory);
+		$es->add_type( id_of('course_template_type') );
+		$results = $es->run_one();
+		foreach ($results as $id => $entity)
+		{
+			if (isset($courses[$id])) continue;
+			$entity->include_source = 'site_courses';
+			$courses[$id] = $entity;
+		}
 	}
 	return $courses;
 }
@@ -480,12 +570,15 @@ function get_site_courses($site_id)
   *
   * @param $cats array category list (id => name)
   */
-function get_courses_by_category($cats)
+function get_courses_by_category($cats, $catalog_site = null)
 {
 	$courses = array();
 	foreach ($cats as $id => $category)
 	{
-		$es = new entity_selector();
+		if ($catalog_site && (is_int($catalog_site) || $catalog_site = id_of($catalog_site)))
+			$es = new entity_selector($catalog_site);
+		else
+			$es = new entity_selector();
 		$es->description = 'Selecting courses by category';
 		$factory = new CourseTemplateEntityFactory();
 		$es->set_entity_factory($factory);
@@ -512,8 +605,8 @@ function get_courses_by_category($cats)
 function get_courses_by_subjects($codes, $catalog_site = null)
 {
 	$courses = array();
-	if ($catalog_site && $site_id = id_of($catalog_site))
-		$es = new entity_selector($site_id);
+	if ($catalog_site && (is_int($catalog_site) || $catalog_site = id_of($catalog_site)))
+		$es = new entity_selector($catalog_site);
 	else
 		$es = new entity_selector();
 	$es->description = 'Selecting courses by subject';
@@ -521,7 +614,7 @@ function get_courses_by_subjects($codes, $catalog_site = null)
 	$es->set_entity_factory($factory);
 	$es->add_type( id_of('course_template_type') );
 	$es->add_relation('org_id in ("'.join('","', $codes).'")');
-	$es->set_order('course_number, title');
+	$es->set_order('ABS(course_number), title');
 	$results = $es->run_one();
 	foreach ($results as $id => $entity)
 	{
@@ -532,18 +625,23 @@ function get_courses_by_subjects($codes, $catalog_site = null)
 	return $courses;
 }
 
+function get_courses_by_org_id($codes, $catalog_site = null)
+{
+	return get_courses_by_subjects($codes, $catalog_site);
+}
+
 /**
   * Find courses by their id in the source data
   *
   * @param array $codes Array of ids
-  * @param string $catalog_site Optional unique name of a catalog site. If you pass this,
+  * @param string or int $catalog_site Optional unique name or id of a catalog site. If you pass this,
   *				only courses associated with that site will be included.
   */
 function get_courses_by_sourced_id($ids, $catalog_site = null)
 {
 	$courses = array();
-	if ($catalog_site && $site_id = id_of($catalog_site))
-		$es = new entity_selector($site_id);
+	if ($catalog_site && (is_int($catalog_site) || $catalog_site = id_of($catalog_site)))
+		$es = new entity_selector($catalog_site);
 	else
 		$es = new entity_selector();
 	$es->description = 'Selecting courses by sourced_id';
@@ -579,19 +677,61 @@ function sort_courses_by_date($a, $b)
 	if ($a_name == $b_name) {
 		return 0;
 	}
-	return ($a_name < $b_name) ? -1 : 1;
+	return ($a_name > $b_name) ? -1 : 1;
 }
 
+function sort_courses_by_number_and_date($a, $b)
+{
+	$a_num = $a->get_value('course_number');
+	$b_num = $b->get_value('course_number');
+	$a_name = $a->get_value('timeframe_begin');
+	$b_name = $b->get_value('timeframe_begin');
+	if ($a_name.$a_num == $b_name.$b_num) {
+		return 0;
+	}
+	return ($a_name.$a_num > $b_name.$b_num) ? -1 : 1;
+}
+
+
+/**
+  * Get the list of possible course subjects by looking at the section data. If a year is
+  * passed, limit the result to those subjects with sections during that academic year.
+  *
+  * @param int $year
+  *
+  * @todo Generalize timespan query
+  */
 function get_course_subjects($year = null)
 {
+	$cache = new ObjectCache('course_subject_cache_'.$year, 60*24);
+	if ($subjects = $cache->fetch()) return $subjects;
+
 	$subjects = array();
-	$q = 'SELECT distinct org_id FROM course_template ORDER BY org_id';
+	$q = 'SELECT distinct org_id FROM course_section';
+	if ($year) $q .= ' WHERE timeframe_begin > "'.get_catalog_year_start_date($year).'" AND timeframe_end < "'.get_catalog_year_end_date($year).'"';
+	$q .= ' ORDER BY org_id';
 	if ($result = db_query($q, 'Error selecting course subjects'))
 	{
 		while ($row = mysql_fetch_assoc($result))
 			$subjects[$row['org_id']] = $row['org_id'];
 	}
+	$cache->set($subjects);
 	return $subjects;
+}
+
+/**
+  * Get the list of years for which we have catalog sites.
+  *
+  * @todo Finish
+  */
+function get_catalog_years()
+{
+	return array(2013=>2013, 2014=>2014, 2015=>2015);
+}
+
+function get_display_year($year)
+{
+	return $year . '-' . ((int) substr($year, -2) + 1);
 }
 
 function term_to_academic_year($term)
@@ -600,6 +740,16 @@ function term_to_academic_year($term)
 	$year = 2000 + $year;
 	if (($term == 'WI') || ($term == 'SP')) $year--;
 	return $year;
+}
+
+function get_catalog_year_start_date($year)
+{
+	return $year.'-09-01 00:00:00';
+}
+
+function get_catalog_year_end_date($year)
+{
+	return ($year + 1).'-07-01 00:00:00';
 }
 
 /**
@@ -616,3 +766,5 @@ function filter_requirements_by_academic_year($reqs, $year)
 	}
 	return $reqs;
 }
+
+
