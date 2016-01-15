@@ -279,6 +279,36 @@ class CourseTemplateType extends Entity
 	}
 	
 	/**
+	 * Return the gov codes for this course. If no year limit is set, you'll get back the values for
+	 * the most recent term. If a year limit is set, and sections occur within that limit, you'll 
+	 * get back the values for the last section in that year. If a year limit is set and no sections occur
+	 * in that year, you'll get the values from the most recent year the course was offered.
+	 *
+	 * @param boolean $refresh
+	 * @return array
+	 */
+	public function get_value_gov_codes($refresh = true)
+	{
+		$sections = $this->get_sections(false);
+		array_reverse($sections);
+		foreach ( $sections as $key => $section)
+		{
+			if ($codes = $section->get_value('gov_codes', $refresh))
+			{
+				if ($this->limit_to_year)
+				{
+					$year = term_to_academic_year($section->get_value('academic_session'));
+					if ($year > $this->limit_to_year)
+						continue;
+					else
+						return $codes;
+				}
+			}
+		}
+		return array();
+	}
+	
+	/**
 	  * Return an array of faculty who teach sections of this course.
 	  * 
 	  * @return array id => name
@@ -493,6 +523,16 @@ class CourseSectionType extends Entity
 		{
 			return $this->external_data['section']['XSEC_SEC_COURSE_LEVELS_SV'];
 		}
+	}
+	
+	public function get_value_gov_codes($refresh = true)
+	{
+		$this->fetch_external_data($refresh);
+		if (isset($this->external_data['section']['XSEC_LOCAL_GOVT_CODES_SV']))
+		{
+			return explode('|',$this->external_data['section']['XSEC_LOCAL_GOVT_CODES_SV']);
+		}
+		return array();
 	}
 	
 	protected function fetch_external_data($refresh = false)
