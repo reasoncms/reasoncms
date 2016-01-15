@@ -1324,9 +1324,7 @@ var $noncanonical_request_keys = array(
 
 
 	function show_persistent()
-	{
-		$item = new entity($this->current_item_id);
-		
+	{		
 		if(!empty($this->current_item_id) && $this->request['story_id'] == $this->current_item_id)
 		{
 			$item = new entity($this->current_item_id);

@@ -19,16 +19,6 @@
 		var $issues = array();	//[$publicationID][$issueID]=issue_entity;
 		var $news_sections = array();   //[$publicationID][$sectionID]=section_entity;
 
-
-		/*function init_head_items()
-	{
-		parent::init_head_items();
-		if ($this->has_url()) {
-			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'content_managers/page_parent_url.js');
-			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'content_managers/page.js');
-		}
-		$this->head_items->add_stylesheet(REASON_ADMIN_CSS_DIRECTORY.'content_managers/minisite_page.css');
-	}*/
 /////
 // ALTER_DATA & HELPER METHODS
 ////
@@ -46,8 +36,7 @@
 			$this -> set_display_name ('release_title', 'Title');
 			$this -> set_display_name ('datetime', 'Date');
 			$this -> set_display_name ('show_hide', 'Show or Hide?');
-			if($this->_is_element('enable_comment_notification')) 
-			$this -> set_display_name ('enable_comment_notification', 'Email me when new comments are added to this news item:');
+			if($this->_is_element('enable_comment_notification')) $this -> set_display_name ('enable_comment_notification', 'Email me when new comments are added to this news item:');
 		
 			$this -> set_comments ('name', form_comment('A short name that describes the news item. This is for internal use.'));
 			$this -> set_comments ('release_title', form_comment('The actual title of the item -- this is the one that shows up on the public site.'));
