@@ -119,7 +119,7 @@ class MinisitePageManager extends parent_childManager
 	
 	function alter_data()
 	{
-		$fields = array('name', 'link_name', 'parent_id', 'parent_info', 'url_fragment', 'custom_page', 'page_type_note', 'content', 'visibility_heading', 'state', 'state_action', 'nav_display', 'indexable','metadata_heading', 'author', 'description', 'keywords', 'administrator_section_heading', 'extra_head_content_structured', 'extra_head_content', 'unique_name');
+		$fields = array('name', 'link_name', 'parent_id', 'parent_info', 'url_fragment', 'custom_page', 'page_type_note', 'content', 'visibility_heading', 'state', 'state_action', 'nav_display', 'indexable','metadata_heading', 'author', 'meta_description', 'keywords', 'administrator_section_heading', 'extra_head_content_structured', 'extra_head_content', 'unique_name');
 		
 		parent::alter_data();
 		$this->_no_tidy[] = 'url_fragment';
@@ -298,7 +298,7 @@ class MinisitePageManager extends parent_childManager
 			
 			$this->set_comments( 'name', form_comment('What should this page be called?') );
 			$this->set_comments( 'author', form_comment('Source or original author of this page') );
-			$this->set_comments( 'description', form_comment('A brief summary of the page. For best results when the page is indexed by search engines, try to not exceed 156 characters.') );
+			$this->set_comments( 'meta_description', form_comment('A brief summary of the page. For best results when the page is indexed by search engines, try to not exceed 156 characters.') );
 			$this->set_comments( 'keywords', form_comment('Comma-separated keywords (for search engines) ie "Dave, Hendler, College, Relations"') );
 			$this->set_comments( 'parent_id', form_comment(''));
 			$this->change_element_type( 'url', 'hidden' );
@@ -310,7 +310,7 @@ class MinisitePageManager extends parent_childManager
 		else
 		{
 			// loop through all elements making them hidden, except for the important link fields
-			$fields = array( 'name', 'url', 'parent_id', 'nav_display', 'description', 'administrator_section_heading', 'unique_name', );
+			$fields = array( 'name', 'url', 'parent_id', 'nav_display', 'meta_description', 'administrator_section_heading', 'unique_name', );
 			foreach($this->get_element_names() as $element_name)
 			{
 				if( !in_array( $element_name, $fields ) )
@@ -326,14 +326,14 @@ class MinisitePageManager extends parent_childManager
 			$this->set_comments( 'url', form_comment('The URL of the external link - should usually begin with http:// unless it is a link to a location within this site') );
 			$this->set_comments( 'name', form_comment('The title of link displayed in your site\'s navigation.') );
 			$this->set_comments( 'parent_id', form_comment('Use this field to choose the link\'s parent page.') );
-			$this->set_comments( 'description', form_comment('A brief description for this link; only displayed if the parent page shows its children.') );
+			$this->set_comments( 'meta_description', form_comment('A brief description for this link; only displayed if the parent page shows its children.') );
 		}
 		
 		// Suggest a limit of 156 characters so that google will display the complete description.
-		$this->change_element_type('description', 'textarea', array('rows' => 4));
+		$this->change_element_type('meta_description', 'textarea', array('rows' => 4));
 		$limiter = new DiscoInputLimiter($this);
-		$limiter->suggest_limit('description', 156);
-		$limiter->auto_show_hide('description', false);
+		$limiter->suggest_limit('meta_description', 156);
+		$limiter->auto_show_hide('meta_description', false);
 		
 		$administrator_fields = array('extra_head_content_structured', 'extra_head_content', 'unique_name');
 		$has_administrator_field = false;
