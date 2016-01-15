@@ -399,7 +399,7 @@ class CourseSectionType extends Entity
 	
 	public function get_value_requirements($refresh = true)
 	{
-		$this->fetch_external_data();
+		$this->fetch_external_data($refresh);
 		if (isset($this->external_data['section']['XSEC_COURSE_TYPES_LIST']))
 		{
 			$reqs = explode(' ', $this->external_data['section']['XSEC_COURSE_TYPES_LIST']);
@@ -413,7 +413,7 @@ class CourseSectionType extends Entity
 	
 	public function get_value_faculty($refresh = true)
 	{
-		$this->fetch_faculty_data();
+		$this->fetch_faculty_data($refresh);
 		$faculty = array();
 		foreach ($this->external_data['faculty'] as $id => $data)
 		{
@@ -428,7 +428,7 @@ class CourseSectionType extends Entity
 	  */
 	public function get_value_grading($refresh = true)
 	{
-		$this->fetch_external_data();
+		$this->fetch_external_data($refresh);
 		if (isset($this->external_data['section']['SEC_ONLY_PASS_NOPASS_FLAG']))
 		{
 			if (($this->external_data['section']['SEC_ONLY_PASS_NOPASS_FLAG'] == 'Y') && strpos('10', $this->external_data['section']['XSEC_SEC_COURSE_LEVELS_SV']) === false)
