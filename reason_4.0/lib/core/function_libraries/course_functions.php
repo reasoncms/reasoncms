@@ -351,8 +351,8 @@ class CourseTemplateType extends Entity
 			
 			if (!isset($this->external_data))
 			{
-				$query = 'SELECT * FROM IDM_CRS WHERE COURSES_ID = '.$this->get_value('sourced_id');
-				connectdb( 'reg_catalog_new' );
+				$query = 'SELECT * FROM colleague_data.IDM_CRS WHERE COURSES_ID = '.$this->get_value('sourced_id');
+
 				if ($result = mysql_query($query))
 				{
 					$this->external_data = mysql_fetch_assoc($result);
@@ -361,7 +361,7 @@ class CourseTemplateType extends Entity
 					// Indicate that we've tried and failed to retrieve the data, so we don't keep trying
 					$this->external_data = array();
 				}
-				connectdb( REASON_DB );
+
 				if (!empty($this->external_data))
 				{
 					$this->set_value('cache', json_encode($this->external_data));
@@ -474,8 +474,8 @@ class CourseSectionType extends Entity
 			
 			if ($refresh || !isset($this->external_data['section']))
 			{
-				$query = 'SELECT * FROM IDM_COURSE WHERE COURSE_SECTIONS_ID = '.$this->get_value('sourced_id');
-				connectdb( 'reg_catalog_new' );
+				$query = 'SELECT * FROM colleague_data.IDM_COURSE WHERE COURSE_SECTIONS_ID = '.$this->get_value('sourced_id');
+
 				if ($result = mysql_query($query))
 				{
 					$this->external_data['section'] = mysql_fetch_assoc($result);
@@ -484,7 +484,7 @@ class CourseSectionType extends Entity
 					// Indicate that we've tried and failed to retrieve the data, so we don't keep trying
 					$this->external_data['section'] = array();
 				}
-				connectdb( REASON_DB );
+
 				if (!empty($this->external_data['section']))
 					$this->update_cache();
 			}
@@ -503,10 +503,10 @@ class CourseSectionType extends Entity
 			if ($refresh || !isset($this->external_data['faculty']))
 			{
 				$this->external_data['faculty'] = array();
-				$query = 'SELECT Id, First_Name, NickName, Last_Name, Carleton_Name, Fac_Catalog_Name FROM IDM_CRS_SEC_FACULTY, EmployeesByPosition_All 
+				$query = 'SELECT Id, First_Name, NickName, Last_Name, Carleton_Name, Fac_Catalog_Name FROM colleague_data.IDM_CRS_SEC_FACULTY, colleague_data.EmployeesByPosition_All 
 					WHERE CSF_COURSE_SECTION = '.$this->get_value('sourced_id') .'
 					AND CSF_FACULTY = EmployeesByPosition_All.Id';
-				connectdb( 'reg_catalog_new' );
+
 				mysql_set_charset('utf8');
 				if ($result = mysql_query($query))
 				{
@@ -516,7 +516,7 @@ class CourseSectionType extends Entity
 					}
 					$this->external_data['timestamp'] = time();
 				}
-				connectdb( REASON_DB );
+
 				if (!empty($this->external_data['faculty']))
 					$this->update_cache();
 			}
