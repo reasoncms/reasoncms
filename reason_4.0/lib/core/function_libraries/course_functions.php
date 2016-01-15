@@ -220,28 +220,60 @@ class CourseTemplateType extends Entity
 			return array();
 	}
 	
+	/**
+	 * Return how this course is graded. If no year limit is set, you'll get back the value for
+	 * the most recent term. If a year limit is set, and sections occur within that limit, you'll 
+	 * get back the value for the last section in that year. If a year limit is set and no sections occur
+	 * in that year, you'll get the value from the most recent year the course was offered.
+	 *
+	 * @param boolean $refresh
+	 * @return array
+	 */
 	public function get_value_grading($refresh = true)
 	{
-		$sections = $this->get_sections();
+		$sections = $this->get_sections(false);
 		array_reverse($sections);
 		foreach ( $sections as $key => $section)
 		{
-			if ($grading = $section->get_value('grading'))
+			if ($grading = $section->get_value('grading', $refresh))
 			{
-				return $grading;
+				if ($this->limit_to_year)
+				{
+					$year = term_to_academic_year($section->get_value('academic_session'));
+					if ($year > $this->limit_to_year)
+						continue;
+					else
+						return $grading;
+				}
 			}
 		}
 	}
 	
+	/**
+	 * Return the course level for this course. If no year limit is set, you'll get back the value for
+	 * the most recent term. If a year limit is set, and sections occur within that limit, you'll 
+	 * get back the value for the last section in that year. If a year limit is set and no sections occur
+	 * in that year, you'll get the value from the most recent year the course was offered.
+	 *
+	 * @param boolean $refresh
+	 * @return array
+	 */
 	public function get_value_course_level($refresh = true)
 	{
-		$sections = $this->get_sections();
+		$sections = $this->get_sections(false);
 		array_reverse($sections);
 		foreach ( $sections as $key => $section)
 		{
-			if ($level = $section->get_value('course_level'))
+			if ($level = $section->get_value('course_level', $refresh))
 			{
-				return $level;
+				if ($this->limit_to_year)
+				{
+					$year = term_to_academic_year($section->get_value('academic_session'));
+					if ($year > $this->limit_to_year)
+						continue;
+					else
+						return $level;
+				}
 			}
 		}
 	}
@@ -257,7 +289,7 @@ class CourseTemplateType extends Entity
 		$faculty = array();
 		foreach ( $sections as $key => $section)
 		{
-			if ($fac = $section->get_value('faculty'))
+			if ($fac = $section->get_value('faculty', $refresh))
 			{
 				$faculty = $faculty + $fac;
 			}
@@ -267,14 +299,14 @@ class CourseTemplateType extends Entity
 
 	public function get_value_start_date($refresh = true)
 	{
-		$this->fetch_external_data();
+		$this->fetch_external_data($refresh);
 		if (isset($this->external_data['CRS_START_DATE']))
 			return $this->external_data['CRS_START_DATE'];
 	}
 	
 	public function get_value_end_date($refresh = true)
 	{
-		$this->fetch_external_data();
+		$this->fetch_external_data($refresh);
 		if (isset($this->external_data['CRS_END_DATE']))
 			return $this->external_data['CRS_END_DATE'];
 	}
