@@ -32,7 +32,7 @@ class CourseTemplateType extends Entity
 			$this->limit_to_year = false;		
 	}
 
-	public function get_value($col, $refresh = true)
+	public function get_value($col, $refresh = false)
 	{
 		$custom_getter = 'get_value_'.$col;
 		if (method_exists($this, $custom_getter))
@@ -233,6 +233,19 @@ class CourseTemplateType extends Entity
 		}
 	}
 	
+	public function get_value_course_level($refresh = true)
+	{
+		$sections = $this->get_sections();
+		array_reverse($sections);
+		foreach ( $sections as $key => $section)
+		{
+			if ($level = $section->get_value('course_level'))
+			{
+				return $level;
+			}
+		}
+	}
+	
 	/**
 	  * Return an array of faculty who teach sections of this course.
 	  * 
@@ -384,7 +397,7 @@ class CourseSectionType extends Entity
 		}
 	}
 
-	public function get_value($col, $refresh = true)
+	public function get_value($col, $refresh = false)
 	{
 		$custom_getter = 'get_value_'.$col;
 		if (method_exists($this, $custom_getter))
@@ -438,6 +451,15 @@ class CourseSectionType extends Entity
 				else
 					return 'S/CR/NC';
 			}
+		}
+	}
+	
+	public function get_value_course_level($refresh = true)
+	{
+		$this->fetch_external_data($refresh);
+		if (isset($this->external_data['section']['XSEC_SEC_COURSE_LEVELS_SV']))
+		{
+			return $this->external_data['section']['XSEC_SEC_COURSE_LEVELS_SV'];
 		}
 	}
 	
