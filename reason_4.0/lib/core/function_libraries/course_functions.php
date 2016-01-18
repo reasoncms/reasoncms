@@ -484,6 +484,7 @@ class CourseSectionType extends Entity
 			
 			return $reqs;
 		}
+		return array();
 	}
 	
 	public function get_value_faculty($refresh = true)
