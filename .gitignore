@@ -1,11 +1,7 @@
 apache.conf
 .vagrant/*
 
-# Don't track a local Reason settings directory in this repo (track it elsewhere)
+# Don't track local Reason directories or symlinks
 /settings_local
-
-# Symlinks created for local Reason instance, some for backwards compatibility
-/reason_4.0/lib/local*
-/reason_4.0/www/reason_package
-/www/reason_4.0
-
+/reason_4.0/lib/local
+/reason_4.0/www/local
