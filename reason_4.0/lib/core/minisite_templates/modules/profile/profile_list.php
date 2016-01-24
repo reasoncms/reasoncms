@@ -8,7 +8,7 @@
   * include the base class and register the module with Reason
   */
 reason_include_once( 'minisite_templates/modules/default.php' );
-reason_include_once( 'config/modules/profile/config.php' );
+reason_include_once( 'minisite_templates/modules/profile/lib/profile_functions.php' );
 
 $GLOBALS[ '_module_class_names' ][ module_basename( __FILE__, '.php' ) ] = 'ProfileDisplayModule';
 
@@ -17,6 +17,9 @@ $GLOBALS[ '_module_class_names' ][ module_basename( __FILE__, '.php' ) ] = 'Prof
  * This module displays lists of profiles based on the combination of parameters passed in the 
  * page type. Some of the parameters rely on the existence of a built out department -> subject -> major
  * structure in your Reason instance, but most should work with just a basic profiles setup.
+ *
+ * @todo should config file be a page type param?
+ * @todo abstract me
  */
 class ProfileDisplayModule extends DefaultMinisiteModule
 {
@@ -73,8 +76,6 @@ class ProfileDisplayModule extends DefaultMinisiteModule
 
 		// Randomize the profiles before displaying
 		'randomize' => false,
-
-		'profile_link_base' => '',
 		);
 		
 	protected $config;
@@ -85,15 +86,12 @@ class ProfileDisplayModule extends DefaultMinisiteModule
 	{
 		parent::init($args);
 
-		$this->config = new profileConfig();
-
+		$this->config = profile_get_config();
+		
 		if($head_items = $this->get_head_items())
 		{
 			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH . 'modules/profiles/list.css');
 		}
-		
-		if (empty($this->params['profile_link_base']))
-			$this->params['profile_link_base'] = reason_get_site_url(id_of($this->config->profiles_site_unique_name));
 		
 		$this->pc = new $this->config->connector_class();
 		
@@ -188,6 +186,12 @@ class ProfileDisplayModule extends DefaultMinisiteModule
 					echo $html;
 			}
 		}
+		
+		// Do something if no profiles were found to display
+		if (empty($html))
+		{
+			echo '<p>There are no profiles to display.</p>';
+		}	
 	}
 	
 	/**
@@ -215,7 +219,7 @@ class ProfileDisplayModule extends DefaultMinisiteModule
 		if ($this->params['show_photos'] && $image = $person->get_image())
 		{	
 			$html .= '<div class="profilePhoto">'."\n";
-			$link = ($this->params['show_profile_link']) ? $this->params['profile_link_base'].$person->get_username() : htmlspecialchars($image['link']);
+			$link = ($this->params['show_profile_link']) ? profile_construct_link(array('username'=>$person->get_username())) : htmlspecialchars($image['link']);
 			$html .= '<a href="'.$link.'"><img src="'.htmlspecialchars($image['src']).'" width="200" height="200" alt="'.htmlspecialchars($image['alt']).'" /></a>'."\n";
 			$html .= '</div>'."\n";
 		}
@@ -251,14 +255,7 @@ class ProfileDisplayModule extends DefaultMinisiteModule
 		
 		if ($this->params['show_profile_link'])
 		{
-			if ($this->config->friendly_urls)
-			{
-				$html .= '<p class="profileLink"><a href="'.$this->params['profile_link_base'].$person->get_username().'">View Full Profile</a></p>'."\n";
-			}
-			else
-			{
-				$html .= '<p class="profileLink"><a href="'.$this->params['profile_link_base'].$this->config->profile_slug.'/?username='.$person->get_username().'">View Full Profile</a></p>'."\n";
-			}
+			$html .= '<p class="profileLink"><a href="'.profile_construct_link(array('username'=>$person->get_username())).'">View Full Profile</a></p>'."\n";
 		}
 		
 		$html .= '</div>'."\n";
@@ -344,14 +341,10 @@ class ProfileDisplayModule extends DefaultMinisiteModule
 	
 	/**
 	  * Find profiles that are owned or borrowed by the current site and add them to our collection.
-	  *
 	  */
 	protected function get_site_profiles()
 	{
-		$this->es = new entity_selector( $this->site_id );
-		$this->es->description = 'Selecting profiles on site';
-		$this->es->add_type( id_of('profile_type') );
-		$results = $this->es->run_one();
+		$results = profile_get_site_profile_entities($this->site_id);
 		foreach ($results as $id => $entity)
 		{
 			if (isset($this->profiles[$id])) continue;

@@ -23,7 +23,7 @@ $(document).ready(function()
 	 */
 	function setup_element_groups()
 	{
-		$("#mainProfileContent li.sites form#disco_form .formElement").each(function()
+		$("#mainProfileContent div.sites form#disco_form .formElement").each(function()
 		{
 			var site = $(this);
 			site.find('.stackedElement').eq(1).find('div.formComment').remove();
@@ -50,9 +50,9 @@ $(document).ready(function()
 	 */
 	function setup_submit_button()
 	{
-		$("#mainProfileContent li.sites form#disco_form").submit(function()
+		$("#mainProfileContent div.sites form#disco_form").submit(function()
 		{
-			$("#mainProfileContent li.sites form#disco_form .formElement").filter(':visible').each(function()
+			$("#mainProfileContent div.sites form#disco_form .formElement").filter(':visible').each(function()
 			{
 				if ($.trim($(this).find(".stackedElement").eq(2).find("input:first").val()) == "")
 				{
@@ -68,18 +68,18 @@ $(document).ready(function()
 	function refresh_add_button()
 	{
 		$("div#add_button").remove();
-		if ($("#mainProfileContent li.sites form#disco_form div.formElement:hidden").length > 0)
+		if ($("#mainProfileContent div.sites form#disco_form div.formElement:hidden").length > 0)
 		{
 			// this is icky in IE7. Lets try something a little different.
 			//button = $("#mainProfileContent li.sites form#disco_form .formElement select:first").clone().attr("id", "add_a_site").removeAttr("name");
 			
-			button_html = $("#mainProfileContent li.sites form#disco_form .formElement select:first").html();
+			button_html = $("#mainProfileContent div.sites form#disco_form .formElement select:first").html();
 			button = $('<select id="add_a_site">'+button_html+'</select>');
 			button.find("option:first").removeAttr("value").text("Add link ...");
 			button.val("");
 			
 			// remove options that are already displayed
-			$("#mainProfileContent li.sites form#disco_form div.formElement h3.siteType").each(function()
+			$("#mainProfileContent div.sites form#disco_form div.formElement h3.siteType").each(function()
 			{
 				var text = $(this).text();
 				if ((text != "") && (text != "Other"))
@@ -95,7 +95,7 @@ $(document).ready(function()
 			});
 			
 			// put the pull down button into the DOM
-			$("#mainProfileContent li.sites form#disco_form div.formElement:last").after(button);
+			$("#mainProfileContent div.sites form#disco_form div.formElement:last").after(button);
 			$("#add_a_site").wrap('<div id="add_button"></div>');
 		}
 	}
@@ -105,7 +105,7 @@ $(document).ready(function()
 	 */
 	function add_an_item(type)
 	{
-		$("#mainProfileContent li.sites form#disco_form div.formElement").filter(':hidden:first').each(function()
+		$("#mainProfileContent div.sites form#disco_form div.formElement").filter(':hidden:first').each(function()
 		{
 			refresh_an_item($(this), type);
 		});
@@ -162,9 +162,9 @@ $(document).ready(function()
 	 */
 	function move_to_end_and_reorder(item)
 	{
-		item.insertAfter("#mainProfileContent li.sites form#disco_form div.formElement:last");
+		item.insertAfter("#mainProfileContent div.sites form#disco_form div.formElement:last");
 		var num = 0;
-		$("#mainProfileContent li.sites form#disco_form div.formElement").each(function()
+		$("#mainProfileContent div.sites form#disco_form div.formElement").each(function()
 		{
 			var site = $(this);
 			var site_elements = site.find(".stackedElement");

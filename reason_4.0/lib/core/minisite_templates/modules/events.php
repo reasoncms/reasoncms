@@ -309,6 +309,8 @@ class EventsModule extends DefaultMinisiteModule
 	 *
 	 * 'view' (string) forces a specific view. Possible values: daily, weekly, monthly, yearly, all
 	 *
+	 * 'available_views' specifies a set of views that can be used, in comma-separated format. Default is empty, indicating all possible views.
+	 *
 	 * 'limit_to_page_categories' (boolen) determines if the module will display all events on site
 	 * or just those with a category matching one on current page
 	 *
@@ -355,6 +357,7 @@ class EventsModule extends DefaultMinisiteModule
 							'list_item_markup' => '',
 							'list_chrome_markup' => '',
 	 						'view'=>'',
+	 						'available_views' => '',
 							'limit_to_page_categories'=>false,
 							'list_type'=>'', // deprecated -- use list_markup instead
 							'additional_sites'=>'',
@@ -3211,6 +3214,11 @@ class EventsModule extends DefaultMinisiteModule
 		elseif(!empty($view))
 		{
 			$init_array['view'] = $view;
+		}
+		if($this->params['available_views'])
+		{
+			if($views = array_map('trim',explode(',',$this->params['available_views'])))
+				$init_array['available_views'] = $views;
 		}
 		if(!empty($this->pass_vars['audience']))
 		{

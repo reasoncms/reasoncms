@@ -1,6 +1,6 @@
 <?php
 /**
- * @package reason_local
+ * @package reason
  * @subpackage minisite_modules
  */
 
@@ -23,8 +23,8 @@ reason_include_once('content_managers/image.php3');
  */
 class imageProfileEditForm extends defaultProfileEditForm
 {
-	protected $min_width = 0;
-	protected $min_height = 0;
+	protected $min_width = 100;
+	protected $min_height = 100;
 	public $form_enctype = 'multipart/form-data';
 	public $actions = array('Upload');
 
@@ -34,18 +34,10 @@ class imageProfileEditForm extends defaultProfileEditForm
 	 */
 	function custom_init()
 	{
-		$person = $this->get_person();
-		$image = $person->get_image();
-
-		$head_items = $this->get_head_items(); // module head items
-		
 		$params = array('head_items' => $this->head_items,
 				'crop_ratio' => 1,
 				'require_crop' => true,
 			  	);
-				
-		//$this->add_element('current_image', 'comment', array('text'=>
-		//	'<p><span class="smallText">Current image:</span><br /><img src="'.$image['src'].'" /></p>'));
 		$this->add_element($this->get_section(), 'reasonImageUploadCroppable', $params);
 		$this->set_display_name($this->get_section(), $this->get_section_display_name());
 		$this->add_required($this->get_section());
@@ -55,20 +47,20 @@ class imageProfileEditForm extends defaultProfileEditForm
 	{
 		echo '<h3>Profile Image</h3>';
 		echo '<p>Choose an image from your computer. Once it displays below, you may drag the selection square
-		to crop your image, making sure your head takes up most of the frame. <em>This image will
-		become your official portrait on Carleton\'s web site, so please choose appropriately.</em></p>';
-		//echo '<p><span class="smallText">Current image:</span><br />';
-		//echo '<img src="'.$image['src'].'" /></p>';
+		to crop your image, making sure your head takes up most of the frame.</p>';
 	}
 	
-	function run_error_checks()
+	/**
+	 * @todo this should not depend on imagemagick.
+	 */
+	function run_error_checks() 
 	{
 		if( !$this->_has_errors() && ($upload = $this->get_element('image')))
 		{
 			if ($info = get_dimensions_image_magick($upload->tmp_full_path))
 			{
-				if ($info['width'] < $this->min_width && $info['height'] < $this->min_height)
-					$this->set_error('profile_image','Your image is not large enough; it needs to be at least 
+				if ($info['width'] < $this->min_width || $info['height'] < $this->min_height)
+					$this->set_error($this->get_section(),'Your image is not large enough; it needs to be at least 
 						'.$this->min_width.'x'.$this->min_height.' pixels in size.');
 			}
 		}

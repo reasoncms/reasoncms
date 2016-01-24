@@ -1,6 +1,6 @@
 $(document).ready(function(){
 	var body = $('body').addClass('jsOn');
-	var subsections = $('#profileInfo .subsection:not(.editing)');
+	var subsections = $('#profileInfo .subsection.truncatable:not(.editing)');
 	if( body.width() < 700 && $('#wrapper').width() < 700)
 	{
 		body.addClass('smallScreenMode');
@@ -95,5 +95,4 @@ $(document).ready(function(){
 		var origin = window.location.protocol.replace(/\:/g, '') + '://' + window.location.host + window.location.pathname;
 		window.location.href = origin + '?contact=' + $(this).val();
 	});
-	
 });

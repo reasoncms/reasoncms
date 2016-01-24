@@ -31,7 +31,7 @@ class singleSiteProfileEditForm extends defaultProfileEditForm
 		{
 			foreach ($sites as $name => $site_url)
 			{
-				if ($name == 'Personal Website')
+				if ($name == $this->site_name)
 				{
 					$this->set_value('web_address', $site_url);
 				}
@@ -80,6 +80,6 @@ class singleSiteProfileEditForm extends defaultProfileEditForm
 	function process()
 	{
 		$person = $this->get_person();
-		$person->sync_sites(array('Personal Website' => $this->get_value('web_address')));
+		$person->sync_sites(array($this->site_name => $this->get_value('web_address')), array($this->site_name));
 	}
 }

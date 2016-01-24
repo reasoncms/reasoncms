@@ -408,7 +408,7 @@
 		 */
 		function grab_request() // {{{
 		{
-			$request = array_diff( conditional_stripslashes($_REQUEST), conditional_stripslashes($_COOKIE) );
+			$request = array_diff( conditional_stripslashes( (array) $_REQUEST), conditional_stripslashes( (array) $_COOKIE) );
 			$columns = (isset($this->columns)) ? array_keys($this->columns) : array('');
 			$cleanup_rules = array('site_id' => array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => true)),
 								   'page_id' => array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => true)),

@@ -11,6 +11,8 @@
  */
 $GLOBALS['reason_event_gallery_models'][basename(__FILE__, '.php')] = 'eventGalleryItem';
 
+reason_include_once('classes/date_range_formatters/functions.php');
+
 /**
  * The default model for event gallery items
  */
@@ -29,6 +31,22 @@ class eventGalleryItem
 			return $this->_event->get_value($key);
 		else
 			return NULL;
+	}
+	public function get_relationship($relationship_name, $direction)
+	{
+		if(!empty($this->_event))
+		{
+			switch($direction)
+			{
+				case 'right':
+					return $this->_event->get_right_relationship($relationship_name);
+				case 'left':
+					return $this->_event->get_left_relationship($relationship_name);
+				default:
+					trigger_error('$direction passes to get_relationship must be either "left" or "right"');
+			}
+		}
+		return NULL;
 	}
 	public function get_main_title()
 	{
@@ -93,55 +111,15 @@ class eventGalleryItem
 				return NULL;
 		}
 	}
-	public function date_range_phrase()
+	/**
+	 * Get a phrase representing a date range
+	 *
+	 * @param string $format
+	 *
+	 */
+	public function date_range_phrase($format = 'default')
 	{
-		if(substr($this->_event->get_value('datetime'),0,10) == $this->_event->get_value('last_occurence'))
-		{
-			if(mb_strlen(prettify_mysql_datetime($this->_event->get_value('datetime'),'F')) > 3)
-				$format = 'M. j, Y';
-			else
-				$format = 'M j, Y';
-			return prettify_mysql_datetime($this->_event->get_value('datetime'),$format);
-		}
-		
-		$diff_years = true;
-		$diff_months = true;
-		
-		$start_year = substr($this->_event->get_value('datetime'),0,4);
-		$end_year = substr($this->_event->get_value('last_occurence'),0,4);
-		if($start_year == $end_year)
-		{
-			$diff_years = false;
-			$start_month = substr($this->_event->get_value('datetime'),5,2);
-			$end_month = substr($this->_event->get_value('last_occurence'),5,2);
-			if($start_month == $end_month)
-				$diff_months = false;
-		}
-		if(mb_strlen(prettify_mysql_datetime($this->_event->get_value('datetime'),'F')) > 3)
-			$start_format = 'M. j';
-		else
-			$start_format = 'M j';
-		if($diff_years)
-			$start_format .= ', Y';
-			
-		if($diff_months)
-		{
-			if(mb_strlen(prettify_mysql_datetime($this->_event->get_value('last_occurence'),'F')) > 3)
-				$end_format = 'M. j, Y';
-			else
-				$end_format = 'M j, Y';
-		}
-		else
-			$end_format = 'j, Y';
-			
-		$ret = prettify_mysql_datetime($this->_event->get_value('datetime'),$start_format);
-		
-		$ret .= ' '.html_entity_decode('&#8211;',ENT_NOQUOTES,'UTF-8').' ';
-		
-		$ret .= prettify_mysql_datetime($this->_event->get_value('last_occurence'),$end_format);
-		
-		return $ret;
-		
+		return format_event_date_range($this->_event, $format);
 	}
 	/**
  	 * @todo find events page

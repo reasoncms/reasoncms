@@ -1,58 +1,29 @@
-@import url('/global_stock/fonts/proxima_nova/family_basic.css');
-@import url('/global_stock/fonts/proxima_nova/family_thin.css');
-html {
-	-webkit-text-size-adjust:100%;
-	-ms-text-size-adjust:100%;
-	-moz-text-size-adjust:100%;
-}
-body {
-	background:#3676B3;
-	color:#fff;
-}
-a {
-	color:#CDDDEC;
-}
-#wrapper, #wrapper input, #wrapper textarea {
-	font-family:'ProximaNova';
-}
-#bannerAndMeat, #footer {
-	margin:0 0 5em 0;
-	max-width:1200px;
-	font-size:1.308em;
-	line-height:1.3;
-}
-#footer {
-	font-size:1.154em;
-}
-#wrapper {
-	background:-moz-linear-gradient(top, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0) 14px, rgba(0,0,0,0) 100%); /* FF3.6+ */
-	background:-webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0.1)), color-stop(14px,rgba(0,0,0,0)), color-stop(100%,rgba(0,0,0,0))); /* Chrome,Safari4+ */
-	background:-webkit-linear-gradient(top, rgba(0,0,0,0.1) 0%,rgba(0,0,0,0) 14px,rgba(0,0,0,0) 100%); /* Chrome10+,Safari5.1+ */
-	background:-o-linear-gradient(top, rgba(0,0,0,0.1) 0%,rgba(0,0,0,0) 14px,rgba(0,0,0,0) 100%); /* Opera 11.10+ */
-	background:-ms-linear-gradient(top, rgba(0,0,0,0.1) 0%,rgba(0,0,0,0) 14px,rgba(0,0,0,0) 100%); /* IE10+ */
-	background:linear-gradient(to bottom, rgba(0,0,0,0.1) 0%,rgba(0,0,0,0) 14px,rgba(0,0,0,0) 100%); /* W3C */
-	padding:0 5%;
-	min-width:700px;
-}
-#banner {
-	display:none;
-}
 
 #profilesModule {
-	padding-left:190px;
 	position:relative;
+}
+#profilesModule a {
+	color:#fff;
 }
 #mainProfileContent {
 	float:left;
 	width:100%;
 }
+
 #secondaryProfileContent {
-	float:left;
 	width:170px;
-	margin-left:-100%;
-	position:relative;
-	left:-190px;
-	margin-top:280px;
+	position:absolute;
+	top:280px;
+	left:0px;
+}
+
+#secondaryProfileContent.noActiveProfile {
+	top:0px;
+}
+
+#secondaryProfileContent.noActiveProfile #moduleNavigation ul li:first-child {
+	padding-top: 0px;
+	margin-top: 0px;
 }
 
 #profilesModule:after, #contactInfo:after, #interestTags:after, #profilesWelcome ul.actions:after {
@@ -114,7 +85,7 @@ a {
 #mainProfileContent div.section {
 	background:#fff;
 	color:#000;
-	padding:20px 20px 20px 72px;
+	padding: 1em;
 }
 #mainProfileContent div.section a {
 	color:#3676B3;
@@ -133,7 +104,6 @@ a {
 	min-height:10em;
 }
 #basicInfo div.image {
-	position:absolute;
 	display:inline-block;
 	padding:15px;
 	background:#fff;
@@ -156,11 +126,7 @@ div.swfupload-container {
 #basicInfo div.image #imageItem .words {
 	display:none;
 }
-#profilesModule div.image div.editOffer {
-	position:absolute;
-	bottom:0;
-	right:0;
-}
+
 #basicInfo h2.name {
 	margin:0;
 	font-weight:200;
@@ -448,7 +414,7 @@ body.smallScreenMode #profileInfo .textZone {
 	margin: 0 5px 5px 5px;
 }
 #mainProfileContent li.tagit-choice .ui-icon {
-	background-image: url("/reason_package/jquery/css/smoothness/images/ui-icons_222222_256x240.png");
+	background-image: url("../../../jquery/css/smoothness/images/ui-icons_222222_256x240.png");
 }
 #mainProfileContent ul.tagList a.interestTag:hover, #mainProfileContent ul.tagList a.interestTag:focus, #mainProfileContent ul.tagList a.interestTag:active {
 	background-color:#3676b3;
@@ -662,7 +628,6 @@ body.smallScreenMode #profileInfo .textZone {
 }
 
 #profileModuleFooter {
-	padding-left:190px;
 	position:relative;
 	color:#C2D6E8;
 	font-size:0.9em;
@@ -705,36 +670,7 @@ div#deleteConfirm {
 }
 
 /* Responsive rules */
-@media all and (min-width:1100px) {
-	#wrapper {
-		padding:0 6%;
-	}
-	#mainProfileContent div.section {
-		padding-left:80px;
-	}
-}
-@media all and (max-width:1000px) {
-	#wrapper {
-		padding:0 4%;
-		min-width:200px;
-	}
-	#mainProfileContent div.section {
-		padding-left:68px;
-	}
-	#bannerAndMeat {
-		font-size:1.231em;
-	}
-	#footer {
-		font-size:#1.077em;
-	}
-}
 @media all and (max-width:900px) {
-	#wrapper {
-		padding:0 3%;
-	}
-	#mainProfileContent div.section {
-		padding-left:58px;
-	}
 	#basicInfo div.image img {
 		height:190px;
 		width:190px;
@@ -750,12 +686,6 @@ div#deleteConfirm {
 	}
 }
 @media all and (max-width:800px) {
-	#wrapper {
-		padding:0 2.5%;
-	}
-	#mainProfileContent div.section {
-		padding-left:38px;
-	}
 	#basicInfo div.image img {
 		height:175px;
 		width:175px;
@@ -765,9 +695,6 @@ div#deleteConfirm {
 	}
 }
 @media all and (max-width:700px) {
-	#wrapper {
-		padding:0 2%;
-	}
 	#basicInfo div.image {
 		position:relative;
 		display:inline-block;
@@ -803,9 +730,6 @@ div#deleteConfirm {
 	#profilesModule {
 		padding-left:0;
 	}
-	#mainProfileContent div.section {
-		padding-left:20px;
-	}
 	#mainProfileContent div#profileInfo {
 		background:#F1F5FA;
 		min-height:0;
@@ -824,9 +748,6 @@ div#deleteConfirm {
 	}
 }
 @media all and (max-width:600px) {
-	#wrapper {
-		padding:0 1%;
-	}
 	#basicInfo div.image img {
 		height:80px;
 		width:80px;
@@ -844,9 +765,6 @@ div#deleteConfirm {
 	}
 }
 @media all and (max-width:500px) {
-	#wrapper {
-		padding:0;
-	}
 	#basicInfo div.image {
 		-moz-box-shadow:0px 2px 5px 0px rgba(0, 0, 0, 0.25);
 		-webkit-box-shadow:0px 2px 5px 0px rgba(0, 0, 0, 0.25);

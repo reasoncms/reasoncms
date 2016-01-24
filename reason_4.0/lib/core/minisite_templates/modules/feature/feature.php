@@ -385,8 +385,8 @@ class FeatureModule extends DefaultMinisiteModule
 			$d['h']=$height; 
 			$d['crop_style']=$feature->get_value('crop_style');;
 
-			$params="?id=".$d['id']."&amp;w=".$d['w']."&amp;h=".$d['h']."&amp;crop=".$d['crop_style'];
-			$d['feature_image_url']=REASON_HTTP_BASE_PATH."displayers/feature_image.php".$params;
+			$query_string_params="?id=".$d['id']."&amp;w=".$d['w']."&amp;h=".$d['h']."&amp;crop=".$d['crop_style'];
+			$d['feature_image_url']=REASON_HTTP_BASE_PATH."displayers/feature_image.php".$query_string_params;
 			$d['destination_url']=$feature->get_value('destination_url');
 
 			$d['title']=$feature->get_value('title');

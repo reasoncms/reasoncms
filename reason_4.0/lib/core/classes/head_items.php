@@ -325,7 +325,7 @@ class HeadItems
 
 		if(!$ok)
 		{
-			trigger_error('Stylesheet not found at "'.$input_path.'". Stylesheet not added.');
+			trigger_error('Less stylesheet not found at "'.$input_path.'". Stylesheet not added.');
 			return false;
 		}
 

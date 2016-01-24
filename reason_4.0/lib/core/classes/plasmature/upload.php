@@ -218,6 +218,8 @@ class ReasonImageUploadType extends image_uploadType
 
 /**
  * Reason image uploads with cropping.
+ *
+ * @todo support existing entity in a meaningful way.
  */
 class ReasonImageUploadCroppableType extends ReasonImageUploadType
 {

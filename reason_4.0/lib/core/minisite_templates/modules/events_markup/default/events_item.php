@@ -370,13 +370,16 @@ class defaultEventsItemMarkup implements eventsItemMarkup
 	{
 		$ret = '';
 		$contact_info = $this->bundle->contact_info($event);
-		if(!empty($contact_info) )
+		if(!empty($contact_info) && (!empty($contact_info['email']) || !empty($contact_info['fullname']) || !empty($contact_info['username']) ) )
 		{
+			$ret .= spray($contact_info);
 			$ret .= '<p class="contact"><strong>Contact:</strong> ';
 			if(!empty($contact_info['email']))
 				$ret .= '<a href="mailto:'.htmlspecialchars($contact_info['email']).'">';
-			if(!empty($contact_info['fullname']))
-				$ret .= htmlspecialchars($contact_info['fullname']);
+			if(!empty($contact_info['fullname']) && '' != trim($contact_info['fullname']))
+				$ret .= '"'.htmlspecialchars($contact_info['fullname']).'"';
+			elseif(!empty($contact_info['email']) && '' != trim($contact_info['email']))
+				$ret .= htmlspecialchars($contact_info['email']);
 			else
 				$ret .= htmlspecialchars($contact_info['username']);
 			if(!empty($contact_info['email']))

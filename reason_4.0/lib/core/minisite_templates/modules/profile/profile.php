@@ -1,6 +1,6 @@
 <?php
 /**
- * @package reason_local
+ * @package reason
  * @subpackage minisite_modules
  */
 
@@ -17,6 +17,7 @@ reason_include_once( 'minisite_templates/modules/default.php' );
 reason_include_once( 'classes/group_helper.php' );
 reason_include_once( 'function_libraries/url_utils.php' );
 reason_include_once( 'function_libraries/user_functions.php' );
+reason_include_once( 'minisite_templates/modules/profile/lib/profile_functions.php' );
 reason_include_once( 'config/modules/profile/config.php' );
 
 /**
@@ -27,28 +28,37 @@ reason_include_once( 'config/modules/profile/config.php' );
  * We map out which profile sections are included for each audience. For those in multiple audiences, we take an additive approach.
  * 
  * @todo current inline editing does not use activation parameters or check if it is active and thus will not play well with layouts where multiple modules support inline editing.
- *
+ * @todo should we not use inline editing framework (editors are not typically site editors)
+ * @todo add basic profile list capability to this module
+ * @todo consider whether we can unify profile list and explore methods in this class
+ * @todo can profile_list and profile_explore "views" be combined into a single profile "display?"
+ * @todo can we make sections (ie basic info) more flexible so modules can be inserted?
+ * @todo forms should move into lib - basic form editing handled in controller / models / view - not in this module.
+ * @todo all HTML should be in views - move to MVC
+ * 
  * @author Nathan White
  * @author Mark Heiman
- */
+ */ 
 class ProfileModule extends DefaultMinisiteModule
 {	
 	public $cleanup_rules = array(
 		'username' => array('function' => 'check_against_regexp', 'extra_args' => array('/^[a-z0-9_]*$/i')),
 		'pose_as' => array('function' => 'check_against_regexp', 'extra_args' => array('/^[a-z0-9_]*$/i')),
 		'connect' => array( 'function' => 'turn_into_int' ),
+		'list' => array('function' => 'turn_into_int' ),
+		'explore' => array('function' => 'turn_into_int' ),
 		'contact' => array( 'function' => 'turn_into_string' ),
 		'module_api' => array( 'function' => 'turn_into_string' ),
 		'module_identifier' => array( 'function' => 'turn_into_string' ),
 		'term' => array( 'function' => 'turn_into_string' ),
 		'tag' => array('function' => 'check_against_regexp', 'extra_args' => array('/^[a-z0-9_]*$/i')),
+		'section' => array('function' => 'check_against_regexp', 'extra_args' => array('/^[a-z0-9_]*$/i')),
 		'view' => array( 'function' => 'turn_into_string' ),
 	);
 	
 	/** These are used to store various settings and lookup tables */
 	protected $config;
 	protected $person;
-	protected $site_url;
 	protected $user_can_inline_edit;
 	protected $affiliation_supports_section;
 	protected $profile_sections_by_region;
@@ -56,7 +66,7 @@ class ProfileModule extends DefaultMinisiteModule
 
 	public function pre_request_cleanup_init()
 	{
-		$this->config = new ProfileConfig();
+		$this->config = profile_get_config();
 	}
 
 	public function get_cleanup_rules()
@@ -88,32 +98,27 @@ class ProfileModule extends DefaultMinisiteModule
 			}
 			exit;
 		}
-		
-		$this->site_url = reason_get_site_url(id_of($this->config->profiles_site_unique_name));
+
+		if ($this->config->make_current_page_a_link)
+		{
+			if ($pages =& $this->get_page_nav())
+			{
+				$pages->make_current_page_a_link();
+			}
+		}
 		
 		// Handle requests for generic usernames (me and editme)
 		if(isset($this->request['username']) && ('me' == $this->request['username'] || 'editme' == $this->request['username']))
 		{
-			$cur_username = reason_require_authentication();
-			if ($this->config->friendly_urls)
+			$username = reason_require_authentication();
+			if ('me' == $this->request['username'])
 			{
-				$link = $this->site_url . urlencode($cur_username) . '/';
+				$link = profile_construct_redirect(array('username' => $username));
 			}
 			else
 			{
-				$link = $this->site_url . $this->config->profile_slug . '/?username=' . urlencode($cur_username);
-			}
-			if('editme' == $this->request['username'])
-			{
-				if ($this->config->friendly_urls)
-				{
-					$link .= '?inline_editing_availability=enable';
-				}
-				else
-				{
-					$link .= '&inline_editing_availability=enable';
-				}
-			}			
+				$link = profile_construct_redirect(array('username' => $username, 'inline_editing_availability' => 'enable'));
+			}		
 			header('Location: '.$link);
 			echo '<a href="'.htmlspecialchars($link, ENT_QUOTES).'">Your profile</a>';
 			die();
@@ -152,11 +157,12 @@ class ProfileModule extends DefaultMinisiteModule
 				if (method_exists($form, 'custom_init')) call_user_func(array($form, 'custom_init'));
 			}
 		}
-		
+	
 		if($head_items = $this->get_head_items())
 		{
+			$head_items->add_javascript(JQUERY_URL, true);
 			$head_items->add_javascript(REASON_HTTP_BASE_PATH . 'modules/profiles/general.js');
-
+			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH . 'modules/profiles/base.css');
 			if ($this->get_view_mode() == 'connect')
 			{
 				$head_items->add_javascript(REASON_HTTP_BASE_PATH . 'modules/profiles/connector.js');
@@ -166,21 +172,58 @@ class ProfileModule extends DefaultMinisiteModule
 			{
 				$head_items->add_stylesheet(REASON_HTTP_BASE_PATH . 'modules/profiles/connector.css');
 			}
+			
+			if ($this->get_view_mode() == 'list')
+			{
+				$controller = $this->get_controller($this->config->list_controller);
+				if (method_exists($controller, 'append_head_items'))
+				{
+					$controller->append_head_items($head_items);
+				}
+			}
+			if ($this->get_view_mode() == 'explore')
+			{
+				$controller = $this->get_controller($this->config->explore_controller);
+				if (method_exists($controller, 'append_head_items'))
+				{
+					$controller->append_head_items($head_items);
+				}
+			}
+			
+			// if we are viewing a profile AND have controllers on sections that define append_head_items($head_items) - add those head items
+			if (!empty($p))
+			{
+				$profile_info_sections = $this->get_profile_info_sections($this->get_affiliations($this->config->primary_affiliation_for_section_ordering));
+				foreach ($profile_info_sections as $section)
+				{
+					$this->append_controller_head_items($section, $head_items);
+				}
+			}
 		}
 	}
 
 	/**
-	 * Defaults to showing a 404 if no valid profile entity is available. You can override
-	 * to apply different logic.
+	 * Defaults to showing a 404 if no valid profile entity is available and the logged in user is not
+	 * not the profile requested.
 	 */
 	protected function should_show_404()
 	{
 		$p = $this->get_person();
-		if ($p->is_valid())
+		if ( (reason_check_authentication() == $p->get_username()) || ($p->is_valid() && $p->has_profile()))
 		{
-			if ($p->has_profile()) return false;
+			return false;
 		}
 		return true;
+	}
+	
+	/**
+	 * If user is logged in and user role isn't allowed to have a profile, return true.
+	 */
+	protected function not_authorized()
+	{
+		$p = $this->get_person();
+		if ( (reason_check_authentication() == $p->get_username()) && !$p->is_valid()) return true;
+		return false;
 	}
 	
 	/**
@@ -226,17 +269,40 @@ class ProfileModule extends DefaultMinisiteModule
 	
 	/**
 	 * Run the profile module.
+	 *
+	 * @todo should have a wrapper so HTML logic in modes is not repeated.
 	 */
 	function run()
 	{
 		$p = $this->get_person();
 		if (!$p)
 		{
-			echo $this->get_welcome_html();
+			if ($this->get_view_mode() == 'list')
+			{
+				// run basic profile list
+				echo $this->get_profile_list_html();
+			}
+			elseif ($this->get_view_mode() == 'explore')
+			{
+				echo $this->get_profile_explore_html();
+			}
+			elseif ($this->config->redirect_to_profile_list_if_no_username)
+			{
+				if ($link = profile_construct_list_redirect())
+				{
+					header('Location: '.$link);
+					exit();
+				} 
+			}
+			else echo $this->get_welcome_html();
 		}
 		elseif ($this->should_show_404())
 		{
 			echo $this->get_not_found_html();
+		}
+		elseif ($this->not_authorized())
+		{
+			echo $this->get_not_authorized_html();
 		}
 		elseif ($this->temporarily_unavailable())
 		{
@@ -246,20 +312,34 @@ class ProfileModule extends DefaultMinisiteModule
 		{
 			echo $this->get_profile_html();
 		}
-		echo $this->get_module_footer();
 	}
 	
 	/**
-	  * By default, show the content of the page the module is running on. Obviously, you can
-	  * override this to do something else.
-	  */
+	 * Show profile page entity content (if defined).
+	 *
+	 * By default, in config redirect_to_profile_list_if_no_username is true so you don't see this content.
+	 *
+	 */
 	protected function get_welcome_html()
 	{
 		$str = '';
-		$str .= '<div id="profilesWelcome">'."\n";
+		$str .= '<div id="profilesModule" class="'.$this->get_api_class_string().'">'."\n";
+		$str .= '<div id="mainProfileContent">'."\n";
+		
+		$str .= '<div id="profileInfo" class="section">' . "\n";
 		if ($content = $this->cur_page->get_value('content'))
 		{
 			$str .= $content;
+		}
+		$str .= '</div>'."\n";
+		
+		$str .= '</div>'."\n";
+		if ($this->should_show_secondary_profile_content())
+		{
+			$str .= '<div id="secondaryProfileContent" class="noActiveProfile">'."\n";
+			$str .= $this->get_module_navigation();
+			$str .= $this->get_sign_in_block();
+			$str .= '</div>'."\n";
 		}
 		$str .= '</div>'."\n";
 		return $str;
@@ -282,8 +362,49 @@ class ProfileModule extends DefaultMinisiteModule
 	
 	protected function get_not_found_html()
 	{
-		$str  = '<div id="profilesNotFound">'."\n";
-		$str .= '<h2>Profile not found.</h2>'."\n";
+		$str = '';
+		$str .= '<div id="profilesModule" class="'.$this->get_api_class_string().'">'."\n";
+		$str .= '<div id="mainProfileContent">'."\n";
+		$str .= '<div id="profileInfo" class="section">' . "\n";
+		$str .= '<h2>Profile not found</h2>'."\n";
+		$str .= '<p>The profile you have selected could not be found.</p>';
+		$str .= '</div>'."\n";
+		$str .= '</div>'."\n";
+		$str .= '<div id="secondaryProfileContent" class="noActiveProfile">'."\n";
+		$str .= $this->get_module_navigation();
+		$str .= $this->get_sign_in_block();
+		$str .= '</div>'."\n";
+		if ($this->should_show_secondary_profile_content())
+		{
+			$str .= '<div id="secondaryProfileContent" class="noActiveProfile">'."\n";
+			$str .= $this->get_module_navigation();
+			$str .= $this->get_sign_in_block();
+			$str .= '</div>'."\n";
+		}
+		$str .= '</div>'."\n";
+		return $str;
+	}
+	
+	/**
+	 * For logged in users without permission to have a profile
+	 */
+	protected function get_not_authorized_html()
+	{
+		$str = '';
+		$str .= '<div id="profilesModule" class="'.$this->get_api_class_string().'">'."\n";
+		$str .= '<div id="mainProfileContent">'."\n";
+		$str .= '<div id="profileInfo" class="section">' . "\n";
+		$str .= '<h2>Profile not allowed</h2>'."\n";
+		$str .= '<p>Your user type is not allowed to have a profile. Sorry!</p>';
+		$str .= '</div>'."\n";
+		$str .= '</div>'."\n";
+		if ($this->should_show_secondary_profile_content())
+		{
+			$str .= '<div id="secondaryProfileContent" class="noActiveProfile">'."\n";
+			$str .= $this->get_module_navigation();
+			$str .= $this->get_sign_in_block();
+			$str .= '</div>'."\n";
+		}
 		$str .= '</div>'."\n";
 		return $str;
 	}
@@ -296,9 +417,6 @@ class ProfileModule extends DefaultMinisiteModule
 		$str = '';
 		$str .= '<div id="profilesModule" class="'.$this->get_api_class_string().'">'."\n";
 		$str .= '<div id="mainProfileContent" class="'.$this->person->get_first_ds_value('ds_affiliation').'Type">'."\n";
-		$str .= $this->get_basic_info();
-		$str .= $this->get_contact_info();
-		$str .= $this->get_connector_tabs();
 		$str .= '<div id="profileInfo" class="section">' . "\n";
 		if ($this->get_view_mode() == 'connect')
 		{
@@ -312,14 +430,122 @@ class ProfileModule extends DefaultMinisiteModule
 		$str .= '</div>'."\n";
 		$str .= $this->get_last_updated_section();
 		$str .= '</div>'."\n";
-		$str .= '<div id="secondaryProfileContent">'."\n";
-		$str .= $this->get_module_navigation();
-		$str .= $this->get_sign_in_block();
-		$str .= '</div>'."\n";
+		if ($this->should_show_secondary_profile_content())
+		{
+			$str .= '<div id="secondaryProfileContent">'."\n";
+			$str .= $this->get_module_navigation();
+			$str .= $this->get_sign_in_block();
+			$str .= '</div>'."\n";
+		}
 		$str .= '</div>'."\n";
 		return $str;
 	}
 	
+	/**
+	 * Controllers always get the site_id and the request object
+	 *
+	 * @return controller object
+	 */
+	protected function get_controller($name)
+	{
+		static $controller;
+		if ($name && !isset($controller[$name]))
+		{
+			if (!empty($name))
+			{
+				if (reason_file_exists('minisite_templates/modules/profile/lib/controllers/' . $name . '.php'))
+				{
+					reason_include_once('minisite_templates/modules/profile/lib/controllers/' . $name . '.php');
+					$controller_object_name = $GLOBALS[ '_profiles_controller' ][ $name ];
+					$controller[$name] = new $controller_object_name;
+					$controller[$name]->config('site_id', $this->site_id);
+					$controller[$name]->config('request', $this->request);
+				}
+				else
+				{
+					trigger_error('Controller `' . htmlspecialchars($name) . '` could not be found in the controllers directory.');
+					return NULL;
+				}
+			}
+		}
+		return ($name) ? $controller[$name] : NULL;
+	}
+	
+	/**
+	 * Instantiate and run named controller.
+	 *
+	 * - apply controller specific configuration here if provided
+	 *
+	 * @return HTML from a named controller
+	 */
+	protected function get_controller_html($name, $config = NULL)
+	{
+		if ($controller = $this->get_controller($name))
+		{
+			if (!empty($config))
+			{
+				foreach ($config as $k=>$v)
+				{
+					$controller->config($k, $v);
+				}
+			}
+			$output = $controller->run();
+		}
+		return (!empty($output)) ? $output : '';
+	}
+	
+	/**
+	 * This is where the page content gets assembled - if I'm loaded we have a view specified.
+	 */
+	protected function get_profile_list_html()
+	{
+		$str = '';
+		$str .= '<div id="profilesModule" class="'.$this->get_api_class_string().'">'."\n";
+		$str .= '<div id="mainProfileContent">'."\n";
+		$str .= '<div id="profileList" class="section">' . "\n";
+		
+		// grab controller from config.
+		$controller = $this->get_controller($this->config->list_controller);
+		$str .= $controller->run();
+		$str .= '</div>'."\n";
+		$str .= '</div>'."\n";
+		if ($this->should_show_secondary_profile_content())
+		{
+			$str .= '<div id="secondaryProfileContent" class="noActiveProfile">'."\n";
+			$str .= $this->get_module_navigation();
+			$str .= $this->get_sign_in_block();
+			$str .= '</div>'."\n";
+		}
+		$str .= '</div>'."\n";
+		return $str;
+	}
+	
+	/**
+	  * This is where the page content gets assembled - if I'm loaded we have a view specified.
+	  */
+	protected function get_profile_explore_html()
+	{
+		$str = '';
+		$str .= '<div id="profilesModule" class="'.$this->get_api_class_string().'">'."\n";
+		$str .= '<div id="mainProfileContent">'."\n";
+		$str .= '<div id="profileExplore" class="section">' . "\n";
+		
+		// grab controller from config.
+		$controller = $this->get_controller($this->config->explore_controller);
+		$str .= $controller->run();
+		$str .= '</div>'."\n";
+		$str .= '</div>'."\n";
+		if ($this->should_show_secondary_profile_content())
+		{
+			$str .= '<div id="secondaryProfileContent" class="noActiveProfile">'."\n";
+			$str .= $this->get_module_navigation();
+			$str .= $this->get_sign_in_block();
+			$str .= '</div>'."\n";
+		}
+		$str .= '</div>'."\n";
+		return $str;
+	}
+
 	protected function get_last_updated_section()
 	{
 		$person = $this->get_person();
@@ -367,18 +593,19 @@ class ProfileModule extends DefaultMinisiteModule
 	protected function get_edit_offer()
 	{
 		$str = '';
-		if ($this->user_can_inline_edit() && $this->get_view_mode() == 'profile')
+		if (($this->user_can_inline_edit() || $this->user_can_pose()) && $this->get_view_mode() == 'profile')
 		{
 			if($this->user_is_currently_inline_editing())
 			{
-				$str .= '<div class="editOffer done"><a href="'.carl_make_link(array('inline_editing_availability'=>'disable','edit_section'=>'',)).'" title="Stop editing this profile"><span class="icon"></span>Done Editing</a></div>'."\n";
+				$str .= '<div class="editOffer done"><a href="'.carl_make_link(array('inline_editing_availability'=>'disable','edit_section'=>'','pose_as'=>'')).'" title="Stop editing this profile"><span class="icon"></span>Done Editing</a></div>'."\n";
 			}
 			else
 			{
 				$person = $this->get_person();
 				$profile = $person->get_profile();
-				if(!empty($profile['id']))
-					$str .= '<div class="editOffer start"><a href="'.carl_make_link(array('inline_editing_availability'=>'enable')).'" title="Edit this profile"><span class="icon"></span>Start Editing</a></div>'."\n";
+				$pose_as = ($person->get_username() != reason_check_authentication()) ? $person->get_username() : '';
+				if(!empty($profile['id']))  
+					$str .= '<div class="editOffer start"><a href="'.carl_make_link(array('inline_editing_availability'=>'enable', 'pose_as' => $pose_as)).'" title="Edit this profile"><span class="icon"></span>Start Editing</a></div>'."\n";
 			}
 		}
 		return $str;
@@ -391,11 +618,12 @@ class ProfileModule extends DefaultMinisiteModule
 		{
 			if(!empty($this->request['edit_section']) && $this->request['edit_section'] == $section)
 			{
-				$str .= '<div class="editOffer cancel"><a href="'.carl_make_link(array('edit_section'=>'')).'" title="Cancel &amp; discard '.$this->get_section_label($section).' edits"><span class="icon"></span>Cancel</a></div>'."\n";
+
+				$str .= '<div class="editOffer cancel"><a href="'.carl_construct_link(array('edit_section'=>''), array('username', 'pose_as')).'" title="Cancel &amp; discard '.$this->get_section_label($section).' edits"><span class="icon"></span>Cancel</a></div>'."\n";
 			}
 			elseif(empty($this->request['edit_section']))
 			{
-				$str .= '<div class="editOffer start"><a href="'.carl_make_link(array('edit_section'=>$section)).'" title="Edit '.$this->get_section_label($section).'"><span class="icon"></span>'.$this->get_edit_language($section).'</a></div>'."\n";
+				$str .= '<div class="editOffer start"><a href="'.carl_construct_link(array('edit_section'=>$section), array('username', 'pose_as')).'" title="Edit '.$this->get_section_label($section).'"><span class="icon"></span>'.$this->get_edit_language($section).'</a></div>'."\n";
 			}
 		}
 		return $str;
@@ -420,7 +648,6 @@ class ProfileModule extends DefaultMinisiteModule
 	protected function get_contact_info()
 	{
 		$links_section_html = $this->get_links_section_html();
-				
 		$classes = array('section');
 		$classes[] = ($links_section_html || $this->should_show_links_section()) ? 'withLinks' : 'noLinks';
 		$contact_info_str  = '<div id="contactInfo" class="'.implode(' ', $classes).'">' . "\n";
@@ -473,8 +700,32 @@ class ProfileModule extends DefaultMinisiteModule
 	}
 
 	/**
-	  * Should we show the links section? Only if this affiliation supports it and we're editing.
-	  */
+	 * Should we show the secondary profile content section? Yes if any of the sections are enabled.
+	 */
+	protected function should_show_secondary_profile_content()
+	{
+		return ($this->should_show_sign_in_block() || $this->should_show_module_navigation());
+	}
+	
+	/**
+	 * Should we show the sign in section? Ask the config.
+	*/
+	protected function should_show_sign_in_block()
+	{
+		return ($this->config->show_sign_in_block);
+	}
+
+	/**
+	 * Should we show the the module navigation section? Ask the config.
+	 */
+	protected function should_show_module_navigation()
+	{
+		return ($this->config->show_module_navigation);
+	}
+		
+	/**
+	 * Should we show the links section? Only if this affiliation supports it and we're editing.
+	 */
 	protected function should_show_links_section()
 	{
 		$supports_links = false;
@@ -543,28 +794,14 @@ class ProfileModule extends DefaultMinisiteModule
 		$str .= '<li id="profileTab" '.(($this->get_view_mode() != 'profile') ? 'class="disabled"' :'').'>';
 		if ($this->get_view_mode() != 'profile')
 		{
-			if ($this->config->friendly_urls)
-			{
-				$str .= '<a href="'.$this->site_url.$this->request['username'].'/">Profile</a></li>'."\n";
-			}
-			else
-			{
-				$str .= '<a href="'.$this->site_url.$this->config->profile_slug.'/?username='.$this->request['username'].'">Profile</a></li>';
-			}
+			$str .= '<a href="'.profile_construct_link(array('username' => $this->request['username'])).'">Profile</a></li>'."\n";
 		}
 		else
 			$str .= 'Profile</li>'."\n";
 		$str .= '<li id="connectTab" '.(($this->get_view_mode() == 'profile') ? 'class="disabled"' :'').'>';
 		if ($this->get_view_mode() == 'profile')
 		{
-			if ($this->config->friendly_urls)
-			{
-				$str .= '<a href="'.$this->site_url.$this->request['username'].'/connect/">Connections</a></li>'."\n";
-			}
-			else
-			{
-				$str .= '<a href="'.$this->site_url.$this->config->profile_slug.'/?username='.$this->request['username'].'&connect=1">Connections</a></li>';
-			}
+			$str .= '<a href="'.profile_construct_link(array('username' => $this->request['username'], 'connect' => 1)).'">Connections</a></li>'."\n";
 		}
 		else
 			$str .= 'Connections</li>'."\n";
@@ -598,30 +835,57 @@ class ProfileModule extends DefaultMinisiteModule
 		$profile_info_str = '';
 		foreach ($profile_info_sections as $section)
 		{
-			if ( ($section_html = $this->get_section_html($section)) || ($this->user_is_currently_inline_editing() && $this->affiliation_supports_section($section)) )
+			$section_pre_html = $this->get_section_pre_html($section);
+			$section_post_html = $this->get_section_post_html($section);
+			$inline_editing_active = $this->user_is_currently_inline_editing();
+			$affiliation_supports_section = $this->affiliation_supports_section($section);
+			
+			/** do not double get section_html when editing is active on the section **/
+			// if (!($inline_editing_active && $affiliation_supports_section))
+			if (!$this->user_is_currently_inline_editing($section))
 			{
-				$profile_info_str .= '<div class="'.$this->camelcase($section).' subsection'.$this->get_inline_editing_class_str($section).'">' . "\n";
-				$profile_info_str .= $this->get_section_edit_offer($section);
-				$profile_info_str .= '<h3>' . $this->get_section_label($section) . '</h3>' ."\n";
-				$profile_info_str .= '<div class="textZone">' . "\n";
-				if ($this->user_is_currently_inline_editing($section))
+				$section_html = $this->get_section_html($section);
+			}
+			
+			if ( !empty($section_pre_html) || !empty($section_post_html) || !empty($section_html) || ($inline_editing_active && $affiliation_supports_section) )
+			{
+				if (!empty($section_pre_html))
 				{
-					$form_html = $this->get_inline_editing_form_html($section);
-					if ($form_html)
+					$profile_info_str .= $section_pre_html;
+				}
+				if (!empty($section_html) || $inline_editing_active)
+				{
+					$truncatable = $this->section_is_truncatable($section) ? " truncatable" : '';
+					$profile_info_str .= '<div class="'.$this->camelcase($section).' subsection'.$this->get_inline_editing_class_str($section).$truncatable.'">' . "\n";
+					$profile_info_str .= $this->get_section_edit_offer($section);
+					if ($this->should_show_section_label($section, $inline_editing_active))
 					{
-						$profile_info_str .= $form_html;
+						$profile_info_str .= '<h3>' . $this->get_section_label($section) . '</h3>' ."\n";
+					}
+					$profile_info_str .= '<div class="textZone">' . "\n";
+					if ($inline_editing_active && $this->user_is_currently_inline_editing($section))
+					{
+						$form_html = $this->get_inline_editing_form_html($section);
+						if ($form_html)
+						{
+							$profile_info_str .= $form_html;
+						}
+						else
+						{
+							$profile_info_str .= '<p>Sorry. This section is not currently editable</p>';
+						}
 					}
 					else
 					{
-						$profile_info_str .= '<p>Sorry. This section is not currently editable</p>';
+						$profile_info_str .= $section_html ."\n";
 					}
+					$profile_info_str .= '</div>' . "\n";
+					$profile_info_str .= '</div>' . "\n";
 				}
-				else
+				if ($section_post_html)
 				{
-					$profile_info_str .= $section_html ."\n";
+					$profile_info_str .= $section_post_html;
 				}
-				$profile_info_str .= '</div>' . "\n";
-				$profile_info_str .= '</div>' . "\n";
 			}
 		}
 		// Check for lack of profile entity.
@@ -657,14 +921,7 @@ class ProfileModule extends DefaultMinisiteModule
 					$tags_str .= '<li class="disabled">'.htmlspecialchars($tag).'</li>';
 				else
 				{
-					if ($this->config->friendly_urls)
-					{
-						$tags_str .= '<li><a class="interestTag" href="'.$this->site_url.$this->config->explore_slug.'/'.htmlspecialchars($slug).'" title="Find others with this interest">'.htmlspecialchars($tag).'</a></li>' ."\n";
-					}
-					else
-					{
-						$tags_str .= '<li><a class="interestTag" href="'.$this->site_url.$this->config->explore_slug.'/?tag='.htmlspecialchars($slug).'" title="Find others with this interest">'.htmlspecialchars($tag).'</a></li>' ."\n";
-					}
+					$tags_str .= '<li><a class="interestTag" href="'.profile_construct_explore_link(array('tag'=>htmlspecialchars($slug),'section'=>htmlspecialchars($section))).'" title="Find others with this interest">'.htmlspecialchars($tag).'</a></li>' ."\n";
 				}
 			}
 			$tags_str .= '</ul>' . "\n";
@@ -674,13 +931,50 @@ class ProfileModule extends DefaultMinisiteModule
 		
 	/**
 	 * Populate the navigation region of the page
+	 * 
+	 * The contents of this are defined in config.php, and can be comprised of two elements:
+	 *
+	 * - html suitable for inclusion within a list item
+	 * - calls to class methods or profile functions that return html suitable for inclusion within a list item (or empty)
+	 *
+	 * The default settings shows "Profile list", "Pose as user" if on a user profile with privs
 	 */
 	protected function get_module_navigation()
 	{
-		$str = '';
-		$str .= '<div id="moduleNavigation" class="section">';
-		// You can put something here.
-		$str .= '</div>';
+		if (!$this->should_show_module_navigation())
+		{
+			return '';
+		}
+		$items = array();
+		foreach ($this->config->navigation_items as $k => $v)
+		{
+			if (!is_int($k) && method_exists($this, $k))
+			{
+				$item = ($v != NULL) ? call_user_func_array(array($this, $k), $v) : call_user_func(array($this, $k));
+				if ($item) $items[] = $item;
+			}
+			elseif (!is_int($k) && function_exists($k))
+			{
+				$item = ($v != NULL) ? call_user_func_array($k, $v) : call_user_func($k);
+				if ($item) $items[] = $item;
+			}
+			else $items[] = $v;
+		}
+		if (!empty($items))
+		{
+			$str = '<div id="moduleNavigation" class="section">';
+			$str .= '<ul><li>' . implode('</li><li>', $items) . '</li></ul>';
+			$str .= '</div>';
+			return $str;
+		}
+	}	
+	
+	/**
+	 * Return a link to "my" profile
+	 */
+	protected function get_my_profile_link($always_show = FALSE)
+	{
+		$str = '<a href="' . profile_construct_link(array('username' => 'me')) .'">My Profile</a>';	
 		return $str;
 	}
 	
@@ -689,57 +983,13 @@ class ProfileModule extends DefaultMinisiteModule
 	 */
 	protected function get_sign_in_block()
 	{
-		$str = '<div id="signIn" class="section">';
-		if(reason_check_authentication())
-			$str .= '<a href="/login/?logout=1" class="out">Sign Out</a>';
-		else
-			$str .= '<a href="/login/" class="in">Sign In</a>';
-		$str .= '</div>'."\n";
-		return $str;
-	}
-
-	/**
-	 * Display our footer text with links to about, sign in and edit, edit, etc as appropriate.
-	 */
-	protected function get_module_footer()
-	{
-		// we only show this if we are viewing a profile.
-		if ($p = $this->get_person())
+		if ($this->should_show_sign_in_block())
 		{
-			if ($netid = $this->get_user_netid())
-			{
-				if ($p->get_first_ds_value('ds_username') == $netid)
-				{
-					$link_txt = '';
-				}
-				else
-				{
-					$link_txt = 'View and edit your own profile';
-				}
-				$link_to = $netid;
-				$link_preserve_array = array('pose_as');
-			}
+			$str = '<div id="signIn" class="section">';
+			if(reason_check_authentication())
+				$str .= '<a href="/login/?logout=1" class="out">Sign Out</a>';
 			else
-			{
-				$link_txt = 'Sign in to view and edit your own profile';
-				$link_to = 'me';
-				$link_preserve_array = array();
-			}
-			
-			$str = '';
-			$str .= '<div id="profileModuleFooter">' . "\n";
-			if (!empty($link_txt))
-			{
-				if ($this->config->friendly_urls)
-				{
-					$str .= '<a href="' . carl_construct_link(array(''), $link_preserve_array, parse_url($this->site_url, PHP_URL_PATH).$link_to.'/') .'">'.$link_txt.'</a>';
-				}
-				else
-				{
-					$str .= '<a href="' . carl_construct_link(array(''), $link_preserve_array, parse_url($this->site_url, PHP_URL_PATH).$this->config->profile_slug.'/?username='.$link_to) .'">'.$link_txt.'</a>';
-				}
-			}
-			$str .= '</p>';
+				$str .= '<a href="/login/" class="in">Sign In</a>';
 			$str .= '</div>'."\n";
 			return $str;
 		}
@@ -749,8 +999,7 @@ class ProfileModule extends DefaultMinisiteModule
 	/**
 	 * If the current user's profile is being displayed, we allow it to be edited.
 	 *
-	 * @todo can all site admins edit all profiles? Or should we require you to pose_as a user?
-	 * @return boolean;
+	 * @return boolean is the active or posed user profile being displayed?
 	 */
 	function user_can_inline_edit()
 	{
@@ -796,7 +1045,7 @@ class ProfileModule extends DefaultMinisiteModule
 		}
 		return $this->affiliation_supports_section[$section];
 	}
-	
+
 	/**
 	 * Does the person have an affiliation that supports editing a section?
 	 *
@@ -815,9 +1064,18 @@ class ProfileModule extends DefaultMinisiteModule
 				if (isset($sections_by_affiliation[$affiliation][$section]))
 				{
 					if (is_array($sections_by_affiliation[$affiliation][$section]) && isset($sections_by_affiliation[$affiliation][$section]['readonly']))
+					{
 						$this->affiliation_supports_section_editing[$section] = !$sections_by_affiliation[$affiliation][$section]['readonly'];
+					}
+					elseif (isset($this->config->section_defaults[$section]['readonly']))
+					{
+						$this->affiliation_supports_section_editing[$section] = !$this->config->section_defaults[$section]['readonly'];
+					}
 					else
-						$this->affiliation_supports_section_editing[$section] = true;
+					{
+						$this->affiliation_supports_section_editing[$section] = true; // default is true
+					}
+					break;
 						
 					// If we got permission, we can stop looking
 					if ($this->affiliation_supports_section_editing[$section] == true) break;	
@@ -843,17 +1101,24 @@ class ProfileModule extends DefaultMinisiteModule
 	}
 	
 	/**
-	 * The profiles module supports three view modes:
+	 * The profiles module supports four view modes:
+	 * - list: for viewing list of profiles
 	 * - profile: for viewing an individual profile
 	 * - connect: for viewing the connections to an individual profile
 	 * - tag: for viewing the connections for a particular tag.
+	 *
+	 * @todo is tag implemented right now?
 	 */
 	function get_view_mode()
 	{
-		if (!empty($this->request['tag']))
-			return 'tag';
-		else if (!empty($this->request['connect']))
+		if (!empty($this->request['connect']))
 			return 'connect';
+		else if (!empty($this->request['list']))
+			return 'list';
+		else if (!empty($this->request['explore']))
+			return 'explore';
+		elseif (!empty($this->request['tag']))
+			return 'tag';
 		else
 			return 'profile';
 	}
@@ -871,34 +1136,86 @@ class ProfileModule extends DefaultMinisiteModule
 	{
 		if (!isset($this->form[$section]))
 		{
-			$custom_form_path = 'minisite_templates/modules/profile/forms/'.$section.'.php';
-			$entity_field_form_path = 'minisite_templates/modules/profile/forms/entity_field.php';
-			if (reason_file_exists($custom_form_path))
+			// if the section has a controller that supports editing, we invoke that.
+			$affiliations = $this->get_affiliations($this->config->primary_affiliation_for_section_ordering);
+			$sections_by_affiliation = $this->get_profile_sections_by_affiliation();
+			foreach ($affiliations as $affiliation)
 			{
-				reason_include_once($custom_form_path);
-				$classname = $this->camelcase($section) . 'ProfileEditForm';
-				$form = new $classname;
-				$form->set_section($section);
-				$form->set_section_display_name($this->get_section_label($section));
-				$form->set_person($this->get_person());
-				$form->set_head_items($this->get_head_items());
+				if (isset($sections_by_affiliation[$affiliation][$section]))
+				{
+					if (is_array($sections_by_affiliation[$affiliation][$section]) && isset($sections_by_affiliation[$affiliation][$section]['controller']))
+					{
+						$controller = call_user_func_array(array($this, 'get_controller'), $sections_by_affiliation[$affiliation][$section]['controller']);
+					}
+					elseif (isset($this->config->section_defaults[$section]['controller']))
+					{
+						$controller = call_user_func_array(array($this, 'get_controller'), $this->config->section_defaults[$section]['controller']);
+					}
+					break;
+				}
 			}
-			elseif (reason_file_exists($entity_field_form_path))
+			if (!empty($controller) && method_exists($controller, 'supports_editing') && $controller->supports_editing())
 			{
-				reason_include_once($entity_field_form_path);
-				$classname = 'entityFieldProfileEditForm';
-				$form = new $classname;
-				$form->set_section($section);
-				$form->set_section_display_name($this->get_section_label($section));
-				$form->set_person($this->get_person());
-				$form->set_head_items($this->get_head_items());
+				$controller->config('section', $section);
+				$this->form[$section] = $controller;
 			}
-			else
+			else // fallback to profile forms
 			{
-				trigger_error('Could not find a custom form called ' . $section . '.php or the default form ' . $default_form . '.php in the profile forms directory');
-				$form = false;
+				foreach ($affiliations as $affiliation)
+				{
+					if (isset($sections_by_affiliation[$affiliation][$section]))
+					{
+						if (is_array($sections_by_affiliation[$affiliation][$section]) && isset($sections_by_affiliation[$affiliation][$section]['form_name']))
+						{
+							$form_name = $sections_by_affiliation[$affiliation][$section]['form_name'];
+						}
+						elseif (isset($this->config->section_defaults[$section]['form_name']))
+						{
+							$form_name = $this->config->section_defaults[$section]['form_name'];
+						}
+						break;
+					}
+				}
+				
+				// use form name is specified otherwise section name.
+				if (!isset($form_name)) $form_name = $section;
+				$custom_form_path = 'minisite_templates/modules/profile/forms/'.$form_name.'.php';
+				$entity_field_form_path = 'minisite_templates/modules/profile/forms/entity_field.php';
+				if (reason_file_exists($custom_form_path))
+				{
+					reason_include_once($custom_form_path);
+					$classname = $this->camelcase($form_name) . 'ProfileEditForm';
+					$form = new $classname;
+					$form->set_section($section); //?
+					$form->set_section_display_name($this->get_section_label($section)); //?
+					$form->set_person($this->get_person());
+					$form->set_head_items($this->get_head_items());
+				
+					if ($config = $this->get_section_config($section))
+					{
+						foreach($config as $k=>$v)
+						{
+							$form->$k = $v;
+						}
+					}
+				}
+				elseif (reason_file_exists($entity_field_form_path))
+				{
+					reason_include_once($entity_field_form_path);
+					$classname = 'entityFieldProfileEditForm';
+					$form = new $classname;
+					$form->set_section($section);
+					$form->set_section_display_name($this->get_section_label($section));
+					$form->set_person($this->get_person());
+					$form->set_head_items($this->get_head_items());
+				}
+				else
+				{
+					trigger_error('Could not find a custom form called ' . $section . '.php or the default form ' . $default_form . '.php in the profile forms directory');
+					$form = false;
+				}
+				$this->form[$section] = $form;
 			}
-			$this->form[$section] = $form;
 		}
 		return $this->form[$section];
 	}
@@ -914,7 +1231,8 @@ class ProfileModule extends DefaultMinisiteModule
 		if ($form = $this->get_inline_editing_form( $section ))
 		{
 			ob_start();
-			$form->run();
+			$return = $form->run();
+			if (!empty($return)) echo $return;
 			$result = ob_get_contents();
 			ob_end_clean();
 			if (!empty($result)) 
@@ -967,6 +1285,8 @@ class ProfileModule extends DefaultMinisiteModule
 	 * as the profile-holder if:
 	 *  1. They're an admin on the profile site
 	 *  2. The profile is an alum, and the person is in the alumni_profile_editors_group
+	 *
+	 * @todo is #2 functional?
 	 */
 	function get_user_netid()
 	{
@@ -978,7 +1298,7 @@ class ProfileModule extends DefaultMinisiteModule
 				$p = new $this->config->person_class($username);
 				if ($p->get_ds_record()) 
 				{
-					if (reason_check_access_to_site($this->site_id))
+					if ($this->user_can_pose())
 					{
 						$this->_user_netid = $username;
 					}
@@ -989,12 +1309,48 @@ class ProfileModule extends DefaultMinisiteModule
 		return $this->_user_netid;
 	}
 
+	/**
+	 * Return true if the logged in user has admin access to this site.
+	 */
+	function user_can_pose()
+	{
+		return ($this->config->allow_posing && reason_check_access_to_site($this->site_id));
+	}
+	
 	protected function format_phone_number($phone)
 	{
 		$phone_parts = explode(' ', $phone);
 		// Remove leading +1
 		unset($phone_parts[0]);
 		return implode(' ', $phone_parts);
+	}
+	
+	/** 
+	 * We show the label in most cases except in this case:
+	 *
+	 * - inline editing is not active
+	 * - section has label_only_when_editing set to true
+	 */
+	public function should_show_section_label($section, $inline_editing_active)
+	{
+		if ($inline_editing_active) return true;
+		$affiliations = $this->get_affiliations($this->config->primary_affiliation_for_section_ordering);
+		$sections_by_affiliation = $this->get_profile_sections_by_affiliation();
+		foreach ($affiliations as $affiliation)
+		{
+			if (isset($sections_by_affiliation[$affiliation][$section]))
+			{
+				if (is_array($sections_by_affiliation[$affiliation][$section]) && isset($sections_by_affiliation[$affiliation][$section]['label_only_when_editing']))
+				{
+					$label_only_when_editing = $sections_by_affiliation[$affiliation][$section]['label_only_when_editing'];
+				}
+				elseif (isset($this->config->section_defaults[$section]['label_only_when_editing']))
+				{
+					$label_only_when_editing = $this->config->section_defaults[$section]['label_only_when_editing'];
+				}
+				return (isset($label_only_when_editing)) ? false : true;
+			}
+		}
 	}
 	
 	/**
@@ -1070,7 +1426,7 @@ class ProfileModule extends DefaultMinisiteModule
 				}
 				elseif (isset($this->config->section_defaults[$section]['instructions_function']))
 				{
-					if (method_exists($this, $this->config->section_defaults[$section]['instructions_function'])) return call_user_func_array(array($this, $this->config->section_defaults[$section]['html_function']), array($section));
+					if (method_exists($this, $this->config->section_defaults[$section]['instructions_function'])) return call_user_func_array(array($this, $this->config->section_defaults[$section]['instructions_function']), array($section));
 					else trigger_error('Method ' . $this->config->section_defaults[$section]['instructions_function'] . ' does not exist in the profile module.');
 				}
 				break;
@@ -1078,7 +1434,71 @@ class ProfileModule extends DefaultMinisiteModule
 		}
 		return NULL;
 	}
+	
+	/**
+	 * We get the section config based upon the affiliations the person is a part of.
+	 *
+	 * - The lookup uses profile_sections_by_affiliation, and looks for array with key 'config' or 'config_function' to get config.
+	 * - We try known affiliations in order.
+	 * - If nothing is found, we just prettify the string.
+	 */
+	public function get_section_config($section)
+	{
+		$affiliations = $this->get_affiliations($this->config->primary_affiliation_for_section_ordering);
+		$sections_by_affiliation = $this->get_profile_sections_by_affiliation();
+		foreach ($affiliations as $affiliation)
+		{
+			if (isset($sections_by_affiliation[$affiliation][$section]))
+			{
+				if (is_array($sections_by_affiliation[$affiliation][$section]) && isset($sections_by_affiliation[$affiliation][$section]['config']))
+				{
+					return $sections_by_affiliation[$affiliation][$section]['config'];
+				}
+				elseif (is_array($sections_by_affiliation[$affiliation][$section]) && isset($sections_by_affiliation[$affiliation][$section]['config_function']))
+				{
+					if (method_exists($this, $sections_by_affiliation[$affiliation][$section]['config_function'])) return call_user_func_array(array($this, $sections_by_affiliation[$affiliation][$section]['config_function']), array($section));
+					else trigger_error('Method ' . $sections_by_affiliation[$affiliation][$section]['config_function'] . ' does not exist in the profile module.');
+				}
+				elseif (isset($this->config->section_defaults[$section]['config']))
+				{
+					return $this->config->section_defaults[$section]['config'];
+				}
+				elseif (isset($this->config->section_defaults[$section]['config_function']))
+				{
+					if (method_exists($this, $this->config->section_defaults[$section]['config_function'])) return call_user_func_array(array($this, $this->config->section_defaults[$section]['config_function']), array($section));
+					else trigger_error('Method ' . $this->config->section_defaults[$section]['config_function'] . ' does not exist in the profile module.');
+				}
+				break;
+			}
+		}
+		return NULL;
+	}
 
+	/** 
+	 * @return boolean true / false - default is true
+	 */
+	public function section_is_truncatable($section)
+	{
+		$affiliations = $this->get_affiliations($this->config->primary_affiliation_for_section_ordering);
+		$sections_by_affiliation = $this->get_profile_sections_by_affiliation();
+		foreach ($affiliations as $affiliation)
+		{
+			if (isset($sections_by_affiliation[$affiliation][$section]))
+			{
+				if (is_array($sections_by_affiliation[$affiliation][$section]) && isset($sections_by_affiliation[$affiliation][$section]['truncatable']))
+				{
+					return $sections_by_affiliation[$affiliation][$section]['truncatable'];
+				}
+				elseif (isset($this->config->section_defaults[$section]['truncatable']))
+				{
+					return $this->config->section_defaults[$section]['truncatable'];
+				}
+				break;
+			}
+		}
+		return true;
+	}
+	
 	/**
 	 * We get the section html based upon the affiliations the person is a part of.
 	 *
@@ -1098,6 +1518,10 @@ class ProfileModule extends DefaultMinisiteModule
 				{
 					return $sections_by_affiliation[$affiliation][$section]['html'];
 				}
+				elseif (is_array($sections_by_affiliation[$affiliation][$section]) && isset($sections_by_affiliation[$affiliation][$section]['controller']))
+				{
+					return call_user_func_array(array($this, 'get_controller_html'), $sections_by_affiliation[$affiliation][$section]['controller']);
+				}
 				elseif (is_array($sections_by_affiliation[$affiliation][$section]) && isset($sections_by_affiliation[$affiliation][$section]['html_function']))
 				{
 					if (method_exists($this, $sections_by_affiliation[$affiliation][$section]['html_function'])) return call_user_func_array(array($this, $sections_by_affiliation[$affiliation][$section]['html_function']), array($section));
@@ -1107,10 +1531,126 @@ class ProfileModule extends DefaultMinisiteModule
 				{
 					return $this->config->section_defaults[$section]['html'];
 				}
+				elseif (isset($this->config->section_defaults[$section]['controller']))
+				{
+					return call_user_func_array(array($this, 'get_controller_html'), $this->config->section_defaults[$section]['controller']);
+				}
 				elseif (isset($this->config->section_defaults[$section]['html_function']))
 				{
 					if (method_exists($this, $this->config->section_defaults[$section]['html_function'])) return call_user_func_array(array($this, $this->config->section_defaults[$section]['html_function']), array($section));
 					else trigger_error('Method ' . $this->config->section_defaults[$section]['html_function'] . ' does not exist in the profile module.');
+				}
+				break;
+			}
+		}
+		return NULL;
+	}
+	
+	/**
+	 * Retrieve any head items a controller specified in config wants to provide.
+	 */
+	protected function append_controller_head_items($section, $head_items)
+	{
+		$affiliations = $this->get_affiliations($this->config->primary_affiliation_for_section_ordering);
+		$sections_by_affiliation = $this->get_profile_sections_by_affiliation();
+		foreach ($affiliations as $affiliation)
+		{
+			if (isset($sections_by_affiliation[$affiliation][$section]))
+			{
+				if (is_array($sections_by_affiliation[$affiliation][$section]) && isset($sections_by_affiliation[$affiliation][$section]['controller']))
+				{
+					// run get_head_items method if it exists
+					$controller = call_user_func_array(array($this, 'get_controller'), $this->config->section_defaults[$section]['controller']);
+					if (method_exists($controller, 'append_head_items'))
+					{
+						$controller->append_head_items($head_items);
+					}
+				}
+				elseif (isset($this->config->section_defaults[$section]['controller']))
+				{
+					$controller = call_user_func_array(array($this, 'get_controller'), $this->config->section_defaults[$section]['controller']);
+					if (method_exists($controller, 'append_head_items'))
+					{
+						$controller->append_head_items($head_items);
+					}
+				}
+				break;
+			}
+		}
+		return NULL;
+	}
+	
+	/**
+	 * We get the section pre html based upon the affiliations the person is a part of.
+	 *
+	 * - The lookup uses profile_sections_by_affiliation, and looks for array with key 'pre_html' or 'pre_html_function' to get the html.
+	 * - We try known affiliations in order.
+	 * - If nothing is found, we default to grabbing a profile field named for the section.
+	 */
+	protected function get_section_pre_html($section)
+	{
+		$affiliations = $this->get_affiliations($this->config->primary_affiliation_for_section_ordering);
+		$sections_by_affiliation = $this->get_profile_sections_by_affiliation();
+		foreach ($affiliations as $affiliation)
+		{
+			if (isset($sections_by_affiliation[$affiliation][$section]))
+			{
+				if (is_array($sections_by_affiliation[$affiliation][$section]) && isset($sections_by_affiliation[$affiliation][$section]['pre_html']))
+				{
+					return $sections_by_affiliation[$affiliation][$section]['pre_html'];
+				}
+				elseif (is_array($sections_by_affiliation[$affiliation][$section]) && isset($sections_by_affiliation[$affiliation][$section]['pre_html_function']))
+				{
+					if (method_exists($this, $sections_by_affiliation[$affiliation][$section]['pre_html_function'])) return call_user_func_array(array($this, $sections_by_affiliation[$affiliation][$section]['pre_html_function']), array($section));
+					else trigger_error('Method ' . $sections_by_affiliation[$affiliation][$section]['pre_html_function'] . ' does not exist in the profile module.');
+				}
+				elseif (isset($this->config->section_defaults[$section]['pre_html']))
+				{
+					return $this->config->section_defaults[$section]['pre_html'];
+				}
+				elseif (isset($this->config->section_defaults[$section]['pre_html_function']))
+				{
+					if (method_exists($this, $this->config->section_defaults[$section]['pre_html_function'])) return call_user_func_array(array($this, $this->config->section_defaults[$section]['pre_html_function']), array($section));
+					else trigger_error('Method ' . $this->config->section_defaults[$section]['pre_html_function'] . ' does not exist in the profile module.');
+				}
+				break;
+			}
+		}
+		return NULL;
+	}
+	
+	/**
+	 * We get the section post html based upon the affiliations the person is a part of.
+	 *
+	 * - The lookup uses profile_sections_by_affiliation, and looks for array with key 'post_html' or 'post_html_function' to get the html.
+	 * - We try known affiliations in order.
+	 * - If nothing is found, we default to grabbing a profile field named for the section.
+	 */
+	protected function get_section_post_html($section)
+	{
+		$affiliations = $this->get_affiliations($this->config->primary_affiliation_for_section_ordering);
+		$sections_by_affiliation = $this->get_profile_sections_by_affiliation();
+		foreach ($affiliations as $affiliation)
+		{
+			if (isset($sections_by_affiliation[$affiliation][$section]))
+			{
+				if (is_array($sections_by_affiliation[$affiliation][$section]) && isset($sections_by_affiliation[$affiliation][$section]['post_html']))
+				{
+					return $sections_by_affiliation[$affiliation][$section]['post_html'];
+				}
+				elseif (is_array($sections_by_affiliation[$affiliation][$section]) && isset($sections_by_affiliation[$affiliation][$section]['post_html_function']))
+				{
+					if (method_exists($this, $sections_by_affiliation[$affiliation][$section]['post_html_function'])) return call_user_func_array(array($this, $sections_by_affiliation[$affiliation][$section]['post_html_function']), array($section));
+					else trigger_error('Method ' . $sections_by_affiliation[$affiliation][$section]['post_html_function'] . ' does not exist in the profile module.');
+				}
+				elseif (isset($this->config->section_defaults[$section]['post_html']))
+				{
+					return $this->config->section_defaults[$section]['post_html'];
+				}
+				elseif (isset($this->config->section_defaults[$section]['post_html_function']))
+				{
+					if (method_exists($this, $this->config->section_defaults[$section]['post_html_function'])) return call_user_func_array(array($this, $this->config->section_defaults[$section]['post_html_function']), array($section));
+					else trigger_error('Method ' . $this->config->section_defaults[$section]['post_html_function'] . ' does not exist in the profile module.');
 				}
 				break;
 			}
@@ -1130,15 +1670,17 @@ class ProfileModule extends DefaultMinisiteModule
 		$affiliation_to_return_first = (empty($affiliation_to_return_first)) ? 'default' : $affiliation_to_return_first;
 		if (!isset($this->_affiliations[$affiliation_to_return_first]))
 		{
-			$person = $this->get_person();
-			$affiliations = $person->get_ds_value('ds_affiliation');
-			if (!empty($affiliations) && $affiliation_to_return_first != 'default')
+			if ($person = $this->get_person())
 			{
-				$flipped = array_flip($affiliations);
-				if (isset($flipped[$affiliation_to_return_first]))
+				$affiliations = $person->get_ds_value('ds_affiliation');
+				if (!empty($affiliations) && $affiliation_to_return_first != 'default')
 				{
-					unset($flipped[$affiliation_to_return_first]);
-					$affiliations = array_keys(array($affiliation_to_return_first => 0) + (array) $flipped);
+					$flipped = array_flip($affiliations);
+					if (isset($flipped[$affiliation_to_return_first]))
+					{
+						unset($flipped[$affiliation_to_return_first]);
+						$affiliations = array_keys(array($affiliation_to_return_first => 0) + (array) $flipped);
+					}
 				}
 			}
 			$this->_affiliations[$affiliation_to_return_first] = $affiliations;
@@ -1150,9 +1692,19 @@ class ProfileModule extends DefaultMinisiteModule
 	{
 		$person = $this->get_person();
 		$profile = $person->get_profile();
+		if ($config = $this->get_section_config($section))
+		{
+			if (isset($config['apply_nl2br']) && $config['apply_nl2br'])
+			{
+				return (isset($profile[$section]) && !carl_empty_html($profile[$section])) ? nl2br($profile[$section]) : '';
+			}
+		}
 		return (isset($profile[$section]) && !carl_empty_html($profile[$section])) ? $profile[$section] : '';
 	}
 	
+	/**
+	 * Return the profile photo or a placeholder.
+	 */
 	protected function get_profile_photo_html($section = NULL)
 	{
 		$person = $this->get_person();
@@ -1161,9 +1713,14 @@ class ProfileModule extends DefaultMinisiteModule
 		{
 			return '<a href="'.htmlspecialchars($image['link']).'"><img src="'.htmlspecialchars($image['src']).'" width="200" height="200" alt="'.htmlspecialchars($image['alt']).'" /></a>'."\n";
 		}
+		else // use default 200px by 200px profile icon
+		{
+			return '<img src="'.REASON_HTTP_BASE_PATH.'modules/profiles/profile_icon.png" width="200" height="200" alt="Profile Photo Placeholder" />'."\n";
+		}
 	}
 	
 	/**
+
 	 * Get the resume link.
 	 */
 	protected function get_resume_html($section)
@@ -1181,6 +1738,12 @@ class ProfileModule extends DefaultMinisiteModule
 		{
 			return '<span class="icon"></span>'.$this->get_section_label($section). ' (Not yet uploaded)'; 
 		}
+	}
+	
+	function get_placeholder_html($section = NULL)
+	{
+		$config = $this->get_section_config($section);
+		return (!empty($config['html'])) ? $config['html'] : '';
 	}
 	
 	function get_sites_html($section = NULL)
@@ -1207,12 +1770,17 @@ class ProfileModule extends DefaultMinisiteModule
 		$person = $this->get_person();
 		if ($sites = $person->get_sites())
 		{
-			$str = '<span class="icon"></span>';
-			foreach ($sites as $name => $url)
-			{
-				$sites_html[] = '<a href="'.htmlspecialchars($url).'">'.$this->get_section_label($section).'</a>';
+			$site_name = $this->get_section_label($section);
+			if ($config = $this->get_section_config($section))
+			{	
+				if (isset($config['site_name'])) $site_name = $config['site_name'];
+				if (isset($config['site_url_as_label']) && $config['site_url_as_label']) $site_label = $sites[$site_name];
 			}
-			$str .= implode(" | ", $sites_html);
+			if (isset($sites[$site_name]))
+			{
+				if (!isset($site_label)) $site_label = $site_name;
+				$str = '<a href="'.htmlspecialchars($sites[$site_name]).'">'.$site_label.'</a>';
+			}
 			return $str;
 		}
 		elseif ($this->user_is_currently_inline_editing())
@@ -1257,15 +1825,7 @@ class ProfileModule extends DefaultMinisiteModule
 			foreach ($tags as $id => $tag_data)
 			{
 				$str .= '<li><h4 class="tagName">';
-				if ($this->config->friendly_urls)
-				{
-					$str .= '<a href="'.$this->site_url.$this->config->explore_slug.'/'.htmlspecialchars($tag_data['slug']).'">'.$tag_data['name'].'</a></h4>';
-				}
-				else
-				{
-					$str .= '<a href="'.$this->site_url.$this->config->explore_slug.'/?tag='.htmlspecialchars($tag_data['slug']).'">'.$tag_data['name'].'</a></h4>';
-				}
-				
+				$str .= '<a href="'.profile_construct_explore_link(array('tag' => htmlspecialchars($tag_data['slug']))).'">'.$tag_data['name'].'</a></h4>';
 				if (!isset($tag_data['profiles'][$this->config->tag_section_relationship_names[$section]])) continue;
 				$profiles = $pc->get_profiles_by_affiliation($tag_data['profiles'][$this->config->tag_section_relationship_names[$section]]);
 				$profiles_by_affil = $pc->sort_profiles_by_user_affiliations($this->person, $profiles);
@@ -1283,14 +1843,7 @@ class ProfileModule extends DefaultMinisiteModule
 							$str .= '<li>';
 						else
 							$str .= '<li class="overflow">';
-						if ($this->config->friendly_urls)
-						{
-							$str .= '<a href="'.$this->site_url.$username.'">'.$profile['display_name'].'</a></li>'."\n";	
-						}
-						else
-						{
-							$str .= '<a href="'.$this->site_url.$this->config->profile_slug.'/?username='.$username.'">'.$profile['display_name'].'</a></li>'."\n";
-						}
+						$str .= '<a href="'. profile_construct_link(array('username' => $username)) .'">'.$profile['display_name'].'</a></li>'."\n";
 						$count++;
 					}
 					$str .= '</ul>';
@@ -1307,11 +1860,34 @@ class ProfileModule extends DefaultMinisiteModule
 	}
 	
 	/**
-	 * Get the base profile section list supplemented by any dynamic sections.
+	 * Get the base profile section list - we do a couple things to prepare:
+	 *
+	 * - If a section isn't explicitly listed, add it with an empty configuration so it is available and inherits the base.
+	 * - Add any dynamic sections.
+	 *
 	 */
 	protected function get_profile_sections_by_affiliation()
 	{
-		return $this->add_dynamic_profile_sections($this->config->profile_sections_by_affiliation);
+		static $profile_sections_by_affiliation;
+		if (!isset($profile_sections_by_affiliation))
+		{
+			$profile_sections_by_affiliation = $this->config->profile_sections_by_affiliation;
+			$affiliations_with_profiles = array_keys($this->config->affiliations_that_have_profiles);
+			$section_defaults = array_keys($this->config->section_defaults);
+			foreach ($affiliations_with_profiles as $affiliation)
+			{
+				if (!isset($profile_sections_by_affiliation[$affiliation]))
+				{
+					// we loop through and set each section to true for this affiliation
+					foreach ($section_defaults as $section_name)
+					{
+						$profile_sections_by_affiliation[$affiliation][$section_name] = true;
+					}
+				}
+			}
+			$this->add_dynamic_profile_sections($profile_sections_by_affiliation);
+		}
+		return $profile_sections_by_affiliation;
 	}
 	
 	/**
@@ -1344,6 +1920,8 @@ class ProfileModule extends DefaultMinisiteModule
 	  * to have other sections that are defined by other user attributes. This method adds those
 	  * to the passed section list as appropriate. Dynamic sections still need to be defined in 
 	  * section_defaults.
+	  *
+	  * @todo possibly this should be a model or something?
 	  */
 	protected function add_dynamic_profile_sections($profile_sections_by_affiliation)
 	{
@@ -1429,7 +2007,7 @@ class ProfileModule extends DefaultMinisiteModule
 		return true;
 	}
 	
-	/**
+	/** 
 	  * Returns an array of tags assigned to a particular edit section,
 	  * optionally filtered by a string. Used to supply data for the tag autocompletion
 	  * ajax script.
@@ -1453,6 +2031,4 @@ class ProfileModule extends DefaultMinisiteModule
 		return $tags;
 	}
 }
-
-
 ?>

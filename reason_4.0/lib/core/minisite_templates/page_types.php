@@ -1342,7 +1342,13 @@
 			'main_post' => 'go',
 		),
 		'google_map' => array(
+<<<<<<< HEAD
 			'main_post' => 'google_map',
+=======
+
+			'main_post' => 'google_map',
+
+>>>>>>> first commit of basically working but poorly documented core profiles
 		),
 		'images_under_nav' => array(
 			'sidebar' => 'blurb',
@@ -2117,10 +2123,11 @@
         'profile' => array(
         	'main_head' => '', // turn off main head
         	'main' => '', // turn off main content - profile shows it
+        	'navigation' => '', // turn off main navigation - profile nav has link to profile list by default
         	'main_post' => 'profile/profile',
         ),
         'profile_explore' => array(
-        	'main_post' => 'profile/explore',
+        	'main_post' => 'profile/profile_explore',
         ),
         'profile_list' => array(
         	'main_post' => 'profile/profile_list',

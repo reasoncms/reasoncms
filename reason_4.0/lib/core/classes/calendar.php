@@ -167,7 +167,7 @@ class reasonCalendar
 	 * if a key-value pair is passed to the object that is not in this array, it is ignored
 	 * @var array
 	 */
-	protected $init_array_keys = array('site','ideal_count','start_date','view','categories','audiences','or_categories','end_date','automagic_window_snap_to_nearest_view','rels','simple_search','context_site','sharing_mode','show_statuses','default_view_min_days', 'es_callback','ongoing_count_all_occurrences','ongoing_count_pre_start_dates','ongoing_count_ends','cache_lifespan','cache_lifespan_meta');
+	protected $init_array_keys = array('site','ideal_count','start_date','view','available_views','categories','audiences','or_categories','end_date','automagic_window_snap_to_nearest_view','rels','simple_search','context_site','sharing_mode','show_statuses','default_view_min_days', 'es_callback','ongoing_count_all_occurrences','ongoing_count_pre_start_dates','ongoing_count_ends','cache_lifespan','cache_lifespan_meta');
 	/**
 	 * site entity that we are looking at
 	 *
@@ -420,6 +420,22 @@ class reasonCalendar
 	protected $known_lower_limit;
 	
 	protected $known_closest_date_before;
+	
+	protected $views_map = array(
+		'daily'=>'day',
+		'weekly'=>'week',
+		'monthly'=>'month',
+		'yearly'=>'year',
+		'all'=>'all',
+	);
+	
+	protected $available_views = array(
+		'daily',
+		'weekly',
+		'monthly',
+		'yearly',
+		'all',
+	);
 	
 	/**
 	 * constructor method
@@ -778,7 +794,9 @@ class reasonCalendar
 		if(empty($this->end_date))
 		{
 			if(!empty($this->view))
+			{
 				$this->end_date = $this->get_end_date( $this->view );
+			}
 			else
 				$this->end_date = $this->get_end_date();
 		}
@@ -1058,14 +1076,23 @@ class reasonCalendar
 	/**
 	 * Provides an array of the defined views supported by the calendar class
 	 *
-	 * Should be: array('daily','weekly','monthly','yearly','all')
+	 * Format: array('day'=>'daily','week'=>'weekly','month'=>'monthly','year'=>'yearly','all'=>'all')
 	 *
 	 * @return array $views
 	 */
 	public function get_views()
 	{
-		static $views = array('day'=>'daily','week'=>'weekly','month'=>'monthly','year'=>'yearly','all'=>'all');
-		return $views;
+		$ret = array();
+		foreach($this->available_views as $view)
+		{
+			if(isset($this->views_map[$view]))
+				$ret[$view] = $this->views_map[$view];
+		}
+		return array_flip($ret);
+	}
+	public function set_available_views($views)
+	{
+		$this->available_views = $views;
 	}
 	/**
 	 * Gets the "AND-style" category entities applied to this calendar

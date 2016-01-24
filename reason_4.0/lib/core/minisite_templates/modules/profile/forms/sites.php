@@ -184,6 +184,10 @@ class sitesProfileEditForm extends defaultProfileEditForm
 				{
 					$this->set_error($elm_name_url, 'You need to provide a valid Twitter link.');
 				}
+				elseif ($type == 'Instagram' && !$this->validate_instagram_url($this->get_value($elm_name_url)))
+				{
+					$this->set_error($elm_name_url, 'You need to provide a valid Instagram link.');
+				}
 				elseif ($type == 'Other' && !$this->validate_url($this->get_value($elm_name_url)))
 				{
 					$other_name = $this->get_value($elm_name_name);
@@ -235,6 +239,16 @@ class sitesProfileEditForm extends defaultProfileEditForm
 		return false;
 	}
 	
+	private function validate_instagram_url($url)
+	{
+		if (filter_var($url, FILTER_VALIDATE_URL))
+		{
+			$host = parse_url($url, PHP_URL_HOST);
+			return in_array(strtolower($host), array('instagram.com', 'www.instagram.com'));
+		}
+		return false;
+	}
+	
 	private function validate_url($url)
 	{
 		return (filter_var($url, FILTER_VALIDATE_URL));
@@ -270,6 +284,6 @@ class sitesProfileEditForm extends defaultProfileEditForm
 		
 		// if there are changes, lets process them.
 		$person = $this->get_person();
-		$person->sync_sites($sites);
+		$person->sync_sites($sites, $this->site_options);
 	}
 }

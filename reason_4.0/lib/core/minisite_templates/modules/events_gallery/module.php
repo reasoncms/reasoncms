@@ -11,10 +11,12 @@
 		protected $template;
 		var $acceptable_params = array(
 			'show' => array('current','upcoming'),
-			'template' => 'slideshow',
+			'template' => 'big_list',
 			'order' => '`last_occurence` ASC',
 			'no_events_message' => '',
 			'model' => 'item',
+			'max' => 0,
+			'categories' => '', // comma-separated unique names
 		);
 		function _get_events()
 		{
@@ -35,8 +37,21 @@
 				{
 					$es->add_relation('(`last_occurence` < "'.reason_sql_string_escape(date('Y-m-d')).'" OR `datetime` >= "'.reason_sql_string_escape(date('Y-m-d',time() + (60*60*24))).'")');
 				}
+				if(!empty($this->params['categories']))
+				{
+					if($cats = $this->get_categories_from_param($this->params['categories']))
+					{
+						$es->add_left_relationship(array_keys($cats),relationship_id_of('event_to_event_category'));
+					}
+					else
+					{
+						$es->add_relation('1 = 2');
+					}
+				}
 				$es->add_relation('`show_hide` = "show"');
 				$es->set_order($this->params['order']);
+				if(!empty($this->params['max']))
+					$es->set_num($this->params['max']);
 				$this->_modify_events_es($es);
 				$events = $es->run_one();
 				$class = $this->get_model_class($this->params['model']);
@@ -48,6 +63,25 @@
 					$this->events = array();
 			}
 			return $this->events;
+		}
+		function get_categories_from_param($param_string)
+		{
+			$unames = explode(',',$param_string);
+			$cats = array();
+			foreach($unames as $uname)
+			{
+				$uname = trim($uname);
+				if(reason_unique_name_exists($uname))
+				{
+					$id = id_of($uname);
+					$cats[$id] = new entity($id);
+				}
+				else
+				{
+					trigger_error('Category with unique name '.$uname.' not found');
+				}
+			}
+			return $cats;
 		}
 		function get_model_class($model_name)
 		{
@@ -76,8 +110,8 @@
 			parent::init($args);
 			if($head_items = $this->get_head_items())
 			{
-				$template = $this->_get_template();
-				$template->add_head_items($head_items);
+				if($template = $this->_get_template())
+					$template->add_head_items($head_items);
 			}
 		}
 		function has_content()
@@ -99,6 +133,10 @@
 				{
 					$this->template = new $classname;
 				}
+				else
+				{
+					trigger_error('Unable to load a template from '.$this->params['template']);
+				}
 			}
 			return $this->template;
 		}
@@ -108,8 +146,8 @@
 			$events = $this->_get_events();
 			if(!empty($events))
 			{
-				$template = $this->_get_template();
-				echo $template->get_markup($events);
+				if($template = $this->_get_template())
+					echo $template->get_markup($events);
 			}
 			elseif(!empty($this->params['no_events_message']))
 			{
