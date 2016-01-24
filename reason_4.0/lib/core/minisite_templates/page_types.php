@@ -1342,13 +1342,7 @@
 			'main_post' => 'go',
 		),
 		'google_map' => array(
-<<<<<<< HEAD
 			'main_post' => 'google_map',
-=======
-
-			'main_post' => 'google_map',
-
->>>>>>> first commit of basically working but poorly documented core profiles
 		),
 		'images_under_nav' => array(
 			'sidebar' => 'blurb',
