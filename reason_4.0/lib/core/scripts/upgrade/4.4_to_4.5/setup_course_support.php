@@ -55,6 +55,7 @@ class ReasonUpgrader_45_SetupCourseSupport implements reasonUpgraderInterface
 		'short_description' => array('db_type' => 'text'),
 		'long_description' => array('db_type' => 'text'),
 		'credits' => array('db_type' => 'varchar(50)'),
+		'list_of_prerequisites' => array('db_type' => 'text'),
 		'academic_session' => array('db_type' => 'varchar(20)'),
 		'timeframe_begin' => array('db_type' => 'datetime'),
 		'timeframe_end' => array('db_type' => 'datetime'),
