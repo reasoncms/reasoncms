@@ -2,6 +2,16 @@
 /**
  * @package reason
  * @subpackage scripts
+ *
+ * This is the framework for the Course Catalog data import. On its own, it doesn't do 
+ * anything; the expectation is that an institution would create a local import class
+ * that extends this one, and run that on some regular schedule. The comments below explain
+ * the points at which you will need to extend the class.
+ *
+ * For a minimal implementation, you will need to extend get_course_template_data() and
+ * get_course_section_data(), and populate the class vars $template_data_map and
+ * $section_data_map (and define any mapping methods, as needed). Then just call the run()
+ * method to kick off the import.
  */
 include_once('reason_header.php');
 reason_include_once('classes/entity_selector.php');
@@ -12,41 +22,101 @@ reason_include_once('function_libraries/user_functions.php');
 reason_include_once('function_libraries/admin_actions.php');
 reason_include_once('function_libraries/root_finder.php');
 
-
-ini_set('display_errors', 'stdout');
-ini_set('error_reporting', E_ALL);
-
-$import = new CourseImportEngine();
-$import->run();
-
 class CourseImportEngine
-{
-	protected $data_source_name = 'Colleague';
-	
-	protected $course_table_year = 2015;
-	protected $current_site = 'academic_catalog_2014_site';
-	
+{	
+	/**
+	  * Course entities are all stored in a single container site and borrowed into catalog
+	  * sites to indicated that they should be published. This value is the unique name of
+	  * the site where you want to store your course entities. It can be a public site
+	  * (if, for instance, you have a parent site that "contains" your separate catalog
+	  * sites) or a hidden site.
+	  */
+	protected $courses_site = 'catalog_courses_site';
+
+	/**
+	  * This script generates a lot of entities. This value defines the user who should be
+	  * set as the creator/editor for those entities.
+	  */
+	protected $entity_creator = 'causal_agent';
+
+	/**
+	  * Importing course data requires mapping values from your external system to the 
+	  * Reason course data structures. These data maps define how that mapping happens.
+	  * You will extend the get_course_template_data() method below to bring in your raw
+	  * data array, one row per course. That data is then processed based on the mapping
+	  * defined here. On the left are Reason entity fields. On the right can be one of 
+	  * three things:
+	  * 1. The array key of a value in your raw data row to map that value directly
+	  * 2. "X", where template_map_X() is a local method that takes a data row and returns
+	  *    the value that should be assigned to the entity field.
+	  * 3. A fixed value to be assigned to all entities (or null, to assign no value)
+	  */
+	protected $template_data_map = array(
+			'course_number' => null,
+			'org_id' => null,
+			'title' => null,
+			'short_description' => null,
+			'long_description' => null,
+			'credits' => null,
+			'list_of_prerequisites' => null,
+			'status' => 'Active',
+			'data_source' => 'myERP',
+			'sourced_id' => null,
+			);
+
+	/**
+	  * See above; this array is the same as $template_data_map, only it applies to course
+	  * section data. Custom mapping methods for sections should be named section_map_X().
+	  */
+	protected $section_data_map = array(
+			'course_number' => null,
+			'org_id' => null,
+			'title' => null,
+			'short_description' => null,
+			'long_description' => null,
+			'credits' => null,
+			'academic_session' => null,
+			'timeframe_begin' => null,
+			'timeframe_end' => null,
+			'location' => null,
+			'meeting' => null,
+			'notes' => null,
+			'status' => 'Active',
+			'data_source' => 'myERP',
+			'sourced_id' => null,
+			'parent_template_id' => null,
+			);
+		
+	/**
+	  * Import error logging; no customization required.
+	  */
 	protected $errors = array();
 	
+	/*
+	 * If set to true, import will display extensive progress reporting. If false, only errors
+	 * will be shown.
+	 */
+	protected $verbose = true;
+	
+		
 	public function run()
 	{	
 		connectDB(REASON_DB);
 		
 		$this->disable_output_buffering();
-		echo "<pre>Running\n";
-		
-		//$this->import_course_blocks();
-		//return;
-		
-		//$this->delete_all_course_entities();
-		
-		//foreach ($this->get_section_org_ids() as $org_id)
-		//{
-			if ($raw_data = $this->get_course_template_data())
+		if ($this->verbose) echo "<pre>Running\n";
+						
+		if (!$org_ids = $this->get_template_org_ids()) $org_ids = array(null);
+		foreach ($org_ids as $org_id)
+		{
+			echo "\n". memory_get_usage() . "\n";
+			if ($raw_data = $this->get_course_template_data($org_id))
 			{
 				if ($mapped_data = $this->map_course_template_data($raw_data))
 				{
-					$this->build_course_template_entities($mapped_data, $this->get_existing_template_ids());
+					$this->build_course_template_entities($mapped_data, $this->get_existing_template_ids($org_id));
+					unset($raw_data);
+					unset($mapped_data);
 				}
 				else
 				{
@@ -57,16 +127,24 @@ class CourseImportEngine
 			{
 				$this->errors[] = 'No course template data received for '.$org_id.'.';
 			}
-		//}
-		//return;
-		foreach ($this->get_section_org_ids() as $org_id)
-		{
+			echo join("\n", $this->errors);
+			$this->errors = array();
+		}
 
+		if (!$org_ids = $this->get_section_org_ids()) $org_ids = array(null);
+		foreach ($org_ids as $org_id)
+		{
+			echo "\n1. ". memory_get_usage() . "\n";
 			if ($raw_data = $this->get_course_section_data($org_id))
 			{
+				echo "\n2. ". memory_get_usage() . "\n";
 				if ($mapped_data = $this->map_course_section_data($raw_data))
 				{
+					echo "\n3. ". memory_get_usage() . "\n";
 					$this->build_course_section_entities($mapped_data);
+					unset($raw_data);
+					unset($mapped_data);
+					echo "\n4. ". memory_get_usage() . "\n";
 				}
 				else
 				{
@@ -77,12 +155,91 @@ class CourseImportEngine
 			{
 				$this->errors[] = 'No course section data received for '.$org_id.'.';	
 			}
+			echo join("\n", $this->errors);
+			$this->errors = array();
 		}
 		
 		echo join("\n", $this->errors);
-		echo "Import Complete.\n";
+		if ($this->verbose) echo "Import Complete.\n";
 	}
 
+	/**
+	 * Retrieves a list of valid 'org_id' values (your department/subject codes).
+	 * Typically this is the same for templates and sections, but you can define them
+	 * separately if necessary.
+	 */
+	protected function get_template_org_ids()
+	{
+		return $this->get_section_org_ids();
+	}
+
+	/**
+	 * Retrieves a list of valid 'org_id' values (your department/subject codes).
+	 * Typically this is the same for templates and sections, but you can define them
+	 * separately if necessary.
+	 */
+	protected function get_section_org_ids()
+	{
+		return array();
+	}
+	
+	/**
+	 * This method does all the work of retrieving your raw course template data from
+	 * wherever it lives: via a query into your ERP, a query to a local data mirror,
+	 * retrieving data from flat files, etc. The result should be an array with one row
+	 * per course. It doesn't matter how that data is structured -- it will be massaged
+	 * into shape by the mapping step.
+	 *
+	 * You should allow for passing an optional org_id value (a department/subject code)
+	 * to retrieve only a subset of data.
+	 *
+	 * @param mixed $org_id
+	 */
+	protected function get_course_template_data($org_id = null)
+	{
+		return array();
+	}
+
+	/**
+	 * This is a set of rules for excluding course templates from being imported.
+	 *
+	 */
+	protected function should_exclude_course_template($row)
+	{
+		return false;
+	}
+
+	/**
+	 * This method does all the work of retrieving your raw course section data from
+	 * wherever it lives: via a query into your ERP, a query to a local data mirror,
+	 * retrieving data from flat files, etc. The result should be an array with one row
+	 * per section. It doesn't matter how that data is structured -- it will be massaged
+	 * into shape by the mapping step.
+	 *
+	 * You should allow for passing an optional org_id value (a department/subject code)
+	 * to retrieve only a subset of data.
+	 *
+	 * @param mixed $org_id
+	 */
+	protected function get_course_section_data($org_id = null)
+	{
+		return array();
+	}
+
+	/**
+	 * This is a set of rules for excluding course sections from being imported.
+	 *
+	 */
+	protected function should_exclude_course_section($row)
+	{
+		return false;
+	}
+
+	/**
+	 * Given the 'sourced_id' value of a course template, return the corresponding entity.
+	 *
+	 * @param mixed ID
+	 */
 	protected function get_section_parent($parent_template_id)
 	{
 		$es = new entity_selector();
@@ -95,14 +252,15 @@ class CourseImportEngine
 		return false;
 	}
 	
+	/**
+	 * Given a course section entity, create a relationship with its parent course template.
+	 *
+	 * @param object
+	 */
 	protected function link_section_to_parent($section)
 	{
-		//echo round(memory_get_usage()/1024,2)."K at point A\n"; 
-
 		if ($template = $this->get_section_parent($section->get_value('parent_template_id')))
 		{
-		//	echo round(memory_get_usage()/1024,2)."K at point B\n"; 
-
 			if (!$parents = $section->get_right_relationship('course_template_to_course_section'))
 			{
 				return create_relationship( $template->id(), $section->id(), relationship_id_of('course_template_to_course_section'),false,false);
@@ -110,7 +268,7 @@ class CourseImportEngine
 			else if (is_array($parents))
 			{
 				$current_template = reset($parents);
-		//		echo round(memory_get_usage()/1024,2)."K at point C\n"; 
+
 				// verify that we have the correct parent, and fix if not.	
 				if ($current_template->get_value('sourced_id') == $template->get_value('sourced_id'))
 				{
@@ -118,31 +276,39 @@ class CourseImportEngine
 				}
 				else
 				{
-					//$this->errors[] = 'Incorrect template attached to '.$section->get_value('name');	
-					echo 'Incorrect template attached to '.$section->get_value('name');	
+					$this->errors[] = 'Incorrect template attached to '.$section->get_value('name');	
 				}
 			}
 			else
 			{
-				//$this->errors[] = 'Non-array '.$parents.' returned from get_right_relationship';
-				echo 'Non-array '.$parents.' returned from get_right_relationship';
+				$this->errors[] = 'Non-array '.$parents.' returned from get_right_relationship';
 			}
 		}
 		else
 		{
-			//$this->errors[] = 'No template found for '.$section->get_value('name');
-			echo 'No template found for '.$section->get_value('name');
+			$this->errors[] = 'No template found for '.$section->get_value('name');
 			return false;
 		}
 	}
 	
-	protected function build_course_template_entities($data, $existing = array())
+	/**
+	 * Given the massaged array of data produced by map_course_template_data(), build or
+	 * update the corresponding entities. You can optionally pass an array of all the
+	 * existing course template entity ids, to generate a report of entities that have
+	 * dropped from the source feed.
+	 *
+	 * @param array Course data
+	 * @param array IDs of existing course template entities.
+	 * @param boolean Whether to delete entities dropped from data feed (not recommended)
+	 *
+	 */
+	protected function build_course_template_entities($data, $existing = array(), $delete = false)
 	{
-		echo "Building entities\n";
+		if ($this->verbose) echo "Building entities\n";
+		$creator = get_user_id($this->entity_creator);
 		foreach ($data as $key => $row)
 		{
-			$name = sprintf('%s %s %s', $row['org_id'], $row['course_number'], $row['title']);
-			//echo 'Adding '.$name ."\n"; continue;
+			$name = $this->build_course_template_entity_name($row);
 			$es = new entity_selector();
 			$es->add_type(id_of('course_template_type'));
 			$es->add_relation('sourced_id = "'.$row['sourced_id'].'"');
@@ -150,11 +316,11 @@ class CourseImportEngine
 			{
 				$course = reset($result);
 				// Find all the values that correspond to the data we're importing
-				$values = array_intersect_key($course->get_values(), $row);
+				$values = array_intersect_assoc($course->get_values(), $row);
 				if ($values != $row)
 				{
-					echo 'Updating '.$name ."\n";
-					reason_update_entity( $course->id(), get_user_id('causal_agent'), $row, false);
+					if ($this->verbose) $this->errors[] = 'Updating '.$name;
+					reason_update_entity( $course->id(), $creator, $row, false);
 				}
 				
 				$key = array_search($course->id(), $existing);
@@ -162,91 +328,119 @@ class CourseImportEngine
 			}
 			else
 			{
-				echo 'Adding '.$name ."\n";
-				reason_create_entity( id_of($this->current_site), id_of('course_template_type'), get_user_id('causal_agent'), $name, $row);
+				if ($this->verbose) $this->errors[] = 'Adding '.$name;
+				$row['new'] = 0;
+				reason_create_entity( id_of($this->courses_site), id_of('course_template_type'), $creator, $name, $row);
 			}
 		}
 		
 		if (count($existing))
 		{
-			$user = get_user_id('causal_agent');
 			foreach ($existing as $id)
 			{
 				$course = new CourseTemplateType($id);
-				echo 'Would Delete: '.$course->get_value('name')."\n";
-				//reason_expunge_entity($id, $user);
+				$this->errors[] = 'No longer in feed: '.$course->get_value('name');
+				if ($delete) reason_expunge_entity($id, $creator);
 			}
 		}
 		
 	}
 
+	/**
+	  * Construct the template entity name (only visible in the Reason admin). You can modify this 
+	  * method if you want your names constructed differently.
+	  *
+	  * @param array data row
+	  * @return string
+	  */
+	protected function build_course_template_entity_name($row)
+	{
+		return sprintf('%s %s %s', $row['org_id'], $row['course_number'], $row['title']);
+	}
+
+	/**
+	  * Given the data assembled by map_course_section_data(), look to see if there's a matching
+	  * entity. If there is, update it if any values have changed. If no entity exists,
+	  * create one and link it to its parent course template entity.
+	  *
+	  * @param array data row
+	  * @return string
+	  */
 	protected function build_course_section_entities($data)
 	{
-		echo "Building section entities\n";
+		if ($this->verbose) echo "Building section entities\n";
+		$creator = get_user_id($this->entity_creator);
 		foreach ($data as $key => $row)
 		{
-			//echo round(memory_get_usage()/1024,2)."K at point E\n"; 
 			$es = new entity_selector();
 			$es->add_type(id_of('course_section_type'));
-			$name = sprintf('%s %s %s', $row['course_number'], $row['academic_session'], $row['title'] );
+			$name = $this->build_course_section_entity_name($row);
 			$es->relations = array();
 			$es->add_relation('sourced_id = "'.$row['sourced_id'].'"');
 			if ($result = $es->run_one())
 			{
 				$section = reset($result);
 				// Find all the values that correspond to the data we're importing
-				$values = array_intersect_key($section->get_values(), $row);
+				$values = array_intersect_assoc($section->get_values(), $row);
 				if ($values != $row)
 				{
-					echo 'Updating: '.$name ."\n";
-					reason_update_entity( $section->id(), get_user_id('causal_agent'), $row, false);
+					if ($this->verbose) $this->errors[] = 'Updating: '.$name;
+					reason_update_entity( $section->id(), $creator, $row, false);
 				}
 				else
 				{
-					echo 'Unchanged: '.$name ."\n";	
+					if ($this->verbose) $this->errors[] = 'Unchanged: '.$name;	
 				}
 			}
 			else
 			{
 				if ($this->get_section_parent($row['parent_template_id']))
 				{
-					echo 'Adding: '.$name ."\n";
-					$id = reason_create_entity( id_of($this->current_site), id_of('course_section_type'), get_user_id('causal_agent'), $name, $row);
+					if ($this->verbose) $this->errors[] = 'Adding: '.$name;
+					$row['new'] = 0;
+					$id = reason_create_entity( id_of($this->courses_site), id_of('course_section_type'), $creator, $name, $row);
 					$section = new entity($id);
 				}
 				else
 				{
-					echo 'No course template found; skipping '.$name ."\n";
+					$this->errors[] = 'No course template found; skipping '.$name;
 					continue;
 				}
 			}
 			
 			if (!empty($section))
 				$this->link_section_to_parent($section);
-			//echo round(memory_get_usage()/1024,2)."K at point D\n"; 
 		}
 	}
 	
+	/**
+	  * Construct the section entity name (only visible in the Reason admin). You can modify this 
+	  * method if you want your names constructed differently.
+	  *
+	  * @param array data row
+	  * @return string
+	  */
+	protected function build_course_section_entity_name($row)
+	{
+		return sprintf('%s %s %s', $row['course_number'], $row['academic_session'], $row['title'] );
+	}
+	
+	/**
+	  * This method accepts the raw data array generated in get_course_template_data() and
+	  * maps it to the Reason course schema based on the rules found in $this->template_data_map. 
+	  * Rules can specify a one-to-one mapping between a source field and a schema field, 
+	  * specify a function to be called to perform the mapping, or assign a static value.
+	  *
+	  * @param array Raw course template data
+	  */
 	protected function map_course_template_data($data)
 	{
-		echo "map_course_template_data\n";
-		$map = array(
-			'course_number' => 'SEC_COURSE_NO',
-			'org_id' => 'SEC_SUBJECT',
-			'title' => 'title',
-			'short_description' => null,
-			'long_description' => 'description',
-			'credits' => 'SEC_MAX_CRED',
-			'list_of_prerequisites' => 'prereq',
-			'status' => 'Active',
-			'data_source' => $this->data_source_name,
-			'sourced_id' => 'COURSES_ID',
-			);
+		if ($this->verbose) echo "map_course_template_data\n";
 		
 		foreach($data as $row)
 		{
 			unset($mapped_row);
-			foreach ($map as $key => $mapkey)
+			foreach ($this->template_data_map as $key => $mapkey)
 			{
 				if ($mapkey)
 				{
@@ -279,32 +473,22 @@ class CourseImportEngine
 		}
 	}
 
+	/**
+	  * This method accepts the raw data array generated in get_course_section_data() and
+	  * maps it to the Reason course schema based on the rules found in $this->section_data_map. 
+	  * Rules can specify a one-to-one mapping between a source field and a schema field, 
+	  * specify a function to be called to perform the mapping, or assign a static value.
+	  *
+	  * @param array Raw course section data
+	  */
 	protected function map_course_section_data($data)
 	{
-		echo "map_course_template_data\n";
-		$map = array(
-			'course_number' => 'SEC_NAME',
-			'org_id' => 'SEC_SUBJECT',
-			'title' => 'title',
-			'short_description' => null,
-			'long_description' => 'description',
-			'credits' => 'credits',
-			'academic_session' => 'SEC_TERM',
-			'timeframe_begin' => 'SEC_START_DATE',
-			'timeframe_end' => 'SEC_END_DATE',
-			'location' => 'location',
-			'meeting' => 'meeting',
-			'notes' => null,
-			'status' => 'Active',
-			'data_source' => $this->data_source_name,
-			'sourced_id' => 'COURSE_SECTIONS_ID',
-			'parent_template_id' => 'SEC_COURSE',
-			);
-		
+		if ($this->verbose) echo "map_course_section_data\n";
+
 		foreach($data as $row)
 		{
 			unset($mapped_row);
-			foreach ($map as $key => $mapkey)
+			foreach ($this->section_data_map as $key => $mapkey)
 			{
 				if ($mapkey)
 				{
@@ -339,189 +523,42 @@ class CourseImportEngine
 			return false;
 		}
 	}
-	
-	protected function get_course_template_data($org_id = null)
-	{
-		echo "get_course_template_data $org_id\n";
-		$restore_conn = get_current_db_connection_name();
-		connectDB('reg_catalog_new');	
-		mysql_set_charset('utf8');
-		$query = 'SELECT * FROM IDM_CRS WHERE CRS_END_DATE IS NULL OR CRS_END_DATE > NOW() ORDER BY CRS_NAME';
-		if ($result = mysql_query($query))
-		{
-			while ($row = mysql_fetch_assoc($result))
-			{
-				if (strpos($row['CRS_NAME'], 'OCP') === 0) continue;
-				if (strpos($row['CRS_NAME'], 'NORW') === 0) continue;
-				if (substr($row['CRS_NAME'], -3) == 'SAT') continue;
-				if (substr($row['CRS_NAME'], -2) == 'WL') continue;
-				if (substr($row['CRS_NAME'], -2) == 'IB') continue;
-				if (substr($row['CRS_NAME'], -2) == 'CC') continue;
-				if (substr($row['CRS_NAME'], -2) == 'MP') continue;
-				if (substr($row['CRS_NAME'], -2) == 'AP') continue;
-				if (substr($row['CRS_NAME'], -1) == 'S') continue;
-				if (substr($row['CRS_NAME'], -1) == 'L') continue;
-
-				$found = false;
-				$coursetableyear = $this->course_table_year;
-				while ($coursetableyear > 2009)
-				{
-					$coursetable = 'course'.$coursetableyear;
-					$query = 'SELECT IDM_COURSE.*, description, title, prereq FROM IDM_COURSE 
-						JOIN '.$coursetable.' 
-						ON '.$coursetable.'.course_id = IDM_COURSE.SEC_COURSE 
-						AND ('.$coursetable.'.match_title IS NULL 
-						OR '.$coursetable.'.match_title = IDM_COURSE.SEC_SHORT_TITLE)
-						WHERE SEC_COURSE = "'.$row['COURSES_ID'].'"';
-
-					if ($result2 = mysql_query($query))
-					{
-						if (mysql_num_rows($result2) == 1)
-						{
-							$row = array_merge($row, mysql_fetch_assoc($result2));
-							$found = true;
-						}
-						else if (mysql_num_rows($result2) > 1)
-						{
-							$row = array_merge($row, mysql_fetch_assoc($result2));
-							$found = true;
-						}
-						else
-						{
-							//echo "No data for $row[COURSES_ID] in $coursetable\n";
-							$coursetableyear--;
-							continue;
-						}
-						$data[] = $row;
-						break;
-					}
-					else
-					{
-						$this->errors[] = mysql_error();
-					}
-				}
-				if (!$found) echo "No data for $row[CRS_NAME] in catalog\n";
-			}
-		} 
-		else
-		{
-			$this->errors[] = mysql_error();
-		}
-		connectDB($restore_conn);
-		
-		if (isset($data)) return $data;
-	}
-
-	protected function get_course_section_data($org_id = null)
-	{
-		echo "get_course_section_data $org_id\n";
-		$data = array();
-		$coursetable = 'course'.$this->course_table_year;
-		$restore_conn = get_current_db_connection_name();
-		connectDB('reg_catalog_new');	
-		mysql_set_charset('utf8');
-		$found = false;
-		$coursetableyear = $this->course_table_year;
-		$org_id_limit = ($org_id) ? ' AND SEC_SUBJECT="'.$org_id.'" ' : '';
-		while ($coursetableyear > 2009)
-		{
-			$coursetable = 'course'.$coursetableyear;
-			$query = 'SELECT s.*, description, title FROM IDM_CRS c, IDM_COURSE s
-				JOIN '.$coursetable.' 
-				ON '.$coursetable.'.course_id = s.SEC_COURSE 
-				AND ('.$coursetable.'.match_title IS NULL 
-				OR '.$coursetable.'.match_title = s.SEC_SHORT_TITLE)
-				WHERE s.SEC_COURSE = c.COURSES_ID AND
-				(CRS_END_DATE IS NULL OR CRS_END_DATE > NOW()) 
-				AND SEC_START_DATE > "2009-09-01 00:00:00" '. $org_id_limit .'
-				ORDER BY SEC_NAME';
-
-			if ($result = mysql_query($query))
-			{
-				while ($row = mysql_fetch_assoc($result))
-				{
-					if (isset($row['SEC_SUBJECT']) && empty($data[$row['COURSE_SECTIONS_ID']]))
-					{
-						if ($row['SEC_SUBJECT'] == 'OCP' || $row['SEC_SUBJECT'] == 'NORW') continue;
-						if (strpos($row['SEC_NO'], 'WL') !== false) continue;
-						//if (strpos($row['SEC_TERM'], 'SU') !== false) continue;
-						
-						$data[$row['COURSE_SECTIONS_ID']] = $row;
-					}
-				}
-			}
-			else
-			{
-				$this->errors[] = mysql_error();
-			}
-			$coursetableyear--;
-		}
-		connectDB($restore_conn);
-		return $data;
-	}
-
-	protected function section_map_location($row)
-	{
-		$location = array();
-		if ($times = explode('|', $row['XSEC_CC_MEETING_TIMES_SV']))
-		{
-			foreach ($times as $time)
-			{
-				if (preg_match('/(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)/', $time, $matches))
-				{
-					$location[] = $matches[1] . ' '. $matches[2];
-				}
-			}
-		}
-		return join('|', $location);
-	}
-
-	protected function section_map_meeting($row)
-	{
-		$meeting = array();
-		if ($times = explode('|', $row['XSEC_CC_MEETING_TIMES_SV']))
-		{
-			foreach ($times as $time)
-			{
-				if (preg_match('/(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)/', $time, $matches))
-				{
-					$meeting[] = $matches[3] . ' '. $matches[4] . ' '. $matches[5];
-				}
-			}
-		}
-		return join('|', $meeting);
-	}
 
 	/**
-	  * If both min and max credits are set, return "MIN-MAX" -- otherwise, return
-	  * whichever one is set, or nothing.
-	  */
-	protected function section_map_credits($row)
+	 * Remove all existing course template entities. Used mostly for catalog setup and testing.
+	 */
+	public function delete_all_course_entities()
 	{
-		$credits = array();
-		if ($row['SEC_MIN_CRED']) $credits[] = $row['SEC_MIN_CRED'];
-		if ($row['SEC_MAX_CRED']) $credits[] = $row['SEC_MAX_CRED'];
-		return join('-', $credits);
-	}
-	
-	protected function delete_all_course_entities()
-	{
-		$user = get_user_id('causal_agent');
-		foreach ($this->get_existing_template_ids() as $id)
+		$user = get_user_id($this->entity_creator);
+		$ids = $this->get_existing_template_ids();
+		foreach ($ids as $id)
 		{
 			reason_expunge_entity($id, $user);
 		}
+		unset($ids);
 	}
 	
-	protected function delete_all_section_entities()
+	/**
+	 * Remove all existing course section entities. Used mostly for catalog setup and testing.
+	 */
+	public function delete_all_section_entities()
 	{
-		$user = get_user_id('causal_agent');
-		foreach ($this->get_existing_section_ids() as $id)
+		$user = get_user_id($this->entity_creator);
+		$ids = $this->get_existing_section_ids();
+		foreach ($ids as $id)
 		{
 			reason_expunge_entity($id, $user);
 		}
+		unset($ids);
 	}
 	
+	/**
+	 * Get all the ids of course template entities, optionally limited by the org_id value on 
+	 * the entity.
+	 * 
+	 * @param string $org_id
+	 * @return array
+	 */
 	protected function get_existing_template_ids($org_id = null)
 	{
 		$es = new entity_selector();
@@ -533,6 +570,13 @@ class CourseImportEngine
 			return array();
 	}
 	
+	/**
+	 * Get all the ids of course section entities, optionally limited by the org_id value on 
+	 * the entity.
+	 * 
+	 * @param string $org_id
+	 * @return array
+	 */
 	protected function get_existing_section_ids($org_id = null)
 	{
 		$es = new entity_selector();
@@ -544,26 +588,7 @@ class CourseImportEngine
 			return array();
 	}
 	
-	protected function get_template_org_ids()
-	{
-		return $this->get_section_org_ids();
-	}
-
-	protected function get_section_org_ids()
-	{
-		$org_ids = array();
-		$q = 'SELECT DISTINCT SEC_SUBJECT FROM IDM_COURSE ORDER BY SEC_SUBJECT';
-		connectDB('reg_catalog_new');	
-		if ($result = mysql_query($q))
-		{
-			while($row = mysql_fetch_assoc($result))
-				$org_ids[] = $row['SEC_SUBJECT'];
-		}
-		connectDB(REASON_DB);
-		return $org_ids;
-	}
-	
-	function disable_output_buffering()
+	protected function disable_output_buffering()
 	{
 		@apache_setenv('no-gzip', 1);
 		@ini_set('zlib.output_compression', 0);
@@ -572,7 +597,7 @@ class CourseImportEngine
 		ob_implicit_flush(1);
 	}
 
-	function get_subjects()
+	public function get_reason_subjects()
 	{
 		$subjects = array();
 		$es = new entity_selector();
@@ -587,85 +612,29 @@ class CourseImportEngine
 		return $subjects;
 	}
 
-	function import_course_blocks()
+	/**
+	 * Remove all existing course blocks in a particular catalog site (designated by academic year). 
+	 * Used mostly for catalog setup and testing.
+	 * 
+	 * @param int $year
+	 */
+	public function delete_all_course_blocks($year)
 	{
-		$subjects = $this->get_subjects();
-		$root_id = root_finder(id_of($this->current_site));
-		$rows = array();
-	
-		connectDB('reg_catalog');	
-		mysql_set_charset('utf8');
-		$query = 'SELECT * FROM blocks JOIN block_types ON blocks.type = block_types.id
-					WHERE YEAR = 2015 ORDER BY dept, sequence';
-		if ($result = mysql_query($query))
+		if (!$site_id = id_of('academic_catalog_'.$year.'_site'))
 		{
-			while ($row = mysql_fetch_assoc($result))
-			{			
-				$rows[] = $row;
-			}
+			echo 'No site found: academic_catalog_'.$year.'_site';
+			return;
 		}
-		connectDB(REASON_DB);
-		
-		$subj = '';
-		$seq = $page_seq = 1;
-		foreach ($rows as $row)
+
+		$es = new entity_selector($site_id);
+		$es->add_type(id_of('course_catalog_block_type'));
+		if ($result = $es->get_ids())
 		{
-			if ($row['dept'] != $subj)
+			$user = get_user_id($this->entity_creator);
+			foreach ($result as $id)
 			{
-				$subj = $row['dept'];
-				$seq = 1;
-
-				if (isset($subjects[$subj]))
-					$page_name = $subjects[$subj]->get_value('name');
-				else
-					$page_name = $subj;
-			
-				$page_values = array(
-					'new' => 0,
-					'url_fragment' => strtolower($subj),
-					'custom_page' => 'catalog_subject_page',
-					'link_name' => $page_name,
-					'nav_display' => 'Yes',
-					);
-			
-				$page_id = reason_create_entity( id_of($this->current_site), id_of('minisite_page'), get_user_id('causal_agent'), $page_name, $page_values);
-				create_relationship( $page_id, $root_id, relationship_id_of('minisite_page_parent'), array('rel_sort_order'=>$page_seq),false);
-
-				$page_seq++;
+				reason_expunge_entity($id, $user);
 			}
-			
-			$block_name = $row['dept'] . ' ' . $row['name'];
-			
-			// Fix up include tags
-			if (preg_match_all('/(\{\{?)([^}]+)\}\}?/', $row['content'], $matches, PREG_SET_ORDER))
-			{
-				foreach ($matches as $match)
-				{
-					if (preg_match('/(.*) ALL/', $match[2], $submatch))
-						$key = 'org_id="'.$submatch[1].'"';
-					else
-						$key = 'gov_code="'.$match[2].'"';
-					
-					if ($match[1] == '{')
-						$replace = '{descriptions '.$key.'}';
-					else
-						$replace = '{titles '.$key.'}';
-					
-					$row['content'] = str_replace($match[0], $replace, $row['content']);
-				}
-			}
-			
-			$block_values = array(
-				'new' => 0,
-				'org_id' => $row['dept'],
-				'title' => $row['title'],
-				'block_type' => $row['name'],
-				'content' => $row['content'],
-			);
-			
-			$block_id = reason_create_entity( id_of($this->current_site), id_of('course_catalog_block_type'), get_user_id('causal_agent'), $block_name, $block_values);
-			create_relationship( $page_id, $block_id, relationship_id_of('page_to_course_catalog_block'), array('rel_sort_order'=>$seq), false);
-			
 		}
 	}
 }
