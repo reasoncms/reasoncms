@@ -98,7 +98,13 @@ class CourseImportEngine
 	 */
 	protected $verbose = true;
 	
-		
+	protected $helper;
+	
+	function __construct()
+	{
+		$this->helper = new $GLOBALS['catalog_helper_class']();
+	}
+	
 	public function run()
 	{	
 		connectDB(REASON_DB);
@@ -338,7 +344,7 @@ class CourseImportEngine
 		{
 			foreach ($existing as $id)
 			{
-				$course = new CourseTemplateType($id);
+				$course = new $GLOBALS['course_template_class']($id);
 				$this->errors[] = 'No longer in feed: '.$course->get_value('name');
 				if ($delete) reason_expunge_entity($id, $creator);
 			}
