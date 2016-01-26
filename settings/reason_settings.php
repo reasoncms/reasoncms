@@ -181,7 +181,7 @@
 	 * Note that this is the same as the name of the file in lib/[core|local]/html_editors,
 	 * but without the ".php"
 	 */
-	define('REASON_DEFAULT_HTML_EDITOR', 'tiny_mce');
+	define('REASON_DEFAULT_HTML_EDITOR', 'ck_editor');
 
 	/**
 	 * REASON_URL_FOR_GENERAL_FEED_HELP
