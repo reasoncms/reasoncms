@@ -114,12 +114,24 @@ class CourseTemplateType extends Entity
 	}
 	
 	/**
-	  * 
-	  * @todo if year limit is in effect, only grab description from that year or older sections
-	  */
+	 * Return the long description for a course. If year limit is in place, load description from
+	 * sections offered that year, otherwise draw the description from the template. If no year limit
+	 * is in place, grab the most recent section description.
+	 * 
+	 * @param boolean $refresh
+	 * @return string
+	 */
 	public function get_value_long_description($refresh = false)
 	{
-		$start_date = 0;
+		if ($this->limit_to_year)
+		{
+			$start_date = $this->helper->get_catalog_year_start_date($this->limit_to_year);
+		}
+		else
+		{
+			$start_date = 0;
+		}
+			
 		foreach ( $this->get_sections(false) as $key => $section)
 		{
 			if ($desc = $section->get_value('long_description', $refresh))
@@ -547,7 +559,7 @@ class CatalogHelper
 
 		$subjects = array();
 		$q = 'SELECT distinct org_id FROM course_section';
-		if ($year) $q .= ' WHERE timeframe_begin > "'.get_catalog_year_start_date($year).'" AND timeframe_end < "'.get_catalog_year_end_date($year).'"';
+		if ($year) $q .= ' WHERE timeframe_begin > "'.$this->get_catalog_year_start_date($year).'" AND timeframe_end < "'.$this->get_catalog_year_end_date($year).'"';
 		$q .= ' ORDER BY org_id';
 		if ($result = db_query($q, 'Error selecting course subjects'))
 		{
