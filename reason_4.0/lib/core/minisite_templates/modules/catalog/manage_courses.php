@@ -31,9 +31,11 @@ class ManageCoursesModule extends DefaultMinisiteModule
 	protected $form;
 	protected $course;
 	protected $section;
+	protected $catalog_years;
 	protected $year;
 	protected $catalog_site_id;
 	protected $noaccess;
+	protected $helper;
 	public $cleanup_rules = array(
 		'module_api' => array( 'function' => 'turn_into_string' ),
 		'module_identifier' => array( 'function' => 'turn_into_string' ),
@@ -118,18 +120,19 @@ class ManageCoursesModule extends DefaultMinisiteModule
 			return;
 		}
 
+		$this->helper = new $GLOBALS['catalog_helper_class']();
+		
 		if($head_items = $this->get_head_items())
 		{
 			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH . 'modules/courses/manage_courses.css');
 			$head_items->add_javascript(REASON_HTTP_BASE_PATH . 'modules/courses/manage_courses.js');
 		}
 
-		if (isset($this->request['year']))
-		{
-			$this->year = $this->request['year'];
-			$this->catalog_site_id = id_of('academic_catalog_'.$this->year.'_site');
-			$this->elements['display_in_catalog']['display_name'] = 'Display in '.$this->year.' Catalog';
-		}
+		// Set the year to the selected year, or, by default, the latest catalog
+		$this->catalog_years = $this->helper->get_catalog_years();
+		$this->year = (isset($this->request['year'])) ? $this->request['year'] : end($this->catalog_years);
+		$this->catalog_site_id = id_of('academic_catalog_'.$this->year.'_site');
+		$this->elements['display_in_catalog']['display_name'] = 'Display in '.$this->year.' Catalog';
 
 		// If a request has been made to deactivate a course, do that and reload
 		if (!empty($this->request['deactivate']))
@@ -151,7 +154,7 @@ class ManageCoursesModule extends DefaultMinisiteModule
 
 		if (isset($this->request['course']))
 		{
-			$this->course = new CourseTemplateType($this->request['course']);
+			$this->course = new $GLOBALS['course_template_class']($this->request['course']);
 			
 			$this->form = new disco();
 			$this->form->box_class = 'StackedBox';
@@ -168,7 +171,7 @@ class ManageCoursesModule extends DefaultMinisiteModule
 
 		if (isset($this->request['section']))
 		{
-			$this->section = new CourseSectionType($this->request['section']);
+			$this->section = new $GLOBALS['course_section_class']($this->request['section']);
 		}		
 	}
 	
@@ -203,7 +206,7 @@ class ManageCoursesModule extends DefaultMinisiteModule
 		$html .= 'Manage Courses for ';
 		$html .= '<select id="courseSubjects">'."\n";
 		$html .= '<option value="">--</option>';	
-		foreach (get_course_subjects($this->year) as $subject)
+		foreach ($this->helper->get_course_subjects($this->year) as $subject)
 		{
 			$selected = (isset($this->request['subject']) && $subject == $this->request['subject']) ? 'selected' : '';
 			$html .= '<option value="'.$subject.'" '.$selected.'>'.$subject.'</option>'."\n";;	
@@ -211,11 +214,11 @@ class ManageCoursesModule extends DefaultMinisiteModule
 		$html .= '</select>'."\n";
 
 		$html .= '<select id="courseYears">'."\n";
-		$html .= '<option value="">--</option>';	
-		foreach (get_catalog_years() as $year)
+		
+		foreach ($this->catalog_years as $year)
 		{
-			$selected = (isset($this->request['year']) && $year == $this->request['year']) ? 'selected' : '';
-			$html .= '<option value="'.$year.'" '.$selected.'>'.get_display_year($year).'</option>'."\n";;	
+			$selected = ($year == $this->year) ? 'selected' : '';
+			$html .= '<option value="'.$year.'" '.$selected.'>'.$this->helper->get_display_year($year).'</option>'."\n";;	
 		}
 		$html .= '</select>'."\n";
 
@@ -238,9 +241,9 @@ class ManageCoursesModule extends DefaultMinisiteModule
 	 */
 	function get_course_list($subject)
 	{
-		$subject_courses = get_courses_by_subjects(array($subject));
+		$subject_courses = $this->helper->get_courses_by_subjects(array($subject));
 		
-		$site_courses = get_site_courses($this->catalog_site_id);
+		$site_courses = $this->helper->get_site_courses($this->catalog_site_id);
 		
 		$html = '<h3>Listed Courses</h3>';
 		$html .= '<ul class="courseListActive">';
@@ -293,7 +296,7 @@ class ManageCoursesModule extends DefaultMinisiteModule
 			$html .= $name .'</a>';
 			if ($history = $course->get_last_offered_academic_session())
 			{
-				if (term_to_academic_year($history) == $this->year)
+				if ($this->helper->term_to_academic_year($history) == $this->year)
 					$html .= ' <span class="courseListTerm termHighlight">'. $history .'</span>';
 				else
 					$html .= ' <span class="courseListTerm">'. $history .'</span>';				
@@ -328,7 +331,7 @@ class ManageCoursesModule extends DefaultMinisiteModule
 				$html .= $name .'</a>';
 				if ($history = $section->get_value('academic_session'))
 				{
-					if (term_to_academic_year($history) == $this->year)
+					if ($this->helper->term_to_academic_year($history) == $this->year)
 						$html .= ' <span class="courseListTerm termHighlight">'. $history .'</span>';
 					else
 						$html .= ' <span class="courseListTerm">'. $history .'</span>';				
@@ -412,7 +415,7 @@ class ManageCoursesModule extends DefaultMinisiteModule
 	{
 		if ($this->year) $course->set_academic_year_limit($this->year);
 	
-		$this->form->set_element_properties('subject', array('options' => get_course_subjects()));
+		$this->form->set_element_properties('subject', array('options' => $this->helper->get_course_subjects()));
 		
 		$this->form->set_value('subject', $course->get_value('org_id'));
 		$this->form->set_value('course_number', $course->get_value('course_number'));
