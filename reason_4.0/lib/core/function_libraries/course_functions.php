@@ -572,7 +572,7 @@ class CatalogHelper
 		{
 			foreach ($catalogs as $catalog)
 			{
-				preg_match('/^academic_catalog_(\d{4})_site$/)', $catalog, $matches);
+				preg_match('/^academic_catalog_(\d{4})_site$/', $catalog, $matches);
 				$return[$matches[1]] = $matches[1];
 			}
 		}
