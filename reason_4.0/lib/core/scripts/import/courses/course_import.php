@@ -75,6 +75,7 @@ class CourseImportEngine
 			'short_description' => null,
 			'long_description' => null,
 			'credits' => null,
+			'list_of_prerequisites' => null,
 			'academic_session' => null,
 			'timeframe_begin' => null,
 			'timeframe_end' => null,
