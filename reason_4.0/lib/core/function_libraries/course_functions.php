@@ -559,10 +559,11 @@ class CatalogHelper
 	}
 
 	/**
-	  * Get the list of years for which we have catalog sites.
-	  *
-	  * @todo Finish
-	  */
+	 * Get the list of years for which we have catalog sites. Assumes that catalog sites use the
+	 * naming convention academic_catalog_YEAR_site.
+	 * 
+	 * @return array
+	 */
 	public function get_catalog_years()
 	{
 		$return = array();
@@ -571,10 +572,11 @@ class CatalogHelper
 		{
 			foreach ($catalogs as $catalog)
 			{
-				
+				preg_match('/^academic_catalog_(\d{4})_site$/)', $catalog, $matches);
+				$return[$matches[1]] = $matches[1];
 			}
 		}
-		return array(2013=>2013, 2014=>2014, 2015=>2015);
+		return $return;
 	}
 
 	/**
