@@ -530,7 +530,7 @@ class CatalogSubjectPageModule extends DefaultMinisiteModule
 	 * 
 	 * @param object $form Block editing Disco object
 	 */
-	protected function save_block_callback(&$form)
+	public function save_block_callback(&$form)
 	{
 		if ($this->request['block_id'] === 0)
 			$values['org_id'] = tidy($form->get_value( 'block_edit_org_id' ));
@@ -555,7 +555,7 @@ class CatalogSubjectPageModule extends DefaultMinisiteModule
 	 * 
 	 * @param object $form Block editing Disco object
 	 */
-	protected function where_to_callback(&$form)
+	public function where_to_callback(&$form)
 	{
 		if( $form->chosen_action == 'save' )
 		{
