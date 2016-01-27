@@ -449,7 +449,7 @@ function _populate_flash_upload_head_items(&$head)
 		return;
 	
     $scripts = array(
-		REASON_PACKAGE_HTTP_BASE_PATH."plupload/plupload-2.1.4/js/plupload.full.min.js",
+		REASON_PACKAGE_HTTP_BASE_PATH."plupload/plupload-2.1.8/js/plupload.full.min.js",
 		REASON_FLASH_UPLOAD_URI . 'upload_support.js',
 		REASON_HTTP_BASE_PATH."js/plupload_setup.js"
 	);
@@ -679,7 +679,7 @@ function _get_plupload_dom_stubs($can_add_file, $current, $element_name, $add_te
 		$uploadEl .= '<span class="smallText">'.$label."</span><br />";
 	}
 	// $uploadEl .= "<a id='upload_browse_" . $element_name . "' href='javascript:;'>[Browse...]</a>";
-	$uploadEl .= "<div class='plupload_dropzone' id='upload_browse_" . $element_name . "'><span class='default_text'>Click to add file, or drag/drop onto this zone...</span></div>";
+	$uploadEl .= "<div class='plupload_dropzone' id='upload_browse_" . $element_name . "'><span class='default_text'>Initializing uploader...</span></div>";
 
 	$uploadEl .= "<pre class='plupload_error_console' id='upload_console_" . $element_name . "'></pre>";
 	$uploadEl .= "</div>";

@@ -45,7 +45,7 @@ function setupRevertInterface(suffix) {
 							orig_dimensions: {
 								width: d.width,
 								height: d.height
-							},
+							}
 						});
 					},
 					error: function() {
@@ -111,8 +111,6 @@ $(document).ready(function() {
 			}
 		});
 		// console.log("SETTING UP [" + cfg.fieldName + "] / [" + uploader.settings.multipart_params.rvFieldName + "] / [" + uploader.id + "]");
-
-		uploader.init();
 
 		uploader.bind('Error', (function(localScopedFieldName, up, err) { return function(up, err) {
 			var uploadConsole = $('#upload_console_' + localScopedFieldName);
@@ -222,10 +220,21 @@ $(document).ready(function() {
 
 		// prevent form submission while uploads are pending
 		// reason_package/reason_4.0/www/flash_upload/rich_upload.js
-        var form = dropzone.parents("form").eq(0);
-        var submitters = $("button[type=submit], input[type=submit], " + "input[type=image]", form);
-        submitters.click(submission_attempt);
-        form.submit(submission_attempt);
+		var form = dropzone.parents("form").eq(0);
+		var submitters = $("button[type=submit], input[type=submit], " + "input[type=image]", form);
+		submitters.click(submission_attempt);
+		form.submit(submission_attempt);
+
+		uploader.bind("Init", function(up, params) {
+			var whichUploader = up.settings.multipart_params.rvFieldName;
+			var placeholderText = "Click to add file...";
+			if (up.features.dragdrop) {
+				placeholderText = "Click to add file, or drag/drop onto this zone...";
+			}
+			$("#upload_browse_" + whichUploader + " span.default_text").html(placeholderText);
+		});
+
+		uploader.init();
 	}
 
 	function cancel_upload(up, fieldName) {
