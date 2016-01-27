@@ -12,7 +12,6 @@ $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'CourseListM
 
 reason_include_once( 'minisite_templates/modules/default.php' );
 reason_include_once( 'function_libraries/course_functions.php' );
-//reason_include_once( 'scripts/import/courses/course_import.php' );
 
 class CourseListModule extends DefaultMinisiteModule
 {
@@ -66,6 +65,7 @@ class CourseListModule extends DefaultMinisiteModule
 	protected $subjects = array();
 	protected $site_subjects = array();
 	protected $page_categories = array();
+	protected $helper;
 	public $cleanup_rules = array(
 		'module_api' => array( 'function' => 'turn_into_string' ),
 		'module_identifier' => array( 'function' => 'turn_into_string' ),
@@ -77,6 +77,8 @@ class CourseListModule extends DefaultMinisiteModule
 	function init( $args = array() )
 	{
 		parent::init($args);
+		
+		$this->helper = new $GLOBALS['catalog_helper_class']();
 		
 		// If we're in ajax mode, we just return the data and quit the module.
 		$api = $this->get_api();
@@ -168,7 +170,7 @@ class CourseListModule extends DefaultMinisiteModule
 				
 				if ($this->params['show_subject_links'])
 				{
-					echo '<ul class="fieldLinks">';
+					echo '<ul class="subjectLinks">';
 					foreach ($buckets as $subject => $courses)
 					{	
 						echo '<li><a href="#'.preg_replace('/\W/', '', $subject).'">'.$subject.'</a></li>';
@@ -178,7 +180,7 @@ class CourseListModule extends DefaultMinisiteModule
 				
 				foreach ($buckets as $subject => $courses)
 				{
-					echo '<h3 class="careerField"><a name="'.preg_replace('/\W/', '', $subject).'">'.$subject.'</a></h3>';
+					echo '<h3 class="courseSubject"><a name="'.preg_replace('/\W/', '', $subject).'">'.$subject.'</a></h3>';
 					foreach ($courses as $html)
 						echo $html;
 				}			
@@ -203,19 +205,19 @@ class CourseListModule extends DefaultMinisiteModule
 		// more efficient that way.
 		
 		if ($this->params['get_site_courses'])
-			$this->courses = $this->courses + get_site_courses($this->site_id);
+			$this->courses = $this->courses + $this->helper->get_site_courses($this->site_id);
 
 		if ($this->params['get_page_courses'])
-			$this->courses = $this->courses + get_page_courses($this->get_source_page_id());
+			$this->courses = $this->courses + $this->helper->get_page_courses($this->get_source_page_id());
 
 		foreach ($this->params['get_courses_by_tags'] as $tag)
-			$this->courses = $this->courses + get_courses_by_category($tag);
+			$this->courses = $this->courses + $this->helper->get_courses_by_category($tag);
 		
 		if ($this->params['get_courses_by_page_categories'])
 			$this->courses = $this->courses + $this->get_page_category_courses();
 		
 		if ($this->params['get_courses_by_subjects'])
-			$this->courses = $this->courses + get_courses_by_subjects($this->params['get_courses_by_subjects'], 'academic_catalog_2014_site');
+			$this->courses = $this->courses + $this->helper->get_courses_by_subjects($this->params['get_courses_by_subjects'], 'academic_catalog_2014_site');
 
 		if ($this->params['get_courses_by_site_subjects'])
 			$this->courses = $this->courses + $this->get_courses_by_site_subjects();
@@ -223,7 +225,7 @@ class CourseListModule extends DefaultMinisiteModule
 		if ($this->params['randomize'])
 			shuffle($this->courses);
 		else
-			uasort($this->courses, 'sort_courses_by_name');		
+			uasort($this->courses, array($this->helper, 'sort_courses_by_name'));		
 	}
 	
 	protected function get_course_html($course)
@@ -344,7 +346,7 @@ class CourseListModule extends DefaultMinisiteModule
 
 		if ($cats = $this->get_page_categories())
 		{
-			$courses = get_courses_by_category($cats);
+			$courses = $this->helper->get_courses_by_category($cats);
 		}
 		
 		return $courses;
@@ -358,7 +360,7 @@ class CourseListModule extends DefaultMinisiteModule
 	protected function get_courses_by_site_subjects()
 	{
 		if ($codes = $this->get_site_subjects()) 
-			return get_courses_by_subjects($codes);
+			return $this->helper->get_courses_by_subjects($codes);
 		else
 			return array();
 	}
@@ -498,7 +500,7 @@ class CourseListModule extends DefaultMinisiteModule
 	{
 		$html = '<select id="courseSubjects">'."\n";
 		$html .= '<option value="">--</option>';	
-		foreach (get_course_subjects() as $subject)
+		foreach ($this->helper->get_course_subjects() as $subject)
 		{
 			$html .= '<option value="'.$subject.'">'.$subject.'</option>';	
 		}
@@ -520,7 +522,7 @@ class CourseListModule extends DefaultMinisiteModule
 		// Build the list of courses already on the page so we know what's selected
 		$this->build_course_list();
 		
-		if ($courses = get_courses_by_subjects(array($data), 'academic_catalog_2014_site'))
+		if ($courses = $this->helper->get_courses_by_subjects(array($data), 'academic_catalog_2014_site'))
 		{
 			foreach ($courses as $id => $course)
 			{

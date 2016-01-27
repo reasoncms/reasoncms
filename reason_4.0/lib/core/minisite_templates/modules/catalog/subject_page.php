@@ -30,10 +30,13 @@ class CatalogSubjectPageModule extends DefaultMinisiteModule
 
 	protected $courses = array();
 	protected $year = 2015;
+	protected $helper;
 	
 	public function init( $args = array() )
 	{
 		parent::init($args);
+		
+		$this->helper = new $GLOBALS['catalog_helper_class']();
 		
 		if (preg_match('/\d{4}/', unique_name_of($this->site_id), $matches))
 			$this->year = (int) $matches[0];
@@ -288,8 +291,8 @@ class CatalogSubjectPageModule extends DefaultMinisiteModule
 			$function = 'get_courses_by_'.$key;
 			if (method_exists($this, $function))
 				$courses = array_merge($courses, $this->$function(array($val), $this->site_id));
-			else if (function_exists($function))
-				$courses = array_merge($courses, $function(array($val), $this->site_id));
+			else if (method_exists($this->helper, $function))
+				$courses = array_merge($courses, $this->helper->$function(array($val), $this->site_id));
 			else
 			{
 				trigger_error('No course function found: '.$function);
@@ -315,7 +318,7 @@ class CatalogSubjectPageModule extends DefaultMinisiteModule
 					$course->set_academic_year_limit($this->year);
 					$html .= '<li>'.$this->get_course_title($course);
 					if (!$history = $course->get_offer_history())
-						$html .= ' (not offered in '.get_display_year($this->year).')';
+						$html .= ' (not offered in '.$this->helper->get_display_year($this->year).')';
 					$html .= '</li>'."\n";
 				}
 				$html .= '</ul>'."\n";
@@ -438,7 +441,7 @@ class CatalogSubjectPageModule extends DefaultMinisiteModule
 			}
 			$history = join(', ', $terms);
 		} else {
-			$history = '<span class="courseAttributesOffered">Not offered '.get_display_year($this->year).'</span>';
+			$history = '<span class="courseAttributesOffered">Not offered '.$this->helper->get_display_year($this->year).'</span>';
 		}
 		return $history;
 	}
