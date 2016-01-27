@@ -888,22 +888,6 @@ div.feedHelp
 	margin-bottom:2em;
 	font-size:90%;
 }
-/* Club Sports */
-div#clubSport div.images {
-	background-color: #E3EDFF;
-	padding: 5px;
-	float: right;
-	border: 1px solid #C8D5EF;
-	margin-left: 20px;
-	margin-bottom: 5px;
-	text-align: center;
-}
-div#clubSport div.images div.tnImage {
-	margin: 10px 10px 2px;
-}
-div#clubSport div.images div.tnDesc {
-	margin: 2px 10px 10px;
-}
 /* Jobs */
 td.navigationTD div#allJobs {
 	padding: 10px;
