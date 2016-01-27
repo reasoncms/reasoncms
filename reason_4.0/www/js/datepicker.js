@@ -16,7 +16,7 @@ var datepickerCallbacks = {
 	"dateset": {},
 	"redraw": {},
 	"domcreate": {},
-	"dombuttoncreate": {},
+	"dombuttoncreate": {}
 };
 
 var addDatepickerCallback = function(dpId, dpEvent, fxn) {
