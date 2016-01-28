@@ -411,7 +411,7 @@ class CourseImportEngine
 					if ($this->verbose) $this->errors[] = 'Unchanged: '.$name;	
 				}
 				
-				$key = array_search($course->id(), $existing);
+				$key = array_search($section->id(), $existing);
 				if ($key !== false) unset($existing[$key]);
 			}
 			else
