@@ -316,7 +316,7 @@ class CatalogSubjectPageModule extends DefaultMinisiteModule
 				foreach ($courses as $course)
 				{
 					$course->set_academic_year_limit($this->year);
-					$html .= '<li>'.$this->get_course_title($course);
+					$html .= '<li>'.$course->get_value('display_title');
 					if (!$history = $course->get_offer_history())
 						$html .= ' (not offered in '.$this->helper->get_display_year($this->year).')';
 					$html .= '</li>'."\n";
@@ -329,25 +329,6 @@ class CatalogSubjectPageModule extends DefaultMinisiteModule
 			}
 			return $html;
 		}
-	}
-
-	/**
-	 * Given a course object, generate a default HTML snippet for its title. Override this if you
-	 * want to use a diffferent pattern.
-	 * 
-	 * @param object $course
-	 * @return string
-	 */
-	protected function get_course_title($course)
-	{
-		$html = '<span class="courseNumber" course="course_'.$course->id().'_'.$this->year.'">';
-		$html .= $course->get_value('org_id').' '.$course->get_value('course_number');
-		$html .= '</span> ';
-		$html .= '<span class="courseTitle">';
-		$html .= $course->get_value('title');
-		$html .= '</span> ';
-	
-		return $html;
 	}
 
 	/**
@@ -381,14 +362,14 @@ class CatalogSubjectPageModule extends DefaultMinisiteModule
 			$details[] = join(', ', $requirements);	
 		}
 		
-		if ($history = $this->get_course_offer_history_html($course))
+		if ($history = $course->get_offer_history_html())
 		{
 			$details[] = $history;
 		}
 		
-		if ($faculty = $this->get_course_faculty_html($course))
+		if ($faculty = $course->get_value('display_faculty'))
 		{
-			$details[] = $faculty;	
+			$details[] = $faculty;
 		}
 		
 		if (isset($details))
@@ -399,52 +380,6 @@ class CatalogSubjectPageModule extends DefaultMinisiteModule
 		return $html;
 	}
 	
-	/**
-	 * Given a course object, generate a default HTML snippet for displaying faculty details for the 
-	 * current academic year. Override this if you want to use a diffferent pattern.
-	 * 
-	 * @param object $course
-	 * @return string
-	 */
-	function get_course_faculty_html($course)
-	{
-		if ($fac_data = $course->get_value('faculty'))
-		{
-			foreach ($fac_data as $id => $name)
-			{
-				list($last, $first) = explode(', ', $name);
-				$faculty[$id] = mb_substr($first, 0, 1, 'UTF-8').'. '.$last;
-			}
-			return '<span class="courseAttributesInstructor">'.join(', ', $faculty).'</span>';	
-		}
-	
-	}
-	
-	/**
-	 * Given a course object, generate a default HTML snippet for displaying details about if and
-	 * when the course is offered in the current academic year. Override this if you want to use a 
-	 * diffferent pattern.
-	 * 
-	 * @param object $course
-	 * @return string
-	 */
-	function get_course_offer_history_html($course)
-	{
-		if ($history = $course->get_offer_history())
-		{
-			$term_names = array('SU'=>'Summer','FA'=>'Fall','WI'=>'Winter','SP'=>'Spring');
-			
-			foreach ($history as $term)
-			{
-				list(,$termcode) = explode('/', $term);
-				$terms[$termcode] = $term_names[$termcode];
-			}
-			$history = join(', ', $terms);
-		} else {
-			$history = '<span class="courseAttributesOffered">Not offered '.$this->helper->get_display_year($this->year).'</span>';
-		}
-		return $history;
-	}
 	/**
 	 * Given a course object, generate a default HTML block for displaying it. Override this if you
 	 * want to use a diffferent pattern.
@@ -457,7 +392,7 @@ class CatalogSubjectPageModule extends DefaultMinisiteModule
 		$course->set_academic_year_limit($this->year);
 
 		$html = '<div class="courseContainer">'."\n";
-		$html .= $this->get_course_title($course);
+		$html .= $course->get_value('display_title');
 		$html .= $this->get_course_extended_description($course);
 		$html .= '</div>'."\n";
 		
