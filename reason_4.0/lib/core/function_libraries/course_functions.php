@@ -16,6 +16,9 @@ $GLOBALS['course_template_class'] = 'CourseTemplateType';
 $GLOBALS['course_section_class'] = 'CourseSectionType';
 $GLOBALS['catalog_helper_class'] = 'CatalogHelper';
 
+// Working with catalog data we need to be always in UTF8
+mysql_set_charset('utf8');
+
 class CourseTemplateEntityFactory
 {
 	public function get_entity(&$row)
@@ -147,25 +150,6 @@ class CourseTemplateType extends Entity
 			$long_description = parent::get_value('long_description', $refresh);
 		
 		return $long_description;
-	}
-	
-	/**
-	  * Return an array of faculty who teach sections of this course.
-	  * 
-	  * @return array id => name
-	  */
-	public function get_value_faculty($refresh = false)
-	{
-		$sections = $this->get_sections();
-		$faculty = array();
-		foreach ( $sections as $key => $section)
-		{
-			if ($fac = $section->get_value('faculty', $refresh))
-			{
-				$faculty = $faculty + $fac;
-			}
-		}
-		return $faculty;
 	}
 
 	/**
@@ -307,17 +291,6 @@ class CourseSectionType extends Entity
 		{
 			return parent::get_value($col, $refresh);
 		}
-	}
-	
-	public function get_value_faculty($refresh = false)
-	{
-		$this->fetch_faculty_data($refresh);
-		$faculty = array();
-		foreach ($this->external_data['faculty'] as $id => $data)
-		{
-			$faculty[$id] = $data['Carleton_Name'];
-		}
-		return $faculty;
 	}
 	
 	/**
