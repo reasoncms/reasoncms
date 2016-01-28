@@ -153,6 +153,25 @@ class CourseTemplateType extends Entity
 	}
 
 	/**
+	 * Generate a default HTML snippet for the course title. Override this if you
+	 * want to use a diffferent pattern.
+	 * 
+	 * @param boolean $refresh
+	 * @return string
+	 */
+	protected function get_value_display_title($refresh = false)
+	{
+		$html = '<span class="courseNumber" course="course_'.$this->id().'_'.$this->limit_to_year.'">';
+		$html .= $this->get_value('org_id', $refresh).' '.$this->get_value('course_number', $refresh);
+		$html .= '</span> ';
+		$html .= '<span class="courseTitle">';
+		$html .= $this->get_value('title', $refresh);
+		$html .= '</span> ';
+	
+		return $html;
+	}
+	
+	/**
 	  * Returns an array of the academic terms in which this course was offered, formatted as
 	  * ( start_date => term_name), sorted by date. Only one element exists per term, even if
 	  * multiple sections of this course are offered in a given term.
@@ -168,6 +187,34 @@ class CourseTemplateType extends Entity
 		}
 		ksort($history);
 		return $history;
+	}
+	
+	/**
+	 * Generate a default HTML snippet for displaying details about if and
+	 * when the course is offered in the current academic year. Override this if you want to use a 
+	 * different pattern.
+	 * 
+	 * @param boolean $honor_limit Whether to honor existing year restriction
+	 * @return string
+	 */
+	function get_offer_history_html($honor_limit = true)
+	{
+		if ($terms = $this->get_offer_history($honor_limit))
+		{
+			$term_names = array('SU'=>'Summer','FA'=>'Fall','WI'=>'Winter','SP'=>'Spring');
+			
+			foreach ($terms as $term)
+			{
+				list(,$termcode) = explode('/', $term);
+				$offered[$termcode] = $term_names[$termcode];
+			}
+			$history = join(', ', $offered);
+		} else if ($this->limit_to_year) {
+			$history = 'Not offered '.$this->helper->get_display_year($this->limit_to_year);
+		}
+		
+		if (!empty($history))
+			return '<span class="courseAttributesOffered">'.$history.'</span>';
 	}
 	
 	/**
@@ -583,10 +630,13 @@ class CatalogHelper
 	 */
 	public function term_to_academic_year($term)
 	{
-		list($year,$term) = explode('/',$term);
-		$year = 2000 + $year;
-		if (($term == 'WI') || ($term == 'SP')) $year--;
-		return $year;
+		if ($term)
+		{
+			list($year,$term) = explode('/',$term);
+			$year = 2000 + $year;
+			if (($term == 'WI') || ($term == 'SP')) $year--;
+			return $year;
+		}
 	}
 
 	/**
@@ -613,5 +663,24 @@ class CatalogHelper
 	public function get_catalog_year_end_date($year)
 	{
 		return ($year + 1).'-07-01 00:00:00';
+	}
+	
+	public function get_catalog_blocks($year, $org_id, $type)
+	{
+		if ($site = id_of('academic_catalog_'.$year.'_site'))
+		{
+			$es = new entity_selector( $site );
+			$es->description = 'Selecting catalog blocks on site';
+			$es->add_type( id_of('course_catalog_block_type') );
+			$es->add_relation('org_id = "'.carl_util_sql_string_escape($org_id).'"');
+			$es->add_relation('block_type = "'.carl_util_sql_string_escape($type).'"');
+			if ($results = $es->run_one())
+				return $results;
+		}
+		else
+		{
+			trigger_error('No catalog site for '.$year.' in get_catalog_block()');
+		}
+		return array();
 	}
 }
