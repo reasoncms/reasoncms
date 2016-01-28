@@ -50,7 +50,7 @@ class CatalogSubjectPageModule extends DefaultMinisiteModule
 			if (isset($this->request['get_course']))
 			{
 				list(,$course_id,$this->year) = explode('_', $this->request['get_course']);
-				$course = new CourseTemplateType($course_id);
+				$course = new $GLOBALS['course_template_class']($course_id);
 				$course->set_academic_year_limit($this->year);
 				$description_title = '<span class="courseTitle">'.$course->get_value('title').'</span> ';
 				echo json_encode(array(
