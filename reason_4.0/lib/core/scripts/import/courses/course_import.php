@@ -87,7 +87,19 @@ class CourseImportEngine
 			'sourced_id' => null,
 			'parent_template_id' => null,
 			);
-		
+	
+	/**
+	 * Whether to automatically delete course templates that disappear from the source data feed.
+	 * @var boolean
+	 */
+	protected $delete_missing_templates = false;
+
+	/**
+	 * Whether to automatically delete course sections that disappear from the source data feed.
+	 * @var boolean
+	 */
+	protected $delete_missing_sections = true;
+	
 	/**
 	  * Import error logging; no customization required.
 	  */
@@ -121,7 +133,7 @@ class CourseImportEngine
 			{
 				if ($mapped_data = $this->map_course_template_data($raw_data))
 				{
-					$this->build_course_template_entities($mapped_data, $this->get_existing_template_ids($org_id));
+					$this->build_course_template_entities($mapped_data, $this->get_existing_template_ids($org_id), $this->delete_missing_templates);
 					unset($raw_data);
 					unset($mapped_data);
 				}
@@ -148,7 +160,7 @@ class CourseImportEngine
 				if ($mapped_data = $this->map_course_section_data($raw_data))
 				{
 					echo "\n3. ". memory_get_usage() . "\n";
-					$this->build_course_section_entities($mapped_data);
+					$this->build_course_section_entities($mapped_data, $this->get_existing_section_ids($org_id), $this->delete_missing_sections);
 					unset($raw_data);
 					unset($mapped_data);
 					echo "\n4. ". memory_get_usage() . "\n";
@@ -373,7 +385,7 @@ class CourseImportEngine
 	  * @param array data row
 	  * @return string
 	  */
-	protected function build_course_section_entities($data)
+	protected function build_course_section_entities($data, $existing = array(), $delete = false)
 	{
 		if ($this->verbose) echo "Building section entities\n";
 		$creator = get_user_id($this->entity_creator);
@@ -398,6 +410,9 @@ class CourseImportEngine
 				{
 					if ($this->verbose) $this->errors[] = 'Unchanged: '.$name;	
 				}
+				
+				$key = array_search($course->id(), $existing);
+				if ($key !== false) unset($existing[$key]);
 			}
 			else
 			{
@@ -418,6 +433,17 @@ class CourseImportEngine
 			if (!empty($section))
 				$this->link_section_to_parent($section);
 		}
+		
+		if (count($existing))
+		{
+			foreach ($existing as $id)
+			{
+				$course = new $GLOBALS['course_section_class']($id);
+				$this->errors[] = 'No longer in feed: '.$course->get_value('course_number').': '.$course->get_value('name');
+				if ($delete) reason_expunge_entity($id, $creator);
+			}
+		}
+
 	}
 	
 	/**
