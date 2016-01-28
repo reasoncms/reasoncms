@@ -127,25 +127,28 @@ img.roundedCorner {width: 6px; height: 6px; border: none; display: block; }
 	font-size:1em;
 }
 .viewFilter tr.submitRow input, .viewFilter tr#discoSubmitRow input {
-	background-color:#e9eef8;
+	background-color:#738EBF;
 	border:1px solid #738EBF;
-	padding:5px 8px;
-	color:#385790;
-	text-transform:uppercase;
-	font-weight:bold;
+	border-right:1px solid #5f7aa9;
+	border-bottom:1px solid #516ea2;
+	padding:7px 12px;
+	color:#fff;
 	cursor:pointer;
 	font-size:1em;
 	letter-spacing:0.05em;
 	border-radius:5px;
 }
-.viewFilter tr.submitRow input:hover, .viewFilter tr#discoSubmitRow input:hover {
-	background-color:#fff;
+.viewFilter tr.submitRow input:hover, .viewFilter tr#discoSubmitRow input:hover, .viewFilter tr.submitRow input:focus, .viewFilter tr#discoSubmitRow input:focus {
+	background-color:#516ea2;
+	border:1px solid #516ea2;
+	border-right:1px solid #43649f;
+	border-bottom:1px solid #355691;
 }
-.viewFilter tr.submitRow input.clear, .viewFilter tr#discoSubmitRow input[name="clear"] {
-	background-color:#c5d2eb;
-}
-.viewFilter tr.submitRow input.clear:hover, .viewFilter tr#discoSubmitRow input[name="clear"]:hover {
-	background-color:#e9eef8;
+.viewFilter tr.submitRow input:active, .viewFilter tr#discoSubmitRow input:active {
+	background-color:#32528d;
+	border:1px solid #132a52;
+	border-right:1px solid #32528d;
+	border-bottom:1px solid #32528d;
 }
 .addLink {
 	margin-bottom: 15px;
@@ -639,23 +642,25 @@ body {
 	/* background-color: #FAEEBF; */
 	/* background-color: #D6DEC6; */
 }
+
 .listRow1 td:not(.viewerCol_id), .listRow2 td:not(.viewerCol_id) { 
   /* These are technically the same, but use both */
   overflow-wrap: break-word;
   word-wrap: break-word;
 
   -ms-word-break: break-all;
-  /* This is the dangerous one in WebKit, as it breaks things wherever */
+  //This is the dangerous one in WebKit, as it breaks things wherever */
   word-break: break-all;
-  /* Instead use this non-standard one: */
+  //Instead use this non-standard one: */
   word-break: break-word;
 
-  /* Adds a hyphen where the word breaks, if supported (No Blink) */
-  -ms-hyphens: auto;
+  //Adds a hyphen where the word breaks, if supported (No Blink) */
+  /* -ms-hyphens: auto;
   -moz-hyphens: auto;
   -webkit-hyphens: auto;
-  hyphens: auto;
+  hyphens: auto; */
 }
+
 td.viewerCol_name img {
 	max-width:15vw;
 	height:auto;
@@ -664,6 +669,15 @@ td.viewerCol_name img {
 	td.viewerCol_id {
 		font-size:.84em;
 	}
+}
+td.viewerCol_admin {
+	color:#999;
+}
+td.viewerCol_admin strong {
+	font-weight:normal;
+}
+td.viewerCol_admin strong a {
+	font-weight:bold;
 }
 form {
 	margin: 0px;
@@ -763,7 +777,7 @@ header .user {
 	}
 }
 .listTools {
-	max-width:40em;
+	max-width:54em;
 }
 .layout:after, .listTools:after {
 	content:"";
@@ -814,7 +828,10 @@ header .user {
 	}
 }
 .list {
-	margin-top: 5px;
+	margin:.85em 0;
+}
+.list>table {
+	min-width:80%;
 }
 .roundedContent {
 	padding-right: 10px;
@@ -824,6 +841,7 @@ header .user {
 	background-color: #C5D2EB;
 	background-image: url(../../ui_images/1px_white.gif);
 	background-repeat: repeat-x;
+	text-align:left;
 	/* background-color: #F6E5A1; */
 	/* background-color: #C0CBA8; */
 }
@@ -833,6 +851,13 @@ header .user {
 }.assocHead {
 	font-weight: bold;
 	clear:both;
+	margin:1em 0;
+}
+.assocAdd .addLink>a {
+	display:inline-block;
+}
+.associatedItemsWrapper {
+	margin-bottom:2.5em;
 }
 .oldBrowserAlert {
 	font-weight: bold;
