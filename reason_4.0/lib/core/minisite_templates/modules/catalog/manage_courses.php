@@ -137,7 +137,7 @@ class ManageCoursesModule extends DefaultMinisiteModule
 		// If a request has been made to deactivate a course, do that and reload
 		if (!empty($this->request['deactivate']))
 		{
-			$course = new CourseTemplateType($this->request['deactivate']);
+			$course = new $GLOBALS['course_template_class']($this->request['deactivate']);
 			$this->toggle_course_in_site($course, $this->catalog_site_id, 'remove');
 			header( 'Location: '. carl_make_redirect(array('deactivate'=>null)));
 			exit;
@@ -146,7 +146,7 @@ class ManageCoursesModule extends DefaultMinisiteModule
 		// If a request has been made to activate a course, do that and reload
 		if (!empty($this->request['activate']))
 		{
-			$course = new CourseTemplateType($this->request['activate']);
+			$course = new $GLOBALS['course_template_class']($this->request['activate']);
 			$this->toggle_course_in_site($course, $this->catalog_site_id, 'add');
 			header( 'Location: '. carl_make_redirect(array('activate'=>null)));
 			exit;
