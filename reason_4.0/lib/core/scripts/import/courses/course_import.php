@@ -121,6 +121,7 @@ class CourseImportEngine
 	public function run()
 	{	
 		connectDB(REASON_DB);
+		mysql_set_charset('utf8');
 		
 		$this->disable_output_buffering();
 		if ($this->verbose) echo "<pre>Running\n";
@@ -128,7 +129,6 @@ class CourseImportEngine
 		if (!$org_ids = $this->get_template_org_ids()) $org_ids = array(null);
 		foreach ($org_ids as $org_id)
 		{
-			echo "\n". memory_get_usage() . "\n";
 			if ($raw_data = $this->get_course_template_data($org_id))
 			{
 				if ($mapped_data = $this->map_course_template_data($raw_data))
@@ -153,17 +153,13 @@ class CourseImportEngine
 		if (!$org_ids = $this->get_section_org_ids()) $org_ids = array(null);
 		foreach ($org_ids as $org_id)
 		{
-			echo "\n1. ". memory_get_usage() . "\n";
 			if ($raw_data = $this->get_course_section_data($org_id))
 			{
-				echo "\n2. ". memory_get_usage() . "\n";
 				if ($mapped_data = $this->map_course_section_data($raw_data))
 				{
-					echo "\n3. ". memory_get_usage() . "\n";
 					$this->build_course_section_entities($mapped_data, $this->get_existing_section_ids($org_id), $this->delete_missing_sections);
 					unset($raw_data);
 					unset($mapped_data);
-					echo "\n4. ". memory_get_usage() . "\n";
 				}
 				else
 				{
@@ -220,8 +216,14 @@ class CourseImportEngine
 	}
 
 	/**
-	 * This is a set of rules for excluding course templates from being imported.
-	 *
+	 * This is a set of rules for excluding course templates from being imported. The method is 
+	 * passed a single row of data produced by get_course_template_data(), and based on the values
+	 * in that row you can pass true or false to indicate whether the row should be discarded.
+	 * This is helpful if you need to exclude courses based on values that are difficult to
+	 * restrict in your initial query.
+	 * 
+	 * @param type $row
+	 * @return boolean
 	 */
 	protected function should_exclude_course_template($row)
 	{
@@ -246,8 +248,14 @@ class CourseImportEngine
 	}
 
 	/**
-	 * This is a set of rules for excluding course sections from being imported.
-	 *
+	 * This is a set of rules for excluding course templates from being imported. The method is 
+	 * passed a single row of data produced by get_course_template_data(), and based on the values
+	 * in that row you can pass true or false to indicate whether the row should be discarded.
+	 * This is helpful if you need to exclude courses based on values that are difficult to
+	 * restrict in your initial query.
+	 * 
+	 * @param type $row
+	 * @return boolean
 	 */
 	protected function should_exclude_course_section($row)
 	{
@@ -349,6 +357,7 @@ class CourseImportEngine
 			{
 				if ($this->verbose) $this->errors[] = 'Adding '.$name;
 				$row['new'] = 0;
+				$this->process_new_course_template($row);
 				reason_create_entity( id_of($this->courses_site), id_of('course_template_type'), $creator, $name, $row);
 			}
 		}
@@ -362,9 +371,21 @@ class CourseImportEngine
 				if ($delete) reason_expunge_entity($id, $creator);
 			}
 		}
-		
 	}
 
+	/**
+	 * This method provides a hook that is run before a new course template is added to Reason.
+	 * If you want to modify values based on existing entities, or do something else when you know
+	 * that a template is new, you can do that here. The data row representing the template is
+	 * passed and updated by reference.
+	 * 
+	 * @param type $row
+	 */
+	protected function process_new_course_template(&$row)
+	{
+		
+	}
+	
 	/**
 	  * Construct the template entity name (only visible in the Reason admin). You can modify this 
 	  * method if you want your names constructed differently.
@@ -420,6 +441,7 @@ class CourseImportEngine
 				{
 					if ($this->verbose) $this->errors[] = 'Adding: '.$name;
 					$row['new'] = 0;
+					$this->process_new_course_section($row);
 					$id = reason_create_entity( id_of($this->courses_site), id_of('course_section_type'), $creator, $name, $row);
 					$section = new entity($id);
 				}
@@ -446,6 +468,19 @@ class CourseImportEngine
 
 	}
 	
+	/**
+	 * This method provides a hook that is run before a new course template is added to Reason.
+	 * If you want to modify values based on existing entities, or do something else when you know
+	 * that a template is new, you can do that here. The data row representing the template is
+	 * passed and updated by reference.
+	 * 
+	 * @param type $row
+	 */
+	protected function process_new_course_section(&$row)
+	{
+		
+	}
+
 	/**
 	  * Construct the section entity name (only visible in the Reason admin). You can modify this 
 	  * method if you want your names constructed differently.
@@ -583,6 +618,14 @@ class CourseImportEngine
 			reason_expunge_entity($id, $user);
 		}
 		unset($ids);
+		
+		// Clear any defunct relationships
+		$q = 'DELETE FROM relationship WHERE type in ('.  
+			relationship_id_of('course_section_to_category') . ',' .
+			relationship_id_of('course_template_to_course_section') . ',' .
+			relationship_id_of('site_owns_course_section_type') . ',' .
+			relationship_id_of('site_borrows_course_section_type') . ')';
+		db_query( $q, 'Unable to delete relationships of entity '.$id );
 	}
 	
 	/**
