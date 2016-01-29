@@ -101,6 +101,8 @@ div#requirementsItem, div#gradingItem, div#creditsItem {
 div#sectionsItem {
 	width: 45%;
 	float: right;
+	font-size: 0.85em;
+	line-height: 1.2;
 }
 
 ul#courseInfo {
