@@ -383,6 +383,9 @@ class CourseSectionType extends Entity
 	}
 }
 
+
+
+
 /**
  * A collection of methods for working with catalog and course data. You will probably want to
  * extend this class locally to meet your particular needs.
@@ -399,6 +402,10 @@ class CatalogHelper
 			$this->year = $year;
 			if (!$this->site = id_of('academic_catalog_'.$year.'_site'))
 				trigger_error('No catalog site for '.$year.' in CatalogHelper');
+		}
+		else
+		{
+			$this->year = $this->get_latest_catalog_year();
 		}
 	}
 	
@@ -612,19 +619,48 @@ class CatalogHelper
 	 */
 	public function get_catalog_years()
 	{
-		$return = array();
-		$names = array_flip(reason_get_unique_names());
-		if ($catalogs = preg_grep('/^academic_catalog_\d{4}_site$/', $names))
+		static $catalog_years = array();
+		if (empty($catalog_years))
 		{
-			foreach ($catalogs as $catalog)
+			$names = array_flip(reason_get_unique_names());
+			if ($catalogs = preg_grep('/^academic_catalog_\d{4}_site$/', $names))
 			{
-				preg_match('/^academic_catalog_(\d{4})_site$/', $catalog, $matches);
-				$return[$matches[1]] = $matches[1];
+				foreach ($catalogs as $catalog)
+				{
+					preg_match('/^academic_catalog_(\d{4})_site$/', $catalog, $matches);
+					$catalog_years[$matches[1]] = $catalog;
+				}
+				krsort($catalog_years);
 			}
 		}
-		return $return;
+		return $catalog_years;
 	}
 
+	/**
+	 * Return the most recent year for which there is a live catalog site
+	 * 
+	 * @return integer
+	 */
+	public function get_latest_catalog_year()
+	{
+		static $latest_year = 0;
+		
+		if (empty($latest_year) && $catalog_years = $this->get_catalog_years())
+		{
+			foreach ($catalog_years as $year => $site)
+			{
+				$site = new entity(id_of($site));
+				if ($site->get_value('state') === 'Live')
+				{
+					$latest_year = $year;
+					break;
+				}
+			}
+		}
+		
+		return $latest_year;
+	}
+	
 	/**
 	 * Convert a bare year (e.g. 2015) into an academic year display (e.g. 2015-16)
 	 * 
