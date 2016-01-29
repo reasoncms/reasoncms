@@ -388,6 +388,19 @@ class CourseSectionType extends Entity
  */
 class CatalogHelper
 {
+	protected $year;
+	protected $site;
+	
+	public function __construct($year = null)
+	{
+		if ($year)
+		{
+			$this->year = $year;
+			if (!$this->site = id_of('academic_catalog_'.$year.'_site'))
+				trigger_error('No catalog site for '.$year.' in CatalogHelper');
+		}
+	}
+	
 	/**
 	  * Find courses that have been attached to the specified page.
 	  *
@@ -683,4 +696,171 @@ class CatalogHelper
 		}
 		return array();
 	}
+	
+/**
+	 * Catalog content can contain tags (in {}) that dynamically include lists of courses based on
+	 * values on the course objects. This method detects those tags and calls get_course_list() to 
+	 * generate the appropriate list, which is then swapped in for the tag.
+	 * 
+	 * @param string $content
+	 * @return string
+	 */
+	public function expand_catalog_tags($content)
+	{
+		if (preg_match_all('/\{([^\}]+)\}/', $content, $tags, PREG_SET_ORDER))
+		{
+			foreach ($tags as $tag)
+			{
+				// This is looking for {type key1="value" key2="value"} but it's very forgiving about 
+				// extra spaces or failure to use the right quotes.
+				if (preg_match('/\s*([^\s=]+)(\s+([^\s=]+)\s*=\s*["\']?([^"\'\b]+)["\'\b])*/', $tag[1], $matches))
+				{
+					$type = strtolower($matches[1]);
+					for ($i = 2; $i < count($matches); $i = $i + 3)
+					{
+						$keys[$matches[$i + 1]] = $matches[$i + 2];
+					}
+					
+					if (!$courses = $this->get_course_list($type, $keys))
+						$courses = '<strong>No courses found for '.$tag[0].'</strong>';
+					
+					$content = str_replace($tag[0], $courses, $content);	
+					
+				}
+				else
+				{
+					trigger_error('Badly formed catalog tag: '.$tag[1]);
+				}
+			}
+		}
+		
+		return $content;
+	}
+
+	/**
+	 * Catalog content can contain tags (in {}) that dynamically include lists of courses based on
+	 * values on the course objects. This method takes the values from a tag and generates html for
+	 * the corresponding courses. It uses an extension pattern so that custom methods/functions can 
+	 * be defined to handle the generation of course lists for particular keys.
+	 *  
+	 * @param string $type What kind of list to generate (titles/descriptions)
+	 * @param array $keys Key value pairs used to select the courses in the list
+	 * @return string
+	 */
+	public function get_course_list($type, $keys)
+	{
+		$courses = array();
+		foreach ($keys as $key => $val)
+		{
+			$function = 'get_courses_by_'.$key;
+			if (method_exists($this, $function))
+				$courses = array_merge($courses, $this->$function(array($val), $this->site));
+			//else if (method_exists($this->helper, $function))
+			//	$courses = array_merge($courses, $this->helper->$function(array($val), $this->site_id));
+			else
+			{
+				trigger_error('No course function found: '.$function);
+			}
+		}
+		
+		if ($courses)
+		{
+			$html = '';
+			
+			if ($type == 'descriptions')
+			{
+				foreach ($courses as $course)
+				{
+					$html .= $this->get_course_html($course);
+				}
+			}
+			else if ($type == 'titles')
+			{
+				$html .= '<ul class="courseList">'."\n";
+				foreach ($courses as $course)
+				{
+					$course->set_academic_year_limit($this->year);
+					$html .= '<li>'.$course->get_value('display_title');
+					if (!$history = $course->get_offer_history())
+						$html .= ' (not offered in '.$this->get_display_year($this->year).')';
+					$html .= '</li>'."\n";
+				}
+				$html .= '</ul>'."\n";
+			}
+			else
+			{
+				trigger_error('Unrecognized catalog tag type: '.$type);
+			}
+			return $html;
+		}
+	}
+
+	/**
+	 * Given a course object, generate a default HTML snippet for its description. Override this if you
+	 * want to use a diffferent pattern.
+	 * 
+	 * @param object $course
+	 * @return string
+	 */
+	public function get_course_extended_description($course)
+	{
+		// Strip off surrounding paragraph tags
+		$description = preg_replace(array('/^<p[^>]*>/','/<\/p>$/'), '', $course->get_value('long_description'));
+		if ($prereqs = $course->get_value('list_of_prerequisites'))
+			$description .= ' <span class="prereqLabel">Prerequisite:</span> '.trim($prereqs, " .").'. ';
+
+		$html = '<span class="courseDescription">'. $description .'</span>';
+		
+		if ($credit = $course->get_value('credits'))
+		{
+			$details[] = $credit . (($credit == 1) ? ' credit' : ' credits');	
+		}
+		
+		if ($grading = $course->get_value('grading'))
+		{
+			$details[] = $grading;	
+		}
+
+		if ($requirements = $course->get_value('requirements'))
+		{
+			$details[] = join(', ', $requirements);	
+		}
+		
+		if ($history = $course->get_offer_history_html())
+		{
+			$details[] = $history;
+		}
+		
+		if ($faculty = $course->get_value('display_faculty'))
+		{
+			$details[] = $faculty;
+		}
+		
+		if (isset($details))
+		{
+			$html .= ' '.ucfirst(join('; ', $details));	
+		}
+		
+		return $html;
+	}
+	
+	/**
+	 * Given a course object, generate a default HTML block for displaying it. Override this if you
+	 * want to use a diffferent pattern.
+	 * 
+	 * @param object $course
+	 * @return string
+	 */
+	public function get_course_html($course)
+	{		
+		$course->set_academic_year_limit($this->year);
+
+		$html = '<div class="courseContainer">'."\n";
+		$html .= $course->get_value('display_title');
+		$html .= $this->get_course_extended_description($course);
+		$html .= '</div>'."\n";
+		
+		return $html;
+	}
+	
 }
