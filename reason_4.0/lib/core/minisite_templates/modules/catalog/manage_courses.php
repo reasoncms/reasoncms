@@ -50,11 +50,11 @@ class ManageCoursesModule extends DefaultMinisiteModule
 	
 
 	protected $elements = array(//{{{
-		'course_info'=>array(
-			'type'=>'comment',
-			),
 		'sections'=>array(
 			'type'=>'checkboxgroup_no_sort',
+			),
+		'course_info'=>array(
+			'type'=>'comment',
 			),
 		'subject'=>array(
 			'type'=>'select',
@@ -188,7 +188,6 @@ class ManageCoursesModule extends DefaultMinisiteModule
 		
 		if (isset($this->course))
 		{
-			echo '<h3>Edit '.$this->course->get_value('org_id'). ' ' .$this->course->get_value('course_number') .'</h3>';
 			echo $this->get_course_editor($this->course);
 		}
 		else if (isset($this->request['subject']))
@@ -474,7 +473,8 @@ class ManageCoursesModule extends DefaultMinisiteModule
 			foreach ($this->sourced_elements as $element)
 				$this->form->change_element_type($element, 'solidtext');
 			
-			$info = '<ul id="courseInfo">';
+			$info = '<h3>'.$this->course->get_value('org_id'). ' ' .$this->course->get_value('course_number') .'</h3>';
+			$info .= '<ul id="courseInfo">';
 			$info .= '<li>Course ID: '.$course->get_value('sourced_id').'</li>'."\n";
 			if ($start = $course->get_value('start_date'))
 				$start = date('M d, Y', strtotime($start));
