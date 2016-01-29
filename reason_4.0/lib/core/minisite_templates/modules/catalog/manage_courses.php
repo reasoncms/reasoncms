@@ -129,8 +129,8 @@ class ManageCoursesModule extends DefaultMinisiteModule
 		}
 
 		// Set the year to the selected year, or, by default, the latest catalog
-		$this->catalog_years = $this->helper->get_catalog_years();
-		$this->year = (isset($this->request['year'])) ? $this->request['year'] : end($this->catalog_years);
+		$this->catalog_years = array_keys($this->helper->get_catalog_years());
+		$this->year = (isset($this->request['year'])) ? $this->request['year'] : reset($this->catalog_years);
 		$this->catalog_site_id = id_of('academic_catalog_'.$this->year.'_site');
 		$this->elements['display_in_catalog']['display_name'] = 'Display in '.$this->year.' Catalog';
 
