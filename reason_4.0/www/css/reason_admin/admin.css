@@ -1,3 +1,6 @@
+img {
+	max-width:100%;
+}
 a.skipLink {
 	position:absolute;
 	left:-9999px;
@@ -190,23 +193,33 @@ img.roundedCorner {width: 6px; height: 6px; border: none; display: block; }
 	padding: 4px;
 	margin-left: 15px;
 }
-div#preview table.itemData th, div#preview table.itemData td {
+div#preview div.listRow {
+	margin:.5em 0;
+}
+div#preview div.listRow:after {
+	content:"";
+	display:table;
+	clear:both;
+}
+div#preview div.listRow>h4.field {
 	margin:0;
-	padding:3px 5px;
-	border:none;
-	vertical-align:top;
-}
-div#preview table.itemData th {
-	font-size:80%;
-	color:#999;
-}
-div#preview table.itemData td.col1, div#preview table.itemData th.col1 {
+	float:left;
+	width:20%;
 	text-align:right;
-	font-weight:bold;
 }
-div#preview table.itemData td.col2, div#preview table.itemData th.col2 {
-	text-align:left;
-	font-weight:normal;
+div#preview div.listRow>div.value {
+	float:left;
+	padding-left:1em;
+	width:80%;
+	box-sizing:border-box;
+}
+@media all and (max-width:500px) {
+	div#preview div.listRow>h4.field, div#preview div.listRow>div.value {
+		padding:0;
+		float:none;
+		width:auto;
+		text-align:left;
+	}
 }
 div#previewRels ul {
 	list-style: none;
@@ -859,7 +872,7 @@ header .user {
 .associatedItemsWrapper {
 	margin-bottom:2.5em;
 }
-.oldBrowserAlert {
+	.oldBrowserAlert {
 	font-weight: bold;
 	color: #CC0000;
 }
