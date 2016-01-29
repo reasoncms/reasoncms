@@ -71,6 +71,7 @@ class CourseTemplateType extends Entity
 				foreach ( $sections as $key => $section)
 				{
 					$this->sections[$section->id()] = new $GLOBALS['course_section_class']($section->id());
+					$this->sections[$section->id()]->get_values();
 				}
 			}
 		}
