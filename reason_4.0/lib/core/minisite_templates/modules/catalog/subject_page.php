@@ -35,12 +35,12 @@ class CatalogSubjectPageModule extends DefaultMinisiteModule
 	public function init( $args = array() )
 	{
 		parent::init($args);
-		
-		$this->helper = new $GLOBALS['catalog_helper_class']();
-		
+				
 		if (preg_match('/\d{4}/', unique_name_of($this->site_id), $matches))
 			$this->year = (int) $matches[0];
 		
+		$this->helper = new $GLOBALS['catalog_helper_class']($this->year);
+
 		// If we're in ajax mode, we just return the data and quit the module.
 		$api = $this->get_api();
 		if ($api && ($api->get_name() == 'standalone'))
