@@ -1,6 +1,9 @@
 img {
 	max-width:100%;
 }
+.viewerCol_item_pre img {
+	max-width:none;
+}
 a.skipLink {
 	position:absolute;
 	left:-9999px;
@@ -140,6 +143,8 @@ img.roundedCorner {width: 6px; height: 6px; border: none; display: block; }
 	font-size:1em;
 	letter-spacing:0.05em;
 	border-radius:5px;
+	-moz-appearance: none;
+	-webkit-appearance:none;
 }
 .viewFilter tr.submitRow input:hover, .viewFilter tr#discoSubmitRow input:hover, .viewFilter tr.submitRow input:focus, .viewFilter tr#discoSubmitRow input:focus {
 	background-color:#516ea2;
@@ -654,24 +659,6 @@ body {
 	background-repeat: repeat-x;
 	/* background-color: #FAEEBF; */
 	/* background-color: #D6DEC6; */
-}
-
-.listRow1 td:not(.viewerCol_id), .listRow2 td:not(.viewerCol_id) { 
-  /* These are technically the same, but use both */
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-
-  -ms-word-break: break-all;
-  //This is the dangerous one in WebKit, as it breaks things wherever */
-  word-break: break-all;
-  //Instead use this non-standard one: */
-  word-break: break-word;
-
-  //Adds a hyphen where the word breaks, if supported (No Blink) */
-  /* -ms-hyphens: auto;
-  -moz-hyphens: auto;
-  -webkit-hyphens: auto;
-  hyphens: auto; */
 }
 
 td.viewerCol_name img {
