@@ -872,6 +872,11 @@ header .user {
 .associatedItemsWrapper {
 	margin-bottom:2.5em;
 }
+.assocFilters:after {
+	content:"";
+	display:table;
+	clear:both;
+}
 	.oldBrowserAlert {
 	font-weight: bold;
 	color: #CC0000;
