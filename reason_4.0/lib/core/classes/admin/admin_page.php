@@ -1478,6 +1478,9 @@ class AdminPage
 		
 		// add collapse javasript (should be moved to module method
 		$this->head_items->add_javascript(JQUERY_URL, true);
+		//$this->head_items->add_head_item('meta',array('name'=>'viewport','content'=>'initial-scale=1'));
+		//$this->head_items->add_head_item('meta',array('name'=>'viewport','content'=>'width=device-width, minimum-scale=0.5, maximum-scale=2.0' ) );
+		$this->head_items->add_head_item('meta',array('name'=>'viewport','content'=>'width=device-width, minimum-scale=1.0, maximum-scale=2.0' ) );
 		$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'jump_navigation.js');
 		$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'disable_submit.js?id=disco_form&reset_time=60000');
 		$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'admin_spin_icon.js');
