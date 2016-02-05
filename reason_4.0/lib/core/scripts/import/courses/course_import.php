@@ -98,13 +98,14 @@ class CourseImportEngine
 	 * Whether to automatically delete course sections that disappear from the source data feed.
 	 * @var boolean
 	 */
-	protected $delete_missing_sections = true;
+	protected $delete_missing_sections = false;
 	
 	/**
 	  * Import error logging; no customization required.
 	  */
 	protected $errors = array();
 	
+	protected $test_mode = true;
 	/*
 	 * If set to true, import will display extensive progress reporting. If false, only errors
 	 * will be shown.
@@ -118,15 +119,21 @@ class CourseImportEngine
 		$this->helper = new $GLOBALS['catalog_helper_class']();
 	}
 	
-	public function run()
+	/**
+	 * Run the full course import process. By default it will attempt to process all courses, but
+	 * you can pass an array of org_ids to limit import to particular subjects.
+	 * 
+	 * @param array $org_ids
+	 */
+	public function run($org_ids = array())
 	{	
 		connectDB(REASON_DB);
 		mysql_set_charset('utf8');
 		
 		$this->disable_output_buffering();
 		if ($this->verbose) echo "<pre>Running\n";
-						
-		if (!$org_ids = $this->get_template_org_ids()) $org_ids = array(null);
+		
+		if (empty($org_ids) && !$org_ids = $this->get_template_org_ids()) $org_ids = array(null);
 		foreach ($org_ids as $org_id)
 		{
 			if ($raw_data = $this->get_course_template_data($org_id))
@@ -328,6 +335,7 @@ class CourseImportEngine
 	 * @param array IDs of existing course template entities.
 	 * @param boolean Whether to delete entities dropped from data feed (not recommended)
 	 *
+	 * @todo Have deletion of templates pay attention to the time range selected
 	 */
 	protected function build_course_template_entities($data, $existing = array(), $delete = false)
 	{
@@ -347,7 +355,8 @@ class CourseImportEngine
 				if ($values != $row)
 				{
 					if ($this->verbose) $this->errors[] = 'Updating '.$name;
-					reason_update_entity( $course->id(), $creator, $row, false);
+					if (!$this->test_mode)
+						reason_update_entity( $course->id(), $creator, $row, false);
 				}
 				
 				$key = array_search($course->id(), $existing);
@@ -358,7 +367,8 @@ class CourseImportEngine
 				if ($this->verbose) $this->errors[] = 'Adding '.$name;
 				$row['new'] = 0;
 				$this->process_new_course_template($row);
-				reason_create_entity( id_of($this->courses_site), id_of('course_template_type'), $creator, $name, $row);
+				if (!$this->test_mode)
+					reason_create_entity( id_of($this->courses_site), id_of('course_template_type'), $creator, $name, $row);
 			}
 		}
 		
@@ -368,7 +378,7 @@ class CourseImportEngine
 			{
 				$course = new $GLOBALS['course_template_class']($id);
 				$this->errors[] = 'No longer in feed: '.$course->get_value('name');
-				if ($delete) reason_expunge_entity($id, $creator);
+				if ($delete && !$this->test_mode) reason_expunge_entity($id, $creator);
 			}
 		}
 	}
@@ -399,13 +409,15 @@ class CourseImportEngine
 	}
 
 	/**
-	  * Given the data assembled by map_course_section_data(), look to see if there's a matching
-	  * entity. If there is, update it if any values have changed. If no entity exists,
-	  * create one and link it to its parent course template entity.
-	  *
-	  * @param array data row
-	  * @return string
-	  */
+	 * Given the data assembled by map_course_section_data(), look to see if there's a matching
+	 * entity. If there is, update it if any values have changed. If no entity exists,
+	 * create one and link it to its parent course template entity.
+	 *
+	 * @param array data row
+	 * @return string
+	 * 
+	 * @todo Have deletion of sections pay attention to the time range selected
+	 */
 	protected function build_course_section_entities($data, $existing = array(), $delete = false)
 	{
 		if ($this->verbose) echo "Building section entities\n";
@@ -425,7 +437,8 @@ class CourseImportEngine
 				if ($values != $row)
 				{
 					if ($this->verbose) $this->errors[] = 'Updating: '.$name;
-					reason_update_entity( $section->id(), $creator, $row, false);
+					if (!$this->test_mode)
+						reason_update_entity( $section->id(), $creator, $row, false);
 				}
 				else
 				{
@@ -442,8 +455,11 @@ class CourseImportEngine
 					if ($this->verbose) $this->errors[] = 'Adding: '.$name;
 					$row['new'] = 0;
 					$this->process_new_course_section($row);
-					$id = reason_create_entity( id_of($this->courses_site), id_of('course_section_type'), $creator, $name, $row);
-					$section = new entity($id);
+					if (!$this->test_mode)
+					{
+						$id = reason_create_entity( id_of($this->courses_site), id_of('course_section_type'), $creator, $name, $row);
+						$section = new entity($id);
+					}
 				}
 				else
 				{
@@ -462,7 +478,7 @@ class CourseImportEngine
 			{
 				$course = new $GLOBALS['course_section_class']($id);
 				$this->errors[] = 'No longer in feed: '.$course->get_value('course_number').': '.$course->get_value('name');
-				if ($delete) reason_expunge_entity($id, $creator);
+				if ($delete && !$this->test_mode) reason_expunge_entity($id, $creator);
 			}
 		}
 
