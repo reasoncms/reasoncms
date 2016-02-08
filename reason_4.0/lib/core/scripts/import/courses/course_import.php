@@ -65,6 +65,16 @@ class CourseImportEngine
 			);
 
 	/**
+	 * If you have template values that are managed in Reason and should not be updated based
+	 * on changes in your source data, add the field names to this array. These fields may still
+	 * be populated when a new template is created, based on the settings in $template_data_map,
+	 * but fields in this array will not be overwritten for existing entities.
+	 * 
+	 * @var array 
+	 */
+	protected $template_data_reason_managed = array();
+	
+	/**
 	  * See above; this array is the same as $template_data_map, only it applies to course
 	  * section data. Custom mapping methods for sections should be named section_map_X().
 	  */
@@ -87,6 +97,16 @@ class CourseImportEngine
 			'sourced_id' => null,
 			'parent_template_id' => null,
 			);
+
+	/**
+	 * If you have section values that are managed in Reason and should not be updated based
+	 * on changes in your source data, add the field names to this array. These fields may still
+	 * be populated when a new section is created, based on the settings in $section_data_map,
+	 * but fields in this array will not be overwritten for existing entities.
+	 * 
+	 * @var array 
+	 */
+	protected $section_data_reason_managed = array();
 	
 	/**
 	 * Whether to automatically delete course templates that disappear from the source data feed.
@@ -105,7 +125,7 @@ class CourseImportEngine
 	  */
 	protected $errors = array();
 	
-	protected $test_mode = true;
+	protected $test_mode = false;
 	/*
 	 * If set to true, import will display extensive progress reporting. If false, only errors
 	 * will be shown.
@@ -350,15 +370,7 @@ class CourseImportEngine
 			if ($result = $es->run_one())
 			{
 				$course = reset($result);
-				// Find all the values that correspond to the data we're importing
-				$values = array_intersect_assoc($course->get_values(), $row);
-				if ($values != $row)
-				{
-					if ($this->verbose) $this->errors[] = 'Updating '.$name;
-					if (!$this->test_mode)
-						reason_update_entity( $course->id(), $creator, $row, false);
-				}
-				
+				$this->update_course_template($row, $course);
 				$key = array_search($course->id(), $existing);
 				if ($key !== false) unset($existing[$key]);
 			}
@@ -383,6 +395,37 @@ class CourseImportEngine
 		}
 	}
 
+	/**
+	 * Update an existing course template entity with new values. Extend this if you need to perform
+	 * additional actions on the data before or after an update action.
+	 * 
+	 * @param array $data Values to apply
+	 * @param object $entity Existing entity object
+	 */
+	protected function update_course_template($data, $entity)
+	{
+		if ($this->verbose) $name = $this->build_course_template_entity_name($data);
+		
+		// Remove any fields which are managed on the Reason side
+		foreach ($this->template_data_reason_managed as $key)
+		{
+			if (isset($data[$key])) unset($data[$key]);
+		}
+		
+		// Find all the values that correspond to the data we're importing
+		$values = array_intersect_assoc($entity->get_values(), $data);
+		if ($values != $data)
+		{
+			if ($this->verbose) $this->errors[] = 'Updating '.$name;
+			if (!$this->test_mode)
+				reason_update_entity( $entity->id(), get_user_id($this->entity_creator), $data, false);
+		}
+		else
+		{
+			if ($this->verbose) $this->errors[] = 'Unchanged: '.$name;
+		}
+	}
+	
 	/**
 	 * This method provides a hook that is run before a new course template is added to Reason.
 	 * If you want to modify values based on existing entities, or do something else when you know
@@ -432,19 +475,7 @@ class CourseImportEngine
 			if ($result = $es->run_one())
 			{
 				$section = reset($result);
-				// Find all the values that correspond to the data we're importing
-				$values = array_intersect_assoc($section->get_values(), $row);
-				if ($values != $row)
-				{
-					if ($this->verbose) $this->errors[] = 'Updating: '.$name;
-					if (!$this->test_mode)
-						reason_update_entity( $section->id(), $creator, $row, false);
-				}
-				else
-				{
-					if ($this->verbose) $this->errors[] = 'Unchanged: '.$name;	
-				}
-				
+				$this->update_course_section($row, $section);
 				$key = array_search($section->id(), $existing);
 				if ($key !== false) unset($existing[$key]);
 			}
@@ -482,6 +513,38 @@ class CourseImportEngine
 			}
 		}
 
+	}
+	
+	/**
+	 * Update an existing course section entity with new values. Extend this if you need to perform
+	 * additional actions on the data before or after an update action.
+	 * 
+	 * @param array $data Values to apply
+	 * @param object $entity Existing entity object
+	 */
+	protected function update_course_section($data, $entity)
+	{
+		if ($this->verbose) $name = $this->build_course_section_entity_name($data);
+		
+		// Remove any fields which are managed on the Reason side
+		foreach ($this->section_data_reason_managed as $key)
+		{
+			if (isset($data[$key])) unset($data[$key]);
+		}
+
+		// Find all the values that correspond to the data we're importing
+		$values = array_intersect_assoc($entity->get_values(), $data);
+		if ($values != $data)
+		{
+			if ($this->verbose) $this->errors[] = 'Updating: '.$name;
+			if (!$this->test_mode)
+				reason_update_entity( $entity->id(), get_user_id($this->entity_creator), $data, false);
+		}
+		else
+		{
+			if ($this->verbose) $this->errors[] = 'Unchanged: '.$name;	
+		}
+	
 	}
 	
 	/**
