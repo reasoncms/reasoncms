@@ -16,8 +16,12 @@ $GLOBALS['course_template_class'] = 'CourseTemplateType';
 $GLOBALS['course_section_class'] = 'CourseSectionType';
 $GLOBALS['catalog_helper_class'] = 'CatalogHelper';
 
-// Working with catalog data we need to be always in UTF8
-mysql_set_charset('utf8');
+// Working with catalog data we need to be always in UTF8, so if we're in a context with a live
+// db connection, set the charset.
+if (function_exists('get_current_db_connection_name') && get_current_db_connection_name())
+{
+	mysql_set_charset('utf8');
+}
 
 class CourseTemplateEntityFactory
 {
@@ -396,7 +400,7 @@ class CatalogHelper
 	protected $site;
 	
 	public function __construct($year = null)
-	{
+	{		
 		if ($year)
 		{
 			$this->year = $year;
