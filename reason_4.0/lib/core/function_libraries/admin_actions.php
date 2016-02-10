@@ -231,7 +231,7 @@
 
 		//! start of new code (see commented note below)
 
-		$ignored_fields = array( 'id', 'name', 'type', 'last_edited_by', 'unique_name' );
+		$ignored_fields = array( 'id', 'name', 'type', 'last_edited_by' );
 
 		if( !$maintain_dates )
 		{
