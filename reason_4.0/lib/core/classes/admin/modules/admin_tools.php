@@ -132,6 +132,11 @@ class ReasonAdminToolsModule extends DefaultModule
 					'description' => 'Find and replace across multiple entities on multiple sites',
 					'safety_level' => 'careful',
 				),
+				'?cur_module=CopySitePages' => array(  
+					'title' => 'Copy Site Pages',
+					'description' => 'Copy the pages (and only the pages) from one site into a new site.',
+					'safety_level' => 'careful',
+				),
 				REASON_HTTP_BASE_PATH.'scripts/urls/replicate_url_history.php' => array(
 					'title' => 'Replicate URL History',
 					'description' => 'Give one page the URL history of another page. '.
