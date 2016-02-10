@@ -107,7 +107,8 @@
 		'AnalyticsAbout'=>array('file'=>'analytics.php', 'class'=>'AnalyticsAboutModule'),
 		'ShareSiteOwnership'=>array('file'=>'share_site_ownership.php', 'class'=>'ShareSiteOwnershipModule'),
 		'BorrowThis'=>array('file'=>'borrow_this.php', 'class'=>'BorrowThisModule'),
-);
+	 	'CopySitePages'=>array('file'=>'copy_site_pages.php','class'=>'ReasonCopySitePagesModule'),
+	);
 
 if (reason_file_exists('config/admin_modules/setup_local.php'))
 {
