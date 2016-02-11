@@ -242,6 +242,7 @@ function reason_get_asset_max_upload_size()
  * @param int site_id owner site id
  * @param int user_id id of creator
  * @param file array with these keys: path, name (name is name of the file)
+ * @param array with additional key/value pairs to pass to reason_create_entity()
  * @return mixed entity_id of existing asset or FALSE on failure
  *
  * @todo modify asset content manager to use this.
@@ -249,7 +250,7 @@ function reason_get_asset_max_upload_size()
  *
  * @author Nathan White
  */
-function reason_create_asset($site_id, $user_id, $file)
+function reason_create_asset($site_id, $user_id, $file, $additional_values)
 {
 	// first lets do a number of sanity checks and trigger errors as appropriate.
 	if (empty($site_id) || (intval($site_id) != $site_id))
@@ -305,6 +306,7 @@ function reason_create_asset($site_id, $user_id, $file)
 	$values['file_type'] = _reason_get_asset_extension($file['path'], $values['mime_type']);
 	$values['file_size'] = _reason_get_asset_size($file['path']);
 	$values['new'] = 0;
+	$values = array_merge($values, $additional_values);
 	
 	$asset_id = reason_create_entity( $site_id, id_of('asset'), $user_id, $values['file_name'], $values );
 	if (!$asset_id)
