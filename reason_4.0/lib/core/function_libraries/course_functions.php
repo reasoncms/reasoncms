@@ -654,7 +654,7 @@ class CatalogHelper
 			foreach ($catalog_years as $year => $site)
 			{
 				$site = new entity(id_of($site));
-				if ($site->get_value('state') === 'Live')
+				if ($site->get_value('site_state') === 'Live')
 				{
 					$latest_year = $year;
 					break;
