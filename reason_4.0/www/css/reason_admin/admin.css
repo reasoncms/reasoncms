@@ -33,14 +33,16 @@ table.banner td.crumbs span {
 	white-space: nowrap;
 }
 
-a.stopPosing {
+a.stopPosing, a.startPosing {
 	font-size:0.9em;
 	padding:5px 5px 3px 5px;
 	background:#607db2;
 	border-top:1px solid #8097c1;
 	border-bottom:1px solid #586d94;
 	text-decoration:none;
-	margin-right:1em;
+}
+strong.logoutLink {
+	margin-left:1.5em;
 }
 
 .id {

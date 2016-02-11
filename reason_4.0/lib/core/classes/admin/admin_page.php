@@ -1447,47 +1447,30 @@ class AdminPage
 	{
 		// if behind HTTP authentication the session lasts until the browser is closed and logout will not do anything
 		$show_logout = !isset($_SERVER['REMOTE_USER']);
-		$user = new entity( $this->authenticated_user_id );
+		$authenticated_user = new entity( $this->authenticated_user_id );
+		$apparent_user = new entity( $this->user_id );
 		
 		if( reason_user_has_privs($this->authenticated_user_id, 'pose_as_other_user' ) )
 		{
-			$es = new entity_selector();
-			$es->add_type( id_of( 'user' ) );
-			$es->set_order( 'name ASC' );
-			$es->limit_tables();
-			$es->limit_fields('name');
-			$users = $es->run_one();
-			
-			echo '<form action="?" class="jumpNavigation" name="userSwitchSelect" method="get">'."\n";
-			echo '<label for="user_switch_select">User</label>: ';
-			echo '<select name="user_id" class="jumpDestination siteMenu" id="user_switch_select">'."\n";
-			echo '<option value="">--</option>'."\n";
-			foreach( array_keys($users) AS $user_id )
-			{
-				echo '<option value="'. $user_id . '"';
-				if( $user_id == $this->user_id )
-					echo ' selected="selected"';
-				echo '>' . $users[$user_id]->get_value( 'name' ) . '</option>' . "\n";
-			}
-			echo '</select>';
-			$this->echo_hidden_fields('user_id');
-			echo '<input type="submit" class="jumpNavigationGo" value="go" />'."\n";
 			if($this->user_id != $this->authenticated_user_id)
 			{
-				if(isset($users[$this->authenticated_user_id]))
-					$username = $users[$this->authenticated_user_id]->get_value('name');
-				else
-					$username = 'me';
-				echo '<a class="stopPosing" href="'.carl_make_link(array('user_id'=>$this->authenticated_user_id)).'" title="Stop posing as another user">'.htmlspecialchars($username).'</a>'."\n";
+				echo 'You are <a class="stopPosing" href="'.carl_make_link(array('user_id'=>$this->authenticated_user_id)).'" title="Stop posing as another user">'.reason_htmlspecialchars($authenticated_user->get_value('name')).'</a> ';
+				echo 'posing as <strong>' . reason_htmlspecialchars($apparent_user->get_value( 'name' )) .'</strong>';
 			}
-			if ($show_logout) echo ' <strong><a href="'.REASON_LOGIN_URL.'?logout=true" class="bannerLink">Logout</a></strong>';
-			echo '</form>';
+			else
+			{
+				echo 'You are <strong>' . reason_htmlspecialchars($authenticated_user->get_value( 'name' )) .'</strong>';
+				$link_array = array('cur_module'=>'UserPosing');
+				if(!empty($this->request['cur_module']))
+					$link_array['return_module'] = $this->request['cur_module'];
+				echo ' <a href="'.$this->make_link($link_array).'" class="startPosing">Pose</a>';
+			}
 		}
 		else
 		{
-			echo 'You are <strong>' . reason_htmlspecialchars($user->get_value( 'name' )) .'</strong>';
-			if ($show_logout) echo ': <strong><a href="'.REASON_LOGIN_URL.'?logout=true" class="bannerLink">Logout</a></strong>';
+			echo 'You are <strong>' . reason_htmlspecialchars($authenticated_user->get_value( 'name' )) .'</strong>';
 		}
+		if ($show_logout) echo ' <strong class="logoutLink"><a href="'.REASON_LOGIN_URL.'?logout=true" class="bannerLink">Logout</a></strong>';
 	} // }}}
 	
 	function set_head_items()
