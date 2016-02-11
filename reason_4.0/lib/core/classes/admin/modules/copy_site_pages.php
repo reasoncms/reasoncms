@@ -18,11 +18,23 @@ include_once( DISCO_INC .'disco.php');
  * Other types and relationships are not preserved, but this can be a timesaver when cloning a
  * site (like the academic catalog) that duplicates a lot of content from site to site.
  * 
+ * Since this was built originally for duplicating academic catalogs, it also has some hidden
+ * support for copying other types that the catalog uses. This could be extended to create a more
+ * general purpose tool.
+ * 
  * @author Mark Heiman
  *
  */
 class ReasonCopySitePagesModule extends DefaultModule// {{{
 {
+	protected $test_mode = false;
+	protected $source_site;
+	protected $destination_site;
+	protected $allowed_related = array(
+		'page_to_course_catalog_block',
+	);
+	protected $copied_ids = array();
+	
 	function ReasonCopySitePagesModule( &$page )
 	{
 		$this->admin_page =& $page;
@@ -56,6 +68,9 @@ class ReasonCopySitePagesModule extends DefaultModule// {{{
 		$site_options = $this->get_user_sites();
 		
 		$this->form = new Disco;
+		$this->form->add_element('test_mode', 'checkboxfirst', array(
+			'display_name' => 'Run in test mode (just list the content that would be copied).',
+			));
 		$this->form->add_element('source_site', 'select', array('options' => $site_options));
 		$this->form->add_element('destination_site', 'select', array('options' => $site_options));
 		$this->form->add_element('home_page_handling', 'radio_no_sort', array(
@@ -118,20 +133,23 @@ class ReasonCopySitePagesModule extends DefaultModule// {{{
 	
 	function process_copy()
 	{
-		$source_site = $this->form->get_value('source_site');
-		$destination_site = $this->form->get_value('destination_site');
+		$this->test_mode = $this->form->get_value('test_mode');
+		$this->source_site = $this->form->get_value('source_site');
+		$this->destination_site = $this->form->get_value('destination_site');
 		$home_page_handling = $this->form->get_value('home_page_handling');
 		
-		$source_root = root_finder($source_site);
-		$destination_root = root_finder($destination_site);
+		$source_root = root_finder($this->source_site);
+		$destination_root = root_finder($this->destination_site);
+		
+		echo '<ul>';
 		
 		if ($destination_root)
 		{
 			// Delete the destination home page and start copying from the source root.
 			if ($home_page_handling === 'delete')
 			{
-				reason_expunge_entity($destination_root, $this->user_id);
-				$this->copy_page_tree($source_root, $destination_site, null);
+				if (!$this->test_mode) reason_expunge_entity($destination_root, $this->user_id);
+				$this->copy_page_tree($source_root, null);
 			}
 			// Attach the children of the source root to the destination home page.
 			else if ($home_page_handling === 'replace')
@@ -142,34 +160,47 @@ class ReasonCopySitePagesModule extends DefaultModule// {{{
 					foreach ($children['minisite_page_parent'] as $child_rel)
 					{
 						if ($child_rel['entity_a'] === $child_rel['entity_b']) continue;
-						$this->copy_page_tree($child_rel['entity_a'], $destination_site, $destination_root, $child_rel['rel_sort_order']);
+						$this->copy_page_tree($child_rel['entity_a'], $destination_root, $child_rel['rel_sort_order']);
 					}
 				}				
 			}
 			// Attach the source root as a child of the destination root.
 			else if ($home_page_handling === 'attach')
 			{
-				$this->copy_page_tree($source_root, $destination_site, $destination_root);
+				$this->copy_page_tree($source_root, $destination_root);
 			}
 		}
 		else
 		{
-			$this->copy_page_tree($source_root, $destination_site, null);
+			$this->copy_page_tree($source_root, null);
 		}
 		
-		echo '<p>Updating rewrites...</p>';
-		$url_mgr = new url_manager($destination_site);
-		$url_mgr->update_rewrites();
-		
-		$this->form->show_form = false;
-		
-		echo '<p>Copy complete.</p>';
+		echo '</ul>';
+		if (!$this->test_mode)
+		{
+			echo '<p>Updating rewrites...</p>';
+			$url_mgr = new url_manager($this->destination_site);
+			$url_mgr->update_rewrites();
+
+			$this->form->show_form = false;
+
+			echo '<p>Copy complete.</p>';
+		}
 	}
 
-	function copy_page_tree($source_root_id, $destination_site_id, $destination_parent_id = null, $rel_sort = 0)
+	/**
+	 * This method accepts a page ID and recursively copies that page and all of its children into
+	 * a new site, preserving the sort order. Call it with a site's root page, and all of the pages
+	 * will be copied.
+	 * 
+	 * @param int $source_root_id The ID of the page to be copied
+	 * @param int $destination_parent_id The ID of the site the page is being copied to
+	 * @param int $rel_sort An optional sort order for the page
+	 */
+	function copy_page_tree($source_root_id, $destination_parent_id = null, $rel_sort = 0)
 	{
 		$source_root = new entity($source_root_id);
-		echo '<br />Copying: ' . $source_root->get_value('name');
+		echo '<li>' . $source_root->get_value('name');
 		
 		$overrides = array('unique_id' => '');
 		// If there's no URL fragment (meaning it's a page tree root) but we're attaching it to a 
@@ -177,28 +208,79 @@ class ReasonCopySitePagesModule extends DefaultModule// {{{
 		if ($destination_parent_id && !$source_root->get_value('url_fragment'))
 			$overrides['url_fragment'] = 'copied_root';
 		
-		$destination_root_id = duplicate_entity( $source_root->id(), false, true, $overrides, $destination_site_id );
-				
-		// Attach this page to the appropriate parent
-		if ($destination_parent_id)
+		if (!$this->test_mode)
 		{
-			create_relationship( $destination_root_id, $destination_parent_id, relationship_id_of('minisite_page_parent'), array('rel_sort_order'=>$rel_sort));
+			$destination_root_id = duplicate_entity( $source_root->id(), false, true, $overrides, $this->destination_site );
+
+			// Attach this page to the appropriate parent
+			if ($destination_parent_id)
+			{
+				create_relationship( $destination_root_id, $destination_parent_id, relationship_id_of('minisite_page_parent'), array('rel_sort_order'=>$rel_sort));
+			}
+			// Or create a root node
+			else
+			{
+				create_relationship( $destination_root_id, $destination_root_id, relationship_id_of('minisite_page_parent'));
+			}
 		}
-		// Or create a root node
 		else
 		{
-			create_relationship( $destination_root_id, $destination_root_id, relationship_id_of('minisite_page_parent'));
+			$destination_root_id = 0;
 		}
+		
+		$this->copy_related_entities($source_root, $destination_root_id);
 		
 		// Find the children of this page and recurse down.
 		if ($children = $source_root->get_right_relationships_info('minisite_page_parent'))
 		{
+			echo '<ul>';
 			foreach ($children['minisite_page_parent'] as $child_rel)
 			{
 				if ($child_rel['entity_a'] === $child_rel['entity_b']) continue;
-				$this->copy_page_tree($child_rel['entity_a'], $destination_site_id, $destination_root_id, $child_rel['rel_sort_order']);
+				$this->copy_page_tree($child_rel['entity_a'], $destination_root_id, $child_rel['rel_sort_order']);
+			}
+			echo '</ul>';
+		}
+		echo '</li>';
+	}
+	
+	/**
+	 * This method provides a mechanism to bring along certain related entities with a copied page.
+	 * What is copied is based on the relationship names found in $this->allowed_related.
+	 * 
+	 * @param object $source_page
+	 * @param int $destination_page_id
+	 */
+	function copy_related_entities($source_page, $destination_page_id)
+	{
+		$overrides = array('unique_id' => '');
+		
+		if ($rels = $source_page->get_left_relationships_info())
+		{
+			foreach ($this->allowed_related as $rel_type)
+			{
+				if (isset($rels[$rel_type]))
+				{
+					echo '<ul>';
+					// @todo list the entities
+					echo '<li>'.$rel_type.': '.count($rels[$rel_type]).'</li>';
+					foreach ($rels[$rel_type] as $rel)
+					{
+						if (!$this->test_mode)
+						{
+							// If we haven't already duplicated this entity, make a copy on the new site
+							if (!isset($this->copied_ids[$rel['entity_b']]))
+							{
+								$entity_id = duplicate_entity( $rel['entity_b'], false, true, $overrides, $this->destination_site );
+								$this->copied_ids[$rel['entity_b']] = $entity_id;
+							}
+							// Relate the new entity to the destination page
+							create_relationship( $destination_page_id, $this->copied_ids[$rel['entity_b']], relationship_id_of($rel_type), array('rel_sort_order'=>$rel['rel_sort_order']));
+						}
+					}
+					echo '</ul>';
+				}
 			}
 		}
 	}
 }
-?>
