@@ -5,6 +5,7 @@
  */
 
 require_once CARL_UTIL_INC."basic/filesystem.php";
+require_once CARL_UTIL_INC."basic/mime_types.php";
 reason_include_once('classes/url_manager.php');
 
  /**
