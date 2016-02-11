@@ -22,6 +22,7 @@
 	 *
 	 * @param array $tables Simple array; format: array('table1','table2',...)
 	 * @param array $flat_values Associative array; format: array('field1'=>'value1','field2'=>'value2','field3'=>'value3',...)
+	 * @param array $ignore Simple array; fields that should not be included in the returned data
 	 * @return array Multidimensional associative array; format: array('table1'=>array('field1'=>'value1','field2'=>'value2'),'table2'=>array('field3'=>'value3',...),...)
 	 *
 	 * @todo add caching so that db structure does not need to be looked up each time
@@ -197,20 +198,20 @@
 		}
 	}
 
-	/** duplicate_entity( $id, $dup_relationships = true, $maintain_dates = false, $overrides = array() ) {{{
-	 *	Duplicates entity with id = $id.
+	/**
+	 * Duplicates entity with id = $id.
 	 *
 	 *	Specifically, copies all fields of an entity to a new id.  If dup_relationships
 	 *	is true, also copies all relationships, replacing the old id with the new inserted one.
-	 *
-	 *	@param	$id						ID of entity to duplicate
-	 *									OR an entity object to duplicate
-	 *	@param	$dup_relationships		Bool that determines whether to duplicate relationships or not
-	 *	@param	$maintain_dates			Bool that determines whether to 
-	 *	@param	$overrides				array of field => value pairs to override any values for the new entity
-	 *	@return							the new, duplicated entity id
+	 * 
+	 * @param int/object $id ID of entity to duplicate OR an entity object to duplicate
+	 * @param boolean $dup_relationships Whether to duplicate relationships or not
+	 * @param boolean $maintain_dates Whether to preserve existing created/modified dates
+	 * @param array $overrides Field => value pairs to override any values for the new entity
+	 * @param int $site_id Id of the site that should own the new object (defaults to current owner)
+	 * @return int	The new, duplicated entity id
 	 */
-	function duplicate_entity( $id, $dup_relationships = true, $maintain_dates = false, $overrides = array() )
+	function duplicate_entity( $id, $dup_relationships = true, $maintain_dates = false, $overrides = array(), $site_id = null )
 	{
 		// get all values and structure from existing object
 		if( is_object( $id ) AND get_class( $id ) == 'entity' )
@@ -219,7 +220,11 @@
 			$e = new entity( $id );
 
 		// get the site that owns this entity
-		$site = $e->get_owner();
+		if (empty($site_id)) 
+		{
+			$site = $e->get_owner();
+			$site_id = $site->id();
+		}
 		
 		// get the tables used by this type/entity
 		$tables = get_entity_tables_by_id( $e->id() );
@@ -243,7 +248,7 @@
 		
 		// create new entity record
 		$new_entity_id = create_entity(
-			$site->id(), 
+			$site_id, 
 			$e->get_value('type'), 
 			$e->get_value('last_edited_by'), 
 			$e->get_value('name'), 
