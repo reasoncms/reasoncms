@@ -76,12 +76,11 @@ class CourseTemplateType extends Entity
 				foreach ( $sections as $key => $section)
 				{
 					$this->sections[$section->id()] = new $GLOBALS['course_section_class']($section->id());
-					$this->sections[$section->id()]->get_values();
+					$this->sections[$section->id()]->get_value('academic_session');
 				}
 			}
+			uasort($this->sections, array($this->helper, 'sort_courses_by_number_and_date'));
 		}
-
-		uasort($this->sections, array($this->helper, 'sort_courses_by_number_and_date'));
 		
 		// If an academic year limit has been set, only return those that match
 		if ($this->limit_to_year && $honor_limit)
