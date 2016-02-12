@@ -177,7 +177,7 @@ class CourseImportEngine
 			$this->errors = array();
 		}
 
-		if (!$org_ids = $this->get_section_org_ids()) $org_ids = array(null);
+		if (empty($org_ids) && !$org_ids = $this->get_section_org_ids()) $org_ids = array(null);
 		foreach ($org_ids as $org_id)
 		{
 			if ($raw_data = $this->get_course_section_data($org_id))
@@ -594,7 +594,8 @@ class CourseImportEngine
 					if (method_exists($this, 'template_map_'.$mapkey))
 					{
 						$method = 'template_map_'.$mapkey;
-						$mapped_row[$key] = $this->$method($row);
+						$value = $this->$method($row);
+						if ($value !== false) $mapped_row[$key] = $value;
 					}
 					else if (array_key_exists($mapkey, $row))
 					{
@@ -642,7 +643,8 @@ class CourseImportEngine
 					if (method_exists($this, 'section_map_'.$mapkey))
 					{
 						$method = 'section_map_'.$mapkey;
-						$mapped_row[$key] = $this->$method($row);
+						$value = $this->$method($row);
+						if ($value !== false) $mapped_row[$key] = $value;
 					}
 					else if (array_key_exists($mapkey, $row))
 					{
