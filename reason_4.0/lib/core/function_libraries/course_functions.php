@@ -37,6 +37,7 @@ class CourseTemplateType extends Entity
 	protected $limit_to_year = false;
 	protected $external_data;
 	protected $helper;
+	protected $cache_duration_minutes = 360;
 	
 	function CourseTemplateType($id, $cache=true)
 	{
@@ -270,15 +271,14 @@ class CourseTemplateType extends Entity
 	 */
 	protected function fetch_external_data($refresh = false)
 	{
-		if (empty($this->external_data))
+		if (!$this->external_data_is_valid())
 		{
-			// Do we want to check for the empty array here?
 			if ($cache = $this->get_value('cache'))
 			{
 				$this->external_data = json_decode($cache, true);
 			}
 			
-			if ($refresh || !isset($this->external_data))
+			if ($refresh || !$this->external_data_is_valid())
 			{
 				// Insert your routine for retrieving external data here.
 				
@@ -286,16 +286,51 @@ class CourseTemplateType extends Entity
 				$this->external_data = array();
 
 				if (!empty($this->external_data))
-				{
-					$this->set_value('cache', json_encode($this->external_data));
-					reason_update_entity( 
-						$this->id(), 
-						$this->get_value('last_edited_by'), 
-						array('cache' => $this->get_value('cache')),
-						false);
-				}
+					$this->update_cache();
 			}
 		}
+	}
+	
+	protected function update_cache()
+	{
+		$this->external_data['timestamp'] = time();
+		$encoded = json_encode($this->external_data);
+		if ($encoded != $this->get_value('cache'))
+		{
+			$this->set_value('cache', json_encode($this->external_data));
+			reason_update_entity( 
+				$this->id(), 
+				$this->get_value('last_edited_by'), 
+				array('cache' => $this->get_value('cache')),
+				false);
+		}
+	}
+	
+	/**
+	 * Determine whether the cached external data needs to be refreshed.
+	 * 
+	 * @return boolean
+	 */
+	protected function external_data_is_valid()
+	{
+		// If it hasn't been defined, it's invalid
+		if (!is_array($this->external_data))
+			return false;
+		
+		// If the timestamp is too old, it's invalid
+		if (isset($this->external_data['timestamp']))
+		{
+			if ((time() - $this->cache_duration_minutes * 60) > $this->external_data['timestamp'])
+				return false;
+		}
+		// If there is no timestamp, it's invalid
+		else
+		{
+			return false;
+		}
+		
+		// Otherwise, it's probably ok.
+		return true;
 	}
 }
 
@@ -315,6 +350,7 @@ class CourseSectionType extends Entity
 {	
 	protected $external_data = array();
 	protected $helper;
+	protected $cache_duration_minutes = 0;
 	
 	function CourseSectionType($id=null, $cache=true)
 	{
@@ -359,13 +395,13 @@ class CourseSectionType extends Entity
 				$this->external_data = json_decode($cache, true);
 			}
 			
-			if ($refresh || !isset($this->external_data['section']))
+			if ($refresh || !$this->external_data_is_valid())
 			{
 				// Insert your routine for retrieving external data here.
 
 				// Indicate that we've tried and failed to retrieve the data, so we don't keep trying
 				$this->external_data['section'] = array();
-
+					
 				if (!empty($this->external_data['section']))
 					$this->update_cache();
 			}
@@ -374,6 +410,7 @@ class CourseSectionType extends Entity
 	
 	protected function update_cache()
 	{
+		$this->external_data['timestamp'] = time();
 		$encoded = json_encode($this->external_data);
 		if ($encoded != $this->get_value('cache'))
 		{
@@ -385,7 +422,35 @@ class CourseSectionType extends Entity
 				false);
 		}
 	}
+
+	/**
+	 * Determine whether the cached external data needs to be refreshed.
+	 * 
+	 * @return boolean
+	 */
+	protected function external_data_is_valid()
+	{
+		// If it hasn't been defined, it's invalid
+		if (!is_array($this->external_data))
+			return false;
+		
+		// If the timestamp is too old, it's invalid
+		if (isset($this->external_data['timestamp']))
+		{
+			if ((time() - $this->cache_duration_minutes * 60) > $this->external_data['timestamp'])
+				return false;
+		}
+		// If there is no timestamp, it's invalid
+		else
+		{
+			return false;
+		}
+		
+		// Otherwise, it's probably ok.
+		return true;
+	}
 }
+
 
 
 
