@@ -37,7 +37,7 @@ class CourseTemplateType extends Entity
 	protected $limit_to_year = false;
 	protected $external_data;
 	protected $helper;
-	protected $cache_duration_minutes = 360;
+	protected $cache_duration_minutes = 1440;
 	
 	function CourseTemplateType($id, $cache=true)
 	{
@@ -76,7 +76,24 @@ class CourseTemplateType extends Entity
 				foreach ( $sections as $key => $section)
 				{
 					$this->sections[$section->id()] = new $GLOBALS['course_section_class']($section->id());
-					$this->sections[$section->id()]->get_value('academic_session');
+					//$this->sections[$section->id()]->get_value('academic_session');
+				}
+				
+				$dbq = new DBSelector;
+				$dbq->add_table( 's','course_section' );
+				$dbq->add_field( 's','id' );
+				$dbq->add_field( 's','academic_session' );
+				$dbq->add_field( 's','course_number' );
+				$dbq->add_field( 's','timeframe_begin' );
+				$dbq->add_relation( 'id IN ('.join(',', array_keys($this->sections)).')');
+				if ($result = $dbq->run())
+				{
+					foreach ($result as $row)
+					{
+						$this->sections[$row['id']]->set_value('academic_session', $row['academic_session']);
+						$this->sections[$row['id']]->set_value('course_number', $row['course_number']);
+						$this->sections[$row['id']]->set_value('timeframe_begin', $row['timeframe_begin']);
+					}
 				}
 			}
 			uasort($this->sections, array($this->helper, 'sort_courses_by_number_and_date'));
@@ -93,7 +110,8 @@ class CourseTemplateType extends Entity
 				{
 					continue;
 				}
-				$sections[$key] = $section;
+				$this->sections[$key]->refresh_values(false);
+				$sections[$key] = $this->sections[$key];
 			}
 			return $sections;
 		}
@@ -131,23 +149,14 @@ class CourseTemplateType extends Entity
 	 */
 	public function get_value_long_description($refresh = false)
 	{
-		if ($this->limit_to_year)
-		{
-			$start_date = $this->helper->get_catalog_year_start_date($this->limit_to_year);
-		}
-		else
-		{
-			$start_date = 0;
-		}
+		$limit = !empty($this->limit_to_year);
 			
-		foreach ( $this->get_sections(false) as $key => $section)
+		foreach ( $this->get_sections($limit) as $section)
 		{
 			if ($desc = $section->get_value('long_description', $refresh))
 			{
-				if ($section->get_value('timeframe_begin', $refresh) > $start_date)
-				{
 					$long_description = $desc;	
-				}
+					break;
 			}
 		}
 		
@@ -376,7 +385,7 @@ class CourseSectionType extends Entity
 		}
 		else
 		{
-			return parent::get_value($col, $refresh);
+			return parent::get_value($col);
 		}
 	}
 	
