@@ -109,6 +109,7 @@
 		'BorrowThis'=>array('file'=>'borrow_this.php', 'class'=>'BorrowThisModule'),
 		'UserPosing'=>array('file'=>'user_posing.php', 'class'=>'UserPosingModule'),
 	 	'CopySitePages'=>array('file'=>'copy_site_pages.php','class'=>'ReasonCopySitePagesModule'),
+	 	'OldThemes'=>array('file'=>'old_themes.php','class'=>'OldThemesModule'),
 	);
 
 if (reason_file_exists('config/admin_modules/setup_local.php'))
