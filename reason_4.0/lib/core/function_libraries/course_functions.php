@@ -66,6 +66,55 @@ class CourseTemplateType extends Entity
 		}
 	}
 	
+	/**
+	 * Return the best section value for a particular key, based on whether or not the year limit is set. 
+	 * If no year limit is set, you'll get back the value for the most recent term. 
+	 * If a year limit is set, and sections occur within that limit, you'll 
+	 * get back the value for the last section in that year. If a year limit is set and no sections occur
+	 * in that year, you'll get the value from the most recent year the course was offered.
+	 *
+	 * @param string $key
+	 * @param boolean $refresh
+	 * @return array
+	 */
+	function get_best_value_from_sections($key, $refresh = false)
+	{
+		if ($refresh || empty($this->{$key}) || ($this->limit_to_year && empty($this->{$key}[$this->limit_to_year])))
+		{
+		if (!isset($this->{$key})) $this->{$key} = array();
+			$sections = $this->get_sections(false);
+		
+			// If there's no year limit, just return the most recent section
+			if (!$this->limit_to_year)
+			{
+				if ($section = reset($sections))
+				{
+					$year = $this->helper->term_to_academic_year($section->get_value('academic_session'));
+					$this->{$key}[$year] = $section->get_value($key, $refresh);
+					return $this->{$key}[$year];
+				}			
+			}
+			
+			// Otherwise, look for the latest section for the requested year
+			foreach ( $sections as $section)
+			{
+				$year = $this->helper->term_to_academic_year($section->get_value('academic_session'));
+				if ($year !== $this->limit_to_year) continue;
+				
+				$this->{$key}[$year] = $section->get_value($key, $refresh);
+				return $this->{$key}[$year];
+			}			
+		}
+		else
+		{
+			krsort($this->{$key});
+			if ($this->limit_to_year) 
+				return $this->{$key}[$this->limit_to_year];
+			else
+				return reset($this->{$key});
+		}		
+	}
+	
 	public function get_sections($honor_limit = true)
 	{
 		if (!is_array($this->sections))
@@ -76,9 +125,11 @@ class CourseTemplateType extends Entity
 				foreach ( $sections as $key => $section)
 				{
 					$this->sections[$section->id()] = new $GLOBALS['course_section_class']($section->id());
-					//$this->sections[$section->id()]->get_value('academic_session');
 				}
 				
+				// Loading all the data for all the sections is potentially a big memory hog, so to start
+				// with we just populate a few values on each section -- the ones we need to know which
+				// sections are going to require a full retrieval.
 				$dbq = new DBSelector;
 				$dbq->add_table( 's','course_section' );
 				$dbq->add_field( 's','id' );
