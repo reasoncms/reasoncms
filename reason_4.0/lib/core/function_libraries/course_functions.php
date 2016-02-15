@@ -37,7 +37,16 @@ class CourseTemplateType extends Entity
 	protected $limit_to_year = false;
 	protected $external_data;
 	protected $helper;
-	protected $cache_duration_minutes = 1440;
+	
+	/**
+	 * This is length of time (in minutes) that external data cached on template entities should 
+	 * persist before being refreshed. 0 means no refreshing, which is the preferred choice. 
+	 * Generally you want your import process to update the external data as needed.  However, you
+	 * can import on demand, and this setting will help manage that.
+	 * 
+	 * @var int 
+	 */
+	protected $cache_duration_minutes = 0;
 	
 	function CourseTemplateType($id, $cache=true)
 	{
@@ -350,6 +359,9 @@ class CourseTemplateType extends Entity
 		}
 	}
 	
+	/**
+	 * Update this entity's external data cache from the current value of $this->external_data
+	 */
 	protected function update_cache()
 	{
 		$this->external_data['timestamp'] = time();
@@ -377,13 +389,13 @@ class CourseTemplateType extends Entity
 			return false;
 		
 		// If the timestamp is too old, it's invalid
-		if (isset($this->external_data['timestamp']))
+		if ($this->cache_duration_minutes && isset($this->external_data['timestamp']))
 		{
 			if ((time() - $this->cache_duration_minutes * 60) > $this->external_data['timestamp'])
 				return false;
 		}
 		// If there is no timestamp, it's invalid
-		else
+		else if ($this->cache_duration_minutes)
 		{
 			return false;
 		}
@@ -409,6 +421,14 @@ class CourseSectionType extends Entity
 {	
 	protected $external_data = array();
 	protected $helper;
+	/**
+	 * This is length of time (in minutes) that external data cached on section entities should 
+	 * persist before being refreshed. 0 means no refreshing, which is the preferred choice. 
+	 * Generally you want your import process to update the external data as needed.  However, you
+	 * can import on demand, and this setting will help manage that.
+	 * 
+	 * @var int 
+	 */
 	protected $cache_duration_minutes = 0;
 	
 	function CourseSectionType($id=null, $cache=true)
@@ -494,13 +514,13 @@ class CourseSectionType extends Entity
 			return false;
 		
 		// If the timestamp is too old, it's invalid
-		if (isset($this->external_data['timestamp']))
+		if ($this->cache_duration_minutes && isset($this->external_data['timestamp']))
 		{
 			if ((time() - $this->cache_duration_minutes * 60) > $this->external_data['timestamp'])
 				return false;
 		}
 		// If there is no timestamp, it's invalid
-		else
+		else if ($this->cache_duration_minutes)
 		{
 			return false;
 		}
