@@ -365,6 +365,8 @@ class CourseImportEngine
 		{
 			$name = $this->build_course_template_entity_name($row);
 			$es = new entity_selector();
+			$factory = new CourseTemplateEntityFactory();
+			$es->set_entity_factory($factory);
 			$es->add_type(id_of('course_template_type'));
 			$es->add_relation('sourced_id = "'.$row['sourced_id'].'"');
 			if ($result = $es->run_one())
@@ -412,10 +414,27 @@ class CourseImportEngine
 			if (isset($data[$key])) unset($data[$key]);
 		}
 		
+		$current_values = $entity->get_values();
+		
+		// Extract the external data cache so that we can compare it separately with the current
+		// external data (the timestamp needs to be removed for an accurate comparison).
+		$current_cache = '';
+		if (isset($current_values['cache']))
+		{
+			$current_cache = json_decode($current_values['cache'], true);
+			if (empty($current_cache)) $current_cache = array();
+			unset($current_values['cache']);
+			if (isset($current_cache['timestamp'])) unset($current_cache['timestamp']);
+		}
+
+		$external_data = $entity->fetch_external_data(true, false);
+		
 		// Find all the values that correspond to the data we're importing
 		$values = array_intersect_assoc($entity->get_values(), $data);
-		if ($values != $data)
+		if ($values != $data || $external_data != $current_cache)
 		{
+			$external_data['timestamp'] = time();
+			$data['cache'] = json_encode($external_data);
 			if ($this->verbose) $this->errors[] = 'Updating '.$name;
 			if (!$this->test_mode)
 				reason_update_entity( $entity->id(), get_user_id($this->entity_creator), $data, false);
@@ -469,6 +488,8 @@ class CourseImportEngine
 		{
 			$es = new entity_selector();
 			$es->add_type(id_of('course_section_type'));
+			$factory = new CourseSectionEntityFactory();
+			$es->set_entity_factory($factory);
 			$name = $this->build_course_section_entity_name($row);
 			$es->relations = array();
 			$es->add_relation('sourced_id = "'.$row['sourced_id'].'"');
@@ -532,10 +553,27 @@ class CourseImportEngine
 			if (isset($data[$key])) unset($data[$key]);
 		}
 
-		// Find all the values that correspond to the data we're importing
-		$values = array_intersect_assoc($entity->get_values(), $data);
-		if ($values != $data)
+		$current_values = $entity->get_values();
+		
+		// Extract the external data cache so that we can compare it separately with the current
+		// external data (the timestamp needs to be removed for an accurate comparison).	
+		$current_cache = '';
+		if (isset($current_values['cache']))
 		{
+			$current_cache = json_decode($current_values['cache'], true);
+			if (empty($current_cache)) $current_cache = array();
+			unset($current_values['cache']);
+			if (isset($current_cache['timestamp'])) unset($current_cache['timestamp']);
+		}
+
+		$external_data = $entity->fetch_external_data(true, false);
+		
+		// Find all the values that correspond to the data we're importing
+		$values = array_intersect_assoc($current_values, $data);
+		if ($values != $data || $external_data != $current_cache)
+		{
+			$external_data['timestamp'] = time();
+			$data['cache'] = json_encode($external_data);
 			if ($this->verbose) $this->errors[] = 'Updating: '.$name;
 			if (!$this->test_mode)
 				reason_update_entity( $entity->id(), get_user_id($this->entity_creator), $data, false);
