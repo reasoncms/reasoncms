@@ -337,9 +337,9 @@ class CourseTemplateType extends Entity
 	 * in the base course template schema. You'll need to extend this class to provide your own
 	 * retrieval routine.
 	 */
-	protected function fetch_external_data($refresh = false)
+	public function fetch_external_data($refresh = false, $update_cache = true)
 	{
-		if (!$this->external_data_is_valid())
+		if (!$this->external_data_is_valid($refresh))
 		{
 			if ($cache = $this->get_value('cache'))
 			{
@@ -353,10 +353,11 @@ class CourseTemplateType extends Entity
 				// Indicate that we've tried and failed to retrieve the data, so we don't keep trying
 				$this->external_data = array();
 
-				if (!empty($this->external_data))
+				if ($update_cache && !empty($this->external_data))
 					$this->update_cache();
 			}
 		}
+		return $this->external_data;
 	}
 	
 	/**
@@ -382,7 +383,7 @@ class CourseTemplateType extends Entity
 	 * 
 	 * @return boolean
 	 */
-	protected function external_data_is_valid()
+	protected function external_data_is_valid($refresh = false)
 	{
 		// If it hasn't been defined, it's invalid
 		if (!is_array($this->external_data))
@@ -401,7 +402,7 @@ class CourseTemplateType extends Entity
 		}
 		
 		// Otherwise, it's probably ok.
-		return true;
+		return !$refresh;
 	}
 }
 
@@ -465,9 +466,9 @@ class CourseSectionType extends Entity
 	 * in the base course section schema. You'll need to extend this class to provide your own
 	 * retrieval routine.
 	 */
-	protected function fetch_external_data($refresh = false)
+	public function fetch_external_data($refresh = false, $update_cache = true)
 	{
-		if (empty($this->external_data['section']))
+		if ($refresh || empty($this->external_data['section']))
 		{
 			if ($cache = $this->get_value('cache'))
 			{
@@ -481,10 +482,11 @@ class CourseSectionType extends Entity
 				// Indicate that we've tried and failed to retrieve the data, so we don't keep trying
 				$this->external_data['section'] = array();
 					
-				if (!empty($this->external_data['section']))
+				if ($update_cache && !empty($this->external_data['section']))
 					$this->update_cache();
 			}
 		}
+		return $this->external_data;
 	}
 	
 	protected function update_cache()
@@ -507,7 +509,7 @@ class CourseSectionType extends Entity
 	 * 
 	 * @return boolean
 	 */
-	protected function external_data_is_valid()
+	protected function external_data_is_valid($refresh = false)
 	{
 		// If it hasn't been defined, it's invalid
 		if (!is_array($this->external_data))
@@ -526,7 +528,7 @@ class CourseSectionType extends Entity
 		}
 		
 		// Otherwise, it's probably ok.
-		return true;
+		return !$refresh;
 	}
 }
 
