@@ -748,6 +748,10 @@ class CatalogHelper
 		$cache = new ObjectCache('course_subject_cache_'.$year, 60*24);
 		if ($subjects = $cache->fetch()) return $subjects;
 
+		// If we're asking about a future academic year, use the previous year's sections, because
+		// the future year may not be fully populated yet.
+		if ($year && $this->get_catalog_year_start_date($year) > date('Y-m-d g:i:s')) $year--;
+		
 		$subjects = array();
 		$q = 'SELECT distinct org_id FROM course_section';
 		if ($year) $q .= ' WHERE timeframe_begin > "'.$this->get_catalog_year_start_date($year).'" AND timeframe_end < "'.$this->get_catalog_year_end_date($year).'"';
