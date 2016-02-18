@@ -500,12 +500,20 @@ class ManageCoursesModule extends DefaultMinisiteModule
 		$this->form->run();
 	}
 	
+	/**
+	 * This method determines how faculty names are displayed in the course editor. By default, it
+	 * displays them as first initial and last name, but you can extend this method to do something
+	 * different.
+	 * 
+	 * @param string $faculty
+	 * @return string
+	 */
 	function format_faculty_for_display($faculty)
 	{
 		foreach ($faculty as $key => $value)
 		{
 			list($last, $first) = explode(', ', $value);
-			$faculty[$key] = $first[0] . '. ' . $last;
+			$faculty[$key] = mb_substr($first, 0, 1, 'UTF-8') . '. ' . $last;
 		}
 		return $faculty;
 	}
