@@ -84,10 +84,10 @@ class ManageCoursesModule extends DefaultMinisiteModule
 			'size'=>50,
 			),
 		'requirements'=>array(
-			'type'=>'solidtext',
+			'type'=>'text',
 			),
 		'grading'=>array(
-			'type'=>'solidtext',
+			'type'=>'text',
 			'default'=>'GRADED',
 			),
 		'credits'=>array(
@@ -359,7 +359,7 @@ class ManageCoursesModule extends DefaultMinisiteModule
 		reason_update_entity( $this->course->id(), get_user_id(reason_check_authentication()), $this->course->get_values(), true);
 		
 		// Apply title and description changes to selected sections
-		if ($sections = $this->course->get_sections())
+		if ($this->form->get_value('sections') && $sections = $this->course->get_sections())
 		{
 			foreach ($this->form->get_value('sections') as $id)
 			{
