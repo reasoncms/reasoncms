@@ -440,7 +440,7 @@ class textDateTimeType extends textType
 	function get_hour_display($hour_val = '')
 	{
 		return $this->_get_display('hour', $hour_val, 'HH',
-		    '&nbsp;&nbsp; at ');
+		    '<span class="datetimeAt">&nbsp;&nbsp; at ');
 	}
 	function get_minute_display($minute_val = '')
 	{
@@ -456,7 +456,7 @@ class textDateTimeType extends textType
 		$str .= '<select id="'.$this->name.'ampmElement" name="'.$this->name.'[ampm]">';
 		$str .= '<option value="am"'.($ampm_val == 'am' ? ' selected="selected"': '').'>AM</option>';
 		$str .= '<option value="pm"'.($ampm_val == 'pm' ? ' selected="selected"': '').'>PM</option>';
-		$str .= '</select>';
+		$str .= '</select></span>';
 		return $str;
 	}
 	function get_cleanup_rules()

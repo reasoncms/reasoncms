@@ -1,9 +1,9 @@
 div#live_preview_panel {
-	float:right;
-	width:46%;
+	width:96%;
 	background-color:#ddd;
 	border:1px solid #bbb;
 	padding:1.5em 2%;
+	margin-bottom: 1.5em;
 }
 div#live_preview_panel div.live_preview_thumbnails {
 	margin:1em 0;
@@ -12,6 +12,12 @@ div#live_preview_panel div.live_preview_thumbnails img {
 	border:none !important;
 	height:40px;
 	width:auto;
+}
+div#live_preview_panel div#live_preview_view .featuresModule ul.features li,
+div#live_preview_panel div#live_preview_view .featuresModule ul.features li .featureImage,
+div#live_preview_panel div#live_preview_view .featuresModule ul.features li .featureImage img {
+	max-width: 100%;
+	height: auto !important;
 }
 div.contentArea div.editor form#disco_form table#discoTable {
 	width:49%;
