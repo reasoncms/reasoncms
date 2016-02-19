@@ -14,7 +14,7 @@
  	 * this line is important - make sure any content handlers have this variable set in their include files!!!!
 	 */
 	$GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'ContentManager';
-	
+
 	/**
 	 * Necessary Includes
 	 */
@@ -119,7 +119,7 @@
 			{
 				$this->entity = new entity( $id, false );
 				$this->entity->get_values();
-				$this->entity->get_relationships();
+				//$this->entity->get_relationships();
 			}
 			
 			

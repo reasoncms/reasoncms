@@ -51,7 +51,15 @@
 			else
 				$this->set_display_name ('ldap_created', 'Automatically Created');
 
+			if( !reason_user_has_privs( $this->admin_page->user_id , 'suppress_staff_listings'))
+			{
+				if($this->get_value('show_hide') == 'hide')
+					$this->add_element('hidden_notice', 'comment', array('text' => '<h4>This person is hidden from the public faculty/staff listing.</h4><p>If this is in error, contact a Reason administrator for assistance.</p>'));
+				$this->remove_element('show_hide');
+			}
+
 			$this->set_order( array(
+				'hidden_notice',
 				'comment',
 				'name',
 				'directory_info',

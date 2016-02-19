@@ -44,11 +44,6 @@ function db_query( $query, $error_message = '', $die_on_error = true )
 		$first_run = false;
 	}
 	
-	if (!empty($GLOBALS['_db_query_enable_tracking']))
-	{
-		$queries[] = array('q' => $query, 'error' => $error_message );
-	}
-	
 	switch( $query )
 	{
 		// profiling and reporting cases
@@ -86,13 +81,38 @@ function db_query( $query, $error_message = '', $die_on_error = true )
 			echo '<br /><br />';
 			echo '<strong>Queries run through db_query():</strong> '.count( $queries ).'<br />';
 			echo '<strong>Queries:</strong><br />';
+			$last = 0;
+			// Sweeten the display with some timing information
+			foreach ($queries as $key => $query)
+			{
+				$queries[$key]['length'] = round(($query['endtime'] - $query['starttime'])*1000,4).'ms';
+				$queries[$key]['time_since_last_q'] = ($last) ? round(($query['starttime'] - $last)*1000,4).'ms' : 0;
+				$last = $query['endtime'];
+				// Flatten debug data to take up less space
+				foreach ($query['context'] as $dkey => $call)
+				{
+					$queries[$key]['context'][$dkey] = '...'.substr($call['file'], -40).':'.$call['line'].'  '.$call['function'].'()';
+				}
+			}
 			pray( $queries );
+			echo '<strong>Total Time: </strong>'.round((microtime(true) - $queries[0]['starttime'])*1000,4).'ms<br />';
 			break;
 		// query case
 		default:
+			if (!empty($GLOBALS['_db_query_enable_tracking'])) $start = microtime(true);
 			// run the query
 			if( $r = mysql_query( $query ) )
+			{
+				if (!empty($GLOBALS['_db_query_enable_tracking']))
+				{
+					$queries[] = array('q' => $query, 
+										'error' => $error_message, 
+										'starttime' => $start, 
+										'endtime' => microtime(true),
+										'context' => debug_backtrace(0));
+				}
 				return $r;
+			}
 			// if an error, run through the error fun.
 			else
 			{
@@ -102,6 +122,12 @@ function db_query( $query, $error_message = '', $die_on_error = true )
 				$body = $error_message.'<br />';
 				$body .= 'Query: "'.str_replace("\n",' ',$query).'"<br />';
 				$body .= 'Error: "'.mysql_error().'" (errno: "'.mysql_errno().'")';
+				// Flatten debug data to take up less space
+				foreach (debug_backtrace(0) as $dkey => $call)
+				{
+					$backtrace[] = '...'.substr($call['file'], -40).':'.$call['line'].'  '.$call['function'].'()';
+				}
+
 				$errorlevel = MEDIUM;
 				if( $die_on_error )
 				{

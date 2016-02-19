@@ -353,7 +353,7 @@ class inlineAVFeatureView extends FeatureView
 
 
 
-		$str ="<li id=\"feature-".$view_data['id']."\" class=\"feature ".$view_data['active']." sizable\"
+		$str ="<li id=\"feature-".$view_data['id']."\" class=\"feature ".$view_data['active']." sizable cropStyle-".reason_htmlspecialchars($view_data['crop_style'])."\"
 		 		style=\"background-color:#".$view_data['bg_color'].";\" >\n";
 		$str.="<div class=\"featureContent\"  >\n";
 			$str.=$media_str;

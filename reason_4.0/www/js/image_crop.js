@@ -11,13 +11,15 @@ $(document).ready(function()
 	   the image in the page has a 600ms delay after receiving the event, and we want to
 	   make sure the image is in place before we attach to it.
 	   */	
-	$("div.file_upload").bind('uploadSuccess', function(event, file, server_data) {
+	// $("div.file_upload").bind('uploadSuccess', function(event, file, server_data) {
+	$(document).on('backgroundUploadComplete', function(event, elementName) {
 		// If jcrop is already loaded, destroy it so that we can start fresh
 		if (jcrop_api) { jcrop_api.destroy(); }
 
 		var true_w;
 		var true_h;
-		var container = $(this).parent();
+		// var container = $(this).parent();
+		var container = $("span#" + elementName + "Item"); // ex: "<span id='imageItem'>"
 		
 		setTimeout(function() {
 			// Figure out the size of the image. If the original proportions are set on the
@@ -34,7 +36,7 @@ $(document).ready(function()
 			}
 
 			var ratio = parseFloat($('input[name="_reason_upload_crop_ratio"]', container).val());
-			
+
 			$('img.representation', container).Jcrop({
 				aspectRatio: ratio,
 				onSelect: updateCoords,
@@ -101,10 +103,12 @@ $(document).ready(function()
 			alert('Please select a crop region before submitting your image.');
 			return false;
 		}
+
 		return true;
 	};
 	
-	$('div.file_upload').each(function(){
+	// $('div.file_upload').each(function(){
+	$('input[name="_reason_upload_orig_h"]').each(function(){
 		$(this).closest('form').submit(function(){
 			return checkCoords(this);
 		});

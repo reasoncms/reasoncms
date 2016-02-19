@@ -325,6 +325,12 @@
 				'width' => 640,
 			),
 		),
+		'audio_video_simple_860_wide' => array(
+			'main_post' => array(
+				'module' => 'av_simple',
+				'width' => 860,
+			),
+		),
 		'audio_video_simple_sidebar' => array(
 			'sidebar' => array(
 				'module' => 'av_simple',
@@ -2127,6 +2133,9 @@
         'user_settings' => array(
         	'main_post' => 'user_settings/user_settings'
         ),
+		'course_catalog_page' => array(
+			'main' => 'catalog/subject_page'
+		),
 	);
 
 	$GLOBALS['_reason_deprecated_modules'] = array(

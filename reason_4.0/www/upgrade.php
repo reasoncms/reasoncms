@@ -51,17 +51,17 @@ $head_items = new HeadItems();
 $head_items->add_head_item('title',array(),'Upgrade Reason', true);
 $head_items->add_head_item('meta',array('http-equiv'=>'Content-Type','content'=>'text/html; charset=UTF-8' ) );
 $head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/reason_setupgrade/reason_setupgrade.css');
-
+		
 if(!empty($_GET['upgrade_step']) && isset($upgrade_steps[$_GET['upgrade_step']]))
 {
 	$step = $_GET['upgrade_step'];
 	$requested_upgrader = !empty($_GET['upgrader']) ? $_GET['upgrader'] : NULL;
-
+	
 	$rua = new reasonUpgradeAssistant;
 	$active_upgraders = $rua->get_active_upgraders($step, $requested_upgrader);
 
 	$str = '<h2>'.htmlspecialchars($upgrade_steps[$step]).'</h2>'."\n";
-
+	
 	if (!empty($active_upgraders))
 	{
 		$str .= $rua->get_upgrader_output($active_upgraders, $reason_user_id, $head_items);
@@ -87,7 +87,7 @@ if(!empty($_GET['upgrade_step']) && isset($upgrade_steps[$_GET['upgrade_step']])
 		{
 			$str .= $rua->get_upgrader_output($upgrade_info_item);
 		}
-
+		
 		// AUTOMATIC UPGRADERS - NO UI - CAN BE RUN AND TESTED AS A GROUP //
 		$upgraders = $rua->get_upgraders($step);
 		if (!empty($upgraders))
@@ -108,7 +108,7 @@ if(!empty($_GET['upgrade_step']) && isset($upgrade_steps[$_GET['upgrade_step']])
 			}
 			$str .= '</ul>'."\n";
 		}
-
+		
 		// STANDALONE UPGRADERS //
 		$standalone_upgraders = $rua->get_standalone_upgraders($step);
 		if (!empty($standalone_upgraders))
@@ -134,13 +134,13 @@ if(!empty($_GET['upgrade_step']) && isset($upgrade_steps[$_GET['upgrade_step']])
 }
 else
 {
-	$str = '<p>Each new version of Reason CMS includes a set of scripts that you should ';
+	$str = '<p>Each new version of Reason includes a set of scripts that you should ';
 	$str .= 'run to update your database to work with the latest version of the Reason code base. ';
 	$str .= 'The scripts are designed to be used from one release to the next; you cannot necessarily update ';
-	$str .= 'a Reason CMS database across multiple steps after downloading the most current code base.</p>';
-	$str .= '<p>If you have trouble upgrading and you are using an old version of Reason CMS, try downloading ';
+	$str .= 'a Reason database across multiple steps after downloading the most current code base.</p>';
+	$str .= '<p>If you have trouble upgrading and you are using an old version of Reason, try downloading ';
 	$str .= 'the point release after the one you are currently using and upgrade incrementally.</p>';
-	$str .= '<p><a href="http://reasoncms.org/get-started/download/">Reason CMS download page</a></p>';
+	$str .= '<p><a href="http://apps.carleton.edu/opensource/reason/download/">Reason download page</a></p>';
 	$str .= '<h2>Reason Upgrade Scripts</h2>';
 	$str .= '<ul>';
 	foreach($upgrade_steps as $k => $v)
@@ -166,7 +166,7 @@ $output .= '<body>';
 $output .= '<div id="reason_upgrade">';
 $output .= '<h1>Upgrade Reason</h1>';
 $output .= $str;
-$output .= '</div>';
+$output .= '</div>';	
 $output .= '</body>';
 $output .= '</html>';
 

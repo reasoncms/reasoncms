@@ -44,6 +44,7 @@ include_once( CARL_UTIL_INC . 'db/db.php' );
  * column doesn't exist, it returns false.
  *
  * @author Brendon Stanton
+ * @author Mark Heiman
  * @package reason
  */
 class entity
@@ -101,6 +102,10 @@ class entity
 	 * setting this to false assures that you will always get the more recent info from the DB
 	 * @var boolean
 	 */
+	 
+	protected $_right_relationships_loaded = false;
+	protected $_left_relationships_loaded = false;
+	
 	var $_cache = true;
 	/**
 	 * Contains the local environment
@@ -136,7 +141,7 @@ class entity
 			$msg = 'Entity instantiated without valid ID. Called by '.str_replace(array(INCLUDE_PATH,WEB_PATH), '...', $first['file']).' on line '.$first['line'].'.';
 			trigger_error($msg);
 		} */
-		$this->_id = $id;
+		$this->_id = (int) $id;
 		$this->_cache = $cache;
 	} // }}}
 	/**
@@ -238,6 +243,7 @@ class entity
 		elseif(!array_key_exists($col, $this->_values))
 		{
 			trigger_error('"'.$col.'" field not retrieved from database');
+			// echo '<pre>';debug_print_backtrace();echo '</pre>';
 		}
 		return false;
 	} // }}}
@@ -308,11 +314,17 @@ class entity
 	// usually we want to check to see if something is 
 	// in one side, but we might want both.
 	//
-	// Relationships can be indexed by number or name, but
-	// if there are two different relationship types (not
-	// two relationships, but two seperate types), using 
-	// the name index will only grab one of them.  To be 
-	// sure in this case, use an index and not a name.
+	// The entity class as originally written stored all
+	// relationship table rows for related entities, indexed
+	// both by relationship id and name, as well as instantiating
+	// entities for all those relationships, also double indexed.
+	// Performance has been significantly improved by grabbing 
+	// relationship table rows only as needed, indexing them 
+	// only by relationship id, and instantiating entities 
+	// from that data only as requested. Historic methods
+	// continue to return the same values as before (double 
+	// indexed) but that data is generated dynamically from
+	// the smaller set actually stored on the entity.
 	//
 	//////////////////////////////////////////////////////
 
@@ -323,29 +335,6 @@ class entity
 	 */
 	function _init_left_relationships() // {{{
 	{
-		//first, get relationship types
-		$dbq = new DBSelector;
-		$dbq->add_field( 'allow' , '*' );
-
-		$dbq->add_table( 'allow' , 'allowable_relationship' );
-		$dbq->add_table( 'entity' , 'entity' );
-
-		$dbq->add_relation( 'entity.id = ' . $this->_id );
-		$dbq->add_relation( 'entity.type = allow.relationship_a' );
-		// see note on this line down  in right relationship land
-		//$dbq->add_relation( 'entity.state = "Live"' );
-
-		$r1 = db_query( $dbq->get_query() , 'Entity Error:  Could not get relationships' );
-		
-		$rel_name = array();
-		while( $row = mysql_fetch_array( $r1 , MYSQL_ASSOC ) )
-		{
-			$this->_left_relationships[ $row['id'] ] = array();
-			$this->_left_relationships[ $row['name'] ] = array();
-			$this->_left_relationships_info[ $row['id'] ] = array();
-			$this->_left_relationships_info[ $row['name'] ] = array();
-			$rel_name[ $row['id'] ] = $row['name'];
-		}
 		$dbq = new DBSelector;
 		$dbq->add_table( 'r','relationship' );
 		$dbq->add_field( 'r','*' );
@@ -359,15 +348,12 @@ class entity
 			$dbq->add_relation( '(r.site=0 OR r.site=' . $this->_env['site'] . ')' );
 		}
 		$rels = $dbq->run( 'Unable to grab relationships' );
-		reset( $rels );
-		while( list( ,$r ) = each( $rels ) )
+		foreach( $rels as $r)
 		{
-			$e = new entity( $r['entity_b'] );
-			$this->_left_relationships[ $r['type'] ][] = $e;
 			$this->_left_relationships_info[ $r['type'] ][] = $r;
-			$this->_left_relationships[ $rel_name[ $r['type'] ] ][] = $e;
-			$this->_left_relationships_info[ $rel_name[ $r['type'] ] ][] = $r;
 		}
+		
+		$this->_left_relationships_loaded = true;
 	} // }}}
 	/**
 	 * Initialize the _right_relationships and _right_relationships_info arrays
@@ -376,28 +362,6 @@ class entity
 	 */
 	function _init_right_relationships() // {{{
 	{
-		//first, get relationship types
-		$dbq = new DBSelector;
-		$dbq->add_field( 'allow' , '*' );
-
-		$dbq->add_table( 'allow' , 'allowable_relationship' );
-		$dbq->add_table( 'entity' , 'entity' );
-
-		$dbq->add_relation( 'entity.id = ' . $this->_id );
-		$dbq->add_relation( 'entity.type = allow.relationship_b' );
-		// we think this should be commented out.  it makes an error not appear.  you probably want more than that.  i don't have it.
-		//$dbq->add_relation( 'entity.state = "Live"' );
-
-		$r1 = db_query( $dbq->get_query() , 'Entity Error:  Could not get relationships' );
-		$rel_name = array();
-		while( $row = mysql_fetch_array( $r1 , MYSQL_ASSOC ) )
-		{
-			$this->_right_relationships[ $row['id'] ] = array();
-			$this->_right_relationships[ $row['name'] ] = array();
-			$this->_right_relationships_info[ $row['id'] ] = array();
-			$this->_right_relationships_info[ $row['name'] ] = array();
-			$rel_name[ $row['id'] ] = $row['name'];
-		}
 		$dbq = new DBSelector;
 		$dbq->add_table( 'r','relationship' );
 		$dbq->add_field( 'r','*' );
@@ -413,16 +377,64 @@ class entity
 		$rels = $dbq->run();
 		foreach( $rels AS $r )
 		{
-			$e = new entity( $r['entity_a'] );
-			$this->_right_relationships[ $r['type'] ][] = $e;
 			$this->_right_relationships_info[ $r['type'] ][] = $r;
-			if(!empty($rel_name[ $r['type'] ]))
+		}
+		
+		$this->_right_relationships_loaded = true;
+	} // }}}
+	
+	/**
+	 * This function returns an array of related entities (if passed as relationship type)
+	 * or all the related entities keyed on relationship type (if no type is passed). It
+	 * populates the *_relationships class var as needed, so entities aren't instantiated
+	 * more than once.
+	 *
+	 * @param string $side 'left' or 'right'
+	 * @param mixed $type optional; either the name or id of an allowable relationship
+	 * @return array
+	 */
+	protected function _get_related_entities($side, $type = null)
+	{
+		$info = '_' . $side . '_relationships_info';
+		$entities = '_' . $side . '_relationships';
+		$column = ($side == 'right') ? 'entity_a' : 'entity_b';
+		
+		if ($type)
+		{
+			list($rel_id, $rel_name) = $this->_normalize_rel_key($type);
+		
+			// If already instantiated, don't try again.
+			if (array_key_exists($rel_id, $this->$entities)) return $this->{$entities}[$rel_id];
+		
+			// If we have rows in the info array, make matching ones in the entities array
+			if (array_key_exists($rel_id, $this->$info))
 			{
-				$this->_right_relationships[ $rel_name[ $r['type'] ] ][] = $e;
-				$this->_right_relationships_info[ $rel_name[ $r['type'] ] ][] = $r;
+				$this->{$entities}[$rel_id] = array();
+				foreach ($this->{$info}[$rel_id] as $key => $row)
+				{
+					$this->{$entities}[$rel_id][$key] = new entity( $row[$column] );
+				}
+				return $this->{$entities}[$rel_id];
 			}
 		}
-	} // }}}
+		else
+		{
+			// If we have rows in the info array, make matching ones in the entities array
+			foreach ($this->$info as $type => $values)
+			{
+				// (if that rel type hasn't already been populated)
+				if (!array_key_exists($type, $this->$entities))
+				{
+					foreach ($values as $key => $row)
+					{
+						$this->{$entities}[$type][$key] = new entity( $row[$column] );
+					}
+				}	
+			}
+			return $this->$entities;
+		}
+		return array();
+	}
 	
 	/**
 	 * returns true if entity has a left relationship of the given type
@@ -431,11 +443,8 @@ class entity
 	 */
 	function has_left_relation_of_type( $e ) // {{{
 	{
-		if( empty($this->_left_relationships) )
-			$this->_init_left_relationships();
-		if( !empty($this->_left_relationships[ $e ]) )
-			return true;
-		else return false;
+		$rels = $this->get_left_relationships_info($e);
+		return !empty($rels[$e]);
 	} // }}}
 	/**
 	 * returns true if entity has a right relationship of the given type
@@ -444,11 +453,8 @@ class entity
 	 */
 	function has_right_relation_of_type( $e ) // {{{
 	{
-		if( empty($this->_right_relationships) )			
-			$this->_init_right_relationships();
-		if( !empty($this->_right_relationships[ $e ]) )
-			return true;
-		else return false;
+		$rels = $this->get_right_relationships_info($e);
+		return !empty($rels[$e]);
 	} // }}}
 
 	/**
@@ -472,17 +478,30 @@ class entity
 		{
 			$id = $e->id();
 		}
-		if( empty( $this->_left_relationships ) )
-			$this->_init_left_relationships();
-		foreach( $this->_left_relationships AS $name => $relate )
+		
+		if ($type) list($rel_id, $rel_name) = $this->_normalize_rel_key($type);
+		
+		// If we know the rel type, we can just look at that subset of relationship data
+		if (!empty($rel_id))
 		{
-			if( empty( $type ) OR $name == $type)
+			$rows = $this->get_left_relationships_info($rel_id);
+			foreach ($rows[$rel_id] as $row)
 			{
-				foreach( $relate AS $item )
-				{
-					if($id == $item->id() )
-						return true;
-				}
+				if ( $id == $row['entity_b'] )
+					return true;
+			}
+			return false;
+		}
+		
+		// If we don't know the rel type, we have to load all the relationships (ouch)
+		if( !$this->_left_relationships_loaded )
+			$this->_init_left_relationships();
+		foreach( $this->_left_relationships_info AS $rel_id => $rows )
+		{
+			foreach( $rows AS $row )
+			{
+				if ( $id == $row['entity_b'] )
+					return true;
 			}
 		}
 		return false;
@@ -508,17 +527,30 @@ class entity
 		{
 			$id = $e->id();
 		}
-		if( empty( $this->_right_relationships ) )
-			$this->_init_right_relationships();
-		foreach( $this->_right_relationships AS $name => $relate )
+		
+		if ($type) list($rel_id, $rel_name) = $this->_normalize_rel_key($type);
+		
+		// If we know the rel type, we can just look at that subset of relationship data
+		if (!empty($rel_id))
 		{
-			if( empty( $type ) OR $name == $type)
+			$rows = $this->get_right_relationships_info($rel_id);
+			foreach ($rows[$rel_id] as $row)
 			{
-				foreach( $relate AS $item )
-				{
-					if($id == $item->id() )
-						return true;
-				}
+				if ( $id == $row['entity_a'] )
+					return true;
+			}
+			return false;
+		}
+		
+		// If we don't know the rel type, we have to load all the relationships (ouch)
+		if( !$this->_right_relationships_loaded )
+			$this->_init_right_relationships();
+		foreach( $this->_right_relationships_info AS $rel_id => $rows )
+		{
+			foreach( $rows AS $row )
+			{
+				if ( $id == $row['entity_a'] )
+					return true;
 			}
 		}
 		return false;
@@ -530,9 +562,9 @@ class entity
 	 */
 	function get_left_relationships() // {{{
 	{
-		if( !$this->_left_relationships )
+		if( !$this->_left_relationships_loaded )
 			$this->_init_left_relationships();
-		return $this->_left_relationships;
+		return $this->_sweeten_relationship_data($this->_get_related_entities('left'));
 	} // }}}
 	/** 
 	 * Gets all right relationships of the entity
@@ -540,9 +572,9 @@ class entity
 	 */
 	function get_right_relationships() // {{{
 	{
-		if( !$this->_right_relationships )
+		if( !$this->_right_relationships_loaded )
 			$this->_init_right_relationships();
-		return $this->_right_relationships;
+		return $this->_sweeten_relationship_data($this->_get_related_entities('right'));
 	} // }}}
 	/** 
 	 * Gets the left relationships of a given name for an object
@@ -550,9 +582,9 @@ class entity
 	 */	
 	function get_left_relationship( $rel_name ) // {{{
 	{
-		if( !$this->_left_relationships )
-			$this->_init_left_relationships();
-		return empty($this->_left_relationships[ $rel_name ]) ? array() : $this->_left_relationships[ $rel_name ];
+		if (!array_key_exists( $rel_name, $this->_left_relationships_info))
+			$this->_get_left_relationship_query( $rel_name );
+		return $this->_get_related_entities('left', $rel_name);
 	} // }}}
 	/** 
 	 * Gets the right relationships of a given name for an object
@@ -560,22 +592,103 @@ class entity
 	 */	
 	function get_right_relationship( $rel_name )  // {{{
 	{
-		if( !$this->_right_relationships )
-			$this->_init_right_relationships();
-		return empty($this->_right_relationships[ $rel_name ]) ? array() : $this->_right_relationships[ $rel_name ];
+		if (!array_key_exists( $rel_name, $this->_right_relationships_info))
+			$this->_get_right_relationship_query( $rel_name );
+		return $this->_get_related_entities('right', $rel_name);
 	} // }}}
-	
+
+	/** 
+	 * Gets the right relationships of a given name for an object, 
+	 * using a single query rather than the full relationship set.
+	 * @param mixed $rel_name name or id of an AR
+	 */	
+	private function _get_right_relationship_query( $type )  // {{{
+	{
+		list($rel_id, $rel_name) = $this->_normalize_rel_key($type);
+		if ($rel_id == 0) return array();
+			
+		$dbq = new DBSelector;
+		$dbq->add_table( 'r','relationship' );
+		$dbq->add_field( 'r','*' );
+		$dbq->add_table( 'entity' , 'entity' );
+		$dbq->add_relation( 'entity.state = "Live"' );
+		$dbq->add_relation( 'entity.id = r.entity_a' );
+		$dbq->add_relation( 'r.entity_b = '.$this->id() );
+		$dbq->add_relation( 'r.type = '.$rel_id );
+		if( $this->_env['restrict_site'] AND !empty($this->_env['site']) )
+		{
+			$dbq->add_relation( '(r.site=0 OR r.site=' . $this->_env['site'] . ')' );
+		}
+		$dbq->set_order( 'rel_sort_order' );
+		$rels = $dbq->run();
+		foreach( $rels AS $r )
+		{
+			$this->_right_relationships_info[ $rel_id ][] = $r;
+		}
+		
+		// If we did the query but didn't get any results, we save an empty array
+		// at that key location to indicate that we've done the query and 
+		// shouldn't do it again.
+		if (!isset($this->_right_relationships_info[$rel_id]))
+		{
+			$this->_right_relationships_info[ $rel_id ] = array();
+		}
+		return $this->_right_relationships_info[ $rel_id ];
+		
+	} // }}}
+
+	/** 
+	 * Gets the left relationships of a given name for an object, 
+	 * using a single query rather than the full relationship set.
+	 * @param mixed $rel_name name or id of an AR
+	 */	
+	private function _get_left_relationship_query( $type )  // {{{
+	{
+		list($rel_id, $rel_name) = $this->_normalize_rel_key($type);
+		if ($rel_id == 0) return array();
+			
+		$dbq = new DBSelector;
+		$dbq->add_table( 'r','relationship' );
+		$dbq->add_field( 'r','*' );
+		$dbq->add_table( 'entity' , 'entity' );
+		$dbq->add_relation( 'entity.state = "Live"' );
+		$dbq->add_relation( 'entity.id = r.entity_b' );
+		$dbq->add_relation( 'r.entity_a = '.$this->id() );
+		$dbq->add_relation( 'r.type = '.$rel_id );
+		if( $this->_env['restrict_site'] AND !empty($this->_env['site']) )
+		{
+			$dbq->add_relation( '(r.site=0 OR r.site=' . $this->_env['site'] . ')' );
+		}
+		$dbq->set_order( 'rel_sort_order' );
+		$rels = $dbq->run();
+		
+		foreach( $rels AS $r )
+		{
+			$this->_left_relationships_info[ $rel_id ][] = $r;
+		}
+		
+		// If we did the query but didn't get any results, we save an empty array
+		// at that key location to indicate that we've done the query and 
+		// shouldn't do it again.
+		if (!isset($this->_left_relationships_info[$rel_id]))
+		{
+			$this->_left_relationships_info[ $rel_id ] = array();
+		}
+		
+		return $this->_left_relationships_info[ $rel_id ];
+		
+	} // }}}	
 	/**
 	 * Generic function which returns true if the entity is on either side of a relationship
 	 * @param mixed $e name or ID of an AR
 	 * @return boolean
 	 */
-		function has_relation_of_type( $e ) // {{{
-		{
-			if( $this->has_left_relation_of_type( $e ) OR $this->has_right_relation_of_type( $e ) )
-				return true;
-			else return false;
-		} // }}}
+	function has_relation_of_type( $e ) // {{{
+	{
+		if( $this->has_left_relation_of_type( $e ) OR $this->has_right_relation_of_type( $e ) )
+			return true;
+		else return false;
+	} // }}}
 	/**
 	 * Generic function which returns true if the entity has a left or right relationship with an entity
 	 * @param entity $e the entity we are checking
@@ -598,14 +711,17 @@ class entity
 		return $this->get_left_relationships() + $this->get_right_relationships();
 	} // }}}
 	/**
-	 * Gets all relationships (left and right) of the entity
-	 * @param mixed $rel_name name or ID of an AR
+	 * Gets a particular relationship (left or right) of the entity
+	 * @param mixed $rel_name name of an AR
 	 * @return array
 	 */
 	function get_relationship( $rel_name ) // {{{
 	{
-		$all = $this->get_relationships();
-		return $all[ $rel_name ];
+		if ($rel = $this->get_left_relationship($rel_name))
+			return $rel;
+		else if ($rel = $this->get_right_relationship($rel_name))
+			return $rel;
+		else return null;
 	} // }}}
 	
 	/** 
@@ -613,27 +729,94 @@ class entity
 	 * 
 	 * Note that this returns the values of the relationship table, not the entities themselves
 	 *
+	 * @param mixed $type optional name or ID of an AR
 	 * @return array
 	 */
-	function get_left_relationships_info() // {{{
+	function get_left_relationships_info($type = null) // {{{
 	{
-		if( !$this->_left_relationships_info )
-			$this->_init_left_relationships();
-		return $this->_left_relationships_info;
+		if (!$type)
+		{
+			if( !$this->_left_relationships_loaded )
+				$this->_init_left_relationships();
+			return $this->_sweeten_relationship_data($this->_left_relationships_info);
+		}
+		else
+		{
+			list($rel_id, $rel_name) = $this->_normalize_rel_key($type);
+			if (array_key_exists($rel_id, $this->_left_relationships_info))
+				return $this->_sweeten_relationship_data(array($rel_id => $this->_left_relationships_info[$rel_id]));
+			else
+				return $this->_sweeten_relationship_data(array($rel_id => $this->_get_left_relationship_query($rel_id)));
+		}	
 	} // }}}
 	/** 
-	 * Getinfo about the right relationships of the entity
+	 * Get info about the right relationships of the entity
 	 *
 	 * Note that this returns the values of the relationship table, not the entities themselves
 	 *
 	 * @return array
 	 */
-	function get_right_relationships_info() // {{{
+	function get_right_relationships_info($type = null) // {{{
 	{
-		if( !$this->_right_relationships_info )
-			$this->_init_right_relationships();
-		return $this->_right_relationships_info;
+		if (!$type)
+		{
+			if( !$this->_right_relationships_loaded )
+				$this->_init_right_relationships();
+			return $this->_sweeten_relationship_data($this->_right_relationships_info);
+		}
+		else
+		{
+			list($rel_id, $rel_name) = $this->_normalize_rel_key($type);
+			if (array_key_exists($rel_id, $this->_right_relationships_info))
+				return $this->_sweeten_relationship_data(array($rel_id => $this->_right_relationships_info[$rel_id]));
+			else
+				return $this->_sweeten_relationship_data(array($rel_id => $this->_get_right_relationship_query($rel_id)));
+		}	
 	} // }}}
+
+	/**
+	 * Relationship data is stored keyed on relationship ID. In previous versions
+	 * of the entity class, this data was also keyed on relationship name, doubling
+	 * the data stored. This method takes a relationship array (either *_relationships
+	 * or *_relationships_info) and populates the relationship name keys, providing a 
+	 * way for methods to continue returning the same data structures as before.
+	 *
+	 * @param array $data
+	 */
+	private function _sweeten_relationship_data($data)
+	{
+		foreach($data as $rel_id => $values)
+		{
+			if ($rel_name = relationship_name_of($rel_id))
+			{
+				if (!array_key_exists($rel_name, $data))
+					$data[$rel_name] = $values;
+			}
+		}
+		return $data;
+	}
+
+	/**
+	 * Given a relationship ID or name, this function returns an array of the form
+	 * array(id, name) so that you always know what you've got.
+	 * @param mixed $key name or ID of an AR
+	 * @return array
+	 */
+	private function _normalize_rel_key($key)
+	{
+		if (is_numeric($key))
+		{
+			return array((int)$key, relationship_name_of($key));
+		}
+		else if ($rel_id = relationship_id_of($key))
+		{
+			return array((int)$rel_id, $key);
+		}
+		else
+		{
+			return array(0, $key);
+		}
+	}
 
 	/**
 	 * Returns an entity of the site that owns this entity
@@ -647,6 +830,17 @@ class entity
 		else
 			return 0;
 	} // }}}
+
+	/**
+	 * Resets the left right relationship and relationship_info arrays. Can reclaim a significant amount
+	 * of memory.
+	 */
+	function clearRelationshipArrays() {
+		$this->_left_relationships = Array();
+		$this->_left_relationships_info = Array();
+		$this->_right_relationships = Array();
+		$this->_right_relationships_info = Array();
+	}
 	/**
 	 * Returns true if entity is owned or borrowed by site in first argument
 	 * @param integer $site_id

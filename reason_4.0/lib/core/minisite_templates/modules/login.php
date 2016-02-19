@@ -357,9 +357,10 @@
 				$current_parts = parse_url( get_current_url() );
 				$parts = parse_url( $this->dest_page );
 				$port = (isset($parts['port']) && !empty($parts['port'])) ? ":".$parts['port'] : '';
+				$path = (isset($parts['path']) && !empty($parts['path'])) ? $parts['path'] : '';
 				$query = (isset($parts['query']) && !empty($parts['query'])) ? '?'.$parts['query'] : '';
 				$fragment = (isset($parts['fragment']) ? '#' . $parts['fragment'] : '');
-				return securest_available_protocol() . '://'.$current_parts['host'].$port.$parts['path'].$query.$fragment;
+				return securest_available_protocol() . '://'.$current_parts['host'].$port.$path.$query.$fragment;
 			}
 		}
 		

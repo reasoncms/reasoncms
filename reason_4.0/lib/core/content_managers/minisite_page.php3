@@ -224,7 +224,7 @@ class MinisitePageManager extends parent_childManager
 				/* Why are we creating a special new state element for new pages? Figure out if we can
 			   	just use the state element all the time. */
 				$this->add_element( 'state_action','select',array( 'options' => array( 'Live' => 'Live','Pending' => 'Pending' ), 'default' => 'Live' ) );
-				$this->set_display_name( 'state_action', 'state' );
+				$this->set_display_name( 'state_action', 'State' );
 				$this->add_required( 'state_action' );
 			}
 		}	

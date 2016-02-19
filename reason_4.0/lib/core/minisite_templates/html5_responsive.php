@@ -114,7 +114,7 @@
 		
 			$this->head_items->add_javascript(JQUERY_URL, true);
 			$this->head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'fitvids/jquery.fitvids_outside.js');
-			$this->head_items->add_head_item('script', array(), $content = '$(document).ready(function(){$("body").fitVids();});' );
+			$this->head_items->add_head_item('script', array(), '$(document).ready(function(){$("body").fitVids();});' );
 		}
 		function show_banner()
 		{

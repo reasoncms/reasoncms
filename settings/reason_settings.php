@@ -638,6 +638,13 @@
 	define( 'PUBLICATION_SOCIAL_SHARING_DEFAULT', false);
 
 	/**
+	* PUBLICATION_SOCIAL_SHARING_INCLUDES_EMAIL
+	* This setting identifies whether social sharing on publications will 
+	* include email sharing via the publication module's email sharing feature
+	*/
+	define( 'PUBLICATION_SOCIAL_SHARING_INCLUDES_EMAIL', true);
+	
+	/**
 	 * REASON_WEB_ADMIN_PATH
 	 * This setting identifies the location of the Reason admin area
 	 * It should be in the form of foo.host_name.bar/http/path/to/admin/area/
@@ -1010,6 +1017,13 @@
 	 * Web path to the directory where Reason's custom sized image are accessible.
 	 */
 	define('REASON_SIZED_IMAGE_CUSTOM_DIR_WEB_PATH', REASON_HTTP_BASE_PATH.'sized_images_custom/');
+
+	/**
+	 * REASON_TEMP_UPLOAD_DIR
+	 *
+	 * Full file system path to the directory where Reason's should temporarily store uploaded files
+	 */
+	define('REASON_TEMP_UPLOAD_DIR', REASON_DATA_DIR.'tmpUploads/');
 
 	/**
 	 * REASON_ENTITY_LOCKS_ENABLED

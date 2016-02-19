@@ -25,6 +25,10 @@ function response_code($code) {
 	http_response_code($code);
 }
 
+function responseWrapper($code, $msg) {
+	final_response($code, Array("message" => $msg));
+}
+
 function final_response($code, $message) {
 	
 	if (is_array($message) || is_object($message)) {

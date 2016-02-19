@@ -17,7 +17,9 @@ include_once(CARL_UTIL_INC.'basic/misc.php');
  * $api->run();
  *
  * @todo allow extensibility with content type definitions - remove hard coded content type map
- *
+ * 
+ * Modification: http_response_code handling added for errors other than 403/4, added csv mime type, added response for csv RABBANII
+ * 
  * @version .1
  * @author Nathan White
  * @package carl_util
@@ -42,7 +44,8 @@ class CarlUtilAPI
 	private $content_type_map = array(
 		'json' => 'application/json',
 		'html' => 'text/html',
-		'xml' => 'text/xml'
+		'xml' => 'text/xml',
+		'csv' => 'text/csv'
 	);
 			
 	private $content_type;
@@ -56,7 +59,7 @@ class CarlUtilAPI
 	 * @param mixed support_types - optional param - string specifying content type or array specifying multiples content types.
 	 */
 	function __construct($support_types = NULL)
-	{
+	{	
 		if (isset($support_types))
 		{
 			if (is_string($support_types)) $support_types = array($support_types);
@@ -140,6 +143,7 @@ class CarlUtilAPI
 	 */
 	final function set_name($name)
 	{
+
 		$this->api_name = $name;
 	}
 
@@ -252,15 +256,16 @@ class CarlUtilAPI
 				header('Content-type: ' . $content_type_header);
 				switch ($this->get_content_type())
 				{
-					case "html":
-						echo '<html><body><h1>404</h1><p>Resource Not Found</p></body></html>';
-						break;
 					case "json":
 						echo json_encode(array('status' => '404', 'error' => 'Resource Not Found'));
 						break;
 					case "xml":
 						$xml = '<?xml version=\'1.0\' standalone=\'yes\'?>';
 						$xml .= '<root><status>404</status><error>Resource Not Found</error></root>';
+						break;
+					case "html":
+					default:
+						echo '<html><body><h1>404</h1><p>Resource Not Found</p></body></html>';
 						break;
 				}
 			}
@@ -270,9 +275,6 @@ class CarlUtilAPI
 				header('Content-type: ' . $content_type_header);
 				switch ($this->get_content_type())
 				{
-					case "html":
-						echo '<html><body><h1>404</h1><p>Unauthorized</p></body></html>';
-						break;
 					case "json":
 						echo json_encode(array('status' => '403', 'error' => 'Unauthorized'));
 						break;
@@ -280,7 +282,15 @@ class CarlUtilAPI
 						$xml = '<?xml version=\'1.0\' standalone=\'yes\'?>';
 						$xml .= '<root><status>403</status><error>Unauthorized</error></root>';
 						break;
+					case "html":
+					default:
+						echo '<html><body><h1>403</h1><p>Unauthorized</p></body></html>';
+						break;
 				}
+			}
+			else {
+				$message = get_message_for_http_status($http_response_code);
+				echo '<html><body><h1>'.$http_response_code.'</h1><p>'.$message.'</p></body></html>';
 			}
 		}
 		elseif ($content_type && !$content_type_supported) // this request is invalid - no content type set

@@ -359,8 +359,11 @@ class DefaultFeatureView extends FeatureView
 		if ( $this->_view_params['initial_offset'])
 			$timer = $this->_view_params['initial_offset'] + $timer;
 		$looping=$this->_view_params['looping'];
+
+		$count = 'count'.count($view_data);
 		$class = ltrim($this->custom_class, '.');
-		$str = "<div class=\"featuresModule $class autoplay-$timer looping-$looping noscript\">\n";
+		$str = "<div class=\"featuresModule $class autoplay-$timer looping-$looping noscript $count\">\n";
+
 		$str.= "<ul class=\"features\">\n";
 		$str.= "";
 		foreach($view_data as $data)
@@ -453,7 +456,7 @@ class DefaultFeatureView extends FeatureView
 			}
 		}
 
-		$str ="<li id=\"feature-".$view_data['id']."\" class=\"feature ".$view_data['active']." sizable\"
+		$str ="<li id=\"feature-".$view_data['id']."\" class=\"feature ".$view_data['active']." sizable cropStyle-".reason_htmlspecialchars($view_data['crop_style'])."\"
 		 		style=\"background-color:#".$view_data['bg_color'].";\" >\n";
 		$str.='<div class="featureContent' .$type_str.'">'."\n";
 			$str.=$media_str;
