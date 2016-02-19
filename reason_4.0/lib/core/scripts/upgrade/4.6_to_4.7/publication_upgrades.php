@@ -135,8 +135,14 @@ class ReasonUpgrader_47_PublicationUpgradeChanges implements reasonUpgraderInter
 			echo "newstype already has a 'linkpost_url' column; skipping...<br>";
 		} else {
 			$this->rsnDbHelper->addFieldsToEntity("newstype", array("linkpost_url" => "varchar(255) DEFAULT ''"));
-			$postToOrganizationRelId = $this->rsnDbHelper->createAllowableRelationshipHelper(id_of("news"), id_of("organization_type"), "news_post_to_url_organization", $this->POST_TO_ORG_DETAILS);
-			echo "added linkpost_url field to newstype and added allowable relationship between news/post and organization<br>";
+
+			echo "added linkpost_url field to newstype<br>";
+			if (id_of("organization_type", true, false) != 0) {
+				$postToOrganizationRelId = $this->rsnDbHelper->createAllowableRelationshipHelper(id_of("news"), id_of("organization_type"), "news_post_to_url_organization", $this->POST_TO_ORG_DETAILS);
+				echo "added allowable relationship between news/post and organization<br>";
+			} else {
+				echo "organization_type doesn't exist; not adding relationship between org and news/post (this is NOT an error)<br>";
+			}
 		}
 	}
 
