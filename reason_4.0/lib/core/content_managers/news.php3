@@ -163,12 +163,18 @@
 		} // }}}
 
 		function get_site_entities($entity_type) {
-			$es = new entity_selector($this->get_value('site_id'));
-			$es->description = 'Finding the entities of type ' . $entity_type . ' on this site';
-			$es->add_type(id_of($entity_type));
-			$es->set_order('entity.name ASC');
-			$entities = $es->run_one();
-			return $entities;
+			$entityId = id_of($entity_type, true, false);
+			if ($entityId == 0) {
+				return null;
+			} else {
+
+				$es = new entity_selector($this->get_value('site_id'));
+				$es->description = 'Finding the entities of type ' . $entity_type . ' on this site';
+				$es->add_type(id_of($entity_type));
+				$es->set_order('entity.name ASC');
+				$entities = $es->run_one();
+				return $entities;
+			}
 		}
 		
 		function make_site_specific_changes()
