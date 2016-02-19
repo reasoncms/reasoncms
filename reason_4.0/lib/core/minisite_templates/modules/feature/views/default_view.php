@@ -9,11 +9,11 @@
 
 /**
  * NOTE - Features are a beta feature. This abstract class and any views distributed with Reason 4 are subject to change.
- * 
+ *
  * It is recommended that you DO NOT create custom feature views at this time.
- * 
+ *
  * This is the root class for all view layer views of the Feature Module.
- * 
+ *
  * To create a new view you should override the following methods
  * 	set($view_data,$view_params,$current_feature_id,&$head_items)
  *   get_html()
@@ -22,13 +22,13 @@
  */
 class FeatureView
 {
-	
+
 	var $_view_params;//parameters that control how the view layer behaves
 	var $_view_data;//the data to be shown to the user via the view layer
 	var $current_feature_id=0;//which feature to show first
 	var $default_width=400;//in case width wasn't passed in via set function
 	var $default_height=300;//in case height wsn't passed in via set function
-	
+
 	/**
 	* This function should be called right before get_html()
 	* it sets the parameters of how the object will behave
@@ -71,8 +71,16 @@ class FeatureView
 		{
 			$this->_view_params['absolute_urls']=false;
 		}
+		if(!empty($this->_view_params['categories']))
+		{
+			$this->_view_params['categories']=array();
+		}
+		if(!isset($view_params['initial_offset']))
+		{
+			$this->_view_params['initial_offset']=0;
+		}
 	}// end set function
-	
+
 	function absolutify_url_if_needed($url)
 	{
 		if($this->_view_params['absolute_urls'])
@@ -85,8 +93,8 @@ class FeatureView
 		}
 		return $url;
 	}
-	
-	
+
+
 	/**
 	* returns view parameters
 	*/
@@ -94,7 +102,7 @@ class FeatureView
 	{
 		return $this->_view_params;
 	}
-	
+
 	/**
 	* return view layer data
 	*/
@@ -111,8 +119,6 @@ class FeatureView
 	function get_html()
 	{
 		$str="";
-		return $str; 
+		return $str;
 	}
 }
-
-?>
