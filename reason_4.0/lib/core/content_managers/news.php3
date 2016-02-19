@@ -223,7 +223,7 @@
 			foreach($this->publications as $pub_id=>$pub)
 			{
 				$this->add_element($pub_id.'-hr', 'hr');
-				$this->add_element($pub_id, 'checkbox');
+				$this->add_element($pub_id, 'checkboxfirst');
 				$this->set_display_name($pub_id, $pub->get_value('name'));
 				$this->init_issues($pub_id);
 				$this->init_news_sections($pub_id);

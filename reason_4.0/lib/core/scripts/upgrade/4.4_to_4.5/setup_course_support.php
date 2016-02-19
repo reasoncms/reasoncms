@@ -155,7 +155,11 @@ class ReasonUpgrader_45_SetupCourseSupport implements reasonUpgraderInterface
 			$str = '';
 			if (!$this->course_template_type_exists()) $str .= '<p>Would create course_template type.</p>';
 			if (!$this->course_section_type_exists()) $str .= '<p>Would create course_section type.</p>';
-			$str .= $this->add_indexes();
+			if (empty($str))
+			{
+				$str .= $this->add_indexes(); // only attempt test if both types exist to avoid crash
+			}
+			else $str .= '<p>Would attempt to add indexes to type tables.</p>';
 			return $str;
 		}
 	}

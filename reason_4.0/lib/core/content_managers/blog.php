@@ -109,14 +109,14 @@
 			$this->add_required('hold_posts_for_review');
 			$this->change_element_type('hold_posts_for_review', 'radio',array('options' => array('no' => 'Publish posts automatically','yes' => 'Hold posts for review' )));	
 			$this->set_display_name('hold_posts_for_review','New Post Moderation');
-			$this->add_element('allow_front_end_posting', 'checkbox');
+			$this->add_element('allow_front_end_posting', 'checkboxfirst');
 			$this->add_comments('allow_front_end_posting',form_comment('Check to enable simple posting on the publication'));
 			$this->set_display_name( 'notify_upon_post', 'New Post Notification' );
 			$this->add_comments('notify_upon_post',form_comment('Who should be notified when a post is added to this publication? Enter usernames or email addresses, separated by commas. Leave this field blank if you don\'t want any notification to be sent.'));
 
 			// Commenting
 			$this->add_element('comment_comment','comment',array('text'=>'<h4>Commenting</h4>'));
-			$this->add_element('allow_comments', 'checkbox');
+			$this->add_element('allow_comments', 'checkboxfirst');
 			$this->add_required('hold_comments_for_review');
 			$this->change_element_type('hold_comments_for_review', 'radio',array('options' => array('no' => 'Publish comments automatically','yes' => 'Hold comments for review' )));	
 			$this->set_display_name('hold_comments_for_review','Comment Moderation');

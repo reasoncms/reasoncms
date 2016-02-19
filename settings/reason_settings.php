@@ -1097,7 +1097,7 @@
 	 * REASON_SECONDARY_TITLE_PATTERN
 	 *
 	 */
-	define('REASON_SECONDARY_TITLE_PATTERN', '[minisite_name]: [page_title] | [organization_name]');
+	define('REASON_SECONDARY_TITLE_PATTERN', '[page_title] | [minisite_name] | [organization_name]');
 	
 	/**
 	 * REASON_ITEM_TITLE_PATTERN
