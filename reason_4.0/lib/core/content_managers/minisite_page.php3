@@ -119,7 +119,7 @@ class MinisitePageManager extends parent_childManager
 	
 	function alter_data()
 	{
-		$fields = array('name', 'link_name', 'parent_id', 'parent_info', 'url_fragment', 'custom_page', 'page_type_note', 'content', 'visibility_heading', 'state', 'state_action', 'nav_display', 'indexable','metadata_heading', 'author', 'description', 'keywords', 'administrator_section_heading', 'extra_head_content_structured', 'extra_head_content', 'unique_name');
+		$fields = array('name', 'link_name', 'parent_id', 'parent_info', 'url_fragment', 'custom_page', 'page_type_note', 'content', 'visibility_heading', 'state', 'state_action', 'nav_display', 'indexable','metadata_heading', 'author','description', 'keywords', 'administrator_section_heading', 'extra_head_content_structured', 'extra_head_content', 'unique_name');
 		
 		parent::alter_data();
 		$this->_no_tidy[] = 'url_fragment';
