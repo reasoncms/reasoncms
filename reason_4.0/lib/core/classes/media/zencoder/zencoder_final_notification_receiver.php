@@ -111,7 +111,8 @@ function process_video($media_work, $notification, $netid)
 	// delete the temporary file from our server
 	if (strpos($media_work->get_value('tmp_file_name'), 'http') !== 0)
 	{
-		unlink(WEB_PATH.WEB_TEMP.$media_work->get_value('tmp_file_name'));
+		// unlink(WEB_PATH.WEB_TEMP.$media_work->get_value('tmp_file_name'));
+		unlink(REASON_TEMP_UPLOAD_DIR.$media_work->get_value('tmp_file_name'));
 	}
 }
 
@@ -143,7 +144,8 @@ function process_audio($media_work, $notification, $netid)
 		// delete the original file from our server
 		if (strpos($media_work->get_value('tmp_file_name'), 'http') !== 0)
 		{
-			unlink(WEB_PATH.WEB_TEMP.$media_work->get_value('tmp_file_name'));
+			// unlink(WEB_PATH.WEB_TEMP.$media_work->get_value('tmp_file_name'));
+			unlink(REASON_TEMP_UPLOAD_DIR.$media_work->get_value('tmp_file_name'));
 		}
 	}
 	elseif ($notification->job->pass_through == 'reencoding_audio')
