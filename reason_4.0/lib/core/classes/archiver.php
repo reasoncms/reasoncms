@@ -1,3 +1,4 @@
+#!/usr/bin/php
 <?php
 /**
  * Entity Archiver (Class)
@@ -33,8 +34,10 @@ reason_include_once( 'function_libraries/admin_actions.php' );
  * progress and log data for that environment. This script should not be run in a HTML context, as the 
  * execution can not be altered from default parameters.
  *
- * To use the Entity Archiver, run the following script:
- *		- /reason_4.0/lib/core/scripts/archiver/archiver.php
+ * To use the Entity Archiver, run one of the following commands:
+ *		- "cd /path/to/your/reason_package && php reason_4.0/lib/core/scripts/archiver/archiver.php [options]"
+ *	 			or
+ *		- "cd /path/to/your/reason_package/reason_4.0/lib/core/scripts/archiver && php -d include_path=/path/to/your/reason_package/ archiver.php [options]"
  *
  * @author Nicholas Mischler'14, Beloit College
  */
