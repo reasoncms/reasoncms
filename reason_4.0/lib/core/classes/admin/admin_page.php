@@ -1171,7 +1171,7 @@ class AdminPage
 					echo ' navSelect';
 				echo '"><a href="'.$l.'" class="nav"><img src="'.REASON_HTTP_BASE_PATH.'ui_images/types/theme_type.png" alt="" />Themes</a></li>'."\n";
 			}	
-			if( $stats_link AND $this->show[ 'stats' ] )
+			if( $stats_link AND $this->show[ 'stats' ] AND !$this->show[ 'analytics' ] )
 			{
 				echo '<li class="navItem"><a href="'.$stats_link.'" class="nav"><img src="'.REASON_HTTP_BASE_PATH.'silk_icons/chart_bar.png" alt="" />Statistics</a></li>'."\n";
 			}
