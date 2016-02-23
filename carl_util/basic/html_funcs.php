@@ -13,7 +13,18 @@
  */
 function tagTransform($xhtml, $tag_array)
 {
-	$output = preg_replace("/(<\/?)(\w+)([^>]*>)/e", "'\\1'._tagMap('\\2', \$tag_array ).stripslashes('\\3')", $xhtml);
+	$output = preg_replace_callback(
+		"/(<\/?)(\w+)([^>]*>)/",
+		function($matches) use ($tag_array)
+		{
+			if (isset($tag_array[$matches[2]]))
+			{
+				$tag = $tag_array[$matches[2]];
+			}
+			else $tag = $matches[2];
+			return $matches[1].$tag.$matches[3];
+		},
+		$xhtml);
 	return $output;
 }
 
@@ -29,22 +40,6 @@ function tagSearchReplace($xhtml, $tag_original, $tag_replace)
 	$tag_array = array($tag_original => $tag_replace);
 	$output = tagTransform($xhtml, $tag_array);
 	return $output;
-}
-
-/**
- * Helper function for tagTransform
- * @param string $value a single xhtml tag extracted from an xhtml string
- * @param array $transform_array an array mapping tags which need to be replaced
- * @return string $value returns the replaced value
- */
- 
-function _tagMap($value, $transform_array)
-{
-	if (isset($transform_array[$value]))
-	{
-		return $transform_array[$value];
-	}
-	else return $value;
 }
 
 /**
