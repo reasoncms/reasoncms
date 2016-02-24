@@ -66,9 +66,9 @@ class AnalyticsModule extends DefaultModule
 		$this->admin_page =& $page;
 	}
 	
-	function ok_to_run()
+	function ok_to_run($ok = NULL, $msg = '')
 	{
-		if(!isset($this->ok_to_run))
+		if(NULL === $ok && !isset($this->ok_to_run))
 		{
 			$this->ok_to_run = false;
 		
@@ -92,6 +92,11 @@ class AnalyticsModule extends DefaultModule
 			{
 				$this->ok_to_run = true;
 			}
+		}
+		if(NULL !== $ok)
+		{
+			$this->ok_to_run = $ok;
+			$this->not_ok_to_run_message = $msg;
 		}
 		return $this->ok_to_run;
 	}
@@ -167,7 +172,16 @@ class AnalyticsModule extends DefaultModule
 		$this->service = new Google_AnalyticsService($this->client);
 
 		// get management profiles
-		$profiles = $this->service->management_profiles->listManagementProfiles(GOOGLE_ANALYTICS_ACCOUNT_ID, GOOGLE_ANALYTICS_PROPERTY_ID);
+		try
+		{
+			$profiles = $this->service->management_profiles->listManagementProfiles(GOOGLE_ANALYTICS_ACCOUNT_ID, GOOGLE_ANALYTICS_PROPERTY_ID);
+		}
+		catch (Exception $e)
+		{
+			trigger_error('Unable to list GA management profiles. Message: '.$e->getMessage());
+			$this->ok_to_run(false, 'Unable to contact Google Analytics. Please try again. If this problem persists, please contact '.REASON_CONTACT_INFO_FOR_ANALYTICS.'.');
+			return;
+		}
 		// get the items
 		$items = $profiles->getItems();
 		// set the $default_page
