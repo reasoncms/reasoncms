@@ -285,6 +285,15 @@ class AnalyticsModule extends DefaultModule
 		return $ret;
 	}
 
+	function get_site_type_datetime($entity_type)
+	{
+		$ret = array();
+		foreach ($entity_type as $e) {
+			$ret[$e->get_value('id')] = prettify_mysql_datetime($e->get_value('datetime'), 'Y - M j').' - '.$e->get_value('name');
+		}
+		return $ret;
+	}
+
 	/**
 	 * 	Return an array of this site's types are queryable through Google Analytics,
 	 * 	if the type has content
@@ -293,12 +302,6 @@ class AnalyticsModule extends DefaultModule
 	{
 		$ret = array();
 		$ret[id_of('minisite_page')] = 'Page';
-		if ($this->has_events) 
-		{
-			$e = current($this->has_events);
-			$type_id = $e->get_value('type');
-			$ret[$type_id] = $this->admin_page->get_name($type_id);
-		}
 		if ($this->has_events) 
 		{
 			$e = current($this->has_events);
@@ -342,9 +345,9 @@ class AnalyticsModule extends DefaultModule
 		asort($this->site_urls);
 		
 		$site_types = $this->get_queryable_site_types();
-		$site_events = $this->get_site_type($this->has_events);
+		$site_events = $this->get_site_type_datetime($this->has_events);
 		$site_faq = $this->get_site_type($this->has_faq);
-		$site_news = $this->get_site_type($this->has_news);
+		$site_news = $this->get_site_type_datetime($this->has_news);
 		$site_policies = $this->get_site_type($this->has_policies);
 
 		$disco = new Disco();
