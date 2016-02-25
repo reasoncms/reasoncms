@@ -52,6 +52,8 @@ class AnalyticsModule extends DefaultModule
 	
 	var $startdate;
 	var $enddate;
+	var $ok_to_run;
+	var $not_ok_to_run_message;
 	
 	/**
 	 * Lifespan of URL cache for a site - default is 24 hours.
@@ -64,6 +66,47 @@ class AnalyticsModule extends DefaultModule
 		$this->admin_page =& $page;
 	}
 	
+	function ok_to_run($ok = NULL, $msg = '')
+	{
+		if(NULL === $ok && !isset($this->ok_to_run))
+		{
+			$this->ok_to_run = false;
+		
+			if(!defined('GOOGLE_API_PRIVATE_KEY_FILE') || !GOOGLE_API_PRIVATE_KEY_FILE)
+			{
+				$this->not_ok_to_run_message = 'The Google Analytics Module is not set up. An administrator should define GOOGLE_API_PRIVATE_KEY_FILE in Google API settings.';
+				trigger_error('GOOGLE_API_PRIVATE_KEY_FILE is not defined.');
+			}
+			elseif(!file_exists(GOOGLE_API_PRIVATE_KEY_FILE))
+			{
+				$this->not_ok_to_run_message = 'The Google Analytics Module is not set up. An administrator should check the setting GOOGLE_API_PRIVATE_KEY_FILE because the file could not be found.';
+				trigger_error('Unable to find a p12 file at GOOGLE_API_PRIVATE_KEY_FILE ('.GOOGLE_API_PRIVATE_KEY_FILE.')');
+			}
+			elseif(!is_readable(GOOGLE_API_PRIVATE_KEY_FILE))
+			{
+				$this->not_ok_to_run_message = 'The Google Analytics Module is not set up. An administrator should check the permissions on the GOOGLE_API_PRIVATE_KEY_FILE, which could not be read.';
+				trigger_error('Unable to read the p12 file at  GOOGLE_API_PRIVATE_KEY_FILE ('.GOOGLE_API_PRIVATE_KEY_FILE).')';
+				
+			}
+			else
+			{
+				$this->ok_to_run = true;
+			}
+		}
+		if(NULL !== $ok)
+		{
+			$this->ok_to_run = $ok;
+			$this->not_ok_to_run_message = $msg;
+		}
+		return $this->ok_to_run;
+	}
+	
+	function not_ok_to_run_message()
+	{
+		$this->ok_to_run();
+		return $this->not_ok_to_run_message;
+	}
+	
 	/**
 	 * Standard Module init function
 	 *
@@ -74,6 +117,22 @@ class AnalyticsModule extends DefaultModule
 	function init()
 	{
 		parent::init();
+		
+		$this->site = new entity( $this->admin_page->site_id );
+		if (!empty($this->admin_page->request['type_id']))
+		{
+			$type_name = $this->admin_page->get_name($this->admin_page->request['type_id']);
+			$id_name = $this->admin_page->get_name($this->admin_page->request['id']);
+			$this->admin_page->title = 'Analytics for <em>' . $id_name . '</em> (' . $type_name . ')';
+		} 
+		else 
+		{
+			$this->admin_page->title = 'Analytics for '.$this->site->get_value('name') . ' (Site)';
+		}
+		
+		if(!$this->ok_to_run())
+			return;
+		
 		$this->head_items->add_javascript(JQUERY_UI_URL, true);
 		$this->head_items->add_javascript(JQUERY_URL, true);
 		$this->head_items->add_stylesheet(JQUERY_UI_CSS_URL);
@@ -91,29 +150,10 @@ class AnalyticsModule extends DefaultModule
 		$this->head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/js/jquery.tablesorter.widgets-filter-formatter.min.js');
 		$this->head_items->add_stylesheet(REASON_PACKAGE_HTTP_BASE_PATH.'mottie-tablesorter/css/filter.formatter.css');
 
-
-		$this->site = new entity( $this->admin_page->site_id );
-		if (!empty($this->admin_page->request['type_id']))
-		{
-			$type_name = $this->admin_page->get_name($this->admin_page->request['type_id']);
-			$id_name = $this->admin_page->get_name($this->admin_page->request['id']);
-			$this->admin_page->title = 'Analytics for <em>' . $id_name . '</em> (' . $type_name . ')';
-		} 
-		else 
-		{
-			$this->admin_page->title = 'Analytics for '.$this->site->get_value('name') . ' (Site)';
-		}
 		// Initialise the Google Client object
 		$this->client = new Google_Client();
 		// Your 'Product name'
 		$this->client->setApplicationName(GOOGLE_API_APP_NAME);
-		
-		if(!file_exists(GOOGLE_API_PRIVATE_KEY_FILE))
-			trigger_error('Unable to find a p12 file at GOOGLE_API_PRIVATE_KEY_FILE');
-		elseif(!is_readable(GOOGLE_API_PRIVATE_KEY_FILE))
-			trigger_error('Unable to read the p12 file at '.GOOGLE_API_PRIVATE_KEY_FILE);
-		//else
-			//echo(file_get_contents(GOOGLE_API_PRIVATE_KEY_FILE));
 		
 		$this->client->setAssertionCredentials(
 			new Google_AssertionCredentials(
@@ -132,7 +172,16 @@ class AnalyticsModule extends DefaultModule
 		$this->service = new Google_AnalyticsService($this->client);
 
 		// get management profiles
-		$profiles = $this->service->management_profiles->listManagementProfiles(GOOGLE_ANALYTICS_ACCOUNT_ID, GOOGLE_ANALYTICS_PROPERTY_ID);
+		try
+		{
+			$profiles = $this->service->management_profiles->listManagementProfiles(GOOGLE_ANALYTICS_ACCOUNT_ID, GOOGLE_ANALYTICS_PROPERTY_ID);
+		}
+		catch (Exception $e)
+		{
+			trigger_error('Unable to list GA management profiles. Message: '.$e->getMessage());
+			$this->ok_to_run(false, 'Unable to contact Google Analytics. Please try again. If this problem persists, please contact '.REASON_CONTACT_INFO_FOR_ANALYTICS.'.');
+			return;
+		}
 		// get the items
 		$items = $profiles->getItems();
 		// set the $default_page
@@ -250,6 +299,15 @@ class AnalyticsModule extends DefaultModule
 		return $ret;
 	}
 
+	function get_site_type_datetime($entity_type)
+	{
+		$ret = array();
+		foreach ($entity_type as $e) {
+			$ret[$e->get_value('id')] = prettify_mysql_datetime($e->get_value('datetime'), 'Y - M j').' - '.$e->get_value('name');
+		}
+		return $ret;
+	}
+
 	/**
 	 * 	Return an array of this site's types are queryable through Google Analytics,
 	 * 	if the type has content
@@ -258,12 +316,6 @@ class AnalyticsModule extends DefaultModule
 	{
 		$ret = array();
 		$ret[id_of('minisite_page')] = 'Page';
-		if ($this->has_events) 
-		{
-			$e = current($this->has_events);
-			$type_id = $e->get_value('type');
-			$ret[$type_id] = $this->admin_page->get_name($type_id);
-		}
 		if ($this->has_events) 
 		{
 			$e = current($this->has_events);
@@ -298,13 +350,18 @@ class AnalyticsModule extends DefaultModule
 	 */
 	function run()
 	{
+		if(!$this->ok_to_run())
+		{
+			echo '<p>'.$this->not_ok_to_run_message().'</p>';
+			return;
+		}
 		$this->site_urls = $this->get_site_urls();
 		asort($this->site_urls);
 		
 		$site_types = $this->get_queryable_site_types();
-		$site_events = $this->get_site_type($this->has_events);
+		$site_events = $this->get_site_type_datetime($this->has_events);
 		$site_faq = $this->get_site_type($this->has_faq);
-		$site_news = $this->get_site_type($this->has_news);
+		$site_news = $this->get_site_type_datetime($this->has_news);
 		$site_policies = $this->get_site_type($this->has_policies);
 
 		$disco = new Disco();
