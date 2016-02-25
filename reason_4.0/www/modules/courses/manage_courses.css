@@ -55,15 +55,15 @@ span.termHighlight {
 }
 
 #wrapper ul.courseListInactive a.activateCourse, #wrapper ul.courseListActive a.deactivateCourse {
-   	border-radius: 50%;
-    color: white;
-    display: none;
-    height: 1.5em;
-    left: 2em;
-    padding: 0 0.4em;
-    position: absolute;
-    text-align: center;
-    width: 0.7em;
+   border-radius: 50%;
+   color: white;
+   display: none;
+   height: 1.5em;
+   left: 2em;
+   padding: 0 0.4em;
+   position: absolute;
+   text-align: center;
+   width: 1.4em;
 }
 
 a.activateCourse {
@@ -72,6 +72,10 @@ a.activateCourse {
 
 a.deactivateCourse {
 	background-color: #dd7575;
+}
+
+#wrapper ul.courseListInactive a.showControl, #wrapper ul.courseListActive a.showControl {
+	display: inline-block;
 }
 
 li.courseListRow a.activateCourse:hover, li.courseListRow a.deactivateCourse:hover {

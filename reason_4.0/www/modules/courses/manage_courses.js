@@ -16,7 +16,7 @@ $(document).ready(function()
 	})
 	
 	$('li.courseListRow').hover(function() {
-		$('a.activateCourse, a.deactivateCourse', $(this)).toggle();
+		$('a.activateCourse, a.deactivateCourse', $(this)).toggleClass('showControl');
 	});
 	
 });
