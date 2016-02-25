@@ -120,9 +120,9 @@ class AnalyticsModule extends DefaultModule
 		}
 		
 		$this->site = new entity( $this->admin_page->site_id );
-		if (!empty($this->admin_page->request['type_id']) && !empty($this->admin_page->request['id']))
+		if ($type_id = $this->get_type_id())
 		{
-			$type_name = $this->admin_page->get_name($this->admin_page->request['type_id']);
+			$type_name = $this->admin_page->get_name($type_id);
 			$id_name = $this->admin_page->get_name($this->admin_page->request['id']);
 			$this->admin_page->title = 'Analytics for <em>' . $id_name . '</em> (' . $type_name . ')';
 		} 
@@ -346,6 +346,13 @@ class AnalyticsModule extends DefaultModule
 		}
 		return $ret;
 	}
+	
+	function get_type_id()
+	{
+		if(!empty($this->admin_page->request['type_id']) && !empty($this->admin_page->request['id']))
+			return $this->admin_page->request['type_id'];
+		return NULL;
+	}
 
 	/**
 	 * Lists the top pages (views) and show analytics
@@ -540,8 +547,10 @@ class AnalyticsModule extends DefaultModule
 
 					$this->draw_line_chart($this->daily_results);
 					$this->draw_pie_chart($this->source_results);
+					
+					$type_id = $this->get_type_id();
 
-					if (empty($this->admin_page->request['type_id']))
+					if(!$type_id)
 					{
 						/**
 						 * 	@todo include pages table
@@ -651,7 +660,8 @@ class AnalyticsModule extends DefaultModule
 	function on_every_time(&$disco)
 	{
 		//called from the 'main' admin_page button
-		if (empty($this->admin_page->request['type_id']) && empty($this->admin_page->request['id']))
+		$type_id = $this->get_type_id();
+		if(!$type_id)
 		{
 			$this->get_ga_data($disco->get_value('location'), $disco->get_value('start_date'), $disco->get_value('end_date'));
 			if (!array_key_exists('submitted', $this->admin_page->request))
@@ -686,7 +696,7 @@ class AnalyticsModule extends DefaultModule
 		else 
 		{
 				$disco->change_element_type('content_type', 'hidden', array('userland_changeable'=>true));
-	            $disco->set_value('content_type', $this->admin_page->request['type_id']);
+	            $disco->set_value('content_type', $type_id);
 	            $disco->set_value('content_id', $this->admin_page->request['id']);
 				$disco->remove_element('url');
 				$disco->remove_element('propagate');
