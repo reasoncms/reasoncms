@@ -52,8 +52,8 @@ class AnalyticsModule extends DefaultModule
 	
 	var $startdate;
 	var $enddate;
-	var $ok_to_run;
-	var $not_ok_to_run_message;
+	var $ok_to_run = true;
+	var $not_ok_to_run_messages;
 	
 	/**
 	 * Lifespan of URL cache for a site - default is 24 hours.
@@ -68,43 +68,38 @@ class AnalyticsModule extends DefaultModule
 	
 	function ok_to_run($ok = NULL, $msg = '')
 	{
-		if(NULL === $ok && !isset($this->ok_to_run))
-		{
-			$this->ok_to_run = false;
-		
-			if(!defined('GOOGLE_API_PRIVATE_KEY_FILE') || !GOOGLE_API_PRIVATE_KEY_FILE)
-			{
-				$this->not_ok_to_run_message = 'The Google Analytics Module is not set up. An administrator should define GOOGLE_API_PRIVATE_KEY_FILE in Google API settings.';
-				trigger_error('GOOGLE_API_PRIVATE_KEY_FILE is not defined.');
-			}
-			elseif(!file_exists(GOOGLE_API_PRIVATE_KEY_FILE))
-			{
-				$this->not_ok_to_run_message = 'The Google Analytics Module is not set up. An administrator should check the setting GOOGLE_API_PRIVATE_KEY_FILE because the file could not be found.';
-				trigger_error('Unable to find a p12 file at GOOGLE_API_PRIVATE_KEY_FILE ('.GOOGLE_API_PRIVATE_KEY_FILE.')');
-			}
-			elseif(!is_readable(GOOGLE_API_PRIVATE_KEY_FILE))
-			{
-				$this->not_ok_to_run_message = 'The Google Analytics Module is not set up. An administrator should check the permissions on the GOOGLE_API_PRIVATE_KEY_FILE, which could not be read.';
-				trigger_error('Unable to read the p12 file at  GOOGLE_API_PRIVATE_KEY_FILE ('.GOOGLE_API_PRIVATE_KEY_FILE).')';
-				
-			}
-			else
-			{
-				$this->ok_to_run = true;
-			}
-		}
 		if(NULL !== $ok)
 		{
-			$this->ok_to_run = $ok;
-			$this->not_ok_to_run_message = $msg;
+			if(!isset($this->ok_to_run) || $this->ok_to_run)
+				$this->ok_to_run = $ok;
+			if(false === $ok)
+				$this->not_ok_to_run_messages[] = $msg;
 		}
 		return $this->ok_to_run;
 	}
 	
-	function not_ok_to_run_message()
+	function not_ok_to_run_messages()
 	{
-		$this->ok_to_run();
-		return $this->not_ok_to_run_message;
+		return $this->not_ok_to_run_messages;
+	}
+	
+	function check_google_api_private_key_file()
+	{
+		if(!defined('GOOGLE_API_PRIVATE_KEY_FILE') || !GOOGLE_API_PRIVATE_KEY_FILE)
+		{
+			$this->ok_to_run(false, 'The Google Analytics Module is not set up. An administrator should define GOOGLE_API_PRIVATE_KEY_FILE in Google API settings.');
+			trigger_error('GOOGLE_API_PRIVATE_KEY_FILE is not defined.');
+		}
+		elseif(!file_exists(GOOGLE_API_PRIVATE_KEY_FILE))
+		{
+			$this->ok_to_run(false, 'The Google Analytics Module is not set up. An administrator should check the setting GOOGLE_API_PRIVATE_KEY_FILE because the file could not be found.');
+			trigger_error('Unable to find a p12 file at GOOGLE_API_PRIVATE_KEY_FILE ('.GOOGLE_API_PRIVATE_KEY_FILE.')');
+		}
+		elseif(!is_readable(GOOGLE_API_PRIVATE_KEY_FILE))
+		{
+			$this->ok_to_run(false, 'The Google Analytics Module is not set up. An administrator should check the permissions on the GOOGLE_API_PRIVATE_KEY_FILE, which could not be read.');
+			trigger_error('Unable to read the p12 file at  GOOGLE_API_PRIVATE_KEY_FILE ('.GOOGLE_API_PRIVATE_KEY_FILE).')';	
+		}
 	}
 	
 	/**
@@ -118,8 +113,14 @@ class AnalyticsModule extends DefaultModule
 	{
 		parent::init();
 		
+		if(empty($this->admin_page->site_id))
+		{
+			$this->ok_to_run(false, 'Not able to provide analytics without a site ID.');
+			return;
+		}
+		
 		$this->site = new entity( $this->admin_page->site_id );
-		if (!empty($this->admin_page->request['type_id']))
+		if (!empty($this->admin_page->request['type_id']) && !empty($this->admin_page->request['id']))
 		{
 			$type_name = $this->admin_page->get_name($this->admin_page->request['type_id']);
 			$id_name = $this->admin_page->get_name($this->admin_page->request['id']);
@@ -129,6 +130,8 @@ class AnalyticsModule extends DefaultModule
 		{
 			$this->admin_page->title = 'Analytics for '.$this->site->get_value('name') . ' (Site)';
 		}
+		
+		$this->check_google_api_private_key_file();
 		
 		if(!$this->ok_to_run())
 			return;
@@ -182,6 +185,7 @@ class AnalyticsModule extends DefaultModule
 			$this->ok_to_run(false, 'Unable to contact Google Analytics. Please try again. If this problem persists, please contact '.REASON_CONTACT_INFO_FOR_ANALYTICS.'.');
 			return;
 		}
+		
 		// get the items
 		$items = $profiles->getItems();
 		// set the $default_page
@@ -352,7 +356,18 @@ class AnalyticsModule extends DefaultModule
 	{
 		if(!$this->ok_to_run())
 		{
-			echo '<p>'.$this->not_ok_to_run_message().'</p>';
+			$messages = $this->not_ok_to_run_messages();
+			if(count($messages) == 1)
+			{
+				echo '<p class="unavailableMessage">'.current($messages).'</p>';
+			}
+			else
+			{
+				echo '<ul class="unavailableMessage">';
+				foreach($messages as $message)
+					echo '<li>'.$message.'</li>';
+				echo '</ul>';
+			}
 			return;
 		}
 		$this->site_urls = $this->get_site_urls();
@@ -698,6 +713,8 @@ class AnalyticsModule extends DefaultModule
 	{
 		$type_id = $disco->get_value('content_type');
 		$id = $disco->get_value('content_id');
+		if(empty($id))
+			$id = false;
 		$location = $disco->get_value('location');
 		$propagate = $disco->get_value('propagate');
 		$provider_name = strtolower(addslashes(GA_SERVICE_PROVIDER_NAME));
@@ -716,7 +733,7 @@ class AnalyticsModule extends DefaultModule
 		 * 	all other types set pagePath with id (we don't 
 		 * 	care about propagating)
 		 */
-		if ($type_id == id_of('minisite_page'))
+		if ($id && $type_id == id_of('minisite_page'))
 		{
 			if (isset($this->admin_page->request['url']))
 			{
