@@ -1677,13 +1677,13 @@ class AdminPage
 				}
 				else
 				{
-					reason_include_once( 'classes/admin/modules/'.$GLOBALS['_reason_admin_modules']['Site']['file'] );
+					$this->cur_module = 'Site';
 					$module_name = $GLOBALS['_reason_admin_modules']['Site']['class'];
 				}
 			}
 			else
 			{
-				reason_include_once( 'classes/admin/modules/'.$GLOBALS['_reason_admin_modules']['Default']['file'] );
+				$this->cur_module = 'Default';
 				$module_name = $GLOBALS['_reason_admin_modules']['Default']['class'];
 			}
 		}
@@ -1918,4 +1918,3 @@ class AdminPage
 		return $this->_invalid_admin_token;
 	}
 }
-?>
