@@ -1216,48 +1216,48 @@ class AdminPage
 		//}
 	} // }}}
 	// IN_MANAGER
+	/**
+	 * Get link to stats page if one exists. REASON_STATS_URI_BASE must be set
+	 *
+	 * @return string|boolean full link on success, FALSE when no link exists
+	 */
 	function stats_link() // {{{
-	//generates link to stats page if there is one
 	{
-		// if using google analytics don't show Stats
-		if ( !$this->show[ 'analytics' ] )
+		if(defined('REASON_STATS_URI_BASE') && REASON_STATS_URI_BASE != '')
 		{
-			if(defined('REASON_STATS_URI_BASE') && REASON_STATS_URI_BASE != '')
+			$site = new entity ( $this->site_id );
+			if( $site->get_value( 'unique_name' ))
 			{
-				$site = new entity ( $this->site_id );
-				if( $site->get_value( 'unique_name' ))
+				$show = false;
+				if($site->get_value( 'site_state' ) == 'Live')
 				{
-					$show = false;
-					if($site->get_value( 'site_state' ) == 'Live')
+					$show = true;
+				}
+				else
+				{
+					$es = new entity_selector();
+					$es->add_right_relationship($site->id(),relationship_id_of('site_archive'));
+					$es->add_relation( 'site_state = "Live"' );
+					$es->set_num(1);
+					$sites = $es->run_one(id_of('site'), 'Archived');
+					if(!empty($sites))
 					{
 						$show = true;
 					}
-					else
+				}
+				if($show)
+				{
+					$link = REASON_STATS_URI_BASE;
+					if (function_exists('posix_uname'))
 					{
-						$es = new entity_selector();
-						$es->add_right_relationship($site->id(),relationship_id_of('site_archive'));
-						$es->add_relation( 'site_state = "Live"' );
-						$es->set_num(1);
-						$sites = $es->run_one(id_of('site'), 'Archived');
-						if(!empty($sites))
-						{
-							$show = true;
-						}
+						$uname = posix_uname();
+						$uname_host = $uname['nodename'];
 					}
-					if($show)
-					{
-						$link = REASON_STATS_URI_BASE;
-						if (function_exists('posix_uname'))
-						{
-							$uname = posix_uname();
-							$uname_host = $uname['nodename'];
-						}
-						else $uname_host = php_uname('n');
-						$link .=  strtolower($uname_host).'/';
-						$link .= $_SERVER['HTTP_HOST'].'/';
-						$link .= $site->get_value( 'unique_name' ).'/';
-						return $link;
-					}
+					else $uname_host = php_uname('n');
+					$link .=  strtolower($uname_host).'/';
+					$link .= $_SERVER['HTTP_HOST'].'/';
+					$link .= $site->get_value( 'unique_name' ).'/';
+					return $link;
 				}
 			}
 		}
