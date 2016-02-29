@@ -66,6 +66,41 @@ class AnalyticsModule extends DefaultModule
 		$this->admin_page =& $page;
 	}
 	
+	public static function type_unique_names_available()
+	{
+		return array(
+			'minisite_page',
+			'event_type',
+			'faq_type',
+			'news',
+			'policy_type',
+		);
+	}
+	public static function type_available($type)
+	{
+		$unique_name = NULL;
+		if(is_numeric($type))
+		{
+			$type = (integer) $type;
+			$entity = new entity($type);
+			$unique_name = $entity->get_value('unique_name');
+		}
+		elseif(is_object($type))
+		{
+			$unique_name = $type->get_value('unique_name');
+		}
+		elseif(is_string($type))
+		{
+			$unique_name = $type;
+		}
+		else
+		{
+			trigger_error('Unrecognized value passed to type_available()');
+			return false;
+		}
+		return in_array($unique_name, static::type_unique_names_available());
+	}
+	
 	function ok_to_run($ok = NULL, $msg = '')
 	{
 		if(NULL !== $ok)
