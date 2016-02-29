@@ -157,6 +157,13 @@ class AnalyticsModule extends DefaultModule
 		$this->site = new entity( $this->admin_page->site_id );
 		if ($type_id = $this->get_type_id())
 		{
+			if(!static::type_available($type_id))
+			{
+				$type = new entity($this->admin_page->request['type_id']);
+				$this->admin_page->title = 'Analytics Unavailable';
+				$this->ok_to_run(false, 'Analytics are not available for '.strtolower($type->get_value('plural_name') ? $type->get_value('plural_name') : $type->get_value('name')).'.');
+				return;
+			}
 			$type_name = $this->admin_page->get_name($type_id);
 			$id_name = $this->admin_page->get_name($this->admin_page->request['id']);
 			$this->admin_page->title = 'Analytics for <em>' . $id_name . '</em> (' . $type_name . ')';
