@@ -780,19 +780,10 @@ class AdminPage
 		
 		if( $this->show[ 'analytics' ] )
 		{
-			if($module_name = $this->get_module_classname('Analytics'))
-			{
-				if($this->include_module('Analytics'))
-				{
-					if(method_exists($module_name, 'type_available') && $module_name::type_available($this->type_id))
-					{
-						echo '<li class="navItem';
-						if( $this->cur_module == 'Analytics' || $this->cur_module == 'AnalyticsAbout' )
-							echo ' navSelect';
-						echo '"><a href="'.$this->make_link( array( 'cur_module' => 'Analytics' ) ).'" class="nav"><img src="'.REASON_HTTP_BASE_PATH.'silk_icons/chart_curve.png" alt="" />Analytics</a></li>'."\n";
-					}
-				}
-			}
+			echo '<li class="navItem';
+			if( $this->cur_module == 'Analytics' || $this->cur_module == 'AnalyticsAbout' )
+				echo ' navSelect';
+			echo '"><a href="'.$this->make_link( array( 'cur_module' => 'Analytics' ) ).'" class="nav"><img src="'.REASON_HTTP_BASE_PATH.'silk_icons/chart_curve.png" alt="" />Analytics</a></li>'."\n";
 		}
 		
 		if($show_history)
@@ -1612,24 +1603,6 @@ class AdminPage
 		$args = array_intersect_key($this->request,array_flip($this->default_args));
 		return !empty($args) ? $args : false;
 	} // }}}
-	
-	function get_module_classname($module_key)
-	{
-		if( !empty($GLOBALS['_reason_admin_modules'][$module_key]['class']) )
-		{
-			return $GLOBALS['_reason_admin_modules'][$module_key]['class'];
-		}
-		return NULL;
-	}
-	
-	function include_module($module_key)
-	{
-		if( !empty($GLOBALS['_reason_admin_modules'][$module_key]['file']) )
-		{
-			return reason_include_once('classes/admin/modules/'.$GLOBALS['_reason_admin_modules'][$module_key]['file']);
-		}
-		return false;
-	}
 
 	/**
 	 * Initializes the admin page.
@@ -1650,10 +1623,21 @@ class AdminPage
 		$this->set_head_items();
 		if( !empty($this->cur_module) )
 		{
-			$module_name = $this->get_module_classname($this->cur_module);
-			if(empty($module_name))
+			if(
+				array_key_exists($this->cur_module, $GLOBALS['_reason_admin_modules'])
+				&&
+				!empty($GLOBALS['_reason_admin_modules'][$this->cur_module]['file'])
+			)
 			{
-				trigger_error('No class name set for ' . $this->cur_module . ' in the admin_modules config');
+				reason_include_once('classes/admin/modules/'.$GLOBALS['_reason_admin_modules'][$this->cur_module]['file']);
+				if( !empty($GLOBALS['_reason_admin_modules'][$this->cur_module]['class']) && class_exists( $GLOBALS['_reason_admin_modules'][$this->cur_module]['class'] ) )
+				{
+					$module_name = $GLOBALS['_reason_admin_modules'][$this->cur_module]['class'];
+				}
+				else
+				{
+					trigger_error('Class '.$this->cur_module.'Module not found');
+				}
 			}
 		}
 		if( empty($module_name) )
@@ -1687,11 +1671,6 @@ class AdminPage
 				$module_name = $GLOBALS['_reason_admin_modules']['Default']['class'];
 			}
 		}
-		if(!$this->include_module($this->cur_module))
-		{
-			trigger_error('File not able to be included for '.$this->cur_module, HIGH);
-			return false;
-		}
 		if(class_exists( $module_name ) )
 		{
 			$this->module_name = $module_name;
@@ -1705,7 +1684,7 @@ class AdminPage
 		}
 		else
 		{
-			trigger_error('Class '.$module_name.' not found. Not able to instantiate an admin module for '.$this->cur_module, HIGH);
+			trigger_error('Could not determine a module to run in the admin page init method.', HIGH);
 		}
 		return true;
 	} // }}}
