@@ -46,6 +46,23 @@ class ReasonUploadType extends uploadType
 	/** @access private */
 	var $existing_entity;
 
+	function _get_current_file_info() {
+		$rv = parent::_get_current_file_info();
+		if ($this->uploading_to_amazon) {
+			$entityId = $_REQUEST['id'];
+			reason_include_once('classes/s3Helper.php');
+			$s3h = new S3Helper("plupload_media_upload");
+			$f = $s3h->getFileByPrefix(($s3h->getTempDir() == "" ? "" : $s3h->getTempDir() . "/") . $entityId . ".");
+
+			if ($f != null) {
+				$rv->size = $f["size"];
+				$metadata = $s3h->getMetadataForKey($f["name"]);
+				$rv->name = $metadata["original_filename"]; // from x-amz-meta-original_filename, stored on the object in S3
+			}
+		}
+		return $rv;
+	}
+
 	function grab() {
 		if ($this->uploading_to_amazon) {
 			$entityId = $_REQUEST['id'];
@@ -692,6 +709,7 @@ function _getAmazonConfigData()
 			// http://docs.amazonwebservices.com/AmazonS3/latest/dev/HTTPPOSTFlash.html
 			array('starts-with', '$Filename', ''), 
 			array('starts-with', '$x-amz-meta-reason_id', ''),
+			array('starts-with', '$x-amz-meta-original_filename', ''),
 		)
 	)));
 

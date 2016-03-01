@@ -118,6 +118,7 @@ function prepForUpload(up, files) {
 			// key is the file's name in the Amazon bucket. Filename is used in only some runtimes, so give it the same value.
 			up.settings.multipart_params.key = (cfg.amzn_tempDir != "" ? cfg.amzn_tempDir + "/" : "") + cfg.entityId + "." + extension;
 			up.settings.multipart_params.Filename = up.settings.multipart_params.key;
+			up.settings.multipart_params['x-amz-meta-original_filename'] = f.name;
 			break;
 		}
 	}
@@ -155,7 +156,7 @@ $(document).ready(function() {
 		};
 
 		if (cfg.amzn_policy != undefined && cfg.amzn_policy != "") {
-			// we'll set key/Filename later in the callback function for s3_prep.php, b/c we want it to include the extension.
+			// we'll set key/Filename later in the callback function for s3_prep.php / amzn_prepPage, b/c we want it to include the extension.
 			multipartParams.acl = 'public-read';
 			multipartParams['Content-Type'] = '';
 			multipartParams.AWSAccessKeyId = cfg.amzn_accessKeyId;
