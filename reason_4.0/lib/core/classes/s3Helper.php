@@ -65,21 +65,31 @@ class S3Helper {
 		foreach ($objects as $obj) {
 			$nameOfFile = $obj['Key'];
 
+			// echo "<PRE>"; var_dump($obj); echo "</PRE>";
+
 			$tmpPath = S3_BASE_URL . $this->bucketName . "/" . $nameOfFile;
 
 			$amazon_file = array(
 				"name" => $nameOfFile,
 				"path" => $tmpPath,
-				"tmp_name" => $tmpPath
+				"tmp_name" => $tmpPath,
 				// "original_path" => $upload->get_original_path(),
 				// "modified_path" => $upload->get_temporary_path(),
-				// "size" => filesize($this->tmp_web_path),
+				"size" => $obj["Size"]
 				// "type" => $upload->get_mime_type("application/octet-stream")
 			);
 
 			break;
 		}
 		return $amazon_file;
+	}
+
+	public function getMetadataForKey($key) {
+		$headers = $this->s3->headObject(array(
+			"Bucket" => $this->bucketName,
+			"Key" => $key
+		));
+		return $headers->toArray()["Metadata"];
 	}
 }
 ?>
