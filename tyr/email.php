@@ -101,18 +101,18 @@ class Email
 	 */
 	function send() {
 		$crlf = "\r\n" ;
-		$additional_headers = '';
-		if ($this->_froms) $additional_headers .= 'From: ' . $this->_froms . $crlf;
-		if ($this->_ccs) $additional_headers .= 'Cc: ' . $this->_ccs . $crlf;
-		if ($this->_tos) $additional_headers .= 'Bcc: ' . $this->_tos . $crlf;
-		if ($this->_replytos) $additional_headers .= 'Reply-To: ' . $this->_replytos . $crlf;
-		$additional_headers .= 'MIME-version: 1.0'.$crlf;
+		$additional_headers = array();
+		if ($this->_froms) $additional_headers[] = 'From: ' . $this->_froms;
+		if ($this->_ccs) $additional_headers[] = 'Cc: ' . $this->_ccs;
+		if ($this->_tos) $additional_headers[] = 'Bcc: ' . $this->_tos;
+		if ($this->_replytos) $additional_headers[] = 'Reply-To: ' . $this->_replytos;
+		$additional_headers[] = 'MIME-version: 1.0';
 		
 		// simplest case: just plain text content
 		if (empty($this->_htmlbody) && empty($this->_attachments))
 		{
-			$additional_headers .= 'Content-Type: text/plain; charset=UTF-8'.$crlf;
-			$additional_headers .= 'Content-Disposition: inline'.$crlf;
+			$additional_headers[] = 'Content-Type: text/plain; charset=UTF-8';
+			$additional_headers[] = 'Content-Disposition: inline';
 			$email = "\n\n" . $this->_txtbody;			
 		}
 		// More complicated: there's an HTML alternate and/or attachments
@@ -139,14 +139,14 @@ class Email
 			// If there's no attachment, the text alternates are the whole of the message
 			if (empty($this->_attachments))
 			{
-				$additional_headers .= 'Content-Type: multipart/alternative; boundary="' . $alternate_boundary . '"' . $crlf; // define boundary
+				$additional_headers[] = 'Content-Type: multipart/alternative; boundary="' . $alternate_boundary . '"';
 				$email .= $alternate;
 			}
 			// If there are attachments, set up container parts around the text and attachments
 			else
 			{
 				$multipart_boundary = uniqid('the_multipart_boundary_is_');
-				$additional_headers .= 'Content-Type: multipart/mixed; boundary="' . $multipart_boundary . '"' . $crlf; // define boundary
+				$additional_headers[] = 'Content-Type: multipart/mixed; boundary="' . $multipart_boundary . '"';
 				$email .= "--" . $multipart_boundary . $crlf; // first boundary
 				if (isset($alternate))
 				{
@@ -165,10 +165,12 @@ class Email
 
 		$subject = $this->mb_mime_header_encode($this->_subject);
 
-		// it seems a little odd that we are sending the whole email in via the additional headers parameter when not running windows
-		$success = (server_is_windows()) 
-				 ? mail('', $subject, $email, $additional_headers )
-				 : mail('', $subject, '', $additional_headers.$email );
+		// Additional headers can't contain extra new lines
+		// https://bugs.php.net/bug.php?id=68776
+		$additional_headers_string = implode(PHP_EOL, $additional_headers);
+
+		$success = mail('', $subject, $email, $additional_headers_string);
+		
 		return $success;
 	}
 		

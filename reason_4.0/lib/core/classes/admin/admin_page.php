@@ -780,10 +780,19 @@ class AdminPage
 		
 		if( $this->show[ 'analytics' ] )
 		{
-			echo '<li class="navItem';
-			if( $this->cur_module == 'Analytics' || $this->cur_module == 'AnalyticsAbout' )
-				echo ' navSelect';
-			echo '"><a href="'.$this->make_link( array( 'cur_module' => 'Analytics' ) ).'" class="nav"><img src="'.REASON_HTTP_BASE_PATH.'silk_icons/chart_curve.png" alt="" />Analytics</a></li>'."\n";
+			if($module_name = $this->get_module_classname('Analytics'))
+			{
+				if($this->include_module('Analytics'))
+				{
+					if(method_exists($module_name, 'type_available') && $module_name::type_available($this->type_id))
+					{
+						echo '<li class="navItem';
+						if( $this->cur_module == 'Analytics' || $this->cur_module == 'AnalyticsAbout' )
+							echo ' navSelect';
+						echo '"><a href="'.$this->make_link( array( 'cur_module' => 'Analytics' ) ).'" class="nav"><img src="'.REASON_HTTP_BASE_PATH.'silk_icons/chart_curve.png" alt="" />Analytics</a></li>'."\n";
+					}
+				}
+			}
 		}
 		
 		if($show_history)
@@ -1171,7 +1180,7 @@ class AdminPage
 					echo ' navSelect';
 				echo '"><a href="'.$l.'" class="nav"><img src="'.REASON_HTTP_BASE_PATH.'ui_images/types/theme_type.png" alt="" />Themes</a></li>'."\n";
 			}	
-			if( $stats_link AND $this->show[ 'stats' ] )
+			if( $stats_link AND $this->show[ 'stats' ] AND !$this->show[ 'analytics' ] )
 			{
 				echo '<li class="navItem"><a href="'.$stats_link.'" class="nav"><img src="'.REASON_HTTP_BASE_PATH.'silk_icons/chart_bar.png" alt="" />Statistics</a></li>'."\n";
 			}
@@ -1216,48 +1225,48 @@ class AdminPage
 		//}
 	} // }}}
 	// IN_MANAGER
+	/**
+	 * Get link to stats page if one exists. REASON_STATS_URI_BASE must be set
+	 *
+	 * @return string|boolean full link on success, FALSE when no link exists
+	 */
 	function stats_link() // {{{
-	//generates link to stats page if there is one
 	{
-		// if using google analytics don't show Stats
-		if ( !$this->show[ 'analytics' ] )
+		if(defined('REASON_STATS_URI_BASE') && REASON_STATS_URI_BASE != '')
 		{
-			if(defined('REASON_STATS_URI_BASE') && REASON_STATS_URI_BASE != '')
+			$site = new entity ( $this->site_id );
+			if( $site->get_value( 'unique_name' ))
 			{
-				$site = new entity ( $this->site_id );
-				if( $site->get_value( 'unique_name' ))
+				$show = false;
+				if($site->get_value( 'site_state' ) == 'Live')
 				{
-					$show = false;
-					if($site->get_value( 'site_state' ) == 'Live')
+					$show = true;
+				}
+				else
+				{
+					$es = new entity_selector();
+					$es->add_right_relationship($site->id(),relationship_id_of('site_archive'));
+					$es->add_relation( 'site_state = "Live"' );
+					$es->set_num(1);
+					$sites = $es->run_one(id_of('site'), 'Archived');
+					if(!empty($sites))
 					{
 						$show = true;
 					}
-					else
+				}
+				if($show)
+				{
+					$link = REASON_STATS_URI_BASE;
+					if (function_exists('posix_uname'))
 					{
-						$es = new entity_selector();
-						$es->add_right_relationship($site->id(),relationship_id_of('site_archive'));
-						$es->add_relation( 'site_state = "Live"' );
-						$es->set_num(1);
-						$sites = $es->run_one(id_of('site'), 'Archived');
-						if(!empty($sites))
-						{
-							$show = true;
-						}
+						$uname = posix_uname();
+						$uname_host = $uname['nodename'];
 					}
-					if($show)
-					{
-						$link = REASON_STATS_URI_BASE;
-						if (function_exists('posix_uname'))
-						{
-							$uname = posix_uname();
-							$uname_host = $uname['nodename'];
-						}
-						else $uname_host = php_uname('n');
-						$link .=  strtolower($uname_host).'/';
-						$link .= $_SERVER['HTTP_HOST'].'/';
-						$link .= $site->get_value( 'unique_name' ).'/';
-						return $link;
-					}
+					else $uname_host = php_uname('n');
+					$link .=  strtolower($uname_host).'/';
+					$link .= $_SERVER['HTTP_HOST'].'/';
+					$link .= $site->get_value( 'unique_name' ).'/';
+					return $link;
 				}
 			}
 		}
@@ -1603,6 +1612,24 @@ class AdminPage
 		$args = array_intersect_key($this->request,array_flip($this->default_args));
 		return !empty($args) ? $args : false;
 	} // }}}
+	
+	function get_module_classname($module_key)
+	{
+		if( !empty($GLOBALS['_reason_admin_modules'][$module_key]['class']) )
+		{
+			return $GLOBALS['_reason_admin_modules'][$module_key]['class'];
+		}
+		return NULL;
+	}
+	
+	function include_module($module_key)
+	{
+		if( !empty($GLOBALS['_reason_admin_modules'][$module_key]['file']) )
+		{
+			return reason_include_once('classes/admin/modules/'.$GLOBALS['_reason_admin_modules'][$module_key]['file']);
+		}
+		return false;
+	}
 
 	/**
 	 * Initializes the admin page.
@@ -1623,21 +1650,10 @@ class AdminPage
 		$this->set_head_items();
 		if( !empty($this->cur_module) )
 		{
-			if(
-				array_key_exists($this->cur_module, $GLOBALS['_reason_admin_modules'])
-				&&
-				!empty($GLOBALS['_reason_admin_modules'][$this->cur_module]['file'])
-			)
+			$module_name = $this->get_module_classname($this->cur_module);
+			if(empty($module_name))
 			{
-				reason_include_once('classes/admin/modules/'.$GLOBALS['_reason_admin_modules'][$this->cur_module]['file']);
-				if( !empty($GLOBALS['_reason_admin_modules'][$this->cur_module]['class']) && class_exists( $GLOBALS['_reason_admin_modules'][$this->cur_module]['class'] ) )
-				{
-					$module_name = $GLOBALS['_reason_admin_modules'][$this->cur_module]['class'];
-				}
-				else
-				{
-					trigger_error('Class '.$this->cur_module.'Module not found');
-				}
+				trigger_error('No class name set for ' . $this->cur_module . ' in the admin_modules config');
 			}
 		}
 		if( empty($module_name) )
@@ -1661,15 +1677,20 @@ class AdminPage
 				}
 				else
 				{
-					reason_include_once( 'classes/admin/modules/'.$GLOBALS['_reason_admin_modules']['Site']['file'] );
+					$this->cur_module = 'Site';
 					$module_name = $GLOBALS['_reason_admin_modules']['Site']['class'];
 				}
 			}
 			else
 			{
-				reason_include_once( 'classes/admin/modules/'.$GLOBALS['_reason_admin_modules']['Default']['file'] );
+				$this->cur_module = 'Default';
 				$module_name = $GLOBALS['_reason_admin_modules']['Default']['class'];
 			}
+		}
+		if(!$this->include_module($this->cur_module))
+		{
+			trigger_error('File not able to be included for '.$this->cur_module, HIGH);
+			return false;
 		}
 		if(class_exists( $module_name ) )
 		{
@@ -1684,7 +1705,7 @@ class AdminPage
 		}
 		else
 		{
-			trigger_error('Could not determine a module to run in the admin page init method.', HIGH);
+			trigger_error('Class '.$module_name.' not found. Not able to instantiate an admin module for '.$this->cur_module, HIGH);
 		}
 		return true;
 	} // }}}
@@ -1897,4 +1918,3 @@ class AdminPage
 		return $this->_invalid_admin_token;
 	}
 }
-?>
