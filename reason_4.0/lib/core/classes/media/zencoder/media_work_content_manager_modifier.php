@@ -529,15 +529,22 @@ class ZencoderMediaWorkContentManagerModifier implements MediaWorkContentManager
 	{
 		if ($this->manager->manages_media && $this->manager->get_value('transcoding_status') != 'converting')
 		{
+			if (defined('ZENCODER_UPLOAD_DIRECT_TO_S3') && true == ZENCODER_UPLOAD_DIRECT_TO_S3) {
+				require_once(SETTINGS_INC.'media_integration/s3_storage_settings.php');
+				$maxSize = S3_MAX_UPLOAD_SIZE;
+			} else {
+				$maxSize = reason_get_actual_max_upload_size();
+			}
+
 			$authenticator = array("reason_username_has_access_to_site", $this->manager->get_value("site_id"));
 			$params = array('authenticator' => $authenticator,
 							'acceptable_extensions' => $this->recognized_extensions,
 							'upload_to_amazon' => (defined('ZENCODER_UPLOAD_DIRECT_TO_S3') ? ZENCODER_UPLOAD_DIRECT_TO_S3 : false),
-							'max_file_size' => reason_get_actual_max_upload_size(),
+							'max_file_size' => $maxSize,
 							'head_items' => &$this->manager->head_items);
 			$this->manager->add_element( 'upload_file', 'ReasonUpload', $params);
-			
-			$this->manager->set_comments('upload_file',form_comment('If the file is on your computer, browse to it here.').form_comment('File must have one of the following extensions: .'.implode(', .', $this->recognized_extensions)).form_comment('<div class="maxUploadSizeNotice">Maximum file size for uploading is '.format_bytes_as_human_readable(reason_get_actual_max_upload_size()).'. </div>') );
+
+			$this->manager->set_comments('upload_file',form_comment('If the file is on your computer, browse to it here.').form_comment('File must have one of the following extensions: .'.implode(', .', $this->recognized_extensions)).form_comment('<div class="maxUploadSizeNotice">Maximum file size for uploading is '.format_bytes_as_human_readable($maxSize).'. </div>') );
 			
 			$this->manager->add_element('upload_url');
 			$this->manager->add_comments('upload_url', form_comment('Or, you can place the media in any web-accessible location and paste its web address in here. <em>Tip: try pasting the address into another tab first, to make sure you have the address right!</em>'));

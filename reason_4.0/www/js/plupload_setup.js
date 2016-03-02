@@ -99,6 +99,10 @@ function buildFiltersForUploader(fieldName, cfg) {
 			}
 			filters["mime_types"] = [ { title: "disco configured filetype restriction", extensions: extensions } ];
 		}
+
+		if (cfg.constraints.max_size != null) {
+			filters["max_file_size"] = cfg.constraints.max_size;
+		}
 	}
 
 	return filters;
@@ -181,16 +185,25 @@ $(document).ready(function() {
 		// console.log("SETTING UP [" + cfg.fieldName + "] / [" + uploader.settings.multipart_params.rvFieldName + "] / [" + uploader.id + "]");
 
 		uploader.bind('Error', (function(localScopedFieldName, up, err) { return function(up, err) {
+			console.log("detected an error...");
+			console.log(err);
 			var uploadConsole = $('#upload_console_' + localScopedFieldName);
 
-			var r = JSON.parse(err.response);
-
-			if (r.message) {
+			if (err.response) {
+				var r = JSON.parse(err.response);
+				if (r.message) {
+					uploadConsole.html(r.message);
+				} else {
+					uploadConsole.html(uploadConsole.html() + "\nError #" + err.code + ": " + err.message);
+				}
+			} else if (err.message == "File size error.") {
+				uploadConsole.html("That file is too large.");
+			} else if (err.message) {
 				uploadConsole.html(r.message);
 			} else {
-				uploadConsole.html(uploadConsole.html() + "\nError #" + err.code + ": " + err.message);
+				uploadConsole.html("An unknown error occurred: " + JSON.stringify(err));
 			}
-			console.log(err);
+
 			cancel_upload(up, localScopedFieldName);
 		} })(cfg.fieldName));
 
@@ -248,7 +261,7 @@ $(document).ready(function() {
 		});
 
 		uploader.bind('UploadProgress', function(up, file) {
-			console.log("getting feedback [" + file.percent + "],[" + up.settings.multipart_params.rvFieldName + "]/[" + up.id + "]");
+			// console.log("getting feedback [" + file.percent + "],[" + up.settings.multipart_params.rvFieldName + "]/[" + up.id + "]");
 
 			// document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + "%</span>";
 			// if (file.percent == "100") { }
