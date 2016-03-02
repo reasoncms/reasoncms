@@ -8,7 +8,13 @@ class S3Helper {
 	private $tempDir;
 	private $debugging;
 
+	private static $cache;
+
 	public function S3Helper($configKey = "default") {
+		if (self::$cache == null) {
+			self::$cache = Array();
+		}
+
 		$this->debugging = false;
 		$keyText = $configKey == "default" ? "" : strtoupper($configKey) . "_";
 
@@ -57,39 +63,78 @@ class S3Helper {
 		return $numDeleted;
 	}
 
-	public function getFileByPrefix($prefix) {
-		$this->printout("fetching [$prefix] prefix from bucket [" . $this->bucketName . "]...");
-		$amazon_file = null;
+	public function getFileByPrefix($prefix, $useCacheIfPossible = true) {
+		$cachedVal = $useCacheIfPossible ? $this->getCacheVal("fileByPrefix", $prefix) : null;
 
-		$objects = $this->s3->getIterator('ListObjects', array("Bucket" => $this->bucketName, "Prefix" => $prefix));
-		foreach ($objects as $obj) {
-			$nameOfFile = $obj['Key'];
+		if ($cachedVal == null) {
+			$this->printout("fetching [$prefix] prefix from bucket [" . $this->bucketName . "]...");
+			$amazon_file = null;
 
-			// echo "<PRE>"; var_dump($obj); echo "</PRE>";
+			$objects = $this->s3->getIterator('ListObjects', array("Bucket" => $this->bucketName, "Prefix" => $prefix));
+			foreach ($objects as $obj) {
+				$nameOfFile = $obj['Key'];
 
-			$tmpPath = S3_BASE_URL . $this->bucketName . "/" . $nameOfFile;
+				// echo "<PRE>"; var_dump($obj); echo "</PRE>";
 
-			$amazon_file = array(
-				"name" => $nameOfFile,
-				"path" => $tmpPath,
-				"tmp_name" => $tmpPath,
-				// "original_path" => $upload->get_original_path(),
-				// "modified_path" => $upload->get_temporary_path(),
-				"size" => $obj["Size"]
-				// "type" => $upload->get_mime_type("application/octet-stream")
-			);
+				$tmpPath = S3_BASE_URL . $this->bucketName . "/" . $nameOfFile;
 
-			break;
+				$amazon_file = array(
+					"name" => $nameOfFile,
+					"path" => $tmpPath,
+					"tmp_name" => $tmpPath,
+					// "original_path" => $upload->get_original_path(),
+					// "modified_path" => $upload->get_temporary_path(),
+					"size" => $obj["Size"]
+					// "type" => $upload->get_mime_type("application/octet-stream")
+				);
+
+				break;
+			}
+			$this->setCacheVal("fileByPrefix", $prefix, $amazon_file);
+			return $amazon_file;
+		} else {
+			return $cachedVal;
 		}
-		return $amazon_file;
 	}
 
-	public function getMetadataForKey($key) {
-		$headers = $this->s3->headObject(array(
-			"Bucket" => $this->bucketName,
-			"Key" => $key
-		));
-		return $headers->toArray()["Metadata"];
+	public function getMetadataForKey($key, $useCacheIfPossible = true) {
+		$cachedVal = $useCacheIfPossible ? $this->getCacheVal("metadata", $key) : null;
+
+		if ($cachedVal == null) {
+			$headers = $this->s3->headObject(array(
+				"Bucket" => $this->bucketName,
+				"Key" => $key
+			));
+
+			$rv = $headers->toArray()["Metadata"];
+			$this->setCacheVal("metadata", $key, $rv);
+			return $rv;
+		} else {
+			return $cachedVal;
+		}
+	}
+
+	// simple request-based caching, as otherwise we'll hit the S3 API multiple times in a single request
+	public function getCache($cacheType) {
+		if (!isset(self::$cache[$cacheType])) {
+			self::$cache[$cacheType] = Array();
+		}
+		return self::$cache[$cacheType];
+	}
+
+	public function setCacheVal($cacheType, $key, $val) {
+		$c = $this->getCache($cacheType);
+		$c[$key] = $val;
+		self::$cache[$cacheType] = $c;
+	}
+
+	public function getCacheVal($cacheType, $key) {
+		$c = $this->getCache($cacheType);
+		if (isset($c[$key])) {
+			return $c[$key];
+		} else {
+			return null;
+		}
 	}
 }
 ?>
