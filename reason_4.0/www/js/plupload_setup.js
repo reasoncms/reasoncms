@@ -7,6 +7,13 @@ function showBrowseButton(suffix, doShow) {
 }
 function showFilelist(suffix, doShow) { $("#upload_filelist_" + suffix).css("display", doShow ? "block" : "none"); }
 
+function cancel_upload(up, fieldName) {
+	uploadsPending--;
+	up.stop();
+	showFilelist(fieldName, false);
+	showBrowseButton(fieldName, true);
+}
+
 var revertData = {};
 
 function setupRevertInterface(suffix) {
@@ -306,13 +313,6 @@ $(document).ready(function() {
 		});
 
 		uploader.init();
-	}
-
-	function cancel_upload(up, fieldName) {
-		uploadsPending--;
-		up.stop();
-		showFilelist(fieldName, false);
-		showBrowseButton(fieldName, true);
 	}
 
 	function submission_attempt() {
