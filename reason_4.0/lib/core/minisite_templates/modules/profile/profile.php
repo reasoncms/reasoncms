@@ -1375,7 +1375,12 @@ class ProfileModule extends DefaultMinisiteModule
 	
 	protected function camelcase($str)
 	{
-		return preg_replace('/_(.?)/e',"strtoupper('$1')",$str);
+		return preg_replace_callback(
+			'/_(.?)/',
+			function($matches) {
+				return strtoupper($matches[1]);
+			},
+			$str);
 	}
 	
 	/**
