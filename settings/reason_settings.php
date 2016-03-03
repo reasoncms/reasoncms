@@ -354,7 +354,7 @@
 	 * When images are uploaded to Reason, they are resized automatically.
 	 * This setting determines their maximum vertical size in pixels
 	 */
-	define('REASON_STANDARD_MAX_IMAGE_HEIGHT', 500);
+	define('REASON_STANDARD_MAX_IMAGE_HEIGHT', 640);
 
 	/**
 	 * REASON_STANDARD_MAX_IMAGE_WIDTH
@@ -362,23 +362,23 @@
 	 * When images are uploaded to Reason, they are resized automatically.
 	 * This setting determines their maximum horizontal size in pixels
 	 */
-	define('REASON_STANDARD_MAX_IMAGE_WIDTH', 500);
+	define('REASON_STANDARD_MAX_IMAGE_WIDTH', 640);
 
 	/**
 	 * REASON_STANDARD_MIN_IMAGE_WIDTH
 	 *
 	 * When images are uploaded to Reason, they are checked to ensure their width is not less than the minimum width requirement.
-	 * This setting defines the minimum image width required and is currently set equal to the maximum width of the thumbnail..
+	 * This setting defines the minimum image width required and is currently set to zero to allow images of any size to be uploaded.
 	 */
-	define ('REASON_STANDARD_MIN_IMAGE_WIDTH', 125);
+	define ('REASON_STANDARD_MIN_IMAGE_WIDTH', 0);
 	
 	/**
 	 * REASON_STANDARD_MIN_IMAGE_HEIGHT
 	 *
 	 * When images are uploaded to Reason, they are checked to ensure their height is not less than the minimum required height.
-	 * This setting defines the minimum image height required and is currently set equal to the maximum height of the thumbnail.
+	 * This setting defines the minimum image height required and is currently set to zero to allow images of any size to be uploaded.
 	 */
-	define ('REASON_STANDARD_MIN_IMAGE_HEIGHT', 125);
+	define ('REASON_STANDARD_MIN_IMAGE_HEIGHT', 0);
 
 	/**
 	 * REASON_STANDARD_MAX_THUMBNAIL_HEIGHT
