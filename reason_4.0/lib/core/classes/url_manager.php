@@ -166,7 +166,7 @@
 			static $server_ip;
 			if (!isset($server_ip))
 			{
-				$get_ip_url = carl_construct_link(array(''), array(''), REASON_HTTP_BASE_PATH . 'displayers/ip.php');
+				$get_ip_url = securest_available_protocol().'://' . REASON_HOST . REASON_HTTP_BASE_PATH . 'displayers/ip.php';
 				$result_ip = carl_util_get_url_contents($get_ip_url);
 				$server_ip = (!empty($result_ip)) ? $result_ip : false;
 			}
