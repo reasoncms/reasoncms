@@ -780,7 +780,7 @@ class AdminPage
 			{
 				if($this->include_module('Analytics'))
 				{
-					if(method_exists($module_name, 'type_available') && $module_name::type_available($this->type_id))
+					if(method_exists($module_name, 'entity_available') && $module_name::entity_available($item))
 					{
 						echo '<li class="navItem';
 						if( $this->cur_module == 'Analytics' || $this->cur_module == 'AnalyticsAbout' )

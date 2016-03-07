@@ -100,6 +100,22 @@ class AnalyticsModule extends DefaultModule
 		}
 		return in_array($unique_name, static::type_unique_names_available());
 	}
+	public static function entity_available($entity)
+	{
+		// no analytics available if the type is not supported
+		if(!static::type_available($entity->get_value('type')))
+		{
+			return false;
+		}
+		
+		// No analytics available on a link page
+		if($entity->get_value('type') == id_of('minisite_page') && $entity->get_value('url'))
+		{
+			return false;
+		}
+		
+		return true;
+	}
 	
 	function ok_to_run($ok = NULL, $msg = '')
 	{
