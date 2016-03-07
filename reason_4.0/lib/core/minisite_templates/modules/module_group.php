@@ -16,18 +16,48 @@
 /**
  * Include the parent class & dependencies, and register the module with Reason
  */
-reason_include_once( 'classes/module_grouper.php' );
+reason_include_once( 'classes/module_group/module_grouper.php' );
+reason_include_once( 'classes/module_group/module_group_layout_manager.php' );
 reason_include_once( 'minisite_templates/modules/default.php' );
 $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'ModuleGroupModule';
+
+/*
+	March 2016 - tfeiler - Module that lets you put multiple modules into the same page location
+	of a template. Configure it in page_types with a "submodules" array that mirrors the layout of an
+	entry in the page_types array. Optionally specify a layout manager that extends "ModuleGroupLayoutManager"
+	to control the exact layout (default behavior will wrap each submodule's output in an indexed div).
+
+	'main_post' => array(
+		'module' => 'module_group',
+		'submodules' => array(
+			array(
+				'module' => 'echo',
+				'msg' => 'This is another instance of the echo module'
+			),
+			'random_number/random_number',
+			array(
+				'module' => 'echo',
+				'msg' => 'instance numero dos'
+			),
+			'random_number/random_number',
+		),
+		'layout_manager' => array(
+			'file' => 'classes/module_group_alt_layout_manager.php',
+			'class' => 'FooLayoutManager'
+		)
+	),
+*/
 	
 class ModuleGroupModule extends DefaultMinisiteModule implements ModuleGrouper {
 	public $acceptable_params = array(
-		'submodules' => array()
+		'submodules' => array(),
+		'layout_manager' => array()
 	);
 
 	private $args;
 	private $subModulesConfig;
 	private $submodules;
+	private $lm;
 
 	function init( $args = array() ) {	
 		$target = $this->get_api_submodule_target();
@@ -36,12 +66,33 @@ class ModuleGroupModule extends DefaultMinisiteModule implements ModuleGrouper {
 		$this->loadSubModules();
 	}
 
-	function run() {
-		echo "<div style='background-color:pink'>";
-		foreach ($this->submodules as $module) {
-			$module->run();
+	function setupLayoutManager() {
+		$defaultLayoutManagerClass = "ModuleGroupLayoutManager";
+		$layoutManagerClass = $defaultLayoutManagerClass;
+		if (isset($this->params['layout_manager'])) {
+			$lmFile = @$this->params['layout_manager']['file'];
+			$lmClass = @$this->params['layout_manager']['class'];
+
+			if (!empty($lmFile) && !empty($lmClass)) {
+				if (reason_file_exists($lmFile)) {
+					reason_include_once($lmFile);
+					$layoutManagerClass = $lmClass;
+				} else {
+					trigger_error("supplied custom layout manager file '$lmFile' does not exist!");
+				}
+			}
 		}
-		echo "</div>";
+		$this->lm = new $layoutManagerClass();
+
+		if ($layoutManagerClass != $defaultLayoutManagerClass && !is_subclass_of($layoutManagerClass, $defaultLayoutManagerClass)) {
+			trigger_error("supplied custom layout manager file '$lmFile'/'$lmClass' does not extend $defaultLayoutManagerClass; using default layout manager class instead.");
+			$this->lm = new $defaultLayoutManagerClass();
+		}
+	}
+
+	function run() {
+		$this->setupLayoutManager();
+		$this->lm->runModules($this->submodules);
 	}
 
 	function get_api_submodule_target() {
