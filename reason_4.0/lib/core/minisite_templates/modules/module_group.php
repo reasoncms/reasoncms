@@ -32,16 +32,8 @@ class ModuleGroupModule extends DefaultMinisiteModule implements ModuleGrouper {
 	function init( $args = array() ) {	
 		$target = $this->get_api_submodule_target();
 
-		// echo "<div style='background-color:pink'>initing...<p>";
 		$this->args = $args;
-		$this->submodules = Array();
-
-		$this->subModulesConfig = $this->params['submodules'];
 		$this->loadSubModules();
-
-		// $templateRef = $this->args['parent'];
-		// foreach ($templateRef->section_to_module as $region => $module_name) { echo "PARENT TEMPLATE [$region] => [$module_name]<BR>"; }
-		// echo "</div>";
 	}
 
 	function run() {
@@ -55,7 +47,6 @@ class ModuleGroupModule extends DefaultMinisiteModule implements ModuleGrouper {
 	function get_api_submodule_target() {
 		$api = $this->get_api();
 		if ($api) {
-			// echo "api is: [" . $api->get_identifier() . "] / [" . $api->get_name() . "]\n";
 			$re = "/submodule-(.*)-mcla-(.*)-mloc-(.*)-mpar-(.*)/"; 
 			preg_match($re, $api->get_identifier(), $matches);
 			return $matches[1];
@@ -65,7 +56,6 @@ class ModuleGroupModule extends DefaultMinisiteModule implements ModuleGrouper {
 	}
 
 	function run_api() {
-		// echo "\n\n\n!!!!! CUSTOM run_AIP!!!!!\n\n\n";
 		$apiTarget = $this->get_api_submodule_target();
 		if (false !== $apiTarget) {
 			$targetSubmodule = $this->submodules[$apiTarget];
@@ -91,27 +81,20 @@ class ModuleGroupModule extends DefaultMinisiteModule implements ModuleGrouper {
 					reason_include_once($moduleFilename);
 					$moduleClass = (!empty($GLOBALS['_module_class_names'][$moduleName])) ? $GLOBALS['_module_class_names'][$moduleName] : '';
 					if (!empty($moduleClass)) {
-						// $module = new $moduleClass;
 						$supportedApis = call_user_func(array($moduleClass, 'get_supported_apis'), $moduleClass);
-						// echo "what apis exist for [" . $moduleName . "]?\n"; var_dump($supportedApis); echo "\n\n";
-						$rv[$moduleClass] = $supportedApis;
+						// $rv[$moduleClass] = $supportedApis;
+
+						foreach ($supportedApis as $apiName => $rsnApiObj) {
+							if ($apiName != "standalone") {
+								$rv[$apiName] = $rsnApiObj;
+							}
+						}
 					}
 				}
 			}
 		}
-		// echo "RETURNING!!!!!!\n\n"; var_dump($rv);
 
-		$rv2 = Array();
-		foreach ($rv as $moduleClass => $apis) {
-			foreach ($apis as $apiName => $apiCfg) {
-				if ($apiName != "standalone") {
-					$rv2[$apiName] = $apiCfg;
-				}
-			}
-		}
-
-		// echo "RETURNING!!!!!!\n\n"; var_dump($rv2);
-		return $rv2;
+		return $rv;
 	}
 
 	function prepAndInitSubModule($idx, $module, $params) {
@@ -151,7 +134,9 @@ class ModuleGroupModule extends DefaultMinisiteModule implements ModuleGrouper {
 	// specific/passthru configuration values, and creates the modules that 
 	// the ModuleGroup module is managing.
 	function loadSubModules() {
-		// echo "submodules:<BR>";
+		$this->submodules = Array();
+		$this->subModulesConfig = $this->params['submodules'];
+
 		$submoduleCounter = 0;
 		$apiTarget = $this->get_api_submodule_target();
 
@@ -173,12 +158,9 @@ class ModuleGroupModule extends DefaultMinisiteModule implements ModuleGrouper {
 					$moduleFilename = ReasonPageTypes::resolve_filename($moduleName);
 					if ($moduleFilename && reason_file_exists($moduleFilename)) {
 						reason_include_once($moduleFilename);
-						// echo "<LI>" . $moduleName . " ($moduleFilename)";
 
 						$moduleClass = (!empty($GLOBALS['_module_class_names'][$moduleName])) ? $GLOBALS['_module_class_names'][$moduleName] : '';
 						if (!empty($moduleClass)) {
-							// echo " ($moduleClass)";
-							// region_name, module_name, module_filename, module_params
 							$module = new $moduleClass;
 							$this->prepAndInitSubModule($submoduleCounter, $module, $moduleParams);
 							$this->submodules[] = $module;
@@ -188,8 +170,6 @@ class ModuleGroupModule extends DefaultMinisiteModule implements ModuleGrouper {
 					} else {
 						trigger_error('Unable to find php file for module (' . $moduleName . ')');
 					}
-
-					// echo "</LI>";
 				}
 			} else {
 				$this->submodules[] = null;
