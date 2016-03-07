@@ -816,7 +816,6 @@ class MinisiteTemplate
 	function load_modules() // {{{
 	{
 		$page_type = $this->get_page_type();
-
 		if (extension_loaded('newrelic')) {
 			newrelic_name_transaction($page_type->get_name());
 		}
@@ -858,6 +857,9 @@ class MinisiteTemplate
 						// dh - I really want to get rid of this.  For now, it stays.  However, I'm adding a number
 						// of other parameters that a module will take by default so that we can rely on some important
 						// data coming in.  9/15/04
+						
+						// tfeiler: as of 2016-03-04, parent is in use by at least one
+						// module-- the "module_group" module uses it to get at the "clean_external_vars" function.
 						$args[ 'parent' ] =& $this; // pass this object to the module
 						$args[ 'page_id' ] = $this->page_id;
 						$args[ 'site_id' ] = $this->site_id;
