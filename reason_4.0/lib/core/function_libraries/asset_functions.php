@@ -251,7 +251,7 @@ function reason_get_asset_max_upload_size()
  *
  * @author Nathan White
  */
-function reason_create_asset($site_id, $user_id, $file, $additional_values)
+function reason_create_asset($site_id, $user_id, $file, $additional_values = array())
 {
 	// first lets do a number of sanity checks and trigger errors as appropriate.
 	if (empty($site_id) || (intval($site_id) != $site_id))
