@@ -1,6 +1,5 @@
 <?php
 require_once(SETTINGS_INC.'media_integration/s3_storage_settings.php');
-//require_once(INCLUDE_PATH . S3_API_INCLUDE_RELATIVE_PATH);
  
 class S3Helper {
 	private $s3;
