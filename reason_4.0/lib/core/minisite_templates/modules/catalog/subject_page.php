@@ -274,7 +274,7 @@ class CatalogSubjectPageModule extends DefaultMinisiteModule
 		// If we're adding a new block, we need them to identify the subject
 		if ($this->request['block_id'] === 0)
 		{
-			$subjects = get_course_subjects();
+			$subjects = $this->helper->get_course_subjects();
 			$form->add_element( 'block_edit_org_id' , 'select', array('options' => $subjects) );
 			$form->set_display_name('block_edit_org_id','Subject');
 		}
