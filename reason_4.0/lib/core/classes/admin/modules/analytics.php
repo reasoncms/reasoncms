@@ -100,6 +100,48 @@ class AnalyticsModule extends DefaultModule
 		}
 		return in_array($unique_name, static::type_unique_names_available());
 	}
+	public static function entity_available($entity)
+	{
+		if(is_numeric($entity))
+		{
+			$id = (integer) $entity;
+			$entity = new entity($id);
+		}
+		elseif(is_object($entity))
+		{
+			// assume it's an entity object
+		}
+		elseif(is_string($entity))
+		{
+			if($id = id_of($entity))
+			{
+				$entity = new entity($id);
+			}
+			else
+			{
+				trigger_error('Unrecognized value passed to entity_available()');
+				return false;
+			}
+		}
+		else
+		{
+			trigger_error('Unrecognized value passed to entity_available()');
+			return false;
+		}
+		// no analytics available if the type is not supported
+		if(!static::type_available($entity->get_value('type')))
+		{
+			return false;
+		}
+		
+		// No analytics available on a link page
+		if($entity->get_value('type') == id_of('minisite_page') && $entity->get_value('url'))
+		{
+			return false;
+		}
+		
+		return true;
+	}
 	
 	function ok_to_run($ok = NULL, $msg = '')
 	{
@@ -162,6 +204,14 @@ class AnalyticsModule extends DefaultModule
 				$type = new entity($this->admin_page->request['type_id']);
 				$this->admin_page->title = 'Analytics Unavailable';
 				$this->ok_to_run(false, 'Analytics are not available for '.strtolower($type->get_value('plural_name') ? $type->get_value('plural_name') : $type->get_value('name')).'.');
+				return;
+			}
+			$entity_id = (integer) $this->admin_page->request['id'];
+			$entity = new entity($entity_id);
+			if(!static::entity_available($entity))
+			{
+				$this->admin_page->title = 'Analytics Unavailable';
+				$this->ok_to_run(false, 'Analytics are not available for this item.');
 				return;
 			}
 			$type_name = $this->admin_page->get_name($type_id);
