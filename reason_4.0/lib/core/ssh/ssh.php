@@ -14,12 +14,10 @@
  * Permits listing directories on remote hosts, transferring files to a temporary local directory.  Allows creating directories,
  * copying files, deleting files on the remote host.
  *
- *  NOTE: this class requires a passwordless private key be in the userid's .ssh directory. Otherwise these functions will fail.
- *
  * Usage:
  *
  *  ssh()
- *  $obj = new ssh('host' , 'userid' , '/full/remote/path');
+ *  $obj = new ssh('host' , 'userid' , '/full/remote/path', '/path/to/userid@host.sshkey');
  *
  *  directory_listing() 
  *  $array = $obj->directory_listing() // returns file names, not full path
@@ -70,22 +68,24 @@
 
 
 // These constants need to be defined in the Reason settings
-// REASON_SSH_DEFAULT_HOST,REASON_SSH_DEFAULT_USERID,REASON_SSH_TEMP_STORAGE
+// REASON_SSH_DEFAULT_HOST,REASON_SSH_DEFAULT_USERID,REASON_SSH_TEMP_STORAGE,REASON_IMAGE_IMPORT_SSHKEYFILE
 
 class ssh{ 
 
 var $host ; 
-var $userid ; 
+var $userid ;
+var $ssh_key_file ;
 var $remote_path ; 
 var $local_path ; 
 
 // constructor
-function ssh($host=REASON_SSH_DEFAULT_HOST , $userid=REASON_SSH_DEFAULT_USERID , $remote_path="" ){
+function ssh($host=REASON_SSH_DEFAULT_HOST , $userid=REASON_SSH_DEFAULT_USERID , $remote_path="", $ssh_key_file = REASON_IMAGE_IMPORT_SSHKEYFILE ){
     
     if($remote_path == ""){ die("You must defined a remote_path when calling the ssh constructor."); }
     
     $this->host = $host ;
-    $this->userid = $userid ; 
+    $this->userid = $userid ;
+    $this->ssh_key_file = $ssh_key_file ; 
     $this->remote_path = $remote_path ; 
     $this->local_path = REASON_SSH_TEMP_STORAGE . "/" . $this->userid . "/" . md5($this->remote_path) ;
 
@@ -379,8 +379,8 @@ function _ssh_exec($command=""){
     if($command == ""){ return ; }
 
     // connect and execute
-    exec('ssh -x ' . $this->userid . "@" . $this->host . ' ' . $command , $result);
-    
+    exec('ssh -x -i ' . $this->ssh_key_file. " " . $this->userid . "@" . $this->host . ' ' . $command , $result);
+
     // exec returns an array of the lines produced
     return $result ;
 
