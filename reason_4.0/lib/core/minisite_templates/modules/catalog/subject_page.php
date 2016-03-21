@@ -55,7 +55,7 @@ class CatalogSubjectPageModule extends DefaultMinisiteModule
 				$description_title = '<span class="courseTitle">'.$course->get_value('title').'</span> ';
 				echo json_encode(array(
 					'title'=>$course->get_value('org_id').' '.$course->get_value('course_number'),
-					'description'=>$description_title . $this->get_course_extended_description($course)
+					'description'=>$description_title . $this->helper->get_course_extended_description($course)
 					));
 				exit;
 			}
@@ -274,7 +274,7 @@ class CatalogSubjectPageModule extends DefaultMinisiteModule
 		// If we're adding a new block, we need them to identify the subject
 		if ($this->request['block_id'] === 0)
 		{
-			$subjects = get_course_subjects();
+			$subjects = $this->helper->get_course_subjects();
 			$form->add_element( 'block_edit_org_id' , 'select', array('options' => $subjects) );
 			$form->set_display_name('block_edit_org_id','Subject');
 		}
