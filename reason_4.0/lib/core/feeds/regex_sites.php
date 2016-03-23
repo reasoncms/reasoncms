@@ -38,8 +38,7 @@ class regexFeed extends defaultFeed
 	}
 	function get_site_link()
 	{
-		$uname = posix_uname();
-		$this->site_link = strtolower($uname['nodename']);
+		$this->site_link = strtolower($_SERVER['HTTP_HOST']);
 	}
 	function get_feed_description()
 	{
