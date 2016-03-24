@@ -1,0 +1,8 @@
+.chosen-container-multi .chosen-choices .search-field input {
+  padding: 0px;
+  height: 25px;
+}
+
+.chosen-container-multi .chosen-choices .search-choice .search-choice-close {
+  height: 12px;
+}
