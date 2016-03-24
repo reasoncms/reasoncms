@@ -12,9 +12,9 @@ require_once PLASMATURE_TYPES_INC."default.php";
  * The abstract class that powers plasmature types that have multiple options
  * (e.g. radio buttons, selects). The optionType encapsulates a list of
  * possible values with the one selected value.
- * 
+ *
  * This is considered an abstract type.
- * 
+ *
  * @abstract
  * @package disco
  * @subpackage plasmature
@@ -35,7 +35,7 @@ class optionType extends defaultType
 	 * Format: disabled option keys are the values of this array. Simple numeric indexing.
 	 *
 	 * @todo Still need to work out compariston rules!!!
-	 * 
+	 *
 	 * @var array
 	 */
 	var $disabled_options = array();
@@ -62,7 +62,7 @@ class optionType extends defaultType
 	 * What label should the empty value get?
 	 */
 	var $empty_value_label = '--';
-	
+
 	protected function _array_val_ok()
 	{
 		return true;
@@ -133,7 +133,7 @@ class optionType extends defaultType
 		else
 			trigger_error('Could not set option order; '.$this->name.' does not have any options set.');
 	}
-	
+
 	/**
 	 * Returns the value as it was displayed in the element -- e.g., if you store
 	 * departments as abbreviations but display them in the option element as
@@ -146,7 +146,7 @@ class optionType extends defaultType
 		{
 			if (!empty($this->options[$this->value]))
 				return $this->options[$this->value];
-			
+
 			if ($this->add_other)
 			{
 				if ($this->other_options && !empty($this->other_options[$this->value]))
@@ -157,8 +157,8 @@ class optionType extends defaultType
 		}
 		return false;
 	}
-	
-	
+
+
 	// MAJOR CHANGE
 	/**
 	 * Finds the value of this element from userland (in {@link _request}) and returns it
@@ -167,7 +167,7 @@ class optionType extends defaultType
 	function grab_value()
 	{
 		$value = parent::grab_value();
-		
+
 		/* We can detect that the Other field has content for us if:
 		   1. $value['__other__'] is set (radio groups)
 		   2. '__other__' is an array value in $value (checkbox groups)
@@ -214,7 +214,7 @@ class optionType extends defaultType
 				}
 			}
 		}
-		
+
 		if($this->_array_val_ok() && is_array($value))
 		{
 			foreach($value as $k=>$v)
@@ -230,7 +230,7 @@ class optionType extends defaultType
 		}
 		return NULL;
 	}
-		
+
 	protected function _validate_submitted_value($value)
 	{
 		// NULL is always OK?
@@ -242,10 +242,10 @@ class optionType extends defaultType
 			trigger_error('Illegal value -- ('.gettype($value).') "'.$value.'" -- submitted for '.$this->name.'. This may be an attempt to probe for vulnerabilities.' );
 			return false;
 		}
-		
+
 		if($this->add_empty_value_to_top && '' === $value)
 			return true;
-		
+
 		// If Other entry is enabled, the value is either one of other_options or anything at all
 		if ($this->add_other && !isset($this->options[$value]))
 		{
@@ -260,16 +260,16 @@ class optionType extends defaultType
 			trigger_error('Unrecognized value -- ('.gettype($value).') "'.$value.'" -- submitted for '.$this->name.'. This may be an attempt to probe for vulnerabilities. Future changes to plasmature will likely block unrecognized values like this.' );
 			// return false;
 		}
-		
+
 		if(!$this->_is_disabled_option($value) || $this->_is_current_value($value))
 		{
 			return true;
 		}
-		
+
 		return false;
 	}
 	/*
-	Problem: Recognize that (str) "5" = (int) 5 and (str) "0" = (int) 0 but that 
+	Problem: Recognize that (str) "5" = (int) 5 and (str) "0" = (int) 0 but that
 	(str) "foobar" != (int) 0, both ways. Fast.
 	*/
 	protected function _is_disabled_option($value)
@@ -301,7 +301,7 @@ class optionType extends defaultType
 		}
 		return false; */
 	}
-	
+
 	protected function _is_current_value($value, $report = false)
 	{
 		if($report) echo $value.' :: '.$this->value.' :: ';
@@ -318,12 +318,12 @@ class optionType extends defaultType
 			return ( (string) $value == (string) $this->value );
 		}
 	}
-	
+
 	protected function _is_option($value)
 	{
 		if($this->add_empty_value_to_top && '' == (string) $value)
 			return true;
-		
+
 		return isset($this->options[$value]);
 	}
 
@@ -338,7 +338,7 @@ class optionType extends defaultType
 		else
 			return $rules;
 	}
-	
+
 	/* function set( $value )
 	{
 		if(is_array( $value ))
@@ -384,7 +384,7 @@ class radioType extends optionType
 	var $type_valid_args = array( 'sub_labels', 'tableless' );
 	var $sub_labels = array();
 	var $tableless = false;
-	
+
 	protected function _array_val_ok()
 	{
 		return false;
@@ -411,7 +411,7 @@ class radioType extends optionType
 		$str .= '</div>'."\n";
 		return $str;
 	}
-	
+
 	protected function _get_radio_item($key,$val,$count)
 	{
 		$str = '';
@@ -420,7 +420,7 @@ class radioType extends optionType
 			$str .= '<div class="radioItem"><span class="radioButton"><input type="radio" id="'.$id.'" name="'.$this->name.'" value="'.htmlspecialchars($key, ENT_QUOTES).'"';
 		else
 			$str .= '<tr>'."\n".'<td valign="top"><input type="radio" id="'.$id.'" name="'.$this->name.'" value="'.htmlspecialchars($key, ENT_QUOTES).'"';
-			
+
 		if ( $this->_is_current_value($key) )
 			$str .= ' checked="checked"';
 		if ( $this->_is_disabled_option($key) )
@@ -431,7 +431,7 @@ class radioType extends optionType
 			$str .= ' /></td>'."\n".'<td valign="top"><label for="'.$id.'">'.$val.'</label></td>'."\n".'</tr>'."\n";
 		return $str;
 	}
-	
+
 	protected function _get_sub_label_item($key)
 	{
 		if (!empty($this->sub_labels[$key]))
@@ -442,7 +442,7 @@ class radioType extends optionType
 				return '<tr class="sublabel">'."\n".'<td colspan="2">'.$this->sub_labels[$key].'</td>'."\n".'</tr>'."\n";
 		}
 	}
-	
+
 	protected function _get_other_item($count, $checked)
 	{
 		$id = 'radio_'.$this->name.'_'.$count;
@@ -450,7 +450,7 @@ class radioType extends optionType
 			$str = '<div class="radioItem radioItemOther"><span class="radioButton"><input type="radio" id="'.$id.'" name="'.$this->name.'" value="__other__"';
 		else
 			$str = '<tr>'."\n".'<td valign="top"><input type="radio" id="'.$id.'" name="'.$this->name.'" value="__other__"';
-		
+
 		if ( !$checked && $this->value)
 		{
 			$other_value = $this->value;
@@ -458,12 +458,12 @@ class radioType extends optionType
 		} else {
 			$other_value = '';
 		}
-		
+
 		if ($this->tableless)
 			$str .= ' /></span><label for="'.$id.'">'.$this->other_label.'</label> '."\n";
 		else
 			$str .= '></td>'."\n".'<td valign="top"><label for="'.$id.'">'.$this->other_label.'</label>';
-		
+
 		if (empty($this->other_options))
 		{
 			$str .= '<input type="text" name="'.$this->name.'_other" value="'.str_replace('"', '&quot;', $other_value).'"  />';
@@ -482,7 +482,7 @@ class radioType extends optionType
 			$str .= '</div>'."\n";
 		else
 			$str .= '</td>'."\n".'</tr>'."\n";
-		
+
 		return $str;
 	}
 }
@@ -586,25 +586,25 @@ class checkboxgroupType extends optionType
 		$str = '<div class="checkBoxGroup">'."\n";
 		if (!$this->tableless) $str .= '<table border="0" cellpadding="1" cellspacing="0">'."\n";
 		$i = 0;
-		
+
 		if($this->add_empty_value_to_top)
 		{
 			$str .= $this->_get_checkbox_item('',$this->empty_value_label,$i++);
 		}
-		
+
 		foreach( $this->options as $key => $val )
 		{
 			if (!empty($this->sub_labels[$key])) $str .= $this->_get_sub_label_item($key);
 			$str .= $this->_get_checkbox_item($key,$val,$i++);
 		}
-		
+
 		if ($this->add_other) $str .= $this->_get_other_item($i++);
-		
+
 		if (!$this->tableless) $str .= '</table>'."\n";
 		$str .= '</div>'."\n";
 		return $str;
 	}
-	
+
 	protected function _get_checkbox_item($key,$val,$count)
 	{
 		$id = 'checkbox_'.$this->name.'_'.$count;
@@ -612,29 +612,29 @@ class checkboxgroupType extends optionType
 			$str = '<div class="checkboxItem">';
 		else
 			$str = '<tr><td valign="top">';
-			
+
 		$str .= '<input type="checkbox" id="'.$id.'" name="'.$this->name.'['.$count.']" value="'.htmlspecialchars($key, ENT_QUOTES).'"';
 
 		if ( $this->_is_current_value($key) )
 			$str .= ' checked="checked"';
 		if ( $this->_is_disabled_option($key) )
 			$str .= ' disabled="disabled"';
-		
+
 		if ($this->tableless)
 			$str .= ' />';
 		else
 			$str .= ' /></td><td valign="top">';
-		
+
 		$str .= '<label for="'.$id.'">'.$val.'</label>';
-		
+
 		if ($this->tableless)
 			$str .= '</div>'."\n";
 		else
 			$str .= '</td></tr>'."\n";
-			
+
 		return $str;
 	}
-	
+
 	protected function _get_other_item($count)
 	{
 		// Identify any set values that aren't supported by the option list
@@ -644,18 +644,18 @@ class checkboxgroupType extends optionType
 			$val_array = array($this->value);
 		else
 			$val_array = array();
-			
+
 		$value = array_diff($val_array, array_keys($this->options));
-		
+
 		$id = 'checkbox_'.$this->name.'_'.$count;
-		
+
 		if ($this->tableless)
 			$str = '<div class="checkboxItem checkboxItemOther">'."\n";
 		else
 			$str = '<tr>'."\n".'<td valign="top">';
-			
+
 		$str .= '<span class="checkBox"><input type="checkbox" id="'.$id.'" name="'.$this->name.'['.$count.']" value="__other__"';
-		
+
 		if (!empty($value))
 		{
 			$other_value = reset($value);
@@ -663,24 +663,24 @@ class checkboxgroupType extends optionType
 		} else {
 			$other_value = '';
 		}
-		
+
 		if ($this->tableless)
 			$str .= ' /></span>';
 		else
 			$str .= ' /></td><td valign="top">';
-		
+
 		$str .= '<label for="'.$id.'">'.$this->other_label.'</label>';
-		
+
 		$str .= '<input type="text" name="'.$this->name.'_other" value="'.str_replace('"', '&quot;', $other_value).'"  />';
-		
+
 		if ($this->tableless)
 			$str .= '</div>'."\n";
 		else
 			$str .= '</td></tr>'."\n";
-			
+
 		return $str;
 	}
-	
+
 	protected function _get_sub_label_item($key)
 	{
 		if (!empty($this->sub_labels[$key]))
@@ -691,7 +691,7 @@ class checkboxgroupType extends optionType
 				return '<tr class="sublabel">'."\n".'<td colspan="2">'.$this->sub_labels[$key].'</td>'."\n".'</tr>'."\n";
 		}
 	}
-	
+
 	/**
 	 * Finds the value of this element from userland (in {@link _request}) and returns it
 	 * @return mixed array, integer, or string if available, otherwise NULL if no value from userland
@@ -861,7 +861,7 @@ class selectType extends optionType
 		$str .= '</select>'."\n";
 		return $str;
 	}
-	
+
 	protected function _get_option_html($key,$val,&$select_count)
 	{
 		$str = '';
@@ -942,13 +942,13 @@ class chosen_selectType extends selectType
         function get_display()
         {
                 $str = $this->get_chosen_select_js_css() . "\n";
-                $str .= '<select id="'.$this->name.'Element" name="'.$this->name.($this->multiple ? '[]' : '').'" class="chzn-select" style="min-width:'.$this->min_width.'px;" size="'.htmlspecialchars($this->n, ENT_QUOTES).'" '.($this->multiple ? 'multiple="multiple"' : '').'>'."\n";
+                $str .= '<select id="'.$this->name.'Element" name="'.$this->name.($this->multiple ? '[]' : '').'" class="chosen-select" style="min-width:'.$this->min_width.'px;" size="'.htmlspecialchars($this->n, ENT_QUOTES).'" '.($this->multiple ? 'multiple="multiple"' : '').'>'."\n";
                 $select_count = 0;
 
                 $str .= $this->_get_optgroup_html($this->options);
 
                 $str .= '</select>'."\n";
-                $str .= '<script language="javascript" type="text/javascript">$(".chzn-select").chosen('.($this->search_substrings ? '{ search_contains: true }' : '').');</script>';
+                $str .= '<script language="javascript" type="text/javascript">$(".chosen-select").chosen('.($this->search_substrings ? '{ search_contains: true }' : '').');</script>';
                 return $str;
         }
 
@@ -964,7 +964,6 @@ class chosen_selectType extends selectType
                         $js_css = '';
                         $js_css .= '<script language="javascript" type="text/javascript" src="' . REASON_PACKAGE_HTTP_BASE_PATH . 'chosen_select/chosen.jquery.js"></script>'."\n";
                         $js_css .= '<link href="' . REASON_PACKAGE_HTTP_BASE_PATH . 'chosen_select/chosen.css" rel="stylesheet">'."\n";
-                        $js_css .= '<link href="' . REASON_PACKAGE_HTTP_BASE_PATH . 'chosen_select/reason_chosen.css" rel="stylesheet">'."\n";
                         $loaded_an_instance = true;
                 }
                 return (!empty($js_css)) ? $js_css : '';
@@ -980,12 +979,12 @@ class chosen_selectType extends selectType
 class chosen_select_multipleType extends chosen_selectType
 {
 	var $type = 'chosen_select_multiple';
-	var $multiple = True;
+	var $multiple = true;
 
 	function get_display()
 	{
 		$str = $this->get_chosen_select_js_css() . "\n";
-		$str .= '<select id="'.$this->name.'Element" name="'.$this->name.($this->multiple ? '[]' : '').'" class="chzn-select" style="min-width:150px;" size="'.htmlspecialchars($this->n, ENT_QUOTES).'" '.($this->multiple ? 'multiple="multiple"' : '').'>'."\n";
+		$str .= '<select id="'.$this->name.'Element" name="'.$this->name.($this->multiple ? '[]' : '').'" class="chosen-select" style="min-width:'.$this->min_width.'px;" size="'.htmlspecialchars($this->n, ENT_QUOTES).'" multiple="multiple">'."\n";
 		$select_count = 0;
 
 		foreach( $this->options as $key => $val )
@@ -1000,7 +999,7 @@ class chosen_select_multipleType extends chosen_selectType
 			}
 		}
 		$str .= '</select>'."\n";
-		$str .= '<script language="javascript" type="text/javascript">$(".chzn-select").chosen();</script>';
+		$str .= '<script language="javascript" type="text/javascript">$(".chosen-select").chosen('.($this->search_substrings ? '{ search_contains: true }' : '').');</script>';
 		return $str;
 	}
 }
@@ -1015,7 +1014,7 @@ class select_no_sortType extends selectType
 	var $add_empty_value_to_top = false;
 	var $sort_options = false;
 }
-	 
+
 /**
  * @package disco
  * @subpackage plasmature
@@ -1173,7 +1172,7 @@ class select_multipleType extends selectType
 	/** if using multiple select box, how many rows to show at once? */
 	var $select_size = 8;
 	var $add_empty_value_to_top = false;
-	
+
 	protected function _string_val_ok()
 	{
 		return false;
@@ -1213,7 +1212,7 @@ class select_multipleType extends selectType
 		}
 		return $str;
 	}
-	
+
 	protected function _get_checkbox_html($key,$val)
 	{
 		$str = '';
@@ -1225,7 +1224,7 @@ class select_multipleType extends selectType
 		$str .= ' />'."\n".'<label for="'.$this->name.'-'.htmlspecialchars($key, ENT_QUOTES).'">'.$val.'</label><br />'."\n";
 		return $str;
 	}
-	
+
 	protected function _get_option_html($key,$val,&$select_count)
 	{
 		$str = '';
@@ -1254,14 +1253,14 @@ class select_jsType extends selectType
 	var $script_url = '';
 	var $type_valid_args = array('n' => 'size', 'multiple', 'script_url',
 		'add_null_value_to_top');
-	
+
 	function get_display()
 	{
 		$str  = $this->script_tag();
 		$str .= parent::get_display();
 		return $str;
 	}
-	
+
 	function script_tag()
 	{
 		$s = '';
@@ -1286,17 +1285,17 @@ class select_no_sort_jsType extends select_jsType
 class range_sliderType extends defaultType
 {
 	var $type = 'range_slider';
-	
+
 	/** @access private */
 	var $type_valid_args = array( 'min', 'max', 'step', 'value' );
 	var $min = 0;
 	var $max = 10;
 	var $step = 1;
 	var $value = 1;
-	
+
 	function get_display()
 	{
 		return '<input type="range" name="'.$this->name.'" value="'.str_replace('"', '&quot;', $this->get()).'"   id="'.$this->name.'Element" min="'.$this->min.'" max="'.$this->max.'" step="'.$this->step.'" />';
-	}	
-	
+	}
+
 }
