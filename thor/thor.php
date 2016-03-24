@@ -564,7 +564,6 @@ class ThorCore
 	 */
 	function get_rows_for_key($key, $key_column, $sort_field = '', $sort_order = '')
 	{
-		$table = $this->get_thor_table();
 		if ($this->get_thor_table() && (strlen($key) > 0) && $this->table_exists())
 		{
 			if (!get_current_db_connection_name()) connectDB($this->get_db_conn());
@@ -597,7 +596,6 @@ class ThorCore
 	
 	function get_rows($sort_field = '', $sort_order = '')
 	{
-		$table = $this->get_thor_table();
 		if ($this->get_thor_table() && $this->table_exists())
 		{
 			if (!get_current_db_connection_name()) connectDB($this->get_db_conn());
@@ -616,16 +614,19 @@ class ThorCore
   			if ($reconnect_db) connectDB($reconnect_db); // reconnect to default DB
   			return $result;
   		}
-  		else
+  		elseif (!$this->get_thor_table())
   		{
   			trigger_error('get_rows called but no table has been defined via the thorCore set_thor_table method');
   			return NULL;
+  		}
+		else
+  		{
+  			return array();
   		}
 	}
 	
 	function get_row_count()
 	{
-		$table = $this->get_thor_table();
 		if ($this->get_thor_table() && $this->table_exists())
 		{
 			if (!get_current_db_connection_name()) connectDB($this->get_db_conn());
@@ -637,11 +638,15 @@ class ThorCore
   			if ($reconnect_db) connectDB($reconnect_db); // reconnect to default DB
   			return $result['count'];
   		}
-  		else
+  		elseif (!$this->get_thor_table())
   		{
   			trigger_error('get_row_count called but no table has been defined via the thorCore set_thor_table method');
   			return NULL;
   		}
+		else
+		{
+			return 0;
+		}
 	}
 	
 	/**
@@ -649,7 +654,6 @@ class ThorCore
 	 */
 	function delete_by_primary_key($primary_key)
 	{
-		$table = $this->get_thor_table();
 		if ($this->get_thor_table() && (strlen($primary_key) > 0) )
 		{
 			$this->delete_file_storage_for_row($primary_key);
@@ -658,7 +662,7 @@ class ThorCore
 			$reconnect_db = (get_current_db_connection_name() != $this->get_db_conn()) ? get_current_db_connection_name() : false;
 			if ($reconnect_db) connectDB($this->get_db_conn());
 			$q = $this->get_delete_by_key_sql($primary_key, 'id');
-  			$res = mysql_query($q);
+  			mysql_query($q);
   			if ($reconnect_db) connectDB($reconnect_db); // reconnect to default DB
   			$this->delete_table_if_needed();
   			return true;
