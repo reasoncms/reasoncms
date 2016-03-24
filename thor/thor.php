@@ -598,7 +598,7 @@ class ThorCore
 	function get_rows($sort_field = '', $sort_order = '')
 	{
 		$table = $this->get_thor_table();
-		if ($this->get_thor_table())
+		if ($this->get_thor_table() && $this->table_exists())
 		{
 			if (!get_current_db_connection_name()) connectDB($this->get_db_conn());
 			$reconnect_db = (get_current_db_connection_name() != $this->get_db_conn()) ? get_current_db_connection_name() : false;
