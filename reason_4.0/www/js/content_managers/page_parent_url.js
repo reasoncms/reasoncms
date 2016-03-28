@@ -8,23 +8,23 @@
 
 jQuery(function warp_page($) {
 	var parent_id_sel = $('#disco_form select#parent_idElement');
-	var slug_input = $('#disco_form #urlfragmentRow input[name=url_fragment]');
-	
+	var slug_input = $('#disco_form #urlfragmentItem input[name=url_fragment]');
+
 	if (!parent_id_sel.length || !slug_input.length)
 		return;
-	
+
 	slug_input.before('<span class="parent_path"></span>');
 	slug_input.after('<span class="trailing_slash">/</span> ' +
 	    '<span class="incomplete_warning"></span>');
 	$('span.url_comment_replace').text("The page's Web address.");
-	var parent_path = $('#urlfragmentRow span.parent_path');
-	
+	var parent_path = $('#urlfragmentItem span.parent_path');
+
 	function update_parent_path() {
 		var parent_id = parent_id_sel.val();
 		var incomplete = $(".incomplete_warning");
 		var trail = $('.trailing_slash');
 		var path;
-		
+
 		if (!parent_id) {
 			parent_path.text('');
 			incomplete.text('(Choose a parent page to see this page\'s full ' +
@@ -37,10 +37,10 @@ jQuery(function warp_page($) {
 			trail.text('/');
 		}
 	}
-	
-	var rules = $('#disco_form #urlfragmentRow .rules');
+
+	var rules = $('#disco_form #urlfragmentItem .rules');
 	var unhappy = false;
-	
+
 	function validate() {
 	    var value = slug_input.val();
 	    var invalid = (!(/^[0-9a-z_\-]*$/i).test(value)) || (/\.html?$/.test(value));
@@ -52,7 +52,7 @@ jQuery(function warp_page($) {
 	        unhappy = false;
 	    }
 	}
-	
+
 	slug_input.keyup(validate);
 	parent_id_sel.change(update_parent_path);
 	update_parent_path();
