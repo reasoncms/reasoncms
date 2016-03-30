@@ -62,6 +62,8 @@
 		
 		var $strip_tags_from_user_input = true;
 		var $allowable_HTML_tags = REASON_DEFAULT_ALLOWED_TAGS;
+
+		var $hidden_field_cutoffs = array();
 		
 		function is_new_entity() // {{{
 		{
@@ -197,6 +199,10 @@
 		function show_form() // {{{
 		{
 			parent::show_form();
+			foreach($this->hidden_field_cutoffs as $field_name => $cutoff_id)
+			{
+				echo '<span style="display:none" id="field_cutoffs'.$cutoff_id[0].'">'.$cutoff_id[1].'</span>';
+			}
 		} // }}}
 		
 		/**
@@ -272,7 +278,7 @@
 		} // }}}
 		
 		
-		function add_relationship_element($name, $type_id, $rel_id, $direction = 'right', $element_type = 'checkbox',$limit_to_site = true,$sort = 'entity.name ASC')
+		function add_relationship_element($name, $type_id, $rel_id, $direction = 'right', $element_type = 'checkbox',$limit_to_site = true,$sort = 'entity.name ASC',$smart_cutoff=0)
 		{
 			static $directions = array('right','left');
 			static $element_types = array(
@@ -359,7 +365,14 @@
 				$rel_es->set_num(1);
 			}
 			//$rel_es->add_field('relationship','id','rel_id');
-			$rel_es->set_order($sort);
+			if($sort=='smart')
+			{
+				$rel_es->set_order('entity.name ASC');
+			}
+			else
+			{
+				$rel_es->set_order($sort);
+			}	
 			$rel_es->add_field('relationship','site','rel_site_id');
 			$related_entities = $rel_es->run_one();
 			
@@ -381,13 +394,32 @@
 			{
 				$es->add_relation('entity.id NOT IN ('.implode(',',array_keys($untouchables)).')');
 			}
-			$es->set_order($sort);
-			$entities = $es->run_one();
-			
-			$values = array();
-			foreach($entities as $entity)
+			if($sort!='smart')
 			{
-				$values[$entity->id()] = strip_tags($entity->get_display_name());
+				$es->set_order($sort);
+			}
+			$entities = $es->run_one();
+			if($sort=='smart')
+			{
+				$sort_entities = $this->sort_entities_by_relationships($entities,$type_id,$rel_id,$smart_cutoff);
+				$entities = $sort_entities['entities'];
+				$first_cutoff = $sort_entities['first_cutoff'];
+				if(!empty($first_cutoff))
+				{
+					$this->hidden_field_cutoffs[] = array($name,$first_cutoff);
+				}
+			}
+			$values = array();
+			foreach($entities as $id=>$entity)
+			{
+				if($id!=0)
+				{
+					$values[$entity->id()] = strip_tags($entity->get_display_name());
+				}
+				else
+				{
+					$values[0] = 'hidden_options';
+				}
 			}
 			$args = array();
 			if(!empty($element_types[$element_type]['args']))
@@ -434,6 +466,78 @@
 			
 		}
 		
+		function sort_entities_by_relationships($entities, $type_id,$rel_id,$cutoff)
+		{
+			$temp_entities = array();
+			foreach($entities as $entity)
+			{
+				$es = new entity_selector($this->get_value('site_id'));
+				$es->add_type($this->get_value('type'));
+				$es->add_left_relationship($entity->get_value('id'),$rel_id);
+				$count = $es->run_one();
+				$checked = False;
+				foreach($count as $id=>$entity_thing)
+				{
+					if($id == $this->get_value('id'))
+					{
+						$checked = True;
+					}
+				}
+				$count = count($count);
+				$temp_entities[] = array('entity'=>$entity,'count'=>$count,'checked'=>$checked);
+			}
+			usort($temp_entities,array($this,'_cmp_entities'));
+			$entities = array();
+			$first_cutoff_entity = '';
+			$above_cutoff_entities = array();
+			$below_cutoff_entities = array();
+			$zero = false;
+			foreach($temp_entities as $pair)
+			{
+				if($pair['count']>$cutoff)
+				{
+					$above_cutoff_entities[$pair['entity']->id()] = $pair['entity'];
+				}
+				else
+				{
+					
+					if($pair['checked'])
+					{
+						$above_cutoff_entities[$pair['entity']->id()] = $pair['entity'];
+					}
+					else
+					{
+						if(!$zero)
+						{
+							$first_cutoff_entity = $pair['entity']->id();
+							$zero = true;
+						}	
+						$below_cutoff_entities[$pair['entity']->id()] = $pair['entity'];
+					}
+					$this->head_items->add_javascript('/reason_package/reason_4.0/www/js/category_sort_disclosure.js');
+				}
+			}
+			// array_merge doesn't preserve keys, array_replace doesn't preserve order, this is hacky but it does both
+			if(empty($above_cutoff_entities))
+			{
+				$first_cutoff_entity = '';
+			}
+			foreach($above_cutoff_entities as $id=>$entity)
+			{
+				$entities[$id] = $entity;
+			}
+			foreach($below_cutoff_entities as $id=>$entity)
+			{
+				$entities[$id] = $entity;
+			}
+			return array('entities'=>$entities,'first_cutoff'=>$first_cutoff_entity);
+		}
+
+		function _cmp_entities($a,$b)
+		{
+			return $b['count']-$a['count'];
+		}
+
 		function _process_relationship_elements()
 		{
 			foreach($this->_relationship_elements as $name=>$info)
