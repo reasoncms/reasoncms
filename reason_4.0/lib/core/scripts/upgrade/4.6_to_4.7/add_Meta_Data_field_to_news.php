@@ -5,15 +5,15 @@ reason_include_once('classes/entity_selector.php');
 reason_include_once('classes/upgrade/upgrader_interface.php');
 reason_include_once('classes/field_to_entity_table_class.php');
 
-$GLOBALS['_reason_upgraders']['4.6_to_4.7']['add_Meta_Data_field_to_news'] = 'ReasonUpgrader_47_MetaDataDecription';
+$GLOBALS['_reason_upgraders']['4.6_to_4.7']['add_meta_data_field_to_news'] = 'ReasonUpgrader_47_MetaDataDescription';
 
-class ReasonUpgrader_47_MetaDataDecription implements reasonUpgraderInterface
+class ReasonUpgrader_47_MetaDataDescription implements reasonUpgraderInterface
 {
 	protected $user_id;
 
-  public function ReasonUpgrader_47_MetaDataDecription()
+  public function ReasonUpgrader_47_MetaDataDescription()
   {
-    $entity_table_name = 'meta';
+    $entity_table_name = 'press_release';
 
     $this->fields = array(
       'meta_description' => array('db_type' => 'text')
@@ -35,7 +35,7 @@ class ReasonUpgrader_47_MetaDataDecription implements reasonUpgraderInterface
 	 */
 	public function title()
 	{
-		return 'Adds Meta Data description field.';
+		return 'Adds Meta Data description field to News / Posts.';
 	}
 
 	/**
@@ -45,7 +45,7 @@ class ReasonUpgrader_47_MetaDataDecription implements reasonUpgraderInterface
 	 */
 	public function description()
 	{
-		return '<p>This script adds a new field, meta_description, to sites.</p>';
+		return '<p>This script adds a new field, meta_description, to news / posts.</p>';
 	}
 
   /**
