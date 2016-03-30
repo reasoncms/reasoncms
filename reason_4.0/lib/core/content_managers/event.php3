@@ -130,7 +130,7 @@
 			{
 				$this->add_element('audiences_heading', 'comment', array('text'=>'<h4>Visibility</h4> To which groups do you wish to promote this event? (Please enter at least one)'));
 				$this->add_relationship_element('audiences', id_of('audience_type'), 
-				relationship_id_of('event_to_audience'),'right','checkbox',REASON_USES_DISTRIBUTED_AUDIENCE_MODEL,'sortable.sort_order ASC');
+				relationship_id_of('event_to_audience'),'right','checkbox',REASON_USES_DISTRIBUTED_AUDIENCE_MODEL,'smart'/*'sortable.sort_order ASC'*/);
 			}
 			
 			$es = new entity_selector();
@@ -144,7 +144,7 @@
 			
 			if(!empty($result))
 			{
-				$this->add_relationship_element('categories', id_of('category_type'), relationship_id_of('event_to_event_category'),'right','checkbox',true,'entity.name ASC');
+				$this->add_relationship_element('categories', id_of('category_type'), relationship_id_of('event_to_event_category'),'right','checkbox',true,'smart',5);
 			}
 			
 			$this->add_element('date_and_time', 'comment', array('text'=>'<h4>Date, Time, and Duration of Event</h4>'));
