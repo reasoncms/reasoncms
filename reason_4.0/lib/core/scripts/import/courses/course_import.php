@@ -147,11 +147,12 @@ class CourseImportEngine
 	 */
 	public function run($org_ids = array())
 	{	
+		if ($this->verbose) echo "<pre>Running\n";
+
 		connectDB(REASON_DB);
 		mysql_set_charset('utf8');
 		
 		$this->disable_output_buffering();
-		if ($this->verbose) echo "<pre>Running\n";
 		
 		if (empty($org_ids) && !$org_ids = $this->get_template_org_ids()) $org_ids = array(null);
 		foreach ($org_ids as $org_id)
@@ -785,7 +786,10 @@ class CourseImportEngine
 	
 	protected function disable_output_buffering()
 	{
-		@apache_setenv('no-gzip', 1);
+		// We don't need to (and shouldn't) try to do this in command line mode
+		if (php_sapi_name() != "cli")
+			@apache_setenv('no-gzip', 1);
+		
 		@ini_set('zlib.output_compression', 0);
 		@ini_set('implicit_flush', 1);
 		for ($i = 0; $i < ob_get_level(); $i++) { ob_end_flush(); }
