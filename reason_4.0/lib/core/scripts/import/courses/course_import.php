@@ -126,17 +126,25 @@ class CourseImportEngine
 	protected $errors = array();
 	
 	protected $test_mode = false;
+	
 	/*
-	 * If set to true, import will display extensive progress reporting. If false, only errors
-	 * will be shown.
+	 * This value sets the reporting verbosity level. 
+	 *		0 = Errors only
+	 *		1 = Report data changes
+	 *		2 = Full report
 	 */
-	protected $verbose = true;
+	protected $verbosity = 0;
 	
 	protected $helper;
 	
 	function __construct()
 	{
 		$this->helper = new $GLOBALS['catalog_helper_class']();
+	}
+	
+	public function set_verbosity($value = 0)
+	{
+		$this->verbosity = $value;
 	}
 	
 	/**
@@ -147,7 +155,11 @@ class CourseImportEngine
 	 */
 	public function run($org_ids = array())
 	{	
-		if ($this->verbose) echo "<pre>Running\n";
+		if ($this->verbosity == 2) 
+		{
+			if (php_sapi_name() !== 'cli') echo '<pre>';
+			echo "Running...\n";
+		}
 
 		connectDB(REASON_DB);
 		mysql_set_charset('utf8');
@@ -203,7 +215,7 @@ class CourseImportEngine
 		}
 		
 		echo join("\n", $this->errors);
-		if ($this->verbose) echo "Import Complete.\n";
+		if ($this->verbosity == 2) echo "Import Complete.\n";
 	}
 
 	/**
@@ -360,7 +372,7 @@ class CourseImportEngine
 	 */
 	protected function build_course_template_entities($data, $existing = array(), $delete = false)
 	{
-		if ($this->verbose) echo "Building entities\n";
+		if ($this->verbosity == 2) echo "Building entities\n";
 		$creator = get_user_id($this->entity_creator);
 		foreach ($data as $key => $row)
 		{
@@ -379,7 +391,7 @@ class CourseImportEngine
 			}
 			else
 			{
-				if ($this->verbose) $this->errors[] = 'Adding '.$name;
+				if ($this->verbosity > 0) $this->errors[] = 'Adding '.$name;
 				$row['new'] = 0;
 				$this->process_new_course_template($row);
 				if (!$this->test_mode)
@@ -392,7 +404,7 @@ class CourseImportEngine
 			foreach ($existing as $id)
 			{
 				$course = new $GLOBALS['course_template_class']($id);
-				$this->errors[] = 'No longer in feed: '.$course->get_value('name');
+				if ($this->verbosity == 2) $this->errors[] = 'No longer in feed: '.$course->get_value('name');
 				if ($delete && !$this->test_mode) reason_expunge_entity($id, $creator);
 			}
 		}
@@ -407,7 +419,7 @@ class CourseImportEngine
 	 */
 	protected function update_course_template($data, $entity)
 	{
-		if ($this->verbose) $name = $this->build_course_template_entity_name($data);
+		if ($this->verbosity > 0) $name = $this->build_course_template_entity_name($data);
 		
 		// Remove any fields which are managed on the Reason side
 		foreach ($this->template_data_reason_managed as $key)
@@ -436,13 +448,13 @@ class CourseImportEngine
 		{
 			$external_data['timestamp'] = time();
 			$data['cache'] = json_encode($external_data);
-			if ($this->verbose) $this->errors[] = 'Updating '.$name;
+			if ($this->verbosity > 0) $this->errors[] = 'Updating '.$name;
 			if (!$this->test_mode)
 				reason_update_entity( $entity->id(), get_user_id($this->entity_creator), $data, false);
 		}
 		else
 		{
-			if ($this->verbose) $this->errors[] = 'Unchanged: '.$name;
+			if ($this->verbosity == 2) $this->errors[] = 'Unchanged: '.$name;
 		}
 	}
 	
@@ -483,7 +495,7 @@ class CourseImportEngine
 	 */
 	protected function build_course_section_entities($data, $existing = array(), $delete = false)
 	{
-		if ($this->verbose) echo "Building section entities\n";
+		if ($this->verbosity == 2) echo "Building section entities\n";
 		$creator = get_user_id($this->entity_creator);
 		foreach ($data as $key => $row)
 		{
@@ -505,7 +517,7 @@ class CourseImportEngine
 			{
 				if ($this->get_section_parent($row['parent_template_id']))
 				{
-					if ($this->verbose) $this->errors[] = 'Adding: '.$name;
+					if ($this->verbosity > 0) $this->errors[] = 'Adding: '.$name;
 					$row['new'] = 0;
 					$this->process_new_course_section($row);
 					if (!$this->test_mode)
@@ -530,7 +542,7 @@ class CourseImportEngine
 			foreach ($existing as $id)
 			{
 				$course = new $GLOBALS['course_section_class']($id);
-				$this->errors[] = 'No longer in feed: '.$course->get_value('course_number').': '.$course->get_value('name');
+				if ($this->verbosity == 2) $this->errors[] = 'No longer in feed: '.$course->get_value('course_number').': '.$course->get_value('name');
 				if ($delete && !$this->test_mode) reason_expunge_entity($id, $creator);
 			}
 		}
@@ -546,7 +558,7 @@ class CourseImportEngine
 	 */
 	protected function update_course_section($data, $entity)
 	{
-		if ($this->verbose) $name = $this->build_course_section_entity_name($data);
+		if ($this->verbosity > 0) $name = $this->build_course_section_entity_name($data);
 		
 		// Remove any fields which are managed on the Reason side
 		foreach ($this->section_data_reason_managed as $key)
@@ -575,13 +587,13 @@ class CourseImportEngine
 		{
 			$external_data['timestamp'] = time();
 			$data['cache'] = json_encode($external_data);
-			if ($this->verbose) $this->errors[] = 'Updating: '.$name;
+			if ($this->verbosity > 0) $this->errors[] = 'Updating: '.$name;
 			if (!$this->test_mode)
 				reason_update_entity( $entity->id(), get_user_id($this->entity_creator), $data, false);
 		}
 		else
 		{
-			if ($this->verbose) $this->errors[] = 'Unchanged: '.$name;	
+			if ($this->verbosity == 2) $this->errors[] = 'Unchanged: '.$name;	
 		}
 	
 	}
@@ -621,7 +633,7 @@ class CourseImportEngine
 	  */
 	protected function map_course_template_data($data)
 	{
-		if ($this->verbose) echo "map_course_template_data\n";
+		if ($this->verbosity == 2) echo "map_course_template_data\n";
 		
 		foreach($data as $row)
 		{
@@ -670,7 +682,7 @@ class CourseImportEngine
 	  */
 	protected function map_course_section_data($data)
 	{
-		if ($this->verbose) echo "map_course_section_data\n";
+		if ($this->verbosity == 2) echo "map_course_section_data\n";
 
 		foreach($data as $row)
 		{
