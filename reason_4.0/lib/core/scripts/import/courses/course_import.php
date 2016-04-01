@@ -184,9 +184,9 @@ class CourseImportEngine
 			}
 			else
 			{
-				$this->errors[] = 'No course template data received for '.$org_id.'.';
+				if ($this->verbosity == 2) $this->errors[] = 'No course template data received for '.$org_id.'.';
 			}
-			echo join("\n", $this->errors);
+			if ($this->errors) echo join("\n", $this->errors)."\n";
 			$this->errors = array();
 		}
 
@@ -208,13 +208,13 @@ class CourseImportEngine
 			}
 			else
 			{
-				$this->errors[] = 'No course section data received for '.$org_id.'.';	
+				if ($this->verbosity == 2) $this->errors[] = 'No course section data received for '.$org_id.'.';	
 			}
-			echo join("\n", $this->errors);
+			if ($this->errors) echo join("\n", $this->errors)."\n";
 			$this->errors = array();
 		}
 		
-		echo join("\n", $this->errors);
+		if ($this->errors) echo join("\n", $this->errors)."\n";
 		if ($this->verbosity == 2) echo "Import Complete.\n";
 	}
 
@@ -528,7 +528,7 @@ class CourseImportEngine
 				}
 				else
 				{
-					$this->errors[] = 'No course template found; skipping '.$name;
+					if ($this->verbosity == 2) $this->errors[] = 'No course template found; skipping '.$name;
 					continue;
 				}
 			}
