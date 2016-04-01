@@ -132,6 +132,24 @@ function get_validated_site($site_id, $page_id)
 	return $site;
 }
 
+function redirect_to_page_edit_url($site_id, $page_id)
+{
+	$type_id = id_of('minisite_page');
+	$admin_relative_path = parse_url("http://" . REASON_WEB_ADMIN_PATH, PHP_URL_PATH);
+
+	$page_edit_url = carl_make_redirect(array(
+		'site_id' => $site_id,
+		'type_id' => $type_id,
+		'id' => $page_id,
+		'cur_module' => 'Editor',
+		'reason_redirect' => null
+	), $admin_relative_path);
+
+	http_response_code(302);
+	header("Location: $page_edit_url");
+	exit;
+}
+
 header("Content-Type: text/html; charset=UTF-8");
 
 // Apache >=2.0.48 sets the REDIRECT REMOTE USER and not the REMOTE USER if an internal redirect
@@ -166,6 +184,16 @@ if( !empty( $site_id ) && !empty( $page_id )) // need site_id and page_id to pro
 		$_REQUEST = array_merge( $my_request, $_REQUEST );
 		$_REQUEST['site_id'] = $site_id;
 		$_REQUEST['page_id'] = $page_id;
+	}
+
+	// When 'reason_redirect' exists in the query string
+	// issue a redirect to the location implied by the value.
+	//
+	// Useful hook to provide to external services (i.e. Siteimprove)
+	// so a service can link a user directly to page editing or
+	// another administrative function.
+	if (!empty($_GET['reason_redirect']) && $_GET['reason_redirect'] === "edit_page") {
+		redirect_to_page_edit_url($site_id, $page_id);
 	}
 
 	// Determine whether to use caching or not
