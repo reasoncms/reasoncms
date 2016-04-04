@@ -188,7 +188,8 @@ class ManageCoursesModule extends DefaultMinisiteModule
 		
 		if (isset($this->course))
 		{
-			echo $this->get_course_editor($this->course);
+			$this->setup_course_editor($this->course);
+			$this->form->run();
 		}
 		else if (isset($this->request['subject']))
 		{
@@ -406,11 +407,11 @@ class ManageCoursesModule extends DefaultMinisiteModule
 	}
 	
 	/**
-	 * Generate and run the disco form for editing a course entity.
+	 * Prepopulate the editing form with data from the passed course
 	 * 
 	 * @param object $course
 	 */
-	function get_course_editor($course)
+	protected function setup_course_editor($course)
 	{
 		if ($this->year) $course->set_academic_year_limit($this->year);
 	
@@ -494,10 +495,7 @@ class ManageCoursesModule extends DefaultMinisiteModule
 
 			if ($grading = $course->get_value('grading'))
 				$this->form->set_value('grading', $grading);
-		}
-		
-		
-		$this->form->run();
+		}	
 	}
 	
 	/**
