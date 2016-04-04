@@ -277,7 +277,18 @@
 			return $row;
 		} // }}}
 		
-		
+		/**
+		 * Add a disco element that allows selection across a relationship
+		 *
+		 * @param string $name the disco name of the element
+		 * @param integer $type_id The type of entities to list
+		 * @param string $direction 'right' or 'left'
+		 * @param string $element_type 'checkbox', 'radio', 'select', or 'multiple_select'
+		 * @param boolean $limit_to_site Display only entities on this site, or select from any site? (careful!)
+		 * @param string $sort A SQL sort order string, or the magic string 'smart', which sorts by frequency of usage and enables progressive disclosure ("cutoff") of less-used items (Note that the cutoff functionality only works with checkbox and radio element types)
+		 * @param integer $smart_cutoff If using the 'smart' sort, this defines the upper bound of the options initially hidden in the interface. (e.g. if set to 3, only items with 4 or more relationships will display above a "more options" disclosure element.) Set to -1 for no cutoff.
+		 * 
+		 */
 		function add_relationship_element($name, $type_id, $rel_id, $direction = 'right', $element_type = 'checkbox',$limit_to_site = true,$sort = 'entity.name ASC',$smart_cutoff=0)
 		{
 			static $directions = array('right','left');
@@ -301,7 +312,7 @@
 			static $single_item_element_types = array('radio','select');
 			if(!array_key_exists($element_type,$element_types))
 			{
-				trigger_error($element_type.' is not an acceptable parameter for add_relationship_element(). Try one of the following: '.implode(', ',$element_types));
+				trigger_error($element_type.' is not an acceptable parameter for add_relationship_element(). Try one of the following: '.implode(', ',array_keys($element_types)));
 				return;
 			}
 			if(!in_array($direction,$directions))
@@ -401,7 +412,7 @@
 			$entities = $es->run_one();
 			if($sort=='smart')
 			{
-				$sort_entities = $this->sort_entities_by_relationships($entities,$type_id,$rel_id,$smart_cutoff);
+				$sort_entities = $this->sort_entities_by_relationships($entities,$type_id,$rel_id,$direction,$smart_cutoff);
 				$entities = $sort_entities['entities'];
 				$first_cutoff = $sort_entities['first_cutoff'];
 				if(!empty($first_cutoff))
@@ -466,23 +477,33 @@
 			
 		}
 		
-		function sort_entities_by_relationships($entities, $type_id,$rel_id,$cutoff)
+		function sort_entities_by_relationships($entities, $type_id,$rel_id,$direction,$cutoff)
 		{
 			$temp_entities = array();
+			
+			$es = new entity_selector();
+			$es->add_type($type_id);
+			if($direction == 'right')
+				$es->add_right_relationship($this->get_value('id'),$rel_id);
+			else
+				$es->add_left_relationship($this->get_value('id'),$rel_id);
+			$es->limit_tables();
+			$es->limit_fields();
+			$checked_entities = $es->run_one();
+			
 			foreach($entities as $entity)
 			{
+				$checked = isset($checked_entities[$entity->id()]);
+				
 				$es = new entity_selector($this->get_value('site_id'));
 				$es->add_type($this->get_value('type'));
-				$es->add_left_relationship($entity->get_value('id'),$rel_id);
+				$es->limit_tables();
+				$es->limit_fields();
+				if($direction == 'right')
+					$es->add_left_relationship($entity->id(),$rel_id);
+				else
+					$es->add_right_relationship($entity->id(),$rel_id);
 				$count = $es->run_one();
-				$checked = False;
-				foreach($count as $id=>$entity_thing)
-				{
-					if($id == $this->get_value('id'))
-					{
-						$checked = True;
-					}
-				}
 				$count = count($count);
 				$temp_entities[] = array('entity'=>$entity,'count'=>$count,'checked'=>$checked);
 			}
@@ -514,7 +535,7 @@
 						}	
 						$below_cutoff_entities[$pair['entity']->id()] = $pair['entity'];
 					}
-					$this->head_items->add_javascript('/reason_package/reason_4.0/www/js/category_sort_disclosure.js');
+					$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'category_sort_disclosure.js');
 				}
 			}
 			// array_merge doesn't preserve keys, array_replace doesn't preserve order, this is hacky but it does both
