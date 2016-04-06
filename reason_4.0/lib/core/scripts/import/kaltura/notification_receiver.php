@@ -249,7 +249,15 @@ class ReasonKalturaNotificationReceiver
 				$message .= 'If you continue to get this error after multiple attempts, please contact your Reason Administrator regarding this issue: '.WEBMASTER_EMAIL_ADDRESS."\n\n";
 			}
 			
-			mail($to, $subject, $message);
+			$mail = new PHPMailer(true);
+			$mail->CharSet = 'utf-8';
+
+			$mail->addAddress($to);
+			$mail->setFrom(WEBMASTER_EMAIL_ADDRESS);
+			$mail->Subject = $subject;
+			$mail->Body    = $message;
+
+			$mail->send();  
 		}
 	}
 	
