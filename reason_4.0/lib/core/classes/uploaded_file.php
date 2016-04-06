@@ -26,6 +26,7 @@ class UploadedFile
 	var $_temporary_path;
 	var $_size;
 	var $_original_path;
+	var $_file_mode;
 	/**#@-**/
 	
 	/**
@@ -38,14 +39,16 @@ class UploadedFile
 	 * @param string $orig_path if the file was modified by the upload handler,
 	 *        provide the path to any preserved unmodified copy of the file
 	 *        here
+	 * @param octal $file_mode four digit octal value to pass to chmod
 	 */
 	function UploadedFile($filename, $temp_path, $known_size=null,
-		$orig_path=null)
+		$orig_path=null, $file_mode = 0644)
 	{
 		$this->_filename = $filename;
 		$this->_temporary_path = $temp_path;
 		$this->_size = $known_size;
 		$this->_original_path = $orig_path;
+		$this->_file_mode = $file_mode;
 	}
 	
 	/**
@@ -74,7 +77,16 @@ class UploadedFile
 	{
 		return $this->_original_path;
 	}
-	
+
+	/**
+	 * Gets the default file mode
+	 * @return octal
+	 */
+	function get_file_mode()
+	{
+		return $this->_file_mode;
+	}
+
 	/**
 	 * Gets the size of the uploaded file. This function will only work if
 	 * the uploaded file is still in its temporary location.
@@ -134,7 +146,11 @@ class UploadedFile
 		}
 		
 		$source = $this->get_temporary_path();
-		if (!rename($source, $destination)) {
+		$file_was_moved = move_uploaded_file($source, $destination);
+		if ($file_was_moved) {
+			$mode = $this->get_file_mode();
+			chmod($destination, $mode);
+		} else {
 			return null;
 		}
 		return $destination;

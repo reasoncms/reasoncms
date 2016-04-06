@@ -696,12 +696,42 @@ class CatalogHelper
 		foreach ($results as $id => $entity)
 		{
 			if (isset($courses[$id])) continue;
-			$entity->include_source = 'subjects';
+			$entity->include_source = 'ids';
 			$courses[$id] = $entity;
 		}
 		return $courses;
 	}
 
+	/**
+	  * Find sections by their id in the source data
+	  *
+	  * @param array $ids Array of ids
+	  * @param string or int $catalog_site Optional unique name or id of a catalog site. If you pass this,
+	  *				only sections associated with that site will be included.
+	  */
+	public function get_sections_by_sourced_id($ids, $catalog_site = null)
+	{
+		$sections = array();
+		if ($catalog_site && (is_int($catalog_site) || $catalog_site = id_of($catalog_site)))
+			$es = new entity_selector($catalog_site);
+		else
+			$es = new entity_selector();
+		$es->description = 'Selecting sections by sourced_id';
+		$factory = new CourseSectionEntityFactory();
+		$es->set_entity_factory($factory);
+		$es->add_type( id_of('course_section_type') );
+		$es->add_relation('sourced_id in ("'.join('","', $ids).'")');
+		$es->set_order('org_id, course_number');
+		$results = $es->run_one();
+		foreach ($results as $id => $entity)
+		{
+			if (isset($sections[$id])) continue;
+			$entity->include_source = 'ids';
+			$sections[$id] = $entity;
+		}
+		return $sections;
+	}
+	
 	public function sort_courses_by_name($a, $b)
 	{
 		$a_name = $a->get_value('name');

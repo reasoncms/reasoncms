@@ -153,7 +153,7 @@ class ds_ldap extends ds_default {
 			$this->close_conn();
 			return $return;
 		} else {
-			$this->_error = sprintf( 'LDAP search failed for filter %s' , $this->_search_params['filter']);
+			$this->_error = sprintf( 'LDAP search failed (%s) for filter %s' , ldap_error($this->_conn), $this->_search_params['filter']);
 			$this->close_conn();
 			return false;
 		}

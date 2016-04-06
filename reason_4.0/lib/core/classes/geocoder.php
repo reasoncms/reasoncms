@@ -70,6 +70,13 @@ class geocoder
 	 */
 	var $cache;
 	
+	/**
+	 * Set this to true to log all geocoder activity in the error log (useful for debugging)
+	 * 
+	 * @var boolean
+	 */
+	var $log_activity = false;
+	
 	function geocoder($location = '')
 	{
 		if (!isset($this->geo_cache_location)) $this->geo_cache_location = REASON_DATA_DIR.'geocodes/';
@@ -139,7 +146,7 @@ class geocoder
 							if (!empty($decoded['zipCode'])) $address['postal_code'] = $decoded['zipCode'];
 							if (!empty($decoded['latitude'])) $address['geocoord']['lat'] = $decoded['latitude'];
 							if (!empty($decoded['longitude'])) $address['geocoord']['lon'] = $decoded['longitude'];
-							error_log('GEOCODE: Retrieved '.$ip.' from ipinfodb.com');
+							if ($this->log_activity) error_log('GEOCODE: Retrieved '.$ip.' from ipinfodb.com');
 						}
 					}
 					
@@ -157,7 +164,7 @@ class geocoder
 							if (!empty($decoded['zipcode'])) $address['postal_code'] = $decoded['zipcode'];
 							if (!empty($decoded['latitude'])) $address['geocoord']['lat'] = $decoded['latitude'];
 							if (!empty($decoded['longitude'])) $address['geocoord']['lon'] = $decoded['longitude'];
-							error_log('GEOCODE: Retrieved '.$ip.' from freegeoip.net');
+							if ($this->log_activity) error_log('GEOCODE: Retrieved '.$ip.' from freegeoip.net');
 						}
 					}
 
@@ -192,7 +199,7 @@ class geocoder
 									
 								}
 							}
-							error_log('GEOCODE: Retrieved '.$ip.' from hostip.info');
+							if ($this->log_activity) error_log('GEOCODE: Retrieved '.$ip.' from hostip.info');
 						}
 					}
 					if (empty($address))
@@ -575,5 +582,3 @@ class geocoder
 		return $this->ip_cache;
 	}
 }
- 
-?>
