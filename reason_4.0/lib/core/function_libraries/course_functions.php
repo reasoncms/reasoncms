@@ -226,6 +226,32 @@ class CourseTemplateType extends Entity
 		return $long_description;
 	}
 
+/**
+	 * Return the title for a course. If year limit is in place, load the title from
+	 * sections offered that year, otherwise draw the title from the template. If no year limit
+	 * is in place, grab the most recent section title.
+	 * 
+	 * @param boolean $refresh
+	 * @return string
+	 */
+	public function get_value_title($refresh = false)
+	{
+		$limit = !empty($this->limit_to_year);
+			
+		foreach ( $this->get_sections($limit) as $section)
+		{
+			if ($title = $section->get_value('title', $refresh))
+			{
+				break;
+			}
+		}
+		
+		if (empty($title))
+			$title = parent::get_value('title', $refresh);
+		
+		return $title;
+	}
+	
 	/**
 	 * Generate a default HTML snippet for the course title. Override this if you
 	 * want to use a diffferent pattern.
