@@ -443,7 +443,7 @@ class CourseImportEngine
 		$external_data = $entity->fetch_external_data(true, false);
 		
 		// Find all the values that correspond to the data we're importing
-		$values = array_intersect_assoc($entity->get_values(), $data);
+		$values = array_intersect_assoc($current_values, $data);
 		if ($values != $data || $external_data != $current_cache)
 		{
 			$external_data['timestamp'] = time();
