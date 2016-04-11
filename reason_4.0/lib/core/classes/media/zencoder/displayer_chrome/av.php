@@ -107,7 +107,7 @@ class ZencoderAVDisplayerChrome implements DisplayerChromeInterface
 					{
 						$file_ext = $this->shim->get_source_file_extension($this->media_work);
 						if($orig_url = $this->shim->get_original_data_url($this->media_work))
-							$markup .= '<li class="orig_li"><a href="'.$orig_url.'"">original (.'.$file_ext.')</a></li>'."\n";
+							$markup .= '<li class="orig_li"><a href="'.htmlspecialchars($orig_url).'">original (.'.$file_ext.')</a></li>'."\n";
 					}
 					
 					if ($this->media_work->get_value('av_type') == 'Video')

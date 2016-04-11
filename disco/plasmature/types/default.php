@@ -158,6 +158,7 @@ class defaultType
 	 */
 	var $_valid_args = array( 'display_name',
 							  'comments',
+							  'comments_pre',
 							  'value' =>'default',
 							  'db_type',
 							  'display_style', // deprecated

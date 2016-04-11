@@ -89,6 +89,16 @@ class ReasonAdminToolsModule extends DefaultModule
 					'description' => 'Describes the top level navigation used by each site.',
 					'safety_level' => 'safe',
 				),
+				'?site_id='.id_of('master_admin').'&cur_module=Export' => array(
+					'title' => 'Data Export',
+					'description' => 'Exports Reason data for a particular site',
+					'safety_level' => 'safe',
+				),
+				'?site_id='.id_of('master_admin').'&cur_module=FormRecipients' => array(
+					'title' => 'Form Recipients Report',
+					'description' => 'Lists all the people who receive email notification when Reason forms are submitted',
+					'safety_level' => 'safe',
+				),
 								
 			),
 			'Content Actions' => array(

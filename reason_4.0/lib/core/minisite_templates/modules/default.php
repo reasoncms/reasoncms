@@ -335,6 +335,22 @@
 			$api_class_string = (!empty($api_string)) ? $module_identifier . " " . $api_string : $module_identifier;
 			return htmlspecialchars($api_class_string,ENT_QUOTES,'UTF-8');
 		}
+		/**
+		 *	Get the URL for a given api on this module
+		 *
+		 * @param string $api_string
+		 * @return mixed html-escaped URL of the api, or NULL if $api_string is not supported
+		 */
+		function get_api_url($api_string = 'html')
+		{
+			$supported_apis = $this->get_supported_apis(get_class($this));
+			if(!in_array($api_string, array_keys($supported_apis)))
+			{
+				trigger_error('$api_string "'.$api_string.'" passed to get_api_url() not supported. Use one of the following: "'.implode('", "',array_keys($supported_apis)).'".');
+				return NULL;
+			}
+			return carl_make_link(array('module_api' => $api_string,'module_identifier' => $this->identifier));
+		}
 		
 		/**
 		 * Return the active api or false
@@ -559,6 +575,8 @@
 		}
 		/**
  		 *
+		 * the basic run function to display this module.
+		 *
 		 * this is called when the template is in non-editing mode
 		 */
 		function run() // {{{

@@ -52,7 +52,7 @@ if ($media_work)
 		
 		if ($success)
 		{
-			reason_update_entity($media_work->get_value('id'), $media_work->get_owner()->get_value('id'), array('transcoding_status' => 'finalizing'), false);
+			reason_update_entity($media_work->get_value('id'), $media_work->get_value('last_edited_by'), array('transcoding_status' => 'finalizing'), false);
 			if ($media_work->get_value('av_type') == 'Video')
 			{
 				process_video($media_work, $notification, $netid);
@@ -152,7 +152,7 @@ function process_audio($media_work, $notification, $netid)
 		$values = array(
 			'transcoding_status' => 'ready',
 		);
-		reason_update_entity($media_work->id(), $media_work->get_owner()->id(), $values, false);
+		reason_update_entity($media_work->id(), $media_work->get_value('last_edited_by'), $values, false);
 	}
 	else
 	{
@@ -175,7 +175,7 @@ function finish_processing($notification, $media_work, $netid, $duration)
 		'transcoding_status' => 'ready',
 		'media_duration' => $duration,
 	);
-	reason_update_entity($media_work->id(), $media_work->get_owner()->id(), $values, false);
+	reason_update_entity($media_work->id(), $media_work->get_value('last_edited_by'), $values, false);
 	send_email($media_work, $notification->job, 'success', $netid);
 }
 
@@ -186,7 +186,14 @@ function finish_processing($notification, $media_work, $netid, $duration)
  */
 function set_error($media_work)
 {
-	reason_update_entity($media_work->id(), $media_work->get_owner()->id(), array('transcoding_status' => 'error'), false);
+	if (is_object($media_work))
+	{
+		reason_update_entity($media_work->id(), $media_work->get_value('last_edited_by'), array('transcoding_status' => 'error'), false);
+	}
+	else
+	{
+		trigger_error('set_error() called with non-entity');
+	}
 }
 
 /**

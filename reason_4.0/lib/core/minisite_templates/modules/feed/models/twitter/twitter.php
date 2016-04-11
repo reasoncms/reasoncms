@@ -3,7 +3,7 @@
  * @package reason
  * @subpackage classes
  */
- 
+
 /**
  * Include the base class
  */
@@ -15,7 +15,7 @@ reason_include_once( 'classes/mvc.php' );
  * Register MVC component with Reason
  */
 $GLOBALS[ '_reason_mvc_model_class_names' ][ reason_basename( __FILE__) ] = 'ReasonTwitterFeedModel';
-	
+
 /**
  * ReasonTwitterFeedModel returns the last 20 tweets, json_decoded and put in an associative array, from the Twitter API v1.1.
  *
@@ -41,7 +41,7 @@ class ReasonTwitterFeedModel extends ReasonMVCModel // implements ReasonFeedInte
 	 * - cache_duration - 600 seconds (10 minutes)
 	 */
 	var $config = array('cache_duration' => 600);
-		
+
 	/**
 	 * Make sure that the model is configured with a valid URL.
 	 *
@@ -50,7 +50,7 @@ class ReasonTwitterFeedModel extends ReasonMVCModel // implements ReasonFeedInte
 	function build()
 	{
 		if ($this->config('screen_name') || $this->config('search_string'))
-		{	
+		{
 			$roc = new ReasonObjectCache('reason_twitter_feed_model_tweets_for_' . $this->config('screen_name'), $this->config('cache_duration'));
 			$tweets = $roc->fetch();
 			if ($tweets === FALSE) // nothing in the cache - lets get em
@@ -60,7 +60,7 @@ class ReasonTwitterFeedModel extends ReasonMVCModel // implements ReasonFeedInte
 					$result = $obj->request('GET', $obj->url('1.1/statuses/user_timeline'), array('screen_name' => $this->config('screen_name')));
 				else if ($this->config('search_string'))
 					$result = $obj->request('GET', $obj->url('1.1/search/tweets.json'), array('q' => $this->config('search_string'), 'result_type' => 'recent'));
-				
+
 				if ($result == '200')
 				{
 					$tweets = json_decode($obj->response['response'], true); // make an associative array
@@ -92,7 +92,7 @@ class ReasonTwitterFeedModel extends ReasonMVCModel // implements ReasonFeedInte
 			trigger_error('The ReasonTwitterFeedModel must be provided with the configuration parameter screen_name or search_string.', FATAL);
 		}
 	}
-	
+
 	/**
 	 * Include appropriate settings files and create the thmOAuth object.
 	 *
@@ -104,7 +104,6 @@ class ReasonTwitterFeedModel extends ReasonMVCModel // implements ReasonFeedInte
 		{
 			require_once(SETTINGS_INC . 'twitter_api_settings.php');
 			require_once(TMHOAUTH_INC . 'tmhOAuth.php');
-			require_once(TMHOAUTH_INC . 'tmhUtilities.php');
 			$this->_oauth_obj = new tmhOAuth(array(
 				'consumer_key'    => TWITTER_API_CONSUMER_KEY,
 				'consumer_secret' => TWITTER_API_CONSUMER_SECRET,
@@ -114,7 +113,7 @@ class ReasonTwitterFeedModel extends ReasonMVCModel // implements ReasonFeedInte
 		}
 		return $this->_oauth_obj;
 	}
-	
+
 	/**
 	 * Add an HTML version of each tweet suitable for display. Here is what we do in detail.
 	 *
@@ -133,7 +132,7 @@ class ReasonTwitterFeedModel extends ReasonMVCModel // implements ReasonFeedInte
 			$tweets[$k]['html'] = $html;
 		}
 	}
-	
+
 	/**
 	 * This is a convenience method that will return the id of the most_recent tweet.
 	 */

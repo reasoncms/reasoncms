@@ -31,21 +31,36 @@ class imageModule extends Generic3Module
 		'num_per_page' => 0,
 		'width' => 0,
 		'height' => 0,
-		'crop' => '', // 'fill' or 'fit'
-		);
+		'crop' => '', // 'fill', 'fit', 'max_height', or 'max_width'
+		'markup' => '', // 'default' or otherwise
+		'target_page_unique_name' => '', // '' or otherwise
+		'limit_by_related_types'=>array(),
+		'stealth_mode' => false,
+	);
+	var $default_markup = 'minisite_templates/modules/images_markup/default.php';
+	var $target_page;
+
+	protected $_markup;
 	
 	function init( $args = array() )
 	{
 		if(!empty($this->params['num_per_page']))
 			$this->num_per_page = (integer) $this->params['num_per_page'];
+		if(isset($this->params['stealth_mode']))
+			$this->stealth_mode = (boolean) $this->params['stealth_mode'];
 		parent::init();
 	}
 	function alter_es() // {{{
 	{
 		if($this->params['sort_order'] == 'rel')
 		{
-			$this->es->add_rel_sort_field( $this->page_id, relationship_id_of('minisite_page_to_image'), 'rel_sort_order');
+			$this->es->add_rel_sort_field( $this->get_target_page()->id(), relationship_id_of('minisite_page_to_image'), 'rel_sort_order');
 			$this->es->set_order( 'rel_sort_order ASC, dated.datetime ASC, meta.description ASC, entity.id ASC' );
+		}
+		elseif($this->params['sort_order'] == 'rel_reverse')
+		{
+			$this->es->add_rel_sort_field( $this->get_target_page()->id(), relationship_id_of('minisite_page_to_image'), 'rel_sort_order');
+			$this->es->set_order( 'rel_sort_order DESC, dated.datetime DESC, meta.description DESC, entity.id DESC' );
 		}
 		else
 		{
@@ -56,58 +71,104 @@ class imageModule extends Generic3Module
 			$this->es->set_num($this->params['max_num']);
 		}
 		$this->es->set_env( 'site' , $this->site_id );
-		$this->es->add_right_relationship( $this->page_id, relationship_id_of('minisite_page_to_image') );
+		
+		$this->es->add_right_relationship( $this->get_target_page()->id(), relationship_id_of('minisite_page_to_image') );		
 	} // }}}
-	function show_list_item( $item ) // {{{
+	
+	function get_target_page()
 	{
-		if($item->get_value('content'))
+		if(!isset($this->target_page))
 		{
-			$caption = $item->get_value('content');
-		}
-		else
-		{
-			$caption = $item->get_value('description');
-		}
-		
-		if($this->params['width'] || $this->params['height'])
-		{
-			$rsi = new reasonSizedImage;
-			$rsi->set_id($item->id());
-			if($this->params['height'])
-				$rsi->set_height($this->params['height']);
-			if($this->params['width'])
-				$rsi->set_width($this->params['width']);
-			if($this->params['crop'])
-				$rsi->set_crop_style($this->params['crop']);
-			$image_url = $rsi->get_url();
-			$width = $rsi->get_image_width();
-			$height = $rsi->get_image_height();
-		}
-		else
-		{
-			$image_url = reason_get_image_url($item).'?cb='.urlencode($item->get_value('last_modified'));
-			$width = $item->get_value('width');
-			$height = $item->get_value('height');
-		}
-		
-		echo '<li>';
-		if ( empty($this->textonly) )
-		{
-			echo '<img src="'.$image_url.'" width="'.$width.'" height="'.$height.'" alt="'.htmlspecialchars(strip_tags($item->get_value('description')), ENT_QUOTES).'" />';
-			if($this->params['show_captions'])
+			if($this->params['target_page_unique_name'])
 			{
-				echo '<div class="caption">'.$caption.'</div>'."\n";
+				if(reason_unique_name_exists($this->params['target_page_unique_name']))
+				{
+				    $target_page = new entity(id_of($this->params['target_page_unique_name']));
+				    if($target_page->get_value('type') == id_of('minisite_page'))
+			        	$this->target_page = $target_page;
+				    else
+    				{
+			  	    	trigger_error('No page found with the unique name '.$this->params['target_page_unique_name'].'. Using 	images from the current page.');
+    			    }
+				}
 			}
-			if($this->params['show_authors'] && $item->get_value('author'))
-			{
-				echo '<div class="author">Photo: '.$item->get_value('author').'</div>'."\n";
-			}
+			if(empty($this->target_page))
+				$this->target_page = new entity($this->page_id);
 		}
-		else
-		{
-			echo '<a href="'.$image_url.'" title="View image">'.$caption.'</a>'."\n";
-		}
-		echo '</li>'."\n";
+		return $this->target_page;
 	}
+	function do_list()
+	{
+		$markup = $this->get_markup_object();
+		$params = array();
+		if(isset($this->params))
+		{
+			$params = $this->params;
+		}
+		$params['current_page_id'] = $this->page_id;
+		$params['target_page_id'] = $this->get_target_page()->id();
+		if(!empty($markup))
+		{
+			echo $markup->get_markup($this->items,$params);
+		}
+	}
+
+	/**
+	 * Get a markup object
+	 *
+	 * @return object
+	 */
+	function get_markup_object()
+	{
+		if(isset($this->_markup))
+			return $this->_markup;
+		
+		if(isset($this->params['markup']))
+		{
+			if(!empty($this->params['markup']))
+			{
+				$path = $this->params['markup'];
+			}
+			else
+			{
+				$path = $this->default_markup;
+			}
+			if(reason_file_exists($path))
+			{
+				reason_include_once($path);
+				if(!empty($GLOBALS['images_markup'][$path]))
+				{
+					if(class_exists($GLOBALS['images_markup'][$path]))
+					{
+						$markup = new $GLOBALS['images_markup'][$path];
+						if($markup instanceof imagesListMarkup)
+							$this->_markup = $markup;
+						else
+							trigger_error('Markup does not implement imagesListMarkup interface');
+					}
+					else
+					{
+						trigger_error('No class with name '.$GLOBALS['images_markup'][$path].' found');
+					}
+				}
+				else
+				{
+					trigger_error('Images markup not properly registered at '.$path);
+				}
+			}
+			else
+			{
+				trigger_error('No markup file exists at '.$path);
+			}
+		}
+		else
+		{
+			trigger_error('Unrecognized markup type ('.$type.')');
+		}
+		if(!isset($this->_markup))
+			$this->_markup = false;
+		return $this->_markup;
+	}
+
 }
 ?>

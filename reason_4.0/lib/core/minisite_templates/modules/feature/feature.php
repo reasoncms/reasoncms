@@ -3,7 +3,7 @@
  * @package reason
  * @subpackage minisite_modules
  */
- 
+
 /**
  * Include the parent class & dependencies, and register the module with Reason
  */
@@ -40,7 +40,10 @@ $GLOBALS[ '_module_class_names' ][ module_basename( __FILE__) ] = 'FeatureModule
  * - max - default 0 (no max). If positive, designates a maximum number of features to select
  * - width - default 400. We use this value as the image width for images set to "crop to fill" and also send it into the feature_image.php script.
  * - height - default 300.  We use this value as the image height for images set to "crop to fill" and also send it into the feature_image.php script.
- * 
+ * - categories - default array(). An array of category names to appear a page location
+ * 		- Note - if categories are used, any feature must use an appropriate category to be displayed
+ * - initial_offset - default 0 -  Used in conjunction with categories and autoplay_timer. If there are categories and timers, setting the initial_offset will prevent the features from changing simultaneously. Time in seconds.
+ *
  * Beta parameters:
  * - view - default DefaultFeatureView. Name of a view class to use.
  *
@@ -59,18 +62,19 @@ class FeatureModule extends DefaultMinisiteModule
 		'width' => 400,
 		'height' => 300,
 		'view' => 'DefaultFeatureView',
-		'absolute_urls' => false,
+		'categories' => array(),
+		'initial_offset' => 0,
 	);
-	
+
 	var $cleanup_rules = array('feature'=>'turn_into_int');
 	var $features_view_params;
 	var $current_feature_id = 0;
 	var $noncanonical_request_keys = array('feature');
-	
+
 	private $_view;
-	private $_view_data;
+	protected $_view_data;
 	private $_features;
-				
+
 	function init( $args = array() )
 	{
 		if ($features = $this->get_features())
@@ -86,7 +90,7 @@ class FeatureModule extends DefaultMinisiteModule
 			$view->set($view_data,$view_params,$current_feature_id,$head_items);
 		}
 	}
-	
+
 	/**
 	 * @todo make me work properly and figure out a scheme for including custom views.
 	 */
@@ -120,7 +124,7 @@ class FeatureModule extends DefaultMinisiteModule
 		}
 		return $this->_view;
 	}
-	
+
 	/**
 	 * Return our feature set by reference - only build the feature set once.
 	 */
@@ -142,9 +146,9 @@ class FeatureModule extends DefaultMinisiteModule
 		{
 			$this->_build_view_params();
 		}
-		return $this->features_view_params; 
+		return $this->features_view_params;
 	}
-	
+
 	/**
 	 * Build the feature set
 	 */
@@ -160,17 +164,18 @@ class FeatureModule extends DefaultMinisiteModule
 			$es1->set_num($this->params['max']);
 		}
 		$features = $es1->run_one();
-		
+
 		if(empty($features))
 		{
 			return null;
 		}
-	
+
 		$es2 = new entity_selector( $this->site_id );
 		$es2->add_type( id_of('image') );
 		$es2->add_right_relationship_field( 'feature_to_image','entity','id','feature_id', array_keys($features) );
 		$es2->enable_multivalue_results();
 		$images = $es2->run_one();
+
 		if ($images)
 		{
 			foreach ($images as $image_id => $image)
@@ -201,8 +206,47 @@ class FeatureModule extends DefaultMinisiteModule
 				}
 			}
 		}
-		
-		// augment our features with images and media works
+
+		$es4 = new entity_selector( $this->site_id );
+		$es4->add_type( id_of('category_type') );
+		$es4->add_right_relationship_field( 'feature_to_category','entity','id', 'feature_id', array_keys($features) );
+		$es4->enable_multivalue_results();
+		$categories = $es4->run_one();
+
+		// create a dictionary with the all categories by id
+		foreach($categories as $category_id => $category)
+		{
+			//If the category is only one, is normally an string
+			if(is_string($category->get_value('feature_id')) and $category->get_value('feature_id')!= "")
+			{
+
+				if(isset($feature_categories[$category->get_value('feature_id')]))
+				{
+					array_push($feature_categories[$category->get_value('feature_id')], $category->get_value('name'));
+				}
+				else
+				{
+					$feature_categories[$category->get_value('feature_id')] = array($category->get_value('name'));
+
+				}
+			}
+
+			if(is_array($category->get_value('feature_id')))
+			{
+				foreach($category->get_value('feature_id') as $feature_id)
+				{
+					if(isset($feature_categories[$feature_id]))
+					{
+						array_push($feature_categories[$feature_id], $category->get_value('name'));
+					}
+					else
+					{
+						$feature_categories[$feature_id] = array($category->get_value('name'));
+					}
+				}
+			}
+		}
+		// augment our features with images, categories and media works
 		foreach($features as $feature_id => $feature)
 		{
 			if (isset($feature_extra[$feature_id]['image_id']))
@@ -211,15 +255,23 @@ class FeatureModule extends DefaultMinisiteModule
 				$features[$feature_id]->set_value('image_id',$value);
 			}
 			else $features[$feature_id]->set_value('image_id',"none");
-			
+
 			if (isset($feature_extra[$feature_id]['av_id']))
 			{
 				$value = (count($feature_extra[$feature_id]['av_id']) == 1) ? reset($feature_extra[$feature_id]['av_id']) : $feature_extra[$feature_id]['av_id'];
 				$features[$feature_id]->set_value('av_id',$value);
 			}
 			else $features[$feature_id]->set_value('av_id',"none");
+
+			if(isset($feature_categories[$feature_id]))
+			{
+				$value = $feature_categories[$feature_id];
+				$features[$feature_id]->set_value('categories', $value);
+			}
+			else $features[$feature_id]->set_value('categories', array());
+
 		}
-		
+
 		//shuffle the features if set to true
 		//note that keys are preserved in the new
 		//shuffled feature array
@@ -287,10 +339,10 @@ class FeatureModule extends DefaultMinisiteModule
 		{
 			$cp=$features[$id]->get_value('crop_style');
 			if($cp==null){ $features[$id]->set_value('crop_style','fill');}
-			
+
 		}
 		$this->_features=$features;
-		
+
 		//if feature id is on this page then display it
 		//else redirect to same page but this feature not set
 		if(isset($this->request['feature']))
@@ -320,7 +372,7 @@ class FeatureModule extends DefaultMinisiteModule
 
 
 
-	
+
 	/**
 	* set the features_view_parms array with the details
 	* needed by the view layer
@@ -332,7 +384,8 @@ class FeatureModule extends DefaultMinisiteModule
 		$this->features_view_params['height']=$this->params['height'];
 		$this->features_view_params['condensed_nav']=false;
 		$this->features_view_params['looping']=$this->params['looping'];//or off
-		$this->features_view_params['absolute_urls']=$this->params['absolute_urls'];//or off
+		$this->features_view_params['categories']=$this->params['categories'];
+		$this->features_view_params['initial_offset']=$this->params['initial_offset'];
 	}
 
 	/**
@@ -340,12 +393,6 @@ class FeatureModule extends DefaultMinisiteModule
 	 */
 	function _build_view_data()
 	{
-		$url_keys = array(
-			'feature_image_url',
-			'destination_url',
-			'feature_av_img_url',
-		);
-		
 		$features=$this->get_features();
 		$params=$this->get_view_params();
 		$data=array();
@@ -354,7 +401,7 @@ class FeatureModule extends DefaultMinisiteModule
 		$fh= new Feature_Helper();
 		$width=$this->params['width'];
 		$height=$this->params['height'];
-		
+
 		//build the data needed by the view layer
 		foreach($features as $feature)
 		{
@@ -362,7 +409,8 @@ class FeatureModule extends DefaultMinisiteModule
 
 			$d['id']=$feature->get_value('id');
 			$d['show_text']=$feature->get_value('show_text');
-			
+			$d['categories']=$feature->get_value('categories');
+
 			if($show_feature && $this->current_feature_id==0)
 			{
 				$show_feature=false;
@@ -372,17 +420,17 @@ class FeatureModule extends DefaultMinisiteModule
 			{
 				$show_feature=true;
 				$d['active']="active";
-				
+
 			}
 			else
 			{
 				$d['active']="inactive";
-			}			
+			}
 
 			$d['bg_color']=$feature->get_value('bg_color');
 
-			$d['w']=$width; 
-			$d['h']=$height; 
+			$d['w']=$width;
+			$d['h']=$height;
 			$d['crop_style']=$feature->get_value('crop_style');;
 
 			$params="?id=".$d['id']."&amp;w=".$d['w']."&amp;h=".$d['h']."&amp;crop=".$d['crop_style'];
@@ -391,7 +439,7 @@ class FeatureModule extends DefaultMinisiteModule
 
 			$d['title']=$feature->get_value('title');
 			$d['text']=$feature->get_value('text');
-			
+
 			$feature_num++;
 			$d['feature_image_url']=array();
 			$img_id=$feature->get_value('image_id');
@@ -429,7 +477,7 @@ class FeatureModule extends DefaultMinisiteModule
 				$d['feature_image_url'][]="none";
 				$d['feature_image_alt'][]= "";
 			}
-			
+
 			$av_id=$feature->get_value('av_id');
 			$d['feature_av_html']=array();
 			$av_info=array();
@@ -468,14 +516,15 @@ class FeatureModule extends DefaultMinisiteModule
 				$d['feature_av_img_url'][]="none";
 				$d['feature_av_img_alt'][]="";
 			}
-			
+
 			$d['current_object_type']=$feature->get_value('current_object_type');
+
 
 			$data[$feature->get_value('id')]=$d;
 		}//end foreach loop through $features
 		$this->_view_data=$data;
 	}
-	
+
 	/**
 	* returns the url to the sized image
 	* @param $id image id of image to be sized
@@ -492,28 +541,26 @@ class FeatureModule extends DefaultMinisiteModule
 		$rsi->set_width($width);
 		$rsi->set_height($height);
 		$rsi->set_crop_style($crop_style);
-		$rsi->use_absolute_urls($this->params['absolute_urls']);
 	 	$ret = $rsi->get_url_and_alt();
 		return $ret;
 	}
-	
-	
+
+
 	function get_av_info($media_works_id)
 	{
 		$width=$this->params['width'];
 		$height=$this->params['height'];
 		$fh= new Feature_Helper();
-		$fh->use_absolute_urls($this->params['absolute_urls']);
 		$av_info=$fh->get_av_info($media_works_id,$width,$height);
 		return $av_info;
 	}
-	
+
 	function has_content()
 	{
 		$features = $this->get_features();
 		return (!empty($features));
 	}
-	
+
 	function run()
 	{
 		$view = $this->get_view();
@@ -521,4 +568,3 @@ class FeatureModule extends DefaultMinisiteModule
 		echo $html_str;
 	}
 }
-?>

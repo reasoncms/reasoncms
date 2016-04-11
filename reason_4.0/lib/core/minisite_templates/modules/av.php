@@ -32,7 +32,7 @@
 		var $item_counter = 1;
 		var $acceptable_params = array(
 			'limit_to_current_site'=>true,
-			'limit_to_current_page'=>true,
+			'limit_to_current_page'=>true, // if set to true we ignore limit_to_current_site
 			'sort_direction'=>'DESC', // Normally this page shows items in reverse chronological order, but you can change this to ASC for formward chronological order
 			'sort_field'=>'dated.datetime',
 			'relationship_sort'=>true, // Says whether the module should pay attention to the 'sortable' nature of the minisite_page_to_av allowable relationship
@@ -41,14 +41,19 @@
 			'thumbnail_crop'=>'',
 			'default_video_height' => 360,
 			'num_per_page' => 15,
+			'show_primary_image_with_audio' => false,
 			'offer_original_download_link' => false, // if true, present the user with a download link for the original file, along with the compressed versions
 			'show_media_first' => false,
+			'fallback_image' => '', // A unique name for a fallback thumbnail image
+			'show_list_with_details' => true,
+			//'show_next_prev' => false,
 		);
 		var $make_current_page_link_in_nav_when_on_item = true;
 		var $no_items_text = 'There is no audio or video attached to this page yet.';
 		var $media_format_overrides = array('Flash Video'=>'Flash');
 		var $size_selector;
-		
+		var $primary_images = array();
+		var $fallback_image;
 		var $displayer_chrome; // used for displaying the av items
 
 		var $noncanonical_request_keys = array(
@@ -60,6 +65,8 @@
 		{	
 			if(isset($this->params['num_per_page']))
 				$this->num_per_page = $this->params['num_per_page'];
+			if(isset($this->params['show_list_with_details']))
+				$this->show_list_with_details = $this->params['show_list_with_details'];
 			
 			// only load javascript and css for integrated items
 			if ( !empty($this->request[ $this->query_string_frag.'_id' ]) )
@@ -69,7 +76,6 @@
 				{
 					$head_items = $this->get_head_items();
 					$head_items->add_javascript(JQUERY_URL, true);
-					
 					$this->displayer_chrome = MediaWorkFactory::displayer_chrome($media_work, 'av');
 					if ($this->displayer_chrome)
 					{
@@ -80,6 +86,7 @@
 			}
 	
 			parent::init($args);
+			$this->_init_social_media_integration();
 		}
 		
 		function alter_es() // {{{
@@ -87,6 +94,7 @@
 			if($this->params['limit_to_current_page'])
 			{
 				$this->es->add_right_relationship( $this->parent->cur_page->id(), relationship_id_of('minisite_page_to_av') );
+				$this->es->set_site( NULL );
 			}
 			if ( !$this->params['relationship_sort'] || !$this->params['limit_to_current_page'])
 			{
@@ -107,6 +115,11 @@
 			if($this->params['show_media_first'])
 			{
 				$this->display_media_work($item);
+			}
+			if($this->params['show_primary_image_with_audio'] && $item->get_value('av_type') == 'Audio' && ($image = $this->get_primary_image($item)))
+			{
+				$alt = strip_tags($image->get_value('description'));
+				echo '<img src="'.reason_get_image_url($image).'" alt="'.reason_htmlspecialchars($alt).'" class="primaryImage" />';
 			}
 			if($item->get_value('datetime') || $item->get_value('media_publication_datetime') )
 			{
@@ -131,6 +144,8 @@
 			else
 				$this->display_transcript($item, 'av_file_id');
 			$this->display_rights_statement($item);
+			//if(!empty($this->params['show_next_prev']))
+			//	$this->show_next_prev($item);
 		}
 		
 		function get_date_information($item)
@@ -152,7 +167,7 @@
 		//Called on by show_list_item()
 		function show_list_item_pre( $item )
 		{
-			$this->get_primary_image( $item );
+			$this->show_primary_image( $item );
 		}
 		
 		//Called on by show_list_item
@@ -170,15 +185,13 @@
 				echo '<div class="smallText date">'.$this->get_date_information($item).'</div>'."\n";
 		}
 		
-		function get_primary_image( $item )
+		function show_primary_image( $item )
 		{
 			if(empty($this->parent->textonly))
 			{
-				$item->set_env('site_id',$this->parent->site_id);
-				$images = $item->get_left_relationship( relationship_id_of('av_to_primary_image') );
-				if(!empty($images))
+				$image = $this->get_primary_image($item);
+				if(!empty($image))
 				{
-					$image = current($images);
 					if($this->params['thumbnail_width'] != 0 or $this->params['thumbnail_height'] != 0)
 					{
 						$rsi = new reasonSizedImage();
@@ -217,6 +230,51 @@
 					show_image( $image, $die_without_thumbnail, $show_popup_link, $show_description, $additional_text, $this->parent->textonly, false, $link );
 				}
 			}
+		}
+	
+		function get_primary_image($item)
+		{
+			if(!isset($this->primary_images[$item->id()]))
+			{
+				$item->set_env('site_id',$this->parent->site_id);
+				$images = $item->get_left_relationship( relationship_id_of('av_to_primary_image') );
+				if(!empty($images))
+				{
+					$this->primary_images[$item->id()] = current($images);	
+				}
+				elseif($fallback_image = $this->get_fallback_image())
+				{
+					$this->primary_images[$item->id()] = $fallback_image;	
+				}
+				else
+				{
+					$this->primary_images[$item->id()] = false;
+				}
+			}
+			return $this->primary_images[$item->id()];
+			
+		} 
+		
+		function get_fallback_image()
+		{
+			if(!isset($this->fallback_image))
+			{
+				$this->fallback_image = false;
+				if(!empty($this->params['fallback_image']))
+				{
+					if(reason_unique_name_exists($this->params['fallback_image']))
+					{
+						$image = new entity(id_of($this->params['fallback_image']));
+						if($image->get_values() && id_of('image') == $image->get_value('type'))
+						{
+							$this->fallback_image = $image;
+						}
+					}
+					if(empty($this->fallback_image))
+						trigger_error('Fallback image with unique name '.$this->params['fallback_image'].' not found in Reason');
+				}
+			}
+			return $this->fallback_image;
 		}
 		
 		function get_cleanup_rules()
@@ -388,11 +446,94 @@
 			echo '<p class="podcast">';
 			echo '<a href="'.$feed_link.'" class="feedLink">Podcast Feed</a>';
 			echo ' <a href="itpc://'.HTTP_HOST_NAME.$feed_link.'" class="subscribe">Subscribe in iTunes</a>';
+			echo ' <a href="feed://'.HTTP_HOST_NAME.$feed_link.'" class="subscribe">Subscribe on iOS</a>';
 			echo '</p>'."\n";
 			if(defined('REASON_URL_FOR_PODCAST_HELP'))
 			{
 				echo '<p class="smallText podcastHelp"><a href="'.REASON_URL_FOR_PODCAST_HELP.'">What\'s a podcast, and how does this work?</a></p>';
 			}
 		}
+
+
+		/**
+		 * Init and add needed head items for social media integration.
+		 *
+		 * This is triggered in post_es_additional_init_actions.
+		 *
+		 * @todo add parameters for further integration that this method pays attention to.
+		 */
+		function _init_social_media_integration() 
+		{	
+			// for now, lets just add sensible open graph tags for the item if we have a current item
+			if ($this->current_item_id)
+			{
+				$this->_add_open_graph_tags_for_item();
+			}
+		}
+	
+		/**
+		 * Add basic metadata using the open graph protocol (http://ogp.me/).
+		 *
+		 * This should improve how shared items appear on facebook and possibly other social networks.
+		 *
+		 * @todo add integration with propietary tags for specific social networks.
+		 */
+		function _add_open_graph_tags_for_item()
+		{
+			if(empty($this->current_item_id))
+				return;
+			$item = new entity($this->current_item_id);
+			$itemValues = $item->get_values();
+			if (reason_is_entity($item) && !empty($itemValues))
+			{
+				$title = htmlspecialchars(trim(strip_tags($item->get_value('name'))),ENT_QUOTES,'UTF-8');
+				$description = htmlspecialchars(trim(str_replace('&nbsp;', '', strip_tags($item->get_value('description')))),ENT_QUOTES,'UTF-8');
+				$url = carl_construct_link(array(''), array('item_id') );
+				$image = $this->get_primary_image($item);
+				if ($teaser = $image)
+				{
+					$teaser = reset($teaser);
+					$image_urls[] = reason_get_image_url($teaser);
+				}
+				elseif ($image = $this->get_primary_image($item))
+				{
+					foreach ($images as $image)	
+					{
+						$image_urls[] = reason_get_image_url($image);
+					}
+				}
+				$site = new entity($this->site_id);
+				if ($site) $site_name = reason_htmlspecialchars(trim(strip_tags($site->get_value('name'))));
+				if(defined('FULL_ORGANIZATION_NAME') && strtolower(FULL_ORGANIZATION_NAME) != strtolower($site_name))
+					$site_name .= ', '.FULL_ORGANIZATION_NAME;
+				$head_items =& $this->get_head_items();
+				$head_items->add_head_item('meta',array( 'property' => 'og:title', 'content' => $title));
+				$head_items->add_head_item('meta',array( 'property' => 'og:url', 'content' => $url));
+				if (!empty($description)) $head_items->add_head_item('meta',array( 'property' => 'og:description', 'content' => $description));
+				if (!empty($image_urls))
+				{
+					foreach ($image_urls as $image_url)
+					{
+						$head_items->add_head_item('meta',array( 'property' => 'og:image', 'content' => 'http://'.$_SERVER['HTTP_HOST'].$image_url));
+						if (HTTPS_AVAILABLE) $head_items->add_head_item('meta',array( 'property' => 'og:image:secure_url', 'content' => 'https://'.$_SERVER['HTTP_HOST'].$image_url));
+					}	
+				}
+				if (!empty($site_name)) $head_items->add_head_item('meta',array( 'property' => 'og:site_name', 'content' => $site_name));
+			}
+		}	
+		/* function show_next_prev($item)
+		{
+			$next = $this->get_next_item($item->id());
+			$prev = $this->get_previous_item($item->id());
+			if(!empty($next) || !empty($prev))
+			{
+				echo '<div class="nextPrev">';
+				if(!empty($next))
+					echo 'next';
+				if(!empty($prev))
+					echo 'prev';
+				echo '</div>';
+			}
+		} */
 	}
-?>
+?>	

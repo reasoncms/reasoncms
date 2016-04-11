@@ -140,7 +140,15 @@ if( !defined( '__DB_SELECTOR' ) )
 				$orderby = '';
 			
 			$optimize = (!(empty($this->optimize))) ? ' ' .$this->optimize . ' ' : '';	
-			$this->count_query = 'SELECT COUNT(1) AS count FROM '.$tables.' '.$where;
+			// $this->count_query = 'SELECT COUNT(1) AS count FROM '.$tables.' '.$where;
+			// modified from SELECT COUNT(1)....problem is that some queries return duplicate entities. For instance given a "Department" entity,
+			// and an "Employee" entity, a relationship of department<->employee, and an employee who belongs to multiple departments. When writing an
+			// entity_selector for this scenario, the employee appears in the resultset twice (calling client doesn't see it in the eventual array 
+			// returned b/c it's associative and the duplicate entries overwrite one another). But this led to strange situation where running the selector
+			// could return a number of items and running the count selector would return a greater number. Changing the count_query brings these in line.
+			// 
+			// note - if you're paginating results, you should be sure to optimize the es using "DISTINCT". Is there a reason to not always use DISTINCT?
+			$this->count_query = 'SELECT COUNT(DISTINCT entity.id) AS count FROM '.$tables.' '.$where;
 			
 			if ($merged)
 			{

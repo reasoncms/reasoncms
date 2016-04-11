@@ -45,6 +45,13 @@ class PublicationMarkupGenerator
 	*/	
 	var $passed_vars = array();  		
 
+
+	/** 
+	 * does this markup generator have custom [[IMG]] style embed support in content? By default, no - this gets us
+	 * decent behavior on legacy sites that borrow in the new embeds created for Carleton's 2015 news site redesign.
+	 */
+	protected $has_custom_embed_handling = false;
+
 ////////
 ///  METHODS
 ////////
@@ -145,6 +152,10 @@ class PublicationMarkupGenerator
 		$this->init();		
 		$this->run();
 		return $this->markup_string;
+	}
+
+	final function has_custom_embed_handling() {
+		return $this->has_custom_embed_handling;
 	}
 
 }

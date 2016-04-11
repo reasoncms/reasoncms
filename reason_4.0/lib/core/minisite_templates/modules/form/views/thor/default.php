@@ -9,6 +9,7 @@
  */
 include_once('reason_header.php');
 reason_include_once('minisite_templates/modules/form/views/default.php');
+include_once( DISCO_INC . 'plugins/honeypot/honeypot.php' );
 
 /**
  * Register form with Reason
@@ -28,6 +29,17 @@ $GLOBALS[ '_form_view_class_names' ][ basename( __FILE__, '.php') ] = 'DefaultTh
 class DefaultThorForm extends DefaultForm
 {
 	var $show_submitted_data_dynamic_fields = false;
+	
+	function run_load_phase()
+	{
+		$this->add_honeypot();
+		parent::run_load_phase();
+	}
+	
+	function add_honeypot()
+	{
+		$honeypot = new HoneypotDiscoPlugin($this);
+	}
 	
 	function get_thank_you_html()
 	{

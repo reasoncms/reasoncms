@@ -1,0 +1,70 @@
+.exportTabs {
+	border-bottom:2px solid #999;
+}
+#typeItem > div.words {
+	padding-top:1em;
+	padding-bottom:1em;
+}
+#typeItem > div.words > span {
+	font-size:1.1em;
+	font-weight:bold;
+}
+.exportTabs h4, ul.tabs {
+	list-style:none;
+	margin:0;
+	padding:0;
+	display:inline;
+	font-weight:normal;
+}
+ul.tabs>li {
+	display:inline-block;
+	margin-left:.5em;
+}
+ul.tabs>li>a, ul.tabs>li>strong {
+	display:inline-block;
+	padding:.5em 1em;
+	background:#eee;
+	color:#000;
+	text-decoration:none;
+	border-radius:.33em .33em 0 0;
+}
+ul.tabs>li>strong {
+	background:#999;
+	color:#fff;
+	font-weight:normal;
+}
+#disco_form {
+	/*padding-top: 10px*/
+	float:left;
+	width: 40%;
+	/*margin-right: 20%;*/
+}
+.exportOutput {
+	padding-right: 10px;
+	float:right;
+	width: 55%;
+	/*width: 40% ;*/
+}
+.exportOutput > h4 {
+	margin-top:12px;
+	margin-bottom:15px;	
+	font-size: 1.1em;
+	font-weight: bold;	
+}
+.exportOutput > a {
+	padding:.5em 1em;
+	font-weight: normal;		
+	background:#eee;
+	color:#000;
+	text-decoration:none;
+	border-radius:.33em .33em 0 0;	
+}
+h3.description {
+	font-size:1.125em;
+	margin-bottom:.5em;
+}
+p.notice {
+	color:#666;
+	font-style:italic;
+	margin-top:.5em;
+}

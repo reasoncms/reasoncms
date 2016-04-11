@@ -60,6 +60,9 @@ class miniEventsModule extends EventsModule
 		if(!isset($this->acceptable_params['title']))
 			$this->acceptable_params['title'] = '';
 		
+		if(!isset($this->acceptable_params['exclude_current_site']))
+			$this->acceptable_params['exclude_current_site'] = false;
+		
 		parent::handle_params( $params );
 	}
 	function init( $args = array() ) // {{{
@@ -68,6 +71,23 @@ class miniEventsModule extends EventsModule
 		$this->find_events_page();
 		
 	} // }}}
+	function _get_sites()
+	{
+		$sites = parent::_get_sites();
+		if(!empty($this->params['exclude_current_site']))
+		{
+			if(count($sites) == 1)
+			{
+				trigger_error('Unable to exlude current site from events_mini module, because there are no other sites to show. exclude_current_site only works in concert with the additional_sites parameter');
+			}
+			elseif(isset($sites[$this->site_id]))
+			{
+				unset($sites[$this->site_id]);
+				$this->event_sites = $sites;
+			}
+		}
+		return $sites;
+	}
 	function has_content() // {{{
 	{
 		if($this->_has_content_to_display())

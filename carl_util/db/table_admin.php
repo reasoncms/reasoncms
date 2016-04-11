@@ -221,6 +221,10 @@ class TableAdmin
 	 */
 	 var $_table_data;
 	/**
+	 * @var string target for file downloads
+	 */
+	 var $file_download_base_url = '/thor/getFormFile.php';	 
+	/**
 	 * @var array cleanup rules
 	 */
 	var $cleanup_rules = array('table_sort_order' => array('function' => 'check_against_array', 'extra_args' => array('asc', 'ASC', 'desc', 'DESC')),
@@ -339,7 +343,7 @@ class TableAdmin
 					$fileCols[$k] = $this->_display_values[$k]["label"];
 				}
 			}
-			$this->batch_download_form = new DiscoAdminBatchDownloader($this->get_table_name(), $fileCols, $data);
+			$this->batch_download_form = new DiscoAdminBatchDownloader($this->get_table_name(), $fileCols, $data, $this->file_download_base_url);
 			break;
 		case "archive":
 			break;
@@ -855,6 +859,20 @@ class TableAdmin
 	{
 		return $this->no_data_message;
 	}
+
+	function get_field_name_from_label($label)
+	{
+		static $labels;
+		if (!empty($labels[$label])) return $labels[$label];
+	
+		foreach ($this->_display_values as $field => $details)
+			$labels[$details['label']] = $field;
+
+		if (!empty($labels[$label])) return $labels[$label];
+		
+		return false;
+	}
+			
 	/**
 	 * @return boolean true if the row count of unfiltered data is greater than 0
 	 */
@@ -1111,9 +1129,8 @@ class TableAdmin
 			// if it's a file, let's make it downloadable
 			$type = (!empty($this->_display_values[$k]['type'])) ? $this->_display_values[$k]['type'] : 'text';
 			if ($type == "file") {
-				$v = "<a href='/thor/getFormFile.php?table=" . $this->get_table_name() . "&row=$row_id&col=$k&filename=$v'>$v</a>";
-				// $link_params = array('table_row_action' => 'download_file', 'table_action_id' => $row_id, 'table_action' => '', 'download_col' => $k);
-				// $v = "<a href='" . carl_make_link($link_params) . "'>$v</a> (" . carl_make_link($link_params) . ")";
+				$link_params = array('table' => $this->get_table_name(), 'row' => $row_id, 'col' => $k, 'filename' => $v);
+				$v = "<a href='" . carl_make_link($link_params, $this->file_download_base_url) . "'>$v</a>";
 			}
 
 			$ret .= '<td'.$first.'>'.$v.'</td>';
@@ -1585,9 +1602,7 @@ class TableAdmin
 	}
 	
 	/**
-	 * Returns an array that describes the label and plasmature type, indexed by column name
-	 * 
-	 * If an admin form is present and defines the get_field_display_name method, it will be used to build column labels.
+	 * Returns an array that describes the label and plasmature type, indexed by column name 
 	 */
 	function _build_display_values()
 	{
@@ -1596,28 +1611,50 @@ class TableAdmin
   		$res = mysql_query($q);
   		connectDB($this->get_orig_db_conn()); // reconnect to default DB
   		
+  		$this->_display_values = array();
   		while($field = mysql_fetch_assoc($res))
   		{
-  			$field_name = $field['Field'];
-  			$type = $field['Type'];
-  			if (substr($type, 0, 4) == 'enum')
-  			{
-  				preg_match_all("/'(.*?)'/", $type, $matches);
-   				$display_values[$field['Field']]['options'] = $matches[1];
-   				$display_values[$field['Field']]['type'] = 'enum';
-  			}
-  			else
-  			{
-  				$display_values[$field['Field']]['type'] = $type;
-  			}
-  			if ($this->admin_form && method_exists($this->admin_form, 'get_field_display_name'))
-  			{
-  				$display_values[$field['Field']]['label'] = $this->admin_form->get_field_display_name($field_name);
-  			}
-  			else $display_values[$field['Field']]['label'] = $field_name;
+  			$this->set_field_display_type($field['Field'], $field['Type']);
+  			$this->set_field_display_name($field['Field'], $field['Field']);
   		}
-  		$this->_display_values = (isset($display_values)) ? $display_values : array();
 	}
+	
+	/** 
+	 * Called by _build_display_values, which passes the field name and db column type to be
+	 * used to set the data type for this column. You can override this if you need custom
+	 * type handling for a particular field.
+	 */
+	function set_field_display_type($field, $type)
+	{
+		if (substr($type, 0, 4) == 'enum')
+		{
+			preg_match_all("/'(.*?)'/", $type, $matches);
+			$this->_display_values[$field]['options'] = $matches[1];
+			$this->_display_values[$field]['type'] = 'enum';
+		}
+		else
+		{
+			$this->_display_values[$field]['type'] = $type;
+		}
+	}
+
+	/** 
+	 * Called by _build_display_values, which passes the field name that is
+	 * used to set the display name for this column. You can override this if you need custom
+	 * name handling for a particular field.
+	 *
+	 * If an admin form is present and defines the get_field_display_name method, 
+	 * it will be used to build column labels.
+	 */
+	function set_field_display_name($field, $field_name)
+	{
+		if ($this->admin_form && method_exists($this->admin_form, 'get_field_display_name'))
+		{
+			$this->_display_values[$field]['label'] = $this->admin_form->get_field_display_name($field);
+		}
+		else $this->_display_values[$field]['label'] = $field_name;
+	}
+
 	
 	/** 
 	 * Returns an array that describes the label and gives a plasmature type of text
@@ -1876,7 +1913,7 @@ class TableAdmin
 			}
 			else return $field;
 		}
-		
+
 		function get_fields_to_show()
 		{
 			if (isset($this->fields_to_show))
@@ -1997,12 +2034,17 @@ class TableAdmin
 	 */
 	class DiscoAdminBatchDownloader extends Disco
 	{
+		/**
+		 * @var string target for file downloads
+		 */
+		var $file_download_base_url = '/thor/getFormFile.php';	 
 		var $actions = array( 'disco_confirm_export' => 'Generate Zip...');
-		function __construct($tableName, $fileColumns, $data)
+		function __construct($tableName, $fileColumns, $data, $url = null)
 		{
 			$this->tableName = $tableName;
 			$this->fileColumns = $fileColumns;
 			$this->data = $data;
+			if (!is_null($url)) $this->file_download_base_url = $url;
 
 			usort($this->data, Array("DiscoAdminBatchDownloader", "cmp"));
 
@@ -2067,6 +2109,7 @@ class TableAdmin
 				foreach ($this->data as $dataRow) {
 					if ($dataRow["id"] >= $targetMin && $dataRow["id"] <= $targetMax) {
 						foreach ($this->fileColumns as $fileCol => $fileLabel) {
+							$fileLabel = substr(str_replace('/','_', $fileLabel), 0, 20);
 							$path = $tc->construct_file_storage_location($dataRow["id"], $fileCol, $dataRow[$fileCol]);
 							if (file_exists($path)) {
 								// echo "[$i]: include $fileLabel [" . $dataRow[$fileCol] . "] -> [" . $path . "]<P>";
@@ -2095,7 +2138,9 @@ class TableAdmin
 					$zip->close();
 
 					// use an iframe to serve up the zip - getFormFile will return it to the user and delete it when done
-					echo '<iframe src="/thor/getFormFile.php?mode=fetch_zip&table=' . $this->tableName . '&zipfile=' . $zipPath . '" id="zipper" style="display:none"></iframe>';
+					$link_params = array('mode' => 'fetch_zip', 'table' => $this->tableName, 'zipfile' => $zipPath);
+
+					echo '<iframe src="'.carl_make_link($link_params, $this->file_download_base_url).'" id="zipper" style="display:none"></iframe>';
 				} else {
 					echo "No matching files were found<P>";
 				}

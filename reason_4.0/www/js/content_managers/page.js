@@ -19,12 +19,12 @@ $(document).ready(function(){
 	});
 	
 	// This code handles the Administrator Tools section of the content manager (if present)
-	if ($('#extraheadcontentstructuredRow input').length) {
+  if ($('[id^="extraheadcontentstructured"] input').length) {
 		var toggler = $('<a href="#"></a>');
-		var toggledElements = $('#extraheadcontentstructuredRow, #extraheadcontentRow, #uniquenameRow');
-		if($('#extraheadcontentstructuredRow input').val().length < 1 &&
-			$('#extraheadcontentRow textarea').val().length < 1 &&
-			$('#uniquenameRow input').val().length < 1 )
+		var toggledElements = $('[id^="extraheadcontentstructured"], [id^="extraheadcontent"], [id^="uniquename"]');
+		if($('[id^="extraheadcontentstructured"] input').val().length < 1 &&
+			$('[id^="extraheadcontent"] textarea').val().length < 1 &&
+			$('[id^="uniquename"] input').val().length < 1 )
 		{
 			toggledElements.hide();
 			toggler.addClass('closed');
@@ -46,8 +46,8 @@ $(document).ready(function(){
 				$(this).removeClass('open').addClass('closed');
 			}
 		});
-		$('#administratorsectionheadingRow h4').wrapInner(toggler);
-		$('#extraheadcontentstructuredRow .headItem').each(function(){
+		$('[id^="administratorsectionheading"] h4').wrapInner(toggler);
+		$('[id^="extraheadcontentstructured"] .headItem').each(function(){
 			urlVal = $(this).find('input.headItemUrl').val();
 			if(urlVal.length < 1)
 			{
@@ -58,7 +58,7 @@ $(document).ready(function(){
 		adder.find('a').click(function(e){
 			e.preventDefault();
 			var shown = 0;
-			$('#extraheadcontentstructuredRow .headItem').each(function(){
+			$('[id^="extraheadcontentstructured"] .headItem').each(function(){
 				urlVal = $(this).find('input.headItemUrl').val();
 				if(shown < 1 && urlVal.length < 1)
 				{
@@ -67,6 +67,6 @@ $(document).ready(function(){
 				}
 			});
 		});
-		$('#extraheadcontentstructuredRow .headItem:last-child').after(adder);
+		$('[id^="extraheadcontentstructured"] .headItem:last-child').after(adder);
 	}
 });

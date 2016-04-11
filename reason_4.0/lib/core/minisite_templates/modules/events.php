@@ -13,10 +13,12 @@ reason_include_once( 'classes/calendar_grid.php' );
 reason_include_once( 'classes/icalendar.php' );
 reason_include_once( 'classes/page_types.php' );
 reason_include_once( 'classes/function_bundle.php' );
+reason_include_once( 'classes/api/api.php' );
+reason_include_once( 'classes/borrow_this.php' );
 include_once(CARL_UTIL_INC . 'cache/object_cache.php');
 include_once( CARL_UTIL_INC . 'dir_service/directory.php' );
+include_once( CARL_UTIL_INC . 'basic/cleanup_funcs.php' );
 $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'EventsModule';
-
 
 
 /**
@@ -299,88 +301,121 @@ class EventsModule extends DefaultMinisiteModule
 	/**
 	 * The parameters that page types can set on the module.
 	 *
+	 * 'additional_sites' (string) Sites other than the current one to pull events from.
+	 * This can be a comma-separated set of site and/or site type unique names OR the keywords 'k_parent_sites', 'k_child_sites', or 'k_sharing_sites'
+	 *
+	 * 'cache_lifespan' How long, in seconds, should the calendar cache the events?
+	 *
+	 * 'cache_lifespan_meta' How long, in seconds, should the calendar cache calendar metadata,
+	 *  like window, category, and audience determination?
+	 *
+	 * 'calendar_link_text' (string) text of link to full calendar view.
+	 *
+	 * 'default_view_min_days' (integer) sets a smallest number of days the dynamically selected view can have.
+	 *
+	 * 'exclude_audiences' (string, comma spaced for multiple) don't show events for these audiences
+	 *
+	 * 'form_include' (path) NEEDS DESCRIPTION
+	 *
+	 * 'freetext_filters' An array of filters, each in the following format:
+	 *   array('string to filter on','fields,to,search')
+	 *   The string to filter on is interpreted as a LIKE statement.
+	 *
+	 * 'ideal_count' (integer) sets the @ideal_count value for dynamic view selection
+	 *
+	 * 'item_admin_markup' () NEEDS DESCRIPTION
+	 *
 	 * 'item_markup' (string) The path to the item markup class
 	 *
-	 * 'list_markup' (string) The path to the list markup class
+	 * 'limit_by_related_types' (array) allows you to select events that share an association
+	 *   with a page. Pass an array with type and relationships, e.g.:
 	 *
-	 * 'list_item_markup'  (string) The path to the list item markup class
+	 *		'limit_by_related_types' => array(
+	 *				'shared_type' => array(
+	 *					'page_rel' => array('shared_type_to_page'),
+	 *					'entity_rel' => array('event_to_shared_type'),
+	 *					)),
+	 *
+	 * 'limit_to_audiences' (string, comma spaced for multiple) limit to these audiences
+	 *
+	 * 'limit_to_page_categories' (boolean) determines if the module will display all events on site
+	 * or just those with a category matching one on current page
+	 *
+	 * 'link_shared_events_to_parent_site' (boolean) by default, the detail view of an event
+	 *   borrowed from another site is shown in the local site context. Set this to true to
+	 *   have borrowed events link directly back to their parent site.
 	 *
 	 * 'list_chrome_markup' (string) The path to the list chrome markup class
 	 *
-	 * 'view' (string) forces a specific view. Possible values: daily, weekly, monthly, yearly, all
+	 * 'list_item_markup'  (string) The path to the list item markup class
 	 *
-	 * 'limit_to_page_categories' (boolen) determines if the module will display all events on site
-	 * or just those with a category matching one on current page
+	 * 'list_markup' (string) The path to the list markup class
+	 *
+	 * 'list_thumbnail_crop' () NEEDS DESCRIPTION
+	 *
+	 * 'list_thumbnail_default_image' () NEEDS DESCRIPTION
+	 *
+	 * 'list_thumbnail_height' (int) NEEDS DESCRIPTION
+	 *
+	 * 'list_thumbnail_width' (int) NEEDS DESCRIPTION
 	 *
 	 * 'list_type' (string) can be 'standard' or 'verbose' NOTE: This parameter is deprecated. Use list_markup to specify a markup generator instead.
 	 *
-	 * 'additional_sites' (string) Sites other than the current one to pull events from.
-	 * This can be a comma-separated set of site and/or site type unique names OR the keywords 'k_parent_sites', 'k_child_sites', or 'k_sharing_sites'
+	 * 'map_zoom_level' (int) set a zoom level for google maps - default 12
+	 *
+	 * 'natural_sort_categories' (boolean) NEEDS DESCRIPTION
+	 *
+	 * 'ongoing_show_ends' (boolean) Show the ending dates for events? Note that in combination with 
 	 *
 	 * 'sharing_mode' (string) can be 'all' (e.g. both shared and private) or 'shared_only'
 	 *
 	 * 'show_images' (boolean) determines if teaser images are displayed in list
 	 *
-	 * 'ideal_count' (integer) sets the @ideal_count value for dynamic view selection
-	 *
-	 * 'default_view_min_days' (integer) sets a smallest number of days the dynamically selected view can have.
-	 *
 	 * 'start_date' (string) forces the calendar to use as its default start date a date other than the current one 
 	 *
-	 * 'map_zoom_level' (int) set a zoom level for google maps - default 12
+	 * 'view' (string) forces a specific view. Possible values: daily, weekly, monthly, yearly, all
 	 *
-	 * 'ongoing_show_ends' (boolean) Show the ending dates for events? Note that in combination with 
-	 * 'ongoing_display'=>'below', events that start before the current view will not be visible, so 
-	 * this should likely only be used in conjunction with 'ongoing_display'=>'above'.
-	 *	Note: This is deprecated. It is now handled by the list_markup class.
-	 * 
-	 * 'limit_to_audiences' (string, comma spaced for multiple) limit to these audiences
-	 * 'exlude_audiences' (string, comma spaced for multiple) excludes specified audiences
-	 *
-	 * 'freetext_filters' An array of filters, each in the following format:
-	 * array('string to filter on','fields,to,search')
-	 * The string to filter on is interpreted as a LIKE statement.
-	 *
-	 * 'cache_lifespan' How long, in seconds, should the calendar cache the events?
-	 * 'cache_lifespan_meta' How long, in seconds, should the calendar cache calendar metadata,
-	 *  like window, category, and audience determination?
+	 * 'wrapper_id' () NEEDS DESCRIPTION
 	 *
 	 * @var array
 	 * @access private
 	 * @todo review current default default_view_min_days value for sanity
 	 */
 	var $acceptable_params = array(
-							'item_markup' => '',
-							'list_markup' => '',
-							'list_item_markup' => '',
-							'list_chrome_markup' => '',
-	 						'view'=>'',
-							'limit_to_page_categories'=>false,
-							'list_type'=>'', // deprecated -- use list_markup instead
 							'additional_sites'=>'',
-							'sharing_mode'=>'',
-							'show_images'=>false,
-							'list_thumbnail_height' => 0,
-							'list_thumbnail_width' => 0,
-							'list_thumbnail_crop' => '',
-							'list_thumbnail_default_image' => '', // a unique name
-							'ideal_count'=>NULL,
-							'default_view_min_days'=>1,
-	 						'start_date'=>'',
-	 						'map_zoom_level' => 12,
-	 						'ongoing_show_ends' => true, // deprecated
-	 						'limit_to_audiences' => '',	 // as comma spaced strings
-	 						'exclude_audiences' => '',
-	 						'freetext_filters' => array(),
 	 						'cache_lifespan' => 0,
 	 						'cache_lifespan_meta' => 0,
-	 						'natural_sort_categories' => false,
-	 						'form_include' => 'minisite_templates/modules/event_slot_registration/event_slot_registration_form.php',
 	 						'calendar_link_text' => 'More events',
+							'default_view_min_days'=>1,
+	 						'exclude_audiences' => '',
+	 						'form_include' => 'minisite_templates/modules/event_slot_registration/event_slot_registration_form.php',
+	 						'freetext_filters' => array(),
+							'ideal_count'=>NULL,
+							'item_admin_markup' => '',
+							'item_markup' => '',
+	 						'limit_by_related_types' => '', // as comma spaced type unique names
+	 						'limit_to_audiences' => '',	 // as comma spaced strings
+							'limit_to_page_categories'=>false,
 	 						'link_shared_events_to_parent_site' => false,
+							'list_chrome_markup' => '',
+							'list_item_markup' => '',
+							'list_markup' => '',
+							'list_thumbnail_crop' => '',
+							'list_thumbnail_default_image' => '', // a unique name
+							'list_thumbnail_height' => 0,
+							'list_thumbnail_width' => 0,
+							'list_type'=>'', // deprecated -- use list_markup instead
+	 						'map_zoom_level' => 12,
+	 						'natural_sort_categories' => false,
+	 						'ongoing_show_ends' => true, // deprecated
+							'sharing_mode'=>'',
+							'show_images'=>false,
+	 						'start_date'=>'',
+	 						'view'=>'',
 	 						'wrapper_id' => '',
 						);
 	var $default_item_markup = 'minisite_templates/modules/events_markup/default/events_item.php';
+	var $default_item_admin_markup = 'minisite_templates/modules/events_markup/default/events_item_admin.php';
 	var $default_list_markup = 'minisite_templates/modules/events_markup/default/events_list.php';
 	var $default_list_item_markup = 'minisite_templates/modules/events_markup/default/events_list_item.php';
 	//var $default_list_item_markup = 'minisite_templates/modules/events_markup/verbose/verbose_events_list_item.php';
@@ -487,7 +522,9 @@ class EventsModule extends DefaultMinisiteModule
 	function init( $args = array() )
 	{
 		parent::init( $args );
-		
+		$head_items =& $this->get_head_items();
+
+		// $this->head_items('Content-Disposition: attachment; filename=data.csv'); // Added by rabbanii
 		if(!empty($this->params['list_type']))
 		{
 			if('verbose' == $this->params['list_type'] && '' == $this->params['list_item_markup'])
@@ -575,11 +612,55 @@ class EventsModule extends DefaultMinisiteModule
 			$this->get_run_output();
 		}
 	}
-	
+
+	static function setup_supported_apis()
+	{
+		$array = debug_backtrace();
+		
+		$csv_api = new ReasonAPI(array('csv'));
+		self::add_api('csv_api', $csv_api);
+	}
+
+	/**
+	 * We run the api we setup in setup_supported_apis()
+	 * Note that we ask for the content type and set the content differently for the json and html content types.
+	 * If the content type is not 'json' or 'html', note that we run the api anyway, as it supports standard error cases.
+     * -- Added from random_number module
+	 */
+	function run_api()
+	{
+        /**
+         * Make sure user is logged in before they can access the link
+         * Make sure user has appropriate priveleges and that the download file exists
+         */
+        reason_require_authentication();    
+        $slot_array = $this->get_slot_registrants($this->event);
+		if ($slot_array['error'] != NULL){
+            if ($slot_array['error'] == '403') {
+                http_response_code(403);
+                echo '<h1>403/Forbidden</h1>';
+                echo '<p>You do not have the access required to view this CSV export.</p>';
+            } else if ($slot_array['error'] == '404') {
+                http_response_code(404);
+                echo '<h1>403/Page Not Found</h1>';
+                echo '<p>CSV export not found.</p>';
+            }
+            die();
+        }
+        $api = $this->get_api();    
+		if ($api->get_name() == 'csv_api') {
+            if ($api->get_content_type() == 'csv') {
+                $api->set_content($this->generate_csv($slot_array,$this->event));
+            }
+			$api->run();
+		}
+		else parent::run_api(); // support other apis defined by parents
+	}
+
 	/**
 	 * Get a markup object
 	 *
-	 * @param string $type 'item', 'list', 'list_chrome', 'list_item'
+	 * @param string $type 'item', 'list', 'list_chrome', 'list_item', 'item_admin'
 	 * @return object
 	 */
 	function get_markup_object($type)
@@ -612,6 +693,13 @@ class EventsModule extends DefaultMinisiteModule
 								$this->_markups[$type] = $markup;
 							else
 								trigger_error('Markup does not implement eventsItemMarkup interface');
+						}
+						elseif('item_admin' == $type)
+						{
+							if($markup instanceof eventsItemAdminMarkup)
+								$this->_markups[$type] = $markup;
+							else
+								trigger_error('Markup does not implement eventsItemAdminMarkup interface');
 						}
 						elseif('list' == $type)
 						{
@@ -1393,6 +1481,7 @@ class EventsModule extends DefaultMinisiteModule
 			{
 				$bundle = new functionBundle();
 				$bundle->set_function('calendar', array($this, 'get_current_calendar'));
+				$bundle->set_function('construct_link', array($this, 'construct_link'));
 				$bundle->set_function('view_options_markup', array($this, 'get_section_markup_view_options'));
 				$bundle->set_function('calendar_grid_markup', array($this, 'get_section_markup_calendar_grid'));
 				$bundle->set_function('search_markup', array($this, 'get_section_markup_search'));
@@ -1407,6 +1496,8 @@ class EventsModule extends DefaultMinisiteModule
 				$bundle->set_function('options_markup', array($this, 'get_section_markup_options'));
 				$bundle->set_function('full_calendar_link_markup', array($this, 'get_full_calendar_link_markup'));
 				$bundle->set_function('prettify_duration', array($this, 'prettify_duration') );
+				$bundle->set_function('events_page_url', array($this, 'get_events_page_url') );
+				$bundle->set_function('current_page', array($this, 'get_current_page') );
 				// get_full_calendar_link_markup()
 				$this->modify_list_chrome_function_bundle($bundle);
 				/* if($markup->needs_markup('list'))
@@ -1554,7 +1645,7 @@ class EventsModule extends DefaultMinisiteModule
 		}
 		$integrated = array();
 		$editable = false;
-		if(empty($this->events_page_url))
+		if(empty($this->events_page_url)) // We're on an actual events page, not an events_mini feed
 		{
 			$inline_edit = get_reason_inline_editing($this->page_id);
 			$editable = $inline_edit->available_for_module($this);
@@ -2025,6 +2116,36 @@ class EventsModule extends DefaultMinisiteModule
 	}
 	
 	/**
+	 * Get link for the borrow this interface
+	 *
+	 * @param integer $event_id
+	 * @return string;
+	 */
+	function cur_user_is_reason_editor()
+	{
+		if($username = reason_check_authentication())
+		{
+			return username_is_a_reason_editor($username);
+		}
+		return false;
+	}
+
+	/**
+	 * Get link for the borrow this interface
+	 *
+	 * @param integer $event_id
+	 * @return string;
+	 */
+	function get_borrow_this_link($event_id)
+	{
+		if(BorrowThis::item_borrowable_by_username($event_id))
+		{
+			return BorrowThis::link($event_id);
+		}
+		return '';
+	}
+	
+	/**
 	 * Display the view options part of the list chrome
 	 * @return void
 	 * @todo move into markup class
@@ -2219,6 +2340,7 @@ class EventsModule extends DefaultMinisiteModule
         	$es->add_rel_sort_field($event_id, relationship_id_of('event_to_image'));
         	$es->set_order('rel_sort_order ASC');
         	$es->set_num(1);
+        	$es->set_env( 'site' , $this->site_id );
         	$images = $es->run_one();
         	if(!empty($images))
         	{
@@ -3235,7 +3357,69 @@ class EventsModule extends DefaultMinisiteModule
 			{
 				$init_array['or_categories'] = $cats;
 			}
+		}		
+		// Figure out what entities of the specified types the page may have in common with events
+		if($this->params['limit_by_related_types'])
+		{
+			foreach ($this->params['limit_by_related_types'] as $type => $rels)
+			{
+				if (!$type_id = id_of($type))
+				{
+					trigger_error('Invalid type name "'.$type.' in limit_by_related_types page type parameter.');
+					continue;
+				}
+				
+				$related = array();
+				$relations = get_allowable_relationships_for_type($type_id);
+				
+				if (!isset($rels['page_rel']) || !is_array($rels['page_rel']))
+				{
+					trigger_error('limit_by_related_types page type parameter incorrectly formed: missing page_rel.');
+					continue;
+				}
+				foreach ($rels['page_rel'] as $rel_name)
+				{
+					if (!$rel_id = relationship_id_of($rel_name))
+					{
+						trigger_error('Invalid relationship name "'.$rel_name.' in limit_by_related_types page type parameter.');
+						continue;
+					}
+					
+					// Find all the entities of the requested types that are associated with 
+					// the current page.
+					$entities = $this->parent->cur_page->get_relationship($rel_name);
+					foreach ($entities as $entity)
+					{
+						$related[$type][] = $entity->id();
+					}
+				}
+
+				if (!empty($related))
+				{
+					if (!isset($rels['entity_rel']) || !is_array($rels['entity_rel']))
+					{
+						trigger_error('limit_by_related_types page type parameter incorrectly formed: missing entity_rel.');
+						continue;
+					}
+								
+					foreach ($rels['entity_rel'] as $rel_name)
+					{
+						if (!$rel_id = relationship_id_of($rel_name))
+						{
+							trigger_error('Invalid relationship name "'.$rel_name.' in limit_by_related_types page type parameter.');
+							continue;
+						}
+
+						$init_array['rels'][] = array(
+							'rel_id' => $rel_id,
+							'entity_ids' => $related[$type],
+							'dir' => (($relations[$rel_id]['relationship_a'] == id_of('event_type')) ? 'left' : 'right')
+							);
+					}
+				}
+			}
 		}
+		
 		if($this->params['ideal_count'])
 			$init_array['ideal_count'] = $this->params['ideal_count'];
 		elseif(!empty($this->ideal_count))
@@ -3358,6 +3542,16 @@ class EventsModule extends DefaultMinisiteModule
 			return '';
 		
 		return '<p class="more"><a href="'.$this->events_page_url.'">'.$this->params['calendar_link_text'].'</a></p>'."\n";
+	}
+	
+	function get_events_page_url()
+	{
+		return $this->events_page_url;
+	}
+	
+	function get_current_page()
+	{
+		return $this->cur_page;
 	}
 	/**
 	 * Display the ical link section
@@ -3616,6 +3810,18 @@ class EventsModule extends DefaultMinisiteModule
 			$bundle->set_function('registration_markup', array($this, 'get_registration_slots_markup'));
 			$bundle->set_function('prettify_duration', array($this, 'prettify_duration'));
 			$bundle->set_function('repetition_explanation', array($this, 'get_repetition_explanation'));
+			
+			if($admin_markup = $this->get_markup_object('item_admin'))
+			{
+				$admin_bundle = new functionBundle();
+				$admin_bundle->set_function('borrow_this_link', array($this, 'get_borrow_this_link'));
+				$admin_bundle->set_function('cur_user_is_reason_editor', array($this, 'cur_user_is_reason_editor'));
+				$admin_markup->set_bundle($admin_bundle);
+				if($head_items = $this->get_head_items())	
+					$admin_markup->modify_head_items($head_items, $e);
+				$bundle->set_function('admin_markup', array($admin_markup, 'get_markup'));
+			}
+			
 			$this->modify_item_function_bundle($bundle);
 			$markup->set_bundle($bundle);
 			if($head_items = $this->get_head_items())	
@@ -3772,6 +3978,7 @@ class EventsModule extends DefaultMinisiteModule
 			$es->add_relation('`entity`.`id` NOT IN ("'.implode('","',array_keys($images)).'")');
 		$es->add_rel_sort_field($e->id(), relationship_id_of('event_to_image'));
 		$es->set_order('rel_sort_order ASC');
+        $es->set_env( 'site' , $this->site_id );
 		$images += $es->run_one();
 		return $images;
 	}
@@ -4026,6 +4233,7 @@ class EventsModule extends DefaultMinisiteModule
 	 */
 	function show_registration_slots($event)
 	{
+
 		//find registration slots
 		$results = $this->get_registration_slots($event);
 		
@@ -4042,7 +4250,8 @@ class EventsModule extends DefaultMinisiteModule
 				$description = $slot->get_value('slot_description');
 				if(!empty($description))
 					echo '<li class="desc">'.$description.'</li>'."\n";
-				$spaces_available = $this->get_spaces_available($event, get_entity_by_id($slot->id()));
+				$temp = new Entity($slot->id()); // Code added by rabbanii
+				$spaces_available = $this->get_spaces_available($event, $temp);
 				if($spaces_available < 0)
 					$spaces_available = 0;
 				echo '<li class="spaces">Spaces Available: '.$spaces_available.'</li>'."\n";
@@ -4129,9 +4338,9 @@ class EventsModule extends DefaultMinisiteModule
 	 */
 	function show_registration_form($event)
 	{
-		$slot_entity = get_entity_by_id($this->request['slot_id']);
+		$slot_entity = new Entity($this->request['slot_id']);
 		echo '<div class="form">'."\n";
-		echo '<h3>Register for '.$event->get_value('name').' ('.$slot_entity['name'].')'.'</h3>'."\n";
+		echo '<h3>Register for '.$event->get_value('name').' ('.$slot_entity->get_value('name').')'.'</h3>'."\n";
 		
 		$class_name = (isset($GLOBALS[ '_slot_registration_view_class_names' ][ basename( $this->params['form_include'], '.php') ]))
 					? $GLOBALS[ '_slot_registration_view_class_names' ][ basename( $this->params['form_include'], '.php') ]
@@ -4155,16 +4364,33 @@ class EventsModule extends DefaultMinisiteModule
 	 */
 	function show_slot_registration_admin_view($event)
 	{
-		$slot = get_entity_by_id($this->request['slot_id']);
-		echo '<h3>Administrative Info for '.$slot['name'].'</h3>'."\n";
+		$slot_array = $this->get_slot_registrants($event);
+		if ($slot_array['error'] != NULL){
+            if ($slot_array['error'] == '403') {
+                http_response_code(403);
+                echo '<h1>403/Forbidden</h1>';
+                echo '<p>You do not have the access required to view this CSV export.</p>';
+            } else if ($slot_array['error'] == '404') {
+                http_response_code(404);
+                echo '<h1>403/Page Not Found</h1>';
+                echo '<p>CSV export not found.</p>';
+            }
+            die();
+        }
+		$slot = $slot_array['slot'];
+		$all_registrants = explode(';',$slot_array['registrants']);
+
+    	echo '<h3>Administrative Info for '.$slot->get_value('name').'</h3>'."\n";
 		echo '<div class="admin">'."\n";
 		echo '<ul>'."\n";
-		if(!empty($slot['slot_description']))
-			echo '<li><strong>Description: </strong>'.$slot['slot_description'].'</li>'."\n";
+		// CHANGED LINE
+		$slot_description = $slot->get_value('slot_description');
+		if(!empty($slot_description))
+			echo '<li><strong>Description: </strong>'.$slot->get_value('slot_description').'</li>'."\n";
 		echo '<li><strong>Spaces Available: </strong>'.$this->get_spaces_available($event, $slot).'</li>'."\n";
-		echo '<li><strong>Capacity: </strong>'.$slot['registration_slot_capacity'].'</li>'."\n";
+		echo '<li><strong>Capacity: </strong>'.$slot->get_value('registration_slot_capacity').'</li>'."\n";
 		echo '</ul>'."\n";
-		$all_registrants = explode(';', $slot['registrant_data']);
+		// $all_registrants = explode(';', $slot->get_value('registrant_data'));
 		$registrants = $this->get_registrants_for_this_date($all_registrants);
 		if (count($registrants) > 0)
 		{
@@ -4185,7 +4411,7 @@ class EventsModule extends DefaultMinisiteModule
 				echo '<strong>'.htmlspecialchars($registrant_pieces[1], ENT_QUOTES).'</strong> <span class="divider">|</span> '."\n";
 				echo '<span class="email">'.htmlspecialchars($registrant_pieces[2], ENT_QUOTES).'</span> <span class="divider">|</span> ';
 				echo '<span class="date">Registered '.date('m/d/Y', $registrant_pieces[3]).'</span> <span class="divider">|</span> ';
-				$link_vars = array('event_id'=>$event->id(), 'date'=>$this->request['date'], 'slot_id'=>$slot['id'], 'admin_view'=>'true', 'delete_registrant'=>md5($registrant));
+				$link_vars = array('event_id'=>$event->id(), 'date'=>$this->request['date'], 'slot_id'=>$slot->get_value('id'), 'admin_view'=>'true', 'delete_registrant'=>md5($registrant));
 				echo '<span class="action"><a href="'.$this->construct_link($link_vars).'" title = "Delete '.htmlspecialchars($registrant_pieces[1], ENT_QUOTES).'">Delete this registrant</a></span>';
 				echo '</li>'."\n";
 				$thisrow = ($thisrow == 'odd') ? 'even' : 'odd';
@@ -4196,6 +4422,12 @@ class EventsModule extends DefaultMinisiteModule
 		}
 		else echo '<p>There are currently no registrations for this event.</p>';
 		$link = carl_make_link(array('admin_view' => '', 'slot_id' => '',));
+        $csv_link = $this->get_api_url("csv_api");
+        if (!$slot_array['registrants']) {
+            $csv_link = '';
+        }
+        
+        echo '<p><a href="'.$csv_link.'">Export as CSV</a></p>';
 		echo '<p><a href="'.$link.'">Leave administrative view</a></p>';
 		echo '</div>'."\n";
 	}
@@ -4209,8 +4441,8 @@ class EventsModule extends DefaultMinisiteModule
 	 */
 	function get_spaces_available($event, $slot_values, $date = '')
 	{
-		$capacity = $slot_values['registration_slot_capacity'];
-		$registrant_str = $slot_values['registrant_data'];
+		$capacity = $slot_values->get_value('registration_slot_capacity');
+		$registrant_str = $slot_values->get_value('registrant_data');
 		
 		if($event->get_value('recurrence') != 'none')
 		{
@@ -4240,7 +4472,7 @@ class EventsModule extends DefaultMinisiteModule
 		return ($capacity - count($registrants));
 	}
 	/**
-	 * Get information about the registratants for a given date
+	 * Get information about the Registrants for a given date
 	 *
 	 * @param array $all_registrants array of raw registrant data
 	 * @param string $date
@@ -4280,11 +4512,12 @@ class EventsModule extends DefaultMinisiteModule
  	 *
  	 * @param object $event event entity
  	 * @return void
+ 	 * @todo check to see if delete_registrant works now
  	 */
 	function delete_registrant($event)
 	{	
-		$slot = get_entity_by_id($this->request['slot_id']);
-		$registrants = explode(';', $slot['registrant_data']);
+		$slot = new Entity($this->request['slot_id']);
+		$registrants = explode(';', $slot->get_value('registrant_data'));
 		$changed = false;
 		foreach($registrants as $key=>$registrant)
 		{
@@ -4398,5 +4631,83 @@ class EventsModule extends DefaultMinisiteModule
 	public function get_current_site_id()
 	{
 		return $this->site_id;
+	}
+
+	/**
+	 * Description of this method
+	 * @param $event entity
+	 * @return array of form: ['error' => '404' or '403', 'slot' => slot_entity, 'registrants' => array containing registrant information ]
+	 */
+	public function get_slot_registrants($event) {
+
+        $error = NULL;
+        
+        /**
+         * Valid Slot Id Check
+         */
+        if (isset($this->request['slot_id'])) {
+            $slot_id = $this->request['slot_id'];        
+            $slot = new Entity($this->request['slot_id']);
+        }            
+        else {
+            http_response_code(404);
+            echo "<h1>404/Page Not Found</h1>";
+            die();
+        }
+		
+        /**
+		 * Sanity Checking Before Outputing Data
+		 */
+		if ($slot->get_value('type') != id_of('registration_slot_type'))
+			$error = '404';
+		// check to see if slot is of the correct event 
+		if (!$slot->has_right_relation_with_entity($event->id()))
+			$error = '404';
+		// check to see if user is admin for slot 
+		if (!$this->user_is_slot_admin($event))
+			$error = '403';
+		if ($error != NULL)
+			return array('error' => $error );
+		else
+			return array('error' => $error,'slot' => $slot,'registrants' => $registrants = $slot->get_value('registrant_data'));
+	}		
+
+	/**
+	 * Returns an output buffer containing a csv file
+	 * @return output buffer containing csv file 
+	 * @param takes in an array of form [slot (entity), registrants (array)]
+	 */
+	function generate_csv($slot_array,$event)
+	{
+        $registrants = $slot_array['registrants'];           
+		$registrants = explode(';',$registrants);
+        $slot_name = sanitize_filename_for_web_hosting($slot_array['slot']->get_value('name'));   
+        $event_name = sanitize_filename_for_web_hosting(strip_tags($event->get_value('name')));
+        $date = date('Y-m-d');
+        $filename = $event_name.'-'.$slot_name.'-export-'.$date.'.csv';
+        
+        header('Content-Encoding: UTF-8');
+        header("content-type:application/csv;charset=UTF-8");
+        header('Content-Disposition: attachment; filename='.$filename);
+        
+        ob_start();
+		$outputFile = fopen("php://output", 'w');
+        
+        /**
+         * Manually insert the BOM for UTF-8 in each file to ensure compatability with Microsoft Excel
+         */
+        fputs( $outputFile, "\xEF\xBB\xBF" );
+		// heading row : Date of Event| Registrant_Name | Registrant_Email | time_of_reg MDY
+		$heading = 'date_of_event|registrant_name|registrant_email|time_of_registration(MDY)';
+        fputcsv($outputFile,explode('|',$heading));
+		if (count($registrants > 0)) {
+			foreach ($registrants as $registrant) {
+				$registrant = explode('|',$registrant);
+				$registrant[3] = gmdate("m/d/y, G:i:s",$registrant[3]);
+				fputcsv($outputFile,$registrant);
+			}
+           fclose($outputFile);
+        }
+    	return ob_get_clean();
 	}
 }

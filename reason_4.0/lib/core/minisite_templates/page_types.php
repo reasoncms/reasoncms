@@ -2,7 +2,7 @@
 /**
  * The core Reason page types
  *
- * NOTE: This is a very fragile file.  
+ * NOTE: This is a very fragile file.
  * If there is a parse error in this file, all of Reason will go down.
  * So tread lightly, and fully test changes on a development/testing
  * instance before moving them into production.
@@ -87,21 +87,21 @@
 			'main_head' => '',
 			'main_post' => 'atoz',
 			'sidebar' => 'blurb',
-		),	
+		),
 		'image_sidebar_100x100' => array(
 			'sidebar' => array(
 				'module' => 'image_sidebar',
 				'thumbnail_width' => 100,
 				'thumbnail_height' => 100,
 				)
-		),	
+		),
 		'image_sidebar_150x150' => array(
 			'sidebar' => array(
 				'module' => 'image_sidebar',
 				'thumbnail_width' => 150,
 				'thumbnail_height' => 150,
 				)
-		),	
+		),
 		'image_sidebar_200x200' => array(
 			'sidebar' => array(
 				'module' => 'image_sidebar',
@@ -325,6 +325,12 @@
 				'width' => 640,
 			),
 		),
+		'audio_video_simple_860_wide' => array(
+			'main_post' => array(
+				'module' => 'av_simple',
+				'width' => 860,
+			),
+		),
 		'audio_video_simple_sidebar' => array(
 			'sidebar' => array(
 				'module' => 'av_simple',
@@ -367,7 +373,7 @@
 								'use_dates_in_list' => false,
 								'markup_generator_info' =>
 									array('item' => array(
-										'classname' => 'NoDateItemMarkupGenerator', 
+										'classname' => 'NoDateItemMarkupGenerator',
 										'filename' => 'minisite_templates/modules/publication/item_markup_generators/no_date.php',
 										)
 					 				),
@@ -414,7 +420,7 @@
 				'related_mode'=>'true',
 				'markup_generator_info' =>
 					array('list_item' => array(
-									'classname' => 'MinimalListItemMarkupGenerator', 
+									'classname' => 'MinimalListItemMarkupGenerator',
 									'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/minimal.php',
 									)
 					 ),
@@ -453,7 +459,7 @@
         	'main_post' => array('module' => 'publication',
         						 'use_filters' => false,
         						 'show_login_link' => false,
-        						 'markup_generator_info' => 
+        						 'markup_generator_info' =>
         						 array('list_item' => array('classname' => 'FullImageListItemMarkupGenerator',
         						 							'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/full_image.php',
         						 	  					   ),
@@ -468,14 +474,14 @@
 			'main_post'=>'publication',
 			'main_head' => 'publication/title',
 			'main'=>'publication/description',
-		),	
+		),
         'publication_and_events_sidebar' => array(
 			'pre_sidebar' => array(
 				'module' => 'publication',
 				'related_mode' => 'true',
 				'markup_generator_info' =>
 				array('list_item' => array(
-									'classname' => 'MinimalListItemMarkupGenerator', 
+									'classname' => 'MinimalListItemMarkupGenerator',
 									'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/minimal.php',
 									)
 					 ),
@@ -494,7 +500,7 @@
 				'related_mode' => 'true',
 				'markup_generator_info' =>
 				array('list_item' => array(
-									'classname' => 'MinimalListItemMarkupGenerator', 
+									'classname' => 'MinimalListItemMarkupGenerator',
 									'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/minimal.php',
 									)
 					 ),
@@ -510,7 +516,7 @@
 				'related_mode' => 'true',
 				'markup_generator_info' =>
 				array('list_item' => array(
-									'classname' => 'MinimalListItemMarkupGenerator', 
+									'classname' => 'MinimalListItemMarkupGenerator',
 									'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/minimal.php',
 									)
 					 ),
@@ -518,7 +524,7 @@
 			),
 			'main_post' => 'children',
 		),
-        
+
 		'blurb' => array(
 			'main_post' => 'blurb',
 			'sub_nav' => '',
@@ -536,7 +542,7 @@
 				'num_to_display' => 1,
 			),
 			'sub_nav' => 'blurb',
-		),	
+		),
 		'blurb_no_demotion_of_headings' => array(
 			'main_post' => array(
 				'module' => 'blurb',
@@ -791,7 +797,7 @@
 				'related_mode' => 'true',
 				'markup_generator_info' =>
 					array('list_item' => array(
-									'classname' => 'MinimalListItemMarkupGenerator', 
+									'classname' => 'MinimalListItemMarkupGenerator',
 									'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/minimal.php',
 									)
 				),
@@ -806,7 +812,7 @@
 				'related_mode' => 'true',
 				'markup_generator_info' =>
 					array('list_item' => array(
-									'classname' => 'MinimalListItemMarkupGenerator', 
+									'classname' => 'MinimalListItemMarkupGenerator',
 									'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/minimal.php',
 									)
 				),
@@ -912,7 +918,7 @@
 				'list_item_markup' => 'minisite_templates/modules/events_markup/verbose/verbose_events_list_item.php',
 			),
 			'sidebar' => '',
-		),	
+		),
 		'events_schedule' => array(
 			'main_post' => array(
 				'module' => 'events',
@@ -920,7 +926,7 @@
 				'list_item_markup' => 'minisite_templates/modules/events_markup/schedule/schedule_events_list_item.php',
 			),
 			'sidebar' => '',
-		),	
+		),
 		'events_verbose_nonav' => array(
 			'main_post' => array(
 				'module' => 'events',
@@ -930,7 +936,7 @@
 			'sub_nav_2' => '',
 			'sub_nav' => '',
 			'sidebar' => '',
-		),	
+		),
 		'faculty' => array(
 			'main_post' => 'faculty',
 		),
@@ -979,6 +985,19 @@
 				'height'=>300
 			),
 		),
+		'feature_multiple_via_categories' => array(
+			'main_post' => array(
+				'module' => 'feature/feature',
+				'categories' => array('Category 1'),
+				'autoplay_timer' => 3,
+				'initial_offset' => 1,
+			),
+			'post_sidebar' => array(
+				'module' => 'feature/feature',
+				'categories' => array('Category 2'),
+				'autoplay_timer' => 3,
+			),
+		),
 		'feature_av' => array(
 			'main_post' => array(
 				'module' => 'feature/feature',
@@ -987,7 +1006,7 @@
 				'height'=>200,
 				'view'=>'av_view'
 			),
-		),		
+		),
 		'feature_autoplay' => array(
 			'main_post' => array(
 				'module' => 'feature/feature',
@@ -1013,13 +1032,13 @@
 			'pre_sidebar'=> array(
 				'module' => 'events_mini',
 				'ideal_count' => 4,
-			),	
+			),
 			'sidebar' => array(
 				'module' => 'publication',
 				'related_mode' => 'true',
 				'markup_generator_info' =>
 				array('list_item' => array(
-									'classname' => 'MinimalListItemMarkupGenerator', 
+									'classname' => 'MinimalListItemMarkupGenerator',
 									'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/minimal.php',
 									)
 					 ),
@@ -1066,13 +1085,13 @@
 				'autoplay_timer' => 5,
 				'width'=>500,
 				'height'=>300
-			),	
+			),
 			'pre_sidebar' => array(
 				'module' => 'publication',
 				'related_mode' => 'true',
 				'markup_generator_info' =>
 				array('list_item' => array(
-									'classname' => 'MinimalListItemMarkupGenerator', 
+									'classname' => 'MinimalListItemMarkupGenerator',
 									'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/minimal.php',
 									)
 					 ),
@@ -1333,7 +1352,7 @@
 			),
 			'sidebar' => '',
 		),
-		'GoModule' => array( 
+		'GoModule' => array(
 			'sub_nav_2' => '',
 			'banner_xtra' => '',
 			'sidebar' => '',
@@ -1415,7 +1434,7 @@
 				'related_mode' => 'true',
 				'markup_generator_info' =>
 				array('list_item' => array(
-									'classname' => 'MinimalListItemMarkupGenerator', 
+									'classname' => 'MinimalListItemMarkupGenerator',
 									'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/minimal.php',
 									)
 					 ),
@@ -1518,7 +1537,7 @@
 				'related_mode' => 'true',
 				'markup_generator_info' =>
 				array('list_item' => array(
-									'classname' => 'MinimalListItemMarkupGenerator', 
+									'classname' => 'MinimalListItemMarkupGenerator',
 									'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/minimal.php',
 									)
 					 ),
@@ -1531,7 +1550,7 @@
 				'related_mode' => 'true',
 				'markup_generator_info' =>
 				array('list_item' => array(
-									'classname' => 'MinimalListItemMarkupGenerator', 
+									'classname' => 'MinimalListItemMarkupGenerator',
 									'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/minimal.php',
 									)
 					 ),
@@ -1545,7 +1564,7 @@
 				'related_mode' => 'true',
 				'markup_generator_info' =>
 				array('list_item' => array(
-									'classname' => 'MinimalListItemMarkupGenerator', 
+									'classname' => 'MinimalListItemMarkupGenerator',
 									'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/minimal.php',
 									)
 					 ),
@@ -1558,7 +1577,7 @@
 				'related_mode' => 'true',
 				'markup_generator_info' =>
 				array('list_item' => array(
-									'classname' => 'MinimalListItemMarkupGenerator', 
+									'classname' => 'MinimalListItemMarkupGenerator',
 									'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/minimal.php',
 									)
 					 ),
@@ -1572,7 +1591,7 @@
 				'related_mode' => 'true',
 				'markup_generator_info' =>
 				array('list_item' => array(
-									'classname' => 'MinimalListItemMarkupGenerator', 
+									'classname' => 'MinimalListItemMarkupGenerator',
 									'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/minimal.php',
 									)
 					 ),
@@ -1636,7 +1655,7 @@
 					'related_mode' => 'true',
 					'markup_generator_info' => array(
 						'list' => array(
-							'classname' => 'CloakRelatedListMarkupGenerator', 
+							'classname' => 'CloakRelatedListMarkupGenerator',
 							'filename' => 'minisite_templates/modules/publication/publication_list_markup_generators/cloak_related_list.php',
 						),
 						'list_item' => array(
@@ -1644,7 +1663,7 @@
 							'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/cloak_minimal_with_image.php',
 						),
 						'featured_item' => array(
-							'classname' => 'CloakWithImageListItemMarkupGenerator', 
+							'classname' => 'CloakWithImageListItemMarkupGenerator',
 							'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/cloak_with_image.php',
 						),
 					),
@@ -1699,7 +1718,7 @@
 				'related_mode' => 'true',
 				'markup_generator_info' =>
 				array('list_item' => array(
-									'classname' => 'MinimalListItemMarkupGenerator', 
+									'classname' => 'MinimalListItemMarkupGenerator',
 									'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/minimal.php',
 									)
 					 ),
@@ -1965,7 +1984,7 @@
 				'related_mode' => 'true',
 				'markup_generator_info' =>
 				array('list_item' => array(
-									'classname' => 'MinimalListItemMarkupGenerator', 
+									'classname' => 'MinimalListItemMarkupGenerator',
 									'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/minimal.php',
 									)
 					 ),
@@ -2114,14 +2133,17 @@
         'user_settings' => array(
         	'main_post' => 'user_settings/user_settings'
         ),
+		'course_catalog_page' => array(
+			'main' => 'catalog/subject_page'
+		),
 	);
-	
+
 	$GLOBALS['_reason_deprecated_modules'] = array(
 				'form_custom/form_custom',
 				'gallery_single_page',
 				'gallery_entire_site',
 	);
-	
+
 	if (reason_file_exists('minisite_templates/page_types_local.php'))
 	{
 		reason_include_once('minisite_templates/page_types_local.php');
@@ -2134,4 +2156,3 @@
 			$GLOBALS['_reason_deprecated_modules'] = array_merge($GLOBALS['_reason_deprecated_modules'],$GLOBALS['_reason_deprecated_modules_local']);
 		}
 	}
-?>

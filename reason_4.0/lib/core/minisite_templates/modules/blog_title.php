@@ -19,6 +19,9 @@
 		var $cleanup_rules = array(
 			'story_id' => array( 'function' => 'turn_into_int' ),
 		);
+		var $acceptable_params = array(
+			'hide_title_on_posts' => false,
+		);
 		function init( $args = array() )
 		{
 			$es = new entity_selector( $this->parent->site_id );
@@ -35,7 +38,12 @@
 		function has_content()
 		{
 			if( !empty($this->blog) && $this->blog->get_value('name') )
-				return true;
+			{
+				if(empty($this->request['story_id']))
+					return true;
+				else
+					return !$this->params['hide_title_on_posts'];
+			}
 			elseif( !empty( $this->parent->title ) )
 				return true;
 			else
@@ -47,15 +55,7 @@
 			{
 				if(!empty($this->request['story_id']))
 				{
-					if($this->textonly)
-					{
-						$link = '?textonly=1';
-					}
-					else
-					{
-						$link = '?';
-					}
-					$blogname = '<a href="'.$link.'">'.$this->blog->get_value('name').'</a>';
+					$blogname = '<a href="./">'.$this->blog->get_value('name').'</a>';
 				}
 				else
 				{

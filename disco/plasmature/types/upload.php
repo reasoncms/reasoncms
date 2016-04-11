@@ -158,6 +158,13 @@ class uploadType extends defaultType
 	 * @var string
 	 */
 	var $original_path;
+
+	function debug($s) {
+		if ($this->_get_upload_id_field() == "id_270_pending_id") {
+			echo "<PRE>"; var_dump($this); echo "</PRE>";
+			echo $s . "<P>";
+		}
+	}
 	
 	function additional_init_actions($args=array())
 	{
@@ -355,10 +362,16 @@ class uploadType extends defaultType
 			$this->existing_file = null;
 		} else {
 			if ($this->file && !empty($this->file["name"])) {
+				// echo "GRAB FROM UPLOAD<P>";
+				// we just uploaded the file - it's brand new.
 				$this->value = $this->_grab_value_from_upload();
 			} else if ($id = @$vars[$this->_get_upload_id_field()]) {
+				// we uploaded the file earlier in this session but not during this submission - for instance, maybe we missed a required field and had to resubmit
+				// echo "GRAB FROM LIMBO<P>";
 				$this->value = $this->_grab_value_from_limbo($id);
 			} else if (!empty($this->existing_file)) {
+				// echo "GRAB FROM EXISTING<P>";
+				// we uploaded the file at some earlier date and are now submitting with changes. 
 				$this->value = $this->_grab_value_from_existing_file();
 			}
 			$this->state = $this->_state;
@@ -418,7 +431,13 @@ class uploadType extends defaultType
 			$filename = $this->file["name"];
 			$this->tmp_web_path = $this->_generate_temp_name($filename);
 			$value = $this->tmp_full_path =
-				$_SERVER['DOCUMENT_ROOT'].$this->tmp_web_path;
+				// $_SERVER['DOCUMENT_ROOT'].$this->tmp_web_path;
+				REASON_TEMP_UPLOAD_DIR . $this->tmp_web_path;
+			
+			$this->tempFileName = $this->tmp_web_path; // store just the name too...
+			// $this->tmp_web_path = "/reason_package/reason_4.0/www/scripts/upload/getTempFile.php?f=" . $this->tmp_web_path;
+			$this->tmp_web_path = REASON_HTTP_BASE_PATH . "scripts/upload/getTempFile.php?f=" . $this->tmp_web_path;
+			// echo "NEW WAY [" . $this->tmp_web_path . "]<P>";
 			
 			if (!rename($this->file["path"], $value)) {
 				$this->set_error("Your file was received, but could not ".
@@ -459,7 +478,8 @@ class uploadType extends defaultType
 		list(, $extension) = get_filename_parts($filename);
 		if (!empty($extension))
 			$extension = strtolower(".$extension");
-		return WEB_TEMP."{$id}{$suffix}{$extension}";
+		// return WEB_TEMP."{$id}{$suffix}{$extension}";
+		return "{$id}{$suffix}{$extension}";
 	}
 	
 	/**
@@ -478,6 +498,7 @@ class uploadType extends defaultType
 	/** @access private */
 	function _persist_filename($value, $original=null, $display_name=null)
 	{
+		// echo "PERSISTING FILENAME [$value]/[$original]/[$display_name]<P>";
 		$cache_id = uniqid('upload_'.mt_rand().'_', true);
 		$cache = new ObjectCache($cache_id, '360');
 		$store = new stdClass;
@@ -510,13 +531,19 @@ class uploadType extends defaultType
 	{
 		list($value, $original, $display_name) =
 			$this->_restore_filename($upload_id);
+		// echo "pulled value [$value], original [$original], display_name [$display_name] from limbo...<P>";
 		if ($value) {
-			$this->tmp_web_path = $value;
+			// $this->tmp_web_path = $value;
+			// $this->tmp_web_path = "/reason_package/reason_4.0/www/scripts/upload/getTempFile.php?f=" . $value;
+			$this->tmp_web_path = REASON_HTTP_BASE_PATH . "scripts/upload/getTempFile.php?f=" . $value;
 			if ($display_name)
 				$this->file_display_name = $display_name;
 			$this->_state = "pending";
-			$this->tmp_full_path = $_SERVER['DOCUMENT_ROOT'].$value;
+			// $this->tmp_full_path = $_SERVER['DOCUMENT_ROOT'].$value;
+			$this->tmp_full_path = REASON_TEMP_UPLOAD_DIR . $value;
 			$this->original_path = $original;
+
+			// echo "established [" . $this->tmp_web_path . "]/[" . $this->tmp_full_path . "]<P>";
 			
 			$filename = ($display_name)
 			    ? $display_name
@@ -558,6 +585,8 @@ class uploadType extends defaultType
 	 */
 	function _get_current_file_info()
 	{
+		// echo "TMP_FULL_PATH [" . $this->tmp_full_path . "]<BR>";
+		// echo "TMP_WEB_PATH [" . $this->tmp_web_path . "]<BR>";
 		$info = new stdClass;
 		
 		if (!empty($this->tmp_full_path)) {
@@ -617,7 +646,7 @@ class uploadType extends defaultType
 		$current = $this->_get_current_file_info();
 
 		$js ="<script type=\"text/javascript\" src=\"".REASON_PACKAGE_HTTP_BASE_PATH."disco/plas_types/upload.js\"></script>\n";
-		
+
 		return $js .
 			$this->_get_hidden_display($current).
 			$this->_get_restriction_display($current).
@@ -654,7 +683,8 @@ class uploadType extends defaultType
 				: @$this->file["name"];
 			$id = ($this->_state == "pending" && !empty($vars[$id_field]))
 				? $vars[$id_field]
-				: $this->_persist_filename($this->tmp_web_path,
+				// : $this->_persist_filename($this->tmp_web_path,
+				: $this->_persist_filename($this->tempFileName,
 					$this->original_path, $disp_name);
 			$disp .= '<input type="hidden" name="'.$id_field.'" '.
 				'value="'.$id.'" />';
@@ -732,7 +762,7 @@ class uploadType extends defaultType
 		return '<div class="uploaded_file"'.$style.'>'.
 			'<span class="filename">'.htmlspecialchars($filename).'</span> '.
 			'<span class="size"><span class="filesize">'.$size.
-			$deletionUi.
+			// $deletionUi.
 			'</span></span></div>';
 	}
 	
@@ -928,7 +958,10 @@ class image_uploadType extends uploadType
 			list($width, $height) = getimagesize($current->path);
 			$disk_size = format_bytes_as_human_readable($current->size);
 			$dimensions = "$width&times;$height";
-			$uri = htmlspecialchars($current->uri).'?_nocache='.time();
+			// $uri = htmlspecialchars($current->uri).'&_nocache='.time();
+			$uri = htmlspecialchars($current->uri);
+			$uri .= (strpos($uri, "?") === false ? "?" : "&") . "_nocache=" . time(); // cachebust
+
 			$img_style = ' style="width: '.$width.'px; '.
 				'height: '.$height.'px;"';
 			$div_style = '';
@@ -940,7 +973,7 @@ class image_uploadType extends uploadType
 			'(<span class="filesize">'.$disk_size.'</span>)';
 		
 		return '<div class="uploaded_file uploaded_image"'.$div_style.'>'.
-			'<span class="smallText">Uploaded image:</span><br />'.
+			// '<span class="smallText">Uploaded image:</span><br />'.
 			'<img src="'.$uri.'"'.$img_style.' class="representation" />'.
 			'<br /><span class="size">'.$image_size.'</span></div>';
 	}

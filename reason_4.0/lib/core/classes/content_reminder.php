@@ -39,7 +39,7 @@ include_once( 'reason_header.php' );
  *		- using a simple listing...
  *		- drawing attention to pages older than 6 months.
  *
- * For including or excluding user rolls and site types, the script
+ * For including or excluding user roles and site types, the script
  * will filter results by using both sets if given valid unique name(s).
  * If the same valid unique name is given in both include and exclude,
  * it will be initially included and finally excluded.

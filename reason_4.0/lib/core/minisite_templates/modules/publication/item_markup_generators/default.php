@@ -425,7 +425,7 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 		$ret .= '<ul>';
 		foreach($this->passed_vars['item_categories'] as $category)
 		{
-			$ret .= '<li><a href="'.$category->get_value('category_url').'">'.$category->get_value('name').'</a></li>';
+			$ret .= '<li><a href="'.htmlspecialchars($category->get_value('category_url')).'">'.$category->get_value('name').'</a></li>';
 		}
 		$ret .= '</ul>';
 		return $ret;

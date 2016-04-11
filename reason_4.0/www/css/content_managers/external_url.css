@@ -1,0 +1,42 @@
+#previewElement{
+    background-color: #F3F3F3;
+    width: 75%;
+    padding: 10px;
+}
+
+#previewElement .rssPreviewItem{
+    margin-top: 15px;
+    border-bottom: 1px solid black;
+}
+
+#previewElement .rssPreviewItem.top{
+    margin-top: 0px;
+}
+
+#previewElement .rssPreviewItem h3{
+    margin-top: 0px;
+}
+
+#previewElement .rssPreviewItem .rssPreviewAuthor{
+    font-style: italic;
+}
+
+#previewElement .rssPreviewItem .rssKeyName{
+    display: inline-block;
+    width: 27%;
+    overflow-wrap: break-word;
+    margin:0px;
+    vertical-align: top;
+    padding-top: 3px;
+}
+
+#previewElement .rssPreviewItem .rssKeyValue{
+    display: inline-block;
+    width: 72%;
+    overflow-wrap: break-word;
+    margin:0px;
+}
+
+#previewElement .rssPreviewItem .rssKeySec{
+    margin-bottom: 20px;
+}

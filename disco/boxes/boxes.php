@@ -111,6 +111,8 @@
 			 	$markup .= 'id="'.$id.'Row"';
 			$markup .= '>'."\n";
 			$markup .= '<td align="right" class="words">';
+			// drop in a named anchor for error jumping
+			$markup .= '<a name="'.$key.'_error"></a>'."\n";
 			if($use_label)
 			{
 				if(!empty($stripped_label)) 

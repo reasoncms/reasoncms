@@ -67,6 +67,9 @@ class AdminPage
 	var $rel_id;
 	var $viewer_id;
 	var $cur_module;
+	var $sharable_relationships;
+	var $associations;
+	var $reverse_associations;
 
 	// current AdminModule
 	var $module;
@@ -125,6 +128,7 @@ class AdminPage
 			'site_tools' => true,
 			'themes' => ALLOW_REASON_SITES_TO_SWITCH_THEMES,
 			'analytics' => USE_GOOGLE_ANALYTICS,
+			'export' => true,
 		);
 	} // }}}
 
@@ -200,6 +204,14 @@ class AdminPage
 		}
 		
 		$this->select_user();
+		
+		// Add useful naming for New Relic performance tracking
+		if (extension_loaded('newrelic')) {
+			$name = 'Reason Admin';
+			if (!empty($this->request['cur_module'])) $name .= ':'.$this->request['cur_module'];
+			newrelic_name_transaction($name);
+		}
+		
 	} // }}}
 
 	function set_show( $section, $val ) // {{{
@@ -363,6 +375,7 @@ class AdminPage
 	//gets all the allowable relationships for the current entity.  It sets them up in $this->associations.  However,
 	//$this->associations is not reliable if you're in the second level.  This might be worth fixing at some point.
 	{
+		if (!empty($this->associations[$var])) return $this->associations[$var];
 		// get allowable relationships
 		$q = new DBSelector();
 		$q->add_table( 'ar', 'allowable_relationship' );
@@ -371,6 +384,7 @@ class AdminPage
 		$q->add_table( 'r', 'relationship' );
 		$q->add_field( 'ar', '*' );
 		$q->add_field( 'e', 'name', 'entity_name' );
+		$q->add_field( 'e', 'unique_name', 'entity_unique_name' );
 		if( $var == 'default' )
 			$q->add_relation( 'ar.relationship_a = '.$this->type_id );
 		else
@@ -401,7 +415,7 @@ class AdminPage
 		$x = array();
 		while( $row = mysql_fetch_array( $r , MYSQL_ASSOC ) )
 			$x[] = $row;
-		$this->associations = $x;
+		$this->associations[$var] = $x;
 		return $x;
 	} // }}}
 	/**
@@ -412,6 +426,7 @@ class AdminPage
 	//gets all the allowable relationships for the current entity.  It sets them up in $this->associations.  However,
 	//$this->associations is not reliable if you're in the second level.  This might be worth fixing at some point.
 	{
+		if (!empty($this->reverse_associations[$var])) return $this->reverse_associations[$var];
 
 		// get allowable relationships
 		$q = new DBSelector();
@@ -422,6 +437,7 @@ class AdminPage
 
 		$q->add_field( 'ar', '*' );
 		$q->add_field( 'e', 'name', 'entity_name' );
+		$q->add_field( 'e', 'unique_name', 'entity_unique_name' );
 		if( $var == 'default' )
 			$q->add_relation( 'ar.relationship_b = '.$this->type_id );
 		else
@@ -453,7 +469,7 @@ class AdminPage
 		$x = array();
 		while( $row = mysql_fetch_array( $r , MYSQL_ASSOC ) )
 			$x[] = $row;
-		$this->reverse_associations = $x;
+		$this->reverse_associations[$var] = $x;
 		return $x;
 	} // }}}
 	function show_owns_links() // {{{
@@ -586,7 +602,7 @@ class AdminPage
 				$ass_name = !empty( $rel[ 'display_name' ] ) ? $rel[ 'display_name' ] : $rel[ 'entity_name' ];
 				$index = $rel[ 'id' ];
 				$links[ $index ] = array( 'title' => $ass_name , 
-										  'icon' => '<img src="' .reason_get_type_icon_url($rel['relationship_b']). '" alt="" />',
+										  'icon' => '<img src="' .reason_get_type_icon_url($rel['entity_unique_name']). '" alt="" />',
 										  'link' => $this->make_link( array( 
 											'site_id' => $this->site_id, 
 											'type_id' => $this->type_id,
@@ -608,7 +624,7 @@ class AdminPage
 				$index = $rel[ 'id' ];
 				
 				$links[ $index ] = array( 'title' => $ass_name , 
-										  'icon' => '<img src="' .reason_get_type_icon_url($rel['relationship_a']). '" alt="" />',
+										  'icon' => '<img src="' .reason_get_type_icon_url($rel['entity_unique_name']). '" alt="" />',
 										  'link' => $this->make_link( array( 
 											'site_id' => $this->site_id, 
 											'type_id' => $this->type_id,
@@ -920,7 +936,7 @@ class AdminPage
 			).'" class="nav">'.$site->get_value('name').'</a></li>' . "\n";
 	}
 	function sitebar() // {{{
-	//if and entity is not selected, it shows a list of all the users sites in an option menu, otherwise just prints out
+	//if an entity is not selected, it shows a list of all the users sites in an option menu, otherwise just prints out
 	//the name of the current site.  This is seen in the bar at the top of the page
 	{
 		echo '<div class="sites">'; 
@@ -944,14 +960,16 @@ class AdminPage
 				if (!empty($user_id)) echo '<input type="hidden" name="user_id" value="'.$user_id.'" />';
 			}
 			echo '<input type="submit" class="jumpNavigationGo" value="go" />';
-			$cur_site = $sites[ $this->site_id ];
-			$cur_site_base_url = $cur_site->get_value( 'base_url' );
-			$cur_site_unique_name = $cur_site->get_value( 'unique_name' );
-			$user = new entity($this->user_id);
-			$target = ($user->get_value('site_window_pref') == 'Popup Window') ? 'target="_blank" ' : '';
-			if(!empty($cur_site_base_url) && ($cur_site_unique_name != 'master_admin') ) 
+			if (isset($sites[ $this->site_id ]) && $cur_site = $sites[ $this->site_id ])
 			{
-				echo '<a href="http://'.REASON_HOST.$cur_site_base_url.'" '.$target.'class="publicSiteLink">Go to public site</a>';
+				$cur_site_base_url = $cur_site->get_value( 'base_url' );
+				$cur_site_unique_name = $cur_site->get_value( 'unique_name' );
+				$user = new entity($this->user_id);
+				$target = ($user->get_value('site_window_pref') == 'Popup Window') ? 'target="_blank" ' : '';
+				if(!empty($cur_site_base_url) && ($cur_site_unique_name != 'master_admin') ) 
+				{
+					echo '<a href="http://'.REASON_HOST.$cur_site_base_url.'" '.$target.'class="publicSiteLink">Go to public site</a>';
+				}
 			}
 			echo '</form>';
 		}
@@ -1190,6 +1208,10 @@ class AdminPage
 				echo '<a href="'.$this->make_link(array('type_id'=>'','cur_module'=>'Newsletter')).'" class="nav"><img src="'.REASON_HTTP_BASE_PATH.'silk_icons/email.png" alt="Email" /> Newsletter Builder</a>';
 				echo '</li>'."\n";
 			}
+			if( $this->show[ 'export' ]  )
+			{
+				echo '<li><a href="'.$this->make_link(array('cur_module'=>'Export')).'" class="nav"><img src="'.REASON_HTTP_BASE_PATH.'silk_icons/table_save.png" alt="" /> Export</a></li>'."\n";
+			}
 			echo '</ul></div>'."\n";
 		//}
 	} // }}}
@@ -1289,6 +1311,7 @@ class AdminPage
 	//returns an array of all sharable relationships.   This is based on two conditions. 1) The current site has access
 	//to that type, 2) Some site that is not the current site shares this same type.  
 	{
+		if (!empty($this->sharable_relationships)) return $this->sharable_relationships;
 		$es = new entity_selector;
 		$es->add_type( id_of( 'type' ) );
 
@@ -1320,7 +1343,8 @@ class AdminPage
 			$es->add_relation( 'site_table.site_state = "Live"' );
 		}
 
-		return $es->run_one();
+		$this->sharable_relationships = $es->run_one();
+		return $this->sharable_relationships;
 	} // }}}
 	function admin_tools() // {{{
 	// shows yet more links in the non-id sidebar.
@@ -1486,7 +1510,10 @@ class AdminPage
 		$this->head_items->add_javascript(JQUERY_URL, true);
 		$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'jump_navigation.js');
 		$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'disable_submit.js?id=disco_form&reset_time=60000');
-		$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'admin_spin_icon.js');
+		if($spinner_js = file_get_contents(WEB_PATH.WEB_JAVASCRIPT_PATH.'admin_spin_icon.js'))
+		{
+			$this->head_items->add_head_item('script', array(), str_replace('[[REASON_HTTP_BASE_PATH]]',REASON_HTTP_BASE_PATH,$spinner_js));
+		}
 		// add the charset information - this should maybe just be in the head function code since we really want it on top
 		$this->head_items->add_head_item('meta',array('http-equiv'=>'Content-Type','content'=>'text/html; charset=UTF-8' ), '', true );
 	}
@@ -1724,9 +1751,9 @@ class AdminPage
 		if( !empty( $id ) )
 			$es->add_relation( 'entity.id > '.$id );
 		if( !empty( $start_datetime ) )
-			$es->add_relation( 'last_modified >= "'.$start_datetime.'"' );
+			$es->add_relation( 'entity.last_modified >= "'.$start_datetime.'"' );
 		$es->set_num( 1 );							// just get one result
-		$es->set_order( 'last_modified ASC, entity.id ASC' );		// order by last modified to get oldest
+		$es->set_order( 'entity.last_modified ASC, entity.id ASC' );		// order by last modified to get oldest
 		$tmp = $es->run_one(false,'Pending', 'Unable to get oldest pending entity for this type' );
 		list( ,$e ) = each( $tmp );
 		return $e;

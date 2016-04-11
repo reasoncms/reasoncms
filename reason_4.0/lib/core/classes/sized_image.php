@@ -26,8 +26,32 @@ reason_include_once('function_libraries/image_tools.php');
  * $rsi = new reasonSizedImage();
  * $rsi->set_id(23423);
  * $rsi->set_width(400);
- * $rsi->set_crop_style('fill');
+ * $rsi->set_crop_style('fill'); // or fit, crop_x, or crop_y
  * $image_url = $rsi->get_url();
+ *
+ * Understanding the crop styles:
+ *
+ * The image will have an aspect ratio (the ratio between its width and height). When both a width
+ * and a height are provided, then that will describe a box which may have a different aspect ratio.
+ * Crop styles provide different ways of handling this situation.
+ *
+ * fill: the resulting image will fill the box. The class will crop horizontally (if image
+ * has a wider aspect ratio) or vertically (if the image has a taller aspect ratio) to ensure this.
+ *
+ * fit: The resulting image will fit entirely inside the box, and the class will not crop the image 
+ * at all. If the image has a wider aspect ratio than the box, it will be proportionally sized so 
+ * the width equals the box width. If the image has a taller aspect ratio than the box, it will be 
+ * proportionally sized so the height equals the box height.
+ *
+ * crop_x: The vertical dimension will be proportionally sized to the height of the box. If the
+ * aspect ratio of the image is greater (wider) than that of the box, the image will be cropped 
+ * horizontally. If the aspect ratio of the image is less than that of the box, the image will not
+ * be cropped and will simply be resized.
+ *
+ * crop_y: The horizontal dimension will be proportionally sized to the width of the box. If the
+ * aspect ratio of the image is less (narrower) than that of the box, the image will be cropped 
+ * vertically. If the aspect ratio of the image is greater than that of the box, the image will not
+ * be cropped and will simply be resized.
  *
  * @todo what should we do if we want to resize to a larger size than the original
  * @todo Add a quality setting so code can choose between "fast" and "good" --
@@ -64,7 +88,7 @@ class reasonSizedImage
 	/**
 	 * @var string
 	 */
-	var $crop_style = "fill"; // fill or fit
+	var $crop_style = "fill"; // fill, fit, crop_x, or crop_y
 	
 	/**
 	* @var boolean
@@ -74,7 +98,7 @@ class reasonSizedImage
 	/**
 	 * $var array supported crop styles
 	 */
-	var $available_crop_styles = array('fill', 'fit');
+	var $available_crop_styles = array('fill', 'fit','crop_x','crop_y');
 	
 	
 	/**
@@ -221,7 +245,7 @@ class reasonSizedImage
 				$image_type = $entity->get_value('original_image_type');
 			else
 				$image_type = $entity->get_value('image_type');
-			$this->_url = $this->get_image_dir_web_path() . $entity->id() . '/' . $filename . '.' . $image_type;
+			$this->_url = $this->get_image_dir_web_path() . $this->_get_entity_dir($entity->id()) . $filename . '.' . $image_type;
 			if($this->use_absolute_urls)
 				$this->_url = '//' . HTTP_HOST_NAME . $this->_url;
 		}
@@ -241,7 +265,7 @@ class reasonSizedImage
 				$image_type = $entity->get_value('original_image_type');
 			else
 				$image_type = $entity->get_value('image_type');
-			$this->_path = $this->get_image_dir() . $entity->id() . '/' . $filename . '.' . $image_type;
+			$this->_path = $this->get_image_dir() . $this->_get_entity_dir($entity->id()) . $filename . '.' . $image_type;
 		}
 		return $this->_path;
 	}
@@ -338,7 +362,7 @@ class reasonSizedImage
 		$entity = $this->get_entity();
 		if ($entity)
 		{
-			if ($this->_make_sure_entity_directory_exists($entity->id()) && is_writable($this->get_image_dir() . $entity->id() . '/'))
+			if ($this->_make_sure_entity_directory_exists($entity->id()) && is_writable($this->get_image_dir() . $this->_get_entity_dir($entity->id())))
 			{
 				if( $this->_orig_exists())
 					$path = reason_get_image_path($entity, 'original'); // we want to copy our original image to our destination and resize in place
@@ -365,14 +389,35 @@ class reasonSizedImage
 					{
 						$sharpen=false;
 					}
+					$crop_style = $this->get_crop_style();
 					
-					if($this->get_crop_style()=="fit")
+					if("crop_y" == $crop_style || "crop_x" == $crop_style)
 					{
-						$success=resize_image($newpath, $width, $height, $sharpen);
+						$image_ratio = $width_src / $height_src;
+						$box_ratio = $width / $height;
+						
+						if("crop_y" == $crop_style)
+						{
+							if($image_ratio < $box_ratio)
+								$crop_style = "fill";
+							else
+								$crop_style = "fit";
+						}
+						else // crop_x
+						{
+							if($image_ratio > $box_ratio)
+								$crop_style = "fill";
+							else
+								$crop_style = "fit";
+						}
 					}
-					elseif($this->get_crop_style()=="fill")
+					if("fit" == $crop_style)
 					{
-				      	$success=crop_image($width, $height, $path, $newpath, $sharpen);
+						$success = resize_image($newpath, $width, $height, $sharpen);
+					}
+					elseif("fill" == $crop_style)
+					{
+						$success = crop_image($width, $height, $path, $newpath, $sharpen);
 					}
 					
 					if($this->do_blit)
@@ -391,7 +436,7 @@ class reasonSizedImage
 			}
 			else
 			{
-				trigger_error('reasonSizedImage class cannot write images to ' . $this->get_image_dir() . $entity->id());
+				trigger_error('reasonSizedImage class cannot write images to ' . $this->get_image_dir() . $this->_get_entity_dir($entity->id()));
 			}
 		}
 		return false;
@@ -402,14 +447,25 @@ class reasonSizedImage
 		$image_dir = $this->get_image_dir();
 		if (is_dir($image_dir))
 		{
-			$entity_dir = $image_dir . $id . '/';
+			$entity_dir = $this->get_image_dir() . $this->_get_entity_dir($id);
 			if (!is_dir($entity_dir))
 			{
-				mkdir($entity_dir);
-				clearstatcache();
 				$perms = substr(sprintf('%o', fileperms($this->get_image_dir())), -4);
-				$newperms = substr(sprintf('%o', fileperms($entity_dir)), -4);
-    			if ($perms != $newperms) @chmod($entity_dir, octdec($perms));
+				if (mkdir($entity_dir, octdec($perms), true))
+				{
+					clearstatcache();
+					$newperms = substr(sprintf('%o', fileperms($entity_dir)), -4);
+					if ($perms != $newperms) 
+					{
+						@chmod($entity_dir, octdec($perms));
+						@chmod(dirname($entity_dir), octdec($perms));
+					}
+				}
+				else
+				{
+					trigger_error('Unable to create sized image directory '.$entity_dir);
+					return false; 
+				}
 			}
 			return true;
 		}
@@ -420,6 +476,14 @@ class reasonSizedImage
 		return false;
 	}
 	
+	/** Images are stored in a tree structure to prevent too many directories at one level.
+	  * The last three digits of the image id determine its parent directory, so e.g. the
+	  * image id 12345 finds its sized images in /set345/12345/
+	  */
+	function _get_entity_dir($id)
+	{
+		return sprintf('set%03s/%s/', substr($id, -3), $id);
+	}
 	
 	/** Getters **/
 	function get_id() { return $this->id; }

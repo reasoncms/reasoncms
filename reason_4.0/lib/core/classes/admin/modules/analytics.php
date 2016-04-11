@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Google Analytics Admin Module
  * @package reason
@@ -106,7 +107,14 @@ class AnalyticsModule extends DefaultModule
 		$this->client = new Google_Client();
 		// Your 'Product name'
 		$this->client->setApplicationName(GOOGLE_API_APP_NAME);
-		 
+		
+		if(!file_exists(GOOGLE_API_PRIVATE_KEY_FILE))
+			trigger_error('Unable to find a p12 file at GOOGLE_API_PRIVATE_KEY_FILE');
+		elseif(!is_readable(GOOGLE_API_PRIVATE_KEY_FILE))
+			trigger_error('Unable to read the p12 file at '.GOOGLE_API_PRIVATE_KEY_FILE);
+		//else
+			//echo(file_get_contents(GOOGLE_API_PRIVATE_KEY_FILE));
+		
 		$this->client->setAssertionCredentials(
 			new Google_AssertionCredentials(
 				GOOGLE_API_SERVICE_EMAIL, // email you added to GA
@@ -303,6 +311,7 @@ class AnalyticsModule extends DefaultModule
 		$disco->add_element('content_id', 'hidden', array('userland_changeable'=>true)); // placeholder for an entity's id
 		$disco->add_element('content_type', 'radio_inline_no_sort', array('options'=>$site_types));
 		$disco->add_element('url', 'chosen_select', array('options'=>$this->site_urls, 'display_name'=>'URL(s)'));
+
 		$disco->add_element('propagate', 'checkboxfirst', array('display_name'=>'Include this page\'s sub-pages (children and grandchildren)'));
 		if ($site_events)
 		{
@@ -320,7 +329,13 @@ class AnalyticsModule extends DefaultModule
 		{
 			$disco->add_element('policies','chosen_select',array('options'=>$site_policies));
 		}
-		$disco->add_element('location', 'radio_inline_no_sort', array('options' => array('anywhere'=>'Anywhere', 'off_campus'=>'Off-Campus', 'on_campus'=>'On-Campus'), 'default' => 'anywhere'));
+		if (GA_SERVICE_PROVIDER_NAME != '')
+		{
+			$disco->add_element('location', 'radio_inline_no_sort', array('options' => array('anywhere'=>'Anywhere', 'off_campus'=>'Off-Campus', 'on_campus'=>'On-Campus'), 'default' => 'anywhere'));
+		} else { 
+			$disco->add_element('location', 'hidden');
+			$disco->set_value('location', 'anywhere');
+		}
 		$disco->add_element('start_date', 'textdate');
 		$disco->add_element('end_date', 'textdate');
 		$disco->add_element('site_id', 'hidden');
@@ -341,9 +356,21 @@ class AnalyticsModule extends DefaultModule
 
 		echo '<div id="analytics-module" class="noscript">' . "\n";
 		echo '<script>$("div").removeClass("noscript");</script>' ."\n";
-
+		
+	
+		if($disco->get_value('url') == (NULL OR '')) { $disco->set_value('url',$this->site->get_value('base_url')); }
 		$disco->run();
 		
+		// $disco->set_value('url',$this->site->get_value('base_url'));
+		// echo '<h2> The Url Is: '.$this->site->get_value('base_url').'</h2>'
+
+		// echo '<h2> The Url Is: '.$disco->get_value('url').'</h2>';
+
+		// if ($disco->get_value('url') == (NULL OR '')) {	
+		// 	$disco->set_error( 'url', 'select url', $element_must_exist = true); 
+		// 	echo '<h2>'.var_dump($disco->has_errors()).'</h2>';
+		// }		
+
 		if (!$disco->has_errors())
 		{
 			// Query Google Analytics and display results if any
@@ -358,7 +385,7 @@ class AnalyticsModule extends DefaultModule
 					echo '<div class="results-title"><h3>' . $location_text . 'Results for '. date("M d, Y", strtotime($disco->get_value('start_date'))) . ' - ' . date("M d, Y", strtotime($disco->get_value('end_date'))) . '</h3></div>'."\n";
 					
 					$prop = $disco->get_value('propagate');
-					$display_url = '<a href="http://'.GA_HOST_NAME.$disco->get_value_for_display("url").'"target="_blank">'.$disco->get_value_for_display('url').'</a>';
+					$display_url = '<a href="http://'.HTTP_HOST_NAME.$disco->get_value_for_display("url").'"target="_blank">'.$disco->get_value_for_display('url').'</a>';
 					if ($disco->get_value('content_type') == id_of('minisite_page') && empty($this->admin_page->request['id']))
 					{
 						$page_path_text = $prop == true ? '<em>'.$display_url.'</em> and all sub-pages' : '<em>'.$display_url.'</em>';
@@ -533,14 +560,17 @@ class AnalyticsModule extends DefaultModule
 			}
 		}
 
+		$this->create_footer();
+
+	}
+
+
+	function create_footer() {
 		echo '<div class="analytics-footer">' . "\n";
-		echo '<p>Please contact '.REASON_CONTACT_INFO_FOR_ANALYTICS.' for more detailed analytics.';
-		echo '&nbsp;&nbsp;&nbsp;'
-				. '<a href="' 
-				. $this->admin_page->make_link( array(
-				'site_id'=>$this->site->id(),
-				'cur_module'=>'AnalyticsAbout' ) ) 
-				. '">About Analytics <img src="'.REASON_HTTP_BASE_PATH.'silk_icons/information.png" alt="" /></a></p>';
+		echo '<p>Please contact '.REASON_CONTACT_INFO_FOR_ANALYTICS.' for more detailed analytics.</p>';
+		
+		$aboutLink = $this->admin_page->make_link( array( 'site_id'=>$this->site->id(),'cur_module'=>'AnalyticsAbout' ) );
+		echo '<p><a href="' . $aboutLink . '">About Analytics <img src="'.REASON_HTTP_BASE_PATH.'silk_icons/information.png" alt="" /></a></p>';
 
 		echo '</div>' . "\n"; //analytics-footer
 		echo '</div>' . "\n"; //analytics-module
@@ -639,6 +669,10 @@ class AnalyticsModule extends DefaultModule
 			{
 				$url = $this->site_urls[$id];
 			}
+			if ($url == (NULL OR '')) { 
+				$url = $this->site->get_value('base_url');  
+				$disco->set_value('url', array_search($url, $this->site_urls));
+			}
 			$default = isset($this->default_page) ? $this->default_page : '';
 			if ($propagate && $id)
 			{
@@ -655,6 +689,7 @@ class AnalyticsModule extends DefaultModule
 		{
 			$filter['path'] = 'ga:pagePath=~'.$id;
 		}
+
 		return implode(';',array_filter($filter));
 	}
 
@@ -675,7 +710,7 @@ class AnalyticsModule extends DefaultModule
 				);
 		} 
 		catch(Exception $de) {
-			$de->getMessage();
+			echo htmlspecialchars($de->getMessage());
 		}
 		if (isset($de)){
 			if (is_developer())

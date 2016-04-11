@@ -245,19 +245,25 @@ class ds_default {
 	{
 		$filter = '';
 		foreach ($tree as $key => $val)
-                {
-                        if (is_array(current($val)))
-                        // if this is not a leaf node
-                        {
-                                // if it has a unary operator, add parens
-                                if (!is_numeric($key)) $filter .= '('.$key;
-                                $filter .= $this->build_filter_from_tree($val);
-                                if (!is_numeric($key)) $filter .=  ')';
-                        } else {
-                        // if this is a leaf node
-                                $filter .= "($val[0]$key$val[1])";
-                        }
-                }
+		{
+			if (is_array(current($val)))
+			// if this is not a leaf node
+			{
+				// if it has a unary operator, add parens
+				if (!is_numeric($key)) $filter .= '('.$key;
+				$filter .= $this->build_filter_from_tree($val);
+				if (!is_numeric($key)) $filter .=  ')';
+			}
+			else if (isset($val[0]))
+			{
+				// if this is a leaf node
+				$filter .= "($val[0]$key$val[1])";
+			}
+			else
+			{
+				trigger_error('Invalid node format for '.$key.'=>'.json_encode($val).' in build_filter_from_tree()');
+			}
+		}
 		return $filter;
 	}
 
