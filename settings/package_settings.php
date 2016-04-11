@@ -130,6 +130,9 @@ define('LOKI_2_HTTP_PATH','/loki_2.0/');
 // Define the path to tinymce files
 define('TINYMCE_HTTP_PATH','/reason_package/tiny_mce/');
 
+// Define the path to ckeditor files
+define('CKEDITOR_HTTP_PATH','/reason_package/ckeditor/');
+
 // Define the path to Date Picker files
 define('DATE_PICKER_INC', INCLUDE_PATH.'date_picker/');
 define('DATE_PICKER_HTTP_PATH', '/date_picker/');
