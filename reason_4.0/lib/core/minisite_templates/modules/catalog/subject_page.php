@@ -49,15 +49,7 @@ class CatalogSubjectPageModule extends DefaultMinisiteModule
 			// codes are clicked on.
 			if (isset($this->request['get_course']))
 			{
-				list(,$course_id,$this->year) = explode('_', $this->request['get_course']);
-				$course = new $GLOBALS['course_template_class']($course_id);
-				$course->set_academic_year_limit($this->year);
-				$description_title = '<span class="courseTitle">'.$course->get_value('title').'</span> ';
-				echo json_encode(array(
-					'title'=>$course->get_value('org_id').' '.$course->get_value('course_number'),
-					'description'=>$description_title . $this->helper->get_course_extended_description($course)
-					));
-				exit;
+				$this->handle_ajax_course_request();
 			}
 		}
 
@@ -95,7 +87,7 @@ class CatalogSubjectPageModule extends DefaultMinisiteModule
 	
 	public function run()
 	{
-		echo '<div id="subjectPageModule" class="'.$this->get_api_class_string().'">'."\n";
+		echo '<div id="subjectPageModule" class="'.$this->get_api_class_string().'" year="'.$this->year.'">'."\n";
 
 		$inline_editing =& get_reason_inline_editing($this->page_id);
 		$editing_available = $inline_editing->available_for_module($this);
@@ -351,4 +343,50 @@ class CatalogSubjectPageModule extends DefaultMinisiteModule
 		return 0;
 	}
 
+	/**
+	 * This method handles ajax requests for course information. The course identifier comes in
+	 * through the get_course parameter, and can have two formats:
+	 * 
+	 * course_NNNNNN_NNNN
+	 *   where the first number is a course object id and the second is the catalog year
+	 * 
+	 * SUBJ_NNN_NNN
+	 *   where SUBJ is an org_id, the first number is a course_number, and the second is the year.
+	 * 
+	 * The method outputs information about the requested course in JSON array(title, description) 
+	 * and exits.
+	 */
+	protected function handle_ajax_course_request()
+	{
+		list($label,$number,$this->year) = explode('_', $this->request['get_course']);
+		if ($label == 'course')
+		{
+			$course_id = $number;
+		}
+		else if ($courses = $this->helper->get_courses_by_subject_and_number($label, $number, $this->site_id))
+		{
+			// @todo Handle mutiple matches
+			$course = reset($courses);
+			$course_id = $course->id();
+		}
+		
+		if (!empty($course_id) && $course = new $GLOBALS['course_template_class']($course_id))
+		{
+			$course->set_academic_year_limit($this->year);
+			$description_title = '<span class="courseTitle">'.$course->get_value('title').'</span> ';
+			echo json_encode(array(
+				'title'=>$course->get_value('org_id').' '.$course->get_value('course_number'),
+				'description'=>$description_title . $this->helper->get_course_extended_description($course)
+				));
+		}
+		else
+		{
+			echo json_encode(array(
+				'title'=>'Course not found',
+				'description'=>''
+				));					
+		}
+		exit;		
+	}
+	
 }
