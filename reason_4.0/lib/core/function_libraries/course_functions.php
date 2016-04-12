@@ -693,6 +693,38 @@ class CatalogHelper
 		return $courses;
 	}
 
+	/**
+	  * Find courses with a particular subject and number 
+	  *
+	  * @param string $code subject code
+	  * @param string $number course number
+	  * @param string $catalog_site Optional unique name of a catalog site. If you pass this,
+	  *				only courses associated with that site will be included.
+	  */
+	public function get_courses_by_subject_and_number($code, $number, $catalog_site = null)
+	{
+		$courses = array();
+		if ($catalog_site && (is_int($catalog_site) || $catalog_site = id_of($catalog_site)))
+			$es = new entity_selector($catalog_site);
+		else
+			$es = new entity_selector();
+		$es->description = 'Selecting courses by subject and number';
+		$factory = new CourseTemplateEntityFactory();
+		$es->set_entity_factory($factory);
+		$es->add_type( id_of('course_template_type') );
+		$es->add_relation('org_id = "'.mysql_real_escape_string($code).'"');
+		$es->add_relation('course_number = "'.mysql_real_escape_string($number).'"');
+		$es->set_order('title');
+		$results = $es->run_one();
+		foreach ($results as $id => $entity)
+		{
+			if (isset($courses[$id])) continue;
+			$entity->include_source = 'subject and number';
+			$courses[$id] = $entity;
+		}
+		return $courses;
+	}
+	
 	public function get_courses_by_org_id($codes, $catalog_site = null)
 	{
 		return $this->get_courses_by_subjects($codes, $catalog_site);
