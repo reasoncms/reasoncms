@@ -39,6 +39,7 @@ class ThorFormModel extends DefaultFormModel
 	var $_summary_obj;
 	var $_is_usable;
 	var $_is_editable;
+	var $_is_deletable; // this refers to individual ROWS of the form as being deletable by an end user. It implies nothing re: the whole contents (or defined structure) of the form.
 	var $_view;
 	var $_admin_view;
 
@@ -101,6 +102,14 @@ class ThorFormModel extends DefaultFormModel
 		$form_id = $this->get_requested_form_id();
 		$form_id = (strlen($form_id) > 0) ? $form_id : NULL;
 		$this->set_form_id_if_valid($form_id);
+	}
+
+	function is_deletable() {
+		return $this->_is_deletable;
+	}
+
+	function set_deletable($is_deletable) {
+		$this->_is_deletable = $is_deletable;
 	}
 
 	function _is_editable()
@@ -436,6 +445,17 @@ class ThorFormModel extends DefaultFormModel
 				$edit_link = carl_construct_link(array('form_id' => $v['id']), array('textonly', 'netid'));
 				$thor_values[$k] = array_merge(array('Action' => '<a href="'.$edit_link.'">Edit</a>'), $thor_values[$k]);
 			}
+
+			if ($this->is_deletable()) {
+				$delete_link = carl_construct_link(array('table_row_action' => 'delete', 'table_action_id' => $v['id']), array('textonly', 'netid'));
+
+				if (isset($thor_values[$k]['Action'])) {
+					$thor_values[$k]['Action'] .= '<br><a href="' . $delete_link . '">Delete</a>';
+				} else {
+					$thor_values[$k] = array_merge(Array('Action' => '<a href="'.$delete_link.'">Delete</a>'), $thor_values[$k]);
+				}
+			}
+
 			
 			if (isset($v['submitted_by'])) unset ($thor_values[$k]['submitted_by']);
 			if (isset($v['submitter_ip'])) unset ($thor_values[$k]['submitter_ip']);
