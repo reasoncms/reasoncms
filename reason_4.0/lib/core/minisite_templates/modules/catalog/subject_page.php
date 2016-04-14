@@ -382,8 +382,8 @@ class CatalogSubjectPageModule extends DefaultMinisiteModule
 		else
 		{
 			echo json_encode(array(
-				'title'=>'Course not found',
-				'description'=>''
+				'title'=>'',
+				'description'=>'Course not found'
 				));					
 		}
 		exit;		
