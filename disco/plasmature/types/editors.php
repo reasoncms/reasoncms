@@ -499,7 +499,7 @@ class ck_editorType extends textareaType
 		if (!isset($loaded_an_instance))
 		{
 			// ckeditor.js is already minified
-			$js = '<script language="javascript" type="text/javascript" src="'.CKEDITOR_HTTP_PATH.'ckeditor.js"></script>'."\n";
+			$js = '<script language="javascript" type="text/javascript" src="//cdn.ckeditor.com/4.5.8/standard/ckeditor.js"></script>'."\n";
 			$external_js = $this->get_class_var('external_js');
 			if (!empty($external_js))
 			{
