@@ -394,7 +394,7 @@ function _scp_exec_from($file="*"){
     if($file == ""){ return ; }
 
     // connect and execute
-    exec('scp ' . $this->userid . "@" . $this->host . ':' . $this->remote_path . "/" . $file . " " . $this->local_path . "/"  , $result);
+    exec('scp -i ' . $this->ssh_key_file. " "  . $this->userid . "@" . $this->host . ':' . $this->remote_path . "/" . $file . " " . $this->local_path . "/"  , $result);
     
     // exec returns an array of the lines produced
     return $result ;
@@ -408,7 +408,7 @@ function _scp_exec_to($file_from="",$file_to=""){
     // NOP if command is not specified
     if($file_to == ""){ return ; }
     if($file_from == ""){ return ; }
-	$command = 'scp "' . $this->local_path . "/" . $file_from . '" ' . $this->userid . "@" . $this->host . ':"' . $this->remote_path . "/" . $file_to.'"';
+	$command = 'scp -i '. $this->ssh_key_file. ' "' . $this->local_path . "/" . $file_from . '" ' . $this->userid . "@" . $this->host . ':"' . $this->remote_path . "/" . $file_to.'"';
     // connect and execute
     $result = exec($command);
     
