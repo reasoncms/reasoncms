@@ -110,6 +110,7 @@
 		'UserPosing'=>array('file'=>'user_posing.php', 'class'=>'UserPosingModule'),
 	 	'CopySitePages'=>array('file'=>'copy_site_pages.php','class'=>'ReasonCopySitePagesModule'),
 	 	'OldThemes'=>array('file'=>'old_themes.php','class'=>'OldThemesModule'),
+	 	'SiteToPDF'=>array('file'=>'site_to_pdf.php','class'=>'ReasonSiteToPDFModule'),
 	);
 
 if (reason_file_exists('config/admin_modules/setup_local.php'))

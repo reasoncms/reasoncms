@@ -226,6 +226,32 @@ class CourseTemplateType extends Entity
 		return $long_description;
 	}
 
+/**
+	 * Return the title for a course. If year limit is in place, load the title from
+	 * sections offered that year, otherwise draw the title from the template. If no year limit
+	 * is in place, grab the most recent section title.
+	 * 
+	 * @param boolean $refresh
+	 * @return string
+	 */
+	public function get_value_title($refresh = false)
+	{
+		$limit = !empty($this->limit_to_year);
+			
+		foreach ( $this->get_sections($limit) as $section)
+		{
+			if ($title = $section->get_value('title', $refresh))
+			{
+				break;
+			}
+		}
+		
+		if (empty($title))
+			$title = parent::get_value('title', $refresh);
+		
+		return $title;
+	}
+	
 	/**
 	 * Generate a default HTML snippet for the course title. Override this if you
 	 * want to use a diffferent pattern.
@@ -667,6 +693,38 @@ class CatalogHelper
 		return $courses;
 	}
 
+	/**
+	  * Find courses with a particular subject and number 
+	  *
+	  * @param string $code subject code
+	  * @param string $number course number
+	  * @param string $catalog_site Optional unique name of a catalog site. If you pass this,
+	  *				only courses associated with that site will be included.
+	  */
+	public function get_courses_by_subject_and_number($code, $number, $catalog_site = null)
+	{
+		$courses = array();
+		if ($catalog_site && (is_int($catalog_site) || $catalog_site = id_of($catalog_site)))
+			$es = new entity_selector($catalog_site);
+		else
+			$es = new entity_selector();
+		$es->description = 'Selecting courses by subject and number';
+		$factory = new CourseTemplateEntityFactory();
+		$es->set_entity_factory($factory);
+		$es->add_type( id_of('course_template_type') );
+		$es->add_relation('org_id = "'.mysql_real_escape_string($code).'"');
+		$es->add_relation('course_number = "'.mysql_real_escape_string($number).'"');
+		$es->set_order('title');
+		$results = $es->run_one();
+		foreach ($results as $id => $entity)
+		{
+			if (isset($courses[$id])) continue;
+			$entity->include_source = 'subject and number';
+			$courses[$id] = $entity;
+		}
+		return $courses;
+	}
+	
 	public function get_courses_by_org_id($codes, $catalog_site = null)
 	{
 		return $this->get_courses_by_subjects($codes, $catalog_site);
@@ -696,12 +754,42 @@ class CatalogHelper
 		foreach ($results as $id => $entity)
 		{
 			if (isset($courses[$id])) continue;
-			$entity->include_source = 'subjects';
+			$entity->include_source = 'ids';
 			$courses[$id] = $entity;
 		}
 		return $courses;
 	}
 
+	/**
+	  * Find sections by their id in the source data
+	  *
+	  * @param array $ids Array of ids
+	  * @param string or int $catalog_site Optional unique name or id of a catalog site. If you pass this,
+	  *				only sections associated with that site will be included.
+	  */
+	public function get_sections_by_sourced_id($ids, $catalog_site = null)
+	{
+		$sections = array();
+		if ($catalog_site && (is_int($catalog_site) || $catalog_site = id_of($catalog_site)))
+			$es = new entity_selector($catalog_site);
+		else
+			$es = new entity_selector();
+		$es->description = 'Selecting sections by sourced_id';
+		$factory = new CourseSectionEntityFactory();
+		$es->set_entity_factory($factory);
+		$es->add_type( id_of('course_section_type') );
+		$es->add_relation('sourced_id in ("'.join('","', $ids).'")');
+		$es->set_order('org_id, course_number');
+		$results = $es->run_one();
+		foreach ($results as $id => $entity)
+		{
+			if (isset($sections[$id])) continue;
+			$entity->include_source = 'ids';
+			$sections[$id] = $entity;
+		}
+		return $sections;
+	}
+	
 	public function sort_courses_by_name($a, $b)
 	{
 		$a_name = $a->get_value('name');

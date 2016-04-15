@@ -10,7 +10,7 @@ $(document).ready(function()
 	// to be lists of courses. If they are, add the appropriate classes so that they'll 
 	// get picked up by the linking process below.
 	var course_regex = /\b([A-Z]{2,4} [0-9]{2,3}\w?)\b/g;
-	$("ul:not(.courseList) li").each(function(){
+	$("ul:not(.courseList) li, p").each(function(){
 		if ($(this).html().match(course_regex))
 		{
 			$(this).html($(this).html().replace(course_regex, function(match, p1){
@@ -22,19 +22,23 @@ $(document).ready(function()
 
 	// For each course number in a list of titles, make the number clickable and 
 	// fire off a request for the course description to be opened in a modal dialog.
-	$("ul.courseList span.courseNumber")
+	$("ul.courseList span.courseNumber, p span.courseNumber")
 		.addClass("clickable")
 		.click(function(){
 
 			if ( $(this).attr('course') )
+			{
 				var course = $(this).attr('course');
+			}
 			else
-				var course = $(this).text();
+			{
+				var course = $(this).text().replace(' ','_') + '_' + $("div#subjectPageModule").attr("year");
+			}
 
 			$.getJSON(document.URL, {
 				module_identifier: module_id,
 				module_api: "standalone",
-				get_course: course,
+				get_course: course
 			})
 			.done(function(response){
 				var courseDialog = $('<div id="courseDialog">' + response.description + '</div>');
@@ -42,8 +46,7 @@ $(document).ready(function()
 					title: response.title,
 					modal: true
 				});
-			})
-			
+			});
 		});
 	
 	// Close open modal dialogs when the background is clicked.

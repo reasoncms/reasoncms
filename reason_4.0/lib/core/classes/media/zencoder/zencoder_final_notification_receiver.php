@@ -79,6 +79,13 @@ if ($media_work)
 	{
 		send_email($media_work, $notification->job, 'error', $netid);
 	}
+
+	if (true == ZENCODER_UPLOAD_DIRECT_TO_S3) {
+		// if we are doing amazon stuff, now is the time we should delete the temp file!!!
+		reason_include_once('classes/s3Helper.php');
+		$s3h = new S3Helper("plupload_media_upload");
+		$numDeleted = $s3h->deleteByPrefix(($s3h->getTempDir() == "" ? "" : $s3h->getTempDir() . "/") . $media_work->id() . ".");
+	}
 }
 else
 {
