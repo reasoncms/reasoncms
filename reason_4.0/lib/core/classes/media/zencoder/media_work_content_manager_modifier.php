@@ -381,24 +381,31 @@ class ZencoderMediaWorkContentManagerModifier implements MediaWorkContentManager
 			
 				if ( !empty($file))
 				{
-					if( ($file->state == 'received' OR $file->state == 'pending') AND file_exists( $file->tmp_full_path ) )
+					if( ( ($file->state == 'received' OR $file->state == 'pending') AND file_exists( $file->tmp_full_path ) ) || $file->state == "uploaded_to_amazon")
 					{
-						$this->manager->set_value('original_filename', $this->_sanitize_filename(urldecode($file->file['name'])));
 						$this->_set_salt();
 					
 						$user = new entity( $this->manager->admin_page->authenticated_user_id );
 						$filePath = $file->tmp_full_path;
-						$filename_parts = explode('/', $filePath);
-						$filename = end($filename_parts);
-						$this->manager->set_value('tmp_file_name', $filename);
 						
-						// convert filePath to web accessible url -- as of Jan 2016, this needs to go through the
-						// getTempFile script since temp files are no longer directly web accessible.
-						// $filePath = carl_construct_link(array(), array(), WEB_TEMP.$filename);
-						$filePath = carl_construct_link(array("f" => $filename), array(), REASON_HTTP_BASE_PATH . "scripts/upload/getTempFile.php");
-						// echo("filepath [" . $filePath . "]<p>encoded [" . urlencode($filePath) . "]<P>special [" . htmlspecialchars($filePath) . "]<hr>");
+						if ($file->state == "uploaded_to_amazon") {
+							$this->manager->set_value('original_filename', $this->_sanitize_filename(urldecode($file->file['name']), true));
+							$this->manager->set_value('tmp_file_name', $filePath);
+							$this->_process_work($file->tmp_web_path, true);
+						} else {
+							$this->manager->set_value('original_filename', $this->_sanitize_filename(urldecode($file->file['name'])));
+							$filename_parts = explode('/', $filePath);
+							$filename = end($filename_parts);
+							$this->manager->set_value('tmp_file_name', $filename);
 
-						$this->_process_work($filePath, false);
+							// convert filePath to web accessible url -- as of Jan 2016, this needs to go through the
+							// getTempFile script since temp files are no longer directly web accessible.
+							// $filePath = carl_construct_link(array(), array(), WEB_TEMP.$filename);
+							$filePath = carl_construct_link(array("f" => $filename), array(), REASON_HTTP_BASE_PATH . "scripts/upload/getTempFile.php");
+							// echo("filepath [" . $filePath . "]<p>encoded [" . urlencode($filePath) . "]<P>special [" . htmlspecialchars($filePath) . "]<hr>");
+
+							$this->_process_work($filePath, false);
+						}
 					}
 				}
 			}
@@ -494,7 +501,7 @@ class ZencoderMediaWorkContentManagerModifier implements MediaWorkContentManager
 			$this->manager->set_error('av_type', 'The Media Type field is required.');
 			return;
 		}
-	
+
 		$this->_update_fields_with_file_data($encoding_job);
 	}
 	
@@ -522,14 +529,22 @@ class ZencoderMediaWorkContentManagerModifier implements MediaWorkContentManager
 	{
 		if ($this->manager->manages_media && $this->manager->get_value('transcoding_status') != 'converting')
 		{
+			if (defined('ZENCODER_UPLOAD_DIRECT_TO_S3') && true == ZENCODER_UPLOAD_DIRECT_TO_S3) {
+				require_once(SETTINGS_INC.'media_integration/s3_storage_settings.php');
+				$maxSize = S3_MAX_UPLOAD_SIZE;
+			} else {
+				$maxSize = reason_get_actual_max_upload_size();
+			}
+
 			$authenticator = array("reason_username_has_access_to_site", $this->manager->get_value("site_id"));
 			$params = array('authenticator' => $authenticator,
 							'acceptable_extensions' => $this->recognized_extensions,
-							'max_file_size' => reason_get_actual_max_upload_size(),
+							'upload_to_amazon' => (defined('ZENCODER_UPLOAD_DIRECT_TO_S3') ? ZENCODER_UPLOAD_DIRECT_TO_S3 : false),
+							'max_file_size' => $maxSize,
 							'head_items' => &$this->manager->head_items);
 			$this->manager->add_element( 'upload_file', 'ReasonUpload', $params);
-			
-			$this->manager->set_comments('upload_file',form_comment('If the file is on your computer, browse to it here.').form_comment('File must have one of the following extensions: .'.implode(', .', $this->recognized_extensions)).form_comment('<div class="maxUploadSizeNotice">Maximum file size for uploading is '.format_bytes_as_human_readable(reason_get_actual_max_upload_size()).'. </div>') );
+
+			$this->manager->set_comments('upload_file',form_comment('If the file is on your computer, browse to it here.').form_comment('File must have one of the following extensions: .'.implode(', .', $this->recognized_extensions)).form_comment('<div class="maxUploadSizeNotice">Maximum file size for uploading is '.format_bytes_as_human_readable($maxSize).'. </div>') );
 			
 			$this->manager->add_element('upload_url');
 			$this->manager->add_comments('upload_url', form_comment('Or, you can place the media in any web-accessible location and paste its web address in here. <em>Tip: try pasting the address into another tab first, to make sure you have the address right!</em>'));
@@ -550,13 +565,16 @@ class ZencoderMediaWorkContentManagerModifier implements MediaWorkContentManager
 	 * @param $filename
 	 * @return string
 	 */
-	function _sanitize_filename($filename)
+	function _sanitize_filename($filename, $allowForwardSlash = false)
 	{
 		$index = strrpos($filename, '.');
 		$name = substr($filename, 0, $index);	
 	
 		// replace all reserved url characters in the name of the file
 		$pattern = '/;|\/|\?|:|@|=|&|\.|#/';
+		if ($allowForwardSlash) {
+			$pattern = '/;|\?|:|@|=|&|\.|#/';
+		}
 		return str_replace(' ', '_', preg_replace($pattern, '', $name)).substr($filename, $index);
 	}
 }
