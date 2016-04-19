@@ -563,6 +563,19 @@ class NewsletterExporter {
 	 */
 	function NewsletterExporter($data = NULL)
 	{
+		if(reason_file_exists('config/newsletter/newsletter_exporter_modifier.php'))
+		{
+			reason_include_once('config/newsletter/newsletter_exporter_modifier.php');
+			if(class_exists('LocalNewsletterExporterModifier'))
+			{
+				$modifier = new LocalNewsletterExporterModifier();
+				$modifier->modify($this);
+			}
+			else
+			{
+				trigger_error('config/newsletter/newsletter_exporter_modifier.php should define a class named LocalNewsletterExporterModifier');
+			}
+		}
 		if (!empty($data))
 		{
 			$this->set_data($data);
@@ -611,16 +624,51 @@ class NewsletterExporter {
 			trigger_error("Exporter class was not assigned data to export.", WARNING);
 			return false;
 		}
-		if (array_key_exists($format, $this->get_export_formats()))
+		$formats = $this->get_export_formats();
+		if (array_key_exists($format, $formats))
 		{
-			$method_name = $this->_available_export_formats[$format]['method'];
-			return $this->$method_name($this->get_data());
+			$definition = $formats[$format];
+			if(!empty($formats[$format]['method']))
+			{
+				$method_name = $formats[$format]['method'];
+				if(method_exists($this,$method_name))
+				{
+					return $this->$method_name($this->get_data());
+				}
+				else
+				{
+					trigger_error('Method named in export format definition ('.$method_name.') does not exist on this class.');
+					return false;
+				}
+			}
+			elseif(!empty($formats[$format]['callback']))
+			{
+				if(is_callable($formats[$format]['callback']))
+				{
+					return call_user_func($formats[$format]['callback'], $this->get_data());
+				}
+				else
+				{
+					trigger_error('Callback specified in export format '.$format.' is not callable.');
+					return false;
+				}
+			}
+			else
+			{
+				trigger_error('Export format '.$format.' needs to have either a "method" or "callback" array member');
+				return false;
+			}
 		}
 		else
 		{
 			trigger_error("Selected format $format wasn't found", WARNING);
 			return false;
 		}
+	}
+	
+	function add_export_format($key, $definition)
+	{
+		$this->_available_export_formats[$key] = $definition;
 	}
 	
 	/**
@@ -675,7 +723,7 @@ class NewsletterExporter {
 				$output .= "<ul>";
 				foreach ($pub_posts as $pub_post)
 				{
-					$output .= '<li><a target="_blank" href="' . $data['info']['urls'][$pub_id] . "?story_id=" . $pub_post->get_value('id') . '">' . $pub_post->get_value('name') . '</a> (' . date("D, M j Y  g:i a", strtotime($pub_post->get_value('datetime')))  . ')</li>';
+					$output .= '<li><a target="_blank" href="' . $data['info']['urls'][$pub_id] . "?story_id=" . $pub_post->get_value('id') . '">' . $pub_post->get_value('release_title') . '</a> (' . date("D, M j Y  g:i a", strtotime($pub_post->get_value('datetime')))  . ')</li>';
 				}
 				$output .= "</ul>";
 			}
@@ -740,7 +788,7 @@ class NewsletterExporter {
 				$output .= "<ul>";
 				foreach ($pub_posts as $pub_post)
 				{
-					$output .= '<li class="has_description"><strong>' . '<a target="_blank" href="' . $data['info']['urls'][$pub_id] . "?story_id=" . $pub_post->get_value('id') . '">' . $pub_post->get_value('name') . '</a></strong> (' . date("D, M j Y  g:i a", strtotime($pub_post->get_value('datetime')))  . ')';
+					$output .= '<li class="has_description"><strong>' . '<a target="_blank" href="' . $data['info']['urls'][$pub_id] . "?story_id=" . $pub_post->get_value('id') . '">' . $pub_post->get_value('release_title') . '</a></strong> (' . date("D, M j Y  g:i a", strtotime($pub_post->get_value('datetime')))  . ')';
 					$output .= trim($pub_post->get_value('description')) . '</li>';
 				}
 				$output .= "</ul>";
@@ -809,7 +857,7 @@ class NewsletterExporter {
 				$output .= "<ul>";
 				foreach ($pub_posts as $pub_post)
 				{
-					$output .= '<li><a target="_blank" href="' . $data['info']['urls'][$pub_id] . "?story_id=" . $pub_post->get_value('id') . '">' . $pub_post->get_value('name') . '</a> (' . date("D, M j Y  g:i a", strtotime($pub_post->get_value('datetime')))  . ')</li>';
+					$output .= '<li><a target="_blank" href="' . $data['info']['urls'][$pub_id] . "?story_id=" . $pub_post->get_value('id') . '">' . $pub_post->get_value('release_title') . '</a> (' . date("D, M j Y  g:i a", strtotime($pub_post->get_value('datetime')))  . ')</li>';
 				}
 				$output .= "</ul>";
 			}
@@ -883,7 +931,7 @@ class NewsletterExporter {
 				$output .= "<ul>";
 				foreach ($pub_posts as $pub_post)
 				{
-					$output .= '<li><a target="_blank" href="' . $data['info']['urls'][$pub_id] . "?story_id=" . $pub_post->get_value('id') . '">' . $pub_post->get_value('name') . '</a> (' . date("D, M j Y  g:i a", strtotime($pub_post->get_value('datetime')))  . ')</li>';
+					$output .= '<li><a target="_blank" href="' . $data['info']['urls'][$pub_id] . "?story_id=" . $pub_post->get_value('id') . '">' . $pub_post->get_value('release_title') . '</a> (' . date("D, M j Y  g:i a", strtotime($pub_post->get_value('datetime')))  . ')</li>';
 				}
 				$output .= "</ul>";
 			}
