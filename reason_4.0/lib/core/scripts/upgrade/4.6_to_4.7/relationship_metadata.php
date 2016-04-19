@@ -46,7 +46,9 @@ class ReasonUpgrader_47_RelationshipMetadataDbChanges implements reasonUpgraderI
 			"<li>modifies the allowable_relationship table, adding a 'meta_type' and 'meta_availability' column to specify the type of entity that can be associated with this sort of relationship</li>" .
 			"<li>modifies the relationship table, adding a 'meta_id' column to associate a particular entity with a particular relationship, as
 				well as 'last_edited_by', 'last_modified', and 'creation_date' to enhance relationship history.</li>" .
-			"</ul></p>";
+			"</ul>".
+			"<strong>NOTE: Because this upgrade modifies the relationship table, it can take several minutes to complete.</strong> You ".
+			"may want to run it during a downtime or low-traffic situation.</p>";
 	}
 	
 	/**
