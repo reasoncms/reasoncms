@@ -105,14 +105,16 @@
 	 */
 	class DiscoAllowableRelationshipManager extends DiscoDefaultAdmin
 	{
-		var $fields_to_show = array('id', 'relationship_a', 'relationship_b', 'name', 'required', 'connections', 'directionality');
+		var $fields_to_show = array('id', 'relationship_a', 'relationship_b', 'name', 'required', 'connections', 'directionality', 'meta_type','meta_availability');
 		var $field_display_names = array('relationship_a' => 'Left', 
-										 'relationship_b' => 'Right', 
-										 'id' => 'ID', 
-										 'required' => "Req'd", 
-										 'name' => 'Name', 
-										 'connections' => 'Connections', 
-										 'directionality' => 'Directionality');
+										'relationship_b' => 'Right', 
+										'id' => 'ID', 
+										'required' => "Req'd", 
+										'name' => 'Name', 
+										'connections' => 'Connections', 
+										'directionality' => 'Directionality',
+										'meta_type' => 'Metadata Type',
+										'meta_availability' => 'Metadata Availability');
 										 
 		var $form_transforms_data = true;
 		
@@ -152,6 +154,8 @@
 			$this->set_comments('description_reverse_direction',form_comment('The text that is used as a heading above the list of A items when previewing a B item.'));
 			$this->add_required( 'is_sortable' );
 			$this->set_comments('is_sortable',form_comment('Answering "yes" will enable relationship-based sorting across relationships of this type. You will still need to alter the appropriate code to pay attention to the relationship sort order field before this has any effect on the front end.'));
+			$this->set_comments('meta_type',form_comment('The metadata entity type that can be associated with this type of relationship'));
+			$this->set_comments('meta_availability',form_comment('If "global", metadata is available on this relationship wherever it occurs; if "by_site", only sites that have been assigned this metadata type will be able to use it.'));
 			
 			if (reason_relationship_names_are_unique())
 			{
@@ -165,11 +169,19 @@
 			$es->add_type( id_of( 'type' ) );
 			$tmp = $es->run_one();
 			// format into a usable form
-			foreach( $tmp AS $ent )
-				$types[ $ent->id() ] = $ent->get_value( 'name' );
+			$metadata_types = Array();
+			foreach( $tmp AS $ent ) {
+				if ($ent->get_value("variety") == "relationship_meta") {
+					$metadata_types[ $ent->id() ] = $ent->get_value( 'name' );
+				} else {
+					$types[ $ent->id() ] = $ent->get_value( 'name' );
+				}
+			}
 			$this->change_element_type( 'relationship_a','select',array('options'=>$types) );
 			$this->change_element_type( 'relationship_b','select',array('options'=>$types) );
-			$this->set_order(array('name','description','relationship_a','relationship_b','connections','directionality','required','is_sortable','display_name','display_name_reverse_direction','description_reverse_direction','type','custom_associator'));
+			$this->change_element_type( 'meta_type','select',array('options'=>$metadata_types) );
+
+			$this->set_order(array('name','description','relationship_a','relationship_b','connections','directionality','required','is_sortable','display_name','display_name_reverse_direction','description_reverse_direction','type','custom_associator', 'meta_type','meta_availability'));
 			parent::on_every_time_default();
 		}
 		
@@ -202,6 +214,7 @@
 			}
 			$data_row['relationship_a'] = isset($types[$data_row['relationship_a']]) ? $types[$data_row['relationship_a']] : 'No Type';
 			$data_row['relationship_b'] = isset($types[$data_row['relationship_b']]) ? $types[$data_row['relationship_b']] : 'No Type';
+			$data_row['meta_type'] = isset($types[$data_row['meta_type']]) ? $types[$data_row['meta_type']] : 'No Type';
 			
 			if (reason_relationship_names_are_unique())
 			{
@@ -271,4 +284,3 @@
 			else return true;
 		}
 	}
-?>
