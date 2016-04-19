@@ -43,7 +43,7 @@ class ReasonUpgrader_47_RelationshipMetadataDbChanges implements reasonUpgraderI
 		return "<p>This upgrade:<ul>" .
 			"<li>modifies the type entity, adding a 'variety' field to distinguish between content, structural, and metadata types</li>" .
 			"<li>modifies the field entity, adding a 'is_required' and 'admin_only' fields" .
-			"<li>modifies the allowable_relationship table, adding a 'meta_type' column to specify the type of entity that can be associated with this sort of relationship</li>" .
+			"<li>modifies the allowable_relationship table, adding a 'meta_type' and 'meta_availability' column to specify the type of entity that can be associated with this sort of relationship</li>" .
 			"<li>modifies the relationship table, adding a 'meta_id' column to associate a particular entity with a particular relationship, as
 				well as 'last_edited_by', 'last_modified', and 'creation_date' to enhance relationship history.</li>" .
 			"</ul></p>";
@@ -66,6 +66,7 @@ class ReasonUpgrader_47_RelationshipMetadataDbChanges implements reasonUpgraderI
 			"'relationship' table has column 'last_modified': " . ($this->columnExistsOnTable("relationship", "last_modified") ? "<font color=green>yes</font>" : "<font color=red>no</font>") . "<br/>" .
 			"'relationship' table has column 'creation_date': " . ($this->columnExistsOnTable("relationship", "creation_date") ? "<font color=green>yes</font>" : "<font color=red>no</font>") . "<br/>" .
 			"'allowable_relationship' table has column 'meta_type': " . ($this->columnExistsOnTable("allowable_relationship", "meta_type") ? "<font color=green>yes</font>" : "<font color=red>no</font>") . "<br/>" .
+			"'allowable_relationship' table has column 'meta_availability': " . ($this->columnExistsOnTable("allowable_relationship", "meta_availability") ? "<font color=green>yes</font>" : "<font color=red>no</font>") . "<br/>" .
 			"</p>";
 	}
 
@@ -101,6 +102,7 @@ class ReasonUpgrader_47_RelationshipMetadataDbChanges implements reasonUpgraderI
 			"creation_date" => "timestamp",									
 			"last_modified" => "timestamp"));								
 		$this->addColumnToTable("allowable_relationship", "meta_type", "int (10) unsigned not null default 0");							// id of potential metadata's required type
+		$this->addColumnToTable("allowable_relationship", "meta_availability", "enum('global','by_site') not null default 'global'");							// id of potential metadata's required type
 		$this->addFieldsToEntity("type", $newTypeFields);
 		$this->addFieldsToEntity("field", $newFieldFields);
 	}
