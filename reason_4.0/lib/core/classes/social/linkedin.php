@@ -40,7 +40,7 @@ class ReasonLinkedInIntegrator extends ReasonSocialIntegrator implements SocialA
 	public function get_profile_link_href($social_entity_id)
 	{
 		$social_entity = new entity($social_entity_id);
-		$userid = $social_entity->get_value('account_id');
+		$userid = $social_entity->get_value($this->element_prefix.'account_id');
 		return $userid;
 	}
 	/****************** SocialSharingLinks implementation ***********************/
@@ -53,18 +53,20 @@ class ReasonLinkedInIntegrator extends ReasonSocialIntegrator implements SocialA
 	 */
 	function social_account_on_every_time($cm)
 	{
-		$cm->change_element_type('account_type', 'protected');
-		$cm->change_element_type('account_details', 'protected');
-		$cm->set_display_name('account_id', 'LinkedIn page URL');
-		$cm->add_required('account_id');
-		$cm->add_comments('account_id', form_comment(''));
+		$cm->change_element_type($this->element_prefix.'account_type', 'protected');
+		$cm->change_element_type($this->element_prefix.'account_details', 'protected');
+		$cm->set_display_name($this->element_prefix.'account_id', 'LinkedIn page URL');
+		$cm->add_required($this->element_prefix.'account_id');
+		$cm->add_comments($this->element_prefix.'account_id', form_comment(''));
 		// lets add a field showing the current link if one is available.
-		$account_id = $cm->get_value('account_id');
+		$account_id = $cm->get_value($this->element_prefix.'account_id');
 		if (!empty($account_id))
 		{
 			$link = $account_id;
 			$comment_text = '<a href="'.$link.'">'.$link.'</a>';
-			$cm->add_element('account_link', 'commentWithLabel', array('text' => $comment_text));
+			$cm->add_element($this->element_prefix.'account_link', 
+				'commentWithLabel', 
+				array('text' => $comment_text, 'display_name' => 'Account Link'));
 		}
 	}
 
@@ -80,19 +82,18 @@ class ReasonLinkedInIntegrator extends ReasonSocialIntegrator implements SocialA
 	 */
 	function social_account_run_error_checks($cm)
 	{
-		$account_id = $cm->get_value('account_id');
-	if ( !check_against_regexp($account_id, array('naturalnumber')) && !check_against_regexp($account_id, array('/^[a-z\d.\S]*$/i')) ) //'/^[\.&:\=\/\?%a-z\d.]*$/i'
+		$account_id = $cm->get_value($this->element_prefix.'account_id');
+		if ( !check_against_regexp($account_id, array('naturalnumber')) && !check_against_regexp($account_id, array('/^[a-z\d.\S]*$/i')) ) //'/^[\.&:\=\/\?%a-z\d.]*$/i'
 		{
-			$cm->set_error('account_id', 'Invalid format for LinkedIn URL. Please enter a valid URL');
+			$cm->set_error($this->element_prefix.'account_id', 'Invalid format for LinkedIn URL. Please enter a valid URL');
 		}
 		// if we have a problem with account_id lets remove the account_link field.
-		if ($cm->has_error('account_id'))
+		if ($cm->has_error($this->element_prefix.'account_id'))
 		{
-			if ($cm->is_element('account_link'))
+			if ($cm->is_element($this->element_prefix.'account_link'))
 			{
-				$cm->remove_element('account_link');
+				$cm->remove_element($this->element_prefix.'account_link');
 			}
 		}
 	}
 }
-?>
