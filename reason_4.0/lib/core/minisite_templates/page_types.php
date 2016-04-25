@@ -2117,6 +2117,9 @@
         'quote' => array(
         	'main_post' => 'quote',
         ),
+        'timeline' => array(
+        	'main_post' => 'timeline',
+        ),
         'user_settings' => array(
         	'main_post' => 'user_settings/user_settings'
         ),
