@@ -14,6 +14,7 @@
 		var $timeline;
 		var $category_id = 0;
 		var $category_id_list = array(0 => "All");
+		var $cleanup_rules = array('category_id' => 'turn_into_int');
 		
 		static function setup_supported_apis()
 		{
@@ -29,8 +30,8 @@
 			$head_items->add_stylesheet('//cdn.knightlab.com/libs/timeline3/latest/css/timeline.css');
 			$head_items->add_stylesheet('//cdn.knightlab.com/libs/timeline3/latest/css/fonts/font.abril-droidsans.css');
 				
-			if (!empty($_REQUEST['category_id']))
-				$this->category_id = $_REQUEST['category_id'];
+			if (!empty($this->request['category_id']))
+				$this->category_id = $this->request['category_id'];
 		}
 
 		function has_content()
