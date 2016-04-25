@@ -5,7 +5,7 @@ reason_include_once('classes/entity_selector.php');
 reason_include_once('classes/upgrade/upgrader_interface.php');
 reason_include_once('classes/field_to_entity_table_class.php');
 
-$GLOBALS['_reason_upgraders']['4.6_to_4.7']['add_meta_data_field_to_news'] = 'ReasonUpgrader_47_MetaDataDescription';
+$GLOBALS['_reason_upgraders']['4.6_to_4.7']['add_Meta_Data_field_to_news'] = 'ReasonUpgrader_47_MetaDataDescription';
 
 class ReasonUpgrader_47_MetaDataDescription implements reasonUpgraderInterface
 {
