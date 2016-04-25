@@ -7,7 +7,7 @@
  * @package reason
  * @subpackage scripts
  */
-$GLOBALS['_reason_upgraders']['4.6_to_4.7']['add_timeline'] = 'ReasonUpgrader_47_AddTimeline';
+$GLOBALS['_reason_upgraders']['4.7_to_4.8']['add_timeline'] = 'ReasonUpgrader_48_AddTimeline';
 include_once('reason_header.php');
 reason_include_once('classes/entity_selector.php');
 reason_include_once('classes/upgrade/upgrader_interface.php');
@@ -16,7 +16,7 @@ reason_include_once('function_libraries/util.php');
 reason_include_once('function_libraries/user_functions.php');
 reason_include_once('function_libraries/admin_actions.php');
 
-class ReasonUpgrader_47_AddTimeline implements reasonUpgraderInterface
+class ReasonUpgrader_48_AddTimeline implements reasonUpgraderInterface
 {
 	var $timeline_type_details = array (
 			'new' => 0,
