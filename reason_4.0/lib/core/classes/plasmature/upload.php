@@ -71,6 +71,8 @@ class ReasonUploadType extends uploadType
 			if (@$vars["delete_existing_" . $this->name] == "confirm_delete") {
 				// die("DELETE NOT yET IMPLEMENTED!!!");
 				parent::grab();
+			} else if (@$vars["upload_url"] != "" || @$vars["import_file"] != "") {
+				parent::grab();
 			} else {
 				$this->file = $this->get_amazon_tempfile($entityId);
 
