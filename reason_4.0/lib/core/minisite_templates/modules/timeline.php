@@ -3,14 +3,23 @@
 	reason_include_once( 'minisite_templates/modules/default.php' );
 	reason_include_once('classes/media/factory.php');
 	include_once( CARL_UTIL_INC . 'basic/cleanup_funcs.php' );
+	//include_once( DISCO_INC . 'disco.php' );
+	reason_include_once( 'classes/api/api.php' );
 	//reason_include_once( 'classes/timeliner.php' );
 
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'TimelineModule';
 
 	class TimelineModule extends DefaultMinisiteModule
 	{
+		var $timeline;
 		var $category_id = 0;
-		var $category_id_list = array(0 => "-- none --");
+		var $category_id_list = array(0 => "All");
+		
+		static function setup_supported_apis()
+		{
+			$timeline_api = new ReasonAPI(array('json', 'html'));
+			self::add_api('timeline', $timeline_api);
+		}
 		
 		function init( $args = array() )
 		{
@@ -41,6 +50,11 @@
 			return false;
 		}
 		
+		/**
+		 * @todo move the form into an actual disco form
+		 * @todo make the form work with JS off (e.g. include submit button)
+		 * @todo improve accessibility of form (e.g. use jquery onchange)
+		 */
 		function create_category_dropdown()
 		// Any timeline item associated with a category will have been added to the $category_id_list in the function create_timeline_slide()
 		// The first item on the list is -- none --
@@ -62,7 +76,7 @@
 			$ret .= '<form method="get" name="disco_form">'."\n";
 			$ret .= '<div id="discoLinear">'."\n";
 			
-			$ret .= '<span id="category_label">Category: </span>'."\n";
+			$ret .= '<span id="category_label">Tags: </span>'."\n";
 			$ret .= '<select name="category_id" id="category_id" style="height: auto; width: auto; margin-bottom: 1.875rem;" title="filter by category" onchange="this.form.submit();">'."\n";
 			foreach ($this->category_id_list as $key => $value)
 			{
@@ -209,61 +223,112 @@
 			
 			return $add_timeline_event;					
 		}
-
-		function run()
-		{		
-			$site_id = $this->site_id;
-			$es = new entity_selector( $site_id );
-			$es->add_type( id_of('timeline_type'));
-			$es->add_right_relationship($this->cur_page->id(), relationship_id_of('page_to_timeline'));
-			$es->add_rel_sort_field($this->cur_page->id(), relationship_id_of('page_to_timeline'));
-			$es->set_order('rel_sort_order');
-			$timelines = $es->run_one();
-
-			if (!empty($timelines))
+	
+		/**
+		 * We run the api we setup in setup_supported_apis()
+		 *
+		 * Note that we ask for the content type and set the content differently for the json and html content types.
+		 *
+		 * If the content type is not 'json' or 'html', note that we run the api anyway, as it supports standard error cases.
+		 */
+		function run_api()
+		{
+			$api = $this->get_api();
+			if ($api->get_name() == 'timeline')
 			{
-				$timeline = reset($timelines);
-				$timeline_dom_id = uniqid('timeline_');
-				$json = [
-					'title' => [],
-					'events' => [],
-					'eras' => [],
-					'scale' => 'human'
-				];
-				
-				$es = new entity_selector($this->site_id);
-				$es->add_type(id_of('timeline_item_type'));
-				$es->add_right_relationship($timeline->_id, relationship_id_of('timeline_to_title_timeline_item'));
-				$timeline_titles = $es->run_one();
-				
-				if (!empty($timeline_titles))
+				if ($api->get_content_type() == 'json')
 				{
-					$timeline_title = reset($timeline_titles);
-					$this->create_timeline_slide($timeline_title, $timeline_item_json);
-					$json['title'] = $timeline_item_json;
+					if ($timeline = $this->get_timeline())
+						$api->set_content(json_encode($this->generate_json_data($timeline)));
+					else
+						$api->set_content(json_encode(array()));
 				}
-
-				$es = new entity_selector($this->site_id);
-				$es->add_type(id_of('timeline_item_type'));
-				$es->add_right_relationship($timeline->_id, relationship_id_of('timeline_to_timeline_item'));
-				$timeline_items = $es->run_one();
-
-				foreach($timeline_items as $timeline_item)
+				if ($api->get_content_type() == 'html')
 				{
-					if ($this->create_timeline_slide($timeline_item, $timeline_item_json))	
-						$json['events'][] = $timeline_item_json;
+					ob_start();
+					$this->run();
+					$html = ob_get_clean();
+					$api->set_content($html);
 				}
+				$api->run();
+			}
+			else parent::run_api(); // support other apis defined by parents
+		}
+		
+		function run()
+		{
+			if ($timeline = $this->get_timeline())
+			{
+				
+				echo '<div id="timelineWrapper" class="'.$this->get_api_class_string().'">';
+				$json = json_encode($this->generate_json_data($timeline));
 				
 				$this->create_category_dropdown();
-
-				$json = json_encode($json);
-
+				
+				$timeline_dom_id = uniqid('timeline_');
+				
 				echo "
 				<div id=\"$timeline_dom_id\" style=\"width: 100%; height: 600px\"></div>
 				<script>
 					if (!window.timelines) window.timelines = []
 					timelines.push(new TL.Timeline('$timeline_dom_id', $json))
 				</script>";
+				echo '</div>'."\n";
 			}
+		}
+		
+		function get_timeline()
+		{
+			if(!isset($this->timeline))
+			{
+				$es = new entity_selector( $this->site_id );
+				$es->add_type( id_of('timeline_type'));
+				$es->add_right_relationship($this->cur_page->id(), relationship_id_of('page_to_timeline'));
+				$es->add_rel_sort_field($this->cur_page->id(), relationship_id_of('page_to_timeline'));
+				$es->set_order('rel_sort_order');
+				$es->set_num(1);
+				$timelines = $es->run_one();
+			
+				if (!empty($timelines))
+					$this->timeline = reset($timelines);
+				else
+					$this->timeline = FALSE;
+			}
+			return $this->timeline;
+		}
+		
+		function generate_json_data($timeline)
+		{
+			$json = [
+				'title' => [],
+				'events' => [],
+				'eras' => [],
+				'scale' => 'human'
+			];
+			
+			$es = new entity_selector($this->site_id);
+			$es->add_type(id_of('timeline_item_type'));
+			$es->add_right_relationship($timeline->_id, relationship_id_of('timeline_to_title_timeline_item'));
+			$timeline_titles = $es->run_one();
+			
+			if (!empty($timeline_titles))
+			{
+				$timeline_title = reset($timeline_titles);
+				$this->create_timeline_slide($timeline_title, $timeline_item_json);
+				$json['title'] = $timeline_item_json;
+			}
+
+			$es = new entity_selector($this->site_id);
+			$es->add_type(id_of('timeline_item_type'));
+			$es->add_right_relationship($timeline->_id, relationship_id_of('timeline_to_timeline_item'));
+			$timeline_items = $es->run_one();
+
+			foreach($timeline_items as $timeline_item)
+			{
+				if ($this->create_timeline_slide($timeline_item, $timeline_item_json))	
+					$json['events'][] = $timeline_item_json;
+			}
+			
+			return $json;
 		}
 	}
