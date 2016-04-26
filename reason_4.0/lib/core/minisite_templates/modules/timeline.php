@@ -214,6 +214,8 @@
 			
 			if ($this->category_id != 0 && (empty($categories) || !array_key_exists($this->category_id, $categories)))
 				$add_timeline_event = false;
+			
+			$timeline_item_json = $this->customize_timeline_item_json($timeline_item, $timeline_item_json);
 
 			// Remove any keys with null values from the timeline item json
 			foreach ($timeline_item_json as $key => $value)
@@ -223,6 +225,13 @@
 			}
 			
 			return $add_timeline_event;					
+		}
+		/**
+		 * Designed to be overloaded by a class extension
+		 */
+		function customize_timeline_item_json($timeline_item, $timeline_item_json)
+		{
+			return $timeline_item_json;
 		}
 	
 		/**
