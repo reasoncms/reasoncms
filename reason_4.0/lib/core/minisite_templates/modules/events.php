@@ -3709,7 +3709,9 @@ class EventsModule extends DefaultMinisiteModule
 		}
 		
 		$calendar = new reason_iCalendar();
-  		$calendar -> set_events($events);
+		$nav = $this->get_page_nav();
+		$calendar->set_events_page_url( $nav->get_full_url( $this->page_id, true, true ) );
+  		$calendar->set_events($events);
 		if (count($events) > 1)
 		{
 			$site = new entity($this->site_id);
