@@ -90,16 +90,12 @@ class DefaultPublicationEmailer extends Disco {
 		$this->add_element('recipient_email', 'text');
 		$this->add_required('recipient_email');
 
-		$this->add_element('personal_note', 'textarea');
-		$this->set_display_name('personal_note', 'Enter a note to be included in your message');
-		
 		// Manually classifify form content for Akismet in hope of getting
 		// better results from Akismet
 		$akismet_filter = new AkismetFilter($this, array(
 				"setCommentType" => "comment", // akismet value 
 				"setCommentAuthor" => "your_name", // form field name
 				"setCommentAuthorEmail" => "your_email",  // form field name
-				"setCommentContent" => "personal_note", // form field name
 			));
 	}
 
@@ -133,10 +129,6 @@ class DefaultPublicationEmailer extends Disco {
 			$clientIp = $this->getClientIp();
 			$htmlContents = htmlspecialchars($your_name) . " (" . htmlspecialchars($this->get_value("your_email")) . ", " . $clientIp . ") wants to share a story with you from ".$site_name.".<p>";
 			$plainContents = $your_name . " (" . $this->get_value("your_email") . ", " . $clientIp . ") wants to share a story with you from ".$site_name."\n";
-			if ($this->get_value("personal_note") != "") {
-				$htmlContents .= "Personal Note: <em>\"" . reason_htmlspecialchars(strip_tags($this->get_value("personal_note"))) . "\"</em><p>";
-				$plainContents .= "Personal Note:" . strip_tags($this->get_value("personal_note")) . "\n";
-			}
 			$htmlContents .= '<hr><br>';
 			$plainContents .= "------------\n";
 			$htmlContents .= '<strong><a href="'.$link.'">' . $story->get_value("release_title") . "</a></strong><br>" . $story->get_value("description") . "<br>";
@@ -155,12 +147,12 @@ class DefaultPublicationEmailer extends Disco {
 
 			if ($this->get_value(DefaultPublicationEmailer::HONEYPOT_FIELD) != "") {
 				// fail silently; honeypot had data entered into it...
-				$this->logEvent($your_name . " / " . $this->get_value("your_email") . " attempted to send a message to " . $this->get_value("recipient_email") . " with note \"" . $this->get_value("personal_note") . "\"; honeypot violation detected (" . $this->get_Value(DefaultPublicationEmailer::HONEYPOT_FIELD) . ")");
+				$this->logEvent($your_name . " / " . $this->get_value("your_email") . " attempted to send a message to " . $this->get_value("recipient_email") . "; honeypot violation detected (" . $this->get_Value(DefaultPublicationEmailer::HONEYPOT_FIELD) . ")");
 			} else {
 				// echo "<PRE>"; var_dump($msg); echo "</PRE>";
 				$tyr = new Tyr(Array($msg));
 				$tyr->run();
-				$this->logEvent($your_name . " / " . $this->get_value("your_email") . " sent a message to " . $this->get_value("recipient_email") . " with note \"" . $this->get_value("personal_note") . "\"");
+				$this->logEvent($your_name . " / " . $this->get_value("your_email") . " sent a message to " . $this->get_value("recipient_email"));
 			}
 			echo "Thanks for sharing! Your message has been sent.<p><a href=\"" . $link . "\">Go back to the story</a>";
 
