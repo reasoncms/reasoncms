@@ -40,6 +40,7 @@ class reason_iCalendar
 {
 	var $_events = array();
 	var $_title;
+	var $_events_page_url;
 	var $use_x_wr_timezone = true;
 		
 	function set_events($events)
@@ -50,6 +51,15 @@ class reason_iCalendar
 	function set_title($title)
 	{
 		$this->_title = $title;
+	}
+	
+	/**
+	 * If all the events in the feed are using the same calendar, you can set an events page URL in
+	 * order to add URL links to all events (not just those with specified URLs)
+	 */
+	function set_events_page_url($url)
+	{
+		$this->_events_page_url = $url;
 	}
 	
 	function get_events()
@@ -133,6 +143,8 @@ class reason_iCalendar
 		//URL
 		if (strlen($event -> get_value('url')) != 0)
 			$icalendar_event .= 'URL:' . $this->_fold_text($event -> get_value('url')) . "\r\n";
+		elseif (!empty($this->_events_page_url))
+			$icalendar_event .= 'URL:' . $this->_fold_text($this->_events_page_url.'?event_id='.$event->id()) . "\r\n";
 		//LAST-MODIFIED
 		if (strlen($event -> get_value('last_modified')) != 0)
 			$icalendar_event .= 'LAST-MODIFIED:' . $this -> _create_datetime(carl_date("Y-m-d H:i:s", strtotime($event -> get_value('last_modified'))), false) . "\r\n";
