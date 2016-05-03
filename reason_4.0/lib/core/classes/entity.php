@@ -119,6 +119,7 @@ class entity
 	 * @var boolean
 	 */
 	protected $_locks = false;
+	protected $_delegates;
 	/**#@-*/
 
 	/**
@@ -144,6 +145,35 @@ class entity
 		$this->_id = (int) $id;
 		$this->_cache = $cache;
 	} // }}}
+	
+	/**
+	 * @todo Do we want pseudo-namespaces?
+	 * @todo Do we want to be able to ask what delegates, methods, or interfaces are supported?
+	 * @todo figure out how serious an unsupported method call is -- die or simply warn?
+	 * @return mixed
+	 */
+	 public function __call($name, $arguments)
+	 {
+		$delegates = $this->get_delegates();
+		foreach($delegates as $delegate)
+		{
+			if(method_exists($name, $delegate))
+				return call_user_func_array(array($delegate,$name),$arguments);
+		}
+		trigger_error('Method '.$name.' is not supported by the Entity class or any of its delegates ('.implode(', ',array_keys($delegates).')');
+	}
+	 
+	public function method_supported($name)
+	{
+		if(method_exists($name, $this))
+			return true;
+		foreach($this->get_delegates() as $delegate)
+		{
+			if(method_exists($name, $delegate))
+				return true;
+		}
+		return false;
+	}
 	/**
 	 * Grab The Entity's ID
 	 *
@@ -156,7 +186,7 @@ class entity
 		return $this->_id;
 	} // }}}
 	/**
-	 * Sets a local enviornment variable.
+	 * Sets a local environment variable.
 	 *
 	 * This can be used to help with selections on stuff like selecting relationship sites.
 	 * @param string $field name of the field
@@ -166,6 +196,17 @@ class entity
 		{
 			$this->_env[$field] = $value;
 		} // }}}
+	/**
+	 * @todo figure out how to pass along type when known to reduce item-by-item DB fetches
+	 */
+	function get_delegates()
+	{
+		if(!isset($this->delegates))
+		{
+			$this->delegates = get_entity_delegates($this);
+		}
+		return $this->delegates;
+	}
 	/**
 	 * Function that actually gets the values from the DB
 	 * @access private
