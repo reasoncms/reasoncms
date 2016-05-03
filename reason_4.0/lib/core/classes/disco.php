@@ -60,6 +60,8 @@
 		 */
 		var $_entity_fields = array();
 		
+		var $_metadata_fields = array();
+		var $_metadata_prefix = '_meta_';
 		var $strip_tags_from_user_input = true;
 		var $allowable_HTML_tags = REASON_DEFAULT_ALLOWED_TAGS;
 
@@ -76,49 +78,7 @@
 
 			$this->_original = new entity( $this->_id );
 
-			// load all fields used by this type
-			$q = 'DESC entity';
-			$r = db_query( $q, 'Unable to get entity description' );
-			while( $row = mysql_fetch_array( $r, MYSQL_ASSOC ) )
-			{
-				list( $type, $args ) = $this->plasmature_type_from_db_type( $row['Field'], $row['Type'] );
-				$this->add_element( $row['Field'], $type, $args );
-			}
-
-			// get tables associated with this type
-			$es = new entity_selector;
-			$es->description = 'disco reason: load_by_type: tables to type';
-			$es->add_type( id_of('content_table') );
-			$es->add_right_relationship( $type_id, relationship_id_of( 'type_to_table' ) );
-			$tables = $es->run_one();
-			unset( $es );
-
-			// make an element for each field the type has
-			foreach( $tables AS $tid => $table )
-			{
-				// grab the type's entity tables and fields
-				$es = new entity_selector;
-				$es->description = 'disco reason 2: load_by_type: fields associated with table '.$table->get_value('name');
-				$es->add_type( id_of('field') );
-				$es->add_left_relationship( $tid, relationship_id_of( 'field_to_entity_table' ) );
-				$fields = $es->run_one('','Live','field es');
-				unset( $es );
-
-				foreach( $fields AS $fid => $field )
-				{
-					$args = array();
-					$type = '';
-					// set the plasmature type if specified by the field, otherwise look up the default for the database type
-					list( $type, $args ) = $this->plasmature_type_from_db_type( $field->get_value('name'), $field->get_value('db_type') );
-					if ( $field->get_value( 'plasmature_type' ) )
-						$type = $field->get_value( 'plasmature_type' );
-				
-					// hook for plasmature arguments here
-				
-					$this->add_element( $field->get_value('name'), $type, $args,$field->get_value( 'db_type' ) );
-					$this->_entity_fields[$field->get_value('name')] = $field->get_value( 'db_type' );
-				}
-			}
+			$this->_entity_fields = $this->add_elements_by_type($type_id);
 
 			// load values
 			$elements = $this->_original->get_values();
@@ -136,6 +96,95 @@
 			elseif($this->get_value('unique_name'))
 				$this->change_element_type( 'unique_name','solidText' );
 		} // }}}
+		
+		
+		/**
+		 * Add to the form all of the plasmature elements required to edit a specific entity type.
+		 * 
+		 * @param int $type_id
+		 * @param string $prefix  Optional string to prefix all element names with
+		 * @param boolean $include_entity  Whether to include fields for base entity table values
+		 * @return array of elements
+		 */
+		function add_elements_by_type($type_id, $prefix = null, $include_entity = true)
+		{
+			if ($include_entity)
+			{
+				// load all the entity table fields
+				$r = db_query( 'DESC entity', 'Unable to get entity description' );
+				while( $row = mysql_fetch_array( $r, MYSQL_ASSOC ) )
+				{
+					list( $type, $args ) = $this->plasmature_type_from_db_type( $row['Field'], $row['Type'] );
+					$this->add_element( $prefix.$row['Field'], $type, $args );
+				}
+			}
+
+			// get tables associated with this type
+			$es = new entity_selector;
+			$es->description = 'disco reason: load_by_type: tables to type';
+			$es->add_type( id_of('content_table') );
+			$es->add_right_relationship( $type_id, relationship_id_of( 'type_to_table' ) );
+			$tables = $es->run_one();
+			unset( $es );
+
+			$elements = array();
+			// make an element for each field the type has
+			foreach( $tables AS $tid => $table )
+			{
+				// grab the type's entity tables and fields
+				$es = new entity_selector;
+				$es->description = 'disco reason 2: load_by_type: fields associated with table '.$table->get_value('name');
+				$es->add_type( id_of('field') );
+				$es->add_left_relationship( $tid, relationship_id_of( 'field_to_entity_table' ) );
+				$es->set_order('entity.id ASC');
+				$fields = $es->run_one('','Live','field es');
+				unset( $es );
+
+				foreach( $fields AS $field )
+				{
+					$args = array();
+					// set the plasmature type if specified by the field, otherwise look up the default for the database type
+					if ( $field->get_value( 'plasmature_type' ) )
+						$type = $field->get_value( 'plasmature_type' );
+					else
+						list( $type, $args ) = $this->plasmature_type_from_db_type( $field->get_value('name'), $field->get_value('db_type') );
+
+					if (empty($args['display_name']))
+						$args['display_name'] = prettify_string ($field->get_value('name'));
+				
+					$this->add_element( $prefix.$field->get_value('name'), $type, $args, $field->get_value( 'db_type' ) );
+					$elements[$prefix.$field->get_value('name')] = $field->get_value( 'db_type' );
+				}
+			}
+			return $elements;
+		}
+		
+		/**
+		 * Replaces all non-metadata fields with display-only versions. Used in contexts where only
+		 * metadata is editable, but entity values need to be displayed.
+		 * 
+		 * @todo Handle elements with array values
+		 */
+		function disable_entity_editing()
+		{
+			foreach($this->get_element_names() as $element)
+			{
+				if (isset($this->_metadata_fields[$element])) continue;
+				
+				$type = $this->get_element_property($element, 'type');
+				if (in_array($type, array('comment','hidden','cloaked'))) continue;
+				
+				if (!$this->get_value($element) && !$this->is_required($element))
+					$this->change_element_type($element, 'hidden', array('comments' => ''));
+				else if (html_editor_name($this->admin_page->site_id) == $type)
+					$this->change_element_type($element,'wysiwyg_disabled', array('comments' => ''));
+				else if ($this->get_value($element))
+				{
+					$this->change_element_type($element, 'solidtext', array('comments' => ''));
+				}
+			}
+		}
+		
 		function process() // {{{
 		{			
 			// ignoring last_edited_by avoids the problem of updating entities by just viewing them.
@@ -194,12 +243,13 @@
 			//}
 			
 			$this->_process_relationship_elements();
+			$this->_process_metadata_elements();
 		
 		} // }}}
 		function show_form() // {{{
 		{
 			parent::show_form();
-			foreach($this->hidden_field_cutoffs as $field_name => $cutoff_id)
+			foreach($this->hidden_field_cutoffs as $cutoff_id)
 			{
 				echo '<span style="display:none" id="field_cutoffs'.$cutoff_id[0].'">'.$cutoff_id[1].'</span>';
 			}
@@ -242,6 +292,9 @@
 			parent::could_be_csrf();
 		}
 		
+		/**
+		 * Verify that the value entered for the unique name is, in fact, unique.
+		 */
 		function _check_unique_name_field()
 		{
 			if( $this->get_value('unique_name') )
@@ -554,6 +607,54 @@
 			return array('entities'=>$entities,'first_cutoff'=>$first_cutoff_entity);
 		}
 
+		/**
+		 * Adds relationship metadata fields to the form as needed. If elements are added, they will
+		 * be listed in the $_metadata_fields class var.
+		 * 
+		 * @param int $rel_type_id	The id of the relationship type
+		 * @param int $rel_id		The id of the relationship to look for metadata fields on
+		 * @param int $entity_id	The id of the entity we're in relationship with
+		 * @param string $comment	Optional comment string to be added before the added elements
+		 * @return null
+		 */
+		function add_metadata_elements($rel_type_id, $rel_id, $entity_id, $comment = null)
+		{
+			// Figure out if this relationship supports metadata
+			$rel_info = reason_get_allowable_relationship_info($rel_type_id);
+			
+			// If not, we're done here.
+			if (empty($rel_info['meta_type'])) return;
+			
+			// Next, find out if there's any metadata currently on the relationship
+			$rels = $this->entity->get_right_relationships_info($rel_type_id);
+
+			$meta_id = null;
+			if (isset($rels[$rel_type_id]))
+			{
+				foreach ($rels[$rel_type_id] as $rel)
+				{
+					if ($rel['id'] == $rel_id)
+					{
+						$meta_id = $rel['meta_id'];
+					}
+				}
+			}
+			
+			$this->add_element($this->_metadata_prefix.'id','hidden',array('default'=>$meta_id));
+			if ($comment)
+					$this->add_element($this->_metadata_prefix.'comment','comment',array('text'=>$comment));
+			$this->_metadata_fields = $this->add_elements_by_type($rel_info['meta_type'], '_meta_', false);
+			
+			if (!empty($meta_id))
+			{
+				$meta_data = new entity($meta_id);
+				foreach($this->_metadata_fields as $name => $type)
+				{
+					$this->set_value($name, $meta_data->get_value(substr($name, strlen($this->_metadata_prefix))));
+				}
+			}
+		}
+		
 		function _cmp_entities($a,$b)
 		{
 			return $b['count']-$a['count'];
@@ -566,6 +667,32 @@
 				$this->_process_relationship_element($name,$info);
 			}
 		}
+		
+		function _process_metadata_elements()
+		{
+			if (!$rel_id = $this->get_value('row_rel_id'))
+			{
+				return;
+			}
+			
+			$existing_id = $this->get_value($this->_metadata_prefix.'id');
+			
+			foreach($this->_metadata_fields as $name => $type)
+			{
+				$values[substr($name, strlen($this->_metadata_prefix))] = tidy($this->get_value($name));
+			}
+
+			// If there was metadata, but it's completely gone, delete the metadata entry.
+			if (!empty($existing_id) && empty($values))
+			{
+				delete_relationship_metadata($rel_id, $this->admin_page->user_id);
+			}
+			else if (!empty($values))
+			{
+				set_relationship_metadata($rel_id, $values, $this->admin_page->user_id);
+			}
+		}
+		
 		function _get_rel_site_value($id)
 		{
 			$e = new entity($id);
@@ -632,4 +759,3 @@
 			}
 		}
 	}
-?>
