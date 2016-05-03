@@ -65,11 +65,11 @@
 			if ($this->rel_direction == 'a_to_b') $ass_es->add_right_relationship($this->admin_page->id, $this->admin_page->rel_id );
 			else $ass_es->add_left_relationship($this->admin_page->id, $this->admin_page->rel_id );
 			$ass_es->add_right_relationship_field('owns', 'entity', 'id', 'site_owner_id');
+			$ass_es->add_field( 'relationship', 'id', 'rel_id' );
 			
 			if ( ($this->rel_direction == 'a_to_b') && $this->check_is_rel_sortable() ) 
 			{
 				$this->columns['rel_sort_order'] = true;
-				$ass_es->add_field( 'relationship', 'id', 'rel_id' );
 				$ass_es->add_rel_sort_field($this->admin_page->id);
 				$ass_es->set_order('relationship.rel_sort_order ASC');
 				if($this->_cur_user_has_edit_privs() && !$this->get_relationship_lock_state())
@@ -84,7 +84,7 @@
 			
 			if ($this->assoc_viewer_order_by($ass_es)) $this->alter_order_enable = false;
 			$this->ass_vals = $ass_es->run_one();
-			
+
 			// check sharing on associated entities
 			foreach ($this->ass_vals as $k=>$val)
 			{
@@ -476,14 +476,15 @@
 				{
 					if (($row->get_value('sharing') == 'owns') || ($this->site_id == $row->get_value('rel_site_id')))
 					{
-						$link = array_merge( $link, array( 'cur_module' => 'DoDisassociate') );
+						$link = array_merge( $link, array( 'cur_module' => 'DoDisassociate', 'row_rel_id' => $row->get_value('rel_id')) );
 					}
 					else $link = '';
 					$name = 'Deselect';
 				}
+				// A to B BEHAVIOR
 				else
 				{
-					$link = array_merge( $link, array( 'cur_module' => 'DoDisassociate') );
+					$link = array_merge( $link, array( 'cur_module' => 'DoDisassociate', 'row_rel_id' => $row->get_value('rel_id')) );
 					$name = 'Deselect';
 				}
 				
@@ -543,6 +544,12 @@
 				$edit_link[ 'id' ] = $row->id();
 				$edit_link[ 'cur_module' ] = 'Edit';
 				
+				// Add the URL parameter that makes it possible to access relationship metadata
+				if ($row->has_value('rel_id'))
+				{
+					$preview_link[ 'row_rel_id' ] = $row->get_value('rel_id');
+					$edit_link[ 'row_rel_id' ] = $row->get_value('rel_id');
+				}
 				$sharing = $row->get_value('sharing');
 				$owned = (is_array($sharing)) ? in_array('owns', $sharing) : ($row->get_value('sharing') == 'owns');
 				$borrowed = (is_array($sharing)) ? in_array('borrows', $sharing) : ($row->get_value('sharing') == 'borrows');
@@ -550,7 +557,15 @@
 				if( $owned && reason_site_can_edit_type($this->site_id, $this->rel_type) )
 					echo ' | <a href="'.$this->admin_page->make_link( $edit_link ).'">Edit</a>';
 				if ($borrowed)
-					echo ' | Borrowed';
+				{
+					if ( !$this->select && reason_metadata_is_allowed_on_relationship($this->admin_page->request['rel_id'], $this->admin_page->site_id) )
+					{
+						$edit_link[ 'cur_module' ] = 'Edit Metadata';
+						echo ' | <a href="' . $this->admin_page->make_link( $edit_link ) . '">Edit Metadata</a>';
+					}
+					else
+						echo ' | Borrowed';
+				}
 				if ( $owned && $borrowed )
 				{
 					echo '<p><strong>Note: </strong><em>Item is owned AND borrowed by the site.</em></p>';
@@ -578,4 +593,3 @@
 	{
 		var $rel_direction = 'b_to_a';
 	}
-?>
