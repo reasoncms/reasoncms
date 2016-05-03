@@ -4,7 +4,7 @@
 	  *
 	  *	These are actions that modify the database.
 	  *
-	  *	@author Dave Hendler, Matt Ryan, Nate White
+	  * @author Dave Hendler, Matt Ryan, Nate White, Mark Heiman
 	  * @package reason
 	  * @subpackage function_libraries
 	  */
@@ -25,20 +25,31 @@
 	 * @param array $ignore Simple array; fields that should not be included in the returned data
 	 * @return array Multidimensional associative array; format: array('table1'=>array('field1'=>'value1','field2'=>'value2'),'table2'=>array('field3'=>'value3',...),...)
 	 *
-	 * @todo add caching so that db structure does not need to be looked up each time
 	 * @todo make query more robust or use standard library to look up field names
 	 */
 	function values_to_tables( $tables, $flat_values, $ignore = array() ) // {{{
 	{
+		static $table_cache = array();
+		
 		// build field to table association
 		$field_to_table = array();
 		foreach( $tables AS $table )
 		{
-			$q = "DESC $table";
-			$r = db_query( $q, 'Unable to get table description.' );
-			while( $row = mysql_fetch_array( $r, MYSQL_ASSOC ) )
-				$field_to_table[ $row['Field'] ] = $table;
-			mysql_free_result( $r );
+			if (isset($table_cache[$table]))
+			{
+				$field_to_table = array_merge($field_to_table, $table_cache[$table]);
+			}
+			else
+			{
+				$q = "DESC $table";
+				$r = db_query( $q, 'Unable to get table description.' );
+				while( $row = mysql_fetch_array( $r, MYSQL_ASSOC ) )
+				{
+					$field_to_table[ $row['Field'] ] = $table;
+					$table_cache[$table][ $row['Field'] ] = $table;
+				}
+				mysql_free_result( $r );
+			}
 		}
 		
 		// build the array of tables->fields->values
@@ -113,18 +124,17 @@
 			die('No ownership relation exists for type:' . $type_id . '.');
 	
 		// create ownership relationship
-		$q = "INSERT INTO relationship (entity_a, entity_b, type) VALUES ($site_id,$entity_id,$ownership_relation)";
+		$q = "INSERT INTO relationship (entity_a, entity_b, type, creation_date, created_by, last_edited_by) VALUES ($site_id,$entity_id,$ownership_relation,NOW(),$user_id,$user_id)";
 		if( $testmode )
 			echo $q.'<br /><br />';
 		else
 			db_query( $q, 'Unable to create ownership relation for this entity.' );
 		// get tables for this type
 		$entity_tables = get_entity_tables_by_type( $type_id );
-		
+
 		// if more values, create the appropriate records in the entity tables
 		foreach( $entity_tables as $table )
 		{
-			
 			if( $table != 'entity' )
 			{
 				$qparts = array('id' => $entity_id);
@@ -145,6 +155,7 @@
 					echo $q.'<br /><br />';
 				else
 					db_query( $q, 'Unable to insert entity values into entity table.' );
+				unset($qparts);
 			}
 			// the entity table already exists, so we have to update it
 			else
@@ -153,6 +164,7 @@
 				{
 					$sqler = new sqler;
 					$sqler->update_one( 'entity', $values['entity'], $entity_id );
+					unset($sqler);
 				}
 			}
 		}
@@ -203,7 +215,7 @@
 	 *
 	 *	Specifically, copies all fields of an entity to a new id.  If dup_relationships
 	 *	is true, also copies all relationships, replacing the old id with the new inserted one.
-	 * 
+	 *
 	 * @param int/object $id ID of entity to duplicate OR an entity object to duplicate
 	 * @param boolean $dup_relationships Whether to duplicate relationships or not
 	 * @param boolean $maintain_dates Whether to preserve existing created/modified dates
@@ -415,7 +427,7 @@
 	 *
 	 * @param integer $id ID of entity to update
 	 * @param integer $user_id Reason ID of user making changes
-	 * @param array $updates array of tables with values being array of key-val pairs
+	 * @param array $raw_updates array of tables with values being array of key-val pairs
 	 * @param boolean $archive boolean that determines whether this update will be archived
 	 * @return boolean true => entity has changed,  false => entity has not changed
 	 */
@@ -520,17 +532,39 @@
 	 *	@param	int $entity_a	ID of left entity
 	 *	@param	int $entity_b	ID of right entity
 	 *	@param	int $relationship_type	ID of the allowable relationship for this relationship
-	 *	@param  array $more array of other attributes to set (optional)	 
-	 *  @param  boolean $check_for_dup whether or not to check if the relationship already exists on the site
+	 *	@param	array $more array of other attributes to set (optional). Relationship metadata
+	 *					may be passed with the 'meta' key.	 
+	 * @param	boolean $check_for_dup whether or not to check if the relationship already exists on the site
+	 * @param	id $user_id Reason id of user creating the relationship. Currently optional unless metadata is being set.
 	 *	@return	boolean true if sql statement to create relationship was executed, false indicates no relationship created
+	 *
+	 * @todo	Think about duplicate checking with regard to metadata 
 	 */
-	function create_relationship( $entity_a, $entity_b, $relationship_type ,$more=false, $check_for_dup=true)
+	function create_relationship( $entity_a, $entity_b, $relationship_type ,$more=false, $check_for_dup=true, $user_id=null)
 	{
+		if (empty($user_id))
+		{
+			if (!$user_id = get_user_id(reason_check_authentication()))
+			{
+				trigger_error('create_relationship(): could not determine userid');
+				$user_id = null;
+			}
+		}
+
 		$rel = array(
 			'entity_a' => turn_into_int($entity_a),
 			'entity_b' => turn_into_int($entity_b),
-			'type' => turn_into_int($relationship_type)
+			'type' => turn_into_int($relationship_type),
+			'creation_date' => 'NOW()',
 		);
+		
+		// These are not required, so we only set them if we have an ID.
+		if ($user_id)
+		{
+			$rel['created_by'] = turn_into_int($user_id);
+			$rel['last_edited_by'] = turn_into_int($user_id);
+		}
+		
 		foreach($rel as $key=>$value)
 		{
 			if(empty($value) || $value < 0)
@@ -539,16 +573,24 @@
 				return false;
 			}
 		}
-		if(is_array($more))
+		// Handle additional values passed in $more
+		if (is_array($more))
 		{
-			$rel = array_merge($rel,$more);
+			// Extract metadata, so we can deal with it separately
+			if (isset($more['meta']))
+			{
+				$metadata = $more['meta'];
+				unset($more['meta']);
+			}
+			// Turn any remaining values into integers and add to values array
+			foreach ($more as $key => $val)
+				$rel[$key] = turn_into_int($val);
 		}
 		elseif($more !== false)
 		{
 			trigger_error('create_relationship(): $more must be an array to be used (is instead a(n) '.gettype($more).') Relationship will be created, but without additional attributes.');
 		}
 		
-		$duplicate = false;
 		if ($check_for_dup)
 		{
 			$q = 'SELECT id, site FROM relationship WHERE entity_a = '.$rel['entity_a'].' AND entity_b = '.$rel['entity_b'].' AND type = '.$rel['type'];
@@ -565,8 +607,18 @@
 				}
 			}
 		}
-		$sqler = new SQLER;
-		$sqler->insert( 'relationship', $rel );
+		
+		if (isset($metadata))
+		{
+			if ($meta_id = create_relationship_metadata_entity($entity_a, $entity_b, $relationship_type, $metadata, $user_id))
+				$rel['meta_id'] = $meta_id;
+			else
+				trigger_error('create_relationship(): failed to create metadata entity');
+		}
+		
+		$q = 'INSERT INTO relationship ('.join(',',array_keys($rel)).') VALUES ('.join(',',$rel).')';
+		db_query( $q, 'Unable to create relationship.' );
+		
 		return true;
 	} // }}}
 
@@ -574,27 +626,52 @@
 	 *	Updates a relationship with a given id
 	 *
 	 *	@param	int $id	ID of existant relationship
-	 *	@param	array $values key=>value pairs of columns to update
+	 *	@param	array $values key=>value pairs of columns to update; Relationship metadata
+	 *				may be passed with the 'meta' key.
+	 *	@param	int $user_id	ID user making change
 	 *	@return	void
-	 *  @author nwhite
+	 * @author nwhite
 	 */
-	function update_relationship( $id, $values)
+	function update_relationship( $id, $values, $user_id=0)
 	{
-		$q = $q2 = '';
+		if (empty($user_id))
+		{
+			if (!$user_id = get_user_id(reason_check_authentication()))
+			{
+				trigger_error('update_relationship(): could not determine userid');
+			}
+		}
+		else
+			$user_id = turn_into_int($user_id);
+
 		$id = turn_into_int($id);
+		
+		// If metadata has been passed, check to see if the relationship has a meta_id,
+		// and create or update the metadata entity appropriately.
+		if (isset($values['meta']))
+		{
+			$metadata = $values['meta'];
+			unset($values['meta']);
+			
+			if ($meta_id = set_relationship_metadata($id, $metadata, $user_id, false))
+				$values['meta_id'] = $meta_id;
+		}
+		
+		if (empty($values['last_edited_by'])) $values['last_edited_by'] = $user_id;
+		if (empty($values['last_modified'])) $values['last_modified'] = 'NOW()';
+		
 		foreach ($values as $k=>$v)
 		{
-			$col_name = check_against_array($k, array('id', 'entity_a', 'entity_b', 'type', 'site', 'rel_sort_order'));
+			$col_name = check_against_array($k, array('id', 'entity_a', 'entity_b', 'type', 'site', 'rel_sort_order','meta_id','last_edited_by','last_modified'));
 			$value = turn_into_int($v);
 			if (!empty($col_name) && !empty($value))
 			{
-				$q2 .= $col_name . ' = ' . $value . ', ';
+				$changes[] = $col_name . ' = ' . $value;
 			}
 		}
-		if (!empty($q2))
+		if (!empty($changes))
 		{
-			$q2 = substr($q2, 0, -2);
-			$q .= 'UPDATE relationship SET ' .$q2 . ' WHERE id = ' . $id;
+			$q = 'UPDATE relationship SET ' .join(', ', $changes) . ' WHERE id = ' . $id;
 			db_query( $q, 'Unable to update relationship with id ' . $id );
 		}
 	} // }}}
@@ -607,15 +684,38 @@
 				$wc = $conditions;
 			else
 			{
-				$wc = '';
 				foreach( $conditions AS $f => $v )
-					$wc .= $f.'='.$v. ' AND ';
-				$wc = substr($wc,0,-5);
+					$parts[] = $f.'='.$v;
+				$wc = join(' AND ', $parts);
 			}
+			delete_relationship_metadata_by_rule($wc);
 			$q = 'DELETE FROM relationship WHERE ' . $wc;
 			db_query( $q );
 		}
 	} // }}}
+
+	/** delete_relationships_by_entities($entity_a, $entity_b, $type = null) // {{{
+	 *	Delete relationships between specific entities. If no type is specified,
+	 *  all relationships between the two entities will be deleted. Relationship
+	 *  sides are ignored.
+	 *
+	 *	@param int $entity_a ID of entity
+	 *	@param int $entity_b ID of entity
+	 *	@param int $type optional ID of relationship type
+	 *	@return void
+	 */
+	function delete_relationships_by_entities($entity_a, $entity_b, $type = null)
+	{
+		$where = '';
+		if ($type)
+			$where = '`type` = '.(int) $type .' AND ';
+		$where .= '((`entity_a` = '.(int)$entity_a.' AND `entity_b` = '.(int)$entity_b.') ';
+		$where .= 'OR (`entity_a` = '.(int)$entity_b.' AND `entity_b` = '.(int)$entity_a.')) ';
+
+		delete_relationship_metadata_by_rule($where);
+		$q = 'DELETE FROM relationship WHERE ' . $where;
+		db_query( $q );
+	}
 
 	/** delete_relationship( $rel_id ) // {{{
 	 *	Delete relationship with id = $rel_id
@@ -625,8 +725,9 @@
 	 */
 	function delete_relationship( $rel_id ) //{{{
 	{
+		$where = 'id = '.$rel_id;
+		delete_relationship_metadata_by_rule($where);
 		$sqler = new SQLER;
-
 		$sqler->delete_one( 'relationship', $rel_id );
 	} // }}} // }}}
 
@@ -648,7 +749,9 @@
 	 */
 	function delete_right_relationship( $right_id ) //{{{
 	{
-		$q = "DELETE FROM relationship WHERE entity_b = $right_id";
+		$where = 'entity_b = '.$right_id;
+		delete_relationship_metadata_by_rule($where);
+		$q = "DELETE FROM relationship WHERE ".$where;
 		return db_query( $q, 'Unable to delete right relationships.' );
 	} // }}} // }}}
 
@@ -659,7 +762,9 @@
 	 */
 	function delete_all_relationships( $id ) //{{{
 	{
-		$q = "DELETE FROM relationship WHERE entity_a = $id OR entity_b = $id";
+		$where = 'entity_a = '.$id.' OR entity_b = '.$id;
+		delete_relationship_metadata_by_rule($where);
+		$q = "DELETE FROM relationship WHERE ".$where;
 		return db_query( $q, 'Unable to delete relationships.' );
 	} // }}} // }}}
 
@@ -710,21 +815,152 @@
 			
 			if( $x )
 			{
-				$first = true;
-				$in = '';
 				foreach( $x AS $rel )
 				{
-					if (!$first) $in .= ',';
-					else $first = false;
-					$in .= $rel[ 'id' ];
+					$in[] = $rel[ 'id' ];
 				}
-				$q = 'DELETE FROM relationship WHERE id IN(' . $in . ')';
+				$where = 'id IN (' . join(', ', $in) . ')';
+				delete_relationship_metadata_by_rule($where);
+				
+				$q = 'DELETE FROM relationship WHERE '.$where;
 				db_query( $q , 'Error removing associations of borrowed item before deleting' );
 			}
 		}
 		
-		$q = 'DELETE FROM relationship WHERE entity_a = ' . $site_id . ' AND entity_b = ' . $id . ' AND type = ' . $rel_id;
+		$where = 'entity_a = ' . $site_id . ' AND entity_b = ' . $id . ' AND type = ' . $rel_id;
+		delete_relationship_metadata_by_rule($where);
+		$q = 'DELETE FROM relationship WHERE '. $where;
 		db_query( $q , 'Error removing borrowship' );
+	}
+	
+	/**
+	 *	Sets or updates metadata on a relationship
+	 *
+	 *	@param	int $relationship_id	ID of the relationship
+	 *	@param  array $metadata array of the metadata	 
+	 *  @param  int $user_id Reason id of user making the change.
+	 *  @param  boolean $update_rel Whether to update the relationship table when a new
+	 *			meta_id is assigned (pass false if you're calling this in a context that's
+	 *			handling that update separately).
+	 *	@return	mixed metadata entity id on success or false on failure
+	 */
+	function set_relationship_metadata($relationship_id, $metadata, $user_id, $update_rel = true)
+	{
+		$q = 'SELECT meta_id, entity_a, entity_b, type FROM relationship WHERE id = '.$relationship_id;
+		$result = db_query($q, 'Error checking for relationship meta_id');
+		if ($row = mysql_fetch_assoc($result))
+		{
+			if ($row['meta_id'])
+			{
+				if (reason_update_entity( $row['meta_id'], $user_id, $metadata))
+					return $row['meta_id'];
+			}
+			else
+			{
+				if ($meta_id = create_relationship_metadata_entity($row['entity_a'], $row['entity_b'], $row['type'], $metadata, $user_id))
+				{
+					if ($update_rel)
+						update_relationship( $relationship_id, array('meta_id' => $meta_id), $user_id);
+					return $meta_id;
+				}
+				else
+					trigger_error('set_relationship_metadata(): failed to create metadata entity');
+			}
+		}
+		else
+			trigger_error('set_relationship_metadata(): relationship not found');
+			
+		return false;
+	}
+	
+	/**
+	 *	Deletes metadata on a relationship
+	 *
+	 *	@param	int $relationship_id	ID of the relationship
+	 *	@param  array $metadata array of the metadata	 
+	 *  @param  id $user_id Reason id of user making the change.
+	 *	@return	boolean success or failure
+	 */
+	function delete_relationship_metadata($relationship_id, $user_id)
+	{
+		$q = 'SELECT meta_id FROM relationship WHERE id = '.$relationship_id;
+		$result = db_query($q, 'Error checking for relationship meta_id');
+		if ($row = mysql_fetch_assoc($result))
+		{
+			if ($row['meta_id'])
+			{
+				// delete from entity table
+				$q = 'DELETE FROM entity WHERE id = '.$row['meta_id'];
+				if (db_query( $q, 'Unable to delete entity from entity table.' ))
+				{
+					update_relationship( $relationship_id, array('meta_id' => 0), $user_id);
+					return true;
+				}
+			}
+		}
+		else
+			trigger_error('delete_relationship_metadata(): relationship not found');
+			
+		return false;
+	}
+
+	/**
+	 *	Deletes metadata on a relationship based on a WHERE clause,
+	 *  without updating the relationship table. This function is intended to be
+	 *  used by other functions that are doing bulk deletion of relationships.
+	 *  You're unlikely to call it directly.
+	 *
+	 *	@param	string $where WHERE clause of a query to find all the affected relationships
+	 *	@return	void
+	 */
+	function delete_relationship_metadata_by_rule($where)
+	{
+		$q = 'SELECT meta_id FROM relationship WHERE '. $where;
+		$result = db_query($q, 'Error checking for relationship meta_id');
+		if ($row = mysql_fetch_assoc($result))
+		{
+			if ($row['meta_id'])
+			{
+				// delete from entity table
+				$q = 'DELETE FROM entity WHERE id = '.$row['meta_id'];
+				db_query( $q, 'Unable to delete entity from entity table.' );
+			}
+		}
+	}
+
+	/**
+	 *	Creates a relationship metadata entity from arguments
+	 *
+	 *	@param int $entity_a	ID of left entity
+	 *	@param int $entity_b	ID of right entity
+	 *	@param int $relationship_type	ID of the allowable relationship for this relationship
+	 *	@param array $metadata array of the metadata	 
+	 * @param id $user_id Reason id of user creating the relationship.
+	 *	@return int ID of new entity or false indicating failure
+	 */
+	function create_relationship_metadata_entity($entity_a, $entity_b, $relationship_type, $metadata, $user_id)
+	{
+		$rel_info = reason_get_allowable_relationship_info($relationship_type);
+		
+		if (empty($rel_info['meta_type']))
+		{
+			trigger_error('Relationship type '.$relationship_type.' does not have a metadata type assigned.');
+			return false;
+		}
+				
+		// figure out which site should get ownership of the metadata entity. Generally,
+		// we're trying to figure out which side of the relationship is more likely to 
+		// want to manage the metadata. Practically, it doesn't make a big difference.
+		if ($rel_info['directionality'] == 'unidirectional')
+			$site_id = get_owner_site_id($entity_a);
+		else if ($rel_info['connections'] == 'one_to_many')
+			$site_id = get_owner_site_id($entity_b);
+		else
+			$site_id = get_owner_site_id($entity_a);
+		
+		if (empty($metadata['new'])) $metadata['new'] = 0;
+		
+		return reason_create_entity( $site_id, $rel_info['meta_type'], $user_id, $entity_a.'-'.$entity_b, $metadata);
 	}
 	
 	/**
@@ -1132,11 +1368,12 @@
 	 * Makes sure the template file exists and there is no existing template entity with the same name before creating entity
 	 *
 	 * @param string $template_name The name of the template file (not including .php)
+	 * @param int $user_id ID of user making change
 	 * @return mixed Id of created template or false if failure
 	 * @author Matt Ryan
 	 * @since Reason 4.0 beta 4
 	 */
-	function reason_add_template($template_name)
+	function reason_add_template($template_name, $user_id = 0 )
 	{
 		if(!get_template_by_name($template_name))
 		{
@@ -1209,7 +1446,7 @@
 		if (count($ids) > 0)
 		{
 			$q = 'DELETE FROM relationship where `id` IN ("'.implode('","', $ids).'")';
-			$result = db_query($q);
+			db_query($q);
 			return count($ids);
 		}
 		else return 0;
@@ -1497,4 +1734,3 @@
 		return true;
 			
 	}
-?>
