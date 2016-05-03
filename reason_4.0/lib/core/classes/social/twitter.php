@@ -117,7 +117,7 @@ class ReasonTwitterIntegrator extends ReasonSocialIntegrator implements SocialAc
 	function social_account_run_error_checks($cm)
 	{
 		$account_id = $cm->get_value('account_id');
-		if ( !check_against_regexp($account_id, array('naturalnumber')) && !check_against_regexp($account_id, array('/^[a-z\d.]*$/i')) )
+		if ( !check_against_regexp($account_id, array('/^[a-z\d._]*$/i')) )
 		{
 			$cm->set_error('account_id', 'Invalid format for twitter username. Please enter a valid username');
 		}

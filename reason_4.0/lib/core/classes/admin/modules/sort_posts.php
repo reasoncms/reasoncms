@@ -88,6 +88,7 @@
 		var $locked_posts = array();
 		var $user_id;
 		var $changes_made = false;
+		var $box_class = 'StackedBox';
 		
 		function set_posts($posts)
 		{

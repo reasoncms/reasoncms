@@ -147,34 +147,37 @@ function update_children( $page_id )
 function check_URL_history( $request_uri )
 {
 	$url_arr = parse_URL( $request_uri );
-	// This catches links that might not have had a trailing slash
-	// pages always have a trailing slash in the db
-	$URL = '/'.trim_slashes($url_arr['path']).'/';
-	$URL = str_replace('//','/',$URL);
-	$query_string = (!empty($url_arr['query'])) ? '?'.$url_arr['query'] : '';
-	$query =  'SELECT * FROM URL_history WHERE url ="' . reason_sql_string_escape ( $URL ) . '" ORDER BY timestamp DESC';
-	$results = db_query( $query );
-	$num_results = mysql_num_rows( $results );
-	
-	if (mysql_num_rows($results) > 0)
+	if (!empty($url_arr['path']))
 	{
-		while ($row = mysql_fetch_array( $results )) // grab the first result (e.g. most recent)
+		// This catches links that might not have had a trailing slash
+		// pages always have a trailing slash in the db
+		$URL = '/'.trim_slashes($url_arr['path']).'/';
+		$URL = str_replace('//','/',$URL);
+		$query_string = (!empty($url_arr['query'])) ? '?'.$url_arr['query'] : '';
+		$query =  'SELECT * FROM URL_history WHERE url ="' . reason_sql_string_escape ( $URL ) . '" ORDER BY timestamp DESC';
+		$results = db_query( $query );
+		$num_results = mysql_num_rows( $results );
+	
+		if (mysql_num_rows($results) > 0)
 		{
-			$page_id = $row['page_id'];
-			$page = new entity($page_id);
-			if (reason_is_entity($page, 'minisite_page') && ($page->get_value('state') == 'Live') && ($redir = @reason_get_page_url($page)))
+			while ($row = mysql_fetch_array( $results )) // grab the first result (e.g. most recent)
 			{
-				if ($redir == $request_uri)
+				$page_id = $row['page_id'];
+				$page = new entity($page_id);
+				if (reason_is_entity($page, 'minisite_page') && ($page->get_value('state') == 'Live') && ($redir = @reason_get_page_url($page)))
 				{
-					//Could potentially update rewrites here, solving most times this happens, perhaps.
-					trigger_error("A page should exist here, but apparently does not at the moment. A web administrator may need to run URL updating on this site.");
-				} 
-				else 
-				{
-					header( 'Location: ' . $redir . $query_string, true, 301 );
-					exit();
-				}
+					if ($redir == $request_uri)
+					{
+						//Could potentially update rewrites here, solving most times this happens, perhaps.
+						trigger_error("A page should exist here, but apparently does not at the moment. A web administrator may need to run URL updating on this site.");
+					} 
+					else 
+					{
+						header( 'Location: ' . $redir . $query_string, true, 301 );
+						exit();
+					}
 				
+				}
 			}
 		}
 	}

@@ -9,6 +9,7 @@
  */
 include_once( 'paths.php');
 include_once( CARL_UTIL_INC . 'basic/date_funcs.php' );
+include_once( DISCO_INC . 'boxes/boxes.php' );
 
 /**
 * Stacked Box class that does not use tables for overall layout
@@ -41,6 +42,8 @@ class StackedBox extends Box // {{{
 		 if(!empty($id)) 
 			$markup .= ' id="'.$id.'Item"';
 		$markup .= '>'."\n";
+		// drop in a named anchor for error jumping
+		$markup .= '<a name="'.$key.'_error"></a>'."\n";
 		$markup .= '<div class="words">';
 		if($use_label)
 		{

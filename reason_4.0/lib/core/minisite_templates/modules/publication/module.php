@@ -17,6 +17,8 @@ include_once( 'reason_header.php' );
 reason_include_once( 'minisite_templates/modules/generic3.php' );
 reason_include_once( 'classes/page_types.php' );
 reason_include_once( 'classes/inline_editing.php' );
+include_once( 'default_embed_handler.php' );
+include_once( 'simple_embed_handler.php' );
 /**
 * A minisite module to handle publications, including blogs, issued newsletters, and newsletters.
 *
@@ -61,6 +63,9 @@ class PublicationModule extends Generic3Module
 	var $minimum_date_strtotime_format;
 	var $minimum_date;
 
+	var $email_sharer_location = null;
+	var $email_sharer_classname = null;
+
 	// Filter settings
 	var $use_filters = true;
 	var $filter_types = array(	'category'=>array(	'type'=>'category_type',
@@ -85,6 +90,7 @@ class PublicationModule extends Generic3Module
 	var $no_section_key = 'no_section';		//key to be used in the items_by_section array when there are no sections.
 	var $group_by_section = true;			//whether or not items should be grouped by section when displayed
 	var $show_module_title = false; // page title module generally handles this
+	var $restrict_story_categories_to_owned_or_borrowed = false;
 
 	// related mode variables - page type configurable
 	var $related_mode = false;      // in related_mode, related publication items are aggregated
@@ -138,6 +144,9 @@ class PublicationModule extends Generic3Module
 															   ),
 										'persistent' => array('classname' => 'PublicationsPersistentMarkupGenerator',
 															  'filename' => 'minisite_templates/modules/publication/persistent_markup/default.php',
+															  ),
+										'linkpost' => array('classname' => 'PublicationsLinkPostMarkupGenerator',
+															  'filename' => 'minisite_templates/modules/publication/linkpost_markup_generators/default.php',
 															  ),
 								   	   );
 
@@ -196,6 +205,8 @@ class PublicationModule extends Generic3Module
 									   'login_logout_link' => 'get_login_logout_link',
 									   'use_filters' => 'get_use_filters_value',
 									   'filtering_markup' => 'get_filtering_markup',
+									   'num_featured' => 'get_num_featured',
+									   'num_normal' => 'get_num_normal'
 									);
 
 	/**
@@ -223,6 +234,8 @@ class PublicationModule extends Generic3Module
 													 'commenting_status' => 'commentability_status',
 													 'previous_post' => 'get_next_post',
 													 'next_post' => 'get_previous_post',
+													 'featured_index' => 'get_featured_index',
+													 'featured_total_count' => 'get_featured_total_count',
 												);
 
 
@@ -252,6 +265,7 @@ var $noncanonical_request_keys = array(
 		$this->set_defaults_from_parameters($this->params);
 		$this->set_show_featured_items();
 		$this->set_minimum_date();
+		$this->set_email_sharing_behavior();
 
 		if ($this->related_mode) $this->init_related( $args );
 		elseif (!empty($this->publication)) parent::init( $args );
@@ -293,6 +307,17 @@ var $noncanonical_request_keys = array(
 				$head_items->add_javascript(JQUERY_URL, true);
 				$head_items->add_javascript(REASON_HTTP_BASE_PATH . 'modules/publications/inline_editing.js');
 			}
+		}
+	}
+
+	function set_email_sharing_behavior()
+	{
+		if (isset($this->params['email_sharer_location']) && isset($this->params['email_sharer_classname'])) {
+			$this->email_sharer_location = $this->params['email_sharer_location'];
+			$this->email_sharer_classname = $this->params['email_sharer_classname'];
+		} else {
+			$this->email_sharer_location = "minisite_templates/modules/publication/default_publication_emailer.php";
+			$this->email_sharer_classname = "DefaultPublicationEmailer";
 		}
 	}
 
@@ -339,7 +364,8 @@ var $noncanonical_request_keys = array(
 		$this->show_login_link = false;
 		$this->use_pagination = (isset($this->params['use_pagination']) && $this->params['use_pagination']) ? true : false;
 		if (!$this->use_pagination && empty($this->max_num_items)) $this->max_num_items = $this->num_per_page;
-		$this->style_string = 'relatedPub';
+		if(empty($this->params['style_string']))
+			$this->style_string = 'relatedPub';
 		unset ($this->request[ $this->query_string_frag.'_id' ] );
 
 		$publication_ids = (!empty($this->params['related_publication_unique_names']))
@@ -536,7 +562,7 @@ var $noncanonical_request_keys = array(
 		$potential_params = array('use_filters', 'use_pagination', 'num_per_page', 'max_num_items', 'minimum_date_strtotime_format', 'show_login_link',
 		      					  'show_module_title', 'related_mode', 'related_order', 'date_format', 'related_title',
 		      					  'limit_by_page_categories', 'related_publication_unique_names', 'related_category_unique_names','css',
-		      					  'show_featured_items','jump_to_item_if_only_one_result','authorization','comment_form_file_location','post_form_file_location',);
+		      					  'show_featured_items','jump_to_item_if_only_one_result','authorization','comment_form_file_location','post_form_file_location','style_string','wrapper_class_override',);
 		$markup_params = 	array('markup_generator_info' => $this->markup_generator_info,
 							      'item_specific_variables_to_pass' => $this->item_specific_variables_to_pass,
 							      'variables_to_pass' => $this->variables_to_pass);
@@ -553,6 +579,8 @@ var $noncanonical_request_keys = array(
 		$this->acceptable_params['module_displays_filter_interface'] = true;
 		$this->acceptable_params['show_pagination_in_module'] = true;
 		$this->acceptable_params['no_publication_warning'] = true;
+		$this->acceptable_params['restrict_story_categories_to_owned_or_borrowed'] = false;
+		$this->acceptable_params['category_limit_method'] = 'or'; // could be 'and'
 		parent::handle_params( $params );
 	}
 
@@ -641,6 +669,10 @@ var $noncanonical_request_keys = array(
 				$this->parent->pages->make_current_page_a_link();
 			}
 
+			if (!empty($this->params['restrict_story_categories_to_owned_or_borrowed'])) {
+				$this->restrict_story_categories_to_owned_or_borrowed = $this->params['restrict_story_categories_to_owned_or_borrowed'];
+			}
+
 			$this->_handle_authorization();
 		}
 	}
@@ -717,6 +749,7 @@ var $noncanonical_request_keys = array(
 		{
 			$title = htmlspecialchars(trim(strip_tags($item->get_value('release_title'))),ENT_QUOTES,'UTF-8');
 			$description = htmlspecialchars(trim(str_replace('&nbsp;', '', strip_tags($item->get_value('description')))),ENT_QUOTES,'UTF-8');
+			$meta_description = htmlspecialchars(trim(str_replace('&nbsp;', '', strip_tags($item->get_value('meta_description')))),ENT_QUOTES,'UTF-8');
 			if (empty($description)) // lets look to the content field if description is missing.
 			{
 				$content = htmlspecialchars(trim(str_replace('&nbsp;', '', strip_tags($item->get_value('content')))),ENT_QUOTES,'UTF-8');
@@ -746,7 +779,7 @@ var $noncanonical_request_keys = array(
 			$head_items->add_head_item('meta',array( 'property' => 'og:type', 'content' => 'article'));
 			$head_items->add_head_item('meta',array( 'property' => 'og:title', 'content' => $title));
 			$head_items->add_head_item('meta',array( 'property' => 'og:url', 'content' => $url));
-			if (!empty($description)) $head_items->add_head_item('meta',array( 'property' => 'og:description', 'content' => $description));
+			if (!empty($meta_description)) $head_items->add_head_item('meta',array( 'property' => 'og:description', 'content' => $meta_description));
 			if (!empty($image_urls))
 			{
 				foreach ($image_urls as $image_url)
@@ -806,8 +839,28 @@ var $noncanonical_request_keys = array(
 			$persistent_markup_generator = $this->set_up_generator_of_type('persistent', $item);
 			$persistent_markup_generator->add_head_items($head_items);
 
+			$this->replaceContentWithLinkIfPresent($item);
+
 			$item_markup_generator = $this->set_up_generator_of_type('item', $item);
 			$item_markup_generator->add_head_items($head_items);
+		}
+	}
+
+	function replaceContentWithLinkIfPresent(&$item) {
+		$itemValues = $item->get_values();
+		if( empty($itemValues) ) {
+			// for instance if a story was deleted or something, we need to just bail
+			return;
+		}
+
+		$linkContent = "";
+		if ($item->has_value("linkpost_url") && $linkpost_url = $item->get_value("linkpost_url")) {
+			// this should come from a markup generator
+			$postlink_markup_generator = $this->set_up_generator_of_type('linkpost', $item);
+
+			$linkContent = $postlink_markup_generator->get_markup();
+			// $linkContent = '<a target="_blank" href="' . $linkpost_url . '">' . $item->get_value("name") . "</a>";
+			$item->set_value("content", $linkContent);
 		}
 	}
 
@@ -1060,6 +1113,8 @@ var $noncanonical_request_keys = array(
 		{
 			$this->cleanup_rules[$fragment . '_id'] = array('function' => 'turn_into_int');
 		}
+		$this->cleanup_rules['share_via_email'] = array('function'=>'check_against_array', 'extra_args' => array('yes'));
+		$this->cleanup_rules['show_linkpost_url'] = array('function'=>'check_against_array', 'extra_args' => array('yes'));
 		return $this->cleanup_rules;
 	}
 
@@ -1122,7 +1177,18 @@ var $noncanonical_request_keys = array(
 		// add category limitations
 		if (!empty($this->related_categories)) // if no categories do not limit;
 		{
-			$this->es->add_left_relationship( array_keys($this->related_categories), relationship_id_of('news_to_category'));
+			switch($this->params['category_limit_method']) {
+				case 'and':
+					foreach(array_keys($this->related_categories) as $cat_id)
+						$this->es->add_left_relationship($cat_id, relationship_id_of('news_to_category'));
+					break;
+				case 'or':
+					$this->es->add_left_relationship( array_keys($this->related_categories), relationship_id_of('news_to_category'));
+					break;
+				default:
+					trigger_error('The parameter category_limit_method must be either "or" or "and" -- another value ('.$this->params['category_limit_method'].') was provided. Falling back to "or" behavior');
+					$this->es->add_left_relationship( array_keys($this->related_categories), relationship_id_of('news_to_category'));
+			}
 		}
 		if (!empty($this->minimum_date))
 		{
@@ -1130,6 +1196,7 @@ var $noncanonical_request_keys = array(
 		}
 		$this->related_issue_limit($this->es);
 		$table_limit_array = (!empty($this->minimum_date)) ? array('status', 'dated') : array('status');
+
 		$this->related_order_and_limit($this->es, $table_limit_array);
 	}
 
@@ -1149,10 +1216,10 @@ var $noncanonical_request_keys = array(
 				else
 					$nonissued_pubs[$pub->id()] = $pub;
 			}
-			
+
 			if(empty($issued_pubs))
 				return;
-			
+
 			$issued_posts = array();
 			$nonissued_posts = array();
 			$table_limit_array = (!empty($this->minimum_date)) ? array('status', 'dated') : array('status');
@@ -1180,7 +1247,7 @@ var $noncanonical_request_keys = array(
 				$this->related_order_and_limit($nonissued_posts_es, $table_limit_array);
 				$nonissued_posts = $nonissued_posts_es->run_one();
 			}
-			
+
 			$post_ids = array_unique(array_merge(array_keys($issued_posts),array_keys($nonissued_posts)));
 			$es->add_relation('entity.id IN ("'.implode('","',$post_ids).'")');
 		}
@@ -1284,6 +1351,45 @@ var $noncanonical_request_keys = array(
 		{
 			echo $this->_unauthorized_message;
 			return;
+		}
+
+		// by default, if a news/post has a link/url we will just auto redirect the user
+		// on to that link. However, in case of something like a permalink (or if we want to do some other stuff)
+		// this module respects the optional "show_linkpost_url" GET param. If this is present and equals "yes", instead
+		// of just redirecting the user, we'll present them with a link (that's defined by a markup generator)
+		$linkContent = "";
+		if ($item->has_value("linkpost_url") && $linkpost_url = $item->get_value("linkpost_url"))
+		{
+			$show_linkpost_url = isset($this->request['show_linkpost_url']) ? $this->request['show_linkpost_url'] : '';
+
+			if ('yes' != $show_linkpost_url) {
+				header('Location: ' . $linkpost_url);
+				return;
+			}
+		}
+		if ($this->page_is_public() &&
+			$this->publication->has_value('enable_social_sharing') &&
+			$this->publication->get_value('enable_social_sharing') == 'yes' &&
+			defined('PUBLICATION_SOCIAL_SHARING_INCLUDES_EMAIL') &&
+			PUBLICATION_SOCIAL_SHARING_INCLUDES_EMAIL &&
+			isset($this->request['share_via_email']) &&
+			$this->request['share_via_email'] == "yes"
+		)
+		{
+			reason_include_once($this->email_sharer_location);
+			if(class_exists($this->email_sharer_classname))
+			{
+				$emailer = new $this->email_sharer_classname($this->get_site_entity(), $this->publication, $item, $this->construct_permalink($item));
+				echo '<div class="emailSharer">';
+				echo $emailer->get_share_intro_text();
+				$emailer->run();
+				echo '</div>';
+				return;
+			}
+			else
+			{
+				trigger_error('Unable to find class '.$this->email_sharer_classname.' for email sharing');
+			}
 		}
 
 		//if this is an issued publication, we want to say what issue we're viewing
@@ -1428,7 +1534,43 @@ var $noncanonical_request_keys = array(
 								     ? $this->markup_generator_info[$type]['settings']
 								     : '';
 			if (!empty($markup_generator_settings)) $markup_generator->set_passed_variables($markup_generator_settings);
-			$markup_generator->set_passed_variables($this->get_values_to_pass($markup_generator, $item));
+
+
+			$itemForGenerator = $item;
+			if ($type == "item") {
+				if ($item == null) {
+					$itemForGenerator = null;
+				} else {
+					if ($markup_generator->has_custom_embed_handling()) {
+						// support for super customized behavior?? For instance, maybe the markup generator wants to handle the responsibility
+						// instead of the publication module and the post<->embedhandler relationship.
+						$markup_generator->handleCustomEmbedding($this, $item);
+					} else {
+						$embedHandler = null;
+						$itemValues = $item->get_values();
+						if (!empty($itemValues)) {
+							$customHandlerData = $item->get_relationship("news_post_to_embed_handler");
+							if (count($customHandlerData) == 1) {
+								$handlerEntity = $customHandlerData[0];
+								reason_include_once($handlerEntity->get_value("path"));
+								$handlerClassName = $handlerEntity->get_value("class_name");
+								$embedHandler = new $handlerClassName($item->get_owner()->id());
+							} else {
+								$embedHandler= new SimpleEmbedHandler($item->get_owner()->id());
+							}
+						}
+
+						if ($embedHandler != null) {
+							$itemForGenerator = clone $item;
+							$embedHandler->customInit($this, $markup_generator, $item);
+							$itemForGenerator->set_value("content", $embedHandler->processEmbeddedContent($itemForGenerator, "content"));
+							$embedHandler->customPostProcess($this, $markup_generator, $item);
+						}
+					}
+				}
+			}
+
+			$markup_generator->set_passed_variables($this->get_values_to_pass($markup_generator, $itemForGenerator));
 			//pray($this->get_values_to_pass($markup_generator, $item));
 			$this->markup_generators[$type][$item_id] = $markup_generator;
 		}
@@ -1624,6 +1766,18 @@ var $noncanonical_request_keys = array(
 		*/
 		function build_post_form($net_id)
 		{
+			if ($form = $this->get_post_form($net_id))
+			{
+				if(!empty($this->issue_id))
+					$form->set_issue_id($this->issue_id);
+				if(!empty($this->request['section_id']))
+					$form->set_section_id($this->request['section_id']);
+				$form->run();
+			}
+		}
+
+		function get_post_form($net_id)
+		{
 			reason_include_once($this->post_form_file_location);
 
 			$identifier = basename( $this->post_form_file_location, '.php');
@@ -1637,12 +1791,7 @@ var $noncanonical_request_keys = array(
 
 			$hold_posts_for_review = ($this->publication->get_value('hold_posts_for_review') == 'yes') ? true : false;
 
-			$form = new $form_class($this->site_id, $this->publication, $net_id, $hold_posts_for_review);
-			if(!empty($this->issue_id))
-				$form->set_issue_id($this->issue_id);
-			if(!empty($this->request['section_id']))
-				$form->set_section_id($this->request['section_id']);
-			$form->run();
+			return new $form_class($this->site_id, $this->publication, $net_id, $hold_posts_for_review);
 		}
 
 ///////////////
@@ -2290,6 +2439,16 @@ var $noncanonical_request_keys = array(
 			return ob_get_clean();
 		}
 
+		function get_num_featured()
+		{
+			return count($this->get_featured_items());
+		}
+
+		function get_num_normal()
+		{
+			return count($this->items) - $this->get_num_featured();
+		}
+
 		function get_pagination_markup($class = '')
 		{
 			if($this->use_pagination && ( $this->show_list_with_details || empty( $this->current_item_id ) ) )
@@ -2547,7 +2706,13 @@ var $noncanonical_request_keys = array(
 		*/
 		function construct_permalink($item)
 		{
-			$link = carl_make_link( array($this->query_string_frag.'_id'=>$item->id()), '', '', true, false );
+			$linkVars = array($this->query_string_frag.'_id'=>$item->id());
+
+			if ($item->has_value("linkpost_url") && $linkpost_url = $item->get_value("linkpost_url"))
+			{
+				$linkVars["show_linkpost_url"] = "yes";
+			}
+			$link = carl_make_link( $linkVars, '', '', true, false );
 			return $link;
 		}
 
@@ -2575,13 +2740,14 @@ var $noncanonical_request_keys = array(
 		//overloaded from generic3
 		function show_style_string()
 		{
-			$class_string = ($this->related_mode) ? 'relatedPub' : 'publication';
-			if(empty($this->filters) && empty( $this->current_item_id ))
-				$class_string .= ' homePostsDisplay';
-			if(!empty( $this->current_item_id ) )
+			if(empty($this->params['wrapper_class_override']))
+				$class_string = ($this->related_mode) ? 'relatedPub' : 'publication';
+			else
+				$class_string = (string) $this->params['wrapper_class_override'];
+ 			if(empty($this->filters) && empty( $this->current_item_id ))
+ 				$class_string .= ' homePostsDisplay';
+ 			if(!empty( $this->current_item_id ) )
 				$class_string .= ' fullPostDisplay';
-			if(!empty($this->filters) && empty( $this->current_item_id ))
-				$class_string .= ' filteredPostsDisplay';
 			echo '<div id="'.$this->style_string.'" class="'.$class_string.'">'."\n";
 		}
 
@@ -2802,6 +2968,32 @@ var $noncanonical_request_keys = array(
 			}
 			return $this->events_page_url;
 		}
+
+		// some markup generators could potentially want to apply a filter to the list of associated images (for instance a
+		// markup generator that *sometimes* includes associated images as a slideshow would not want the images to also show up in a sidebar).
+		// (obv if it ALWAYS used a slideshow it could just omit using images altogether
+		function filter_out_images($item, $filter_ids)
+		{
+			if ($item == null || $filter_ids == null) { return; }
+			if (!isset($this->_item_images[$item->id()])) {
+				$this->get_item_images($item);
+			}
+			foreach ($filter_ids as $filter_id) {
+				unset($this->_item_images[$item->id()][$filter_id]);
+			}
+		}
+
+		function filter_out_media($item, $filter_ids)
+		{
+			if ($item == null || $filter_ids == null) { return; }
+			if (!isset($this->_item_media[$item->id()])) {
+				$this->get_item_media($item);
+			}
+			foreach ($filter_ids as $filter_id) {
+				unset($this->_item_media[$item->id()][$filter_id]);
+			}
+		}
+
 		function get_item_images($item)
 		{
 			if (!isset($this->_item_images[$item->id()]))
@@ -2845,21 +3037,27 @@ var $noncanonical_request_keys = array(
 		}
 		function get_item_categories($item)
 		{
-			$es = new entity_selector();
+			$es = new entity_selector($this->site_id);
 			$es->description = 'Selecting categories for news item';
 			$es->add_type( id_of('category_type') );
 			$es->set_env('site',$this->site_id);
 			$es->add_right_relationship( $item->id(), relationship_id_of('news_to_category') );
 			$es->set_order( 'entity.name ASC' );
 			$cats = $es->run_one();
+
+			if ($this->restrict_story_categories_to_owned_or_borrowed) {
+				foreach ($cats as $c) {
+					if ($c->get_owner()->id() != $this->site_id && ! site_borrows_entity($this->site_id, $c->id())) {
+						unset($cats[$c->id()]);
+					}
+				}
+			}
+
 			if(!empty($cats))
 			{
 				foreach(array_keys($cats) as $id)
 				{
-					$url = '?filters[1][type]=category&filters[1][id]='.$id;
-					if($this->textonly)
-						$url .= '&amp;textonly=1';
-					$cats[$id]->set_value('category_url',$url);
+					$cats[$id]->set_value('category_url','?filter1=category-'.$id);
 				}
 			}
 			return $cats;
@@ -2889,6 +3087,7 @@ var $noncanonical_request_keys = array(
 				reason_include_once('classes/social.php');
 				$helper = reason_get_social_integration_helper();
 				$integrators = $helper->get_social_integrators_by_interface('SocialSharingLinks');
+				$item_social_sharing = array();
 				if (!empty($integrators))
 				{
 					foreach ($integrators as $integrator_type => $integrator)
@@ -2897,8 +3096,15 @@ var $noncanonical_request_keys = array(
 						$item_social_sharing[$integrator_type]['text'] = $integrator->get_sharing_link_text();
 						$item_social_sharing[$integrator_type]['href'] = $integrator->get_sharing_link_href();
 					}
-					return $item_social_sharing;
 				}
+				if(defined('PUBLICATION_SOCIAL_SHARING_INCLUDES_EMAIL') && PUBLICATION_SOCIAL_SHARING_INCLUDES_EMAIL)
+				{
+					$item_social_sharing['email']['icon'] = '/reason_package/reason_4.0/www/modules/social_account/images/email.png';
+					$item_social_sharing['email']['text'] = 'Email';
+					$item_social_sharing['email']['href'] = $this->construct_permalink($item).'&amp;share_via_email=yes';
+				}
+				if(!empty($item_social_sharing))
+					return $item_social_sharing;
 			}
 			return false;
 		}
@@ -2917,22 +3123,27 @@ var $noncanonical_request_keys = array(
 		{
 			return (isset($this->_comment_has_errors)) ? $this->_comment_has_errors : '';
 		}
+
+		function get_comment_form($item)
+		{
+			reason_include_once($this->comment_form_file_location);
+			$identifier = basename( $this->comment_form_file_location, '.php');
+			if(empty($GLOBALS[ '_publication_comment_forms' ][ $identifier ]))
+			{
+				trigger_error('Comment forms must identify their class name in the $GLOBALS array; the form located at '.$this->comment_form_file_location.' does not and therefore cannot be run.');
+				return '';
+			}
+
+			$form_class = $GLOBALS[ '_publication_comment_forms' ][ $identifier ];
+			return new $form_class($this->site_id, $item, $this->get_comment_moderation_state(), $this->publication);
+		}
+
 		function get_comment_form_markup($item)
 		{
 			if($this->comment_form_ok_to_run($item))
 			{
-				reason_include_once($this->comment_form_file_location);
-				$identifier = basename( $this->comment_form_file_location, '.php');
-				if(empty($GLOBALS[ '_publication_comment_forms' ][ $identifier ]))
-				{
-					trigger_error('Comment forms must identify their class name in the $GLOBALS array; the form located at '.$this->comment_form_file_location.' does not and therefore cannot be run.');
-					return '';
-				}
-
-				$form_class = $GLOBALS[ '_publication_comment_forms' ][ $identifier ];
-
 				ob_start();
-				$form = new $form_class($this->site_id, $item, $this->get_comment_moderation_state(), $this->publication);
+				$form = $this->get_comment_form($item);
 				$form->set_username($this->get_user_netid());
 				$form->run();
 				if ($form->has_errors())
@@ -3056,6 +3267,18 @@ var $noncanonical_request_keys = array(
 			if(!empty($p))
 				$p->set_value('link_url',$this->get_link_to_full_item($p));
 			return $p;
+		}
+
+		function get_featured_total_count($entity)
+		{
+			return $this->get_num_featured();
+		}
+
+		function get_featured_index($entity)
+		{
+			$featured_keys = array_keys($this->get_featured_items());
+			$featured_item_order_by_key = array_flip($featured_keys);
+			return (in_array($entity->id(), $featured_keys)) ? $featured_item_order_by_key[$entity->id()] : false;
 		}
 
 		//////////////////////////////////////////

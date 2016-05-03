@@ -115,14 +115,21 @@
 				}
 				else
 				{
-					trigger_error('Could not identify site maintainer - check to make sure username - ' . $maintainer . ' - is valid');
+					trigger_error('Could not identify site maintainer - check to make sure username - ' . $maintainer . ' - is valid', E_USER_NOTICE);
 					$html = $maintainer;
 				}
 			}
 			return $html;
 		}
+		/**
+		 * @todo generalize the method of determining the re-check time
+		 * @todo move errors to this function, and only produce one error per site per day
+		 * @todo send email instead of erroring if site maintainer can't be found
+		 */
 		function _get_maintainer_info($maintainer)
 		{
+			$email = $full_name = '';
+		
 			// Check to see if it's before or after 7 am, and set the last colleague->ldap sync time appropriately.
 				
 			if(carl_date('G') < 7) // it's before 7am

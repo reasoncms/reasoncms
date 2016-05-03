@@ -291,6 +291,7 @@ class VimeoMediaWorkDisplayer implements MediaWorkDisplayerInterface
 	{		
 		if (isset($this->media_work))
 		{
+			$markup = '';
 			if ( !empty($this->height) )
 			{
 				$iframe_height = $this->_get_height();
@@ -311,7 +312,9 @@ class VimeoMediaWorkDisplayer implements MediaWorkDisplayerInterface
 			if ($this->autostart)
 				$src .= '?autoplay=1';
 			
-			$markup = '<iframe class="media_work_iframe" src="'.$src.'" width="'.intval($iframe_width).'" height="'.intval($iframe_height).'" frameborder="0" allowfullscreen></iframe>'."\n";
+			$markup .= '<div style="width:100%;height:0;padding-bottom:'.($iframe_height/$iframe_width*100).'%;position:relative;">';
+			$markup .= '<iframe class="media_work_iframe" src="'.$src.'" width="'.intval($iframe_width).'" height="'.intval($iframe_height).'" frameborder="0" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>'."\n";
+			$markup .= '</div>';
 			
 			return $markup;
 		}

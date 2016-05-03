@@ -188,10 +188,13 @@
 		{
 			if( !empty( $this->admin_page->associations ) )
 			{
-				foreach( $this->admin_page->associations AS $ass )
+				foreach( $this->admin_page->associations AS $side )
 				{
-					if( $ass[ 'name' ] == $index )
-						return $ass;
+					foreach( $side AS $ass )
+					{
+						if( $ass[ 'name' ] == $index )
+							return $ass;
+					}
 				}
 			}
 			return array();

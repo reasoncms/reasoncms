@@ -163,7 +163,9 @@ class RelationshipSort
 		// performs an appropriate entity selection - populates class variables with specifics for run method.
 		$es = new entity_selector($this->site_id);
 		$es->add_type($type_id);
-		$es->set_sharing( 'owns,borrows' );
+		// 20151207 - tfeiler fix for https://github.com/carleton/reason_package/issues/6
+		// $es->set_sharing( 'owns,borrows' );
+		$es->set_sharing(Array());
 		$es->add_field( 'relationship' , 'id' , 'relationship_id' );
 		$es->add_right_relationship( $this->left_entity_id , $this->al_relationship_id );
 		$es->add_rel_sort_field($this->left_entity_id);
@@ -173,6 +175,7 @@ class RelationshipSort
 		$resultcount = count($result);
 		$read_next = false;
 		$rowcounter = 0;
+		$relationship_id_1 = $relationship_id_2 = $new_rel_sort_order = $old_rel_sort_order = null;
 		foreach ($result as $k=>$v)
 		{
 			if ($read_next == true)

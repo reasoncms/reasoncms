@@ -56,12 +56,27 @@
 			'thumbnail_height' => 0,
 			// How to crop the image to fit the size requirements; 'fill' or 'fit'
 			'thumbnail_crop' => '',
+			'ignore_affiliations' => false,
+			// optional affiliation display order and naming. Set a label to null or '' to hide an affiliation.
+			'affiliations' => array(),
+			// optional affiliation names for use in navigation
+			'affiliation_nav_names' => array(),
 		);
 				
 		function has_content() // {{{
 		{
 			return true;
 		} // }}}
+
+		function init( $args = array() )
+		{
+			parent::init($args);
+			if (!empty($this->params['affiliations']))
+				$this->affiliations = $this->params['affiliations'];
+			if (!empty($this->params['affiliation_nav_names']))
+				$this->affiliation_nav_names = $this->params['affiliation_nav_names'];
+		}
+		
 		function run() // {{{
 		{
 			$this->show_faculty_page();
@@ -100,7 +115,7 @@
 				{
 					$this->directory_people = $records;
 					usort( $this->directory_people, 'dir_result_last_name_sort' );
-				}
+				}	
 			}
 		} // }}}
 		function build_dept_filter()
@@ -126,6 +141,7 @@
 		{
 			foreach( $this->reason_people as $reason_person )
 				$this->reason_netids[ $reason_person->get_value('name') ] = $reason_person;
+
 		} // }}}
 		function look_up_dir_reason_diffs() // {{{
 		{
@@ -176,7 +192,7 @@
 				}
 				else
 					;	// drop this person - no Reason or LDAP info
-			}
+				}
 			// now, run through what's left
 			foreach( $this->directory_netids AS $directory_person )
 			{
@@ -186,7 +202,7 @@
 		} // }}}
 		function sort_all_people() // {{{
 		{
-			if(!empty($this->affiliations))
+			if(!empty($this->affiliations) && !$this->params['ignore_affiliations'])
 			{
 				// make sure sorted people affiliations are in same order as affiliations array
 				foreach( $this->affiliations as $directory_aff=>$public_aff )
@@ -195,22 +211,29 @@
 				}
 				foreach( $this->all_people AS $person )
 				{
+					$hidden = false;
 					// if this person has an entry in reason and they have an affiliation set in reason
 					if( !empty( $this->reason_netids[ $person[ 'ds_username' ][0] ] ) &&
 						$this->reason_netids[ $person[ 'ds_username' ][0] ]->get_value('affiliation') )
-					{
-						$directory_aff = $this->reason_netids[ $person[ 'ds_username' ][0] ]->get_value( 'affiliation' );	
+					{	
+						$directory_aff = $this->reason_netids[ $person[ 'ds_username' ][0] ]->get_value( 'affiliation' );
 					}
 					elseif(!($directory_aff = $this->get_affiliation($person)))
 						$directory_aff = 'other';
 					
-					if (($this->affiliation_from_directory[$person['ds_username'][0]] == false) && 
+					if ((empty($this->affiliation_from_directory[$person['ds_username'][0]]) ||
+						$this->affiliation_from_directory[$person['ds_username'][0]] == false) && 
 					    (in_array($directory_aff,$this->affiliations_to_use_other_aff_flag)) && 
 					    ($this->other_affiliation_flag == true))
 					{
 						$directory_aff = 'other_' . $directory_aff;
 					}
-					if(array_key_exists($directory_aff, $this->affiliations) )
+					if( !empty( $this->reason_netids[ $person[ 'ds_username' ][0] ] ) &&
+						$this->reason_netids[ $person[ 'ds_username' ][0] ]->get_value('show_hide')=='hide' )
+					{		
+							$hidden = true;
+					}
+					if(array_key_exists($directory_aff, $this->affiliations) && !$hidden )
 					{
 						$this->sorted_people[$directory_aff][$person['ds_username'][0]] = $person;
 					}
@@ -226,18 +249,21 @@
 		} // }}}
 		function show_people() // {{{
 		{
-
 			$this->clean_sorted_people();
 			$this->determine_heads_use();
 			if($this->heads) $this->show_section_links();
 			foreach($this->sorted_people as $affiliation=>$people)
 			{
+
 				if(!empty($people))
 				{
 					if($this->heads)
 					{
 						if (isset($this->affiliations[$affiliation]))
-							$display = $this->affiliations[$affiliation];
+						{
+							if (!$display = $this->affiliations[$affiliation])
+								continue;
+						}
 						else
 							$display = ucwords($affiliation);
 
@@ -269,11 +295,16 @@
 				echo '</div>'."\n";
 			}
 		} // }}}
+		
+		/**
+		  * Hide an affiliation if it is empty, or its label in the $affiliations var is empty.
+		  *
+		  */
 		function clean_sorted_people() // {{{
 		{
 			foreach($this->sorted_people as $affiliation=>$people)
 			{
-				if(empty($people))
+				if(empty($people) || (array_key_exists($affiliation, $this->affiliations) && empty($this->affiliations[$affiliation])))
 					unset($this->sorted_people[$affiliation]);
 			}
 		} // }}}

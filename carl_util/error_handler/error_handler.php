@@ -180,7 +180,7 @@ function is_developer()
 		return $_SESSION['carl_util_error_handler_override'];
 	
 	if(!empty($_SERVER['REMOTE_ADDR']))
-		return is_developer_ip_address($_SERVER['REMOTE_ADDR']);
+		return is_developer_ip_address(get_user_ip_address());
 	
 	return false;
 }
@@ -292,7 +292,9 @@ function error_level_name($level)
 			ERROR => 'Error',
 			WARNING => 'Warning',
 			E_WARNING => 'Warning',
-			E_NOTICE => 'Notice'
+			E_USER_WARNING => 'Warning',
+			E_NOTICE => 'Notice',
+			E_USER_NOTICE => 'Notice'
 		);
 		
 		if (defined('E_RECOVERABLE_ERROR'))
@@ -587,7 +589,7 @@ function carl_util_handle_error($level, $message, $file, $line, $context)
 		_carl_util_send_page($level, $message, $file, $line, $context);
 	
 	if (level_is_terminal($level)) {
-		if (!is_developer() && !error_handler_config('script_mode')) {
+		if (!is_developer() && !error_handler_config('script_mode') && PHP_SAPI != "cli" ) {
 			header('Location: '.OHSHI_SCRIPT);
 		} else {
 			_carl_util_send_error_status();

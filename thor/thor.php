@@ -12,6 +12,7 @@ require_once( INCLUDE_PATH . 'xml/xmlparser.php' );
 include_once ( SETTINGS_INC.'thor_settings.php' );
 include_once( CARL_UTIL_INC . 'db/db.php'); // Requires ConnectDB Functionality
 reason_include_once("function_libraries/file_utils.php");
+reason_include_once("classes/plasmature/upload.php");
 
 /**
  * ThorCore - essentially a thor replacement that does less than the old thor, but does it better.
@@ -160,7 +161,7 @@ class ThorCore
 		return (isset($labels[$name])) ? $labels[$name] : false;
 	}
 	
-	function append_thor_elements_to_form(&$disco_obj)
+	function append_thor_elements_to_form(&$disco_obj, $include_submit = true)
 	{
 		$xml = $this->get_thor_xml();
 		// echo "<PRE>" . $xml . "</PRE>";
@@ -168,6 +169,7 @@ class ThorCore
 		{
 			foreach ($xml->document->tagChildren as $node)
 			{
+				// echo "running on [" . $node->tagName . "]...<br>";
 				if ($node->tagName == 'input') $this->_transform_input($node, $disco_obj);
 				elseif ($node->tagName == 'textarea') $this->_transform_textarea($node, $disco_obj);
 				elseif ($node->tagName == 'radiogroup') $this->_transform_radiogroup($node, $disco_obj);
@@ -180,7 +182,10 @@ class ThorCore
 					$this->_transform_upload($node, $disco_obj);
 				}
 			}
-			$this->_transform_submit($xml->document->tagAttrs, $disco_obj);
+
+			if ($include_submit) {
+				$this->_transform_submit($xml->document->tagAttrs, $disco_obj);
+			}
 		}
 		else
 		{
@@ -204,7 +209,9 @@ class ThorCore
 					$kEl = $disco_obj->get_element($k);
 					if ($kEl)
 					{
-						if ("upload" == $kEl->type) {
+						$uploadClassName = "UploadType";
+						// if ("upload" == $kEl->type || "ReasonUpload" == $kEl->type) {
+						if ($uploadClassName == get_class($kEl) || is_subclass_of($kEl, $uploadClassName)) {
 							$possibleExistingPath = $this->get_thor_filestorage_row_and_col_specific_storage_dir($primary_key, $k) . $v;
 
 							if (!empty($v) && file_exists($possibleExistingPath)) {
@@ -518,6 +525,8 @@ class ThorCore
 
   			$GLOBALS['sqler']->mode = '';
   			if ($reconnect_db) connectDB($reconnect_db); // reconnect to default DB
+
+			return $result;
   		}
   		elseif (!$this->get_thor_table())
   		{
@@ -556,11 +565,12 @@ class ThorCore
 	function get_rows_for_key($key, $key_column, $sort_field = '', $sort_order = '')
 	{
 		$table = $this->get_thor_table();
-		if ($this->get_thor_table() && (strlen($key) > 0) )
+		if ($this->get_thor_table() && (strlen($key) > 0) && $this->table_exists())
 		{
 			if (!get_current_db_connection_name()) connectDB($this->get_db_conn());
 			$reconnect_db = (get_current_db_connection_name() != $this->get_db_conn()) ? get_current_db_connection_name() : false;
 			if ($reconnect_db) connectDB($this->get_db_conn());
+			
 			$q = $this->get_select_by_key_sql($key, $key_column, $sort_field, $sort_order);
   			$res = mysql_query($q);
   			if ($res && mysql_num_rows($res) > 0)
@@ -708,7 +718,7 @@ class ThorCore
 	
 	function get_table_exists_sql()
 	{
-		return 'SHOW TABLES LIKE "'.$this->get_thor_table().'"';
+		return 'SELECT TABLE_NAME FROM `information_schema`.`TABLES` WHERE `TABLE_SCHEMA` = "'.get_database_name().'" AND `TABLE_NAME` = "'.$this->get_thor_table().'"';
 	}
 
 	function get_column_exists_sql($column)
@@ -767,7 +777,7 @@ class ThorCore
   				if (mysql_num_rows($res) > 0) $this->_table_exists = true;
   				else $this->_table_exists = false;
   				if ($reconnect_db) connectDB($reconnect_db); // reconnect to default DB
-  			}
+			}
   			else
   			{
   				trigger_error('table_exists called but no table has been defined via the thorCore set_thor_table method');
@@ -813,9 +823,10 @@ class ThorCore
 			if (!get_current_db_connection_name()) connectDB($this->get_db_conn());
 			$reconnect_db = (get_current_db_connection_name() != $this->get_db_conn()) ? get_current_db_connection_name() : false;
 			if ($reconnect_db) connectDB($this->get_db_conn());
-			$res = db_query($sql);
+			if ($res = db_query($sql))
+				$this->_table_exists = true;
 			if ($reconnect_db) connectDB($reconnect_db); // reconnect to default DB
-			return true;
+			return $this->_table_exists;
 		}
 		else
   		{
@@ -1127,7 +1138,7 @@ class ThorCore
 					  'size' => $size,
 					  'default' => array(),
 					  'display_name' => $display_name,
-					  'add_null_value_to_top' => !$required);
+					  'add_null_value_to_top' => true);
 					  
 		$element_children = $element->tagChildren;
 		foreach ($element_children as $element_child)
@@ -1214,7 +1225,8 @@ class ThorCore
 
 		// var_dump("FINAL ARGS: <PRE>", $args, "</PRE>");
 
-		$d->add_element($id, 'upload', $args);
+		// $d->add_element($id, 'upload', $args);
+		$d->add_element($id, 'ReasonUpload', $args);
 		if ( $required ) $d->add_required($id);
 	}
 	

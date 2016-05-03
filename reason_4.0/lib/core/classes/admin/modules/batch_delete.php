@@ -93,6 +93,7 @@
 				$d->set_items($this->_items);
 				$d->set_user_id($this->admin_page->user_id);
 				echo '<div class="sortPostsModule">'."\n";
+				echo '<div class="warning"><p><strong>Warning:</strong> This module does not run any of the deletion hooks that some types require. Most notably, sites, pages, assets, and images have hooks that ensure that appropriate clean-up occurs upon deletion, and this module doesn\'t run any of those hooks. If you aren\'t entirely confident that it is safe to batch delete items of a given type, please ask a Reason developer or in a Reason support forum for confirmation.</p></div>';
 				$d->run();
 				echo '</div>'."\n";
 			}

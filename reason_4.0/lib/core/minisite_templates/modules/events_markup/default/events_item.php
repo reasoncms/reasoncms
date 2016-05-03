@@ -92,6 +92,7 @@ class defaultEventsItemMarkup implements eventsItemMarkup
 		$ret .= $this->get_audiences_markup($event);
 		$ret .= $this->get_keywords_markup($event);
 		$ret .= $this->bundle->registration_markup($event);
+		$ret .= $this->get_admin_markup($event);
 		return $ret;
 	}
 	/**
@@ -509,6 +510,24 @@ class defaultEventsItemMarkup implements eventsItemMarkup
 			}
 			$ret .= implode(', ',$parts);
 			$ret .= '</p>';
+			$ret .= '</div>'."\n";
+		}
+		return $ret;
+	}
+	
+	/**
+	 * Get the HTML markup for Reason admins
+	 * @param object $e event
+	 * @return string
+	 */
+	function get_admin_markup($event)
+	{
+		$ret = '';
+		if($markup = $this->bundle->admin_markup($event))
+		{
+			$ret .= '<div class="reasonMaintainerPanel">';
+			$ret .= '<h4>For Reason Site Maintainers:</h4>';
+			$ret .= $markup;
 			$ret .= '</div>'."\n";
 		}
 		return $ret;

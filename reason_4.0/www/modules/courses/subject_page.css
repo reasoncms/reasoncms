@@ -1,0 +1,30 @@
+div.courseContainer {
+	margin-bottom: 1em;
+}
+
+span.courseNumber, span.courseTitle {
+	font-weight: bold;
+}
+
+span.courseAttributesOffered {
+	font-style: italic;
+}
+
+span.courseAttributesInstructor {
+	font-weight: bold;
+}
+
+span.clickable {
+	color: #0000F0;
+	cursor: pointer;
+}
+
+.ui-widget {
+    font-family: inherit;
+    font-size: 0.9em;
+    line-height: 1.4;
+}
+
+.ui-dialog  .ui-dialog-content {
+	padding: 1em 1.5em;
+}

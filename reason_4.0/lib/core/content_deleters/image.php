@@ -39,7 +39,7 @@
 				if(file_exists($path))
 					$largest = $key;
 			}
-			if($largest)
+			if(!empty($largest))
 			{
 				// move to image graveyard
 				if(defined('REASON_IMAGE_GRAVEYARD') && REASON_IMAGE_GRAVEYARD)

@@ -83,7 +83,7 @@
 
   - name: Apache enable rewrite
     command: a2enmod rewrite creates=/etc/apache2/mods-enabled/rewrite.load
-    notify: 
+    notify:
     - restart apache
 
   handlers:
@@ -93,7 +93,7 @@
     - name: import reason databases
       mysql_db: db={{ item.db }} target={{ item.target }} state=import
       with_items:
-        - { db: reason, target: /var/reason_package/reason_4.0/data/dbs/reason4.6.sql }
+        - { db: reason, target: /var/reason_package/reason_4.0/data/dbs/reason4.7.sql }
 
     - name: open setup in browser
       sudo: no

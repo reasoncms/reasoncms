@@ -74,6 +74,8 @@
 					
 					if( isset( $this->page->request[ $key ] ) AND $this->page->request[ $key ] )
 						$this->set_value( $key , $this->page->request[ $key ] );
+					if( $key == 'search_datetime')
+						$this->add_comments($key,form_comment('yyyy-mm-dd'));
 					$this->set_display_name( $key , prettify_string($field) );
 				}
 			}

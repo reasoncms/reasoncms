@@ -34,7 +34,7 @@ function make_sure_username_is_user($username, $creator_id)
 	}
 	$es = new entity_selector($master_admin_id);
 	$es->add_type(id_of('user'));
-	$es->add_relation('entity.name = "'.$username.'"');
+	$es->add_relation('entity.name = "'.reason_sql_string_escape($username).'"');
 	$es->set_num(1);
 	$users = $es->run_one();
 	if(empty($users))
@@ -85,6 +85,48 @@ function reason_username_has_access_to_site($username, $site_id, $force_refresh 
  		$has_access_to_site[$username][$site_id] = (!empty($id)) ? user_can_edit_site($id, $site_id, $force_refresh) : false;
 	}
 	return $has_access_to_site[$username][$site_id];
+}
+
+/**
+ * Does a given username have editing access to at least one Reason site?
+ *
+ * @param string $username
+ * @return boolean
+ */
+function username_is_a_reason_editor($username)
+{
+	$user_id = get_user_id($username);
+	if($user_id)
+		return user_is_a_reason_editor($user_id);
+	return false;
+}
+
+/**
+ * Does a given user have editing access to at least one Reason site?
+ *
+ * @param mixed $user entity ID or user entity
+ * @return boolean
+ */
+function user_is_a_reason_editor($user)
+{
+	static $editors = array();
+	if(is_object($user))
+		$user_id = (integer) $user_id->id();
+	else
+		$user_id = (integer) $user;
+	if(!isset($editors[$user_id]))
+	{
+		$es = new entity_selector();
+		$es->add_type(id_of('user'));
+		$es->add_right_relationship_field( 'site_to_user', 'entity', 'id', 'site_id' );
+		$es->add_relation('entity.id = "'.$user_id.'"');
+		$es->set_num(1);
+		$es->limit_tables();
+		$es->limit_fields();
+		$users = $es->run_one();
+		$editors[$user_id] = !empty($users);
+	}
+	return $editors[$user_id];
 }
 
 /**

@@ -59,7 +59,8 @@ reason_include_once( 'minisite_templates/modules/feature/views/default_view.php'
 class DefaultFeatureView extends FeatureView
 {
 	var $has_av = false;
-	
+	var $custom_class = '';
+
 	function set($view_data,$view_params,$current_feature_id,&$head_items)
 	{
 		//call Mother
@@ -87,8 +88,51 @@ class DefaultFeatureView extends FeatureView
 			if(!isset($data['feature_av_img_alt'])){ $view_data[$id]['feature_av_img_alt']=array("");}
 			if ($view_data[$id]['current_object_type'] == 'av') $this->has_av = true;
 		}
+
+		//eliminate array elements that do not belong to a category
+		if( !empty($view_params['categories']) )
+		{
+			// build a unique name for styling multiple features on a page
+			foreach ($view_params['categories'] as $category) {
+				$category = preg_replace('/\s+/', '', $category);
+				$category = strtolower($category);
+				$this->custom_class .= ucfirst( $category );
+			}
+			$this->custom_class = '.'.lcfirst( $this->custom_class );
+
+			foreach( $view_data as $id=>$data )
+			{
+				//assert if categories is set
+				$has_category = false;
+				$categories = $view_params['categories'];
+
+				if( $data['categories'] )
+				{
+					foreach( $categories as $category )
+					{
+						foreach( $data['categories'] as $feature_cat )
+						{
+							if( $feature_cat == $category )
+							{
+								$has_category = true;
+								break 2;
+							}
+						}
+					}
+				}
+
+				//eliminate feature from the list if does not have the related category
+				if( !$has_category )
+				{
+					unset( $view_data[$id] );
+				}
+			}
+		} else {
+			$this->custom_class = '.noCat';
+		}
+
 		$this->_view_data=$view_data;
-			
+
 		$width=$this->_view_params['width'];
 		$height=$this->_view_params['height'];
 		if($head_items != null)
@@ -96,21 +140,21 @@ class DefaultFeatureView extends FeatureView
 			$head_items->add_javascript(JQUERY_URL, true);
 			if ($this->has_av)
 			{
-				$head_items->add_javascript($this->absolutify_url_if_needed(REASON_PACKAGE_HTTP_BASE_PATH."nyroModal/js/jquery.nyroModal-1.6.2.min.js"));
+				$head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH."nyroModal/js/jquery.nyroModal-1.6.2.min.js");
 			}
-			$head_items->add_javascript($this->absolutify_url_if_needed(REASON_HTTP_BASE_PATH . 'js/feature.js'));
-			$head_items->add_stylesheet($this->absolutify_url_if_needed(REASON_HTTP_BASE_PATH . 'css/features/feature_responsive.css'));
+			$head_items->add_javascript(REASON_HTTP_BASE_PATH . 'js/feature.js');
+			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH . 'css/features/feature_responsive.css');
 			$head_items->add_head_item("style",array("type"=>"text/css"),"
-			.featuresModule { max-width: ".$width."px; }
-			.features { padding-bottom:" . round($height/$width*100, 5) . "%; }
+			.featuresModule$this->custom_class { max-width: ".$width."px; }
+			$this->custom_class .features { padding-bottom:" . round($height/$width*100, 5) . "%; }
 			",false);
 		}
-		
+
 	}// end set function
-	
+
 
 	/**
-	* @return the features nav strings 
+	* @return the features nav strings
 	*/
 	function build_feature_nav_strs()
 	{
@@ -129,9 +173,9 @@ class DefaultFeatureView extends FeatureView
 			{
 				$this->_view_data[$d['id']]['feature_nav_str']="<div class=\"featureNav\"></div>";
 			}
-			
+
 		}
-		
+
 	}
 
 	/**
@@ -174,7 +218,7 @@ class DefaultFeatureView extends FeatureView
 				{
 					$anchor_class="nonCurrent";
 				}
-				
+
 				$title=$d['title'];
 				$str.="<a  href=\"?feature=".$id."\" title=\"".reason_htmlspecialchars($title)."\" class=\"".$anchor_class." navItem\">"."<span>".$feature_num."</span></a>";
 				$feature_num++;
@@ -183,15 +227,15 @@ class DefaultFeatureView extends FeatureView
 		$str.=$this->build_arrow_nav_str("next",$curr_id);
 		$str .= '</span>';
 		$str.="</div>\n";
-		
+
 		return $str;
-		
+
 	}
 	/**
 	* build an html string for arrow navigation
 	*
 	* @param $direction looks for two values "prev" or "next"
-	* @return string containing html for next or prev links in the 
+	* @return string containing html for next or prev links in the
 	*         feature navigation string
 	*/
 	function build_arrow_nav_str($direction,$curr_id)
@@ -203,17 +247,17 @@ class DefaultFeatureView extends FeatureView
 		$title="";
 		$ids=array();
 		$titles=array();
-		$arrow=$this->get_arrow_html('prev');
+		$arrow="&lt;";
 		$class="button prev";
 		$looping=$this->_view_params['looping'];
-		
+
 		//build the arrays of ids and titles
 		foreach($data as $d)
 		{
 			$ids[]=$d['id'];
 			$titles[]=$d['title'];
 		}
-		
+
 		//find the index of the curr_id in the ids array
 		$curr_index=0;
 		$n=count($ids);
@@ -238,7 +282,7 @@ class DefaultFeatureView extends FeatureView
 			{
 				$id=$ids[0];
 				$title=$titles[0];
-			}		
+			}
 			else
 			{
 				$id=$ids[$curr_index-1];
@@ -247,7 +291,7 @@ class DefaultFeatureView extends FeatureView
 		}
 		else if($direction=="next")
 		{
-			$arrow=$this->get_arrow_html('next');
+			$arrow="&gt;";
 			$class="button next";
 			if( $curr_index== ($n-1) && $looping=="on" )
 			{
@@ -258,7 +302,7 @@ class DefaultFeatureView extends FeatureView
 			{
 				$id=$ids[$n-1];
 				$title=$titles[$n-1];
-			}		
+			}
 			else
 			{
 				$id=$ids[$curr_index+1];
@@ -270,15 +314,7 @@ class DefaultFeatureView extends FeatureView
 
 
 	}// end build_arrow_nav_str function
-	
-	function get_arrow_html($direction)
-	{
-		if($direction=="prev")
-			return "&lt;";
-		elseif($direction=="next")
-			return "&gt;";
-	}
-	
+
 
 
 	/**
@@ -289,7 +325,7 @@ class DefaultFeatureView extends FeatureView
 		$str="<a style=\"display:none\" href=\"#\" title=\"Play Slide Show\" class=\"button play \"> Play </a>";
 		return $str;
 	}
-	
+
 	/**
 	* @return string containing a pause link for when feature is in slide show mode
 	*/
@@ -298,7 +334,7 @@ class DefaultFeatureView extends FeatureView
 		$str="<a style=\"display:none\" href=\"#\" title=\"Pause Slide Show\" class=\"button pause \"> Pause </a>";
 		return $str;
 	}
-	
+
 	/**
 	* @return string containing a start over link for when features is in slide show mode and looping is off
 	*/
@@ -307,8 +343,8 @@ class DefaultFeatureView extends FeatureView
 		$str="<a style=\"display:none\" href=\"#\" title=\"Start Over\" class=\"button startOver \"> Start Over </a>";
 		return $str;
 	}
-	
-	
+
+
 	/**
 	 * Create the markup
 	 * @return string containing html markup for features
@@ -320,8 +356,14 @@ class DefaultFeatureView extends FeatureView
 
 		$view_data = $this->get_view_data();
 		$timer=$this->_view_params['autoplay_timer'];
+		if ( $this->_view_params['initial_offset'])
+			$timer = $this->_view_params['initial_offset'] + $timer;
 		$looping=$this->_view_params['looping'];
-		$str = "<div class=\"featuresModule autoplay-$timer looping-$looping noscript\">\n";
+
+		$count = 'count'.count($view_data);
+		$class = ltrim($this->custom_class, '.');
+		$str = "<div class=\"featuresModule $class autoplay-$timer looping-$looping noscript $count\">\n";
+
 		$str.= "<ul class=\"features\">\n";
 		$str.= "";
 		foreach($view_data as $data)
@@ -331,8 +373,7 @@ class DefaultFeatureView extends FeatureView
 		$str.="</ul>\n";
 //		$str.=$this->build_feature_nav_str($curr_id);
 		$str.="</div>\n";
-	//	pray($data);
-		return $str; 
+		return $str;
 
 	}
 
@@ -346,7 +387,7 @@ class DefaultFeatureView extends FeatureView
 		if($view_data['destination_url']==null){$has_anchor=false;}
 
 		$height=$this->_view_params['height'];
-		
+
 		$anchor_start='<span class="noLink">';
 		$image_anchor_start='<span class="noLink">';
 		$anchor_end='</span>';
@@ -384,7 +425,7 @@ class DefaultFeatureView extends FeatureView
 			$image_anchor_end="</a>";
 			$text_anchor_start = "<a href=\"#".$img_id."\" class=\"anchor\">\n";
 			$text_anchor_end = '</a>';
-			
+
 			if($img_url!="none")
 			{
 				$link = ($has_anchor) ? ' (' .$anchor_start . 'more' . $anchor_end . ')' : '';
@@ -415,7 +456,7 @@ class DefaultFeatureView extends FeatureView
 			}
 		}
 
-		$str ="<li id=\"feature-".$view_data['id']."\" class=\"feature ".$view_data['active']." sizable\"
+		$str ="<li id=\"feature-".$view_data['id']."\" class=\"feature ".$view_data['active']." sizable cropStyle-".reason_htmlspecialchars($view_data['crop_style'])."\"
 		 		style=\"background-color:#".$view_data['bg_color'].";\" >\n";
 		$str.='<div class="featureContent' .$type_str.'">'."\n";
 			$str.=$media_str;
@@ -431,7 +472,5 @@ class DefaultFeatureView extends FeatureView
 		return $str;
 	}
 
-	
-}
 
-?>
+}

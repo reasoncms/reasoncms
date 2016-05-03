@@ -269,10 +269,10 @@ div#themeSelection li {
 	background-position: bottom left;
 }
 div#themeSelection li:after {
-    content: "."; 
-    display: block; 
-    height: 0; 
-    clear: both; 
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
     visibility: hidden;
 }
 div#themeSelection div.image {
@@ -499,15 +499,15 @@ div.versionUpdateNotice {
 	padding:12px 12px 12px 34px;
 }
 tr.notInNav td.viewerCol_name {
-	
+
 }
 
 div.addlActions {
-	color: #666;	
+	color: #666;
 }
 
 div.addlActions a {
-	text-decoration: none;	
+	text-decoration: none;
 }
 
 .borrowNav, .borrowNav ul {
@@ -836,7 +836,7 @@ header .user {
 .roundedContent {
 	padding-right: 10px;
 	padding-left: 10px;
-} 
+}
 .listHead {
 	background-color: #C5D2EB;
 	background-image: url(../../ui_images/1px_white.gif);
@@ -920,7 +920,15 @@ h2.pageTitle {
 
 .uploaded_file {
   font-size: 90%;
+  margin-top: 0.3em;
   margin-bottom: 0.7em;
+}
+
+#imageItem.formElement,
+#imageItem.formElement .uploaded_file,
+#imageItem.formElement .uploaded_file img {
+	max-width: 100%;
+	height: auto !important;
 }
 
 .uploaded_file .filename {
@@ -1004,4 +1012,3 @@ div.EntityInfo .entityInfoTable a.locationBarLinks {
 #discoLinear div.formElement {
     margin-bottom: 1.5em;
 }
-

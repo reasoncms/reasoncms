@@ -10,6 +10,8 @@ reason_include_once('function_libraries/util.php');
 reason_include_once('function_libraries/course_functions.php');
 reason_include_once('function_libraries/user_functions.php');
 reason_include_once('function_libraries/admin_actions.php');
+reason_include_once('function_libraries/root_finder.php');
+
 
 ini_set('display_errors', 'stdout');
 ini_set('error_reporting', E_ALL);
@@ -21,6 +23,9 @@ class CourseImportEngine
 {
 	protected $data_source_name = 'Colleague';
 	
+	protected $course_table_year = 2015;
+	protected $current_site = 'academic_catalog_2014_site';
+	
 	protected $errors = array();
 	
 	public function run()
@@ -29,6 +34,10 @@ class CourseImportEngine
 		
 		$this->disable_output_buffering();
 		echo "<pre>Running\n";
+		
+		//$this->import_course_blocks();
+		//return;
+		
 		//$this->delete_all_course_entities();
 		
 		//foreach ($this->get_section_org_ids() as $org_id)
@@ -49,7 +58,7 @@ class CourseImportEngine
 				$this->errors[] = 'No course template data received for '.$org_id.'.';
 			}
 		//}
-		return;
+		//return;
 		foreach ($this->get_section_org_ids() as $org_id)
 		{
 
@@ -154,7 +163,7 @@ class CourseImportEngine
 			else
 			{
 				echo 'Adding '.$name ."\n";
-				reason_create_entity( id_of('academic_catalog_site'), id_of('course_template_type'), get_user_id('causal_agent'), $name, $row);
+				reason_create_entity( id_of($this->current_site), id_of('course_template_type'), get_user_id('causal_agent'), $name, $row);
 			}
 		}
 		
@@ -202,7 +211,7 @@ class CourseImportEngine
 				if ($this->get_section_parent($row['parent_template_id']))
 				{
 					echo 'Adding: '.$name ."\n";
-					$id = reason_create_entity( id_of('academic_catalog_site'), id_of('course_section_type'), get_user_id('causal_agent'), $name, $row);
+					$id = reason_create_entity( id_of($this->current_site), id_of('course_section_type'), get_user_id('causal_agent'), $name, $row);
 					$section = new entity($id);
 				}
 				else
@@ -354,7 +363,7 @@ class CourseImportEngine
 				if (substr($row['CRS_NAME'], -1) == 'L') continue;
 
 				$found = false;
-				$coursetableyear = 2014;
+				$coursetableyear = $this->course_table_year;
 				while ($coursetableyear > 2009)
 				{
 					$coursetable = 'course'.$coursetableyear;
@@ -364,6 +373,7 @@ class CourseImportEngine
 						AND ('.$coursetable.'.match_title IS NULL 
 						OR '.$coursetable.'.match_title = IDM_COURSE.SEC_SHORT_TITLE)
 						WHERE SEC_COURSE = "'.$row['COURSES_ID'].'"';
+
 					if ($result2 = mysql_query($query))
 					{
 						if (mysql_num_rows($result2) == 1)
@@ -406,12 +416,12 @@ class CourseImportEngine
 	{
 		echo "get_course_section_data $org_id\n";
 		$data = array();
-		$coursetable = 'course2014';
+		$coursetable = 'course'.$this->course_table_year;
 		$restore_conn = get_current_db_connection_name();
 		connectDB('reg_catalog_new');	
 		mysql_set_charset('utf8');
 		$found = false;
-		$coursetableyear = 2014;
+		$coursetableyear = $this->course_table_year;
 		$org_id_limit = ($org_id) ? ' AND SEC_SUBJECT="'.$org_id.'" ' : '';
 		while ($coursetableyear > 2009)
 		{
@@ -561,5 +571,101 @@ class CourseImportEngine
 		for ($i = 0; $i < ob_get_level(); $i++) { ob_end_flush(); }
 		ob_implicit_flush(1);
 	}
+
+	function get_subjects()
+	{
+		$subjects = array();
+		$es = new entity_selector();
+		$es->add_type(id_of('subject_type'));
+		if ($result = $es->run_one())
+		{
+			foreach ($result as $subject)
+			{
+				$subjects[$subject->get_value('sync_name')] = $subject;
+			}
+		}
+		return $subjects;
+	}
+
+	function import_course_blocks()
+	{
+		$subjects = $this->get_subjects();
+		$root_id = root_finder(id_of($this->current_site));
+		$rows = array();
 	
+		connectDB('reg_catalog');	
+		mysql_set_charset('utf8');
+		$query = 'SELECT * FROM blocks JOIN block_types ON blocks.type = block_types.id
+					WHERE YEAR = 2015 ORDER BY dept, sequence';
+		if ($result = mysql_query($query))
+		{
+			while ($row = mysql_fetch_assoc($result))
+			{			
+				$rows[] = $row;
+			}
+		}
+		connectDB(REASON_DB);
+		
+		$subj = '';
+		$seq = $page_seq = 1;
+		foreach ($rows as $row)
+		{
+			if ($row['dept'] != $subj)
+			{
+				$subj = $row['dept'];
+				$seq = 1;
+
+				if (isset($subjects[$subj]))
+					$page_name = $subjects[$subj]->get_value('name');
+				else
+					$page_name = $subj;
+			
+				$page_values = array(
+					'new' => 0,
+					'url_fragment' => strtolower($subj),
+					'custom_page' => 'catalog_subject_page',
+					'link_name' => $page_name,
+					'nav_display' => 'Yes',
+					);
+			
+				$page_id = reason_create_entity( id_of($this->current_site), id_of('minisite_page'), get_user_id('causal_agent'), $page_name, $page_values);
+				create_relationship( $page_id, $root_id, relationship_id_of('minisite_page_parent'), array('rel_sort_order'=>$page_seq),false);
+
+				$page_seq++;
+			}
+			
+			$block_name = $row['dept'] . ' ' . $row['name'];
+			
+			// Fix up include tags
+			if (preg_match_all('/(\{\{?)([^}]+)\}\}?/', $row['content'], $matches, PREG_SET_ORDER))
+			{
+				foreach ($matches as $match)
+				{
+					if (preg_match('/(.*) ALL/', $match[2], $submatch))
+						$key = 'org_id="'.$submatch[1].'"';
+					else
+						$key = 'gov_code="'.$match[2].'"';
+					
+					if ($match[1] == '{')
+						$replace = '{descriptions '.$key.'}';
+					else
+						$replace = '{titles '.$key.'}';
+					
+					$row['content'] = str_replace($match[0], $replace, $row['content']);
+				}
+			}
+			
+			$block_values = array(
+				'new' => 0,
+				'org_id' => $row['dept'],
+				'title' => $row['title'],
+				'block_type' => $row['name'],
+				'content' => $row['content'],
+			);
+			
+			$block_id = reason_create_entity( id_of($this->current_site), id_of('course_catalog_block_type'), get_user_id('causal_agent'), $block_name, $block_values);
+			create_relationship( $page_id, $block_id, relationship_id_of('page_to_course_catalog_block'), array('rel_sort_order'=>$seq), false);
+			
+		}
+	}
 }
