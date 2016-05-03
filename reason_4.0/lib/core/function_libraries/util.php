@@ -2142,6 +2142,38 @@
 	}
 	
 	/**
+	 * Determine whether relationship metadata is allowed on a particular relationship.  If you 
+	 * pass an optional site_id, it will also check if metadata is allowed in that site context.
+	 * 
+	 * @staticvar array $site_types
+	 * @param int $alrel_id
+	 * @param int $site_id
+	 * @return boolean
+	 */
+	function reason_metadata_is_allowed_on_relationship( $alrel_id, $site_id = null)
+	{
+		static $site_types = array();
+		$rel = reason_get_allowable_relationship_info($alrel_id);
+		if ($rel['meta_type'])
+		{
+			if ($site_id && $rel['meta_availability'] == 'by_site')
+			{
+				if (empty($site_types[$site_id]))
+				{
+					$es = new entity_selector( );
+					$es->add_type( id_of('type') );
+					$es->add_right_relationship( $this->site_id, relationship_id_of( 'site_to_type' ) );
+					$es->add_relation('variety="relationship_meta"');
+					$site_types[$site_id] = $es->run_one();
+				}
+				if (!isset($site_types[$site_id][$rel['meta_type']])) return false;
+			}
+			return true;
+		}
+		return false;
+	}
+	
+	/**
 	 * Get the sites a given user has administrative access to
 	 *
 	 * @param mixed $user entity or user id
