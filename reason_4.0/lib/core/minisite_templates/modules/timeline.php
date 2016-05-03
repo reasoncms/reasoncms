@@ -1,6 +1,7 @@
 <?php
 	include_once('reason_header.php');
 	reason_include_once( 'minisite_templates/modules/default.php' );
+	reason_include_once( 'function_libraries/image_tools.php' );
 	reason_include_once('classes/media/factory.php');
 	include_once( CARL_UTIL_INC . 'basic/cleanup_funcs.php' );
 	//include_once( DISCO_INC . 'disco.php' );
@@ -151,8 +152,8 @@
 					$image = reset($images);
 			
 					$timeline_item_json['media'] = [
-					'url'     => WEB_PHOTOSTOCK . $image->_id . '.' . $image->get_value('image_type'),
-					'caption' => $image->get_value('description')
+						'url' => securest_available_protocol().'://'.REASON_HOST.reason_get_image_url($image),
+						'caption' => $image->get_value('description')
 					];
 				}
 			}
@@ -185,8 +186,11 @@
 						}
 						else
 						{
+							$iframe_src = $displayer->get_iframe_src(360, 639, $media_work);
+							if(substr($iframe_src, 0, 4) != 'http')
+								$iframe_src = securest_available_protocol() . ':' . $iframe_src;
 							$timeline_item_json['media'] = [
-								'url' => '<iframe style="height: 425px; width: 356px; border: 0" src="' . $displayer->get_iframe_src(405, 356, $media_work) . '&amp;autostart=0"></iframe>'
+								'url' => '<iframe style="height:360px;width:639px;border:0" src="' . $iframe_src . '"></iframe>'
 							];
 						}				
 					}
