@@ -178,7 +178,7 @@ class ReasonFacebookIntegrator extends ReasonSocialIntegrator implements SocialA
 	public function get_graph_info($id)
 	{
 		$url = 'https://graph.facebook.com/'.$id;
-		if (defined(FACEBOOK_API_APP_ID)) $url .= '?access_token='.FACEBOOK_API_APP_ID.'|'.FACEBOOK_API_APP_SECRET;
+		if (defined('FACEBOOK_API_APP_ID')) $url .= '?access_token='.FACEBOOK_API_APP_ID.'|'.FACEBOOK_API_APP_SECRET;
 		$json = carl_util_get_url_contents($url, false, '', '', 10, 5, true, false);
 
 		if ($json) return json_decode($json, true);
