@@ -99,11 +99,26 @@ class AdminPage
 							  'type_id',
 							  'id',
 							  'rel_id',
+							  'row_rel_id',
 							  'cur_module',
 							  'new_entity',
 							  'user_id',
 							  'open',
 							  );
+
+	/**
+	 * These are errors that can be displayed on this page by passing the array key in the error
+	 * URL parameter.  The check_errors method detects these error conditions and rewrites the 
+	 * URL appropriately.
+	 * 
+	 * @var array
+	 */
+	var $error_messages = array(
+		'site_is_site' => 'You have requested an invalid site.',
+		'site_to_type' => 'This site does not have access to this type.',
+		'type_to_id' => 'The entity you have chosen does not match the type.',
+		'site_owns_id' => 'This site does not own this entity.',
+		);
 
 	
 	function AdminPage( ) // {{{
@@ -163,6 +178,7 @@ class AdminPage
 					 'entity_b' => array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => 'true')),
 					 'new_entity' => array('function' => 'check_against_array', 'extra_args' => array(0, 1)),	 
 					 'debugging' => array('function' => 'check_against_array', 'extra_args' => array('true', 'false')),
+					 'error' => array('function' => 'check_against_array', 'extra_args' => array_keys($this->error_messages)),
 					 'state' => array('function' => 'check_against_array', 'extra_args' => array('deleted', 'pending', 'live')));
 
 		$params_to_localize = array( 'site_id','user_id','type_id','id',
@@ -593,10 +609,8 @@ class AdminPage
 				'link' => $this->make_link( array( 'cur_module' => 'Editor' ) ),
 				'locked' => !$entity->user_can_edit($user, 'fields'),
 			);
-			if( $second )
-				$rels = $second;
-			else
-				$rels = $this->get_rels();
+			
+			$rels = ($second) ? $second : $this->get_rels();
 			foreach( $rels AS $rel )
 			{
 				$ass_name = !empty( $rel[ 'display_name' ] ) ? $rel[ 'display_name' ] : $rel[ 'entity_name' ];
@@ -1073,6 +1087,8 @@ class AdminPage
 			
 			foreach( $types as $type )
 			{
+				if (!$type->get_value('variety') == 'content') continue;
+				
 				if( $type->id() == $this->type_id )
 				{
 					$cur_type = true;
@@ -1110,6 +1126,7 @@ class AdminPage
 				'site_id' => $this->site_id, 
 				'type_id' => $type_id ,
 				'user_id' => $this->user_id,
+				'rel_id' => get_borrows_relationship_id($type_id),
 				'cur_module' => 'Sharing' ,
 				'state' => 'live') );
 	}
@@ -1118,6 +1135,7 @@ class AdminPage
 		return $this->make_link( array( 
 				'site_id' => $this->site_id, 
 				'type_id' => $type_id ,
+				'rel_id' => get_owns_relationship_id($type_id),
 				'cur_module' => 'Lister' ,
 				'state' => 'live') );
 	}
@@ -1401,14 +1419,22 @@ class AdminPage
 		echo '<h2 class="pageTitle">'.$this->title.'</h2>';
 	}
 	
+	/**
+	 * Displays the main area of the page.  First does its own stuff then calls the module to do its stuff.
+	 */
 	function main_area()
-	//displays the main area of the page.  First does its own stuff then calls the module to do its stuff.
 	{
 		echo '<div class="contentArea">';		
 		if( $this->show[ 'title' ] )
 		{
 			$this->title();
 		}
+		
+		if (isset($this->request['error']))
+		{
+			echo '<div class="adminNotice">'.$this->error_messages[$this->request['error']].'</div>';
+		}
+		
 		if ($this->module->check_admin_token() && $this->invalid_admin_token())
 		{
 			$this->module->run_invalid_admin_token();
@@ -1417,9 +1443,11 @@ class AdminPage
 		
 		echo '</div>';
 	}
-	
+
+	/**
+	 * The top banner.  doesn't really do much except display some stuff and the show the user
+	 */
 	function banner()
-	//the top banner.  doesn't really do much except display some stuff and the show the user
 	{
 		echo '<table class="banner">' . "\n";
 		echo '<tr>' . "\n";
@@ -1442,9 +1470,11 @@ class AdminPage
 		echo '</table>' . "\n";
 	}
 	
+	/**
+	 * If logged in user has pose_as_other_user privs, displays a link to the posing module so that 
+	 * they can log in as that person (for debugging purposes). Otherwise, tells the user who they are.
+	 */
 	function show_user()
-	//if logged in user has pose_as_other_user privs, displays a drop down of all users so that they can log in as that person (for debugging purposes).
-	//otherwise, tells the user who they are
 	{
 		// if behind HTTP authentication the session lasts until the browser is closed and logout will not do anything
 		$show_logout = !isset($_SERVER['REMOTE_USER']);
@@ -1502,8 +1532,10 @@ class AdminPage
 		$this->head_items->add_head_item('meta',array('http-equiv'=>'Content-Type','content'=>'text/html; charset=UTF-8' ), '', true );
 	}
 	
+	/**
+	 * Page head.  Prints out basic top html stuff.
+	 */
 	function head()
-	//page head.  prints out basic top html stuff
 	{
 		echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">'."\n";
 		echo '<html xmlns="http://www.w3.org/1999/xhtml">'."\n";
@@ -1633,8 +1665,6 @@ class AdminPage
 	 * @return true if complete, false if used could not be authenticated
 	 */
 	function init() // {{{
-	//basic init function.  called before anything is displayed.  does its own stuff and then calls the modules
-	//init function
 	{
 		if ($this->authenticate() == false) return false;
 		$this->load_params();
@@ -1701,38 +1731,63 @@ class AdminPage
 		}
 		return true;
 	} // }}}
+	
+	/**
+	 * Checks for various error conditions at page load (bad/mismatched IDs, access issues). If an
+	 * error is found, this method redirects to an appropriate admin module, passing the error 
+	 * condition in the URL for display.
+	 * 
+	 * @param type $user
+	 */
 	function check_errors( $user ) // {{{
-	//checks to make sure user has access to current site, otherwise, sends him home.
 	{
-		$error_messages = array(
-								'site_is_site' => 'You have requested an invalid site.',
-								'site_to_type' => 'This site does not have access to this type.',
-								'type_to_id' => 'The entity you have chosen does not match the type.',
-								'site_owns_id' => 'This site does not own this entity.',
-							   );
-		$message = '';
+		// Is the current site_id valid?
 		$site = new entity($this->site_id);
 		if (!reason_is_entity($site, 'site'))
 		{
-			$message = $error_messages[ 'site_is_site' ];
+			$message = 'site_is_site';
+			$this->site_id = $this->type_id = null;
 		}
-		elseif( !$this->verify_user( $user ) ){
+		// Does the user have access to the current site?
+		elseif( !$this->verify_user( $user ) )
+		{
 			header('Location: ' . securest_available_protocol() . '://' . REASON_WEB_ADMIN_PATH . '?cur_module=SiteAccessDenied&user_id='.$user->id().'&requested_url='.urlencode(get_current_url()));
 		}
+		// Is the requested type available on the current site?
 		elseif( !$this->site_to_type() )
-			$message = $error_messages[ 'site_to_type' ];
-		elseif( !$this->type_to_id() )
-			$message = $error_messages[ 'type_to_id' ];
-		elseif( !$this->site_owns_id() )
-			$message = $error_messages[ 'site_owns_id' ];
-			
-		if( $message )
 		{
-			ob_flush();
-			$link = 'index.php';
-			if( $this->user_id ) 
-				$link .= '?user_id=' . $this->user_id;
-			die( $message . '  <a href="'.$link.'">Reason Home</a>.' );
+			$message = 'site_to_type';
+			$this->type_id = null;
+		}
+		// Does the requested entity match the specified type?
+		elseif( !$this->type_to_id() )
+		{
+			$message = 'type_to_id';
+		}
+		// Does the current site own the requested entity?
+		elseif( !$this->site_owns_id() )
+		{
+			if (! ($this->cur_module == 'Editor' &&
+				site_borrows_entity($this->site_id, $this->id) &&
+				reason_metadata_is_allowed_on_relationship ($this->rel_id, $this->site_id)) )
+			{
+				$message = 'site_owns_id';
+			}
+		}
+		
+		if( isset($message) )
+		{
+			if ($this->type_id)
+				$module = 'Lister';
+			else if ($this->site_id)
+				$module = 'Site';
+			else
+				$module = 'Default';
+			
+			$this->id = null;
+			$redirect = carl_make_redirect(array('cur_module' => $module, 'site_id' => $this->site_id, 'id' => $this->id, 'type_id' => $this->type_id, 'error' => $message));
+			header('Location: ' . $redirect);
+			die;
 		}
 	} // }}}
 	// method to find oldest pending item for a site and type
@@ -1789,10 +1844,24 @@ class AdminPage
 		}
 		return true;
 	} // }}}
+	
+	/**
+	 * Does the current site own the current entity? Actually only checks if we're trying to edit or
+	 * associate the entity -- otherwise it always returns true.
+	 * 
+	 * @staticvar boolean $owns
+	 * @return boolean
+	 */
 	function site_owns_id() // {{{
 	{
-		if( $this->id && $this->site_id && empty( $this->request[ 'new_entity' ] ) && $this->cur_module 
-				&& ( $this->cur_module == 'Editor' || $this->cur_module == 'Associator' ) )
+		static $owns = null;
+		if ($owns != null) return $owns;
+		
+		if($this->id && 
+			$this->site_id && 
+			empty( $this->request[ 'new_entity' ] ) && 
+			$this->cur_module && 
+			( $this->cur_module == 'Editor' || $this->cur_module == 'Associator' ) )
 		{
 			$es = new entity_selector( $this->site_id );
 			$es->add_type( $this->type_id );
@@ -1802,11 +1871,13 @@ class AdminPage
 			$es->set_sharing( 'owns' );
 			$es->set_num(1);
 			if( $es->run_one('','All') )
-				return true;
+				$owns = true;
 			else
-				return false;
+				$owns = false;
 		}
-		return true;
+		else $owns = true;
+		
+		return $owns;
 	} // }}}
 	
 	function should_run_api()

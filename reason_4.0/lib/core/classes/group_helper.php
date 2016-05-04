@@ -271,6 +271,15 @@
 							}
 						}
 					}
+
+					// weird case - user who was not in LDAP but still had a username for logging in. Check the
+					// usernames array manually in this case.
+					$usernames = explode(',', trim($this->group->get_value('authorized_usernames')));
+					if (count($usernames) > 0 && in_array($user_netID, $usernames)) {
+						$this->permissions[$user_netID] = true;
+						return true;
+					}
+
 					$this->permissions[$user_netID] = false;
 					return false;
 				}

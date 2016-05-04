@@ -92,8 +92,15 @@ class DefaultPublicationEmailer extends Disco {
 
 		$this->add_element('personal_note', 'textarea');
 		$this->set_display_name('personal_note', 'Enter a note to be included in your message');
-
-		$akismet_filter = new AkismetFilter($this);
+		
+		// Manually classifify form content for Akismet in hope of getting
+		// better results from Akismet
+		$akismet_filter = new AkismetFilter($this, array(
+				"setCommentType" => "comment", // akismet value 
+				"setCommentAuthor" => "your_name", // form field name
+				"setCommentAuthorEmail" => "your_email",  // form field name
+				"setCommentContent" => "personal_note", // form field name
+			));
 	}
 
 	function run_error_checks() {

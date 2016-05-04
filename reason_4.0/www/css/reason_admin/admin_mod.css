@@ -417,7 +417,7 @@ div.contentArea div.editor form#disco_form table#discoTable {
 span.listerPageNum, span.listerResultNum {
 	white-space:nowrap;
 }
-div.versionUpdateNotice {
+div.versionUpdateNotice, .adminNotice {
 	background:#fffeca url(../../silk_icons/error.png) no-repeat 12px 12px;
 	border:1px solid #f1df46;
 	padding:12px 12px 12px 34px;

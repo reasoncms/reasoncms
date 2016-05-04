@@ -117,7 +117,6 @@
 			{
 				$this->entity = new entity( $id, false );
 				$this->entity->get_values();
-				//$this->entity->get_relationships();
 			}
 			
 			
@@ -186,10 +185,16 @@
 			else
 				$this->change_element_type( 'no_share', 'hidden' );
 
-			//$this->set_assoc( $id , $type_id , $site_id );
 			$this->alter_data();
 			$this->alter_display_names();
 			$this->alter_comments();
+			if ($this->add_metadata_fields())
+			{
+				if (site_borrows_entity($site_id, $id))
+				{
+					$this->disable_entity_editing();
+				}
+			}
 			
 			/**
 			 * Why do we turn all page requests into hidden elements? If there is not a good reason, don't call this and
@@ -239,6 +244,32 @@
 			
 			$this->_apply_locks();
 		} // }}}
+
+		/**
+		 * This is somewhat hacky; if you can come up with a better solution, please do.
+		 * The problem is that when one clicks the Finish link in a content manager 
+		 * (not a submit button) and there are errors on the form, the form is reloaded
+		 * with the parameter submitted=1, which causes the error checks to be run and
+		 * displayed (as though the form were submitted). However, it also causes all the
+		 * form elements to attempt to grab new values from the request environment. Some
+		 * elements (like checkboxes) take the absence of data to mean they should be set
+		 * to empty, thereby overwriting any values that had previously been set from the
+		 * database. This fix tells the load phase that it's in first_time mode, so it
+		 * doesn't attempt to load values from the request. A deeper solution would be to
+		 * build something into disco to allow you to tell it not to load values.
+		 */
+		function run_load_phase() // {{{
+		{
+			$first_time_status = $this->_first_time;
+			// A real submisssion has submitted=true, so we can tell the difference here
+			if (isset( $this->_request[ 'submitted' ] ) && $this->_request[ 'submitted' ] === '1')
+			{
+				$this->_first_time = true;
+			}
+			
+			parent::run_load_phase();
+			$this->_first_time = $first_time_status;				
+		}
 		
 		/**
 		 * Check to see if any fields are locked; if so, either lock them or indicate the presence of a lock (depending on the privs of the current user)
@@ -331,13 +362,14 @@
 		}
 		
 		/**
-		 * This function is used when you're editting an entity within editing another entity
+		 * This function is used when you're editing an entity within editing another entity
 		 * @return void
-		 * @todo get rid of references to global variables and make them local 
 		 */
 		function load_associations() // {{{
 		{
-			global $rel_id , $rel_entity_a , $rel_entity_b;		
+			$rel_id = (!empty($this->admin_page->request['rel_id'])) ? $this->admin_page->request['rel_id'] : null;
+			$rel_entity_a = (!empty($this->admin_page->request['rel_entity_a'])) ? $this->admin_page->request['rel_entity_a'] : null;
+			$rel_entity_b = (!empty($this->admin_page->request['rel_entity_b'])) ? $this->admin_page->request['rel_entity_b'] : null;
 
 			if( $rel_id AND ( $rel_entity_a OR $rel_entity_b ) )
 			{
@@ -394,7 +426,47 @@
 			//overloadable function
 		} // }}}
 		/**#@-*/
-
+		
+		/**
+		 * If metadata editing is available for this type in this context, call DiscoReason2's 
+		 * add_metadata_elements() method to provide metadata editing.
+		 * 
+		 * @return boolean
+		 */
+		function add_metadata_fields()
+		{		
+			// Quit if we don't have the necessary URL parameters to find metadata
+			if (empty($this->admin_page->request['row_rel_id']))
+				return false;
+			
+			if (!empty($this->admin_page->request['__old_id']))
+			{
+				$related_entity_id = $this->admin_page->request['__old_id'];
+				$relationship_id = $this->admin_page->request['__old_rel_id'];
+			}
+			else
+			{
+				$related_entity_id = $this->admin_page->site_id;
+				$relationship_id = $this->admin_page->request['rel_id'];
+			}
+			
+			// Make sure that metadata editing is available in this context
+			if (!reason_metadata_is_allowed_on_relationship($relationship_id, $this->admin_page->site_id))
+				return false;
+			
+			$related_entity = new entity($related_entity_id);
+			$type = new entity($related_entity->get_value('type'));
+			$context = 'the <em>'.$related_entity->get_value('name').'</em> '.$type->get_value('name');
+			
+			$this->add_metadata_elements(
+					$relationship_id, 
+					$this->admin_page->request['row_rel_id'],
+					$related_entity_id, 
+					'<h4>These values apply when this item is viewed in the context of '.$context.':</h4>'
+				);
+			return true;
+		}
+		
 		// site management page display functions
 
 		/**
@@ -463,13 +535,11 @@
 		{
 			if( $side == 'left' )
 			{
-				$q = 'DELETE FROM relationship WHERE type = ' . $r_id . ' AND entity_a = ' . $ent_id;
-				db_query( $q , 'Error deleting existing relationships' );
+				delete_relationships(array('type'=>$r_id, 'entity_a'=>$ent_id));
 			}
 			elseif( $side == 'right' )
 			{
-				$q = 'DELETE FROM relationship WHERE type = ' . $r_id . ' AND entity_b = ' . $ent_id;
-				db_query( $q , 'Error deleting existing relationships' );
+				delete_relationships(array('type'=>$r_id, 'entity_b'=>$ent_id));
 			}
 		} // }}}
 		/**
@@ -569,4 +639,3 @@
 			return false;
 		}
 	}
-?>

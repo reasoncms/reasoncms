@@ -240,7 +240,7 @@ class AssociatorModule extends DefaultModule // {{{
 			'type_id' => $this->rel_type->id(),
 			'id' => '',
 			'cur_module' => 'Editor',
-			'rel_id' => '',
+			'row_rel_id' => '',
 			'lister' => '',
 			'new_entity' => 1,
 		);
@@ -285,6 +285,7 @@ class AssociatorModule extends DefaultModule // {{{
 			$new_vars = $this->get_second_level_vars();
 			$new_vars[ 'cur_module' ] = 'Sharing';
 			$new_vars[ 'new_entity' ] = '';
+			$new_vars[ 'rel_id' ] = get_borrows_relationship_id($this->rel_type->id());
 			echo '<a href="'.$this->admin_page->make_link( $new_vars ).'">Borrow '.$type_name.' from another site.</a><br />';
 		}
 		if( $this->admin_page->cur_module == 'Sharing' )
@@ -315,12 +316,6 @@ class AssociatorModule extends DefaultModule // {{{
 		}
 		return '';
 	}
-	
-	
-	
-
-	
-	
 	
 	/**
 	 * We want to show the jump links if we have more than 5 associated items.
@@ -406,4 +401,3 @@ class AssociatorModule extends DefaultModule // {{{
 		echo '</table>'."\n";
 	} // }}}
 } // }}}	
-?>
