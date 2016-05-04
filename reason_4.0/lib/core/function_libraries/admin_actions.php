@@ -15,6 +15,7 @@
 	include_once( 'reason_header.php' );
 	include_once( CARL_UTIL_INC . 'db/sqler.php' );
 	reason_include_once( 'classes/entity.php' );
+	reason_include_once( 'function_libraries/user_functions.php' );
 
 	/**
 	 * Take a simple array of keys and values, and, given table names,
