@@ -46,38 +46,21 @@ CKEDITOR.dialog.add( 'reasonImageDialog', function( editor ) {
 						id: 'filter',
 						label: 'Filter results',
 					},
-					
 					{
-						type: 'select',
-						id: 'title',
-						label: 'Explanation',
-						items :
-							  [
-							    [ '<none>', '' ],
-							    [ 'Set 1', 1],
-							    [ 'Set 2', 2 ],
-							    [ 'Set 3', 3 ]
-							  ],
+					    type: 'radio',
+					    id: 'size',
+					    label: 'Size',
+					    items: [['Thumbnail', 'thumbnail'], ['Full', 'full']],
+					    default: 'thumbnail',
+					    style: 'display: inline-block',
 					},
 					{
-					    type: 'hbox',
-					    widths: [ '25%', '25%', '50%' ],
-					    children: [
-					               {
-					                   type: 'text',
-					                   id: 'id1',
-					                   width: '40px',
-					               },
-					               {
-					                   type: 'text',
-					                   id: 'id2',
-					                   width: '40px',
-					               },
-					               {
-					                   type: 'text',
-					                   id: 'id3'
-					               }
-					               ]
+					    type: 'radio',
+					    id: 'alignment',
+					    label: 'Alignment',
+					    items: [['None', 'none'], ['Left', 'left'], ['Right', 'right']],
+					    default: 'none',
+					    style: 'display: inline-block',
 					},
 					{
 						// Horizontal window where images and captions are displayed
@@ -100,11 +83,23 @@ CKEDITOR.dialog.add( 'reasonImageDialog', function( editor ) {
 				label: 'Image at web address',
 				elements: [
 					{
-						// Another text field for the abbr element id.
 						type: 'text',
-						id: 'id',
-						label: 'text',
-					}
+						id: 'location',
+						label: 'Location: ',
+					},
+					{
+						type: 'text',
+						id: 'description',
+						label: 'Description: ',
+					},
+					{
+					    type: 'radio',
+					    id: 'alignment',
+					    label: 'Alignment',
+					    items: [['None', 'none'], ['Left', 'left'], ['Right', 'right']],
+					    default: 'none',
+					    style: 'display: inline-block',
+					},
 				]
 			}
 		],
@@ -166,11 +161,11 @@ CKEDITOR.dialog.add( 'reasonImageDialog', function( editor ) {
 			var dialog = this;
 
 			// Create a new img url link
-			var reason_image = editor.document.createElement( 'img' );
+			var reason_image = editor.document.createElement('img');
 			
-			reason_image.setAttribute('src', $('figure.cke_menubutton_on > img').attr("src"));
+			reason_image.setAttribute('src', $('figure.cke_menubutton_on > img').attr('src'));
 			reason_image.setAttribute('alt', $('figure.cke_menubutton_on > figcaption').html());
-			
+			reason_image.setAttribute('style', 'float: ' + dialog.getValueOf('tab-existing', 'alignment'));
 
 			// Set element attribute and text by getting the defined field values.
 			//reason_image.setAttribute( 'title', dialog.getValueOf( 'tab-existing', 'title' ) );
@@ -181,8 +176,8 @@ CKEDITOR.dialog.add( 'reasonImageDialog', function( editor ) {
 			//if ( id )
 			//	reason_image.setAttribute( 'id', id );
 
-			// Finally, insert the element into the editor at the caret position.
-			editor.insertElement( reason_image );
+			// Insert the element into the editor at the caret position.
+			editor.insertElement(reason_image);
 		}
 	};
 });
