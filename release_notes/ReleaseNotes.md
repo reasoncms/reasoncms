@@ -1,14 +1,15 @@
 Reason CMS 4.7 Release Notes
 ============================
 ### Enhancements
-- [#188](https://github.com/carleton/reason_package/pull/188) – Multiple Independent Features on a Page
-- [Commit](https://github.com/carleton/reason_package/commit/101c5d26bf3bf03375ab7de54c90034712cf47af) – Notifications for Event Registration Slots
-- [#192](https://github.com/carleton/reason_package/pull/192) – File uploader was updated, now uses [Plupload](https://github.com/moxiecode/plupload)
-- [#192](https://github.com/carleton/reason_package/pull/192) – General security updates
+- Multiple, independent Features on a Page – [#188](https://github.com/carleton/reason_package/pull/188)
+- Notifications for Event Registration Slots – [Commit](https://github.com/carleton/reason_package/commit/101c5d26bf3bf03375ab7de54c90034712cf47af)
+- File uploader was updated, now uses [Plupload](https://github.com/moxiecode/plupload) – [#192](https://github.com/carleton/reason_package/pull/192)
+- Responsive administrative UI  – [#209](https://github.com/carleton/reason_package/pull/209), [#187](https://github.com/carleton/reason_package/pull/187)
+- General security updates – [#192](https://github.com/carleton/reason_package/pull/192)
 
 ##### SEO
-- [#180](https://github.com/carleton/reason_package/pull/180) – Adds an optional Meta-Description field for News Posts
+- Adds an optional Meta-Description field for News Posts – [#180](https://github.com/carleton/reason_package/pull/180)
 
 ### New Settings
 in settings/reason_settings.php
-- [Commit](66ba5adf557b435b0f3de0d44b6fc610ffc937c5) ```PUBLICATION_SOCIAL_SHARING_INCLUDES_EMAIL```
+- ```PUBLICATION_SOCIAL_SHARING_INCLUDES_EMAIL``` – [Commit](https://github.com/carleton/reason_package/pull/192/commits/66ba5adf557b435b0f3de0d44b6fc610ffc937c5)
