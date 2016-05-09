@@ -21,7 +21,10 @@ include_once( CARL_UTIL_INC . 'basic/email_funcs.php' );
  */
 class Email
 {
-	var $_PHPMailer;
+	/**
+	 * @var PHPMailer
+	 */
+	var $PHPMailer;
 
 	/**
 	 * Construct the Email object
@@ -42,8 +45,9 @@ class Email
 			$address_types = 'mixed';
 		}
 		
-		$this->_PHPMailer = new PHPMailer(true);
-		$this->_PHPMailer->CharSet = 'utf-8';
+		$exceptions = true;
+		$this->PHPMailer = new PHPMailer($exceptions);
+		$this->PHPMailer->CharSet = 'utf-8';
 		
 		$this->add_tos($tos, $address_types);
 		$this->add_froms($froms, $address_types);
@@ -59,7 +63,7 @@ class Email
 		$address_array = prettify_email_addresses($tos, $address_types, 'array');
 
 		foreach ($address_array as $address) {
-			$this->_PHPMailer->AddAddress($address);
+			$this->PHPMailer->AddAddress($address);
 		}
 	}
 
@@ -72,7 +76,7 @@ class Email
 			$from = WEBMASTER_EMAIL_ADDRESS;
 		}
 
-		$this->_PHPMailer->setFrom($from);
+		$this->PHPMailer->setFrom($from);
 	}
 
 	// For details about $froms see prettify_email_addresses()
@@ -80,7 +84,7 @@ class Email
 		$address_array = prettify_email_addresses($ccs, $address_types, 'array');
 
 		foreach ($address_array as $address) {
-			$this->_PHPMailer->AddCC($address);
+			$this->PHPMailer->AddCC($address);
 		}
 	}
 
@@ -89,34 +93,34 @@ class Email
 		$address_array = prettify_email_addresses($replytos, $address_types, 'array');
 
 		foreach ($address_array as $address) {
-			$this->_PHPMailer->AddReplyTo($address);
+			$this->PHPMailer->AddReplyTo($address);
 		}
 	}
 
 	function set_subject($subject) {
-		$this->_PHPMailer->Subject = $subject;
+		$this->PHPMailer->Subject = $subject;
 	}
 
 	function set_txtbody($txtbody) {
-		$this->_PHPMailer->Body = $txtbody;
+		$this->PHPMailer->Body = $txtbody;
 	}
 
 	function set_htmlbody($htmlbody) {
 		if ($htmlbody) {
-			$this->_PHPMailer->IsHTML(true);
+			$this->PHPMailer->IsHTML(true);
 
 			// Copy txt body to altbody
-			$this->_PHPMailer->AltBody = $this->_PHPMailer->Body;
+			$this->PHPMailer->AltBody = $this->PHPMailer->Body;
 
 			// Set html body as main body
-			$this->_PHPMailer->Body = $htmlbody;
+			$this->PHPMailer->Body = $htmlbody;
 		}
 	}
 
 	function set_attachments($attachments) {
 		foreach ($attachments as $name => $file) {
 			if (is_file($name)) {
-				$this->_PHPMailer->addAttachment($name, $file);
+				$this->PHPMailer->addAttachment($name, $file);
 			}
 		}
 	}
@@ -127,7 +131,7 @@ class Email
 	 * @return boolean Accepted for delivery
 	 */
 	function send() {
-		return $this->_PHPMailer->send();
+		return $this->PHPMailer->send();
 	}
 
 }
