@@ -10,12 +10,24 @@ abstract class EntityDelegate
     	{
     		trigger_error('EntityDelegate objects must be instantiated with their entities');
     	}
-    	//add error checking & handling for being passed an ID or unique name
+    	if(!is_object($entity))
+    	{
+    		if(is_numeric($entity))
+    		{
+    			$id = (integer) $entity;
+    			if($id)
+    				$entity = new entity($id);
+    			else
+    				trigger_error('Unable to construct EntityDelegate -- not given a valid ID/Entity/Unique Name', HIGH);
+    		}
+    		elseif(is_string($entity))
+    		{
+    			if(reason_unique_name_exists($entity))
+    				$entity = new entity(id_of($entity));
+    			else
+    				trigger_error('Unable to construct EntityDelegate -- not given a valid ID/Entity/Unique Name', HIGH);
+    		}
+    	}
         $this->entity = $entity;
-    }
-    
-    public function get_url()
-    {
-    	
     }
 }
