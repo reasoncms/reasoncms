@@ -55,6 +55,7 @@ class ReasonUpgrader_45_SetupCourseSupport implements reasonUpgraderInterface
 		'short_description' => array('db_type' => 'text'),
 		'long_description' => array('db_type' => 'text'),
 		'credits' => array('db_type' => 'varchar(50)'),
+		'list_of_prerequisites' => array('db_type' => 'text'),
 		'academic_session' => array('db_type' => 'varchar(20)'),
 		'timeframe_begin' => array('db_type' => 'datetime'),
 		'timeframe_end' => array('db_type' => 'datetime'),
@@ -155,11 +156,6 @@ class ReasonUpgrader_45_SetupCourseSupport implements reasonUpgraderInterface
 			$str = '';
 			if (!$this->course_template_type_exists()) $str .= '<p>Would create course_template type.</p>';
 			if (!$this->course_section_type_exists()) $str .= '<p>Would create course_section type.</p>';
-			if (empty($str))
-			{
-				$str .= $this->add_indexes(); // only attempt test if both types exist to avoid crash
-			}
-			else $str .= '<p>Would attempt to add indexes to type tables.</p>';
 			return $str;
 		}
 	}
