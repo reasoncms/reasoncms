@@ -17,6 +17,7 @@ include_once('reason_header.php');
  */
 if (defined("REASON_DB")) $GLOBALS['_db_query_first_run_connection_name'] = REASON_DB;
 reason_include_once('classes/locks.php');
+reason_include_once('entity_delegates/factory.php');
 
 /**
  * Include database management stuff
@@ -152,24 +153,38 @@ class entity
 	 * @todo figure out how serious an unsupported method call is -- die or simply warn?
 	 * @return mixed
 	 */
-	 public function __call($name, $arguments)
-	 {
+	public function __call($name, $arguments)
+	{
 		$delegates = $this->get_delegates();
 		foreach($delegates as $delegate)
 		{
-			if(method_exists($name, $delegate))
+			if(method_exists($delegate, $name))
 				return call_user_func_array(array($delegate,$name),$arguments);
 		}
-		trigger_error('Method '.$name.' is not supported by the Entity class or any of its delegates ('.implode(', ',array_keys($delegates).')');
+		trigger_error('Method '.$name.' is not supported by the '.get_class($this).' class or any of its delegates (' . implode(', ',array_keys($delegates)) . ')');
 	}
-	 
+	/**
+	 * Does the entity class or one of its delegates support a given method?
+	 */
 	public function method_supported($name)
 	{
-		if(method_exists($name, $this))
+		if(method_exists($this,$name))
 			return true;
 		foreach($this->get_delegates() as $delegate)
 		{
-			if(method_exists($name, $delegate))
+			if(method_exists($delegate, $name))
+				return true;
+		}
+		return false;
+	}
+	
+	public function is_or_has($name)
+	{
+		if(is_a($this,$name))
+			return true;
+		foreach($this->get_delegates() as $delegate)
+		{
+			if(is_a($delegate, $name))
 				return true;
 		}
 		return false;
@@ -220,9 +235,9 @@ class entity
 	 * Checks to see if the values need to be grabbed and does it, then returns them
 	 * @return array
 	 */
-	function get_values() // {{{
+	function get_values($fetch = true) // {{{
 	{
-		if( !$this->_values )
+		if( !$this->_values && $fetch )
 			$this->_values =  $this->_get_values();
 		return $this->_values;
 	} // }}}
