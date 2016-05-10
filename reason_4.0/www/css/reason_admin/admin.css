@@ -145,6 +145,7 @@ img.roundedCorner {width: 6px; height: 6px; border: none; display: block; }
 	border-radius:5px;
 	-moz-appearance: none;
 	-webkit-appearance:none;
+	font-family:inherit;
 }
 .viewFilter tr.submitRow input:hover, .viewFilter tr#discoSubmitRow input:hover, .viewFilter tr.submitRow input:focus, .viewFilter tr#discoSubmitRow input:focus {
 	background-color:#516ea2;
