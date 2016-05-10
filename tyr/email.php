@@ -134,6 +134,13 @@ class Email
 	 * @return boolean Accepted for delivery
 	 */
 	function send() {
+		if (THIS_IS_A_DEVELOPMENT_REASON_INSTANCE && filter_var(REASON_DIVERT_EMAIL_TO, FILTER_VALIDATE_EMAIL)) {
+			$this->PHPMailer->clearAllRecipients();
+			$this->PHPMailer->addAddress(REASON_DIVERT_EMAIL_TO);
+			$currentSubject = $this->PHPMailer->Subject;
+			$this->PHPMailer->Subject = "[DIVERTED] $currentSubject";
+		}
+
 		return $this->PHPMailer->send();
 	}
 
