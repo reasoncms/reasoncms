@@ -36,6 +36,8 @@ namespace Aws;
  * @method \Aws\MultiRegionClient createMultiRegionCodePipeline(array $args = [])
  * @method \Aws\CognitoIdentity\CognitoIdentityClient createCognitoIdentity(array $args = [])
  * @method \Aws\MultiRegionClient createMultiRegionCognitoIdentity(array $args = [])
+ * @method \Aws\CognitoIdentityProvider\CognitoIdentityProviderClient createCognitoIdentityProvider(array $args = [])
+ * @method \Aws\MultiRegionClient createMultiRegionCognitoIdentityProvider(array $args = [])
  * @method \Aws\CognitoSync\CognitoSyncClient createCognitoSync(array $args = [])
  * @method \Aws\MultiRegionClient createMultiRegionCognitoSync(array $args = [])
  * @method \Aws\ConfigService\ConfigServiceClient createConfigService(array $args = [])
@@ -135,7 +137,7 @@ namespace Aws;
  */
 class Sdk
 {
-    const VERSION = '3.17.4';
+    const VERSION = '3.18.6';
 
     /** @var array Arguments for creating clients */
     private $args;
