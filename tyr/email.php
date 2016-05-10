@@ -118,9 +118,12 @@ class Email
 	}
 
 	function set_attachments($attachments) {
-		foreach ($attachments as $name => $file) {
-			if (is_file($name)) {
-				$this->PHPMailer->addAttachment($name, $file);
+		if (!is_array($attachments)) {
+			return;
+		}
+		foreach ($attachments as $name => $file_path) {
+			if (is_file($file_path)) {
+				$this->PHPMailer->addAttachment($file_path, $name);
 			}
 		}
 	}
