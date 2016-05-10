@@ -19,3 +19,5 @@ composer.phar
 /reason_4.0/www/reason_package
 /www/reason_4.0
 
+
+tests/_output/*
