@@ -443,29 +443,7 @@ class ManageCoursesModule extends DefaultMinisiteModule
 		if ($this->catalog_site_id)
 			$this->form->set_value('display_in_catalog', $course->owned_or_borrowed_by($this->catalog_site_id));
 
-		if ($sections = $course->get_sections())
-		{
-			$checked = array();
-			$sections = array_reverse($sections);
-			foreach ($sections as $section)
-			{
-				$id = $section->id();
-				$section_list[$id] = '<span class="courseNumber">'.$section->get_value('course_number').'</span> ';
-				$section_list[$id] .= '<span class="courseSession">'.$section->get_value('academic_session').'</span> ';
-				$section_list[$id] .= '<span class="courseTitle">'.$section->get_value('title').'</span>';
-				// Preselect the sections whose title and description match what we're editing
-				if ($section->get_value('long_description') == $description && $section->get_value('title') == $title)
-					$checked[] = $id;
-			}
-			$this->form->set_element_properties('sections', array('options' => $section_list));
-			$this->form->set_value('sections', $checked);
-			$this->form->set_comments('sections', '<p class="comment">Any changes made to this course will be applied to the selected sections.<p>');
-		}
-		else
-		{
-			$this->form->change_element_type('sections', 'solidtext');
-			$this->form->set_value('sections', 'No Current Sections Found');
-		}
+		$this->setup_course_editor_section_list($course);
 		
 		// If this entity has an id tying it to an external data source, make the externally-sourced
 		// fields non-editable.
@@ -496,6 +474,38 @@ class ManageCoursesModule extends DefaultMinisiteModule
 			if ($grading = $course->get_value('grading'))
 				$this->form->set_value('grading', $grading);
 		}	
+	}
+	
+	/**
+	 * Build the display for listing the sections associated with this course.
+	 * 
+	 * @param object $course
+	 */
+	protected function setup_course_editor_section_list($course)
+	{
+		if ($sections = $course->get_sections())
+			{
+				$checked = array();
+				$sections = array_reverse($sections);
+				foreach ($sections as $section)
+				{
+					$id = $section->id();
+					$section_list[$id] = '<span class="courseNumber">'.$section->get_value('course_number').'</span> ';
+					$section_list[$id] .= '<span class="courseSession">'.$section->get_value('academic_session').'</span> ';
+					$section_list[$id] .= '<span class="courseTitle">'.$section->get_value('title').'</span>';
+					// Preselect the sections whose title and description match what we're editing
+					if ($section->get_value('long_description') == $this->form->get_value('description') && $section->get_value('title') == $this->form->get_value('title'))
+						$checked[] = $id;
+				}
+				$this->form->set_element_properties('sections', array('options' => $section_list));
+				$this->form->set_value('sections', $checked);
+				$this->form->set_comments('sections', '<p class="comment">Any changes made to this course will be applied to the selected sections.<p>');
+			}
+			else
+			{
+				$this->form->change_element_type('sections', 'solidtext');
+				$this->form->set_value('sections', 'No Current Sections Found');
+			}	
 	}
 	
 	/**
