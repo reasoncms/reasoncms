@@ -186,36 +186,33 @@ function display_media($media_work, $displayer)
 }
 
 // begin the script
-$media_work = reason_iframe_get_media_work();
-$displayer = reason_iframe_get_displayer($media_work);
-if ($displayer)
+$page_state = 'invalid_request';
+if ($media_work = reason_iframe_get_media_work())
 {
-	$valid_hash = reason_iframe_valid_hash($displayer);
-	$page_state = 'invalid_request';
-	
-	if ($media_work != false && $valid_hash)
+	if ($displayer = reason_iframe_get_displayer($media_work))
 	{
-		$page_state = 'ok';
-		$mwh = new media_work_helper($media_work);
-		$username = reason_check_authentication();
-		if ( !$mwh->user_has_access_to_media($username) )
+		$valid_hash = reason_iframe_valid_hash($displayer);
+
+		if ($media_work != false && $valid_hash)
 		{
-			if ($username)
+			$page_state = 'ok';
+			$mwh = new media_work_helper($media_work);
+			$username = reason_check_authentication();
+			if ( !$mwh->user_has_access_to_media($username) )
 			{
-				$page_state = 'unauthorized';
-				header('HTTP/1.1 403 Forbidden');
-			}
-			else
-			{
-				$page_state = 'authentication_required';
-				header('HTTP/1.1 403 Forbidden');
+				if ($username)
+				{
+					$page_state = 'unauthorized';
+					header('HTTP/1.1 403 Forbidden');
+				}
+				else
+				{
+					$page_state = 'authentication_required';
+					header('HTTP/1.1 403 Forbidden');
+				}
 			}
 		}
 	}
-}
-else
-{
-	$page_state = 'invalid_request';
 }
 
 echo '<!DOCTYPE html>'."\n";
