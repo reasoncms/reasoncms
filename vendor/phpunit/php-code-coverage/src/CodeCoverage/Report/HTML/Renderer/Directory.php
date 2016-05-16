@@ -36,23 +36,24 @@ class PHP_CodeCoverage_Report_HTML_Renderer_Directory extends PHP_CodeCoverage_R
         }
 
         $template->setVar(
-            array(
+            [
                 'id'    => $node->getId(),
                 'items' => $items
-            )
+            ]
         );
 
         $template->renderTo($file);
     }
 
     /**
-     * @param  PHP_CodeCoverage_Report_Node $item
-     * @param  bool                         $total
+     * @param PHP_CodeCoverage_Report_Node $item
+     * @param bool                         $total
+     *
      * @return string
      */
     protected function renderItem(PHP_CodeCoverage_Report_Node $item, $total = false)
     {
-        $data = array(
+        $data = [
             'numClasses'                   => $item->getNumClassesAndTraits(),
             'numTestedClasses'             => $item->getNumTestedClassesAndTraits(),
             'numMethods'                   => $item->getNumMethods(),
@@ -65,7 +66,7 @@ class PHP_CodeCoverage_Report_HTML_Renderer_Directory extends PHP_CodeCoverage_R
             'testedMethodsPercentAsString' => $item->getTestedMethodsPercent(),
             'testedClassesPercent'         => $item->getTestedClassesAndTraitsPercent(false),
             'testedClassesPercentAsString' => $item->getTestedClassesAndTraitsPercent()
-        );
+        ];
 
         if ($total) {
             $data['name'] = 'Total';

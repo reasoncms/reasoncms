@@ -18,4 +18,25 @@
 <host>127.0.0.1</host>
 <charset>utf8</charset>
 </database>
+	<database>
+		<connection_name>reg_catalog</connection_name>
+		<db>reg_catalog</db>
+		<user>regapps</user>
+		<password>r0gw1lco</password>
+		<host>127.0.0.1</host>
+	</database>
+        <database>
+                <connection_name>reg_catalog_new</connection_name>
+                <db>reg_catalog_new</db>
+                <user>regapps</user>
+                <password>r0gw1lco</password>
+                <host>127.0.0.1</host>
+        </database>
+        <database>
+                <connection_name>reg_prop_courses</connection_name>
+                <db>reg_prop_courses</db>
+                <user>regapps</user>
+                <password>r0gw1lco</password>
+                <host>127.0.0.1</host>
+        </database>
 </databases>

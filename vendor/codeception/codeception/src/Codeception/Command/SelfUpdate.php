@@ -2,9 +2,9 @@
 namespace Codeception\Command;
 
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 /**
  * Auto-updates phar archive from official site: 'http://codeception.com/codecept.phar' .
@@ -21,6 +21,7 @@ class SelfUpdate extends Command
     const NAME = 'Codeception';
     const GITHUB = 'Codeception/Codeception';
     const SOURCE = 'http://codeception.com/codecept.phar';
+    const SOURCE_PHP54 = 'http://codeception.com/php54/codecept.phar';
 
     /**
      * Holds the current script filename.
@@ -43,10 +44,12 @@ class SelfUpdate extends Command
 
         $this
             // ->setAliases(array('selfupdate'))
-            ->setDescription(sprintf(
-                'Upgrade <comment>%s</comment> to the latest version',
-                $this->filename
-            ));
+            ->setDescription(
+                sprintf(
+                    'Upgrade <comment>%s</comment> to the latest version',
+                    $this->filename
+                )
+            );
 
         parent::configure();
     }
@@ -152,16 +155,8 @@ class SelfUpdate extends Command
      */
     private function retrieveContentFromUrl($url)
     {
-        $opts = [
-            'http' => [
-                'follow_location' => 1,
-                'max_redirects'   => 20,
-                'timeout'         => 60,
-                'user_agent'      => self::NAME
-            ]
-        ];
+        $ctx = $this->prepareContext($url);
 
-        $ctx = stream_context_create($opts);
         $body = file_get_contents($url, 0, $ctx);
 
         if (isset($http_response_header)) {
@@ -177,6 +172,50 @@ class SelfUpdate extends Command
     }
 
     /**
+     * Add proxy support to context if environment variable was set up
+     *
+     * @param array $opt context options
+     * @param string $url
+     */
+    private function prepareProxy(&$opt, $url)
+    {
+        $scheme = parse_url($url)['scheme'];
+        if ($scheme === 'http' && (!empty($_SERVER['HTTP_PROXY']) || !empty($_SERVER['http_proxy']))) {
+            $proxy = !empty($_SERVER['http_proxy']) ? $_SERVER['http_proxy'] : $_SERVER['HTTP_PROXY'];
+        }
+
+        if ($scheme === 'https' && (!empty($_SERVER['HTTPS_PROXY']) || !empty($_SERVER['https_proxy']))) {
+            $proxy = !empty($_SERVER['https_proxy']) ? $_SERVER['https_proxy'] : $_SERVER['HTTPS_PROXY'];
+        }
+
+        if (!empty($proxy)) {
+            $proxy = str_replace(['http://', 'https://'], ['tcp://', 'ssl://'], $proxy);
+            $opt['http']['proxy'] = $proxy;
+        }
+
+    }
+
+    /**
+     * Preparing context for request
+     * @param $url
+     *
+     * @return resource
+     */
+    private function prepareContext($url)
+    {
+        $opts = [
+            'http' => [
+                'follow_location' => 1,
+                'max_redirects'   => 20,
+                'timeout'         => 10,
+                'user_agent'      => self::NAME
+            ]
+        ];
+        $this->prepareProxy($opts, $url);
+        return stream_context_create($opts);
+    }
+
+    /**
      * Retrieves the latest phar file.
      *
      * @param OutputInterface $output
@@ -186,7 +225,12 @@ class SelfUpdate extends Command
         $temp = basename($this->filename, '.phar') . '-temp.phar';
 
         try {
-            if (@copy(self::SOURCE, $temp)) {
+            $source = self::SOURCE;
+            if (version_compare(PHP_VERSION, '5.6.0', '<')) {
+                $source = self::SOURCE_PHP54;
+            }
+
+            if (@copy($source, $temp)) {
                 chmod($temp, 0777 & ~umask());
 
                 // test the phar validity
