@@ -26,8 +26,12 @@
  *
  * @author Nathan White and the author(s) of functions that I lifted from the default template
  */
+
+use Leafo\ScssPhp\Compiler;
+use Leafo\ScssPhp\Server;
+
 class HeadItems
-{
+{	
 	/**
 	 * @var array
 	 * @access private
@@ -360,6 +364,8 @@ class HeadItems
 		{
 			if ( get_class($parser) !== 'lessc' )
 			{
+				// Make $scss var public (line 43 of reason_package/scssphp/src/Server.php) instead of private
+				// otherwise the next line fails
 				$parser->scss->addImportPath(WEB_PATH);
 				$parser->scss->addImportPath( pathinfo ( $input_path, PATHINFO_DIRNAME ) );
 				foreach ($this->style_import_paths as $path) {
@@ -402,7 +408,7 @@ class HeadItems
 			return false;
 		}
 
-		$scss = new Leafo\ScssPhp\Compiler();
+		$scss = new Compiler();
 		$scss->setFormatter('Leafo\ScssPhp\Formatter\Compressed');
 		$scss->setVariables($variables);
 		foreach ($functions as $name => $func)
@@ -410,7 +416,7 @@ class HeadItems
 			$scss->registerFunction($name, $func);
 		}
 
-		return new \Leafo\ScssPhp\Server('.', '.', $scss);
+		return new Server('.', '.', $scss);
 	}
 
 	/**
