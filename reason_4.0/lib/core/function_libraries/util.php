@@ -2172,6 +2172,24 @@
 		}
 		return false;
 	}
+
+	/**
+	 * Given an allowable relationship id, return the type entity for the metadata it supports.
+	 * 
+	 * @param int $alrel_id
+	 * @return object
+	 */
+	function reason_get_relationship_meta_type( $alrel_id )
+	{
+		$es = new entity_selector( );
+		$es->add_type( id_of('type') );
+		$es->add_table('ar', 'allowable_relationship');
+		$es->add_relation('variety="relationship_meta"');
+		$es->add_relation('ar.id = '.$alrel_id);
+		$es->add_relation('ar.meta_type = type.id');
+		if ($result = $es->run_one())
+			return reset($result);
+	}
 	
 	/**
 	 * Get the sites a given user has administrative access to
