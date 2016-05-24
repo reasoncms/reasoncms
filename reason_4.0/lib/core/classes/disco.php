@@ -361,8 +361,14 @@
 									'args'=>array('size'=>7,'multiple'=>true),
 									'comment'=>'Control-click (PC) or Command-click (Mac) to choose multiple items',
 									),
+					'chosen_select' => array(
+									'plasmature_type'=>'chosen_select',
+									),
+					'chosen_select_multiple' => array(
+									'plasmature_type'=>'chosen_select_multiple',
+									),
 			);
-			static $single_item_element_types = array('radio','select');
+			static $single_item_element_types = array('radio','select','chosen_select');
 			if(!array_key_exists($element_type,$element_types))
 			{
 				trigger_error($element_type.' is not an acceptable parameter for add_relationship_element(). Try one of the following: '.implode(', ',array_keys($element_types)));
