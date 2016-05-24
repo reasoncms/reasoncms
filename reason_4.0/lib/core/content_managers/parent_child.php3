@@ -28,6 +28,7 @@
 		var $allow_creation_of_root_node = false;
 		var $multiple_root_nodes_allowed = false;
 		var $root_node_description_text = '-- Top-level item --';
+		var $parent_element_display_name = 'Parent Page';
 		var $parent_id_defaults_to_null = true;
 		var $existing_parent_id;
 		var $roots = array();
@@ -203,7 +204,7 @@
 				
 				$this->add_element( 'parent_id' , 'select_no_sort' , array( 'options' => $list, 'disabled_options' => $disabled_options) );
 				$this->set_value( 'parent_id', $p_id );
-				$this->set_display_name( 'parent_id' , 'Parent Page' );
+				$this->set_display_name( 'parent_id' , $this->parent_element_display_name );
 				$this->add_required('parent_id');
 				$this->add_element( 'r_id' , 'hidden' );
 				$this->set_value( 'r_id' , $r_id );
@@ -229,7 +230,7 @@
 					$this->change_element_type( 'parent_id' , 'hidden' );
 					$this->add_element( 'parent_info' , 'solidtext', array() );
 					$this->set_value( 'parent_info', $parent_entity->get_value('name'));
-					$this->set_display_name( 'parent_info' , 'Parent Page' );
+					$this->set_display_name( 'parent_info' , $this->parent_element_display_name );
 					$this->add_comments( 'parent_info' , '<img 	class="lockIndicator" src="'.REASON_HTTP_BASE_PATH.'ui_images/lock_12px.png" alt="locked" width="12" height="12" />', 'before' );
 					$this->move_element( 'parent_info', 'before', 'parent_id');
 				}
