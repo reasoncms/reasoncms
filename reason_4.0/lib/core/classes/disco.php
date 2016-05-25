@@ -139,15 +139,15 @@
 				$es->set_order('entity.id ASC');
 				$fields = $es->run_one('','Live','field es');
 				unset( $es );
-
 				foreach( $fields AS $field )
 				{
 					$args = array();
 					// set the plasmature type if specified by the field, otherwise look up the default for the database type
+					
+					list( $type, $args ) = $this->plasmature_type_from_db_type( $field->get_value('name'), $field->get_value('db_type') );
+					
 					if ( $field->get_value( 'plasmature_type' ) )
 						$type = $field->get_value( 'plasmature_type' );
-					else
-						list( $type, $args ) = $this->plasmature_type_from_db_type( $field->get_value('name'), $field->get_value('db_type') );
 
 					if (empty($args['display_name']))
 						$args['display_name'] = prettify_string ($field->get_value('name'));
