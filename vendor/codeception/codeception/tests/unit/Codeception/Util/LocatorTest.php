@@ -53,6 +53,15 @@ class LocatorTest extends PHPUnit_Framework_TestCase
         $this->assertFalse(Locator::isID('hello'));
     }
 
+    public function testContains()
+    {
+        $this->assertEquals('descendant-or-self::label[contains(., \'enter a name\')]', Locator::contains('label', 'enter a name'));
+        $this->assertEquals('descendant-or-self::label[@id = \'user\'][contains(., \'enter a name\')]', Locator::contains('label#user', 'enter a name'));
+        $this->assertEquals('//label[@for="name"][contains(., \'enter a name\')]', Locator::contains('//label[@for="name"]', 'enter a name'));
+
+
+    }
+
     public function testHumanReadableString()
     {
        $this->assertEquals("'string selector'", Locator::humanReadableString("string selector"));
@@ -63,5 +72,15 @@ class LocatorTest extends PHPUnit_Framework_TestCase
           Locator::humanReadableString(null);
           $this->fail("Expected exception when calling humanReadableString() with invalid selector");
        } catch (\InvalidArgumentException $e) {}
+    }
+
+    public function testLocatingElementPosition()
+    {
+        $this->assertEquals('(descendant-or-self::p)[position()=1]', Locator::firstElement('p'));
+        $this->assertEquals('(descendant-or-self::p)[position()=last()]', Locator::lastElement('p'));
+        $this->assertEquals('(descendant-or-self::p)[position()=1]', Locator::elementAt('p', 1));
+        $this->assertEquals('(descendant-or-self::p)[position()=last()-0]', Locator::elementAt('p', -1));
+        $this->assertEquals('(descendant-or-self::p)[position()=last()-1]', Locator::elementAt('p', -2));
+
     }
 }

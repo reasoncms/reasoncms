@@ -615,4 +615,20 @@ class WebDriverTest extends TestsForBrowsers
         }
     }
 
+    public function testScrollTo()
+    {
+        $this->module->amOnPage('/form/example18');
+        $this->module->scrollTo('#clickme');
+        $this->module->click('Submit');
+        $this->module->see('Welcome to test app!');
+    }
+
+    /**
+     * @Issue 2921
+     */
+    public function testSeeInFieldForTextarea()
+    {
+        $this->module->amOnPage('/form/bug2921');
+        $this->module->seeInField('foo', 'bar baz');
+    }
 }

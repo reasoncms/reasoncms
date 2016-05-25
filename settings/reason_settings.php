@@ -147,6 +147,24 @@
 	define( 'THIS_IS_A_DEVELOPMENT_REASON_INSTANCE', true );
 
 	/**
+	 * REASON_DIVERT_EMAIL_TO
+	 * 
+	 * Reroute outgoing email to a different address
+	 * 
+	 * Typical use case is development/testing environments.
+	 * Appends "[DIVERTED]" to the subject line
+	 * 
+	 * This setting only applies
+	 *   - when THIS_IS_A_DEVELOPMENT_REASON_INSTANCE == true
+	 *   - when REASON_DIVERT_EMAIL_TO validates with FILTER_VALIDATE_EMAIL
+	 *   - for emails sent with Tyr/Email classes (not direct mail/PHPMailer uses)
+	 * 
+	 * Only acceptable value is a single email address like "steve@example.com".
+	 * To preserve regular email behavior leave the value as an empty string.
+	 */
+	define( 'REASON_DIVERT_EMAIL_TO', '' );
+	
+	/**
 	 * REASON_HOST_HAS_VALID_SSL_CERTIFICATE
 	 * Set this to true if you have a valid certificate signed by a known certificate authority.
 	 * Otherwise set this to false (if you have a self-signed cert, for example).

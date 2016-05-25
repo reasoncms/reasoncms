@@ -27,7 +27,7 @@ $GLOBALS['i']  = 'i';
  */
 class Framework_TestCaseTest extends PHPUnit_Framework_TestCase
 {
-    protected $backupGlobalsBlacklist = array('i', 'singleton');
+    protected $backupGlobalsBlacklist = ['i', 'singleton'];
 
     /**
      * Used be testStaticAttributesBackupPre
@@ -188,6 +188,28 @@ class Framework_TestCaseTest extends PHPUnit_Framework_TestCase
     {
         $test = new ThrowExceptionTestCase('test');
         $test->setExpectedException('RuntimeException');
+
+        $result = $test->run();
+
+        $this->assertEquals(1, count($result));
+        $this->assertTrue($result->wasSuccessful());
+    }
+
+    public function testExceptionWithEmptyMessage()
+    {
+        $test = new ThrowExceptionTestCase('test');
+        $test->setExpectedException('RuntimeException', '');
+
+        $result = $test->run();
+
+        $this->assertEquals(1, count($result));
+        $this->assertTrue($result->wasSuccessful());
+    }
+
+    public function testExceptionWithNullMessage()
+    {
+        $test = new ThrowExceptionTestCase('test');
+        $test->setExpectedException('RuntimeException', null);
 
         $result = $test->run();
 
@@ -431,7 +453,7 @@ class Framework_TestCaseTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals(1, $result->skippedCount());
         $this->assertEquals(
-            'PHPUnit 1111111 (or later) is required.',
+            'PHPUnit >= 1111111 is required.',
             $test->getStatusMessage()
         );
     }
@@ -443,7 +465,7 @@ class Framework_TestCaseTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals(1, $result->skippedCount());
         $this->assertEquals(
-            'PHP 9999999 (or later) is required.',
+            'PHP >= 9999999 is required.',
             $test->getStatusMessage()
         );
     }
@@ -483,19 +505,31 @@ class Framework_TestCaseTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    public function testSkipsIfRequiresExtensionWithAMinimumVersion()
+    {
+        $test   = new RequirementsTest('testSpecificExtensionVersion');
+        $result = $test->run();
+
+        $this->assertEquals(
+            'Extension testExt >= 1.8.0 is required.',
+            $test->getStatusMessage()
+        );
+    }
+
     public function testSkipsProvidesMessagesForAllSkippingReasons()
     {
         $test   = new RequirementsTest('testAllPossibleRequirements');
         $result = $test->run();
 
         $this->assertEquals(
-            'PHP 99-dev (or later) is required.' . PHP_EOL .
-            'PHPUnit 9-dev (or later) is required.' . PHP_EOL .
+            'PHP >= 99-dev is required.' . PHP_EOL .
+            'PHPUnit >= 9-dev is required.' . PHP_EOL .
             'Operating system matching /DOESNOTEXIST/i is required.' . PHP_EOL .
             'Function testFuncOne is required.' . PHP_EOL .
             'Function testFuncTwo is required.' . PHP_EOL .
             'Extension testExtOne is required.' . PHP_EOL .
-            'Extension testExtTwo is required.',
+            'Extension testExtTwo is required.' . PHP_EOL .
+            'Extension testExtThree >= 2.0 is required.',
             $test->getStatusMessage()
         );
     }
