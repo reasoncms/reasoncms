@@ -71,7 +71,10 @@ class LoginBaseModule extends DefaultMinisiteModule
 	{
 		$head_items =& $this->parent->head_items;
 		$head_items->add_javascript(JQUERY_URL, true); // do we need to do this?
-		$head_items->add_javascript(WEB_JAVASCRIPT_PATH . 'login/focus.js');
+		if($this->params['login_mode'] == 'standalone')
+		{
+			$head_items->add_javascript(WEB_JAVASCRIPT_PATH . 'login/focus.js');
+		}
 		// Search engines should not be indexing versions of the index page with specific destinations
 		if( isset( $this->request[ 'dest_page' ] ) )
 		{
