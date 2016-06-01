@@ -294,7 +294,7 @@
 					{
 						if(!empty($dir_array['directory_services'])) $dir = new directory_service($dir_array['directory_services']);
 						else $dir = new directory_service();
-						$dir->search_by_filter('(ds_username='.ldap_escape($user_netID).')');
+						$dir->search_by_filter('(ds_username='.$user_netID.')');
 						$member = $dir->get_records();
 						if (!empty($member))
 						{
@@ -512,7 +512,6 @@
 	 */
 	function add_netid_check_to_representation($user_netID,$rep)
 	{
-		$user_netID = ldap_escape($user_netID);
 		foreach($rep as $filter_key=>$filter_info)
 		{
 			if(!empty($filter_info['filter']))
