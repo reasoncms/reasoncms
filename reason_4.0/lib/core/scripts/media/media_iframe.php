@@ -283,12 +283,12 @@ STYLE;
 else
 	echo '<style>body{background:#777;color:#eee;font-family:Verdana,Arial,Helvetica,sans-serif;font-size:0.8em;margin:0;padding:0.5em;}a{color:#fff}a.signIn{background:#555;padding:0.3em 0.67em;text-decoration:none;}p{margin-top:0;}</style>'."\n";
 echo '<script src="'.JQUERY_URL.'"></script>'."\n";
-if ($media_work->get_value('integration_library') && $media_work->get_value('integration_library') != 'default')
+if ($media_work && $media_work->get_value('integration_library') && $media_work->get_value('integration_library') != 'default')
 {
 	// media api
 	echo '<script src="/reason_package/reason_4.0/lib/core/classes/media/api/media_api.js"></script>'."\n";
 }
-elseif ($media_work->get_value('av_type') == '')
+elseif ($media_work && $media_work->get_value('av_type') == '')
 {
 	echo '<script src="/reason_package/reason_4.0/lib/core/classes/media/api/media_api_flv.js"></script>'."\n";
 }
