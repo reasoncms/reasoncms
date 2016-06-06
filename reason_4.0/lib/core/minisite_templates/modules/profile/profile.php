@@ -534,7 +534,10 @@ class ProfileModule extends DefaultMinisiteModule
 		{
 			foreach($email_parts as $k=>$email)
 			{
-				$email_parts[$k] = '<a href="mailto:'.urlencode($email).'" title="Send email to this person">'.htmlspecialchars($email).'</a>';
+				// Need to encode the address but preserve the @
+				// https://tools.ietf.org/html/rfc2368
+				$encoded_email = str_replace(array("%40"), array("@"), rawurlencode($email));
+				$email_parts[$k] = '<a href="mailto:'.$encoded_email.'" title="Send email to this person">'.htmlspecialchars($email).'</a>';
 			}
 			$contact_info_str .= '<li class="email"><span class="icon"></span>Email: '.implode(', ',$email_parts).'</li>' . "\n";
 		}
