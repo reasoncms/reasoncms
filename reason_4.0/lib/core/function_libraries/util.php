@@ -33,9 +33,9 @@
 	include_once( 'reason_header.php' );
 	include_once( CARL_UTIL_INC . 'db/db_selector.php' );
 	include_once( CARL_UTIL_INC . 'basic/misc.php' );
+	reason_include_once( 'classes/object_cache.php' );
 	reason_include_once( 'classes/entity_selector.php' );
 	reason_include_once( 'function_libraries/url_utils.php' );
-	reason_include_once( 'classes/object_cache.php' );
 
 	/**
 	 * Get the id of an item with a given unique name
