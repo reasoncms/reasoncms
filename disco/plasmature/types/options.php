@@ -1003,6 +1003,20 @@ class chosen_select_multipleType extends chosen_selectType
 		$str .= '<script language="javascript" type="text/javascript">$(".chzn-select").chosen();</script>';
 		return $str;
 	}
+	function grab_value()
+	{
+		// See checkboxgroup notes
+		$val = parent::grab_value();
+		return (NULL === $val) ? array() : $val;
+	}
+	function get()
+	{
+		// See checkboxgroup notes
+		if ( empty($this->value) )
+			return array();
+		else
+			return $this->value;
+	}
 }
 /**
  * Same as {@link selectType}  but doesn't sort the {@link options}.
@@ -1241,6 +1255,20 @@ class select_multipleType extends selectType
 		}
 		$str .= '>'.$val.'</option>'."\n";
 		return $str;
+	}
+	function grab_value()
+	{
+		// See checkboxgroup notes
+		$val = parent::grab_value();
+		return (NULL === $val) ? array() : $val;
+	}
+	function get()
+	{
+		// See checkboxgroup notes
+		if ( empty($this->value) )
+			return array();
+		else
+			return $this->value;
 	}
 }
 
