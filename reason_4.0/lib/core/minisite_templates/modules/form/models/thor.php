@@ -490,13 +490,18 @@ class ThorFormModel extends DefaultFormModel
 	
 	function &get_top_links()
 	{
+		// Grab current request vars, but remove some internal-only ids
+		$preserve_url_vars = (array) $this->_view->_request;
+		unset($preserve_url_vars['page_id'], $preserve_url_vars['site_id']);
+		var_dump($this->_view);
+
 		if (!$this->user_requested_admin() && $this->user_has_administrative_access() && ($this->get_values()))
 		{
-			$link['Enter administrative view'] = carl_construct_link(array('form_admin_view' => 'true'), array('textonly', 'netid'));
+			$link['Enter administrative view'] = carl_construct_link(array('form_admin_view' => 'true'), array_keys($preserve_url_vars));
 		}
 		elseif ($this->user_requested_admin() && $this->user_has_administrative_access())
 		{
-			$link['Exit administrative view'] = carl_construct_link(array('form_admin_view' => ''), array('textonly', 'netid'));
+			$link['Exit administrative view'] = carl_construct_link(array('form_admin_view' => ''), array_keys($preserve_url_vars));
 		}	
 		else $link = array();
 		return $link;
@@ -749,27 +754,34 @@ class ThorFormModel extends DefaultFormModel
 	
 	/**
 	 * Return mixed form entity object or false
+	 * 
+	 * Gotcha: looks up form ids via 'page_to_form' relationship
+	 *         or via $this->_form_id, if that value is already set (possibly manually)
+	 * 
 	 * @access private
 	 */
 	function &get_form_entity()
 	{
-		if (!isset($this->_form))
-		{
-			$es = new entity_selector();
-			$es->description = 'Selecting form to display on a minisite page.';
-			$es->add_type( id_of('form') );
-			$es->add_right_relationship( $this->get_page_id(), relationship_id_of('page_to_form') );
-			$es->set_num(1);
-			$result = $es->run_one();
-			if ($result)
-			{
- 				$this->_form = reset($result);
- 			}
-  			else $this->_form = false;
-  		}
-  		return $this->_form;
+		if (!isset($this->_form)) {
+			if (isset($this->_form_id)) {
+				// Already have a form id
+				$this->_form = new entity($this->_form_id);
+			} else {
+				// Lookup the form attached to this page
+				$es = new entity_selector();
+				$es->description = 'Selecting form to display on a minisite page.';
+				$es->add_type(id_of('form'));
+				$es->add_right_relationship($this->get_page_id(), relationship_id_of('page_to_form'));
+				$es->set_num(1);
+				$result = $es->run_one();
+				if ($result) {
+					$this->_form = reset($result);
+				}
+			}
+		}
+		return $this->_form;
 	}
-	
+
 	function &get_values()
 	{
 		if (!isset($this->_values))
