@@ -3654,20 +3654,17 @@ class EventsModule extends DefaultMinisiteModule
 					}
 				}
 				
-				$this->verify_and_set_up_registration_slots();
+				$this->verify_and_set_up_registration_forms();
 			}
 		}
 	} // }}}
-	/**
-	 * Make sure a legitimate slot is being requested
-	 */
-	function verify_and_set_up_registration_slots()
+	function verify_and_set_up_registration_forms()
 	{
 		$redirect = false;
 		$return_value = false;
 		if (!empty($this->event))
 		{
-			$slots = $this->get_registration_slots($this->event);
+			$slots = $this->get_registration_forms($this->event);
 			if(!empty($slots))
 			{
 				if ($head_items = $this->get_head_items())
@@ -3828,7 +3825,7 @@ class EventsModule extends DefaultMinisiteModule
 			$bundle->set_function('keyword_links', array($this, 'get_event_keyword_links'));
 			$bundle->set_function('is_all_day_event', array($this, 'event_is_all_day_event'));
 			$bundle->set_function('map_zoom_level', array($this, 'get_map_zoom_level'));
-			$bundle->set_function('registration_markup', array($this, 'get_registration_slots_markup'));
+			$bundle->set_function('registration_markup', array($this, 'get_registration_forms_markup'));
 			$bundle->set_function('prettify_duration', array($this, 'prettify_duration'));
 			$bundle->set_function('repetition_explanation', array($this, 'get_repetition_explanation'));
 			
@@ -4141,32 +4138,22 @@ class EventsModule extends DefaultMinisiteModule
 	//////////////////////////////////////
 	// Registration slots
 	//////////////////////////////////////
-	
-	/*
-		General note about registration slots:
-		This should be moved into some sort of templated (perhaps MVC) framework
-		at some point. It is not recommended to modify or customize registration slots beyond 
-		swapping out the form via the form_include parameter.
-	*/
-	
+
 	/**
-	 * Get the registration slots associated with this event.
+	 * Get the registration forms associated with this event.
+	 * 
 	 * @param object $event entity
-	 * @return array registration slot entities
+	 * @return array registration form entities
 	 */
-	function get_registration_slots($event)
+	function get_registration_forms($event)
 	{
-		static $cache = array();
-		if(!isset($cache[$event->id()]))
-		{
-			$es = new entity_selector();
-			$es->description = "Getting the registration slots for this event";
-			$es->add_type( id_of( 'registration_slot_type' ) );
-			$es->add_right_relationship($event->id(), relationship_id_of('event_type_to_registration_slot_type'));
-			$es->set_order( 'sortable.sort_order ASC' );
-			$cache[$event->id()] = $es->run_one();
-		}
-		return $cache[$event->id()];
+		$es = new entity_selector();
+		$es->description = "Getting the registration forms for this event";
+		$es->add_type( id_of( 'form' ) );
+		$es->add_right_relationship($event->id(), relationship_id_of('event_to_form'));
+		$result = $es->run_one();
+		
+		return $result;
 	}
 	
 	/**
@@ -4174,42 +4161,25 @@ class EventsModule extends DefaultMinisiteModule
 	 * @param object $event entity
 	 * @return string markup
 	 */
-	function get_registration_slots_markup($event)
+	function get_registration_forms_markup($event)
 	{
 		ob_start();
-		if(!($event->get_value('last_occurence') < date('Y-m-d')))
-		{
-			$slots = $this->get_registration_slots($event);
-			if(!empty($slots))
-			{
-				echo '<div id="slotInfo">'."\n";
-				if(!empty($this->request['delete_registrant']) && $this->user_is_slot_admin($event) )
-				{
-					$this->delete_registrant($event);
-				}
-			
-				if(!empty($this->request['admin_view']) && $this->validate_date($this->event) && $this->user_is_slot_admin($event))
-				{
-					$this->show_slot_registration_admin_view($event);
-				}
-				elseif(!$this->validate_date($event))
-				{
-					$this->show_registration_dates($event);
-				}
-				elseif(empty($this->request['slot_id']))
-				{
-					$this->show_registration_slots($event);
-				}
-				else
-				{
-					$this->show_registration_form($event);
-				}
-				echo '</div>'."\n";
+
+		$should_display_form = $event->get_value('last_occurence') > date('Y-m-d');
+		if ($should_display_form) {			
+			$forms = $this->get_registration_forms($event);
+			echo "<div id='slotInfo'>\n";
+			foreach ($forms as $form) {
+				$this->show_registration_form($form);
 			}
+			echo "</div>\n";
 		}
-		return ob_get_clean();
+
+		$form_html = ob_get_clean();
+
+		return $form_html;
 	}
-	
+
 	/**
 	 * Redirect to empty date if the given requested date is not a date the event occurrs
 	 * @param object $event
@@ -4256,7 +4226,7 @@ class EventsModule extends DefaultMinisiteModule
 	{
 
 		//find registration slots
-		$results = $this->get_registration_slots($event);
+		$results = $this->get_registration_forms($event);
 		
 		//display registration slots
 		if(!empty($results) && $event->get_value('registration') != 'full')
@@ -4357,24 +4327,41 @@ class EventsModule extends DefaultMinisiteModule
 	 * @return void
 	 * @todo Move to a markup class
 	 */
-	function show_registration_form($event)
+	function show_registration_form($form)
 	{
-		$slot_entity = new Entity($this->request['slot_id']);
-		echo '<div class="form">'."\n";
-		echo '<h3>Register for '.$event->get_value('name').' ('.$slot_entity->get_value('name').')'.'</h3>'."\n";
-		
-		$class_name = (isset($GLOBALS[ '_slot_registration_view_class_names' ][ basename( $this->params['form_include'], '.php') ]))
-					? $GLOBALS[ '_slot_registration_view_class_names' ][ basename( $this->params['form_include'], '.php') ]
-					: 'EventSlotRegistrationForm';
-		
-		$form = new $class_name($event, $this->request, ';', '|', $this->slot_generate_cancel_link($event));
-		$possible_dates = $this->get_possible_registration_dates($event);
-		if (count($possible_dates) > 1)
-		{
-			$form->show_date_change_link();
-		}
-		$form->run();
-		echo '</div>'."\n";
+		reason_include_once('minisite_templates/modules/form/models/thor.php');
+		reason_include_once('minisite_templates/modules/form/views/thor/default.php');
+		reason_include_once('minisite_templates/modules/form/controllers/thor.php');
+
+		// Assemble the MVC components to handle forms in this context
+		$form_model = new ThorFormModel();
+		$form_model->init_from_module($this);
+		// Unlike typical forms with a 'page_to_form' relationship,
+		// here our form ID comes from an 'event_to_form' relationship and is already
+		// present on this Event object so we define it on the model. 
+		$form_model->_form_id = $form->id();
+
+		$form_view = new DefaultThorForm();
+		$form_view->set_model($form_model);
+
+		$form_controller = new ThorFormController();
+		$form_controller->set_model($form_model);
+		$form_controller->set_view($form_view);
+
+		// Render the form and store it in var 
+		ob_start();
+		$form_controller->init();
+		$form_controller->run();
+		$form_html = ob_get_clean();
+
+		$html = <<<HTML
+<div class="form">
+	<h3>Register for {$this->event->get_value('name')}</h3>
+	$form_html
+</div>
+HTML;
+
+		echo $html;
 	}
 	/**
 	 * Display the registration admin view
