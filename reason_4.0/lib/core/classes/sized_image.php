@@ -377,6 +377,12 @@ class reasonSizedImage
 				elseif (empty($width) && empty($height)) trigger_error('reasonSizedImage needs to be provided a non-empty width or height value to create a sized image');
 				else
 				{
+					
+					if(!file_exists($path))
+					{
+						trigger_error('Image not found at '.$path.' -- unable to make resized image');
+						return false;
+					}
 					copy($path, $newpath);
 					
 					//Do we need to sharpen the image?
