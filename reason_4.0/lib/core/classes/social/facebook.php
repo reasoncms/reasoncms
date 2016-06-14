@@ -151,7 +151,7 @@ class ReasonFacebookIntegrator extends ReasonSocialIntegrator implements SocialA
 				}
 				else
 				{
-					$cm->set_error($this->element_prefix.'account_id', 'Facebook does have a public link associated with that Facebook ID. Make sure you entered the ID correctly.');
+					$cm->set_error($this->element_prefix.'account_id', 'Facebook does not have a public link associated with that Facebook ID. Make sure you entered the ID correctly.');
 				}
 			}
 			else
