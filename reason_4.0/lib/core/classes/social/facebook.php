@@ -130,31 +130,13 @@ class ReasonFacebookIntegrator extends ReasonSocialIntegrator implements SocialA
 	function social_account_run_error_checks($cm)
 	{
 		$account_id = $cm->get_value($this->element_prefix.'account_id');
-		if ( !check_against_regexp($account_id, array('naturalnumber')) && !check_against_regexp($account_id, array('/^[a-z\d.]*$/i')) )
+		if ( !$this->validate_account_id($account_id) )
 		{
 			$cm->set_error($this->element_prefix.'account_id', 'Invalid format for Facebook ID. Please enter a numeric ID or a valid Facebook username');
 		}
 		else
 		{
-			// lets actually look this up at graph search.
-			if ($details = $this->get_graph_info($account_id))
-			{
-				if (isset($details['link']))
-				{
-					$existing_details = json_decode($cm->get_value($this->element_prefix.'account_details'), true);
-					$existing_details['link'] = $details['link'];
-					$cm->set_value($this->element_prefix.'account_details', json_encode($existing_details));
-					if (isset($details['id']) && ($details['id'] != $account_id))
-					{
-						$cm->set_value($this->element_prefix.'account_id', $details['id']);
-					}
-				}
-				else
-				{
-					$cm->set_error($this->element_prefix.'account_id', 'Facebook does not have a public link associated with that Facebook ID. Make sure you entered the ID correctly.');
-				}
-			}
-			else
+			if (!$this->update_form_from_graph_info($account_id, $cm))
 			{
 				$cm->set_error($this->element_prefix.'account_id', 'Facebook does not recognize the ID that you entered.');
 			}
@@ -168,6 +150,48 @@ class ReasonFacebookIntegrator extends ReasonSocialIntegrator implements SocialA
 				$cm->remove_element($this->element_prefix.'account_link');
 			}
 		}
+	}
+	
+	/**
+	 * Determine whether the passed account ID conforms to Facebook standards
+	 * 
+	 * @param string $account_id
+	 * @return boolean
+	 */
+	public function validate_account_id($account_id)
+	{
+		return (check_against_regexp($account_id, array('naturalnumber')) || check_against_regexp($account_id, array('/^[a-z\d.]*$/i')));
+	}
+	
+	/**
+	 * Given an account ID, look it up using the Facebook Graph API and set the account_details
+	 * field appropriately.  Returns false on failure.
+	 * 
+	 * IMPORTANT NOTE: The Graph API as used here can only return information about completely 
+	 * public pages and groups. Closed groups or groups that are defined within another organization
+	 * will fail, even if they're perfectly valid.
+	 * 
+	 * @param string $account_id
+	 * @param object $cm
+	 * @return boolean
+	 */
+	public function update_form_from_graph_info($account_id, $cm)
+	{
+		if ($details = $this->get_graph_info($account_id))
+		{
+			if (isset($details['link']))
+			{
+				$existing_details = json_decode($cm->get_value($this->element_prefix.'account_details'), true);
+				$existing_details['link'] = $details['link'];
+				$cm->set_value($this->element_prefix.'account_details', json_encode($existing_details));
+				if (isset($details['id']) && ($details['id'] != $account_id))
+				{
+					$cm->set_value($this->element_prefix.'account_id', $details['id']);
+				}
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	/**
