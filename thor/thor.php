@@ -924,7 +924,7 @@ class ThorCore
 				$db_structure[$node->tagAttrs['id']]['type'] = 'text';
 			}
 			elseif ($node->tagName == 'hidden') {
-			$db_structure[$node->tagAttrs['id']]['type'] = 'tinytext';
+				$db_structure[$node->tagAttrs['id']]['type'] = 'text';
 			}
 			elseif (($node->tagName == 'radiogroup') || ($node->tagName == 'optiongroup')) {
 				$db_structure[$node->tagAttrs['id']]['type'] = 'enum';
