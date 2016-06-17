@@ -33,6 +33,7 @@ class ReasonSiteToPDFModule extends DefaultModule// {{{
 		$this->admin_page->title = 'Site to PDF';
 		$this->admin_page->set_breadcrumbs( array(''=> 'Site to PDF' ) );
 		$this->head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form_data.css');
+		$this->head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/modules/site_to_pdf.js');
 		$this->_get_site_pages();
 		
 		if (isset($_POST['pages']))
@@ -220,7 +221,7 @@ class ReasonSiteToPDFModule extends DefaultModule// {{{
 		$temp_file_path = sys_get_temp_dir() . "/" . $this->admin_page->site_id . ".pdf";
 
 		// Download the pages as a pdf.
-		$command = 'wkhtmltopdf -l --javascript-delay 10000 ' . $url_string . $temp_file_path;
+		$command = 'wkhtmltopdf -l --print-media-type  ' . $url_string . $temp_file_path;
 		$output = shell_exec($command);
 
 		// Ensure that a non-empty file was created.
