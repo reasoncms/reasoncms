@@ -1540,6 +1540,102 @@
 			return array( $alias => array( 'table_orig' => $table, 'table' => $t , 'field' => $field ) );
 		} // }}}
 
+		/**	 
+		* Return relationship metadata for entities returned by the entity selector. This is still
+		* somewhat experimental. For some types of queries, you may need to turn on enable_multivalue_results
+		* to get all of the results
+		*
+		* @param string $rel_name the name of the relationship between the entities
+		* @param string $field the name of the metadata field to be selected
+		* @param string $alias that alias for the field
+		* @param mixed $limit_results true return only row for which the related value is defined
+		*                                                         false to return all results even if the value does not exist
+		*                                                         string or array to limit results to the values passed
+		* @return boolean
+		*/
+		function add_left_relationship_meta_field($rel_name, $field, $alias, $limit_results = true)
+		{
+			if (($rel_name != "owns") && ($rel_name != "borrows") && !empty($rel_name))
+				$rel_type_id = relationship_id_of($rel_name);
+			elseif ($rel_name == 'owns' || $rel_name == 'borrows')
+			{
+				if (empty($this->type))
+				{
+					$call_info = array_shift(debug_backtrace());
+					$code_line = $call_info['line'];
+					$file = array_pop(explode('/', $call_info['file']));
+					$msg = 'entity selector method add_left_relationship_meta_field called by ' . $file . ' on line ' . $code_line . ' on a generic "owns" or "borrows" relationship when the type has not been set on the entity selector.';
+					trigger_error($msg, WARNING);
+					return false;
+				}
+				elseif ($rel_name == "owns")
+					$rel_type_id = get_owns_relationship_id(reset($this->type));
+				elseif ($rel_name == "borrows")
+					$rel_type_id = get_borrows_relationship_id(reset($this->type));
+			}
+			if (empty($rel_type_id))
+			{
+				trigger_error('add_left_relationship_meta_field failed - an id could not be determined from the relationship name provided');
+				return false;
+			}
+
+			if ($meta_type = reason_get_relationship_meta_type($rel_type_id))
+			{
+				$table = get_table_from_field($field, $meta_type->id());
+			}
+			if (empty($table))
+			{
+				trigger_error('add_left_relationship_meta_field failed - no table found for the requested field');
+				return false;
+			}
+
+			if ($limit_results === false)
+			{
+				$cur_es = carl_clone($this);
+				$this->union = true;
+			}
+
+			$es = new entity_selector();
+
+			$es->add_table('relationship', 'relationship');
+			$es->add_table($table);
+			$tables = $this->merge_tables($es);
+
+			if (!empty($tables['relationship']))
+				$r = $tables['relationship'];
+			else
+				$r = 'relationship';
+
+			if (!empty($tables[$table]))
+				$t = $tables[$table];
+			else
+				$t = $table;
+
+			$this->add_relation($r . '.meta_id = ' . $t . '.id');
+			$this->add_relation('entity.id = ' . $r . '.entity_a');
+			$this->add_relation($r . '.type = ' . $rel_type_id);
+
+			$this->add_field($t, $field, $alias);
+			if ($this->_env['restrict_site'] AND ! empty($this->_env['site']))
+			{
+				$this->add_relation('(' . $r . '.site=0 OR ' . $r . '.site=' . $this->_env['site'] . ')');
+			}
+			if ($limit_results === false)
+			{
+				$this->union_fields[end($this->fields)] = '0 as ' . $alias;
+				$this->diff['fields'][] = array_diff_assoc($this->fields, $cur_es->fields);
+				$this->diff['tables'][] = array_diff_assoc($this->tables, $cur_es->tables);
+				$this->diff['relations'][] = array_diff_assoc($this->relations, $cur_es->relations);
+			}
+			elseif (is_string($limit_results) || is_array($limit_results))
+			{
+				$limit_values = (is_string($limit_results)) ? array($limit_results) : $limit_results;
+				array_walk($limit_values, 'db_prep_walk');
+				$this->add_relation($t . '.' . $field . ' IN (' . implode(',', $limit_values) . ')');
+			}
+			return array($alias => array('table_orig' => $table, 'table' => $t, 'field' => $field));
+		}
+
 		/**
 		 * Sets entity tables to exclude from the entity selector 
 		 * The entity table cannot be excluded
