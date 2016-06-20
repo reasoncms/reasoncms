@@ -1203,10 +1203,10 @@ class entity
 	 */
 	public function get_edit_url($return_url = null)
 	{
-		$site = $this->entity->get_owner_site();
+		$site = $this->get_owner();
 		if($site)
 		{
-			$qs = carl_construct_query_string(array('site_id' => $site->id(), 'type_id' => $this->entity->type_id(), 'id' => $this->entity->id(), 'cur_module' => 'Editor', 'fromweb' => $return_url));
+			$qs = carl_construct_query_string(array('site_id' => $site->id(), 'type_id' => $this->type_id(), 'id' => $this->id(), 'cur_module' => 'Editor', 'fromweb' => $return_url));
 			return securest_available_protocol() . '://' . REASON_WEB_ADMIN_PATH . $qs;
 		}
 		return NULL;
