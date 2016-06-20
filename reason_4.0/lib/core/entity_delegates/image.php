@@ -39,4 +39,24 @@ class imageDelegate extends entityDelegate
 	{
 		return reason_htmlspecialchars(strip_tags($this->entity->get_value('description')));
 	}
+	function get_display_name()
+	{
+		$path = $this->entity->get_image_path('thumbnail');
+		if( file_exists($path) && (filesize($path) > 0) )
+			$url = $this->entity->get_image_url('thumbnail');
+		else
+		{
+			$path = $this->entity->get_image_path();
+			if( file_exists($path) && (filesize($path) > 0) )
+				$url = $this->entity->get_image_url();
+		}
+		if( !empty($url) )
+		{
+			list( $width, $height ) = getimagesize( $path );
+			$mod_time = filemtime( $path );
+			return $this->entity->get_value('name').'<br /><img src="'.$url.'?cb='.$mod_time.'" width="'.$width.'" height="'.$height.'" alt="'.$this->entity->get_alt_text().'" />';
+		}
+		else
+			return $this->entity->get_value('name');
+	}
 }
