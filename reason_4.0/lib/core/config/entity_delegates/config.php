@@ -52,6 +52,11 @@ $entity_delegates_config_setting = array(
 			'entity_delegates/field.php',
 		),
 	),
+	'social_account_type' => array(
+		'append' => array(
+			'entity_delegates/social_account.php',
+		),
+	),
 );
 
 
