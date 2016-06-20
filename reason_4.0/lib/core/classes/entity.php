@@ -17,7 +17,7 @@ include_once('reason_header.php');
  */
 if (defined("REASON_DB")) $GLOBALS['_db_query_first_run_connection_name'] = REASON_DB;
 reason_include_once('classes/locks.php');
-reason_include_once('entity_delegates/factory.php');
+reason_include_once('config/entity_delegates/config.php');
 
 /**
  * Include database management stuff
@@ -43,6 +43,18 @@ include_once( CARL_UTIL_INC . 'db/db.php' );
  *
  * On line 3, the entity does not query, rather it uses information already gathered on line 2.  If the
  * column doesn't exist, it returns false.
+ *
+ * Delegates
+ *
+ * Entities can be extended with delegates, which are lazy-loaded as needed. By default 
+ * entity methods act as "final" methods -- they cannot be overloaded by delegates.
+ * However, methods can be implemented as "non-final" methods by internally calling
+ * a delegate if it exists, or falling through to calling delegates in certain circumstances.
+ *
+ * Non-final methods (which delegates can overload):
+ * - get_display_name()
+ * - get_url()
+ * 
  *
  * @author Brendon Stanton
  * @author Mark Heiman
@@ -121,6 +133,7 @@ class entity
 	 */
 	protected $_locks = false;
 	protected $_delegates;
+	protected $_delegates_hash;
 	/**#@-*/
 
 	/**
@@ -148,23 +161,47 @@ class entity
 	} // }}}
 	
 	/**
+	 * Magic __call method to permit runtime delegation of addtional methods
+	 *
 	 * @todo Do we want pseudo-namespaces?
-	 * @todo Do we want to be able to ask what delegates, methods, or interfaces are supported?
-	 * @todo figure out how serious an unsupported method call is -- die or simply warn?
 	 * @return mixed
 	 */
 	public function __call($name, $arguments)
 	{
+		return $this->call_delegate($name, $arguments);
+	}
+	public function call_delegate($name, $arguments, $delegate_path = null)
+	{
 		$delegates = $this->get_delegates();
-		foreach($delegates as $delegate)
+		if(!$delegate_path)
 		{
-			if(method_exists($delegate, $name))
-				return call_user_func_array(array($delegate,$name),$arguments);
+			foreach($delegates as $delegate)
+			{
+				if(method_exists($delegate, $name))
+					return call_user_func_array(array($delegate,$name),$arguments);
+			}
+			trigger_error('Method '.$name.' is not supported by any delegates (' . implode(', ',array_keys($delegates)) . ')');
 		}
-		trigger_error('Method '.$name.' is not supported by the '.get_class($this).' class or any of its delegates (' . implode(', ',array_keys($delegates)) . ')');
+		else
+		{
+			if(isset($delegates[$delegate_path]))
+			{
+				if(method_exists($delegates[$delegate_path], $name))
+					return call_user_func_array(array($delegates[$delegate_path],$name),$arguments);
+				trigger_error('Method '.$name.' is not supported by delegate ' . $delegate_path );
+			}
+			trigger_error('No delegate found for ' . $delegate_path );
+		}
+
 	}
 	/**
 	 * Does the entity class or one of its delegates support a given method?
+	 *
+	 * Note that this function is using method_exists, which will return true for private/
+	 * protected methods
+	 *
+	 * @param string $name Name of the method
+	 * @return boolean
 	 */
 	public function method_supported($name)
 	{
@@ -177,7 +214,22 @@ class entity
 		}
 		return false;
 	}
-	
+	/**
+	 * @todo implement a way to get the superset of methods supported by this entity and its delegates
+	 * @return array
+	 */
+	/* public function get_all_methods()
+	{
+		trigger_error('entity::get_all_methods() is not yet implemented');
+		return array();
+	} */
+	/**
+	 * Check to see if this entity supports or inherits a particular interface
+	 *
+	 * @param string $name Name of the class or interface
+	 * @return boolean
+	 * @todo add a cache if we are calling this a lot
+	 */
 	public function is_or_has($name)
 	{
 		if(is_a($this,$name))
@@ -200,6 +252,20 @@ class entity
 	{
 		return $this->_id;
 	} // }}}
+	
+	function set_type_id($type_id = NULL)
+	{
+		$this->_type_id = (integer) $type_id;
+	}
+	/**
+	 * @todo get the entity selector to set the type id by default
+	 */
+	function type_id()
+	{
+		if(!isset($this->_type_id))
+			$this->_type_id = (integer) $this->get_value('type');
+		return $this->_type_id;
+	}
 	/**
 	 * Sets a local environment variable.
 	 *
@@ -216,11 +282,31 @@ class entity
 	 */
 	function get_delegates()
 	{
-		if(!isset($this->delegates))
+		$config = get_entity_delegates_config();
+		if(!isset($this->_delegates))
 		{
-			$this->delegates = get_entity_delegates($this);
+			$this->_delegates = $config->get_delegates($this);
+			$this->_delegates_hash = $config->type_hash($this->type_id());
 		}
-		return $this->delegates;
+		elseif($config->type_hash($this->type_id()) != $this->_delegates_hash)
+		{
+			$new_delegates = $config->get_delegates($this, NULL, true);
+			$append = array();
+			foreach($this->_delegates as $k=>$d)
+			{
+				if(isset($new_delegates[$k]))
+					$new_delegates[$k] = $d;
+				else
+					$append[$k] = $d;
+			}
+			$this->_delegates = array_merge($new_delegates,$append);
+		}
+		return $this->_delegates;
+	}
+	function add_delegate($path, $delegate)
+	{
+		$this->get_delegates();
+		$this->_delegates[$path] = $delegate;
 	}
 	/**
 	 * Function that actually gets the values from the DB
@@ -328,11 +414,20 @@ class entity
 	 *
 	 * This isn't an actual attribute of the entity, rather it is a function of the entity's type.
 	 * Gets the display_name_handler an then calls the function on the current object
+	 *
+	 * @todo remove entire display name block in 4.8
+	 *
 	 * @return string display name of the object
 	 */
-	function get_display_name() // {{{
+	function get_display_name()
 	{
-		$type_id = $this->get_value( 'type' );
+		if($name = @$this->call_delegate('get_display_name', array()))
+		{
+			return $name;
+		}
+		
+		die('huh');
+		$type_id = $this->type_id();
 		if(!empty($type_id))
 		{
 			$type = new entity( $type_id );
@@ -347,7 +442,10 @@ class entity
 					elseif(!function_exists($display_handler))
 						trigger_error('Custom display name handler not registered properly in '.$file);
 					else
+					{
+						trigger_error('Display name handlers are deprecated. Please migrate your display name generation to an entity delegate for the type "'.$type->get_value( 'unique_name' ).'"');
 						return $display_handler( $this );
+					}
 				}
 				else
 				{
@@ -359,8 +457,9 @@ class entity
 		{
 			trigger_error('Item id '.$this->id().' does not have an entry in Type field. Potential database corruption.');
 		}
+		
 		return $this->get_value( 'name' );
-	} // }}}
+	}
 
 	//////////////////////////////////////////////////////
 	//  
@@ -401,7 +500,7 @@ class entity
 		//$dbq->add_relation( 'r.type != 0' ); // There are some bad rels out there with type=0
 		if( $this->_env['restrict_site'] AND !empty($this->_env['site']) )
 		{
-			$dbq->add_relation( '(r.site=0 OR r.site=' . $this->_env['site'] . ')' );
+			$dbq->add_relation( '(r.site=0 OR r.site=' . (integer) $this->_env['site'] . ')' );
 		}
 		$rels = $dbq->run( 'Unable to grab relationships' );
 		foreach( $rels as $r)
@@ -427,7 +526,7 @@ class entity
 		$dbq->add_relation( 'r.entity_b = '.$this->id() );
 		if( $this->_env['restrict_site'] AND !empty($this->_env['site']) )
 		{
-			$dbq->add_relation( '(r.site=0 OR r.site=' . $this->_env['site'] . ')' );
+			$dbq->add_relation( '(r.site=0 OR r.site=' . (integer) $this->_env['site'] . ')' );
 		}
 		$dbq->set_order( 'rel_sort_order' );
 		$rels = $dbq->run();
@@ -673,7 +772,7 @@ class entity
 		$dbq->add_relation( 'r.type = '.$rel_id );
 		if( $this->_env['restrict_site'] AND !empty($this->_env['site']) )
 		{
-			$dbq->add_relation( '(r.site=0 OR r.site=' . $this->_env['site'] . ')' );
+			$dbq->add_relation( '(r.site=0 OR r.site=' . (integer) $this->_env['site'] . ')' );
 		}
 		$dbq->set_order( 'rel_sort_order' );
 		$rels = $dbq->run();
@@ -713,7 +812,7 @@ class entity
 		$dbq->add_relation( 'r.type = '.$rel_id );
 		if( $this->_env['restrict_site'] AND !empty($this->_env['site']) )
 		{
-			$dbq->add_relation( '(r.site=0 OR r.site=' . $this->_env['site'] . ')' );
+			$dbq->add_relation( '(r.site=0 OR r.site=' . (integer) $this->_env['site'] . ')' );
 		}
 		$dbq->set_order( 'rel_sort_order' );
 		$rels = $dbq->run();
@@ -880,7 +979,7 @@ class entity
 	 */
 	function get_owner() // {{{
 	{
-		$right_rels = $this->get_right_relationship( get_owns_relationship_id( $this->get_value('type') ) );
+		$right_rels = $this->get_right_relationship( get_owns_relationship_id( $this->type_id() ) );
 		if( !empty( $right_rels[ 0 ] ) )
 			return $right_rels[ 0 ];
 		else
@@ -906,7 +1005,7 @@ class entity
 	{
 		$site = new entity($site_id);
 		$owner = $this->get_owner();
-		if( $owner->id() == $site->id() || $this->has_right_relation_with_entity( $site, get_borrows_relationship_id( $this->get_value('type') ) ) )
+		if( $owner->id() == $site->id() || $this->has_right_relation_with_entity( $site, get_borrows_relationship_id( $this->type_id() ) ) )
 		{
 			return true;
 		}
@@ -1085,6 +1184,31 @@ class entity
 		$locks = $this->get_locks();
 		return $locks->user_can_edit_relationship($relationship, $user, $direction, $entity_on_other_side, $context_site);
 	}
+	
+	
+	/**
+	 * Get the URL of the item
+	 *
+	 * return mixed string or NULL
+	 */
+	public function get_url($type = '')
+	{
+		return @$this->call_delegate('get_url', array($type));
+	}
+	/**
+	 * Get the URL to edit this item
+	 *
+	 * @param $return_url A url to return to after editing
+	 * @return mixed URL or null if no owner site found
+	 */
+	public function get_edit_url($return_url = null)
+	{
+		$site = $this->entity->get_owner_site();
+		if($site)
+		{
+			$qs = carl_construct_query_string(array('site_id' => $site->id(), 'type_id' => $this->entity->type_id(), 'id' => $this->entity->id(), 'cur_module' => 'Editor', 'fromweb' => $return_url));
+			return securest_available_protocol() . '://' . REASON_WEB_ADMIN_PATH . $qs;
+		}
+		return NULL;
+	}
 }
-
-?>
