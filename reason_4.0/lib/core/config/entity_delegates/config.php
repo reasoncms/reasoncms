@@ -47,6 +47,11 @@ $entity_delegates_config_setting = array(
 			'entity_delegates/feature.php',
 		),
 	),
+	'field' => array(
+		'append' => array(
+			'entity_delegates/field.php',
+		),
+	),
 );
 
 
