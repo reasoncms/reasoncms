@@ -1078,6 +1078,7 @@
 					{
 						$e = new entity( $row[ 'id' ] );
 					}
+					$e->set_type_id($type);
 					$e->_values = $row;
 				}
 				$results[ $row[ 'id' ] ] = $e;
