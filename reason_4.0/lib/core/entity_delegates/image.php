@@ -12,10 +12,6 @@ $GLOBALS['entity_delegates']['entity_delegates/image.php'] = 'imageDelegate';
 class imageDelegate extends entityDelegate
 {
 	protected $sized_images = array();
-	function foobar()
-	{
-		return 'foobar';
-	}
 	
 	function get_image_markup( $die_without_thumbnail = false, $show_popup_link = true, $show_description = true, $other_text = '' , $textonly = false, $show_author = false, $link_with_url = '' )
 	{
@@ -39,5 +35,8 @@ class imageDelegate extends entityDelegate
 		}
 		return $this->sized_images[$handle];
 	}
-	
+	function get_alt_text()
+	{
+		return reason_htmlspecialchars(strip_tags($this->entity->get_value('description')));
+	}
 }
