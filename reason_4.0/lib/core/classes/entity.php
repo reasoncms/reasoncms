@@ -426,7 +426,6 @@ class entity
 			return $name;
 		}
 		
-		die('huh');
 		$type_id = $this->type_id();
 		if(!empty($type_id))
 		{
