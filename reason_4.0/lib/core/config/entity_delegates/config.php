@@ -57,6 +57,11 @@ $entity_delegates_config_setting = array(
 			'entity_delegates/social_account.php',
 		),
 	),
+	'av' => array(
+		'append' => array(
+			'entity_delegates/media_work.php',
+		),
+	),
 );
 
 
