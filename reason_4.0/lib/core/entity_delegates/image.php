@@ -39,24 +39,50 @@ class imageDelegate extends entityDelegate
 	{
 		return reason_htmlspecialchars(strip_tags($this->entity->get_value('description')));
 	}
+	function get_image_html($size = 'standard', $check_file = false, $browser_cache_bust = false, $display_ratio = 1)
+	{
+		if($check_file)
+		{
+			$path = $this->entity->get_image_path($size);
+			if( file_exists($path) && (filesize($path) > 0) )
+			{
+				$url = $this->entity->get_image_url($size);
+			}
+			else
+			{
+				return '';
+			}
+		}
+		else
+		{
+			$url = $this->entity->get_image_url($size);
+		}
+		if($browser_cache_bust)
+		{
+			if(empty($path))
+				$path = $this->entity->get_image_path($size);
+			$mod_time = filemtime( $path );
+			$url .= '?cb='.$mod_time;
+		}
+		if($size = getimagesize($path))
+		{
+			$width = $size[0];
+			$height = $size[1];
+		}
+		//return '<img src="'.$url.'" width="'.(round($width * $display_ratio)).'" height="'.(round($height * $display_ratio)).'" alt="'.$this->entity->get_alt_text().'" />';
+		return '<img src="'.$url.'" width="'.(round($width * $display_ratio)).'" height="'.(round($height * $display_ratio)).'" alt="'.$this->entity->get_alt_text().'" />';
+	}
 	function get_display_name()
 	{
-		$path = $this->entity->get_image_path('thumbnail');
-		if( file_exists($path) && (filesize($path) > 0) )
-			$url = $this->entity->get_image_url('thumbnail');
-		else
+		$markup = $this->entity->get_image_html('thumbnail', true, true);
+		if(empty($markup))
 		{
-			$path = $this->entity->get_image_path();
-			if( file_exists($path) && (filesize($path) > 0) )
-				$url = $this->entity->get_image_url();
+			$markup = $this->entity->get_image_html('standard', true, true);
 		}
-		if( !empty($url) )
+		if(empty($markup))
 		{
-			list( $width, $height ) = getimagesize( $path );
-			$mod_time = filemtime( $path );
-			return $this->entity->get_value('name').'<br /><img src="'.$url.'?cb='.$mod_time.'" width="'.$width.'" height="'.$height.'" alt="'.$this->entity->get_alt_text().'" />';
-		}
-		else
 			return $this->entity->get_value('name');
+		}
+		return $this->entity->get_value('name').'<br />'.$markup;
 	}
 }
