@@ -66,6 +66,7 @@ class CourseListModule extends DefaultMinisiteModule
 	protected $site_subjects = array();
 	protected $page_categories = array();
 	protected $helper;
+	protected $year;
 	public $cleanup_rules = array(
 		'module_api' => array( 'function' => 'turn_into_string' ),
 		'module_identifier' => array( 'function' => 'turn_into_string' ),
@@ -79,6 +80,7 @@ class CourseListModule extends DefaultMinisiteModule
 		parent::init($args);
 		
 		$this->helper = new $GLOBALS['catalog_helper_class']();
+		$this->year = $this->helper->get_latest_catalog_year();
 		
 		// If we're in ajax mode, we just return the data and quit the module.
 		$api = $this->get_api();
@@ -217,7 +219,7 @@ class CourseListModule extends DefaultMinisiteModule
 			$this->courses = $this->courses + $this->get_page_category_courses();
 		
 		if ($this->params['get_courses_by_subjects'])
-			$this->courses = $this->courses + $this->helper->get_courses_by_subjects($this->params['get_courses_by_subjects'], 'academic_catalog_2014_site');
+			$this->courses = $this->courses + $this->helper->get_courses_by_subjects($this->params['get_courses_by_subjects'], 'academic_catalog_'.$this->year.'_site');
 
 		if ($this->params['get_courses_by_site_subjects'])
 			$this->courses = $this->courses + $this->get_courses_by_site_subjects();
@@ -230,8 +232,8 @@ class CourseListModule extends DefaultMinisiteModule
 	
 	protected function get_course_html($course)
 	{
-		$course->set_academic_year_limit(2015);
-		if ($course->get_last_offered_academic_year() < 2011) return null;
+		$course->set_academic_year_limit($this->year);
+		if ($course->get_last_offered_academic_year() < $this->year - 4) return null;
 		
 		$html = '<div class="courseContainer">'."\n";
 		$html .= '<h4>';
@@ -278,7 +280,7 @@ class CourseListModule extends DefaultMinisiteModule
 				}
 				$details[] = 'Offered ' . join(', ', $terms);
 			} else {
-				$details[] = 'Not offered 2015–16';
+				$details[] = 'Not offered '.$this->year.'-'.($this->year + 1);
 			}
 		}
 
@@ -522,12 +524,12 @@ class CourseListModule extends DefaultMinisiteModule
 		// Build the list of courses already on the page so we know what's selected
 		$this->build_course_list();
 		
-		if ($courses = $this->helper->get_courses_by_subjects(array($data), 'academic_catalog_2014_site'))
+		if ($courses = $this->helper->get_courses_by_subjects(array($data), 'academic_catalog_'.$this->year.'_site'))
 		{
 			foreach ($courses as $id => $course)
 			{
 				$history = $course->get_last_offered_academic_year();
-				if ($history < (2014 - 3)) continue;
+				if ($history < ($this->year - 3)) continue;
 				
 				$output['title'] = html_entity_decode($course->get_value('name'));
 				
@@ -610,5 +612,3 @@ class CourseListModule extends DefaultMinisiteModule
 		return false;
 	}
 }
-
-?>
