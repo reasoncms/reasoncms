@@ -16,18 +16,19 @@ reason_include_once('scripts/upgrade/reason_db_helper.php');
 class ReasonUpgrader_47_CourseCatalog implements reasonUpgraderInterface
 {
 	protected $user_id;
-	
+
 	var $catalog_block_type_details = array (
 		'new'=>0,
 		'unique_name'=>'course_catalog_block_type',
-		'plural_name'=>'Catalog Blocks');	
+		'custom_content_handler' => 'catalog_block.php',
+		'plural_name'=>'Catalog Blocks');
 
 	var $catalog_block_type_schema = array(
 		'title' => array('db_type' => 'varchar(128)'),
 		'org_id' => array('db_type' => 'varchar(10)'),
 		'block_type' => array('db_type' => 'enum("General","Faculty list","Description","Major/Concentration Requirements","Study Abroad","Pertinent Courses","Course Descriptions")'),
 		'content' => array('db_type' => 'text'),
-		);	
+		);
 
 	var $relationships = array(
 		'course_catalog_block_to_subject' => array (
@@ -74,15 +75,15 @@ class ReasonUpgrader_47_CourseCatalog implements reasonUpgraderInterface
 				),
 		),
 		*/
-	);		
-	
+	);
+
 	private $rsnDbHelper;
 
 	public function __construct() {
 		$this->rsnDbHelper = new ReasonDbHelper();
 		$this->rsnDbHelper->setUsername(reason_check_authentication());
 	}
-	
+
 	public function user_id( $user_id = NULL)
 	{
 		if(!empty($user_id))
@@ -115,11 +116,11 @@ class ReasonUpgrader_47_CourseCatalog implements reasonUpgraderInterface
 	public function test()
 	{
 	reason_refresh_unique_names();  // force refresh from the database just in case.
-	reason_refresh_relationship_names(); 
-	
+	reason_refresh_relationship_names();
+
 	if (!$this->course_template_type_exists())
 		return '<p>This script requires that the course types exist. The upgrader for this is in the 4.4 to 4.5 upgrade set.</p>';
-	
+
 	if($this->catalog_block_type_exists() &&
 			reason_relationship_name_exists('course_catalog_block_to_subject') &&
 			$this->rsnDbHelper->columnExistsOnTable("course_section", "list_of_prerequisites"))
@@ -132,7 +133,7 @@ class ReasonUpgrader_47_CourseCatalog implements reasonUpgraderInterface
 			return $str;
 		}
 	}
-	
+
     /**
      * Run the upgrader
      * @return string HTML report
@@ -160,25 +161,25 @@ class ReasonUpgrader_47_CourseCatalog implements reasonUpgraderInterface
 		}
 		return $str;
 	}
-	
+
 	/// FUNCTIONS THAT DO THE CREATION WORK
 	protected function create_catalog_block_type()
 	{
 		$str = '';
-		
+
 		$catalog_block_type_id = reason_create_entity(id_of('master_admin'), id_of('type'), $this->user_id(), 'Course Catalog Block', $this->catalog_block_type_details);
 		$str .= '<p>Create catalog block type entity</p>';
-		create_default_rels_for_new_type($catalog_block_type_id);		
+		create_default_rels_for_new_type($catalog_block_type_id);
 		create_reason_table('catalog_block', $this->catalog_block_type_details['unique_name'], $this->user_id());
-		
+
 		$ftet = new FieldToEntityTable('catalog_block', $this->catalog_block_type_schema);
-			
+
 		$ftet->update_entity_table();
 		ob_start();
 		$ftet->report();
 		$str .= ob_get_contents();
 		ob_end_clean();
-		
+
 		return $str;
 	}
 
@@ -198,7 +199,7 @@ class ReasonUpgrader_47_CourseCatalog implements reasonUpgraderInterface
 		}
 		return $str;
 	}
-	
+
 	protected function add_prereq_field_to_section($test_mode = false)
 	{
 		$log = '';
@@ -206,7 +207,7 @@ class ReasonUpgrader_47_CourseCatalog implements reasonUpgraderInterface
 		$updater = new FieldToEntityTable('course_section', $field_params);
 		$updater->test_mode = $test_mode;
 		$updater->update_entity_table();
-		
+
 		ob_start();
 		$updater->report();
 		$log .= ob_get_contents();
@@ -214,14 +215,14 @@ class ReasonUpgrader_47_CourseCatalog implements reasonUpgraderInterface
 
 		return $log;
 	}
-	
+
 	/// FUNCTIONS THAT CHECK IF WE HAVE WORK TO DO
 	protected function catalog_block_type_exists()
 	{
 		reason_refresh_unique_names();  // force refresh from the database just in case.
 		return reason_unique_name_exists('course_catalog_block_type');
-	}	
-	
+	}
+
 	protected function course_template_type_exists()
 	{
 		reason_refresh_unique_names();  // force refresh from the database just in case.

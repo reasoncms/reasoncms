@@ -3,24 +3,24 @@
  * @package reason
  * @subpackage admin
  */
- 
+
 /*
  * Rules for inclusion of admin modules
  *
  * This file sets up the array $GLOBALS['_reason_admin_modules']. This file defines the "core" admin
- * modules. If you have local admin modules, you should define $GLOBALS['_reason_admin_modules_local'] 
+ * modules. If you have local admin modules, you should define $GLOBALS['_reason_admin_modules_local']
  * in a file called setup_local.php and place it here:
  *
  * reason_package/reason_4.0/lib/local/config/admin_modules/setup_local.php
- * 
+ *
  * Modules defined in $GLOBALS['_reason_admin_modules_local'] will be merged into the available set
- * of admin modules defined in $GLOBALS['_reason_admin_modules']. 
- * 
+ * of admin modules defined in $GLOBALS['_reason_admin_modules'].
+ *
  * The $GLOBALS['_reason_admin_modules'] array identifues the filename and class name for each admin module.
- * Each key of this array corresponds to a string identified in the request as "cur_module." 
+ * Each key of this array corresponds to a string identified in the request as "cur_module."
  *
  * Reason compares the requested module to this keys in this array. If it finds a matching key
- * (case-sensitive) it includes the file identified by the key "file" in the value array of the cur_module 
+ * (case-sensitive) it includes the file identified by the key "file" in the value array of the cur_module
  * key in the classes/admin/modules directory.
  *
  * Reason then instantiates the class identified by the key "class" in the value array.
@@ -38,8 +38,8 @@
  *
  * In this file, define a class that extends the DefaultModule. Overload the various methods as needed.
  *
- * Add a line to the $GLOBALS['_reason_admin_modules_local'] which identifies the filename and class name 
- * of your new module. Now the new module should be available simply by altering the cur_module request element to 
+ * Add a line to the $GLOBALS['_reason_admin_modules_local'] which identifies the filename and class name
+ * of your new module. Now the new module should be available simply by altering the cur_module request element to
  * match the key you used in this array.
  */
  $GLOBALS['_reason_admin_modules'] = array(
@@ -87,10 +87,10 @@
 		'ReviewChanges'=>array('file'=>'review_changes.php','class'=>'ReasonReviewChangesModule'),
 		'SitePages'=>array('file'=>'site_pages.php','class'=>'ReasonSitePagesModule'),
 		'ImageSizer'=>array('file'=>'image_sizer.php','class'=>'ImageSizerModule'),
-		'OrphanManager'=>array('file'=>'orphan_manager.php','class'=>'OrphanManagerModule'),		
+		'OrphanManager'=>array('file'=>'orphan_manager.php','class'=>'OrphanManagerModule'),
 		'ManageLocks'=>array('file'=>'manage_locks.php','class'=>'ManageLocksModule'),
 		'AdminTools'=>array('file'=>'admin_tools.php','class'=>'ReasonAdminToolsModule'),
-		'ErrorVisibility'=>array('file'=>'error_visibility.php','class'=>'ErrorVisibilityModule'),	
+		'ErrorVisibility'=>array('file'=>'error_visibility.php','class'=>'ErrorVisibilityModule'),
 		'KalturaMediaImagePicker'=>array('file'=>'media_work_image_picker_kaltura.php','class'=>'kalturaMediaWorkImagePickerModule'),
 		'ZencoderMediaImagePicker'=>array('file'=>'media_work_image_picker_zencoder.php', 'class'=>'zencoderMediaWorkImagePickerModule'),
 		'ZencoderMediaWorkUpdate'=>array('file'=>'pull_files_from_zencoder.php','class'=>'zencoderMediaWorkUpdateModule'),
@@ -107,6 +107,8 @@
 		'AnalyticsAbout'=>array('file'=>'analytics.php', 'class'=>'AnalyticsAboutModule'),
 		'ShareSiteOwnership'=>array('file'=>'share_site_ownership.php', 'class'=>'ShareSiteOwnershipModule'),
 		'BorrowThis'=>array('file'=>'borrow_this.php', 'class'=>'BorrowThisModule'),
+		'CopySitePages'=>array('file'=>'copy_site_pages.php','class'=>'ReasonCopySitePagesModule'),
+		'SiteToPDF'=>array('file'=>'site_to_pdf.php','class'=>'ReasonSiteToPDFModule'),
 );
 
 if (reason_file_exists('config/admin_modules/setup_local.php'))

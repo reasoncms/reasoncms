@@ -2136,6 +2136,14 @@
 		'course_catalog_page' => array(
 			'main' => 'catalog/subject_page'
 		),
+		'catalog_manage_courses' => array(
+			'navigation' => '',
+			'sub_nav' => '',
+			'sub_nav_2' => '',
+			'sub_nav_3' => '',
+			'main_post' => 'catalog/manage_courses'
+		),
+
 	);
 
 	$GLOBALS['_reason_deprecated_modules'] = array(
