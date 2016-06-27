@@ -1,11 +1,23 @@
 <?php
-
+/**
+ * Media work delegate
+ */
+/**
+ * Include dependencies
+ */
 reason_include_once( 'entity_delegates/abstract.php' );
-
+/**
+ * Register delegate
+ */
 $GLOBALS['entity_delegates']['entity_delegates/media_work.php'] = 'mediaWorkDelegate';
-
+/**
+ * Media work delegate
+ */
 class mediaWorkDelegate extends entityDelegate
 {
+	/**
+	 * Get the display name for media works
+	 */
 	function get_display_name()
 	{
 		if($this->entity->get_value('transcoding_status') == 'converting' || $this->entity->get_value('transcoding_status') == 'finalizing')
