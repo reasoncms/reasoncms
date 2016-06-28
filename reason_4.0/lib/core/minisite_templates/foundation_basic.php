@@ -1,9 +1,9 @@
 <?php
 
    /*
-	*  Foundation 6 BASE TEMPLATE
+	*  Foundation Basic BASE TEMPLATE
 	*
-	*  Foundation6Template (/lib/core/minisite_templates/foundation6.php)...
+	*  FoundationBasicTemplate (/lib/core/minisite_templates/foundation_basic.php)...
 	*     extends HTML5ResponsiveTemplate (/lib/core/minisite_templates/html5_responsive.php)...
 	*     which extends DefaultTemplate (/lib/core/minisite_templates/default.php)
 	*
@@ -16,9 +16,9 @@
 	//reason_include_once('classes/module_sets.php');
 
 	// this variable must be the same as the class name
-	$GLOBALS[ '_minisite_template_class_names' ][ basename( __FILE__) ] = 'Foundation6Template';
+	$GLOBALS[ '_minisite_template_class_names' ][ basename( __FILE__) ] = 'FoundationBasicTemplate';
 
-	class Foundation6Template extends HTML5ResponsiveTemplate
+	class FoundationBasicTemplate extends HTML5ResponsiveTemplate
 	{
 		// Don't include default Reason module styles. We'll include our own. Some modules continue to show styles anyway.
 		var $include_modules_css = false;
@@ -85,7 +85,7 @@
 				foreach($regions as $region)
 				{
 					// if(!isset($module['module_params']['default_list_markup']))
-					// 	$page_type->set_region_parameter($region, 'default_list_markup', 'minisite_templates/modules/events_markup/mini/foundation6_mini_events_list.php');
+					// 	$page_type->set_region_parameter($region, 'default_list_markup', 'minisite_templates/modules/events_markup/mini/foundation_mini_events_list.php');
 					// if(!isset($module['module_params']['ideal_count']))
 					// 	$page_type->set_region_parameter($region, 'ideal_count', 2);
 				}
@@ -128,8 +128,8 @@
 						if(empty($markup_generators['item']))
 						{
 							$markup_generators['item'] = array (
-								'classname' => 'Foundation6ItemMarkupGenerator', 
-								'filename' => 'minisite_templates/modules/publication/item_markup_generators/foundation6.php',
+								'classname' => 'FoundationBasicItemMarkupGenerator', 
+								'filename' => 'minisite_templates/modules/publication/item_markup_generators/foundation_basic.php',
 							);
 						}
 					}
@@ -180,7 +180,7 @@
 			MinisiteTemplate::get_meta_information();
 			$this->add_head_item('meta',array('name'=>'viewport','content'=>'width=device-width, initial-scale=1.0' ) );
 			
-			//$this->head_items->add_javascript('/reason/foundation6/js/vendor/modernizr.js');
+			//$this->head_items->add_javascript('/reason/foundation/js/vendor/modernizr.js');
 			$this->head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/html5shiv/html5shiv-printshiv.js', true, array('before'=>'<!--[if lt IE 9]>','after'=>'<![endif]-->'));
 			$this->head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/respond/respond.min.js', false, array('before'=>'<!--[if lt IE 9]>','after'=>'<![endif]-->'));
 			$this->head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/ie8_fix_maxwidth.js', false, array('before'=>'<!--[if lt IE 9]>','after'=>'<![endif]-->'));
@@ -194,9 +194,9 @@
 
 		function get_css_files()
 		{
-			$this->head_items->add_style_import_path(WEB_PATH . substr(REASON_HTTP_BASE_PATH, 1) . 'foundation6/bower_components/foundation-sites/scss');
-			$this->head_items->add_style_import_path(WEB_PATH . substr(REASON_HTTP_BASE_PATH, 1) . 'foundation6/bower_components/motion-ui');
-			$this->head_items->add_style_import_path(WEB_PATH . substr(REASON_HTTP_BASE_PATH, 1) . 'foundation6/scss');
+			$this->head_items->add_style_import_path(WEB_PATH . substr(REASON_HTTP_BASE_PATH, 1) . 'foundation-basic/bower_components/foundation-sites/scss');
+			$this->head_items->add_style_import_path(WEB_PATH . substr(REASON_HTTP_BASE_PATH, 1) . 'foundation-basic/bower_components/motion-ui');
+			$this->head_items->add_style_import_path(WEB_PATH . substr(REASON_HTTP_BASE_PATH, 1) . 'foundation-basic/scss');
 
 			parent::get_css_files();
 		}
@@ -252,7 +252,7 @@
 			}
 		}
 
-		// Foundation6 moves the location of the breadcumb naivgation.
+		// Foundation moves the location of the breadcumb naivgation.
 		// In the default template (/lib/core/minisite_templates/default.php), you_are_here() runs in start_page().
 		// Rather than overloading start_page() for the minor change of removing breadcrumbs, we're going to overload you_are_here();
 		// and craate an identical breadcrumb function with a different name, and place it in a new location.
@@ -260,7 +260,7 @@
 		{
 		}
 
-		function foundation6_you_are_here($delimiter = ' <span class="delimiter">&raquo;</span> ')
+		function foundation_you_are_here($delimiter = ' <span class="delimiter">&raquo;</span> ')
 		{
 			echo '<div id="breadcrumbs" class="locationBarText">';
 			echo '<div class="breadcrumb">';
@@ -270,7 +270,7 @@
 			echo '</div>'."\n";
 		}
 
-		// Foundation6 adds a search icon that toggles open the search bar.
+		// Foundation adds a search icon that toggles open the search bar.
 		//
 		// This function assumes you run the search module in the banner_xtra page location.
 		// If you run a different module in banner_xtra in your page_types file, you will probably want
@@ -294,16 +294,16 @@
 			}
 		}
 
-		// Adds foundation6_you_are_here() to it's new location
-		// Adds foundation6_show_main_head() to it's new location
+		// Adds foundation_you_are_here() to it's new location
+		// Adds foundation_show_main_head() to it's new location
 		function show_body_tableless()
 		{
 			$class = 'fullGraphicsView';
 			echo '<div id="wrapper" class="'.$class.'">'."\n";
 			echo '<div id="bannerAndMeat">'."\n";
 			$this->show_banner();
-			$this->foundation6_you_are_here();
-			//$this->foundation6_show_main_head();
+			$this->foundation_you_are_here();
+			//$this->foundation_show_main_head();
 			$this->show_meat();
 			echo '</div>'."\n";
 			$this->show_footer();
@@ -318,8 +318,8 @@
 			// Foundation also recommends including jQuery at the bottom of the body. But this causes conflicts
 			// with Reason scripts, like Features. Currently, we're just calling it in the head via in the normal Reason way.
 
-			echo '<script type="text/javascript" src="/reason/foundation6/bower_components/foundation-sites/dist/foundation.min.js"></script>'."\n";
-			echo '<script type="text/javascript" src="/reason/foundation6/js/app.js"></script>'."\n";
+			echo '<script type="text/javascript" src="/reason/foundation-basic/bower_components/foundation-sites/dist/foundation.min.js"></script>'."\n";
+			echo '<script type="text/javascript" src="/reason/foundation-basic/js/app.js"></script>'."\n";
 		}
 }
 ?>
