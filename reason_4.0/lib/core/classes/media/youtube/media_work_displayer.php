@@ -253,6 +253,11 @@ class YoutubeMediaWorkDisplayer implements MediaWorkDisplayerInterface
 
 			$markup .= 'src="'.$this->get_iframe_src($iframe_height, $iframe_width).'" ';
 			
+			$desc = $this->media_work->get_value('name');
+			if(!empty($this->media_work->get_value('av_type')))
+				$desc = $this->media_work->get_value('av_type').': '.$desc;
+			$markup .= 'description="'.reason_htmlspecialchars(strip_tags($desc)).'" ';
+			
 			$markup .= '>';
 			$markup .= '</iframe>'."\n";
 			
