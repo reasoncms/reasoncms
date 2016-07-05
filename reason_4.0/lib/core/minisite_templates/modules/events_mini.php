@@ -63,10 +63,19 @@ class miniEventsModule extends EventsModule
 		if(!isset($this->acceptable_params['exclude_current_site']))
 			$this->acceptable_params['exclude_current_site'] = false;
 		
+		if(!isset($this->acceptable_params['hide_when_unauthenticated']))
+			$this->acceptable_params['hide_when_unauthenticated'] = false;
+		
+		if(!isset($this->acceptable_params['title_heading_level']))
+			$this->acceptable_params['title_heading_level'] = 3;
+		
 		parent::handle_params( $params );
 	}
 	function init( $args = array() ) // {{{
 	{
+		if(!empty($this->params['hide_when_unauthenticated']) && !reason_check_authentication())
+			return;
+		
 		parent::init( $args );
 		$this->find_events_page();
 		
@@ -90,6 +99,9 @@ class miniEventsModule extends EventsModule
 	}
 	function has_content() // {{{
 	{
+		if(!empty($this->params['hide_when_unauthenticated']) && !reason_check_authentication())
+			return false;
+		
 		if($this->_has_content_to_display())
 			return true;
 		elseif($this->_get_no_content_message())
@@ -98,7 +110,7 @@ class miniEventsModule extends EventsModule
 	} // }}}
 	function _has_content_to_display() // {{{
 	{
-		$events_page = $this->get_events_page();
+		$events_page = $this->params['exclude_current_site'] ? true : $this->get_events_page();
 		if(!empty($events_page) && !empty($this->calendar))
 		{
 			$events = $this->calendar->get_all_events();
@@ -140,12 +152,12 @@ class miniEventsModule extends EventsModule
 	function display_list_title()
 	{
 		$events_page_url = $this->get_events_page_url();
-		echo '<h3>';
+		echo '<h'.$this->params['title_heading_level'].'>';
 		if(!empty($events_page_url))
 			echo '<a href="'.$events_page_url.'">'.$this->_get_list_title().'</a>';
 		else
-			$this->_get_list_title();
-		echo '</h3>'."\n";
+			echo $this->_get_list_title();
+		echo '</h'.$this->params['title_heading_level'].'>'."\n";
 	}
 
 	function _get_list_title()
