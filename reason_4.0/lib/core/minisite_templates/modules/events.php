@@ -383,9 +383,11 @@ class EventsModule extends DefaultMinisiteModule
 	 */
 	var $acceptable_params = array(
 							'additional_sites'=>'',
+							'exclude_sites'=>'',
 	 						'cache_lifespan' => 0,
 	 						'cache_lifespan_meta' => 0,
 	 						'calendar_link_text' => 'More events',
+	 						'calendar_link_replacement' => '',
 							'default_view_min_days'=>1,
 	 						'exclude_audiences' => '',
 	 						'form_include' => 'minisite_templates/modules/event_slot_registration/event_slot_registration_form.php',
@@ -1111,9 +1113,24 @@ class EventsModule extends DefaultMinisiteModule
 		{
 			return $this->event_sites;
 		}
-		$sites = array();
+		$sites = $this->_get_sites_from_string($this->params['additional_sites']);
+		if(!empty($this->params['exclude_sites']))
+		{
+			$excluded = $this->_get_sites_from_string($this->params['exclude_sites']);
+			foreach($excluded as $site)
+			{
+				if(isset($sites[$site->id()]))
+					unset($sites[$site->id()]);
+			}
+		}
 		$sites[$this->site_id] = new entity($this->site_id);
-		$site_strings = explode(',',$this->params['additional_sites']);
+		$this->event_sites = $sites;
+		return $this->event_sites;
+	}
+	function _get_sites_from_string($string)
+	{
+		$sites = array();
+		$site_strings = explode(',',$string);
 		foreach($site_strings as $site_string)
 		{
 			$site_string = trim($site_string);
@@ -1140,8 +1157,7 @@ class EventsModule extends DefaultMinisiteModule
 						$sites = $sites + $usites;
 			}
 		}
-		$this->event_sites = $sites;
-		return $this->event_sites;
+		return $sites;
 	}
 	/**
 	 * Get the parent sites for the current site
@@ -3538,6 +3554,9 @@ class EventsModule extends DefaultMinisiteModule
 	 */
 	function get_full_calendar_link_markup()
 	{
+		if(!empty($this->params['calendar_link_replacement']))
+			return $this->params['calendar_link_replacement'];
+		
 		if(empty($this->events_page_url) || empty($this->params['calendar_link_text']))
 			return '';
 		
