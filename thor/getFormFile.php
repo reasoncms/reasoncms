@@ -94,8 +94,6 @@
 						header("Content-type: application/octet-stream");
 						header(XSENDFILE_HEADER . " $path");
 						exit;
-						// File located at $path is deleted nightly after the file
-						// is 24 hrs old via the cron/php_nightly.sh job	
 					} else {
 						// Deliver file via PHP
 						header('Content-disposition: attachment; filename=' . $attachmentFilename);
