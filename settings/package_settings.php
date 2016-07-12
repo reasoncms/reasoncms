@@ -97,6 +97,27 @@ domain_define( 'UNIVERSAL_CSS_PATH', REASON_PACKAGE_HTTP_BASE_PATH.'css/universa
 domain_define( 'HTTP_HOST_NAME', $_SERVER['HTTP_HOST'] );
 
 /**
+ * Sendfile header value
+ * 
+ * Helpful to deliver private (behind auth) or large files using web server internal
+ * file handles
+ * 
+ * Requires mod_sendfile (or similar) to be installed, enabled, and configured 
+ * for your web server
+ * 
+ * For Apache
+ *     value should be "X-Sendfile:"
+ *     docs at https://tn123.org/mod_xsendfile/
+ * 
+ * For Nginx: 
+ *     value should be "X-Accel-Redirect:" or "X-Accel-Redirect: /private/uri/handler/"
+ *     docs at https://www.nginx.com/resources/wiki/start/topics/examples/x-accel/
+ * 
+ * When Sendfile and Accel-Redirect aren't in use, leave this empty
+ */
+define('XSENDFILE_HEADER', '');
+
+/**
  * Make sure that your locale settings use UTF-8.
  *
  * If your server is not set to use utf-8, and you cannot change it at the server level, uncomment
