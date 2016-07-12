@@ -5,32 +5,29 @@
 
 CKEDITOR.timestamp = new Date;
 CKEDITOR.editorConfig = function( config ) {
-	// Define changes to default configuration here.
-	// For complete reference see:
-	// http://docs.ckeditor.com/#!/api/CKEDITOR.config
+	// Define changes to default configuration here. For example:
+	// config.language = 'fr';
+	// config.uiColor = '#AADC6E';
 	
 	config.extraPlugins = 'reason_image';
+	
+    config.toolbarGroups = [
+        { name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
+        { name: 'editing', groups: [ 'find', 'selection', 'spellchecker', 'editing' ] },
+        { name: 'forms', groups: [ 'forms' ] },
+        { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+        { name: 'styles', groups: [ 'styles' ] },
+        { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi', 'paragraph' ] },
+        { name: 'links', groups: [ 'links' ] },
+        { name: 'insert', groups: [ 'insert' ] },
+        { name: 'colors', groups: [ 'colors' ] },
+        { name: 'others', groups: [ 'others' ] },
+        { name: 'tools', groups: [ 'tools' ] },
+        { name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
+        { name: 'about', groups: [ 'about' ] }
+    ];
 
-	// The toolbar groups arrangement, optimized for a single toolbar row.
-	config.toolbarGroups = [
-		{ name: 'document',	   groups: [ 'mode', 'document', 'doctools' ] },
-		{ name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
-		{ name: 'editing',     groups: [ 'find', 'selection', 'spellchecker' ] },
-		{ name: 'forms' },
-		{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
-		{ name: 'paragraph',   groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ] },
-		{ name: 'links' },
-		{ name: 'insert' },
-		{ name: 'styles' },
-		{ name: 'colors' },
-		{ name: 'tools' },
-		{ name: 'others' },
-		{ name: 'about' }
-	];
-
-	// The default plugins included in the basic setup define some buttons that
-	// are not needed in a basic editor. They are removed here.
-	config.removeButtons = 'Cut,Copy,Paste,Undo,Redo,Anchor,Underline,Strike,Subscript,Superscript';
+	config.removeButtons = 'Save,NewPage,Preview,Print,Templates,TextColor,BGColor,Font,FontSize,About,Styles,Flash,Smiley,PageBreak,Iframe,Language,BidiRtl,BidiLtr,JustifyLeft,JustifyCenter,JustifyRight,JustifyBlock,ShowBlocks,CreateDiv,Underline,Superscript,Subscript,Strike,Form,Checkbox,Radio,TextField,Textarea,Select,Button,Image,ImageButton,HiddenField';
 
 	// Dialog windows are also simplified.
 	config.removeDialogTabs = 'link:advanced';
