@@ -219,6 +219,7 @@ class PublicationModule extends Generic3Module
 													 'link_to_related_item' => 'get_link_to_related_item',
 													 'permalink' => 'construct_permalink',
 													 'teaser_image' => 'get_teaser_image',
+													 'embed_handler' => 'get_embed_handler',
 													 'section_links' => 'get_links_to_sections_for_this_item',
 													 'item_number' => 'get_item_number',
 													 'item_publication' => 'get_item_publication',
@@ -1548,15 +1549,7 @@ var $noncanonical_request_keys = array(
 						$embedHandler = null;
 						$itemValues = $item->get_values();
 						if (!empty($itemValues)) {
-							$customHandlerData = $item->get_relationship("news_post_to_embed_handler");
-							if (count($customHandlerData) == 1) {
-								$handlerEntity = $customHandlerData[0];
-								reason_include_once($handlerEntity->get_value("path"));
-								$handlerClassName = $handlerEntity->get_value("class_name");
-								$embedHandler = new $handlerClassName($item->get_owner()->id());
-							} else {
-								$embedHandler= new SimpleEmbedHandler($item->get_owner()->id());
-							}
+							$embedHandler = $this->get_embed_handler($item);
 						}
 
 						if ($embedHandler != null) {
@@ -2856,6 +2849,28 @@ var $noncanonical_request_keys = array(
 				$this->_teasers[$item->id()] = $es->run_one();
 			}
 			return $this->_teasers[$item->id()];
+		}
+
+		function get_embed_handler($item)
+		{
+			if (!isset($this->_embed_handlers[$item->id()]))
+			{
+				$customHandlerData = $item->get_relationship("news_post_to_embed_handler");
+				$handler = null;
+				if (count($customHandlerData) == 1) {
+					$handlerEntity = $customHandlerData[0];
+					reason_include_once($handlerEntity->get_value("path"));
+					$handlerClassName = $handlerEntity->get_value("class_name");
+					$handler = new $handlerClassName($item->get_owner()->id());
+				}
+
+				if ($handler == null) {
+					$handler = new SimpleEmbedHandler($item->get_owner()->id());
+				}
+				$this->_embed_handlers[$item->id()] = $handler;
+			}
+
+			return $this->_embed_handlers[$item->id()];
 		}
 		
 		function get_item_number($item)
