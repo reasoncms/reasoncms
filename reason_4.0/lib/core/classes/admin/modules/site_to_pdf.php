@@ -43,7 +43,7 @@ class ReasonSiteToPDFModule extends DefaultModule// {{{
 				$site = new entity($this->admin_page->site_id);
 
 				header('Content-type: application/pdf');
-				header('Content-disposition: inline; filename="'. $site->get_value('name').'.pdf"');
+				header('Content-disposition: attachment; filename="'. $site->get_value('name').'.pdf"');
 				header('Content-length: ' . filesize($temp_file_path));
 				readfile($temp_file_path);
 				exit;
