@@ -3,7 +3,7 @@
  * @package reason
  * @subpackage scripts
  */
-$GLOBALS['_reason_upgraders']['4.6_to_4.7']['course_catalog'] = 'ReasonUpgrader_47_CourseCatalog';
+$GLOBALS['_reason_upgraders']['4.6_to_4.7']['course_catalog_support_2'] = 'ReasonUpgrader_47_CourseCatalog';
 include_once('reason_header.php');
 reason_include_once('classes/entity_selector.php');
 reason_include_once('classes/upgrade/upgrader_interface.php');
@@ -31,20 +31,20 @@ class ReasonUpgrader_47_CourseCatalog implements reasonUpgraderInterface
 		);
 
 	var $relationships = array(
-		'course_catalog_block_to_subject' => array (
-			'left' => 'course_catalog_block_type',
-			'right' => 'subject_type',
-			'details' => array(
-				'description'=>'Course Catalog Block to Subject',
-				'directionality'=>'bidirectional',
-				'connections'=>'many_to_many',
-				'required'=>'no',
-				'is_sortable'=>'no',
-				'display_name'=>'Subjects',
-				'display_name_reverse_direction'=>'Catalog Blocks',
-				'description_reverse_direction'=>'Catalog Blocks'
-				),
-		),
+		// 'course_catalog_block_to_subject' => array (
+		// 	'left' => 'course_catalog_block_type',
+		// 	'right' => 'subject_type',
+		// 	'details' => array(
+		// 		'description'=>'Course Catalog Block to Subject',
+		// 		'directionality'=>'bidirectional',
+		// 		'connections'=>'many_to_many',
+		// 		'required'=>'no',
+		// 		'is_sortable'=>'no',
+		// 		'display_name'=>'Subjects',
+		// 		'display_name_reverse_direction'=>'Catalog Blocks',
+		// 		'description_reverse_direction'=>'Catalog Blocks'
+		// 		),
+		// ),
 		'page_to_course_catalog_block' => array (
 			'left' => 'minisite_page',
 			'right' => 'course_catalog_block_type',
@@ -97,7 +97,7 @@ class ReasonUpgrader_47_CourseCatalog implements reasonUpgraderInterface
          */
 	public function title()
 	{
-		return 'Add course catalog support';
+		return 'Add additional course catalog support';
 	}
         /**
          * Get a description of what this upgrade script will do
@@ -118,8 +118,8 @@ class ReasonUpgrader_47_CourseCatalog implements reasonUpgraderInterface
 	reason_refresh_unique_names();  // force refresh from the database just in case.
 	reason_refresh_relationship_names();
 
-	if (!$this->course_template_type_exists())
-		return '<p>This script requires that the course types exist. The upgrader for this is in the 4.4 to 4.5 upgrade set.</p>';
+	// if (!$this->course_template_type_exists())
+	// 	return '<p>This script requires that the course types exist. The upgrader for this is in the 4.4 to 4.5 upgrade set.</p>';
 
 	if($this->catalog_block_type_exists() &&
 			reason_relationship_name_exists('course_catalog_block_to_subject') &&
@@ -229,6 +229,11 @@ class ReasonUpgrader_47_CourseCatalog implements reasonUpgraderInterface
 		return reason_unique_name_exists('course_template_type');
 	}
 
+	protected function subject_type_exists()
+	{
+		reason_refresh_unique_names();  // force refresh from the database just in case.
+		return reason_unique_name_exists('subject_type');
+	}
 
 }
 ?>
