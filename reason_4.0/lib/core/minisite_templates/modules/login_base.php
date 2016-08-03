@@ -64,7 +64,7 @@ class LoginBaseModule extends DefaultMinisiteModule
 	protected $on_secure_page_if_available = false;
 	protected $current_url = '';
 	protected $msg_extra = '';
-	protected $verbose_logging = false; // Useful for debugging login issues
+	protected $verbose_logging = true; // Useful for debugging login issues
 	protected $enable_two_factor_login = false;
 	
 	public function init( $args = array() )
