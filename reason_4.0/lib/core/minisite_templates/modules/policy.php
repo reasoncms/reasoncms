@@ -81,7 +81,7 @@
 			$this->all_audiences = $es->run_one();
 
 			$head =& $this->get_head_items();
-			$head->add_javascript('/reason_package/reason_4.0/www/js/policy_selector.js');
+			$head->add_javascript(WEB_JAVASCRIPT_PATH.'policy_selector.js');
 			
 			if(!$this->_in_show_all_mode())
 			{
