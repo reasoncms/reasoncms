@@ -221,7 +221,7 @@ class ReasonSiteToPDFModule extends DefaultModule// {{{
 		$temp_file_path = sys_get_temp_dir() . "/" . $this->admin_page->site_id . ".pdf";
 
 		// Download the pages as a pdf.
-		$command = 'wkhtmltopdf -l --print-media-type  ' . $url_string . $temp_file_path;
+		$command = 'wkhtmltopdf -l --footer-right [page]/[topage] --print-media-type  ' . $url_string . $temp_file_path;
 		$output = shell_exec($command);
 
 		// Ensure that a non-empty file was created.
