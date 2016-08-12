@@ -62,7 +62,9 @@ class ReasonSiteToPDFModule extends DefaultModule// {{{
 				PDF.</p>
 				<p>By default, pages are unchecked if they are hidden from the site navigation, or if
 				they are restricted by an access group. You can check a restricted page, but you\'ll
-				probably just end up with a copy of the login page in your PDF.<p>';
+				probably just end up with a copy of the login page in your PDF.<p>
+				<p><em>For Developers: when building the PDF, pages are captured with CSS print media and
+				javascript disabled.</em></p>';
 		
 		if ($this->_site_pages)
 		{
@@ -220,8 +222,14 @@ class ReasonSiteToPDFModule extends DefaultModule// {{{
 		// Figure out what to call and where to place the temporary pdf file.
 		$temp_file_path = sys_get_temp_dir() . "/" . $this->admin_page->site_id . ".pdf";
 
-		// Download the pages as a pdf.
-		$command = 'wkhtmltopdf -l --footer-right [page]/[topage] --print-media-type  ' . $url_string . $temp_file_path;
+		// Generate a PDF of all pages in $url_string, in order.
+		// JS is disabled because wkhtmltopdf waits for JS to finish executing,
+		// but if the JS doesn't finish a page is skipped from the resulting pdf.
+		// One may tinker with lengthening --javascript-delay, but even a delay of 
+		// 60 seconds led to skipped pages in the final result which is the worst
+		// possible scenario for a site export tool. No error is produced when a page is skipped.
+		$args = " --disable-javascript -l --footer-right [page]/[topage] --print-media-type ";
+		$command = 'wkhtmltopdf' . $args . $url_string . $temp_file_path;
 		$output = shell_exec($command);
 
 		// Ensure that a non-empty file was created.
