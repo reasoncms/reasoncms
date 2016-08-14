@@ -3573,17 +3573,23 @@ class EventsModule extends DefaultMinisiteModule
 		}
 		
 		$query_string = $this->construct_link(array('start_date'=>$start_date,'view'=>'','end_date'=>'','format'=>'ical'));
+		$webcal_url = 'webcal://'.REASON_HOST.$this->parent->pages->get_full_url( $this->page_id ).$query_string;
+		$gcal_url = 'https://calendar.google.com/calendar/render?cid='.str_replace(array('&amp;','='),array('%26','%3D'),$webcal_url);
+		
 		if(!empty($this->request['category']) || !empty($this->request['audience']) || !empty($this->request['search']))
 		{
-			$subscribe_text = 'Subscribe to this view in desktop calendar';
+			$subscribe_desktop_text = 'Subscribe to this view (Desktop)';
+			$subscribe_gcal_text = 'Subscribe to this view (Google Calendar)';
 			$download_text = 'Download these events (.ics)';
 		}
 		else
 		{
-			$subscribe_text = 'Subscribe to this calendar';
+			$subscribe_desktop_text = 'Subscribe (Desktop)';
+			$subscribe_gcal_text = 'Subscribe (Google Calendar)';
 			$download_text = 'Download events (.ics)';
 		}
-		echo '<a href="webcal://'.REASON_HOST.$this->parent->pages->get_full_url( $this->page_id ).$query_string.'">'.$subscribe_text.'</a>';
+		echo '<a href="'.$webcal_url.'">'.$subscribe_desktop_text.'</a>';
+		echo ' <span class="divider">|</span> <a href="'.$gcal_url.'" target="_blank">'.$subscribe_gcal_text.'</a>';
 		if(!empty($this->events))
 			echo ' <span class="divider">|</span> <a href="'.$query_string.'">'.$download_text.'</a>';
 		if (defined("REASON_URL_FOR_ICAL_FEED_HELP") && ( (bool) REASON_URL_FOR_ICAL_FEED_HELP != FALSE))
