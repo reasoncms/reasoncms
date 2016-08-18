@@ -94,5 +94,18 @@ class DefaultThorForm extends DefaultForm
 			
 		}
 	}
+
+	function run_error_checks()
+	{
+		$model = $this->get_model();
+		if ($model->form_has_event_ticket_elements()) {
+			$ticket_request = $model->event_tickets_ticket_request_is_valid();
+			if (!$ticket_request['status']) {
+				$this->set_error($ticket_request['disco_element_id'], $ticket_request['message']);
+			}
+		}
+	}
+
 }
+
 ?>

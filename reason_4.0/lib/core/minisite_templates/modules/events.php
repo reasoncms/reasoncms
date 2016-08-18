@@ -4168,11 +4168,9 @@ class EventsModule extends DefaultMinisiteModule
 		$should_display_form = $event->get_value('last_occurence') > date('Y-m-d');
 		if ($should_display_form) {			
 			$forms = $this->get_registration_forms($event);
-			echo "<div id='slotInfo'>\n";
 			foreach ($forms as $form) {
 				$this->show_registration_form($form);
 			}
-			echo "</div>\n";
 		}
 
 		$form_html = ob_get_clean();
@@ -4341,27 +4339,44 @@ class EventsModule extends DefaultMinisiteModule
 		// present on this Event object so we define it on the model. 
 		$form_model->_form_id = $form->id();
 
-		$form_view = new DefaultThorForm();
-		$form_view->set_model($form_model);
-
 		$form_controller = new ThorFormController();
 		$form_controller->set_model($form_model);
-		$form_controller->set_view($form_view);
-
-		// Render the form and store it in var 
-		ob_start();
 		$form_controller->init();
+
+
+		// If an $eventIdInRequest isset, make sure it's valid
+		// @todo: point this at login in the model
+		if (array_key_exists('event_id', $this->request)) {
+			$eventIdInRequest = $this->request['event_id'];
+		} else {
+			$eventIdInRequest = false;
+		}
+		$eventsOnForm = $form_controller->model->get_events_on_form();
+		$eventIdInRequestIsValid = false;
+		foreach ($eventsOnForm as $event) {
+			if ($eventIdInRequest && $event->id() == $eventIdInRequest) {
+				$eventIdInRequestIsValid = true;
+			}
+		}
+
+
+		if ($eventIdInRequestIsValid) {
+		// Prepare the form, store response html in var 
+		ob_start();
 		$form_controller->run();
 		$form_html = ob_get_clean();
 
 		$html = <<<HTML
-<div class="form">
-	<h3>Register for {$this->event->get_value('name')}</h3>
-	$form_html
+<div id="slotInfo">
+	<div class="form">
+		<h3>Register for {$this->event->get_value('name')}</h3>
+		$form_html
+	</div>
 </div>
 HTML;
 
 		echo $html;
+		}
 	}
 	/**
 	 * Display the registration admin view

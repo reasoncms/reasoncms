@@ -68,6 +68,7 @@
 									'module_api' => array( 'function' => 'turn_into_string' ),
 									'module_identifier' => array( 'function' => 'turn_into_string' ),
 									'module_api_action' => array( 'function' => 'turn_into_string' ),
+									'event_id' => array( 'function' => 'turn_into_int' ),
 								   );
 								   
 		var $supported_modes = array('api', 'admin', 'form_complete', 'summary', 'closed', 'form', 'unauthorized');
@@ -158,10 +159,10 @@
 			{
 				echo $this->check_view_and_invoke_method('get_view_submission_list_html');
 			}
-                        if ($this->check_view_and_model_and_invoke_method('should_show_submission_limit_message'))
-                        {
-                                echo $this->check_view_and_invoke_method('get_view_submission_limit_html');
-                        }
+			if ($this->check_view_and_model_and_invoke_method('should_show_submission_limit_message'))
+			{
+				echo $this->check_view_and_invoke_method('get_view_submission_limit_html');
+			}
  			if ($this->check_view_and_model_and_invoke_method('should_show_thank_you_message'))
 			{
 				echo $this->check_view_and_invoke_method('get_thank_you_html');
@@ -287,11 +288,11 @@
 			$view_link = carl_construct_link( array('form_id' => ''), array('textonly', 'netid') );
 			return '<p class="summary_view_link"><a href="'.$view_link.'">View Your Submission List</a></p>';
 		}
-		
-                function get_view_submission_limit_html()
-                {
-                        return '<p class="submission_limit">This form permits only one submission per user.</p>';
-                }
+
+		function get_view_submission_limit_html()
+		{
+			return '<p class="submission_limit">This form permits only one submission per user.</p>';
+		}
 
 		function get_create_new_submission_html()
 		{
@@ -386,4 +387,4 @@
 		{
 			return true;
 		}
-	}
+}
