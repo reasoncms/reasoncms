@@ -228,7 +228,8 @@ class ReasonSiteToPDFModule extends DefaultModule// {{{
 		// One may tinker with lengthening --javascript-delay, but even a delay of 
 		// 60 seconds led to skipped pages in the final result which is the worst
 		// possible scenario for a site export tool. No error is produced when a page is skipped.
-		$args = " --disable-javascript -l --footer-right [page]/[topage] --print-media-type ";
+		$args = " --disable-javascript -l --footer-left [title] --footer-right [page]/[topage]";
+		$args .= " --footer-font-size 9 --footer-spacing 3 --print-media-type ";
 		$command = 'wkhtmltopdf' . $args . $url_string . $temp_file_path;
 		$output = shell_exec($command);
 
