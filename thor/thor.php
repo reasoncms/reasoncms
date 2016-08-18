@@ -180,6 +180,8 @@ class ThorCore
 				elseif ($node->tagName == 'upload') {
 					$disco_obj->form_enctype = "multipart/form-data";
 					$this->_transform_upload($node, $disco_obj);
+				} elseif ($node->tagName == 'event_tickets') {
+					$this->_transform_event_tickets($node, $disco_obj);
 				}
 			}
 
@@ -255,7 +257,7 @@ class ThorCore
 		{
 			foreach ($xml->document->tagChildren as $node)
 			{
-				if (in_array($node->tagName, array('input', 'textarea', 'radiogroup', 'optiongroup', 'hidden')))
+				if (in_array($node->tagName, array('input', 'textarea', 'radiogroup', 'optiongroup', 'hidden', 'event_tickets')))
 				{
 					// just basic - get the disco value
 					$key = $node->tagAttrs['id'];
@@ -270,7 +272,7 @@ class ThorCore
 						$child_value = (!empty($value) &&  in_array($child_node->tagAttrs['value'], $value)) ? $child_node->tagAttrs['value'] : '';
 						$thor_values[$child_node->tagAttrs['id']] = $child_value;
 					}
-				}
+				} 
 			}
 		}
 		return $thor_values;
@@ -942,12 +944,15 @@ class ThorCore
 			elseif ($node->tagName == 'upload') {
 				$db_structure[$node->tagAttrs['id']]['type'] = 'tinytext';
 			}
+			elseif ($node->tagName == 'event_tickets') {
+				$db_structure[$node->tagAttrs['id']]['type'] = 'tinytext';
+			}
 		}
 		return $db_structure;
 	}
 	
 	function _build_display_values()
-	{
+	{	
 		$xml = $this->get_thor_xml();
 		$display_values = array();
 		foreach ($xml->document->tagChildren as $k=>$v)
@@ -1047,6 +1052,14 @@ class ThorCore
 	{
 		$element_attrs = $element_obj->tagAttrs;
 		$type = 'file';
+		$display_values[$element_attrs['id']] = array('label' => $element_attrs['label'], 'type' => $type);
+		return $display_values;
+	}
+	
+	function _build_display_event_tickets($element_obj)
+	{
+		$element_attrs = $element_obj->tagAttrs;
+		$type = 'event_tickets';
 		$display_values[$element_attrs['id']] = array('label' => $element_attrs['label'], 'type' => $type);
 		return $display_values;
 	}
@@ -1234,10 +1247,93 @@ class ThorCore
 		if ( $required ) $d->add_required($id);
 	}
 	
+	function _transform_event_tickets($element, &$d)
+	{
+		$eventId = $element->tagAttrs['event_id'];
+		if(!$eventId) {
+			return;
+		}
+
+		if (array_key_exists('num_total_available', $element->tagAttrs)) {
+			$numTotalAvailableForEvent = $element->tagAttrs['num_total_available'];
+		}
+		if (array_key_exists('max_per_person', $element->tagAttrs)) {
+			$numMaxPerPersonForEvent = $element->tagAttrs['max_per_person'];
+		}
+		if (array_key_exists('event_close_datetime', $element->tagAttrs)) {
+			$closeAfterDatetimeForEvent = $element->tagAttrs['event_close_datetime'];
+		}
+
+		// This is dynamically added to thor xml at runtime
+		$numTicketsCurrentlyRemaining = $element->tagAttrs['remaining_seats'];
+
+		// Generate list of number of tickets a person can select, being sensitive
+		// to the number of tickets still available
+		$allOptions = array();
+		$disabledOptions = array();
+		foreach (range(0, $numMaxPerPersonForEvent) as $k => $tickentNum) {
+			$displayString = $tickentNum;
+			if ($tickentNum > $numTicketsCurrentlyRemaining) {
+				$displayString .= " &mdash; unavailable";
+				$disabledOptions[] = $tickentNum;
+			}
+			$allOptions[] = $displayString;
+		}
+
+		$eventTitle = $element->tagAttrs['label'];
+
+		$discoArgs = array(
+			'options' => $allOptions,
+			'disabled_options' => $disabledOptions,
+			'multiple' => false,
+			'default' => 0,
+			'display_name' => "Number of Tickets for $eventTitle",
+			'add_null_value_to_top' => false,
+		);
+
+		$id = $element->tagAttrs['id'];
+
+		$d->add_element($id, 'select_no_sort', $discoArgs);
+		
+		$required = (!empty($element->tagAttrs['required'])) ? true : false;
+		if ($required) {
+			$d->add_required($id);
+		}
+	}
+
 	function _transform_submit($element_attributes, &$d)
 	{
 		$submit = (!empty($element_attributes['submit'])) ? $element_attributes['submit'] : '';
 		$d->actions = Array( 'submit' => $submit);
+	}
+	
+	function get_event_tickets_thor_nodes($disco_obj, $filter_event_id = 0)
+	{
+		$xml = $this->get_thor_xml();
+		$thor_values = array();
+		if ($xml && $disco_obj) {
+			foreach ($xml->document->tagChildren as $node) {
+				if ($node->tagName == 'event_tickets') {
+					if ($filter_event_id != 0 && $node->tagAttrs['event_id'] != $filter_event_id) {
+						continue;
+					}
+					
+					// Inject runtime default values mentioned in formbuilder tool
+					if($node->tagAttrs['num_total_available'] === "") {
+						$node->tagAttrs['num_total_available'] = 100000;
+					}
+					if($node->tagAttrs['max_per_person'] === "") {
+						$node->tagAttrs['max_per_person'] = 1;
+					}
+					
+					$thor_values[] = array(
+						'thor_info' => $node->tagAttrs,
+						'submitted_value' => $disco_obj->get_value($node->tagAttrs['id'])
+					);
+				}
+			}
+		}
+		return $thor_values;
 	}
 }
 ?>

@@ -41,7 +41,8 @@ class formbuilder2Type extends textareaType
 		"checkboxgroup" => "checkboxes",
 		"optiongroup" => "dropdown",
 		"hidden" => "hidden_field",
-		"upload" => "file"
+		"upload" => "file",
+		"event_tickets" => "event_tickets"
 	);
 
 	var $optionMap = array(
@@ -97,7 +98,11 @@ class formbuilder2Type extends textareaType
 			new RestrictableAttributeTranslator("text,paragraph", "default_value", "value"),
 			new IdentityTranslator("required"),
 			new DescriptionPropagatorTranslator("hidden_field", "value"),
-			new DescriptionPropagatorTranslator("text_comment", "")
+			new DescriptionPropagatorTranslator("text_comment", ""),
+			new RestrictableAttributeTranslator("event_tickets", "event_tickets_event_id", "event_id"),
+			new RestrictableAttributeTranslator("event_tickets", "event_tickets_num_total_available", "num_total_available"),
+			new RestrictableAttributeTranslator("event_tickets", "event_tickets_max_per_person", "max_per_person"),
+			new RestrictableAttributeTranslator("event_tickets", "event_tickets_event_close_datetime", "event_close_datetime"),
 		);
 
 		$this->optionTranslators = array(
@@ -184,7 +189,12 @@ class formbuilder2Type extends textareaType
 				if ($jsonFieldName == "text_comment" && $jsonObj["label"] == "") {
 					$jsonObj["label"] = "Text Comment";
 				}
+				
 
+				// Event ticket types don't use a label, add a dummy label
+				if ($jsonFieldName == "event_tickets" && $jsonObj["label"] == "") {
+					$jsonObj["label"] = "dynamic_field_not_set_by_user_here";
+				}
 
 				if (isset($this->optionMap[$childEl->getName()])) {
 					$expectedChildNodeName = $this->optionMap[$childEl->getName()];
@@ -253,7 +263,7 @@ class formbuilder2Type extends textareaType
 
 			$emptyOrWhitespaceRegex = '/^\s*$/';
 			// echo "field type: [" . $field->field_type . "], label [" . $field->label . "]<br>";
-			if (preg_match($emptyOrWhitespaceRegex, $field->label) === 1) {
+			if (preg_match($emptyOrWhitespaceRegex, $field->label) === 1 && $field->field_type != 'event_tickets') {
 				$formErrors .= ($formErrors == "" ? "" : "<br>") . "Form field #" . ($fieldIdx+1) . " does not have a label";
 			}
 
@@ -285,7 +295,18 @@ class formbuilder2Type extends textareaType
 					}
 				}
 			}
-			
+
+			if ($field->field_type == 'event_tickets') {
+				if (!isset($field->event_tickets_event_id)) {
+					$formErrors .= ($formErrors == "" ? "" : "<br>") . "Ticket Slot (field #" . ($fieldIdx + 1) . ") does not have an event selected";
+				} else {
+					// Event ticket types don't use a label, add a dummy label
+					if ($field->label == "" || $field->label == "dynamic_field_not_set_by_user_here") {
+						$field = $this->add_event_ticket_title_to_field($field);
+					}
+				}
+			}
+
 			$fieldNode = $rootXml->addChild($this->fieldMapJtX[$field->field_type]);
 
 			foreach ($this->mainFieldTranslators as $translator) { $translator->translateAndAttachToXml($fieldNode, $field); }
@@ -314,4 +335,16 @@ class formbuilder2Type extends textareaType
 
 		return $rootXml->asXML();
 	}
+	
+	function add_event_ticket_title_to_field($field)
+	{
+		$event = new Entity($field->event_tickets_event_id);
+
+		$date = date("M j Y, g:ia", strtotime($event->get_value('datetime')));
+		$titleString = "{$event->get_value('name')}, $date";
+		$field->label = $titleString;
+
+		return $field;
+	}
+
 }

@@ -233,14 +233,21 @@ class ThorFormModel extends DefaultFormModel
 		$value = $form->get_value('email_data');
 		return ($value == 'yes');
 	}
-	
+
 	function should_save_form_data()
 	{
-		$form =& $this->get_form_entity();
-		$db_save = $form->get_value('db_flag');
-		return ($db_save == 'yes');
+		if ($this->form_has_event_ticket_elements()) {
+			$ticket_request = $this->event_tickets_ticket_request_is_valid();
+			$should_save = $ticket_request['status'];
+		} else {
+			$form =& $this->get_form_entity();
+			$db_save = $form->get_value('db_flag');
+			$should_save = $db_save == 'yes';
+		}
+
+		return $should_save;
 	}
-	
+
 	function should_save_submitted_data_to_session()
 	{
 		$form =& $this->get_form_entity();
@@ -280,18 +287,18 @@ class ThorFormModel extends DefaultFormModel
 		return ($thank_you_message); // does the thank you message have content?
 	}
 
-        function should_show_summary()
-        {
-                $form =& $this->get_form_entity();
-                $should_show_summary = $form->get_value('allow_multiple');
-                return ($should_show_summary == 'yes');
-        }
+	function should_show_summary()
+	{
+		$form =& $this->get_form_entity();
+		$should_show_summary = $form->get_value('allow_multiple');
+		return ($should_show_summary == 'yes');
+	}
 
-        function should_show_submission_limit_message()
-        {
+	function should_show_submission_limit_message()
+	{
 		return ($this->user_has_submitted() && !$this->form_allows_multiple()); 
-        }
-	
+	}
+
 	function set_form_id_if_valid($form_id)
 	{
 		if ($this->form_id_is_valid($form_id)) $this->set_form_id($form_id);
@@ -493,7 +500,6 @@ class ThorFormModel extends DefaultFormModel
 		// Grab current request vars, but remove some internal-only ids
 		$preserve_url_vars = (array) $this->_view->_request;
 		unset($preserve_url_vars['page_id'], $preserve_url_vars['site_id']);
-		var_dump($this->_view);
 
 		if (!$this->user_requested_admin() && $this->user_has_administrative_access() && ($this->get_values()))
 		{
@@ -515,7 +521,7 @@ class ThorFormModel extends DefaultFormModel
 	function &get_values_for_save()
 	{
 		$disco_obj =& $this->get_view();
-		$thor_core =& $this->get_thor_core_object();
+		$thor_core =& $this->get_thor_core_object();		
 		$thor_values = array_merge($thor_core->get_thor_values_from_form($disco_obj), $this->get_values_for_save_extra_fields());
 		return $thor_values;
 	}
@@ -555,7 +561,7 @@ class ThorFormModel extends DefaultFormModel
 			$thor_core =& $this->get_thor_core_object();
 			$thor_values = $this->_get_values_and_extra_email_fields($disco_obj);
 			$disco_hidden_fields =& $this->_get_disco_hidden_fields($disco_obj);
-			
+
 			// If a view has specified dynamic fields to show, they should show even if
 			// hidden, so subtract them from the list of disco_hidden_fields
 			if (($dynamic = $disco_obj->get_show_submitted_data_dynamic_fields()) && is_array($dynamic) )
@@ -1592,5 +1598,192 @@ class ThorFormModel extends DefaultFormModel
  		}
  		return $this->_magic_transform_values;
 	}
+	
+	// NOTE - the logic here is duplicated in
+	// reason_package/thor/plasmature/formbuilder2.php:add_event_ticket_title_to_field()
+	function get_event_ticket_title($eventId = 0)
+	{
+		if (!$eventId) {
+			$eventId = $this->get_event_id_in_request();
+		}
+		if (!$eventId) {
+			return "";
+		}
+		$event = new Entity($eventId);
+		$date = date("M j Y, g:ia", strtotime($event->get_value('datetime')));
+		$titleString = "{$event->get_value('name')}, $date";
+		return $titleString;
+	}
+
+	function get_events_thor_configs()
+	{
+		$thor_xml = $this->_form->get_value('thor_content');
+		$xml = new SimpleXMLElement($thor_xml);
+		$event_ticket_nodes = $xml->xpath("/*/event_tickets");
+		return $event_ticket_nodes;
+	}
+
+	function form_has_event_ticket_elements()
+	{
+		return count($this->get_events_on_form()) > 0;
+	}
+
+	function get_events_on_form()
+	{
+		$formId = $this->_form->id();
+		$siteId = $this->get_site_id();
+
+		$es = new entity_selector($siteId);
+		$es->add_type(id_of('event_type'));
+		$es->add_left_relationship($formId, relationship_id_of('event_to_form'));
+		$eventsOnForm = $es->run_one();
+
+		$validEvents = array();
+		$eventsInFormConfig = $this->get_events_thor_configs();
+		foreach ($eventsOnForm as $eventOnForm) {
+			foreach ($eventsInFormConfig as $eventInConfig) {
+				if ($eventInConfig['event_id'] == $eventOnForm->id()) {
+					$validEvents[] = $eventOnForm;
+				} else {
+				}
+			}
+		}
+		if (count($eventsInFormConfig) > count($eventsOnForm)) {
+			// @todo: figure out how to automatically triage this scenario
+			// or avoid it entirely
+			trigger_error("Form $formId has more Events in thor xml config than relationships.");
+		}
+
+		return $validEvents;
+	}
+
+	function get_event_id_in_request()
+	{
+		$currentEventId = false;
+		if (array_key_exists('event_id', $this->_request_vars)) {
+			$currentEventId = intval($this->_request_vars['event_id']);
+		}
+		return $currentEventId;
+	}
+
+	function event_tickets_get_request()
+	{
+		$thorCore = $this->get_thor_core_object();
+		$currentEventId = $this->get_event_id_in_request();
+		if ($currentEventId === false) {
+			return;
+		}
+		$ticketRequest = $thorCore->get_event_tickets_thor_nodes($this->get_view(), $currentEventId);
+		if (count($ticketRequest) > 1) {
+			// Thor XML is modified in the init method for Thor forms 
+			// to strip out other events associated with this form such 
+			// that users only get tickets to one event at a time.
+			trigger_error("Too many events in request");
+		}
+
+		return $ticketRequest;
+	}
+
+	function event_tickets_ticket_request_is_valid()
+	{
+		$ticketRequest = $this->event_tickets_get_request();
+		if (count($ticketRequest) < 1) {
+			return;
+		}
+		$numTicketsRequested = intval($ticketRequest[0]['submitted_value']);
+		$remainingSeats = $this->event_tickets_get_remaining_seats();
+
+		$requestStatus = array(
+			"status" => true,
+			"message" => "",
+			"disco_element_id" => $ticketRequest[0]['thor_info']['id']
+		);
+		if ($numTicketsRequested === 0) {
+			$requestStatus['status'] = false;
+			$requestStatus['message'] = "You selected zero tickets. Please select one or more tickets and resubmit.";
+		} else if ($remainingSeats === 0) {
+			$requestStatus['status'] = false;
+			$requestStatus['message'] = "Sorry, no tickets are available for this event.";
+		} else if ($numTicketsRequested > $remainingSeats) {
+			$requestStatus['status'] = false;
+			$plural = $remainingSeats > 1 ? "tickets are available" : "ticket is available";
+			$requestStatus['message'] = "Sorry, you requested $numTicketsRequested tickets, but only $remainingSeats $plural.";
+		}
+
+		return $requestStatus;
+	}
+
+	function event_tickets_get_remaining_seats()
+	{
+		$ticketRequest = $this->event_tickets_get_request();
+		if (count($ticketRequest) < 1) {
+			return;
+		}
+		$eventDiscoId = $ticketRequest[0]['thor_info']['id'];
+		$maxTixAvailable = intval($ticketRequest[0]['thor_info']['num_total_available']);
+
+		$thorCore = $this->get_thor_core_object();
+		$rows = $thorCore->get_rows();
+		$numTixCurrentlyClaimed = 0;
+		foreach ((array) $rows as $row) {
+			$numTixCurrentlyClaimed += intval($row[$eventDiscoId]);
+		}
+
+		// # remaining tickets, or 0 if it somehow goes negative (manual adjustments?)
+		$remainingSeats = max(array($maxTixAvailable - $numTixCurrentlyClaimed, 0));
+
+		return $remainingSeats;
+	}
+
+	// @todo break the pieces out into single-use methods
+	//       and integrate in other methods where similar logic exists
+	function event_tickets_get_all_event_seat_info()
+	{
+		$thorCore = $this->get_thor_core_object();
+		$events = $thorCore->get_event_tickets_thor_nodes($this->get_view());
+		$rows = $thorCore->get_rows();
+
+		$return_info = array();
+		foreach ($events as $k => $event) {
+			$info = $event['thor_info'];
+			$event_id = $event['thor_info']['event_id'];
+			$maxTixAvailable = intval($event['thor_info']['num_total_available']);
+			$numTixCurrentlyClaimed = 0;
+
+			// Get the number of tickets still available
+			foreach ((array) $rows as $row) {
+				$discoId = $event['thor_info']['id'];
+				$numTixCurrentlyClaimed += intval($row[$discoId]);
+			}
+			$ticketsAvailable = max(array($maxTixAvailable - $numTixCurrentlyClaimed, 0));
+
+			$info['ticketsClaimed'] = $numTixCurrentlyClaimed;
+			$info['ticketsAvailable'] = $ticketsAvailable;
+
+			// See if tickets shouldn't be sold anymore
+			$ticketSalesAreClosed = false;
+			if (array_key_exists('event_close_datetime', $event['thor_info'])) {
+				$now = new Datetime();
+				$closeDatetime = new Datetime($event['thor_info']['event_close_datetime']);
+				$ticketSalesAreClosed = $now > $closeDatetime;
+			}
+
+			$info['eventState'] = 'open';
+			$info['eventStateReason'] = '';
+			if ($ticketsAvailable < 1) {
+				$info['eventState'] = 'closed';
+				$info['eventStateReason'] = 'max_tickets_reached';
+			} else if ($ticketSalesAreClosed) {
+				$info['eventState'] = 'closed';
+				$info['eventStateReason'] = 'close_date_passed';
+			}
+
+			$return_info[$event_id] = $info;
+		}
+
+		return $return_info;
+	}
+
 }
+
 ?>

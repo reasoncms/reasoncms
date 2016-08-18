@@ -93,6 +93,27 @@
 			$this->add_element('thank_you_note','comment',array('text'=>'<h3>Thank You Note</h3>') );
 			$this->set_display_name('thank_you_message','This information is displayed after someone submits the form:');
 			$this->add_element('limiting_note','comment',array('text'=>'<h3>Limiting and Scheduling</h3>') );
+			
+			
+			// Get events on this form to encode on json for the formbuilder to use
+			$es = new entity_selector($this->admin_page->site_id);
+			$es->add_type(id_of('event_type'));
+			$es->add_left_relationship($this->admin_page->id, relationship_id_of('event_to_form'));
+			$events = $es->run_one();
+			$events_on_form = array();
+			foreach($events as $event) {
+				$events_on_form[] = array(
+					'id' => $event->get_value('id'),
+					'name' => $event->get_value('name'),
+					'datetime' => $event->get_value('datetime'),
+					'datetime_pretty' => date("M j Y, g:ia", strtotime($event->get_value('datetime'))),
+				);
+			}
+			$json = json_encode($events_on_form);
+			$script = '<script type="text/plain" id="event_rel_info">' . $json . '</script>';
+			$this->add_element('event_rel_info', 'comment', array('text' => $script));
+
+
 			$this->set_element_properties('submission_limit', array('size'=>'4'));
 			// echo "<HR>using thor version...[" . USE_THOR_VERSION . "]<hr>";
 			if (USE_THOR_VERSION == THOR_VERSION_FLASH)
