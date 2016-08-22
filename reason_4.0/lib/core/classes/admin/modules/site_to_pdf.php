@@ -60,7 +60,8 @@ class ReasonSiteToPDFModule extends DefaultModule// {{{
 		echo '<p>This module will allow you to generate a PDF of all or some of the pages in this site.
 				The pages are listed below; check or uncheck pages to include or exclude them from the
 				PDF.</p>
-				<p>By default, pages are unchecked if they are hidden from the site navigation, or if
+				<p>By default, pages are unchecked if they are hidden from the site navigation, 
+				if they are external links to a page on another site, or if
 				they are restricted by an access group. You can check a restricted page, but you\'ll
 				probably just end up with a copy of the login page in your PDF.<p>
 				<p><em>For Developers: when building the PDF, pages are captured with CSS print media and
@@ -124,7 +125,7 @@ class ReasonSiteToPDFModule extends DefaultModule// {{{
 			{
 				$es = new entity_selector($site_id);
 				$es->add_type(id_of('minisite_page'));
-				$es->add_relation('(entity.name != "") AND ((url.url = "") OR (url.url IS NULL))'); // only pages, not custom urls
+				$es->add_relation('(entity.name != "")');
 				$es->add_left_relationship_field('minisite_page_parent', 'entity', 'id', 'parent_id');
 				$es->add_right_relationship_field('page_to_access_group', 'entity', 'id', 'access_group_id', false);
 				$es->set_order('sort_order ASC');
@@ -168,37 +169,43 @@ class ReasonSiteToPDFModule extends DefaultModule// {{{
 	
 	function draw_page_tree($tree)
 	{
-		echo '<ul class="pageTree">'."\n";
-		foreach ($tree as $key => $val)
-		{
+		echo '<ul class="pageTree">' . "\n";
+		foreach ($tree as $key => $val) {
 			$notes = array();
-			if ($this->_site_pages[$key]->get_value('access_group_id'))
+
+			if ($this->_site_pages[$key]->get_value('access_group_id')) {
 				$notes[] = 'restricted';
-			if ($this->_site_pages[$key]->get_value('nav_display') == 'No')
+			}
+			if ($this->_site_pages[$key]->get_value('nav_display') == 'No') {
 				$notes[] = 'no nav';
-			
-			if (empty($_REQUEST['pages']) && empty($notes))
+			}
+			if ($this->_site_pages[$key]->get_value('url') != '') {
+				$notes[] = 'external link';
+			}
+
+			if (empty($_REQUEST['pages']) && empty($notes)) {
 				$checked = 'checked';
-			else if (!empty($_REQUEST['pages']) && in_array($key, $_REQUEST['pages']))
+			} else if (!empty($_REQUEST['pages']) && in_array($key, $_REQUEST['pages'])) {
 				$checked = 'checked';
-			else
+			} else {
 				$checked = '';
-			
+			}
+
 			echo '<li>';
-			echo '<input type="checkbox" name="pages[]" value="'.$key.'" '.$checked.'/> ';
+			echo '<input type="checkbox" name="pages[]" value="' . $key . '" ' . $checked . '/> ';
 			echo $this->_site_pages[$key]->get_value('name');
 
-			if ($notes)
-				echo ' <span class="pageNote">('.join(', ', $notes).')</span>';
-			echo '</li>'."\n";
-			if (is_array($val))
-			{
+			if ($notes) {
+				echo ' <span class="pageNote">(' . join(', ', $notes) . ')</span>';
+			}
+			echo '</li>' . "\n";
+			if (is_array($val)) {
 				$this->draw_page_tree($val);
 			}
 		}
-		echo '</ul>'."\n";
+		echo '</ul>' . "\n";
 	}
-	
+
 	function find_site_root()
 	{
 		foreach ($this->_site_pages as $page)
