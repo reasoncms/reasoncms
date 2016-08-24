@@ -79,7 +79,7 @@ function initializeFormbuilder($, Formbuilder, thorContentItemId) {
 Event ID: <%= rf.get(Formbuilder.options.mappings.EVENT_TICKETS_EVENT_ID) %><br>\n\
 Total tickets for event: <%= rf.get(Formbuilder.options.mappings.EVENT_TICKETS_NUM_TOTAL_AVAILABLE) || 'unlimited' %><br>\n\
 Max tickets per submission: <%= rf.get(Formbuilder.options.mappings.EVENT_TICKETS_MAX_PER_PERSON) || '1' %><br>\n\
-Ticket sales close at: <%= rf.get(Formbuilder.options.mappings.EVENT_TICKETS_EVENT_CLOSE_DATETIME) || 'never' %><br>",
+Ticket sales close at: <%= rf.get(Formbuilder.options.mappings.EVENT_TICKETS_EVENT_CLOSE_DATETIME) || '1hr before event' %><br>",
 		edit: "\
   <div class='fb-label-description'>\n\
   <div class='fb-edit-section-header'>Tickets</div>\n\
@@ -90,10 +90,10 @@ Ticket sales close at: <%= rf.get(Formbuilder.options.mappings.EVENT_TICKETS_EVE
   <div class='fb-edit-section-header'>Options</div><div class='fb-clear'></div>\n\
   <label>Total Tickets Available:<br><input type='number' min='0' name='' data-rv-input='model.<%= Formbuilder.options.mappings.EVENT_TICKETS_NUM_TOTAL_AVAILABLE %>' /> <em>Default: unlimited</em><br><br>\n\
   <label>Max Tickets Per Submission:<br><input type='number' min='0' name='' data-rv-input='model.<%= Formbuilder.options.mappings.EVENT_TICKETS_MAX_PER_PERSON %>' /> <em>Default: 1 per person</em><br><br>\n\
-  <label>Purchase cutoff prior to event: <br><input type='text' name='' placeholder='YYYY-MM-DD HH:MM:SS' data-rv-input='model.<%= Formbuilder.options.mappings.EVENT_TICKETS_EVENT_CLOSE_DATETIME %>' /> (YYYY-MM-DD HH:MM:SS, in 24hr time)<br> <em>Default: never</em><br>\n\
+  <label>Purchase cutoff prior to event: <br><input type='text' name='' placeholder='YYYY-MM-DD HH:MM:SS' data-rv-input='model.<%= Formbuilder.options.mappings.EVENT_TICKETS_EVENT_CLOSE_DATETIME %>' /> (YYYY-MM-DD HH:MM:SS, in 24hr time)<br> <em>Default: 1hr before event</em><br>\n\
   </div>",
-		addButton: "<span class='symbol'><span class='fa fa-minus'></span></span> Ticket Slots",
-		prettyName: "Ticket Slots",	
+		addButton: "<span class='symbol'><span class='fa fa-minus'></span></span> Event Tickets",
+		prettyName: "Event Tickets",	
 
 	});
 
