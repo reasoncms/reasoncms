@@ -1760,12 +1760,17 @@ class ThorFormModel extends DefaultFormModel
 			$info['ticketsAvailable'] = $ticketsAvailable;
 
 			// See if tickets shouldn't be sold anymore
-			$ticketSalesAreClosed = false;
-			if (array_key_exists('event_close_datetime', $event['thor_info'])) {
-				$now = new Datetime();
+			if (array_key_exists('event_close_datetime', $event['thor_info']) && $event['thor_info']['event_close_datetime']) {
+				// User provided a close datetime
 				$closeDatetime = new Datetime($event['thor_info']['event_close_datetime']);
-				$ticketSalesAreClosed = $now > $closeDatetime;
+			} else {
+				// Fallback/default is to close the event 60 minutes before start
+				$eventEntity = new Entity($event_id);
+				$closeDatetime = new Datetime($eventEntity->get_value('datetime'));
+				$closeDatetime->modify("-60min");
 			}
+			$now = new Datetime();
+			$ticketSalesAreClosed = $now > $closeDatetime;
 
 			$info['eventState'] = 'open';
 			$info['eventStateReason'] = '';
