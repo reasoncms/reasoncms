@@ -51,33 +51,41 @@ class ReasonUpgrader_49_UpdateEventRegistration extends reasonUpgraderDefault im
 
 	public function test()
 	{
-		$message = "";
+		$message = "<ol>";
 
+		// step
 		$eventSlotsInFuture = $this->checkForEventSlots();
-		$message .= "<p>Checking if there are any event slots currently open...<br>";
+		$message .= "<li>Checking if there are any event slots currently open...";
 		if ($eventSlotsInFuture == "") {
-			$message .= "<strong>Success!</strong> No event slots are currently in use.</p>";
+			$message .= "Success! No event slots are currently in use.</li>";
 		} else {
 			$message .= "<strong>WARNING:</strong> Event slots configured for future events. "
-					. "There is no migration path forward; slot data is exported and relationships are removed.<br>"
+					. "There is no migration path forward; slot data is exported and relationships are removed."
 					. "Proceed with caution. Matching Events: <br>"
-					. "$eventSlotsInFuture</p>";
+					. "$eventSlotsInFuture</li>";
 		}
 
-
+		// step
 		$newRels = $this->relationshipsToBeCreated();
-		$message .= "<p>Checking if relationships need to be created...<br>";
+		$message .= "<li>Checking if relationships need to be created...";
 		if (empty($newRels)) {
-			$message .= "<strong>Relationships already exist!</strong></p>";
+			$message .= "Relationships already exist!</li>";
 		} else {
 			$newRels = trim(implode(", ", array_keys($newRels)), ", ");
-			$message .= "<strong>Note:</strong> The following new relationships would be created: $newRels</p>";
+			$message .= "<strong>Upgrade Needed:</strong> The following new relationships would be created: $newRels</li>";
 		}
 
+		// step
+		$entityTable = 'form';
+		$fieldUpdater = new FieldToEntityTable($entityTable, $this->getFieldsDefinition());
+		$message .= "<li>Checking if new field for forms needs to be created...";
+		if (!$fieldUpdater->field_exists('include_thank_you_in_email')) {
+			$message .= '<strong>Upgrade Needed:</strong> The field "include_thank_you_in_email" will be added to forms.</li>';
+		} else {
+			$message .= 'The form field "include_thank_you_in_email" already exists</li>';
+		}
 
-
-		return $message;
-
+		return $message . "</ol>";
 	}
 
 	/**
@@ -90,16 +98,29 @@ class ReasonUpgrader_49_UpdateEventRegistration extends reasonUpgraderDefault im
 		$currentUsername = get_authentication_from_session();
 		$this->dbHelper->setUsername($currentUsername);
 
-		$message = "";
+		$message = "<ol>";
 		$newRels = $this->relationshipsToBeCreated();
 
 		if (empty($newRels)) {
-			$message = "<p>All relationships have already been created. This script doesn't need to run</p>";
+			$message = "<li>All relationships already exist.</li>";
 		} else {
 			$message .= $this->checkForEventSlots();
 			$message .= $this->createRelationships();
 		}
-		return $message;
+		
+		$entityTable = 'form';
+		$fieldUpdater = new FieldToEntityTable($entityTable, $this->getFieldsDefinition());
+		if ($fieldUpdater->field_exists('include_thank_you_in_email')) {
+			$message .= '<li>The form field "include_thank_you_in_email" already exists</li>';
+		} else {
+			$fieldUpdater->update_entity_table();
+			ob_start();
+			$fieldUpdater->report();
+			$message .= ob_get_clean();
+		}
+
+
+		return $message . "</ol>";
 	}
 	
 	public function createRelationships()
@@ -133,6 +154,11 @@ class ReasonUpgrader_49_UpdateEventRegistration extends reasonUpgraderDefault im
 		}
 
 		return $relationshipsToBeCreated;
+	}
+	
+	public function getFieldsDefinition()
+	{
+		return array('include_thank_you_in_email' => array('db_type' => 'enum("yes", "no") DEFAULT NULL'));
 	}
 
 	public function checkForEventSlots()
