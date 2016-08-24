@@ -99,9 +99,10 @@ class DefaultThorForm extends DefaultForm
 	{
 		$model = $this->get_model();
 		if ($model->form_has_event_ticket_elements()) {
-			$ticket_request = $model->event_tickets_ticket_request_is_valid();
-			if (!$ticket_request['status']) {
-				$this->set_error($ticket_request['disco_element_id'], $ticket_request['message']);
+			$ticket_request = $model->event_tickets_get_request();
+			$request_status = $model->event_tickets_ticket_request_is_valid($ticket_request);
+			if (!$request_status['status']) {
+				$this->set_error($request_status['disco_element_id'], $request_status['message']);
 			}
 		}
 	}
