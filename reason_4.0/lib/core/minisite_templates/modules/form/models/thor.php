@@ -1640,11 +1640,10 @@ class ThorFormModel extends DefaultFormModel
 
 		$validEvents = array();
 		$eventsInFormConfig = $this->get_events_thor_configs();
-		foreach ($eventsOnForm as $eventOnForm) {
-			foreach ($eventsInFormConfig as $eventInConfig) {
+		foreach ($eventsInFormConfig as $eventInConfig) {
+			foreach ($eventsOnForm as $eventOnForm) {
 				if ($eventInConfig['event_id'] == $eventOnForm->id()) {
 					$validEvents[] = $eventOnForm;
-				} else {
 				}
 			}
 		}
