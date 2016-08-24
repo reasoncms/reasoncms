@@ -237,8 +237,9 @@ class ThorFormModel extends DefaultFormModel
 	function should_save_form_data()
 	{
 		if ($this->form_has_event_ticket_elements()) {
-			$ticket_request = $this->event_tickets_ticket_request_is_valid();
-			$should_save = $ticket_request['status'];
+			$ticket_request = $this->event_tickets_get_request();
+			$request_status = $this->event_tickets_ticket_request_is_valid($ticket_request);
+			$should_save = $request_status['status'];
 		} else {
 			$form =& $this->get_form_entity();
 			$db_save = $form->get_value('db_flag');
@@ -1680,22 +1681,19 @@ class ThorFormModel extends DefaultFormModel
 			trigger_error("Too many events in request");
 		}
 
-		return $ticketRequest;
+		return $ticketRequest[0];
 	}
 
-	function event_tickets_ticket_request_is_valid()
+	function event_tickets_ticket_request_is_valid($ticketRequest)
 	{
-		$ticketRequest = $this->event_tickets_get_request();
-		if (count($ticketRequest) < 1) {
-			return;
-		}
-		$numTicketsRequested = intval($ticketRequest[0]['submitted_value']);
-		$remainingSeats = $this->event_tickets_get_remaining_seats();
+		$numTicketsRequested = intval($ticketRequest['submitted_value']);
+		$thorEventInfo = $ticketRequest['thor_info'];
+		$remainingSeats = $this->event_tickets_get_remaining_seats($thorEventInfo);
 
 		$requestStatus = array(
 			"status" => true,
 			"message" => "",
-			"disco_element_id" => $ticketRequest[0]['thor_info']['id']
+			"disco_element_id" => $thorEventInfo['id']
 		);
 		if ($numTicketsRequested === 0) {
 			$requestStatus['status'] = false;
@@ -1712,14 +1710,10 @@ class ThorFormModel extends DefaultFormModel
 		return $requestStatus;
 	}
 
-	function event_tickets_get_remaining_seats()
+	function event_tickets_get_remaining_seats($thorEventInfo)
 	{
-		$ticketRequest = $this->event_tickets_get_request();
-		if (count($ticketRequest) < 1) {
-			return;
-		}
-		$eventDiscoId = $ticketRequest[0]['thor_info']['id'];
-		$maxTixAvailable = intval($ticketRequest[0]['thor_info']['num_total_available']);
+		$eventDiscoId = $thorEventInfo['id'];
+		$maxTixAvailable = intval($thorEventInfo['num_total_available']);
 
 		$thorCore = $this->get_thor_core_object();
 		$rows = $thorCore->get_rows();
@@ -1740,52 +1734,58 @@ class ThorFormModel extends DefaultFormModel
 	{
 		$thorCore = $this->get_thor_core_object();
 		$events = $thorCore->get_event_tickets_thor_nodes($this->get_view());
-		$rows = $thorCore->get_rows();
 
 		$return_info = array();
 		foreach ($events as $k => $event) {
-			$info = $event['thor_info'];
-			$event_id = $event['thor_info']['event_id'];
-			$maxTixAvailable = intval($event['thor_info']['num_total_available']);
-			$numTixCurrentlyClaimed = 0;
+			$thorEventInfo = $event['thor_info'];
 
 			// Get the number of tickets still available
-			foreach ((array) $rows as $row) {
-				$discoId = $event['thor_info']['id'];
-				$numTixCurrentlyClaimed += intval($row[$discoId]);
-			}
-			$ticketsAvailable = max(array($maxTixAvailable - $numTixCurrentlyClaimed, 0));
+			$numTixStillAvailable = $this->event_tickets_get_remaining_seats($thorEventInfo);
+			$numTixCurrentlyClaimed = intval($thorEventInfo['num_total_available']) - $numTixStillAvailable;
 
-			$info['ticketsClaimed'] = $numTixCurrentlyClaimed;
-			$info['ticketsAvailable'] = $ticketsAvailable;
+			$thorEventInfo['ticketsClaimed'] = $numTixCurrentlyClaimed;
+			$thorEventInfo['ticketsAvailable'] = $numTixStillAvailable;
 
 			// See if tickets shouldn't be sold anymore
-			if (array_key_exists('event_close_datetime', $event['thor_info']) && $event['thor_info']['event_close_datetime']) {
-				// User provided a close datetime
-				$closeDatetime = new Datetime($event['thor_info']['event_close_datetime']);
-			} else {
-				// Fallback/default is to close the event 60 minutes before start
-				$eventEntity = new Entity($event_id);
-				$closeDatetime = new Datetime($eventEntity->get_value('datetime'));
-				$closeDatetime->modify("-60min");
-			}
-			$now = new Datetime();
-			$ticketSalesAreClosed = $now > $closeDatetime;
+			$ticketSalesAreClosed = $this->event_tickets_thor_event_is_closed($thorEventInfo);
 
-			$info['eventState'] = 'open';
-			$info['eventStateReason'] = '';
-			if ($ticketsAvailable < 1) {
-				$info['eventState'] = 'closed';
-				$info['eventStateReason'] = 'max_tickets_reached';
+			$thorEventInfo['eventState'] = 'open';
+			$thorEventInfo['eventStateReason'] = '';
+			if ($numTixStillAvailable < 1) {
+				$thorEventInfo['eventState'] = 'closed';
+				$thorEventInfo['eventStateReason'] = 'max_tickets_reached';
 			} else if ($ticketSalesAreClosed) {
-				$info['eventState'] = 'closed';
-				$info['eventStateReason'] = 'close_date_passed';
+				$thorEventInfo['eventState'] = 'closed';
+				$thorEventInfo['eventStateReason'] = 'close_date_passed';
 			}
 
-			$return_info[$event_id] = $info;
+			$return_info[$thorEventInfo['event_id']] = $thorEventInfo;
 		}
 
 		return $return_info;
+	}
+
+	// make sure docs mention that "closed" here only refers to closure due 
+	// to time proximity to the event, not that the event has full capacity
+	function event_tickets_thor_event_is_closed($thorEventInfo, DateTime $baseDatetime = null)
+	{
+		// See if tickets shouldn't be sold anymore
+		if (array_key_exists('event_close_datetime', $thorEventInfo) &&
+				trim($thorEventInfo['event_close_datetime']) != '') {
+			// User provided a close datetime
+			$closeDatetime = new Datetime($thorEventInfo['event_close_datetime']);
+		} else {
+			// Fallback/default is to close the event 60 minutes before start
+			$eventEntity = new Entity($thorEventInfo['event_id']);
+			$closeDatetime = new Datetime($eventEntity->get_value('datetime'));
+			$closeDatetime->modify("-60min");
+		}
+		if ($baseDatetime === null) {
+			$baseDatetime = new Datetime(); // "now"
+		}
+		$ticketSalesAreClosed = $baseDatetime > $closeDatetime;
+
+		return $ticketSalesAreClosed;
 	}
 
 }

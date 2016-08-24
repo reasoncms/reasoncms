@@ -1328,7 +1328,7 @@ class ThorCore
 					
 					$thor_values[] = array(
 						'thor_info' => $node->tagAttrs,
-						'submitted_value' => $disco_obj->get_value($node->tagAttrs['id'])
+						'submitted_value' => $disco_obj->get_value($node->tagAttrs['id']), // false when empty
 					);
 				}
 			}

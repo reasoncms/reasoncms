@@ -246,7 +246,9 @@
 			$ticketSlots = $xmlObject->xpath($xpathSelector);
 			foreach ($ticketSlots as $node) {
 				$node['label'] = $model->get_event_ticket_title($currentEventId);
-				$node['remaining_seats'] = $model->event_tickets_get_remaining_seats();
+				
+				$ticketRequest = $model->event_tickets_get_request();
+				$node['remaining_seats'] = $model->event_tickets_get_remaining_seats($ticketRequest['thor_info']);
 			}
 			$modified_thor_xml = $xmlObject->asXML();
 			$thor_core->set_thor_xml($modified_thor_xml);
@@ -256,7 +258,8 @@
 		{
 			$model =& $this->get_model();
 			$formHasTickets = $model->form_has_event_ticket_elements();
-			$remainingSeatsForCurrentEvent = $model->event_tickets_get_remaining_seats();
+			$ticketRequest = $model->event_tickets_get_request();
+			$remainingSeatsForCurrentEvent = $model->event_tickets_get_remaining_seats($ticketRequest['thor_info']);
 			return $formHasTickets && $remainingSeatsForCurrentEvent < 1;
 		}
 
@@ -276,12 +279,8 @@
 			$formHasTickets = $model->form_has_event_ticket_elements();
 			$remainingSeatsForCurrentEvent = $model->event_tickets_get_request();
 
-			$ticketSalesAreClosed = false;
-			if ($formHasTickets && array_key_exists('event_close_datetime', $remainingSeatsForCurrentEvent[0]['thor_info'])) {
-				$now = new Datetime();
-				$closeDatetime = new Datetime($remainingSeatsForCurrentEvent[0]['thor_info']['event_close_datetime']);
-				$ticketSalesAreClosed = $now > $closeDatetime;
-			}
+			$thorEventInfo = $remainingSeatsForCurrentEvent['thor_info'];
+			$ticketSalesAreClosed = $model->event_tickets_thor_event_is_closed($thorEventInfo);
 
 			return $formHasTickets && $ticketSalesAreClosed;
 		}
@@ -291,7 +290,7 @@
 			$model =& $this->get_model();
 			$remainingSeatsForCurrentEvent = $model->event_tickets_get_request();
 
-			$dt = new Datetime($remainingSeatsForCurrentEvent[0]['thor_info']['event_close_datetime']);
+			$dt = new Datetime($remainingSeatsForCurrentEvent['thor_info']['event_close_datetime']);
 			$closedMessage = "Registration closed at {$dt->format("g:i a")} on {$dt->format("F jS")}.";
 
 			return $closedMessage;
