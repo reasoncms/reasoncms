@@ -935,6 +935,7 @@ class ThorFormModel extends DefaultFormModel
 		$options['header'] = $this->get_form_name() . " - " . "Successfully Submitted " . carl_date('l, F jS Y \\a\t h:i:s A');
 		$options['to'] = $this->get_email_of_submitter();
 		$options['disclaimer'] = false;
+		$options['thank_you_message'] = $this->get_thank_you_message();
 		$view =& $this->get_view();
 		if (method_exists($view, 'get_custom_options_for_email_submitter_view'))
 		{
