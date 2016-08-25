@@ -138,7 +138,7 @@
 			$this->set_order (array ('name', 'db_flag', 'email_of_recipient', 'thor_content', 'thor_comment', 'magic_string_autofill_note',
 									 'magic_string_autofill', 'thank_you_note', 'thank_you_message', 'display_return_link', 'show_submitted_data', 
 									 'limiting_note', 'submission_limit', 'open_date', 'close_date',
-									 'advanced_options_header', 'thor_view', 'thor_view_custom', 'is_editable', 'allow_multiple', 'email_submitter', 'email_link', 'email_data', 'email_empty_fields', 'apply_akismet_filter', // advanced options
+									 'advanced_options_header', 'thor_view', 'thor_view_custom', 'is_editable', 'allow_multiple', 'email_submitter','include_thank_you_in_email', 'email_link', 'email_data', 'email_empty_fields', 'apply_akismet_filter', // advanced options
 									 'unique_name', 'tableless'));
 		}
 
@@ -152,6 +152,7 @@
 				'is_editable' => 'Are Submissions Editable by the Submitter?',
 			 	'allow_multiple' => 'Allow Multiple Submissions per User?',
 			  	'email_submitter' => 'Email Form Results to Submitter?',
+			  	'include_thank_you_in_email' => 'Include the Thank You message (with html) in email?',
 			  	'email_link' => 'Include Edit Link When Possible?',
 			  	'email_data' => 'Include Submitted Data in E-mails?',
 			  	'email_empty_fields' => 'Include Empty Fields in E-mails?',
