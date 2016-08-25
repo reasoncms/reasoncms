@@ -114,6 +114,7 @@ class PublicationModule extends Generic3Module
 	var $_unauthorized_message = NULL;
 	var $_items_by_section = array(); // a place to cache items organized by section
 	var $_blurbs_by_issue; // a place to cache blurbs organized by issue
+	var $_images_by_issue; // a place to cache images organized by issue
 	var $_comment_group_helper; // The helper for the publication's comment group	
 	var $_comment_has_errors;
 	protected $_item_images = array();
@@ -185,6 +186,7 @@ class PublicationModule extends Generic3Module
 									   'issues_by_date' => 'get_issues',
 									   'links_to_issues' => 'get_links_to_issues',
 									   'issue_blurbs' => 'get_current_issue_blurbs',
+									   'issue_images' => 'get_current_issue_images',
 									   //sections
 									   'current_section' => 'get_current_section',
 									   'sections' => 'get_sections_issue_aware',
@@ -2014,6 +2016,27 @@ var $noncanonical_request_keys = array(
 					$this->_blurbs_by_issue[ $issue->id() ] = $es->run_one();
 				}
 				return $this->_blurbs_by_issue[ $issue->id() ];
+			}
+			return array();
+		}
+
+		/**
+		* Returns the images associated with the current issue
+		*/
+		function get_current_issue_images()
+		{
+			$issue = $this->get_current_issue();
+			if( is_object($issue) )
+			{
+				if( !isset( $this->_images_by_issue[ $issue->id() ] ) )
+				{
+					$es = new entity_selector();
+					$es->add_type(id_of('image'));
+					$es->set_env('site', $this->site_id);
+					$es->add_right_relationship($issue->id(), relationship_id_of('issue_to_image'));
+					$this->_images_by_issue[ $issue->id() ] = $es->run_one();
+				}
+				return $this->_images_by_issue[ $issue->id() ];
 			}
 			return array();
 		}
