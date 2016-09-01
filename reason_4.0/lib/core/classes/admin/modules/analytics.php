@@ -1141,12 +1141,12 @@ class AnalyticsModule extends DefaultModule
 						$path = str_replace(GA_HOST_NAME, '', $cell);
 						if (strpos($path, '?'))
 						{
-							$table .= '<td>'.$path.'</td>'."\n";
+							$table .= '<td><a href="'.reason_htmlspecialchars($path).'" target="_blank">'.reason_htmlspecialchars($path).'</a></td>'."\n";
 						}
 						else
 						{
 							$id = array_search($path, $this->get_site_urls());
-							$table .= '<td><a href="'.$this->admin_page->make_link(array('type_id'=>id_of('minisite_page'), 'id'=>$id)).'">'.$path.'</a></td>'."\n";
+							$table .= '<td><a href="'.reason_htmlspecialchars($path).'" target="_blank">'.reason_htmlspecialchars($path).'</a> <a href="'.$this->admin_page->make_link(array('type_id'=>id_of('minisite_page'), 'id'=>$id)).'" class="edit">Edit</a></td>'."\n";
 						}
 					}
 					elseif ($i == 4)
@@ -1192,11 +1192,11 @@ class AnalyticsModule extends DefaultModule
 		  $table .= '<tr>' . "\n";
 		  if ($table_id != 'page-results')
 		  {
-		  	$preview_link = '<a href="'.$this->admin_page->make_link(array('id'=>$row['entity']->get_value('id'),'type_id'=>$row['entity']->get_value('type'),'cur_module'=>'Analytics')).'">'.$row['entity']->get_value('name').'</a>';
+		  	$preview_link = $row['entity']->get_value('name').' <a href="'.$this->admin_page->make_link(array('id'=>$row['entity']->id(),'type_id'=>$row['entity']->get_value('type'),'cur_module'=>'Analytics')).'" class="edit">Edit</a>';
 		  }
 		  else 
 		  {
-		  	$preview_link = '<a href="'.$this->admin_page->make_link(array('id'=>$row['entity']->get_value('id'),'type_id'=>$row['entity']->get_value('type'),'cur_module'=>'Analytics')).'">'.$row['entity']->get_value('name').'</a>';
+		  	$preview_link = $row['entity']->get_value('name').' <a href="'.$this->admin_page->make_link(array('id'=>$row['entity']->id(),'type_id'=>$row['entity']->get_value('type'),'cur_module'=>'Analytics')).'" class="edit">Edit</a>';
 		  }
 		  		$table .= '<td>' .$preview_link .'</td>' . "\n";
 				$table .= '<td>' . $row['pageviews'] . '</td>' . "\n";
