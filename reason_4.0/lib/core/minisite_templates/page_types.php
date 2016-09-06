@@ -1844,6 +1844,62 @@
 				'thumbnail_width' => 200,
 			),
 		),
+		'child_gallery_280x200' => array(
+			'main_post' => array(
+				'module'=>'children',
+				'provide_images' => true,
+				'thumbnail_width' => 280,
+				'thumbnail_height' => 200,
+				'html5' => true,
+			),
+			'not_a_real_page_location' => array(
+				'module' => 'head_items_include',
+				'css' => array(array(REASON_HTTP_BASE_PATH.'modules/children/children_gallery_280x200.less')),
+				'js' => array(array(REASON_HTTP_BASE_PATH.'modules/children/children_gallery.js')),
+			),
+		),
+		'child_gallery_327x218' => array(
+			'main_post' => array(
+				'module'=>'children',
+				'provide_images' => true,
+				'thumbnail_width' => 327,
+				'thumbnail_height' => 218,
+				'html5' => true,
+			),
+			'not_a_real_page_location' => array(
+				'module' => 'head_items_include',
+				'css' => array(array(REASON_HTTP_BASE_PATH.'modules/children/children_gallery_327x218.less')),
+				'js' => array(array(REASON_HTTP_BASE_PATH.'modules/children/children_gallery.js')),
+			),
+		),
+		'child_gallery_400x200' => array(
+			'main_post' => array(
+				'module'=>'children',
+				'provide_images' => true,
+				'thumbnail_width' => 400,
+				'thumbnail_height' => 200,
+				'html5' => true,
+			),
+			'not_a_real_page_location' => array(
+				'module' => 'head_items_include',
+				'css' => array(array(REASON_HTTP_BASE_PATH.'modules/children/children_gallery_400x200.less')),
+				'js' => array(array(REASON_HTTP_BASE_PATH.'modules/children/children_gallery.js')),
+			),
+		),
+		'child_gallery_500x250' => array(
+			'main_post' => array(
+				'module'=>'children',
+				'provide_images' => true,
+				'thumbnail_width' => 500,
+				'thumbnail_height' => 250,
+				'html5' => true,
+			),
+			'not_a_real_page_location' => array(
+				'module' => 'head_items_include',
+				'css' => array(array(REASON_HTTP_BASE_PATH.'modules/children/children_gallery_500x250.less')),
+				'js' => array(array(REASON_HTTP_BASE_PATH.'modules/children/children_gallery.js')),
+			),
+		),
 		'siblings_and_children' => array(
 			'main_post' => 'siblings',
 			'sidebar'=>'children',
