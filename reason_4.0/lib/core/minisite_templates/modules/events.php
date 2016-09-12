@@ -3573,17 +3573,22 @@ class EventsModule extends DefaultMinisiteModule
 		}
 		
 		$query_string = $this->construct_link(array('start_date'=>$start_date,'view'=>'','end_date'=>'','format'=>'ical'));
+		$webcal_url = 'webcal://'.REASON_HOST.$this->parent->pages->get_full_url( $this->page_id ).$query_string;
+		$gcal_url = 'https://calendar.google.com/calendar/render?cid='.str_replace(array('&amp;','='),array('%26','%3D'),$webcal_url);
 		if(!empty($this->request['category']) || !empty($this->request['audience']) || !empty($this->request['search']))
 		{
-			$subscribe_text = 'Subscribe to this view in desktop calendar';
+			$subscribe_desktop_text = 'Subscribe to this view (Desktop)';
+			$subscribe_gcal_text = 'Subscribe to this view (Google Calendar)';
 			$download_text = 'Download these events (.ics)';
 		}
 		else
 		{
-			$subscribe_text = 'Subscribe to this calendar';
+			$subscribe_desktop_text = 'Subscribe (Desktop)';
+			$subscribe_gcal_text = 'Subscribe (Google Calendar)';
 			$download_text = 'Download events (.ics)';
 		}
-		echo '<a href="webcal://'.REASON_HOST.$this->parent->pages->get_full_url( $this->page_id ).$query_string.'">'.$subscribe_text.'</a>';
+		echo '<a href="'.$webcal_url.'">'.$subscribe_desktop_text.'</a>';
+		echo ' <span class="divider">|</span> <a href="'.$gcal_url.'" target="_blank">'.$subscribe_gcal_text.'</a>';
 		if(!empty($this->events))
 			echo ' <span class="divider">|</span> <a href="'.$query_string.'">'.$download_text.'</a>';
 		if (defined("REASON_URL_FOR_ICAL_FEED_HELP") && ( (bool) REASON_URL_FOR_ICAL_FEED_HELP != FALSE))
@@ -3801,6 +3806,7 @@ class EventsModule extends DefaultMinisiteModule
 			$bundle->set_function('media_works', array($this, 'get_event_media_works'));
 			$bundle->set_function('owner_site', array($this, 'get_owner_site_info'));
 			$bundle->set_function('ical_link', array($this, 'get_item_ical_link'));
+			$bundle->set_function('external_link', array($this, 'get_item_external_link'));
 			$bundle->set_function('contact_info', array($this, 'get_contact_info'));
 			$bundle->set_function('categories', array($this, 'get_event_categories'));
 			$bundle->set_function('audiences', array($this, 'get_event_audiences'));
@@ -3938,6 +3944,93 @@ class EventsModule extends DefaultMinisiteModule
 			return $this->construct_link(array('event_id'=>$e->id(),'format'=>'ical','date'=>''));
 		else
 			return $this->construct_link(array('event_id'=>$e->id(),'format'=>'ical','date'=>$date));
+	}
+	/**
+	 * Get the external add-to-calendar link for a given event entity
+	 *
+	 * @param object $e event entity
+	 * @param string $calendar determines which external source, 'google' or 'yahoo'
+	 * @return string html-encoded URL
+	 */
+	function get_item_external_link($e, $calendar) {
+		//Make DateTime object, assign single instance date if relevant:
+		$dateTime = new DateTime($e->get_value('datetime'));
+		$reqDate = '';
+		if ($e->get_value('recurrence') != 'none' && !empty($this->request['date']))
+			$reqDate = $this->request['date'];
+		if (!empty($reqDate))
+			$dateTime->modify($reqDate.' '.$dateTime->format('H:i:s'));
+		//Make DateTime object, set UTC, and record start dates and times:
+		$hours = $e->get_value('hours');
+		$minutes = $e->get_value('minutes');
+		$all_day = (($dateTime->format('His') == '000000') && ((($hours == 0) || ($hours == 24)) && ($minutes == 0)));
+		$dateTime->setTimezone(new DateTimeZone('UTC'));
+		$startDate = $dateTime->format('Ymd');
+		$startTime = $dateTime->format('His');																						
+		//Get event title and adjust and make safe for transfer:
+		$title = $this->string_to_external_url_safe($e->get_value('name'));
+		//Create location string:
+		$location = $this->string_to_external_url_safe($e->get_value('location'));
+		$address = $this->string_to_external_url_safe($e->get_value('address'));
+		$location .= (!empty($location) && !empty($address)) ? ', ' : '';
+		$location .= (!empty($address)) ? $address : '';
+		//Create details string:
+		$content = $this->string_to_external_url_safe($e->get_value('content'));
+		$info_url = $this->string_to_external_url_safe('For more information, visit: '.$e->get_value('url'));
+		$cal_url = $this->string_to_external_url_safe('Event source: '.REASON_HOST.$this->parent->pages->get_full_url($this->page_id).'?event_id='.$e->id());
+		$details = (!empty($content)) ? $content.'%0A%0A' : '';
+		$details .= (!empty($e->get_value('url'))) ? $info_url.'%0A%0A'.$cal_url : $cal_url;
+		switch ($calendar) {
+			case 'google':
+				//Complete additional formating:
+				$dateTime->add(new DateInterval('PT'.$e->get_value('hours').'H'.$e->get_value('minutes').'M'));
+				$endDate = $dateTime->format('Ymd');
+				$endTime = $dateTime->format('His');
+				$dates = $all_day ? $startDate.'/'.$endDate : $startDate.'T'.$startTime.'Z/'.$endDate.'T'.$endTime.'Z';
+				//Create string to return:
+				$ret = 'http://www.google.com/calendar/event?action=TEMPLATE';
+				$ret .= '&dates='.$dates.'&ctz='.REASON_DEFAULT_TIMEZONE.'&text='.$title;
+				$ret .= (!empty($location)) ? '&location='.$location : '';
+				$ret .= (!empty($details)) ? '&details='.$details : '';
+				break;
+			case 'yahoo':
+				//Complete additional formating:
+				$duration = '';
+				if (!$all_day) {
+					$duration = ($hours < 10) ? '0'.$hours : $hours;
+					$duration .= ($minutes < 10) ? '0'.$minutes : $minutes;
+				}
+				$startDateTime = $all_day ? $startDate : $startDate.'T'.$startTime.'Z';
+				//Create string to return:
+				$ret = 'http://calendar.yahoo.com/?v=60&ST='.$startDateTime.'&TITLE='.$title;
+				$ret .= (!empty($duration)) ? '&DUR='.$duration : '';
+				$ret .= (!empty($location)) ? '&in_loc='.$location : '';
+				$ret .= (!empty($details)) ? '&DESC='.$details : '';
+				break;
+			default:
+				trigger_error('External calendar of "'.$calendar.'" given is not implemented. Unable to return url.');
+				$ret = NULL;
+		}
+		return $ret;
+	}
+	/**
+	 * Returns given string converted for use as a parameter value in urls.
+	 * Operations: Format lists, strip tags, straight to curly quotes, replace ampersand, urlencode, other minor changes.
+	 *
+	 * @param string $e string to convert
+	 * @return string converted string
+	 */
+	function string_to_external_url_safe($string) {
+		$string = preg_replace('/<li[^>]*>/',' • ',$string); //not sure how ol or levels, so simple ul bullets
+		$string = strip_tags($string);
+		$string = preg_replace('/(.*?)"(.*?)"(.*?)/','$1“$2”$3',$string); //curly quotes
+		$string = str_replace(array('"','&amp;'), array('“','and'), $string);
+		$string = urlencode($string);
+		$string = str_replace('%26nbsp%3B','+',$string);
+		$string = preg_replace('/(?:\+){2,}/','+',$string); //remove duplicate spaces
+		$string = str_replace('%0A','%0A%0A',$string);
+		$string = preg_replace('/(?:%0A){3,}/','%0A%0A',$string); //remove large breaks
+		return $string;
 	}
 	/**
 	 * Output HTML of a link back to the events listing from the view of an individual event
