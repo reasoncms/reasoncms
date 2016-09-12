@@ -29,7 +29,7 @@ class ShortURL
     var $db;
     var $basedir = 'http://go.carleton.edu'; 
     var $admin = false;
-    var $admins = array( 'mryan', 'mheiman', 'jlawrenc', 'dbratland', 'tfeiler');
+    var $admins = array( 'mryan', 'mheiman', 'jlawrenc', 'dbratland', 'tfeiler', 'janderso','trozwadowski');
     
     function ShortURL()
     {
@@ -428,7 +428,7 @@ JS;
             {
                 echo    '<p>Type in the desired code to be assigned to this URL<br />
                         <b>Note:</b> If this field is left blank, a short URL will be generated automatically</p>
-                        <p><input type="text" size="10" maxlength="10" name="shortURL" value="" />
+                        <p><input type="text" size="12" maxlength="12" name="shortURL" value="" />
                         <input type="hidden" name="force" value="false" /></p>';
             }
         }

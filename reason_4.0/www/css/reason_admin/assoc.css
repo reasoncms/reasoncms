@@ -1,4 +1,26 @@
-@import url(assoc_mod.css);
+.listRow1 td {
+	background-color: #FFFBDA;
+	background-image: url(../../ui_images/1px_white.gif);
+	background-repeat: repeat-x;
+}
+.listRow2 td {
+	background-color: #fffdee;
+	background-image: url(../../ui_images/1px_white.gif);
+	background-repeat: repeat-x;
+}
+.listHead {
+	background-color: #FAEEBF;
+	background-image: url(../../ui_images/1px_white.gif);
+	background-repeat: repeat-x;
+}
+.viewFilter {
+	background-color: #F0E1A8;
+	margin-right: 0;
+	margin-bottom: 15px;
+	float:none;
+	width:auto;
+	max-width:40em;
+}
 
 .listrow1 td {
 	background-color: #FFFBDA;

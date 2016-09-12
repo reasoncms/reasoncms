@@ -28,6 +28,9 @@ $GLOBALS[ '_reason_mvc_model_class_names' ][ reason_basename( __FILE__) ] = 'You
  * - cache_duration
  *
  * @author Nathan White
+ *
+ * @todo This code needs to be updated to retrieve data from the YouTube API v3. The API
+ *       being called here is no longer supported.
  */
 class YouTubeLatestUserVideosFeedModel extends ReasonMVCModel // implements ReasonFeedInterface
 {
@@ -45,6 +48,8 @@ class YouTubeLatestUserVideosFeedModel extends ReasonMVCModel // implements Reas
 	 */
 	function build()
 	{
+		return ''; // Disabling until updated
+	
 		if ($user_id = $this->config('user_id'))
 		{
 			$url = 'http://gdata.youtube.com/feeds/api/users/'.$user_id.'/uploads';

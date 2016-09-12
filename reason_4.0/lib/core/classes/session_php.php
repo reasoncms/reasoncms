@@ -138,9 +138,9 @@
 						$started = session_start();
 					}
 					
-					if (!$started) 
+					if (empty($started)) 
 					{
-						error_log('Failed to start session '.$this->sess_name.'; sid_override='.$sid_override);
+						error_log('Failed to start session '.$this->sess_name.'; sid_override='.$sid_override.'; session_id='.session_id());
 						// this seems to be problematic:
 						// return false;
 					}
@@ -231,7 +231,7 @@
 				$domain = $this->_transform_domain($_SERVER['HTTP_HOST']);
 				setcookie( $this->sess_name.'_EXISTS', '', 0, '/', $domain, 0 );
 				$_SESSION = array();
-				session_destroy();
+				if (session_id()) session_destroy();
 				setcookie( $this->sess_name, '', 0, '/', $domain, $this->secure_session_flag );
 			}
 			else

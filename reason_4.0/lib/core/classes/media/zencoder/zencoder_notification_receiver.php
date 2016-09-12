@@ -111,7 +111,7 @@ function process_video($media_work, $notification, $mime_type_map, $netid)
 	{
 		echo 'Processing media file '.$media_file->id()."\n";
 		
-		reason_update_entity($media_file->get_value('id'), $media_work->get_owner()->get_value('id'), array('url' => 'downloading'), false);
+		reason_update_entity($media_file->get_value('id'), $media_work->get_value('last_edited_by'), array('url' => 'downloading'), false);
 		
 		$url = $output->url;
 		$name = basename($url);
@@ -301,7 +301,14 @@ function create_image_entity($media_work, $username)
  */
 function set_error($media_work)
 {
-	reason_update_entity($media_work->id(), $media_work->get_owner()->id(), array('transcoding_status' => 'error'), false);
+	if (is_object($media_work))
+	{
+		reason_update_entity($media_work->id(), $media_work->get_value('last_edited_by'), array('transcoding_status' => 'error'), false);
+	}
+	else
+	{
+		trigger_error('set_error() called with non-entity');
+	}
 }
 
 /**

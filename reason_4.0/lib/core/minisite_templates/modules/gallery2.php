@@ -12,7 +12,7 @@ reason_include_once( 'minisite_templates/modules/generic3.php' );
 reason_include_once( 'classes/sized_image.php' );
 reason_include_once( 'function_libraries/image_tools.php' );
 reason_include_once( 'classes/group_helper.php' );
-
+reason_include_once( 'classes/function_bundle.php' );
 
 
 /**
@@ -124,7 +124,6 @@ class Gallery2Module extends Generic3Module
 		'use_pagination'=>true,
 		'number_per_page' => 12,
 		'entire_site'=>false,
-		'use_relationship_sort' => false,
 		'sort_order' => 'dated.datetime ASC, meta.description ASC, entity.id ASC',
 		'show_dates_in_list' => false,
 		'show_descriptions_in_list' => true,
@@ -138,6 +137,9 @@ class Gallery2Module extends Generic3Module
 		'crop' => 0,
 		'max_filters' => 3,
 		'original_size_access_group' => '',
+		'item_markup' => '',
+		'filter_types' => array(),
+		'limit_by_related_types'=>array(),
 	);
 	
 	/**
@@ -145,7 +147,7 @@ class Gallery2Module extends Generic3Module
 	 * This is set in parameters.
 	 * @var boolean
 	 */
-	var $sorting_by_rel_sort_order = false;
+	var $sorting_by_rel_sort_order;
 	
 	/**
 	 * Array of id => array of image data such as thumbnail,
@@ -163,6 +165,8 @@ class Gallery2Module extends Generic3Module
 	
 	var $back_link_text = 'Thumbnails';
 	var $make_current_page_link_in_nav_when_on_item = true;
+	var $markups = array();
+	var $default_item_markup = 'minisite_templates/modules/gallery_markup/default/item.php';
 	
 	/**
 	 * Add cleanup rules specific to the gallery module
@@ -172,6 +176,16 @@ class Gallery2Module extends Generic3Module
 	{
 		$this->cleanup_rules['original_access'] = array('function'=>'turn_into_int');
 		return parent::get_cleanup_rules();
+	}
+	
+	function init($params = array())
+	{
+		parent::init($params);
+		if( !empty($this->current_item_id) )
+		{
+			$item = new entity($this->current_item_id);
+			$this->add_open_graph_tags_for_item($item);
+		}
 	}
 	
 	/**
@@ -198,24 +212,40 @@ class Gallery2Module extends Generic3Module
 		$this->init_sort_order();
 	}
 	
+	function sorting_by_rel_sort_order()
+	{
+		if(!isset($this->sorting_by_rel_sort_order))
+		{
+			// Since rel_sort doesn't make sense on a site-wide gallery, we need to keep this from happening
+			if (empty($this->params['sort_order']) || ($this->params['sort_order'] == 'rel' && $this->params['entire_site'] && !$this->is_virtual) || ($this->params['sort_order'] == 'rel_reverse' && $this->params['entire_site'] && !$this->is_virtual))
+			{
+				$this->sorting_by_rel_sort_order = false;
+			}
+			elseif ($this->params['sort_order'] == 'rel' || $this->params['sort_order'] == 'rel_reverse')
+			{
+				$this->sorting_by_rel_sort_order = true;
+			}
+			else
+			{
+				$this->sorting_by_rel_sort_order = false;
+			}
+		}
+		return $this->sorting_by_rel_sort_order;
+	}
+	
 	function init_sort_order()
 	{
 		// Since rel_sort doesn't make sense on a site-wide gallery, we need to keep this from happening
-		if (empty($this->params['sort_order']) || ($this->params['sort_order'] == 'rel' && $this->params['entire_site'] && !$this->is_virtual))
+		if(!$this->sorting_by_rel_sort_order())
 		{
-			$sort_order_string = 'dated.datetime ASC, entity.id ASC';
-		}
-		elseif ($this->params['sort_order'] == 'rel')
-		{
-			$this->sorting_by_rel_sort_order = true;
-		}
-		else
-		{
-			$sort_order_string = $this->params['sort_order'];
-		}
-
-		if (!$this->sorting_by_rel_sort_order)
-		{
+			if(empty($this->params['sort_order']))
+			{
+				$sort_order_string = 'dated.datetime ASC, entity.id ASC';
+			}
+			else
+			{
+				$sort_order_string = $this->params['sort_order'];
+			}
 			// If we use regular expressions to split the sort order string,
 			// we'll be more likely to get real sort orders.
 			$pattern = '/\b[A-Za-z]+\.[A-Za-z]+\b \b(?:ASC|DESC)\b/';
@@ -346,6 +376,51 @@ class Gallery2Module extends Generic3Module
 	}
 	
 	/**
+	 * Add basic metadata using the open graph protocol (http://ogp.me/).
+	 *
+	 * This should improve how shared items appear on facebook and possibly other social networks.
+	 *
+	 * @todo add integration with propietary tags for specific social networks.
+	 */
+	function add_open_graph_tags_for_item($item)
+	{
+		//$item = new entity($this->current_item_id);
+		if (reason_is_entity($item, 'image') && $this->further_checks_on_entity($item))
+		{
+			$title = htmlspecialchars(trim(strip_tags($item->get_value('description'))),ENT_QUOTES,'UTF-8');
+			$content = htmlspecialchars(trim(str_replace('&nbsp;', '', strip_tags($item->get_value('content')))),ENT_QUOTES,'UTF-8');
+			if (!empty($content))
+			{
+				$words = explode(' ', $content, 31);
+				unset($words[count($words)-1]);
+				$description = implode(' ', $words).'…';
+			}
+			$url = carl_construct_link(array(''), array('image_id'));
+			$image_url = reason_get_image_url($item);
+			$site_name = '';
+			if($this->site_id)
+			{
+				$site = new entity($this->site_id);
+				$site_name .= htmlspecialchars(trim(strip_tags($site->get_value('name'))),ENT_QUOTES,'UTF-8');
+			}
+			if(defined('FULL_ORGANIZATION_NAME') && FULL_ORGANIZATION_NAME)
+			{
+				if(!empty($site_name))
+					$site_name .= '/';
+				$site_name .= FULL_ORGANIZATION_NAME;
+			}
+			$head_items =& $this->get_head_items();
+			$head_items->add_head_item('meta',array( 'property' => 'og:type', 'content' => 'website'));// dumb og doesn't have a type for image
+			$head_items->add_head_item('meta',array( 'property' => 'og:title', 'content' => $title));
+			$head_items->add_head_item('meta',array( 'property' => 'og:url', 'content' => $url));
+			if (!empty($description)) $head_items->add_head_item('meta',array( 'property' => 'og:description', 'content' => $description));
+			$head_items->add_head_item('meta',array( 'property' => 'og:image', 'content' => 'http://'.$_SERVER['HTTP_HOST'].$image_url));
+			if (HTTPS_AVAILABLE) $head_items->add_head_item('meta',array( 'property' => 'og:image:secure_url', 'content' => 'https://'.$_SERVER['HTTP_HOST'].$image_url));
+			if (!empty($site_name)) $head_items->add_head_item('meta',array( 'property' => 'og:site_name', 'content' => $site_name));
+		}
+	}
+	
+	/**
 	 * Runs through the list, showing the thumbnails.
 	 */
 	function do_list()
@@ -423,47 +498,151 @@ class Gallery2Module extends Generic3Module
 	//Called on by show_item
 	function show_item_name( $item ) // {{{
 	{
-		echo '<h3 class="imageTitle">' . $item->get_value( 'description' ) . '</h3>'."\n";
+		$ok = true;
+		if($item_markup = $this->get_markup_object('item'))
+		{
+			$ok = !$item_markup->generates_item_name();
+		}
+		if($ok)
+			echo '<h3 class="imageTitle">' . $item->get_value( 'description' ) . '</h3>'."\n";
 	} // }}}
 	
 	//Called on by show_item()
 	function show_item_content( $item ) // {{{
 	{
-		$this->show_sequence_number($item);
-		$next_prev_array = $this->get_next_and_prev_images($item);
-		if (!empty($next_prev_array['prev']))
+		if($item_markup = $this->get_markup_object('item'))
 		{
-			echo '<div class="prevWrapper"><div class="thumbnail">';
-			if ($prev_image_markup = $this->show_image($next_prev_array['prev']))
-				echo $prev_image_markup;
-			echo '</div><a href="'.$this->construct_link($next_prev_array['prev']).'" title="Previous: ' . $next_prev_array['prev']->get_value('description') . '"><img class="nav_arrow" src="'.$this->prev_arrow_url.'" width="80" height="80" alt="Previous image"></a></div>'."\n";
+			$item_markup->set_bundle($this->get_item_bundle());
+			echo $item_markup->get_markup($item);
 		}
-		
-		if (!empty($next_prev_array['next']))
-		{
-			echo '<div class="nextWrapper"><div class="thumbnail">';
-			if ($next_image_markup = $this->show_image($next_prev_array['next']))
-				echo $next_image_markup;
-			echo '</div><a href="'.$this->construct_link($next_prev_array['next']).'" title="Next: ' . $next_prev_array['next']->get_value('description') . '"><img class="nav_arrow" src="'.$this->next_arrow_url.'" width="80" height="80" alt="Next image"></a></div>'."\n";
-		}
-		echo '<div class="imageWrapper">';
-		echo $this->show_image( $item, false );
-		echo '</div>'."\n";
-		echo '<div class="imageCaptionWrapper">'."\n";
-		if ($item->get_value( 'content' ))
-			echo '<div class="fullDescription">' .  $item->get_value( 'content' ) . '</div>'."\n";
-		if ($item->get_value( 'author' ))
-			echo '<div class="author"><h4>Photo:</h4> ' .  $item->get_value( 'author' ) . '</div>'."\n";
-		if ($item->get_value( 'keywords' ))
-			echo '<div class="keywords"><h4>Keywords:</h4> ' .  $item->get_value( 'keywords' ) . '</div>'."\n";
-		if ($item->get_value( 'datetime' ))
-			echo '<div class="dateTime">' .  prettify_mysql_datetime($item->get_value( 'datetime' ), $this->date_format) . '</div>'."\n";
-		
-		$this->show_item_owner_site_info ( $item ); 
-		$this->show_item_categories( $item );
-		$this->show_item_original_size_link( $item );
-		echo '</div>'."\n";
 	} // }}}
+	
+	function get_item_bundle()
+	{
+		$bundle = new functionBundle();
+		$bundle->set_function('sequence_number_markup', array($this, 'get_sequence_number_markup'));
+		$bundle->set_function('next_and_previous_images', array($this, 'get_next_and_prev_images'));
+		$bundle->set_function('previous_item_markup', array($this, 'get_previous_item_markup'));
+		$bundle->set_function('next_item_markup', array($this, 'get_next_item_markup'));
+		$bundle->set_function('image_markup', array($this, 'show_image_full_size'));
+		$bundle->set_function('date_format', array($this, 'get_date_format'));
+		$bundle->set_function('owner_markup', array($this, 'get_item_owner_site_markup'));
+		$bundle->set_function('categories_markup', array($this, 'get_item_categories_markup'));
+		$bundle->set_function('original_size_link_markup', array($this, 'get_item_original_size_link_markup'));
+		return $bundle;
+	}
+	
+	/**
+	 * Get a markup object
+	 *
+	 * @param string $type 'item'
+	 * @return object
+	 */
+	function get_markup_object($type)
+	{
+		if(isset($this->_markups[$type]))
+			return $this->_markups[$type];
+		
+		if(isset($this->params[$type.'_markup']))
+		{
+			if(!empty($this->params[$type.'_markup']))
+			{
+				$path = $this->params[$type.'_markup'];
+			}
+			else
+			{
+				$var = 'default_'.$type.'_markup';
+				$path = $this->$var;
+			}
+			if(reason_file_exists($path))
+			{
+				reason_include_once($path);
+				if(!empty($GLOBALS['gallery_markup'][$path]))
+				{
+					if(class_exists($GLOBALS['gallery_markup'][$path]))
+					{
+						$markup = new $GLOBALS['gallery_markup'][$path];
+						if('item' == $type)
+						{
+							if($markup instanceof galleryItemMarkup)
+								$this->_markups[$type] = $markup;
+							else
+								trigger_error('Markup does not implement eventsItemMarkup interface');
+						}
+						/* elseif('list' == $type)
+						{
+							if($markup instanceof eventsListMarkup)
+								$this->_markups[$type] = $markup;
+							else
+								trigger_error('Markup does not implement eventsListMarkup interface');
+						}
+						elseif('list_item' == $type)
+						{
+							if($markup instanceof eventsListItemMarkup)
+								$this->_markups[$type] = $markup;
+							else
+								trigger_error('Markup does not implement eventsListItemMarkup interface');
+						}
+						elseif('list_chrome' == $type)
+						{
+							if($markup instanceof eventsListChromeMarkup)
+								$this->_markups[$type] = $markup;
+							else
+								trigger_error('Markup does not implement eventsListChromeMarkup interface');
+						} */
+						else
+						{
+							trigger_error('Unknown markup type');
+						}
+					}
+					else
+					{
+						trigger_error('No class with name '.$GLOBALS['gallery_markup'][$path].' found');
+					}
+				}
+				else
+				{
+					trigger_error('Gallery markup not properly registered at '.$path);
+				}
+			}
+			else
+			{
+				trigger_error('No markup file exists at '.$path);
+			}
+		}
+		else
+		{
+			trigger_error('Unrecognized markup type ('.$type.')');
+		}
+		if(!isset($this->_markups[$type]))
+			$this->_markups[$type] = false;
+		return $this->_markups[$type];
+	}
+	
+	function get_previous_item_markup($item)
+	{
+		$ret = '';
+		$ret .= '<div class="prevWrapper"><div class="thumbnail">';
+		if ($prev_image_markup = $this->show_image($item))
+			$ret .= $prev_image_markup;
+		$ret .= '</div><a href="'.$this->construct_link($item).'" title="Previous: ' . $item->get_value('description') . '"><img class="nav_arrow" src="'.$this->prev_arrow_url.'" width="80" height="80" alt="Previous image"></a></div>'."\n";
+		return $ret;
+	}
+	
+	function get_next_item_markup($item)
+	{
+		$ret = '';
+		$ret .= '<div class="nextWrapper"><div class="thumbnail">';
+		if ($next_image_markup = $this->show_image($item))
+			$ret .= $next_image_markup;
+		$ret .= '</div><a href="'.$this->construct_link($item).'" title="Next: ' . $item->get_value('description') . '"><img class="nav_arrow" src="'.$this->next_arrow_url.'" width="80" height="80" alt="Next image"></a></div>'."\n";
+		return $ret;
+	}
+	
+	function get_date_format()
+	{
+		return $this->date_format;
+	}
 	
 	function show_item_owner_site_info ( &$item )
 	{
@@ -478,12 +657,26 @@ class Gallery2Module extends Generic3Module
 		}
 	}
 	
+	function get_item_owner_site_markup( $item )
+	{
+		ob_start();
+		$this->show_item_owner_site_info ( $item );
+		return ob_get_clean();
+	}
+	
 	function show_item_categories( &$item )
 	{
 		if ($cat_array = $this->get_categories_for_image($item->id()))
 		{
 			echo '<div class="categories"><h4>Categories:</h4> ' . implode(', ',$cat_array) . '</h4></div>';
 		}
+	}
+	
+	function get_item_categories_markup( $item )
+	{
+		ob_start();
+		$this->show_item_categories( $item );
+		return ob_get_clean();
 	}
 	
 	/**
@@ -517,6 +710,13 @@ class Gallery2Module extends Generic3Module
 		
 		if(!empty($msg))
 			echo '<div class="originalSizeLink">'.$msg.'</div>'."\n";
+	}
+	
+	function get_item_original_size_link_markup( $item )
+	{
+		ob_start();
+		$this->show_item_original_size_link( $item );
+		return ob_get_clean();
 	}
 	
 	/**
@@ -622,7 +822,7 @@ class Gallery2Module extends Generic3Module
 	//called on by init()
 	function alter_es() // {{{
 	{
-		if (!$this->sorting_by_rel_sort_order)
+		if (!$this->sorting_by_rel_sort_order())
 		{
 			if ($this->params['entire_site'])
 			{
@@ -631,16 +831,21 @@ class Gallery2Module extends Generic3Module
 			else
 			{
 				$this->es->add_right_relationship( $this->parent->cur_page->id(), relationship_id_of('minisite_page_to_image') );
+				$this->es->set_site( NULL ); // we ignore limit_to_site b/c we're limiting to page
 			}
 			
 			$this->es->set_order($this->sort_order_string);
 		}
 		else
 		{
+			$this->es->set_site( NULL ); // we ignore limit_to_site b/c we're limiting to page
 			$this->es->add_right_relationship( $this->parent->cur_page->id(), relationship_id_of('minisite_page_to_image') );
 			$this->es->add_rel_sort_field( $this->parent->cur_page->id(), relationship_id_of('minisite_page_to_image'), 'rel_sort_order');
 			// order first by rel_sort_order if that is not defined second criteria is dated.datetime ASC and in case of same datetimes, lastly by entity.id- this keeps pages that change to gallery pages reasonably predictable
-			$this->es->set_order( 'rel_sort_order ASC, dated.datetime ASC, entity.id ASC' );
+			if('rel_reverse' == $this->params['sort_order'])
+				$this->es->set_order( 'rel_sort_order DESC, dated.datetime DESC, entity.id DESC' );
+			else
+				$this->es->set_order( 'rel_sort_order ASC, dated.datetime ASC, entity.id ASC' );
 		}
 		
 	} // }}}
@@ -764,6 +969,11 @@ class Gallery2Module extends Generic3Module
 		}
 	}
 	
+	function show_image_full_size($image)
+	{
+		return $this->show_image($image, false);
+	}
+	
 	/**
 	 * Makes sure the selected entity id would turn up
 	 * in the list of this entity selector.
@@ -771,7 +981,8 @@ class Gallery2Module extends Generic3Module
 	function further_checks_on_entity( $entity )
 	{
 		$es = carl_clone($this->es);
-		$es->add_relation('entity.id = '.$entity->id());
+		$id = (integer) $entity->id();
+		$es->add_relation('entity.id = "' . $id . '"');
 		$es->set_num(1);
 		$es->set_start(0);
 		$check = $es->run_one();
@@ -821,6 +1032,13 @@ class Gallery2Module extends Generic3Module
 			echo '#<em>' . $current . '</em> of <em>' . $total . '</em>'."\n";
 			echo '</div>'."\n";
 		}
+	}
+	
+	function get_sequence_number_markup($item)
+	{
+		ob_start();
+		$this->show_sequence_number( $item );
+		return ob_get_clean();
 	}
 	
 	/**

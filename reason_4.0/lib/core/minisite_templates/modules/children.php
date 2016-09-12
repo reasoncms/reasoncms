@@ -41,6 +41,8 @@
 										'blurbs_count' => 0,
 										'html5' => false,
 										'chunks' => 1,
+										'heading' => '',
+										'footer' => '',
 									);
 		var $offspring = array();
 		var $az = array();
@@ -176,6 +178,10 @@
 		
 		function run()
 		{
+			if(!empty($this->params['heading']))
+			{
+				echo '<div class="heading">'.$this->params['heading'].'</div>'."\n";
+			}
 			/* If the page has no entries, say so */
 			if( empty($this->offspring ) )
 			{
@@ -243,6 +249,10 @@
 				}
 				if($this->params['html5'])
 					echo '</nav>'."\n";
+			if(!empty($this->params['footer']))
+			{
+				echo '<div class="footer">'.$this->params['footer'].'</div>'."\n";
+			}
 			}
 		}
 		
@@ -314,7 +324,9 @@
 					}
 				}
 				if(!$this->params['html5'])
+				{
 					echo $image_markup;
+				}
 			}
 			if($this->params['description_part_of_link'])
 			{
@@ -334,7 +346,8 @@
 			}
 			else
 			{
-				echo $image_markup;
+				if($this->params['html5'])
+					echo $image_markup;
 				echo '<h4><a href="'.$link.'"'.$title_attr.'>'.$page_name.'</a></h4>';
 				if ( $child->get_value( 'description' ))
 				{

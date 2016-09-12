@@ -494,8 +494,13 @@ class xhtmlStrictReasonAVDisplay
 			$url .= '&amp;controlbar='.htmlspecialchars($this->parameters['flv']['controlbar']);
 		if(!empty($this->placard_image_url))
 			$url .= '&amp;image='.htmlspecialchars($this->placard_image_url);
-		$ret[] = '<object type="application/x-shockwave-flash" data="'.$url.'" '.$dimensions_attrs.' id="flashVideoWidget'.$entity->id().'">';
+		$objtag = '<object type="application/x-shockwave-flash" data="'.$url.'" '.$dimensions_attrs.' id="flashVideoWidget'.$entity->id().'"';
+		if('Video' == $entity->get_value('av_type'))
+			$objtag .= ' style="position:absolute;top:0;left:0;width:100%;height:100%;"';
+		$objtag .= '>';
+		$ret[] = $objtag;
 		$ret[] = '<param name="movie" value="'.$url.'" />';
+		$ret[] = '<param name="wmode" value="opaque" />';
 		if($entity->get_value('av_type') != 'Audio')
 		{
 			$ret[] = '<param name="allowfullscreen" value="true" />';
@@ -525,7 +530,13 @@ class xhtmlStrictReasonAVDisplay
 		$ret [] = $link;
 		$ret [] = '</object>';
 		
-		return implode("\n",$ret);
+		$markup = implode("\n",$ret);
+		
+		if('Video' == $entity->get_value('av_type'))
+		{
+			$markup = '<div style="width:100%;height:0;padding-bottom:'.($dimensions['height']/$dimensions['width']*100).'%;position:relative;">'.$markup.'</div>';
+		}
+		return $markup;
 	}
 	/**
 	 * Creates appropriate markup for .swf files

@@ -253,32 +253,17 @@ class AssociatorModule extends DefaultModule // {{{
 		$site = new entity($this->admin_page->site_id);
 		if(!$this->rel_type->has_right_relation_with_entity($site, relationship_id_of( 'site_cannot_edit_type' )))
 		{
-		?>
-		<table border="0" cellpadding="0" cellspacing="0"><tr><td>
-		<div class="addLink">
-		  <div class="roundedTop">
-					<img src="<?php echo REASON_ADMIN_IMAGES_DIRECTORY; ?>nw.gif" alt="" class="roundedCorner" />
-				</div>
-				
-			<div class="roundedContent"> 
-			<?php
-					$type_name = $this->rel_type->get_value( 'name' );
-					$new_vars = $this->get_second_level_vars();
-					echo '<a href="'.$this->admin_page->make_link( $new_vars ).'">Add '.$type_name.'</a>';
-			  ?>
-			  </div>
-				<div class="roundedBottom">
-					<img src="<?php echo REASON_ADMIN_IMAGES_DIRECTORY; ?>sw.gif" alt="" class="roundedCorner" />
-				</div>
-			</div>
-		</td></tr></table>
-		<?php
+			echo '<div class="addLink">'."\n";
+			$type_name = $this->rel_type->get_value( 'name' );
+			$new_vars = $this->get_second_level_vars();
+			echo '<a href="'.$this->admin_page->make_link( $new_vars ).'">Add '.$type_name.'</a>';
+			echo '</div>'."\n";
 		
 		}
 	} // }}}
 	function do_sharing_link() // {{{
 	{
-		echo '<table border="0" cellpadding="0" cellspacing="0">'."\n\t".'<tr>'."\n\t\t".'<td>'."\n".'<div class="viewFilter">'."\n\t\t\t".'<div class="roundedTop">'."\n\t".'<img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'nw.gif" alt="" class="roundedCorner" />'."\n".'</div>'."\n".'<div class="roundedContent">';
+		echo '<div class="viewFilter">'."\n";
 		$type_name = $this->rel_type->get_value( 'name' );
 		if( $this->admin_page->cur_module == 'Associator' )
 		{
@@ -291,15 +276,14 @@ class AssociatorModule extends DefaultModule // {{{
 		{
 			echo '<a href="'.$this->admin_page->make_link( array( 'cur_module' => 'Cancel' ) ).'">Back to Selecting '.$type_name.'.</a><br />';
 		}
-		echo '</div>'."\n".'<div class="roundedBottom">'."\n".'<img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'sw.gif" alt="" class="roundedCorner" />'."\n".'</div>'."\n".'</div>'."\n".'</td>'."\n".'</tr>'."\n".'</table>'."\n";
+		echo '</div>'."\n";
 	} // }}}
 	
 	function get_selected_jump_link()
 	{
 		if ($this->show_jump_links())
 		{
-			/*return '<a id="itemsSelect" name="itemsSelect" /a><div class="jumpLinkTop"><div class="roundedTop"><img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'trans.gif" alt="" class="roundedCorner" /></div><div class="roundedContent"><p><span class="jumpToSelect"><a class="jump" href="#itemsSelected">Top</a></span></p></div><div class="roundedBottom"><img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'trans.gif" alt="" class="roundedCorner" /></div></div><br />';*/
-			return '<a id="itemsSelect" name="itemsSelect" /a><div class="jumpLinkTop">'."\n\t\t\t".'<div class="roundedTop">'."\n\t".'<img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'nw.gif" alt="" class="roundedCorner" />'."\n".'</div>'."\n".'<div class="roundedContent"><span class="jumpToSelected"><a class="jump" href="#itemsSelected">Top</a></span></div>'."\n".'<div class="roundedBottom">'."\n".'<img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'sw.gif" alt="" class="roundedCorner" />'."\n".'</div>'."\n".'</div>'."\n";
+			return '<a id="itemsSelect" name="itemsSelect" /></a><div class="jumpLinkTop"><span class="jumpToSelected"><a class="jump" href="#itemsSelected">Top</a></span></div>'."\n";
 		}
 		return '';
 	}
@@ -310,8 +294,7 @@ class AssociatorModule extends DefaultModule // {{{
 		{
 			$verb = ($this->admin_page->cur_module == 'Sharing') ? 'Borrow' : 'Select';
 			$noun = $this->rel_type->get_value('plural_name');
-			/*return '<a id="itemsSelected" name="itemsSelected" /a><div class="jumpLinkFind"><div class="roundedTop"><img src="<?php echo REASON_ADMIN_IMAGES_DIRECTORY; ?>nw.gif" alt="" class="roundedCorner" /></div><div class="roundedContent"><p><span class="jumpToSelected"><a class="jump" href="#itemsSelect">Find and '.$verb.' '.$noun.'</a></span></p></div><div class="roundedBottom"><img src="<?php echo REASON_ADMIN_IMAGES_DIRECTORY; ?>sw.gif" alt="" class="roundedCorner" /></div></div>';*/
-			return '<a id="itemsSelected" name="itemsSelected" /a><div class="jumpLinkFind">'."\n\t\t\t".'<div class="roundedTop">'."\n\t".'<img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'nw.gif" alt="" class="roundedCorner" />'."\n".'</div>'."\n".'<div class="roundedContent"><span class="jumpToSelected"><a class="jump" href="#itemsSelect">Find and '.$verb.' '.$noun.'</a></span></div>'."\n".'<div class="roundedBottom">'."\n".'<img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'sw.gif" alt="" class="roundedCorner" />'."\n".'</div>'."\n".'</div>'."\n";
+			return '<a id="itemsSelected" name="itemsSelected" /></a><div class="jumpLinkFind"><span class="jumpToSelected"><a class="jump" href="#itemsSelect">Find and '.$verb.' '.$noun.'</a></span></div>'."\n";
 		}
 		return '';
 	}
@@ -345,6 +328,8 @@ class AssociatorModule extends DefaultModule // {{{
 			echo '<p>There is a problem with the link to this page. Please try to get to this page in another way.</p>';
 			return;
 		}
+		
+		echo '<div class="associatorModule">';
 		if( !empty ($this->admin_page->request[ 'error_message' ]) )
 		{
 			$e_mess = array( 1 => 'This is a required relationship, You must first choose an item of this type to go with your entity',
@@ -362,33 +347,27 @@ class AssociatorModule extends DefaultModule // {{{
 		}
 		$colspan = count( $this->viewer->columns ) + 1;
 		
-		echo '<table border="0"><tr><td>';
-		
 		// use plural type name
 		echo $this->get_select_jump_link();
 		$this->viewer->show_associated_items();
-		echo '</td></tr>'."\n";
 		if($this->_locked)
 		{
-			echo '</table>'."\n";
+			echo '</div>'."\n";
 			return;
 		}
 		
-		echo '<tr><td>&nbsp;';
-		echo '</td></tr>';
-		echo '<tr><td>';
 		echo $this->get_selected_jump_link();
-		echo '</td></tr><tr><td class="assocHead" colspan="'. $colspan .'">';
-		echo '&nbsp;&nbsp;Not Selected<br /><br /></td></tr><tr><td colspan="'.$colspan.'"><table><tr>';
+		echo '<div class="assocHead">Not Selected</div>'."\n";
+		echo '<div class="assocFilters">';
 		$list_mod = new ListerModule($this->admin_page);
 		$list_mod->filter =& $this->filter;
 		$list_mod->show_filters();
-		echo '</tr></table></td></tr>';
+		echo '</div>';
 		if( empty( $this->admin_page->request[ CM_VAR_PREFIX.'type_id' ] ) && $this->admin_page->cur_module == 'Associator' && reason_user_has_privs($this->admin_page->user_id, 'add') )
 		{
-			echo '<tr><td>';
+			echo '<div class="assocAdd">';
 			$this->do_add_link();
-			echo '</td></tr>'."\n";
+			echo '</div>'."\n";
 		}
 		
 		$assoc_ok = !$this->admin_page->is_second_level() && $this->admin_page->cur_module == 'Associator' && $this->some_site_shares_type();
@@ -396,14 +375,15 @@ class AssociatorModule extends DefaultModule // {{{
 		
 		if( reason_user_has_privs($this->admin_page->user_id, 'borrow') && ( $assoc_ok || $sharing_ok ) )
 		{
-		echo '<tr><td>';
+		echo '<div class="assocSharing">';
 		$this->do_sharing_link();
-		echo '</td></tr>'."\n";
+		echo '</div>'."\n";
 		}
-		echo '<tr><td>';
+		echo '<div class="assocList">';
 		$this->viewer->do_display();
-		echo '</td></tr>'."\n";
-		echo '</table>'."\n";
+		echo '</div>'."\n";
+		
+		echo '</div>'."\n"; //associatorModule
 	} // }}}
 } // }}}	
 ?>

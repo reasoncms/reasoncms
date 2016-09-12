@@ -52,6 +52,14 @@
 		 */
 		var $_relationship_elements = array();
 		
+		/**
+		 * Stores the list of database fields used by the entity. Populated in load_by_type(), this list is
+		 * used by process() to determine what should run through tidy.
+		 * 
+		 * @var array
+		 */
+		var $_entity_fields = array();
+		
 		var $strip_tags_from_user_input = true;
 		var $allowable_HTML_tags = REASON_DEFAULT_ALLOWED_TAGS;
 		
@@ -106,6 +114,7 @@
 					// hook for plasmature arguments here
 				
 					$this->add_element( $field->get_value('name'), $type, $args,$field->get_value( 'db_type' ) );
+					$this->_entity_fields[$field->get_value('name')] = $field->get_value( 'db_type' );
 				}
 			}
 
@@ -126,7 +135,7 @@
 				$this->change_element_type( 'unique_name','solidText' );
 		} // }}}
 		function process() // {{{
-		{
+		{			
 			// ignoring last_edited_by avoids the problem of updating entities by just viewing them.
 			// i believe entities will only be updated when some of the actual CONTENT of the entity is changed.
 			// phew.
@@ -141,12 +150,12 @@
 				if( !in_array( $element_name, $this->_process_ignore ) )
 					$values[ $element_name ] = $this->get_value($element_name);
 			}
-			/*foreach( $this->_elements AS $key => $element )
-				if( !in_array( $key, $this->_process_ignore ) )
-					$values[ $key ] = $element->get(); */
+
+			// tidy any values that are actually being written to the database and aren't
+			// in the _no_tidy list.
 			foreach( $values AS $key => $el )
 			{
-				if( !in_array( $key, $this->_no_tidy ) )
+				if( isset($this->_entity_fields[$key]) && !in_array( $key, $this->_no_tidy ) )
 				{
 					$values[ $key ] = tidy( $el );
 				}

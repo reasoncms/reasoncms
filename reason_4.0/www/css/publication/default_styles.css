@@ -56,7 +56,27 @@ div.publication div.fullPost div.addCommentForm table#discoTable #commentcontent
 div.publication div.fullPost div.addCommentForm #disco_form, div.publication div.fullPost div.addCommentForm #disco_form div.formElement {
 	margin-bottom:1em;
 }
-
+div.publication span.embed {
+	display:block;
+	max-width:100%;
+}
+div.publication span.embed.floatLeft {
+	float:left;
+	clear:left;
+	margin:0 1.5em .75em 0;
+}
+div.publication span.embed.floatRight {
+	float:right;
+	clear:right;
+	margin:0 0 .75em 1.5em;
+}
+div.publication .embed .embedCaption, div.publication .embed .embedAuthor {
+	display:block;
+	font-size:.84em;
+}
+div.publication .embed .embedAuthor {
+	opacity:.67;
+}
 div.publication div.fullPost div.primaryContent {
 	width:70%;
 	float:left;
@@ -195,6 +215,15 @@ div.publication div.fullPost div.social img {
 	margin: 0 .2em;
 	height: auto;
 	vertical-align: middle;
+}
+div.publication div.emailSharer #disco_form {
+	margin-bottom:1em;
+}
+div.publication div.emailSharer #disco_form div.formElement {
+	margin:1em 0;
+}
+div.publication div.emailSharer #disco_form input, div.publication div.emailSharer #disco_form textarea {
+	max-width:98%;
 }
 
 /* lets hide the "List All Issues" link */

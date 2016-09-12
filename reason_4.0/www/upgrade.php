@@ -38,6 +38,8 @@ if(!reason_user_has_privs( $reason_user_id, 'upgrade' ) )
 }
 
 $upgrade_steps = array(
+	'4.7_to_4.8' => 'Reason 4.7 to 4.8',
+	'4.6_to_4.7' => 'Reason 4.6 to 4.7',
 	'4.5_to_4.6' => 'Reason 4.5 to 4.6',
 	'4.4_to_4.5' => 'Reason 4.4 to 4.5',
 	'4.3_to_4.4' => 'Reason 4.3 to 4.4',
@@ -133,13 +135,13 @@ if(!empty($_GET['upgrade_step']) && isset($upgrade_steps[$_GET['upgrade_step']])
 }
 else
 {
-	$str = '<p>Each new version of Reason CMS includes a set of scripts that you should ';
+	$str = '<p>Each new version of Reason includes a set of scripts that you should ';
 	$str .= 'run to update your database to work with the latest version of the Reason code base. ';
 	$str .= 'The scripts are designed to be used from one release to the next; you cannot necessarily update ';
-	$str .= 'a Reason CMS database across multiple steps after downloading the most current code base.</p>';
-	$str .= '<p>If you have trouble upgrading and you are using an old version of Reason CMS, try downloading ';
+	$str .= 'a Reason database across multiple steps after downloading the most current code base.</p>';
+	$str .= '<p>If you have trouble upgrading and you are using an old version of Reason, try downloading ';
 	$str .= 'the point release after the one you are currently using and upgrade incrementally.</p>';
-	$str .= '<p><a href="http://reasoncms.org/get-started/download/">Reason CMS download page</a></p>';
+	$str .= '<p><a href="http://apps.carleton.edu/opensource/reason/download/">Reason download page</a></p>';
 	$str .= '<h2>Reason Upgrade Scripts</h2>';
 	$str .= '<ul>';
 	foreach($upgrade_steps as $k => $v)

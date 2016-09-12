@@ -24,7 +24,6 @@ include_once( CARL_UTIL_INC . 'db/db.php' );
  * 
  * A singleton instance of SQLER is stored in $GLOBALS['sqler'] to reduce the need to constantly reinstantiate this class
  * 
- * @todo unify with db_query class so we aren't using mysql_query directly there and there.
  *
  * @author dave hendler
  */
@@ -68,18 +67,7 @@ include_once( CARL_UTIL_INC . 'db/db.php' );
 			if ($this->mode == 'get_query') return $q;
 			else
 			{
-				if(mysql_query( $q ))
-				{
-					return true;
-				}
-				else
-				{
-					$error_level = $die_on_error ? EMERGENCY : WARNING;
-					if($die_on_error)
-						echo 'foo';
-					trigger_error( 'sqler.php :: Unable to insert data into '.$table.'; error message: "'.mysql_error().'" :: query: '.$q, $error_level );
-					return false;
-				}
+				return (boolean) db_query( $q, 'Unable to insert data into '.$table, $die_on_error );
 			}
 		}
 		// }}}
@@ -108,16 +96,7 @@ include_once( CARL_UTIL_INC . 'db/db.php' );
 			if ($this->mode == 'get_query') return $q;
 			else 
 			{
-				if(mysql_query( $q ))
-				{
-					return true;
-				}
-				else
-				{
-					trigger_error( 'sqler.php :: Unable to update '.$table.' :: Error: '.mysql_error().' :: '.$q, EMERGENCY );
-					// if the error level above is EMERGENCY, this script will likely die, but this line is there in case it is not set to die
-					return false;
-				}
+				return (boolean) db_query( $q, 'Unable to update data in '.$table );
 			}
 		}
 		// }}}
@@ -137,16 +116,7 @@ include_once( CARL_UTIL_INC . 'db/db.php' );
 			if ($this->mode == 'get_query') return $q;
 			else 
 			{
-				if(mysql_query( $q ))
-				{
-					return true;
-				}
-				else
-				{
-					trigger_error( 'sqler.php :: Unable to delete from '.$table.' :: '.$q, EMERGENCY );
-					// if the error level above is EMERGENCY, this script will likely die, but this line is there in case it is not set to die
-					return false;
-				}
+				return (boolean) db_query( $q, 'Unable to delete data from '.$table );
 			}
 		}
 		// }}}

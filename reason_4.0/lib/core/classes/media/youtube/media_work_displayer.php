@@ -290,6 +290,7 @@ class YoutubeMediaWorkDisplayer implements MediaWorkDisplayerInterface
 	{		
 		if (isset($this->media_work))
 		{
+			$markup = '';
 			if ( !empty($this->height) )
 			{
 				$iframe_height = $this->_get_height();
@@ -304,7 +305,8 @@ class YoutubeMediaWorkDisplayer implements MediaWorkDisplayerInterface
 			else 
 				$iframe_width = $this->_get_width_from_height();
 			
-			$markup = '<iframe class="media_work_iframe" width="'.intval($iframe_width).'" height="'.intval($iframe_height).'" ';
+			$markup .= '<div style="width:100%;height:0;padding-bottom:'.($iframe_height/$iframe_width*100).'%;position:relative;">';
+			$markup .= '<iframe class="media_work_iframe" width="'.intval($iframe_width).'" height="'.intval($iframe_height).'" ';
 			
 			$src = 'https://www.youtube.com/embed/'.$this->media_work->get_value('entry_id');
 			
@@ -319,8 +321,9 @@ class YoutubeMediaWorkDisplayer implements MediaWorkDisplayerInterface
 			}
 			
 			$markup .= 'src="'.$src.'" ';
-			$markup .= 'frameborder="0" allowfullscreen>';
+			$markup .= 'frameborder="0" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;">';
 			$markup .= '</iframe>'."\n";
+			$markup .= '</div>';
 			
 			return $markup;
 		}

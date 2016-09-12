@@ -42,7 +42,13 @@
 			if(!empty($this->admin_page->request['entity_id_test']))
 			{
 				$id = $this->admin_page->request['entity_id_test'];
-				settype($id, 'integer');
+
+				if (! is_numeric($id)) {
+					echo "Converting unique name <b>$id</b> to ";
+					$id = id_of($id);
+					echo "<b>$id</b>...<hr>";
+				}
+				// settype($id, 'integer');
 			}
 			if(empty($id))
 			{

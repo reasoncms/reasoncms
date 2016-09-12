@@ -130,7 +130,7 @@ $(window).load(function()
 	 		my_html += "<li>logout_time: " + get_logout_time() + "</li>";
 	 		my_html += "<li>warning_time: " + get_warning_time() + "</li>";
 	 		my_html += "</ul>";
-	 		if (document.cookie) my_html += "<p>" + document.cookie + "</p>";
+	 		// if (document.cookie) my_html += "<p>" + document.cookie + "</p>";
 	 		$(this).html(my_html);
 	 	});
 	}

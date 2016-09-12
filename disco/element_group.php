@@ -295,7 +295,7 @@
 			
 			foreach ($order as $element_name => $element)
 			{
-				$markup_string .= '<span class="inlineElement">'.$this->get_individual_element_display($element_name).'</span>';
+				$markup_string .= '<span id="'.str_replace('_', '', $element_name).'" class="inlineElement">'.$this->get_individual_element_display($element_name).'</span>';
 			}
 			return $markup_string;
 		}
@@ -305,8 +305,9 @@
 			$markup_string = '';
 			$element = $this->elements[$element_name];
 			$markup_string .= $this->additional_element_info[$element_name]['anchor'];
-			if($this->use_element_labels)
+			if($this->use_element_labels && $element->is_labeled())
 				$markup_string .=  $this->get_element_name($element);
+			$markup_string .= $element->get_comments('before');
 			$markup_string .= $element->get_display();
 			$markup_string .= $element->get_comments();
 			return $markup_string;
@@ -331,7 +332,10 @@
 			
 			foreach ($order as $element_name => $element)
 			{
-				$markup_string .= '<div class="stackedElement">'.$this->get_individual_element_display($element_name).'</div>';
+				//if (!$element->is_hidden())
+					$markup_string .= '<div id="'.str_replace('_', '', $element_name).'" class="stackedElement">'.$this->get_individual_element_display($element_name).'</div>'."\n";
+				//else
+				//	$markup_string .= $element->get_display()."\n";
 			}
 			return $markup_string;
 		}
@@ -341,11 +345,12 @@
 			$markup_string = '';
 			$element = $this->elements[$element_name];
 			$markup_string .= $this->additional_element_info[$element_name]['anchor'];
-			if($this->use_element_labels)
-				$markup_string .=  $this->get_element_name($element);
-			$markup_string .= $element->get_display();
-			$markup_string .= $element->get_comments();
-			return $markup_string;
+			if($this->use_element_labels && $element->is_labeled())
+				$markup_string .=  '<label for="'.$element_name.'">'.$this->get_element_name($element).'</label>'."\n";
+			$markup_string .= $element->get_comments('before')."\n";
+			$markup_string .= $element->get_display()."\n";
+			$markup_string .= $element->get_comments()."\n";
+			return $markup_string."\n";
 		}
 	}
 	/**
@@ -518,7 +523,8 @@
 					$name = $this->columns[$column];
 				else
 					$name = prettify_string($column);
-				$markup_string .='<th>'.$name.'</th>';
+				$class = strtolower(preg_replace('/[^\w]/','', $column)).'Col';
+				$markup_string .='<th class="'.$class.'">'.$name.'</th>';
 			}
 			$markup_string .='</tr></thead>'."\n";
 			return $markup_string;
@@ -533,17 +539,19 @@
 				$markup_string .= '<tr>'."\n";
 				//display row name, if applicable
 				if($this->row_labels_exist())
-					$markup_string .= '<th>'.$this->rows[$row].'</th>'."\n";
+					$markup_string .= '<th class="rowLabel">'.$this->rows[$row].'</th>'."\n";
 				foreach($column_array as $column => $element_name)
 				{
 					$element = $this->elements[$element_name];
 					
 					if(!empty($element))
 					{
-						$markup_string .= '<td>'."\n";
+						$class = strtolower(preg_replace('/[^\w]/','', $column)).'Col';
+						$markup_string .= '<td class="'.$class.'">'."\n";
 						$markup_string .= $this->additional_element_info[$element_name]['anchor']."\n";
 						if($this->use_element_labels)
 							$markup_string .= $this->get_element_name($element);
+						$markup_string .= $element->get_comments('before')."\n";
 						$markup_string .= $element->get_display()."\n";
 						$markup_string .= $element->get_comments()."\n";
 						$markup_string .= '</td>'."\n";			

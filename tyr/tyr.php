@@ -65,8 +65,9 @@ class Tyr
 		// Copy deprecated fields into corresponding fields in $this->_messages
 		if ( !empty($_REQUEST['MAILTO']) )
 		{
+			$to = (empty($_REQUEST['CCTO'])) ? $_REQUEST['MAILTO'] : $_REQUEST['MAILTO'] . "," . $_REQUEST['CCTO'];
 			$this->_messages[uniqid('deprecated_mailto_')] =
-				 Array( 'to' => $_REQUEST['MAILTO'] . "," . $_REQUEST['CCTO'],
+				 Array( 'to' => $to,
 						'from' => $_REQUEST['02_Email'],
 						'subject' => $_REQUEST['FORMNAME'] );
 		}
@@ -324,6 +325,8 @@ class Tyr
 	
 	function make_html_table($values, $hide_empty_values)
 	{
+		if (empty($values)) return;
+	
 		$message = "<table border='0' cellspacing='0' cellpadding='7'>\n";
 
 		foreach ( $values as $key => $value )
@@ -352,7 +355,8 @@ class Tyr
 				$value = $new_value;
 			}
 			
-			$value = htmlspecialchars( $value, ENT_COMPAT, 'UTF-8' );
+			// todo: change ENT_IGNORE to ENT_SUBSTITUTE when at PHP 5.4+
+			$value = htmlspecialchars( $value, ENT_COMPAT | ENT_IGNORE, 'UTF-8' );
 				
 			$show_item = true;
 			

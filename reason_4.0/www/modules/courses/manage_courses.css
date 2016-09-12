@@ -1,74 +1,131 @@
 
 div#courseNavigation {
-	position: absolute;
-	background-color: #231D5E;
-	top: 49px;
-	left: 0px;
-	width: 100%;
-	border-top: 1px solid #fff;
-	padding: 3px;
-	font-size: 0.85em;
+    font-size: 1.2em;
+    font-weight: bold;
+    padding-top: 0.75em;
 }
 
 header#banner, div#preBanner, div.pageTitle {
-	display: none;	
+	display: none;
+}
+
+h3 {
+	font-size: 1.2em;
 }
 
 ul.courseListActive, ul.courseListInactive {
-	list-style: none;	
+	list-style: none;
+	padding-left: 0;
 }
 
 ul.courseListInactive {
-	color: #999;	
+	color: #999;
 }
 
 #wrapper ul.courseListInactive a {
-	color: #5c8ab5;	
+	color: #5c8ab5;
 }
 
+li.courseListRow {
+	padding-left: 2em;
+}
+
+li.courseListRow span.courseNumber {
+	display: inline-block;
+	width: 5.5em;
+}
 
 li.courseListRow a {
-	display: inline-block;
-	width: 5.5em;	
+	text-decoration: none;
 }
+
+li.courseListRow a:hover {
+	text-decoration: underline;
+}
+
+span.courseListTerm {
+	color: #999;
+	font-size: 0.8em;
+	padding-left: 0.5em;
+}
+
+span.termHighlight {
+	color: #777;
+	font-weight: bold;
+}
+
+#wrapper ul.courseListInactive a.activateCourse, #wrapper ul.courseListActive a.deactivateCourse {
+   border-radius: 50%;
+   color: white;
+   display: none;
+   height: 1.5em;
+   left: 2em;
+   padding: 0 0.4em;
+   position: absolute;
+   text-align: center;
+   width: 1.4em;
+}
+
+a.activateCourse {
+	background-color: #7ADDA8;
+}
+
+a.deactivateCourse {
+	background-color: #dd7575;
+}
+
+#wrapper ul.courseListInactive a.showControl, #wrapper ul.courseListActive a.showControl {
+	display: inline-block;
+}
+
+li.courseListRow a.activateCourse:hover, li.courseListRow a.deactivateCourse:hover {
+	text-decoration: none;
+}
+
 
 
 div.contentPost div#discoLinear > div {
 	max-width: 45%;
 }
 
-div.contentPost span.labelText {
+div.contentPost span.labelText, div.contentPost p.comment {
 	font-size: 0.85em;
-	color: #666;	
+	color: #666;
 }
 
-div#subjectItem, div#coursenumberItem {
-	display: inline-block;	
+div#subjectItem, div#coursenumberItem, div#requirementsItem, div#gradingItem, div#creditsItem {
+	display: inline-block;
 }
 
-div#sectionsItem, div#courseinfoItem, div#requirementsItem  {
+div#requirementsItem, div#gradingItem, div#creditsItem {
+	margin-right: 3em;
+}
+
+
+div#sectionsItem {
 	width: 45%;
 	float: right;
-	clear: right;
+	font-size: 0.85em;
+	line-height: 1.2;
 }
 
 ul#courseInfo {
 	list-style: none;
-	padding: 0;	
+	padding: 0;
 	font-size: 0.85em;
-	color: #666;	
+	color: #666;
 }
 
 body#tinymce {
-	font-size: 0.95em;	
+	font-size: 0.95em;
 }
 
 div.contentPost div.mce-container {
-	width: 45em;	
+	width: 45em;
 }
 
 div.contentPost input#titleElement {
-	width: 36.75em;	
+	width: 36.75em;
 }
 
 div.contentPost div#prerequisitesItem textarea {

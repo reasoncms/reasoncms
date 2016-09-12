@@ -7,12 +7,10 @@
  	 * Include parent class
  	 */
 	reason_include_once( 'minisite_templates/modules/default.php' );
-
 	/**
  	 * Register module with Reason
  	 */
 	$GLOBALS[ '_module_class_names' ][ 'magpie/' . basename( __FILE__, '.php' ) ] = 'Magpie_Feed_Display';
-
 	/**
 	 * A minisite module that will display the contents of an RSS feed
 	 */
@@ -35,6 +33,7 @@
 		);
 		var $feed_location;
 		var $is_remote;
+		var $options;
 		function init( $args = array() )
 		{
 			parent::init( $args );
@@ -49,17 +48,14 @@
 				$this->feed_location = $this->params['feed_location'];
 				$this->is_remote = $this->params['is_remote'];
 			}
-
             if(!empty($this->params['display_timestamp']))
             {
                 $this->display_timestamp = $this->params['display_timestamp'];
             }
-            
             if(!empty($this->params['show_entries_lacking_description']))
             {
                 $this->_show_entries_lacking_description = $this->params['show_entries_lacking_description'];
             }
-
             if(!empty($this->params['disable_cache']))
             {
                 $this->disable_cache = $this->params['disable_cache'] ;
@@ -79,6 +75,12 @@
 				{
 					$url = current($urls);
 					$cache[$this->parent->cur_page->id()] = $url->get_value('url');
+					$entOptions = [];
+					$availOptions = ['num_posts','field_title','field_words','future_posts'];
+					foreach($availOptions as $option){
+						$entOptions[$option] = $url->get_value($option);
+					}
+					$this->options = $entOptions;
 				}
 				else
 				{
@@ -101,13 +103,12 @@
 		}
 		function run()
 		{
-
         reason_include_once( 'minisite_templates/modules/magpie/reason_rss.php' );
-
 		$rfd = new reasonFeedDisplay();
 		$rfd->set_location($this->feed_location, $this->is_remote);
 		$rfd->set_page_query_string_key('view_page');
 		$rfd->set_search_query_string_key('search');
+		$rfd->set_options($this->options);
 		if(!empty($this->request['view_page']))
 		{
 			$rfd->set_page($this->request['view_page']);
@@ -144,14 +145,11 @@
 		{
 			$rfd->set_title($this->params['title']);
 		}
-
         if(isset($this->disable_cache))
         {
             $rfd->set_cache_disable($this->disable_cache);
         }
-
         echo $rfd->display_feed("feed");
-
 		}
 	}
 ?>

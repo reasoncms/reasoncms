@@ -57,7 +57,7 @@ class monthType extends selectType
 			$key = ($this->pad_keys) ? sprintf('%02s', $month) : $month;
 			/* Note the use of mktime instead of carl_mktime. This is to avoid a strict notice in php 5 regarding is_dst, and
 			should not cause any problems as we are fixing the year inside the Unix era */
-			$this->options[ $key ] = carl_date($this->date_format,mktime(0,0,0,$month,1,1970));
+			$this->options[ $key ] = carl_date($this->date_format,mktime(0,0,0,$month,1,1971));
 		}
 	}
 }
@@ -440,7 +440,7 @@ class textDateTimeType extends textType
 	function get_hour_display($hour_val = '')
 	{
 		return $this->_get_display('hour', $hour_val, 'HH',
-		    '&nbsp;&nbsp; at ');
+		    '<span class="datetimeAt">&nbsp;&nbsp; at ');
 	}
 	function get_minute_display($minute_val = '')
 	{
@@ -456,7 +456,7 @@ class textDateTimeType extends textType
 		$str .= '<select id="'.$this->name.'ampmElement" name="'.$this->name.'[ampm]">';
 		$str .= '<option value="am"'.($ampm_val == 'am' ? ' selected="selected"': '').'>AM</option>';
 		$str .= '<option value="pm"'.($ampm_val == 'pm' ? ' selected="selected"': '').'>PM</option>';
-		$str .= '</select>';
+		$str .= '</select></span>';
 		return $str;
 	}
 	function get_cleanup_rules()

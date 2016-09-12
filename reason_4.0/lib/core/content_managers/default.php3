@@ -14,7 +14,7 @@
  	 * this line is important - make sure any content handlers have this variable set in their include files!!!!
 	 */
 	$GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'ContentManager';
-	
+
 	/**
 	 * Necessary Includes
 	 */
@@ -52,6 +52,8 @@
 		
 		var $_locked_fields = array();
 		var $_lock_indicated_fields = array();
+
+		var $box_class = 'StackedBox';
 
 		function init( $externally_set_up = false)
 		{
@@ -117,7 +119,7 @@
 			{
 				$this->entity = new entity( $id, false );
 				$this->entity->get_values();
-				$this->entity->get_relationships();
+				//$this->entity->get_relationships();
 			}
 			
 			

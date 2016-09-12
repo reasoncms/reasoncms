@@ -397,33 +397,17 @@ class YoutubeMediaWorkContentManagerModifier implements MediaWorkContentManagerM
 				}
 				else
 				{
-					$this->manager->set_error('youtube_url', 'Invalid YouTube url');
+					$this->manager->set_error('youtube_url', 'Invalid YouTube url 1');
 				}
 				return;
 			}
 	
 			if ($valid_url)
 			{	
-				// parse out the video id from the url and save it
-				// this regular expression is borrowed from: http://stackoverflow.com/questions/3452546/javascript-regex-how-to-get-youtube-video-id-from-url
-				$regexp = '/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/';
-				preg_match($regexp, $url, $matches);
-				if (count($matches) >= 3)
-				{
-					$video_key = $matches[2];
-					if (strlen($video_key) != 11) 
-					{
-						$this->manager->set_error('youtube_url', 'Invalid video key detected.');
-					}
-					else
-					{
-						$this->manager->set_value('entry_id', $video_key);
-					}
-				}
+				if($video_key = $this->_youtube_id_from_url($url))
+					$this->manager->set_value('entry_id', $video_key);
 				else
-				{
-					$this->manager->set_error('youtube_url', 'Invalid YouTube url');
-				}
+					$this->manager->set_error('youtube_url', 'Invalid YouTube url.');
 			}
 			else
 			{
@@ -458,5 +442,24 @@ class YoutubeMediaWorkContentManagerModifier implements MediaWorkContentManagerM
 	{
 		return $this->_check_valid_url('http://www.youtube.com/watch?v='.$key);
 	}
+	/**
+	 * Parse out the video id from the url
+	 *
+	 * Note that this function requires an 11-character youtube ID. If youtube ever starts
+	 * using more chars this method will need to be updated.
+	 *
+	 * @param string $url
+	 * @return mixed string youtube id or NULL if none found
+	 */
+	function _youtube_id_from_url($url)
+	{
+		$regexp = '/^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*/';
+		$match_num = 1;
+		if (preg_match($regexp, $url, $match))
+		{
+			if(strlen($match[$match_num]) == 11)
+				return $match[$match_num];
+		}
+		return NULL;
+	}
 }
-?>

@@ -10,36 +10,74 @@
 require_once PLASMATURE_TYPES_INC."default.php";
 
 /**
+ * Base class for all types that deal with plain text values.
+ * @package disco
+ * @subpackage plasmature
+ */
+class defaultTextType extends defaultType
+{
+	/**
+	 * Returns the value of this plasmature element.
+	 * This version forces the value into text, which is what's always expected
+	 * @return string The value of this element.
+	 */
+	function get()
+	{
+		return strval(parent::get());
+	}
+
+	/**
+	 * Finds the value of this element from userland (in {@link _request}) and returns it
+	 * This version forces the value into text, which is what's always expected
+	 * @return string if available, otherwise NULL if no value from userland
+	 */
+	function grab_value()
+	{
+		$val = parent::grab_value();
+		return ($val !== NULL) ? strval($val) : null;
+	}
+}
+
+/**
  * Single-line text input.
  * @package disco
  * @subpackage plasmature
  */
-class textType extends defaultType
+class textType extends defaultTextType
 {
 	var $type = 'text';
 	/**
 	 * The size (in characters) of the input element.
 	 * @var int
 	 */
-	
+
 	var $size = 50;
-	
+
 	/**
 	 * The maximum length (in characters) of the input value.
 	 * Note that this check only occurs on the client side.
 	 * @var int
 	 */
 	var $maxlength = 256;
-	
+
+	/**
+	 * Hint for user about what should go in the field
+	 * @var string
+	 */
+	var $placeholder;
+
 	/** @access private */
-	var $type_valid_args = array( 'size', 'maxlength' );
-	
+	var $type_valid_args = array( 'size', 'maxlength', 'placeholder' );
+
 	function get_display()
 	{
-		return '<input type="text" name="'.$this->name.'" value="'.str_replace('"', '&quot;', $this->get()).'" size="'.$this->size.'" maxlength="'.$this->maxlength.'" id="'.$this->get_id().'" class="text" />';
+		$display = '<input type="text" name="'.$this->name.'" value="'.str_replace('"', '&quot;', $this->get()).'" size="'.$this->size.'" maxlength="'.$this->maxlength.'" id="'.$this->get_id().'" aria-label="'.$this->display_name.'" class="text" ';
+		if (!empty($this->placeholder)) $display .= 'placeholder="'.$this->placeholder.'"';
+		$display .= '/>';
+		return $display;
 	}
 }
-	
+
 /**
  * @package disco
  * @subpackage plasmature
@@ -56,20 +94,24 @@ class text_no_labelType extends textType // {{{
  * @package disco
  * @subpackage plasmature
  */
-class solidtextType extends defaultType
+class solidtextType extends defaultTextType
 {
 	var $type = 'solidtext';
-	
+	var $userland_changeable = false;
+
+	/** @access private */
+	var $type_valid_args = array( 'userland_changeable');
+
 	function grab()
 	{
 		$value = $this->grab_value();
-		if($value !== NULL && $value != $this->get() && preg_replace('/\s+/','',$value) != preg_replace('/\s+/','',$this->get()))
+		if(!$this->userland_changeable && $value !== NULL && $value != $this->get() && preg_replace('/\s+/','',$value) != preg_replace('/\s+/','',$this->get()))
 		{
 			trigger_error('solidText element ('.$this->name.') value changed in userland. This is deprecated (insecure) behavior and will not be allowed in future releases.');
 		}
 		parent::grab();
 	}
-	
+
 	function get_display()
 	{
 		$str  = '<input type="hidden" name="'.$this->name.'" id="'.$this->get_id().'" value="'.htmlspecialchars($this->get(),ENT_QUOTES).'"/>';
@@ -84,7 +126,7 @@ class solidtextType extends defaultType
  * @package disco
  * @subpackage plasmature
  */
-class plainTextType extends defaultType
+class plainTextType extends defaultTextType
 {
 	var $type = 'plainText';
 	function grab()
@@ -134,15 +176,18 @@ class disabledTextType extends textType
  * @package disco
  * @subpackage plasmature
  */
-class passwordType extends defaultType
+class passwordType extends defaultTextType
 {
 	var $type = 'password';
 	var $size = 20;
 	var $maxlength = 256;
-	var $type_valid_args = array( 'size', 'maxlength' );
+	var $type_valid_args = array( 'size', 'maxlength', 'placeholder' );
 	function get_display()
 	{
-		return '<input type="password" name="'.$this->name.'" id="'.$this->get_id().'" value="'.htmlspecialchars($this->get(),ENT_QUOTES).'" size="'.$this->size.'" maxlength="'.$this->maxlength.'" />';
+		$display = '<input type="password" name="'.$this->name.'" id="'.$this->get_id().'" value="'.htmlspecialchars($this->get(),ENT_QUOTES).'" size="'.$this->size.'" maxlength="'.$this->maxlength.'" aria-label="'.$this->display_name.'" ';
+		if (!empty($this->placeholder)) $display .= 'placeholder="'.$this->placeholder.'"';
+		$display .= '/>';
+		return $display;
 	}
 }
 
@@ -155,7 +200,7 @@ class moneyType extends textType
 	var $type = 'money';
 	var $currency_symbol = '$';
 	var $decimal_symbol = '.';
-	var $type_valid_args = array( 'currency_symbol','decimal_symbol' );
+	var $type_valid_args = array( 'currency_symbol','decimal_symbol','placeholder' );
 	function get_display()
 	{
 		$field = parent::get_display();
@@ -199,7 +244,7 @@ class money_solidTextType extends solidtextType
  */
 // displays a money amount but allows changes, unlike money_solidText.
 // useful for displaying calculated fields
-class money_disabledChangeableType extends defaultType
+class money_disabledChangeableType extends defaultTextType
 {
 	var $type = 'money_disabledchangeable';
 	var $currency_symbol = '$';
@@ -217,7 +262,7 @@ class money_disabledChangeableType extends defaultType
  * @package disco
  * @subpackage plasmature
  */
-class textareaType extends defaultType
+class textareaType extends defaultTextType
 {
 	var $type = 'textarea';
 	var $rows = 8;
@@ -225,16 +270,16 @@ class textareaType extends defaultType
 	var $type_valid_args = array('rows', 'cols');
 	function get_display()
 	{
-		$str  = '<textarea name="'.$this->name.'" id="'.$this->get_id().'" rows="'.$this->rows.'" cols="'.$this->cols.'">'.htmlspecialchars($this->get(),ENT_QUOTES,'UTF-8').'</textarea>';
+		$str  = '<textarea name="'.$this->name.'" id="'.$this->get_id().'" aria-label="'.$this->display_name.'" rows="'.$this->rows.'" cols="'.$this->cols.'">'.htmlspecialchars($this->get(),ENT_QUOTES,'UTF-8').'</textarea>';
 		return $str;
 	}
 	function grab()
 	{
 		parent::grab();
-		$length = strlen( $this->value );
+		$length = strlen( strval($this->value) );
 		$length_limits = array('tinytext' => 255, 'text' => 65535,
 			'mediumtext' => 16777215);
-		
+
 		if(!empty($this->db_type) && array_key_exists($this->db_type, $length_limits))
 		{
 			if($length  > $length_limits[$this->db_type])
@@ -247,7 +292,7 @@ class textareaType extends defaultType
 		}
 	}
 }
-	 
+
 /**
  * @package disco
  * @subpackage plasmature
@@ -272,20 +317,20 @@ class textarea_no_labelType extends textareaType // {{{
 class wysiwyg_disabledType extends textareaType
 {
 	var $type = 'wysiwyg_disabled';
-	
+
 	function grab()
 	{
 		// intentionally left blank -- nothing should come in from userland
 	}
-	
-	
+
+
 	function get_display()
 	{
 		$str  = '<textarea name="'.htmlspecialchars($this->name, ENT_QUOTES).'" rows="'.$this->rows.'" cols="'.$this->cols.'" id="'.$this->get_id().'" disabled="disabled" >'.htmlspecialchars($this->get(),ENT_QUOTES,'UTF-8').'</textarea>';
 		$str .= $this->_get_javascript_block($this->get_id());
 		return $str;
 	}
-	
+
 	function get_id()
 	{
 		if (empty($this->id))
@@ -293,13 +338,13 @@ class wysiwyg_disabledType extends textareaType
 		else
 			return $this->id;
 	}
-	
+
 	function _get_javascript_block($element_id)
 	{
 		include_once(CARL_UTIL_INC.'basic/json.php');
 		$prepped_id = trim(json_encode($element_id),'"');
 		$html_prepped_id = trim(json_encode(htmlspecialchars($element_id,ENT_QUOTES)),'"');
-		
+
 		return '<script type="text/javascript">
 		// <![CDATA[
 		if (jQuery) {
@@ -329,7 +374,7 @@ class wysiwyg_disabledType extends textareaType
 class wysiwyg_solidtextType extends solidtextType
 {
 	var $type = 'wysiwyg_solidtext';
-		
+
 	function get_display()
 	{
 		$str  = '<input type="hidden" name="'.$this->name.'" id="'.$this->get_id().'" value="'.htmlspecialchars($this->get(),ENT_QUOTES).'"/>';

@@ -256,11 +256,12 @@ class defaultFilterDisplay
 	 * This function may be overloaded in extensions of this class to provide different markup and/or interface for the search feature
 	 * @return string
 	 * @access private
+	 * @todo: change ENT_IGNORE to ENT_SUBSTITUTE when at PHP 5.4+
 	 */
 	function _build_search_interface()
 	{
 		if(!empty($this->search_value))
-			$v = htmlspecialchars( $this->search_value, ENT_COMPAT, 'UTF-8');
+			$v = htmlspecialchars( $this->search_value, ENT_COMPAT | ENT_IGNORE, 'UTF-8');
 		else
 			$v = '';
 		$ret = '';
@@ -297,6 +298,7 @@ class defaultFilterDisplay
 	 * Assemble the markup for the relationship filtering interface
 	 * @return string
 	 * @access private
+	 * @todo: change ENT_IGNORE to ENT_SUBSTITUTE when at PHP 5.4+
 	 *
 	 * This function may be overloaded in extensions of this class to provide different markup and/or interface for the relationship filtering feature
 	 */
@@ -309,7 +311,7 @@ class defaultFilterDisplay
 			$ret .= '<form method="get" action="?" class="relFilters">'."\n";
 			if(!empty($this->search_value))
 			{
-				$ret .= '<input type="hidden" name="search" value="'.htmlspecialchars($this->search_value,ENT_QUOTES,"UTF-8").'">';
+				$ret .= '<input type="hidden" name="search" value="'.htmlspecialchars($this->search_value,ENT_QUOTES | ENT_IGNORE,"UTF-8").'">';
 			}
 			if(count($this->filter_types) != 1)
 				$ret .= '<span class="filterLabel">Browse by '.implode('/',array_keys($this->filter_types)).':</span>'."\n";

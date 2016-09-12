@@ -37,7 +37,7 @@
 	    private $disco_form;
 	    
 	    /**
-	     * An array containing field => word limit
+	     * An array containing field => array containins min/max word limits
 	     * @var array
 	     */
 	    private $field_limits = array();
@@ -48,15 +48,6 @@
 	     */
 	    // private $suggested_field_limits = array();
 
-	    /**
-	     * Whether or not we auto hide and show the warnings.
-	     * 
-	     * Call auto_show_hide(false) if you want warnings to always show.
-	     *
-	     * @var array
-	     */
-	    private $auto_show_hide = array();
-	        
 	    /**
 	     * Disco form must be passed in -- callbacks will be attached to various process points in 
 	     * disco 
@@ -85,28 +76,15 @@
 	    
 	    
 	    /**
-	     * Sets a word limit on the given field. 
+	     * Sets a word limits on the given field. 
 	     * @param string $field_name -- the field/element to limit
-	     * @param int $word_limit -- the number of words to limit to
+	     * @param int $max_limit -- the number of words to limit to
+	     * @param int $min_limit -- the number of words to require
 	     */
-	    public function limit_field($field_name, $word_limit)
+	    public function limit_field($field_name, $max_limit, $min_limit = -1)
 	    {
-	        $this->field_limits[$field_name] = $word_limit;
-	    }
-	    
-	    /**
-	     * Get / set whether or not the input limit text for a field should auto show/hide.
-	     *
-	     * @param string $field_name the field/element to suggest a limit for.
-	     * @param boolean $showHideVal show or not
-	     */
-	    public function auto_show_hide($field_name, $showHideVal = NULL)
-	    {
-	    	if ($showHideVal !== NULL)
-	    	{
-	    		$this->auto_show_hide[$field_name] = $showHideVal;
-	    	}
-	    	return (isset($this->auto_show_hide[$field_name])) ? $this->auto_show_hide[$field_name] : true;
+	        $this->field_limits[$field_name]["max"] = $max_limit;
+	        $this->field_limits[$field_name]["min"] = $min_limit;
 	    }
 
 		private function count_words($val)
@@ -124,22 +102,39 @@
 	     */
 	    public function add_limiter_comments()
 	    {
-	        foreach($this->field_limits as $field => $word_limit)
+	        foreach($this->field_limits as $field => $minMax)
 	        {
+				$minLimit = $minMax["min"];
+				$maxLimit = $minMax["max"];
+
 	            // grab value from DB, count its words, calculate how many remain
 	            $element_value = $this->disco_form->get_value($field);
-	            $words_remaining = $word_limit - $this->count_words($element_value);
+	            $num_words = $this->count_words($element_value);
+	            $words_remaining = $maxLimit - $num_words;
 	            
-	            $auto_show_hide = ($this->auto_show_hide($field)) ? ' autoShowHide' : '';
+	            $formatted_word_limit = '<div class="smallText wordInputLimitNote">' .
+					'<span class="wordsEntered">' . $num_words . '</span> word(s) entered.' .
+					' (';
+					if ($minLimit > 0) {
+						$formatted_word_limit .= '<span class="tooFew">' . $minLimit . ' min</span> / ';
+					}
+					$formatted_word_limit .= '<span class="tooMany">' . $maxLimit . ' max</span>)' .
+					'<span class="minWordLimit" style="display: none;">'. $minLimit . '</span>' .
+					'<span class="maxWordLimit" style="display: none;">'. $maxLimit . '</span>' .
+					'</div>';
+
+                $this->disco_form->add_comments($field, $formatted_word_limit);
+				/*
 	            $formatted_word_limit = '<div class="smallText showRemaining wordInputLimitNote' . $auto_show_hide . '" style="display: none;">
 	                Words remaining: <span class="wordsRemaining">'. $words_remaining . '</span>
-                    <span class="wordLimit", style="display: none;">'. $word_limit . '</span></div>';
+                    <span class="maxWordLimit", style="display: none;">'. $maxLimit . '</span></div>';
                 
                 $over_limit_note = '<div class="smallText overWordLimitNote' . $auto_show_hide . '" style="display: none; font-weight:bold;">
                 <span class="numWordsOver">0</span> word(s) over the limit! Please shorten text.</b></div>';
-                
+
                 $this->disco_form->add_comments($field, $formatted_word_limit);
                 $this->disco_form->add_comments($field, $over_limit_note);
+				 */
 	        }
 	    }
 	    
@@ -150,17 +145,26 @@
 	    
 	    public function check_field_wordcounts()
 	    {
-	        foreach($this->field_limits as $field => $word_limit)
+	        foreach($this->field_limits as $field => $minMax)
 	        {
+				$minLimit = $minMax["min"];
+				$maxLimit = $minMax["max"];
+
 	            $num_words = $this->count_words($this->disco_form->get_element_property($field, 'value'));
-	            $words_over_limit = $num_words - $word_limit;
+	            $words_over_limit = $num_words - $maxLimit;
+
+				$field_display_name = $this->disco_form->get_display_name($field);
+				$errorMessage = "";
 	            if($words_over_limit > 0)
 	            {
-	                $field_display_name = $this->disco_form->get_display_name($field);
-	                $this->disco_form->set_error($field, 
-	                'There are '. $words_over_limit .' more word(s) than allowed in "'. $field_display_name . 
-	                '". Please shorten the text in this field.');
-	            }
+	                $errorMessage = 'There are '. $words_over_limit .' more word(s) than allowed in "'. $field_display_name .  '". Please shorten the text in this field.';
+				} else if ($this->disco_form->is_required($field) && $num_words < $minLimit) {
+	                $errorMessage = $field_display_name . ' requires at least ' . $minLimit . ' word(s) and there are only ' . $num_words . ' entered.';
+				}
+
+				if ($errorMessage != "") {
+	                $this->disco_form->set_error($field, $errorMessage);
+				}
 	        }
 	    }
 	    
