@@ -3558,6 +3558,7 @@ class EventsModule extends DefaultMinisiteModule
 	 *
 	 * @return void
 	 * @todo Move to a markup class
+	 * @todo Find a way to make Yahoo accept urls with ampersands
 	 */
 	function show_list_export_links()
 	{
@@ -3573,22 +3574,27 @@ class EventsModule extends DefaultMinisiteModule
 		}
 		
 		$query_string = $this->construct_link(array('start_date'=>$start_date,'view'=>'','end_date'=>'','format'=>'ical'));
-		$webcal_url = 'webcal://'.REASON_HOST.$this->parent->pages->get_full_url( $this->page_id ).$query_string;
-		$gcal_url = 'https://calendar.google.com/calendar/render?cid='.str_replace(array('&amp;','='),array('%26','%3D'),$webcal_url);
+		$calendar_url = REASON_HOST.$this->parent->pages->get_full_url( $this->page_id );
+		$webcal_url = 'webcal://'.$calendar_url.$query_string;
+		$gcal_url = 'https://calendar.google.com/calendar/render?cid='.str_replace('&amp;','%26',urlencode($webcal_url));
+		//$ycal_url = 'https://calendar.yahoo.com/subscribe?ics=http://'.$calendar_url.$this->construct_link(array('format'=>'ical'));
 		if(!empty($this->request['category']) || !empty($this->request['audience']) || !empty($this->request['search']))
 		{
 			$subscribe_desktop_text = 'Subscribe to this view (Desktop)';
-			$subscribe_gcal_text = 'Subscribe to this view (Google Calendar)';
+			$subscribe_gcal_text = 'Subscribe to this view (Google)';
+			//$subscribe_ycal_text = 'Subscribe to this view (Yahoo!)';
 			$download_text = 'Download these events (.ics)';
 		}
 		else
 		{
 			$subscribe_desktop_text = 'Subscribe (Desktop)';
-			$subscribe_gcal_text = 'Subscribe (Google Calendar)';
+			$subscribe_gcal_text = 'Subscribe (Google)';
+			//$subscribe_ycal_text = 'Subscribe (Yahoo!)';
 			$download_text = 'Download events (.ics)';
 		}
 		echo '<a href="'.$webcal_url.'">'.$subscribe_desktop_text.'</a>';
 		echo ' <span class="divider">|</span> <a href="'.$gcal_url.'" target="_blank">'.$subscribe_gcal_text.'</a>';
+		//echo ' <span class="divider">|</span> <a href="'.$ycal_url.'" target="_blank">'.$subscribe_ycal_text.'</a>';
 		if(!empty($this->events))
 			echo ' <span class="divider">|</span> <a href="'.$query_string.'">'.$download_text.'</a>';
 		if (defined("REASON_URL_FOR_ICAL_FEED_HELP") && ( (bool) REASON_URL_FOR_ICAL_FEED_HELP != FALSE))
@@ -4021,16 +4027,9 @@ class EventsModule extends DefaultMinisiteModule
 	 * @return string converted string
 	 */
 	function string_to_external_url_safe($string) {
-		$string = preg_replace('/<li[^>]*>/',' • ',$string); //not sure how ol or levels, so simple ul bullets
-		$string = strip_tags($string);
-		$string = preg_replace('/(.*?)"(.*?)"(.*?)/','$1“$2”$3',$string); //curly quotes
-		$string = str_replace(array('"','&amp;'), array('“','and'), $string);
-		$string = urlencode($string);
-		$string = str_replace('%26nbsp%3B','+',$string);
-		$string = preg_replace('/(?:\+){2,}/','+',$string); //remove duplicate spaces
-		$string = str_replace('%0A','%0A%0A',$string);
-		$string = preg_replace('/(?:%0A){3,}/','%0A%0A',$string); //remove large breaks
-		return $string;
+		//not sure how best to handle ol or levels, so convert all to simple ul bullets
+		$string = preg_replace('/<li[^>]*>/',' • ',$string);
+		return urlencode(html_entity_decode(strip_tags($string)));
 	}
 	/**
 	 * Output HTML of a link back to the events listing from the view of an individual event
