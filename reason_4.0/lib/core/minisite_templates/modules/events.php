@@ -3572,11 +3572,11 @@ class EventsModule extends DefaultMinisiteModule
 		{
 			$start_date = $this->request['start_date'];
 		}
-		
-		$query_string = $this->construct_link(array('start_date'=>$start_date,'view'=>'','end_date'=>'','format'=>'ical'));
+		$download_query = $this->construct_link(array('start_date'=>$start_date,'view'=>'','end_date'=>'','format'=>'ical'));
+		$subscribe_query = $this->construct_link(array('start_date'=>$start_date,'view'=>'','end_date'=>'','format'=>'ical'), true, false);
 		$calendar_url = REASON_HOST.$this->parent->pages->get_full_url( $this->page_id );
-		$webcal_url = 'webcal://'.$calendar_url.$query_string;
-		$gcal_url = 'https://calendar.google.com/calendar/render?cid='.str_replace('&amp;','%26',urlencode($webcal_url));
+		$webcal_url = 'webcal://'.$calendar_url.$subscribe_query;
+		$gcal_url = 'https://calendar.google.com/calendar/render?cid='.$webcal_url;
 		//$ycal_url = 'https://calendar.yahoo.com/subscribe?ics=http://'.$calendar_url.$this->construct_link(array('format'=>'ical'));
 		if(!empty($this->request['category']) || !empty($this->request['audience']) || !empty($this->request['search']))
 		{
@@ -3595,8 +3595,10 @@ class EventsModule extends DefaultMinisiteModule
 		echo '<a href="'.$webcal_url.'">'.$subscribe_desktop_text.'</a>';
 		echo ' <span class="divider">|</span> <a href="'.$gcal_url.'" target="_blank">'.$subscribe_gcal_text.'</a>';
 		//echo ' <span class="divider">|</span> <a href="'.$ycal_url.'" target="_blank">'.$subscribe_ycal_text.'</a>';
-		if(!empty($this->events))
-			echo ' <span class="divider">|</span> <a href="'.$query_string.'">'.$download_text.'</a>';
+		if(!empty($this->events)) 
+		{
+			echo ' <span class="divider">|</span> <a href="'.$download_query.'">'.$download_text.'</a>';
+		}
 		if (defined("REASON_URL_FOR_ICAL_FEED_HELP") && ( (bool) REASON_URL_FOR_ICAL_FEED_HELP != FALSE))
 		{
 			echo ' <span class="divider">|</span> <a href="'.REASON_URL_FOR_ICAL_FEED_HELP.'"><img src="'.REASON_HTTP_BASE_PATH . 'silk_icons/help.png" alt="Help" width="16px" height="16px" /></a>';
@@ -4674,11 +4676,12 @@ class EventsModule extends DefaultMinisiteModule
 	 * @param array $vars The query string variables for the link
 	 * @param boolean $pass_passables should the items in $this->pass_vars
 	 *                be passed if they are present in the current query?
+	 * @param boolean $html_encode Should use '&amp;' for HTML (true) or '%26' for URL (false).
 	 * @return string
 	 *
 	 * @todo replace this with carl_ functions
 	 */
-	function construct_link( $vars = array(), $pass_passables = true ) // {{{
+	function construct_link( $vars = array(), $pass_passables = true , $html_encode = true) // {{{
 	{
 		if($pass_passables)
 			$link_vars = $this->pass_vars;
@@ -4696,7 +4699,8 @@ class EventsModule extends DefaultMinisiteModule
 		{
 			$link_vars[$key] = urlencode($link_vars[$key]);
 		}
-		return '?'.implode_with_keys('&amp;',$link_vars);
+		$ampersand = ($html_encode) ? '&amp;' : '%26';
+		return '?'.implode_with_keys($ampersand,$link_vars);
 	} // }}}
 	/**
 	 * Is a given event an all-day event?
