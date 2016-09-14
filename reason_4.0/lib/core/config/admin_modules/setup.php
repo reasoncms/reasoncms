@@ -107,6 +107,7 @@
 		'AnalyticsAbout'=>array('file'=>'analytics.php', 'class'=>'AnalyticsAboutModule'),
 		'ShareSiteOwnership'=>array('file'=>'share_site_ownership.php', 'class'=>'ShareSiteOwnershipModule'),
 		'BorrowThis'=>array('file'=>'borrow_this.php', 'class'=>'BorrowThisModule'),
+		'NoRelReport'=>array('file'=>'no_rel_report.php', 'class'=>'NoRelReportModule'),
 		'UserPosing'=>array('file'=>'user_posing.php', 'class'=>'UserPosingModule'),
 	 	'CopySitePages'=>array('file'=>'copy_site_pages.php','class'=>'ReasonCopySitePagesModule'),
 	 	'OldThemes'=>array('file'=>'old_themes.php','class'=>'OldThemesModule'),

@@ -104,7 +104,11 @@ class ReasonAdminToolsModule extends DefaultModule
 					'description' => 'Lists all the people who receive email notification when Reason forms are submitted',
 					'safety_level' => 'safe',
 				),
-								
+				'?site_id='.id_of('master_admin').'&cur_module=NoRelReport' => array(
+					'title' => 'No Relationships Report',
+					'description' => 'Lists entities with or without specific relationships',
+					'safety_level' => 'safe',
+				),	
 			),
 			'Content Actions' => array(
 				REASON_HTTP_BASE_PATH.'scripts/urls/update_urls.php' => array(
