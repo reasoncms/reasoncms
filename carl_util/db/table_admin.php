@@ -155,6 +155,10 @@ class TableAdmin
 	 */
 	var $show_header = true;
 	/**
+	 * @var boolean whether or not prepend the data rows with a row indicating
+	 */
+	var $show_column_summations = false;
+	/**
 	 * @var boolean whether or not to show action column in first table cell
 	 */
 	var $show_actions_first_cell = true;
@@ -230,7 +234,8 @@ class TableAdmin
 	var $cleanup_rules = array('table_sort_order' => array('function' => 'check_against_array', 'extra_args' => array('asc', 'ASC', 'desc', 'DESC')),
 							   'table_filters' => array('function' => 'turn_into_array'),
 							   'table_filter_clear' => array('function' => 'turn_into_string'),
-							   'table_action_id' => array('function' => 'check_against_regexp', 'extra_args' => array('naturalnumber')));
+							   'table_action_id' => array('function' => 'check_against_regexp', 'extra_args' => array('naturalnumber')),
+							   'table_summations' => array('function' => 'turn_into_int'));
 	
 	var $_no_db_mode = false;
 	/**
@@ -416,6 +421,7 @@ class TableAdmin
 		if (isset($this->request['table_sort_field'])) 	 $this->set_sort_field($this->request['table_sort_field']);
 		if (isset($this->request['table_filters']))		 $this->set_filters($this->request['table_filters']);
 		if (isset($this->request['table_filter_clear'])) $this->clear_filters($this->request['table_filters']);
+		if (isset($this->request['table_summations']))   $this->set_show_column_summations($this->request['table_summations']);
 	}
 	
 	function _get_valid_actions()
@@ -600,6 +606,10 @@ class TableAdmin
 	function set_show_header($val = NULL)
 	{
 		if (!is_null($val)) $this->show_header = $val;
+	}
+	function set_show_column_summations($val = NULL)
+	{
+		if (!is_null($val)) $this->show_column_summations = $val;
 	}
 	
 	function set_show_actions_first_cell($val = NULL)
@@ -1045,6 +1055,54 @@ class TableAdmin
 	}
 
 	/**
+	 * Generate an HTML table row of with a sum for each column in $data_array
+	 * that contains only numeric values
+	 * 
+	 * The table row puts sums in the same respective table cell as you would 
+	 * see in the browser
+	 * 
+	 * @param array $data_array
+	 * @return string html table row
+	 */
+	function gen_stats_row($data_array)
+	{
+		// find numeric rows in this table
+		// and sum them now, excluding the 'id' col
+		$sums = array();
+		foreach ($data_array as $row) {
+			unset($row['id']);
+			foreach ($row as $column => $value) {
+				if (is_numeric($value)) {
+					if (!isset($sums[$column])) {
+						$sums[$column] = 0;
+					}
+					$sums[$column] += floatval($value);
+				}
+			}
+		}
+
+		// write html
+		$rowHtml = "<tr class='column_sums'><td class='first'>Column Sums</td><td></td>";
+		foreach ($row as $column => $value) {
+			switch ($column) {
+				case 'submitted_by':
+				case 'submitter_ip':
+				case 'date_created':
+				case 'date_modified':
+					$rowHtml .= "<td></td>";
+					break;
+
+				default:
+					$rowHtml .= isset($sums[$column]) ? "<td>$sums[$column]</td>" : "<td></td>";
+					break;
+			}
+		}
+		$rowHtml .= "</tr>";
+
+		return $rowHtml;
+	}
+
+	/**
 	 * Generates HTML for a table row containing column headers
 	 * @param array $header_row can be any row from the data since the keys are always the same
 	 * @todo add mechanism to pad to certain length
@@ -1305,6 +1363,13 @@ class TableAdmin
 		$links_batchdownload['table_action'] = 'batch_download';
 		if ($this->allow_delete) $menu_links['Delete Stored Data'] = carl_make_link($links_delete);
 		if ($this->allow_new) $menu_links['Create New Row'] = carl_make_link($links_new);
+		
+		// column sums is a toggle
+		// change link name based on current state
+		$link_sum_text = (!$this->show_column_summations ? "Show" : "Hide" ) . " Column Sums";
+		$link_summations['table_summations'] = !$this->show_column_summations; // make like a on/off toggle
+		$menu_links[$link_sum_text] = carl_make_link($link_summations);
+
 		if ($this->allow_download_files && $this->form_contains_file_elements()) $menu_links['Batch Download Attachments'] = carl_make_link($links_batchdownload);
 		if ($this->show_header) $ret .= '<h3>Displaying '.$this->_filtered_rows.' of '.$this->_total_rows.' rows</h3>';
 		if (!empty($menu_links)) $ret .= $this->gen_menu($menu_links);
@@ -1313,6 +1378,7 @@ class TableAdmin
 		$ret .= '<table class="table_data">';
 		$ret .= $header;
 		if ($this->allow_filters) $ret .= $this->gen_filter_rows($this->_row);
+		if ($this->show_column_summations) $ret .= $this->gen_stats_row($data_array);
 		foreach ($data_array as $data_row)
 		{
 			$class = ($class == 'odd') ? 'even' : 'odd';
