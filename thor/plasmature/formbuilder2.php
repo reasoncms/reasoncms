@@ -19,6 +19,8 @@ echo "TYR_INC: " . TYR_INC . "<p>";
 require_once PLASMATURE_TYPES_INC."default.php";
 include_once (XML_PARSER_INC . 'xmlparser.php');
 include_once ('translators.php');
+require_once 'reason_header.php';
+reason_include_once( 'function_libraries/event_tickets.php' );
 
 /**
  * Formbuilder2 plasmature type for disco integration
@@ -335,16 +337,9 @@ class formbuilder2Type extends textareaType
 
 		return $rootXml->asXML();
 	}
-	
 	function add_event_ticket_title_to_field($field)
 	{
-		$event = new Entity($field->event_tickets_event_id);
-
-		$date = date("M j Y, g:ia", strtotime($event->get_value('datetime')));
-		$titleString = "{$event->get_value('name')}, $date";
-		$field->label = $titleString;
-
+		$field->label = get_pretty_ticketed_event_name($field->event_tickets_event_id);
 		return $field;
 	}
-
 }

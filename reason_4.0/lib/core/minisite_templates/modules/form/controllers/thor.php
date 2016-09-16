@@ -8,6 +8,7 @@
 	 * Include base class & register controller with Reason
 	 */
 	reason_include_once( 'minisite_templates/modules/form/controllers/default.php' );
+	reason_include_once('function_libraries/event_tickets.php');
 	include_once(TYR_INC . 'tyr.php');
 	$GLOBALS[ '_form_controller_class_names' ][ basename( __FILE__, '.php') ] = 'ThorFormController';
 
@@ -199,21 +200,8 @@
 					'event_id' => $event_id
 				);
 
-				$eventState = $event_info[$event_id]['eventState'];
-				$eventTitle = $this->model->get_event_ticket_title($event_id);
-
-				if ($eventState == 'open') {
-					$qs = carl_make_link($query_string_args, '', 'qs_only', true, true);
-					$html .= "Tickets for <a href='$qs'>$eventTitle</a><br>\n";
-				} else {
-					$key_for_closed = $event_info[$event_id]['eventStateReason'];
-					if ($key_for_closed == "max_tickets_reached") {
-						$reason_for_closed = "SOLD OUT";
-					} else if ($key_for_closed == "close_date_passed") {
-						$reason_for_closed = "CLOSED";
-					}
-					$html .= "Tickets for $eventTitle<strong>&mdash;$reason_for_closed</strong><br>\n";
-				}
+				$urlForOpenEvents = carl_make_link($query_string_args, '', 'qs_only', true, true);
+				$html .= get_ticket_status_html_link($event_id, $event_info[$event_id], $urlForOpenEvents);
 			}
 
 			return $html;
@@ -277,12 +265,16 @@
 		{
 			$model =& $this->get_model();
 			$formHasTickets = $model->form_has_event_ticket_elements();
-			$remainingSeatsForCurrentEvent = $model->event_tickets_get_request();
 
-			$thorEventInfo = $remainingSeatsForCurrentEvent['thor_info'];
-			$ticketSalesAreClosed = $model->event_tickets_thor_event_is_closed($thorEventInfo);
+			$ticketSalesAreClosed = false;
+			if ($formHasTickets) {
+				$remainingSeatsForCurrentEvent = $model->event_tickets_get_request();
 
-			return $formHasTickets && $ticketSalesAreClosed;
+				$thorEventInfo = $remainingSeatsForCurrentEvent['thor_info'];
+				$ticketSalesAreClosed = $model->event_tickets_thor_event_is_closed($thorEventInfo);
+			}
+
+		return $formHasTickets && $ticketSalesAreClosed;
 		}
 
 		function get_event_closed_html()
