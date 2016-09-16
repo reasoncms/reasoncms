@@ -1,6 +1,6 @@
 <?php
 
-$GLOBALS['_reason_upgraders']['4.8_to_4.9']['add_event_registration'] = 'ReasonUpgrader_49_UpdateEventRegistration';
+$GLOBALS['_reason_upgraders']['4.7_to_4.8']['add_event_registration'] = 'ReasonUpgrader_48_UpdateEventRegistration';
 include_once('reason_header.php');
 reason_include_once('classes/entity_selector.php');
 reason_include_once('classes/upgrade/upgrader_interface.php');
@@ -10,7 +10,7 @@ reason_include_once('function_libraries/user_functions.php');
 reason_include_once('function_libraries/admin_actions.php');
 reason_include_once("scripts/upgrade/reason_db_helper.php");
 
-class ReasonUpgrader_49_UpdateEventRegistration extends reasonUpgraderDefault implements reasonUpgraderInterface
+class ReasonUpgrader_48_UpdateEventRegistration extends reasonUpgraderDefault implements reasonUpgraderInterface
 {
 
 	public function newRelationshipsDictionary()
