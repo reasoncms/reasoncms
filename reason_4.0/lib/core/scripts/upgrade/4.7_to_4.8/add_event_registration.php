@@ -25,6 +25,9 @@ class ReasonUpgrader_49_UpdateEventRegistration extends reasonUpgraderDefault im
 					'required' => 'no',
 					'is_sortable' => 'no',
 					'display_name' => 'Registration Form',
+					// Relationships are managed in the Thor content manager.
+					// They're added when an event ticket item is added to a form
+					'custom_associator' => 'yes',
 				)
 			)
 		);
