@@ -1264,16 +1264,25 @@ class ThorCore
 			$closeAfterDatetimeForEvent = $element->tagAttrs['event_close_datetime'];
 		}
 
-		// This is dynamically added to thor xml at runtime
-		$numTicketsCurrentlyRemaining = $element->tagAttrs['remaining_seats'];
-
+		// This is dynamically added to thor xml at runtime, but may be missing 
+		// in some admin views when the form isn't rendered
+		if (array_key_exists('remaining_seats', $element->tagAttrs)) {
+			$numTicketsCurrentlyRemaining = $element->tagAttrs['remaining_seats'];
+		} else {
+			$numTicketsCurrentlyRemaining = 100000;
+		}
+		
+		
 		// Generate list of number of tickets a person can select, being sensitive
-		// to the number of tickets still available
+		// to the number of tickets still available (except when editing a form submission)
 		$allOptions = array();
 		$disabledOptions = array();
+		
+		$userInEditMode = !empty($_GET['table_row_action']) && $_GET['table_row_action'] == 'edit';
+		
 		foreach (range(0, $numMaxPerPersonForEvent) as $k => $tickentNum) {
 			$displayString = $tickentNum;
-			if ($tickentNum > $numTicketsCurrentlyRemaining) {
+			if ($tickentNum > $numTicketsCurrentlyRemaining && !$userInEditMode) {
 				$displayString .= " &mdash; unavailable";
 				$disabledOptions[] = $tickentNum;
 			}
@@ -1319,10 +1328,10 @@ class ThorCore
 					}
 					
 					// Inject runtime default values mentioned in formbuilder tool
-					if($node->tagAttrs['num_total_available'] === "") {
+					if (!array_key_exists('num_total_available', $node->tagAttrs) || $node->tagAttrs['num_total_available'] === "") {
 						$node->tagAttrs['num_total_available'] = 100000;
 					}
-					if($node->tagAttrs['max_per_person'] === "") {
+					if (!array_key_exists('max_per_person', $node->tagAttrs) || $node->tagAttrs['max_per_person'] === "") {
 						$node->tagAttrs['max_per_person'] = 1;
 					}
 					

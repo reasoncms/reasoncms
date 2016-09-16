@@ -9,6 +9,7 @@
  */
 reason_include_once( 'minisite_templates/modules/form/models/default.php' );
 reason_include_once( 'classes/object_cache.php' );
+reason_include_once( 'function_libraries/event_tickets.php' );
 require_once( THOR_INC.'boxes_thor.php' );
 include_once( TYR_INC.'tyr.php' );
 
@@ -499,7 +500,7 @@ class ThorFormModel extends DefaultFormModel
 	function &get_top_links()
 	{
 		// Grab current request vars, but remove some internal-only ids
-		$preserve_url_vars = (array) $this->_view->_request;
+		$preserve_url_vars = $_GET;
 		unset($preserve_url_vars['page_id'], $preserve_url_vars['site_id']);
 
 		if (!$this->user_requested_admin() && $this->user_has_administrative_access() && ($this->get_values()))
@@ -508,7 +509,15 @@ class ThorFormModel extends DefaultFormModel
 		}
 		elseif ($this->user_requested_admin() && $this->user_has_administrative_access())
 		{
-			$link['Exit administrative view'] = carl_construct_link(array('form_admin_view' => ''), array_keys($preserve_url_vars));
+			// unset request params user who has submitted the form & is an admin might see
+			$clear_these_params = array(
+				'form_admin_view' => '',
+				'table_action' => '',
+				'submission_key' => '',
+				'table_row_action' => '',
+				'table_action_id' => ''
+			);
+			$link['Exit administrative view'] = carl_construct_link($clear_these_params, array_keys($preserve_url_vars));
 		}	
 		else $link = array();
 		return $link;
@@ -1601,8 +1610,6 @@ class ThorFormModel extends DefaultFormModel
  		return $this->_magic_transform_values;
 	}
 	
-	// NOTE - the logic here is duplicated in
-	// reason_package/thor/plasmature/formbuilder2.php:add_event_ticket_title_to_field()
 	function get_event_ticket_title($eventId = 0)
 	{
 		if (!$eventId) {
@@ -1611,10 +1618,7 @@ class ThorFormModel extends DefaultFormModel
 		if (!$eventId) {
 			return "";
 		}
-		$event = new Entity($eventId);
-		$date = date("M j Y, g:ia", strtotime($event->get_value('datetime')));
-		$titleString = "{$event->get_value('name')}, $date";
-		return $titleString;
+		return get_pretty_ticketed_event_name($eventId);
 	}
 
 	function get_events_thor_configs()
@@ -1729,8 +1733,6 @@ class ThorFormModel extends DefaultFormModel
 		return $remainingSeats;
 	}
 
-	// @todo break the pieces out into single-use methods
-	//       and integrate in other methods where similar logic exists
 	function event_tickets_get_all_event_seat_info()
 	{
 		$thorCore = $this->get_thor_core_object();

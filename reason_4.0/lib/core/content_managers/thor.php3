@@ -95,10 +95,12 @@
 			$this->add_element('limiting_note','comment',array('text'=>'<h3>Limiting and Scheduling</h3>') );
 			
 			
-			// Get events on this form to encode on json for the formbuilder to use
 			$es = new entity_selector($this->admin_page->site_id);
+			$es->description = "Get future, non-recurring events on this site";
 			$es->add_type(id_of('event_type'));
-			$es->add_left_relationship($this->admin_page->id, relationship_id_of('event_to_form'));
+			$es->add_relation(" `event`.`datetime` > NOW() AND `event`.`recurrence` = 'none' ");
+			$es->set_order(" `event`.`datetime` DESC");
+			
 			$events = $es->run_one();
 			$events_on_form = array();
 			foreach($events as $event) {
@@ -314,6 +316,44 @@
 				$this->set_error('submission_limit','You have set a submission limit, but this form is not saving data to a database. Please enable the database option or remove the submission limit.');
 			}
 			$this->run_error_checks_advanced_options();
+			$this->run_error_checks_event_tickets();
+		}
+		
+		function run_error_checks_event_tickets() {
+			$thorXml = $this->get_element('thor_content')->value;
+			$xml = new SimpleXMLElement($thorXml);
+			$ticketElement = $xml->xpath("/*/event_tickets");
+
+			// Get ticket form items out of thor structure
+			$eventsInForm = array();
+			foreach ($ticketElement as $element) {
+				// cast is to shift away from xml object
+				$eventId = (string) $element['event_id'];
+				if ($eventId) {
+					$eventsInForm[] = (string) $element['event_id'];
+				} else {
+					// Error is set in formbuilder2.php plasmature type
+				}
+			}
+
+			$form = $this->entity;
+			$formRels = $form->get_right_relationships_info('event_to_form');
+			$existingEventFormRelationships = $formRels['event_to_form'];
+
+			// Add new rels
+			foreach ($eventsInForm as $formEventId) {
+				//echo "creating $formEventId event relationship<br>\n";
+				create_relationship($formEventId, $form->id(), relationship_id_of('event_to_form'));
+			}
+
+			// remove old/stale rels
+			foreach ($existingEventFormRelationships as $relationship) {
+				$existingRelId = $relationship['entity_a'];
+				if (!in_array($existingRelId, $eventsInForm)) {
+					//echo "deleting relationship for event $existingRelId; not found in form <br>\n";
+					delete_relationship($relationship['id']);
+				}
+			}
 		}
 		
 		function pre_show_form()

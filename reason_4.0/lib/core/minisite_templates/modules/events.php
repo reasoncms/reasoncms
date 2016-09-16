@@ -396,6 +396,7 @@ class EventsModule extends DefaultMinisiteModule
 							'item_admin_markup' => '',
 							'item_markup' => '',
 	 						'limit_by_related_types' => '', // as comma spaced type unique names
+							'limit_to_ticketed_events'=>false,
 	 						'limit_to_audiences' => '',	 // as comma spaced strings
 							'limit_to_page_categories'=>false,
 	 						'link_shared_events_to_parent_site' => false,
@@ -513,6 +514,17 @@ class EventsModule extends DefaultMinisiteModule
 	 * @var string html
 	 */
 	protected $slot_registration_admin_messages = '';
+	
+	/**
+	 * Container array of form controllers for forms associated with the event
+	 * 
+	 * Usually there is only one form per event.
+	 * 
+	 * Controllers here haven't had init() run yet
+	 * 
+	 * @var array
+	 */
+	var $ticket_form_controllers = array();
 	
 	//////////////////////////////////////
 	// General Functions
@@ -1557,6 +1569,7 @@ class EventsModule extends DefaultMinisiteModule
 			{
 				$item_bundle = new functionBundle();
 				$item_bundle->set_function('event_link', array($this, 'get_event_link') );
+				$item_bundle->set_function('get_ticket_info_from_form', array($this, 'get_ticket_info_from_form') );
 				$item_bundle->set_function('teaser_image', array($this, 'get_teaser_image_html') );
 				$item_bundle->set_function('media_works', array($this, 'get_event_media_works'));
 				$item_bundle->set_function('prettify_duration', array($this, 'prettify_duration') );
@@ -3515,6 +3528,10 @@ class EventsModule extends DefaultMinisiteModule
 			$es->add_relation($audience_table_info['audience_id']['table'].'.'.$audience_table_info['audience_id']['field'].' NOT IN ('.implode(',',$audience_ids).')');
 		}
 		
+		if($this->params['limit_to_ticketed_events']) {
+			$es->add_left_relationship_field('event_to_form', 'entity', 'id', 'event_id');
+		}
+		
 		if(!empty($this->params['freetext_filters']))
 		{
 			foreach($this->params['freetext_filters'] as $filter)
@@ -4319,6 +4336,37 @@ class EventsModule extends DefaultMinisiteModule
 		return $possible_dates;
 	}
 	/**
+	 * Get a Thor Form Controller
+	 * 
+	 * @param object $form a form entity
+	 * @return ThorFormController controller that hasn't been inited
+	 */
+	function get_ticket_form_controller($form)
+	{
+		$formId = $form->id();
+		if (empty($this->ticket_form_controllers[$formId])) {
+			reason_include_once('minisite_templates/modules/form/models/thor.php');
+			reason_include_once('minisite_templates/modules/form/views/thor/default.php');
+			reason_include_once('minisite_templates/modules/form/controllers/thor.php');
+
+			// Assemble the MVC components to handle forms in this context
+			$form_model = new ThorFormModel();
+			$form_model->init_from_module($this);
+			// Unlike typical forms with a 'page_to_form' relationship,
+			// here our form ID comes from an 'event_to_form' relationship and is already
+			// present on this Event object so we define it on the model. 
+			$form_model->_form_id = $formId;
+
+			$form_controller = new ThorFormController();
+			$form_controller->set_model($form_model);
+
+			$this->ticket_form_controllers[$formId] = $form_controller;
+		}
+
+		return $this->ticket_form_controllers[$formId];
+	}
+
+	/**
 	 * Display the registration form
 	 *
 	 * @param object $event event entity
@@ -4327,55 +4375,49 @@ class EventsModule extends DefaultMinisiteModule
 	 */
 	function show_registration_form($form)
 	{
-		reason_include_once('minisite_templates/modules/form/models/thor.php');
-		reason_include_once('minisite_templates/modules/form/views/thor/default.php');
-		reason_include_once('minisite_templates/modules/form/controllers/thor.php');
-
-		// Assemble the MVC components to handle forms in this context
-		$form_model = new ThorFormModel();
-		$form_model->init_from_module($this);
-		// Unlike typical forms with a 'page_to_form' relationship,
-		// here our form ID comes from an 'event_to_form' relationship and is already
-		// present on this Event object so we define it on the model. 
-		$form_model->_form_id = $form->id();
-
-		$form_controller = new ThorFormController();
-		$form_controller->set_model($form_model);
-		$form_controller->init();
-
-
-		// If an $eventIdInRequest isset, make sure it's valid
-		// @todo: point this at login in the model
 		if (array_key_exists('event_id', $this->request)) {
 			$eventIdInRequest = $this->request['event_id'];
 		} else {
 			$eventIdInRequest = false;
 		}
-		$eventsOnForm = $form_controller->model->get_events_on_form();
+		
+		$controller = $this->get_ticket_form_controller($form);
+		$controller->init();
+		$eventsOnForm = $controller->model->get_events_on_form();
 		$eventIdInRequestIsValid = false;
 		foreach ($eventsOnForm as $event) {
 			if ($eventIdInRequest && $event->id() == $eventIdInRequest) {
 				$eventIdInRequestIsValid = true;
 			}
-		}
-
-
+		}	
+		
+	
 		if ($eventIdInRequestIsValid) {
-		// Prepare the form, store response html in var 
-		ob_start();
-		$form_controller->run();
-		$form_html = ob_get_clean();
+			// Prepare the form, store response html in var 
+			ob_start();
+			
+			// since the form is in the middle of the page, make sure users
+			// see the form response using an anchor jump
+			$view =& $controller->get_view();
+			$view->form_action = htmlspecialchars($_SERVER['REQUEST_URI'], ENT_QUOTES) . "#jumpToForm";
+			
+			$controller->run();
+			$formHtml = ob_get_clean();
 
-		$html = <<<HTML
+			// This demotion is to reuse existing styles (and partially semantic, too)
+			$formHtml = demote_headings($formHtml, 1);
+			
+			$html = <<<HTML
+<a name="jumpToForm"></a>
 <div id="slotInfo">
 	<div class="form">
 		<h3>Register for {$this->event->get_value('name')}</h3>
-		$form_html
+		$formHtml
 	</div>
 </div>
 HTML;
 
-		echo $html;
+			echo $html;
 		}
 	}
 	/**
@@ -4732,5 +4774,29 @@ HTML;
            fclose($outputFile);
         }
     	return ob_get_clean();
+	}
+	
+	/**
+	 * Get Event Ticket info & state from all related forms
+	 * 
+	 * @param Entity $event event entity
+	 * @return array
+	 */
+	function get_ticket_info_from_form($event) {
+		// find forms on this event
+		$forms = $this->get_registration_forms($event);
+		// Look for the event in related forms, though there is usually only one form
+		$eventInfo = array();
+		foreach($forms as $form) {
+			$form_controller = $this->get_ticket_form_controller($form);
+			$form_controller->init();
+			$model = $form_controller->get_model();
+			$eventInfoFromForm = $model->event_tickets_get_all_event_seat_info();
+			foreach($eventInfoFromForm as $k => $info) {
+				$eventInfo[$k] = $info;
+			}
+		}
+		
+		return $eventInfo;
 	}
 }

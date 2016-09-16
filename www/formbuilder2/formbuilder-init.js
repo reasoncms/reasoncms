@@ -83,10 +83,10 @@ Ticket sales close at: <%= rf.get(Formbuilder.options.mappings.EVENT_TICKETS_EVE
 		edit: "\
   <div class='fb-label-description'>\n\
   <div class='fb-edit-section-header'>Tickets</div>\n\
-  <div>Select Event:<br>\n\
+  <div>Select Future Event:<br>\n\
   <select style='width:100%' data-rv-input='model.<%= Formbuilder.options.mappings.EVENT_TICKETS_EVENT_ID %>' >" +
 				htmlSelect +
-				"</select></div>\n\
+				"</select><em>non-recurring events only</em></div>\n\
   <div class='fb-edit-section-header'>Options</div><div class='fb-clear'></div>\n\
   <label>Total Tickets Available:<br><input type='number' min='0' name='' data-rv-input='model.<%= Formbuilder.options.mappings.EVENT_TICKETS_NUM_TOTAL_AVAILABLE %>' /> <em>Default: unlimited</em><br><br>\n\
   <label>Max Tickets Per Submission:<br><input type='number' min='0' name='' data-rv-input='model.<%= Formbuilder.options.mappings.EVENT_TICKETS_MAX_PER_PERSON %>' /> <em>Default: 1 per person</em><br><br>\n\
