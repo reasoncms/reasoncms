@@ -41,7 +41,7 @@ reason_include_once('function_libraries/admin_actions.php');
  * @package reason
  * @subpackage classes
  */
-class FieldToEntityTable 
+class FieldToEntityTable
 {
 	var $entity_table_name;
 	var $entity_table_id;
@@ -54,7 +54,7 @@ class FieldToEntityTable
 	var $warn = array();
 	var $report = array();
 	var $queries = array();
-	
+
 	var $test_mode = false;
 
 	function FieldToEntityTable($entity_table_name = '', $fields = array(), $user_netID = '')
@@ -75,7 +75,7 @@ class FieldToEntityTable
 			$this->add_field($k, $v);
 		}
 	}
-	
+
 	function set_entity_table($entity_table_name)
 	{
 		$es = new entity_selector($this->ma_site_id);
@@ -140,14 +140,14 @@ class FieldToEntityTable
 			$q = 'ALTER TABLE `'.$this->entity_table_name.'` ADD `'.$k.'` '.$v['db_type'];
 			if ($this->test_mode) $this->queries[] = $q;
 			else $r = db_query( $q, 'There was a problem altering the table to add the field - probably a syntax error in the db_type description');
-		
+
 			// Create the field entity
 			if ($this->test_mode) $this->report[] = 'The field ' . $k . ' would be created and added to the entity table ' . $this->entity_table_name;
-			else 
+			else
 			{
 				$v['new'] = 0;
 				$id = reason_create_entity( $this->ma_site_id, $this->field_id, $this->user_id, $k, $v );
-				
+
 				// Relate the new field entity to the entity table
 				create_relationship( $id, $this->entity_table_id, $this->field_to_entity_table_rel_id);
 				$this->report[] = 'The field ' . $k . ' was created and added to the entity table ' . $this->entity_table_name;
@@ -157,30 +157,30 @@ class FieldToEntityTable
 		elseif ($process && $this->test_mode) $this->report[] = 'Finished - Entity table would have been updated';
 		return true;
 	}
-	
+
 	function report()
 	{
-		if (count($this->warn) > 0) 
+		if (count($this->warn) > 0)
 		{
-			echo '<h3>Warnings</h3>';
+			echo '<h4>FieldToEntityTable Class Warnings</h4>';
 			$this->array_to_list_HTML($this->warn);
 		}
-		if (count($this->err) > 0) 
+		if (count($this->err) > 0)
 		{
-			echo '<h3>Errors</h3>';
+			echo '<h4>FieldToEntityTable Class Errors</h4>';
 			$this->array_to_list_HTML($this->err);
 		}
 		if ($this->test_mode)
 		{
 			if (count($this->queries) > 0)
 			{
-				echo '<h3>Queries that Would Have Run</h3>';
+				echo '<h4>Queries that Would Have Run</h4>';
 				$this->array_to_list_HTML($this->queries);
 			}
 		}
 		if (count($this->report) > 0)
 		{
-			echo '<h3>Report</h3>';
+			echo '<h4>FieldToEntityTable Class Report</h4>';
 			$this->array_to_list_HTML($this->report);
 		}
 	}
@@ -205,7 +205,7 @@ class FieldToEntityTable
 		}
 		return false;
 	}
-	
+
 	function array_to_list_HTML($array = array())
 	{
 		if (count($array) > 0)
