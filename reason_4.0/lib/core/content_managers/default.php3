@@ -31,8 +31,8 @@
 	 *
 	 * This is the default content manager class for reason.  It handles getting
 	 * the basic fields, and setting them up appropriately.  Basically, this should
-	 * work fine for any form as long as you don't need to do anything special. 
-	 */	
+	 * work fine for any form as long as you don't need to do anything special.
+	 */
 	class ContentManager extends DiscoReason2
 	{
 		/**
@@ -43,15 +43,17 @@
 		var $left_assoc_display_names = array();
 		var $left_assoc_omit_relationship = array();
 		var $left_assoc_omit_link = array();
-		
+
 		var $right_assoc_display_names = array();
 		var $right_assoc_omit_relationship = array();
 		var $right_assoc_omit_link = array();
-		
+
 		var $actions = array( 'stay_here' => 'Save and Continue Editing', 'finish' => 'Save and Finish' );
-		
+
 		var $_locked_fields = array();
 		var $_lock_indicated_fields = array();
+
+		var $head_items;
 
 		var $box_class = 'StackedBox';
 
@@ -60,11 +62,13 @@
 			if ( !isset( $this->_inited_head_items ) OR empty( $this->_inited_head_items ))
 			{
 				$this->init_head_items();
+				$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'content_managers/administrator_tools.js');
+				$this->head_items->add_stylesheet(REASON_ADMIN_CSS_DIRECTORY.'content_managers/administrator_tools.css');
 				$this->_inited_head_items = true;
 			}
 			parent::init();
 		}
-		
+
 		/**
 		 * The editor module will ask the content manager about whether to call run() or run_api()
 		 *
@@ -74,7 +78,7 @@
 		{
 			return false;
 		}
-		
+
 		/**
 		 * By default we run an API and do not set any content which should return a 404.
 		 */
@@ -84,21 +88,21 @@
 			$api->run();
 			exit();
 		}
-		
+
 		/**
 		 * Add head items to the head_items object if head_items need to be added by the content manager
 		 */
 		function init_head_items()
 		{
 		}
-		
+
 		/**
 		 * Monster function that sets up all the basics.
 		 *
 		 * Basically, there are a lot of fields we don't want to show, so we
 		 * cut them out.  Also, it deals with a lot of the sharing stuff.
-		 * This should probably never be overloaded.  If there's more stuff you 
-		 * want to do on load, you should find some other place to do it.  If you 
+		 * This should probably never be overloaded.  If there's more stuff you
+		 * want to do on load, you should find some other place to do it.  If you
 		 * do need to overload it, you probably want to have:
 		 * <code>
 		 * parent::prep_for_run( $site_id , $type_id , $id , $user_id );
@@ -121,12 +125,12 @@
 				$this->entity->get_values();
 				//$this->entity->get_relationships();
 			}
-			
-			
+
+
 			// make sure to let MySQL auto handle the last_modified field - don't let the user see it
 			$this->remove_element( 'last_modified');
 			$this->remove_element( 'creation_date');
-	
+
 			// also hide the "new" field
 			$this->remove_element( 'new' );
 
@@ -136,7 +140,7 @@
 			// we now have sorting handled in its own place, so we don't need to show sort order
 			if($this->_is_element('sort_order'))
 				$this->remove_element( 'sort_order' );
-	
+
 			// maintain variables for site management navigation
 			$this->add_element( 'type_id', 'hidden' );
 			$this->set_value( 'type_id', $type_id );
@@ -151,15 +155,15 @@
 				$this->set_display_name( 'no_share', 'Sharing' );
 				$new_order = $this->get_order();
 				unset($new_order['no_share']);
-				/*$new_order = array();			
+				/*$new_order = array();
 				foreach( $this->_elements AS $k => $v )
 				{
 					if( $k != 'no_share' )
 						$new_order[] = $k;
-				} 
+				}
 				$new_order[] = $k; */
 				$this->set_order( $new_order );
-				
+
 				$sites_borrowing = get_sites_that_are_borrowing_entity($this->admin_page->id);
 				$comments = 'Your site is currently sharing this type.  Select private to prevent other sites from borrowing this item. ';
 
@@ -189,16 +193,17 @@
 				$this->change_element_type( 'no_share', 'hidden' );
 
 			//$this->set_assoc( $id , $type_id , $site_id );
+			$this->alter_admin_tools();
 			$this->alter_data();
 			$this->alter_display_names();
 			$this->alter_comments();
-			
+
 			/**
 			 * Why do we turn all page requests into hidden elements? If there is not a good reason, don't call this and
 			 * delete the method! It makes it pretty easy to stomp on legitimate hidden elements added by plasmature objects
 			 */
 			if( !empty( $this->admin_page->request ) ) $this->grab_all_page_requests();
-			
+
 			// if the state of the entity is pending, show the queue review actions
 			// instead of the regular actions
 			if( !$this->is_new_entity() AND $this->entity->get_value( 'state' ) == 'Pending' AND $this->admin_page->type_id == id_of( 'image' ) )
@@ -238,10 +243,10 @@
 					}
 				}
 			}
-			
+
 			$this->_apply_locks();
 		} // }}}
-		
+
 		/**
 		 * Check to see if any fields are locked; if so, either lock them or indicate the presence of a lock (depending on the privs of the current user)
 		 */
@@ -282,7 +287,7 @@
 			{
 				if(
 					$this->is_required($field_name)
-					&& 
+					&&
 					(
 						'' === $this->get_value($field_name)
 						||
@@ -321,8 +326,8 @@
 				$this->_lock_indicated_fields[] = $field_name;
 			}
 		}
-		
-		
+
+
 		/**
 		 * Accept a reference to the head items so that content managers can interact with head items directly
 		 * @author Nathan White
@@ -331,21 +336,21 @@
 		{
 			$this->head_items =& $head_items;
 		}
-		
+
 		/**
 		 * This function is used when you're editting an entity within editing another entity
 		 * @return void
-		 * @todo get rid of references to global variables and make them local 
+		 * @todo get rid of references to global variables and make them local
 		 */
 		function load_associations() // {{{
 		{
-			global $rel_id , $rel_entity_a , $rel_entity_b;		
+			global $rel_id , $rel_entity_a , $rel_entity_b;
 
 			if( $rel_id AND ( $rel_entity_a OR $rel_entity_b ) )
 			{
 				$this->add_element( 'rel_id' , 'hidden' );
 				$this->set_value( 'rel_id' , $rel_id );
-				
+
 				if( $rel_entity_a )
 				{
 					$this->add_element( 'rel_entity_a' , 'hidden' );
@@ -358,9 +363,9 @@
 					$this->set_value( 'rel_entity_b' , $rel_entity_b );
 					$e = new entity( $rel_entity_b );
 				}
-				
+
 				$t = 'Save and return to editing ' . $e->get_value( 'name' );
-				
+
 				$this->actions = array( 'return' => $t );
 			}
 		} // }}}
@@ -379,7 +384,37 @@
 				}
 			}
 		} // }}}
-		
+
+		/**
+		 * moves elements meant for administrators to the end of the form
+		 * and adds a heading
+		 * @return void
+		 */
+		function alter_admin_tools()
+		{
+			$administrator_fields = array('extra_head_content_structured', 'extra_head_content', 'unique_name', 'class_name');
+			$has_administrator_field = false;
+			$previous_field = '';
+			foreach($administrator_fields as $field)
+			{
+				if($this->is_element($field) && !$this->element_is_hidden($field) )
+				{
+					$has_administrator_field = true;
+					$this->add_element('administrator_section_heading', 'comment', array('text' => '<h4>Administrator Tools</h4>'));
+					$previous_field = 'administrator_section_heading';
+				}
+				if($has_administrator_field)
+				{
+					$this->move_element($field,'after',$previous_field);
+					$previous_field = $field;
+				}
+			}
+			if ($this->get_element('class_name')) {
+				$this->set_display_name('class_name', 'Class(es)');
+				$this->set_comments( 'class_name', form_comment('A single class or space-separated list of classes') );
+			}
+		}// }}}
+
 		/**#@+
 		 * Overloadable function for classes that extend this
 		 */
@@ -389,7 +424,7 @@
 		} // }}}
 		function alter_display_names() // {{{
 		{
-			//overloadable function 
+			//overloadable function
 		} // }}}
 		function alter_comments() // {{{
 		{
@@ -415,24 +450,24 @@
 				$e = new entity($this->get_value('id'));
 				echo '<h4 class="saved">Saved at ' . prettify_mysql_timestamp( $e->get_value( 'last_modified' ), 'g:i A' ) . '</h4>';
 			}
-			
+
 			if(!empty($this->_locked_fields))
 				echo '<p><img class="lockIndicator" src="'.REASON_HTTP_BASE_PATH.'ui_images/lock_12px.png" alt="locked" width="12" height="12" /> = Locked fields (info)</p>';
-			
+
 			if(!empty($this->_lock_indicated_fields))
 				echo '<p><img class="lockIndicator" src="'.REASON_HTTP_BASE_PATH.'ui_images/lock_12px_grey_trans.png" alt="locked" width="12" height="12" /> = Fields locked for some users</p>';
-		
+
 		} // }}}
-	
+
 		/**#@+
 		 * Called right before the form finishes
 		 *
 		 * In old Disco, finish would either return a link or return true.
 		 * If it returned true, it would redirect to the current page, otherwise
-		 * it would redirect to wherever the link said.  However, this was a bit of 
+		 * it would redirect to wherever the link said.  However, this was a bit of
 		 * a strain on the finish function.  To fix this problem, the where_to()
 		 * function was created.  The Content_Manager still pays attention (I think)
-		 * to what this returns, but where_to() takes priority.  CMfinish was 
+		 * to what this returns, but where_to() takes priority.  CMfinish was
 		 * built as an extension to finish specifically for reason.
 		 * @return void
 		 */
@@ -445,7 +480,7 @@
 			return $this->CMfinish();
 		} // }}}
 		/**#@-*/
-		
+
 		/**
 		 * This is called by the Admin Finish Module.
 		 * Overload it if you want something special to happen when the entity is finished.
@@ -475,7 +510,7 @@
 			}
 		} // }}}
 		/**
-		 * pending queue has some actions that need to fire before error 
+		 * pending queue has some actions that need to fire before error
 		 * checks are run to avoid coming back to the form when there is
 		 * no reason to come back to the form
 		 * @return void
@@ -495,7 +530,7 @@
 			// in pending queue, delete chosen
 			elseif( $this->chosen_action == 'delete_and_next' )
 			{
-				// get id of next object 
+				// get id of next object
 				$q = 'UPDATE entity SET state = "Deleted" where id = ' . $this->entity->id();
 				db_query( $q , 'Error setting state as deleted in deleteDisco::finish()' );
 				$link = unhtmlentities( $this->admin_page->make_link( array( 'cur_module' => 'Editor', 'id' => $this->next_entity->id() ) ) );
@@ -508,7 +543,7 @@
 		} // }}}
 		/**
 		 * determine button pressed and route accordingly
-		 * 
+		 *
 		 * see finish() and CMfinish()
 		 * @return string link of where to go when form is done
 		 */
@@ -516,15 +551,15 @@
 		{
 			$page =& $this->admin_page;
 			$link = null;
-			$change_detection_redirect = ($this->is_element('change_detection_redirect')) 
-									   ? $this->get_value('change_detection_redirect') 
+			$change_detection_redirect = ($this->is_element('change_detection_redirect'))
+									   ? $this->get_value('change_detection_redirect')
 									   : false;
-			
+
 			if ($change_detection_redirect)
 			{
 				$link = $change_detection_redirect;
-			} 
-			else if ($this->chosen_action == 'finish') 
+			}
+			else if ($this->chosen_action == 'finish')
 			{
 				$link = $page->make_link(array('cur_module' => 'Finish'), false, false);
 			}
@@ -536,15 +571,15 @@
 				// editor
 				$link = $page->make_link(array('cur_module' => 'Finish', 'next_entity' => $this->next_entity->id()), false, false);
 			}
-			else 
+			else
 			{
 				$params = array('id' => $this->_id, 'cur_module' => 'Editor', 'submitted' => false, 'entity_saved' => true);
 				$params = array_merge($params, $this->get_continuation_state_parameters());
 				$link = $page->make_link($params, false, false);
 			}
-			return $link; 
-		} // }}}		
-		
+			return $link;
+		} // }}}
+
 		/**
 		 * Returns any additional query parameters that should be passed to
 		 * the editing page on a "Save & Continue Editing" event.
@@ -555,7 +590,7 @@
 		{
 			return array();
 		}
-		
+
 		function has_association($rel_name)
 		{
 			if ($rels = $this->admin_page->get_rels())

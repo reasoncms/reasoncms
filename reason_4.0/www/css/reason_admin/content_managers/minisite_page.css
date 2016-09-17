@@ -15,20 +15,3 @@ tr#urlfragmentRow span.parent_path, tr#urlfragmentRow span.trailing_slash {
 h4 {
 	font-size:1.125em;
 }
-[id^="administratorsectionheading"] h4 a.closed {
-	background:transparent url(../../../ui_images/item_open.gif) no-repeat right center;
-	padding-right:20px;
-	text-decoration: none;
-}
-[id^="administratorsectionheading"] h4 a.open {
-	background:transparent url(../../../ui_images/item_collapse.gif) no-repeat right center;
-	padding-right:20px;
-	text-decoration: none;
-
-}
-[id^="extraheadcontentstructured"] .headItemAdder a {
-	background:transparent url(../../../silk_icons/add.png) no-repeat;
-	padding-left:20px;
-	min-height:20px;
-	display:inline-block;
-}
