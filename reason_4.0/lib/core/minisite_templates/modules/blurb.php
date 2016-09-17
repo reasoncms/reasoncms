@@ -166,6 +166,8 @@ class BlurbModule extends DefaultMinisiteModule
 			echo '<div class="blurb number'.$i;
 			if($blurb->get_value('unique_name'))
 				echo ' uname_'.htmlspecialchars($blurb->get_value('unique_name'));
+			if( $blurb->get_value('class_name') )
+				echo ' '.htmlspecialchars($blurb->get_value('class_name'));
 			if( $editable )
 				echo ' editable';
 			if( $editing_item )
