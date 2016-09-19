@@ -113,7 +113,7 @@ class ReasonUpgrader_48_DenormalizeTextBlurbs implements reasonUpgraderInterface
 
 	protected function _get_fields_to_add()
 	{
-		return array('class_name' => array('db_type' => 'text'));
+		return array('class_name' => array('db_type' => 'tinytext'));
 	}
 }
 ?>
