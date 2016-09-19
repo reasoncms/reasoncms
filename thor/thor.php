@@ -1296,7 +1296,7 @@ class ThorCore
 			'disabled_options' => $disabledOptions,
 			'multiple' => false,
 			'default' => 0,
-			'display_name' => "Number of Tickets for $eventTitle",
+			'display_name' => "Number of seats for $eventTitle",
 			'add_null_value_to_top' => false,
 		);
 
