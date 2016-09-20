@@ -320,7 +320,13 @@
 		}
 		
 		function run_error_checks_event_tickets() {
-			$thorXml = $this->get_element('thor_content')->value;
+			$thorContent = $this->get_element('thor_content');
+			if (!$thorContent || empty($thorContent->value)) {
+				return;
+			} else {
+				$thorXml = $thorContent->value;
+			}
+
 			$xml = new SimpleXMLElement($thorXml);
 			$ticketElement = $xml->xpath("/*/event_tickets");
 
