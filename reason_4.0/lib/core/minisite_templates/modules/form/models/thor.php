@@ -1647,6 +1647,12 @@ class ThorFormModel extends DefaultFormModel
 		return $event_ticket_nodes;
 	}
 
+	/**
+	 * Uses relationships and thor elements to determine if there are events
+	 * on this form
+	 * 
+	 * @return boolean true if this form has event relationships & is found in thor xml
+	 */
 	function form_has_event_ticket_elements()
 	{
 		return count($this->get_events_on_form()) > 0;
@@ -1733,8 +1739,19 @@ class ThorFormModel extends DefaultFormModel
 		return $requestStatus;
 	}
 
+	/**
+	 * Returns the number of seats remaining for a single event
+	 * 
+	 * @param array $thorEventInfo thor_info from thor xml for a single event
+	 * @return int|boolean number of seats remaining or FALSE when the
+	 *     form doesn't have events
+	 */
 	function event_tickets_get_remaining_seats($thorEventInfo)
 	{
+		if (!$this->form_has_event_ticket_elements()) {
+			return false;
+		}
+		
 		$eventDiscoId = $thorEventInfo['id'];
 		$maxTixAvailable = intval($thorEventInfo['num_total_available']);
 
