@@ -167,12 +167,30 @@ class ThorFormModel extends DefaultFormModel
 		$email_of_recipient = $form->get_value('email_of_recipient');
 		return $email_of_recipient;
 	}
-	
+
+	/**
+	 * Search for an email address of the person who submitted the form
+	 * 
+	 * @return string|bool email provided in the field "Your Email", a user's netid, or false
+	 */
 	function get_email_of_submitter()
 	{
-		return $this->get_user_netid();
+		$disco_obj =& $this->get_view();
+		$thor_core =& $this->get_thor_core_object();
+		$formColumns = $thor_core->get_column_labels_indexed_by_name();
+		foreach ($formColumns as $columnId => $displayName) {
+			// Find thor field named "Your Email" and look up the user-supplied value
+			if ($displayName == "Your Email") {
+				$userEmail = $disco_obj->get_value($columnId);
+				break;
+			}
+		}
+		$userSuppliedValidEmail = filter_var($userEmail, FILTER_VALIDATE_EMAIL);
+		$submitterEmail = $userSuppliedValidEmail ? $userEmail : $this->get_user_netid();
+
+		return $submitterEmail;
 	}
-	
+
 	function get_thank_you_message()
 	{
 		$form =& $this->get_form_entity();
