@@ -797,7 +797,7 @@ class ThorFormModel extends DefaultFormModel
 	function &get_form_entity()
 	{
 		if (!isset($this->_form)) {
-			if (isset($this->_form_id)) {
+			if (isset($this->_form_id) && $this->_form_id > 0) {
 				// Already have a form id
 				$this->_form = new entity($this->_form_id);
 			} else {
