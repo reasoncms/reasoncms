@@ -1644,7 +1644,7 @@ class ThorFormModel extends DefaultFormModel
 		$thor_xml = $this->_form->get_value('thor_content');
 		$event_ticket_nodes = array();
 		try {
-			$xml = new SimpleXMLElement($thor_xml . "/");
+			$xml = new SimpleXMLElement($thor_xml);
 			$event_ticket_nodes = $xml->xpath("/*/event_tickets");
 		} catch (Exception $exc) {
 			trigger_error($exc->getMessage() . " XML=$thor_xml");
