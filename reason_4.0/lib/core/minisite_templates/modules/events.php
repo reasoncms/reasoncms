@@ -4390,7 +4390,7 @@ class EventsModule extends DefaultMinisiteModule
 				$eventIdInRequestIsValid = true;
 			}
 		}	
-		
+
 	
 		if ($eventIdInRequestIsValid) {
 			// Prepare the form, store response html in var 
@@ -4406,12 +4406,16 @@ class EventsModule extends DefaultMinisiteModule
 
 			// This demotion is to reuse existing styles (and partially semantic, too)
 			$formHtml = demote_headings($formHtml, 1);
-			
+
+			// Use the full form name for the header above the form
+			$model =& $controller->get_model();
+			$formEntity = $model->_form;
+
 			$html = <<<HTML
 <a name="jumpToForm"></a>
 <div id="slotInfo">
 	<div class="form">
-		<h3>Register for {$this->event->get_value('name')}</h3>
+		<h3>{$formEntity->get_value('name')}</h3>
 		$formHtml
 	</div>
 </div>
