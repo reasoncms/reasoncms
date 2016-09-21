@@ -125,6 +125,8 @@
 
 			// Then adjust event_ticket elements for the current request
 			$this->adjust_event_ticket_node_xml();
+			
+			parent::init_form();
 		}
 
 		/**
@@ -140,20 +142,20 @@
 			$summary->set_data_from_array($user_values);		
 		}
 		
-		function run_form()
-		{
-			// Forms with Event Tickets need an event ID in the request to 
-			// enforce only getting tickets for an event per submission
-			if ($this->check_view_and_model_and_invoke_method('should_show_event_tickets_list')) {
-				echo $this->check_view_and_invoke_method('get_event_ticket_selector_html');
-			} else if ($this->check_view_and_model_and_invoke_method('should_hide_form_when_event_full')) {
-				echo $this->check_view_and_invoke_method('get_event_full_html');
-			} else if ($this->check_view_and_model_and_invoke_method('should_hide_form_when_event_closed')) {
-				echo $this->check_view_and_invoke_method('get_event_closed_html');
-			} else {
-				parent::run_form();
-			}
-		}
+//		function run_form()
+//		{
+//			// Forms with Event Tickets need an event ID in the request to 
+//			// enforce only getting tickets for an event per submission
+//			if ($this->check_view_and_model_and_invoke_method('should_show_event_tickets_list')) {
+//				echo $this->check_view_and_invoke_method('get_event_ticket_selector_html');
+//			} else if ($this->check_view_and_model_and_invoke_method('should_hide_form_when_event_full')) {
+//				echo $this->check_view_and_invoke_method('get_event_full_html');
+//			} else if ($this->check_view_and_model_and_invoke_method('should_hide_form_when_event_closed')) {
+//				echo $this->check_view_and_invoke_method('get_event_closed_html');
+//			} else {
+//				parent::run_form();
+//			}
+//		}
 
 		function should_show_event_tickets_list()
 		{
