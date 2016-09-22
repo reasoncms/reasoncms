@@ -4354,8 +4354,9 @@ class EventsModule extends DefaultMinisiteModule
 			$form_model->init_from_module($this);
 			// Unlike typical forms with a 'page_to_form' relationship,
 			// here our form ID comes from an 'event_to_form' relationship and is already
-			// present on this Event object so we define it on the model. 
-			$form_model->_form_id = $formId;
+			// present on this Event object so we manually define it on the model. 
+			$form_model->set_form_id($formId);
+			$form_model->set_form_entity($formId);
 
 			$form_controller = new ThorFormController();
 			$form_controller->set_model($form_model);
