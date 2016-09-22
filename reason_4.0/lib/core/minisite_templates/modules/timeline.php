@@ -15,7 +15,7 @@
 		var $timeline;
 		var $category_id = 0;
 		var $category_id_list = array(0 => "All");
-		var $cleanup_rules = array('category_id' => 'turn_into_int');
+		var $cleanup_rules = array('category_id' => 'turn_into_int','json_html_decode' => 'turn_into_int');
 		
 		static function setup_supported_apis()
 		{
@@ -122,6 +122,15 @@
 			return $val;
 		}
 		
+		function prep_string_for_json($str)
+		{
+			if(!empty($this->request['json_html_decode']))
+			{
+				return unhtmlentities(strip_tags($str));
+			}
+			return $str;
+		}
+		
 		function create_timeline_slide($timeline_item, &$timeline_item_json)
 		// populate the timeline_item_json array with contents of the timeline_item
 		// returns false if timeline_item is not in the currently chosen category otherwise true
@@ -134,8 +143,8 @@
 				'display_date' => $this->nullify($timeline_item->get_value('display_date')),
 				'unique_id'    => $this->nullify($timeline_item->get_value('unique_name')),
 				'text' => [
-					'headline' => $timeline_item->get_value('name'),
-					'text'     => $timeline_item->get_value('text')
+					'headline' => $this->prep_string_for_json($timeline_item->get_value('name')),
+					'text'     => $this->prep_string_for_json($timeline_item->get_value('text')),
 				]
 			];
 			
@@ -153,7 +162,7 @@
 			
 					$timeline_item_json['media'] = [
 						'url' => securest_available_protocol().'://'.REASON_HOST.reason_get_image_url($image),
-						'caption' => $image->get_value('description')
+						'caption' => $this->prep_string_for_json($image->get_value('description')),
 					];
 				}
 			}
@@ -175,13 +184,13 @@
 						if ($media_work->get_value('integration_library') == 'youtube' && !empty($media_work->get_value('entry_id')))
 						{
 							$timeline_item_json['media'] = [
-								'url' => 'https://www.youtube.com/watch?v=' . $media_work->get_value('entry_id')
+								'url' => $this->prep_string_for_json('https://www.youtube.com/watch?v=' . $media_work->get_value('entry_id')),
 							];
 						}
 						else if ($media_work->get_value('integration_library') == 'vimeo' && !empty($media_work->get_value('entry_id')))
 						{
 							$timeline_item_json['media'] = [
-								'url' => 'https://vimeo.com/' . $media_work->get_value('entry_id')
+								'url' => $this->prep_string_for_json('https://vimeo.com/' . $media_work->get_value('entry_id')),
 							];
 						}
 						else
@@ -199,7 +208,7 @@
 			else if ($timeline_item->get_value('media') == 'other')
 			{
 				$timeline_item_json['media'] = [
-					'url' => $timeline_item->get_value('other_media')
+					'url' => $this->prep_string_for_json($timeline_item->get_value('other_media')),
 				];
 			}
 			
