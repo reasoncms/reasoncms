@@ -185,7 +185,7 @@ class ThorFormModel extends DefaultFormModel
 				break;
 			}
 		}
-		$userSuppliedValidEmail = filter_var($userEmail, FILTER_VALIDATE_EMAIL);
+		$userSuppliedValidEmail = $userEmail ? filter_var($userEmail, FILTER_VALIDATE_EMAIL) : false;
 		$submitterEmail = $userSuppliedValidEmail ? $userEmail : $this->get_user_netid();
 
 		return $submitterEmail;
@@ -787,33 +787,50 @@ class ThorFormModel extends DefaultFormModel
 	}
 	
 	/**
-	 * Return mixed form entity object or false
+	 * Returns the entity set on the model OR looks up a form related to the
+	 * current page via 'page_to_form' relationship
 	 * 
-	 * Gotcha: looks up form ids via 'page_to_form' relationship
-	 *         or via $this->_form_id, if that value is already set (possibly manually)
-	 * 
-	 * @access private
+	 * @return Entity|false a form entity, or false if no entity set/found
 	 */
 	function &get_form_entity()
 	{
-		if (!isset($this->_form)) {
-			if (isset($this->_form_id) && $this->_form_id > 0) {
-				// Already have a form id
-				$this->_form = new entity($this->_form_id);
-			} else {
-				// Lookup the form attached to this page
-				$es = new entity_selector();
-				$es->description = 'Selecting form to display on a minisite page.';
-				$es->add_type(id_of('form'));
-				$es->add_right_relationship($this->get_page_id(), relationship_id_of('page_to_form'));
-				$es->set_num(1);
-				$result = $es->run_one();
-				if ($result) {
-					$this->_form = reset($result);
-				}
-			}
+		if (!isset($this->_form))
+		{
+			$es = new entity_selector();
+			$es->description = 'Selecting form to display on a minisite page.';
+			$es->add_type( id_of('form') );
+			$es->add_right_relationship( $this->get_page_id(), relationship_id_of('page_to_form') );
+			$es->set_num(1);
+			$result = $es->run_one();
+			if ($result)
+			{
+ 				$this->_form = reset($result);
+ 			}
+  			else $this->_form = false;
+  		}
+  		return $this->_form;
+	}
+	
+	/**
+	 * Manually set the form entity for the model
+	 * 
+	 * To be used in cases where there is no page_to_form relationship
+	 * where get_form_entity() would fail
+	 * 
+	 * When this method is used, manually calling set_form_id() is also
+	 * recommended
+	 *  
+	 * @param int $form_id entity id for a form
+	 */
+	function set_form_entity($form_id)
+	{
+		$form_id = intval($form_id);
+		if ($form_id < 1) {
+			trigger_error(__METHOD__ . " was passed an invalid form id");
+			$this->_form = false;
+		} else {
+			$this->_form = new entity($form_id);
 		}
-		return $this->_form;
 	}
 
 	function &get_values()
