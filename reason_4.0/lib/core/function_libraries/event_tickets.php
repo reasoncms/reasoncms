@@ -46,7 +46,7 @@ function get_ticket_status_html_link($eventId, $eventInfo, $link)
 	$eventState = $eventInfo['eventState'];
 	$eventTitle = get_pretty_ticketed_event_name($eventId);
 
-	if ($eventState == 'open' || !is_array($eventInfo)) {
+	if ($eventState == 'open' || (!is_array($eventInfo) || empty($eventInfo))) {
 		$html .= "Tickets for <a href='$link'>$eventTitle</a><br>\n";
 	} else {
 		$key_for_closed = $eventInfo['eventStateReason'];
