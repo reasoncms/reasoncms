@@ -179,6 +179,7 @@ class ThorFormModel extends DefaultFormModel
 		$thor_core =& $this->get_thor_core_object();
 		$formColumns = $thor_core->get_column_labels_indexed_by_name();
 		foreach ($formColumns as $columnId => $displayName) {
+			$displayName = trim($displayName);
 			// Find thor field named "Your Email" and look up the user-supplied value
 			if ($displayName == "Your Email") {
 				$userEmail = $disco_obj->get_value($columnId);
@@ -1276,7 +1277,7 @@ class ThorFormModel extends DefaultFormModel
 		$display_values =& $thor_core->get_column_labels_indexed_by_name();
 		foreach ($display_values as $key => $label)
 		{
-			$normalized_label = strtolower(str_replace(array(' ',':'), array('_',''), $label));
+			$normalized_label = strtolower(str_replace(array(' ',':'), array('_',''), trim($label)));
 			if (isset($transform_array[$label]) || isset($transform_array[$normalized_label]))
 			{
 				$value = (isset($transform_array[$label])) ? $transform_array[$label] : $transform_array[$normalized_label];
