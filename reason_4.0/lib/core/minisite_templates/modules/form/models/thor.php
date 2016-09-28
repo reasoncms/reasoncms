@@ -185,7 +185,7 @@ class ThorFormModel extends DefaultFormModel
 				break;
 			}
 		}
-		$userSuppliedValidEmail = $userEmail ? filter_var($userEmail, FILTER_VALIDATE_EMAIL) : false;
+		$userSuppliedValidEmail = isset($userEmail) ? filter_var($userEmail, FILTER_VALIDATE_EMAIL) : false;
 		$submitterEmail = $userSuppliedValidEmail ? $userEmail : $this->get_user_netid();
 
 		return $submitterEmail;
@@ -533,7 +533,8 @@ class ThorFormModel extends DefaultFormModel
 				'table_action' => '',
 				'submission_key' => '',
 				'table_row_action' => '',
-				'table_action_id' => ''
+				'table_action_id' => '',
+				'table_summations' => ''
 			);
 			$link['Exit administrative view'] = carl_construct_link($clear_these_params, array_keys($preserve_url_vars));
 		}	
@@ -1645,6 +1646,12 @@ class ThorFormModel extends DefaultFormModel
  		return $this->_magic_transform_values;
 	}
 	
+	/**
+	 * Lookup a pretty name for an ticketed event
+	 * 
+	 * @param int $eventId event id
+	 * @return string pretty event name or an empty string if no event found
+	 */
 	function get_event_ticket_title($eventId = 0)
 	{
 		if (!$eventId) {
@@ -1656,6 +1663,11 @@ class ThorFormModel extends DefaultFormModel
 		return get_pretty_ticketed_event_name($eventId);
 	}
 
+	/**
+	 * Load event ticket thor configurations from the form
+	 * 
+	 * @return array an array of SimpleXMLElement objects or FALSE in case of an error
+	 */
 	function get_events_thor_configs()
 	{
 		$thor_xml = $this->_form->get_value('thor_content');
@@ -1680,6 +1692,15 @@ class ThorFormModel extends DefaultFormModel
 		return count($this->get_events_on_form()) > 0;
 	}
 
+	/**
+	 * Return an array of events related to this form AND found in the form's 
+	 * Thor XML configuration.
+	 * 
+	 * The Thor addition is to ensure there is a receptacle for collecting 
+	 * ticket information and not just a spurious relationship.
+	 * 
+	 * @return array array of event entity ids
+	 */
 	function get_events_on_form()
 	{
 		$formId = $this->_form->id();
@@ -1708,6 +1729,14 @@ class ThorFormModel extends DefaultFormModel
 		return $validEvents;
 	}
 
+	/**
+	 * Find the 'event_id' parameter in the current request
+	 * 
+	 * A request should only have one event_id at a time
+	 * 
+	 * @return int|boolean returns the current event id or FALSE if the key was
+	 *     not present in the request
+	 */
 	function get_event_id_in_request()
 	{
 		$currentEventId = false;
@@ -1717,6 +1746,30 @@ class ThorFormModel extends DefaultFormModel
 		return $currentEventId;
 	}
 
+	/**
+	 * Returns event information about the current request in an array
+	 * 
+	 * 'thor_info' is from Thor and gradually expanded and passed around, often
+	 * as $thorEventInfo (of various states)
+	 * 
+	 * 'submitted_value' is only non-zero on a POST request, and there is an
+	 * error check to disallow requesting 0 tickets
+	 * 
+	 * @return array|boolean rurns an array similar to below for the event
+	 *     in the current request, or FALSE when no event in request
+	 * 
+	 * array (size=2)
+	 *   'thor_info' => 
+	 *     array (size=7)
+	 *       'label' => string 'Comps Performance: COCK, Sep 30 2016, 9:00pm' (length=44)
+	 *       'id' => string 'id_7' (length=4)
+	 *       'event_id' => string '1470113' (length=7)
+	 *       'num_total_available' => string '35' (length=2)
+	 *       'max_per_person' => string '4' (length=1)
+	 *       'event_close_datetime' => string '' (length=0)
+	 *       'remaining_seats' => string '28' (length=2)
+	 *   'submitted_value' => int 0
+	 */
 	function event_tickets_get_request()
 	{
 		$thorCore = $this->get_thor_core_object();
@@ -1724,7 +1777,7 @@ class ThorFormModel extends DefaultFormModel
 		if ($currentEventId === false) {
 			return;
 		}
-		$ticketRequest = $thorCore->get_event_tickets_thor_nodes($this->get_view(), $currentEventId);
+		$ticketRequest = $thorCore->get_event_tickets_thor_info($this->get_view(), $currentEventId);
 		if (count($ticketRequest) > 1) {
 			// Thor XML is modified in the init method for Thor forms 
 			// to strip out other events associated with this form such 
@@ -1735,6 +1788,16 @@ class ThorFormModel extends DefaultFormModel
 		return $ticketRequest[0];
 	}
 
+	/**
+	 * Determine of a form submission which contains a request for tickets
+	 * at an event can proceed
+	 * 
+	 * To be tacked used during the error checking phase of form processing
+	 * 
+	 * @param type $ticketRequest array of event ticket info, see event_tickets_get_request()
+	 *  
+	 * @return type
+	 */
 	function event_tickets_ticket_request_is_valid($ticketRequest)
 	{
 		$numTicketsRequested = intval($ticketRequest['submitted_value']);
@@ -1790,10 +1853,34 @@ class ThorFormModel extends DefaultFormModel
 		return $remainingSeats;
 	}
 
+	/**
+	 * Returns live information & status about all events on the form
+	 * 
+	 * Loads event configuration & data from Thor form, then does some calculations
+	 * to determine remaining tickets available and the event state
+	 * 
+	 * This is the most comprehensive data structure for event tickets, sometimes
+	 * functions only use a subset of the fields provided by Thor
+	 * 
+	 * @return array assoc array with a structure similar to the following
+	 *     eventEntityId (int) => 
+	 *         array (size=10)
+	 *           'label' => string 'Comps Performance: COCK, Sep 29 2016, 7:00pm' (length=44)
+	 *           'id' => string 'id_4' (length=4)
+	 *           'event_id' => string '1462906' (length=7)
+	 *           'num_total_available' => string '35' (length=2)
+	 *           'max_per_person' => string '4' (length=1)
+	 *           'event_close_datetime' => string '' (length=0)
+	 *           'ticketsClaimed' => int 14
+	 *           'ticketsAvailable' => int 21
+	 *           'eventState' => string 'open' (length=4)
+	 *           'eventStateReason' => string '' (length=0)
+	 *     eventEntityId (int) => ...
+	 */
 	function event_tickets_get_all_event_seat_info()
 	{
 		$thorCore = $this->get_thor_core_object();
-		$events = $thorCore->get_event_tickets_thor_nodes($this->get_view());
+		$events = $thorCore->get_event_tickets_thor_info($this->get_view());
 
 		$return_info = array();
 		foreach ($events as $k => $event) {
@@ -1825,8 +1912,19 @@ class ThorFormModel extends DefaultFormModel
 		return $return_info;
 	}
 
-	// make sure docs mention that "closed" here only refers to closure due 
-	// to time proximity to the event, not that the event has full capacity
+	/**
+	 * Determine if ticket sales are closed given the current time
+	 * 
+	 * This method only uses temporal comparisons and doesn't both with seating
+	 * capacity checks
+	 * 
+	 * @param type $thorEventInfo an array of keys from the Thor XML form definition
+	 *     for an event ticket node
+	 * @param DateTime $baseDatetime optional, if we want to base the comparison agains
+	 *     a DateTime that is not this instant
+	 * @return boolean returns TRUE if this event is closed due to proximity 
+	 *     to the event or its defined box office close time
+	 */
 	function event_tickets_thor_event_is_closed($thorEventInfo, DateTime $baseDatetime = null)
 	{
 		// See if tickets shouldn't be sold anymore

@@ -1253,12 +1253,15 @@ class ThorCore
 		if(!$eventId) {
 			return;
 		}
-
+		
 		if (array_key_exists('num_total_available', $element->tagAttrs)) {
 			$numTotalAvailableForEvent = $element->tagAttrs['num_total_available'];
 		}
 		if (array_key_exists('max_per_person', $element->tagAttrs)) {
 			$numMaxPerPersonForEvent = $element->tagAttrs['max_per_person'];
+		} else {
+			// If we don't have as max per person limit, use 1 ticket per person
+			$numMaxPerPersonForEvent = 1;
 		}
 		if (array_key_exists('event_close_datetime', $element->tagAttrs)) {
 			$closeAfterDatetimeForEvent = $element->tagAttrs['event_close_datetime'];
@@ -1272,7 +1275,7 @@ class ThorCore
 			$numTicketsCurrentlyRemaining = 100000;
 		}
 		
-		
+
 		// Generate list of number of tickets a person can select, being sensitive
 		// to the number of tickets still available (except when editing a form submission)
 		$allOptions = array();
@@ -1316,7 +1319,16 @@ class ThorCore
 		$d->actions = Array( 'submit' => $submit);
 	}
 	
-	function get_event_tickets_thor_nodes($disco_obj, $filter_event_id = 0)
+	/**
+	 * Get 'thor_info' and a 'submitted_value' field out of the form
+	 * 
+	 * Submitted value only present on post requests
+	 * 
+	 * @param Disco $disco_obj
+	 * @param int $filter_event_id limit results to this event id
+	 * @return array array of event ticket info with keys 'thor_info' and 'submitted_value' for each
+	 */
+	function get_event_tickets_thor_info($disco_obj, $filter_event_id = 0)
 	{
 		$xml = $this->get_thor_xml();
 		$thor_values = array();

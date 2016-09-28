@@ -15,7 +15,11 @@ class ticketsListItemMarkup extends miniEventsListItemMarkup
 		$html = $this->bundle->teaser_image($event, $linkForOpenEvents);
 
 		$formInfo = $this->bundle->get_ticket_info_from_form($event);
-		$thisEventsInfo = $formInfo[$eventId];
+		if (array_key_exists($eventId, $formInfo)) {
+			$thisEventsInfo = $formInfo[$eventId];
+		} else {
+			$thisEventsInfo = array();
+		}
 
 		$html .= get_ticket_status_html_link($eventId, $thisEventsInfo, $linkForOpenEvents);
 
