@@ -302,10 +302,10 @@ class formbuilder2Type extends textareaType
 				if (!isset($field->event_tickets_event_id)) {
 					$formErrors .= ($formErrors == "" ? "" : "<br>") . "Ticket Slot (field #" . ($fieldIdx + 1) . ") does not have an event selected";
 				} else {
-					// Event ticket types don't use a label, add a dummy label
-					if ($field->label == "" || $field->label == "dynamic_field_not_set_by_user_here") {
-						$field = $this->add_event_ticket_title_to_field($field);
-					}
+					// Event ticket types don't use a label in the form builder,
+					// recheck the label on each save. The recheck every time is
+					// necessary to accomodate duplicating forms and the event element
+					$field = $this->add_event_ticket_title_to_field($field);
 				}
 			}
 
