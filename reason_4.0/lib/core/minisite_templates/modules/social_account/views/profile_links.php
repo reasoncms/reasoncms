@@ -37,7 +37,7 @@ class ReasonSocialProfileLinksView extends ReasonMVCView
 			foreach ($profile_links as $id => $link)
 			{
 				$space = (isset($space)) ? " " : "";
-				$str .= $space . '<a href="'.$link['href'].'"><img src="'.$link['icon'].'" alt="'.$link['text'].'" /></a>';	
+				$str .= $space . '<a href="'.$link['href'].'"><img src="'.$link['icon'].'" alt="'.$link['text'].'" title="'.$link['name'].'" /></a>';	
 			}
 			$str .= '</div>';
 		}
