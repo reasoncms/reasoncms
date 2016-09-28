@@ -3529,7 +3529,10 @@ class EventsModule extends DefaultMinisiteModule
 		}
 		
 		if($this->params['limit_to_ticketed_events']) {
-			$es->add_left_relationship_field('event_to_form', 'entity', 'id', 'event_id');
+			// Limit to events with the 'event_to_form' relationship AND
+			// the state of the form entity is Live
+			$table_info = $es->add_left_relationship_field('event_to_form', 'entity', 'state', 'form_id');
+			$es->add_relation($table_info['form_id']['table'] . '.' . $table_info['form_id']['field'] . ' = "Live"');
 		}
 		
 		if(!empty($this->params['freetext_filters']))
