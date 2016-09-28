@@ -765,6 +765,19 @@
 			),
 			'sidebar' => '',
 		),
+		'events_with_tickets_list' => array(
+			'main_post' => array(
+				'module' => 'events_mini',
+				'wrapper_id' => 'events_list_tickets',
+				// List all events with tickets (basically)
+				'ideal_count' => 10000,
+				// The following parameter & markup templates need to stay together
+				'limit_to_ticketed_events' => true,
+				'list_markup' => 'minisite_templates/modules/events_markup/tickets/tickets_events_list.php',
+				'list_item_markup' => 'minisite_templates/modules/events_markup/tickets/tickets_events_list_item.php',
+				'list_chrome_markup' => 'minisite_templates/modules/events_markup/tickets/tickets_events_list_chrome.php',
+			),
+		),
 		'events' => array(
 			'main_post' => 'events',
 			'sidebar' => '',
