@@ -4784,6 +4784,8 @@ HTML;
 	/**
 	 * Get Event Ticket info & state from all related forms
 	 * 
+	 * If a event hasn't received any submissions it will not appear in this array
+	 * 
 	 * @param Entity $event event entity
 	 * @return array
 	 */
