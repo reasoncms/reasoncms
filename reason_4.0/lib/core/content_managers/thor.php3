@@ -174,7 +174,15 @@
 			{
 				foreach($advanced_option_display_names as $k=>$v)
 				{
-					$this->remove_element($k);	
+					// If data was submitted for an advanced option, take it and use it
+					// but transition the element to hidden since the assumption here
+					// is users shouldn't edit the value. But a error checking script
+					// (like for event tickets) may need to actually set these values
+					if (!empty($this->get_value($k))) {
+						$this->change_element_type($k, "hidden");
+					} else {
+						$this->remove_element($k);
+					}
 				}
 			}
 			$this->setup_tableless_element();
@@ -318,16 +326,76 @@
 			$this->run_error_checks_advanced_options();
 			$this->run_error_checks_event_tickets();
 		}
-		
-		function run_error_checks_event_tickets() {
-			$thorContent = $this->get_element('thor_content');
-			if (!$thorContent || empty($thorContent->value)) {
-				return;
+
+		/**
+		 * Get the Thor XML definition for this form
+		 * 
+		 * @return string a thor xml form defition
+		 */
+		function get_thor_content_value()
+		{
+			// Use this variable for the form's first save
+			if (is_string($this->get_value('thor_content'))) {
+				$thorContent = $this->get_value('thor_content');
 			} else {
-				$thorXml = $thorContent->value;
+				// Once a form collects submissions, the thor_content field changes types
+				// on the content manager object. So actually check the form entity's 
+				// value for thor_content.
+				$thorContent = $this->entity->get_value('thor_content');
 			}
 
-			$xml = new SimpleXMLElement($thorXml);
+			return $thorContent;
+		}
+
+		/**
+		 * Determine if the form has event ticket items present in the definition
+		 * 
+		 * @return boolean TRUE if form has one or more event tickets defined
+		 */
+		function has_event_tickets()
+		{
+			$thorContent = $this->get_thor_content_value();
+
+			try {
+				$xml = new SimpleXMLElement($thorContent);
+				$ticketElement = $xml->xpath("/*/event_tickets");
+			} catch (Exception $exc) {
+				trigger_error($exc->getTraceAsString());
+			}
+
+			return isset($ticketElement) && count($ticketElement) > 0;
+		}
+
+		/**
+		 * Remove 'event_to_form' relationships when the event is no longer
+		 * in the thor form xml
+		 */
+		function delete_stale_event_form_relationships()
+		{
+			$form = $this->entity;
+			$formRels = $form->get_right_relationships_info('event_to_form');
+			$existingEventFormRelationships = $formRels['event_to_form'];
+
+			$eventsInForm = $this->get_event_ids_in_form();
+
+			foreach ($existingEventFormRelationships as $relationship) {
+				$existingRelId = $relationship['entity_a'];
+				if (!in_array($existingRelId, $eventsInForm)) {
+					//	echo "deleting relationship for event $existingRelId; not found in form <br>\n";
+					delete_relationship($relationship['id']);
+				}
+			}
+		}
+
+		/**
+		 * Get Event IDs out of the thor form xml
+		 * 
+		 * @return array of event IDs in the form, or an empty array
+		 */
+		function get_event_ids_in_form()
+		{
+			$thorContent = $this->get_thor_content_value();
+			$xml = new SimpleXMLElement($thorContent);
 			$ticketElement = $xml->xpath("/*/event_tickets");
 
 			// Get ticket form items out of thor structure
@@ -341,27 +409,96 @@
 					// Error is set in formbuilder2.php plasmature type
 				}
 			}
+			return $eventsInForm;
+		}
 
-			$form = $this->entity;
-			$formRels = $form->get_right_relationships_info('event_to_form');
-			$existingEventFormRelationships = $formRels['event_to_form'];
+		/**
+		 * Manage 'event_to_form' relationships when a event ticket form node is present
+		 * or deleted.
+		 * 
+		 * Also trigger the requirements routine for forms with event ticket
+		 */
+		function run_error_checks_event_tickets()
+		{
+			if (!$this->has_event_tickets()) {
+				$this->delete_stale_event_form_relationships();
+				return;
+			} else {
+				$eventsInForm = $this->get_event_ids_in_form();
+			}
 
 			// Add new rels
 			foreach ($eventsInForm as $formEventId) {
 				//echo "creating $formEventId event relationship<br>\n";
-				create_relationship($formEventId, $form->id(), relationship_id_of('event_to_form'));
+				create_relationship($formEventId, $this->entity->id(), relationship_id_of('event_to_form'));
 			}
 
 			// remove old/stale rels
-			foreach ($existingEventFormRelationships as $relationship) {
-				$existingRelId = $relationship['entity_a'];
-				if (!in_array($existingRelId, $eventsInForm)) {
-					//echo "deleting relationship for event $existingRelId; not found in form <br>\n";
-					delete_relationship($relationship['id']);
+			$this->delete_stale_event_form_relationships();
+
+			// Apply requirements to an Event Ticket form
+			$requirements = $this->event_ticket_apply_requirements();
+			foreach ($requirements as $elementName => $info) {
+				if ($info['changed']) {
+					$this->set_error($elementName, $info['message'] . " Please resave the form to automatically correct the issue.");
 				}
 			}
 		}
-		
+
+		/**
+		 * Automatically create missing elements with required values or adjust the
+		 * existing elements to the required values
+		 */
+		function event_ticket_apply_requirements()
+		{
+			$requirements = array(
+				"db_flag" => array(
+					"value" => "yes",
+					"message" => "An event ticket form must save to a database table. This option was selected on your behalf."
+				),
+				"email_of_recipient" => array(
+					"value" => "",
+					"message" => "An event ticket form can not email responses, it must save to a database. The email recipient field was cleared to avoid confusion."
+				),
+				"show_submitted_data" => array(
+					"value" => "yes",
+					"message" => "An event ticket form must show submitted data after submission."
+				),
+				"email_submitter" => array(
+					"value" => "yes",
+					"message" => "An event ticket form must send a thank you email to confirm the ticket request. Make sure the email field is named 'Your Email'!"
+				),
+				"email_data" => array(
+					"value" => "yes",
+					"message" => "An event ticket form must include form data in the email, it tells the user how many tickets they obtained."
+				),
+				"include_thank_you_in_email" => array(
+					"value" => "yes",
+					"message" => "An event ticket form must include the thank you text in the confirmation email. Make sure the Thank You message is appropriate for a web page and an email message."
+				),
+			);
+
+			foreach ($requirements as $elementName => $info) {
+				if (!$this->_is_element($elementName)) {
+					// Create a hidden version of the element with the required value
+					$this->add_element($elementName, 'hidden');
+					$this->set_value($elementName, $info['value']);
+					$requirements[$elementName]['changed'] = true;
+				} else {
+					// Make sure existing element's value is correct
+					$requiredValue = $info['value'];
+					if ($this->get_value($elementName) != $requiredValue) {
+						$this->set_value($elementName, $requiredValue);
+						$requirements[$elementName]['changed'] = true;
+					} else {
+						$requirements[$elementName]['changed'] = false;
+					}
+				}
+			}
+
+			return $requirements;
+		}
+
 		function pre_show_form()
 		{
 			parent::pre_show_form();
