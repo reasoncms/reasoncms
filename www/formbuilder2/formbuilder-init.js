@@ -47,7 +47,7 @@ function initializeFormbuilder($, Formbuilder, thorContentItemId) {
 
 		var htmlSelect = "";
 		Formbuilder.eventInfo = {};
-		$.each(eventArray, function (event) {
+		$.each(eventArray, function (index, event) {
 			// Save event obj for the method to display pretty event titles
 			// in the Formbuilder view
 			Formbuilder.eventInfo[event.id] = event;
