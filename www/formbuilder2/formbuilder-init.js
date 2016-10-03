@@ -47,7 +47,7 @@ function initializeFormbuilder($, Formbuilder, thorContentItemId) {
 
 		var htmlSelect = "";
 		Formbuilder.eventInfo = {};
-		eventArray.each(function (event) {
+		$.each(eventArray, function (index, event) {
 			// Save event obj for the method to display pretty event titles
 			// in the Formbuilder view
 			Formbuilder.eventInfo[event.id] = event;
@@ -65,10 +65,13 @@ function initializeFormbuilder($, Formbuilder, thorContentItemId) {
 	}
 	
 	Formbuilder.event_id_to_name = function(eventId) {
+		console.log(eventId);
 		var title = "";
 		if(this.eventInfo[eventId]) {
 			title = this.eventInfo[eventId].name + ", " + this.eventInfo[eventId].datetime_pretty;
 		}
+				console.log(title);
+
 		return title;
 	}
 	
