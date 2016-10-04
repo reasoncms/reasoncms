@@ -443,6 +443,18 @@
 					$this->set_error($elementName, $info['message'] . " Please resave the form to automatically correct the issue.");
 				}
 			}
+			
+			// Make sure the form definition has a field named "Your Email"
+			$thorXml = $this->get_thor_content_value();
+			try {
+				$xml = new SimpleXMLElement($thorXml);
+				$emailNode = $xml->xpath("/*/input[@label='Your Email']");
+				if (empty($emailNode)) {
+					$this->set_error('thor_content', "An event ticket form requires a short text input with the exact label 'Your Email'. Please add that element or change the email field label to 'Your Email'.");
+				}
+			} catch (Exception $exc) {
+				trigger_error($exc->getTraceAsString());
+			}
 		}
 
 		/**
