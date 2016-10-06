@@ -118,14 +118,19 @@
 			// so we need to make sure the original xml is used to create the populate
 			// the database tables. Do that on the first save request, a little earlier
 			// than when Thor would do it naturally.
-			if ($_POST) {
-				$thor_core = $this->model->get_thor_core_object();
-				$thor_core->create_table_if_needed();
+			$model =& $this->get_model();
+			if ($model->form_has_event_ticket_elements()) {
+				if ($_POST) {
+					// This area stashes the full thor xml schema before we adjust
+					// it below (to only show one ticket item to a user, etc)
+					// The stashed strucuture is only used when the sql table
+					// is created for the first time.
+					$thor_core = $model->get_thor_core_object();
+					$thor_core->stash_current_structure_for_table_generation();
+				}
+				$this->adjust_event_ticket_node_xml();
 			}
 
-			// Then adjust event_ticket elements for the current request
-			$this->adjust_event_ticket_node_xml();
-			
 			parent::init_form();
 		}
 
@@ -209,6 +214,17 @@
 			return $html;
 		}
 
+		/**
+		 * Adjust the original Thor XML in two ways:
+		 *   1) Remove event ticket elements that don't match the current request.
+		 *      This is so users only see & register for one event at a time.
+		 * 
+		 *   2) Lookup the real, current number of remaining seats for the event
+		 *      displayed and stash that number in the xml. The xml then generates
+		 *      a correctly formatted dropdown menu
+		 * 
+		 * This routine only runs when 'event_id' is present in the request.
+		 */
 		function adjust_event_ticket_node_xml()
 		{
 			$model = $this->get_model();

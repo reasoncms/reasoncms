@@ -43,6 +43,8 @@ class ThorCore
 		'date_created' => 'timestamp default 0 NOT NULL',
 		'date_modified' => 'timestamp default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP',
 		);
+	var $_stashed_sql_for_table_generation = "";
+	var $_stashed_structure = array();
 	
 	function ThorCore($xml = '', $table = '')
 	{
@@ -821,11 +823,25 @@ class ThorCore
   		return $this->_column_exists[$column];
 	}
 	
+	/**
+	 * Creates a SQL table
+	 * 
+	 * Will check $this->_stashed_sql_for_table_generation first and use the SQL
+	 * stashed in this variable first. When the variable is empty, the SQL 
+	 * to create the table is generated.
+	 * 
+	 * @return boolean|null returns TRUE when the table was created, FALSE on a possible
+	 *     creation error, and NULL when the table already exists
+	 */
 	function create_table()
 	{
 		if ($this->get_thor_table() && !$this->table_exists())
 		{
-			$sql = $this->get_create_table_sql();
+			if (!empty($this->_stashed_sql_for_table_generation)) {
+				$sql = $this->_stashed_sql_for_table_generation;
+			} else {
+				$sql = $this->get_create_table_sql();
+			}
 			if (!get_current_db_connection_name()) connectDB($this->get_db_conn());
 			$reconnect_db = (get_current_db_connection_name() != $this->get_db_conn()) ? get_current_db_connection_name() : false;
 			if ($reconnect_db) connectDB($this->get_db_conn());
@@ -856,6 +872,30 @@ class ThorCore
 		return false;
 	}
 	
+	/**
+	 * Store a snapshot of the current database structure and SQL.
+	 * 
+	 * To be used later when the table is generated.
+	 * 
+	 * Useful in situations where the thor xml is modified during runtime, like when
+	 * event ticket items are in use, but we want to original xml to drive 
+	 * the database table creation. All event ticket nodes are used to create 
+	 * a database table, but only one event ticket node is used during runtime
+	 * and presented to a user.
+	 * 
+	 * @return boolean TRUE on successful/first stash, FALSE if stashed info already exists
+	 */
+	function stash_current_structure_for_table_generation()
+	{
+		if (empty($this->_stashed_sql_for_table_generation)) {
+			$this->_stashed_structure = $this->_build_db_structure();
+			$this->_stashed_sql_for_table_generation = $this->get_create_table_sql();
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	function delete_table()
 	{
 		if ($this->get_thor_table() && $this->table_exists())
