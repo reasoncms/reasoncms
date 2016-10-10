@@ -544,6 +544,10 @@ class NewsletterExporter {
 			'method' => '_export_headings_only_events_by_date',
 			'name' => 'Headings only, show events by date',
 		),
+		'events_by_date_with_descriptions' => array(
+			'method' => '_export_with_descriptions_events_by_date',
+			'name' => 'Headings and descriptions, show events by date',
+		),
 		'headings_only_events_by_month' => array(
 			'method' => '_export_headings_only_events_by_month',
 			'name' => 'Headings only, show events by month',
@@ -876,6 +880,90 @@ class NewsletterExporter {
 					@$eHelper->set_page_link($event);
 					$eventURL = $event->get_value('url') . date("Y-m-d", strtotime($day));
 					$output .= '<li><a target="_blank" href="' . $eventURL . '">' . $event->get_value('name') . '</a> (' . date("g:i a", strtotime(preg_replace('/^.*[^ ] /', '', $event->get_value('datetime')))) . ')</li>';
+				}
+				$output .= "</ul>";	
+			}
+
+		}
+		return tidy($output);
+	}
+	
+	/**
+	 * An export function which displays title, intro, publication/event
+	 * titles, descriptions, and dates, with events grouped by date.
+	 * 
+	 * Output looks like:
+	 * <code>
+	 * <h1>A Newsletter Title</h1>
+	 * <p>A newsletter description blah blah</p>
+	 * <h2>Recent News</h2>
+	 * <h3>The name of a publication</h3>
+	 * <ul>
+	 * 	<li><a target="_blank" href="some_story_url">A post</a> (Wed, May 19 2010  9:23 am)<br />
+	 *  Description of news item</li>
+	 * 	<li><a target="_blank" href="some_story_url">A post</a> (Wed, May 19 2010  9:23 am)<br />
+	 *  Description of news item</li>
+	 * </ul>
+	 * <h2>Upcoming Events</h2>
+	 * <h3>Thu, April 15 2010</h3>
+	 * <ul>
+	 * 	<li><a target="_blank" href="some_event_url">An event</a> (4:30 pm)<br />
+	 *  Description of event</li>
+	 * 	<li><a target="_blank" href="some_event_url">An event</a> (5:30 pm)<br />
+	 *  Description of event</li>
+	 * </ul>
+	 * <h3>Fri, April 16 2010</h3>
+	 * <ul>
+	 * 	<li><a target="_blank" href="some_event_url">An event</a> (4:30 pm)<br />
+	 *  Description of event</li>
+	 * 	<li><a target="_blank" href="some_event_url">An event</a> (5:30 pm)<br />
+	 *  Description of event</li>
+	 * </ul>
+	 * </code>
+	 * 
+	 * @param array the data to be transformed.
+	 * @return array the transformed data
+	 */
+	function _export_with_descriptions_events_by_date($data)
+	{
+		$output = "";
+		if ($data['info']['title'])
+			$output = '<h1>' . $data['info']['title'] . '</h1>';
+		if ($data['info']['intro'])
+			$output .= '<p>' . $data['info']['intro'] . '</p>';
+		if (!empty($data['pubs'])) 
+		{
+			$output .= "<h2>Recent News</h2>";
+			foreach ($data['pubs'] as $pub_id => $pub_posts)
+			{
+				$pub_ent = new Entity($pub_id);
+				$output .= '<h3>'.$pub_ent->get_value('name').'</h3>';
+				$output .= "<ul>";
+				foreach ($pub_posts as $pub_post)
+				{
+					$output .= '<li><a target="_blank" href="' . $data['info']['urls'][$pub_id] . "?story_id=" . $pub_post->get_value('id') . '">' . $pub_post->get_value('release_title') . '</a> (' . date("D, M j Y  g:i a", strtotime($pub_post->get_value('datetime')))  . ')<br />';
+					$output .= trim($pub_post->get_value('description'));
+					$output .= '</li>';
+				}
+				$output .= "</ul>";
+			}
+		}
+		if (!empty($data['events'])) 
+		{
+			$output .= "<h2>Upcoming Events</h2>";
+
+			foreach ($data['events'] as $day=>$events) 
+			{
+				$output .= "<h3>" . date("D, F j Y", strtotime($day)) . "</h3>";
+				$output .= "<ul>";			
+				foreach ($events as $event)
+				{
+					$eHelper = new EventHelper();
+					@$eHelper->set_page_link($event);
+					$eventURL = $event->get_value('url') . date("Y-m-d", strtotime($day));
+					$output .= '<li><a target="_blank" href="' . $eventURL . '">' . $event->get_value('name') . '</a> (' . date("g:i a", strtotime(preg_replace('/^.*[^ ] /', '', $event->get_value('datetime')))) . ')<br />';
+					$output .= trim($event->get_value('description'));
+					$output .= '</li>';
 				}
 				$output .= "</ul>";	
 			}
