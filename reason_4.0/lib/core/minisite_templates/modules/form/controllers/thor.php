@@ -300,7 +300,15 @@
 			$model =& $this->get_model();
 			$remainingSeatsForCurrentEvent = $model->event_tickets_get_request();
 
-			$dt = new Datetime($remainingSeatsForCurrentEvent['thor_info']['event_close_datetime']);
+			$closeTimestamp = $remainingSeatsForCurrentEvent['thor_info']['event_close_datetime'];
+			// If no user provided datetime to close ticket sales,
+			// use event datetime
+			if (!$closeTimestamp) {
+				$event = new Entity($remainingSeatsForCurrentEvent['thor_info']['event_id']);
+				$closeTimestamp = $event->get_value('datetime');
+			}
+			$dt = new Datetime($closeTimestamp);
+
 			$closedMessage = "Registration closed at {$dt->format("g:i a")} on {$dt->format("F jS")}.";
 
 			return $closedMessage;
