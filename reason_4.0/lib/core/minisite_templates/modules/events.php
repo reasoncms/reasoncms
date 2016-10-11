@@ -4185,7 +4185,12 @@ class EventsModule extends DefaultMinisiteModule
 	{
 		ob_start();
 
-		$should_display_form = $event->get_value('last_occurence') > date('Y-m-d');
+		$event_time = new Datetime($event->get_value('datetime'));
+		// show form for 12 hours after event,
+		// but the form itself may display a closed message
+		$event_time->modify("+12 hours");
+		$now = new Datetime();
+		$should_display_form =  $event_time > $now;
 		if ($should_display_form) {			
 			$forms = $this->get_registration_forms($event);
 			foreach ($forms as $form) {
