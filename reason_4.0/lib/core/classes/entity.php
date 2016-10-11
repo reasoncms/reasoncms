@@ -364,7 +364,11 @@ class entity
 			}
 			else 
 			{
-				trigger_error('"'.$col.'" field not retrieved from database');
+				$val = $this->get_value_from_delegate( $col );
+				if(null !== $val)
+					return $val;
+				else
+					trigger_error('"'.$col.'" field not retrieved from database');
 			}
 		}
 		return false;
@@ -384,11 +388,41 @@ class entity
 			return $this->_values[ $col ];
 		elseif(!array_key_exists($col, $this->_values))
 		{
-			trigger_error('"'.$col.'" field not retrieved from database');
+			$val = $this->get_value_from_delegate( $col );
+			if(null !== $val)
+				return $val;
+			else
+				trigger_error('"'.$col.'" field not retrieved from database');
 			// echo '<pre>';debug_print_backtrace();echo '</pre>';
 		}
 		return false;
 	} // }}}
+	
+	/**
+	 * Get a value from delegate
+	 * @param string $col the column/key requested
+	 * @param mixed $delegate_path the delegate path or null for first delegate that
+	 * supports this value
+	 * @return mixed NULL if no delegate supports, mixed non-null value otherwise
+	 */
+	function get_value_from_delegate( $col, $delegate_path = null )
+	{
+		$delegates = $this->get_delegates();
+		if(!$delegate_path)
+		{
+			foreach($delegates as $delegate)
+			{
+				$val = $delegate->get_value( $col );
+				if(NULL !== $val)
+					return $val;
+			}
+		}
+		elseif(isset($delegates[$delegate_path]))
+		{
+			return $delegate->get_value( $col );
+		}
+		return null;
+	}
 	
 	function set_value($col, $val)
 	{

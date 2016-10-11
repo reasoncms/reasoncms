@@ -49,4 +49,16 @@ abstract class EntityDelegate
     	}
         $this->entity = $entity;
     }
+    
+    /**
+	 * Get a value in addition to 
+	 * @param string $col the column/key requested
+	 * @param mixed $delegate_path the delegate path or null for first delegate that
+	 * supports this value
+	 * @return mixed NULL if no delegate supports, mixed non-null value otherwise
+	 */
+    public function get_value($key)
+    {
+    	return NULL;
+    }
 }
