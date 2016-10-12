@@ -397,21 +397,32 @@ class defaultEventsItemMarkup implements eventsItemMarkup
 	 */
 	protected function get_item_export_link_markup($event) {
 		$ret = '';
-		if($ical_link = $this->bundle->ical_link($event))
+		$ical_link = $this->bundle->ical_link($event);
+		$gcal_link = $this->bundle->external_link($event, 'google');
+		$ycal_link = $this->bundle->external_link($event, 'yahoo');
+		if($ical_link || $gcal_link || $ycal_link)
 		{
 			$ret .= '<div class="export">'."\n";
+			$ret .= 'Add this event to your calendar: ';
 			if($event->get_value('recurrence') == 'none' || !$this->bundle->request_date() )
 			{
-				$ret .= '<a href="'.$ical_link.'">Import into your calendar program</a>';
+				$ret .= ($ical_link) ? '<a href="'.$ical_link.'">Desktop</a>' : '';
+				$ret .= ($ical_link && ($gcal_link || $ycal_link)) ? ' | ' : '';
+				$ret .= ($gcal_link) ? '<a href="'.$gcal_link.'" target="_blank">Google Calendar</a>' : '';
+				$ret .= ($gcal_link && $ycal_link) ? ' | ' : '';
+				$ret .= ($ycal_link) ? '<a href="'.$ycal_link.'" target="_blank">Yahoo! Calendar</a>' : '';
 			}
 			else
 			{
-				$ret .= 'Add to your calendar: ';
 				if($item_ical_link = $this->bundle->ical_link($event, false))
 				{
-					$ret .= '<a href="'.$item_ical_link.'">This occurrence</a> | ';
+					$ret .= '<a href="'.$item_ical_link.'">Desktop</a>';
+					$ret .= ($gcal_link || $ycal_link) ? ' | ' : '';
 				}
-				$ret .= '<a href="'.$ical_link.'">All occurrences</a>';
+				$ret .= ($gcal_link) ? '<a href="'.$gcal_link.'" target="_blank">Google Calendar</a>' : '';
+				$ret .= ($gcal_link && $ycal_link) ? ' | ' : '';
+				$ret .= ($ycal_link) ? '<a href="'.$ycal_link.'" target="_blank">Yahoo! Calendar</a>' : '';
+				$ret .= ' | '.'<a href="'.$ical_link.'">All Occurrences</a>';
 			}
 			$ret .= '</div>'."\n";
 		}
