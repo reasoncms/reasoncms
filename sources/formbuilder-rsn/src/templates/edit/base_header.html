@@ -1,0 +1,13 @@
+<div>
+	<div id="fieldDisplayEditable" style="display:none">
+		Field Type: 
+		<select id="fieldTypeSelector">
+			<% _(Formbuilder.getSupportedFields()).each(function(field) { %>
+			<option value="<%=field.value%>"><%= field.display %></option>
+			<% }); %>
+		</select>
+	</div>
+	<div id="fieldDisplayNonEditable" style="display:none">
+		Field Type: <span data-rv-text="model.<%= Formbuilder.options.mappings.FIELD_TYPE %>"></span>
+	</div>
+</div>
