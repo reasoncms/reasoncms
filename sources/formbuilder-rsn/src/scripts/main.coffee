@@ -818,6 +818,43 @@ class BuilderView extends Backbone.View
 
 class Formbuilder
 
+  @eventTickets:
+    events: null
+
+    loadData: () ->
+      eventInfo = jQuery("#event_rel_info")
+      if (eventInfo.length > 0) 
+        Formbuilder.eventTickets.events = []
+        eventArray = JSON.parse(eventInfo[0].innerHTML)
+        jQuery.each(eventArray, (index, event) ->
+          Formbuilder.eventTickets.events[event.id] = event
+        )
+
+    getHtmlSelect: () ->
+      displayStr = ""
+      htmlSelect = ""
+      if (Formbuilder.eventTickets.events == null) 
+        Formbuilder.eventTickets.loadData()
+      jQuery.each(Formbuilder.eventTickets.events, (index, event) ->
+        if (event)
+          displayStr = event.name + " [" + event.datetime_pretty + "] [ID: " + event.id + "]"
+          htmlSelect += '<option value="' + event.id + '">' + displayStr + "</option>\n"
+      )
+      if (htmlSelect == "")
+        displayStr = "No Event Relationships present."
+        htmlSelect += '<option value="">' + displayStr + "</option>"
+      else 
+        htmlSelect = '<option value=""></option>' + htmlSelect
+      return htmlSelect
+
+    getEventName: (event_id) ->
+      if (Formbuilder.eventTickets.events == null) 
+        Formbuilder.eventTickets.loadData()
+      event = Formbuilder.eventTickets.events[event_id];
+      if (event)
+        title = event.name + ", " + event.datetime_pretty;
+      return title || ""
+
   @helpers:
     defaultFieldAttrs: (field_type) ->
       attrs = {}
@@ -890,6 +927,10 @@ class Formbuilder
       FILE_UPLOAD_EXTENSION_RESTRICTIONS: 'file_upload_extension_restrictions'
       FILE_UPLOAD_TYPE_RESTRICTIONS: 'file_upload_type_restrictions'
       FILE_UPLOAD_SIZE_RESTRICTION: 'file_upload_size_restriction'
+      EVENT_TICKETS_EVENT_ID: 'event_tickets_event_id'
+      EVENT_TICKETS_NUM_TOTAL_AVAILABLE: 'event_tickets_num_total_available'
+      EVENT_TICKETS_MAX_PER_PERSON: 'event_tickets_max_per_person'
+      EVENT_TICKETS_EVENT_CLOSE_DATETIME: 'event_tickets_event_close_datetime'
 
     dict:
       ALL_CHANGES_SAVED: 'All changes saved'

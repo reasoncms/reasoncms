@@ -1,0 +1,27 @@
+<div class="fb-label-description">
+    <div class="fb-edit-section-header">Tickets</div>
+
+    <label>Select Future Event:<br>
+        <select style="width:100%" data-rv-value="model.<%= Formbuilder.options.mappings.EVENT_TICKETS_EVENT_ID %>" >
+            <%= Formbuilder.eventTickets.getHtmlSelect() %>
+        </select>
+        <em>non-recurring events only</em>
+    </label>
+
+    <div class="fb-edit-section-header">Options</div><div class="fb-clear"></div>
+    <label>Total Tickets Available:<br>
+        <input type="number" min="0" name="" data-rv-input="model.<%= Formbuilder.options.mappings.EVENT_TICKETS_NUM_TOTAL_AVAILABLE %>" /> 
+        <em>Default: unlimited</em><br>
+    </label><br>
+
+    <label>Max Tickets Per Submission:<br>
+        <input type="number" min="0" name="" data-rv-input="model.<%= Formbuilder.options.mappings.EVENT_TICKETS_MAX_PER_PERSON %>" /> 
+        <em>Default: 1 per person</em><br>
+    </label><br>
+
+    <label>Purchase cutoff prior to event:<br>
+        <input type="text" name="" placeholder="YYYY-MM-DD HH:MM:SS" data-rv-input="model.<%= Formbuilder.options.mappings.EVENT_TICKETS_EVENT_CLOSE_DATETIME %>" />
+        (YYYY-MM-DD HH:MM:SS, in 24hr time)<br> 
+        <em>Default: 1hr before event</em><br>
+    </label>
+</div>
