@@ -1,0 +1,33 @@
+/** CSS for the subject page module & the related links section of the courses module **/
+
+#subjectPageModule div.courseContainer, .related div.courseContainer{
+	margin-bottom: 1em;
+}
+
+#subjectPageModule span.courseNumber, .related span.courseNumber,
+#subjectPageModule span.courseTitle, .related span.courseTitle  {
+	font-weight: bold;
+}
+
+#subjectPageModule span.courseAttributesOffered, .related span.courseAttributesOffered {
+	font-style: italic;
+}
+
+#subjectPageModule span.courseAttributesInstructor, .related span.courseAttributesInstructor {
+	font-weight: bold;
+}
+
+#subjectPageModule span.clickable, .related span.clickable {
+	color: #0000F0;
+	cursor: pointer;
+}
+
+.ui-widget {
+    font-family: inherit;
+    font-size: 0.9em;
+    line-height: 1.4;
+}
+
+.ui-dialog  .ui-dialog-content {
+	padding: 1em 1.5em;
+}

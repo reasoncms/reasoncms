@@ -72,9 +72,9 @@ class CatalogSubjectPageModule extends DefaultMinisiteModule
 		if($head_items = $this->get_head_items())
 		{
 			$head_items->add_stylesheet(JQUERY_UI_CSS_URL);
-			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH . 'modules/courses/subject_page.css');
+			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH . 'modules/courses/course_description_modal.css');
 			$head_items->add_javascript(JQUERY_UI_URL);
-			$head_items->add_javascript(REASON_HTTP_BASE_PATH . 'modules/courses/subject_page.js');
+			$head_items->add_javascript(REASON_HTTP_BASE_PATH . 'modules/courses/course_description_modal.js');
 			$head_items->add_javascript(WEB_JAVASCRIPT_PATH . 'jquery.reasonAjax.js');
 		}
 
@@ -87,7 +87,7 @@ class CatalogSubjectPageModule extends DefaultMinisiteModule
 
 	public function run()
 	{
-		echo '<div id="subjectPageModule" class="'.$this->get_api_class_string().'" year="'.$this->year.'">'."\n";
+		echo '<div id="subjectPageModule" class="reason_course_modals '.$this->get_api_class_string().'" year="'.$this->year.'">'."\n";
 
 		$inline_editing =& get_reason_inline_editing($this->page_id);
 		$editing_available = $inline_editing->available_for_module($this);

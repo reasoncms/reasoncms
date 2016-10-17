@@ -1,10 +1,16 @@
-/** Subject Page support for the catalog
-  * @requires JQuery UI
-  * @author Mark Heiman
-  */
+/** 
+ * Enrich a course list with clickable course modals
+ * 
+ * Originally for only Subject Page module for the course catalog, later
+ * renamed and added to another course module
+ * 
+ * @requires JQuery UI
+ * @author Mark Heiman
+ */
 $(document).ready(function()
 {
-	var module_id = $.reasonAjax.get_module_identifier($('#subjectPageModule'));
+	var module_dom_query = "div.reason_course_modals";
+	var module_id = $.reasonAjax.get_module_identifier($(module_dom_query));
 
 	// Look at all the lists that aren't designated as courseList and see if they appear
 	// to be lists of courses. If they are, add the appropriate classes so that they'll 
@@ -32,7 +38,7 @@ $(document).ready(function()
 			}
 			else
 			{
-				var course = $(this).text().replace(' ','_') + '_' + $("div#subjectPageModule").attr("year");
+				var course = $(this).text().replace(' ','_') + '_' + $(module_dom_query).attr("year");
 			}
 
 			$.getJSON(document.URL, {
