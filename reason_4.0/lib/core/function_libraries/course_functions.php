@@ -573,16 +573,14 @@ class CatalogHelper
 	protected $site;
 	
 	public function __construct($year = null)
-	{		
-		if ($year)
-		{
+	{
+		if ($year) {
 			$this->year = $year;
-			if (!$this->site = id_of('academic_catalog_'.$year.'_site'))
-				trigger_error('No catalog site for '.$year.' in CatalogHelper');
-		}
-		else
-		{
+		} else {
 			$this->year = $this->get_latest_catalog_year();
+		}
+		if (!$this->site = id_of('academic_catalog_' . $this->year . '_site')) {
+			trigger_error('No catalog site for ' . $this->year . ' in CatalogHelper');
 		}
 	}
 	
