@@ -28,32 +28,35 @@ $(document).ready(function()
 
 	// For each course number in a list of titles, make the number clickable and 
 	// fire off a request for the course description to be opened in a modal dialog.
-	$("ul.courseList span.courseNumber, p span.courseNumber")
-		.addClass("clickable")
-		.click(function(){
+	$("ul.courseList span.courseNumber, p span.courseNumber").each(function(){
+		$(this).replaceWith(function () {
+			return $("<a>", {
+				'class': this.className + " clickable",
+				'course' : $(this).attr('course'),
+				href: "javascript:void(0)",
+				text: this.innerHTML,
+				title: "Click for " + this.innerHTML + " description",
+			}).click(function(){
+				if ( $(this).attr('course') ) {
+					var course = $(this).attr('course');
+				} else {
+					var course = $(this).text().replace(' ','_') + '_' + $(module_dom_query).attr("year");
+				}
 
-			if ( $(this).attr('course') )
-			{
-				var course = $(this).attr('course');
-			}
-			else
-			{
-				var course = $(this).text().replace(' ','_') + '_' + $(module_dom_query).attr("year");
-			}
-
-			$.getJSON(document.URL, {
-				module_identifier: module_id,
-				module_api: "standalone",
-				get_course: course
-			})
-			.done(function(response){
-				var courseDialog = $('<div id="courseDialog">' + response.description + '</div>');
-				courseDialog.dialog({
-					title: response.title,
-					modal: true
+				$.getJSON(document.URL, {
+					module_identifier: module_id,
+					module_api: "standalone",
+					get_course: course
+				}).done(function(response){
+					var courseDialog = $('<div id="courseDialog">' + response.description + '</div>');
+					courseDialog.dialog({
+						title: response.title,
+						modal: true
+					});
 				});
-			});
+			})
 		});
+	});
 	
 	// Close open modal dialogs when the background is clicked.
     $(document.body).on("click", ".ui-widget-overlay", function()

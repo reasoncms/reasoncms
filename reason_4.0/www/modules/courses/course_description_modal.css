@@ -5,6 +5,7 @@
 }
 
 #subjectPageModule span.courseNumber, .related span.courseNumber,
+#subjectPageModule a.courseNumber, .related a.courseNumber,
 #subjectPageModule span.courseTitle, .related span.courseTitle  {
 	font-weight: bold;
 }
