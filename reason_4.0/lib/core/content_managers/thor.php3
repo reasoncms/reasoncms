@@ -119,28 +119,28 @@
 			$this->set_element_properties('submission_limit', array('size'=>'4'));
 			// echo "<HR>using thor version...[" . USE_THOR_VERSION . "]<hr>";
             
-            $es = new entity_selector();
-            $es->add_type(id_of('minisite_page'));
-            $es->add_left_relationship($this->admin_page->id, relationship_id_of('page_to_form'));
-            $pages_with_form = $es->run_one();
-            if (!$pages_with_form)
-            {
-                $this->add_element('publish_status', 'comment', array('text'=>'<b>Status:</b> Unpublished. <a href="http://reasoncms.org/userdocs/managing-content/other-types/forms/#attaching_a_form_to_a_page" target="_blank" style="color: blue;">How to publish your form</a>'));
-            }
-            elseif ($pages_with_form)
-            {
-                $str_pages_with_form = '';
-                foreach ($pages_with_form as $page_with_form)
-                {
-                    $reason_page_url = new reasonPageUrl();
-                    $reason_page_url->set_id( $page_with_form->_id );
-                    $page_url = $reason_page_url->get_url();
-                    $str_pages_with_form = $str_pages_with_form . '<li><a href="' . $page_url . '" style="color: blue;" target="_blank">' . $page_with_form->get_value('name') . '</a></li>';
-                }
-            
-                $this->add_element('publish_status', 'comment', array('text'=>'<b>Status:</b> Published to the following page(s):<ul>' . $str_pages_with_form . '</ul>'));
-            }
-            
+			$es = new entity_selector();
+			$es->add_type(id_of('minisite_page'));
+			$es->add_left_relationship($this->admin_page->id, relationship_id_of('page_to_form'));
+			$pages_with_form = $es->run_one();
+			if (!$pages_with_form)
+			{
+				$this->add_element('publish_status', 'comment', array('text'=>'<b>Status:</b> Unpublished. <a href="http://reasoncms.org/userdocs/managing-content/other-types/forms/#attaching_a_form_to_a_page" target="_blank" style="color: blue;">How to publish your form</a>'));
+			}
+			elseif ($pages_with_form)
+			{
+				$str_pages_with_form = '';
+				foreach ($pages_with_form as $page_with_form)
+				{
+					$reason_page_url = new reasonPageUrl();
+					$reason_page_url->set_id( $page_with_form->_id );
+					$page_url = $reason_page_url->get_url();
+					$str_pages_with_form = $str_pages_with_form . '<li><a href="' . $page_url . '" style="color: blue;" target="_blank">' . $page_with_form->get_value('name') . '</a></li>';
+				}
+				
+				$this->add_element('publish_status', 'comment', array('text'=>'<b>Status:</b> Published to the following page(s):<ul>' . $str_pages_with_form . '</ul>'));
+			}
+			
 			if (USE_THOR_VERSION == THOR_VERSION_FLASH)
 			{
 				include_once( THOR_INC . 'plasmature/flash.php' );
@@ -160,11 +160,11 @@
 				die("Fatal Error: USE_THOR_VERSION is configured with an invalid value [" . USE_THOR_VERSION . "]");
 			}
 			$this->alter_data_advanced_options();
-            $this->set_order (array ('publish_status', 'name', 'db_flag', 'email_of_recipient', 'thor_content', 'thor_comment', 'magic_string_autofill_note',
-                                     'magic_string_autofill', 'thank_you_note', 'thank_you_message', 'display_return_link', 'show_submitted_data',
-                                     'limiting_note', 'submission_limit', 'open_date', 'close_date',
-                                     'advanced_options_header', 'thor_view', 'thor_view_custom', 'is_editable', 'allow_multiple', 'email_submitter','include_thank_you_in_email', 'email_link', 'email_data', 'email_empty_fields', 'apply_akismet_filter', // advanced options
-                                     'unique_name', 'tableless'));
+			$this->set_order (array ('publish_status', 'name', 'db_flag', 'email_of_recipient', 'thor_content', 'thor_comment', 'magic_string_autofill_note',
+					'magic_string_autofill', 'thank_you_note', 'thank_you_message', 'display_return_link', 'show_submitted_data',
+					'limiting_note', 'submission_limit', 'open_date', 'close_date',
+					'advanced_options_header', 'thor_view', 'thor_view_custom', 'is_editable', 'allow_multiple', 'email_submitter','include_thank_you_in_email', 'email_link', 'email_data', 'email_empty_fields', 'apply_akismet_filter', // advanced options
+					'unique_name', 'tableless'));
 		}
 
 		/**
