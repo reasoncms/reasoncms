@@ -111,10 +111,8 @@
 					$ents_count = count($ents);
 					$name = $type->get_value('plural_name') ? $type->get_value( 'plural_name' ) : $type->get_value( 'name' );
 					
-					$newItemLink = ' <a href="' . $this->admin_page->make_link( array( 'type_id' => $type->id(),'cur_module'=>'Editor','id'=>'', 'new_entity' => 1)) . '"><img src="' . REASON_HTTP_BASE_PATH . 'silk_icons/add.png" alt="Add ' . reason_htmlspecialchars($type->get_value('name')) . '"></a> ';
-					
 					echo '<li class="'.$type->get_value('unique_name').'" style="list-style-image:url('.reason_get_type_icon_url($type).')">';
-					echo '<h4><a href="'.$this->admin_page->make_link( array( 'type_id' => $type->id(),'cur_module'=>'Lister','state'=>$state_link_val ) ).'">'.$name.'</a> <span class="count">('.$ents_count.')</span>'.'<span class="addnew">'.$newItemLink.'</span></h4>'."\n";
+					echo '<h4><a href="'.$this->admin_page->make_link( array( 'type_id' => $type->id(),'cur_module'=>'Lister','state'=>$state_link_val ) ).'">'.$name.'</a> <span class="count">('.$ents_count.')</span></h4>'."\n";
 					if(!empty($ents))
 					{
 						echo '<div class="recent">'."\n";
