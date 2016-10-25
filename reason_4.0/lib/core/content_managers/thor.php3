@@ -125,7 +125,7 @@
 			$pages_with_form = $es->run_one();
 			if (!$pages_with_form)
 			{
-				$this->add_element('publish_status', 'comment', array('text'=>'<b>Status:</b> Unpublished. <a href="http://reasoncms.org/userdocs/managing-content/other-types/forms/#attaching_a_form_to_a_page" target="_blank" style="color: blue;">How to publish your form</a>'));
+				$this->add_element('publish_status', 'comment', array('text'=>'<strong>Status:</strong> Unpublished. <a href="http://reasoncms.org/userdocs/managing-content/other-types/forms/#attaching_a_form_to_a_page">How to publish your form</a>'));
 			}
 			elseif ($pages_with_form)
 			{
@@ -135,10 +135,28 @@
 					$reason_page_url = new reasonPageUrl();
 					$reason_page_url->set_id( $page_with_form->_id );
 					$page_url = $reason_page_url->get_url();
-					$str_pages_with_form = $str_pages_with_form . '<li><a href="' . $page_url . '" style="color: blue;" target="_blank">' . $page_with_form->get_value('name') . '</a></li>';
+					$str_pages_with_form .= '<li><a href="' . $page_url . '">' . $page_with_form->get_value('name') . '</a>';
+					
+					$appropriate_page_types = page_types_that_use_module('form');
+					$current_page_type = $page_with_form->get_value( 'custom_page' );
+					$page_type_is_appropriate = false;
+					foreach ($appropriate_page_types as $appropriate_page_type)
+					{
+						if ( $appropriate_page_type == $current_page_type )
+						{
+							$page_type_is_appropriate = true;
+							break;
+						}
+					}
+					if ( !$page_type_is_appropriate )
+					{
+						$str_pages_with_form .= ' (Warning: This page is not of the correct type to display forms.)';
+					}
+					
+					$str_pages_with_form .= '</li>';
 				}
 				
-				$this->add_element('publish_status', 'comment', array('text'=>'<b>Status:</b> Published to the following page(s):<ul>' . $str_pages_with_form . '</ul>'));
+				$this->add_element('publish_status', 'comment', array('text'=>'<strong>Status:</strong> Published to the following page(s):<ul>' . $str_pages_with_form . '</ul>'));
 			}
 			
 			if (USE_THOR_VERSION == THOR_VERSION_FLASH)
