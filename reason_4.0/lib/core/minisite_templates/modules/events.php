@@ -3845,6 +3845,7 @@ class EventsModule extends DefaultMinisiteModule
 			$bundle->set_function('keyword_links', array($this, 'get_event_keyword_links'));
 			$bundle->set_function('is_all_day_event', array($this, 'event_is_all_day_event'));
 			$bundle->set_function('map_zoom_level', array($this, 'get_map_zoom_level'));
+			$bundle->set_function('get_registration_forms', array($this, 'get_registration_forms'));
 			$bundle->set_function('registration_markup', array($this, 'get_registration_forms_markup'));
 			$bundle->set_function('prettify_duration', array($this, 'prettify_duration'));
 			$bundle->set_function('repetition_explanation', array($this, 'get_repetition_explanation'));
