@@ -1114,7 +1114,6 @@ class AdminPage
 				echo '<a href="'.$link_url.'" class="nav">';
 				echo '<img src="'.reason_get_type_icon_url($type).'" alt="" />';
 				$type_name = $type->get_value('plural_name') ? $type->get_value( 'plural_name' ) : $type->get_value( 'name' );
-				$newItemLink = ' <a href="' . $this->make_link( array( 'type_id' => $type->id(),'cur_module'=>'Editor','id'=>'','new_entity' => 1)) . '">(+)</a>';
 				echo '<span class="typeName">' . $type_name . '</span>';
 				echo '</a></li>' . "\n";
 			}
