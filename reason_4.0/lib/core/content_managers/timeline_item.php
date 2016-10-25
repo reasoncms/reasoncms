@@ -57,16 +57,24 @@ class TimelineItemManager extends ContentManager
 		
 		$this->change_element_type('background', 'colorpicker');
 		
-		// TODO: use the set of groups that exist among timeline items in the current site 
-		// $this->change_element_type('group', 'radio_with_other', array('options' => 
-		// 	array(
-		// 		'test',
-		// 		'test2'
-		// 	)
-		// ));
+		// Create a list of all groups used by timeline items on this site
+		$groups = array();
+		$es = new entity_selector();
+		$es->add_type(id_of('timeline_item_type'));
+		$es->add_right_relationship($this->get_value('site_id'), relationship_id_of('site_owns_timeline_item_type'));
+		$timeline_items = $es->run_one();
+		
+		foreach ($timeline_items as $timeline_item) {
+			if (!empty($timeline_item->get_value('group'))) {
+				$groups[] = $timeline_item->get_value('group');
+			}
+		}
+		
+		$groups = array_unique($groups);
+		
+		// Use the list of groups to make a radio choice of groups
+		$this->change_element_type('group', 'radio_with_other', array('options' => $groups));
 
-		
-		
 		$this->set_order(
 			array(
 				'timelines',
