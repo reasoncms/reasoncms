@@ -306,8 +306,14 @@
 			if (!$closeTimestamp) {
 				$event = new Entity($remainingSeatsForCurrentEvent['thor_info']['event_id']);
 				$closeTimestamp = $event->get_value('datetime');
+				$dt = new Datetime($closeTimestamp);
+				
+				if (defined('REASON_EVENT_TICKETS_DEFAULT_CLOSE_MODIFIER')) {
+					$dt->modify(REASON_EVENT_TICKETS_DEFAULT_CLOSE_MODIFIER);
+				}
+			} else {
+				$dt = new Datetime($closeTimestamp);
 			}
-			$dt = new Datetime($closeTimestamp);
 
 			$closedMessage = "Registration closed at {$dt->format("g:i a")} on {$dt->format("F jS")}.";
 

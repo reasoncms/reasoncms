@@ -1705,9 +1705,8 @@ class ThorFormModel extends DefaultFormModel
 	function get_events_on_form()
 	{
 		$formId = $this->_form->id();
-		$siteId = $this->get_site_id();
 
-		$es = new entity_selector($siteId);
+		$es = new entity_selector();
 		$es->add_type(id_of('event_type'));
 		$es->add_left_relationship($formId, relationship_id_of('event_to_form'));
 		$eventsOnForm = $es->run_one();
@@ -1937,7 +1936,10 @@ class ThorFormModel extends DefaultFormModel
 			// Fallback/default is to close the event 60 minutes before start
 			$eventEntity = new Entity($thorEventInfo['event_id']);
 			$closeDatetime = new Datetime($eventEntity->get_value('datetime'));
-			$closeDatetime->modify("-60min");
+			
+			if (defined('REASON_EVENT_TICKETS_DEFAULT_CLOSE_MODIFIER')) {
+				$closeDatetime->modify(REASON_EVENT_TICKETS_DEFAULT_CLOSE_MODIFIER);
+			}
 		}
 		if ($baseDatetime === null) {
 			$baseDatetime = new Datetime(); // "now"
