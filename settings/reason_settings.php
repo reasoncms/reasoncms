@@ -1070,6 +1070,19 @@
 	define('REASON_EVENT_GEOLOCATION_ENABLED', true);
 
 	/**
+	 * REASON_EVENT_TICKETS_DEFAULT_CLOSE_MODIFIER
+	 * 
+	 * A string value passed to the DataTime::modify() method when defined.
+	 * 
+	 * Used to define a modification to the default event closing time, which is the time
+	 * the event starts. It is used on forms with event ticket sales when the form item 
+	 * doesn't a time to close ticket sales. The desired value at Carleton
+	 * is "-60min", which means we close ticket sales an hour before the event
+	 * so the event staff can process the list in preperation for the event.
+	 */
+	define('REASON_EVENT_TICKETS_DEFAULT_CLOSE_MODIFIER', "");
+	
+	/**
 	 * REASON_MYSQL_SPATIAL_DATA_AVAILABLE
 	 *
 	 * If you are running MySQL 5, Reason can store location information as binary data in MySQL, and keep
