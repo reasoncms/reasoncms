@@ -1040,6 +1040,11 @@
 				}
 				//echo '<p>Cache miss</p>';
 			}
+			
+			$fetching_all_fields = true;
+			if (!empty($this->limit_fields) || !empty($this->table_mod) || ( empty($this->table_mod) && $this->_exclude_tables_dynamically ) )
+				$fetching_all_fields = false;
+			
 			$results = array();
 			$r = db_query( $query , $this->description.': '.$error );
 			
@@ -1081,6 +1086,7 @@
 					$e->set_type_id($type);
 					$e->_values = $row;
 				}
+				$e->full_fetch_performed($fetching_all_fields);
 				$results[ $row[ 'id' ] ] = $e;
 			}
 			mysql_free_result( $r );

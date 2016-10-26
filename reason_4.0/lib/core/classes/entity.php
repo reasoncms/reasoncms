@@ -134,6 +134,7 @@ class entity
 	protected $_locks = false;
 	protected $_delegates;
 	protected $_delegates_hash;
+	protected $_full_fetch_performed = false;
 	/**#@-*/
 
 	/**
@@ -324,12 +325,25 @@ class entity
 	function get_values($fetch = true) // {{{
 	{
 		if( !$this->_values && $fetch )
+		{
 			$this->_values =  $this->_get_values();
+			$this->full_fetch_performed(true);
+		}
 		return $this->_values;
 	} // }}}
 	function refresh_values($use_cache = true)
 	{
 		$this->_values = $this->_values + get_entity_by_id( $this->_id, $use_cache );
+		$this->full_fetch_performed(true);
+	}
+	function full_fetch_performed($value = NULL)
+	{
+		if(isset($value))
+		{
+			$this->_full_fetch_performed = (boolean) $value;
+			return true;
+		}
+		return $this->_full_fetch_performed;
 	}
 	/**
 	 * Returns the available fields for the entity
@@ -338,7 +352,10 @@ class entity
 	function get_characteristics() // {{{
 	{
 		if( !$this->_values )
+		{
 			$this->_values = get_entity_by_id( $this->_id );
+			$this->full_fetch_performed(true);
+		}
 		$c = array();
 		reset( $this->_values );
 		while( list( $key , ) = each( $this->_values ) )
@@ -353,14 +370,19 @@ class entity
 	function get_value( $col, $refresh = true ) // {{{
 	{
 		if( empty( $this->_values ) )
+		{
 			$this->_values = get_entity_by_id( $this->_id );
+			$this->full_fetch_performed(true);
+		}
 		if( !empty( $this->_values[ $col ]) OR (isset($this->_values[$col]) AND strlen($this->_values[ $col ]) > 0) )
 			return $this->_values[ $col ];
 		elseif(!array_key_exists($col, $this->_values))
 		{
-			if ($refresh)
-			{			
-				return $this->get_value_refresh ($col);
+			// This logic aims to prevent a full fetch from being
+			// performed every time a delegated value is requested
+			if ($refresh && !$this->full_fetch_performed() )
+			{
+				return $this->get_value_refresh($col);
 			}
 			else 
 			{
@@ -383,7 +405,10 @@ class entity
 	{
 		$this->refresh_values();
 		if( empty( $this->_values ) )
+		{
 			$this->_values = get_entity_by_id( $this->_id );
+			$this->full_fetch_performed(true);
+		}
 		if( !empty( $this->_values[ $col ]) OR (isset($this->_values[$col]) AND strlen($this->_values[ $col ]) > 0) )
 			return $this->_values[ $col ];
 		elseif(!array_key_exists($col, $this->_values))
