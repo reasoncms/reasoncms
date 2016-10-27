@@ -2,3 +2,8 @@
 	padding:1em;
 	background-color:#eee;
 }
+
+#publishstatusItem {
+    background: #eee;
+    padding: 1em 1em .5em 1em;
+}
