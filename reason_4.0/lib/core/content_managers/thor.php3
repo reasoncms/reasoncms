@@ -163,7 +163,7 @@
 					$str_events_with_form .= '<li>' . $event_with_form->get_value('name') . '</li>';
 				}
 				
-				$publish_status_text .= '<strong>Status:</strong> Associated the following events(s):<ul>' . $str_events_with_form . '</ul>';
+				$publish_status_text .= '<strong>Status:</strong> Published as registration form for the following event(s):<ul>' . $str_events_with_form . '</ul>';
 			}
 			
 			if (!$published)
