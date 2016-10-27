@@ -136,7 +136,7 @@
 					$reason_page_url = new reasonPageUrl();
 					$reason_page_url->set_id( $page_with_form->_id );
 					$page_url = $reason_page_url->get_url();
-					$str_pages_with_form .= '<li><a href="' . $page_url . '">' . $page_with_form->get_value('name') . '</a>';
+					$str_pages_with_form .= '<li><a target="_blank" href="' . $page_url . '">' . $page_with_form->get_value('name') . '</a>';
 					
 					if ( !in_array( $page_with_form->get_value( 'custom_page' ), page_types_that_use_module( 'form' ) ) )
 					{
@@ -168,7 +168,7 @@
 			
 			if (!$published)
 			{
-				$publish_status_text .= '<strong>Status:</strong> Unpublished. <a href="http://reasoncms.org/userdocs/managing-content/other-types/forms/#attaching_a_form_to_a_page">How to publish your form</a>';
+				$publish_status_text .= '<strong>Status:</strong> Unpublished. <a target="_blank" href="http://reasoncms.org/userdocs/managing-content/other-types/forms/#attaching_a_form_to_a_page">How to publish your form</a>';
 			}
 			
 			$this->add_element('publish_status', 'comment', array('text'=>$publish_status_text));
