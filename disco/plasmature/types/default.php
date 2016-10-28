@@ -740,4 +740,9 @@ class defaultType
 		}
 		return $this->_labeled;
 	}
+	
+	function get_label_target_id()
+	{
+		return false;
+	}
 }
