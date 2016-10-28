@@ -39,16 +39,23 @@ class checkboxType extends defaultType
 	function get_display()
 	{
 		$this->checkbox_id = 'checkbox_'.$this->name;
-		$str = '<input type="checkbox" id="'.$this->checkbox_id.'" name="'.$this->name.'" value="'.$this->checked_value.'"';
+		$str = '<input type="checkbox" id="'.htmlspecialchars($this->checkbox_id).'" name="'.htmlspecialchars($this->name).'" value="'.htmlspecialchars($this->checked_value).'"';
 		if ( $this->value )
 		{
 			$str .= ' checked="checked"';
 		}
 		$str .= ' class="checkbox" />';
 		if (!empty($this->description)) {
-			$str .= ' <label class="smallText" for="'.$this->checkbox_id.'">'.$this->description.'</label>';
+			$str .= ' <label class="smallText" for="'.htmlspecialchars($this->checkbox_id).'">'.$this->description.'</label>';
 		}
 		return $str;
+	}
+	
+	function get_label_target_id()
+	{
+		if (empty($this->description)) // If there is no description the element is labeled by the display name
+			return $this->checkbox_id;
+		return false; // Otherwise it is labeled by the description
 	}
 }
 
@@ -77,6 +84,6 @@ class checkboxfirstType extends checkboxType {
 	
 	function get_display()
 	{
-		return parent::get_display().' <label for="'.$this->checkbox_id.'">'.$this->display_name.'</label>';
+		return parent::get_display().' <label for="'.htmlspecialchars($this->checkbox_id).'">'.$this->display_name.'</label>';
 	}
 }

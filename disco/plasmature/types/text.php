@@ -72,9 +72,14 @@ class textType extends defaultTextType
 	function get_display()
 	{
 		$display = '<input type="text" name="'.$this->name.'" value="'.str_replace('"', '&quot;', $this->get()).'" size="'.$this->size.'" maxlength="'.$this->maxlength.'" id="'.$this->get_id().'" aria-label="'.$this->display_name.'" class="text" ';
-		if (!empty($this->placeholder)) $display .= 'placeholder="'.$this->placeholder.'"';
+		if (!empty($this->placeholder)) $display .= 'placeholder="'.htmlspecialchars($this->placeholder).'"';
 		$display .= '/>';
 		return $display;
+	}
+	
+	function get_label_target_id()
+	{
+		return $this->get_id();
 	}
 }
 
@@ -189,6 +194,11 @@ class passwordType extends defaultTextType
 		$display .= '/>';
 		return $display;
 	}
+	
+	function get_label_target_id()
+	{
+		return $this->get_id();
+	}
 }
 
 /**
@@ -290,6 +300,11 @@ class textareaType extends defaultTextType
 				$this->set_error( 'There is more text in '.$name_to_display.' than can be stored; this field can hold no more than '.$length_limits[$this->db_type].' characters.' );
 			}
 		}
+	}
+	
+	function get_label_target_id()
+	{
+		return $this->get_id();
 	}
 }
 

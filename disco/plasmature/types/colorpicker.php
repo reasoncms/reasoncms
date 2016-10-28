@@ -125,5 +125,9 @@ class colorpickerType extends defaultType
 		return $str;
 	}	
 	
+	function get_label_target_id()
+	{
+		return $this->name;
+	}
 }
 ?>
