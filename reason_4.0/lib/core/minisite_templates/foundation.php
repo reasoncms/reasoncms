@@ -188,17 +188,22 @@
 			// fitvids will move to the default template at some point, but for now it is here.
 		
 			$this->head_items->add_javascript(JQUERY_URL, true);
+			//$this->head_items->add_javascript( '/reason/foundation/bower_components/jquery/dist/jquery.js');
 			$this->head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'fitvids/jquery.fitvids_outside.js');
 			$this->head_items->add_head_item('script', array(), $content = '$(document).ready(function(){$("body").fitVids();});' );
 		}
 
 		function get_css_files()
 		{
-			$this->head_items->add_style_import_path(WEB_PATH . substr(REASON_HTTP_BASE_PATH, 1) . 'foundation/foundation6/bower_components/foundation-sites/scss');
-			$this->head_items->add_style_import_path(WEB_PATH . substr(REASON_HTTP_BASE_PATH, 1) . 'foundation/foundation6/bower_components/motion-ui');
+			$this->head_items->add_style_import_path(WEB_PATH . substr(REASON_HTTP_BASE_PATH, 1) . 'foundation/bower_components/foundation-sites/scss');
+			$this->head_items->add_style_import_path(WEB_PATH . substr(REASON_HTTP_BASE_PATH, 1) . 'foundation/bower_components/motion-ui');
 			$this->head_items->add_style_import_path(WEB_PATH . substr(REASON_HTTP_BASE_PATH, 1) . 'foundation/scss');
-
+			$this->head_items->add_stylesheet( '/reason/foundation/scss/reason-foundation.scss');
+					
 			parent::get_css_files();
+			
+			// add standalone css files after parent::get_css_files() compiles any scss files
+			$this->head_items->add_stylesheet("//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css");
 		}
 
 		function show_banner()
@@ -318,8 +323,8 @@
 			// Foundation also recommends including jQuery at the bottom of the body. But this causes conflicts
 			// with Reason scripts, like Features. Currently, we're just calling it in the head via in the normal Reason way.
 
-			echo '<script type="text/javascript" src="/reason/foundation/foundation6/bower_components/foundation-sites/dist/foundation.min.js"></script>'."\n";
-			echo '<script type="text/javascript" src="/reason/foundation/foundation6/js/app.js"></script>'."\n";
+			echo '<script type="text/javascript" src="/reason/foundation/bower_components/foundation-sites/dist/foundation.js"></script>'."\n";
+			echo '<script type="text/javascript" src="/reason/foundation/js/app.js"></script>'."\n";
 		}
 }
 ?>

@@ -358,8 +358,7 @@ class HeadItems
         }
 
         // Track our modified time so we know to delete older files.
-		$mtime = $delete_cached && file_exists($output_path) ? filemtime($output_path) : null;
-
+		$mtime = $delete_cached && file_exists($output_path) ? filemtime($output_path) : filemtime($input_path);
 		try
 		{
 			if ( get_class($parser) !== 'lessc' )
@@ -384,13 +383,22 @@ class HeadItems
 
 		if ($delete_cached && $mtime !== filemtime($output_path))
 		{
-			foreach (glob($output_directory . $hash . '_*.css*') as $file) {
-				if (strpos($file, $output_filename) === false) {
-					unlink($file);
-				}
+			$new_mtime = filemtime($output_path);
+			$output_url = preg_replace('/_\d{10}\.css$/' , '_' . $new_mtime . '.css', $output_url);
+			touch($input_path, $new_mtime);
+			foreach (glob($output_directory . $hash . '_*.css*') as $file)
+			{
+				$new_file = preg_replace('/_\d{10}\.css/' , '_' . $new_mtime . '.css', $file);
+				rename($file, $new_file);
+				touch($new_file, $new_mtime);
 			}
-		}
 
+			// in the meta file, update the mtime for scss file specified by $url
+			$s = file_get_contents(WEB_PATH.substr($output_url, 1) . '.meta');
+			$s = str_replace($mtime, $new_mtime, $s);
+			file_put_contents(WEB_PATH.substr($output_url, 1) . '.meta', $s);
+		}
+		
 		return $output_url;
 	}
 
