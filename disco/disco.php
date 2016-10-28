@@ -1122,7 +1122,11 @@
 						  $this->get_element_property($element_name, 'use_display_name') );
 			
 			// drop in a named anchor for error jumping
+<<<<<<< HEAD
 			echo '<a name="'.$element_name.'_error"></a>'."\n";
+=======
+			// echo '<a name="'.$element_name.'_error"></a>'."\n";
+>>>>>>> fa0b0cc49183af587a4a17ce547e5c81d0352128
 			
 			// show the comments that were placed above the element
 			$element->echo_comments('before');

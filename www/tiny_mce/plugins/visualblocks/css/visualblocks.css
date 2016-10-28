@@ -47,7 +47,11 @@
 	background: transparent no-repeat url(data:image/gif;base64,R0lGODlhDgAKAIABALu7u////yH5BAEAAAEALAAAAAAOAAoAAAIajI8HybbxIoiuwjan04jep1iZ1XRlAo5bVgAAOw==);
 }
 
+<<<<<<< HEAD
 .mce-visualblocks div {
+=======
+.mce-visualblocks div:not([data-mce-bogus]) {
+>>>>>>> fa0b0cc49183af587a4a17ce547e5c81d0352128
 	padding-top: 10px;
 	border: 1px dashed #BBB;
 	margin-left: 3px;

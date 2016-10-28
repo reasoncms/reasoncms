@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /*
 Flot plugin that adds some extra symbols for plotting points.
 
@@ -9,6 +10,20 @@ choice:
           symbol: "square" // or "diamond", "triangle", "cross"
       }
   }
+=======
+/* Flot plugin that adds some extra symbols for plotting points.
+
+Copyright (c) 2007-2014 IOLA and Ole Laursen.
+Licensed under the MIT license.
+
+The symbols are accessed as strings through the standard symbol options:
+
+	series: {
+		points: {
+			symbol: "square" // or "diamond", "triangle", "cross"
+		}
+	}
+>>>>>>> fa0b0cc49183af587a4a17ce547e5c81d0352128
 
 */
 
@@ -51,7 +66,11 @@ choice:
                 ctx.moveTo(x - size, y + size);
                 ctx.lineTo(x + size, y - size);
             }
+<<<<<<< HEAD
         }
+=======
+        };
+>>>>>>> fa0b0cc49183af587a4a17ce547e5c81d0352128
 
         var s = series.points.symbol;
         if (handlers[s])

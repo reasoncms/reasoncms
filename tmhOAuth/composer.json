@@ -1,6 +1,10 @@
 {
   "name": "themattharris/tmhoauth",
+<<<<<<< HEAD
   "description": "An OAuth 1.0A library written in PHP by @themattharris, specifically for use with the Twitter API",
+=======
+  "description": "An OAuth library written in PHP by @themattharris",
+>>>>>>> fa0b0cc49183af587a4a17ce547e5c81d0352128
   "license": "Apache-2.0",
   "authors": [
     {

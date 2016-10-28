@@ -321,7 +321,7 @@
 			{
 				$this->add_element('location_head', 'comment', array('text'=>'<h4>Where is this event?</h4>'));
 				$this->set_display_name('location', 'Location Name');
-				$this->add_element('auto_update_coordinates', 'checkbox');
+				$this->add_element('auto_update_coordinates', 'checkboxfirst');
 			
 				// the value of auto_update_coordinates should depend on whether or not they are currently in sync.
 				// if they are in sync - then leave it checked.

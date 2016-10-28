@@ -6,12 +6,14 @@
 	/**
 	 * Register the content manager with Reason
 	 */
+	include_once( DISCO_INC . 'plugins/input_limiter/input_limiter.php' );
+
 	$GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'news_handler';
-	
+
 	/**
 	 * A content manager for posts
 	 */
-	class news_handler extends ContentManager 
+	class news_handler extends ContentManager
 	{
 		var $publications; //pub_id=>pub_entity
 		var $issues = array();	//[$publicationID][$issueID]=issue_entity;
@@ -24,49 +26,62 @@
 /////
 // ALTER_DATA & HELPER METHODS
 ////
-		function alter_data() { // {{{	
-			if ( $this->is_new_entity() ) 
+		function alter_data() { // {{{
+			if ( $this->is_new_entity() )
 				$this -> add_required ('status');
-				
+
 			$this -> add_required ('datetime');
 			//$this -> add_required ('keywords');
 			$this -> add_required ('release_title');
 			$this -> add_required ('news_type');
 			$this -> add_required ('status');
 			$this -> add_required ('show_hide');
-			
+
 			$this -> set_display_name ('release_title', 'Title');
 			$this -> set_display_name ('datetime', 'Date');
 			$this -> set_display_name ('show_hide', 'Show or Hide?');
 			if($this->_is_element('enable_comment_notification')) $this -> set_display_name ('enable_comment_notification', 'Email me when new comments are added to this news item:');
-		
+
 			$this -> set_comments ('name', form_comment('A short name that describes the news item. This is for internal use.'));
 			$this -> set_comments ('release_title', form_comment('The actual title of the item -- this is the one that shows up on the public site.'));
 			$this -> set_comments ('description', form_comment('A brief summary of the news item; this is what appears on lists of news items'));
+			if($this->_is_element('description'))
+			$this -> set_display_name ('description', 'Teaser Text');
 			$this -> set_comments ('content', form_comment('The content of the news item.'));
 			$this -> set_comments ('show_hide', form_comment('Hidden items will not show up in the news listings.'));
 
 			if ( !$this -> get_value('datetime') )
 				$this -> set_value( 'datetime', time() );
-			if (!$this -> get_value('show_hide')) 
+			if (!$this -> get_value('show_hide'))
 				$this -> set_value('show_hide', 'show');
-			if (!$this -> get_value('status')) 
+			if (!$this -> get_value('status'))
 				$this -> set_value('status', 'published');
-				
+
 			$this->change_element_type( 'show_hide', 'hidden');
 			$this->change_element_type('names', 'hidden');
 			$this->change_element_type('subtitle', 'hidden');
-			$this->change_element_type('author_description', 'hidden');	
+			$this->change_element_type('author_description', 'hidden');
 # Make this un-hidden again when we have actually IMPLEMENTED comment notification
 			if($this->_is_element('enable_comment_notification')) $this->change_element_type('enable_comment_notification', 'hidden');
-			
-			
+
+			$this->add_element('metadata_heading', 'comment', array('text' => '<h4>Metadata</h4>
+			<p>These fields provide additional information about the page, but are typically not displayed
+			to site visitors. Description and Keywords are visible to search engines, and can affect how
+			easily this page can be found by searching.</p>'));
+
+
+		$limiter = new DiscoInputLimiter($this);
+		$limiter->suggest_limit('meta_description', 156);
+		$limiter->auto_show_hide('meta_description', false);
+
+
+
+
 			//make more sophisticated changes to the content manager
 			$this->alter_commenting_state_field();
-			
+
 			$this->lokify();
-			
-			
+
 			$this->make_publication_related_fields();
 			$this->set_values_for_publication_related_fields();
 
@@ -86,16 +101,17 @@
 					$publication_elements[]=$pub_id.'-sections';
 				if(array_key_exists($pub_id.'more_than_one_section_comment', $this->_elements))
 					$publication_elements[]=$pub_id.'more_than_one_section_comment';
-			}		
+			}
 			$publication_elements[] = 'pubs_last_hr';
-	
+
 			// does the site have categories? if so, lets make it easy to associate a post with categories.
 			$cat_es = new entity_selector($this->get_value('site_id'));
 			$cat_es->description = 'Finding the categories on this site';
+			$cat_es->meta_description = 'Finding the categories on this site';
 			$cat_es->add_type(id_of('category_type'));
 			$categories = $cat_es->run_one();
 			if (!empty($categories))
-			{	
+			{
 				$this->add_relationship_element('choose_categories', id_of('category_type'), relationship_id_of('news_to_category'), 'right', 'checkbox');
 			}
 
@@ -124,15 +140,15 @@
 				$this->add_relationship_element('link_org', id_of('organization_type'), relationship_id_of('news_post_to_url_organization'), 'right', 'select');
 				$this->set_display_name('link_org', 'Link Organization');
 			}
-			
-			$order = array ('name', 
+
+			$order = array ('name',
 							'release_title',
-							'subtitle', 
-							'news_type', 
-							'author', 
-							'author_description', 
-							'location', 
-							'datetime', 
+							'subtitle',
+							'news_type',
+							'author',
+							'author_description',
+							'location',
+							'datetime',
 							'description',
 							'is_link_story',
 							'embed_handler',
@@ -140,26 +156,28 @@
 							'linkpost_url',
 							'link_org',
 							'choose_categories',
-							'keywords', 
-							'names', 
-							'contact_name', 
-							'contact_email', 
-							'contact_title', 
-							'contact_phone', 
-							'release_number', 
-							'status', 
-							'show_on_front_page', 
-							'publish_start_date', 
-							'publish_end_date', 
+							'names',
+							'contact_name',
+							'contact_email',
+							'contact_title',
+							'contact_phone',
+							'release_number',
+							'status',
+							'show_on_front_page',
+							'publish_start_date',
+							'publish_end_date',
 							'news_to_sport', // delete?
 							'news_to_image', // delete?
-							'unique_name', 
+							'unique_name',
 							'commenting_state',
 							'enable_comment_notification',
+							'metadata_heading',
+							'meta_description',
+							'keywords',
 							'pubs_heading',);
-							
-			$this -> set_order (array_merge($order, $publication_elements));		
-			$this->make_site_specific_changes();			
+
+			$this -> set_order (array_merge($order, $publication_elements));
+			$this->make_site_specific_changes();
 		} // }}}
 
 		function get_site_entities($entity_type) {
@@ -176,7 +194,7 @@
 				return $entities;
 			}
 		}
-		
+
 		function make_site_specific_changes()
 		{
 			// the following stuff should be hidden on sites
@@ -195,7 +213,7 @@
 			$this->change_element_type( 'show_hide', 'hidden');
 			$this -> set_comments ('status', form_comment('"Published" items will appear on your site; "pending" items will be hidden.'));
 		}
-		
+
 		function lokify()
 		{
 			$editor_name = html_editor_name($this->admin_page->site_id);
@@ -205,11 +223,21 @@
 			{
 				$wysiwyg_settings_desc['widgets'] = array('strong','em','lists','link','assets');
 			} */
-			
+			//$this -> change_element_type ('meta_description', $editor_name , $wysiwyg_settings_desc );
+			$this -> set_comments ('meta_description', form_comment('A brief summary of the page. For best results when the page is indexed by search engines, try to not exceed 156 characters.') );
 			$this -> change_element_type ('description', $editor_name , $wysiwyg_settings_desc );
 			$this -> set_comments ('description', form_comment('A brief summary of the news item; this is what appears on lists of news items'));
+
+		// Suggest a limit of 156 characters so that google will display the complete description.
+		/*$this->change_element_type('meta_description', 'textarea', array('rows' => 4));
+		$limiter = new DiscoInputLimiter($this);
+		$limiter->suggest_limit('meta_description', 156);
+		$limiter->auto_show_hide('meta_description', false); */
+
+
 			$this->change_element_type( 'content' , $editor_name , $wysiwyg_settings );
 			$this -> set_comments ('content', form_comment('The content of the news item. Please do not include #### at the end of the content'));
+			$this->set_comments( 'keywords', form_comment('Comma-separated keywords (for search engines) ie "Dave, Hendler, College, Relations"') );
 		}
 
 		function make_publication_related_fields()
@@ -217,23 +245,24 @@
 			//find all the publications associated with this site
 			$es = new entity_selector($this->get_value('site_id'));
 			$es->description = 'Finding the publications on this site';
+			$es->meta_description = 'Finding the publications on this site';
 			$es->add_type(id_of('publication_type'));
 			$es->set_order('entity.name ASC');
 			$this->publications = current($es->run());
-			
+
 			if (empty($this->publications)) return false;
-			
+
 			$this->add_element('pubs_heading','comment',array('text'=>'<h3>Publications</h3>'));
 			$this->add_element('pubs_last_hr','hr');
-			
+
 			foreach($this->publications as $pub_id=>$pub)
 			{
 				$this->add_element($pub_id.'-hr', 'hr');
-				$this->add_element($pub_id, 'checkbox');
+				$this->add_element($pub_id, 'checkboxfirst');
 				$this->set_display_name($pub_id, $pub->get_value('name'));
 				$this->init_issues($pub_id);
 				$this->init_news_sections($pub_id);
-				
+
 				if(!empty($this->issues[$pub_id]))
 				{
 					$issue_names = array();
@@ -255,12 +284,13 @@
 				}
 			}
 		}
-		
+
 		function init_issues($pub_id)
 		{
 			if($this->publications[$pub_id]->get_value('has_issues') == 'yes')
 			{
 				$es = new entity_selector( $this->get_value('site_id') );
+				$es->meta_description = 'Selecting issues for this publication';
 				$es->description = 'Selecting issues for this publication';
 				$es->add_type( id_of('issue_type') );
 				$es->add_left_relationship( $pub_id, relationship_id_of('issue_to_publication') );
@@ -268,25 +298,26 @@
 				$this->issues[$pub_id] = $es->run_one();
 			}
 		}
-		
+
 		function init_news_sections($pub_id)
 		{
 			if($this->publications[$pub_id]->get_value('has_sections') == 'yes')
 			{
 				$es = new entity_selector( $this->get_value('site_id') );
 				$es->description = 'Selecting news sections for this publication';
+				$es->meta_description = 'Selecting news sections for this publication';
 				$es->add_type( id_of('news_section_type'));
 				$es->add_left_relationship( $pub_id, relationship_id_of('news_section_to_publication') );
 				$es->set_order('entity.name ASC');
 				$this->sections[$pub_id] = current($es->run());
 			}
 		}
-		
-		
+
+
 		function set_values_for_publication_related_fields()
 		{
 			$left_relationships = $this->entity->get_left_relationships();
-			
+
 			#	What if there's not any publications for the site?
 			if(!empty($this->publications) && count($this->publications) == 1)
 			{
@@ -305,7 +336,7 @@
 					}
 				}
 			}
-#			we're doing this outside the publication loop in case we've somehow managed to set these vals without setting a publication val.  
+#			we're doing this outside the publication loop in case we've somehow managed to set these vals without setting a publication val.
 #			can that happen?  is this unnecessarily inefficient?
 			foreach($this->publications as $pub_id=>$pub_entity)
 			{
@@ -317,7 +348,7 @@
 					{
 						if(array_key_exists($related_issue->id(), $this->issues[$pub_id]))
 						{
-							
+
 								$issue_options[] = $related_issue->id();
 						}
 					}
@@ -329,7 +360,7 @@
 							$issue_names[] = $this->issues[$pub_id][$issue_id]->get_value('name');
 						}
 						$this->change_element_type($pub_id.'-issues', 'hidden');
-						$this->add_element($pub_id.'more_than_one_issue_comment', 'comment', array('text'=>'<strong>Issues:</strong> '.implode(', ',$issue_names).'<br />To change this post\'s issues, use the "Assign this story to an issue" link at the top of the page.'));			
+						$this->add_element($pub_id.'more_than_one_issue_comment', 'comment', array('text'=>'<strong>Issues:</strong> '.implode(', ',$issue_names).'<br />To change this post\'s issues, use the "Assign this story to an issue" link at the top of the page.'));
 					}
 					else
 					{
@@ -340,12 +371,12 @@
 				if($this->get_value($pub_id) && !empty($this->sections[$pub_id]) && count($this->sections[$pub_id]) == 1)
 				{
 					$first_section = reset($this->sections[$pub_id]);
-					$this->set_value($pub_id.'-sections', $first_section->id()); 
-				} 
+					$this->set_value($pub_id.'-sections', $first_section->id());
+				}
 				//otherewise set the section value if a relationship exists
 				elseif(!empty($this->sections[$pub_id]) && !empty($left_relationships['news_to_news_section']))
 				{
-					$section_options = array(); 
+					$section_options = array();
 					foreach($left_relationships['news_to_news_section'] as $related_section)
 					{
 						if(array_key_exists($related_section->id(), $this->sections[$pub_id]))
@@ -370,13 +401,13 @@
 				}
 			}
 		}
-	
+
 		function set_value_for_only_publication()
 		{
 			$first_pub = reset($this->publications);
 			$this->set_value($first_pub->id(), 'true');
 		}
-		
+
 		function alter_commenting_state_field()
 		{
 			$es = new entity_selector();
@@ -428,13 +459,13 @@
 				$this->set_value("linkpost_url", "");
 			}
 		}
-		
+
 		/**
 		 * Makes sure the news item is associated with at least one publication
 		 *
 		 * @todo it seems this only works if there is exactly one publication on the site - is that desired???
 		 */
-		function run_publication_association_error_check() 
+		function run_publication_association_error_check()
 		{
 			foreach($this->publications as $pub_id=>$pub_entity)
 			{
@@ -448,7 +479,7 @@
 				$this->set_error($first_pub->id(), 'This news item needs to be associated with at least one publication.' );
 			}
 		}
-		
+
 		/**
 		 * Makes sure that if a publication is selected that has issues and/or sections, that proper associations are present
 		 */
@@ -459,36 +490,36 @@
 				if($this->get_value($pub_id))
 				{
 					//make sure they have a relationship with at least one issue -- remember that if they have a relationship with more than one issue, the issue element will be hidden
-#					//we can't have an empty issue_val, can we?  since it's a select?  										
+#					//we can't have an empty issue_val, can we?  since it's a select?
 					$issue_val = $this->get_value($pub_id.'-issues');
 					if(!empty($this->issues[$pub_id]) && $this->_elements[$pub_id.'-issues']->type != 'hidden' && empty($issue_val) )
 					{
-						$this->set_error($pub_id.'-issues', 'This news item needs to be associated with at least one issue of "'.$pub_entity->get_value('name').'".' );					
+						$this->set_error($pub_id.'-issues', 'This news item needs to be associated with at least one issue of "'.$pub_entity->get_value('name').'".' );
 					}
 					//make sure they have a relationship with at least one section -- remember that if they have a relationship with more than one section, the section element will be hidden
 					$section_val = $this->get_value($pub_id.'-sections');
 					if(!empty($this->sections[$pub_id]) && empty($section_val) && $this->_elements[$pub_id.'-sections']->type != 'hidden')
 					{
-						$this->set_error($pub_id.'-sections', 'This news item needs to be associated with at least one section of "'.$pub_entity->get_value('name').'".' );					
+						$this->set_error($pub_id.'-sections', 'This news item needs to be associated with at least one section of "'.$pub_entity->get_value('name').'".' );
 					}
 				}
 			}
 		}
 
 
-	
+
 /////
 // PROCESS & HELPER METHODS
 ////
-	
+
 		function process()
 		{
 			$this->handle_new_associations();
 			$this->handle_deletions();
 			parent::process();
 		}
-		
-		
+
+
 		function handle_new_associations()
 		{
 			foreach($this->publications as $pub_id=>$pub_entity)
@@ -515,16 +546,16 @@
 				}
 			}
 		}
-		
+
 		function extra_associations(&$pub_entity)
 		{
 		}
-	
+
 		function handle_deletions()
 		{
 			foreach($this->publications as $pub_id=>$pub_entity)
 			{
-				//figure out if we're supposed to delete an association with a publication.  If we are, also delete associations with issues & sections.	
+				//figure out if we're supposed to delete an association with a publication.  If we are, also delete associations with issues & sections.
 #				if(!$this->get_value($pub_id) && $this->entity->has_left_relation_with_entity(new entity($pub_id), 'news_to_publication'))
 				if(!$this->get_value($pub_id))
 				{
@@ -536,11 +567,11 @@
 					//delete all associations with this publication's news sections
 					$this->delete_all_section_associations_for_this_publication($pub_id);
 					$this->extra_deletions($pub_entity);
-				}				
+				}
 				//issue & section associations for associated publications cannot be deleted, only replaced, so this is taken care of in handle_new_associations
 			}
 		}
-		
+
 		// hook for extra deletion actions for local extensions
 		function extra_deletions(&$pub_entity)
 		{
@@ -550,14 +581,14 @@
 		{
 			delete_relationships( array( 'entity_a' => $entity_a_id, 'entity_b' => $entity_b_id,'type' => relationship_id_of( $reln_unique_name )));
 		}
-		
-#		now that this function only contains the create_relationship command, it should probably be deleted ... but we'll leave it in for now, in case we want to change it.		
+
+#		now that this function only contains the create_relationship command, it should probably be deleted ... but we'll leave it in for now, in case we want to change it.
 		function make_new_association($reln_unique_name, $entity_b_id)
-		{		
-			//create a relationship with the new entity 
+		{
+			//create a relationship with the new entity
 			create_relationship($this->entity->id(), $entity_b_id, relationship_id_of($reln_unique_name));
 		}
-		
+
 		function delete_all_issue_associations_for_this_publication($publication_id)
 		{
 			if(!empty($this->issues[$publication_id]))
@@ -571,7 +602,7 @@
 				}
 			}
 		}
-		
+
 		function delete_all_section_associations_for_this_publication($publication_id)
 		{
 			if(!empty($this->sections[$publication_id]))

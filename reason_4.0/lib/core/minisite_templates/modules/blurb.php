@@ -37,7 +37,7 @@ class BlurbModule extends DefaultMinisiteModule
 	);
 	var $es;
 	var $blurbs = array();
-	
+
 	function init( $args = array() ) // {{{
 	{
 		parent::init( $args );
@@ -67,7 +67,7 @@ class BlurbModule extends DefaultMinisiteModule
 			$this->blurbs = $this->es->run_one();
 		}
 		$this->used_blurbs(array_keys($this->blurbs));
-		
+
 		// register myself as editable if there are any blurbs ...
 		if (!empty($this->blurbs))
 		{
@@ -75,7 +75,7 @@ class BlurbModule extends DefaultMinisiteModule
 			$inline_edit->register_module($this, $this->user_can_inline_edit());
 		}
 	} // }}}
-	
+
 	protected function get_source_page_id()
 	{
 		if(!empty($this->params['source_page']))
@@ -87,7 +87,7 @@ class BlurbModule extends DefaultMinisiteModule
 		}
 		return $this->cur_page->id();
 	}
-	
+
 	/**
 	 * Determines whether or not the user can inline edit.
 	 *
@@ -101,16 +101,16 @@ class BlurbModule extends DefaultMinisiteModule
 		}
 		return $this->_user_can_inline_edit;
 	}
-	
+
 	function build_blurbs_array_using_unique_names()
 	{
 		$blurb_array = array();
-		$blurb_unique_name_array = (is_array($this->params['blurb_unique_names_to_show'])) 
+		$blurb_unique_name_array = (is_array($this->params['blurb_unique_names_to_show']))
 								   ? $this->params['blurb_unique_names_to_show']
 								   : array($this->params['blurb_unique_names_to_show']);
-		
+
 		if ($this->params['rand_flag'] == true) shuffle($blurb_unique_name_array);
-		
+
 		$max_count = (!empty($this->params['num_to_display'])) ? $this->params['num_to_display'] : count($blurb_unique_name_array);
 		$count = 0;
 		foreach($blurb_unique_name_array as $blurb_unique_name)
@@ -132,14 +132,14 @@ class BlurbModule extends DefaultMinisiteModule
 		}
 		$this->blurbs = $blurb_array;
 	}
-	
+
 	function used_blurbs( $used = array() )
 	{
 		static $used_blurbs = array();
 		$used_blurbs = array_merge($used_blurbs, $used);
 		return $used_blurbs;
 	}
-			
+
 	function has_content() // {{{
 	{
 		$inline_editing =& get_reason_inline_editing($this->page_id);
@@ -172,7 +172,7 @@ class BlurbModule extends DefaultMinisiteModule
 				echo ' editing';
 			echo ' '.$class;
 			echo '">';
-			
+
 			if($editing_item)
 			{
 				if($pages = $this->_blurb_also_appears_on($blurb))
@@ -202,7 +202,7 @@ class BlurbModule extends DefaultMinisiteModule
 		}
 		echo '</div>'."\n";
 	} // }}}
-	
+
 	function _blurb_is_editable($blurb)
 	{
 		$user = reason_get_current_user_entity();
@@ -210,7 +210,7 @@ class BlurbModule extends DefaultMinisiteModule
 			return true;
 		return false;
 	}
-	
+
 	function _blurb_also_appears_on($blurb)
 	{
 		$es = new entity_selector();
@@ -219,7 +219,7 @@ class BlurbModule extends DefaultMinisiteModule
 		$es->add_relation('entity.id != "'.reason_sql_string_escape($this->page_id).'"');
 		return $es->run_one();
 	}
-	
+
 	function _get_editing_form($blurb)
 	{
 		$form = new disco();
@@ -235,15 +235,15 @@ class BlurbModule extends DefaultMinisiteModule
 		$form->run();
 		$form_output = ob_get_clean();
 		return $form_output;
-	}	
-	
+	}
+
 	function save_blurb_callback(&$form)
 	{
 		$values['content'] = tidy($form->get_value( 'blurb_edit_text' ));
 		$archive = ($form->chosen_action == 'save_and_finish') ? true : false;
 		reason_update_entity( $this->request['blurb_id'], $this->get_html_editor_user_id(), $values, $archive );
 	}
-	
+
 	function where_to_callback(&$form)
 	{
 		if( $form->chosen_action == 'save' )
@@ -257,7 +257,7 @@ class BlurbModule extends DefaultMinisiteModule
 			return carl_make_redirect($params);
 		}
 	}
-	
+
 	/**
 	 * @return int reason user entity that corresponds to logged in user or 0 if it does not exist
 	 */
@@ -270,7 +270,7 @@ class BlurbModule extends DefaultMinisiteModule
 		}
 		return 0;
 	}
-	
+
 	/**
 	*  Template calls this function to figure out the most recently last modified item on page
 	* This function uses the most recently modified blurb
@@ -291,7 +291,7 @@ class BlurbModule extends DefaultMinisiteModule
 		}
 		return false;
 	} // }}}
-	
+
 	/**
 	 * Provides (x)HTML documentation of the module
 	 * @return mixed null if no documentation available, string if available
@@ -302,7 +302,7 @@ class BlurbModule extends DefaultMinisiteModule
 			$num = $this->params['num_to_display'];
 		else
 			$num = 'all';
-		
+
 		$ret = '<p>Displays '.$num.' blurbs attached to this page';
 		if($this->params['rand_flag'])
 		{
@@ -314,4 +314,3 @@ class BlurbModule extends DefaultMinisiteModule
 		return $ret;
 	}
 }
-?>

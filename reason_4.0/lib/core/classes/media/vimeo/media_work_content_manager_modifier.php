@@ -271,7 +271,8 @@ class VimeoMediaWorkContentManagerModifier implements MediaWorkContentManagerMod
 	 */
 	function _add_file_preview()
 	{
-		if ($this->manager->get_value('transcoding_status') == 'ready')
+		$uploading = defined('VIMEO_UPLOADING_ENABLED') ? VIMEO_UPLOADING_ENABLED : false;
+		if ( ( !$uploading || $this->manager->get_value('transcoding_status') == 'ready' ) && $this->manager->get_value('entry_id'))
 		{
 			$entity = new entity($this->manager->get_value('id'));
 			$embed_markup = '';
@@ -448,47 +449,37 @@ class VimeoMediaWorkContentManagerModifier implements MediaWorkContentManagerMod
 	function _handle_vimeo_url($url)
 	{
 		$this->manager->set_value('vimeo_url', $url);
-		// check to see if the provided vimeo info is valid
-		// regexp found here: http://stackoverflow.com/questions/10488943/easy-way-to-get-vimeo-id-from-a-vimeo-url
-		$regexp = '#(https?:\/\/)?(www.)?(player.)?vimeo.com\/([a-z]*\/)*([0-9]{6,11})[?]?.*#';
-		preg_match($regexp, $url, $matches);
-		
-		if (count($matches) >= 6)
+		$valid_url = false;
+		if($key = $this->_vimeo_id_from_url($url))
 		{
-			$valid_url = $this->_check_valid_url($matches[5]);
+			if($valid_key = $this->_check_valid_key($key))
+			{
+				$valid_url = true;
+			}
 		}
 		else
 		{
-			$valid_url = false;
+			$valid_key = $this->_check_valid_key($url);
 		}
-		$valid_key = $this->_check_valid_key($url);
 		
 		if (!($valid_key || $valid_url))
 		{	
 			if (strpos($url, 'vimeo') === false)
 			{
-				$this->manager->set_error('vimeo_url', 'Invalid Vimeo video key');
+				$this->manager->set_error('vimeo_url', 'Reason wasn\'t able to validate the Vimeo video key');
 			}
 			else
 			{
-				$this->manager->set_error('vimeo_url', 'Invalid Vimeo url');
+				$this->manager->set_error('vimeo_url', 'Reason wasn\'t able to validate the Vimeo URL');
 			}
 			return;
 		}
 
 		if ($valid_url)
 		{
-			if ($matches[5])
+			if ($key)
 			{
-				$video_key = $matches[5];
-				if (!is_numeric($video_key)) 
-				{
-					$this->manager->set_error('vimeo_url', 'Invalid video key detected.');
-				}
-				else
-				{
-					$this->manager->set_value('entry_id', $video_key);
-				}
+				$this->manager->set_value('entry_id', $key);
 			}
 			else
 			{
@@ -610,7 +601,16 @@ class VimeoMediaWorkContentManagerModifier implements MediaWorkContentManagerMod
 	 */
 	function _check_valid_url($url)
 	{
-		return $this->_check_valid_key($url);
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch,  CURLOPT_RETURNTRANSFER, TRUE);
+		$response = curl_exec($ch);
+		$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		if ($http_code == 200)
+		{
+			return true;
+		}
+		return false;
 	}
 	
 	/**
@@ -618,12 +618,34 @@ class VimeoMediaWorkContentManagerModifier implements MediaWorkContentManagerMod
 	 */
 	function _check_valid_key($key)
 	{
+		if(!is_numeric($key))
+			return false;
+		
 		$data = $this->shim->get_video_data($key);
 		if (!$data)
 		{
-			return false;
+			return $this->_check_valid_url('https://vimeo.com/'.$key);
 		}
 		return true;
+	}
+	/**
+	 * Parse out the video id from the url
+	 *
+	 * regexp found here: http://stackoverflow.com/questions/10488943/easy-way-to-get-vimeo-id-from-a-vimeo-url
+	 *
+	 * @param string $url
+	 * @return mixed string youtube id or NULL if none found
+	 */
+	function _vimeo_id_from_url($url)
+	{
+		$regexp = '#(https?:\/\/)?(www.)?(player.)?vimeo.com\/([a-z]*\/)*([0-9]{6,11})[?]?.*#';
+		preg_match($regexp, $url, $matches);
+		
+		if (count($matches) >= 6)
+		{
+			return $matches[5];
+		}
+		return NULL;
 	}
 	
 	/**

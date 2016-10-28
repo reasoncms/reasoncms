@@ -1572,8 +1572,14 @@ tinymce.PluginManager.add('reasonintegration', function(editor, url) {
       format: 'text'
     });
 
-    // confirm some text or an image has been selected ...
-    if (!data.text && selectionElement.nodeName != 'IMG')
+    // check for selected image
+    if (selectionElement.nodeName == 'IMG')
+    {
+      data.text = '';
+    }
+
+    // confirm some text has been selected ...
+    if (!data.text)
     {
       // ... alert user to select some text
       tinymce.activeEditor.windowManager.alert(
