@@ -88,12 +88,12 @@
 		*
 		* @todo Add a way to indicate that an element is required if $use_label is false.
 		*/
-		function row_open( $label, $required = false, $error = false, $key = false, $use_label = true ) // {{{
+		function row_open( $label, $required = false, $error = false, $key = false, $use_label = true, $label_target_id = false ) // {{{
 		{
-			$this->box_item_open( $label, $required, $error, $key, $use_label );
+			$this->box_item_open( $label, $required, $error, $key, $use_label, $label_target_id );
 		} // }}}
 		
-		function box_item_open( $label, $required, $error, $key, $use_label )
+		function box_item_open( $label, $required, $error, $key, $use_label, $label_target_id = false )
 		{
 			$id = str_replace("_", "", $key);
 			
@@ -115,10 +115,14 @@
 			$markup .= '<a name="'.$key.'_error"></a>'."\n";
 			if($use_label)
 			{
+				if(!empty($label_target_id))
+					$markup .= '<label for="'.htmlspecialchars($label_target_id).'">';
 				if(!empty($stripped_label)) 
 					$markup  .= '<span class="labelText">'.$label.$label_punct.'</span>';
 				if($required) 
 					$markup .= '<span class="requiredIndicator">'.$this->get_required_indicator().'</span>';
+				if(!empty($label_target_id))
+					$markup .= '</label>';
 			}
 			$markup .= '</td>'."\n";
 			$markup .= '<td align="left" class="element">'."\n";
@@ -150,9 +154,9 @@
 		* @param boolean $use_label Whether or not the label should be displayed (optional - default true)
 		* @deprecated this is no longer used as far as I can tell
 		*/
-		function row( $label, $content, $required = false, $error = false, $key = false, $use_label = true) // {{{
+		function row( $label, $content, $required = false, $error = false, $key = false, $use_label = true, $label_target_id = false) // {{{
 		{
-			$this->box_item_open( $label, $required, $error, $key, $use_label);
+			$this->box_item_open( $label, $required, $error, $key, $use_label, $label_target_id);
 			echo $content;
 			$this->box_item_close();
 		} // }}}
