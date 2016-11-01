@@ -15,7 +15,7 @@ $GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'TimelineIte
  */
 class TimelineItemManager extends ContentManager
 {	
-	
+
 	function alter_data()
 	{
 		$this->add_relationship_element('timelines', id_of('timeline_type'), 
@@ -32,8 +32,18 @@ class TimelineItemManager extends ContentManager
 			}
 		}
 		
+		// Get image, media work, and location associated with this timeline items
+		$image_string = $this->get_preview_string('image', 'image', 'timeline_item_to_image');
+		$media_work_string = $this->get_preview_string('media work', 'av', 'timeline_item_to_media_work');
+		$location_string = $this->get_preview_string('location', 'loction_type', 'timeline_item_to_location');
+				
+		$this->add_element('image', 'comment', array('text' => $image_string));
+		$this->add_element('media_work', 'comment', array('text' => $media_work_string));
+		$this->add_element('location', 'comment', array('text' => $location_string));
+		
 		$this->set_display_name('other_media', 'Media URL');
 		$this->set_display_name('background', 'Background Color');
+
 
 		$this->set_comments('name', form_comment('Title of the timeline item'));
 		$this->set_comments('start_date', form_comment('What is the first date of this item?'));
@@ -85,6 +95,9 @@ class TimelineItemManager extends ContentManager
 				'text',
 				'autolink',
 				'media',
+				'image',
+				'media_work',
+				'location',
 				'other_media',
 				'group',
 				'background'
@@ -123,6 +136,19 @@ class TimelineItemManager extends ContentManager
 	function init_head_items() {
 		$this->head_items->add_javascript(JQUERY_URL, true);
 		$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH .'content_managers/timeline_item.js');
+	}
+	
+	function get_preview_string($name, $type, $relationship) {
+		$es = new entity_selector();
+		$es->add_type(id_of($type));
+		$es->add_right_relationship($this->get_value('id'), relationship_id_of($relationship));
+		$results = $es->run_one();
+		
+		if (!empty($results)) {
+			return 'Current ' . $name . ':<br>' . reset($results)->get_display_name();
+		} else {
+			return 'No ' . $name . ' associated with this timeline item.';
+		}
 	}
 
 }
