@@ -1,7 +1,7 @@
-var rowIds = {'other' 			  : 'tr#othermediaRow', 
-			  'reason_image' 	  : 'tr#imageRow',
-			  'reason_media_work' : 'tr#mediaworkRow',
-			  'reason_location'   : 'tr#locationRow'};
+var rowIds = {'other' 			  : '#othermediaItem', 
+			  'reason_image' 	  : '#imageItem',
+			  'reason_media_work' : '#mediaworkItem',
+			  'reason_location'   : '#locationItem'};
 
 $(document).ready(function() {	
 	hideAll();
