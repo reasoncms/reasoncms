@@ -15,7 +15,7 @@ $GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'TimelineIte
  */
 class TimelineItemManager extends ContentManager
 {	
-
+	var $box_class = 'stackedBox';
 	function alter_data()
 	{
 		$this->add_relationship_element('timelines', id_of('timeline_type'), 
