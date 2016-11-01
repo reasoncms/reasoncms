@@ -108,7 +108,6 @@ class TimelineItemManager extends ContentManager
 				'unique_name'
 			)
 		);
-	
 	}
 	
 
