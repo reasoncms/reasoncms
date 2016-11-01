@@ -32,6 +32,9 @@ class TimelineItemManager extends ContentManager
 			}
 		}
 		
+		$this->add_relationship_element('categories', id_of('category_type'), 
+				relationship_id_of('timeline_item_to_category'),'right','checkbox',true);
+				
 		// Get image, media work, and location associated with this timeline items
 		$image_string = $this->get_preview_string('image', 'image', 'timeline_item_to_image');
 		$media_work_string = $this->get_preview_string('media work', 'av', 'timeline_item_to_media_work');
@@ -99,8 +102,10 @@ class TimelineItemManager extends ContentManager
 				'media_work',
 				'location',
 				'other_media',
+				'categories',
 				'group',
-				'background'
+				'background',
+				'unique_name'
 			)
 		);
 	
