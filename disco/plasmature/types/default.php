@@ -740,7 +740,26 @@ class defaultType
 		}
 		return $this->_labeled;
 	}
-	
+	/**
+	 * Get an ID to use as the for="" attribute on the display name label produced by Disco
+	 *
+	 * Plasmature elements should assume that if this is returning a nonfalse value,
+	 * Disco's box class will put a label element using this value as the for="" attribute
+	 * around the display name.
+	 *
+	 * If the element is not labeled (That is, @is_labeled() returns false), the plasmature
+	 * element should use other means of labeling the element for accessibility, like
+	 * using the aria-label attribute.
+	 *
+	 * In some cases (e.g. Plasmature elements that use multiple inputs, like checkbox groups,
+	 * radio buttons, and some date/time elements) there is no single input to label.
+	 * In these cases, the plasmature element should return false for this method and should
+	 * instead self-label. Best practices as of 2016 are to produce a wrapper element with
+	 * role="group" and aria-label="[[display_name]]", and to produce label elements or use
+	 * aria-label on each component input.
+	 *
+	 * @return mixed false if no label is appropriate, string if label is desired
+	 */
 	function get_label_target_id()
 	{
 		return false;

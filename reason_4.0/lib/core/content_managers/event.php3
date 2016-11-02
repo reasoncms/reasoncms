@@ -173,7 +173,7 @@
 											'yearly'=>'Yearly'), 
 											'add_empty_value_to_top' => false,
 					) );
-			$this->change_element_type( 'minutes', 'select_no_sort', array('options'=>$minutes) );
+			$this->change_element_type( 'minutes', 'select_no_label', array('options'=>$minutes,'sort_options'=>false) );
 			$this->change_element_type( 'hours', 'select_no_sort', array('options'=>$hours) );
 			$this->change_element_type( 'frequency', 'text', array('size'=>3) );
 			$this->change_element_type( 'week_of_month','protected' );
@@ -201,7 +201,6 @@
 			$this->set_comments(	 'url', form_comment( 'If this event has a site dedicated to it, enter that URL here.' ) );
 			$this->set_display_name( 'hours', 'Duration' );
 			$this->set_comments(	 'hours', ' Hours');
-			$this->set_display_name( 'minutes', ' ' );
 			$this->set_comments(	 'minutes', ' Minutes' );
 			$this->set_display_name( 'sunday', 'On' );
 			$this->set_comments(	 'sunday', ' Sunday' );

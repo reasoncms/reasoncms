@@ -61,6 +61,10 @@ class monthType extends selectType
 		}
 	}
 }
+class month_no_labelType extends monthType
+{
+	var $_labeled = false;
+}
 
 /**
  * Presents a drop-down of years.
@@ -118,6 +122,11 @@ class yearType extends numrangeType
 			$this->end = $current_date['year'] + $this->num_years_after_today;
 		}
 	 }
+}
+
+class year_no_labelType extends yearType
+{
+	var $_labeled = false;
 }
 
 /**
@@ -355,7 +364,7 @@ class textDateTimeType extends textType
 
 	function display()
 	{
-	    if ($this->use_picker && !defined("DATE_PICKER_HEAD_ITEMS_LOADED") && !defined('_PLASMATURE_INCLUDED_DATEPICKER'))
+	    if ($this->use_picker && !defined("DATE_PICKER_HEAD_ITEMS_LOADED") && !defined('_PLASMATURE_INCLUDED_DATEPICKER') && defined('REASON_HTTP_BASE_PATH') )
 	    {
 	        /**
 	         * We specify the english datepicker .js file ... the dynamic mechanism to pick the language
@@ -569,9 +578,10 @@ class selectMonthTextYearType extends textDateTimeType
 	function init_month_element()
 	{
 		//set up the month plasmature element
-		$this->month_element = new monthType;
+		$this->month_element = new month_no_labelType;
 		$this->month_element->set_request( $this->_request );
 		$this->month_element->set_name( $this->name.'[month]' );
+		$this->month_element->set_display_name( 'month' );
 		if(empty($this->month_args['date_format']))
 			$this->month_args['date_format'] = 'F';
 		$this->month_element->init($this->month_args);
@@ -624,8 +634,9 @@ class selectMonthYearType extends selectMonthTextYearType
 	function init_year_element()
 	{
 		//set up the year plasmature element
-		$this->year_element = new yearType;
+		$this->year_element = new year_no_labelType;
 		$this->year_element->set_request( $this->_request );
+		$this->year_element->set_display_name('year');
 		$this->year_element->set_name( $this->name.'[year]' );
 		if(empty($this->year_args['end']) || (isset($this->year_args['end']) && $this->year_args['end'] > $this->year_max))
 			$this->year_args['end'] = $this->year_max;
