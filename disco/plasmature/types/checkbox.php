@@ -113,3 +113,11 @@ class checkboxfirstType extends checkboxType {
 		return false;
 	}
 }
+
+/**
+ * Like {@link checkboxType}, but does not display a label
+ */
+class checkbox_no_labelType extends checkboxType {
+	var $type = 'checkbox_no_label';
+	var $_labeled = false;
+}

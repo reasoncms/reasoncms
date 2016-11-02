@@ -94,8 +94,7 @@
 			
 			// Social sharing
 			$this->add_element('social_sharing_comment','comment',array('text'=>'<h4>Social Sharing</h4>'));
-			$this->add_comments('social_sharing_comment',form_comment('Would you like to provide links to share your content on social networks?'));
-			$this->set_display_name('enable_social_sharing','&nbsp;');		
+			$this->set_display_name('enable_social_sharing','Would you like to provide links to share your content on social networks?');		
 			$this->change_element_type('enable_social_sharing', 'radio',array('options' => array('no' => 'Don\'t provide buttons to share posts','yes' => 'Provide buttons to share posts on social networks' )));	
 			if(!$this->get_value('enable_social_sharing'))
 			{
