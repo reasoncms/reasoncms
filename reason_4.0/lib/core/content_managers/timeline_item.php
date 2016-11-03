@@ -38,7 +38,7 @@ class TimelineItemManager extends ContentManager
 		// Get image, media work, and location associated with this timeline items
 		$image_string = $this->get_preview_string('image', 'image', 'timeline_item_to_image');
 		$media_work_string = $this->get_preview_string('media work', 'av', 'timeline_item_to_media_work');
-		$location_string = $this->get_preview_string('location', 'loction_type', 'timeline_item_to_location');
+		$location_string = $this->get_preview_string('location', 'location_type', 'timeline_item_to_location');
 				
 		$this->add_element('image', 'comment', array('text' => $image_string));
 		$this->add_element('media_work', 'comment', array('text' => $media_work_string));
@@ -72,9 +72,11 @@ class TimelineItemManager extends ContentManager
 		
 		// Create a list of all groups used by timeline items on this site
 		$groups = array();
-		$es = new entity_selector();
+		$es = new entity_selector($this->get_value('site_id'));
 		$es->add_type(id_of('timeline_item_type'));
 		$es->add_right_relationship($this->get_value('site_id'), relationship_id_of('site_owns_timeline_item_type'));
+		$es->add_relation('timeline_item.group != ""');
+		$es->add_relation('timeline_item.group IS NOT NULL');
 		$timeline_items = $es->run_one();
 		
 		foreach ($timeline_items as $timeline_item) {
@@ -112,12 +114,12 @@ class TimelineItemManager extends ContentManager
 	
 
 	function run_error_checks() {
-		$media = $this->get_element('media')->value;
-		$background = $this->get_element('background')->value;
+		$media = $this->get_value('media');
+		$background = $this->get_value('background');
 		
 		// Make sure that other_media has valid URL if 'other' is selected
 		if ($media == 'other') {
-			$media_url = $this->get_element('other_media')->value;
+			$media_url = $this->get_value('other_media');
 			
 			if (filter_var($media_url, FILTER_VALIDATE_URL) === false) {
 				$this->set_error('other_media', 'Not a valid URL: ' . htmlspecialchars($media_url));
