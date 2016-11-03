@@ -108,7 +108,7 @@ foreach ( $sites as $site )
 
 if(id_of('minisite_page') == $type_id)
 {
-	echo '<p><input type="checkbox" name="move_children" value="1" checked="" id="moveChildrenCheckbox"> <label for="moveChildrenCheckbox">Automatically move all children of selected pages</label></p>';
+	echo '<p><input type="checkbox" name="move_children" value="1" id="moveChildrenCheckbox"> <label for="moveChildrenCheckbox">Automatically move all children of selected pages</label></p>';
 }
 echo '<table id="entity_mover" width="100%">'."\n";
 echo '<tr><th><a href="'.carl_make_link(array('sort'=>'entity.id'), '', '', false).'">Id</a></th>';

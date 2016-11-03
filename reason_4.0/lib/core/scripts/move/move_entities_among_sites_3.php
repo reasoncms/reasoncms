@@ -69,7 +69,7 @@ if(id_of('minisite_page') == $type_id && !empty($_REQUEST['move_children']))
 				// If any descendant is being moved to a different site, die
 				if (isset($new_site_ids[$descendant]) && $new_site_ids[$descendant] != $new_site_id && $new_site_ids[$descendant] != $old_site_id)
 				{
-					die('<h1>Please do not move related pages to different sites.</h1></body></html>');
+					die('<h1>Unable to move pages</h1><p>Please make sure that child pages are being moved to the same site as their parent when "Automatically move all children of selected pages" is checked.</p></body></html>');
 				}
 				$new_site_ids[$descendant] = $new_site_id;
 			}
