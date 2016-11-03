@@ -49,6 +49,21 @@ else
 }
 
 $job_stack = new ReasonJobStack();
+
+// Move children preprocess step
+// Add all children, grandchildren, etc. to $new_site_ids if move_children checkbox is checked
+if(id_of('minisite_page') == $type_id && !empty($_REQUEST['move_children']))
+{
+	$page_tree = new MinisiteNavigation;
+	$page_tree->order_by = 'sortable.sort_order';
+	$page_tree->init( $old_site_id, id_of('minisite_page') );
+	foreach ( $new_site_ids as $entity_id => $new_site_id )
+	{
+		// add all children pages to $new_site_ids
+		// BUT error out if any child page was selected to move to a different place -- 
+		// we don't know how to resolve that so give the user an error and do nothing
+	}
+}
 foreach ( $new_site_ids as $entity_id => $new_site_id )
 {
 	$entity_id = (integer) $entity_id;
