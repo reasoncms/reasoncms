@@ -377,4 +377,21 @@ class ChangeSiteContextAndAutoBorrowJob extends ReasonJob
 		return true;
 	}
 }
+
+/**
+ * Recursively get all descendant pages of a parent page
+ * @param  MinisiteNavigation $page_tree 
+ * @param  int $page_id    the parent page whose descendants to get
+ * @return Array           all descendants of the parent page
+ */
+function get_page_descendants($page_tree, $page_id) {
+	$children = $page_tree->children($page_id);
+	$descendants = $children;
+	
+	foreach ($children as $child) {
+		$descendants = array_merge($descendants, get_page_descendants($page_tree, $child));
+	}
+	
+	return $descendants;
+} 
 ?>
