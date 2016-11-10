@@ -93,7 +93,14 @@ class CourseListModule extends DefaultMinisiteModule
 			}
 			if (isset($this->request['toggle_course']))
 			{
-				echo json_encode($this->do_course_toggle($this->request['toggle_course']));
+				$toggled = $this->do_course_toggle($this->request['toggle_course']);
+				if($toggled)
+				{
+					$user = reason_get_current_user_entity();
+					if(!empty($user))
+						reason_update_entity( $this->page_id, $user->id(), array('last_modified' => date('Y-m-d H:i:s') ), false);
+				}
+				echo json_encode($toggled);
 				exit;
 			}
 		}
