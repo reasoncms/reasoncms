@@ -24,7 +24,7 @@ class ReasonUpgrader_48_AddMediaCaptions extends reasonUpgraderDefault implement
 					'display_name' => 'Captions & Subtitles',
 					'description' => 'To connect captions and subtitles to a Media Work',
 					'directionality' => 'unidirectional',
-					'connections' => 'one_to_many',
+					'connections' => 'many_to_one',
 					'required' => 'no',
 					'is_sortable' => 'no',
 				)
@@ -127,6 +127,11 @@ class ReasonUpgrader_48_AddMediaCaptions extends reasonUpgraderDefault implement
 		return $message . "</ol>";
 	}
 
+	/**
+	 * Create types which don't exist yet as defined in newTypes()
+	 * 
+	 * @return string status message to display to user 
+	 */
 	protected function createTypes()
 	{
 		$str = '';
@@ -160,6 +165,13 @@ class ReasonUpgrader_48_AddMediaCaptions extends reasonUpgraderDefault implement
 		return $str;
 	}
 
+	/**
+	 * Filters out existing types from the type dictionary 
+	 * and only returns types which don't yet exist.
+	 * 
+	 * @return array dictionary of types which don't exist
+	 *     to be used by createTypes()
+	 */
 	protected function typesToBeCreated()
 	{
 		reason_refresh_unique_names();
@@ -175,6 +187,11 @@ class ReasonUpgrader_48_AddMediaCaptions extends reasonUpgraderDefault implement
 		return $typesToBeCreated;
 	}
 
+	/**
+	 * Create relationships which don't exist yet as defined in newRelationships()
+	 * 
+	 * @return string status message to display to user 
+	 */
 	protected function createRelationships()
 	{
 		$message = "";
@@ -196,6 +213,13 @@ class ReasonUpgrader_48_AddMediaCaptions extends reasonUpgraderDefault implement
 		return $message;
 	}
 
+	/**
+	 * Filters out existing relationships from the relationship dictionary 
+	 * and only returns relationships which don't yet exist.
+	 * 
+	 * @return array dictionary of relationships which don't exist
+	 *     to be used by createRelationships()
+	 */
 	protected function relationshipsToBeCreated()
 	{
 		reason_refresh_unique_names();
