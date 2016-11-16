@@ -105,7 +105,7 @@ class ReasonUpgrader_48_UpdateEventRegistration extends reasonUpgraderDefault im
 		$newRels = $this->relationshipsToBeCreated();
 
 		if (empty($newRels)) {
-			$message = "<li>All relationships already exist.</li>";
+			$message .= "<li>All relationships already exist.</li>";
 		} else {
 			$message .= $this->checkForEventSlots();
 			$message .= $this->createRelationships();
