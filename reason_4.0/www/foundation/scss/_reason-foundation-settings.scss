@@ -28,6 +28,18 @@ $breadcrumb-primary-color: map-get($foundation-palette, primary);
 $children-primary-color: map-get($foundation-palette, primary);
 $classified-primary-color: map-get($foundation-palette, primary);
 $event-primary-color: map-get($foundation-palette, primary);
+$faculty-primary-color: map-get($foundation-palette, primary);
+$faq-primary-color: map-get($foundation-palette, primary);
+$feature-primary-color: map-get($foundation-palette, primary);
+$form-primary-color: map-get($foundation-palette, primary);
+$gallery-primary-color: map-get($foundation-palette, primary);
+$images-primary-color: map-get($foundation-palette, primary);
+$login-link-primary-color: map-get($foundation-palette, primary);
+$maintained-primary-color: map-get($foundation-palette, primary);
+$minutes-primary-color: map-get($foundation-palette, primary);
+$navigation-primary-color: map-get($foundation-palette, primary);
+$policy-primary-color: map-get($foundation-palette, primary);
+$publication-primary-color: map-get($foundation-palette, primary);
 
 $font-family-serif: Georgia, Cambria, "Times New Roman", Times, serif !default;
 
@@ -51,6 +63,16 @@ $large-low-range: (63.8125em, 77.4375em); // 1021px, 1239px
 $large-high-range: (77.5em, 90em); // 1240px, 1440px
 $xlarge-range: (90.063em, 120em); // 1441px, 1920px
 $xxlarge-range: (120.063em); // 1921px
+$breakpoints: (
+	small: 0px,
+	small-high: 480px,
+	medium: 641px,
+	medium-high: 961px,
+	large: 1021px,
+	large-high: 1240px,
+	xlarge: 1441px,
+	xxlarge: 1921px,	
+);
 
 $screen: "only screen";
 
@@ -84,3 +106,6 @@ $xlarge-only: "#{$screen} and (min-width:#{lower-bound($xlarge-range)}) and (max
 
 $xxlarge-up: "#{$screen} and (min-width:#{lower-bound($xxlarge-range)})";
 $xxlarge-only: "#{$screen} and (min-width:#{lower-bound($xxlarge-range)}) and (max-width:#{upper-bound($xxlarge-range)})";
+
+$breakpoint-classes: (small small-high medium medium-high large large-high xlarge xxlarge);
+$grid-column-align-edge: false;

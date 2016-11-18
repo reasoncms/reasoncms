@@ -49,7 +49,7 @@
 				}
 
 				h4 {
-					font-size: $h3-font-size - $h3-font-reduction;
+					font-size: map-get($header-sizes, h3);
 				}
 
 				.desc {
@@ -127,7 +127,7 @@
 			font-size: rem-calc(14);
 
 			a {
-				@include inline-icon($pseudo: after, $icon: $fa-var-lock);
+				//@include inline-icon($pseudo: after, $icon: $fa-var-lock);
 				color: $publication-primary-color;
 			}
 		}
@@ -240,14 +240,14 @@
 				padding: $horizontal-gutter/1.5 0; 
 				list-style-type: none;
 
-				@media #{$small-only} {
+				@include breakpoint(small only) {
 					&:last-of-type {
 						border-bottom: 2px solid $smoke;
 						margin-bottom: $horizontal-gutter;
 					}
 				}
 
-				@media #{$medium-up} {
+				@include breakpoint(medium) {
 					padding: $horizontal-gutter $column-gutter/1.5; 
 					border: 1px solid $smoke;
 					box-shadow: rgba(black, .25) 0 1px 1px;
@@ -258,14 +258,14 @@
 					float: right;
 					margin: 0 0 $horizontal-gutter/2 $column-gutter/2;
 
-					@media #{$small-only} {
+					@include breakpoint(small only) {
 						max-width: 100px;
 					}
 				}
 
 				.title {
 					margin: 0;
-					font-size: $h3-font-size;
+					font-size: map-get($header-sizes, h3);
 					font-weight: 400;
 
 					a {
@@ -406,15 +406,17 @@
 			@include grid-row();
 			
 			.firstChunk {
-				@include grid-column($columns:12,$collapse:true);
+				@include grid-column(12);
+				@include grid-column-collapse;
 
-				@media #{$medium-up} {
-					@include grid-column($columns:8,$collapse:true);
+				@include breakpoint(medium) {
+					@include grid-column(8);
+					@include grid-column-collapse;
 					padding-right: $column-gutter/2;
 				}
 
 				.commentAdded {
-					@include cloak-alert($mode: info);
+					@include cloak-alert($mode: primary);
 
 					h4 {
 						color: $body-font-color;
@@ -437,7 +439,8 @@
 			}
 
 			.relatedItems {
-				@include grid-column($columns:12,$collapse:true);
+				@include grid-column(12);
+				@include grid-column-collapse;
 				max-width: 400px;
 				margin: 0 auto;
 				float: none;
@@ -446,13 +449,14 @@
 					border-bottom: 1px solid #efefef;
 				}
 
-				@media #{$medium-up} {
-					@include grid-column($columns:4,$collapse:true);
+				@include breakpoint(medium) {
+					@include grid-column(4);
+					@include grid-column-collapse;
 					padding-left: $column-gutter/2;
 				}
 
 				h4 {
-					font-size: $h4-font-size;
+					font-size: map-get($header-sizes, h4);
 					margin-top: 0;
 				}
 
@@ -499,7 +503,7 @@
 						white-space: pre;
 
 						a {
-							@include inline-icon($icon: $fa-var-folder-o, $color: $monsoon);
+							//@include inline-icon($icon: $fa-var-folder-o, $color: $monsoon);
 							color: $publication-primary-color;
 
 							&:hover {
@@ -515,7 +519,8 @@
 			}
 
 			.secondChunk {
-				@include grid-column($columns:12,$collapse:true);
+				@include grid-column(12);
+				@include grid-column-collapse;
 
 				.nextPrev {
 					border-top: 6px solid $silver;
@@ -642,7 +647,7 @@
 					// Comments on, but off for individual story
 					.commentsOff {
 						
-						@include cloak-alert($mode: info, $symbol: $fa-var-toggle-off);
+						@include cloak-alert($mode: primary, $symbol: $fa-var-toggle-off);
 
 						h4 {
 							padding: 0;

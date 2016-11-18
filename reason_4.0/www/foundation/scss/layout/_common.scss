@@ -90,7 +90,7 @@
 				margin-right: rem-calc(8);
 				font-weight: 400;
 
-				@media #{$small-only} {
+				@include breakpoint(small only) {
 					font-weight: 700;
 				}
 			}

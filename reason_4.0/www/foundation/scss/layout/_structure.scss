@@ -62,7 +62,7 @@
 	// 4a. MINISITE COLUMN LAYOUT: 3 column layout.
 	// Page has content, related, and navigation.
 	&.containsConRelNav {
-		@media #{$medium-up} {
+		@include breakpoint(medium) {
 			
 			#content {
 				@include grid-column(8);
@@ -73,7 +73,7 @@
 			}
 		}
 
-		@media #{$medium-high-up} {
+		@include breakpoint(medium-high) {
 		
 			#content {
 				@include grid-column(6);
@@ -95,7 +95,7 @@
 	// Page has content and navigation.
 	&.containsConNav {
 
-		@media #{$medium-high-up} {
+		@include breakpoint(medium-high) {
 
 			#content {
 				@include grid-column(9);
@@ -113,7 +113,7 @@
 	// Page has content and related.
 	&.containsConRel {
 
-		@media #{$medium-high-up} {
+		@include breakpoint(medium-high) {
 
 			#content {
 				@include grid-column(9);
@@ -148,14 +148,17 @@
 
 		.persistent {
 			@include grid-column($columns:12, $gutter:0);
+			@include grid-column-collapse;
 		}
 
 		.moduleNav {
 			@include grid-column($columns:12, $gutter:0);
+			@include grid-column-collapse;
 		}
 
 		#faq > .item {
 			@include grid-column($columns:12, $gutter:0);
+			@include grid-column-collapse;
 		}
 	}
 
@@ -169,9 +172,11 @@
 
 		.persistent {
 			@include grid-column($columns:12, $gutter:0);
+			@include grid-column-collapse;
 
-			@media #{$medium-up} {
+			@include breakpoint(medium) {
 				@include grid-column($columns:4, $gutter:0);
+				@include grid-column-collapse;
 				float: right;
 				padding-left: $grid-column-gutter/2;
 			}
@@ -180,9 +185,11 @@
 		.moduleNav,
 		#faq > .item {
 			@include grid-column($columns:12, $gutter:0);
+			@include grid-column-collapse;
 
-			@media #{$medium-up} {
+			@include breakpoint(medium) {
 				@include grid-column($columns:8, $gutter:0);
+				@include grid-column-collapse;
 				padding-right: $grid-column-gutter/2;	
 			}
 		}

@@ -6,10 +6,10 @@
 	a {
 		text-decoration: underline;
 		font-weight: 400;
-		color: $maintained-priamry-color;
+		color: $maintained-primary-color;
 
 		&:hover {
-			color: darken($maintained-priamry-color, 10%);
+			color: darken($maintained-primary-color, 10%);
 			text-decoration: underline;
 		}
 	}

@@ -102,7 +102,7 @@ $medium-only-events: "#{$screen} and (min-width:#{$events_default_break_point_up
 				font-size: rem-calc(12);
 				margin-right: rem-calc(6);
 
-				@media #{$medium-up} {
+				@include breakpoint(medium) {
 					font-size: rem-calc(14);
 				}
 			}
@@ -118,7 +118,7 @@ $medium-only-events: "#{$screen} and (min-width:#{$events_default_break_point_up
 					padding: 0;
 					font-size: rem-calc(13);
 
-					@media #{$medium-up} {
+					@include breakpoint(medium) {
 						font-size: rem-calc(15);
 					}
 
@@ -169,7 +169,7 @@ $medium-only-events: "#{$screen} and (min-width:#{$events_default_break_point_up
 			margin-bottom: $column-gutter;
 			line-height: 1;
 
-			@media #{$medium-up} {
+			@include breakpoint(medium) {
 				font-size: rem-calc(16);
 			}
 
@@ -372,7 +372,8 @@ $medium-only-events: "#{$screen} and (min-width:#{$events_default_break_point_up
 					float: left;
 					padding-right: rem-calc(14);
 
-					@media #{$medium-only-events} {
+					@include breakpoint(medium) {
+					//@media #{$medium-only-events} {
 						width: 100%;
 						padding-right: rem-calc(7);
 						margin-bottom: rem-calc(8);
@@ -386,8 +387,8 @@ $medium-only-events: "#{$screen} and (min-width:#{$events_default_break_point_up
 					padding: 0;
 					margin: 0;
 
-					@media #{$medium-only-events} {
-
+					@include breakpoint(medium) {
+					//@media #{$medium-only-events} {
 						float: none;
 						width: 100%;
 					}
@@ -521,11 +522,11 @@ $medium-only-events: "#{$screen} and (min-width:#{$events_default_break_point_up
 		.images {
 			@include clearfix;
 
-			@media #{$small-only} {
+			@include breakpoint(small only) {
 				margin-left: -$column-gutter/2;
 			}
 
-			@media #{$medium-up} {
+			@include breakpoint(medium) {
 				float: right;
 				width: rem-calc(125);
 				margin-left: $column-gutter;
@@ -535,7 +536,7 @@ $medium-only-events: "#{$screen} and (min-width:#{$events_default_break_point_up
 				width: rem-calc(125);
 				margin-bottom: $horizontal-gutter/2;
 				
-				@media #{$small-only} {
+				@include breakpoint(small only) {
 					float: left;
 					margin-left: $column-gutter/2;
 				}
@@ -547,7 +548,7 @@ $medium-only-events: "#{$screen} and (min-width:#{$events_default_break_point_up
 		}
 
 		h3 {
-			@media #{$small-only} {
+			@include breakpoint(small only) {
 				clear: both;
 			}
 		}
@@ -769,7 +770,7 @@ $medium-only-events: "#{$screen} and (min-width:#{$events_default_break_point_up
 				background: $white;
 
 				#eventdateItem .words {
-					font-size: $h4-font-size;
+					font-size: map-get($header-sizes, h4);
 					padding: 0;
 				}
 			}
@@ -799,7 +800,7 @@ $medium-only-events: "#{$screen} and (min-width:#{$events_default_break_point_up
 					margin-bottom: 0;
 
 					a {
-						@include button($padding: $button-tny);
+						@include button();
 					}
 				}
 			}
@@ -958,8 +959,7 @@ $medium-only-events: "#{$screen} and (min-width:#{$events_default_break_point_up
 //       display: inline-block;
 
 // 			.imageChunk {
-// 				@media
-// 				#{$medium-up} {
+// 				@include breakpoint(medium) {
 // 					float: left;
 // 					width: 50%;
 

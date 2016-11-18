@@ -12,11 +12,8 @@
 
 	.editLink,
 	.inlineEditLink {
-		@include button(
-			$padding: $button-tny,
-			$bg: $login-link-primary-color,
-			$radius: $global-radius
-		);
+		@include button($background: $login-link-primary-color);
+		$padding: map-get($button-sizes, tiny);
 		border: 1px solid $login-link-primary-color;
 		margin: 0 rem-calc(4) $column-gutter/2;
 		font-weight: 400;
@@ -56,7 +53,8 @@
 		font-size: rem-calc(14);
 
 		.login {
-			@include button($bg: $login-link-primary-color, $radius: $global-radius, $padding: $button-tny);
+			@include button($background: $login-link-primary-color);
+			$padding: map-get($button-sizes, tiny);
 			border: 1px solid $login-link-primary-color;
 			color: $white;
 			margin-bottom: 0;

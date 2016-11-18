@@ -180,7 +180,7 @@
 // MINISITE COLUMN LAYOUT: 3 column layout.
 .containsConRelNav .childrenListWithImages  {
 	li {
-		@media #{$small-high-up} {  // 2 per row for small-high screens
+		@include breakpoint(small-high) {  // 2 per row for small-high screens
 			width: 50%;
 			float: left;
 			clear: none;
@@ -199,7 +199,7 @@
 .containsConRel .childrenListWithImages {
 	li {
 
-		@media #{$small-high-up} {  // 2 per row for small-high screens
+		@include breakpoint(small-high) {  // 2 per row for small-high screens
 			width: 50%;
 			float: left;
 			clear: none;
@@ -209,7 +209,7 @@
 			}
 		}
 
-		@media #{$medium-up} { // 3 per row for medium screens
+		@include breakpoint(medium) { // 3 per row for medium screens
 			width: 33.33333%;
 
 			&:nth-child(2n+1) {
@@ -221,7 +221,7 @@
 			}
 		}
 
-		@media #{$xlarge-up} { // 4 per row for xl screens
+		@include breakpoint(xlarge) { // 4 per row for xl screens
 			width: 25%;
 
 			&:nth-child(3n+1) {
@@ -240,7 +240,7 @@
 .containsCon .childrenListWithImages {
 	li {
 
-		@media #{$small-high-up} {  // 2 per row for small-high screens
+		@include breakpoint(small-high) {  // 2 per row for small-high screens
 			width: 50%;
 			float: left;
 			clear: none;
@@ -250,7 +250,7 @@
 			}
 		}
 
-		@media #{$medium-up} { // 3 per row for medium screens
+		@include breakpoint(medium) { // 3 per row for medium screens
 			width: 33.33333%;
 
 			&:nth-child(2n+1) {
@@ -262,7 +262,7 @@
 			}
 		}
 
-		@media #{$large-up} { // 4 per row for large screens
+		@include breakpoint(large) { // 4 per row for large screens
 			width: 25%;
 
 			&:nth-child(3n+1) {

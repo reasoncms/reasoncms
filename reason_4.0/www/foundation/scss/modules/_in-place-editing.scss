@@ -30,7 +30,7 @@
 
 		&:hover {
 			background: black;
-			@include single-transition(background-color);
+			//@include single-transition(background-color);
 		}
 	}
 
@@ -53,15 +53,15 @@
 			}
 
 			input[type="submit"] {
-				@include button-size($padding:$button-tny);
+				$padding: map-get($button-sizes, tiny);
 				height: auto;
 				background: none;
 				border: 2px solid $aluminum;
 				color: $steel;
 				font-weight: 700;
 				letter-spacing: rem-calc(.5);
-				@include single-transition(color);
-				@include single-transition(border-color);
+				//@include single-transition(color);
+				//@include single-transition(border-color);
 
 				&:hover {
 					color: black;

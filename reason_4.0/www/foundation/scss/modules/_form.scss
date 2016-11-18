@@ -4,7 +4,7 @@
 // MINISITE SEARCH FORM
 .searchForm {
 
-	@media #{$small-only} {
+	@include breakpoint(small only) {
 		margin-top: $horizontal-gutter/2 !important;
 	}
 	
@@ -12,7 +12,7 @@
 		display: block;
 		@include form-element();
 
-		@media #{$medium-up} {
+		@include breakpoint(medium) {
 			width: 80%;
 			float: left;
 			margin-bottom: 0;
@@ -30,7 +30,7 @@
 		width: 100%;
 		border-radius: 0 $global-radius $global-radius 0;
 
-		@media #{$medium-up} {
+		@include breakpoint(medium) {
 			width: 20%;
 			float: left;
 			margin-bottom: 0;
@@ -45,7 +45,7 @@
 		@include form-element();
 		margin-bottom: $form-spacing/2;
 
-		@media #{$medium-up} {
+		@include breakpoint(medium) {
 			width: 70%;
 			float: left;
 			margin-bottom: $form-spacing;
@@ -63,7 +63,7 @@
 		width: 100%;
 		border-radius: 0 $global-radius $global-radius 0;
 
-		@media #{$medium-up} {
+		@include breakpoint(medium) {
 			width: 30%;
 			float: left;
 			margin-bottom: $form-spacing;
@@ -189,7 +189,7 @@ form #antlionItem {
 	@include anchor-padding-menu;
 
 	h3 {
-		font-size: $h4-font-size;
+		font-size: map-get($header-sizes, h4);
 		font-weight: 400;
 		margin: 0 0 rem-calc(6);
 		color: $alert-color !important;
@@ -202,7 +202,7 @@ form #antlionItem {
 	}
 
 	ul {
-		@include alert($bg: $white, $radius: $global-radius);
+		@include callout-style($alert-color);
 		border-color: lighten($alert-color, 40%);
 		margin: 0;
 		font-weight: 700;
@@ -265,8 +265,7 @@ form,
 
 	input[type="submit"] {
 		@include button(
-			$radius: $global-radius,
-			$bg: $form-primary-color
+			$background: $form-primary-color
 		);
 		height: ($input-font-size + ($form-spacing * 1.5) - rem-calc(1));
 		padding: 0 $column-gutter;

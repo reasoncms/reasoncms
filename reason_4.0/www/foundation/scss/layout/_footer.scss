@@ -7,7 +7,7 @@
 	text-align: center;
 	padding: $horizontal-gutter/1.5 $grid-column-gutter/2;
 
-	@media #{$medium-up} {
+	@include breakpoint(medium) {
 		padding: $horizontal-gutter $grid-column-gutter;
 	}
 

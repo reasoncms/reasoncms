@@ -8,7 +8,7 @@
 .cloakLogin {
 
 	#wrapper {
-		@media #{$small-high-up} {
+		@include breakpoint(small-high) {
 			padding-top: 10%;
 		}
 	}
@@ -16,7 +16,7 @@
 	#banner,
 	#meat {
 
-		@media #{$small-high-up} {
+		@include breakpoint(small-high) {
 			max-width: rem-calc(400);
 			margin: 0 auto;
 		}
@@ -28,7 +28,7 @@
 		border-bottom: 1px solid $iron;
 		background: $silver;
 
-		@media #{$small-high-up} {
+		@include breakpoint(small-high) {
 			border: 1px solid $iron;
 			border-bottom: none;
 			border-radius: $global-radius $global-radius 0 0;
@@ -36,7 +36,7 @@
 		}
 
 		h1 {
-			font-size: $h4-font-size;
+			font-size: map-get($header-sizes, h4);
 			
 			a {
 				color: $login-primary-color;
@@ -53,7 +53,7 @@
 		max-width: rem-calc(400);
 		margin: 0 auto;
 
-		@media #{$small-high-up} {
+		@include breakpoint(small-high) {
 			border: 1px solid $iron;
 			border-radius: 0 0 $global-radius $global-radius;
 		}
@@ -76,7 +76,7 @@
 					font-weight: 600;
 					font-size: rem-calc(14);
 
-					@media #{$small-high-up} {
+					@include breakpoint(small-high) {
 						font-size: rem-calc(14);
 					}
 				}
@@ -129,7 +129,7 @@
 		 		padding: $horizontal-gutter/2 $column-gutter/2;
 		 		font-size: rem-calc(14);
 		 		
-		 		@media #{$small-high-up} {
+		 		@include breakpoint(small-high)} {
 		 			margin-top: 0;
 			 		margin-left: -$column-gutter/2;
 			 		margin-right: -$column-gutter/2;

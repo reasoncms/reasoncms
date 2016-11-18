@@ -8,11 +8,13 @@
 	#imageGallery {
 		
 		.persistent {
-			@include grid-column($columns:12, $collapse:true);
+			@include grid-column(12);
+			@include grid-column-collapse;
 		}
 
 		.moduleNav {
-			@include grid-column($columns:12, $collapse:true);
+			@include grid-column(12);
+			@include grid-column-collapse;
 		}
 	}
 }
@@ -27,7 +29,8 @@
 	
 	// GALLERY ITEM LIST
 	.moduleNav {
-		@include grid-column($columns:12, $collapse:true);
+		@include grid-column(12);
+		@include grid-column-collapse;
 		width: 100%;
 
 		// PAGINATION

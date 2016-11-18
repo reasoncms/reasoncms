@@ -69,11 +69,9 @@
 }
 
 @mixin admin-button() {
-	@include button(
-		$background: #333
-	);
+	@include button($background: #333);
 	@include inline-icon($pseudo: before, $icon: $fa-var-pencil);
-	@include single-transition(background);
+	//@include single-transition(background);
 	color: $white;
 	font-weight: 400;
 	text-decoration: none;
@@ -92,7 +90,7 @@
 }
 
 @mixin more-link($more-link-bg: $primary-color, $text-color: $white) {
-	@include button($padding: $button-sml, $bg: $more-link-bg, $radius: false);
+	@include button();
 	@include inline-icon($pseudo: after, $icon: $fa-var-chevron-circle-right);
 	color: $text-color;
 	font-weight: 400;
@@ -186,7 +184,7 @@
 		height: $column-gutter;
 		visibility: hidden;
 
-		@media #{$large-up} {
+		@include breakpoint(large) {
 			margin-top: -($column-gutter*4);
 			height: $column-gutter*4;
 		}

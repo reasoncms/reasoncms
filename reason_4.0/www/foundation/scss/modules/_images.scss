@@ -83,7 +83,7 @@
 			clear: left;
 		}
 
-		@media #{$medium-up} {
+		@include breakpoint(medium) {
 			
 			&.left,
 			&[align="left"] { // align left images left, and pad out the right.

@@ -27,7 +27,7 @@
 			border-radius: $global-radius;
 			margin: 0 rem-calc(6) rem-calc(6) 0 !important;
 
-			@media #{$large-up} {
+			@include breakpoint(large) {
 				padding: $tab-item-padding $tab-item-padding * 2 !important;
 				border-bottom: none;
 				border-radius: $global-radius $global-radius 0 0;

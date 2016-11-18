@@ -22,14 +22,14 @@
 		.facStaffImage {
 			margin-bottom: $horizontal-gutter/2;
 
-			@media #{$medium-up} {
+			@include breakpoint(medium) {
 				float: right;
 				margin: 0 0 $horizontal-gutter/2 $column-gutter/2;
 			}
 		}
 
 		.facStaffName {
-			font-size: $h3-font-size;
+			font-size: map-get($header-sizes, h3);
 			margin-bottom: $horizontal-gutter/2;
 		}
 

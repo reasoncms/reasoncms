@@ -3,7 +3,7 @@
    /*
 	*  Foundation 6 BASE TEMPLATE
 	*
-	*  Foundation6Template (/lib/core/minisite_templates/foundation6.php)...
+	*  FoundationTemplate (/lib/core/minisite_templates/foundation.php)...
 	*     extends HTML5ResponsiveTemplate (/lib/core/minisite_templates/html5_responsive.php)...
 	*     which extends DefaultTemplate (/lib/core/minisite_templates/default.php)
 	*
@@ -208,7 +208,8 @@
 
 		function show_banner()
 		{
-			echo '<div class="sticky">'."\n";
+			echo '<div data-sticky-container>'."\n";
+			echo '<div class="sticky" data-sticky data-options="marginTop:0;" style="width:100%">'."\n";
 
 			if ($this->has_content( 'pre_banner' ))
 			{
@@ -247,6 +248,7 @@
 			$this->show_banner_xtra();
 
 			echo '</header>'."\n";
+			echo '</div>'."\n";
 			echo '</div>'."\n";
 
 			if($this->has_content('post_banner'))

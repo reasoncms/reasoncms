@@ -24,7 +24,7 @@
 	padding: $horizontal-gutter/2 $grid-column-gutter/2;
 	background-position: center center;
 
-	@media #{$medium-up} { 
+	@include breakpoint(medium) { 
 		padding: $horizontal-gutter $grid-column-gutter/2 $horizontal-gutter/1.25;
 	}
 
@@ -33,10 +33,10 @@
 		margin: 0;
 		padding-bottom: $horizontal-gutter/2;
 		
-		@media #{$medium-up} {
+		@include breakpoint(medium) {
 			font-size: rem-calc(26);
 		}
-		@media #{$large-up} {
+		@include breakpoint(large) {
 			font-size: rem-calc(30);
 		}
 
@@ -61,7 +61,7 @@
 
 			&.navJump {
 
-				@media #{$medium-high-up} {
+				@include breakpoint(medium-high) {
 					@include screenreader();
 				}
 

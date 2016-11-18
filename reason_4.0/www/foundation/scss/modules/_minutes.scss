@@ -12,10 +12,10 @@
 			@include inline-icon($icon: $fa-var-file-text-o);
 
 			a {
-				color: $minutes-priamry-color;
+				color: $minutes-primary-color;
 
 				&:hover {
-					color: darken($minutes-priamry-color, 10%);
+					color: darken($minutes-primary-color, 10%);
 				}
 			}
 		}
