@@ -48,6 +48,7 @@ class Email
 		$exceptions = true;
 		$this->PHPMailer = new PHPMailer($exceptions);
 		$this->PHPMailer->CharSet = 'utf-8';
+		$this->PHPMailer->AllowEmpty = true; // otherwise, it's fatal exception
 		
 		$this->add_tos($tos, $address_types);
 		$this->add_froms($froms, $address_types);
