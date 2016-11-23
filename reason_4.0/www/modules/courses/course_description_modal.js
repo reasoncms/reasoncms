@@ -28,7 +28,15 @@ $(document).ready(function()
 
 	// For each course number in a list of titles, make the number clickable and 
 	// fire off a request for the course description to be opened in a modal dialog.
-	$("ul.courseList span.courseNumber, p span.courseNumber").each(function(){
+	$("ul.courseList span.courseNumber, p span.courseNumber").each(function () {
+		// The routine above sometimes does too many replaces, and you may end up with
+		// nested <span class="courseNumber"> nodes. If you end up with a node like
+		//     <span class="courseNumber"><span class="courseNumber">SOAN 330</span></span>
+		// skip it
+		if (this.innerHTML.match(/courseNumber/i)) {
+			return;
+		}
+		
 		$(this).replaceWith(function () {
 			return $("<a>", {
 				'class': this.className + " clickable",
