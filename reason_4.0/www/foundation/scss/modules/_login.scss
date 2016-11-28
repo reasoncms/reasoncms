@@ -1,11 +1,11 @@
 // Login Module Styles
-// Cloak, v1
+// Foundation
 
-// Imported by cloak/scss/login.scss.
-// Not included in cloadk/scss/_modules.scss or compiled in app.css,
+// Imported by foundation/scss/login.scss.
+// Not included in foundation/scss/_modules.scss or compiled in app.css,
 // since Login has it's own dedicated theme that doesn't use those files.
 
-.cloakLogin {
+.foundationLogin {
 
 	#wrapper {
 		@include breakpoint(small-high) {
@@ -24,7 +24,7 @@
 
 	#banner {
 		text-align: center;
-		padding: $horizontal-gutter/2 $column-gutter/2;
+		padding: $horizontal-gutter/2 $grid-column-gutter/2;
 		border-bottom: 1px solid $iron;
 		background: $silver;
 
@@ -49,7 +49,7 @@
 	}
 
 	#meat {
-		padding: $horizontal-gutter/2 $column-gutter/2 0 $column-gutter/2;
+		padding: $horizontal-gutter/2 $grid-column-gutter/2 0 $grid-column-gutter/2;
 		max-width: rem-calc(400);
 		margin: 0 auto;
 
@@ -126,13 +126,13 @@
 		 	p.smallText {
 		 		background: $silver;
 		 		border: 1px solid $iron;
-		 		padding: $horizontal-gutter/2 $column-gutter/2;
+		 		padding: $horizontal-gutter/2 $grid-column-gutter/2;
 		 		font-size: rem-calc(14);
 		 		
 		 		@include breakpoint(small-high)} {
 		 			margin-top: 0;
-			 		margin-left: -$column-gutter/2;
-			 		margin-right: -$column-gutter/2;
+			 		margin-left: -$grid-column-gutter/2;
+			 		margin-right: -$grid-column-gutter/2;
 			 		margin-bottom: 0;
 		 			border: none;
 		 			border-top: 1px solid $iron;

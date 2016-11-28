@@ -1,5 +1,5 @@
 // Asset Styles
-// Cloak, v1
+// Foundation
 
 .assets {
 
@@ -7,7 +7,7 @@
 	margin-bottom: $horizontal-gutter/2;
 
 	ul { 
-		margin: 0 0 0 $column-gutter/2; // bump out the list to make room for icons
+		margin: 0 0 0 $grid-column-gutter/2; // bump out the list to make room for icons
 		list-style-type: none;
 	}
 
@@ -18,7 +18,7 @@
 			@extend .fa;
 			content: $fa-var-download;
 			float: left;
-			margin-left: -($column-gutter/2);
+			margin-left: -($grid-column-gutter/2);
 			margin-top: rem-calc(6);
 			color: $aluminum;
 		}

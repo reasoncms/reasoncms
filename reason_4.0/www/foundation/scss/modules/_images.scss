@@ -1,10 +1,10 @@
 // Image Module Styles
-// Cloak, v1
+// Foundation
 
 // Image Module (images in the main content area)
 
 #images {
-	//margin-bottom: $column-gutter/2;
+	//margin-bottom: $grid-column-gutter/2;
 	@include clearfix;
 
 	.moduleNav {
@@ -87,13 +87,13 @@
 			
 			&.left,
 			&[align="left"] { // align left images left, and pad out the right.
-				margin-right: $column-gutter/2;
+				margin-right: $grid-column-gutter/2;
 				float: left !important;
 			}
 
 			&.right,
 			&[align="right"] { // align right images right, and pad out the left
-				margin-left: $column-gutter/2;
+				margin-left: $grid-column-gutter/2;
 				float: right !important;
 			}
 

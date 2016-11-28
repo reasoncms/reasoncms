@@ -1,5 +1,5 @@
 	// Modules Styles
-	// Cloak, v1
+	// Foundation
 
 .featuresModule {
 	
@@ -12,7 +12,7 @@
 		.featureContent {
 
 			.featuredImage {
-				// Max Feature size is 700x460, set in cloak.php
+				// Max Feature size is 700x460, set in foundation.php
 			}
 
 			.featureInfo {
@@ -25,7 +25,7 @@
 					a.anchor,
 					span.noLink {
 						margin: 0;
-						padding: rem-calc(8) $column-gutter/3 0;
+						padding: rem-calc(8) $grid-column-gutter/3 0;
 						line-height: 1.2;
 						color: $white;
 					}
@@ -37,7 +37,7 @@
 					a.anchor,
 					span.noLink {
 						margin: 0;
-						padding: rem-calc(8) $column-gutter/3;
+						padding: rem-calc(8) $grid-column-gutter/3;
 						line-height: 1.2;
 						color: white;
 

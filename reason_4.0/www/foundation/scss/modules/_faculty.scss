@@ -1,5 +1,5 @@
 // Faculty Styles
-// Cloak, v1
+// Foundation
 
 #facultyStaff {
 	@include clearfix;
@@ -24,7 +24,7 @@
 
 			@include breakpoint(medium) {
 				float: right;
-				margin: 0 0 $horizontal-gutter/2 $column-gutter/2;
+				margin: 0 0 $horizontal-gutter/2 $grid-column-gutter/2;
 			}
 		}
 
@@ -40,7 +40,7 @@
 			}
 
 			.facStaffPhone {
-				margin-left: $column-gutter/2;
+				margin-left: $grid-column-gutter/2;
 
 				@include inline-icon($icon: $fa-var-phone);
 				&:before {
@@ -49,7 +49,7 @@
 			}
 
 			.facStaffEmail {
-				margin-left: $column-gutter/2;
+				margin-left: $grid-column-gutter/2;
 
 				@include inline-icon($icon: $fa-var-laptop);
 				&:before {

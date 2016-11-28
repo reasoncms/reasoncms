@@ -1,5 +1,5 @@
 // FAQ Styles
-// Cloak, v1
+// Foundation
 
 #faq {
 	@include clearfix;
@@ -43,7 +43,7 @@
 
 		ul {
 		@include clearfix;
-			margin: 0 0 $horizontal-gutter/2 $column-gutter/2;
+			margin: 0 0 $horizontal-gutter/2 $grid-column-gutter/2;
 
 			li {
 				list-style-type: decimal;

@@ -1,5 +1,5 @@
 // In-place Editing Styles
-// Cloak, v1
+// Foundation
 
 // In-place Editing allows you to edit the content of your page from the front end.
 
@@ -41,7 +41,7 @@
 		background: $white;
 
 		form {
-			padding: $horizontal-gutter/2 $column-gutter/4 0;
+			padding: $horizontal-gutter/2 $grid-column-gutter/4 0;
 
 			table {
 				margin-bottom: 0 !important;
@@ -75,7 +75,7 @@
 		}
 		
 		.note {
-			@include cloak-alert($mode: alert, $symbol: $fa-var-warning);
+			@include reason-alert($mode: alert, $symbol: $fa-var-warning);
 			border-radius: 0 !important;
 			border: none !important;
 			margin-bottom: 0;

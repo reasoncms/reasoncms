@@ -12,7 +12,7 @@
 	padding: 0;
 }
 
-@mixin circle-icon-button(
+@mixin icon-button(
 	$icon-size: rem-calc(15),
 	$icon-padding: rem-calc(10),
 	$icon-background: $snow,
@@ -25,7 +25,6 @@
 	margin: 0;
 	padding: $icon-padding;
 	line-height: 1 !important;
-	border-radius: $global-rounded;
 	background: $icon-background;
 	border: 1px solid $icon-border-color;
 	color: $icon-color;
@@ -40,7 +39,7 @@
 	}
 
 	&:hover {
-		background: darken($icon-background, 10%);
+		background: darken($icon-background, 2%);
 	}
 
 	&:active {
@@ -50,6 +49,18 @@
 	span {
 		@include screenreader;
 	}
+}
+
+@mixin circle-icon-button(
+	$icon-size: rem-calc(15),
+	$icon-padding: rem-calc(10),
+	$icon-background: $snow,
+	$icon-variable: $fa-var-bomb,
+	$icon-color: $primary-color,
+	$icon-border-color: $gainsboro) {
+	
+	@include icon-button($icon-size, $icon-padding, $icon-background, $icon-variable, $icon-color, $icon-border-color);
+	border-radius: $global-rounded;
 }
 
 @mixin inline-icon($pseudo: before, $icon: $fa-var-bomb, $color: inherit, $margin: true) {
@@ -116,7 +127,8 @@
 	@include inline-icon($pseudo: before, $icon: $fa-var-chevron-circle-left);
 }
 
-@mixin cloak-alert($mode: alert, $symbol: null) {
+// Reason alert boxes allow for the inclusion of font awesome icons
+@mixin reason-alert($mode: alert, $symbol: null) {
 
 	@if $symbol != null {
 		@include inline-icon($icon: $symbol);
@@ -164,13 +176,13 @@
 // Named anchor padding
 // Provides padding above named anchor links to keep them from hugging the top of the browser window
 
-// Provides padding equal to the column guttter
+// Provides padding equal to the column gutter
 @mixin anchor-padding-gutter {
 	&:before {
 		display: block;
 		content: "";
-		margin-top: -($column-gutter/2);
-		height: $column-gutter/2;
+		margin-top: -($grid-column-gutter/2);
+		height: $grid-column-gutter/2;
 		visibility: hidden;
 	}
 }
@@ -180,13 +192,13 @@
 	&:before { 
 		display: block;
 		content: "";
-		margin-top: -$column-gutter;
-		height: $column-gutter;
+		margin-top: -$grid-column-gutter;
+		height: $grid-column-gutter;
 		visibility: hidden;
 
 		@include breakpoint(large) {
-			margin-top: -($column-gutter*4);
-			height: $column-gutter*4;
+			margin-top: -($grid-column-gutter*4);
+			height: $grid-column-gutter*4;
 		}
 	}
 }

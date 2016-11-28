@@ -1,10 +1,10 @@
 // Announcement Styles
-// Cloak, v1
+// Foundation
 	
 #announcements {
 
 	.announcement {
-		@include cloak-alert($mode: secondary);
+		@include reason-alert($mode: secondary);
 		border-radius: 0 !important;
 		margin: 0;
 
@@ -17,25 +17,25 @@
 		// Default is secondary (handled above).
 
 		.success {
-			@include cloak-alert($mode: success);
+			@include reason-alert($mode: success);
 			margin: -$callout-padding;
 			border-radius: 0 !important;
 		}
 
 		.info {
-			@include cloak-alert($mode: primary);
+			@include reason-alert($mode: primary);
 			margin: -$callout-padding;
 			border-radius: 0 !important;
 		}
 
 		.warning {
-			@include cloak-alert($mode: warning);
+			@include reason-alert($mode: warning);
 			margin: -$callout-padding;
 			border-radius: 0 !important;
 		}
 
 		.alert {
-			@include cloak-alert($mode: alert);
+			@include reason-alert($mode: alert);
 			margin: -$callout-padding;
 			border-radius: 0 !important;
 		}

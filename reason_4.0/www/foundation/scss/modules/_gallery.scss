@@ -1,5 +1,5 @@
 // Gallery Styles
-// Cloak, v1
+// Foundation
 
 // @todo: Fix search / gallery layout
 
@@ -48,12 +48,12 @@
 		// IMAGE LIST 
 		#imageGalleryItemList {
 			margin: 0;
-			margin-left: -($column-gutter);
+			margin-left: -($grid-column-gutter);
 
 			li {
 				margin: 0;
 				margin-bottom: $horizontal-gutter;
-				margin-left: $column-gutter;
+				margin-left: $grid-column-gutter;
 				//width: rem-calc(150); // Width for default thumbanil image size. If the module uses larger images, styles are output in the <head> to override this.
 			
 				img {

@@ -1,5 +1,5 @@
 // Form Styles
-// Cloak, v1
+// Foundation
 
 // MINISITE SEARCH FORM
 .searchForm {
@@ -268,7 +268,7 @@ form,
 			$background: $form-primary-color
 		);
 		height: ($input-font-size + ($form-spacing * 1.5) - rem-calc(1));
-		padding: 0 $column-gutter;
+		padding: 0 $grid-column-gutter;
 	}
 
 	// RADIOS & CHECKBOXES

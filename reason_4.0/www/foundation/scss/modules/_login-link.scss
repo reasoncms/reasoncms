@@ -1,5 +1,5 @@
 // Login Link Module Styles
-// Cloak, v1
+// Foundation
 
 .loginLinkModule {
 
@@ -15,7 +15,7 @@
 		@include button($background: $login-link-primary-color);
 		$padding: map-get($button-sizes, tiny);
 		border: 1px solid $login-link-primary-color;
-		margin: 0 rem-calc(4) $column-gutter/2;
+		margin: 0 rem-calc(4) $grid-column-gutter/2;
 		font-weight: 400;
 
 		&:hover {

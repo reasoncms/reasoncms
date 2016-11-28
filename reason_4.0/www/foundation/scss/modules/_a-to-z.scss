@@ -1,5 +1,5 @@
 // A to Z Styles
-// Cloak, v1
+// Foundation
 	
 #atoz {
 
@@ -20,7 +20,7 @@
 			width: rem-calc(32);	
 			height: rem-calc(32);
 			line-height: rem-calc(32);
-			margin: 0 rem-calc(4) $column-gutter/4 0;
+			margin: 0 rem-calc(4) $grid-column-gutter/4 0;
 			border-radius: $global-rounded; 
 			color: $white;
 			background-color: $a-to-z-primary-color;

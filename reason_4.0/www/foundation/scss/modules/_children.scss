@@ -1,5 +1,5 @@
 // Children, Grandchildren, and Sibling Styles
-// Cloak, v1
+// Foundation
 
 // 1. CHILDREN
 // 2. CHILDREN & GRANDCHILDREN 
@@ -20,7 +20,7 @@
 		border-top: 1px solid $smoke;
 
 		a[href] {
-			padding: $horizontal-gutter/3 $column-gutter/3;
+			padding: $horizontal-gutter/3 $grid-column-gutter/3;
 			display: block;
 
 			h4 {
@@ -84,7 +84,7 @@
 
 		ul {
 			
-			padding: $horizontal-gutter/2 $column-gutter/2;
+			padding: $horizontal-gutter/2 $grid-column-gutter/2;
 			margin: 0;
 			@include clearfix;
 
@@ -124,13 +124,13 @@
 
 	@include clearfix;
 	margin: 0;
-	margin-left: -($column-gutter/2);
+	margin-left: -($grid-column-gutter/2);
 	margin-bottom: $horizontal-gutter/2;
 	border: none;
 
 	// Children with Images are displayed in columns, with heading & text below each image.
 	// We can override this layout with custom styles in specific sites or locations.
-	// The image size parameters can be set in cloak.php (See GLOBAL MODULE SETTINGS) or in a local page type.
+	// The image size parameters can be set in foundation.php (See GLOBAL MODULE SETTINGS) or in a local page type.
 
 	li {
 		clear: both;
@@ -144,7 +144,7 @@
 			overflow: hidden;
 			background: $silver;
 			margin: 0;
-			margin-left: $column-gutter/2;
+			margin-left: $grid-column-gutter/2;
 			display: block;
 			@include clearfix;
 			padding: 0;
@@ -164,11 +164,11 @@
 			}
 
 			h4 {
-				padding: $horizontal-gutter/3 $column-gutter/3;
+				padding: $horizontal-gutter/3 $grid-column-gutter/3;
 			}
 
 			.childDesc {
-				padding: 0 $column-gutter/3 $horizontal-gutter/3;
+				padding: 0 $grid-column-gutter/3 $horizontal-gutter/3;
 			}
 		}
 	}

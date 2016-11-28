@@ -1,5 +1,5 @@
 // Publication Styles
-// Cloak, v1
+// Foundation
 
 // Common
 @mixin publication-date() {
@@ -37,7 +37,7 @@
 				.teaserImage {
 					max-width: rem-calc(80);
 					float: right;
-					margin: 0 0 $horizontal-gutter/3 $column-gutter/3;
+					margin: 0 0 $horizontal-gutter/3 $grid-column-gutter/3;
 					
 					.tnImage {
 
@@ -122,7 +122,7 @@
 		}
 
 		.loginlogout {
-			margin: $horizontal-gutter/4 $column-gutter/2 0 0;
+			margin: $horizontal-gutter/4 $grid-column-gutter/2 0 0;
 			text-align: right;
 			font-size: rem-calc(14);
 
@@ -248,7 +248,7 @@
 				}
 
 				@include breakpoint(medium) {
-					padding: $horizontal-gutter $column-gutter/1.5; 
+					padding: $horizontal-gutter $grid-column-gutter/1.5; 
 					border: 1px solid $smoke;
 					box-shadow: rgba(black, .25) 0 1px 1px;
 					margin-bottom: $horizontal-gutter;
@@ -256,7 +256,7 @@
 
 				.teaserImage {
 					float: right;
-					margin: 0 0 $horizontal-gutter/2 $column-gutter/2;
+					margin: 0 0 $horizontal-gutter/2 $grid-column-gutter/2;
 
 					@include breakpoint(small only) {
 						max-width: 100px;
@@ -412,11 +412,11 @@
 				@include breakpoint(medium) {
 					@include grid-column(8);
 					@include grid-column-collapse;
-					padding-right: $column-gutter/2;
+					padding-right: $grid-column-gutter/2;
 				}
 
 				.commentAdded {
-					@include cloak-alert($mode: primary);
+					@include reason-alert($mode: primary);
 
 					h4 {
 						color: $body-font-color;
@@ -452,7 +452,7 @@
 				@include breakpoint(medium) {
 					@include grid-column(4);
 					@include grid-column-collapse;
-					padding-left: $column-gutter/2;
+					padding-left: $grid-column-gutter/2;
 				}
 
 				h4 {
@@ -647,7 +647,7 @@
 					// Comments on, but off for individual story
 					.commentsOff {
 						
-						@include cloak-alert($mode: primary, $symbol: $fa-var-toggle-off);
+						@include reason-alert($mode: primary, $symbol: $fa-var-toggle-off);
 
 						h4 {
 							padding: 0;
@@ -660,7 +660,7 @@
 					.notPermitted {
 
 						.subContent {
-							@include cloak-alert($mode: warning, $symbol: $fa-var-ban);
+							@include reason-alert($mode: warning, $symbol: $fa-var-ban);
 						}	
 					}
 
@@ -668,7 +668,7 @@
 					.loginRequired {
 
 						.subContent {
-							@include cloak-alert($mode: warning, $symbol: $fa-var-power-off);
+							@include reason-alert($mode: warning, $symbol: $fa-var-power-off);
 						}	
 					}
 				}
