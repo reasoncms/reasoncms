@@ -1,0 +1,171 @@
+// Minisite Navigation Styles
+// Foundation
+
+#minisiteNavigation {
+	margin-bottom: $horizontal-gutter;
+
+	// Adds non-visible padding to the top of the minisite navigation when it's linked to from the mobile navigation
+	@include anchor-padding-gutter();
+
+	ul {
+		@include zero-out();
+		list-style-type: none;
+		font-size: rem-calc(17);
+
+		$nav-item-lr: rem-calc(12);
+		$nav-item-tb: rem-calc(16);
+		$nav-bg-color: $white-smoke;
+
+		.home {
+			display: block;
+			border-bottom: 1px solid $silver;
+			padding: $nav-item-lr $nav-item-tb;
+			text-transform: uppercase;
+			background: $navigation-primary-color;
+			color: $white;
+
+			&:hover {
+				background: darken($navigation-primary-color, 10%) !important;
+				cursor: pointer;
+			}
+		}
+
+		.navList {
+			background: $nav-bg-color;
+
+			li {
+				position: relative;
+
+				// Links (<a>) and current pages (<strong>)
+				// The default navigation class turns current pages into non-links
+				a,
+				strong {
+					line-height: 1.2;
+					display: block;
+					border-bottom: 1px solid $white;
+					padding: $nav-item-lr $nav-item-tb;
+				}
+
+				// Just links
+				a {
+					color: $body-font-color;
+					color: darken($body-font-color, 4%);
+
+					&:hover {
+					}
+
+					&.cur {
+						padding: 0;
+						border-bottom: 0;
+					}
+				}
+
+				// Just current pages
+				strong {
+					color: $navigation-primary-color;
+				}
+			}
+
+			// Indentation for nested navigation items
+			.open {
+				
+				li {
+					a,
+					strong {
+						padding-left: $nav-item-lr * 2.5;
+					}
+
+					li {
+						a,
+						strong {
+							padding-left: $nav-item-lr * 3.5;
+						}
+
+						li {
+							a,
+							strong {
+								padding-left: $nav-item-lr * 4.5;
+							}
+
+								li {
+								a,
+								strong {
+									padding-left: $nav-item-lr * 5.5;
+								}
+							}
+						}
+					}
+				}
+			}
+
+			// External link indicator
+			.jump {
+			
+				a {
+					padding-right: 2.25rem; 
+
+					&:after {
+						@extend .fa;
+						font-size: rem-calc(12);
+						content: $fa-var-external-link;
+						position: absolute;
+						top: $horizontal-gutter / 2;
+						right: $nav-item-tb;
+						color: $jumbo;
+					}
+				}
+			}
+		}
+
+		// Nested navigation backgrounds
+		// Courtesy Cartleton College
+
+		// First level after site title
+		li.open a:hover {
+			background: darken($nav-bg-color, 2%);
+		}
+
+		ul li.open a,
+		ul li.open strong {
+			background: darken($nav-bg-color, 6%);
+		}
+		ul li.open a:hover {
+			background: darken($nav-bg-color, 8%);
+		}
+
+		// Second Level
+		ul ul li.open a,
+		ul ul li.open strong {
+			background: darken($nav-bg-color, 14%);
+		}
+		ul ul li.open a:hover {
+			background: darken($nav-bg-color, 16%);
+		}
+
+		// Third level
+		ul ul ul li.open a,
+		ul ul ul li.open strong {
+			background: darken($nav-bg-color, 20%);
+		}
+		ul ul ul li.open a:hover {
+			background: darken($nav-bg-color, 22%);
+		}
+
+		// Fourth Level
+		ul ul ul ul li.open a, ul ul ul ul li.open strong {
+			background: darken($nav-bg-color, 30%);
+		}
+		ul ul ul ul li.open a:hover {
+			background: darken($nav-bg-color, 32%);
+		}
+
+		// Fifth Level
+		ul ul ul ul ul li.open a,
+		ul ul ul ul ul li.open strong {
+			background: darken($nav-bg-color, 38%);
+		}
+		ul ul ul ul ul li.open a:hover {
+			background: darken($nav-bg-color, 40%);
+		}
+	}
+}

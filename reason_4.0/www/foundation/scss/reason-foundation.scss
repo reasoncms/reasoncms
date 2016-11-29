@@ -1,0 +1,24 @@
+// BASIC BOILERPLATE STYLES
+// Foundation
+
+// This file includes everything needed for a the basic, unbranded bolierplate site.
+// It's the starting point for any custom theme or site css.
+
+// Foundation
+@import "settings/settings";
+@import "foundation";
+@include foundation-everything;
+
+// Font Awesome
+@import "vendor/font-awesome/variables";
+@import "vendor/font-awesome/mixins";
+@import "vendor/font-awesome/core";
+@import "vendor/font-awesome/fixed-width";
+@import "vendor/font-awesome/list";
+@import "vendor/font-awesome/screen-reader";
+
+// Foundation
+@import "reason-foundation-settings";
+@import "mixins";
+@import "layout";
+@import "modules";

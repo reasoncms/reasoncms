@@ -2,76 +2,188 @@
 /**
  * SCSSPHP
  *
- * @copyright 2012-2014 Leaf Corcoran
+ * @copyright 2012-2015 Leaf Corcoran
  *
- * @license http://opensource.org/licenses/gpl-license GPL-3.0
  * @license http://opensource.org/licenses/MIT MIT
  *
- * @link http://leafo.net/scssphp
+ * @link http://leafo.github.io/scssphp
  */
 
 namespace Leafo\ScssPhp;
 
+use Leafo\ScssPhp\Formatter\OutputBlock;
+
 /**
- * SCSS base formatter
+ * Base formatter
  *
  * @author Leaf Corcoran <leafot@gmail.com>
  */
 abstract class Formatter
 {
+    /**
+     * @var integer
+     */
     public $indentLevel;
+
+    /**
+     * @var string
+     */
     public $indentChar;
+
+    /**
+     * @var string
+     */
     public $break;
+
+    /**
+     * @var string
+     */
     public $open;
+
+    /**
+     * @var string
+     */
     public $close;
+
+    /**
+     * @var string
+     */
     public $tagSeparator;
+
+    /**
+     * @var string
+     */
     public $assignSeparator;
 
-    protected function indentStr($n = 0)
+    /**
+     * @var boolea
+     */
+    public $keepSemicolons;
+
+    /**
+     * Initialize formatter
+     *
+     * @api
+     */
+    abstract public function __construct();
+
+    /**
+     * Return indentation (whitespace)
+     *
+     * @return string
+     */
+    protected function indentStr()
     {
-        return str_repeat($this->indentChar, max($this->indentLevel + $n, 0));
+        return '';
     }
 
+    /**
+     * Return property assignment
+     *
+     * @api
+     *
+     * @param string $name
+     * @param mixed  $value
+     *
+     * @return string
+     */
     public function property($name, $value)
     {
-        return $name . $this->assignSeparator . $value . ';';
+        return rtrim($name) . $this->assignSeparator . $value . ';';
     }
 
-    protected function blockLines($inner, $block)
+    /**
+     * Strip semi-colon appended by property(); it's a separator, not a terminator
+     *
+     * @api
+     *
+     * @param array $lines
+     */
+    public function stripSemicolon(&$lines)
     {
-        $glue = $this->break.$inner;
+        if ($this->keepSemicolons) {
+            return;
+        }
+
+        if (($count = count($lines))
+            && substr($lines[$count - 1], -1) === ';'
+        ) {
+            $lines[$count - 1] = substr($lines[$count - 1], 0, -1);
+        }
+    }
+
+    /**
+     * Output lines inside a block
+     *
+     * @param \Leafo\ScssPhp\Formatter\OutputBlock $block
+     */
+    protected function blockLines(OutputBlock $block)
+    {
+        $inner = $this->indentStr();
+
+        $glue = $this->break . $inner;
+
         echo $inner . implode($glue, $block->lines);
 
-        if (!empty($block->children)) {
+        if (! empty($block->children)) {
             echo $this->break;
         }
     }
 
-    protected function block($block)
+    /**
+     * Output block selectors
+     *
+     * @param \Leafo\ScssPhp\Formatter\OutputBlock $block
+     */
+    protected function blockSelectors(OutputBlock $block)
+    {
+        $inner = $this->indentStr();
+
+        echo $inner
+            . implode($this->tagSeparator, $block->selectors)
+            . $this->open . $this->break;
+    }
+
+    /**
+     * Output block children
+     *
+     * @param \Leafo\ScssPhp\Formatter\OutputBlock $block
+     */
+    protected function blockChildren(OutputBlock $block)
+    {
+        foreach ($block->children as $child) {
+            $this->block($child);
+        }
+    }
+
+    /**
+     * Output non-empty block
+     *
+     * @param \Leafo\ScssPhp\Formatter\OutputBlock $block
+     */
+    protected function block(OutputBlock $block)
     {
         if (empty($block->lines) && empty($block->children)) {
             return;
         }
 
-        $inner = $pre = $this->indentStr();
+        $pre = $this->indentStr();
 
-        if (!empty($block->selectors)) {
-            echo $pre .
-                implode($this->tagSeparator, $block->selectors) .
-                $this->open . $this->break;
+        if (! empty($block->selectors)) {
+            $this->blockSelectors($block);
+
             $this->indentLevel++;
-            $inner = $this->indentStr();
         }
 
-        if (!empty($block->lines)) {
-            $this->blockLines($inner, $block);
+        if (! empty($block->lines)) {
+            $this->blockLines($block);
         }
 
-        foreach ($block->children as $child) {
-            $this->block($child);
+        if (! empty($block->children)) {
+            $this->blockChildren($block);
         }
 
-        if (!empty($block->selectors)) {
+        if (! empty($block->selectors)) {
             $this->indentLevel--;
 
             if (empty($block->children)) {
@@ -82,10 +194,21 @@ abstract class Formatter
         }
     }
 
-    public function format($block)
+    /**
+     * Entry point to formatting a block
+     *
+     * @api
+     *
+     * @param \Leafo\ScssPhp\Formatter\OutputBlock $block An abstract syntax tree
+     *
+     * @return string
+     */
+    public function format(OutputBlock $block)
     {
         ob_start();
+
         $this->block($block);
+
         $out = ob_get_clean();
 
         return $out;

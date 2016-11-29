@@ -1,0 +1,43 @@
+// Announcement Styles
+// Foundation
+	
+#announcements {
+
+	.announcement {
+		@include reason-alert($mode: secondary);
+		border-radius: 0 !important;
+		margin: 0;
+
+		// To display different colored alerts, wrap your text blurb in a div with one of the following classes, like so:
+		// 
+		// <div class="success">
+		//   <p>Success!</p>
+		// </div>
+		// 
+		// Default is secondary (handled above).
+
+		.success {
+			@include reason-alert($mode: success);
+			margin: -$callout-padding;
+			border-radius: 0 !important;
+		}
+
+		.info {
+			@include reason-alert($mode: primary);
+			margin: -$callout-padding;
+			border-radius: 0 !important;
+		}
+
+		.warning {
+			@include reason-alert($mode: warning);
+			margin: -$callout-padding;
+			border-radius: 0 !important;
+		}
+
+		.alert {
+			@include reason-alert($mode: alert);
+			margin: -$callout-padding;
+			border-radius: 0 !important;
+		}
+	}
+}

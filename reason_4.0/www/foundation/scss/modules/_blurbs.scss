@@ -1,0 +1,26 @@
+// Blurb Styles
+// Foundation
+
+.blurb,
+.issueBlurb {
+	@include clearfix;
+	//background: $vapor;
+	border: 1px solid $gainsboro;
+	padding: $horizontal-gutter/2;
+	margin-bottom: $horizontal-gutter;
+
+	// Remove padding from the final tag and any tags inside it (to keep padding uniform)
+	@include last-child-padding-collapse();
+
+	a {
+		color: $blurbs-primary-color !important;
+		
+		&:hover {
+			color: darken($blurbs-primary-color, 10%);
+		}
+	}
+}
+
+.issueBlurbs {
+	.issueBlurb {}
+}

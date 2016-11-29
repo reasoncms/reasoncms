@@ -1,0 +1,127 @@
+	// Modules Styles
+	// Foundation
+
+.featuresModule {
+	
+	.features {
+		margin-bottom: $horizontal-gutter;
+	}
+
+	.feature {
+
+		.featureContent {
+
+			.featuredImage {
+				// Max Feature size is 700x460, set in foundation.php
+			}
+
+			.featureInfo {
+				background-color: rgba(black, .5) !important;
+
+				.featureTitle {
+					font-family: $font-family-serif;
+
+					a.dest,
+					a.anchor,
+					span.noLink {
+						margin: 0;
+						padding: rem-calc(8) $grid-column-gutter/3 0;
+						line-height: 1.2;
+						color: $white;
+					}
+				}
+
+				.featureText {
+
+					a.dest,
+					a.anchor,
+					span.noLink {
+						margin: 0;
+						padding: rem-calc(8) $grid-column-gutter/3;
+						line-height: 1.2;
+						color: white;
+
+						&:empty {  // Here we hide it if there's no content
+							display: none;
+						}
+					}
+				}
+
+				.featureNav {
+					@include clearfix;
+					padding: 0;
+					background: $jet;
+					font-size: rem-calc(14);
+					border-top: 1px solid rgba(white, .1);
+
+					.play-pause {
+
+						.button {
+							display: block;
+							float: right;
+							margin: 0;
+							padding: rem-calc(10) rem-calc(16);
+							line-height: 1;
+							text-align: center;
+							border-right: 1px solid rgba(white, .1);
+							color: rgba(white, .7);
+
+							&:hover {
+								background: $oil;
+								color: $white;
+							}
+
+							&.play {
+								@include inline-icon($icon: $fa-var-play);
+							}
+
+							&.pause {
+								@include inline-icon($icon: $fa-var-pause);
+							}
+
+						}
+					}
+
+					.navBlock {	
+
+						.navItem,
+						.button {
+							display: block;
+							float: left;
+							margin: 0;
+							padding: rem-calc(10) rem-calc(16);
+							line-height: 1;
+							text-align: center;
+							border-right: 1px solid rgba(white, .1);
+							color: rgba(white, .7);
+
+							&:hover {
+								background: $oil;
+								color: $white;
+							}
+
+							&.current {
+								background: $feature-primary-color;	
+							}
+						}
+
+						.button {
+
+							&.prev {
+								@include inline-icon($icon: $fa-var-caret-left, $margin: false);
+							}
+							
+							&.next {
+								@include inline-icon($icon: $fa-var-caret-right, $margin: false);
+							}
+
+							span {
+								@include screenreader();
+							}
+						}
+					} 
+				}
+			} 
+		}
+	}
+}

@@ -1,0 +1,39 @@
+// Foundation Overrides
+// Foundation
+
+// Custom style overrides for Foundation components that don't have variables
+
+// REVEAL MODAL
+// http://foundation.zurb.com/docs/components/reveal.html
+
+.reveal-modal,
+dialog {
+
+	&.tiny {
+
+		@include breakpoint(medium) {
+			min-width: 560px;
+		}
+	}
+
+	.reveal-heading {
+		margin-top: -$reveal-padding;
+		margin-bottom: $reveal-padding;
+	}
+
+	.close-reveal-modal {
+		
+		&:before {
+			@extend .fa;
+			content: $fa-var-times;
+		}
+
+		span {
+			@include screenreader();
+		}
+	}
+}
+
+.reveal-modal-bg {
+	position: fixed;
+}

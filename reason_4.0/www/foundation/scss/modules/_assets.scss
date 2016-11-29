@@ -1,0 +1,75 @@
+// Asset Styles
+// Foundation
+
+.assets {
+
+	// This margin, along with the bottom padding on each li, gives us the even margin we need to keep spacing uniform between page elements
+	margin-bottom: $horizontal-gutter/2;
+
+	ul { 
+		margin: 0 0 0 $grid-column-gutter/2; // bump out the list to make room for icons
+		list-style-type: none;
+	}
+
+	li {
+		padding-bottom: $horizontal-gutter/2;
+
+		&:before {  // download icon
+			@extend .fa;
+			content: $fa-var-download;
+			float: left;
+			margin-left: -($grid-column-gutter/2);
+			margin-top: rem-calc(6);
+			color: $aluminum;
+		}
+
+		&.mp4 {
+			&:before {
+				content: $fa-var-file-video-o;
+			}
+		}
+
+		&.txt {
+			&:before {
+				content: $fa-var-file-text-o;
+			}
+		}
+
+		&.pdf {
+			&:before {
+				content: $fa-var-file-pdf-o;
+			}
+			
+		}
+	}
+
+	a {
+		color: $asset-primary-color;
+
+		&:hover {
+			color: darken($asset-primary-color, 10%);
+		}
+	}
+
+	.name {
+		font-size: rem-calc(13);
+		color: $jumbo;
+		display: inline-block;
+
+		a {
+			font-size: rem-calc(18);
+			font-family: $header-font-family;
+		}
+	}
+	.date {
+		font-size: rem-calc(14);
+		color: $jumbo;
+	}
+
+	h4 { 
+		// Assets by category has category heading that use H4
+		// Let's make the heading a little smaller
+		font-size: map-get($header-sizes, h5);
+		margin-top: $horizontal-gutter/2;
+	}
+}

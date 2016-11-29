@@ -1,0 +1,16 @@
+// Mainted Module Styles
+// Foundation
+
+#maintained {
+	
+	a {
+		text-decoration: underline;
+		font-weight: 400;
+		color: $maintained-primary-color;
+
+		&:hover {
+			color: darken($maintained-primary-color, 10%);
+			text-decoration: underline;
+		}
+	}
+}

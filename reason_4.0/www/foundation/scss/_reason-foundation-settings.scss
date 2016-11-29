@@ -1,0 +1,79 @@
+// _settings.scss is the default Foundation settings file.
+// To keep things clean, we have Reason-specific settings here.
+
+// Colors
+$ghost       : #FAFAFA;
+$snow        : #F9F9F9;
+$vapor       : #F6F6F6;
+$white-smoke : #F5F5F5;
+$silver      : #EFEFEF;
+$smoke       : #EEEEEE;
+$gainsboro   : #DDDDDD;
+$iron        : #CCCCCC;
+$base        : #AAAAAA;
+$aluminum    : #999999;
+$jumbo       : #888888;
+$monsoon     : #777777;
+$steel       : #666666;
+$charcoal    : #555555;
+$tuatara     : #444444;
+$oil         : #333333;
+$jet         : #222222;
+
+$a_to_z_primary_color: map-get($foundation-palette, primary);
+$asset_primary_color: map-get($foundation-palette, primary);
+$av_primary_color: map-get($foundation-palette, primary);
+$blurbs-primary-color: map-get($foundation-palette, primary);
+$breadcrumb-primary-color: map-get($foundation-palette, primary);
+$children-primary-color: map-get($foundation-palette, primary);
+$classified-primary-color: map-get($foundation-palette, primary);
+$event-primary-color: map-get($foundation-palette, primary);
+$faculty-primary-color: map-get($foundation-palette, primary);
+$faq-primary-color: map-get($foundation-palette, primary);
+$feature-primary-color: map-get($foundation-palette, primary);
+$form-primary-color: map-get($foundation-palette, primary);
+$gallery-primary-color: map-get($foundation-palette, primary);
+$images-primary-color: map-get($foundation-palette, primary);
+$login-link-primary-color: map-get($foundation-palette, primary);
+$maintained-primary-color: map-get($foundation-palette, primary);
+$minutes-primary-color: map-get($foundation-palette, primary);
+$navigation-primary-color: map-get($foundation-palette, primary);
+$policy-primary-color: map-get($foundation-palette, primary);
+$publication-primary-color: map-get($foundation-palette, primary);
+
+$font-family-serif: Georgia, Cambria, "Times New Roman", Times, serif !default;
+
+// Controls horizontal spacing
+$horizontal-gutter: rem-calc(36);
+
+// We use these to make sure border radius matches unless we want it different.
+$global-radius: 3px;
+$global-rounded: 1000px;
+
+// REASON ADDITION: Here we add a few additional break points for more control over responsive styling
+
+$small-range: (0em, 40em); // 0, 640px
+$small-high-range: (30em, 40em); // 480px, 640px
+$medium-range: (40.063em, 63.75em); // 641px, 1020px
+$medium-low-range: (40.0625em, 60em); // 641px, 960px
+$medium-high-range: (60.0625em, 63.75em); // 961px, 1020px
+$large-range: (63.8125em, 90em); // 1021px, 1440px
+$large-low-range: (63.8125em, 77.4375em); // 1021px, 1239px
+$large-high-range: (77.5em, 90em); // 1240px, 1440px
+$xlarge-range: (90.063em, 120em); // 1441px, 1920px
+$xxlarge-range: (120.063em); // 1921px
+$breakpoints: (
+	small: 0px,
+	small-high: 480px,
+	medium: 641px,
+	medium-high: 961px,
+	large: 1021px,
+	large-high: 1240px,
+	xlarge: 1441px,
+	xxlarge: 1921px,	
+);
+
+$screen: "only screen";
+
+$breakpoint-classes: (small small-high medium medium-high large large-high xlarge xxlarge);
+$grid-column-align-edge: false;

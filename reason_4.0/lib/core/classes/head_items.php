@@ -26,8 +26,12 @@
  *
  * @author Nathan White and the author(s) of functions that I lifted from the default template
  */
+
+use Leafo\ScssPhp\Compiler;
+use Leafo\ScssPhp\Server;
+
 class HeadItems
-{
+{	
 	/**
 	 * @var array
 	 * @access private
@@ -354,12 +358,13 @@ class HeadItems
         }
 
         // Track our modified time so we know to delete older files.
-		$mtime = $delete_cached && file_exists($output_path) ? filemtime($output_path) : null;
-
+		$mtime = $delete_cached && file_exists($output_path) ? filemtime($output_path) : filemtime($input_path);
 		try
 		{
 			if ( get_class($parser) !== 'lessc' )
 			{
+				// Make $scss var public (line 43 of reason_package/scssphp/src/Server.php) instead of private
+				// otherwise the next line fails
 				$parser->scss->addImportPath(WEB_PATH);
 				$parser->scss->addImportPath( pathinfo ( $input_path, PATHINFO_DIRNAME ) );
 				foreach ($this->style_import_paths as $path) {
@@ -378,13 +383,22 @@ class HeadItems
 
 		if ($delete_cached && $mtime !== filemtime($output_path))
 		{
-			foreach (glob($output_directory . $hash . '_*.css*') as $file) {
-				if (strpos($file, $output_filename) === false) {
-					unlink($file);
-				}
+			$new_mtime = filemtime($output_path);
+			$output_url = preg_replace('/_\d{10}\.css$/' , '_' . $new_mtime . '.css', $output_url);
+			touch($input_path, $new_mtime);
+			foreach (glob($output_directory . $hash . '_*.css*') as $file)
+			{
+				$new_file = preg_replace('/_\d{10}\.css/' , '_' . $new_mtime . '.css', $file);
+				rename($file, $new_file);
+				touch($new_file, $new_mtime);
 			}
-		}
 
+			// in the meta file, update the mtime for scss file specified by $url
+			$s = file_get_contents(WEB_PATH.substr($output_url, 1) . '.meta');
+			$s = str_replace($mtime, $new_mtime, $s);
+			file_put_contents(WEB_PATH.substr($output_url, 1) . '.meta', $s);
+		}
+		
 		return $output_url;
 	}
 
@@ -402,7 +416,7 @@ class HeadItems
 			return false;
 		}
 
-		$scss = new Leafo\ScssPhp\Compiler();
+		$scss = new Compiler();
 		$scss->setFormatter('Leafo\ScssPhp\Formatter\Compressed');
 		$scss->setVariables($variables);
 		foreach ($functions as $name => $func)
@@ -410,7 +424,7 @@ class HeadItems
 			$scss->registerFunction($name, $func);
 		}
 
-		return new \Leafo\ScssPhp\Server('.', '.', $scss);
+		return new Server('.', '.', $scss);
 	}
 
 	/**

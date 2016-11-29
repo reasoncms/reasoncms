@@ -1,0 +1,108 @@
+// Image Module Styles
+// Foundation
+
+// Image Module (images in the main content area)
+
+#images {
+	//margin-bottom: $grid-column-gutter/2;
+	@include clearfix;
+
+	.moduleNav {
+		
+		.pagination {
+
+			.pages {
+
+				strong {
+					background: $images-primary-color;
+				}
+			}	
+		}
+
+		ul {
+			margin: 0;
+
+			li {
+				list-style-type: none;
+				margin-bottom: $horizontal-gutter;
+
+				img {
+					border: 1px solid #ccc;
+					padding: rem-calc(6);
+				}
+
+				.caption {
+					@include image-caption();
+				}
+			}
+		}
+	}
+}
+
+// Sidebar Images (default pages, publications)
+.imageSidebarModule,
+.publication .images {
+	
+	.imageChunk,
+	li {
+		margin-bottom: $horizontal-gutter;
+
+		.tnImage {
+
+		}
+
+		.tnDesc {
+			@include image-caption();
+		}
+	}
+}
+
+// Inline images, added by TinyMCE
+#pageContent,
+.fullPost .text,
+.comments .commentContent,
+.eventContent,
+.blurb,
+#faq .answer,
+.facStaffContent,
+.minutesContent,
+.policyContent,
+.policy .approvals {
+	img {
+		width: auto;  // Allow inline image to display at native resolution,
+		max-width: 100%;  // but no bigger than its container.
+		margin: 0 0 $paragraph-margin-bottom; // space out the bottom
+		display: block;
+		clear: left;
+		
+		&.left,
+		&[align="left"],
+		&.right,
+		&[align="right"] { // On phones, we won't float the images to prevent skinny column wrapping text.
+			float: none !important;
+			clear: left;
+		}
+
+		@include breakpoint(medium) {
+			
+			&.left,
+			&[align="left"] { // align left images left, and pad out the right.
+				margin-right: $grid-column-gutter/2;
+				float: left !important;
+			}
+
+			&.right,
+			&[align="right"] { // align right images right, and pad out the left
+				margin-left: $grid-column-gutter/2;
+				float: right !important;
+			}
+
+			&.left,  // If images are floated left or right, we cap their max-width at 40% max-width
+			&[align="left"],
+			&.right,
+			&[align="right"] {
+				max-width: 40%;
+			}
+		}
+	}
+}

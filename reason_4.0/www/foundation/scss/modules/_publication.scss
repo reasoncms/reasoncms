@@ -1,0 +1,678 @@
+// Publication Styles
+// Foundation
+
+// Common
+@mixin publication-date() {
+	color: $aluminum;
+	font-size: rem-calc(14);
+}
+
+// REALTED PUBLICATION (usually in the sidebar)
+#relatedPub {
+@include clearfix;
+
+	a {
+		color: $publication-primary-color;
+
+		&:hover {
+			color: darken($publication-primary-color, 10%);
+		}
+	}
+
+	// @todo: make sure structure doesn't do anything weird with module nav in this instance
+	.moduleNav {
+
+		.posts {
+			margin: 0;
+
+			.post {
+				list-style-type: none;
+				border-top: 1px solid $silver;
+				padding: $horizontal-gutter/2 0;
+
+				a:hover {
+					text-decoration: underline;
+				}
+				
+				.teaserImage {
+					max-width: rem-calc(80);
+					float: right;
+					margin: 0 0 $horizontal-gutter/3 $grid-column-gutter/3;
+					
+					.tnImage {
+
+					}
+				}
+
+				.date {
+					@include publication-date();
+				}
+
+				h4 {
+					font-size: map-get($header-sizes, h3);
+				}
+
+				.desc {
+					@include last-child-padding-collapse();
+					
+					* {
+						font-size: rem-calc(14);
+					}
+				}
+			}
+		}
+
+		.pubLinks {
+			margin: 0 0 $horizontal-gutter;
+
+			li {
+				list-style-type: none;
+				
+				a {
+					@include more-link($more-link-bg: $publication-primary-color);
+				}
+			}
+		}
+	}
+}
+
+
+
+// PUBLICATION
+#meat .publication {
+
+	// Common
+	.date {
+		@include publication-date();
+	}
+
+	.back {
+		margin-top: 0;
+		text-align: left;
+
+		div {
+			
+			a {
+				@include back-link($back-link-bg: $publication-primary-color);
+			}
+		}
+	}
+
+	// Search and Filter styles
+	.persistent {
+		border: none;
+
+		
+		#filtering {
+			.searchForm {
+				// Form styles included in _form.scss	
+				.submit,
+				input[type="submit"] {
+					background: $publication-primary-color;
+					color: $white;
+
+					&:hover {
+						background: darken($publication-primary-color, 10%);
+					}
+				}
+			}
+		}
+
+		.addItemLink {
+		}
+
+		.loginlogout {
+			margin: $horizontal-gutter/4 $grid-column-gutter/2 0 0;
+			text-align: right;
+			font-size: rem-calc(14);
+
+			a {
+				//@include inline-icon($pseudo: after, $icon: $fa-var-lock);
+				color: $publication-primary-color;
+			}
+		}
+	}
+
+	// List of Posts
+	.moduleNav {
+
+		// Pagination
+		// Colors set here. Everything else, see base/_common.scss
+		.pagination {
+
+			.pages {
+
+				strong {
+					background: $publication-primary-color;
+				}
+			}	
+		}
+
+		// Heading when a seach term is applied: "Results for 'News Story'"
+		.searchTitle {
+			text-transform: uppercase;
+			font-size: rem-calc(15);
+			font-weight: 700;
+		}
+
+		// Heading when a filter is applied: "Posts tagged with 'Category 2'"
+		.filterMessage {
+			
+			h3 {
+				text-transform: uppercase;
+				font-size: rem-calc(15);
+				font-weight: 700;
+
+				.clear {
+					font-weight: 700;
+					
+					a {
+						padding: 0 rem-calc(4);
+						display: inline-block;
+						@include inline-icon($icon: $fa-var-mail-reply);
+						color: $publication-primary-color;
+					}
+				}
+			}
+		}
+
+		.issueName {
+
+		}
+
+		.issueMenu {
+			margin-bottom: $horizontal-gutter/2;
+			@include clearfix;
+			
+			form {
+				margin-bottom: $horizontal-gutter/3;
+
+				.issueLabel {
+					@include screenreader();
+				}
+				//margin-bottom: $horizontal-gutter/2;
+			}
+
+			.allIssuesLink a {
+				float: right;
+				@include more-link($more-link-bg: $publication-primary-color);
+			}
+		}
+
+		#featuredItems {
+
+		}
+
+		.sections {
+			margin: 0;
+
+			.section {
+				list-style-type: none;
+				margin-bottom: $horizontal-gutter;
+
+				.sectionInfo {
+
+					h3 a {
+						display: block;
+						border-bottom: 2px solid;
+					}
+
+					.sectionDesc {
+
+					}
+				}
+
+				.sectionFoot {
+					text-align: right;
+
+					.viewEntireSection {
+						@include inline-more-link($more-link-color: $publication-primary-color);
+					}
+				}
+			}
+		}
+		
+		.posts {
+			margin: 0;
+
+			.post {
+				border-top: 2px solid $smoke;
+				padding: $horizontal-gutter/1.5 0; 
+				list-style-type: none;
+
+				@include breakpoint(small only) {
+					&:last-of-type {
+						border-bottom: 2px solid $smoke;
+						margin-bottom: $horizontal-gutter;
+					}
+				}
+
+				@include breakpoint(medium) {
+					padding: $horizontal-gutter $grid-column-gutter/1.5; 
+					border: 1px solid $smoke;
+					box-shadow: rgba(black, .25) 0 1px 1px;
+					margin-bottom: $horizontal-gutter;
+				}
+
+				.teaserImage {
+					float: right;
+					margin: 0 0 $horizontal-gutter/2 $grid-column-gutter/2;
+
+					@include breakpoint(small only) {
+						max-width: 100px;
+					}
+				}
+
+				.title {
+					margin: 0;
+					font-size: map-get($header-sizes, h3);
+					font-weight: 400;
+
+					a {
+						color: $publication-primary-color;
+
+						&:hover {
+							color: darken($publication-primary-color, 10%);
+						}
+					}
+				}
+
+				.date {
+					margin: 0;
+				}
+
+				.desc {
+					margin-top: rem-calc(16);
+				}
+
+				.links {
+					margin: 0;
+					padding: 0;
+					font-size: rem-calc(14);
+
+					li {
+						display: inline-block;
+						margin-right: rem-calc(12);
+
+						a {
+							color: $publication-primary-color;
+
+							&:before {
+								@extend .fa-fw;
+							}
+
+							&:hover {
+								color: darken($publication-primary-color, 10%);
+							}
+						}
+
+						&.more a {
+							@include inline-icon($icon: $fa-var-share);
+						}
+
+						&.permalink a {
+							@include inline-icon($icon: $fa-var-bookmark);
+						}
+						&.comments a {
+							@include inline-icon($icon: $fa-var-comment);
+						}
+					}
+				}
+			}
+		}
+
+		a[href="?"] {
+			@include back-link($back-link-bg: $publication-primary-color);
+		}
+
+		.feedLink {
+			margin-bottom: $horizontal-gutter;
+
+			a {
+				@include feed-button($feed-button-bg: $publication-primary-color);
+			}
+			
+			.feedInfo a {
+				@include inline-icon($icon: $fa-var-rss);
+			}
+		}
+	}
+
+	// Full Post
+
+	&.fullPostDisplay {
+		position: relative;
+
+		.persistent {
+			display: none;
+		}
+
+		.back {
+			margin-bottom: $horizontal-gutter;
+		}
+
+		.social {
+			margin: 0;
+			display: block;
+			@include clearfix;
+
+			&.top {
+				margin-top: $horizontal-gutter;
+			}
+
+			&.bottom {
+				margin-bottom: $horizontal-gutter;
+			}
+
+			p {
+				//display: inline-block;
+				margin: 0;
+
+				span {
+					@include screenreader();
+				}
+
+				a {
+					margin: 0 rem-calc(6);
+
+					@include circle-icon-button(
+						$icon-size: rem-calc(15),
+						$icon-padding: rem-calc(10),
+						$icon-background: $publication-primary-color,
+						$icon-color: $white,
+						$icon-border-color: transparent
+					);
+
+					&.facebook:before {
+						content: $fa-var-facebook;
+					}
+
+					&.twitter:before {
+						content: $fa-var-twitter;
+					}
+
+					&.google:before {
+						content: $fa-var-google-plus;
+					}
+
+					&.email:before {
+						content: $fa-var-envelope-o;
+					}
+				}
+			}
+		}
+
+		.fullPost {
+			@include grid-row();
+			
+			.firstChunk {
+				@include grid-column(12);
+				@include grid-column-collapse;
+
+				@include breakpoint(medium) {
+					@include grid-column(8);
+					@include grid-column-collapse;
+					padding-right: $grid-column-gutter/2;
+				}
+
+				.commentAdded {
+					@include reason-alert($mode: primary);
+
+					h4 {
+						color: $body-font-color;
+						font-size: rem-calc(16);
+						@include inline-icon($icon: $fa-var-info-circle);
+						display: block;
+						padding: 0;
+					}
+				}
+
+				.postTitle {
+				}
+
+				.date {
+				}
+
+				.text {
+					margin-top: $horizontal-gutter;
+				}
+			}
+
+			.relatedItems {
+				@include grid-column(12);
+				@include grid-column-collapse;
+				max-width: 400px;
+				margin: 0 auto;
+				float: none;
+
+				> div {
+					border-bottom: 1px solid #efefef;
+				}
+
+				@include breakpoint(medium) {
+					@include grid-column(4);
+					@include grid-column-collapse;
+					padding-left: $grid-column-gutter/2;
+				}
+
+				h4 {
+					font-size: map-get($header-sizes, h4);
+					margin-top: 0;
+				}
+
+				> div {
+					margin-bottom: $horizontal-gutter/2;
+				}
+
+				.relatedEvents {
+					
+					ul {
+						margin: 0;
+
+						li {
+							list-style-type: none;
+							margin-bottom: $horizontal-gutter/2;
+							@include inline-icon($icon: $fa-var-calendar);
+						}
+					}
+				}
+
+				.images {
+
+					ul {
+						margin: 0;
+					
+						li {
+							list-style-type: none;
+						}
+					}
+				}
+
+				.assets {
+					// inherits styles from _assets.scss
+				}
+
+				.categories {
+					ul {
+						margin: 0;
+					}
+
+					li {
+						display: inline-block;
+						margin: 0 rem-calc(8) $horizontal-gutter/2 0;
+						white-space: pre;
+
+						a {
+							//@include inline-icon($icon: $fa-var-folder-o, $color: $monsoon);
+							color: $publication-primary-color;
+
+							&:hover {
+								color: darken($publication-primary-color, 10%);
+							}
+						}
+
+						strong {
+							@include inline-icon($icon: $fa-var-folder-open-o, $color: inherit);
+						}
+					}
+				}
+			}
+
+			.secondChunk {
+				@include grid-column(12);
+				@include grid-column-collapse;
+
+				.nextPrev {
+					border-top: 6px solid $silver;
+					border-bottom: 2px solid $silver;
+					padding: $horizontal-gutter*2 0;
+					text-transform: uppercase;
+					margin-bottom: $horizontal-gutter;
+
+					h4 {
+						font-size: rem-calc(14);
+						margin: 0;
+					}
+
+					p {
+						margin: 0;
+					}
+
+					a {
+						text-transform: none;
+						color: $publication-primary-color;
+
+						&:hover {
+							color: darken($publication-primary-color, 10%);
+						}
+					}
+
+					.prev,
+					.next {
+						width: 100%;
+						float: none;
+						text-align: center;
+						border: none;
+						padding: 0;
+					}
+
+					.prev {				
+						margin-bottom: $horizontal-gutter;
+						
+						&.only {
+							width: 100%;
+							text-align: center;
+							margin-bottom: 0;
+						}
+
+						a {
+							@include inline-icon($icon: $fa-var-angle-double-left);
+						}
+					}
+					
+					.next {
+
+						&.only {
+							width: 100%;
+							text-align: center;
+						}
+
+						a {
+							@include inline-icon($pseudo: after, $icon: $fa-var-angle-double-right);
+						}
+					}
+				}
+
+				.comments {
+					
+					> ul {
+						margin: 0;
+						@include clearfix;
+
+						> li {
+							background: none;
+							padding: 0;
+							margin: 0 0 $horizontal-gutter;
+							list-style-type: none;
+
+							a[name^='comment'] {
+								@include anchor-padding-menu();
+							}
+
+							.datetime {
+								float: right;
+								text-align: right;
+								width: 50%;
+								font-size: rem-calc(14);
+								margin-bottom: rem-calc(8);
+							}
+
+							.author {
+								float: left;
+								width: 50%;
+								font-size: rem-calc(18);
+								font-weight: 700;
+								margin-bottom: rem-calc(8);
+							}
+
+							.commentContent {
+								border: 1px solid $gainsboro;
+								clear: both;
+								padding: $horizontal-gutter;
+								border-radius: $global-radius;
+								line-height: 1.2 !important;
+
+								*:last-child {
+									margin-bottom: 0;
+								}
+							}
+						}
+					}
+				}
+				
+				.comments,
+				.addCommentForm {
+					max-width: rem-calc(600);
+					margin: 0 auto;
+				}
+
+				a[name="comments"],
+				a[name="addComment"] {
+					// Adds non-visible padding to the top of the named anchor to space it out from the top of the browser
+					@include anchor-padding-menu;
+				}
+
+				.addCommentForm {
+
+					// Comments on, but off for individual story
+					.commentsOff {
+						
+						@include reason-alert($mode: primary, $symbol: $fa-var-toggle-off);
+
+						h4 {
+							padding: 0;
+							margin: 0;
+							font-size: rem-calc(16);
+						}
+					}
+
+					// Comments on, but not for this user
+					.notPermitted {
+
+						.subContent {
+							@include reason-alert($mode: warning, $symbol: $fa-var-ban);
+						}	
+					}
+
+					// Comments on, but login first
+					.loginRequired {
+
+						.subContent {
+							@include reason-alert($mode: warning, $symbol: $fa-var-power-off);
+						}	
+					}
+				}
+			}
+		}
+	}
+}

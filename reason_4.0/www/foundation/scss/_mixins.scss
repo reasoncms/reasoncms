@@ -1,0 +1,243 @@
+// Foundation Mixins
+
+@mixin screenreader() {
+	position: absolute;
+	left: -9999px;
+	top: -9999px;
+	margin-bottom: 0;
+}
+
+@mixin zero-out() {
+	margin: 0;
+	padding: 0;
+}
+
+@mixin icon-button(
+	$icon-size: rem-calc(15),
+	$icon-padding: rem-calc(10),
+	$icon-background: $snow,
+	$icon-variable: $fa-var-bomb,
+	$icon-color: $primary-color,
+	$icon-border-color: $gainsboro
+	) {
+
+	display: inline-block;
+	margin: 0;
+	padding: $icon-padding;
+	line-height: 1 !important;
+	background: $icon-background;
+	border: 1px solid $icon-border-color;
+	color: $icon-color;
+	text-align: center;
+	
+	&:before {
+		@extend .fa;
+		content: $icon-variable;
+		font-size: $icon-size;
+		width: $icon-size;
+		display: block;
+	}
+
+	&:hover {
+		background: darken($icon-background, 2%);
+	}
+
+	&:active {
+		background: lighten($icon-background, 5%);
+	}
+
+	span {
+		@include screenreader;
+	}
+}
+
+@mixin circle-icon-button(
+	$icon-size: rem-calc(15),
+	$icon-padding: rem-calc(10),
+	$icon-background: $snow,
+	$icon-variable: $fa-var-bomb,
+	$icon-color: $primary-color,
+	$icon-border-color: $gainsboro) {
+	
+	@include icon-button($icon-size, $icon-padding, $icon-background, $icon-variable, $icon-color, $icon-border-color);
+	border-radius: $global-rounded;
+}
+
+@mixin inline-icon($pseudo: before, $icon: $fa-var-bomb, $color: inherit, $margin: true) {
+	&:#{$pseudo} {
+		@extend .fa;
+		content: $icon;
+		@if $margin == true {
+			@if $pseudo == after {
+				margin-left: rem-calc(6);	
+			}
+			@else {
+				margin-right: rem-calc(6);
+			}
+		}
+		color: $color;
+	}
+}
+
+@mixin admin-button() {
+	@include button($background: #333);
+	@include inline-icon($pseudo: before, $icon: $fa-var-pencil);
+	//@include single-transition(background);
+	color: $white;
+	font-weight: 400;
+	text-decoration: none;
+
+	&:hover {
+		background: #000;
+	}
+}
+
+@mixin feed-button($feed-button-bg: $primary-color) {
+	@include button(
+		$background: $feed-button-bg,
+	);
+	@include inline-icon($pseudo: before, $icon: $fa-var-rss);
+	margin: 0 rem-calc(12) rem-calc(2) 0 !important;
+}
+
+@mixin more-link($more-link-bg: $primary-color, $text-color: $white) {
+	@include button();
+	@include inline-icon($pseudo: after, $icon: $fa-var-chevron-circle-right);
+	color: $text-color;
+	font-weight: 400;
+	text-align: left;
+}
+
+// More links that are part of a longer sentence of unlinked text
+@mixin inline-more-link($more-link-color: transparent) {
+	font-size: rem-calc(14);
+
+	a {
+		border: 1px solid $primary-color;
+		color: $more-link-color;
+		font-weight: 700;
+		text-decoration: underline;
+		font-size: rem-calc(14);
+	}
+	//@include inline-icon($pseudo: after, $icon: $fa-var-chevron-circle-right, $color: $base);
+}
+
+@mixin back-link($back-link-bg: $primary-color) {
+	@include button($background: $back-link-bg);
+	@include inline-icon($pseudo: before, $icon: $fa-var-chevron-circle-left);
+}
+
+// Reason alert boxes allow for the inclusion of font awesome icons
+@mixin reason-alert($mode: alert, $symbol: null) {
+
+	@if $symbol != null {
+		@include inline-icon($icon: $symbol);
+
+		&:before {
+			line-height: 1;
+			font-size: rem-calc(20);
+			display: block;
+			text-align: center;
+			background: rgba(white, .25);
+			margin-top: -$callout-padding;
+			margin-left: -$callout-padding;
+			margin-right: -$callout-padding;
+			margin-bottom: $callout-padding;
+			padding: rem-calc(12) 0;
+			border-color: $callout-border;
+			border-bottom: 1px solid;
+		}
+	}
+	
+	@include callout(map-get($foundation-palette, $mode));
+
+	a {
+		text-decoration: underline;
+		font-weight: 700;
+		color: inherit;
+	}
+
+	*:last-child {
+		margin-bottom: 0;
+		padding-bottom: 0;
+	}
+}
+
+@mixin last-child-padding-collapse {
+	> *:last-child {
+		margin-bottom: 0;
+
+		*:last-child {
+			margin-bottom: 0;
+		}
+	}
+}
+
+// Named anchor padding
+// Provides padding above named anchor links to keep them from hugging the top of the browser window
+
+// Provides padding equal to the column gutter
+@mixin anchor-padding-gutter {
+	&:before {
+		display: block;
+		content: "";
+		margin-top: -($grid-column-gutter/2);
+		height: $grid-column-gutter/2;
+		visibility: hidden;
+	}
+}
+
+// Provides padding to account for the sticky navigation menu
+@mixin anchor-padding-menu {
+	&:before { 
+		display: block;
+		content: "";
+		margin-top: -$grid-column-gutter;
+		height: $grid-column-gutter;
+		visibility: hidden;
+
+		@include breakpoint(large) {
+			margin-top: -($grid-column-gutter*4);
+			height: $grid-column-gutter*4;
+		}
+	}
+}
+
+@mixin image-caption {
+	font-style: italic;
+	font-weight: 300;
+	color: $aluminum;
+	font-family: $font-family-serif;
+	font-size: rem-calc(14);
+	display: block;
+	margin-top: rem-calc(2);
+}
+
+// Equilateral triangles
+//
+// $triangle-size - Used to set border-size. No default, set a px or em size.
+// $triangle-color - Used to set border-color which makes up triangle. No default
+// $triangle-direction - Used to determine which direction triangle points. Options: top, bottom, left, right
+@mixin css-triangle($triangle-size, $triangle-color, $triangle-direction) {
+  content: "";
+  display: block;
+  width: 0;
+  height: 0;
+  border: inset $triangle-size;
+  @if ($triangle-direction == top) {
+    border-color: $triangle-color transparent transparent transparent;
+    border-top-style: solid;
+  }
+  @if ($triangle-direction == bottom) {
+    border-color: transparent transparent $triangle-color transparent;
+    border-bottom-style: solid;
+  }
+  @if ($triangle-direction == left) {
+    border-color: transparent transparent transparent $triangle-color;
+    border-left-style: solid;
+  }
+  @if ($triangle-direction == right) {
+    border-color: transparent $triangle-color transparent transparent;
+    border-right-style: solid;
+  }
+}

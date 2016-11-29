@@ -1,0 +1,89 @@
+// Login Link Module Styles
+// Foundation
+
+.loginLinkModule {
+
+	margin-top: $horizontal-gutter/2;
+
+	.editDiv,
+	.inlineEditDiv {
+		display: inline-block;
+	}
+
+	.editLink,
+	.inlineEditLink {
+		@include button($background: $login-link-primary-color);
+		$padding: map-get($button-sizes, tiny);
+		border: 1px solid $login-link-primary-color;
+		margin: 0 rem-calc(4) $grid-column-gutter/2;
+		font-weight: 400;
+
+		&:hover {
+			border: 1px solid darken($login-link-primary-color, 10%);
+		}
+	}
+
+	.inlineEditLink {
+		margin-left: rem-calc(7);
+	}
+
+	.editDivider {
+		display: none;
+	}
+
+	.inlineEnabled {
+
+		.clarifyingText {
+			@include screenreader();
+		}
+
+		.inlineEditLink {
+			background: transparent;
+			color: $login-link-primary-color;
+
+			&:hover {
+				background: darken($login-link-primary-color, 10%);
+				border: 1px solid darken($login-link-primary-color, 10%);
+				color: $white;
+			}
+		}
+	}
+
+	#footerLoginLink {
+		font-size: rem-calc(14);
+
+		.login {
+			@include button($background: $login-link-primary-color);
+			$padding: map-get($button-sizes, tiny);
+			border: 1px solid $login-link-primary-color;
+			color: $white;
+			margin-bottom: 0;
+			font-weight: 400;
+
+			&:hover {
+				color: $login-link-primary-color;
+				background: $white;
+			}
+
+			&:after {
+				@extend .fa;
+				content: $fa-var-power-off;
+				margin-left: rem-calc(4);
+			}
+		}
+
+		.username {
+			font-weight: 700;
+		}
+
+		.logout {
+			color: $login-link-primary-color;
+			
+			&:after {
+				@extend .fa;
+				content: $fa-var-power-off;
+				margin-left: rem-calc(4);
+			}
+		}
+	}
+}
