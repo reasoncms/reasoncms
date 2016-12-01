@@ -582,6 +582,26 @@ class ZencoderMediaWorkDisplayer implements MediaWorkDisplayerInterface
 			$markup .= $avd_markup;
 		}
 		
+		// Add caption track files, if any exist
+		$es = new entity_selector();
+		$es->add_type(id_of('av_captions'));
+		$es->add_right_relationship($this->media_work->id(), relationship_id_of('av_to_av_captions'));
+		$media_captions = $es->run_one();
+		foreach ((array) $media_captions as $caption) {
+			$base_url = REASON_HTTP_BASE_PATH . 'scripts/media/get_captions.php';
+			$url_with_params = $base_url . "?" . http_build_query(array(
+						"media_work_id" => $this->media_work->id(),
+						"caption_id" => $caption->id(),
+						"hash" => $this->get_hash(),
+			));
+			
+			$markup .= '<track kind="' . $caption->get_value('kind') . '" '
+					. 'src="' . $url_with_params . '" '
+					. 'srclang="' . htmlentities($caption->get_value('lang'), ENT_QUOTES) . '" '
+					. 'label="' . htmlentities($caption->get_value('label'), ENT_QUOTES) . '" />';
+			$markup .= "\n";
+		}
+
 		$markup .= '</video>'."\n";
 		
 		return $markup;
