@@ -4,11 +4,12 @@
 // Custom style overrides for Foundation components that don't have variables
 
 // REVEAL MODAL
-// http://foundation.zurb.com/docs/components/reveal.html
+// http://foundation.zurb.com/sites/docs/reveal.html
 
-.reveal-modal,
+.reveal,
 dialog {
-
+	padding: 3.375rem;
+	
 	&.tiny {
 
 		@include breakpoint(medium) {
@@ -21,8 +22,8 @@ dialog {
 		margin-bottom: $reveal-padding;
 	}
 
-	.close-reveal-modal {
-		
+	.close-button {
+		font-size: 1.25em;
 		&:before {
 			@extend .fa;
 			content: $fa-var-times;
