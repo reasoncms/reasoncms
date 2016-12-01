@@ -340,14 +340,7 @@ class formbuilder2Type extends textareaType
 	function add_event_ticket_title_to_field($field)
 	{
 		$label = get_pretty_ticketed_event_name($field->event_tickets_event_id);
-		
-		// encode ampersands and carrots to make XML happy
-		// https://stackoverflow.com/questions/7604436/xmlparseentityref-no-name-warnings-while-loading-xml-into-a-php-file
-		$label_modified = preg_replace('/&(?!#?[a-z0-9]+;)/', '&amp;', $label);
-		$label_modified = preg_replace('/</', '&lt;', $label_modified);
-		$label_modified = preg_replace('/>/', '&rt;', $label_modified);
-		
-		$field->label = $label_modified;
+		$field->label = $label;
 		return $field;
 	}
 }
