@@ -239,8 +239,8 @@
 				if($this->has_content( 'banner_xtra' ))
 				{
 					// Foundation Reveal Modal (lightbox)
-					// http://foundation.zurb.com/docs/components/reveal.html
-					echo '<li class="searchToggle"><a href="#" data-reveal-id="search" id="search-toggle"><span class="searchJumpText">Jump to site search</span></a></li>';
+					// http://foundation.zurb.com/sites/docs/reveal.html
+					echo '<li class="searchToggle"><a data-open="search" id="search-toggle"><span class="searchJumpText">Jump to site search</span></a></li>';
 				}
 				echo "</ul>";
 			}
@@ -289,13 +289,11 @@
 				echo '<div id="bannerXtra">';
 
 				// Foundation Reveal Modal (lightbox)
-				// http://foundation.zurb.com/docs/components/reveal.html
-				echo '<div id="search" class="reveal-modal tiny" data-reveal>';
-				// echo '<div class="reveal-heading">';
-				// echo 'Search';
+				// http://foundation.zurb.com/sites/docs/reveal.html
+				echo '<div id="search" class="reveal tiny" data-reveal>';
 				$this->run_section( 'banner_xtra' );
-				echo '<a class="close-reveal-modal"><span>Close</span></a>';
-				// echo '</div>'."\n";
+				echo '<button class="close-button" data-close aria-label="Close" type="button">';
+				echo '</button>';
 				echo '</div>'."\n";
 				echo '</div>'."\n";
 			}

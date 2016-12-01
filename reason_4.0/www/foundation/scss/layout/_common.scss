@@ -139,56 +139,24 @@
 	// For maximum integration, we use Foundation pagination mixins and variables wherever possible.
 
 	.pagination {
-		display: block;
-		//min-height: $pagination-height;
-		//margin-#{$default-float}: $pagination-margin;
-		margin-bottom: $horizontal-gutter;
-		padding: 0 !important;
-		background: none !important;
-
-		&.above {
+		@include pagination-container;
+		background-color: inherit !important;
+		.pages a,
+		.pages strong,
+		.previous,
+		.next {
+			display: inline-block;
 		}
-
-		&.below {
+		.pages strong {
+			@include pagination-item-current;
+			border-radius: $global-radius;
 		}
-
 		.next,
 		.previous {
 			border: none !important;
 			margin: 0 !important;
-			padding: 0;
-		}
-
-		.pages a,
-		.pages strong,
-		.next,
-		.previous { 
-			//height: $pagination-li-height;
-			color: $pagination-item-color;
-			font-size: $pagination-font-size;
-			//margin-#{$default-float}: $pagination-li-margin;
-			//float: $pagination-li-float;
-			display: block;
-			padding: $pagination-item-padding !important;
-			background: none;
-			//@include radius;
-			font-weight: normal;
-			line-height: inherit;
-			//@include single-transition(background-color);
-
-			&:hover,
-			&:focus {
-				background: $pagination-item-background-hover;
-			}
-		}
-
-		.pages {
-
-			strong {
-				//@include pagination-current-item($has-anchor: false);
-				//float: $pagination-li-float;
-				//margin-left: $pagination-li-margin;
-			}
+			padding-left: .67em !important;
+			padding-right: .67em !important;
 		}
 	}
 
