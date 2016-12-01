@@ -204,7 +204,7 @@ class ReasonUpgrader_48_AddMediaCaptions extends reasonUpgraderDefault implement
 			$message .= "Creating relationship $relName... <br>";
 			$ownerId = create_allowable_relationship($relInfo["left_rel"], $relInfo["right_rel"], $relName, $relInfo["details"]);
 			if ($ownerId) {
-				$message .= "<span style='color:green'>Created relationsip with id $ownerId</span> <br>";
+				$message .= "<span style='color:green'>Created relationship with id $ownerId</span> <br>";
 			} else {
 				$message .= "<span style='color:red'>ERROR making relationship $relName!</span> <br>";
 			}
