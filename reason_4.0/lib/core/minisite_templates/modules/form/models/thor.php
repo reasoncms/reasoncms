@@ -1671,13 +1671,12 @@ class ThorFormModel extends DefaultFormModel
 	 */
 	function get_events_thor_configs()
 	{
-		$thor_xml = $this->_form->get_value('thor_content');
-		$event_ticket_nodes = array();
+		$thor_content = $this->_form->get_value('thor_content');
 		try {
-			$xml = new SimpleXMLElement($thor_xml);
+			$xml = simplexml_load_string($thor_content);
 			$event_ticket_nodes = $xml->xpath("/*/event_tickets");
 		} catch (Exception $exc) {
-			trigger_error($exc->getMessage() . " XML=$thor_xml");
+			trigger_error($exc->getMessage() . " thor_content=$thor_content");
 		}
 		return $event_ticket_nodes;
 	}
