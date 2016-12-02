@@ -2,8 +2,7 @@
 /**
  * @package reason
  * @subpackage html_editors
- * @author Nathan White
- * @author Matt Ryan
+ * @author Brian Jones
  */
 reason_include('html_editors/base.php');
 

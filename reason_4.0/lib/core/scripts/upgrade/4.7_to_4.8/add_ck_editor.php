@@ -57,15 +57,9 @@ class ReasonUpgrader_48_AddCKEditor implements reasonUpgraderInterface
 	{
 		$es = new entity_selector(id_of('master_admin'));
 		$es->add_type(id_of('html_editor_type'));
+		$es->add_relation('`entity`.`unique_name` = "ck_editor_html_editor"');
 		$result = $es->run_one();
-		foreach ($result as $editor) {
-			if ( in_array("CKEditor", $editor->get_values()) )
-				$ret = true;
-			else
-				$ret = false;
-		}
-		return $ret;
-
+		return !empty($result);
 	}
 
 	/**
@@ -77,7 +71,7 @@ class ReasonUpgrader_48_AddCKEditor implements reasonUpgraderInterface
 	{
 		if ( !$this->_editor_exists() )
 		{
-			$id = reason_create_entity( id_of('master_admin'), id_of('html_editor_type'), $this->user_id, 'CKEditor', array('html_editor_filename'=>'ck_editor.php'));
+			$id = reason_create_entity( id_of('master_admin'), id_of('html_editor_type'), $this->user_id, 'CKEditor', array('html_editor_filename'=>'ck_editor.php', 'unique_name' => 'ck_editor_html_editor'));
 			if(!empty($id))
 			{
 				echo '<p>Adding CKEditor was successful</p>';
