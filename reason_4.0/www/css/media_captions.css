@@ -1,0 +1,5 @@
+
+#contentRow, #contentItem,
+#contentmanualRow, #contentmanualItem {
+	visibility: hidden;
+}
