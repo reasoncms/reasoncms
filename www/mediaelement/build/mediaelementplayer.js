@@ -764,8 +764,8 @@ if (jQuery !== undefined) {
 							t['build' + feature](t, t.controls, t.layers, t.media);
 						} catch (e) {
 							// TODO: report control error
-							
-							
+							console.log('error building ' + feature);
+							console.log(e);
 						}
 					}
 				}
@@ -1561,8 +1561,11 @@ if (jQuery !== undefined) {
 
 				track = $(track);
 
+				var srclang = (track.attr('srclang')) ? track.attr('srclang').toLowerCase() : '';
+				var trackId = t.id + '_track_' + index + '_' + track.attr('kind') + '_' + srclang;
 				t.tracks.push({
-					srclang: (track.attr('srclang')) ? track.attr('srclang').toLowerCase() : '',
+					trackId:  trackId,
+					srclang: srclang,
 					src: track.attr('src'),
 					kind: track.attr('kind'),
 					label: track.attr('label') || '',
@@ -1631,8 +1634,8 @@ if (jQuery !== undefined) {
 						t['clean' + feature](t);
 					} catch (e) {
 						// TODO: report control error
-						
-						
+						console.log('error cleaning ' + feature);
+						console.log(e);
 					}
 				}
 			}
@@ -3481,6 +3484,7 @@ if (jQuery !== undefined) {
 	$.extend(mejs.MepDefaults, {
 		/**
 		 * Default language to start media using ISO 639-2 Language Code List (en, es, it, etc.)
+		 * If there are multiple tracks for one language, the last track node found is activated
 		 * @see https://www.loc.gov/standards/iso639-2/php/code_list.php
 		 * @type {String}
 		 */
@@ -3583,12 +3587,11 @@ if (jQuery !== undefined) {
 			if (t.options.toggleCaptionsButtonWhenOnlyOne && subtitleCount === 1){
 				// click
 				player.captionsButton.on('click',function() {
+					var trackId = "none";
 					if (player.selectedTrack === null) {
-						lang = player.tracks[0].srclang;
-					} else {
-						lang = 'none';
+						trackId = player.tracks[0].trackId;
 					}
-					player.setTrack(lang);
+					player.setTrack(trackId);
 				});
 			} else {
 				// hover or keyboard focus
@@ -3601,8 +3604,10 @@ if (jQuery !== undefined) {
 					})
 					// handle clicks to the language radio buttons
 					.on('click','input[type=radio]',function() {
-						lang = this.value;
-						player.setTrack(lang);
+						// value is trackId, same as the acutal id, and we're using it here
+						// because the "none" checkbox *doesn't* have a trackId
+						// to use, but we want to know when "none" is clicked
+						player.setTrack(this.value); 
 					})
 					.on('click','.mejs-captions-selector-label',function() {
 						$(this).siblings('input[type="radio"]').trigger('click');
@@ -3641,7 +3646,7 @@ if (jQuery !== undefined) {
 			for (i = 0; i < total; i++) {
 				kind = player.tracks[i].kind;
 				if (kind === 'subtitles' || kind === 'captions') {
-					player.addTrackButton(player.tracks[i].srclang, player.tracks[i].label);
+					player.addTrackButton(player.tracks[i].trackId, player.tracks[i].srclang, player.tracks[i].label);
 				}
 			}
 
@@ -3716,39 +3721,41 @@ if (jQuery !== undefined) {
 		},
 
 		/**
-		 *
-		 * @param {String} lang
+		 * 
+		 * @param {String} trackId, or "none" to disable captions
 		 */
-		setTrack: function(lang){
-
+		setTrack: function(trackId){
 			var
 				t = this,
 				i
 			;
 
-			t.captionsButton
-				.find('input[type="radio"]').prop('checked', false)
-				.end()
-				.find('.mejs-captions-selected').removeClass('mejs-captions-selected')
-				.end()
-				.find('input[value="' + lang + '"]').prop('checked', true)
-				.siblings('.mejs-captions-selector-label').addClass('mejs-captions-selected')
-			;
 
-			if (lang === 'none') {
-				t.selectedTrack = null;
+			if (trackId === 'none') {
 				t.captionsButton.removeClass('mejs-captions-enabled');
-			} else {
-				for (i=0; i<t.tracks.length; i++) {
-					if (t.tracks[i].srclang === lang) {
-						if (t.selectedTrack === null)
-							t.captionsButton.addClass('mejs-captions-enabled');
-						t.selectedTrack = t.tracks[i];
-						t.captions.attr('lang', t.selectedTrack.srclang);
-						t.displayCaptions();
-						break;
-					}
+				t.selectedTrack = null;
+				t.captionsButton.find('.mejs-captions-selected').removeClass('mejs-captions-selected');
+				return;
+			}
+
+			for (i=0; i<t.tracks.length; i++) {
+				if (t.tracks[i].trackId == trackId) {
+					if (t.selectedTrack === null) 
+						t.captionsButton.addClass('mejs-captions-enabled');
+					t.selectedTrack = t.tracks[i];
+					t.captions.attr('lang', t.selectedTrack.srclang);
+					t.displayCaptions();
+					break;
 				}
+			}
+			if (t.selectedTrack !== null) {
+				t.captionsButton
+					.find('input[type="radio"]').prop('checked', false)
+					.end()
+					.find('.mejs-captions-selected').removeClass('mejs-captions-selected')
+					.end()
+					.find('input[id="' + trackId + '"]').prop('checked', true)
+					.siblings('.mejs-captions-selector-label').addClass('mejs-captions-selected');
 			}
 		},
 
@@ -3782,7 +3789,7 @@ if (jQuery !== undefined) {
 
 					track.isLoaded = true;
 
-					t.enableTrackButton(track.srclang, track.label);
+					t.enableTrackButton(track);
 
 					t.loadNextTrack();
 
@@ -3817,7 +3824,7 @@ if (jQuery !== undefined) {
 						}
 					},
 					error: function() {
-						t.removeTrackButton(track.srclang);
+						t.removeTrackButton(track.trackId);
 						t.loadNextTrack();
 					}
 				});
@@ -3829,20 +3836,22 @@ if (jQuery !== undefined) {
 		 * @param {String} lang - The language code
 		 * @param {String} label
 		 */
-		enableTrackButton: function(lang, label) {
-			var t = this;
+		enableTrackButton: function(track) {
+			var t = this, 
+					lang = track.srclang, 
+					label = track.label
+				;
 
 			if (label === '') {
 				label = mejs.language.codes[lang] || lang;
 			}
 
-			t.captionsButton
-				.find('input[value=' + lang + ']').prop('disabled',false)
+			$("#" + track.trackId).prop('disabled', false)
 				.siblings('.mejs-captions-selector-label').html(label);
 
 			// auto select
 			if (t.options.startLanguage === lang) {
-				$('#' + t.id + '_captions_' + lang).prop('checked', true).trigger('click');
+				$("#" + track.trackId).prop('checked', true).trigger('click');
 			}
 
 			t.adjustLanguageBox();
@@ -3852,10 +3861,10 @@ if (jQuery !== undefined) {
 		 *
 		 * @param {String} lang
 		 */
-		removeTrackButton: function(lang) {
+		removeTrackButton: function(trackId) {
 			var t = this;
 
-			t.captionsButton.find('input[value=' + lang + ']').closest('li').remove();
+			t.captionsButton.find('input[id=' + trackId + ']').closest('li').remove();
 
 			t.adjustLanguageBox();
 		},
@@ -3865,15 +3874,18 @@ if (jQuery !== undefined) {
 		 * @param {String} lang - The language code
 		 * @param {String} label
 		 */
-		addTrackButton: function(lang, label) {
+		addTrackButton: function(trackId, lang, label) {
 			var t = this;
 			if (label === '') {
 				label = mejs.language.codes[lang] || lang;
 			}
 
+			// trackId is used in the value, too, because the "none" 
+			// caption option doesn't have a trackId but we need to be able
+			// to set it, too
 			t.captionsButton.find('ul').append(
 				$('<li class="mejs-captions-selector-list-item">'+
-					'<input type="radio" class="mejs-captions-selector-input" name="' + t.id + '_captions" id="' + t.id + '_captions_' + lang + '" value="' + lang + '" disabled="disabled" />' +
+					'<input type="radio" class="mejs-captions-selector-input" name="' + t.id + '_captions" id="' + trackId + '" value="' + trackId + '" disabled="disabled" />' +
 					'<label class="mejs-captions-selector-label">' + label + ' (loading)' + '</label>' +
 				'</li>')
 			);
