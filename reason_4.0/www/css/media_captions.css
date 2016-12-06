@@ -3,3 +3,18 @@
 #contentmanualRow, #contentmanualItem {
 	visibility: hidden;
 }
+
+.file-status-block {
+	display:inline;
+	margin-left:10px;
+	font-weight:bold;
+}
+.status-complete {
+	color:green;
+}
+.status-invalid {
+	color: red;
+}
+.status-loading {
+	color:black;
+}
