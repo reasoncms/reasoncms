@@ -1,5 +1,21 @@
 $(document).ready(function () {
 
+	var statusNode = $("<div class='file-status-block'></div>");
+	$("form *[id^=upload] .file_upload").append(statusNode);
+	$.fn.extend({
+		clearStatus: function () {
+			return $(this).removeClass(function (i, str) {
+				var toRemove = "";
+				$.each(str.split(" "), function (j, singleclass) {
+					if (/^status-/.test(singleclass)) {
+						toRemove += " " + singleclass;
+					}
+				});
+				return toRemove;
+			});
+		}
+	});
+
 	function promptUserForOverwrite() {
 		if ($('textarea[name=content_manual]').val().length > 0) {
 			return window.confirm("Do want to overwrite your manual changes with the uploaded file?")
@@ -11,13 +27,13 @@ $(document).ready(function () {
 		return /^WEBVTT/.test(text);
 	}
 
-	function handleTextLoaded(event) {
-		var fileContent = event.target.result;
+	function handleTextLoaded(event, fileNode) {
+		var reader = event.target,
+				fileContent = reader.result;
 
 		if (textIsValidWebVTT(fileContent)) {
 			var okToContinue = promptUserForOverwrite();
 			if (!okToContinue) {
-				console.log('bailed');
 				return;
 			}
 			$("input[name=content]").val(fileContent);
@@ -26,18 +42,44 @@ $(document).ready(function () {
 			// unless the manual editor has text
 			$('#contentmanualRow, #contentmanualItem').css("visibility", "hidden");
 			$('textarea[name=content_manual]').val("");
+
+			statusNode.clearStatus().addClass("status-complete").html("Upload Complete!");
 		} else {
-			alert("invalid file selected")
+			statusNode.clearStatus().addClass("status-invalid").html("Invalid File Type: text isn't WEBVTT, please try again");
+			fileNode.value = "";
 		}
 	}
 
 	function hookupFileChangeHandler() {
-		$("input[type=file]").on("change", function (e) {
+		$("input[type=file]").on("change", function () {
+			var fileFromUser = $(this).get(0).files[0];
+			var fileNode = this;
+
 			// https://developer.mozilla.org/en-US/docs/Web/API/FileReader
 			var reader = new FileReader();
-			reader.onload = handleTextLoaded;
-
-			var fileFromUser = $(this).get(0).files[0];
+			reader.onload = function (event) {
+				handleTextLoaded(event, fileNode);
+			};
+			reader.onloadstart = function (event) {
+				$("form input[type=submit]").prop("disabled", true);
+				// Make sure file is less than 100M
+				console.log(event, event.total >= 100000000);
+				if (event.total >= 100000000) {
+					reader.abort();
+					statusNode.clearStatus().addClass("status-invalid").html("File is too large, please try again");
+					fileNode.value = "";
+				}
+			};
+			reader.onloadend = function (event) {
+				$("form input[type=submit]").prop("disabled", false);
+			};
+			reader.onerror = function (event) {
+				statusNode.clearStatus().addClass("status-invalid").html("Upload or Type error, please try again");
+				fileNode.value = "";
+			};
+			reader.onprogress = function (event) {
+				statusNode.html("Loading captions from file...");
+			};
 			reader.readAsText(fileFromUser);
 		});
 	}
@@ -60,7 +102,8 @@ $(document).ready(function () {
 				// If no 'content' value, spawn some boilerplate WEBVTT text
 				text = "WEBVTT" + "\n\n" + "1\n" +
 						"00:00:01.000 --> 00:00:10.000\n" +
-						"This is the first line of text, displaying from 1-10 seconds\n";
+						"This is the first line of demo text, displaying from 1-10 seconds\n" +
+						"This is the second line\n";
 			}
 
 			// Since the text value may be large and slow to load,
