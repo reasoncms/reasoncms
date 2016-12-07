@@ -248,27 +248,11 @@ body { margin: 0;
        padding: 0; } 
 .AudioWrapper { position: relative; 
                 height: 46px; } 
-audio { width: 100%; 
-        position: absolute; 
-        bottom: 0; } 
 .VideoWrapper { position: absolute; 
                 left: 0; 
                 right: 0; 
                 top: 0; 
                 bottom: 0; } 
-video, 
-img { width: 100%; 
-      height: auto; 
-      max-height: 100%; }
-video, 
-canvas { top: 0; 
-         left: 0; 
-         width: 100%; 
-         max-width: 100%; 
-         height: auto; }
-video { height: 100%; 
-        position: absolute;
-        z-index:10000; } 
 body { margin: 0; 
        height: 100%; 
        width: 100%; }
@@ -291,6 +275,22 @@ if ($media_work && $media_work->get_value('integration_library') && $media_work-
 elseif ($media_work && $media_work->get_value('av_type') == '')
 {
 	echo '<script src="/reason_package/reason_4.0/lib/core/classes/media/api/media_api_flv.js"></script>'."\n";
+}
+if ($media_work && $media_work->get_value('integration_library') == 'zencoder') {
+	echo '<script src="' . REASON_PACKAGE_HTTP_BASE_PATH . 'mediaelement/build/mediaelement-and-player.min.js"></script>';
+	echo '<link rel="stylesheet" href="' . REASON_PACKAGE_HTTP_BASE_PATH . 'mediaelement/build/mediaelementplayer.css" />';
+	echo <<<EOT
+	<script>
+		$(document).ready(function(){
+			$("video,audio").mediaelementplayer({
+				iPadUseNativeControls: true,
+				iPhoneUseNativeControls: true,
+				AndroidUseNativeControls: true,
+				pluginPath: '../build/'
+			});
+		});
+	</script>
+EOT;
 }
 
 echo '</head>'."\n";
