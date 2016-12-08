@@ -558,30 +558,6 @@ class ZencoderMediaWorkDisplayer implements MediaWorkDisplayerInterface
 			$markup .= $this->_get_video_source_tag($media_file, $media_file->get_value('mime_type'));
 		}
 		
-		if ($mp4 != null)
-		{
-			// Flash Video Fallback markup
-			$avd = new reasonAVDisplay();
-			$avd->set_video_dimensions($embed_width, $embed_height);
-			
-			$avd_autoplay = $this->autostart ? 'true' : 'false';
-			$avd->set_parameter('flv', 'autostart', $avd_autoplay);
-			$avd->set_parameter('flv', 'controlbar', 'over');
-			
-			if ($poster_url)
-				$avd->set_placard_image($poster_url);
-			
-			if ( !$this->show_controls )
-				$avd->set_parameter('flv', 'controlbar', '0');
-			
-			//$mp4->set_value('media_format', 'Flash Video');
-			$mp4->set_value('url', $this->_match_protocol($mp4->get_value('url')));
-			
-			$avd_markup = $avd->get_embedding_markup_for_flash_video($mp4);
-			// return $avd_markup; // uncomment this if testing the flash player
-			$markup .= $avd_markup;
-		}
-		
 		// Add caption track files, if any exist
 		$es = new entity_selector();
 		$es->add_type(id_of('av_captions'));
@@ -784,24 +760,6 @@ class ZencoderMediaWorkDisplayer implements MediaWorkDisplayerInterface
 				$mp3 = $file;
 		}
 		
-		// Fall back to flash player
-		if ($mp3)
-		{
-			$avd = new reasonAVDisplay();
-			
-			$avd_autoplay = $this->autostart ? 'true' : 'false';
-			$avd->set_parameter('flv', 'autostart', $avd_autoplay);
-			
-			if ( !$this->show_controls )
-				$avd->set_parameter('flv', 'controlbar', '0');
-			
-			$mp3->set_value('url', $this->_match_protocol($mp3->get_value('url')));
-			
-			$avd_markup = $avd->get_embedding_markup_For_flash_video($mp3);
-			$markup .= $avd_markup;
-			
-			// return $avd_markup;  // uncomment this if testing the flash player
-		}
 		$markup .= '</audio>'."\n";
 
 		return $markup;
@@ -845,6 +803,7 @@ class ZencoderMediaWorkDisplayer implements MediaWorkDisplayerInterface
 //		return array(
 //			"iPhoneUseNativeControls" => true,
 //			"AndroidUseNativeControls" => true,
+//			"pluginPath" => REASON_PACKAGE_HTTP_BASE_PATH . "mediaelement/build/",
 //			"features" => array(
 //				"playpause", "current", "progress", "duration", "tracks",
 //				"volume", "fullscreen", "googleanalytics"
