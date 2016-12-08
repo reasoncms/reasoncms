@@ -834,5 +834,24 @@ class ZencoderMediaWorkDisplayer implements MediaWorkDisplayerInterface
 			$this->analytics_on = false;
 		}
 	}
+	
+	/**
+	 * Array of parameters to pass to encode as json and pass to 
+	 * $("video,audio").mediaelementplayer($params_go_here);
+	 */
+	public function get_mediaelementjs_params()
+	{
+		// EXAMPLE
+//		return array(
+//			"iPhoneUseNativeControls" => true,
+//			"AndroidUseNativeControls" => true,
+//			"features" => array(
+//				"playpause", "current", "progress", "duration", "tracks",
+//				"volume", "fullscreen", "googleanalytics"
+//			),
+//			"googleAnalyticsTitle" => $this->media_work->get_value("name")
+//		);
+	}
+
 }
 ?>
