@@ -82,7 +82,7 @@
 		function init_head_items()
 		{
 			$this->head_items->add_javascript(JQUERY_URL, true); // uses jquery - jquery should be at top
-			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH .'event.js');
+			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH .'event.js?v=2');
 			if ($this->geolocation_enabled())
 			{
 				$base_gmap_url = (HTTPS_AVAILABLE) ? 'https://maps-api-ssl.google.com/maps/api/js' : 'http://maps.google.com/maps/api/js';
