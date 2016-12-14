@@ -70,7 +70,9 @@ module.exports = function(grunt) {
 					'src/js/mediaelementplayer-feature-skipback.js',
 					'src/js/mediaelementplayer-feature-jumpforward.js',
 					'src/js/mediaelementplayer-feature-postroll.js',
-					'src/js/mediaelementplayer-feature-markers.js'
+					'src/js/mediaelementplayer-feature-markers.js',
+					'src/js/mediaelementplayer-feature-googleanalytics.js'
+
 					]),
 				dest: 'build/mediaelementplayer.js'
 			},
