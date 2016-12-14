@@ -73,27 +73,40 @@
 			// If browser will do native captions, prefer mejs captions, loop through tracks and hide
 			if (t.domNode.textTracks) {
 				for (i = t.domNode.textTracks.length - 1; i >= 0; i--) {
-					t.domNode.textTracks[i].mode = "hidden";
+					t.domNode.textTracks[i].mode = 'hidden';
 				}
 			}
 
 			t.cleartracks(player);
 			player.chapters =
-					$('<div class="mejs-chapters mejs-layer"></div>')
+					$('<div class="' + t.options.classPrefix + 'chapters ' +
+					                   t.options.classPrefix + 'layer"></div>')
 						.prependTo(layers).hide();
 			player.captions =
-					$('<div class="mejs-captions-layer mejs-layer"><div class="mejs-captions-position mejs-captions-position-hover" ' +
-					attr + '><span class="mejs-captions-text"></span></div></div>')
+					$('<div class="' + t.options.classPrefix + 'captions-layer ' +
+					                   t.options.classPrefix + 'layer">' +
+						'<div class="' + t.options.classPrefix + 'captions-position ' +
+						                 t.options.classPrefix + 'captions-position-hover" ' +
+							attr + '>' +
+								'<span class="' + t.options.classPrefix + 'captions-text"></span></div></div>')
 						.prependTo(layers).hide();
-			player.captionsText = player.captions.find('.mejs-captions-text');
+			player.captionsText = player.captions.find('.' + t.options.classPrefix + 'captions-text');
 			player.captionsButton =
-					$('<div class="mejs-button mejs-captions-button">' +
-						'<button type="button" aria-controls="' + t.id + '" title="' + tracksTitle + '" aria-label="' + tracksTitle + '"></button>' +
-						'<div class="mejs-captions-selector mejs-offscreen">' +
-							'<ul class="mejs-captions-selector-list">'+
-								'<li class="mejs-captions-selector-list-item">'+
-									'<input type="radio" class="mejs-captions-selector-input" name="' + player.id + '_captions" id="' + player.id + '_captions_none" value="none" checked="checked" />' +
-									'<label class="mejs-captions-selector-label mejs-captions-selected" for="' + player.id + '_captions_none">' + mejs.i18n.t('mejs.none') + '</label>' +
+					$('<div class="' + t.options.classPrefix + 'button ' +
+					                   t.options.classPrefix + 'captions-button">' +
+						'<button type="button" aria-controls="' + t.id + '" title="' + tracksTitle + '" ' +
+							'aria-label="' + tracksTitle + '"></button>' +
+						'<div class="' + t.options.classPrefix + 'captions-selector ' +
+						                 t.options.classPrefix + 'offscreen">' +
+							'<ul class="' + t.options.classPrefix + 'captions-selector-list">'+
+								'<li class="' + t.options.classPrefix + 'captions-selector-list-item">'+
+									'<input type="radio" class="' + t.options.classPrefix + 'captions-selector-input" ' +
+										'name="' + player.id + '_captions" id="' + player.id + '_captions_none" ' +
+										'value="none" checked="checked" />' +
+									'<label class="' + t.options.classPrefix + 'captions-selector-label ' +
+									                   t.options.classPrefix + 'captions-selected" ' +
+										'for="' + player.id + '_captions_none">' + mejs.i18n.t('mejs.none') +
+									'</label>' +
 								'</li>'	+
 							'</ul>' +
 						'</div>' +
@@ -113,7 +126,7 @@
 			if (t.options.toggleCaptionsButtonWhenOnlyOne && subtitleCount === 1){
 				// click
 				player.captionsButton.on('click',function() {
-					var trackId = "none";
+					var trackId = 'none';
 					if (player.selectedTrack === null) {
 						trackId = player.tracks[0].trackId;
 					}
@@ -123,19 +136,21 @@
 				// hover or keyboard focus
 				player.captionsButton
 					.on('mouseenter focusin', function() {
-						$(this).find('.mejs-captions-selector').removeClass('mejs-offscreen');
+						$(this).find('.' + t.options.classPrefix + 'captions-selector')
+							.removeClass(t.options.classPrefix + 'offscreen');
 					})
 					.on('mouseleave focusout', function() {
-						$(this).find(".mejs-captions-selector").addClass("mejs-offscreen");
+						$(this).find('.' + t.options.classPrefix + 'captions-selector')
+							.addClass(t.options.classPrefix + 'offscreen');
 					})
 					// handle clicks to the language radio buttons
 					.on('click','input[type=radio]',function() {
-						// value is trackId, same as the acutal id, and we're using it here
-						// because the "none" checkbox *doesn't* have a trackId
+						// value is trackId, same as the actual id, and we're using it here
+						// because the "none" checkbox doesn't have a trackId
 						// to use, but we want to know when "none" is clicked
-						player.setTrack(this.value); 
+						player.setTrack(this.value);
 					})
-					.on('click','.mejs-captions-selector-label',function() {
+					.on('click', '.' + t.options.classPrefix + 'captions-selector-label', function() {
 						$(this).siblings('input[type="radio"]').trigger('click');
 					})
 					//Allow up/down arrow to change the selected radio without changing the volume.
@@ -149,17 +164,20 @@
 				player.container
 					.on('controlsshown', function () {
 						// push captions above controls
-						player.container.find('.mejs-captions-position').addClass('mejs-captions-position-hover');
+						player.container.find('.' + t.options.classPrefix + 'captions-position')
+							.addClass(t.options.classPrefix + 'captions-position-hover');
 
 					})
 					.on('controlshidden', function () {
 						if (!media.paused) {
 							// move back to normal place
-							player.container.find('.mejs-captions-position').removeClass('mejs-captions-position-hover');
+							player.container.find('.' + t.options.classPrefix + 'captions-position')
+								.removeClass(t.options.classPrefix + 'captions-position-hover');
 						}
 					});
 			} else {
-				player.container.find('.mejs-captions-position').addClass('mejs-captions-position-hover');
+				player.container.find('.' + t.options.classPrefix + 'captions-position')
+					.addClass(t.options.classPrefix + 'captions-position-hover');
 			}
 
 			player.trackToLoad = -1;
@@ -200,14 +218,15 @@
 				function () {
 					// chapters
 					if (player.hasChapters) {
-						player.chapters.removeClass('mejs-offscreen');
-						player.chapters.fadeIn(200).height(player.chapters.find('.mejs-chapter').outerHeight());
+						player.chapters.removeClass(t.options.classPrefix + 'offscreen');
+						player.chapters.fadeIn(200)
+							.height(player.chapters.find('.' + t.options.classPrefix + 'chapter').outerHeight());
 					}
 				},
 				function () {
 					if (player.hasChapters && !media.paused) {
 						player.chapters.fadeOut(200, function() {
-							$(this).addClass('mejs-offscreen');
+							$(this).addClass(t.options.classPrefix + 'offscreen');
 							$(this).css('display','block');
 						});
 					}
@@ -219,7 +238,7 @@
 
 			// check for autoplay
 			if (player.node.getAttribute('autoplay') !== null) {
-				player.chapters.addClass('mejs-offscreen');
+				player.chapters.addClass(t.options.classPrefix + 'offscreen');
 			}
 		},
 
@@ -256,32 +275,33 @@
 				i
 			;
 
+			t.captionsButton
+				.find('input[type="radio"]').prop('checked', false)
+				.end()
+				.find('.' + t.options.classPrefix + 'captions-selected')
+				.removeClass(t.options.classPrefix + 'captions-selected')
+				.end()
+				.find('input[value="' + trackId + '"]').prop('checked', true)
+				.siblings('.' + t.options.classPrefix + 'captions-selector-label')
+				.addClass(t.options.classPrefix + 'captions-selected')
+			;
 
 			if (trackId === 'none') {
-				t.captionsButton.removeClass('mejs-captions-enabled');
 				t.selectedTrack = null;
-				t.captionsButton.find('.mejs-captions-selected').removeClass('mejs-captions-selected');
+				t.captionsButton.removeClass(t.options.classPrefix + 'captions-enabled');
 				return;
 			}
 
-			for (i=0; i<t.tracks.length; i++) {
-				if (t.tracks[i].trackId == trackId) {
-					if (t.selectedTrack === null) 
-						t.captionsButton.addClass('mejs-captions-enabled');
+			for (i = 0; i<t.tracks.length; i++) {
+				if (t.tracks[i].trackId === trackId) {
+					if (t.selectedTrack === null) {
+						t.captionsButton.addClass(t.options.classPrefix + 'captions-enabled');
+					}
 					t.selectedTrack = t.tracks[i];
 					t.captions.attr('lang', t.selectedTrack.srclang);
 					t.displayCaptions();
 					break;
 				}
-			}
-			if (t.selectedTrack !== null) {
-				t.captionsButton
-					.find('input[type="radio"]').prop('checked', false)
-					.end()
-					.find('.mejs-captions-selected').removeClass('mejs-captions-selected')
-					.end()
-					.find('input[id="' + trackId + '"]').prop('checked', true)
-					.siblings('.mejs-captions-selector-label').addClass('mejs-captions-selected');
 			}
 		},
 
@@ -369,11 +389,11 @@
 				;
 
 			if (label === '') {
-				label = mejs.language.codes[lang] || lang;
+				label = mejs.i18n.t(mejs.language.codes[lang]) || lang;
 			}
 
 			$("#" + track.trackId).prop('disabled', false)
-				.siblings('.mejs-captions-selector-label').html(label);
+				.siblings('.' + t.options.classPrefix + 'captions-selector-label').html(label);
 
 			// auto select
 			if (t.options.startLanguage === lang) {
@@ -385,7 +405,7 @@
 
 		/**
 		 *
-		 * @param {String} lang
+		 * @param {String} trackId
 		 */
 		removeTrackButton: function(trackId) {
 			var t = this;
@@ -397,29 +417,31 @@
 
 		/**
 		 *
+		 * @param {String} trackId
 		 * @param {String} lang - The language code
 		 * @param {String} label
 		 */
 		addTrackButton: function(trackId, lang, label) {
 			var t = this;
 			if (label === '') {
-				label = mejs.language.codes[lang] || lang;
+				label = mejs.i18n.t(mejs.language.codes[lang]) || lang;
 			}
 
 			// trackId is used in the value, too, because the "none" 
 			// caption option doesn't have a trackId but we need to be able
 			// to set it, too
 			t.captionsButton.find('ul').append(
-				$('<li class="mejs-captions-selector-list-item">'+
-					'<input type="radio" class="mejs-captions-selector-input" name="' + t.id + '_captions" id="' + trackId + '" value="' + trackId + '" disabled="disabled" />' +
-					'<label class="mejs-captions-selector-label">' + label + ' (loading)' + '</label>' +
+				$('<li class="' + t.options.classPrefix + 'captions-selector-list-item">' +
+					'<input type="radio" class="' + t.options.classPrefix + 'captions-selector-input" ' +
+						'name="' + t.id + '_captions" id="' + trackId + '" value="' + trackId + '" disabled="disabled" />' +
+					'<label class="' + t.options.classPrefix + 'captions-selector-label">' + label + ' (loading)' + '</label>' +
 				'</li>')
 			);
 
 			t.adjustLanguageBox();
 
 			// remove this from the dropdownlist (if it exists)
-			t.container.find('.mejs-captions-translations option[value=' + lang + ']').remove();
+			t.container.find('.' + t.options.classPrefix + 'captions-translations option[value=' + lang + ']').remove();
 		},
 
 		/**
@@ -428,9 +450,9 @@
 		adjustLanguageBox:function() {
 			var t = this;
 			// adjust the size of the outer box
-			t.captionsButton.find('.mejs-captions-selector').height(
-				t.captionsButton.find('.mejs-captions-selector-list').outerHeight(true) +
-				t.captionsButton.find('.mejs-captions-translations').outerHeight(true)
+			t.captionsButton.find('.' + t.options.classPrefix + 'captions-selector').height(
+				t.captionsButton.find('.' + t.options.classPrefix + 'captions-selector-list').outerHeight(true) +
+				t.captionsButton.find('.' + t.options.classPrefix + 'captions-translations').outerHeight(true)
 			);
 		},
 
@@ -470,19 +492,20 @@
 
 			var
 				t = this,
-				i,
-				track = t.selectedTrack
+				track = t.selectedTrack,
+				i
 			;
 
 			if (track !== null && track.isLoaded) {
-				for (i=0; i<track.entries.times.length; i++) {
-					if (t.media.currentTime >= track.entries.times[i].start && t.media.currentTime <= track.entries.times[i].stop) {
-						// Set the line before the timecode as a class so the cue can be targeted if needed
-						t.captionsText.html(track.entries.text[i]).attr('class', 'mejs-captions-text ' + (track.entries.times[i].identifier || ''));
-						t.captions.show().height(0);
-						return; // exit out if one is visible;
-					}
+				i = t.searchTrackPosition(track.entries, t.media.currentTime);
+				if (i > -1) {
+					// Set the line before the timecode as a class so the cue can be targeted if needed
+					t.captionsText.html(track.entries[i].text)
+						.attr('class', t.options.classPrefix + 'captions-text ' + (track.entries[i].identifier || ''));
+					t.captions.show().height(0);
+					return; // exit out if one is visible;
 				}
+
 				t.captions.hide();
 			} else {
 				t.captions.hide();
@@ -497,7 +520,7 @@
 			var t = this;
 
 			t.slides = track;
-			t.slides.entries.imgs = [t.slides.entries.text.length];
+			t.slides.entries.imgs = [t.slides.entries.length];
 			t.showSlide(0);
 
 		},
@@ -512,12 +535,12 @@
 			}
 
 			var t = this,
-				url = t.slides.entries.text[index],
-				img = t.slides.entries.imgs[index];
+				url = t.slides.entries[index].text,
+				img = t.slides.entries[index].imgs;
 
 			if (img === undefined || img.fadeIn === undefined) {
 
-				t.slides.entries.imgs[index] = img = $('<img src="' + url + '">')
+				t.slides.entries[index].imgs = img = $('<img src="' + url + '">')
 						.on('load', function() {
 							img.appendTo(t.slidesContainer)
 								.hide()
@@ -550,16 +573,12 @@
 			var
 				t = this,
 				slides = t.slides,
-				i
+				i = t.searchTrackPosition(slides.entries, t.media.currentTime)
 			;
 
-			for (i=0; i<slides.entries.times.length; i++) {
-				if (t.media.currentTime >= slides.entries.times[i].start && t.media.currentTime <= slides.entries.times[i].stop){
-
-					t.showSlide(i);
-
-					return; // exit out if one is visible;
-				}
+			if (i > -1) {
+				t.showSlide(i);
+				return; // exit out if one is visible;
 			}
 		},
 
@@ -591,36 +610,38 @@
 				dur,
 				percent = 0,
 				usedPercent = 0,
-				total = chapters.entries.times.length
+				total = chapters.entries.length
 			;
 
 			t.chapters.empty();
 
 			for (i = 0; i<total; i++) {
-				dur = chapters.entries.times[i].stop - chapters.entries.times[i].start;
+				dur = chapters.entries[i].stop - chapters.entries[i].start;
 				percent = Math.floor(dur / t.media.duration * 100);
 				if (percent + usedPercent > 100 || // too large
-					i === chapters.entries.times.length-1 && percent + usedPercent < 100) // not going to fill it in
+					i === chapters.entries.length-1 && percent + usedPercent < 100) // not going to fill it in
 					{
 					percent = 100 - usedPercent;
 				}
-				//width = Math.floor(t.width * dur / t.media.duration);
-				//left = Math.floor(t.width * chapters.entries.times[i].start / t.media.duration);
-				//if (left + width > t.width) {
-				//	width = t.width - left;
-				//}
 
 				t.chapters.append( $(
-					'<div class="mejs-chapter" rel="' + chapters.entries.times[i].start + '" style="left: ' + usedPercent.toString() + '%;width: ' + percent.toString() + '%;">' +
-						'<div class="mejs-chapter-block' + ((i==chapters.entries.times.length-1) ? ' mejs-chapter-block-last' : '') + '">' +
-							'<span class="ch-title">' + chapters.entries.text[i] + '</span>' +
-							'<span class="ch-time">' + mejs.Utility.secondsToTimeCode(chapters.entries.times[i].start, t.options.alwaysShowHours) + '&ndash;' + mejs.Utility.secondsToTimeCode(chapters.entries.times[i].stop, t.options.alwaysShowHours) + '</span>' +
+					'<div class="' +  t.options.classPrefix + 'chapter" ' +
+						'rel="' + chapters.entries.times[i].start + '" ' +
+						'style="left: ' + usedPercent.toString() + '%; width: ' + percent.toString() + '%;">' +
+						'<div class="' +  t.options.classPrefix + 'chapter-block' +
+							((i === chapters.entries.length - 1) ? ' ' +  t.options.classPrefix + 'chapter-block-last' : '') + '">' +
+							'<span class="ch-title">' + chapters.entries[i].text + '</span>' +
+							'<span class="ch-time">' +
+								mejs.Utility.secondsToTimeCode(chapters.entries[i].start, t.options.alwaysShowHours) +
+								'&ndash;' +
+								mejs.Utility.secondsToTimeCode(chapters.entries[i].stop, t.options.alwaysShowHours) +
+							'</span>' +
 						'</div>' +
 					'</div>'));
 				usedPercent += percent;
 			}
 
-			t.chapters.find('div.mejs-chapter').click(function() {
+			t.chapters.find('.' +  t.options.classPrefix + 'chapter').click(function() {
 				t.media.setCurrentTime( parseFloat( $(this).attr('rel') ) );
 				if (t.media.paused) {
 					t.media.play();
@@ -628,6 +649,38 @@
 			});
 
 			t.chapters.show();
+		},
+		/**
+		 * Perform binary search to look for proper track index
+		 *
+		 * @param {Object[]} tracks
+		 * @param {Number} currentTime
+		 * @return {Number}
+		 */
+		searchTrackPosition: function(tracks, currentTime) {
+			var
+				lo = 0,
+				hi = tracks.length - 1,
+				mid,
+				start,
+				stop
+			;
+
+			while (lo <= hi) {
+				mid = ((lo + hi) >> 1);
+				start = tracks[mid].start;
+				stop = tracks[mid].stop;
+
+				if (currentTime >= start && currentTime < stop) {
+					return mid;
+				} else if (start < currentTime) {
+					lo = mid + 1;
+				} else if (start > currentTime) {
+					hi = mid - 1;
+				}
+			}
+
+			return -1;
 		}
 	});
 
@@ -638,61 +691,61 @@
 	 */
 	mejs.language = {
 		codes:  {
-			af: mejs.i18n.t('mejs.afrikaans'),
-			sq: mejs.i18n.t('mejs.albanian'),
-			ar: mejs.i18n.t('mejs.arabic'),
-			be: mejs.i18n.t('mejs.belarusian'),
-			bg: mejs.i18n.t('mejs.bulgarian'),
-			ca: mejs.i18n.t('mejs.catalan'),
-			zh: mejs.i18n.t('mejs.chinese'),
-			'zh-cn': mejs.i18n.t('mejs.chinese-simplified'),
-			'zh-tw': mejs.i18n.t('mejs.chines-traditional'),
-			hr: mejs.i18n.t('mejs.croatian'),
-			cs: mejs.i18n.t('mejs.czech'),
-			da: mejs.i18n.t('mejs.danish'),
-			nl: mejs.i18n.t('mejs.dutch'),
-			en: mejs.i18n.t('mejs.english'),
-			et: mejs.i18n.t('mejs.estonian'),
-			fl: mejs.i18n.t('mejs.filipino'),
-			fi: mejs.i18n.t('mejs.finnish'),
-			fr: mejs.i18n.t('mejs.french'),
-			gl: mejs.i18n.t('mejs.galician'),
-			de: mejs.i18n.t('mejs.german'),
-			el: mejs.i18n.t('mejs.greek'),
-			ht: mejs.i18n.t('mejs.haitian-creole'),
-			iw: mejs.i18n.t('mejs.hebrew'),
-			hi: mejs.i18n.t('mejs.hindi'),
-			hu: mejs.i18n.t('mejs.hungarian'),
-			is: mejs.i18n.t('mejs.icelandic'),
-			id: mejs.i18n.t('mejs.indonesian'),
-			ga: mejs.i18n.t('mejs.irish'),
-			it: mejs.i18n.t('mejs.italian'),
-			ja: mejs.i18n.t('mejs.japanese'),
-			ko: mejs.i18n.t('mejs.korean'),
-			lv: mejs.i18n.t('mejs.latvian'),
-			lt: mejs.i18n.t('mejs.lithuanian'),
-			mk: mejs.i18n.t('mejs.macedonian'),
-			ms: mejs.i18n.t('mejs.malay'),
-			mt: mejs.i18n.t('mejs.maltese'),
-			no: mejs.i18n.t('mejs.norwegian'),
-			fa: mejs.i18n.t('mejs.persian'),
-			pl: mejs.i18n.t('mejs.polish'),
-			pt: mejs.i18n.t('mejs.portuguese'),
-			ro: mejs.i18n.t('mejs.romanian'),
-			ru: mejs.i18n.t('mejs.russian'),
-			sr: mejs.i18n.t('mejs.serbian'),
-			sk: mejs.i18n.t('mejs.slovak'),
-			sl: mejs.i18n.t('mejs.slovenian'),
-			es: mejs.i18n.t('mejs.spanish'),
-			sw: mejs.i18n.t('mejs.swahili'),
-			sv: mejs.i18n.t('mejs.swedish'),
-			tl: mejs.i18n.t('mejs.tagalog'),
-			th: mejs.i18n.t('mejs.thai'),
-			tr: mejs.i18n.t('mejs.turkish'),
-			uk: mejs.i18n.t('mejs.ukrainian'),
-			vi: mejs.i18n.t('mejs.vietnamese'),
-			cy: mejs.i18n.t('mejs.welsh'),
-			yi: mejs.i18n.t('mejs.yiddish')
+			af: 'mejs.afrikaans',
+			sq: 'mejs.albanian',
+			ar: 'mejs.arabic',
+			be: 'mejs.belarusian',
+			bg: 'mejs.bulgarian',
+			ca: 'mejs.catalan',
+			zh: 'mejs.chinese',
+			'zh-cn': 'mejs.chinese-simplified',
+			'zh-tw': 'mejs.chines-traditional',
+			hr: 'mejs.croatian',
+			cs: 'mejs.czech',
+			da: 'mejs.danish',
+			nl: 'mejs.dutch',
+			en: 'mejs.english',
+			et: 'mejs.estonian',
+			fl: 'mejs.filipino',
+			fi: 'mejs.finnish',
+			fr: 'mejs.french',
+			gl: 'mejs.galician',
+			de: 'mejs.german',
+			el: 'mejs.greek',
+			ht: 'mejs.haitian-creole',
+			iw: 'mejs.hebrew',
+			hi: 'mejs.hindi',
+			hu: 'mejs.hungarian',
+			is: 'mejs.icelandic',
+			id: 'mejs.indonesian',
+			ga: 'mejs.irish',
+			it: 'mejs.italian',
+			ja: 'mejs.japanese',
+			ko: 'mejs.korean',
+			lv: 'mejs.latvian',
+			lt: 'mejs.lithuanian',
+			mk: 'mejs.macedonian',
+			ms: 'mejs.malay',
+			mt: 'mejs.maltese',
+			no: 'mejs.norwegian',
+			fa: 'mejs.persian',
+			pl: 'mejs.polish',
+			pt: 'mejs.portuguese',
+			ro: 'mejs.romanian',
+			ru: 'mejs.russian',
+			sr: 'mejs.serbian',
+			sk: 'mejs.slovak',
+			sl: 'mejs.slovenian',
+			es: 'mejs.spanish',
+			sw: 'mejs.swahili',
+			sv: 'mejs.swedish',
+			tl: 'mejs.tagalog',
+			th: 'mejs.thai',
+			tr: 'mejs.turkish',
+			uk: 'mejs.ukrainian',
+			vi: 'mejs.vietnamese',
+			cy: 'mejs.welsh',
+			yi: 'mejs.yiddish'
 		}
 	};
 
@@ -729,7 +782,7 @@
 				var
 					i = 0,
 					lines = mejs.TrackFormatParser.split2(trackText, /\r?\n/),
-					entries = {text:[], times:[]},
+					entries = [],
 					timecode,
 					text,
 					identifier;
@@ -749,13 +802,11 @@
 							i++;
 						}
 						text = $.trim(text).replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, "<a href='$1' target='_blank'>$1</a>");
-						// Text is in a different array so I can use .join
-						entries.text.push(text);
-						entries.times.push(
-						{
+						entries.push({
 							identifier: identifier,
 							start: (mejs.Utility.convertSMPTEtoSeconds(timecode[1]) === 0) ? 0.200 : mejs.Utility.convertSMPTEtoSeconds(timecode[1]),
 							stop: mejs.Utility.convertSMPTEtoSeconds(timecode[3]),
+							text: text,
 							settings: timecode[5]
 						});
 					}
@@ -779,8 +830,8 @@
 					lines = container.find("p"),
 					styleNode = trackText.find("#" + container.attr("style")),
 					styles,
-					text,
-					entries = {text:[], times:[]};
+					entries = []
+				;
 
 
 				if (styleNode.length) {
@@ -794,27 +845,31 @@
 				}
 
 				for(i = 0; i<lines.length; i++) {
-					var style;
-					var _temp_times = {
-						start: null,
-						stop: null,
-						style: null
-					};
-					if (lines.eq(i).attr("begin")) _temp_times.start = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i).attr("begin"));
-					if (!_temp_times.start && lines.eq(i-1).attr("end")) _temp_times.start = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i-1).attr("end"));
-					if (lines.eq(i).attr("end")) _temp_times.stop = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i).attr("end"));
-					if (!_temp_times.stop && lines.eq(i+1).attr("begin")) _temp_times.stop = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i+1).attr("begin"));
+					var
+						style,
+						_temp = {
+							start: null,
+							stop: null,
+							style: null,
+							text: null
+						}
+					;
+
+					if (lines.eq(i).attr("begin")) _temp.start = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i).attr("begin"));
+					if (!_temp.start && lines.eq(i-1).attr("end")) _temp.start = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i-1).attr("end"));
+					if (lines.eq(i).attr("end")) _temp.stop = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i).attr("end"));
+					if (!_temp.stop && lines.eq(i+1).attr("begin")) _temp.stop = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i+1).attr("begin"));
+
 					if (styles) {
 						style = "";
 						for (var _style in styles) {
 							style += _style + ":" + styles[_style] + ";";
 						}
 					}
-					if (style) _temp_times.style = style;
-					if (_temp_times.start === 0) _temp_times.start = 0.200;
-					entries.times.push(_temp_times);
-					text = $.trim(lines.eq(i).html()).replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, "<a href='$1' target='_blank'>$1</a>");
-					entries.text.push(text);
+					if (style) _temp.style = style;
+					if (_temp.start === 0) _temp.start = 0.200;
+					_temp.text = $.trim(lines.eq(i).html()).replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, "<a href='$1' target='_blank'>$1</a>");
+					entries.push(_temp);
 				}
 				return entries;
 			}

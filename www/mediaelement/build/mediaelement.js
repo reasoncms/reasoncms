@@ -1746,7 +1746,8 @@ mejs.version = '3.0';
 					firstScriptTag = doc.getElementsByTagName('script')[0],
 					done = false;
 
-				script.src = 'https://cdn.dashjs.org/latest/dash.all.min.js';
+				// script.src = 'https://cdn.dashjs.org/latest/dash.all.min.js';
+				script.src = 'https://cdn.dashjs.org/latest/dash.mediaplayer.min.js';
 
 				// Attach handlers for all browsers
 				script.onload = script.onreadystatechange = function () {
@@ -2642,7 +2643,7 @@ mejs.version = '3.0';
 									break;
 
 								default:
-									console.log('youtube ' + youtube.id, propName, 'UNSUPPORTED property');
+									
 							}
 
 						} else {
@@ -3211,7 +3212,7 @@ mejs.version = '3.0';
 									}
 									break;
 								default:
-									console.log('vimeo ' + vimeo.id, propName, 'UNSUPPORTED property');
+									
 							}
 
 						} else {
@@ -3707,7 +3708,7 @@ mejs.version = '3.0';
 									break;
 
 								default:
-									console.log('dm ' + dm.id, propName, 'UNSUPPORTED property');
+									
 							}
 
 						} else {
@@ -4094,7 +4095,7 @@ mejs.version = '3.0';
 									break;
 
 								default:
-									console.log('facebook ' + fbWrapper.id, propName, 'UNSUPPORTED property');
+									
 							}
 
 						} else {
@@ -4586,7 +4587,7 @@ mejs.version = '3.0';
 									break;
 
 								default:
-									console.log('sc ' + sc.id, propName, 'UNSUPPORTED property');
+									
 							}
 
 						} else {
@@ -4981,11 +4982,11 @@ mejs.version = '3.0';
 								try {
 									flash.flashApi['fire_' + methodName]();
 								} catch (e) {
-									console.log(e);
+									
 								}
 
 							} else {
-								console.log('flash', 'missing method', methodName);
+								
 							}
 						} else {
 							// store for after "READY" event fires
@@ -5775,6 +5776,9 @@ mejs.version = '3.0';
 
 			// mediaelementplayer-feature-jumpforward
 			"mejs.time-jump-forward": ["Jump forward 1 second", "Jump forward %1 seconds"],
+
+			// mediaelementplayer-feature-loop
+			"mejs.loop": "Toggle Loop",
 
 			// mediaelementplayer-feature-playpause
 			"mejs.play": "Play",
