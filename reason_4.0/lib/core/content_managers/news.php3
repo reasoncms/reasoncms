@@ -20,7 +20,7 @@
 		var $news_sections = array();   //[$publicationID][$sectionID]=section_entity;
 
 		function init_head_items() {
-			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'content_managers/news_content_manager.js');
+			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'content_managers/news_content_manager.js?v=2');
 		}
 
 /////
