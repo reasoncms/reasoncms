@@ -165,6 +165,11 @@
 				'order' => 'chunk.author ASC',
 				),
 		),
+		'assets_and_children' => array(
+			'pre_sidebar' => '',
+			'main_post' => 'assets',
+			'main_post_2' => 'children',
+		),
 		'audio_video' => array(
 			'main_post' => 'av',
 		),
