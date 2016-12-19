@@ -280,11 +280,16 @@ if ($media_work && $media_work->get_value('integration_library') == 'zencoder') 
 	echo '<script src="' . REASON_PACKAGE_HTTP_BASE_PATH . 'mediaelement/build/mediaelement-and-player.min.js"></script>';
 	echo '<link rel="stylesheet" href="' . REASON_PACKAGE_HTTP_BASE_PATH . 'mediaelement/build/mediaelementplayer.min.css" />';
 	
-	$params = json_encode($displayer->get_mediaelementjs_params());
+	echo '<link rel="stylesheet" href="' . REASON_PACKAGE_HTTP_BASE_PATH . 'mediaelement/build/mediaelementplayer.css" />';
 	echo <<<EOT
 	<script>
 		$(document).ready(function(){
-			$("video,audio").mediaelementplayer($params); 
+			$("video,audio").mediaelementplayer({
+				iPadUseNativeControls: true,
+				iPhoneUseNativeControls: true,
+				AndroidUseNativeControls: true,
+				pluginPath: '../build/'
+			});
 		});
 	</script>
 EOT;
