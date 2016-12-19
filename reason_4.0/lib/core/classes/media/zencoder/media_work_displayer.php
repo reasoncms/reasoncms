@@ -799,17 +799,17 @@ class ZencoderMediaWorkDisplayer implements MediaWorkDisplayerInterface
 	 */
 	public function get_mediaelementjs_params()
 	{
-		// EXAMPLE
-//		return array(
-//			"iPhoneUseNativeControls" => true,
-//			"AndroidUseNativeControls" => true,
-//			"pluginPath" => REASON_PACKAGE_HTTP_BASE_PATH . "mediaelement/build/",
-//			"features" => array(
-//				"playpause", "current", "progress", "duration", "tracks",
-//				"volume", "fullscreen", "googleanalytics"
-//			),
-//			"googleAnalyticsTitle" => $this->media_work->get_value("name")
-//		);
+		return [
+			"iPadUseNativeControls" => true,
+			"iPhoneUseNativeControls" => true,
+			"AndroidUseNativeControls" => true,
+			"pluginPath" => REASON_PACKAGE_HTTP_BASE_PATH . "mediaelement/build/",
+			"features" => [
+				"playpause", "current", "progress", "duration", "tracks",
+				"volume", "fullscreen", "googleanalytics"
+			],
+			"googleAnalyticsTitle" => $this->media_work->get_value("name")
+		];
 	}
 
 }

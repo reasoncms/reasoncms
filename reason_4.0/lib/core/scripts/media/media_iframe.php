@@ -279,20 +279,19 @@ elseif ($media_work && $media_work->get_value('av_type') == '')
 if ($media_work && $media_work->get_value('integration_library') == 'zencoder') {
 	echo '<script src="' . REASON_PACKAGE_HTTP_BASE_PATH . 'mediaelement/build/mediaelement-and-player.min.js"></script>';
 	echo '<link rel="stylesheet" href="' . REASON_PACKAGE_HTTP_BASE_PATH . 'mediaelement/build/mediaelementplayer.min.css" />';
-	
-	echo '<link rel="stylesheet" href="' . REASON_PACKAGE_HTTP_BASE_PATH . 'mediaelement/build/mediaelementplayer.css" />';
+	$params = json_encode($displayer->get_mediaelementjs_params());
 	echo <<<EOT
 	<script>
 		$(document).ready(function(){
-			$("video,audio").mediaelementplayer({
-				iPadUseNativeControls: true,
-				iPhoneUseNativeControls: true,
-				AndroidUseNativeControls: true,
-				pluginPath: '../build/'
-			});
+			$("video,audio").mediaelementplayer($params);
 		});
 	</script>
 EOT;
+	// There isn't an easy way right now for Carleton to inject analytics
+	if (defined('WEB_PATH')) {
+		require_once WEB_PATH . 'global_stock/analytics/default.php';
+		echo get_carleton_default_analytics_head_markup();
+	}
 }
 
 echo '</head>'."\n";
