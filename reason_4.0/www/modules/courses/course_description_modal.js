@@ -15,7 +15,7 @@ $(document).ready(function()
 	// Look at all the lists that aren't designated as courseList and see if they appear
 	// to be lists of courses. If they are, add the appropriate classes so that they'll 
 	// get picked up by the linking process below.
-	var course_regex = /\b([A-Z]{2,4} [0-9]{2,3}\w?)\b/g;
+	var course_regex = /\b^([A-Z]{2,4} [0-9]{2,3}\w?)\b/g;
 	$("ul:not(.courseList) li, p").each(function(){
 		if ($(this).html().match(course_regex))
 		{
