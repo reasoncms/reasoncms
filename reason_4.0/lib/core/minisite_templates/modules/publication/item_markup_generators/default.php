@@ -444,7 +444,7 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 		$ret = '<p><strong>Share post:</strong>';
 		foreach($this->passed_vars['item_social_sharing'] as $social_sharing)
 		{
-			$ret .= ' <a href="'.$social_sharing['href'].'">';
+			$ret .= ' <a href="'.$social_sharing['href'].'" target="_blank">';
 			$ret .= '<img src="'. $social_sharing['icon'] . '" alt="'. $social_sharing['text'] . '" />';
 			$ret .= '</a>';
 		}
