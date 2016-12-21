@@ -44,7 +44,7 @@ $(document).ready(function () {
 			// Hide the manual editor and reset its value
 			// since the official store is input[name=content],
 			// unless the manual editor has text
-			$('#contentmanualRow, #contentmanualItem').css("visibility", "hidden");
+			$('#contentmanualItem').css("display", "none");
 			$('textarea[name=content_manual]').val("");
 
 			statusNode.clearStatus().addClass("status-complete").html("Upload Complete!");
@@ -91,11 +91,11 @@ $(document).ready(function () {
 		$("a.toggle-manual-content").on("click", function (event) {
 
 			// Don't overwrite changes if users click more than 1x
-			if ($('#contentmanualRow, #contentmanualItem').css("visibility") == "visible") {
+			if ($('#contentmanualItem').css("display") == "block") {
 				return;
 			}
 
-			$('#contentmanualRow, #contentmanualItem').css("visibility", "visible");
+			$('#contentmanualItem').css("display", "block");
 
 			// If we have content already, copy it to the manual editor
 			// for manual edits
