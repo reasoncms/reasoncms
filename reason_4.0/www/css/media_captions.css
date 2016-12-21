@@ -1,7 +1,7 @@
 
-#contentRow, #contentItem,
-#contentmanualRow, #contentmanualItem {
-	visibility: hidden;
+#contentItem,
+#contentmanualItem {
+	display:none;
 }
 
 .file-status-block {
