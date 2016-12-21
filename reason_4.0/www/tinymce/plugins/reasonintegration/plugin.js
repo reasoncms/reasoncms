@@ -1044,14 +1044,7 @@ ReasonLink.prototype.updateForm = function() {
     var methodName = "construct" + k;
     v.before(tinymce.ui.Factory.create(this[methodName]())).remove();
   }, this);
-  this.getControlReferences()
-  tinymce.each(this.formControls, function(v) {
-    v.parent().layoutRect(this.layoutRects[i][1]);
-    v.layoutRect(this.layoutRects[i][0]);
-    v.parent().reflow();
-    v.reflow();
-    i++;
-  }, this);
+  this.getControlReferences();
 
   this.bindReasonUI();
 };
@@ -1246,7 +1239,7 @@ ReasonAsset.prototype.bindReasonUI = function ()
 
       if (asset.id == asset_id)
       {
-        self.setSelected('asset_url', asset.url);
+      	self.setSelected('asset_url', asset.url);
         self.setDesc(asset.name);
         break;
       }
@@ -1274,10 +1267,10 @@ ReasonAsset.prototype.constructAssets = function ()
 
       if (asset.url == selected_url)
       {
-        selected = asset.id;
-
+      	selected = asset.id;
         this.setSelected('asset', selected);
         this.setSelected('asset_url', asset.url);
+        this.setDesc(asset.name);
 
         break;
       }
@@ -1396,15 +1389,6 @@ ReasonAsset.prototype.updateForm = function ()
   }, this);
 
   this.getControlReferences();
-
-  tinymce.each(this.formControls, function (v)
-  {
-    v.parent().layoutRect(this.layoutRects[i][1]);
-    v.layoutRect(this.layoutRects[i][0]);
-    v.parent().reflow();
-    v.reflow();
-    i++;
-  }, this);
 
   this.bindReasonUI();
 };
