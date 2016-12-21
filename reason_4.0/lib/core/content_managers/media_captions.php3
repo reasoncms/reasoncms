@@ -221,6 +221,9 @@ class av_captions extends ContentManager
 		}
 
 		// We're going to dynamically generate 'name' and 'label' at save
+		// until we have a reason to make users type in a label.
+		// The generated label & name will keep the front end and back end
+		// fields consistent
 		$this->remove_required('name');
 		$this->change_element_type('name', 'hidden', array('userland_changeable' => true));
 		$this->change_element_type('label', 'hidden', array('userland_changeable' => true));
