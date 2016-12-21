@@ -904,6 +904,7 @@ ReasonLink.prototype.constructPages = function() {
     type: "listbox",
     flex: 1,
     values: this.updateValues(pages, selected),
+    value: selected,
     disabled: !!this.getDisabled().pages
   };
 };
@@ -918,6 +919,7 @@ ReasonLink.prototype.constructAnchors = function() {
     type: "listbox",
     flex: 1,
     values: this.updateValues(anchors, selected),
+    value: selected,
     disabled: !!this.getDisabled().anchors
   };
 };
@@ -1268,7 +1270,7 @@ ReasonAsset.prototype.constructAssets = function ()
       if (asset.url == selected_url)
       {
       	selected = asset.id;
-        this.setSelected('asset', selected);
+      	this.setSelected('asset', selected);
         this.setSelected('asset_url', asset.url);
         this.setDesc(asset.name);
 
@@ -1277,13 +1279,15 @@ ReasonAsset.prototype.constructAssets = function ()
     }
   }
 
-  return {
-    name: 'assets',
-    label: 'Asset',
-    type: 'listbox',
-    flex: 1,
-    values: this.updateValues(assets, selected)
-  };
+    var listBox = {
+        name: 'assets',
+        label: 'Asset',
+        type: 'listbox',
+        flex: 1,
+        values: this.updateValues(assets, selected),
+		value: selected
+    };
+    return listBox;
 };
 
 ReasonAsset.prototype.constructDescription = function ()
