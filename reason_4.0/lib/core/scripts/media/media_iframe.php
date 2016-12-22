@@ -276,24 +276,26 @@ elseif ($media_work && $media_work->get_value('av_type') == '')
 {
 	echo '<script src="/reason_package/reason_4.0/lib/core/classes/media/api/media_api_flv.js"></script>'."\n";
 }
-if ($media_work && $media_work->get_value('integration_library') == 'zencoder') {
+if ($media_work 
+		&& $media_work->get_value('integration_library') == 'zencoder'
+		&& $media_work->get_value('av_type') == 'Video') {
 	echo '<script src="' . REASON_PACKAGE_HTTP_BASE_PATH . 'mediaelement/build/mediaelement-and-player.min.js"></script>';
 	echo '<link rel="stylesheet" href="' . REASON_PACKAGE_HTTP_BASE_PATH . 'mediaelement/build/mediaelementplayer.min.css" />';
 	$params = json_encode($displayer->get_mediaelementjs_params());
 	echo <<<EOT
 	<script>
 		$(document).ready(function(){
-			$("video,audio").mediaelementplayer($params);
+			$("video").mediaelementplayer($params);
 		});
 	</script>
 EOT;
-	// There isn't an easy way right now for Carleton to inject analytics
-	if (defined('WEB_PATH')) {
-		$path = WEB_PATH . 'global_stock/analytics/default.php';
-		if (file_exists($path)) {
-			require_once $path;
-			echo get_carleton_default_analytics_head_markup();
-		}
+}
+// There isn't an easy way right now for Carleton to inject analytics
+if (defined('WEB_PATH')) {
+	$path = WEB_PATH . 'global_stock/analytics/default.php';
+	if (file_exists($path)) {
+		require_once $path;
+		echo get_carleton_default_analytics_head_markup();
 	}
 }
 
