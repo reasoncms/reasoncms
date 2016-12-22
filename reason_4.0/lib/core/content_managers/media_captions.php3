@@ -240,7 +240,7 @@ class av_captions extends ContentManager
 		$this->change_element_type('content', 'hidden', array('userland_changeable' => true));
 
 		$this->add_element('upload', 'upload');
-		$this->set_display_name('upload', 'Upload Track File');
+		$this->set_display_name('upload', 'Select Track File');
 		$this->add_comments('upload', form_comment("Alternatively, <a href='javascript:void(0);' class='toggle-manual-content'>add/edit Track content</a> manually instead"));
 
 		$this->set_display_name('kind', 'Track Type');
