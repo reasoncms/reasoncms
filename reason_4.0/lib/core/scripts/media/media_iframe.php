@@ -289,8 +289,11 @@ if ($media_work && $media_work->get_value('integration_library') == 'zencoder') 
 EOT;
 	// There isn't an easy way right now for Carleton to inject analytics
 	if (defined('WEB_PATH')) {
-		require_once WEB_PATH . 'global_stock/analytics/default.php';
-		echo get_carleton_default_analytics_head_markup();
+		$path = WEB_PATH . 'global_stock/analytics/default.php';
+		if (file_exists($path)) {
+			require_once $path;
+			echo get_carleton_default_analytics_head_markup();
+		}
 	}
 }
 
