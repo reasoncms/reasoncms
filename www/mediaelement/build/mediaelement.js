@@ -78,7 +78,7 @@ mejs.version = '3.0';
 		 * @return {Object}
 		 */
 		createEvent: function (eventName, target) {
-			var event = null;
+			var event;
 
 			if (doc.createEvent) {
 				event = doc.createEvent('Event');
@@ -86,9 +86,9 @@ mejs.version = '3.0';
 				event.target = target;
 			} else {
 				event = {};
+				event.type = eventName;
+				event.target = target;
 			}
-			event.type = eventName;
-			event.target = target;
 
 			return event;
 		},
@@ -364,7 +364,7 @@ mejs.version = '3.0';
 
 			var format = options.timeFormat,
 				firstChar = format[0],
-				firstTwoPlaces = (format[1] == format[0]),
+				firstTwoPlaces = (format[1] === format[0]),
 				separatorIndex = firstTwoPlaces ? 2 : 1,
 				separator = ':',
 				hours = Math.floor(time / 3600) % 24,
@@ -422,13 +422,15 @@ mejs.version = '3.0';
 		 * @return {number}
 		 */
 		convertSMPTEtoSeconds: function (SMPTE) {
-			if (typeof SMPTE !== 'string')
+
+			if (typeof SMPTE !== 'string') {
 				return false;
+			}
 
 			SMPTE = SMPTE.replace(',', '.');
 
 			var secs = 0,
-				decimalLen = (SMPTE.indexOf('.') != -1) ? SMPTE.split('.')[1].length : 0,
+				decimalLen = (SMPTE.indexOf('.') > -1) ? SMPTE.split('.')[1].length : 0,
 				multiplier = 1;
 
 			SMPTE = SMPTE.split(':').reverse();
@@ -449,12 +451,16 @@ mejs.version = '3.0';
 				var context = this, args = arguments;
 				var later = function () {
 					timeout = null;
-					if (!immediate) func.apply(context, args);
+					if (!immediate) {
+						func.apply(context, args);
+					}
 				};
 				var callNow = immediate && !timeout;
 				clearTimeout(timeout);
 				timeout = setTimeout(later, wait);
-				if (callNow) func.apply(context, args);
+				if (callNow) {
+					func.apply(context, args);
+				}
 			};
 		},
 		/**
@@ -509,7 +515,7 @@ mejs.version = '3.0';
 		features.isiPhone = (ua.match(/iphone/i) !== null);
 		features.isiOS = features.isiPhone || features.isiPad;
 		features.isAndroid = (ua.match(/android/i) !== null);
-		features.isIE = (nav.appName.toLowerCase().indexOf("microsoft") != -1 || nav.appName.toLowerCase().match(/trident/gi) !== null);
+		features.isIE = (nav.appName.toLowerCase().indexOf("microsoft") > -1 || nav.appName.toLowerCase().match(/trident/gi) !== null);
 		features.isChrome = (ua.match(/chrome/gi) !== null);
 		features.isFirefox = (ua.match(/firefox/gi) !== null);
 
@@ -634,6 +640,101 @@ mejs.version = '3.0';
 	})();
 
 })(window, document, window.mejs || {});
+// IE6,7,8
+// Production steps of ECMA-262, Edition 5, 15.4.4.14
+// Reference: http://es5.github.io/#x15.4.4.14
+if (!Array.prototype.indexOf) {
+	Array.prototype.indexOf = function (searchElement, fromIndex) {
+
+		var k;
+
+		// 1. Let O be the result of calling ToObject passing
+		//	   the this value as the argument.
+		if (this === undefined || this === null) {
+			throw new TypeError('"this" is null or not defined');
+		}
+
+		var O = Object(this);
+
+		// 2. Let lenValue be the result of calling the Get
+		//	   internal method of O with the argument "length".
+		// 3. Let len be ToUint32(lenValue).
+		var len = O.length >>> 0;
+
+		// 4. If len is 0, return -1.
+		if (len === 0) {
+			return -1;
+		}
+
+		// 5. If argument fromIndex was passed let n be
+		//	   ToInteger(fromIndex); else let n be 0.
+		var n = +fromIndex || 0;
+
+		if (Math.abs(n) === Infinity) {
+			n = 0;
+		}
+
+		// 6. If n >= len, return -1.
+		if (n >= len) {
+			return -1;
+		}
+
+		// 7. If n >= 0, then Let k be n.
+		// 8. Else, n<0, Let k be len - abs(n).
+		//	   If k is less than 0, then let k be 0.
+		k = Math.max(n >= 0 ? n : len - Math.abs(n), 0);
+
+		// 9. Repeat, while k < len
+		while (k < len) {
+			// a. Let Pk be ToString(k).
+			//   This is implicit for LHS operands of the in operator
+			// b. Let kPresent be the result of calling the
+			//	HasProperty internal method of O with argument Pk.
+			//   This step can be combined with c
+			// c. If kPresent is true, then
+			//	i.	Let elementK be the result of calling the Get
+			//		internal method of O with the argument ToString(k).
+			//   ii.	Let same be the result of applying the
+			//		Strict Equality Comparison Algorithm to
+			//		searchElement and elementK.
+			//  iii.	If same is true, return k.
+			if (k in O && O[k] === searchElement) {
+				return k;
+			}
+			k++;
+		}
+		return -1;
+	};
+}
+
+// document.createEvent for IE8 or other old browsers that do not implement it
+// Reference: https://github.com/WebReflection/ie8/blob/master/build/ie8.max.js
+if (document.createEvent === undefined) {
+	document.createEvent = function (event) {
+
+		var e;
+
+		e = document.createEventObject();
+		e.timeStamp = (new Date()).getTime();
+		e.enumerable = true;
+		e.writable = true;
+		e.configurable = true;
+
+		e.initEvent = function (type, bubbles, cancelable) {
+			this.type = type;
+			this.bubbles = !!bubbles;
+			this.cancelable = !!cancelable;
+			if (!this.bubbles) {
+				this.stopPropagation = function () {
+					this.stoppedPropagation = true;
+					this.cancelBubble = true;
+				};
+			}
+		};
+
+		return e;
+	};
+}
 /**
  * MediaElement core
  *
@@ -1065,7 +1166,7 @@ mejs.version = '3.0';
 					// create the renderer
 					newRendererType = mejs.Renderers.renderers[rendererArray[index]];
 
-					var renderOptions = mejs.Utils.extend({}, mediaElement.options, newRendererType.options);
+					var renderOptions = mejs.Utils.extend({}, newRendererType.options, mediaElement.options);
 					newRenderer = newRendererType.create(mediaElement, renderOptions, mediaFiles);
 					newRenderer.name = rendererName;
 
@@ -1128,7 +1229,7 @@ mejs.version = '3.0';
 					// test <source> types to see if they are usable
 					for (i = 0; i < sources; i++) {
 						n = mediaElement.originalNode.childNodes[i];
-						if (n.nodeType == 1 && n.tagName.toLowerCase() === 'source') {
+						if (n.nodeType === Node.ELEMENT_NODE && n.tagName.toLowerCase() === 'source') {
 							src = n.getAttribute('src');
 							type = mejs.Utils.formatType(src, n.getAttribute('type'));
 							mediaFiles.push({type: type, src: src});
@@ -1929,7 +2030,7 @@ mejs.version = '3.0';
 				 * @see http://cdn.dashjs.org/latest/jsdoc/MediaPlayerEvents.html
 				 */
 				var assignMdashEvents = function (e, data) {
-					var event = mejs.Utils.createEvent(e, node);
+					var event = mejs.Utils.createEvent(e.type, node);
 					mediaElement.dispatchEvent(event);
 
 					if (e === 'error') {
@@ -2426,6 +2527,7 @@ mejs.version = '3.0';
 		 * - http://www.youtube.com/watch?feature=player_embedded&v=yyWWXSwtPP0
 		 * - http://www.youtube.com/v/VIDEO_ID?version=3
 		 * - http://youtu.be/Djd6tPrxc08
+		 * - http://www.youtube-nocookie.com/watch?feature=player_embedded&v=yyWWXSwtPP0
 		 *
 		 * @param {String} url
 		 * @return {string}
@@ -2490,6 +2592,21 @@ mejs.version = '3.0';
 			url = parts[0];
 
 			return url.substring(url.lastIndexOf('/') + 1);
+		},
+
+		/**
+		 * Inject `no-cookie` element to URL. Only works with format: http://www.youtube.com/v/VIDEO_ID?version=3
+		 * @param {String} url
+		 * @return {?String}
+		 */
+		getYouTubeNoCookieUrl: function(url) {
+			if (url === undefined || url === null || url.indexOf('www.youtube') === -1) {
+				return url;
+			}
+
+			var parts = url.split('/');
+			parts[2] = parts[2].replace('.com', '-nocookie.com');
+			return parts.join('/');
 		}
 	};
 
@@ -2505,7 +2622,26 @@ mejs.version = '3.0';
 		name: 'youtube_iframe',
 
 		options: {
-			prefix: 'youtube_iframe'
+			prefix: 'youtube_iframe',
+			/**
+			 * Custom configuration for YouTube player
+			 *
+			 * @see https://developers.google.com/youtube/player_parameters#Parameters
+			 * @type {Object}
+			 */
+			youtube: {
+				autoplay: 0,
+				disablekb: 1,
+				end: 0,
+				loop: 0,
+				modestbranding: 0,
+				playsinline: 0,
+				rel: 0,
+				showinfo: 0,
+				start: 0,
+				// custom to inject `-nocookie` element in URL
+				nocookie: true
+			}
 		},
 
 		/**
@@ -2693,6 +2829,12 @@ mejs.version = '3.0';
 			// CREATE YouTube
 			var youtubeContainer = doc.createElement('div');
 			youtubeContainer.id = youtube.id;
+
+			// If `nocookie` feature was enabled, modify original URL
+			if (youtube.options.youtube.nocookie) {
+				mediaElement.originalNode.setAttribute('src', YouTubeApi.getYouTubeNoCookieUrl(mediaFiles[0].src));
+			}
+
 			mediaElement.originalNode.parentNode.insertBefore(youtubeContainer, mediaElement.originalNode);
 			mediaElement.originalNode.style.display = 'none';
 
@@ -2706,15 +2848,16 @@ mejs.version = '3.0';
 					videoId: videoId,
 					height: height,
 					width: width,
-					playerVars: {
+					playerVars: mejs.Utils.extend({
 						controls: 0,
 						rel: 0,
 						disablekb: 1,
 						showinfo: 0,
 						modestbranding: 0,
 						html5: 1,
-						playsinline: 1
-					},
+						playsinline: 0,
+						start: 0,
+						end: 0}, youtube.options.youtube),
 					origin: win.location.host,
 					events: {
 						onReady: function (e) {
@@ -4209,7 +4352,8 @@ mejs.version = '3.0';
 							var fbEvents = ['startedPlaying', 'paused', 'finishedPlaying', 'startedBuffering', 'finishedBuffering'];
 							for (i = 0, il = fbEvents.length; i < il; i++) {
 								var event = fbEvents[i], handler = eventHandler[event];
-								if (!mejs.Utility.isObjectEmpty(handler) && typeof handler.removeListener === 'function') {
+								if (handler !== undefined && handler !== null &&
+									!mejs.Utility.isObjectEmpty(handler) && typeof handler.removeListener === 'function') {
 									handler.removeListener(event);
 								}
 							}
@@ -4805,7 +4949,7 @@ mejs.version = '3.0';
 			var pv = this.plugins[plugin];
 			v[1] = v[1] || 0;
 			v[2] = v[2] || 0;
-			return (pv[0] > v[0] || (pv[0] == v[0] && pv[1] > v[1]) || (pv[0] == v[0] && pv[1] == v[1] && pv[2] >= v[2]));
+			return (pv[0] > v[0] || (pv[0] === v[0] && pv[1] > v[1]) || (pv[0] === v[0] && pv[1] === v[1] && pv[2] >= v[2]));
 		},
 
 		/**
@@ -4841,7 +4985,7 @@ mejs.version = '3.0';
 			// Firefox, Webkit, Opera
 			if (typeof(this.nav.plugins) !== 'undefined' && typeof this.nav.plugins[pluginName] === 'object') {
 				description = this.nav.plugins[pluginName].description;
-				if (description && !(typeof this.nav.mimeTypes != 'undefined' && this.nav.mimeTypes[mimeType] && !this.nav.mimeTypes[mimeType].enabledPlugin)) {
+				if (description && !(typeof this.nav.mimeTypes !== 'undefined' && this.nav.mimeTypes[mimeType] && !this.nav.mimeTypes[mimeType].enabledPlugin)) {
 					version = description.replace(pluginName, '').replace(/^\s+/, '').replace(/\sr/gi, '.').split('.');
 					for (i = 0; i < version.length; i++) {
 						version[i] = parseInt(version[i].match(/\d+/), 10);

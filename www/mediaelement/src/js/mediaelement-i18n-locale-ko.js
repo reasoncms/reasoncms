@@ -50,7 +50,7 @@
 			"mejs.time-help-text": "1초 전진하려면 좌/우측 화살표를 사용하시고 10초 전진하려면 위/아래 화살표를 사용하세요.",
 
 			// mediaelementplayer-feature-skipback
-			"mejs.time-skip-back": "1초 % 를 뒤로 건너뛰세요",
+			"mejs.time-skip-back": "%1초 를 뒤로 건너뛰세요",
 
 			// mediaelementplayer-feature-tracks
 			"mejs.captions-subtitles": "캡션/자막",
@@ -65,7 +65,7 @@
 
 			// mep-player
 			"mejs.video-player": "비디오 플레이어",
-			"mejs.audio-player": "오디오 플레이어",
+			"mejs.audio-player": "오디오 플레이어"
 
 			// mediaelementplayer-feature-ads
 			//"mejs.ad-skip": "Skip ad",

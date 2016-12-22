@@ -96,6 +96,7 @@
 		 * - http://www.youtube.com/watch?feature=player_embedded&v=yyWWXSwtPP0
 		 * - http://www.youtube.com/v/VIDEO_ID?version=3
 		 * - http://youtu.be/Djd6tPrxc08
+		 * - http://www.youtube-nocookie.com/watch?feature=player_embedded&v=yyWWXSwtPP0
 		 *
 		 * @param {String} url
 		 * @return {string}
@@ -160,6 +161,21 @@
 			url = parts[0];
 
 			return url.substring(url.lastIndexOf('/') + 1);
+		},
+
+		/**
+		 * Inject `no-cookie` element to URL. Only works with format: http://www.youtube.com/v/VIDEO_ID?version=3
+		 * @param {String} url
+		 * @return {?String}
+		 */
+		getYouTubeNoCookieUrl: function(url) {
+			if (url === undefined || url === null || url.indexOf('www.youtube') === -1) {
+				return url;
+			}
+
+			var parts = url.split('/');
+			parts[2] = parts[2].replace('.com', '-nocookie.com');
+			return parts.join('/');
 		}
 	};
 
@@ -175,7 +191,26 @@
 		name: 'youtube_iframe',
 
 		options: {
-			prefix: 'youtube_iframe'
+			prefix: 'youtube_iframe',
+			/**
+			 * Custom configuration for YouTube player
+			 *
+			 * @see https://developers.google.com/youtube/player_parameters#Parameters
+			 * @type {Object}
+			 */
+			youtube: {
+				autoplay: 0,
+				disablekb: 1,
+				end: 0,
+				loop: 0,
+				modestbranding: 0,
+				playsinline: 0,
+				rel: 0,
+				showinfo: 0,
+				start: 0,
+				// custom to inject `-nocookie` element in URL
+				nocookie: true
+			}
 		},
 
 		/**
@@ -363,6 +398,12 @@
 			// CREATE YouTube
 			var youtubeContainer = doc.createElement('div');
 			youtubeContainer.id = youtube.id;
+
+			// If `nocookie` feature was enabled, modify original URL
+			if (youtube.options.youtube.nocookie) {
+				mediaElement.originalNode.setAttribute('src', YouTubeApi.getYouTubeNoCookieUrl(mediaFiles[0].src));
+			}
+
 			mediaElement.originalNode.parentNode.insertBefore(youtubeContainer, mediaElement.originalNode);
 			mediaElement.originalNode.style.display = 'none';
 
@@ -376,15 +417,16 @@
 					videoId: videoId,
 					height: height,
 					width: width,
-					playerVars: {
+					playerVars: mejs.Utils.extend({
 						controls: 0,
 						rel: 0,
 						disablekb: 1,
 						showinfo: 0,
 						modestbranding: 0,
 						html5: 1,
-						playsinline: 1
-					},
+						playsinline: 0,
+						start: 0,
+						end: 0}, youtube.options.youtube),
 					origin: win.location.host,
 					events: {
 						onReady: function (e) {
