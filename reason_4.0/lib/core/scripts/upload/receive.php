@@ -59,6 +59,10 @@ if (!function_exists('json_encode')) {
 $response = array();
 foreach (array_keys($_FILES) as $name) {
 	$file = reason_get_uploaded_file($name);
+	if(!is_object($file))
+	{
+		responseWrapper(500, 'Upload failed.');
+	}
 	$filename = $file->get_filename();
 	
 	// gotta set this before checking for constraints as those are based on the actual disco/plasmature field name, not the generic "file" that comes through from plupload...

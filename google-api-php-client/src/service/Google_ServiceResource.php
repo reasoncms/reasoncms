@@ -38,6 +38,7 @@ class Google_ServiceResource {
       'mimeType' => array('type' => 'string', 'location' => 'header'),
       'uploadType' => array('type' => 'string', 'location' => 'query'),
       'mediaUpload' => array('type' => 'complex', 'location' => 'query'),
+      'forUsername' => array('type' => 'string', 'location' => 'query'),
   );
 
   /** @var Google_Service $service */

@@ -15,7 +15,7 @@ $(document).ready(function()
 	// Look at all the lists that aren't designated as courseList and see if they appear
 	// to be lists of courses. If they are, add the appropriate classes so that they'll 
 	// get picked up by the linking process below.
-	var course_regex = /\b([A-Z]{2,4} [0-9]{2,3}\w?)\b/g;
+	var course_regex = /\b^([A-Z]{2,4} [0-9]{2,3}\w?)\b/g;
 	$("ul:not(.courseList) li, p").each(function(){
 		if ($(this).html().match(course_regex))
 		{
@@ -28,7 +28,15 @@ $(document).ready(function()
 
 	// For each course number in a list of titles, make the number clickable and 
 	// fire off a request for the course description to be opened in a modal dialog.
-	$("ul.courseList span.courseNumber, p span.courseNumber").each(function(){
+	$("ul.courseList span.courseNumber, p span.courseNumber").each(function () {
+		// The routine above sometimes does too many replaces, and you may end up with
+		// nested <span class="courseNumber"> nodes. If you end up with a node like
+		//     <span class="courseNumber"><span class="courseNumber">SOAN 330</span></span>
+		// skip it
+		if (this.innerHTML.match(/courseNumber/i)) {
+			return;
+		}
+		
 		$(this).replaceWith(function () {
 			return $("<a>", {
 				'class': this.className + " clickable",

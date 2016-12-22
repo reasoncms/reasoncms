@@ -410,9 +410,8 @@
 		function has_event_tickets()
 		{
 			$thorContent = $this->get_thor_content_value();
-
 			try {
-				$xml = new SimpleXMLElement($thorContent);
+				$xml = simplexml_load_string($thorContent);
 				$ticketElement = $xml->xpath("/*/event_tickets");
 			} catch (Exception $exc) {
 				trigger_error($exc->getTraceAsString());
@@ -450,8 +449,12 @@
 		function get_event_ids_in_form()
 		{
 			$thorContent = $this->get_thor_content_value();
-			$xml = new SimpleXMLElement($thorContent);
-			$ticketElement = $xml->xpath("/*/event_tickets");
+			try {
+				$xml = simplexml_load_string($thorContent);
+				$ticketElement = $xml->xpath("/*/event_tickets");
+			} catch (Exception $exc) {
+				trigger_error($exc->getTraceAsString());
+			}
 
 			// Get ticket form items out of thor structure
 			$eventsInForm = array();
@@ -500,9 +503,9 @@
 			}
 			
 			// Make sure the form definition has a field named "Your Email"
-			$thorXml = $this->get_thor_content_value();
+			$thorContent = $this->get_thor_content_value();
 			try {
-				$xml = new SimpleXMLElement($thorXml);
+				$xml = simplexml_load_string($thorContent);
 				$emailNode = $xml->xpath("/*/input[@label='Your Email']");
 				if (empty($emailNode)) {
 					$this->set_error('thor_content', "An event ticket form requires a short text input with the exact label 'Your Email'. Please add that element or change the email field label to 'Your Email'.");

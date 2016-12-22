@@ -76,6 +76,7 @@ class formbuilder2Type extends textareaType
 
 	function formbuilder2Type() {
 		$this->scripts = array(
+			'polyfills'   => REASON_PACKAGE_HTTP_BASE_PATH . 'formbuilder2/polyfills.js',
 			'vendorpath'   => REASON_PACKAGE_HTTP_BASE_PATH . 'formbuilder2/vendor/js/vendor.js',
 			'fbpath'       => REASON_PACKAGE_HTTP_BASE_PATH . 'formbuilder2/formbuilder.js',
 			'fbinitpath'   => REASON_PACKAGE_HTTP_BASE_PATH . 'formbuilder2/formbuilder-init.js'
@@ -339,7 +340,8 @@ class formbuilder2Type extends textareaType
 	}
 	function add_event_ticket_title_to_field($field)
 	{
-		$field->label = get_pretty_ticketed_event_name($field->event_tickets_event_id);
+		$label = get_pretty_ticketed_event_name($field->event_tickets_event_id);
+		$field->label = $label;
 		return $field;
 	}
 }

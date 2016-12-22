@@ -238,7 +238,8 @@
 			$thor_core = $model->get_thor_core_object();
 			$xmlString = $thor_core->get_thor_xml()->GenerateXML();
 
-			$xmlObject = new SimpleXMLElement($xmlString);
+			
+			$xmlObject = simplexml_load_string($xmlString);
 			$xpathSelector = "/form/event_tickets[not(@event_id='$currentEventId')]";
 			$inactiveTicketSlots = $xmlObject->xpath($xpathSelector);
 			foreach ($inactiveTicketSlots as $node) {

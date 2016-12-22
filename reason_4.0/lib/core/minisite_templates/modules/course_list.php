@@ -93,7 +93,14 @@ class CourseListModule extends DefaultMinisiteModule
 			}
 			if (isset($this->request['toggle_course']))
 			{
-				echo json_encode($this->do_course_toggle($this->request['toggle_course']));
+				$toggled = $this->do_course_toggle($this->request['toggle_course']);
+				if($toggled)
+				{
+					$user = reason_get_current_user_entity();
+					if(!empty($user))
+						reason_update_entity( $this->page_id, $user->id(), array('last_modified' => date('Y-m-d H:i:s') ), false);
+				}
+				echo json_encode($toggled);
 				exit;
 			}
 		}
@@ -132,8 +139,9 @@ class CourseListModule extends DefaultMinisiteModule
 		
 			if ($editing_active) 
 			{
-				$html .= $this->get_editing_explanation();
-				$html .= $this->get_course_picker();	
+				$info = $this->get_source_info();
+				$html .= $this->get_editing_explanation($info);
+				$html .= $this->get_course_picker($info);
 			} else {
 				$html .= '<p class="edit"><a class="editThis" href="'.carl_make_link($inline_editing->get_activation_params($this)).'#coursesRegion">Edit Course List</a></p>'."\n";				
 			}
@@ -441,9 +449,10 @@ class CourseListModule extends DefaultMinisiteModule
 		return $this->_user_can_inline_edit;
 	} 
 
-	function get_editing_explanation()
+	function get_source_info()
 	{
 		$sources = array();
+		$errors = array();
 		if ($this->params['get_site_courses'])
 			$sources[] = 'courses borrowed by this Reason site.';
 
@@ -457,6 +466,7 @@ class CourseListModule extends DefaultMinisiteModule
 		{
 			if ($cats = $this->get_page_categories())
 				$sources[] = 'courses that share the categories associated with this page ('.join(', ', $cats).').';
+			$errors[] = 'No categories are associated with the page to draw courses from.';
 		}
 		
 		foreach ($this->params['get_courses_by_subjects'] as $subj)
@@ -466,7 +476,14 @@ class CourseListModule extends DefaultMinisiteModule
 		{
 			if ($subjects = $this->get_site_subjects())
 				$sources[] = 'courses that share the same academic subject as this Reason site ('.join(', ', $subjects).').';
+			$errors[] = 'This site dos not have any subjects to draw courses from.';
 		}
+		return array('sources' => $sources, 'errors' => $errors);
+	}
+	function get_editing_explanation($source_info)
+	{
+		$sources = $source_info['sources'];
+		$errors = $source_info['errors'];
 		
 		$string = '<div class="explain">';
 		if (count($sources) > 1)
@@ -478,18 +495,41 @@ class CourseListModule extends DefaultMinisiteModule
 			$string .= '</ul>'."\n";
 			$string .= '</parse_url>'."\n";
 		}
-		else
+		elseif(isset($sources[0]))
 		{
 			$string .= '<p>This page is currently displaying ' . $sources[0].'</p>';	
 		}
-		$string .= '<p>If you need to change how courses are selected for this page, please contact a Reason administrator.</p>';
-		$string .= '<p class="edit"><a class="editThis" href="'.carl_make_link(array('inline_edit'=>null)).'">Save and Finish</a></p>'."\n";				
+		else
+		{
+			$string .= '<p>This page is not displaying any courses because it is not fully set up.</p>';
+			if(!empty($errors))
+			{
+				$string .= '<p>These issues were encountered:</p>';
+				$string .= '<ul>';
+				foreach($errors as $error)
+					$string .= '<li>'.$error.'</li>';
+				$string .= '</ul>';
+			}
+			$string .= '<p>Please contact a Reason administrator if you\'re not able to fix these issues yourself.</p>'."\n";
+		}
+		if(!empty($sources))
+		{
+			$string .= '<p>If you need to change how courses are selected for this page, please contact a Reason administrator.</p>';
+			$string .= '<p class="edit"><a class="editThis" href="'.carl_make_link(array('inline_edit'=>null)).'">Save and Finish</a></p>'."\n";
+		}
+		else
+		{
+			$string .= '<p class="edit"><a class="editThis" href="'.carl_make_link(array('inline_edit'=>null)).'">OK, Thanks</a></p>'."\n";
+		}		
 		$string .= '</div>';
 		return $string;
 	}
 	
-	function get_course_picker()
+	function get_course_picker($info)
 	{
+		if(empty($info['sources']))
+			return '';
+		
 		$html = '<div id="coursePicker">'."\n";
 		$html .= '<h4>Select Courses for this Page</h4>';
 		$html .= '<p>Choose a subject: '.$this->get_subject_menu().'</p>'."\n";
