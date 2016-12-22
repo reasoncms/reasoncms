@@ -57,6 +57,7 @@ class YouTubeLatestUserVideosDefaultFeedView extends ReasonMVCView
                     .youtube-list > li {
                     padding: 10px;
                     overflow: auto;
+                    list-style-type: none;
                     }
                     
                     .youtube-list > li:hover {

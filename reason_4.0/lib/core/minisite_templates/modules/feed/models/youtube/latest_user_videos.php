@@ -72,8 +72,17 @@ class YouTubeLatestUserVideosFeedModel extends ReasonMVCModel
 			if (!$result)
 			{
                 try {
-                    // Call the channels.list method to retrieve information about the
-                    // supplied channel_id.
+                    // first try to get a channel_id from the supplied username
+                    // if a channel_id is supplied this is wasted work but there is no good way to
+                    // know if the $user_id is a channel_id or something else...
+                    $channelIdResponse = $youtube->channels->listChannels('id', array(
+                        'forUsername' => $user_id
+                    ));
+
+                    $retrieved_user_id = empty($channelIdResponse['items']) ? '' : $channelIdResponse['items'][0]['id'];
+                    $user_id = empty($retrieved_user_id) ? $user_id : $retrieved_user_id;
+
+                    // Now call the channels.list method to retrieve information about the channel_id.
                     $channelsResponse = $youtube->channels->listChannels('contentDetails', array(
                         'id' => $user_id,
                     ));
@@ -91,12 +100,13 @@ class YouTubeLatestUserVideosFeedModel extends ReasonMVCModel
                         {
                             $videoId = $playlistItem['snippet']['resourceId']['videoId'];
                             $title = $playlistItem['snippet']['title'];
-                            $result[$videoId] = $playlistItem;
                             $url = 'https://www.youtube.com/watch?v='.$videoId;
                             $thumbnail_url = $playlistItem['snippet']['thumbnails']['medium']['url'];
                             $result[$videoId] = array('url' => $url, 'thumbnail' => $thumbnail_url, 'title' => $title);
                         }
+
                         $cache->set($result);
+
                     }
                 } catch (Google_Service_Exception $e) {
                     $result['error'] = sprintf('<p>A service error occurred: <code>%s</code></p>',
@@ -106,11 +116,17 @@ class YouTubeLatestUserVideosFeedModel extends ReasonMVCModel
                         htmlspecialchars($e->getMessage()));
                 }
 			}
-			return $result;
+            if (empty($result))
+            {
+                $result['error'] = 'No videos were found for user_id: '.$user_id.', please be sure to supply a channel ID or username that has videos';
+            }
+
+            return $result;
 		}
 		else
 		{
-			trigger_error('The YouTubeLatestUserVideosFeedModel must be provided with the configuration parameter user_id.', FATAL);
+			trigger_error('The YouTubeLatestUserVideosFeedModel must be provided with the configuration parameter user_id.
+			user_id can be a Youtube username or a channel ID', FATAL);
 		}
 	}
 }
