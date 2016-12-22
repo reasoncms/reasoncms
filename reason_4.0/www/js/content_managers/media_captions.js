@@ -21,7 +21,7 @@ $(document).ready(function () {
 
 	function promptUserForOverwrite() {
 			if ($('textarea[name=content_manual]').val().length > 0) {
-			return window.confirm("Do want to overwrite your manual changes with the uploaded file?")
+			return window.confirm("Do want to overwrite your manual changes with the selected file?")
 		}
 		return true;
 	}
@@ -47,7 +47,7 @@ $(document).ready(function () {
 			$('#contentmanualItem').css("display", "none");
 			$('textarea[name=content_manual]').val("");
 
-			statusNode.clearStatus().addClass("status-complete").html("Upload Complete!");
+			statusNode.clearStatus().addClass("status-complete").html("Complete!");
 		} else {
 			statusNode.clearStatus().addClass("status-invalid").html("Invalid File Type: text isn't VTT, please try again");
 			fileNode.value = "";
@@ -77,7 +77,7 @@ $(document).ready(function () {
 				$("form input[type=submit]").prop("disabled", false);
 			};
 			reader.onerror = function (event) {
-				statusNode.clearStatus().addClass("status-invalid").html("Upload or Type error, please try again");
+				statusNode.clearStatus().addClass("status-invalid").html("Error, please try again");
 				fileNode.value = "";
 			};
 			reader.onprogress = function (event) {
@@ -140,7 +140,7 @@ $(document).ready(function () {
 		}
 	});
 	if (!window.FileReader) {
-		var sorry = "Your browser can't upload caption files. Click the add/edit link instead.";
+		var sorry = "Your browser can't select caption files. Click the add/edit link instead.";
 		statusNode.clearStatus().addClass("status-invalid").html(sorry);
 	}
 	hookupManualEditToggle();
