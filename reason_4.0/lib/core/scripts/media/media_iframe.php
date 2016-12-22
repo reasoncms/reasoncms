@@ -248,6 +248,9 @@ body { margin: 0;
        padding: 0; } 
 .AudioWrapper { position: relative; 
                 height: 46px; } 
+audio { width: 100%; 
+        position: absolute; 
+        bottom: 0; } 
 .VideoWrapper { position: absolute; 
                 left: 0; 
                 right: 0; 
