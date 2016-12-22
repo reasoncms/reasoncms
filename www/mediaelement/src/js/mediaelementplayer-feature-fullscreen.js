@@ -63,10 +63,11 @@
 		 */
 		buildfullscreen: function (player, controls, layers, media) {
 
-			if (!player.isVideo)
+			if (!player.isVideo) {
 				return;
+			}
 
-			player.isInIframe = (window.location != window.parent.location);
+			player.isInIframe = (window.location !== window.parent.location);
 
 			// detect on start
 			media.addEventListener('loadstart', function () {
@@ -452,7 +453,7 @@
 				.width('100%')
 				.height('100%');
 			} else {
-				t.container.find('iframe, embed, object')
+				t.container.find('iframe, embed, object, video')
 				.width('100%')
 				.height('100%');
 			}
@@ -516,7 +517,7 @@
 						.width(t.normalWidth)
 						.height(t.normalHeight);
 				} else {
-					t.container.find('iframe, embed, object')
+					t.container.find('iframe, embed, object, video')
 						.width(t.normalWidth)
 						.height(t.normalHeight);
 				}

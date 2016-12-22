@@ -46,7 +46,7 @@ if (jQuery !== undefined) {
 		// default if the user doesn't specify
 		defaultAudioWidth: 400,
 		// default if the user doesn't specify
-		defaultAudioHeight: 30,
+		defaultAudioHeight: 40,
 		// default amount to move back when back key is pressed
 		defaultSeekBackwardInterval: function (media) {
 			return (media.duration * 0.05);
@@ -222,7 +222,7 @@ if (jQuery !== undefined) {
 				keys: [70], // F
 				action: function (player, media, key, event) {
 					if (!event.ctrlKey) {
-						if (typeof player.enterFullScreen != 'undefined') {
+						if (typeof player.enterFullScreen !== 'undefined') {
 							if (player.isFullScreen) {
 								player.exitFullScreen();
 							} else {
@@ -314,9 +314,9 @@ if (jQuery !== undefined) {
 		var elsLen = els.length;
 
 		for (i = 0; i < elsLen; i++) {
-			if (els[i].className.indexOf(className) != -1) {
+			if (els[i].className.indexOf(className) > -1) {
 				teststr = "," + els[i].className.split(" ").join(",") + ",";
-				if (teststr.indexOf("," + className + ",") != -1) {
+				if (teststr.indexOf("," + className + ",") > -1) {
 					classElements[j] = els[i];
 					j++;
 				}
@@ -351,7 +351,7 @@ if (jQuery !== undefined) {
 		}
 
 		// check for existing player
-		if (typeof t.node.player != 'undefined') {
+		if (typeof t.node.player !== 'undefined') {
 			return t.node.player;
 		}
 
@@ -582,8 +582,9 @@ if (jQuery !== undefined) {
 
 			doAnimation = doAnimation === undefined || doAnimation;
 
-			if (t.controlsAreVisible)
+			if (t.controlsAreVisible) {
 				return;
+			}
 
 			if (doAnimation) {
 				t.controls
@@ -625,7 +626,7 @@ if (jQuery !== undefined) {
 
 			if (!t.controlsAreVisible || t.options.alwaysShowControls || t.keyboardAction ||
 				(t.media.paused && t.media.readyState === 4) ||
-				(t.isVideo && !t.options.hideVideoControlsOnLoad) ||
+				(t.isVideo && !t.options.hideVideoControlsOnLoad && !t.media.readyState) ||
 				t.media.ended) {
 				return;
 			}
@@ -670,7 +671,7 @@ if (jQuery !== undefined) {
 
 			var t = this;
 
-			timeout = typeof timeout != 'undefined' ? timeout : t.options.controlsTimeoutDefault;
+			timeout = typeof timeout !== 'undefined' ? timeout : t.options.controlsTimeoutDefault;
 
 			t.killControlsTimer('start');
 
@@ -1328,29 +1329,29 @@ if (jQuery !== undefined) {
 
 		setControlsSize: function () {
 			var
-				t = this,
-				rail = t.controls.find('.' + t.options.classPrefix + 'time-rail')
+				t = this
 			;
-
+				
 			// skip calculation if hidden
-			if (!t.container.is(':visible') || !rail.length || !rail.is(':visible')) {
+			if (!t.container.is(':visible') || !t.rail || !t.rail.length || !t.rail.is(':visible')) {
 				return;
 			}
 
 			var
+				railMargin = parseFloat(t.rail.css('margin-left')) + parseFloat(t.rail.css('margin-right')),
+				totalMargin = parseFloat( t.total.css('margin-left')) + parseFloat(t.total.css('margin-right')),
 				controlElements = t.controls.children(),
-				margin = parseFloat(controlElements.children('.' + t.options.classPrefix + 'time-total').css('margin-left')),
 				siblingsWidth = 0
 			;
 
-			rail.siblings().each(function () {
-				siblingsWidth += $(this).outerWidth(true);
+			t.rail.siblings().each(function () {
+				siblingsWidth += parseFloat( $(this).outerWidth(true) );
 			});
 
-			siblingsWidth += (margin * 2);
+			siblingsWidth += totalMargin + railMargin + 1;
 
 			// Substract the width of the feature siblings from time rail
-			rail.width('100%').width('-=' + siblingsWidth);
+			t.rail.width( t.controls.width() - siblingsWidth );
 
 			t.container.trigger('controlsresize');
 		},
@@ -1404,8 +1405,9 @@ if (jQuery !== undefined) {
 
 		buildoverlays: function (player, controls, layers, media) {
 			var t = this;
-			if (!player.isVideo)
+			if (!player.isVideo) {
 				return;
+			}
 
 			var
 				loading =
@@ -1567,7 +1569,9 @@ if (jQuery !== undefined) {
 
 					for (var j = 0, jl = keyAction.keys.length; j < jl; j++) {
 						if (e.keyCode === keyAction.keys[j]) {
-							if (typeof(e.preventDefault) === "function") e.preventDefault();
+							if (typeof(e.preventDefault) === "function") {
+								e.preventDefault();
+							}
 							keyAction.action(player, media, e.keyCode, e);
 							return false;
 						}
@@ -1736,8 +1740,12 @@ if (jQuery !== undefined) {
 			var doc = t.node ? t.node.ownerDocument : document;
 
 			events = splitEvents(events, t.id);
-			if (events.d) $(doc).on(events.d, data, callback);
-			if (events.w) $(window).on(events.w, data, callback);
+			if (events.d) {
+				$(doc).on(events.d, data, callback);
+			}
+			if (events.w) {
+				$(window).on(events.w, data, callback);
+			}
 		};
 
 		mejs.MediaElementPlayer.prototype.globalUnbind = function (events, callback) {
@@ -1745,13 +1753,17 @@ if (jQuery !== undefined) {
 			var doc = t.node ? t.node.ownerDocument : document;
 
 			events = splitEvents(events, t.id);
-			if (events.d) $(doc).unbind(events.d, callback);
-			if (events.w) $(window).unbind(events.w, callback);
+			if (events.d) {
+				$(doc).unbind(events.d, callback);
+			}
+			if (events.w) {
+				$(window).unbind(events.w, callback);
+			}
 		};
 	})();
 
 	// turn into jQuery plugin
-	if (typeof $ != 'undefined') {
+	if (typeof $ !== 'undefined') {
 		$.fn.mediaelementplayer = function (options) {
 			if (options === false) {
 				this.each(function () {
@@ -1845,6 +1857,7 @@ if (jQuery !== undefined) {
 			function togglePlayPause(which) {
 				if ('play' === which) {
 					play.removeClass(t.options.classPrefix + 'play')
+						.removeClass(t.options.classPrefix + 'replay')
 						.addClass(t.options.classPrefix + 'pause');
 					play_btn.attr({
 						'title': pauseTitle,
@@ -1852,6 +1865,7 @@ if (jQuery !== undefined) {
 					});
 				} else {
 					play.removeClass(t.options.classPrefix + 'pause')
+						.removeClass(t.options.classPrefix + 'replay')
 						.addClass(t.options.classPrefix + 'play');
 					play_btn.attr({
 						'title': playTitle,
@@ -1875,6 +1889,16 @@ if (jQuery !== undefined) {
 			}, false);
 			media.addEventListener('paused',function() {
 				togglePlayPause('pse');
+			}, false);
+
+			media.addEventListener('ended',function() {
+
+				if (!player.options.loop) {
+					play.removeClass(t.options.classPrefix + 'pause')
+						.removeClass(t.options.classPrefix + 'play')
+						.addClass(t.options.classPrefix + 'replay');
+				}
+
 			}, false);
 		}
 	});
@@ -1999,6 +2023,7 @@ if (jQuery !== undefined) {
 			.appendTo(controls);
 			controls.find('.' + t.options.classPrefix + 'time-buffering').hide();
 
+			t.rail = controls.find('.' + t.options.classPrefix + 'time-rail');
 			t.total = controls.find('.' + t.options.classPrefix + 'time-total');
 			t.loaded = controls.find('.' + t.options.classPrefix + 'time-loaded');
 			t.current = controls.find('.' + t.options.classPrefix + 'time-current');
@@ -2184,7 +2209,7 @@ if (jQuery !== undefined) {
 
 
 			// handle clicks
-			t.total.on('mousedown touchstart', function (e) {
+			t.rail.on('mousedown touchstart', function (e) {
 				// only handle left clicks or touch
 				if (e.which === 1 || e.which === 0) {
 					mouseIsDown = true;
@@ -2422,7 +2447,7 @@ if (jQuery !== undefined) {
 
 			var duration = t.media.duration;
 
-			if (isNaN(duration) || duration == Infinity || duration < 0) {
+			if (isNaN(duration) || duration === Infinity || duration < 0) {
 				t.media.duration = t.options.duration = duration = 0;
 			}
 
@@ -2488,8 +2513,9 @@ if (jQuery !== undefined) {
 		buildvolume: function (player, controls, layers, media) {
 
 			// Android and iOS don't support volume controls
-			if ((mejs.MediaFeatures.isAndroid || mejs.MediaFeatures.isiOS) && this.options.hideVolumeOnTouchDevices)
+			if ((mejs.MediaFeatures.isAndroid || mejs.MediaFeatures.isiOS) && this.options.hideVolumeOnTouchDevices) {
 				return;
+			}
 
 			var t = this,
 				mode = (t.isVideo) ? t.options.videoVolume : t.options.audioVolume,
@@ -2849,10 +2875,11 @@ if (jQuery !== undefined) {
 		 */
 		buildfullscreen: function (player, controls, layers, media) {
 
-			if (!player.isVideo)
+			if (!player.isVideo) {
 				return;
+			}
 
-			player.isInIframe = (window.location != window.parent.location);
+			player.isInIframe = (window.location !== window.parent.location);
 
 			// detect on start
 			media.addEventListener('loadstart', function () {
@@ -3238,7 +3265,7 @@ if (jQuery !== undefined) {
 				.width('100%')
 				.height('100%');
 			} else {
-				t.container.find('iframe, embed, object')
+				t.container.find('iframe, embed, object, video')
 				.width('100%')
 				.height('100%');
 			}
@@ -3302,7 +3329,7 @@ if (jQuery !== undefined) {
 						.width(t.normalWidth)
 						.height(t.normalHeight);
 				} else {
-					t.container.find('iframe, embed, object')
+					t.container.find('iframe, embed, object, video')
 						.width(t.normalWidth)
 						.height(t.normalHeight);
 				}
@@ -3890,7 +3917,7 @@ if (jQuery !== undefined) {
 					success: function(d) {
 
 						// parse the loaded file
-						if (typeof d == "string" && (/<tt\s+xml/ig).exec(d)) {
+						if (typeof d === "string" && (/<tt\s+xml/ig).exec(d)) {
 							track.entries = mejs.TrackFormatParser.dfxp.parse(d);
 						} else {
 							track.entries = mejs.TrackFormatParser.webvtt.parse(d);
@@ -3898,7 +3925,7 @@ if (jQuery !== undefined) {
 
 						after();
 
-						if (track.kind == 'chapters') {
+						if (track.kind === 'chapters') {
 							t.media.addEventListener('play', function() {
 								if (t.media.duration > 0) {
 									t.displayChapters(track);
@@ -3906,7 +3933,7 @@ if (jQuery !== undefined) {
 							}, false);
 						}
 
-						if (track.kind == 'slides') {
+						if (track.kind === 'slides') {
 							t.setupSlides(track);
 						}
 					},
@@ -4028,8 +4055,9 @@ if (jQuery !== undefined) {
 		 */
 		displayCaptions: function() {
 
-			if (this.tracks === undefined)
+			if (this.tracks === undefined) {
 				return;
+			}
 
 			var
 				t = this,
@@ -4396,10 +4424,18 @@ if (jQuery !== undefined) {
 						}
 					;
 
-					if (lines.eq(i).attr("begin")) _temp.start = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i).attr("begin"));
-					if (!_temp.start && lines.eq(i-1).attr("end")) _temp.start = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i-1).attr("end"));
-					if (lines.eq(i).attr("end")) _temp.stop = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i).attr("end"));
-					if (!_temp.stop && lines.eq(i+1).attr("begin")) _temp.stop = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i+1).attr("begin"));
+					if (lines.eq(i).attr("begin")) {
+						_temp.start = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i).attr("begin"));
+					}
+					if (!_temp.start && lines.eq(i-1).attr("end")) {
+						_temp.start = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i-1).attr("end"));
+					}
+					if (lines.eq(i).attr("end")) {
+						_temp.stop = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i).attr("end"));
+					}
+					if (!_temp.stop && lines.eq(i+1).attr("begin")) {
+						_temp.stop = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i+1).attr("begin"));
+					}
 
 					if (styles) {
 						style = "";
@@ -4407,8 +4443,12 @@ if (jQuery !== undefined) {
 							style += _style + ":" + styles[_style] + ";";
 						}
 					}
-					if (style) _temp.style = style;
-					if (_temp.start === 0) _temp.start = 0.200;
+					if (style) {
+						_temp.style = style;
+					}
+					if (_temp.start === 0) {
+						_temp.start = 0.200;
+					}
 					_temp.text = $.trim(lines.eq(i).html()).replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, "<a href='$1' target='_blank'>$1</a>");
 					entries.push(_temp);
 				}
@@ -4429,7 +4469,7 @@ if (jQuery !== undefined) {
 	};
 
 	// test for browsers with bad String.split method.
-	if ('x\n\ny'.split(/\n/gi).length != 3) {
+	if ('x\n\ny'.split(/\n/gi).length !== 3) {
 		// add super slow IE8 and below version
 		mejs.TrackFormatParser.split2 = function(text, regex) {
 			var
@@ -4716,8 +4756,9 @@ $.extend(mejs.MepDefaults,
 			render: function(player) {
 
 				// check for fullscreen plugin
-				if (player.enterFullScreen === undefined)
+				if (player.enterFullScreen === undefined) {
 					return null;
+				}
 
 				if (player.isFullScreen) {
 					return mejs.i18n.t('mejs.fullscreen-off');
@@ -4867,14 +4908,16 @@ $.extend(mejs.MepDefaults,
 					item = t.options.contextMenuItems[itemIndex];
 
 				// bind extra functionality?
-				if (typeof item.show != 'undefined')
+				if (typeof item.show !== 'undefined') {
 					item.show( $dom , t);
+				}
 
 				// bind click action
 				$dom.click(function() {
 					// perform click action
-					if (typeof item.click != 'undefined')
+					if (typeof item.click !== 'undefined') {
 						item.click(t);
+					}
 
 					// close
 					t.contextMenu.hide();
@@ -5164,109 +5207,6 @@ $.extend(mejs.MepDefaults,
 				}
 			}
 
-		}
-	});
-
-})(mejs.$);
-
-/*
- *
- * Requires JQuery
- */
-/**
- * Google Analytics Plugin
- *
- * This feature enables GA to send certain events, such as play, pause, ended, etc. It requires previous configuration
- * on GA to send events properly.
- * @see https://developers.google.com/analytics/devguides/collection/analyticsjs/events
- */
-(function ($) {
-
-	// Feature configuration
-	$.extend(mejs.MepDefaults, {
-		/**
-		 * @type {String}
-		 */
-		googleAnalyticsTitle: '',
-		/**
-		 * @type {String}
-		 */
-		googleAnalyticsCategory: 'Videos',
-		/**
-		 * @type {String}
-		 */
-		googleAnalyticsEventPlay: 'Play',
-		/**
-		 * @type {String}
-		 */
-		googleAnalyticsEventPause: 'Pause',
-		/**
-		 * @type {String}
-		 */
-		googleAnalyticsEventEnded: 'Ended',
-		/**
-		 * @type {String}
-		 */
-		googleAnalyticsEventTime: 'Time'
-	});
-
-
-	$.extend(MediaElementPlayer.prototype, {
-
-		/**
-		 * Feature constructor.
-		 *
-		 * Always has to be prefixed with `build` and the name that will be used in MepDefaults.features list
-		 * @param {MediaElementPlayer} player
-		 * @param {$} controls
-		 * @param {$} layers
-		 * @param {HTMLElement} media
-		 */
-		buildgoogleanalytics: function (player, controls, layers, media) {
-
-			media.addEventListener('play', function () {
-				if (typeof ga != 'undefined') {
-					ga('send', 'event',
-						player.options.googleAnalyticsCategory,
-						player.options.googleAnalyticsEventPlay,
-						(player.options.googleAnalyticsTitle === '') ? player.media.currentSrc : player.options.googleAnalyticsTitle
-					);
-				}
-			}, false);
-
-			media.addEventListener('pause', function () {
-				if (typeof ga != 'undefined') {
-					ga('send', 'event',
-						player.options.googleAnalyticsCategory,
-						player.options.googleAnalyticsEventPause,
-						(player.options.googleAnalyticsTitle === '') ? player.media.currentSrc : player.options.googleAnalyticsTitle
-					);
-				}
-			}, false);
-
-			media.addEventListener('ended', function () {
-				if (typeof ga != 'undefined') {
-					ga('send', 'event',
-						player.options.googleAnalyticsCategory,
-						player.options.googleAnalyticsEventEnded,
-						(player.options.googleAnalyticsTitle === '') ? player.media.currentSrc : player.options.googleAnalyticsTitle
-					);
-				}
-			}, false);
-
-			/*
-			 media.addEventListener('timeupdate', function() {
-			 if (typeof ga != 'undefined') {
-			 ga('send', 'event',
-			 player.options.googleAnalyticsCategory,
-			 player.options.googleAnalyticsEventEnded,
-			 player.options.googleAnalyticsTime,
-			 (player.options.googleAnalyticsTitle === '') ? player.media.currentSrc : player.options.googleAnalyticsTitle,
-			 player.currentTime
-			 );
-			 }
-			 }, true);
-			 */
 		}
 	});
 

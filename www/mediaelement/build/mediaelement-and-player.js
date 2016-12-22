@@ -78,7 +78,7 @@ mejs.version = '3.0';
 		 * @return {Object}
 		 */
 		createEvent: function (eventName, target) {
-			var event = null;
+			var event;
 
 			if (doc.createEvent) {
 				event = doc.createEvent('Event');
@@ -86,9 +86,9 @@ mejs.version = '3.0';
 				event.target = target;
 			} else {
 				event = {};
+				event.type = eventName;
+				event.target = target;
 			}
-			event.type = eventName;
-			event.target = target;
 
 			return event;
 		},
@@ -364,7 +364,7 @@ mejs.version = '3.0';
 
 			var format = options.timeFormat,
 				firstChar = format[0],
-				firstTwoPlaces = (format[1] == format[0]),
+				firstTwoPlaces = (format[1] === format[0]),
 				separatorIndex = firstTwoPlaces ? 2 : 1,
 				separator = ':',
 				hours = Math.floor(time / 3600) % 24,
@@ -422,13 +422,15 @@ mejs.version = '3.0';
 		 * @return {number}
 		 */
 		convertSMPTEtoSeconds: function (SMPTE) {
-			if (typeof SMPTE !== 'string')
+
+			if (typeof SMPTE !== 'string') {
 				return false;
+			}
 
 			SMPTE = SMPTE.replace(',', '.');
 
 			var secs = 0,
-				decimalLen = (SMPTE.indexOf('.') != -1) ? SMPTE.split('.')[1].length : 0,
+				decimalLen = (SMPTE.indexOf('.') > -1) ? SMPTE.split('.')[1].length : 0,
 				multiplier = 1;
 
 			SMPTE = SMPTE.split(':').reverse();
@@ -449,12 +451,16 @@ mejs.version = '3.0';
 				var context = this, args = arguments;
 				var later = function () {
 					timeout = null;
-					if (!immediate) func.apply(context, args);
+					if (!immediate) {
+						func.apply(context, args);
+					}
 				};
 				var callNow = immediate && !timeout;
 				clearTimeout(timeout);
 				timeout = setTimeout(later, wait);
-				if (callNow) func.apply(context, args);
+				if (callNow) {
+					func.apply(context, args);
+				}
 			};
 		},
 		/**
@@ -509,7 +515,7 @@ mejs.version = '3.0';
 		features.isiPhone = (ua.match(/iphone/i) !== null);
 		features.isiOS = features.isiPhone || features.isiPad;
 		features.isAndroid = (ua.match(/android/i) !== null);
-		features.isIE = (nav.appName.toLowerCase().indexOf("microsoft") != -1 || nav.appName.toLowerCase().match(/trident/gi) !== null);
+		features.isIE = (nav.appName.toLowerCase().indexOf("microsoft") > -1 || nav.appName.toLowerCase().match(/trident/gi) !== null);
 		features.isChrome = (ua.match(/chrome/gi) !== null);
 		features.isFirefox = (ua.match(/firefox/gi) !== null);
 
@@ -634,6 +640,101 @@ mejs.version = '3.0';
 	})();
 
 })(window, document, window.mejs || {});
+// IE6,7,8
+// Production steps of ECMA-262, Edition 5, 15.4.4.14
+// Reference: http://es5.github.io/#x15.4.4.14
+if (!Array.prototype.indexOf) {
+	Array.prototype.indexOf = function (searchElement, fromIndex) {
+
+		var k;
+
+		// 1. Let O be the result of calling ToObject passing
+		//	   the this value as the argument.
+		if (this === undefined || this === null) {
+			throw new TypeError('"this" is null or not defined');
+		}
+
+		var O = Object(this);
+
+		// 2. Let lenValue be the result of calling the Get
+		//	   internal method of O with the argument "length".
+		// 3. Let len be ToUint32(lenValue).
+		var len = O.length >>> 0;
+
+		// 4. If len is 0, return -1.
+		if (len === 0) {
+			return -1;
+		}
+
+		// 5. If argument fromIndex was passed let n be
+		//	   ToInteger(fromIndex); else let n be 0.
+		var n = +fromIndex || 0;
+
+		if (Math.abs(n) === Infinity) {
+			n = 0;
+		}
+
+		// 6. If n >= len, return -1.
+		if (n >= len) {
+			return -1;
+		}
+
+		// 7. If n >= 0, then Let k be n.
+		// 8. Else, n<0, Let k be len - abs(n).
+		//	   If k is less than 0, then let k be 0.
+		k = Math.max(n >= 0 ? n : len - Math.abs(n), 0);
+
+		// 9. Repeat, while k < len
+		while (k < len) {
+			// a. Let Pk be ToString(k).
+			//   This is implicit for LHS operands of the in operator
+			// b. Let kPresent be the result of calling the
+			//	HasProperty internal method of O with argument Pk.
+			//   This step can be combined with c
+			// c. If kPresent is true, then
+			//	i.	Let elementK be the result of calling the Get
+			//		internal method of O with the argument ToString(k).
+			//   ii.	Let same be the result of applying the
+			//		Strict Equality Comparison Algorithm to
+			//		searchElement and elementK.
+			//  iii.	If same is true, return k.
+			if (k in O && O[k] === searchElement) {
+				return k;
+			}
+			k++;
+		}
+		return -1;
+	};
+}
+
+// document.createEvent for IE8 or other old browsers that do not implement it
+// Reference: https://github.com/WebReflection/ie8/blob/master/build/ie8.max.js
+if (document.createEvent === undefined) {
+	document.createEvent = function (event) {
+
+		var e;
+
+		e = document.createEventObject();
+		e.timeStamp = (new Date()).getTime();
+		e.enumerable = true;
+		e.writable = true;
+		e.configurable = true;
+
+		e.initEvent = function (type, bubbles, cancelable) {
+			this.type = type;
+			this.bubbles = !!bubbles;
+			this.cancelable = !!cancelable;
+			if (!this.bubbles) {
+				this.stopPropagation = function () {
+					this.stoppedPropagation = true;
+					this.cancelBubble = true;
+				};
+			}
+		};
+
+		return e;
+	};
+}
 /**
  * MediaElement core
  *
@@ -1065,7 +1166,7 @@ mejs.version = '3.0';
 					// create the renderer
 					newRendererType = mejs.Renderers.renderers[rendererArray[index]];
 
-					var renderOptions = mejs.Utils.extend({}, mediaElement.options, newRendererType.options);
+					var renderOptions = mejs.Utils.extend({}, newRendererType.options, mediaElement.options);
 					newRenderer = newRendererType.create(mediaElement, renderOptions, mediaFiles);
 					newRenderer.name = rendererName;
 
@@ -1128,7 +1229,7 @@ mejs.version = '3.0';
 					// test <source> types to see if they are usable
 					for (i = 0; i < sources; i++) {
 						n = mediaElement.originalNode.childNodes[i];
-						if (n.nodeType == 1 && n.tagName.toLowerCase() === 'source') {
+						if (n.nodeType === Node.ELEMENT_NODE && n.tagName.toLowerCase() === 'source') {
 							src = n.getAttribute('src');
 							type = mejs.Utils.formatType(src, n.getAttribute('type'));
 							mediaFiles.push({type: type, src: src});
@@ -1929,7 +2030,7 @@ mejs.version = '3.0';
 				 * @see http://cdn.dashjs.org/latest/jsdoc/MediaPlayerEvents.html
 				 */
 				var assignMdashEvents = function (e, data) {
-					var event = mejs.Utils.createEvent(e, node);
+					var event = mejs.Utils.createEvent(e.type, node);
 					mediaElement.dispatchEvent(event);
 
 					if (e === 'error') {
@@ -2426,6 +2527,7 @@ mejs.version = '3.0';
 		 * - http://www.youtube.com/watch?feature=player_embedded&v=yyWWXSwtPP0
 		 * - http://www.youtube.com/v/VIDEO_ID?version=3
 		 * - http://youtu.be/Djd6tPrxc08
+		 * - http://www.youtube-nocookie.com/watch?feature=player_embedded&v=yyWWXSwtPP0
 		 *
 		 * @param {String} url
 		 * @return {string}
@@ -2490,6 +2592,21 @@ mejs.version = '3.0';
 			url = parts[0];
 
 			return url.substring(url.lastIndexOf('/') + 1);
+		},
+
+		/**
+		 * Inject `no-cookie` element to URL. Only works with format: http://www.youtube.com/v/VIDEO_ID?version=3
+		 * @param {String} url
+		 * @return {?String}
+		 */
+		getYouTubeNoCookieUrl: function(url) {
+			if (url === undefined || url === null || url.indexOf('www.youtube') === -1) {
+				return url;
+			}
+
+			var parts = url.split('/');
+			parts[2] = parts[2].replace('.com', '-nocookie.com');
+			return parts.join('/');
 		}
 	};
 
@@ -2505,7 +2622,26 @@ mejs.version = '3.0';
 		name: 'youtube_iframe',
 
 		options: {
-			prefix: 'youtube_iframe'
+			prefix: 'youtube_iframe',
+			/**
+			 * Custom configuration for YouTube player
+			 *
+			 * @see https://developers.google.com/youtube/player_parameters#Parameters
+			 * @type {Object}
+			 */
+			youtube: {
+				autoplay: 0,
+				disablekb: 1,
+				end: 0,
+				loop: 0,
+				modestbranding: 0,
+				playsinline: 0,
+				rel: 0,
+				showinfo: 0,
+				start: 0,
+				// custom to inject `-nocookie` element in URL
+				nocookie: true
+			}
 		},
 
 		/**
@@ -2693,6 +2829,12 @@ mejs.version = '3.0';
 			// CREATE YouTube
 			var youtubeContainer = doc.createElement('div');
 			youtubeContainer.id = youtube.id;
+
+			// If `nocookie` feature was enabled, modify original URL
+			if (youtube.options.youtube.nocookie) {
+				mediaElement.originalNode.setAttribute('src', YouTubeApi.getYouTubeNoCookieUrl(mediaFiles[0].src));
+			}
+
 			mediaElement.originalNode.parentNode.insertBefore(youtubeContainer, mediaElement.originalNode);
 			mediaElement.originalNode.style.display = 'none';
 
@@ -2706,15 +2848,16 @@ mejs.version = '3.0';
 					videoId: videoId,
 					height: height,
 					width: width,
-					playerVars: {
+					playerVars: mejs.Utils.extend({
 						controls: 0,
 						rel: 0,
 						disablekb: 1,
 						showinfo: 0,
 						modestbranding: 0,
 						html5: 1,
-						playsinline: 1
-					},
+						playsinline: 0,
+						start: 0,
+						end: 0}, youtube.options.youtube),
 					origin: win.location.host,
 					events: {
 						onReady: function (e) {
@@ -4209,7 +4352,8 @@ mejs.version = '3.0';
 							var fbEvents = ['startedPlaying', 'paused', 'finishedPlaying', 'startedBuffering', 'finishedBuffering'];
 							for (i = 0, il = fbEvents.length; i < il; i++) {
 								var event = fbEvents[i], handler = eventHandler[event];
-								if (!mejs.Utility.isObjectEmpty(handler) && typeof handler.removeListener === 'function') {
+								if (handler !== undefined && handler !== null &&
+									!mejs.Utility.isObjectEmpty(handler) && typeof handler.removeListener === 'function') {
 									handler.removeListener(event);
 								}
 							}
@@ -4805,7 +4949,7 @@ mejs.version = '3.0';
 			var pv = this.plugins[plugin];
 			v[1] = v[1] || 0;
 			v[2] = v[2] || 0;
-			return (pv[0] > v[0] || (pv[0] == v[0] && pv[1] > v[1]) || (pv[0] == v[0] && pv[1] == v[1] && pv[2] >= v[2]));
+			return (pv[0] > v[0] || (pv[0] === v[0] && pv[1] > v[1]) || (pv[0] === v[0] && pv[1] === v[1] && pv[2] >= v[2]));
 		},
 
 		/**
@@ -4841,7 +4985,7 @@ mejs.version = '3.0';
 			// Firefox, Webkit, Opera
 			if (typeof(this.nav.plugins) !== 'undefined' && typeof this.nav.plugins[pluginName] === 'object') {
 				description = this.nav.plugins[pluginName].description;
-				if (description && !(typeof this.nav.mimeTypes != 'undefined' && this.nav.mimeTypes[mimeType] && !this.nav.mimeTypes[mimeType].enabledPlugin)) {
+				if (description && !(typeof this.nav.mimeTypes !== 'undefined' && this.nav.mimeTypes[mimeType] && !this.nav.mimeTypes[mimeType].enabledPlugin)) {
 					version = description.replace(pluginName, '').replace(/^\s+/, '').replace(/\sr/gi, '.').split('.');
 					for (i = 0; i < version.length; i++) {
 						version[i] = parseInt(version[i].match(/\d+/), 10);
@@ -5930,7 +6074,7 @@ if (jQuery !== undefined) {
 		// default if the user doesn't specify
 		defaultAudioWidth: 400,
 		// default if the user doesn't specify
-		defaultAudioHeight: 30,
+		defaultAudioHeight: 40,
 		// default amount to move back when back key is pressed
 		defaultSeekBackwardInterval: function (media) {
 			return (media.duration * 0.05);
@@ -6106,7 +6250,7 @@ if (jQuery !== undefined) {
 				keys: [70], // F
 				action: function (player, media, key, event) {
 					if (!event.ctrlKey) {
-						if (typeof player.enterFullScreen != 'undefined') {
+						if (typeof player.enterFullScreen !== 'undefined') {
 							if (player.isFullScreen) {
 								player.exitFullScreen();
 							} else {
@@ -6198,9 +6342,9 @@ if (jQuery !== undefined) {
 		var elsLen = els.length;
 
 		for (i = 0; i < elsLen; i++) {
-			if (els[i].className.indexOf(className) != -1) {
+			if (els[i].className.indexOf(className) > -1) {
 				teststr = "," + els[i].className.split(" ").join(",") + ",";
-				if (teststr.indexOf("," + className + ",") != -1) {
+				if (teststr.indexOf("," + className + ",") > -1) {
 					classElements[j] = els[i];
 					j++;
 				}
@@ -6235,7 +6379,7 @@ if (jQuery !== undefined) {
 		}
 
 		// check for existing player
-		if (typeof t.node.player != 'undefined') {
+		if (typeof t.node.player !== 'undefined') {
 			return t.node.player;
 		}
 
@@ -6466,8 +6610,9 @@ if (jQuery !== undefined) {
 
 			doAnimation = doAnimation === undefined || doAnimation;
 
-			if (t.controlsAreVisible)
+			if (t.controlsAreVisible) {
 				return;
+			}
 
 			if (doAnimation) {
 				t.controls
@@ -6509,7 +6654,7 @@ if (jQuery !== undefined) {
 
 			if (!t.controlsAreVisible || t.options.alwaysShowControls || t.keyboardAction ||
 				(t.media.paused && t.media.readyState === 4) ||
-				(t.isVideo && !t.options.hideVideoControlsOnLoad) ||
+				(t.isVideo && !t.options.hideVideoControlsOnLoad && !t.media.readyState) ||
 				t.media.ended) {
 				return;
 			}
@@ -6554,7 +6699,7 @@ if (jQuery !== undefined) {
 
 			var t = this;
 
-			timeout = typeof timeout != 'undefined' ? timeout : t.options.controlsTimeoutDefault;
+			timeout = typeof timeout !== 'undefined' ? timeout : t.options.controlsTimeoutDefault;
 
 			t.killControlsTimer('start');
 
@@ -7212,29 +7357,29 @@ if (jQuery !== undefined) {
 
 		setControlsSize: function () {
 			var
-				t = this,
-				rail = t.controls.find('.' + t.options.classPrefix + 'time-rail')
+				t = this
 			;
-
+				
 			// skip calculation if hidden
-			if (!t.container.is(':visible') || !rail.length || !rail.is(':visible')) {
+			if (!t.container.is(':visible') || !t.rail || !t.rail.length || !t.rail.is(':visible')) {
 				return;
 			}
 
 			var
+				railMargin = parseFloat(t.rail.css('margin-left')) + parseFloat(t.rail.css('margin-right')),
+				totalMargin = parseFloat( t.total.css('margin-left')) + parseFloat(t.total.css('margin-right')),
 				controlElements = t.controls.children(),
-				margin = parseFloat(controlElements.children('.' + t.options.classPrefix + 'time-total').css('margin-left')),
 				siblingsWidth = 0
 			;
 
-			rail.siblings().each(function () {
-				siblingsWidth += $(this).outerWidth(true);
+			t.rail.siblings().each(function () {
+				siblingsWidth += parseFloat( $(this).outerWidth(true) );
 			});
 
-			siblingsWidth += (margin * 2);
+			siblingsWidth += totalMargin + railMargin + 1;
 
 			// Substract the width of the feature siblings from time rail
-			rail.width('100%').width('-=' + siblingsWidth);
+			t.rail.width( t.controls.width() - siblingsWidth );
 
 			t.container.trigger('controlsresize');
 		},
@@ -7288,8 +7433,9 @@ if (jQuery !== undefined) {
 
 		buildoverlays: function (player, controls, layers, media) {
 			var t = this;
-			if (!player.isVideo)
+			if (!player.isVideo) {
 				return;
+			}
 
 			var
 				loading =
@@ -7451,7 +7597,9 @@ if (jQuery !== undefined) {
 
 					for (var j = 0, jl = keyAction.keys.length; j < jl; j++) {
 						if (e.keyCode === keyAction.keys[j]) {
-							if (typeof(e.preventDefault) === "function") e.preventDefault();
+							if (typeof(e.preventDefault) === "function") {
+								e.preventDefault();
+							}
 							keyAction.action(player, media, e.keyCode, e);
 							return false;
 						}
@@ -7620,8 +7768,12 @@ if (jQuery !== undefined) {
 			var doc = t.node ? t.node.ownerDocument : document;
 
 			events = splitEvents(events, t.id);
-			if (events.d) $(doc).on(events.d, data, callback);
-			if (events.w) $(window).on(events.w, data, callback);
+			if (events.d) {
+				$(doc).on(events.d, data, callback);
+			}
+			if (events.w) {
+				$(window).on(events.w, data, callback);
+			}
 		};
 
 		mejs.MediaElementPlayer.prototype.globalUnbind = function (events, callback) {
@@ -7629,13 +7781,17 @@ if (jQuery !== undefined) {
 			var doc = t.node ? t.node.ownerDocument : document;
 
 			events = splitEvents(events, t.id);
-			if (events.d) $(doc).unbind(events.d, callback);
-			if (events.w) $(window).unbind(events.w, callback);
+			if (events.d) {
+				$(doc).unbind(events.d, callback);
+			}
+			if (events.w) {
+				$(window).unbind(events.w, callback);
+			}
 		};
 	})();
 
 	// turn into jQuery plugin
-	if (typeof $ != 'undefined') {
+	if (typeof $ !== 'undefined') {
 		$.fn.mediaelementplayer = function (options) {
 			if (options === false) {
 				this.each(function () {
@@ -7729,6 +7885,7 @@ if (jQuery !== undefined) {
 			function togglePlayPause(which) {
 				if ('play' === which) {
 					play.removeClass(t.options.classPrefix + 'play')
+						.removeClass(t.options.classPrefix + 'replay')
 						.addClass(t.options.classPrefix + 'pause');
 					play_btn.attr({
 						'title': pauseTitle,
@@ -7736,6 +7893,7 @@ if (jQuery !== undefined) {
 					});
 				} else {
 					play.removeClass(t.options.classPrefix + 'pause')
+						.removeClass(t.options.classPrefix + 'replay')
 						.addClass(t.options.classPrefix + 'play');
 					play_btn.attr({
 						'title': playTitle,
@@ -7759,6 +7917,16 @@ if (jQuery !== undefined) {
 			}, false);
 			media.addEventListener('paused',function() {
 				togglePlayPause('pse');
+			}, false);
+
+			media.addEventListener('ended',function() {
+
+				if (!player.options.loop) {
+					play.removeClass(t.options.classPrefix + 'pause')
+						.removeClass(t.options.classPrefix + 'play')
+						.addClass(t.options.classPrefix + 'replay');
+				}
+
 			}, false);
 		}
 	});
@@ -7883,6 +8051,7 @@ if (jQuery !== undefined) {
 			.appendTo(controls);
 			controls.find('.' + t.options.classPrefix + 'time-buffering').hide();
 
+			t.rail = controls.find('.' + t.options.classPrefix + 'time-rail');
 			t.total = controls.find('.' + t.options.classPrefix + 'time-total');
 			t.loaded = controls.find('.' + t.options.classPrefix + 'time-loaded');
 			t.current = controls.find('.' + t.options.classPrefix + 'time-current');
@@ -8068,7 +8237,7 @@ if (jQuery !== undefined) {
 
 
 			// handle clicks
-			t.total.on('mousedown touchstart', function (e) {
+			t.rail.on('mousedown touchstart', function (e) {
 				// only handle left clicks or touch
 				if (e.which === 1 || e.which === 0) {
 					mouseIsDown = true;
@@ -8306,7 +8475,7 @@ if (jQuery !== undefined) {
 
 			var duration = t.media.duration;
 
-			if (isNaN(duration) || duration == Infinity || duration < 0) {
+			if (isNaN(duration) || duration === Infinity || duration < 0) {
 				t.media.duration = t.options.duration = duration = 0;
 			}
 
@@ -8372,8 +8541,9 @@ if (jQuery !== undefined) {
 		buildvolume: function (player, controls, layers, media) {
 
 			// Android and iOS don't support volume controls
-			if ((mejs.MediaFeatures.isAndroid || mejs.MediaFeatures.isiOS) && this.options.hideVolumeOnTouchDevices)
+			if ((mejs.MediaFeatures.isAndroid || mejs.MediaFeatures.isiOS) && this.options.hideVolumeOnTouchDevices) {
 				return;
+			}
 
 			var t = this,
 				mode = (t.isVideo) ? t.options.videoVolume : t.options.audioVolume,
@@ -8733,10 +8903,11 @@ if (jQuery !== undefined) {
 		 */
 		buildfullscreen: function (player, controls, layers, media) {
 
-			if (!player.isVideo)
+			if (!player.isVideo) {
 				return;
+			}
 
-			player.isInIframe = (window.location != window.parent.location);
+			player.isInIframe = (window.location !== window.parent.location);
 
 			// detect on start
 			media.addEventListener('loadstart', function () {
@@ -9122,7 +9293,7 @@ if (jQuery !== undefined) {
 				.width('100%')
 				.height('100%');
 			} else {
-				t.container.find('iframe, embed, object')
+				t.container.find('iframe, embed, object, video')
 				.width('100%')
 				.height('100%');
 			}
@@ -9186,7 +9357,7 @@ if (jQuery !== undefined) {
 						.width(t.normalWidth)
 						.height(t.normalHeight);
 				} else {
-					t.container.find('iframe, embed, object')
+					t.container.find('iframe, embed, object, video')
 						.width(t.normalWidth)
 						.height(t.normalHeight);
 				}
@@ -9774,7 +9945,7 @@ if (jQuery !== undefined) {
 					success: function(d) {
 
 						// parse the loaded file
-						if (typeof d == "string" && (/<tt\s+xml/ig).exec(d)) {
+						if (typeof d === "string" && (/<tt\s+xml/ig).exec(d)) {
 							track.entries = mejs.TrackFormatParser.dfxp.parse(d);
 						} else {
 							track.entries = mejs.TrackFormatParser.webvtt.parse(d);
@@ -9782,7 +9953,7 @@ if (jQuery !== undefined) {
 
 						after();
 
-						if (track.kind == 'chapters') {
+						if (track.kind === 'chapters') {
 							t.media.addEventListener('play', function() {
 								if (t.media.duration > 0) {
 									t.displayChapters(track);
@@ -9790,7 +9961,7 @@ if (jQuery !== undefined) {
 							}, false);
 						}
 
-						if (track.kind == 'slides') {
+						if (track.kind === 'slides') {
 							t.setupSlides(track);
 						}
 					},
@@ -9912,8 +10083,9 @@ if (jQuery !== undefined) {
 		 */
 		displayCaptions: function() {
 
-			if (this.tracks === undefined)
+			if (this.tracks === undefined) {
 				return;
+			}
 
 			var
 				t = this,
@@ -10280,10 +10452,18 @@ if (jQuery !== undefined) {
 						}
 					;
 
-					if (lines.eq(i).attr("begin")) _temp.start = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i).attr("begin"));
-					if (!_temp.start && lines.eq(i-1).attr("end")) _temp.start = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i-1).attr("end"));
-					if (lines.eq(i).attr("end")) _temp.stop = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i).attr("end"));
-					if (!_temp.stop && lines.eq(i+1).attr("begin")) _temp.stop = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i+1).attr("begin"));
+					if (lines.eq(i).attr("begin")) {
+						_temp.start = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i).attr("begin"));
+					}
+					if (!_temp.start && lines.eq(i-1).attr("end")) {
+						_temp.start = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i-1).attr("end"));
+					}
+					if (lines.eq(i).attr("end")) {
+						_temp.stop = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i).attr("end"));
+					}
+					if (!_temp.stop && lines.eq(i+1).attr("begin")) {
+						_temp.stop = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i+1).attr("begin"));
+					}
 
 					if (styles) {
 						style = "";
@@ -10291,8 +10471,12 @@ if (jQuery !== undefined) {
 							style += _style + ":" + styles[_style] + ";";
 						}
 					}
-					if (style) _temp.style = style;
-					if (_temp.start === 0) _temp.start = 0.200;
+					if (style) {
+						_temp.style = style;
+					}
+					if (_temp.start === 0) {
+						_temp.start = 0.200;
+					}
 					_temp.text = $.trim(lines.eq(i).html()).replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, "<a href='$1' target='_blank'>$1</a>");
 					entries.push(_temp);
 				}
@@ -10313,7 +10497,7 @@ if (jQuery !== undefined) {
 	};
 
 	// test for browsers with bad String.split method.
-	if ('x\n\ny'.split(/\n/gi).length != 3) {
+	if ('x\n\ny'.split(/\n/gi).length !== 3) {
 		// add super slow IE8 and below version
 		mejs.TrackFormatParser.split2 = function(text, regex) {
 			var
@@ -10600,8 +10784,9 @@ $.extend(mejs.MepDefaults,
 			render: function(player) {
 
 				// check for fullscreen plugin
-				if (player.enterFullScreen === undefined)
+				if (player.enterFullScreen === undefined) {
 					return null;
+				}
 
 				if (player.isFullScreen) {
 					return mejs.i18n.t('mejs.fullscreen-off');
@@ -10751,14 +10936,16 @@ $.extend(mejs.MepDefaults,
 					item = t.options.contextMenuItems[itemIndex];
 
 				// bind extra functionality?
-				if (typeof item.show != 'undefined')
+				if (typeof item.show !== 'undefined') {
 					item.show( $dom , t);
+				}
 
 				// bind click action
 				$dom.click(function() {
 					// perform click action
-					if (typeof item.click != 'undefined')
+					if (typeof item.click !== 'undefined') {
 						item.click(t);
+					}
 
 					// close
 					t.contextMenu.hide();
@@ -11048,109 +11235,6 @@ $.extend(mejs.MepDefaults,
 				}
 			}
 
-		}
-	});
-
-})(mejs.$);
-
-/*
- *
- * Requires JQuery
- */
-/**
- * Google Analytics Plugin
- *
- * This feature enables GA to send certain events, such as play, pause, ended, etc. It requires previous configuration
- * on GA to send events properly.
- * @see https://developers.google.com/analytics/devguides/collection/analyticsjs/events
- */
-(function ($) {
-
-	// Feature configuration
-	$.extend(mejs.MepDefaults, {
-		/**
-		 * @type {String}
-		 */
-		googleAnalyticsTitle: '',
-		/**
-		 * @type {String}
-		 */
-		googleAnalyticsCategory: 'Videos',
-		/**
-		 * @type {String}
-		 */
-		googleAnalyticsEventPlay: 'Play',
-		/**
-		 * @type {String}
-		 */
-		googleAnalyticsEventPause: 'Pause',
-		/**
-		 * @type {String}
-		 */
-		googleAnalyticsEventEnded: 'Ended',
-		/**
-		 * @type {String}
-		 */
-		googleAnalyticsEventTime: 'Time'
-	});
-
-
-	$.extend(MediaElementPlayer.prototype, {
-
-		/**
-		 * Feature constructor.
-		 *
-		 * Always has to be prefixed with `build` and the name that will be used in MepDefaults.features list
-		 * @param {MediaElementPlayer} player
-		 * @param {$} controls
-		 * @param {$} layers
-		 * @param {HTMLElement} media
-		 */
-		buildgoogleanalytics: function (player, controls, layers, media) {
-
-			media.addEventListener('play', function () {
-				if (typeof ga != 'undefined') {
-					ga('send', 'event',
-						player.options.googleAnalyticsCategory,
-						player.options.googleAnalyticsEventPlay,
-						(player.options.googleAnalyticsTitle === '') ? player.media.currentSrc : player.options.googleAnalyticsTitle
-					);
-				}
-			}, false);
-
-			media.addEventListener('pause', function () {
-				if (typeof ga != 'undefined') {
-					ga('send', 'event',
-						player.options.googleAnalyticsCategory,
-						player.options.googleAnalyticsEventPause,
-						(player.options.googleAnalyticsTitle === '') ? player.media.currentSrc : player.options.googleAnalyticsTitle
-					);
-				}
-			}, false);
-
-			media.addEventListener('ended', function () {
-				if (typeof ga != 'undefined') {
-					ga('send', 'event',
-						player.options.googleAnalyticsCategory,
-						player.options.googleAnalyticsEventEnded,
-						(player.options.googleAnalyticsTitle === '') ? player.media.currentSrc : player.options.googleAnalyticsTitle
-					);
-				}
-			}, false);
-
-			/*
-			 media.addEventListener('timeupdate', function() {
-			 if (typeof ga != 'undefined') {
-			 ga('send', 'event',
-			 player.options.googleAnalyticsCategory,
-			 player.options.googleAnalyticsEventEnded,
-			 player.options.googleAnalyticsTime,
-			 (player.options.googleAnalyticsTitle === '') ? player.media.currentSrc : player.options.googleAnalyticsTitle,
-			 player.currentTime
-			 );
-			 }
-			 }, true);
-			 */
 		}
 	});
 
