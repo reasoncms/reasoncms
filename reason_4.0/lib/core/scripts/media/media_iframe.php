@@ -296,7 +296,8 @@ if ($media_work
 		&& $media_work->get_value('av_type') == 'Video') {
 	echo '<script src="' . REASON_PACKAGE_HTTP_BASE_PATH . 'mediaelement/build/mediaelement-and-player.min.js"></script>';
 	echo '<link rel="stylesheet" href="' . REASON_PACKAGE_HTTP_BASE_PATH . 'mediaelement/build/mediaelementplayer.min.css" />';
-	$params = json_encode($displayer->get_mediaelementjs_params());
+	$media_site_id = get_owner_site_id($media_work->id());
+		$params = json_encode($displayer->get_mediaelementjs_params(array('site_id_for_title' => $media_site_id)));
 	echo "<script>var mediaelementparams = $params;</script>\n";
 	echo '<script src="' . REASON_HTTP_BASE_PATH . 'media/zencoder/mediaelement_init.js"></script>' . "\n";
 }

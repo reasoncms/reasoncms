@@ -536,7 +536,7 @@ class ZencoderMediaWorkDisplayer implements MediaWorkDisplayerInterface
 		// $markup .= 'height="'.intval($embed_height).'" ';		
 			
 		$markup .= 'width="100%" '; // for responsiveness, fill the iframe the video is in.
-		$markup .= 'height="100%" ';
+		$markup .= 'height="100%" style="max-width:100%;" ';
 			
 			
 		if ($poster_url = $this->_get_poster_image_url())
@@ -797,9 +797,20 @@ class ZencoderMediaWorkDisplayer implements MediaWorkDisplayerInterface
 	 * Array of parameters to pass to encode as json and pass to 
 	 * $("video,audio").mediaelementplayer($params_go_here);
 	 */
-	public function get_mediaelementjs_params()
+	public function get_mediaelementjs_params($args = array())
 	{
+		$siteSuffix = "";
+		if (array_key_exists('site_id_for_title', $args)) {
+			$siteId = $args['site_id_for_title'];
+			if ($siteId > 0) {
+				$site = new entity($siteId);
+				$siteName = $site->get_value('name');
+				$siteSuffix .= " | $siteName";
+			}
+		}
+
 		return [
+			"stretching" => "none",
 			"iPadUseNativeControls" => true,
 			"iPhoneUseNativeControls" => true,
 			"AndroidUseNativeControls" => true,
@@ -808,7 +819,7 @@ class ZencoderMediaWorkDisplayer implements MediaWorkDisplayerInterface
 				"playpause", "current", "progress", "duration", "tracks",
 				"volume", "fullscreen", "googleanalytics"
 			],
-			"googleAnalyticsTitle" => $this->media_work->get_value("name")
+			"googleAnalyticsTitle" => $this->media_work->get_value("name") . $siteSuffix
 		];
 	}
 
