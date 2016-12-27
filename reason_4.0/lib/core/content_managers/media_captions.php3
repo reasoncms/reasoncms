@@ -185,6 +185,14 @@ class av_captions extends ContentManager
 		}
 
 		
+		// Until we know we want to permit <script> tags
+		// in the WebVTT captions we store, pull them out here.
+		// The content is delivered raw (not htmlencoded) to users
+		// since the track content can contain html. 
+		$content = $this->get_value('content');
+		$content_no_scripts = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $content);
+		$this->set_value('content', $content_no_scripts);
+
 		// Generate or update the 'label' and 'name' fields
 		$pretty_lang = $this->languages[$this->get_value('lang')];
 
@@ -240,7 +248,7 @@ class av_captions extends ContentManager
 		$this->change_element_type('content', 'hidden', array('userland_changeable' => true));
 
 		$this->add_element('upload', 'upload');
-		$this->set_display_name('upload', 'Select Track File');
+		$this->set_display_name('upload', 'Select WebVTT Track File');
 		$this->add_comments('upload', form_comment("Alternatively, <a href='javascript:void(0);' class='toggle-manual-content'>add/edit Track content</a> manually instead"));
 
 		$this->set_display_name('kind', 'Track Type');
@@ -264,7 +272,10 @@ class av_captions extends ContentManager
 	{
 		if (!$this->inited) {
 			$this->inited = true;
+			// Need to preserve the webvtt content as is
+			// https://w3c.github.io/webvtt/#introduction-other-features
 			array_push($this->_no_tidy, "content");
+			$this->strip_tags_from_user_input = false;
 		}
 		parent::init();
 	}

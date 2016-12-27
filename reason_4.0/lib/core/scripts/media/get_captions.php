@@ -81,8 +81,8 @@ function send_response(entity $caption)
 
 	header("Content-Type: text/vtt; charset=utf-8");
 
-	echo html_entity_decode($caption->get_value('content'));
-
+	echo $caption->get_value('content');
+	
 	exit;
 }
 
