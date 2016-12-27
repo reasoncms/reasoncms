@@ -297,13 +297,8 @@ if ($media_work
 	echo '<script src="' . REASON_PACKAGE_HTTP_BASE_PATH . 'mediaelement/build/mediaelement-and-player.min.js"></script>';
 	echo '<link rel="stylesheet" href="' . REASON_PACKAGE_HTTP_BASE_PATH . 'mediaelement/build/mediaelementplayer.min.css" />';
 	$params = json_encode($displayer->get_mediaelementjs_params());
-	echo <<<EOT
-	<script>
-		$(document).ready(function(){
-			$("video").mediaelementplayer($params);
-		});
-	</script>
-EOT;
+	echo "<script>var mediaelementparams = $params;</script>\n";
+	echo '<script src="' . REASON_HTTP_BASE_PATH . 'media/zencoder/mediaelement_init.js"></script>' . "\n";
 }
 // There isn't an easy way right now for Carleton to inject analytics
 if (defined('WEB_PATH')) {
