@@ -8,22 +8,21 @@
 
 $(document).ready(function() 
 {
-	var embed_row = $("<tr class=\"embed_toggler\"></tr>");
-	var embed_col = $("<td class=\"words\" align=\"right\"></td>");
+	var embed_row = $("<div class=\"embed_toggler\"></div>");
 	var show_embed = $("<a href=\"\">Show Embedding Code</a>");
 	
-	embed_row.append(embed_col.append(show_embed));
-	$("tr#Small_Embedding_Code_Row").before(embed_row);
+	embed_row.append(show_embed);
+	$("#small_embedding_code_preview_field").before(embed_row);
 		
 	hide_elements();
 	
 	function hide_elements()
 	{
-		if ($("tr#Medium_Embedding_Code_Row").html() != null)
+		if ($("#medium_embedding_code_preview_field").html() != null)
 		{
-			$("tr#Small_Embedding_Code_Row").hide();
-			$("tr#Medium_Embedding_Code_Row").hide();
-			$("tr#Large_Embedding_Code_Row").hide();
+			$("#small_embedding_code_preview_field").hide();
+			$("#medium_embedding_code_preview_field").hide();
+			$("#large_embedding_code_preview_field").hide();
 		}
 		else
 		{
@@ -34,9 +33,9 @@ $(document).ready(function()
 	show_embed.click(function()
 	{
 		embed_row.hide();
-		$("tr#Small_Embedding_Code_Row").show();
-		$("tr#Medium_Embedding_Code_Row").show();
-		$("tr#Large_Embedding_Code_Row").show();
+		$("#small_embedding_code_preview_field").show();
+		$("#medium_embedding_code_preview_field").show();
+		$("#large_embedding_code_preview_field").show();
 		return false;
 	});
 	
