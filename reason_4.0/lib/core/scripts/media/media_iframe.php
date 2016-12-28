@@ -267,8 +267,7 @@ canvas { top: 0;
          max-width: 100%; 
          height: auto; }
 video { height: 100%; 
-        position: absolute;
-        z-index:10000; } 
+        position: absolute; }
 body { margin: 0; 
        height: 100%; 
        width: 100%; }
@@ -291,6 +290,24 @@ if ($media_work && $media_work->get_value('integration_library') && $media_work-
 elseif ($media_work && $media_work->get_value('av_type') == '')
 {
 	echo '<script src="/reason_package/reason_4.0/lib/core/classes/media/api/media_api_flv.js"></script>'."\n";
+}
+if ($media_work 
+		&& $media_work->get_value('integration_library') == 'zencoder'
+		&& $media_work->get_value('av_type') == 'Video') {
+	echo '<script src="' . REASON_PACKAGE_HTTP_BASE_PATH . 'mediaelement/build/mediaelement-and-player.min.js"></script>';
+	echo '<link rel="stylesheet" href="' . REASON_PACKAGE_HTTP_BASE_PATH . 'mediaelement/build/mediaelementplayer.min.css" />';
+	$media_site_id = get_owner_site_id($media_work->id());
+		$params = json_encode($displayer->get_mediaelementjs_params(array('site_id_for_title' => $media_site_id)));
+	echo "<script>var mediaelementparams = $params;</script>\n";
+	echo '<script src="' . REASON_HTTP_BASE_PATH . 'media/zencoder/mediaelement_init.js"></script>' . "\n";
+}
+// There isn't an easy way right now for Carleton to inject analytics
+if (defined('WEB_PATH')) {
+	$path = WEB_PATH . 'global_stock/analytics/default.php';
+	if (file_exists($path)) {
+		require_once $path;
+		echo get_carleton_default_analytics_head_markup();
+	}
 }
 
 echo '</head>'."\n";
