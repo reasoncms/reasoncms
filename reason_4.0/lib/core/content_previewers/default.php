@@ -404,8 +404,8 @@
 		 */
 		function show_item_default( $field , $value ) // {{{
 		{
-			echo '<div class="listRow">';
-			echo '<h4 class="field"">';
+			echo '<div class="listRow" id="'.htmlspecialchars(str_replace(' ', '_', strtolower(strip_tags($field)))).'_preview_field">';
+			echo '<h4 class="field">';
 			if($lock_str = $this->_get_lock_indication_string($field))
 				echo $lock_str . '&nbsp;';
 			echo prettify_string( $field );
