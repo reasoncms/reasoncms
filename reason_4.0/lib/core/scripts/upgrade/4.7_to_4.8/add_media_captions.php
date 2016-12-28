@@ -42,6 +42,7 @@ class ReasonUpgrader_48_AddMediaCaptions extends reasonUpgraderDefault implement
 					'new' => 0,
 					'unique_name' => 'av_captions',
 					'plural_name' => '', // I don't think we want one
+					'custom_content_handler' => 'media_captions.php3',
 				),
 				'db_schema' => array(
 					'lang' => array('db_type' => 'tinytext '),
