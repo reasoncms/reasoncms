@@ -72,7 +72,7 @@ class ZencoderMediaWorkPreviewerModifier implements MediaWorkPreviewerModifierIn
 	function set_head_items($head_items)
 	{
 		$head_items->add_javascript(JQUERY_URL, true);
-		$head_items->add_javascript(REASON_HTTP_BASE_PATH.'media/zencoder/media_work_previewer.js');
+		$head_items->add_javascript(REASON_HTTP_BASE_PATH.'media/zencoder/media_work_previewer.js?v=2');
 		$this->displayer_chrome->set_head_items($head_items);
 	}
 	
