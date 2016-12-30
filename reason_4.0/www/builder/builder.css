@@ -1,0 +1,10 @@
+.builder-section {
+	margin-bottom:1em;
+	padding:1em;
+	background:#eee;
+}
+.builder-section>h3 {
+	font-size:.8rem !important;
+	opacity:.75 !important;
+	margin:0 !important;
+}

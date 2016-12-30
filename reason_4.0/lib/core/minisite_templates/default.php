@@ -296,10 +296,10 @@ class MinisiteTemplate
 	 *
 	 * This is still an experimental feature of the Reaspon template system.
 	 *
-	 * @var string possible values: 'default','documentation','samples'
+	 * @var string possible values: 'default','documentation','samples','builder'
 	 * @access private
 	 */
-	var $mode = 'default';
+	var $mode;
 	/**
 	 * Have the current site's parent site been requested from the db?
 	 *
@@ -460,7 +460,30 @@ class MinisiteTemplate
 			$this->_display_403_page();
 			die();
 		}
+		
+		if($this->in_builder_mode())
+		{
+			$this->head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'builder/builder.css');
+			$this->head_items->add_javascript(REASON_HTTP_BASE_PATH.'builder/builder.js');
+		}
 	} // }}}
+	
+	/**
+	 * @todo check to see if user is an editor of current site
+	 */
+	function get_mode()
+	{
+		$modes = array('default','documentation','samples','builder');
+		if(!isset($this->mode))
+		{
+			$this->mode = 'default';
+			if(reason_check_authentication() && !empty($_REQUEST['mode']) && in_array($_REQUEST['mode'], $modes))
+			{
+				$this->mode = $_REQUEST['mode'];
+			}
+		}
+		return $this->mode;
+	}
 
 	function _handle_access_auth_check()
 	{
@@ -676,6 +699,7 @@ class MinisiteTemplate
 	function run() // {{{
 	{
 		$this->start_page();
+		$this->show_mode_banner();
 		$this->show_body();
 		$this->end_page();
 	} // }}}
@@ -982,21 +1006,37 @@ class MinisiteTemplate
 
 	function run_section( $sec ) // {{{
 	{
+		if($this->in_builder_mode() && $this->section_in_builder($sec))
+		{
+			$this->run_builder($sec);
+			return;
+		}
 		$module =& $this->_get_module( $sec );
 		$module_name = $this->section_to_module[$sec];
 		if( $module )
 		{
 			echo "\n\n";
+			if ($this->should_benchmark()) $this->benchmark_start('run module ' . $module_name);
+			
 			if($this->in_documentation_mode())
 			{
+				echo '<div class="documentationWrapper">';
 				$this->run_documentation($sec);
+				if($this->has_content( $sec, false))
+				{
+					$module->run();
+				}
+				else
+				{
+					echo '<p class="noContentNotice">This module has no content to display at the moment</p>';
+				}
+				echo '</div>';
 			}
 			else
 			{
-				if ($this->should_benchmark()) $this->benchmark_start('run module ' . $module_name);
 				$module->run();
-				if ($this->should_benchmark()) $this->benchmark_stop('run module ' . $module_name);
 			}
+			if ($this->should_benchmark()) $this->benchmark_stop('run module ' . $module_name);
 			echo "\n\n";
 		}
 	} // }}}
@@ -1010,18 +1050,79 @@ class MinisiteTemplate
 			{
 				$module_name = $this->section_to_module[$sec];
 				echo '<div class="documentation">'."\n";
+				echo '<p class="pageLocaton">'.htmlspecialchars(prettify_string($sec)).'</p>';
 				echo '<h4>'.prettify_string($module_name).'</h4>'."\n";
 				echo $doc;
 				echo '</div>'."\n";
 			}
 		}
 	}
-	function has_content( $sec ) // {{{
+	function builder_sections()
 	{
+		return array(
+			'sub_nav',
+			'sub_nav_2',
+			'sub_nav_3',
+			'main',
+			'main_post',
+			'main_post_2',
+			'main_post_3',
+			'pre_sidebar',
+			'sidebar',
+			'post_sidebar',
+		);
+	}
+	function section_in_builder($sec)
+	{
+		return in_array($sec,$this->builder_sections());
+	}
+	/**
+	 * @todo figure out how to handle the existence of multiple copies of the same module (e.g. blurbs) on the same page
+	 * @todo figure out how to handle parameters
+	 */
+	function run_builder( $sec )
+	{
+		echo '<section class="builder-section">';
+		echo '<h3>'.htmlspecialchars( $sec ).'</h3>';
+		$ms = reason_get_module_sets();
+		if($modules = $ms->get('page_type_builder_basic'))
+		{
+			foreach($this->builder_sections() as $builder_section)
+			{
+				if(isset($this->section_to_module[$builder_section]))
+					$modules[] = $this->section_to_module[$builder_section];
+			}
+			$modules = array_unique($modules);
+			$current_module = isset($this->section_to_module[$sec]) ? $this->section_to_module[$sec] : '';
+			echo '<select name="'.htmlspecialchars($sec).'" class="select-module">';
+			echo '<option value=""';
+			if(empty($current_module))
+				echo ' selected="selected"';
+			echo '>(No module)</option>';
+			foreach($modules as $mod)
+			{
+				echo '<option value="'.htmlspecialchars($mod).'"';
+				if($current_module == $mod)
+					echo ' selected="selected"';
+				echo '>'.htmlspecialchars($mod).'</option>';
+			}
+			echo '</select>';
+			$this->run_documentation($sec);
+		}
+		
+		echo '</section>';
+	}
+	
+	function has_content( $sec, $check_mode = true ) // {{{
+	{
+		if($check_mode && $this->in_builder_mode())
+		{
+			return true;
+		}
 		$module =& $this->_get_module( $sec );
 		if( $module )
 		{
-			if($this->in_documentation_mode())
+			if($check_mode && $this->in_documentation_mode())
 				return true;
 			return $module->has_content();
 		}
@@ -1253,6 +1354,37 @@ class MinisiteTemplate
 		$this->show_footer();
 		echo '</div>'."\n";
 	} // }}}
+	function show_mode_banner()
+	{
+		if($this->in_builder_mode() || $this->in_documentation_mode())
+		{
+			echo '<form><div class="modeBanner">';
+			echo '<ul>';
+			if($this->in_builder_mode())
+			{
+				echo '<li><a href=".">Current Page</a></li>';
+				echo '<li><a href="?mode=documentation">Explain Current Page</a></li>';
+				echo '<li><strong>Configure Page</strong></li>';
+			}
+			else
+			{
+				echo '<li><a href=".">Current Page</a></li>';
+				echo '<li><strong>Explain Current Page</strong></li>';
+				echo '<li><a href="?mode=builder">Configure Page</a></li>';
+			}
+			echo '</ul>';
+			if($this->in_builder_mode())
+				echo '<input type="submit" value="Request This Configuration" />';
+			echo '</div>';
+		}
+	}
+	function show_mode_footer()
+	{
+		if($this->in_builder_mode() || $this->in_documentation_mode())
+		{
+			echo '</form>';
+		}
+	}
 	function end_page() // {{{
 	{
 		// finish body and html
@@ -1748,7 +1880,13 @@ class MinisiteTemplate
 	}
 	function in_documentation_mode()
 	{
-		if($this->mode == 'documentation')
+		if($this->get_mode() == 'documentation')
+			return true;
+		return false;
+	}
+	function in_builder_mode()
+	{
+		if($this->get_mode() == 'builder')
 			return true;
 		return false;
 	}

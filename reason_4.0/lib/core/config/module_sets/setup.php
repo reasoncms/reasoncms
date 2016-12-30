@@ -57,6 +57,28 @@ $ms->add(
 	'av_module_derivatives'
 );
 
+$ms->add(
+	array(
+		'content',
+		'blurb',
+		'assets',
+		'gallery2',
+		'images',
+		'image_slideshow',
+		'image_sidebar',
+		'av',
+		'children',
+		'children_and_grandchildren',
+		'siblings',
+		'events_mini',
+		'form',
+		'feature',
+		'faqs',
+		'publication',
+	),
+	'page_type_builder_basic'
+);
+
 if(reason_file_exists('config/module_sets/setup_local.php'))
 	reason_include_once('config/module_sets/setup_local.php');
 
