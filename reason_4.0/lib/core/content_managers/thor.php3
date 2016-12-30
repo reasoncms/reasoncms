@@ -412,7 +412,9 @@
 			$thorContent = $this->get_thor_content_value();
 			try {
 				$xml = simplexml_load_string($thorContent);
-				$ticketElement = $xml->xpath("/*/event_tickets");
+				if ($xml) {
+					$ticketElement = $xml->xpath("/*/event_tickets");
+				}
 			} catch (Exception $exc) {
 				trigger_error($exc->getTraceAsString());
 			}
@@ -451,14 +453,16 @@
 			$thorContent = $this->get_thor_content_value();
 			try {
 				$xml = simplexml_load_string($thorContent);
-				$ticketElement = $xml->xpath("/*/event_tickets");
+				if ($xml) {
+					$ticketElement = $xml->xpath("/*/event_tickets");
+				}
 			} catch (Exception $exc) {
 				trigger_error($exc->getTraceAsString());
 			}
 
 			// Get ticket form items out of thor structure
 			$eventsInForm = array();
-			foreach ($ticketElement as $element) {
+			foreach ((array) $ticketElement as $element) {
 				// cast is to shift away from xml object
 				$eventId = (string) $element['event_id'];
 				if ($eventId) {
@@ -506,9 +510,11 @@
 			$thorContent = $this->get_thor_content_value();
 			try {
 				$xml = simplexml_load_string($thorContent);
-				$emailNode = $xml->xpath("/*/input[@label='Your Email']");
-				if (empty($emailNode)) {
-					$this->set_error('thor_content', "An event ticket form requires a short text input with the exact label 'Your Email'. Please add that element or change the email field label to 'Your Email'.");
+				if ($xml) {
+					$emailNode = $xml->xpath("/*/input[@label='Your Email']");
+					if (empty($emailNode)) {
+						$this->set_error('thor_content', "An event ticket form requires a short text input with the exact label 'Your Email'. Please add that element or change the email field label to 'Your Email'.");
+					}
 				}
 			} catch (Exception $exc) {
 				trigger_error($exc->getTraceAsString());
