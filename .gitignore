@@ -5,3 +5,6 @@ apache.conf
 /settings_local
 /reason_4.0/lib/local
 /reason_4.0/www/local
+
+.idea/
+.env

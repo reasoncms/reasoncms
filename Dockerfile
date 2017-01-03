@@ -1,9 +1,9 @@
-FROM ubuntu:latest
+FROM ubuntu:14.04
 
 MAINTAINER Quinn Shanahan <quinn@tastehoneyco.com>
 
 # install dependencies
-RUN apt-get update 
+RUN apt-get update
 RUN apt-get -y install git apache2 libapache2-mod-php5 php5-mysql php5-gd php-pear php-apc curl gettext-base
 
 # configure apache
