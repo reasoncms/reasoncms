@@ -622,22 +622,14 @@ class ThorFormModel extends DefaultFormModel
 	{
 		$submitted_by = $this->get_user_netid();
 		$submitter_ip = (isset($_SERVER['REMOTE_ADDR'])) ? $_SERVER['REMOTE_ADDR'] : '';
-		return array(
-			'submitted_by' => $submitted_by,
-			'submitter_ip' => $submitter_ip,
-			'date_user_submitted' => get_mysql_datetime()
-		);
+		return array('submitted_by' => $submitted_by, 'submitter_ip' => $submitter_ip);
 	}
 	
 	function get_values_for_email_extra_fields()
 	{
 		$submitted_by = $this->get_user_netid();
 		$submitter_ip = (isset($_SERVER['REMOTE_ADDR'])) ? $_SERVER['REMOTE_ADDR'] : '';
-		return array(
-			'submitted_by' => $submitted_by,
-			'submitter_ip' => $submitter_ip,
-			'submission_time' => get_mysql_datetime()
-		);
+		return array('submitted_by' => $submitted_by, 'submitter_ip' => $submitter_ip, 'submission_time' => get_mysql_datetime());
 	}
 
 	function &_get_values_and_extra_email_fields(&$disco_obj)

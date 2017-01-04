@@ -40,19 +40,9 @@ class ThorCore
 		'id' => 'int(11) NOT NULL AUTO_INCREMENT',
 		'submitted_by' => 'tinytext NOT NULL',
 		'submitter_ip' => 'tinytext NOT NULL',
-		'date_created' => 'timestamp default 0 NOT NULL', // when a record is created
-		'date_modified' => 'timestamp default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP', // when any row data changes
-		'date_user_submitted' => 'timestamp default 0 NOT NULL', // when a user submits from a userland/non-administrative interface
+		'date_created' => 'timestamp default 0 NOT NULL',
+		'date_modified' => 'timestamp default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP',
 		);
-	// date_created and date_user_submitted are developer-controlled dates.
-	// date_modified automatically updates when any other column value changes.
-	//
-	// date_created is intended to represent when a record first came into existance.
-	// date_user_submitted is intendeted to represent when the original user submits/updates a record,
-	//     not when an admin/maintainer/system updates a record
-	//     Therefore, date_user_submitted shouldn't be assigned inside core Thor functions, 
-	//     since Thor functions may be used in other context to update data dynamically
-	//     such as administrative interfaces or cron jobs
 	var $_stashed_sql_for_table_generation = "";
 	var $_stashed_structure = array();
 	
@@ -341,12 +331,7 @@ class ThorCore
 		if ($this->get_thor_table() && $values)
 		{
 			$this->create_table_if_needed(); // create the table if it does not exist
-			if (!isset($values['date_created'])){
-				$values['date_created'] = get_mysql_datetime();
-			}
-			if (!isset($values['date_user_submitted'])){
-				$values['date_user_submitted'] = get_mysql_datetime();
-			}
+			if (!isset($values['date_created'])) $values['date_created'] = get_mysql_datetime();
 			if (!get_current_db_connection_name()) connectDB($this->get_db_conn());
 			$reconnect_db = (get_current_db_connection_name() != $this->get_db_conn()) ? get_current_db_connection_name() : false;
 			if ($reconnect_db) connectDB($this->get_db_conn());
