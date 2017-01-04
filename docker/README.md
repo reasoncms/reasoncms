@@ -1,63 +1,50 @@
-# Deploying with docker
+# run reason CMS with docker
 
+## Prerequisites
 ### Install Docker
 
  * Go here: http://docs.docker.com/installation/
  * pick your platform and follow the instructions.
 
-### Setup nginx proxy to manage virtual hosts
+### Get reason
+Checkout `reasoncms` from github (https://github.com/reasoncms/reasoncms)
 
-Start the nginx proxy service:
 
-~~~ sh
-docker run -d -p 80:80 -v /var/run/docker.sock:/tmp/docker.sock -t jwilder/nginx-proxy
-~~~
+## build and install using `docker-compose`
+Go to your copy of the `reasoncms` repository
 
-See the [github repository](https://github.com/jwilder/nginx-proxy) for more
-info on how this works.
+First, you will need to set some configuration variables. Docker prefers setting these as environment variables. An easy way to do this is to create a file called `.env` in the root of your `reasoncms` checkout. Be sure is contains the following:
 
-### Start the mysql server
+```
+MYSQL_ROOT_PASSWORD=ReasonAdminPassword1
+MYSQL_DATABASE=reason
+MYSQL_USER=reason_user
+MYSQL_PASSWORD=some_password
+MYSQL_HOST=mysql
+```
 
-~~~
-docker run --name reason_mysql -e MYSQL_PASS=ReasonAdminPassword1 -d tutum/mysql
-~~~
+You can change the settings above if you like.
 
-This starts a mysql server with password "ReasonAdminPassword1" and user "admin".
+Now you are ready to run reason using docker:
 
-### Create the Reason docker image
+```
+cd path/to/reasoncms
 
-* __Clone the repo:__
+docker-compose up
+## this will build and run mariadb and reason from this repository
 
-  ~~~
-  git clone https://github.com/carleton/reason_package.git
-  ~~~
+```
+You can see that it is running by executing `docker ps -a`:
 
-* __Build the image:__
+```
+$ docker ps -a
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                NAMES
+024dca8d9a87        reasoncms_web       "/entrypoint.sh sh -c"   2 minutes ago       Up 2 minutes        0.0.0.0:80->80/tcp   reasoncms_web_1
+59ed96522426        mariadb:5.5         "docker-entrypoint.sh"   15 minutes ago      Up 2 minutes        3306/tcp             reasoncms_db_1
+```
 
-  ~~~
-  docker build -t docker-registry.example.com/reason .
-  ~~~
+After the containers have been built and are running, you need to seed the database, again using docker. *This step is only needed on a fresh install*. It *destroys* any reason data in your database when it is run.
 
-### Configure and launch app
+`docker exec -it reasoncms_web_1 ./docker-install.sh`
 
-* __Run the install script:__
-
-  ~~~
-  docker run --rm -i -t --link reason_mysql:mysql -v /root/reason_package:/usr/src/app docker-registry.example.com/reason ./install.sh
-  ~~~
-
-  You should only need to enter your public IP address (use
-  http://ipchicken.com/ or similar), none of the other config parameters
-  should matter.
-
-* __Launch the web app process__
-
-  ~~~
-  docker run --name reason -d --link reason_mysql:mysql -v /root/reason_package:/usr/src/app -e VIRTUAL_HOST=reason.example.com docker-registry.example.com/reason
-  ~~~
-
-* __Run setup:__
-
-  Browse to http://reason.example.com/reason/setup.php. Everything should be
-  good to go, check the bottom for the newly created admin account login and
-  password.
+This should populate the database and then you can go to http://localhost/reason/setup.php to verify the reason environment is functional. Scroll down to the bottom of the page to see how to access the admin area of your new reason installation.

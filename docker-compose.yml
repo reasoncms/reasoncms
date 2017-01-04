@@ -1,19 +1,19 @@
 version: '2'
 
 services:
-  reason-mysql:
-    image: mysql:5.7
+  db:
+    image: mariadb:5.5
     volumes:
       - db_data:/var/lib/mysql
     restart: always
     env_file:
       - .env
-  reason:
+  web:
     depends_on:
-      - reason-mysql
+      - db
     build: .
     links:
-      - reason-mysql:mysql
+      - db:mysql
     volumes:
       - .:/usr/src/app
     ports:

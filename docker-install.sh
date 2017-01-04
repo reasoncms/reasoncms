@@ -1,3 +1,5 @@
-./install.sh
+#!/usr/bin/env bash
 
-cat reason_4.0/data/dbs/reason4.7.sql | mysql -h$MYSQL_PORT_3306_TCP_ADDR -uadmin -p$MYSQL_ENV_MYSQL_PASS
+reason_version="4.7"
+
+mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$MYSQL_HOST $MYSQL_DATABASE < "reason_4.0/data/dbs/reason$reason_version.sql"
