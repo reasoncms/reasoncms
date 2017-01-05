@@ -8,3 +8,4 @@ apache.conf
 
 .idea/
 .env
+.DS_Store

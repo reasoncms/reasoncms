@@ -75,5 +75,7 @@ cat << EOF > $(echo $dbs_xml_tpl)
 EOF
 
 # no subbing in apache config for now at least.
+echo "****** $PWD\n********************"
+
 cat $apache_conf_tpl            > apache.conf
 cat     $dbs_xml_tpl | envsubst > settings/dbs.xml

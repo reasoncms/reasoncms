@@ -1,4 +1,4 @@
-# run reason CMS with docker
+# Run Reason CMS with docker
 
 ## Prerequisites
 ### Install Docker
@@ -45,6 +45,6 @@ CONTAINER ID        IMAGE               COMMAND                  CREATED        
 
 After the containers have been built and are running, you need to seed the database, again using docker. *This step is only needed on a fresh install*. It *destroys* any reason data in your database when it is run.
 
-`docker exec -it reasoncms_web_1 ./docker-install.sh`
+`docker exec -it reasoncms_web_1 ./docker/docker-install.sh`
 
 This should populate the database and then you can go to http://localhost/reason/setup.php to verify the reason environment is functional. Scroll down to the bottom of the page to see how to access the admin area of your new reason installation.
