@@ -195,11 +195,9 @@
             // Check if inside of highlight div.
             var firstBlock = path.block || path.blockLimit;
             var elementPath = editor.elementPath( firstBlock );
-            console.log("In highlight refresh: " + elementPath);
             var enclosingDiv = elementPath.contains( 'div', 1 );
 
             if ( enclosingDiv && enclosingDiv.hasClass( highlightDivClassName ) ) {
-                console.log("In highlight refresh, we are in a '" + highlightDivClassName +"' DIV");
                 this.setState( CKEDITOR.TRISTATE_ON );
             } else {
                 this.setState( CKEDITOR.TRISTATE_OFF );
