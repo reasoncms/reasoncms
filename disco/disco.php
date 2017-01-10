@@ -430,6 +430,8 @@
 				'where_to'=>array(),
 		);
 		
+		var $_prepopulable = array();
+		
 		
 	//////////////////////////////////////////////////
 	// PUBLIC METHODS
@@ -532,6 +534,8 @@
 			$this->on_every_time();
 			$this->_run_callbacks('on_every_time');
 			
+			$this->_prepopulate();
+			
 			if ( !$this->_is_first_time() )
 			{	
 				$this->_grab_messages();
@@ -571,6 +575,32 @@
 		function on_every_time() // {{{
 		{
 		} // }}}
+		
+		function _prepopulate()
+		{
+			foreach($this->_prepopulable as $element_name => $prepopulation_key)
+			{
+				if(isset($this->_request[$prepopulation_key]))
+				{
+					$this->set_value($element_name, $this->_request[$prepopulation_key]);
+				}
+			}
+		}
+		
+		function enable_prepopulation($element_name, $prepopulation_key = '')
+		{
+			if(empty($prepopulation_key))
+				$prepopulation_key = 'p_'.$element_name;
+			$this->_prepopulable[$element_name] = $prepopulation_key;
+		}
+		
+		function disable_prepopulation($element_name)
+		{
+			if(isset($this->_prepopulable[$element_name]))
+			{
+				unset($this->_prepopulable[$element_name]);
+			}
+		}
 		
 		/**
 		* Grabs all data from the user.  
