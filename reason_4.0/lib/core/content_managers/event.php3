@@ -87,7 +87,7 @@
 			{
 				$base_gmap_url = (HTTPS_AVAILABLE) ? 'https://maps-api-ssl.google.com/maps/api/js' : 'http://maps.google.com/maps/api/js';
 				$this->head_items->add_javascript($base_gmap_url . '?v=3&libraries=geometry&sensor=false', true);
-				$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH . 'content_managers/event/geo.js');
+				$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH . 'content_managers/event/geo.js?v=2');
 				$this->head_items->add_stylesheet(WEB_JAVASCRIPT_PATH . 'content_managers/event/geo.css');
 			}
 		}
