@@ -4033,7 +4033,15 @@ class EventsModule extends DefaultMinisiteModule
 		switch ($calendar) {
 			case 'google':
 				//Complete additional formating:
-				$dateTime->add(new DateInterval('PT'.$e->get_value('hours').'H'.$e->get_value('minutes').'M'));
+				if($all_day && $e->get_value('recurrence') == 'daily' && $e->get_value('frequency') == '1')
+				{
+					$dateTime = new DateTime($e->get_value('last_occurence'));
+					$dateTime->add(new DateInterval('PT24H0M'));
+				}
+				else
+				{
+					$dateTime->add(new DateInterval('PT'.$e->get_value('hours').'H'.$e->get_value('minutes').'M'));
+				}
 				$endDate = $dateTime->format('Ymd');
 				$endTime = $dateTime->format('His');
 				$dates = $all_day ? $startDate.'/'.$endDate : $startDate.'T'.$startTime.'Z/'.$endDate.'T'.$endTime.'Z';
