@@ -4025,7 +4025,7 @@ class EventsModule extends DefaultMinisiteModule
 		$content = $this->string_to_external_url_safe($e->get_value('content'));
 		$info_url = $this->string_to_external_url_safe('For more information, visit: '.$e->get_value('url'));
 		$event_url = 'http://'.REASON_HOST.$this->parent->pages->get_full_url($this->page_id).'?event_id='.$e->id();
-		if($this->request['date'])
+		if(!empty($this->request['date']))
 			$event_url .= '&date='.urlencode($this->request['date']);
 		$cal_url = $this->string_to_external_url_safe('Event source: '.$event_url);
 		$details = (!empty($content)) ? $content.'%0A%0A' : '';
