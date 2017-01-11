@@ -622,14 +622,22 @@ class ThorFormModel extends DefaultFormModel
 	{
 		$submitted_by = $this->get_user_netid();
 		$submitter_ip = (isset($_SERVER['REMOTE_ADDR'])) ? $_SERVER['REMOTE_ADDR'] : '';
-		return array('submitted_by' => $submitted_by, 'submitter_ip' => $submitter_ip);
+		return array(
+			'submitted_by' => $submitted_by,
+			'submitter_ip' => $submitter_ip,
+			'date_user_submitted' => get_mysql_datetime()
+		);
 	}
 	
 	function get_values_for_email_extra_fields()
 	{
 		$submitted_by = $this->get_user_netid();
 		$submitter_ip = (isset($_SERVER['REMOTE_ADDR'])) ? $_SERVER['REMOTE_ADDR'] : '';
-		return array('submitted_by' => $submitted_by, 'submitter_ip' => $submitter_ip, 'submission_time' => get_mysql_datetime());
+		return array(
+			'submitted_by' => $submitted_by,
+			'submitter_ip' => $submitter_ip,
+			'submission_time' => get_mysql_datetime()
+		);
 	}
 
 	function &_get_values_and_extra_email_fields(&$disco_obj)
@@ -1671,13 +1679,12 @@ class ThorFormModel extends DefaultFormModel
 	 */
 	function get_events_thor_configs()
 	{
-		$thor_xml = $this->_form->get_value('thor_content');
-		$event_ticket_nodes = array();
+		$thor_content = $this->_form->get_value('thor_content');
 		try {
-			$xml = new SimpleXMLElement($thor_xml);
+			$xml = simplexml_load_string($thor_content);
 			$event_ticket_nodes = $xml->xpath("/*/event_tickets");
 		} catch (Exception $exc) {
-			trigger_error($exc->getMessage() . " XML=$thor_xml");
+			trigger_error($exc->getMessage() . " thor_content=$thor_content");
 		}
 		return $event_ticket_nodes;
 	}
@@ -1705,9 +1712,8 @@ class ThorFormModel extends DefaultFormModel
 	function get_events_on_form()
 	{
 		$formId = $this->_form->id();
-		$siteId = $this->get_site_id();
 
-		$es = new entity_selector($siteId);
+		$es = new entity_selector();
 		$es->add_type(id_of('event_type'));
 		$es->add_left_relationship($formId, relationship_id_of('event_to_form'));
 		$eventsOnForm = $es->run_one();
@@ -1937,7 +1943,10 @@ class ThorFormModel extends DefaultFormModel
 			// Fallback/default is to close the event 60 minutes before start
 			$eventEntity = new Entity($thorEventInfo['event_id']);
 			$closeDatetime = new Datetime($eventEntity->get_value('datetime'));
-			$closeDatetime->modify("-60min");
+			
+			if (defined('REASON_EVENT_TICKETS_DEFAULT_CLOSE_MODIFIER')) {
+				$closeDatetime->modify(REASON_EVENT_TICKETS_DEFAULT_CLOSE_MODIFIER);
+			}
 		}
 		if ($baseDatetime === null) {
 			$baseDatetime = new Datetime(); // "now"

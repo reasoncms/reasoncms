@@ -118,6 +118,61 @@
 
 			$this->set_element_properties('submission_limit', array('size'=>'4'));
 			// echo "<HR>using thor version...[" . USE_THOR_VERSION . "]<hr>";
+            
+			$published = false;
+			$publish_status_text = '';
+			
+			$es = new entity_selector();
+			$es->add_type(id_of('minisite_page'));
+			$es->add_left_relationship($this->admin_page->id, relationship_id_of('page_to_form'));
+			$pages_with_form = $es->run_one();
+			if ($pages_with_form)
+			{
+				$published = true;
+				
+				$str_pages_with_form = '';
+				foreach ($pages_with_form as $page_with_form)
+				{
+					$reason_page_url = new reasonPageUrl();
+					$reason_page_url->set_id( $page_with_form->_id );
+					$page_url = $reason_page_url->get_url();
+					$str_pages_with_form .= '<li><a target="_blank" href="' . $page_url . '">' . $page_with_form->get_value('name') . '</a>';
+					
+					if ( !in_array( $page_with_form->get_value( 'custom_page' ), page_types_that_use_module( 'form' ) ) )
+					{
+						$str_pages_with_form .= ' (Warning: Page needs to be given the <em>Form</em> page type for this form to show up.)';
+					}
+					
+					$str_pages_with_form .= '</li>';
+				}
+				
+				$publish_status_text .= '<strong>Status:</strong> Published to the following page(s):<ul>' . $str_pages_with_form . '</ul>';
+			}
+			
+			$es = new entity_selector();
+			$es->add_type(id_of('event_type'));
+			$es->add_left_relationship($this->admin_page->id, relationship_id_of('event_to_form'));
+			$events_with_form = $es->run_one();
+			if ($events_with_form)
+			{
+				$published = true;
+				
+				$str_events_with_form = '';
+				foreach ($events_with_form as $event_with_form)
+				{
+					$str_events_with_form .= '<li>' . $event_with_form->get_value('name') . '</li>';
+				}
+				
+				$publish_status_text .= '<strong>Status:</strong> Published as registration form for the following event(s):<ul>' . $str_events_with_form . '</ul>';
+			}
+			
+			if (!$published)
+			{
+				$publish_status_text .= '<strong>Status:</strong> Unpublished. <a target="_blank" href="http://reasoncms.org/userdocs/managing-content/other-types/forms/#attaching_a_form_to_a_page">How to publish your form</a>';
+			}
+			
+			$this->add_element('publish_status', 'comment', array('text'=>$publish_status_text));
+			
 			if (USE_THOR_VERSION == THOR_VERSION_FLASH)
 			{
 				include_once( THOR_INC . 'plasmature/flash.php' );
@@ -137,11 +192,11 @@
 				die("Fatal Error: USE_THOR_VERSION is configured with an invalid value [" . USE_THOR_VERSION . "]");
 			}
 			$this->alter_data_advanced_options();
-			$this->set_order (array ('name', 'db_flag', 'email_of_recipient', 'thor_content', 'thor_comment', 'magic_string_autofill_note',
-									 'magic_string_autofill', 'thank_you_note', 'thank_you_message', 'display_return_link', 'show_submitted_data', 
-									 'limiting_note', 'submission_limit', 'open_date', 'close_date',
-									 'advanced_options_header', 'thor_view', 'thor_view_custom', 'is_editable', 'allow_multiple', 'email_submitter','include_thank_you_in_email', 'email_link', 'email_data', 'email_empty_fields', 'apply_akismet_filter', // advanced options
-									 'unique_name', 'tableless'));
+			$this->set_order (array ('publish_status', 'name', 'db_flag', 'email_of_recipient', 'thor_content', 'thor_comment', 'magic_string_autofill_note',
+					'magic_string_autofill', 'thank_you_note', 'thank_you_message', 'display_return_link', 'show_submitted_data',
+					'limiting_note', 'submission_limit', 'open_date', 'close_date',
+					'advanced_options_header', 'thor_view', 'thor_view_custom', 'is_editable', 'allow_multiple', 'email_submitter','include_thank_you_in_email', 'email_link', 'email_data', 'email_empty_fields', 'apply_akismet_filter', // advanced options
+					'unique_name', 'tableless'));
 		}
 
 		/**
@@ -355,10 +410,11 @@
 		function has_event_tickets()
 		{
 			$thorContent = $this->get_thor_content_value();
-
 			try {
-				$xml = new SimpleXMLElement($thorContent);
-				$ticketElement = $xml->xpath("/*/event_tickets");
+				$xml = simplexml_load_string($thorContent);
+				if ($xml) {
+					$ticketElement = $xml->xpath("/*/event_tickets");
+				}
 			} catch (Exception $exc) {
 				trigger_error($exc->getTraceAsString());
 			}
@@ -395,12 +451,18 @@
 		function get_event_ids_in_form()
 		{
 			$thorContent = $this->get_thor_content_value();
-			$xml = new SimpleXMLElement($thorContent);
-			$ticketElement = $xml->xpath("/*/event_tickets");
+			try {
+				$xml = simplexml_load_string($thorContent);
+				if ($xml) {
+					$ticketElement = $xml->xpath("/*/event_tickets");
+				}
+			} catch (Exception $exc) {
+				trigger_error($exc->getTraceAsString());
+			}
 
 			// Get ticket form items out of thor structure
 			$eventsInForm = array();
-			foreach ($ticketElement as $element) {
+			foreach ((array) $ticketElement as $element) {
 				// cast is to shift away from xml object
 				$eventId = (string) $element['event_id'];
 				if ($eventId) {
@@ -445,12 +507,14 @@
 			}
 			
 			// Make sure the form definition has a field named "Your Email"
-			$thorXml = $this->get_thor_content_value();
+			$thorContent = $this->get_thor_content_value();
 			try {
-				$xml = new SimpleXMLElement($thorXml);
-				$emailNode = $xml->xpath("/*/input[@label='Your Email']");
-				if (empty($emailNode)) {
-					$this->set_error('thor_content', "An event ticket form requires a short text input with the exact label 'Your Email'. Please add that element or change the email field label to 'Your Email'.");
+				$xml = simplexml_load_string($thorContent);
+				if ($xml) {
+					$emailNode = $xml->xpath("/*/input[@label='Your Email']");
+					if (empty($emailNode)) {
+						$this->set_error('thor_content', "An event ticket form requires a short text input with the exact label 'Your Email'. Please add that element or change the email field label to 'Your Email'.");
+					}
 				}
 			} catch (Exception $exc) {
 				trigger_error($exc->getTraceAsString());

@@ -1,0 +1,6 @@
+<label>
+	<span><%= Formbuilder.helpers.warnIfEmpty(Formbuilder.helpers.simple_format(rf.get(Formbuilder.options.mappings.LABEL)), Formbuilder.options.dict.EMPTY_LABEL_WARNING) %></span>
+  <% if (rf.get(Formbuilder.options.mappings.REQUIRED)) { %>
+    <abbr title='required'>*</abbr>
+  <% } %>
+</label>

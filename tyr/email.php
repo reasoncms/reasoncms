@@ -48,6 +48,9 @@ class Email
 		$exceptions = true;
 		$this->PHPMailer = new PHPMailer($exceptions);
 		$this->PHPMailer->CharSet = 'utf-8';
+		$this->PHPMailer->AllowEmpty = true; // otherwise, it's fatal exception
+		$this->PHPMailer->SingleTo = true; // may have performance implication if 
+		// the recipient list approaches "large volumes" (quote from PHP docs).
 		
 		$this->add_tos($tos, $address_types);
 		$this->add_froms($froms, $address_types);
@@ -58,7 +61,16 @@ class Email
 		$this->set_attachments($attachments);
 	}
 
-	// For details about $tos see prettify_email_addresses()
+	/**
+	 * Add recipients to message
+	 * 
+	 * PHPMailer sends each recipient a direct message so recipients don't
+	 * see the entire To list
+	 * 
+	 * @uses prettify_email_addresses()
+	 * @param mixed $tos see $addresses on prettify_email_addresses()
+	 * @param string $address_types can be 'mixed', 'email', or 'username'
+	 */
 	function add_tos($tos, $address_types = 'mixed') {
 		$address_array = prettify_email_addresses($tos, $address_types, 'array');
 
@@ -130,7 +142,10 @@ class Email
 
 	/**
 	 * Send the Email
-	 *
+	 * 
+	 * Each recipient receives a message with a single To
+	 * 
+	 * @see REASON_DIVERT_EMAIL_TO
 	 * @return boolean Accepted for delivery
 	 */
 	function send() {
@@ -140,7 +155,7 @@ class Email
 			$currentSubject = $this->PHPMailer->Subject;
 			$this->PHPMailer->Subject = "[DIVERTED] $currentSubject";
 		}
-
+		
 		return $this->PHPMailer->send();
 	}
 

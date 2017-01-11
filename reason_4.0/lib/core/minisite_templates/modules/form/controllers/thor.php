@@ -238,7 +238,8 @@
 			$thor_core = $model->get_thor_core_object();
 			$xmlString = $thor_core->get_thor_xml()->GenerateXML();
 
-			$xmlObject = new SimpleXMLElement($xmlString);
+			
+			$xmlObject = simplexml_load_string($xmlString);
 			$xpathSelector = "/form/event_tickets[not(@event_id='$currentEventId')]";
 			$inactiveTicketSlots = $xmlObject->xpath($xpathSelector);
 			foreach ($inactiveTicketSlots as $node) {
@@ -306,8 +307,14 @@
 			if (!$closeTimestamp) {
 				$event = new Entity($remainingSeatsForCurrentEvent['thor_info']['event_id']);
 				$closeTimestamp = $event->get_value('datetime');
+				$dt = new Datetime($closeTimestamp);
+				
+				if (defined('REASON_EVENT_TICKETS_DEFAULT_CLOSE_MODIFIER')) {
+					$dt->modify(REASON_EVENT_TICKETS_DEFAULT_CLOSE_MODIFIER);
+				}
+			} else {
+				$dt = new Datetime($closeTimestamp);
 			}
-			$dt = new Datetime($closeTimestamp);
 
 			$closedMessage = "Registration closed at {$dt->format("g:i a")} on {$dt->format("F jS")}.";
 

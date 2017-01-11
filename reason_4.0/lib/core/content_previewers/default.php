@@ -400,7 +400,7 @@
 		 */
 		function show_item_default( $field , $value ) // {{{
 		{
-			echo '<tr>';
+			echo '<tr id="'.htmlspecialchars(str_replace(' ', '_', strtolower(strip_tags($field)))).'_preview_field">';
 			$this->_row = $this->_row%2;
 			$this->_row++;
 
