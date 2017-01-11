@@ -1,0 +1,47 @@
+/**
+ * Reason CMS loads this whenever CKEditor is loaded. This default version does the following:
+ *
+ * - Provides styles for our reason_image dialog plugins. ckeditor dialogs are within the context of the page
+ *      not the context of the editor's IFRAME so we need to include CSS as "external"
+ *
+ */
+
+/* for the reason_image image grid */
+#image-list {
+    overflow-y: scroll;
+    height: 335px;
+}
+
+#image-list .selectedImage {
+    background: #dedede;
+    background: -moz-linear-gradient(top,  #dedede 0%, #b8b8b8 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#dedede), color-stop(100%,#b8b8b8));
+    background: -webkit-linear-gradient(top,  #dedede 0%,#b8b8b8 100%);
+    background: -o-linear-gradient(top,  #dedede 0%,#b8b8b8 100%);
+    background: -ms-linear-gradient(top,  #dedede 0%,#b8b8b8 100%);
+    background: linear-gradient(to bottom,  #dedede 0%,#b8b8b8 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#dedede', endColorstr='#b8b8b8',GradientType=0 );
+
+}
+
+#image-list > figure {
+    float: left;
+    width: 125px;
+    height: 154px;
+    overflow: hidden;
+    padding: 2px;
+    margin: 3px;
+}
+
+#image-list figure > img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#image-list figure > figcaption {
+    width:125px;
+    white-space: normal;
+    margin-top: 5px;
+}
+/* END reason_image image grid styles */

@@ -36,16 +36,25 @@ class reasonCkEditorIntegration extends reasonEditorIntegrationBase
 	function get_plasmature_element_parameters($site_id, $user_id = 0)
 	{
 		$param['rows'] = 20;
-		//$param['external_css'][] = REASON_HTTP_BASE_PATH . 'ckeditor/css/external.css';
+		$param['external_css'][] = REASON_HTTP_BASE_PATH . 'ckeditor/css/external.css';
 		$param['init_options']['content_css'] = $this->get_content_css_path();
+
+        //TODO: is this needed? I think this was moved over from the tinyMCE implementation. Not sure if it is applicable. --TB
 		$site = new entity($site_id);
 		$loki_default = $site->get_value( 'loki_default' );
-		
-		$config = (!empty($loki_default) && in_array($loki_default, array_keys($this->get_configuration_options()))) ? $loki_default : 'notables';	
+		$config = (!empty($loki_default) && in_array($loki_default, array_keys($this->get_configuration_options()))) ? $loki_default : 'notables';
 		$imagetoolbar = ($this->reason_plugins_available($user_id)) ? 'reasonimage' : 'image';
-		
 
-		return $param;
+		// Configure the reason_image plugin to pull the images from the proper site
+        /* load the basic reason image and link plug in options */
+        if ($this->reason_plugins_available($user_id))
+        {
+            $param['init_options']['reason_site_id'] = $site_id;
+            $param['init_options']['reason_http_base_path'] = REASON_HTTP_BASE_PATH;
+        }
+
+
+        return $param;
 	}
 	
 	/**
@@ -57,7 +66,7 @@ class reasonCkEditorIntegration extends reasonEditorIntegrationBase
 		{
 			return REASON_CKEDITOR_CONTENT_CSS_PATH;
 		}
-		else return REASON_HTTP_BASE_PATH . 'ckeditor/contents.css';
+		else return REASON_HTTP_BASE_PATH . 'ckeditor/css/content.css';
 	}
 	
 	/**
@@ -89,6 +98,7 @@ class reasonCkEditorIntegration extends reasonEditorIntegrationBase
 	 */
 	function get_configuration_options()
 	{
+		// TODO: this is copied from TinyMCE, determine how much of this we want/can do with CKEditor
 		return array(
 			//'notables' => 'Standard (All minus Tables &amp; Pre)',
 			//'default' => 'TinyMCE Default Set',

@@ -9,3 +9,9 @@ apache.conf
 .idea/
 .env
 .DS_Store
+
+out.log
+
+err.log
+
+reason_4.0/data/tmpUploads

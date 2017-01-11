@@ -426,13 +426,9 @@ class tiny_mce_no_labelType extends tiny_mceType // {{{
  *
  * These are the type valid args you should use:
  *
- * - rows
- * - cols
  * - external_css
- * - plugins
+ * - external_js
  * - init_options
- *
- * Init options supports everything TinyMCE supports - we setup defaults in $this->base_init_options.
  *
  *
  * @todo do we need to add db_type error checks like we have in Loki?
@@ -456,12 +452,12 @@ class ck_editorType extends textareaType
 	protected $external_css = array();
 
 	/**
-	 * @param array of paths (relative to server root) of JS files to load after CkEditor loads but before init.
+	 * @param array array of paths (relative to server root) of JS files to load after CkEditor loads but before init.
 	*/
 	protected $external_js = array();
 
 	/**
-	 * @param array containing CkEditor init options in addition or to override base_init_options
+	 * @param array array containing CkEditor init options in addition or to override base_init_options
 	*/
 	protected $init_options = array();
 
@@ -499,7 +495,12 @@ class ck_editorType extends textareaType
 		if (!isset($loaded_an_instance))
 		{
 			// ckeditor.js is already minified
-			$js = '<script language="javascript" type="text/javascript" src="'.CKEDITOR_HTTP_PATH.'ckeditor.js"></script>'."\n";		$external_js = $this->get_class_var('external_js');
+			$js = '<script language="javascript" type="text/javascript" src="'.CKEDITOR_HTTP_PATH.'ckeditor.js"></script>'."\n";
+
+			// OPTIONAL for DEVELOPMENT (busts the cache on every page load, not for production):
+			$js .= '<script language="javascript" type="text/javascript">CKEDITOR.timestamp=new Date().getTime();</script>';
+
+			$external_js = $this->get_class_var('external_js');
 			if (!empty($external_js))
 			{
 				foreach ($external_js as $js_file)
@@ -526,12 +527,13 @@ class ck_editorType extends textareaType
 		if (!isset($loaded_css))
 		{
 			$external_css = $this->get_class_var('external_css');
+
 			if (!empty($external_css))
 			{
 				$css = '';
 				foreach ($external_css as $css_file)
 				{
-					$css .= '<link rel="stylesheet" type="text/css" href="' . $css_file . '" />'."\n";
+                    $css .= '<link rel="stylesheet" type="text/css" href="' . $css_file . '?' . time() .'" />'."\n";
 				}
 			}
 			$loaded_css = true;
