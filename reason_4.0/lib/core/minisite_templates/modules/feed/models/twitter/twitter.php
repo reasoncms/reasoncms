@@ -125,10 +125,11 @@ class ReasonTwitterFeedModel extends ReasonMVCModel // implements ReasonFeedInte
 	 */
 	protected function add_html_version_to_tweets(&$tweets)
 	{
+		return;
 		foreach ($tweets as $k => $v)
 		{
 			if (isset($v['retweeted_status'])) unset($v['retweeted_status']);
-			$html = tmhUtilities::entify_with_options($v);
+//			$html = tmhUtilities::entify_with_options($v);
 			$tweets[$k]['html'] = $html;
 		}
 	}
