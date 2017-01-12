@@ -125,13 +125,93 @@ class ReasonTwitterFeedModel extends ReasonMVCModel // implements ReasonFeedInte
 	 */
 	protected function add_html_version_to_tweets(&$tweets)
 	{
-		return;
 		foreach ($tweets as $k => $v)
 		{
 			if (isset($v['retweeted_status'])) unset($v['retweeted_status']);
-//			$html = tmhUtilities::entify_with_options($v);
+			$html = $this->entify_with_options($v);
 			$tweets[$k]['html'] = $html;
 		}
+	}
+	
+	/**
+	 * Entifies the tweet using the given entities element, using the provided
+	 * options.
+	 * 
+	 * Originally sourced from tmhUtilities::entify_with_options in
+	 * https://github.com/themattharris/tmhOAuth in versions prior to 0.8.0 
+	 * 
+	 * @param array $tweet the json converted to normalised array
+	 * @param array $options settings to be used when rendering the entities
+	 * @param array $replacements if specified, the entities and their replacements will be stored to this variable
+	 * @return the tweet text with entities replaced with hyperlinks
+	 */
+	public function entify_with_options($tweet, $options = array(), &$replacements = array())
+	{
+		$default_opts = array(
+			'encoding' => 'UTF-8',
+			'target' => '',
+		);
+
+		$opts = array_merge($default_opts, $options);
+
+		$encoding = mb_internal_encoding();
+		mb_internal_encoding($opts['encoding']);
+
+		$keys = array();
+		$is_retweet = false;
+
+		if (isset($tweet['retweeted_status'])) {
+			$tweet = $tweet['retweeted_status'];
+			$is_retweet = true;
+		}
+
+		if (!isset($tweet['entities'])) {
+			return $tweet['text'];
+		}
+
+		$target = (!empty($opts['target'])) ? ' target="' . $opts['target'] . '"' : '';
+
+		// prepare the entities
+		foreach ($tweet['entities'] as $type => $things) {
+			foreach ($things as $entity => $value) {
+				$tweet_link = "<a href=\"https://twitter.com/{$tweet['user']['screen_name']}/statuses/{$tweet['id']}\"{$target}>{$tweet['created_at']}</a>";
+
+				switch ($type) {
+					case 'hashtags':
+						$href = "<a href=\"https://twitter.com/search?q=%23{$value['text']}\"{$target}>#{$value['text']}</a>";
+						break;
+					case 'user_mentions':
+						$href = "@<a href=\"https://twitter.com/{$value['screen_name']}\" title=\"{$value['name']}\"{$target}>{$value['screen_name']}</a>";
+						break;
+					case 'urls':
+					case 'media':
+						$url = empty($value['expanded_url']) ? $value['url'] : $value['expanded_url'];
+						$display = isset($value['display_url']) ? $value['display_url'] : str_replace('http://', '', $url);
+						// Not all pages are served in UTF-8 so you may need to do this ...
+						$display = urldecode(str_replace('%E2%80%A6', '&hellip;', urlencode($display)));
+						$href = "<a href=\"{$value['url']}\"{$target}>{$display}</a>";
+						break;
+				}
+				$keys[$value['indices']['0']] = mb_substr(
+						$tweet['text'], $value['indices']['0'], $value['indices']['1'] - $value['indices']['0']
+				);
+				$replacements[$value['indices']['0']] = $href;
+			}
+		}
+
+		ksort($replacements);
+		$replacements = array_reverse($replacements, true);
+		$entified_tweet = $tweet['text'];
+		foreach ($replacements as $k => $v) {
+			$entified_tweet = mb_substr($entified_tweet, 0, $k) . $v . mb_substr($entified_tweet, $k + strlen($keys[$k]));
+		}
+		$replacements = array(
+			'replacements' => $replacements,
+			'keys' => $keys
+		);
+
+		mb_internal_encoding($encoding);
+		return $entified_tweet;
 	}
 
 	/**
