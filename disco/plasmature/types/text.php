@@ -20,7 +20,7 @@ class defaultTextType extends defaultType
 	 * Returns the value of this plasmature element.
 	 * This version forces the value into text, which is what's always expected
 	 * @return string The value of this element.
-	 */ 
+	 */
 	function get()
 	{
 		return strval(parent::get());
@@ -50,9 +50,9 @@ class textType extends defaultTextType
 	 * The size (in characters) of the input element.
 	 * @var int
 	 */
-	
+
 	var $size = 50;
-	
+
 	/**
 	 * The maximum length (in characters) of the input value.
 	 * Note that this check only occurs on the client side.
@@ -65,19 +65,19 @@ class textType extends defaultTextType
 	 * @var string
 	 */
 	var $placeholder;
-	
+
 	/** @access private */
 	var $type_valid_args = array( 'size', 'maxlength', 'placeholder' );
-	
+
 	function get_display()
 	{
-		$display = '<input type="text" name="'.$this->name.'" value="'.str_replace('"', '&quot;', $this->get()).'" size="'.$this->size.'" maxlength="'.$this->maxlength.'" id="'.$this->get_id().'" class="text" ';
+		$display = '<input type="text" name="'.$this->name.'" value="'.str_replace('"', '&quot;', $this->get()).'" size="'.$this->size.'" maxlength="'.$this->maxlength.'" id="'.$this->get_id().'" aria-label="'.htmlspecialchars(strip_tags($this->display_name)).'" class="text" ';
 		if (!empty($this->placeholder)) $display .= 'placeholder="'.$this->placeholder.'"';
 		$display .= '/>';
 		return $display;
 	}
 }
-	
+
 /**
  * @package disco
  * @subpackage plasmature
@@ -98,10 +98,10 @@ class solidtextType extends defaultTextType
 {
 	var $type = 'solidtext';
 	var $userland_changeable = false;
-	
+
 	/** @access private */
 	var $type_valid_args = array( 'userland_changeable');
-	
+
 	function grab()
 	{
 		$value = $this->grab_value();
@@ -111,7 +111,7 @@ class solidtextType extends defaultTextType
 		}
 		parent::grab();
 	}
-	
+
 	function get_display()
 	{
 		$str  = '<input type="hidden" name="'.$this->name.'" id="'.$this->get_id().'" value="'.htmlspecialchars($this->get(),ENT_QUOTES).'"/>';
@@ -184,7 +184,7 @@ class passwordType extends defaultTextType
 	var $type_valid_args = array( 'size', 'maxlength', 'placeholder' );
 	function get_display()
 	{
-		$display = '<input type="password" name="'.$this->name.'" id="'.$this->get_id().'" value="'.htmlspecialchars($this->get(),ENT_QUOTES).'" size="'.$this->size.'" maxlength="'.$this->maxlength.'" ';
+		$display = '<input type="password" name="'.$this->name.'" id="'.$this->get_id().'" value="'.htmlspecialchars($this->get(),ENT_QUOTES).'" size="'.$this->size.'" maxlength="'.$this->maxlength.'" aria-label="'.htmlspecialchars(strip_tags($this->display_name)).'" ';
 		if (!empty($this->placeholder)) $display .= 'placeholder="'.$this->placeholder.'"';
 		$display .= '/>';
 		return $display;
@@ -270,7 +270,7 @@ class textareaType extends defaultTextType
 	var $type_valid_args = array('rows', 'cols');
 	function get_display()
 	{
-		$str  = '<textarea name="'.$this->name.'" id="'.$this->get_id().'" rows="'.$this->rows.'" cols="'.$this->cols.'">'.htmlspecialchars($this->get(),ENT_QUOTES,'UTF-8').'</textarea>';
+		$str  = '<textarea name="'.$this->name.'" id="'.$this->get_id().'" aria-label="'.htmlspecialchars(strip_tags($this->display_name)).'" rows="'.$this->rows.'" cols="'.$this->cols.'">'.htmlspecialchars($this->get(),ENT_QUOTES,'UTF-8').'</textarea>';
 		return $str;
 	}
 	function grab()
@@ -279,7 +279,7 @@ class textareaType extends defaultTextType
 		$length = strlen( strval($this->value) );
 		$length_limits = array('tinytext' => 255, 'text' => 65535,
 			'mediumtext' => 16777215);
-		
+
 		if(!empty($this->db_type) && array_key_exists($this->db_type, $length_limits))
 		{
 			if($length  > $length_limits[$this->db_type])
@@ -292,7 +292,7 @@ class textareaType extends defaultTextType
 		}
 	}
 }
-	 
+
 /**
  * @package disco
  * @subpackage plasmature
@@ -317,20 +317,20 @@ class textarea_no_labelType extends textareaType // {{{
 class wysiwyg_disabledType extends textareaType
 {
 	var $type = 'wysiwyg_disabled';
-	
+
 	function grab()
 	{
 		// intentionally left blank -- nothing should come in from userland
 	}
-	
-	
+
+
 	function get_display()
 	{
 		$str  = '<textarea name="'.htmlspecialchars($this->name, ENT_QUOTES).'" rows="'.$this->rows.'" cols="'.$this->cols.'" id="'.$this->get_id().'" disabled="disabled" >'.htmlspecialchars($this->get(),ENT_QUOTES,'UTF-8').'</textarea>';
 		$str .= $this->_get_javascript_block($this->get_id());
 		return $str;
 	}
-	
+
 	function get_id()
 	{
 		if (empty($this->id))
@@ -338,13 +338,13 @@ class wysiwyg_disabledType extends textareaType
 		else
 			return $this->id;
 	}
-	
+
 	function _get_javascript_block($element_id)
 	{
 		include_once(CARL_UTIL_INC.'basic/json.php');
 		$prepped_id = trim(json_encode($element_id),'"');
 		$html_prepped_id = trim(json_encode(htmlspecialchars($element_id,ENT_QUOTES)),'"');
-		
+
 		return '<script type="text/javascript">
 		// <![CDATA[
 		if (jQuery) {
@@ -374,7 +374,7 @@ class wysiwyg_disabledType extends textareaType
 class wysiwyg_solidtextType extends solidtextType
 {
 	var $type = 'wysiwyg_solidtext';
-		
+
 	function get_display()
 	{
 		$str  = '<input type="hidden" name="'.$this->name.'" id="'.$this->get_id().'" value="'.htmlspecialchars($this->get(),ENT_QUOTES).'"/>';

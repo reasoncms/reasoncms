@@ -65,7 +65,7 @@ class PublicationModule extends Generic3Module
 
 	var $email_sharer_location = null;
 	var $email_sharer_classname = null;
-	
+
 	// Filter settings
 	var $use_filters = true;
 	var $filter_types = array(	'category'=>array(	'type'=>'category_type',
@@ -91,7 +91,7 @@ class PublicationModule extends Generic3Module
 	var $group_by_section = true;			//whether or not items should be grouped by section when displayed
 	var $show_module_title = false; // page title module generally handles this
 	var $restrict_story_categories_to_owned_or_borrowed = false;
-	
+
 	// related mode variables - page type configurable
 	var $related_mode = false;      // in related_mode, related publication items are aggregated
 	var $related_order = ''; 		// allows for keywords for custom order and special considerations for related items
@@ -269,7 +269,7 @@ var $noncanonical_request_keys = array(
 		$this->set_show_featured_items();
 		$this->set_minimum_date();
 		$this->set_email_sharing_behavior();
-	
+
 		if ($this->related_mode) $this->init_related( $args );
 		elseif (!empty($this->publication)) parent::init( $args );
 		else
@@ -323,7 +323,7 @@ var $noncanonical_request_keys = array(
 			$this->email_sharer_classname = "DefaultPublicationEmailer";
 		}
 	}
-	
+
 	function set_show_featured_items()
 	{
 		if (isset($this->params['show_featured_items'])) $this->show_featured_items = $this->params['show_featured_items']; // set from parameter if present
@@ -566,7 +566,7 @@ var $noncanonical_request_keys = array(
 		      					  'show_module_title', 'related_mode', 'related_order', 'date_format', 'related_title',
 		      					  'limit_by_page_categories', 'related_publication_unique_names', 'related_category_unique_names','css',
 		      					  'show_featured_items','jump_to_item_if_only_one_result','authorization','comment_form_file_location','post_form_file_location','style_string','wrapper_class_override',);
-		$markup_params = 	array('markup_generator_info' => $this->markup_generator_info, 
+		$markup_params = 	array('markup_generator_info' => $this->markup_generator_info,
 							      'item_specific_variables_to_pass' => $this->item_specific_variables_to_pass,
 							      'variables_to_pass' => $this->variables_to_pass);
 		
@@ -675,7 +675,7 @@ var $noncanonical_request_keys = array(
 			if (!empty($this->params['restrict_story_categories_to_owned_or_borrowed'])) {
 				$this->restrict_story_categories_to_owned_or_borrowed = $this->params['restrict_story_categories_to_owned_or_borrowed'];
 			}
-			
+
 			$this->_handle_authorization();
 		}
 	}
@@ -752,6 +752,7 @@ var $noncanonical_request_keys = array(
 		{
 			$title = htmlspecialchars(trim(strip_tags($item->get_value('release_title'))),ENT_QUOTES,'UTF-8');
 			$description = htmlspecialchars(trim(str_replace('&nbsp;', '', strip_tags($item->get_value('description')))),ENT_QUOTES,'UTF-8');
+			$meta_description = htmlspecialchars(trim(str_replace('&nbsp;', '', strip_tags($item->get_value('meta_description')))),ENT_QUOTES,'UTF-8');
 			if (empty($description)) // lets look to the content field if description is missing.
 			{
 				$content = htmlspecialchars(trim(str_replace('&nbsp;', '', strip_tags($item->get_value('content')))),ENT_QUOTES,'UTF-8');
@@ -781,7 +782,7 @@ var $noncanonical_request_keys = array(
 			$head_items->add_head_item('meta',array( 'property' => 'og:type', 'content' => 'article'));
 			$head_items->add_head_item('meta',array( 'property' => 'og:title', 'content' => $title));
 			$head_items->add_head_item('meta',array( 'property' => 'og:url', 'content' => $url));
-			if (!empty($description)) $head_items->add_head_item('meta',array( 'property' => 'og:description', 'content' => $description));
+			if (!empty($meta_description)) $head_items->add_head_item('meta',array( 'property' => 'og:description', 'content' => $meta_description));
 			if (!empty($image_urls))
 			{
 				foreach ($image_urls as $image_url)
@@ -842,7 +843,7 @@ var $noncanonical_request_keys = array(
 			$persistent_markup_generator->add_head_items($head_items);
 
 			$this->replaceContentWithLinkIfPresent($item);
-			
+
 			$item_markup_generator = $this->set_up_generator_of_type('item', $item);
 			$item_markup_generator->add_head_items($head_items);
 		}
@@ -865,7 +866,7 @@ var $noncanonical_request_keys = array(
 			$item->set_value("content", $linkContent);
 		}
 	}
-	
+
 	/**
 	 * Makes sure the section id is okay - intelligently redirects if not.
 	 *
@@ -1218,10 +1219,10 @@ var $noncanonical_request_keys = array(
 				else
 					$nonissued_pubs[$pub->id()] = $pub;
 			}
-			
+
 			if(empty($issued_pubs))
 				return;
-			
+
 			$issued_posts = array();
 			$nonissued_posts = array();
 			$table_limit_array = (!empty($this->minimum_date)) ? array('status', 'dated') : array('status');
@@ -1249,7 +1250,7 @@ var $noncanonical_request_keys = array(
 				$this->related_order_and_limit($nonissued_posts_es, $table_limit_array);
 				$nonissued_posts = $nonissued_posts_es->run_one();
 			}
-			
+
 			$post_ids = array_unique(array_merge(array_keys($issued_posts),array_keys($nonissued_posts)));
 			$es->add_relation('entity.id IN ("'.implode('","',$post_ids).'")');
 		}
@@ -1369,7 +1370,7 @@ var $noncanonical_request_keys = array(
 				return;
 			}
 		}
-		if ($this->page_is_public() && 
+		if ($this->page_is_public() &&
 			$this->publication->has_value('enable_social_sharing') &&
 			$this->publication->get_value('enable_social_sharing') == 'yes' &&
 			defined('PUBLICATION_SOCIAL_SHARING_INCLUDES_EMAIL') &&
@@ -1393,7 +1394,7 @@ var $noncanonical_request_keys = array(
 				trigger_error('Unable to find class '.$this->email_sharer_classname.' for email sharing');
 			}
 		}
-		
+
 		//if this is an issued publication, we want to say what issue we're viewing
 		$current_issue = $this->get_current_issue();
 		if(!empty($current_issue) )
@@ -1537,7 +1538,7 @@ var $noncanonical_request_keys = array(
 								     : '';
 			if (!empty($markup_generator_settings)) $markup_generator->set_passed_variables($markup_generator_settings);
 
-			
+
 			$itemForGenerator = $item;
 			if ($type == "item") {
 				if ($item == null) {
@@ -1552,6 +1553,7 @@ var $noncanonical_request_keys = array(
 						$itemValues = $item->get_values();
 						if (!empty($itemValues)) {
 							$embedHandler = $this->get_embed_handler($item);
+
 						}
 
 						if ($embedHandler != null) {
@@ -2463,7 +2465,7 @@ var $noncanonical_request_keys = array(
 		{
 			return count($this->items) - $this->get_num_featured();
 		}
-		
+
 		function get_pagination_markup($class = '')
 		{
 			if($this->use_pagination && ( $this->show_list_with_details || empty( $this->current_item_id ) ) )
@@ -3006,7 +3008,7 @@ var $noncanonical_request_keys = array(
 			return $this->events_page_url;
 		}
 
-		// some markup generators could potentially want to apply a filter to the list of associated images (for instance a 
+		// some markup generators could potentially want to apply a filter to the list of associated images (for instance a
 		// markup generator that *sometimes* includes associated images as a slideshow would not want the images to also show up in a sidebar).
 		// (obv if it ALWAYS used a slideshow it could just omit using images altogether
 		function filter_out_images($item, $filter_ids)
@@ -3167,14 +3169,15 @@ var $noncanonical_request_keys = array(
 			$identifier = basename( $this->comment_form_file_location, '.php');
 			if(empty($GLOBALS[ '_publication_comment_forms' ][ $identifier ]))
 			{
+
 				trigger_error('Comment forms must identify their class name in the $GLOBALS array; the form located at '.$this->comment_form_file_location.' does not and therefore cannot be run.');
 				return '';
 			}
-			
+
 			$form_class = $GLOBALS[ '_publication_comment_forms' ][ $identifier ];
 			return new $form_class($this->site_id, $item, $this->get_comment_moderation_state(), $this->publication);
 		}
-		
+
 		function get_comment_form_markup($item)
 		{
 			if($this->comment_form_ok_to_run($item))
@@ -3317,7 +3320,7 @@ var $noncanonical_request_keys = array(
 			$featured_item_order_by_key = array_flip($featured_keys);
 			return (in_array($entity->id(), $featured_keys)) ? $featured_item_order_by_key[$entity->id()] : false;
 		}
-		
+
 		//////////////////////////////////////////
 		// Inline Editing Functions
 		//////////////////////////////////////////

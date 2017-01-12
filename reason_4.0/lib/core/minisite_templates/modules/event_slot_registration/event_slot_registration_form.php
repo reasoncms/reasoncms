@@ -49,6 +49,7 @@ class EventSlotRegistrationForm extends Disco{
 	var $error_checks = array(
 		'email' => array(
 			'email_is_correctly_formatted' => 'The email address you entered does not appear to be valid.  Please check to make sure you entered it correctly',
+			'already_registered' => 'This email address has already been registered for this event. If you have a question, please contact the event organizer for more information.',
 		 ),
 	);
 	
@@ -58,6 +59,7 @@ class EventSlotRegistrationForm extends Disco{
 	var $request_array;
 	var $cancel_link;
 	
+	var $show_error_jumps = false;	
 	var $show_date_change_link = false;
 	var $include_time_in_email = true;
 	
@@ -70,6 +72,22 @@ class EventSlotRegistrationForm extends Disco{
 		$this->delimiter1 = $delimiter1;
 		$this->delimiter2 = $delimiter2;
 		$this->cancel_link = $cancel_link;
+	}
+	
+	function already_registered()
+	{
+		$slot_entity = get_entity_by_id($this->request_array['slot_id']);
+		$registrants = explode($this->delimiter1, $slot_entity['registrant_data']);
+
+		$lc_email = strtolower($this->get_value('email'));
+		foreach ($registrants as $registrant => $value) {
+			$regs = explode($this->delimiter2, $value);
+			if (in_array($lc_email, array_map('strtolower', $regs)))
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	function email_is_correctly_formatted()

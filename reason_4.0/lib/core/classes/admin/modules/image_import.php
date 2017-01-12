@@ -33,7 +33,7 @@
 		function init_head_items()
 		{
 			$this->head_items->add_javascript(JQUERY_URL, true);
-			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'import_photos.js');
+			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'import_photos.js?v=2');
 		}
 		
 		/**

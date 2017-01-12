@@ -42,8 +42,8 @@
 					// iframe replacement method
 					// http://intranation.com/test-cases/object-vs-iframe/
 					//  classid="clsid:25336920-03F9-11CF-8FD0-00AA00686F13"
-					$this->show_item_default( 'Public View of Page' , '<object type="text/html" data="'.$url.'" class="pageViewer"></object><p><a href="'.$url.'" target="_blank">Open page in new window</a></p>');
-					//$this->show_item_default( 'Public View of Page' , '<iframe src="'.$url.'" class="pageViewer"></iframe><p><a href="'.$url.'" target="_blank">Open page in new window</a></p>');
+					$this->show_item_default( 'Public View of Page' , '<object type="text/html" data="'.$url.'" class="pageViewer"></object><p><a href="'.$url.'" target="_new">Open page in new window</a></p>');
+					//$this->show_item_default( 'Public View of Page' , '<iframe src="'.$url.'" class="pageViewer"></iframe><p><a href="'.$url.'" target="_new">Open page in new window</a></p>');
 				}
 			}
 			
@@ -58,17 +58,7 @@
 		
 		function show_item_extra_head_content( $field , $value )
 		{
-			echo '<tr>';
-			$this->_row = $this->_row%2;
-			$this->_row++;
-
-			echo '<td class="listRow' . $this->_row . ' col1">' . prettify_string( $field );
-			if( $field != '&nbsp;' ) echo ':';
-			echo '</td>';
-			$value = nl2br(htmlspecialchars($value));
-			echo '<td class="listRow' . $this->_row . ' col2">' . ( ($value OR (strlen($value) > 0)) ? $value : '<em>(No value)</em>' ). '</td>';
-
-			echo '</tr>';
+			$this->show_item_default( $field, nl2br(htmlspecialchars($value)));
 		}
 		
 		function clear_page_cache()

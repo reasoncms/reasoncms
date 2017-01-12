@@ -904,6 +904,7 @@ ReasonLink.prototype.constructPages = function() {
     type: "listbox",
     flex: 1,
     values: this.updateValues(pages, selected),
+    value: selected,
     disabled: !!this.getDisabled().pages
   };
 };
@@ -918,6 +919,7 @@ ReasonLink.prototype.constructAnchors = function() {
     type: "listbox",
     flex: 1,
     values: this.updateValues(anchors, selected),
+    value: selected,
     disabled: !!this.getDisabled().anchors
   };
 };
@@ -1044,14 +1046,7 @@ ReasonLink.prototype.updateForm = function() {
     var methodName = "construct" + k;
     v.before(tinymce.ui.Factory.create(this[methodName]())).remove();
   }, this);
-  this.getControlReferences()
-  tinymce.each(this.formControls, function(v) {
-    v.parent().layoutRect(this.layoutRects[i][1]);
-    v.layoutRect(this.layoutRects[i][0]);
-    v.parent().reflow();
-    v.reflow();
-    i++;
-  }, this);
+  this.getControlReferences();
 
   this.bindReasonUI();
 };
@@ -1246,7 +1241,7 @@ ReasonAsset.prototype.bindReasonUI = function ()
 
       if (asset.id == asset_id)
       {
-        self.setSelected('asset_url', asset.url);
+      	self.setSelected('asset_url', asset.url);
         self.setDesc(asset.name);
         break;
       }
@@ -1274,23 +1269,25 @@ ReasonAsset.prototype.constructAssets = function ()
 
       if (asset.url == selected_url)
       {
-        selected = asset.id;
-
-        this.setSelected('asset', selected);
+      	selected = asset.id;
+      	this.setSelected('asset', selected);
         this.setSelected('asset_url', asset.url);
+        this.setDesc(asset.name);
 
         break;
       }
     }
   }
 
-  return {
-    name: 'assets',
-    label: 'Asset',
-    type: 'listbox',
-    flex: 1,
-    values: this.updateValues(assets, selected)
-  };
+    var listBox = {
+        name: 'assets',
+        label: 'Asset',
+        type: 'listbox',
+        flex: 1,
+        values: this.updateValues(assets, selected),
+		value: selected
+    };
+    return listBox;
 };
 
 ReasonAsset.prototype.constructDescription = function ()
@@ -1396,15 +1393,6 @@ ReasonAsset.prototype.updateForm = function ()
   }, this);
 
   this.getControlReferences();
-
-  tinymce.each(this.formControls, function (v)
-  {
-    v.parent().layoutRect(this.layoutRects[i][1]);
-    v.layoutRect(this.layoutRects[i][0]);
-    v.parent().reflow();
-    v.reflow();
-    i++;
-  }, this);
 
   this.bindReasonUI();
 };
@@ -1572,8 +1560,14 @@ tinymce.PluginManager.add('reasonintegration', function(editor, url) {
       format: 'text'
     });
 
-    // confirm some text or an image has been selected ...
-    if (!data.text && selectionElement.nodeName != 'IMG')
+    // check for selected image
+    if (selectionElement.nodeName == 'IMG')
+    {
+      data.text = '';
+    }
+
+    // confirm some text has been selected ...
+    if (!data.text)
     {
       // ... alert user to select some text
       tinymce.activeEditor.windowManager.alert(

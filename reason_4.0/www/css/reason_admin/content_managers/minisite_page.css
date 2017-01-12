@@ -5,28 +5,28 @@
 .incomplete_warning {
     color: #444;
 }
-tr#urlfragmentRow span.parent_path, tr#urlfragmentRow span.trailing_slash {
+#urlfragmentItem span.parent_path, #urlfragmentItem span.trailing_slash {
 	font-size:0.9em;
 	color:#777;
 }
-#pagetypenoteRow div.note>*:first-child, #pagetypenoteRow div.note div.callOut>*:first-child {
+#pagetypenoteItem div.note>*:first-child, #pagetypenoteItem div.note div.callOut>*:first-child {
 	margin-top:0;
 }
 h4 {
 	font-size:1.125em;
 }
-#administratorsectionheadingRow h4 a.closed {
+[id^="administratorsectionheading"] h4 a.closed {
 	background:transparent url(../../../ui_images/item_open.gif) no-repeat right center;
 	padding-right:20px;
 	text-decoration: none;
 }
-#administratorsectionheadingRow h4 a.open {
+[id^="administratorsectionheading"] h4 a.open {
 	background:transparent url(../../../ui_images/item_collapse.gif) no-repeat right center;
 	padding-right:20px;
 	text-decoration: none;
 
 }
-#extraheadcontentstructuredRow .headItemAdder a {
+[id^="extraheadcontentstructured"] .headItemAdder a {
 	background:transparent url(../../../silk_icons/add.png) no-repeat;
 	padding-left:20px;
 	min-height:20px;
