@@ -49,6 +49,8 @@ class blogPostsFeed extends pageTreeFeed
          */
 	function get_robots_http_header()
 	{
+		if($this->site_specific && $this->site->get_value('site_state') == 'Not Live')
+			return 'none';
 		return '';
 	}	
 	function grab_blog()
