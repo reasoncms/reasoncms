@@ -53,6 +53,13 @@ class sitewideNewsFeed extends defaultFeed
 	var $num_to_display = 25;
 
 	/**
+	 * We want news/posts to be indexed by search engines, so we turn off the robots http header
+	 */
+	function get_robots_http_header()
+	{
+		return '';
+	}
+	/**
 	 * Grab our items, send them to the feed
 	 */
 	function alter_feed()

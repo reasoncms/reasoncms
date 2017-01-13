@@ -16,6 +16,13 @@ class faqFeed extends pageTreeFeed
 	var $page_types = array('faqs',);
 	var $query_string = 'faq_id';
 	
+	/**
+	 * We want faqs to be indexed by search engines, so we turn off the robots http header
+	 */
+	function get_robots_http_header()
+	{
+		return '';
+	}
 	function alter_feed()
 	{
 		$this->feed->set_item_field_map('title','description');

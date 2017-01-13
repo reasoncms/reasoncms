@@ -28,7 +28,14 @@ class mediaFileFeed extends defaultFeed
 	var $_page_check_state = 'unchecked';
 	//var $page_types = array('av');
 	
-	
+
+	/**
+	 * We want media/podcasts to be indexed by search engines, so we turn off the robots http header
+	 */
+        function get_robots_http_header()
+        {
+                return '';
+        }	
 	function run($send_header = true)
 	{
 		$this->get_site_id();
