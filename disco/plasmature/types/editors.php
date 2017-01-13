@@ -474,12 +474,9 @@ class ck_editorType extends textareaType
 		parent::display();
 		$display = $this->get_ck_editor_javascript();
 		$display .= $this->get_ck_editor_external_css();
-		// $display .= '<script language="javascript" type="text/javascript">'."\n";
-		// $display .= $this->get_ck_editor_init_string();
-		// $display .= '</script>'."\n";
-		$display .= "<script>
-                CKEDITOR.replace( '{$this->name}' );
-            	</script>";
+		$display .= '<script language="javascript" type="text/javascript">'."\n";
+		$display .= $this->get_ck_editor_init_string();
+		$display .= '</script>'."\n";
 		echo $display;
 	}
 
@@ -533,7 +530,7 @@ class ck_editorType extends textareaType
 				$css = '';
 				foreach ($external_css as $css_file)
 				{
-                    $css .= '<link rel="stylesheet" type="text/css" href="' . $css_file . '?' . time() .'" />'."\n";
+					$css .= '<link rel="stylesheet" type="text/css" href="' . $css_file . '?' . time() .'" />'."\n";
 				}
 			}
 			$loaded_css = true;
@@ -552,38 +549,40 @@ class ck_editorType extends textareaType
 	 *
 	 * @return string
 	 */
-	// function get_ck_editor_init_string()
-	// {
-	// 	$options = $this->base_init_options;
-	// 	//$options['elements'] = $this->name;
-	// 	$options['selector'] = 'textarea[name='.$this->name.']';
+	 function get_ck_editor_init_string()
+	 {
+		$options = $this->base_init_options;
+		//$options['elements'] = $this->name;
+		$options['selector'] = 'textarea[name='.$this->name.']';
 
-	// 	// Merge in custom options
-	// 	foreach($this->init_options as $option => $val) $options[$option] = $val;
+		// Merge in custom options
+		foreach($this->init_options as $option => $val) $options[$option] = $val;
 
-	// 	// Format the options
-	// 	foreach ($options as $option => $val)
-	// 	{
-	// 		// support configuration params that expect a json object or pure integer
-	// 		if (is_int($val) || (!empty($val) && ((substr($val, 0, 1) == '[') || (substr($val, 0, 1) == '{'))))
-	// 		{
-	// 			$parts[] = sprintf('%s : %s', $option, $val);
-	// 		}
-	// 		else if (is_bool($val)) // handle booleans
-	// 		{
-	// 			$strval = ($val) ? 'true' : 'false';
-	// 			$parts[] = sprintf('%s : %s', $option, $strval);
-	// 		}
-	// 		else if (strpos($val, 'function(') === 0) // functions
-	// 		{
-	// 			$parts[] = sprintf('%s : %s', $option, $val);
-	// 		}
-	// 		else // default for strings
-	// 		{
-	// 			$parts[] = sprintf('%s : "%s"', $option, $val);
-	// 		}
-	// 	}
-	// 	return 'CKEDITOR.replace({'."\n" . implode(",\n", $parts) . "\n});\n";
-	// }
+		// Format the options
+		foreach ($options as $option => $val)
+		{
+			// support configuration params that expect a json object or pure integer
+			if (is_int($val) || (!empty($val) && ((substr($val, 0, 1) == '[') || (substr($val, 0, 1) == '{'))))
+			{
+				$parts[] = sprintf('%s : %s', $option, $val);
+			}
+			else if (is_bool($val)) // handle booleans
+			{
+				$strval = ($val) ? 'true' : 'false';
+				$parts[] = sprintf('%s : %s', $option, $strval);
+			}
+			else if (strpos($val, 'function(') === 0) // functions
+			{
+				$parts[] = sprintf('%s : %s', $option, $val);
+			}
+			else // default for strings
+			{
+				$parts[] = sprintf('%s : "%s"', $option, $val);
+			}
+		}
+
+		 $init_string = "CKEDITOR.replace('" . $this->name . "', \n{customValues: {" . implode(",\n", $parts) . "\n}});\n";
+		 return $init_string;
+	 }
 
 }

@@ -6,7 +6,7 @@
 
 CKEDITOR.dialog.add( 'reasonImageDialog', function( editor ) {
     var dataObjects = [];
-    var imgKeys = []
+    var imgKeys = [];
     var filteredImgKeys = [];
     var selectedKey = -1;
     var dialog;
@@ -36,8 +36,8 @@ CKEDITOR.dialog.add( 'reasonImageDialog', function( editor ) {
      * @param {String}  type       the type of items to fetch, i.e. image or link
      */
     function jsonURL(offset, chunk_size, type) {
-        var site_id = tinymce.activeEditor.settings.reason_site_id,
-            reason_http_base_path = tinymce.activeEditor.settings.reason_http_base_path;
+        var site_id = editor.config.customValues.reason_site_id,
+            reason_http_base_path = editor.config.customValues.reason_http_base_path;
 
         return reason_http_base_path + 'displayers/generate_json.php?site_id=' + site_id + '&type=' + type + '&num=' + chunk_size + '&offset=' + offset + '&';
     };
@@ -125,7 +125,7 @@ CKEDITOR.dialog.add( 'reasonImageDialog', function( editor ) {
         onLoad: function() {
             dialog = this;
             // getJSON is called asynchronously, and onShow: gets called before getJSON returns
-            $.getJSON("//" + window.location.host + "/reason/displayers/generate_json.php?site_id=240622&type=image", function( data ) {
+            $.getJSON(jsonURL(0, 6, "image"), function( data ) {
                   // "count" and "items" are json "data" object keys
                 console.log(data);
                   $.each(data.items, function(key, value) {
@@ -148,7 +148,7 @@ CKEDITOR.dialog.add( 'reasonImageDialog', function( editor ) {
                 console.log(filteredImgKeys);
                 writeImagesHtml();
             });
-            
+
             $(document).on('click', 'figure', function() {
                 if ($(this).hasClass('selectedImage')) {
                     $(this).removeClass('selectedImage');
