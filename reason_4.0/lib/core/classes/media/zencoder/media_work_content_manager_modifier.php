@@ -47,8 +47,8 @@ class ZencoderMediaWorkContentManagerModifier implements MediaWorkContentManager
 	public function set_head_items($head_items)
 	{
 		$head_items->add_javascript(JQUERY_URL, true);
-		$head_items->add_javascript(REASON_HTTP_BASE_PATH.'media/zencoder/media_work_content_manager.js');
-		$head_items->add_stylesheet(REASON_HTTP_BASE_PATH .'media/zencoder/media_work_content_manager.css');
+		$head_items->add_javascript(REASON_HTTP_BASE_PATH.'media/zencoder/media_work_content_manager.js?v=2');
+		$head_items->add_stylesheet(REASON_HTTP_BASE_PATH .'media/zencoder/media_work_content_manager.css?v=2');
 		if ($this->displayer_chrome)
 			$this->displayer_chrome->set_head_items($head_items);
 	}
