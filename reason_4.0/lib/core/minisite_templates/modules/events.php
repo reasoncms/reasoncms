@@ -4038,9 +4038,11 @@ class EventsModule extends DefaultMinisiteModule
 					$dateTime = new DateTime($e->get_value('last_occurence'));
 					$dateTime->add(new DateInterval('PT24H0M'));
 				}
-				else
+				elseif($e->get_value('hours') || $e->get_value('minutes'))
 				{
-					$dateTime->add(new DateInterval('PT'.$e->get_value('hours').'H'.$e->get_value('minutes').'M'));
+					$hours = $e->get_value('hours') ? $e->get_value('hours') : '0';
+					$minutes = $e->get_value('minutes') ? $e->get_value('minutes') : '0';
+					$dateTime->add(new DateInterval('PT'.$hours.'H'.$minutes.'M'));
 				}
 				$endDate = $dateTime->format('Ymd');
 				$endTime = $dateTime->format('His');
