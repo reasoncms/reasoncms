@@ -388,44 +388,36 @@ CKEDITOR.dialog.add( 'reasonImageDialog', function( editor ) {
 
         // Method is invoked once a user clicks the OK button, confirming the dialog.
         onOk: function() {
-            console.log(this.imageHandler.displayedItems);
+            // Create a new img url link
+            var reason_image = editor.document.createElement('img');
 
-            var selectedImageElement = $('figure.selectedImage');
-            if (selectedImageElement) var selectedImageId = selectedImageElement.data().imageId;
-
-            var selectedItem;
-            for (var i = 0; i < this.imageHandler.displayedItems.length; i++) {
-                var id = this.imageHandler.displayedItems[i].id;
-                if (id && parseInt(id) === selectedImageId) {
-                    selectedItem = this.imageHandler.displayedItems[i];
-                    break;
+            if (this._.currentTabId == 'tab-existing') {
+                var selectedImageElement = $('figure.selectedImage');
+                if (selectedImageElement.length > 0) {
+                    var selectedImageId = selectedImageElement.data().imageId;
+                    var selectedItem;
+                    for (var i = 0; i < this.imageHandler.displayedItems.length; i++) {
+                        var id = this.imageHandler.displayedItems[i].id;
+                        if (id && parseInt(id) === selectedImageId) {
+                            selectedItem = this.imageHandler.displayedItems[i];
+                            break;
+                        }
+                    }
+                    if (selectedItem) {
+                        imageType = this.getValueOf('tab-existing', 'size');
+                        altText = selectedItem.description;
+                        reason_image.setAttribute('src', selectedItem.URLs[imageType]);
+                        reason_image.setAttribute('alt', altText);
+                        reason_image.setAttribute('style', 'float: ' + this.getValueOf('tab-existing', 'alignment'));
+                    }
                 }
+            } else if (this.getValueOf('tab-web', 'location') !== '') {
+                reason_image.setAttribute('src', this.getValueOf('tab-web', 'location'));
+                reason_image.setAttribute('alt', this.getValueOf('tab-web', 'description'));
+                reason_image.setAttribute('style', 'float: ' + this.getValueOf('tab-web', 'alignment'));
             }
-
-            if ((selectedItem) || dialog.getValueOf('tab-web', 'location') !== '') {
-
-                // Create a new img url link
-                var reason_image = editor.document.createElement('img');
-
-                if (this._.currentTabId == 'tab-existing') {
-                    imageType = this.getValueOf('tab-existing', 'size');
-                    altText = selectedItem.description;
-                    debugger;
-                    // need to figure out how to get the proper item and use its attributes
-                    reason_image.setAttribute('src', selectedItem.URLs[imageType]);
-                    reason_image.setAttribute('alt', altText);
-                    reason_image.setAttribute('style', 'float: ' + this.getValueOf('tab-existing', 'alignment'));
-                }
-                else if (this.getValueOf('tab-web', 'location') != '') {
-                    debugger;
-                    reason_image.setAttribute('src', this.getValueOf('tab-web', 'location'));
-                    reason_image.setAttribute('alt', this.getValueOf('tab-web', 'description'));
-                    reason_image.setAttribute('style', 'float: ' + this.getValueOf('tab-web', 'alignment'));
-                }
-
-                // Insert the element into the editor at the caret position.
-                editor.insertElement(reason_image);
-            }
+            // Insert the element into the editor at the caret position.
+            editor.insertElement(reason_image);
         }
     };
     return dialogDefinition;
