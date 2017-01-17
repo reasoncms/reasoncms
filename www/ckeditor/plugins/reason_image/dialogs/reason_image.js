@@ -259,7 +259,6 @@ CKEDITOR.dialog.add( 'reasonImageDialog', function( editor ) {
 
     const MIN_WIDTH = 425;
     const MIN_HEIGHT = 400;
-    var imageHandler;
     var dialogDefinition = {
         // Basic properties of the dialog window: title, minimum size.
         title: 'Insert/Edit image',
@@ -349,13 +348,12 @@ CKEDITOR.dialog.add( 'reasonImageDialog', function( editor ) {
 
         // Called when the dialog is first created
         onLoad: function() {
-            imageHandler = new ReasonCKImage(editor);
+            this.imageHandler = imageHandler = new ReasonCKImage(editor);
             // getJSON is called asynchronously, and onShow: gets called before getJSON returns
 
             // TODO: fix the #cke_39_textInput hack using registerEvents() instead
             // TODO: figure out that this does -- Tom
             $("#cke_39_textInput").keyup(function() {
-                debugger;
                 //console.log(dataObjects);
                 var filter = dialog.getValueOf('tab-existing', 'filter').toLowerCase();
                 filteredImgKeys = [];
@@ -381,32 +379,48 @@ CKEDITOR.dialog.add( 'reasonImageDialog', function( editor ) {
 
         // Called every time the dialog is opened
         onShow: function() {
-            if (imageHandler.items.length > 0) {
+            // debugger;
+            if (this.imageHandler.items.length > 0) {
                 $('figure').removeClass('selectedImage');
-                imageHandler.displayImages();
+                this.imageHandler.displayImages();
             }
         },
 
         // Method is invoked once a user clicks the OK button, confirming the dialog.
         onOk: function() {
+            console.log(this.imageHandler.displayedItems);
 
-            var dialog = this;
+            var selectedImageElement = $('figure.selectedImage');
+            if (selectedImageElement) var selectedImageId = selectedImageElement.data().imageId;
 
-            if (($('figure.selectedImage').length !== 0) || dialog.getValueOf('tab-web', 'location') !== '') {
+            var selectedItem;
+            for (var i = 0; i < this.imageHandler.displayedItems.length; i++) {
+                var id = this.imageHandler.displayedItems[i].id;
+                if (id && parseInt(id) === selectedImageId) {
+                    selectedItem = this.imageHandler.displayedItems[i];
+                    break;
+                }
+            }
+
+            if ((selectedItem) || dialog.getValueOf('tab-web', 'location') !== '') {
 
                 // Create a new img url link
                 var reason_image = editor.document.createElement('img');
 
-                if (dialog.definition.dialog._.currentTabId == 'tab-existing') {
+                if (this._.currentTabId == 'tab-existing') {
+                    imageType = this.getValueOf('tab-existing', 'size');
+                    altText = selectedItem.description;
                     debugger;
-                    reason_image.setAttribute('src', $('figure.selectedImage > img').attr('src'));
-                    reason_image.setAttribute('alt', $('figure.selectedImage > figcaption').html());
-                    reason_image.setAttribute('style', 'float: ' + dialog.getValueOf('tab-existing', 'alignment'));
+                    // need to figure out how to get the proper item and use its attributes
+                    reason_image.setAttribute('src', selectedItem.URLs[imageType]);
+                    reason_image.setAttribute('alt', altText);
+                    reason_image.setAttribute('style', 'float: ' + this.getValueOf('tab-existing', 'alignment'));
                 }
-                else if (dialog.getValueOf('tab-web', 'location') != '') {
-                    reason_image.setAttribute('src', dialog.getValueOf('tab-web', 'location'));
-                    reason_image.setAttribute('alt', dialog.getValueOf('tab-web', 'description'));
-                    reason_image.setAttribute('style', 'float: ' + dialog.getValueOf('tab-web', 'alignment'));
+                else if (this.getValueOf('tab-web', 'location') != '') {
+                    debugger;
+                    reason_image.setAttribute('src', this.getValueOf('tab-web', 'location'));
+                    reason_image.setAttribute('alt', this.getValueOf('tab-web', 'description'));
+                    reason_image.setAttribute('style', 'float: ' + this.getValueOf('tab-web', 'alignment'));
                 }
 
                 // Insert the element into the editor at the caret position.
