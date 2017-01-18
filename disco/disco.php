@@ -430,6 +430,12 @@
 				'where_to'=>array(),
 		);
 		
+		/**
+		 * List of Disco element names with value prepopulation enabled
+		 * Values are sourced from $this->_request
+		 * @var array 
+		 * @access private
+		 */
 		var $_prepopulable = array();
 		
 		
@@ -576,6 +582,10 @@
 		{
 		} // }}}
 		
+		/**
+		 * Set prepopulated values on Disco elements from $this->_request
+		 * Called by {@link run_load_phase}.
+		 */
 		function _prepopulate()
 		{
 			foreach($this->_prepopulable as $element_name => $prepopulation_key)
@@ -587,6 +597,13 @@
 			}
 		}
 		
+		/**
+		 * Allow an element's value to be prepopulated from a URL param
+		 * 
+		 * @param string $element_name Disco element name
+		 * @param string $prepopulation_key key to load data from $this->_request,
+		 *     default is "p_". $element_name
+		 */
 		function enable_prepopulation($element_name, $prepopulation_key = '')
 		{
 			if(empty($prepopulation_key))
@@ -594,6 +611,10 @@
 			$this->_prepopulable[$element_name] = $prepopulation_key;
 		}
 		
+		/**
+		 * Disable value prepopulation
+		 * @param string $element_name Disco element name
+		 */
 		function disable_prepopulation($element_name)
 		{
 			if(isset($this->_prepopulable[$element_name]))
