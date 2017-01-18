@@ -116,7 +116,6 @@ ReasonCKImage.prototype.setupReasonUI = function() {
         context.displayImages(context.makePageSlice(context.page));
     });
 
-
 };
 
 ReasonCKImage.prototype.renderReasonImages = function () {
@@ -155,7 +154,7 @@ ReasonCKImage.prototype.fetchImages = function(chunk) {
     url = this.jsonURL(offset, this.chunkSize, this.feedType);
 
     function processData(data) {
-        console.log(data);
+        // console.log(data);
         context.parseImages(data);
         context.displayedItems = context.items;
         context.updatePagination();
@@ -186,31 +185,30 @@ ReasonCKImage.prototype.fetchImages = function(chunk) {
  * @param {Array<ReasonCKImageDialogItem>} images_array
  **/
 ReasonCKImage.prototype.displayImages = function (images_array) {
-    var imagesHtml = "",
+    var imagesHTML = "",
         imagesContainer = this.document.find('#image-list').getItem(0),
-        cur_src;
+        selectedElement = this.elementToEdit;
 
     images_array = (!images_array && this.displayedItems) ? this.makePageSlice(1) : images_array;
-    // cur_src = this.srcControl.value();
-    cur_src = false;
-    for (var i in images_array)
-    {
-        selected = false;
-        if (!!cur_src)
-        {
-            // for (url in images_array[i].URLs) {
-            //     if (cur_src == images_array[i].URLs[url])
-            //     {
-            //         selected = true;
-            //         break;
-            //     }
-            // }
+    for (var i in images_array) {
+        var selected = false;
+        var size;
+        if (!!selectedElement) {
+            for (url in images_array[i].URLs) {
+                var selectedElementUrl = selectedElement.getAttribute('src');
+                if (selectedElementUrl === images_array[i].URLs['full'] || selectedElementUrl === images_array[i].URLs['thumbnail']) {
+                    selected = true;
+                    size = (selectedElementUrl === images_array[i].URLs['full']) ? 'full' : 'thumbnail';
+                    break;
+                }
+            }
         }
-        imagesHtml += images_array[i].displayItem(selected);
+        imagesHTML += images_array[i].displayItem(selected, size);
     }
-    imagesContainer.setHtml(imagesHtml);
+    imagesContainer.setHtml(imagesHTML);
     this.updatePagination();
-};
+}
+
 
 
 var ReasonCKPluginDialogItem = function() {};
@@ -240,8 +238,14 @@ ReasonCKImageDialogItem.prototype.description = '';
 /**
  * render image in the dialog box with selectedImage class if it is the current image.
  */
-ReasonCKImageDialogItem.prototype.displayItem = function ( selected ) {
+ReasonCKImageDialogItem.prototype.displayItem = function (selected, size) {
     var selectedImageClass = (selected == true) ? " selectedImage" : "";
+    if (selected && !!size) {
+        console.log("Could update controls here...");
+        var dialog = CKEDITOR.dialog.getCurrent()
+        var sizeElement = dialog.getContentElement('tab-existing', 'ex-size');
+        sizeElement.setup(size);
+    }
     var imageHTML = '';
     imageHTML += '<figure data-image-id="' + this.id + '" class="cke_chrome' + selectedImageClass + '">';
     imageHTML += '<img src="' + this.URLs['thumbnail'] + '" alt="' + this.escapeHtml(this.description) + '"/>';
@@ -274,29 +278,41 @@ CKEDITOR.dialog.add( 'reasonImageDialog', function( editor ) {
                 elements: [
                     {
                         type: 'text',
-                        id: 'filter',
+                        id: 'ex-filter',
                         label: 'Filter results',
                     },
                     {
                         type: 'radio',
-                        id: 'size',
+                        id: 'ex-size',
                         label: 'Size',
                         items: [['Thumbnail', 'thumbnail'], ['Full', 'full']],
                         default: 'thumbnail',
                         style: 'display: inline-block',
+                        setup: function(element) {
+                            // can't determine full or thumb reliably based on the HTML element
+                            // could add data attribute on the inserted images but that adds markup
+                            // and would not be present on existing content
+                            if (!!element && (typeof element == 'string')) {
+                                this.setValue(element);
+                            }
+                        },
                     },
                     {
                         type: 'radio',
-                        id: 'alignment',
+                        id: 'ex-alignment',
                         label: 'Alignment',
                         items: [['None', 'none'], ['Left', 'left'], ['Right', 'right']],
                         default: 'none',
                         style: 'display: inline-block',
+                        setup: function( element ) {
+                            var styleAttribute = element.getStyle( "float" );
+                            this.setValue(styleAttribute);
+                        }
                     },
                     {
                         // Window where images and captions are displayed
                         type: 'vbox',
-                        id: 'vbox_img',
+                        id: 'ex-vbox_img',
                         children: [
                             {
                                 type: 'html',
@@ -326,21 +342,36 @@ CKEDITOR.dialog.add( 'reasonImageDialog', function( editor ) {
                 elements: [
                     {
                         type: 'text',
-                        id: 'location',
+                        id: 'web-location',
                         label: 'Location: ',
+                        setup: function (element) {
+                            var src = element.getAttribute('src');
+                            this.setValue(src);
+                        },
                     },
                     {
                         type: 'text',
-                        id: 'description',
+                        id: 'web-description',
                         label: 'Description: ',
+                        setup: function (element) {
+                            var src = element.getAttribute('alt');
+                            this.setValue(src);
+                        },
+                        commit: function( element ) {
+                            element.setAttribute(this.getValue());
+                        }
                     },
                     {
                         type: 'radio',
-                        id: 'alignment',
+                        id: 'web-alignment',
                         label: 'Alignment',
                         items: [['None', 'none'], ['Left', 'left'], ['Right', 'right']],
                         default: 'none',
                         style: 'display: inline-block',
+                        setup: function( element ) {
+                            var styleAttribute = element.getStyle( "float" );
+                            this.setValue(styleAttribute);
+                        }
                     },
                 ]
             }
@@ -349,7 +380,10 @@ CKEDITOR.dialog.add( 'reasonImageDialog', function( editor ) {
         // Called when the dialog is first created
         onLoad: function() {
             this.imageHandler = imageHandler = new ReasonCKImage(editor);
-            // getJSON is called asynchronously, and onShow: gets called before getJSON returns
+            // this.imageHandler.whenLoaded(function()
+            // {
+            //     // this.selectImage(element.(imgElm, 'src'));
+            // });
 
             // TODO: fix the #cke_39_textInput hack using registerEvents() instead
             // TODO: figure out that this does -- Tom
@@ -379,11 +413,25 @@ CKEDITOR.dialog.add( 'reasonImageDialog', function( editor ) {
 
         // Called every time the dialog is opened
         onShow: function() {
-            // debugger;
+            var selection = editor.getSelection();
+            var element = selection.getStartElement();
+            if ( element )
+                element = element.getAscendant( 'img', true );
+
+            if ( element && element.getName() == 'img' ) {
+                this.imageHandler.elementToEdit = element;
+                this.setupContent( element );
+            } else {
+                // reset
+                this.imageHandler.elementToEdit = undefined;
+            }
+
             if (this.imageHandler.items.length > 0) {
+                // check to see if we are in a selection that has an id
                 $('figure').removeClass('selectedImage');
                 this.imageHandler.displayImages();
             }
+
         },
 
         // Method is invoked once a user clicks the OK button, confirming the dialog.
@@ -404,17 +452,17 @@ CKEDITOR.dialog.add( 'reasonImageDialog', function( editor ) {
                         }
                     }
                     if (selectedItem) {
-                        imageType = this.getValueOf('tab-existing', 'size');
+                        imageType = this.getValueOf('tab-existing', 'ex-size');
                         altText = selectedItem.description;
                         reason_image.setAttribute('src', selectedItem.URLs[imageType]);
                         reason_image.setAttribute('alt', altText);
-                        reason_image.setAttribute('style', 'float: ' + this.getValueOf('tab-existing', 'alignment'));
+                        reason_image.setAttribute('style', 'float: ' + this.getValueOf('tab-existing', 'ex-alignment'));
                     }
                 }
-            } else if (this.getValueOf('tab-web', 'location') !== '') {
-                reason_image.setAttribute('src', this.getValueOf('tab-web', 'location'));
-                reason_image.setAttribute('alt', this.getValueOf('tab-web', 'description'));
-                reason_image.setAttribute('style', 'float: ' + this.getValueOf('tab-web', 'alignment'));
+            } else if (this.getValueOf('tab-web', 'web-location') !== '') {
+                reason_image.setAttribute('src', this.getValueOf('tab-web', 'web-location'));
+                reason_image.setAttribute('alt', this.getValueOf('tab-web', 'web-description'));
+                reason_image.setAttribute('style', 'float: ' + this.getValueOf('tab-web', 'web-alignment'));
             }
             // Insert the element into the editor at the caret position.
             editor.insertElement(reason_image);
