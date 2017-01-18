@@ -7,3 +7,8 @@
     background: #eee;
     padding: 1em 1em .5em 1em;
 }
+
+select[multiple] {
+	max-width:50%;
+	min-width:200px;
+}

@@ -196,7 +196,7 @@
 					'magic_string_autofill', 'thank_you_note', 'thank_you_message', 'display_return_link', 'show_submitted_data',
 					'limiting_note', 'submission_limit', 'open_date', 'close_date',
 					'advanced_options_header', 'thor_view', 'thor_view_custom', 'is_editable', 'allow_multiple', 'email_submitter','include_thank_you_in_email', 'email_link', 'email_data', 'email_empty_fields', 'apply_akismet_filter', // advanced options
-					'unique_name', 'tableless'));
+					'prefill_field_selector', 'unique_name', 'tableless'));
 		}
 
 		/**
@@ -241,10 +241,46 @@
 				}
 			}
 			$this->setup_tableless_element();
+			
+			// Change the prefill field from url element to a hidden string
+			// to store the selected fields
+			$this->change_element_type("prefill_these_form_fields", "hidden", array('userland_changeable' => true));
+			
+			// For admins, continue to make the prefill selector available
+			if (reason_user_has_privs($this->admin_page->user_id, 'edit_form_advanced_options')) {
+				$selected_fields = explode(",", (string) $this->get_value('prefill_these_form_fields'));
+
+				// Then, add a new element for users select elements to prefill via url
+				try {
+					$thorContent = $this->get_thor_content_value();
+					$xml = simplexml_load_string($thorContent);
+				} catch (Exception $exc) {
+					echo $exc->getTraceAsString();
+				}
+				$form_fields = array("" => "");
+				if ($xml) {
+					foreach ($xml as $ele) {
+						$form_fields[(string) $ele['id']] = (string) $ele['label'];
+					}
+				}
+				$this->add_element("prefill_field_selector", "select_multiple", array('options' => $form_fields));
+				$this->set_display_name("prefill_field_selector", "Prepopulate these fields from URL params");
+				$this->set_value("prefill_field_selector", $selected_fields);
+				$comment = 'For basic labels, the prefill pattern is "p_" . rawurlencode(strtolower($label))<br>';
+				$comment .= 'Example: a label "My Progress/Concern:" becomes "p_' . rawurlencode(strtolower('My Progress/Concern:')).'=my_value"';
+				$this->set_comments("prefill_field_selector", form_comment($comment));
+			}
 		}
 		
 		function pre_error_check_advanced_options()
 		{
+			// Only admins have this field present
+			if ($this->get_element('prefill_field_selector')) {
+				// Copy the visible field's values into a hidden form field,
+				// squishing the array into a string along the way
+				$prefill_vals = implode(",", array_filter($this->get_value('prefill_field_selector')));
+				$this->set_value("prefill_these_form_fields", $prefill_vals);
+			}
 		}
 		
 		function run_error_checks_advanced_options()

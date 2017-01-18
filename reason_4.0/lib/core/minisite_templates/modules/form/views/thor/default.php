@@ -30,6 +30,11 @@ class DefaultThorForm extends DefaultForm
 {
 	var $show_submitted_data_dynamic_fields = false;
 	
+	function custom_init()
+	{
+		$this->prefill_fields();
+	}
+	
 	function run_load_phase()
 	{
 		$this->add_honeypot();
@@ -106,7 +111,58 @@ class DefaultThorForm extends DefaultForm
 			}
 		}
 	}
+	 
+	/**
+	 * Get form fields where value prepopulation was enabled
+	 * 
+	 * @return array array of fields to enable prepopulation;
+	 *     array keys are thor element names, values are the
+	 *     urldecoded strings Disco should find 
+	 *     in the request array
+	 */
+	function fields_to_prepopulate_from_url()
+	{
+		$model = $this->get_model();
+		$thor_core =& $model->get_thor_core_object();
+		$form =& $model->get_form_entity();
 
+		$fields_str = $form->get_value('prefill_these_form_fields');
+		$fields_array = explode(",", $fields_str);
+
+		$fields = array();
+		$url_key_prefix = "p_";
+		foreach ($fields_array as $thorColId) {
+			$fieldName = $thor_core->get_column_label($thorColId);
+			if (!is_string($fieldName)) {
+				// Don't prefill text comment form fields
+				continue;
+			}
+
+			$request_key = $url_key_prefix . strtolower($fieldName);
+
+			// We're not encoding the key here per se, rather, we need to tell
+			// Disco what the url *decoded* request key is probably going to be. 
+			// We're trying to guess the key in the $_REQUEST array. 
+			// It's straightforward for almost all characters, 
+			// but reserved url chars might fail.
+			// The char replacements below give us pretty good coverage.
+			$request_key = trim(str_replace(array(" ", ".", "+"), "_", $request_key));
+
+			$fields[$thorColId] = $request_key;
+		}
+
+		return $fields;
+	}
+
+	/**
+	 * Enable form prefilling for select form fields from URL params
+	 */
+	function prefill_fields()
+	{
+		foreach ($this->fields_to_prepopulate_from_url() as $element_name => $prepopulate_key) {
+			$this->enable_prepopulation($element_name, $prepopulate_key);
+		}
+	}
 }
 
 ?>
