@@ -30,7 +30,7 @@ class ReasonUpgrader_48_AddThorColumn extends reasonUpgraderDefault implements r
 	 */
 	public function description()
 	{
-		$str = "<p>Add `{$this->new_col_name}` Column To Existing Thor Tables/p>";
+		$str = "<p>Add `{$this->new_col_name}` Column To Existing Thor Tables</p>";
 		return $str;
 	}
 
