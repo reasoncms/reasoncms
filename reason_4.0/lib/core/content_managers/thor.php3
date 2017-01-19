@@ -93,8 +93,86 @@
 			$this->add_element('thank_you_note','comment',array('text'=>'<h3>Thank You Note</h3>') );
 			$this->set_display_name('thank_you_message','This information is displayed after someone submits the form:');
 			$this->add_element('limiting_note','comment',array('text'=>'<h3>Limiting and Scheduling</h3>') );
+			
+			
+			$es = new entity_selector($this->admin_page->site_id);
+			$es->description = "Get future, non-recurring events on this site";
+			$es->add_type(id_of('event_type'));
+			$es->add_relation(" `event`.`datetime` > NOW() AND `event`.`recurrence` = 'none' ");
+			$es->set_order(" `event`.`datetime` DESC");
+			
+			$events = $es->run_one();
+			$events_on_form = array();
+			foreach($events as $event) {
+				$events_on_form[] = array(
+					'id' => $event->get_value('id'),
+					'name' => $event->get_value('name'),
+					'datetime' => $event->get_value('datetime'),
+					'datetime_pretty' => date("M j Y, g:ia", strtotime($event->get_value('datetime'))),
+				);
+			}
+			$json = json_encode($events_on_form);
+			$script = '<script type="text/plain" id="event_rel_info">' . $json . '</script>';
+			$this->add_element('event_rel_info', 'comment', array('text' => $script));
+
+
 			$this->set_element_properties('submission_limit', array('size'=>'4'));
 			// echo "<HR>using thor version...[" . USE_THOR_VERSION . "]<hr>";
+            
+			$published = false;
+			$publish_status_text = '';
+			
+			$es = new entity_selector();
+			$es->add_type(id_of('minisite_page'));
+			$es->add_left_relationship($this->admin_page->id, relationship_id_of('page_to_form'));
+			$pages_with_form = $es->run_one();
+			if ($pages_with_form)
+			{
+				$published = true;
+				
+				$str_pages_with_form = '';
+				foreach ($pages_with_form as $page_with_form)
+				{
+					$reason_page_url = new reasonPageUrl();
+					$reason_page_url->set_id( $page_with_form->_id );
+					$page_url = $reason_page_url->get_url();
+					$str_pages_with_form .= '<li><a target="_blank" href="' . $page_url . '">' . $page_with_form->get_value('name') . '</a>';
+					
+					if ( !in_array( $page_with_form->get_value( 'custom_page' ), page_types_that_use_module( 'form' ) ) )
+					{
+						$str_pages_with_form .= ' (Warning: Page needs to be given the <em>Form</em> page type for this form to show up.)';
+					}
+					
+					$str_pages_with_form .= '</li>';
+				}
+				
+				$publish_status_text .= '<strong>Status:</strong> Published to the following page(s):<ul>' . $str_pages_with_form . '</ul>';
+			}
+			
+			$es = new entity_selector();
+			$es->add_type(id_of('event_type'));
+			$es->add_left_relationship($this->admin_page->id, relationship_id_of('event_to_form'));
+			$events_with_form = $es->run_one();
+			if ($events_with_form)
+			{
+				$published = true;
+				
+				$str_events_with_form = '';
+				foreach ($events_with_form as $event_with_form)
+				{
+					$str_events_with_form .= '<li>' . $event_with_form->get_value('name') . '</li>';
+				}
+				
+				$publish_status_text .= '<strong>Status:</strong> Published as registration form for the following event(s):<ul>' . $str_events_with_form . '</ul>';
+			}
+			
+			if (!$published)
+			{
+				$publish_status_text .= '<strong>Status:</strong> Unpublished. <a target="_blank" href="http://reasoncms.org/userdocs/managing-content/other-types/forms/#attaching_a_form_to_a_page">How to publish your form</a>';
+			}
+			
+			$this->add_element('publish_status', 'comment', array('text'=>$publish_status_text));
+			
 			if (USE_THOR_VERSION == THOR_VERSION_FLASH)
 			{
 				include_once( THOR_INC . 'plasmature/flash.php' );
@@ -114,11 +192,11 @@
 				die("Fatal Error: USE_THOR_VERSION is configured with an invalid value [" . USE_THOR_VERSION . "]");
 			}
 			$this->alter_data_advanced_options();
-			$this->set_order (array ('name', 'db_flag', 'email_of_recipient', 'thor_content', 'thor_comment', 'magic_string_autofill_note',
-									 'magic_string_autofill', 'thank_you_note', 'thank_you_message', 'display_return_link', 'show_submitted_data', 
-									 'limiting_note', 'submission_limit', 'open_date', 'close_date',
-									 'advanced_options_header', 'thor_view', 'thor_view_custom', 'is_editable', 'allow_multiple', 'email_submitter', 'email_link', 'email_data', 'email_empty_fields', 'apply_akismet_filter', // advanced options
-									 'unique_name', 'tableless'));
+			$this->set_order (array ('publish_status', 'name', 'db_flag', 'email_of_recipient', 'thor_content', 'thor_comment', 'magic_string_autofill_note',
+					'magic_string_autofill', 'thank_you_note', 'thank_you_message', 'display_return_link', 'show_submitted_data',
+					'limiting_note', 'submission_limit', 'open_date', 'close_date',
+					'advanced_options_header', 'thor_view', 'thor_view_custom', 'is_editable', 'allow_multiple', 'email_submitter','include_thank_you_in_email', 'email_link', 'email_data', 'email_empty_fields', 'apply_akismet_filter', // advanced options
+					'unique_name', 'tableless'));
 		}
 
 		/**
@@ -131,6 +209,7 @@
 				'is_editable' => 'Are Submissions Editable by the Submitter?',
 			 	'allow_multiple' => 'Allow Multiple Submissions per User?',
 			  	'email_submitter' => 'Email Form Results to Submitter?',
+			  	'include_thank_you_in_email' => 'Include the Thank You message (with html) in email?',
 			  	'email_link' => 'Include Edit Link When Possible?',
 			  	'email_data' => 'Include Submitted Data in E-mails?',
 			  	'email_empty_fields' => 'Include Empty Fields in E-mails?',
@@ -150,7 +229,15 @@
 			{
 				foreach($advanced_option_display_names as $k=>$v)
 				{
-					$this->remove_element($k);	
+					// If data was submitted for an advanced option, take it and use it
+					// but transition the element to hidden since the assumption here
+					// is users shouldn't edit the value. But a error checking script
+					// (like for event tickets) may need to actually set these values
+					if (!empty($this->get_value($k))) {
+						$this->change_element_type($k, "hidden");
+					} else {
+						$this->remove_element($k);
+					}
 				}
 			}
 			$this->setup_tableless_element();
@@ -292,8 +379,202 @@
 				$this->set_error('submission_limit','You have set a submission limit, but this form is not saving data to a database. Please enable the database option or remove the submission limit.');
 			}
 			$this->run_error_checks_advanced_options();
+			$this->run_error_checks_event_tickets();
 		}
-		
+
+		/**
+		 * Get the Thor XML definition for this form
+		 * 
+		 * @return string a thor xml form defition
+		 */
+		function get_thor_content_value()
+		{
+			// Use this variable for the form's first save
+			if (is_string($this->get_value('thor_content'))) {
+				$thorContent = $this->get_value('thor_content');
+			} else {
+				// Once a form collects submissions, the thor_content field changes types
+				// on the content manager object. So actually check the form entity's 
+				// value for thor_content.
+				$thorContent = $this->entity->get_value('thor_content');
+			}
+
+			return $thorContent;
+		}
+
+		/**
+		 * Determine if the form has event ticket items present in the definition
+		 * 
+		 * @return boolean TRUE if form has one or more event tickets defined
+		 */
+		function has_event_tickets()
+		{
+			$thorContent = $this->get_thor_content_value();
+			try {
+				$xml = simplexml_load_string($thorContent);
+				if ($xml) {
+					$ticketElement = $xml->xpath("/*/event_tickets");
+				}
+			} catch (Exception $exc) {
+				trigger_error($exc->getTraceAsString());
+			}
+
+			return isset($ticketElement) && count($ticketElement) > 0;
+		}
+
+		/**
+		 * Remove 'event_to_form' relationships when the event is no longer
+		 * in the thor form xml
+		 */
+		function delete_stale_event_form_relationships()
+		{
+			$form = $this->entity;
+			$formRels = $form->get_right_relationships_info('event_to_form');
+			$existingEventFormRelationships = $formRels['event_to_form'];
+
+			$eventsInForm = $this->get_event_ids_in_form();
+
+			foreach ($existingEventFormRelationships as $relationship) {
+				$existingRelId = $relationship['entity_a'];
+				if (!in_array($existingRelId, $eventsInForm)) {
+					//	echo "deleting relationship for event $existingRelId; not found in form <br>\n";
+					delete_relationship($relationship['id']);
+				}
+			}
+		}
+
+		/**
+		 * Get Event IDs out of the thor form xml
+		 * 
+		 * @return array of event IDs in the form, or an empty array
+		 */
+		function get_event_ids_in_form()
+		{
+			$thorContent = $this->get_thor_content_value();
+			try {
+				$xml = simplexml_load_string($thorContent);
+				if ($xml) {
+					$ticketElement = $xml->xpath("/*/event_tickets");
+				}
+			} catch (Exception $exc) {
+				trigger_error($exc->getTraceAsString());
+			}
+
+			// Get ticket form items out of thor structure
+			$eventsInForm = array();
+			foreach ((array) $ticketElement as $element) {
+				// cast is to shift away from xml object
+				$eventId = (string) $element['event_id'];
+				if ($eventId) {
+					$eventsInForm[] = (string) $element['event_id'];
+				} else {
+					// Error is set in formbuilder2.php plasmature type
+				}
+			}
+			return $eventsInForm;
+		}
+
+		/**
+		 * Manage 'event_to_form' relationships when a event ticket form node is present
+		 * or deleted.
+		 * 
+		 * Also trigger the requirements routine for forms with event ticket
+		 */
+		function run_error_checks_event_tickets()
+		{
+			if (!$this->has_event_tickets()) {
+				$this->delete_stale_event_form_relationships();
+				return;
+			} else {
+				$eventsInForm = $this->get_event_ids_in_form();
+			}
+
+			// Add new rels
+			foreach ($eventsInForm as $formEventId) {
+				//echo "creating $formEventId event relationship<br>\n";
+				create_relationship($formEventId, $this->entity->id(), relationship_id_of('event_to_form'));
+			}
+
+			// remove old/stale rels
+			$this->delete_stale_event_form_relationships();
+
+			// Apply requirements to an Event Ticket form
+			$requirements = $this->event_ticket_apply_requirements();
+			foreach ($requirements as $elementName => $info) {
+				if ($info['changed']) {
+					$this->set_error($elementName, $info['message'] . " Please resave the form to automatically correct the issue.");
+				}
+			}
+			
+			// Make sure the form definition has a field named "Your Email"
+			$thorContent = $this->get_thor_content_value();
+			try {
+				$xml = simplexml_load_string($thorContent);
+				if ($xml) {
+					$emailNode = $xml->xpath("/*/input[@label='Your Email']");
+					if (empty($emailNode)) {
+						$this->set_error('thor_content', "An event ticket form requires a short text input with the exact label 'Your Email'. Please add that element or change the email field label to 'Your Email'.");
+					}
+				}
+			} catch (Exception $exc) {
+				trigger_error($exc->getTraceAsString());
+			}
+		}
+
+		/**
+		 * Automatically create missing elements with required values or adjust the
+		 * existing elements to the required values
+		 */
+		function event_ticket_apply_requirements()
+		{
+			$requirements = array(
+				"db_flag" => array(
+					"value" => "yes",
+					"message" => "An event ticket form must save to a database table. This option was selected on your behalf."
+				),
+				"email_of_recipient" => array(
+					"value" => "",
+					"message" => "An event ticket form can not email responses, it must save to a database. The email recipient field was cleared to avoid confusion."
+				),
+				"show_submitted_data" => array(
+					"value" => "yes",
+					"message" => "An event ticket form must show submitted data after submission."
+				),
+				"email_submitter" => array(
+					"value" => "yes",
+					"message" => "An event ticket form must send a thank you email to confirm the ticket request. Make sure the email field is named 'Your Email'!"
+				),
+				"email_data" => array(
+					"value" => "yes",
+					"message" => "An event ticket form must include form data in the email, it tells the user how many tickets they obtained."
+				),
+				"include_thank_you_in_email" => array(
+					"value" => "yes",
+					"message" => "An event ticket form must include the thank you text in the confirmation email. Make sure the Thank You message is appropriate for a web page and an email message."
+				),
+			);
+
+			foreach ($requirements as $elementName => $info) {
+				if (!$this->_is_element($elementName)) {
+					// Create a hidden version of the element with the required value
+					$this->add_element($elementName, 'hidden');
+					$this->set_value($elementName, $info['value']);
+					$requirements[$elementName]['changed'] = true;
+				} else {
+					// Make sure existing element's value is correct
+					$requiredValue = $info['value'];
+					if ($this->get_value($elementName) != $requiredValue) {
+						$this->set_value($elementName, $requiredValue);
+						$requirements[$elementName]['changed'] = true;
+					} else {
+						$requirements[$elementName]['changed'] = false;
+					}
+				}
+			}
+
+			return $requirements;
+		}
+
 		function pre_show_form()
 		{
 			parent::pre_show_form();

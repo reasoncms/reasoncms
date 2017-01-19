@@ -9,6 +9,7 @@
  */
 reason_include_once( 'minisite_templates/modules/form/models/default.php' );
 reason_include_once( 'classes/object_cache.php' );
+reason_include_once( 'function_libraries/event_tickets.php' );
 require_once( THOR_INC.'boxes_thor.php' );
 include_once( TYR_INC.'tyr.php' );
 
@@ -39,6 +40,7 @@ class ThorFormModel extends DefaultFormModel
 	var $_summary_obj;
 	var $_is_usable;
 	var $_is_editable;
+	var $_is_deletable; // this refers to individual ROWS of the form as being deletable by an end user. It implies nothing re: the whole contents (or defined structure) of the form.
 	var $_view;
 	var $_admin_view;
 
@@ -103,6 +105,14 @@ class ThorFormModel extends DefaultFormModel
 		$this->set_form_id_if_valid($form_id);
 	}
 
+	function is_deletable() {
+		return $this->_is_deletable;
+	}
+
+	function set_deletable($is_deletable) {
+		$this->_is_deletable = $is_deletable;
+	}
+
 	function _is_editable()
 	{
 		if (!isset($this->_is_editable))
@@ -157,12 +167,31 @@ class ThorFormModel extends DefaultFormModel
 		$email_of_recipient = $form->get_value('email_of_recipient');
 		return $email_of_recipient;
 	}
-	
+
+	/**
+	 * Search for an email address of the person who submitted the form
+	 * 
+	 * @return string|bool email provided in the field "Your Email", a user's netid, or false
+	 */
 	function get_email_of_submitter()
 	{
-		return $this->get_user_netid();
+		$disco_obj =& $this->get_view();
+		$thor_core =& $this->get_thor_core_object();
+		$formColumns = $thor_core->get_column_labels_indexed_by_name();
+		foreach ($formColumns as $columnId => $displayName) {
+			$displayName = trim($displayName);
+			// Find thor field named "Your Email" and look up the user-supplied value
+			if ($displayName == "Your Email") {
+				$userEmail = $disco_obj->get_value($columnId);
+				break;
+			}
+		}
+		$userSuppliedValidEmail = isset($userEmail) ? filter_var($userEmail, FILTER_VALIDATE_EMAIL) : false;
+		$submitterEmail = $userSuppliedValidEmail ? $userEmail : $this->get_user_netid();
+
+		return $submitterEmail;
 	}
-	
+
 	function get_thank_you_message()
 	{
 		$form =& $this->get_form_entity();
@@ -224,14 +253,22 @@ class ThorFormModel extends DefaultFormModel
 		$value = $form->get_value('email_data');
 		return ($value == 'yes');
 	}
-	
+
 	function should_save_form_data()
 	{
-		$form =& $this->get_form_entity();
-		$db_save = $form->get_value('db_flag');
-		return ($db_save == 'yes');
+		if ($this->form_has_event_ticket_elements()) {
+			$ticket_request = $this->event_tickets_get_request();
+			$request_status = $this->event_tickets_ticket_request_is_valid($ticket_request);
+			$should_save = $request_status['status'];
+		} else {
+			$form =& $this->get_form_entity();
+			$db_save = $form->get_value('db_flag');
+			$should_save = $db_save == 'yes';
+		}
+
+		return $should_save;
 	}
-	
+
 	function should_save_submitted_data_to_session()
 	{
 		$form =& $this->get_form_entity();
@@ -271,18 +308,18 @@ class ThorFormModel extends DefaultFormModel
 		return ($thank_you_message); // does the thank you message have content?
 	}
 
-        function should_show_summary()
-        {
-                $form =& $this->get_form_entity();
-                $should_show_summary = $form->get_value('allow_multiple');
-                return ($should_show_summary == 'yes');
-        }
+	function should_show_summary()
+	{
+		$form =& $this->get_form_entity();
+		$should_show_summary = $form->get_value('allow_multiple');
+		return ($should_show_summary == 'yes');
+	}
 
-        function should_show_submission_limit_message()
-        {
+	function should_show_submission_limit_message()
+	{
 		return ($this->user_has_submitted() && !$this->form_allows_multiple()); 
-        }
-	
+	}
+
 	function set_form_id_if_valid($form_id)
 	{
 		if ($this->form_id_is_valid($form_id)) $this->set_form_id($form_id);
@@ -436,6 +473,17 @@ class ThorFormModel extends DefaultFormModel
 				$edit_link = carl_construct_link(array('form_id' => $v['id']), array('textonly', 'netid'));
 				$thor_values[$k] = array_merge(array('Action' => '<a href="'.$edit_link.'">Edit</a>'), $thor_values[$k]);
 			}
+
+			if ($this->is_deletable()) {
+				$delete_link = carl_construct_link(array('table_row_action' => 'delete', 'table_action_id' => $v['id']), array('textonly', 'netid'));
+
+				if (isset($thor_values[$k]['Action'])) {
+					$thor_values[$k]['Action'] .= '<br><a href="' . $delete_link . '">Delete</a>';
+				} else {
+					$thor_values[$k] = array_merge(Array('Action' => '<a href="'.$delete_link.'">Delete</a>'), $thor_values[$k]);
+				}
+			}
+
 			
 			if (isset($v['submitted_by'])) unset ($thor_values[$k]['submitted_by']);
 			if (isset($v['submitter_ip'])) unset ($thor_values[$k]['submitter_ip']);
@@ -470,13 +518,26 @@ class ThorFormModel extends DefaultFormModel
 	
 	function &get_top_links()
 	{
+		// Grab current request vars, but remove some internal-only ids
+		$preserve_url_vars = $_GET;
+		unset($preserve_url_vars['page_id'], $preserve_url_vars['site_id']);
+
 		if (!$this->user_requested_admin() && $this->user_has_administrative_access() && ($this->get_values()))
 		{
-			$link['Enter administrative view'] = carl_construct_link(array('form_admin_view' => 'true'), array('textonly', 'netid'));
+			$link['Enter administrative view'] = carl_construct_link(array('form_admin_view' => 'true'), array_keys($preserve_url_vars));
 		}
 		elseif ($this->user_requested_admin() && $this->user_has_administrative_access())
 		{
-			$link['Exit administrative view'] = carl_construct_link(array('form_admin_view' => ''), array('textonly', 'netid'));
+			// unset request params user who has submitted the form & is an admin might see
+			$clear_these_params = array(
+				'form_admin_view' => '',
+				'table_action' => '',
+				'submission_key' => '',
+				'table_row_action' => '',
+				'table_action_id' => '',
+				'table_summations' => ''
+			);
+			$link['Exit administrative view'] = carl_construct_link($clear_these_params, array_keys($preserve_url_vars));
 		}	
 		else $link = array();
 		return $link;
@@ -490,7 +551,7 @@ class ThorFormModel extends DefaultFormModel
 	function &get_values_for_save()
 	{
 		$disco_obj =& $this->get_view();
-		$thor_core =& $this->get_thor_core_object();
+		$thor_core =& $this->get_thor_core_object();		
 		$thor_values = array_merge($thor_core->get_thor_values_from_form($disco_obj), $this->get_values_for_save_extra_fields());
 		return $thor_values;
 	}
@@ -530,7 +591,7 @@ class ThorFormModel extends DefaultFormModel
 			$thor_core =& $this->get_thor_core_object();
 			$thor_values = $this->_get_values_and_extra_email_fields($disco_obj);
 			$disco_hidden_fields =& $this->_get_disco_hidden_fields($disco_obj);
-			
+
 			// If a view has specified dynamic fields to show, they should show even if
 			// hidden, so subtract them from the list of disco_hidden_fields
 			if (($dynamic = $disco_obj->get_show_submitted_data_dynamic_fields()) && is_array($dynamic) )
@@ -561,14 +622,22 @@ class ThorFormModel extends DefaultFormModel
 	{
 		$submitted_by = $this->get_user_netid();
 		$submitter_ip = (isset($_SERVER['REMOTE_ADDR'])) ? $_SERVER['REMOTE_ADDR'] : '';
-		return array('submitted_by' => $submitted_by, 'submitter_ip' => $submitter_ip);
+		return array(
+			'submitted_by' => $submitted_by,
+			'submitter_ip' => $submitter_ip,
+			'date_user_submitted' => get_mysql_datetime()
+		);
 	}
 	
 	function get_values_for_email_extra_fields()
 	{
 		$submitted_by = $this->get_user_netid();
 		$submitter_ip = (isset($_SERVER['REMOTE_ADDR'])) ? $_SERVER['REMOTE_ADDR'] : '';
-		return array('submitted_by' => $submitted_by, 'submitter_ip' => $submitter_ip, 'submission_time' => get_mysql_datetime());
+		return array(
+			'submitted_by' => $submitted_by,
+			'submitter_ip' => $submitter_ip,
+			'submission_time' => get_mysql_datetime()
+		);
 	}
 
 	function &_get_values_and_extra_email_fields(&$disco_obj)
@@ -728,8 +797,10 @@ class ThorFormModel extends DefaultFormModel
 	}
 	
 	/**
-	 * Return mixed form entity object or false
-	 * @access private
+	 * Returns the entity set on the model OR looks up a form related to the
+	 * current page via 'page_to_form' relationship
+	 * 
+	 * @return Entity|false a form entity, or false if no entity set/found
 	 */
 	function &get_form_entity()
 	{
@@ -750,6 +821,28 @@ class ThorFormModel extends DefaultFormModel
   		return $this->_form;
 	}
 	
+	/**
+	 * Manually set the form entity for the model
+	 * 
+	 * To be used in cases where there is no page_to_form relationship
+	 * where get_form_entity() would fail
+	 * 
+	 * When this method is used, manually calling set_form_id() is also
+	 * recommended
+	 *  
+	 * @param int $form_id entity id for a form
+	 */
+	function set_form_entity($form_id)
+	{
+		$form_id = intval($form_id);
+		if ($form_id < 1) {
+			trigger_error(__METHOD__ . " was passed an invalid form id");
+			$this->_form = false;
+		} else {
+			$this->_form = new entity($form_id);
+		}
+	}
+
 	function &get_values()
 	{
 		if (!isset($this->_values))
@@ -896,6 +989,7 @@ class ThorFormModel extends DefaultFormModel
 		$options['header'] = $this->get_form_name() . " - " . "Successfully Submitted " . carl_date('l, F jS Y \\a\t h:i:s A');
 		$options['to'] = $this->get_email_of_submitter();
 		$options['disclaimer'] = false;
+		$options['thank_you_message'] = $this->get_thank_you_message();
 		$view =& $this->get_view();
 		if (method_exists($view, 'get_custom_options_for_email_submitter_view'))
 		{
@@ -1191,7 +1285,7 @@ class ThorFormModel extends DefaultFormModel
 		$display_values =& $thor_core->get_column_labels_indexed_by_name();
 		foreach ($display_values as $key => $label)
 		{
-			$normalized_label = strtolower(str_replace(array(' ',':'), array('_',''), $label));
+			$normalized_label = strtolower(str_replace(array(' ',':'), array('_',''), trim($label)));
 			if (isset($transform_array[$label]) || isset($transform_array[$normalized_label]))
 			{
 				$value = (isset($transform_array[$label])) ? $transform_array[$label] : $transform_array[$normalized_label];
@@ -1560,5 +1654,308 @@ class ThorFormModel extends DefaultFormModel
  		}
  		return $this->_magic_transform_values;
 	}
+	
+	/**
+	 * Lookup a pretty name for an ticketed event
+	 * 
+	 * @param int $eventId event id
+	 * @return string pretty event name or an empty string if no event found
+	 */
+	function get_event_ticket_title($eventId = 0)
+	{
+		if (!$eventId) {
+			$eventId = $this->get_event_id_in_request();
+		}
+		if (!$eventId) {
+			return "";
+		}
+		return get_pretty_ticketed_event_name($eventId);
+	}
+
+	/**
+	 * Load event ticket thor configurations from the form
+	 * 
+	 * @return array an array of SimpleXMLElement objects or FALSE in case of an error
+	 */
+	function get_events_thor_configs()
+	{
+		$thor_content = $this->_form->get_value('thor_content');
+		try {
+			$xml = simplexml_load_string($thor_content);
+			$event_ticket_nodes = $xml->xpath("/*/event_tickets");
+		} catch (Exception $exc) {
+			trigger_error($exc->getMessage() . " thor_content=$thor_content");
+		}
+		return $event_ticket_nodes;
+	}
+
+	/**
+	 * Uses relationships and thor elements to determine if there are events
+	 * on this form
+	 * 
+	 * @return boolean true if this form has event relationships & is found in thor xml
+	 */
+	function form_has_event_ticket_elements()
+	{
+		return count($this->get_events_on_form()) > 0;
+	}
+
+	/**
+	 * Return an array of events related to this form AND found in the form's 
+	 * Thor XML configuration.
+	 * 
+	 * The Thor addition is to ensure there is a receptacle for collecting 
+	 * ticket information and not just a spurious relationship.
+	 * 
+	 * @return array array of event entity ids
+	 */
+	function get_events_on_form()
+	{
+		$formId = $this->_form->id();
+
+		$es = new entity_selector();
+		$es->add_type(id_of('event_type'));
+		$es->add_left_relationship($formId, relationship_id_of('event_to_form'));
+		$eventsOnForm = $es->run_one();
+
+		$validEvents = array();
+		$eventsInFormConfig = $this->get_events_thor_configs();
+		foreach ($eventsInFormConfig as $eventInConfig) {
+			foreach ($eventsOnForm as $eventOnForm) {
+				if ($eventInConfig['event_id'] == $eventOnForm->id()) {
+					$validEvents[] = $eventOnForm;
+				}
+			}
+		}
+		if (count($eventsInFormConfig) > count($eventsOnForm)) {
+			// @todo: figure out how to automatically triage this scenario
+			// or avoid it entirely
+			trigger_error("Form $formId has more Events in thor xml config than relationships.");
+		}
+
+		return $validEvents;
+	}
+
+	/**
+	 * Find the 'event_id' parameter in the current request
+	 * 
+	 * A request should only have one event_id at a time
+	 * 
+	 * @return int|boolean returns the current event id or FALSE if the key was
+	 *     not present in the request
+	 */
+	function get_event_id_in_request()
+	{
+		$currentEventId = false;
+		if (array_key_exists('event_id', $this->_request_vars)) {
+			$currentEventId = intval($this->_request_vars['event_id']);
+		}
+		return $currentEventId;
+	}
+
+	/**
+	 * Returns event information about the current request in an array
+	 * 
+	 * 'thor_info' is from Thor and gradually expanded and passed around, often
+	 * as $thorEventInfo (of various states)
+	 * 
+	 * 'submitted_value' is only non-zero on a POST request, and there is an
+	 * error check to disallow requesting 0 tickets
+	 * 
+	 * @return array|boolean rurns an array similar to below for the event
+	 *     in the current request, or FALSE when no event in request
+	 * 
+	 * array (size=2)
+	 *   'thor_info' => 
+	 *     array (size=7)
+	 *       'label' => string 'Comps Performance: COCK, Sep 30 2016, 9:00pm' (length=44)
+	 *       'id' => string 'id_7' (length=4)
+	 *       'event_id' => string '1470113' (length=7)
+	 *       'num_total_available' => string '35' (length=2)
+	 *       'max_per_person' => string '4' (length=1)
+	 *       'event_close_datetime' => string '' (length=0)
+	 *       'remaining_seats' => string '28' (length=2)
+	 *   'submitted_value' => int 0
+	 */
+	function event_tickets_get_request()
+	{
+		$thorCore = $this->get_thor_core_object();
+		$currentEventId = $this->get_event_id_in_request();
+		if ($currentEventId === false) {
+			return;
+		}
+		$ticketRequest = $thorCore->get_event_tickets_thor_info($this->get_view(), $currentEventId);
+		if (count($ticketRequest) > 1) {
+			// Thor XML is modified in the init method for Thor forms 
+			// to strip out other events associated with this form such 
+			// that users only get tickets to one event at a time.
+			trigger_error("Too many events in request");
+		}
+
+		return $ticketRequest[0];
+	}
+
+	/**
+	 * Determine of a form submission which contains a request for tickets
+	 * at an event can proceed
+	 * 
+	 * To be tacked used during the error checking phase of form processing
+	 * 
+	 * @param type $ticketRequest array of event ticket info, see event_tickets_get_request()
+	 *  
+	 * @return type
+	 */
+	function event_tickets_ticket_request_is_valid($ticketRequest)
+	{
+		$numTicketsRequested = intval($ticketRequest['submitted_value']);
+		$thorEventInfo = $ticketRequest['thor_info'];
+		$remainingSeats = $this->event_tickets_get_remaining_seats($thorEventInfo);
+
+		$requestStatus = array(
+			"status" => true,
+			"message" => "",
+			"disco_element_id" => $thorEventInfo['id']
+		);
+		if ($numTicketsRequested === 0) {
+			$requestStatus['status'] = false;
+			$requestStatus['message'] = "You selected zero tickets. Please select one or more tickets and resubmit.";
+		} else if ($remainingSeats === 0) {
+			$requestStatus['status'] = false;
+			$requestStatus['message'] = "Sorry, no tickets are available for this event.";
+		} else if ($numTicketsRequested > $remainingSeats) {
+			$requestStatus['status'] = false;
+			$plural = $remainingSeats > 1 ? "tickets are available" : "ticket is available";
+			$requestStatus['message'] = "Sorry, you requested $numTicketsRequested tickets, but only $remainingSeats $plural.";
+		}
+
+		return $requestStatus;
+	}
+
+	/**
+	 * Returns the number of seats remaining for a single event
+	 * 
+	 * @param array $thorEventInfo thor_info from thor xml for a single event
+	 * @return int|boolean number of seats remaining or FALSE when the
+	 *     form doesn't have events
+	 */
+	function event_tickets_get_remaining_seats($thorEventInfo)
+	{
+		if (!$this->form_has_event_ticket_elements()) {
+			return false;
+		}
+		
+		$eventDiscoId = $thorEventInfo['id'];
+		$maxTixAvailable = intval($thorEventInfo['num_total_available']);
+
+		$thorCore = $this->get_thor_core_object();
+		$rows = $thorCore->get_rows();
+		$numTixCurrentlyClaimed = 0;
+		foreach ((array) $rows as $row) {
+			$numTixCurrentlyClaimed += intval($row[$eventDiscoId]);
+		}
+
+		// # remaining tickets, or 0 if it somehow goes negative (manual adjustments?)
+		$remainingSeats = max(array($maxTixAvailable - $numTixCurrentlyClaimed, 0));
+
+		return $remainingSeats;
+	}
+
+	/**
+	 * Returns live information & status about all events on the form
+	 * 
+	 * Loads event configuration & data from Thor form, then does some calculations
+	 * to determine remaining tickets available and the event state
+	 * 
+	 * This is the most comprehensive data structure for event tickets, sometimes
+	 * functions only use a subset of the fields provided by Thor
+	 * 
+	 * @return array assoc array with a structure similar to the following
+	 *     eventEntityId (int) => 
+	 *         array (size=10)
+	 *           'label' => string 'Comps Performance: COCK, Sep 29 2016, 7:00pm' (length=44)
+	 *           'id' => string 'id_4' (length=4)
+	 *           'event_id' => string '1462906' (length=7)
+	 *           'num_total_available' => string '35' (length=2)
+	 *           'max_per_person' => string '4' (length=1)
+	 *           'event_close_datetime' => string '' (length=0)
+	 *           'ticketsClaimed' => int 14
+	 *           'ticketsAvailable' => int 21
+	 *           'eventState' => string 'open' (length=4)
+	 *           'eventStateReason' => string '' (length=0)
+	 *     eventEntityId (int) => ...
+	 */
+	function event_tickets_get_all_event_seat_info()
+	{
+		$thorCore = $this->get_thor_core_object();
+		$events = $thorCore->get_event_tickets_thor_info($this->get_view());
+
+		$return_info = array();
+		foreach ($events as $k => $event) {
+			$thorEventInfo = $event['thor_info'];
+
+			// Get the number of tickets still available
+			$numTixStillAvailable = $this->event_tickets_get_remaining_seats($thorEventInfo);
+			$numTixCurrentlyClaimed = intval($thorEventInfo['num_total_available']) - $numTixStillAvailable;
+
+			$thorEventInfo['ticketsClaimed'] = $numTixCurrentlyClaimed;
+			$thorEventInfo['ticketsAvailable'] = $numTixStillAvailable;
+
+			// See if tickets shouldn't be sold anymore
+			$ticketSalesAreClosed = $this->event_tickets_thor_event_is_closed($thorEventInfo);
+
+			$thorEventInfo['eventState'] = 'open';
+			$thorEventInfo['eventStateReason'] = '';
+			if ($numTixStillAvailable < 1) {
+				$thorEventInfo['eventState'] = 'closed';
+				$thorEventInfo['eventStateReason'] = 'max_tickets_reached';
+			} else if ($ticketSalesAreClosed) {
+				$thorEventInfo['eventState'] = 'closed';
+				$thorEventInfo['eventStateReason'] = 'close_date_passed';
+			}
+
+			$return_info[$thorEventInfo['event_id']] = $thorEventInfo;
+		}
+
+		return $return_info;
+	}
+
+	/**
+	 * Determine if ticket sales are closed given the current time
+	 * 
+	 * This method only uses temporal comparisons and doesn't both with seating
+	 * capacity checks
+	 * 
+	 * @param type $thorEventInfo an array of keys from the Thor XML form definition
+	 *     for an event ticket node
+	 * @param DateTime $baseDatetime optional, if we want to base the comparison agains
+	 *     a DateTime that is not this instant
+	 * @return boolean returns TRUE if this event is closed due to proximity 
+	 *     to the event or its defined box office close time
+	 */
+	function event_tickets_thor_event_is_closed($thorEventInfo, DateTime $baseDatetime = null)
+	{
+		// See if tickets shouldn't be sold anymore
+		if (array_key_exists('event_close_datetime', $thorEventInfo) &&
+				trim($thorEventInfo['event_close_datetime']) != '') {
+			// User provided a close datetime
+			$closeDatetime = new Datetime($thorEventInfo['event_close_datetime']);
+		} else {
+			// Fallback/default is to close the event 60 minutes before start
+			$eventEntity = new Entity($thorEventInfo['event_id']);
+			$closeDatetime = new Datetime($eventEntity->get_value('datetime'));
+			
+			if (defined('REASON_EVENT_TICKETS_DEFAULT_CLOSE_MODIFIER')) {
+				$closeDatetime->modify(REASON_EVENT_TICKETS_DEFAULT_CLOSE_MODIFIER);
+			}
+		}
+		if ($baseDatetime === null) {
+			$baseDatetime = new Datetime(); // "now"
+		}
+		$ticketSalesAreClosed = $baseDatetime > $closeDatetime;
+
+		return $ticketSalesAreClosed;
+	}
+
 }
+
 ?>

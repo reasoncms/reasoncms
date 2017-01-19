@@ -186,36 +186,33 @@ function display_media($media_work, $displayer)
 }
 
 // begin the script
-$media_work = reason_iframe_get_media_work();
-$displayer = reason_iframe_get_displayer($media_work);
-if ($displayer)
+$page_state = 'invalid_request';
+if ($media_work = reason_iframe_get_media_work())
 {
-	$valid_hash = reason_iframe_valid_hash($displayer);
-	$page_state = 'invalid_request';
-	
-	if ($media_work != false && $valid_hash)
+	if ($displayer = reason_iframe_get_displayer($media_work))
 	{
-		$page_state = 'ok';
-		$mwh = new media_work_helper($media_work);
-		$username = reason_check_authentication();
-		if ( !$mwh->user_has_access_to_media($username) )
+		$valid_hash = reason_iframe_valid_hash($displayer);
+
+		if ($media_work != false && $valid_hash)
 		{
-			if ($username)
+			$page_state = 'ok';
+			$mwh = new media_work_helper($media_work);
+			$username = reason_check_authentication();
+			if ( !$mwh->user_has_access_to_media($username) )
 			{
-				$page_state = 'unauthorized';
-				header('HTTP/1.1 403 Forbidden');
-			}
-			else
-			{
-				$page_state = 'authentication_required';
-				header('HTTP/1.1 403 Forbidden');
+				if ($username)
+				{
+					$page_state = 'unauthorized';
+					header('HTTP/1.1 403 Forbidden');
+				}
+				else
+				{
+					$page_state = 'authentication_required';
+					header('HTTP/1.1 403 Forbidden');
+				}
 			}
 		}
 	}
-}
-else
-{
-	$page_state = 'invalid_request';
 }
 
 echo '<!DOCTYPE html>'."\n";
@@ -270,8 +267,7 @@ canvas { top: 0;
          max-width: 100%; 
          height: auto; }
 video { height: 100%; 
-        position: absolute;
-        z-index:10000; } 
+        position: absolute; }
 body { margin: 0; 
        height: 100%; 
        width: 100%; }
@@ -286,14 +282,32 @@ STYLE;
 else
 	echo '<style>body{background:#777;color:#eee;font-family:Verdana,Arial,Helvetica,sans-serif;font-size:0.8em;margin:0;padding:0.5em;}a{color:#fff}a.signIn{background:#555;padding:0.3em 0.67em;text-decoration:none;}p{margin-top:0;}</style>'."\n";
 echo '<script src="'.JQUERY_URL.'"></script>'."\n";
-if ($media_work->get_value('integration_library') && $media_work->get_value('integration_library') != 'default')
+if ($media_work && $media_work->get_value('integration_library') && $media_work->get_value('integration_library') != 'default')
 {
 	// media api
 	echo '<script src="/reason_package/reason_4.0/lib/core/classes/media/api/media_api.js"></script>'."\n";
 }
-elseif ($media_work->get_value('av_type') == '')
+elseif ($media_work && $media_work->get_value('av_type') == '')
 {
 	echo '<script src="/reason_package/reason_4.0/lib/core/classes/media/api/media_api_flv.js"></script>'."\n";
+}
+if ($media_work 
+		&& $media_work->get_value('integration_library') == 'zencoder'
+		&& $media_work->get_value('av_type') == 'Video') {
+	echo '<script src="' . REASON_PACKAGE_HTTP_BASE_PATH . 'mediaelement/build/mediaelement-and-player.min.js"></script>';
+	echo '<link rel="stylesheet" href="' . REASON_PACKAGE_HTTP_BASE_PATH . 'mediaelement/build/mediaelementplayer.min.css" />';
+	$media_site_id = get_owner_site_id($media_work->id());
+		$params = json_encode($displayer->get_mediaelementjs_params(array('site_id_for_title' => $media_site_id)));
+	echo "<script>var mediaelementparams = $params;</script>\n";
+	echo '<script src="' . REASON_HTTP_BASE_PATH . 'media/zencoder/mediaelement_init.js"></script>' . "\n";
+}
+// There isn't an easy way right now for Carleton to inject analytics
+if (defined('WEB_PATH')) {
+	$path = WEB_PATH . 'global_stock/analytics/default.php';
+	if (file_exists($path)) {
+		require_once $path;
+		echo get_carleton_default_analytics_head_markup();
+	}
 }
 
 echo '</head>'."\n";

@@ -147,6 +147,24 @@
 	define( 'THIS_IS_A_DEVELOPMENT_REASON_INSTANCE', true );
 
 	/**
+	 * REASON_DIVERT_EMAIL_TO
+	 * 
+	 * Reroute outgoing email to a different address
+	 * 
+	 * Typical use case is development/testing environments.
+	 * Appends "[DIVERTED]" to the subject line
+	 * 
+	 * This setting only applies
+	 *   - when THIS_IS_A_DEVELOPMENT_REASON_INSTANCE == true
+	 *   - when REASON_DIVERT_EMAIL_TO validates with FILTER_VALIDATE_EMAIL
+	 *   - for emails sent with Tyr/Email classes (not direct mail/PHPMailer uses)
+	 * 
+	 * Only acceptable value is a single email address like "steve@example.com".
+	 * To preserve regular email behavior leave the value as an empty string.
+	 */
+	define( 'REASON_DIVERT_EMAIL_TO', '' );
+	
+	/**
 	 * REASON_HOST_HAS_VALID_SSL_CERTIFICATE
 	 * Set this to true if you have a valid certificate signed by a known certificate authority.
 	 * Otherwise set this to false (if you have a self-signed cert, for example).
@@ -354,7 +372,7 @@
 	 * When images are uploaded to Reason, they are resized automatically.
 	 * This setting determines their maximum vertical size in pixels
 	 */
-	define('REASON_STANDARD_MAX_IMAGE_HEIGHT', 500);
+	define('REASON_STANDARD_MAX_IMAGE_HEIGHT', 640);
 
 	/**
 	 * REASON_STANDARD_MAX_IMAGE_WIDTH
@@ -362,23 +380,23 @@
 	 * When images are uploaded to Reason, they are resized automatically.
 	 * This setting determines their maximum horizontal size in pixels
 	 */
-	define('REASON_STANDARD_MAX_IMAGE_WIDTH', 500);
+	define('REASON_STANDARD_MAX_IMAGE_WIDTH', 640);
 
 	/**
 	 * REASON_STANDARD_MIN_IMAGE_WIDTH
 	 *
 	 * When images are uploaded to Reason, they are checked to ensure their width is not less than the minimum width requirement.
-	 * This setting defines the minimum image width required and is currently set equal to the maximum width of the thumbnail..
+	 * This setting defines the minimum image width required and is currently set to zero to allow images of any size to be uploaded.
 	 */
-	define ('REASON_STANDARD_MIN_IMAGE_WIDTH', 125);
+	define ('REASON_STANDARD_MIN_IMAGE_WIDTH', 0);
 	
 	/**
 	 * REASON_STANDARD_MIN_IMAGE_HEIGHT
 	 *
 	 * When images are uploaded to Reason, they are checked to ensure their height is not less than the minimum required height.
-	 * This setting defines the minimum image height required and is currently set equal to the maximum height of the thumbnail.
+	 * This setting defines the minimum image height required and is currently set to zero to allow images of any size to be uploaded.
 	 */
-	define ('REASON_STANDARD_MIN_IMAGE_HEIGHT', 125);
+	define ('REASON_STANDARD_MIN_IMAGE_HEIGHT', 0);
 
 	/**
 	 * REASON_STANDARD_MAX_THUMBNAIL_HEIGHT
@@ -1051,6 +1069,19 @@
 	 */
 	define('REASON_EVENT_GEOLOCATION_ENABLED', true);
 
+	/**
+	 * REASON_EVENT_TICKETS_DEFAULT_CLOSE_MODIFIER
+	 * 
+	 * A string value passed to the DataTime::modify() method when defined.
+	 * 
+	 * Used to define a modification to the default event closing time, which is the time
+	 * the event starts. It is used on forms with event ticket sales when the form item 
+	 * doesn't a time to close ticket sales. The desired value at Carleton
+	 * is "-60min", which means we close ticket sales an hour before the event
+	 * so the event staff can process the list in preperation for the event.
+	 */
+	define('REASON_EVENT_TICKETS_DEFAULT_CLOSE_MODIFIER', "");
+	
 	/**
 	 * REASON_MYSQL_SPATIAL_DATA_AVAILABLE
 	 *

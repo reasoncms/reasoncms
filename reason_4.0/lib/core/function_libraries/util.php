@@ -1357,7 +1357,7 @@
 				'editor_user_role'=>array('add','edit_pending','delete_pending','edit','delete','publish','borrow','expunge','switch_theme',),
 				'power_user_role'=>array('add','edit_pending','delete_pending','edit','delete','publish','borrow','expunge','switch_theme','edit_html','upload_full_size_image',),
 				'super_user_role'=>array('add','edit_pending','delete_pending','edit','delete','publish','borrow','expunge','switch_theme','edit_html','upload_full_size_image','pose_as_non_admin_user',),
-				'admin_role'=>array('add','edit_pending','delete_pending','edit','delete','publish','borrow','expunge','duplicate','edit_html','switch_theme','pose_as_other_user','assign_any_page_type','edit_head_items','edit_unique_names','edit_fragile_slugs','edit_home_page_nav_link','edit_form_advanced_options','manage_allowable_relationships','view_sensitive_data','manage_integration_settings','edit_raw_ldap_filters','upload_full_size_image','upgrade','db_maintenance','update_urls','bypass_locks','manage_locks','customize_all_themes','suppress_staff_listings',),
+				'admin_role'=>array('add','edit_pending','delete_pending','edit','delete','publish','borrow','expunge','duplicate','edit_html','switch_theme','pose_as_other_user','assign_any_page_type','edit_head_items','edit_unique_names','edit_fragile_slugs','edit_home_page_nav_link','edit_form_advanced_options','manage_allowable_relationships','view_sensitive_data','manage_integration_settings','edit_raw_ldap_filters','upload_full_size_image','upgrade','db_maintenance','update_urls','bypass_locks','manage_locks','customize_all_themes','suppress_staff_listings','manage_embed_handlers',),
 		);
 	}
 	
@@ -2139,6 +2139,56 @@
 			$cache[$alrel_id] = mysql_fetch_array( $r , MYSQL_ASSOC );
 		}
 		return $cache[$alrel_id];
+	}
+	
+	/**
+	 * Determine whether relationship metadata is allowed on a particular relationship.  If you 
+	 * pass an optional site_id, it will also check if metadata is allowed in that site context.
+	 * 
+	 * @staticvar array $site_types
+	 * @param int $alrel_id
+	 * @param int $site_id
+	 * @return boolean
+	 */
+	function reason_metadata_is_allowed_on_relationship( $alrel_id, $site_id = null)
+	{
+		static $site_types = array();
+		$rel = reason_get_allowable_relationship_info($alrel_id);
+		if ($rel['meta_type'])
+		{
+			if ($site_id && $rel['meta_availability'] == 'by_site')
+			{
+				if (empty($site_types[$site_id]))
+				{
+					$es = new entity_selector( );
+					$es->add_type( id_of('type') );
+					$es->add_right_relationship( $this->site_id, relationship_id_of( 'site_to_type' ) );
+					$es->add_relation('variety="relationship_meta"');
+					$site_types[$site_id] = $es->run_one();
+				}
+				if (!isset($site_types[$site_id][$rel['meta_type']])) return false;
+			}
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Given an allowable relationship id, return the type entity for the metadata it supports.
+	 * 
+	 * @param int $alrel_id
+	 * @return object
+	 */
+	function reason_get_relationship_meta_type( $alrel_id )
+	{
+		$es = new entity_selector( );
+		$es->add_type( id_of('type') );
+		$es->add_table('ar', 'allowable_relationship');
+		$es->add_relation('variety="relationship_meta"');
+		$es->add_relation('ar.id = '.$alrel_id);
+		$es->add_relation('ar.meta_type = type.id');
+		if ($result = $es->run_one())
+			return reset($result);
 	}
 	
 	/**

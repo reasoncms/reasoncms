@@ -22,7 +22,7 @@
 				);
 		function init_head_items()
 		{
-			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH . 'content_managers/group.js');
+			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH . 'content_managers/group.js?v=2');
 		}
 
 		function pre_show_form()

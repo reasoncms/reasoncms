@@ -68,6 +68,7 @@
 									'module_api' => array( 'function' => 'turn_into_string' ),
 									'module_identifier' => array( 'function' => 'turn_into_string' ),
 									'module_api_action' => array( 'function' => 'turn_into_string' ),
+									'event_id' => array( 'function' => 'turn_into_int' ),
 								   );
 								   
 		var $supported_modes = array('api', 'admin', 'form_complete', 'summary', 'closed', 'form', 'unauthorized');
@@ -158,10 +159,10 @@
 			{
 				echo $this->check_view_and_invoke_method('get_view_submission_list_html');
 			}
-                        if ($this->check_view_and_model_and_invoke_method('should_show_submission_limit_message'))
-                        {
-                                echo $this->check_view_and_invoke_method('get_view_submission_limit_html');
-                        }
+			if ($this->check_view_and_model_and_invoke_method('should_show_submission_limit_message'))
+			{
+				echo $this->check_view_and_invoke_method('get_view_submission_limit_html');
+			}
  			if ($this->check_view_and_model_and_invoke_method('should_show_thank_you_message'))
 			{
 				echo $this->check_view_and_invoke_method('get_thank_you_html');
@@ -225,7 +226,12 @@
 
 		function get_unauthorized_header_html()
 		{
-			return '<h3>Access to this form is restricted</h3>';
+			$model =& $this->get_model();
+			$user_netid = $model->get_user_netid();
+			if (empty($user_netid))
+				return '<h3>Please <a href="'.$this->get_login_link().'">log in</a> to access this form</h3>';
+			else
+				return '<h3>Access to this form is restricted</h3>';
 		}
 		
 		function get_unauthorized_html()
@@ -234,7 +240,11 @@
 			$user_netid = $model->get_user_netid();
 			if (empty($user_netid))
 			{
-				return '<p>You are not currently logged in. If you have access to this form, the contents will be displayed after you login.</p>';
+				return '<p>You are not currently logged in. If you have access to this form, it will be displayed after you log in.</p>';
+			}
+			else
+			{
+				return '<p>Sorry, this form is not available due to an access restriction.</p>';
 			}
 		}
 		
@@ -278,11 +288,11 @@
 			$view_link = carl_construct_link( array('form_id' => ''), array('textonly', 'netid') );
 			return '<p class="summary_view_link"><a href="'.$view_link.'">View Your Submission List</a></p>';
 		}
-		
-                function get_view_submission_limit_html()
-                {
-                        return '<p class="submission_limit">This form permits only one submission per user.</p>';
-                }
+
+		function get_view_submission_limit_html()
+		{
+			return '<p class="submission_limit">This form permits only one submission per user.</p>';
+		}
 
 		function get_create_new_submission_html()
 		{
@@ -333,12 +343,24 @@
 		{
 			$netid = reason_check_authentication();
 			$ret = '<div class="loginlogout">';
-			$qs_array = ($netid) ? array('logout' => 'true', 'dest_page' => get_current_url()) : array('dest_page' => get_current_url());
-			$qs = carl_make_link($qs_array, '', 'qs_only', true, false);
-			if ($netid) $ret .= 'Logged in: '.$netid.' <a href="'.REASON_LOGIN_URL.$qs.'">Log Out</a>';
-			else $ret .= '<a href="'.REASON_LOGIN_URL.$qs.'">Log In</a>';
+			if ($netid) $ret .= 'Logged in: '.$netid.' <a href="'.$this->get_logout_link().'">Log Out</a>';
+			else $ret .= '<a href="'.$this->get_login_link().'">Log In</a>';
 			$ret .= '</div>';
 			return $ret;
+		}
+		
+		function get_login_link()
+		{
+			$qs_array = array('dest_page' => get_current_url());
+			$qs = carl_make_link($qs_array, '', 'qs_only', true, false);
+			return REASON_LOGIN_URL.$qs;
+		}
+		
+		function get_logout_link()
+		{
+			$qs_array = array('logout' => 'true', 'dest_page' => get_current_url());
+			$qs = carl_make_link($qs_array, '', 'qs_only', true, false);
+			return REASON_LOGIN_URL.$qs;
 		}
 		
 		function should_show_submission_list_link()
@@ -365,4 +387,4 @@
 		{
 			return true;
 		}
-	}
+}

@@ -350,6 +350,7 @@ class DefaultFormModel extends AbstractFormModel
 	 * - access_link: link indicating where the form can be accessed for view/edit
 	 * - email_empty_fields: boolean indicating whether or not to email empty fields
 	 * - attachments: array of filename => filepath for message attachments
+	 * - thank_you_message: html string to include atop the message
 	 *
 	 * @param array data - key/value pairs of the data to e-mail
 	 * @param array options - allows various parameters to be optionally passed
@@ -365,6 +366,7 @@ class DefaultFormModel extends AbstractFormModel
 			if (isset($options['access_link'])) $messages['all']['form_access_link'] = $options['access_link'];
 			$messages['all']['hide_empty_values'] = (isset($options['email_empty_fields'])) ? !$options['email_empty_fields'] : true;
 			$messages['all']['form_title'] = (isset($options['header'])) ? $options['header'] : '';
+			$messages['all']['thank_you_message'] = (isset($options['thank_you_message'])) ? $options['thank_you_message'] : '';
 			$messages[0]['to'] = $to;
 			$messages[0]['from'] = (isset($options['from'])) ? $options['from'] : TYR_REPLY_TO_EMAIL_ADDRESS;
 			$messages[0]['reply-to'] = (isset($options['reply-to'])) ? $options['reply-to'] : TYR_REPLY_TO_EMAIL_ADDRESS;

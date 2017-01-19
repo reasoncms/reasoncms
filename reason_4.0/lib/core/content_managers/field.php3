@@ -31,6 +31,10 @@
 		} // }}}
 		function on_every_time() // {{{
 		{
+
+			$this->change_element_type( 'is_required','select_no_sort',array('options'=>array('0'=>'false','1'=>'true') ) );
+			$this->change_element_type( 'admin_only','select_no_sort',array('options'=>array('0'=>'false','1'=>'true') ) );
+
 			if( $this->_id )
 			{
 				$tmp = new entity( $this->_id );
@@ -73,4 +77,3 @@
 			return $this->CMfinish();
 		} // }}}
 	}
-?>

@@ -105,7 +105,6 @@ class ReasonOembedTwitterFeedModel extends ReasonMVCModel // implements ReasonFe
 		{
 			require_once(SETTINGS_INC . 'twitter_api_settings.php');
 			require_once(TMHOAUTH_INC . 'tmhOAuth.php');
-			require_once(TMHOAUTH_INC . 'tmhUtilities.php');
 			$this->_oauth_obj = new tmhOAuth(array(
 				'consumer_key'    => TWITTER_API_CONSUMER_KEY,
 				'consumer_secret' => TWITTER_API_CONSUMER_SECRET,

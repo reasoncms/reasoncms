@@ -165,6 +165,11 @@
 				'order' => 'chunk.author ASC',
 				),
 		),
+		'assets_and_children' => array(
+			'pre_sidebar' => '',
+			'main_post' => 'assets',
+			'main_post_2' => 'children',
+		),
 		'audio_video' => array(
 			'main_post' => 'av',
 		),
@@ -765,6 +770,19 @@
 			),
 			'sidebar' => '',
 		),
+		'events_with_tickets_list' => array(
+			'main_post' => array(
+				'module' => 'events_mini',
+				'wrapper_id' => 'events_list_tickets',
+				// List all events with tickets (basically)
+				'ideal_count' => 10000,
+				// The following parameter & markup templates need to stay together
+				'limit_to_ticketed_events' => true,
+				'list_markup' => 'minisite_templates/modules/events_markup/tickets/tickets_events_list.php',
+				'list_item_markup' => 'minisite_templates/modules/events_markup/tickets/tickets_events_list_item.php',
+				'list_chrome_markup' => 'minisite_templates/modules/events_markup/tickets/tickets_events_list_chrome.php',
+			),
+		),
 		'events' => array(
 			'main_post' => 'events',
 			'sidebar' => '',
@@ -1160,6 +1178,16 @@
 			'sub_nav' => '',
 			'main' => 'form_content',
 			'main_post' => 'form'
+		),
+		'form_no_nav_no_sidebar' => array(
+			'navigation' => '',
+			'sub_nav_2' => '',
+			'sub_nav' => '',
+			'main' => 'form_content',
+			'main_post' => 'form',
+			'pre_sidebar' => '',
+			'sidebar' => '',
+			'post_sidebar' => '',
 		),
 		'form_sidebar_blurbs' => array(
 			'main' => 'form_content',
@@ -1847,6 +1875,62 @@
 				'thumbnail_width' => 200,
 			),
 		),
+		'child_gallery_280x200' => array(
+			'main_post' => array(
+				'module'=>'children',
+				'provide_images' => true,
+				'thumbnail_width' => 280,
+				'thumbnail_height' => 200,
+				'html5' => true,
+			),
+			'not_a_real_page_location' => array(
+				'module' => 'head_items_include',
+				'css' => array(array(REASON_HTTP_BASE_PATH.'modules/children/children_gallery_280x200.less')),
+				'js' => array(array(REASON_HTTP_BASE_PATH.'modules/children/children_gallery.js')),
+			),
+		),
+		'child_gallery_327x218' => array(
+			'main_post' => array(
+				'module'=>'children',
+				'provide_images' => true,
+				'thumbnail_width' => 327,
+				'thumbnail_height' => 218,
+				'html5' => true,
+			),
+			'not_a_real_page_location' => array(
+				'module' => 'head_items_include',
+				'css' => array(array(REASON_HTTP_BASE_PATH.'modules/children/children_gallery_327x218.less')),
+				'js' => array(array(REASON_HTTP_BASE_PATH.'modules/children/children_gallery.js')),
+			),
+		),
+		'child_gallery_400x200' => array(
+			'main_post' => array(
+				'module'=>'children',
+				'provide_images' => true,
+				'thumbnail_width' => 400,
+				'thumbnail_height' => 200,
+				'html5' => true,
+			),
+			'not_a_real_page_location' => array(
+				'module' => 'head_items_include',
+				'css' => array(array(REASON_HTTP_BASE_PATH.'modules/children/children_gallery_400x200.less')),
+				'js' => array(array(REASON_HTTP_BASE_PATH.'modules/children/children_gallery.js')),
+			),
+		),
+		'child_gallery_500x250' => array(
+			'main_post' => array(
+				'module'=>'children',
+				'provide_images' => true,
+				'thumbnail_width' => 500,
+				'thumbnail_height' => 250,
+				'html5' => true,
+			),
+			'not_a_real_page_location' => array(
+				'module' => 'head_items_include',
+				'css' => array(array(REASON_HTTP_BASE_PATH.'modules/children/children_gallery_500x250.less')),
+				'js' => array(array(REASON_HTTP_BASE_PATH.'modules/children/children_gallery.js')),
+			),
+		),
 		'siblings_and_children' => array(
 			'main_post' => 'siblings',
 			'sidebar'=>'children',
@@ -2130,6 +2214,9 @@
         'quote' => array(
         	'main_post' => 'quote',
         ),
+        'timeline' => array(
+        	'main_post' => 'timeline',
+        ),
         'user_settings' => array(
         	'main_post' => 'user_settings/user_settings'
         ),
@@ -2151,7 +2238,7 @@
 				'gallery_single_page',
 				'gallery_entire_site',
 	);
-
+	
 	if (reason_file_exists('minisite_templates/page_types_local.php'))
 	{
 		reason_include_once('minisite_templates/page_types_local.php');
@@ -2164,3 +2251,4 @@
 			$GLOBALS['_reason_deprecated_modules'] = array_merge($GLOBALS['_reason_deprecated_modules'],$GLOBALS['_reason_deprecated_modules_local']);
 		}
 	}
+?>

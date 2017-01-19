@@ -79,7 +79,7 @@ $(document).ready(function(){
     var buttons = {
         "Save": function() {
             $( this ).dialog( "close" );
-            $("tr#discoSubmitRow input:first").trigger("click");
+            $("#disco_form .submitSection input:first").trigger("click");
             $('#unsaved_changes').hide();
             $('#changes_saving').show();
             draw_dialog({}); // get rid of buttons

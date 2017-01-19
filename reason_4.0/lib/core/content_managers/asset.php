@@ -49,7 +49,7 @@
 			$this->add_element('asset', 'ReasonUpload', $params);
 			$asset = $this->get_element('asset');
 	
-			$this->set_comments( 'name', form_comment('A name for internal reference.') );
+			$this->set_comments( 'name', form_comment('A name used in asset listings -- on public pages and in Reason') );
 			$this->set_comments( 'content', form_comment('A long description of the document, if it needs it. This field is not required.') );
 			$this->set_comments( 'description', form_comment('A description of the document.') );
 			$this->set_comments( 'keywords', form_comment('A few words to aid in searching for the document.') );

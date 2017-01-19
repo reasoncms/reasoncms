@@ -1,7 +1,23 @@
 apache.conf
 .vagrant/*
 
-# Don't track local Reason directories or symlinks
+# Composer
+composer.phar
+# For now, we'll bundle the vendor directory with the repo
+#/vendor/
+
+# Commit your application's lock file http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file
+# You may choose to ignore a library lock file http://getcomposer.org/doc/02-libraries.md#lock-file
+# composer.lock
+
+
+# Don't track a local Reason settings directory in this repo (track it elsewhere)
 /settings_local
-/reason_4.0/lib/local
-/reason_4.0/www/local
+
+# Symlinks created for local Reason instance, some for backwards compatibility
+/reason_4.0/lib/local*
+/reason_4.0/www/reason_package
+/www/reason_4.0
+
+
+tests/_output/*

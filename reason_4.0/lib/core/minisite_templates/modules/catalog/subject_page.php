@@ -8,7 +8,7 @@
  * @since 2014-08-20
  * @package MinisiteModule
  *
- *
+ * 
  */
 $GLOBALS[ '_module_class_names' ][ 'catalog/'.basename( __FILE__, '.php' ) ] = 'CatalogSubjectPageModule';
 
@@ -31,14 +31,14 @@ class CatalogSubjectPageModule extends DefaultMinisiteModule
 	protected $courses = array();
 	protected $year = 2015;
 	protected $helper;
-
+	
 	public function init( $args = array() )
 	{
 		parent::init($args);
-
+				
 		if (preg_match('/\d{4}/', unique_name_of($this->site_id), $matches))
 			$this->year = (int) $matches[0];
-
+		
 		$this->helper = new $GLOBALS['catalog_helper_class']($this->year);
 
 		// If we're in ajax mode, we just return the data and quit the module.
@@ -72,9 +72,9 @@ class CatalogSubjectPageModule extends DefaultMinisiteModule
 		if($head_items = $this->get_head_items())
 		{
 			$head_items->add_stylesheet(JQUERY_UI_CSS_URL);
-			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH . 'modules/courses/subject_page.css');
+			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH . 'modules/courses/course_description_modal.css');
 			$head_items->add_javascript(JQUERY_UI_URL);
-			$head_items->add_javascript(REASON_HTTP_BASE_PATH . 'modules/courses/subject_page.js');
+			$head_items->add_javascript(REASON_HTTP_BASE_PATH . 'modules/courses/course_description_modal.js');
 			$head_items->add_javascript(WEB_JAVASCRIPT_PATH . 'jquery.reasonAjax.js');
 		}
 
@@ -84,10 +84,10 @@ class CatalogSubjectPageModule extends DefaultMinisiteModule
 		$inline_edit =& get_reason_inline_editing($this->page_id);
 		$inline_edit->register_module($this, $this->user_can_inline_edit());
 	}
-
+	
 	public function run()
 	{
-		echo '<div id="subjectPageModule" class="'.$this->get_api_class_string().'" year="'.$this->year.'">'."\n";
+		echo '<div id="subjectPageModule" class="reason_course_modals '.$this->get_api_class_string().'" year="'.$this->year.'">'."\n";
 
 		$inline_editing =& get_reason_inline_editing($this->page_id);
 		$editing_available = $inline_editing->available_for_module($this);
@@ -114,11 +114,11 @@ class CatalogSubjectPageModule extends DefaultMinisiteModule
 			else
 			{
 				if( $editable ) echo '<div class="editRegion">'."\n";
-
+				
 				if ($title = $block->get_value('title'))
 					echo '<h3>'.$title.'</h3>'."\n";
 				echo $this->helper->expand_catalog_tags($block->get_value('content'))."\n";
-
+				
 				// Add editing options
 				if( $editable )
 				{
@@ -138,7 +138,7 @@ class CatalogSubjectPageModule extends DefaultMinisiteModule
 		}
 
 		// If in editing mode, add an additional region where a new block may be added.
-		if( $editing_available )
+		if( $editing_available ) 
 		{
 			echo '<a name="block0"></a><div class="editable">'."\n";
 			if ( $editing_active && ($this->request['block_id'] === 0) )
@@ -154,7 +154,7 @@ class CatalogSubjectPageModule extends DefaultMinisiteModule
 			}
 			echo '</div>'."\n";
 		}
-
+		
 		echo '</div>'."\n";
 	}
 
@@ -208,7 +208,7 @@ class CatalogSubjectPageModule extends DefaultMinisiteModule
 			delete_relationships_by_entities($id, $this->page_id);
 		}
 	}
-
+	
 	/**
 	  * Get the block entities attached to this page.
 	  * Sets $this->blocks to an array of objects
@@ -241,7 +241,7 @@ class CatalogSubjectPageModule extends DefaultMinisiteModule
 
 	/**
 	 * Generates the editing interface for a catalog block.
-	 *
+	 * 
 	 * @param object $block Optional catalog_block entity
 	 * @return string
 	 */
@@ -284,11 +284,11 @@ class CatalogSubjectPageModule extends DefaultMinisiteModule
 		$form->run();
 		$form_output = ob_get_clean();
 		return $form_output;
-	}
-
+	}	
+	
 	/**
 	 * Actions to take when the form process phase is invoked.
-	 *
+	 * 
 	 * @param object $form Block editing Disco object
 	 */
 	public function save_block_callback(&$form)
@@ -300,7 +300,7 @@ class CatalogSubjectPageModule extends DefaultMinisiteModule
 		$values['block_type'] = tidy($form->get_value( 'block_edit_type' ));
 		$values['content'] = tidy($form->get_value( 'block_edit_text' ));
 		$archive = ($form->chosen_action == 'save_and_finish') ? true : false;
-
+		
 		if ($this->request['block_id'] === 0)
 		{
 			$name = $values['org_id'] . ' ' . $values['block_type'];
@@ -310,10 +310,10 @@ class CatalogSubjectPageModule extends DefaultMinisiteModule
 		else
 			reason_update_entity( $this->request['block_id'], $this->get_html_editor_user_id(), $values, $archive );
 	}
-
+	
 	/**
 	 * Actions to take when the form where_to phase is invoked.
-	 *
+	 * 
 	 * @param object $form Block editing Disco object
 	 */
 	public function where_to_callback(&$form)
@@ -329,7 +329,7 @@ class CatalogSubjectPageModule extends DefaultMinisiteModule
 			return carl_make_redirect($params);
 		}
 	}
-
+	
 	/**
 	 * @return int reason user entity that corresponds to logged in user or 0 if it does not exist
 	 */
@@ -346,14 +346,14 @@ class CatalogSubjectPageModule extends DefaultMinisiteModule
 	/**
 	 * This method handles ajax requests for course information. The course identifier comes in
 	 * through the get_course parameter, and can have two formats:
-	 *
+	 * 
 	 * course_NNNNNN_NNNN
 	 *   where the first number is a course object id and the second is the catalog year
-	 *
+	 * 
 	 * SUBJ_NNN_NNN
 	 *   where SUBJ is an org_id, the first number is a course_number, and the second is the year.
-	 *
-	 * The method outputs information about the requested course in JSON array(title, description)
+	 * 
+	 * The method outputs information about the requested course in JSON array(title, description) 
 	 * and exits.
 	 */
 	protected function handle_ajax_course_request()
@@ -369,7 +369,7 @@ class CatalogSubjectPageModule extends DefaultMinisiteModule
 			$course = reset($courses);
 			$course_id = $course->id();
 		}
-
+		
 		if (!empty($course_id) && $course = new $GLOBALS['course_template_class']($course_id))
 		{
 			$course->set_academic_year_limit($this->year);
@@ -382,11 +382,11 @@ class CatalogSubjectPageModule extends DefaultMinisiteModule
 		else
 		{
 			echo json_encode(array(
-				'title'=>'Course not found',
-				'description'=>''
-				));
+				'title'=>'',
+				'description'=>'Course not found'
+				));					
 		}
-		exit;
+		exit;		
 	}
-
+	
 }

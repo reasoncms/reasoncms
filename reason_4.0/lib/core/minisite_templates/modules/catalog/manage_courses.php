@@ -47,7 +47,7 @@ class ManageCoursesModule extends DefaultMinisiteModule
 		'deactivate' => array( 'function' => 'turn_into_int' ),
 		'toggle_course' => array( 'function' => 'turn_into_string' ),
 		);
-
+	
 
 	protected $elements = array(//{{{
 		'sections'=>array(
@@ -98,9 +98,9 @@ class ManageCoursesModule extends DefaultMinisiteModule
 			'type'=>'checkboxfirst',
 			),
 		);
-
+	
 	protected $required = array();
-
+	
 	/**
 	  * These are elements whose value is sourced from external data when working with
 	  * a course entity with a sourced_id value, and are not editable in this context.
@@ -111,9 +111,9 @@ class ManageCoursesModule extends DefaultMinisiteModule
 	function init( $args = array() )
 	{
 		parent::init($args);
-
+		
 		reason_require_authentication();
-
+		
 		if (!reason_check_access_to_site($this->site_id))
 		{
 			$this->noaccess = true;
@@ -121,7 +121,7 @@ class ManageCoursesModule extends DefaultMinisiteModule
 		}
 
 		$this->helper = new $GLOBALS['catalog_helper_class']();
-
+		
 		if($head_items = $this->get_head_items())
 		{
 			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH . 'modules/courses/manage_courses.css');
@@ -155,7 +155,7 @@ class ManageCoursesModule extends DefaultMinisiteModule
 		if (isset($this->request['course']))
 		{
 			$this->course = new $GLOBALS['course_template_class']($this->request['course']);
-
+			
 			$this->form = new disco();
 			$this->form->box_class = 'StackedBox';
 			$this->form->elements = $this->elements;
@@ -172,9 +172,9 @@ class ManageCoursesModule extends DefaultMinisiteModule
 		if (isset($this->request['section']))
 		{
 			$this->section = new $GLOBALS['course_section_class']($this->request['section']);
-		}
+		}		
 	}
-
+	
 	function run()
 	{
 		if ($this->noaccess)
@@ -183,19 +183,20 @@ class ManageCoursesModule extends DefaultMinisiteModule
 					an error, please contact the site owner listed at the bottom of the page.</p>';
 			return;
 		}
-
+			
 		echo $this->get_menus();
-
+		
 		if (isset($this->course))
 		{
-			echo $this->get_course_editor($this->course);
+			$this->setup_course_editor($this->course);
+			$this->form->run();
 		}
 		else if (isset($this->request['subject']))
 		{
-			echo $this->get_course_list($this->request['subject']);
+			echo $this->get_course_list($this->request['subject']);	
 		}
 	}
-
+	
 	/**
 	  * Generate the HTML for the menus that allow you to switch between subjects and years.
 	  */
@@ -204,20 +205,20 @@ class ManageCoursesModule extends DefaultMinisiteModule
 		$html = '<div id="courseNavigation">'."\n";
 		$html .= 'Manage Courses for ';
 		$html .= '<select id="courseSubjects">'."\n";
-		$html .= '<option value="">--</option>';
+		$html .= '<option value="">--</option>';	
 		foreach ($this->helper->get_course_subjects($this->year) as $subject)
 		{
 			$selected = (isset($this->request['subject']) && $subject == $this->request['subject']) ? 'selected' : '';
-			$html .= '<option value="'.$subject.'" '.$selected.'>'.$subject.'</option>'."\n";;
+			$html .= '<option value="'.$subject.'" '.$selected.'>'.$subject.'</option>'."\n";;	
 		}
 		$html .= '</select>'."\n";
 
 		$html .= '<select id="courseYears">'."\n";
-
+		
 		foreach ($this->catalog_years as $year)
 		{
 			$selected = ($year == $this->year) ? 'selected' : '';
-			$html .= '<option value="'.$year.'" '.$selected.'>'.$this->helper->get_display_year($year).'</option>'."\n";;
+			$html .= '<option value="'.$year.'" '.$selected.'>'.$this->helper->get_display_year($year).'</option>'."\n";;	
 		}
 		$html .= '</select>'."\n";
 
@@ -230,20 +231,20 @@ class ManageCoursesModule extends DefaultMinisiteModule
 		$html .= '</div>'."\n";
 		return $html;
 	}
-
+	
 	/**
 	 * When a subject is selected, generate lists of courses, showing those that are borrowed into
 	 * the site and those that are not.
-	 *
+	 * 
 	 * @param string $subject
 	 * @return string HTML
 	 */
 	function get_course_list($subject)
 	{
 		$subject_courses = $this->helper->get_courses_by_subjects(array($subject));
-
+		
 		$site_courses = $this->helper->get_site_courses($this->catalog_site_id);
-
+		
 		$html = '<h3>Listed Courses</h3>';
 		$html .= '<ul class="courseListActive">';
 		foreach ($subject_courses as $id => $course)
@@ -255,7 +256,7 @@ class ManageCoursesModule extends DefaultMinisiteModule
 			}
 		}
 		$html .= '</ul>';
-
+		
 		$html .= '<h3>Unlisted Courses</h3>';
 		$html .= '<ul class="courseListInactive">';
 		foreach ($subject_courses as $id => $course)
@@ -265,27 +266,27 @@ class ManageCoursesModule extends DefaultMinisiteModule
 		$html .= '</ul>';
 		return $html;
 	}
-
+	
 	/**
 	 * Get a single row in a course list, handling the fact that there might be multiple section-based
 	 * listings for a single course template.
-	 *
+	 * 
 	 * @param object $course
 	 * @param string $status Which set of courses are we in (active/inactive)
 	 * @return string HTML
 	 */
 	function get_course_list_row($course, $status = 'active')
-	{
+	{	
 		// We want to limit our view to the academic year we're looking at
 		if ($this->year) $course->set_academic_year_limit($this->year);
-
+		
 		$html = '';
 		$subject = $course->get_value('org_id');
 		$number = $course->get_value('course_number');
 		$name = $course->get_value('title');
 
 		$titles = $course->get_value('section_titles');
-
+		
 		// If all the sections for this course have the same title, just list it
 		if (count($titles) < 2)
 		{
@@ -298,7 +299,7 @@ class ManageCoursesModule extends DefaultMinisiteModule
 				if ($this->helper->term_to_academic_year($history) == $this->year)
 					$html .= ' <span class="courseListTerm termHighlight">'. $history .'</span>';
 				else
-					$html .= ' <span class="courseListTerm">'. $history .'</span>';
+					$html .= ' <span class="courseListTerm">'. $history .'</span>';				
 			}
 			if ($status == 'active')
 				$html .= '<a class="deactivateCourse" title="Unlist course" href="'.carl_make_link(array('deactivate'=>$course->id())).'">–</a>'."\n";
@@ -333,15 +334,15 @@ class ManageCoursesModule extends DefaultMinisiteModule
 					if ($this->helper->term_to_academic_year($history) == $this->year)
 						$html .= ' <span class="courseListTerm termHighlight">'. $history .'</span>';
 					else
-						$html .= ' <span class="courseListTerm">'. $history .'</span>';
+						$html .= ' <span class="courseListTerm">'. $history .'</span>';				
 				}
 				$html .= '</li>';
 			}
 		}
-
+		
 		return $html;
 	}
-
+	
 	function process_editor_submission()
 	{
 		if (!$this->course->get_value('sourced_id'))
@@ -349,15 +350,15 @@ class ManageCoursesModule extends DefaultMinisiteModule
 			$this->course->set_value('org_id', $this->form->get_value('subject'));
 			$this->course->set_value('course_number', $this->form->get_value('course_number'));
 		}
-
+		
 		$this->course->set_value('name', join(' ', array($this->form->get_value('subject'), $this->form->get_value('course_number'), $this->form->get_value('title'))));
 		$this->course->set_value('list_of_prerequisites', $this->form->get_value('prerequisites'));
 		$this->course->set_value('credits', $this->form->get_value('credits'));
 		$this->course->set_value('title', $this->form->get_value('title'));
 		$this->course->set_value('long_description', $this->form->get_value('description'));
-
+		
 		reason_update_entity( $this->course->id(), get_user_id(reason_check_authentication()), $this->course->get_values(), true);
-
+		
 		// Apply title and description changes to selected sections
 		if ($this->form->get_value('sections') && $sections = $this->course->get_sections())
 		{
@@ -371,19 +372,19 @@ class ManageCoursesModule extends DefaultMinisiteModule
 				}
 			}
 		}
-
+		
 		if ($this->catalog_site_id)
 		{
 			if ($this->form->get_value('display_in_catalog'))
 				$this->toggle_course_in_site($this->course, $this->catalog_site_id, 'add');
-			else
+			else 
 				$this->toggle_course_in_site($this->course, $this->catalog_site_id, 'remove');
 		}
 	}
-
+	
 	/**
 	 * Add or remove the borrowed relationship for this course on this site.
-	 *
+	 * 
 	 * @param object $course
 	 * @param integer $site_id
 	 * @param string $action
@@ -395,30 +396,30 @@ class ManageCoursesModule extends DefaultMinisiteModule
 		else if ($action != 'add' && $course->owned_or_borrowed_by($site_id))
 			delete_borrowed_relationship( $site_id, $course->id(), get_borrows_relationship_id(id_of('course_template_type')));
 	}
-
+	
 	function where_to()
 	{
 		return carl_make_redirect(array(
-			'course'=>null,
-			'section'=>null,
-			'subject'=>$this->course->get_value('org_id'),
-			'year'=>$this->year));
+			'course'=>null, 
+			'section'=>null, 
+			'subject'=>$this->course->get_value('org_id'), 
+			'year'=>$this->year));	
 	}
-
+	
 	/**
-	 * Generate and run the disco form for editing a course entity.
-	 *
+	 * Prepopulate the editing form with data from the passed course
+	 * 
 	 * @param object $course
 	 */
-	function get_course_editor($course)
+	protected function setup_course_editor($course)
 	{
 		if ($this->year) $course->set_academic_year_limit($this->year);
-
+	
 		$this->form->set_element_properties('subject', array('options' => $this->helper->get_course_subjects()));
-
+		
 		$this->form->set_value('subject', $course->get_value('org_id'));
 		$this->form->set_value('course_number', $course->get_value('course_number'));
-
+		
 		// If a section has been passed as a parameter, then we want to pull the data from
 		// that section, since we're dealing with a situation where a single course has
 		// sections with different titles/descriptions.
@@ -430,7 +431,7 @@ class ManageCoursesModule extends DefaultMinisiteModule
 		else
 		{
 			$title = $course->get_value('title');
-			$description = $course->get_value('long_description');
+			$description = $course->get_value('long_description');		
 		}
 		$this->form->set_value('title', $title);
 		$this->form->set_value('description', $description);
@@ -438,41 +439,19 @@ class ManageCoursesModule extends DefaultMinisiteModule
 		$this->form->set_value('faculty', join(', ', $this->format_faculty_for_display($course->get_value('faculty'))));
 		$credits = ($course->get_value('credits')) ? $course->get_value('credits') : 'N/A';
 		$this->form->set_value('credits', $credits);
-
+		
 		if ($this->catalog_site_id)
 			$this->form->set_value('display_in_catalog', $course->owned_or_borrowed_by($this->catalog_site_id));
 
-		if ($sections = $course->get_sections())
-		{
-			$checked = array();
-			$sections = array_reverse($sections);
-			foreach ($sections as $section)
-			{
-				$id = $section->id();
-				$section_list[$id] = '<span class="courseNumber">'.$section->get_value('course_number').'</span> ';
-				$section_list[$id] .= '<span class="courseSession">'.$section->get_value('academic_session').'</span> ';
-				$section_list[$id] .= '<span class="courseTitle">'.$section->get_value('title').'</span>';
-				// Preselect the sections whose title and description match what we're editing
-				if ($section->get_value('long_description') == $description && $section->get_value('title') == $title)
-					$checked[] = $id;
-			}
-			$this->form->set_element_properties('sections', array('options' => $section_list));
-			$this->form->set_value('sections', $checked);
-			$this->form->set_comments('sections', '<p class="comment">Any changes made to this course will be applied to the selected sections.<p>');
-		}
-		else
-		{
-			$this->form->change_element_type('sections', 'solidtext');
-			$this->form->set_value('sections', 'No Current Sections Found');
-		}
-
+		$this->setup_course_editor_section_list($course);
+		
 		// If this entity has an id tying it to an external data source, make the externally-sourced
 		// fields non-editable.
 		if ($course->get_value('sourced_id'))
 		{
 			foreach ($this->sourced_elements as $element)
 				$this->form->change_element_type($element, 'solidtext');
-
+			
 			$info = '<h3>'.$this->course->get_value('org_id'). ' ' .$this->course->get_value('course_number') .'</h3>';
 			$info .= '<ul id="courseInfo">';
 			$info .= '<li>Course ID: '.$course->get_value('sourced_id').'</li>'."\n";
@@ -484,7 +463,7 @@ class ManageCoursesModule extends DefaultMinisiteModule
 			if ($end = $course->get_value('end_date'))
 				$info .= '<li>End Date: '.date('M d, Y', strtotime($end)).'</li>'."\n";
 			$info .= '</li>';
-
+			
 			$this->form->set_element_properties('course_info', array('text' => $info));
 
 			if ($course->get_value('requirements'))
@@ -494,17 +473,46 @@ class ManageCoursesModule extends DefaultMinisiteModule
 
 			if ($grading = $course->get_value('grading'))
 				$this->form->set_value('grading', $grading);
-		}
-
-
-		$this->form->run();
+		}	
 	}
-
+	
+	/**
+	 * Build the display for listing the sections associated with this course.
+	 * 
+	 * @param object $course
+	 */
+	protected function setup_course_editor_section_list($course)
+	{
+		if ($sections = $course->get_sections())
+			{
+				$checked = array();
+				$sections = array_reverse($sections);
+				foreach ($sections as $section)
+				{
+					$id = $section->id();
+					$section_list[$id] = '<span class="courseNumber">'.$section->get_value('course_number').'</span> ';
+					$section_list[$id] .= '<span class="courseSession">'.$section->get_value('academic_session').'</span> ';
+					$section_list[$id] .= '<span class="courseTitle">'.$section->get_value('title').'</span>';
+					// Preselect the sections whose title and description match what we're editing
+					if ($section->get_value('long_description') == $this->form->get_value('description') && $section->get_value('title') == $this->form->get_value('title'))
+						$checked[] = $id;
+				}
+				$this->form->set_element_properties('sections', array('options' => $section_list));
+				$this->form->set_value('sections', $checked);
+				$this->form->set_comments('sections', '<p class="comment">Any changes made to this course will be applied to the selected sections.<p>');
+			}
+			else
+			{
+				$this->form->change_element_type('sections', 'solidtext');
+				$this->form->set_value('sections', 'No Current Sections Found');
+			}	
+	}
+	
 	/**
 	 * This method determines how faculty names are displayed in the course editor. By default, it
 	 * displays them as first initial and last name, but you can extend this method to do something
 	 * different.
-	 *
+	 * 
 	 * @param string $faculty
 	 * @return string
 	 */

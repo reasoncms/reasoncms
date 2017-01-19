@@ -47,7 +47,7 @@ class MinisitePageManager extends parent_childManager
 			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'content_managers/page_parent_url.js');
 			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'content_managers/page.js');
 		}
-		$this->head_items->add_stylesheet(REASON_ADMIN_CSS_DIRECTORY.'content_managers/minisite_page.css');
+		$this->head_items->add_stylesheet(REASON_ADMIN_CSS_DIRECTORY.'content_managers/minisite_page.css?v=2');
 	}
 	
 	/**

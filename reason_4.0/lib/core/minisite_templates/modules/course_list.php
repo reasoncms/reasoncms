@@ -12,7 +12,6 @@ $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'CourseListM
 
 reason_include_once( 'minisite_templates/modules/default.php' );
 reason_include_once( 'function_libraries/course_functions.php' );
-//reason_include_once( 'scripts/import/courses/course_import.php' );
 
 class CourseListModule extends DefaultMinisiteModule
 {
@@ -66,6 +65,8 @@ class CourseListModule extends DefaultMinisiteModule
 	protected $subjects = array();
 	protected $site_subjects = array();
 	protected $page_categories = array();
+	protected $helper;
+	protected $year;
 	public $cleanup_rules = array(
 		'module_api' => array( 'function' => 'turn_into_string' ),
 		'module_identifier' => array( 'function' => 'turn_into_string' ),
@@ -78,6 +79,9 @@ class CourseListModule extends DefaultMinisiteModule
 	{
 		parent::init($args);
 		
+		$this->helper = new $GLOBALS['catalog_helper_class']();
+		$this->year = $this->helper->get_latest_catalog_year();
+		
 		// If we're in ajax mode, we just return the data and quit the module.
 		$api = $this->get_api();
 		if ($api && ($api->get_name() == 'standalone'))
@@ -89,7 +93,14 @@ class CourseListModule extends DefaultMinisiteModule
 			}
 			if (isset($this->request['toggle_course']))
 			{
-				echo json_encode($this->do_course_toggle($this->request['toggle_course']));
+				$toggled = $this->do_course_toggle($this->request['toggle_course']);
+				if($toggled)
+				{
+					$user = reason_get_current_user_entity();
+					if(!empty($user))
+						reason_update_entity( $this->page_id, $user->id(), array('last_modified' => date('Y-m-d H:i:s') ), false);
+				}
+				echo json_encode($toggled);
 				exit;
 			}
 		}
@@ -128,8 +139,9 @@ class CourseListModule extends DefaultMinisiteModule
 		
 			if ($editing_active) 
 			{
-				$html .= $this->get_editing_explanation();
-				$html .= $this->get_course_picker();	
+				$info = $this->get_source_info();
+				$html .= $this->get_editing_explanation($info);
+				$html .= $this->get_course_picker($info);
 			} else {
 				$html .= '<p class="edit"><a class="editThis" href="'.carl_make_link($inline_editing->get_activation_params($this)).'#coursesRegion">Edit Course List</a></p>'."\n";				
 			}
@@ -168,7 +180,7 @@ class CourseListModule extends DefaultMinisiteModule
 				
 				if ($this->params['show_subject_links'])
 				{
-					echo '<ul class="fieldLinks">';
+					echo '<ul class="subjectLinks">';
 					foreach ($buckets as $subject => $courses)
 					{	
 						echo '<li><a href="#'.preg_replace('/\W/', '', $subject).'">'.$subject.'</a></li>';
@@ -178,7 +190,7 @@ class CourseListModule extends DefaultMinisiteModule
 				
 				foreach ($buckets as $subject => $courses)
 				{
-					echo '<h3 class="careerField"><a name="'.preg_replace('/\W/', '', $subject).'">'.$subject.'</a></h3>';
+					echo '<h3 class="courseSubject"><a name="'.preg_replace('/\W/', '', $subject).'">'.$subject.'</a></h3>';
 					foreach ($courses as $html)
 						echo $html;
 				}			
@@ -203,19 +215,19 @@ class CourseListModule extends DefaultMinisiteModule
 		// more efficient that way.
 		
 		if ($this->params['get_site_courses'])
-			$this->courses = $this->courses + get_site_courses($this->site_id);
+			$this->courses = $this->courses + $this->helper->get_site_courses($this->site_id);
 
 		if ($this->params['get_page_courses'])
-			$this->courses = $this->courses + get_page_courses($this->get_source_page_id());
+			$this->courses = $this->courses + $this->helper->get_page_courses($this->get_source_page_id());
 
 		foreach ($this->params['get_courses_by_tags'] as $tag)
-			$this->courses = $this->courses + get_courses_by_category($tag);
+			$this->courses = $this->courses + $this->helper->get_courses_by_category($tag);
 		
 		if ($this->params['get_courses_by_page_categories'])
 			$this->courses = $this->courses + $this->get_page_category_courses();
 		
 		if ($this->params['get_courses_by_subjects'])
-			$this->courses = $this->courses + get_courses_by_subjects($this->params['get_courses_by_subjects'], 'academic_catalog_2014_site');
+			$this->courses = $this->courses + $this->helper->get_courses_by_subjects($this->params['get_courses_by_subjects'], 'academic_catalog_'.$this->year.'_site');
 
 		if ($this->params['get_courses_by_site_subjects'])
 			$this->courses = $this->courses + $this->get_courses_by_site_subjects();
@@ -223,13 +235,13 @@ class CourseListModule extends DefaultMinisiteModule
 		if ($this->params['randomize'])
 			shuffle($this->courses);
 		else
-			uasort($this->courses, 'sort_courses_by_name');		
+			uasort($this->courses, array($this->helper, 'sort_courses_by_name'));		
 	}
 	
 	protected function get_course_html($course)
 	{
-		$course->set_academic_year_limit(2015);
-		if ($course->get_last_offered_academic_year() < 2011) return null;
+		$course->set_academic_year_limit($this->year);
+		if ($course->get_last_offered_academic_year() < $this->year - 4) return null;
 		
 		$html = '<div class="courseContainer">'."\n";
 		$html .= '<h4>';
@@ -276,7 +288,7 @@ class CourseListModule extends DefaultMinisiteModule
 				}
 				$details[] = 'Offered ' . join(', ', $terms);
 			} else {
-				$details[] = 'Not offered 2015–16';
+				$details[] = 'Not offered '.$this->year.'-'.($this->year + 1);
 			}
 		}
 
@@ -344,7 +356,7 @@ class CourseListModule extends DefaultMinisiteModule
 
 		if ($cats = $this->get_page_categories())
 		{
-			$courses = get_courses_by_category($cats);
+			$courses = $this->helper->get_courses_by_category($cats);
 		}
 		
 		return $courses;
@@ -358,7 +370,7 @@ class CourseListModule extends DefaultMinisiteModule
 	protected function get_courses_by_site_subjects()
 	{
 		if ($codes = $this->get_site_subjects()) 
-			return get_courses_by_subjects($codes);
+			return $this->helper->get_courses_by_subjects($codes);
 		else
 			return array();
 	}
@@ -437,9 +449,10 @@ class CourseListModule extends DefaultMinisiteModule
 		return $this->_user_can_inline_edit;
 	} 
 
-	function get_editing_explanation()
+	function get_source_info()
 	{
 		$sources = array();
+		$errors = array();
 		if ($this->params['get_site_courses'])
 			$sources[] = 'courses borrowed by this Reason site.';
 
@@ -453,6 +466,7 @@ class CourseListModule extends DefaultMinisiteModule
 		{
 			if ($cats = $this->get_page_categories())
 				$sources[] = 'courses that share the categories associated with this page ('.join(', ', $cats).').';
+			$errors[] = 'No categories are associated with the page to draw courses from.';
 		}
 		
 		foreach ($this->params['get_courses_by_subjects'] as $subj)
@@ -462,7 +476,14 @@ class CourseListModule extends DefaultMinisiteModule
 		{
 			if ($subjects = $this->get_site_subjects())
 				$sources[] = 'courses that share the same academic subject as this Reason site ('.join(', ', $subjects).').';
+			$errors[] = 'This site dos not have any subjects to draw courses from.';
 		}
+		return array('sources' => $sources, 'errors' => $errors);
+	}
+	function get_editing_explanation($source_info)
+	{
+		$sources = $source_info['sources'];
+		$errors = $source_info['errors'];
 		
 		$string = '<div class="explain">';
 		if (count($sources) > 1)
@@ -474,18 +495,41 @@ class CourseListModule extends DefaultMinisiteModule
 			$string .= '</ul>'."\n";
 			$string .= '</parse_url>'."\n";
 		}
-		else
+		elseif(isset($sources[0]))
 		{
 			$string .= '<p>This page is currently displaying ' . $sources[0].'</p>';	
 		}
-		$string .= '<p>If you need to change how courses are selected for this page, please contact a Reason administrator.</p>';
-		$string .= '<p class="edit"><a class="editThis" href="'.carl_make_link(array('inline_edit'=>null)).'">Save and Finish</a></p>'."\n";				
+		else
+		{
+			$string .= '<p>This page is not displaying any courses because it is not fully set up.</p>';
+			if(!empty($errors))
+			{
+				$string .= '<p>These issues were encountered:</p>';
+				$string .= '<ul>';
+				foreach($errors as $error)
+					$string .= '<li>'.$error.'</li>';
+				$string .= '</ul>';
+			}
+			$string .= '<p>Please contact a Reason administrator if you\'re not able to fix these issues yourself.</p>'."\n";
+		}
+		if(!empty($sources))
+		{
+			$string .= '<p>If you need to change how courses are selected for this page, please contact a Reason administrator.</p>';
+			$string .= '<p class="edit"><a class="editThis" href="'.carl_make_link(array('inline_edit'=>null)).'">Save and Finish</a></p>'."\n";
+		}
+		else
+		{
+			$string .= '<p class="edit"><a class="editThis" href="'.carl_make_link(array('inline_edit'=>null)).'">OK, Thanks</a></p>'."\n";
+		}		
 		$string .= '</div>';
 		return $string;
 	}
 	
-	function get_course_picker()
+	function get_course_picker($info)
 	{
+		if(empty($info['sources']))
+			return '';
+		
 		$html = '<div id="coursePicker">'."\n";
 		$html .= '<h4>Select Courses for this Page</h4>';
 		$html .= '<p>Choose a subject: '.$this->get_subject_menu().'</p>'."\n";
@@ -498,7 +542,7 @@ class CourseListModule extends DefaultMinisiteModule
 	{
 		$html = '<select id="courseSubjects">'."\n";
 		$html .= '<option value="">--</option>';	
-		foreach (get_course_subjects() as $subject)
+		foreach ($this->helper->get_course_subjects() as $subject)
 		{
 			$html .= '<option value="'.$subject.'">'.$subject.'</option>';	
 		}
@@ -520,12 +564,12 @@ class CourseListModule extends DefaultMinisiteModule
 		// Build the list of courses already on the page so we know what's selected
 		$this->build_course_list();
 		
-		if ($courses = get_courses_by_subjects(array($data), 'academic_catalog_2014_site'))
+		if ($courses = $this->helper->get_courses_by_subjects(array($data), 'academic_catalog_'.$this->year.'_site'))
 		{
 			foreach ($courses as $id => $course)
 			{
 				$history = $course->get_last_offered_academic_year();
-				if ($history < (2014 - 3)) continue;
+				if ($history < ($this->year - 3)) continue;
 				
 				$output['title'] = html_entity_decode($course->get_value('name'));
 				
@@ -608,5 +652,3 @@ class CourseListModule extends DefaultMinisiteModule
 		return false;
 	}
 }
-
-?>

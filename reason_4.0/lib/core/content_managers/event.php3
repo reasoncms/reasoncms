@@ -82,12 +82,12 @@
 		function init_head_items()
 		{
 			$this->head_items->add_javascript(JQUERY_URL, true); // uses jquery - jquery should be at top
-			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH .'event.js');
+			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH .'event.js?v=2');
 			if ($this->geolocation_enabled())
 			{
 				$base_gmap_url = (HTTPS_AVAILABLE) ? 'https://maps-api-ssl.google.com/maps/api/js' : 'http://maps.google.com/maps/api/js';
 				$this->head_items->add_javascript($base_gmap_url . '?v=3&libraries=geometry&sensor=false', true);
-				$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH . 'content_managers/event/geo.js');
+				$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH . 'content_managers/event/geo.js?v=2');
 				$this->head_items->add_stylesheet(WEB_JAVASCRIPT_PATH . 'content_managers/event/geo.css');
 			}
 		}
@@ -130,7 +130,7 @@
 			{
 				$this->add_element('audiences_heading', 'comment', array('text'=>'<h4>Visibility</h4> To which groups do you wish to promote this event? (Please enter at least one)'));
 				$this->add_relationship_element('audiences', id_of('audience_type'), 
-				relationship_id_of('event_to_audience'),'right','checkbox',REASON_USES_DISTRIBUTED_AUDIENCE_MODEL,'sortable.sort_order ASC');
+				relationship_id_of('event_to_audience'),'right','checkbox',REASON_USES_DISTRIBUTED_AUDIENCE_MODEL,'smart',1);
 			}
 			
 			$es = new entity_selector();
@@ -144,7 +144,7 @@
 			
 			if(!empty($result))
 			{
-				$this->add_relationship_element('categories', id_of('category_type'), relationship_id_of('event_to_event_category'),'right','checkbox',true,'entity.name ASC');
+				$this->add_relationship_element('categories', id_of('category_type'), relationship_id_of('event_to_event_category'),'right','checkbox',true,'smart',1);
 			}
 			
 			$this->add_element('date_and_time', 'comment', array('text'=>'<h4>Date, Time, and Duration of Event</h4>'));

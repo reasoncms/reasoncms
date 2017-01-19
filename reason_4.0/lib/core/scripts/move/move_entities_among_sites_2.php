@@ -71,8 +71,8 @@ $allowable_relationship_id = get_owns_relationship_id($type_id);
 $es = new entity_selector();
 $es->add_type($type_id);
 $es->add_right_relationship($site_id, $allowable_relationship_id);
-if ($start_date) $es->add_relation('creation_date >= "'.mysql_real_escape_string($start_date).'"');
-if ($end_date) $es->add_relation('creation_date <= "'.mysql_real_escape_string($end_date).'"');
+if ($start_date) $es->add_relation('entity.creation_date >= "'.mysql_real_escape_string($start_date).'"');
+if ($end_date) $es->add_relation('entity.creation_date <= "'.mysql_real_escape_string($end_date).'"');
 if ($name) $es->add_relation('entity.name LIKE "%'.mysql_real_escape_string($name).'%"');
 $es->set_order(mysql_real_escape_string($sort).' ASC');
 $entity_bs = $es->run_one();
@@ -106,7 +106,10 @@ foreach ( $sites as $site )
 				  '</option>' );
 }
 
-
+if(id_of('minisite_page') == $type_id)
+{
+	echo '<p><input type="checkbox" name="move_children" value="1" id="moveChildrenCheckbox"> <label for="moveChildrenCheckbox">Automatically move all children of selected pages</label></p>';
+}
 echo '<table id="entity_mover" width="100%">'."\n";
 echo '<tr><th><a href="'.carl_make_link(array('sort'=>'entity.id'), '', '', false).'">Id</a></th>';
 echo '<th><a href="'.carl_make_link(array('sort'=>'entity.name'), '', '', false).'">Name</a></th>';

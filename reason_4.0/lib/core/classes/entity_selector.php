@@ -202,6 +202,13 @@
 		 * @var array
 		 */
 		var $_rel_sort_field_queue = array();
+
+		/**
+		 * Contains the relationship meta_id value queue
+		 * @access private
+		 * @var array
+		 */
+		var $_rel_meta_field_queue = array();
 		
 		/**
 		 * Storage for the multivalue result mode
@@ -250,7 +257,7 @@
  		  /**
  		  * Does the actual work of adding relationship sort fields to the entity selector
  		  * @param int $entity_id the entity on the left side of a relationship
- 		  * @param int $relationship_id optional parameter specifying relationship ID
+ 		  * @param int $allowable_rel_id optional parameter specifying relationship ID
  		  * @param string $alias defaults to 'rel_sort_order'
  		  * @access private
  		  */
@@ -294,6 +301,54 @@
  		 		}
  		 	}
  		 }
+
+ 		  /**
+ 		  * Does the actual work of adding relationship meta fields to the entity selector
+ 		  * @param int $entity_id the entity on the left side of a relationship
+ 		  * @param int $allowable_rel_id optional parameter specifying relationship ID
+ 		  * @param string $alias defaults to 'rel_meta_id'
+ 		  * @access private
+ 		  */
+ 		 function _add_rel_meta_field($entity_id, $allowable_rel_id = '', $alias = 'rel_meta_id')
+ 		 {
+ 		 	//extract name of field to add
+ 		 	$relation_array = $this->relations;
+ 		 	$rel_name_from_entity_id = $rel_name_from_rel_type = '';
+ 		 	while ($cur_element = array_pop($relation_array)) // begin at end
+ 		 	{
+ 		 		if (!empty($allowable_rel_id))
+ 		 		{
+ 		 			$test_rel_id_start = strpos($cur_element, 'relationship');
+ 		 			$test_rel_id_end = strpos($cur_element, '.type = '. $allowable_rel_id);
+ 		 			if ($test_rel_id_start !== false && $test_rel_id_end !== false)
+ 		 			{
+ 		 				$rel_name_from_rel_type = substr($cur_element, 0, $test_rel_id_end);
+ 		 				continue;
+ 		 			}
+ 		 		}
+
+ 		 		$test_entity_id = strpos($cur_element, '.entity_a = ' . $entity_id);
+ 		 		if ($test_entity_id != false)
+ 		 		{
+ 		 			$rel_name_from_entity_id = substr($cur_element, 0, $test_entity_id);
+ 		 		}
+ 		 		
+ 		 		if (!empty($allowable_rel_id) && (!empty($rel_name_from_entity_id)) && (!empty($rel_name_from_rel_type))
+ 		 		    && ($rel_name_from_entity_id == $rel_name_from_rel_type))
+ 		 		{
+ 		 			$relation_array = array();
+ 		 			if (!in_array($rel_name_from_entity_id.".meta_id AS ".$alias, $this->fields))
+ 		 			$this->add_field($rel_name_from_entity_id, 'meta_id', $alias);
+ 		 		}
+ 		 		
+ 		 		elseif (empty($allowable_rel_id) && !empty($rel_name_from_entity_id))
+ 		 		{
+ 		 		 	$relation_array = array();
+ 		 		 	if (!in_array($rel_name_from_entity_id.".meta_id AS ".$alias, $this->fields))
+ 		 		 	$this->add_field($rel_name_from_entity_id, 'meta_id', $alias);
+ 		 		}
+ 		 	}
+ 		 }
  		 
  		 /**
 	 	 * Adds relationship sort field to entities. 
@@ -317,6 +372,18 @@
  		 	$this->_rel_sort_field_queue[] = array($entity_id, $allowable_rel_id, $alias);
  		 }
  		 
+		 /**
+		  * Adds a field from relationship metadata to the entity selector
+		  * 
+		  * @param int $entity_id The entity on the left side of a relationship
+		  * @param int $allowable_rel_id Optional parameter specifying relationship ID
+		  * @param string $alias
+		  */
+ 		 function add_rel_meta_field($entity_id, $allowable_rel_id = '', $alias = 'rel_meta_id')
+ 		 {
+ 		 	$this->_rel_meta_field_queue[] = array($entity_id, $allowable_rel_id, $alias);
+ 		 }
+
  		 /**
  		  * Invokes _add_rel_sort_field() to process relationship sort field additions to entity selector
  		  * @access private
@@ -326,6 +393,18 @@
  		 	foreach($this->_rel_sort_field_queue as $rel_sort)
  		 	{
  		 		$this->_add_rel_sort_field($rel_sort[0], $rel_sort[1], $rel_sort[2]);
+ 		 	}
+ 		 }
+
+ 		 /**
+ 		  * Invokes _add_rel_meta_field() to process relationship meta field additions to entity selector
+ 		  * @access private
+ 		  */
+ 		 function _process_rel_meta_fields()
+ 		 {
+ 		 	foreach($this->_rel_meta_field_queue as $rel_meta)
+ 		 	{
+ 		 		$this->_add_rel_meta_field($rel_meta[0], $rel_meta[1], $rel_meta[2]);
  		 	}
  		 }
  		 
@@ -822,6 +901,7 @@
 			}
 			
 			if (count($this->_rel_sort_field_queue) > 0) $this->_process_rel_sort_fields();
+			if (count($this->_rel_meta_field_queue) > 0) $this->_process_rel_meta_fields();
 			
 			$new_e = new entity_selector($this->site_id);
 			$sharing = '';
@@ -1011,7 +1091,7 @@
 		 * @param string $error optional error message
 		 * @return array
 		 */
-		function run_one($type = '', $status = 'Live' , $error = 'run_one error') // runs query for one type, returns array of results {{{
+		function run_one($type = '', $status = 'Live' , $error = 'run_one error', $printQuery = false) // runs query for one type, returns array of results {{{
 		{
 			if( !$type )
 			{
@@ -1041,8 +1121,10 @@
 				//echo '<p>Cache miss</p>';
 			}
 			$results = array();
+			if ($printQuery) { echo "QUERY: [" . $query . "]<p>"; }
 			$r = db_query( $query , $this->description.': '.$error );
 			
+			if ($printQuery) { echo "Got back [" . mysql_num_rows($r) . "] ROWS...<P>"; }
 			while( $row = mysql_fetch_array( $r, MYSQL_ASSOC ) )
 			{
 				//pray ($row);
@@ -1080,6 +1162,7 @@
 					}
 					$e->_values = $row;
 				}
+
 				$results[ $row[ 'id' ] ] = $e;
 			}
 			mysql_free_result( $r );
@@ -1456,6 +1539,102 @@
 			}
 			return array( $alias => array( 'table_orig' => $table, 'table' => $t , 'field' => $field ) );
 		} // }}}
+
+		/**	 
+		* Return relationship metadata for entities returned by the entity selector. This is still
+		* somewhat experimental. For some types of queries, you may need to turn on enable_multivalue_results
+		* to get all of the results
+		*
+		* @param string $rel_name the name of the relationship between the entities
+		* @param string $field the name of the metadata field to be selected
+		* @param string $alias that alias for the field
+		* @param mixed $limit_results true return only row for which the related value is defined
+		*                                                         false to return all results even if the value does not exist
+		*                                                         string or array to limit results to the values passed
+		* @return boolean
+		*/
+		function add_left_relationship_meta_field($rel_name, $field, $alias, $limit_results = true)
+		{
+			if (($rel_name != "owns") && ($rel_name != "borrows") && !empty($rel_name))
+				$rel_type_id = relationship_id_of($rel_name);
+			elseif ($rel_name == 'owns' || $rel_name == 'borrows')
+			{
+				if (empty($this->type))
+				{
+					$call_info = array_shift(debug_backtrace());
+					$code_line = $call_info['line'];
+					$file = array_pop(explode('/', $call_info['file']));
+					$msg = 'entity selector method add_left_relationship_meta_field called by ' . $file . ' on line ' . $code_line . ' on a generic "owns" or "borrows" relationship when the type has not been set on the entity selector.';
+					trigger_error($msg, WARNING);
+					return false;
+				}
+				elseif ($rel_name == "owns")
+					$rel_type_id = get_owns_relationship_id(reset($this->type));
+				elseif ($rel_name == "borrows")
+					$rel_type_id = get_borrows_relationship_id(reset($this->type));
+			}
+			if (empty($rel_type_id))
+			{
+				trigger_error('add_left_relationship_meta_field failed - an id could not be determined from the relationship name provided');
+				return false;
+			}
+
+			if ($meta_type = reason_get_relationship_meta_type($rel_type_id))
+			{
+				$table = get_table_from_field($field, $meta_type->id());
+			}
+			if (empty($table))
+			{
+				trigger_error('add_left_relationship_meta_field failed - no table found for the requested field');
+				return false;
+			}
+
+			if ($limit_results === false)
+			{
+				$cur_es = carl_clone($this);
+				$this->union = true;
+			}
+
+			$es = new entity_selector();
+
+			$es->add_table('relationship', 'relationship');
+			$es->add_table($table);
+			$tables = $this->merge_tables($es);
+
+			if (!empty($tables['relationship']))
+				$r = $tables['relationship'];
+			else
+				$r = 'relationship';
+
+			if (!empty($tables[$table]))
+				$t = $tables[$table];
+			else
+				$t = $table;
+
+			$this->add_relation($r . '.meta_id = ' . $t . '.id');
+			$this->add_relation('entity.id = ' . $r . '.entity_a');
+			$this->add_relation($r . '.type = ' . $rel_type_id);
+
+			$this->add_field($t, $field, $alias);
+			if ($this->_env['restrict_site'] AND ! empty($this->_env['site']))
+			{
+				$this->add_relation('(' . $r . '.site=0 OR ' . $r . '.site=' . $this->_env['site'] . ')');
+			}
+			if ($limit_results === false)
+			{
+				$this->union_fields[end($this->fields)] = '0 as ' . $alias;
+				$this->diff['fields'][] = array_diff_assoc($this->fields, $cur_es->fields);
+				$this->diff['tables'][] = array_diff_assoc($this->tables, $cur_es->tables);
+				$this->diff['relations'][] = array_diff_assoc($this->relations, $cur_es->relations);
+			}
+			elseif (is_string($limit_results) || is_array($limit_results))
+			{
+				$limit_values = (is_string($limit_results)) ? array($limit_results) : $limit_results;
+				array_walk($limit_values, 'db_prep_walk');
+				$this->add_relation($t . '.' . $field . ' IN (' . implode(',', $limit_values) . ')');
+			}
+			return array($alias => array('table_orig' => $table, 'table' => $t, 'field' => $field));
+		}
 
 		/**
 		 * Sets entity tables to exclude from the entity selector 

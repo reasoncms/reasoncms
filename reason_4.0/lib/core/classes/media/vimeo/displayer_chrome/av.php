@@ -73,9 +73,9 @@ class VimeoAVDisplayerChrome implements DisplayerChromeInterface
 				$markup .= '<h5 class="share_label">Share:</h5>'."\n";
 				$markup .= '<ul class="share_list">'."\n";
 				$facebook_url = 'http://www.facebook.com/sharer.php?u='.urlencode(get_current_url()).'&t='.urlencode($this->media_work->get_value('name'));
-				$markup .= '<li><a href="'.$facebook_url.'">Facebook</a></li>'."\n";
+				$markup .= '<li><a href="'.$facebook_url.'" target="_blank">Facebook</a></li>'."\n";
 				$twitter_url = 'https://twitter.com/share?url='.urlencode(get_current_url()).'&text='.urlencode($this->media_work->get_value('name'));
-				$markup .= '<li><a href="'.$twitter_url.'">Twitter</a></li>'."\n";
+				$markup .= '<li><a href="'.$twitter_url.'" target="_blank">Twitter</a></li>'."\n";
 				$markup .= '</ul>'."\n";
 				$markup .= '</div>'."\n";
 				

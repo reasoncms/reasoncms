@@ -43,6 +43,7 @@ class ReasonAPIFactory
 			$region_info = $page_type->get_region($region);
 			$module_api = $apis[$requested_api];
 			$module_api->set_name($requested_api);
+			$module_api->set_identifier($requested_identifier);
 			return array('module_name' => $region_info['module_name'],
 						 'module_region' => $region,
 						 'api' => $module_api);
@@ -81,7 +82,16 @@ class ReasonAPIFactory
 		{
 			if (!isset($class_supported_apis[$module_class]))
 			{
-				$class_supported_apis[$module_class] = call_user_func(array($module_class, 'get_supported_apis'), $module_class);
+				$classInterfaces = class_implements($module_class, false);
+				if (isset($classInterfaces["ModuleGrouper"])) {
+					$m = new $module_class;
+					$region_info = $page_type->get_region($region);
+					$params = ($region_info['module_params'] != null) ? $region_info['module_params'] : array();
+					$m->handle_params($params);
+					$class_supported_apis[$module_class] = $m->getGroupedModuleSupportedApis();
+				} else {
+					$class_supported_apis[$module_class] = call_user_func(array($module_class, 'get_supported_apis'), $module_class);
+				}
 			}
 			return $class_supported_apis[$module_class];
 		}
@@ -138,7 +148,7 @@ class ReasonAPIFactory
 			$identifier = self::parse_identifier($requested_identifier);
 			$search_pathways = array(
 				array('module_class', 'module_location', 'module_params'),
-				array('module_class', 'module_param'),
+				array('module_class', 'module_params'),
 				array('module_name', 'module_location'),
 				array('module_class'),
 				array('module_location')
@@ -157,6 +167,7 @@ class ReasonAPIFactory
 						{
 							$supported_apis = self::get_supported_apis($page_type, $region);
 							$supports_requested_api[$module_name] = (!empty($supported_apis)) ? (isset($supported_apis[$requested_api])) : false;
+
 							if ($supports_requested_api[$module_name] && ($first_supported_region == FALSE))
 							{
 								$first_supported_region = $region;
@@ -171,6 +182,7 @@ class ReasonAPIFactory
 								$search_mod[$region]['module_location'] = $region;
 								$search_mod[$region]['module_params'] = md5(serialize($params));
 							}
+
 							$test = (array_intersect_key($search_mod[$region], array_flip($match_array)) == array_intersect_key($identifier, array_flip($match_array)));
 							if ($test) return $region;
 						}

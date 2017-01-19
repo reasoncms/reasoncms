@@ -58,6 +58,18 @@ class defaultFeed
 			$this->site_specific = true;
 		}
 	}
+	/**
+	 * Get the appropriate X-Robots-Tag header for this feed
+	 *
+	 * Defaults to "none" -- inclusion/spidering by search engines should be
+	 * explicitly enabled for feeds where that is desired
+	 *
+	 * @return string
+	 */
+	function get_robots_http_header()
+	{
+		return 'none';
+	}
 	function set_request_vars( $request_vars )
 	{
 		$this->request = $request_vars;
@@ -186,6 +198,8 @@ class defaultFeed
 		if($send_header)
 		{
 			header('Content-type: text/xml');
+			if($robots = $this->get_robots_http_header())
+				header('X-Robots-Tag: '.$robots);
 		}
 		echo $this->feed->get_rss();
 	}

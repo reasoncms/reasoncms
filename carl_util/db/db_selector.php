@@ -19,6 +19,7 @@ if( !defined( '__DB_SELECTOR' ) )
 	define ( '__DB_SELECTOR', true );
 	
 	include_once('db_query.php');
+	include_once('sql_string_escape.php');
 	
 	/**
 	 * DBSelector class
@@ -276,6 +277,46 @@ if( !defined( '__DB_SELECTOR' ) )
 		{
 			$this->cache_lifespan = $lifespan;
 		}
+		
+		function add_freetext_search($search_term, $search_fields)
+		{
+			if(!empty($search_term) && !empty($search_fields))
+			{
+				$regexp = '/(?:\"(.+?)\"|([^\*\"\s]+))/';
+				preg_match_all($regexp,$search_term,$matches);
+				
+				$search_term_array = array();
+				foreach ($matches[1] as $chunk)
+				{
+					if (!empty($chunk))	$search_term_array[] = trim($chunk);
+				}
+				
+				foreach ($matches[2] as $chunk)
+				{
+					if (!empty($chunk))	$search_term_array[] = trim($chunk);
+				}
+				$search_array = array();
+				
+				foreach ($search_term_array as $chunk)
+				{
+					$sub_search_array = array();
+					foreach($search_fields as $field)
+					{
+						$sub_search_array[] = $field . ' LIKE "%'.strtr(carl_util_sql_string_escape($chunk),array('*'=>'%')).'%"';
+					}
+					$search_array[] = '('.implode(' OR ',$sub_search_array).')';
+				}
+				if (!empty($search_array))
+				{
+					$this->add_relation('('.implode(' AND ', $search_array).')');
+					return true;
+				}
+			}
+			else
+			{
+				trigger_error('add_freetext_search() requires two arguments: $search_term, $search_fields');
+			}
+			return false;
+		}
 	}
 }
-?>

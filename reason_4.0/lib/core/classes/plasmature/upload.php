@@ -36,7 +36,7 @@ $GLOBALS['_disco_upload_head_items_shown'] = false;
 class ReasonUploadType extends uploadType
 {
 	var $type = "ReasonUpload";
-	var $type_valid_args = array('authenticator', 'existing_entity',
+	var $type_valid_args = array('authenticator', 'existing_entity', 'upload_to_amazon',
 		'head_items');
 
 	/** @access private */
@@ -46,9 +46,57 @@ class ReasonUploadType extends uploadType
 	/** @access private */
 	var $existing_entity;
 
+	function _get_current_file_info() {
+		$rv = parent::_get_current_file_info();
+		if ($this->uploading_to_amazon) {
+			$entityId = $_REQUEST['id'];
+			reason_include_once('classes/s3Helper.php');
+			$s3h = new S3Helper("plupload_media_upload");
+			$f = $s3h->getFileByPrefix(($s3h->getTempDir() == "" ? "" : $s3h->getTempDir() . "/") . $entityId . ".");
+
+			if ($f != null) {
+				$rv->size = $f["size"];
+				$metadata = $s3h->getMetadataForKey($f["name"]);
+				$rv->name = $metadata["original_filename"]; // from x-amz-meta-original_filename, stored on the object in S3
+			}
+		}
+		return $rv;
+	}
+
+	function grab() {
+		if ($this->uploading_to_amazon) {
+			$entityId = $_REQUEST['id'];
+
+			$vars = $this->get_request();
+			if (@$vars["delete_existing_" . $this->name] == "confirm_delete") {
+				// die("DELETE NOT yET IMPLEMENTED!!!");
+				parent::grab();
+			} else if (@$vars["upload_url"] != "" || @$vars["import_file"] != "") {
+				parent::grab();
+			} else {
+				$this->file = $this->get_amazon_tempfile($entityId);
+
+				if ($this->file == null) {
+					// we didn't upload a file...that might be ok though; maybe we uploaded one awhile ago and we're just back to update some other entity metadata. Let's check...
+					$e = new entity($entityId);
+					// possible transcoding_status values:
+					// "", "converting", "error", "finalizing", "ready"
+
+					if (!in_array($e->get_value("transcoding_status"), Array("converting", "finalizing", "ready"))) {
+						// if it's not one of these values we either didn't upload anything, or possibly an earlier upload failed on conversion. Either way display an error.
+						$this->set_error("No upload file found.");
+					}
+				} // else, we uploaded a file during this (or an earlier) editing session -- it's still sitting in the temp area on S3
+			}
+		} else {
+			parent::grab();
+		}
+	}
+
 	function additional_init_actions($args=array())
 	{
 		$auth = @$args['authenticator'];
+		$this->uploading_to_amazon = @$args['upload_to_amazon'];
 		$this->upload_sid = _get_disco_async_upload_session($auth);
 		
 		$constraints = array(
@@ -79,7 +127,7 @@ class ReasonUploadType extends uploadType
 		$current = $this->_get_current_file_info();
 
 		// marker - reason upload element
-		return _get_plupload_js_setup_snippet($this->upload_sid, $this->name) . 
+		return _get_plupload_js_setup_snippet($this->upload_sid, $this->name, $this->uploading_to_amazon) . 
 			$this->_get_hidden_display($current).
 			$this->_get_restriction_display($current).
 			$this->_get_current_file_display($current).
@@ -90,6 +138,21 @@ class ReasonUploadType extends uploadType
 	{
 		return array_merge(_get_disco_async_upload_internal_field_names(),
 			parent::register_fields());
+	}
+
+	function get_amazon_tempfile($entityId) {
+		reason_include_once('classes/s3Helper.php');
+		$s3h = new S3Helper("plupload_media_upload");
+		$f = $s3h->getFileByPrefix(($s3h->getTempDir() == "" ? "" : $s3h->getTempDir() . "/") . $entityId . ".");
+
+		$this->value = $f["path"];
+		$this->tmp_full_path = $f["path"];
+		$this->tmp_web_path = $f["path"];
+		// $this->tmp_file_name = $nameOfFile;
+		// $this->original_filename = $nameOfFile;
+		$this->state = "uploaded_to_amazon";
+
+		return $f;
 	}
 	
 	function _get_uploaded_file()
@@ -156,7 +219,7 @@ class ReasonImageUploadType extends image_uploadType
 		$current = $this->_get_current_file_info();
 
 		// marker - image upload element
-		return _get_plupload_js_setup_snippet($this->upload_sid, $this->name) . 
+		return _get_plupload_js_setup_snippet($this->upload_sid, $this->name, false) . 
 			$this->_get_hidden_display($current).
 			$this->_get_restriction_display($current).
 			$this->_get_current_file_display($current).
@@ -449,7 +512,7 @@ function _populate_flash_upload_head_items(&$head)
 		return;
 	
     $scripts = array(
-		REASON_PACKAGE_HTTP_BASE_PATH."plupload/plupload-2.1.4/js/plupload.full.min.js",
+		REASON_PACKAGE_HTTP_BASE_PATH."plupload/plupload-2.1.8/js/plupload.full.min.js",
 		REASON_FLASH_UPLOAD_URI . 'upload_support.js',
 		REASON_HTTP_BASE_PATH."js/plupload_setup.js"
 	);
@@ -626,8 +689,43 @@ function _embed_plupload_stylesheet($head_items = null)
 	}
 }
 
-function _get_plupload_js_setup_snippet($upload_sid, $element_name)
+function _getAmazonConfigData()
 {
+	require_once(SETTINGS_INC.'media_integration/s3_storage_settings.php');
+	$bucket = S3_PLUPLOAD_MEDIA_UPLOAD_BUCKET_NAME;
+	$accessKeyId = S3_PLUPLOAD_MEDIA_UPLOAD_ACCESS_KEY_ID;
+	$secret = S3_PLUPLOAD_MEDIA_UPLOAD_SECRET_ACCESS_KEY;
+	$tempDir = S3_PLUPLOAD_MEDIA_UPLOAD_TEMP_DIR;
+
+	$policy = base64_encode(json_encode(array(
+		'expiration' => date('Y-m-d\TH:i:s.000\Z', strtotime('+1 day')),  
+		'conditions' => array(
+			array('bucket' => $bucket),
+			array('acl' => 'public-read'),
+			array('starts-with', '$rvfieldname', ''),
+			array('starts-with', '$key', ''),
+			array('starts-with', '$Content-Type', ''), // accept all files
+			// Plupload internally adds name field, so we need to mention it here
+			array('starts-with', '$name', ''),  
+			// One more field to take into account: Filename - gets silently sent by FileReference.upload() in Flash
+			// http://docs.amazonwebservices.com/AmazonS3/latest/dev/HTTPPOSTFlash.html
+			array('starts-with', '$Filename', ''), 
+			array('starts-with', '$x-amz-meta-reason_id', ''),
+			array('starts-with', '$x-amz-meta-original_filename', ''),
+		)
+	)));
+
+	$signature = base64_encode(hash_hmac('sha1', $policy, $secret, true));
+
+	return Array("bucket" => $bucket, "tempDir" => $tempDir, "accessKeyId" => $accessKeyId, "policy" => $policy, "signature" => $signature);
+}
+
+function _get_plupload_js_setup_snippet($upload_sid, $element_name, $uploading_to_amazon)
+{
+	$session = _get_async_upload_session($upload_sid);
+	$constraints = empty($session['constraints'][$element_name]) ? null : $session['constraints'][$element_name];
+	$encodedConstraints = json_encode($constraints);
+	
 	// $js = "<script type=\"text/javascript\">var pluploadSubmissionUrl = '" . REASON_HTTP_BASE_PATH . "scripts/upload/receive.php?user_id=0&upload_sid=" . $upload_sid . "';</script>";
 	// $js .= "<script type=\"text/javascript\">var pluploadFieldName = '" . $element_name . "'; console.log('setting pluploadFieldName to " . $element_name . "...');</script>";
 
@@ -635,10 +733,28 @@ function _get_plupload_js_setup_snippet($upload_sid, $element_name)
 
 	// var pluploadConfig = {submissionUrl: "{$REASON_HTTP_BASE_PATH}scripts/upload/receive.php?user_id=0&upload_sid={$upload_sid}", fieldNames: []};
 	$user_id = isset($_REQUEST['user_id']) ? $_REQUEST['user_id'] : 0;
+	$entity_id = isset($_REQUEST['id']) ? $_REQUEST['id'] : 0;
 
 	$submitUrl = REASON_HTTP_BASE_PATH . "scripts/upload/receive.php?user_id=" . $user_id . "&upload_sid=" . $upload_sid;
 	$destructionUrl = REASON_HTTP_BASE_PATH . "scripts/upload/destroy.php?user_id=" . $user_id . "&upload_sid=" . $upload_sid;
 	$previewUrl = REASON_HTTP_BASE_PATH . "scripts/upload/getTempFile.php?f=";
+
+	$amazonPayload = "";
+	$amazonPayloadDetails = $uploading_to_amazon ? _getAmazonConfigData() : null;
+	if ($amazonPayloadDetails != null) {
+		// echo "<div style='background-color: red'>UPLOADING TO AMAZON!!!</div>";
+		foreach ($amazonPayloadDetails as $field => $val) {
+			if ($field != "bucket") {
+				$amazonPayload .= ", amzn_$field: \"" . $val . "\"";
+			}
+		}
+
+		$amazonPayload .= ", amzn_prepPage: \"" . REASON_HTTP_BASE_PATH . "scripts/upload/s3_prep.php\"";
+
+		$submitUrl = "https://" . $amazonPayloadDetails["bucket"] . ".s3.amazonaws.com:443/";
+	} else {
+		// echo "<div style='background-color: green'>standard reason upload...</div>";
+	}
 
 	$js = <<<JAVASCRIPT
 		<script type="text/javascript">
@@ -648,7 +764,7 @@ function _get_plupload_js_setup_snippet($upload_sid, $element_name)
 				var pluploadConfig = [];
 			}
 			// pluploadConfig.fieldNames.push("{$element_name}");
-			pluploadConfig.push({submissionUrl: "{$submitUrl}", destructionUrl: "{$destructionUrl}", previewUrl: "{$previewUrl}", fieldName: "{$element_name}"});
+			pluploadConfig.push({constraints: {$encodedConstraints}, entityId: "{$entity_id}", submissionUrl: "{$submitUrl}", destructionUrl: "{$destructionUrl}", previewUrl: "{$previewUrl}", fieldName: "{$element_name}"{$amazonPayload}});
 
 		</script>
 JAVASCRIPT;
@@ -679,7 +795,7 @@ function _get_plupload_dom_stubs($can_add_file, $current, $element_name, $add_te
 		$uploadEl .= '<span class="smallText">'.$label."</span><br />";
 	}
 	// $uploadEl .= "<a id='upload_browse_" . $element_name . "' href='javascript:;'>[Browse...]</a>";
-	$uploadEl .= "<div class='plupload_dropzone' id='upload_browse_" . $element_name . "'><span class='default_text'>Click to add file, or drag/drop onto this zone...</span></div>";
+	$uploadEl .= "<div class='plupload_dropzone' id='upload_browse_" . $element_name . "'><span class='default_text'>Initializing uploader...</span></div>";
 
 	$uploadEl .= "<pre class='plupload_error_console' id='upload_console_" . $element_name . "'></pre>";
 	$uploadEl .= "</div>";

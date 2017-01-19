@@ -3,7 +3,7 @@
  * @package reason
  * @subpackage admin
  */
-
+ 
 /**
  * Include the default module and other needed utilities
  */
@@ -11,9 +11,9 @@ reason_include_once('classes/admin/modules/default.php');
 reason_include_once('function_libraries/url_utils.php');
 
 /**
- * An administrative module that can generate a PDF from all or part of a site.
+ * An administrative module that can generate a PDF from all or part of a site. 
  * The server must have wkhtmltopdf installed and accessible to the web user.
- *
+ * 
  * @author Mark Heiman
  *
  */
@@ -21,7 +21,7 @@ class ReasonSiteToPDFModule extends DefaultModule// {{{
 {
 	protected $_site_pages;
 	protected $error;
-
+	
 	function ReasonSiteToPDFModule( &$page )
 	{
 		$this->admin_page =& $page;
@@ -33,8 +33,9 @@ class ReasonSiteToPDFModule extends DefaultModule// {{{
 		$this->admin_page->title = 'Site to PDF';
 		$this->admin_page->set_breadcrumbs( array(''=> 'Site to PDF' ) );
 		$this->head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form_data.css');
+		$this->head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/modules/site_to_pdf.js');
 		$this->_get_site_pages();
-
+		
 		if (isset($_POST['pages']))
 		{
 			if ( ($temp_file_path = $this->build_pdf()) && file_exists($temp_file_path))
@@ -42,7 +43,7 @@ class ReasonSiteToPDFModule extends DefaultModule// {{{
 				$site = new entity($this->admin_page->site_id);
 
 				header('Content-type: application/pdf');
-				header('Content-disposition: inline; filename="'. $site->get_value('name').'.pdf"');
+				header('Content-disposition: attachment; filename="'. $site->get_value('name').'.pdf"');
 				header('Content-length: ' . filesize($temp_file_path));
 				readfile($temp_file_path);
 				exit;
@@ -53,29 +54,32 @@ class ReasonSiteToPDFModule extends DefaultModule// {{{
 			}
 		}
 	}
-
+	
 	function run()
-	{
+	{	
 		echo '<p>This module will allow you to generate a PDF of all or some of the pages in this site.
 				The pages are listed below; check or uncheck pages to include or exclude them from the
 				PDF.</p>
-				<p>By default, pages are unchecked if they are hidden from the site navigation, or if
+				<p>By default, pages are unchecked if they are hidden from the site navigation, 
+				if they are external links to a page on another site, or if
 				they are restricted by an access group. You can check a restricted page, but you\'ll
-				probably just end up with a copy of the login page in your PDF.<p>';
-
+				probably just end up with a copy of the login page in your PDF.<p>
+				<p><em>For Developers: when building the PDF, pages are captured with CSS print media and
+				javascript disabled.</em></p>';
+		
 		if ($this->_site_pages)
 		{
 			if ($this->error) echo '<p class="error">'.$this->error.'</p>';
-
+			
 			$root = $this->find_site_root();
 			$page_tree[$root] = $this->build_page_tree($root);
-
+			
 			echo '<form method="POST">';
 			$this->draw_page_tree($page_tree);
 			echo '<p>Depending on the number of pages, PDFs can take a minute or two to complete.</p>';
 			echo '<input type="submit" value="Build PDF" />';
 			echo '<form>';
-
+			
 			//pray($this->_site_pages);
 		}
 		elseif (!$this->_get_validated_site_id())
@@ -87,7 +91,7 @@ class ReasonSiteToPDFModule extends DefaultModule// {{{
 			echo '<p>The site does not have any valid pages.</p>';
 		}
 	}
-
+	
 	/**
 	 * Return the current site id if
 	 *
@@ -109,7 +113,7 @@ class ReasonSiteToPDFModule extends DefaultModule// {{{
 		}
 		return false;
 	}
-
+	
 	/**
 	 * Grab the site page entities
 	 */
@@ -121,7 +125,7 @@ class ReasonSiteToPDFModule extends DefaultModule// {{{
 			{
 				$es = new entity_selector($site_id);
 				$es->add_type(id_of('minisite_page'));
-				$es->add_relation('(entity.name != "") AND ((url.url = "") OR (url.url IS NULL))'); // only pages, not custom urls
+				$es->add_relation('(entity.name != "")');
 				$es->add_left_relationship_field('minisite_page_parent', 'entity', 'id', 'parent_id');
 				$es->add_right_relationship_field('page_to_access_group', 'entity', 'id', 'access_group_id', false);
 				$es->set_order('sort_order ASC');
@@ -131,11 +135,11 @@ class ReasonSiteToPDFModule extends DefaultModule// {{{
 			else $this->_site_pages = false;
 		}
 		return $this->_site_pages;
-	}
+	}	
 
 	/**
 	 * Lets set some extra values - specifically ... the URL!
-	 *
+	 * 
 	 * @todo instead of just supressing errors in reason_get_page_url perhaps we should flag these pages somehow?
 	 */
 	function _augment_page_entities(&$entities)
@@ -156,44 +160,50 @@ class ReasonSiteToPDFModule extends DefaultModule// {{{
 				$children[$page->id()] = $this->build_page_tree($page->id());
 			}
 		}
-
+		
 		if (isset($children))
 			return $children;
 		else
 			return $root;
 	}
-
+	
 	function draw_page_tree($tree)
 	{
-		echo '<ul class="pageTree">'."\n";
-		foreach ($tree as $key => $val)
-		{
+		echo '<ul class="pageTree">' . "\n";
+		foreach ($tree as $key => $val) {
 			$notes = array();
-			if ($this->_site_pages[$key]->get_value('access_group_id'))
-				$notes[] = 'restricted';
-			if ($this->_site_pages[$key]->get_value('nav_display') == 'No')
-				$notes[] = 'no nav';
 
-			if (empty($_REQUEST['pages']) && empty($notes))
+			if ($this->_site_pages[$key]->get_value('access_group_id')) {
+				$notes[] = 'restricted';
+			}
+			if ($this->_site_pages[$key]->get_value('nav_display') == 'No') {
+				$notes[] = 'no nav';
+			}
+			if ($this->_site_pages[$key]->get_value('url') != '') {
+				$notes[] = 'external link';
+			}
+
+			if (empty($_REQUEST['pages']) && empty($notes)) {
 				$checked = 'checked';
-			else if (!empty($_REQUEST['pages']) && in_array($key, $_REQUEST['pages']))
+			} else if (!empty($_REQUEST['pages']) && in_array($key, $_REQUEST['pages'])) {
 				$checked = 'checked';
-			else
+			} else {
 				$checked = '';
+			}
 
 			echo '<li>';
-			echo '<input type="checkbox" name="pages[]" value="'.$key.'" '.$checked.'/> ';
+			echo '<input type="checkbox" name="pages[]" value="' . $key . '" ' . $checked . '/> ';
 			echo $this->_site_pages[$key]->get_value('name');
 
-			if ($notes)
-				echo ' <span class="pageNote">('.join(', ', $notes).')</span>';
-			echo '</li>'."\n";
-			if (is_array($val))
-			{
+			if ($notes) {
+				echo ' <span class="pageNote">(' . join(', ', $notes) . ')</span>';
+			}
+			echo '</li>' . "\n";
+			if (is_array($val)) {
 				$this->draw_page_tree($val);
 			}
 		}
-		echo '</ul>'."\n";
+		echo '</ul>' . "\n";
 	}
 
 	function find_site_root()
@@ -206,7 +216,7 @@ class ReasonSiteToPDFModule extends DefaultModule// {{{
 			}
 		}
 	}
-
+	
 	function build_pdf()
 	{
 		$url_string = '';
@@ -215,12 +225,19 @@ class ReasonSiteToPDFModule extends DefaultModule// {{{
 			if ($url = $this->_site_pages[$page_id]->get_value('page_url'))
 				$url_string .= $url . ' ';
 		}
-
+		
 		// Figure out what to call and where to place the temporary pdf file.
 		$temp_file_path = sys_get_temp_dir() . "/" . $this->admin_page->site_id . ".pdf";
 
-		// Download the pages as a pdf.
-		$command = 'wkhtmltopdf -l --javascript-delay 10000 ' . $url_string . $temp_file_path;
+		// Generate a PDF of all pages in $url_string, in order.
+		// JS is disabled because wkhtmltopdf waits for JS to finish executing,
+		// but if the JS doesn't finish a page is skipped from the resulting pdf.
+		// One may tinker with lengthening --javascript-delay, but even a delay of 
+		// 60 seconds led to skipped pages in the final result which is the worst
+		// possible scenario for a site export tool. No error is produced when a page is skipped.
+		$args = " --disable-javascript -l --footer-left [title] --footer-right [page]/[topage]";
+		$args .= " --footer-font-size 9 --footer-spacing 3 --print-media-type ";
+		$command = 'wkhtmltopdf' . $args . $url_string . $temp_file_path;
 		$output = shell_exec($command);
 
 		// Ensure that a non-empty file was created.

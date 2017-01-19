@@ -44,7 +44,15 @@ class blogPostsFeed extends pageTreeFeed
 	var $query_string = 'story_id';
 	var $blog; // entity
 	var $module_sets = array('publication_item_display');
-	
+        /**
+         * We want blog posts to be indexed by search engines, so we turn off the robots http header
+         */
+	function get_robots_http_header()
+	{
+		if($this->site_specific && $this->site->get_value('site_state') == 'Not Live')
+			return 'none';
+		return '';
+	}	
 	function grab_blog()
 	{
 		if(empty($this->blog))

@@ -8,6 +8,7 @@
  * Load dependencies.
  */
 include_once('reason_header.php');
+include_once(SETTINGS_INC . 'facebook_api_settings.php');
 reason_include_once( 'classes/social.php' );
 
 /**
@@ -93,22 +94,24 @@ class ReasonFacebookIntegrator extends ReasonSocialIntegrator implements SocialA
 	 */
 	function social_account_on_every_time($cm)
 	{
-		$cm->change_element_type('account_type', 'protected');
-		$cm->change_element_type('account_details', 'protected');
-		$cm->set_display_name('account_id', 'Facebook ID');
-		$cm->add_required('account_id');
-		$cm->set_comments('account_id', form_comment('This is usually the number at the end of your Facebook profile or page. If you cannot find it, try your username instead.'));
+		$cm->change_element_type($this->element_prefix.'account_type', 'protected');
+		$cm->change_element_type($this->element_prefix.'account_details', 'protected');
+		$cm->set_display_name($this->element_prefix.'account_id', 'Facebook ID');
+		$cm->add_required($this->element_prefix.'account_id');
+		$cm->set_comments($this->element_prefix.'account_id', form_comment('This is usually the number at the end of your Facebook profile or page. If you cannot find it, try your username instead.'));
 			
 		// lets add a field showing the current link if one is available.
 		
-		$account_details = $cm->get_value('account_details');
+		$account_details = $cm->get_value($this->element_prefix.'account_details');
 		if (!empty($account_details))
 		{
 			$details = json_decode($account_details, true);
 			if (isset($details['link']))
 			{
 				$comment_text = '<a href="'.$details['link'].'">'.$details['link'].'</a>';
-				$cm->add_element('account_link', 'commentWithLabel', array('text' => $comment_text));
+				$cm->add_element($this->element_prefix.'account_link', 'commentWithLabel', array(
+					'text' => $comment_text,
+					'display_name' => 'Account Link'));
 			}
 		}
 	}
@@ -126,45 +129,69 @@ class ReasonFacebookIntegrator extends ReasonSocialIntegrator implements SocialA
 	 */
 	function social_account_run_error_checks($cm)
 	{
-		$account_id = $cm->get_value('account_id');
-		if ( !check_against_regexp($account_id, array('naturalnumber')) && !check_against_regexp($account_id, array('/^[a-z\d.]*$/i')) )
+		$account_id = $cm->get_value($this->element_prefix.'account_id');
+		if ( !$this->validate_account_id($account_id) )
 		{
-			$cm->set_error('account_id', 'Invalid format for Facebook ID. Please enter a numeric ID or a valid Facebook username');
+			$cm->set_error($this->element_prefix.'account_id', 'Invalid format for Facebook ID. Please enter a numeric ID or a valid Facebook username');
 		}
 		else
 		{
-			// lets actually look this up at graph search.
-			if ($details = $this->get_graph_info($account_id))
+			if (!$this->update_form_from_graph_info($account_id, $cm))
 			{
-				if (isset($details['link']))
-				{
-					$existing_details = json_decode($cm->get_value('account_details'), true);
-					$existing_details['link'] = $details['link'];
-					$cm->set_value('account_details', json_encode($existing_details));
-					if (isset($details['id']) && ($details['id'] != $account_id))
-					{
-						$cm->set_value('account_id', $details['id']);
-					}
-				}
-				else
-				{
-					$cm->set_error('account_id', 'Facebook does have a public link associated with that Facebook ID. Make sure you entered the ID correctly.');
-				}
-			}
-			else
-			{
-				$cm->set_error('account_id', 'Facebook does not recognize the ID that you entered.');
+				$cm->set_error($this->element_prefix.'account_id', 'Facebook does not recognize the ID that you entered.');
 			}
 		}
 		
 		// if we have a problem with account_id lets remove the account_link field.
-		if ($cm->has_error('account_id'))
+		if ($cm->has_error($this->element_prefix.'account_id'))
 		{
-			if ($cm->is_element('account_link'))
+			if ($cm->is_element($this->element_prefix.'account_link'))
 			{
-				$cm->remove_element('account_link');
+				$cm->remove_element($this->element_prefix.'account_link');
 			}
 		}
+	}
+	
+	/**
+	 * Determine whether the passed account ID conforms to Facebook standards
+	 * 
+	 * @param string $account_id
+	 * @return boolean
+	 */
+	public function validate_account_id($account_id)
+	{
+		return (check_against_regexp($account_id, array('naturalnumber')) || check_against_regexp($account_id, array('/^[a-z\d.]*$/i')));
+	}
+	
+	/**
+	 * Given an account ID, look it up using the Facebook Graph API and set the account_details
+	 * field appropriately.  Returns false on failure.
+	 * 
+	 * IMPORTANT NOTE: The Graph API as used here can only return information about completely 
+	 * public pages and groups. Closed groups or groups that are defined within another organization
+	 * will fail, even if they're perfectly valid.
+	 * 
+	 * @param string $account_id
+	 * @param object $cm
+	 * @return boolean
+	 */
+	public function update_form_from_graph_info($account_id, $cm)
+	{
+		if ($details = $this->get_graph_info($account_id))
+		{
+			if (isset($details['link']))
+			{
+				$existing_details = json_decode($cm->get_value($this->element_prefix.'account_details'), true);
+				$existing_details['link'] = $details['link'];
+				$cm->set_value($this->element_prefix.'account_details', json_encode($existing_details));
+				if (isset($details['id']) && ($details['id'] != $account_id))
+				{
+					$cm->set_value($this->element_prefix.'account_id', $details['id']);
+				}
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	/**
@@ -172,12 +199,13 @@ class ReasonFacebookIntegrator extends ReasonSocialIntegrator implements SocialA
 	 *
 	 * @return mixed array key value pairs for facebook graph id or boolean FALSE
 	 */
-	private function get_graph_info($id)
+	public function get_graph_info($id)
 	{
-		$url = 'http://graph.facebook.com/'.$id;
+		$url = 'https://graph.facebook.com/'.$id;
+		if (defined('FACEBOOK_API_APP_ID')) $url .= '?access_token='.FACEBOOK_API_APP_ID.'|'.FACEBOOK_API_APP_SECRET;
 		$json = carl_util_get_url_contents($url, false, '', '', 10, 5, true, false);
+
 		if ($json) return json_decode($json, true);
 		else return false;
 	}
 }
-?>

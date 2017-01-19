@@ -40,9 +40,21 @@ class ThorCore
 		'id' => 'int(11) NOT NULL AUTO_INCREMENT',
 		'submitted_by' => 'tinytext NOT NULL',
 		'submitter_ip' => 'tinytext NOT NULL',
-		'date_created' => 'timestamp default 0 NOT NULL',
-		'date_modified' => 'timestamp default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP',
+		'date_created' => 'timestamp default 0 NOT NULL', // when a record is created
+		'date_modified' => 'timestamp default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP', // when any row data changes
+		'date_user_submitted' => 'timestamp default 0 NOT NULL', // when a user submits from a userland/non-administrative interface
 		);
+	// date_created and date_user_submitted are developer-controlled dates.
+	// date_modified automatically updates when any other column value changes.
+	//
+	// date_created is intended to represent when a record first came into existance.
+	// date_user_submitted is intendeted to represent when the original user submits/updates a record,
+	//     not when an admin/maintainer/system updates a record
+	//     Therefore, date_user_submitted shouldn't be assigned inside core Thor functions, 
+	//     since Thor functions may be used in other context to update data dynamically
+	//     such as administrative interfaces or cron jobs
+	var $_stashed_sql_for_table_generation = "";
+	var $_stashed_structure = array();
 	
 	function ThorCore($xml = '', $table = '')
 	{
@@ -180,6 +192,8 @@ class ThorCore
 				elseif ($node->tagName == 'upload') {
 					$disco_obj->form_enctype = "multipart/form-data";
 					$this->_transform_upload($node, $disco_obj);
+				} elseif ($node->tagName == 'event_tickets') {
+					$this->_transform_event_tickets($node, $disco_obj);
 				}
 			}
 
@@ -255,7 +269,7 @@ class ThorCore
 		{
 			foreach ($xml->document->tagChildren as $node)
 			{
-				if (in_array($node->tagName, array('input', 'textarea', 'radiogroup', 'optiongroup', 'hidden')))
+				if (in_array($node->tagName, array('input', 'textarea', 'radiogroup', 'optiongroup', 'hidden', 'event_tickets')))
 				{
 					// just basic - get the disco value
 					$key = $node->tagAttrs['id'];
@@ -270,7 +284,7 @@ class ThorCore
 						$child_value = (!empty($value) &&  in_array($child_node->tagAttrs['value'], $value)) ? $child_node->tagAttrs['value'] : '';
 						$thor_values[$child_node->tagAttrs['id']] = $child_value;
 					}
-				}
+				} 
 			}
 		}
 		return $thor_values;
@@ -327,7 +341,12 @@ class ThorCore
 		if ($this->get_thor_table() && $values)
 		{
 			$this->create_table_if_needed(); // create the table if it does not exist
-			if (!isset($values['date_created'])) $values['date_created'] = get_mysql_datetime();
+			if (!isset($values['date_created'])){
+				$values['date_created'] = get_mysql_datetime();
+			}
+			if (!isset($values['date_user_submitted'])){
+				$values['date_user_submitted'] = get_mysql_datetime();
+			}
 			if (!get_current_db_connection_name()) connectDB($this->get_db_conn());
 			$reconnect_db = (get_current_db_connection_name() != $this->get_db_conn()) ? get_current_db_connection_name() : false;
 			if ($reconnect_db) connectDB($this->get_db_conn());
@@ -564,7 +583,6 @@ class ThorCore
 	 */
 	function get_rows_for_key($key, $key_column, $sort_field = '', $sort_order = '')
 	{
-		$table = $this->get_thor_table();
 		if ($this->get_thor_table() && (strlen($key) > 0) && $this->table_exists())
 		{
 			if (!get_current_db_connection_name()) connectDB($this->get_db_conn());
@@ -597,8 +615,7 @@ class ThorCore
 	
 	function get_rows($sort_field = '', $sort_order = '')
 	{
-		$table = $this->get_thor_table();
-		if ($this->get_thor_table())
+		if ($this->get_thor_table() && $this->table_exists())
 		{
 			if (!get_current_db_connection_name()) connectDB($this->get_db_conn());
 			$reconnect_db = (get_current_db_connection_name() != $this->get_db_conn()) ? get_current_db_connection_name() : false;
@@ -616,17 +633,20 @@ class ThorCore
   			if ($reconnect_db) connectDB($reconnect_db); // reconnect to default DB
   			return $result;
   		}
-  		else
+  		elseif (!$this->get_thor_table())
   		{
   			trigger_error('get_rows called but no table has been defined via the thorCore set_thor_table method');
   			return NULL;
+  		}
+		else
+  		{
+  			return array();
   		}
 	}
 	
 	function get_row_count()
 	{
-		$table = $this->get_thor_table();
-		if ($this->get_thor_table())
+		if ($this->get_thor_table() && $this->table_exists())
 		{
 			if (!get_current_db_connection_name()) connectDB($this->get_db_conn());
 			$reconnect_db = (get_current_db_connection_name() != $this->get_db_conn()) ? get_current_db_connection_name() : false;
@@ -637,11 +657,15 @@ class ThorCore
   			if ($reconnect_db) connectDB($reconnect_db); // reconnect to default DB
   			return $result['count'];
   		}
-  		else
+  		elseif (!$this->get_thor_table())
   		{
   			trigger_error('get_row_count called but no table has been defined via the thorCore set_thor_table method');
   			return NULL;
   		}
+		else
+		{
+			return 0;
+		}
 	}
 	
 	/**
@@ -649,7 +673,6 @@ class ThorCore
 	 */
 	function delete_by_primary_key($primary_key)
 	{
-		$table = $this->get_thor_table();
 		if ($this->get_thor_table() && (strlen($primary_key) > 0) )
 		{
 			$this->delete_file_storage_for_row($primary_key);
@@ -658,7 +681,7 @@ class ThorCore
 			$reconnect_db = (get_current_db_connection_name() != $this->get_db_conn()) ? get_current_db_connection_name() : false;
 			if ($reconnect_db) connectDB($this->get_db_conn());
 			$q = $this->get_delete_by_key_sql($primary_key, 'id');
-  			$res = mysql_query($q);
+  			mysql_query($q);
   			if ($reconnect_db) connectDB($reconnect_db); // reconnect to default DB
   			$this->delete_table_if_needed();
   			return true;
@@ -815,11 +838,25 @@ class ThorCore
   		return $this->_column_exists[$column];
 	}
 	
+	/**
+	 * Creates a SQL table
+	 * 
+	 * Will check $this->_stashed_sql_for_table_generation first and use the SQL
+	 * stashed in this variable first. When the variable is empty, the SQL 
+	 * to create the table is generated.
+	 * 
+	 * @return boolean|null returns TRUE when the table was created, FALSE on a possible
+	 *     creation error, and NULL when the table already exists
+	 */
 	function create_table()
 	{
 		if ($this->get_thor_table() && !$this->table_exists())
 		{
-			$sql = $this->get_create_table_sql();
+			if (!empty($this->_stashed_sql_for_table_generation)) {
+				$sql = $this->_stashed_sql_for_table_generation;
+			} else {
+				$sql = $this->get_create_table_sql();
+			}
 			if (!get_current_db_connection_name()) connectDB($this->get_db_conn());
 			$reconnect_db = (get_current_db_connection_name() != $this->get_db_conn()) ? get_current_db_connection_name() : false;
 			if ($reconnect_db) connectDB($this->get_db_conn());
@@ -850,6 +887,30 @@ class ThorCore
 		return false;
 	}
 	
+	/**
+	 * Store a snapshot of the current database structure and SQL.
+	 * 
+	 * To be used later when the table is generated.
+	 * 
+	 * Useful in situations where the thor xml is modified during runtime, like when
+	 * event ticket items are in use, but we want to original xml to drive 
+	 * the database table creation. All event ticket nodes are used to create 
+	 * a database table, but only one event ticket node is used during runtime
+	 * and presented to a user.
+	 * 
+	 * @return boolean TRUE on successful/first stash, FALSE if stashed info already exists
+	 */
+	function stash_current_structure_for_table_generation()
+	{
+		if (empty($this->_stashed_sql_for_table_generation)) {
+			$this->_stashed_structure = $this->_build_db_structure();
+			$this->_stashed_sql_for_table_generation = $this->get_create_table_sql();
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	function delete_table()
 	{
 		if ($this->get_thor_table() && $this->table_exists())
@@ -920,7 +981,7 @@ class ThorCore
 				$db_structure[$node->tagAttrs['id']]['type'] = 'text';
 			}
 			elseif ($node->tagName == 'hidden') {
-			$db_structure[$node->tagAttrs['id']]['type'] = 'tinytext';
+				$db_structure[$node->tagAttrs['id']]['type'] = 'text';
 			}
 			elseif (($node->tagName == 'radiogroup') || ($node->tagName == 'optiongroup')) {
 				$db_structure[$node->tagAttrs['id']]['type'] = 'enum';
@@ -938,12 +999,15 @@ class ThorCore
 			elseif ($node->tagName == 'upload') {
 				$db_structure[$node->tagAttrs['id']]['type'] = 'tinytext';
 			}
+			elseif ($node->tagName == 'event_tickets') {
+				$db_structure[$node->tagAttrs['id']]['type'] = 'tinytext';
+			}
 		}
 		return $db_structure;
 	}
 	
 	function _build_display_values()
-	{
+	{	
 		$xml = $this->get_thor_xml();
 		$display_values = array();
 		foreach ($xml->document->tagChildren as $k=>$v)
@@ -1043,6 +1107,14 @@ class ThorCore
 	{
 		$element_attrs = $element_obj->tagAttrs;
 		$type = 'file';
+		$display_values[$element_attrs['id']] = array('label' => $element_attrs['label'], 'type' => $type);
+		return $display_values;
+	}
+	
+	function _build_display_event_tickets($element_obj)
+	{
+		$element_attrs = $element_obj->tagAttrs;
+		$type = 'event_tickets';
 		$display_values[$element_attrs['id']] = array('label' => $element_attrs['label'], 'type' => $type);
 		return $display_values;
 	}
@@ -1230,10 +1302,115 @@ class ThorCore
 		if ( $required ) $d->add_required($id);
 	}
 	
+	function _transform_event_tickets($element, &$d)
+	{
+		$eventId = $element->tagAttrs['event_id'];
+		if(!$eventId) {
+			return;
+		}
+		
+		if (array_key_exists('num_total_available', $element->tagAttrs)) {
+			$numTotalAvailableForEvent = $element->tagAttrs['num_total_available'];
+		}
+		if (array_key_exists('max_per_person', $element->tagAttrs)) {
+			$numMaxPerPersonForEvent = $element->tagAttrs['max_per_person'];
+		}
+		if (array_key_exists('event_close_datetime', $element->tagAttrs)) {
+			$closeAfterDatetimeForEvent = $element->tagAttrs['event_close_datetime'];
+		}
+
+		// This is dynamically added to thor xml at runtime, but may be missing 
+		// in some admin views when the form isn't rendered
+		if (array_key_exists('remaining_seats', $element->tagAttrs)) {
+			$numTicketsCurrentlyRemaining = $element->tagAttrs['remaining_seats'];
+		} else {
+			$numTicketsCurrentlyRemaining = 100000;
+		}
+		
+		// If we don't have as max per person limit, use 1 ticket per person
+		if (intval($numMaxPerPersonForEvent) < 1) {
+			$numMaxPerPersonForEvent = 1;
+		}
+
+		// Generate list of number of tickets a person can select, being sensitive
+		// to the number of tickets still available (except when editing a form submission)
+		$allOptions = array();
+		$disabledOptions = array();
+		
+		$userInEditMode = !empty($_GET['table_row_action']) && $_GET['table_row_action'] == 'edit';
+		
+		foreach (range(0, $numMaxPerPersonForEvent) as $k => $tickentNum) {
+			$displayString = $tickentNum;
+			if ($tickentNum > $numTicketsCurrentlyRemaining && !$userInEditMode) {
+				$displayString .= " &mdash; unavailable";
+				$disabledOptions[] = $tickentNum;
+			}
+			$allOptions[] = $displayString;
+		}
+
+		$eventTitle = $element->tagAttrs['label'];
+
+		$discoArgs = array(
+			'options' => $allOptions,
+			'disabled_options' => $disabledOptions,
+			'multiple' => false,
+			'default' => 0,
+			'display_name' => "Number of seats for $eventTitle",
+			'add_null_value_to_top' => false,
+		);
+
+		$id = $element->tagAttrs['id'];
+
+		$d->add_element($id, 'select_no_sort', $discoArgs);
+		
+		$required = (!empty($element->tagAttrs['required'])) ? true : false;
+		if ($required) {
+			$d->add_required($id);
+		}
+	}
+
 	function _transform_submit($element_attributes, &$d)
 	{
 		$submit = (!empty($element_attributes['submit'])) ? $element_attributes['submit'] : '';
 		$d->actions = Array( 'submit' => $submit);
+	}
+	
+	/**
+	 * Get 'thor_info' and a 'submitted_value' field out of the form
+	 * 
+	 * Submitted value only present on post requests
+	 * 
+	 * @param Disco $disco_obj
+	 * @param int $filter_event_id limit results to this event id
+	 * @return array array of event ticket info with keys 'thor_info' and 'submitted_value' for each
+	 */
+	function get_event_tickets_thor_info($disco_obj, $filter_event_id = 0)
+	{
+		$xml = $this->get_thor_xml();
+		$thor_values = array();
+		if ($xml && $disco_obj) {
+			foreach ($xml->document->tagChildren as $node) {
+				if ($node->tagName == 'event_tickets') {
+					if ($filter_event_id != 0 && $node->tagAttrs['event_id'] != $filter_event_id) {
+						continue;
+					}
+					
+					// Inject runtime default values mentioned in formbuilder tool
+					if (!array_key_exists('num_total_available', $node->tagAttrs) || $node->tagAttrs['num_total_available'] === "") {
+						$node->tagAttrs['num_total_available'] = 100000;
+					}
+					if (!array_key_exists('max_per_person', $node->tagAttrs) || $node->tagAttrs['max_per_person'] === "") {
+						$node->tagAttrs['max_per_person'] = 1;
+					}
+					
+					$thor_values[] = array(
+						'thor_info' => $node->tagAttrs,
+						'submitted_value' => $disco_obj->get_value($node->tagAttrs['id']), // false when empty
+					);
+				}
+			}
+		}
+		return $thor_values;
 	}
 }
 ?>

@@ -58,14 +58,14 @@ $(document).ready(function()
 	function init()
 	{
 		// lets grab our salient existing DOM elements once right here.
-		var lat_row = $("tr#latitudeRow");
-		var long_row = $("tr#longitudeRow");
-		var auto_update_row = $("tr#autoupdatecoordinatesRow");	
+		var lat_row = $("#latitudeItem");
+		var long_row = $("#longitudeItem");
+		var auto_update_row = $("#autoupdatecoordinatesItem");	
 			
 		// lets clone the structure of a disco row, then replace it with our map element
-		map_row = lat_row.clone().attr("id", "mapRow");
-		$("td.words", map_row).text('Map:');
-		$("td.element", map_row).html(map_container);
+		map_row = lat_row.clone().attr("id", "mapItem");
+		$(".words .labelText", map_row).text('Map:');
+		$("div.element", map_row).html(map_container);
 		
 		lat_row.before(map_row);
 		lat_row.hide();
