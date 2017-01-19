@@ -207,7 +207,17 @@ ReasonCKImage.prototype.displayImages = function (images_array) {
     }
     imagesContainer.setHtml(imagesHTML);
     this.updatePagination();
-}
+};
+
+ReasonCKImage.prototype.findSelectedImageInItems = function(selectedImageId) {
+    for (var i = 0; i < this.displayedItems.length; i++) {
+        var id = this.displayedItems[i].id;
+        if (id && parseInt(id) === selectedImageId) {
+            return this.displayedItems[i];
+        }
+    }
+};
+
 
 
 
@@ -241,7 +251,6 @@ ReasonCKImageDialogItem.prototype.description = '';
 ReasonCKImageDialogItem.prototype.displayItem = function (selected, size) {
     var selectedImageClass = (selected == true) ? " selectedImage" : "";
     if (selected && !!size) {
-        console.log("Could update controls here...");
         var dialog = CKEDITOR.dialog.getCurrent()
         var sizeElement = dialog.getContentElement('tab-existing', 'ex-size');
         sizeElement.setup(size);
@@ -263,6 +272,7 @@ CKEDITOR.dialog.add( 'reasonImageDialog', function( editor ) {
 
     const MIN_WIDTH = 425;
     const MIN_HEIGHT = 400;
+
     var dialogDefinition = {
         // Basic properties of the dialog window: title, minimum size.
         title: 'Insert/Edit image',
@@ -290,10 +300,23 @@ CKEDITOR.dialog.add( 'reasonImageDialog', function( editor ) {
                         style: 'display: inline-block',
                         setup: function(element) {
                             // can't determine full or thumb reliably based on the HTML element
-                            // could add data attribute on the inserted images but that adds markup
-                            // and would not be present on existing content
+                            // so you need to pass it in...
                             if (!!element && (typeof element == 'string')) {
                                 this.setValue(element);
+                            }
+                        },
+                        onChange: function( api ) {
+                            // the idea is to update all elements in all tabs of the dialog when settings are
+                            // changed, work in progress.
+                            var webLocationElement = this._.dialog.getContentElement('tab-web', 'web-location');
+                            newImgElement = editor.document.createElement('img');
+                            sizeType = this.getValue();
+                            var selectedImageElement = $('figure.selectedImage');
+                            if (selectedImageElement.length > 0) {
+                                debugger;
+                                var selectedImageId = selectedImageElement.data().imageId;
+                                var selectedItem = this.getDialog().imageHandler.findSelectedImageInItems(selectedImageId);
+                                webLocationElement.setValue(selectedItem.URLs[sizeType]);
                             }
                         },
                     },
@@ -307,7 +330,13 @@ CKEDITOR.dialog.add( 'reasonImageDialog', function( editor ) {
                         setup: function( element ) {
                             var styleAttribute = element.getStyle( "float" );
                             this.setValue(styleAttribute);
-                        }
+                        },
+                        onChange: function( api ) {
+                            // the idea is to update all elements in all tabs of the dialog when settings are
+                            // changed, work in progress.
+                            var webAlignmentElement = this._.dialog.getContentElement('tab-web', 'web-alignment');
+                            if (webAlignmentElement) webAlignmentElement.setValue(this.getValue());
+                        },
                     },
                     {
                         // Window where images and captions are displayed
@@ -348,6 +377,10 @@ CKEDITOR.dialog.add( 'reasonImageDialog', function( editor ) {
                             var src = element.getAttribute('src');
                             this.setValue(src);
                         },
+                        onChange: function(api) {
+                            if (api.sender.id === 'web-location')
+                                $('figure').removeClass('selectedImage');
+                        },
                     },
                     {
                         type: 'text',
@@ -357,9 +390,6 @@ CKEDITOR.dialog.add( 'reasonImageDialog', function( editor ) {
                             var src = element.getAttribute('alt');
                             this.setValue(src);
                         },
-                        commit: function( element ) {
-                            element.setAttribute(this.getValue());
-                        }
                     },
                     {
                         type: 'radio',
@@ -371,7 +401,14 @@ CKEDITOR.dialog.add( 'reasonImageDialog', function( editor ) {
                         setup: function( element ) {
                             var styleAttribute = element.getStyle( "float" );
                             this.setValue(styleAttribute);
-                        }
+                        },
+                        onChange: function( api ) {
+                            // the idea is to update all elements in all tabs of the dialog when settings are
+                            // changed, work in progress.
+                            var exAlignmentElement = this._.dialog.getContentElement('tab-ex', 'ex-alignment');
+                            if (exAlignmentElement) exAlignmentElement.setValue(this.getValue());
+                        },
+
                     },
                 ]
             }
@@ -400,7 +437,7 @@ CKEDITOR.dialog.add( 'reasonImageDialog', function( editor ) {
                 imageHandler.displayImages();
             });
 
-            $(document).on('click', 'figure', function() {
+            function handleSelectedImage() {
                 if ($(this).hasClass('selectedImage')) {
                     $(this).removeClass('selectedImage');
                 }
@@ -408,6 +445,10 @@ CKEDITOR.dialog.add( 'reasonImageDialog', function( editor ) {
                     $(this).siblings('figure').removeClass('selectedImage');
                     $(this).addClass('selectedImage');
                 }
+            }
+
+            $(document).on('click', 'figure', function() {
+                handleSelectedImage.call(this);
             });
         },
 
@@ -419,10 +460,11 @@ CKEDITOR.dialog.add( 'reasonImageDialog', function( editor ) {
                 element = element.getAscendant( 'img', true );
 
             if ( element && element.getName() == 'img' ) {
+                // We are editing an img that was already there
                 this.imageHandler.elementToEdit = element;
-                this.setupContent( element );
+                this.setupContent(element);
             } else {
-                // reset
+                // reset the handler;
                 this.imageHandler.elementToEdit = undefined;
             }
 
@@ -431,39 +473,38 @@ CKEDITOR.dialog.add( 'reasonImageDialog', function( editor ) {
                 $('figure').removeClass('selectedImage');
                 this.imageHandler.displayImages();
             }
-
         },
 
         // Method is invoked once a user clicks the OK button, confirming the dialog.
         onOk: function() {
-            // Create a new img url link
+            // Create a new img for insertion
             var reason_image = editor.document.createElement('img');
 
+            var description = this.getValueOf('tab-web', 'web-description');
             if (this._.currentTabId == 'tab-existing') {
                 var selectedImageElement = $('figure.selectedImage');
                 if (selectedImageElement.length > 0) {
+
                     var selectedImageId = selectedImageElement.data().imageId;
-                    var selectedItem;
-                    for (var i = 0; i < this.imageHandler.displayedItems.length; i++) {
-                        var id = this.imageHandler.displayedItems[i].id;
-                        if (id && parseInt(id) === selectedImageId) {
-                            selectedItem = this.imageHandler.displayedItems[i];
-                            break;
-                        }
-                    }
+                    var selectedItem = this.imageHandler.findSelectedImageInItems(selectedImageId);
+
                     if (selectedItem) {
-                        imageType = this.getValueOf('tab-existing', 'ex-size');
-                        altText = selectedItem.description;
-                        reason_image.setAttribute('src', selectedItem.URLs[imageType]);
-                        reason_image.setAttribute('alt', altText);
+                        sizeType = this.getValueOf('tab-existing', 'ex-size');
+                        reason_image.setAttribute('src', selectedItem.URLs[sizeType]);
+                        // need to be sure that the tab-web fields get updated when a new images is selected in the tab-existing
+                        if (!description) description = selectedItem.description;
+                        reason_image.setAttribute('alt', description);
                         reason_image.setAttribute('style', 'float: ' + this.getValueOf('tab-existing', 'ex-alignment'));
                     }
                 }
+
             } else if (this.getValueOf('tab-web', 'web-location') !== '') {
                 reason_image.setAttribute('src', this.getValueOf('tab-web', 'web-location'));
-                reason_image.setAttribute('alt', this.getValueOf('tab-web', 'web-description'));
+                reason_image.setAttribute('alt', description);
                 reason_image.setAttribute('style', 'float: ' + this.getValueOf('tab-web', 'web-alignment'));
             }
+
+            // debugger;
             // Insert the element into the editor at the caret position.
             editor.insertElement(reason_image);
         }
