@@ -119,6 +119,7 @@
 			{
 				$this->entity = new entity( $id, false );
 				$this->entity->get_values();
+				//$this->entity->get_relationships();
 			}
 			
 			

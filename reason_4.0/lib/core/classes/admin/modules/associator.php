@@ -381,3 +381,4 @@ class AssociatorModule extends DefaultModule // {{{
 		echo '</div>'."\n"; //associatorModule
 	} // }}}
 } // }}}	
+?>

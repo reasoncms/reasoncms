@@ -84,6 +84,11 @@ class ReasonAdminToolsModule extends DefaultModule
 					'description' => 'Lists themes and theme elements that are not currently in use',
 					'safety_level' => 'safe',
 				),
+				'?cur_module=OldThemes' => array(
+					'title' => 'List Old Themes',
+					'description' => 'Lists themes that were created before a given date',
+					'safety_level' => 'safe',
+				),
 				'?site_id='.id_of('master_admin').'&cur_module=TopLevelNavAnalysis' => array(
 					'title' => 'Site Structure Analysis',
 					'description' => 'Describes the top level navigation used by each site.',
@@ -99,7 +104,11 @@ class ReasonAdminToolsModule extends DefaultModule
 					'description' => 'Lists all the people who receive email notification when Reason forms are submitted',
 					'safety_level' => 'safe',
 				),
-								
+				'?site_id='.id_of('master_admin').'&cur_module=NoRelReport' => array(
+					'title' => 'No Relationships Report',
+					'description' => 'Lists entities with or without specific relationships',
+					'safety_level' => 'safe',
+				),	
 			),
 			'Content Actions' => array(
 				REASON_HTTP_BASE_PATH.'scripts/urls/update_urls.php' => array(

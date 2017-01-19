@@ -1179,15 +1179,15 @@
 			'main' => 'form_content',
 			'main_post' => 'form'
 		),
-                'form_no_nav_no_sidebar' => array(
-                        'navigation' => '',
-                        'sub_nav_2' => '',
-                        'sub_nav' => '',
-                        'main' => 'form_content',
-                        'main_post' => 'form',
+		'form_no_nav_no_sidebar' => array(
+			'navigation' => '',
+			'sub_nav_2' => '',
+			'sub_nav' => '',
+			'main' => 'form_content',
+			'main_post' => 'form',
 			'pre_sidebar' => '',
 			'sidebar' => '',
-                	'post_sidebar' => '',
+			'post_sidebar' => '',
 		),
 		'form_sidebar_blurbs' => array(
 			'main' => 'form_content',
@@ -2238,7 +2238,7 @@
 				'gallery_single_page',
 				'gallery_entire_site',
 	);
-
+	
 	if (reason_file_exists('minisite_templates/page_types_local.php'))
 	{
 		reason_include_once('minisite_templates/page_types_local.php');
@@ -2251,3 +2251,4 @@
 			$GLOBALS['_reason_deprecated_modules'] = array_merge($GLOBALS['_reason_deprecated_modules'],$GLOBALS['_reason_deprecated_modules_local']);
 		}
 	}
+?>
