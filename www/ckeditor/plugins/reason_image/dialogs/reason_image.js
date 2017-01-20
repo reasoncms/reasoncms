@@ -270,8 +270,8 @@ CKEDITOR.dialog.add( 'reasonImageDialog', function( editor ) {
     var dialog;
 
 
-    const MIN_WIDTH = 425;
-    const MIN_HEIGHT = 400;
+    var MIN_WIDTH = 425;
+    var MIN_HEIGHT = 400;
 
     var dialogDefinition = {
         // Basic properties of the dialog window: title, minimum size.
