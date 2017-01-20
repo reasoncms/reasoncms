@@ -1,7 +1,7 @@
 #Reason Developer Documentation
 
-[Installation & Configuration](installation/)
+[Installation & Configuration](installation/index.md)
 
-[Quick Start](quickstart/)
+[Quick Start](quickstart/index.md)
 
-[Reason Development Reference](reference/)
+[Reason Development Reference](reference/index.md)
