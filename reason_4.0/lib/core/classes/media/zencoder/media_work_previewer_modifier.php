@@ -89,7 +89,6 @@ class ZencoderMediaWorkPreviewerModifier implements MediaWorkPreviewerModifierIn
 		$vals = $this->previewer->_entity->get_values();
 		unset($vals['salt']);
 		$this->previewer->show_all_values($vals);
-		$this->previewer->end_table();
 	}
 	
 	/**
@@ -148,22 +147,10 @@ class ZencoderMediaWorkPreviewerModifier implements MediaWorkPreviewerModifierIn
 	
 	/**
 	 * Displays an embed field.
-	 */ 
+	 */
 	private function _show_embed_item($field, $value)
 	{
-		echo '<tr id="'.str_replace(' ', '_', $field).'_Row">';
-		$this->previewer->_row = $this->previewer->_row%2;
-		$this->previewer->_row++;
-
-		echo '<td class="listRow' . $this->previewer->_row . ' col1">';
-		if($lock_str = $this->previewer->_get_lock_indication_string($field))
-			echo $lock_str . '&nbsp;';
-		echo prettify_string( $field );
-		if( $field != '&nbsp;' ) echo ':';
-		echo '</td>';
-		echo '<td class="listRow' . $this->previewer->_row . ' col2"><input id="'.$field.'Element" type="text" readonly="readonly" size="50" value="'.htmlspecialchars($value).'"></td>';
-
-		echo '</tr>';
+		$this->previewer->show_item_default( $field , '<input id="'.$field.'Element" type="text" readonly="readonly" size="50" value="'.htmlspecialchars($value).'">' );
 	}
 
 	private function _add_original_link($entity)

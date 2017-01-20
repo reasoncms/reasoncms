@@ -78,16 +78,25 @@
 		 */
 		function run() // {{{
 		{
+			echo '<div id="preview">'."\n";
 			$this->pre_show_entity();
 			$this->display_entity();
+			$this->pre_show_relationships();
 			$this->display_relationships();
 			$this->post_show_entity();
+			echo '</div>'."\n";
 		} // }}}
 
 		/**
 		 * Meant for overloading.  Will show something before the entity is previewed
 		 */
 		function pre_show_entity() // {{{
+		{
+		} // }}}
+		/**
+		 * Meant for overloading.  Will show something between the entity fields and relationships
+		 */
+		function pre_show_relationships() // {{{
 		{
 		} // }}}
 		/**
@@ -102,9 +111,9 @@
 		 */
 		function display_entity() // {{{
 		{
-			$this->start_table();
+			echo '<div class="itemData">'."\n";
 			$this->show_all_values( $this->_entity->get_values() );
-			$this->end_table();
+			echo '</div>';
 		} // }}}
 		/**
 		 * Function called which displays relationship info about the entity
@@ -338,10 +347,6 @@
 		} // }}}
 		function start_table() // {{{
 		{
-			$this->_row = 1;
-			echo '<div id="preview">'."\n";
-			echo '<table class="itemData" summary="A comprehensive view of this item\'s data">'."\n";
-			echo '<tr><th class="col1">Field Name</th><th class="col2">Value</th></tr>'."\n";
 		} // }}}
 		function show_all_values( $values ) // {{{
 		{
@@ -362,8 +367,7 @@
 		} // }}}
 		function end_table() // {{{
 		{
-			echo '</table>';
-			echo '</div>'."\n";
+			trigger_error('end_table() is deprecated.');
 		} // }}}
 		
 		/**
@@ -375,19 +379,15 @@
 		 */
 		function show_item_default( $field , $value ) // {{{
 		{
-			echo '<tr>';
-			$this->_row = $this->_row%2;
-			$this->_row++;
-
-			echo '<td class="listRow' . $this->_row . ' col1">';
+			echo '<div class="listRow">';
+			echo '<h4 class="field"">';
 			if($lock_str = $this->_get_lock_indication_string($field))
 				echo $lock_str . '&nbsp;';
 			echo prettify_string( $field );
-			if( $field != '&nbsp;' ) echo ':';
-			echo '</td>';
-			echo '<td class="listRow' . $this->_row . ' col2">' . ( ($value OR (strlen($value) > 0)) ? $value : '<em>(No value)</em>' ). '</td>';
+			echo '</h4>';
+			echo '<div class="value">' . ( ($value OR (strlen($value) > 0)) ? $value : '<em>(No value)</em>' ). '</div>';
 
-			echo '</tr>';
+			echo '</div>';
 		} // }}}
 		
 		function _get_lock_indication_string($field)

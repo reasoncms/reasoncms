@@ -8,11 +8,11 @@
 $(document).ready(function()
 {
 	var menuState = new Array();
-	menuState["none"]= new Array("frequencyRow","sundayRow", "mondayRow", "tuesdayRow", "wednesdayRow", "thursdayRow", "fridayRow", "saturdayRow", "enddateRow", "monthlyrepeatRow");
-	menuState["daily"]= new Array("sundayRow", "mondayRow", "tuesdayRow", "wednesdayRow", "thursdayRow", "fridayRow", "saturdayRow", "monthlyrepeatRow");
-	menuState["weekly"]= new Array("monthlyrepeatRow");
-	menuState["monthly"]= new Array("sundayRow", "mondayRow", "tuesdayRow", "wednesdayRow", "thursdayRow", "fridayRow", "saturdayRow");
-	menuState["yearly"]= new Array("sundayRow", "mondayRow", "tuesdayRow", "wednesdayRow", "thursdayRow", "fridayRow", "saturdayRow", "monthlyrepeatRow");
+	menuState["none"]= new Array("frequencyItem","sundayItem", "mondayItem", "tuesdayItem", "wednesdayItem", "thursdayItem", "fridayItem", "saturdayItem", "enddateItem", "monthlyrepeatItem");
+	menuState["daily"]= new Array("sundayItem", "mondayItem", "tuesdayItem", "wednesdayItem", "thursdayItem", "fridayItem", "saturdayItem", "monthlyrepeatItem");
+	menuState["weekly"]= new Array("monthlyrepeatItem");
+	menuState["monthly"]= new Array("sundayItem", "mondayItem", "tuesdayItem", "wednesdayItem", "thursdayItem", "fridayItem", "saturdayItem");
+	menuState["yearly"]= new Array("sundayItem", "mondayItem", "tuesdayItem", "wednesdayItem", "thursdayItem", "fridayItem", "saturdayItem", "monthlyrepeatItem");
 	
 	var freqState = new Array();
 	freqState["none"] = '';
@@ -49,7 +49,7 @@ $(document).ready(function()
 	{	
 		for (var i = 0; i < menuState["none"].length; i++)
 		{
-			$("tr#"+menuState["none"][i]).show();
+			$("#"+menuState["none"][i]).show();
 		}
 	}
 	
@@ -58,7 +58,7 @@ $(document).ready(function()
 		index = index || "none";
 		for (var i = 0; i < menuState[index].length; i++)
 		{
-			$("tr#"+menuState[index][i]).hide();
+			$("#"+menuState[index][i]).hide();
 		}
 	}
 	

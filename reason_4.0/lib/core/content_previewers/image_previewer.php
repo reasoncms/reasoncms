@@ -16,9 +16,8 @@
 	{
 		// Revised Jan./2012 by Nick Jones to use standard Reason image_tools library for naming 
 		// convention of files
-		function display_entity() // {{{
+		function pre_show_entity() // {{{
 		{
-			$this->start_table();
 			$id = $this->_entity->id();
 			
 			// Full Size Image
@@ -48,13 +47,6 @@
 					$this->show_item_default( 'Hi-Res Image' , '<a href="'.WEB_PHOTOSTOCK.$original_name.'">View original image </a>' );
 				}
 			}
-			
-			$this->show_item_default( 'Custom sizes' , '<a href="'.carl_make_link(array('cur_module'=>'ImageSizer')).'">Get this image at a custom size</a>' );
-			
-			// Everything Else
-			$this->show_all_values( $this->_entity->get_values() );
-			
-			$this->end_table();
 		} // }}}
 		function show_item_name( $field , $value ) // {{{
 		{

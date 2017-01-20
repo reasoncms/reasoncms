@@ -16,7 +16,7 @@
 	 * type. See the faculty_staff module for more info.
 	 *
 	 */
-	class faculty_staff_handler extends ContentManager 
+	class faculty_staff_handler extends ContentManager
 	{
 		var $ldap_field_mapping = array(
 										'ds_fullname'=>'Name',
@@ -32,7 +32,7 @@
 			$this->change_element_type( 'degrees' , 'hidden' );
 			$this->remove_element( 'author' );
 			$this->hide_elements();
-			
+
 			$info = $this->get_person_info();
 			$pre = '';
 			$post = '';
@@ -40,12 +40,13 @@
 			{
 				$this->add_element('directory_info','commentWithLabel',array('text'=>$info));
 				$pre = 'Additional ' ;
-				$post = '<br /><span class="smallText">(This will appear below directory info)</span>';
+				$post = '<span class="smallText">(This will appear below directory info)</span>';
+				$this->set_comments('content', $post, 'after');
 			}
-			$this->set_display_name('content',$pre.'Personal Information'.$post);
-			
+			$this->set_display_name('content',$pre.'Personal Information');
+
 			$this->change_element_type( 'content' , html_editor_name($this->admin_page->site_id) , html_editor_params($this->admin_page->site_id, $this->admin_page->user_id) );
-			
+
 			if( !reason_user_has_privs( $this->admin_page->user_id , 'manage_integration_settings' ) )
 				$this->change_element_type( 'ldap_created' , 'hidden' );
 			else
@@ -119,7 +120,7 @@
 		{
 			return '<a href="mailto:'.urlencode($email).'">'.htmlspecialchars($email, ENT_QUOTES).'</a>';
 		} // }}}
-		
+
 		function run_error_checks()
 		{
 			// make sure an entity with the same name is not already on the site - if so, throw an error

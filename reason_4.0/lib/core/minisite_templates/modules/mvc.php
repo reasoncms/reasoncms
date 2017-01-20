@@ -3,7 +3,7 @@
  * @package reason
  * @subpackage minisite_modules
  */
- 
+
 /**
  * Include the base class & dependencies, and register the module with Reason
  */
@@ -23,9 +23,9 @@ $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'ReasonMVCMo
  * - Module system specific concerns like breadcrumbs, inline editing, head items, standalone API, etc should be handled in a module.
  * - The configuration of an MVC combination is dependent upon the request variables.
  * - You want to specify default views and models so that page types can just pass in configuration params.
- * 
- * In effect, when extended the module itself becomes something of a super controller. It is generally a good idea to keep module specific 
- * logic out of a controller such that the MVC components can easily be used anywhere - not just in the module system. A controller should 
+ *
+ * In effect, when extended the module itself becomes something of a super controller. It is generally a good idea to keep module specific
+ * logic out of a controller such that the MVC components can easily be used anywhere - not just in the module system. A controller should
  * never have any dependencies on the module system or template itself.
  *
  * A page_type can use this module directly in a couple ways:
@@ -60,24 +60,24 @@ class ReasonMVCModule extends DefaultMinisiteModule
 	var $acceptable_params = array('controller' => '',
 								   'model' => '',
 								   'view' => '');
-	
+
 	/**
 	 * @param string file name of the default view
 	 */
 	var $view;
-	
+
 	/**
 	 * @param string file name of the default model
 	 */
 	var $model;
-	
+
 	/**
 	 * @param string file name of the default controller
 	 */
 	var $controller;
-	
+
 	protected $content;
-	
+
 	// set everything up and get the model data.
 	function init( $args = array() )
 	{
@@ -89,12 +89,12 @@ class ReasonMVCModule extends DefaultMinisiteModule
 	{
 		return (!empty($this->content));
 	}
-	
+
 	function run()
 	{
 		echo $this->content;
 	}
-	
+
 	final protected function get_controller()
 	{
 		if (!isset($this->_controller))
@@ -110,7 +110,7 @@ class ReasonMVCModule extends DefaultMinisiteModule
 		}
 		return $this->_controller;
 	}
-	
+
 	final private function get_model()
 	{
 		if (!isset($this->_model))
@@ -124,7 +124,7 @@ class ReasonMVCModule extends DefaultMinisiteModule
 		}
 		return $this->_model;
 	}
-	
+
 	final private function get_view()
 	{
 		if (!isset($this->_view))
@@ -138,7 +138,7 @@ class ReasonMVCModule extends DefaultMinisiteModule
 		}
 		return $this->_view;
 	}
-	
+
 	/**
 	 * Include a file if needed - we allow a relative path from minisite_templates/modules/ or an absolute path.
 	 */
@@ -151,7 +151,7 @@ class ReasonMVCModule extends DefaultMinisiteModule
 		}
 		if (!empty($params['file']) || !empty($this->$type)) // we need to do an include
 		{
-			if (empty($params['file']) || !empty($this->$type)) $params['file'] = $this->$type;	
+			if (empty($params['file']) && !empty($this->$type)) $params['file'] = $this->$type;
 			if (reason_file_exists('minisite_templates/modules/'.$params['file']))
 			{
 				reason_include_once('minisite_templates/modules/'.$params['file']);
@@ -187,7 +187,7 @@ class ReasonMVCModule extends DefaultMinisiteModule
 			return $obj;
 		}
 	}
-	
+
 	/**
 	  * This may be overridden by extending modules to pass other useful things to models, views, or controllers
 	  * (e.g. passing head_items to a view).
