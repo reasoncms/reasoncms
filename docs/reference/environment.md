@@ -30,6 +30,6 @@ include_once('reason_header.php');
 
 reason_include_once('classes/entity.php');
 
-$e - new entity(id_of('type'));
+$e = new entity(id_of('type'));
 echo $e->get_value('name');`
 ```
