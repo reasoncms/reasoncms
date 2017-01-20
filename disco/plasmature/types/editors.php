@@ -494,6 +494,7 @@ class ck_editorType extends textareaType
 			// ckeditor.js is already minified
 			$js = '<script language="javascript" type="text/javascript" src="'.CKEDITOR_HTTP_PATH.'ckeditor.js"></script>'."\n";
 
+			// TODO remove this optional line for production
 			// OPTIONAL for DEVELOPMENT (busts the cache on every page load, not for production):
 			$js .= '<script language="javascript" type="text/javascript">CKEDITOR.timestamp=new Date().getTime();</script>';
 
@@ -529,7 +530,7 @@ class ck_editorType extends textareaType
 			{
 				$css = '';
 				foreach ($external_css as $css_file)
-				{
+				{	// TODO: remove the time() query string "cache buster" for production
 					$css .= '<link rel="stylesheet" type="text/css" href="' . $css_file . '?' . time() .'" />'."\n";
 				}
 			}

@@ -5,8 +5,8 @@ CKEDITOR.plugins.add( 'reason_image', {
         // console.log(editor.config.customValues.reason_http_base_path);
     	// Define editor command that opens the reason image dialog window
     	editor.addCommand('reason_image', new CKEDITOR.dialogCommand('reasonImageDialog',{
-            allowedContent: 'img[alt,src,style]',
-            // customValues: editor.config.customValues,
+            allowedContent: 'img[alt,src]{float}',
+            context: 'img',
         }));
         editor.ui.addButton( 'reason_image', {
             label: 'Insert Image',

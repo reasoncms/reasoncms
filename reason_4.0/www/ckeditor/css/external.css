@@ -10,6 +10,7 @@
 #image-list {
     overflow-y: scroll;
     height: 335px;
+    clear:both;
 }
 
 #image-list .selectedImage {
@@ -43,5 +44,30 @@
     width:125px;
     white-space: normal;
     margin-top: 5px;
+}
+
+.cke-pagination {
+    /*display: inline-block;*/
+    /*float:right;*/
+}
+
+.cke-pagination .pagination-wrapper div {
+    float: left;
+    /*width: 33%;*/
+}
+
+.cke-pagination span {
+    padding: 0 10px;
+    /*text-align: center;*/
+}
+
+.cke-pagination .nextImagePage {
+    /*text-align: right;*/
+}
+
+.cke-pagination .pagination-wrapper {
+    width:50%;
+    margin: 0 auto;
+
 }
 /* END reason_image image grid styles */
