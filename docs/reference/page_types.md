@@ -68,3 +68,21 @@ Page locations in the default template are:
 - post_foot
 - edit_link
 
+##Passing parameters to a module
+
+Reason modules can be given parameters that alter their behavior. For example, if the siblings module is passed a true value for "provide_images" if will output the first image for each sibling page.
+
+To do this, the string value used above for this page location is converted into an array. The module filename is given the key "module", and other parameters are key-value pairs on this array.
+
+Example:
+
+
+```php
+$GLOBALS['_reason_page_types_local'] = array(
+	'my_page_type' => array(
+		'main_post' => array(
+			'module' => 'siblings',
+			'provide_images' => true,
+		),
+	),
+);
