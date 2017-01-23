@@ -115,7 +115,14 @@
 			$script = '<script type="text/plain" id="event_rel_info">' . $json . '</script>';
 			$this->add_element('event_rel_info', 'comment', array('text' => $script));
 
-
+			// Stash a privs flag in the page source for the JS 
+			// to pick up client side. This flag shows hidden admin-only
+			// fields in the formbuilder tool.
+			$has_advanced = reason_user_has_privs($this->admin_page->user_id, 'edit_form_advanced_options');
+			$user_options_json = json_encode(array("user_has_advanced_options" => $has_advanced));
+			$script = '<script type="text/plain" id="user_options_json">' . $user_options_json . '</script>';
+			$this->add_element('user_options_json', 'comment', array('text' => $script));
+			
 			$this->set_element_properties('submission_limit', array('size'=>'4'));
 			// echo "<HR>using thor version...[" . USE_THOR_VERSION . "]<hr>";
             

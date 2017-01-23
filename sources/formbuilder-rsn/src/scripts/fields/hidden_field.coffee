@@ -19,6 +19,7 @@ Formbuilder.registerField 'hidden_field',
       <textarea data-rv-input='model.<%= Formbuilder.options.mappings.DESCRIPTION %>'
         placeholder='Add some data to this hidden field'></textarea>
     </div>
+    <%= Formbuilder.templates['edit/admin_only_footer']() %>
   """
 
   instructionDetails: """

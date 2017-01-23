@@ -229,6 +229,7 @@
       attrs = _.clone(this.model.attributes);
       delete attrs['id'];
       attrs['label'] += ' Copy';
+      attrs['prefill_key'] = '';
       return this.parentView.createField(attrs, {
         position: this.model.indexInDOM() + 1
       });
@@ -283,7 +284,7 @@
     };
 
     EditFieldView.prototype.render = function() {
-      var allowTypeChange, dvalIsEmpty, ref;
+      var allowTypeChange, dvalIsEmpty, ref, userIsReasonAdmin;
       dvalIsEmpty = Formbuilder.helpers.fieldIsEmptyOrNull(this.model.get(Formbuilder.options.mappings.DEFAULT_VALUE));
       this.model.attributes.displayDefaultValueUI = !dvalIsEmpty;
       this.$el.html(Formbuilder.templates["edit/base" + (!this.model.is_input() ? '_non_input' : '')]({
@@ -327,6 +328,14 @@
           } else {
             $("#fieldDisplayNonEditable").css("display", "block");
             return $("#fieldDisplayEditable").remove();
+          }
+        };
+      })(this)), 10);
+      userIsReasonAdmin = Formbuilder.options.IS_REASON_ADMIN;
+      setTimeout(((function(_this) {
+        return function() {
+          if (userIsReasonAdmin) {
+            return $(".fb-reason-admin-only").css("display", "block");
           }
         };
       })(this)), 10);
@@ -1173,6 +1182,7 @@
       FORCE_BOTTOM_SUBMIT: true,
       REQUIRED_DEFAULT: true,
       ALLOW_TYPE_CHANGE: false,
+      IS_REASON_ADMIN: false,
       UNLISTED_FIELDS: ['submit_button'],
       mappings: {
         SIZE: 'field_options.size',
@@ -1181,6 +1191,7 @@
         DEFAULT_VALUE: 'default_value',
         FIELD_TYPE: 'field_type',
         REQUIRED: 'required',
+        PREFILL_KEY: 'prefill_key',
         ADMIN_ONLY: 'admin_only',
         OPTIONS: 'field_options.options',
         DESCRIPTION: 'field_options.description',
@@ -1615,7 +1626,7 @@
     order: 10,
     type: 'non_input',
     view: "<label class=\"preview-only\">" + localPrettyName + "</label>\n<label class='section-name'><%= rf.get(Formbuilder.options.mappings.LABEL) %></label>\n<pre><code><%= _.escape(rf.get(Formbuilder.options.mappings.DESCRIPTION)) %></code></pre>",
-    edit: "<div class='fb-label-description'>\n  <div class='fb-edit-section-header'>Label</div>\n  <input type='text' data-rv-input='model.<%= Formbuilder.options.mappings.LABEL %>' />\n  <div class='fb-edit-section-header'>Data</div>\n  <textarea data-rv-input='model.<%= Formbuilder.options.mappings.DESCRIPTION %>'\n    placeholder='Add some data to this hidden field'></textarea>\n</div>",
+    edit: "<div class='fb-label-description'>\n  <div class='fb-edit-section-header'>Label</div>\n  <input type='text' data-rv-input='model.<%= Formbuilder.options.mappings.LABEL %>' />\n  <div class='fb-edit-section-header'>Data</div>\n  <textarea data-rv-input='model.<%= Formbuilder.options.mappings.DESCRIPTION %>'\n    placeholder='Add some data to this hidden field'></textarea>\n</div>\n<%= Formbuilder.templates['edit/admin_only_footer']() %>",
     instructionDetails: "<div class=\"instructionText\">Used to pass data through the form without displaying it to the user.</div>",
     prettyName: localPrettyName,
     addButton: "<span class='symbol'><span class='fa fa-code'></span></span> " + localPrettyName,
@@ -1792,6 +1803,18 @@
 this["Formbuilder"] = this["Formbuilder"] || {};
 this["Formbuilder"]["templates"] = this["Formbuilder"]["templates"] || {};
 
+this["Formbuilder"]["templates"]["edit/admin_only_footer"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape;
+with (obj) {
+__p += '<!-- these are displayed at runtime, via the IS_REASON_ADMIN option -->\n<div class="fb-reason-admin-only" style="display:none">\n  <div class="fb-edit-section-header ">\n    Admin Only Options\n  </div>\n  <div class="fb-label-description">\n    <label> \n      URL Prefill Key:<br>\n      <input type=\'text\' data-rv-input=\'model.' +
+((__t = ( Formbuilder.options.mappings.PREFILL_KEY )) == null ? '' : __t) +
+'\' autocomplete="off" placeholder="e.g. my_field_name"/>\n    </label> \n    </div>\n</div>';
+
+}
+return __p
+};
+
 this["Formbuilder"]["templates"]["edit/base_header"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
@@ -1837,6 +1860,8 @@ __p +=
 ((__t = ( Formbuilder.templates['edit/common']() )) == null ? '' : __t) +
 '\n' +
 ((__t = ( Formbuilder.fields[rf.get(Formbuilder.options.mappings.FIELD_TYPE)].edit({rf: rf}) )) == null ? '' : __t) +
+'\n' +
+((__t = ( Formbuilder.templates['edit/admin_only_footer']() )) == null ? '' : __t) +
 '\n';
 
 }

@@ -13,6 +13,8 @@ function initializeFormbuilder($, Formbuilder, thorContentItemId) {
 		selector: '#' + nameSpace + '_form-builder'
 	};
 
+	var userInfo = getUserFlags();
+
 	Formbuilder.config({
 	  UNLISTED_FIELDS: ['submit_button',
 	                    'date',
@@ -25,9 +27,10 @@ function initializeFormbuilder($, Formbuilder, thorContentItemId) {
 	                    'section_break'],
 	  SHOW_SAVE_BUTTON: false,
 	  WARN_IF_UNSAVED: false,
-	ALLOW_TYPE_CHANGE: true,
+	  ALLOW_TYPE_CHANGE: true,
 	  FORCE_BOTTOM_SUBMIT: true,
-	  REQUIRED_DEFAULT: false
+	  REQUIRED_DEFAULT: false,
+	  IS_REASON_ADMIN: userInfo.user_has_advanced_options
 	});
 
 	var fb = new Formbuilder(options);
@@ -46,6 +49,15 @@ function initializeFormbuilder($, Formbuilder, thorContentItemId) {
 
 	// $('.fb-op-buttons-wrapper').css("background-color", "blue");
 	// $('.fb-left').css("background-color", "red");
+}
+
+// Returns an JS object with user info from the server
+function getUserFlags() {
+	var node = $("#user_options_json"), jsonString;
+	if (node.text()) {
+		jsonString = node.text() || "";
+	}
+	return jsonString ? JSON.parse(jsonString) : {};
 }
 
 // initializeFormbuilder($, Formbuilder, "thorcontentItem");

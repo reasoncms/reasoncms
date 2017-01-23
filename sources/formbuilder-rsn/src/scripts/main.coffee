@@ -80,6 +80,7 @@ class ViewFieldView extends Backbone.View
     attrs = _.clone(@model.attributes)
     delete attrs['id']
     attrs['label'] += ' Copy'
+    attrs['prefill_key'] = ''
     @parentView.createField attrs, { position: @model.indexInDOM() + 1 }
 
 
@@ -162,6 +163,12 @@ class EditFieldView extends Backbone.View
         $("#fieldDisplayNonEditable").css("display", "block")
         $("#fieldDisplayEditable").remove()
 
+    ), 10)
+
+    userIsReasonAdmin = Formbuilder.options.IS_REASON_ADMIN
+    setTimeout((=>
+      if (userIsReasonAdmin)
+        $(".fb-reason-admin-only").css("display", "block")
     ), 10)
 
     # and another one - focus the "Label" field if it's empty
@@ -901,6 +908,7 @@ class Formbuilder
     FORCE_BOTTOM_SUBMIT: true
     REQUIRED_DEFAULT: true
     ALLOW_TYPE_CHANGE: false
+    IS_REASON_ADMIN: false
 
     UNLISTED_FIELDS: [
      'submit_button'
@@ -913,6 +921,7 @@ class Formbuilder
       DEFAULT_VALUE: 'default_value'
       FIELD_TYPE: 'field_type'
       REQUIRED: 'required'
+      PREFILL_KEY: 'prefill_key'
       ADMIN_ONLY: 'admin_only'
       OPTIONS: 'field_options.options'
       DESCRIPTION: 'field_options.description'

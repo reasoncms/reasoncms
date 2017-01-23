@@ -93,6 +93,7 @@ class formbuilder2Type extends textareaType
 
 		$this->mainFieldTranslators = array(
 			new AttributeTranslator("label"),
+			new AttributeTranslator("prefill_key"),
 			new RestrictableAttributeTranslator("file", "file_upload_extension_restrictions", "restrict_extensions"),
 			new RestrictableAttributeTranslator("file", "file_upload_type_restrictions", "restrict_types"),
 			new RestrictableAttributeTranslator("file", "file_upload_size_restriction", "restrict_maxsize"),
