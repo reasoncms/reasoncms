@@ -174,7 +174,7 @@ class EditFieldView extends Backbone.View
     # and another one - focus the "Label" field if it's empty
     setTimeout((=>
       if (Formbuilder.helpers.fieldIsEmptyOrNull(@model.get(Formbuilder.options.mappings.LABEL)))
-        $(".fb-label-description input").focus()
+        $(".fb-label-description input[data-rv-input='model.label']").focus()
     ), 10)
 
     return @

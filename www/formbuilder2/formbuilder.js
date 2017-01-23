@@ -342,7 +342,7 @@
       setTimeout(((function(_this) {
         return function() {
           if (Formbuilder.helpers.fieldIsEmptyOrNull(_this.model.get(Formbuilder.options.mappings.LABEL))) {
-            return $(".fb-label-description input").focus();
+            return $(".fb-label-description input[data-rv-input='model.label']").focus();
           }
         };
       })(this)), 10);
