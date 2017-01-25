@@ -34,4 +34,25 @@ There is an Apache .htaccess file in www/ that enables files at reason/www/fooba
 
 ## Settings Core/Local Directories
 
-(not yet written)
+For application settings, core settings reside in `settings/`. Local settings can be managed in one of two ways:
+
+###The files in `settings/` can be modified directly
+
+Advantage:
+- Upgrades via Git will automatically pull in new settings
+
+Disadvantages:
+- If Reason's default settings change or are reorganized it will cause headaches on upgrade as you attempt to reconcile your local changes with changes coming from the core
+- If a core default that you haven't modified is changed, it will silently change your local setting upon upgrade.
+
+###You can make a copy of `settings/` to `settings_local/`
+
+If the `settings_local/` directory exists, Reason will use it instead. 
+
+Advantages:
+- A clear separation between your local settings and any changes that come in from the core on upgrade
+- No surprises on upgrade
+
+Disadvantages:
+- If new settings are added in the core, you will need to manually add them locally
+- Will need to manually change defaults if you want to adopt core default changes
