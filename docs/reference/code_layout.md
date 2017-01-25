@@ -11,9 +11,8 @@ The root level of the package is a rough collection of various libraries and too
 * www: Libraries that need to be web-available (eg. javascript, etc.)
 * provisioning: Files used to bootstrap a new development area using Ansible
 * release_notes: "What's new/changed" notes on each release of Reason
-
 * README.md
-* Vagrantfile: a file that 
+* Vagrantfile: Configuration for Vagrant-based virtual machines
 * install.sh: A Reason installation shell script
 
 ## Reason project-maintained "external libraries"
