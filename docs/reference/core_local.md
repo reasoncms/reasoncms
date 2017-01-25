@@ -4,6 +4,10 @@ In Reason it is best practice to keep local configurations, templates, modules, 
 
 There are three places where local and core code exist in parallel structures in Reason:
 
+- [PHP Core/Local Directories](#php-corelocal-directories)
+- [Web Asset Core/Local Directories](#web-asset-corelocal-directories)
+- [Settings Core/Local Directories](#settings-corelocal-directories)
+
 ##PHP core/local directories
 
 Reason's core PHP code lives at `reason_4.0/lib/core/`.
@@ -28,6 +32,6 @@ The parallel local directory is `reason_4.0/www/local`.
 
 There is an Apache .htaccess file in www/ that enables files at reason/www/foobar/ and reason/www/local/foobar/ to appear as if they are both at reason/www/foobar/. If there is a file name conflict, the local directory "wins".
 
-## Settings
+## Settings Core/Local Directories
 
 (not yet written)
