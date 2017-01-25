@@ -1109,7 +1109,7 @@ class MinisiteTemplate
 
 	function get_title ()
 	{
-		if ( $this->is_minisite_home_page() )
+		if ( $this->is_minisite_home_page() && !$this->is_item_page() )
 			$pattern = 'home';
 		elseif ( $this->is_secondary_page() )
 			$pattern = 'secondary';
@@ -1489,7 +1489,7 @@ class MinisiteTemplate
 
 	function show_main_content_tabled() // {{{
 	{
-		if ($this->has_content( 'main_head' ) || $this->has_content( 'main' ) || $this->has_content( 'main_post' ) || $this->has_content( 'main_post_2' ) || $this->has_content( 'main_post_3') || $this->has_content( 'main_post_4') || $this->has_content( 'main_post_5') ) 
+		if ($this->has_content( 'main_head' ) || $this->has_content( 'main' ) || $this->has_content( 'main_post' ) || $this->has_content( 'main_post_2' ) || $this->has_content( 'main_post_3') || $this->has_content( 'main_post_4') || $this->has_content( 'main_post_5') )
 		{
 			echo '<td valign="top" class="contentTD">'."\n";
 			echo '<div class="content"><a name="content"></a>'."\n";
@@ -1530,13 +1530,13 @@ class MinisiteTemplate
 			$this->run_section( 'main_post_3' );
 			echo '</div>'."\n";
 		}
-		if ($this->has_content( 'main_post_4' )) 
+		if ($this->has_content( 'main_post_4' ))
 		{
 			echo '<div class="contentPost4">'."\n";
 			$this->run_section( 'main_post_4' );
 			echo '</div>'."\n";
 		}
-		if ($this->has_content( 'main_post_5' )) 
+		if ($this->has_content( 'main_post_5' ))
 		{
 			echo '<div class="contentPost5">'."\n";
 			$this->run_section( 'main_post_5' );
