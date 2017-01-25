@@ -32,7 +32,7 @@ There are also a number of vended external dependency libraries at the root. Exa
 * akismet
 * date_picker
 * google-api-php-client
-Etc.
+* Etc.
 
 Reason is in the process of moving to using [Composer](https://getcomposer.org/) to manage its external dependencies. Reason 4.8+ contains a `vendor` directory for composer-managed libraries. This third set of libraries will largely migrate into `/vendor` and the composer configuration in 4.8 & 4.9.
 
