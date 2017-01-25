@@ -35,7 +35,9 @@ include_once( DISCO_INC . 'disco.php' );
 				$show_all_columns = 'false';
 			else
 				$show_all_columns = $d->get_value('include_empty_columns');
-			$link = $this->admin_page->make_link(array('export_type_id'=>$type_id,'export_type'=>$export_type,'show_all_columns'=>$show_all_columns), false, false);
+			$num = (integer) $d->get_value('number_of_items');
+			$index = (integer) $d->get_value('index');
+			$link = $this->admin_page->make_link(array('export_type_id'=>$type_id,'export_type'=>$export_type,'show_all_columns'=>$show_all_columns,'number_of_items'=>$num, 'index' => $index), false, false);
 			return $link;
 		}
 
@@ -76,7 +78,16 @@ include_once( DISCO_INC . 'disco.php' );
 			{
 				$query_types= $types;
 			}
-			
+
+			if ($num = (integer) $this->admin_page->request['number_of_items'])
+			{
+				$es->set_num($num);
+			}
+			if($index = (integer) $this->admin_page->request['index'])
+			{
+				$es->set_start($index);
+			}
+
 			$entities = array();
 			
 			foreach($query_types as $type)
@@ -88,6 +99,7 @@ include_once( DISCO_INC . 'disco.php' );
 	        	$show_all_columns = true;
 	        else
 	        	$show_all_columns = false;
+
 
 	        $information = array(
 	        	'entity-type'=>$this->admin_page->request['export_type_id'],
@@ -179,6 +191,8 @@ include_once( DISCO_INC . 'disco.php' );
 				$d->add_element('type', 'radio', array('options'=>$radio_buttons));
 				if ($export_type == 'csv'){
 					$d->add_element('include_empty_columns', 'checkbox', array('checkbox_id'=>'includeEmptyColumns', 'checked_value'=>'true', 'description'=>''));
+					$d->add_element('number_of_items', 'text');
+					$d->add_element('index', 'text');
 				}
 				if (isset($this->admin_page->request['export_type_id'])) {
 					$d->set_value('type',$this->admin_page->request['export_type_id']);
@@ -190,6 +204,10 @@ include_once( DISCO_INC . 'disco.php' );
 				if (isset($this->admin_page->request['show_all_columns']))
 					if ($this->admin_page->request['show_all_columns'] == 'true')
 						$d->set_value('include_empty_columns','true');
+				if (!empty($this->admin_page->request['number_of_items']))
+					$d->set_value('number_of_items', (integer) $this->admin_page->request['number_of_items']);
+				if (!empty($this->admin_page->request['index']))
+                                        $d->set_value('index', (integer) $this->admin_page->request['index']);
 				echo '<h3 class="description">'.$desc.'</h3>';
 				echo '<p class="notice">'.$notice.'</p>';
 				$d->add_callback(array($this,'go_to_url'), 'where_to');
@@ -206,7 +224,14 @@ include_once( DISCO_INC . 'disco.php' );
 						} else {
 							$show_all_columns = 'false';
 						}
-						$link = $this->admin_page->make_link(array('export_type_id'=>$export_type_id,'download_csv'=>'true','show_all_columns'=>$show_all_columns),false,false);					
+						$num = '';
+						if (!empty($this->admin_page->request['number_of_items'])) {
+							$num = (integer) $this->admin_page->request['number_of_items'];
+						}
+                                                if (!empty($this->admin_page->request['index'])) {
+                                                        $index = (integer) $this->admin_page->request['index'];
+                                                }
+						$link = $this->admin_page->make_link(array('export_type_id'=>$export_type_id,'download_csv'=>'true','show_all_columns'=>$show_all_columns, 'number_of_items' => $num, 'index' => $index),false,false);					
 						echo '<a href="'.$link.'">'.'Download'.'</a>';
 					} else if ($export_type == 'xml') {
 						if ($export_type_id == 'all_types') {
