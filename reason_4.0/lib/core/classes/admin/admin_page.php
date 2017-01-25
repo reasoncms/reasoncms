@@ -1516,6 +1516,10 @@ class AdminPage
 		$this->head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/html5shiv/html5shiv-printshiv.js', true, array('before'=>'<!--[if lt IE 9]>','after'=>'<![endif]-->'));
 		$this->head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/respond/respond.min.js', false, array('before'=>'<!--[if lt IE 9]>','after'=>'<![endif]-->'));
 		$this->head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/ie8_fix_maxwidth.js', false, array('before'=>'<!--[if lt IE 9]>','after'=>'<![endif]-->'));
+		if(defined('REASON_DEFAULT_FAVICON_PATH') && REASON_DEFAULT_FAVICON_PATH )
+		{
+			$this->head_items->add_head_item('link',array('rel'=>'shortcut icon', 'href'=>REASON_DEFAULT_FAVICON_PATH) );
+		}
 	}
 	
 	function head()
