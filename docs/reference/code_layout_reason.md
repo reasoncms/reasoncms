@@ -1,0 +1,50 @@
+# Reason CMS Code Layout (e.g. reason_4.0/)
+
+* lib
+	* core
+		* admin
+		* classes
+		* config
+		* content_deleters
+		* content_listers
+		* content_managers
+		* content_post_deleters
+		* content_previewers
+		* content_sorters
+		* display_name_handlers
+		* errors
+		* feeds
+		* finish_actions
+		* function_libraries
+		* helpers
+		* html_editors
+		* minisite
+		* minisite_templates
+		* popup_templates
+		* popups
+		* scripts
+		* ssh
+		* theme_customizers
+	* local
+		* (local directories, parallel to `../core/`)
+* data
+	* assets
+	* cache
+	* csv_data
+	* dbs
+	* geocodes
+	* images
+	* logs
+	* media
+	* sized_images
+	* sized_images_custom
+	* tmp
+	* www_tmp
+* hooks
+* www
+	* local
+		* (local directories, parallel to `../`)
+	* css
+	* js
+	* modules
+	* etc.
