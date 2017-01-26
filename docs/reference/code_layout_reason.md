@@ -30,17 +30,17 @@
 * data *(File-based data storage)*
 	* assets *(Documents uploaded to Reason)*
 	* cache *(Ephemeral cached data that can be regenerated as needed)*
-	* csv_data *(???)*
+	* csv_data \*
 	* dbs *(Database seeds & snapshots)*
 	* geocodes *(Address -> Geocode cache)*
 	* images *(Images uploaded to Reason, plus standard resized derivatives)*
 	* logs *(Activity logs)*
-	* media *(???)*
+	* media \*
 	* sized_images *(Programatically cropped/resized image cache; can be regenerated as needed)*
 	* sized_images_custom *(Manually cropped/resized image derivatives; *cannot* be regenerated as needed)*
 	* tmp *(Default temp directory)*
 	* www_tmp *(Temp directory for files that shoud be temporarily web-available)*
-* hooks *(???)*
+* hooks \*
 * www *(Web-available assets)*
 	* local *(Local additions)*
 		* (local directories, parallel to `../`)
@@ -50,3 +50,5 @@
 	* images, sized_images, sized_images_custom *(symlink to equivalent directories in `data/`)*
 	* tmp *(symlink to `data/www_tmp/`)*
 	* etc.
+
+\* Author unclear on purpose
