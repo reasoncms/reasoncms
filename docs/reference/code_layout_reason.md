@@ -21,30 +21,32 @@
 		* minisite *(Bootstrapper for the Reason front-end interface)*
 		* minisite_templates *(Reason front-end templates, modules, & page types)*
 		* popup_templates *(Templates for popup windows)*
-		* popups *()*
-		* scripts
-		* ssh
-		* theme_customizers
+		* popups *(Bootstrappers for popup windows)*
+		* scripts *(Loose utility scripts, webhooks, upgrade scripts, and other web-accessible tools & utilities not wrapped up or generalized into the front-end or back-end frameworks)*
+		* ssh *(SSH/SCP libraries)*
+		* theme_customizers *(Objects that encapsulate theme options)*
 	* local *Area for [local customizations & enhancements](core_local.md)*
 		* (local directories, parallel to `../core/`)
-* data
-	* assets
-	* cache
-	* csv_data
-	* dbs
-	* geocodes
-	* images
-	* logs
-	* media
-	* sized_images
-	* sized_images_custom
-	* tmp
-	* www_tmp
-* hooks
-* www
-	* local
+* data *(File-based data storage)*
+	* assets *(Documents uploaded to Reason)*
+	* cache *(Ephemeral cached data that can be regenerated as needed)*
+	* csv_data *(???)*
+	* dbs *(Database seeds & snapshots)*
+	* geocodes *(Address -> Geocode cache)*
+	* images *(Images uploaded to Reason, plus standard resized derivatives)*
+	* logs *(Activity logs)*
+	* media *(???)*
+	* sized_images *(Programatically cropped/resized image cache; can be regenerated as needed)*
+	* sized_images_custom *(Manually cropped/resized image derivatives; *cannot* be regenerated as needed)*
+	* tmp *(Default temp directory)*
+	* www_tmp *(Temp directory for files that shoud be temporarily web-available)*
+* hooks *(???)*
+* www *(Web-available assets)*
+	* local *(Local additions)*
 		* (local directories, parallel to `../`)
-	* css
-	* js
-	* modules
+	* css *(General/reusable css)*
+	* js *(General/reusable js)*
+	* modules *(Module-specific css/js/images)*
+	* images, sized_images, sized_images_custom *(symlink to equivalent directories in `data/`)*
+	* tmp *(symlink to `data/www_tmp/`)*
 	* etc.
