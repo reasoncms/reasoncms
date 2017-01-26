@@ -3,7 +3,7 @@
 * lib *(Reason PHP libraries)*
 	* core *(Core Reason PHP code)*
 		* admin *(Bootstrapper for the Reason administrative interface)*
-		* classes *(Reason utility classes)*
+		* classes *(Reason utility classes & OO API)*
 		* config *(Default configurations; amend in ../local/config/)*
 		* content_deleters *(Entity expungement code – hard deletion)*
 		* content_listers *(Administrative interface list views)*
@@ -14,14 +14,14 @@
 		* display_name_handlers *(Code to generate entity "display names")*
 		* errors *(Default error pages)*
 		* feeds *(Framework for generating RSS feeds)*
-		* finish_actions
-		* function_libraries
-		* helpers
-		* html_editors
-		* minisite
-		* minisite_templates
-		* popup_templates
-		* popups
+		* finish_actions *(Code to run upon completion of entity editing)*
+		* function_libraries *(Reason utility functions & procedural API)*
+		* helpers *(Type-sepcific utility classes – Deprecated directory)*
+		* html_editors *(Shims for wysiwyg/html editors)*
+		* minisite *(Bootstrapper for the Reason front-end interface)*
+		* minisite_templates *(Reason front-end templates, modules, & page types)*
+		* popup_templates *(Templates for popup windows)*
+		* popups *()*
 		* scripts
 		* ssh
 		* theme_customizers
