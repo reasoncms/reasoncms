@@ -29,29 +29,28 @@ lib/core/ssh | SSH/SCP libraries
 lib/core/theme_customizers | Objects that encapsulate theme options
 lib/local | Area for [local customizations & enhancements](core_local.md)
 lib/local/* | local directories, parallel to `../core/`
-
-* data *(File-based data storage)*
-	* assets *(Documents uploaded to Reason)*
-	* cache *(Ephemeral cached data that can be regenerated as needed)*
-	* csv_data \*
-	* dbs *(Database seeds & snapshots)*
-	* geocodes *(Address -> Geocode cache)*
-	* images *(Images uploaded to Reason, plus standard resized derivatives)*
-	* logs *(Activity logs)*
-	* media \*
-	* sized_images *(Programatically cropped/resized image cache; can be regenerated as needed)*
-	* sized_images_custom *(Manually cropped/resized image derivatives; *cannot* be regenerated as needed)*
-	* tmp *(Default temp directory)*
-	* www_tmp *(Temp directory for files that shoud be temporarily web-available)*
-* hooks \*
-* www *(Web-available assets)*
-	* local *(Local additions)*
-		* (local directories, parallel to `../`)
-	* css *(General/reusable css)*
-	* js *(General/reusable js)*
-	* modules *(Module-specific css/js/images)*
-	* images, sized_images, sized_images_custom *(symlink to equivalent directories in `data/`)*
-	* tmp *(symlink to `data/www_tmp/`)*
-	* etc.
+data | File-based data storage
+data/assets | Documents uploaded to Reason
+data/cache | Ephemeral cached data that can be regenerated as needed
+data/csv_data | \*
+data/dbs | Database seeds & snapshots
+data/geocodes | Address -> Geocode cache
+data/images | Images uploaded to Reason, plus standard resized derivatives
+data/logs | Activity logs
+data/media | \*
+data/sized_images | Programatically cropped/resized image cache; can be regenerated as needed
+data/sized_images_custom | Manually cropped/resized image derivatives; *cannot* be regenerated as needed
+data/tmp | Default temp directory
+data/www_tmp | Temp directory for files that shoud be temporarily web-available
+hooks | \*
+www | Web-available assets
+www/local | Local additions
+www/local/* | local directories, parallel to `../`
+www/css | General/reusable css
+www/js | General/reusable js
+www/modules | Module-specific css/js/images
+www/images, sized_images, sized_images_custom | symlink to equivalent directories in `data/`
+www/tmp | symlink to `data/www_tmp/`
+www/etc. | 
 
 \* Author unclear on purpose
