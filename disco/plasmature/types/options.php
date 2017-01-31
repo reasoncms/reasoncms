@@ -257,7 +257,9 @@ class optionType extends defaultType
 
 		if(!isset($this->options[$value]))
 		{
-			trigger_error('Unrecognized value -- ('.gettype($value).') "'.$value.'" -- submitted for '.$this->name.'. This may be an attempt to probe for vulnerabilities. Future changes to plasmature will likely block unrecognized values like this.' );
+			// Supress errors, as prefilled values, when enabled, also match
+			// this criteria but are desired
+			// trigger_error('Unrecognized value -- ('.gettype($value).') "'.$value.'" -- submitted for '.$this->name.'. This may be an attempt to probe for vulnerabilities. Future changes to plasmature will likely block unrecognized values like this.' );
 			// return false;
 		}
 
