@@ -363,6 +363,27 @@ div#guide div.recent ul li.item1 {
 div#guide div.recent a.more {
 	font-style:italic;
 }
+div#siteIntro #announcements {
+	margin-bottom:2em;
+}
+div#siteIntro #announcements .explanation {
+	font-size:.9em;
+	color:#777;
+	padding:.5em 1em;
+	background:#eee;
+	margin:0;
+}
+div#siteIntro #announcements .announcement {
+	padding:1em;
+	background:#fcf7b5;
+	border-top:1px solid #fff;
+}
+div#siteIntro #announcements .announcement>*:first-child {
+	margin-top:0;
+}
+div#siteIntro #announcements .announcement>*:last-child {
+	margin-bottom:0;
+}
 div#siteIntro div#siteNotices {
 	float:right;
 	width:33%;
