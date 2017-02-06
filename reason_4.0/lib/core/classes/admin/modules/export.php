@@ -79,11 +79,11 @@ include_once( DISCO_INC . 'disco.php' );
 				$query_types= $types;
 			}
 
-			if ($num = (integer) $this->admin_page->request['number_of_items'])
+			if (isset($this->admin_page->request['number_of_items']) && ($num = (integer) $this->admin_page->request['number_of_items']))
 			{
 				$es->set_num($num);
 			}
-			if($index = (integer) $this->admin_page->request['index'])
+			if(isset($this->admin_page->request['index']) && ($index = (integer) $this->admin_page->request['index']))
 			{
 				$es->set_start($index);
 			}
@@ -228,9 +228,10 @@ include_once( DISCO_INC . 'disco.php' );
 						if (!empty($this->admin_page->request['number_of_items'])) {
 							$num = (integer) $this->admin_page->request['number_of_items'];
 						}
-                                                if (!empty($this->admin_page->request['index'])) {
-                                                        $index = (integer) $this->admin_page->request['index'];
-                                                }
+						$index = 0;
+						if (!empty($this->admin_page->request['index'])) {
+							$index = (integer) $this->admin_page->request['index'];
+						}
 						$link = $this->admin_page->make_link(array('export_type_id'=>$export_type_id,'download_csv'=>'true','show_all_columns'=>$show_all_columns, 'number_of_items' => $num, 'index' => $index),false,false);					
 						echo '<a href="'.$link.'">'.'Download'.'</a>';
 					} else if ($export_type == 'xml') {
