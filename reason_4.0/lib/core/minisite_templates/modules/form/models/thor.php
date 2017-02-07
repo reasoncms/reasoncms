@@ -666,6 +666,28 @@ class ThorFormModel extends DefaultFormModel
 		return $thor_values;
 	}
 	
+
+	/**
+	 * Returns a subset of Thor values from get_thor_values_from_form()
+	 * 
+	 * @param array $thor_ids array of Thor IDs
+	 * @return array array of thor values from elements with ids found in $thor_ids
+	 */
+	function get_values_filter_by_thor_id($thor_ids)
+	{
+		$disco_obj =& $this->get_view();
+		$thor_core =& $this->get_thor_core_object();
+		$thor_values = array_merge($thor_core->get_thor_values_from_form($disco_obj));
+
+		$field_values = [];
+		foreach ($thor_ids as $id) {
+			if (array_key_exists($id, $thor_values)) {
+				$field_values[$id] = $thor_values[$id];
+			}
+		}
+		return $field_values;
+	}
+
 	function &_get_disco_hidden_fields($disco_obj)
 	{
 		if (!isset($this->_disco_hidden_fields))
