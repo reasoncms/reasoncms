@@ -605,7 +605,10 @@
 				// transition to finish and make sure finish knows we're in
 				// queue mode so that it can hand off the control to the next
 				// editor
-				$link = $page->make_link(array('cur_module' => 'Finish', 'next_entity' => $this->next_entity->id()), false, false);
+				$args = array('cur_module' => 'Finish');
+				if(!empty($this->next_entity))
+					$args['next_entity'] = $this->next_entity->id();
+				$link = $page->make_link($args, false, false);
 			}
 			else 
 			{
