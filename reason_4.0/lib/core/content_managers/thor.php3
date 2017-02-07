@@ -19,6 +19,7 @@
 		var $form_prefix = 'form_'; // default prefix for thor db tables
 		var $type = 'email';
 		var $box_class = 'stackedBox';
+		var $formbuilder2Type = 'formbuilder2'; // a var which can be overridden locally ("carletonFormbuilder2")
 
 		function init( $externally_set_up = false)
 		{
@@ -192,7 +193,7 @@
 			else if (USE_THOR_VERSION == THOR_VERSION_JS_FORMBUILDER)
 			{
 				include_once( THOR_INC . 'plasmature/formbuilder2.php' );
-				$this->change_element_type( 'thor_content', 'formbuilder2');
+				$this->change_element_type( 'thor_content', $this->formbuilder2Type);
 			}
 			else
 			{
