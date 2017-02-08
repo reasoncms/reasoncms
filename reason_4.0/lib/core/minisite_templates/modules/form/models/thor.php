@@ -670,6 +670,8 @@ class ThorFormModel extends DefaultFormModel
 	/**
 	 * Returns a subset of Thor values from get_thor_values_from_form()
 	 * 
+	 * Filters out thor id duplicates and input values equal to FALSE
+	 * 
 	 * @param array $thor_ids array of Thor IDs
 	 * @return array array of thor values from elements with ids found in $thor_ids
 	 */
@@ -678,6 +680,10 @@ class ThorFormModel extends DefaultFormModel
 		$disco_obj =& $this->get_view();
 		$thor_core =& $this->get_thor_core_object();
 		$thor_values = array_merge($thor_core->get_thor_values_from_form($disco_obj));
+
+		// avoid duplication & strays
+		$thor_ids = array_unique($thor_ids);
+		$thor_ids = array_filter($thor_ids);
 
 		$field_values = [];
 		foreach ($thor_ids as $id) {
