@@ -43,7 +43,7 @@ data/tmp/ | Default temp directory
 data/www_tmp/ | Temp directory for files that shoud be temporarily web-available
 **hooks/** | **(unclear)**
 **www/** | **Web-available assets**
-www/local/ | Local additions, contents parallel to `www/`. Apache rules make these appear at www/ and override core equivalents.
+www/local/ | Local additions, contents parallel to `www/`. Apache rules make these appear at www/ and override core equivalents. [core_local.md#web-asset-corelocal-directories](More info)
 www/css/ | General/reusable css
 www/js/ | General/reusable js
 www/modules/ | Module-specific css/js/images
