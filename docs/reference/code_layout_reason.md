@@ -43,13 +43,10 @@ data/tmp/ | Default temp directory
 data/www_tmp/ | Temp directory for files that shoud be temporarily web-available
 **hooks/** | **(unclear)**
 **www/** | **Web-available assets**
-www/local/ | Local additions
-www/local/* | local directories, parallel to `../`
+www/local/ | Local additions, contents parallel to `www/`. Apache rules make these appear at www/ and override core equivalents.
 www/css/ | General/reusable css
 www/js/ | General/reusable js
 www/modules/ | Module-specific css/js/images
 www/images/, sized_images/, sized_images_custom/ | symlink to equivalent directories in `data/`
 www/tmp/ | symlink to `data/www_tmp/`
 www/etc. | 
-
-\* Author unclear on purpose
