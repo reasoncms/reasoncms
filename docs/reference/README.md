@@ -20,6 +20,10 @@
 
 [Creating, Updating, and Deleting Relationships](crud_relationships.md)
 
+## Fetching Entity Data (ORM)
+
+[The Entity class](entity.md)
+
 ## Page Types
 
 [Page Types (e.g. page layouts)](page_types.md)
