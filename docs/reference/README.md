@@ -24,6 +24,8 @@
 
 [The Entity class](entity.md)
 
+[The Entity Selector class](entity_selector.md)
+
 ## Page Types
 
 [Page Types (e.g. page layouts)](page_types.md)
