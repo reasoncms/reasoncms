@@ -61,3 +61,23 @@ foreach($e->get_left_relationship( 'image_to_category' ) as $category)
 ```
 
 To fetch presorted/filtered related entities, use the [Entity Selector class](entity_selector.md)
+
+## Set a value for later use
+
+The entity can be a key-value bundle with the `set_value()` method. Set a computed value on an entity using `set_value()` and this will be accessible by other code that interacts with the same object.
+
+```php
+$image = new entity(12345);
+$image->set_value('url', reason_get_image_url($image));
+$image->set_value('alt', reason_htmlspecialchars(strip_tags($image->get_value('description'));
+
+render_image($image);
+
+function render_image($image)
+{
+	if($image->has_value('url') && $image->has_value('alt'))
+		echo '<img src="'.$image->get_value('url').'"  alt="'.$image->get_value('alt').'" />';
+	else
+		echo 'Unable to render an image without a URL or alt text';
+}
+```
