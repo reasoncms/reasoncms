@@ -22,9 +22,9 @@
 
 ## Fetching Entity Data (ORM)
 
-[The Entity class](entity.md)
+[The Entity class](entity.md) (For individual entity data)
 
-[The Entity Selector class](entity_selector.md)
+[The Entity Selector class](entity_selector.md) (For paramaterized fetching of entities)
 
 ## Page Types
 
