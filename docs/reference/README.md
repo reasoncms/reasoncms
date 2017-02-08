@@ -1,6 +1,12 @@
-#Reason Developer Reference
+# Reason Developer Reference
+
+## Basics
 
 [Importing the Reason environment](environment.md)
+
+[Error Handling](error_handling.md)
+
+## Code Layout, local customization, core code
 
 [Package Code Layout](code_layout.md)
 
@@ -8,10 +14,12 @@
 
 [Core vs. Local code](core_local.md)
 
+## CRUD Operations
+
 [Creating, Updating, and Deleting Entities](crud.md)
 
 [Creating, Updating, and Deleting Relationships](crud_relationships.md)
 
-[Error Handling](error_handling.md)
+## Page Types
 
 [Page Types (e.g. page layouts)](page_types.md)
