@@ -57,4 +57,36 @@ $es->add_relation('name LIKE "%headshot"');
 $images = $es->run_one();
 ```
 
+## Limiting by relationships
 
+You can limit the entities fetched based on relationships. This is extremely common usage.
+
+To fetch images associated with a given page:
+
+```php
+$es = new entity_selector();
+$es->add_type(id_of('image'));
+$es->add_left_relationship($page_id, relationship_id_of('page_to_image'));
+$images = $es->run_one();
+```
+
+## Fetching related entity data in single query
+
+You can also join across the relationship table to fetch data associated with related entities.
+
+To get a set of images *and* the id of the pages each image appears on, in a given site:
+
+```php
+$es = new entity_selector($site_id);
+$es->add_type(id_of('image'));
+$es->add_left_relationship_field('page_to_image', 'entity', 'id', 'page_id' );
+$es->enable_multivalue_results(); // Without this we would only get the first page for each image, and images not placed on a page would be excluded from the results
+$images = $es->run_one();
+
+foreach($images as $image)
+	echo $image->get_display_name().' is on page ids: '.implode(', ',$image->get_value('page_id'));
+```
+
+## Sorting options
+
+(coming soon)
