@@ -14,17 +14,15 @@
 
 [Core vs. Local code](core_local.md)
 
-## CRUD Operations
+## Create/Read/Update/Delete
 
 [Creating, Updating, and Deleting Entities](crud.md)
 
-[Creating, Updating, and Deleting Relationships](crud_relationships.md)
-
-## Fetching Entity Data (ORM)
-
-[The Entity class](entity.md) (For individual entity data)
+[The Entity class](entity.md) (For reading individual entity data)
 
 [The Entity Selector class](entity_selector.md) (For paramaterized fetching of entities)
+
+[Creating, Updating, and Deleting Relationships](crud_relationships.md)
 
 ## Page Types
 
