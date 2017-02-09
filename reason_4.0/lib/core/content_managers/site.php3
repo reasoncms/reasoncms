@@ -94,10 +94,13 @@
 
 			$this->add_element('title_patterns_header','comment',array('text'=>'<h3>Page Titles</h3><p class="smallText">These tags are replaced: ['. join('] [', $t->tags) .']. To change defaults across Reason, edit settings/reason_settings.php.</p>'));
 			
-			// Make links to the site and the site admin page
-			$site_link = '<a href="' . $this->get_value('base_url') . '" target="_blank">Open site</a>';
-			$admin_link = '<a href="' . carl_construct_relative_link(array('site_id' => $this->get_value('id')), array('user_id')) . '" target="_blank">Open site admin</a>';
-			$this->add_element('site_links', 'comment', array('text' => $site_link . ' | ' . $admin_link));
+			if(!empty($this->old_entity_values['base_url']) && $this->get_value('unique_name') != 'master_admin') // e.g. the site has really been created, and is not the master admin
+			{
+				// Make links to the site and the site admin page
+				$site_link = '<a href="' . $this->get_value('base_url') . '" target="_blank">Open site</a>';
+				$admin_link = '<a href="' . carl_construct_relative_link(array('site_id' => $this->get_value('id')), 	array('user_id')) . '" target="_blank">Open site admin</a>';
+				$this->add_element('site_links', 'comment', array('text' => $site_link . ' | ' . $admin_link));
+			}
 
 			if('' == $this->get_value('home_title_pattern'))
 			{
