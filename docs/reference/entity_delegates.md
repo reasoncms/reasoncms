@@ -1,6 +1,6 @@
 # Entity Delegates (Type-specific functionality on entities)
 
-Entity delegates add type-specific functionality to the entity class.
+Entity delegates add type-specific functionality to the entity class. They are essentially a form of [mixin](https://en.wikipedia.org/wiki/Mixin) that can be configured dynamically at runtime.
 
 For example, image entities support this interface for retrieving image URLs:
 
