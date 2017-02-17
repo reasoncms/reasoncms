@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
 
-$PWD/docker/docker-tpl.sh
+./docker-tpl.sh
 
 exec "$@"
