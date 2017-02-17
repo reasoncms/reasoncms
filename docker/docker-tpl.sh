@@ -58,22 +58,24 @@ cat << EOF > $(echo $dbs_xml_tpl)
 <databases>
   <database>
   <connection_name>reason_connection</connection_name>
-  <db>reason</db>
-  <user>admin</user>
-  <password>\$MYSQL_ENV_MYSQL_PASS</password>
-  <host>\$MYSQL_PORT_3306_TCP_ADDR</host>
+  <db>\${MYSQL_DATABASE}</db>
+  <user>\${MYSQL_USER}</user>
+  <password>\${MYSQL_PASSWORD}</password>
+  <host>\${MYSQL_HOST}</host>
   </database>
 
   <database>
   <connection_name>thor_connection</connection_name>
-  <db>reason</db>
-  <user>admin</user>
-  <password>\$MYSQL_ENV_MYSQL_PASS</password>
-  <host>\$MYSQL_PORT_3306_TCP_ADDR</host>
+  <db>\${MYSQL_DATABASE}</db>
+  <user>\${MYSQL_USER}</user>
+  <password>\${MYSQL_PASSWORD}</password>
+  <host>\${MYSQL_HOST}</host>
   </database>
 </databases>
 EOF
 
 # no subbing in apache config for now at least.
+echo "****** $PWD\n********************"
+
 cat $apache_conf_tpl            > apache.conf
 cat     $dbs_xml_tpl | envsubst > settings/dbs.xml
