@@ -1570,6 +1570,7 @@
 	 */
 	function reason_basename( $full_path, $suffix = '.php' )
 	{
+		$dir = '/' . basename(INCLUDE_PATH) . '/';
 		// if the pathname does not appear to be in the reason include we do some symlink hocus pocus.
 		if (carl_strpos($full_path, REASON_INC) === FALSE) // something going on with symbolic links possibly.
 		{
@@ -1579,7 +1580,7 @@
 			if (carl_substr( $real_local_path, -1 ) != '/') $real_local_path = $real_local_path . "/"; // add trailing slash.
 			if (carl_strpos( $full_path, $real_local_path ) !== FALSE)
 			{
-				return carl_basename( $local_path . carl_substr($full_path, carl_strlen($real_local_path)), $suffix, '/reason_package/' );
+				return carl_basename( $local_path . carl_substr($full_path, carl_strlen($real_local_path)), $suffix, $dir );
 			}
 			
 			// now try core
@@ -1588,10 +1589,10 @@
 			if (carl_substr( $real_core_path, -1 ) != '/') $real_core_path = $real_core_path . "/"; // add trailing slash.
 			if (carl_strpos( $full_path, $real_core_path ) !== FALSE)
 			{
-				return carl_basename( $local_path . carl_substr($full_path, carl_strlen($real_core_path)), $suffix, '/reason_package/' );
+				return carl_basename( $local_path . carl_substr($full_path, carl_strlen($real_core_path)), $suffix, $dir );
 			}
 		}
-		return carl_basename( $full_path, $suffix, '/reason_package/' );
+		return carl_basename( $full_path, $suffix, $dir );
 	}
 
 	function clean_vars( &$vars, $rules )
