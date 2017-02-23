@@ -113,6 +113,7 @@
 	 	'OldThemes'=>array('file'=>'old_themes.php','class'=>'OldThemesModule'),
 	 	'SiteToPDF'=>array('file'=>'site_to_pdf.php','class'=>'ReasonSiteToPDFModule'),
 		'EntityStats'=>array('file'=>'entity_stats.php', 'class'=>'ReasonEntityStatsModule'),
+		'InvisiblesFinder'=>array('file'=>'invisibles_finder.php', 'class'=>'InvisiblesFinderModule'),
 	);
 
 if (reason_file_exists('config/admin_modules/setup_local.php'))

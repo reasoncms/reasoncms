@@ -108,7 +108,12 @@ class ReasonAdminToolsModule extends DefaultModule
 					'title' => 'No Relationships Report',
 					'description' => 'Lists entities with or without specific relationships',
 					'safety_level' => 'safe',
-				),	
+				),
+				'?cur_module=InvisiblesFinder' => array(
+					'title' => 'Invisibles Finder',
+					'description' => 'Finds entities that are not visible given a site\'s setup.',
+					'safety_level' => 'safe',
+				),
 			),
 			'Content Actions' => array(
 				REASON_HTTP_BASE_PATH.'scripts/urls/update_urls.php' => array(
