@@ -296,13 +296,19 @@ if( !empty( $site_id ) && !empty( $page_id )) // need site_id and page_id to pro
 		{
 			trigger_error('Unable to use specified template ('.htmlspecialchars($filename,ENT_QUOTES,'UTF-8').') because it does not have a class name properly set in the array $GLOBALS[ \'_minisite_template_class_names\' ].');
 			reason_include_once( 'minisite_templates/default.php' );
-			$minisite_template = $GLOBALS[ '_minisite_template_class_names' ][ 'default' ];
+			$minisite_template = $GLOBALS[ '_minisite_template_class_names' ][ 'default.php' ];
+		}
+		elseif(!class_exists($GLOBALS[ '_minisite_template_class_names' ][ $filename ]))
+		{
+			trigger_error('The class name provided in $GLOBALS[ \'_minisite_template_class_names\' ][ \''.$filename.'\' ] ( ' . $GLOBALS[ '_minisite_template_class_names' ][ $filename ]  .') does not appear to exist. Using the default template instead.');
+			reason_include_once( 'minisite_templates/default.php' );
+			$minisite_template = $GLOBALS[ '_minisite_template_class_names' ][ 'default.php' ];
 		}
 		else
 		{
 			$minisite_template = $GLOBALS[ '_minisite_template_class_names' ][ $filename ];
 		}
-		
+
 		$t = new $minisite_template;
 		if ($requested_api) $t->requested_api = $requested_api;
 		if ($requested_identifier) $t->requested_identifier = $requested_identifier;
