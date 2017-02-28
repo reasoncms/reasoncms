@@ -106,10 +106,11 @@ function convert_to_png($orig)
  * @param $max_size maximum size (in megapixels) for the resulting image
  * @param $dimension_timeout seconds to wait to determine dimensions default 10
  * @param $convert_timeout seconds to wait for conversion to complete default 15
+ * @param $additional_args additional flags to pass to the conversion command
  *
  * @return the path of the converted file, or false if rasterization fails
  */
-function rasterize_pdf($path, $format, $max_size = 4, $dimension_timeout = 10, $convert_timeout = 15)
+function rasterize_pdf($path, $format, $max_size = 4, $dimension_timeout = 10, $convert_timeout = 15, $additional_args = Array())
 {	
 	$new_path = change_extension($path, $format);
 
@@ -151,6 +152,10 @@ function rasterize_pdf($path, $format, $max_size = 4, $dimension_timeout = 10, $
 		escapeshellarg($path.'[0]'),
 		escapeshellarg($new_path),
 		);
+
+	if (count($additional_args) > 0) {
+		array_splice($args, 1, 0, $additional_args);
+	}
 	
 	$command = implode(' ', $args);
 	$start = time();

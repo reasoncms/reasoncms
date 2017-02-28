@@ -9,6 +9,7 @@
 	$GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'SiteManager';
 	
 	include_once( CARL_UTIL_INC . 'dir_service/directory.php' );
+	include_once( CARL_UTIL_INC . 'basic/url_funcs.php');
 	reason_include_once( 'classes/url_manager.php' );
 	reason_include_once( 'classes/page_cache.php' );
 	reason_include_once( 'classes/title_tag_parser.php' );
@@ -93,6 +94,14 @@
 
 			$this->add_element('title_patterns_header','comment',array('text'=>'<h3>Page Titles</h3><p class="smallText">These tags are replaced: ['. join('] [', $t->tags) .']. To change defaults across Reason, edit settings/reason_settings.php.</p>'));
 			
+			if(!empty($this->old_entity_values['base_url']) && $this->get_value('unique_name') != 'master_admin' && 'Live' == $this->get_value('state')) // e.g. the site has really been created, and is not the master admin
+			{
+				// Make links to the site and the site admin page
+				$site_link = '<a href="' . $this->get_value('base_url') . '" target="_blank">Open site</a>';
+				$admin_link = '<a href="' . carl_construct_relative_link(array('site_id' => $this->get_value('id')), 	array('user_id')) . '" target="_blank">Open site admin</a>';
+				$this->add_element('site_links', 'comment', array('text' => $site_link . ' | ' . $admin_link));
+			}
+
 			if('' == $this->get_value('home_title_pattern'))
 			{
 				$this->set_value('home_title_pattern', REASON_HOME_TITLE_PATTERN);
@@ -159,8 +168,7 @@
 			if( $this->is_new_entity() )
 				$this->set_value( 'loki_default','notables' );
 			$this->set_comments( 'loki_default',form_comment('The HTML editor options available when editing content on the site.'));
-			$this->set_order(array('name','unique_name','primary_maintainer','base_url','domain','base_breadcrumbs','description','keywords','department','site_state','loki_default','other_base_urls','use_page_caching','theme','allow_site_to_change_theme','site_type','use_custom_footer','custom_footer','title_patterns_header','home_title_pattern','secondary_title_pattern','item_title_pattern',));
-			if ( html_editor_name($this->get_value('id')) == 'tiny_mce' )
+			$this->set_order(array('name','unique_name','primary_maintainer','base_url','domain','site_links','base_breadcrumbs','description','keywords','department','site_state','loki_default','other_base_urls','use_page_caching','theme','allow_site_to_change_theme','site_type','use_custom_footer','custom_footer','title_patterns_header','home_title_pattern','secondary_title_pattern','item_title_pattern',));			if ( html_editor_name($this->get_value('id')) == 'tiny_mce' )
 			{
 				$this->add_element('tiny_preview','text', array('display_name'=>''));
 				$this->set_value('tiny_preview','<p>A preview to show the TinyMCE editor\'s options for this site.</p><p>Though mostly functional, this content will not be saved and has no effect on the site\'s setup.</p><p>* The "source code" button will only show for users with that privilege.</p>');

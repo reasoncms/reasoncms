@@ -17,7 +17,7 @@
 		{
 			if($rel_name == 'site_to_theme' && $direction == 'right')
 			{
-				return $entity->get_display_name().' (<a href="'.$entity->get_value('base_url').'" target="_new">public site</a>)';
+				return $entity->get_display_name().' (<a href="'.$entity->get_value('base_url').'" target="_blank">public site</a>)';
 			}
 			return parent::_get_rel_list_display_name($entity,$rel_name,$direction);
 		}

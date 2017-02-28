@@ -46,7 +46,7 @@ class CloakItemMarkupGenerator extends ResponsiveItemMarkupGenerator
 			//Convert whitespaces and underscore to dash
 			$name = preg_replace("/[\s_]/", "-", $name);
 			
-			$ret .= ' <a href="'.$social_sharing['href'].'" class="' . $name . '">';
+			$ret .= ' <a href="'.$social_sharing['href'].'" class="' . $name . '" target="_blank">';
 			//$ret .= '<img src="'. $social_sharing['icon'] . '" alt="'. $social_sharing['text'] . '" />';
 			$ret .= '<span>' . $social_sharing['text'] . '</span>'; 
 			$ret .= '</a>';

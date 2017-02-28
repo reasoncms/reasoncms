@@ -85,7 +85,8 @@
 			$max_dimensions = $this->_get_max_dimensions($image);
 			
 			$this->_form = new Disco();
-			
+			$this->_form->set_box_class('StackedBox');
+
 			$this->_form->add_element('width','text', array('size'=>6));
 			$this->_form->add_comments('width',' pixels <span class="smallText max">('.$max_dimensions['width'].' max)</span>');
 			

@@ -536,7 +536,7 @@ class ZencoderMediaWorkDisplayer implements MediaWorkDisplayerInterface
 		// $markup .= 'height="'.intval($embed_height).'" ';		
 			
 		$markup .= 'width="100%" '; // for responsiveness, fill the iframe the video is in.
-		$markup .= 'height="100%" ';
+		$markup .= 'height="100%" style="max-width:100%;" ';
 			
 			
 		if ($poster_url = $this->_get_poster_image_url())
@@ -558,30 +558,26 @@ class ZencoderMediaWorkDisplayer implements MediaWorkDisplayerInterface
 			$markup .= $this->_get_video_source_tag($media_file, $media_file->get_value('mime_type'));
 		}
 		
-		if ($mp4 != null)
-		{
-			// Flash Video Fallback markup
-			$avd = new reasonAVDisplay();
-			$avd->set_video_dimensions($embed_width, $embed_height);
+		// Add caption track files, if any exist
+		$es = new entity_selector();
+		$es->add_type(id_of('av_captions'));
+		$es->add_right_relationship($this->media_work->id(), relationship_id_of('av_to_av_captions'));
+		$media_captions = $es->run_one();
+		foreach ((array) $media_captions as $caption) {
+			$base_url = REASON_HTTP_BASE_PATH . 'scripts/media/get_captions.php';
+			$url_with_params = $base_url . "?" . http_build_query(array(
+						"media_work_id" => $this->media_work->id(),
+						"caption_id" => $caption->id(),
+						"hash" => $this->get_hash(),
+			));
 			
-			$avd_autoplay = $this->autostart ? 'true' : 'false';
-			$avd->set_parameter('flv', 'autostart', $avd_autoplay);
-			$avd->set_parameter('flv', 'controlbar', 'over');
-			
-			if ($poster_url)
-				$avd->set_placard_image($poster_url);
-			
-			if ( !$this->show_controls )
-				$avd->set_parameter('flv', 'controlbar', '0');
-			
-			//$mp4->set_value('media_format', 'Flash Video');
-			$mp4->set_value('url', $this->_match_protocol($mp4->get_value('url')));
-			
-			$avd_markup = $avd->get_embedding_markup_for_flash_video($mp4);
-			// return $avd_markup; // uncomment this if testing the flash player
-			$markup .= $avd_markup;
+			$markup .= '<track kind="' . $caption->get_value('kind') . '" '
+					. 'src="' . $url_with_params . '" '
+					. 'srclang="' . htmlentities($caption->get_value('lang'), ENT_QUOTES) . '" '
+					. 'label="' . htmlentities($caption->get_value('label'), ENT_QUOTES) . '" />';
+			$markup .= "\n";
 		}
-		
+
 		$markup .= '</video>'."\n";
 		
 		return $markup;
@@ -764,24 +760,6 @@ class ZencoderMediaWorkDisplayer implements MediaWorkDisplayerInterface
 				$mp3 = $file;
 		}
 		
-		// Fall back to flash player
-		if ($mp3)
-		{
-			$avd = new reasonAVDisplay();
-			
-			$avd_autoplay = $this->autostart ? 'true' : 'false';
-			$avd->set_parameter('flv', 'autostart', $avd_autoplay);
-			
-			if ( !$this->show_controls )
-				$avd->set_parameter('flv', 'controlbar', '0');
-			
-			$mp3->set_value('url', $this->_match_protocol($mp3->get_value('url')));
-			
-			$avd_markup = $avd->get_embedding_markup_For_flash_video($mp3);
-			$markup .= $avd_markup;
-			
-			// return $avd_markup;  // uncomment this if testing the flash player
-		}
 		$markup .= '</audio>'."\n";
 
 		return $markup;
@@ -814,5 +792,36 @@ class ZencoderMediaWorkDisplayer implements MediaWorkDisplayerInterface
 			$this->analytics_on = false;
 		}
 	}
+	
+	/**
+	 * Array of parameters to pass to encode as json and pass to 
+	 * $("video,audio").mediaelementplayer($params_go_here);
+	 */
+	public function get_mediaelementjs_params($args = array())
+	{
+		$siteSuffix = "";
+		if (array_key_exists('site_id_for_title', $args)) {
+			$siteId = $args['site_id_for_title'];
+			if ($siteId > 0) {
+				$site = new entity($siteId);
+				$siteName = $site->get_value('name');
+				$siteSuffix .= " | $siteName";
+			}
+		}
+
+		return [
+			"stretching" => "none",
+			"iPadUseNativeControls" => true,
+			"iPhoneUseNativeControls" => true,
+			"AndroidUseNativeControls" => true,
+			"pluginPath" => REASON_PACKAGE_HTTP_BASE_PATH . "mediaelement/build/",
+			"features" => [
+				"playpause", "current", "progress", "duration", "tracks",
+				"volume", "fullscreen", "googleanalytics"
+			],
+			"googleAnalyticsTitle" => $this->media_work->get_value("name") . $siteSuffix
+		];
+	}
+
 }
 ?>

@@ -356,8 +356,9 @@ class XMLTag
         $out = "\n".str_repeat("\t", $this->tagParents).'<'.$this->tagName;
 
         //For each attribute, add attr="value"
-        foreach($this->tagAttrs as $attr => $value)
-            $out .= ' '.$attr.'="'.$value.'"';
+        foreach($this->tagAttrs as $attr => $value) {
+            $out .= ' '.$attr.'="'.xml_entities($value).'"';
+		}
         
         //If there are no children and it contains no data, end it off with a />
         if(empty($this->tagChildren) && empty($this->tagData))
@@ -435,5 +436,19 @@ class XMLTag
             unset($this->tagChildren[$x]);
         }
     }
+}
+
+// http://stackoverflow.com/a/3957519/841203
+function xml_entities($string) {
+    return strtr(
+        $string, 
+        array(
+            "<" => "&lt;",
+            ">" => "&gt;",
+            '"' => "&quot;",
+            "'" => "&apos;",
+            "&" => "&amp;",
+        )
+    );
 }
 ?>

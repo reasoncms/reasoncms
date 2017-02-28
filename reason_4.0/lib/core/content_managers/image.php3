@@ -249,14 +249,14 @@
 	     *	If the ignore minimum size check option is not checked, go ahead and check that the dimensions of the image are not too small.
 	     */
 
-	   if(!(empty($image->tmp_full_path) && empty($thumbnail->tmp_full_path)))
+	   if(!empty($image->tmp_full_path))
 	   {
 		  if(!isset($_POST['ignore_min_img_size_check']))
 		  {
-			   if(!image_error_check($image_info, $this->min_width, $this->min_height))
-			   $this->set_error('image','Your image is not large enough; it needs to be at least 
-                            '.$this->min_width.' x '.$this->min_height.' pixels in size.');
-              
+				if(!image_error_check($image_info, $this->min_width, $this->min_height))
+				{
+					$this->set_error('image','Your image is not large enough; it needs to be at least '.$this->min_width.' x '.$this->min_height.' pixels in size.');
+            	}
 		  }
 	   }
             /*

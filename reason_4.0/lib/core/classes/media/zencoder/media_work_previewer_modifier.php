@@ -72,7 +72,7 @@ class ZencoderMediaWorkPreviewerModifier implements MediaWorkPreviewerModifierIn
 	function set_head_items($head_items)
 	{
 		$head_items->add_javascript(JQUERY_URL, true);
-		$head_items->add_javascript(REASON_HTTP_BASE_PATH.'media/zencoder/media_work_previewer.js');
+		$head_items->add_javascript(REASON_HTTP_BASE_PATH.'media/zencoder/media_work_previewer.js?v=2');
 		$this->displayer_chrome->set_head_items($head_items);
 	}
 	
@@ -86,6 +86,7 @@ class ZencoderMediaWorkPreviewerModifier implements MediaWorkPreviewerModifierIn
 		$this->_add_file_preview($this->previewer->_entity);
 		$this->_add_embed_code($this->previewer->_entity);
 		$this->_add_original_link($this->previewer->_entity);
+		$this->_add_file_links($this->previewer->_entity);
 		$vals = $this->previewer->_entity->get_values();
 		unset($vals['salt']);
 		$this->previewer->show_all_values($vals);
@@ -145,6 +146,22 @@ class ZencoderMediaWorkPreviewerModifier implements MediaWorkPreviewerModifierIn
 		}
 	}
 	
+	protected function check_for_url_access($entity)
+	{
+		if(empty($this->previewer->admin_page))
+			return false;
+		
+		$owner = $entity->get_owner();
+		
+		if(empty($owner))
+			return false;
+		
+		if($owner->id() != $this->previewer->admin_page->site_id)
+			return false;
+		
+		return true;
+	}
+	
 	/**
 	 * Displays an embed field.
 	 */
@@ -153,20 +170,42 @@ class ZencoderMediaWorkPreviewerModifier implements MediaWorkPreviewerModifierIn
 		$this->previewer->show_item_default( $field , '<input id="'.$field.'Element" type="text" readonly="readonly" size="50" value="'.htmlspecialchars($value).'">' );
 	}
 
-	private function _add_original_link($entity)
+	private function _add_file_links($entity)
 	{
-		if(empty($this->previewer->admin_page))
+		if(!$this->check_for_url_access($entity))
 			return;
 		
-		$owner = $entity->get_owner();
-		if($owner->id() != $this->previewer->admin_page->site_id)
+		$es = new entity_selector();
+ 		$es->add_type(id_of('av_file'));
+ 		$es->add_right_relationship($entity->get_value('id'), relationship_id_of('av_to_av_file'));
+ 		$media_files = $es->run_one();
+ 		
+ 		foreach($media_files as $media_file)
+ 		{
+ 			if($url = $media_file->get_value('url'))
+ 			{
+ 				$name_parts = explode(' ',$media_file->get_value('name'));
+ 				$element_name = array_pop($name_parts);
+ 				if($entity->get_value('av_type') == 'Video')
+ 				{
+ 					$element_name .= '_'.array_pop($name_parts);
+ 				}
+ 				$url = '<a href="'.reason_htmlspecialchars($url).'">'.$url.'</a>';
+ 				$this->previewer->show_item_default( $element_name, $url);
+ 			}
+ 		}
+	}
+
+	private function _add_original_link($entity)
+	{
+		if(!$this->check_for_url_access($entity))
 			return;
 		
 		$storage_class = self::get_storage_class();
 		$original = $entity->get_value('original_filename');		
 		$url = $storage_class->get_base_url().$storage_class->get_path(false, $original, $entity, 'original');	
-		$url = '<a href="'.$url.'">'.$url.'</a>';
-		$this->previewer->show_item_default( 'link_to_original', $url);
+		$url = '<a href="'.reason_htmlspecialchars($url).'">'.$url.'</a>';
+		$this->previewer->show_item_default( 'original_upload', $url);
 
 	}
 }

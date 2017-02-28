@@ -271,6 +271,15 @@
 							}
 						}
 					}
+
+					// weird case - user who was not in LDAP but still had a username for logging in. Check the
+					// usernames array manually in this case.
+					$usernames = explode(',', trim($this->group->get_value('authorized_usernames')));
+					if (count($usernames) > 0 && in_array($user_netID, $usernames)) {
+						$this->permissions[$user_netID] = true;
+						return true;
+					}
+
 					$this->permissions[$user_netID] = false;
 					return false;
 				}
@@ -285,7 +294,7 @@
 					{
 						if(!empty($dir_array['directory_services'])) $dir = new directory_service($dir_array['directory_services']);
 						else $dir = new directory_service();
-						$dir->search_by_filter('(ds_username='.ldap_escape($user_netID).')');
+						$dir->search_by_filter('(ds_username='.$user_netID.')');
 						$member = $dir->get_records();
 						if (!empty($member))
 						{
@@ -503,7 +512,6 @@
 	 */
 	function add_netid_check_to_representation($user_netID,$rep)
 	{
-		$user_netID = ldap_escape($user_netID);
 		foreach($rep as $filter_key=>$filter_info)
 		{
 			if(!empty($filter_info['filter']))

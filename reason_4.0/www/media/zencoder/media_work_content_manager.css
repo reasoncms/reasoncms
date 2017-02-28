@@ -1,7 +1,7 @@
 a.toggler {
 	display:inline-block;
 	padding:4px 17px 5px 8px;
-	background:#eee url(../../../ui_images/reveal_wedge_grey_margins.png) no-repeat right center;
+	background:#eee url(../../ui_images/reveal_wedge_grey_margins.png) no-repeat right center;
 	text-decoration:none;
 	color:#000;
 	-webkit-border-radius: 3px;
@@ -11,26 +11,7 @@ a.toggler {
 a.toggler:hover {
 	background-color:#ddd;
 }
-
-div.file_upload a.upload {
-	display:inline-block;
-	padding:6px 11px 7px 11px;
-	background:#eee;
-	background: -moz-linear-gradient(top, rgba(238,238,238,1) 0%, rgba(204,204,204,1) 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(238,238,238,1)), color-stop(100%,rgba(204,204,204,1))); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top, rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top, rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top, rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%); /* IE10+ */
-	background: linear-gradient(to bottom, rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%); /* W3C */
-	text-decoration:none;
-	color:#000;
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
-	font-size:1.25em;
-	border:1px solid #ccc;
-}
-tr.offScreen {
+.offScreen {
 	position:absolute;
 	left:-9999px;
 	visibility:hidden;

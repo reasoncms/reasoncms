@@ -10,12 +10,12 @@
  */
 
 jQuery(function($) {
-	var upload_rows = $("tr[id^='upload'][id$='Row']");
-	var error_last_index = upload_rows.index($("tr.error:last"));
-	var file_last_index = upload_rows.index($("tr:has(.uploaded_file):last"));
+	var upload_rows = $("div.formElement[id^='upload'][id$='Item']");
+	var error_last_index = upload_rows.index($(".error:last"));
+	var file_last_index = upload_rows.index($(":has(.uploaded_file):last"));
 
 	//declare upload_optioin variable to handle ignoreminimgsizecheckRow
-	var upload_option = $("#ignoreminimgsizecheckRow");
+	var upload_option = $("#ignoreminimgsizecheckItem");
 	
 	var hide_after_index = Math.max(0, error_last_index, file_last_index + 1);	
 	upload_rows.each(function() {

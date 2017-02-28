@@ -352,6 +352,7 @@ class EventsUpcomingModule extends DefaultMinisiteModule
 	{
 		if(!empty($ids))
 		{
+			echo '<div class="ongoing">';
 			echo '<h4>Ongoing</h4>'."\n";
 			echo '<ul>'."\n";
 			foreach($ids as $id)
@@ -361,6 +362,7 @@ class EventsUpcomingModule extends DefaultMinisiteModule
 				echo '</li>'."\n";
 			}
 			echo '</ul>'."\n";
+			echo '</div>';
 		}
 	}	
 	

@@ -383,9 +383,11 @@ class EventsModule extends DefaultMinisiteModule
 	 */
 	var $acceptable_params = array(
 							'additional_sites'=>'',
+							'exclude_sites'=>'',
 	 						'cache_lifespan' => 0,
 	 						'cache_lifespan_meta' => 0,
 	 						'calendar_link_text' => 'More events',
+	 						'calendar_link_replacement' => '',
 							'default_view_min_days'=>1,
 	 						'exclude_audiences' => '',
 	 						'form_include' => 'minisite_templates/modules/event_slot_registration/event_slot_registration_form.php',
@@ -394,6 +396,7 @@ class EventsModule extends DefaultMinisiteModule
 							'item_admin_markup' => '',
 							'item_markup' => '',
 	 						'limit_by_related_types' => '', // as comma spaced type unique names
+							'limit_to_ticketed_events'=>false,
 	 						'limit_to_audiences' => '',	 // as comma spaced strings
 							'limit_to_page_categories'=>false,
 	 						'link_shared_events_to_parent_site' => false,
@@ -511,6 +514,17 @@ class EventsModule extends DefaultMinisiteModule
 	 * @var string html
 	 */
 	protected $slot_registration_admin_messages = '';
+	
+	/**
+	 * Container array of form controllers for forms associated with the event
+	 * 
+	 * Usually there is only one form per event.
+	 * 
+	 * Controllers here haven't had init() run yet
+	 * 
+	 * @var array
+	 */
+	var $ticket_form_controllers = array();
 	
 	//////////////////////////////////////
 	// General Functions
@@ -1111,9 +1125,24 @@ class EventsModule extends DefaultMinisiteModule
 		{
 			return $this->event_sites;
 		}
-		$sites = array();
+		$sites = $this->_get_sites_from_string($this->params['additional_sites']);
+		if(!empty($this->params['exclude_sites']))
+		{
+			$excluded = $this->_get_sites_from_string($this->params['exclude_sites']);
+			foreach($excluded as $site)
+			{
+				if(isset($sites[$site->id()]))
+					unset($sites[$site->id()]);
+			}
+		}
 		$sites[$this->site_id] = new entity($this->site_id);
-		$site_strings = explode(',',$this->params['additional_sites']);
+		$this->event_sites = $sites;
+		return $this->event_sites;
+	}
+	function _get_sites_from_string($string)
+	{
+		$sites = array();
+		$site_strings = explode(',',$string);
 		foreach($site_strings as $site_string)
 		{
 			$site_string = trim($site_string);
@@ -1140,8 +1169,7 @@ class EventsModule extends DefaultMinisiteModule
 						$sites = $sites + $usites;
 			}
 		}
-		$this->event_sites = $sites;
-		return $this->event_sites;
+		return $sites;
 	}
 	/**
 	 * Get the parent sites for the current site
@@ -1541,6 +1569,7 @@ class EventsModule extends DefaultMinisiteModule
 			{
 				$item_bundle = new functionBundle();
 				$item_bundle->set_function('event_link', array($this, 'get_event_link') );
+				$item_bundle->set_function('get_ticket_info_from_form', array($this, 'get_ticket_info_from_form') );
 				$item_bundle->set_function('teaser_image', array($this, 'get_teaser_image_html') );
 				$item_bundle->set_function('media_works', array($this, 'get_event_media_works'));
 				$item_bundle->set_function('prettify_duration', array($this, 'prettify_duration') );
@@ -3499,6 +3528,13 @@ class EventsModule extends DefaultMinisiteModule
 			$es->add_relation($audience_table_info['audience_id']['table'].'.'.$audience_table_info['audience_id']['field'].' NOT IN ('.implode(',',$audience_ids).')');
 		}
 		
+		if($this->params['limit_to_ticketed_events']) {
+			// Limit to events with the 'event_to_form' relationship AND
+			// the state of the form entity is Live
+			$table_info = $es->add_left_relationship_field('event_to_form', 'entity', 'state', 'form_id');
+			$es->add_relation($table_info['form_id']['table'] . '.' . $table_info['form_id']['field'] . ' = "Live"');
+		}
+		
 		if(!empty($this->params['freetext_filters']))
 		{
 			foreach($this->params['freetext_filters'] as $filter)
@@ -3538,6 +3574,9 @@ class EventsModule extends DefaultMinisiteModule
 	 */
 	function get_full_calendar_link_markup()
 	{
+		if(!empty($this->params['calendar_link_replacement']))
+			return $this->params['calendar_link_replacement'];
+		
 		if(empty($this->events_page_url) || empty($this->params['calendar_link_text']))
 			return '';
 		
@@ -3558,6 +3597,7 @@ class EventsModule extends DefaultMinisiteModule
 	 *
 	 * @return void
 	 * @todo Move to a markup class
+	 * @todo Find a way to make Yahoo accept urls with ampersands
 	 */
 	function show_list_export_links()
 	{
@@ -3571,21 +3611,33 @@ class EventsModule extends DefaultMinisiteModule
 		{
 			$start_date = $this->request['start_date'];
 		}
-		
-		$query_string = $this->construct_link(array('start_date'=>$start_date,'view'=>'','end_date'=>'','format'=>'ical'));
+		$download_query = $this->construct_link(array('start_date'=>$start_date,'view'=>'','end_date'=>'','format'=>'ical'));
+		$subscribe_query = $this->construct_link(array('start_date'=>$start_date,'view'=>'','end_date'=>'','format'=>'ical'), true, false);
+		$calendar_url = REASON_HOST.$this->parent->pages->get_full_url( $this->page_id );
+		$webcal_url = 'webcal://'.$calendar_url.$subscribe_query;
+		$gcal_url = 'https://calendar.google.com/calendar/render?cid='.$webcal_url;
+		//$ycal_url = 'https://calendar.yahoo.com/subscribe?ics=http://'.$calendar_url.$this->construct_link(array('format'=>'ical'));
 		if(!empty($this->request['category']) || !empty($this->request['audience']) || !empty($this->request['search']))
 		{
-			$subscribe_text = 'Subscribe to this view in desktop calendar';
+			$subscribe_desktop_text = 'Subscribe to this view (Desktop)';
+			$subscribe_gcal_text = 'Subscribe to this view (Google)';
+			//$subscribe_ycal_text = 'Subscribe to this view (Yahoo!)';
 			$download_text = 'Download these events (.ics)';
 		}
 		else
 		{
-			$subscribe_text = 'Subscribe to this calendar';
+			$subscribe_desktop_text = 'Subscribe (Desktop)';
+			$subscribe_gcal_text = 'Subscribe (Google)';
+			//$subscribe_ycal_text = 'Subscribe (Yahoo!)';
 			$download_text = 'Download events (.ics)';
 		}
-		echo '<a href="webcal://'.REASON_HOST.$this->parent->pages->get_full_url( $this->page_id ).$query_string.'">'.$subscribe_text.'</a>';
-		if(!empty($this->events))
-			echo ' <span class="divider">|</span> <a href="'.$query_string.'">'.$download_text.'</a>';
+		echo '<a href="'.$webcal_url.'">'.$subscribe_desktop_text.'</a>';
+		echo ' <span class="divider">|</span> <a href="'.$gcal_url.'" target="_blank">'.$subscribe_gcal_text.'</a>';
+		//echo ' <span class="divider">|</span> <a href="'.$ycal_url.'" target="_blank">'.$subscribe_ycal_text.'</a>';
+		if(!empty($this->events)) 
+		{
+			echo ' <span class="divider">|</span> <a href="'.$download_query.'">'.$download_text.'</a>';
+		}
 		if (defined("REASON_URL_FOR_ICAL_FEED_HELP") && ( (bool) REASON_URL_FOR_ICAL_FEED_HELP != FALSE))
 		{
 			echo ' <span class="divider">|</span> <a href="'.REASON_URL_FOR_ICAL_FEED_HELP.'"><img src="'.REASON_HTTP_BASE_PATH . 'silk_icons/help.png" alt="Help" width="16px" height="16px" /></a>';
@@ -3635,20 +3687,17 @@ class EventsModule extends DefaultMinisiteModule
 					}
 				}
 				
-				$this->verify_and_set_up_registration_slots();
+				$this->verify_and_set_up_registration_forms();
 			}
 		}
 	} // }}}
-	/**
-	 * Make sure a legitimate slot is being requested
-	 */
-	function verify_and_set_up_registration_slots()
+	function verify_and_set_up_registration_forms()
 	{
 		$redirect = false;
 		$return_value = false;
 		if (!empty($this->event))
 		{
-			$slots = $this->get_registration_slots($this->event);
+			$slots = $this->get_registration_forms($this->event);
 			if(!empty($slots))
 			{
 				if ($head_items = $this->get_head_items())
@@ -3709,7 +3758,9 @@ class EventsModule extends DefaultMinisiteModule
 		}
 		
 		$calendar = new reason_iCalendar();
-  		$calendar -> set_events($events);
+		$nav = $this->get_page_nav();
+		$calendar->set_events_page_url( $nav->get_full_url( $this->page_id, true, true ) );
+  		$calendar->set_events($events);
 		if (count($events) > 1)
 		{
 			$site = new entity($this->site_id);
@@ -3801,13 +3852,15 @@ class EventsModule extends DefaultMinisiteModule
 			$bundle->set_function('media_works', array($this, 'get_event_media_works'));
 			$bundle->set_function('owner_site', array($this, 'get_owner_site_info'));
 			$bundle->set_function('ical_link', array($this, 'get_item_ical_link'));
+			$bundle->set_function('external_link', array($this, 'get_item_external_link'));
 			$bundle->set_function('contact_info', array($this, 'get_contact_info'));
 			$bundle->set_function('categories', array($this, 'get_event_categories'));
 			$bundle->set_function('audiences', array($this, 'get_event_audiences'));
 			$bundle->set_function('keyword_links', array($this, 'get_event_keyword_links'));
 			$bundle->set_function('is_all_day_event', array($this, 'event_is_all_day_event'));
 			$bundle->set_function('map_zoom_level', array($this, 'get_map_zoom_level'));
-			$bundle->set_function('registration_markup', array($this, 'get_registration_slots_markup'));
+			$bundle->set_function('get_registration_forms', array($this, 'get_registration_forms'));
+			$bundle->set_function('registration_markup', array($this, 'get_registration_forms_markup'));
 			$bundle->set_function('prettify_duration', array($this, 'prettify_duration'));
 			$bundle->set_function('repetition_explanation', array($this, 'get_repetition_explanation'));
 			
@@ -3938,6 +3991,99 @@ class EventsModule extends DefaultMinisiteModule
 			return $this->construct_link(array('event_id'=>$e->id(),'format'=>'ical','date'=>''));
 		else
 			return $this->construct_link(array('event_id'=>$e->id(),'format'=>'ical','date'=>$date));
+	}
+	/**
+	 * Get the external add-to-calendar link for a given event entity
+	 *
+	 * @param object $e event entity
+	 * @param string $calendar determines which external source, 'google' or 'yahoo'
+	 * @return string html-encoded URL
+	 */
+	function get_item_external_link($e, $calendar) {
+		//Make DateTime object, assign single instance date if relevant:
+		$dateTime = new DateTime($e->get_value('datetime'));
+		$reqDate = '';
+		if ($e->get_value('recurrence') != 'none' && !empty($this->request['date']))
+			$reqDate = $this->request['date'];
+		if (!empty($reqDate))
+			$dateTime->modify($reqDate.' '.$dateTime->format('H:i:s'));
+		//Make DateTime object, set UTC, and record start dates and times:
+		$hours = $e->get_value('hours');
+		$minutes = $e->get_value('minutes');
+		$all_day = (($dateTime->format('His') == '000000') && ((($hours == 0) || ($hours == 24)) && ($minutes == 0)));
+		$dateTime->setTimezone(new DateTimeZone('UTC'));
+		$startDate = $dateTime->format('Ymd');
+		$startTime = $dateTime->format('His');																						
+		//Get event title and adjust and make safe for transfer:
+		$title = $this->string_to_external_url_safe($e->get_value('name'));
+		//Create location string:
+		$location = $this->string_to_external_url_safe($e->get_value('location'));
+		$address = $this->string_to_external_url_safe($e->get_value('address'));
+		$location .= (!empty($location) && !empty($address)) ? ', ' : '';
+		$location .= (!empty($address)) ? $address : '';
+		//Create details string:
+		$content = $this->string_to_external_url_safe($e->get_value('content'));
+		$info_url = $this->string_to_external_url_safe('For more information, visit: '.$e->get_value('url'));
+		$event_url = 'http://'.REASON_HOST.$this->parent->pages->get_full_url($this->page_id).'?event_id='.$e->id();
+		if(!empty($this->request['date']))
+			$event_url .= '&date='.urlencode($this->request['date']);
+		$cal_url = $this->string_to_external_url_safe('Event source: '.$event_url);
+		$details = (!empty($content)) ? $content.'%0A%0A' : '';
+		$details .= (!empty($e->get_value('url'))) ? $info_url.'%0A%0A'.$cal_url : $cal_url;
+		switch ($calendar) {
+			case 'google':
+				//Complete additional formating:
+				if($all_day && $e->get_value('recurrence') == 'daily' && $e->get_value('frequency') == '1')
+				{
+					$dateTime = new DateTime($e->get_value('last_occurence'));
+					$dateTime->add(new DateInterval('PT24H0M'));
+				}
+				elseif($e->get_value('hours') || $e->get_value('minutes'))
+				{
+					$hours = $e->get_value('hours') ? $e->get_value('hours') : '0';
+					$minutes = $e->get_value('minutes') ? $e->get_value('minutes') : '0';
+					$dateTime->add(new DateInterval('PT'.$hours.'H'.$minutes.'M'));
+				}
+				$endDate = $dateTime->format('Ymd');
+				$endTime = $dateTime->format('His');
+				$dates = $all_day ? $startDate.'/'.$endDate : $startDate.'T'.$startTime.'Z/'.$endDate.'T'.$endTime.'Z';
+				//Create string to return:
+				$ret = 'http://www.google.com/calendar/event?action=TEMPLATE';
+				$ret .= '&dates='.$dates.'&ctz='.REASON_DEFAULT_TIMEZONE.'&text='.$title;
+				$ret .= (!empty($location)) ? '&location='.$location : '';
+				$ret .= (!empty($details)) ? '&details='.$details : '';
+				break;
+			case 'yahoo':
+				//Complete additional formating:
+				$duration = '';
+				if (!$all_day) {
+					$duration = ($hours < 10) ? '0'.$hours : $hours;
+					$duration .= ($minutes < 10) ? '0'.$minutes : $minutes;
+				}
+				$startDateTime = $all_day ? $startDate : $startDate.'T'.$startTime.'Z';
+				//Create string to return:
+				$ret = 'http://calendar.yahoo.com/?v=60&ST='.$startDateTime.'&TITLE='.$title;
+				$ret .= (!empty($duration)) ? '&DUR='.$duration : '';
+				$ret .= (!empty($location)) ? '&in_loc='.$location : '';
+				$ret .= (!empty($details)) ? '&DESC='.$details : '';
+				break;
+			default:
+				trigger_error('External calendar of "'.$calendar.'" given is not implemented. Unable to return url.');
+				$ret = NULL;
+		}
+		return $ret;
+	}
+	/**
+	 * Returns given string converted for use as a parameter value in urls.
+	 * Operations: Format lists, strip tags, straight to curly quotes, replace ampersand, urlencode, other minor changes.
+	 *
+	 * @param string $e string to convert
+	 * @return string converted string
+	 */
+	function string_to_external_url_safe($string) {
+		//not sure how best to handle ol or levels, so convert all to simple ul bullets
+		$string = preg_replace('/<li[^>]*>/',' • ',$string);
+		return urlencode(html_entity_decode(strip_tags($string)));
 	}
 	/**
 	 * Output HTML of a link back to the events listing from the view of an individual event
@@ -4120,32 +4266,22 @@ class EventsModule extends DefaultMinisiteModule
 	//////////////////////////////////////
 	// Registration slots
 	//////////////////////////////////////
-	
-	/*
-		General note about registration slots:
-		This should be moved into some sort of templated (perhaps MVC) framework
-		at some point. It is not recommended to modify or customize registration slots beyond 
-		swapping out the form via the form_include parameter.
-	*/
-	
+
 	/**
-	 * Get the registration slots associated with this event.
+	 * Get the registration forms associated with this event.
+	 * 
 	 * @param object $event entity
-	 * @return array registration slot entities
+	 * @return array registration form entities
 	 */
-	function get_registration_slots($event)
+	function get_registration_forms($event)
 	{
-		static $cache = array();
-		if(!isset($cache[$event->id()]))
-		{
-			$es = new entity_selector();
-			$es->description = "Getting the registration slots for this event";
-			$es->add_type( id_of( 'registration_slot_type' ) );
-			$es->add_right_relationship($event->id(), relationship_id_of('event_type_to_registration_slot_type'));
-			$es->set_order( 'sortable.sort_order ASC' );
-			$cache[$event->id()] = $es->run_one();
-		}
-		return $cache[$event->id()];
+		$es = new entity_selector();
+		$es->description = "Getting the registration forms for this event";
+		$es->add_type( id_of( 'form' ) );
+		$es->add_right_relationship($event->id(), relationship_id_of('event_to_form'));
+		$result = $es->run_one();
+		
+		return $result;
 	}
 	
 	/**
@@ -4153,42 +4289,28 @@ class EventsModule extends DefaultMinisiteModule
 	 * @param object $event entity
 	 * @return string markup
 	 */
-	function get_registration_slots_markup($event)
+	function get_registration_forms_markup($event)
 	{
 		ob_start();
-		if(!($event->get_value('last_occurence') < date('Y-m-d')))
-		{
-			$slots = $this->get_registration_slots($event);
-			if(!empty($slots))
-			{
-				echo '<div id="slotInfo">'."\n";
-				if(!empty($this->request['delete_registrant']) && $this->user_is_slot_admin($event) )
-				{
-					$this->delete_registrant($event);
-				}
-			
-				if(!empty($this->request['admin_view']) && $this->validate_date($this->event) && $this->user_is_slot_admin($event))
-				{
-					$this->show_slot_registration_admin_view($event);
-				}
-				elseif(!$this->validate_date($event))
-				{
-					$this->show_registration_dates($event);
-				}
-				elseif(empty($this->request['slot_id']))
-				{
-					$this->show_registration_slots($event);
-				}
-				else
-				{
-					$this->show_registration_form($event);
-				}
-				echo '</div>'."\n";
+
+		$event_time = new Datetime($event->get_value('datetime'));
+		// show form for 12 hours after event,
+		// but the form itself may display a closed message
+		$event_time->modify("+12 hours");
+		$now = new Datetime();
+		$should_display_form =  $event_time > $now;
+		if ($should_display_form) {			
+			$forms = $this->get_registration_forms($event);
+			foreach ($forms as $form) {
+				$this->show_registration_form($form);
 			}
 		}
-		return ob_get_clean();
+
+		$form_html = ob_get_clean();
+
+		return $form_html;
 	}
-	
+
 	/**
 	 * Redirect to empty date if the given requested date is not a date the event occurrs
 	 * @param object $event
@@ -4235,7 +4357,7 @@ class EventsModule extends DefaultMinisiteModule
 	{
 
 		//find registration slots
-		$results = $this->get_registration_slots($event);
+		$results = $this->get_registration_forms($event);
 		
 		//display registration slots
 		if(!empty($results) && $event->get_value('registration') != 'full')
@@ -4330,30 +4452,94 @@ class EventsModule extends DefaultMinisiteModule
 		return $possible_dates;
 	}
 	/**
+	 * Get a Thor Form Controller
+	 * 
+	 * @param object $form a form entity
+	 * @return ThorFormController controller that hasn't been inited
+	 */
+	function get_ticket_form_controller($form)
+	{
+		$formId = $form->id();
+		if (empty($this->ticket_form_controllers[$formId])) {
+			reason_include_once('minisite_templates/modules/form/models/thor.php');
+			reason_include_once('minisite_templates/modules/form/views/thor/default.php');
+			reason_include_once('minisite_templates/modules/form/controllers/thor.php');
+
+			// Assemble the MVC components to handle forms in this context
+			$form_model = new ThorFormModel();
+			$form_model->init_from_module($this);
+			// Unlike typical forms with a 'page_to_form' relationship,
+			// here our form ID comes from an 'event_to_form' relationship and is already
+			// present on this Event object so we manually define it on the model. 
+			$form_model->set_form_id($formId);
+			$form_model->set_form_entity($formId);
+
+			$form_controller = new ThorFormController();
+			$form_controller->set_model($form_model);
+
+			$this->ticket_form_controllers[$formId] = $form_controller;
+		}
+
+		return $this->ticket_form_controllers[$formId];
+	}
+
+	/**
 	 * Display the registration form
 	 *
 	 * @param object $event event entity
 	 * @return void
 	 * @todo Move to a markup class
 	 */
-	function show_registration_form($event)
+	function show_registration_form($form)
 	{
-		$slot_entity = new Entity($this->request['slot_id']);
-		echo '<div class="form">'."\n";
-		echo '<h3>Register for '.$event->get_value('name').' ('.$slot_entity->get_value('name').')'.'</h3>'."\n";
-		
-		$class_name = (isset($GLOBALS[ '_slot_registration_view_class_names' ][ basename( $this->params['form_include'], '.php') ]))
-					? $GLOBALS[ '_slot_registration_view_class_names' ][ basename( $this->params['form_include'], '.php') ]
-					: 'EventSlotRegistrationForm';
-		
-		$form = new $class_name($event, $this->request, ';', '|', $this->slot_generate_cancel_link($event));
-		$possible_dates = $this->get_possible_registration_dates($event);
-		if (count($possible_dates) > 1)
-		{
-			$form->show_date_change_link();
+		if (array_key_exists('event_id', $this->request)) {
+			$eventIdInRequest = $this->request['event_id'];
+		} else {
+			$eventIdInRequest = false;
 		}
-		$form->run();
-		echo '</div>'."\n";
+		
+		$controller = $this->get_ticket_form_controller($form);
+		$controller->init();
+		$eventsOnForm = $controller->model->get_events_on_form();
+		$eventIdInRequestIsValid = false;
+		foreach ($eventsOnForm as $event) {
+			if ($eventIdInRequest && $event->id() == $eventIdInRequest) {
+				$eventIdInRequestIsValid = true;
+			}
+		}	
+
+	
+		if ($eventIdInRequestIsValid) {
+			// Prepare the form, store response html in var 
+			ob_start();
+			
+			// since the form is in the middle of the page, make sure users
+			// see the form response using an anchor jump
+			$view =& $controller->get_view();
+			$view->form_action = htmlspecialchars($_SERVER['REQUEST_URI'], ENT_QUOTES) . "#jumpToForm";
+			
+			$controller->run();
+			$formHtml = ob_get_clean();
+
+			// This demotion is to reuse existing styles (and partially semantic, too)
+			$formHtml = demote_headings($formHtml, 1);
+
+			// Use the full form name for the header above the form
+			$model =& $controller->get_model();
+			$formEntity = $model->_form;
+
+			$html = <<<HTML
+<a name="jumpToForm"></a>
+<div id="slotInfo">
+	<div class="form">
+		<h3>{$formEntity->get_value('name')}</h3>
+		$formHtml
+	</div>
+</div>
+HTML;
+
+			echo $html;
+		}
 	}
 	/**
 	 * Display the registration admin view
@@ -4582,11 +4768,12 @@ class EventsModule extends DefaultMinisiteModule
 	 * @param array $vars The query string variables for the link
 	 * @param boolean $pass_passables should the items in $this->pass_vars
 	 *                be passed if they are present in the current query?
+	 * @param boolean $html_encode Should use '&amp;' for HTML (true) or '%26' for URL (false).
 	 * @return string
 	 *
 	 * @todo replace this with carl_ functions
 	 */
-	function construct_link( $vars = array(), $pass_passables = true ) // {{{
+	function construct_link( $vars = array(), $pass_passables = true , $html_encode = true) // {{{
 	{
 		if($pass_passables)
 			$link_vars = $this->pass_vars;
@@ -4604,7 +4791,8 @@ class EventsModule extends DefaultMinisiteModule
 		{
 			$link_vars[$key] = urlencode($link_vars[$key]);
 		}
-		return '?'.implode_with_keys('&amp;',$link_vars);
+		$ampersand = ($html_encode) ? '&amp;' : '%26';
+		return '?'.implode_with_keys($ampersand,$link_vars);
 	} // }}}
 	/**
 	 * Is a given event an all-day event?
@@ -4709,5 +4897,31 @@ class EventsModule extends DefaultMinisiteModule
            fclose($outputFile);
         }
     	return ob_get_clean();
+	}
+	
+	/**
+	 * Get Event Ticket info & state from all related forms
+	 * 
+	 * If a event hasn't received any submissions it will not appear in this array
+	 * 
+	 * @param Entity $event event entity
+	 * @return array
+	 */
+	function get_ticket_info_from_form($event) {
+		// find forms on this event
+		$forms = $this->get_registration_forms($event);
+		// Look for the event in related forms, though there is usually only one form
+		$eventInfo = array();
+		foreach($forms as $form) {
+			$form_controller = $this->get_ticket_form_controller($form);
+			$form_controller->init();
+			$model = $form_controller->get_model();
+			$eventInfoFromForm = $model->event_tickets_get_all_event_seat_info();
+			foreach($eventInfoFromForm as $k => $info) {
+				$eventInfo[$k] = $info;
+			}
+		}
+		
+		return $eventInfo;
 	}
 }

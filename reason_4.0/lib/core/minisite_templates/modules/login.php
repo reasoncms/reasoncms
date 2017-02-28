@@ -35,6 +35,7 @@
 			// Array of directory services to try for authentication.  If empty, uses the default(s) defined in SETTINGS_INC/dir_service_config.php
 			'auth_service' => array(),
 			'login_error_message' => 'It appears your login information is not valid.  Please try again.  If problems persist, contact the Web Services Group for assistance.',
+			'msg_uname' => '',
 		);
 		var $cleanup_rules = array(
 			'username' => array( 'function' => 'turn_into_string' ),
@@ -226,18 +227,24 @@
 						$s =& get_reason_session();
 						$this->msg = $s->get_error_msg( $this->request[ 'code' ] );
 					}
-					if( !empty( $this->request[ 'msg_uname' ] ) )
-					{
-						$msg_id = id_of($this->request[ 'msg_uname' ], true, false);
-						if(!empty($msg_id))
-						{
-							$msg_ent = new entity($msg_id);
-							if( $msg_ent->get_value( 'type' ) == id_of('text_blurb') )
-								$this->msg .= $msg_ent->get_value('content');
-						}
-					}
+					
+					if( isset( $this->request[ 'msg_uname' ] ) )
+						$this->set_message_from_unique_name($this->request[ 'msg_uname' ]);
+					elseif( !empty($this->params[ 'msg_uname' ] ) )
+						$this->set_message_from_unique_name($this->params[ 'msg_uname' ]);
 				}
 			}
+		}
+	
+		protected function set_message_from_unique_name($name)
+		{
+			$msg_id = id_of($name, true, false);
+			if(!empty($msg_id))
+			{
+				$msg_ent = new entity($msg_id);
+				if( $msg_ent->get_value( 'type' ) == id_of('text_blurb') )
+					$this->msg .= $msg_ent->get_value('content');
+			}		
 		}
 		function run()
 		{

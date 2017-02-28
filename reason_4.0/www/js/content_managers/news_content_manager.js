@@ -2,11 +2,11 @@ function handleLinkness() {
 	var linkRadioStatus = $("input[name='is_link_story']:checked").val(); // 0 means "no, not a link"
 	// console.log("radio: [" + (linkRadioStatus == 0 ? "NO" : "YES") + "]");
 
-	$("tr#linkposturlRow").css("display", linkRadioStatus == 0 ? "none" : "table-row");
-	$("tr#linkorgRow").css("display", linkRadioStatus == 0 ? "none" : "table-row");
-	// $("tr#descriptionRow").css("display", linkRadioStatus == 1 ? "none" : "table-row");
-	$("tr#contentRow").css("display", linkRadioStatus == 1 ? "none" : "table-row");
-	$("tr#embedhandlerRow").css("display", linkRadioStatus == 1 ? "none" : "table-row");
+	$("#linkposturlItem").css("display", linkRadioStatus == 0 ? "none" : "block");
+	$("#linkorgItem").css("display", linkRadioStatus == 0 ? "none" : "block");
+	// $("tr#descriptionRow").css("display", linkRadioStatus == 1 ? "none" : "block");
+	$("#contentItem").css("display", linkRadioStatus == 1 ? "none" : "block");
+	$("#embedhandlerItem").css("display", linkRadioStatus == 1 ? "none" : "block");
 }
 
 $(document).ready(function() {
