@@ -82,17 +82,26 @@
 						'image/png',);
 			}
 			
-			$this->add_element( 'image', 'ReasonImageUpload', array('obey_no_resize_flag' => true, 'authenticator' => $this->_get_authenticator(), 'max_width' => $this->max_width, 'max_height' => $this->max_height,
-			'acceptable_types' => $acceptable_types) );
+			$this->add_element( 'image', 'ReasonImageUpload', array(
+				'obey_no_resize_flag' => true,
+				'authenticator' => $this->_get_authenticator(),
+				'max_width' => $this->max_width,
+				'max_height' => $this->max_height,
+				'acceptable_types' => $acceptable_types,
+				'head_items' => $this->admin_page->head_items,
+			));
 			if (! imagemagick_available())
 				{
 					$size = get_approx_max_image_size();
 					$this->set_comments('image', 'Images with resolutions over '.$size['res'].' or '.$size['mps'].' MPs may cause errors');
 				}
 			
-			$this->add_element( 'thumbnail', 'ReasonImageUpload', array('authenticator' => $this->_get_authenticator(),
-			'acceptable_types' => $acceptable_types) );
-						
+			$this->add_element( 'thumbnail', 'ReasonImageUpload', array(
+				'authenticator' => $this->_get_authenticator(),
+				'acceptable_types' => $acceptable_types,
+				'head_items' => $this->admin_page->head_items,
+			));
+			
 			$image = $this->get_element('image');
 			$image->get_head_items($this->head_items);
 			$this->add_element('default_thumbnail', 'checkbox', 
