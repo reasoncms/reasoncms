@@ -11,6 +11,7 @@
 	require_once CARL_UTIL_INC . 'basic/misc.php';
 	require_once DISCO_INC . 'plugins/input_limiter/input_limiter.php';
 	reason_include_once('classes/plasmature/upload.php');
+	reason_include_once('classes/plasmature/image_point.php');
 	reason_include_once('function_libraries/images.php');
 	reason_include_once('function_libraries/image_tools.php');
 	reason_include_once('content_managers/default.php3');
@@ -91,11 +92,13 @@
 			
 			$this->add_element( 'thumbnail', 'ReasonImageUpload', array('authenticator' => $this->_get_authenticator(),
 			'acceptable_types' => $acceptable_types) );
-			
+						
 			$image = $this->get_element('image');
 			$image->get_head_items($this->head_items);
 			$this->add_element('default_thumbnail', 'checkbox', 
 					array('description' => 'Generate thumbnail from full-size image'));
+					
+			$this->add_element( 'focal_point', 'reason_image_focal_point');
 
 			$this->change_element_type( 'width','hidden' );
 			$this->change_element_type( 'height','hidden' );
@@ -104,20 +107,26 @@
 			$this->change_element_type( 'author_description','hidden' );
 			$this->change_element_type( 'thumbnail_image_type', 'hidden' );
 			$this->change_element_type( 'original_image_type', 'hidden' );
-			
+			$this->change_element_type( 'focal_point_x', 'hidden', array('userland_changeable' => true) );
+			$this->change_element_type( 'focal_point_y', 'hidden', array('userland_changeable' => true) );
 
+			$this->change_element_type( 'crop_style','radio_no_sort',array( 'options' => array( 'center' => 'Center', 'custom' => 'Custom' ) ) );
+			
 			$this->set_display_name( 'description', 'Short Caption' );
 			$this->set_display_name( 'content', 'Long Caption' );
 			$this->set_display_name( 'datetime', 'Photo Taken' );
 			$this->set_display_name( 'author', 'Photographer' );
 			$this->set_display_name( 'default_thumbnail', '&nbsp;');
+			$this->set_display_name( 'focal_point', '&nbsp;');
 
 
 			$this->set_comments( 'name', form_comment("A name for internal reference") );
 			$this->set_comments( 'content', form_comment("The long caption will appear with the full-sized image.") );
 			$this->set_comments( 'description', form_comment("The short caption will go along with the thumbnail. It will also be used under the full-sized image if there is no long caption.") );
 			$this->set_comments( 'keywords', form_comment('Use commas to separate terms, like this: "Fall, Campus, Sunny, Scenic, Orange, Leaves, Bicycle Ride"') );
-			
+			$this->set_comments( 'crop_style', form_comment('If Reason needs to crop this image to fit into a page layout, how should it be cropped?') );
+
+
 			if(!$this->get_value('datetime'))
 				$this->set_comments( 'datetime', form_comment('This may be automatically determined from the image file.') );
 			//determine if user should be able to upload full-sized images
@@ -150,6 +159,18 @@
 			// Limit number of characters that can be entered for short/long caption
 			$this->limit_input_lengths();
 			
+			// If they are empty, set default values for focal_point_x and focal_point_y.
+			if (!empty($this->get_value('crop_style'))) {
+				if (empty($this->get_value('focal_point_x'))) {
+					$this->set_value('focal_point_x', 0.5);
+				}
+				if (empty($this->get_value('focal_point_y'))) {
+					$this->set_value('focal_point_y', 0.5);
+				}
+			} else {
+				$this->change_element_type('crop_style', 'hidden');
+			}
+			
 			
 			/* 
 			 *   Include javascript that handles hiding/showing various fields when appropriate,
@@ -158,6 +179,7 @@
 			$this->head_items->add_javascript(JQUERY_URL, true);
 			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH .'content_managers/image_manager.js');
 			$this->head_items->add_stylesheet(REASON_HTTP_BASE_PATH .'css/reason_admin/content_managers/image.css');
+			$this->head_items->add_stylesheet(REASON_HTTP_BASE_PATH .'css/reason_admin/content_managers/image_point.css');
 		} // }}}
 		
 		function limit_input_lengths()
@@ -199,7 +221,9 @@
 					'author',
 					'keywords',
 					'datetime',
-					'original_image_format',	
+					'original_image_format',
+					'crop_style',
+					'focal_point',
 				)
 			);
 			

@@ -372,6 +372,14 @@ class reasonSizedImage
 				$width = $this->_get_width();
 				$height = $this->_get_height();
 				$crop_style=$this->get_crop_style();
+				$focal_point_x = $entity->get_value('focal_point_x');
+				$focal_point_y = $entity->get_value('focal_point_y');
+				$image_crop_style = $entity->get_value('crop_style');
+				if ('center' == $image_crop_style) {
+					$focal_point_x = 0.5;
+					$focal_point_y = 0.5;
+				} 
+				
 				if (empty($path)) trigger_error('reasonSizedImage could not determine the path of the original image - did not make a sized image');
 				elseif (empty($newpath)) trigger_error('reasonSizedImage could not determine the proper destination for the sized image');
 				elseif (empty($width) && empty($height)) trigger_error('reasonSizedImage needs to be provided a non-empty width or height value to create a sized image');
@@ -391,6 +399,9 @@ class reasonSizedImage
 					$width_src=$info[0];
 					$height_src=$info[1];
 					$r= ($width*$height)/($width_src*$height_src);//r is for ratio
+					$image_ratio = $width_src / $height_src;
+					$box_ratio = $width / $height;
+					
 					if( $r >= 0.5  )
 					{
 						$sharpen=false;
@@ -398,10 +409,7 @@ class reasonSizedImage
 					$crop_style = $this->get_crop_style();
 					
 					if("crop_y" == $crop_style || "crop_x" == $crop_style)
-					{
-						$image_ratio = $width_src / $height_src;
-						$box_ratio = $width / $height;
-						
+					{	
 						if("crop_y" == $crop_style)
 						{
 							if($image_ratio < $box_ratio)
@@ -423,7 +431,29 @@ class reasonSizedImage
 					}
 					elseif("fill" == $crop_style)
 					{
-						$success = crop_image($width, $height, $path, $newpath, $sharpen);
+						$offset_x = 0;
+						$offset_y = 0;
+						
+						// If new focal point feature is active, figure out crop params
+						if (!empty($image_crop_style)) {
+							$resize_width = 0;
+							$resize_height = 0;
+							if ($image_ratio >= $box_ratio) {
+								$resize_width =  $height * $image_ratio;
+								$resize_height = $height;
+							} else {
+								$resize_width = $width;
+								$resize_height = $width / $image_ratio;
+							}
+							
+							$offset_x = ($focal_point_x - 0.5) * $resize_width;
+							$offset_y = ($focal_point_y - 0.5) * $resize_height;
+							
+							$offset_x = max(min($offset_x, ($resize_width - $width) / 2), (-$resize_width + $width) / 2);
+							$offset_y = max(min($offset_y, ($resize_height - $height) / 2), (-$resize_height + $height) / 2);
+						}
+						
+						$success = crop_image($width, $height, $path, $newpath, $sharpen, $offset_x, $offset_y);
 					}
 					
 					if($this->do_blit)
