@@ -23,6 +23,10 @@
 	{
 		echo '<link rel="stylesheet" type="text/css" href="'.UNIVERSAL_CSS_PATH.'" />'."\n";
 	}
+	if(defined('REASON_DEFAULT_FAVICON_PATH') && REASON_DEFAULT_FAVICON_PATH )
+	{
+		echo '<link rel="shortcut icon" href="'.REASON_DEFAULT_FAVICON_PATH.'" type="image/x-icon"/>';
+	}
 ?>
 <style type="text/css">
 <!--

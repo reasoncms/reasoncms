@@ -502,7 +502,7 @@ class entityArchiver {
 			return NULL;
 		}
 		//Must be a entity of user type:
-		if ($entity->get_value('type') !== id_of('user')) {
+		if ($entity->get_value('type') != id_of('user')) {
 			$this->log_notice('Given user id ('.$user_id.') is for an entity which is not of the user type. No entities will be '.$action.'d.', 'Warning');
 			return NULL;
 		}
