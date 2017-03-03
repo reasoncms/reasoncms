@@ -178,8 +178,8 @@ define('HTML_PURIFIER_INC',INCLUDE_PATH.'htmlpurifier/');
 // Define the path to jquery
 define('JQUERY_INC',INCLUDE_PATH.'jquery/');
 define('JQUERY_HTTP_PATH','/jquery/');
-define('JQUERY_URL',JQUERY_HTTP_PATH.'jquery-1.11.2.min.js');
-define('JQUERY_UI_URL',JQUERY_HTTP_PATH.'jquery-ui-1.11.3.min.js');
+define('JQUERY_URL',JQUERY_HTTP_PATH.'jquery-1.12.4.min.js');
+define('JQUERY_UI_URL',JQUERY_HTTP_PATH.'jquery-ui-1.12.1.min.js');
 define('JQUERY_UI_CSS_URL',JQUERY_HTTP_PATH.'css/smoothness/jquery-ui.min.css');
 
 // Define the path to Less PHP
