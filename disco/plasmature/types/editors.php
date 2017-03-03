@@ -420,3 +420,167 @@ class tiny_mce_no_labelType extends tiny_mceType // {{{
 {
 	var $_labeled = false;
 }
+
+/**
+ * Edit HTML using the CK editor Moono skin.
+ *
+ * These are the type valid args you should use:
+ *
+ * - rows
+ * - cols
+ * - external_css
+ * - plugins
+ * - init_options
+ *
+ * Init options supports everything TinyMCE supports - we setup defaults in $this->base_init_options.
+ *
+ *
+ * @todo do we need to add db_type error checks like we have in Loki?
+ * @todo do we need to tidy here if core sanitization is off?
+ * @todo would be great to integrate with head items instead of adding JS and CSS inline.
+ *
+ * @package disco
+ * @subpackage plasmature
+ */
+class ck_editorType extends textareaType
+{
+	var $type = 'ck_editor';
+	var $type_valid_args = array('rows',
+			'cols',
+			'external_css',
+			'external_js',
+			'init_options'
+	);
+	/**
+	 * @param array of paths (relative to server root) of CSS files to load before CkEditor inits.
+	 */
+	protected $external_css = array();
+	
+	/**
+	 * @param array of paths (relative to server root) of JS files to load after CkEditor loads but before init.
+	*/
+	protected $external_js = array();
+	
+	/**
+	 * @param array containing CkEditor init options in addition or to override base_init_options
+	*/
+	protected $init_options = array();
+	
+	/**
+	 * We set CkEditor content_css to the UNIVERSAL_CSS_PATH by default.
+	 */
+	function __construct()
+	{
+		$this->base_init_options['content_css'] = UNIVERSAL_CSS_PATH;
+	}
+	
+	function display()
+	{
+		$display = $this->get_ck_editor_javascript();
+		//$display .= $this->get_ck_editor_external_css();
+		//$display .= '<script language="javascript" type="text/javascript">'."\n";
+		//$display .= $this->get_ck_editor_init_string();
+		//$display .= '</script>'."\n";
+		echo $display;
+		parent::display();
+	}
+	
+	/**
+	 * Return the main javascript for CkEditor and any external javascript - we use a static variable to keep track such that we include it only once.
+	 *
+	 * @return string
+	 */
+	function get_ck_editor_javascript()
+	{
+		// we only want to load the main js file once.
+		static $loaded_an_instance;
+		if (!isset($loaded_an_instance))
+		{
+			// ckeditor.js is already minified
+			$js = '<script language="javascript" type="text/javascript" src="'.CKEDITOR_HTTP_PATH.'ckeditor.js"></script>'."\n";
+			$external_js = $this->get_class_var('external_js');
+			if (!empty($external_js))
+			{
+				foreach ($external_js as $js_file)
+				{
+					$js .= '<script language="javascript" type="text/javascript" src="'.$js_file.'"></script>'."\n";
+				}
+			}
+			$loaded_an_instance = true;
+		}
+		return (!empty($js)) ? $js : '';
+	}
+	
+	/**
+	 * If a css path was provided to CkEditor, then load it. Note any file here is used to style aspects of CkEditor
+	 * other than the content area. If you want to style content within CkEditor's content area, use the CkEditor
+	 * content_css config option.
+	 *
+	 * @return string
+	 */
+	function get_tiny_mce_external_css()
+	{
+		// we only want to load this extra css declaration once.
+		static $loaded_css;
+		if (!isset($loaded_css))
+		{
+			$external_css = $this->get_class_var('external_css');
+			if (!empty($external_css))
+			{
+				$css = '';
+				foreach ($external_css as $css_file)
+				{
+					$css .= '<link rel="stylesheet" type="text/css" href="' . $css_file . '" />'."\n";
+				}
+			}
+			$loaded_css = true;
+		}
+		return (!empty($css)) ? $css : '';
+	}
+	
+	/**
+	 * Generate CkEditor init string from the combination of base_init_options and init_options.
+	 *
+	 * The items in our init options arrays are generally treated as strings with three exceptions:
+	 *
+	 * - We assume values starting with [ or { are JSON and do not add quotes.
+	 * - We do not add quotes to integers.
+	 * - We do not add quotes to boolean values - CkEditor init will treat true and "true" differently.
+	 *
+	 * @return string
+	 */
+	function get_tiny_mce_init_string()
+	{
+		$options = $this->base_init_options;
+		//$options['elements'] = $this->name;
+		$options['selector'] = 'textarea[name='.$this->name.']';
+	
+		// Merge in custom options
+		foreach($this->init_options as $option => $val) $options[$option] = $val;
+	
+		// Format the options
+		foreach ($options as $option => $val)
+		{
+			// support configuration params that expect a json object or pure integer
+			if (is_int($val) || (!empty($val) && ((substr($val, 0, 1) == '[') || (substr($val, 0, 1) == '{'))))
+			{
+				$parts[] = sprintf('%s : %s', $option, $val);
+			}
+			else if (is_bool($val)) // handle booleans
+			{
+				$strval = ($val) ? 'true' : 'false';
+				$parts[] = sprintf('%s : %s', $option, $strval);
+			}
+			else if (strpos($val, 'function(') === 0) // functions
+			{
+				$parts[] = sprintf('%s : %s', $option, $val);
+			}
+			else // default for strings
+			{
+				$parts[] = sprintf('%s : "%s"', $option, $val);
+			}
+		}
+		return 'CKEDITOR.replace({'."\n" . implode(",\n", $parts) . "\n});\n";
+	}
+	
+}
