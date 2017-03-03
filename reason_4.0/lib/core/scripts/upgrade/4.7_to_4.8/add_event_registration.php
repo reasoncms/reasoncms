@@ -54,7 +54,24 @@ class ReasonUpgrader_48_UpdateEventRegistration extends reasonUpgraderDefault im
 
 	public function test()
 	{
-		$message = "<ol>";
+		$type_exists = !empty(id_of("registration_slot_type"));
+		if (array_key_exists('download_backup_report', $_GET) && $_GET['download_backup_report'] == 'yes') {
+			$this->exportOldSlots();
+			exit;
+		}
+
+		$message = "<p><strong>WARNING: All Event Slot Data will be deleted. 
+Download a backup below, and make sure you have a recent Reason database snapshot.
+</strong></p><ol>";
+
+		// step
+		if ($type_exists) {
+			$url = carl_make_link(['download_backup_report' => 'yes']);
+			$link = "<a href='$url'>Download Slot Data<a/>";
+			$message .= "<li>Download a backup of Event Slot data: $link</li>";
+		} else {
+			$message .= "<li>Event Slot Type not found. Is it already deleted?</li>";
+		}
 
 		// step
 		$eventSlotsInFuture = $this->checkForEventSlots();
@@ -122,6 +139,10 @@ class ReasonUpgrader_48_UpdateEventRegistration extends reasonUpgraderDefault im
 			$message .= ob_get_clean();
 		}
 
+		// step
+		if ($this->deleteEventSlots()) {
+			$message .= "<li>All event slot entities purged.</li>";
+		}
 
 		return $message . "</ol>";
 	}
@@ -178,6 +199,11 @@ class ReasonUpgrader_48_UpdateEventRegistration extends reasonUpgraderDefault im
 
 	public function getEventsWithSlots($startDateForSQL = "NOW()")
 	{
+		$type_exists = !empty(id_of("registration_slot_type"));
+		if (!$type_exists) {
+			return [];
+		}
+
 		$es = new entity_selector();
 		$es->description = "Get events with regisration slot relation";
 		$es->add_type(id_of('event_type'));
@@ -185,10 +211,134 @@ class ReasonUpgrader_48_UpdateEventRegistration extends reasonUpgraderDefault im
 		$es->add_left_relationship_field('event_type_to_registration_slot_type', 'registration_slot', 'id', 'slot_id');
 		return $es->run_one();
 	}
-	
+
+	/**
+	 * Return report with info about all events with registration slot data
+	 * @return array
+	 */
+	public function getExistingSlotReport()
+	{
+		$type_exists = !empty(id_of("registration_slot_type"));
+		if (!$type_exists) {
+			return [];
+		}
+
+		$es = new entity_selector();
+		$es->add_type(id_of('event_type'));
+		$es->add_left_relationship_field('event_type_to_registration_slot_type', 'registration_slot', 'id', 'slot_id');
+		$events = $es->run_one();
+
+		$report = [];
+		foreach ($events as $event) {
+			$event_values = $event->get_values();
+
+			$slots = $event->get_left_relationship(relationship_id_of('event_type_to_registration_slot_type'));
+			foreach ($slots as $slot) {
+				$slot_values = $slot->get_values();
+
+				$event_info = array_combine(
+					array_map(function ($k) {
+						return 'event_' . $k;
+					}, array_keys($event_values)),
+					$event_values
+				);
+				$slot_info = array_combine(
+					array_map(function ($k) {
+						return 'slot_' . $k;
+					}, array_keys($slot_values)),
+					$slot_values
+				);
+				$report[] = array_merge($event_info, $slot_info);
+			}
+		}
+
+		return $report;
+	}
+
+	/**
+	 * Write a CSV to output buffers of existing registration slots
+	 */
 	public function exportOldSlots()
 	{
-		
+
+		$rows = $this->getExistingSlotReport();
+
+		if($rows) {
+			$filename = REASON_HOST . "_event_registration_slots_backup_" . date("Y-m-d-H-i-s") . ".csv";
+
+			ob_clean();
+			header("Content-Type: text/csv");
+			header('Content-Disposition: attachment; filename="' . $filename . '"');
+			$out = fopen('php://output', 'w');
+			fputcsv($out, array_keys($rows[0]));
+			foreach ($rows as $row) {
+				fputcsv($out, $row);
+			}
+			fclose($out);
+		}
+	}
+
+	/**
+	 * Remove all traces of Registration Slot in database
+	 *
+	 * @return bool TRUE on a successful delete of primary type, FALSE otherwise
+	 */
+	public function deleteEventSlots()
+	{
+		$type_exists = !empty(id_of("registration_slot_type"));
+
+		// Delete instances of Registration Slots
+		if ($type_exists) {
+			$es = new entity_selector();
+			$es->add_type(id_of('registration_slot_type'));
+			$slots = $es->run_one();
+			foreach ($slots as $slot) {
+				reason_expunge_entity($slot->id(), $this->user_id);
+			}
+		}
+
+		// Delete Registration Slot Entity Fields
+		if ($type_exists) {
+			$es = new entity_selector();
+			$es->add_type(id_of('field'));
+			$list = implode("', '", get_fields_by_content_table("registration_slot"));
+			$es->add_relation("`entity`.`name` IN ('$list')");
+			$fields = $es->run_one();
+			foreach ($fields as $field) {
+				reason_expunge_entity($field->id(), $this->user_id);
+			}
+		}
+
+		// Delete Registration Slot Entity Table
+		if ($type_exists) {
+			$es = new entity_selector();
+			$es->add_type(id_of('content_table'));
+			$es->add_relation("`entity`.`name` = 'registration_slot'");
+			$table = $es->run_one();
+			reason_expunge_entity(array_pop($table)->id(), $this->user_id);
+		}
+
+		// Delete Registration Slot Type
+		$type_deleted = false;
+		if ($type_exists) {
+			$type_deleted = true;
+			$type_entity = new entity(id_of("registration_slot_type"));
+			reason_expunge_entity($type_entity->id(), $this->user_id);
+		}
+
+		// Delete Registration Slot Allowable Relationships
+		if ($type_exists) {
+			$delete_allowable_rels = "DELETE FROM `allowable_relationship` WHERE `relationship_a` = {$type_entity->id()} OR `relationship_b` = {$type_entity->id()}";
+			db_query($delete_allowable_rels);
+		}
+
+		// Delete Registration Slot Table
+		if ($type_exists) {
+			$drop_table = "DROP TABLE `registration_slot`";
+			db_query($drop_table);
+		}
+
+		return $type_exists && $type_deleted;
 	}
 
 }
