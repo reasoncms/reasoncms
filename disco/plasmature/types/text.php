@@ -71,7 +71,7 @@ class textType extends defaultTextType
 
 	function get_display()
 	{
-		$display = '<input type="text" name="'.$this->name.'" value="'.str_replace('"', '&quot;', $this->get()).'" size="'.$this->size.'" maxlength="'.$this->maxlength.'" id="'.$this->get_id().'" aria-label="'.$this->display_name.'" class="text" ';
+		$display = '<input type="text" name="'.$this->name.'" value="'.str_replace('"', '&quot;', $this->get()).'" size="'.$this->size.'" maxlength="'.$this->maxlength.'" id="'.$this->get_id().'" aria-label="'.htmlspecialchars(strip_tags($this->display_name)).'" class="text" ';
 		if (!empty($this->placeholder)) $display .= 'placeholder="'.$this->placeholder.'"';
 		$display .= '/>';
 		return $display;
@@ -184,7 +184,7 @@ class passwordType extends defaultTextType
 	var $type_valid_args = array( 'size', 'maxlength', 'placeholder' );
 	function get_display()
 	{
-		$display = '<input type="password" name="'.$this->name.'" id="'.$this->get_id().'" value="'.htmlspecialchars($this->get(),ENT_QUOTES).'" size="'.$this->size.'" maxlength="'.$this->maxlength.'" aria-label="'.$this->display_name.'" ';
+		$display = '<input type="password" name="'.$this->name.'" id="'.$this->get_id().'" value="'.htmlspecialchars($this->get(),ENT_QUOTES).'" size="'.$this->size.'" maxlength="'.$this->maxlength.'" aria-label="'.htmlspecialchars(strip_tags($this->display_name)).'" ';
 		if (!empty($this->placeholder)) $display .= 'placeholder="'.$this->placeholder.'"';
 		$display .= '/>';
 		return $display;
@@ -270,7 +270,7 @@ class textareaType extends defaultTextType
 	var $type_valid_args = array('rows', 'cols');
 	function get_display()
 	{
-		$str  = '<textarea name="'.$this->name.'" id="'.$this->get_id().'" aria-label="'.$this->display_name.'" rows="'.$this->rows.'" cols="'.$this->cols.'">'.htmlspecialchars($this->get(),ENT_QUOTES,'UTF-8').'</textarea>';
+		$str  = '<textarea name="'.$this->name.'" id="'.$this->get_id().'" aria-label="'.htmlspecialchars(strip_tags($this->display_name)).'" rows="'.$this->rows.'" cols="'.$this->cols.'">'.htmlspecialchars($this->get(),ENT_QUOTES,'UTF-8').'</textarea>';
 		return $str;
 	}
 	function grab()

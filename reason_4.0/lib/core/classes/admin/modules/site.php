@@ -35,10 +35,40 @@
 				)
 			);
 		} // }}}
+		protected function get_announcement_blurbs($site)
+		{
+			$master_admin_id = id_of('master_admin');
+			$es = new entity_selector($master_admin_id);
+			$es->limit_tables();
+			$es->limit_fields();
+			$es->add_type(id_of('text_blurb'));
+			$es->add_right_relationship($site->id(), relationship_id_of('site_to_announcement_blurb'));
+			$es->set_env('site',$master_admin_id);
+			return $es->run_one();
+		}
+		
+		protected function render_announcement_blurbs($blurbs)
+		{
+			if(!empty($blurbs))
+			{
+				echo '<div id="announcements">';
+				echo '<p class="explanation">This site currently has '.(count($blurbs) > 1 ? 'these announcements' : 'this announcement').'. <em>To change this announcement, please contact a Reason administrator.</em></p>';
+				foreach($blurbs as $blurb)
+				{
+					echo '<div class="announcement">';
+					echo $blurb->get_value('content');
+					echo '</div>';
+				}
+				echo '</div>';
+			}
+		}
 		function run() // {{{
 		{
 			echo '<div id="siteIntro">'."\n";
 			$e = new entity( $this->admin_page->site_id );
+			
+			$this->render_announcement_blurbs($this->get_announcement_blurbs($e));
+			
 			echo '<div id="siteNotices">'."\n";
 			if( $e->get_value('site_state') == "Not Live" && $e->get_value('unique_name') != 'master_admin' )
 			{

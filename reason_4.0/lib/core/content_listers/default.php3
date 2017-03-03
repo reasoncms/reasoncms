@@ -307,12 +307,10 @@
 			if(reason_user_has_privs($this->admin_page->user_id,'edit'))
 			{
 				echo '<strong>';
-				$preview_link = $this->admin_page->make_link(  array( 'cur_module' => 'Preview' , 'id' => $row->id() ) );
-				echo '<a href="' . $preview_link . '">'. 'Preview</a>';
+				echo '<a href="' . $this->make_module_link($row, 'Preview') . '">'. 'Preview</a>';
 				if (reason_site_can_edit_type($this->admin_page->site_id, $this->admin_page->type_id))
 				{
-					$edit_link = $this->admin_page->make_link(  array( 'cur_module' => 'Editor' , 'id' => $row->id() ) );
-					$edit_block = '<a href="' . $edit_link . '">Edit</a>';
+					$edit_block = '<a href="' . $this->make_module_link($row, 'Editor') . '">Edit</a>';
 					if($row->has_lock())
 					{
 						$user = new entity($this->admin_page->user_id);
@@ -341,12 +339,10 @@
 			if(reason_user_has_privs($this->admin_page->user_id,'edit_pending'))
 			{
 				echo '<strong>';
-				$preview_link = $this->admin_page->make_link(  array( 'cur_module' => 'Preview' , 'id' => $row->id() ) );
-				echo '<a href="' . $preview_link . '">'. 'Preview</a>';
+				echo '<a href="' . $this->make_module_link($row, 'Preview') . '">'. 'Preview</a>';
 				if (reason_site_can_edit_type($this->admin_page->site_id, $this->admin_page->type_id))
 				{
-					$edit_link = $this->admin_page->make_link(  array( 'cur_module' => 'Editor' , 'id' => $row->id() ) );
-					$edit_block = '<a href="' . $edit_link . '">Edit</a>';
+					$edit_block = '<a href="' . $this->make_module_link($row, 'Editor') . '">Edit</a>';
 					if($row->has_lock())
 					{
 						$user = new entity($this->admin_page->user_id);
@@ -382,13 +378,11 @@
 			{
 				if(reason_user_has_privs($this->admin_page->user_id,'publish'))
 				{
-					$link =  $this->admin_page->make_link( array( 'id' => $row->id(), 'cur_module' => 'Undelete' ) );
-					$links[] = '<a href="'.$link.'">Undelete</a>';
+					$links[] = '<a href="'.$this->make_module_link($row, 'Undelete').'">Undelete</a>';
 				}
 				if(reason_user_has_privs($this->admin_page->user_id,'expunge'))
 				{
-					$link =  $this->admin_page->make_link( array( 'id' => $row->id(), 'cur_module' => 'Expunge' ) );
-					$links[] = '<a href="'.$link.'">Expunge</a>';
+					$links[] = '<a href="'. $this->make_module_link($row, 'Expunge') .'">Expunge</a>';
 				}
 				if( $row->field_has_lock('state') && reason_user_has_privs($this->admin_page->user_id,'manage_locks') )
 				{
@@ -436,5 +430,26 @@
 				default: echo 'There are no live items.'; break;
 			}
 		} // }}}
+		
+		/**
+		 * Given a data row and a module name, construct a link for this item. If the row contains
+		 * a relationship id, that is added to the link to disambiguate entities that may be related 
+		 * multiple times with different metadata.
+		 * 
+		 * @param object $row entity
+		 * @param string $module
+		 * @param array Extra key/value parameters to add to link
+		 * @return string
+		 */
+		function make_module_link($row, $module, $additional_params = array())
+		{
+			$link_items = array(
+				'id' => $row->id(),
+				'cur_module' => $module,
+				'admin_token' => $this->admin_page->get_admin_token()
+				);
+			if ($row->has_value('rel_id')) $link_items['row_rel_id'] = $row->get_value('rel_id');
+			$link_items = array_merge($link_items, $additional_params);
+			return $this->admin_page->make_link( $link_items );
+		}
 	}
-?>

@@ -5,9 +5,9 @@
  * @requires jQuery
  */
 
-var limit_top =  "tr#limitcommentRow";
-var details_top =  "tr#audiencescommentRow";
-var name_top = "tr#namecommentRow";
+var limit_top =  "#limitcommentItem";
+var details_top =  "#audiencescommentItem";
+var name_top = "#namecommentItem";
  
 $(document).ready(function()
 {	

@@ -294,6 +294,11 @@ class Tyr
 		{
 			$message .= '<h2>' . htmlspecialchars( $this->_messages['all']['form_title'], ENT_COMPAT, 'UTF-8' ) . '</h2>'."\n";
 		}
+		
+		if (!empty($this->_messages['all']['thank_you_message'])) {
+			// This includes HTML typically
+			$message .= $this->_messages['all']['thank_you_message'];
+		}
 
 		if(!empty($this->_messages['all']['form_origin_link']) )
 		{

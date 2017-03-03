@@ -257,7 +257,9 @@ class optionType extends defaultType
 
 		if(!isset($this->options[$value]))
 		{
-			trigger_error('Unrecognized value -- ('.gettype($value).') "'.$value.'" -- submitted for '.$this->name.'. This may be an attempt to probe for vulnerabilities. Future changes to plasmature will likely block unrecognized values like this.' );
+			// Supress errors, as prefilled values, when enabled, also match
+			// this criteria but are desired
+			// trigger_error('Unrecognized value -- ('.gettype($value).') "'.$value.'" -- submitted for '.$this->name.'. This may be an attempt to probe for vulnerabilities. Future changes to plasmature will likely block unrecognized values like this.' );
 			// return false;
 		}
 
@@ -265,6 +267,7 @@ class optionType extends defaultType
 		{
 			return true;
 		}
+
 
 		return false;
 	}
@@ -645,16 +648,20 @@ class checkboxgroupType extends optionType
 		else
 			$val_array = array();
 
+
 		$value = array_diff($val_array, array_keys($this->options));
 
 		$id = 'checkbox_'.$this->name.'_'.$count;
+
 
 		if ($this->tableless)
 			$str = '<div class="checkboxItem checkboxItemOther">'."\n";
 		else
 			$str = '<tr>'."\n".'<td valign="top">';
 
+
 		$str .= '<span class="checkBox"><input type="checkbox" id="'.$id.'" name="'.$this->name.'['.$count.']" value="__other__"';
+
 
 		if (!empty($value))
 		{
@@ -669,17 +676,21 @@ class checkboxgroupType extends optionType
 		else
 			$str .= ' /></td><td valign="top">';
 
+
 		$str .= '<label for="'.$id.'">'.$this->other_label.'</label>';
 
 		$str .= '<input type="text" name="'.$this->name.'_other" value="'.str_replace('"', '&quot;', $other_value).'"  />';
+
 
 		if ($this->tableless)
 			$str .= '</div>'."\n";
 		else
 			$str .= '</td></tr>'."\n";
 
+
 		return $str;
 	}
+
 
 	protected function _get_sub_label_item($key)
 	{
@@ -942,13 +953,17 @@ class chosen_selectType extends selectType
         function get_display()
         {
                 $str = $this->get_chosen_select_js_css() . "\n";
+
                 $str .= '<select id="'.$this->name.'Element" name="'.$this->name.($this->multiple ? '[]' : '').'" class="chosen-select" style="min-width:'.$this->min_width.'px;" size="'.htmlspecialchars($this->n, ENT_QUOTES).'" '.($this->multiple ? 'multiple="multiple"' : '').'>'."\n";
+
                 $select_count = 0;
 
                 $str .= $this->_get_optgroup_html($this->options);
 
                 $str .= '</select>'."\n";
+
                 $str .= '<script language="javascript" type="text/javascript">$(".chosen-select").chosen('.($this->search_substrings ? '{ search_contains: true }' : '').');</script>';
+
                 return $str;
         }
 
@@ -981,10 +996,13 @@ class chosen_select_multipleType extends chosen_selectType
 	var $type = 'chosen_select_multiple';
 	var $multiple = true;
 
+
 	function get_display()
 	{
 		$str = $this->get_chosen_select_js_css() . "\n";
+
 		$str .= '<select id="'.$this->name.'Element" name="'.$this->name.($this->multiple ? '[]' : '').'" class="chosen-select" style="min-width:'.$this->min_width.'px;" size="'.htmlspecialchars($this->n, ENT_QUOTES).'" multiple="multiple">'."\n";
+
 		$select_count = 0;
 
 		foreach( $this->options as $key => $val )
@@ -1001,6 +1019,21 @@ class chosen_select_multipleType extends chosen_selectType
 		$str .= '</select>'."\n";
 		$str .= '<script language="javascript" type="text/javascript">$(".chosen-select").chosen('.($this->search_substrings ? '{ search_contains: true }' : '').');</script>';
 		return $str;
+	}
+
+	function grab_value()
+	{
+		// See checkboxgroup notes
+		$val = parent::grab_value();
+		return (NULL === $val) ? array() : $val;
+	}
+	function get()
+	{
+		// See checkboxgroup notes
+		if ( empty($this->value) )
+			return array();
+		else
+			return $this->value;
 	}
 }
 /**
@@ -1241,6 +1274,20 @@ class select_multipleType extends selectType
 		$str .= '>'.$val.'</option>'."\n";
 		return $str;
 	}
+	function grab_value()
+	{
+		// See checkboxgroup notes
+		$val = parent::grab_value();
+		return (NULL === $val) ? array() : $val;
+	}
+	function get()
+	{
+		// See checkboxgroup notes
+		if ( empty($this->value) )
+			return array();
+		else
+			return $this->value;
+	}
 }
 
 /**
@@ -1293,9 +1340,11 @@ class range_sliderType extends defaultType
 	var $step = 1;
 	var $value = 1;
 
+
 	function get_display()
 	{
 		return '<input type="range" name="'.$this->name.'" value="'.str_replace('"', '&quot;', $this->get()).'"   id="'.$this->name.'Element" min="'.$this->min.'" max="'.$this->max.'" step="'.$this->step.'" />';
 	}
+
 
 }

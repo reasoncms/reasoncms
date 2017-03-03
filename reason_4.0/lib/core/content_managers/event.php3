@@ -82,12 +82,12 @@
 		function init_head_items()
 		{
 			$this->head_items->add_javascript(JQUERY_URL, true); // uses jquery - jquery should be at top
-			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH .'event.js');
+			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH .'event.js?v=2');
 			if ($this->geolocation_enabled())
 			{
 				$base_gmap_url = (HTTPS_AVAILABLE) ? 'https://maps-api-ssl.google.com/maps/api/js' : 'http://maps.google.com/maps/api/js';
 				$this->head_items->add_javascript($base_gmap_url . '?v=3&libraries=geometry&sensor=false', true);
-				$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH . 'content_managers/event/geo.js');
+				$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH . 'content_managers/event/geo.js?v=2');
 				$this->head_items->add_stylesheet(WEB_JAVASCRIPT_PATH . 'content_managers/event/geo.css');
 			}
 		}
@@ -130,7 +130,7 @@
 			{
 				$this->add_element('audiences_heading', 'comment', array('text'=>'<h4>Visibility</h4> To which groups do you wish to promote this event? (Please enter at least one)'));
 				$this->add_relationship_element('audiences', id_of('audience_type'), 
-				relationship_id_of('event_to_audience'),'right','checkbox',REASON_USES_DISTRIBUTED_AUDIENCE_MODEL,'sortable.sort_order ASC');
+				relationship_id_of('event_to_audience'),'right','checkbox',REASON_USES_DISTRIBUTED_AUDIENCE_MODEL,'smart',1);
 			}
 			
 			$es = new entity_selector();
@@ -144,7 +144,7 @@
 			
 			if(!empty($result))
 			{
-				$this->add_relationship_element('categories', id_of('category_type'), relationship_id_of('event_to_event_category'),'right','checkbox',true,'entity.name ASC');
+				$this->add_relationship_element('categories', id_of('category_type'), relationship_id_of('event_to_event_category'),'right','checkbox',true,'smart',1);
 			}
 			
 			$this->add_element('date_and_time', 'comment', array('text'=>'<h4>Date, Time, and Duration of Event</h4>'));
@@ -244,6 +244,8 @@
 				$this->set_comments('dates',form_comment('<a href="'.$this->admin_page->make_link( array( 'cur_module' => 'EventSplit' )).'" class="eventSplitLink">Split into separate event items</a>'));
 			}
 
+			$this->add_element('registration_info', 'comment', array('text' => $this->get_registration_info() ) );
+
 			// set requirements
 			$this->add_required( 'datetime' );
 			$this->add_required( 'recurrence' );
@@ -311,6 +313,29 @@
 			$limiter->limit_field('description', 140);
 			
 		} // }}}
+		
+		function get_registration_info()
+		{
+			$e = new entity($this->get_value('id'));
+			$forms = $e->get_left_relationship(relationship_id_of('event_to_form'));
+			$ret = '<h4>Event Registration/Ticketing</h4>';
+			if(!empty($forms))
+			{
+				$ret .= '<p>This event is set up for registration using '.(count($forms) > 1 ? 'these forms' : 'this form').':</p>';
+				$ret .= '<ul>';
+				foreach($forms as $form)
+				{
+					$link = $this->admin_page->make_link(array('type_id'=>id_of('form'),'id'=>$form->id()), true);
+					$ret .= '<li><a href="'.$link.'" target="_blank">'.$form->get_value('name').'</a></li>';
+				}
+				$ret .= '</ul>';
+			}
+			else
+			{
+				$ret .= '<p><a href="http://reasoncms.org/userdocs/managing-content/other-types/event-tickets/" target="_blank">How to set up registration/ticketing for this event</a></p>';
+			}
+			return $ret;
+		}
 
 		/**
 		 * We really only want to do this if geolocation is "on".
@@ -391,7 +416,7 @@
 		
 		function set_event_field_order()
 		{
-			$this->set_order (array ('this_event_is_comment','this_event_is', 'date_and_time', 'datetime', 'hours', 'minutes', 'recurrence', 'frequency', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'monthly_repeat', 'week_of_month', 'month_day_of_week', 'end_date', 'term_only', 'dates', 'show_hide', 'hr1', 'info_head', 'name', 'description', 'location_head', 'location', 'address', 'auto_update_coordinates', 'latitude', 'longitude', 'other_info_head', 'sponsor', 'contact_username', 'contact_organization', 'url', 'content', 'keywords', 'categories', 'hr2', 'audiences_heading','audiences','no_share', 'hr3', 'registration',  ));
+			$this->set_order (array ('this_event_is_comment','this_event_is', 'date_and_time', 'datetime', 'hours', 'minutes', 'recurrence', 'frequency', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'monthly_repeat', 'week_of_month', 'month_day_of_week', 'end_date', 'term_only', 'dates', 'show_hide', 'hr1', 'info_head', 'name', 'description', 'location_head', 'location', 'address', 'auto_update_coordinates', 'latitude', 'longitude', 'other_info_head', 'sponsor', 'contact_username', 'contact_organization', 'url', 'content', 'keywords', 'categories', 'hr2', 'registration_info', 'hr3', 'audiences_heading','audiences','no_share', 'hr4',  ));
 		}
 		
 		function _should_offer_split()
