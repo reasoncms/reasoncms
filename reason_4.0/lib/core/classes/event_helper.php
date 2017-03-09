@@ -197,7 +197,7 @@ reason_include_once('classes/page_types.php');
 				$es->add_type( id_of('quote_type') );
 				$es->set_env('site', $this->site_id);
 				$es->add_left_relationship_field( 'quote_to_category', 'entity', 'id', 'cat_id', array_keys($cat_result));
-				if (!empty($already_selected)) $es->add_relation('entity.id NOT IN ('.implode(array_keys($already_selected)).')');
+				if (!empty($already_selected)) $es->add_condition( 'entity.id', 'NOT IN', array_keys($already_selected) );
 				$result = $es->run_one();
 			}
 		}
@@ -244,11 +244,7 @@ reason_include_once('classes/page_types.php');
 			$ps = new entity_selector($owner_site->id());
 			$ps->add_type( id_of('minisite_page') );
 			$rels = array();
-			foreach($this->get_events_page_types() as $page_type)
-			{
-				$rels[] = 'page_node.custom_page = "'.$page_type.'"';
-			}
-			$ps->add_relation('( '.implode(' OR ', $rels).' )');
+			$ps->add_condition( 'page_node.custom_page', 'IN', $this->get_events_page_types() );
 			$page_array = $ps->run_one();
 			reset($page_array);
 			$events_page = current($page_array);

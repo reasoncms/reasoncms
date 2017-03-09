@@ -377,7 +377,7 @@ class ProfileConnector
 		$es = new entity_selector(id_of($this->config->profiles_site_unique_name));
 		$es->enable_multivalue_results();
 		$es->add_type(id_of('category_type'));
-		$es->add_relation('slug="'.mysql_real_escape_string($slug).'"');
+		$es->add_condition('slug', '=', $slug);
 		$es->add_left_relationship_field( 'parent_category_to_category' , 'entity' , 'id' , 'child_id',  false );
 		if ($results = $es->run_one())
 		{
@@ -409,7 +409,7 @@ class ProfileConnector
 		$es = new entity_selector(id_of($this->config->profiles_site_unique_name));
 		$es->enable_multivalue_results();
 		$es->add_type(id_of('category_type'));
-		$es->add_relation('slug="'.mysql_real_escape_string($slug).'"');
+		$es->add_condition('slug', '=', $slug);
 		$es->add_right_relationship_field( 'page_to_category' , 'entity' , 'id' , 'page_id',  false );
 		if ($results = $es->run_one())
 		{
@@ -444,7 +444,7 @@ class ProfileConnector
 		$es = new entity_selector(id_of($this->config->profiles_site_unique_name));
 		$es->add_type(id_of('profile_type'));
 		$es->limit_fields(array('profile.user_guid'));
-		$es->add_relation(' entity.id in ('.join(',', $ids).')');
+		$es->add_condition('entity.id', 'IN', $ids);
 		if ($results = $es->run_one())
 		{
 			foreach($results as $result)

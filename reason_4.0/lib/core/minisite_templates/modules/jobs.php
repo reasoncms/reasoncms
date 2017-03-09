@@ -71,8 +71,8 @@ class JobsModule extends DefaultMinisiteModule
 			$es->description = "Getting all jobs -- not just on this site";
 		}
 		$es->add_type( id_of( 'job' ) );
-		$es->add_relation( 'show_hide.show_hide = "show"' );
-		$es->add_relation( 'job.posting_start <= "'.date( 'Y-m-d' ).'"' );
+		$es->add_condition( 'show_hide.show_hide', '=', 'show' );
+		$es->add_condition( 'job.posting_start', '<=', date( 'Y-m-d' ) );
 		$es->add_relation( 'adddate( job.posting_start, interval duration.duration day ) >= "'.date( 'Y-m-d' ).'"' );
 		$this->jobs = $es->run_one();
 		if(!empty($this->request['job_id']) && !empty($this->jobs[$this->request['job_id']]) )

@@ -205,7 +205,7 @@ function get_media_work($job_id)
 {
 	$es = new entity_selector();
 	$es->add_type(id_of('av'));
-	$es->add_relation('media_work.entry_id = "'.addslashes($job_id).'"');
+	$es->add_condition( 'media_work.entry_id', '=', $job_id );
 	$results = array_merge($es->run_one(), $es->run_one('','Pending'));
 	if (!empty($results))
 	{

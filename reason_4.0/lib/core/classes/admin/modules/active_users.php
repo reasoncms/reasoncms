@@ -114,7 +114,7 @@
 			$es = new entity_selector();
 			$es->add_type(id_of('user'));
 			$es->enable_multivalue_results();
-			$es->add_relation('`entity`.`id` IN ("'.implode('","',$ids).'")');
+			$es->add_condition( '`entity`.`id`', 'IN', $ids );
 			$es->add_right_relationship_field('site_to_user','entity','id','site_membership_id'); // This is here so we only grab users who have access to a site
 			$users = $es->run_one();
 			

@@ -468,8 +468,8 @@ class ds_reason extends ds_default {
 		if(!empty($username) && !empty($password))
 		{
 			$es = new entity_selector();
-			$es->add_relation('entity.name = "'.reason_sql_string_escape($username).'"');
-			$es->add_relation('user.user_password_hash = "'.sha1($password).'"');
+			$es->add_condition( 'entity.name', '=', $username );
+			$es->add_condition( 'user.user_password_hash', '=', $password );
 			$es->add_relation($this->get_basic_limitation());
 			$es->set_num(1);
 			$this->open_conn();

@@ -17,7 +17,9 @@
 function carl_util_sql_string_escape($str, $link_identifier = NULL)
 {
 	if(NULL === $link_identifier)
+	{
 		return mysql_real_escape_string($str);
+	}
 	return mysql_real_escape_string($str, $link_identifier);
 	
 }

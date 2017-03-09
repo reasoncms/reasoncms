@@ -23,7 +23,7 @@
 			$s = new entity_selector();
 			$s->add_type(id_of('site'));
 			$s->set_order( 'entity.name' );
-			$s->add_relation('site.site_state = "Live"');
+			$s->add_condition('site.site_state', '=', 'Live');
 			$this->site_count = $s->get_one_count();
 			$this->sites = $s->run_one();
 			

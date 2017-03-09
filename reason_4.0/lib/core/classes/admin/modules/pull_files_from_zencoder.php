@@ -81,7 +81,7 @@ class zencoderMediaWorkUpdateModule extends DefaultModule
 					
 						$es = new entity_selector();
 						$es->add_type(id_of('av_file'));
-						$es->add_relation('entity.id = "'.addslashes($id).'"');
+						$es->add_condition( 'entity.id', '=', $id );
 						$media_file = current(array_merge($es->run_one(), $es->run_one('','Pending')));
 						
 						$duration = $this->get_human_readable_duration(intval($obj->duration_in_ms));
@@ -130,7 +130,7 @@ class zencoderMediaWorkUpdateModule extends DefaultModule
 					
 						$es = new entity_selector();
 						$es->add_type(id_of('av_file'));
-						$es->add_relation('entity.id = "'.addslashes($id).'"');
+						$es->add_condition('entity.id', '=', $id);
 						$media_file = current(array_merge($es->run_one(), $es->run_one('','Pending')));
 						$duration = $this->get_human_readable_duration(intval($obj->duration_in_ms));
 						

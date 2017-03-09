@@ -382,31 +382,31 @@ class AdminPage
 		$q->add_field( 'e', 'name', 'entity_name' );
 		$q->add_field( 'e', 'unique_name', 'entity_unique_name' );
 		if( $var == 'default' )
-			$q->add_relation( 'ar.relationship_a = '.$this->type_id );
+			$q->add_condition( 'ar.relationship_a', '=', $this->type_id );
 		else
-			$q->add_relation( 'ar.relationship_a = '.$this->request[ CM_VAR_PREFIX . 'type_id' ] );
+			$q->add_condition( 'ar.relationship_a', '=', $this->request[ CM_VAR_PREFIX . 'type_id' ] );
 		$q->add_relation( 'ar.relationship_b = e.id' );
 		if (reason_relationship_names_are_unique())
 		{
-			$q->add_relation( 'ar.type = "association"' );
+			$q->add_condition( 'ar.type', '=', 'association' );
 			$q->set_order( 'ar.id ASC' );
 		}
 		else
 		{
-			$q->add_relation( 'ar.name != "owns"' );
-			$q->add_relation( 'ar.name != "borrows"' );
-			$q->add_relation( 'ar.name NOT LIKE "%archive%"' );
+			$q->add_condition( 'ar.name', '!=', 'owns' );
+			$q->add_condition( 'ar.name', '!=', 'borrows' );
+			$q->add_condition( 'ar.name', 'NOT LIKE', '%archive%' );
 		}
 		// make sure this site has access to the related type
 		// we don't want to be able to associate with types that a site does not have access to
-		$q->add_relation( 'site_own_alrel.relationship_a = '.id_of( 'site' ) );
-		$q->add_relation( 'site_own_alrel.relationship_b = '.id_of( 'type' ) );
-		$q->add_relation( 'site_own_alrel.name = "site_to_type"' );
-		$q->add_relation( 'r.entity_a = '.$this->site_id );
+		$q->add_condition( 'site_own_alrel.relationship_a', '=', id_of( 'site' ) );
+		$q->add_condition( 'site_own_alrel.relationship_b', '=', id_of( 'type' ) );
+		$q->add_condition( 'site_own_alrel.name', '=', 'site_to_type' );
+		$q->add_condition( 'r.entity_a', '=', $this->site_id );
 		$q->add_relation( 'r.entity_b = ar.relationship_b' );
 		$q->add_relation( 'r.type = site_own_alrel.id' );
 
-		$q->add_relation('(ar.custom_associator IS NULL OR ar.custom_associator = "")');
+		$q->add_condition( 'ar.custom_associator', '=', array( NULL, '' ) );
 		$r = db_query( $q->get_query(), 'Unable to get allowable relationships for this type.' );
 		$x = array();
 		while( $row = mysql_fetch_array( $r , MYSQL_ASSOC ) )
@@ -435,32 +435,32 @@ class AdminPage
 		$q->add_field( 'e', 'name', 'entity_name' );
 		$q->add_field( 'e', 'unique_name', 'entity_unique_name' );
 		if( $var == 'default' )
-			$q->add_relation( 'ar.relationship_b = '.$this->type_id );
+			$q->add_condition( 'ar.relationship_b', '=', $this->type_id );
 		else
-			$q->add_relation( 'ar.relationship_b = '.$this->request[ CM_VAR_PREFIX . 'type_id' ] );
+			$q->add_condition( 'ar.relationship_b', '=', $this->request[ CM_VAR_PREFIX . 'type_id' ] );
 		$q->add_relation( 'ar.relationship_a = e.id' );
-		$q->add_relation( 'ar.directionality = "bidirectional"' );
+		$q->add_condition( 'ar.directionality', '=', 'bidirectional' );
 		if (reason_relationship_names_are_unique())
 		{
-			$q->add_relation( 'ar.type = "association"' );
+			$q->add_condition( 'ar.type', '=', 'association' );
 			$q->set_order( 'ar.id ASC' );
 		}
 		else
 		{
-			$q->add_relation( 'ar.name != "owns"' );
-			$q->add_relation( 'ar.name != "borrows"' );
-			$q->add_relation( 'ar.name NOT LIKE "%archive%"' );
+			$q->add_condition( 'ar.name', '!=', 'owns' );
+			$q->add_condition( 'ar.name', '!=', 'borrows' );
+			$q->add_condition( 'ar.name', 'NOT LIKE', '%archive%' );
 		}
 		// make sure this site has access to the related type
 		// we don't want to be able to associate with types that a site does not have access to
-		$q->add_relation( 'site_own_alrel.relationship_a = '.id_of( 'site' ) );
-		$q->add_relation( 'site_own_alrel.relationship_b = '.id_of( 'type' ) );
-		$q->add_relation( 'site_own_alrel.name = "site_to_type"' );
-		$q->add_relation( 'r.entity_a = '.$this->site_id );
+		$q->add_condition( 'site_own_alrel.relationship_a', '=', id_of( 'site' ) );
+		$q->add_condition( 'site_own_alrel.relationship_b', '=', id_of( 'type' ) );
+		$q->add_condition( 'site_own_alrel.name', '=', 'site_to_type' );
+		$q->add_condition( 'r.entity_a', '=', $this->site_id );
 		$q->add_relation( 'r.entity_b = ar.relationship_a' );
 		$q->add_relation( 'r.type = site_own_alrel.id' );
 
-		$q->add_relation('(ar.custom_associator IS NULL OR ar.custom_associator = "")');
+		$q->add_condition( 'ar.custom_associator', '=', array( NULL, '' ) );
 		$r = db_query( $q->get_query(), 'Unable to get allowable relationships for this type.' );
 		$x = array();
 		while( $row = mysql_fetch_array( $r , MYSQL_ASSOC ) )
@@ -862,13 +862,13 @@ class AdminPage
 		$dbq->add_field( 'entity' , 'id' , 'e_id' );
 		$dbq->add_field( 'entity' , 'name' , 'e_name' );
 		
-		$dbq->add_relation( 'ar.connections = "one_to_many"' );
-		$dbq->add_relation( 'ar.required = "yes"' );
+		$dbq->add_condition( 'ar.connections', '=', 'one_to_many' );
+		$dbq->add_condition( 'ar.required', '=', 'yes' );
 
-		$dbq->add_relation( 'r.entity_b = ' . $id );
+		$dbq->add_condition( 'r.entity_b', '=', $id );
 		$dbq->add_relation( 'r.type = ar.id' );
 		$dbq->add_relation( 'entity.id = r.entity_a' );
-		$dbq->add_relation( 'entity.state = "Live"' );
+		$dbq->add_condition( 'entity.state', '=', 'Live' );
 		$dbq->add_relation( 'r.entity_b != r.entity_a' );
 
 		return $dbq;
@@ -1232,7 +1232,7 @@ class AdminPage
 					{
 						$es = new entity_selector();
 						$es->add_right_relationship($site->id(),relationship_id_of('site_archive'));
-						$es->add_relation( 'site_state = "Live"' );
+						$es->add_condition( 'site_state', '=', 'Live' );
 						$es->set_num(1);
 						$sites = $es->run_one(id_of('site'), 'Archived');
 						if(!empty($sites))
@@ -1323,20 +1323,20 @@ class AdminPage
 		$es->add_relation( 'shares_rel.type = shares.id' );
 		
 		//access relations
-		$es->add_relation( 'access.name = "site_to_type"' );
-		$es->add_relation( 'access_rel.entity_a = ' . $this->site_id );
+		$es->add_condition( 'access.name', '=', 'site_to_type' );
+		$es->add_condition( 'access_rel.entity_a', '=', $this->site_id );
 		$es->add_relation( 'access_rel.entity_b = entity.id' );
 
 		//sharing relations
-		$es->add_relation( 'shares.name = "site_shares_type"' );
-		$es->add_relation( 'shares_rel.entity_a != ' . $this->site_id );
+		$es->add_condition( 'shares.name', '=', 'site_shares_type' );
+		$es->add_condition( 'shares_rel.entity_a', '!=', $this->site_id );
 		$es->add_relation( 'shares_rel.entity_b = entity.id' );
 
 		if( $this->site_is_live() )
 		{
 			$es->add_table( 'site_table' , 'site' );
 			$es->add_relation( 'shares_rel.entity_a = site_table.id' );
-			$es->add_relation( 'site_table.site_state = "Live"' );
+			$es->add_condition( 'site_table.site_state', '=', 'Live' );
 		}
 
 		$this->sharable_relationships = $es->run_one();
@@ -1741,11 +1741,11 @@ class AdminPage
 
 		$es = new entity_selector( $sid );			// select site
 		$es->add_type( $tid );						// select type
-		$es->add_relation( 'new != 1' );			// make sure it's not new
+		$es->add_condition( 'new', '!=', 1 );		// make sure it's not new
 		if( !empty( $id ) )
-			$es->add_relation( 'entity.id > '.$id );
+			$es->add_condition( 'entity.id', '>', $id );
 		if( !empty( $start_datetime ) )
-			$es->add_relation( 'entity.last_modified >= "'.$start_datetime.'"' );
+			$es->add_condition( 'entity.last_modified', '>=', $start_datetime );
 		$es->set_num( 1 );							// just get one result
 		$es->set_order( 'entity.last_modified ASC, entity.id ASC' );		// order by last modified to get oldest
 		$tmp = $es->run_one(false,'Pending', 'Unable to get oldest pending entity for this type' );
@@ -1767,9 +1767,9 @@ class AdminPage
 
 			$d->add_relation( 'ar.id = r.type' );
 
-			$d->add_relation( 'ar.name = "site_to_type"' );
-			$d->add_relation( 'r.entity_a = ' . $this->site_id );
-			$d->add_relation( 'r.entity_b = ' . $this->type_id );
+			$d->add_condition( 'ar.name', '=', 'site_to_type' );
+			$d->add_condition( 'r.entity_a', '=', $this->site_id );
+			$d->add_condition( 'r.entity_b', '=', $this->type_id );
 			if( $d->run() )
 				return true;
 			else
@@ -1796,7 +1796,7 @@ class AdminPage
 			$es->add_type( $this->type_id );
 			$es->limit_tables();
 			$es->limit_fields();
-			$es->add_relation( 'entity.id = ' . $this->id );
+			$es->add_condition( 'entity.id', '=', $this->id );
 			$es->set_sharing( 'owns' );
 			$es->set_num(1);
 			if( $es->run_one('','All') )

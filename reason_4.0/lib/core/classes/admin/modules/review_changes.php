@@ -140,7 +140,7 @@
 			{
 				$es = new entity_selector();
 				$es->add_type(id_of('site'));
-				$es->add_relation('site.site_state = "Live"');
+				$es->add_condition('site.site_state', '=', 'Live');
 				if(!reason_user_has_privs($this->admin_page->user_id, 'view_sensitive_data'))
 				{
 					$es->add_left_relationship($this->admin_page->user_id,relationship_id_of('site_to_user'));
@@ -272,12 +272,16 @@
 					continue;
 				$es = new entity_selector($site_param);
 				$es->add_type($type->id());
-				$es->add_relation('entity.last_modified >= "'.$start_date.'"');
-				$es->add_relation('entity.last_modified <= "'.$end_date.' 23:59:59"');
+				$es->add_condition( 'entity.last_modified', '>=', $start_date );
+				$es->add_condition('entity.last_modified', '<=', $end_date.' 23:59:59');
 				if($mod_user)
-					$es->add_relation('entity.last_edited_by = "'.addslashes($mod_user).'"');
+				{
+					$es->add_condition('entity.last_edited_by', '=', $mod_user);
+				}
 				if($sort && ('ASC' == $sort || 'DESC' == $sort))
+				{
 					$es->set_order('entity.last_modified '.$sort);
+				}
 				$es->set_sharing('owns');
 				
 				$changes = $es->run_one();
@@ -363,7 +367,7 @@
 			$es = new entity_selector();
 			$es->add_type( $item->get_value('type') );
 			$es->add_right_relationship( $item->id(), reason_get_archive_relationship_id($item->get_value('type')) );
-			$es->add_relation('entity.last_modified < "'.reason_sql_string_escape($start_date).'"');
+			$es->add_condition( 'entity.last_modified', '<', $start_date );
 			$es->set_order('entity.last_modified DESC');
 			$es->set_num(1);
 			$starts = $es->run_one(false,'Archived');
@@ -374,7 +378,7 @@
 			$es = new entity_selector();
 			$es->add_type( $item->get_value('type') );
 			$es->add_right_relationship( $item->id(), reason_get_archive_relationship_id($item->get_value('type')) );
-			$es->add_relation('entity.last_modified <= "'.reason_sql_string_escape($end_date).' 23:59:59"');
+			$es->add_condition( 'entity.last_modified', '<=', $end_date.' 23:59:59' );
 			$es->set_order('entity.last_modified DESC');
 			$es->set_num(1);
 			$ends = $es->run_one(false,'Archived');

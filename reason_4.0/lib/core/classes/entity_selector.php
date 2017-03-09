@@ -48,7 +48,7 @@
 	 * this function is used if you know that a specific entity has a specific name, but you don't
 	 * know the specific table.  It can be used like this:
 	 * <code>
-	 * $es->add_relation( table_of( 'content' , id_of( 'news' ) ) . ' = "stuff"');
+	 * $es->add_condition( table_of( 'content' , id_of( 'news' ) ), '=', 'stuff');
 	 * </code>
 	 * if news has a field called content, it will return the proper string (i.e. chunk.content)
 	 * otherwise returns false, which will likely corrupt the query forcing you to go back and fix stuff
@@ -246,6 +246,11 @@
 			$this->type = array();
 			$this->site_id = $site_id;
 		} // }}}
+		
+		protected function escape_string($string)
+		{
+			return reason_sql_string_escape($string);
+		}
  		 
  		  /**
  		  * Does the actual work of adding relationship sort fields to the entity selector
@@ -732,19 +737,17 @@
 			$this->add_relation( $relationship_name . '.entity_a = entity.id' );
 			if(is_array($entity_id))
 			{
-				$prepped_entity_ids = $entity_id;
-				array_walk($prepped_entity_ids, 'db_prep_walk');
-				$this->add_relation( $relationship_name . '.entity_b IN (' . implode(',',$prepped_entity_ids) . ')' );
+				$this->add_condition( $relationship_name . '.entity_b', 'IN', $entity_id );
 			}
 			else
-				$this->add_relation( $relationship_name . '.entity_b = "' . reason_sql_string_escape($entity_id) . '"');
+				$this->add_condition( $relationship_name . '.entity_b', '=', $entity_id );
 			if($relationship_type)
 			{
-				$this->add_relation( $relationship_name . '.type = ' . $relationship_type );
+				$this->add_condition( $relationship_name . '.type', '=', $relationship_type );
 			}
 			if( $this->_env['restrict_site'] AND !empty($this->_env['site']) )
 			{
-				$this->add_relation( '(' . $relationship_name . '.site=0 OR ' . $relationship_name . '.site=' . $this->_env['site'] . ')' );
+				$this->add_condition( $relationship_name . '.site', '=', array( 0, $this->_env['site'] ) );
 			}
 		} // }}}
 		/**
@@ -783,23 +786,19 @@
 			$this->add_relation( $relationship_name . '.entity_b = entity.id' );
 			if(is_array($entity_id))
 			{
-				$in = "";
-				foreach( $entity_id AS $e_id )
-				{
-					$in .= $e_id . ',';
-				}
-				$in = substr($in, 0,-1);
-				$this->add_relation( $relationship_name . '.entity_a IN (' . $in . ')' );
+				$this->add_condition( $relationship_name . '.entity_a', 'IN', $entity_id );
 			}
 			else
-				$this->add_relation( $relationship_name . '.entity_a = ' . $entity_id );
+			{
+				$this->add_condition( $relationship_name . '.entity_a', '=', $entity_id );
+			}
 			if($relationship_type)
 			{
-				$this->add_relation( $relationship_name . '.type = ' . $relationship_type );
+				$this->add_condition( $relationship_name . '.type', '=', $relationship_type );
 			}
 			if( $this->_env['restrict_site'] AND !empty($this->_env['site']) )
 			{
-				$this->add_relation( '(' . $relationship_name . '.site=0 OR ' . $relationship_name . '.site=' . $this->_env['site'] . ')' );
+				$this->add_condition( $relationship_name . '.site', '=', array( 0, $this->_env['site'] ) );
 			}
 		} // }}}
 		/**
@@ -830,9 +829,9 @@
 			if( $this->borrows )
 				$sharing .= 'borrows';
 			if( $status != 'All' )
-				$new_e->add_relation( 'entity.state = "'.$status.'"' );
+				$new_e->add_condition( 'entity.state', '=', $status );
 			else
-				$new_e->add_relation( 'entity.state != "Archived"' );
+				$new_e->add_condition( 'entity.state', '!=', 'Archived' );
 			
 			if (is_array($this->limit_fields) && empty($this->table_mod) && $this->_exclude_tables_dynamically)
 			{
@@ -1169,9 +1168,9 @@
 			$new_e->swallow( get_entities_by_type_object( $type , $this->site_id, $sharing));
 			$new_e->swallow( $this );
 			if($status != 'All' )
-				$new_e->add_relation( 'entity.state = "' . $status . '"' );
+				$new_e->add_condition( 'entity.state', '=', $status );
 			else
-				$new_e->add_relation( 'entity.state != "Archived"' );
+				$new_e->add_condition( 'entity.state', '!=', 'Archived' );
 			
 			if ($this->union) // count based on query for entities which match or do not match conditionals
 			{
@@ -1326,12 +1325,12 @@
 			
 			$this->add_relation( $e . '.id = ' . $r . '.entity_b' );
 			$this->add_relation( 'entity.id = ' . $r . '.entity_a' );
-			$this->add_relation( $r . '.type = ' . $rel_type_id );
+			$this->add_condition( $r . '.type', '=', $rel_type_id );
 			
 			$this->add_field( $t , $field , $alias );
 			if( $this->_env['restrict_site'] AND !empty($this->_env['site']) )
 			{
-				$this->add_relation( '(' . $r . '.site=0 OR ' . $r . '.site=' . $this->_env['site'] . ')' );
+				$this->add_condition( $r . '.site', '=', array( 0, $this->_env['site'] ) );
 			}
 			if ($limit_results === false)
 			{	
@@ -1343,8 +1342,7 @@
 			elseif (is_string($limit_results) || is_array($limit_results))
 			{
 				$limit_values = (is_string($limit_results)) ? array($limit_results) : $limit_results;
-				array_walk($limit_values,'db_prep_walk');
-				$this->add_relation($t . '.' . $field . ' IN ('.implode(',', $limit_values).')');
+				$this->add_condition($t . '.' . $field, 'IN', $limit_values );
 			}
 			return array( $alias => array( 'table_orig' => $table, 'table' => $t , 'field' => $field ) );
 		} // }}}
@@ -1427,12 +1425,13 @@
 			
 			$this->add_relation( $e . '.id = ' . $r . '.entity_a' );
 			$this->add_relation( 'entity.id = ' . $r . '.entity_b' );
-			$this->add_relation( $r . '.type = ' . $rel_type_id );
+			$this->add_condition( $r . '.type', '=', $rel_type_id );
 
 			$this->add_field( $t , $field , $alias );
 			if( $this->_env['restrict_site'] AND !empty($this->_env['site']) )
 			{
-				$this->add_relation( '(' . $r . '.site=0 OR ' . $r . '.site=' . reason_sql_string_escape($this->_env['site']) . ')' );
+				$this->add_condition( $r . '.site', '=', array( 0, $this->_env['site'] ) );
+				
 			}
 			if ($limit_results === false)
 			{	
@@ -1450,8 +1449,7 @@
 				else
 				{
 					$limit_values = (is_string($limit_results)) ? array($limit_results) : $limit_results;
-					array_walk($limit_values,'db_prep_walk');
-					$this->add_relation($t . '.' . $field . ' IN ('.implode(',', $limit_values).')');
+					$this->add_condition( $t . '.' . $field, 'IN',  $limit_values );
 				}
 			}
 			return array( $alias => array( 'table_orig' => $table, 'table' => $t , 'field' => $field ) );

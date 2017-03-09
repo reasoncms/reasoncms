@@ -71,7 +71,7 @@ class ImageSidebarModule extends DefaultMinisiteModule
 		$es->add_type( id_of('image') );
 		$es->set_env( 'site' , $site_id );
 		$es->add_right_relationship( $page_id, relationship_id_of('minisite_page_to_image') );
-		$es->add_relation('entity.id = '. addslashes($id));
+		$es->add_condition('entity.id', '=', $id);
 		$result = $es->run_one();
 		
 		//echo 'given id='.$id;

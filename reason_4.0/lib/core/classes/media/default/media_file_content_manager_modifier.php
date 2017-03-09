@@ -720,8 +720,8 @@ array('options'=>array('yes'=>'Yes','no'=>'No'),'display_name'=>'&nbsp;'), 'no' 
 		{
 			$es = new entity_selector($this->manager->get_value( 'site_id' ));
 			$es->add_type(id_of('av_file'));
-			$es->add_relation('media_md5_sum = "'.$this->checksum.'"');
-			$es->add_relation('entity.id != '.$this->manager->get_value('id'));
+			$es->add_condition( 'media_md5_sum', '=', $this->checksum );
+			$es->add_condition( 'entity.id', '!=', $this->manager->get_value('id') );
 			$es->set_num(1);
 			$conflicts = $es->run_one();
 			if(!empty($conflicts))

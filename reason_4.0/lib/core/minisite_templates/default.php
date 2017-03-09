@@ -1803,7 +1803,7 @@ class MinisiteTemplate
 			$es->set_order( 'entity.name' );
 			if($this->site_info->get_value('site_state') == 'Live')
 			{
-				$es->add_relation('site_state = "Live"');
+				$es->add_condition('site_state', '=', 'Live');
 			}
 			$this->parent_sites = $es->run_one();
 			$this->queried_for_parent_sites = true;

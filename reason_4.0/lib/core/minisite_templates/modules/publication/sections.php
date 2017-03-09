@@ -65,7 +65,7 @@
 					$es->limit_tables(array('dated','show_hide'));
 					$es->limit_fields('dated.datetime');
 					$es->set_order('dated.datetime DESC');
-					$es->add_relation('show_hide.show_hide = "show"');
+					$es->add_condition('show_hide.show_hide', '=', 'show');
 					$es->add_left_relationship( $this->publication->id(), relationship_id_of('issue_to_publication') );
 					$es->set_num(1);
 					$issues = $es->run_one();

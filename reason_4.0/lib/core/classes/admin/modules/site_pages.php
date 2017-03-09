@@ -98,7 +98,8 @@ class ReasonSitePagesModule extends DefaultModule// {{{
 				$sort_order_string = $this->_get_sort_order_string();
 				$es = new entity_selector($site_id);
 				$es->add_type(id_of('minisite_page'));
-				$es->add_relation('(entity.name != "") AND ((url.url = "") OR (url.url IS NULL))'); // only pages, not custom urls
+				$es->add_condition('entity.name', '!=', '');
+				$es->add_condition( 'url.url', '=', array('',NULL) ); // only pages, not custom urls
 				$es->set_order('last_modified ' . $sort_order_string);
 				$this->_site_pages = $es->run_one();
 				if ($this->_site_pages) $this->_augment_page_entities($this->_site_pages);

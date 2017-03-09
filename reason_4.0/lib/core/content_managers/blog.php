@@ -206,8 +206,8 @@
 				{
 					$es = new entity_selector($this->get_value('site_id'));
 					$es->add_type( id_of('publication_type') );
-					$es->add_relation ('entity.id != '.$this->get_value( 'id' ));
-					$es->add_relation ('blog.blog_feed_string = "'.$this->get_value('blog_feed_string').'"' );
+					$es->add_condition( 'entity.id', '!=', $this->get_value( 'id' ) );
+					$es->add_condition('blog.blog_feed_string', '=', $this->get_value('blog_feed_string') );
 					$es->set_num(1);
 					$same_feed_string = $es->run_one();
 					if(!empty($same_feed_string))
@@ -333,7 +333,7 @@
 			$es = new entity_selector();
 			$es->add_type(id_of('type'));
 			$es->add_right_relationship($this->get_value('site_id'),relationship_id_of('site_to_type'));
-			$es->add_relation('entity.id = "'.$type_id.'"');
+			$es->add_condition( 'entity.id', '=', $type_id );
 			$es->set_num(1);
 			$issue_type = $es->run_one();
 			if(empty($issue_type))

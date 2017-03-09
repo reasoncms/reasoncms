@@ -77,7 +77,7 @@
 			$noneditable_types = $non_editable_es->run_one();
 			if(!empty($noneditable_types))
 			{
-				$es->add_relation('entity.id NOT IN ('.implode(',',array_keys($noneditable_types)).')');
+				$es->add_condition( 'entity.id', 'NOT IN', array_keys($noneditable_types) );
 			}
 			$es->set_order('entity.name ASC');
 			$types = $es->run_one();

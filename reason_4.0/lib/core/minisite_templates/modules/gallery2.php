@@ -982,7 +982,7 @@ class Gallery2Module extends Generic3Module
 	{
 		$es = carl_clone($this->es);
 		$id = (integer) $entity->id();
-		$es->add_relation('entity.id = "' . $id . '"');
+		$es->add_condition('entity.id', '=', $id);
 		$es->set_num(1);
 		$es->set_start(0);
 		$check = $es->run_one();

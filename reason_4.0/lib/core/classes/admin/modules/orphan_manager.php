@@ -51,7 +51,7 @@ class reason_orphan_manager
 				$e->limit_fields();
 				$alias = $e->add_right_relationship_field('owns','entity','id','site_id');
 				$field = $alias['site_id']['table'].'.'.$alias['site_id']['field'];
-				$e->add_relation($field.' IN ("'.implode('","',array_keys($sites)).'")');
+				$e->add_condition( $field, 'IN', array_keys($sites) );
 				$non_orphans = $e->run_one('', 'All');
 				
 				$e = new entity_selector();
@@ -60,7 +60,7 @@ class reason_orphan_manager
 				$e->limit_fields();
 				if(!empty($non_orphans))
 				{
-					$e->add_relation('entity.id NOT IN ("'.implode('","',array_keys($non_orphans)).'")');
+					$e->add_condition( 'entity.id', 'NOT IN', array_keys($non_orphans) );
 				}
 				$orphans = $e->run_one('', 'All');
 
@@ -392,8 +392,8 @@ class OrphanManagerModule extends DefaultModule
 		$d->add_field('relationship','entity_a');
 		$d->add_field('relationship','entity_b');
 		$d->add_field('relationship','id');
-		$d->add_relation('relationship.entity_a ='.$orphaned_page_id);
-		$d->add_relation('relationship.entity_b ='.$orphaned_page_id);
+		$d->add_condition('relationship.entity_a', '=', $orphaned_page_id);
+		$d->add_condition('relationship.entity_b', '=', $orphaned_page_id);
 		$results = current($d->run());
 		$id = $results['id'];
 		delete_relationship($id);

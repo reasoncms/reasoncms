@@ -19,6 +19,7 @@ if( !defined( '__DB_SELECTOR' ) )
 	define ( '__DB_SELECTOR', true );
 	
 	include_once('db_query.php');
+	include_once('sql_string_escape.php');
 	
 	/**
 	 * DBSelector class
@@ -231,6 +232,303 @@ if( !defined( '__DB_SELECTOR' ) )
 		function add_relation( $relation )
 		{
 			$this->relations[] = $relation;
+		}
+		/**
+		 * Add a simple WHERE clause based on field/value/operator parameters
+		 *
+		 * Pass single or multiple fields and values to be evaluated using a given operator
+		 *
+		 * If multiple fields or values are passed, evaluation will be based on a logical
+		 * OR, e.g. the clause will match if any of the fields match any of the values 
+		 * using the operator provided.
+		 *
+		 * If logical AND is desired, use add_condition() or add_relation() multiple 
+		 * times -- multiple clauses are logically ANDed together in query assembly.
+		 *
+		 * Note that you can use the "=" & "IN" operators interchangeably; the method 
+		 * determines which to use based on the values provides.
+		 *
+		 * Note also that the "!=', "<>" and "NOT IN" operators are also interchangeable.
+		 *
+		 * @param mixed $field String single field, array multiple fields
+		 * @param mixed $value String single value, array multiple values
+		 * @param mixed $operator "=","IN","!=","NOT IN","<>",">","<",">=","<=","LIKE"
+		 *
+		 * @return mixed string condition added on success; boolean false on failure
+		 */
+		function add_condition($field, $operator, $value)
+		{
+			if($condition = $this->get_condition($field, $operator, $value))
+			{
+				$this->add_relation($condition);
+				return $condition;
+			}
+			trigger_error('No condition could be made from arguments', HIGH);
+			return false;
+		}
+		function add_condition_set()
+		{
+			$args = func_get_args();
+			if(empty($args))
+			{
+				trigger_error('get_condition_set() must have at least one argument.');
+				return false;
+			}
+			return call_user_func_array(array($this,'get_condition_set'),$args);
+		}
+		function get_condition_set()
+		{
+			$conditions = array();
+			$args = func_get_args();
+			if(empty($args))
+			{
+				trigger_error('get_condition_set() must have at least one argument.');
+				return NULL;
+			}
+			$num = 1;
+			foreach($args as $arg)
+			{
+				if($condition = call_user_func_array(array($this,'get_condition'),$arg))
+				{
+					$conditions[] = $condition;
+				}
+				else
+				{
+					trigger_error('Each argument to get_condition_set() must be a 3+ element array that conforms to the requirements of get_condition(). Argument #'.$num.' did not meet requirements.');
+					return NULL;
+				}
+				$num++;
+			}
+			return '('.implode(' OR ', $conditions).')';
+		}
+		/**
+		 * Get a simple WHERE clause based on field/value/operator parameters
+		 *
+		 * Pass single or multiple fields and values to be evaluated using a given operator
+		 *
+		 * If multiple fields or values are passed, evaluation will be based on a logical
+		 * OR, e.g. if any of the fields match any of the values using the operator provided
+		 *
+		 * Note that the "!=" parameter is supported but that all output uses the "<>" 
+		 * operator for consistency and db portability
+		 *
+		 * @todo sanity check/whitelist chars in field names
+		 * @todo parse field names into table.field and use backtick quoting style
+		 * @todo add support for "%LIKE%","%LIKE","LIKE%"
+		 *
+		 * @param mixed $field String single field, array multiple fields
+		 * @param string $operator "=","<=>","IN","!=","NOT IN","<>",">","<",">=","<=","LIKE","NOT LIKE"
+		 * @param mixed $value String single value, array multiple values
+		 * @param string $boolean 'AUTO', 'OR' or 'AND'
+		 */
+		function get_condition($field, $operator, $value, $boolean = 'AUTO', $parens_wrap = true)
+		{
+			// Gotta have some kind of field
+			if(empty($field))
+			{
+				trigger_error('No field provided to get_condition(). Unable to continue.');
+				return NULL;
+			}
+			if(!in_array($boolean, array('AUTO','OR','AND')))
+			{
+				trigger_error('Unrecognized boolean value provided to get_condition(). Unable to continue.');
+				return NULL;
+			}
+			
+			// Several operators are treated as logically identical in get_condition().
+			// Here we map them on to a standard set of operators
+			$operator_map = array(
+				'!=' => '<>',
+			);
+			if(isset($operator_map[$operator]))
+			{
+				$operator = $operator_map[$operator];
+			}
+			
+			// The "AUTO" value for booleans means that negations use AND, other comparators
+			// use OR
+			$negation_operators = array(
+				'<>', 'NOT IN', 'NOT LIKE',
+			);
+			if('AUTO' == $boolean)
+			{
+				if(in_array($operator, $negation_operators))
+				{
+					$boolean = 'AND';
+				}
+				else
+				{
+					$boolean = 'OR';
+				}
+			}
+			
+			// Coerce the field value into a standard format (e.g. single-value array if 
+			// passed a string)
+			if(!is_array($field))
+				$field = array($field);
+			
+			$statements = array();
+			switch($operator)
+			{
+				case 'NOT IN':
+					if('OR' == $boolean)
+					{
+						// The NOT IN clause is inherently a logical AND so specifying OR is ambiguous
+						trigger_error('The "NOT IN" operator is not compatible with the "OR" boolean.');
+						return NULL;
+					}
+				case 'IN':
+					if('AND' == $boolean)
+					{
+						// The NOT IN clause is inherently a logical AND so specifying OR is ambiguous
+						trigger_error('The "IN" operator is not compatible with the "AND" boolean.');
+						return NULL;
+					}
+					if( is_null($value) )
+					{
+						trigger_error('NULL values are not supported for IN clauses.');
+						return NULL;
+					}
+					elseif( is_array($value) )
+					{
+						if(empty($value))
+						{
+							trigger_error('Empty arrays are not supported for IN clauses.');
+							return NULL;
+						}
+						elseif(in_array(NULL, $value, true))
+						{
+							trigger_error('NULL values are not supported for IN clauses.');
+							return NULL;
+						}
+					} 
+					else
+					{
+						$value = array($value);
+					}
+					$vals_clause = '('.implode(',',$this->escape_quote($value)).')';
+					foreach($field as $f)
+					{
+						$statements[] = $f.' '.$operator.' '.$vals_clause;
+					}
+					break;
+				case '=':
+				case '<=>':
+				case '<>':
+				case '>':
+				case '<':
+				case '>=':
+				case '<=':
+				case 'LIKE':
+				case 'NOT LIKE':
+					if(is_array($value))
+					{
+						foreach($value as $val)
+						{
+							if($clause = $this->get_condition($field, $operator, $val, $boolean, false))
+							{
+								$statements[] = $clause;
+							}
+							else
+							{
+								trigger_error('Unable to process parameters (Field: '.$field.', Operator: '.$operator.', Value: '.$val.')');
+								return NULL;
+							}
+						}
+						break;
+					}
+					if(is_null($value))
+					{
+						if('=' == $operator)
+						{
+							$actual_operator = 'IS';
+						}
+						elseif('<>' == $operator)
+						{
+							$actual_operator = 'IS NOT';
+						}
+						elseif('<=>' == $operator)
+						{
+							$actual_operator = '<=>';
+						}
+						else
+						{
+							trigger_error('NULL values are incompatible with comparators other than "=", "<=>", and "<>"');
+							return NULL;
+						}
+						foreach($field as $f)
+						{
+							$statements[] = $f.' '.$actual_operator.' NULL';
+						}
+						break;
+					}
+					if(is_object($value))
+					{
+						if(!method_exists($value, '__toString'))
+						{
+							trigger_error('Object values must have a __toString() method to be used in get_condition().');
+							return NULL;
+						}
+					}
+					elseif(!is_scalar($value))
+					{
+						trigger_error('Non-scalar value passed. Unable to proceed.');
+						return NULL;
+					}
+					foreach($field as $f)
+					{
+						$statements[] = $f.' '.$operator.' '.$this->escape_quote($value);
+					}
+					break;
+				default:
+					trigger_error('Unrecognized operator "'.$operator.'" passed to get_condition(). Unable to continue.');
+					return NULL;
+			}
+			$num = count($statements);
+			if($num > 1)
+			{
+				$condition = implode(' '.$boolean.' ',$statements);
+				if($parens_wrap)
+					$condition = '('.$condition.')';
+			}
+			elseif(1 == $num)
+			{
+				$condition = reset($statements);
+			}
+			else
+			{
+				trigger_error('No statements made (unknown cause). Unable to proceed.');
+				return NULL;
+			}
+			return $condition;
+		}
+		/**
+		 * Prepare value or value array for use in SQL statement
+		 *
+		  * String values will be escaped and quoted; integer values will be returned as-is
+		  *
+		  * Uses single quotes to conform to ANSI SQL standard for maximum portability
+		  *
+		  * Note that a db connection must exist before this method can be called
+		  *
+		 * @param $value mixed string, integer, or array of strings or integers
+		 */
+		function escape_quote($value)
+		{
+			if(is_array($value))
+			{
+				return array_map(array($this, 'escape_quote'),$value);
+			}
+			if(is_int($value))
+			{
+				return $value;
+			}
+			return '\''.$this->escape_string($value).'\'';
+		}
+		
+		protected function escape_string($string)
+		{
+			return carl_util_sql_string_escape($string);
 		}
 		/**
 		 * Set the index to start at

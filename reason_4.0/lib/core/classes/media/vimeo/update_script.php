@@ -22,9 +22,9 @@ reason_include_once( 'classes/media/vimeo/shim.php' );
 
 $es = new entity_selector();
 $es->add_type(id_of('av'));
-$es->add_relation('media_work.av_type = "Video"');
-$es->add_relation('media_work.integration_library = "vimeo"');
-$es->add_relation('media_work.transcoding_status = "converting"');
+$es->add_condition('media_work.av_type', '=', 'Video');
+$es->add_condition('media_work.integration_library', '=', 'vimeo');
+$es->add_condition('media_work.transcoding_status', '=', 'converting');
 $media_works = array_merge($es->run_one(), $es->run_one('','Pending'));
 
 $shim = new VimeoShim();

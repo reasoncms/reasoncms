@@ -406,7 +406,7 @@ class GalleryVoteModule extends GalleryModule
 			$es->set_num(1);
 			$es->limit_tables();
 			$es->limit_fields();
-			$es->add_relation('entity.id = "'.$this->site_id.'"');
+			$es->add_condition('entity.id', '=', $this->site_id);
 			$sites = $es->run_one();
 			if(!empty($sites))
 			{

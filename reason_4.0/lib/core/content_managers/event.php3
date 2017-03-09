@@ -136,7 +136,7 @@
 			$es = new entity_selector();
 			$es->add_type(id_of('site'));
 			$es->add_left_relationship(id_of('category_type'), relationship_id_of('site_to_type'));
-			$es->add_relation('entity.id = "'.$site->id().'"');
+			$es->add_condition( 'entity.id', '=', $site->id() );
 			$es->limit_tables();
 			$es->limit_fields();
 			$es->set_num(1);
@@ -253,12 +253,7 @@
 			// If there is not, hide the registration field.
 			$ps = new entity_selector($this->get_value( 'site_id' ));
 			$ps->add_type( id_of('minisite_page') );
-			$relation_parts = array();
-			foreach($this->registration_page_types as $page_type)
-			{
-				$relation_parts[] = 'page_node.custom_page = "'.$page_type.'"';
-			}
-			$ps->add_relation('( '.implode(' OR ',$relation_parts).' )');
+			$ps->add_condition( 'page_node.custom_page', 'IN', $this->registration_page_types );
 			$ps->set_num(1);
 			$page_array = $ps->run_one();
 			if(empty($page_array))

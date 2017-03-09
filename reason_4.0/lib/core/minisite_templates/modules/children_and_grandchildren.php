@@ -118,7 +118,7 @@ class ChildrenAndGrandchildrenModule extends ChildrenModule
 		$es->add_left_relationship( $child->id(), relationship_id_of( 'minisite_page_parent' ) );
 		if($this->params['show_only_pages_in_nav'])
 		{
-			$this->es->add_relation('nav_display = "Yes"');
+			$this->es->add_condition('nav_display', '=', 'Yes');
 		}
 		$es->set_order('sortable.sort_order ASC');
 		return $es->run_one();

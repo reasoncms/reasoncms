@@ -96,8 +96,8 @@
 			$dbq->add_field( 'i' , 'image_type' );
 			$dbq->add_field( 'm' , 'description' );
 
-			$dbq->add_relation( 'r.type = ' . $association_id );
-			$dbq->add_relation( 'r.entity_a = ' . $entity_id );
+			$dbq->add_condition( 'r.type', '=', $association_id );
+			$dbq->add_condition( 'r.entity_a', '=', $entity_id );
 			$dbq->add_relation( 'r.entity_b = i.id' );
 			$dbq->add_relation( 'i.id = m.id' );
 

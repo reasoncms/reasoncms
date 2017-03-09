@@ -67,7 +67,7 @@
 			$es = new entity_selector();
 			$es->add_type(id_of('type'));
 			$es->add_right_relationship($site_id,relationship_id_of('site_to_type'));
-			$es->add_relation('entity.unique_name = "image"');
+			$es->add_condition('entity.unique_name', '=', 'image');
 			$es->set_num(1);
 			$types = $es->run_one();
 			if(empty($types))

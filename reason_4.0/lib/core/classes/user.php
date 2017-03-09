@@ -76,7 +76,7 @@ class user
 		$es->add_type(id_of('user'));
 		$es->limit_tables();
 		$es->limit_fields();
-		$es->add_relation('entity.name = "'.$user_netID.'"');
+		$es->add_condition( 'entity.name', '=', $user_netID );
 		$es->set_num(1);
 		$result = $es->run_one();
 		if (!empty($result))

@@ -31,7 +31,7 @@
 			$es = new entity_selector();
 			$es->description = "Getting all live sites";
 			$es->add_type( id_of( 'site' ) );
-			$es->add_relation('site.site_state = "Live"');
+			echo $es->add_condition('site.site_state', '=', 'Live');
 			$this->sites = $es->run_one();
 
 			// find all non-reason sites

@@ -78,8 +78,8 @@
 		}
 		function alter_es() // {{{
 		{
-			$this->es->add_relation('bug.bug_state != "Done" 
-AND bug.bug_state != "Cancelled"');
+			$this->es->add_condition('bug.bug_state', '!=', 'Done');
+			$this->es->add_condition('bug.bug_state', '!=', 'Cancelled');
 			if(!empty($this->request['order_projects']))
 				$order_key = $this->request['order_projects'];
 			else

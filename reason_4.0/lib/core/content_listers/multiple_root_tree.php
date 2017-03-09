@@ -59,7 +59,7 @@
 			$parent->add_relation( 'entity2.id =  relationship2.entity_b' );
 			$parent->add_relation( 'entity.id = relationship2.entity_a' );
 			$parent->add_relation( 'relationship2.type = allowable_relationship2.id' );
-			$parent->add_relation( 'allowable_relationship2.name LIKE "%parent%"' );
+			$parent->add_condition( 'allowable_relationship2.name', 'LIKE', '%parent%' );
 			$parent->set_order( 'sortable.sort_order' );
 
 			$this->es->swallow( $parent );

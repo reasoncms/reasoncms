@@ -80,7 +80,7 @@ class FieldToEntityTable
 	{
 		$es = new entity_selector($this->ma_site_id);
 		$es->add_type(id_of('content_table'));
-		$es->add_relation('entity.name = "'.$entity_table_name.'"');
+		$es->add_condition( 'entity.name', '=', $entity_table_name );
 		$results = $es->run_one();
 		$result_count = count($results);
 		if ($result_count == 0) $this->err[] = 'The entity table ' . $entity_table_name . ' could not be found';

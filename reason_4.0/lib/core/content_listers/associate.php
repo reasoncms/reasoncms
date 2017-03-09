@@ -37,8 +37,7 @@
 			// modify entity selector to exclude items that are already associated
 			if( $this->ass_vals )
 			{
-				$relation = 'entity.id NOT IN ('.implode(",",array_keys($this->ass_vals)).')';
-				$this->es->add_relation( $relation );
+				$this->es->add_condition( 'entity.id', 'NOT IN', array_keys($this->ass_vals) );
 			}
 			
 			// modify entity selector to exlude items that should not be available for association because they are already part of a many_to_one relationship
@@ -50,8 +49,7 @@
 				$this->related_vals = $ass_related_es->run_one();
 				if( $this->related_vals )
 				{
-					$relation = 'entity.id NOT IN ('.implode(",",array_keys($this->related_vals)).')';
-					$this->es->add_relation( $relation );
+					$this->es->add_condition( 'entity.id', 'NOT IN', array_keys($this->related_vals) );
 				}
 			}
 		} // }}}

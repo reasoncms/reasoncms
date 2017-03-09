@@ -49,8 +49,8 @@
 			$d->add_table( 'ar' , 'allowable_relationship' );
 			
 			$d->add_relation( 'r.type = ar.id' );
-			$d->add_relation( 'ar.id = ' . $this->admin_page->rel_id );
-			$d->add_relation( 'r.entity_a = ' . $this->admin_page->id );
+			$d->add_condition( 'ar.id', '=', $this->admin_page->rel_id );
+			$d->add_condition( 'r.entity_a', '=', $this->admin_page->id );
 
 			$r = db_query( $d->get_query() , "Can't do query in FinishModule::check_required_relationships()" );
 			if( mysql_fetch_array( $r ) )

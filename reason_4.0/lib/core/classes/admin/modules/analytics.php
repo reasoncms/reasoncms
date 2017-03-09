@@ -226,7 +226,8 @@ class AnalyticsModule extends DefaultModule
 			$es->limit_fields(array('url','url_fragment'));
 			$es->add_type(id_of('minisite_page'));
 			$es->add_left_relationship_field('minisite_page_parent', 'entity', 'id', 'parent_id');
-			$es->add_relation('(entity.name != "") AND ((url.url = "") OR (url.url IS NULL))'); // only pages, not custom urls
+			$es->add_condition( 'entity.name', '!=', '' );
+			$es->add_condition( 'url.url', '=', array('', NULL) ); // only pages, not custom urls
 			$this->pages = $es->run_one();
 			$url_builder = new reasonPageURL();
 			$url_builder->provide_page_entities($pages);

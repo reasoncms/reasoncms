@@ -532,7 +532,7 @@ class reasonCalendar
 		$this->es->set_cache_lifespan( $this->_get_cache_lifespan() );
 		if( $this->sharing_mode == 'shared_only' )
 		{
-			$this->es->add_relation( 'entity.no_share != 1');
+			$this->es->add_condition( 'entity.no_share', '!=', 1);
 		}
 		elseif( $this->sharing_mode == 'hybrid' )
 		{
@@ -544,11 +544,14 @@ class reasonCalendar
 				$es->limit_fields();
 				$es->set_cache_lifespan( $this->_get_cache_lifespan() );
 				$tmp = $es->run_one();
-				$this->es->add_relation('(`entity`.`id` IN ("'.implode('","',array_keys($tmp)).'") OR entity.no_share != 1 )');
+				$this->es->add_condition_set(
+					array( '`entity`.`id`', 'IN', array_keys($tmp) ),
+					array( 'entity.no_share', '!=', 1 )
+				);
 			}
 			else
 			{
-				$this->es->add_relation( 'entity.no_share != 1');
+				$this->es->add_condition( 'entity.no_share', '!=', 1 );
 			}
 		}
 		$this->es->add_type( id_of('event_type') );
@@ -557,7 +560,7 @@ class reasonCalendar
 			$this->es->set_env('site',$this->context_site->id());
 		}
 		
-		$this->es->add_relation( table_of('show_hide', id_of('event_type')) .' in ("'.join('","', $this->show_statuses).'")' );
+		$this->es->add_condition( table_of('show_hide', id_of('event_type')), 'IN', $this->show_statuses );
 		
 		if(!empty($this->es_callback))
 		{
@@ -595,19 +598,23 @@ class reasonCalendar
 			$simple_search_date_fields = array('datetime','dates');
 			$time = strtotime($this->simple_search);
 			$search_chunks = array();
+			$conditions = array();
 			if($time > 0)
 			{
 				$date = carl_date('Y-m-d',$time);
+				$tables = array();
 				foreach($simple_search_date_fields as $field)
 				{
-					$search_chunks[] = table_of($field, id_of('event_type')) . '  LIKE "%'.$date.'%"';
+					$tables[] = table_of($field, id_of('event_type'));
 				}
+				$conditions[] = array($tables, 'LIKE', '%'.$date.'%');
 			}
-			$prepped = reason_sql_string_escape($this->simple_search);
+			$tables = array();
 			foreach($simple_search_text_fields as $field)
 			{
-				$search_chunks[] = table_of($field, id_of('event_type')) . ' LIKE "%'.$prepped.'%"';
+				$tables[] = table_of($field, id_of('event_type'));
 			}
+			$conditions[] = array($tables, 'LIKE', '%'.$this->simple_search.'%');
 			
 			// Not sure how to do this... the idea is to select categories that match the search term and additionally select 
 			// events based on the categories... but I don't think there is a way at this point to wrap that all up in a single entity selector.
@@ -621,7 +628,7 @@ class reasonCalendar
 			else
 				$es = new entity_selector();
 			$es->add_type(id_of('category_type'));
-			$es->add_relation('entity.name LIKE "%'.$prepped.'%"');
+			$es->add_condition('entity.name', 'LIKE', '%'.$this->simple_search.'%');
 			$matching_cats = $es->run_one();
 			if(!empty($matching_cats))
 			{
@@ -630,7 +637,7 @@ class reasonCalendar
 			}
 			echo $this->es->get_one_query(); */
 			
-			$this->es->add_relation('('.implode(' OR ',$search_chunks).')');
+			call_user_func_array(array($this->es, 'add_condition_set'), $conditions);
 		}
 		
 		if(!empty($this->rels))
@@ -674,7 +681,7 @@ class reasonCalendar
 			$es->add_left_relationship( id_of('event_type'), relationship_id_of('site_shares_type'));
 			$es->limit_tables('site');
 			$es->limit_fields('site_state');
-			$es->add_relation('site_state="Live"');
+			$es->add_condition( 'site_state', '=', 'Live' );
 			$es->set_cache_lifespan( $this->_get_cache_lifespan_meta() );
 			$sharing_sites = $es->run_one();
 		}
@@ -927,18 +934,14 @@ class reasonCalendar
 	 */
 	protected function complete_es()
 	{
-		/*$this->es->add_table( 'event_date_extract' );
-		$this->es->add_relation('event_date_extract.date >= "'.$this->start_date.'"' );
-		$this->es->add_relation('event_date_extract.entity_id = entity.id' ); */
-		$this->es->add_relation( table_of('last_occurence', id_of('event_type')). ' >= "'.$this->start_date.'"' );
+		$this->es->add_condition( table_of('last_occurence', id_of('event_type')), '>=', $this->start_date );
 		if($this->get_view() != 'all')
 		{
-			$this->es->add_relation( table_of('datetime', id_of('event_type')). ' <= "'.$this->end_date.' 23:59:59"' );
-			//$this->es->add_relation('event_date_extract.date >= "'.$this->end_date.'"' );
+			$this->es->add_condition( table_of('datetime', id_of('event_type')), '<=', $this->end_date.' 23:59:59' );
 		}
 		if( $this->view == 'daily' )
 		{
-			$this->es->add_relation( table_of('dates', id_of('event_type')). ' LIKE "%'.$this->start_date.'%"');
+			$this->es->add_condition( table_of('dates', id_of('event_type')), 'LIKE', '%'.$this->start_date.'%'); //why does this have wildcard at the beginning?
 		}
 	}
 	/**
@@ -1454,7 +1457,7 @@ class reasonCalendar
 		}
 		$test_es = carl_clone($this->base_es);
 		$test_es->set_num(1);
-		$test_es->add_relation( table_of('datetime', id_of('event_type')). ' < "'.reason_sql_string_escape($date).'"');
+		$test_es->add_condition( table_of('datetime', id_of('event_type')), '<', $date );
 		$test_es->limit_fields();
 		$test_es->exclude_tables_dynamically();
 		$test_es->set_cache_lifespan($this->_get_cache_lifespan_meta());
@@ -1490,7 +1493,7 @@ class reasonCalendar
 		}
 		$test_es = carl_clone($this->base_es);
 		$test_es->set_num(1);
-		$test_es->add_relation('event.last_occurence > "'.reason_sql_string_escape($date).'"');
+		$test_es->add_condition( 'event.last_occurence', '>', $date );
 		$test_es->limit_fields();
 		$test_es->exclude_tables_dynamically();
 		$test_es->set_cache_lifespan($this->_get_cache_lifespan_meta());

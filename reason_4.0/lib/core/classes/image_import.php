@@ -108,7 +108,7 @@
 			{
 				$es = new entity_selector($site_id);
 				$es->add_type( id_of( 'minisite_page' ) );
-				$es->add_relation( 'page_node.custom_page IN (\''.implode('\', \'', $page_types).'\')' );
+				$es->add_condition( 'page_node.custom_page', 'IN', $page_types );
 				$pages = $es->run_one();
 			}
 			return $pages;

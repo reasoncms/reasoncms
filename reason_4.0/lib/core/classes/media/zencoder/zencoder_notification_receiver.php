@@ -100,7 +100,7 @@ function process_video($media_work, $notification, $mime_type_map, $netid)
 	// get Reason media file for this output file
 	$es = new entity_selector();
 	$es->add_type(id_of('av_file'));
-	$es->add_relation('entity.id = "'.addslashes($id).'"');
+	$es->add_condition( 'entity.id', '=', $id );
 	$media_file = current(array_merge($es->run_one(), $es->run_one('','Pending')));
 	
 	$duration = get_human_readable_duration(intval($output->duration_in_ms));
@@ -166,7 +166,7 @@ function process_audio($media_work, $notification, $mime_type_map, $netid)
 	// get Reason media file for this output file
 	$es = new entity_selector();
 	$es->add_type(id_of('av_file'));
-	$es->add_relation('entity.id = "'.addslashes($id).'"');
+	$es->add_condition( 'entity.id', '=', $id );
 	$media_file = current(array_merge($es->run_one(), $es->run_one('','Pending')));
 	$duration = get_human_readable_duration(intval($output->duration_in_ms));
 	
@@ -320,7 +320,7 @@ function get_media_work($job_id)
 {
 	$es = new entity_selector();
 	$es->add_type(id_of('av'));
-	$es->add_relation('media_work.entry_id = "'.addslashes($job_id).'"');
+	$es->add_condition( 'media_work.entry_id', '=', $job_id );
 	$results = array_merge($es->run_one(), $es->run_one('','Pending'));
 	if (!empty($results))
 	{

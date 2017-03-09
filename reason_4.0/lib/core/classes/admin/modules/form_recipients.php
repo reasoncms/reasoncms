@@ -52,7 +52,7 @@ class FormRecipientsModule extends DefaultModule
 		{
 			$es = new entity_selector();
 			$es->add_type(id_of('form'));
-			$es->add_relation('`email_of_recipient` != ""');
+			$es->add_condition('`email_of_recipient`', '!=', '');
 			$site_id = (integer) $d->get_value('site');
 			if($site_id)
 				$es->set_site($site_id);

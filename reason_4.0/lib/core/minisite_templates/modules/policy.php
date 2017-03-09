@@ -179,7 +179,7 @@
 			$es->set_order( 'entity.name ASC' );
 			$es->set_env( 'site' , $this->site_id );
 			
-			$es->add_relation( table_of('show_hide', id_of( 'policy_type' )) .' != "hide"' );
+			$es->add_condition( table_of('show_hide', id_of( 'policy_type' )), '!=', 'hide' );
 			$es->add_left_relationship_field( 'policy_parent' , 'entity' , 'id' , 'parent_id' );
 			
 			if($audience = $this->_get_current_audience())
@@ -395,8 +395,8 @@
 		{
 			$es = new entity_selector();
 			$es->add_type(id_of('policy_type'));
-			$es->add_relation('entity.id != "'.$policy->id().'"');
-			$es->add_relation( table_of('show_hide', id_of( 'policy_type' )) .' != "hide"' );
+			$es->add_condition( 'entity.id', '!=', $policy->id() );
+			$es->add_condition( table_of('show_hide', id_of( 'policy_type' )), '!=', 'hide' );
 			$es->add_left_relationship($policy->id(),relationship_id_of('policy_parent'));
 			$es->set_order('sortable.sort_order ASC');
 			return $es->run_one();
@@ -785,14 +785,14 @@
 				// Populate the numbering_scheme elements
 				$es = new entity_selector();
 				$es->add_type(id_of('content_table'));
-				$es->add_relation('entity.name = "policies"');
+				$es->add_condition('entity.name', '=', 'policies');
 				$policy_table = current($es->run_one());
 				unset($es);
 				
 				$es = new entity_selector();
 				$es->add_type( id_of('field') );
 				$es->add_left_relationship($policy_table->id(), relationship_id_of('field_to_entity_table'));
-				$es->add_relation('entity.name = "numbering_scheme"');
+				$es->add_condition('entity.name', '=', 'numbering_scheme');
 				$field = current($es->run_one());
 				
 				$args = array();

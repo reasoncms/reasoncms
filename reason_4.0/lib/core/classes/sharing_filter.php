@@ -46,9 +46,9 @@
 			$es->add_type( id_of( 'site' ) );
 			if($cur_site->get_value('site_state') == 'Live')
 			{
-				$es->add_relation('site.site_state = "Live"');
+				$es->add_condition('site.site_state', '=', 'Live');
 			}
-			$es->add_relation('entity.id != '.$this->page->site_id);
+			$es->add_condition( 'entity.id', '!=', $this->page->site_id );
 			$es->add_left_relationship( $this->page->type_id , relationship_id_of( 'site_shares_type' ) );
 			$es->set_order( 'name ASC' );
 			$results = $es->run_one();

@@ -427,7 +427,6 @@
 						$key = 'search_' . $name;
 						if( !empty( $this->admin_page->request[ $key ] ) )
 						{
-							$value = reason_sql_string_escape($this->admin_page->request[ $key ]);
 							$this->active_filters = true;
 							$alias = isset( $this->alias[ $name ] ) ? $this->alias[ $name ] : '';
 							if( $alias )  //first, check aliases
@@ -463,32 +462,32 @@
 			function add_exact_filter( $table , $value ) // {{{
 			{
 				$filter_es_name = $this->filter_es_name;
-				$this->$filter_es_name->add_relation( $table . ' = "'. $value . '"' );
+				$this->$filter_es_name->add_condition( $table, '=', $value );
 			} // }}}
 			function add_like_filter( $table , $value ) // {{{
 			{
 				$filter_es_name = $this->filter_es_name;
-				$this->$filter_es_name->add_relation( $table . ' LIKE "%'. $value . '%"' );
+				$this->$filter_es_name->add_condition( $table, 'LIKE', '%'. $value . '%' );
 			} // }}}
 			function add_less_than_filter( $table , $value ) // {{{
 			{
 				$filter_es_name = $this->filter_es_name;
-				$this->$filter_es_name->add_relation( $table . ' < "'. $value . '"' );
+				$this->$filter_es_name->add_condition( $table, '<', $value );
 			} // }}}
 			function add_less_than_equal_filter( $table , $value ) // {{{
 			{
 				$filter_es_name = $this->filter_es_name;
-				$this->$filter_es_name->add_relation( $table . ' <= "'. $value . '"' );
+				$this->$filter_es_name->add_condition( $table, '<=', $value );
 			} // }}}
 			function add_greater_than_filter( $table , $value ) // {{{
 			{
 				$filter_es_name = $this->filter_es_name;
-				$this->$filter_es_name->add_relation( $table . ' > "'. $value . '"' );
+				$this->$filter_es_name->add_condition( $table, '>', $value );
 			} // }}}
 			function add_greater_than_equal_filter( $table , $value ) // {{{
 			{
 				$filter_es_name = $this->filter_es_name;
-				$this->$filter_es_name->add_relation( $table . ' >= "'. $value . '"' );
+				$this->$filter_es_name->add_condition( $table, '>=', $value );
 			} // }}}
 			/**#@-*/
 
@@ -607,7 +606,10 @@
 					$result =& $this->check_bounds($es);
 					$slice_start = ( ($this->page - 1 ) * ( $this->num_per_page ) );
 					$keys = array_slice($result, $slice_start, $this->num_per_page);
-					if (!empty($keys)) $es->add_relation('entity.id IN ('.implode(",",$keys).')');
+					if (!empty($keys))
+					{
+						$es->add_condition( 'entity.id', 'IN', $keys );
+					}
 					else 
 					{
 						$this->values = array();

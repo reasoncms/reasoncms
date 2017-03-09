@@ -1160,7 +1160,7 @@ class EventsModule extends DefaultMinisiteModule
 		{
 			$es->limit_tables('site');
 			$es->limit_fields('site_state');
-			$es->add_relation('site_state="Live"');
+			$es->add_condition('site_state', '=', 'Live');
 		}
 		else
 		{
@@ -1187,7 +1187,7 @@ class EventsModule extends DefaultMinisiteModule
 		{
 			$es->limit_tables('site');
 			$es->limit_fields('site_state');
-			$es->add_relation('site_state="Live"');
+			$es->add_condition('site_state', '=', 'Live');
 		}
 		else
 		{
@@ -1230,7 +1230,7 @@ class EventsModule extends DefaultMinisiteModule
 					{
 						$es->limit_tables('site');
 						$es->limit_fields('site_state');
-						$es->add_relation('site_state="Live"');
+						$es->add_condition('site_state', '=', 'Live');
 					}
 					else
 					{
@@ -1270,7 +1270,7 @@ class EventsModule extends DefaultMinisiteModule
 		{
 			$es->limit_tables('site');
 			$es->limit_fields('site_state');
-			$es->add_relation('site_state="Live"');
+			$es->add_condition('site_state', '=', 'Live');
 		}
 		else
 		{
@@ -3495,8 +3495,8 @@ class EventsModule extends DefaultMinisiteModule
 			// get all events -- exclude those who have an audience in the excluded audience list
 			$audience_table_info = $es->add_left_relationship_field('event_to_audience', 'entity', 'id', 'audience_id');
 			$audience_ids = array_keys($audiences_to_exclude);
-			array_walk($audience_ids,'db_prep_walk');
-			$es->add_relation($audience_table_info['audience_id']['table'].'.'.$audience_table_info['audience_id']['field'].' NOT IN ('.implode(',',$audience_ids).')');
+			$audience_field = $audience_table_info['audience_id']['table'].'.'.$audience_table_info['audience_id']['field'];
+			$es->add_condition($audience_field, 'NOT IN', $audience_ids);
 		}
 		
 		if(!empty($this->params['freetext_filters']))
@@ -3505,15 +3505,13 @@ class EventsModule extends DefaultMinisiteModule
 			{
 				$string = $filter[0];
 				$fields = explode(',',$filter[1]);
-				$parts = array();
+				$standardized_fields = array();
 				foreach($fields as $field)
 				{
 					$field_parts = explode('.',trim($field));
-					
-					$parts[] = '`'.implode('`.`',$field_parts).'` LIKE "'.reason_sql_string_escape($string).'"';
+					$standardized_fields[] = '`'.implode('`.`',$field_parts).'`';
 				}
-				$where = '('.implode(' OR ',$parts).')';
-				$es->add_relation($where);
+				$es->add_condition($standardized_fields, 'LIKE', $string);
 			}
 		}
 	}
@@ -3743,12 +3741,12 @@ class EventsModule extends DefaultMinisiteModule
 			if(is_array($sites)) $es = new entity_selector(array_keys($sites));
 			else $es = new entity_selector($sites->id());
 			$es->add_type(id_of('event_type'));
-			$es->add_relation('entity.id = "'.$id.'"');
-			$es->add_relation(table_of('show_hide', id_of('event_type')). ' = "show"');
+			$es->add_condition('entity.id', '=', $id);
+			$es->add_condition(table_of('show_hide', id_of('event_type')), '=', 'show');
 			$es->set_num(1);
 			$es->limit_tables(get_table_from_field('show_hide', id_of('event_type')));
 			$es->limit_fields();
-			if($this->_get_sharing_mode() == 'shared_only') $es->add_relation('entity.no_share != 1');
+			if($this->_get_sharing_mode() == 'shared_only') $es->add_condition('entity.no_share', '!=', 1);
 			$this->_ok_to_show[$id] = ($es->run_one());
 		}
 		return $this->_ok_to_show[$id];
@@ -3975,7 +3973,7 @@ class EventsModule extends DefaultMinisiteModule
 		$es->add_type( id_of('image') );
 		$es->add_right_relationship( $e->id(), relationship_id_of('event_to_image') );
 		if(!empty($images))
-			$es->add_relation('`entity`.`id` NOT IN ("'.implode('","',array_keys($images)).'")');
+			$es->add_condition( '`entity`.`id`', 'NOT IN', array_keys($images) );
 		$es->add_rel_sort_field($e->id(), relationship_id_of('event_to_image'));
 		$es->set_order('rel_sort_order ASC');
         $es->set_env( 'site' , $this->site_id );
@@ -3998,8 +3996,8 @@ class EventsModule extends DefaultMinisiteModule
 			$es->add_right_relationship( $e->id(), relationship_id_of('event_to_media_work'));
 			$es->add_rel_sort_field($e->id(), relationship_id_of('event_to_media_work'));
 			$es->set_order('rel_sort_order ASC');
-			$es->add_relation( 'show_hide.show_hide = "show"' );
-			$es->add_relation( '(media_work.transcoding_status = "ready" OR ISNULL(media_work.transcoding_status) OR media_work.transcoding_status = "")' );
+			$es->add_condition( 'show_hide.show_hide', '=', 'show' );
+			$es->add_condition( 'media_work.transcoding_status', '=', array('ready', NULL, '') );
 			$cache[$e->id()] = $es->run_one();
 		}
 		return $cache[$e->id()];
@@ -4042,7 +4040,7 @@ class EventsModule extends DefaultMinisiteModule
 		$es->limit_fields();
 		$es->enable_multivalue_results();
 		$es->add_type( id_of('event_type'));
-		$es->add_relation('entity.id = ' . $e->id());
+		$es->add_condition( 'entity.id', '=', $e->id() );
 		$es->add_left_relationship_field('event_to_audience', 'entity', 'id', 'aud_ids');
 		$with_audiences = $es->run_one();
 		if (!empty($with_audiences))

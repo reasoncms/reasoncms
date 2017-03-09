@@ -173,8 +173,8 @@ class reasonPageURL extends reasonURL
 			$d = new DBselector();
 			$d->add_table( 'r', 'relationship' );
 			$d->add_field( 'r', 'entity_b', 'parent_id' );
-			$d->add_relation( 'r.type = ' . relationship_id_of('minisite_page_parent'));
-			$d->add_relation( 'r.entity_a = ' . $page->id() );
+			$d->add_condition( 'r.type', '=', relationship_id_of('minisite_page_parent') );
+			$d->add_condition( 'r.entity_a', '=', $page->id() );
 			$d->set_num(1);
 			$result = db_query( $d->get_query() , 'Error getting parent ID.' );
 			if( $row = mysql_fetch_assoc($result))
@@ -206,8 +206,8 @@ class reasonPageURL extends reasonURL
 			$d = new DBselector();
 			$d->add_table( 'r', 'relationship' );
 			$d->add_field( 'r', 'entity_a', 'owner_id' );
-			$d->add_relation( 'r.type = ' . get_owns_relationship_id(id_of('minisite_page')));
-			$d->add_relation( 'r.entity_b = ' . $page->id() );
+			$d->add_condition( 'r.type', '=', get_owns_relationship_id(id_of('minisite_page')) );
+			$d->add_condition( 'r.entity_b', '=', $page->id() );
 			$d->set_num(1);
 			$result = db_query( $d->get_query() , 'Error getting owner ID.' );
 			if( $row = mysql_fetch_assoc($result))
@@ -311,7 +311,7 @@ class reasonPageURL extends reasonURL
 			$es = new entity_selector();
 			$es->limit_tables(array('page_node', 'url'));
 			$es->add_type(id_of('minisite_page'));
-			$es->add_relation("entity.id = " . $page_id);
+			$es->add_condition( 'entity.id', '=', $page_id );
 			$es->set_num(1);
 			$result = $es->run_one();
 			$page_entities[$page_id] = ($result) ? reset($result) : false;
@@ -340,7 +340,7 @@ class reasonPageURL extends reasonURL
 			$es = new entity_selector();
 			$es->limit_tables('site');
 			$es->add_type(id_of('site'));
-			$es->add_relation("entity.id = " . $site_id);
+			$es->add_condition( 'entity.id', '=', $page_id );
 			$es->set_num(1);
 			$result = $es->run_one();
 			$site_entities[$site_id] = ($result) ? reset($result) : false;

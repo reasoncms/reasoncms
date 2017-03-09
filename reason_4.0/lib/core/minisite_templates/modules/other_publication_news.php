@@ -77,9 +77,9 @@ class OtherPublicationNewsModule extends DefaultMinisiteModule
 			$es->limit_fields(array('press_release.release_title', 'dated.datetime', 'status.status'));
 			$es->add_left_relationship($pub_id, relationship_id_of('news_to_publication'));
 			$alias = $es->add_left_relationship_field('news_to_publication', 'entity', 'id', 'pub_id');
-			$es->add_relation($alias['pub_id']['table'] . '.' . $alias['pub_id']['field'] . " != " . $pub_id);
+			$es->add_condition($alias['pub_id']['table'] . '.' . $alias['pub_id']['field'] , '!=', $pub_id);
 			$es->add_right_relationship_field('owns', 'entity', 'id', 'site_id');
-			$es->add_relation('status.status = "published"');
+			$es->add_condition('status.status', '=', 'published');
 			$es->set_order('dated.datetime DESC');
 			$result = $es->run_one();
 			
@@ -88,7 +88,6 @@ class OtherPublicationNewsModule extends DefaultMinisiteModule
 				$result_keys = array_keys($result);
 				$rpts =& get_reason_page_types();
 				$valid_page_types = $rpts->get_page_type_names_that_use_module($this->publication_modules);
-				foreach (array_keys($valid_page_types) as $k) quote_walk($valid_page_types[$k], NULL);
 				foreach ($result_keys as $key)
 				{
 					$success = $this->augment_entity($result[$key], $valid_page_types);
@@ -125,7 +124,7 @@ class OtherPublicationNewsModule extends DefaultMinisiteModule
 			$es->add_right_relationship($pub_id, relationship_id_of('publication_to_featured_post'));
 			$es->add_rel_sort_field($pub_id, relationship_id_of('publication_to_featured_post'), 'featured_sort_order' );
 			$es->set_order('featured_sort_order ASC');
-			$es->add_relation('status.status = "published"');
+			$es->add_condition('status.status', '=', 'published');
 			$cache[$pub_id] = array_keys( $es->run_one() );
 		}
 		return $cache[$pub_id];
@@ -187,7 +186,7 @@ class OtherPublicationNewsModule extends DefaultMinisiteModule
 		$es->limit_tables(array('page_node'));
 		$es->limit_fields(array('page_node.url_fragment'));
 		$es->add_left_relationship($pub_id_array, relationship_id_of('page_to_publication'));
-		$es->add_relation('page_node.custom_page IN ('.implode(",", $valid_page_types).')');
+		$es->add_condition('page_node.custom_page', 'IN', $valid_page_types);
 		$result = $es->run_one();
 		
 		if ($result)

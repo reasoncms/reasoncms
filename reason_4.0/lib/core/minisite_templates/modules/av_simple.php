@@ -61,8 +61,8 @@ class avSimpleModule extends Generic3Module
 			$this->es->add_rel_sort_field($this->parent->cur_page->id(), relationship_id_of('minisite_page_to_av'));
 			$this->es->set_order('rel_sort_order ASC');
 		}
-		$this->es->add_relation( 'show_hide.show_hide = "show"' );
-		$this->es->add_relation( '(media_work.transcoding_status = "ready" OR ISNULL(media_work.transcoding_status) OR media_work.transcoding_status = "")' );
+		$this->es->add_condition( 'show_hide.show_hide', '=', 'show' );
+		$this->es->add_condition( 'media_work.transcoding_status', '=', array('ready', NULL, '') );
 		$this->es->set_env( 'site' , $this->site_id );
 	} // }}}
 	function show_list_item( $item ) // {{{

@@ -175,9 +175,9 @@
 					unset($sites[$owner_site_id]);
 				$es = new entity_selector();
 				$es->add_type(id_of('site'));
-				$es->add_relation('`entity`.`id` IN ("'.implode('","', array_keys($sites)).'")');
+				$es->add_condition( '`entity`.`id`', 'IN', array_keys($sites) );
 				if($owner_site->get_value('site_state') != 'Live')
-					$es->add_relation('`site_state` != "Live"');
+					$es->add_condition( '`site_state`', '!=', 'Live' );
 				$es->add_left_relationship($item->get_value('type'), relationship_id_of('site_to_type'));
 				$this->available_sites[$item->id()] = $es->run_one();
 			}

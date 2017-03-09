@@ -25,17 +25,20 @@
 				
 				if(!in_array('archived',$this->params['show']))
 				{
-					$es->add_relation('`last_occurence` >= "'.reason_sql_string_escape(date('Y-m-d')).'"');
+					$es->add_condition('`last_occurence`', '>=', date('Y-m-d'));
 				}
 				if(!in_array('upcoming',$this->params['show']))
 				{
-					$es->add_relation('`datetime` < "'.reason_sql_string_escape(date('Y-m-d',time() + (60*60*24))).'"');
+					$es->add_condition('`datetime`', '<', date('Y-m-d',time() + (60*60*24)));
 				}
 				if(!in_array('current',$this->params['show']))
 				{
-					$es->add_relation('(`last_occurence` < "'.reason_sql_string_escape(date('Y-m-d')).'" OR `datetime` >= "'.reason_sql_string_escape(date('Y-m-d',time() + (60*60*24))).'")');
+					$last_occur_cond = $es->get_condition('`last_occurence`', '<', date('Y-m-d'));
+					$datetime_cond = $es->get_condition('`datetime`', '>=', date('Y-m-d',time() + (60*60*24)));
+					$relation = '('.$last_occur_cond.' OR '.$datetime_cond.')';
+					$es->add_relation($relation);
 				}
-				$es->add_relation('`show_hide` = "show"');
+				$es->add_condition('`show_hide`', '=', 'show');
 				$es->set_order($this->params['order']);
 				$this->_modify_events_es($es);
 				$events = $es->run_one();

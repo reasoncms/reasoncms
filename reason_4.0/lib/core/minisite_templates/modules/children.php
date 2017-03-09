@@ -59,19 +59,19 @@
 			$this->es->add_left_relationship( $this->get_parent_page_id(), relationship_id_of( 'minisite_page_parent' ) );
 			if($this->params['show_only_pages_in_nav'])
 			{
-				$this->es->add_relation('nav_display = "Yes"');
+				$this->es->add_condition('nav_display', '=', 'Yes');
 			}
 			if(isset($this->params['show_external_links']) && !$this->params['show_external_links'])
 			{
-				$this->es->add_relation('(url = "" OR url IS NULL)');
+				$this->es->add_condition('url', '=', array('',NULL));
 			}
 			if(!empty($this->params['exclude']))
 			{
-				$this->es->add_relation('unique_name NOT IN ('.$this->_param_to_sql_set($this->params['exclude']).')');
+				$this->es->add_condition('unique_name', 'NOT IN', $this->params['exclude']);
 			}
 			if(!empty($this->params['limit_to']))
 			{
-				$this->es->add_relation('unique_name IN ('.$this->_param_to_sql_set($this->params['limit_to']).')');
+				$this->es->add_condition('unique_name', 'IN', $this->params['limit_to']);
 			}
 			
 			$this->es->set_order('sortable.sort_order ASC');
@@ -155,6 +155,7 @@
 		
 		function _param_to_sql_set($param)
 		{
+			trigger_error('_param_to_sql_set() is deprecated. Please use $es->add_condition() instead.');
 			if(is_array($param))
 			{
 				array_walk($param, 'db_prep_walk');

@@ -36,7 +36,7 @@ class Feature_Helper
 		$es->add_type( id_of('feature_type') );
 		$es->add_left_relationship_field( 'feature_to_media_work','entity','id','av_id');
 		$es->enable_multivalue_results();
-		$es->add_relation('entity.id='.$feature_id);
+		$es->add_condition( 'entity.id', '=', $feature_id );
 		$results_array = $es->run_one();
 		return $results_array;
 	}

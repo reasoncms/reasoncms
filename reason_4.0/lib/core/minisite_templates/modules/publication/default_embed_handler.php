@@ -189,7 +189,7 @@
 
 			/*
 			$es->add_type($probe->get_value("type"));
-			$es->add_relation("entity.id = " . $entityId);
+			$es->add_condition('entity.id', '=', $entityId);
 			$entities = $es->run_one();
 
 			if (count($entities) == 1) {

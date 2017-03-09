@@ -69,7 +69,7 @@ class FinishModule extends DefaultModule // {{{
 		$es = new entity_selector( $this->admin_page->site_id );
 		$es->add_type( $this->admin_page->type_id );
 		$es->add_right_relationship( $this->admin_page->id, $this->rel_id );
-		$es->add_relation('entity.last_modified = "'.$original->get_value( 'last_modified' ).'"');
+		$es->add_condition( 'entity.last_modified', '=', $original->get_value( 'last_modified' ) );
 		$es->set_num(1);
 		$similar_archived = $es->run_one('','Archived');
 
@@ -198,9 +198,9 @@ class FinishModule extends DefaultModule // {{{
 		$d->add_table( 'relationship' );
 		$d->add_table( 'entity' );
 		
-		$d->add_relation( 'allowable_relationship.name = "site_to_type"' );
+		$d->add_condition( 'allowable_relationship.name', '=', 'site_to_type' );
 		$d->add_relation( 'allowable_relationship.id = relationship.type' );
-		$d->add_relation( 'relationship.entity_a = '.$this->admin_page->site_id );
+		$d->add_condition( 'relationship.entity_a', '=', $this->admin_page->site_id );
 		$d->add_relation( 'relationship.entity_b = ar.relationship_b' );
 		$d->add_relation( 'entity.id = ar.relationship_b' );
 		
@@ -208,17 +208,17 @@ class FinishModule extends DefaultModule // {{{
 		$d->add_field( 'entity' , 'name' , 'e_name' );
 		$d->add_field('ar','*');
 
-		$d->add_relation( 'ar.relationship_a = ' . $this->admin_page->type_id );
+		$d->add_condition( 'ar.relationship_a', '=', $this->admin_page->type_id );
 		if (reason_relationship_names_are_unique())
 		{
-			$d->add_relation('ar.type = "association"');
+			$d->add_condition('ar.type', '=', 'association');
 		}
 		else
 		{
-			$d->add_relation('ar.name != "owns"');
+			$d->add_condition('ar.name', '!=', 'owns');
 		}
-		$d->add_relation( '(ar.custom_associator IS NULL OR ar.custom_associator = "")');
-		$d->add_relation( 'ar.required = "yes"' );
+		$d->add_condition( 'ar.custom_associator', '=', array( NULL, '' ) );
+		$d->add_condition( 'ar.required', '=', 'yes' );
 		$r = db_query( $d->get_query() , 'Error selecting relationships' );
 
 		$return_me = array();
@@ -236,8 +236,8 @@ class FinishModule extends DefaultModule // {{{
 			$d->add_table( 'ar' , 'allowable_relationship' );
 			
 			$d->add_relation( 'r.type = ar.id' );
-			$d->add_relation( 'ar.id = ' . $rel[ 'id' ] );
-			$d->add_relation( 'r.entity_a = ' . $this->admin_page->id );
+			$d->add_condition( 'ar.id', '=', $rel[ 'id' ] );
+			$d->add_condition( 'r.entity_a', '=', $this->admin_page->id );
 
 			$r = db_query( $d->get_query() , "Can't do query in FinishModule::check_required_relationships()" );
 			if( !( $row = mysql_fetch_array( $r ) ) )

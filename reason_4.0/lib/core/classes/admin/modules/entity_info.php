@@ -262,22 +262,22 @@
 			
 			if ($right)
 			{
-				$dbq->add_relation('r.entity_b = '.$entity->id());
+				$dbq->add_condition('r.entity_b', '=', $entity->id());
 			}
 			else
 			{
-				$dbq->add_relation('r.entity_a = '.$entity->id());
+				$dbq->add_condition('r.entity_a', '=', $entity->id());
 			}
 			
 			$dbq->add_relation('ar.id = r.type');
 			if (reason_relationship_names_are_unique())
 			{
-				$dbq->add_relation('ar.type = "association"');
+				$dbq->add_condition('ar.type', '=', 'association');
 			}
 			else
 			{
-				$dbq->add_relation('ar.name != "owns"');
-				$dbq->add_relation('ar.name != "borrows"');
+				$dbq->add_condition('ar.name', '!=', 'owns');
+				$dbq->add_condition('ar.name', '!=', 'borrows');
 			}
 			$rels = $dbq->run();
 			return $rels;

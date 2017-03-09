@@ -686,7 +686,7 @@
 				$es = new entity_selector();
 				$es->add_type( id_of('asset') );
 				$es->add_right_relationship( $asset->id(), relationship_id_of('asset_archive') );
-				$es->add_relation( 'asset.file_name != "'.$asset->get_value('file_name').'"' );
+				$es->add_condition( 'asset.file_name', '!=', $asset->get_value('file_name') );
 				$archived_assets = $es->run_one(false,'Archived');
 				
 				$archived_asset_filenames = array();
@@ -767,7 +767,6 @@
 					$page_types = array_merge($page_types, $pts);
 			}
 			array_unique($page_types);
-			array_walk($page_types,'db_prep_walk');
 			
 			if(empty($page_types))
 				return; // there are no publication page types in this instance of Reason
@@ -775,8 +774,8 @@
 			$es = new entity_selector( $this->site_id );
 			$es->add_type( id_of( 'minisite_page' ) );
 			$es->add_left_relationship_field('page_to_publication','entity','id','publication_id');
-			$es->add_relation('`entity`.`state` = "Live"');
-			$es->add_relation('`custom_page` IN ('.implode(',',$page_types).')');
+			$es->add_condition( '`entity`.`state`', '=', 'Live' );
+			$es->add_condition( '`custom_page`', 'IN', $page_types );
 			$es->set_sharing('owns');
 			$blog_pages = $es->run_one();
 			

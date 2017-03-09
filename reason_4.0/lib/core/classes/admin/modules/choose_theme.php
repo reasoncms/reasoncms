@@ -124,7 +124,7 @@
 			$es->add_type( id_of( 'theme_type' ) );
 			$es->add_right_relationship( $site_type_ids , relationship_id_of( 'site_type_to_theme' ) );
 			if( $current_theme AND $omit_current)
-				$es->add_relation( 'entity.id !=' . $current_theme->id() );
+				$es->add_condition( 'entity.id', '!=', $current_theme->id() );
 			$es->set_order('entity.name ASC');
 			return $es->run_one();
 		} // }}}
@@ -144,10 +144,10 @@
 			$es->add_right_relationship( $this->admin_page->site_id , relationship_id_of( 'site_has_had_theme' ) );
 			
 			//omit redundancy
-			$es->add_relation( 'entity.id != ' . $current_theme->id());
+			$es->add_condition( 'entity.id', '!=', $current_theme->id() );
 			if( $themes )
 				foreach( $themes AS $t)
-					$es->add_relation( 'entity.id !=' . $t->id() );
+					$es->add_condition( 'entity.id', '!=', $t->id() );
 
 			$es->set_order('entity.name ASC');
 			return $es->run_one();

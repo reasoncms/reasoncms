@@ -153,17 +153,6 @@
 		 */
 		function get_db_fields( $viewer ) // {{{
 		{
-			$n = count( $viewer );
-			$i = 0;
-			$in = '( ';
-			foreach( $viewer AS $key => $t )
-			{
-				$i++;
-				$in .= '"' . $key . '"';
-				if( $i != $n )
-					$in .= ', ';
-			}
-			$in .= ')';
 			$d = new DBSelector;
 			$d->add_table( 'entity' );
 			$d->add_table( 'field' );
@@ -175,23 +164,26 @@
 			$d->add_field( 'field' , '*' );
 			$d->add_field( 'entity' , '*' );
 
-			$d->add_relation( 'ar1.name = "type_to_table"' );
-			$d->add_relation( 'ar2.name = "field_to_entity_table"' );
+			$d->add_condition( 'ar1.name', '=', 'type_to_table' );
+			$d->add_condition( 'ar2.name', '=', 'field_to_entity_table' );
 
 			$d->add_relation( 'r1.type = ar1.id' );
 			$d->add_relation( 'r2.type = ar2.id' );
 			$d->add_relation( 'entity.id = field.id' );
 
-			$d->add_relation( 'r1.entity_a = ' . $this->page->type_id );
+			$d->add_condition( 'r1.entity_a', '=', $this->page->type_id );
 			$d->add_relation( 'r1.entity_b = r2.entity_b' );
 			$d->add_relation( 'r2.entity_a = field.id' );
-			if( $n > 0 )
-				$d->add_relation( 'entity.name IN ' . $in );
+			if( count($viewer) > 0 )
+			{
+				$d->add_condition( 'entity.name', 'IN', array_keys($viewer) );
+			}
 			$fields = $d->run();
 			$this->fields = array();
 			foreach( $fields AS $field )
+			{
 				$this->fields[ $field[ 'name' ] ] = $field;
-			
+			}
 		} // }}}
 		/**
 		 * after all error checking is finish, this finishes the search

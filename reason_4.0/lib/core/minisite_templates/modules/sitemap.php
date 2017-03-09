@@ -43,7 +43,7 @@
 			{
 				$es = new entity_selector(id_of('master_admin'));
 				$es->add_type(id_of('site_type_type'));
-				$es->add_relation('((show_hide.show_hide IS NULL) OR (show_hide.show_hide = "show"))');
+				$es->add_condition( 'show_hide.show_hide', '=', array(NULL,'show') );
 				$es->set_order('sortable.sort_order ASC');
 				$result = $es->run_one();
 				foreach ($result as $e)
@@ -80,7 +80,7 @@
 				$r_es = new entity_selector();
 				$r_es->description = 'Getting all '.$name;
 				$r_es->add_type( $this->id_of_site_type );
-				$r_es->add_relation('site.site_state = "Live"');
+				$r_es->add_condition( 'site.site_state', '=', 'Live' );
 				$r_es->add_left_relationship($site_type_id, relationship_id_of('site_to_site_type'));
 				$r_es->set_order('entity.name ASC');
 				$sites_by_type[ $this->id_of_site_type ] += $r_es->run_one();
@@ -89,7 +89,7 @@
 				$nr_es->description = 'Getting all '.$name;
 				$nr_es->add_type( $this->id_of_non_reason_site_type );
 				$nr_es->add_left_relationship($site_type_id, relationship_id_of('non_reason_site_to_site_type'));
-				$nr_es->add_relation('site.site_state = "Live"');
+				$nr_es->add_condition( 'site.site_state', '=', 'Live' );
 				$sites_by_type[ $this->id_of_non_reason_site_type ] += $nr_es->run_one();
 			}
 			

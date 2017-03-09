@@ -32,7 +32,7 @@
 		{
 			$type_id = id_of($this->type_unique_name);
 			$this->es->set_order( table_of('datetime',$type_id).' DESC' );
-			$this->es->add_relation( table_of('minutes_status',$type_id).' = "published"' );
+			$this->es->add_condition( table_of('minutes_status',$type_id), '=', 'published' );
 		} // }}}
 		function list_items() // {{{
 		{

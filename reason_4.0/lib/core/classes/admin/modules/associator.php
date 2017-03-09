@@ -52,9 +52,9 @@ class AssociatorModule extends DefaultModule // {{{
 		$d->add_table( 'relationship' );
 		$d->add_table( 'entity' );
 		
-		$d->add_relation( 'allowable_relationship.name = "site_to_type"' );
+		$d->add_condition( 'allowable_relationship.name', '=', 'site_to_type' );
 		$d->add_relation( 'allowable_relationship.id = relationship.type' );
-		$d->add_relation( 'relationship.entity_a = '.$this->admin_page->site_id );
+		$d->add_condition( 'relationship.entity_a', '=', $this->admin_page->site_id );
 		$d->add_relation( 'relationship.entity_b = ar.relationship_b' );
 		$d->add_relation( 'entity.id = ar.relationship_b' );
 		
@@ -62,16 +62,16 @@ class AssociatorModule extends DefaultModule // {{{
 		$d->add_field( 'entity' , 'name' , 'e_name' );
 		$d->add_field('ar','*');
 
-		$d->add_relation( 'ar.relationship_a = ' . $this->admin_page->type_id );
+		$d->add_condition( 'ar.relationship_a', '=', $this->admin_page->type_id );
 		if (reason_relationship_names_are_unique())
 		{
-			$d->add_relation('ar.type = "association"');
+			$d->add_condition('ar.type', '=', 'association');
 		}
 		else
 		{
-			$d->add_relation('ar.name != "owns"');
+			$d->add_condition('ar.name', '!=', 'owns');
 		}
-		$d->add_relation('(ar.custom_associator IS NULL OR ar.custom_associator = "")');
+		$d->add_condition( 'ar.custom_associator', '=', array( NULL, '' ) );
 		$r = db_query( $d->get_query() , 'Error selecting relationships' );
 		$return_me = array();
 		while( $row = mysql_fetch_array( $r , MYSQL_ASSOC ) )

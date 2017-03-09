@@ -339,13 +339,13 @@ class entity
 		$dbq->add_table( 'r','relationship' );
 		$dbq->add_field( 'r','*' );
 		$dbq->add_table( 'entity' , 'entity' );
-		$dbq->add_relation( 'entity.state = "Live"' );
+		$dbq->add_condition( 'entity.state', '=', 'Live' );
 		$dbq->add_relation( 'entity.id = r.entity_b' );
-		$dbq->add_relation( 'r.entity_a = '.$this->id() );
-		//$dbq->add_relation( 'r.type != 0' ); // There are some bad rels out there with type=0
+		$dbq->add_condition( 'r.entity_a', '=', $this->id() );
+		//$dbq->add_condition( 'r.type', '!=', 0 ); // There are some bad rels out there with type=0
 		if( $this->_env['restrict_site'] AND !empty($this->_env['site']) )
 		{
-			$dbq->add_relation( '(r.site=0 OR r.site=' . $this->_env['site'] . ')' );
+			$dbq->add_condition( 'r.site', '=', array( 0, $this->_env['site']) );
 		}
 		$rels = $dbq->run( 'Unable to grab relationships' );
 		foreach( $rels as $r)
@@ -366,12 +366,12 @@ class entity
 		$dbq->add_table( 'r','relationship' );
 		$dbq->add_field( 'r','*' );
 		$dbq->add_table( 'entity' , 'entity' );
-		$dbq->add_relation( 'entity.state = "Live"' );
+		$dbq->add_condition( 'entity.state', '=', 'Live' );
 		$dbq->add_relation( 'entity.id = r.entity_a' );
-		$dbq->add_relation( 'r.entity_b = '.$this->id() );
+		$dbq->add_condition( 'r.entity_b', '=', $this->id() );
 		if( $this->_env['restrict_site'] AND !empty($this->_env['site']) )
 		{
-			$dbq->add_relation( '(r.site=0 OR r.site=' . $this->_env['site'] . ')' );
+			$dbq->add_condition( 'r.site', '=', array( 0, $this->_env['site']) );
 		}
 		$dbq->set_order( 'rel_sort_order' );
 		$rels = $dbq->run();
@@ -611,13 +611,13 @@ class entity
 		$dbq->add_table( 'r','relationship' );
 		$dbq->add_field( 'r','*' );
 		$dbq->add_table( 'entity' , 'entity' );
-		$dbq->add_relation( 'entity.state = "Live"' );
+		$dbq->add_condition( 'entity.state', '=', 'Live' );
 		$dbq->add_relation( 'entity.id = r.entity_a' );
-		$dbq->add_relation( 'r.entity_b = '.$this->id() );
-		$dbq->add_relation( 'r.type = '.$rel_id );
+		$dbq->add_condition( 'r.entity_b', '=', $this->id() );
+		$dbq->add_condition( 'r.type', '=', $rel_id );
 		if( $this->_env['restrict_site'] AND !empty($this->_env['site']) )
 		{
-			$dbq->add_relation( '(r.site=0 OR r.site=' . $this->_env['site'] . ')' );
+			$dbq->add_condition( 'r.site', '=', array( 0, $this->_env['site']) );
 		}
 		$dbq->set_order( 'rel_sort_order' );
 		$rels = $dbq->run();
@@ -651,13 +651,13 @@ class entity
 		$dbq->add_table( 'r','relationship' );
 		$dbq->add_field( 'r','*' );
 		$dbq->add_table( 'entity' , 'entity' );
-		$dbq->add_relation( 'entity.state = "Live"' );
+		$dbq->add_condition( 'entity.state', '=', 'Live' );
 		$dbq->add_relation( 'entity.id = r.entity_b' );
-		$dbq->add_relation( 'r.entity_a = '.$this->id() );
-		$dbq->add_relation( 'r.type = '.$rel_id );
+		$dbq->add_condition( 'r.entity_a', '=', $this->id() );
+		$dbq->add_condition( 'r.type', '=', $rel_id );
 		if( $this->_env['restrict_site'] AND !empty($this->_env['site']) )
 		{
-			$dbq->add_relation( '(r.site=0 OR r.site=' . $this->_env['site'] . ')' );
+			$dbq->add_condition( 'r.site', '=', array( 0, $this->_env['site']) );
 		}
 		$dbq->set_order( 'rel_sort_order' );
 		$rels = $dbq->run();

@@ -250,7 +250,7 @@
 					
 					// make sure the currently selected item has all fields needed (e.g. relationship fields, etc.)
 					$item_es = carl_clone($this->es);
-					$item_es->add_relation('entity.id = "'.$this->current_item_id.'"');
+					$item_es->add_condition('entity.id', '=', $this->current_item_id);
 					$item_es->set_num(1);
 					$item_array = $item_es->run_one();
 					
@@ -1208,8 +1208,7 @@
 
 			$pagination_ids = array();
 			$pagination_ids = array_slice($this->position_to_ids, $this->num_per_page * ( $this->request['page'] - 1 ) , $this->num_per_page  );
-			$pagination_ids_string = 'entity.id IN ("'.implode('","',$pagination_ids) . '")';
-			$this->es->add_relation($pagination_ids_string);
+			$this->es->add_condition('entity.id', 'IN', $pagination_ids);
 		}
 		
 		//Called on by list_items
@@ -1374,11 +1373,10 @@
 			{
 				if(!$this->attempted_to_find_target_page)
 				{
-					$relation = '(page_node.custom_page = "'.implode('" OR page_node.custom_page = "',$this->page_types_available_for_linking).'")';
 					
 					$es = new entity_selector($this->site_id);
 					$es->add_type( id_of( 'minisite_page' ) );
-					$es->add_relation( $relation );
+					$es->add_condition('page_node.custom_page', '=', $this->page_types_available_for_linking);
 					$es->set_num( 1 );
 					$pages = $es->run_one();
 					if(!empty($pages))

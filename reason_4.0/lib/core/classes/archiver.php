@@ -843,12 +843,12 @@ class entityArchiver {
 		$dbq->add_field( 'r' , 'entity_b' );
 		$dbq->add_field( 'entity' , 'id' , 'e_id' );
 		$dbq->add_field( 'entity' , 'name' , 'e_name' );
-		$dbq->add_relation( 'ar.connections = "one_to_many"' );
-		$dbq->add_relation( 'ar.required = "yes"' );
-		$dbq->add_relation( 'r.entity_b = ' . $entity_id );
+		$dbq->add_condition( 'ar.connections', '=', 'one_to_many' );
+		$dbq->add_condition( 'ar.required', '=', 'yes' );
+		$dbq->add_condition( 'r.entity_b', '=', $entity_id );
 		$dbq->add_relation( 'r.type = ar.id' );
 		$dbq->add_relation( 'entity.id = r.entity_a' );
-		$dbq->add_relation( 'entity.state = "Live"' );
+		$dbq->add_condition( 'entity.state', '=', 'Live' );
 		$dbq->add_relation( 'r.entity_b != r.entity_a' );
 		if(!empty($dbq) && ($dbq->run()))
 			return 'Entity has required relationships, preventing deletion.';

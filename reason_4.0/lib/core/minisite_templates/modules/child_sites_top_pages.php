@@ -27,7 +27,7 @@
 			$es->description = 'Getting pages for child site';
 			$es->add_type( id_of( 'minisite_page' ) );
 			$es->add_left_relationship_field( 'minisite_page_parent', 'entity' , 'id' , 'parent_id' );
-			$es->add_relation('page_node.nav_display = "Yes"');
+			$es->add_condition('page_node.nav_display', '=', 'Yes');
 			$es->set_order( 'sortable.sort_order' );
 			$pages = $es->run_one();
 			

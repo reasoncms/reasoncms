@@ -106,7 +106,7 @@
 		{
 			$es = new entity_selector();
 			$es->add_type(id_of('content_table'));
-			$es->add_relation('entity.name = "'.reason_sql_string_escape($this->get_value('name')).'"');
+			$es->add_condition('entity.name', '=', $this->get_value('name') );
 			$es->set_num(1);
 			$tables = $es->run_one();
 			if(empty($tables))

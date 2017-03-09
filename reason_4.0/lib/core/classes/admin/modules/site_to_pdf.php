@@ -121,7 +121,8 @@ class ReasonSiteToPDFModule extends DefaultModule// {{{
 			{
 				$es = new entity_selector($site_id);
 				$es->add_type(id_of('minisite_page'));
-				$es->add_relation('(entity.name != "") AND ((url.url = "") OR (url.url IS NULL))'); // only pages, not custom urls
+				$es->add_condition('entity.name', '!=', '');
+				$es->add_condition( 'url.url', '=', array('',NULL) ); // only pages, not custom urls
 				$es->add_left_relationship_field('minisite_page_parent', 'entity', 'id', 'parent_id');
 				$es->add_right_relationship_field('page_to_access_group', 'entity', 'id', 'access_group_id', false);
 				$es->set_order('sort_order ASC');

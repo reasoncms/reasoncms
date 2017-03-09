@@ -35,7 +35,7 @@
 			
 			if( $this->ass_vals )
 			{
-				$this->es->add_relation('entity.id NOT IN ("'.implode('","', array_keys($this->ass_vals)).'")');
+				$this->es->add_condition( 'entity.id', 'NOT IN', array_keys($this->ass_vals) );
 			}
 			
 			if (!(empty($this->admin_page->request['__old_rel_id'])))
@@ -46,7 +46,10 @@
 					$ass_related_es = carl_clone($this->es);
 					$ass_related_es->add_right_relationship_field(relationship_name_of($this->admin_page->request['__old_rel_id']), 'entity', 'id', 'related_id');
 					$this->related_vals = $ass_related_es->run_one();
-					if( $this->related_vals ) $this->es->add_relation('entity.id NOT IN ("'.implode('","', array_keys($this->related_vals)).'")');
+					if( $this->related_vals )
+					{
+						$this->es->add_condition( 'entity.id', 'NOT IN', array_keys($this->related_vals) );
+					}
 				}
 			}
 		} // }}}
@@ -162,8 +165,8 @@
 			{
 				$prep_es->limit_tables('site');
 				$prep_es->limit_fields('site.site_state');
-				$prep_es->add_relation('site.site_state = "Live"');
-				$prep_es->add_relation('entity.id != "'.$this->admin_page->site_id.'"');
+				$prep_es->add_condition( 'site.site_state', '=', 'Live' );
+				$prep_es->add_condition( 'entity.id', '!=', $this->admin_page->site_id );
 			}
 			else
 			{
@@ -178,7 +181,7 @@
 			$es->add_right_relationship_field('owns', 'entity', 'id', 'site_id', $limiter);
 			$es->add_right_relationship_field('owns', 'entity', 'name', 'site');
 			$this->apply_order_and_limits($es);
-			$es->add_relation( '(entity.no_share IS NULL OR entity.no_share = 0)' ); // entity is shared
+			$es->add_condition( 'entity.no_share', '=', array( NULL, 0 ) ); // entity is shared
 			$this->es = $es;
 		} // }}}
 		function show_item_post( $row , $options ) // {{{

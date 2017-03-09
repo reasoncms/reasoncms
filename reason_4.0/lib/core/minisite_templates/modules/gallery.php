@@ -38,11 +38,7 @@
 			$es = $this->refine_es( $es );
 			if( !empty( $this->request[ 'search_image' ] ) )
 			{
-				$es->add_relation( '(entity.name LIKE "%'.reason_sql_string_escape($this->request[ 'search_image' ]).
-								   '%" OR meta.description LIKE "%' . reason_sql_string_escape($this->request[ 'search_image' ]) . '%"'.
-								   ' OR meta.keywords LIKE "%' . reason_sql_string_escape($this->request[ 'search_image' ]) . '%"'.
-								   ' OR chunk.content LIKE "%' . reason_sql_string_escape($this->request[ 'search_image' ]) . '%"'.
-								   ')' );
+				$es->add_condition(array('entity.name','meta.description','meta.keywords','chunk.content'), 'LIKE', '%'.$this->request[ 'search_image' ].'%');
 			}
 			$this->num = $es->get_one_count();
 			$this->check_bounds();

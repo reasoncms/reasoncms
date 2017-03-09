@@ -254,7 +254,7 @@ class profilePerson
 			{
 				$es = new entity_selector(id_of($this->config->profiles_site_unique_name));
 				$es->add_type(id_of('profile_type'));
-				$es->add_relation('user_guid = ' . $col_id);
+				$es->add_condition('user_guid', '=', $guid);
 				$es->add_left_relationship_field( 'profile_to_image', 'image' , 'id' , 'image_id', false );
 				if ($result = $es->run_one())
 				{
@@ -428,7 +428,7 @@ class profilePerson
 		{
 			$es = new entity_selector(id_of($this->config->profiles_site_unique_name));
 			$es->add_type(id_of('category_type'));
-			$es->add_relation('slug = "' . mysql_real_escape_string($slug) .'"');
+			$es->add_condition('slug', '=', $slug);
 			if ($result = $es->run_one())
 			{
 				$category = reset($result);
@@ -460,7 +460,7 @@ class profilePerson
 		{
 			$es = new entity_selector(id_of($this->config->profiles_site_unique_name));
 			$es->add_type(id_of('category_type'));
-			$es->add_relation('slug = "' . mysql_real_escape_string($slug) .'"');
+			$es->add_condition('slug', '=', $slug);
 			if ($result = $es->run_one())
 			{
 				$category = reset($result);

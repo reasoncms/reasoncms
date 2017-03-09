@@ -151,7 +151,9 @@ class eventGalleryItem
 		if(!isset($this->_url))
 		{
 			if($this->_event->get_value('url'))
+			{
 				return $this->_event->get_value('url');
+			}
 			elseif($owner = $this->_event->get_owner())
 			{
 				static $cache = array();
@@ -165,10 +167,9 @@ class eventGalleryItem
 						$page_types = page_types_that_use_module($modules);
 						if(!empty($page_types))
 						{
-							array_walk($page_types,'db_prep_walk');
 							$es = new entity_selector($owner->id());
 							$es->add_type(id_of('minisite_page'));
-							$es->add_relation('`custom_page` IN ('.implode(',',$page_types).')');
+							$es->add_condition('`custom_page`', 'IN', $page_types);
 							$es->set_num(1);
 							$pages = $es->run_one();
 							if(!empty($pages))

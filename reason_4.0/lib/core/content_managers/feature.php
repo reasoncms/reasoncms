@@ -113,7 +113,7 @@ class FeatureManager extends ContentManager
 		$es->add_type( id_of('feature_type') );
 		$es->add_left_relationship_field( 'feature_to_image','entity','id','image_id');
 		$es->enable_multivalue_results();
-		$es->add_relation('entity.id='.$id);
+		$es->add_condition( 'entity.id', '=', $id );
 		$results_array = $es->run_one("","All");
 
 		
@@ -363,7 +363,7 @@ class FeatureManager extends ContentManager
 		//and place the height and width as option tag values, and page type
 		// and location as what the user sees when using the select box.
 		$rpts =& get_reason_page_types();
-		$ptypes=$rpts->get_params_of_page_types_that_use_module('feature/feature');
+		$ptypes = $rpts->get_params_of_page_types_that_use_module('feature/feature');
 		$types = array();
 		$contents=array();
 		foreach($ptypes as $type)
@@ -373,62 +373,59 @@ class FeatureManager extends ContentManager
 //		pray($types);
 		if(!empty($types))
 		{
-			$prepped = array();
-			foreach($types as $pt=>$type)
-				$prepped[] = reason_sql_string_escape($pt);
 			
 			$es = new entity_selector();
 			$es->add_type(id_of('minisite_page'));
-			$es->add_relation('custom_page IN ("'.implode('","',$prepped).'")');
+			$es->add_condition( 'custom_page', 'IN', array_keys($types) );
 			$es->add_left_relationship( $this->get_value('id'), relationship_id_of('page_to_feature'));
 			$placed_pages = $es->run_one();
 //			pray($placed_pages);
 			
 			foreach($placed_pages as $page)
 			{
-				$w=$this->width;
-				$h=$this->height;
+				$w = $this->width;
+				$h = $this->height;
 				if(!empty($types[$page->get_value('custom_page')]['params']['width']))
 				{
-					 $w=htmlspecialchars($types[$page->get_value('custom_page')]['params']['width']);
+					 $w = htmlspecialchars($types[$page->get_value('custom_page')]['params']['width']);
 				}
 				if(!empty($types[$page->get_value('custom_page')]['params']['height']))
 				{
-					$h=htmlspecialchars($types[$page->get_value('custom_page')]['params']['height']);
+					$h = htmlspecialchars($types[$page->get_value('custom_page')]['params']['height']);
 				}
-				$name=strip_tags($page->get_value('name'));
-				$contents[]=array('name'=>$name,'w'=>$w,'h'=>$h,'italicize'=>true);
+				$name = strip_tags($page->get_value('name'));
+				$contents[] = array('name'=>$name,'w'=>$w,'h'=>$h,'italicize'=>true);
 			}
 			$es = new entity_selector($this->get_value('site_id'));
 			$es->add_type(id_of('minisite_page'));
-			$es->add_relation('custom_page IN ("'.implode('","',$prepped).'")');
+			$es->add_condition( 'custom_page', 'IN', array_keys($types) );
 			if(!empty($placed_pages))
 			{
-				$es->add_relation('entity.id NOT IN ("'.implode('","',array_keys($placed_pages)).'")');
+				$es->add_condition('entity.id', 'NOT IN', array_keys($placed_pages) );
 			}
 			$site_pages = $es->run_one();
 			
 			foreach($site_pages as $page)
 			{
-				$w=$this->width;
-				$h=$this->height;
+				$w = $this->width;
+				$h = $this->height;
 				if(!empty($types[$page->get_value('custom_page')]['params']['width']))
 				{
-					 $w=htmlspecialchars($types[$page->get_value('custom_page')]['params']['width']);
+					 $w = htmlspecialchars($types[$page->get_value('custom_page')]['params']['width']);
 				}
 				if(!empty($types[$page->get_value('custom_page')]['params']['height']))
 				{
-					$h=htmlspecialchars($types[$page->get_value('custom_page')]['params']['height']);
+					$h = htmlspecialchars($types[$page->get_value('custom_page')]['params']['height']);
 				}
-				$name=strip_tags($page->get_value('name'));
-				$contents[]=array('name'=>$name,'w'=>$w,'h'=>$h);
+				$name = strip_tags($page->get_value('name'));
+				$contents[] = array('name'=>$name,'w'=>$w,'h'=>$h);
 			}
 
 		}// end if(!empty($types))
 
 		if(empty($contents))
 		{
-			$contents[]=array('name'=>"Default Size (No pages show features on the site yet)",'w'=>$this->width,'h'=>$this->height);
+			$contents[] = array('name'=>"Default Size (No pages show features on the site yet)",'w'=>$this->width,'h'=>$this->height);
 		}
 		//testing with a ton O' tabs
 /*
@@ -444,14 +441,15 @@ class FeatureManager extends ContentManager
 			$contents[]=array('name'=>"foo$i",'w'=>400,'h'=>300);
 		}
 */
-		$tabs=new Feature_Tabs();
+		$tabs = new Feature_Tabs();
 		$tabs->set($contents);
-		$w=$this->width; $h=$this->height;
+		$w = $this->width;
+		$h = $this->height;
 //		echo $w."x".$h;
 //		$tabs->set_active_tab($w."x".$h);
-		$tab_html_str=$tabs->get_html();
-		$str ="<h4 class=\"size_label\">Preview At Different Sizes </h4>";
-		$str.=$tab_html_str;
+		$tab_html_str = $tabs->get_html();
+		$str = "<h4 class=\"size_label\">Preview At Different Sizes </h4>";
+		$str .= $tab_html_str;
 
 
 		return $str;

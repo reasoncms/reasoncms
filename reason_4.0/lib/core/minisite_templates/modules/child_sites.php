@@ -54,7 +54,7 @@
 				$es->set_order( 'entity.name' );
 				if($site->get_value('site_state') == 'Live')
 				{
-					$es->add_relation('site_state="Live"');
+					$es->add_condition('site_state', '=', 'Live');
 				}
 				$this->child_sites = $es->run_one();
 			}
@@ -93,7 +93,7 @@
 		{
 			$es = new entity_selector($site->id());
 			$es->add_type( id_of('text_blurb' ) );
-			$es->add_relation( 'entity.name = "Site Description"' );
+			$es->add_condition( 'entity.name', '=', 'Site Description' );
 			$es->set_order( 'entity.last_modified DESC');
 			$descriptions = $es->run_one();
 			if(!empty($descriptions))

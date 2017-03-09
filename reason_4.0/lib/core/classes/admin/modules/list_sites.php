@@ -42,7 +42,7 @@
 			$lm = new entity_selector();
 			$lm->add_type(id_of('site'));
 			$lm->set_order( 'entity.name' );
-			$lm->add_relation('site.site_state = "Live"');
+			$lm->add_condition('site.site_state', '=', 'Live');
 			$this->ls_count = $lm->get_one_count();
 			$this->live_sites_list = $lm->run_one();
 			
@@ -51,7 +51,7 @@
 				$nm = new entity_selector();
 				$nm->add_type(id_of('site'));
 				$nm->set_order( 'entity.name' );
-				$nm->add_relation('site.site_state != "Live"');
+				$nm->add_condition('site.site_state', '!=', 'Live');
 				$this->nls_count = $nm->get_one_count();
 				$this->not_live_site_list = $nm->run_one();
 			}

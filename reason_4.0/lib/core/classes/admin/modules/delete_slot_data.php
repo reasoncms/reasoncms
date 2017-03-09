@@ -47,7 +47,7 @@ class DeleteRegistrationSlotDataModule extends DefaultModule // {{{
 			$es = new entity_selector();
 			$es->add_type(id_of('type'));
 			$es->add_right_relationship($this->admin_page->site_id,relationship_id_of('site_to_type'));
-			$es->add_relation('entity.id = "'.id_of('registration_slot_type').'"');
+			$es->add_condition( 'entity.id', '=', id_of('registration_slot_type') );
 			$es->set_num(1);
 			$result = $es->run_one();
 			$this->_site_has_slot_type = (!empty($result));
@@ -64,7 +64,8 @@ class DeleteRegistrationSlotDataModule extends DefaultModule // {{{
 		{
 			$es = new entity_selector($this->admin_page->site_id);
 			$es->add_type(id_of('registration_slot_type'));
-			$es->add_relation('( (registrant_data <> "") AND (registrant_data IS NOT NULL) )');
+			$es->add_condition( 'registrant_data', '<>', '' );
+			$es->add_condition( 'registrant_data', '<>', NULL );
 			$result = $es->run_one();
 			if (!empty($result))
 			{

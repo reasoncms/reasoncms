@@ -105,8 +105,8 @@
 				$this->es->add_rel_sort_field($this->parent->cur_page->id(), relationship_id_of('minisite_page_to_av'));
 				$this->es->set_order('rel_sort_order ASC');
 			}
-			$this->es->add_relation( 'show_hide.show_hide = "show"' );
-			$this->es->add_relation( '(media_work.transcoding_status = "ready" OR ISNULL(media_work.transcoding_status) OR media_work.transcoding_status = "")' );
+			$this->es->add_condition( 'show_hide.show_hide', '=', 'show' );
+			$this->es->add_condition( 'media_work.transcoding_status', '=', array('ready', NULL, '' ) );
 			
 		}
 		
@@ -352,7 +352,7 @@
 			{
 				$es = new entity_selector();
 				$es->add_type(id_of('av'));
-				$es->add_relation('`entity`.`id` = "'.reason_sql_string_escape($entity->id()).'"');
+				$es->add_condition('`entity`.`id`', '=', $entity->id());
 				$es->add_right_relationship( $this->page_id, relationship_id_of('minisite_page_to_av') );
 				$es->set_num(1);
 				$es->limit_tables();
@@ -389,15 +389,12 @@
 				$allowed_page_types = array_merge($allowed_page_types, array_diff($rpts->get_page_type_names_that_use_module($mod), $allowed_page_types));
 			}
 			
-			// Turn this list into a string.
-			$serialized = "'" . implode("','", $allowed_page_types) . "'";
-			
 			// Build the ES
 			$es = new entity_selector();
 			$es->add_type(id_of('minisite_page'));
 			$es->add_left_relationship($id, relationship_id_of('minisite_page_to_av'));
 			$es->add_right_relationship_field('owns', 'entity', 'name', 'site_name');
-			$es->add_relation("page_node.custom_page IN ($serialized)");
+			$es->add_condition('page_node.custom_page', 'IN', $allowed_page_types);
 			$result = $es->run_one();
 
 			echo '<div class="notice itemNotAvailable"><h3>Sorry -- this item is not available</h3>';

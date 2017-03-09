@@ -61,7 +61,7 @@ class BlurbModule extends DefaultMinisiteModule
 			}
 			if (!empty($already_displayed))
 			{
-				$this->es->add_relation('entity.id NOT IN ('.join(',',$already_displayed).')');
+				$this->es->add_condition('entity.id', 'NOT IN', $already_displayed);
 			}
 			if (!empty($this->params['num_to_display'])) $this->es->set_num($this->params['num_to_display']);
 			$this->blurbs = $this->es->run_one();
@@ -216,7 +216,7 @@ class BlurbModule extends DefaultMinisiteModule
 		$es = new entity_selector();
 		$es->add_type(id_of('minisite_page'));
 		$es->add_left_relationship( $blurb->id(), relationship_id_of('minisite_page_to_text_blurb') );
-		$es->add_relation('entity.id != "'.reason_sql_string_escape($this->page_id).'"');
+		$es->add_condition('entity.id', '!=', $this->page_id);
 		return $es->run_one();
 	}
 

@@ -561,8 +561,15 @@
 			}
 		}
 		$sqler = new SQLER;
-		$sqler->insert( 'relationship', $rel );
-		return true;
+		if($sqler->insert( 'relationship', $rel ))
+		{
+			if($rel_id = mysql_insert_id())
+			{
+				return $rel_id;
+			}
+			return true;
+		}
+		return false;
 	} // }}}
 
 	/**     

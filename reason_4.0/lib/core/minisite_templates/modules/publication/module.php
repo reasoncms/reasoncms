@@ -379,8 +379,14 @@ var $noncanonical_request_keys = array(
 		$pub_es->enable_multivalue_results();
 		$pub_es->limit_tables();
 		$pub_es->limit_fields();
-		if (!empty($publication_ids)) $pub_es->add_relation('entity.id IN (' . implode(",", array_keys($publication_ids)) . ')');
-		else $pub_es->add_right_relationship( $this->page_id, relationship_id_of('page_to_related_publication') );
+		if (!empty($publication_ids))
+		{
+			$pub_es->add_condition('entity.id', 'IN', $publication_ids);
+		}
+		else
+		{
+			$pub_es->add_right_relationship( $this->page_id, relationship_id_of('page_to_related_publication') );
+		}
 		$pub_es->add_right_relationship_field('page_to_publication', 'entity', 'id', 'page_id');
 		$publications = $pub_es->run_one();
 		if (empty($publications))
@@ -415,8 +421,14 @@ var $noncanonical_request_keys = array(
 				$cat_es->add_type( id_of('category_type'));
 				$cat_es->limit_tables();
 				$cat_es->limit_fields();
-				if (!empty($category_ids)) $cat_es->add_relation('entity.id IN (' . implode(",", array_keys($category_ids)) . ')');
-				else $cat_es->add_right_relationship($this->page_id, relationship_id_of('page_to_category') );
+				if (!empty($category_ids))
+				{
+					$cat_es->add_condition('entity.id', 'IN', array_keys($category_ids));
+				}
+				else
+				{
+					$cat_es->add_right_relationship($this->page_id, relationship_id_of('page_to_category') );
+				}
 				$categories = $cat_es->run_one();
 				if (!empty($categories))
 				{
@@ -453,8 +465,8 @@ var $noncanonical_request_keys = array(
 		$es->add_type(id_of($related_id_type_unique_name));
 		$es->limit_tables();
 		$es->limit_fields();
-		$es->add_relation('entity.id IN (' . implode(",", $all_entity_ids) . ')');
-		$es->add_relation('entity.state != "Live"');
+		$es->add_condition('entity.id', 'IN', $all_entity_ids);
+		$es->add_condition('entity.state', '!=', 'Live');
 		$result = $es->run_one("", "All");
 		if ($result) // we have non live entities that we need to filter out
 		{
@@ -1149,7 +1161,7 @@ var $noncanonical_request_keys = array(
 				}
 				else
 				{
-					$this->es->add_relation('1 = 2'); // if it is an issued publication without any issues associated, don't show any posts
+					$this->es->add_condition('1', '=', '2'); // if it is an issued publication without any issues associated, don't show any posts
 				}
 			}
 			if(!empty($this->request['section_id']))
@@ -1158,10 +1170,10 @@ var $noncanonical_request_keys = array(
 			}
 			if (!empty($this->minimum_date))
 			{
-				$this->es->add_relation('dated.datetime > "' . $this->minimum_date . '"');
+				$this->es->add_condition('dated.datetime', '>', $this->minimum_date);
 			}
 		}
-		$this->es->add_relation( 'status.status = "published"' );
+		$this->es->add_condition( 'status.status', '=', 'published' );
 		$this->further_alter_es();
 		if(!empty($this->max_num_items))
 		{
@@ -1192,7 +1204,7 @@ var $noncanonical_request_keys = array(
 		}
 		if (!empty($this->minimum_date))
 		{
-			$this->es->add_relation('dated.datetime > "' . $this->minimum_date . '"');
+			$this->es->add_condition('dated.datetime', '>', $this->minimum_date);
 		}
 		$this->related_issue_limit($this->es);
 		$table_limit_array = (!empty($this->minimum_date)) ? array('status', 'dated') : array('status');
@@ -1230,7 +1242,7 @@ var $noncanonical_request_keys = array(
 				$es2->limit_fields('show_hide');
 				$es2->add_type( id_of('issue_type') );
 				$es2->add_left_relationship( array_keys($issued_pubs), relationship_id_of('issue_to_publication') );
-				$es2->add_relation("show_hide.show_hide = 'show'");
+				$es2->add_condition('show_hide.show_hide', '=', 'show');
 				$issues = $es2->run_one();
 				if(!empty($issues))
 				{
@@ -1249,7 +1261,7 @@ var $noncanonical_request_keys = array(
 			}
 
 			$post_ids = array_unique(array_merge(array_keys($issued_posts),array_keys($nonissued_posts)));
-			$es->add_relation('entity.id IN ("'.implode('","',$post_ids).'")');
+			$es->add_condition('entity.id', 'IN', $post_ids);
 		}
 	}
 
@@ -1301,7 +1313,7 @@ var $noncanonical_request_keys = array(
 			$es = new entity_selector();
 			$es->add_type($this->type);
 			$es->enable_multivalue_results();
-			$es->add_relation('entity.id IN ('.implode(",", array_keys($this->items)).')');
+			$es->add_condition( 'entity.id', 'IN', array_keys($this->items) );
 			$es->add_left_relationship_field('news_to_publication', 'entity', 'id', 'publication_id', array_keys($this->related_publications));
 			if ($this->related_categories)
 			{
@@ -1898,7 +1910,7 @@ var $noncanonical_request_keys = array(
 					$es->limit_fields('dated.datetime');
 					$es->add_type( id_of('issue_type') );
 					$es->add_right_relationship( $this->current_item_id, relationship_id_of('news_to_issue') );
-					$es->add_relation('entity.id IN ('.implode(", ", array_keys($all_issues)).')');
+					$es->add_condition( 'entity.id', 'IN', array_keys($all_issues) );
 					$es->set_order('dated.datetime DESC');
 					$issue_set = $es->run_one();
 					$issues[$this->current_item_id] = $issue_set;
@@ -2576,7 +2588,7 @@ var $noncanonical_request_keys = array(
 		function get_related_featured_items()
 		{
 			$featured_items = array();
-			$related_pub_ids = implode(",", array_keys($this->related_publications));
+			$related_pub_ids = array_keys($this->related_publications);
 			if ($this->show_featured_items && !empty($related_pub_ids))
 			{
 				if (count($this->related_publications) > 1) // we use dated.datetime DESC for sort order
@@ -2587,9 +2599,9 @@ var $noncanonical_request_keys = array(
 					$es->set_env('site', $this->site_id);
 					$alias['rel_pub_id'] = current($es->add_right_relationship_field( 'publication_to_featured_post', 'entity', 'id', 'related_publication_id' ));
 					$alias['pub_id'] = current($es->add_left_relationship_field( 'news_to_publication', 'entity', 'id', 'publication_id' ));
-					$es->add_relation($alias['rel_pub_id']['table'] . '.id IN ('.$related_pub_ids.')');
+					$es->add_condition($alias['rel_pub_id']['table'] . '.id', 'IN', $related_pub_ids);
 					$es->add_relation($alias['rel_pub_id']['table'] . '.id = '.$alias['pub_id']['table'] . '.id');
-					$es->add_relation('status.status = "published"');
+					$es->add_condition('status.status', '=', 'published');
 					$es->set_order('dated.datetime DESC');
 					$fi = $es->run_one();
 					if (!empty($fi))
@@ -2602,7 +2614,7 @@ var $noncanonical_request_keys = array(
 				}
 				else // lets use relationship sort order since we have only 1 related publication.
 				{
-					$related_pub_id = $related_pub_ids;
+					$related_pub_id = reset($related_pub_ids);
 					$es = new entity_selector( $this->site_id );
 					$es->description = 'Selecting featured news items from a single related publication';
 					$es->add_type( id_of('news') );
@@ -2695,7 +2707,7 @@ var $noncanonical_request_keys = array(
 			$es = new entity_selector( $this->site_id );
 			$es->description = 'Counting comments for this news item';
 			$es->add_type( id_of('comment_type') );
-			$es->add_relation('show_hide.show_hide = "show"');
+			$es->add_condition('show_hide.show_hide', '=', 'show');
 			$es->add_right_relationship( $item->id(), relationship_id_of('news_to_comment') );
 			return $es->get_one_count();
 		}
@@ -2949,16 +2961,10 @@ var $noncanonical_request_keys = array(
 				$ms =& reason_get_module_sets();
 				$modules = $ms->get('event_display');
 				$rpts =& get_reason_page_types();
-				$events_page_types = $rpts->get_page_type_names_that_use_module($modules);
 				$ps = new entity_selector($this->site_id );
 				$ps->add_type( id_of('minisite_page') );
 				$ps->set_num(1);
-				$rels = array();
-				foreach($events_page_types as $page_type)
-				{
-					$rels[] = 'page_node.custom_page = "'.$page_type.'"';
-				}
-				$ps->add_relation('( '.implode(' OR ', $rels).' )');
+				$ps->add_condition('page_node.custom_page', 'IN' , $rpts->get_page_type_names_that_use_module($modules));
 				$page_array = $ps->run_one();
 				if (!empty($page_array))
 				{
@@ -3020,8 +3026,8 @@ var $noncanonical_request_keys = array(
 				$es->add_right_relationship( $item->id(), relationship_id_of('news_to_media_work') );
 				$es->add_rel_sort_field( $item->id(), relationship_id_of('news_to_media_work') );
 				$es->set_order('rel_sort_order');
-				$es->add_relation( 'show_hide.show_hide = "show"' );
-				$es->add_relation( '(media_work.transcoding_status = "ready" OR ISNULL(media_work.transcoding_status) OR media_work.transcoding_status = "")' );
+				$es->add_condition( 'show_hide.show_hide', '=', 'show' );
+				$es->add_condition( 'media_work.transcoding_status', '=', array('ready', NULL, '') );
 				$this->_item_media[$item->id()] = $es->run_one();
 			}
 			return $this->_item_media[$item->id()];
@@ -3114,7 +3120,7 @@ var $noncanonical_request_keys = array(
 			$es->description = 'Selecting comments for news item';
 			$es->add_type( id_of('comment_type') );
 			$es->set_env( 'site' , $this->site_id );
-			$es->add_relation('show_hide.show_hide = "show"');
+			$es->add_condition('show_hide.show_hide', '=', 'show');
 			$es->add_right_relationship( $item->id(), relationship_id_of('news_to_comment') );
 			$es->set_order( 'dated.datetime ASC' );
 			return $es->run_one();
@@ -3236,7 +3242,7 @@ var $noncanonical_request_keys = array(
 		function alter_relationship_checker_es($es)
 		{
 			$es->add_left_relationship( $this->publication->id(), relationship_id_of('news_to_publication') );
-			$es->add_relation('status.status = "published"');
+			$es->add_condition('status.status', '=' 'published');
 			return $es;
 		}
 

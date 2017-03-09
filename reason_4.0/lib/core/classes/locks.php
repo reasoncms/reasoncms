@@ -210,7 +210,7 @@ class ReasonEntityLocks
 	{
 		$dbs = new DBSelector();
 		$dbs->add_table('entity_lock');
-		$dbs->add_relation('`entity_id` = "'.reason_sql_string_escape($this->_entity->id()).'"');
+		$dbs->add_condition( '`entity_id`', '=', $this->_entity->id() );
 		self::$_raw_locks[$this->_entity->id()] = $dbs->run('Error getting locks for entity '.$this->_entity->id().'.', false);
 	}
 	
