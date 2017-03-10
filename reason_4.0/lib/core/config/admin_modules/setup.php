@@ -114,6 +114,7 @@
 	 	'SiteToPDF'=>array('file'=>'site_to_pdf.php','class'=>'ReasonSiteToPDFModule'),
 		'EntityStats'=>array('file'=>'entity_stats.php', 'class'=>'ReasonEntityStatsModule'),
 		'InvisiblesFinder'=>array('file'=>'invisibles_finder.php', 'class'=>'InvisiblesFinderModule'),
+		'SharingStats'=>array('file'=>'sharing_stats.php', 'class'=>'ReasonSharingStatsModule'),
 	);
 
 if (reason_file_exists('config/admin_modules/setup_local.php'))

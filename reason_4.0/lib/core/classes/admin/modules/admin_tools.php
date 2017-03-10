@@ -114,6 +114,11 @@ class ReasonAdminToolsModule extends DefaultModule
 					'description' => 'Finds entities that are not visible given a site\'s setup.',
 					'safety_level' => 'safe',
 				),
+				'?cur_module=SharingStats' => array(
+					'title' => 'Sharing Stats',
+					'description' => 'Provides statistics on sharing and borrowing in Reason.',
+					'safety_level' => 'safe',
+				),
 			),
 			'Content Actions' => array(
 				REASON_HTTP_BASE_PATH.'scripts/urls/update_urls.php' => array(
