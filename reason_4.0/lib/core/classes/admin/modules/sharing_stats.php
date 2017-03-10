@@ -18,13 +18,13 @@ class ReasonSharingStatsModule extends DefaultModule
     protected $data;
     protected $sharing_sites = array();
 
-    function ReasonEntityStatsModule(&$page) {
+    function ReasonSharingStatsModule(&$page) {
         $this->admin_page = & $page;
     }
 
     function init()
     {
-        $this->admin_page->title = 'Entity Stats';
+        $this->admin_page->title = 'Sharing Stats';
     }
 
     function run()
@@ -52,14 +52,38 @@ class ReasonSharingStatsModule extends DefaultModule
         echo '<p>Unique sites sharing anything: ' . $unique_sharing_sites_count . '</p>';
         echo '<p>Average number of types shared per site: ' . round($sums['Sites']/$unique_sharing_sites_count, 2) . '</p>';
         echo '<p>Average number of entities shared per site: ' . round($sums['Entities']/$unique_sharing_sites_count, 2) . '</p>';
+        $deferred = array();
         foreach($types as $type)
         {
-        	echo '<h3>'.$type->get_display_name().'</h3>';
-        	echo '<ul>';
+        	$defer = true;
+        	$str = '';
+        	$str .= '<h3>'.$type->get_display_name().'</h3>';
+        	$str .= '<ul>';
         	
         	foreach($data[$type->id()] as $label => $count)
         	{
-        		echo '<li>'.$label.': '.$count.'</li>';
+        		if($count > 0) {
+        			$defer = false;
+        		}
+        		$str .= '<li>'.$label.': '.$count.'</li>';
+        	}
+        	$str .= '</ul>';
+        	if($defer)
+        	{
+        		$deferred[] = $type;
+        	}
+        	else
+        	{
+        		echo $str;
+        	}
+        }
+        if(!empty($deferred))
+        {
+        	echo '<h3>Types with no shares</h3>';
+        	echo '<ul>';
+        	foreach($deferred as $type)
+        	{
+        		echo '<li>'.$type->get_display_name().'</li>';
         	}
         	echo '</ul>';
         }
