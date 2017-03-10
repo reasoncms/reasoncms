@@ -613,7 +613,9 @@ div.addlActions a {
 .jumpLinkFind a:hover, .jumpLinkTop a:hover {
 	background-color:#ccc;
 }
-
+.associatorModule .assocList {
+	clear:left;
+}
 
 .nav, .nav:visited, .nav:active {
 	text-decoration: none;
