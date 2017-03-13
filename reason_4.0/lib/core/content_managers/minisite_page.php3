@@ -388,7 +388,7 @@ class MinisitePageManager extends parent_childManager
 			$es = new entity_selector();
 			$es->add_type(id_of('type'));
 			$es->add_right_relationship( $this->get_value('site_id'), relationship_id_of('site_to_type') );
-			$es->add_relation( 'entity.unique_name IN ("'.implode('","',array_keys($types_to_optional_pages)).'")' );
+			$es->add_condition( 'entity.unique_name', 'IN', array_keys($types_to_optional_pages) );
 			$types = $es->run_one();
 			
 			foreach($types as $type)

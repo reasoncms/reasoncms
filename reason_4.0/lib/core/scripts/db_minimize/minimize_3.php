@@ -296,7 +296,7 @@ else
 			if(!array_key_exists($alrel[$side],$checked))
 			{
 				$es = new entity_selector();
-				$es->add_relation('entity.id = "'.$alrel[$side].'"');
+				$es->add_condition( 'entity.id', '=', $alrel[$side] );
 				$es->set_num(1);
 				$ents = $es->run_one(id_of('type'));
 				if(empty($ents))

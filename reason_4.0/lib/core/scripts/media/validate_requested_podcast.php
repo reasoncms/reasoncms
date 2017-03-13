@@ -40,8 +40,8 @@ if (!$media_file->get_values() || $media_file->get_value('type') != id_of('av_fi
 $es = new entity_selector();
 $es->add_type(id_of('av'));
 $es->add_left_relationship($media_file->id(), relationship_id_of('av_to_av_file'));
-$es->add_relation('`entity`.`id` = "'.addslashes($media_work_id).'"');
-$es->add_relation('`media_work`.`integration_library` != ""');
+$es->add_condition( '`entity`.`id`', '=', $media_work_id );
+$es->add_condition( '`media_work`.`integration_library`', '!=', '' );
 $es->set_num(1);
 $works = $es->run_one();
 

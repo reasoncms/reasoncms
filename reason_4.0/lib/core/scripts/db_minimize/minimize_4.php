@@ -134,7 +134,7 @@ else
 			$parts2 = explode('_',$parts1[0]);
 			$id = turn_into_int($parts2[0]);
 			$es = new entity_selector();
-			$es->add_relation('entity.id = '.$id);
+			$es->add_condition('entity.id', '=', $id);
 			$es->set_num(1);
 			$images = $es->run_one(id_of('image'));
 			if(empty($images))
@@ -166,7 +166,7 @@ else
 			$parts = explode('.',$entry);
 			$id = turn_into_int($parts[0]);
 			$es = new entity_selector();
-			$es->add_relation('entity.id = '.$id);
+			$es->add_condition( 'entity.id', '=', $id );
 			$es->set_num(1);
 			$assets = $es->run_one(id_of('asset'));
 			if(empty($assets))

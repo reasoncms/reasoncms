@@ -72,7 +72,7 @@ function reason_iframe_get_media_file()
 				$es = new entity_selector();
 				$es->add_type(id_of('av_file'));
 				$es->add_right_relationship($work->id(), relationship_id_of('av_to_av_file'));
-				$es->add_relation('`entity`.`id` = "'.addslashes($id).'"');
+				$es->add_condition( '`entity`.`id`', '=', $id );
 				$es->set_num(1);
 				$results = $es->run_one();
 				if(!empty($results))

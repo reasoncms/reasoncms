@@ -190,7 +190,7 @@ else
 // Creates a list of the  publications with reminder_days set above 0.
 $es = new entity_selector();
 $es->add_type(id_of('publication_type'));
-$es->add_relation('`reminder_days` > 0');
+$es->add_condition( '`reminder_days`', '>', 0);
 $publications = $es->run_one();
 // For each publication, make sure the site owning it is live, then create a reminder, set pulication for that reminder, and run the remind function.
 foreach($publications as $pub_id=>$pub)

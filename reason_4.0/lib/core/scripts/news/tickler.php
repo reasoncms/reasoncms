@@ -132,7 +132,7 @@ $datetime = date('Y-m-d H:i:s', $time);
 $es = new entity_selector();
 $es->add_type(id_of('news'));
 $es->add_left_relationship( $pub->id(), relationship_id_of('news_to_publication'));
-$es->add_relation('`datetime` >= "'.$datetime.'"');
+$es->add_condition( '`datetime`', '>=', $datetime );
 $es->set_num(1);
 $posts = $es->run_one();
 

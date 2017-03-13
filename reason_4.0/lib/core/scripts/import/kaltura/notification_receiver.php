@@ -125,7 +125,7 @@ class ReasonKalturaNotificationReceiver
 		{			
 			$es = new entity_selector();
 			$es->add_type(id_of('av'));
-			$es->add_relation('media_work.entry_id = "'.addslashes($data['entry_id']).'"');
+			$es->add_condition( 'media_work.entry_id', '=', $data['entry_id'] );
 			$results = array_merge($es->run_one(), $es->run_one('','Pending'));
 			
 			if (!empty($results))

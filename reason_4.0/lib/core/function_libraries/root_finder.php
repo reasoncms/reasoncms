@@ -21,7 +21,7 @@ function root_finder( $site_id )
 {
     $es = new entity_selector( );
     $es->add_type( id_of( 'minisite_page') );
-    $es->add_relation( 'entity.state = "Live"' );
+    $es->add_condition( 'entity.state', '=', 'Live' );
     $es->add_right_relationship( $site_id, get_owns_relationship_id(id_of('minisite_page')) );
     $results = $es->run_one();
     foreach( $results as $page )

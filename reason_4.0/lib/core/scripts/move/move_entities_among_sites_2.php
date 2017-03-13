@@ -71,9 +71,9 @@ $allowable_relationship_id = get_owns_relationship_id($type_id);
 $es = new entity_selector();
 $es->add_type($type_id);
 $es->add_right_relationship($site_id, $allowable_relationship_id);
-if ($start_date) $es->add_relation('creation_date >= "'.mysql_real_escape_string($start_date).'"');
-if ($end_date) $es->add_relation('creation_date <= "'.mysql_real_escape_string($end_date).'"');
-if ($name) $es->add_relation('entity.name LIKE "%'.mysql_real_escape_string($name).'%"');
+if ($start_date) $es->add_condition('creation_date', '>=', $start_date );
+if ($end_date) $es->add_condition('creation_date', '<=', $end_date );
+if ($name) $es->add_condition( 'entity.name', 'LIKE', '%'.mysql_real_escape_string($name).'%' );
 $es->set_order(mysql_real_escape_string($sort).' ASC');
 $entity_bs = $es->run_one();
 

@@ -28,8 +28,8 @@
 			$es->add_left_relationship_field( 'minisite_page_parent' , 'entity' , 'name' , 'parent_name' );
 			if( !empty( $this->admin_page->request[ 'parent_id' ] ) )
 			{
-				$es->add_relation( 'entity.id != ' . $this->admin_page->request[ 'parent_id' ] );
-				$es->add_relation( '__entity__.id = ' . $this->admin_page->request[ 'parent_id' ] );
+				$es->add_condition( 'entity.id', '!=', $this->admin_page->request[ 'parent_id' ] );
+				$es->add_condition( '__entity__.id', '=', $this->admin_page->request[ 'parent_id' ] );
 			}
 			return $es;
 		} // }}}

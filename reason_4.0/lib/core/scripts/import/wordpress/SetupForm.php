@@ -548,8 +548,8 @@ class SetupForm extends FormStep
 		{
 			$es = new entity_selector();
 			$es->add_type(id_of('site'));
-			$es->add_relation('entity.unique_name != "master_admin"');
-			$es->add_relation('entity.unique_name != "site_login"');	
+			$es->add_condition( 'entity.unique_name', '!=', 'master_admin' );
+			$es->add_condition( 'entity.unique_name', '!=', 'site_login' );	
 			$results = $es->run_one();
 			if (!empty($results))
 			{

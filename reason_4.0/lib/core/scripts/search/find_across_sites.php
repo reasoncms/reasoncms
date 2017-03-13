@@ -78,7 +78,6 @@ $d->actions = array('Search');
 $d->run();
 if(!empty($_REQUEST['search_string']))
 {
-	$sql_search_string = reason_sql_string_escape($_REQUEST['search_string']);
 	$use_fields = array('id','name','last_modified');
 
 	echo '<h2>Search results</h2>';
@@ -106,20 +105,16 @@ if(!empty($_REQUEST['search_string']))
 		$es->add_type($type->id());
 		$tables = get_entity_tables_by_type( $type->id() );
 		//pray($tables);
-		$relation_pieces = array();
+		$relation_fields = array();
 		foreach($tables as $table)
 		{
 			$fields = get_fields_by_content_table( $table );
-			//pray($fields);
 			foreach($fields as $field)
 			{
-				$relation_pieces[] = $table.'.'.$field.' LIKE "%'.$sql_search_string.'%"';
+				$relation_fields[] = $table.'.'.$field;
 			}
 		}
-		$relation = '( '.implode(' OR ',$relation_pieces).' )';
-		//echo '<p>'.$relation.'</p>';
-		$es->add_relation($relation);
-		//$es->add_relation('* LIKE "%'.$_REQUEST['search_string'].'%"');
+		$es->add_condition( $relation_fields, 'LIKE', '%'.$_REQUEST['search_string'].'%' );
 		$entities = $es->run_one();
 		if(!empty($entities))
 		{

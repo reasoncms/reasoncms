@@ -31,8 +31,8 @@ class regexFeed extends defaultFeed
 		$this->feed->set_item_field_map('author', '');
 		$this->feed->set_item_field_handler( 'description', 'make_regex', true );
 		
-		$this->feed->es->add_relation( 'site.site_state = "Live"' );
-		$this->feed->es->add_relation( 'entity.unique_name != ""' );
+		$this->feed->es->add_condition( 'site.site_state', '=', 'Live' );
+		$this->feed->es->add_condition( 'entity.unique_name', '!=', '' );
 		$this->feed->es->set_order( 'name ASC' );
 		$this->feed->es->set_num( 10000 );
 	}

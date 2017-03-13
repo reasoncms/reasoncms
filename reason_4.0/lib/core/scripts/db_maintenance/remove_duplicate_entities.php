@@ -120,14 +120,14 @@ else
 				if( $t != 'entity' )
 					$q->add_relation( 'entity.id = '.$t.'.id' );
 			}
-			$q->add_relation( 'entity.id != '.$id );
+			$q->add_condition( 'entity.id', '!=', $id );
 			reset( $fields );
 			while( list( ,$f ) = each( $fields ) )
 			{
 				if( $d[$f] )
-					$q->add_relation( $f.' = "'.reason_sql_string_escape($d[$f]).'"' );
+					$q->add_condition( $f, '=', $d[$f] );
 				else
-					$q->add_relation( $f.' IS NULL' );
+					$q->add_condition( $f, '=', NULL );
 			}
 			$q->add_field( 'entity','id' );
 			//echo $q->get_query().'<br /><br />';

@@ -135,9 +135,9 @@
 		$dbq->add_table('entity');
 		$dbq->add_field('entity', 'id');
 		$dbq->add_field('entity', 'unique_name');
-		$dbq->add_relation('unique_name IS NOT NULL');
-		$dbq->add_relation('unique_name != ""');
-		$dbq->add_relation('(state = "Live" OR state = "Pending")');
+		$dbq->add_condition( 'unique_name', 'IS NOT', NULL );
+		$dbq->add_condition( 'unique_name', '!=', '' );
+		$dbq->add_condition( 'state', '=', array( 'Live', 'Pending' ) );
 		$r = db_query( $dbq->get_query(),'Error getting unique names in reason_refresh_unique_names' );
 		while( $row = mysql_fetch_array( $r ))
 		{
@@ -350,7 +350,7 @@
 		$es->add_type(id_of('content_table'));
 		$es->limit_fields('entity.name');
 		$es->limit_tables();
-		$es->add_relation('entity.name = "'.reason_sql_string_escape($table_name).'"');
+		$es->add_condition( 'entity.name', '=', $table_name );
 		$results = $es->run_one();
 		return (!empty($results));
 	}
@@ -493,8 +493,8 @@
 		$dbq->add_table( 'e2','entity' );
 		$dbq->add_table( 'r','relationship' );
 		$dbq->add_relation( 'e.type = e2.id' );
-		$dbq->add_relation( 'e2.unique_name = "content_table"' );
-		$dbq->add_relation( 'r.entity_a = '.$type );
+		$dbq->add_condition( 'e2.unique_name', '=', 'content_table' );
+		$dbq->add_condition( 'r.entity_a', '=', $type );
 		$dbq->add_relation( 'r.entity_b = e.id' );
 		return $dbq;
 
@@ -585,17 +585,17 @@
 		}
 
 		$dbq->add_relation( 't.type = type.id' );
-		$dbq->add_relation( 'type.unique_name = "content_table"' );
-		$dbq->add_relation( 'item.id = '.$id );
+		$dbq->add_condition( 'type.unique_name', '=', 'content_table' );
+		$dbq->add_condition( 'item.id', '=', $id );
 		$dbq->add_relation( 'r.entity_a = item.type' );
 		$dbq->add_relation( 'r.entity_b = t.id' );
 		if (reason_relationship_names_are_unique())
 		{
-			$dbq->add_relation( 'r.type = '.relationship_id_of('type_to_table') );
+			$dbq->add_condition( 'r.type', '=', relationship_id_of('type_to_table') );
 		}
 		else
 		{
-			$dbq->add_relation( 'ar.name = "type_to_table"' );
+			$dbq->add_condition( 'ar.name', '=', 'type_to_table' );
 		}
 		return $dbq;
 	} // }}}
@@ -663,7 +663,7 @@
 
 		$q->add_table( 'type','entity' );
 		$q->add_field( 'type','id' );
-		$q->add_relation( 'type.unique_name = "'.$type_name.'"' );
+		$q->add_condition( 'type.unique_name', '=', $type_name );
 
 		return $q;
 	} // }}}
@@ -726,7 +726,7 @@
 				$dbq->add_relation( 'entity.id = '.$table.'.id' );
 			}
 		}
-		$dbq->add_relation( 'entity.id = '.$id );
+		$dbq->add_condition( 'entity.id', '=', $id );
 		return $dbq;
 	} // }}}
 	
@@ -788,7 +788,7 @@
 				$dbq->add_relation( '`entity`.`id` = `'.$table.'`.`id`' );
 		}
 		
-		$dbq->add_relation( '`entity`.`type` = "'.$type.'"' );
+		$dbq->add_condition( '`entity`.`type`', '=', $type );
 
 		if( $site_id && $sharing )
 		{
@@ -799,12 +799,11 @@
 			}
 			if(is_array($site_id))
 			{
-				array_walk($site_id,'db_prep_walk');
-				$dbq->add_relation( 'r.entity_a IN ('.implode(',',$site_id).')');
+				$dbq->add_condition( 'r.entity_a', 'IN', $site_id );
 			}
 			else
 			{
-				$dbq->add_relation( 'r.entity_a = "'.reason_sql_string_escape($site_id).'"');
+				$dbq->add_condition( 'r.entity_a', '=', $site_id );
 			}
 			$dbq->add_relation( 'r.entity_b = entity.id');
 			if (!reason_relationship_names_are_unique())
@@ -817,27 +816,27 @@
 				{
 					$owns_rel_id = get_owns_relationship_id($type);
 					$borrows_rel_id = get_borrows_relationship_id($type);
-					$dbq->add_relation( '(r.type = '.$owns_rel_id.' OR r.type = '.$borrows_rel_id.')' );
+					$dbq->add_condition( 'r.type', '=', array( $owns_rel_id, $borrows_rel_id ) );
 				}
-				else $dbq->add_relation( '(ar.name = "owns" OR ar.name = "borrows")' );
+				else $dbq->add_condition( 'ar.name', '=', array( 'owns', 'borrows' ) );
 			}
 			elseif( preg_match( '/borrows/' , $sharing ) )
 			{
 				if (reason_relationship_names_are_unique())
 				{
 					$borrows_rel_id = get_borrows_relationship_id($type);
-					$dbq->add_relation( '(r.type = '.$borrows_rel_id.')' );
+					$dbq->add_condition( 'r.type', '=', $borrows_rel_id );
 				}
-				else $dbq->add_relation( 'ar.name = "borrows"' );
+				else $dbq->add_condition( 'ar.name', '=', 'borrows' );
 			}
 			else
 			{
 				if (reason_relationship_names_are_unique())
 				{
 					$owns_rel_id = get_owns_relationship_id($type);
-					$dbq->add_relation( '(r.type = '.$owns_rel_id.')' );
+					$dbq->add_condition( 'r.type', '=', $owns_rel_id );
 				}
-				else $dbq->add_relation( 'ar.name = "owns"' );
+				else $dbq->add_condition( 'ar.name', '=', 'owns' );
 			}
 		}
 
@@ -892,7 +891,7 @@
 		$q = new DBSelector;
 
 		$q->add_table( 'ar','allowable_relationship' );
-		$q->add_relation( 'ar.relationship_a = '.$type );
+		$q->add_condition( 'ar.relationship_a', '=', $type );
 
 		return $q;
 	} // }}}
@@ -919,9 +918,9 @@
 		$dbq->add_table( 'e1', 'entity' );
 		$dbq->add_table( 'e2', 'entity' );
 		$dbq->add_relation( 'e1.id = r.entity_a' );
-		$dbq->add_relation( 'e1.type = '.$type_a );
+		$dbq->add_condition( 'e1.type', '=', $type_a );
 		$dbq->add_relation( 'e2.id = r.entity_b' );
-		$dbq->add_relation( 'e2.type = '.$type_b );
+		$dbq->add_condition( 'e2.type', '=', $type_b );
 
 		return $dbq;
 	} // }}}
@@ -942,7 +941,7 @@
 
 		$dbq->add_table( 'r','relationship' );
 		$dbq->add_field( 'r','entity_b' );
-		$dbq->add_relation( 'r.entity_a = '.$id );
+		$dbq->add_condition( 'r.entity_a', '=', $id );
 
 		return $dbq;
 	} // }}}
@@ -971,11 +970,11 @@
 		// backwards compatibility 
 		if (reason_relationship_names_are_unique() && in_array($relation_type, array('owns', 'borrows', 'archive')))
 		{
-			$dbq->add_relation( 'ar.type = "'.$relation_type.'"' );
+			$dbq->add_condition( 'ar.type', '=', $relation_type );
 		}
 		else
 		{
-			$dbq->add_relation( 'ar.name = "'.$relation_type.'"' );
+			$dbq->add_condition( 'ar.name', '=', $relation_type );
 		}
 		return $dbq;
 	} // }}}
@@ -991,7 +990,7 @@
 		$dbq->add_field( 'r','entity_a' );
 		$dbq->add_field( 'r','entity_b' );
 		$dbq->add_relation( 'r.type = ar.id' );
-		$dbq->add_relation( 'ar.id = "'.$relation_id.'"' );
+		$dbq->add_condition( 'ar.id', '=', $relation_id );
 		return $dbq;
 	} // }}}
 
@@ -1006,9 +1005,9 @@
 	{
 		$d = get_entity_associations_by_type_name_object( 'site_to_user' );
 		$d->add_table( 'user','entity' );
-		$d->add_relation( 'user.name = "'.$user_id.'"' );
+		$d->add_condition( 'user.name', '=', $user_id );
 		$d->add_relation( 'user.id = r.entity_b' );
-		$d->add_relation( 'r.entity_a = "'.$site_id.'"' );
+		$d->add_condition( 'r.entity_a', '=', $site_id );
 
 		if ( !count( $d->run() ) )
 			die( 'You are not authorized to use this page' );
@@ -1020,8 +1019,8 @@
 	function auth_site_to_type( $site_id, $type_id ) // {{{
 	{
 		$d = get_entity_associations_by_type_name_object( 'site_to_type' );
-		$d->add_relation( 'r.entity_a = '.$site_id );
-		$d->add_relation( 'r.entity_b = '.$type_id );
+		$d->add_condition( 'r.entity_a', '=', $site_id );
+		$d->add_condition( 'r.entity_b', '=', $type_id );
 
 		if ( !$d->run() )
 			die( 'This site does not have access to that content type' );
@@ -1040,11 +1039,14 @@
 		$d->add_relation( 'ar.id = r.type' );
 		if (reason_relationship_names_are_unique())
 		{
-			$d->add_relation( 'ar.type = "owns"' );
+			$d->add_condition( 'ar.type', '=', 'owns' );
 		}
-		else $d->add_relation( 'ar.name = "owns"' );
-		$d->add_relation( 'r.entity_a = ' . $site_id );
-		$d->add_relation( 'r.entity_b = ' . $entity_id );
+		else 
+		{
+			$d->add_condition( 'ar.name', '=', 'owns' );
+		}
+		$d->add_condition( 'r.entity_a', '=', $site_id );
+		$d->add_condition( 'r.entity_b', '=', $entity_id );
 		$r = db_query( $d->get_query() , 'Error checking ownership' );
 		if( $row = mysql_fetch_array( $r , MYSQL_ASSOC ) )
 		{
@@ -1067,11 +1069,14 @@
 		$d->add_relation( 'ar.id = r.type' );
 		if (reason_relationship_names_are_unique())
 		{
-			$d->add_relation( 'ar.type = "borrows"' );
+			$d->add_condition( 'ar.type', '=', 'borrows' );
 		}
-		else $d->add_relation( 'ar.name = "borrows"' );
-		$d->add_relation( 'r.entity_a = ' . $site_id );
-		$d->add_relation( 'r.entity_b = ' . $entity_id );
+		else
+		{
+			$d->add_condition( 'ar.name', '=', 'borrows' );
+		}
+		$d->add_condition( 'r.entity_a', '=', $site_id );
+		$d->add_condition( 'r.entity_b', '=', $entity_id );
 		$r = db_query( $d->get_query() , 'Error checking ownership' );
 		if( $row = mysql_fetch_array( $r , MYSQL_ASSOC ) )
 		{
@@ -1092,7 +1097,7 @@
 	function get_sites_that_are_borrowing_entity($entity_id)
 	{
 		$d = get_entity_associations_by_type_name_object( 'borrows' );
-		$d->add_relation( 'r.entity_b = '.$entity_id );
+		$d->add_condition( 'r.entity_b', '=', $entity_id );
 		$r = db_query( $d->get_query() , 'Error checking borrowing' );
 		$sites = array();
 		while( $row = mysql_fetch_array( $r, MYSQL_ASSOC ) )
@@ -1123,7 +1128,7 @@
 			$es->limit_tables('entity');
 			$es->limit_fields();
 			$es->add_type(id_of('user'));
-			$es->add_relation('entity.name = "'.reason_sql_string_escape($username).'"');
+			$es->add_condition('entity.name', '=', $username );
 			$es->set_num(1);
 			$result = $es->run_one();
 			if ($result)
@@ -1480,17 +1485,20 @@
 		$d = new DBSelector;
 
 		$d->add_table( 'entity' );
-		$d->add_relation( 'entity.id = '.$entity_id );
+		$d->add_condition( 'entity.id', '=', $entity_id );
 		$d->add_field( 'r', 'entity_a', 'site_id' );
 		$d->add_table( 'ar' , 'allowable_relationship' );
 		$d->add_table( 'r' , 'relationship' );
 		$d->add_relation( 'ar.id = r.type' );
 		if (reason_relationship_names_are_unique())
 		{
-			$d->add_relation( 'ar.type = "owns"' );
+			$d->add_condition( 'ar.type', '=', 'owns' );
 		}
-		else $d->add_relation( 'ar.name = "owns"' );
-		$d->add_relation( 'r.entity_b = ' . $entity_id );
+		else
+		{
+			$d->add_condition( 'ar.name', '=', 'owns' );
+		}
+		$d->add_condition( 'r.entity_b', '=', $entity_id );
 		$d->set_num(1);
 		$r = db_query( $d->get_query() , 'Error getting owning site ID.' );
 		if( $row = mysql_fetch_array( $r , MYSQL_ASSOC ) )
@@ -1626,11 +1634,11 @@
 			$dbq->add_table( 'ar','allowable_relationship' );
 			$dbq->add_table( 'r', 'relationship' );	
 
-			$dbq->add_relation( 'ar.name = "site_shares_type"' );
+			$dbq->add_condition( 'ar.name', '=', 'site_shares_type' );
 			$dbq->add_relation( 'r.type = ar.id' );
 
-			$dbq->add_relation( 'r.entity_a = '.$site_id );
-			$dbq->add_relation( 'r.entity_b = '.$type_id );
+			$dbq->add_condition( 'r.entity_a', '=', $site_id );
+			$dbq->add_condition( 'r.entity_b', '=', $type_id );
 	
 			$q = $dbq->get_query();
 			$r = db_query( $q, 'Failed determination of site\'s sharing status.' );
@@ -1803,7 +1811,7 @@
 		{
 			$es = new entity_selector();
 			$es->add_type(id_of('minisite_template'));
-			$es->add_relation('entity.name = "'.reason_sql_string_escape($name).'"');
+			$es->add_condition( 'entity.name', '=', $name );
 			$es->set_num(1);
 			$templates = $es->run_one();
 			if(!empty($templates))
@@ -1834,7 +1842,7 @@
 			$es = new entity_selector();
 			$es->add_type(id_of('user'));
 			$es->add_right_relationship($site_id,relationship_id_of('site_to_user'));
-			$es->add_relation('entity.id = "'.$user_id.'"');
+			$es->add_condition('entity.id', '=', $user_id );
 			$es->set_num(1);
 			$es->limit_tables();
 			$es->limit_fields();
@@ -2102,7 +2110,7 @@
 				$es->limit_fields();
 				$es->add_type(id_of('type'));
 				$es->add_right_relationship($site_id, relationship_id_of('site_to_type'));
-				$es->add_relation('entity.id = "'.$type_id.'"');
+				$es->add_condition( 'entity.id', '=', $type_id );
 				$result = $es->run_one();
 				
 				$es2 = new entity_selector();
@@ -2110,7 +2118,7 @@
 				$es2->limit_fields();
 				$es2->add_type(id_of('type'));
 				$es2->add_right_relationship($site_id, relationship_id_of('site_cannot_edit_type'));
-				$es2->add_relation('entity.id = "'.$type_id.'"');
+				$es2->add_condition( 'entity.id', '=', $type_id );
 				$result2 = $es2->run_one();
 				
 				$cache[$site_id][$type_id] = (!empty($result) && empty($result2));

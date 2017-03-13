@@ -17,10 +17,10 @@
 		{
 			if( !empty( $this->admin_page->request[ 'sort_current_projects' ] ) )
 			{
-				$es->add_relation( 'bug.bug_state != 
-"Cancelled"' );
-				$es->add_relation( 'bug.bug_state != 
-"Done"' );
+				$es->add_condition( 'bug.bug_state', '!=', 
+'Cancelled' );
+				$es->add_condition( 'bug.bug_state', '!=', 
+'Done' );
 			}
 			return $es;
 		} // }}}

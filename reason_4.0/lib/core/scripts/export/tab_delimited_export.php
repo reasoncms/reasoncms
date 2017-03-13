@@ -62,16 +62,14 @@ else
 			{
 				$limit_field = reason_sql_string_escape($_REQUEST['limit_field']);
 				$limit_value = reason_sql_string_escape($_REQUEST['limit_value']);
+				$operator = '=';
 				if(empty($_REQUEST['limit_type']) || $_REQUEST['limit_type'] != 'exact')
 				{
-					$relation = $limit_field.' LIKE "%'.$limit_value.'%"';
+					$operator = 'LIKE';
+					$limit_value = '%'.$limit_value.'%';
 				}
-				else
-				{
-					$relation = $limit_field.' = "'.$limit_value.'"';
-				}
-				$output .= $relation;
-				$es->add_relation($relation);
+				//$output .= $relation;
+				$es->add_condition( $limit_field, $operator, $limit_value );
 			}
 			
 			$items = $es->run_one();

@@ -576,7 +576,7 @@ class FindReplaceWizardHelper
 			$es->add_relation('( '.implode(' OR ',$relation_pieces).' )');
 			if ($excluded_array = $this->get_excluded())
 			{
-				$es->add_relation('entity.id NOT IN (' . implode(",", $excluded_array) .')');
+				$es->add_condition( 'entity.id', 'NOT IN', $excluded_array );
 			}
 			$this->_matches = $es->run_one();
 		}

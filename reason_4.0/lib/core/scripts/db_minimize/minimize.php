@@ -134,7 +134,7 @@ else
 	}
 	$sites_es = new entity_selector();
 	$sites_es->add_type(id_of('site'));
-	$sites_es->add_relation('entity.unique_name NOT IN ("'.implode('","',$minimal_sites).'")');
+	$sites_es->add_condition( 'entity.unique_name', 'NOT IN', $minimal_sites );
 	$sites_es->set_num($num_sites);
 	$sites_es->set_order('entity.last_modified DESC');
 	$sites = $sites_es->run_one();

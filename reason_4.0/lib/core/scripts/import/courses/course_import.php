@@ -311,7 +311,7 @@ class CourseImportEngine
 	{
 		$es = new entity_selector();
 		$es->add_type(id_of('course_template_type'));
-		$es->add_relation('sourced_id = "'.$parent_template_id.'"');
+		$es->add_condition('sourced_id', '=', $parent_template_id );
 		if ($result = $es->run_one())
 		{
 			return reset($result);	
@@ -381,7 +381,7 @@ class CourseImportEngine
 			$factory = new CourseTemplateEntityFactory();
 			$es->set_entity_factory($factory);
 			$es->add_type(id_of('course_template_type'));
-			$es->add_relation('sourced_id = "'.$row['sourced_id'].'"');
+			$es->add_condition( 'sourced_id', '=', $row['sourced_id'] );
 			if ($result = $es->run_one())
 			{
 				$course = reset($result);
@@ -505,7 +505,7 @@ class CourseImportEngine
 			$es->set_entity_factory($factory);
 			$name = $this->build_course_section_entity_name($row);
 			$es->relations = array();
-			$es->add_relation('sourced_id = "'.$row['sourced_id'].'"');
+			$es->add_condition( 'sourced_id', '=', $row['sourced_id'] );
 			if ($result = $es->run_one())
 			{
 				$section = reset($result);
@@ -771,7 +771,7 @@ class CourseImportEngine
 	{
 		$es = new entity_selector();
 		$es->add_type(id_of('course_template_type'));
-		if ($org_id) $es->add_relation('org_id = "'.mysql_real_escape_string($org_id).'"');
+		if ($org_id) $es->add_condition( 'org_id', '=', $org_id );
 		if ($result = $es->get_ids())
 			return $result;
 		else
@@ -789,7 +789,7 @@ class CourseImportEngine
 	{
 		$es = new entity_selector();
 		$es->add_type(id_of('course_section_type'));
-		if ($org_id) $es->add_relation('org_id = "'.mysql_real_escape_string($org_id).'"');
+		if ($org_id) $es->add_condition('org_id', '=', $org_id );
 		if ($result = $es->get_ids())
 			return $result;
 		else

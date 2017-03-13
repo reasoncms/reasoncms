@@ -31,12 +31,12 @@ class editorTypeFeed extends defaultFeed
 		$this->feed->set_item_field_map( 'pubDate', '' );
 		$this->feed->set_item_field_map( 'author', '' );
 		
-		//$this->feed->es->add_relation( 'site.site_state = "Live"' );
+		//$this->feed->es->add_condition( 'site.site_state', '= "Live"' );
 		$this->feed->es->set_order( 'name ASC' );
 		
 		if(!empty($GLOBALS['_reason_types_with_editor_link_feeds']) && !empty($this->site))
 		{
-			$this->feed->es->add_relation('entity.unique_name IN ("'.implode('","',$GLOBALS['_reason_types_with_editor_link_feeds']).'")');
+			$this->feed->es->add_condition('entity.unique_name', 'IN', $GLOBALS['_reason_types_with_editor_link_feeds'] );
 			$this->feed->es->add_right_relationship($this->site->id(),relationship_id_of('site_to_type'));
 			$this->feed->restricted_site_id = $this->site->id();
 		}

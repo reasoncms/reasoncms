@@ -163,7 +163,7 @@
 
 				$parent->add_relation( 'entity2.id =  relationship2.entity_b' );
 				$parent->add_relation( 'entity.id = relationship2.entity_a' );
-				$parent->add_relation( 'relationship2.type = "'.$r_id.'"' );
+				$parent->add_condition( 'relationship2.type', '=', $r_id );
 				if(!empty($this->parent_sort_order))
 				{
 					$parent->set_order($this->parent_sort_order);
@@ -307,8 +307,8 @@
 
 					$d->add_field ( 'r' , 'entity_b' , 'p_id' );
 
-					$d->add_relation( 'r.type = "' . $this->get_parent_relationship().'"' );
-					$d->add_relation( 'r.entity_a = "' . $this->get_value( 'id' ).'"' );
+					$d->add_condition( 'r.type', '=',  $this->get_parent_relationship() );
+					$d->add_condition( 'r.entity_a', '=', $this->get_value( 'id' ) );
 
 					$res = db_query( $d->get_query() , 'Error getting page parent in parentchildManager::alter_data()' );
 

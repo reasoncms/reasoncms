@@ -133,7 +133,7 @@ class mediaFileFeed extends defaultFeed
 			// using entity selector as easy way to enforce ownership rules & ensure acceptable state
 			$es = new entity_selector($this->site->id());
 			$es->add_type(id_of('minisite_page'));
-			$es->add_relation('entity.id = "'.$this->request['page_id'].'"');
+			$es->add_condition( 'entity.id', '=', $this->request['page_id'] );
 			$es->set_num(1);
 			$pages = $es->run_one();
 			if(!empty($pages))
@@ -173,7 +173,7 @@ class mediaFileFeed extends defaultFeed
 				foreach($GLOBALS['_reason_page_types'][$pt] as $loc=>$mod)
 				{
 					if(is_array($mod) && isset($mod['limit_to_current_page']) && false == $mod['limit_to_current_page'])
-						$ptq[] = addslashes($pt);
+						$ptq[] = $pt;
 				}
 			}
 		}
@@ -181,7 +181,7 @@ class mediaFileFeed extends defaultFeed
 		{
 			$es = new entity_selector($this->site->id());
 			$es->add_type(id_of('minisite_page'));
-			$es->add_relation('custom_page IN("'.implode('","',$ptq).'")');
+			$es->add_condition('custom_page', 'IN', $ptq );
 			return $es->run_one();
 		}
 		return NULL;
@@ -252,14 +252,17 @@ class mediaFileFeed extends defaultFeed
 		// Enclosure example:
 		// <enclosure url="http://www.scripting.com/mp3s/weatherReportSuite.mp3" length="12216320" type="audio/mpeg" />
 		//$this->feed->set_item_field_validator( 'enclosure', 'validate_media_format_for_rss_enclosure' );
-		$this->feed->es->add_relation('url.url != ""');
-		$this->feed->es->add_relation('av.media_is_progressively_downloadable != "false"');
+		$this->feed->es->add_condition( 'url.url', '!=', '' );
+		$this->feed->es->add_condition('av.media_is_progressively_downloadable', '!=', 'false');
 		$this->feed->es->set_order('av.av_part_number ASC');
 		
 		$ok_formats = array_keys(reason_get_valid_formats_for_podcasting());
-		$ok_formats = array_map('reason_sql_string_escape',$ok_formats);
 		// this is a hack because .mp4s should be included even if the media_format field is "invalid".
-		$this->feed->es->add_relation('((av.media_format IN ("'.implode('","',$ok_formats).'")) OR (url.url LIKE "%.mp4") OR (mime_type IN("video/mp4","audio/mpeg")) )');
+		$this->feed->es->add_condition_set(
+			array('av.media_format', 'IN', $ok_formats),
+			array('url.url', 'LIKE', '%.mp4'),
+			array('mime_type', 'IN', array( 'video/mp4', 'audio/mpeg' ) )
+		);
 		$this->feed->es->set_site(NULL);
 		$this->feed->es->set_num(-1);
 

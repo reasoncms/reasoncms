@@ -82,9 +82,9 @@ class newsFeed extends pageTreeFeed
 		
 		$this->feed->set_item_field_handler( 'title', 'make_title', true );
 		$this->feed->set_item_field_handler( 'description', 'strip_tags', false );
-		$this->feed->es->add_relation( 'show_hide.show_hide = "show"' );
+		$this->feed->es->add_condition( 'show_hide.show_hide', '=', 'show' );
 		$this->feed->es->set_order( 'datetime DESC' );
-		$this->feed->es->add_relation( 'status.status != "pending"' );
+		$this->feed->es->add_condition( 'status.status', '!=', 'pending' );
 		$this->feed->es->add_relation( 'dated.datetime <= NOW()' );
 		$this->feed->es->set_num( 10 );
 		
@@ -93,7 +93,7 @@ class newsFeed extends pageTreeFeed
 			// grab the most recent issue
 			$es = new entity_selector( $this->site_id );
 			$es->add_type( id_of( 'issue_type' ) );
-			$es->add_relation( 'show_hide.show_hide = "show"' );
+			$es->add_condition( 'show_hide.show_hide', '=', 'show' );
 			$es->set_order( 'dated.datetime DESC' );
 			$es->set_num( 1 );
 			$issues = $es->run_one();

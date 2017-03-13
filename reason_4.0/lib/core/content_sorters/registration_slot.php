@@ -34,7 +34,7 @@
 				$es->add_right_relationship_field( 'event_type_to_registration_slot_type' , 'entity' , 'id' , 'event_id' );
 				$es->add_right_relationship_field( 'event_type_to_registration_slot_type' , 'entity' , 'name' , 'event_name' );
 				if( !empty( $this->admin_page->request[ 'event_id' ] ) )
-					$es->add_relation( '__entity__.id = ' . $this->admin_page->request[ 'event_id' ] ); 
+					$es->add_condition( '__entity__.id', '=', $this->admin_page->request[ 'event_id' ] ); 
 			}
 			return $es;
 		} // }}}

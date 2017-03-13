@@ -70,7 +70,7 @@ if(!empty($_GET['action']))
 		
 		$dbs = new DBSelector();
 		$dbs->add_table('URL_history');
-		$dbs->add_relation('page_id = "'.reason_sql_string_escape($old_page_id).'"');
+		$dbs->add_condition( 'page_id', '=', $old_page_id );
 		$dbs->set_order('timestamp ASC');
 		$rows = $dbs->run();
 		//pray($rows);

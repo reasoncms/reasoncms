@@ -21,8 +21,8 @@
 
 	$es = new entity_selector();
 	$es->add_type( id_of( 'site' ) );
-	$es->add_relation( 'site.department IS NOT NULL' );
-	$es->add_relation( 'site.department != ""' );
+	$es->add_condition( 'site.department', '!=', NULL );
+	$es->add_condition( 'site.department', '!=', '' );
 	$sites = $es->run_one();
 	$creator = id_of( 'ldap' );
 	$report = '';

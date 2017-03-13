@@ -29,9 +29,9 @@ class faqFeed extends pageTreeFeed
 	{
 		if(!$this->site_specific)
 		{
-			$this->feed->es->add_relation( 'entity.no_share = "0"' );
+			$this->feed->es->add_condition( 'entity.no_share', '=', 0 );
 			$this->feed->es->add_right_relationship_field( 'owns', 'site' , 'site_state' , 'site_state' );
-			$this->feed->es->add_relation( 'site_state = "Live"' );
+			$this->feed->es->add_condition( 'site_state', '=', 'Live' );
 		}
 	}
 }

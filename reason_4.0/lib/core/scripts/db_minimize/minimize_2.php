@@ -180,7 +180,7 @@ else
 	$out[] = '<h2>Started Blurbs</h2>';
 	$es = new entity_selector();
 	$es->set_num($limit);
-	$es->add_relation('entity.unique_name NOT IN ("'.implode('","',$minimal_blurbs).'")');
+	$es->add_condition( 'entity.unique_name', 'NOT IN', $minimal_blurbs );
 	$blurbs = $es->run_one(id_of('text_blurb'));
 	$pending_blurbs = $es->run_one(id_of('text_blurb'), 'Pending');
 	if(!empty($pending_blurbs))
@@ -208,7 +208,7 @@ else
 	$out[] = '<h2>Started Users</h2>';
 	$es = new entity_selector();
 	$es->set_num($limit);
-	$es->add_relation('entity.name NOT IN ("'.implode('","',$minimal_users).'")');
+	$es->add_condition( 'entity.name', 'NOT IN', $minimal_users );
 	$users = $es->run_one(id_of('user'));
 	$pending_users = $es->run_one(id_of('user'), 'Pending');
 	if(!empty($pending_users))

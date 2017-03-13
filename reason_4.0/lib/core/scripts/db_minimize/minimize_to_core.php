@@ -200,7 +200,7 @@ else
 	// themes
 	$out[] = '<h2>Entered theme deletion phase</h2>';
 	/*$es = new entity_selector();
-	$es->add_relation('external_css.css_relative_to_reason_http_base = "true"');
+	$es->add_condition( 'external_css.css_relative_to_reason_http_base', '=', 'true' );
 	$protected_css = $es->run_one(id_of('css'));
 	$protected_themes = array();
 	foreach($protected_css as $css)
@@ -275,7 +275,7 @@ else
 	{
 		$es = new entity_selector();
 		$es->add_left_relationship($table_id,relationship_id_of('type_to_table'));
-		$es->add_relation('entity.unique_name IN ("'.implode('","',$core_types).'")');
+		$es->add_condition('entity.unique_name', 'IN', $core_types );
 		$es->set_num(1);
 		$types = $es->run_one(id_of('type'));
 		if(empty($types))
@@ -323,7 +323,7 @@ else
 	{
 		$es = new entity_selector();
 		$es->add_left_relationship($template_id,relationship_id_of('theme_to_minisite_template'));
-		$es->add_relation('entity.unique_name IN ("'.implode('","',$core_themes).'")');
+		$es->add_condition('entity.unique_name', 'IN', $core_themes );
 		$es->set_num(1);
 		$themes = $es->run_one(id_of('theme_type'));
 		if(empty($themes))
@@ -354,7 +354,7 @@ else
 		{
 			$es = new entity_selector();
 			$es->add_left_relationship($image_id,relationship_id_of('theme_to_primary_image'));	
-			$es->add_relation('entity.unique_name IN ("'.implode('","',$core_themes).'")');
+			$es->add_condition( 'entity.unique_name', 'IN', $core_themes );
 			$es->set_num(1);
 			$themes = $es->run_one(id_of('theme_type'));
 			if(empty($themes))
@@ -384,7 +384,7 @@ else
 		//$out[] = 'Testing '.$view->get_value('name');
 		$es = new entity_selector();
 		$es->add_right_relationship($view_id, relationship_id_of('view_to_site'));
-		//$es->add_relation('entity.unique_name IN ("'.implode('","',$core_sites).'")');
+		//$es->add_condition('entity.unique_name', 'IN', $core_sites );
 		$es->set_num(1);
 		$sites = $es->run_one(id_of('site'));
 		if(empty($sites))
@@ -392,7 +392,7 @@ else
 			//$out[] = 'Failed test 1';
 			$es = new entity_selector();
 			$es->add_left_relationship($view_id, relationship_id_of('type_to_default_view'));
-			$es->add_relation('entity.unique_name IN ("'.implode('","',$core_types).'")');
+			$es->add_condition('entity.unique_name', 'IN', $core_types );
 			$es->set_num(1);
 			$types = $es->run_one(id_of('type'));
 			if(empty($types))
@@ -425,7 +425,7 @@ else
 		if(!in_array($vt->get_value('unique_name'),$core_view_types))
 		{
 			$es = new entity_selector();
-			$es->add_relation('entity.id IN ("'.implode('","',array_keys($views)).'")');
+			$es->add_condition('entity.id', 'IN', array_keys($views) );
 			$es->add_left_relationship($vt_id, relationship_id_of('view_to_view_type'));
 			$es->set_num(1);
 			$vs = $es->run_one(id_of('view'));
@@ -456,7 +456,7 @@ else
 		//$out[] = 'Testing '.$view->get_value('name');
 		$es = new entity_selector();
 		$es->add_left_relationship($css_id, relationship_id_of('theme_to_external_css_url'));
-		$es->add_relation('entity.unique_name IN ("'.implode('","',$core_themes).'")');
+		$es->add_condition('entity.unique_name', 'IN', $core_themes );
 		$es->set_num(1);
 		$themes = $es->run_one(id_of('theme_type'));
 		if(empty($themes))
@@ -464,7 +464,7 @@ else
 			//$out[] = 'Failed test 1';
 			$es = new entity_selector();
 			$es->add_left_relationship($view_id, relationship_id_of('minisite_template_to_external_css'));
-			$es->add_relation('entity.unique_name IN ("'.implode('","',array_keys($templates)).'")');
+			$es->add_condition('entity.unique_name', 'IN', array_keys($templates) );
 			$es->set_num(1);
 			$tmplts = $es->run_one(id_of('minisite_template'));
 			if(empty($tmplts))

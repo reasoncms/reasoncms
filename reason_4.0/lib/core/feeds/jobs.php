@@ -22,8 +22,8 @@ class jobsFeed extends pageTreeFeed
 		$this->feed->set_item_field_map('description','title_extension');
 		$this->feed->set_item_field_map('pubDate','posting_start');
 		
-		$this->feed->es->add_relation( 'show_hide.show_hide = "show"' );
-		$this->feed->es->add_relation( 'job.posting_start <= "'.date( 'Y-m-d' ).'"' );
+		$this->feed->es->add_condition( 'show_hide.show_hide', '=', 'show' );
+		$this->feed->es->add_condition( 'job.posting_start', '<=', date( 'Y-m-d' ) );
 		$this->feed->es->add_relation( 'adddate( job.posting_start, interval duration.duration day ) >= "'.date( 'Y-m-d' ).'"' );
 		$this->feed->es->set_order( 'name ASC' );
 		$this->feed->es->set_num( 10000 );

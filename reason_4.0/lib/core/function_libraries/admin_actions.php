@@ -90,17 +90,17 @@
 		$q = new DBSelector;
 		$q->add_table('ar','allowable_relationship');
 		$q->add_table('site','entity');
-		$q->add_relation( 'site.unique_name = "site"');
+		$q->add_condition( 'site.unique_name', '=', 'site' );
 		$q->add_relation( 'ar.relationship_a = site.id' );
 		$q->add_field( 'ar','id' );
-		$q->add_relation( 'ar.relationship_b = "'.$type_id.'"' );
+		$q->add_condition( 'ar.relationship_b', '=', $type_id );
 		if (reason_relationship_names_are_unique())
 		{
-			$q->add_relation( 'ar.type = "owns"' );
+			$q->add_condition( 'ar.type', '=', 'owns' );
 		}
 		else
 		{
-			$q->add_relation( 'ar.name = "owns"' );
+			$q->add_condition( 'ar.name', '=', 'owns' );
 		}
 		$tmp = $q->run();
 		if( $tmp )
@@ -682,7 +682,7 @@
 			$dbq->add_table( 'ar' , 'allowable_relationship' );
 			$dbq->add_field( 'r' , '*' );
 			$dbq->add_relation( 'r.type = ar.id' );
-			$dbq->add_relation( 'r.entity_b = ' . $id );
+			$dbq->add_condition( 'r.entity_b', '=', $id );
 			
 			//owns relationship table
 			$dbq->add_table( 'r2' , 'relationship' );
@@ -690,24 +690,24 @@
 			
 			if (!reason_relationship_names_are_unique())
 			{
-				$dbq->add_relation( 'ar2.name = "owns"' );
+				$dbq->add_condition( 'ar2.name', '=', 'owns' );
 			}
 			else
 			{
-				$dbq->add_relation( 'ar2.type = "owns"' );
+				$dbq->add_condition( 'ar2.type', '=', 'owns' );
 			}
 			$dbq->add_relation( 'r2.type = ar2.id' );
-			$dbq->add_relation( 'r2.entity_a = ' . $site_id );
+			$dbq->add_condition( 'r2.entity_a', '=', $site_id );
 			$dbq->add_relation( 'r2.entity_b = r.entity_a' );
 			
 			//current borrowship
 			$dbq->add_table( 'r3' , 'relationship' );
 			$dbq->add_table( 'ar3' , 'allowable_relationship' );
 			
-			$dbq->add_relation( 'ar3.id = ' . $rel_id );	
+			$dbq->add_condition( 'ar3.id', '=', $rel_id );	
 			$dbq->add_relation( 'r3.type = ar3.id' );
-			$dbq->add_relation( 'r3.entity_a = ' . $site_id );
-			$dbq->add_relation( 'r3.entity_b = ' . $id );
+			$dbq->add_condition( 'r3.entity_a', '=', $site_id );
+			$dbq->add_condition( 'r3.entity_b', '=', $id );
 			$x = $dbq->run();
 			
 			if( $x )
@@ -757,7 +757,7 @@
 		{
 			$es = new entity_selector();
 			$es->add_type(id_of('content_table'));
-			$es->add_relation('entity.name = "'.$table_name.'"');
+			$es->add_condition('entity.name', '=', $table_name);
 			$results = $es->run_one();
 			if(!empty($results))
 			{
@@ -829,7 +829,7 @@
 			}
 			$es = new entity_selector();
 			$es->add_type(id_of('content_table'));
-			$es->add_relation('entity.name = "'.addslashes($tablename).'"');
+			$es->add_condition( 'entity.name', '=', $tablename );
 			$es->set_num(1);
 			$tables = $es->run_one();
 			if(empty($tables))
@@ -1352,7 +1352,7 @@
 		// check for table existence
 		$es = new entity_selector();
 		$es->add_type(id_of('content_table'));
-		$es->add_relation('`name` = "'.reason_sql_string_escape($source_table).'"');
+		$es->add_condition( '`name`', '=', $source_table );
 		$source_table_result = $es->run_one();
 		if(empty($source_table_result))
 		{
@@ -1362,7 +1362,7 @@
 		
 		$es = new entity_selector();
 		$es->add_type(id_of('content_table'));
-		$es->add_relation('`name` = "'.reason_sql_string_escape($destination_table).'"');
+		$es->add_condition( '`name`', '=', $destination_table );
 		$destination_table_result = $es->run_one();
 		if(empty($destination_table_result))
 		{
@@ -1392,7 +1392,7 @@
 		$es = new entity_selector();
 		$es->add_type(id_of('type'));
 		$es->add_left_relationship($destination_table_entity->id(),relationship_id_of('type_to_table'));
-		$es->add_relation('`entity`.`id` != "'.reason_sql_string_escape($type_id).'"');
+		$es->add_condition('`entity`.`id`', '!=', $type_id);
 		$other_types = $es->run_one();
 		
 		if(!empty($other_types))

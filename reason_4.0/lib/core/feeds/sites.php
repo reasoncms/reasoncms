@@ -28,7 +28,7 @@ class siteFeed extends defaultFeed
 		$this->feed->set_item_field_map('author','email_cache');
 		$this->feed->set_item_field_handler( 'link', 'make_site_link' );
 		
-		$this->feed->es->add_relation( 'site.site_state = "Live"' );
+		$this->feed->es->add_condition( 'site.site_state', '=', 'Live' );
 		$this->feed->es->set_order( 'name ASC' );
 		$this->feed->es->set_num( 10000 );
 	}

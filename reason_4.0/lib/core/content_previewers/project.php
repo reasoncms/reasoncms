@@ -25,7 +25,7 @@
 				$site = $this->_entity->get_owner();
 				$es = new entity_selector( $site->id() );
 				$es->add_type( id_of('minisite_page') );
-				$es->add_relation('page_node.custom_page = "projects"');
+				$es->add_condition('page_node.custom_page', '=', 'projects');
 				$es->set_num(1);
 				$pages = $es->run_one();
 				if(!empty($pages))

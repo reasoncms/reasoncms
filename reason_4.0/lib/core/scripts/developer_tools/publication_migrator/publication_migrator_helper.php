@@ -206,7 +206,7 @@ class PublicationMigratorHelper
 		$es = new entity_selector();
 		$es->add_type(id_of('type'));
 		$es->add_right_relationship($this->get_site_id(),relationship_id_of('site_to_type'));
-		$es->add_relation('entity.id = "'.id_of('issue_type').'"');
+		$es->add_condition( 'entity.id', '=', id_of('issue_type') );
 		$es->set_num(1);
 		$type = $es->run_one();
 		return ($type);
@@ -218,7 +218,7 @@ class PublicationMigratorHelper
 		$es = new entity_selector();
 		$es->add_type(id_of('type'));
 		$es->add_right_relationship($this->get_site_id(),relationship_id_of('site_to_type'));
-		$es->add_relation('entity.id = "'.id_of('news_section_type').'"');
+		$es->add_condition( 'entity.id', '=', id_of('news_section_type') );
 		$es->set_num(1);
 		$type = $es->run_one();
 		return ($type);	
@@ -322,10 +322,10 @@ class PublicationMigratorHelper
 			$es2->limit_tables(array('entity', 'press_release', 'status'));
 			$es2->limit_fields(array('release_title'));
 			$es2->add_type(id_of('news'));
-			$es2->add_relation('status.status = "published"');
+			$es2->add_condition( 'status.status', '=', 'published' );
 			if ($attached_news_items)
 			{
-				$es2->add_relation('entity.id NOT IN ('.implode(",",array_keys($attached_news_items)).')');
+				$es2->add_condition('entity.id', 'NOT IN', array_keys($attached_news_items) );
 			}
 			$unattached_news_items = $es2->run_one();
 		}
@@ -391,7 +391,7 @@ class PublicationMigratorHelper
 			$es2->add_type(id_of('news_section_type'));
 			if ($attached_sections)
 			{
-				$es2->add_relation('entity.id NOT IN ('.implode(",",array_keys($attached_sections)).')');
+				$es2->add_condition('entity.id', 'NOT IN', array_keys($attached_sections) );
 			}
 			$unattached_sections = $es2->run_one();
 		}
@@ -457,7 +457,7 @@ class PublicationMigratorHelper
 			$es2->add_type(id_of('issue_type'));
 			if ($attached_issues)
 			{
-				$es2->add_relation('entity.id NOT IN ('.implode(",",array_keys($attached_issues)).')');
+				$es2->add_condition('entity.id', 'NOT IN', array_keys($attached_issues) );
 			}
 			$unattached_issues = $es2->run_one();
 		}
@@ -556,12 +556,11 @@ class PublicationMigratorHelper
 									? array_unique(array_merge($valid_page_types, $rpts->get_page_type_names_that_use_module($module)))
 									: $rpts->get_page_type_names_that_use_module($module);
 			}
-			foreach (array_keys($valid_page_types) as $k) quote_walk($valid_page_types[$k], NULL);
 		
 			$site_id = $this->get_site_id();
 			$es = new entity_selector($site_id);
 			$es->add_type(id_of('minisite_page'));
-			$es->add_relation('page_node.custom_page IN ('.implode(",", $valid_page_types).')');
+			$es->add_condition('page_node.custom_page', 'IN', $valid_page_types );
 			$pages_using_news_modules = $es->run_one();
 		}
 		return $pages_using_news_modules;
@@ -630,7 +629,7 @@ class PublicationMigratorHelper
 			$site_id = $this->get_site_id();
 			$es = new entity_selector($site_id);
 			$es->add_type(id_of('minisite_page'));
-			$es->add_relation('page_node.custom_page IN ("'.$page_types.'")');
+			$es->add_condition( 'page_node.custom_page', 'IN', $page_types );
 			$es->set_num(1);
 			$result = $es->run_one();
 			if (!empty($result))
@@ -673,7 +672,7 @@ class PublicationMigratorHelper
 			$es = new entity_selector();
 			$es->add_type(id_of('type'));
 			$es->add_right_relationship($this->get_site_id(),relationship_id_of('site_to_type'));
-			$es->add_relation('entity.id = "'.$type_id.'"');
+			$es->add_condition( 'entity.id', '=', $type_id );
 			$es->set_num(1);
 			$type = $es->run_one();
 			if(empty($type))

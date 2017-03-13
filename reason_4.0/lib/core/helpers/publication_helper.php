@@ -88,10 +88,10 @@ class PublicationHelper extends entity
 				$es->limit_fields(array('dated.datetime', 'status.status', 'show_hide.show_hide'));
 				$es->add_left_relationship( $this->id(), relationship_id_of('news_to_publication') );
 				$es->set_order('dated.datetime DESC');
-				if ($this->get_start_date()) $es->add_relation('dated.datetime >= "' . $this->get_start_date() .'"');
-				if ($this->get_end_date()) $es->add_relation('dated.datetime <= "' . $this->get_end_date() .'"'); 
+				if ($this->get_start_date()) $es->add_condition('dated.datetime', '>=', $this->get_start_date() );
+				if ($this->get_end_date()) $es->add_condition('dated.datetime', '<=', $this->get_end_date() ); 
 				if ($limit_num) $es->set_num($limit_num);
-				$es->add_relation("status.status != 'pending'");
+				$es->add_condition( 'status.status', '!=', 'pending' );
 				if ($issues) $es->add_left_relationship_field( 'news_to_issue', 'entity', 'id', 'issue_id', array_keys($issues) );
 				$this->published_items = $es->run_one();
 			}

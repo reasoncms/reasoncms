@@ -71,7 +71,7 @@ $sites = $es->run_one();
 $es = new entity_selector();
 $es->add_type(id_of('type'));
 $es->add_table('ar', 'allowable_relationship');
-$es->add_relation('ar.relationship_a = ' . id_of('site'));
+$es->add_condition('ar.relationship_a', '=', id_of('site'));
 $types = $es->run_one();
 
 $site_options = array();

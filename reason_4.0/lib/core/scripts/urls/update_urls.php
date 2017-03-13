@@ -32,7 +32,7 @@
 
 	$es = new entity_selector();
 	$es->add_type( id_of( 'site' ) );
-	$es->add_relation( 'site.base_url IS NOT NULL AND site.base_url != ""' );
+	$es->add_condition( 'site.base_url', '!=', array( NULL, '' ) );
 	// order results by name so the site picker is easy to use
 	$es->set_order( 'entity.name' );
 	$sites = $es->run_one();

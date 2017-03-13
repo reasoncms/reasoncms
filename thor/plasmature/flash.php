@@ -81,7 +81,7 @@ class thorType extends defaultType
 			$dbs = new DBSelector();
 			$dbs->add_table('thor');
 			$dbs->add_field('thor', 'content');
-			$dbs->add_relation('thor.id = ' . addslashes($this->tmp_id));
+			$dbs->add_condition( 'thor.id', '=', $this->tmp_id );
 			$results = $dbs->run();
 			if ( count($results) > 0 )
 				$this->value = $results[0]['content'];

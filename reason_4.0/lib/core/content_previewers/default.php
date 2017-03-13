@@ -303,39 +303,39 @@
 			$q->add_field( 'e', 'name', 'entity_name' );
 			if($dir == 'left')
 			{
-				$q->add_relation( 'ar.relationship_a = '.$this->admin_page->type_id );
+				$q->add_condition( 'ar.relationship_a', '=', $this->admin_page->type_id );
 				$q->add_relation( 'ar.relationship_b = e.id' );
 				if (!reason_relationship_names_are_unique())
 				{
-					$q->add_relation( 'ar.name != "borrows"' );
+					$q->add_condition( 'ar.name', '!=', 'borrows' );
 				}
 				else
 				{
-					$q->add_relation( 'ar.type != "borrows"' );
+					$q->add_condition( 'ar.type', '!=', 'borrows' );
 				}
 			}
 			elseif($dir == 'right')
 			{
 				$q->add_relation( 'ar.relationship_a = e.id' );
-				$q->add_relation( 'ar.relationship_b = '.$this->admin_page->type_id );
+				$q->add_condition( 'ar.relationship_b', '=', $this->admin_page->type_id );
 			}
 			if (!reason_relationship_names_are_unique())
 			{
-				$q->add_relation( 'ar.name != "owns"' );
-				$q->add_relation( 'ar.name NOT LIKE "%archive%"' );
+				$q->add_condition( 'ar.name', '!=', 'owns' );
+				$q->add_condition( 'ar.name', 'NOT LIKE', '%archive%' );
 			}
 			else
 			{
-				$q->add_relation( 'ar.type != "owns"' );
-				$q->add_relation( 'ar.type != "archive"' );
+				$q->add_condition( 'ar.type', '!=', 'owns' );
+				$q->add_condition( 'ar.type', '!=', 'archive' );
 			}
 			// make sure this site has access to the related type
 			// we don't want to be able to associate with types that a site does not have access to
 			/*
-			$q->add_relation( 'site_own_alrel.relationship_a = '.id_of( 'site' ) );
-			$q->add_relation( 'site_own_alrel.relationship_b = '.id_of( 'type' ) );
-			$q->add_relation( 'site_own_alrel.name = "site_to_type"' );
-			$q->add_relation( 'r.entity_a = '.$this->admin_page->site_id );
+			$q->add_condition( 'site_own_alrel.relationship_a', '=', id_of( 'site' ) );
+			$q->add_condition( 'site_own_alrel.relationship_b', '=', id_of( 'type' ) );
+			$q->add_condition( 'site_own_alrel.name', '=', 'site_to_type' );
+			$q->add_condition( 'r.entity_a', '=', $this->admin_page->site_id );
 			$q->add_relation( 'r.entity_b = e.id' );
 			$q->add_relation( 'r.type = site_own_alrel.id' );
 			*/

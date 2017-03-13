@@ -196,13 +196,12 @@ class sitewideNewsFeed extends defaultFeed
 		if (isset($valid_page_types))
 		{
 			// check each page type to make sure publication is NOT in related mode
-			foreach (array_keys($valid_page_types) as $k) quote_walk($valid_page_types[$k], NULL);
 			$es = new entity_selector($this->site->id());
 			$es->add_type(id_of('minisite_page'));
 			$es->limit_tables(array('page_node'));
 			$es->limit_fields(array('custom_page'));
 			$es->add_left_relationship_field('page_to_publication', 'entity', 'id', 'pub_id');
-			$es->add_relation('page_node.custom_page IN ('.implode(",", $valid_page_types).')');
+			$es->add_condition( 'page_node.custom_page', 'IN', $valid_page_types );
 			$result = $es->run_one();
 		}
 		else $result = false;

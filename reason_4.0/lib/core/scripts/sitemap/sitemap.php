@@ -74,11 +74,11 @@
 		set_time_limit(3600);
 		$es = new entity_selector();
 		$es->add_type(id_of('site'));
-		$es->add_relation('site_state = "Live"');
+		$es->add_condition('site_state', '=', 'Live');
 		/* Add new relation to indicate to only include sites that are indexable. - AF*/
 		//$es->set_num(200);
 		if(!empty($exclude_sites))
-			$es->add_relation('`entity`.`id` NOT IN ("'.implode('","',$exclude_sites).'")');
+			$es->add_condition('`entity`.`id`', 'NOT IN', $exclude_sites );
 		$sites = $es->run_one();
 
 		$info = array();

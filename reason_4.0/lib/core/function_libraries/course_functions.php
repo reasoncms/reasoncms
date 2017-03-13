@@ -145,7 +145,7 @@ class CourseTemplateType extends Entity
 				$dbq->add_field( 's','academic_session' );
 				$dbq->add_field( 's','course_number' );
 				$dbq->add_field( 's','timeframe_begin' );
-				$dbq->add_relation( 'id IN ('.join(',', array_keys($this->sections)).')');
+				$dbq->add_condition( 'id', 'IN', array_keys($this->sections) );
 				if ($result = $dbq->run())
 				{
 					foreach ($result as $row)
@@ -681,7 +681,7 @@ class CatalogHelper
 		$factory = new CourseTemplateEntityFactory();
 		$es->set_entity_factory($factory);
 		$es->add_type( id_of('course_template_type') );
-		$es->add_relation('org_id in ("'.join('","', $codes).'")');
+		$es->add_condition('org_id', 'IN', $codes );
 		$es->set_order('ABS(course_number), title');
 		$results = $es->run_one();
 		foreach ($results as $id => $entity)
@@ -712,8 +712,8 @@ class CatalogHelper
 		$factory = new CourseTemplateEntityFactory();
 		$es->set_entity_factory($factory);
 		$es->add_type( id_of('course_template_type') );
-		$es->add_relation('org_id = "'.mysql_real_escape_string($code).'"');
-		$es->add_relation('course_number = "'.mysql_real_escape_string($number).'"');
+		$es->add_condition( 'org_id', '=', $code );
+		$es->add_condition('course_number', '=', $number );
 		$es->set_order('title');
 		$results = $es->run_one();
 		foreach ($results as $id => $entity)
@@ -748,7 +748,7 @@ class CatalogHelper
 		$factory = new CourseTemplateEntityFactory();
 		$es->set_entity_factory($factory);
 		$es->add_type( id_of('course_template_type') );
-		$es->add_relation('sourced_id in ("'.join('","', $ids).'")');
+		$es->add_condition( 'sourced_id', 'IN', $ids );
 		$es->set_order('org_id, course_number');
 		$results = $es->run_one();
 		foreach ($results as $id => $entity)
@@ -778,7 +778,7 @@ class CatalogHelper
 		$factory = new CourseSectionEntityFactory();
 		$es->set_entity_factory($factory);
 		$es->add_type( id_of('course_section_type') );
-		$es->add_relation('sourced_id in ("'.join('","', $ids).'")');
+		$es->add_condition( 'sourced_id', 'IN', $ids );
 		$es->set_order('org_id, course_number');
 		$results = $es->run_one();
 		foreach ($results as $id => $entity)
@@ -967,8 +967,8 @@ class CatalogHelper
 			$es = new entity_selector( $site );
 			$es->description = 'Selecting catalog blocks on site';
 			$es->add_type( id_of('course_catalog_block_type') );
-			$es->add_relation('org_id = "'.carl_util_sql_string_escape($org_id).'"');
-			$es->add_relation('block_type = "'.carl_util_sql_string_escape($type).'"');
+			$es->add_condition( 'org_id', '=', $org_id );
+			$es->add_condition( 'block_type', '=', $type );
 			if ($results = $es->run_one())
 				return $results;
 		}

@@ -34,7 +34,7 @@ function make_sure_username_is_user($username, $creator_id)
 	}
 	$es = new entity_selector($master_admin_id);
 	$es->add_type(id_of('user'));
-	$es->add_relation('entity.name = "'.reason_sql_string_escape($username).'"');
+	$es->add_condition( 'entity.name', '=', $username );
 	$es->set_num(1);
 	$users = $es->run_one();
 	if(empty($users))
@@ -119,7 +119,7 @@ function user_is_a_reason_editor($user)
 		$es = new entity_selector();
 		$es->add_type(id_of('user'));
 		$es->add_right_relationship_field( 'site_to_user', 'entity', 'id', 'site_id' );
-		$es->add_relation('entity.id = "'.$user_id.'"');
+		$es->add_condition( 'entity.id', '=', $user_id );
 		$es->set_num(1);
 		$es->limit_tables();
 		$es->limit_fields();
@@ -197,7 +197,7 @@ function reason_get_current_user_entity()
 		{
 			$es = new entity_selector();
 			$es->add_type(id_of('user'));
-			$es->add_relation('entity.name = "'.reason_sql_string_escape($username).'"');
+			$es->add_condition('entity.name', '=', $username );
 			$es->set_num(1);
 			$result = $es->run_one();
 			if(!empty($result))

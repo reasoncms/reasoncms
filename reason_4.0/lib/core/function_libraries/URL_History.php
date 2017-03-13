@@ -67,7 +67,7 @@ function update_URL_history( $page_id, $check_children = true )
 			$d->add_field( 'history', 'url', 'url' );
 			$d->add_field( 'history', 'page_id', 'page_id' );
 			$d->add_field( 'history', 'timestamp', 'timestamp' );
-			$d->add_relation( 'history.page_id = ' . $page_id );
+			$d->add_condition( 'history.page_id', '=', $page_id );
 			$d->set_num(1);
 			$d->set_order( 'history.timestamp DESC, history.id DESC' ); // get highest id of highest timestamp
 			$result = db_query( $d->get_query() , 'Error getting most recent URL_history entry for page '.$page_id );
@@ -112,7 +112,7 @@ function update_children( $page_id )
 	// find all the children of this page
 	$es->add_type( id_of('minisite_page') );
 	$es->add_left_relationship( $page_id, relationship_id_of( 'minisite_page_parent' ) );
-	$es->add_relation ('((url.url = "") OR (url.url IS NULL))');
+	$es->add_condition ('url.url', '=', array( '', NULL ) );
 	$es->set_order('sortable.sort_order ASC');
 	$offspring = $es->run_one();
 	

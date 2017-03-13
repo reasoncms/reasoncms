@@ -361,7 +361,7 @@ if (admin_user_exists() == false)
 
 			$es = new entity_selector();
 			$es->add_type(id_of('site'));
-			$es->add_relation ('((entity.unique_name = "master_admin") OR (entity.unique_name = "site_login") OR (entity.unique_name = "page_types_demo_site"))');
+			$es->add_condition( 'entity.unique_name', '=', array( 'master_admin', 'site_login', 'page_types_demo_site' ) );
 			$result = $es->run_one();
 			foreach ($result as $result)
 			{

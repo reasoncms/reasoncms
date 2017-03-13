@@ -245,8 +245,8 @@
 				//check against other base_urls
 				$es = new entity_selector();
 				$es->add_type( id_of( 'site' ) );
-				$es->add_relation('base_url = "'.$this->get_value('base_url').'"');
-				$es->add_relation('entity.id != "'.$this->get_value('id').'"');
+				$es->add_condition( 'base_url', '=', $this->get_value('base_url') );
+				$es->add_condition('entity.id', '!=', $this->get_value('id') );
 				$es->set_num( 1 );
 				$sites = $es->run_one();
 				if(!empty($sites))

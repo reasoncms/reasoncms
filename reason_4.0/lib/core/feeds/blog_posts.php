@@ -117,19 +117,19 @@ class blogPostsFeed extends pageTreeFeed
 		//$this->feed->set_item_field_handler( 'description', 'expand_all_links_in_html', false );
 		$this->feed->set_item_field_handler( 'title', 'strip_tags', false );
 		
-		$this->feed->es->add_relation( 'show_hide = "show"' );
+		$this->feed->es->add_condition( 'show_hide', '=', 'show' );
 		$this->feed->es->set_order( 'datetime DESC' );
-		$this->feed->es->add_relation( 'status != "pending"' );
+		$this->feed->es->add_condition( 'status', '!=', 'pending' );
 		
 		// In order to be able to take advantage of query caching so we round up using 5 minute intervals when looking at the datetime.
-		$this->feed->es->add_relation( 'datetime <= "' . get_mysql_datetime(ceil(time()/300)*300) . '"' );
+		$this->feed->es->add_condition( 'datetime', '<=',  get_mysql_datetime(ceil(time()/300)*300) );
 		
 		// lets add some sensible limits to avoid joining across all the tables (particularly chunk)
 		$this->feed->es->limit_tables(array('entity', 'dated', 'status', 'show_hide'));
 		$this->feed->es->limit_fields();
 		
 		if(!empty($this->request['shared_only']))
-			$this->feed->es->add_relation( 'no_share = "0"' );
+			$this->feed->es->add_condition( 'no_share', '=', 0 );
 		
 		if($this->blog->get_value('has_issues') == 'yes')
 		{
@@ -161,7 +161,7 @@ class blogPostsFeed extends pageTreeFeed
 		$es->limit_tables(array('dated','show_hide'));
 		$es->set_num(1);
 		$es->set_order( 'datetime DESC' );
-		$es->add_relation('show_hide.show_hide = "show"');
+		$es->add_condition( 'show_hide.show_hide', '=', 'show' );
 		$issues = $es->run_one();
 		if(!empty($issues))
 		{
@@ -194,12 +194,7 @@ function get_blog_page_link( $site, $tree, $page_types, $blog ) // {{{
 			}
 		}
 	}
-	
-	foreach($valid_page_types as $page_type)
-	{
-		$relations[] = 'page_node.custom_page = "'.$page_type.'"';
-	}
-	$es->add_relation( '('.implode(' or ', $relations).')' );
+	$es->add_condition('page_node.custom_page', 'IN',  $valid_page_types );
 	$es->add_left_relationship( $blog->id(), relationship_id_of('page_to_publication') );
 	$es->set_num( 1 );
 	$pages = $es->run_one();

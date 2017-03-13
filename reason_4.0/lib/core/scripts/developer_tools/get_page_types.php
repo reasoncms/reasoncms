@@ -86,7 +86,7 @@ if(!empty($_REQUEST['site_id']) || !empty($_REQUEST['site_type_id']) || !empty($
 	$es->limit_tables();
 	$es->limit_fields();
 	if(!empty($_REQUEST['site_id']))
-		$es->add_relation('`entity`.`id` = "'.(integer) $_REQUEST['site_id'].'"');
+		$es->add_condition('`entity`.`id`', '=', (integer) $_REQUEST['site_id'] );
 	if(!empty($_REQUEST['site_type_id']))
 		$es->add_left_relationship((integer) $_REQUEST['site_type_id'], relationship_id_of('site_to_site_type'));
 	if(!empty($_REQUEST['theme_id']))
@@ -104,7 +104,8 @@ $es->limit_fields('entity.name, page_node.custom_page, page_node.url_fragment, u
 $es->add_right_relationship_field( 'owns', 'entity' , 'id' , 'owner_id' );
 $es->add_left_relationship_field('minisite_page_parent', 'entity', 'id', 'parent_id');
 // we add some relations so that we grab only valid pages with names that are not custom url pages
-$es->add_relation('(entity.name != "") AND ((url.url = "") OR (url.url IS NULL))');
+$es->add_condition( 'entity.name', '!=', '' );
+$es->add_condition('url.url', '=', array( '', NULL) );
 $result = $es->run_one();
 shuffle($result); // we lose ids due to the shuffle but we don't care
 

@@ -49,9 +49,9 @@
 		$dbs->add_field('entity','id','id');
 		$dbs->add_field('entity','unique_name','unique_name');
 		$dbs->add_field('entity','name','name');
-		$dbs->add_relation('`unique_name` != ""');
-		$dbs->add_relation('unique_name IS NOT NULL');
-		$dbs->add_relation('`state` IN ("Live","pending")');
+		$dbs->add_condition( '`unique_name`', '!=', '' );
+		$dbs->add_condition( 'unique_name', '!=', NULL );
+		$dbs->add_condition('`state`', 'IN', array( 'Live', 'Pending' ) );
 		$results = $dbs->run('Error getting unique names');
 		
 		$uniques = array();

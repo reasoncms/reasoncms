@@ -141,8 +141,8 @@ class RemoveParentRelIfRootNodeJob extends ReasonJob
 		$d->add_table( 'r', 'relationship' );
 		$d->add_field( 'r', 'entity_b', 'parent_id' );
 		$d->add_field( 'r', 'id', 'rel_id' );
-		$d->add_relation( 'r.type = ' . relationship_id_of('minisite_page_parent'));
-		$d->add_relation( 'r.entity_a = ' . $this->config('page_id') );
+		$d->add_condition( 'r.type', '=', relationship_id_of('minisite_page_parent') );
+		$d->add_condition( 'r.entity_a', '=', $this->config('page_id') );
 		$d->set_num(1);
 		$result = db_query( $d->get_query() , 'Error getting parent ID.' );
 		if( $row = mysql_fetch_assoc($result))

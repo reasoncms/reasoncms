@@ -33,8 +33,8 @@
 			$es->add_left_relationship_field( 'policy_parent' , 'entity' , 'name' , 'parent_name' );
 			if( $parent_id && is_numeric($parent_id) )
 			{
-				$es->add_relation( 'entity.id != ' . $this->admin_page->request[ 'parent_id' ] );
-				$es->add_relation( '__entity__.id = ' . $this->admin_page->request[ 'parent_id' ] );
+				$es->add_condition( 'entity.id', '!=', $this->admin_page->request[ 'parent_id' ] );
+				$es->add_condition( '__entity__.id', '=', $this->admin_page->request[ 'parent_id' ] );
 			}
 			elseif (!$this->is_new())
 			{

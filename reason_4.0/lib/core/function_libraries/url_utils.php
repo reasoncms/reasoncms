@@ -150,11 +150,10 @@ function get_potential_sites_from_path($path)
 		{
 			$values[] = $prev_parts = $prev_parts.$part.'/';
 		}
-		$where = '(site.base_url = "'.implode('" OR site.base_url = "',$values).'")';
 		
 		$es = new entity_selector();
 		$es->add_type(id_of('site'));
-		$es->add_relation($where);
+		$es->add_condition( 'site.base_url', 'IN', $values );
 		$es->set_order('site.base_url DESC');
 		$potential_sites = $es->run_one();
 		return $potential_sites;
@@ -305,11 +304,7 @@ function get_page_link( &$site, &$tree, $page_types, $as_uri = false, $secure = 
 	$relations = array();
 	$es = new entity_selector($site->id());
 	$es->add_type( id_of( 'minisite_page' ) );
-	foreach($page_types as $page_type)
-	{
-		$relations[] = 'page_node.custom_page = "'.$page_type.'"';
-	}
-	$es->add_relation( '('.implode(' or ', $relations).')' );
+	$es->add_condition( 'page_node.custom_page', '=', $page_types );
 	$es->set_num( 1 );
 	$pages = $es->run_one();
 	
@@ -366,7 +361,7 @@ function build_URL( $page_id )
 		$es->add_type(id_of('minisite_page'));
 		$es->limit_tables('page_node');
 		$es->limit_fields('page_node.url_fragment');
-		$es->add_relation('entity.id = '.$page_id);
+		$es->add_condition( 'entity.id', '=', $page_id );
 		$result = $es->run_one();
 		$page = (!empty($result)) ? array_shift($result) : false;
 		if ($page)
