@@ -24,7 +24,7 @@ class StackedBox extends Box // {{{
 		echo '<div id="discoLinear">'."\n";
 	} // }}}
 	
-	function box_item_open( $label, $required, $error, $key, $use_label )
+	function box_item_open( $label, $required, $error, $key, $use_label, $label_target_id = false )
 	{
 		$id = str_replace("_", "", $key);
 		
@@ -47,10 +47,14 @@ class StackedBox extends Box // {{{
 		$markup .= '<div class="words">';
 		if($use_label)
 		{
+			if(!empty($label_target_id))
+				$markup .= '<label for="'.htmlspecialchars($label_target_id).'">';
 			if(!empty($stripped_label)) 
 				$markup  .= '<span class="labelText">'.$label.'</span>';
 			if($required) 
 				$markup .= '<span class="requiredIndicator">'.$this->get_required_indicator().'</span>';
+			if(!empty($label_target_id))
+				$markup .= '</label>';
 		}
 		$markup .= '</div>'."\n";
 		$markup .= '<div class="element">'."\n";
