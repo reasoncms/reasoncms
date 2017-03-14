@@ -396,7 +396,7 @@ class radioType extends optionType
 	{
 		$i = 0;
 		$str = '<div id="'.$this->name.'_container" class="radioButtons" role="group" aria-label=
-		"'.htmlspecialchars($this->display_name).'">'."\n";
+		"'.html_attribute_escape($this->display_name).'">'."\n";
 		if (!$this->tableless) $str .= '<table border="0" cellpadding="1" cellspacing="0">'."\n";
 		$checked = false;
 		if($this->add_empty_value_to_top)
@@ -470,11 +470,11 @@ class radioType extends optionType
 
 		if (empty($this->other_options))
 		{
-			$str .= '<input aria-label="'.str_replace(':','',$this->other_label).' (Enter)" type="text" name="'.$this->name.'_other" value="'.str_replace('"', '&quot;', $other_value).'"  />';
+			$str .= '<input aria-label="'.str_replace(':','',html_attribute_escape($this->other_label)).' (Enter)" type="text" name="'.$this->name.'_other" value="'.str_replace('"', '&quot;', $other_value).'"  />';
 		}
 		else
 		{
-			$str .= '<select aria-label="'.str_replace(':','',$this->other_label).' (Enter)" name="'.$this->name.'_other" class="other">';
+			$str .= '<select aria-label="'.str_replace(':','',html_attribute_escape($this->other_label)).' (Enter)" name="'.$this->name.'_other" class="other">';
 			foreach($this->other_options as $k => $v)
 			{
 				$selected = ($k == $other_value) ? ' selected="selected"' : '';
@@ -588,7 +588,7 @@ class checkboxgroupType extends optionType
 	function get_display()
 	{
 		$str = '<div class="checkBoxGroup" role="group" aria-label=
-		"'.htmlspecialchars($this->display_name).'">'."\n";
+		"'.html_attribute_escape($this->display_name).'">'."\n";
 		if (!$this->tableless) $str .= '<table border="0" cellpadding="1" cellspacing="0">'."\n";
 		$i = 0;
 
@@ -856,7 +856,7 @@ class selectType extends optionType
 		//pray($this->value);
 		$str = '<select id="'.htmlspecialchars($this->get_label_target_id()).'" name="'.$this->name.($this->multiple ? '[]' : '').'" size="'.htmlspecialchars($this->n, ENT_QUOTES).'" '.($this->multiple ? 'multiple="multiple"' : '');
 		if(!$this->is_labeled())
-			$str .= ' aria-label="'.htmlspecialchars($this->display_name).'"';
+			$str .= ' aria-label="'.html_attribute_escape($this->display_name).'"';
 		$str .= '>'."\n";
 		$select_count = 0;
 		if($this->add_empty_value_to_top)

@@ -388,7 +388,7 @@ class textDateTimeType extends textType
 		if(count($this->use_fields) > 1)
 		{
 			$before = '<span role="group" aria-label=
-		"'.htmlspecialchars($this->display_name).'">';
+		"'.html_attribute_escape($this->display_name).'">';
 			$after = '</span>';
 		}
 		
