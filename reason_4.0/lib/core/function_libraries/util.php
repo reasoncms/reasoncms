@@ -135,7 +135,7 @@
 		$dbq->add_table('entity');
 		$dbq->add_field('entity', 'id');
 		$dbq->add_field('entity', 'unique_name');
-		$dbq->add_condition( 'unique_name', 'IS NOT', NULL );
+		$dbq->add_condition( 'unique_name', '!=', NULL );
 		$dbq->add_condition( 'unique_name', '!=', '' );
 		$dbq->add_condition( 'state', '=', array( 'Live', 'Pending' ) );
 		$r = db_query( $dbq->get_query(),'Error getting unique names in reason_refresh_unique_names' );

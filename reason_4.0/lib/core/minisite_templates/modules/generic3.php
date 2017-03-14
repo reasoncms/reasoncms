@@ -1148,51 +1148,31 @@
 		{
 			$es->add_left_relationship( $item_id,  $relationship_id);
 		}
+		
+		/**
+		 * Apply search phrases to the entity selector
+		 */
 		function do_filters_search()
 		{
 			if(!empty($this->request['search']))
 			{
-				$search_term = $this->request['search'];
-				$regexp = '/(?:\"(.+?)\"|([^\*\"\s]+))/';
-				preg_match_all($regexp,$search_term,$matches);
-				
-				$search_term_array = array();
-				foreach ($matches[1] as $chunk)
+				$table_fields = array();
+				foreach($this->search_fields as $field)
 				{
-					if (!empty($chunk))	$search_term_array[] = trim($chunk);
+					$table_field = '';
+					if(false === strpos($field,'.'))
+						$table_field = table_of($field,$this->type);
+					if(empty($table_field))
+						$table_field = $field;
+					$table_fields[] = $table_field;
 				}
-				
-				foreach ($matches[2] as $chunk)
-				{
-					if (!empty($chunk))	$search_term_array[] = trim($chunk);
-				}
-				$search_array = array();
-				
-				foreach ($search_term_array as $chunk)
-				{
-					$sub_search_array = array();
-					foreach($this->search_fields as $field)
-					{
-						$table_field = '';
-						if(false === strpos($field,'.'))
-							$table_field = table_of($field,$this->type);
-						if(empty($table_field))
-							$table_field = $field;
-						$sub_search_array[] = $table_field . ' LIKE "%'.strtr(reason_sql_string_escape($chunk),array('*'=>'%')).'%"';
-					}
-					$search_array[] = '('.implode(' OR ',$sub_search_array).')';
-				}
-				if (!empty($search_array))
-				{
-					$this->es->add_relation('('.implode(' AND ', $search_array).')');
-				}
+				$this->es->add_words_search($table_fields, $this->request['search']);
 			}
 			foreach($this->allowable_psearch_fields as $psearch_frag => $psearch_data)
 			{
 				if (!empty($this->request['search_' . $psearch_frag]))
 				{
-					$psearch_string = str_replace('*','%',reason_sql_string_escape($this->request['search_' . $psearch_frag]));
-					$this->es->add_relation('(' . $psearch_data['field'] . ' LIKE "' . $psearch_string . '")');
+					$this->es->add_basic_search($psearch_data['field'], 'LIKE', $this->request['search_' . $psearch_frag] );
 				}
 			}
 		}
@@ -1208,7 +1188,10 @@
 
 			$pagination_ids = array();
 			$pagination_ids = array_slice($this->position_to_ids, $this->num_per_page * ( $this->request['page'] - 1 ) , $this->num_per_page  );
-			$this->es->add_condition('entity.id', 'IN', $pagination_ids);
+			if(!empty($pagination_ids))
+			{
+				$this->es->add_condition('entity.id', 'IN', $pagination_ids);
+			}
 		}
 		
 		//Called on by list_items

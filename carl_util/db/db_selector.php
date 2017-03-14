@@ -530,6 +530,80 @@ if( !defined( '__DB_SELECTOR' ) )
 		{
 			return carl_util_sql_string_escape($string);
 		}
+		
+		/**
+		 * Add a simple LIKE search
+		 *
+		 * Finds the specific phrase supplied among one or more fields. Phrase must be
+		 * in precise order, though it is insensitive and found anywhere in field content.
+		 *
+		 * This will wrap the search phrase in '%'. Supports wildcards.
+		 *
+		 * @param mixed $fields string or array of field names
+		 * @param string $search_phrase the phrase being searched
+		 * @param string $wildcard a wldcard character
+		 * @return boolean success
+		 */
+		public function add_basic_search($fields, $search_phrase, $wildcard = '*')
+		{
+			$condition_value = '%' . strtr( $search_phrase, array($wildcard=>'%') ) . '%';
+			if($this->add_condition($fields, 'LIKE', $condition_value))
+			{
+				return true;
+			}
+			return false;
+		}
+		
+		/**
+		 * Add a sophisticated LIKE search
+		 *
+		 * Splits the search phrase up by whitespace, then finds the parts in any order
+		 * across all fields supplied.
+		 *
+		 * E.g.  search for "chicken taco" across the name and description fields 
+		 * will return a row with "taco: chicken" in the name field, or with "taco" in
+		 * the name field and "chicken" in the description field.
+		 *
+		 * @param mixed $fields string or array of field names
+		 * @param string $search_phrase the phrase being searched
+		 * @param string $wildcard a wldcard character
+		 * @return boolean success
+		 */
+		public function add_words_search($fields, $search_phrase, $wildcard = '*')
+		{
+			$matches = array();
+			
+			preg_match_all( '/(?:\"(.+?)\"|([^\*\"\s]+))/', $search_phrase, $matches );
+			
+			$search_term_array = array();
+			
+			foreach($matches[1] as $chunk)
+			{
+				if (!empty($chunk))	$search_term_array[] = trim($chunk);
+			}
+			
+			foreach($matches[2] as $chunk)
+			{
+				if (!empty($chunk))	$search_term_array[] = trim($chunk);
+			}
+			
+			foreach(array_keys($search_term_array) as $key)
+			{
+				$search_term_array[$key] = '%' . strtr( $search_term_array[$key], array($wildcard=>'%') ) . '%';
+			}
+			
+			$ret = true;
+			
+			foreach($search_term_array as $search_term)
+			{
+				if(!$this->add_condition( $fields, 'LIKE', $search_term ))
+				{
+					$ret = false;
+				}
+			}
+			
+			return $ret;
+		}
 		/**
 		 * Set the index to start at
 		 *
