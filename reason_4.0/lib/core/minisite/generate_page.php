@@ -71,6 +71,12 @@ function get_minisite_template($theme_id)
 function get_validated_site($site_id, $page_id) 
 {
 	static $validated;
+	
+	if(!get_current_db_connection_name() && defined("REASON_DB"))
+	{
+		connectDB(REASON_DB);
+	}
+	
 	if (isset($validated[$site_id][$page_id])) return $validated[$site_id][$page_id];
 	if ($site_id != $_REQUEST['site_id'])
 	{
