@@ -57,7 +57,6 @@
 	 /**
 	 * The Disco Form Management Class.
 	 *
-	 * Fairly sophisticated form manager.
 	 * Handles:
 	 * - maintaining state in a form
 	 * - checking required fields
@@ -78,7 +77,49 @@
 	 * $d->add_element('first_name');
 	 * $d->add_element('last_name');
 	 * $d->add_element('favorite_color','radio',array('options'=>array('blue'=>'Blue','green'=>'Green','red'=>'Red','yellow'=>'Yellow')));
+	 *
+	 * $d->add_element('your_age');
+	 *
+	 * $d->add_required('first_name');
+	 * $d->add_required('favorite_color');
+	 * $d->add_required('your_age');
+	 *
 	 * $d->run();
+	 * </code>
+	 *
+	 * Getting form values
+	 *
+	 * <code>
+	 * echo '<p>Thank you, ' .  htmlspecialchars($d->get_value('first_name')) . '!</p>';
+	 * echo '<p>Your favorite color is ' .  htmlspecialchars($d->get_value('favorite_color')) . '.</p>';
+	 * </code>
+	 *
+	 * Adding error checking 
+	 *
+	 * <code>
+	 * function my_error_checks($d) {
+	 * 	if($d->get_value('your_age') < 12 ) {
+	 * 		$d->set_error('your_age', 'Sorry, you are too young to participate in this survey');
+	 * 	}
+	 * }
+	 * $d->add_callback('my_error_checks', 'run_error_checks');
+	 * </code>
+	 *
+	 * Alternate usage: Extension
+	 *
+	 * <code>
+	 * class MyForm extends Disco {
+	 * 	function on_every_time() {
+	 * 		$this->add_element('first_name');
+	 * 	}
+	 * 	function run_error_checks() {
+	 * 		if(strlen($this->get_value('first_name') > 80) {
+	 * 			$this->set_error('first_name', 'Names must be 80 characters or fewer');
+	 * 		}
+	 * 	}
+	 * }
+	 * $form = new MyForm();
+	 * $form->run();
 	 * </code>
 	 *
 	 * See the plasmature subdirectory for the full set of available elements. Or roll your own.
