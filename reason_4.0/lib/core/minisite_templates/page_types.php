@@ -336,6 +336,14 @@
 				'width' => 860,
 			),
 		),
+		'audio_video_simple_860_wide_with_author_description' => array(
+			'main_post' => array(
+				'module' => 'av_simple',
+				'width' => 860,
+				'show_descriptions' => true,
+				'show_authors' => true,
+			),
+		),
 		'audio_video_simple_sidebar' => array(
 			'sidebar' => array(
 				'module' => 'av_simple',
