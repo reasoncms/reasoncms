@@ -105,6 +105,16 @@ Download a backup below, and make sure you have a recent Reason database snapsho
 			$message .= 'The form field "include_thank_you_in_email" already exists</li>';
 		}
 
+		// step
+		$pages = $this->getPagesWithEventSlotTypes();
+		$message .= "<li>Checking if any page types need to be updated...";
+		if (!empty($pages)) {
+			$message .= '<strong>Upgrade Needed:</strong> The page types "event_slot_registration" and "event_slot_registration_cache_1_hour" will change to "events".</li>';
+		} else {
+			$message .= 'No pages using the old event slot page types.</li>';
+		}
+
+
 		return $message . "</ol>";
 	}
 
@@ -142,6 +152,14 @@ Download a backup below, and make sure you have a recent Reason database snapsho
 		// step
 		if ($this->deleteEventSlots()) {
 			$message .= "<li>All event slot entities purged.</li>";
+		}
+
+		// step
+		$pages = $this->getPagesWithEventSlotTypes();
+		if (!empty($pages)) {
+			$message .= "<li>Updating page types...";
+			$message .= $this->changePagesToEventPageType();
+			$message .= "</li>";
 		}
 
 		return $message . "</ol>";
@@ -339,6 +357,40 @@ Download a backup below, and make sure you have a recent Reason database snapsho
 		}
 
 		return $type_exists && $type_deleted;
+	}
+
+	/**
+	 * Search for pages with page types that were removed
+	 * @return array array of entities matching removed page types
+	 */
+	function getPagesWithEventSlotTypes()
+	{
+		$es = new entity_selector();
+		$es->add_type(id_of('minisite_page'));
+		$es->enable_multivalue_results();
+		$es->limit_tables('page_node');
+		$es->limit_fields('custom_page');
+		$es->add_relation('(page_node.custom_page = "event_slot_registration" OR page_node.custom_page = "event_slot_registration_cache_1_hour")');
+		return $es->run_one();
+	}
+
+
+	/**
+	 * Update pages with old page types to Events page type
+	 * @return string
+	 */
+	function changePagesToEventPageType()
+	{
+		$to_change = $this->getPagesWithEventSlotTypes();
+
+		$message = "";
+		foreach ($to_change as $entity) {
+			$values = array('custom_page' => 'events');
+			$url = reason_get_page_url($entity);
+			$message .= 'Changed page type on: <a href="' . $url . '">' . $url . '</a><br>';
+			reason_update_entity($entity->id(), $this->user_id, $values);
+		}
+		return $message ? $message : "No changes made to page types";
 	}
 
 }
