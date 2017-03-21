@@ -285,7 +285,7 @@ Download a backup below, and make sure you have a recent Reason database snapsho
 	 */
 	public function deleteEventSlots()
 	{
-		$type_exists = !empty(id_of("registration_slot_type"));
+		$type_exists = reason_unique_name_exists("registration_slot_type");
 
 		// Delete instances of Registration Slots
 		if ($type_exists) {
