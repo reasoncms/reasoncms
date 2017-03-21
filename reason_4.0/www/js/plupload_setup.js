@@ -189,6 +189,7 @@ $(document).ready(function() {
 			multipart_params : multipartParams,
 			filters: uploadFilters
 		});
+		
 		// console.log("SETTING UP [" + cfg.fieldName + "] / [" + uploader.settings.multipart_params.rvFieldName + "] / [" + uploader.id + "]");
 
 		uploader.bind('Error', (function(localScopedFieldName, up, err) { return function(up, err) {
@@ -310,6 +311,20 @@ $(document).ready(function() {
 				placeholderText = "Click to add file, or drag/drop onto this zone...";
 			}
 			$("#upload_browse_" + whichUploader + " span.default_text").html(placeholderText);
+			
+			var wrapper = $('#' + up.settings.multipart_params.rvFieldName + 'Item');
+			if(wrapper.length > 0 ) {
+				var input = wrapper.find('input[type="file"]');
+				if(input.length > 0) {
+					var label = wrapper.find('.words label');
+					if(label.length < 1) {
+						label = $('<label></label>');
+						wrapper.find('.words').innerWrap(label);
+					}
+					label.attr('for', input.attr('id'));
+				}
+			}
+			
 		});
 
 		uploader.init();

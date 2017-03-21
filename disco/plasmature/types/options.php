@@ -856,7 +856,9 @@ class selectType extends optionType
 		//pray($this->value);
 		$str = '<select id="'.htmlspecialchars($this->get_label_target_id()).'" name="'.$this->name.($this->multiple ? '[]' : '').'" size="'.htmlspecialchars($this->n, ENT_QUOTES).'" '.($this->multiple ? 'multiple="multiple"' : '');
 		if(!$this->is_labeled())
+		{
 			$str .= ' aria-label="'.html_attribute_escape($this->display_name).'"';
+		}
 		$str .= '>'."\n";
 		$select_count = 0;
 		if($this->add_empty_value_to_top)

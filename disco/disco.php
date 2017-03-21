@@ -1155,7 +1155,7 @@
 		{
 			if( ( count( $this->_error_required ) > 0 ) || ( count( $this->_error_messages ) > 0 ) )
 			{
-				echo '<div id="discoErrorNotice">'."\n";
+				echo '<div id="discoErrorNotice" aria-role="alert">'."\n";
 				echo '<h3 style="color:red;">'.$this->error_header_text.'</h3>'."\n";
 				// count required errors
 				echo '<ul>'."\n";
