@@ -315,8 +315,6 @@ class EventsModule extends DefaultMinisiteModule
 	 *
 	 * 'exclude_audiences' (string, comma spaced for multiple) don't show events for these audiences
 	 *
-	 * 'form_include' (path) NEEDS DESCRIPTION
-	 *
 	 * 'freetext_filters' An array of filters, each in the following format:
 	 *   array('string to filter on','fields,to,search')
 	 *   The string to filter on is interpreted as a LIKE statement.
@@ -390,7 +388,6 @@ class EventsModule extends DefaultMinisiteModule
 	 						'calendar_link_replacement' => '',
 							'default_view_min_days'=>1,
 	 						'exclude_audiences' => '',
-	 						'form_include' => 'minisite_templates/modules/event_slot_registration/event_slot_registration_form.php',
 	 						'freetext_filters' => array(),
 							'ideal_count'=>NULL,
 							'item_admin_markup' => '',
@@ -503,18 +500,7 @@ class EventsModule extends DefaultMinisiteModule
 	 * @var string html
 	 */
 	protected $_no_events_message = '';
-	
-	/**
-	 * Messages for slot registration administrators
-	 *
-	 * Do not set this on the class manually -- it is set dynamically.
-	 *
-	 * @todo come up with a better way to handle this
-	 *
-	 * @var string html
-	 */
-	protected $slot_registration_admin_messages = '';
-	
+
 	/**
 	 * Container array of form controllers for forms associated with the event
 	 * 
@@ -625,50 +611,6 @@ class EventsModule extends DefaultMinisiteModule
 		{
 			$this->get_run_output();
 		}
-	}
-
-	static function setup_supported_apis()
-	{
-		$array = debug_backtrace();
-		
-		$csv_api = new ReasonAPI(array('csv'));
-		self::add_api('csv_api', $csv_api);
-	}
-
-	/**
-	 * We run the api we setup in setup_supported_apis()
-	 * Note that we ask for the content type and set the content differently for the json and html content types.
-	 * If the content type is not 'json' or 'html', note that we run the api anyway, as it supports standard error cases.
-     * -- Added from random_number module
-	 */
-	function run_api()
-	{
-        /**
-         * Make sure user is logged in before they can access the link
-         * Make sure user has appropriate priveleges and that the download file exists
-         */
-        reason_require_authentication();    
-        $slot_array = $this->get_slot_registrants($this->event);
-		if ($slot_array['error'] != NULL){
-            if ($slot_array['error'] == '403') {
-                http_response_code(403);
-                echo '<h1>403/Forbidden</h1>';
-                echo '<p>You do not have the access required to view this CSV export.</p>';
-            } else if ($slot_array['error'] == '404') {
-                http_response_code(404);
-                echo '<h1>403/Page Not Found</h1>';
-                echo '<p>CSV export not found.</p>';
-            }
-            die();
-        }
-        $api = $this->get_api();    
-		if ($api->get_name() == 'csv_api') {
-            if ($api->get_content_type() == 'csv') {
-                $api->set_content($this->generate_csv($slot_array,$this->event));
-            }
-			$api->run();
-		}
-		else parent::run_api(); // support other apis defined by parents
 	}
 
 	/**
@@ -836,9 +778,6 @@ class EventsModule extends DefaultMinisiteModule
 			),
 			'no_search' => array(
 				'function'=>'turn_into_int',
-			),
-			'slot_id' => array(
-				'function' => 'turn_into_int',
 			),
 			'admin_view' => array(
 				'function' => 'check_against_array',
@@ -3686,40 +3625,18 @@ class EventsModule extends DefaultMinisiteModule
 						$head_items->add_head_item('meta',array( 'name' => 'keywords', 'content' => htmlspecialchars($this->event->get_value('keywords'),ENT_QUOTES,'UTF-8')));
 					}
 				}
-				
-				$this->verify_and_set_up_registration_forms();
+
+				$forms = $this->get_registration_forms($this->event);
+				if (!empty($forms))
+				{
+					if ($head_items = $this->get_head_items())
+					{
+						$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/events/event_registration_forms.css');
+					}
+				}
 			}
 		}
 	} // }}}
-	function verify_and_set_up_registration_forms()
-	{
-		$redirect = false;
-		$return_value = false;
-		if (!empty($this->event))
-		{
-			$slots = $this->get_registration_forms($this->event);
-			if(!empty($slots))
-			{
-				if ($head_items = $this->get_head_items())
-				{
-					$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/events/event_slot.css');
-				}
-				reason_include_once($this->params['form_include']);
-				if (!empty($this->request['slot_id']) && !array_key_exists($this->request['slot_id'], $slots))
-				{
-					$redirect = true;
-				}
-				$return_value = true;
-			}
-		}
-		if($redirect && !empty($this->request['slot_id']))
-		{
-			$redir = carl_make_redirect(array('slot_id' => ''));
-			header("Location: " . $redir );
-			exit;
-		}
-		return $return_value;
-	}
 	/**
 	 * Given set of events, generate ical representation, send as ical, and die
 	 *
@@ -4264,16 +4181,16 @@ class EventsModule extends DefaultMinisiteModule
 	} // }}}
 	
 	//////////////////////////////////////
-	// Registration slots
+	// Registration Forms
 	//////////////////////////////////////
 
 	/**
 	 * Get the registration forms associated with this event.
 	 * 
-	 * @param object $event entity
+	 * @param entity $event event entity
 	 * @return array registration form entities
 	 */
-	function get_registration_forms($event)
+	function get_registration_forms(entity $event)
 	{
 		$es = new entity_selector();
 		$es->description = "Getting the registration forms for this event";
@@ -4285,11 +4202,11 @@ class EventsModule extends DefaultMinisiteModule
 	}
 	
 	/**
-	 * Get the markup for the registration slots for a given event
-	 * @param object $event entity
+	 * Get the markup for the registration forms for a given event
+	 * @param entity $event event entity
 	 * @return string markup
 	 */
-	function get_registration_forms_markup($event)
+	function get_registration_forms_markup(entity $event)
 	{
 		ob_start();
 
@@ -4312,152 +4229,12 @@ class EventsModule extends DefaultMinisiteModule
 	}
 
 	/**
-	 * Redirect to empty date if the given requested date is not a date the event occurrs
-	 * @param object $event
-	 * @return void
-	 */
-	function validate_date($event)
-	{
-		$date = (isset($this->request['date'])) ? $this->request['date'] : '';
-		if (empty($date)) return false;
-		else
-		{
-			$possible_dates_str = $event->get_value('dates');
-			$possible_dates = explode(", ", $possible_dates_str);
-			if (in_array($date, $possible_dates))
-			{
-				return true;
-			}
-			else
-			{
-				header("Location: " . carl_make_redirect(array('date' => '')));
-				exit;
-			}
-		}
-		// if the value for request['date'] is missing or invalid
-	}
-	/**
-	 * Get the link to cancel registration
-	 * @param object $event event entity
-	 * @return string html-encoded link
-	 */
-	function slot_generate_cancel_link($event)
-	{
-		$link = $this->events_page_url;
-		$link .= $this->construct_link(array('event_id'=>$event->id(),'date'=>$this->request['date'],'view'=>(isset($this->request['view']) ? $this->request['view'] : '') ));
-		return $link;
-	}
-	/**
-	 * Display the markup listing registration slots
-	 * @param object $event event entity
-	 * @return void
-	 * @todo Move to a markup class
-	 */
-	function show_registration_slots($event)
-	{
-
-		//find registration slots
-		$results = $this->get_registration_forms($event);
-		
-		//display registration slots
-		if(!empty($results) && $event->get_value('registration') != 'full')
-		{
-			echo '<h3>Registration</h3>'."\n";
-			echo '<ul>'."\n";
-			foreach($results as $slot)
-			{
-				echo '<li>'."\n";
-				echo '<h4>'.$slot->get_value('name').'</h4>'."\n";
-				echo '<ul>'."\n";
-				$description = $slot->get_value('slot_description');
-				if(!empty($description))
-					echo '<li class="desc">'.$description.'</li>'."\n";
-				$temp = new Entity($slot->id()); // Code added by rabbanii
-				$spaces_available = $this->get_spaces_available($event, $temp);
-				if($spaces_available < 0)
-					$spaces_available = 0;
-				echo '<li class="spaces">Spaces Available: '.$spaces_available.'</li>'."\n";
-				if($spaces_available > 0)
-				{
-					$link_vars = array('event_id'=>$event->id(), 'date'=>$this->request['date'], 'slot_id'=>$slot->id());
-					echo '<li class="register"><a href="'.$this->construct_link($link_vars).'" title = "Register for '.htmlspecialchars($slot->get_value('name'), ENT_QUOTES).'">Register Now</a></li>'."\n";;
-				}
-				//if user is admin of slot, display admin link
-				if($this->user_is_slot_admin($event))
-				{
-					$link_vars = array('event_id'=>$event->id(), 'date'=>$this->request['date'], 'slot_id'=>$slot->id(), 'admin_view'=>'true');
-					echo '<li class="administer"><a href="'.$this->construct_link($link_vars).'" title = "Administer '.htmlspecialchars($slot->get_value('name'), ENT_QUOTES).'">Administer '.$slot->get_value('name').'</a></li>'."\n";;
-				}
-				echo '</ul>'."\n";
-				echo '</li>'."\n";
-			}
-			echo '</ul>'."\n";
-		}
-	}
-	/**
-	 * Display the markup listing possible dates for registration
-	 *
-	 * We require a specific date to be passed in order to register for an event
-	 * 
-	 * If only one date is available, redirect to that date ... otherwise show a screen that allows a date selection
-	 *
-	 * @param object $event event entity
-	 * @return void
-	 * @todo Move to a markup class
-	 */
-	function show_registration_dates($event)
-	{
-		$possible_dates = $this->get_possible_registration_dates($event);
-		if (count($possible_dates) == 1) // redirect to the date
-		{
-			$date = $possible_dates[0];
-			$link = carl_make_redirect(array('date' => $date));
-			header("Location: " . $link);
-			exit;
-		}
-		elseif(!empty($possible_dates))
-		{
-			echo '<h3>To register, please choose a date</h3>';
-			echo '<ul>';
-			foreach ($possible_dates as $the_date)
-			{
-				$link = carl_make_link(array('date' => $the_date));
-				echo '<li>';
-				echo '<a href="'. $link . '">'.prettify_mysql_datetime($the_date).'</a>';
-				echo '</li>';
-			}
-			echo '</ul>';
-		}
-	}
-	/**
-	 * Get the potential dates a user can register for for a given event
-	 *
-	 * @param object $event event entity
-	 * @return array mysql-formatted dates
-	 */
-	function get_possible_registration_dates($event)
-	{
-		$possible_dates_str = $event->get_value('dates');
-		$possible_dates = explode(", ", $possible_dates_str);
-		$cur_date = get_mysql_datetime();
-		$time_frag = substr($event->get_value('datetime'), 10);
-		foreach ($possible_dates as $k=>$v)
-		{
-			$working_date = $v . $time_frag;
-			if ($cur_date > $working_date)
-			{
-				unset($possible_dates[$k]);
-			}
-		}
-		return $possible_dates;
-	}
-	/**
 	 * Get a Thor Form Controller
 	 * 
-	 * @param object $form a form entity
+	 * @param entity $form form entity
 	 * @return ThorFormController controller that hasn't been inited
 	 */
-	function get_ticket_form_controller($form)
+	function get_ticket_form_controller(entity $form)
 	{
 		$formId = $form->id();
 		if (empty($this->ticket_form_controllers[$formId])) {
@@ -4486,11 +4263,10 @@ class EventsModule extends DefaultMinisiteModule
 	/**
 	 * Display the registration form
 	 *
-	 * @param object $event event entity
+	 * @param entity $form form entity
 	 * @return void
-	 * @todo Move to a markup class
 	 */
-	function show_registration_form($form)
+	function show_registration_form(entity $form)
 	{
 		if (array_key_exists('event_id', $this->request)) {
 			$eventIdInRequest = $this->request['event_id'];
@@ -4541,221 +4317,31 @@ HTML;
 			echo $html;
 		}
 	}
-	/**
-	 * Display the registration admin view
-	 *
-	 * @param object $event event entity
-	 * @return void
-	 * @todo Move to a markup class
-	 */
-	function show_slot_registration_admin_view($event)
-	{
-		$slot_array = $this->get_slot_registrants($event);
-		if ($slot_array['error'] != NULL){
-            if ($slot_array['error'] == '403') {
-                http_response_code(403);
-                echo '<h1>403/Forbidden</h1>';
-                echo '<p>You do not have the access required to view this CSV export.</p>';
-            } else if ($slot_array['error'] == '404') {
-                http_response_code(404);
-                echo '<h1>403/Page Not Found</h1>';
-                echo '<p>CSV export not found.</p>';
-            }
-            die();
-        }
-		$slot = $slot_array['slot'];
-		$all_registrants = explode(';',$slot_array['registrants']);
 
-    	echo '<h3>Administrative Info for '.$slot->get_value('name').'</h3>'."\n";
-		echo '<div class="admin">'."\n";
-		echo '<ul>'."\n";
-		// CHANGED LINE
-		$slot_description = $slot->get_value('slot_description');
-		if(!empty($slot_description))
-			echo '<li><strong>Description: </strong>'.$slot->get_value('slot_description').'</li>'."\n";
-		echo '<li><strong>Spaces Available: </strong>'.$this->get_spaces_available($event, $slot).'</li>'."\n";
-		echo '<li><strong>Capacity: </strong>'.$slot->get_value('registration_slot_capacity').'</li>'."\n";
-		echo '</ul>'."\n";
-		// $all_registrants = explode(';', $slot->get_value('registrant_data'));
-		$registrants = $this->get_registrants_for_this_date($all_registrants);
-		if (count($registrants) > 0)
-		{
-			echo '<div id="registrant_data">'."\n";
-			echo '<h4>Current Registrants: </h4>'."\n";
-			echo '<ul>'."\n";
-			/* echo '<tr>'."\n".'<th id="name" scope="col">Name</th>'."\n".
-				 '<th id="email" scope="col">Email Address</th>'."\n".
-				 '<th id="date_registered" scope="col">Date Registered</th>'."\n".
-				 '<th id="delete_registrant" scope="col">Action</th>'."\n".
-				 '</tr>'."\n"; */
-			ksort($registrants);
-			$thisrow = 'odd';
-			foreach($registrants as $registrant)
-			{
-				$registrant_pieces = explode('|', $registrant);
-				echo '<li class='.$thisrow.'>'."\n";	
-				echo '<strong>'.htmlspecialchars($registrant_pieces[1], ENT_QUOTES).'</strong> <span class="divider">|</span> '."\n";
-				echo '<span class="email">'.htmlspecialchars($registrant_pieces[2], ENT_QUOTES).'</span> <span class="divider">|</span> ';
-				echo '<span class="date">Registered '.date('m/d/Y', $registrant_pieces[3]).'</span> <span class="divider">|</span> ';
-				$link_vars = array('event_id'=>$event->id(), 'date'=>$this->request['date'], 'slot_id'=>$slot->get_value('id'), 'admin_view'=>'true', 'delete_registrant'=>md5($registrant));
-				echo '<span class="action"><a href="'.$this->construct_link($link_vars).'" title = "Delete '.htmlspecialchars($registrant_pieces[1], ENT_QUOTES).'">Delete this registrant</a></span>';
-				echo '</li>'."\n";
-				$thisrow = ($thisrow == 'odd') ? 'even' : 'odd';
-			}
-			echo '</ul>'."\n";
-			echo '</div>';
-			echo $this->slot_registration_admin_messages;
-		}
-		else echo '<p>There are currently no registrations for this event.</p>';
-		$link = carl_make_link(array('admin_view' => '', 'slot_id' => '',));
-        $csv_link = $this->get_api_url("csv_api");
-        if (!$slot_array['registrants']) {
-            $csv_link = '';
-        }
-        
-        echo '<p><a href="'.$csv_link.'">Export as CSV</a></p>';
-		echo '<p><a href="'.$link.'">Leave administrative view</a></p>';
-		echo '</div>'."\n";
-	}
 	/**
-	 * Get the number of spaces available for a given event/slot/date
+	 * Get Event Ticket info & state from all related forms
 	 *
-	 * @param object $event event entity
-	 * @param array $slot_values with key 'registrant_data'
-	 * @param string $date
-	 * @return integer Number of spaces available in the slot
-	 */
-	function get_spaces_available($event, $slot_values, $date = '')
-	{
-		$capacity = $slot_values->get_value('registration_slot_capacity');
-		$registrant_str = $slot_values->get_value('registrant_data');
-		
-		if($event->get_value('recurrence') != 'none')
-		{
-			//if the last occurence of this event hasn't already happened, figure out which registrants registered for the next date.
-			if($event->get_value('last_occurence') >= date('Y-m-d'))
-			{
-				if(empty($registrant_str))
-				{
-					return $capacity;
-				}
-				$all_registrants = explode(';', $registrant_str);
-				$registrants = $this->get_registrants_for_this_date($all_registrants, $date);
-
-			}
-			//if the last occurence of this event has already happened, there aren't any spaces available.
-			else
-				return 0;
-		}
-		else
-		{
-			if(empty($registrant_str))
-			{
-				return $capacity;
-			}
-			$registrants = explode(';', $registrant_str);
-		}
-		return ($capacity - count($registrants));
-	}
-	/**
-	 * Get information about the Registrants for a given date
+	 * If a event hasn't received any submissions it will not appear in this array
 	 *
-	 * @param array $all_registrants array of raw registrant data
-	 * @param string $date
+	 * @param entity $event event entity
 	 * @return array
 	 */
-	function get_registrants_for_this_date($all_registrants, $date = '')
-	{
-		$date = (!empty($date)) ? $date : $this->request['date'];
-		$registrants = array();
-		foreach($all_registrants as $registrant)
-		{
-			$registrant_pieces = explode('|', $registrant);
-			$event_date = $registrant_pieces[0];
-			if($event_date == $date)					
-			{
-				//use date/time signed up and name as the key for the $registrants array
-				$registrants[$registrant_pieces[3]] = $registrant;
+	function get_ticket_info_from_form(entity $event) {
+		// find forms on this event
+		$forms = $this->get_registration_forms($event);
+		// Look for the event in related forms, though there is usually only one form
+		$eventInfo = array();
+		foreach($forms as $form) {
+			$form_controller = $this->get_ticket_form_controller($form);
+			$form_controller->init();
+			$model = $form_controller->get_model();
+			$eventInfoFromForm = $model->event_tickets_get_all_event_seat_info();
+			foreach($eventInfoFromForm as $k => $info) {
+				$eventInfo[$k] = $info;
 			}
 		}
-		return $registrants; 				
-	}
-	/**
-	 * Is the user a valid administrator for registration slots for a given event?
-	 * @param object $event event entity
-	 * @return boolean
-	 */
-	function user_is_slot_admin($event)
-	{
-		if($event->get_value('contact_username') && $event->get_value('contact_username') == reason_check_authentication())
-		{
-			return true;
-		}
-		return $this->user_can_inline_edit_event($event->id());
-	}
- 	/**
- 	 * Delete the registrant indicated in the delete_registrant request value
- 	 *
- 	 * @param object $event event entity
- 	 * @return void
- 	 * @todo check to see if delete_registrant works now
- 	 */
-	function delete_registrant($event)
-	{	
-		$slot = new Entity($this->request['slot_id']);
-		$registrants = explode(';', $slot->get_value('registrant_data'));
-		$changed = false;
-		foreach($registrants as $key=>$registrant)
-		{
-			if(md5($registrant) == $this->request['delete_registrant'])
-			{
-				$old_data[] = $registrants[$key];
-				unset($registrants[$key]);
-				$changed = true;
-			}
-		}
-		
-		if($changed)
-		{
-			$values = array ( 'registrant_data' => implode(';', $registrants));
-			
-			$update_user = $this->user_is_slot_admin($event);
-			if(empty($update_user))
-				$update_user = get_user_id('event_agent');
-			$successful_update = reason_update_entity( $this->request['slot_id'], $update_user, $values );
-			
-			if($successful_update)
-			{
-				// redirect on successful delete
-				$link = carl_make_redirect(array('delete_registrant' => ''));
-				header("Location: " . $link );
-				exit;
-			}
-			else
-			{
-				$this->slot_registration_admin_messages .=  '<h4>Sorry</h4><p>Deletion unsuccesful. The Web Services group has been notified of this error - please try again later.</p>';
-				$this->send_slot_deletion_error_message($event, print_r($old_data, true) );
-			}
-		}
-		else
-			$this->slot_registration_admin_messages .=  '<h4>Sorry</h4><p>Could not find registrant to delete - most likely they were already deleted.</p>';
 
-	}
-	/**
-	 * Email the webmaster if there is an error deleting a registrant
-	 *
-	 * @param objet $event event entity
-	 * @param array $registrant_data
-	 * @return void
-	 */
-	function send_slot_deletion_error_message($event, $registrant_data)
-	{
-		$to = WEBMASTER_EMAIL_ADDRESS;
-		$subject = 'Slot registration deletion error';
-		$body = "There was an error deleting a registrant for ".$event->get_value('name').'.'."\n\n";
-		$body .= "The following person was not successfully deleted\n\n";
-		$body .= $registrant_data . "\n";
-		mail($to,$subject,$body,'From: '.WEBMASTER_EMAIL_ADDRESS);
+		return $eventInfo;
 	}
 	
 	//////////////////////////////////////
@@ -4819,109 +4405,5 @@ HTML;
 	public function get_current_site_id()
 	{
 		return $this->site_id;
-	}
-
-	/**
-	 * Description of this method
-	 * @param $event entity
-	 * @return array of form: ['error' => '404' or '403', 'slot' => slot_entity, 'registrants' => array containing registrant information ]
-	 */
-	public function get_slot_registrants($event) {
-
-        $error = NULL;
-        
-        /**
-         * Valid Slot Id Check
-         */
-        if (isset($this->request['slot_id'])) {
-            $slot_id = $this->request['slot_id'];        
-            $slot = new Entity($this->request['slot_id']);
-        }            
-        else {
-            http_response_code(404);
-            echo "<h1>404/Page Not Found</h1>";
-            die();
-        }
-		
-        /**
-		 * Sanity Checking Before Outputing Data
-		 */
-		if ($slot->get_value('type') != id_of('registration_slot_type'))
-			$error = '404';
-		// check to see if slot is of the correct event 
-		if (!$slot->has_right_relation_with_entity($event->id()))
-			$error = '404';
-		// check to see if user is admin for slot 
-		if (!$this->user_is_slot_admin($event))
-			$error = '403';
-		if ($error != NULL)
-			return array('error' => $error );
-		else
-			return array('error' => $error,'slot' => $slot,'registrants' => $registrants = $slot->get_value('registrant_data'));
-	}		
-
-	/**
-	 * Returns an output buffer containing a csv file
-	 * @return output buffer containing csv file 
-	 * @param takes in an array of form [slot (entity), registrants (array)]
-	 */
-	function generate_csv($slot_array,$event)
-	{
-        $registrants = $slot_array['registrants'];           
-		$registrants = explode(';',$registrants);
-        $slot_name = sanitize_filename_for_web_hosting($slot_array['slot']->get_value('name'));   
-        $event_name = sanitize_filename_for_web_hosting(strip_tags($event->get_value('name')));
-        $date = date('Y-m-d');
-        $filename = $event_name.'-'.$slot_name.'-export-'.$date.'.csv';
-        
-        header('Content-Encoding: UTF-8');
-        header("content-type:application/csv;charset=UTF-8");
-        header('Content-Disposition: attachment; filename='.$filename);
-        
-        ob_start();
-		$outputFile = fopen("php://output", 'w');
-        
-        /**
-         * Manually insert the BOM for UTF-8 in each file to ensure compatability with Microsoft Excel
-         */
-        fputs( $outputFile, "\xEF\xBB\xBF" );
-		// heading row : Date of Event| Registrant_Name | Registrant_Email | time_of_reg MDY
-		$heading = 'date_of_event|registrant_name|registrant_email|time_of_registration(MDY)';
-        fputcsv($outputFile,explode('|',$heading));
-		if (count($registrants > 0)) {
-			foreach ($registrants as $registrant) {
-				$registrant = explode('|',$registrant);
-				$registrant[3] = gmdate("m/d/y, G:i:s",$registrant[3]);
-				fputcsv($outputFile,$registrant);
-			}
-           fclose($outputFile);
-        }
-    	return ob_get_clean();
-	}
-	
-	/**
-	 * Get Event Ticket info & state from all related forms
-	 * 
-	 * If a event hasn't received any submissions it will not appear in this array
-	 * 
-	 * @param Entity $event event entity
-	 * @return array
-	 */
-	function get_ticket_info_from_form($event) {
-		// find forms on this event
-		$forms = $this->get_registration_forms($event);
-		// Look for the event in related forms, though there is usually only one form
-		$eventInfo = array();
-		foreach($forms as $form) {
-			$form_controller = $this->get_ticket_form_controller($form);
-			$form_controller->init();
-			$model = $form_controller->get_model();
-			$eventInfoFromForm = $model->event_tickets_get_all_event_seat_info();
-			foreach($eventInfoFromForm as $k => $info) {
-				$eventInfo[$k] = $info;
-			}
-		}
-		
-		return $eventInfo;
 	}
 }
