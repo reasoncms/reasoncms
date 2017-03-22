@@ -107,7 +107,7 @@
 			$this->add_element('default_thumbnail', 'checkbox_no_label', 
 					array('description' => 'Generate thumbnail from full-size image'));
 					
-			$this->add_element( 'focal_point', 'reason_image_focal_point');
+			$this->add_element( 'focal_point', 'reason_image_focal_point', array('labeled'=>false));
 
 			$this->change_element_type( 'width','hidden' );
 			$this->change_element_type( 'height','hidden' );
@@ -125,8 +125,6 @@
 			$this->set_display_name( 'content', 'Long Caption' );
 			$this->set_display_name( 'datetime', 'Photo Taken' );
 			$this->set_display_name( 'author', 'Photographer' );
-			$this->set_display_name( 'default_thumbnail', '&nbsp;');
-			$this->set_display_name( 'focal_point', '&nbsp;');
 
 
 			$this->set_comments( 'name', form_comment("A name for internal reference") );
