@@ -9,3 +9,6 @@ Andrei Zmievski <andrei@php.net>
 Gene Wood <gene_wood@users.sourceforge.net>
     - bug fixes
     - security fixes
+
+Thomas Hoger <thoger@redhat.com>
+    - CA certificate checks and security fixes

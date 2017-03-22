@@ -1,6 +1,6 @@
 NAME:
 
-	Snoopy - the PHP net client v1.2.5
+	Snoopy - the PHP net client v2.0.0
 	
 SYNOPSIS:
 
@@ -58,8 +58,7 @@ DESCRIPTION:
 REQUIREMENTS:
 
 	Snoopy requires PHP with PCRE (Perl Compatible Regular Expressions),
-	which should be PHP 3.0.9 and up. For read timeout support, it requires
-	PHP 4 Beta 4 or later. Snoopy was developed and tested with PHP 3.0.12.
+	and the OpenSSL extension for fetching HTTPS requests.	
 
 CLASS METHODS:
 
@@ -121,6 +120,7 @@ CLASS VARIABLES:	(default value in parenthesis)
 	$port			the port to connect to
 	$proxy_host		the proxy host to use, if any
 	$proxy_port		the proxy port to use, if any
+					proxy can only be used for http URLs, but not https
 	$agent			the user agent to masqerade as (Snoopy v0.1)
 	$referer		referer information to pass, if any
 	$cookies		cookies to pass if any
@@ -142,6 +142,11 @@ CLASS VARIABLES:	(default value in parenthesis)
 	$status			http status of fetch
 	$temp_dir		temp directory that the webserver can write to. (/tmp)
 	$curl_path		system path to cURL binary, set to false if none
+					(this variable is ignored as of Snoopy v1.2.6)
+	$cafile			name of a file with CA certificate(s)
+	$capath			name of a correctly hashed directory with CA certificate(s)
+					if either $cafile or $capath is set, SSL certificate
+					verification is enabled
 	
 
 EXAMPLES:

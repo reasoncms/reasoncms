@@ -1,3 +1,16 @@
+RELEASE NOTE v1.2.6
+
+Snoopy no longer uses cUrl to fetch https requests, but instead uses PHP functions directly
+through the use of openssl. Be sure you have compiled PHP with --with-openssl and openssl is
+enabled in your php.ini.
+
+If either $cafile or $capath is set, SSL certificate verification is enabled. See the README.
+
+Added getResults() method, simple returning $snoopy->results property;
+
+Snoopy methods are now chainable, so for instance this is valid:
+$res = $snoopy->fetch('http://www.google.com')->getResults();
+
 RELEASE NOTE: v1.2.4
 October 22, 2008
 

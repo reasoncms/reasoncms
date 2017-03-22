@@ -1,3 +1,11 @@
+Version 2.0.0
+-------------
+
+    - remove all dependancies on cUrl, use OpenSSH for SSL connections.
+    - add SSL certificate checking
+    - add getResults() method
+    - make methods chainable
+
 Version 1.2.5
 -------------
 
