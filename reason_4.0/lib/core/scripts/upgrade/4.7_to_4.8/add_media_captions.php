@@ -17,8 +17,8 @@ class ReasonUpgrader_48_AddMediaCaptions extends reasonUpgraderDefault implement
 	{
 		return array(
 			array(
-				'left_rel' => id_of('av'),
-				'right_rel' => id_of('av_captions'),
+				'left_rel' => id_of('av', true, false),
+				'right_rel' => id_of('av_captions', true, false),
 				'rel_unique_name' => 'av_to_av_captions',
 				'details' => array(
 					'display_name' => 'Captions & Subtitles',
