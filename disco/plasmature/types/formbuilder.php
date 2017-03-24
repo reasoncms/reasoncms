@@ -33,4 +33,10 @@ class formbuilderType extends textareaType
 <?php
 
 	}
+	
+	// Not sure how to label this tool for accessibility
+	function get_label_target_id()
+	{
+		return false;
+	}
 }

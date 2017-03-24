@@ -55,7 +55,7 @@
 			echo '<div id="discoLinear">'."\n";
 		} // }}}
 		
-		function box_item_open( $label, $required, $error, $key, $use_label )
+		function box_item_open( $label, $required, $error, $key, $use_label, $label_target_id = false )
 		{
 			$id = str_replace("_", "", $key);
 			
@@ -77,10 +77,14 @@
 			$markup .= '<a name="'.$key.'_error"></a>'."\n";
 			if($use_label)
 			{
+				if(!empty($label_target_id))
+					$markup .= '<label for="'.htmlspecialchars($label_target_id).'">';
 				if(!empty($stripped_label)) 
 					$markup  .= $label.$label_punct;
 				if($required) 
 					$markup .= '*';
+				if(!empty($label_target_id))
+					$markup .= '</label>';
 			}
 			$markup .= '</span>'."\n";
 			echo $markup;	

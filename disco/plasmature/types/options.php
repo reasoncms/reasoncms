@@ -395,7 +395,8 @@ class radioType extends optionType
 	function get_display()
 	{
 		$i = 0;
-		$str = '<div id="'.$this->name.'_container" class="radioButtons">'."\n";
+		$str = '<div id="'.$this->name.'_container" class="radioButtons" role="group" aria-label=
+		"'.htmlspecialchars($this->display_name).'">'."\n";
 		if (!$this->tableless) $str .= '<table border="0" cellpadding="1" cellspacing="0">'."\n";
 		$checked = false;
 		if($this->add_empty_value_to_top)
@@ -469,11 +470,11 @@ class radioType extends optionType
 
 		if (empty($this->other_options))
 		{
-			$str .= '<input type="text" name="'.$this->name.'_other" value="'.str_replace('"', '&quot;', $other_value).'"  />';
+			$str .= '<input aria-label="'.str_replace(':','',$this->other_label).' (Enter)" type="text" name="'.$this->name.'_other" value="'.str_replace('"', '&quot;', $other_value).'"  />';
 		}
 		else
 		{
-			$str .= '<select name="'.$this->name.'_other" class="other">';
+			$str .= '<select aria-label="'.str_replace(':','',$this->other_label).' (Enter)" name="'.$this->name.'_other" class="other">';
 			foreach($this->other_options as $k => $v)
 			{
 				$selected = ($k == $other_value) ? ' selected="selected"' : '';
@@ -586,7 +587,8 @@ class checkboxgroupType extends optionType
 	}
 	function get_display()
 	{
-		$str = '<div class="checkBoxGroup">'."\n";
+		$str = '<div class="checkBoxGroup" role="group" aria-label=
+		"'.htmlspecialchars($this->display_name).'">'."\n";
 		if (!$this->tableless) $str .= '<table border="0" cellpadding="1" cellspacing="0">'."\n";
 		$i = 0;
 
@@ -852,7 +854,10 @@ class selectType extends optionType
 	function get_display()
 	{
 		//pray($this->value);
-		$str = '<select id="'.$this->name.'Element" name="'.$this->name.($this->multiple ? '[]' : '').'" size="'.htmlspecialchars($this->n, ENT_QUOTES).'" '.($this->multiple ? 'multiple="multiple"' : '').'>'."\n";
+		$str = '<select id="'.htmlspecialchars($this->get_label_target_id()).'" name="'.$this->name.($this->multiple ? '[]' : '').'" size="'.htmlspecialchars($this->n, ENT_QUOTES).'" '.($this->multiple ? 'multiple="multiple"' : '');
+		if(!$this->is_labeled())
+			$str .= ' aria-label="'.htmlspecialchars($this->display_name).'"';
+		$str .= '>'."\n";
 		$select_count = 0;
 		if($this->add_empty_value_to_top)
 		{
@@ -933,6 +938,11 @@ class selectType extends optionType
 		$rv = array_filter($array,'is_array');
 	    if(count($rv)>0) return true;
 	    return false;
+	}
+	
+	function get_label_target_id()
+	{
+		return $this->name.'Element';
 	}
 }
 
@@ -1231,7 +1241,7 @@ class select_multipleType extends selectType
 		}
 		else
 		{
-			$str = '<select name="'.$this->name.'[]" multiple="multiple" size="'.$this->select_size.'">'."\n";
+			$str = '<select id="'.htmlspecialchars($this->get_label_target_id()).'" name="'.$this->name.'[]" multiple="multiple" size="'.$this->select_size.'">'."\n";
 			$select_count = 0;
 			if($this->add_empty_value_to_top)
 			{
@@ -1274,12 +1284,14 @@ class select_multipleType extends selectType
 		$str .= '>'.$val.'</option>'."\n";
 		return $str;
 	}
-	function grab_value()
+  
+  function grab_value()
 	{
 		// See checkboxgroup notes
 		$val = parent::grab_value();
 		return (NULL === $val) ? array() : $val;
 	}
+  
 	function get()
 	{
 		// See checkboxgroup notes
@@ -1287,6 +1299,13 @@ class select_multipleType extends selectType
 			return array();
 		else
 			return $this->value;
+  }
+	
+	function get_label_target_id()
+	{
+		if( $this->multiple_display_type == 'checkbox' )
+			return false;
+		return parent::get_label_target_id();
 	}
 }
 
@@ -1343,8 +1362,10 @@ class range_sliderType extends defaultType
 
 	function get_display()
 	{
-		return '<input type="range" name="'.$this->name.'" value="'.str_replace('"', '&quot;', $this->get()).'"   id="'.$this->name.'Element" min="'.$this->min.'" max="'.$this->max.'" step="'.$this->step.'" />';
+		return '<input type="range" name="'.$this->name.'" value="'.str_replace('"', '&quot;', $this->get()).'"   id="'.htmlspecialchars($this->get_label_target_id()).'" min="'.$this->min.'" max="'.$this->max.'" step="'.$this->step.'" />';
 	}
-
-
+	function get_label_target_id()
+	{
+		return $this->name.'Element';
+	}
 }
