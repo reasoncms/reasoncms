@@ -38,6 +38,7 @@ class LoginBaseModule extends DefaultMinisiteModule
 		// Array of domains that this login is allowed to redirect to (defaults to current domain)
 		'allowable_domains' => array(),
 		'login_error_message' => 'It appears your login information is not valid.  Please try again.  If problems persist, contact the Web Services Group for assistance.',
+		'msg_uname' => '',
 	);
 	public $cleanup_rules = array(
 		'username' => array( 'function' => 'turn_into_string' ),
@@ -71,7 +72,10 @@ class LoginBaseModule extends DefaultMinisiteModule
 	{
 		$head_items =& $this->parent->head_items;
 		$head_items->add_javascript(JQUERY_URL, true); // do we need to do this?
-		$head_items->add_javascript(WEB_JAVASCRIPT_PATH . 'login/focus.js');
+		if($this->params['login_mode'] == 'standalone')
+		{
+			$head_items->add_javascript(WEB_JAVASCRIPT_PATH . 'login/focus.js');
+		}
 		// Search engines should not be indexing versions of the index page with specific destinations
 		if( isset( $this->request[ 'dest_page' ] ) )
 		{
@@ -166,6 +170,8 @@ class LoginBaseModule extends DefaultMinisiteModule
 				
 				if( isset( $this->request[ 'msg_uname' ] ) )
 					$this->set_message_from_unique_name($this->request[ 'msg_uname' ]);
+				elseif( !empty($this->params[ 'msg_uname' ] ) )
+					$this->set_message_from_unique_name($this->params[ 'msg_uname' ]);
 			}
 		}
 	}

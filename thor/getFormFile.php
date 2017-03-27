@@ -87,22 +87,32 @@
 				if (!file_exists($path)) {
 					$this->error("Unable to find this file.");
 				} else {
-					header('Content-disposition: attachment; filename="' . $attachmentFilename.'"');
-					// header('Content-type: text/plain');
-					readfile($path);
+					if (trim(XSENDFILE_HEADER) !== "") {
+						// Use SendFile module: pass path to Apache to deliver file
+						// to client
+						header('Content-disposition: attachment; filename="' . $attachmentFilename . '"');
+						header("Content-type: application/octet-stream");
+						header(XSENDFILE_HEADER . " $path");
+						exit;
+					} else {
+						// Deliver file via PHP
+						header('Content-disposition: attachment; filename=' . $attachmentFilename);
+						// header('Content-type: text/plain');
+						readfile($path);
 
-					if ($this->mode == "fetch_zip") {
-						ignore_user_abort(true);
-						if (connection_aborted()) {
+						if ($this->mode == "fetch_zip") {
+							ignore_user_abort(true);
+							if (connection_aborted()) {
+								unlink($this->zipfile);
+							}
 							unlink($this->zipfile);
 						}
-						unlink($this->zipfile);
 					}
 				}
 			} else {
 				$this->error("You do not have permissions to access this file.");
 			}
-		}
+		} 
 
 		function error($s) {
 			echo '<p>'.$s.'</p>';

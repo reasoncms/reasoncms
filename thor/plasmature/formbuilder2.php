@@ -19,6 +19,8 @@ echo "TYR_INC: " . TYR_INC . "<p>";
 require_once PLASMATURE_TYPES_INC."default.php";
 include_once (XML_PARSER_INC . 'xmlparser.php');
 include_once ('translators.php');
+require_once 'reason_header.php';
+reason_include_once( 'function_libraries/event_tickets.php' );
 
 /**
  * Formbuilder2 plasmature type for disco integration
@@ -41,7 +43,8 @@ class formbuilder2Type extends textareaType
 		"checkboxgroup" => "checkboxes",
 		"optiongroup" => "dropdown",
 		"hidden" => "hidden_field",
-		"upload" => "file"
+		"upload" => "file",
+		"event_tickets" => "event_tickets"
 	);
 
 	var $optionMap = array(
@@ -73,6 +76,7 @@ class formbuilder2Type extends textareaType
 
 	function formbuilder2Type() {
 		$this->scripts = array(
+			'polyfills'   => REASON_PACKAGE_HTTP_BASE_PATH . 'formbuilder2/polyfills.js',
 			'vendorpath'   => REASON_PACKAGE_HTTP_BASE_PATH . 'formbuilder2/vendor/js/vendor.js',
 			'fbpath'       => REASON_PACKAGE_HTTP_BASE_PATH . 'formbuilder2/formbuilder.js',
 			'fbinitpath'   => REASON_PACKAGE_HTTP_BASE_PATH . 'formbuilder2/formbuilder-init.js'
@@ -89,6 +93,7 @@ class formbuilder2Type extends textareaType
 
 		$this->mainFieldTranslators = array(
 			new AttributeTranslator("label"),
+			new AttributeTranslator("prefill_key"),
 			new RestrictableAttributeTranslator("file", "file_upload_extension_restrictions", "restrict_extensions"),
 			new RestrictableAttributeTranslator("file", "file_upload_type_restrictions", "restrict_types"),
 			new RestrictableAttributeTranslator("file", "file_upload_size_restriction", "restrict_maxsize"),
@@ -97,7 +102,11 @@ class formbuilder2Type extends textareaType
 			new RestrictableAttributeTranslator("text,paragraph", "default_value", "value"),
 			new IdentityTranslator("required"),
 			new DescriptionPropagatorTranslator("hidden_field", "value"),
-			new DescriptionPropagatorTranslator("text_comment", "")
+			new DescriptionPropagatorTranslator("text_comment", ""),
+			new RestrictableAttributeTranslator("event_tickets", "event_tickets_event_id", "event_id"),
+			new RestrictableAttributeTranslator("event_tickets", "event_tickets_num_total_available", "num_total_available"),
+			new RestrictableAttributeTranslator("event_tickets", "event_tickets_max_per_person", "max_per_person"),
+			new RestrictableAttributeTranslator("event_tickets", "event_tickets_event_close_datetime", "event_close_datetime"),
 		);
 
 		$this->optionTranslators = array(
@@ -184,7 +193,12 @@ class formbuilder2Type extends textareaType
 				if ($jsonFieldName == "text_comment" && $jsonObj["label"] == "") {
 					$jsonObj["label"] = "Text Comment";
 				}
+				
 
+				// Event ticket types don't use a label, add a dummy label
+				if ($jsonFieldName == "event_tickets" && $jsonObj["label"] == "") {
+					$jsonObj["label"] = "dynamic_field_not_set_by_user_here";
+				}
 
 				if (isset($this->optionMap[$childEl->getName()])) {
 					$expectedChildNodeName = $this->optionMap[$childEl->getName()];
@@ -253,7 +267,7 @@ class formbuilder2Type extends textareaType
 
 			$emptyOrWhitespaceRegex = '/^\s*$/';
 			// echo "field type: [" . $field->field_type . "], label [" . $field->label . "]<br>";
-			if (preg_match($emptyOrWhitespaceRegex, $field->label) === 1) {
+			if (preg_match($emptyOrWhitespaceRegex, $field->label) === 1 && $field->field_type != 'event_tickets') {
 				$formErrors .= ($formErrors == "" ? "" : "<br>") . "Form field #" . ($fieldIdx+1) . " does not have a label";
 			}
 
@@ -285,7 +299,18 @@ class formbuilder2Type extends textareaType
 					}
 				}
 			}
-			
+
+			if ($field->field_type == 'event_tickets') {
+				if (!isset($field->event_tickets_event_id)) {
+					$formErrors .= ($formErrors == "" ? "" : "<br>") . "Ticket Slot (field #" . ($fieldIdx + 1) . ") does not have an event selected";
+				} else {
+					// Event ticket types don't use a label in the form builder,
+					// recheck the label on each save. The recheck every time is
+					// necessary to accomodate duplicating forms and the event element
+					$field = $this->add_event_ticket_title_to_field($field);
+				}
+			}
+
 			$fieldNode = $rootXml->addChild($this->fieldMapJtX[$field->field_type]);
 
 			foreach ($this->mainFieldTranslators as $translator) { $translator->translateAndAttachToXml($fieldNode, $field); }
@@ -313,5 +338,11 @@ class formbuilder2Type extends textareaType
 		*/
 
 		return $rootXml->asXML();
+	}
+	function add_event_ticket_title_to_field($field)
+	{
+		$label = get_pretty_ticketed_event_name($field->event_tickets_event_id);
+		$field->label = $label;
+		return $field;
 	}
 }

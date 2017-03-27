@@ -83,6 +83,10 @@
 .tablesorter, #total-results, #source-results, #page-results, #event-results, #faq-results, #news-results, #policy-results{
   margin: 20px;
 }
+.tablesorter a.edit {
+	font-size:.85em;
+	color:#666;
+}
 #analytics-about {
   margin: 20px;
 }

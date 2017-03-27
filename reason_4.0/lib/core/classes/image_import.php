@@ -91,6 +91,7 @@
 					$this->max_upload_number = $max_file_uploads;
 				}
 			}
+			$this->set_box_class('StackedBox');
 		}
 		
 		function get_available_categories($site_id)

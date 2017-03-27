@@ -1,0 +1,16 @@
+<div class='fb-edit-section-header'>File Restrictions</div>
+<div>
+	For each of these fields, no restrictions of that type if left blank. Case-insensitive.
+	<p/>
+	<b>Extensions</b><br/>
+	comma-separated list of file extensions<br/>
+    <input placeholder="Ex: 'jpg,jpeg,png'" type='text' style="width:100%" data-rv-input='model.<%= Formbuilder.options.mappings.FILE_UPLOAD_EXTENSION_RESTRICTIONS %>' />
+	<p>
+	<b>MIME Types</b><br/>
+	comma-separated list of MIME type patterns<br/>
+    <input placeholder="Ex: 'application/pdf,image/*'" type='text' style="width:100%" data-rv-input='model.<%= Formbuilder.options.mappings.FILE_UPLOAD_TYPE_RESTRICTIONS %>' />
+	<p>
+	<b>Maximum Size</b><br/>
+	Size specified with suffix. B=bytes, KB=kilobytes, MB=megabytes.<br/>
+    <input placeholder="Ex: '1MB'" type='text' style="width:100%" data-rv-input='model.<%= Formbuilder.options.mappings.FILE_UPLOAD_SIZE_RESTRICTION %>' />
+</div>

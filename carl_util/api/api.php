@@ -148,6 +148,13 @@ class CarlUtilAPI
 	}
 
 	/**
+	 * @param string identifier for ths API request (e.g. "mcla-RandomNumberModule-mloc-main_post-mpar-5e31a4cceaa1ecd49d73b921a67e1b4c")
+	 */
+	final function set_identifier($identifier) { $this->api_identifier = $identifier; }
+
+	final function get_identifier() { return $this->api_identifier; }
+
+	/**
 	 * @param string content
 	 */
 	final function set_content($content)

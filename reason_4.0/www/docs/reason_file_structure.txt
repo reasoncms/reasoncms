@@ -314,8 +314,6 @@ line.  this could probably now be changed since we have a better URL manager.  H
 and sites both use this to make sure that, upon finish/publish, URLs get updated
 
 /usr/local/webapps/apps/global_stock/php/reason3/function_libraries:
-access_log_functions.php - used for webstats RSS feed creation
-access_log_regex_builder.php - used for webstats
 asset_functions.php - display helper function for assets
 relationship_finder.php - relationship finding utility
 root_finder.php - finds root node given a page
@@ -324,7 +322,6 @@ URL_History.php - all the code for the URL History / permanent URL stuff
 url_utils.php - one function that gets the HTML output of a Reason page
 
 /usr/local/webapps/apps/global_stock/php/reason3/micro_scripts: (various scripts, some old, some still in use)
-access_log_functions.php
 IGNORE.php
 restore_last_mod_dates_4_04.php
 site_link_select.php

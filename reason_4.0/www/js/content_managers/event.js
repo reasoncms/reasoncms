@@ -22,7 +22,7 @@ function populate_calendar_preview()
 		if ($("div#event_preview").length)
 			$("div#event_preview").html('<img src="/global_stock/images/activity.gif" class="activityInd" />');
 		else
-			$("div.managerNav").after('<div id="event_preview"><img src="/global_stock/images/activity.gif" class="activityInd" /></div>');
+			$("div.managerNav").append('<div id="event_preview"><img src="/global_stock/images/activity.gif" class="activityInd" /></div>');
 		$("div#event_preview").load("/reason_package/reason_4.0/www/displayers/calendar_preview.php",
 			{
 			date: event_date,

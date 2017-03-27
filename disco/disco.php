@@ -430,6 +430,14 @@
 				'where_to'=>array(),
 		);
 		
+		/**
+		 * List of Disco element names with value prepopulation enabled
+		 * Values are sourced from $this->_request
+		 * @var array 
+		 * @access private
+		 */
+		var $_prepopulable = array();
+		
 		
 	//////////////////////////////////////////////////
 	// PUBLIC METHODS
@@ -532,6 +540,8 @@
 			$this->on_every_time();
 			$this->_run_callbacks('on_every_time');
 			
+			$this->_prepopulate();
+			
 			if ( !$this->_is_first_time() )
 			{	
 				$this->_grab_messages();
@@ -571,6 +581,99 @@
 		function on_every_time() // {{{
 		{
 		} // }}}
+		
+		/**
+		 * Set prepopulated values on Disco elements from $this->_request
+		 * Called by {@link run_load_phase}.
+		 */
+		function _prepopulate()
+		{
+			foreach($this->_prepopulable as $element_name => $prepopulation_key)
+			{
+				// Make sure we enable userland_changeable for prepopulatable elements
+				$ele = $this->get_element($element_name);
+				if (property_exists($ele, 'userland_changeable')) {
+					$ele->userland_changeable = true;
+				}
+				
+				if(isset($this->_request[$prepopulation_key]))
+				{
+					$prefill_value = $this->_request[$prepopulation_key];
+					 
+					// For radios/select menus with prefill enabled, we might need
+					// to add the prefilled option to the list of valid options
+					$this->consider_injecting_new_option($element_name, $prefill_value);
+					
+					$this->set_value($element_name, $prefill_value);
+				}
+			}
+		}
+		
+		/**
+		 * When element prepopulation is enabled, we must manually add the prefill
+		 * value to the form element for some types like Radio buttons and Select 
+		 * menus.
+		 * 
+		 * Conditions to inject an option are:
+		 *     - prepopulation must be enable on the element
+		 *     - the element must be a valid/certain type
+		 *     - the element must already have at least one option, to avoid lock-in
+		 *     - the value we're trying to add doesn't already exist
+		 * 
+		 * @param string $element_name disco element name
+		 * @param string $prefill_value the option value to consider adding
+		 * @return boolean TRUE if the option was injected, FALSE if no changes made
+		 */
+		function consider_injecting_new_option($element_name, $prefill_value)
+		{
+			// If we're running this method, there's an implicit assumtion 
+			// the field has prepopulate enabled
+			$ele = $this->get_element($element_name);
+
+			$valid_type_prefixes = "/radio|select|checkbox/";
+			$is_eligible_type = preg_match($valid_type_prefixes, $ele->type) === 1;
+			$has_alternative_options = $is_eligible_type ? count($ele->options) > 0 : false;
+			$option_would_be_new = $is_eligible_type && !in_array($prefill_value, $ele->options);
+
+			$should_inject_option = $is_eligible_type && $has_alternative_options && $option_would_be_new;
+			if ($should_inject_option) {
+				$new_options = array_merge($ele->options, array(
+					// option value => option label
+					// normally, values are htmlencoded and labels aren't, but we
+					// should encode labels here since it comes from the user
+					$prefill_value => htmlentities($prefill_value, ENT_QUOTES)
+				));
+				$ele->set_options($new_options);
+			}
+
+			return $should_inject_option;
+		}
+
+		/**
+		 * Allow an element's value to be prepopulated from a URL param
+		 * 
+		 * @param string $element_name Disco element name
+		 * @param string $prepopulation_key key to load data from $this->_request,
+		 *     default is "p_". $element_name
+		 */
+		function enable_prepopulation($element_name, $prepopulation_key = '')
+		{
+			if(empty($prepopulation_key))
+				$prepopulation_key = 'p_'.$element_name;
+			$this->_prepopulable[$element_name] = $prepopulation_key;
+		}
+		
+		/**
+		 * Disable value prepopulation
+		 * @param string $element_name Disco element name
+		 */
+		function disable_prepopulation($element_name)
+		{
+			if(isset($this->_prepopulable[$element_name]))
+			{
+				unset($this->_prepopulable[$element_name]);
+			}
+		}
 		
 		/**
 		* Grabs all data from the user.  
@@ -1115,11 +1218,14 @@
 		*/
 		function show_normal_element( $element_name , $element , &$b) // {{{
 		{
-			$b->row_open( $this->get_display_name($element_name), 
-						  $this->is_required( $element_name ), 
-						  $this->has_error( $element_name ), 
-						  $element_name, 
-						  $this->get_element_property($element_name, 'use_display_name') );
+			$b->row_open(
+						  $this->get_display_name($element_name),
+						  $this->is_required( $element_name ),
+						  $this->has_error( $element_name ),
+						  $element_name,
+						  $this->get_element_property($element_name, 'use_display_name'),
+						  $this->get_label_target_id( $element_name )
+			);
 			
 			// drop in a named anchor for error jumping
 			// echo '<a name="'.$element_name.'_error"></a>'."\n";
@@ -2393,6 +2499,16 @@
 				trigger_error('Cannot set error, as '.$element_name.' is not a recognized element or element group', WARNING);
 			}
 		} // }}}
+		
+		function get_label_target_id( $element_name )
+		{
+			if($this->_is_element($element_name))
+			{
+				$element = $this->get_element($element_name);
+				return $element->get_label_target_id();
+			}
+			return false;
+		}
 		
 	//////////////////////////////////////////////////
 	// MISC. METHODS

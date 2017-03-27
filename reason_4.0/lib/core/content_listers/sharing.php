@@ -30,6 +30,7 @@
 			$this->alias = $ass_es->add_right_relationship_field('owns', 'entity', 'name', 'site');
 			$ass_es->add_right_relationship_field('owns', 'entity', 'id', 'site_id');
 			if ($this->site_is_live()) $ass_es->add_right_relationship_field('owns', 'entity', 'state', 'site_state', 'Live');
+			$ass_es->add_field( 'relationship', 'id', 'rel_id' );
 			$this->apply_order_and_limits($ass_es);
 			$this->ass_vals = $ass_es->run_one();
 			
@@ -131,15 +132,22 @@
 		function show_admin_normal( $row , $options) // {{{
 		{
 			echo '<td align="left" class="'.$options[ 'class' ].'"><strong>';
-			$borrow_array =  array( 'cur_module' => 'DoBorrow' , 'id' => $row->id(), 'admin_token' => $this->admin_page->get_admin_token() );
-			if( !$this->select )
-				$borrow_array[ 'unborrow' ] = 1;
-			$borrow_link = $this->admin_page->make_link( $borrow_array );
-			$preview_link = $this->admin_page->make_link( array( 'cur_module' => 'Preview' , 'id' => $row->id() ) );
-			echo '<a href="' . $preview_link . '">Preview</a>';
+			echo '<a href="' . $this->make_module_link($row, 'Preview') . '">Preview</a>';
+			
 			if(reason_user_has_privs($this->admin_page->user_id, 'borrow'))
 			{
-				echo ' | <a href="' . $borrow_link . '">'. ( $this->select ? "Borrow" : "Don't Borrow" ) . '</a></strong>';
+				$borrow_array = array();
+				if( !$this->select ) $borrow_array[ 'unborrow' ] = 1;
+				$borrow_link = $this->make_module_link($row, 'DoBorrow', $borrow_array);
+				
+				echo ' | <a href="' . $borrow_link . '">'. ( $this->select ? "Borrow" : "Don't Borrow" ) . '</a>';
+				
+				
+				if ( !$this->select && reason_metadata_is_allowed_on_relationship($this->admin_page->request['rel_id'], $this->admin_page->site_id) )
+					echo ' | <a href="' . $this->make_module_link($row, 'Edit') . '">Edit Metadata</a>';
+
+				echo '</strong>';
+				
 				if (!$this->select && ($row->get_value('no_share') == 1))
 				{
 					echo '<p><strong>Note: </strong><em>Item is no longer shared by owner and cannot be borrowed again.</em></p>';
@@ -195,7 +203,3 @@
 			}
 		} // }}}
 	}
-	
-
-
-?>

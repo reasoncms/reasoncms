@@ -29,7 +29,7 @@ class ShortURL
     var $db;
     var $basedir = 'http://go.carleton.edu'; 
     var $admin = false;
-    var $admins = array( 'mryan', 'mheiman', 'jlawrenc', 'dbratland', 'tfeiler', 'janderso','trozwadowski');
+    var $admins = array( 'mryan', 'jlawrenc', 'dbratland', 'tfeiler', 'janderso','trozwadowski', 'mlauer');
     
     function ShortURL()
     {
@@ -79,7 +79,7 @@ class ShortURL
    
     function long_URL_exists( )
     {
-        $query = 'SELECT short_URL FROM redirects WHERE long_URL="' . $this->long_URL . '"';
+        $query = 'SELECT short_URL FROM redirects WHERE long_URL="' . mysql_real_escape_string($this->long_URL) . '"';
         
         $results = mysql_query( $query, $this->db );
         
@@ -97,7 +97,7 @@ class ShortURL
 
 	function get_long_URL_for_shortcut($shortcut)
 	{
-        $query = 'SELECT long_URL FROM redirects WHERE short_URL="' . $shortcut . '"';
+        $query = 'SELECT long_URL FROM redirects WHERE short_URL="' . mysql_real_escape_string($shortcut) . '"';
         
         $results = mysql_query( $query, $this->db );
         
@@ -114,7 +114,7 @@ class ShortURL
 
     function short_URL_exists()
     {
-        $query = 'SELECT short_URL FROM redirects WHERE short_URL="' . $this->temp_short_URL . '"';
+        $query = 'SELECT short_URL FROM redirects WHERE short_URL="' . mysql_real_escape_string($this->temp_short_URL) . '"';
         
         $results = mysql_query( $query, $this->db );
         
@@ -147,6 +147,9 @@ class ShortURL
         
         if( !( isset( $URL_components['scheme'] ) ) || !( isset( $URL_components['host'] ) ) )
             return false;
+        
+        if($this->admin)
+        	return true;
 
         //explode our host name on '.'s and reattach the last two with a dot in between... voila, a domain
         $domain_components = explode( '.', $URL_components['host'] );
@@ -214,11 +217,11 @@ class ShortURL
     function store_short_URL( )
     {
         $query =    'INSERT INTO redirects SET ' . 
-                    'long_URL="' . $this->long_URL . '", ' .
-                    'short_URL="' . $this->temp_short_URL . '", ' . 
+                    'long_URL="' . mysql_real_escape_string($this->long_URL) . '", ' .
+                    'short_URL="' . mysql_real_escape_string($this->temp_short_URL) . '", ' . 
                     'date_added="' . date( 'Y-m-d', time() ) . '", ' . 
-                    'created_method="' . $this->created_method . '", ' . 
-                    'created_by="' . $this->created_by . '"';
+                    'created_method="' . mysql_real_escape_string($this->created_method) . '", ' . 
+                    'created_by="' . mysql_real_escape_string($this->created_by) . '"';
         
         //echo $query . '<br />';
         
@@ -233,7 +236,7 @@ class ShortURL
     */
     function is_collision( $URL )
     {
-        $query = 'SELECT short_URL FROM redirects WHERE short_URL="' . $URL . '"';
+        $query = 'SELECT short_URL FROM redirects WHERE short_URL="' . mysql_real_escape_string($URL) . '"';
         
         $result = mysql_query( $query, $this->db )
                     or die( "Query failed : " . mysql_error());
@@ -335,7 +338,7 @@ class ShortURL
     */
     function redirect( $site )
     {
-        $query = 'SELECT long_URL FROM redirects WHERE short_URL="' . $site . '"';
+        $query = 'SELECT long_URL FROM redirects WHERE short_URL="' . mysql_real_escape_string($site) . '"';
     
         $results = mysql_query( $query, $this->db )
             or die( "Query failed : " . mysql_error());
@@ -459,8 +462,8 @@ JS;
 			if( $this->short_URL_exists() )
 			{
 				$query =    'UPDATE redirects SET ' . 
-							'long_URL="' . $this->long_URL . '" ' .
-							'WHERE short_URL="' . $this->temp_short_URL . '"';
+							'long_URL="' . mysql_real_escape_string($this->long_URL) . '" ' .
+							'WHERE short_URL="' . mysql_real_escape_string($this->temp_short_URL) . '"';
 				
 				// echo $query . '<br />';
 				
@@ -488,7 +491,7 @@ JS;
 	
 		foreach( $URLs as $URL )
 		{       
-			echo '<p>Shortened URL: <a href="' . $this->basedir . '/' . $URL . '">http://go.carleton.edu/' . $URL . '</a></p>';
+			echo '<p>Shortened URL: <a href="' . $this->basedir . '/' . urlencode($URL) . '">http://go.carleton.edu/' . htmlspecialchars($URL) . '</a></p>';
 		}
 		
 		$this->print_form();
@@ -578,7 +581,7 @@ JS;
                 
                 foreach( $URLs as $URL )
                 {
-                    echo '<p>Shortened URL: <a href="' . $this->basedir . '/' . $URL . '">http://go.carleton.edu/' . $URL . '</a></p>';
+                    echo '<p>Shortened URL: <a href="' . $this->basedir . '/' . urlencode($URL) . '">http://go.carleton.edu/' . htmlspecialchars($URL) . '</a></p>';
                 }
                 
                 $this->print_form();

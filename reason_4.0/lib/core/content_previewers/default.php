@@ -137,6 +137,7 @@
 					$es->add_type( $v[ 'relationship_b' ] );
 					$es->set_env( 'site' , $this->admin_page->site_id );
 					$es->add_right_relationship( $this->admin_page->id , $v[ 'id' ] );
+					$es->add_field( 'relationship', 'meta_id' );
 					$ass_items = $es->run_one();
 					
 					if(!empty($ass_items))
@@ -175,6 +176,9 @@
 							foreach($associated_items[$key] AS $ent )
 							{
 								echo '<li>'.$this->_get_rel_list_display_name($ent,$v['name'],'left').'</li>'."\n";
+								if ($meta_id = $ent->get_value('meta_id'))
+									echo $this->_get_metadata_display($meta_id);
+
 							}
 							echo '</ul>'."\n";
 							echo '</li>'."\n";
@@ -212,6 +216,7 @@
 					$es->set_env( 'site' , $this->admin_page->site_id );
 					$es->add_left_relationship( $this->admin_page->id , $v[ 'id' ] );
 					$es->set_env( 'restrict_site' , false );
+					$es->add_field( 'relationship', 'meta_id' );
 					$es->add_right_relationship_field( 'owns', 'entity' , 'name' , 'owner_name' );
 					$es->add_right_relationship_field( 'owns', 'entity' , 'id' , 'owner_id' );
 					$ass_items = $es->run_one();
@@ -269,6 +274,8 @@
 									//echo ' <em>(<a href="http://'.REASON_HOST.$ent->get_value('owner_base_url').'">'.$ent->get_value('owner_name').'</a>)</em>';
 									echo ' <em>('.$ent->get_value('owner_name').')</em>';
 								}
+								if ($meta_id = $ent->get_value('meta_id'))
+									echo $this->_get_metadata_display($meta_id);
 								echo '</li>'."\n";
 							}
 							echo '</ul>'."\n";
@@ -282,6 +289,24 @@
 		function _get_rel_list_display_name($entity,$rel_name,$direction)
 		{
 			return $entity->get_display_name() . ' (ID: '.$entity->id().')';
+		}
+		function _get_metadata_display($ent)
+		{
+			$metadata = new entity($ent);
+			if ($values = $metadata->get_values())
+			{
+				// Strip out the default entity fields
+				$values = array_diff_key($values, array_flip(get_fields_by_content_table('entity')));
+				
+				$html = '<ul class="metadata">'."\n";
+				foreach ($values as $key => $val)
+				{
+					if (empty($val)) continue;
+					$html .= '<li>'.$key.': '.$val.'</li>'."\n";
+				}
+				$html .= '</ul>'."\n";
+			}
+			return $html;
 		}
 		function get_left_relationships() // {{{
 		{
@@ -379,8 +404,8 @@
 		 */
 		function show_item_default( $field , $value ) // {{{
 		{
-			echo '<div class="listRow">';
-			echo '<h4 class="field"">';
+			echo '<div class="listRow" id="'.htmlspecialchars(str_replace(' ', '_', strtolower(strip_tags($field)))).'_preview_field">';
+			echo '<h4 class="field">';
 			if($lock_str = $this->_get_lock_indication_string($field))
 				echo $lock_str . '&nbsp;';
 			echo prettify_string( $field );
@@ -497,4 +522,3 @@
 		/**#@-*/
 	
 	}
-?>

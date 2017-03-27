@@ -1,0 +1,70 @@
+<div class='fb-left'>
+  <ul class='fb-tabs'>
+    <li class='active'><a data-target='#addField'><i class='fa fa-plus-circle'></i> Add new field</a></li>
+    <li><a data-target='#editField'><i class='fa fa-edit'></i> Edit field</a></li>
+  </ul>
+
+  <div class='fb-tab-content'>
+    <%= Formbuilder.templates['partials/add_field']() %>
+    <%= Formbuilder.templates['partials/edit_field']() %>
+  </div>
+
+	  <% if (false) { %>
+
+
+    <script language="Javascript">
+		var duplicateClientIdChecker;
+		var dupesFound;
+
+		function trackDupes(cid) {
+			if (duplicateClientIdChecker[cid] != null) {
+				dupesFound = true;
+				duplicateClientIdChecker[cid] = duplicateClientIdChecker[cid] + 1;
+				return true;
+			} else {
+				duplicateClientIdChecker[cid] = 1;
+				return false;
+			}
+		}
+    function debugMe() {
+      // next line hooks up debug button for reason integration
+      // var fb = window.formbuilderInstance;
+
+      console.log("----------------- MODEL START --------------------");
+			duplicateClientIdChecker = {};
+			dupesFound = false;
+      for (var i = 0 ; i < fb.mainView.collection.models.length ; i++) {
+        var currModel = fb.mainView.collection.models[i];
+        // console.log("[" + i + "] -> [" + JSON.stringify(currModel.attributes) + "] (" + currModel.cid + ")/(" + currModel.attributes.cid + ")");
+        console.log("[" + i + "] -> [" + JSON.stringify(currModel.attributes) + "] (" + currModel.attributes.cid + ")");
+
+				if (currModel.field_options != null && currModel.field_options.options != null) {
+					for (var k = 0 ; k < currModel.field_options.options.length ; k++) {
+						var currOpt = currModel.field_options.options[k];
+						trackDupes(currOpt.reasonOptionId);
+					}
+				}
+
+				trackDupes(currModel.attributes.cid);
+      }
+      console.log("----------------- MODEL END --------------------");
+
+			if (dupesFound) {
+				console.log("------- DUPES FOUND, UH OH! ------");
+				console.log (JSON.stringify(duplicateClientIdChecker));
+				console.log("------- DUPES FOUND, END ------");
+			} else {
+				console.log("------- no dupes found ------");
+			}
+
+      // fb.saveForm()
+                       // fb.isFormReadyToSave();
+
+    }
+    </script>
+
+	<p><input type="button" onClick="debugMe();" value="debug info (please ignore)">
+	<% } %>
+	<!-- marker -->
+
+</div>

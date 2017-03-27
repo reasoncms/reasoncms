@@ -61,6 +61,10 @@ class monthType extends selectType
 		}
 	}
 }
+class month_no_labelType extends monthType
+{
+	var $_labeled = false;
+}
 
 /**
  * Presents a drop-down of years.
@@ -120,6 +124,11 @@ class yearType extends numrangeType
 	 }
 }
 
+class year_no_labelType extends yearType
+{
+	var $_labeled = false;
+}
+
 /**
  * A plasmature element to represent the date/time as multiple text fields.
  * This element displays itself as multiple HTML inputs, but it is treated within plasmature and disco as a single
@@ -167,6 +176,15 @@ class textDateTimeType extends textType
 		'minute',
 		'second',
 		'ampm',
+	);
+	var $id_suffixes = array(
+		'year' => '',
+		'month' => 'mm',
+		'day' => 'dd',
+		'hour' => 'HH',
+		'minute' => 'MM',
+		'second' => 'SS',
+		'ampm' => 'ampmElement',
 	);
 	/**
 	 *  Sets the value to the current datetime if the value is empty and {@link prepopulate} is set.
@@ -346,7 +364,7 @@ class textDateTimeType extends textType
 
 	function display()
 	{
-	    if ($this->use_picker && !defined("DATE_PICKER_HEAD_ITEMS_LOADED") && !defined('_PLASMATURE_INCLUDED_DATEPICKER'))
+	    if ($this->use_picker && !defined("DATE_PICKER_HEAD_ITEMS_LOADED") && !defined('_PLASMATURE_INCLUDED_DATEPICKER') && defined('REASON_HTTP_BASE_PATH') )
 	    {
 	        /**
 	         * We specify the english datepicker .js file ... the dynamic mechanism to pick the language
@@ -364,6 +382,17 @@ class textDateTimeType extends textType
 	function get_display()
 	{
 		$str = '';
+		
+		$before = '';
+		$after = '';
+		if(count($this->use_fields) > 1)
+		{
+			$before = '<span role="group" aria-label=
+		"'.htmlspecialchars($this->display_name).'">';
+			$after = '</span>';
+		}
+		
+		$str .= $before;
 		foreach($this->use_fields as $field_name)
 		{
 			$get_val_method = 'get_'.$field_name.'_value_for_display';
@@ -377,6 +406,7 @@ class textDateTimeType extends textType
 			else
 				trigger_error($field_name.' is in $use_fields, but no display method exists for it');
 		}
+		$str .= $after;
 		return $str;
 	}
 	function get_value_for_month_display()
@@ -407,53 +437,51 @@ class textDateTimeType extends textType
 			$h = $this->hour;
 		$str .= $this->get_hour_display($h);
 	}
-	function _get_display($name, $value, $id_suffix, $separator='', $size=2,
+	function _get_display($name, $value, $separator='', $size=2,
 	    $class=null)
 	{
 	    $class = ($class)
 	        ? ' class="'.$class.'"'
 	        : '';
-	    $id = $this->name;
-	    if ($id_suffix)
-	        $id .= "-$id_suffix";
 	    $value = htmlspecialchars($value, ENT_QUOTES);
 	    return $separator.'<input type="text"'.$class.' size="'.$size.'" '.
-	        'maxlength="'.$size.'" id="'.$id.'" '.
-	        'name="'.$this->name.'['.$name.']" value="'.$value.'" />';
+	        'maxlength="'.$size.'" id="'.htmlspecialchars($this->get_field_id($name)).'" '.
+	        'name="'.$this->name.'['.$name.']" value="'.htmlspecialchars($value).'" aria-label="'.htmlspecialchars($name).' ('.htmlspecialchars($size).' digits)" />';
 	}
+	
 	function get_month_display($month_val = '')
 	{
-	    return $this->_get_display('month', $month_val, 'mm');
+	    return $this->_get_display('month', $month_val);
 	}
 	function get_day_display($day_val = '')
 	{
-	    return $this->_get_display('day', $day_val, 'dd', ' / ');
+	    return $this->_get_display('day', $day_val, ' / ');
 	}
 	function get_year_display($year_val = '')
 	{
 	    // The classes on the year display activate the JavaScript
 	    // date picker.
 	    $class = ($this->use_picker) ? 'datepicker' : null;
-		return $this->_get_display('year', $year_val, null, ' / ', 4,
+		return $this->_get_display('year', $year_val, ' / ', 4,
 		    $class);
 	}
 	function get_hour_display($hour_val = '')
 	{
-		return $this->_get_display('hour', $hour_val, 'HH',
+		return $this->_get_display('hour', $hour_val, 
 		    '<span class="datetimeAt">&nbsp;&nbsp; at ');
 	}
 	function get_minute_display($minute_val = '')
 	{
-	    return $this->_get_display('minute', $minute_val, 'MM', ' : ');
+	    return $this->_get_display('minute', $minute_val, ' : ');
 	}
 	function get_second_display($second_val = '')
 	{
-		return $this->_get_display('second', $second_val, 'SS', ' : ');
+		return $this->_get_display('second', $second_val, ' : ');
 	}
 	function get_ampm_display($ampm_val)
 	{
 		$str = ' ';
-		$str .= '<select id="'.$this->name.'ampmElement" name="'.$this->name.'[ampm]">';
+		$str .= '<select id="'.$this->name.'ampmElement" name="'.$this->name.'[ampm]" aria-label="AM or PM">';
 		$str .= '<option value="am"'.($ampm_val == 'am' ? ' selected="selected"': '').'>AM</option>';
 		$str .= '<option value="pm"'.($ampm_val == 'pm' ? ' selected="selected"': '').'>PM</option>';
 		$str .= '</select></span>';
@@ -462,6 +490,26 @@ class textDateTimeType extends textType
 	function get_cleanup_rules()
 	{
 		return array( $this->name => array( 'function' => 'turn_into_array' ));
+	}
+	function get_label_target_id()
+	{
+		if(count($this->use_fields) == 1)
+		{
+			$field = current($this->use_fields);
+			if($id = $this->get_field_id($field))
+				return $id;
+		}
+		return false;
+	}
+	function get_field_id($field)
+	{
+		if(isset($this->id_suffixes[$field]))
+		{
+			if(!empty($this->id_suffixes[$field]))
+				return $this->name.'-'.$this->id_suffixes[$field];
+			return $this->name;
+		}
+		return NULL;
 	}
  }
 
@@ -530,9 +578,10 @@ class selectMonthTextYearType extends textDateTimeType
 	function init_month_element()
 	{
 		//set up the month plasmature element
-		$this->month_element = new monthType;
+		$this->month_element = new month_no_labelType;
 		$this->month_element->set_request( $this->_request );
 		$this->month_element->set_name( $this->name.'[month]' );
+		$this->month_element->set_display_name( 'month' );
 		if(empty($this->month_args['date_format']))
 			$this->month_args['date_format'] = 'F';
 		$this->month_element->init($this->month_args);
@@ -585,8 +634,9 @@ class selectMonthYearType extends selectMonthTextYearType
 	function init_year_element()
 	{
 		//set up the year plasmature element
-		$this->year_element = new yearType;
+		$this->year_element = new year_no_labelType;
 		$this->year_element->set_request( $this->_request );
+		$this->year_element->set_display_name('year');
 		$this->year_element->set_name( $this->name.'[year]' );
 		if(empty($this->year_args['end']) || (isset($this->year_args['end']) && $this->year_args['end'] > $this->year_max))
 			$this->year_args['end'] = $this->year_max;

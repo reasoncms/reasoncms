@@ -54,4 +54,11 @@ include_once (SETTINGS_INC . 'domain_settings.php');
  * Load the package_settings for the reason_packge.
  */
 require_once( SETTINGS_INC . 'package_settings.php');
+
+/**
+ * Include Composer class autoloader, if it exists
+ */
+if (file_exists(INCLUDE_PATH . 'vendor/autoload.php')) {
+	include_once INCLUDE_PATH . 'vendor/autoload.php';
+}
 ?>

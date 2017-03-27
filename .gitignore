@@ -6,6 +6,39 @@ apache.conf
 /reason_4.0/lib/local
 /reason_4.0/www/local
 
-.idea/
+# Composer
+composer.phar
+# For now, we'll bundle the vendor directory with the repo
+#/vendor/
+
+# Commit your application's lock file http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file
+# You may choose to ignore a library lock file http://getcomposer.org/doc/02-libraries.md#lock-file
+# composer.lock
+
+tests/_output/*
+
+# ignore NetBeans IDE project folders
+nbproject/
+# ignore local node packages
+node_modules/
+
+
+# Don't track files these files. They are copied by Ansible
+# and source files live in wsg-provisioning/carleton.edu
+/pdf/fpdi/INFO
+/pdf/fpdi/filters/FilterPredictor_FPDI.php
+/pdf/fpdi/filters/FilterPredictor.php
+/pdf/fpdi/INSTALL
+/pdf/fpdi/pdf_parser.php.licensed
+
+# Ignore Carleton data-dir symlinks
+reason_4.0/www/images_local
+reason_4.0/www/sized_images_custom_local
+reason_4.0/www/sized_images_local
+reason_4.0/www/tmp_local
+
+# Ignore PHPStorm project setup files
+.idea
+
 .env
 .DS_Store
