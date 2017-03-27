@@ -1,0 +1,17 @@
+This version of magpierss is the same as the following commit on github:
+https://github.com/kellan/magpierss/tree/04d2a88b97fdba5813d01dc0d56c772d97360bb5
+
+NOTE: rss_fetch.inc was altered like so:
+
+35c35,37
+< require_once( MAGPIE_EXTLIB . 'Snoopy.class.inc');
+---
+>
+> // require_once( MAGPIE_EXTLIB . '_Snoopy.class.inc');
+> require_once( MAGPIE_EXTLIB . 'Snoopy-2.0.0' . DIR_SEP . 'Snoopy.class.php');
+100a103
+>
+156c159
+<             if ( $rss and $rss->etag and $rss->last_modified ) {
+---
+>             if ( $rss and !empty($rss->etag) and !empty($rss->last_modified) ) {

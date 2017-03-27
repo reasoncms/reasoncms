@@ -30,6 +30,11 @@ class DefaultThorForm extends DefaultForm
 {
 	var $show_submitted_data_dynamic_fields = false;
 	
+	function custom_init()
+	{
+		$this->prefill_fields();
+	}
+	
 	function run_load_phase()
 	{
 		$this->add_honeypot();
@@ -94,5 +99,57 @@ class DefaultThorForm extends DefaultForm
 			
 		}
 	}
+
+	function run_error_checks()
+	{
+		$model = $this->get_model();
+		if ($model->form_has_event_ticket_elements()) {
+			$ticket_request = $model->event_tickets_get_request();
+			$request_status = $model->event_tickets_ticket_request_is_valid($ticket_request);
+			if (!$request_status['status']) {
+				$this->set_error($request_status['disco_element_id'], $request_status['message']);
+			}
+		}
+	}
+	 
+	/**
+	 * Get form fields where value prepopulation was enabled
+	 * 
+	 * @return array array of fields to enable prepopulation;
+	 *     array keys are thor element names, values are the
+	 *     urldecoded strings Disco should find 
+	 *     in the request array
+	 */
+	function fields_to_prepopulate_from_url()
+	{
+		$model = $this->get_model();
+		$form =& $model->get_form_entity();
+
+		$thor_content = $form->get_value('thor_content');
+		$thor_xml = simplexml_load_string($thor_content);
+		
+		$fields = array();
+		if ($thor_xml instanceof SimpleXMLElement) {
+			$elements_with_prefill_key = $thor_xml->xpath("*[not(@prefill_key='')]");
+			foreach ($elements_with_prefill_key as $ele) {
+				$thorColId = (string) $ele['id'];
+				$request_key = (string) $ele['prefill_key'];
+				$fields[$thorColId] = $request_key;
+			}
+		}
+
+		return $fields;
+	}
+
+	/**
+	 * Enable form prefilling for select form fields from URL params
+	 */
+	function prefill_fields()
+	{
+		foreach ($this->fields_to_prepopulate_from_url() as $element_name => $prepopulate_key) {
+			$this->enable_prepopulation($element_name, $prepopulate_key);
+		}
+	}
 }
+
 ?>

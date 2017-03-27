@@ -140,10 +140,10 @@ class DefaultFeatureView extends FeatureView
 			$head_items->add_javascript(JQUERY_URL, true);
 			if ($this->has_av)
 			{
-				$head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH."nyroModal/js/jquery.nyroModal-1.6.2.min.js");
+				$head_items->add_javascript($this->absolutify_url_if_needed(REASON_PACKAGE_HTTP_BASE_PATH."nyroModal/js/jquery.nyroModal-1.6.2.min.js"));
 			}
-			$head_items->add_javascript(REASON_HTTP_BASE_PATH . 'js/feature.js');
-			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH . 'css/features/feature_responsive.css');
+			$head_items->add_javascript($this->absolutify_url_if_needed(REASON_HTTP_BASE_PATH . 'js/feature.js'));
+			$head_items->add_stylesheet($this->absolutify_url_if_needed(REASON_HTTP_BASE_PATH . 'css/features/feature_responsive.css'));
 			$head_items->add_head_item("style",array("type"=>"text/css"),"
 			.featuresModule$this->custom_class { max-width: ".$width."px; }
 			$this->custom_class .features { padding-bottom:" . round($height/$width*100, 5) . "%; }
@@ -395,9 +395,9 @@ class DefaultFeatureView extends FeatureView
 
 		if($has_anchor)
 		{
-			$image_anchor_start = "<a href=\"".$view_data['destination_url']."\" class=\"dest\">"; //style=\"height:".$height."px;\">";
+			$image_anchor_start = "<a href=\"".$this->absolutify_url_if_needed($view_data['destination_url'])."\" class=\"dest\">"; //style=\"height:".$height."px;\">";
 			$image_anchor_end="</a>";
-			$anchor_start="<a href=\"".$view_data['destination_url']."\" class=\"dest\">";
+			$anchor_start="<a href=\"".$this->absolutify_url_if_needed($view_data['destination_url'])."\" class=\"dest\">";
 			$anchor_end="</a>";
 		}
 

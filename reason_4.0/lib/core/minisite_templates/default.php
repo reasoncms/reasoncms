@@ -816,7 +816,6 @@ class MinisiteTemplate
 	function load_modules() // {{{
 	{
 		$page_type = $this->get_page_type();
-
 		if (extension_loaded('newrelic')) {
 			newrelic_name_transaction($page_type->get_name());
 		}
@@ -858,6 +857,9 @@ class MinisiteTemplate
 						// dh - I really want to get rid of this.  For now, it stays.  However, I'm adding a number
 						// of other parameters that a module will take by default so that we can rely on some important
 						// data coming in.  9/15/04
+						
+						// tfeiler: as of 2016-03-04, parent is in use by at least one
+						// module-- the "module_group" module uses it to get at the "clean_external_vars" function.
 						$args[ 'parent' ] =& $this; // pass this object to the module
 						$args[ 'page_id' ] = $this->page_id;
 						$args[ 'site_id' ] = $this->site_id;
@@ -1109,7 +1111,7 @@ class MinisiteTemplate
 
 	function get_title ()
 	{
-		if ( $this->is_minisite_home_page() && !$this->is_item_page() )
+		if ( $this->is_minisite_home_page() )
 			$pattern = 'home';
 		elseif ( $this->is_secondary_page() )
 			$pattern = 'secondary';
@@ -1489,7 +1491,7 @@ class MinisiteTemplate
 
 	function show_main_content_tabled() // {{{
 	{
-		if ($this->has_content( 'main_head' ) || $this->has_content( 'main' ) || $this->has_content( 'main_post' ) || $this->has_content( 'main_post_2' ) || $this->has_content( 'main_post_3') || $this->has_content( 'main_post_4') || $this->has_content( 'main_post_5') )
+		if ($this->has_content( 'main_head' ) || $this->has_content( 'main' ) || $this->has_content( 'main_post' ) || $this->has_content( 'main_post_2' ) || $this->has_content( 'main_post_3') || $this->has_content( 'main_post_4') || $this->has_content( 'main_post_5') ) 
 		{
 			echo '<td valign="top" class="contentTD">'."\n";
 			echo '<div class="content"><a name="content"></a>'."\n";
@@ -1530,13 +1532,13 @@ class MinisiteTemplate
 			$this->run_section( 'main_post_3' );
 			echo '</div>'."\n";
 		}
-		if ($this->has_content( 'main_post_4' ))
+		if ($this->has_content( 'main_post_4' )) 
 		{
 			echo '<div class="contentPost4">'."\n";
 			$this->run_section( 'main_post_4' );
 			echo '</div>'."\n";
 		}
-		if ($this->has_content( 'main_post_5' ))
+		if ($this->has_content( 'main_post_5' )) 
 		{
 			echo '<div class="contentPost5">'."\n";
 			$this->run_section( 'main_post_5' );

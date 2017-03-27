@@ -1,0 +1,9 @@
+<div>
+  <p>
+    Tickets for <%= Formbuilder.eventTickets.getEventName(rf.get(Formbuilder.options.mappings.EVENT_TICKETS_EVENT_ID)) %>
+  </p>
+  Event ID:                       <%= rf.get(Formbuilder.options.mappings.EVENT_TICKETS_EVENT_ID) %><br>
+  Total tickets for event:        <%= rf.get(Formbuilder.options.mappings.EVENT_TICKETS_NUM_TOTAL_AVAILABLE) || 'unlimited' %><br>
+  Max tickets per submission:     <%= rf.get(Formbuilder.options.mappings.EVENT_TICKETS_MAX_PER_PERSON) || '1' %><br>
+  Ticket sales close at:          <%= rf.get(Formbuilder.options.mappings.EVENT_TICKETS_EVENT_CLOSE_DATETIME) || '1hr before event' %>
+</div>

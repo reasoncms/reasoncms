@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+<head>
+  <title>Form Builder</title>
+  <meta name="description" content="">
+  <link rel="stylesheet" href="vendor/css/vendor.css" />
+  <link rel="stylesheet" href="dist/formbuilder.css" />
+  <style>
+  * {
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+
+  body {
+    background-color: #444;
+    font-family: sans-serif;
+  }
+
+  .fb-main {
+    background-color: #fff;
+    border-radius: 5px;
+    min-height: 600px;
+  }
+
+  input[type=text] {
+    height: 26px;
+    margin-bottom: 3px;
+  }
+
+  select {
+    margin-bottom: 5px;
+    font-size: 16px;
+  }
+  </style>
+</head>
+<body>
+  <div class='fb-main'></div>
+
+  <script src="vendor/js/vendor-standalone.js"></script>
+  <script src="dist/formbuilder.js"></script>
+  <script src="formbuilder-config.js"></script>
+
+  <script>
+    $(function(){
+      fb = new Formbuilder({
+        selector: '.fb-main',
+        bootstrapData: [{"label":"Please enter your clearance number","field_type":"text","required":true,"field_options":{},"cid":"c6"},{"label":"Security personnel #82?","field_type":"radio","required":true,"field_options":{"options":[{"label":"Yes","reasonOptionId":7,"checked":false},{"label":"No","checked":false}],"include_other_option":true},"cid":"c10"},{"label":"Medical history","field_type":"file","required":true,"field_options":{},"cid":"c14", "file_upload_extension_restrictions": "txt"}]
+        // bootstrapData: []
+      });
+
+      fb.on('save', function(payload){
+        console.log(payload);
+      })
+    });
+  </script>
+
+</body>
+</html>

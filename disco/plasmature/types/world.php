@@ -143,6 +143,7 @@ class stateType extends selectType
 	 * @var boolean
 	 */
 	var $include_territories = false;
+	protected $_divider_count = 0;
 	/**
 	 *  Populates the {@link options} array.
 	 */
@@ -264,7 +265,6 @@ class state_provinceType extends stateType
 	var $use_not_in_usa_option = true;
 	var $sort_options = false;
 	var $add_empty_value_to_top = true;
-	protected $_divider_count = 0;
 	function load_options( $args = array())
 	{
 		$this->load_states();

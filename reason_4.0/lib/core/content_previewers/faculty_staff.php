@@ -55,7 +55,7 @@
 		} // }}}
 		function make_email_link($email) //{{{
 		{
-			return ('<a href="mailto:'.$email.'>'.$email.'</a>');
+			return ('<a href="mailto:'.urlencode($email).'">'.htmlspecialchars($email).'</a>');
 		} // }}}
 	}
 ?>

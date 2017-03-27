@@ -49,7 +49,7 @@ class SelectTemplate extends FormStep
 		{
 			$templates[$format] = $info['name'];
 		}
-		$this->add_element('templateChooser', 'radio_inline', array('options' => $templates, 'display_name' => 'Template'));
+		$this->add_element('templateChooser', 'radio_inline', array('options' => $templates, 'display_name' => 'Template', 'sort_options' => false));
 		$this->add_required('templateChooser');
 	}
 	

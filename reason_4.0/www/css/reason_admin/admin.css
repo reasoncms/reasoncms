@@ -363,6 +363,27 @@ div#guide div.recent ul li.item1 {
 div#guide div.recent a.more {
 	font-style:italic;
 }
+div#siteIntro #announcements {
+	margin-bottom:2em;
+}
+div#siteIntro #announcements .explanation {
+	font-size:.9em;
+	color:#777;
+	padding:.5em 1em;
+	background:#eee;
+	margin:0;
+}
+div#siteIntro #announcements .announcement {
+	padding:1em;
+	background:#fcf7b5;
+	border-top:1px solid #fff;
+}
+div#siteIntro #announcements .announcement>*:first-child {
+	margin-top:0;
+}
+div#siteIntro #announcements .announcement>*:last-child {
+	margin-bottom:0;
+}
 div#siteIntro div#siteNotices {
 	float:right;
 	width:33%;
@@ -625,14 +646,16 @@ div.addlActions a {
 	white-space: nowrap;
 }
 
-a.stopPosing {
+a.stopPosing, a.startPosing {
 	font-size:0.9em;
 	padding:5px 5px 3px 5px;
 	background:#607db2;
 	border-top:1px solid #8097c1;
 	border-bottom:1px solid #586d94;
 	text-decoration:none;
-	margin-right:1em;
+}
+strong.logoutLink {
+	margin-left:1.5em;
 }
 
 .id {
@@ -909,7 +932,7 @@ div#allRels tr.odd td {
 div#allRels tr.even td {
 	background-color:#F0F5FF;
 }
-.editor #discoTable tr.nonVisibleRow {
+.editor #discoTable tr.nonVisibleRow, .editor #discoLinear .formElement.nonVisibleRow {
 	display:block;
     position:absolute;
     left:-9999px;

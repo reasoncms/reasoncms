@@ -88,9 +88,22 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 		{
 			$this->markup_string .= $this->get_filter_message_markup();
 		}
+
+		if (!empty($this->passed_vars['current_issue'])) {
+			$this->markup_string .= $this->get_issue_description_markup();
+		}
 		
 		//show any featured items
 		$this->markup_string .= $this->get_featured_items_markup();
+	}
+
+	function get_issue_description_markup() {
+		$issueDescription = $this->passed_vars['current_issue']->get_value('description');
+		if (!empty($issueDescription)) {
+			return "<div id='issueDescription'>" . $issueDescription . "</div>";
+		} else {
+			return "";
+		}
 	}
 	
 	function get_post_list_markup()

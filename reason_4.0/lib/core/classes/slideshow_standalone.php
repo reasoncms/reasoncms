@@ -13,6 +13,7 @@
 
 	class SlideshowStandalone {
 		private $images;
+		private $customCaptions;
 		private $params;
 		private $maxWidth;
 		private $maxHeight;
@@ -59,6 +60,7 @@
 			$this->echoHeadItems = $probeHead == null ? true : false;
 			
 			$this->images = Array();
+			$this->customCaptions = Array();
 		}
 
 		function setImages($images) {
@@ -331,6 +333,11 @@
 			$this->headItems->add_head_item('style', array('type' => 'text/css', 'charset' => 'utf-8'), $boxCss, array('before' => '<!--[if !IE 7]><!-->', 'after' => '<!-- <![endif]-->'));
 		}
 
+		// an array of image id's to custom captions
+		function setCustomCaptions($captions) {
+			$this->customCaptions = $captions;	
+		}
+
 		/**
 		 * Returns an array of image info for the given images.
 		 * @param string $crop Crop style for the reason sized image. May be either 'fill' or 'fit'
@@ -358,6 +365,10 @@
 					$imgWidth = $rsi->get_image_width();
 				} else {
 					$imgUrl = reason_get_image_url($image);
+				}
+
+				if (isset($this->customCaptions[$image->id()])) {
+					$imgDescription = $this->customCaptions[$image->id()];
 				}
 
 				$imageInfo[] = array('description' => $imgDescription, 'content' => $imgContent, 'author' => $imgAuthor, 'height' => $imgHeight, 'width' => $imgWidth, 'url' => $imgUrl);

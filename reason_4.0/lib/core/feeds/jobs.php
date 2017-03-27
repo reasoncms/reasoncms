@@ -15,7 +15,15 @@ class jobsFeed extends pageTreeFeed
 {
 	var $page_types = array('jobs','jobs_faculty', 'jobs_student',);
 	var $query_string = 'job_id';
-	
+	/**
+	 * We want jobs to be indexed by search engines, so we turn off the robots http header
+	 */
+	function get_robots_http_header()
+	{
+		if($this->site_specific	&& $this->site->get_value('site_state')	== 'Not	Live')
+			return 'none';
+		return '';
+	}	
 	function alter_feed()
 	{
 		$this->feed->set_item_field_map('title','name');

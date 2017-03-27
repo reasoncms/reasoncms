@@ -16,7 +16,7 @@ var datepickerCallbacks = {
 	"dateset": {},
 	"redraw": {},
 	"domcreate": {},
-	"dombuttoncreate": {},
+	"dombuttoncreate": {}
 };
 
 var addDatepickerCallback = function(dpId, dpEvent, fxn) {
@@ -72,10 +72,11 @@ $(document).ready( function() {
         dayElementID    = yearElementID + "-dd";
         monthElementID  = yearElementID + "-mm";
 
-        dateObj = [];
+        var dateObj = {};
         dateObj[yearElementID]   = "%Y";
         dateObj[dayElementID]    = "%d";
         dateObj[monthElementID]  = "%m";
+
         opts = {
                 formElements:       dateObj,
                 statusFormat:       "%l, %d%S %F %Y",

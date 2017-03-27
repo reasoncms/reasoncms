@@ -283,6 +283,7 @@
 									   'page_id' => array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => true)),
 									   'type_id'=> array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => true)),
 									   'rel_id' => array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => true)),
+									   'row_rel_id' => array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => true)),
 									   'id' => array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => true)),
 									   'open' => array('function' => 'check_against_regexp', 'extra_args' => array('/^[0-9,]*$/')),
 									   'lister' => array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => true)),
@@ -327,7 +328,7 @@
 			 */
 			function _consult_and_save_session_state()
 			{
-				$context_vars = array('site_id', 'type_id', 'id', 'user_id', 'cur_module', 'rel_id', '__old_site_id', '__old_type_id', '__old_id', '__old_rel_id', '__old_cur_module', '__old_user_id');
+				$context_vars = array('site_id', 'type_id', 'id', 'user_id', 'cur_module', 'rel_id', 'row_rel_id','__old_site_id', '__old_type_id', '__old_id', '__old_rel_id', '__old_cur_module', '__old_user_id');
 				$ignore_vars = array('open','new_entity','refresh_lister_state');
 
 				$context_string = $this->get_lister_id($context_vars, $this->request);
