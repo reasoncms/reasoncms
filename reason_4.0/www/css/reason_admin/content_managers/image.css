@@ -1,4 +1,4 @@
-#imageRow a.upload {
+#imageItem a.upload {
 	font-size:1.2em;
 	display:inline-block;
 	padding:0.4em 0.6em;
@@ -12,7 +12,7 @@
 	color:#222;
 	margin-right:8px;
 }
-tr#imageRow td, tr#thumbnailRow td, tr#descriptionRow td {
+#imageItem, #thumbnailItem, #descriptionItem {
 	border-top:1px solid #ddd;
 	padding-top:10px;
 }

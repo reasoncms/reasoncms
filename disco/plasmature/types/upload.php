@@ -797,11 +797,23 @@ class uploadType extends defaultType
 		}
 		
 		$upload = '<div class="file_upload">';
+		$label_id = '';
 		if ($label) {
-			$upload .= '<span class="smallText">'.$label."</span><br />";
+			$label_id = $this->get_id().'AddReplaceDesc';
+			$upload .= '<span class="smallText" id="'.htmlspecialchars($label_id).'">'.$label."</span><br />";
 		}
-		$upload .= '<input type="file" name="'.$this->name.'" /></div>';
+		$upload .= '<input type="file" name="'.htmlspecialchars($this->name).'" id="'.htmlspecialchars($this->get_id()).'" ';
+		if(!empty($label_id))
+			$upload .= 'aria-describedby="'.htmlspecialchars($label_id).'" ';
+		if(!$this->is_labeled())
+			$upload .= 'aria-label="'.htmlspecialchars($this->display_name).'" ';
+		$upload .= '/></div>';
 		return $upload;
+	}
+	
+	function get_label_target_id()
+	{
+		return $this->get_id();
 	}
 }
 

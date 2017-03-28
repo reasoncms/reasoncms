@@ -106,10 +106,11 @@ function convert_to_png($orig)
  * @param $max_size maximum size (in megapixels) for the resulting image
  * @param $dimension_timeout seconds to wait to determine dimensions default 10
  * @param $convert_timeout seconds to wait for conversion to complete default 15
+ * @param $additional_args additional flags to pass to the conversion command
  *
  * @return the path of the converted file, or false if rasterization fails
  */
-function rasterize_pdf($path, $format, $max_size = 4, $dimension_timeout = 10, $convert_timeout = 15)
+function rasterize_pdf($path, $format, $max_size = 4, $dimension_timeout = 10, $convert_timeout = 15, $additional_args = Array())
 {	
 	$new_path = change_extension($path, $format);
 
@@ -151,6 +152,10 @@ function rasterize_pdf($path, $format, $max_size = 4, $dimension_timeout = 10, $
 		escapeshellarg($path.'[0]'),
 		escapeshellarg($new_path),
 		);
+
+	if (count($additional_args) > 0) {
+		array_splice($args, 1, 0, $additional_args);
+	}
 	
 	$command = implode(' ', $args);
 	$start = time();
@@ -298,10 +303,12 @@ function add_name_suffix($path, $suffix)
 * @param int $nh the new height of the image
 * @param string $source the path and file of the image to be cropped
 * @param string $dest the path and file of the cropped image
+* @param int $x the x offset from center in pixels of the crop (after resizing)
+* @param int $y the y offset from center in pixels of the crop (after resizing)
 * @return boolean true on success
 *
 */
-function crop_image($nw, $nh, $source, $dest, $sharpen=true)
+function crop_image($nw, $nh, $source, $dest, $sharpen=true, $x=0, $y=0)
 {
     if (!is_file($source) || !is_readable($source)) {
         trigger_error('cannot resize image; no file exists at the given path '.
@@ -310,7 +317,7 @@ function crop_image($nw, $nh, $source, $dest, $sharpen=true)
     }
     $perms = substr(sprintf('%o', fileperms($source)), -4);
    if (imagemagick_available()) {
-        $result = _imagemagick_crop_image($nw, $nh, $source,$dest,$sharpen);
+        $result = _imagemagick_crop_image($nw, $nh, $source, $dest, $sharpen, $x, $y);
     } else if (function_exists('imagecreatetruecolor')) {
         $result = _gd_crop_image($nw, $nh, $source, $dest, $sharpen);
     } else {
@@ -331,49 +338,24 @@ function crop_image($nw, $nh, $source, $dest, $sharpen=true)
 * See crop_image for an explanation of the parameters
 * and return value
 */
-function _imagemagick_crop_image($nw,$nh,$source,$target,$sharpen)
+function _imagemagick_crop_image($nw,$nh,$source,$target,$sharpen, $x=0, $y=0)
 {
 	$info = getimagesize($source);
 	$ow=$info[0];
 	$oh=$info[1];
-	
-	$or=$ow/$oh;
-	$nr=$nw/$nh;
-	
-	$x=0;
-	$y=0;
 
 	$resize_str="";
-	if($nw<=$nh && $or>=$nr)
-	{
-
-		$resize_str=" -resize x".$nh." ";
-
-	}
-	elseif($nw<=$nh && $or<$nr)
-	{
-		$resize_str=" -resize ".$nw."x ";
-	}
-	elseif($nw>$nh && $or<$nr)
-	{
-		$resize_str=" -resize ".$nw."x ";
-	}
-	elseif($nw>$nh && $or>$nr)
-	{
-		$resize_str=" -resize x".$nh." ";;
-	}
-	else
-	{
-		$resize_str=" -resize ".$nw."x ";
-
-	}
+    if ($ow/$oh >= $nw/$nh) {
+        $resize_str = " -resize x".$nh." ";
+    } else {
+        $resize_str=" -resize ".$nw."x ";
+    }
+	
 	$sharpen_str="";
 	if($sharpen)
 	{
 		$sharpen_str=" -sharpen 1";
 	}
-	
-	$repage=" -repage ".$nw."x".$nh;
 
 	$exec="convert ".$resize_str.$sharpen_str."-gravity Center +repage  -crop ".$nw."x".$nh."+".$x."+".$y."! ".$source."  ".$target;
 

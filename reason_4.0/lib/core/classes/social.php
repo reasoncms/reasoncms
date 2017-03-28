@@ -129,6 +129,14 @@ class ReasonSocialIntegrationHelper
 abstract class ReasonSocialIntegrator implements SocialAccountContentManager
 {
 	/**
+	 * Social integrators may be used in a context other than a standard content
+	 * manager, where some control is needed over the default element names. By
+	 * setting this value with set_element_prefix, you can use social integrators
+	 * in more flexible ways.
+	 */
+	protected $element_prefix = '';
+
+	/**
 	 * Return the account_type field from the social account entity.
 	 *
 	 * @param int
@@ -153,6 +161,24 @@ abstract class ReasonSocialIntegrator implements SocialAccountContentManager
 		$social_entity = new entity($social_entity_id);
 		$account_type = $social_entity->get_value('account_type');
 		return REASON_HTTP_BASE_PATH . 'modules/social_account/images/'.$account_type.'.png';
+	}
+	//get profile name
+	public function get_profile_link_name($social_entity_id)
+	{
+		$social_entity = new entity($social_entity_id);
+		$name = $social_entity->get_value('name');
+		return $name;
+	}
+	
+	/**
+	 * Sets the element_prefix class var.
+	 *
+	 * @param string
+	 * @return void
+	 */
+	public function set_element_prefix($prefix)
+	{
+		$this->element_prefix = $prefix;
 	}
 	
 	/**
@@ -201,6 +227,7 @@ interface SocialAccountProfileLinks
 	public function get_profile_link_icon($social_entity_id);
 	public function get_profile_link_text($social_entity_id);
 	public function get_profile_link_href($social_entity_id);
+	public function get_profile_link_name($social_entity_id);
 }
 
 /**

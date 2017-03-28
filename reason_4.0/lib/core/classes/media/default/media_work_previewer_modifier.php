@@ -34,7 +34,5 @@ class DefaultMediaWorkPreviewerModifier implements MediaWorkPreviewerModifierInt
 	{
 		$this->previewer->start_table();
 		$this->previewer->show_all_values( $this->previewer->_entity->get_values() );
-		$this->previewer->end_table();
 	}
 }
-?>

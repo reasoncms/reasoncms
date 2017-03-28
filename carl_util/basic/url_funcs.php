@@ -219,35 +219,19 @@ function on_secure_page()
  * Looks in $_SERVER for HTTP_CLIENT_IP, HTTP_X_FORWARDED_FOR,
  * HTTP_X_CLUSTER_CLIENT_IP, and REMOTE_ADDR in that order. 
  * 
- * @param boolean $skip_reserved_ips optional; when TRUE, IP addresses in the following
- *     private or reserved ranges will always return FALSE:
- *     - 0.0.0.0/8
- *     - 10.0.0.0/8
- *     - 127.0.0.1
- *     - 169.254.0.0/16
- *     - 172.16.0.0/12
- *     - 192.0.2.0/24
- *     - 192.168.0.0/16
- *     - 224.0.0.0/4
- * 
  * @link http://stackoverflow.com/a/2031935/841203
  * @link http://stackoverflow.com/questions/3003145/
  * 
  * @return mixed returns one IPv4 as a string or FALSE if
  *     a valid IP address wasn't found
  */
-function get_user_ip_address($skip_reserved_ips = false) {
+function get_user_ip_address() {
 	$headers = array(
 		'HTTP_CLIENT_IP',
 		'HTTP_X_FORWARDED_FOR',
 		'HTTP_X_CLUSTER_CLIENT_IP',
 		'REMOTE_ADDR'
 	);
-
-	$filter_flags = null;
-	if ($skip_reserved_ips) {
-		$filter_flags = array("flags" => FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE);
-	}
 	
 	foreach ($headers as $key) {
 		if (!array_key_exists($key, $_SERVER)) {
@@ -255,7 +239,7 @@ function get_user_ip_address($skip_reserved_ips = false) {
 		}
 		foreach (explode(',', $_SERVER[$key]) as $ip) {
 			$ip = trim($ip);
-			if (filter_var($ip, FILTER_VALIDATE_IP, $filter_flags) !== false) {
+			if (filter_var($ip, FILTER_VALIDATE_IP) !== false) {
 				return $ip;
 			}
 		}

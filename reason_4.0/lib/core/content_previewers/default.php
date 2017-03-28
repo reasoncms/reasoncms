@@ -78,16 +78,25 @@
 		 */
 		function run() // {{{
 		{
+			echo '<div id="preview">'."\n";
 			$this->pre_show_entity();
 			$this->display_entity();
+			$this->pre_show_relationships();
 			$this->display_relationships();
 			$this->post_show_entity();
+			echo '</div>'."\n";
 		} // }}}
 
 		/**
 		 * Meant for overloading.  Will show something before the entity is previewed
 		 */
 		function pre_show_entity() // {{{
+		{
+		} // }}}
+		/**
+		 * Meant for overloading.  Will show something between the entity fields and relationships
+		 */
+		function pre_show_relationships() // {{{
 		{
 		} // }}}
 		/**
@@ -102,9 +111,9 @@
 		 */
 		function display_entity() // {{{
 		{
-			$this->start_table();
+			echo '<div class="itemData">'."\n";
 			$this->show_all_values( $this->_entity->get_values() );
-			$this->end_table();
+			echo '</div>';
 		} // }}}
 		/**
 		 * Function called which displays relationship info about the entity
@@ -128,6 +137,7 @@
 					$es->add_type( $v[ 'relationship_b' ] );
 					$es->set_env( 'site' , $this->admin_page->site_id );
 					$es->add_right_relationship( $this->admin_page->id , $v[ 'id' ] );
+					$es->add_field( 'relationship', 'meta_id' );
 					$ass_items = $es->run_one();
 					
 					if(!empty($ass_items))
@@ -166,6 +176,9 @@
 							foreach($associated_items[$key] AS $ent )
 							{
 								echo '<li>'.$this->_get_rel_list_display_name($ent,$v['name'],'left').'</li>'."\n";
+								if ($meta_id = $ent->get_value('meta_id'))
+									echo $this->_get_metadata_display($meta_id);
+
 							}
 							echo '</ul>'."\n";
 							echo '</li>'."\n";
@@ -203,6 +216,7 @@
 					$es->set_env( 'site' , $this->admin_page->site_id );
 					$es->add_left_relationship( $this->admin_page->id , $v[ 'id' ] );
 					$es->set_env( 'restrict_site' , false );
+					$es->add_field( 'relationship', 'meta_id' );
 					$es->add_right_relationship_field( 'owns', 'entity' , 'name' , 'owner_name' );
 					$es->add_right_relationship_field( 'owns', 'entity' , 'id' , 'owner_id' );
 					$ass_items = $es->run_one();
@@ -260,6 +274,8 @@
 									//echo ' <em>(<a href="http://'.REASON_HOST.$ent->get_value('owner_base_url').'">'.$ent->get_value('owner_name').'</a>)</em>';
 									echo ' <em>('.$ent->get_value('owner_name').')</em>';
 								}
+								if ($meta_id = $ent->get_value('meta_id'))
+									echo $this->_get_metadata_display($meta_id);
 								echo '</li>'."\n";
 							}
 							echo '</ul>'."\n";
@@ -273,6 +289,24 @@
 		function _get_rel_list_display_name($entity,$rel_name,$direction)
 		{
 			return $entity->get_display_name() . ' (ID: '.$entity->id().')';
+		}
+		function _get_metadata_display($ent)
+		{
+			$metadata = new entity($ent);
+			if ($values = $metadata->get_values())
+			{
+				// Strip out the default entity fields
+				$values = array_diff_key($values, array_flip(get_fields_by_content_table('entity')));
+				
+				$html = '<ul class="metadata">'."\n";
+				foreach ($values as $key => $val)
+				{
+					if (empty($val)) continue;
+					$html .= '<li>'.$key.': '.$val.'</li>'."\n";
+				}
+				$html .= '</ul>'."\n";
+			}
+			return $html;
 		}
 		function get_left_relationships() // {{{
 		{
@@ -338,10 +372,6 @@
 		} // }}}
 		function start_table() // {{{
 		{
-			$this->_row = 1;
-			echo '<div id="preview">'."\n";
-			echo '<table class="itemData" summary="A comprehensive view of this item\'s data">'."\n";
-			echo '<tr><th class="col1">Field Name</th><th class="col2">Value</th></tr>'."\n";
 		} // }}}
 		function show_all_values( $values ) // {{{
 		{
@@ -362,8 +392,7 @@
 		} // }}}
 		function end_table() // {{{
 		{
-			echo '</table>';
-			echo '</div>'."\n";
+			trigger_error('end_table() is deprecated.');
 		} // }}}
 		
 		/**
@@ -375,19 +404,15 @@
 		 */
 		function show_item_default( $field , $value ) // {{{
 		{
-			echo '<tr>';
-			$this->_row = $this->_row%2;
-			$this->_row++;
-
-			echo '<td class="listRow' . $this->_row . ' col1">';
+			echo '<div class="listRow" id="'.htmlspecialchars(str_replace(' ', '_', strtolower(strip_tags($field)))).'_preview_field">';
+			echo '<h4 class="field">';
 			if($lock_str = $this->_get_lock_indication_string($field))
 				echo $lock_str . '&nbsp;';
 			echo prettify_string( $field );
-			if( $field != '&nbsp;' ) echo ':';
-			echo '</td>';
-			echo '<td class="listRow' . $this->_row . ' col2">' . ( ($value OR (strlen($value) > 0)) ? $value : '<em>(No value)</em>' ). '</td>';
+			echo '</h4>';
+			echo '<div class="value">' . ( ($value OR (strlen($value) > 0)) ? $value : '<em>(No value)</em>' ). '</div>';
 
-			echo '</tr>';
+			echo '</div>';
 		} // }}}
 		
 		function _get_lock_indication_string($field)
@@ -497,4 +522,3 @@
 		/**#@-*/
 	
 	}
-?>

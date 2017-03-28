@@ -5,11 +5,11 @@
 .incomplete_warning {
     color: #444;
 }
-tr#urlfragmentRow span.parent_path, tr#urlfragmentRow span.trailing_slash {
+#urlfragmentItem span.parent_path, #urlfragmentItem span.trailing_slash {
 	font-size:0.9em;
 	color:#777;
 }
-#pagetypenoteRow div.note>*:first-child, #pagetypenoteRow div.note div.callOut>*:first-child {
+#pagetypenoteItem div.note>*:first-child, #pagetypenoteItem div.note div.callOut>*:first-child {
 	margin-top:0;
 }
 h4 {

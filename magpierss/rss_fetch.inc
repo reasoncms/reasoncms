@@ -34,7 +34,7 @@ require_once( MAGPIE_DIR . 'rss_cache.inc' );
 define('MAGPIE_EXTLIB', MAGPIE_DIR . 'extlib' . DIR_SEP);
 
 // require_once( MAGPIE_EXTLIB . '_Snoopy.class.inc');
-require_once( MAGPIE_EXTLIB . 'Snoopy-1.2.5' . DIR_SEP . 'Snoopy.class.php');
+require_once( MAGPIE_EXTLIB . 'Snoopy-2.0.0' . DIR_SEP . 'Snoopy.class.php');
 
 
 /* 
@@ -156,7 +156,7 @@ function fetch_rss ($url) {
         // setup headers
         if ( $cache_status == 'STALE' ) {
             $rss = $cache->get( $cache_key );
-            if ( $rss and $rss->etag and $rss->last_modified ) {
+            if ( $rss and !empty($rss->etag) and !empty($rss->last_modified) ) {
                 $request_headers['If-None-Match'] = $rss->etag;
                 $request_headers['If-Last-Modified'] = $rss->last_modified;
             }

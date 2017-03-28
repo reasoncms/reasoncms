@@ -51,7 +51,7 @@ reason_include_once('classes/page_types.php');
 	var $calendar;
 	var $events;
 	var $events_page_types;
-	var $events_modules = array('events','events_verbose','events_academic_calendar','events_workshops','event_slot_registration','event_registration','event_signup','events_archive','athletics/athletics_schedule');
+	var $events_modules = array('events','events_verbose','events_academic_calendar','events_workshops','event_registration','event_signup','events_archive','athletics/athletics_schedule');
 	
  	function EventHelper($site_id = NULL, $page_id = NULL, $optimal_event_count = NULL, $lookahead_minutes = NULL, $cache_lifespan = NULL, $audience_limit = NULL, $category_limit = NULL)
  	{

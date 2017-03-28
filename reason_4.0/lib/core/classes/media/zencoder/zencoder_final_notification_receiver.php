@@ -79,6 +79,13 @@ if ($media_work)
 	{
 		send_email($media_work, $notification->job, 'error', $netid);
 	}
+
+	if (true == ZENCODER_UPLOAD_DIRECT_TO_S3) {
+		// if we are doing amazon stuff, now is the time we should delete the temp file!!!
+		reason_include_once('classes/s3Helper.php');
+		$s3h = new S3Helper("plupload_media_upload");
+		$numDeleted = $s3h->deleteByPrefix(($s3h->getTempDir() == "" ? "" : $s3h->getTempDir() . "/") . $media_work->id() . ".");
+	}
 }
 else
 {
@@ -111,7 +118,8 @@ function process_video($media_work, $notification, $netid)
 	// delete the temporary file from our server
 	if (strpos($media_work->get_value('tmp_file_name'), 'http') !== 0)
 	{
-		unlink(WEB_PATH.WEB_TEMP.$media_work->get_value('tmp_file_name'));
+		// unlink(WEB_PATH.WEB_TEMP.$media_work->get_value('tmp_file_name'));
+		unlink(REASON_TEMP_UPLOAD_DIR.$media_work->get_value('tmp_file_name'));
 	}
 }
 
@@ -143,7 +151,8 @@ function process_audio($media_work, $notification, $netid)
 		// delete the original file from our server
 		if (strpos($media_work->get_value('tmp_file_name'), 'http') !== 0)
 		{
-			unlink(WEB_PATH.WEB_TEMP.$media_work->get_value('tmp_file_name'));
+			// unlink(WEB_PATH.WEB_TEMP.$media_work->get_value('tmp_file_name'));
+			unlink(REASON_TEMP_UPLOAD_DIR.$media_work->get_value('tmp_file_name'));
 		}
 	}
 	elseif ($notification->job->pass_through == 'reencoding_audio')
@@ -271,8 +280,16 @@ function send_email($media_work, $data, $status, $netid)
 			}
 			$message .= 'If you continue to get this error after multiple attempts, please contact your Reason Administrator regarding this issue: '.WEBMASTER_EMAIL_ADDRESS."\n\n";
 		}
-		
-		mail($to, $subject, $message);
+                
+		$mail = new PHPMailer(true);
+		$mail->CharSet = 'utf-8';
+
+		$mail->addAddress($to);
+		$mail->setFrom(WEBMASTER_EMAIL_ADDRESS);
+		$mail->Subject = $subject;
+		$mail->Body    = $message;
+
+		$mail->send();
 	}
 }
 

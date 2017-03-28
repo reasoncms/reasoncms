@@ -1,0 +1,45 @@
+#wrapper ul.childrenList {
+	&:after {
+		display:table;
+		content:"";
+		clear:left;
+	}
+	.tnImage {
+		height:0;
+		padding:0 0 percentage(@image-height/@image-width) 0;
+		position:relative;
+		margin:0 0 10px 0;
+		img {
+			position:absolute;
+			width:100%;
+			height:100%;
+			float:none;
+		}
+	}
+	&>li {
+		float:left;
+		width:@image-width;
+		max-width:100%;
+		margin:0 20px 20px 0;
+		&>a {
+			padding:0 0 10px 0;
+			h4 {
+				padding:0 10px;
+				line-height:1.1;
+			}
+			.childDesc {
+				padding:0 10px;
+			}
+			&:hover, &:active, &:focus {
+				img {
+					opacity:.9;
+				}
+			}
+		}
+		&.jump {
+			&>a {
+				padding-right:0 !important;
+			}
+		}
+	}
+}

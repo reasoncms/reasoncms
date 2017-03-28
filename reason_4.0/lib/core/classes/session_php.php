@@ -91,7 +91,7 @@
 				$this->expires = (REASON_SESSION_TIMEOUT * 60);
 			}
 			ini_set( 'session.use_cookies', 1 ) OR trigger_error('Unable to set use_cookies ini');
-			ini_set( 'session.gc_maxlifetime', 86400 );
+			ini_set( 'session.gc_maxlifetime', $this->expires );
 			
 			foreach( $this->errors AS $err_num => $err )
 			{
