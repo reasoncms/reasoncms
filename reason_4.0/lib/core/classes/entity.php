@@ -444,6 +444,7 @@ class entity
 		}
 		elseif(isset($delegates[$delegate_path]))
 		{
+			$delegate = $delegates[$delegate_path];
 			return $delegate->get_value( $col );
 		}
 		return null;
@@ -474,7 +475,7 @@ class entity
 	 * This isn't an actual attribute of the entity, rather it is a function of the entity's type.
 	 * Gets the display_name_handler an then calls the function on the current object
 	 *
-	 * @todo remove entire display name block in 4.8
+	 * @todo remove entire display name block once they are replaced by entity delegates
 	 *
 	 * @return string display name of the object
 	 */

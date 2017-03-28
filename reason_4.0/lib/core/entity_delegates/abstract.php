@@ -10,7 +10,7 @@
  *
  * All entity delegates should inherit from this class
  */
-abstract class EntityDelegate
+abstract class entityDelegate
 {
 	/**
 	 * The entity that the delegate is linked with
