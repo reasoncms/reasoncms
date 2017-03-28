@@ -1,5 +1,6 @@
 apache.conf
 .vagrant/*
+.DS_Store
 
 # Don't track local Reason directories or symlinks
 /settings_local
