@@ -37,3 +37,20 @@ Reason CMS 4.8 Release Notes
 - Updated Snoopy in MagpieRSS to 2.0.0 - [Commit](https://github.com/reasoncms/reasoncms/commit/9fa0b060d958c4d542cbe41885e1ab8f457b9cff)
 
 ### New Settings
+ 1) REASON_DIVERT_EMAIL_TO (reason_settings)   
+   - A setting to divert email messages to a another address
+   - Defaults to off
+   - Diverted messages contain `[DIVERTED]` in subject line
+   - Applies globally for any messages sent with Tyr or Email classes
+ 2) REASON_EVENT_TICKETS_DEFAULT_CLOSE_MODIFIER (reason_settings)   
+   - A `strtotime` string that modifies the default closing time of form event ticket registration
+   - Defaults to empty string
+   - Carleton uses `-60min` to close ticket requests an hour before the event begins
+ 3) XSENDFILE_HEADER (package_settings)   
+   - A HTTP header PHP emits to instruct the webserver to deliver a file to the client at the end of the request
+   - Defaults to off/none
+   - Useful for large files and files behind authentication
+   - Used in `thor/getFormFile.php`
+   - Server modules required. More Info:
+      - Apache: https://tn123.org/mod_xsendfile/
+      - Nginx: https://www.nginx.com/resources/wiki/start/topics/examples/x-accel/
