@@ -25,8 +25,8 @@
 // Basic information about the organization
 domain_define( 'FULL_ORGANIZATION_NAME','The Full Name of the Organization' );
 domain_define( 'SHORT_ORGANIZATION_NAME', 'Short Org Name' );
-domain_define( 'ORGANIZATION_HOME_PAGE_URI', 'http://www.domain_name.domain' );
-domain_define( 'WEBMASTER_EMAIL_ADDRESS', 'webmaster@domain_name.domain' );
+domain_define( 'ORGANIZATION_HOME_PAGE_URI', 'http://www.example.com' );
+domain_define( 'WEBMASTER_EMAIL_ADDRESS', 'webmaster@example.com' );
 domain_define( 'WEBMASTER_NAME', 'Joanne Q. Webmaster' );
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
