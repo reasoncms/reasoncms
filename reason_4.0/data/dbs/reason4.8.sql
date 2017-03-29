@@ -1186,7 +1186,7 @@ CREATE TABLE `ldap_cache` (
 
 LOCK TABLES `ldap_cache` WRITE;
 /*!40000 ALTER TABLE `ldap_cache` DISABLE KEYS */;
-INSERT INTO `ldap_cache` VALUES (5,'','','0000-00-00 00:00:00',''),(75393,'admin','webmaster@domain_name.domain','2015-08-14 18:38:17','admin'),(240622,'admin','webmaster@domain_name.domain','2017-03-27 14:03:23','admin'),(241409,'admin','webmaster@domain_name.domain','2015-08-14 18:38:17','admin'),(241410,'admin','webmaster@domain_name.domain','2014-01-24 14:41:55','admin');
+INSERT INTO `ldap_cache` VALUES (5,'','','0000-00-00 00:00:00',''),(75393,'admin','webmaster@example.com','2015-08-14 18:38:17','admin'),(240622,'admin','webmaster@example.com','2017-03-27 14:03:23','admin'),(241409,'admin','webmaster@example.com','2015-08-14 18:38:17','admin'),(241410,'admin','webmaster@example.com','2014-01-24 14:41:55','admin');
 /*!40000 ALTER TABLE `ldap_cache` ENABLE KEYS */;
 UNLOCK TABLES;
 
