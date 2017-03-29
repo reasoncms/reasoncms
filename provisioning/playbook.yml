@@ -22,6 +22,7 @@
       - php5-curl
       - imagemagick
       - php5-xdebug
+      - sendmail
     notify:
     - restart apache
 
