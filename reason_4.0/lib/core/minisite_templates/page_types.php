@@ -762,22 +762,6 @@
 			'main_post' => 'event_signup',
 			'sidebar' => '',
 		),
-		'event_slot_registration' => array(
-			'main_post' => array(
-				'module' => 'events',
-				'list_item_markup' => 'minisite_templates/modules/events_markup/verbose/verbose_events_list_item.php',
-			),
-			'sidebar' => '',
-		),
-		'event_slot_registration_cache_1_hour' => array(
-			'main_post' => array(
-				'module' => 'events',
-				'list_item_markup' => 'minisite_templates/modules/events_markup/verbose/verbose_events_list_item.php',
-				'cache_lifespan' => '3600',
-				'cache_lifespan_meta' => '7400',
-			),
-			'sidebar' => '',
-		),
 		'events_with_tickets_list' => array(
 			'main_post' => array(
 				'module' => 'events_mini',
