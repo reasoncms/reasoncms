@@ -58,35 +58,54 @@
 				$this->add_to_alpha($site);
 			}
 
-			ksort( $this->alpha );
+			ksort( $this->alpha_sites );
 
 			echo '<div id="atoz">'."\n";
 			echo '<p class="alpha"><span class="jumpTo label">Jump to:</span> ';
-			foreach($this->alpha as $keyletter => $keywords )
+			foreach($this->alpha_sites as $keyletter => $keywords )
 			{
 				echo '<a href="#'.strtolower($keyletter).'">'.$keyletter.'</a> ';
 			}
 			echo '</p>'."\n";
 			echo '<ul>'."\n";
-			foreach( $this->alpha as $keyletter => $keywords )
+			foreach( $this->alpha_sites as $keyletter => $keywords )
 			{
 				ksort( $keywords );
 				echo "\t".'<li><a name="'.strtolower($keyletter).'"></a><span class="letter">'.$keyletter.'</span><ul>'."\n";
 				foreach( $keywords as $word => $sites )
 				{
-					asort( $sites );
 					echo "\t\t".'<li><strong>'.$word.':</strong>';
 					$insert_string = '';
-					foreach( $sites as $base_url=>$name )
+					$counts = array();
+					foreach( $sites as $id => $site )
 					{
-						$title_attr = '';
-						$title = $this->get_title($word, $name);
-						if(!empty($title))
-							$title_attr = ' title="'.$title.'"';
-						echo $insert_string.' <a href="'.$base_url.'"'.$title_attr.'>';
-						echo $name;
-						echo '</a>';
-						$insert_string = ',';
+						$count = 0;
+						foreach($site->get_value('az_keywords') as $key)
+						{
+							if($word == strtolower($key))
+							{
+								$count++;
+							}
+						}
+						$counts[$count][$id] = $site;	
+					}
+					//pray($counts);
+					krsort($counts);
+					//echo count($counts);
+					foreach($counts as $count => $count_sites)
+					{
+						entity_sort( $count_sites );
+						foreach($count_sites as $site)
+						{
+							$title_attr = '';
+							$title = $this->get_title($word, $site->get_value('name'));
+							if(!empty($title))
+								$title_attr = ' title="'.$title.'"';
+							echo $insert_string.' <a href="'.$site->get_value('az_url').'"'.$title_attr.'>';
+							echo $site->get_value('name');
+							echo '</a>';
+							$insert_string = ',';
+						}
 					}
 					echo '</li>'."\n";
 				}
@@ -106,17 +125,32 @@
 		{
 			if( $site->get_value( 'keywords' ) )
 			{
-				$keywords = explode( ', ',$site->get_value( 'keywords' ) ); 
+				$keywords = $this->get_keywords_array($site); 
+				$site->set_value('az_keywords', $keywords);
+				if($site->get_value('base_url'))
+					$url = $site->get_value('base_url');
+				else
+					$url = $site->get_value('url');
+				$site->set_value('az_url', $url);
+				$site->set_value('az_url', $url);
+
 				foreach( $keywords as $word )
 				{
 					$letter = strtoupper( substr( $word,0,1 ) );
-					if($site->get_value('base_url'))
-						$url = $site->get_value('base_url');
-					else
-						$url = $site->get_value('url');
-					$this->alpha[ $letter ][ strtolower( $word ) ][$url] = $site->get_value('name');
+					$this->alpha[ $letter ][ strtolower( $word ) ][$url] = $site->get_value('name'); // for backwards compatibility
+					$this->alpha_sites[ $letter ][ strtolower( $word ) ][$site->id()] = $site;
 				}
 			}
+		}
+		function get_keywords_array($site)
+		{
+			$keywords = array();
+			if( $site->get_value( 'keywords' ) )
+			{
+				$keywords = explode( ',', $site->get_value( 'keywords' ) );
+				$keywords = array_map('trim', $keywords);
+			}
+			return $keywords;
 		}
 	}
 ?>
