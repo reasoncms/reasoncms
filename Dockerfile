@@ -15,6 +15,7 @@ RUN buildDeps=" \
         libmagickwand-dev \
         libcurl4-openssl-dev \
         libtidy-dev \
+        gettext-base \
     "; \
     set -x \
     && apt-get update && apt-get install -y $buildDeps --no-install-recommends && rm -rf /var/lib/apt/lists/* \
@@ -38,27 +39,39 @@ RUN buildDeps=" \
 RUN rm /etc/apache2/sites-enabled/*
 RUN a2enmod rewrite
 
+ARG web_root_path=/var/www
+ARG reason_package_path=/var/reason_package
+ARG php_xdebug_remote_host=localhost
+ARG php_xdebug_remote_port=9000
+
+COPY . ${reason_package_path}
+WORKDIR ${reason_package_path}
+
+RUN [ -d ${web_root_path} ] || mkdir ${web_root_path}
+
+RUN ln -s ${reason_package_path}/reason_4.0/www/ ${web_root_path}/reason
+RUN ln -s ${reason_package_path}/www/ ${web_root_path}/reason_package
+RUN ln -s ${reason_package_path}/thor/ ${web_root_path}/thor
+RUN ln -s ${reason_package_path}/loki_2.0/ ${web_root_path}/loki_2.0
+RUN ln -s ${reason_package_path}/flvplayer/ ${web_root_path}/flvplayer
+RUN ln -s ${reason_package_path}/jquery/ ${web_root_path}/jquery
+RUN ln -s ${reason_package_path}/date_picker/ ${web_root_path}/date_picker
+
+COPY provisioning/php.ini /usr/local/etc/php/php.ini
+COPY provisioning/default /etc/apache2/sites-enabled/000-default.conf
+COPY provisioning/error_handler_settings.php ${reason_package_path}/settings/error_handler_settings.php
+
+RUN chown -R www-data:www-data ${web_root_path}
+RUN chown -R www-data:www-data ${reason_package_path}/reason_4.0/data/
+RUN chmod -R 0777 ${web_root_path}
+RUN chmod -R 0777 ${reason_package_path}/reason_4.0/data/
+RUN chmod -R 0644 /usr/local/etc/php/php.ini
+
 # setup command
 COPY docker/docker-entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["sh", "-c", "bin/www"]
+CMD ["apache2-foreground"]
 
 EXPOSE 80
 
-COPY . /usr/src/app
-WORKDIR /usr/src/app
-
-RUN mkdir /usr/src/root
-RUN ln -s /usr/src/app/www            /usr/src/root/reason_package
-RUN ln -s /usr/src/app/reason_4.0/www /usr/src/root/reason
-
-RUN chown www-data -R /usr/src/root/                         && \
-    chown www-data -R /usr/src/app/reason_4.0/data/csv_data/ && \
-    chown www-data -R /usr/src/app/reason_4.0/data/logs/     && \
-    chown www-data -R /usr/src/app/reason_4.0/data/assets/   && \
-    chown www-data -R /usr/src/app/reason_4.0/data/images/   && \
-    chown www-data -R /usr/src/app/reason_4.0/data/tmp/      && \
-    chown www-data -R /usr/src/app/reason_4.0/data/cache/    && \
-    chown www-data -R /usr/src/root/reason/tmp/              && \
-    chown www-data -R /usr/src/app/reason_4.0/data/geocodes/
 

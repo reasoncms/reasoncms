@@ -15,7 +15,7 @@ services:
     links:
       - db:mysql
     volumes:
-      - .:/usr/src/app
+      - .:/var/reason_package
     ports:
       - "80:80"
     restart: always
