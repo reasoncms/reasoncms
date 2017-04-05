@@ -244,9 +244,17 @@ class commentForm extends Disco
 			$akismet = new Akismet($url, $akismet_api_key);
 			$akismet->setCommentAuthor($this->get_value('author'));
 			$akismet->setCommentContent($this->get_value('comment_content'));
-			return ($akismet->isCommentSpam());
+
+			$is_spam = true; // Let Akismet tell us this isn't spam
+			try {
+				$is_spam = $akismet->isCommentSpam();
+			} catch (Exception $e) {
+				// Catch fatal Exceptions and reissue a non-fatal alert
+				trigger_error($e->getMessage());
+			}
+			return $is_spam;
 		}
-		return false;
+		return false; // If Akismet isn't present, let the comment through
 	}
 	
 	function post_show_form()
