@@ -40,3 +40,6 @@ reason_4.0/www/tmp_local
 
 # Ignore PHPStorm project setup files
 .idea
+
+.env
+.DS_Store
