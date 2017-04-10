@@ -57,15 +57,11 @@ RUN ln -s ${reason_package_path}/flvplayer/ ${web_root_path}/flvplayer
 RUN ln -s ${reason_package_path}/jquery/ ${web_root_path}/jquery
 RUN ln -s ${reason_package_path}/date_picker/ ${web_root_path}/date_picker
 
-COPY provisioning/php.ini /usr/local/etc/php/php.ini
-COPY provisioning/default /etc/apache2/sites-enabled/000-default.conf
-COPY provisioning/error_handler_settings.php ${reason_package_path}/settings/error_handler_settings.php
-
 RUN chown -R www-data:www-data ${web_root_path}
 RUN chown -R www-data:www-data ${reason_package_path}/reason_4.0/data/
 RUN chmod -R 0777 ${web_root_path}
 RUN chmod -R 0777 ${reason_package_path}/reason_4.0/data/
-RUN chmod -R 0644 /usr/local/etc/php/php.ini
+#RUN chmod -R 0644 /usr/local/etc/php/php.ini
 
 # setup command
 COPY docker/docker-entrypoint.sh /entrypoint.sh

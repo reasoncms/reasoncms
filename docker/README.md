@@ -21,9 +21,10 @@ MYSQL_DATABASE=reason
 MYSQL_USER=reason_user
 MYSQL_PASSWORD=some_password
 MYSQL_HOST=mysql
+REASON_SETTINGS_PATH=/var/reason_settings/
 ```
 
-You can change the settings above if you like.
+An example of can be dound in `docker/env.example` You can change the settings above if you like. If those settings work you can simple copy the example into the root of the repository like so" `cp docker/env.example ./.env`
 
 Now you are ready to run reason using docker:
 
