@@ -374,8 +374,15 @@ class entity
 			$this->_values = get_entity_by_id( $this->_id );
 			$this->full_fetch_performed(true);
 		}
-		if( !empty( $this->_values[ $col ]) OR (isset($this->_values[$col]) AND strlen($this->_values[ $col ]) > 0) )
-			return $this->_values[ $col ];
+
+		if (isset($this->_values[$col]))
+		{
+			$value = $this->_values[$col];
+		}
+
+		if(!empty($value)) {
+			return $value;
+		}
 		elseif(!array_key_exists($col, $this->_values))
 		{
 			// This logic aims to prevent a full fetch from being
