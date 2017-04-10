@@ -136,7 +136,7 @@
 					// check for virtual host redirects (e.g. sports.domain.edu)
 					// also ignore ip addressed hosts
 					if ( substr_count(REASON_HOST, '.') > 1
-						|| !preg_match('\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b', REASON_HOST) )
+						&& !preg_match('/\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/', REASON_HOST) )
 					{
 						//lop off virtual host parts
 						$host_array = explode('.', REASON_HOST);
