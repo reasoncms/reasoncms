@@ -30,10 +30,16 @@ RUN buildDeps=" \
     && docker-php-ext-install zip \
     && pecl install imagick \
     && docker-php-ext-enable imagick \
-  && pecl install xdebug \
-  && docker-php-ext-enable xdebug \
-  && docker-php-ext-install curl \
-  && docker-php-ext-install tidy
+    && pecl install xdebug \
+    && docker-php-ext-enable xdebug \
+    && docker-php-ext-install curl \
+    && docker-php-ext-install tidy
+
+# configure xdebug
+RUN echo "xdebug.remote_enable = 1" >> /usr/local/etc/php/conf.d/xdebug.ini \
+  && echo "xdebug.remote_autostart = 0" >> /usr/local/etc/php/conf.d/xdebug.ini \
+  && echo "xdebug.remote_connect_back = 0" >> /usr/local/etc/php/conf.d/xdebug.ini \
+  && echo "xdebug.remote_port = 9000" >> /usr/local/etc/php/conf.d/xdebug.ini
 
 # configure apache
 RUN rm /etc/apache2/sites-enabled/*
@@ -41,27 +47,24 @@ RUN a2enmod rewrite
 
 ARG web_root_path=/var/www
 ARG reason_package_path=/var/reason_package
-ARG php_xdebug_remote_host=localhost
-ARG php_xdebug_remote_port=9000
 
 COPY . ${reason_package_path}
 WORKDIR ${reason_package_path}
 
 RUN [ -d ${web_root_path} ] || mkdir ${web_root_path}
 
-RUN ln -s ${reason_package_path}/reason_4.0/www/ ${web_root_path}/reason
-RUN ln -s ${reason_package_path}/www/ ${web_root_path}/reason_package
-RUN ln -s ${reason_package_path}/thor/ ${web_root_path}/thor
-RUN ln -s ${reason_package_path}/loki_2.0/ ${web_root_path}/loki_2.0
-RUN ln -s ${reason_package_path}/flvplayer/ ${web_root_path}/flvplayer
-RUN ln -s ${reason_package_path}/jquery/ ${web_root_path}/jquery
-RUN ln -s ${reason_package_path}/date_picker/ ${web_root_path}/date_picker
+RUN ln -s ${reason_package_path}/reason_4.0/www/ ${web_root_path}/reason \
+  && ln -s ${reason_package_path}/www/ ${web_root_path}/reason_package \
+  && ln -s ${reason_package_path}/thor/ ${web_root_path}/thor \
+  && ln -s ${reason_package_path}/loki_2.0/ ${web_root_path}/loki_2.0 \
+  && ln -s ${reason_package_path}/flvplayer/ ${web_root_path}/flvplayer \
+  && ln -s ${reason_package_path}/jquery/ ${web_root_path}/jquery \
+  && ln -s ${reason_package_path}/date_picker/ ${web_root_path}/date_picker
 
-RUN chown -R www-data:www-data ${web_root_path}
-RUN chown -R www-data:www-data ${reason_package_path}/reason_4.0/data/
-RUN chmod -R 0777 ${web_root_path}
-RUN chmod -R 0777 ${reason_package_path}/reason_4.0/data/
-#RUN chmod -R 0644 /usr/local/etc/php/php.ini
+RUN chown -R www-data:www-data ${web_root_path} \
+  && chown -R www-data:www-data ${reason_package_path}/reason_4.0/data/ \
+  && chmod -R 0777 ${web_root_path} \
+  && chmod -R 0777 ${reason_package_path}/reason_4.0/data/
 
 # setup command
 COPY docker/docker-entrypoint.sh /entrypoint.sh

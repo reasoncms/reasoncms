@@ -18,8 +18,11 @@ services:
       - .:/var/reason_package
     ports:
       - "80:80"
+    expose:
+      - "9000"
     restart: always
     env_file:
       - .env
+
 volumes:
   db_data:

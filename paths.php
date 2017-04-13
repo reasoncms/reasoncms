@@ -43,7 +43,7 @@ define ('INCLUDE_PATH', dirname(__FILE__) . '/');
  * By default, the constant will be set to settings_local if such a directory exists parallel to settings
  */
 if ($settings_path = getenv('REASON_SETTINGS_PATH')) {
-	define(SETTINGS_INC, $settings_path);
+	define('SETTINGS_INC', $settings_path);
 } else {
 	define ('SETTINGS_INC',
 		(file_exists(INCLUDE_PATH . 'settings_local'))
