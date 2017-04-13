@@ -154,6 +154,47 @@ class ReasonJSON
 			$items = $this->get_items();
 			if ($this->caching()) $this->cache($items);
 		}
-		return json_encode($this->make_chunk($items));
+		$data = $this->make_chunk($items);
+		$json_data = $this->safe_json_encode($data);
+		if (!$json_data) {
+			// we have no data, encoding returned "false"
+			$error_message = json_last_error_msg();
+			switch (json_last_error()) {
+				case JSON_ERROR_NONE:
+					break;
+				default:
+					// handle any JSON encoding error message and return "Internal Server Error" with more info
+					$json_data = json_encode(array('status' => '500', 'error' => 'JSON encoding error: ' . $error_message));
+					break;
+			}
+		}
+		return $json_data;
+	}
+
+	function safe_json_encode($value)
+	{
+		$encoded = json_encode($value);
+		switch (json_last_error()) {
+			case JSON_ERROR_NONE:
+				return $encoded;
+			case JSON_ERROR_UTF8:
+				$clean = $this->utf8ize($value);
+				return $this->safe_json_encode($clean);
+			default:
+				return $encoded;
+
+		}
+	}
+
+	final function utf8ize($mixed)
+	{
+		if (is_array($mixed)) {
+			foreach ($mixed as $key => $value) {
+				$mixed[$key] = $this->utf8ize($value);
+			}
+		} else if (is_string($mixed)) {
+			return utf8_encode($mixed);
+		}
+		return $mixed;
 	}
 }
