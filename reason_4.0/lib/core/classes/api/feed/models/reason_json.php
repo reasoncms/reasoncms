@@ -21,6 +21,7 @@ class ReasonJSON
 {
 	var $requires_authentication = true;
 	var $caching_enabled = true;
+	var $response_status_code;
 
 	function get_items_selector()
 	{
@@ -155,7 +156,10 @@ class ReasonJSON
 			if ($this->caching()) $this->cache($items);
 		}
 		$data = $this->make_chunk($items);
+
 		$json_data = $this->safe_json_encode($data);
+//		$json_data = json_encode($data);
+		$this->set_response_status_code('200');
 		if (!$json_data) {
 			// we have no data, encoding returned "false"
 			$error_message = json_last_error_msg();
@@ -163,15 +167,16 @@ class ReasonJSON
 				case JSON_ERROR_NONE:
 					break;
 				default:
+					$this->set_response_status_code('500');
 					// handle any JSON encoding error message and return "Internal Server Error" with more info
-					$json_data = json_encode(array('status' => '500', 'error' => 'JSON encoding error: ' . $error_message));
+					$json_data = json_encode(array('status' => $this->get_response_status_code(), 'error' => 'JSON encoding error: ' . $error_message));
 					break;
 			}
 		}
 		return $json_data;
 	}
 
-	function safe_json_encode($value)
+	final function safe_json_encode($value)
 	{
 		$encoded = json_encode($value);
 		switch (json_last_error()) {
@@ -196,5 +201,21 @@ class ReasonJSON
 			return utf8_encode($mixed);
 		}
 		return $mixed;
+	}
+
+	/**
+	 * @param $code string that represents the response code
+	 */
+	function set_response_status_code($code)
+	{
+		$this->response_status_code = $code;
+	}
+
+	/**
+	 * @return string the response code
+	 */
+	function get_response_status_code()
+	{
+		return $this->response_status_code;
 	}
 }

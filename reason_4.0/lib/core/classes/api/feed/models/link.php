@@ -21,6 +21,8 @@ reason_include_once('function_libraries/user_functions.php');
  */
 abstract class ReasonLinksJSON extends ReasonMVCModel
 {
+	var $response_status_code = '200';
+
 	function authorized()
 	{
 		return (reason_check_authentication());
@@ -34,7 +36,24 @@ abstract class ReasonLinksJSON extends ReasonMVCModel
 			return $this->get_json();
 		}
 		else return FALSE;
-	}	
+	}
+
+	/**
+	 * @param $code string that represents the response code
+	 */
+	function set_response_status_code($code)
+	{
+		$this->response_status_code = $code;
+	}
+
+	/**
+	 * @return string the response code
+	 */
+	function get_response_status_code()
+	{
+		return $this->response_status_code;
+	}
+
 }
 
 /**

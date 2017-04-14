@@ -111,8 +111,7 @@ class ReasonFeedAPI extends CarlUtilAPI
 				{
 					$this->set_content($json);
 					// pull out the status and set it on the response
-					$decoded_json = json_decode($json, true);
-					$response_code = isset($decoded_json['status']) ? $decoded_json['status'] : '200';
+					$response_code = $model->get_response_status_code() ?:  '200';;
 					$this->set_http_response_code($response_code);
 				}
 			}
@@ -132,4 +131,6 @@ interface ReasonFeedInterface
 {
 	function authorized();
 	function get();
+	function get_response_status_code();
+	function set_response_status_code($code);
 }
