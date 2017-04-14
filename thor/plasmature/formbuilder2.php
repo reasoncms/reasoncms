@@ -44,7 +44,9 @@ class formbuilder2Type extends textareaType
 		"optiongroup" => "dropdown",
 		"hidden" => "hidden_field",
 		"upload" => "file",
-		"event_tickets" => "event_tickets"
+		"event_tickets" => "event_tickets",
+		"date" => "date",
+		"time" => "time"
 	);
 
 	var $optionMap = array(
@@ -101,6 +103,7 @@ class formbuilder2Type extends textareaType
 			new RegexTranslator("/^c(\w*)/",'id_${1}',"/^id_(\w*)/",'c${1}',"cid", "id"),
 			new RestrictableAttributeTranslator("text,paragraph", "default_value", "value"),
 			new IdentityTranslator("required"),
+			new IdentityTranslator("date_field_time_enabled"),
 			new DescriptionPropagatorTranslator("hidden_field", "value"),
 			new DescriptionPropagatorTranslator("text_comment", ""),
 			new RestrictableAttributeTranslator("event_tickets", "event_tickets_event_id", "event_id"),
