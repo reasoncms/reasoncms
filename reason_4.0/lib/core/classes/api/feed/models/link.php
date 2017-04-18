@@ -10,51 +10,8 @@
  * Include the reason libraries & setup
  */
 include_once('reason_header.php');
-reason_include_once('classes/mvc.php');
+reason_include_once('classes/api/feed/models/reason_json.php');
 reason_include_once('function_libraries/user_functions.php');
-
-
-/**
- * ReasonSiteListJSON provides a list of Reason sites.
- *
- * @author Nathan White
- */
-abstract class ReasonLinksJSON extends ReasonMVCModel
-{
-	var $response_status_code = '200';
-
-	function authorized()
-	{
-		return (reason_check_authentication());
-	}
-	
-	function build()
-	{
-		$this->configure();
-		if ($this->configured())
-		{
-			return $this->get_json();
-		}
-		else return FALSE;
-	}
-
-	/**
-	 * @param $code string that represents the response code
-	 */
-	function set_response_status_code($code)
-	{
-		$this->response_status_code = $code;
-	}
-
-	/**
-	 * @return string the response code
-	 */
-	function get_response_status_code()
-	{
-		return $this->response_status_code;
-	}
-
-}
 
 /**
  * ReasonLinkTypeListJSON provides a list of what link feeds a particular site makes available.
@@ -63,17 +20,11 @@ abstract class ReasonLinksJSON extends ReasonMVCModel
  * assets then we provide the asset feed as well.
  * 
  * @author Nathan White
+ * @author Tom Brice
  */
-class ReasonLinkTypeListJSON extends ReasonLinksJSON implements ReasonFeedInterface
+class ReasonLinkTypeListJSON extends ReasonJSON implements ReasonFeedInterface
 {
-	function configure()
-	{
-		if (!$this->config('site_id'))
-		{
-			if (isset($_GET['site_id'])) $this->config('site_id', intval($_GET['site_id']));
-		}
-	}
-	
+
 	function configured()
 	{
 		if ($site_id = $this->config('site_id'))
@@ -83,21 +34,25 @@ class ReasonLinkTypeListJSON extends ReasonLinksJSON implements ReasonFeedInterf
 		}
 		return false;
 	}
-	
-	function get_json()
+
+	protected function get_items_selector()
 	{
-		$site_id = $this->config('site_id');
-		$site = new entity($site_id);
 		$es = new entity_selector();
 		$es->add_type(id_of('asset'));
 		$es->limit_tables();
 		$es->limit_fields();
+		return $es;
+	}
+
+	protected function get_json()
+	{
 		$feeds['pages'] = 'pageList';
+		$es = $this->get_items_selector();
 		if ($results = $es->run_one())
 		{
 			$feeds['assets'] = 'assetList';
 		}
-		return json_encode($feeds);
+		return $this->encoded_json_from($feeds);
 	}
 }
 
@@ -109,19 +64,13 @@ class ReasonLinkTypeListJSON extends ReasonLinksJSON implements ReasonFeedInterf
  * - a non-live site gets the live and non-live site list.
  * - a live site gets the live site list.
  *
- * @todo implement caching (based on latest last_modified date of a site)
+ * @todo implement caching (based on latest last_modified date of a site) -see ReasonImageJSON on how to implement
  * @author Nathan White
  */
-class ReasonSiteListJSON extends ReasonLinksJSON implements ReasonFeedInterface
+class ReasonSiteListJSON extends ReasonJSON implements ReasonFeedInterface
 {
-	function configure()
-	{
-		if (!$this->config('site_id'))
-		{
-			if (isset($_GET['site_id'])) $this->config('site_id', intval($_GET['site_id']));
-		}
-	}
-	
+	private $collection_key = 'sites';
+
 	function configured()
 	{
 		if ($site_id = $this->config('site_id'))
@@ -131,11 +80,8 @@ class ReasonSiteListJSON extends ReasonLinksJSON implements ReasonFeedInterface
 		}
 		return false;
 	}
-	
-	/**
-	 * Get sites - exclude master_admin
-	 */
-	function get_json()
+
+	protected function get_items_selector()
 	{
 		$site_id = $this->config('site_id');
 		$site = new entity($site_id);
@@ -147,18 +93,28 @@ class ReasonSiteListJSON extends ReasonLinksJSON implements ReasonFeedInterface
 		$es->add_relation('( (custom_url_handler = "") OR (custom_url_handler IS NULL) )');
 		$es->set_order('name ASC');
 		if ($restrict_to_live) $es->add_relation('site_state = "Live"');
-		if ($results = $es->run_one())
-		{
-			$sites['count'] = 0;
-			foreach($results as $result)
-			{
-				$sites['sites'][] = array('name' => strip_tags($result->get_value('name')), 'id' => $result->id());
-				$sites['count']++;
-			}
-			return json_encode($sites);
-		}
-		else return json_encode(array('count' => 0, 'sites' => array()));
+
+		return $es;
 	}
+
+	protected function transform_item($item)
+	{
+		return array('name' => strip_tags($item->get_value('name')), 'id' => $item->id());
+	}
+
+	/**
+	 * Get sites - exclude master_admin
+	 */
+	protected function get_json()
+	{
+		$items = $this->get_items($this->collection_key);
+
+		$data = $this->make_chunk($items, $this->collection_key);
+
+		return $this->encoded_json_from($data);
+	}
+
+
 }
 
 /**
@@ -166,22 +122,14 @@ class ReasonSiteListJSON extends ReasonLinksJSON implements ReasonFeedInterface
  *
  * @author Nathan White
  */
-class ReasonPageListJSON extends ReasonLinksJSON implements ReasonFeedInterface
+class ReasonPageListJSON extends ReasonJSON implements ReasonFeedInterface
 {
 	function __construct()
 	{
 		reason_include_once( 'classes/object_cache.php' );
 		reason_include_once( 'minisite_templates/nav_classes/default.php' );
 	}
-	
-	function configure()
-	{
-		if (!$this->config('site_id'))
-		{
-			if (isset($_GET['site_id'])) $this->config('site_id', intval($_GET['site_id']));
-		}
-	}
-	
+
 	function configured()
 	{
 		if ($site_id = $this->config('site_id'))
@@ -191,13 +139,13 @@ class ReasonPageListJSON extends ReasonLinksJSON implements ReasonFeedInterface
 		}
 		return false;
 	}
-	
-	function get_json()
+
+	protected function get_json()
 	{
 		$pages = $this->get_pages();
 		if ($id = $pages->root_node())
 		{
-			return json_encode($this->build_pages($id));
+			return $this->encoded_json_from($this->build_pages($id));
 		}
 		else return '{}';
 	}
@@ -259,19 +207,13 @@ class ReasonPageListJSON extends ReasonLinksJSON implements ReasonFeedInterface
  * @author Nathan White
  * @author Andrew Collins
  */
-class ReasonAssetListJSON extends ReasonLinksJSON implements ReasonFeedInterface
+class ReasonAssetListJSON extends ReasonJSON implements ReasonFeedInterface
 {
+	private $collection_key = 'assets';
+
 	function __construct()
 	{
 		reason_include_once( 'function_libraries/asset_functions.php' );
-	}
-	
-	function configure()
-	{
-		if (!$this->config('site_id'))
-		{
-			if (isset($_GET['site_id'])) $this->config('site_id', intval($_GET['site_id']));
-		}
 	}
 	
 	function configured()
@@ -283,39 +225,33 @@ class ReasonAssetListJSON extends ReasonLinksJSON implements ReasonFeedInterface
 		}
 		return false;
 	}
-	
-	function get_json()
+
+	protected function transform_item($asset)
 	{
-		if ($assets = $this->get_assets())
-		{
-			$asset_list = array();
-			$asset_json['site_id'] = $this->config('site_id');
-			$site = new entity($this->config('site_id'));
-			foreach($assets as $asset)
-			{
-				array_push($asset_list, array(
-					'name' => strip_tags($asset->get_value('name')),
-					'url' => reason_get_asset_url($asset, $site),
-					'id' => strip_tags($asset->get_value('id')),
-				));
-			}
-			$asset_json['assets'] = $asset_list;
-			return json_encode($asset_json);
-		}
-		else return '{}';
+		$site = new entity($this->config('site_id'));
+		return array(
+			'name' => strip_tags($asset->get_value('name')),
+			'url' => reason_get_asset_url($asset, $site),
+			'id' => strip_tags($asset->get_value('id')),
+			);
 	}
-	
-	function get_assets()
+
+	protected function get_json()
 	{
-		if (!isset($this->_assets))
-		{
-			$es = new entity_selector($this->config('site_id'));
-			$es->add_type(id_of('asset'));
-			$es->set_order('entity.name ASC');
-			$es->limit_tables();
-			$es->limit_fields('name');
-			$this->_assets = $es->run_one();
-		}
-		return $this->_assets;
+		$assets = $this->get_items($this->collection_key);
+
+		$data = $this->make_chunk($assets, $this->collection_key);
+
+		return $this->encoded_json_from($data);
+	}
+
+	protected function get_items_selector()
+	{
+		$es = new entity_selector($this->config('site_id'));
+		$es->add_type(id_of('asset'));
+		$es->set_order('entity.name ASC');
+		$es->limit_tables();
+		$es->limit_fields('name');
+		return $es;
 	}
 }
