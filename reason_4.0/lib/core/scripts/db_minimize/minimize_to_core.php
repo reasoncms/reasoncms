@@ -51,7 +51,7 @@ h2,h3 {
 <h1>Create a core Reason instance</h1>
 <?php
 
-$core_types = array('type','content_table','site','user','admin_link','news','image','view','view_type','field','project','minisite_page','css','minisite_template','text_blurb','av','av_file','user_role','asset','publication_type','category_type','comment_type','event_type','faq_type','form','group_type','issue_type','minutes_type','news_section_type','non_reason_site_type','office_department_type','policy_type','project_type_type','registration_slot_type','site_type_type','site_user_type','theme_type','bug','faculty_staff','job','audience_type','html_editor_type');
+$core_types = array('type','content_table','site','user','admin_link','news','image','view','view_type','field','project','minisite_page','css','minisite_template','text_blurb','av','av_file','user_role','asset','publication_type','category_type','comment_type','event_type','faq_type','form','group_type','issue_type','minutes_type','news_section_type','non_reason_site_type','office_department_type','policy_type','project_type_type','site_type_type','site_user_type','theme_type','bug','faculty_staff','job','audience_type','html_editor_type');
 
 $core_user_roles = array('admin_role','contribute_only_role','power_user_role');
 

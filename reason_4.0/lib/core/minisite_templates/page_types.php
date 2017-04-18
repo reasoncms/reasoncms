@@ -336,6 +336,14 @@
 				'width' => 860,
 			),
 		),
+		'audio_video_simple_860_wide_with_author_description' => array(
+			'main_post' => array(
+				'module' => 'av_simple',
+				'width' => 860,
+				'show_descriptions' => true,
+				'show_authors' => true,
+			),
+		),
 		'audio_video_simple_sidebar' => array(
 			'sidebar' => array(
 				'module' => 'av_simple',
@@ -752,22 +760,6 @@
 		),
 		'event_signup' => array(
 			'main_post' => 'event_signup',
-			'sidebar' => '',
-		),
-		'event_slot_registration' => array(
-			'main_post' => array(
-				'module' => 'events',
-				'list_item_markup' => 'minisite_templates/modules/events_markup/verbose/verbose_events_list_item.php',
-			),
-			'sidebar' => '',
-		),
-		'event_slot_registration_cache_1_hour' => array(
-			'main_post' => array(
-				'module' => 'events',
-				'list_item_markup' => 'minisite_templates/modules/events_markup/verbose/verbose_events_list_item.php',
-				'cache_lifespan' => '3600',
-				'cache_lifespan_meta' => '7400',
-			),
 			'sidebar' => '',
 		),
 		'events_with_tickets_list' => array(
