@@ -15,6 +15,7 @@ reason_include_once( 'classes/page_types.php' );
 reason_include_once( 'classes/function_bundle.php' );
 reason_include_once( 'classes/api/api.php' );
 reason_include_once( 'classes/borrow_this.php' );
+reason_include_once( 'function_libraries/safe_json.php' );
 include_once(CARL_UTIL_INC . 'cache/object_cache.php');
 include_once( CARL_UTIL_INC . 'dir_service/directory.php' );
 include_once( CARL_UTIL_INC . 'basic/cleanup_funcs.php' );
@@ -3822,7 +3823,7 @@ class EventsModule extends DefaultMinisiteModule
 			return $values;
 		}, $events));
 
-		return json_encode($events);
+		return safe_json_encode($events);
 	}
 	/**
 	 * Output HTML for the detail view of an event
