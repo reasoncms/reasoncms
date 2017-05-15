@@ -3737,11 +3737,7 @@ class EventsModule extends DefaultMinisiteModule
 		while(ob_get_level() > 0)
 			ob_end_clean();
 
-		$events = array_values(array_map(function($e) {
-			return $e->get_values();
-		}, $events));
-
-		$encoded = json_encode($events);
+		$encoded = $this->get_json($events);
 		$size_in_bytes = strlen($encoded);
 
 		header('Content-type: application/json; charset=utf-8');
@@ -3771,6 +3767,25 @@ class EventsModule extends DefaultMinisiteModule
 			$calendar->set_title($site_name);
 		}
   		return $calendar -> get_icalendar_events();
+	}
+	/**
+	 * Get a json representation of a set of events
+	 * @param array $events entities
+	 * @return string JSON
+	 */
+	function get_json($events)
+	{
+		if(!is_array($events))
+		{
+			trigger_error('get_json needs an array of event entities');
+			return '';
+		}
+
+		$events = array_values(array_map(function($e) {
+			return $e->get_values();
+		}, $events));
+
+		return json_encode($events);
 	}
 	/**
 	 * Output HTML for the detail view of an event
