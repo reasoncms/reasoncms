@@ -733,7 +733,7 @@ class EventsModule extends DefaultMinisiteModule
 	{
 		if (!isset($this->calendar)) $this->calendar = new reasonCalendar;
 		$views = $this->calendar->get_views();
-		$formats = array('ical');
+		$formats = array('ical', 'json');
 
 		return array(
 			'audience' => array(
