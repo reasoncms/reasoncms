@@ -3740,7 +3740,7 @@ class EventsModule extends DefaultMinisiteModule
 		$encoded = $this->get_json($events);
 		$size_in_bytes = strlen($encoded);
 
-		header('Content-type: application/json; charset=utf-8');
+		header('Content-Type: application/json; charset=utf-8');
 		header('Content-Length: '.$size_in_bytes);
 		echo $encoded;
 		die();
