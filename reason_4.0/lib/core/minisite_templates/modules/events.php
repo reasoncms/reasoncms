@@ -3781,7 +3781,14 @@ class EventsModule extends DefaultMinisiteModule
 			return '';
 		}
 
-		$events = array_values(array_map(function($e) {
+		$nav = $this->get_page_nav();
+		$page_url = $nav->get_full_url( $this->page_id, true, true );
+
+		$events = array_values(array_map(function($e) use ($page_url) {
+			// ensure that all events have an associated URL
+			if(!$e->get_value('url')) {
+				$e->set_value('url', $page_url.'?event_id='.$e->id());
+			}
 			return $e->get_values();
 		}, $events));
 
