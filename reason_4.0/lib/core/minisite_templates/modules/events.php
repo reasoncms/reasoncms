@@ -3789,7 +3789,37 @@ class EventsModule extends DefaultMinisiteModule
 			if(!$e->get_value('url')) {
 				$e->set_value('url', $page_url.'?event_id='.$e->id());
 			}
-			return $e->get_values();
+			$values = $e->get_values();
+
+			$values['calendar_record'] = $values['calendar_record'] ? (int)$values['calendar_record'] : null;
+			$values['dates'] = explode(", ", $values['dates']);
+			$values['datetime'] = $values['datetime'] ?: null;
+			$values['end_date'] = $values['end_date'] ?: null;
+			$values['frequency'] = $values['frequency'] ? (int)$values['frequency'] : null;
+			$values['friday'] = $values['friday'] == 'true';
+			$values['hours'] = $values['hours'] ? (int)$values['hours'] : null;
+			$values['id'] = (int)$values['id'];
+			$values['last_occurence'] = $values['last_occurence'] ?: null;
+			$values['latitude'] = $values['latitude'] ? (double)$values['latitude'] : null;
+			$values['longitude'] = $values['longitude'] ? (double)$values['longitude'] : null;
+			$values['minutes'] = $values['minutes'] ? (int)$values['minutes'] : null;
+			$values['monday'] = $values['monday'] == 'true';
+			$values['month_day_of_week'] = $values['month_day_of_week'] ?: null;
+			$values['monthly_repeat'] = $values['monthly_repeat'] ?: null;
+			// $values['new'] = $values['new'] == '1';
+			// $values['no_share'] = $values['no_share'] == '1';
+			$values['recurrence'] = $values['recurrence'] ?: null;
+			$values['registration'] = $values['registration'] ?: null;
+			$values['saturday'] = $values['saturday'] == 'true';
+			$values['show_hide'] = $values['show_hide'] ?: null;
+			$values['sunday'] = $values['sunday'] == 'true';
+			$values['term_only'] = $values['term_only'] ? $values['term_only'] === "yes" : null;
+			$values['thursday'] = $values['thursday'] == 'true';
+			$values['tuesday'] = $values['tuesday'] == 'true';
+			$values['wednesday'] = $values['wednesday'] == 'true';
+			$values['week_of_month'] = $values['week_of_month'] ? (int)$values['week_of_month'] : null;
+
+			return $values;
 		}, $events));
 
 		return json_encode($events);
