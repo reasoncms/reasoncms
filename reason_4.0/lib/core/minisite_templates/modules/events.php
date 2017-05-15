@@ -1018,6 +1018,10 @@ class EventsModule extends DefaultMinisiteModule
 		{
 			$this->init_and_run_ical_calendar();
 		}
+		if(!empty($this->request['format']) && $this->request['format'] == 'json')
+		{
+			$this->init_and_run_json_calendar();
+		}
 		else
 		{
 			$this->init_html_calendar();
@@ -1310,6 +1314,21 @@ class EventsModule extends DefaultMinisiteModule
 		$events = $this->calendar->get_all_events();
 		
 		$this->export_ical($events);
+	}
+	/**
+	 * Set up and produce json ouput
+	 *
+	 * @return void
+	 */
+	function init_and_run_json_calendar()
+	{
+		$init_array = $this->make_reason_calendar_init_array($this->_get_start_date(), '', 'all');
+
+		$this->calendar = $this->_get_runned_calendar($init_array);
+
+		$events = $this->calendar->get_all_events();
+
+		$this->export_json($events);
 	}
 	/**
 	 * Do the set up required for the standard html output
@@ -3622,6 +3641,16 @@ class EventsModule extends DefaultMinisiteModule
 				}
 				$this->export_ical(array($event));
 			}
+			if(!empty($this->request['format']) && $this->request['format'] == 'json')
+			{
+				$event = carl_clone($this->event);
+				if(!empty($this->request['date']))
+				{
+					$event->set_value('recurrence','none');
+					$event->set_value('datetime',$this->request['date'].' '.prettify_mysql_datetime($event->get_value('datetime'), 'H:i:s'));
+				}
+				$this->export_json(array($event));
+			}
 			else
 			{
 				$this->_add_crumb( $this->event->get_value( 'name' ) );
@@ -3693,6 +3722,31 @@ class EventsModule extends DefaultMinisiteModule
 		header( $ic->get_icalendar_header() );
 		header('Content-Disposition: attachment; filename='.$filename.'; size='.$size_in_bytes);
 		echo $ical;
+		die();
+	}
+	/**
+	 * Given set of events, generate json representation, send as json, and die
+	 *
+	 * Note that this method will never return, as it calls die().
+	 *
+	 * @param array $events entities
+	 * @return void
+	 */
+	function export_json($events)
+	{
+		while(ob_get_level() > 0)
+			ob_end_clean();
+
+		$events = array_values(array_map(function($e) {
+			return $e->get_values();
+		}, $events));
+
+		$encoded = json_encode($events);
+		$size_in_bytes = strlen($encoded);
+
+		header('Content-type: application/json; charset=utf-8');
+		header('Content-Length: '.$size_in_bytes);
+		echo $encoded;
 		die();
 	}
 	/**
