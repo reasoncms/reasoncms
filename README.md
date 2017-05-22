@@ -38,6 +38,6 @@ About Reason CMS
 
 - Reason CMS is free and open source - released under the GNU General Public License Version 2.
 
-[Release Notes](https://github.com/carleton/reason_package/releases)
+[Release Notes](ReleaseNotes.md)
 -------------
 

@@ -79,6 +79,10 @@ class FeatureView
 		{
 			$this->_view_params['initial_offset']=0;
 		}
+		if(isset($view_params['absolute_urls']))
+		{
+			$this->_view_params['absolute_urls'] = $view_params['absolute_urls'];
+		}
 	}// end set function
 
 	function absolutify_url_if_needed($url)

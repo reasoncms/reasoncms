@@ -408,7 +408,7 @@ class textDateTimeType extends textType
 		$str .= $this->get_hour_display($h);
 	}
 	function _get_display($name, $value, $id_suffix, $separator='', $size=2,
-	    $class=null)
+	    $class=null, $placeholder='')
 	{
 	    $class = ($class)
 	        ? ' class="'.$class.'"'
@@ -419,15 +419,15 @@ class textDateTimeType extends textType
 	    $value = htmlspecialchars($value, ENT_QUOTES);
 	    return $separator.'<input type="text"'.$class.' size="'.$size.'" '.
 	        'maxlength="'.$size.'" id="'.$id.'" '.
-	        'name="'.$this->name.'['.$name.']" value="'.$value.'" />';
+	        'name="'.$this->name.'['.$name.']" value="'.$value.'" placeholder="'.$placeholder.'" />';
 	}
 	function get_month_display($month_val = '')
 	{
-	    return $this->_get_display('month', $month_val, 'mm');
+	    return $this->_get_display('month', $month_val, 'mm', '', 2, null, 'mm');
 	}
 	function get_day_display($day_val = '')
 	{
-	    return $this->_get_display('day', $day_val, 'dd', ' / ');
+	    return $this->_get_display('day', $day_val, 'dd', ' / ', 2, null, 'dd');
 	}
 	function get_year_display($year_val = '')
 	{
@@ -435,20 +435,20 @@ class textDateTimeType extends textType
 	    // date picker.
 	    $class = ($this->use_picker) ? 'datepicker' : null;
 		return $this->_get_display('year', $year_val, null, ' / ', 4,
-		    $class);
+		    $class, 'yyyy');
 	}
 	function get_hour_display($hour_val = '')
 	{
 		return $this->_get_display('hour', $hour_val, 'HH',
-		    '<span class="datetimeAt">&nbsp;&nbsp; at ');
+		    '<span class="datetimeAt">&nbsp;&nbsp; at ', 2, null, 'HH');
 	}
 	function get_minute_display($minute_val = '')
 	{
-	    return $this->_get_display('minute', $minute_val, 'MM', ' : ');
+	    return $this->_get_display('minute', $minute_val, 'MM', ' : ', 2, null, 'MM');
 	}
 	function get_second_display($second_val = '')
 	{
-		return $this->_get_display('second', $second_val, 'SS', ' : ');
+		return $this->_get_display('second', $second_val, 'SS', ' : ', 2, null, 'SS');
 	}
 	function get_ampm_display($ampm_val)
 	{
@@ -464,6 +464,22 @@ class textDateTimeType extends textType
 		return array( $this->name => array( 'function' => 'turn_into_array' ));
 	}
  }
+ 
+/**
+ * Identical to {@link textDateTimeType} except that it does not use seconds.
+ */
+class textDateTimeNoSecondsType extends textDateTimeType {
+	var $use_fields = array( 'month', 'day', 'year', 'hour', 'minute', 'ampm');
+}
+
+/**
+ * Identical to {@link textDateTimeType} except that it only uses hour, minute, and ampm.
+ */
+class textTimeNoSecondsType extends textDateTimeType {
+	var $type = 'textTime';
+	var $date_format = "H:i:s";
+	var $use_fields = array('hour', 'minute', 'ampm');
+}
 
 /**
  * Identical to {@link textDateTimeType} except that it only uses month, day, and year.

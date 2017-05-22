@@ -1,0 +1,56 @@
+
+div#focalPointContainer {
+    display: table;
+    background-color: lightgrey;
+}
+
+div#focalPointSelector {
+    padding: 20px 20px 20px 20px;
+}
+
+div#focalPointClickArea {
+    position: relative;
+    margin-top: 20px;
+}
+
+img#focalPointIcon {
+    position: absolute;
+    pointer-events: none;
+    margin: -8px 0 0 -8px;
+}
+
+div#focalPointSeparator {
+    background-color: white;
+    display: table-cell;
+    min-width: 5px;
+}
+
+div#cropSamples {
+    padding: 20px 0 20px 20px;
+}
+
+div.croppedImageContainer {
+    overflow: hidden;
+    display: inline-block;
+    vertical-align: top;
+    margin: 20px 20px 0 0;
+}
+
+img.croppedImage {
+    max-width: none;
+}
+
+strong.focalPointTitle {
+    font-size: 1.5em;
+}
+
+@media (max-width: 699px) {    
+    div#focalPointSeparator {
+        display: table-row;
+        height: 5px;
+    }
+    
+    div#focalPointSeparatorCell {
+        display: table-cell;
+    }
+}

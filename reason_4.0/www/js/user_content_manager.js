@@ -8,12 +8,12 @@
 $(document).ready(function()
 {
 	var authoritative_source_element = "#user_authoritative_sourceElement";
-	var visibility_toggle_rows = new Array("#usersurnameRow",
-											   "#usergivennameRow",
-											   "#useremailRow",
-											   "#userphoneRow",
-											   "#passwordRow",
-											   "#confirmpasswordRow");
+	var visibility_toggle_rows = new Array("#usersurnameItem",
+											   "#usergivennameItem",
+											   "#useremailItem",
+											   "#userphoneItem",
+											   "#passwordItem",
+											   "#confirmpasswordItem");
 	function toggleVisibility()
 	{
 		if ($(authoritative_source_element).val().toLowerCase() == "reason")

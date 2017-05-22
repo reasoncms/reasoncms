@@ -16,6 +16,7 @@ reason_include_once( 'classes/url_manager.php');
 reason_include_once( 'function_libraries/user_functions.php' );
 reason_include_once( 'scripts/move/move_entities_among_sites_helper.php' );
 reason_include_once( 'classes/job.php' );
+reason_include_once( 'minisite_templates/nav_classes/default.php' );
 force_secure_if_available();
 $current_user = check_authentication();
 $current_user_id = get_user_id($current_user);
@@ -49,6 +50,33 @@ else
 }
 
 $job_stack = new ReasonJobStack();
+
+// Move children preprocess step
+// Add all children, grandchildren, etc. to $new_site_ids if move_children checkbox is checked
+if(id_of('minisite_page') == $type_id && !empty($_REQUEST['move_children']))
+{
+	$page_tree = new MinisiteNavigation;
+	$page_tree->order_by = 'sortable.sort_order';
+	$page_tree->init( $old_site_id, id_of('minisite_page') );
+
+	foreach ( $new_site_ids as $entity_id => $new_site_id )
+	{
+		if ($new_site_id != $old_site_id)
+		{
+			$descendants = get_page_descendants($page_tree, $entity_id);
+			foreach ($descendants as $descendant) 
+			{
+				// If any descendant is being moved to a different site, die
+				if (isset($new_site_ids[$descendant]) && $new_site_ids[$descendant] != $new_site_id && $new_site_ids[$descendant] != $old_site_id)
+				{
+					die('<h1>Unable to move pages</h1><p>Please make sure that child pages are being moved to the same site as their parent when "Automatically move all children of selected pages" is checked.</p></body></html>');
+				}
+				$new_site_ids[$descendant] = $new_site_id;
+			}
+		}
+	}	
+}
+
 foreach ( $new_site_ids as $entity_id => $new_site_id )
 {
 	$entity_id = (integer) $entity_id;

@@ -64,6 +64,7 @@ class FeatureModule extends DefaultMinisiteModule
 		'view' => 'DefaultFeatureView',
 		'categories' => array(),
 		'initial_offset' => 0,
+		'absolute_urls' => false,
 	);
 
 	var $cleanup_rules = array('feature'=>'turn_into_int');
@@ -158,6 +159,11 @@ class FeatureModule extends DefaultMinisiteModule
 		$es1->add_type( id_of('feature_type') );
 		$es1->add_right_relationship( $this->page_id, relationship_id_of('page_to_feature'));
 		$es1->add_rel_sort_field( $this->page_id, relationship_id_of('page_to_feature') );
+		$cat_ids = $this->get_category_ids();
+		if(!empty($cat_ids))
+		{
+			$es1->add_left_relationship( $cat_ids, relationship_id_of('feature_to_category') );
+		}
 		$es1->set_order('rel_sort_order ASC');
 		if($this->params['max'] != 0)
 		{
@@ -207,6 +213,9 @@ class FeatureModule extends DefaultMinisiteModule
 			}
 		}
 
+		
+		
+		
 		$es4 = new entity_selector( $this->site_id );
 		$es4->add_type( id_of('category_type') );
 		$es4->add_right_relationship_field( 'feature_to_category','entity','id', 'feature_id', array_keys($features) );
@@ -268,7 +277,7 @@ class FeatureModule extends DefaultMinisiteModule
 				$value = $feature_categories[$feature_id];
 				$features[$feature_id]->set_value('categories', $value);
 			}
-			else $features[$feature_id]->set_value('categories', array());
+			else $features[$feature_id]->set_value('categories', '');
 
 		}
 
@@ -370,7 +379,24 @@ class FeatureModule extends DefaultMinisiteModule
 		$this->_build_view_data();
 	}
 
-
+	function get_category_ids()
+	{
+		if(!isset($this->category_ids))
+		{
+			$this->category_ids = array();
+			if(!empty($this->params['categories']))
+			{
+				foreach($this->params['categories'] as $cat_uname)
+				{
+					if($id = id_of($cat_uname))
+					{
+						$this->category_ids = $id;
+					}
+				}
+			}
+		}
+		return $this->category_ids;
+	}
 
 
 	/**
@@ -386,6 +412,7 @@ class FeatureModule extends DefaultMinisiteModule
 		$this->features_view_params['looping']=$this->params['looping'];//or off
 		$this->features_view_params['categories']=$this->params['categories'];
 		$this->features_view_params['initial_offset']=$this->params['initial_offset'];
+		$this->features_view_params['absolute_urls']=$this->params['absolute_urls'];
 	}
 
 	/**
@@ -541,6 +568,8 @@ class FeatureModule extends DefaultMinisiteModule
 		$rsi->set_width($width);
 		$rsi->set_height($height);
 		$rsi->set_crop_style($crop_style);
+		if(!empty($this->params['absolute_urls']))
+			$rsi->use_absolute_urls();
 	 	$ret = $rsi->get_url_and_alt();
 		return $ret;
 	}

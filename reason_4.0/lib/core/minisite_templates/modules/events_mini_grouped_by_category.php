@@ -47,7 +47,7 @@ class miniEventsGroupedByCategoryModule extends DefaultMinisiteModule
 	 * The modules that represent an events page that we can link to
 	 * @var array
 	 */
-	var $_events_modules = array('events','event_registration','event_signup','event_slot_registration','events_archive','events_hybrid','events_verbose',);
+	var $_events_modules = array('events','event_registration','event_signup','events_archive','events_hybrid','events_verbose',);
 	/**
 	 * Acceptable parameters
 	 * @var array

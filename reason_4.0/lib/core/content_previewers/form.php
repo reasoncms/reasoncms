@@ -15,7 +15,7 @@
 	{
 		function show_item_thor_content( $field , $value )
 		{
-			$this->show_item_default( htmlspecialchars($value) );
+			$this->show_item_default( $field, htmlspecialchars($value) );
 		}
 	}
 ?>
