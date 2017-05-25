@@ -34,6 +34,9 @@ class BlurbModule extends DefaultMinisiteModule
 		'demote_headings' => 1,
 		'source_page' => '',
 		'footer_html' => '',
+		'jump_links' => false,
+		'jump_links_delimiter' => '',
+		'jump_links_return' => false,
 	);
 	var $es;
 	var $blurbs = array();
@@ -155,7 +158,31 @@ class BlurbModule extends DefaultMinisiteModule
 		$inline_editing =& get_reason_inline_editing($this->page_id);
 		$editing_available = $inline_editing->available_for_module($this);
 		$editing_active = $inline_editing->active_for_module($this);
-		echo '<div class="blurbs ' . $this->get_api_class_string() . '">'."\n";
+		echo '<div class="blurbs ';
+		echo $this->get_api_class_string();
+		if($this->params['jump_links'])
+		{
+			echo ' usesJumpLinks';
+		}
+		echo '">'."\n";
+		if($this->params['jump_links'])
+		{
+			echo '<ul class="jumpLinks">';
+			foreach( $this->blurbs as $blurb )
+			{
+				$name = $blurb->get_value('name');
+				if($this->params['jump_links_delimiter'])
+				{
+					$pos = strpos($name, $this->params['jump_links_delimiter']);
+					if(false !== $pos)
+					{
+						$name = trim(substr($name, $pos + strlen($this->params['jump_links_delimiter'])));
+					}
+				}
+				echo '<li><a href="#blurb'.$blurb->id().'">'.$name.'</a></li>';
+			}
+			echo '</ul>';
+		}
 		$i = 0;
 		$class = 'odd';
 		foreach( $this->blurbs as $blurb )
@@ -171,7 +198,9 @@ class BlurbModule extends DefaultMinisiteModule
 			if( $editing_item )
 				echo ' editing';
 			echo ' '.$class;
-			echo '">';
+			echo '"';
+			echo ' id="blurb'.$blurb->id().'"';
+			echo '>';
 
 			if($editing_item)
 			{
@@ -189,6 +218,18 @@ class BlurbModule extends DefaultMinisiteModule
 				{
 					$params = array_merge(array('blurb_id' => $blurb->id()), $inline_editing->get_activation_params($this));
 					echo '<div class="edit"><a href="'.carl_make_link($params).'">Edit Blurb</a></div>'."\n";
+				}
+				if($this->params['jump_links'] && $this->params['jump_links_return'])
+				{
+					if(true === $this->params['jump_links_return'])
+					{
+						$returntext = 'Return to top';
+					}
+					else
+					{
+						$returntext = $this->params['jump_links_return'];
+					}
+					echo '<div class="jumpLinksReturn"><a href="">'.$returnText.'</a></div>';
 				}
 			}
 			echo '</div>'."\n";

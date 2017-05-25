@@ -43,6 +43,8 @@
 										'chunks' => 1,
 										'heading' => '',
 										'footer' => '',
+										'link_to_blurbs' => false,
+										'blurb_title_delimiter' => '',
 									);
 		var $offspring = array();
 		var $az = array();
@@ -354,7 +356,31 @@
 					echo "\n".'<div class="childDesc">'.$child->get_value( 'description' ).'</div>';
 				}
 			}
-			if(!empty($this->params['blurbs_count']))
+			if(!empty($this->params['link_to_blurbs']))
+			{
+				$count = !empty($this->params['blurbs_count']) ? $this->params['blurbs_count'] : 9999;
+				if($blurbs = $this->get_blurbs_for_page($child, $count))
+				{
+					echo '<ul class="childBlurbLinks">';
+					foreach($blurbs as $blurb)
+					{
+						$name = $blurb->get_value('name');
+						if($this->params['blurb_title_delimiter'])
+						{
+							$pos = strpos($name, $this->params['blurb_title_delimiter']);
+							if(false !== $pos)
+							{
+								$name = trim(substr($name, $pos + strlen($this->params['blurb_title_delimiter'])));
+							}
+						}
+						echo '<li>';
+						echo '<a href="'.$link.'#blurb'.$blurb->id().'">'.$name.'</a>';
+						echo '</li>';
+					}
+					echo '</ul>';
+				}
+			}
+			elseif(!empty($this->params['blurbs_count']))
 			{
 				if($blurbs = $this->get_blurbs_for_page($child, $this->params['blurbs_count']))
 				{
