@@ -37,9 +37,12 @@ class BlurbModule extends DefaultMinisiteModule
 		'jump_links' => false,
 		'jump_links_delimiter' => '',
 		'jump_links_return' => false,
+		'jump_links_return_url' => false,
+		'module_id' => '',
 	);
 	var $es;
 	var $blurbs = array();
+	var $module_id;
 
 	function init( $args = array() ) // {{{
 	{
@@ -153,6 +156,22 @@ class BlurbModule extends DefaultMinisiteModule
 		else
 			return false;
 	} // }}}
+	
+	function get_module_id()
+	{
+		static $module_count = 0;
+		if(!isset($this->module_id))
+		{
+			if(!empty($this->params['module_id'])) {
+				$this->module_id = $this->params['module_id'];
+			} else {
+				$this->module_id = 'blurbsModule'.$module_count;
+			}
+			$module_count++;
+		}
+		return $this->module_id;
+	}
+	
 	function run() // {{{
 	{
 		$inline_editing =& get_reason_inline_editing($this->page_id);
@@ -164,7 +183,9 @@ class BlurbModule extends DefaultMinisiteModule
 		{
 			echo ' usesJumpLinks';
 		}
-		echo '">'."\n";
+		echo '"';
+		echo ' id="'.htmlspecialchars($this->get_module_id()).'"';
+		echo '>'."\n";
 		if($this->params['jump_links'])
 		{
 			echo '<ul class="jumpLinks">';
@@ -223,13 +244,14 @@ class BlurbModule extends DefaultMinisiteModule
 				{
 					if(true === $this->params['jump_links_return'])
 					{
-						$returntext = 'Return to top';
+						$return_text = 'Back to top';
 					}
 					else
 					{
-						$returntext = $this->params['jump_links_return'];
+						$return_text = $this->params['jump_links_return'];
 					}
-					echo '<div class="jumpLinksReturn"><a href="">'.$returnText.'</a></div>';
+					$link = !empty($this->params['jump_links_return_url']) ? $this->params['jump_links_return_url'] : '#'.$this->get_module_id();
+					echo '<div class="jumpLinksReturn"><a href="'.htmlspecialchars($link).'">'.$return_text.'</a></div>';
 				}
 			}
 			echo '</div>'."\n";
