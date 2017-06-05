@@ -3550,12 +3550,10 @@ class EventsModule extends DefaultMinisiteModule
 		{
 			$start_date = $this->request['start_date'];
 		}
-		$download_query = $this->construct_link(array('start_date'=>$start_date,'view'=>'','end_date'=>'','format'=>'ical'));
-		$subscribe_query = $this->construct_link(array('start_date'=>$start_date,'view'=>'','end_date'=>'','format'=>'ical'), true, false);
-		$calendar_url = REASON_HOST.$this->parent->pages->get_full_url( $this->page_id );
-		$webcal_url = 'webcal://'.$calendar_url.$subscribe_query;
-		$gcal_url = 'https://calendar.google.com/calendar/render?cid='.$webcal_url;
-		//$ycal_url = 'https://calendar.yahoo.com/subscribe?ics=http://'.$calendar_url.$this->construct_link(array('format'=>'ical'));
+		$ical_link = '//'.REASON_HOST.$this->parent->pages->get_full_url( $this->page_id ).$this->construct_link(array('start_date'=>$start_date,'view'=>'','end_date'=>'','format'=>'ical'), true, false);
+		
+		$webcal_url = 'webcal:'.$ical_link;
+		$gcal_url = 'https://calendar.google.com/calendar/render?cid='.urlencode($webcal_url);
 		if(!empty($this->request['category']) || !empty($this->request['audience']) || !empty($this->request['search']))
 		{
 			$subscribe_desktop_text = 'Subscribe to this view (Desktop)';
@@ -3570,12 +3568,12 @@ class EventsModule extends DefaultMinisiteModule
 			//$subscribe_ycal_text = 'Subscribe (Yahoo!)';
 			$download_text = 'Download events (.ics)';
 		}
-		echo '<a href="'.$webcal_url.'">'.$subscribe_desktop_text.'</a>';
-		echo ' <span class="divider">|</span> <a href="'.$gcal_url.'" target="_blank">'.$subscribe_gcal_text.'</a>';
+		echo '<a href="'.htmlspecialchars($webcal_url).'">'.$subscribe_desktop_text.'</a>';
+		echo ' <span class="divider">|</span> <a href="'.htmlspecialchars($gcal_url).'" target="_blank">'.$subscribe_gcal_text.'</a>';
 		//echo ' <span class="divider">|</span> <a href="'.$ycal_url.'" target="_blank">'.$subscribe_ycal_text.'</a>';
 		if(!empty($this->events)) 
 		{
-			echo ' <span class="divider">|</span> <a href="'.$download_query.'">'.$download_text.'</a>';
+			echo ' <span class="divider">|</span> <a href="'.htmlspecialchars($ical_link).'">'.$download_text.'</a>';
 		}
 		if (defined("REASON_URL_FOR_ICAL_FEED_HELP") && ( (bool) REASON_URL_FOR_ICAL_FEED_HELP != FALSE))
 		{
@@ -4354,12 +4352,12 @@ HTML;
 	 * @param array $vars The query string variables for the link
 	 * @param boolean $pass_passables should the items in $this->pass_vars
 	 *                be passed if they are present in the current query?
-	 * @param boolean $html_encode Should use '&amp;' for HTML (true) or '%26' for URL (false).
+	 * @param boolean $html_encode Should the output be html encoded? Use true for direct inclusion in HTML.
 	 * @return string
 	 *
 	 * @todo replace this with carl_ functions
 	 */
-	function construct_link( $vars = array(), $pass_passables = true , $html_encode = true) // {{{
+	function construct_link( $vars = array(), $pass_passables = true, $html_encode = true ) // {{{
 	{
 		if($pass_passables)
 			$link_vars = $this->pass_vars;
@@ -4377,8 +4375,12 @@ HTML;
 		{
 			$link_vars[$key] = urlencode($link_vars[$key]);
 		}
-		$ampersand = ($html_encode) ? '&amp;' : '%26';
-		return '?'.implode_with_keys($ampersand,$link_vars);
+		$ret = '?'.implode_with_keys('&',$link_vars);
+		if($html_encode)
+		{
+			$ret = htmlspecialchars($ret, ENT_QUOTES);
+		}
+		return $ret;
 	} // }}}
 	/**
 	 * Is a given event an all-day event?
