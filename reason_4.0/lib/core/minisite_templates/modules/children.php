@@ -43,8 +43,8 @@
 										'chunks' => 1,
 										'heading' => '',
 										'footer' => '',
-										'link_to_blurbs' => false,
-										'blurb_title_delimiter' => '',
+										'link_to_blurbs' => false, // can be boolean for any child page type or a page type string or array for one or multiple page types to do blurb linking on
+										'blurb_title_delimiter' => '', // If a nonempty string is provided, blurb titles will be split on the delimiter provided and only text after the first instance of the delimiter will be displayed
 									);
 		var $offspring = array();
 		var $az = array();
@@ -358,8 +358,17 @@
 			}
 			if(!empty($this->params['link_to_blurbs']))
 			{
+				$get_blurbs = true;
+				if('string' == gettype($this->params['link_to_blurbs']) && $child->get_value('custom_page') != $this->params['link_to_blurbs'])
+				{
+					$get_blurbs = false;
+				}
+				elseif('array' == gettype($this->params['link_to_blurbs']) && !in_array($child->get_value('custom_page'), $this->params['link_to_blurbs']))
+				{
+					$get_blurbs = false;
+				}
 				$count = !empty($this->params['blurbs_count']) ? $this->params['blurbs_count'] : 9999;
-				if($blurbs = $this->get_blurbs_for_page($child, $count))
+				if($get_blurbs && $blurbs = $this->get_blurbs_for_page($child, $count))
 				{
 					echo '<ul class="childBlurbLinks">';
 					foreach($blurbs as $blurb)
