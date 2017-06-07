@@ -1867,6 +1867,12 @@
 				'thumbnail_width' => 200,
 			),
 		),
+		'show_children_with_blurb_links' => array(
+		    'main_post' => array(
+		    	'module' => 'children',
+		    	'link_to_blurbs' => true,
+		    ),
+		),
 		'child_gallery_280x200' => array(
 			'main_post' => array(
 				'module'=>'children',
