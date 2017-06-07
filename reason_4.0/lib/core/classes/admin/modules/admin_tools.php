@@ -124,6 +124,11 @@ class ReasonAdminToolsModule extends DefaultModule
 					'description' => 'Provides statistics on sharing and borrowing in Reason.',
 					'safety_level' => 'safe',
 				),
+				'?cur_module=Stats' => array(
+					'title' => 'Type Stats',
+					'description' => 'Provides statistics on usage by type in Reason.',
+					'safety_level' => 'safe',
+				),
 			),
 			'Content Actions' => array(
 				REASON_HTTP_BASE_PATH.'scripts/urls/update_urls.php' => array(

@@ -71,6 +71,7 @@
 		'ViewUsers'=>array('file'=>'view_users.php','class'=>'ViewUsersModule'),
 		'Duplicate'=>array('file'=>'duplicate.php','class'=>'DuplicateModule'),
 		'clone'=>array('file'=>'cloner.php','class'=>'ClonerModule'),
+		'Stats'=>array('file'=>'stats.php','class'=>'StatsModule'),
 		'ThorData'=>array('file'=>'thor_data.php','class'=>'ThorDataModule'),
 		'GroupTester'=>array('file'=>'group_tester.php','class'=>'GroupTesterModule'),
 		'ListSites'=>array('file'=>'list_sites.php','class'=>'ListSitesModule'),
