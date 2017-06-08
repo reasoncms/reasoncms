@@ -94,6 +94,11 @@ class ReasonAdminToolsModule extends DefaultModule
 					'description' => 'Describes the top level navigation used by each site.',
 					'safety_level' => 'safe',
 				),
+				REASON_HTTP_BASE_PATH.'scripts/sitemap/hierarchical_page_report.php' => array(
+					'title' => 'Hierarchical Page Report',
+					'description' => 'Describes the page hierarchy of a chosen site. Pages are annotated with the page type info and aggregate module usage is shown.',
+					'safety_level' => 'safe',
+				),
 				'?site_id='.id_of('master_admin').'&cur_module=Export' => array(
 					'title' => 'Data Export',
 					'description' => 'Exports Reason data for a particular site',
@@ -117,6 +122,11 @@ class ReasonAdminToolsModule extends DefaultModule
 				'?cur_module=SharingStats' => array(
 					'title' => 'Sharing Stats',
 					'description' => 'Provides statistics on sharing and borrowing in Reason.',
+					'safety_level' => 'safe',
+				),
+				'?cur_module=Stats' => array(
+					'title' => 'Type Stats',
+					'description' => 'Provides statistics on usage by type in Reason.',
 					'safety_level' => 'safe',
 				),
 			),

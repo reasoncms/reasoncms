@@ -37,3 +37,8 @@ reason_4.0/www/sized_images_custom_local
 reason_4.0/www/sized_images_local
 reason_4.0/www/tmp_local
 
+# Ignore PHPStorm project setup files
+.idea
+
+.env
+.DS_Store
