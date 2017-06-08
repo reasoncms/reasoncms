@@ -39,6 +39,9 @@ class BlurbModule extends DefaultMinisiteModule
 		'jump_links_return' => false,
 		'jump_links_return_url' => false,
 		'module_id' => '',
+		'display_blurb_names' => false,
+		'blurb_names_heading_level' => 3,
+		'blurb_names_delimiter' => '',
 	);
 	var $es;
 	var $blurbs = array();
@@ -234,6 +237,21 @@ class BlurbModule extends DefaultMinisiteModule
 			}
 			else
 			{
+				if($this->params['display_blurb_names'])
+				{
+					$name = $blurb->get_value('name');
+					if($this->params['blurb_names_delimiter'])
+					{
+						$pos = strpos($name, $this->params['blurb_names_delimiter']);
+						if(false !== $pos)
+						{
+							$name = trim(substr($name, $pos + strlen($this->params['blurb_names_delimiter'])));
+						}
+					}
+					$heading_level = !empty($this->params['blurb_names_heading_level']) ? $this->params['blurb_names_heading_level'] : 3;
+					
+					echo '<h'.$heading_level.' class="blurbName">'.$name.'</h'.$heading_level.'>';
+				}
 				echo demote_headings($blurb->get_value('content'), $this->params['demote_headings']);
 				if( $editable )
 				{
@@ -286,10 +304,25 @@ class BlurbModule extends DefaultMinisiteModule
 	function _get_editing_form($blurb)
 	{
 		$form = new disco();
+		$form->set_box_class('stackedBox');
 		$form->strip_tags_from_user_input = true;
+		if($this->params['display_blurb_names'])
+		{
+			$form->add_element('blurb_edit_name');
+			$form->set_display_name('blurb_edit_name', 'Blurb Name');
+			$form->set_value( 'blurb_edit_name', $blurb->get_value('name') );
+			$form->add_required('blurb_edit_name');
+		}
 		$form->allowable_HTML_tags = REASON_DEFAULT_ALLOWED_TAGS;
 		$form->add_element( 'blurb_edit_text' , html_editor_name($this->site_id) , html_editor_params($this->site_id, $this->get_html_editor_user_id()) );
-		$form->set_display_name('blurb_edit_text',' ');
+		if($this->params['display_blurb_names'])
+		{
+			$form->set_display_name('blurb_edit_text','Blurb Text');
+		}
+		else
+		{
+			$form->set_display_name('blurb_edit_text',' ');
+		}
 		$form->set_value( 'blurb_edit_text', $blurb->get_value('content') );
 		$form->set_actions(array('save' => 'Save','save_and_finish' => 'Save and Finish Editing',));
 		$form->add_callback(array(&$this,'save_blurb_callback'),'process');
@@ -302,6 +335,11 @@ class BlurbModule extends DefaultMinisiteModule
 
 	function save_blurb_callback(&$form)
 	{
+		$values = array();
+		if($this->params['display_blurb_names'])
+		{
+			$values['name'] = tidy($form->get_value( 'blurb_edit_name' ));
+		}
 		$values['content'] = tidy($form->get_value( 'blurb_edit_text' ));
 		$archive = ($form->chosen_action == 'save_and_finish') ? true : false;
 		reason_update_entity( $this->request['blurb_id'], $this->get_html_editor_user_id(), $values, $archive );
