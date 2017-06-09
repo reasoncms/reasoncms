@@ -396,6 +396,7 @@ class EventsModule extends DefaultMinisiteModule
 							'limit_to_ticketed_events'=>false,
 	 						'limit_to_audiences' => '',	 // as comma spaced strings
 							'limit_to_page_categories'=>false,
+							'filter_on_page_name' => false,
 	 						'link_shared_events_to_parent_site' => false,
 							'list_chrome_markup' => '',
 							'list_item_markup' => '',
@@ -3489,6 +3490,21 @@ class EventsModule extends DefaultMinisiteModule
 				}
 				$where = '('.implode(' OR ',$parts).')';
 				$es->add_relation($where);
+			}
+		}
+		if($this->params['filter_on_page_name'])
+		{
+			if(is_bool($this->params['filter_on_page_name']))
+			{
+				$es->add_relation('entity.name LIKE "%'.reason_sql_string_escape($this->parent->cur_page->get_value('name')).'%"');
+			}
+			elseif(is_string($this->params['filter_on_page_name']))
+			{
+				$es->add_relation('`'.reason_sql_string_escape($this->params['filter_on_page_name']).'` LIKE "%'.reason_sql_string_escape($this->parent->cur_page->get_value('name')).'%"');
+			}
+			else
+			{
+				trigger_error('filter_on_page_name does not support values other than boolean or string');
 			}
 		}
 	}
