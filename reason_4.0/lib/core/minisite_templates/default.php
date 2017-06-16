@@ -1111,12 +1111,18 @@ class MinisiteTemplate
 
 	function get_title ()
 	{
-		if ( $this->is_minisite_home_page() )
-			$pattern = 'home';
-		elseif ( $this->is_secondary_page() )
-			$pattern = 'secondary';
-		elseif ( $this->is_item_page() )
+		if ( $this->is_item_page() )
+		{
 			$pattern = 'item';
+		}
+		elseif ( $this->is_minisite_home_page() )
+		{
+			$pattern = 'home';
+		}
+		elseif ( $this->is_secondary_page() )
+		{
+			$pattern = 'secondary';
+		}
 
 		$parser = new TitleTagParser($this->get_title_tag_pattern_for($pattern), $this);
 
