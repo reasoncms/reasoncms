@@ -82,6 +82,7 @@
 		'EntityInfo'=>array('file'=>'entity_info.php','class'=>'EntityInfoModule'),
 		'BatchDelete'=>array('file'=>'batch_delete.php','class'=>'BatchDeleteModule'),
 		'Export'=>array('file'=>'export.php','class'=>'ReasonExportModule'),
+		'ExportImages'=>array('file'=>'export_images.php','class'=>'ReasonExportImagesModule'),
 		'VersionCheck'=>array('file'=>'version_check.php','class'=>'ReasonVersionCheckModule'),
 		'EventSplit'=>array('file'=>'event_split.php','class'=>'ReasonEventSplitModule'),
 		'ActiveUsers'=>array('file'=>'active_users.php','class'=>'ReasonActiveUsersModule'),

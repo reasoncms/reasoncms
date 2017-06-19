@@ -104,6 +104,11 @@ class ReasonAdminToolsModule extends DefaultModule
 					'description' => 'Exports Reason data for a particular site',
 					'safety_level' => 'safe',
 				),
+				'?cur_module=ExportImages' => array(
+					'title' => 'Image Export',
+					'description' => 'Exports Reason images for a particular site. Note that you will need to specify a site_id for this tool to work.',
+					'safety_level' => 'safe',
+				),
 				'?site_id='.id_of('master_admin').'&cur_module=FormRecipients' => array(
 					'title' => 'Form Recipients Report',
 					'description' => 'Lists all the people who receive email notification when Reason forms are submitted',
