@@ -40,6 +40,7 @@ class ReasonExportImagesModule extends DefaultModule
 		
 		if($d->successfully_submitted())
 		{
+			set_time_limit( 600 ); // give it 10 minutes to complete
 			
 			$site = new entity($this->admin_page->request['site_id']);
 			
@@ -115,10 +116,22 @@ class ReasonExportImagesModule extends DefaultModule
 			}
 		}
 	}
+	function get_statuses()
+	{
+		return array('Live'=>'Live','Pending'=>'Pending','Deleted'=>'Deleted');
+	}
 	function get_form()
 	{
 		$d = new Disco();
 		$d->set_box_class('StackedBox');
+		$d->add_element('status',
+			'radio_no_sort',
+			array(
+				'options' => $this->get_statuses(),
+			)
+		);
+		$d->add_required('status');
+		$d->set_value('status', 'Live');
 		$d->set_actions(array('run'=>'Get Images'));
 		return $d;
 	}
@@ -126,7 +139,8 @@ class ReasonExportImagesModule extends DefaultModule
 	{
 		$es = new entity_selector($this->admin_page->request['site_id']);
 		$es->add_type(id_of('image'));
-		$images = $es->run_one();
+		$status = in_array($disco->get_value('status'), $this->get_statuses()) ? $disco->get_value('status') : 'Live';
+		$images = $es->run_one('', $status);
 		return $images;
 	}
 	function get_paths_for_images($images)
