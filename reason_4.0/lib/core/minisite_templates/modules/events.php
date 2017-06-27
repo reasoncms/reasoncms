@@ -481,6 +481,12 @@ class EventsModule extends DefaultMinisiteModule
 	 * @var array
 	 */
 	protected $_user_can_inline_edit_sites = array();
+	/**
+	 * Flag indicating whether the current user has editing rights for this site.
+	 *
+	 * @var boolean
+	 */
+	protected $_user_has_editing_rights_to_current_site;
 	
 	/**
 	 * Array of set-up markup classes
@@ -787,6 +793,9 @@ class EventsModule extends DefaultMinisiteModule
 			'delete_registrant' => array(
 				'function' => 'turn_into_string',
 			),
+			'bust_cache' => array(
+				'function'=>'turn_into_int',
+			),
 		);
 	}
 	
@@ -939,6 +948,10 @@ class EventsModule extends DefaultMinisiteModule
 	 */
 	protected function get_cache_lifespan()
 	{
+		if($this->should_bust_caches())
+		{
+			return 1;
+		}
 		return $this->params['cache_lifespan'];
 	}
 	/**
@@ -948,9 +961,26 @@ class EventsModule extends DefaultMinisiteModule
 	 */
 	protected function get_cache_lifespan_meta()
 	{
+		
+		if($this->should_bust_caches())
+		{
+			return 1;
+		}
 		if($this->params['cache_lifespan_meta'])
 			return $this->params['cache_lifespan_meta'];
 		return $this->get_cache_lifespan();
+	}
+	/**
+	 * Should caches be rebuilt?
+	 * @return boolean
+	 */
+	protected function should_bust_caches()
+	{
+		if(isset($this->request['bust_cache']) && $this->request['bust_cache'] && $this->user_has_editing_rights_to_current_site())
+		{
+			return true;
+		}
+		return false;
 	}
 	
 	//////////////////////////////////////
@@ -2057,9 +2087,21 @@ class EventsModule extends DefaultMinisiteModule
 	{
 		if (!isset($this->_user_can_inline_edit))
 		{
-			$this->_user_can_inline_edit = reason_check_access_to_site($this->site_id);
+			$this->_user_can_inline_edit = $this->user_has_editing_rights_to_current_site();
 		}
 		return $this->_user_can_inline_edit;
+	}
+	/**
+	 * Does the current user have editing rights to the current site?
+	 * @return boolean
+	 */
+	function user_has_editing_rights_to_current_site()
+	{
+		if (!isset($this->_user_has_editing_rights_to_current_site))
+		{
+			$this->_user_has_editing_rights_to_current_site = reason_check_access_to_site($this->site_id);
+		}
+		return $this->_user_has_editing_rights_to_current_site;
 	}
 
 	/**
@@ -2422,6 +2464,7 @@ class EventsModule extends DefaultMinisiteModule
 		$this->options_bar .= $this->get_audiences();
 		$this->options_bar .= $this->get_today_link();
 		$this->options_bar .= $this->get_archive_toggler();
+		$this->options_bar .= $this->get_cache_buster_section();
 		$this->options_bar .= '</div>'."\n";
 	}
 	/**
@@ -3195,6 +3238,19 @@ class EventsModule extends DefaultMinisiteModule
 			return $this->refine_get_min_year($median_year, $year_inside_bounds, $depth++);
 		}
 		
+	}
+	/**
+	 * Get the html for a link to bust the cache (if one exists)
+	 * @return string HTML
+	 */
+	function get_cache_buster_section()
+	{
+		$ret = '';
+		if((!empty($this->params['cache_lifespan']) || !empty($this->params['cache_lifespan_meta'])) && $this->user_has_editing_rights_to_current_site())
+		{
+			$ret .= '<div class="cacheBuster"><a href="?bust_cache=1">Refresh event data</a></div>';
+		}
+		return $ret;
 	}
 	/**
 	 * Display the search interface
