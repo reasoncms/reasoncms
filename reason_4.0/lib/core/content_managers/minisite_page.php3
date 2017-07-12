@@ -335,6 +335,8 @@ class MinisitePageManager extends parent_childManager
 		$limiter->suggest_limit('description', 156);
 		$limiter->auto_show_hide('description', false);
 		
+		$this->change_element_type( 'language' , 'language', array('language_set' => 'ISO-639-1', 'top_languages'=>array(REASON_DEFAULT_CONTENT_LANGUAGE), 'country_variants' => true, 'add_empty_value_to_top' => true, 'show_codes' => true ) );
+		
 		$administrator_fields = array('extra_head_content_structured', 'extra_head_content', 'unique_name');
 		$has_administrator_field = false;
 		foreach($administrator_fields as $field)

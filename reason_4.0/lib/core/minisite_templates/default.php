@@ -665,6 +665,27 @@ class MinisiteTemplate
 			$this->head_items->add_head_item('meta',array('name'=>'robots','content'=>'none' ) );
 		}
 	}
+	protected function get_site_language()
+	{
+		if($this->site_info->get_value('language'))
+		{
+			return $this->site_info->get_value('language');
+		}
+		if(defined('REASON_DEFAULT_CONTENT_LANGUAGE'))
+		{
+			return REASON_DEFAULT_CONTENT_LANGUAGE;
+		}
+		return NULL;
+	}
+	protected function get_html_tag_language_attributes_string()
+	{
+		if($lang = $this->get_site_language())
+		{
+			$encoded_lang = reason_htmlspecialchars($lang);
+			return ' lang="'.$encoded_lang.'" xml:lang="'.$encoded_lang.'"';
+		}
+		return '';
+	}
 	function _get_favicon_path()
 	{
 		if(defined('REASON_DEFAULT_FAVICON_PATH') && REASON_DEFAULT_FAVICON_PATH )
@@ -1036,7 +1057,7 @@ class MinisiteTemplate
 		$this->get_title();
 		// start page
 		echo $this->get_doctype()."\n";
-		echo '<html xmlns="http://www.w3.org/1999/xhtml">'."\n";
+		echo '<html xmlns="http://www.w3.org/1999/xhtml"'.$this->get_html_tag_language_attributes_string().'>'."\n";
 		echo '<head>'."\n";
 		//echo '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />' . "\n";
 

@@ -147,6 +147,8 @@
 
 			// get rid of archaic fields
 			if ($this->_is_element('script_url')) $this->remove_element( 'script_url' );
+			
+			$this->change_element_type( 'language' , 'language', array('language_set' => 'ISO-639-1', 'top_languages'=>array(REASON_DEFAULT_CONTENT_LANGUAGE), 'country_variants' => true, 'add_empty_value_to_top' => true, 'show_codes' => true ) );
 
 			// check for valid data
 			$this->add_required( 'base_url' );
