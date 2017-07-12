@@ -336,13 +336,13 @@
 				echo '<a href="'.$link.'"'.$title_attr.'>';
 				if($this->params['html5'])
 					echo $image_markup;
-				echo '<'.$element.'>'.$page_name.'</'.$element.'>';
+				echo '<'.$element.$child->get_language_attribute().'>'.$page_name.'</'.$element.'>';
 				if(!$this->params['html5'])
 					echo '<br />';
 				if ( $child->get_value( 'description' ))
 				{
 					$element = $this->params['html5'] ? 'div' : 'span';
-					echo "\n".'<'.$element.' class="childDesc">'.$child->get_value( 'description' ).'</'.$element.'>';
+					echo "\n".'<'.$element.$child->get_language_attribute().' class="childDesc">'.$child->get_value( 'description' ).'</'.$element.'>';
 				}
 				echo '</a>';
 			}
@@ -350,10 +350,10 @@
 			{
 				if($this->params['html5'])
 					echo $image_markup;
-				echo '<h4><a href="'.$link.'"'.$title_attr.'>'.$page_name.'</a></h4>';
+				echo '<h4><a href="'.$link.'"'.$title_attr.$child->get_language_attribute().'>'.$page_name.'</a></h4>';
 				if ( $child->get_value( 'description' ))
 				{
-					echo "\n".'<div class="childDesc">'.$child->get_value( 'description' ).'</div>';
+					echo "\n".'<div class="childDesc"'.$child->get_language_attribute().'>'.$child->get_value( 'description' ).'</div>';
 				}
 			}
 			if(!empty($this->params['link_to_blurbs']))

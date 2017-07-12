@@ -87,7 +87,7 @@ class ReasonUpgrader_49_AddLanguageFields implements reasonUpgraderInterface
     
     protected function create_language_field()
 	{
-		$q = "ALTER TABLE `entity` ADD `language` VARCHAR(8)";
+		$q = "ALTER TABLE `entity` ADD `language` VARCHAR(24)";
 		$result = db_query($q, 'problem creating language field');
 		return true;
 	}

@@ -26,7 +26,7 @@
 		}
 		function run()
 		{
-			echo '<div id="pageDescription">'."\n";
+			echo '<div id="pageDescription"'.$this->cur_page->get_language_attribute().'>'."\n";
 			echo $this->cur_page->get_value('description');
 			echo '</div>'."\n";
 		}

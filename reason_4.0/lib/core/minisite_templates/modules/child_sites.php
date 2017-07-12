@@ -82,7 +82,7 @@
 		} // }}}
 		function show_site( $site )
 		{
-			echo '<li>'."\n";
+			echo '<li'.$site->get_language_attribute().'>'."\n";
 			echo '<h4><a href="'.$site->get_value('base_url').'">'.$site->get_value('name').'</a></h4>';
 			$desc = $this->get_description($site);
 			if(!empty($desc))

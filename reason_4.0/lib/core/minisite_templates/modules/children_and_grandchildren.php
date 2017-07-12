@@ -68,11 +68,11 @@ class ChildrenAndGrandchildrenModule extends ChildrenModule
 		/* If the page has a link name, use that; otherwise, use its name */
 		if( $this->params['use_link_name'] )
 		{
-			$page_name = $child->get_value( 'link_name' ) ? $child->get_value( 'link_name' ) : $child->get_value('name');
+			$page_name = $child->get_value( 'link_name' ) ? $child->get_language_wrapped_value( 'link_name' ) : $child->get_language_wrapped_value('name');
 		}
 		else
 		{
-			$page_name = $child->get_value('name');
+			$page_name = $child->get_language_wrapped_value('name');
 		}
 
 		$link = $this->get_page_link($child);
@@ -92,7 +92,7 @@ class ChildrenAndGrandchildrenModule extends ChildrenModule
 		echo '</a>';
 		echo '</'.$tag.'>';
 		if ( $child->get_value( 'description' ))
-			echo "\n".'<div class="childDesc">'.$child->get_value( 'description' ).'</div>';
+			echo "\n".'<div class="childDesc"'.$child->get_language_attribute().'>'.$child->get_value( 'description' ).'</div>';
 		if($depth < $this->params['max_depth'])
 		{
 			$children_prepend = $prepend_url.$child->get_value('url_fragment').'/';
