@@ -245,16 +245,7 @@ class languageType extends select_no_sortType
 	protected $show_codes = false;
 	function get_all_languages()
 	{
-		if(!isset($this->language_sets[$this->language_set]))
-		{
-			trigger_error('Language set specified ('.$this->language_set.') is not available. Please choose from one of '.implode(', ',array_keys($this->language_sets)));
-			$langset = 'legacy';
-		}
-		else
-		{
-			$langset = $this->language_set;
-		}
-		$languages = $this->language_sets[$langset];
+		$languages = $this->get_language_set($this->language_set);
 		if($this->country_variants)
 		{
 			foreach($this->country_variant_sets as $code => $countries)
@@ -279,6 +270,15 @@ class languageType extends select_no_sortType
 			}
 		}
 		return $languages;
+	}
+	function get_language_set($langset = 'legacy')
+	{
+		if(!isset($this->language_sets[$langset]))
+		{
+			trigger_error('Language set specified ('.$this->language_set.') is not available. Please choose from one of '.implode(', ',array_keys($this->language_sets)));
+			$langset = 'legacy';
+		}
+		return $this->language_sets[$langset];
 	}
 	/**
 	 *  Adds the default languages to the {@link options} array.
