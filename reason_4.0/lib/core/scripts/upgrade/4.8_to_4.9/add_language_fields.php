@@ -126,10 +126,52 @@ class ReasonUpgrader_49_AddLanguageFields implements reasonUpgraderInterface
                 }
             }
             $ret .= '<p>Transferred data for '.$count.' captions.</p>';
-       	    $ret .= '<p>Deleting lang field...</p>';
-            // TODO: delete lang field
+            if($lang_field = $this->get_lang_field_entity())
+            {
+       	        $ret .= '<p>Deleting lang field...</p>';
+                if(db_query('ALTER TABLE `media_captions` DROP `lang`'))
+                {
+       	            $ret .= '<p>Successfully dropped the lang column. Deleting the field entity...</p>';
+                   	if(reason_expunge_entity($lang_field->id(),$this->user_id))
+                   	{
+                        $ret .= '<p>Successfully deleted the lang field entity.</p>';
+                   	}
+                   	else
+                   	{
+                   	    $ret .= '<p>Problem deleting the lang field entity. Please try deleting it manually in the Master Admin.</p>';
+                   	}
+       	        }
+                else
+                {
+                    $ret .= '<p>Problem deleting the lang column from the media_captions table. Please try doing this manually in the Master Admin.</p>';
+                }
+            }
+            else
+            {
+                $ret .= '<p>unable to find the media caption "lang" field. Please try deleting it manually in the Master Admin.</p>';
+            }
         }
         return $ret;
+    }
+    protected function get_lang_field_entity()
+    {
+        $es = new entity_selector();
+       	$es->add_type(id_of('content_table'));
+       	$es->add_relation('name = "media_captions"');
+       	$tables = $es->run_one();
+       	if(!empty($tables))
+       	{
+       	    $table = current($tables);
+	    $es = new entity_selector();
+	    $es->add_type(id_of('field'));
+	    $es->add_relation('name = "lang"');
+	    $es->add_left_relationship($table->id(), relationship_id_of('field_to_entity_table'));
+            $fields = $es->run_one();
+            if(!empty($fields))
+            {
+                return current($fields);
+            }
+       	}
     }
     protected function create_language_field()
 	{
