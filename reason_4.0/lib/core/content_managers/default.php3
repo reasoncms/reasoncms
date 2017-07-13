@@ -1,4 +1,4 @@
-	<?php
+<?php
 	/**
 	 * ContentManager is derived from Disco - its purpose to show and manage the content type editing screens for reason.
 	 *
