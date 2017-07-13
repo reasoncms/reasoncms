@@ -86,7 +86,10 @@
 			'sub_nav' => '',
 			'main_head' => '',
 			'main_post' => 'atoz',
-			'sidebar' => 'blurb',
+			'sidebar' => array(
+				'module' => 'blurb',
+				'demote_headings' => 0,
+			),
 		),
 		'image_sidebar_100x100' => array(
 			'sidebar' => array(
@@ -2114,7 +2117,10 @@
 					'Offices'=>array('office_site_type'),
 					'Other Sites'=>array('other_site_type'))), */
 			),
-			'sidebar' => 'blurb',
+			'sidebar' => array(
+				'module' => 'blurb',
+				'demote_headings' => 0,
+			),
 		),
 		'social_accounts' => array(
 			'main_post' => 'social_account/social_account',
