@@ -21,7 +21,7 @@ class av_captions extends ContentManager
 
 	var $box_class = 'stackedBox';
 	var $fields_to_remove = array();
-	var $field_order = array('av', 'upload', 'content', 'content_manual', 'kind', 'lang', 'label', 'unique_name', 'name',);
+	var $field_order = array('av', 'upload', 'content', 'content_manual', 'kind', 'language', 'label', 'unique_name', 'name',);
 	var $inited = false;
 	var $languages = array(
 		// A ISO-639-1 language code list  
@@ -194,7 +194,7 @@ class av_captions extends ContentManager
 		$this->set_value('content', $content_no_scripts);
 
 		// Generate or update the 'label' and 'name' fields
-		$pretty_lang = $this->languages[$this->get_value('lang')];
+		$pretty_lang = $this->languages[$this->get_value('language')];
 
 		$generated_label = "$pretty_lang " . $this->get_value('kind');
 		$this->set_value('label', $generated_label);
@@ -219,7 +219,7 @@ class av_captions extends ContentManager
 		
 		// Apply a few defaults for new entities
 		if ($this->_is_first_time() && !$this->has_errors() && $this->is_new_entity() && !$this->get_value('name')) {
-			$this->set_value('lang', 'en');
+			$this->set_value('languages', REASON_DEFAULT_CONTENT_LANGUAGE);
 
 			// Prefill the media work ID when creating a new caption
 			// in the context of a Media Work.
@@ -253,11 +253,8 @@ class av_captions extends ContentManager
 
 		$this->set_display_name('kind', 'Track Type');
 
-		$this->set_display_name('lang', 'Language');
-		$this->change_element_type('lang', 'select_no_sort', array(
-			'options' => $this->languages,
-			'display_name' => 'Track Language')
-		);
+		$this->change_element_type( 'language', 'language', array('language_set' => 'ISO-639-1', 'top_languages'=>array(REASON_DEFAULT_CONTENT_LANGUAGE), 'country_variants' => true, 'add_empty_value_to_top' => true, 'show_codes' => true ) );
+		$this->set_display_name('language', 'Track Language');
 	}
 
 	function init_head_items()
