@@ -1029,6 +1029,40 @@ class entity
 		$locks = $this->get_locks();
 		return $locks->user_can_edit_relationship($relationship, $user, $direction, $entity_on_other_side, $context_site);
 	}
+	/**
+	 * Get the attribute that specifies the language of the entity
+	 *
+	 * Usage:
+	 * echo '<div'.$e->get_language_attribute().'>'.$e->get_value('name').'</div>';
+	 *
+	 * @return string Empty (if default language) or a full ' lang=""' ready to be used directly as part of constructing an html element
+	 */
+	function get_language_attribute()
+	{
+		if($lang = $this->get_value('language'))
+		{
+			return ' lang="'.reason_htmlspecialchars($lang).'"';
+		}
+		return '';
+	}
+	/**
+	 * Get a given value wrapped with the appropriate language tag
+	 *
+	 * Usage:
+	 * echo $e->get_language_wrapped_value('name', 'div');
+	 *
+	 * @param string $field
+	 * @param string $wrapper_element
+	 * @return string
+	 */
+	function get_language_wrapped_value($field, $wrapper_element = 'span')
+	{
+		if($val = $this->get_value($field))
+		{
+			return '<'.$wrapper_element.$this->get_language_attribute().'>'.$val.'</'.$wrapper_element.'>';
+		}
+		return '';
+	}
 }
 
 ?>

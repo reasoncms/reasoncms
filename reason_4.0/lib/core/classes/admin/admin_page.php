@@ -1546,7 +1546,7 @@ class AdminPage
 	function head()
 	{
 		echo '<!DOCTYPE html>'."\n";
-		echo '<html xmlns="http://www.w3.org/1999/xhtml">'."\n";
+		echo '<html xmlns="http://www.w3.org/1999/xhtml" lang="'.REASON_DEFAULT_INTERFACE_LANGUAGE.'" xml:lang="'.REASON_DEFAULT_INTERFACE_LANGUAGE.'">'."\n";
 		echo '<head>'."\n";
 		echo '<title>Reason';
 		if( !empty( $this->site_id ) )

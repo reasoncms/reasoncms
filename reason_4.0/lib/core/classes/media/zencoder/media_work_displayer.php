@@ -573,8 +573,8 @@ class ZencoderMediaWorkDisplayer implements MediaWorkDisplayerInterface
 			
 			$markup .= '<track kind="' . $caption->get_value('kind') . '" '
 					. 'src="' . $url_with_params . '" '
-					. 'srclang="' . htmlentities($caption->get_value('lang'), ENT_QUOTES) . '" '
-					. 'label="' . htmlentities($caption->get_value('label'), ENT_QUOTES) . '" />';
+					. 'srclang="' . reason_htmlspecialchars($caption->get_value('language')) . '" '
+					. 'label="' . reason_htmlspecialchars($caption->get_value('label')) . '" />';
 			$markup .= "\n";
 		}
 

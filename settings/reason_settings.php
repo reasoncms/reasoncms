@@ -1135,3 +1135,14 @@
 	 *
 	 */
 	define('REASON_ITEM_TITLE_PATTERN', '[item_name] | [minisite_name] | [organization_name]');
+	
+	
+	/**
+	 * REASON_DEFAULT_CONTENT_LANGUAGE
+	 */
+	define('REASON_DEFAULT_CONTENT_LANGUAGE', 'en-US');
+	
+	/**
+	 * REASON_DEFAULT_INTERFACE_LANGUAGE
+	 */
+	define('REASON_DEFAULT_INTERFACE_LANGUAGE', 'en-US');
