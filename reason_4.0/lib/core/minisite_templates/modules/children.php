@@ -45,6 +45,7 @@
 										'footer' => '',
 										'link_to_blurbs' => false, // can be boolean for any child page type or a page type string or array for one or multiple page types to do blurb linking on
 										'blurb_title_delimiter' => '', // If a nonempty string is provided, blurb titles will be split on the delimiter provided and only text after the first instance of the delimiter will be displayed
+										'heading_level' => '4',
 									);
 		var $offspring = array();
 		var $az = array();
@@ -332,7 +333,7 @@
 			}
 			if($this->params['description_part_of_link'])
 			{
-				$element = $this->params['html5'] ? 'h4' : 'strong';
+				$element = $this->params['html5'] ? 'h'.$this->params['heading_level'] : 'strong';
 				echo '<a href="'.$link.'"'.$title_attr.'>';
 				if($this->params['html5'])
 					echo $image_markup;
@@ -350,7 +351,7 @@
 			{
 				if($this->params['html5'])
 					echo $image_markup;
-				echo '<h4><a href="'.$link.'"'.$title_attr.'>'.$page_name.'</a></h4>';
+				echo '<h'.$this->params['heading_level'].'><a href="'.$link.'"'.$title_attr.'>'.$page_name.'</a></h'.$this->params['heading_level'].'>';
 				if ( $child->get_value( 'description' ))
 				{
 					echo "\n".'<div class="childDesc">'.$child->get_value( 'description' ).'</div>';
