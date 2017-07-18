@@ -19,44 +19,95 @@ reason_include_once('function_libraries/image_tools.php');
  *
  * It refreshes its cache any time the most recent last modified date of an image on the site changes.
  *
- * @todo rework this to be based on ReasonMVCModel so it is configurable via config() and not just the current URL.
- *
  * @author Nathan White
+ * @author Tom Brice
  */
 class ReasonImageJSON extends ReasonJSON implements ReasonFeedInterface
 {
-	/** 
-	 * Set myself up.
-	 */
-	function __construct()
+	function configure()
 	{
-		$type = turn_into_string($_GET['type']);
-		$site_id = turn_into_int($_GET['site_id']);
-		$this->type(id_of('image'));
-		$this->site_id($site_id);
-		$last_mod = (isset($_GET['lastmod'])) ? $_GET['lastmod'] : false;
-		$num = !empty($_REQUEST['num']) ? turn_into_int($_REQUEST['num']) : '500';
-		$offset = !empty($_REQUEST['offset']) ? turn_into_int($_REQUEST['offset']) : '0';
-		$this->num($num);
-		$this->offset($offset);
-		$this->last_mod($last_mod);
-		$this->caching((isset($_GET['caching']))? turn_into_boolean($_GET['caching']) : true);	
+		parent::configure();
+
+		if (!$this->config('type')) {
+			if (isset($_GET['type'])) $this->config('type', id_of($_GET['type']));
+		}
+
+		if (!$this->config('lastmod'))
+		{
+			$last_mod_value = false;
+			if (isset($_GET['lastmod'])) {
+				$last_mod_value = $_GET['lastmod'];
+			}
+			$this->config('lastmod', $last_mod_value);
+		}
+		if (!$this->config('num'))
+		{
+			$num_value = '500';
+			if (isset($_GET['num'])) {
+				$num_value = intval($_GET['num']);
+			}
+			$this->config('num', $num_value);
+		}
+		if (!$this->config('offset'))
+		{
+			$offset_value = '0';
+			if (isset($_GET['offset'])) {
+				$offset_value = intval($_GET['offset']);
+			}
+			$this->config('offset', $offset_value);
+		}
+		if (!$this->config('caching'))
+		{
+			$caching_value = true;
+			if (isset($_GET['caching'])) {
+				$caching_value = boolval($_GET['caching']);
+			}
+			$this->config('caching', $caching_value);
+		}
 	}
-	
+
+	function configured()
+	{
+		if ($site_id = $this->config('site_id'))
+		{
+			$site = new entity($site_id);
+			if (reason_is_entity($site, 'site')) return true;
+		}
+		return false;
+	}
+
 	function authorized()
 	{
 		return (reason_check_authentication());
 	}
-	
-	function get()
+
+	protected function get_json()
 	{
-		return $this->run();
+		// if caching is off or the items are not yet in the cache.
+		$items = ($this->caching()) ? $this->cache() : FALSE;
+		if (!$items)
+		{
+			$items = $this->get_items('items');
+			if ($this->caching()) $this->cache($items);
+		}
+		$data = $this->make_chunk($items, 'items');
+
+		return $this->encoded_json_from($data);
 	}
+
+	protected function get_items_selector()
+	{
+		$es = new entity_selector($this->config('site_id'));
+		$es->add_type($this->config('type'));
+		$es->set_order('last_modified DESC');
+		return $es;
+	}
+
 	/**
 	 * This function should be overloaded in each new ReasonJSON type. It is the
 	 * mapping of values from the Reason entities to the JSON object.
 	 */
-	function transform_item($v)
+	protected function transform_item($v)
 	{
 		$newArray = array();
 		$newArray['id'] = $v->get_value('id');

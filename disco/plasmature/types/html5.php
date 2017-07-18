@@ -18,7 +18,6 @@ class telType extends defaultTextType
 {
 	var $type = 'tel';
 
-	
 	function get_display()
 	{
 		$str  = '<input type="tel" name="'.$this->name.'" id="'.$this->get_id().'" value="'.htmlspecialchars($this->get(),ENT_QUOTES).'"/>';
@@ -37,6 +36,11 @@ class telType extends defaultTextType
 			}
 		}
 		parent::grab();
+	}
+	
+	function get_label_target_id()
+	{
+		return $this->get_id();
 	}
 }
 
@@ -67,6 +71,11 @@ class numberType extends defaultTextType
 		$str .= '/>'; 
 		return $str;
 	}
+	
+	function get_label_target_id()
+	{
+		return $this->get_id();
+	}
 }
 
 /**
@@ -96,6 +105,11 @@ class rangeType extends defaultTextType
 		}
 		$str .= '/>';
 		return $str;
+	}
+	
+	function get_label_target_id()
+	{
+		return $this->get_id();
 	}
 }
 

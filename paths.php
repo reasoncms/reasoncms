@@ -36,15 +36,21 @@ function domain_define($constant, $default)
 define ('INCLUDE_PATH', dirname(__FILE__) . '/');
 
 /**
- * The location of the reason_package settings folder - this should be outside the web tree
+ * The location of the reason_package settings folder - this should be outside the web tree.
+ * It can be supplied by setting an environment variable to an absolute path.
+ * If the ENV var REASON_SETTINGS_PATH is set it will be used.
  *
  * By default, the constant will be set to settings_local if such a directory exists parallel to settings
  */
-define ('SETTINGS_INC', 
-       (file_exists(INCLUDE_PATH . 'settings_local'))
-       ? INCLUDE_PATH . 'settings_local/'
-       : INCLUDE_PATH . 'settings/');
-       
+if ($settings_path = getenv('REASON_SETTINGS_PATH')) {
+	define('SETTINGS_INC', $settings_path);
+} else {
+	define ('SETTINGS_INC',
+		(file_exists(INCLUDE_PATH . 'settings_local'))
+			? INCLUDE_PATH . 'settings_local/'
+			: INCLUDE_PATH . 'settings/');
+}
+
 /**
  * Load in domain specific settings. Any setting defined with the domain_define will use domain specific settings when available
  */
