@@ -147,10 +147,12 @@ class reason_iCalendar
 			$icalendar_event .= 'URL:' . $this->_fold_text($this->_events_page_url.'?event_id='.$event->id()) . "\r\n";
 		//LAST-MODIFIED
 		if (strlen($event -> get_value('last_modified')) != 0)
-			$icalendar_event .= 'LAST-MODIFIED:' . $this -> _create_datetime(carl_date("Y-m-d H:i:s", strtotime($event -> get_value('last_modified'))), false) . "\r\n";
+			$icalendar_event .= 'LAST-MODIFIED:' . $this -> _create_datetime(carl_date("Y-m-d H:i:s", strtotime($event -> get_value('last_modified'))), true) . "\r\n";
 		//CREATED
 		if (strlen($event -> get_value('creation_date')) != 0)
 			$icalendar_event .= 'CREATED:' . $this -> _create_datetime(carl_date("Y-m-d H:i:s", strtotime($event -> get_value('creation_date'))), false) . "\r\n";
+		
+		$icalendar_event .= 'DTSTAMP:' . $this -> _create_datetime(carl_date("Y-m-d H:i:s", time()), false) . "\r\n";
 	
 		//DTSTART
 		if (strlen($event -> get_value('datetime')) != 0)

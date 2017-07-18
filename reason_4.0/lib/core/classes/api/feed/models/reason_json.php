@@ -6,6 +6,7 @@ include_once( 'reason_header.php' );
 reason_include_once('classes/mvc.php');
 reason_include_once( 'function_libraries/user_functions.php' );
 reason_include_once( 'classes/object_cache.php' );
+reason_include_once( 'function_libraries/safe_json.php' );
 
 /**
  * ReasonJSON is a JSON API that supports caching and chunking.
@@ -199,7 +200,7 @@ abstract class ReasonJSON extends ReasonMVCModel
 	 */
 	final function encoded_json_from($data)
 	{
-		$json_data = $this->safe_json_encode($data);
+		$json_data = safe_json_encode($data);
 //		$json_data = json_encode($data);
 		$this->set_response_status_code('200');
 		if (!$json_data) {
@@ -216,40 +217,6 @@ abstract class ReasonJSON extends ReasonMVCModel
 			}
 		}
 		return $json_data;
-	}
-
-	/**
-	 * This function will handle encoding data into JSON. The data can contain chars that
-	 * might not properly be utf8.
-	 *
-	 * @param $value
-	 * @return mixed|string encoded JSON string
-	 */
-	final function safe_json_encode($value)
-	{
-		$encoded = json_encode($value);
-		switch (json_last_error()) {
-			case JSON_ERROR_NONE:
-				return $encoded;
-			case JSON_ERROR_UTF8:
-				$clean = $this->utf8ize($value);
-				return $this->safe_json_encode($clean);
-			default:
-				return $encoded;
-
-		}
-	}
-
-	final function utf8ize($mixed)
-	{
-		if (is_array($mixed)) {
-			foreach ($mixed as $key => $value) {
-				$mixed[$key] = $this->utf8ize($value);
-			}
-		} else if (is_string($mixed)) {
-			return utf8_encode($mixed);
-		}
-		return $mixed;
 	}
 
 	/**

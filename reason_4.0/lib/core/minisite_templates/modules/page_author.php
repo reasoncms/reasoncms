@@ -136,7 +136,8 @@
 	
 		function get_author_markup()
 		{
-			return '<div class="pageAuthor">'.$this->current_page->get_value('author').'</div>';
+			$ret = '<div class="pageAuthor"'.$this->current_page->get_language_attribute().'>'.$this->current_page->get_value('author').'</div>';
+			return $ret;
 		}
 		
 	}

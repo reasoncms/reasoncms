@@ -21,7 +21,7 @@
  * <code>
  *	$head_item = new HeadItems();
  *	$head_item->add_stylesheet('mycss.css');
- *	$head_html = $head_item->get_head_items_html();
+ *	$head_html = $head_item->get_head_item_markup();
  * </code>
  *
  * @author Nathan White and the author(s) of functions that I lifted from the default template

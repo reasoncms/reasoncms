@@ -21,153 +21,8 @@ class av_captions extends ContentManager
 
 	var $box_class = 'stackedBox';
 	var $fields_to_remove = array();
-	var $field_order = array('av', 'upload', 'content', 'content_manual', 'kind', 'lang', 'label', 'unique_name', 'name',);
+	var $field_order = array('av', 'upload', 'content', 'content_manual', 'kind', 'language', 'label', 'unique_name', 'name',);
 	var $inited = false;
-	var $languages = array(
-		// A ISO-639-1 language code list  
-		"" => "",
-		"en" => "English",
-		"es" => "Spanish",
-		"ab" => "Abkhazian",
-		"aa" => "Afar",
-		"af" => "Afrikaans",
-		"sq" => "Albanian",
-		"am" => "Amharic",
-		"ar" => "Arabic",
-		"hy" => "Armenian",
-		"as" => "Assamese",
-		"ay" => "Aymara",
-		"az" => "Azerbaijani",
-		"ba" => "Bashkir",
-		"eu" => "Basque",
-		"bn" => "Bengali",
-		"dz" => "Bhutani",
-		"bh" => "Bihari",
-		"bi" => "Bislama",
-		"br" => "Breton",
-		"bg" => "Bulgarian",
-		"my" => "Burmese",
-		"be" => "Byelorussian",
-		"km" => "Cambodian",
-		"ca" => "Catalan",
-		"zh" => "Chinese",
-		"co" => "Corsican",
-		"hr" => "Croatian",
-		"cs" => "Czech",
-		"da" => "Danish",
-		"nl" => "Dutch",
-		"en" => "English",
-		"eo" => "Esperanto",
-		"et" => "Estonian",
-		"fo" => "Faeroese",
-		"fj" => "Fiji",
-		"fi" => "Finnish",
-		"fr" => "French",
-		"fy" => "Frisian",
-		"gl" => "Galician",
-		"ka" => "Georgian",
-		"de" => "German",
-		"el" => "Greek",
-		"kl" => "Greenlandic",
-		"gn" => "Guarani",
-		"gu" => "Gujarati",
-		"ha" => "Hausa",
-		"he" => "Hebrew",
-		"hi" => "Hindi",
-		"hu" => "Hungarian",
-		"is" => "Icelandic",
-		"id" => "Indonesian",
-		"ia" => "Interlingua",
-		"ie" => "Interlingue",
-		"ik" => "Inupiak",
-		"iu" => "Inuktitut (Eskimo)",
-		"ga" => "Irish",
-		"it" => "Italian",
-		"ja" => "Japanese",
-		"jw" => "Javanese",
-		"kn" => "Kannada",
-		"ks" => "Kashmiri",
-		"kk" => "Kazakh",
-		"rw" => "Kinyarwanda",
-		"ky" => "Kirghiz",
-		"rn" => "Kirundi",
-		"ko" => "Korean",
-		"ku" => "Kurdish",
-		"lo" => "Laothian",
-		"la" => "Latin",
-		"lv" => "Latvian, Lettish",
-		"ln" => "Lingala",
-		"lt" => "Lithuanian",
-		"mk" => "Macedonian",
-		"mg" => "Malagasy",
-		"ms" => "Malay",
-		"ml" => "Malayalam",
-		"mt" => "Maltese",
-		"mi" => "Maori",
-		"mr" => "Marathi",
-		"mo" => "Moldavian",
-		"mn" => "Mongolian",
-		"na" => "Nauru",
-		"ne" => "Nepali",
-		"no" => "Norwegian",
-		"oc" => "Occitan",
-		"or" => "Oriya",
-		"om" => "Oromo",
-		"ps" => "Pashto, Pushto",
-		"fa" => "Persian",
-		"pl" => "Polish",
-		"pt" => "Portuguese",
-		"pa" => "Punjabi",
-		"qu" => "Quechua",
-		"rm" => "Rhaeto-Romance",
-		"ro" => "Romanian",
-		"ru" => "Russian",
-		"sm" => "Samoan",
-		"sg" => "Sangro",
-		"sa" => "Sanskrit",
-		"gd" => "Scots Gaelic",
-		"sr" => "Serbian",
-		"sh" => "Serbo-Croatian",
-		"st" => "Sesotho",
-		"tn" => "Setswana",
-		"sn" => "Shona",
-		"sd" => "Sindhi",
-		"si" => "Singhalese",
-		"ss" => "Siswati",
-		"sk" => "Slovak",
-		"sl" => "Slovenian",
-		"so" => "Somali",
-		"es" => "Spanish",
-		"su" => "Sudanese",
-		"sw" => "Swahili",
-		"sv" => "Swedish",
-		"tl" => "Tagalog",
-		"tg" => "Tajik",
-		"ta" => "Tamil",
-		"tt" => "Tatar",
-		"te" => "Tegulu",
-		"th" => "Thai",
-		"bo" => "Tibetan",
-		"ti" => "Tigrinya",
-		"to" => "Tonga",
-		"ts" => "Tsonga",
-		"tr" => "Turkish",
-		"tk" => "Turkmen",
-		"tw" => "Twi",
-		"ug" => "Uigur",
-		"uk" => "Ukrainian",
-		"ur" => "Urdu",
-		"uz" => "Uzbek",
-		"vi" => "Vietnamese",
-		"vo" => "Volapuk",
-		"cy" => "Welch",
-		"wo" => "Wolof",
-		"xh" => "Xhosa",
-		"yi" => "Yiddish",
-		"yo" => "Yoruba",
-		"za" => "Zhuang",
-		"zu" => "Zulu",
-	);
 
 	function on_every_time()
 	{
@@ -194,7 +49,24 @@ class av_captions extends ContentManager
 		$this->set_value('content', $content_no_scripts);
 
 		// Generate or update the 'label' and 'name' fields
-		$pretty_lang = $this->languages[$this->get_value('lang')];
+		$lang_element = $this->get_element('language');
+		$langs = $lang_element->get_language_set('ISO-639-1');
+		if(isset($langs[$this->get_value('language')]))
+		{
+			$pretty_lang = $langs[$this->get_value('language')];
+		}
+		else
+		{
+			$parts = explode('-', $this->get_value('language'));
+			if(isset($langs[$parts[0]]))
+			{
+				$pretty_lang = $langs[$parts[0]];
+			}
+			else
+			{
+				$pretty_lang = $this->get_value('language');
+			}
+		}
 
 		$generated_label = "$pretty_lang " . $this->get_value('kind');
 		$this->set_value('label', $generated_label);
@@ -219,7 +91,7 @@ class av_captions extends ContentManager
 		
 		// Apply a few defaults for new entities
 		if ($this->_is_first_time() && !$this->has_errors() && $this->is_new_entity() && !$this->get_value('name')) {
-			$this->set_value('lang', 'en');
+			$this->set_value('language', REASON_DEFAULT_CONTENT_LANGUAGE);
 
 			// Prefill the media work ID when creating a new caption
 			// in the context of a Media Work.
@@ -253,11 +125,8 @@ class av_captions extends ContentManager
 
 		$this->set_display_name('kind', 'Track Type');
 
-		$this->set_display_name('lang', 'Language');
-		$this->change_element_type('lang', 'select_no_sort', array(
-			'options' => $this->languages,
-			'display_name' => 'Track Language')
-		);
+		$this->change_element_type( 'language', 'language', array('language_set' => 'ISO-639-1', 'top_languages'=>array(REASON_DEFAULT_CONTENT_LANGUAGE), 'country_variants' => true, 'add_empty_value_to_top' => true, 'show_codes' => true ) );
+		$this->set_display_name('language', 'Track Language');
 	}
 
 	function init_head_items()

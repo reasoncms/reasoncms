@@ -1191,6 +1191,7 @@
         DEFAULT_VALUE: 'default_value',
         FIELD_TYPE: 'field_type',
         REQUIRED: 'required',
+        DATE_FIELD_TIME_ENABLED: 'date_field_time_enabled',
         PREFILL_KEY: 'prefill_key',
         ADMIN_ONLY: 'admin_only',
         OPTIONS: 'field_options.options',
@@ -1539,11 +1540,16 @@
 }).call(this);
 
 (function() {
+  var localPrettyName;
+
+  localPrettyName = "Date";
+
   Formbuilder.registerField('date', {
     order: 20,
-    view: "<div class='input-line'>\n  <span class='month'>\n    <input type=\"text\" />\n    <label>MM</label>\n  </span>\n\n  <span class='above-line'>/</span>\n\n  <span class='day'>\n    <input type=\"text\" />\n    <label>DD</label>\n  </span>\n\n  <span class='above-line'>/</span>\n\n  <span class='year'>\n    <input type=\"text\" />\n    <label>YYYY</label>\n  </span>\n</div>",
-    edit: "",
-    addButton: "<span class=\"symbol\"><span class=\"fa fa-calendar\"></span></span> Date"
+    view: "<div class='input-line'>\n  <span class='month'>\n    <input type=\"text\" />\n    <label>MM</label>\n  </span>\n\n  <span class='above-line'>/</span>\n\n  <span class='day'>\n    <input type=\"text\" />\n    <label>DD</label>\n  </span>\n\n  <span class='above-line'>/</span>\n\n  <span class='year'>\n    <input type=\"text\" />\n    <label>YYYY</label>\n  </span>\n</div>\n   <% if (rf.get(Formbuilder.options.mappings.DATE_FIELD_TIME_ENABLED)) { %>\n  <div class='input-line'>\n  <span class='hours'>\n    <input type=\"text\" />\n    <label>HH</label>\n  </span>\n\n  <span class='above-line'>:</span>\n\n  <span class='minutes'>\n    <input type=\"text\" />\n    <label>MM</label>\n  </span>\n\n  <span class='above-line'>:</span>\n\n  <span class='seconds'>\n    <input type=\"text\" />\n    <label>SS</label>\n  </span>\n\n  <span class='am_pm'>\n    <select>\n      <option>AM</option>\n      <option>PM</option>\n    </select>\n  </span>\n</div>\n<% } %>",
+    edit: "<label><input type='checkbox' data-rv-checked='model.<%= Formbuilder.options.mappings.DATE_FIELD_TIME_ENABLED %>' />\n	Also Show Time Entry\n</label>",
+    addButton: "<span class=\"symbol\"><span class=\"fa fa-calendar\"></span></span> Date",
+    prettyName: localPrettyName
   });
 
 }).call(this);
@@ -1781,11 +1787,16 @@
 }).call(this);
 
 (function() {
+  var localPrettyName;
+
+  localPrettyName = "Time";
+
   Formbuilder.registerField('time', {
     order: 25,
     view: "<div class='input-line'>\n  <span class='hours'>\n    <input type=\"text\" />\n    <label>HH</label>\n  </span>\n\n  <span class='above-line'>:</span>\n\n  <span class='minutes'>\n    <input type=\"text\" />\n    <label>MM</label>\n  </span>\n\n  <span class='above-line'>:</span>\n\n  <span class='seconds'>\n    <input type=\"text\" />\n    <label>SS</label>\n  </span>\n\n  <span class='am_pm'>\n    <select>\n      <option>AM</option>\n      <option>PM</option>\n    </select>\n  </span>\n</div>",
     edit: "",
-    addButton: "<span class=\"symbol\"><span class=\"fa fa-clock-o\"></span></span> Time"
+    addButton: "<span class=\"symbol\"><span class=\"fa fa-clock-o\"></span></span> Time",
+    prettyName: localPrettyName
   });
 
 }).call(this);

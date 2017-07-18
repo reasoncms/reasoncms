@@ -31,10 +31,11 @@
 		function run()
 		{
 			$this->process();
-			echo '<div id="pageContent" class="'.$this->get_api_class_string().'">';
+			echo '<div id="pageContent" class="'.$this->get_api_class_string().'"'.$this->cur_page->get_language_attribute().'>';
 			echo $this->content;
 			echo '</div>';
 		}
+		
 		function process()
 		{
 			if (!empty($this->textonly))

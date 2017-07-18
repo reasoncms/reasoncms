@@ -49,3 +49,13 @@ function yiq($r,$g,$b)
 {
 	return (($r*299)+($g*587)+($b*114))/1000;
 }
+function less_multiply($arg)
+{
+    list($color1, $color2) = $arg[2];
+    
+    $r = $color1[1] * $color2[1] / 255;
+    $g = $color1[2] * $color2[2] / 255;
+    $b = $color1[3] * $color2[3] / 255;
+
+    return array('color', round($r), round($g), round($b));
+}

@@ -167,7 +167,7 @@ if( !defined( 'INC_REASON_MODULES_IMAGES' ) )
 			if (empty($link_with_url))
 			{
 				if (empty($textonly))
-					$pre_link = "<a onmouseover=\"window.status = 'view larger image'; return true;\" onmouseout=\"window.status = ''; return true;\" onclick=\"this.href='javascript:void(window.open(\'".REASON_IMAGE_VIEWER."?id=".$image['id']."\', \'PopupImage\', \'menubar,scrollbars,resizable,width=".$window_width.",height=".$window_height."\'))'\" href=\"".WEB_PHOTOSTOCK. reason_get_image_filename($id) ."?cb=".filemtime($image_path)."\">";
+					$pre_link = "<a onclick=\"this.href='javascript:void(window.open(\'".REASON_IMAGE_VIEWER."?id=".$image['id']."\', \'PopupImage\', \'menubar,scrollbars,resizable,width=".$window_width.",height=".$window_height."\'))'\" href=\"".WEB_PHOTOSTOCK. reason_get_image_filename($id) ."?cb=".filemtime($image_path)."\">";
 					else
 						$pre_link = '<a href="'.WEB_PHOTOSTOCK. reason_get_image_filename($id) .'?cb='.filemtime($image_path).'">';
 			}

@@ -183,6 +183,8 @@ class ThorCore
 			{
 				// echo "running on [" . $node->tagName . "]...<br>";
 				if ($node->tagName == 'input') $this->_transform_input($node, $disco_obj);
+				elseif ($node->tagName == 'date') $this->_transform_date($node, $disco_obj);
+				elseif ($node->tagName == 'time') $this->_transform_time($node, $disco_obj);
 				elseif ($node->tagName == 'textarea') $this->_transform_textarea($node, $disco_obj);
 				elseif ($node->tagName == 'radiogroup') $this->_transform_radiogroup($node, $disco_obj);
 				elseif ($node->tagName == 'checkboxgroup') $this->_transform_checkboxgroup($node, $disco_obj);
@@ -233,6 +235,10 @@ class ThorCore
 							}
 						}
 						$disco_obj->set_value($k, $v);
+						// Inject options if data reflects new options
+						if (property_exists($kEl, 'options'))
+							if (!in_array($kEl->value, $kEl->options))
+								$kEl->options[$kEl->value] = $kEl->value;
 					}
 					elseif (isset($display_values[$k]['group_id']))
 					{
@@ -269,7 +275,7 @@ class ThorCore
 		{
 			foreach ($xml->document->tagChildren as $node)
 			{
-				if (in_array($node->tagName, array('input', 'textarea', 'radiogroup', 'optiongroup', 'hidden', 'event_tickets')))
+				if (in_array($node->tagName, array('input', 'date', 'time', 'textarea', 'radiogroup', 'optiongroup', 'hidden', 'event_tickets')))
 				{
 					// just basic - get the disco value
 					$key = $node->tagAttrs['id'];
@@ -710,14 +716,11 @@ class ThorCore
 			case 'tinytext':
    				$q .= '`'.$k.'` tinytext NOT NULL , ';
    				break;
-			case 'enum':
-   				$q .= '`'.$k.'` enum(';
-   				foreach ($v['options'] as $option)
-   				{
-   					$q .= "'" . mysql_real_escape_string($option) . "',";
-   				}
-   				$q = substr( $q, 0, -1 ); // trim trailing comma
-   				$q .= ') NULL , ';
+   			case 'dateTimeText':
+   				$q .= '`'.$k.'` datetime NOT NULL , ';
+   				break;
+   			case 'timeText':
+   				$q .= '`'.$k.'` tinytext NOT NULL , ';
    				break;
 			case 'text':
    				$q .= '`'.$k.'` text NOT NULL , ';
@@ -980,15 +983,17 @@ class ThorCore
 			elseif ($node->tagName == 'textarea') {
 				$db_structure[$node->tagAttrs['id']]['type'] = 'text';
 			}
+			elseif ($node->tagName == 'date') {
+				$db_structure[$node->tagAttrs['id']]['type'] = 'dateTimeText';
+			}
+			elseif ($node->tagName == 'time') {
+				$db_structure[$node->tagAttrs['id']]['type'] = 'timeText';
+			}
 			elseif ($node->tagName == 'hidden') {
 				$db_structure[$node->tagAttrs['id']]['type'] = 'text';
 			}
 			elseif (($node->tagName == 'radiogroup') || ($node->tagName == 'optiongroup')) {
-				$db_structure[$node->tagAttrs['id']]['type'] = 'enum';
-				$node_children = $node->tagChildren;
-				foreach ($node_children as $node2) {
-					$db_structure[$node->tagAttrs['id']]['options'][] = $node2->tagAttrs['value'];
-				}
+				$db_structure[$node->tagAttrs['id']]['type'] = 'tinytext';
 			}
 			elseif ($node->tagName == 'checkboxgroup') {
 				$node_children = $node->tagChildren;
@@ -1052,6 +1057,22 @@ class ThorCore
 	{
 		$element_attrs = $element_obj->tagAttrs;
 		$type = 'textarea';
+		$display_values[$element_attrs['id']] = array('label' => $element_attrs['label'], 'type' => $type);
+		return $display_values;
+	}
+	
+	function _build_display_date($element_obj)
+ 	{
+		$element_attrs = $element_obj->tagAttrs;
+		$type = 'dateTimeText';
+		$display_values[$element_attrs['id']] = array('label' => $element_attrs['label'], 'type' => $type);
+		return $display_values;
+	}
+	
+	function _build_display_time($element_obj)
+	{
+		$element_attrs = $element_obj->tagAttrs;
+		$type = 'timeText';
 		$display_values[$element_attrs['id']] = array('label' => $element_attrs['label'], 'type' => $type);
 		return $display_values;
 	}
@@ -1155,6 +1176,30 @@ class ThorCore
 		$id = $element->tagAttrs['id'];
 		$args = Array('text' => $element->tagData);
 		$d->add_element($id, 'comment', $args);
+	}
+	
+	function _transform_date($element, &$d)
+	{
+		$id = $element->tagAttrs['id'];
+		$display_name = (!empty($element->tagAttrs['label'])) ? $element->tagAttrs['label'] : '';
+		$args = Array('display_name' => $display_name);
+		$time_entry = (!empty($element->tagAttrs['date_field_time_enabled'])) ? true : false;
+		if ($time_entry)
+			$d->add_element($id, 'textDateTimeNoSeconds', $args);
+		else
+			$d->add_element($id, 'textDate', $args);
+		$required = (!empty($element->tagAttrs['required'])) ? true : false;
+		if ($required) $d->add_required($id);
+	}
+	
+	function _transform_time($element, &$d)
+	{
+		$id = $element->tagAttrs['id'];
+		$display_name = (!empty($element->tagAttrs['label'])) ? $element->tagAttrs['label'] : '';
+		$args = Array('display_name' => $display_name);
+		$d->add_element($id, 'textTimeNoSeconds', $args);
+		$required = (!empty($element->tagAttrs['required'])) ? true : false;
+		if ($required) $d->add_required($id);
 	}
  
 	function _transform_textarea($element, &$d)

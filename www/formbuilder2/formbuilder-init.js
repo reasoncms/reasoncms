@@ -17,8 +17,6 @@ function initializeFormbuilder($, Formbuilder, thorContentItemId) {
 
 	Formbuilder.config({
 	  UNLISTED_FIELDS: ['submit_button',
-	                    'date',
-	                    'time',
 	                    'number',
 	                    'website',
 	                    'email',

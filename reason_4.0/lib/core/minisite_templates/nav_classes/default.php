@@ -264,7 +264,7 @@
 					$class_attr = ' class="'.implode(' ',$classes).'"';
 				else
 					$class_attr = '';
-				$link = '<a href="'.$link.'"'.$class_attr.'>'.$prepend.$page_name.$append.'</a>';
+				$link = '<a href="'.$link.'"'.$class_attr.$item->get_language_attribute().'>'.$prepend.$page_name.$append.'</a>';
 
 				echo $link;
 			}
@@ -274,7 +274,7 @@
 					$class_attr = ' class="'.implode(' ',$classes).'"';
 				else
 					$class_attr = '';
-				echo '<strong'.$class_attr.'>'.$page_name.'</strong>';
+				echo '<strong'.$class_attr.$item->get_language_attribute().'>'.$page_name.'</strong>';
 			}
 		} //  }}}
 		function modify_base_url($base_url) // {{{
