@@ -126,7 +126,6 @@
 			$this->set_display_name( 'datetime', 'Photo Taken' );
 			$this->set_display_name( 'author', 'Photographer' );
 
-
 			$this->set_comments( 'name', form_comment("A name for internal reference") );
 			$this->set_comments( 'content', form_comment("The long caption will appear with the full-sized image.") );
 			$this->set_comments( 'description', form_comment("The short caption will go along with the thumbnail. It will also be used under the full-sized image if there is no long caption.") );

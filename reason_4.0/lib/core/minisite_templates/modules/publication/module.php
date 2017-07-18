@@ -2878,6 +2878,11 @@ var $noncanonical_request_keys = array(
 
 		function get_embed_handler($item)
 		{
+			$vals = $item->get_values();
+			if(empty($vals)) {
+				trigger_error('Entity not found');
+				return NULL;
+			}
 			if (!isset($this->_embed_handlers[$item->id()]))
 			{
 				$customHandlerData = $item->get_relationship("news_post_to_embed_handler");
@@ -2890,7 +2895,13 @@ var $noncanonical_request_keys = array(
 				}
 
 				if ($handler == null) {
-					$handler = new SimpleEmbedHandler($item->get_owner()->id());
+					if($owner = $item->get_owner()) {
+						$handler = new SimpleEmbedHandler($owner->id());
+					}
+					else {
+						trigger_error('Item not owned by any site');
+						return NULL;
+					}
 				}
 				$this->_embed_handlers[$item->id()] = $handler;
 			}

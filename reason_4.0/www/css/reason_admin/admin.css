@@ -82,6 +82,14 @@ a.skipLink:focus, a.skipLink:active, a.skipLink:hover {
 	float:right;
 	margin-top:2px;
 }
+.liveness {
+	background:#fff;
+	color:#777;
+	border-radius:.125em;
+	display:inline-block;
+	padding:.125em .25em;
+	font-weight:normal;
+}
 .editor img.lockIndicator {
 	float:left;
 	margin:2px 4px 0 0;

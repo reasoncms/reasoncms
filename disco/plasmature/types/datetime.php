@@ -446,7 +446,7 @@ class textDateTimeType extends textType
 	    $value = htmlspecialchars($value, ENT_QUOTES);
 	    return $separator.'<input type="text"'.$class.' size="'.$size.'" '.
 	        'maxlength="'.$size.'" id="'.htmlspecialchars($this->get_field_id($name)).'" '.
-	        'name="'.$this->name.'['.$name.']" value="'.htmlspecialchars($value).'" aria-label="'.htmlspecialchars($name).' ('.htmlspecialchars($size).' digits)" placeholder="'.htmlspecialchars($placeholder).'" />';
+	        'name="'.$this->name.'['.$name.']" value="'.htmlspecialchars($value).'" aria-label="'.html_attribute_escape($name).' ('.html_attribute_escape($size).' digits)" placeholder="'.html_attribute_escape($placeholder).'" />';
 	}
 	
 	function get_month_display($month_val = '')

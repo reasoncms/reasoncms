@@ -144,6 +144,7 @@
 			$this->set_value( 'site_id', $site_id );
 			$this->add_required( 'name' );
 			$this->change_element_type( 'state' , 'hidden' );
+			$this->change_element_type( 'language' , 'hidden' ); // This can be shown on a type-by-type basis as needed
 
 			if( site_shares_type($this->get_value( 'site_id' ), $this->get_value( 'type_id' )) )
 			{

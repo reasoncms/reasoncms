@@ -107,15 +107,20 @@
 					{
 						foreach($sites as $site)
 						{
-							if($type_id == $this->id_of_site_type)
-								$site_merge[$site->get_value('name')] = $site->get_value('base_url');
-							else
-								$site_merge[$site->get_value('name')] = $site->get_value('url');
-							
-							if($site->get_value('keywords'))
+							if(!isset($site_merge[$site->get_value('name')]))
 							{
-								$titles[$site->get_value('name')] = $site->get_value('keywords');
+								$site_merge[$site->get_value('name')] = array();
 							}
+							if($type_id == $this->id_of_site_type)
+								$site_merge[$site->get_value('name')]['url'] = $site->get_value('base_url');
+							else
+								$site_merge[$site->get_value('name')]['url'] = $site->get_value('url');
+							
+							$site_merge[$site->get_value('name')]['title_attr'] = '';
+							if($site->get_value('keywords') && strtolower($site->get_value('keywords')) != strtolower($site->get_value('name')))
+								$site_merge[$site->get_value('name')]['title_attr'] = ' title="'.reason_htmlspecialchars($site->get_value('keywords')).'"';
+							
+							$site_merge[$site->get_value('name')]['lang_attr'] = $site->get_language_attribute();
 						}
 					}
 				}
@@ -124,12 +129,9 @@
 				{
 					echo '<h3>'.$name.'</h3>'."\n";
 					echo '<ul>'."\n";
-					foreach($site_merge as $name=>$url)
+					foreach($site_merge as $name=>$info)
 					{
-						$title_attr = '';
-						if(!empty($titles[$name]) && strtolower($titles[$name]) != strtolower($name))
-							$title_attr = ' title="'.reason_htmlspecialchars($titles[$name]).'"';
-						echo '<li><a href="'.$url.'"'.$title_attr.'>'.$name.'</a></li>'."\n";
+						echo '<li><a href="'.$info['url'].'"'.$info['title_attr'].$info['lang_attr'].'>'.$name.'</a></li>'."\n";
 					}
 					echo '</ul>'."\n";
 				}

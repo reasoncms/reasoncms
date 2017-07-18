@@ -3,9 +3,10 @@
  * include dependencies
  */
 include_once( 'reason_header.php' );
-reason_include_once( 'classes/entity_selector.php' );
+reason_include_once('classes/mvc.php');
 reason_include_once( 'function_libraries/user_functions.php' );
 reason_include_once( 'classes/object_cache.php' );
+reason_include_once( 'function_libraries/safe_json.php' );
 
 /**
  * ReasonJSON is a JSON API that supports caching and chunking.
@@ -13,27 +14,64 @@ reason_include_once( 'classes/object_cache.php' );
  * It is used by TinyMCE but could be used by other things.
  *
  * @todo right now we transform the whole set even with caching off - think about this
- * @todo rework this into an abstract ReasonMVCModel that isn't so dependent on Reason types.
+ * @todo this now extends ReasonMVCModel, look to make it more flexible with regard to Reason types
  *
  * @author Andrew Bacon and Nathan White
+ * @author Tom Brice
  */
-class ReasonJSON
+abstract class ReasonJSON extends ReasonMVCModel
 {
 	var $requires_authentication = true;
 	var $caching_enabled = true;
+	var $response_status_code;
 
-	function get_items_selector()
+	/**
+	 * Any subclass must provide a way to get the JSON it encapsulates
+	 * @return string returns a JSON string
+	 */
+	abstract protected function get_json();
+
+	/**
+	 * builds the EntitySelector that is uses to get the collection of items for this model
+	 * @return entity_selector the entity_selector tha can be used to get a collection of items
+	 */
+	protected function get_items_selector()
 	{
-		$es = new entity_selector($this->site_id());
-		$es->add_type($this->type());
-		$es->set_order('last_modified DESC');
-		return $es;
+		// default implementation is a no-op
 	}
-	
+
+	/**
+	 *	Sets the model up based on config() setting or query parameters
+	 */
+	function configure()
+	{
+		if (!$this->config('site_id')) {
+			if (isset($_GET['site_id'])) $this->config('site_id', intval($_GET['site_id']));
+		}
+	}
+
+	function build()
+	{
+		$this->configure();
+		if ($this->configured())
+		{
+			return $this->get_json();
+		}
+		else return FALSE;
+	}
+
+	function authorized()
+	{
+		return (reason_check_authentication());
+	}
+
+	/**
+	 * @return entity_selector used to get the last modified item for this site and type
+	 */
 	function get_last_modified_item_selector()
 	{
-		$es = new entity_selector($this->site_id());
-		$es->add_type($this->type());
+		$es = new entity_selector($this->config('site_id'));
+		$es->add_type($this->config('type'));
 		$es->limit_tables();
 		$es->limit_fields('last_modified');
 		$es->set_num(1);
@@ -55,39 +93,18 @@ class ReasonJSON
 		return $this->_last_modified_item;
 	}
 
-	final function type($type = NULL)
-	{
-		if ($type !== NULL) $this->_type = $type;
-		return $this->_type;
-	}
-	
-	final function site_id($site_id = NULL)
-	{
-		if ($site_id !== NULL) $this->_site_id = $site_id;
-		return $this->_site_id;
-	}
 
-	final function num($num = NULL)
-	{
-		if ($num !== NULL) $this->_num = $num;
-		return $this->_num;
-	}
-
-	final function offset($offset = NULL)
-	{
-		if ($offset !== NULL) $this->_offset = $offset;
-		return $this->_offset;			
-	}
-	
 	final function caching($caching = NULL)
 	{
-		if (isset($caching)) $this->_caching = $caching;
-		return $this->_caching;
+		return $this->config('caching');
 	}
-	
+
+	/**
+	 * @return string a cache key based on type, site_id and last mod
+	 */
 	final function get_cache_key()
 	{
-		return 'jsongen_' . $this->type() . '_' . $this->site_id() . '_' . $this->last_mod();
+		return 'jsongen_' . $this->config('type') . '_' . $this->config('site_id') . '_' . $this->config('last_mod');
 	}
 	
 	final function cache($obj = NULL)
@@ -119,15 +136,26 @@ class ReasonJSON
 		return $this->_last_mod;
 	}
 
-	final function make_chunk($obj)
+	/**
+	 * @param $obj
+	 * @param $collection_key
+	 * @return array
+	 */
+	final function make_chunk($obj, $collection_key)
 	{
 		$chunk = Array();
-		$chunk['count'] = $obj['count'];
-		$chunk['items'] = isset($obj['items']) ? array_slice($obj['items'], $this->offset(), $this->num()) : null;
+		$chunk['count'] = isset($obj['count']) ? $obj['count'] : 0;
+		$chunk['site_id'] = isset($obj['site_id']) ? $obj['site_id'] : null;
+		if (isset($obj[$collection_key])) {
+			$sliced = array_slice($obj[$collection_key], $this->config('offset'), $this->config('num'));
+			$chunk[$collection_key] = $sliced;
+		} else {
+			$chunk[$collection_key] = null;
+		}
 		return $chunk;
 	}
 	
-	final function get_items()
+	protected function get_items($collection_key)
 	{
 		if (!isset($this->_items))
 		{
@@ -135,25 +163,76 @@ class ReasonJSON
 			if ($items = $items->run_one())
 			{
 				$this->_items['count'] = count($items);
+				$this->_items['site_id'] = $this->config('site_id');
 				foreach ($items as $k => $v)
 				{
-					$this->_items['items'][] = $this->transform_item($v);
+					$this->_items[$collection_key][] = $this->transform_item($v);
 				}
 			}
 			else $this->_items['count'] = 0;
 		}	
 		return $this->_items;
 	}
-	
-	final function run()
+
+	/**
+	 * Used to prepare objects from JSON encoding
+	 * default implementation takes an object and transforms it into an associative array of its attributes
+	 * @param $item
+	 * @return array
+	 */
+	protected function transform_item($item)
 	{
-		// if caching is off or the items are not yet in the cache.
-		$items = ($this->caching()) ? $this->cache() : FALSE;
-		if (!$items)
-		{
-			$items = $this->get_items();
-			if ($this->caching()) $this->cache($items);
-		}
-		return json_encode($this->make_chunk($items));
+		return $this->object_to_array($item);
 	}
+
+	function object_to_array($object) {
+		if(!is_object($object) && !is_array($object))
+			return $object;
+
+		return array_map(array($this, 'object_to_array'), (array) $object);
+	}
+
+	/**
+	 * Provided data it will attempt to encode it as JSON. In the event of an JSON error it will
+	 * return JSON with a 'status' of 500 and the error message as 'error'
+	 * @param $data
+	 * @return mixed|string
+	 */
+	final function encoded_json_from($data)
+	{
+		$json_data = safe_json_encode($data);
+//		$json_data = json_encode($data);
+		$this->set_response_status_code('200');
+		if (!$json_data) {
+			// we have no data, encoding returned "false"
+			$error_message = json_last_error_msg();
+			switch (json_last_error()) {
+				case JSON_ERROR_NONE:
+					break;
+				default:
+					$this->set_response_status_code('500');
+					// handle any JSON encoding error message and return "Internal Server Error" with more info
+					$json_data = json_encode(array('status' => $this->get_response_status_code(), 'error' => 'JSON encoding error: ' . $error_message));
+					break;
+			}
+		}
+		return $json_data;
+	}
+
+	/**
+	 * @param $code string that represents the response code
+	 */
+	function set_response_status_code($code)
+	{
+		$this->response_status_code = $code;
+	}
+
+	/**
+	 * @return string the response code
+	 */
+	function get_response_status_code()
+	{
+		return $this->response_status_code;
+	}
+
 }

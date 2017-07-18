@@ -1292,6 +1292,7 @@ class select_multipleType extends selectType
 		$val = parent::grab_value();
 		return (NULL === $val) ? array() : $val;
 	}
+  
 	function get()
 	{
 		// See checkboxgroup notes

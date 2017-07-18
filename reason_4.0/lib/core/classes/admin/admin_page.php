@@ -946,13 +946,20 @@ class AdminPage
 		if(!empty($class))
 			echo ' '.$class;
 		echo '">';
-
-		echo '<a href="'.$this->make_link( 
+		$link = $this->make_link( 
 			array( 
 					'site_id' => $site->id(),
 					'cur_module' => '',
 				 )
-			).'" class="nav">'.$site->get_value('name').'</a></li>' . "\n";
+			);
+		echo '<a href="'.$link.'" class="nav">';
+		echo $site->get_value('name');
+		if($site->get_value('unique_name') != 'master_admin' && $site->get_value('site_state') == 'Not Live')
+		{
+			echo ' <em class="smallText liveness">Not Live</em>';
+		}
+		echo '</a>';
+		echo '</li>' . "\n";
 	}
 	function sitebar() // {{{
 	//if an entity is not selected, it shows a list of all the users sites in an option menu, otherwise just prints out
@@ -1023,17 +1030,18 @@ class AdminPage
 	function _get_site_name_block()
 	{
 		$site = new entity($this->site_id);
+		$liveness = ('Not Live' == $site->get_value('site_state')) ? ' <em class="smallText liveness">Not Live</em>' : '';
 		if('SiteModule' == $this->module_name)
 		{
 			
-			return '<h1 class="siteName"><strong>'.$site->get_value( 'name' ).'</strong></h1>'."\n";
+			return '<h1 class="siteName"><strong>'.$site->get_value( 'name' ).$liveness .'</strong></h1>'."\n";
 		}
 		$link = $this->make_link( array( 
 				'site_id' => $this->site_id,
 				'type_id' => '',
 				'user_id' => $this->user_id, 
 				'cur_module' => '', ) );
-		return '<h1 class="siteName"><a href="'.$link.'">'.$site->get_value( 'name' ).'</a></h1>'."\n";
+		return '<h1 class="siteName"><a href="'.$link.'">'.$site->get_value( 'name' ).$liveness .'</a></h1>'."\n";
 	}
 	function get_types_for_current_site()
 	{
@@ -1505,7 +1513,7 @@ class AdminPage
 		if (defined('UNIVERSAL_CSS_PATH') && UNIVERSAL_CSS_PATH != '') $this->head_items->add_stylesheet(UNIVERSAL_CSS_PATH);
 		
 		// add admin CSS
-		$this->head_items->add_stylesheet(REASON_ADMIN_CSS_DIRECTORY.'admin.css?v=3');
+		$this->head_items->add_stylesheet(REASON_ADMIN_CSS_DIRECTORY.'admin.css?v=4');
 					
 		// add javascript logout timer
 		if (!isset($_SERVER['REMOTE_USER']) && USE_JS_LOGOUT_TIMER) // if we are not logged in via http authentication
@@ -1538,7 +1546,7 @@ class AdminPage
 	function head()
 	{
 		echo '<!DOCTYPE html>'."\n";
-		echo '<html xmlns="http://www.w3.org/1999/xhtml">'."\n";
+		echo '<html xmlns="http://www.w3.org/1999/xhtml" lang="'.REASON_DEFAULT_INTERFACE_LANGUAGE.'" xml:lang="'.REASON_DEFAULT_INTERFACE_LANGUAGE.'">'."\n";
 		echo '<head>'."\n";
 		echo '<title>Reason';
 		if( !empty( $this->site_id ) )

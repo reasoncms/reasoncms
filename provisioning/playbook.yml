@@ -5,8 +5,11 @@
     max_clients: 200
     web_root_path: /var/www
     reason_package_path: /var/reason_package
+    php_xdebug_remote_host: localhost
+    php_xdebug_remote_port: "9000"
   user: vagrant
   become: yes
+
   tasks:
   - name: ensure apache & php are installed
     apt: pkg={{ item }} state=present update_cache=yes cache_valid_time=86400
@@ -18,11 +21,21 @@
       - php5-tidy
       - php5-curl
       - imagemagick
+      - php5-xdebug
     notify:
     - restart apache
 
   - name: ensure apache is running
     service: name=apache2 state=started
+
+  - name: move XDebug INI file into place
+    template: >
+      src={{ item.src }}
+      dest={{ item.dest }} owner=root group=root mode=0644
+    with_items:
+      - { src: 20-xdebug.ini.j2, dest: /etc/php5/apache2/conf.d/20-xdebug.ini }
+    notify:
+      - restart apache
 
   - name: ensure MySQL is installed
     apt: pkg={{ item }} state=present
@@ -93,7 +106,7 @@
     - name: import reason databases
       mysql_db: db={{ item.db }} target={{ item.target }} state=import
       with_items:
-        - { db: reason, target: /var/reason_package/reason_4.0/data/dbs/reason4.7.sql }
+        - { db: reason, target: /var/reason_package/reason_4.0/data/dbs/reason4.8.sql }
 
     - name: open setup in browser
       become: no

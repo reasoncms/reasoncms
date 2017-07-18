@@ -857,7 +857,7 @@ class contentReminder {
 	 */
 	function create_message($user, $user_sites) 
 	{		
-		$message =	'<html>'."\r\n";
+		$message =	'<html lang="'.reason_htmlspecialchars(REASON_DEFAULT_INTERFACE_LANGUAGE).'">'."\r\n";
 		
 			$message .=	'<head>'."\r\n";
 			$message .=	'<title>Reason Content Reminder</title>'."\r\n";

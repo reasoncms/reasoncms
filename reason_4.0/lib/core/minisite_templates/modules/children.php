@@ -43,6 +43,9 @@
 										'chunks' => 1,
 										'heading' => '',
 										'footer' => '',
+										'link_to_blurbs' => false, // can be boolean for any child page type or a page type string or array for one or multiple page types to do blurb linking on
+										'blurb_title_delimiter' => '', // If a nonempty string is provided, blurb titles will be split on the delimiter provided and only text after the first instance of the delimiter will be displayed
+										'heading_level' => '4',
 									);
 		var $offspring = array();
 		var $az = array();
@@ -330,17 +333,17 @@
 			}
 			if($this->params['description_part_of_link'])
 			{
-				$element = $this->params['html5'] ? 'h4' : 'strong';
+				$element = $this->params['html5'] ? 'h'.$this->params['heading_level'] : 'strong';
 				echo '<a href="'.$link.'"'.$title_attr.'>';
 				if($this->params['html5'])
 					echo $image_markup;
-				echo '<'.$element.'>'.$page_name.'</'.$element.'>';
+				echo '<'.$element.$child->get_language_attribute().'>'.$page_name.'</'.$element.'>';
 				if(!$this->params['html5'])
 					echo '<br />';
 				if ( $child->get_value( 'description' ))
 				{
 					$element = $this->params['html5'] ? 'div' : 'span';
-					echo "\n".'<'.$element.' class="childDesc">'.$child->get_value( 'description' ).'</'.$element.'>';
+					echo "\n".'<'.$element.$child->get_language_attribute().' class="childDesc">'.$child->get_value( 'description' ).'</'.$element.'>';
 				}
 				echo '</a>';
 			}
@@ -348,13 +351,46 @@
 			{
 				if($this->params['html5'])
 					echo $image_markup;
-				echo '<h4><a href="'.$link.'"'.$title_attr.'>'.$page_name.'</a></h4>';
+				echo '<h'.$this->params['heading_level'].'><a href="'.$link.'"'.$title_attr.$child->get_language_attribute().'>'.$page_name.'</a></h'.$this->params['heading_level'].'>';
 				if ( $child->get_value( 'description' ))
 				{
-					echo "\n".'<div class="childDesc">'.$child->get_value( 'description' ).'</div>';
+					echo "\n".'<div class="childDesc"'.$child->get_language_attribute().'>'.$child->get_value( 'description' ).'</div>';
 				}
 			}
-			if(!empty($this->params['blurbs_count']))
+			if(!empty($this->params['link_to_blurbs']))
+			{
+				$get_blurbs = true;
+				if('string' == gettype($this->params['link_to_blurbs']) && $child->get_value('custom_page') != $this->params['link_to_blurbs'])
+				{
+					$get_blurbs = false;
+				}
+				elseif('array' == gettype($this->params['link_to_blurbs']) && !in_array($child->get_value('custom_page'), $this->params['link_to_blurbs']))
+				{
+					$get_blurbs = false;
+				}
+				$count = !empty($this->params['blurbs_count']) ? $this->params['blurbs_count'] : 9999;
+				if($get_blurbs && $blurbs = $this->get_blurbs_for_page($child, $count))
+				{
+					echo '<ul class="childBlurbLinks">';
+					foreach($blurbs as $blurb)
+					{
+						$name = $blurb->get_value('name');
+						if($this->params['blurb_title_delimiter'])
+						{
+							$pos = strpos($name, $this->params['blurb_title_delimiter']);
+							if(false !== $pos)
+							{
+								$name = trim(substr($name, $pos + strlen($this->params['blurb_title_delimiter'])));
+							}
+						}
+						echo '<li>';
+						echo '<a href="'.$link.'#blurb'.$blurb->id().'">'.$name.'</a>';
+						echo '</li>';
+					}
+					echo '</ul>';
+				}
+			}
+			elseif(!empty($this->params['blurbs_count']))
 			{
 				if($blurbs = $this->get_blurbs_for_page($child, $this->params['blurbs_count']))
 				{

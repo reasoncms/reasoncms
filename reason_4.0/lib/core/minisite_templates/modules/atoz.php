@@ -101,7 +101,7 @@
 							$title = $this->get_title($word, $site->get_value('name'));
 							if(!empty($title))
 								$title_attr = ' title="'.$title.'"';
-							echo $insert_string.' <a href="'.$site->get_value('az_url').'"'.$title_attr.'>';
+							echo $insert_string.' <a href="'.$site->get_value('az_url').'"'.$title_attr.$site->get_language_attribute().'>';
 							echo $site->get_value('name');
 							echo '</a>';
 							$insert_string = ',';

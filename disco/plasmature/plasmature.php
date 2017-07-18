@@ -94,4 +94,5 @@ require_once PLASMATURE_TYPES_INC."upload.php";
 require_once PLASMATURE_TYPES_INC."group.php";
 require_once PLASMATURE_TYPES_INC."colorpicker.php";
 require_once PLASMATURE_TYPES_INC."html5.php";
+require_once PLASMATURE_TYPES_INC."recaptcha.php";
 

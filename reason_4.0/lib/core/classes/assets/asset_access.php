@@ -108,7 +108,7 @@ class ReasonAssetAccess
 			else
 			{
 				echo '<!DOCTYPE html>'."\n";
-				echo '<html xmlns="http://www.w3.org/1999/xhtml">'."\n";
+				echo '<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US">'."\n";
 				echo '<head><title>File Not Found (HTTP 404)</title><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /></head>'."\n";
 				echo '<body>'."\n";
 				echo '<h2>File Not Found (HTTP 404)</h2>'."\n";;
@@ -128,7 +128,7 @@ class ReasonAssetAccess
 			else
 			{
 				echo '<!DOCTYPE html>'."\n";
-				echo '<html xmlns="http://www.w3.org/1999/xhtml">'."\n";
+				echo '<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US">'."\n";
 				echo '<head><title>Access Forbidden (HTTP 403)</title><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /></head>'."\n";
 				echo '<body>'."\n";
 				echo '<h2>Access Forbidden (HTTP 403)</h2>'."\n";;

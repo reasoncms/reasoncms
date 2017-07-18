@@ -86,7 +86,10 @@
 			'sub_nav' => '',
 			'main_head' => '',
 			'main_post' => 'atoz',
-			'sidebar' => 'blurb',
+			'sidebar' => array(
+				'module' => 'blurb',
+				'demote_headings' => 0,
+			),
 		),
 		'image_sidebar_100x100' => array(
 			'sidebar' => array(
@@ -1867,6 +1870,12 @@
 				'thumbnail_width' => 200,
 			),
 		),
+		'show_children_with_blurb_links' => array(
+		    'main_post' => array(
+		    	'module' => 'children',
+		    	'link_to_blurbs' => true,
+		    ),
+		),
 		'child_gallery_280x200' => array(
 			'main_post' => array(
 				'module'=>'children',
@@ -2108,7 +2117,10 @@
 					'Offices'=>array('office_site_type'),
 					'Other Sites'=>array('other_site_type'))), */
 			),
-			'sidebar' => 'blurb',
+			'sidebar' => array(
+				'module' => 'blurb',
+				'demote_headings' => 0,
+			),
 		),
 		'social_accounts' => array(
 			'main_post' => 'social_account/social_account',
