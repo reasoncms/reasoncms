@@ -911,5 +911,20 @@ if (!defined("ENT_QUOTES")) define("ENT_QUOTES", 3);
 			return $reason_max_media_upload;
 		}
 	}
+	
+	/**
+	 * Escape a string for use in an HTML attribute
+	 *
+	 * Prepares a string that may have HTML in it (or be non-, fully-, or partially-html encoded)
+	 * for use in an HTML attribute
+	 *
+	 * @param string $string
+	 * @param string $encoding
+	 * @return string
+	 */
+	function html_attribute_escape($string, $encoding = 'UTF-8')
+	{
+		return htmlspecialchars( strip_tags($string), ENT_QUOTES, $encoding, false );
+	}
 }
 ?>

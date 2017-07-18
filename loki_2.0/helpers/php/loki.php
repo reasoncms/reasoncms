@@ -72,6 +72,7 @@ class Loki2
 	var $_allowable_inline_styles = null;
 	var $_external_script_path = null;
 	var $_html_generator = null;
+	var $_iframe_aria_label = null;
 	var $_document_style_sheets = array();
 
 	/**
@@ -114,6 +115,11 @@ class Loki2
 	function set_feed($feed_name, $feed_url)
 	{
 		$this->_feeds[$feed_name] = $feed_url;
+	}
+	
+	function set_iframe_aria_label($label)
+	{
+		$this->_iframe_aria_label = $label;
 	}
 
 	/**
@@ -435,6 +441,8 @@ class Loki2
 			$s->allowable_inline_styles = $this->_allowable_inline_styles;
 		if ($this->_html_generator)
 			$s->html_generator = $this->_html_generator;
+		if($this->_iframe_aria_label)
+			$s->iframe_aria_label = $this->_iframe_aria_label;
 		
 		return $s;
 	}

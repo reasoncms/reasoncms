@@ -46,7 +46,7 @@ class checkboxType extends defaultType
 		}
 		if( $this->use_aria_label() )
 		{
-			$str .= ' aria-label="'.htmlspecialchars($this->display_name).'"';
+			$str .= ' aria-label="'.html_attribute_escape($this->display_name).'"';
 		}
 		$str .= ' class="checkbox" />';
 		if (!empty($this->description)) {
