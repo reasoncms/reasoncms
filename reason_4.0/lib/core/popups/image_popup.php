@@ -54,6 +54,7 @@
 		$image = null;
 	}
 	
+	$GLOBALS['_reason_image_popup_data']['language'] = REASON_DEFAULT_CONTENT_LANGUAGE;
 	if(!empty( $image ))
 	{
 		$GLOBALS['_reason_image_popup_data']['id'] = $id;
@@ -64,6 +65,14 @@
 		$GLOBALS['_reason_image_popup_data']['image_caption'] = ($image->get_value('content') ? $image->get_value('content') : $image->get_value('description'));
 		
 		$GLOBALS['_reason_image_popup_data']['image_author'] = $image->get_value( 'author' );
+		
+		if($owner = $image->get_owner())
+		{
+			if($lang = $owner->get_value('language'))
+			{
+				$GLOBALS['_reason_image_popup_data']['language'] = $lang;
+			}
+		}
 	}
 	else
 	{

@@ -14,7 +14,7 @@
 	include_once( 'reason_header.php' );
    	reason_include( 'scripts/urls/404action.php' );
 ?><!DOCTYPE html>
-<html>
+<html lang="en-US">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <title><?php echo FULL_ORGANIZATION_NAME; ?>: File Not Found</title>
