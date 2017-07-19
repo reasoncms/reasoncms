@@ -5,9 +5,9 @@ reason_include_once('classes/entity_selector.php');
 reason_include_once('classes/upgrade/upgrader_interface.php');
 reason_include_once('scripts/upgrade/reason_db_helper.php');
 
-$GLOBALS['_reason_upgraders']['4.8_to_4.9']['add_language_fields'] = 'ReasonUpgrader_49_AddLanguageFields';
+$GLOBALS['_reason_upgraders']['4.7_to_4.8']['add_language_fields'] = 'ReasonUpgrader_48_AddLanguageFields';
 
-class ReasonUpgrader_49_AddLanguageFields implements reasonUpgraderInterface 
+class ReasonUpgrader_48_AddLanguageFields implements reasonUpgraderInterface
 {
 
     protected $user_id;

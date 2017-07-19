@@ -38,7 +38,6 @@ if(!reason_user_has_privs( $reason_user_id, 'upgrade' ) )
 }
 
 $upgrade_steps = array(
-	'4.8_to_4.9' => 'Reason 4.8 to 4.9',
 	'4.7_to_4.8' => 'Reason 4.7 to 4.8',
 	'4.6_to_4.7' => 'Reason 4.6 to 4.7',
 	'4.5_to_4.6' => 'Reason 4.5 to 4.6',
@@ -160,7 +159,7 @@ else
 }
 
 $output = '<!DOCTYPE html>';
-$output .= '<html xmlns="http://www.w3.org/1999/xhtml">';
+$output .= '<html xmlns="http://www.w3.org/1999/xhtml" lang="'.reason_htmlspecialchars(REASON_DEFAULT_INTERFACE_LANGUAGE).'" xml:lang="'.reason_htmlspecialchars(REASON_DEFAULT_INTERFACE_LANGUAGE).'">';
 $output .= '<head>';
 $output .= $head_items->get_head_item_markup();
 $output .= '</head>';

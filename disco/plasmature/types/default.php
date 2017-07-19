@@ -163,6 +163,7 @@ class defaultType
 							  'db_type',
 							  'display_style', // deprecated
 							  'trim_input',
+							  '_labeled' => 'labeled',
 							  );
 							  
 	/**

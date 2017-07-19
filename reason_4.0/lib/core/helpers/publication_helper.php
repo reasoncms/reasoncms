@@ -21,7 +21,7 @@ class PublicationHelper extends entity
 	{
 		$delegates = parent::get_delegates();
 		if(!isset($delegates['entity_delegates/publication.php']))
-			$this->add_delegate('entity_delegates/publication.php', new publicationDelegate($this->id() );
+			$this->add_delegate('entity_delegates/publication.php', new publicationDelegate($this->id() ));
 		return parent::get_delegates();
 	}
 }

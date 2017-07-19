@@ -22,7 +22,7 @@ foreach($GLOBALS['_reason_image_popup_data'] as $key=>$val)
  	$$key = $val;
 }
 ?><!DOCTYPE html>
-<html>
+<html lang="<?php echo reason_htmlspecialchars($language); ?>">
 <head>
 <title><?php echo strip_tags($title); ?></title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />

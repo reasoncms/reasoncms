@@ -75,7 +75,7 @@ class textType extends defaultTextType
 		if (!empty($this->placeholder))
 			$display .= 'placeholder="'.htmlspecialchars($this->placeholder).'" ';
 		if(!$this->is_labeled())
-			$display .= 'aria-label="'.htmlspecialchars($this->display_name).'" ';
+			$display .= 'aria-label="'.html_attribute_escape($this->display_name).'" ';
 		$display .= '/>';
 		return $display;
 	}
@@ -177,7 +177,7 @@ class disabledTextType extends textType
 	{
 		$str  = '<input type="text" name="'.htmlspecialchars($this->name).'" id="'.htmlspecialchars($this->get_id()).'" value="'.htmlspecialchars($this->get(),ENT_QUOTES).'" size="'.htmlspecialchars($this->size).'" maxlength="'.htmlspecialchars($this->maxlength).'" disabled="disabled" ';
 		if(!$this->is_labeled())
-			$str .= 'aria-label="'.htmlspecialchars($this->display_name).'" ';
+			$str .= 'aria-label="'.html_attribute_escape($this->display_name).'" ';
 		$str .= '/>';
 		return $str;
 	}
@@ -199,7 +199,7 @@ class passwordType extends defaultTextType
 		if (!empty($this->placeholder))
 			$display .= 'placeholder="'.htmlspecialchars($this->placeholder).'"';
 		if(!$this->is_labeled())
-			$display .= 'aria-label="'.htmlspecialchars($this->display_name).'" ';
+			$display .= 'aria-label="'.html_attribute_escape($this->display_name).'" ';
 		$display .= '/>';
 		return $display;
 	}
@@ -291,7 +291,7 @@ class textareaType extends defaultTextType
 	{
 		$str  = '<textarea name="'.htmlspecialchars($this->name).'" id="'.htmlspecialchars($this->get_id()).'" rows="'.htmlspecialchars($this->rows).'" cols="'.htmlspecialchars($this->cols).'"';
 		if(!$this->is_labeled())
-			$str .= ' aria-label="'.htmlspecialchars($this->display_name).'"';
+			$str .= ' aria-label="'.html_attribute_escape($this->display_name).'"';
 		$str .= '>'.htmlspecialchars($this->get(),ENT_QUOTES,'UTF-8').'</textarea>';
 		return $str;
 	}
@@ -355,7 +355,7 @@ class wysiwyg_disabledType extends textareaType
 	{
 		$str = '<textarea name="'.htmlspecialchars($this->name, ENT_QUOTES).'" rows="'.htmlspecialchars($this->rows).'" cols="'.htmlspecialchars($this->cols).'" id="'.htmlspecialchars($this->get_id()).'" disabled="disabled"';
 		if(!$this->is_labeled())
-			$str .= ' aria-label="'.htmlspecialchars($this->display_name).'"';
+			$str .= ' aria-label="'.html_attribute_escape($this->display_name).'"';
 		$str .= '>'.htmlspecialchars($this->get(),ENT_QUOTES,'UTF-8').'</textarea>';
 		$str .= $this->_get_javascript_block($this->get_id());
 		return $str;

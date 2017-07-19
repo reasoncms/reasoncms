@@ -890,7 +890,7 @@ class entityArchiver {
 			$replace = 	array(	"<br>\r\n",	"<strong>",	"</strong>",);
 			
 			//Message:
-			$message =	'<html>'."\r\n";
+			$message =	'<html lang="'.reason_htmlspecialchars(REASON_DEFAULT_INTERFACE_LANGUAGE).'" xml:lang="'.reason_htmlspecialchars(REASON_DEFAULT_INTERFACE_LANGUAGE).'">'."\r\n";
 			$message .=	'<head>'."\r\n";
 			$message .=	'<title>Entity Archiver</title>'."\r\n";
 			$message .=	'</head>'."\r\n";

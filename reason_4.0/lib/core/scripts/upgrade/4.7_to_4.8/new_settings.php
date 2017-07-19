@@ -3,11 +3,11 @@
  * @package reason
  * @subpackage scripts
  */
-$GLOBALS['_reason_upgraders']['4.8_to_4.9']['new_settings'] = 'ReasonUpgrader_49_NewSettings';
+$GLOBALS['_reason_upgraders']['4.7_to_4.8']['new_settings'] = 'ReasonUpgrader_48_NewSettings';
 include_once('reason_header.php');
 reason_include_once('classes/upgrade/upgrader_interface.php');
 
-class ReasonUpgrader_49_NewSettings extends reasonUpgraderDefault implements reasonUpgraderInfoInterface
+class ReasonUpgrader_48_NewSettings extends reasonUpgraderDefault implements reasonUpgraderInfoInterface
 {   
     /**
      * Return information about new settings
@@ -15,7 +15,7 @@ class ReasonUpgrader_49_NewSettings extends reasonUpgraderDefault implements rea
      */
     public function run()
     {
-        $str = '<h3>Reason 4.9 has some new changes:</h3>';
+        $str = '<h3>Reason 4.8 has some new changes:</h3>';
         $str .= '<h4>in settings/reason_settings.php</h4>';
         $str .= '<ul>';
         $str .= '<li>REASON_DEFAULT_CONTENT_LANGUAGE';
