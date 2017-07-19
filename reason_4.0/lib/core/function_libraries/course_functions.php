@@ -3,6 +3,8 @@
 /**
  * Functions for manipulating and locating course entities.
  *
+ * @todo make this a delegate
+ *
  * @author Mark Heiman
  * @package reason
  * @subpackage function_libraries

@@ -104,10 +104,10 @@
 			
 			$image = $this->get_element('image');
 			$image->get_head_items($this->head_items);
-			$this->add_element('default_thumbnail', 'checkbox', 
+			$this->add_element('default_thumbnail', 'checkbox_no_label', 
 					array('description' => 'Generate thumbnail from full-size image'));
 					
-			$this->add_element( 'focal_point', 'reason_image_focal_point');
+			$this->add_element( 'focal_point', 'reason_image_focal_point', array('labeled'=>false));
 
 			$this->change_element_type( 'width','hidden' );
 			$this->change_element_type( 'height','hidden' );
@@ -125,9 +125,6 @@
 			$this->set_display_name( 'content', 'Long Caption' );
 			$this->set_display_name( 'datetime', 'Photo Taken' );
 			$this->set_display_name( 'author', 'Photographer' );
-			$this->set_display_name( 'default_thumbnail', '&nbsp;');
-			$this->set_display_name( 'focal_point', '&nbsp;');
-
 
 			$this->set_comments( 'name', form_comment("A name for internal reference") );
 			$this->set_comments( 'content', form_comment("The long caption will appear with the full-sized image.") );
@@ -149,12 +146,8 @@
 			}
 			if( $full_sizer )
 			{
-				$this->add_element( 'do_not_resize', 'checkbox', array('description' => 'Upload this image at full resolution &amp; size. (Use with caution &ndash; it is easy to accidentally upload an overly-large image.)'));
-				$this->set_display_name( 'do_not_resize', '&nbsp;');
-				$this->add_element( 'ignore_min_img_size_check', 'checkbox', array('description' => 'Ignore minimum size check and upload image of any size.'));
-				$this->set_display_name( 'ignore_min_img_size_check', '&nbsp;');
-
-
+				$this->add_element( 'do_not_resize', 'checkbox_no_label', array('description' => 'Upload this image at full resolution &amp; size. (Use with caution &ndash; it is easy to accidentally upload an overly-large image.)'));
+				$this->add_element( 'ignore_min_img_size_check', 'checkbox_no_label', array('description' => 'Ignore minimum size check and upload image of any size.'));
 			}
 
 			// Required fields

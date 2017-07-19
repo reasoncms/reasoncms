@@ -232,7 +232,7 @@ class VimeoMediaWorkDisplayer implements MediaWorkDisplayerInterface
 	* @return string or false
 	*/
 	function get_display_markup()
-	{	
+	{
 		if (isset($this->media_work))
 		{
 			if ( !empty($this->height) )
@@ -250,7 +250,7 @@ class VimeoMediaWorkDisplayer implements MediaWorkDisplayerInterface
 				$iframe_width = $this->_get_width_from_height();				
 				
 			//add video class using string on object
-			$markup = '<iframe class="media_work_iframe video" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" height="'.intval($iframe_height).'" width="'.intval($iframe_width).'" ';
+			$markup = '<iframe class="media_work_iframe video" title="Video" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" height="'.intval($iframe_height).'" width="'.intval($iframe_width).'" ';
 
 			$markup .= 'src="'.$this->get_iframe_src($iframe_height, $iframe_width).'" ';
 			
@@ -313,7 +313,7 @@ class VimeoMediaWorkDisplayer implements MediaWorkDisplayerInterface
 				$src .= '?autoplay=1';
 			
 			$markup .= '<div style="width:100%;height:0;padding-bottom:'.($iframe_height/$iframe_width*100).'%;position:relative;">';
-			$markup .= '<iframe class="media_work_iframe" src="'.$src.'" width="'.intval($iframe_width).'" height="'.intval($iframe_height).'" frameborder="0" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>'."\n";
+			$markup .= '<iframe class="media_work_iframe" title="Video" src="'.$src.'" width="'.intval($iframe_width).'" height="'.intval($iframe_height).'" frameborder="0" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>'."\n";
 			$markup .= '</div>';
 			
 			return $markup;
