@@ -39,7 +39,7 @@ class publicationDelegate extends entityDelegate
 	{
 		if (!isset($this->site_id))
 		{
-			$owner = $this->get_owner();
+			$owner = $this->entity->get_owner();
 			$this->site_id = $owner->id();
 		}
 		return $this->site_id;
