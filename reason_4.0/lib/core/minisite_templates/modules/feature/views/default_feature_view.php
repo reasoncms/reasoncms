@@ -100,33 +100,6 @@ class DefaultFeatureView extends FeatureView
 			}
 			$this->custom_class = '.'.lcfirst( $this->custom_class );
 
-			foreach( $view_data as $id=>$data )
-			{
-				//assert if categories is set
-				$has_category = false;
-				$categories = $view_params['categories'];
-
-				if( $data['categories'] )
-				{
-					foreach( $categories as $category )
-					{
-						foreach( $data['categories'] as $feature_cat )
-						{
-							if( $feature_cat == $category )
-							{
-								$has_category = true;
-								break 2;
-							}
-						}
-					}
-				}
-
-				//eliminate feature from the list if does not have the related category
-				if( !$has_category )
-				{
-					unset( $view_data[$id] );
-				}
-			}
 		} else {
 			$this->custom_class = '.noCat';
 		}

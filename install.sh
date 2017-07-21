@@ -49,9 +49,17 @@ ln -ns $PWD/thor/ $webdir/thor
 echo "Symlinks created"
 
 echo " "
-echo "Enter the name of your mysql server."
-echo "If you wish to use mysql on this server, enter localhost"
-read mysqlhost
+
+if [ -z ${MYSQL_HOST+x} ]
+  then
+    echo "Enter the name of your mysql server."
+    echo "If you wish to use mysql on this server, enter localhost"
+    read mysqlhost
+  else
+    echo "Based on your environment, the hostname for the mysql server for Reason is '$MYSQL_HOST'"
+    mysqlhost=$MYSQL_HOST
+fi
+
 
 echo " "
 echo "If you have an account that can create databases and users,"
@@ -97,19 +105,39 @@ Y|y)
 ;;
 N|n)
     echo " "
-    echo "Enter the name of the database you have created for Reason:"
-    read mysqldb
+    if [ -z ${MYSQL_DATABASE+x} ]
+      then
+        echo "Enter the name of the database you have created for Reason:"
+        read mysqldb
+      else
+        echo "Based on your environment, the database you have created for Reason is '$MYSQL_DATABASE'"
+        mysqldb=$MYSQL_DATABASE
+    fi
 
-    echo "Enter the mysql username Reason should use:"
-    read mysqluser
+    if [ -z ${MYSQL_USER+x} ]
+      then
+        echo "Enter the mysql username Reason should use:"
+        read mysqluser
+      else
+        echo "Based on your environment, the database username for Reason is '$MYSQL_USER'"
+        mysqluser=$MYSQL_USER
+    fi
 
-    echo "Enter the mysql password for $mysqluser:"
-    read mysqlpassy
+
+    if [ -z ${MYSQL_PASSWORD+x} ]
+      then
+        echo "Enter the mysql password for $mysqluser:"
+        read mysqlpassy
+      else
+        echo "Based on your environment, the database username for Reason is '$MYSQL_PASSWORD'"
+        mysqlpassy=$MYSQL_PASSWORD
+    fi
+
 ;;
 *) echo "Invalid command"
 esac
 
-$mysqlcmd -u$mysqluser -p$mysqlpassy -h$mysqlhost $mysqldb < $PWD/reason_4.0/data/dbs/reason4.7.sql
+$mysqlcmd -u$mysqluser -p$mysqlpassy -h$mysqlhost $mysqldb < $PWD/reason_4.0/data/dbs/reason4.8.sql
 
 sed -e "s/<db>reason/<db>$mysqldb/g" -e "s/<db>thor/<db>$mysqldb/g" -e "s/reason_user/$mysqluser/g" -e "s/some_password/$mysqlpassy/g" -e "s/your.mysql.hostname.or.ip.address/$mysqlhost/g" $PWD/settings/dbs.xml.sample > $PWD/settings/dbs.xml
 

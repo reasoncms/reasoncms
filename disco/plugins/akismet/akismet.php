@@ -93,7 +93,15 @@ class AkismetFilter
 			$userip = get_user_ip_address();
 			$akismet->setUserIP($userip);
 
-			if ($akismet->isCommentSpam()) {
+			$is_spam = true; // Let Akismet tell us this isn't spam
+			try {
+				$is_spam = $akismet->isCommentSpam();
+			} catch (Exception $e) {
+				// Catch fatal Exceptions and reissue a non-fatal alert
+				trigger_error($e->getMessage());
+			}
+
+			if ($is_spam) {
 				$error_msg = 'Spam detected in this submission. If this message was made in error, please contact an administrator.';
 				$this->disco_form->set_error(NULL, $error_msg, false);
 			}

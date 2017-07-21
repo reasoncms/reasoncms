@@ -921,6 +921,7 @@ class Formbuilder
       DEFAULT_VALUE: 'default_value'
       FIELD_TYPE: 'field_type'
       REQUIRED: 'required'
+      DATE_FIELD_TIME_ENABLED: 'date_field_time_enabled'
       PREFILL_KEY: 'prefill_key'
       ADMIN_ONLY: 'admin_only'
       OPTIONS: 'field_options.options'

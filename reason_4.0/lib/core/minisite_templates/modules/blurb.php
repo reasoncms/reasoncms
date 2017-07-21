@@ -34,9 +34,18 @@ class BlurbModule extends DefaultMinisiteModule
 		'demote_headings' => 1,
 		'source_page' => '',
 		'footer_html' => '',
+		'jump_links' => false,
+		'jump_links_delimiter' => '',
+		'jump_links_return' => false,
+		'jump_links_return_url' => false,
+		'module_id' => '',
+		'display_blurb_names' => false,
+		'blurb_names_heading_level' => 3,
+		'blurb_names_delimiter' => '',
 	);
 	var $es;
 	var $blurbs = array();
+	var $module_id;
 
 	function init( $args = array() ) // {{{
 	{
@@ -150,12 +159,54 @@ class BlurbModule extends DefaultMinisiteModule
 		else
 			return false;
 	} // }}}
+	
+	function get_module_id()
+	{
+		static $module_count = 0;
+		if(!isset($this->module_id))
+		{
+			if(!empty($this->params['module_id'])) {
+				$this->module_id = $this->params['module_id'];
+			} else {
+				$this->module_id = 'blurbsModule'.$module_count;
+			}
+			$module_count++;
+		}
+		return $this->module_id;
+	}
+	
 	function run() // {{{
 	{
 		$inline_editing =& get_reason_inline_editing($this->page_id);
 		$editing_available = $inline_editing->available_for_module($this);
 		$editing_active = $inline_editing->active_for_module($this);
-		echo '<div class="blurbs ' . $this->get_api_class_string() . '">'."\n";
+		echo '<div class="blurbs ';
+		echo $this->get_api_class_string();
+		if($this->params['jump_links'])
+		{
+			echo ' usesJumpLinks';
+		}
+		echo '"';
+		echo ' id="'.htmlspecialchars($this->get_module_id()).'"';
+		echo '>'."\n";
+		if($this->params['jump_links'])
+		{
+			echo '<ul class="jumpLinks">';
+			foreach( $this->blurbs as $blurb )
+			{
+				$name = $blurb->get_value('name');
+				if($this->params['jump_links_delimiter'])
+				{
+					$pos = strpos($name, $this->params['jump_links_delimiter']);
+					if(false !== $pos)
+					{
+						$name = trim(substr($name, $pos + strlen($this->params['jump_links_delimiter'])));
+					}
+				}
+				echo '<li><a href="#blurb'.$blurb->id().'">'.$name.'</a></li>';
+			}
+			echo '</ul>';
+		}
 		$i = 0;
 		$class = 'odd';
 		foreach( $this->blurbs as $blurb )
@@ -171,7 +222,9 @@ class BlurbModule extends DefaultMinisiteModule
 			if( $editing_item )
 				echo ' editing';
 			echo ' '.$class;
-			echo '">';
+			echo '"';
+			echo ' id="blurb'.$blurb->id().'"';
+			echo '>';
 
 			if($editing_item)
 			{
@@ -184,11 +237,39 @@ class BlurbModule extends DefaultMinisiteModule
 			}
 			else
 			{
+				if($this->params['display_blurb_names'])
+				{
+					$name = $blurb->get_value('name');
+					if($this->params['blurb_names_delimiter'])
+					{
+						$pos = strpos($name, $this->params['blurb_names_delimiter']);
+						if(false !== $pos)
+						{
+							$name = trim(substr($name, $pos + strlen($this->params['blurb_names_delimiter'])));
+						}
+					}
+					$heading_level = !empty($this->params['blurb_names_heading_level']) ? $this->params['blurb_names_heading_level'] : 3;
+					
+					echo '<h'.$heading_level.' class="blurbName">'.$name.'</h'.$heading_level.'>';
+				}
 				echo demote_headings($blurb->get_value('content'), $this->params['demote_headings']);
 				if( $editable )
 				{
 					$params = array_merge(array('blurb_id' => $blurb->id()), $inline_editing->get_activation_params($this));
 					echo '<div class="edit"><a href="'.carl_make_link($params).'">Edit Blurb</a></div>'."\n";
+				}
+				if($this->params['jump_links'] && $this->params['jump_links_return'])
+				{
+					if(true === $this->params['jump_links_return'])
+					{
+						$return_text = 'Back to top';
+					}
+					else
+					{
+						$return_text = $this->params['jump_links_return'];
+					}
+					$link = !empty($this->params['jump_links_return_url']) ? $this->params['jump_links_return_url'] : '#'.$this->get_module_id();
+					echo '<div class="jumpLinksReturn"><a href="'.htmlspecialchars($link).'">'.$return_text.'</a></div>';
 				}
 			}
 			echo '</div>'."\n";
@@ -223,10 +304,25 @@ class BlurbModule extends DefaultMinisiteModule
 	function _get_editing_form($blurb)
 	{
 		$form = new disco();
+		$form->set_box_class('stackedBox');
 		$form->strip_tags_from_user_input = true;
+		if($this->params['display_blurb_names'])
+		{
+			$form->add_element('blurb_edit_name');
+			$form->set_display_name('blurb_edit_name', 'Blurb Name');
+			$form->set_value( 'blurb_edit_name', $blurb->get_value('name') );
+			$form->add_required('blurb_edit_name');
+		}
 		$form->allowable_HTML_tags = REASON_DEFAULT_ALLOWED_TAGS;
 		$form->add_element( 'blurb_edit_text' , html_editor_name($this->site_id) , html_editor_params($this->site_id, $this->get_html_editor_user_id()) );
-		$form->set_display_name('blurb_edit_text',' ');
+		if($this->params['display_blurb_names'])
+		{
+			$form->set_display_name('blurb_edit_text','Blurb Text');
+		}
+		else
+		{
+			$form->set_display_name('blurb_edit_text',' ');
+		}
 		$form->set_value( 'blurb_edit_text', $blurb->get_value('content') );
 		$form->set_actions(array('save' => 'Save','save_and_finish' => 'Save and Finish Editing',));
 		$form->add_callback(array(&$this,'save_blurb_callback'),'process');
@@ -239,6 +335,11 @@ class BlurbModule extends DefaultMinisiteModule
 
 	function save_blurb_callback(&$form)
 	{
+		$values = array();
+		if($this->params['display_blurb_names'])
+		{
+			$values['name'] = tidy($form->get_value( 'blurb_edit_name' ));
+		}
 		$values['content'] = tidy($form->get_value( 'blurb_edit_text' ));
 		$archive = ($form->chosen_action == 'save_and_finish') ? true : false;
 		reason_update_entity( $this->request['blurb_id'], $this->get_html_editor_user_id(), $values, $archive );

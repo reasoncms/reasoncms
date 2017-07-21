@@ -122,7 +122,7 @@ class Gallery2Module extends Generic3Module
 		'filter_displayer'=>'gallery_specific.php',
 		'pagination_displayer'=>'window.php',
 		'use_pagination'=>true,
-		'number_per_page' => 12,
+		'number_per_page' => 24,
 		'entire_site'=>false,
 		'sort_order' => 'dated.datetime ASC, meta.description ASC, entity.id ASC',
 		'show_dates_in_list' => false,

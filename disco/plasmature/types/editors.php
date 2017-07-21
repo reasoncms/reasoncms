@@ -113,6 +113,10 @@ class loki2Type extends defaultType
 		{
 			$loki->set_crash_report_uri($this->crash_report_uri);
 		}
+		if(!empty($this->display_name))
+		{
+			$loki->set_iframe_aria_label(html_attribute_escape($this->display_name));
+		}
 		$loki->print_form_children($this->rows, $this->cols);
 	}
 	function _resolve_widgets($widgets)

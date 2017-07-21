@@ -1,37 +1,76 @@
-FROM ubuntu:latest
+FROM php:5.6-apache
 
-MAINTAINER Quinn Shanahan <quinn@tastehoneyco.com>
+MAINTAINER Tom Brice <tbrice@carleton.edu>
 
 # install dependencies
-RUN apt-get update 
-RUN apt-get -y install git apache2 libapache2-mod-php5 php5-mysql php5-gd php-pear php-apc curl gettext-base
+# Install other needed extensions
+RUN apt-get update && apt-get install -y libfreetype6 git-core mysql-client imagemagick libjpeg62-turbo libmcrypt4 libpng12-0 sendmail gettext-base --no-install-recommends && rm -rf /var/lib/apt/lists/*
+RUN buildDeps=" \
+        libfreetype6-dev \
+        libjpeg-dev \
+        libldap2-dev \
+        libmcrypt-dev \
+        libpng12-dev \
+        zlib1g-dev \
+        libmagickwand-dev \
+        libcurl4-openssl-dev \
+        libtidy-dev \
+        gettext-base \
+    "; \
+    set -x \
+    && apt-get update && apt-get install -y $buildDeps --no-install-recommends && rm -rf /var/lib/apt/lists/* \
+    && docker-php-ext-configure gd --enable-gd-native-ttf --with-jpeg-dir=/usr/lib/x86_64-linux-gnu --with-png-dir=/usr/lib/x86_64-linux-gnu --with-freetype-dir=/usr/lib/x86_64-linux-gnu \
+    && docker-php-ext-install gd \
+    && docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu \
+    && docker-php-ext-install ldap \
+    && docker-php-ext-install mbstring \
+    && docker-php-ext-install mcrypt \
+    && docker-php-ext-install mysql mysqli \
+    && docker-php-ext-install pdo pdo_mysql \
+    && docker-php-ext-install zip \
+    && pecl install imagick \
+    && docker-php-ext-enable imagick \
+    && pecl install xdebug \
+    && docker-php-ext-enable xdebug \
+    && docker-php-ext-install curl \
+    && docker-php-ext-install tidy
+
+# configure xdebug
+RUN echo "xdebug.remote_enable = 1" >> /usr/local/etc/php/conf.d/xdebug.ini \
+  && echo "xdebug.remote_autostart = 0" >> /usr/local/etc/php/conf.d/xdebug.ini \
+  && echo "xdebug.remote_connect_back = 0" >> /usr/local/etc/php/conf.d/xdebug.ini \
+  && echo "xdebug.remote_port = 9000" >> /usr/local/etc/php/conf.d/xdebug.ini
 
 # configure apache
 RUN rm /etc/apache2/sites-enabled/*
-RUN ln -s /etc/apache2/mods-available/rewrite.load /etc/apache2/mods-enabled/
+RUN a2enmod rewrite
+
+ARG web_root_path=/var/www
+ARG reason_package_path=/var/reason_package
+
+COPY . ${reason_package_path}
+WORKDIR ${reason_package_path}
+
+RUN [ -d ${web_root_path} ] || mkdir ${web_root_path}
+
+RUN ln -s ${reason_package_path}/reason_4.0/www/ ${web_root_path}/reason \
+  && ln -s ${reason_package_path}/www/ ${web_root_path}/reason_package \
+  && ln -s ${reason_package_path}/thor/ ${web_root_path}/thor \
+  && ln -s ${reason_package_path}/loki_2.0/ ${web_root_path}/loki_2.0 \
+  && ln -s ${reason_package_path}/flvplayer/ ${web_root_path}/flvplayer \
+  && ln -s ${reason_package_path}/jquery/ ${web_root_path}/jquery \
+  && ln -s ${reason_package_path}/date_picker/ ${web_root_path}/date_picker
+
+RUN chown -R www-data:www-data ${web_root_path} \
+  && chown -R www-data:www-data ${reason_package_path}/reason_4.0/data/ \
+  && chmod -R 0777 ${web_root_path} \
+  && chmod -R 0777 ${reason_package_path}/reason_4.0/data/
 
 # setup command
-ADD docker-entrypoint.sh /entrypoint.sh
+COPY docker/docker-entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["sh", "-c", "bin/www"]
+CMD ["apache2-foreground"]
 
 EXPOSE 80
 
-ADD . /usr/src/app
-WORKDIR /usr/src/app
 
-RUN mkdir /usr/src/root
-RUN ln -s /usr/src/app/www            /usr/src/root/reason_package
-RUN ln -s /usr/src/app/reason_4.0/www /usr/src/root/reason
-
-RUN apt-get -y install php5-curl mysql-client-core-5.6 tidy
-
-RUN chown www-data -R /usr/src/root/                         && \
-    chown www-data -R /usr/src/app/reason_4.0/data/csv_data/ && \
-    chown www-data -R /usr/src/app/reason_4.0/data/logs/     && \
-    chown www-data -R /usr/src/app/reason_4.0/data/assets/   && \
-    chown www-data -R /usr/src/app/reason_4.0/data/images/   && \
-    chown www-data -R /usr/src/app/reason_4.0/data/tmp/      && \
-    chown www-data -R /usr/src/app/reason_4.0/data/cache/    && \
-    chown www-data -R /usr/src/root/reason/tmp/              && \
-    chown www-data -R /usr/src/app/reason_4.0/data/geocodes/

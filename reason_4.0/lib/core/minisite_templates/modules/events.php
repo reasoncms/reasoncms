@@ -15,6 +15,7 @@ reason_include_once( 'classes/page_types.php' );
 reason_include_once( 'classes/function_bundle.php' );
 reason_include_once( 'classes/api/api.php' );
 reason_include_once( 'classes/borrow_this.php' );
+reason_include_once( 'function_libraries/safe_json.php' );
 include_once(CARL_UTIL_INC . 'cache/object_cache.php');
 include_once( CARL_UTIL_INC . 'dir_service/directory.php' );
 include_once( CARL_UTIL_INC . 'basic/cleanup_funcs.php' );
@@ -396,6 +397,7 @@ class EventsModule extends DefaultMinisiteModule
 							'limit_to_ticketed_events'=>false,
 	 						'limit_to_audiences' => '',	 // as comma spaced strings
 							'limit_to_page_categories'=>false,
+							'filter_on_page_name' => false,
 	 						'link_shared_events_to_parent_site' => false,
 							'list_chrome_markup' => '',
 							'list_item_markup' => '',
@@ -480,6 +482,12 @@ class EventsModule extends DefaultMinisiteModule
 	 * @var array
 	 */
 	protected $_user_can_inline_edit_sites = array();
+	/**
+	 * Flag indicating whether the current user has editing rights for this site.
+	 *
+	 * @var boolean
+	 */
+	protected $_user_has_editing_rights_to_current_site;
 	
 	/**
 	 * Array of set-up markup classes
@@ -726,7 +734,7 @@ class EventsModule extends DefaultMinisiteModule
 	{
 		if (!isset($this->calendar)) $this->calendar = new reasonCalendar;
 		$views = $this->calendar->get_views();
-		$formats = array('ical');
+		$formats = array('ical', 'json');
 
 		return array(
 			'audience' => array(
@@ -785,6 +793,9 @@ class EventsModule extends DefaultMinisiteModule
 			),
 			'delete_registrant' => array(
 				'function' => 'turn_into_string',
+			),
+			'bust_cache' => array(
+				'function'=>'turn_into_int',
 			),
 		);
 	}
@@ -938,6 +949,10 @@ class EventsModule extends DefaultMinisiteModule
 	 */
 	protected function get_cache_lifespan()
 	{
+		if($this->should_bust_caches())
+		{
+			return 1;
+		}
 		return $this->params['cache_lifespan'];
 	}
 	/**
@@ -947,9 +962,26 @@ class EventsModule extends DefaultMinisiteModule
 	 */
 	protected function get_cache_lifespan_meta()
 	{
+		
+		if($this->should_bust_caches())
+		{
+			return 1;
+		}
 		if($this->params['cache_lifespan_meta'])
 			return $this->params['cache_lifespan_meta'];
 		return $this->get_cache_lifespan();
+	}
+	/**
+	 * Should caches be rebuilt?
+	 * @return boolean
+	 */
+	protected function should_bust_caches()
+	{
+		if(isset($this->request['bust_cache']) && $this->request['bust_cache'] && $this->user_has_editing_rights_to_current_site())
+		{
+			return true;
+		}
+		return false;
 	}
 	
 	//////////////////////////////////////
@@ -970,6 +1002,10 @@ class EventsModule extends DefaultMinisiteModule
 		if(!empty($this->request['format']) && $this->request['format'] == 'ical')
 		{
 			$this->init_and_run_ical_calendar();
+		}
+		if(!empty($this->request['format']) && $this->request['format'] == 'json')
+		{
+			$this->init_and_run_json_calendar();
 		}
 		else
 		{
@@ -1277,6 +1313,21 @@ class EventsModule extends DefaultMinisiteModule
 		$events = $this->calendar->get_all_events();
 		
 		$this->export_ical($events);
+	}
+	/**
+	 * Set up and produce json ouput
+	 *
+	 * @return void
+	 */
+	function init_and_run_json_calendar()
+	{
+		$init_array = $this->make_reason_calendar_init_array($this->_get_start_date(), '', 'all');
+
+		$this->calendar = $this->_get_runned_calendar($init_array);
+
+		$events = $this->calendar->get_all_events();
+
+		$this->export_json($events);
 	}
 	/**
 	 * Do the set up required for the standard html output
@@ -2056,9 +2107,21 @@ class EventsModule extends DefaultMinisiteModule
 	{
 		if (!isset($this->_user_can_inline_edit))
 		{
-			$this->_user_can_inline_edit = reason_check_access_to_site($this->site_id);
+			$this->_user_can_inline_edit = $this->user_has_editing_rights_to_current_site();
 		}
 		return $this->_user_can_inline_edit;
+	}
+	/**
+	 * Does the current user have editing rights to the current site?
+	 * @return boolean
+	 */
+	function user_has_editing_rights_to_current_site()
+	{
+		if (!isset($this->_user_has_editing_rights_to_current_site))
+		{
+			$this->_user_has_editing_rights_to_current_site = reason_check_access_to_site($this->site_id);
+		}
+		return $this->_user_has_editing_rights_to_current_site;
 	}
 
 	/**
@@ -2421,6 +2484,7 @@ class EventsModule extends DefaultMinisiteModule
 		$this->options_bar .= $this->get_audiences();
 		$this->options_bar .= $this->get_today_link();
 		$this->options_bar .= $this->get_archive_toggler();
+		$this->options_bar .= $this->get_cache_buster_section();
 		$this->options_bar .= '</div>'."\n";
 	}
 	/**
@@ -3196,6 +3260,19 @@ class EventsModule extends DefaultMinisiteModule
 		
 	}
 	/**
+	 * Get the html for a link to bust the cache (if one exists)
+	 * @return string HTML
+	 */
+	function get_cache_buster_section()
+	{
+		$ret = '';
+		if((!empty($this->params['cache_lifespan']) || !empty($this->params['cache_lifespan_meta'])) && $this->user_has_editing_rights_to_current_site())
+		{
+			$ret .= '<div class="cacheBuster"><a href="?bust_cache=1">Refresh event data</a></div>';
+		}
+		return $ret;
+	}
+	/**
 	 * Display the search interface
 	 *
 	 * @return void
@@ -3491,6 +3568,21 @@ class EventsModule extends DefaultMinisiteModule
 				$es->add_relation($where);
 			}
 		}
+		if($this->params['filter_on_page_name'])
+		{
+			if(is_bool($this->params['filter_on_page_name']))
+			{
+				$es->add_relation('entity.name LIKE "%'.reason_sql_string_escape($this->parent->cur_page->get_value('name')).'%"');
+			}
+			elseif(is_string($this->params['filter_on_page_name']))
+			{
+				$es->add_relation('`'.reason_sql_string_escape($this->params['filter_on_page_name']).'` LIKE "%'.reason_sql_string_escape($this->parent->cur_page->get_value('name')).'%"');
+			}
+			else
+			{
+				trigger_error('filter_on_page_name does not support values other than boolean or string');
+			}
+		}
 	}
 	/**
 	 * Display a link to the calendar's RSS feed
@@ -3550,12 +3642,10 @@ class EventsModule extends DefaultMinisiteModule
 		{
 			$start_date = $this->request['start_date'];
 		}
-		$download_query = $this->construct_link(array('start_date'=>$start_date,'view'=>'','end_date'=>'','format'=>'ical'));
-		$subscribe_query = $this->construct_link(array('start_date'=>$start_date,'view'=>'','end_date'=>'','format'=>'ical'), true, false);
-		$calendar_url = REASON_HOST.$this->parent->pages->get_full_url( $this->page_id );
-		$webcal_url = 'webcal://'.$calendar_url.$subscribe_query;
-		$gcal_url = 'https://calendar.google.com/calendar/render?cid='.$webcal_url;
-		//$ycal_url = 'https://calendar.yahoo.com/subscribe?ics=http://'.$calendar_url.$this->construct_link(array('format'=>'ical'));
+		$ical_link = '//'.REASON_HOST.$this->parent->pages->get_full_url( $this->page_id ).$this->construct_link(array('start_date'=>$start_date,'view'=>'','end_date'=>'','format'=>'ical'), true, false);
+		
+		$webcal_url = 'webcal:'.$ical_link;
+		$gcal_url = 'https://calendar.google.com/calendar/render?cid='.urlencode($webcal_url);
 		if(!empty($this->request['category']) || !empty($this->request['audience']) || !empty($this->request['search']))
 		{
 			$subscribe_desktop_text = 'Subscribe to this view (Desktop)';
@@ -3570,17 +3660,16 @@ class EventsModule extends DefaultMinisiteModule
 			//$subscribe_ycal_text = 'Subscribe (Yahoo!)';
 			$download_text = 'Download events (.ics)';
 		}
-		echo '<a href="'.$webcal_url.'">'.$subscribe_desktop_text.'</a>';
-		echo ' <span class="divider">|</span> <a href="'.$gcal_url.'" target="_blank">'.$subscribe_gcal_text.'</a>';
+		echo '<a href="'.htmlspecialchars($webcal_url).'">'.$subscribe_desktop_text.'</a>';
+		echo ' <span class="divider">|</span> <a href="'.htmlspecialchars($gcal_url).'" target="_blank">'.$subscribe_gcal_text.'</a>';
 		//echo ' <span class="divider">|</span> <a href="'.$ycal_url.'" target="_blank">'.$subscribe_ycal_text.'</a>';
 		if(!empty($this->events)) 
 		{
-			echo ' <span class="divider">|</span> <a href="'.$download_query.'">'.$download_text.'</a>';
+			echo ' <span class="divider">|</span> <a href="'.htmlspecialchars($ical_link).'">'.$download_text.'</a>';
 		}
 		if (defined("REASON_URL_FOR_ICAL_FEED_HELP") && ( (bool) REASON_URL_FOR_ICAL_FEED_HELP != FALSE))
 		{
-			echo ' <span class="divider">|</span> <a href="'.REASON_URL_FOR_ICAL_FEED_HELP.'"><img src="'.REASON_HTTP_BASE_PATH . 'silk_icons/help.png" alt="Help" width="16px" height="16px" /></a>';
-			echo ' <a href="'.REASON_URL_FOR_ICAL_FEED_HELP.'">How to Use This</a>';
+			echo ' <span class="divider">|</span> <a href="'.REASON_URL_FOR_ICAL_FEED_HELP.'"><span class="helpIcon"><img src="'.REASON_HTTP_BASE_PATH . 'silk_icons/help.png" alt="Help" width="16px" height="16px" /> </span>How to Use This</a>';
 		}
 		echo '</div>'."\n";
 	}
@@ -3612,6 +3701,16 @@ class EventsModule extends DefaultMinisiteModule
 					$event->set_value('datetime',$this->request['date'].' '.prettify_mysql_datetime($event->get_value('datetime'), 'H:i:s'));
 				}
 				$this->export_ical(array($event));
+			}
+			if(!empty($this->request['format']) && $this->request['format'] == 'json')
+			{
+				$event = carl_clone($this->event);
+				if(!empty($this->request['date']))
+				{
+					$event->set_value('recurrence','none');
+					$event->set_value('datetime',$this->request['date'].' '.prettify_mysql_datetime($event->get_value('datetime'), 'H:i:s'));
+				}
+				$this->export_json(array($event));
 			}
 			else
 			{
@@ -3662,6 +3761,27 @@ class EventsModule extends DefaultMinisiteModule
 		die();
 	}
 	/**
+	 * Given set of events, generate json representation, send as json, and die
+	 *
+	 * Note that this method will never return, as it calls die().
+	 *
+	 * @param array $events entities
+	 * @return void
+	 */
+	function export_json($events)
+	{
+		while(ob_get_level() > 0)
+			ob_end_clean();
+
+		$encoded = $this->get_json($events);
+		$size_in_bytes = strlen($encoded);
+
+		header('Content-Type: application/json; charset=utf-8');
+		header('Content-Length: '.$size_in_bytes);
+		echo $encoded;
+		die();
+	}
+	/**
 	 * Get an ical representation of a set of events
 	 * @param array $events entities
 	 * @return string iCal
@@ -3685,6 +3805,62 @@ class EventsModule extends DefaultMinisiteModule
 			$calendar->set_title($site_name);
 		}
   		return $calendar -> get_icalendar_events();
+	}
+	/**
+	 * Get a json representation of a set of events
+	 * @param array $events entities
+	 * @return string JSON
+	 */
+	function get_json($events)
+	{
+		if(!is_array($events))
+		{
+			trigger_error('get_json needs an array of event entities');
+			return '';
+		}
+
+		$nav = $this->get_page_nav();
+		$page_url = $nav->get_full_url( $this->page_id, true, true );
+
+		$events = array_values(array_map(function($e) use ($page_url) {
+			// ensure that all events have an associated URL
+			if(!$e->get_value('url')) {
+				$e->set_value('url', $page_url.'?event_id='.$e->id());
+			}
+			$values = $e->get_values();
+
+			$values['calendar_record'] = $values['calendar_record'] ? (int)$values['calendar_record'] : null;
+			$values['dates'] = explode(", ", $values['dates']);
+			$values['datetime'] = $values['datetime'] ?: null;
+			$values['end_date'] = $values['end_date'] ?: null;
+			$values['frequency'] = $values['frequency'] ? (int)$values['frequency'] : null;
+			$values['friday'] = $values['friday'] == 'true';
+			$values['hours'] = $values['hours'] ? (int)$values['hours'] : null;
+			$values['id'] = (int)$values['id'];
+			$values['last_occurence'] = $values['last_occurence'] ?: null;
+			$values['latitude'] = $values['latitude'] ? (double)$values['latitude'] : null;
+			$values['longitude'] = $values['longitude'] ? (double)$values['longitude'] : null;
+			$values['minutes'] = $values['minutes'] ? (int)$values['minutes'] : null;
+			$values['monday'] = $values['monday'] == 'true';
+			$values['month_day_of_week'] = $values['month_day_of_week'] ?: null;
+			$values['monthly_repeat'] = $values['monthly_repeat'] ?: null;
+			// $values['new'] = $values['new'] == '1';
+			// $values['no_share'] = $values['no_share'] == '1';
+			$values['recurrence'] = $values['recurrence'] ?: null;
+			$values['registration'] = $values['registration'] ?: null;
+			$values['saturday'] = $values['saturday'] == 'true';
+			$values['show_hide'] = $values['show_hide'] ?: null;
+			$values['sunday'] = $values['sunday'] == 'true';
+			$values['term_only'] = $values['term_only'] ? $values['term_only'] === "yes" : null;
+			$values['thursday'] = $values['thursday'] == 'true';
+			$values['tuesday'] = $values['tuesday'] == 'true';
+			$values['wednesday'] = $values['wednesday'] == 'true';
+			$values['week_of_month'] = $values['week_of_month'] ? (int)$values['week_of_month'] : null;
+
+			return $values;
+		}, $events));
+
+		return safe_json_encode($events);
 	}
 	/**
 	 * Output HTML for the detail view of an event
@@ -4354,12 +4530,12 @@ HTML;
 	 * @param array $vars The query string variables for the link
 	 * @param boolean $pass_passables should the items in $this->pass_vars
 	 *                be passed if they are present in the current query?
-	 * @param boolean $html_encode Should use '&amp;' for HTML (true) or '%26' for URL (false).
+	 * @param boolean $html_encode Should the output be html encoded? Use true for direct inclusion in HTML.
 	 * @return string
 	 *
 	 * @todo replace this with carl_ functions
 	 */
-	function construct_link( $vars = array(), $pass_passables = true , $html_encode = true) // {{{
+	function construct_link( $vars = array(), $pass_passables = true, $html_encode = true ) // {{{
 	{
 		if($pass_passables)
 			$link_vars = $this->pass_vars;
@@ -4377,8 +4553,12 @@ HTML;
 		{
 			$link_vars[$key] = urlencode($link_vars[$key]);
 		}
-		$ampersand = ($html_encode) ? '&amp;' : '%26';
-		return '?'.implode_with_keys($ampersand,$link_vars);
+		$ret = '?'.implode_with_keys('&',$link_vars);
+		if($html_encode)
+		{
+			$ret = htmlspecialchars($ret, ENT_QUOTES);
+		}
+		return $ret;
 	} // }}}
 	/**
 	 * Is a given event an all-day event?

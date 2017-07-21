@@ -27,8 +27,6 @@
 		
 		function display_entity() // {{{
 		{
-			$this->start_table();
-			
 			// iFrame Preview
 			if( !$this->_entity->get_value( 'url' ) && $this->_entity->get_value( 'state' ) == 'Live' )
 			{
@@ -52,8 +50,6 @@
 			
 			// Everything Else
 			$this->show_all_values( $this->_entity->get_values() );
-			
-			$this->end_table();
 		} // }}}
 		
 		function show_item_extra_head_content( $field , $value )

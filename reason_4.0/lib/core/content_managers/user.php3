@@ -23,15 +23,6 @@
 								'user_phone'=>'Phone',
 								'user_popup_alert_pref'=>'Logout Notification Preference',
 								);
-		var $autocompletes = array(
-				'name' => 'username-for-other-user',
-				'user_surname' => 'family-name-for-other-user',
-				'user_given_name' => 'given-name-for-other-user',
-				'user_email' => 'email-for-other-user',
-				'user_phone' => 'tel-for-other-user',
-				'password' => 'new-password-for-other-user',
-				'confirm_password' => 'new-password-for-other-user',
-		);
 		function init_head_items()
 		{
 			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH . 'user_content_manager.js?v=2');
@@ -145,10 +136,6 @@
 			foreach($this->nice_labels as $name=>$label)
 			{
 				$this->set_display_name($name,$label);
-			}
-			foreach($this->autocompletes as $name=>$autocomplete)
-			{
-				$this->set_element_properties( $name, array('autocomplete' => $autocomplete) );
 			}
 			$this->set_order(array('conflict_notice','name','role','site_window_pref','user_popup_alert_pref','user_authoritative_source','user_given_name','user_surname','user_email','user_phone','password','confirm_password'));
 		}

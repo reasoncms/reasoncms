@@ -159,7 +159,7 @@ else
 }
 
 $output = '<!DOCTYPE html>';
-$output .= '<html xmlns="http://www.w3.org/1999/xhtml">';
+$output .= '<html xmlns="http://www.w3.org/1999/xhtml" lang="'.reason_htmlspecialchars(REASON_DEFAULT_INTERFACE_LANGUAGE).'" xml:lang="'.reason_htmlspecialchars(REASON_DEFAULT_INTERFACE_LANGUAGE).'">';
 $output .= '<head>';
 $output .= $head_items->get_head_item_markup();
 $output .= '</head>';

@@ -89,6 +89,7 @@
 		{
 			echo '<p>We\'re sorry, but we do not have any record of you being an authorized Reason user.</p>';
 		}
+		echo '<p>You are currently logged in as: '.htmlspecialchars($authenticated_user_netid).'. <a href="'.REASON_LOGIN_URL.'?logout=1">Log in as a different user</a></p>';
 	}
 
 	$_page_timing_end = getmicrotime();

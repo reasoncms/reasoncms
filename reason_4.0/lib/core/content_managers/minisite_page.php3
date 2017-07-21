@@ -119,7 +119,7 @@ class MinisitePageManager extends parent_childManager
 	
 	function alter_data()
 	{
-		$fields = array('name', 'link_name', 'parent_id', 'parent_info', 'url_fragment', 'custom_page', 'page_type_note', 'content', 'visibility_heading', 'state', 'state_action', 'nav_display', 'indexable','metadata_heading', 'author','description', 'keywords', 'administrator_section_heading', 'extra_head_content_structured', 'extra_head_content', 'unique_name');
+		$fields = array('name', 'link_name', 'parent_id', 'parent_info', 'url_fragment', 'custom_page', 'page_type_note', 'content', 'visibility_heading', 'state', 'state_action', 'nav_display', 'indexable','metadata_heading', 'author','description', 'keywords', 'language', 'administrator_section_heading', 'extra_head_content_structured', 'extra_head_content', 'unique_name');
 		
 		parent::alter_data();
 		$this->_no_tidy[] = 'url_fragment';
@@ -129,6 +129,8 @@ class MinisitePageManager extends parent_childManager
 		
 		$this->set_allowable_html_tags('extra_head_content','all');
 		$this->set_allowable_html_tags('extra_head_content_structured','all');
+		
+		$this->change_element_type( 'language' , 'language', array('language_set' => 'ISO-639-1', 'top_languages'=>array(REASON_DEFAULT_CONTENT_LANGUAGE), 'country_variants' => true, 'add_empty_value_to_top' => true, 'show_codes' => true ) );
 
 		$this->add_element( 'is_link', 'hidden' );
 		if( !empty( $_REQUEST[ 'is_link' ] ) OR $this->get_value( 'url' ) )
@@ -301,6 +303,7 @@ class MinisitePageManager extends parent_childManager
 			$this->set_comments( 'description', form_comment('A brief summary of the page. For best results when the page is indexed by search engines, try to not exceed 156 characters.') );
 			$this->set_comments( 'keywords', form_comment('Comma-separated keywords (for search engines) ie "Dave, Hendler, College, Relations"') );
 			$this->set_comments( 'parent_id', form_comment(''));
+			$this->add_comments('language', form_comment('If this page is a different language than other pages on this site, please specify the language here.'));
 			$this->change_element_type( 'url', 'hidden' );
 
 			
@@ -310,7 +313,7 @@ class MinisitePageManager extends parent_childManager
 		else
 		{
 			// loop through all elements making them hidden, except for the important link fields
-			$fields = array( 'name', 'url', 'parent_id', 'nav_display', 'description', 'administrator_section_heading', 'unique_name', );
+			$fields = array( 'name', 'url', 'parent_id', 'nav_display', 'description', 'language', 'administrator_section_heading', 'unique_name', );
 			foreach($this->get_element_names() as $element_name)
 			{
 				if( !in_array( $element_name, $fields ) )
@@ -327,6 +330,7 @@ class MinisitePageManager extends parent_childManager
 			$this->set_comments( 'name', form_comment('The title of link displayed in your site\'s navigation.') );
 			$this->set_comments( 'parent_id', form_comment('Use this field to choose the link\'s parent page.') );
 			$this->set_comments( 'description', form_comment('A brief description for this link; only displayed if the parent page shows its children.') );
+			$this->add_comments('language', form_comment('If the title/description of this link is in a different language than other content on this site, please specify the language here.'));
 		}
 		
 		// Suggest a limit of 156 characters so that google will display the complete description.

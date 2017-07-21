@@ -106,7 +106,7 @@
 
 			if($this->params['use_parent_title_as_header'])
 			{
-				echo '<h3>'.$this->parent_page->get_value('name').'</h3>'."\n";
+				echo '<h3'.$this->parent_page->get_language_attribute().'>'.$this->parent_page->get_value('name').'</h3>'."\n";
 			}
 			echo '<ul class="'.implode(' ',$classes).'">'."\n";
 			$counter = 1;
@@ -195,7 +195,7 @@
 					if(!empty($prevnext))
 						echo '<strong>'.ucfirst($key).':</strong> ';
 					echo $image_html;
-					echo '<a href="'.$link.'">'.$page_name.'</a>';
+					echo '<a href="'.$link.'"'.$sibling->get_language_attribute().'>'.$page_name.'</a>';
 					/* if ( $sibling->get_value( 'description' ))
 						echo "\n".'<div class="smallText">'.$sibling->get_value( 'description' ).'</div>'; */
 					echo "</li>\n";
@@ -204,7 +204,7 @@
 				{
 					echo '<li class="'.implode(' ',$classes).'">';
 					echo $image_html;
-					echo '<strong>'.$page_name.'</strong>';
+					echo '<strong'.$sibling->get_language_attribute().'>'.$page_name.'</strong>';
 					echo '</li>'."\n";
 				}
 				

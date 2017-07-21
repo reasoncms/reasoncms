@@ -211,7 +211,7 @@ class ImageSidebarModule extends DefaultMinisiteModule
 				$img_info = $this->get_image_detail_image_info($image);
 				
 				$buf.= '<!DOCTYPE html>'."\n";
-				$buf.= '<html>'."\n";
+				$buf.= '<html lang="'.reason_htmlspecialchars($img_info['language']).'">'."\n";
 				
 				$buf.= '<head>'."\n";
 				$buf.= '<title>'. strip_tags($img_info['title']) .'</title>'."\n";
@@ -239,7 +239,7 @@ class ImageSidebarModule extends DefaultMinisiteModule
 		//Error:
 		http_response_code(404);
 		$buf.= '<!DOCTYPE html>'."\n";
-		$buf.= '<html>'."\n";
+		$buf.= '<html lang="en-US">'."\n";
 		$buf.= '<head>'."\n";
 		$buf.= '<title>404 Error</title>'."\n";
 		$buf.= '</head>'."\n";
@@ -281,11 +281,23 @@ class ImageSidebarModule extends DefaultMinisiteModule
 		$title = $image_entity->get_value('description') ? $image_entity->get_value('description') : 'Image';
 		$image_caption = $image_entity->get_value('content') ? $image_entity->get_value('content') : $image_entity->get_value('description');
 		
-		$image_info = array('title' => $title, 'caption' => $image_caption, 'url' => $img_url, 'author' => $img_author, 'width' => $img_width, 'height' => $img_height);
+		$image_info = array('title' => $title, 'caption' => $image_caption, 'url' => $img_url, 'author' => $img_author, 'width' => $img_width, 'height' => $img_height, 'language' => $this->get_image_language($image_entity));
 		
 		return $image_info;
 	}	
-	
+	function get_image_language($image)
+	{
+		$image_language = REASON_DEFAULT_CONTENT_LANGUAGE;
+		if($site_id = get_owner_site_id($image->id()))
+		{
+			$site = new entity($site_id);
+			if($lang = $site->get_value('language'))
+			{
+				$image_language = $lang;
+			}
+		}
+		return $image_language;
+	}
 	function select_images()
 	{
 		if ($this->params['alternate_source_page_id'])

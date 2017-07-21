@@ -228,6 +228,27 @@
 		}
 		return $val;
 	} // }}}
+	/**
+	 * Clean up a value into a non-negative integer
+	 *
+	 * Useful for checking against entities, pagination, and other cases where a negative integer
+	 * does not make sense
+	 *
+	 * @param mixed $val
+	 * @param array $extra_args
+	 * @return integer
+	 */
+	function turn_into_non_negative_int($val, $extra_args = NULL) //{{{
+	{
+		$val = turn_into_int($val, $extra_args);
+		
+		if($val < 0)
+		{
+			$val = 0;
+		}
+		
+		return $val;
+	} // }}}
 	
 	function turn_into_string($val, $dummy = NULL) //{{{
 	{

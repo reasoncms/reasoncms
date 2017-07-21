@@ -4,7 +4,6 @@
 // Compiled 2011-03-29 15:27:18 
 // http://loki-editor.googlecode.com/
 
-
 // file TinyMCE.js
 /**
  * $RCSfile: tiny_mce_src.js,v $
@@ -6225,7 +6224,7 @@ Util.HTML_Reader = function()
 	{
 		if ( this._iframe == null )
 			this._append_iframe(uri);
-
+		
 		this._iframe.src = uri;
 	};
 
@@ -21993,8 +21992,12 @@ UI.Loki = function Loki()
 		Util.Element.add_class(_iframe_wrapper, 'iframe_wrapper');
 
 		_iframe = _owner_document.createElement('IFRAME');
-		_iframe.src = 'javascript:""';
+		_iframe.src = 'javascript:\'\'';
 		_iframe.frameBorder = '0'; // otherwise, IE puts an extra border around the iframe that css cannot erase
+		
+		if('iframe_aria_label' in _settings) {
+			_iframe.setAttribute('aria-label', _settings.iframe_aria_label);
+		}
 
 		_iframe_wrapper.appendChild(_iframe);
 

@@ -22,6 +22,7 @@
       - php5-curl
       - imagemagick
       - php5-xdebug
+      - sendmail
     notify:
     - restart apache
 
@@ -106,7 +107,7 @@
     - name: import reason databases
       mysql_db: db={{ item.db }} target={{ item.target }} state=import
       with_items:
-        - { db: reason, target: /var/reason_package/reason_4.0/data/dbs/reason4.7.sql }
+        - { db: reason, target: /var/reason_package/reason_4.0/data/dbs/reason4.8.sql }
 
     - name: open setup in browser
       become: no
