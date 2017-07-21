@@ -293,10 +293,15 @@
 			else
 				$order = $this->elements;
 			
+			$markup_string .= '<span class="inlineElementGroup"';
+			if($this->has_display_name())
+				 $markup_string .= ' aria-label="'.html_attribute_escape($this->get_display_name()).'"';
+			$markup_string .= '>';
 			foreach ($order as $element_name => $element)
 			{
 				$markup_string .= '<span id="'.str_replace('_', '', $element_name).'" class="inlineElement">'.$this->get_individual_element_display($element_name).'</span>';
 			}
+			$markup_string .= '</span>';
 			return $markup_string;
 		}
 		
@@ -306,7 +311,20 @@
 			$element = $this->elements[$element_name];
 			$markup_string .= $this->additional_element_info[$element_name]['anchor'];
 			if($this->use_element_labels && $element->is_labeled())
-				$markup_string .=  $this->get_element_name($element);
+			{
+				if($target = $element->get_label_target_id())
+				{
+					$markup_string .=  '<label for="'.html_attribute_escape($target).'">' . $this->get_element_name($element) . '</label>';
+				}
+				else
+				{
+					$markup_string .=  $this->get_element_name($element);
+				}
+			}
+			else
+			{
+				$element->set_class_var('labeled', false);
+			}
 			$markup_string .= $element->get_comments('before');
 			$markup_string .= $element->get_display();
 			$markup_string .= $element->get_comments();
@@ -330,6 +348,11 @@
 			else
 				$order = $this->elements;
 			
+			
+			$markup_string .= '<div class="stackedElementGroup"';
+			if($this->has_display_name())
+				 $markup_string .= ' aria-label="'.html_attribute_escape($this->get_display_name()).'"';
+			$markup_string .= '>';
 			foreach ($order as $element_name => $element)
 			{
 				//if (!$element->is_hidden())
@@ -337,6 +360,7 @@
 				//else
 				//	$markup_string .= $element->get_display()."\n";
 			}
+			$markup_string .= '</div>';
 			return $markup_string;
 		}
 		
@@ -346,7 +370,20 @@
 			$element = $this->elements[$element_name];
 			$markup_string .= $this->additional_element_info[$element_name]['anchor'];
 			if($this->use_element_labels && $element->is_labeled())
-				$markup_string .=  '<label for="'.$element_name.'">'.$this->get_element_name($element).'</label>'."\n";
+			{
+				if($target = $element->get_label_target_id())
+				{
+					$markup_string .=  '<label for="'.html_attribute_escape($target).'">' . $this->get_element_name($element) . '</label>';
+				}
+				else
+				{
+					$markup_string .=  $this->get_element_name($element);
+				}
+			}
+			else
+			{
+				$element->set_class_var('labeled', false);
+			}
 			$markup_string .= $element->get_comments('before')."\n";
 			$markup_string .= $element->get_display()."\n";
 			$markup_string .= $element->get_comments()."\n";
@@ -502,10 +539,18 @@
 			$this->set_defaults();
 			$this->_put_elements_in_position();
 			
+			$markup_string .= '<div class="tableElementGroup"';
+			if($this->has_display_name())
+				 $markup_string .= ' aria-label="'.html_attribute_escape($this->get_display_name()).'"';
+			$markup_string .= '>';
+			
 			$markup_string .= '<table>'."\n";
 			$markup_string .= $this->get_table_headers();
 			$markup_string .= $this->get_table_data();
 			$markup_string .= '</table>'."\n";
+			
+			$markup_string .= '</div>';
+			
 			return $markup_string;
 		}
 		
@@ -549,8 +594,23 @@
 						$class = strtolower(preg_replace('/[^\w]/','', $column)).'Col';
 						$markup_string .= '<td class="'.$class.'">'."\n";
 						$markup_string .= $this->additional_element_info[$element_name]['anchor']."\n";
-						if($this->use_element_labels)
-							$markup_string .= $this->get_element_name($element);
+						
+						if($this->use_element_labels && $element->is_labeled())
+						{
+							if($target = $element->get_label_target_id())
+							{
+								$markup_string .=  '<label for="'.html_attribute_escape($target).'">' . $this->get_element_name($element) . '</label>';
+							}
+							else
+							{
+								$markup_string .=  $this->get_element_name($element);
+							}
+						}
+						else
+						{
+							$element->set_class_var('labeled', false);
+						}
+						
 						$markup_string .= $element->get_comments('before')."\n";
 						$markup_string .= $element->get_display()."\n";
 						$markup_string .= $element->get_comments()."\n";

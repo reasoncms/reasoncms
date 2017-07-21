@@ -108,7 +108,7 @@ class ReasonAssetAccess
 			else
 			{
 				echo '<!DOCTYPE html>'."\n";
-				echo '<html xmlns="http://www.w3.org/1999/xhtml">'."\n";
+				echo '<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US">'."\n";
 				echo '<head><title>File Not Found (HTTP 404)</title><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /></head>'."\n";
 				echo '<body>'."\n";
 				echo '<h2>File Not Found (HTTP 404)</h2>'."\n";;
@@ -128,7 +128,7 @@ class ReasonAssetAccess
 			else
 			{
 				echo '<!DOCTYPE html>'."\n";
-				echo '<html xmlns="http://www.w3.org/1999/xhtml">'."\n";
+				echo '<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US">'."\n";
 				echo '<head><title>Access Forbidden (HTTP 403)</title><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /></head>'."\n";
 				echo '<body>'."\n";
 				echo '<h2>Access Forbidden (HTTP 403)</h2>'."\n";;
@@ -192,6 +192,7 @@ class ReasonAssetAccess
 
 		if (file_exists($file_path))
 		{
+
 			$file_size = filesize($file_path);
 		
 			// disposition needs some extensive testing - should it be attachment or inline?
@@ -215,6 +216,7 @@ class ReasonAssetAccess
 			//if (in_array($file_ext, $extensions_to_display_inline)) $file_disposition = 'inline';
 			if (empty($mime_type)) $mime_type = 'application/octet-stream';
 			ob_end_clean();
+
 			header('Pragma: public');
 			header('Cache-Control: max-age=0'); //added to squash weird IE 6 bug where pdfs say that the file is not found
 			header('Content-Type: ' . $mime_type);
@@ -222,6 +224,13 @@ class ReasonAssetAccess
 			header('Content-Length: '.$file_size);
 			header('Content-Transfer-Encoding: binary');
 			header('Expires: 0');
+
+			// Emit a robots none header if the site doesn't exist or is not live
+			if(empty($this->site) || $this->site->get_value('site_state') != 'Live')
+			{
+				header('X-Robots-Tag: noindex');
+			}
+
 			fpassthru($file_handle);
 			exit();
 		}

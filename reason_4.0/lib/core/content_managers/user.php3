@@ -23,10 +23,9 @@
 								'user_phone'=>'Phone',
 								'user_popup_alert_pref'=>'Logout Notification Preference',
 								);
-
 		function init_head_items()
 		{
-			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH . 'user_content_manager.js');
+			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH . 'user_content_manager.js?v=2');
 		}
 		function alter_data()
 		{
@@ -43,7 +42,9 @@
 			}
 			$this->change_element_type('user_popup_alert_pref', 'select', array('options'=>array('yes'=>'Javascript alert (more accessible)','no'=>'In-page (less obtrusive)'),'add_empty_value_to_top' => false));
 			
-			$this->add_element('password', 'password');	
+			
+			
+			$this->add_element('password', 'password');
 			$this->add_element('confirm_password', 'password');
 			$this->change_element_type('user_password_hash', 'cloaked');
 			if($this->get_value('user_password_hash'))

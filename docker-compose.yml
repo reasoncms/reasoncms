@@ -1,0 +1,28 @@
+version: '2'
+
+services:
+  db:
+    image: mariadb:5.5
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: always
+    env_file:
+      - .env
+  web:
+    depends_on:
+      - db
+    build: .
+    links:
+      - db:mysql
+    volumes:
+      - .:/var/reason_package
+    ports:
+      - "80:80"
+    expose:
+      - "9000"
+    restart: always
+    env_file:
+      - .env
+
+volumes:
+  db_data:

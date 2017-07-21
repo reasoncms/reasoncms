@@ -318,7 +318,7 @@ function reason_require_http_authentication($realm = FULL_ORGANIZATION_NAME, $ca
 	if(empty($cancel_message))
 	{
 		$msg_str = 'This resource requires login.';
-		$cancel_message = '<!doctype HTML><html><title>'.$msg_str.'</title></head><body><h3>'.$msg_str.'</h3>';
+		$cancel_message = '<!doctype HTML><html lang="en-US"><title>'.$msg_str.'</title></head><body><h3>'.$msg_str.'</h3>';
 		if($cgi_mode && function_exists('is_developer') && is_developer())
 			$cancel_message .= '<p>HTTP authentication is not currently supported when PHP is running under CGI/Fast CGI.</p>';
 		$cancel_message .= '</body></html>';

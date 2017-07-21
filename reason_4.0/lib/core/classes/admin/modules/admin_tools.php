@@ -84,9 +84,19 @@ class ReasonAdminToolsModule extends DefaultModule
 					'description' => 'Lists themes and theme elements that are not currently in use',
 					'safety_level' => 'safe',
 				),
+				'?cur_module=OldThemes' => array(
+					'title' => 'List Old Themes',
+					'description' => 'Lists themes that were created before a given date',
+					'safety_level' => 'safe',
+				),
 				'?site_id='.id_of('master_admin').'&cur_module=TopLevelNavAnalysis' => array(
 					'title' => 'Site Structure Analysis',
 					'description' => 'Describes the top level navigation used by each site.',
+					'safety_level' => 'safe',
+				),
+				REASON_HTTP_BASE_PATH.'scripts/sitemap/hierarchical_page_report.php' => array(
+					'title' => 'Hierarchical Page Report',
+					'description' => 'Describes the page hierarchy of a chosen site. Pages are annotated with the page type info and aggregate module usage is shown.',
 					'safety_level' => 'safe',
 				),
 				'?site_id='.id_of('master_admin').'&cur_module=Export' => array(
@@ -94,12 +104,36 @@ class ReasonAdminToolsModule extends DefaultModule
 					'description' => 'Exports Reason data for a particular site',
 					'safety_level' => 'safe',
 				),
+				'?cur_module=ExportImages' => array(
+					'title' => 'Image Export',
+					'description' => 'Exports Reason images for a particular site. Note that you will need to specify a site_id for this tool to work.',
+					'safety_level' => 'safe',
+				),
 				'?site_id='.id_of('master_admin').'&cur_module=FormRecipients' => array(
 					'title' => 'Form Recipients Report',
 					'description' => 'Lists all the people who receive email notification when Reason forms are submitted',
 					'safety_level' => 'safe',
 				),
-								
+				'?site_id='.id_of('master_admin').'&cur_module=NoRelReport' => array(
+					'title' => 'No Relationships Report',
+					'description' => 'Lists entities with or without specific relationships',
+					'safety_level' => 'safe',
+				),
+				'?cur_module=InvisiblesFinder' => array(
+					'title' => 'Invisibles Finder',
+					'description' => 'Finds entities that are not visible given a site\'s setup.',
+					'safety_level' => 'safe',
+				),
+				'?cur_module=SharingStats' => array(
+					'title' => 'Sharing Stats',
+					'description' => 'Provides statistics on sharing and borrowing in Reason.',
+					'safety_level' => 'safe',
+				),
+				'?cur_module=Stats' => array(
+					'title' => 'Type Stats',
+					'description' => 'Provides statistics on usage by type in Reason.',
+					'safety_level' => 'safe',
+				),
 			),
 			'Content Actions' => array(
 				REASON_HTTP_BASE_PATH.'scripts/urls/update_urls.php' => array(
@@ -130,6 +164,11 @@ class ReasonAdminToolsModule extends DefaultModule
 				REASON_HTTP_BASE_PATH.'scripts/search/find_and_replace.php' => array(
 					'title' => 'Find and Replace',
 					'description' => 'Find and replace across multiple entities on multiple sites',
+					'safety_level' => 'careful',
+				),
+				'?cur_module=CopySitePages' => array(  
+					'title' => 'Copy Site Pages',
+					'description' => 'Copy the pages (and only the pages) from one site into a new site.',
 					'safety_level' => 'careful',
 				),
 				REASON_HTTP_BASE_PATH.'scripts/urls/replicate_url_history.php' => array(

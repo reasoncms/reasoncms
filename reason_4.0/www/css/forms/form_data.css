@@ -46,3 +46,8 @@ table.thor_data tr.even, table.table_data tr.even {
 #formAdminControlBox p {
 	padding: 3px;
 }
+
+table.table_data .column_sums td {
+	background: #eee;
+	border-bottom: 1px solid black;
+}

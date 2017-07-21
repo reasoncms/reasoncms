@@ -360,9 +360,10 @@ class SocketWriteRead implements AkismetRequestSender {
 		$response = '';
 
 		$fs = fsockopen($host, $port, $this->errorNumber, $this->errorString, 3);
+		stream_set_timeout($fs, 3); // Apply a read/write timeout, too
 
 		if($this->errorNumber != 0) {
-			throw new Exception('Error connecting to host: ' . $host . ' Error number: ' . $this->errorNumber . ' Error message: ' . $this->errorString);
+			throw new Exception('Akismet Error connecting to host: ' . $host . ' Error number: ' . $this->errorNumber . ' Error message: ' . $this->errorString);
 		}
 
 		if($fs !== false) {

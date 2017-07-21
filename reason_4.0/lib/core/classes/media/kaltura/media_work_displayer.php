@@ -424,6 +424,9 @@ class KalturaMediaWorkDisplayer implements MediaWorkDisplayerInterface
 
 			$markup .= 'src="'.$this->get_iframe_src($iframe_height, $iframe_width).'" ';
 			
+			if(!empty($this->media_work->get_value('av_type')))
+				$markup .= 'title="'.reason_htmlspecialchars($this->media_work->get_value('av_type')).'" ';
+			
 			$markup .= '>';
 			$markup .= '</iframe>'."\n";
 			

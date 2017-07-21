@@ -6,7 +6,7 @@ Welcome to Reason CMS!
 
 Automated Install (Using install.sh)
 ------------------------------------
-1. Move reason_package outside your web root.
+1. Rename reasoncms to reason_package and move the directory outside your web root.
 
 2. Run the install.sh script in the reason_package folder and follow instructions.
 
@@ -38,6 +38,6 @@ About Reason CMS
 
 - Reason CMS is free and open source - released under the GNU General Public License Version 2.
 
-[Release Notes](https://github.com/carleton/reason_package/releases)
+[Release Notes](ReleaseNotes.md)
 -------------
 

@@ -25,8 +25,8 @@
 // Basic information about the organization
 domain_define( 'FULL_ORGANIZATION_NAME','The Full Name of the Organization' );
 domain_define( 'SHORT_ORGANIZATION_NAME', 'Short Org Name' );
-domain_define( 'ORGANIZATION_HOME_PAGE_URI', 'http://www.domain_name.domain' );
-domain_define( 'WEBMASTER_EMAIL_ADDRESS', 'webmaster@domain_name.domain' );
+domain_define( 'ORGANIZATION_HOME_PAGE_URI', 'http://www.example.com' );
+domain_define( 'WEBMASTER_EMAIL_ADDRESS', 'webmaster@example.com' );
 domain_define( 'WEBMASTER_NAME', 'Joanne Q. Webmaster' );
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -97,6 +97,27 @@ domain_define( 'UNIVERSAL_CSS_PATH', REASON_PACKAGE_HTTP_BASE_PATH.'css/universa
 domain_define( 'HTTP_HOST_NAME', $_SERVER['HTTP_HOST'] );
 
 /**
+ * Sendfile header value
+ * 
+ * Helpful to deliver private (behind auth) or large files using web server internal
+ * file handles
+ * 
+ * Requires mod_sendfile (or similar) to be installed, enabled, and configured 
+ * for your web server
+ * 
+ * For Apache
+ *     value should be "X-Sendfile:"
+ *     docs at https://tn123.org/mod_xsendfile/
+ * 
+ * For Nginx: 
+ *     value should be "X-Accel-Redirect:" or "X-Accel-Redirect: /private/uri/handler/"
+ *     docs at https://www.nginx.com/resources/wiki/start/topics/examples/x-accel/
+ * 
+ * When Sendfile and Accel-Redirect aren't in use, leave this empty
+ */
+define('XSENDFILE_HEADER', '');
+
+/**
  * Make sure that your locale settings use UTF-8.
  *
  * If your server is not set to use utf-8, and you cannot change it at the server level, uncomment
@@ -157,8 +178,8 @@ define('HTML_PURIFIER_INC',INCLUDE_PATH.'htmlpurifier/');
 // Define the path to jquery
 define('JQUERY_INC',INCLUDE_PATH.'jquery/');
 define('JQUERY_HTTP_PATH','/jquery/');
-define('JQUERY_URL',JQUERY_HTTP_PATH.'jquery-1.11.2.min.js');
-define('JQUERY_UI_URL',JQUERY_HTTP_PATH.'jquery-ui-1.11.3.min.js');
+define('JQUERY_URL',JQUERY_HTTP_PATH.'jquery-1.12.4.min.js');
+define('JQUERY_UI_URL',JQUERY_HTTP_PATH.'jquery-ui-1.12.1.min.js');
 define('JQUERY_UI_CSS_URL',JQUERY_HTTP_PATH.'css/smoothness/jquery-ui.min.css');
 
 // Define the path to Less PHP

@@ -39,7 +39,7 @@ if( substr($parts['path'],-4) == ".php" )
 	else
 	{
 		trigger_error('The file at ERROR_403_PATH ('.ERROR_403_PATH.') is not able to be included');
-		echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>403: Forbidden</title></head><body><h1>403: Forbidden</h1><p>You do not have access to this page.</p></body></html>';
+		echo '<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US"><head><title>403: Forbidden</title></head><body><h1>403: Forbidden</h1><p>You do not have access to this page.</p></body></html>';
 	}
 	die;
 }
@@ -132,6 +132,24 @@ function get_validated_site($site_id, $page_id)
 	return $site;
 }
 
+function redirect_to_page_edit_url($site_id, $page_id)
+{
+	$type_id = id_of('minisite_page');
+	$admin_relative_path = parse_url("http://" . REASON_WEB_ADMIN_PATH, PHP_URL_PATH);
+
+	$page_edit_url = carl_make_redirect(array(
+		'site_id' => $site_id,
+		'type_id' => $type_id,
+		'id' => $page_id,
+		'cur_module' => 'Editor',
+		'reason_redirect' => null
+	), $admin_relative_path);
+
+	http_response_code(302);
+	header("Location: $page_edit_url");
+	exit;
+}
+
 header("Content-Type: text/html; charset=UTF-8");
 
 // Apache >=2.0.48 sets the REDIRECT REMOTE USER and not the REMOTE USER if an internal redirect
@@ -166,6 +184,16 @@ if( !empty( $site_id ) && !empty( $page_id )) // need site_id and page_id to pro
 		$_REQUEST = array_merge( $my_request, $_REQUEST );
 		$_REQUEST['site_id'] = $site_id;
 		$_REQUEST['page_id'] = $page_id;
+	}
+
+	// When 'reason_redirect' exists in the query string
+	// issue a redirect to the location implied by the value.
+	//
+	// Useful hook to provide to external services (i.e. Siteimprove)
+	// so a service can link a user directly to page editing or
+	// another administrative function.
+	if (!empty($_GET['reason_redirect']) && $_GET['reason_redirect'] === "edit_page") {
+		redirect_to_page_edit_url($site_id, $page_id);
 	}
 
 	// Determine whether to use caching or not
@@ -268,13 +296,19 @@ if( !empty( $site_id ) && !empty( $page_id )) // need site_id and page_id to pro
 		{
 			trigger_error('Unable to use specified template ('.htmlspecialchars($filename,ENT_QUOTES,'UTF-8').') because it does not have a class name properly set in the array $GLOBALS[ \'_minisite_template_class_names\' ].');
 			reason_include_once( 'minisite_templates/default.php' );
-			$minisite_template = $GLOBALS[ '_minisite_template_class_names' ][ 'default' ];
+			$minisite_template = $GLOBALS[ '_minisite_template_class_names' ][ 'default.php' ];
+		}
+		elseif(!class_exists($GLOBALS[ '_minisite_template_class_names' ][ $filename ]))
+		{
+			trigger_error('The class name provided in $GLOBALS[ \'_minisite_template_class_names\' ][ \''.$filename.'\' ] ( ' . $GLOBALS[ '_minisite_template_class_names' ][ $filename ]  .') does not appear to exist. Using the default template instead.');
+			reason_include_once( 'minisite_templates/default.php' );
+			$minisite_template = $GLOBALS[ '_minisite_template_class_names' ][ 'default.php' ];
 		}
 		else
 		{
 			$minisite_template = $GLOBALS[ '_minisite_template_class_names' ][ $filename ];
 		}
-		
+
 		$t = new $minisite_template;
 		if ($requested_api) $t->requested_api = $requested_api;
 		if ($requested_identifier) $t->requested_identifier = $requested_identifier;

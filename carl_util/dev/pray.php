@@ -87,7 +87,7 @@ if( !defined( '__PRAY' ) )
 									$key = htmlentities( $key );
 								}
 								printf ("(%s)<strong>%s</strong>:\n",$type, $key);
-								pray ($value,$escape,$sf,$level + 1);
+								pray ($value,$escape,$sf,$level + 1, $max_depth);
 							}
 							elseif (preg_match ("/function/i", $type))
 							{

@@ -497,7 +497,7 @@ class MinisiteTemplate
 		else
 		{
 			trigger_error('The file at ERROR_403_PATH ('.ERROR_403_PATH.') is not able to be included');
-			echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>403: Forbidden</title></head><body><h1>403: Forbidden</h1><p>You do not have access to this page.</p></body></html>';
+			echo '<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US"><head><title>403: Forbidden</title></head><body><h1>403: Forbidden</h1><p>You do not have access to this page.</p></body></html>';
 		}
 	}
 
@@ -511,7 +511,7 @@ class MinisiteTemplate
 		else
 		{
 			trigger_error('The file at ERROR_404_PATH ('.ERROR_404_PATH.') is not able to be included');
-			echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>404: Forbidden</title></head><body><h1>404: Not Found</h1><p>This page was not found.</p></body></html>';
+			echo '<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US"><head><title>404: Forbidden</title></head><body><h1>404: Not Found</h1><p>This page was not found.</p></body></html>';
 		}
 	}
 
@@ -665,6 +665,27 @@ class MinisiteTemplate
 			$this->head_items->add_head_item('meta',array('name'=>'robots','content'=>'none' ) );
 		}
 	}
+	protected function get_site_language()
+	{
+		if($this->site_info->get_value('language'))
+		{
+			return $this->site_info->get_value('language');
+		}
+		if(defined('REASON_DEFAULT_CONTENT_LANGUAGE'))
+		{
+			return REASON_DEFAULT_CONTENT_LANGUAGE;
+		}
+		return NULL;
+	}
+	protected function get_html_tag_language_attributes_string()
+	{
+		if($lang = $this->get_site_language())
+		{
+			$encoded_lang = reason_htmlspecialchars($lang);
+			return ' lang="'.$encoded_lang.'" xml:lang="'.$encoded_lang.'"';
+		}
+		return '';
+	}
 	function _get_favicon_path()
 	{
 		if(defined('REASON_DEFAULT_FAVICON_PATH') && REASON_DEFAULT_FAVICON_PATH )
@@ -816,7 +837,6 @@ class MinisiteTemplate
 	function load_modules() // {{{
 	{
 		$page_type = $this->get_page_type();
-
 		if (extension_loaded('newrelic')) {
 			newrelic_name_transaction($page_type->get_name());
 		}
@@ -858,6 +878,9 @@ class MinisiteTemplate
 						// dh - I really want to get rid of this.  For now, it stays.  However, I'm adding a number
 						// of other parameters that a module will take by default so that we can rely on some important
 						// data coming in.  9/15/04
+						
+						// tfeiler: as of 2016-03-04, parent is in use by at least one
+						// module-- the "module_group" module uses it to get at the "clean_external_vars" function.
 						$args[ 'parent' ] =& $this; // pass this object to the module
 						$args[ 'page_id' ] = $this->page_id;
 						$args[ 'site_id' ] = $this->site_id;
@@ -1034,7 +1057,7 @@ class MinisiteTemplate
 		$this->get_title();
 		// start page
 		echo $this->get_doctype()."\n";
-		echo '<html xmlns="http://www.w3.org/1999/xhtml">'."\n";
+		echo '<html xmlns="http://www.w3.org/1999/xhtml"'.$this->get_html_tag_language_attributes_string().'>'."\n";
 		echo '<head>'."\n";
 		//echo '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />' . "\n";
 
@@ -1109,12 +1132,18 @@ class MinisiteTemplate
 
 	function get_title ()
 	{
-		if ( $this->is_minisite_home_page() )
-			$pattern = 'home';
-		elseif ( $this->is_secondary_page() )
-			$pattern = 'secondary';
-		elseif ( $this->is_item_page() )
+		if ( $this->is_item_page() )
+		{
 			$pattern = 'item';
+		}
+		elseif ( $this->is_minisite_home_page() )
+		{
+			$pattern = 'home';
+		}
+		elseif ( $this->is_secondary_page() )
+		{
+			$pattern = 'secondary';
+		}
 
 		$parser = new TitleTagParser($this->get_title_tag_pattern_for($pattern), $this);
 

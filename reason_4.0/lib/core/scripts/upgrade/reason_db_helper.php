@@ -24,7 +24,7 @@
 			$this->username = $uname;
 			$this->userId = get_user_id($this->username);
 		}
-
+		
 		public function createAllowableRelationshipHelper($aSideId, $bSideId, $relationshipName, $details) {
 			if ($this->userId == -1) { die("ERROR - USER ID NOT SET\n"); }
 
@@ -52,7 +52,7 @@
 				// at this point we have an entry in the "type" and the "entity" tables representing this new data type, and in the "relationship" table marking this as owned by master_admin
 				$this->println("creation of [" . $userFacingTypeName . "] gave us type id [" . $typeId . "]");
 
-				create_default_rels_for_new_type($typeId);
+				create_default_rels_for_new_type($typeId);		
 				// now we have some entries in allowable_relationships
 				$this->println("created default relationships for this type");
 
