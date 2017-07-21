@@ -14,6 +14,8 @@ Reason CMS 4.8 Release Notes
     - Tested on BrowserStack with Android, iOS (iPhone and iPad), Windows Phone, macOS (Safari, Chrome, Firefox), Windows (Edge, IE 8-current, Chrome, Firefox).
     - NOTE: not responsive in IE 8 because media queries don't work there.
 - Timeline - a new page type and module based on <https://timeline.knightlab.com/> and <http://timeline.knightlab.com/docs/json-format.html>
+- Mediaworks now support captions and subtitles
+
 
 
 ### Enhancements
@@ -23,8 +25,7 @@ Reason CMS 4.8 Release Notes
 - Add a Captions/Subtitles type on Media Works
 - Add ability to prefill a form element from request parameters
 - Page mover script can move all pages of a site at once, descendant pages are moved properly now.
-
-##### SEO
+- Accessibility improvements
 
 ##### Dependency Updates
 - Updated bundled JQuery (to jquery-1.12.4.min.js) and JQuery UI (jquery-ui-1.12.1.min.js)  – [Commit](https://github.com/reasoncms/reasoncms/commit/38b89243879c44a65e768d89aa3fa23036527f37)
@@ -38,19 +39,31 @@ Reason CMS 4.8 Release Notes
 
 ### New Settings
  1) REASON_DIVERT_EMAIL_TO (reason_settings)   
-   - A setting to divert email messages to a another address
-   - Defaults to off
-   - Diverted messages contain `[DIVERTED]` in subject line
-   - Applies globally for any messages sent with Tyr or Email classes
+    - A setting to divert email messages to a another address
+    - Defaults to off
+    - Diverted messages contain `[DIVERTED]` in subject line
+    - Applies globally for any messages sent with Tyr or Email classes
+ 
  2) REASON_EVENT_TICKETS_DEFAULT_CLOSE_MODIFIER (reason_settings)   
-   - A `strtotime` string that modifies the default closing time of form event ticket registration
-   - Defaults to empty string
-   - Carleton uses `-60min` to close ticket requests an hour before the event begins
+    - A `strtotime` string that modifies the default closing time of form event ticket registration
+    - Defaults to empty string
+    - Carleton uses `-60min` to close ticket requests an hour before the event begins
+ 
  3) XSENDFILE_HEADER (package_settings)   
-   - A HTTP header PHP emits to instruct the webserver to deliver a file to the client at the end of the request
-   - Defaults to off/none
-   - Useful for large files and files behind authentication
-   - Used in `thor/getFormFile.php`
-   - Server modules required. More Info:
+    - A HTTP header PHP emits to instruct the webserver to deliver a file to the client at the end of the request
+    - Defaults to off/none
+    - Useful for large files and files behind authentication
+    - Used in `thor/getFormFile.php`
+    - Server modules required. More Info:
       - Apache: https://tn123.org/mod_xsendfile/
       - Nginx: https://www.nginx.com/resources/wiki/start/topics/examples/x-accel/
+      
+ 4) REASON_DEFAULT_CONTENT_LANGUAGE (reason_settings)
+    - Accessibility improvement
+    - This is used to set the proper `lang` attribute on the content elements presented on pages Reason emits. 
+    - the default is set to `define('REASON_DEFAULT_CONTENT_LANGUAGE', 'en-US');`
+   
+ 5) REASON_DEFAULT_INTERFACE_LANGUAGE (reason_settings)
+    - Accessibility improvement
+    - This is used to set the proper `lang` attribute on the `html` element on pages Reason emits. 
+    - the default is set to `define('REASON_DEFAULT_INTERFACE_LANGUAGE', 'en-US');`
