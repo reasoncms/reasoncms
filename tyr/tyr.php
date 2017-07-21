@@ -361,7 +361,7 @@ class Tyr
 			}
 			
 			// todo: change ENT_IGNORE to ENT_SUBSTITUTE when at PHP 5.4+
-			$value = htmlspecialchars( $value, ENT_COMPAT | ENT_IGNORE, 'UTF-8' );
+			$value = htmlspecialchars( strip_tags($value,''), ENT_COMPAT | ENT_IGNORE, 'UTF-8' );
 				
 			$show_item = true;
 			
@@ -382,7 +382,7 @@ class Tyr
 				$value = str_replace( "\'", "'", $value );
 				$key = str_replace( '_', " ", $key );
 				$key = $key . ( (substr($key, -1) != ':' && substr($key, -1) != '?') ? ':' : '' );
-				$message .= "<tr><td align='right' valign='top'><strong>" . htmlspecialchars( $key, ENT_COMPAT, 'UTF-8' ) . " </strong></td><td valign='top'>" . $value . "<br /></td></tr>\n";
+				$message .= "<tr><td align='right' valign='top'><strong>" . htmlspecialchars( strip_tags($key,''), ENT_COMPAT, 'UTF-8' ) . " </strong></td><td valign='top'>" . $value . "<br /></td></tr>\n";
 			}
 			
 		}
