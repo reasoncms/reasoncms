@@ -13,14 +13,6 @@ include_once('reason_header.php');
 include_once(DISCO_INC .'disco.php');
 reason_include_once( 'classes/entity_selector.php');
 
-class DiscoSearcher extends Disco
-{
-	function where_to()
-	{
-		return ( '?search_string=' . urlencode($this->get_value('search_string') ) . '&type=' . urlencode($this->get_value('type') ) );
-	}
-}
-
 reason_include_once( 'function_libraries/user_functions.php' );
 force_secure_if_available();
 $current_user = check_authentication();
@@ -58,39 +50,53 @@ $es = new entity_selector();
 $es->add_type(id_of('type'));
 $es->set_order('entity.name ASC');
 $types = $es->run_one();
-$type_names = array('All');
-foreach($types as $id=>$type)
+$type_names = array(0 => 'All');
+foreach($types as $id=>$arrtype)
 {
-	$type_names[$id] = $type->get_value('name');
+	$type_names[$id] = $arrtype->get_value('name');
 }
-$d = new DiscoSearcher;
+
+$es = new entity_selector();
+$es->add_type(id_of('site'));
+$es->set_order('entity.name ASC');
+$sites = $es->run_one();
+$site_names = array(0 => 'All');
+foreach($sites as $id=>$arrsite)
+{
+	$site_names[$id] = $arrsite->get_value('name');
+}
+
+$d = new Disco;
+$d->set_form_method('get');
 $d->add_element('search_string');
 $d->add_element('type','select_no_sort',array('options'=>$type_names));
-if(!empty($_REQUEST['type']))
+$d->add_element('site','select_no_sort',array('options'=>$site_names));
+/* if(!empty($_REQUEST['type']))
 {
 	$d->set_value('type', $_REQUEST['type']);
 }
 if(!empty($_REQUEST['search_string']))
 {
 	$d->set_value('search_string', $_REQUEST['search_string']);
-}
+} */
 $d->actions = array('Search');
 $d->run();
-if(!empty($_REQUEST['search_string']))
+
+if($d->get_value('search_string'))
 {
-	$sql_search_string = reason_sql_string_escape($_REQUEST['search_string']);
+	$sql_search_string = reason_sql_string_escape($d->get_value('search_string'));
 	$use_fields = array('id','name','last_modified');
 
 	echo '<h2>Search results</h2>';
 	$hit_count = 0;
 	$txt = '';
 	
-	if(!empty($_REQUEST['type']))
+	if($d->get_value('type'))
 	{
-		if(isset($types[$_REQUEST['type']]))
+		if(isset($types[$d->get_value('type')]))
 		{
-			$only_type = $types[$_REQUEST['type']];
-			$types = array($_REQUEST['type'] => $only_type);
+			$only_type = $types[$d->get_value('type')];
+			$types = array($d->get_value('type') => $only_type);
 		}
 		else
 		{
@@ -98,11 +104,29 @@ if(!empty($_REQUEST['search_string']))
 			echo 'Not a type';
 		}
 	}
+	if($d->get_value('site'))
+	{
+		if(isset($sites[$d->get_value('site')]))
+		{
+			$site = $sites[$d->get_value('site')];
+		}
+		else
+		{
+			die('Invalid site');
+		}
+	}
 	foreach($types as $type)
 	{
 		//echo $type->get_value('name').'<br />';
 		$tables = get_entity_tables_by_type( $type->id() );
-		$es = new entity_selector();
+		if(!empty($site))
+		{
+			$es = new entity_selector($site->id());
+		}
+		else
+		{
+			$es = new entity_selector();
+		}
 		$es->add_type($type->id());
 		$tables = get_entity_tables_by_type( $type->id() );
 		//pray($tables);
@@ -173,9 +197,9 @@ if(!empty($_REQUEST['search_string']))
 				$txt .= '<ul>';
 				foreach($e->get_values() as $key=>$value)
 				{
-					if(stristr($value,$_REQUEST['search_string']))
+					if(stristr($value,$d->get_value('search_string')))
 					{
-						$search_str = $_REQUEST['search_string'];
+						$search_str = $d->get_value('search_string');
 						if($type->get_value('unique_name') == 'form' && 'thor_content' == $key)
                                                 {
 						        $value = htmlspecialchars($value);
