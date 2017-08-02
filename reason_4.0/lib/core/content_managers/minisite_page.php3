@@ -281,10 +281,20 @@ class MinisitePageManager extends parent_childManager
 				ksort($options);
 				$primary = $this->get_element_property('custom_page', 'options');
 				if(!empty($primary))
+				{
 					$this->change_element_type( 'custom_page' , 'radio_with_other_no_sort' , array( 'options' => $primary, 'other_options' => $options ) );
+				}
 				else
+				{
 					$this->change_element_type('custom_page' , 'select_no_sort', array( 'options' => $options ));
-				$this->set_comments( 'custom_page', form_comment('<a href="'.REASON_HTTP_BASE_PATH.'scripts/page_types/view_page_type_info.php">Page type definitions</a>.') );
+				}
+				$url = REASON_HTTP_BASE_PATH.'scripts/page_types/view_page_type_info.php';
+				$comment = '<a href="'.htmlspecialchars($url).'">Page type definitions</a>';
+				if($this->get_value('custom_page'))
+				{
+					$comment .=  ' &bull; <a href="'.htmlspecialchars($url).'#'.urlencode($this->get_value('custom_page')).'">'.htmlspecialchars(prettify_string($this->get_value('custom_page'))).' page type definition</a>';
+				}
+				$this->set_comments( 'custom_page', form_comment($comment) );
 
 			}
 			
