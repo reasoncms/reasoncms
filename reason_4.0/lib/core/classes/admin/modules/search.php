@@ -35,6 +35,14 @@ reason_include_once( 'function_libraries/user_functions.php' );
 		
 		function run() // {{{
 		{
+			
+			$sites = $this->get_sites();
+			if(empty($sites))
+			{
+				echo '<p class="searchSorryMsg">Sorry, you don\'t have access to any sites to search.</p>';
+				return;
+			}
+			
 			echo '<div class="searchModule">';
 			$form = $this->get_form();
 			$form->run();
