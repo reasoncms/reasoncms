@@ -420,12 +420,18 @@ class DefaultFeatureView extends FeatureView
 			if ($view_data['current_object_type'] == 'av') // our links go to the movie not the dest url
 			{
 				$title_str="<h3 class=\"featureTitle\">".$text_anchor_start.$view_data['title'].$text_anchor_end."</h3>\n";
-				$text_str="<div class=\"featureText\">".$text_anchor_start.$view_data['text'].$text_anchor_end."</div>\n";
+				if(!empty($view_data['text']))
+				{
+					$text_str="<div class=\"featureText\">".$text_anchor_start.$view_data['text'].$text_anchor_end."</div>\n";
+				}
 			}
 			else
 			{
 				$title_str="<h3 class=\"featureTitle\">".$anchor_start.$view_data['title'].$anchor_end."</h3>\n";
-				$text_str="<div class=\"featureText\">".$anchor_start.$view_data['text'].$anchor_end."</div>\n";
+				if(!empty($view_data['text']))
+				{
+					$text_str="<div class=\"featureText\">".$anchor_start.$view_data['text'].$anchor_end."</div>\n";
+				}
 			}
 		}
 
