@@ -44,7 +44,7 @@ class ReasonAdminToolsModule extends DefaultModule
 											'description' => 'See what has been added, deleted, and updated recently in Reason',
 					'safety_level' => 'safe',
 									),
-									REASON_HTTP_BASE_PATH.'scripts/search/find_across_sites.php' => array(
+								'?cur_module=Search' => array(
 											'title' => 'Search Across All Reason Sites',
 											'description' => 'Find a given string anywhere in Reason',
 					'safety_level' => 'safe',

@@ -1,0 +1,8 @@
+.searchModule form { padding:.75em; background:#E9EEF8; }
+#search_stringElement { font-size:1.4em; max-width:90%; padding:.33em .67em; }
+.searchResults h5 { font-size:1.5em; }
+.searchResults span.hit { background-color:#FFFF99; }
+.searchResults table td { border-top:1px solid #ffffff; vertical-align:top; background-color:#C8D5EF; }
+.searchResults table tr.odd td { background-color:#E3EDFF; }
+.searchResults table th { background-color:#B2C3E3; }
+.searchResults table td ul, table td ul li { margin-top:0px; margin-bottom:.5em; }
