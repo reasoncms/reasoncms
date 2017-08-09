@@ -131,10 +131,10 @@ reason_include_once( 'function_libraries/user_functions.php' );
 				$this->form->add_element('search_string');
 				$this->form->set_display_name('search_string', 'Search For');
 				
-				$this->form->add_element('type','select_no_sort',array('options'=>$type_names));
+				$this->form->add_element('type','select_no_sort',array('options'=>$type_names, 'reject_unrecognized_values' => true ));
 				$this->form->set_display_name('type', 'Among');
 				
-				$this->form->add_element('site_id','select_no_sort',array('options'=>$site_names));
+				$this->form->add_element('site_id','select_no_sort',array('options'=>$site_names, 'reject_unrecognized_values' => true ));
 				$this->form->set_display_name('site_id', 'Within');
 				$this->form->set_value('site_id',$this->admin_page->site_id);
 				
