@@ -22,7 +22,7 @@ require_once PLASMATURE_TYPES_INC."default.php";
 class optionType extends defaultType
 {
 	var $type = 'option';
-	var $type_valid_args = array('options', 'sort_options','disabled_options','add_empty_value_to_top', 'add_other', 'other_label', 'other_options', 'empty_value_label', );
+	var $type_valid_args = array('options', 'sort_options','disabled_options','add_empty_value_to_top', 'add_other', 'other_label', 'other_options', 'empty_value_label', 'reject_unrecognized_values');
 	/**
 	 * The possible values of this element.
 	 * Format: value as it should be stored => value as it should be displayed.
@@ -62,6 +62,10 @@ class optionType extends defaultType
 	 * What label should the empty value get?
 	 */
 	var $empty_value_label = '--';
+	/**
+	 * Should values that are not recognized be rejected?
+	 */
+	var $reject_unrecognized_values = false;
 
 	protected function _array_val_ok()
 	{
@@ -255,12 +259,12 @@ class optionType extends defaultType
 				return true;
 		}
 
-		if(!isset($this->options[$value]))
+		if($this->reject_unrecognized_values && !isset($this->options[$value]))
 		{
 			// Supress errors, as prefilled values, when enabled, also match
 			// this criteria but are desired
 			// trigger_error('Unrecognized value -- ('.gettype($value).') "'.$value.'" -- submitted for '.$this->name.'. This may be an attempt to probe for vulnerabilities. Future changes to plasmature will likely block unrecognized values like this.' );
-			// return false;
+			return false;
 		}
 
 		if(!$this->_is_disabled_option($value) || $this->_is_current_value($value))
