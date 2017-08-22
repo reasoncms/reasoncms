@@ -1186,65 +1186,100 @@ class AdminPage
 			echo '</ul></div>'."\n";
 		}
 	} // }}}
-	function site_tools() //{{{
+	protected function get_site_tools_links()
 	{
+		$ret = array();
+		
 		$stats_link = $this->stats_link();
 
-		/* if( $show_site_admin OR ($stats_link AND $this->show[ 'stats' ] ) )
-		{ */
+		if( $this->show[ 'themes' ]  )
+		{
+			$ret[] = array(
+				'link' => $this->make_link( array( 'cur_module' => 'ChooseTheme', 'type_id' => '' ) ),
+				'selected' => ( $this->cur_module == 'ChooseTheme' ),
+				'icon' => REASON_HTTP_BASE_PATH.'ui_images/types/theme_type.png',
+				'label' => 'Themes',
+			);
+		}
+		if( $stats_link AND $this->show[ 'stats' ] AND !$this->show[ 'analytics' ] )
+		{
+			$ret[] = array(
+				'link' => $stats_link,
+				'selected' => false,
+				'icon' => REASON_HTTP_BASE_PATH.'silk_icons/chart_bar.png',
+				'label' => 'Statistics',
+			);
+		}
+		if( $this->show[ 'analytics' ]  )
+		{
+			$ret[] = array(
+				'link' => $this->make_link( array( 'cur_module' => 'Analytics', 'type_id' => '' ) ),
+				'selected' => ( $this->cur_module == 'Analytics' || $this->cur_module == 'AnalyticsAbout' ),
+				'icon' => REASON_HTTP_BASE_PATH.'silk_icons/chart_curve.png',
+				'label' => 'Analytics',
+			);
+		}
+		$ret[] = array(
+			'link' => $this->make_link( array( 'cur_module' => 'ViewUsers', 'type_id' => '' ) ),
+			'selected' => ( $this->cur_module == 'ViewUsers' ),
+			'icon' => REASON_HTTP_BASE_PATH.'ui_images/types/user.png',
+			'label' => 'Users',
+		);
+		$master_admin_id = id_of('master_admin');
+		if($this->site_id != $master_admin_id)
+		{
+			$sites = $this->get_sites();
+			if(isset($sites[$master_admin_id]))
+			{
+				$ret[] = array(
+					'link' => $this->make_link(array('site_id'=>id_of('master_admin'),'type_id'=>id_of('site'),'id'=>$this->site_id,'cur_module'=>'Editor')),
+					'selected' => false,
+					'icon' => REASON_HTTP_BASE_PATH.'silk_icons/pencil.png',
+					'label' => 'Site Setup',
+				);
+			}
+		}
+		$types = $this->get_types_for_current_site();
+		if( isset($types[id_of('publication_type')]) || isset($types[id_of('event_type')]) )
+		{
+			$ret[] = array(
+				'link' => $this->make_link(array('type_id'=>'','cur_module'=>'Newsletter')),
+				'selected' => ( $this->cur_module == 'Newsletter' ),
+				'icon' => REASON_HTTP_BASE_PATH.'silk_icons/email.png',
+				'label' => 'Newsletter Builder',
+			);
+		}
+		if( $this->show[ 'export' ]  )
+		{
+			$ret[] = array(
+				'link' => $this->make_link(array('cur_module'=>'Export')),
+				'selected' => ( $this->cur_module == 'Export' ),
+				'icon' => REASON_HTTP_BASE_PATH.'silk_icons/table_save.png',
+				'label' => 'Export',
+			);
+		}
+		return $ret;
+	}
+	function site_tools() //{{{
+	{
+		$links = $this->get_site_tools_links();
+		if(!empty($links))
+		{
 			echo '<div class="typeNav"><strong>Site Tools</strong>';
 			echo '<ul class="leftList">';
-			if( $this->show[ 'themes' ]  )
-			{
-				$l = $this->make_link( array( 'cur_module' => 'ChooseTheme', 'type_id' => '' ) );
-				echo '<li class="navItem';
-				if( $this->cur_module == 'ChooseTheme' )
-					echo ' navSelect';
-				echo '"><a href="'.$l.'" class="nav"><img src="'.REASON_HTTP_BASE_PATH.'ui_images/types/theme_type.png" alt="" />Themes</a></li>'."\n";
-			}	
-			if( $stats_link AND $this->show[ 'stats' ] AND !$this->show[ 'analytics' ] )
-			{
-				echo '<li class="navItem"><a href="'.$stats_link.'" class="nav"><img src="'.REASON_HTTP_BASE_PATH.'silk_icons/chart_bar.png" alt="" />Statistics</a></li>'."\n";
-			}
-			if( $this->show[ 'analytics' ]  )
+			foreach($links as $link)
 			{
 				echo '<li class="navItem';
-				if( $this->cur_module == 'Analytics' || $this->cur_module == 'AnalyticsAbout' )
-					echo ' navSelect';
-				echo '"><a href="'.$this->make_link( array( 'cur_module' => 'Analytics', 'type_id' => '' ) ).'" class="nav"><img src="'.REASON_HTTP_BASE_PATH.'silk_icons/chart_curve.png" alt="" />Analytics</a></li>'."\n";
-			}
-			echo '<li class="navItem';
-			if( $this->cur_module == 'ViewUsers' )
-				echo ' navSelect';
-			echo '"><a href="'.$this->make_link( array( 'cur_module' => 'ViewUsers', 'type_id' => '' ) ).'" class="nav"><img src="'.REASON_HTTP_BASE_PATH.'ui_images/types/user.png" alt="" />Users</a></li>'."\n";
-			$master_admin_id = id_of('master_admin');
-			if($this->site_id != $master_admin_id)
-			{
-				$sites = $this->get_sites();
-				if(isset($sites[$master_admin_id]))
-				{
-					echo '<li><a href="'.$this->make_link(array('site_id'=>id_of('master_admin'),'type_id'=>id_of('site'),'id'=>$this->site_id,'cur_module'=>'Editor')).'" class="nav"><img src="'.REASON_HTTP_BASE_PATH.'silk_icons/pencil.png" alt="" /> Site Setup</a></li>'."\n";
-				}
-			}
-			$types = $this->get_types_for_current_site();
-			if( isset($types[id_of('publication_type')]) || isset($types[id_of('event_type')]) )
-			{
-				$cur_mod = false;
-				if(!empty($this->request['cur_module']) && 'Newsletter' == $this->request['cur_module'])
-					$cur_mod = true;
-				echo '<li class="navItem;';
-				if( $this->cur_module == 'Newsletter' )
-					echo ' navSelect';
+				echo $link['selected'] ? ' navSelect' : '';
 				echo '">';
-				echo '<a href="'.$this->make_link(array('type_id'=>'','cur_module'=>'Newsletter')).'" class="nav"><img src="'.REASON_HTTP_BASE_PATH.'silk_icons/email.png" alt="Email" /> Newsletter Builder</a>';
-				echo '</li>'."\n";
-			}
-			if( $this->show[ 'export' ]  )
-			{
-				echo '<li><a href="'.$this->make_link(array('cur_module'=>'Export')).'" class="nav"><img src="'.REASON_HTTP_BASE_PATH.'silk_icons/table_save.png" alt="" /> Export</a></li>'."\n";
+				echo '<a href="'.$link['link'].'" class="nav">';
+				echo $link['icon'] ? '<img src="'.$link['icon'].'" alt="" />' : '';
+				echo $link['label'];
+				echo '</a>';
+				echo '</li>';
 			}
 			echo '</ul></div>'."\n";
-		//}
+		}
 	} // }}}
 	// IN_MANAGER
 	/**
@@ -1252,7 +1287,7 @@ class AdminPage
 	 *
 	 * @return string|boolean full link on success, FALSE when no link exists
 	 */
-	function stats_link() // {{{
+	function stats_link()
 	{
 		if(defined('REASON_STATS_URI_BASE') && REASON_STATS_URI_BASE != '')
 		{
@@ -1285,7 +1320,7 @@ class AdminPage
 			}
 		}
 		return false;
-	} // }}}
+	}
 	// IN_MANAGER
 	function sharing() // {{{
 	//creates a list of all types a site can borrow from other sites
