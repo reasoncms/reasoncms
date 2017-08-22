@@ -54,7 +54,19 @@
 		if ($relationship_sort->validate_request()) $relationship_sort->run();
 	}
 	
-	reason_include_once( 'classes/admin/admin_page.php' );
+	$admin_page_filename = 'classes/admin/admin_page.php';
+	if(defined('ADMIN_PAGE_CLASS_PATH'))
+	{
+		if(reason_file_exists(ADMIN_PAGE_CLASS_PATH))
+		{
+			$admin_page_filename = ADMIN_PAGE_CLASS_PATH;
+		}
+		else
+		{
+			trigger_error('ADMIN_PAGE_CLASS_PATH "'.ADMIN_PAGE_CLASS_PATH.'" does not seem to exist.');
+		}
+	}
+	reason_include_once( $admin_page_filename );
  
  	/**
  	 * Reason 4 Beta 8 adds a setting DISABLE_REASON_ADMINISTRATIVE_INTERFACE, which is more specific than DISABLE_REASON_LOGIN,
@@ -66,7 +78,20 @@
 	    die();
 	}
 	
-	$f = new AdminPage();
+	$admin_class = 'AdminPage';
+	if(defined('ADMIN_PAGE_CLASS'))
+	{
+		if(class_exists(ADMIN_PAGE_CLASS))
+		{
+			$admin_class = ADMIN_PAGE_CLASS;
+		}
+		else
+		{
+			trigger_error('ADMIN_PAGE_CLASS "'.ADMIN_PAGE_CLASS.'" does not seem to exist.');
+		}
+	}
+	
+	$f = new $admin_class();
 	$authenticated = $f->authenticate();
 	if ($authenticated)
 	{
