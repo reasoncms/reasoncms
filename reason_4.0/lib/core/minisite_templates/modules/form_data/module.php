@@ -1,9 +1,38 @@
 <?php
+/**
+ * @package reason
+ * @subpackage modules
+ */
+ 
+/**
+ * Register module and include dependencies
+ */
 $GLOBALS[ '_module_class_names' ][ basename( 'form_data', '.php' ) ] = 'FormDataModule';
 reason_include_once( 'minisite_templates/modules/default.php' );
 include_once(THOR_INC.'thor_viewer.php');
 
 /**
+ * This module is designed to simplify the display of Thor form data
+ *
+ * To use this module:
+ *
+ * 1. Extend the default markup class. See the documentation in form_data/markup/default.php.
+ * 2. Create a page type that specifies the markup class to use. The form can be specified in the
+ *    page type or attached to the page.
+ * 3. Apply this page type to a page.
+ *
+ * Note that the default markup class will simply report on the form's data structure, so you can use
+ * it to know what fields you have to work with.
+ * 
+ * Example page type:
+ *
+ * 'my_form_display' => array(
+ * 		'main_post' => array(
+ * 			'module' => 'form_data',
+ * 			'markup' => 'path/to/markup/class.php',
+ * 		),
+ * ),
+ * 
  * @todo add ability to transform data before it is passed to the markup class
  */
 class FormDataModule extends DefaultMinisiteModule
@@ -14,6 +43,11 @@ class FormDataModule extends DefaultMinisiteModule
 		);
 	var $form_entity;
 	var $markup_object;
+	
+	/**
+	 * Get the form whose data we are displaying
+	 * @return mixed form entity object if form can be identified, otherwise FALSE
+	 */
 	function get_form_entity()
 	{
 		if(!isset($this->form_entity))
@@ -62,11 +96,24 @@ class FormDataModule extends DefaultMinisiteModule
 			}
 			else
 			{
-				trigger_error('A form_id must be specified in the page type.');
+				$forms = $this->cur_page->get_left_relationship(relationship_id_of('page_to_form'));
+				if(!empty($forms))
+				{
+					$this->form_entity = reset($forms);
+				}
+				else
+				{
+					trigger_error('No form found to display. Please attach a form to this page or specify a form in the page type.');
+				}
 			}
 		}
 		return $this->form_entity;
 	}
+	
+	/**
+	 * Get the markup object to use
+	 * @return mixed markup object if form can be identified, otherwise FALSE
+	 */
 	function get_markup_object()
 	{
 		if(!isset($this->markup_object))
@@ -107,11 +154,22 @@ class FormDataModule extends DefaultMinisiteModule
 		}
 		return $this->markup_object;
 	}
+	
+	/**
+	 * Perform initialization actions on the markup object
+	 * @param object $markup_object
+	 * @return void
+	 */
 	function initalize_markup_object($markup_object)
 	{
 		$markup_object->set_form($this->get_form_entity());
 		
 	}
+	
+	/**
+	 * Initialize the module
+	 * @return void
+	 */
 	function init( $args = array() )
 	{	
 		parent::init( $args );
@@ -128,6 +186,11 @@ class FormDataModule extends DefaultMinisiteModule
 			$markup_object->add_head_items($this->get_head_items());
 		}			
 	}
+	
+	/**
+	 * Run the module
+	 * @return void
+	 */
 	function run()
 	{
 		echo '<div class="formDataModule">';
