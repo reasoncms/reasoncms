@@ -66,15 +66,20 @@ class DefaultFormDataMarkup
 	/**
 	 * Overload this method to interact with the head items object
 	 *
-	 * Examples:
-	 * $head_items->add_stylesheet('/path/to/css.css');
-	 * $head_items->add_javascript('/path/to/js.js');
+	 * Example implementation in a child class:
+	 *
+	 * function add_head_items($head_items)
+	 * {
+	 * 	$head_items->add_stylesheet('/path/to/css.css');
+	 * 	$head_items->add_javascript('/path/to/js.js');
+	 * }
 	 *
 	 * @param object $head_items
 	 * @return void
 	 */
 	function add_head_items($head_items)
 	{
+		// base class does nothing; overload this method to add head items
 	}
 	
 	/**
@@ -217,6 +222,19 @@ class DefaultFormDataMarkup
 	}
 	/**
 	 * Get the markup
+	 *
+	 * Example get_markup() definition for a form with 'Your Name' and 'Your Major' as labels.
+	 *
+	 * function get_markup()
+	 * {
+	 * 	$ret = '<ul>';
+	 * 	foreach($this->get_form_data() as $row)
+	 * 	{
+	 * 		$ret .= '<li>'.$this->get_label_value('Your Name', $row).': '.$this->get_label_value('Your Major', $row).'</li>';
+	 * 	}
+	 * 	return $ret;
+	 * }
+	 *
 	 * @return string HTML
 	 */
 	function get_markup()
