@@ -117,7 +117,9 @@ class SelectItems extends FormStep
 		if ($this->controller->get_form_data('events_start_date') != '')
 		{
 			$site_id = (integer) $_REQUEST['site_id'];
-			$site = new entity($site_id);
+			$additional_site_finder = new additionalSiteFinder();
+			$site = $additional_site_finder->get_additional_sites($site_id);
+			$site[] = new entity($site_id);
 			$start_date = $this->controller->get_form_data('events_start_date');
 			$end_date = $this->controller->get_form_data('events_end_date');
 			$end_date = (!empty($end_date)) ? $end_date : date('Y-m-d');

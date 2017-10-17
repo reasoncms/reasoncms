@@ -1,4 +1,7 @@
 <?php
+
+reason_include_once( 'classes/string_to_sites.php' );
+reason_include_once('classes/admin/modules/newsletter/additionalSiteFinder.php');
 /**
  * This file contains the SelectIncludes disco form step for use in the 
  * newsletter builder admin module. 
@@ -46,7 +49,15 @@ class SelectIncludes extends FormStep
 		parent::init($args);
 		
 		$site_id = (integer) $_REQUEST['site_id'];
-		
+		$additional_site_finder = new additionalSiteFinder();
+		$additional_sites = $additional_site_finder->get_additional_sites($site_id);
+		if ($additional_sites != array()) {
+			$site_id = array($site_id);
+			foreach ($additional_sites as $site) {
+				$site_id[] = $site->id();
+			}
+		}
+
 		// Only do this init if we're on the step that needs it.
 		if ($this->controller->get_current_step() != 'SelectIncludes')
 			return;
@@ -155,7 +166,7 @@ class SelectIncludes extends FormStep
 			$this->add_element('sucks_to_be_you', 'comment', array('text'=>'<h3>There are no publications or calendars associated with this site. Press continue if you would like to use the newsletter builder anyway.'));
 		
 	}
-	
+
 	function on_every_time()
 	{
 //		$this->controller->destroy_form_data();
