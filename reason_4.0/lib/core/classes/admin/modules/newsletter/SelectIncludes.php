@@ -1,6 +1,5 @@
 <?php
 
-reason_include_once( 'classes/string_to_sites.php' );
 reason_include_once('classes/admin/modules/newsletter/additionalSiteFinder.php');
 /**
  * This file contains the SelectIncludes disco form step for use in the 
@@ -47,7 +46,7 @@ class SelectIncludes extends FormStep
 	function init($args=array())
 	{
 		parent::init($args);
-		
+
 		$site_id = (integer) $_REQUEST['site_id'];
 		$additional_site_finder = new additionalSiteFinder();
 		$additional_sites = $additional_site_finder->get_additional_sites($site_id);

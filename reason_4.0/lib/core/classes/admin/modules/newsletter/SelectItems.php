@@ -1,4 +1,6 @@
 <?php
+
+reason_include_once('classes/admin/modules/newsletter/additionalSiteFinder.php');
 /**
  * This file contains the SelectItems disco multi-step form step for
  * NewsletterModule and a plasmature type used in the creation of a
