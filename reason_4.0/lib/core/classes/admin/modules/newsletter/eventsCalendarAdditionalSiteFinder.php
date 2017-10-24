@@ -9,13 +9,13 @@ reason_include_once('classes/event_helper.php');
  *
  * @author Adante Ratzlaff
  */
-class additionalSiteFinder
+class eventsCalendarAdditionalSiteFinder
 {
 	/**
 	 * If the current site has an events module and the page type of the events module has the additional_sites param,
 	 * pull events and publications from all additional sites.
 	 * @param $site_id
-	 * @return entity|array Single site entity or array of site entities
+	 * @return int|array Single site id or array of site ids
 	 */
 	function get_additional_sites($site_id){
 		// Retrieve an array of all possible events pages on the site

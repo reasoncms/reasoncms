@@ -48,13 +48,15 @@ class SelectIncludes extends FormStep
 		parent::init($args);
 
 		$site_id = (integer) $_REQUEST['site_id'];
-		$additional_site_finder = new additionalSiteFinder();
+		$additional_site_finder = new eventsCalendarAdditionalSiteFinder();
 		$additional_sites = $additional_site_finder->get_additional_sites($site_id);
 		if ($additional_sites != array()) {
-			$site_id = array($site_id);
+			$es_param = array($site_id);
 			foreach ($additional_sites as $site) {
-				$site_id[] = $site->id();
+				$es_param[] = $site->id();
 			}
+		} else {
+			$es_param = $site_id;
 		}
 
 		// Only do this init if we're on the step that needs it.
@@ -64,7 +66,7 @@ class SelectIncludes extends FormStep
 		//////////////// PUBLICATIONS /////////////////
 		// Select all publications that are attached to this site.
 		$pub_factory = new PubHelperFactory();
-		$es = new entity_selector($site_id);
+		$es = new entity_selector($es_param);
 		$es->add_type(id_of('publication_type'));
 		// Add the page_id to which the pub belongs (so we can get url)
 		$es->add_right_relationship_field('page_to_publication', 'entity', 'id', 'page_id');
@@ -142,7 +144,7 @@ class SelectIncludes extends FormStep
 		$cal->run();
 		$events = $cal->get_all_events(); */
 		
-		$es = new entity_selector($site_id);
+		$es = new entity_selector($es_param);
 		$es->add_type(id_of('event_type'));
 		$es->set_num(1);
 		$es->limit_tables();
