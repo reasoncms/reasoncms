@@ -32,43 +32,47 @@ class stringToSites
 
 	function get_sites_from_string($string)
 	{
-			$sites = array();
-			$site_strings = explode(',',$string);
-			foreach($site_strings as $site_string)
+		if(empty($string))
+		{
+			return array();
+		}
+		$sites = array();
+		$site_strings = explode(',',$string);
+		foreach($site_strings as $site_string)
+		{
+			$site_string = trim($site_string);
+			switch($site_string)
 			{
-					$site_string = trim($site_string);
-					switch($site_string)
+				case 'k_parent_sites':
+					$psites = $this->get_parent_sites();
+					if(!empty($psites))
 					{
-							case 'k_parent_sites':
-									$psites = $this->get_parent_sites();
-									if(!empty($psites))
-									{
-										$sites = $sites + $psites;
-									}
-									break;
-							case 'k_child_sites':
-									$csites = $this->get_child_sites();
-									if(!empty($csites))
-									{
-										$sites = $sites + $csites;
-									}
-									break;
-							case 'k_sharing_sites':
-									$ssites = $this->get_sharing_sites();
-									if(!empty($ssites))
-									{
-										$sites = $sites + $ssites;
-									}
-									break;
-							default:
-									$usites = $this->get_sites_by_unique_name($site_string);
-									if(!empty($usites))
-									{
-										$sites = $sites + $usites;
-									}
+						$sites = $sites + $psites;
+					}
+					break;
+				case 'k_child_sites':
+					$csites = $this->get_child_sites();
+					if(!empty($csites))
+					{
+						$sites = $sites + $csites;
+					}
+					break;
+				case 'k_sharing_sites':
+					$ssites = $this->get_sharing_sites();
+					if(!empty($ssites))
+					{
+						$sites = $sites + $ssites;
+					}
+					break;
+				default:
+					$usites = $this->get_sites_by_unique_name($site_string);
+					if(!empty($usites))
+					{
+						$sites = $sites + $usites;
 					}
 			}
-			return $sites;
+		}
+		return $sites;
 	}
 	
 	/**

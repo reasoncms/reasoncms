@@ -1,6 +1,6 @@
 <?php
 
-reason_include_once('classes/admin/modules/newsletter/additionalSiteFinder.php');
+reason_include_once('classes/admin/modules/newsletter/eventsCalendarAdditionalSiteFinder.php');
 /**
  * This file contains the SelectIncludes disco form step for use in the 
  * newsletter builder admin module. 

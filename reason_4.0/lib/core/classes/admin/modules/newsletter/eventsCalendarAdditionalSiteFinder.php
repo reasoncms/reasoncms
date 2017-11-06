@@ -25,7 +25,7 @@ class eventsCalendarAdditionalSiteFinder
 		$rels = array();
 		foreach($event_helper->get_events_page_types() as $page_type)
 		{
-			$rels[] = 'page_node.custom_page = "'.$page_type.'"';
+			$rels[] = 'page_node.custom_page = "'.reason_sql_string_escape($page_type).'"';
 		}
 		$ps->add_relation('( '.implode(' OR ', $rels).' )');
 		$site_pages = $ps->run_one();
@@ -55,6 +55,11 @@ class eventsCalendarAdditionalSiteFinder
 					break;
 				}
 			}
+		}
+		
+		if(empty($additional_sites))
+		{
+			return array();
 		}
 
 		// Convert the string to a list of site entities.
