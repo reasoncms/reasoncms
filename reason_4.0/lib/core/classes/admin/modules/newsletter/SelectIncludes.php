@@ -1,4 +1,6 @@
 <?php
+
+reason_include_once('classes/admin/modules/newsletter/additionalSiteFinder.php');
 /**
  * This file contains the SelectIncludes disco form step for use in the 
  * newsletter builder admin module. 
@@ -44,9 +46,19 @@ class SelectIncludes extends FormStep
 	function init($args=array())
 	{
 		parent::init($args);
-		
+
 		$site_id = (integer) $_REQUEST['site_id'];
-		
+		$additional_site_finder = new eventsCalendarAdditionalSiteFinder();
+		$additional_sites = $additional_site_finder->get_additional_sites($site_id);
+		if ($additional_sites != array()) {
+			$es_param = array($site_id);
+			foreach ($additional_sites as $site) {
+				$es_param[] = $site->id();
+			}
+		} else {
+			$es_param = $site_id;
+		}
+
 		// Only do this init if we're on the step that needs it.
 		if ($this->controller->get_current_step() != 'SelectIncludes')
 			return;
@@ -54,7 +66,7 @@ class SelectIncludes extends FormStep
 		//////////////// PUBLICATIONS /////////////////
 		// Select all publications that are attached to this site.
 		$pub_factory = new PubHelperFactory();
-		$es = new entity_selector($site_id);
+		$es = new entity_selector($es_param);
 		$es->add_type(id_of('publication_type'));
 		// Add the page_id to which the pub belongs (so we can get url)
 		$es->add_right_relationship_field('page_to_publication', 'entity', 'id', 'page_id');
@@ -132,7 +144,7 @@ class SelectIncludes extends FormStep
 		$cal->run();
 		$events = $cal->get_all_events(); */
 		
-		$es = new entity_selector($site_id);
+		$es = new entity_selector($es_param);
 		$es->add_type(id_of('event_type'));
 		$es->set_num(1);
 		$es->limit_tables();
@@ -155,7 +167,7 @@ class SelectIncludes extends FormStep
 			$this->add_element('sucks_to_be_you', 'comment', array('text'=>'<h3>There are no publications or calendars associated with this site. Press continue if you would like to use the newsletter builder anyway.'));
 		
 	}
-	
+
 	function on_every_time()
 	{
 //		$this->controller->destroy_form_data();

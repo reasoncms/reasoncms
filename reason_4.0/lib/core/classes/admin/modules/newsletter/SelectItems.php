@@ -1,4 +1,6 @@
 <?php
+
+reason_include_once('classes/admin/modules/newsletter/additionalSiteFinder.php');
 /**
  * This file contains the SelectItems disco multi-step form step for
  * NewsletterModule and a plasmature type used in the creation of a
@@ -117,11 +119,13 @@ class SelectItems extends FormStep
 		if ($this->controller->get_form_data('events_start_date') != '')
 		{
 			$site_id = (integer) $_REQUEST['site_id'];
-			$site = new entity($site_id);
+			$additional_site_finder = new eventsCalendarAdditionalSiteFinder();
+			$sites = $additional_site_finder->get_additional_sites($site_id);
+			$sites[] = new entity($site_id);
 			$start_date = $this->controller->get_form_data('events_start_date');
 			$end_date = $this->controller->get_form_data('events_end_date');
 			$end_date = (!empty($end_date)) ? $end_date : date('Y-m-d');
-			$cal = new reasonCalendar(array('site'=>$site,'start_date'=>$start_date,'end_date'=>$end_date));
+			$cal = new reasonCalendar(array('site'=>$sites,'start_date'=>$start_date,'end_date'=>$end_date));
 			$cal->run();
 			$events = $cal->get_all_events();
 			$days = $cal->get_all_days();
