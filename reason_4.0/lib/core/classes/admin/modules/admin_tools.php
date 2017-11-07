@@ -134,6 +134,11 @@ class ReasonAdminToolsModule extends DefaultModule
 					'description' => 'Provides statistics on usage by type in Reason.',
 					'safety_level' => 'safe',
 				),
+				'?cur_module=FindPageFromURL' => array(  
+					'title' => 'Find Page From URL',
+					'description' => 'Given a URL, find all pages that have been at that URL',
+					'safety_level' => 'safe',
+				),
 			),
 			'Content Actions' => array(
 				REASON_HTTP_BASE_PATH.'scripts/urls/update_urls.php' => array(
