@@ -16,6 +16,7 @@ reason_include_once( 'classes/function_bundle.php' );
 reason_include_once( 'classes/api/api.php' );
 reason_include_once( 'classes/borrow_this.php' );
 reason_include_once( 'function_libraries/safe_json.php' );
+reason_include_once( 'classes/string_to_sites.php' );
 include_once(CARL_UTIL_INC . 'cache/object_cache.php');
 include_once( CARL_UTIL_INC . 'dir_service/directory.php' );
 include_once( CARL_UTIL_INC . 'basic/cleanup_funcs.php' );
@@ -1116,34 +1117,10 @@ class EventsModule extends DefaultMinisiteModule
 	}
 	function _get_sites_from_string($string)
 	{
-		$sites = array();
-		$site_strings = explode(',',$string);
-		foreach($site_strings as $site_string)
-		{
-			$site_string = trim($site_string);
-			switch($site_string)
-			{
-				case 'k_parent_sites':
-					$psites = $this->_get_parent_sites($this->site_id);
-					if(!empty($psites))
-						$sites = $sites + $psites;
-					break;
-				case 'k_child_sites':
-					$csites = $this->_get_child_sites($this->site_id);
-					if(!empty($csites))
-						$sites = $sites + $csites;
-					break;
-				case 'k_sharing_sites':
-					$ssites = $this->_get_sharing_sites($this->site_id);
-					if(!empty($ssites))
-						$sites = $sites + $ssites;
-					break;
-				default:
-					$usites = $this->_get_sites_by_unique_name($site_string, $this->site_id);
-					if(!empty($usites))
-						$sites = $sites + $usites;
-			}
-		}
+		$parser = new stringToSites();
+		$site = new entity($this->site_id);
+		$parser->set_context_site($site);
+		$sites = $parser->get_sites_from_string($string);
 		return $sites;
 	}
 	/**
