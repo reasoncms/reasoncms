@@ -3109,7 +3109,8 @@ class EventsModule extends DefaultMinisiteModule
 		echo '<form action="'.$this->construct_link().'" method="post">'."\n";
 		echo '<h4>Jump to date:</h4>';
 		echo '<span style="white-space:nowrap;">'."\n";
-		echo '<select name="start_month">'."\n";
+		echo '<label for="eventDateJumpMonthSelect" class="hide">Month</label>';
+		echo '<select name="start_month" id="eventDateJumpMonthSelect">'."\n";
 		for($m = 1; $m <= 12; $m++)
 		{
 			$m_padded = str_pad($m,2,'0',STR_PAD_LEFT);
@@ -3120,7 +3121,8 @@ class EventsModule extends DefaultMinisiteModule
 			 echo '>'.$month_name.'</option>'."\n";
 		}
 		echo '</select>'."\n";
-		echo '<select name="start_day">'."\n";
+		echo '<label for="eventDateJumpDaySelect" class="hide">Day</label>';
+		echo '<select name="start_day" id="eventDateJumpDaySelect">'."\n";
 		for($d = 1; $d <= 31; $d++)
 		{
 			 echo '<option value="'.$d.'"';
@@ -3129,7 +3131,8 @@ class EventsModule extends DefaultMinisiteModule
 			 echo '>'.$d.'</option>'."\n";
 		}
 		echo '</select>'."\n";
-		echo '<select name="start_year">'."\n";
+		echo '<label for="eventDateJumpYearSelect" class="hide">Year</label>';
+		echo '<select name="start_year" id="eventDateJumpYearSelect">'."\n";
 		for($y = $min_year; $y <= $max_year; $y++)
 		{
 			 echo '<option value="'.$y.'"';

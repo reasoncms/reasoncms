@@ -109,7 +109,6 @@
 		
 		function run() // {{{
 		{
-			echo '<div class="oldBrowserAlert">Notice: Reason works with all browsers.  However, it will look and feel quite a lot nicer if you can use it with a modern, standards-based browser such as Internet Explorer 6+, Mozilla 1.5+, Firefox, Netscape 7, Safari, or Opera.</div>'."\n";
 			if(!HTTPS_AVAILABLE && reason_user_has_privs($this->admin_page->user_id, 'upgrade'))
 			{
 				echo '<div id="securityWarning">'."\n";
@@ -136,6 +135,14 @@
 						break;
 				}
 			}
+			
+			$label = 'Search your sites';
+			if(reason_user_has_privs( $this->admin_page->user_id, 'view_sensitive_data' ))
+			{
+				$label = 'Search across all sites';
+			}
+			echo '<form class="allSearchMini searchMini" action="./" method="get"><label for="searchModuleInput">'.$label.':</label> <input name="search_string" id="searchModuleInput"><input type="hidden" name="site_id" value=""><input type="hidden" name="cur_module" value="Search"><input type="hidden" name="result_limit" value="100"><input type="hidden" name="submitted" value="true"><input type="hidden" name="user_id" value="'.$this->admin_page->user_id.'"> <input type="submit" value="Go"></form>';
+			
 			if(reason_unique_name_exists('whats_new_in_reason_blurb'))
 			{
 				$intro = new entity(id_of('whats_new_in_reason_blurb'));

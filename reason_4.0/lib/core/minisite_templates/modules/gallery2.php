@@ -196,7 +196,7 @@ class Gallery2Module extends Generic3Module
 	{
 		$this->prev_arrow_url = REASON_HTTP_BASE_PATH.'css/gallery2/image_gallery_arrow_prev.gif';
 		$this->next_arrow_url = REASON_HTTP_BASE_PATH.'css/gallery2/image_gallery_arrow_next.gif';
-		$this->parent->head_items->add_stylesheet( REASON_HTTP_BASE_PATH.'css/gallery2/gallery2.v2.css', '', true );
+		$this->parent->head_items->add_stylesheet( REASON_HTTP_BASE_PATH.'css/gallery2/gallery2.v2.css?v=2', '', true );
 		$this->parent->head_items->add_javascript(JQUERY_URL, true);
 		
 		if( !isset($this->request['image_id']) )

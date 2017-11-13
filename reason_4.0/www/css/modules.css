@@ -865,27 +865,26 @@ div.feedInfo {
 	text-align: right;
 }
 div.feedInfo a {
-	background-color: #FF9900;
-	background-image:url(../ui_images/feed_icon_16px_dual.gif);
+	background-color: #ffae35;
+	background-image:url(../ui_images/feed_icon_32px_white.png);
+	background-size: 12px 12px;
 	background-repeat:no-repeat;
-	background-position:-239px center;
-	padding: 2px 4px 2px 19px;
-	border: 1px solid #DC5B06;
+	background-position:5px center;
+	padding: 5px 6px 4px 24px;
 	font-size: 12px;
 	text-transform: uppercase;
-	color: #FFFFFF;
+	color: #533e16;
 	text-decoration: none;
 	font-weight: bold;
+	border-radius:3px;
 }
 div.feedInfo a:hover {
-	background-color: #FF6600;
-	border: 1px solid #CC3300;
-	background-position:1px center;
+	background-color: #FF9900;
 }
 div.feedHelp
 {
 	text-align:right;
-	margin-bottom:2em;
+	margin:.125em 0 2em;
 	font-size:90%;
 }
 /* Jobs */
@@ -1518,6 +1517,16 @@ div.socialProfileLinks img {
 	position:absolute;
 	left:-9999px;
 	width:1000px;
+}
+.hide.skipNav:hover, .hide.skipNav:focus, .hide.skipNav:active {
+	display:inline-block;
+	left:0;
+	width:auto;
+	background:#fff;
+	color:#00a;
+	text-decoration:underline;
+	padding:.25em .5em;
+	z-index:9999;
 }
 
 /* Navigation & Policy Modules are in modules_mod.css */
