@@ -238,8 +238,8 @@ class ThorCore
 						// Inject options if data reflects new options
 						if (property_exists($kEl, 'options'))
 							if (!in_array($kEl->value, $kEl->options))
-								$kEl->options[$kEl->value] = $kEl->value;
-					}
+							$kEl->options[$kEl->value] = $kEl->value;
+						}
 					elseif (isset($display_values[$k]['group_id']))
 					{
 						$group[$display_values[$k]['group_id']][] = $v;
@@ -993,12 +993,12 @@ class ThorCore
 				$db_structure[$node->tagAttrs['id']]['type'] = 'text';
 			}
 			elseif (($node->tagName == 'radiogroup') || ($node->tagName == 'optiongroup')) {
-				$db_structure[$node->tagAttrs['id']]['type'] = 'tinytext';
+				$db_structure[$node->tagAttrs['id']]['type'] = 'text';
 			}
 			elseif ($node->tagName == 'checkboxgroup') {
 				$node_children = $node->tagChildren;
 				foreach ($node_children as $node2) {
-					$db_structure[$node2->tagAttrs['id']]['type'] = 'tinytext';
+					$db_structure[$node2->tagAttrs['id']]['type'] = 'text';
 				}
 			}
 			elseif ($node->tagName == 'upload') {
