@@ -236,7 +236,7 @@ class ThorCore
 						}
 						$disco_obj->set_value($k, $v);
 						// Inject options if data reflects new options
-						if (property_exists($kEl, 'options') && $kEl->value != '' && !in_array($kEl->value, $kEl->options))
+						if (property_exists($kEl, 'options') && strlen($kEl->value) != 0 && !in_array($kEl->value, $kEl->options))
 						{
 							$kEl->options[$kEl->value] = $kEl->value;
 						}
