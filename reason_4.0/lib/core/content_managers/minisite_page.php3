@@ -15,6 +15,7 @@ reason_include_once('minisite_templates/page_types.php');
 reason_require_once( 'minisite_templates/page_types.php' );
 reason_include_once( 'classes/plasmature/head_items.php' );
 include_once( DISCO_INC . 'plugins/input_limiter/input_limiter.php' );
+include_once( DISCO_INC . 'plugins/grade_level_notifier/grade_level_notifier.php' );
 
 $GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'MinisitePageManager';
 
@@ -348,6 +349,10 @@ class MinisitePageManager extends parent_childManager
 		$limiter = new DiscoInputLimiter($this);
 		$limiter->suggest_limit('description', 156);
 		$limiter->auto_show_hide('description', false);
+		
+		// Add reading level notifier plugin to content editor
+		$readlevelnotif = new DiscoGradeLevelNotifier($this);
+		$readlevelnotif->add_field('content');
 		
 		$administrator_fields = array('extra_head_content_structured', 'extra_head_content', 'unique_name');
 		$has_administrator_field = false;
