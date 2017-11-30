@@ -163,6 +163,13 @@ class ComposerStaticInite6c109fad32128aa74ab115a2ba6707e
                 0 => __DIR__ . '/..' . '/phpspec/prophecy/src',
             ),
         ),
+        'D' => 
+        array (
+            'DaveChild\\TextStatistics' => 
+            array (
+                0 => __DIR__ . '/..' . '/davechild/textstatistics/src',
+            ),
+        ),
     );
 
     public static $classMap = array (
