@@ -124,33 +124,35 @@ class reason_iCalendar
 	{
 		$icalendar_event = "";
 		$icalendar_event .= 'BEGIN:VEVENT' . "\r\n";  
-		$icalendar_event .= 'UID:'.$this->_fold_text(str_replace(array('-',' ',':'),'',$event->get_value('creation_date')).'-'.$event->id().'@'.REASON_ICALENDAR_UID_DOMAIN)."\r\n";
+		$icalendar_event .= $this->_fold_text('UID:'.str_replace(array('-',' ',':'),'',$event->get_value('creation_date')).'-'.$event->id().'@'.REASON_ICALENDAR_UID_DOMAIN)."\r\n";
 
 		//SUMMARY
 		if (strlen($event -> get_value('name')) != 0)
-			$icalendar_event .= 'SUMMARY:' . $this -> _fold_text($event -> get_value('name')) . "\r\n";
+			$icalendar_event .= $this -> _fold_text('SUMMARY:' . $event -> get_value('name')) . "\r\n";
 		
 		//DESCRIPTION
 		// if "brief description of event" (field: description) was specified, use that. Otherwise, use the "full event information" (field: content)
 		if (strlen($event -> get_value('description')) != 0)
-			$icalendar_event .= 'DESCRIPTION:' . $this -> _fold_text($event -> get_value('description')) . "\r\n";
+			$icalendar_event .= $this -> _fold_text('DESCRIPTION:' . $event -> get_value('description')) . "\r\n";
 		else if (strlen($event -> get_value('content')) != 0)
-			$icalendar_event .= 'DESCRIPTION:' . $this -> _fold_text($event -> get_value('content')) . "\r\n";
+			$icalendar_event .= $this -> _fold_text('DESCRIPTION:' . $event -> get_value('content')) . "\r\n";
 		
 		//LOCATION
 		if (strlen($event -> get_value('location')) != 0)
-			$icalendar_event .= 'LOCATION:' . $this -> _fold_text($event -> get_value('location')) . "\r\n";
+			$icalendar_event .= $this -> _fold_text('LOCATION:' . $event -> get_value('location')) . "\r\n";
 		//URL
 		if (strlen($event -> get_value('url')) != 0)
-			$icalendar_event .= 'URL:' . $this->_fold_text($event -> get_value('url')) . "\r\n";
+			$icalendar_event .= $this->_fold_text('URL:' . $event -> get_value('url')) . "\r\n";
 		elseif (!empty($this->_events_page_url))
-			$icalendar_event .= 'URL:' . $this->_fold_text($this->_events_page_url.'?event_id='.$event->id()) . "\r\n";
+			$icalendar_event .= $this->_fold_text('URL:' . $this->_events_page_url.'?event_id='.$event->id()) . "\r\n";
 		//LAST-MODIFIED
 		if (strlen($event -> get_value('last_modified')) != 0)
-			$icalendar_event .= 'LAST-MODIFIED:' . $this -> _create_datetime(carl_date("Y-m-d H:i:s", strtotime($event -> get_value('last_modified'))), false) . "\r\n";
+			$icalendar_event .= $this->_fold_text('LAST-MODIFIED:' . $this -> _create_datetime(carl_date("Y-m-d H:i:s", strtotime($event -> get_value('last_modified'))), true)) . "\r\n";
 		//CREATED
 		if (strlen($event -> get_value('creation_date')) != 0)
-			$icalendar_event .= 'CREATED:' . $this -> _create_datetime(carl_date("Y-m-d H:i:s", strtotime($event -> get_value('creation_date'))), false) . "\r\n";
+			$icalendar_event .= $this->_fold_text('CREATED:' . $this -> _create_datetime(carl_date("Y-m-d H:i:s", strtotime($event -> get_value('creation_date'))), false)) . "\r\n";
+		
+		$icalendar_event .= $this->_fold_text('DTSTAMP:' . $this -> _create_datetime(carl_date("Y-m-d H:i:s", time()), false)) . "\r\n";
 	
 		//DTSTART
 		if (strlen($event -> get_value('datetime')) != 0)
@@ -159,9 +161,9 @@ class reason_iCalendar
 			if (strstr($event -> get_value('datetime'), '00:00:00'))
 			{
 				preg_match("/[\d]*/", $timestamp, $matches);
-				$icalendar_event .= 'DTSTART;VALUE=DATE:' . $matches[0] . "\r\n";
+				$icalendar_event .= $this->_fold_text('DTSTART;VALUE=DATE:' . $matches[0]) . "\r\n";
 				//DREND (for all day events)
-				$icalendar_event .= 'DTEND;VALUE=DATE:' . $matches[0] . "\r\n";
+				$icalendar_event .= $this->_fold_text('DTEND;VALUE=DATE:' . $matches[0]) . "\r\n";
 			}
 			else
 			{
@@ -213,7 +215,7 @@ class reason_iCalendar
 
 		// 2014-08-14: rewritten to handle multibyte strings
 		$folded_text = "";
-		$break_at = 75;
+		$break_at = 74;
 		$encoding = "UTF-8";
 		while (mb_strlen($text, $encoding) > $break_at) {
 			$folded_text .= mb_substr($text, 0, $break_at, $encoding) . "\r\n ";
@@ -227,10 +229,11 @@ class reason_iCalendar
 	//create the DURATION property from the hours and minutes specified in the event
 	function _create_duration($hours, $minutes)
 	{
+		$hours = empty($hours) ? '0' : $hours;
+		$minutes = empty($minutes) ? '0' : $minutes;
 		$duration = 'DURATION:';
 		$duration .= 'PT' . $hours . 'H' . $minutes . 'M0S';
-		$duration .= "\r\n";
-		return $duration;
+		return $this->_fold_text($duration) . "\r\n";
 	}
 	
 	//convert a SQL datetime into an iCalendar date-time
@@ -285,8 +288,7 @@ class reason_iCalendar
 			}
 		}
 		if (substr($rrule, -1, 1) == ';') $rrule = substr($rrule, 0, -1);
-		$rrule .= "\r\n";
-		return $rrule;
+		return $this->_fold_text($rrule)."\r\n";
 	}
 	
 	//create a list of days on which the event recurrs

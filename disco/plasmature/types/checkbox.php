@@ -38,17 +38,42 @@ class checkboxType extends defaultType
 	}
 	function get_display()
 	{
-		$this->checkbox_id = 'checkbox_'.$this->name;
-		$str = '<input type="checkbox" id="'.$this->checkbox_id.'" name="'.$this->name.'" value="'.$this->checked_value.'"';
+		
+		$str = '<input type="checkbox" id="'.htmlspecialchars($this->get_checkbox_id()).'" name="'.htmlspecialchars($this->name).'" value="'.htmlspecialchars($this->checked_value).'"';
 		if ( $this->value )
 		{
 			$str .= ' checked="checked"';
 		}
+		if( $this->use_aria_label() )
+		{
+			$str .= ' aria-label="'.html_attribute_escape($this->display_name).'"';
+		}
 		$str .= ' class="checkbox" />';
 		if (!empty($this->description)) {
-			$str .= ' <label class="smallText" for="'.$this->checkbox_id.'">'.$this->description.'</label>';
+			$str .= ' <label class="smallText" for="'.htmlspecialchars($this->get_checkbox_id()).'">'.$this->description.'</label>';
 		}
 		return $str;
+	}
+	
+	function use_aria_label()
+	{
+		return (empty($this->description) && !$this->is_labeled());
+	}
+	
+	function get_checkbox_id()
+	{
+		if(empty($this->checkbox_id))
+			$this->checkbox_id = 'checkbox_'.$this->name;
+		return $this->checkbox_id;
+	}
+	
+	function get_label_target_id()
+	{
+		if (empty($this->description)) // If there is no description the element is labeled by the display name
+		{
+			return $this->get_checkbox_id();
+		}
+		return false; // Otherwise it is labeled by the description
 	}
 }
 
@@ -77,6 +102,22 @@ class checkboxfirstType extends checkboxType {
 	
 	function get_display()
 	{
-		return parent::get_display().' <label for="'.$this->checkbox_id.'">'.$this->display_name.'</label>';
+		return parent::get_display().' <label for="'.htmlspecialchars($this->get_checkbox_id()).'">'.$this->display_name.'</label>';
 	}
+	
+	/**
+	 * Since we are using a <label> element we should not use an aria label
+	 */
+	function use_aria_label()
+	{
+		return false;
+	}
+}
+
+/**
+ * Like {@link checkboxType}, but does not display a label
+ */
+class checkbox_no_labelType extends checkboxType {
+	var $type = 'checkbox_no_label';
+	var $_labeled = false;
 }

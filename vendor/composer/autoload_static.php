@@ -27,6 +27,10 @@ class ComposerStaticInite6c109fad32128aa74ab115a2ba6707e
             'Symfony\\Component\\Console\\' => 26,
             'Symfony\\Component\\BrowserKit\\' => 29,
         ),
+        'R' => 
+        array (
+            'ReCaptcha\\' => 10,
+        ),
         'P' => 
         array (
             'Psr\\Http\\Message\\' => 17,
@@ -93,6 +97,10 @@ class ComposerStaticInite6c109fad32128aa74ab115a2ba6707e
         'Symfony\\Component\\BrowserKit\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/browser-kit',
+        ),
+        'ReCaptcha\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/google/recaptcha/src/ReCaptcha',
         ),
         'Psr\\Http\\Message\\' => 
         array (

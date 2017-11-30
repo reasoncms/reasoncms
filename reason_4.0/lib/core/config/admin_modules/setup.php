@@ -71,6 +71,7 @@
 		'ViewUsers'=>array('file'=>'view_users.php','class'=>'ViewUsersModule'),
 		'Duplicate'=>array('file'=>'duplicate.php','class'=>'DuplicateModule'),
 		'clone'=>array('file'=>'cloner.php','class'=>'ClonerModule'),
+		'Stats'=>array('file'=>'stats.php','class'=>'StatsModule'),
 		'ThorData'=>array('file'=>'thor_data.php','class'=>'ThorDataModule'),
 		'GroupTester'=>array('file'=>'group_tester.php','class'=>'GroupTesterModule'),
 		'ListSites'=>array('file'=>'list_sites.php','class'=>'ListSitesModule'),
@@ -81,6 +82,7 @@
 		'EntityInfo'=>array('file'=>'entity_info.php','class'=>'EntityInfoModule'),
 		'BatchDelete'=>array('file'=>'batch_delete.php','class'=>'BatchDeleteModule'),
 		'Export'=>array('file'=>'export.php','class'=>'ReasonExportModule'),
+		'ExportImages'=>array('file'=>'export_images.php','class'=>'ReasonExportImagesModule'),
 		'VersionCheck'=>array('file'=>'version_check.php','class'=>'ReasonVersionCheckModule'),
 		'EventSplit'=>array('file'=>'event_split.php','class'=>'ReasonEventSplitModule'),
 		'ActiveUsers'=>array('file'=>'active_users.php','class'=>'ReasonActiveUsersModule'),
@@ -100,7 +102,6 @@
 		'CustomizeTheme'=>array('file'=>'customize_theme.php','class'=>'CustomizeThemeModule'),
 		'SiteAccessDenied'=>array('file'=>'site_access_denied.php', 'class'=>'SiteAccessDeniedModule'),
 		'Newsletter'=>array('file'=>'newsletter/newsletter.php', 'class'=>'NewsletterModule'),
-		'DeleteRegistrationSlotData'=>array('file'=>'delete_slot_data.php', 'class'=>'DeleteRegistrationSlotDataModule'),
 		'ClearCache'=>array('file'=>'clear_cache.php', 'class'=>'ReasonClearCacheModule'),
 		'FormRecipients'=>array('file'=>'form_recipients.php', 'class'=>'FormRecipientsModule'),
 		'Analytics'=>array('file'=>'analytics.php', 'class'=>'AnalyticsModule'),
@@ -114,6 +115,9 @@
 	 	'SiteToPDF'=>array('file'=>'site_to_pdf.php','class'=>'ReasonSiteToPDFModule'),
 		'EntityStats'=>array('file'=>'entity_stats.php', 'class'=>'ReasonEntityStatsModule'),
 		'InvisiblesFinder'=>array('file'=>'invisibles_finder.php', 'class'=>'InvisiblesFinderModule'),
+		'SharingStats'=>array('file'=>'sharing_stats.php', 'class'=>'ReasonSharingStatsModule'),
+		'FindPageFromURL'=>array('file'=>'find_page_from_url.php', 'class'=>'FindPageFromURLModule'),
+		'Search'=>array('file'=>'search.php', 'class'=>'ReasonAdminSearchModule'),
 	);
 
 if (reason_file_exists('config/admin_modules/setup_local.php'))

@@ -243,8 +243,7 @@
 			/*
 			 *   add the ignore image size check option to allow upload of images of any size
 			*/
-			$this->add_element('ignore_min_img_size_check', 'checkbox',array('description' => 'Ignore minimum image size check.'));
-			$this->set_display_name('ignore_min_img_size_check', '&nbsp;');
+			$this->add_element('ignore_min_img_size_check', 'checkbox_no_label',array('description' => 'Ignore minimum image size check.'));
 			$order[] = 'ignore_min_img_size_check';	
 			$this->set_order( $order );
 

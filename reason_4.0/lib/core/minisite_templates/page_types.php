@@ -86,7 +86,10 @@
 			'sub_nav' => '',
 			'main_head' => '',
 			'main_post' => 'atoz',
-			'sidebar' => 'blurb',
+			'sidebar' => array(
+				'module' => 'blurb',
+				'demote_headings' => 0,
+			),
 		),
 		'image_sidebar_100x100' => array(
 			'sidebar' => array(
@@ -334,6 +337,14 @@
 			'main_post' => array(
 				'module' => 'av_simple',
 				'width' => 860,
+			),
+		),
+		'audio_video_simple_860_wide_with_author_description' => array(
+			'main_post' => array(
+				'module' => 'av_simple',
+				'width' => 860,
+				'show_descriptions' => true,
+				'show_authors' => true,
 			),
 		),
 		'audio_video_simple_sidebar' => array(
@@ -752,22 +763,6 @@
 		),
 		'event_signup' => array(
 			'main_post' => 'event_signup',
-			'sidebar' => '',
-		),
-		'event_slot_registration' => array(
-			'main_post' => array(
-				'module' => 'events',
-				'list_item_markup' => 'minisite_templates/modules/events_markup/verbose/verbose_events_list_item.php',
-			),
-			'sidebar' => '',
-		),
-		'event_slot_registration_cache_1_hour' => array(
-			'main_post' => array(
-				'module' => 'events',
-				'list_item_markup' => 'minisite_templates/modules/events_markup/verbose/verbose_events_list_item.php',
-				'cache_lifespan' => '3600',
-				'cache_lifespan_meta' => '7400',
-			),
 			'sidebar' => '',
 		),
 		'events_with_tickets_list' => array(
@@ -1875,6 +1870,12 @@
 				'thumbnail_width' => 200,
 			),
 		),
+		'show_children_with_blurb_links' => array(
+		    'main_post' => array(
+		    	'module' => 'children',
+		    	'link_to_blurbs' => true,
+		    ),
+		),
 		'child_gallery_280x200' => array(
 			'main_post' => array(
 				'module'=>'children',
@@ -2116,7 +2117,10 @@
 					'Offices'=>array('office_site_type'),
 					'Other Sites'=>array('other_site_type'))), */
 			),
-			'sidebar' => 'blurb',
+			'sidebar' => array(
+				'module' => 'blurb',
+				'demote_headings' => 0,
+			),
 		),
 		'social_accounts' => array(
 			'main_post' => 'social_account/social_account',

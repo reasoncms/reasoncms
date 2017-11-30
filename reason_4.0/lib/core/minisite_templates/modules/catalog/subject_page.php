@@ -272,7 +272,8 @@ class CatalogSubjectPageModule extends DefaultMinisiteModule
 		}
 
 		$form->add_element( 'block_edit_text' , html_editor_name($this->site_id) , html_editor_params($this->site_id, $this->get_html_editor_user_id()) );
-		$form->set_display_name('block_edit_text','&nbsp;');
+		$form->set_display_name('block_edit_text','Content');
+		
 		$value = ($block) ? $block->get_value('content') : null;
 		$form->set_value( 'block_edit_text', $value );
 

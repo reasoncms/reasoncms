@@ -84,6 +84,7 @@ class ZencoderMediaWorkPreviewerModifier implements MediaWorkPreviewerModifierIn
 		$this->previewer->start_table();
 		
 		$this->_add_file_preview($this->previewer->_entity);
+		$this->_add_standalone_view_url($this->previewer->_entity);
 		$this->_add_embed_code($this->previewer->_entity);
 		$this->_add_original_link($this->previewer->_entity);
 		$this->_add_file_links($this->previewer->_entity);
@@ -168,6 +169,19 @@ class ZencoderMediaWorkPreviewerModifier implements MediaWorkPreviewerModifierIn
 	private function _show_embed_item($field, $value)
 	{
 		$this->previewer->show_item_default( $field , '<input id="'.$field.'Element" type="text" readonly="readonly" size="50" value="'.htmlspecialchars($value).'">' );
+	}
+	
+	private function _add_standalone_view_url($entity)
+	{
+		reason_include_once( 'classes/media/zencoder/media_work_displayer.php' );
+		$displayer = new ZencoderMediaWorkDisplayer();
+		$displayer->set_media_work($entity);
+		$url = $displayer->get_iframe_src(480, 853);
+		if(strpos($url, '//') === 0)
+		{
+			$url = securest_available_protocol().':'.$url;
+		}
+		$this->previewer->show_item_default( 'Direct View' , '<a href="'.reason_htmlspecialchars($url).'">'.reason_htmlspecialchars($url).'</a>');
 	}
 
 	private function _add_file_links($entity)

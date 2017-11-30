@@ -1,3 +1,5 @@
+localPrettyName = "Time"
+
 Formbuilder.registerField 'time',
 
   order: 25
@@ -37,3 +39,5 @@ Formbuilder.registerField 'time',
   addButton: """
     <span class="symbol"><span class="fa fa-clock-o"></span></span> Time
   """
+  
+  prettyName: localPrettyName

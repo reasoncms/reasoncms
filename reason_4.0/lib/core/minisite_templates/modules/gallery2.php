@@ -122,7 +122,7 @@ class Gallery2Module extends Generic3Module
 		'filter_displayer'=>'gallery_specific.php',
 		'pagination_displayer'=>'window.php',
 		'use_pagination'=>true,
-		'number_per_page' => 12,
+		'number_per_page' => 24,
 		'entire_site'=>false,
 		'sort_order' => 'dated.datetime ASC, meta.description ASC, entity.id ASC',
 		'show_dates_in_list' => false,
@@ -196,7 +196,7 @@ class Gallery2Module extends Generic3Module
 	{
 		$this->prev_arrow_url = REASON_HTTP_BASE_PATH.'css/gallery2/image_gallery_arrow_prev.gif';
 		$this->next_arrow_url = REASON_HTTP_BASE_PATH.'css/gallery2/image_gallery_arrow_next.gif';
-		$this->parent->head_items->add_stylesheet( REASON_HTTP_BASE_PATH.'css/gallery2/gallery2.v2.css', '', true );
+		$this->parent->head_items->add_stylesheet( REASON_HTTP_BASE_PATH.'css/gallery2/gallery2.v2.css?v=2', '', true );
 		$this->parent->head_items->add_javascript(JQUERY_URL, true);
 		
 		if( !isset($this->request['image_id']) )

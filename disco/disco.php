@@ -1155,7 +1155,7 @@
 		{
 			if( ( count( $this->_error_required ) > 0 ) || ( count( $this->_error_messages ) > 0 ) )
 			{
-				echo '<div id="discoErrorNotice">'."\n";
+				echo '<div id="discoErrorNotice" aria-role="alert">'."\n";
 				echo '<h3 style="color:red;">'.$this->error_header_text.'</h3>'."\n";
 				// count required errors
 				echo '<ul>'."\n";
@@ -1218,11 +1218,14 @@
 		*/
 		function show_normal_element( $element_name , $element , &$b) // {{{
 		{
-			$b->row_open( $this->get_display_name($element_name), 
-						  $this->is_required( $element_name ), 
-						  $this->has_error( $element_name ), 
-						  $element_name, 
-						  $this->get_element_property($element_name, 'use_display_name') );
+			$b->row_open(
+						  $this->get_display_name($element_name),
+						  $this->is_required( $element_name ),
+						  $this->has_error( $element_name ),
+						  $element_name,
+						  $this->get_element_property($element_name, 'use_display_name'),
+						  $this->get_label_target_id( $element_name )
+			);
 			
 			// drop in a named anchor for error jumping
 			// echo '<a name="'.$element_name.'_error"></a>'."\n";
@@ -2496,6 +2499,16 @@
 				trigger_error('Cannot set error, as '.$element_name.' is not a recognized element or element group', WARNING);
 			}
 		} // }}}
+		
+		function get_label_target_id( $element_name )
+		{
+			if($this->_is_element($element_name))
+			{
+				$element = $this->get_element($element_name);
+				return $element->get_label_target_id();
+			}
+			return false;
+		}
 		
 	//////////////////////////////////////////////////
 	// MISC. METHODS

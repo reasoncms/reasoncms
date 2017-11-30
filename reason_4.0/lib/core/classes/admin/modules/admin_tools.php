@@ -44,7 +44,7 @@ class ReasonAdminToolsModule extends DefaultModule
 											'description' => 'See what has been added, deleted, and updated recently in Reason',
 					'safety_level' => 'safe',
 									),
-									REASON_HTTP_BASE_PATH.'scripts/search/find_across_sites.php' => array(
+								'?cur_module=Search' => array(
 											'title' => 'Search Across All Reason Sites',
 											'description' => 'Find a given string anywhere in Reason',
 					'safety_level' => 'safe',
@@ -94,9 +94,19 @@ class ReasonAdminToolsModule extends DefaultModule
 					'description' => 'Describes the top level navigation used by each site.',
 					'safety_level' => 'safe',
 				),
+				REASON_HTTP_BASE_PATH.'scripts/sitemap/hierarchical_page_report.php' => array(
+					'title' => 'Hierarchical Page Report',
+					'description' => 'Describes the page hierarchy of a chosen site. Pages are annotated with the page type info and aggregate module usage is shown.',
+					'safety_level' => 'safe',
+				),
 				'?site_id='.id_of('master_admin').'&cur_module=Export' => array(
 					'title' => 'Data Export',
 					'description' => 'Exports Reason data for a particular site',
+					'safety_level' => 'safe',
+				),
+				'?cur_module=ExportImages' => array(
+					'title' => 'Image Export',
+					'description' => 'Exports Reason images for a particular site. Note that you will need to specify a site_id for this tool to work.',
 					'safety_level' => 'safe',
 				),
 				'?site_id='.id_of('master_admin').'&cur_module=FormRecipients' => array(
@@ -112,6 +122,21 @@ class ReasonAdminToolsModule extends DefaultModule
 				'?cur_module=InvisiblesFinder' => array(
 					'title' => 'Invisibles Finder',
 					'description' => 'Finds entities that are not visible given a site\'s setup.',
+					'safety_level' => 'safe',
+				),
+				'?cur_module=SharingStats' => array(
+					'title' => 'Sharing Stats',
+					'description' => 'Provides statistics on sharing and borrowing in Reason.',
+					'safety_level' => 'safe',
+				),
+				'?cur_module=Stats' => array(
+					'title' => 'Type Stats',
+					'description' => 'Provides statistics on usage by type in Reason.',
+					'safety_level' => 'safe',
+				),
+				'?cur_module=FindPageFromURL' => array(  
+					'title' => 'Find Page From URL',
+					'description' => 'Given a URL, find all pages that have been at that URL',
 					'safety_level' => 'safe',
 				),
 			),

@@ -61,9 +61,7 @@ reason_include_once( 'classes/inline_editing.php' );
 		
 		function get_edit_page_link()
 		{
-			$type_id = id_of('minisite_page');
-			$qs = carl_construct_query_string(array('site_id' => $this->site_id, 'type_id' => $type_id, 'id' => $this->page_id, 'cur_module' => 'Editor', 'fromweb' => get_current_url()));
-			return securest_available_protocol() . '://' . REASON_WEB_ADMIN_PATH . $qs;	
+			return $this->cur_page->get_edit_url(get_current_url());
 		}
 
 		function get_edit_site_link()

@@ -134,7 +134,8 @@
 	
 		function get_formatted_page_title()
 		{
-			return '<h2 class="pageTitle"><span>'.$this->parent->title.'</span></h2>';
+			$ret = '<h2 class="pageTitle"'.$this->cur_page->get_language_attribute().'><span>'.$this->parent->title.'</span></h2>';
+			return $ret;
 		}
 		
 	}

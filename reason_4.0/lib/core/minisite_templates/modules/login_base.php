@@ -70,6 +70,13 @@ class LoginBaseModule extends DefaultMinisiteModule
 	
 	public function init( $args = array() )
 	{
+	    // login depends on a test cookie being in place, it should be set "soonest"
+        // in this process to avoid telling the user that they don't havce cookies enabled
+        // when the really do. That case can happen when they get into a state where the
+        // test cookie has expired or been removed and they did not go through the standard
+        // logout flow.
+		$this->set_test_cookie();
+
 		$head_items =& $this->parent->head_items;
 		$head_items->add_javascript(JQUERY_URL, true); // do we need to do this?
 		if($this->params['login_mode'] == 'standalone')
@@ -108,6 +115,8 @@ class LoginBaseModule extends DefaultMinisiteModule
 			{
 				if ($this->verbose_logging) error_log('LOGIN: do_logout');
 				// Set the test cookie here, so they can log back in again
+                // we set test cookies with every visit to the login page but we do it here
+                // as well to ensure that the cookie is set and "fresh" in this specific case.
 				$this->set_test_cookie();
 				$this->do_logout();
 			}

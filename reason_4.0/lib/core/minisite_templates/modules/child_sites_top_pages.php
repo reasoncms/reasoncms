@@ -20,7 +20,7 @@
 		function show_site( $site )
 		{
 			$link = $site->get_value('base_url');
-			echo '<li>'."\n";
+			echo '<li'.$site->get_language_attribute().'>'."\n";
 			echo '<h4><a href="'.$link.'">'.$site->get_value('name').'</a></h4>'."\n";
 			
 			$es = new entity_selector($site->id());
@@ -54,7 +54,7 @@
 						$name = $page->get_value('link_name');
 					else
 						$name = $page->get_value('name');
-					echo '<li><a href="'.$link.'">'.$name.'</a></li>'."\n";
+					echo '<li'.$page->get_language_attribute().'><a href="'.$link.'">'.$name.'</a></li>'."\n";
 				}
 				echo '</ul>'."\n";
 			}

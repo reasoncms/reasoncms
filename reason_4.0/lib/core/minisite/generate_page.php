@@ -39,7 +39,7 @@ if( substr($parts['path'],-4) == ".php" )
 	else
 	{
 		trigger_error('The file at ERROR_403_PATH ('.ERROR_403_PATH.') is not able to be included');
-		echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>403: Forbidden</title></head><body><h1>403: Forbidden</h1><p>You do not have access to this page.</p></body></html>';
+		echo '<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US"><head><title>403: Forbidden</title></head><body><h1>403: Forbidden</h1><p>You do not have access to this page.</p></body></html>';
 	}
 	die;
 }

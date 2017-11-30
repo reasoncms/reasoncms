@@ -21,7 +21,7 @@
  * <code>
  *	$head_item = new HeadItems();
  *	$head_item->add_stylesheet('mycss.css');
- *	$head_html = $head_item->get_head_items_html();
+ *	$head_html = $head_item->get_head_item_markup();
  * </code>
  *
  * @author Nathan White and the author(s) of functions that I lifted from the default template
@@ -270,7 +270,7 @@ class HeadItems
 	 */
 	function add_scss_stylesheet( $url, $media = '', $add_to_top = false, $wrapper = array('before'=>'','after'=>'') )
 	{
-		$parser = $this->get_scss_parser($this->default_scss_variables, $this->default_scss_functions);
+		$parser = $this->get_scss_parser($this->default_scss_variables, $this->default_scss_functions, $url);
 		$output_url = $this->create_parsed_stylesheet($parser, $url, $this->default_scss_variables, $this->default_scss_functions, $this->delete_old_scss_css);
 		if (!$output_url) return;
 		$this->add_stylesheet($output_url, $media, $add_to_top, $wrapper);
@@ -307,28 +307,7 @@ class HeadItems
 			return false;
 		}
 
-		$input_path = WEB_PATH.substr($url, 1);
-		$ok = false;
-		if(file_exists($input_path))
-		{
-			$ok = true;
-		}
-		else
-		{
-			if(strpos($url,REASON_HTTP_BASE_PATH) === 0)
-			{
-				// see if it's local
-				$local_url = REASON_HTTP_BASE_PATH.'local/'.substr($url, strlen(REASON_HTTP_BASE_PATH));
-				$local_input_path = WEB_PATH.substr($local_url, 1);
-				echo $local_input_path;
-				if(file_exists($local_input_path))
-				{
-					$input_path = $local_input_path;
-					$ok = true;
-				}
-				
-			}
-		}
+		list($input_path, $ok) = $this->derive_input_path_from_url($url);
 
 		if(!$ok)
 		{
@@ -358,17 +337,7 @@ class HeadItems
 
 		try
 		{
-			if ( get_class($parser) !== 'lessc' )
-			{
-				$parser->scss->addImportPath(WEB_PATH);
-				$parser->scss->addImportPath( pathinfo ( $input_path, PATHINFO_DIRNAME ) );
-				foreach ($this->style_import_paths as $path) {
-					$parser->scss->addImportPath($path);
-				}
-				$parser->checkedCachedCompile($input_path, $output_path);
-			} else {
-				$parser->checkedCachedCompile($input_path, $output_path);
-			}		
+			$parser->checkedCachedCompile($input_path, $output_path);
 		}
 		catch (Exception $ex)
 		{
@@ -394,7 +363,7 @@ class HeadItems
 	 * @param type $functions
 	 * @return \Leafo\ScssPhp\Server|boolean
 	 */
-	function get_scss_parser($variables, $functions)
+	function get_scss_parser($variables, $functions, $url = null)
 	{
 		if(!include_once(SCSSPHP_INC.'scss.inc.php'))
 		{
@@ -405,10 +374,24 @@ class HeadItems
 		$scss = new Leafo\ScssPhp\Compiler();
 		$scss->setFormatter('Leafo\ScssPhp\Formatter\Compressed');
 		$scss->setVariables($variables);
+
 		foreach ($functions as $name => $func)
 		{
 			$scss->registerFunction($name, $func);
 		}
+
+		$input_path = null;
+		if ($url) {
+			list($input_path, $ok) = $this->derive_input_path_from_url($url);
+		}
+		$scss->addImportPath(WEB_PATH);
+		if ($input_path) {
+			$scss->addImportPath( pathinfo ( $input_path, PATHINFO_DIRNAME ) );
+		}
+		foreach ($this->style_import_paths as $path) {
+			$scss->addImportPath($path);
+		}
+
 
 		return new \Leafo\ScssPhp\Server('.', '.', $scss);
 	}
@@ -633,5 +616,31 @@ class HeadItems
 			$html_items = array_merge($top_html_items, $non_top_html_items);
 		}
 		$html_items = array_reverse(array_unique(array_reverse($html_items))); // removes duplicates - leaving only last instance of a string
+	}
+
+	/**
+	 * @param $url
+	 * @return array result contains the input_path as well as a flag to indicate if a file exists at that input_path
+	 */
+	private function derive_input_path_from_url($url)
+	{
+		// strip leading slash from $url
+		$input_path = WEB_PATH . substr($url, 1);
+		$file_exists = false;
+
+		if (file_exists($input_path)) {
+			$file_exists = true;
+		} else {
+			if (strpos($url, REASON_HTTP_BASE_PATH) === 0) {
+				// see if it's local
+				$local_url = REASON_HTTP_BASE_PATH . 'local/' . substr($url, strlen(REASON_HTTP_BASE_PATH));
+				$local_input_path = WEB_PATH . substr($local_url, 1);
+				if (file_exists($local_input_path)) {
+					$input_path = $local_input_path;
+					$file_exists = true;
+				}
+			}
+		}
+		return array($input_path, $file_exists);
 	}
 }

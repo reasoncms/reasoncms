@@ -82,6 +82,14 @@ a.skipLink:focus, a.skipLink:active, a.skipLink:hover {
 	float:right;
 	margin-top:2px;
 }
+.liveness {
+	background:#fff;
+	color:#777;
+	border-radius:.125em;
+	display:inline-block;
+	padding:.125em .25em;
+	font-weight:normal;
+}
 .editor img.lockIndicator {
 	float:left;
 	margin:2px 4px 0 0;
@@ -113,6 +121,10 @@ a.skipLink:focus, a.skipLink:active, a.skipLink:hover {
 }
 .nav {
 	text-decoration: none;
+}
+.searchMini {
+	background:#E9EEF8;
+	padding:.5em .75em;
 }
 .viewFilter {
 	background-color: #8AA3D0;
@@ -387,10 +399,12 @@ div#siteIntro #announcements .announcement>*:last-child {
 div#siteIntro div#siteNotices {
 	float:right;
 	width:33%;
+	margin:0 0 1em 1em;
+	border-left:2px solid #fff;
+	border-bottom:2px solid #fff;
 }
 div#siteIntro div#siteNotices div#siteDesc, div#siteIntro div#siteNotices div#whatsNew, div#siteIntro div#siteNotices div.notLiveNotice {
 	padding:1em;
-	margin:0 0 1em 1em;
 	background-color:#E9EEF8;
 }
 div#siteIntro div#siteNotices div.notLiveNotice h4 {
@@ -613,7 +627,9 @@ div.addlActions a {
 .jumpLinkFind a:hover, .jumpLinkTop a:hover {
 	background-color:#ccc;
 }
-
+.associatorModule .assocList {
+	clear:left;
+}
 
 .nav, .nav:visited, .nav:active {
 	text-decoration: none;
@@ -794,6 +810,8 @@ header .user {
 	div#siteIntro div#siteNotices {
 		float:none;
 		width:auto;
+		border:none;
+		margin-left:0;
 	}
 	div#siteIntro div#siteNotices div#siteDesc, div#siteIntro div#siteNotices div#whatsNew, div#siteIntro div#siteNotices div.notLiveNotice {
 		padding:1em;

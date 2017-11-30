@@ -7,6 +7,7 @@
 /**
  * Register the content manager with Reason
  */
+//ini_set('max_input_vars', 5000);
 reason_include_once( 'content_managers/parent_child.php3' );
 reason_include_once('classes/url_manager.php');
 reason_include_once('classes/page_types.php');
@@ -45,7 +46,7 @@ class MinisitePageManager extends parent_childManager
 	{
 		parent::init_head_items();
 		if ($this->has_url()) {
-			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'content_managers/page_parent_url.js');
+			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'content_managers/page_parent_url.js?v=2');
 			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'content_managers/page.js');
 		}
 		$this->head_items->add_stylesheet(REASON_ADMIN_CSS_DIRECTORY.'content_managers/minisite_page.css?v=2');
@@ -120,7 +121,7 @@ class MinisitePageManager extends parent_childManager
 	
 	function alter_data()
 	{
-		$fields = array('name', 'link_name', 'parent_id', 'parent_info', 'url_fragment', 'custom_page', 'page_type_note', 'content', 'visibility_heading', 'state', 'state_action', 'nav_display', 'indexable','metadata_heading', 'author','description', 'keywords', 'administrator_section_heading', 'extra_head_content_structured', 'extra_head_content', 'unique_name');
+		$fields = array('name', 'link_name', 'parent_id', 'parent_info', 'url_fragment', 'custom_page', 'page_type_note', 'content', 'visibility_heading', 'state', 'state_action', 'nav_display', 'indexable','metadata_heading', 'author','description', 'keywords', 'language', 'administrator_section_heading', 'extra_head_content_structured', 'extra_head_content', 'unique_name');
 		
 		parent::alter_data();
 		$this->_no_tidy[] = 'url_fragment';
@@ -130,6 +131,8 @@ class MinisitePageManager extends parent_childManager
 		
 		$this->set_allowable_html_tags('extra_head_content','all');
 		$this->set_allowable_html_tags('extra_head_content_structured','all');
+		
+		$this->change_element_type( 'language' , 'language', array('language_set' => 'ISO-639-1', 'top_languages'=>array(REASON_DEFAULT_CONTENT_LANGUAGE), 'country_variants' => true, 'add_empty_value_to_top' => true, 'show_codes' => true ) );
 
 		$this->add_element( 'is_link', 'hidden' );
 		if( !empty( $_REQUEST[ 'is_link' ] ) OR $this->get_value( 'url' ) )
@@ -176,7 +179,6 @@ class MinisitePageManager extends parent_childManager
 			// You may need to change the javascript to see any wording change here.
 			$this->set_comments( 'url_fragment', form_comment('<span class="url_comment_replace">The final part of the page\'s Web address.</span> <span class="rules">Only use letters and numbers; separate words with hyphens (-). Please avoid upper-case letters.</span>') );
 			$this->add_required( 'url_fragment' );
-			$this->_add_page_url_elements($this->_available_parents);
 		}
 
 		if (!$this->get_value('link_name')) $this->set_value('link_name', $this->get_value('name'));
@@ -280,10 +282,20 @@ class MinisitePageManager extends parent_childManager
 				ksort($options);
 				$primary = $this->get_element_property('custom_page', 'options');
 				if(!empty($primary))
+				{
 					$this->change_element_type( 'custom_page' , 'radio_with_other_no_sort' , array( 'options' => $primary, 'other_options' => $options ) );
+				}
 				else
+				{
 					$this->change_element_type('custom_page' , 'select_no_sort', array( 'options' => $options ));
-				$this->set_comments( 'custom_page', form_comment('<a href="'.REASON_HTTP_BASE_PATH.'scripts/page_types/view_page_type_info.php">Page type definitions</a>.') );
+				}
+				$url = REASON_HTTP_BASE_PATH.'scripts/page_types/view_page_type_info.php';
+				$comment = '<a href="'.htmlspecialchars($url).'">Page type definitions</a>';
+				if($this->get_value('custom_page'))
+				{
+					$comment .=  ' &bull; <a href="'.htmlspecialchars($url).'#'.urlencode($this->get_value('custom_page')).'">'.htmlspecialchars(prettify_string($this->get_value('custom_page'))).' page type definition</a>';
+				}
+				$this->set_comments( 'custom_page', form_comment($comment) );
 
 			}
 			
@@ -302,6 +314,7 @@ class MinisitePageManager extends parent_childManager
 			$this->set_comments( 'description', form_comment('A brief summary of the page. For best results when the page is indexed by search engines, try to not exceed 156 characters.') );
 			$this->set_comments( 'keywords', form_comment('Comma-separated keywords (for search engines) ie "Dave, Hendler, College, Relations"') );
 			$this->set_comments( 'parent_id', form_comment(''));
+			$this->add_comments('language', form_comment('If this page is a different language than other pages on this site, please specify the language here.'));
 			$this->change_element_type( 'url', 'hidden' );
 
 			
@@ -311,7 +324,7 @@ class MinisitePageManager extends parent_childManager
 		else
 		{
 			// loop through all elements making them hidden, except for the important link fields
-			$fields = array( 'name', 'url', 'parent_id', 'nav_display', 'description', 'administrator_section_heading', 'unique_name', );
+			$fields = array( 'name', 'url', 'parent_id', 'nav_display', 'description', 'language', 'administrator_section_heading', 'unique_name', );
 			foreach($this->get_element_names() as $element_name)
 			{
 				if( !in_array( $element_name, $fields ) )
@@ -328,6 +341,7 @@ class MinisitePageManager extends parent_childManager
 			$this->set_comments( 'name', form_comment('The title of link displayed in your site\'s navigation.') );
 			$this->set_comments( 'parent_id', form_comment('Use this field to choose the link\'s parent page.') );
 			$this->set_comments( 'description', form_comment('A brief description for this link; only displayed if the parent page shows its children.') );
+			$this->add_comments('language', form_comment('If the title/description of this link is in a different language than other content on this site, please specify the language here.'));
 		}
 		
 		// Suggest a limit of 156 characters so that google will display the complete description.
@@ -360,11 +374,12 @@ class MinisitePageManager extends parent_childManager
 	
 	function _add_page_url_elements($parents)
 	{
-		foreach($this->build_path_map($parents) as $id=>$path)
+		
+		/* foreach($this->build_path_map($parents) as $id=>$path)
 		{
 			$this->add_element('path_to_'.$id, 'protected');
 			$this->set_value('path_to_'.$id, $path);
-		}
+		} */
 	}
 	
 	function on_first_time()
@@ -493,7 +508,20 @@ class MinisitePageManager extends parent_childManager
 		
 		$roots = $this->root_node();
 		if( $this->is_new_entity() && $this->has_url() && !empty($roots))
+		{
 			echo '&raquo; <a href="'.$this->admin_page->make_link( array( 'is_link' => 1, 'parent_id' => $this->get_value('parent_id') ) ).'">Create an external link instead of a page.</a><br /><br />';
+		}
+	}
+	
+	function post_show_form()
+	{
+		parent::post_show_form();
+		
+		if($this->has_url())
+		{
+			$json = json_encode($this->build_path_map($this->_available_parents));
+			echo '<script>var pageUrls = '.$json.'</script>';
+		}
 	}
 	
 	function finish()

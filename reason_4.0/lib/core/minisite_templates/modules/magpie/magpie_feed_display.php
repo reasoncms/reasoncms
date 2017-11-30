@@ -30,10 +30,12 @@
             'display_timestamp'=>false,
             'show_entries_lacking_description'=>false,
             'disable_cache'=>false,
+			'options' => array(),
 		);
 		var $feed_location;
 		var $is_remote;
 		var $options;
+		var $availOptions = ['num_posts','field_title','field_words','future_posts'];
 		function init( $args = array() )
 		{
 			parent::init( $args );
@@ -47,6 +49,17 @@
 			{
 				$this->feed_location = $this->params['feed_location'];
 				$this->is_remote = $this->params['is_remote'];
+				if (!empty($this->params['options']))
+				{
+                    $entOptions = [];
+					foreach($this->availOptions as $option){
+						if (isset($this->params['options'][$option]))
+							$entOptions[$option] = $this->params['options'][$option];
+						else
+							$entOptions[$option] = '';
+					}
+					$this->options = $entOptions;
+				}
 			}
             if(!empty($this->params['display_timestamp']))
             {
@@ -76,8 +89,7 @@
 					$url = current($urls);
 					$cache[$this->parent->cur_page->id()] = $url->get_value('url');
 					$entOptions = [];
-					$availOptions = ['num_posts','field_title','field_words','future_posts'];
-					foreach($availOptions as $option){
+					foreach($this->availOptions as $option){
 						$entOptions[$option] = $url->get_value($option);
 					}
 					$this->options = $entOptions;

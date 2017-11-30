@@ -183,8 +183,8 @@ class reasonUpgradeAssistant
 		{
 			foreach($files as $file)
 			{
-				// skip .swp files in the upgrade dir.
-				if (strpos($file, ".swp") == strlen($file) - 4) { continue; }
+				// skip non-php files in the upgrade dir.
+				if (!strpos($file, ".php") == strlen($file) - 4) { continue; }
 
 				reason_include_once($dir_path.$file);
 				$name = basename($file, '.php');
