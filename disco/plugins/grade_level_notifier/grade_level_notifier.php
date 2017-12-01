@@ -58,8 +58,8 @@
 			foreach( $this->fields as $field)
 			{
 				$element_value = $this->disco_form->get_value( $field );
-				$textStatistics = new DaveChild\TextStatistics\TextStatistics;
-				$grade_level = $textStatistics->fleschKincaidGradeLevel( $element_value );
+				
+				$grade_level = self::get_grade_level($element_value);
 								
 				$formatted_grade_level_notification = '<div class="smallText gradeLevelNotification">' .
 					'Current Reading Grade Level: <span class="currentGradeLevel">' . $grade_level . '</span></div>';
@@ -67,6 +67,29 @@
 				$this->disco_form->add_comments($field, $formatted_grade_level_notification);
 			}
 		}
+		
+		public static function html_to_string($html)
+		{
+			// strip tags so they don't become part of the calculation
+			$text = strip_tags( $html );
+			
+			// decode html entities so they become normal characters
+			$text = html_entity_decode( $text, ENT_HTML5, 'UTF-8' );
+			
+			// Replace multiple whitepace chars with single spaces again
+			mb_internal_encoding('UTF-8');
+			$text = preg_replace('/\p{Z}/u', ' ', $text);
+	
+			// trim
+			$text = trim($text);
+			
+			return $text;
+		}
+		
+		public static function get_grade_level($html)
+		{
+			$textStatistics = new DaveChild\TextStatistics\TextStatistics;
+			return $textStatistics->fleschKincaidGradeLevel( self::html_to_string($html) );
+		}
 	}
-?>
 
