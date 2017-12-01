@@ -89,6 +89,10 @@
 		public static function get_grade_level($html)
 		{
 			$textStatistics = new DaveChild\TextStatistics\TextStatistics;
+			if(method_exists($textStatistics, 'setMaxGradeLevel'))
+			{
+				$textStatistics->setMaxGradeLevel(24);
+			}
 			return $textStatistics->fleschKincaidGradeLevel( self::html_to_string($html) );
 		}
 	}
