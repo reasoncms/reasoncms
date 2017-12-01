@@ -353,6 +353,7 @@ class MinisitePageManager extends parent_childManager
 		// Add reading level notifier plugin to content editor
 		$readlevelnotif = new DiscoGradeLevelNotifier($this);
 		$readlevelnotif->add_field('content');
+		$readlevelnotif->add_field('description');
 		
 		$administrator_fields = array('extra_head_content_structured', 'extra_head_content', 'unique_name');
 		$has_administrator_field = false;
