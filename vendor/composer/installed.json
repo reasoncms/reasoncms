@@ -2197,17 +2197,17 @@
     },
     {
         "name": "davechild/textstatistics",
-        "version": "1.0.1",
-        "version_normalized": "1.0.1.0",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
         "source": {
             "type": "git",
-            "url": "https://github.com/DaveChild/Text-Statistics.git",
-            "reference": "6196462b4fe730a8ff0019036baf362295c161b3"
+            "url": "https://github.com/carleton/Text-Statistics.git",
+            "reference": "da354f87730b1fff17aefac8ce5a1979ccfd5300"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/DaveChild/Text-Statistics/zipball/6196462b4fe730a8ff0019036baf362295c161b3",
-            "reference": "6196462b4fe730a8ff0019036baf362295c161b3",
+            "url": "https://api.github.com/repos/carleton/Text-Statistics/zipball/da354f87730b1fff17aefac8ce5a1979ccfd5300",
+            "reference": "da354f87730b1fff17aefac8ce5a1979ccfd5300",
             "shasum": ""
         },
         "require": {
@@ -2220,20 +2220,19 @@
             "ext-bcmath": "More accurate floating point calculations.",
             "ext-mbstring": "Handle multi-byte text properly."
         },
-        "time": "2015-04-22T14:55:55+00:00",
+        "time": "2017-12-01T21:42:39+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
                 "dev-master": "1.0.x-dev"
             }
         },
-        "installation-source": "dist",
+        "installation-source": "source",
         "autoload": {
             "psr-0": {
                 "DaveChild\\TextStatistics": "src"
             }
         },
-        "notification-url": "https://packagist.org/downloads/",
         "license": [
             "BSD-2-Clause"
         ],
@@ -2246,6 +2245,9 @@
             }
         ],
         "description": "PHP package to measure the readability of text according to various algorithms.",
-        "homepage": "https://github.com/DaveChild/Text-Statistics"
+        "homepage": "https://github.com/DaveChild/Text-Statistics",
+        "support": {
+            "source": "https://github.com/carleton/Text-Statistics/tree/master"
+        }
     }
 ]

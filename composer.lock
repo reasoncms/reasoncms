@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "0aa0ac9e465e211c450bb7a8debe162d",
+    "content-hash": "1a7f12dbac9dc257fd60b921b5970e1e",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -169,16 +169,16 @@
         },
         {
             "name": "davechild/textstatistics",
-            "version": "1.0.1",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/DaveChild/Text-Statistics.git",
-                "reference": "6196462b4fe730a8ff0019036baf362295c161b3"
+                "url": "https://github.com/carleton/Text-Statistics.git",
+                "reference": "da354f87730b1fff17aefac8ce5a1979ccfd5300"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/DaveChild/Text-Statistics/zipball/6196462b4fe730a8ff0019036baf362295c161b3",
-                "reference": "6196462b4fe730a8ff0019036baf362295c161b3",
+                "url": "https://api.github.com/repos/carleton/Text-Statistics/zipball/da354f87730b1fff17aefac8ce5a1979ccfd5300",
+                "reference": "da354f87730b1fff17aefac8ce5a1979ccfd5300",
                 "shasum": ""
             },
             "require": {
@@ -202,7 +202,6 @@
                     "DaveChild\\TextStatistics": "src"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-2-Clause"
             ],
@@ -216,7 +215,10 @@
             ],
             "description": "PHP package to measure the readability of text according to various algorithms.",
             "homepage": "https://github.com/DaveChild/Text-Statistics",
-            "time": "2015-04-22T14:55:55+00:00"
+            "support": {
+                "source": "https://github.com/carleton/Text-Statistics/tree/master"
+            },
+            "time": "2017-12-01T21:42:39+00:00"
         },
         {
             "name": "doctrine/instantiator",
@@ -2179,7 +2181,9 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "davechild/textstatistics": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
