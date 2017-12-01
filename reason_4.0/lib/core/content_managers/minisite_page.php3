@@ -7,6 +7,7 @@
 /**
  * Register the content manager with Reason
  */
+//ini_set('max_input_vars', 5000);
 reason_include_once( 'content_managers/parent_child.php3' );
 reason_include_once('classes/url_manager.php');
 reason_include_once('classes/page_types.php');
@@ -14,6 +15,7 @@ reason_include_once('minisite_templates/page_types.php');
 reason_require_once( 'minisite_templates/page_types.php' );
 reason_include_once( 'classes/plasmature/head_items.php' );
 include_once( DISCO_INC . 'plugins/input_limiter/input_limiter.php' );
+include_once( DISCO_INC . 'plugins/grade_level_notifier/grade_level_notifier.php' );
 
 $GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'MinisitePageManager';
 
@@ -44,7 +46,7 @@ class MinisitePageManager extends parent_childManager
 	{
 		parent::init_head_items();
 		if ($this->has_url()) {
-			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'content_managers/page_parent_url.js');
+			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'content_managers/page_parent_url.js?v=2');
 			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'content_managers/page.js');
 		}
 		$this->head_items->add_stylesheet(REASON_ADMIN_CSS_DIRECTORY.'content_managers/minisite_page.css?v=2');
@@ -177,7 +179,6 @@ class MinisitePageManager extends parent_childManager
 			// You may need to change the javascript to see any wording change here.
 			$this->set_comments( 'url_fragment', form_comment('<span class="url_comment_replace">The final part of the page\'s Web address.</span> <span class="rules">Only use letters and numbers; separate words with hyphens (-). Please avoid upper-case letters.</span>') );
 			$this->add_required( 'url_fragment' );
-			$this->_add_page_url_elements($this->_available_parents);
 		}
 
 		if (!$this->get_value('link_name')) $this->set_value('link_name', $this->get_value('name'));
@@ -349,6 +350,11 @@ class MinisitePageManager extends parent_childManager
 		$limiter->suggest_limit('description', 156);
 		$limiter->auto_show_hide('description', false);
 		
+		// Add reading level notifier plugin to content editor
+		$readlevelnotif = new DiscoGradeLevelNotifier($this);
+		$readlevelnotif->add_field('content');
+		$readlevelnotif->add_field('description');
+		
 		$administrator_fields = array('extra_head_content_structured', 'extra_head_content', 'unique_name');
 		$has_administrator_field = false;
 		foreach($administrator_fields as $field)
@@ -369,11 +375,12 @@ class MinisitePageManager extends parent_childManager
 	
 	function _add_page_url_elements($parents)
 	{
-		foreach($this->build_path_map($parents) as $id=>$path)
+		
+		/* foreach($this->build_path_map($parents) as $id=>$path)
 		{
 			$this->add_element('path_to_'.$id, 'protected');
 			$this->set_value('path_to_'.$id, $path);
-		}
+		} */
 	}
 	
 	function on_first_time()
@@ -502,7 +509,20 @@ class MinisitePageManager extends parent_childManager
 		
 		$roots = $this->root_node();
 		if( $this->is_new_entity() && $this->has_url() && !empty($roots))
+		{
 			echo '&raquo; <a href="'.$this->admin_page->make_link( array( 'is_link' => 1, 'parent_id' => $this->get_value('parent_id') ) ).'">Create an external link instead of a page.</a><br /><br />';
+		}
+	}
+	
+	function post_show_form()
+	{
+		parent::post_show_form();
+		
+		if($this->has_url())
+		{
+			$json = json_encode($this->build_path_map($this->_available_parents));
+			echo '<script>var pageUrls = '.$json.'</script>';
+		}
 	}
 	
 	function finish()

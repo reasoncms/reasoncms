@@ -1246,7 +1246,9 @@
 	{
 		$user_id = (integer) $user_id;
 		if(empty($user_id))
+		{
 			return false;
+		}
 		static $privs_cache = array();
 		if(empty($cache[$user_id]))
 		{
@@ -1299,11 +1301,15 @@
 				foreach($roles as $role)
 				{
 					if($role->get_value('unique_name'))
+					{
 						$roles_cache[$user_id][] = $role->get_value('unique_name');
+					}
 				}
 			}
 			if(empty($roles_cache[$user_id]))
+			{
 				$roles_cache[$user_id][] = 'editor_user_role';
+			}
 		}
 		return $roles_cache[$user_id];
 	}
@@ -1352,6 +1358,18 @@
 	 */
 	function reason_get_privs_table()
 	{
+		if(isset($GLOBALS['reason_role_privileges']))
+		{
+			return $GLOBALS['reason_role_privileges'];
+		}
+		
+		static $errored = false;
+		if(!$errored)
+		{
+			trigger_error('Unable to find the $GLOBALS[\'reason_role_privileges\'] setting. Falling back to the legacy role privileges array.');
+			$errored = true;
+		}
+		
 		return array(
 				'contribute_only_role'=>array('add','edit_pending','delete_pending',),
 				'editor_user_role'=>array('add','edit_pending','delete_pending','edit','delete','publish','borrow','expunge','switch_theme',),

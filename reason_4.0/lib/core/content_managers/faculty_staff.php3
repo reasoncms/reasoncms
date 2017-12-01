@@ -7,6 +7,7 @@
 	 * Register content manager with Reason
 	 */
 	$GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'faculty_staff_handler';
+	include_once( DISCO_INC . 'plugins/grade_level_notifier/grade_level_notifier.php' );
 
 	/**
 	 * A content manager for faculty/staff (e.g. people in directory service)
@@ -46,6 +47,10 @@
 			$this->set_display_name('content',$pre.'Personal Information');
 
 			$this->change_element_type( 'content' , html_editor_name($this->admin_page->site_id) , html_editor_params($this->admin_page->site_id, $this->admin_page->user_id) );
+			
+			// Add reading level notifier plugin to content editor
+			$readlevelnotif = new DiscoGradeLevelNotifier($this);
+			$readlevelnotif->add_field('content');
 
 			if( !reason_user_has_privs( $this->admin_page->user_id , 'manage_integration_settings' ) )
 				$this->change_element_type( 'ldap_created' , 'hidden' );

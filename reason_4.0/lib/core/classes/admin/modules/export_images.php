@@ -17,6 +17,7 @@ reason_include_once('classes/admin/modules/default.php');
  */
 class ReasonExportImagesModule extends DefaultModule
 {
+	protected $errors = array();
 	function init()
 	{
 		$this->admin_page->title = 'Export Images';
@@ -63,6 +64,7 @@ class ReasonExportImagesModule extends DefaultModule
 			}
 			
 			$paths = $this->get_paths_for_images($images);
+			
 			
 			if(empty($paths))
 			{
@@ -151,23 +153,34 @@ class ReasonExportImagesModule extends DefaultModule
 		{
 			$type = 'original';
 			$path = reason_get_image_path($image, $type);
-			if(empty($path))
+			if(empty($path) || !file_exists($path))
 			{
 				$type = 'standard';
 				$path = reason_get_image_path($image, $type );
 			}
-			if(empty($path))
+			if(empty($path) || !file_exists($path))
 			{
 				$type = 'thumbnail';
 				$path = reason_get_image_path($image, 'thumbnail');
 			}
-			if(!empty($path) && file_exists($path))
+			if(!empty($path))
 			{
-				$paths[$image->id()] = array(
-					'path' => $path,
-					'filename' => reason_get_image_filename($image, $type),
-					'image' => $image,
-				);
+				if(file_exists($path))
+				{
+					$paths[$image->id()] = array(
+						'path' => $path,
+						'filename' => reason_get_image_filename($image, $type),
+						'image' => $image,
+					);
+				}
+				else
+				{
+					$this->errors[] = 'File not found for image id ' . $image->id() . ' at ' . $path;
+				}
+			}
+			else
+			{
+				$this->errors[] = 'No image path found for image id '.$image->id();
 			}
 		}
 		return $paths;
