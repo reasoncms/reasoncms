@@ -4,6 +4,9 @@
  * @author Nathaniel MacArthur-Warner
  */
 	
+	/**
+	 * Include dependencies
+	 */
 	include_once( 'paths.php');
 	include_once( CARL_UTIL_INC . 'dev/pray.php' );
 	include_once( CARL_UTIL_INC . 'basic/misc.php' );
@@ -15,26 +18,44 @@
 	include_once( DISCO_INC . 'disco.php' );
 	
 	/**
-	 * Class to support notification of grade level in disco forms
+	 * Define constants
 	 */
+	if(!defined('GRADE_LEVEL_NOTIFIER_MAX_GRADE_LEVEL'))
+	{
+		define('GRADE_LEVEL_NOTIFIER_MAX_GRADE_LEVEL', 24);
+	}
 	
+	/**
+	 * Class to support notification of grade level in disco forms
+	 *
+	 * Example usage:
+	 *
+	 * $readlevelnotif = new DiscoGradeLevelNotifier($disco);
+	 *
+	 * $readlevelnotif->add_field('content');
+	 *
+	 * @todo add support for grade level thresholds (color coding, messages)
+	 * @todo add support for different readability indexes
+	 * @todo add support for requiring certain reading levels (e.g. error if reading level is above or below certain point)
+	 */
 	class DiscoGradeLevelNotifier
 	{
 		/**
 		 * The disco form containing the fields to notify the grade level of
 		 * @var object
 		 */
-		private $disco_form;
+		protected $disco_form;
 		
 		/**
 		 * An array containing field => suggested grade level
 		 * @var array
 		 */
-		private $fields = array();
+		protected $fields = array();
 		
 		/**
 		 * Disco form must be passed in -- callbacks will be attached to various process points in disco
 		 * @param disco_form The Disco form containing fields whose input should be checked and have the author informed of its grade level
+		 * @param disco-object $disco_form
 		 */
 		public function __construct( $disco_form )
 		{
@@ -43,16 +64,32 @@
 			$this->disco_form->add_callback( array( $this, 'add_grade_level_comment' ), 'on_every_time' );
 		}
 		
+		/**
+		 * Output the necessary javascript
+		 * @return void
+		 */
 		public function include_js()
 		{
 			echo '<script src="' . REASON_PACKAGE_HTTP_BASE_PATH . 'disco/plugins/grade_level_notifier/grade_level_notifier.js' . '"></script>';
 		}
 		
+		/**
+		 * Apply the reading level report to a given field
+		 * @param string $field_name
+		 * @return void
+		 */
 		public function add_field( $field_name )
 		{
 			array_push( $this->fields, $field_name );
 		}
 		
+		/**
+		 * Add comments to the fields to display grade levels
+		 *
+		 * Used in a callback
+		 *
+		 * @return void
+		 */
 		public function add_grade_level_comment()
 		{
 			foreach( $this->fields as $field)
@@ -68,6 +105,15 @@
 			}
 		}
 		
+		/**
+		 * Convert UTF-8 HTML to a string for grade level analysis
+		 *
+		 * Removes tags, converts html entities to UTF-8 characters, and strips out whitepace
+		 * as preparation for runing through the TextStatistics library.
+		 *
+		 * @param string $html (UTF-8 encoded)
+		 * @return string plain text (UTF-8 encoded)
+		 */
 		public static function html_to_string($html)
 		{
 			// strip tags so they don't become part of the calculation
@@ -86,12 +132,18 @@
 			return $text;
 		}
 		
+		/**
+		 * Get the reading grade level of a given HTML string
+		 *
+		 * @param string $html
+		 * @return float Grade level
+		 */
 		public static function get_grade_level($html)
 		{
 			$textStatistics = new DaveChild\TextStatistics\TextStatistics;
 			if(method_exists($textStatistics, 'setMaxGradeLevel'))
 			{
-				$textStatistics->setMaxGradeLevel(24);
+				$textStatistics->setMaxGradeLevel(GRADE_LEVEL_NOTIFIER_MAX_GRADE_LEVEL);
 			}
 			return $textStatistics->fleschKincaidGradeLevel( self::html_to_string($html) );
 		}
