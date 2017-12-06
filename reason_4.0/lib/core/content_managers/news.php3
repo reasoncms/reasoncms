@@ -7,6 +7,7 @@
 	 * Register the content manager with Reason
 	 */
 	include_once( DISCO_INC . 'plugins/input_limiter/input_limiter.php' );
+	include_once( DISCO_INC . 'plugins/grade_level_notifier/grade_level_notifier.php' );
 
 	$GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'news_handler';
 
@@ -74,7 +75,10 @@
 		$limiter->suggest_limit('meta_description', 156);
 		$limiter->auto_show_hide('meta_description', false);
 
-
+		// Add reading level notifier plugin to content editor
+		$readlevelnotif = new DiscoGradeLevelNotifier($this);
+		$readlevelnotif->add_field('content');
+		$readlevelnotif->add_field('description');
 
 
 			//make more sophisticated changes to the content manager
