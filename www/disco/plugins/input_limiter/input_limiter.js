@@ -39,7 +39,7 @@ $(document).ready(function()
             $.get(counter_src, 
                 {text: current_text},
                 function(returned_count)
-                {                
+                {
                     chars_remaining = char_limit - returned_count;
                     chars_remaining_element.html(chars_remaining);
                     var over_limit = -chars_remaining;
@@ -74,15 +74,18 @@ $(document).ready(function()
     }
         
     //bind chatacter count upon keyup events in text areas
-	$('div.inputLimitNote').siblings('textarea, :text').bind('keyup', function()
+	$('div.inputLimitNote').siblings('textarea, :text').on('keyup', function(e)
 	{
 		// if an AJAX call was in queue to be made, replace it with a new one
-		if(typeof(t_out) != 'undefined')
+		if(typeof(input_limiter_timeout) != 'undefined')
 		{
-			clearTimeout(t_out);
+			clearTimeout(input_limiter_timeout);
 		}
 		var copy_of_this = $(this);
-		t_out = setTimeout(function(){ count_and_update(copy_of_this, copy_of_this.val()) }, 700);
+		//count_and_update(copy_of_this, copy_of_this.val());
+		input_limiter_timeout = setTimeout(function(){
+			count_and_update(copy_of_this, copy_of_this.val());
+		}, 700);
 	});
 	// trigger character count upon the first rendering of page
     $('div.inputLimitNote').siblings('textarea, :text').each(function(){
@@ -98,11 +101,11 @@ $(document).ready(function()
 			function handler(){
 				var text_element = $(iframeNode).parents('.loki');
 				var cur_text = $(this).html();
-				if(typeof(t_out) != 'undefined')
+				if(typeof(input_limiter_timeout) != 'undefined')
 				{
-					clearTimeout(t_out);
+					clearTimeout(input_limiter_timeout);
 				}
-				t_out = setTimeout(function(){ count_and_update(text_element, cur_text) }, 700);
+				input_limiter_timeout = setTimeout(function(){ count_and_update(text_element, cur_text) }, 700);
 			}
 			$(this).contents().find("body").unbind('keyup', handler);
 			$(this).contents().find("body").keyup(handler);
@@ -132,11 +135,11 @@ $(document).ready(function()
 		$(document).on('keyup', '.loki textarea', function(){
 			var text_element = $(this).parents('.loki');
 			var cur_text = $(this).val();
-			if(typeof(t_out) != 'undefined')
+			if(typeof(input_limiter_timeout) != 'undefined')
 			{
-				clearTimeout(t_out);
+				clearTimeout(input_limiter_timeout);
 			}
-			t_out = setTimeout(function(){ count_and_update(text_element, cur_text) }, 700);
+			input_limiter_timeout = setTimeout(function(){ count_and_update(text_element, cur_text) }, 700);
 		});
 	});
 
@@ -150,11 +153,11 @@ $(document).ready(function()
 					editor.on('KeyUp', function(e) {
 						var elementToUpdate = container;
 						var content = editor.getContent();
-						if(typeof(t_out) != 'undefined')
+						if(typeof(input_limiter_timeout) != 'undefined')
 						{
-							clearTimeout(t_out);
+							clearTimeout(input_limiter_timeout);
 						}
-						t_out = setTimeout(function(){ count_and_update(elementToUpdate, editor.getContent()) }, 700);
+						input_limiter_timeout = setTimeout(function(){ count_and_update(elementToUpdate, editor.getContent()) }, 700);
 					});
 				}
 			});

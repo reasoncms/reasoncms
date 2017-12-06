@@ -28,15 +28,15 @@ $(document).ready(function()
 	}
 	
 	// bind grade level determination upon keyup events in text areas
-	$('div.gradeLevelNotification').siblings('textarea, :text').bind('keyup', function()
+	$('div.gradeLevelNotification').siblings('textarea, :text').on('keyup', function(e)
 	{
 		// if an AJAX call was in queue to be made, replace it with a new one
-		if(typeof(t_out) != 'undefined')
+		if(typeof(grade_level_timeout) != 'undefined')
 		{
-			clearTimeout(t_out);
+			clearTimeout(grade_level_timeout);
 		}
 		var copy_of_this = $(this);
-		t_out = setTimeout(function(){ determine_and_update(copy_of_this, copy_of_this.val()) }, 700);
+		grade_level_timeout = setTimeout(function(){ determine_and_update(copy_of_this, copy_of_this.val()) }, 700);
 	});
 	
 	// trigger grade level determination upon the first rendering of page
@@ -53,11 +53,11 @@ $(document).ready(function()
 			function handler(){
 				var text_element = $(iframeNode).parents('.loki');
 				var cur_text = $(this).html();
-				if(typeof(t_out) != 'undefined')
+				if(typeof(grade_level_timeout) != 'undefined')
 				{
-					clearTimeout(t_out);
+					clearTimeout(grade_level_timeout);
 				}
-				t_out = setTimeout(function(){ determine_and_update(text_element, cur_text) }, 700);
+				grade_level_timeout = setTimeout(function(){ determine_and_update(text_element, cur_text) }, 700);
 			}
 			$(this).contents().find("body").unbind('keyup', handler);
 			$(this).contents().find("body").keyup(handler);
@@ -87,11 +87,11 @@ $(document).ready(function()
 		$(document).on('keyup', '.loki textarea', function(){
 			var text_element = $(this).parents('.loki');
 			var cur_text = $(this).val();
-			if(typeof(t_out) != 'undefined')
+			if(typeof(grade_level_timeout) != 'undefined')
 			{
-				clearTimeout(t_out);
+				clearTimeout(grade_level_timeout);
 			}
-			t_out = setTimeout(function(){ determine_and_update(text_element, cur_text) }, 700);
+			grade_level_timeout = setTimeout(function(){ determine_and_update(text_element, cur_text) }, 700);
 		});
 	});
 
@@ -105,11 +105,11 @@ $(document).ready(function()
 					editor.on('KeyUp', function(e) {
 						var elementToUpdate = container;
 						var content = editor.getContent();
-						if(typeof(t_out) != 'undefined')
+						if(typeof(grade_level_timeout) != 'undefined')
 						{
-							clearTimeout(t_out);
+							clearTimeout(grade_level_timeout);
 						}
-						t_out = setTimeout(function(){ determine_and_update(elementToUpdate, editor.getContent()) }, 700);
+						grade_level_timeout = setTimeout(function(){ determine_and_update(elementToUpdate, editor.getContent()) }, 700);
 					});
 				}
 			});
