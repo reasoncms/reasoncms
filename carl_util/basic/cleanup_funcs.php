@@ -305,6 +305,17 @@
 	}
 	
 	/**
+	 * Prep a string for use in a slug
+	 *
+	 * @param $string string
+	 * @param $separator what to use instead of whitespace
+	 * @return slug
+	 */
+	function sanitize_slug($string, $separator = '_') {
+		return preg_replace(array('/[\s\/]+/','/[^a-z0-9_-]/'), array($separator,''), mb_strtolower(trim($string)));
+	}
+	
+	/**
 	 * Sanitizes HTML using HTMLPurifier - accepts custom config object.
 	 * 
 	 * @param string html string needing sanitization
