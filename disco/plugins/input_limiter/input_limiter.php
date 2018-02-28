@@ -69,7 +69,7 @@
 	     */
 	    public function include_js()
 	    {
-	        echo '<script src="'. REASON_PACKAGE_HTTP_BASE_PATH . 'disco/plugins/input_limiter/input_limiter.js?v=2' .'"></script>';
+	        echo '<script src="'. REASON_PACKAGE_HTTP_BASE_PATH . 'disco/plugins/input_limiter/input_limiter.js?v=3' .'"></script>';
 	    }
 	    
 	    

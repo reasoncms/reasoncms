@@ -9,7 +9,6 @@ $(document).ready(function()
 {
 
 
-
     /* 
         - Triggers an AJAX call to count the characters (for consistency on the server-side) 
         - Displays how many characters remain to be used once user gets within 20 characters of limit (hidden otherwise). 
@@ -18,7 +17,7 @@ $(document).ready(function()
     
     // figure out where the counter php script is located -- should be in same directory as this script
     var counter_src = new String();
-    $('script[src$= "input_limiter.js"]:first').each(function() {
+    $('script[src*="/input_limiter.js"]:first').each(function() {
         var script_src = $(this).attr('src');
         counter_src = script_src.replace('input_limiter.js', 'get_char_count.php');
     });
@@ -31,7 +30,6 @@ $(document).ready(function()
         var char_limit = parseInt(limit_note.children('span.charLimit').html());
         var chars_remaining_element = limit_note.children('span.charsRemaining');
         var auto_show_hide = limit_note.hasClass("autoShowHide");
-        
         // only make the AJAX call if within what JS considers to be 20
         // characters of the limit
         if( !auto_show_hide || (current_text.length > (char_limit - 20) ))
