@@ -4,7 +4,7 @@ class BootstrapCest
 
     protected $bootstrapPath;
 
-    function _before(\CliGuy $I)
+    public function _before(\CliGuy $I)
     {
         $this->bootstrapPath = 'tests/data/sandbox/boot'.uniqid();
         @mkdir($this->bootstrapPath, 0777, true);
@@ -16,14 +16,12 @@ class BootstrapCest
         $I->executeCommand('bootstrap');
         $I->seeFileFound('codeception.yml');
         $this->checkFilesCreated($I);
-        $I->seeInShellOutput('Building Actor classes for suites');
     }
 
     public function bootstrapWithNamespace(\CliGuy $I)
     {
         $I->executeCommand('bootstrap --namespace Generated');
 
-        $I->seeInShellOutput('Building Actor classes for suites');
         $I->seeFileFound('codeception.yml');
         $I->seeInThisFile('namespace: Generated');
         $I->dontSeeInThisFile('namespace Generated\\');
@@ -39,7 +37,7 @@ class BootstrapCest
     public function bootstrapWithActor(\CliGuy $I)
     {
         $I->executeCommand('bootstrap --actor Ninja');
-        $I->seeFileFound('AcceptanceNinja.php','tests/_support/');
+        $I->seeFileFound('AcceptanceNinja.php', 'tests/_support/');
     }
 
 
@@ -47,32 +45,38 @@ class BootstrapCest
     {
         $I->executeCommand('bootstrap --empty');
         $I->dontSeeFileFound('tests/acceptance');
-        $I->dontSeeFileFound('AcceptanceTester.php','tests/acceptance');
         $I->seeFileFound('codeception.yml');
     }
-    
+
+    public function bootstrapFromInit(\CliGuy $I)
+    {
+        $I->executeCommand('init bootstrap');
+        $this->checkFilesCreated($I);
+    }
+
+    public function bootstrapFromInitUsingClassName(\CliGuy $I)
+    {
+        $I->executeCommand('init "Codeception\Template\Bootstrap"');
+        $this->checkFilesCreated($I);
+    }
+
     protected function checkFilesCreated(\CliGuy $I)
     {
         $I->seeDirFound('tests/_support');
         $I->seeDirFound('tests/_data');
         $I->seeDirFound('tests/_output');
-        $I->seeDirFound('tests/_envs');
 
-        $I->seeFileFound('functional.suite.yml','tests');
-        $I->seeFileFound('acceptance.suite.yml','tests');
-        $I->seeFileFound('unit.suite.yml','tests');
+        $I->seeFileFound('functional.suite.yml', 'tests');
+        $I->seeFileFound('acceptance.suite.yml', 'tests');
+        $I->seeFileFound('unit.suite.yml', 'tests');
 
-        $I->seeFileFound('_bootstrap.php','tests/acceptance');
-        $I->seeFileFound('_bootstrap.php','tests/functional');
-        $I->seeFileFound('_bootstrap.php','tests/unit');
+        $I->seeFileFound('AcceptanceTester.php', 'tests/_support');
+        $I->seeFileFound('FunctionalTester.php', 'tests/_support');
+        $I->seeFileFound('UnitTester.php', 'tests/_support');
 
-        $I->seeFileFound('AcceptanceTester.php','tests/_support');
-        $I->seeFileFound('FunctionalTester.php','tests/_support');
-        $I->seeFileFound('UnitTester.php','tests/_support');
-
-        $I->seeFileFound('Acceptance.php','tests/_support/Helper');
-        $I->seeFileFound('Functional.php','tests/_support/Helper');
-        $I->seeFileFound('Unit.php','tests/_support/Helper');
+        $I->seeFileFound('Acceptance.php', 'tests/_support/Helper');
+        $I->seeFileFound('Functional.php', 'tests/_support/Helper');
+        $I->seeFileFound('Unit.php', 'tests/_support/Helper');
     }
 
 }

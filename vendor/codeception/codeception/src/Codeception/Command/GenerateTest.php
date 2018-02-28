@@ -5,7 +5,6 @@ use Codeception\Lib\Generator\Test as TestGenerator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -25,7 +24,6 @@ class GenerateTest extends Command
             [
                 new InputArgument('suite', InputArgument::REQUIRED, 'suite where tests will be put'),
                 new InputArgument('class', InputArgument::REQUIRED, 'class name'),
-                new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
             ]
         );
         parent::configure();
@@ -41,17 +39,17 @@ class GenerateTest extends Command
         $suite = $input->getArgument('suite');
         $class = $input->getArgument('class');
 
-        $config = $this->getSuiteConfig($suite, $input->getOption('config'));
+        $config = $this->getSuiteConfig($suite);
 
-        $className = $this->getClassName($class);
-        $path = $this->buildPath($config['path'], $class);
+        $className = $this->getShortClassName($class);
+        $path = $this->createDirectoryFor($config['path'], $class);
 
         $filename = $this->completeSuffix($className, 'Test');
         $filename = $path . $filename;
 
         $gen = new TestGenerator($config, $class);
 
-        $res = $this->save($filename, $gen->produce());
+        $res = $this->createFile($filename, $gen->produce());
 
         if (!$res) {
             $output->writeln("<error>Test $filename already exists</error>");

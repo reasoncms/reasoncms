@@ -5,16 +5,24 @@ use Codeception\Configuration;
 use Codeception\Exception\TestParseException;
 use Codeception\Scenario;
 use Codeception\Step;
-use Codeception\Util\Annotation;
+use Codeception\Test\Metadata;
 
 class Parser
 {
+    /**
+     * @var Scenario
+     */
     protected $scenario;
+    /**
+     * @var Metadata
+     */
+    protected $metadata;
     protected $code;
 
-    public function __construct(Scenario $scenario)
+    public function __construct(Scenario $scenario, Metadata $metadata)
     {
         $this->scenario = $scenario;
+        $this->metadata = $metadata;
     }
 
     public function prepareToRun($code)
@@ -41,38 +49,7 @@ class Parser
 
     public function parseScenarioOptions($code)
     {
-        $comments = $this->matchComments($code);
-        $this->attachMetadata($comments);
-        
-        // deprecated - parsing $scenario->xxx calls
-        $metaData = ['group', 'env'];
-        $phpCode = $this->stripComments($code);
-        $scenario = $this->scenario;
-        $feature = $scenario->getFeature();
-        foreach ($metaData as $call) {
-            $res = preg_match_all("~\\\$scenario->$call.*?;~", $phpCode, $matches);
-            if (!$res) {
-                continue;
-            }
-            foreach ($matches[0] as $line) {
-                // run $scenario->group or $scenario->env
-                \Codeception\Lib\Notification::deprecate("\$scenario->$call() is deprecated in favor of annotation: // @$call",
-                    $this->scenario->getFeature()
-                );
-                eval($line);
-            }
-        }
-    }
-
-    public function attachMetadata($comments)
-    {
-        $annotations = ['group', 'env', 'skip', 'incomplete', 'ignore'];
-        foreach ($annotations as $annotation) {
-            $values = Annotation::fetchAllFromComment($annotation, $comments);
-            foreach ($values as $value) {
-                call_user_func([$this->scenario, $annotation], $value);
-            }
-        }        
+        $this->metadata->setParamsFromAnnotations($this->matchComments($code));
     }
 
     public function parseSteps($code)
@@ -108,7 +85,6 @@ class Parser
                 $isFriend = false;
             }
         }
-
     }
 
     protected function addStep($matches)
@@ -131,7 +107,11 @@ class Parser
         if (empty($config['settings']['lint'])) { // lint disabled in config
             return;
         }
-        exec("php -l ".escapeshellarg($file)." 2>&1", $output, $code);
+        if (!function_exists('exec')) {
+            //exec function is disabled #3324
+            return;
+        }
+        exec("php -l " . escapeshellarg($file) . " 2>&1", $output, $code);
         if ($code !== 0) {
             throw new TestParseException($file, implode("\n", $output));
         }
@@ -145,7 +125,7 @@ class Parser
         try {
             self::includeFile($file);
         } catch (\ParseError $e) {
-            throw new TestParseException($file, $e->getMessage());
+            throw new TestParseException($file, $e->getMessage(), $e->getLine());
         } catch (\Exception $e) {
             // file is valid otherwise
         }
@@ -178,6 +158,9 @@ class Parser
                     $classes[] = $namespace . $tokens[$i + 2][1];
                     continue;
                 }
+                if ($tokens[$i - 2][0] === T_NEW) {
+                    continue;
+                }
                 if ($tokens[$i - 1][0] === T_WHITESPACE and $tokens[$i - 2][0] === T_DOUBLE_COLON) {
                     continue;
                 }
@@ -193,7 +176,7 @@ class Parser
 
     /*
      * Include in different scope to prevent included file from affecting $file variable
-     */ 
+     */
     private static function includeFile($file)
     {
         include_once $file;

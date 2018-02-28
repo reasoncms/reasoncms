@@ -25,12 +25,18 @@ class RemoteServer extends LocalServer
             return;
         }
 
-        $suite = $e->getSuite()->getName();
+        $suite = strtr($e->getSuite()->getName(), ['\\' => '.']);
         if ($this->options['coverage-xml']) {
             $this->retrieveAndPrintXml($suite);
         }
         if ($this->options['coverage-html']) {
             $this->retrieveAndPrintHtml($suite);
+        }
+        if ($this->options['coverage-crap4j']) {
+            $this->retrieveAndPrintCrap4j($suite);
+        }
+        if ($this->options['coverage-phpunit']) {
+            $this->retrieveAndPrintPHPUnit($suite);
         }
     }
 
@@ -56,5 +62,29 @@ class RemoteServer extends LocalServer
     {
         $destFile = Configuration::outputDir() . $suite . '.remote.coverage.xml';
         file_put_contents($destFile, $this->c3Request('clover'));
+    }
+
+    protected function retrieveAndPrintCrap4j($suite)
+    {
+        $destFile = Configuration::outputDir() . $suite . '.remote.crap4j.xml';
+        file_put_contents($destFile, $this->c3Request('crap4j'));
+    }
+
+    protected function retrieveAndPrintPHPUnit($suite)
+    {
+        $tempFile = tempnam(sys_get_temp_dir(), 'C3') . '.tar';
+        file_put_contents($tempFile, $this->c3Request('phpunit'));
+
+        $destDir = Configuration::outputDir() . $suite . '.remote.coverage-phpunit';
+        if (is_dir($destDir)) {
+            FileSystem::doEmptyDir($destDir);
+        } else {
+            mkdir($destDir, 0777, true);
+        }
+
+        $phar = new \PharData($tempFile);
+        $phar->extractTo($destDir);
+
+        unlink($tempFile);
     }
 }

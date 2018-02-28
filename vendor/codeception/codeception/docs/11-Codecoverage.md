@@ -1,4 +1,4 @@
-## Code Coverage
+# Code Coverage
 
 At some point you want to review which parts of your application are tested well and which are not.
 Just for this case the [CodeCoverage](http://en.wikipedia.org/wiki/Code_coverage) is used. When you execute your tests to collect coverage report,
@@ -21,31 +21,7 @@ coverage:
     enabled: true
 ```
 
-That's ok for now. But what files should be present in final coverage report? You can filter files by providing blacklist and whitelist filters like this:
-
-``` yaml
-coverage:
-    enabled: true
-    whitelist:
-        include:
-            - app/*
-        exclude:
-            - app/cache/*
-    blacklist:
-        include:
-            - app/controllers/*
-        exclude:
-            - app/cache/CacheProvider.php
-
-```
-What are whitelists and blacklists?
-
-* A **whitelist** is a list of files that should be included in report even they were not touched.
-* A **blacklist** is a list of files that should be excluded from report even they were touched.
-
-<div class="alert alert-info">
-The blacklist functionality has been removed from PHPUnit 5, but it can still be used with PHPUnit 4.8.
-</div>
+That's ok for now. But what files should be present in final coverage report?
 Pass an array of files or directory to include/exclude sections. The path ending with '\*' matches the directory.
 Also you can use '\*' mask in a file name, i.e. `app/models/*Model.php` to match all models.
 
@@ -59,10 +35,17 @@ coverage:
     exclude:
         - app/cache/*
 ```
+Include and exclude options can be redefined for each suite in corresponding config files.
 
-These `include` and `exclude` options are to add or remove files from a whitelist.
+By default, if coverage is reported to be < 35% it is marked as low, and >70% is high coverage.
+You can also define high and low boundaries with `low_limit` and `high_limit` config options:
 
-All these settings can be redefined for each suite in their config files.
+```yaml
+coverage:
+    enabled: true
+    low_limit: 30
+    high_limit: 60
+```
 
 ## Local CodeCoverage
 
@@ -99,13 +82,13 @@ Please, follow installation instructions described in a [readme file](https://gi
 To connect to `c3` Codeception uses url config from PhpBrowser or WebDriver module.
 But URL of index with `c3.php` included can be specified explicitly with `c3_url` parameter defined:
 
-
 ``` yaml
 coverage:
     # url of file which includes c3 router.
     c3_url: 'http://127.0.0.1:8000/index-test.php/'
 ```
-
+> note: we can't have multiple `c3_url` on same host difference only by port. Please, use alias of domain 
+(i.e. `frontend.dev:8000`,`backend.dev:8080`) instead.
 
 After the `c3.php` file is included in application you can start gather coverage.
 In case you execute your application locally there is nothing to be changed in config.
@@ -126,7 +109,7 @@ In this case remote Code Coverage results won't be merged with local ones, if th
 Merging is possible only in case a remote and local files have the same path.
 But in case of running tests on a remote server we are not sure of it.
 
-CodeCoverage results from remote server will be saved to `tests/_output` directory. Please note that remote codecoverage results won't be displayed in console by the reason mentioned above: local and remote results can't be merged, and console displays results for local codecoverage. 
+CodeCoverage results from remote server will be saved to `tests/_output` directory. Please note that remote codecoverage results won't be displayed in console by the reason mentioned above: local and remote results can't be merged, and console displays results for local codecoverage.
 
 ### Remote Context Options
 

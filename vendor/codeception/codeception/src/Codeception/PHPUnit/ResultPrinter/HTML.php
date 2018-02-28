@@ -4,6 +4,10 @@ namespace Codeception\PHPUnit\ResultPrinter;
 use Codeception\PHPUnit\ResultPrinter as CodeceptionResultPrinter;
 use Codeception\Step;
 use Codeception\Step\Meta;
+use Codeception\Test\Descriptor;
+use Codeception\Test\Interfaces\ScenarioDriven;
+use Codeception\TestInterface;
+use Codeception\Util\PathResolver;
 
 class HTML extends CodeceptionResultPrinter
 {
@@ -46,8 +50,7 @@ class HTML extends CodeceptionResultPrinter
 
         $this->templatePath = sprintf(
             '%s%stemplate%s',
-
-            dirname(__FILE__),
+            __DIR__,
             DIRECTORY_SEPARATOR,
             DIRECTORY_SEPARATOR
         );
@@ -62,69 +65,105 @@ class HTML extends CodeceptionResultPrinter
     {
     }
 
-    /**
-     * Handler for 'on test' event.
-     *
-     * @param  string $name
-     * @param  boolean $success
-     * @param  array $steps
-     */
-    protected function onTest($name, $success = true, array $steps = [], $time = 0)
+    public function endTest(\PHPUnit_Framework_Test $test, $time)
     {
+        $steps = [];
+        $success = ($this->testStatus == \PHPUnit_Runner_BaseTestRunner::STATUS_PASSED);
+        if ($success) {
+            $this->successful++;
+        }
+
+        if ($test instanceof ScenarioDriven) {
+            $steps = $test->getScenario()->getSteps();
+        }
         $this->timeTaken += $time;
 
         switch ($this->testStatus) {
-            case \PHPUnit_Runner_BaseTestRunner::STATUS_FAILURE: $scenarioStatus = 'scenarioFailed'; break;
-            case \PHPUnit_Runner_BaseTestRunner::STATUS_SKIPPED: $scenarioStatus = 'scenarioSkipped'; break;
-            case \PHPUnit_Runner_BaseTestRunner::STATUS_INCOMPLETE: $scenarioStatus = 'scenarioIncomplete'; break;
-            case \PHPUnit_Runner_BaseTestRunner::STATUS_ERROR: $scenarioStatus = 'scenarioFailed'; break;
-            default: $scenarioStatus = 'scenarioSuccess';
+            case \PHPUnit_Runner_BaseTestRunner::STATUS_FAILURE:
+                $scenarioStatus = 'scenarioFailed';
+                break;
+            case \PHPUnit_Runner_BaseTestRunner::STATUS_SKIPPED:
+                $scenarioStatus = 'scenarioSkipped';
+                break;
+            case \PHPUnit_Runner_BaseTestRunner::STATUS_INCOMPLETE:
+                $scenarioStatus = 'scenarioIncomplete';
+                break;
+            case \PHPUnit_Runner_BaseTestRunner::STATUS_ERROR:
+                $scenarioStatus = 'scenarioFailed';
+                break;
+            default:
+                $scenarioStatus = 'scenarioSuccess';
         }
 
         $stepsBuffer = '';
-        $metaStep = null;
-
         $subStepsBuffer = '';
+        $subStepsRendered = [];
 
         foreach ($steps as $step) {
-            /** @var $step Step  **/
             if ($step->getMetaStep()) {
-                $subStepsBuffer .= $this->renderStep($step);
-                $metaStep = $step->getMetaStep();
-                continue;
+                $subStepsRendered[$step->getMetaStep()->getAction()][] = $this->renderStep($step);
             }
-            if ($step->getMetaStep() != $metaStep) {
-                $stepsBuffer .= $this->renderSubsteps($metaStep, $subStepsBuffer);
-                $subStepsBuffer = '';
-            }
-            $metaStep = $step->getMetaStep();
-            $stepsBuffer .= $this->renderStep($step);
         }
 
-        if ($subStepsBuffer and $metaStep) {
-            $stepsBuffer .= $this->renderSubsteps($metaStep, $subStepsBuffer);
+        foreach ($steps as $step) {
+            if ($step->getMetaStep()) {
+                if (! empty($subStepsRendered[$step->getMetaStep()->getAction()])) {
+                    $subStepsBuffer = implode('', $subStepsRendered[$step->getMetaStep()->getAction()]);
+                    unset($subStepsRendered[$step->getMetaStep()->getAction()]);
+
+                    $stepsBuffer .= $this->renderSubsteps($step->getMetaStep(), $subStepsBuffer);
+                }
+            } else {
+                $stepsBuffer .= $this->renderStep($step);
+            }
         }
 
         $scenarioTemplate = new \Text_Template(
             $this->templatePath . 'scenario.html'
         );
 
-        $failure = '';
+        $failures = '';
+        $name = Descriptor::getTestSignature($test);
         if (isset($this->failures[$name])) {
             $failTemplate = new \Text_Template(
                 $this->templatePath . 'fail.html'
             );
-            $failTemplate->setVar(['fail' => nl2br($this->failures[$name])]);
-            $failure = $failTemplate->render();
+            foreach ($this->failures[$name] as $failure) {
+                $failTemplate->setVar(['fail' => nl2br($failure)]);
+                $failures .= $failTemplate->render() . PHP_EOL;
+            }
+            $this->failures[$name] = [];
         }
+
+        $png = '';
+        $html = '';
+        if ($test instanceof TestInterface) {
+            $reports = $test->getMetadata()->getReports();
+            if (isset($reports['png'])) {
+                $localPath = PathResolver::getRelativeDir($reports['png'], codecept_output_dir());
+                $png = "<tr><td class='error'><div class='screenshot'><img src='$localPath' alt='failure screenshot'></div></td></tr>";
+            }
+            if (isset($reports['html'])) {
+                $localPath = PathResolver::getRelativeDir($reports['html'], codecept_output_dir());
+                $html = "<tr><td class='error'>See <a href='$localPath' target='_blank'>HTML snapshot</a> of a failed page</td></tr>";
+            }
+        }
+
+        $toggle = $stepsBuffer ? '<span class="toggle">+</span>' : '';
+
+        $testString = htmlspecialchars(ucfirst(Descriptor::getTestAsString($test)));
+        $testString = preg_replace('~^([\s\w\\\]+):\s~', '<span class="quiet">$1 &raquo;</span> ', $testString);
 
         $scenarioTemplate->setVar(
             [
                 'id'             => ++$this->id,
-                'name'           => ucfirst($name),
+                'name'           => $testString,
                 'scenarioStatus' => $scenarioStatus,
                 'steps'          => $stepsBuffer,
-                'failure'        => $failure,
+                'toggle'         => $toggle,
+                'failure'        => $failures,
+                'png'            => $png,
+                'html'            => $html,
                 'time'           => round($time, 2)
             ]
         );
@@ -137,25 +176,28 @@ class HTML extends CodeceptionResultPrinter
         $suiteTemplate = new \Text_Template(
             $this->templatePath . 'suite.html'
         );
+        if (!$suite->getName()) {
+            return;
+        }
 
         $suiteTemplate->setVar(['suite' => ucfirst($suite->getName())]);
 
         $this->scenarios .= $suiteTemplate->render();
-
     }
 
     /**
      * Handler for 'end run' event.
-     *
      */
     protected function endRun()
     {
-
         $scenarioHeaderTemplate = new \Text_Template(
             $this->templatePath . 'scenario_header.html'
         );
 
-        $status = !$this->failed ? '<span style="color: green">OK</span>' : '<span style="color: #e74c3c">FAILED</span>';
+        $status = !$this->failed
+            ? '<span style="color: green">OK</span>'
+            : '<span style="color: #e74c3c">FAILED</span>';
+
 
         $scenarioHeaderTemplate->setVar(
             [
@@ -194,20 +236,20 @@ class HTML extends CodeceptionResultPrinter
      */
     public function addError(\PHPUnit_Framework_Test $test, \Exception $e, $time)
     {
-        $this->failures[$test->toString()] = $e->getMessage();
+        $this->failures[Descriptor::getTestSignature($test)][] = $this->cleanMessage($e);
         parent::addError($test, $e, $time);
     }
 
     /**
      * A failure occurred.
      *
-     * @param PHPUnit_Framework_Test                 $test
-     * @param PHPUnit_Framework_AssertionFailedError $e
+     * @param \PHPUnit_Framework_Test                 $test
+     * @param \PHPUnit_Framework_AssertionFailedError $e
      * @param float                                  $time
      */
     public function addFailure(\PHPUnit_Framework_Test $test, \PHPUnit_Framework_AssertionFailedError $e, $time)
     {
-        $this->failures[$test->toString()] = $e->getMessage();
+        $this->failures[Descriptor::getTestSignature($test)][] = $this->cleanMessage($e);
         parent::addFailure($test, $e, $time);
     }
 
@@ -231,7 +273,14 @@ class HTML extends CodeceptionResultPrinter
     protected function renderSubsteps(Meta $metaStep, $substepsBuffer)
     {
         $metaTemplate = new \Text_Template($this->templatePath . 'substeps.html');
-        $metaTemplate->setVar(['metaStep' => $metaStep, 'steps' => $substepsBuffer, 'id' => uniqid()]);
+        $metaTemplate->setVar(['metaStep' => $metaStep->getHtml(), 'error' => $metaStep->hasFailed() ? 'failedStep' : '', 'steps' => $substepsBuffer, 'id' => uniqid()]);
         return $metaTemplate->render();
+    }
+
+    private function cleanMessage($exception)
+    {
+        $msg = $exception->getMessage();
+        $msg = str_replace(['<info>','</info>','<bold>','</bold>'], ['','','',''], $msg);
+        return htmlentities($msg);
     }
 }

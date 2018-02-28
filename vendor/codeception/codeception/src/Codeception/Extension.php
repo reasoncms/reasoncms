@@ -7,17 +7,24 @@ use Codeception\Exception\ModuleRequireException;
 use Codeception\Lib\Console\Output;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
+/**
+ * A base class for all Codeception Extensions and GroupObjects
+ *
+ * Available Properties:
+ *
+ * * config: current extension configuration
+ * * options: passed running options
+ *
+ */
 abstract class Extension implements EventSubscriberInterface
 {
-    public static $events = [];
-
     protected $config = [];
     protected $options;
     protected $output;
     protected $globalConfig;
     private $modules = [];
 
-    function __construct($config, $options)
+    public function __construct($config, $options)
     {
         $this->config = array_merge($this->config, $config);
         $this->options = $options;
@@ -26,8 +33,11 @@ abstract class Extension implements EventSubscriberInterface
     }
 
 
-    static function getSubscribedEvents()
+    public static function getSubscribedEvents()
     {
+        if (!isset(static::$events)) {
+            return [Events::SUITE_INIT => 'receiveModuleContainer'];
+        }
         if (isset(static::$events[Events::SUITE_INIT])) {
             if (!is_array(static::$events[Events::SUITE_INIT])) {
                 static::$events[Events::SUITE_INIT] = [[static::$events[Events::SUITE_INIT]]];
@@ -57,7 +67,7 @@ abstract class Extension implements EventSubscriberInterface
     }
 
     /**
-     * You can do all preperations here. No need to override constructor.
+     * You can do all preparations here. No need to override constructor.
      * Also you can skip calling `_reconfigure` if you don't need to.
      */
     public function _initialize()

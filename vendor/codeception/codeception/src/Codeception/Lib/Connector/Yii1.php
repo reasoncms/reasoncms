@@ -1,9 +1,9 @@
 <?php
 namespace Codeception\Lib\Connector;
 
+use Codeception\Util\Stub;
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Response;
-use Yii;
 
 class Yii1 extends Client
 {
@@ -30,7 +30,7 @@ class Yii1 extends Client
      * Current request headers
      * @var array
      */
-    private $_headers;
+    private $headers;
 
     /**
      *
@@ -40,12 +40,12 @@ class Yii1 extends Client
      */
     public function doRequest($request)
     {
-        $this->_headers = array();
+        $this->headers = [];
         $_COOKIE        = array_merge($_COOKIE, $request->getCookies());
         $_SERVER        = array_merge($_SERVER, $request->getServer());
         $_FILES         = $this->remapFiles($request->getFiles());
         $_REQUEST       = $this->remapRequestParameters($request->getParameters());
-        $_POST          = $_GET = array();
+        $_POST          = $_GET = [];
 
         if (strtoupper($request->getMethod()) == 'GET') {
             $_GET = $_REQUEST;
@@ -54,11 +54,10 @@ class Yii1 extends Client
         }
 
         // Parse url parts
-        $uriPath = trim(parse_url($request->getUri(), PHP_URL_PATH), '/');
+        $uriPath = ltrim(parse_url($request->getUri(), PHP_URL_PATH), '/');
         $uriQuery = ltrim(parse_url($request->getUri(), PHP_URL_QUERY), '?');
         $scriptName = trim(parse_url($this->url, PHP_URL_PATH), '/');
         if (!empty($uriQuery)) {
-
             $uriPath .= "?{$uriQuery}";
 
             parse_str($uriQuery, $params);
@@ -68,7 +67,7 @@ class Yii1 extends Client
         }
 
         // Add script name to request if none
-        if (strpos($uriPath, $scriptName) === false) {
+        if ($scriptName and strpos($uriPath, $scriptName) === false) {
             $uriPath = "/{$scriptName}/{$uriPath}";
         }
 
@@ -87,17 +86,32 @@ class Yii1 extends Client
         $_SERVER['SCRIPT_FILENAME'] = $this->appPath;
 
         ob_start();
-        Yii::setApplication(null);
-        Yii::createApplication($this->appSettings['class'], $this->appSettings['config']);
+        \Yii::setApplication(null);
+        \Yii::createApplication($this->appSettings['class'], $this->appSettings['config']);
 
+        $app = \Yii::app();
         // disabling logging. Logs slow down test execution
-        if (Yii::app()->hasComponent('log')) {
-            foreach (Yii::app()->getComponent('log')->routes as $route) {
+        if ($app->hasComponent('log')) {
+            foreach ($app->getComponent('log')->routes as $route) {
                 $route->enabled = false;
             }
         }
-        Yii::app()->onEndRequest->add([$this, 'setHeaders']);
-        Yii::app()->run();
+
+        if ($app->hasComponent('session')) { // disable regenerate id in session
+            $app->setComponent('session', Stub::make('CHttpSession', ['regenerateID' => false]));
+        }
+
+        $app->onEndRequest->add([$this, 'setHeaders']);
+        $app->run();
+
+        if ($app->hasComponent('db')) {
+            // close connection
+            $app->getDb()->setActive(false);
+            // cleanup metadata cache
+            $property = new \ReflectionProperty('CActiveRecord', '_md');
+            $property->setAccessible(true);
+            $property->setValue([]);
+        }
 
         $content = ob_get_clean();
 
@@ -119,7 +133,7 @@ class Yii1 extends Client
      */
     public function setHeaders()
     {
-        $this->_headers = Yii::app()->request->getAllHeaders();
+        $this->headers = \Yii::app()->request->getAllHeaders();
     }
 
     /**
@@ -128,6 +142,6 @@ class Yii1 extends Client
      */
     public function getHeaders()
     {
-        return $this->_headers;
+        return $this->headers;
     }
 }

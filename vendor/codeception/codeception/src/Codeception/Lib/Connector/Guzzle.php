@@ -1,6 +1,8 @@
 <?php
 namespace Codeception\Lib\Connector;
 
+use Aws\Credentials\Credentials;
+use Aws\Signature\SignatureV4;
 use Codeception\Util\Uri;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Message\Response;
@@ -19,6 +21,8 @@ class Guzzle extends Client
     ];
     protected $refreshMaxInterval = 0;
 
+    protected $awsCredentials = null;
+    protected $awsSignature = null;
 
     /** @var \GuzzleHttp\Client */
     protected $client;
@@ -53,7 +57,7 @@ class Guzzle extends Client
      * Sets the request header to the passed value.  The header will be
      * sent along with the next request.
      *
-     * Passing an empty value clears the header, which is the equivelant
+     * Passing an empty value clears the header, which is the equivalent
      * of calling deleteHeader.
      *
      * @param string $name the name of the header
@@ -79,13 +83,18 @@ class Guzzle extends Client
         unset($this->requestOptions['headers'][$name]);
     }
 
-    public function setAuth($username, $password)
+    /**
+     * @param string $username
+     * @param string $password
+     * @param string $type  Default: 'basic'
+     */
+    public function setAuth($username, $password, $type = 'basic')
     {
         if (!$username) {
             unset($this->requestOptions['auth']);
             return;
         }
-        $this->requestOptions['auth'] = [$username, $password];
+        $this->requestOptions['auth'] = [$username, $password, $type];
     }
 
     /**
@@ -117,7 +126,7 @@ class Guzzle extends Client
             $matches = [];
 
             $matchesMeta = preg_match(
-                '/\<meta[^\>]+http-equiv="refresh" content="(\d*)\s*;?\s*url=(.*?)"/i',
+                '/\<meta[^\>]+http-equiv="refresh" content="\s*(\d*)\s*;\s*url=(.*?)"/i',
                 $response->getBody(true),
                 $matches
             );
@@ -125,7 +134,7 @@ class Guzzle extends Client
             if (!$matchesMeta) {
                 // match by header
                 preg_match(
-                    '~(\d*);?url=(.*)~',
+                    '/^\s*(\d*)\s*;\s*url=(.*)/i',
                     (string)$response->getHeader('Refresh'),
                     $matches
                 );
@@ -154,7 +163,7 @@ class Guzzle extends Client
     public function getAbsoluteUri($uri)
     {
         $baseUri = $this->baseUri;
-        if (strpos($uri, '://') === false) {
+        if (strpos($uri, '://') === false && strpos($uri, '//') !== 0) {
             if (strpos($uri, '/') === 0) {
                 $baseUriPath = parse_url($baseUri, PHP_URL_PATH);
                 if (!empty($baseUriPath) && strpos($uri, $baseUriPath) === 0) {
@@ -193,7 +202,11 @@ class Guzzle extends Client
 
         // Let BrowserKit handle redirects
         try {
-            $response = $this->client->send($guzzleRequest);
+            if (null !== $this->awsCredentials) {
+                $response = $this->client->send($this->awsSignature->signRequest($guzzleRequest, $this->awsCredentials));
+            } else {
+                $response = $this->client->send($guzzleRequest);
+            }
         } catch (RequestException $e) {
             if ($e->hasResponse()) {
                 $response = $e->getResponse();
@@ -211,7 +224,7 @@ class Guzzle extends Client
 
         $contentHeaders = ['Content-Length' => true, 'Content-Md5' => true, 'Content-Type' => true];
         foreach ($server as $header => $val) {
-            $header = implode('-', array_map('ucfirst', explode('-', strtolower(str_replace('_', '-', $header)))));
+            $header = html_entity_decode(implode('-', array_map('ucfirst', explode('-', strtolower(str_replace('_', '-', $header))))), ENT_NOQUOTES);
             if (strpos($header, 'Http-') === 0) {
                 $headers[substr($header, 5)] = $val;
             } elseif (isset($contentHeaders[$header])) {
@@ -223,15 +236,15 @@ class Guzzle extends Client
 
     protected function extractBody(BrowserKitRequest $request)
     {
-        if (in_array(strtoupper($request->getMethod()), ['GET','HEAD'])) {
+        if (in_array(strtoupper($request->getMethod()), ['GET', 'HEAD'])) {
             return null;
         }
         if ($request->getContent() !== null) {
             return $request->getContent();
-        } else {
-            return $request->getParameters();
         }
-}
+
+        return $request->getParameters();
+    }
 
     protected function extractFiles(BrowserKitRequest $request)
     {
@@ -272,5 +285,11 @@ class Guzzle extends Client
     protected function extractCookies(BrowserKitRequest $request)
     {
         return $this->getCookieJar()->allRawValues($request->getUri());
+    }
+
+    public function setAwsAuth($config)
+    {
+        $this->awsCredentials = new Credentials($config['key'], $config['secret']);
+        $this->awsSignature = new SignatureV4($config['service'], $config['region']);
     }
 }

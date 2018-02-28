@@ -1,18 +1,19 @@
 <?php
 namespace Codeception\Module;
 
-use Codeception\Exception\ModuleConfig;
+use Codeception\Configuration;
+use Codeception\Exception\ModuleException;
+use Codeception\Exception\ModuleConfigException;
 use Codeception\Lib\Connector\Lumen as LumenConnector;
 use Codeception\Lib\Framework;
 use Codeception\Lib\Interfaces\ActiveRecord;
-use Codeception\TestCase;
-use Codeception\Step;
-use Codeception\Configuration;
+use Codeception\Lib\Interfaces\PartedModule;
+use Codeception\Lib\Shared\LaravelCommon;
 use Codeception\Lib\ModuleContainer;
-use Codeception\Subscriber\ErrorHandler;
+use Codeception\TestInterface;
+use Codeception\Util\ReflectionHelper;
 use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Facade;
+use Illuminate\Database\Eloquent\Model as EloquentModel;
 
 /**
  *
@@ -30,19 +31,31 @@ use Illuminate\Support\Facades\Facade;
  *
  * ## Config
  *
- * * cleanup: `boolean`, default `true` - all db queries will be run in transaction, which will be rolled back at the end of test.
- * * bootstrap: `string`, default `bootstrap/app.php` - Relative path to app.php config file.
- * * root: `string`, default `` - Root path of our application.
- * * packages: `string`, default `workbench` - Root path of application packages (if any).
+ * * cleanup: `boolean`, default `true` - all database queries will be run in a transaction,
+ *   which will be rolled back at the end of each test.
+ * * bootstrap: `string`, default `bootstrap/app.php` - relative path to app.php config file.
+ * * root: `string`, default `` - root path of the application.
+ * * packages: `string`, default `workbench` - root path of application packages (if any).
+ * * url: `string`, default `http://localhost` - the application URL
  *
  * ## API
  *
- * * app - `Illuminate\Foundation\Application` instance
- * * client - `BrowserKit` client
+ * * app - `\Laravel\Lumen\Application`
+ * * config - `array`
  *
+ * ## Parts
+ *
+ * * ORM - only include the database methods of this module:
+ *     * have
+ *     * haveMultiple
+ *     * haveRecord
+ *     * grabRecord
+ *     * seeRecord
+ *     * dontSeeRecord
  */
-class Lumen extends Framework implements ActiveRecord
+class Lumen extends Framework implements ActiveRecord, PartedModule
 {
+    use LaravelCommon;
 
     /**
      * @var \Laravel\Lumen\Application
@@ -52,27 +65,42 @@ class Lumen extends Framework implements ActiveRecord
     /**
      * @var array
      */
-    protected $config = [];
+    public $config = [];
 
     /**
      * Constructor.
      *
      * @param ModuleContainer $container
-     * @param $config
+     * @param array|null $config
      */
     public function __construct(ModuleContainer $container, $config = null)
     {
         $this->config = array_merge(
-            array(
+            [
                 'cleanup' => true,
                 'bootstrap' => 'bootstrap' . DIRECTORY_SEPARATOR . 'app.php',
                 'root' => '',
                 'packages' => 'workbench',
-            ),
-            (array) $config
+                'url' => 'http://localhost',
+            ],
+            (array)$config
         );
 
+        $projectDir = explode($this->config['packages'], Configuration::projectDir())[0];
+        $projectDir .= $this->config['root'];
+
+        $this->config['project_dir'] = $projectDir;
+        $this->config['bootstrap_file'] = $projectDir . $this->config['bootstrap'];
+
         parent::__construct($container);
+    }
+
+    /**
+     * @return array
+     */
+    public function _parts()
+    {
+        return ['orm'];
     }
 
     /**
@@ -80,18 +108,19 @@ class Lumen extends Framework implements ActiveRecord
      */
     public function _initialize()
     {
-        $this->initializeLumen();
+        $this->checkBootstrapFileExists();
+        $this->registerAutoloaders();
     }
 
     /**
      * Before hook.
      *
-     * @param \Codeception\TestCase $test
-     * @throws ModuleConfig
+     * @param \Codeception\TestInterface $test
+     * @throws ModuleConfigException
      */
-    public function _before(TestCase $test)
+    public function _before(TestInterface $test)
     {
-        $this->initializeLumen();
+        $this->client = new LumenConnector($this);
 
         if ($this->app['db'] && $this->config['cleanup']) {
             $this->app['db']->beginTransaction();
@@ -101,9 +130,9 @@ class Lumen extends Framework implements ActiveRecord
     /**
      * After hook.
      *
-     * @param \Codeception\TestCase $test
+     * @param \Codeception\TestInterface $test
      */
-    public function _after(TestCase $test)
+    public function _after(TestInterface $test)
     {
         if ($this->app['db'] && $this->config['cleanup']) {
             $this->app['db']->rollback();
@@ -116,65 +145,29 @@ class Lumen extends Framework implements ActiveRecord
     }
 
     /**
-     * After step hook.
+     * Make sure the Lumen bootstrap file exists.
      *
-     * @param \Codeception\Step $step
+     * @throws ModuleConfigException
      */
-    public function _afterStep(Step $step)
+    protected function checkBootstrapFileExists()
     {
-        Facade::clearResolvedInstances();
-    }
+        $bootstrapFile = $this->config['bootstrap_file'];
 
-    /**
-     * Initialize the Lumen framework.
-     *
-     * @throws ModuleConfig
-     */
-    protected function initializeLumen()
-    {
-        $this->app = $this->bootApplication();
-        $this->app->instance('request', new Request());
-        $this->client = new LumenConnector($this->app);
-        $this->client->followRedirects(true);
-
-        $this->revertErrorHandler();
-    }
-
-    /**
-     * Boot the Lumen application object.
-     *
-     * @return \Laravel\Lumen\Application
-     * @throws \Codeception\Exception\ModuleConfig
-     */
-    protected function bootApplication()
-    {
-        $projectDir = explode($this->config['packages'], Configuration::projectDir())[0];
-        $projectDir .= $this->config['root'];
-        require $projectDir . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
-
-        $bootstrapFile = $projectDir . $this->config['bootstrap'];
-
-        if (! file_exists($bootstrapFile)) {
-            throw new ModuleConfig(
+        if (!file_exists($bootstrapFile)) {
+            throw new ModuleConfigException(
                 $this,
-                "Laravel bootstrap file not found in $bootstrapFile.\n"
-                . "Please provide a valid path to it using 'bootstrap' config param. "
+                "Lumen bootstrap file not found in $bootstrapFile.\n"
+                . "Please provide a valid path using the 'bootstrap' config param. "
             );
         }
-
-        $app = require $bootstrapFile;
-
-        return $app;
     }
 
     /**
-     * Revert back to the Codeception error handler,
-     * because Laravel registers it's own error handler.
+     * Register autoloaders.
      */
-    protected function revertErrorHandler()
+    protected function registerAutoloaders()
     {
-        $handler = new ErrorHandler();
-        set_error_handler(array($handler, 'errorHandler'));
+        require $this->config['project_dir'] . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
     }
 
     /**
@@ -185,6 +178,14 @@ class Lumen extends Framework implements ActiveRecord
     public function getApplication()
     {
         return $this->app;
+    }
+
+    /**
+     * @param \Laravel\Lumen\Application $app
+     */
+    public function setApplication($app)
+    {
+        $this->app = $app;
     }
 
     /**
@@ -203,7 +204,7 @@ class Lumen extends Framework implements ActiveRecord
     {
         $route = $this->getRouteByName($routeName);
 
-        if (! $route) {
+        if (!$route) {
             $this->fail("Could not find route with name '$routeName'");
         }
 
@@ -245,7 +246,7 @@ class Lumen extends Framework implements ActiveRecord
     {
         $url = $route['uri'];
 
-        while(count($params) > 0) {
+        while (count($params) > 0) {
             $param = array_shift($params);
             $url = preg_replace('/{.+?}/', $param, $url, 1);
         }
@@ -254,79 +255,43 @@ class Lumen extends Framework implements ActiveRecord
     }
 
     /**
-     * Assert that the session has a given list of values.
+     * Set the authenticated user for the next request.
+     * This will not persist between multiple requests.
      *
-     * @param  string|array $key
-     * @param  mixed $value
-     * @return void
-     */
-    public function seeInSession($key, $value = null)
-    {
-        if (is_array($key)) {
-            $this->seeSessionHasValues($key);
-            return;
-        }
-
-        if (is_null($value)) {
-            $this->assertTrue($this->app['session']->has($key));
-        } else {
-            $this->assertEquals($value, $this->app['session']->get($key));
-        }
-    }
-
-    /**
-     * Assert that the session has a given list of values.
-     *
-     * @param  array $bindings
-     * @return void
-     */
-    public function seeSessionHasValues(array $bindings)
-    {
-        foreach ($bindings as $key => $value) {
-            if (is_int($key)) {
-                $this->seeInSession($value);
-            } else {
-                $this->seeInSession($key, $value);
-            }
-        }
-    }
-
-    /**
-     * Set the currently logged in user for the application.
-     * Takes either an object that implements the User interface or
-     * an array of credentials.
-     *
-     * @param  \Illuminate\Contracts\Auth\User|array $user
-     * @param  string $driver
+     * @param  \Illuminate\Contracts\Auth\Authenticatable
+     * @param  string|null $driver The authentication driver for Lumen <= 5.1.*, guard name for Lumen >= 5.2
      * @return void
      */
     public function amLoggedAs($user, $driver = null)
     {
-        if ($user instanceof Authenticatable) {
-            $this->app['auth']->driver($driver)->setUser($user);
-        } else {
-            $this->app['auth']->driver($driver)->attempt($user);
+        if (!$user instanceof Authenticatable) {
+            $this->fail(
+                'The user passed to amLoggedAs() should be an instance of \\Illuminate\\Contracts\\Auth\\Authenticatable'
+            );
         }
+
+        $guard = $auth = $this->app['auth'];
+
+        if (method_exists($auth, 'driver')) {
+            $guard = $auth->driver($driver);
+        }
+
+        if (method_exists($auth, 'guard')) {
+            $guard = $auth->guard($driver);
+        }
+
+        $guard->setUser($user);
     }
 
     /**
-     * Logs user out
-     */
-    public function logout()
-    {
-        $this->app['auth']->logout();
-    }
-
-    /**
-     * Checks that user is authenticated
+     * Checks that user is authenticated.
      */
     public function seeAuthentication()
     {
         $this->assertTrue($this->app['auth']->check(), 'User is not logged in');
     }
-
     /**
-     * Check that user is not authenticated
+     * Check that user is not authenticated.
      */
     public function dontSeeAuthentication()
     {
@@ -362,96 +327,249 @@ class Lumen extends Framework implements ActiveRecord
 
     /**
      * Inserts record into the database.
+     * If you pass the name of a database table as the first argument, this method returns an integer ID.
+     * You can also pass the class name of an Eloquent model, in that case this method returns an Eloquent model.
      *
      * ``` php
      * <?php
-     * $user_id = $I->haveRecord('users', array('name' => 'Davert'));
+     * $user_id = $I->haveRecord('users', array('name' => 'Davert')); // returns integer
+     * $user = $I->haveRecord('App\User', array('name' => 'Davert')); // returns Eloquent model
      * ?>
      * ```
      *
-     * @param $tableName
+     * @param string $table
      * @param array $attributes
-     * @return mixed
+     * @return integer|EloquentModel
+     * @part orm
      */
-    public function haveRecord($tableName, $attributes = array())
+    public function haveRecord($table, $attributes = [])
     {
-        $id = $this->app['db']->table($tableName)->insertGetId($attributes);
-        if (!$id) {
-            $this->fail("Couldn't insert record into table $tableName");
+        if (class_exists($table)) {
+            $model = new $table;
+
+            if (!$model instanceof EloquentModel) {
+                throw new \RuntimeException("Class $table is not an Eloquent model");
+            }
+
+            $model->fill($attributes)->save();
+
+            return $model;
         }
-        return $id;
+
+        try {
+            return $this->app['db']->table($table)->insertGetId($attributes);
+        } catch (\Exception $e) {
+            $this->fail("Could not insert record into table '$table':\n\n" . $e->getMessage());
+        }
     }
 
     /**
      * Checks that record exists in database.
+     * You can pass the name of a database table or the class name of an Eloquent model as the first argument.
      *
      * ``` php
+     * <?php
      * $I->seeRecord('users', array('name' => 'davert'));
+     * $I->seeRecord('App\User', array('name' => 'davert'));
+     * ?>
      * ```
      *
-     * @param $tableName
+     * @param string $table
      * @param array $attributes
+     * @part orm
      */
-    public function seeRecord($tableName, $attributes = array())
+    public function seeRecord($table, $attributes = [])
     {
-        $record = $this->findRecord($tableName, $attributes);
-        if (!$record) {
-            $this->fail("Couldn't find $tableName with " . json_encode($attributes));
+        if (class_exists($table)) {
+            if (!$this->findModel($table, $attributes)) {
+                $this->fail("Could not find $table with " . json_encode($attributes));
+            }
+        } elseif (!$this->findRecord($table, $attributes)) {
+            $this->fail("Could not find matching record in table '$table'");
         }
-        $this->debugSection($tableName, json_encode($record));
     }
 
     /**
      * Checks that record does not exist in database.
+     * You can pass the name of a database table or the class name of an Eloquent model as the first argument.
      *
      * ``` php
      * <?php
      * $I->dontSeeRecord('users', array('name' => 'davert'));
+     * $I->dontSeeRecord('App\User', array('name' => 'davert'));
      * ?>
      * ```
      *
-     * @param $tableName
+     * @param string $table
      * @param array $attributes
+     * @part orm
      */
-    public function dontSeeRecord($tableName, $attributes = array())
+    public function dontSeeRecord($table, $attributes = [])
     {
-        $record = $this->findRecord($tableName, $attributes);
-        $this->debugSection($tableName, json_encode($record));
-        if ($record) {
-            $this->fail("Unexpectedly managed to find $tableName with " . json_encode($attributes));
+        if (class_exists($table)) {
+            if ($this->findModel($table, $attributes)) {
+                $this->fail("Unexpectedly found matching $table with " . json_encode($attributes));
+            }
+        } elseif ($this->findRecord($table, $attributes)) {
+            $this->fail("Unexpectedly found matching record in table '$table'");
         }
     }
 
     /**
      * Retrieves record from database
+     * If you pass the name of a database table as the first argument, this method returns an array.
+     * You can also pass the class name of an Eloquent model, in that case this method returns an Eloquent model.
      *
      * ``` php
      * <?php
-     * $category = $I->grabRecord('users', array('name' => 'davert'));
+     * $record = $I->grabRecord('users', array('name' => 'davert')); // returns array
+     * $record = $I->grabRecord('App\User', array('name' => 'davert')); // returns Eloquent model
      * ?>
      * ```
      *
-     * @param $tableName
+     * @param string $table
      * @param array $attributes
-     * @return mixed
+     * @return array|EloquentModel
+     * @part orm
      */
-    public function grabRecord($tableName, $attributes = array())
+    public function grabRecord($table, $attributes = [])
     {
-        return $this->findRecord($tableName, $attributes);
+        if (class_exists($table)) {
+            if (!$model = $this->findModel($table, $attributes)) {
+                $this->fail("Could not find $table with " . json_encode($attributes));
+            }
+
+            return $model;
+        }
+
+        if (!$record = $this->findRecord($table, $attributes)) {
+            $this->fail("Could not find matching record in table '$table'");
+        }
+
+        return $record;
     }
 
     /**
-     * @param $tableName
+     * @param string $modelClass
      * @param array $attributes
-     * @return mixed
+     *
+     * @return EloquentModel
      */
-    protected function findRecord($tableName, $attributes = array())
+    protected function findModel($modelClass, $attributes = [])
     {
-        $query = $this->app['db']->table($tableName);
+        $model = new $modelClass;
+
+        if (!$model instanceof EloquentModel) {
+            throw new \RuntimeException("Class $modelClass is not an Eloquent model");
+        }
+
+        $query = $model->newQuery();
         foreach ($attributes as $key => $value) {
             $query->where($key, $value);
         }
+
         return $query->first();
     }
 
+    /**
+     * @param string $table
+     * @param array $attributes
+     * @return array
+     */
+    protected function findRecord($table, $attributes = [])
+    {
+        $query = $this->app['db']->table($table);
+        foreach ($attributes as $key => $value) {
+            $query->where($key, $value);
+        }
+
+        return (array)$query->first();
+    }
+
+    /**
+     * Use Lumen's model factory to create a model.
+     * Can only be used with Lumen 5.1 and later.
+     *
+     * ``` php
+     * <?php
+     * $I->have('App\User');
+     * $I->have('App\User', ['name' => 'John Doe']);
+     * $I->have('App\User', [], 'admin');
+     * ?>
+     * ```
+     *
+     * @see https://lumen.laravel.com/docs/master/testing#model-factories
+     * @param string $model
+     * @param array $attributes
+     * @param string $name
+     * @return mixed
+     * @part orm
+     */
+    public function have($model, $attributes = [], $name = 'default')
+    {
+        try {
+            return $this->modelFactory($model, $name)->create($attributes);
+        } catch (\Exception $e) {
+            $this->fail("Could not create model: \n\n" . get_class($e) . "\n\n" . $e->getMessage());
+        }
+    }
+
+    /**
+     * Use Laravel's model factory to create multiple models.
+     * Can only be used with Lumen 5.1 and later.
+     *
+     * ``` php
+     * <?php
+     * $I->haveMultiple('App\User', 10);
+     * $I->haveMultiple('App\User', 10, ['name' => 'John Doe']);
+     * $I->haveMultiple('App\User', 10, [], 'admin');
+     * ?>
+     * ```
+     *
+     * @see https://lumen.laravel.com/docs/master/testing#model-factories
+     * @param string $model
+     * @param int $times
+     * @param array $attributes
+     * @param string $name
+     * @return mixed
+     * @part orm
+     */
+    public function haveMultiple($model, $times, $attributes = [], $name = 'default')
+    {
+        try {
+            return $this->modelFactory($model, $name, $times)->create($attributes);
+        } catch (\Exception $e) {
+            $this->fail("Could not create model: \n\n" . get_class($e) . "\n\n" . $e->getMessage());
+        }
+    }
+
+    /**
+     * @param string $model
+     * @param string $name
+     * @param int $times
+     * @return \Illuminate\Database\Eloquent\FactoryBuilder
+     * @throws ModuleException
+     */
+    protected function modelFactory($model, $name, $times = 1)
+    {
+        if (!function_exists('factory')) {
+            throw new ModuleException($this, 'The factory() method does not exist. ' .
+                'This functionality relies on Lumen model factories, which were introduced in Lumen 5.1.');
+        }
+
+        return factory($model, $name, $times);
+    }
+
+    /**
+     * Returns a list of recognized domain names.
+     * This elements of this list are regular expressions.
+     *
+     * @return array
+     */
+    protected function getInternalDomains()
+    {
+        $server = ReflectionHelper::readPrivateProperty($this->client, 'server');
+
+        return ['/^' . str_replace('.', '\.', $server['HTTP_HOST']) . '$/'];
+    }
 }

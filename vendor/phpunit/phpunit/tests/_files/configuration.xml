@@ -11,11 +11,12 @@
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
          forceCoversAnnotation="false"
-         printerClass="PHPUnit_TextUI_ResultPrinter"
          stopOnFailure="false"
          stopOnWarning="false"
          failOnWarning="false"
          failOnRisky="false"
+         extensionsDirectory="/tmp"
+         printerClass="PHPUnit_TextUI_ResultPrinter"
          testSuiteLoaderClass="PHPUnit_Runner_StandardTestSuiteLoader"
          beStrictAboutChangesToGlobalState="false"
          beStrictAboutOutputDuringTests="false"
@@ -43,6 +44,15 @@
       <group>name</group>
     </exclude>
   </groups>
+
+  <testdoxGroups>
+    <include>
+      <group>name</group>
+    </include>
+    <exclude>
+      <group>name</group>
+    </exclude>
+  </testdoxGroups>
 
   <filter>
     <whitelist addUncoveredFilesFromWhitelist="true"
@@ -89,6 +99,7 @@
     <log type="junit" target="/tmp/logfile.xml" logIncompleteSkipped="false"/>
     <log type="testdox-html" target="/tmp/testdox.html"/>
     <log type="testdox-text" target="/tmp/testdox.txt"/>
+    <log type="testdox-xml" target="/tmp/testdox.xml"/>
   </logging>
 
   <php>

@@ -12,8 +12,6 @@
  * A TestListener that generates a logfile of the test execution in XML markup.
  *
  * The XML markup used is the same as the one that is used by the JUnit Ant task.
- *
- * @since Class available since Release 2.1.0
  */
 class PHPUnit_Util_Log_JUnit extends PHPUnit_Util_Printer implements PHPUnit_Framework_TestListener
 {
@@ -132,11 +130,13 @@ class PHPUnit_Util_Log_JUnit extends PHPUnit_Util_Printer implements PHPUnit_Fra
      * @param PHPUnit_Framework_Test    $test
      * @param PHPUnit_Framework_Warning $e
      * @param float                     $time
-     *
-     * @since Method available since Release 5.1.0
      */
     public function addWarning(PHPUnit_Framework_Test $test, PHPUnit_Framework_Warning $e, $time)
     {
+        if (!$this->logIncompleteSkipped) {
+            return;
+        }
+
         $this->doAddFault($test, $e, $time, 'warning');
         $this->testSuiteFailures[$this->testSuiteLevel]++;
     }
@@ -188,8 +188,6 @@ class PHPUnit_Util_Log_JUnit extends PHPUnit_Util_Printer implements PHPUnit_Fra
      * @param PHPUnit_Framework_Test $test
      * @param Exception              $e
      * @param float                  $time
-     *
-     * @since  Method available since Release 4.0.0
      */
     public function addRiskyTest(PHPUnit_Framework_Test $test, Exception $e, $time)
     {
@@ -218,8 +216,6 @@ class PHPUnit_Util_Log_JUnit extends PHPUnit_Util_Printer implements PHPUnit_Fra
      * @param PHPUnit_Framework_Test $test
      * @param Exception              $e
      * @param float                  $time
-     *
-     * @since  Method available since Release 3.0.0
      */
     public function addSkippedTest(PHPUnit_Framework_Test $test, Exception $e, $time)
     {
@@ -246,8 +242,6 @@ class PHPUnit_Util_Log_JUnit extends PHPUnit_Util_Printer implements PHPUnit_Fra
      * A testsuite started.
      *
      * @param PHPUnit_Framework_TestSuite $suite
-     *
-     * @since  Method available since Release 2.2.0
      */
     public function startTestSuite(PHPUnit_Framework_TestSuite $suite)
     {
@@ -282,8 +276,6 @@ class PHPUnit_Util_Log_JUnit extends PHPUnit_Util_Printer implements PHPUnit_Fra
      * A testsuite ended.
      *
      * @param PHPUnit_Framework_TestSuite $suite
-     *
-     * @since  Method available since Release 2.2.0
      */
     public function endTestSuite(PHPUnit_Framework_TestSuite $suite)
     {
@@ -397,8 +389,6 @@ class PHPUnit_Util_Log_JUnit extends PHPUnit_Util_Printer implements PHPUnit_Fra
      * Returns the XML as a string.
      *
      * @return string
-     *
-     * @since  Method available since Release 2.2.0
      */
     public function getXML()
     {
@@ -413,8 +403,6 @@ class PHPUnit_Util_Log_JUnit extends PHPUnit_Util_Printer implements PHPUnit_Fra
      * PHPUnit with Phing.
      *
      * @return string
-     *
-     * @since  Method available since Release 2.2.0
      */
     public function setWriteDocument($flag)
     {
@@ -438,13 +426,12 @@ class PHPUnit_Util_Log_JUnit extends PHPUnit_Util_Printer implements PHPUnit_Fra
         }
 
         if ($test instanceof PHPUnit_Framework_SelfDescribing) {
-            $buffer = $test->toString() . "\n";
+            $buffer = $test->toString() . PHP_EOL;
         } else {
             $buffer = '';
         }
 
-        $buffer .= PHPUnit_Framework_TestFailure::exceptionToString($e) .
-                   "\n" .
+        $buffer .= PHPUnit_Framework_TestFailure::exceptionToString($e) . PHP_EOL .
                    PHPUnit_Util_Filter::getFilteredStacktrace($e);
 
         $fault = $this->document->createElement(
@@ -452,7 +439,12 @@ class PHPUnit_Util_Log_JUnit extends PHPUnit_Util_Printer implements PHPUnit_Fra
             PHPUnit_Util_XML::prepareString($buffer)
         );
 
-        $fault->setAttribute('type', get_class($e));
+        if ($e instanceof PHPUnit_Framework_ExceptionWrapper) {
+            $fault->setAttribute('type', $e->getClassName());
+        } else {
+            $fault->setAttribute('type', get_class($e));
+        }
+
         $this->currentTestCase->appendChild($fault);
     }
 }

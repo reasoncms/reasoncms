@@ -5,14 +5,14 @@ use Codeception\Configuration;
 use Codeception\Exception\ModuleConfigException;
 use Codeception\Lib\Framework;
 use Codeception\Lib\Interfaces\DoctrineProvider;
-use Codeception\TestCase;
+use Codeception\TestInterface;
 use Symfony\Component\HttpKernel\Client;
 
 /**
  * Module for testing Silex applications like you would regularly do with Silex\WebTestCase.
  * This module uses Symfony2 Crawler and HttpKernel to emulate requests and get response.
  *
- * This module may be considered experimental and require feedback and pull requests from you )
+ * This module may be considered experimental and require feedback and pull requests from you.
  *
  * ## Status
  *
@@ -27,13 +27,13 @@ use Symfony\Component\HttpKernel\Client;
  *
  * ### Bootstrap File
  *
- * Bootstrap is the same as [WebTestCase.createApplication](http://silex.sensiolabs.org/doc/testing.html#webtestcase) should be.
+ * Bootstrap is the same as [WebTestCase.createApplication](http://silex.sensiolabs.org/doc/testing.html#webtestcase).
  *
  * ``` php
- * <?
+ * <?php
  * $app = require __DIR__.'/path/to/app.php';
  * $app['debug'] = true;
- * $app['exception_handler']->disable();
+ * unset($app['exception_handler']);
  *
  * return $app; // optionally
  * ?>
@@ -46,12 +46,20 @@ use Symfony\Component\HttpKernel\Client;
  *           - Silex:
  *              app: 'app/bootstrap.php'
  *
+ * ## Public Properties
+ *
+ * * app - `Silex\Application` instance received from bootstrap file
+ *
  * Class Silex
  * @package Codeception\Module
  */
 class Silex extends Framework implements DoctrineProvider
 {
-    protected $app;
+    /**
+     * @var \Silex\Application
+     */
+    public $app;
+
     protected $requiredFields = ['app'];
     protected $config = [
         'em_service' => 'db.orm.em'
@@ -66,7 +74,7 @@ class Silex extends Framework implements DoctrineProvider
         $this->loadApp();
     }
 
-    public function _before(TestCase $test)
+    public function _before(TestInterface $test)
     {
         $this->loadApp();
         $this->client = new Client($this->app);
@@ -74,7 +82,7 @@ class Silex extends Framework implements DoctrineProvider
 
     public function _getEntityManager()
     {
-        if(!isset($this->app[$this->config['em_service']])){
+        if (!isset($this->app[$this->config['em_service']])) {
             return null;
         }
 
@@ -94,13 +102,13 @@ class Silex extends Framework implements DoctrineProvider
 
         // make doctrine persistent
         $db_orm_em = $this->_getEntityManager();
-        if($db_orm_em){
-            $this->app->extend($this->config['em_service'], function() use ($db_orm_em){
+        if ($db_orm_em) {
+            $this->app->extend($this->config['em_service'], function () use ($db_orm_em) {
                 return $db_orm_em;
             });
         }
 
-        // some silex apps (like bolt) may rely on global $app variable
+        // some Silex apps (like Bolt) may rely on global $app variable
         $GLOBALS['app'] = $this->app;
     }
 

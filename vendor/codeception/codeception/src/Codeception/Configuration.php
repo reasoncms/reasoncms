@@ -2,10 +2,13 @@
 
 namespace Codeception;
 
-use Codeception\Exception\ConfigurationException as ConfigurationException;
+use Codeception\Exception\ConfigurationException;
+use Codeception\Lib\ParamsLoader;
 use Codeception\Util\Autoload;
+use Codeception\Util\Template;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
+use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 
 class Configuration
@@ -29,9 +32,9 @@ class Configuration
     protected static $dir = null;
 
     /**
-     * @var string Current project logs directory.
+     * @var string Current project output directory.
      */
-    protected static $logDir = null;
+    protected static $outputDir = null;
 
     /**
      * @var string Current project data directory. This directory is used to hold
@@ -62,15 +65,16 @@ class Configuration
      * @var array Default config
      */
     public static $defaultConfig = [
-        'actor'      => 'Guy', ## codeception 1.x compatility
+        'actor_suffix'=> 'Tester',
         'namespace'  => '',
         'include'    => [],
-        'paths'      => [
-        ],
+        'paths'      => [],
+        'suites'     => [],
         'modules'    => [],
         'extensions' => [
-            'enabled' => [],
-            'config'  => [],
+            'enabled'  => [],
+            'config'   => [],
+            'commands' => [],
         ],
         'reporters'  => [
             'xml'    => 'Codeception\PHPUnit\Log\JUnit',
@@ -81,28 +85,41 @@ class Configuration
         ],
         'groups'     => [],
         'settings'   => [
-            'colors'     => false,
-            'log'        => false, // deprecated
-            'bootstrap'  => false,
-            'strict_xml' => false,
-            'lint'       => true
+            'colors'                    => true,
+            'bootstrap'                 => false,
+            'strict_xml'                => false,
+            'lint'                      => true,
+            'backup_globals'            => true,
+            'log_incomplete_skipped'    => false,
+            'report_useless_tests'      => false,
+            'disallow_test_output'      => false,
+            'be_strict_about_changes_to_global_state' => false
         ],
-        'coverage'   => []
+        'coverage'   => [],
+        'params'     => [],
+        'gherkin'    => []
     ];
 
     public static $defaultSuiteSettings = [
-        'class_name'  => 'NoGuy',
+        'actor'       => null,
+        'class_name'  => null, // Codeception <2.3 compatibility
         'modules'     => [
             'enabled' => [],
             'config'  => [],
             'depends' => []
         ],
+        'path'        => null,
         'namespace'   => null,
-        'path'        => '',
         'groups'      => [],
         'shuffle'     => false,
+        'extensions'  => [ // suite extensions
+            'enabled' => [],
+            'config' => [],
+        ],
         'error_level' => 'E_ALL & ~E_STRICT & ~E_DEPRECATED',
     ];
+
+    protected static $params;
 
     /**
      * Loads global config file which is `codeception.yml` by default.
@@ -131,48 +148,78 @@ class Configuration
         }
 
         $dir = realpath(dirname($configFile));
+        self::$dir = $dir;
 
         $configDistFile = $dir . DIRECTORY_SEPARATOR . 'codeception.dist.yml';
 
         if (!(file_exists($configDistFile) || file_exists($configFile))) {
-            throw new ConfigurationException("Configuration file could not be found.\nRun `bootstrap` to initialize Codeception.");
+            throw new ConfigurationException("Configuration file could not be found.\nRun `bootstrap` to initialize Codeception.", 404);
         }
 
-        $config = self::loadConfigFile($configDistFile, self::$defaultConfig);
-        $config = self::loadConfigFile($configFile, $config);
+        // Preload config to retrieve params such that they are applied to codeception config file below
+        $tempConfig = self::$defaultConfig;
+
+        $distConfigContents = "";
+        if (file_exists($configDistFile)) {
+            $distConfigContents = file_get_contents($configDistFile);
+            $tempConfig = self::mergeConfigs($tempConfig, self::getConfFromContents($distConfigContents, $configDistFile));
+        }
+
+        $configContents = "";
+        if (file_exists($configFile)) {
+            $configContents = file_get_contents($configFile);
+            $tempConfig = self::mergeConfigs($tempConfig, self::getConfFromContents($configContents, $configFile));
+        }
+        self::prepareParams($tempConfig);
+
+        // load config using params
+        $config = self::mergeConfigs(self::$defaultConfig, self::getConfFromContents($distConfigContents, $configDistFile));
+        $config = self::mergeConfigs($config, self::getConfFromContents($configContents, $configFile));
 
         if ($config == self::$defaultConfig) {
             throw new ConfigurationException("Configuration file is invalid");
         }
 
-        self::$dir = $dir;
         self::$config = $config;
 
-        if (!isset($config['paths']['log'])) {
-            throw new ConfigurationException('Log path is not defined by key "paths: log"');
+        // compatibility with suites created by Codeception < 2.3.0
+        if (!isset($config['paths']['output']) and isset($config['paths']['log'])) {
+            $config['paths']['output'] = $config['paths']['log'];
         }
 
-        self::$logDir = $config['paths']['log'];
+        if (isset(self::$config['actor'])) {
+            self::$config['actor_suffix'] = self::$config['actor']; // old compatibility
+        }
+
+        if (!isset($config['paths']['support']) and isset($config['paths']['helpers'])) {
+            $config['paths']['support'] = $config['paths']['helpers'];
+        }
+
+        if (!isset($config['paths']['output'])) {
+            throw new ConfigurationException('Output path is not defined by key "paths: output"');
+        }
+
+        self::$outputDir = $config['paths']['output'];
 
         // fill up includes with wildcard expansions
         $config['include'] = self::expandWildcardedIncludes($config['include']);
 
         // config without tests, for inclusion of other configs
-        if (count($config['include']) and !isset($config['paths']['tests'])) {
-            return self::$config = $config;
+        if (count($config['include'])) {
+            self::$config = $config;
+            if (!isset($config['paths']['tests'])) {
+                 return $config;
+            }
         }
 
         if (!isset($config['paths']['tests'])) {
-            throw new ConfigurationException('Tests directory is not defined in Codeception config by key "paths: tests:"');
+            throw new ConfigurationException(
+                'Tests directory is not defined in Codeception config by key "paths: tests:"'
+            );
         }
 
         if (!isset($config['paths']['data'])) {
             throw new ConfigurationException('Data path is not defined Codeception config by key "paths: data"');
-        }
-
-        // compatibility with 1.x, 2.0
-        if (!isset($config['paths']['support']) and isset($config['paths']['helpers'])) {
-            $config['paths']['support'] = $config['paths']['helpers'];
         }
 
         if (!isset($config['paths']['support'])) {
@@ -187,8 +234,8 @@ class Configuration
             self::$envsDir = $config['paths']['envs'];
         }
 
+        Autoload::addNamespace(self::$config['namespace'], self::supportDir());
         self::loadBootstrap($config['settings']['bootstrap']);
-        self::autoloadHelpers();
         self::loadSuites();
 
         return $config;
@@ -205,25 +252,20 @@ class Configuration
         }
     }
 
-    protected static function loadConfigFile($file, $parentConfig)
-    {
-        $config = file_exists($file) ? Yaml::parse(file_get_contents($file)) : [];
-        return self::mergeConfigs($parentConfig, $config);
-    }
-
-    protected static function autoloadHelpers()
-    {
-        $namespace = self::$config['namespace'];
-        Autoload::addNamespace($namespace, self::supportDir());
-
-        // deprecated
-        Autoload::addNamespace($namespace . '\Codeception\Module', self::supportDir());
-    }
-
     protected static function loadSuites()
     {
-        $suites = Finder::create()->files()->name('*.{suite,suite.dist}.yml')->in(self::$dir . DIRECTORY_SEPARATOR . self::$testsDir)->depth('< 1');
+        $suites = Finder::create()
+            ->files()
+            ->name('*.{suite,suite.dist}.yml')
+            ->in(self::$dir . DIRECTORY_SEPARATOR . self::$testsDir)
+            ->depth('< 1')
+            ->sortByName();
+
         self::$suites = [];
+
+        foreach (array_keys(self::$config['suites']) as $suite) {
+            self::$suites[$suite] = $suite;
+        }
 
         /** @var SplFileInfo $suite */
         foreach ($suites as $suite) {
@@ -253,7 +295,7 @@ class Configuration
 
         // load global config
         $globalConf = $config['settings'];
-        foreach (['modules', 'coverage', 'namespace', 'groups', 'env'] as $key) {
+        foreach (['modules', 'coverage', 'namespace', 'groups', 'env', 'gherkin', 'extensions'] as $key) {
             if (isset($config[$key])) {
                 $globalConf[$key] = $config[$key];
             }
@@ -262,14 +304,26 @@ class Configuration
 
         // load suite config
         $settings = self::loadSuiteConfig($suite, $config['paths']['tests'], $settings);
-
         // load from environment configs
         if (isset($config['paths']['envs'])) {
             $envConf = self::loadEnvConfigs(self::$dir . DIRECTORY_SEPARATOR . $config['paths']['envs']);
             $settings = self::mergeConfigs($settings, $envConf);
         }
 
-        $settings['path'] = self::$dir . DIRECTORY_SEPARATOR . $config['paths']['tests'] . DIRECTORY_SEPARATOR . $suite . DIRECTORY_SEPARATOR;
+        if (!$settings['actor']) {
+            // Codeception 2.2 compatibility
+            $settings['actor'] = $settings['class_name'];
+        }
+
+        if (!$settings['path']) {
+            // take a suite path from its name
+            $settings['path'] = $suite;
+        }
+
+        $settings['path'] = self::$dir . DIRECTORY_SEPARATOR . $config['paths']['tests']
+            . DIRECTORY_SEPARATOR . $settings['path'] . DIRECTORY_SEPARATOR;
+
+
 
         return $settings;
     }
@@ -319,6 +373,35 @@ class Configuration
     }
 
     /**
+     * Loads configuration from Yaml data
+     *
+     * @param string $contents Yaml config file contents
+     * @param string $filename which is supposed to be loaded
+     * @return array
+     * @throws ConfigurationException
+     */
+    protected static function getConfFromContents($contents, $filename = '(.yml)')
+    {
+        if (self::$params) {
+            $template = new Template($contents, '%', '%');
+            $template->setVars(self::$params);
+            $contents = $template->produce();
+        }
+
+        try {
+            return Yaml::parse($contents);
+        } catch (ParseException $exception) {
+            throw new ConfigurationException(
+                sprintf(
+                    "Error loading Yaml config from `%s`\n \n%s\nRead more about Yaml format https://goo.gl/9UPuEC",
+                    $filename,
+                    $exception->getMessage()
+                )
+            );
+        }
+    }
+
+    /**
      * Loads configuration from Yaml file or returns given value if the file doesn't exist
      *
      * @param string $filename filename
@@ -328,7 +411,8 @@ class Configuration
     protected static function getConfFromFile($filename, $nonExistentValue = [])
     {
         if (file_exists($filename)) {
-            return Yaml::parse(file_get_contents($filename));
+            $yaml = file_get_contents($filename);
+            return self::getConfFromContents($yaml, $filename);
         }
         return $nonExistentValue;
     }
@@ -364,24 +448,33 @@ class Configuration
     }
 
     /**
-     * Return instances of enabled modules according suite config.
+     * Return list of enabled modules according suite config.
      *
      * @param array $settings suite settings
-     * @return array|\Codeception\Module[]
+     * @return array
      */
     public static function modules($settings)
     {
-        return array_map(
-            function ($m) {
-                return is_array($m) ? key($m) : $m;
-            }, $settings['modules']['enabled'], array_keys($settings['modules']['enabled'])
+        return array_filter(
+            array_map(
+                function ($m) {
+                    return is_array($m) ? key($m) : $m;
+                },
+                $settings['modules']['enabled'],
+                array_keys($settings['modules']['enabled'])
+            ),
+            function ($m) use ($settings) {
+                if (!isset($settings['modules']['disabled'])) {
+                    return true;
+                }
+                return !in_array($m, $settings['modules']['disabled']);
+            }
         );
     }
 
     public static function isExtensionEnabled($extensionName)
     {
-        return isset(self::$config['extensions'])
-        && isset(self::$config['extensions']['enabled'])
+        return isset(self::$config['extensions'], self::$config['extensions']['enabled'])
         && in_array($extensionName, self::$config['extensions']['enabled']);
     }
 
@@ -416,22 +509,27 @@ class Configuration
      */
     public static function outputDir()
     {
-        if (!self::$logDir) {
+        if (!self::$outputDir) {
             throw new ConfigurationException("Path for output not specified. Please, set output path in global config");
         }
 
-        $dir = self::$logDir . DIRECTORY_SEPARATOR;
-        if (strcmp(self::$logDir[0], "/") !== 0) {
+        $dir = self::$outputDir . DIRECTORY_SEPARATOR;
+        if (strcmp(self::$outputDir[0], "/") !== 0) {
             $dir = self::$dir . DIRECTORY_SEPARATOR . $dir;
         }
 
+        if (!file_exists($dir)) {
+            @mkdir($dir, 0777, true);
+        }
+
         if (!is_writable($dir)) {
-            @mkdir($dir);
             @chmod($dir, 0777);
         }
 
         if (!is_writable($dir)) {
-            throw new ConfigurationException("Path for output is not writable. Please, set appropriate access mode for output path.");
+            throw new ConfigurationException(
+                "Path for output is not writable. Please, set appropriate access mode for output path."
+            );
         }
 
         return $dir;
@@ -456,6 +554,7 @@ class Configuration
     {
         return self::$dir . DIRECTORY_SEPARATOR;
     }
+
 
     /**
      * Returns path to tests directory
@@ -500,17 +599,42 @@ class Configuration
      */
     public static function append(array $config = [])
     {
-        return self::$config = self::mergeConfigs(self::$config, $config);
+        self::$config = self::mergeConfigs(self::$config, $config);
+
+        if (isset(self::$config['paths']['output'])) {
+            self::$outputDir = self::$config['paths']['output'];
+        }
+        if (isset(self::$config['paths']['data'])) {
+            self::$dataDir = self::$config['paths']['data'];
+        }
+        if (isset(self::$config['paths']['support'])) {
+            self::$supportDir = self::$config['paths']['support'];
+        }
+        if (isset(self::$config['paths']['tests'])) {
+            self::$testsDir = self::$config['paths']['tests'];
+        }
+
+        return self::$config;
     }
 
     public static function mergeConfigs($a1, $a2)
     {
-        if (!is_array($a1) || !is_array($a2)) {
+        if (!is_array($a1)) {
             return $a2;
+        }
+
+        if (!is_array($a2)) {
+            return $a1;
         }
 
         $res = [];
 
+        // for sequential arrays
+        if (isset($a1[0], $a2[0])) {
+            return array_merge_recursive($a2, $a1);
+        }
+
+        // for associative arrays
         foreach ($a2 as $k2 => $v2) {
             if (!isset($a1[$k2])) { // if no such key
                 $res[$k2] = $v2;
@@ -539,8 +663,17 @@ class Configuration
      */
     protected static function loadSuiteConfig($suite, $path, $settings)
     {
-        $suiteDistConf = self::getConfFromFile(self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.dist.yml");
-        $suiteConf = self::getConfFromFile(self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.yml");
+        if (isset(self::$config['suites'][$suite])) {
+            // bundled config
+            return self::mergeConfigs($settings, self::$config['suites'][$suite]);
+        }
+
+        $suiteDistConf = self::getConfFromFile(
+            self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.dist.yml"
+        );
+        $suiteConf = self::getConfFromFile(
+            self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.yml"
+        );
         $settings = self::mergeConfigs($settings, $suiteDistConf);
         $settings = self::mergeConfigs($settings, $suiteConf);
         return $settings;
@@ -594,5 +727,15 @@ class Configuration
         }
 
         return $paths;
+    }
+
+    private static function prepareParams($settings)
+    {
+        self::$params = [];
+        $paramsLoader = new ParamsLoader();
+
+        foreach ($settings['params'] as $paramStorage) {
+            static::$params = array_merge(self::$params, $paramsLoader->load($paramStorage));
+        }
     }
 }

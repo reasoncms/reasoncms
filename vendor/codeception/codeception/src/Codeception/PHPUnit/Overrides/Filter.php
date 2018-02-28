@@ -1,14 +1,16 @@
 <?php
 
+// @codingStandardsIgnoreStart
 class PHPUnit_Util_Filter
 {
+    // @codingStandardsIgnoreEnd
     protected static $filteredClassesPattern = [
         'Symfony\Component\Console',
         'Codeception\Command\\',
         'Codeception\TestCase\\',
     ];
 
-    public static function getFilteredStackTrace(Exception $e, $asString = true, $filter = true)
+    public static function getFilteredStackTrace($e, $asString = true, $filter = true)
     {
         $stackTrace = $asString ? '' : [];
 
@@ -17,8 +19,17 @@ class PHPUnit_Util_Filter
             $trace = $e->getSerializableTrace();
         }
 
-        foreach ($trace as $step) {
+        $eFile = $e->getFile();
+        $eLine = $e->getLine();
 
+        if (!self::frameExists($trace, $eFile, $eLine)) {
+            array_unshift(
+                $trace,
+                ['file' => $eFile, 'line' => $eLine]
+            );
+        }
+
+        foreach ($trace as $step) {
             if (self::classIsFiltered($step) and $filter) {
                 continue;
             }
@@ -73,12 +84,32 @@ class PHPUnit_Util_Filter
             return true;
         }
 
-        if (strpos($step['file'], 'src' . DIRECTORY_SEPARATOR . 'Codeception' . DIRECTORY_SEPARATOR . 'Module') !== false) {
+        $modulePath = 'src' . DIRECTORY_SEPARATOR . 'Codeception' . DIRECTORY_SEPARATOR . 'Module';
+        if (strpos($step['file'], $modulePath) !== false) {
             return false; // don`t filter modules
         }
 
         if (strpos($step['file'], 'src' . DIRECTORY_SEPARATOR . 'Codeception' . DIRECTORY_SEPARATOR) !== false) {
             return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param array  $trace
+     * @param string $file
+     * @param int    $line
+     *
+     * @return bool
+     */
+    private static function frameExists(array $trace, $file, $line)
+    {
+        foreach ($trace as $frame) {
+            if (isset($frame['file']) && $frame['file'] == $file &&
+                isset($frame['line']) && $frame['line'] == $line) {
+                return true;
+            }
         }
 
         return false;

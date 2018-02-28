@@ -1,7 +1,6 @@
 <?php
-use Codeception\Util\Stub;
 
-class DataProvidersTest extends \Codeception\TestCase\Test
+class DataProvidersTest extends \Codeception\Test\Unit
 {
    /**
     * @var \CodeGuy
@@ -9,6 +8,7 @@ class DataProvidersTest extends \Codeception\TestCase\Test
     protected $codeGuy;
 
     /**
+     * @group data-providers
      * @dataProvider triangles
      */
     public function testIsTriangle($a, $b, $c)

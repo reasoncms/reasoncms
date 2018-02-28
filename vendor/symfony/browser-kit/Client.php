@@ -42,11 +42,10 @@ abstract class Client
 
     private $maxRedirects = -1;
     private $redirectCount = 0;
+    private $redirects = array();
     private $isMainRequest = true;
 
     /**
-     * Constructor.
-     *
      * @param array     $server    The server parameters (equivalent of $_SERVER)
      * @param History   $history   A History instance to store the browser history
      * @param CookieJar $cookieJar A CookieJar instance to store the cookies
@@ -123,7 +122,7 @@ abstract class Client
     public function setServerParameters(array $server)
     {
         $this->server = array_merge(array(
-            'HTTP_USER_AGENT' => 'Symfony2 BrowserKit',
+            'HTTP_USER_AGENT' => 'Symfony BrowserKit',
         ), $server);
     }
 
@@ -234,8 +233,6 @@ abstract class Client
     /**
      * Clicks on a given link.
      *
-     * @param Link $link A Link instance
-     *
      * @return Crawler
      */
     public function click(Link $link)
@@ -328,6 +325,8 @@ abstract class Client
         }
 
         if ($this->followRedirects && $this->redirect) {
+            $this->redirects[serialize($this->history->current())] = true;
+
             return $this->crawler = $this->followRedirect();
         }
 
@@ -345,8 +344,23 @@ abstract class Client
      */
     protected function doRequestInProcess($request)
     {
+        $deprecationsFile = tempnam(sys_get_temp_dir(), 'deprec');
+        putenv('SYMFONY_DEPRECATIONS_SERIALIZE='.$deprecationsFile);
+        $_ENV['SYMFONY_DEPRECATIONS_SERIALIZE'] = $deprecationsFile;
         $process = new PhpProcess($this->getScript($request), null, null);
         $process->run();
+
+        if (file_exists($deprecationsFile)) {
+            $deprecations = file_get_contents($deprecationsFile);
+            unlink($deprecationsFile);
+            foreach ($deprecations ? unserialize($deprecations) : array() as $deprecation) {
+                if ($deprecation[0]) {
+                    trigger_error($deprecation[1], E_USER_DEPRECATED);
+                } else {
+                    @trigger_error($deprecation[1], E_USER_DEPRECATED);
+                }
+            }
+        }
 
         if (!$process->isSuccessful() || !preg_match('/^O\:\d+\:/', $process->getOutput())) {
             throw new \RuntimeException(sprintf('OUTPUT: %s ERROR OUTPUT: %s', $process->getOutput(), $process->getErrorOutput()));
@@ -430,7 +444,11 @@ abstract class Client
      */
     public function back()
     {
-        return $this->requestFromRequest($this->history->back(), false);
+        do {
+            $request = $this->history->back();
+        } while (array_key_exists(serialize($request), $this->redirects));
+
+        return $this->requestFromRequest($request, false);
     }
 
     /**
@@ -440,7 +458,11 @@ abstract class Client
      */
     public function forward()
     {
-        return $this->requestFromRequest($this->history->forward(), false);
+        do {
+            $request = $this->history->forward();
+        } while (array_key_exists(serialize($request), $this->redirects));
+
+        return $this->requestFromRequest($request, false);
     }
 
     /**
@@ -468,14 +490,15 @@ abstract class Client
 
         if (-1 !== $this->maxRedirects) {
             if ($this->redirectCount > $this->maxRedirects) {
+                $this->redirectCount = 0;
                 throw new \LogicException(sprintf('The maximum number (%d) of redirections was reached.', $this->maxRedirects));
             }
         }
 
         $request = $this->internalRequest;
 
-        if (in_array($this->internalResponse->getStatus(), array(302, 303))) {
-            $method = 'get';
+        if (in_array($this->internalResponse->getStatus(), array(301, 302, 303))) {
+            $method = 'GET';
             $files = array();
             $content = null;
         } else {
@@ -484,7 +507,7 @@ abstract class Client
             $content = $request->getContent();
         }
 
-        if ('get' === strtolower($method)) {
+        if ('GET' === strtoupper($method)) {
             // Don't forward parameters for GET request as it should reach the redirection URI
             $parameters = array();
         } else {
@@ -542,9 +565,9 @@ abstract class Client
             return parse_url($currentUri, PHP_URL_SCHEME).':'.$uri;
         }
 
-        // anchor?
-        if (!$uri || '#' == $uri[0]) {
-            return preg_replace('/#.*?$/', '', $currentUri).$uri;
+        // anchor or query string parameters?
+        if (!$uri || '#' == $uri[0] || '?' == $uri[0]) {
+            return preg_replace('/[#?].*?$/', '', $currentUri).$uri;
         }
 
         if ('/' !== $uri[0]) {

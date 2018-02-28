@@ -21,6 +21,8 @@ class Di
 
     public function get($className)
     {
+        // normalize namespace
+        $className = ltrim($className, '\\');
         return isset($this->container[$className]) ? $this->container[$className] : null;
     }
 
@@ -32,19 +34,26 @@ class Di
     /**
      * @param string $className
      * @param array $constructorArgs
-     * @param string $injectMethodName Method which will be invoked after object creation; resolved dependencies will be passed to it as arguments
+     * @param string $injectMethodName Method which will be invoked after object creation;
+     *                                 Resolved dependencies will be passed to it as arguments
      * @throws InjectionException
      * @return null|object
      */
-    public function instantiate($className, $constructorArgs = null, $injectMethodName = self::DEFAULT_INJECT_METHOD_NAME)
-    {
+    public function instantiate(
+        $className,
+        $constructorArgs = null,
+        $injectMethodName = self::DEFAULT_INJECT_METHOD_NAME
+    ) {
+        // normalize namespace
+        $className = ltrim($className, '\\');
+
         // get class from container
         if (isset($this->container[$className])) {
             if ($this->container[$className] instanceof $className) {
                 return $this->container[$className];
-            } else {
-                throw new InjectionException("Failed to resolve cyclic dependencies for class '$className'");
             }
+
+            throw new InjectionException("Failed to resolve cyclic dependencies for class '$className'");
         }
 
         // get class from parent container
@@ -103,7 +112,13 @@ class Di
         try {
             $args = $this->prepareArgs($reflectedMethod, $defaults);
         } catch (\Exception $e) {
-            throw new InjectionException("Failed to inject dependencies in instance of '{$reflectedObject->name}'. " . $e->getMessage());
+            $msg = $e->getMessage();
+            if ($e->getPrevious()) { // injection failed because PHP code is invalid. See #3869
+                $msg .= '; '. $e->getPrevious();
+            }
+            throw new InjectionException(
+                "Failed to inject dependencies in instance of '{$reflectedObject->name}'. $msg"
+            );
         }
 
         if (!$reflectedMethod->isPublic()) {

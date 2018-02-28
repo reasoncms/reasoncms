@@ -2,7 +2,7 @@
 namespace Codeception\Module;
 
 use Codeception\Module as CodeceptionModule;
-use Codeception\TestCase;
+use Codeception\TestInterface;
 use Codeception\Exception\ModuleConfigException;
 use Codeception\Lib\Driver\AmazonSQS;
 use Codeception\Lib\Driver\Beanstalk;
@@ -23,7 +23,7 @@ use Codeception\Lib\Driver\Iron;
  *
  * The following dependencies are needed for the listed queue servers:
  *
- * * Beanstalkd: pda/pheanstalk ~2.0
+ * * Beanstalkd: pda/pheanstalk ~3.0
  * * Amazon SQS: aws/aws-sdk-php
  * * IronMQ: iron-io/iron_mq
  *
@@ -49,6 +49,8 @@ use Codeception\Lib\Driver\Iron;
  * * token - Iron.io access token.
  * * project - Iron.io project ID.
  * * key - AWS access key ID.
+ * * version - AWS version (e.g. latest)
+ * * endpoint - The full URI of the webservice. This is only required when connecting to a custom endpoint (e.g., a local version of SQS).
  * * secret - AWS secret access key.
  *      Warning:
  *          Hard-coding your credentials can be dangerous, because it is easy to accidentally commit your credentials
@@ -86,10 +88,10 @@ use Codeception\Lib\Driver\Iron;
  *        enabled: [Queue]
  *        config:
  *           Queue:
- *              'type' => 'iron',
- *              'host' => 'mq-aws-us-east-1.iron.io',
- *              'token' => 'your-token',
- *              'project' => 'your-project-id'
+ *              'type': 'iron',
+ *              'host': 'mq-aws-us-east-1.iron.io',
+ *              'token': 'your-token',
+ *              'project': 'your-project-id'
  *
  * #### Example (AWS SQS)
  *
@@ -97,10 +99,10 @@ use Codeception\Lib\Driver\Iron;
  *        enabled: [Queue]
  *        config:
  *           Queue:
- *              'type' => 'aws',
- *              'key' => 'your-public-key',
- *              'secret' => 'your-secret-key',
- *              'region' => 'us-west-2'
+ *              'type': 'aws',
+ *              'key': 'your-public-key',
+ *              'secret': 'your-secret-key',
+ *              'region': 'us-west-2'
  *
  * #### Example AWS SQS using profile credentials
  *
@@ -108,18 +110,18 @@ use Codeception\Lib\Driver\Iron;
  *        enabled: [Queue]
  *        config:
  *           Queue:
- *              'type' => 'aws',
- *              'profile' => 'project1', //see documentation
- *              'region' => 'us-west-2'
+ *              'type': 'aws',
+ *              'profile': 'project1', //see documentation
+ *              'region': 'us-west-2'
  *
- * #### Example AWS SQS running on Anazon EC2 instance
+ * #### Example AWS SQS running on Amazon EC2 instance
  *
  *     modules:
  *        enabled: [Queue]
  *        config:
  *           Queue:
- *              'type' => 'aws',
- *              'region' => 'us-west-2'
+ *              'type': 'aws',
+ *              'region': 'us-west-2'
  *
  */
 class Queue extends CodeceptionModule
@@ -132,9 +134,9 @@ class Queue extends CodeceptionModule
     /**
      * Setup connection and open/setup the connection with config settings
      *
-     * @param \Codeception\TestCase $test
+     * @param \Codeception\TestInterface $test
      */
-    public function _before(TestCase $test)
+    public function _before(TestInterface $test)
     {
         $this->queueDriver->openConnection($this->config);
     }

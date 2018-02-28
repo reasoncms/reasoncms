@@ -54,14 +54,14 @@ class Console
             } elseif (function_exists('proc_open')) {
                 $process = proc_open(
                     'mode CON',
-                    array(
-                        1 => array('pipe', 'w'),
-                        2 => array('pipe', 'w')
-                    ),
+                    [
+                        1 => ['pipe', 'w'],
+                        2 => ['pipe', 'w']
+                    ],
                     $pipes,
                     null,
                     null,
-                    array('suppress_errors' => true)
+                    ['suppress_errors' => true]
                 );
 
                 if (is_resource($process)) {
@@ -84,13 +84,13 @@ class Console
             return 80;
         }
 
-        if (preg_match('#\d+ (\d+)#', shell_exec('stty size'), $match) === 1) {
+        if (function_exists('shell_exec') && preg_match('#\d+ (\d+)#', shell_exec('stty size'), $match) === 1) {
             if ((int) $match[1] > 0) {
                 return (int) $match[1];
             }
         }
 
-        if (preg_match('#columns = (\d+);#', shell_exec('stty'), $match) === 1) {
+        if (function_exists('shell_exec') && preg_match('#columns = (\d+);#', shell_exec('stty'), $match) === 1) {
             if ((int) $match[1] > 0) {
                 return (int) $match[1];
             }

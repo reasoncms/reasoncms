@@ -9,22 +9,45 @@ class ExtensionsCest
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run tests/dummy/FileExistsCept.php -c codeception_extended.yml');
         $I->dontSeeInShellOutput("Check config");
-        $I->seeInShellOutput('[+] check config');
+        $I->seeInShellOutput('[+] FileExistsCept');
         $I->seeInShellOutput('Modules used: Filesystem, DumbHelper');
+    }
+
+    public function loadExtensionByOverride(CliGuy $I)
+    {
+        $I->amInPath('tests/data/sandbox');
+        $I->executeCommand('run tests/dummy/FileExistsCept.php -o "extensions: enabled: [\Codeception\Extension\SimpleReporter]"');
+        $I->dontSeeInShellOutput("Check config");
+        $I->seeInShellOutput('[+] FileExistsCept');
+    }
+
+    public function dynamicallyEnablingExtensions(CliGuy $I)
+    {
+        $I->amInPath('tests/data/sandbox');
+        $I->executeCommand('run dummy --ext DotReporter');
+        $I->seeInShellOutput('......');
+        $I->dontSeeInShellOutput('Optimistic');
+        $I->dontSeeInShellOutput('AnotherCest');
     }
 
     public function reRunFailedTests(CliGuy $I)
     {
         $ds = DIRECTORY_SEPARATOR;
         $I->amInPath('tests/data/sandbox');
+
         $I->executeCommand('run unit FailingTest.php -c codeception_extended.yml --no-exit');
         $I->seeInShellOutput('FAILURES');
-        $I->seeFileFound('failed','tests/_output');
-        $I->seeFileContentsEqual(<<<EOF
-tests{$ds}unit{$ds}FailingTest.php:testMe
-EOF
-);
+        $I->seeFileFound('failed', 'tests/_output');
+        $I->seeFileContentsEqual("tests{$ds}unit{$ds}FailingTest.php:testMe");
         $I->executeCommand('run -g failed -c codeception_extended.yml --no-exit');
+        $I->seeInShellOutput('Tests: 1, Assertions: 1, Failures: 1');
+
+        $failGroup = "some-failed";
+        $I->executeCommand("run unit FailingTest.php -c codeception_extended.yml --no-exit --override \"extensions: config: Codeception\\Extension\\RunFailed: fail-group: {$failGroup}\"");
+        $I->seeInShellOutput('FAILURES');
+        $I->seeFileFound($failGroup, 'tests/_output');
+        $I->seeFileContentsEqual("tests{$ds}unit{$ds}FailingTest.php:testMe");
+        $I->executeCommand("run -g {$failGroup} -c codeception_extended.yml --no-exit --override \"extensions: config: Codeception\\Extension\\RunFailed: fail-group: {$failGroup}\"");
         $I->seeInShellOutput('Tests: 1, Assertions: 1, Failures: 1');
     }
 
@@ -41,4 +64,29 @@ EOF
         $I->executeCommand('run tests/dummy/AnotherCest.php:optimistic -c codeception_extended.yml -vvv');
         $I->seeInShellOutput('Extreme verbosity');
     }
+
+    public function runPerSuiteExtensions(CliGuy $I)
+    {
+        $I->amInPath('tests/data/sandbox');
+        $I->executeCommand('run extended,scenario', false);
+        $I->seeInShellOutput('Suite setup for extended');
+        $I->seeInShellOutput('Test setup for Hello');
+        $I->seeInShellOutput('Test teardown for Hello');
+        $I->seeInShellOutput('Suite teardown for extended');
+        $I->dontSeeInShellOutput('Suite setup for scenario');
+        $I->seeInShellOutput('Config1: value1');
+        $I->seeInShellOutput('Config2: value2');
+    }
+
+    public function runPerSuiteExtensionsInEnvironment(CliGuy $I)
+    {
+        $I->amInPath('tests/data/sandbox');
+        $I->executeCommand('run extended --env black', false);
+        $I->seeInShellOutput('Suite setup for extended');
+        $I->seeInShellOutput('Test setup for Hello');
+        $I->seeInShellOutput('Config1: black_value');
+        $I->seeInShellOutput('Config2: value2');
+    }
+
+
 }

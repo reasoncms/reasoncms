@@ -2,8 +2,9 @@
 namespace Codeception\Lib;
 
 use Codeception\Configuration;
-use Codeception\TestCase\Interfaces\Reported;
-use Codeception\TestCase\Interfaces\ScenarioDriven;
+use Codeception\Test\Interfaces\Reported;
+use Codeception\Test\Descriptor;
+use Codeception\TestInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
@@ -41,14 +42,13 @@ class GroupManager
             }
             $files = Finder::create()->files()
                 ->name(basename($pattern))
-                ->path(dirname($pattern))
                 ->sortByName()
-                ->in(Configuration::projectDir());
+                ->in(Configuration::projectDir().dirname($pattern));
 
             $i = 1;
             foreach ($files as $file) {
                 /** @var SplFileInfo $file * */
-                $this->configuredGroups[str_replace('*', $i, $group)] = $file->getRelativePathname();
+                $this->configuredGroups[str_replace('*', $i, $group)] = dirname($pattern).DIRECTORY_SEPARATOR.$file->getRelativePathname();
                 $i++;
             }
             unset($this->configuredGroups[$group]);
@@ -71,7 +71,9 @@ class GroupManager
                         // if the current line is blank then we need to move to the next line
                         // otherwise the current codeception directory becomes part of the group
                         // which causes every single test to run
-                        if (trim($test) === '') continue;
+                        if (trim($test) === '') {
+                            continue;
+                        }
 
                         $file = trim(Configuration::projectDir() . $test);
                         $file = str_replace(['/', '\\'], [DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR], $file);
@@ -79,8 +81,6 @@ class GroupManager
                     }
                     fclose($handle);
                 }
-            } else {
-                codecept_debug("Group '$group' is empty, no tests are loaded");
             }
         }
     }
@@ -88,8 +88,9 @@ class GroupManager
     public function groupsForTest(\PHPUnit_Framework_Test $test)
     {
         $groups = [];
-        if ($test instanceof ScenarioDriven) {
-            $groups = $test->getScenario()->getGroups();
+        $filename = Descriptor::getTestFileName($test);
+        if ($test instanceof TestInterface) {
+            $groups = $test->getMetadata()->getGroups();
         }
         if ($test instanceof Reported) {
             $info = $test->getReportFields();
@@ -97,9 +98,16 @@ class GroupManager
                 $groups = array_merge($groups, \PHPUnit_Util_Test::getGroups($info['class'], $info['name']));
             }
             $filename = str_replace(['\\\\', '//'], ['\\', '/'], $info['file']);
-        } else {
+        }
+        if ($test instanceof \PHPUnit_Framework_TestCase) {
             $groups = array_merge($groups, \PHPUnit_Util_Test::getGroups(get_class($test), $test->getName(false)));
-            $filename = (new \ReflectionClass($test))->getFileName();
+        }
+        if ($test instanceof \PHPUnit_Framework_TestSuite_DataProvider) {
+            $firstTest = $test->testAt(0);
+            if ($firstTest != false && $firstTest instanceof TestInterface) {
+                $groups = array_merge($groups, $firstTest->getMetadata()->getGroups());
+                $filename = Descriptor::getTestFileName($firstTest);
+            }
         }
 
         foreach ($this->testsInGroups as $group => $tests) {
@@ -107,9 +115,16 @@ class GroupManager
                 if ($filename == $testPattern) {
                     $groups[] = $group;
                 }
-
                 if (strpos($filename . ':' . $test->getName(false), $testPattern) === 0) {
                     $groups[] = $group;
+                }
+                if ($test instanceof \PHPUnit_Framework_TestSuite_DataProvider) {
+                    $firstTest = $test->testAt(0);
+                    if ($firstTest != false && $firstTest instanceof TestInterface) {
+                        if (strpos($filename . ':' . $firstTest->getName(false), $testPattern) === 0) {
+                            $groups[] = $group;
+                        }
+                    }
                 }
             }
         }

@@ -1,32 +1,31 @@
 <?php
 use Codeception\Lib\Parser;
-use \Codeception\Util\Stub;
 
 /**
  * @group core
  * Class ParserTest
  */
-class ParserTest extends \Codeception\TestCase\Test
+class ParserTest extends \Codeception\Test\Unit
 {
     /**
      * @var Parser
      */
     protected $parser;
+
     /**
-     * @var \CodeGuy
+     * @var \Codeception\Scenario
      */
-    protected $codeGuy;
+    protected $scenario;
+    
+    protected $testMetadata;
 
     protected function _before()
     {
-        $this->scenario = new \Codeception\Scenario(Stub::make('Codeception\TestCase\Cept'));
-        $this->parser = new Parser($this->scenario);
-        Codeception\Configuration::append(['settings' => ['lint' => true]]);
-    }
+        $cept = new \Codeception\Test\Cept('demo', 'DemoCept.php');
 
-    protected function _after()
-    {
-        Codeception\Configuration::append(['settings' => ['lint' => false]]);
+        $this->testMetadata = $cept->getMetadata();
+        $this->scenario = new Codeception\Scenario($cept);
+        $this->parser = new Parser($this->scenario, $this->testMetadata);
     }
 
     public function testParsingFeature()
@@ -58,9 +57,8 @@ class ParserTest extends \Codeception\TestCase\Test
 EOF;
 
         $this->parser->parseScenarioOptions($code);
-        $this->assertContains('davert', $this->scenario->getGroups());
-        $this->assertContains('windows', $this->scenario->getEnv());
-
+        $this->assertContains('davert', $this->testMetadata->getGroups());
+        $this->assertContains('windows', $this->testMetadata->getEnv());
     }
 
     public function testCommentedInBlockScenarioOptions()
@@ -72,7 +70,7 @@ EOF;
  */
 EOF;
         $this->parser->parseScenarioOptions($code);
-        $this->assertTrue($this->scenario->isBlocked());
+        $this->assertTrue($this->testMetadata->isBlocked());
     }
 
     public function testFeatureCommented()
@@ -84,32 +82,20 @@ EOF;
         $code = "<?php\n /*\n \\\$I->wantTo('run this test'); \n */";
         $this->parser->parseFeature($code);
         $this->assertNull($this->scenario->getFeature());
-
     }
 
     public function testScenarioSkipOptionsHandled()
     {
-        $this->setExpectedException('PHPUnit_Framework_SkippedTestError', 'pass along');
         $code = "<?php\n // @skip pass along";
         $this->parser->parseScenarioOptions($code);
-        $this->assertTrue($this->scenario->isBlocked());
-        $this->scenario->stopIfBlocked();
-    }
-
-    public function testScenarioGroup()
-    {
-        $code = "<?php\n \$scenario->group('firefox'); ";
-        $this->parser->parseScenarioOptions($code);
-        $this->assertContains('firefox', $this->scenario->getGroups());
+        $this->assertTrue($this->testMetadata->isBlocked());
     }
 
     public function testScenarioIncompleteOptionHandled()
     {
-        $this->setExpectedException('PHPUnit_Framework_IncompleteTestError', 'not ready yet');
         $code = "<?php\n // @incomplete not ready yet";
         $this->parser->parseScenarioOptions($code);
-        $this->assertTrue($this->scenario->isBlocked());
-        $this->scenario->stopIfBlocked();
+        $this->assertTrue($this->testMetadata->isBlocked());
     }
 
     public function testSteps()
@@ -130,7 +116,6 @@ EOF;
         $this->assertContains("jon does", $text);
         $this->assertContains("I have friend", $text);
         $this->assertContains("back to me", $text);
-
     }
 
     public function testParseFile()
@@ -147,6 +132,15 @@ EOF;
         $classes = Parser::getClassesFromFile(codecept_data_dir('php55Test'));
         $this->assertEquals(['php55Test'], $classes);
     }
+
+    public function testParseFileWithAnonymousClass()
+    {
+        if (version_compare(PHP_VERSION, '7.0.0', '<')) {
+            $this->markTestSkipped('only for php 7');
+        }
+        $classes = Parser::getClassesFromFile(codecept_data_dir('php70Test'));
+        $this->assertEquals(['php70Test'], $classes);
+    }
     
     /*
      * https://github.com/Codeception/Codeception/issues/1779
@@ -155,15 +149,6 @@ EOF;
     {
         $classes = Parser::getClassesFromFile(codecept_data_dir('unsetFile.php'));
         $this->assertEquals([], $classes);
-    }
-    /**
-     * @group core
-     * @throws \Codeception\Exception\TestParseException
-     */
-    public function testCeptValidation()
-    {
-        $this->setExpectedException('Codeception\Exception\TestParseException');
-        Parser::validate(codecept_data_dir('Invalid.php'));
     }
 
     /**

@@ -50,7 +50,9 @@ class Runtime
 
         // PHP >= 5.4.0
         if (self::$binary === null && defined('PHP_BINARY')) {
-            self::$binary = escapeshellarg(PHP_BINARY);
+            if (PHP_BINARY !== '') {
+                self::$binary = escapeshellarg(PHP_BINARY);
+            }
         }
 
         // PHP < 5.4.0
@@ -72,11 +74,11 @@ class Runtime
         }
 
         if (self::$binary === null) {
-            $possibleBinaryLocations = array(
+            $possibleBinaryLocations = [
                 PHP_BINDIR . '/php',
                 PHP_BINDIR . '/php-cli.exe',
                 PHP_BINDIR . '/php.exe'
-            );
+            ];
 
             foreach ($possibleBinaryLocations as $binary) {
                 if (is_readable($binary)) {
