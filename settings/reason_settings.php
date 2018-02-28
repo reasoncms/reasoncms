@@ -1146,6 +1146,26 @@
 	 * REASON_DEFAULT_INTERFACE_LANGUAGE
 	 */
 	define('REASON_DEFAULT_INTERFACE_LANGUAGE', 'en-US');
+	
+	/**
+	 * REASON_DISPLAY_GRADE_LEVEL
+	 */
+	define('REASON_DISPLAY_GRADE_LEVEL', true);
+	
+	/**
+	 * REASON_GRADE_LEVEL_LABEL
+	 */
+	define('REASON_GRADE_LEVEL_LABEL', '');
+	
+	/**
+	 * REASON_DISPLAY_READING_EASE
+	 */
+	define('REASON_DISPLAY_READING_EASE', true);
+	
+	/**
+	 * REASON_READING_EASE_LABEL
+	 */
+	define('REASON_READING_EASE_LABEL', '');
 
 	/**
 	 * $GLOBALS['reason_role_privileges']

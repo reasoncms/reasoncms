@@ -17,28 +17,20 @@
 	include_once( DISCO_INC . 'boxes/boxes.php' );
 	include_once( DISCO_INC . 'disco.php' );
 	
-	/**
-	 * Define constants
-	 */
-	if(!defined('GRADE_LEVEL_NOTIFIER_MAX_GRADE_LEVEL'))
-	{
-		define('GRADE_LEVEL_NOTIFIER_MAX_GRADE_LEVEL', 24);
-	}
 	
 	/**
 	 * Class to support notification of grade level in disco forms
 	 *
 	 * Example usage:
 	 *
-	 * $readlevelnotif = new DiscoGradeLevelNotifier($disco);
+	 * $readeasenotif = new DiscoReadingEaseNotifier($disco);
 	 *
-	 * $readlevelnotif->add_field('content');
+	 * $readeasenotif->add_field('content');
 	 *
 	 * @todo add support for grade level thresholds (color coding, messages)
-	 * @todo add support for different readability indexes
 	 * @todo add support for requiring certain reading levels (e.g. error if reading level is above or below certain point)
 	 */
-	class DiscoGradeLevelNotifier
+	class DiscoReadingEaseNotifier
 	{
 		/**
 		 * The disco form containing the fields to notify the grade level of
@@ -61,7 +53,7 @@
 		{
 			$this->disco_form = $disco_form;
 			$this->disco_form->add_callback( array( $this, 'include_js' ), 'pre_show_form' );
-			$this->disco_form->add_callback( array( $this, 'add_grade_level_comment' ), 'on_every_time' );
+			$this->disco_form->add_callback( array( $this, 'add_reading_ease_comment' ), 'on_every_time' );
 		}
 		
 		/**
@@ -70,7 +62,7 @@
 		 */
 		public function include_js()
 		{
-			echo '<script src="' . REASON_PACKAGE_HTTP_BASE_PATH . 'disco/plugins/grade_level_notifier/grade_level_notifier.js' . '"></script>';
+			echo '<script src="' . REASON_PACKAGE_HTTP_BASE_PATH . 'disco/plugins/reading_ease_notifier/reading_ease_notifier.js' . '"></script>';
 		}
 		
 		/**
@@ -90,29 +82,32 @@
 		 *
 		 * @return void
 		 */
-		public function add_grade_level_comment()
+		public function add_reading_ease_comment()
 		{
 			foreach( $this->fields as $field)
 			{
 				$element_value = $this->disco_form->get_value( $field );
 				
-				$grade_level = self::get_grade_level($element_value);
+				$score = self::get_reading_ease($element_value);
 								
-				$formatted_grade_level_notification = '<div class="smallText gradeLevelNotification">';
+				$formatted_reading_ease_notification = '<div class="smallText readingEaseNotification">';
 				
+				$label = 'Reading Ease';
 				
-				$label = 'Grade Level';
-				
-				if(defined('REASON_GRADE_LEVEL_LABEL') && REASON_GRADE_LEVEL_LABEL)
+				if(defined('REASON_READING_EASE_LABEL') && REASON_READING_EASE_LABEL)
 				{
-					$label = REASON_GRADE_LEVEL_LABEL;
+					$label = REASON_READING_EASE_LABEL;
 				}
 				
-				$formatted_grade_level_notification .= '<span class="gradeLevelLabel">' . $label . '</span>: <span class="currentGradeLevel">' . $grade_level . '</span>';
+				$formatted_reading_ease_notification .= '<span class="readingEaseLabel">'.REASON_READING_EASE_LABEL.'</span>: <span class="currentReadingEase">' . $score . '</span>';
 				
-				$formatted_grade_level_notification .= '</div>';
+				$formatted_reading_ease_notification .= ' (<span class="currentReadingEaseLabel">' . self::get_ease_label($score) . '</span>)';
 				
-				$this->disco_form->add_comments($field, $formatted_grade_level_notification);
+				$formatted_reading_ease_notification .= '</div>';
+					
+					
+				
+				$this->disco_form->add_comments($field, $formatted_reading_ease_notification);
 			}
 		}
 		
@@ -144,19 +139,52 @@
 		}
 		
 		/**
-		 * Get the reading grade level of a given HTML string
+		 * Get the reading ease score of a given HTML string
 		 *
 		 * @param string $html
-		 * @return float Grade level
+		 * @return float Reading ease score
 		 */
-		public static function get_grade_level($html)
+		public static function get_reading_ease($html)
 		{
+			$string = self::html_to_string($html);
 			$textStatistics = new DaveChild\TextStatistics\TextStatistics;
-			if(method_exists($textStatistics, 'setMaxGradeLevel'))
+			return $textStatistics->fleschKincaidReadingEase( $string );
+		}
+		public static function is_scoreable($string)
+		{
+			if(mb_strlen($string) < 88)
 			{
-				$textStatistics->setMaxGradeLevel(GRADE_LEVEL_NOTIFIER_MAX_GRADE_LEVEL);
+				return false;
 			}
-			return $textStatistics->fleschKincaidGradeLevel( self::html_to_string($html) );
+			return true;
+		}
+		public static function get_ease_label($score)
+		{
+			$labels = self::get_ease_labels();
+			foreach($labels as $min_score => $label)
+			{
+				if($score >= $min_score)
+				{
+					return $label;
+				}
+			}
+			return $labels[0];
+		}
+		public static function get_ease_labels()
+		{
+			return array(
+				80 => 'Very easy to read. Fantastic job!',
+				70 => 'Easy to read. Good job!',
+				60 => 'Moderately easy to read. Nice!',
+				50 => 'OK – not especially easy or hard',
+				40 => 'A little hard to read. A few changes might get it above 50.',
+				30 => 'Hard to read.  See if you can get it to score above 40.',
+				0 => 'Very hard to read. Try to revise to score above 30.',
+			);
+		}
+		public static function get_not_scoreable_label()
+		{
+			return 'Too short to score';
 		}
 	}
 

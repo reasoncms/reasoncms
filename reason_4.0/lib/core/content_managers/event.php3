@@ -17,7 +17,6 @@
 	require_once INCLUDE_PATH . '/disco/plugins/input_limiter/input_limiter.php';
 	reason_include_once('classes/event.php');
 	reason_include_once('classes/api/geocoder.php');
-	include_once( DISCO_INC . 'plugins/grade_level_notifier/grade_level_notifier.php' );
 	
 	/**
 	 * A content manager for event entities
@@ -313,9 +312,8 @@
 			$limiter->limit_field('description', 140);
 			
 			// Add reading level notifier plugin to content editor
-			$readlevelnotif = new DiscoGradeLevelNotifier($this);
-			$readlevelnotif->add_field('content');
-			$readlevelnotif->add_field('description');
+			$this->add_readability_notifiers('content');
+			$this->add_readability_notifiers('description');
 			
 		} // }}}
 		

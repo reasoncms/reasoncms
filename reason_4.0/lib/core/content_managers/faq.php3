@@ -7,7 +7,6 @@
 	 * Include parent class
 	 */
 	reason_include_once('content_managers/default.php3');
-	include_once( DISCO_INC . 'plugins/grade_level_notifier/grade_level_notifier.php' );
 	/**
 	 * Register content manager with Reason
 	 */
@@ -43,8 +42,7 @@ relationship_id_of('faq_to_audience'),'right','checkbox',REASON_USES_DISTRIBUTED
 			$this->change_element_type( 'content' , html_editor_name($this->admin_page->site_id) , html_editor_params($this->admin_page->site_id, $this->admin_page->user_id) );
 			
 			// Add reading level notifier plugin to content editor
-			$readlevelnotif = new DiscoGradeLevelNotifier($this);
-			$readlevelnotif->add_field('content');
+			$this->add_readability_notifiers('content');
 
 			$this->set_order(
 				array(

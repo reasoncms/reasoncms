@@ -7,7 +7,6 @@
 	 * Register the content manager with Reason
 	 */
 	reason_include_once( 'content_managers/parent_child.php3' );
-	include_once( DISCO_INC . 'plugins/grade_level_notifier/grade_level_notifier.php' );
 	
 	$GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'MinuteManager';
 
@@ -35,8 +34,7 @@
 			$this->change_element_type( 'bigger_content' , html_editor_name($this->admin_page->site_id) , html_editor_params($this->admin_page->site_id, $this->admin_page->user_id) );
 			
 			// Add reading level notifier plugin to content editor
-			$readlevelnotif = new DiscoGradeLevelNotifier($this);
-			$readlevelnotif->add_field('bigger_content');
+			$this->add_readability_notifiers('bigger_content');
 			
 			$org = $this->get_value('organization');
 			$site = new entity($this->admin_page->site_id);

@@ -20,8 +20,7 @@
 			$this->change_element_type( 'content' , html_editor_name($this->admin_page->site_id) , html_editor_params($this->admin_page->site_id, $this->admin_page->user_id) );
 		
 			// Add reading level notifier plugin to content editor
-			$readlevelnotif = new DiscoGradeLevelNotifier($this);
-			$readlevelnotif->add_field('content');
+			$this->add_readability_notifiers('content');
 		}
 	}
 ?>
