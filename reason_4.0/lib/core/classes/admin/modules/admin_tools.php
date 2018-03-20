@@ -157,8 +157,8 @@ class ReasonAdminToolsModule extends DefaultModule
 					'safety_level' => 'safe',
 				),
 				'?cur_module=ShareSiteOwnership' => array(  
-					'title' => 'Share Site Ownership',
-					'description' => 'Assign some or all of a user\'s sites to another user as well.',
+					'title' => 'Duplicate Site Access',
+					'description' => 'Give some or all of a user\'s sites to another user as well.',
 					'safety_level' => 'safe',
 				),
 				REASON_HTTP_BASE_PATH.'scripts/move/move_entities_among_sites.php' => array(
