@@ -93,12 +93,12 @@ function get_remote_filesize($uri,$user='',$pw='')
  * @param $url
  * @return mixed site ID integer if successful, else NULL
  */
-function get_site_id_from_url($url)
+function get_site_id_from_url($url, $live_only = false)
 {
 	$parsed = parse_url($url);
 	if(empty($parsed['host']) || hostname_is_associated_with_this_reason_instance($parsed['host']) )
 	{
-		$sites = get_potential_sites_from_path($parsed['path']);
+		$sites = get_potential_sites_from_path($parsed['path'], $live_only);
 		if(!empty($sites))
 		{
 			reset($sites);
@@ -139,7 +139,7 @@ function hostname_is_associated_with_this_reason_instance($hostname)
  * @param string $path
  * @return array Site entities
  */
-function get_potential_sites_from_path($path)
+function get_potential_sites_from_path($path, $live_only = false)
 {
 	if(!empty($path))
 	{
@@ -148,13 +148,17 @@ function get_potential_sites_from_path($path)
 		$prev_parts = '/';
 		foreach($path_parts as $part)
 		{
-			$values[] = $prev_parts = $prev_parts.$part.'/';
+			$values[] = reason_sql_string_escape( $prev_parts = $prev_parts.$part.'/' );
 		}
 		$where = '(site.base_url = "'.implode('" OR site.base_url = "',$values).'")';
 		
 		$es = new entity_selector();
 		$es->add_type(id_of('site'));
 		$es->add_relation($where);
+		if($live_only)
+		{
+			$es->add_relation('site.site_state = "Live"');
+		}
 		$es->set_order('site.base_url DESC');
 		$potential_sites = $es->run_one();
 		return $potential_sites;
