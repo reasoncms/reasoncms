@@ -411,7 +411,7 @@ class ZencoderMediaWorkDisplayer implements MediaWorkDisplayerInterface
 					$iframe_width = 360;
 			}
 			//add video or audio class using string on object
-			$markup = '<iframe class="media_work_iframe ' . strtolower($this->media_work->get_value('av_type')) . '" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" allowfullscreen="allowfullscreen" height="'.intval($iframe_height).'" width="'.intval($iframe_width).'" ';
+			$markup = '<iframe class="media_work_iframe ' . strtolower($this->media_work->get_value('av_type')) . '" style="border:none;margin:0;" allowfullscreen="allowfullscreen" height="'.intval($iframe_height).'" width="'.intval($iframe_width).'" ';
 			
 			$markup .= 'src="'.$this->get_iframe_src($iframe_height, $iframe_width).'" ';
 			

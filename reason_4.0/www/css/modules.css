@@ -13,7 +13,10 @@ is preserved, the contents of modules_mod was placed precisely where the import 
 a img {
 	border:none;
 }
-
+.media_work_iframe {
+	border:none;
+	margin:0;
+}
 .media_work_iframe.audio {
 	max-width:100%;
 }

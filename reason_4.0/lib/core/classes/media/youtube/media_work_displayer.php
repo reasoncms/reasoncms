@@ -249,7 +249,7 @@ class YoutubeMediaWorkDisplayer implements MediaWorkDisplayerInterface
 				$iframe_width = $this->_get_width_from_height();				
 				
 			//add video class using string on object
-			$markup = '<iframe class="media_work_iframe video" title="Video" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" height="'.intval($iframe_height).'" width="'.intval($iframe_width).'" ';
+			$markup = '<iframe class="media_work_iframe video" title="Video" style="border:none;margin:0;" height="'.intval($iframe_height).'" width="'.intval($iframe_width).'" ';
 
 			$markup .= 'src="'.$this->get_iframe_src($iframe_height, $iframe_width).'" ';
 			
@@ -321,7 +321,7 @@ class YoutubeMediaWorkDisplayer implements MediaWorkDisplayerInterface
 			}
 			
 			$markup .= 'src="'.$src.'" ';
-			$markup .= 'frameborder="0" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;">';
+			$markup .= 'allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;margin:0;">';
 			$markup .= '</iframe>'."\n";
 			$markup .= '</div>';
 			

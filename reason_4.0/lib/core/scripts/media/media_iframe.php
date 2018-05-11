@@ -270,7 +270,8 @@ video { height: 100%;
         position: absolute; }
 body { margin: 0; 
        height: 100%; 
-       width: 100%; }
+       width: 100%;
+       overflow: hidden; }
 img.nonImage {
 	position:relative;
 	left:-9999px;

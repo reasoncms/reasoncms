@@ -546,7 +546,7 @@ class MinisiteTemplate
 
 		if($this->include_modules_css)
 		{
-			$this->head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/modules.css?v=3');
+			$this->head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/modules.css?v=4');
 		}
 		if( $css_files )
 		{
