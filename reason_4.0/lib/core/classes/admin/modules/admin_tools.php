@@ -135,8 +135,8 @@ class ReasonAdminToolsModule extends DefaultModule
 					'safety_level' => 'safe',
 				),
 				'?site_id='.id_of('master_admin').'&cur_module=TypeUsage' => array(
-					'title' => 'Type Usage',
-					'description' => 'Provides statistics on which sites use which types',
+					'title' => 'Type & Module Usage',
+					'description' => 'Provides statistics on how frequently each type and module is used by each site',
 					'safety_level' => 'safe',
 				),
 				'?cur_module=FindPageFromURL' => array(  
