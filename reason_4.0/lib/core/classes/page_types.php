@@ -934,26 +934,7 @@ class ReasonPageTypes
 	 */
 	function get_page_type_names_that_use_module($module_name)
 	{
-		static $modules_to_page_types = array();
-		if(empty($modules_to_page_types))
-		{
-			reason_include_once('minisite_templates/page_types.php');
-			foreach($GLOBALS['_reason_page_types'] as $page_type => $type )
-			{
-				if( $page_type != 'default' )
-				{
-					$type = array_merge( $GLOBALS['_reason_page_types'][ 'default' ], $type  );
-				}
-				foreach( $type AS $section => $module_info )
-				{
-					if('_meta' != $section)
-					{
-						$module = is_array( $module_info ) ? $module_info[ 'module' ] : $module_info;
-						if ($module) $modules_to_page_types[$module][] = $page_type;
-					}
-				}
-			}
-		}
+		$modules_to_page_types = $this->get_modules_to_page_types();
 		if (is_array($module_name))
 		{
 			$result_array = array();
@@ -979,6 +960,35 @@ class ReasonPageTypes
 		return array();
 	}
 	
+	function get_modules_to_page_types()
+	{
+		static $modules_to_page_types = array();
+		if(empty($modules_to_page_types))
+		{
+			reason_include_once('minisite_templates/page_types.php');
+			foreach($GLOBALS['_reason_page_types'] as $page_type => $type )
+			{
+				if( $page_type != 'default' )
+				{
+					$type = array_merge( $GLOBALS['_reason_page_types'][ 'default' ], $type  );
+				}
+				foreach( $type AS $section => $module_info )
+				{
+					if('_meta' != $section)
+					{
+						$module = is_array( $module_info ) ? $module_info[ 'module' ] : $module_info;
+						if ($module) $modules_to_page_types[$module][] = $page_type;
+					}
+				}
+			}
+		}
+		return $modules_to_page_types;
+	}
+	
+	function get_all_modules()
+	{
+		return array_keys($this->get_modules_to_page_types());
+	}
 	
 	/**
 	 * Provides an array of all the page type names. Faster than get_page_types(). 
