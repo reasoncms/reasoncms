@@ -97,7 +97,7 @@
 				parent::run();
 			echo '</div>'."\n";
 			
-			echo '<form class="siteSearchMini searchMini" action="./" method="get"><label for="searchModuleInput">Search this site:</label> <input name="search_string" id="searchModuleInput"><input type="hidden" name="site_id" value="'.$e->id().'"><input type="hidden" name="cur_module" value="Search"><input type="hidden" name="result_limit" value="100"><input type="hidden" name="submitted" value="true"><input type="hidden" name="user_id" value="'.$this->admin_page->user_id.'"> <input type="submit" value="Go"></form>';
+			echo '<form class="siteSearchMini searchMini" action="./" method="get"><label for="searchModuleInput">Search this site:</label> <input name="search_string" id="searchModuleInput"><input type="hidden" name="search_site_id" value="'.$e->id().'"><input type="hidden" name="site_id" value="'.$e->id().'"><input type="hidden" name="cur_module" value="Search"><input type="hidden" name="result_limit" value="100"><input type="hidden" name="submitted" value="true"><input type="hidden" name="user_id" value="'.$this->admin_page->user_id.'"> <input type="submit" value="Go"></form>';
 			
 			echo '<div id="guide">'."\n";
 			$es = new entity_selector();

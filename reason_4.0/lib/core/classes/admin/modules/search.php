@@ -108,7 +108,10 @@ reason_include_once( 'function_libraries/user_functions.php' );
 					$type_names[$id] = $arrtype->get_value('name');
 				}
 
-				$site_names = array(0 => $this->user_is_admin() ? 'All Sites' : 'All Your Sites');
+				$site_names = array(
+					0 => $this->user_is_admin() ? 'All Sites' : 'All Your Sites',
+					-1 => $this->user_is_admin() ? 'All Live Sites' : 'All Your Live Sites',
+				);
 				foreach($this->get_sites() as $id=>$arrsite)
 				{
 					$site_names[$id] = $arrsite->get_value('name');
@@ -134,15 +137,18 @@ reason_include_once( 'function_libraries/user_functions.php' );
 				$this->form->add_element('type','select_no_sort',array('options'=>$type_names, 'reject_unrecognized_values' => true ));
 				$this->form->set_display_name('type', 'Among');
 				
-				$this->form->add_element('site_id','select_no_sort',array('options'=>$site_names, 'reject_unrecognized_values' => true ));
-				$this->form->set_display_name('site_id', 'Within');
-				$this->form->set_value('site_id',$this->admin_page->site_id);
+				$this->form->add_element('search_site_id','select_no_sort',array('options'=>$site_names, 'reject_unrecognized_values' => true ));
+				$this->form->set_display_name('search_site_id', 'Within');
+				$this->form->set_value('search_site_id',$this->admin_page->site_id);
 				
 				$this->form->add_element('cur_module','hidden');
 				$this->form->set_value('cur_module','Search');
 				
 				$this->form->add_element('user_id','hidden');
 				$this->form->set_value('user_id',$this->admin_page->user_id);
+				
+				$this->form->add_element('site_id','hidden');
+				$this->form->set_value('site_id',$this->admin_page->site_id);
 				
 				$this->form->add_element('result_limit','select_no_sort',array('options'=>$limit_options));
 				$this->form->set_value('result_limit','100');
@@ -176,19 +182,44 @@ reason_include_once( 'function_libraries/user_functions.php' );
 					else
 					{
 						$types = array();
-						echo 'Not a type';
 					}
 				}
-				if($form->get_value('site_id'))
+				$site_ids = array();
+				if( isset($sites[$form->get_value('search_site_id')]) )
 				{
-					if(isset($sites[$form->get_value('site_id')]))
+					$site_ids[] = (integer) $form->get_value('search_site_id');
+				}
+				elseif(-1 == $form->get_value('search_site_id'))
+				{
+					foreach($sites as $site)
 					{
-						$site = $sites[$form->get_value('site_id')];
+						if($site->get_value('site_state') == 'Live')
+						{
+							$site_ids[] = $site->id();
+						}
+					}
+					if(empty($site_ids)) {
+						$site_ids = array(-1);
+					}
+				}
+				elseif( 0 == $form->get_value('search_site_id') )
+				{
+					if($this->user_is_admin())
+					{
+						$site_ids = null; // should be faster to simply not specify site ids
 					}
 					else
 					{
-						die('Invalid site');
+						$site_ids = array_keys($sites);
+						if(empty($site_ids)) {
+							$site_ids = array(-1);
+						}
 					}
+				}
+				else
+				{
+					echo '<p>Invalid site</p>';
+					return;
 				}
 				foreach($types as $type)
 				{
@@ -197,18 +228,7 @@ reason_include_once( 'function_libraries/user_functions.php' );
 					
 					//echo $type->get_value('name').'<br />';
 					$tables = get_entity_tables_by_type( $type->id() );
-					if(!empty($site))
-					{
-						$es = new entity_selector($site->id());
-					}
-					elseif($this->user_is_admin())
-					{
-						$es = new entity_selector();
-					}
-					else
-					{
-						$es = new entity_selector(array_keys($sites));
-					}
+					$es = new entity_selector($site_ids);
 					$es->set_num($result_limit - $hit_count);
 					$es->add_type($type->id());
 					$tables = get_entity_tables_by_type( $type->id() );
