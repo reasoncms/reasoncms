@@ -245,7 +245,6 @@
 		 *
 		 * Set using set_entity_limit(); get using get_entity_limit().
 		 *
-		 * @access protected
 		 * @var integer
 		 */
 		protected $entity_limit = -1;
