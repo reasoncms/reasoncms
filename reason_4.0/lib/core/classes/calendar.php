@@ -15,6 +15,11 @@ include_once( 'reason_header.php' );
 include_once( CARL_UTIL_INC . 'db/db.php' );
 reason_include_once( 'classes/entity_selector.php' );
 
+if( !defined( 'CALENDAR_RESULTS_LIMIT_DEFAULT' ) )
+{
+	define( 'CALENDAR_RESULTS_LIMIT_DEFAULT', 15000 );
+}
+
 /**
  * compare_times( $a,$b )
  * This function takes two objects with datetime fields and figures out which
@@ -167,7 +172,7 @@ class reasonCalendar
 	 * if a key-value pair is passed to the object that is not in this array, it is ignored
 	 * @var array
 	 */
-	protected $init_array_keys = array('site','ideal_count','start_date','view','categories','audiences','or_categories','end_date','automagic_window_snap_to_nearest_view','rels','simple_search','context_site','sharing_mode','show_statuses','default_view_min_days', 'es_callback','ongoing_count_all_occurrences','ongoing_count_pre_start_dates','ongoing_count_ends','cache_lifespan','cache_lifespan_meta');
+	protected $init_array_keys = array('site','ideal_count','start_date','view','categories','audiences','or_categories','end_date','automagic_window_snap_to_nearest_view','rels','simple_search','context_site','sharing_mode','show_statuses','default_view_min_days', 'es_callback','ongoing_count_all_occurrences','ongoing_count_pre_start_dates','ongoing_count_ends','cache_lifespan','cache_lifespan_meta','limit',);
 	/**
 	 * site entity that we are looking at
 	 *
@@ -393,6 +398,15 @@ class reasonCalendar
 	 * @var integer seconds
 	 */
 	protected $cache_lifespan_meta = 0;
+	
+	/**
+	 * What should be the maximum number of calendar items retrieved?
+	 *
+	 * This is available so that large calendars won't exhaust php's avialable memory.
+	 *
+	 * @var integer limit
+	 */
+	protected $limit = CALENDAR_RESULTS_LIMIT_DEFAULT;
 	
 	/**
 	 * The entity selector used by the calendar to select the events
@@ -657,7 +671,6 @@ class reasonCalendar
 				}
 			}
 		}
-		
 	}
 	/**
 	 * Get the set of sites that share events
@@ -939,6 +952,12 @@ class reasonCalendar
 		if( $this->view == 'daily' )
 		{
 			$this->es->add_relation( table_of('dates', id_of('event_type')). ' LIKE "%'.$this->start_date.'%"');
+		}
+		if(!empty($this->limit))
+		{
+			$limit = (integer) $this->limit;
+			$limit++; // so we know if we have 1 more than cap
+			$this->es->set_entity_limit($limit);
 		}
 	}
 	/**
@@ -1511,7 +1530,21 @@ class reasonCalendar
 			return false;
 		}
 	}
+	public function limit_reached()
+	{
+		//echo 'events: ' . count($this->events) . '<br />';
+		//echo 'limit: '. $this->limit . '<br />';
+		if(!empty($this->limit) && count($this->events) > $this->limit)
+		{
+			return true;
+		}
+		return false;
+	}
 	
+	public function get_limit()
+	{
+		return $this->limit;
+	}
 }
 
 ?>
