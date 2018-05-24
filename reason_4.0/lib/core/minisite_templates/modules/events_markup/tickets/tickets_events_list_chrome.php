@@ -9,6 +9,7 @@ class ticketsEventListChrome extends miniEventsListChromeMarkup
 	public function get_markup()
 	{
 		$ret = '';
+		$ret .= $this->get_section_markup('notice');
 		$ret .= $this->get_section_markup('list');
 		return $ret;
 	}
