@@ -84,6 +84,7 @@ class hybridEventsListChromeMarkup implements eventsListChromeMarkup
 		
 		$ret .= $this->get_section_markup('focus');
 		$ret .= $this->get_section_markup('list_title');
+		$ret .= $this->get_section_markup('notice');
 		
 		$ret .= $this->get_section_markup('list');
 		

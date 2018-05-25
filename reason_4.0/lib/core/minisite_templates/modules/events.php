@@ -1377,6 +1377,20 @@ class EventsModule extends DefaultMinisiteModule
 		$this->show_focus();
 		return ob_get_clean();
 	}
+	
+	function get_section_markup_notice()
+	{
+		$ret = '';
+		
+		if( $cal = $this->get_current_calendar() )
+		{
+			if( $cal->limit_reached() )
+			{
+				$ret .= '<div class="notice"><h3>Not Showing All Events For This Time Period</h3><p>This calendar can only show ' . number_format( $cal->get_limit() ) . ' events at a time. Because the currently selected view contains more events than that, there are some events that are not shown below. Please try choosing a shorter timespan (e.g. day/week/month).</p></div>';
+			}
+		}
+		return $ret;
+	}
 	/**
 	 * Get the ical links section markup
 	 * @return string
@@ -1483,6 +1497,7 @@ class EventsModule extends DefaultMinisiteModule
 				$bundle->set_function('options_markup', array($this, 'get_section_markup_options'));
 				$bundle->set_function('navigation_markup', array($this, 'get_section_markup_navigation'));
 				$bundle->set_function('focus_markup', array($this, 'get_section_markup_focus'));
+				$bundle->set_function('notice_markup', array($this, 'get_section_markup_notice'));
 				$bundle->set_function('list_title_markup', array($this, 'get_section_markup_list_title'));
 				$bundle->set_function('ical_links_markup', array($this, 'get_section_markup_ical_links'));
 				$bundle->set_function('rss_links_markup', array($this, 'get_section_markup_rss_links'));
