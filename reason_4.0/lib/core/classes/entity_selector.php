@@ -937,8 +937,12 @@
 				$sharing .= 'owns';
 			if( $this->borrows )
 				$sharing .= 'borrows';
-			if( $status != 'All' )
-				$new_e->add_relation( 'entity.state = "'.$status.'"' );
+			if( is_array($status) )
+			{
+				$new_e->add_relation( 'entity.state IN ("'.implode( '","', array_map('reason_sql_string_escape', $status) ) .'")');
+			}
+			elseif( $status != 'All' )
+				$new_e->add_relation( 'entity.state = "'.reason_sql_string_escape($status).'"' );
 			else
 				$new_e->add_relation( 'entity.state != "Archived"' );
 			
