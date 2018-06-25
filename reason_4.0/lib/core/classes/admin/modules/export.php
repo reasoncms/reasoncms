@@ -201,10 +201,19 @@ include_once( DISCO_INC . 'disco.php' );
 				$d->add_element('type', 'radio', array('options'=>$radio_buttons));
 				if ($export_type == 'csv'){
 					$d->add_element('states', 'checkboxgroup', array('options'=>array('Live'=>'Live','Pending'=>'Pending','Deleted'=>'Deleted')));
-					if(!is_array($this->admin_page->request['states']))
+					$d->set_value('states', array('Live'));
+					if(!empty($this->admin_page->request['states']))
 					{
-						$d->set_value('states', explode(',', $this->admin_page->request['states']));
+						if(is_array($this->admin_page->request['states']))
+						{
+							$d->set_value('states', $this->admin_page->request['states']);
+						}
+						else
+						{
+							$d->set_value('states', explode(',', $this->admin_page->request['states']));
+						}
 					}
+					
 					$d->add_element('include_empty_columns', 'checkbox', array('checkbox_id'=>'includeEmptyColumns', 'checked_value'=>'true', 'description'=>''));
 					$d->add_element('number_of_items', 'text');
 					$d->add_element('index', 'text');
