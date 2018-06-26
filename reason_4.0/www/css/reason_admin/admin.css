@@ -129,7 +129,7 @@ a.skipLink:focus, a.skipLink:active, a.skipLink:hover {
 .viewFilter {
 	background-color: #8AA3D0;
 }
-.viewInfo {
+.viewInfo, .exportInfo {
 	background-color: #D9E2F4;
 	padding:10px;
 	border-radius:5px;

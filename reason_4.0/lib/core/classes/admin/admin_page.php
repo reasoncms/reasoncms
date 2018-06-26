@@ -1548,7 +1548,7 @@ class AdminPage
 		if (defined('UNIVERSAL_CSS_PATH') && UNIVERSAL_CSS_PATH != '') $this->head_items->add_stylesheet(UNIVERSAL_CSS_PATH);
 		
 		// add admin CSS
-		$this->head_items->add_stylesheet(REASON_ADMIN_CSS_DIRECTORY.'admin.css?v=5');
+		$this->head_items->add_stylesheet(REASON_ADMIN_CSS_DIRECTORY.'admin.css?v=6');
 					
 		// add javascript logout timer
 		if (!isset($_SERVER['REMOTE_USER']) && USE_JS_LOGOUT_TIMER) // if we are not logged in via http authentication

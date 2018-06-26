@@ -20,6 +20,7 @@
 		var $admin_page;
 		var $viewer_entity;
 		var $import_modules = array('image'=>'ImageImport');
+		var $export_modules = array('image'=>'ExportImages');
 
 		function ListerModule( &$page ) // {{{
 		{
@@ -41,6 +42,7 @@
 			{
 				$this->show_sorting();
 			}
+			$this->show_export();
 			echo '</div>'."\n";
 			$this->show_filters();
 			echo '</div>'."\n";
@@ -211,6 +213,19 @@
 				echo '<a href="'.$link.'">Sort these items</a></div>'."\n";
 			}
 		} // }}}
+		
+		function show_export()
+		{
+			echo '<div class="exportInfo">'."\n";
+			$states = 'Live';
+			if( !empty($this->admin_page->request[ 'state' ]))
+			{
+				$states = ucfirst($this->admin_page->request[ 'state' ]);
+			}
+			$link = $this->admin_page->make_link( array( 'cur_module' => 'Export', 'states' => $states ) );
+			echo '<a href="'.$link.'">Export these items</a>';
+			echo '</div>'."\n";
+		}
 	
 		function get_views( ) // {{{
 		{	

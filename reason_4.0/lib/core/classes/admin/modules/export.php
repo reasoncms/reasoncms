@@ -23,6 +23,16 @@ include_once( DISCO_INC . 'disco.php' );
 		// Set to true in init() if exporting as CSV
 		var $should_run_api = false;
 		
+		function get_custom_export_map()
+		{
+			return array(
+				'image' => array(
+					'module' => 'ExportImages',
+					'label' => 'Export Original Image Files',
+				),
+			);
+		}
+		
 		/**
 		 * Call back method for disco
 		 * @param disco form $d
@@ -192,6 +202,16 @@ include_once( DISCO_INC . 'disco.php' );
 					$desc = 'Export data from Reason as a spreadsheet';
 					$notice = 'Note: CSV exports do not contain asset files, image files, or form data. CSV exports of form data are available when editing a form.';
 				}
+				
+				$map = $this->get_custom_export_map();
+				
+				$export_type_id = $this->get_export_type_id();
+				if($export_type_id && isset($map[unique_name_of($export_type_id)]))
+				{
+					$export_info = $map[unique_name_of($export_type_id)];
+					$notice .= ' <a href="'.$this->admin_page->make_link(array('cur_module'=>$export_info['module'])).'">'.$export_info['label'].'</a>';
+				}
+				
 				foreach ($types as $type) {
 					$radio_buttons[$type->get_value('id')] = $type->get_value('name');
 				}
@@ -218,12 +238,8 @@ include_once( DISCO_INC . 'disco.php' );
 					$d->add_element('number_of_items', 'text');
 					$d->add_element('index', 'text');
 				}
-				if (isset($this->admin_page->request['export_type_id'])) {
-					$d->set_value('type',$this->admin_page->request['export_type_id']);
-					$export_type_id = $this->admin_page->request['export_type_id'];
-				} else if (isset($this->admin_page->request['type_id'])) {
-					$d->set_value('type',$this->admin_page->request['type_id']);
-					$export_type_id = $this->admin_page->request['type_id'];
+				if (!empty($export_type_id)) {
+					$d->set_value('type',$export_type_id);
 				}
 				if (isset($this->admin_page->request['show_all_columns']))
 					if ($this->admin_page->request['show_all_columns'] == 'true')
@@ -283,9 +299,22 @@ include_once( DISCO_INC . 'disco.php' );
 						$export = new reason_xml_export();
 	                    echo '<textarea rows="38">'.htmlspecialchars($export->get_xml($entities), ENT_QUOTES).'</textarea>'."\n";
 					}
+					
                     echo '</div>';
 				}
 			}
+		}
+		function get_export_type_id()
+		{
+			if (isset($this->admin_page->request['export_type_id'])) {
+				return (integer) $this->admin_page->request['export_type_id'];
+			} elseif (isset($this->admin_page->request['type_id'])) {
+				return (integer) $this->admin_page->request['type_id'];
+			}
+			elseif (isset($this->admin_page->request['type'])) {
+				return (integer) $this->admin_page->request['type'];
+			}
+			return NULL;
 		}
 	}
 ?>
