@@ -119,6 +119,11 @@ include_once( DISCO_INC . 'disco.php' );
 	        	$show_all_columns = true;
 	        else
 	        	$show_all_columns = false;
+	        
+	        foreach($entities as $e)
+	        {
+	        	$this->add_generated_data($e);
+	        }
 
 
 	        $information = array(
@@ -132,6 +137,21 @@ include_once( DISCO_INC . 'disco.php' );
             	header($header);
             echo $export->get_csv($entities,$type_id,$site_id);
             exit();
+		}
+		
+		protected function add_generated_data($e)
+		{
+			if($e->method_supported('get_export_generated_data'))
+			{
+				$data = $e->get_export_generated_data();
+				if(!empty($data))
+				{
+					foreach($data as $k => $v)
+					{
+						$e->set_value('_generated_'.$k, $v);
+					}
+				}
+			}
 		}
 
 		function EntityInfoModule( &$page ) // {{{

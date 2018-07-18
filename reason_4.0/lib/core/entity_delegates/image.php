@@ -49,15 +49,20 @@ class imageDelegate extends entityDelegate
 	 * @param string $size 'standard', 'thumbnail', 'original, or common variants
 	 * @return string url
 	 */
-	function get_image_url($size='standard') {
-		return reason_get_image_url($this->entity, $size);
+	function get_image_url($size='standard', $absolute = false) {
+		$url = reason_get_image_url($this->entity, $size);
+		if($absolute)
+		{
+			$url = $this->absolutify($url);
+		}
+		return $url;
 	}
 	
-	function get_image_path($size='standard') {
+	function get_image_path($size='standard', $absolute = false) {
 		return reason_get_image_path($this->entity, $size);
 	}
 	
-	function get_sized_image($handle = 'default')
+	function get_sized_image($handle = 'default', $absolute = false)
 	{
 		if(!isset($this->sized_images[$handle]))
 		{
@@ -70,14 +75,14 @@ class imageDelegate extends entityDelegate
 	{
 		return reason_htmlspecialchars(strip_tags($this->entity->get_value('description')));
 	}
-	function get_image_html($size = 'standard', $check_file = false, $browser_cache_bust = false, $display_ratio = 1)
+	function get_image_html($size = 'standard', $check_file = false, $browser_cache_bust = false, $display_ratio = 1, $absolute = false)
 	{
 		if($check_file)
 		{
 			$path = $this->entity->get_image_path($size);
 			if( file_exists($path) && (filesize($path) > 0) )
 			{
-				$url = $this->entity->get_image_url($size);
+				$url = $this->entity->get_image_url($size, $absolute);
 			}
 			else
 			{
@@ -86,7 +91,7 @@ class imageDelegate extends entityDelegate
 		}
 		else
 		{
-			$url = $this->entity->get_image_url($size);
+			$url = $this->entity->get_image_url($size, $absolute);
 		}
 		if($browser_cache_bust)
 		{
@@ -103,6 +108,11 @@ class imageDelegate extends entityDelegate
 		//return '<img src="'.$url.'" width="'.(round($width * $display_ratio)).'" height="'.(round($height * $display_ratio)).'" alt="'.$this->entity->get_alt_text().'" />';
 		return '<img src="'.$url.'" width="'.(round($width * $display_ratio)).'" height="'.(round($height * $display_ratio)).'" alt="'.$this->entity->get_alt_text().'" />';
 	}
+	function image_size_exists($size)
+	{
+		$path = $this->entity->get_image_path($size);
+		return ( file_exists($path) && (filesize($path) > 0) );
+	}
 	function get_display_name()
 	{
 		$markup = $this->entity->get_image_html('thumbnail', true, true);
@@ -115,5 +125,34 @@ class imageDelegate extends entityDelegate
 			return $this->entity->get_value('name');
 		}
 		return $this->entity->get_value('name').'<br />'.$markup;
+	}
+	function get_export_generated_data()
+	{
+		$ret = array();
+		$sizes = array(
+			'original',
+			'standard',
+			'thumbnail',
+		);
+		$ret['largest_image_url'] = '';
+		foreach($sizes as $size)
+		{
+			$key = $size . '_image_url';
+			$ret[$key] = '';
+			if($this->entity->image_size_exists($size))
+			{
+				$ret[$key] = $this->entity->get_image_url($size, true);
+				if(empty($ret['largest_image_url']))
+				{
+					$ret['largest_image_url'] = $ret[$key];
+				}
+			}
+		}
+		$ret['alt_text'] = $this->entity->get_alt_text();
+		return $ret;
+	}
+	protected function absolutify($path)
+	{
+		return securest_available_protocol() . '://' . REASON_HOST . $path;
 	}
 }

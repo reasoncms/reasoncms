@@ -22,6 +22,11 @@ reason_include_once('classes/entity_delegates_config.php');
 ); */
 
 $entity_delegates_config_setting = array(
+	'minisite_page' => array(
+		'append' => array(
+			'entity_delegates/page.php',
+		),
+	),
 	'image' => array(
 		'append' => array(
 			'entity_delegates/image.php',

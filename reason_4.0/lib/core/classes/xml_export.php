@@ -6,8 +6,6 @@
  */
  
  include_once('reason_header.php');
- reason_include_once('function_libraries/asset_functions.php');
- reason_include_once('function_libraries/images.php');
  
 /**
  * Class for handling standard Reason exports
@@ -178,6 +176,17 @@ class reason_xml_export_generator_version_point_one extends reason_xml_export_ge
 			{
 				$lines[] = "\t\t".'<value name="'.$k.'">'.htmlspecialchars($v).'</value>';
 			}
+			if($e->method_supported('get_export_generated_data'))
+			{
+				$data = $e->get_export_generated_data();
+				if(!empty($data))
+				{
+					foreach($data as $k => $v)
+					{
+						$lines[] = "\t\t".'<value name="_generated_'.$k.'" type="computed">'.htmlspecialchars($v).'</value>';
+					}
+				}
+			}
 			$method = '_get_custom_values_for_'.$type->get_value('unique_name');
 			if(method_exists($this, $method) )
 			{
@@ -236,36 +245,6 @@ class reason_xml_export_generator_version_point_one extends reason_xml_export_ge
 			$lines[] = $indent."\t".'</rel>';
 		}
 		$lines[] = $indent.'</alrel>';
-		return $lines;
-	}
-	
-	/**
-	 * Get custom computed values for an asset
-	 * @access private
-	 * @param object (entity) $e
-	 * @param string $indent
-	 * @return array lines
-	 */
-	function _get_custom_values_for_asset($e,$indent)
-	{
-		$lines = array();
-		$lines[] = $indent.'<value name="url" type="computed">'.htmlspecialchars(reason_get_asset_url($e)).'</value>';
-		$lines[] = $indent.'<value name="filesystem_location" type="computed">'.htmlspecialchars(reason_get_asset_filesystem_location($e)).'</value>';
-		return $lines;
-	}
-	
-	/**
-	 * Get custom computed values for an image
-	 * @access private
-	 * @param object (entity) $e
-	 * @param string $indent
-	 * @return array lines
-	 */
-	function _get_custom_values_for_image($e,$indent)
-	{
-		$lines = array();
-		$lines[] = $indent.'<value name="url" type="computed">'.htmlspecialchars(reason_get_image_url($e)).'</value>';
-		$lines[] = $indent.'<value name="thumb_url" type="computed">'.htmlspecialchars(reason_get_image_url($e,'thumbnail')).'</value>';
 		return $lines;
 	}
 }
