@@ -4,9 +4,9 @@
  * @package reason
  * @subpackage classes
  */
- 
+
  include_once('reason_header.php');
- 
+
 /**
  * Class for handling standard Reason exports
  *
@@ -24,20 +24,20 @@
  * $export = new reason_xml_export();
  * $xml = $export->get_xml($entities);
  */
- 
+
 class reason_xml_export
 {
 	/** array of versions supported by the class
 	 * @var array keys=version name, values=class method to run for this version
 	 */
 	var $versions = array('0.1'=>'get_xml_version_point_one');
-	
+
 	/** the default version used if no version is provided to this class
 	 * This should be one of the keys in the $versions class variable
 	 * @var string
 	 */
 	var $default_version = '0.1';
-	
+
 	/** Method for finding out which versions are supported by the class
 	 * @return array
 	 */
@@ -45,7 +45,7 @@ class reason_xml_export
 	{
 		return array_keys($this->versions);
 	}
-	
+
 	/** Method for finding out which version is the current default
 	 * @return string
 	 */
@@ -53,7 +53,7 @@ class reason_xml_export
 	{
 		return $this->default_version;
 	}
-	
+
 	/** Determine is a particular version is supported by this class
 	 * @return bool
 	 */
@@ -68,7 +68,7 @@ class reason_xml_export
 			return true;
 		}
 	}
-	
+
 	/** Determine what function should be used for a particular version
 	 * @return string (NULL returned if none available)
 	 */
@@ -83,7 +83,7 @@ class reason_xml_export
 			return NULL;
 		}
 	}
-	
+
 	/** The main public function for this class
 	 * Mostly other classes should just use this function
 	 * It is up to the controlling class to serve contents or to store in file
@@ -113,7 +113,7 @@ class reason_xml_export
 			trigger_error('Unsupported xml version requested: '.$version);
 		}
 	}
-	
+
 	/** Generates reason data version 0.1
 	 * This is a very rough implementation of the Reason XML exporting scheme
 	 * It's probably best to use it only if there is nothing better available
@@ -124,7 +124,7 @@ class reason_xml_export
 		$gen = new reason_xml_export_generator_version_point_one();
 		return $gen->get_xml($entities);
 	}
-	
+
 }
 
 /**
@@ -172,11 +172,15 @@ class reason_xml_export_generator_version_point_one extends reason_xml_export_ge
 			}
 			$line .= '>';
 			$lines[] = $line;
-			foreach($e->get_values() as $k=>$v)
+			foreach ($e->get_values() as $k=>$v)
 			{
 				$lines[] = "\t\t".'<value name="'.$k.'">'.htmlspecialchars($v).'</value>';
+				if ( in_array($k, [ 'created_by', 'last_edited_by' ] ) ) {
+					$username = $this->get_reason_username($v);
+					$lines[] = "\t\t" . '<value name="' .$k. '_username">' . htmlspecialchars( $username ) . '</value>';
+				}
 			}
-			if($e->method_supported('get_export_generated_data'))
+			if ($e->method_supported('get_export_generated_data'))
 			{
 				$data = $e->get_export_generated_data();
 				if(!empty($data))
@@ -206,7 +210,7 @@ class reason_xml_export_generator_version_point_one extends reason_xml_export_ge
 			{
 				if(is_numeric($alrel_id) && !empty($rels))
 				{
-					
+
 					$lines = array_merge($lines, $this->_get_rel_xml_lines($rels, $right_rel_info[$alrel_id], $alrel_id, 'right', "\t\t\t") );
 				}
 			}
@@ -216,7 +220,7 @@ class reason_xml_export_generator_version_point_one extends reason_xml_export_ge
 		$lines[] = "</reason_data>";
 		return implode("\n",$lines);
 	}
-	
+
 	/**
 	 * @access private
 	 * @param array $rels
@@ -246,6 +250,29 @@ class reason_xml_export_generator_version_point_one extends reason_xml_export_ge
 		}
 		$lines[] = $indent.'</alrel>';
 		return $lines;
+	}
+
+	function get_reason_username( $reason_id ) {
+		static $user_netids;
+		if ( empty( $reason_id ) ) {
+			return null;
+		}
+		if ( ! isset( $user_netids[ $reason_id ] ) ) {
+			$es = new entity_selector();
+			$es->limit_tables( 'entity' );
+			$es->limit_fields( 'name' );
+			$es->add_type( id_of( 'user' ) );
+			$es->add_relation( 'entity.id = ' . reason_sql_string_escape( $reason_id ) );
+			$es->set_num( 1 );
+			$result = $es->run_one();
+			if ( $result && $result[ $reason_id ]->get_value( 'name' ) ) {
+				$user_netids[ $reason_id ] = (string) $result[ $reason_id ]->get_value( 'name' );
+			} else {
+				$user_netids[ $reason_id ] = null;
+			}
+		}
+
+		return $user_netids[ $reason_id ];
 	}
 }
 ?>
