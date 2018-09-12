@@ -69,7 +69,20 @@
 .featuresModule div.featureImage a, .featuresModule h3.featureTitle a, .featuresModule div.featureText a {
 	display:block;
 }
-
+.featuresModule div.featureImage a:focus, .featuresModule div.featureImage a:active {
+	position:relative;
+}
+.featuresModule div.featureImage a:focus:after, .featuresModule div.featureImage a:active:after {
+	content:" ";	
+	display:block;
+	position:absolute;
+	top:0;
+	left:0;
+	bottom:0;
+	right:0;
+	border:1px dotted #000;
+	box-shadow:inset 0px 0px 0px 1px rgba(255,255,255,.5);
+}
 
 .featuresModule ul {
 	margin:0;

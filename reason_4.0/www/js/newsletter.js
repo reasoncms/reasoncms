@@ -207,4 +207,14 @@ h4 {\
 		if ($('#newsletterlokiRow').length != 0)
 			styleFrames(); 
 	});
+	if($('#eventsnumberRow .words').length > 0)
+	{
+		var toggler = $('<p><a href="#" class="select">Select/Unselect All</a></p>');
+		toggler.find('a').click(function(e){
+			$('#eventsgroupRow input[type="checkbox"]').prop('checked', $(this).hasClass('select'));
+			$(this).toggleClass('select').toggleClass('unselect');
+			e.preventDefault();
+		});
+		$('#eventsnumberRow .words').append(toggler);
+	}
 });

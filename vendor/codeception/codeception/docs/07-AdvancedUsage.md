@@ -1,16 +1,18 @@
 # Advanced Usage
 
-In this chapter we will cover some techniques and options that you can use to improve your testing experience and stay with better organization of your project. 
+In this chapter we will cover some techniques and options that you can use to improve your testing experience
+and keep your project better organized.
 
 ## Cest Classes
 
-In case you want to get a class-like structure for your Cepts, you can use the Cest format instead of plain PHP.
-It is very simple and is fully compatible with Cept scenarios. It means that if you feel that your test is long enough and you want to split it - you can easily move it into classes.
+If you want to get a class-like structure for your Cepts, you can use the Cest format instead of plain PHP.
+It is very simple and is fully compatible with Cept scenarios. It means that if you feel that your test is long enough
+and you want to split it, you can easily move it into classes.
 
-You can create Cest file by running the command:
+You can create a Cest file by running the command:
 
 ```bash
-$ php codecept.phar generate:cest suitename CestName
+$ php codecept generate:cest suitename CestName
 ```
 
 The generated file will look like this:
@@ -28,25 +30,26 @@ class BasicCest
     }
 
     // tests
-    public function tryToTest(\AcceptanceTester $I) 
-    {    
+    public function tryToTest(\AcceptanceTester $I)
+    {
     }
 }
-?>
 ```
 
-**Each public method of Cest (except those starting with `_`) will be executed as a test** and will receive Actor class as the first parameter and `$scenario` variable as the second one.
+**Each public method of Cest (except those starting with `_`) will be executed as a test**
+and will receive an instance of the Actor class as the first parameter and the `$scenario` variable as the second one.
 
-In `_before` and `_after` methods you can use common setups and teardowns for the tests in the class. This actually makes Cest tests more flexible than Cepts, which rely only on similar methods in Helper classes.
+In `_before` and `_after` methods you can use common setups and teardowns for the tests in the class.
+This actually makes Cest tests more flexible than Cepts, which rely only on similar methods in Helper classes.
 
-As you see, we are passing Actor object into `tryToTest` method. It allows us to write scenarios the way we did before.
+As you see, we are passing the Actor object into `tryToTest` method. This allows us to write scenarios the way we did before:
 
 ```php
 <?php
 class BasicCest
 {
     // test
-    public function checkLogin(\AcceptanceTester $I) 
+    public function tryToTest(\AcceptanceTester $I)
     {
         $I->wantTo('log in to site');
         $I->amOnPage('/');
@@ -58,16 +61,20 @@ class BasicCest
         $I->seeInCurrentUrl('/account');
     }
 }
-?>
 ```
 
-As you see, Cest class have no parents like `\Codeception\TestCase\Test` or `PHPUnit_Framework_TestCase`. This is done intentionally. It allows you to extend class with common behaviors and workarounds that may be used in child classes. But don't forget to make these methods `protected` so they won't be executed as tests.
+As you see, Cest classes have no parents like `\Codeception\Test\Unit` or `PHPUnit_Framework_TestCase`.
+This is done intentionally. It allows you to extend your classes with common behaviors and workarounds
+that may be used in child classes. But don't forget to make these methods `protected` so they won't be executed as tests.
 
-Also you can define `_failed` method in Cest class which will be called if test finishes with `error` or fails.
+You can also define a `_failed` method in Cest classes which will be called if test finishes with `error` or fails.
 
 ## Dependency Injection
 
-Codeception supports simple dependency injection for Cest and \Codeception\TestCase\Test classes. It means that you can specify which classes you need as parameters of the special `_inject()` method, and Codeception will automatically create the respective objects and invoke this method, passing all dependencies as arguments. This may be useful when working with Helpers, for example:
+Codeception supports simple dependency injection for Cest and \Codeception\TestCase\Test classes.
+It means that you can specify which classes you need as parameters of the special `_inject()` method,
+and Codeception will automatically create the respective objects and invoke this method,
+passing all dependencies as arguments. This may be useful when working with Helpers. Here's an example for Cest:
 
 ```php
 <?php
@@ -82,17 +89,17 @@ class SignUpCest
      * @var Helper\NavBarHelper
      */
     protected $navBar;
- 
+
     protected function _inject(\Helper\SignUp $signUp, \Helper\NavBar $navBar)
     {
         $this->signUp = $signUp;
         $this->navBar = $navBar;
     }
-    
+
     public function signUp(\AcceptanceTester $I)
     {
         $I->wantTo('sign up');
- 
+
         $this->navBar->click('Sign up');
         $this->signUp->register([
             'first_name'            => 'Joe',
@@ -103,10 +110,9 @@ class SignUpCest
         ]);
     }
 }
-?>
 ```
 
-Example of Test class:
+And for Test classes:
 
 ```php
 <?php
@@ -133,14 +139,17 @@ class MathTest extends \Codeception\TestCase\Test
         $this->assertEquals(1, $this->math->subtract(3, 2));
     }
 }
-?>
 ```
 
-However, Dependency Injection is not limited to this. It allows you to **inject any class**, which can be constructed with arguments known to Codeception.
+However, Dependency Injection is not limited to this. It allows you to **inject any class**,
+which can be constructed with arguments known to Codeception.
 
-In order to make auto-wiring work, you will need to implement `_inject()` method with the list of desired arguments. It is important to specify the type of arguments, so Codeception can guess which objects are expected to be received. The `_inject()` will be invoked just once right after creation of the TestCase object (either Cest or Test). Dependency Injection will also work in a similar manner for Helper and Actor classes.
+In order to make auto-wiring work, you will need to implement the `_inject()` method with the list of desired arguments.
+It is important to specify the type of arguments, so Codeception can guess which objects are expected to be received.
+The `_inject()` will only be invoked once, just after creation of the TestCase object (either Cest or Test).
+Dependency Injection will also work in a similar manner for Helper and Actor classes.
 
-Each test of Cest class can declare its own dependencies and receive them from method arguments:
+Each test of a Cest class can declare its own dependencies and receive them from method arguments:
 
 ```php
 <?php
@@ -155,14 +164,108 @@ class UserCest
         $I->see('Profile of Bill','h1');
     }
 }
-?>
 ```
 
-Moreover, Codeception can resolve dependencies recursively (when `A` depends on `B`, and `B` depends on `C` etc.) and handle parameters of primitive types with default values (like `$param = 'default'`). Of course, you are not allowed to have *cyclic dependencies*.
+Moreover, Codeception can resolve dependencies recursively (when `A` depends on `B`, and `B` depends on `C` etc.)
+and handle parameters of primitive types with default values (like `$param = 'default'`).
+Of course, you are not allowed to have *cyclic dependencies*.
+
+### Examples
+
+What if you want to execute the same test scenario with different data? In this case you can inject examples
+as `\Codeception\Example` instances.
+Data is defined via the `@example` annotation, using JSON or Doctrine-style notation (limited to a single line). Doctrine-style:
+
+```php
+<?php
+ /**
+  * @example ["/api/", 200]
+  * @example ["/api/protected", 401]
+  * @example ["/api/not-found-url", 404]
+  * @example ["/api/faulty", 500]
+  */
+  public function checkEndpoints(ApiTester $I, \Codeception\Example $example)
+  {
+    $I->sendGET($example[0]);
+    $I->seeResponseCodeIs($example[1]);
+  }
+```
+
+JSON:
+
+```php
+<?php
+ /**
+  * @example { "url": "/", "title": "Welcome" }
+  * @example { "url": "/info", "title": "Info" }
+  * @example { "url": "/about", "title": "About Us" }
+  * @example { "url": "/contact", "title": "Contact Us" }
+  */
+  public function staticPages(AcceptanceTester $I, \Codeception\Example $example)
+  {
+    $I->amOnPage($example['url']);
+    $I->see($example['title'], 'h1');
+    $I->seeInTitle($example['title']);
+  }
+```
+
+<div class="alert alert-info">
+If you use JSON notation please keep in mind that all string keys
+and values should be enclosed in double quotes (`"`) according to JSON standard.
+</div>
+
+Key-value data in Doctrine-style annotation syntax:
+
+```php
+<?php
+ /**
+  * @example(url="/", title="Welcome")
+  * @example(url="/info", title="Info")
+  * @example(url="/about", title="About Us")
+  * @example(url="/contact", title="Contact Us")
+  */
+  public function staticPages(AcceptanceTester $I, \Codeception\Example $example)
+  {
+    $I->amOnPage($example['url']);
+    $I->see($example['title'], 'h1');
+    $I->seeInTitle($example['title']);
+  }
+```
+
+You can also use the `@dataprovider` annotation for creating dynamic examples, using a protected method for providing example data:
+
+```php
+<?php
+   /**
+    * @dataprovider pageProvider
+    */
+    public function staticPages(AcceptanceTester $I, \Codeception\Example $example)
+    {
+        $I->amOnPage($example['url']);
+        $I->see($example['title'], 'h1');
+        $I->seeInTitle($example['title']);
+    }
+
+    /**
+     * @return array
+     */
+    protected function pageProvider() // alternatively, if you want the function to be public, be sure to prefix it with `_`
+    {
+        return [
+            ['url'=>"/", 'title'=>"Welcome"],
+            ['url'=>"/info", 'title'=>"Info"],
+            ['url'=>"/about", 'title'=>"About Us"],
+            ['url'=>"/contact", 'title'=>"Contact Us"]
+        ];
+    }
+```
 
 ### Before/After Annotations
 
-You can control execution flow with `@before` and `@after` annotations. You may move common actions into protected (non-test) methods and invoke them before or after the test method by putting them into annotations. It is possible to invoke several methods by using more than one `@before` or `@after` annotation. Methods are invoked in order from top to bottom.
+You can control execution flow with `@before` and `@after` annotations. You may move common actions
+into protected (non-test) methods and invoke them before or after the test method by putting them into annotations.
+It is possible to invoke several methods by using more than one `@before` or `@after` annotation.
+Methods are invoked in order from top to bottom.
 
 ```php
 <?php
@@ -185,7 +288,7 @@ class ModeratorCest {
         $I->see('Ban', '.button');
         $I->click('Ban');
     }
-    
+
     /**
      * @before login
      * @before cleanup
@@ -199,22 +302,20 @@ class ModeratorCest {
         $I->click('Ban');
     }
 }
-?>
 ```
-
-You can also use `@before` and `@after` for included functions. But you can't have multiple annotations of the same kind for single method - one method can have only one `@before` and only one `@after` annotation of the same kind.
 
 ## Environments
 
 For cases where you need to run tests with different configurations you can define different config environments.
-The most typical use cases are running acceptance tests in different browsers, or running database tests using different database engines.
+The most typical use cases are running acceptance tests in different browsers,
+or running database tests using different database engines.
 
-Let's demonstrate usage of environments for the browsers case.
+Let's demonstrate the usage of environments for the browsers case.
 
-We need to add new lines to `acceptance.suite.yml`:
+We need to add some new lines to `acceptance.suite.yml`:
 
 ``` yaml
-class_name: AcceptanceTester
+actor: AcceptanceTester
 modules:
     enabled:
         - WebDriver
@@ -244,22 +345,23 @@ env:
 Basically you can define different environments inside the `env` root, name them (`phantom`, `chrome` etc.),
 and then redefine any configuration parameters that were set before.
 
-You can also define environments in separate configuration files placed in the directory specified by `envs` option in
-`paths` configuration:
+You can also define environments in separate configuration files placed in the directory specified by the `envs` option in
+the `paths` configuration:
 
 ```yaml
 paths:
     envs: tests/_envs
 ```
 
-Names of these files are used as environments names (e.g. `chrome.yml` or `chrome.dist.yml` for environment named `chrome`). 
-You can generate a new file with environment configuration using `generate:environment` command:
+The names of these files are used as environments names
+(e.g. `chrome.yml` or `chrome.dist.yml` for an environment named `chrome`).
+You can generate a new file with this environment configuration by using the `generate:environment` command:
 
 ```bash
-$ php codecept.phar g:env chrome
+$ php codecept g:env chrome
 ```
 
-and in there you can just specify options that you wish to override:
+In that file you can specify just the options you wish to override:
 
 ```yaml
 modules:
@@ -268,34 +370,36 @@ modules:
             browser: 'chrome'
 ```
 
-Environment configuration files are merged into the main configuration before suite configuration is merged.
+The environment configuration files are merged into the main configuration before the suite configuration is merged.
 
-You can easily switch between those configs by running tests with `--env` option. To run tests only for PhantomJS you need to pass `--env phantom` option:
-
-```bash
-$ php codecept.phar run acceptance --env phantom
-```
-
-To run tests in all 3 browsers, just list all the environments:
+You can easily switch between those configs by running tests with `--env` option.
+To run the tests only for PhantomJS you just need to pass `--env phantom` as an option:
 
 ```bash
-$ php codecept.phar run acceptance --env phantom --env chrome --env firefox
+$ php codecept run acceptance --env phantom
 ```
 
-and tests will be executed 3 times, each time in a different browser.
-
-It's also possible to merge multiple environments into one configuration by using comma as a separator:
+To run the tests in all 3 browsers, list all the environments:
 
 ```bash
-$ php codecept.phar run acceptance --env dev,phantom --env dev,chrome --env dev,firefox
+$ php codecept run acceptance --env phantom --env chrome --env firefox
 ```
 
-Configuration is merged in the given order. This way you can easily create multiple combinations of your environment configurations.
+The tests will be executed 3 times, each time in a different browser.
 
-Depending on environment you may choose which tests are to be executed.
-For example, you might need some tests to be executed only in Firefox, and a few tests only in Chrome.
+It's also possible to merge multiple environments into a single configuration by separating them with a comma:
 
-Desired environments can be specified with `@env` annotation for tests in Test and Cest formats:
+```bash
+$ php codecept run acceptance --env dev,phantom --env dev,chrome --env dev,firefox
+```
+
+The configuration is merged in the order given.
+This way you can easily create multiple combinations of your environment configurations.
+
+Depending on the environment, you may choose which tests are to be executed.
+For example, you might need some tests to be executed in Firefox only, and some tests in Chrome only.
+
+The desired environments can be specified with the `@env` annotation for tests in Test and Cest formats:
 
 ```php
 <?php
@@ -312,53 +416,64 @@ class UserCest
         // I do something
     }
 }
-?>
 ```
 
-For Cept you should use `$scenario->env()`:
+For Cept you should use simple comments:
 
 ```php
 <?php
-$scenario->env('firefox');
-$scenario->env('phantom');
-// or
-$scenario->env(['phantom', 'firefox']);
-?>
+// @env firefox
+// @env phantom
 ```
 
-If merged environments are used, then you can specify multiple required environments (order is ignored):
-
-```php
-<?php
-$scenario->env('firefox,dev');
-$scenario->env('dev,phantom');
-?>
-```
-
-This way you can easily control which tests will be executed for each environments.
+This way you can easily control which tests will be executed for each environment.
 
 ### Current values
 
-Sometimes you may need to change test behavior in realtime. For instance, behavior of the same test may differ in Firefox and in Chromium.
-In runtime we can receive current environment name, test name, or list of enabled modules by calling `$scenario->current()` method.
-    
+Sometimes you may need to change the test behavior in real time.
+For instance, the behavior of the same test may differ in Firefox and in Chrome.
+In runtime we can retrieve the current environment name, test name,
+or list of enabled modules by calling the `$scenario->current()` method.
+
 ```php
 <?php
 // retrieve current environment
-$scenario->current('env'); 
+$scenario->current('env');
 
 // list of all enabled modules
-$scenario->current('modules'); 
+$scenario->current('modules');
 
 // test name
 $scenario->current('name');
-?>
+
+// browser name (if WebDriver module enabled)
+$scenario->current('browser');
+
+// capabilities (if WebDriver module enabled)
+$scenario->current('capabilities');
 ```
 
-### Depends Annotation
+You can access `\Codeception\Scenario` in the Cept and Cest formats.
+In Cept, the `$scenario` variable is available by default,
+while in Cest you should retrieve it through dependency injection:
 
-With `@depends` annotation you can specify a test that should be passed before the current one. If that test fails, the current test will be skipped.
-You should pass a method name of a test you are relying on.
+```php
+<?php
+public function myTest(\AcceptanceTester $I, \Codeception\Scenario $scenario)
+{
+    if ($scenario->current('browser') == 'phantomjs') {
+      // emulate popups for PhantomJS
+      $I->executeScript('window.alert = function(){return true;}');
+    }
+}
+```
+
+`Codeception\Scenario` is also availble in Actor classes and StepObjects. You can access it with `$this->getScenario()`.
+
+### Dependencies
+
+With the `@depends` annotation you can specify a test that should be passed before the current one.
+If that test fails, the current test will be skipped. You should pass the method name of the test you are relying on.
 
 ```php
 <?php
@@ -377,77 +492,77 @@ class ModeratorCest {
         // bans user
     }
 }
-?>
 ```
 
-Hint: `@depends` can be combined with `@before`.
+`@depends` applies to the `Cest` and `Codeception\Test\Unit` formats. Dependencies can be set across different classes.
+To specify a dependent test from another file you should provide a *test signature*.
+Normally, the test signature matches the `className:methodName` format.
+But to get the exact test signature just run the test with the `--steps` option to see it:
+
+```
+Signature: ModeratorCest:login`
+```
+
+Codeception reorders tests so dependent tests will always be executed before the tests that rely on them.
 
 ## Interactive Console
 
-Interactive console was added to try Codeception commands before executing them inside a test. 
+The interactive console was added to try Codeception commands before executing them inside a test.
 
-![console](http://img267.imageshack.us/img267/204/003nk.png)
+![console](http://codeception.com/images/console.png)
 
 You can run the console with the following command:
 
 ``` bash
-$ php codecept.phar console suitename
+$ php codecept console suitename
 ```
 
-Now you can execute all commands of appropriate Actor class and see results immediately. This is especially useful when used with `WebDriver` module. It always takes too long to launch Selenium and browser for tests. But with console you can try different selectors, and different commands, and then write a test that would pass for sure when executed.
+Now you can execute all the commands of an appropriate Actor class and see the results immediately.
+This is especially useful when used with the `WebDriver` module. It always takes too long to launch Selenium
+and the browser for tests. But with the console you can try different selectors, and different commands,
+and then write a test that should pass when executed.
 
-And a special hint: show your boss how you can nicely manipulate web pages with console and Selenium. It will be easy to convince to automate this steps and introduce acceptance testing to the project.
+And a special hint: show your boss how you can easily manipulate web pages with the console and Selenium.
+It will be easy to convince them to automate this step and introduce acceptance testing to the project.
 
 ## Running from different folders
 
-If you have several projects with Codeception tests, you can use single `codecept.phar` file to run all of your tests.
-You can pass `-c` option to any Codeception command, excluding `bootstrap`, to execute Codeception in another directory.
+If you have several projects with Codeception tests, you can use a single `codecept` file to run all of your tests.
+You can pass the `-c` option to any Codeception command (except `bootstrap`), to execute Codeception in another directory:
 
 ```bash
-$ php codecept.phar run -c ~/projects/ecommerce/
-$ php codecept.phar run -c ~/projects/drupal/
-$ php codecept.phar generate:cept acceptance CreateArticle -c ~/projects/drupal/
+$ php codecept run -c ~/projects/ecommerce/
+$ php codecept run -c ~/projects/drupal/
+$ php codecept generate:cept acceptance CreateArticle -c ~/projects/drupal/
 ```
 
-To create a project in directory different from the current one, just provide its path as a parameter.
+To create a project in directory different from the current one, just provide its path as a parameter:
 
 ```bash
-$ php codecept.phar bootstrap ~/projects/drupal/
+$ php codecept bootstrap ~/projects/drupal/
 ```
 
-Basically `-c` option allows you to specify not only the path, but a config file to be used. Thus, you can have several `codeception.yml` files for your test suite. You may use it to specify different environments and settings. Just pass a filename into `-c` parameter to execute tests with specific config settings.
+Also, the `-c` option allows you to specify another config file to be used.
+Thus, you can have several `codeception.yml` files for your test suite (e.g. to to specify different environments
+and settings). Just pass the `.yml` filename as the `-c` parameter to execute tests with specific config settings.
 
 ## Groups
 
-There are several ways to execute bunch of tests. You can run tests from specific directory:
+There are several ways to execute a bunch of tests. You can run tests from a specific directory:
 
 ```bash
-$ php codecept.phar run tests/acceptance/admin
+$ php codecept run tests/acceptance/admin
 ```
 
-Or execute one (or several) specific groups of tests:
+You can execute one (or several) specific groups of tests:
 
 ```bash
-$ php codecept.phar run -g admin -g editor
+$ php codecept run -g admin -g editor
 ```
 
-In this case all tests that belongs to groups `admin` and `editor` will be executed. Concept of groups was taken from PHPUnit and in classical PHPUnit tests they behave just in the same way. To add Cept to the group - use `$scenario` variable:
+The concept of groups was taken from PHPUnit and behave in the same way.
 
-```php
-<?php
-$scenario->group('admin');
-$scenario->group('editor');
-// or
-$scenario->group(['admin', 'editor']);
-// or
-$scenario->groups(['admin', 'editor'])
-
-$I = new AcceptanceTester($scenario);
-$I->wantToTest('admin area');
-?>
-```
-
-For Tests and Cests you can use `@group` annotation to add a test to the group.
+For Test and Cest files you can use the `@group` annotation to add a test to a group.
 
 ```php
 <?php
@@ -456,67 +571,96 @@ For Tests and Cests you can use `@group` annotation to add a test to the group.
  */
 public function testAdminUser()
 {
-    $this->assertEquals('admin', User::find(1)->role);
 }
-?>
 ```
-Same annotation can be used in Cest classes.
+
+For Cept files, use pseudo-annotations in comments:
+
+```php
+<?php
+// @group admin
+// @group editor
+$I = new AcceptanceTester($scenario);
+$I->wantToTest('admin area');
+```
+
+For `.feature`-files (Gherkin) use tags:
+
+```gherkin
+@admin @editor
+Feature: Admin area
+```
 
 ### Group Files
 
-Groups can be defined in global or suite configuration file.
-Tests for groups can be specified as array or as path to file containing list of groups.
+Groups can be defined in global or suite configuration files.
+Tests for groups can be specified as an array of file names or directories containing them:
 
 ```yaml
 groups:
   # add 2 tests to db group
   db: [tests/unit/PersistTest.php, tests/unit/DataTest.php]
 
-  # add list of tests to slow group
-  slow: tests/_data/slow  
+  # add all tests from a directory to api group
+  api: [tests/functional/api]
 ```
 
-For instance, you can create a file with the list of the most slow tests, and run them inside their own group.
-Group file is a plain text file with test names on separate lines:
+A list of tests for the group can be passed from a Group file. It should be defined in plain text with test names on separate lines:
 
 ```bash
 tests/unit/DbTest.php
 tests/unit/UserTest.php:create
 tests/unit/UserTest.php:update
 ```
+A group file can be included by its relative filename:
 
-You can create group files manually or generate them from 3rd party applications. 
-For example, you may write a script that updates the slow group by taking the slowest tests from xml report.
+```yaml
+groups:
+  # requiring a group file
+  slow: tests/_data/slow.txt
+```
 
-You can even specify patterns for loading multiple group files by single definition:
+You can create group files manually or generate them from third party applications.
+For example, you can write a script that updates the slow group by taking the slowest tests from xml report.
+
+You can even specify patterns for loading multiple group files with a single definition:
 
 ```yaml
 groups:
   p*: tests/_data/p*
 ```
 
-This will load all found `p*` files in `tests/_data` as groups.
+This will load all found `p*` files in `tests/_data` as groups. Group names will be as follows p1,p2,...,pN.
 
+## Shell autocompletion
 
-## Custom Reporters
+For bash and zsh shells, you can use autocompletion for your Codeception projects by executing the following in your shell (or add it to your .bashrc/.zshrc):
+```bash
+# BASH ~4.x, ZSH
+source <([codecept location] _completion --generate-hook --program codecept --use-vendor-bin)
 
-In order to customize output you can use Extensions, as it is done in [SimpleOutput Extension](https://github.com/Codeception/Codeception/blob/master/ext%2FSimpleOutput.php).
-But what if you need to change output format of XML or JSON results triggered with `--xml` or `--json` options?
-Codeception uses printers from PHPUnit and overrides some of them. If you need to customize one of standard reporters you can override them too.
-If you are thinking on implementing your own reporter you should add `reporters` section to `codeception.yml` and override one of standard printer classes to your own:
+# BASH ~3.x, ZSH
+[codecept location] _completion --generate-hook --program codecept --use-vendor-bin | source /dev/stdin
 
-```yaml
-reporters: 
-    xml: Codeception\PHPUnit\Log\JUnit
-    html: Codeception\PHPUnit\ResultPrinter\HTML
-    tap: PHPUnit_Util_Log_TAP
-    json: PHPUnit_Util_Log_JSON
-    report: Codeception\PHPUnit\ResultPrinter\Report
+# BASH (any version)
+eval $([codecept location] _completion --generate-hook --program codecept --use-vendor-bin)
 ```
 
-All reporters implement [PHPUnit_Framework_TestListener](https://phpunit.de/manual/current/en/extending-phpunit.html#extending-phpunit.PHPUnit_Framework_TestListener) interface.
-It is recommended to read the code of original reporter before overriding it.
+### Explanation
+
+By using the above code in your shell, Codeception will try to autocomplete the following:
+* Commands
+* Suites
+* Test paths
+
+Usage of `-use-vendor-bin` is optional. This option will work for most Codeception projects, where Codeception is located in your `vendor/bin` folder.
+But in case you are using a global Codeception installation for example, you wouldn't use this option.
+
+Note that with the `-use-vendor-bin` option, your commands will be completed using the Codeception binary located in your project's root.
+Without the option, it will use whatever Codeception binary you originally used to generate the completion script ('codecept location' in the above examples)
 
 ## Conclusion
 
-Codeception is a framework which may look simple at first glance. But it allows you to build powerful tests with a single API, refactor them, and write them faster using the interactive console. Codeception tests can be easily organized in groups or Cest classes.
+Codeception is a framework which may look simple at first glance
+but it allows you to build powerful tests with a single API, refactor them,
+and write them faster using the interactive console. Codeception tests can be easily organized in groups or Cest classes.

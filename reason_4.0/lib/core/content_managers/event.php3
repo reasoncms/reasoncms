@@ -311,6 +311,10 @@
 			$limiter->limit_field('name', 70);
 			$limiter->limit_field('description', 140);
 			
+			// Add reading level notifier plugin to content editor
+			$this->add_readability_notifiers('content');
+			$this->add_readability_notifiers('description');
+			
 		} // }}}
 		
 		function get_registration_info()

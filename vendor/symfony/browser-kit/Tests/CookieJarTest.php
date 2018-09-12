@@ -11,11 +11,12 @@
 
 namespace Symfony\Component\BrowserKit\Tests;
 
-use Symfony\Component\BrowserKit\CookieJar;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\BrowserKit\Cookie;
+use Symfony\Component\BrowserKit\CookieJar;
 use Symfony\Component\BrowserKit\Response;
 
-class CookieJarTest extends \PHPUnit_Framework_TestCase
+class CookieJarTest extends TestCase
 {
     public function testSetGet()
     {
@@ -93,7 +94,7 @@ class CookieJarTest extends \PHPUnit_Framework_TestCase
     {
         $timestamp = time() + 3600;
         $date = gmdate('D, d M Y H:i:s \G\M\T', $timestamp);
-        $setCookies = array(sprintf('foo=foo; expires=%s; domain=.symfony.com; path=/, bar=bar; domain=.blog.symfony.com, PHPSESSID=id; expires=%s', $date, $date));
+        $setCookies = array(sprintf('foo=foo; expires=%s; domain=.symfony.com; path=/, bar=bar; domain=.blog.symfony.com, PHPSESSID=id; expires=%1$s', $date));
 
         $cookieJar = new CookieJar();
         $cookieJar->updateFromSetCookie($setCookies);

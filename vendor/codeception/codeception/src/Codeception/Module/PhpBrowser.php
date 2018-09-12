@@ -1,11 +1,12 @@
 <?php
 namespace Codeception\Module;
 
-use Codeception\Exception\ModuleException;
+use Codeception\Lib\Connector\Guzzle6;
 use Codeception\Lib\InnerBrowser;
 use Codeception\Lib\Interfaces\MultiSession;
 use Codeception\Lib\Interfaces\Remote;
-use Codeception\TestCase;
+use Codeception\Lib\Interfaces\RequiresPackage;
+use Codeception\TestInterface;
 use Codeception\Util\Uri;
 use GuzzleHttp\Client as GuzzleClient;
 
@@ -21,16 +22,16 @@ use GuzzleHttp\Client as GuzzleClient;
  *
  * * Maintainer: **davert**
  * * Stability: **stable**
- * * Contact: davert.codecept@mailican.com
- * * Works with [Guzzle](http://guzzlephp.org/)
+ * * Contact: codeception@codeception.com
  *
- * *Please review the code of non-stable modules and provide patches if you have issues.*
  *
  * ## Configuration
  *
  * * url *required* - start url of your app
+ * * headers - default headers are set before each test.
+ * * handler (default: curl) -  Guzzle handler to use. By default curl is used, also possible to pass `stream`, or any valid class name as [Handler](http://docs.guzzlephp.org/en/latest/handlers-and-middleware.html#handlers).
+ * * middleware - Guzzle middlewares to add. An array of valid callables is required.
  * * curl - curl options
- * * headers - ...
  * * cookies - ...
  * * auth - ...
  * * verify - ...
@@ -73,27 +74,29 @@ use GuzzleHttp\Client as GuzzleClient;
  * * `client` - Symfony BrowserKit instance.
  *
  */
-class PhpBrowser extends InnerBrowser implements Remote, MultiSession
+class PhpBrowser extends InnerBrowser implements Remote, MultiSession, RequiresPackage
 {
 
     private $isGuzzlePsr7;
     protected $requiredFields = ['url'];
 
     protected $config = [
+        'headers' => [],
         'verify' => false,
         'expect' => false,
         'timeout' => 30,
         'curl' => [],
         'refresh_max_interval' => 10,
+        'handler' => 'curl',
+        'middleware' => null,
 
         // required defaults (not recommended to change)
         'allow_redirects' => false,
         'http_errors' => false,
-        'cookies' => true
+        'cookies' => true,
     ];
 
     protected $guzzleConfigFields = [
-        'headers',
         'auth',
         'proxy',
         'verify',
@@ -117,17 +120,18 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
      */
     public $guzzle;
 
+    public function _requires()
+    {
+        return ['GuzzleHttp\Client' => '"guzzlehttp/guzzle": ">=4.1.4 <7.0"'];
+    }
+
     public function _initialize()
     {
-        $this->client = $this->guessGuzzleConnector();
         $this->_initializeSession();
     }
 
     protected function guessGuzzleConnector()
     {
-        if (!class_exists('GuzzleHttp\Client')) {
-            throw new ModuleException($this, "Guzzle is not installed. Please install `guzzlehttp/guzzle` with composer");
-        }
         if (class_exists('GuzzleHttp\Url')) {
             $this->isGuzzlePsr7 = false;
             return new \Codeception\Lib\Connector\Guzzle();
@@ -136,12 +140,12 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
         return new \Codeception\Lib\Connector\Guzzle6();
     }
 
-    public function _before(TestCase $test)
+    public function _before(TestInterface $test)
     {
         if (!$this->client) {
             $this->client = $this->guessGuzzleConnector();
         }
-        $this->_initializeSession();
+        $this->_prepareSession();
     }
 
     public function _getUrl()
@@ -150,46 +154,14 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
     }
 
     /**
-     * Sets the HTTP header to the passed value - which is used on
-     * subsequent HTTP requests through PhpBrowser.
+     * Alias to `haveHttpHeader`
      *
-     * Example:
-     * ```php
-     * <?php
-     * $I->setHeader('X-Requested-With', 'Codeception');
-     * $I->amOnPage('test-headers.php');
-     * ?>
-     * ```
-     *
-     * @param string $name the name of the request header
-     * @param string $value the value to set it to for subsequent
-     *        requests
+     * @param $name
+     * @param $value
      */
     public function setHeader($name, $value)
     {
-        $this->client->setHeader($name, $value);
-    }
-
-    /**
-     * Deletes the header with the passed name.  Subsequent requests
-     * will not have the deleted header in its request.
-     *
-     * Example:
-     * ```php
-     * <?php
-     * $I->setHeader('X-Requested-With', 'Codeception');
-     * $I->amOnPage('test-headers.php');
-     * // ...
-     * $I->deleteHeader('X-Requested-With');
-     * $I->amOnPage('some-other-page.php');
-     * ?>
-     * ```
-     * 
-     * @param string $name the name of the header to delete.
-     */
-    public function deleteHeader($name)
-    {
-        $this->client->deleteHeader($name);
+        $this->haveHttpHeader($name, $value);
     }
 
     public function amHttpAuthenticated($username, $password)
@@ -202,6 +174,9 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
         $host = Uri::retrieveHost($url);
         $this->_reconfigure(['url' => $host]);
         $page = substr($url, strlen($host));
+        if ($page === '') {
+            $page = '/';
+        }
         $this->debugSection('Host', $host);
         $this->amOnPage($page);
     }
@@ -216,7 +191,7 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
 
     protected function onReconfigure()
     {
-        $this->_initializeSession();
+        $this->_prepareSession();
     }
 
     /**
@@ -251,6 +226,13 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
 
     public function _initializeSession()
     {
+        // independent sessions need independent cookies
+        $this->client = $this->guessGuzzleConnector();
+        $this->_prepareSession();
+    }
+
+    public function _prepareSession()
+    {
         $defaults = array_intersect_key($this->config, array_flip($this->guzzleConfigFields));
         $curlOptions = [];
 
@@ -260,11 +242,19 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
             }
         }
 
+        $this->headers = $this->config['headers'];
         $this->setCookiesFromOptions();
 
         if ($this->isGuzzlePsr7) {
             $defaults['base_uri'] = $this->config['url'];
             $defaults['curl'] = $curlOptions;
+            $handler = Guzzle6::createHandler($this->config['handler']);
+            if ($handler && is_array($this->config['middleware'])) {
+                foreach ($this->config['middleware'] as $middleware) {
+                    $handler->push($middleware);
+                }
+            }
+            $defaults['handler'] = $handler;
             $this->guzzle = new GuzzleClient($defaults);
         } else {
             $defaults['config']['curl'] = $curlOptions;
@@ -281,7 +271,8 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
         return [
             'client' => $this->client,
             'guzzle' => $this->guzzle,
-            'crawler' => $this->crawler
+            'crawler' => $this->crawler,
+            'headers' => $this->headers,
         ];
     }
 
@@ -292,7 +283,7 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
         }
     }
 
-    public function _closeSession($session)
+    public function _closeSession($session = null)
     {
         unset($session);
     }

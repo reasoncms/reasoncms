@@ -2,14 +2,19 @@
 namespace Codeception\Lib\Connector;
 
 use Codeception\Lib\Connector\Laravel5\ExceptionHandlerDecorator;
+use Codeception\Lib\Connector\Shared\LaravelCommon;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Client;
 
 class Laravel5 extends Client
 {
+    use LaravelCommon;
+
     /**
      * @var Application
      */
@@ -46,6 +51,11 @@ class Laravel5 extends Client
     private $eventsDisabled;
 
     /**
+     * @var bool
+     */
+    private $modelEventsDisabled;
+
+    /**
      * @var object
      */
     private $oldDb;
@@ -62,6 +72,7 @@ class Laravel5 extends Client
         $this->exceptionHandlingDisabled = $this->module->config['disable_exception_handling'];
         $this->middlewareDisabled = $this->module->config['disable_middleware'];
         $this->eventsDisabled = $this->module->config['disable_events'];
+        $this->modelEventsDisabled = $this->module->config['disable_model_events'];
 
         $this->initialize();
 
@@ -90,11 +101,55 @@ class Laravel5 extends Client
         }
         $this->firstRequest = false;
 
+        $this->applyBindings();
+        $this->applyContextualBindings();
+        $this->applyInstances();
+        $this->applyApplicationHandlers();
+
         $request = Request::createFromBase($request);
         $response = $this->kernel->handle($request);
         $this->app->make('Illuminate\Contracts\Http\Kernel')->terminate($request, $response);
 
         return $response;
+    }
+
+    /**
+     * Make sure files are \Illuminate\Http\UploadedFile instances with the private $test property set to true.
+     * Fixes issue https://github.com/Codeception/Codeception/pull/3417.
+     *
+     * @param array $files
+     * @return array
+     */
+    protected function filterFiles(array $files)
+    {
+        $files = parent::filterFiles($files);
+
+        if (! class_exists('Illuminate\Http\UploadedFile')) {
+            // The \Illuminate\Http\UploadedFile class was introduced in Laravel 5.2.15,
+            // so don't change the $files array if it does not exist.
+            return $files;
+        }
+
+        return $this->convertToTestFiles($files);
+    }
+
+    /**
+     * @param array $files
+     * @return array
+     */
+    private function convertToTestFiles(array $files)
+    {
+        $filtered = [];
+
+        foreach ($files as $key => $value) {
+            if (is_array($value)) {
+                $filtered[$key] = $this->convertToTestFiles($value);
+            } else {
+                $filtered[$key] = UploadedFile::createFromBase($value, true);
+            }
+        }
+
+        return $filtered;
     }
 
     /**
@@ -107,7 +162,7 @@ class Laravel5 extends Client
         // Store a reference to the database object
         // so the database connection can be reused during tests
         $this->oldDb = null;
-        if ($this->app['db'] && $this->app['db']->connection()) {
+        if (isset($this->app['db']) && $this->app['db']->connection()) {
             $this->oldDb = $this->app['db'];
         }
 
@@ -120,11 +175,9 @@ class Laravel5 extends Client
         }
         $this->app->instance('request', Request::createFromBase($request));
 
-        // Reset the old database after the DatabaseServiceProvider ran.
-        // This way other service providers that rely on the $app['db'] entry
-        // have the correct instance available.
+        // Reset the old database after all the service providers are registered.
         if ($this->oldDb) {
-            $this->app['events']->listen('Illuminate\Database\DatabaseServiceProvider', function () {
+            $this->app['events']->listen('bootstrapped: Illuminate\Foundation\Bootstrap\RegisterProviders', function () {
                 $this->app->singleton('db', function () {
                     return $this->oldDb;
                 });
@@ -134,9 +187,19 @@ class Laravel5 extends Client
         $this->app->make('Illuminate\Contracts\Http\Kernel')->bootstrap();
 
         // Record all triggered events by adding a wildcard event listener
-        $this->app['events']->listen('*', function () {
-            $this->triggeredEvents[] = $this->normalizeEvent($this->app['events']->firing());
-        });
+        // Since Laravel 5.4 wildcard event handlers receive the event name as the first argument,
+        // but for earlier Laravel versions the firing() method of the event dispatcher should be used
+        // to determine the event name.
+        if (method_exists($this->app['events'], 'firing')) {
+            $listener = function () {
+                $this->triggeredEvents[] = $this->normalizeEvent($this->app['events']->firing());
+            };
+        } else {
+            $listener = function ($event) {
+                $this->triggeredEvents[] = $this->normalizeEvent($event);
+            };
+        }
+        $this->app['events']->listen('*', $listener);
 
         // Replace the Laravel exception handler with our decorated exception handler,
         // so exceptions can be intercepted for the disable_exception_handling functionality.
@@ -150,6 +213,10 @@ class Laravel5 extends Client
 
         if ($this->module->config['disable_events'] || $this->eventsDisabled) {
             $this->mockEventDispatcher();
+        }
+
+        if ($this->module->config['disable_model_events'] || $this->modelEventsDisabled) {
+            Model::unsetEventDispatcher();
         }
 
         $this->module->setApplication($this->app);
@@ -185,8 +252,13 @@ class Laravel5 extends Client
 
             return [];
         };
+
+        // In Laravel 5.4 the Illuminate\Contracts\Events\Dispatcher interface was changed,
+        // the 'fire' method was renamed to 'dispatch'. This code determines the correct method to mock.
+        $method = method_exists($this->app['events'], 'dispatch') ? 'dispatch' : 'fire';
+
         $mock->expects(new \PHPUnit_Framework_MockObject_Matcher_AnyInvokedCount)
-            ->method('fire')
+            ->method($method)
             ->will(new \PHPUnit_Framework_MockObject_Stub_ReturnCallback($callback));
 
         $this->app->instance('events', $mock);
@@ -262,6 +334,15 @@ class Laravel5 extends Client
     {
         $this->eventsDisabled = true;
         $this->mockEventDispatcher();
+    }
+
+    /**
+     * Disable model events.
+     */
+    public function disableModelEvents()
+    {
+        $this->modelEventsDisabled = true;
+        Model::unsetEventDispatcher();
     }
 
     /*

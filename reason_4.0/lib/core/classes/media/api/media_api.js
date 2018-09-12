@@ -3,7 +3,15 @@
 // requires jQuery
 
 $(document).ready(function() {
-	if (typeof(parent.iframeLoaded) != "undefined") { 
+	var crossorigin = true;
+	try {
+		if (typeof(parent.iframeLoaded) != "undefined") {
+			crossorigin = false;
+		}
+	} catch(e) {
+		
+	}
+	if (!crossorigin) { 
 		// private vars
 		var jQueryElement = $('video');
 		if (!jQueryElement.length) {

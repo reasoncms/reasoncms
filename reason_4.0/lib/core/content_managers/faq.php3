@@ -40,6 +40,9 @@ relationship_id_of('faq_to_audience'),'right','checkbox',REASON_USES_DISTRIBUTED
 			}
 
 			$this->change_element_type( 'content' , html_editor_name($this->admin_page->site_id) , html_editor_params($this->admin_page->site_id, $this->admin_page->user_id) );
+			
+			// Add reading level notifier plugin to content editor
+			$this->add_readability_notifiers('content');
 
 			$this->set_order(
 				array(

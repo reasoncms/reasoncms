@@ -3,7 +3,8 @@ namespace Codeception\Command;
 
 use Codeception\Configuration;
 use Codeception\Exception\ConfigurationException as ConfigurationException;
-use Codeception\TestCase\Interfaces\ScenarioDriven;
+use Codeception\Test\Cest;
+use Codeception\Test\Interfaces\ScenarioDriven;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -27,11 +28,9 @@ class GenerateScenarios extends Command
     {
         $this->setDefinition([
             new InputArgument('suite', InputArgument::REQUIRED, 'suite from which texts should be generated'),
-            new InputOption('config', 'c', InputOption::VALUE_REQUIRED, 'Use specified config instead of default'),
             new InputOption('path', 'p', InputOption::VALUE_REQUIRED, 'Use specified path as destination instead of default'),
             new InputOption('single-file', '', InputOption::VALUE_NONE, 'Render all scenarios to only one file'),
             new InputOption('format', 'f', InputOption::VALUE_REQUIRED, 'Specify output format: html or text (default)', 'text'),
-            new InputOption('config', 'c', InputOption::VALUE_REQUIRED, 'Use specified config instead of default'),
         ]);
         parent::configure();
     }
@@ -45,7 +44,7 @@ class GenerateScenarios extends Command
     {
         $suite = $input->getArgument('suite');
 
-        $suiteConf = $this->getSuiteConfig($suite, $input->getOption('config'));
+        $suiteConf = $this->getSuiteConfig($suite);
 
         $path = $input->getOption('path')
             ? $input->getOption('path')
@@ -56,7 +55,9 @@ class GenerateScenarios extends Command
         @mkdir($path);
 
         if (!is_writable($path)) {
-            throw new ConfigurationException("Path $path is not writable. Please, set valid permissions for folder to store scenarios.");
+            throw new ConfigurationException(
+                "Path $path is not writable. Please, set valid permissions for folder to store scenarios."
+            );
         }
 
         $path = $path . DIRECTORY_SEPARATOR . $suite;
@@ -84,7 +85,7 @@ class GenerateScenarios extends Command
             $name = $this->underscore(basename($test->getFileName(), '.php'));
 
             // create separate file for each test in Cest
-            if (get_class($test) == 'Codeception\TestCase\Cest' && !$input->getOption('single-file')) {
+            if ($test instanceof Cest && !$input->getOption('single-file')) {
                 $name .= '.' . $this->underscore($test->getTestMethod());
             }
 
@@ -93,13 +94,13 @@ class GenerateScenarios extends Command
                 $output->writeln("* $name rendered");
             } else {
                 $feature = $this->decorate($feature, $format);
-                $this->save($path . DIRECTORY_SEPARATOR . $name . $this->formatExtension($format), $feature, true);
+                $this->createFile($path . DIRECTORY_SEPARATOR . $name . $this->formatExtension($format), $feature, true);
                 $output->writeln("* $name generated");
             }
         }
 
         if ($input->getOption('single-file')) {
-            $this->save($path . $this->formatExtension($format), $this->decorate($scenarios, $format), true);
+            $this->createFile($path . $this->formatExtension($format), $this->decorate($scenarios, $format), true);
         }
     }
 
@@ -138,5 +139,4 @@ class GenerateScenarios extends Command
         $name = preg_replace('/_Cest$/', '', $name);
         return $name;
     }
-
 }

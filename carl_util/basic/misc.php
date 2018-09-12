@@ -926,5 +926,16 @@ if (!defined("ENT_QUOTES")) define("ENT_QUOTES", 3);
 	{
 		return htmlspecialchars( strip_tags($string), ENT_QUOTES, $encoding, false );
 	}
+	
+	/**
+	 * Add a zero-width space after every slash character to support line breaks on slashes
+	 *
+	 * @param string $string
+	 * @return string
+	 */
+	function slash_wrap($string)
+	{
+		return str_replace('/','/'.html_entity_decode('&#8203;'), $string);
+	}
 }
 ?>

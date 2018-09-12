@@ -23,6 +23,16 @@ include_once( DISCO_INC . 'disco.php' );
 		// Set to true in init() if exporting as CSV
 		var $should_run_api = false;
 		
+		function get_custom_export_map()
+		{
+			return array(
+				'image' => array(
+					'module' => 'ExportImages',
+					'label' => 'Export Original Image Files',
+				),
+			);
+		}
+		
 		/**
 		 * Call back method for disco
 		 * @param disco form $d
@@ -37,7 +47,12 @@ include_once( DISCO_INC . 'disco.php' );
 				$show_all_columns = $d->get_value('include_empty_columns');
 			$num = (integer) $d->get_value('number_of_items');
 			$index = (integer) $d->get_value('index');
-			$link = $this->admin_page->make_link(array('export_type_id'=>$type_id,'export_type'=>$export_type,'show_all_columns'=>$show_all_columns,'number_of_items'=>$num, 'index' => $index), false, false);
+			$states = '';
+			if(is_array($d->get_value('states')))
+			{
+				$states = implode(',', $d->get_value('states'));
+			}
+			$link = $this->admin_page->make_link(array('export_type_id'=>$type_id,'export_type'=>$export_type,'show_all_columns'=>$show_all_columns,'number_of_items'=>$num, 'index' => $index, 'states' => $states), false, false);
 			return $link;
 		}
 
@@ -87,18 +102,28 @@ include_once( DISCO_INC . 'disco.php' );
 			{
 				$es->set_start($index);
 			}
+			$states = array('Live');
+			if(!empty($this->admin_page->request['states']))
+			{
+				$states = explode(',', $this->admin_page->request['states']);
+			}
 
 			$entities = array();
 			
 			foreach($query_types as $type)
 			{
-				$entities = array_merge($entities, $es->run_one( $type->id() ) );
+				$entities = array_merge($entities, $es->run_one( $type->id(), $states ) );
 			}
 	        
 	        if ($this->admin_page->request['show_all_columns'] == 'true')
 	        	$show_all_columns = true;
 	        else
 	        	$show_all_columns = false;
+	        
+	        foreach($entities as $e)
+	        {
+	        	$this->add_generated_data($e);
+	        }
 
 
 	        $information = array(
@@ -112,6 +137,21 @@ include_once( DISCO_INC . 'disco.php' );
             	header($header);
             echo $export->get_csv($entities,$type_id,$site_id);
             exit();
+		}
+		
+		protected function add_generated_data($e)
+		{
+			if($e->method_supported('get_export_generated_data'))
+			{
+				$data = $e->get_export_generated_data();
+				if(!empty($data))
+				{
+					foreach($data as $k => $v)
+					{
+						$e->set_value('_generated_'.$k, $v);
+					}
+				}
+			}
 		}
 
 		function EntityInfoModule( &$page ) // {{{
@@ -182,6 +222,16 @@ include_once( DISCO_INC . 'disco.php' );
 					$desc = 'Export data from Reason as a spreadsheet';
 					$notice = 'Note: CSV exports do not contain asset files, image files, or form data. CSV exports of form data are available when editing a form.';
 				}
+				
+				$map = $this->get_custom_export_map();
+				
+				$export_type_id = $this->get_export_type_id();
+				if($export_type_id && isset($map[unique_name_of($export_type_id)]))
+				{
+					$export_info = $map[unique_name_of($export_type_id)];
+					$notice .= ' <a href="'.$this->admin_page->make_link(array('cur_module'=>$export_info['module'])).'">'.$export_info['label'].'</a>';
+				}
+				
 				foreach ($types as $type) {
 					$radio_buttons[$type->get_value('id')] = $type->get_value('name');
 				}
@@ -190,16 +240,26 @@ include_once( DISCO_INC . 'disco.php' );
 				$d->set_box_class('StackedBox');
 				$d->add_element('type', 'radio', array('options'=>$radio_buttons));
 				if ($export_type == 'csv'){
+					$d->add_element('states', 'checkboxgroup', array('options'=>array('Live'=>'Live','Pending'=>'Pending','Deleted'=>'Deleted')));
+					$d->set_value('states', array('Live'));
+					if(!empty($this->admin_page->request['states']))
+					{
+						if(is_array($this->admin_page->request['states']))
+						{
+							$d->set_value('states', $this->admin_page->request['states']);
+						}
+						else
+						{
+							$d->set_value('states', explode(',', $this->admin_page->request['states']));
+						}
+					}
+					
 					$d->add_element('include_empty_columns', 'checkbox', array('checkbox_id'=>'includeEmptyColumns', 'checked_value'=>'true', 'description'=>''));
 					$d->add_element('number_of_items', 'text');
 					$d->add_element('index', 'text');
 				}
-				if (isset($this->admin_page->request['export_type_id'])) {
-					$d->set_value('type',$this->admin_page->request['export_type_id']);
-					$export_type_id = $this->admin_page->request['export_type_id'];
-				} else if (isset($this->admin_page->request['type_id'])) {
-					$d->set_value('type',$this->admin_page->request['type_id']);
-					$export_type_id = $this->admin_page->request['type_id'];
+				if (!empty($export_type_id)) {
+					$d->set_value('type',$export_type_id);
 				}
 				if (isset($this->admin_page->request['show_all_columns']))
 					if ($this->admin_page->request['show_all_columns'] == 'true')
@@ -232,7 +292,11 @@ include_once( DISCO_INC . 'disco.php' );
 						if (!empty($this->admin_page->request['index'])) {
 							$index = (integer) $this->admin_page->request['index'];
 						}
-						$link = $this->admin_page->make_link(array('export_type_id'=>$export_type_id,'download_csv'=>'true','show_all_columns'=>$show_all_columns, 'number_of_items' => $num, 'index' => $index),false,false);					
+						$states = 'Live';
+						if (!empty($this->admin_page->request['states'])) {
+							$states = $this->admin_page->request['states'];
+						}
+						$link = $this->admin_page->make_link(array('export_type_id'=>$export_type_id,'download_csv'=>'true','show_all_columns'=>$show_all_columns, 'number_of_items' => $num, 'index' => $index, 'states' => $states),false,false);					
 						echo '<a href="'.$link.'">'.'Download'.'</a>';
 					} else if ($export_type == 'xml') {
 						if ($export_type_id == 'all_types') {
@@ -255,9 +319,22 @@ include_once( DISCO_INC . 'disco.php' );
 						$export = new reason_xml_export();
 	                    echo '<textarea rows="38">'.htmlspecialchars($export->get_xml($entities), ENT_QUOTES).'</textarea>'."\n";
 					}
+					
                     echo '</div>';
 				}
 			}
+		}
+		function get_export_type_id()
+		{
+			if (isset($this->admin_page->request['export_type_id'])) {
+				return (integer) $this->admin_page->request['export_type_id'];
+			} elseif (isset($this->admin_page->request['type_id'])) {
+				return (integer) $this->admin_page->request['type_id'];
+			}
+			elseif (isset($this->admin_page->request['type'])) {
+				return (integer) $this->admin_page->request['type'];
+			}
+			return NULL;
 		}
 	}
 ?>

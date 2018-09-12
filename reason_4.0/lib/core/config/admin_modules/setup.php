@@ -116,6 +116,9 @@
 		'EntityStats'=>array('file'=>'entity_stats.php', 'class'=>'ReasonEntityStatsModule'),
 		'InvisiblesFinder'=>array('file'=>'invisibles_finder.php', 'class'=>'InvisiblesFinderModule'),
 		'SharingStats'=>array('file'=>'sharing_stats.php', 'class'=>'ReasonSharingStatsModule'),
+		'FindPageFromURL'=>array('file'=>'find_page_from_url.php', 'class'=>'FindPageFromURLModule'),
+		'Search'=>array('file'=>'search.php', 'class'=>'ReasonAdminSearchModule'),
+		'TypeUsage'=>array('file'=>'type_usage.php', 'class'=>'ReasonTypeUsageModule'),
 	);
 
 if (reason_file_exists('config/admin_modules/setup_local.php'))

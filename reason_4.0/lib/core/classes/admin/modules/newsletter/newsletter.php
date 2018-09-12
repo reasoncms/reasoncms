@@ -72,7 +72,7 @@ class NewsletterModule extends DefaultModule
 	}
 	function init()
 	{
-		$this->head_items->add_javascript(REASON_HTTP_BASE_PATH . 'js/newsletter.js');
+		$this->head_items->add_javascript(REASON_HTTP_BASE_PATH . 'js/newsletter.js?v=2');
 		$this->head_items->add_stylesheet(REASON_HTTP_BASE_PATH . 'css/reason_admin/newsletter.css');
 
 		////////// THIS IS A HACK! /////////

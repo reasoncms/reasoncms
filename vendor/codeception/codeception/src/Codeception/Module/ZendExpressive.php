@@ -2,10 +2,10 @@
 namespace Codeception\Module;
 
 use Codeception\Lib\Framework;
-use Codeception\TestCase;
+use Codeception\TestInterface;
 use Codeception\Configuration;
 use Codeception\Lib\Connector\ZendExpressive as ZendExpressiveConnector;
-use Psr\Http\Message\ResponseInterface;
+use Codeception\Lib\Interfaces\DoctrineProvider;
 
 /**
  * This module allows you to run tests inside Zend Expressive.
@@ -28,7 +28,7 @@ use Psr\Http\Message\ResponseInterface;
  * * client - BrowserKit client
  *
  */
-class ZendExpressive extends Framework
+class ZendExpressive extends Framework implements DoctrineProvider
 {
     protected $config = [
         'container' => 'config/container.php',
@@ -54,21 +54,33 @@ class ZendExpressive extends Framework
     public function _initialize()
     {
         $cwd = getcwd();
-        chdir(Configuration::projectDir());
-        $this->container = require Configuration::projectDir() . $this->config['container'];
+        $projectDir = Configuration::projectDir();
+        chdir($projectDir);
+        $this->container = require $projectDir . $this->config['container'];
+        $app = $this->container->get('Zend\Expressive\Application');
+
+        $pipelineFile = $projectDir . 'config/pipeline.php';
+        if (file_exists($pipelineFile)) {
+            require $pipelineFile;
+        }
+        $routesFile = $projectDir . 'config/routes.php';
+        if (file_exists($routesFile)) {
+            require $routesFile;
+        }
         chdir($cwd);
-        $this->application = $this->container->get('Zend\Expressive\Application');
+
+        $this->application = $app;
         $this->initResponseCollector();
     }
 
-    public function _before(TestCase $test)
+    public function _before(TestInterface $test)
     {
         $this->client = new ZendExpressiveConnector();
         $this->client->setApplication($this->application);
         $this->client->setResponseCollector($this->responseCollector);
     }
 
-    public function _after(TestCase $test)
+    public function _after(TestInterface $test)
     {
         //Close the session, if any are open
         if (session_status() == PHP_SESSION_ACTIVE) {
@@ -90,5 +102,15 @@ class ZendExpressive extends Framework
 
         $this->responseCollector = new ZendExpressiveConnector\ResponseCollector;
         $emitterStack->unshift($this->responseCollector);
+    }
+
+    public function _getEntityManager()
+    {
+        $service = 'Doctrine\ORM\EntityManager';
+        if (!$this->container->has($service)) {
+            throw new \PHPUnit_Framework_AssertionFailedError("Service $service is not available in container");
+        }
+
+        return $this->container->get('Doctrine\ORM\EntityManager');
     }
 }

@@ -146,6 +146,43 @@ function update_children( $page_id )
  */
 function check_URL_history( $request_uri )
 {
+	$history = reason_get_url_history( $request_uri );
+	
+	foreach($history as $row)
+	{
+		$page_id = $row['page_id'];
+		$page = new entity($page_id);
+		if (reason_is_entity($page, 'minisite_page') && ($page->get_value('state') == 'Live') && ($redir = @reason_get_page_url($page)))
+		{
+			if ($redir == $request_uri)
+			{
+				//Could potentially update rewrites here, solving most times this happens, perhaps.
+				trigger_error("A page should exist here, but apparently does not at the moment. A web administrator may need to run URL updating on this site.");
+			} 
+			else 
+			{
+				header( 'Location: ' . $redir . $query_string, true, 301 );
+				exit();
+			}
+		
+		}
+	}
+	
+	// if we have gotten this far and not found a URL lets send a 404
+	http_response_code(404);
+}
+
+/**
+ * Fetch the list of pages that have apeared at a given URL
+ *
+ * @param string $request_uri a URL relative to the host root (e.g. /foo/bar/)
+ * @return array
+ *
+ * @todo modify to make multidomain safe
+ */
+function reason_get_url_history( $request_uri )
+{
+	$ret = array();
 	$url_arr = parse_URL( $request_uri );
 	if (!empty($url_arr['path']))
 	{
@@ -162,27 +199,9 @@ function check_URL_history( $request_uri )
 		{
 			while ($row = mysql_fetch_array( $results )) // grab the first result (e.g. most recent)
 			{
-				$page_id = $row['page_id'];
-				$page = new entity($page_id);
-				if (reason_is_entity($page, 'minisite_page') && ($page->get_value('state') == 'Live') && ($redir = @reason_get_page_url($page)))
-				{
-					if ($redir == $request_uri)
-					{
-						//Could potentially update rewrites here, solving most times this happens, perhaps.
-						trigger_error("A page should exist here, but apparently does not at the moment. A web administrator may need to run URL updating on this site.");
-					} 
-					else 
-					{
-						header( 'Location: ' . $redir . $query_string, true, 301 );
-						exit();
-					}
-				
-				}
+				$ret[] = $row;
 			}
 		}
 	}
-	
-	// if we have gotten this far and not found a URL lets send a 404
-	http_response_code(404);
+	return $ret;
 }
-?>

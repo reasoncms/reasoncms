@@ -21,8 +21,6 @@ class Cookie
     /**
      * Handles dates as defined by RFC 2616 section 3.3.1, and also some other
      * non-standard, but common formats.
-     *
-     * @var array
      */
     private static $dateFormats = array(
         'D, d M Y H:i:s T',
@@ -62,7 +60,7 @@ class Cookie
             $this->rawValue = $value;
         } else {
             $this->value = $value;
-            $this->rawValue = urlencode($value);
+            $this->rawValue = rawurlencode($value);
         }
         $this->name = $name;
         $this->path = empty($path) ? '/' : $path;
@@ -76,16 +74,12 @@ class Cookie
                 throw new \UnexpectedValueException(sprintf('The cookie expiration time "%s" is not valid.', $expires));
             }
 
-            $this->expires = $timestampAsDateTime->getTimestamp();
+            $this->expires = $timestampAsDateTime->format('U');
         }
     }
 
     /**
      * Returns the HTTP representation of the Cookie.
-     *
-     * @return string The HTTP representation of the Cookie
-     *
-     * @throws \UnexpectedValueException
      */
     public function __toString()
     {
@@ -121,7 +115,7 @@ class Cookie
      * @param string $cookie A Set-Cookie header value
      * @param string $url    The base URL
      *
-     * @return Cookie A Cookie instance
+     * @return static
      *
      * @throws \InvalidArgumentException
      */
@@ -205,16 +199,14 @@ class Cookie
 
         foreach (self::$dateFormats as $dateFormat) {
             if (false !== $date = \DateTime::createFromFormat($dateFormat, $dateValue, new \DateTimeZone('GMT'))) {
-                return $date->getTimestamp();
+                return $date->format('U');
             }
         }
 
         // attempt a fallback for unusual formatting
         if (false !== $date = date_create($dateValue, new \DateTimeZone('GMT'))) {
-            return $date->getTimestamp();
+            return $date->format('U');
         }
-
-        throw new \InvalidArgumentException(sprintf('Could not parse date "%s".', $dateValue));
     }
 
     /**
@@ -304,6 +296,6 @@ class Cookie
      */
     public function isExpired()
     {
-        return null !== $this->expires && 0 !== $this->expires && $this->expires < time();
+        return null !== $this->expires && 0 != $this->expires && $this->expires < time();
     }
 }

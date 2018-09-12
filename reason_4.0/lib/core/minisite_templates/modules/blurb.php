@@ -33,6 +33,7 @@ class BlurbModule extends DefaultMinisiteModule
 		'exclude_shown_blurbs' => true,
 		'demote_headings' => 1,
 		'source_page' => '',
+		'header_html' => '',
 		'footer_html' => '',
 		'jump_links' => false,
 		'jump_links_delimiter' => '',
@@ -189,6 +190,12 @@ class BlurbModule extends DefaultMinisiteModule
 		echo '"';
 		echo ' id="'.htmlspecialchars($this->get_module_id()).'"';
 		echo '>'."\n";
+		if(!empty($this->params['header_html']))
+                {
+			echo '<div class="blurbsHeader">';
+			echo $this->params['header_html'];
+			echo '</div>'."\n";
+                }
 		if($this->params['jump_links'])
 		{
 			echo '<ul class="jumpLinks">';

@@ -39,9 +39,9 @@
 			$ret .= '<span class="'.implode(' ',$classes).'" style="width:'.$width.'px;">';
 			$ret .= '<img src="'.$img_url.'" width="'.$width.'" height="'.$height.'" alt="'.reason_htmlspecialchars(strip_tags($caption)).'" />';
 			
-			$ret .= '<span class="embedCaption">'.strip_non_phrasing_tags($caption).'</span>';
+			$ret .= '<span class="embedCaption">'.strip_non_phrasing_tags($caption).'</span> ';
 			if($img->get_value('author'))
-				$ret .= '<span class="embedAuthor">Photo: '.strip_non_phrasing_tags($img->get_value('author')).'</span>';
+				$ret .= '<span class="embedAuthor">Photo: '.strip_non_phrasing_tags($img->get_value('author')).'</span> ';
 			$ret .= '</span>';
 			return $ret;
 		}
@@ -75,9 +75,9 @@
 				$displayer_chrome->set_media_work($media);
 				$displayer_chrome->set_media_width($width);
 				$rv .= $displayer_chrome->get_html_markup();
-				$rv .= '<span class="embedCaption">'.strip_non_phrasing_tags($caption).'</span>';
+				$rv .= '<span class="embedCaption">'.strip_non_phrasing_tags($caption).'</span> ';
 				if($media->get_value('author'))
-					$rv .= '<span class="embedAuthor">By: '.strip_non_phrasing_tags($media->get_value('author')).'</span>';
+					$rv .= '<span class="embedAuthor">By: '.strip_non_phrasing_tags($media->get_value('author')).'</span> ';
 				$rv .= '</span>';
 			}
 			else

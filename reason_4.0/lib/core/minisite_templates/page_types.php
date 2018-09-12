@@ -834,6 +834,34 @@
 			'main_post' => 'children',
 			'main_head' => '',
 		),
+		'publication_related_under_nav' => array(
+			'sub_nav' => array(
+				'module' => 'publication',
+				'related_mode' => 'true',
+				'markup_generator_info' => array(
+					'list_item' => array(
+						'classname' => 'MinimalListItemMarkupGenerator',
+						'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/minimal.php',
+					),
+				),
+				'max_num_items' => 4,
+			),
+			'sub_nav_2' => 'blurb',
+		),
+		'publication_related_under_nav_sidebar_blurbs' => array(
+			'sub_nav' => array(
+				'module' => 'publication',
+				'related_mode' => 'true',
+				'markup_generator_info' => array(
+					'list_item' => array(
+						'classname' => 'MinimalListItemMarkupGenerator',
+						'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/minimal.php',
+					),
+				),
+				'max_num_items' => 4,
+			),
+			'sidebar' => 'blurb',
+		),
 		'events_archive' => array(
 			'main_post' => 'events_archive',
 			'sidebar' => '',

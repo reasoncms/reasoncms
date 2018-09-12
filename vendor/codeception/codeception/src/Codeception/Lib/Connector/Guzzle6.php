@@ -1,12 +1,16 @@
 <?php
 namespace Codeception\Lib\Connector;
 
+use Aws\Credentials\Credentials;
+use Aws\Signature\SignatureV4;
 use Codeception\Util\Uri;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Cookie\CookieJar;
 use GuzzleHttp\Cookie\SetCookie;
-use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Handler\CurlHandler;
+use GuzzleHttp\Handler\StreamHandler;
+use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Request as Psr7Request;
 use GuzzleHttp\Psr7\Response as Psr7Response;
 use GuzzleHttp\Psr7\Uri as Psr7Uri;
@@ -23,6 +27,9 @@ class Guzzle6 extends Client
         'headers'         => [],
     ];
     protected $refreshMaxInterval = 0;
+
+    protected $awsCredentials = null;
+    protected $awsSignature = null;
 
     /** @var \GuzzleHttp\Client */
     protected $client;
@@ -52,7 +59,7 @@ class Guzzle6 extends Client
      * Sets the request header to the passed value.  The header will be
      * sent along with the next request.
      *
-     * Passing an empty value clears the header, which is the equivelant
+     * Passing an empty value clears the header, which is the equivalent
      * of calling deleteHeader.
      *
      * @param string $name the name of the header
@@ -78,13 +85,18 @@ class Guzzle6 extends Client
         unset($this->requestOptions['headers'][$name]);
     }
 
-    public function setAuth($username, $password)
+    /**
+     * @param string $username
+     * @param string $password
+     * @param string $type  Default: 'basic'
+     */
+    public function setAuth($username, $password, $type = 'basic')
     {
         if (!$username) {
             unset($this->requestOptions['auth']);
             return;
         }
-        $this->requestOptions['auth'] = [$username, $password];
+        $this->requestOptions['auth'] = [$username, $password, $type];
     }
 
     /**
@@ -120,7 +132,7 @@ class Guzzle6 extends Client
             $matches = [];
 
             $matchesMeta = preg_match(
-                '/\<meta[^\>]+http-equiv="refresh" content="(\d*)\s*;?\s*url=(.*?)"/i',
+                '/\<meta[^\>]+http-equiv="refresh" content="\s*(\d*)\s*;\s*url=(.*?)"/i',
                 $body,
                 $matches
             );
@@ -128,7 +140,7 @@ class Guzzle6 extends Client
             if (!$matchesMeta && isset($headers['Refresh'])) {
                 // match by header
                 preg_match(
-                    '~(\d*);?url=(.*)~',
+                    '/^\s*(\d*)\s*;\s*url=(.*)/i',
                     (string) reset($headers['Refresh']),
                     $matches
                 );
@@ -151,7 +163,7 @@ class Guzzle6 extends Client
     public function getAbsoluteUri($uri)
     {
         $baseUri = $this->client->getConfig('base_uri');
-        if (strpos($uri, '://') === false) {
+        if (strpos($uri, '://') === false && strpos($uri, '//') !== 0) {
             if (strpos($uri, '/') === 0) {
                 $baseUriPath = $baseUri->getPath();
                 if (!empty($baseUriPath) && strpos($uri, $baseUriPath) === 0) {
@@ -190,7 +202,11 @@ class Guzzle6 extends Client
         }
 
         try {
-            $response = $this->client->send($guzzleRequest, $options);
+            if (null !== $this->awsCredentials) {
+                $response = $this->client->send($this->awsSignature->signRequest($guzzleRequest, $this->awsCredentials), $options);
+            } else {
+                $response = $this->client->send($guzzleRequest, $options);
+            }
         } catch (RequestException $e) {
             if (!$e->hasResponse()) {
                 throw $e;
@@ -207,7 +223,7 @@ class Guzzle6 extends Client
 
         $contentHeaders = ['Content-Length' => true, 'Content-Md5' => true, 'Content-Type' => true];
         foreach ($server as $header => $val) {
-            $header = implode('-', array_map('ucfirst', explode('-', strtolower(str_replace('_', '-', $header)))));
+            $header = html_entity_decode(implode('-', array_map('ucfirst', explode('-', strtolower(str_replace('_', '-', $header))))), ENT_NOQUOTES);
             if (strpos($header, 'Http-') === 0) {
                 $headers[substr($header, 5)] = $val;
             } elseif (isset($contentHeaders[$header])) {
@@ -219,7 +235,7 @@ class Guzzle6 extends Client
 
     protected function extractFormData(BrowserKitRequest $request)
     {
-        if (!in_array(strtoupper($request->getMethod()), ['POST', 'PUT', 'PATCH'])) {
+        if (!in_array(strtoupper($request->getMethod()), ['POST', 'PUT', 'PATCH', 'DELETE'])) {
             return null;
         }
 
@@ -313,5 +329,28 @@ class Guzzle6 extends Client
             $jar[] = $setCookie;
         }
         return new CookieJar(false, $jar);
+    }
+
+    public static function createHandler($handler)
+    {
+        if ($handler === 'curl') {
+            return HandlerStack::create(new CurlHandler());
+        }
+        if ($handler === 'stream') {
+            return HandlerStack::create(new StreamHandler());
+        }
+        if (class_exists($handler)) {
+            return HandlerStack::create(new $handler);
+        }
+        if (is_callable($handler)) {
+            return HandlerStack::create($handler);
+        }
+        return HandlerStack::create();
+    }
+
+    public function setAwsAuth($config)
+    {
+        $this->awsCredentials = new Credentials($config['key'], $config['secret']);
+        $this->awsSignature = new SignatureV4($config['service'], $config['region']);
     }
 }

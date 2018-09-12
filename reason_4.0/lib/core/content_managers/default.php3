@@ -22,6 +22,18 @@
 	reason_include_once( 'classes/entity.php');
 	reason_include_once( 'function_libraries/admin_actions.php' );
 	include_once(CARL_UTIL_INC . 'api/api.php');
+	include_once( DISCO_INC . 'plugins/grade_level_notifier/grade_level_notifier.php' );
+	include_once( DISCO_INC . 'plugins/reading_ease_notifier/reading_ease_notifier.php' );
+	
+	if(!defined('REASON_DISPLAY_GRADE_LEVEL'))
+	{
+		define('REASON_DISPLAY_GRADE_LEVEL', true);
+	}
+	
+	if(!defined('REASON_DISPLAY_READING_EASE'))
+	{
+		define('REASON_DISPLAY_READING_EASE', true);
+	}
 
 	//Form comment function
 	//moved to disco.php3
@@ -54,6 +66,9 @@
 		var $_lock_indicated_fields = array();
 
 		var $box_class = 'StackedBox';
+		
+		protected $reading_level_notifier;
+		protected $reading_ease_notifier;
 
 		function init( $externally_set_up = false)
 		{
@@ -644,5 +659,28 @@
 					if ($assoc['name'] == $rel_name) return true;
 			}
 			return false;
+		}
+		
+		function add_readability_notifiers($field_name)
+		{
+			if(REASON_DISPLAY_READING_EASE)
+			{
+				if(!isset($this->reading_ease_notifier))
+				{
+					$this->reading_ease_notifier = new DiscoReadingEaseNotifier($this);
+				}
+				
+				$this->reading_ease_notifier->add_field($field_name);
+			}
+			
+			if(REASON_DISPLAY_GRADE_LEVEL)
+			{
+				if(!isset($this->reading_level_notifier))
+				{
+					$this->reading_level_notifier = new DiscoGradeLevelNotifier($this);
+				}
+				
+				$this->reading_level_notifier->add_field($field_name);
+			}
 		}
 	}

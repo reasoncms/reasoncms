@@ -46,6 +46,9 @@
 			$this->set_display_name('content',$pre.'Personal Information');
 
 			$this->change_element_type( 'content' , html_editor_name($this->admin_page->site_id) , html_editor_params($this->admin_page->site_id, $this->admin_page->user_id) );
+			
+			// Add reading level notifier plugin to content editor
+			$this->add_readability_notifiers('content');
 
 			if( !reason_user_has_privs( $this->admin_page->user_id , 'manage_integration_settings' ) )
 				$this->change_element_type( 'ldap_created' , 'hidden' );

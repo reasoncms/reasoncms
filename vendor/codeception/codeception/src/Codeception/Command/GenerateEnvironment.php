@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace Codeception\Command;
 
 use Codeception\Configuration;
@@ -6,7 +6,6 @@ use Codeception\Exception\ConfigurationException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -14,7 +13,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  *  * `codecept g:env firefox`
  *
- * Required to have `envs` path to be specifed in `codeception.yml`
+ * Required to have `envs` path to be specified in `codeception.yml`
  */
 class GenerateEnvironment extends Command
 {
@@ -25,7 +24,6 @@ class GenerateEnvironment extends Command
     {
         $this->setDefinition([
             new InputArgument('env', InputArgument::REQUIRED, 'Environment name'),
-            new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
         ]);
     }
 
@@ -36,7 +34,7 @@ class GenerateEnvironment extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $conf = $this->getGlobalConfig($input->getOption('config'));
+        $conf = $this->getGlobalConfig();
         if (!Configuration::envsDir()) {
             throw new ConfigurationException(
                 "Path for environments configuration is not set.\n"
@@ -48,15 +46,13 @@ class GenerateEnvironment extends Command
         $env = $input->getArgument('env');
         $file = "$env.yml";
 
-        $path = $this->buildPath($relativePath, $file);
-        $saved = $this->save($path . $file, "# `$env` environment config goes here");
+        $path = $this->createDirectoryFor($relativePath, $file);
+        $saved = $this->createFile($path . $file, "# `$env` environment config goes here");
 
         if ($saved) {
             $output->writeln("<info>$env config was created in $relativePath/$file</info>");
         } else {
             $output->writeln("<error>File $relativePath/$file already exists</error>");
         }
-
     }
-
 }

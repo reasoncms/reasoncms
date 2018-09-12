@@ -232,14 +232,42 @@
 		 * have statements in add_relation that don't use fully qualified entity_table.field_name pairs.
 		 */
 		var $_exclude_tables_dynamically = false;
+		 
+		var $union = false;
+		
+		/**
+		 * Set a limit on entities returned, enforced in php.
+		 *
+		 * This is useful for when you are doing outer joins (e.g. enable multivalue results)
+		 * and you want to precisely set your limit. This is different from $num in that
+		 * the full SQL query is performed and this limit is enforced as results are
+		 * retrievied in php.
+		 *
+		 * Set using set_entity_limit(); get using get_entity_limit().
+		 *
+		 * @var integer
+		 */
+		protected $entity_limit = -1;
+		
+		/**
+		 * Do we need to have all multivalued fields when an entity limit is applied?
+		 *
+		 * True gives you "perfect" results where each entity is fully populated with
+		 * multivalued fields. This may be slower and/or more memory consuming because
+		 * the entity selector still needs to grab each row from the database.
+		 *
+		 * False puts the entity selector into a mode where it stps fetching results once
+		 * it has fetched a certain number of entities. Some entities may not have every
+		 * multivalued field fully populated.
+		 *
+		 * @var boolean
+		 */
+		protected $entity_limit_full_multivalued_fields = true;
 				
 		/**
  		 * Constructor 
 		 * @param int $site_id optional site id, if set will only select entities belonging to the given site
 		 */
-		 
-		var $union = false;
-		
 		function entity_selector($site_id = false) // {{{
 		{
 			$this->query = '';
@@ -909,8 +937,12 @@
 				$sharing .= 'owns';
 			if( $this->borrows )
 				$sharing .= 'borrows';
-			if( $status != 'All' )
-				$new_e->add_relation( 'entity.state = "'.$status.'"' );
+			if( is_array($status) )
+			{
+				$new_e->add_relation( 'entity.state IN ("'.implode( '","', array_map('reason_sql_string_escape', $status) ) .'")');
+			}
+			elseif( $status != 'All' )
+				$new_e->add_relation( 'entity.state = "'.reason_sql_string_escape($status).'"' );
 			else
 				$new_e->add_relation( 'entity.state != "Archived"' );
 			
@@ -1107,11 +1139,17 @@
 			}
 			$query = $this->get_one_query( $type , $status);
 			$factory =& $this->get_entity_factory();
+			$entity_limit = $this->get_entity_limit();
 			if($this->cache_lifespan)
 			{
 				$factory_class = ($factory) ? get_class($factory) : '';
 				//echo '<p>caching '.$this->cache_lifespan.' secs</p>';
-				$cache = new ObjectCache('entity_selector_cache_'.get_current_db_connection_name().'_'.$this->_enable_multivalue_results.'_'.$factory_class.'_'.$query, $this->cache_lifespan);
+				$cache_key = 'entity_selector_cache_'.get_current_db_connection_name().'_'.$this->_enable_multivalue_results.'_'.$factory_class.'_'.$query;
+				if($entity_limit > 0)
+				{
+					$cache_key .= '_entitylimit=' . $entity_limit;
+				}
+				$cache = new ObjectCache($cache_key, $this->cache_lifespan);
 				$results =& $cache->fetch();
 				if(false !== $results)
 				{
@@ -1130,6 +1168,7 @@
 			$r = db_query( $query , $this->description.': '.$error );
 			
 			if ($printQuery) { echo "Got back [" . mysql_num_rows($r) . "] ROWS...<P>"; }
+			$num_results = 0;
 			while( $row = mysql_fetch_array( $r, MYSQL_ASSOC ) )
 			{
 				//pray ($row);
@@ -1169,6 +1208,18 @@
 					$e->_values = $row;
 				}
 				$e->full_fetch_performed($fetching_all_fields);
+				if(!isset($results[ $row[ 'id' ] ]))
+				{
+					if($entity_limit > 0 && $num_results >= $entity_limit)
+					{
+						if(!$this->entity_limit_full_multivalued_fields)
+						{
+							break;
+						}
+						continue;
+					}
+					$num_results++;
+				}
 				$results[ $row[ 'id' ] ] = $e;
 			}
 			mysql_free_result( $r );
@@ -1738,6 +1789,15 @@
 		{
 			if (!isset($this->entity_factory_class)) $this->entity_factory_class = false;
 			return $this->entity_factory_class;
+		}
+		
+		function set_entity_limit($num, $full_multivalued_fields = true) {
+			$this->entity_limit = (integer) $num;
+			$this->entity_limit_full_multivalued_fields = (boolean) $full_multivalued_fields;
+		}
+		
+		function get_entity_limit() {
+			return $this->entity_limit;
 		}
 	} // }}}
 ?>

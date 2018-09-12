@@ -8,10 +8,7 @@
  * file that was distributed with this source code.
  */
 
-/**
- * @since Class available since Release 5.3.0
- */
-class ConfigurationGenerator
+class PHPUnit_Util_ConfigurationGenerator
 {
     /**
      * @var string
@@ -27,7 +24,7 @@ class ConfigurationGenerator
          beStrictAboutTestsThatDoNotTestAnything="true"
          beStrictAboutTodoAnnotatedTests="true"
          verbose="true">
-    <testsuite>
+    <testsuite name="default">
         <directory suffix="Test.php">{tests_directory}</directory>
     </testsuite>
 

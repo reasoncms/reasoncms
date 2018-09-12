@@ -546,7 +546,7 @@ class MinisiteTemplate
 
 		if($this->include_modules_css)
 		{
-			$this->head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/modules.css');
+			$this->head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/modules.css?v=4');
 		}
 		if( $css_files )
 		{
@@ -1073,7 +1073,7 @@ class MinisiteTemplate
 		echo '</head>'."\n";
 
 		echo $this->create_body_tag();
-		echo '<div class="hide"><a href="#content" class="hide">Skip Navigation</a></div>'."\n";
+		echo '<a href="#content" class="hide skipNav">Skip Navigation</a>'."\n";
 		if ($this->has_content( 'pre_bluebar' ))
 			$this->run_section( 'pre_bluebar' );
 		$this->do_org_navigation();

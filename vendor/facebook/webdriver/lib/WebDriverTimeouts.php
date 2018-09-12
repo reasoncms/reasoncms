@@ -16,60 +16,68 @@
 namespace Facebook\WebDriver;
 
 use Facebook\WebDriver\Remote\DriverCommand;
+use Facebook\WebDriver\Remote\ExecuteMethod;
 
 /**
  * Managing timeout behavior for WebDriver instances.
  */
-class WebDriverTimeouts {
+class WebDriverTimeouts
+{
+    /**
+     * @var ExecuteMethod
+     */
+    protected $executor;
 
-  protected $executor;
+    public function __construct(ExecuteMethod $executor)
+    {
+        $this->executor = $executor;
+    }
 
-  public function __construct($executor) {
-    $this->executor = $executor;
-  }
+    /**
+     * Specify the amount of time the driver should wait when searching for an element if it is not immediately present.
+     *
+     * @param int $seconds Wait time in second.
+     * @return WebDriverTimeouts The current instance.
+     */
+    public function implicitlyWait($seconds)
+    {
+        $this->executor->execute(
+            DriverCommand::IMPLICITLY_WAIT,
+            ['ms' => $seconds * 1000]
+        );
 
-  /**
-   * Specify the amount of time the driver should wait when searching for an
-   * element if it is not immediately present.
-   *
-   * @param int $seconds Wait time in second.
-   * @return WebDriverTimeouts The current instance.
-   */
-  public function implicitlyWait($seconds) {
-    $this->executor->execute(
-      DriverCommand::IMPLICITLY_WAIT,
-      array('ms' => $seconds * 1000)
-    );
-    return $this;
-  }
+        return $this;
+    }
 
-  /**
-   * Set the amount of time to wait for an asynchronous script to finish
-   * execution before throwing an error.
-   *
-   * @param int $seconds Wait time in second.
-   * @return WebDriverTimeouts The current instance.
-   */
-  public function setScriptTimeout($seconds) {
-    $this->executor->execute(
-      DriverCommand::SET_SCRIPT_TIMEOUT,
-      array('ms' => $seconds * 1000)
-    );
-    return $this;
-  }
+    /**
+     * Set the amount of time to wait for an asynchronous script to finish execution before throwing an error.
+     *
+     * @param int $seconds Wait time in second.
+     * @return WebDriverTimeouts The current instance.
+     */
+    public function setScriptTimeout($seconds)
+    {
+        $this->executor->execute(
+            DriverCommand::SET_SCRIPT_TIMEOUT,
+            ['ms' => $seconds * 1000]
+        );
 
-  /**
-   * Set the amount of time to wait for a page load to complete before throwing
-   * an error.
-   *
-   * @param int $seconds Wait time in second.
-   * @return WebDriverTimeouts The current instance.
-   */
-  public function pageLoadTimeout($seconds) {
-    $this->executor->execute(DriverCommand::SET_TIMEOUT, array(
-      'type' => 'page load',
-      'ms' => $seconds * 1000,
-    ));
-    return $this;
-  }
+        return $this;
+    }
+
+    /**
+     * Set the amount of time to wait for a page load to complete before throwing an error.
+     *
+     * @param int $seconds Wait time in second.
+     * @return WebDriverTimeouts The current instance.
+     */
+    public function pageLoadTimeout($seconds)
+    {
+        $this->executor->execute(DriverCommand::SET_TIMEOUT, [
+            'type' => 'page load',
+            'ms' => $seconds * 1000,
+        ]);
+
+        return $this;
+    }
 }
