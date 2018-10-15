@@ -139,6 +139,11 @@ class ReasonAdminToolsModule extends DefaultModule
 					'description' => 'Provides statistics on how frequently each type and module is used by each site',
 					'safety_level' => 'safe',
 				),
+				'?site_id='.id_of('master_admin').'&cur_module=GroupUsage' => array(
+					'title' => 'Group Usage',
+					'description' => 'Provides statistics on how this reason instance uses groups for access control',
+					'safety_level' => 'safe',
+				),
 				'?cur_module=FindPageFromURL' => array(  
 					'title' => 'Find Page From URL',
 					'description' => 'Given a URL, find all pages that have been at that URL',

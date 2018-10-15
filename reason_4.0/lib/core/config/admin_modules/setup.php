@@ -119,6 +119,7 @@
 		'FindPageFromURL'=>array('file'=>'find_page_from_url.php', 'class'=>'FindPageFromURLModule'),
 		'Search'=>array('file'=>'search.php', 'class'=>'ReasonAdminSearchModule'),
 		'TypeUsage'=>array('file'=>'type_usage.php', 'class'=>'ReasonTypeUsageModule'),
+		'GroupUsage'=>array('file'=>'group_usage.php', 'class'=>'GroupUsageModule'),
 	);
 
 if (reason_file_exists('config/admin_modules/setup_local.php'))
