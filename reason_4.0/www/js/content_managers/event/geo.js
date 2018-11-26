@@ -101,16 +101,10 @@ $(document).ready(function()
 		if (update_timer) clearTimeout(update_timer);
 		if (address_sync)
 		{
-			if (aloc = get_location_from_address(true))
-			{
-				update_location(aloc);
-				show("static_map");
-			}
-			else
-			{
+			aloc = get_location_from_address(true);
+
 				update_location(null);
 				show("map_link");
-			}
 		}
 		else
 		{
@@ -136,24 +130,9 @@ $(document).ready(function()
 	 */
 	function show(layer)
 	{
-		if (layer == "map_link")
-		{
-			static_map_container.hide();
-			full_map_container.hide();
-			show_map_link();
-		}
-		else if (layer == "static_map")
-		{
-			full_map_container.hide();
-			map_link_container.hide();
-			show_static_map();
-		}
-		else if (layer == "full_map")
-		{
 			static_map_container.hide();
 			map_link_container.hide();
 			show_full_map();
-		}
 	}
 
 	/**
