@@ -81,7 +81,7 @@ $(document).ready(function()
 		var day = $("input[name='datetime[day]']").val();
 		var month = $("input[name='datetime[month]']").val();
 		var year = $("input[name='datetime[year]']").val();
-		var wom = Math.floor(day/7)+1;
+		var wom = Math.ceil(day/7);
 		var dow = ymd_to_dow( year,month,day );	
 		$("div#monthly_repeat_container label[for='radio_monthly_repeat_0']").text("On the "+wom+suffix( wom )+" "+dow+" of the month");
 		$("div#monthly_repeat_container label[for='radio_monthly_repeat_1']").text("On the "+day+suffix( day )+" of the month");
