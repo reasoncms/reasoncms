@@ -13,6 +13,7 @@
 	padding:10px;
 	margin:10px;
 	background:#eee;
+	text-decoration:none;
 }
 #eventsGalleryModule.bigList ul.events li.event a:hover, #eventsGalleryModule.bigList ul.events li.event a:active, #eventsGalleryModule.bigList ul.events li.event a:focus {
 	background:#ddd;
