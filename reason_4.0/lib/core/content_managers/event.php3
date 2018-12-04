@@ -17,7 +17,8 @@
 	require_once INCLUDE_PATH . '/disco/plugins/input_limiter/input_limiter.php';
 	reason_include_once('classes/event.php');
 	reason_include_once('classes/api/geocoder.php');
-	
+	reason_include_once('function_libraries/google_maps.php');
+
 	/**
 	 * A content manager for event entities
 	 *
@@ -82,11 +83,10 @@
 		function init_head_items()
 		{
 			$this->head_items->add_javascript(JQUERY_URL, true); // uses jquery - jquery should be at top
-			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH .'event.js?v=2');
+			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH .'event.js?v=3');
 			if ($this->geolocation_enabled())
 			{
-				$base_gmap_url = (HTTPS_AVAILABLE) ? 'https://maps-api-ssl.google.com/maps/api/js' : 'http://maps.google.com/maps/api/js';
-				$this->head_items->add_javascript($base_gmap_url . '?v=3&libraries=geometry&sensor=false', true);
+				$this->head_items->add_javascript(create_google_maps_js_url(["libraries" => "geometry"]), true);
 				$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH . 'content_managers/event/geo.js?v=2');
 				$this->head_items->add_stylesheet(WEB_JAVASCRIPT_PATH . 'content_managers/event/geo.css');
 			}

@@ -13,6 +13,7 @@ include_once('reason_header.php');
 include_once(CARL_UTIL_INC . 'cache/object_cache.php');
 include_once(CARL_UTIL_INC . 'basic/json.php');
 include_once(CARL_UTIL_INC . 'basic/url_funcs.php');
+reason_include_once('function_libraries/google_maps.php');
 
 /**
  * A class for geocoding with result caching.
@@ -339,28 +340,24 @@ class geocoder
 	**/
 	function get_results_from_service()
 	{
-		$url = 'https://maps.googleapis.com/maps/api/geocode/json?';
 		if ($this->location_is_address() || $this->location_is_lat_lon())
 		{
+			$query_params = [];
 			if ($this->location_is_address())
 			{
-				$url .= 'sensor=false&address='.urlencode($this->get_location());
+				$query_params['sensor'] = 'false';
+				$query_params['address'] = $this->get_location();
 			}
 			elseif ($this->location_is_lat_lon())
 			{
-				$latlng_str = implode(",", $this->get_location());
-				$url .= 'sensor=false&latlng='.urlencode($latlng_str);
+				$query_params['sensor'] = 'false';
+				$query_params['latlng'] = implode(",", $this->get_location());
 			}
-			foreach($this->extra_params as $key => $val)
-			{
-				$url .= '&'.urlencode($key).'='.urlencode($val);
-			}
-			
-			// Limit requests to one per second
-			if (isset($last_query_time) && ( (time() - $last_query_time) == 0) ) usleep(1000000);
-			$last_query_time = time();
-			
-			if (!($this->raw_query_results = @carl_util_get_url_contents($url, false, '', '', 10, 5))) 
+			$query_params = $query_params + $this->extra_params;
+
+			$url = create_google_geocode_url($query_params);
+
+			if (!($this->raw_query_results = carl_util_get_url_contents($url, false, '', '', 10, 5)))
 			{
 				trigger_error('Geocoding request failed in geocoder->get_results_from_service()');
 				return false;	

@@ -435,5 +435,21 @@
 			}
 			return array_merge($chain, $this->get_id_chain($this->parent($page_id)));
 		}
+		
+		function get_descendants($page_id)
+		{
+			if(!isset($this->values[ $page_id ]))
+			{
+				trigger_error('Page id '.$page_id.' not in site');
+				return array();
+			}
+			$descendants = array($page_id);
+			$children = $this->children($page_id);
+			foreach($children as $child_id)
+			{
+				$descendants = array_merge($descendants, $this->get_descendants($child_id));
+			}
+			return $descendants;
+		}
 	}
 ?>
