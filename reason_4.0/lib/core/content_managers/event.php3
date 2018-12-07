@@ -83,7 +83,7 @@
 		function init_head_items()
 		{
 			$this->head_items->add_javascript(JQUERY_URL, true); // uses jquery - jquery should be at top
-			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH .'event.js?v=2');
+			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH .'event.js?v=3');
 			if ($this->geolocation_enabled())
 			{
 				$this->head_items->add_javascript(create_google_maps_js_url(["libraries" => "geometry"]), true);
