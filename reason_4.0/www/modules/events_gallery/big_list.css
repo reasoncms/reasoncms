@@ -2,17 +2,20 @@
 	margin:0;
 	padding:0;
 	list-style:none;
+	display:block;
 }
 #eventsGalleryModule.bigList ul.events li.event {
-	float:left;
+	display:inline-block;
+	margin:0 20px 20px 0;
+	vertical-align:top;
 }
 #eventsGalleryModule.bigList ul.events li.event a {
-	display:block;
-	width:280px;
-	height:280px;
 	padding:10px;
-	margin:10px;
+	width:280px;
+	min-height:280px;
+	display:block;
 	background:#eee;
+	text-decoration:none;
 }
 #eventsGalleryModule.bigList ul.events li.event a:hover, #eventsGalleryModule.bigList ul.events li.event a:active, #eventsGalleryModule.bigList ul.events li.event a:focus {
 	background:#ddd;
