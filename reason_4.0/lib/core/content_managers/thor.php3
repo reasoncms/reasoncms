@@ -231,6 +231,7 @@
 				}
 				$filter_current_setting = (REASON_FORMS_THOR_DEFAULT_AKISMET_FILTER ? 'yes' : 'no');
 				$this->set_element_properties('apply_akismet_filter', array('options' => array('' => 'Default (currently set to "' . $filter_current_setting  . '")', 'true' => 'Yes', 'false' => 'No'), 'add_empty_value_to_top' => false));
+				$this->add_comments('email_submitter',form_comment('Emails a confirmation to the logged-in user or the email address in a field labeled exactly "Your Email" (no colon or other characters)'));
 				$this->setup_thor_view_element();
 			}
 			else
