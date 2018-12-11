@@ -2078,6 +2078,11 @@
 			'sidebar' => 'blurb',
 			'main_head' => '',
 		),
+		'sidebar_blurb_and_children' => array(
+			'sub_nav' => '',
+			'sidebar' => 'blurb',
+			'main_post' => 'children',
+		),
 		'sidebar_blurb_and_children_no_title' => array(
 			'sub_nav' => '',
 			'sidebar' => 'blurb',
