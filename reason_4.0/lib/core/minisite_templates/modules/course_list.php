@@ -12,6 +12,7 @@ $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'CourseListM
 
 reason_include_once( 'minisite_templates/modules/default.php' );
 reason_include_once( 'function_libraries/course_functions.php' );
+include_once( DISCO_INC . 'disco.php' );
 
 class CourseListModule extends DefaultMinisiteModule
 {
@@ -52,6 +53,14 @@ class CourseListModule extends DefaultMinisiteModule
 		
 		// Add a list of internal links to the subject sections
 		'show_subject_links' => false,
+		
+		// Permit the specification of courses via query string parameters
+		'get_url_specified_courses' => false,
+		
+		// Permit a search (requires 'get_url_specified_courses' => true)
+		'search_for_course_if_none' => false,
+		
+		'no_courses_message' => '',
 
 		// Randomize the courses before displaying
 		'randomize' => false,
@@ -73,6 +82,8 @@ class CourseListModule extends DefaultMinisiteModule
 		'subject' => array( 'function' => 'turn_into_string' ),
 		'choose_course' => array( 'function' => 'turn_into_array' ),
 		'toggle_course' => array( 'function' => 'turn_into_string' ),
+		'number' => array( 'function' => 'turn_into_string' ),
+		'course_search' => array( 'function' => 'turn_into_string' ),
 		);
 	
 	function init( $args = array() )
@@ -152,6 +163,23 @@ class CourseListModule extends DefaultMinisiteModule
 		
 			$count = $protected_count = 0;
 			$buckets = array();
+			if(empty($this->courses))
+			{
+				echo $this->params['no_courses_message'];
+				if($this->params['get_url_specified_courses'] && (!empty($this->request['subject']) || !empty($this->request['number']) || !empty($this->request['course_search']) ))
+				{
+					echo '<h3>Course not found</h3><p>Please search for a different course</p>';
+				}
+				if($this->params['search_for_course_if_none'])
+				{
+					$d = new Disco();
+					$d->set_box_class('stackedBox');
+					$d->add_element('course_search');
+					$d->set_actions(array('search'=>'Search for Course'));
+					$d->set_form_method('get');
+					$d->run();
+				}
+			}
 			foreach ($this->courses as $course)
 			{			
 				// Increment only if we got content for this course
@@ -213,6 +241,23 @@ class CourseListModule extends DefaultMinisiteModule
 		// Go through all the parameters and grab all the courses that match what's being requested.
 		// We'll sort through them and throw out any that don't apply at the run stage -- it's
 		// more efficient that way.
+		
+		if ($this->params['get_url_specified_courses'] && !empty($this->request['subject']) && !empty($this->request['number']))
+			$this->courses = $this->courses + $this->helper->get_courses_by_subject_and_number($this->request['subject'], $this->request['number'], 'academic_catalog_'.$this->year.'_site');
+		
+		if ($this->params['get_url_specified_courses'] && !empty($this->request['course_search']))
+		{
+			$parts = explode(' ', $this->request['course_search']);
+			if(count($parts) > 1)
+			{
+				$subject = (string) $parts[0];
+				$number = (string) $parts[1];
+				if($subject && $number)
+				{
+					$this->courses = $this->courses + $this->helper->get_courses_by_subject_and_number($subject, $number, 'academic_catalog_'.$this->year.'_site');
+				}
+			}
+		}
 		
 		if ($this->params['get_site_courses'])
 			$this->courses = $this->courses + $this->helper->get_site_courses($this->site_id);
