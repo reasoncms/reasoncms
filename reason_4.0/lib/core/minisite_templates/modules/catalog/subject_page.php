@@ -43,7 +43,7 @@ class CatalogSubjectPageModule extends DefaultMinisiteModule
 
 		// If we're in ajax mode, we just return the data and quit the module.
 		$api = $this->get_api();
-		if ($api && ($api->get_name() == 'standalone'))
+		if (!$this->helper->supports_course_links() && $api && ($api->get_name() == 'standalone'))
 		{
 			// This call is used to provide course descriptions that pop up when course
 			// codes are clicked on.
@@ -69,13 +69,17 @@ class CatalogSubjectPageModule extends DefaultMinisiteModule
 			exit;
 		}
 
-		if($head_items = $this->get_head_items())
+		if( $head_items = $this->get_head_items() )
 		{
-			$head_items->add_stylesheet(JQUERY_UI_CSS_URL);
+			
 			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH . 'modules/courses/course_description_modal.css');
-			$head_items->add_javascript(JQUERY_UI_URL);
-			$head_items->add_javascript(REASON_HTTP_BASE_PATH . 'modules/courses/course_description_modal.js');
-			$head_items->add_javascript(WEB_JAVASCRIPT_PATH . 'jquery.reasonAjax.js');
+			if(!$this->helper->supports_course_links())
+			{
+				$head_items->add_stylesheet(JQUERY_UI_CSS_URL);
+				$head_items->add_javascript(JQUERY_UI_URL);
+				$head_items->add_javascript(REASON_HTTP_BASE_PATH . 'modules/courses/course_description_modal.js');
+				$head_items->add_javascript(WEB_JAVASCRIPT_PATH . 'jquery.reasonAjax.js');
+			}
 		}
 
 		$this->get_catalog_blocks();
@@ -117,8 +121,12 @@ class CatalogSubjectPageModule extends DefaultMinisiteModule
 				
 				if ($title = $block->get_value('title'))
 					echo '<h3>'.$title.'</h3>'."\n";
-				echo $this->helper->expand_catalog_tags($block->get_value('content'))."\n";
 				
+				$content = $this->helper->course_refs_to_links($block->get_value('content'));
+				
+				$content = $this->helper->expand_catalog_tags($content);
+				
+				echo $content . "\n";
 				// Add editing options
 				if( $editable )
 				{

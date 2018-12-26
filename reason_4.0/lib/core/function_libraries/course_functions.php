@@ -1018,6 +1018,58 @@ class CatalogHelper
 		
 		return $content;
 	}
+	
+	function course_refs_to_links($content)
+	{
+		if(preg_match_all('/<[^>]+(*SKIP)(*F)|\W([A-Z]{2,4} [0-9]{2,3})\W/', $content, $matches, PREG_SET_ORDER))
+		{
+			foreach ($matches as $match)
+			{
+				$orig = $match[0];
+				$match = $match[1];
+				$url = $this->get_course_details_url($match, $this->year);
+				if($url)
+				{
+					$replacement = '<a href="'.$url.'" class="courseNumber courseNumber--auto-inserted">'.$match.'</a>';
+				}
+				else
+				{
+					$replacement = '<span class="courseNumber courseNumber--auto-inserted">'.$match.'</span>';
+				}
+				$replacement = substr($orig, 0, 1) . $replacement . substr($orig, -1, 1);
+				$content = str_replace($orig, $replacement, $content);
+			}
+		}
+		return $content;
+	}
+	
+	
+	// Replace with institution-specific logic to find a url for the course
+	function get_course_details_url($course_string)
+	{
+		if($this->supports_course_links() && ( $site = $this->get_catalog_site() ) )
+		{
+			$parts = explode(' ', $course_string);
+			return '//'.HTTP_HOST_NAME.$site->get_value('base_url').'course-details/?subject='.urlencode($parts[0]).'&amp;number='.urlencode($parts[1]);
+		}
+	}
+	
+	// Replace with institution-specific logic to find the appropriate catalog site.
+	// returns false if none found
+	function get_catalog_site()
+	{
+		static $sites_by_year = array();
+		if(!isset($sites_by_year[$this->year]))
+		{
+			$sites_by_year[$this->year] = false;
+		}
+		return $sites_by_year[$this->year];
+	}
+	
+	function supports_course_links()
+	{
+		return false;
+	}
 
 	/**
 	 * Catalog content can contain tags (in {}) that dynamically include lists of courses based on
