@@ -35,10 +35,13 @@ class CatalogSubjectPageModule extends DefaultMinisiteModule
 	public function init( $args = array() )
 	{
 		parent::init($args);
-				
-		if (preg_match('/\d{4}/', unique_name_of($this->site_id), $matches))
-			$this->year = (int) $matches[0];
 		
+		
+		if ($year = $GLOBALS['catalog_helper_class']::get_catalog_year_from_unique_name(unique_name_of($this->site_id)))
+		{
+			$this->year = $year;
+		}
+			
 		$this->helper = new $GLOBALS['catalog_helper_class']($this->year);
 
 		// If we're in ajax mode, we just return the data and quit the module.

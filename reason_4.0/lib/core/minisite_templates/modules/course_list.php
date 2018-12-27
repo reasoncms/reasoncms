@@ -90,8 +90,15 @@ class CourseListModule extends DefaultMinisiteModule
 	{
 		parent::init($args);
 		
-		$this->helper = new $GLOBALS['catalog_helper_class']();
-		$this->year = $this->helper->get_latest_catalog_year();
+		if ($this->year = $GLOBALS['catalog_helper_class']::get_catalog_year_from_unique_name(unique_name_of($this->site_id)))
+		{
+			$this->helper = new $GLOBALS['catalog_helper_class']($this->year);
+		}
+		else // otherwise use the current year (default)
+		{
+			$this->helper = new $GLOBALS['catalog_helper_class']();
+			$this->year = $this->helper->get_latest_catalog_year();
+		}
 		
 		// If we're in ajax mode, we just return the data and quit the module.
 		$api = $this->get_api();
