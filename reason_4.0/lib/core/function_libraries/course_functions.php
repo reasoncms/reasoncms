@@ -29,7 +29,7 @@ class CourseTemplateEntityFactory
 {
 	public function get_entity(&$row)
 	{
-		return new $GLOBALS['course_template_class']($row['id']);	
+		return new $GLOBALS['course_template_class']($row['id']);
 	}
 }
 
@@ -39,29 +39,29 @@ class CourseTemplateType extends Entity
 	protected $limit_to_year = false;
 	protected $external_data;
 	protected $helper;
-	
+
 	/**
-	 * This is length of time (in minutes) that external data cached on template entities should 
-	 * persist before being refreshed. 0 means no refreshing, which is the preferred choice. 
+	 * This is length of time (in minutes) that external data cached on template entities should
+	 * persist before being refreshed. 0 means no refreshing, which is the preferred choice.
 	 * Generally you want your import process to update the external data as needed.  However, you
 	 * can import on demand, and this setting will help manage that.
-	 * 
-	 * @var int 
+	 *
+	 * @var int
 	 */
 	protected $cache_duration_minutes = 0;
-	
+
 	function CourseTemplateType($id, $cache=true)
 	{
 		parent::__construct($id, $cache);
 		$this->helper = new $GLOBALS['catalog_helper_class']();
 	}
-	
+
 	public function set_academic_year_limit($year)
 	{
 		if ($year && is_numeric($year))
 			$this->limit_to_year = $year;
 		else
-			$this->limit_to_year = false;		
+			$this->limit_to_year = false;
 	}
 
 	public function get_value($col, $refresh = false)
@@ -76,11 +76,11 @@ class CourseTemplateType extends Entity
 			return parent::get_value($col, $refresh);
 		}
 	}
-	
+
 	/**
-	 * Return the best section value for a particular key, based on whether or not the year limit is set. 
-	 * If no year limit is set, you'll get back the value for the most recent term. 
-	 * If a year limit is set, and sections occur within that limit, you'll 
+	 * Return the best section value for a particular key, based on whether or not the year limit is set.
+	 * If no year limit is set, you'll get back the value for the most recent term.
+	 * If a year limit is set, and sections occur within that limit, you'll
 	 * get back the value for the last section in that year. If a year limit is set and no sections occur
 	 * in that year, you'll get the value from the most recent year the course was offered.
 	 *
@@ -92,9 +92,9 @@ class CourseTemplateType extends Entity
 	{
 		if ($refresh || empty($this->{$key}) || ($this->limit_to_year && empty($this->{$key}[$this->limit_to_year])))
 		{
-		if (!isset($this->{$key})) $this->{$key} = array();
+			if (!isset($this->{$key})) $this->{$key} = array();
 			$sections = $this->get_sections(false);
-		
+
 			// If there's no year limit, just return the most recent section
 			if (!$this->limit_to_year)
 			{
@@ -103,29 +103,29 @@ class CourseTemplateType extends Entity
 					$year = $this->helper->term_to_academic_year($section->get_value('academic_session'));
 					$this->{$key}[$year] = $section->get_value($key, $refresh);
 					return $this->{$key}[$year];
-				}			
+				}
 			}
-			
+
 			// Otherwise, look for the latest section for the requested year
 			foreach ( $sections as $section)
 			{
 				$year = $this->helper->term_to_academic_year($section->get_value('academic_session'));
 				if ($year !== $this->limit_to_year) continue;
-				
+
 				$this->{$key}[$year] = $section->get_value($key, $refresh);
 				return $this->{$key}[$year];
-			}			
+			}
 		}
 		else
 		{
 			krsort($this->{$key});
-			if ($this->limit_to_year) 
+			if ($this->limit_to_year)
 				return $this->{$key}[$this->limit_to_year];
 			else
 				return reset($this->{$key});
-		}		
+		}
 	}
-	
+
 	public function get_sections($honor_limit = true)
 	{
 		if (!is_array($this->sections))
@@ -137,7 +137,7 @@ class CourseTemplateType extends Entity
 				{
 					$this->sections[$section->id()] = new $GLOBALS['course_section_class']($section->id());
 				}
-				
+
 				// Loading all the data for all the sections is potentially a big memory hog, so to start
 				// with we just populate a few values on each section -- the ones we need to know which
 				// sections are going to require a full retrieval.
@@ -160,7 +160,7 @@ class CourseTemplateType extends Entity
 			}
 			uasort($this->sections, array($this->helper, 'sort_courses_by_number_and_date'));
 		}
-		
+
 		// If an academic year limit has been set, only return those that match
 		if ($this->limit_to_year && $honor_limit)
 		{
@@ -168,7 +168,7 @@ class CourseTemplateType extends Entity
 			foreach ( $this->sections as $key => $section)
 			{
 				$year = $this->helper->term_to_academic_year($section->get_value('academic_session'));
-				if ($year != $this->limit_to_year) 
+				if ($year != $this->limit_to_year)
 				{
 					continue;
 				}
@@ -180,7 +180,7 @@ class CourseTemplateType extends Entity
 
 		return $this->sections;
 	}
-	
+
 	/**
 	 * Return the distinct titles associated with this course's sections. Honors year
 	 * limits.  Used primarily to find courses with sections that have different titles.
@@ -200,46 +200,46 @@ class CourseTemplateType extends Entity
 		}
 		return $titles;
 	}
-	
+
 	/**
 	 * Return the long description for a course. If year limit is in place, load description from
 	 * sections offered that year, otherwise draw the description from the template. If no year limit
 	 * is in place, grab the most recent section description.
-	 * 
+	 *
 	 * @param boolean $refresh
 	 * @return string
 	 */
 	public function get_value_long_description($refresh = false)
 	{
 		$limit = !empty($this->limit_to_year);
-			
+
 		foreach ( $this->get_sections($limit) as $section)
 		{
 			if ($desc = $section->get_value('long_description', $refresh))
 			{
-					$long_description = $desc;	
-					break;
+				$long_description = $desc;
+				break;
 			}
 		}
-		
+
 		if (empty($long_description))
 			$long_description = parent::get_value('long_description', $refresh);
-		
+
 		return $long_description;
 	}
 
-/**
+	/**
 	 * Return the title for a course. If year limit is in place, load the title from
 	 * sections offered that year, otherwise draw the title from the template. If no year limit
 	 * is in place, grab the most recent section title.
-	 * 
+	 *
 	 * @param boolean $refresh
 	 * @return string
 	 */
 	public function get_value_title($refresh = false)
 	{
 		$limit = !empty($this->limit_to_year);
-			
+
 		foreach ( $this->get_sections($limit) as $section)
 		{
 			if ($title = $section->get_value('title', $refresh))
@@ -247,17 +247,17 @@ class CourseTemplateType extends Entity
 				break;
 			}
 		}
-		
+
 		if (empty($title))
 			$title = parent::get_value('title', $refresh);
-		
+
 		return $title;
 	}
-	
+
 	/**
 	 * Generate a default HTML snippet for the course title. Override this if you
 	 * want to use a diffferent pattern.
-	 * 
+	 *
 	 * @param boolean $refresh
 	 * @return string
 	 */
@@ -269,17 +269,17 @@ class CourseTemplateType extends Entity
 		$html .= '<span class="courseTitle">';
 		$html .= $this->get_value('title', $refresh);
 		$html .= '</span> ';
-	
+
 		return $html;
 	}
-	
+
 	/**
-	  * Returns an array of the academic terms in which this course was offered, formatted as
-	  * ( start_date => term_name), sorted by date. Only one element exists per term, even if
-	  * multiple sections of this course are offered in a given term.
-	  *
-	  * @return array
-	  */
+	 * Returns an array of the academic terms in which this course was offered, formatted as
+	 * ( start_date => term_name), sorted by date. Only one element exists per term, even if
+	 * multiple sections of this course are offered in a given term.
+	 *
+	 * @return array
+	 */
 	public function get_offer_history($honor_limit = true)
 	{
 		$history = array();
@@ -290,12 +290,12 @@ class CourseTemplateType extends Entity
 		ksort($history);
 		return $history;
 	}
-	
+
 	/**
 	 * Generate a default HTML snippet for displaying details about if and
-	 * when the course is offered in the current academic year. Override this if you want to use a 
+	 * when the course is offered in the current academic year. Override this if you want to use a
 	 * different pattern.
-	 * 
+	 *
 	 * @param boolean $honor_limit Whether to honor existing year restriction
 	 * @return string
 	 */
@@ -304,7 +304,7 @@ class CourseTemplateType extends Entity
 		if ($terms = $this->get_offer_history($honor_limit))
 		{
 			$term_names = array('SU'=>'Summer','FA'=>'Fall','WI'=>'Winter','SP'=>'Spring');
-			
+
 			foreach ($terms as $term)
 			{
 				list(,$termcode) = explode('/', $term);
@@ -314,40 +314,40 @@ class CourseTemplateType extends Entity
 		} else if ($this->limit_to_year) {
 			$history = 'Not offered '.$this->helper->get_display_year($this->limit_to_year);
 		}
-		
+
 		if (!empty($history))
 			return '<span class="courseAttributesOffered">'.$history.'</span>';
 	}
-	
+
 	/**
-	  * Returns the academic year in which this course was last offered. The value
-	  * is the year that the session started, e.g. courses offered in the 2013-14 academic
-	  * year return 2013. Courses with no history return 0;
-	  *
-	  * @return integer
-	  */
+	 * Returns the academic year in which this course was last offered. The value
+	 * is the year that the session started, e.g. courses offered in the 2013-14 academic
+	 * year return 2013. Courses with no history return 0;
+	 *
+	 * @return integer
+	 */
 	public function get_last_offered_academic_year()
 	{
 		if ($history = $this->get_offer_history(false))
 		{
 			$year = $this->helper->term_to_academic_year(end($history));
 		}
-		
+
 		return (isset($year)) ? $year : 0;
 	}
 
 	/**
-	  * Returns the academic session in which this course was last offered.
-	  *
-	  * @return string
-	  */
+	 * Returns the academic session in which this course was last offered.
+	 *
+	 * @return string
+	 */
 	public function get_last_offered_academic_session()
 	{
 		if ($history = $this->get_offer_history(false))
 		{
 			$session = end($history);
 		}
-		
+
 		return (isset($session)) ? $session : null;
 	}
 
@@ -373,11 +373,11 @@ class CourseTemplateType extends Entity
 			{
 				$this->external_data = json_decode($cache, true);
 			}
-			
+
 			if ($refresh || !$this->external_data_is_valid())
 			{
 				// Insert your routine for retrieving external data here.
-				
+
 				// Indicate that we've tried and failed to retrieve the data, so we don't keep trying
 				$this->external_data = array();
 
@@ -387,7 +387,7 @@ class CourseTemplateType extends Entity
 		}
 		return $this->external_data;
 	}
-	
+
 	/**
 	 * Update this entity's external data cache from the current value of $this->external_data
 	 */
@@ -398,17 +398,17 @@ class CourseTemplateType extends Entity
 		if ($encoded != $this->get_value('cache'))
 		{
 			$this->set_value('cache', json_encode($this->external_data));
-			reason_update_entity( 
-				$this->id(), 
-				$this->get_value('last_edited_by'), 
+			reason_update_entity(
+				$this->id(),
+				$this->get_value('last_edited_by'),
 				array('cache' => $this->get_value('cache')),
 				false);
 		}
 	}
-	
+
 	/**
 	 * Determine whether the cached external data needs to be refreshed.
-	 * 
+	 *
 	 * @return boolean
 	 */
 	protected function external_data_is_valid($refresh = false)
@@ -416,7 +416,7 @@ class CourseTemplateType extends Entity
 		// If it hasn't been defined, it's invalid
 		if (!is_array($this->external_data))
 			return false;
-		
+
 		// If the timestamp is too old, it's invalid
 		if ($this->cache_duration_minutes && isset($this->external_data['timestamp']))
 		{
@@ -428,7 +428,7 @@ class CourseTemplateType extends Entity
 		{
 			return false;
 		}
-		
+
 		// Otherwise, it's probably ok.
 		return !$refresh;
 	}
@@ -442,31 +442,31 @@ class CourseSectionEntityFactory
 {
 	public function get_entity(&$row)
 	{
-		return new $GLOBALS['course_section_class']($row['id']);	
+		return new $GLOBALS['course_section_class']($row['id']);
 	}
 }
 
 class CourseSectionType extends Entity
-{	
+{
 	protected $external_data = array();
 	protected $helper;
 	/**
-	 * This is length of time (in minutes) that external data cached on section entities should 
-	 * persist before being refreshed. 0 means no refreshing, which is the preferred choice. 
+	 * This is length of time (in minutes) that external data cached on section entities should
+	 * persist before being refreshed. 0 means no refreshing, which is the preferred choice.
 	 * Generally you want your import process to update the external data as needed.  However, you
 	 * can import on demand, and this setting will help manage that.
-	 * 
-	 * @var int 
+	 *
+	 * @var int
 	 */
 	protected $cache_duration_minutes = 0;
-	
+
 	function CourseSectionType($id=null, $cache=true)
 	{
 		parent::__construct($id, $cache);
 		$this->helper = new $GLOBALS['catalog_helper_class']();
 	}
 
-	
+
 	public function get_template()
 	{
 		if ($entities = $this->get_right_relationship('course_template_to_course_section'))
@@ -488,7 +488,7 @@ class CourseSectionType extends Entity
 			return parent::get_value($col);
 		}
 	}
-	
+
 	/**
 	 * Retrieve and cache section data from an external source. Used for values that are not defined
 	 * in the base course section schema. You'll need to extend this class to provide your own
@@ -502,21 +502,21 @@ class CourseSectionType extends Entity
 			{
 				$this->external_data = json_decode($cache, true);
 			}
-			
+
 			if ($refresh || !$this->external_data_is_valid())
 			{
 				// Insert your routine for retrieving external data here.
 
 				// Indicate that we've tried and failed to retrieve the data, so we don't keep trying
 				$this->external_data['section'] = array();
-					
+
 				if ($update_cache && !empty($this->external_data['section']))
 					$this->update_cache();
 			}
 		}
 		return $this->external_data;
 	}
-	
+
 	protected function update_cache()
 	{
 		$this->external_data['timestamp'] = time();
@@ -524,9 +524,9 @@ class CourseSectionType extends Entity
 		if ($encoded != $this->get_value('cache'))
 		{
 			$this->set_value('cache', json_encode($this->external_data));
-			reason_update_entity( 
-				$this->id(), 
-				$this->get_value('last_edited_by'), 
+			reason_update_entity(
+				$this->id(),
+				$this->get_value('last_edited_by'),
 				array('cache' => $this->get_value('cache')),
 				false);
 		}
@@ -534,7 +534,7 @@ class CourseSectionType extends Entity
 
 	/**
 	 * Determine whether the cached external data needs to be refreshed.
-	 * 
+	 *
 	 * @return boolean
 	 */
 	protected function external_data_is_valid($refresh = false)
@@ -542,7 +542,7 @@ class CourseSectionType extends Entity
 		// If it hasn't been defined, it's invalid
 		if (!is_array($this->external_data))
 			return false;
-		
+
 		// If the timestamp is too old, it's invalid
 		if ($this->cache_duration_minutes && isset($this->external_data['timestamp']))
 		{
@@ -554,7 +554,7 @@ class CourseSectionType extends Entity
 		{
 			return false;
 		}
-		
+
 		// Otherwise, it's probably ok.
 		return !$refresh;
 	}
@@ -572,7 +572,7 @@ class CatalogHelper
 {
 	protected $year;
 	protected $site;
-	
+
 	public function __construct($year = null)
 	{
 		if ($year) {
@@ -584,11 +584,11 @@ class CatalogHelper
 			trigger_error('No catalog site for ' . $this->year . ' in CatalogHelper');
 		}
 	}
-	
+
 	/**
-	  * Find courses that have been attached to the specified page.
-	  *
-	  */
+	 * Find courses that have been attached to the specified page.
+	 *
+	 */
 	public function get_page_courses($page_id)
 	{
 		$courses = array();
@@ -609,9 +609,9 @@ class CatalogHelper
 	}
 
 	/**
-	  * Find courses that are owned or borrowed by the specified site.
-	  *
-	  */
+	 * Find courses that are owned or borrowed by the specified site.
+	 *
+	 */
 	public function get_site_courses($site)
 	{
 		$courses = array();
@@ -634,10 +634,10 @@ class CatalogHelper
 	}
 
 	/**
-	  * Find courses that use given categories and add them to our collection.
-	  *
-	  * @param $cats array category list (id => name)
-	  */
+	 * Find courses that use given categories and add them to our collection.
+	 *
+	 * @param $cats array category list (id => name)
+	 */
 	public function get_courses_by_category($cats, $catalog_site = null)
 	{
 		$courses = array();
@@ -664,12 +664,12 @@ class CatalogHelper
 	}
 
 	/**
-	  * Find courses with particular academic subjects and add them to our collection.
-	  *
-	  * @param array $codes Array of subject codes
-	  * @param string $catalog_site Optional unique name of a catalog site. If you pass this,
-	  *				only courses associated with that site will be included.
-	  */
+	 * Find courses with particular academic subjects and add them to our collection.
+	 *
+	 * @param array $codes Array of subject codes
+	 * @param string $catalog_site Optional unique name of a catalog site. If you pass this,
+	 *				only courses associated with that site will be included.
+	 */
 	public function get_courses_by_subjects($codes, $catalog_site = null)
 	{
 		$courses = array();
@@ -694,13 +694,13 @@ class CatalogHelper
 	}
 
 	/**
-	  * Find courses with a particular subject and number 
-	  *
-	  * @param string $code subject code
-	  * @param string $number course number
-	  * @param string $catalog_site Optional unique name of a catalog site. If you pass this,
-	  *				only courses associated with that site will be included.
-	  */
+	 * Find courses with a particular subject and number
+	 *
+	 * @param string $code subject code
+	 * @param string $number course number
+	 * @param string $catalog_site Optional unique name of a catalog site. If you pass this,
+	 *				only courses associated with that site will be included.
+	 */
 	public function get_courses_by_subject_and_number($code, $number, $catalog_site = null)
 	{
 		$courses = array();
@@ -724,19 +724,19 @@ class CatalogHelper
 		}
 		return $courses;
 	}
-	
+
 	public function get_courses_by_org_id($codes, $catalog_site = null)
 	{
 		return $this->get_courses_by_subjects($codes, $catalog_site);
 	}
 
 	/**
-	  * Find courses by their id in the source data
-	  *
-	  * @param array $ids Array of ids
-	  * @param string or int $catalog_site Optional unique name or id of a catalog site. If you pass this,
-	  *				only courses associated with that site will be included.
-	  */
+	 * Find courses by their id in the source data
+	 *
+	 * @param array $ids Array of ids
+	 * @param string or int $catalog_site Optional unique name or id of a catalog site. If you pass this,
+	 *				only courses associated with that site will be included.
+	 */
 	public function get_courses_by_sourced_id($ids, $catalog_site = null)
 	{
 		$courses = array();
@@ -761,12 +761,12 @@ class CatalogHelper
 	}
 
 	/**
-	  * Find sections by their id in the source data
-	  *
-	  * @param array $ids Array of ids
-	  * @param string or int $catalog_site Optional unique name or id of a catalog site. If you pass this,
-	  *				only sections associated with that site will be included.
-	  */
+	 * Find sections by their id in the source data
+	 *
+	 * @param array $ids Array of ids
+	 * @param string or int $catalog_site Optional unique name or id of a catalog site. If you pass this,
+	 *				only sections associated with that site will be included.
+	 */
 	public function get_sections_by_sourced_id($ids, $catalog_site = null)
 	{
 		$sections = array();
@@ -789,7 +789,7 @@ class CatalogHelper
 		}
 		return $sections;
 	}
-	
+
 	public function sort_courses_by_name($a, $b)
 	{
 		$a_name = $a->get_value('name');
@@ -824,13 +824,13 @@ class CatalogHelper
 
 
 	/**
-	  * Get the list of possible course subjects by looking at the section data. If a year is
-	  * passed, limit the result to those subjects with sections during that academic year.
-	  *
-	  * @param int $year
-	  *
-	  * @todo Generalize timespan query
-	  */
+	 * Get the list of possible course subjects by looking at the section data. If a year is
+	 * passed, limit the result to those subjects with sections during that academic year.
+	 *
+	 * @param int $year
+	 *
+	 * @todo Generalize timespan query
+	 */
 	public function get_course_subjects($year = null)
 	{
 		$cache = new ObjectCache('course_subject_cache_'.$year, 60*24);
@@ -842,7 +842,7 @@ class CatalogHelper
 			$startyear = $year - 1;
 		else
 			$startyear = $year;
-		
+
 		$subjects = array();
 		$q = 'SELECT distinct org_id FROM course_section';
 		if ($year) $q .= ' WHERE timeframe_begin > "'.$this->get_catalog_year_start_date($startyear).'" AND timeframe_end < "'.$this->get_catalog_year_end_date($year).'"';
@@ -859,7 +859,7 @@ class CatalogHelper
 	/**
 	 * Get the list of years for which we have catalog sites. Assumes that catalog sites use the
 	 * naming convention academic_catalog_YEAR_site.
-	 * 
+	 *
 	 * @return array
 	 */
 	public function get_catalog_years()
@@ -883,13 +883,13 @@ class CatalogHelper
 
 	/**
 	 * Return the most recent year for which there is a live catalog site
-	 * 
+	 *
 	 * @return integer
 	 */
 	public function get_latest_catalog_year()
 	{
 		static $latest_year = 0;
-		
+
 		if (empty($latest_year) && $catalog_years = $this->get_catalog_years())
 		{
 			foreach ($catalog_years as $year => $site)
@@ -902,13 +902,29 @@ class CatalogHelper
 				}
 			}
 		}
-		
+
 		return $latest_year;
 	}
-	
+
+
+	/**
+	 * Given a site unique name, get the catalog year
+	 *
+	 * @param string $unique_name
+	 * @return mixed int year or null if not a catalog site
+	 */
+	public static function get_catalog_year_from_unique_name($unique_name)
+	{
+		if (preg_match('/^academic_catalog_(\d{4})_site$/', $unique_name, $matches))
+		{
+			return (int) $matches[1];
+		}
+		return NULL;
+	}
+
 	/**
 	 * Convert a bare year (e.g. 2015) into an academic year display (e.g. 2015-16)
-	 * 
+	 *
 	 * @param mixed $year
 	 * @return string
 	 */
@@ -919,7 +935,7 @@ class CatalogHelper
 
 	/**
 	 * Convert a term code into the catalog year in which it occurs.
-	 * 
+	 *
 	 * @param string $term
 	 * @return integer
 	 */
@@ -936,9 +952,9 @@ class CatalogHelper
 
 	/**
 	 * Given a catalog year, return a date representing the start of that academic year. Used to
-	 * identify which year a section is offered in. This is a simple default, which you can 
+	 * identify which year a section is offered in. This is a simple default, which you can
 	 * override or extend to do a lookup or something.
-	 * 
+	 *
 	 * @param integer $year
 	 * @return string
 	 */
@@ -949,9 +965,9 @@ class CatalogHelper
 
 	/**
 	 * Given a catalog year, return a date representing the end of that academic year. Used to
-	 * identify which year a section is offered in. This is a simple default, which you can 
+	 * identify which year a section is offered in. This is a simple default, which you can
 	 * override or extend to do a lookup or something.
-	 * 
+	 *
 	 * @param integer $year
 	 * @return string
 	 */
@@ -959,7 +975,7 @@ class CatalogHelper
 	{
 		return ($year + 1).'-07-01 00:00:00';
 	}
-	
+
 	public function get_catalog_blocks($year, $org_id, $type)
 	{
 		if ($site = id_of('academic_catalog_'.$year.'_site'))
@@ -978,12 +994,12 @@ class CatalogHelper
 		}
 		return array();
 	}
-	
-/**
+
+	/**
 	 * Catalog content can contain tags (in {}) that dynamically include lists of courses based on
-	 * values on the course objects. This method detects those tags and calls get_course_list() to 
+	 * values on the course objects. This method detects those tags and calls get_course_list() to
 	 * generate the appropriate list, which is then swapped in for the tag.
-	 * 
+	 *
 	 * @param string $content
 	 * @return string
 	 */
@@ -993,7 +1009,7 @@ class CatalogHelper
 		{
 			foreach ($tags as $tag)
 			{
-				// This is looking for {type key1="value" key2="value"} but it's very forgiving about 
+				// This is looking for {type key1="value" key2="value"} but it's very forgiving about
 				// extra spaces or failure to use the right quotes.
 				if (preg_match('/\s*([^\s=]+)(\s+([^\s=]+)\s*=\s*["\']?([^"\'\b]+)["\'\b])*/', $tag[1], $matches))
 				{
@@ -1002,12 +1018,12 @@ class CatalogHelper
 					{
 						$keys[$matches[$i + 1]] = $matches[$i + 2];
 					}
-					
+
 					if (!$courses = $this->get_course_list($type, $keys))
 						$courses = '<strong>No courses found for '.$tag[0].'</strong>';
-					
-					$content = str_replace($tag[0], $courses, $content);	
-					
+
+					$content = str_replace($tag[0], $courses, $content);
+
 				}
 				else
 				{
@@ -1015,16 +1031,96 @@ class CatalogHelper
 				}
 			}
 		}
-		
+
 		return $content;
+	}
+
+	function course_refs_to_links($content)
+	{
+		if (preg_match_all('/<[^>]+(*SKIP)(*F)|\W([A-Z]{2,4}(( [0-9]{2,3},)*( [0-9]{2,3})))\W/', $content, $matches, PREG_SET_ORDER))
+		{
+			foreach ($matches as $match)
+			{
+				$orig = $match[0];
+				$course_match = $match[1];
+				if ( count( array_filter( explode(',', $match[1]) ) ) > 1 ) {
+					preg_match('/[A-Z]{2,4}/', $match[1], $match_subject);
+					$course_subject_match = $course_subject_match_firstrun = $match_subject[0];
+					preg_match_all('/\d{2,3}/', $match[1], $course_number_matches);
+					$replace_all = '';
+					foreach ($course_number_matches[0] as $course_number_match) {
+						$url = $this->get_course_details_url("$course_subject_match $course_number_match", $this->year);
+						if ($url)
+						{
+							$replace_all .= ', <a href="'.$url.'" class="courseNumber courseNumber--auto-inserted">'.$course_subject_match_firstrun . ' ' . $course_number_match.'</a>';
+						}
+						else
+						{
+							$replace_all .= ', <span class="courseNumber courseNumber--auto-inserted">'.$course_subject_match_firstrun . ' ' . $course_number_match.'</span>';
+						}
+						$course_subject_match_firstrun = '';
+					}
+					$replace_all = substr($replace_all, 2);
+					$replacement = substr($orig, 0, 1) . $replace_all . substr($orig, -1, 1);
+				} else {
+					$url = $this->get_course_details_url($course_match, $this->year);
+					if($url)
+					{
+						$replacement = '<a href="'.$url.'" class="courseNumber courseNumber--auto-inserted">'.$course_match.'</a>';
+					}
+					else
+					{
+						$replacement = '<span class="courseNumber courseNumber--auto-inserted">'.$course_match.'</span>';
+					}
+					$replacement = substr($orig, 0, 1) . $replacement . substr($orig, -1, 1);
+				}
+				$content = str_replace($orig, $replacement, $content);
+			}
+		}
+
+		return $content;
+	}
+
+	// Replace with institution-specific logic to find a url for the course
+	function get_course_details_url($course_string)
+	{
+		if($this->supports_course_links() && ( $site = $this->get_catalog_site() ) )
+		{
+			$parts = explode(' ', $course_string);
+			return '//'.HTTP_HOST_NAME.$site->get_value('base_url').'course-details/?subject='.urlencode($parts[0]).'&amp;number='.urlencode($parts[1]);
+		}
+	}
+
+	// Replace with institution-specific logic to find the appropriate catalog site.
+	// returns false if none found
+	function get_catalog_site()
+	{
+		static $sites_by_year = array();
+		if(!isset($sites_by_year[$this->year]))
+		{
+			if($this->site)
+			{
+				$sites_by_year[$this->year] = new entity($this->site);
+			}
+			else
+			{
+				$sites_by_year[$this->year] = false;
+			}
+		}
+		return $sites_by_year[$this->year];
+	}
+
+	function supports_course_links()
+	{
+		return false;
 	}
 
 	/**
 	 * Catalog content can contain tags (in {}) that dynamically include lists of courses based on
 	 * values on the course objects. This method takes the values from a tag and generates html for
-	 * the corresponding courses. It uses an extension pattern so that custom methods/functions can 
+	 * the corresponding courses. It uses an extension pattern so that custom methods/functions can
 	 * be defined to handle the generation of course lists for particular keys.
-	 *  
+	 *
 	 * @param string $type What kind of list to generate (titles/descriptions)
 	 * @param array $keys Key value pairs used to select the courses in the list
 	 * @return string
@@ -1044,11 +1140,11 @@ class CatalogHelper
 				trigger_error('No course function found: '.$function);
 			}
 		}
-		
+
 		if ($courses)
 		{
 			$html = '';
-			
+
 			if ($type == 'descriptions')
 			{
 				foreach ($courses as $course)
@@ -1080,7 +1176,7 @@ class CatalogHelper
 	/**
 	 * Given a course object, generate a default HTML snippet for its description. Override this if you
 	 * want to use a diffferent pattern.
-	 * 
+	 *
 	 * @param object $course
 	 * @return string
 	 */
@@ -1092,57 +1188,57 @@ class CatalogHelper
 			$description .= ' <span class="prereqLabel">Prerequisite:</span> '.trim($prereqs, " .").'. ';
 
 		$html = '<span class="courseDescription">'. $description .'</span>';
-		
+
 		if ($credit = $course->get_value('credits'))
 		{
-			$details[] = $credit . (($credit == 1) ? ' credit' : ' credits');	
+			$details[] = $credit . (($credit == 1) ? ' credit' : ' credits');
 		}
-		
+
 		if ($grading = $course->get_value('grading'))
 		{
-			$details[] = $grading;	
+			$details[] = $grading;
 		}
 
 		if ($requirements = $course->get_value('requirements'))
 		{
-			$details[] = join(', ', $requirements);	
+			$details[] = join(', ', $requirements);
 		}
-		
+
 		if ($history = $course->get_offer_history_html())
 		{
 			$details[] = $history;
 		}
-		
+
 		if ($faculty = $course->get_value('display_faculty'))
 		{
 			$details[] = $faculty;
 		}
-		
+
 		if (isset($details))
 		{
-			$html .= ' '.ucfirst(join('; ', $details));	
+			$html .= ' '.ucfirst(join('; ', $details));
 		}
-		
+
 		return $html;
 	}
-	
+
 	/**
 	 * Given a course object, generate a default HTML block for displaying it. Override this if you
 	 * want to use a diffferent pattern.
-	 * 
+	 *
 	 * @param object $course
 	 * @return string
 	 */
 	public function get_course_html($course)
-	{		
+	{
 		$course->set_academic_year_limit($this->year);
 
 		$html = '<div class="courseContainer">'."\n";
 		$html .= $course->get_value('display_title');
 		$html .= $this->get_course_extended_description($course);
 		$html .= '</div>'."\n";
-		
+
 		return $html;
 	}
-	
+
 }
