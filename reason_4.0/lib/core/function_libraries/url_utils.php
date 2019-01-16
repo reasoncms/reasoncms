@@ -202,14 +202,18 @@ function reason_get_page_url( $page_entity_or_id )
  * Get the absolute url for the site, given a reason entity or id for a site or page.
  *
  * @author Nathan White
- * @param mixed entity or entity_id corresponding to a page or site
+ * @param mixed entity or entity_id corresponding to a page or site or non-reason site
  * @return mixed string absolute url if successful; else null
  */
 function reason_get_site_url( $page_or_site_entity_or_id )
 {
 	$entity = is_numeric($page_or_site_entity_or_id) ? new entity($page_or_site_entity_or_id) : $page_or_site_entity_or_id;	
 	$type = $entity->has_value('type') ? $entity->get_value('type') : false;
-	if ( ($type == id_of('minisite_page')) || ($type == id_of('site')) )
+	if ( $type == id_of('non_reason_site_type'))
+	{
+		return $entity->get_value('url');
+	}
+	elseif ( ($type == id_of('minisite_page')) || ($type == id_of('site')) )
 	{
 		$site = ($type == id_of('minisite_page')) ? $entity->get_owner() : $entity;
 		$domain = ($site->has_value('domain') && $site->get_value('domain')) ? $site->get_value('domain') : REASON_HOST;
