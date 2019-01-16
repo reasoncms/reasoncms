@@ -1,4 +1,5 @@
 <?php
+include_once(CARL_UTIL_INC . 'basic/url_funcs.php');
 include_once(SETTINGS_INC . 'map_settings.php');
 
 /**
@@ -108,17 +109,5 @@ function create_google_geocode_url($query_params = array())
  */
 function sign_google_url($input_url, $signing_key)
 {
-	// We only need to sign the path+query part of the string
-	$parts = parse_url($input_url);
-	$url_to_sign = $parts['path'] . '?' . $parts['query'];
-
-	$decoded_key = base64_decode(strtr($signing_key, '-_', '+/'));
-	$signature = hash_hmac('sha1', $url_to_sign, $decoded_key, true);
-
-	// Encode the binary signature into base64 for use within a URL
-	$encoded_signature = strtr(base64_encode($signature), '+/', '-_');
-
-	$original_url = $parts['scheme'] . '://' . $parts['host'] . $parts['path'] . '?' . $parts['query'];
-
-	return $original_url . '&signature=' . $encoded_signature;
+	return sign_url($input_url, $signing_key);
 }
