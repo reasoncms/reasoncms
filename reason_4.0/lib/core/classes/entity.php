@@ -568,6 +568,7 @@ class entity
 		{
 			$dbq->add_relation( '(r.site=0 OR r.site=' . (integer) $this->_env['site'] . ')' );
 		}
+		$dbq->set_order( 'rel_sort_order' );
 		$rels = $dbq->run( 'Unable to grab relationships' );
 		foreach( $rels as $r)
 		{
