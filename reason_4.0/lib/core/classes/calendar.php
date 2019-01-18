@@ -220,6 +220,13 @@ class reasonCalendar
 	 */
 	protected $audiences = array();
 	/**
+	 * audiences
+	 * Events that are related to *any* of the audiences in this array will 
+	 * be included in the calendar
+	 * @var array audience entities
+	 */
+	protected $or_audiences = array();
+	/**
 	 * category entities joined by OR
 	 * Events that are related to *any* of the entities in this array will 
 	 * be included in the calendar
@@ -475,6 +482,7 @@ class reasonCalendar
 		}
 		$this->_standardize_sharing_mode();
 		$this->_add_or_rels(relationship_id_of('event_to_event_category'), $this->or_categories);
+		$this->_add_or_rels(relationship_id_of('event_to_audience'), $this->or_audiences);
 		$this->_add_rels(relationship_id_of('event_to_event_category'), $this->categories);
 		$this->_add_rels(relationship_id_of('event_to_audience'), $this->audiences);
 		$this->build_es();
