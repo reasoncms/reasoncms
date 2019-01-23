@@ -1277,6 +1277,21 @@ class entity
 		}
 		return NULL;
 	}
+	/**
+	 * Get the URL to preview this item
+	 *
+	 * @return mixed URL or null if no owner site found
+	 */
+	public function get_preview_url()
+	{
+		$site = $this->get_owner();
+		if($site)
+		{
+			$qs = carl_construct_query_string(array('site_id' => $site->id(), 'type_id' => $this->type_id(), 'id' => $this->id(), 'cur_module' => 'Preview'));
+			return securest_available_protocol() . '://' . REASON_WEB_ADMIN_PATH . $qs;
+		}
+		return NULL;
+	}
 
 	/**
 	 * Get the attribute that specifies the language of the entity
