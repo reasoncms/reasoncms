@@ -9,7 +9,7 @@ if( empty($_GET['id']) )
 	die();
 }
 
-if( empty($_GET['width']) )
+if( empty($_GET['width']) && empty($_GET['height']) )
 {
 	// header a different error code
 	die();
