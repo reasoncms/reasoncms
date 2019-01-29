@@ -176,6 +176,11 @@ class ReasonAdminToolsModule extends DefaultModule
 					'description' => 'Move entities from one site to another. Additional steps required if moving pages or assets.',
 					'safety_level' => 'careful',
 				),
+				'?cur_module=CopyBorrowing&site_id='.id_of('master_admin') => array(
+					'title' => 'Copy Borrowing Between Sites',
+					'description' => 'Copy borrow relationships from one site to another',
+					'safety_level' => 'careful',
+				),
 				REASON_HTTP_BASE_PATH.'scripts/search/find_and_replace.php' => array(
 					'title' => 'Find and Replace',
 					'description' => 'Find and replace across multiple entities on multiple sites',
