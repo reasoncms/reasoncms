@@ -85,6 +85,7 @@ class CourseListModule extends DefaultMinisiteModule
 		'number' => array( 'function' => 'turn_into_string' ),
 		'course_search' => array( 'function' => 'turn_into_string' ),
 		);
+	protected $enable_debug_logs = 0;
 	
 	function init( $args = array() )
 	{
@@ -187,24 +188,11 @@ class CourseListModule extends DefaultMinisiteModule
 					$d->run();
 				}
 			}
-			foreach ($this->courses as $course)
-			{			
-				// Increment only if we got content for this course
-				if ($content = $this->get_course_html($course)) 
-				{
-					if (!$this->params['organize_by_subject'])
-					{
-						$html .= $content;
-						$count++;
-					}
-					else 
-					{
-						$subject = $course->get_value('org_id');
-						$buckets[$subject][] = $content;
-					}
-				}
-				// Stop if we've reached our limit
-				if ($this->params['max_shown'] > 0 && $count >= $this->params['max_shown']) break;
+
+			if ($this->params['organize_by_subject']) {
+				$html = $this->generate_output_html_by_subject($this->params['max_shown']);
+			} else {
+				$html = $this->generate_output_html($this->params['max_shown']);
 			}
 			
 			echo $html;
@@ -240,9 +228,123 @@ class CourseListModule extends DefaultMinisiteModule
 		}
 		
 		echo '</div>';
-		
+
 	}
-	
+
+	/**
+	 * Detach courses from the class and split data into chunks
+	 *
+	 * This lets php do better memory management around many
+	 * calls to $this->get_course_html($course)
+	 *
+	 * @param int $chunk_count
+	 * @return array
+	 */
+	protected function prepare_courses_for_html($chunk_count = 30)
+	{
+		$courses = $this->courses;
+		unset($this->courses);
+
+		$chunks = array_chunk($courses, $chunk_count);
+
+		return $chunks;
+	}
+
+	/**
+	 * Generate course output html
+	 *
+	 * @return string
+	 */
+	protected function generate_output_html($max_shown)
+	{
+		$chunks = $this->prepare_courses_for_html();
+
+		$html = '';
+		$count = count($chunks);
+		$total_number = 0;
+		for ($i = 0; $i < $count; $i++) {
+			$this->_debug_log('before loop');
+			foreach ($chunks[$i] as $course) {
+				$course_html = $this->get_course_html($course);
+				if ($course_html) {
+					$total_number++;
+					$html .= $this->get_course_html($course);
+				}
+
+				if ($max_shown > 0 && $total_number >= $max_shown) {
+					return $html;
+				}
+
+				$this->_debug_log('during loop');
+			}
+			$this->_debug_log('after loop');
+			unset($chunks[$i]);
+			$this->_debug_log('after unset');
+		}
+		$this->_debug_log('done');
+
+		return $html;
+	}
+
+	protected function _debug_log($message)
+	{
+		if (!$this->enable_debug_logs) {
+			return;
+		}
+
+		$memory = 'requires_xdebug';
+		if (function_exists('xdebug_memory_usage')) {
+			$memory = (xdebug_memory_usage() / 1000000) . ' MB';
+		}
+		error_log("[COURSE_HTML] " . $message . " | memory=" . $memory . "\n");
+	}
+
+
+	/**
+	 * Generate course output html, with subject anchors at the start of each new subject
+	 *
+	 * @param $max_shown
+	 * @return string
+	 */
+	protected function generate_output_html_by_subject($max_shown)
+	{
+		$chunks = $this->prepare_courses_for_html();
+
+		$count = count($chunks);
+		$total_number = 0;
+		$buckets = [];
+		$this->_debug_log('before loop');
+		for ($i = 0; $i < $count; $i++) {
+			foreach ($chunks[$i] as $course) {
+				if ($max_shown > 0 && $total_number >= $max_shown) {
+					continue;
+				}
+
+				$course_html = $this->get_course_html($course);
+				if ($course_html) {
+					$total_number++;
+					$buckets[$course->get_value('org_id')][] = $course_html;
+				}
+
+				$this->_debug_log('during loop');
+			}
+			$this->_debug_log('after loop');
+			unset($chunks[$i]);
+			$this->_debug_log('after unset');
+		}
+
+		$html = '';
+		foreach ($buckets as $subject => $courses) {
+			$html .= '<h3 class="courseSubject"><a name="' . preg_replace('/\W/', '', $subject) . '">' . $subject . '</a></h3>';
+			foreach ($courses as $course_html) {
+				$html .= $course_html;
+			}
+		}
+		$this->_debug_log('done');
+
+		return $html;
+	}
+
 	protected function build_course_list()
 	{
 		// Go through all the parameters and grab all the courses that match what's being requested.
