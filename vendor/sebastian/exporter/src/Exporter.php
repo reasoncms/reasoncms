@@ -61,10 +61,9 @@ class Exporter
             $context = new Context;
         }
 
-        $array = $data;
         $context->add($data);
 
-        foreach ($array as $key => $value) {
+        foreach ($data as $key => $value) {
             if (is_array($value)) {
                 if ($context->contains($data[$key]) !== false) {
                     $result[] = '*RECURSION*';
@@ -251,12 +250,11 @@ class Exporter
                 return 'Array &' . $key;
             }
 
-            $array  = $value;
             $key    = $processed->add($value);
             $values = '';
 
-            if (count($array) > 0) {
-                foreach ($array as $k => $v) {
+            if (count($value) > 0) {
+                foreach ($value as $k => $v) {
                     $values .= sprintf(
                         '%s    %s => %s' . "\n",
                         $whitespace,

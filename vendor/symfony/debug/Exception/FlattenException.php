@@ -9,9 +9,49 @@
  * file that was distributed with this source code.
  */
 
+namespace Symfony\Component\HttpKernel\Exception;
+
+use Symfony\Component\Debug\Exception\FlattenException as DebugFlattenException;
+
+/**
+ * FlattenException wraps a PHP Exception to be able to serialize it.
+ *
+ * Basically, this class removes all objects from the trace.
+ *
+ * @author Fabien Potencier <fabien@symfony.com>
+ *
+ * @deprecated Deprecated in 2.3, to be removed in 3.0. Use the same class from the Debug component instead.
+ */
+class FlattenException
+{
+    private $handler;
+
+    public static function __callStatic($method, $args)
+    {
+        if (!method_exists('Symfony\Component\Debug\Exception\FlattenException', $method)) {
+            throw new \BadMethodCallException(sprintf('Call to undefined method %s::%s()', \get_called_class(), $method));
+        }
+
+        return \call_user_func_array(array('Symfony\Component\Debug\Exception\FlattenException', $method), $args);
+    }
+
+    public function __call($method, $args)
+    {
+        if (!isset($this->handler)) {
+            $this->handler = new DebugFlattenException();
+        }
+
+        if (!method_exists($this->handler, $method)) {
+            throw new \BadMethodCallException(sprintf('Call to undefined method %s::%s()', \get_class($this), $method));
+        }
+
+        return \call_user_func_array(array($this->handler, $method), $args);
+    }
+}
+
 namespace Symfony\Component\Debug\Exception;
 
-use Symfony\Component\HttpFoundation\Exception\RequestExceptionInterface;
+use Symfony\Component\HttpKernel\Exception\FlattenException as LegacyFlattenException;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 /**
@@ -21,7 +61,7 @@ use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class FlattenException
+class FlattenException extends LegacyFlattenException
 {
     private $message;
     private $code;
@@ -42,8 +82,6 @@ class FlattenException
         if ($exception instanceof HttpExceptionInterface) {
             $statusCode = $exception->getStatusCode();
             $headers = array_merge($headers, $exception->getHeaders());
-        } elseif ($exception instanceof RequestExceptionInterface) {
-            $statusCode = 400;
         }
 
         if (null === $statusCode) {
@@ -53,7 +91,7 @@ class FlattenException
         $e->setStatusCode($statusCode);
         $e->setHeaders($headers);
         $e->setTraceFromException($exception);
-        $e->setClass(get_class($exception));
+        $e->setClass(\get_class($exception));
         $e->setFile($exception->getFile());
         $e->setLine($exception->getLine());
 
@@ -228,9 +266,9 @@ class FlattenException
             if ($value instanceof \__PHP_Incomplete_Class) {
                 // is_object() returns false on PHP<=7.1
                 $result[$key] = array('incomplete-object', $this->getClassNameFromIncomplete($value));
-            } elseif (is_object($value)) {
-                $result[$key] = array('object', get_class($value));
-            } elseif (is_array($value)) {
+            } elseif (\is_object($value)) {
+                $result[$key] = array('object', \get_class($value));
+            } elseif (\is_array($value)) {
                 if ($level > 10) {
                     $result[$key] = array('array', '*DEEP NESTED ARRAY*');
                 } else {
@@ -238,13 +276,9 @@ class FlattenException
                 }
             } elseif (null === $value) {
                 $result[$key] = array('null', null);
-            } elseif (is_bool($value)) {
+            } elseif (\is_bool($value)) {
                 $result[$key] = array('boolean', $value);
-            } elseif (is_int($value)) {
-                $result[$key] = array('integer', $value);
-            } elseif (is_float($value)) {
-                $result[$key] = array('float', $value);
-            } elseif (is_resource($value)) {
+            } elseif (\is_resource($value)) {
                 $result[$key] = array('resource', get_resource_type($value));
             } else {
                 $result[$key] = array('string', (string) $value);

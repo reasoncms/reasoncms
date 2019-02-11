@@ -1,29 +1,33 @@
-`descriptor:åèä`
-----------------
+descriptor:åèä
+--------------
 
-command åèä description
+* Description: command åèä description
+* Usage:
 
-### Usage
-
-* `descriptor:åèä [-o|--option_åèä] [--] <argument_åèä>`
-* `descriptor:åèä -o|--option_name <argument_name>`
-* `descriptor:åèä <argument_name>`
+  * `descriptor:åèä [-o|--option_åèä] [--] <argument_åèä>`
+  * `descriptor:åèä -o|--option_name <argument_name>`
+  * `descriptor:åèä <argument_name>`
 
 command åèä help
 
-### Arguments
+### Arguments:
 
-#### `argument_åèä`
+**argument_åèä:**
 
+* Name: argument_åèä
 * Is required: yes
 * Is array: no
+* Description: <none>
 * Default: `NULL`
 
-### Options
+### Options:
 
-#### `--option_åèä|-o`
+**option_åèä:**
 
+* Name: `--option_åèä`
+* Shortcut: `-o`
 * Accept value: no
 * Is value required: no
 * Is multiple: no
+* Description: <none>
 * Default: `false`

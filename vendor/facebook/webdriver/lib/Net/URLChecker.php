@@ -28,7 +28,7 @@ class URLChecker
         $end = microtime(true) + $timeout_in_ms / 1000;
 
         while ($end > microtime(true)) {
-            if ($this->getHTTPResponseCode($url) === 200) {
+            if ($this->getHTTPResponseCode($timeout_in_ms, $url) === 200) {
                 return $this;
             }
             usleep(self::POLL_INTERVAL_MS);
@@ -46,7 +46,7 @@ class URLChecker
         $end = microtime(true) + $timeout_in_ms / 1000;
 
         while ($end > microtime(true)) {
-            if ($this->getHTTPResponseCode($url) !== 200) {
+            if ($this->getHTTPResponseCode($timeout_in_ms, $url) !== 200) {
                 return $this;
             }
             usleep(self::POLL_INTERVAL_MS);
@@ -59,18 +59,18 @@ class URLChecker
         ));
     }
 
-    private function getHTTPResponseCode($url)
+    private function getHTTPResponseCode($timeout_in_ms, $url)
     {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        // The PHP doc indicates that CURLOPT_CONNECTTIMEOUT_MS constant is added in cURL 7.16.2
-        // available since PHP 5.2.3.
-        if (!defined('CURLOPT_CONNECTTIMEOUT_MS')) {
-            define('CURLOPT_CONNECTTIMEOUT_MS', 156);  // default value for CURLOPT_CONNECTTIMEOUT_MS
-        }
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, self::CONNECT_TIMEOUT_MS);
-
+        // There is a PHP bug in some versions which didn't define the constant.
+        curl_setopt(
+            $ch,
+            156, // CURLOPT_CONNECTTIMEOUT_MS
+            self::CONNECT_TIMEOUT_MS
+        );
         $code = null;
         try {
             curl_exec($ch);

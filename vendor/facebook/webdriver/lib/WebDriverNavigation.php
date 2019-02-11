@@ -25,7 +25,7 @@ use Facebook\WebDriver\Remote\ExecuteMethod;
  * Note that they are all blocking functions until the page is loaded by
  * by default. It could be overridden by 'webdriver.load.strategy' in the
  * FirefoxProfile preferences.
- * https://github.com/SeleniumHQ/selenium/wiki/DesiredCapabilities#firefoxprofile-settings
+ * https://code.google.com/p/selenium/wiki/DesiredCapabilities#settings
  */
 class WebDriverNavigation
 {
@@ -75,13 +75,12 @@ class WebDriverNavigation
     /**
      * Navigate to the given URL.
      *
-     * @see WebDriver::get()
      * @param string $url
      * @return WebDriverNavigation The instance.
      */
     public function to($url)
     {
-        $params = ['url' => (string) $url];
+        $params = array('url' => (string) $url);
         $this->executor->execute(DriverCommand::GET, $params);
 
         return $this;

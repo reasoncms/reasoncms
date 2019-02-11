@@ -13,9 +13,9 @@ namespace Symfony\Component\Console\Tests\Helper;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Helper\Table;
-use Symfony\Component\Console\Helper\TableStyle;
-use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Helper\TableCell;
+use Symfony\Component\Console\Helper\TableSeparator;
+use Symfony\Component\Console\Helper\TableStyle;
 use Symfony\Component\Console\Output\StreamOutput;
 
 class TableTest extends TestCase
@@ -728,85 +728,6 @@ TABLE;
 
     /**
      * @expectedException \Symfony\Component\Console\Exception\InvalidArgumentException
-     * @expectedExceptionMessage A cell must be a TableCell, a scalar or an object implementing __toString, array given.
-     */
-    public function testThrowsWhenTheCellInAnArray()
-    {
-        $table = new Table($output = $this->getOutputStream());
-        $table
-            ->setHeaders(array('ISBN', 'Title', 'Author', 'Price'))
-            ->setRows(array(
-                array('99921-58-10-7', array(), 'Dante Alighieri', '9.95'),
-            ));
-
-        $table->render();
-    }
-
-    public function testColumnWith()
-    {
-        $table = new Table($output = $this->getOutputStream());
-        $table
-            ->setHeaders(array('ISBN', 'Title', 'Author', 'Price'))
-            ->setRows(array(
-                array('99921-58-10-7', 'Divine Comedy', 'Dante Alighieri', '9.95'),
-                array('9971-5-0210-0', 'A Tale of Two Cities', 'Charles Dickens', '139.25'),
-            ))
-            ->setColumnWidth(0, 15)
-            ->setColumnWidth(3, 10);
-
-        $style = new TableStyle();
-        $style->setPadType(STR_PAD_LEFT);
-        $table->setColumnStyle(3, $style);
-
-        $table->render();
-
-        $expected =
-            <<<TABLE
-+-----------------+----------------------+-----------------+------------+
-| ISBN            | Title                | Author          |      Price |
-+-----------------+----------------------+-----------------+------------+
-| 99921-58-10-7   | Divine Comedy        | Dante Alighieri |       9.95 |
-| 9971-5-0210-0   | A Tale of Two Cities | Charles Dickens |     139.25 |
-+-----------------+----------------------+-----------------+------------+
-
-TABLE;
-
-        $this->assertEquals($expected, $this->getOutputContent($output));
-    }
-
-    public function testColumnWiths()
-    {
-        $table = new Table($output = $this->getOutputStream());
-        $table
-            ->setHeaders(array('ISBN', 'Title', 'Author', 'Price'))
-            ->setRows(array(
-                array('99921-58-10-7', 'Divine Comedy', 'Dante Alighieri', '9.95'),
-                array('9971-5-0210-0', 'A Tale of Two Cities', 'Charles Dickens', '139.25'),
-            ))
-            ->setColumnWidths(array(15, 0, -1, 10));
-
-        $style = new TableStyle();
-        $style->setPadType(STR_PAD_LEFT);
-        $table->setColumnStyle(3, $style);
-
-        $table->render();
-
-        $expected =
-            <<<TABLE
-+-----------------+----------------------+-----------------+------------+
-| ISBN            | Title                | Author          |      Price |
-+-----------------+----------------------+-----------------+------------+
-| 99921-58-10-7   | Divine Comedy        | Dante Alighieri |       9.95 |
-| 9971-5-0210-0   | A Tale of Two Cities | Charles Dickens |     139.25 |
-+-----------------+----------------------+-----------------+------------+
-
-TABLE;
-
-        $this->assertEquals($expected, $this->getOutputContent($output));
-    }
-
-    /**
-     * @expectedException \Symfony\Component\Console\Exception\InvalidArgumentException
      * @expectedExceptionMessage Style "absent" is not defined.
      */
     public function testIsNotDefinedStyleException()
@@ -822,6 +743,42 @@ TABLE;
     public function testGetStyleDefinition()
     {
         Table::getStyleDefinition('absent');
+    }
+
+    public function testBoxedStyleWithColspan()
+    {
+        $boxed = new TableStyle();
+        $boxed
+            ->setHorizontalBorderChar('─')
+            ->setVerticalBorderChar('│')
+            ->setCrossingChar('┼')
+        ;
+
+        $table = new Table($output = $this->getOutputStream());
+        $table->setStyle($boxed);
+        $table
+            ->setHeaders(array('ISBN', 'Title', 'Author'))
+            ->setRows(array(
+                array('99921-58-10-7', 'Divine Comedy', 'Dante Alighieri'),
+                new TableSeparator(),
+                array(new TableCell('This value spans 3 columns.', array('colspan' => 3))),
+            ))
+        ;
+        $table->render();
+
+        $expected =
+            <<<TABLE
+┼───────────────┼───────────────┼─────────────────┼
+│ ISBN          │ Title         │ Author          │
+┼───────────────┼───────────────┼─────────────────┼
+│ 99921-58-10-7 │ Divine Comedy │ Dante Alighieri │
+┼───────────────┼───────────────┼─────────────────┼
+│ This value spans 3 columns.                     │
+┼───────────────┼───────────────┼─────────────────┼
+
+TABLE;
+
+        $this->assertSame($expected, $this->getOutputContent($output));
     }
 
     protected function getOutputStream($decorated = false)

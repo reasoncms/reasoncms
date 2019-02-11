@@ -191,7 +191,7 @@ class FormTest extends TestCase
             $values,
             array_map(
                 function ($field) {
-                    $class = get_class($field);
+                    $class = \get_class($field);
 
                     return array(substr($class, strrpos($class, '\\') + 1), $field->getValue());
                 },
@@ -321,12 +321,6 @@ class FormTest extends TestCase
         $this->assertEquals('PATCH', $form->getMethod(), '->getMethod() returns the method defined in the constructor if provided');
     }
 
-    public function testGetMethodWithOverride()
-    {
-        $form = $this->createForm('<form method="get"><input type="submit" formmethod="post" /></form>');
-        $this->assertEquals('POST', $form->getMethod(), '->getMethod() returns the method attribute value of the form');
-    }
-
     public function testGetSetValue()
     {
         $form = $this->createForm('<form><input type="text" name="foo" value="foo" /><input type="submit" /></form>');
@@ -400,6 +394,10 @@ class FormTest extends TestCase
 
         $form = $this->createForm('<form><input type="text" name="foo" value="foo" disabled="disabled" /><input type="text" name="bar" value="bar" /><input type="submit" /></form>');
         $this->assertEquals(array('bar' => 'bar'), $form->getValues(), '->getValues() does not include disabled fields');
+
+        $form = $this->createForm('<form><template><input type="text" name="foo" value="foo" /></template><input type="text" name="bar" value="bar" /><input type="submit" /></form>');
+        $this->assertEquals(array('bar' => 'bar'), $form->getValues(), '->getValues() does not include template fields');
+        $this->assertFalse($form->has('foo'));
     }
 
     public function testSetValues()
@@ -450,6 +448,10 @@ class FormTest extends TestCase
 
         $form = $this->createForm('<form method="post"><input type="file" name="foo[bar]" disabled="disabled" /><input type="submit" /></form>');
         $this->assertEquals(array(), $form->getFiles(), '->getFiles() does not include disabled file fields');
+
+        $form = $this->createForm('<form method="post"><template><input type="file" name="foo"/></template><input type="text" name="bar" value="bar"/><input type="submit"/></form>');
+        $this->assertEquals(array(), $form->getFiles(), '->getFiles() does not include template file fields');
+        $this->assertFalse($form->has('foo'));
     }
 
     public function testGetPhpFiles()
@@ -541,12 +543,6 @@ class FormTest extends TestCase
     {
         $form = $this->createForm('<form><input type="submit" /></form>', null, 'http://localhost/foo/bar');
         $this->assertEquals('http://localhost/foo/bar', $form->getUri(), '->getUri() returns path if no action defined');
-    }
-
-    public function testGetUriWithActionOverride()
-    {
-        $form = $this->createForm('<form action="/foo"><button type="submit" formaction="/bar" /></form>', null, 'http://localhost/foo/');
-        $this->assertEquals('http://localhost/bar', $form->getUri(), '->getUri() returns absolute URIs');
     }
 
     public function provideGetUriValues()
@@ -869,7 +865,7 @@ class FormTest extends TestCase
     protected function createForm($form, $method = null, $currentUri = null)
     {
         $dom = new \DOMDocument();
-        $dom->loadHTML('<html>'.$form.'</html>');
+        @$dom->loadHTML('<html>'.$form.'</html>');
 
         $xPath = new \DOMXPath($dom);
         $nodes = $xPath->query('//input | //button');
@@ -948,12 +944,12 @@ class FormTest extends TestCase
     {
         $dom = new \DOMDocument();
         $dom->loadHTML('
-              <html>
-                  <form>
-                      <textarea name="example"></textarea>
-                  </form>
-              </html>
-          ');
+            <html>
+                <form>
+                    <textarea name="example"></textarea>
+                </form>
+            </html>'
+        );
 
         $nodes = $dom->getElementsByTagName('form');
         $form = new Form($nodes->item(0), 'http://example.com');

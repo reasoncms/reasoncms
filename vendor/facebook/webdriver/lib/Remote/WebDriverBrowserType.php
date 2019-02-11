@@ -16,22 +16,21 @@
 namespace Facebook\WebDriver\Remote;
 
 /**
- * All the browsers supported by selenium.
- *
- * @codeCoverageIgnore
+ * All the browsers supported by selenium
  */
 class WebDriverBrowserType
 {
     const FIREFOX = 'firefox';
+    const FIREFOX_2 = 'firefox2';
+    const FIREFOX_3 = 'firefox3';
     const FIREFOX_PROXY = 'firefoxproxy';
     const FIREFOX_CHROME = 'firefoxchrome';
     const GOOGLECHROME = 'googlechrome';
     const SAFARI = 'safari';
-    const SAFARI_PROXY = 'safariproxy';
     const OPERA = 'opera';
-    const MICROSOFT_EDGE = 'MicrosoftEdge';
     const IEXPLORE = 'iexplore';
     const IEXPLORE_PROXY = 'iexploreproxy';
+    const SAFARI_PROXY = 'safariproxy';
     const CHROME = 'chrome';
     const KONQUEROR = 'konqueror';
     const MOCK = 'mock';

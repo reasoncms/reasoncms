@@ -16,19 +16,15 @@
 namespace Facebook\WebDriver;
 
 use Facebook\WebDriver\Remote\DriverCommand;
-use Facebook\WebDriver\Remote\ExecuteMethod;
 
 /**
  * An abstraction allowing the driver to manipulate the javascript alerts
  */
 class WebDriverAlert
 {
-    /**
-     * @var ExecuteMethod
-     */
     protected $executor;
 
-    public function __construct(ExecuteMethod $executor)
+    public function __construct($executor)
     {
         $this->executor = $executor;
     }
@@ -77,7 +73,7 @@ class WebDriverAlert
     {
         $this->executor->execute(
             DriverCommand::SET_ALERT_VALUE,
-            ['text' => $value]
+            array('text' => $value)
         );
 
         return $this;

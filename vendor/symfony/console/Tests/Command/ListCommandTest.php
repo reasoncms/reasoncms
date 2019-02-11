@@ -12,8 +12,8 @@
 namespace Symfony\Component\Console\Tests\Command;
 
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Tester\CommandTester;
 
 class ListCommandTest extends TestCase
 {
@@ -31,7 +31,7 @@ class ListCommandTest extends TestCase
         $application = new Application();
         $commandTester = new CommandTester($command = $application->get('list'));
         $commandTester->execute(array('command' => $command->getName(), '--format' => 'xml'));
-        $this->assertRegExp('/<command id="list" name="list" hidden="0">/', $commandTester->getDisplay(), '->execute() returns a list of available commands in XML if --xml is passed');
+        $this->assertRegExp('/<command id="list" name="list">/', $commandTester->getDisplay(), '->execute() returns a list of available commands in XML if --xml is passed');
     }
 
     public function testExecuteListsCommandsWithRawOption()

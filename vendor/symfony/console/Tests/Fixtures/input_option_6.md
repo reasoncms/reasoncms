@@ -1,8 +1,9 @@
-#### `--option_name|-o|-O`
+**option_name:**
 
-option with multiple shortcuts
-
+* Name: `--option_name`
+* Shortcut: `-o|-O`
 * Accept value: yes
 * Is value required: yes
 * Is multiple: no
+* Description: option with multiple shortcuts
 * Default: `NULL`

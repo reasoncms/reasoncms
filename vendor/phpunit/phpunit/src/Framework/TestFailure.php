@@ -10,6 +10,8 @@
 
 /**
  * A TestFailure collects a failed test together with the caught exception.
+ *
+ * @since Class available since Release 2.0.0
  */
 class PHPUnit_Framework_TestFailure
 {
@@ -32,21 +34,19 @@ class PHPUnit_Framework_TestFailure
      * Constructs a TestFailure with the given test and exception.
      *
      * @param PHPUnit_Framework_Test $failedTest
-     * @param Throwable              $t
+     * @param Exception              $thrownException
      */
-    public function __construct(PHPUnit_Framework_Test $failedTest, $t)
+    public function __construct(PHPUnit_Framework_Test $failedTest, Exception $thrownException)
     {
         if ($failedTest instanceof PHPUnit_Framework_SelfDescribing) {
             $this->testName = $failedTest->toString();
         } else {
             $this->testName = get_class($failedTest);
         }
-
         if (!$failedTest instanceof PHPUnit_Framework_TestCase || !$failedTest->isInIsolation()) {
             $this->failedTest = $failedTest;
         }
-
-        $this->thrownException = $t;
+        $this->thrownException = $thrownException;
     }
 
     /**
@@ -67,6 +67,8 @@ class PHPUnit_Framework_TestFailure
      * Returns a description for the thrown exception.
      *
      * @return string
+     *
+     * @since  Method available since Release 3.4.0
      */
     public function getExceptionAsString()
     {
@@ -79,6 +81,8 @@ class PHPUnit_Framework_TestFailure
      * @param Exception $e
      *
      * @return string
+     *
+     * @since  Method available since Release 3.2.0
      */
     public static function exceptionToString(Exception $e)
     {
@@ -95,7 +99,7 @@ class PHPUnit_Framework_TestFailure
         } elseif ($e instanceof PHPUnit_Framework_Error) {
             $buffer = $e->getMessage() . "\n";
         } elseif ($e instanceof PHPUnit_Framework_ExceptionWrapper) {
-            $buffer = $e->getClassName() . ': ' . $e->getMessage() . "\n";
+            $buffer = $e->getClassname() . ': ' . $e->getMessage() . "\n";
         } else {
             $buffer = get_class($e) . ': ' . $e->getMessage() . "\n";
         }
@@ -107,6 +111,8 @@ class PHPUnit_Framework_TestFailure
      * Returns the name of the failing test (including data set, if any).
      *
      * @return string
+     *
+     * @since  Method available since Release 4.3.0
      */
     public function getTestName()
     {

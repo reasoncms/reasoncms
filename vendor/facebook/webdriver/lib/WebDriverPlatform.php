@@ -17,8 +17,6 @@ namespace Facebook\WebDriver;
 
 /**
  * The platforms supported by WebDriver.
- *
- * @codeCoverageIgnore
  */
 class WebDriverPlatform
 {

@@ -27,12 +27,12 @@ class Issue1335Test extends PHPUnit_Framework_TestCase
 
     public function testGlobalBoolTrue()
     {
-        $this->assertTrue($GLOBALS['globalBoolTrue']);
+        $this->assertEquals(true, $GLOBALS['globalBoolTrue']);
     }
 
     public function testGlobalBoolFalse()
     {
-        $this->assertFalse($GLOBALS['globalBoolFalse']);
+        $this->assertEquals(false, $GLOBALS['globalBoolFalse']);
     }
 
     public function testGlobalNull()
@@ -42,26 +42,26 @@ class Issue1335Test extends PHPUnit_Framework_TestCase
 
     public function testGlobalArray()
     {
-        $this->assertEquals(['foo'], $GLOBALS['globalArray']);
+        $this->assertEquals(array('foo'), $GLOBALS['globalArray']);
     }
 
     public function testGlobalNestedArray()
     {
-        $this->assertEquals([['foo']], $GLOBALS['globalNestedArray']);
+        $this->assertEquals(array(array('foo')), $GLOBALS['globalNestedArray']);
     }
 
     public function testGlobalObject()
     {
-        $this->assertEquals((object) ['foo'=> 'bar'], $GLOBALS['globalObject']);
+        $this->assertEquals((object) array('foo'=> 'bar'), $GLOBALS['globalObject']);
     }
 
     public function testGlobalObjectWithBackSlashString()
     {
-        $this->assertEquals((object) ['foo'=> 'back\\slash'], $GLOBALS['globalObjectWithBackSlashString']);
+        $this->assertEquals((object) array('foo'=> 'back\\slash'), $GLOBALS['globalObjectWithBackSlashString']);
     }
 
     public function testGlobalObjectWithDoubleBackSlashString()
     {
-        $this->assertEquals((object) ['foo'=> 'back\\\\slash'], $GLOBALS['globalObjectWithDoubleBackSlashString']);
+        $this->assertEquals((object) array('foo'=> 'back\\\\slash'), $GLOBALS['globalObjectWithDoubleBackSlashString']);
     }
 }

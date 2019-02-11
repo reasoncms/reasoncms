@@ -85,7 +85,7 @@ class WebDriverPoint
      * @param WebDriverPoint $point The point to be compared with.
      * @return bool Whether the x and y coordinates are the same as the instance.
      */
-    public function equals(self $point)
+    public function equals(WebDriverPoint $point)
     {
         return $this->x === $point->getX() &&
         $this->y === $point->getY();

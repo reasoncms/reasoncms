@@ -23,7 +23,7 @@ class S3Helper {
 		$key = constant($keyConstant);
 		$secret = constant($secretConstant);
 
-		$this->s3 = new Aws\S3\S3Client([
+		$this->s3 = Aws\S3\S3Client::factory([
 			'version' => 'latest',
 			'region'  => 'us-east-1',
 			'credentials' => [

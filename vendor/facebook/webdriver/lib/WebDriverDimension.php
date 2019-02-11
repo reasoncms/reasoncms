@@ -20,19 +20,9 @@ namespace Facebook\WebDriver;
  */
 class WebDriverDimension
 {
-    /**
-     * @var int
-     */
     private $height;
-    /**
-     * @var int
-     */
     private $width;
 
-    /**
-     * @param int $width
-     * @param int $height
-     */
     public function __construct($width, $height)
     {
         $this->width = $width;
@@ -63,9 +53,10 @@ class WebDriverDimension
      * Check whether the given dimension is the same as the instance.
      *
      * @param WebDriverDimension $dimension The dimension to be compared with.
-     * @return bool Whether the height and the width are the same as the instance.
+     * @return bool Whether the height and the width are the same as the
+     *              instance.
      */
-    public function equals(self $dimension)
+    public function equals(WebDriverDimension $dimension)
     {
         return $this->height === $dimension->getHeight() && $this->width === $dimension->getWidth();
     }

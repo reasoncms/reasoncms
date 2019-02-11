@@ -17,12 +17,7 @@ namespace Facebook\WebDriver\Remote\Service;
 
 use Exception;
 use Facebook\WebDriver\Net\URLChecker;
-use Symfony\Component\Process\Process;
-use Symfony\Component\Process\ProcessBuilder;
 
-/**
- * Start local WebDriver service (when remote WebDriver server is not used).
- */
 class DriverService
 {
     /**
@@ -46,7 +41,7 @@ class DriverService
     private $environment;
 
     /**
-     * @var Process|null
+     * @var resource
      */
     private $process;
 
@@ -56,7 +51,7 @@ class DriverService
      * @param array $args
      * @param array|null $environment Use the system environment if it is null
      */
-    public function __construct($executable, $port, $args = [], $environment = null)
+    public function __construct($executable, $port, $args = array(), $environment = null)
     {
         $this->executable = self::checkExecutable($executable);
         $this->url = sprintf('http://localhost:%d', $port);
@@ -81,8 +76,18 @@ class DriverService
             return $this;
         }
 
-        $this->process = $this->createProcess();
-        $this->process->start();
+        $pipes = array();
+        $this->process = proc_open(
+            sprintf('%s %s', $this->executable, implode(' ', $this->args)),
+            $descriptorspec = array(
+                0 => array('pipe', 'r'), // stdin
+                1 => array('pipe', 'w'), // stdout
+                2 => array('pipe', 'a'), // stderr
+            ),
+            $pipes,
+            null,
+            $this->environment
+        );
 
         $checker = new URLChecker();
         $checker->waitUntilAvailable(20 * 1000, $this->url . '/status');
@@ -99,7 +104,7 @@ class DriverService
             return $this;
         }
 
-        $this->process->stop();
+        proc_terminate($this->process);
         $this->process = null;
 
         $checker = new URLChecker();
@@ -117,7 +122,9 @@ class DriverService
             return false;
         }
 
-        return $this->process->isRunning();
+        $status = proc_get_status($this->process);
+
+        return $status['running'];
     }
 
     /**
@@ -138,27 +145,5 @@ class DriverService
         }
 
         return $executable;
-    }
-
-    /**
-     * @return Process
-     */
-    private function createProcess()
-    {
-        // BC: ProcessBuilder deprecated since Symfony 3.4 and removed in Symfony 4.0.
-        if (class_exists(ProcessBuilder::class)
-            && false === mb_strpos('@deprecated', (new \ReflectionClass(ProcessBuilder::class))->getDocComment())
-        ) {
-            $processBuilder = (new ProcessBuilder())
-                ->setPrefix($this->executable)
-                ->setArguments($this->args)
-                ->addEnvironmentVariables($this->environment);
-
-            return $processBuilder->getProcess();
-        }
-        // Safe to use since Symfony 3.3
-        $commandLine = array_merge([$this->executable], $this->args);
-
-        return new Process($commandLine, null, $this->environment);
     }
 }

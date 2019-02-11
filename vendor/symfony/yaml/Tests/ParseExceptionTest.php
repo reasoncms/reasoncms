@@ -19,7 +19,11 @@ class ParseExceptionTest extends TestCase
     public function testGetMessage()
     {
         $exception = new ParseException('Error message', 42, 'foo: bar', '/var/www/app/config.yml');
-        $message = 'Error message in "/var/www/app/config.yml" at line 42 (near "foo: bar")';
+        if (\PHP_VERSION_ID >= 50400) {
+            $message = 'Error message in "/var/www/app/config.yml" at line 42 (near "foo: bar")';
+        } else {
+            $message = 'Error message in "\\/var\\/www\\/app\\/config.yml" at line 42 (near "foo: bar")';
+        }
 
         $this->assertEquals($message, $exception->getMessage());
     }
@@ -27,7 +31,11 @@ class ParseExceptionTest extends TestCase
     public function testGetMessageWithUnicodeInFilename()
     {
         $exception = new ParseException('Error message', 42, 'foo: bar', 'äöü.yml');
-        $message = 'Error message in "äöü.yml" at line 42 (near "foo: bar")';
+        if (\PHP_VERSION_ID >= 50400) {
+            $message = 'Error message in "äöü.yml" at line 42 (near "foo: bar")';
+        } else {
+            $message = 'Error message in "\u00e4\u00f6\u00fc.yml" at line 42 (near "foo: bar")';
+        }
 
         $this->assertEquals($message, $exception->getMessage());
     }

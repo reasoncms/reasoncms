@@ -25,10 +25,9 @@ use Symfony\Component\Console\Exception\RuntimeException;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-abstract class Input implements InputInterface, StreamableInputInterface
+abstract class Input implements InputInterface
 {
     protected $definition;
-    protected $stream;
     protected $options = array();
     protected $arguments = array();
     protected $interactive = true;
@@ -72,7 +71,7 @@ abstract class Input implements InputInterface, StreamableInputInterface
             return !array_key_exists($argument, $givenArguments) && $definition->getArgument($argument)->isRequired();
         });
 
-        if (count($missingArguments) > 0) {
+        if (\count($missingArguments) > 0) {
             throw new RuntimeException(sprintf('Not enough arguments (missing: "%s").', implode(', ', $missingArguments)));
         }
     }
@@ -150,7 +149,7 @@ abstract class Input implements InputInterface, StreamableInputInterface
             throw new InvalidArgumentException(sprintf('The "%s" option does not exist.', $name));
         }
 
-        return array_key_exists($name, $this->options) ? $this->options[$name] : $this->definition->getOption($name)->getDefault();
+        return isset($this->options[$name]) ? $this->options[$name] : $this->definition->getOption($name)->getDefault();
     }
 
     /**
@@ -183,21 +182,5 @@ abstract class Input implements InputInterface, StreamableInputInterface
     public function escapeToken($token)
     {
         return preg_match('{^[\w-]+$}', $token) ? $token : escapeshellarg($token);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setStream($stream)
-    {
-        $this->stream = $stream;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getStream()
-    {
-        return $this->stream;
     }
 }

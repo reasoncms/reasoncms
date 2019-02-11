@@ -24,17 +24,8 @@ use Facebook\WebDriver\WebDriverMouse;
  */
 abstract class WebDriverKeysRelatedAction
 {
-    /**
-     * @var WebDriverKeyboard
-     */
     protected $keyboard;
-    /**
-     * @var WebDriverMouse
-     */
     protected $mouse;
-    /**
-     * @var WebDriverLocatable|null
-     */
     protected $locationProvider;
 
     /**

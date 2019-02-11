@@ -38,6 +38,8 @@ class EventFiringWebDriverNavigation
     {
         $this->navigator = $navigator;
         $this->dispatcher = $dispatcher;
+
+        return $this;
     }
 
     /**
@@ -46,6 +48,20 @@ class EventFiringWebDriverNavigation
     public function getDispatcher()
     {
         return $this->dispatcher;
+    }
+
+    /**
+     * @param mixed $method
+     */
+    protected function dispatch($method)
+    {
+        if (!$this->dispatcher) {
+            return;
+        }
+
+        $arguments = func_get_args();
+        unset($arguments[0]);
+        $this->dispatcher->dispatch($method, $arguments);
     }
 
     /**
@@ -114,7 +130,6 @@ class EventFiringWebDriverNavigation
             return $this;
         } catch (WebDriverException $exception) {
             $this->dispatchOnException($exception);
-            throw $exception;
         }
     }
 
@@ -130,14 +145,11 @@ class EventFiringWebDriverNavigation
             $url,
             $this->getDispatcher()->getDefaultDriver()
         );
-
         try {
             $this->navigator->to($url);
         } catch (WebDriverException $exception) {
             $this->dispatchOnException($exception);
-            throw $exception;
         }
-
         $this->dispatch(
             'afterNavigateTo',
             $url,
@@ -147,24 +159,9 @@ class EventFiringWebDriverNavigation
         return $this;
     }
 
-    /**
-     * @param mixed $method
-     * @param mixed $arguments,...
-     */
-    protected function dispatch($method, ...$arguments)
-    {
-        if (!$this->dispatcher) {
-            return;
-        }
-
-        $this->dispatcher->dispatch($method, $arguments);
-    }
-
-    /**
-     * @param WebDriverException $exception
-     */
-    protected function dispatchOnException(WebDriverException $exception)
+    private function dispatchOnException($exception)
     {
         $this->dispatch('onException', $exception);
+        throw $exception;
     }
 }

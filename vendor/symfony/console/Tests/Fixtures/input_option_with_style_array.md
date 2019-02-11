@@ -1,8 +1,9 @@
-#### `--option_name|-o`
+**option_name:**
 
-option description
-
+* Name: `--option_name`
+* Shortcut: `-o`
 * Accept value: yes
 * Is value required: yes
 * Is multiple: yes
-* Default: `array (  0 => 'Hello',  1 => 'world',)`
+* Description: option description
+* Default: `array (  0 => '<comment>Hello</comment>',  1 => '<info>world</info>',)`

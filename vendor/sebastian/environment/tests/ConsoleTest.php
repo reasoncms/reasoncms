@@ -42,7 +42,6 @@ class ConsoleTest extends PHPUnit_Framework_TestCase
 
     /**
      * @covers \SebastianBergmann\Environment\Console::hasColorSupport
-     *
      * @uses   \SebastianBergmann\Environment\Console::isInteractive
      */
     public function testCanDetectColorSupport()
@@ -52,7 +51,6 @@ class ConsoleTest extends PHPUnit_Framework_TestCase
 
     /**
      * @covers \SebastianBergmann\Environment\Console::getNumberOfColumns
-     *
      * @uses   \SebastianBergmann\Environment\Console::isInteractive
      */
     public function testCanDetectNumberOfColumns()

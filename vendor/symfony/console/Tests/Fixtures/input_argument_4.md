@@ -1,8 +1,8 @@
-#### `argument_name`
+**argument_name:**
 
-multiline
-argument description
-
+* Name: argument_name
 * Is required: yes
 * Is array: no
+* Description: multiline
+  argument description
 * Default: `NULL`

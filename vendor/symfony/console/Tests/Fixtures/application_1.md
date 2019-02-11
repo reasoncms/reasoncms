@@ -1,172 +1,201 @@
-Console Tool
-============
+UNKNOWN
+=======
 
-* [`help`](#help)
-* [`list`](#list)
+* help
+* list
 
-`help`
-------
+help
+----
 
-Displays help for a command
+* Description: Displays help for a command
+* Usage:
 
-### Usage
+  * `help [--xml] [--format FORMAT] [--raw] [--] [<command_name>]`
 
-* `help [--format FORMAT] [--raw] [--] [<command_name>]`
+The <info>help</info> command displays help for a given command:
 
-The help command displays help for a given command:
+  <info>php app/console help list</info>
 
-  php app/console help list
+You can also output the help in other formats by using the <comment>--format</comment> option:
 
-You can also output the help in other formats by using the --format option:
+  <info>php app/console help --format=xml list</info>
 
-  php app/console help --format=xml list
+To display the list of available commands, please use the <info>list</info> command.
 
-To display the list of available commands, please use the list command.
+### Arguments:
 
-### Arguments
+**command_name:**
 
-#### `command_name`
-
-The command name
-
+* Name: command_name
 * Is required: no
 * Is array: no
+* Description: The command name
 * Default: `'help'`
 
-### Options
+### Options:
 
-#### `--format`
+**xml:**
 
-The output format (txt, xml, json, or md)
+* Name: `--xml`
+* Shortcut: <none>
+* Accept value: no
+* Is value required: no
+* Is multiple: no
+* Description: To output help as XML
+* Default: `false`
 
+**format:**
+
+* Name: `--format`
+* Shortcut: <none>
 * Accept value: yes
 * Is value required: yes
 * Is multiple: no
+* Description: The output format (txt, xml, json, or md)
 * Default: `'txt'`
 
-#### `--raw`
+**raw:**
 
-To output raw command help
-
+* Name: `--raw`
+* Shortcut: <none>
 * Accept value: no
 * Is value required: no
 * Is multiple: no
+* Description: To output raw command help
 * Default: `false`
 
-#### `--help|-h`
+**help:**
 
-Display this help message
-
+* Name: `--help`
+* Shortcut: `-h`
 * Accept value: no
 * Is value required: no
 * Is multiple: no
+* Description: Display this help message
 * Default: `false`
 
-#### `--quiet|-q`
+**quiet:**
 
-Do not output any message
-
+* Name: `--quiet`
+* Shortcut: `-q`
 * Accept value: no
 * Is value required: no
 * Is multiple: no
+* Description: Do not output any message
 * Default: `false`
 
-#### `--verbose|-v|-vv|-vvv`
+**verbose:**
 
-Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
-
+* Name: `--verbose`
+* Shortcut: `-v|-vv|-vvv`
 * Accept value: no
 * Is value required: no
 * Is multiple: no
+* Description: Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
 * Default: `false`
 
-#### `--version|-V`
+**version:**
 
-Display this application version
-
+* Name: `--version`
+* Shortcut: `-V`
 * Accept value: no
 * Is value required: no
 * Is multiple: no
+* Description: Display this application version
 * Default: `false`
 
-#### `--ansi`
+**ansi:**
 
-Force ANSI output
-
+* Name: `--ansi`
+* Shortcut: <none>
 * Accept value: no
 * Is value required: no
 * Is multiple: no
+* Description: Force ANSI output
 * Default: `false`
 
-#### `--no-ansi`
+**no-ansi:**
 
-Disable ANSI output
-
+* Name: `--no-ansi`
+* Shortcut: <none>
 * Accept value: no
 * Is value required: no
 * Is multiple: no
+* Description: Disable ANSI output
 * Default: `false`
 
-#### `--no-interaction|-n`
+**no-interaction:**
 
-Do not ask any interactive question
-
+* Name: `--no-interaction`
+* Shortcut: `-n`
 * Accept value: no
 * Is value required: no
 * Is multiple: no
+* Description: Do not ask any interactive question
 * Default: `false`
 
-`list`
-------
+list
+----
 
-Lists commands
+* Description: Lists commands
+* Usage:
 
-### Usage
+  * `list [--xml] [--raw] [--format FORMAT] [--] [<namespace>]`
 
-* `list [--raw] [--format FORMAT] [--] [<namespace>]`
+The <info>list</info> command lists all commands:
 
-The list command lists all commands:
-
-  php app/console list
+  <info>php app/console list</info>
 
 You can also display the commands for a specific namespace:
 
-  php app/console list test
+  <info>php app/console list test</info>
 
-You can also output the information in other formats by using the --format option:
+You can also output the information in other formats by using the <comment>--format</comment> option:
 
-  php app/console list --format=xml
+  <info>php app/console list --format=xml</info>
 
 It's also possible to get raw list of commands (useful for embedding command runner):
 
-  php app/console list --raw
+  <info>php app/console list --raw</info>
 
-### Arguments
+### Arguments:
 
-#### `namespace`
+**namespace:**
 
-The namespace name
-
+* Name: namespace
 * Is required: no
 * Is array: no
+* Description: The namespace name
 * Default: `NULL`
 
-### Options
+### Options:
 
-#### `--raw`
+**xml:**
 
-To output raw command list
-
+* Name: `--xml`
+* Shortcut: <none>
 * Accept value: no
 * Is value required: no
 * Is multiple: no
+* Description: To output list as XML
 * Default: `false`
 
-#### `--format`
+**raw:**
 
-The output format (txt, xml, json, or md)
+* Name: `--raw`
+* Shortcut: <none>
+* Accept value: no
+* Is value required: no
+* Is multiple: no
+* Description: To output raw command list
+* Default: `false`
 
+**format:**
+
+* Name: `--format`
+* Shortcut: <none>
 * Accept value: yes
 * Is value required: yes
 * Is multiple: no
+* Description: The output format (txt, xml, json, or md)
 * Default: `'txt'`

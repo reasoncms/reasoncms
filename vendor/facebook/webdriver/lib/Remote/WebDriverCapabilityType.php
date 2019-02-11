@@ -17,8 +17,6 @@ namespace Facebook\WebDriver\Remote;
 
 /**
  * WebDriverCapabilityType contains all constants defined in the WebDriver Wire Protocol.
- *
- * @codeCoverageIgnore
  */
 class WebDriverCapabilityType
 {

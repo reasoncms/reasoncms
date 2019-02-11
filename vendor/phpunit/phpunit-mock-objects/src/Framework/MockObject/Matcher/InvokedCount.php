@@ -50,8 +50,7 @@ class PHPUnit_Framework_MockObject_Matcher_InvokedCount extends PHPUnit_Framewor
     }
 
     /**
-     * @param PHPUnit_Framework_MockObject_Invocation $invocation
-     *
+     * @param  PHPUnit_Framework_MockObject_Invocation      $invocation
      * @throws PHPUnit_Framework_ExpectationFailedException
      */
     public function invoked(PHPUnit_Framework_MockObject_Invocation $invocation)

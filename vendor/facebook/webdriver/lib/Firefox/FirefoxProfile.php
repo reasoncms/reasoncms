@@ -26,15 +26,15 @@ class FirefoxProfile
     /**
      * @var array
      */
-    private $preferences = [];
+    private $preferences = array();
     /**
      * @var array
      */
-    private $extensions = [];
+    private $extensions = array();
     /**
      * @var array
      */
-    private $extensions_datas = [];
+    private $extensions_datas = array();
     /**
      * @var string
      */
@@ -211,7 +211,7 @@ class FirefoxProfile
         $prefix = '';
         if (!empty($ns)) {
             foreach ($ns as $key => $value) {
-                if (mb_strpos($value, '//www.mozilla.org/2004/em-rdf') > 0) {
+                if (strpos($value, '//www.mozilla.org/2004/em-rdf') > 0) {
                     if ($key != '') {
                         $prefix = $key . ':'; // Separate the namespace from the name.
                     }
@@ -220,18 +220,15 @@ class FirefoxProfile
             }
         }
         // Get the extension id from the install manifest.
-        $matches = [];
+        $matches = array();
         preg_match('#<' . $prefix . 'id>([^<]+)</' . $prefix . 'id>#', $xml->asXML(), $matches);
         if (isset($matches[1])) {
             $ext_dir = $profile_dir . '/extensions/' . $matches[1];
             mkdir($ext_dir, 0777, true);
             $this->extractTo($extension, $ext_dir);
-        } else {
-            $this->deleteDirectory($temp_dir);
-
-            throw new WebDriverException('Cannot get the extension id from the install manifest.');
         }
 
+        // clean up
         $this->deleteDirectory($temp_dir);
 
         return $ext_dir;

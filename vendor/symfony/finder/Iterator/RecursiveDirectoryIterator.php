@@ -51,9 +51,9 @@ class RecursiveDirectoryIterator extends \RecursiveDirectoryIterator
 
         parent::__construct($path, $flags);
         $this->ignoreUnreadableDirs = $ignoreUnreadableDirs;
-        $this->rootPath = $path;
-        if ('/' !== DIRECTORY_SEPARATOR && !($flags & self::UNIX_PATHS)) {
-            $this->directorySeparator = DIRECTORY_SEPARATOR;
+        $this->rootPath = (string) $path;
+        if ('/' !== \DIRECTORY_SEPARATOR && !($flags & self::UNIX_PATHS)) {
+            $this->directorySeparator = \DIRECTORY_SEPARATOR;
         }
     }
 

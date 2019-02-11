@@ -4117,7 +4117,8 @@ class EventsModule extends DefaultMinisiteModule
 			$event_url .= '&date='.urlencode($this->request['date']);
 		$cal_url = $this->string_to_external_url_safe('Event source: '.$event_url);
 		$details = (!empty($content)) ? $content.'%0A%0A' : '';
-		$details .= (!empty($e->get_value('url'))) ? $info_url.'%0A%0A'.$cal_url : $cal_url;
+		$url = $e->get_value('url');
+		$details .= (!empty($url)) ? $info_url.'%0A%0A'.$cal_url : $cal_url;
 		switch ($calendar) {
 			case 'google':
 				//Complete additional formating:

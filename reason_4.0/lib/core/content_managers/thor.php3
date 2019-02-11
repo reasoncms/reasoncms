@@ -242,7 +242,8 @@
 					// but transition the element to hidden since the assumption here
 					// is users shouldn't edit the value. But a error checking script
 					// (like for event tickets) may need to actually set these values
-					if (!empty($this->get_value($k))) {
+					$value = $this->get_value($k);
+					if (!empty($value)) {
 						$this->change_element_type($k, "hidden");
 					} else {
 						$this->remove_element($k);

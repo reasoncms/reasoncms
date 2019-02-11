@@ -20,17 +20,8 @@ use Facebook\WebDriver\WebDriverElement;
 
 class WebDriverFlickFromElementAction extends WebDriverTouchAction implements WebDriverAction
 {
-    /**
-     * @var int
-     */
     private $x;
-    /**
-     * @var int
-     */
     private $y;
-    /**
-     * @var int
-     */
     private $speed;
 
     /**

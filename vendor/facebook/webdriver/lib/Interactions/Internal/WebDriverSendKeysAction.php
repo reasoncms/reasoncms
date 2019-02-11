@@ -22,10 +22,7 @@ use Facebook\WebDriver\WebDriverMouse;
 
 class WebDriverSendKeysAction extends WebDriverKeysRelatedAction implements WebDriverAction
 {
-    /**
-     * @var string
-     */
-    private $keys = '';
+    private $keys;
 
     /**
      * @param WebDriverKeyboard $keyboard
@@ -37,7 +34,7 @@ class WebDriverSendKeysAction extends WebDriverKeysRelatedAction implements WebD
         WebDriverKeyboard $keyboard,
         WebDriverMouse $mouse,
         WebDriverLocatable $location_provider = null,
-        $keys = ''
+        $keys = null
     ) {
         parent::__construct($keyboard, $mouse, $location_provider);
         $this->keys = $keys;

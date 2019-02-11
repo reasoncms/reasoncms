@@ -162,11 +162,14 @@
 			$this->limit_input_lengths();
 			
 			// If they are empty, set default values for focal_point_x and focal_point_y.
-			if (!empty($this->get_value('crop_style'))) {
-				if (empty($this->get_value('focal_point_x'))) {
+			$crop_style = $this->get_value('crop_style');
+			if (!empty($crop_style)) {
+				$focal_point_x = $this->get_value('focal_point_x');
+				if (empty($focal_point_x)) {
 					$this->set_value('focal_point_x', 0.5);
 				}
-				if (empty($this->get_value('focal_point_y'))) {
+				$focal_point_y = $this->get_value('focal_point_y');
+				if (empty($focal_point_y)) {
 					$this->set_value('focal_point_y', 0.5);
 				}
 			} else {

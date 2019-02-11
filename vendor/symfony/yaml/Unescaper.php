@@ -11,8 +11,6 @@
 
 namespace Symfony\Component\Yaml;
 
-use Symfony\Component\Yaml\Exception\ParseException;
-
 /**
  * Unescaper encapsulates unescaping rules for single and double-quoted
  * YAML strings.
@@ -23,6 +21,16 @@ use Symfony\Component\Yaml\Exception\ParseException;
  */
 class Unescaper
 {
+    /**
+     * Parser and Inline assume UTF-8 encoding, so escaped Unicode characters
+     * must be converted to that encoding.
+     *
+     * @deprecated since version 2.5, to be removed in 3.0
+     *
+     * @internal
+     */
+    const ENCODING = 'UTF-8';
+
     /**
      * Regex fragment that matches an escaped character in a double quoted string.
      */
@@ -49,8 +57,9 @@ class Unescaper
      */
     public function unescapeDoubleQuotedString($value)
     {
-        $callback = function ($match) {
-            return $this->unescapeCharacter($match[0]);
+        $self = $this;
+        $callback = function ($match) use ($self) {
+            return $self->unescapeCharacter($match[0]);
         };
 
         // evaluate the string
@@ -63,8 +72,11 @@ class Unescaper
      * @param string $value An escaped character
      *
      * @return string The unescaped character
+     *
+     * @internal This method is public to be usable as callback. It should not
+     *           be used in user code. Should be changed in 3.0.
      */
-    private function unescapeCharacter($value)
+    public function unescapeCharacter($value)
     {
         switch ($value[1]) {
             case '0':
@@ -114,7 +126,9 @@ class Unescaper
             case 'U':
                 return self::utf8chr(hexdec(substr($value, 2, 8)));
             default:
-                throw new ParseException(sprintf('Found unknown escape character "%s".', $value));
+                @trigger_error('Not escaping a backslash in a double-quoted string is deprecated since Symfony 2.8 and will throw a ParseException in 3.0.', E_USER_DEPRECATED);
+
+                return $value;
         }
     }
 
@@ -128,15 +142,15 @@ class Unescaper
     private static function utf8chr($c)
     {
         if (0x80 > $c %= 0x200000) {
-            return chr($c);
+            return \chr($c);
         }
         if (0x800 > $c) {
-            return chr(0xC0 | $c >> 6).chr(0x80 | $c & 0x3F);
+            return \chr(0xC0 | $c >> 6).\chr(0x80 | $c & 0x3F);
         }
         if (0x10000 > $c) {
-            return chr(0xE0 | $c >> 12).chr(0x80 | $c >> 6 & 0x3F).chr(0x80 | $c & 0x3F);
+            return \chr(0xE0 | $c >> 12).\chr(0x80 | $c >> 6 & 0x3F).\chr(0x80 | $c & 0x3F);
         }
 
-        return chr(0xF0 | $c >> 18).chr(0x80 | $c >> 12 & 0x3F).chr(0x80 | $c >> 6 & 0x3F).chr(0x80 | $c & 0x3F);
+        return \chr(0xF0 | $c >> 18).\chr(0x80 | $c >> 12 & 0x3F).\chr(0x80 | $c >> 6 & 0x3F).\chr(0x80 | $c & 0x3F);
     }
 }

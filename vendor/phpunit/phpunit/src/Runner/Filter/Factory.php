@@ -8,12 +8,15 @@
  * file that was distributed with this source code.
  */
 
+/**
+ * @since Class available since Release 4.0.0
+ */
 class PHPUnit_Runner_Filter_Factory
 {
     /**
      * @var array
      */
-    private $filters = [];
+    private $filters = array();
 
     /**
      * @param ReflectionClass $filter
@@ -30,7 +33,7 @@ class PHPUnit_Runner_Filter_Factory
             );
         }
 
-        $this->filters[] = [$filter, $args];
+        $this->filters[] = array($filter, $args);
     }
 
     /**

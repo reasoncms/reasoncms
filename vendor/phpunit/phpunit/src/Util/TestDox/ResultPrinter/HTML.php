@@ -10,77 +10,22 @@
 
 /**
  * Prints TestDox documentation in HTML format.
+ *
+ * @since Class available since Release 2.1.0
  */
 class PHPUnit_Util_TestDox_ResultPrinter_HTML extends PHPUnit_Util_TestDox_ResultPrinter
 {
     /**
-     * @var string
+     * @var bool
      */
-    private $pageHeader = <<<EOT
-<!doctype html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8"/>
-        <title>Test Documentation</title>
-        <style>
-            body {
-                text-rendering: optimizeLegibility;
-                font-variant-ligatures: common-ligatures;
-                font-kerning: normal;
-                margin-left: 2em;
-            }
-
-            body > ul > li {
-                font-family: Source Serif Pro, PT Sans, Trebuchet MS, Helvetica, Arial;
-                font-size: 2em;
-            }
-
-            h2 {
-                font-family: Tahoma, Helvetica, Arial;
-                font-size: 3em;
-            }
-
-            ul {
-                list-style: none;
-                margin-bottom: 1em;
-            }
-        </style>
-    </head>
-    <body>
-EOT;
-
-    /**
-     * @var string
-     */
-    private $classHeader = <<<EOT
-
-        <h2 id="%s">%s</h2>
-        <ul>
-
-EOT;
-
-    /**
-     * @var string
-     */
-    private $classFooter = <<<EOT
-        </ul>
-EOT;
-
-    /**
-     * @var string
-     */
-    private $pageFooter = <<<EOT
-
-    </body>
-</html>
-EOT;
+    protected $printsHTML = true;
 
     /**
      * Handler for 'start run' event.
      */
     protected function startRun()
     {
-        $this->write($this->pageHeader);
+        $this->write('<html><body>');
     }
 
     /**
@@ -91,11 +36,8 @@ EOT;
     protected function startClass($name)
     {
         $this->write(
-            sprintf(
-                $this->classHeader,
-                $name,
-                $this->currentTestClassPrettified
-            )
+            '<h2 id="' . $name . '">' . $this->currentTestClassPrettified .
+            '</h2><ul>'
         );
     }
 
@@ -107,14 +49,15 @@ EOT;
      */
     protected function onTest($name, $success = true)
     {
-        $this->write(
-            sprintf(
-                "            <li style=\"color: %s;\">%s %s</li>\n",
-                $success ? '#555753' : '#ef2929',
-                $success ? '✓' : '❌',
-                $name
-            )
-        );
+        if (!$success) {
+            $strikeOpen  = '<span style="text-decoration:line-through;">';
+            $strikeClose = '</span>';
+        } else {
+            $strikeOpen  = '';
+            $strikeClose = '';
+        }
+
+        $this->write('<li>' . $strikeOpen . $name . $strikeClose . '</li>');
     }
 
     /**
@@ -124,7 +67,7 @@ EOT;
      */
     protected function endClass($name)
     {
-        $this->write($this->classFooter);
+        $this->write('</ul>');
     }
 
     /**
@@ -132,6 +75,6 @@ EOT;
      */
     protected function endRun()
     {
-        $this->write($this->pageFooter);
+        $this->write('</body></html>');
     }
 }

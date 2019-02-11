@@ -1,9 +1,9 @@
 {
     "require": {
-        "aws/aws-sdk-php": "^3.15",
+        "aws/aws-sdk-php": "^2",
         "phpmailer/phpmailer": "^5.2",
-        "codeception/codeception": "^2.1",
-        "davechild/textstatistics": "dev-master",
+        "codeception/codeception": ">=2.3 <2.4",
+        "davechild/textstatistics": "1.0.2",
         "google/recaptcha": "~1.1"
     }
 }

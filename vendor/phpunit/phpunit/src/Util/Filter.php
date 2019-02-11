@@ -10,6 +10,8 @@
 
 /**
  * Utility class for code filtering.
+ *
+ * @since Class available since Release 2.0.0
  */
 class PHPUnit_Util_Filter
 {
@@ -21,7 +23,7 @@ class PHPUnit_Util_Filter
      *
      * @return string
      */
-    public static function getFilteredStacktrace($e, $asString = true)
+    public static function getFilteredStacktrace(Exception $e, $asString = true)
     {
         $prefix = false;
         $script = realpath($GLOBALS['_SERVER']['SCRIPT_NAME']);
@@ -33,7 +35,7 @@ class PHPUnit_Util_Filter
         if ($asString === true) {
             $filteredStacktrace = '';
         } else {
-            $filteredStacktrace = [];
+            $filteredStacktrace = array();
         }
 
         if ($e instanceof PHPUnit_Framework_SyntheticError) {
@@ -56,7 +58,7 @@ class PHPUnit_Util_Filter
         if (!self::frameExists($eTrace, $eFile, $eLine)) {
             array_unshift(
                 $eTrace,
-                ['file' => $eFile, 'line' => $eLine]
+                array('file' => $eFile, 'line' => $eLine)
             );
         }
 
@@ -88,6 +90,8 @@ class PHPUnit_Util_Filter
      * @param int    $line
      *
      * @return bool
+     *
+     * @since  Method available since Release 3.3.2
      */
     private static function frameExists(array $trace, $file, $line)
     {

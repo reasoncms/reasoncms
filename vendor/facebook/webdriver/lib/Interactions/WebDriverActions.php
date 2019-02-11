@@ -27,7 +27,6 @@ use Facebook\WebDriver\Interactions\Internal\WebDriverMoveToOffsetAction;
 use Facebook\WebDriver\Interactions\Internal\WebDriverSendKeysAction;
 use Facebook\WebDriver\WebDriver;
 use Facebook\WebDriver\WebDriverElement;
-use Facebook\WebDriver\WebDriverHasInputDevices;
 
 /**
  * WebDriver action builder. It implements the builder pattern.
@@ -39,10 +38,7 @@ class WebDriverActions
     protected $mouse;
     protected $action;
 
-    /**
-     * @param WebDriverHasInputDevices $driver
-     */
-    public function __construct(WebDriverHasInputDevices $driver)
+    public function __construct(WebDriver $driver)
     {
         $this->driver = $driver;
         $this->keyboard = $driver->getKeyboard();

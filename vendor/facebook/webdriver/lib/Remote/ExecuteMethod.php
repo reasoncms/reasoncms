@@ -22,5 +22,5 @@ interface ExecuteMethod
      * @param array $parameters
      * @return WebDriverResponse
      */
-    public function execute($command_name, array $parameters = []);
+    public function execute($command_name, array $parameters = array());
 }

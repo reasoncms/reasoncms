@@ -43,6 +43,8 @@ class EventFiringWebElement implements WebDriverElement, WebDriverLocatable
     {
         $this->element = $element;
         $this->dispatcher = $dispatcher;
+
+        return $this;
     }
 
     /**
@@ -54,11 +56,33 @@ class EventFiringWebElement implements WebDriverElement, WebDriverLocatable
     }
 
     /**
+     * @param mixed $method
+     */
+    protected function dispatch($method)
+    {
+        if (!$this->dispatcher) {
+            return;
+        }
+        $arguments = func_get_args();
+        unset($arguments[0]);
+        $this->dispatcher->dispatch($method, $arguments);
+    }
+
+    /**
      * @return WebDriverElement
      */
     public function getElement()
     {
         return $this->element;
+    }
+
+    /**
+     * @param WebDriverElement $element
+     * @return EventFiringWebElement
+     */
+    protected function newElement(WebDriverElement $element)
+    {
+        return new static($element, $this->getDispatcher());
     }
 
     /**
@@ -73,7 +97,6 @@ class EventFiringWebElement implements WebDriverElement, WebDriverLocatable
             $this->element->sendKeys($value);
         } catch (WebDriverException $exception) {
             $this->dispatchOnException($exception);
-            throw $exception;
         }
         $this->dispatch('afterChangeValueOf', $this);
 
@@ -91,7 +114,6 @@ class EventFiringWebElement implements WebDriverElement, WebDriverLocatable
             $this->element->click();
         } catch (WebDriverException $exception) {
             $this->dispatchOnException($exception);
-            throw $exception;
         }
         $this->dispatch('afterClickOn', $this);
 
@@ -111,14 +133,11 @@ class EventFiringWebElement implements WebDriverElement, WebDriverLocatable
             $this,
             $this->dispatcher->getDefaultDriver()
         );
-
         try {
             $element = $this->newElement($this->element->findElement($by));
         } catch (WebDriverException $exception) {
             $this->dispatchOnException($exception);
-            throw $exception;
         }
-
         $this->dispatch(
             'afterFindBy',
             $by,
@@ -143,13 +162,12 @@ class EventFiringWebElement implements WebDriverElement, WebDriverLocatable
             $this->dispatcher->getDefaultDriver()
         );
         try {
-            $elements = [];
+            $elements = array();
             foreach ($this->element->findElements($by) as $element) {
                 $elements[] = $this->newElement($element);
             }
         } catch (WebDriverException $exception) {
             $this->dispatchOnException($exception);
-            throw $exception;
         }
         $this->dispatch(
             'afterFindBy',
@@ -173,7 +191,6 @@ class EventFiringWebElement implements WebDriverElement, WebDriverLocatable
             return $this;
         } catch (WebDriverException $exception) {
             $this->dispatchOnException($exception);
-            throw $exception;
         }
     }
 
@@ -188,7 +205,6 @@ class EventFiringWebElement implements WebDriverElement, WebDriverLocatable
             return $this->element->getAttribute($attribute_name);
         } catch (WebDriverException $exception) {
             $this->dispatchOnException($exception);
-            throw $exception;
         }
     }
 
@@ -203,7 +219,6 @@ class EventFiringWebElement implements WebDriverElement, WebDriverLocatable
             return $this->element->getCSSValue($css_property_name);
         } catch (WebDriverException $exception) {
             $this->dispatchOnException($exception);
-            throw $exception;
         }
     }
 
@@ -217,7 +232,6 @@ class EventFiringWebElement implements WebDriverElement, WebDriverLocatable
             return $this->element->getLocation();
         } catch (WebDriverException $exception) {
             $this->dispatchOnException($exception);
-            throw $exception;
         }
     }
 
@@ -231,7 +245,6 @@ class EventFiringWebElement implements WebDriverElement, WebDriverLocatable
             return $this->element->getLocationOnScreenOnceScrolledIntoView();
         } catch (WebDriverException $exception) {
             $this->dispatchOnException($exception);
-            throw $exception;
         }
     }
 
@@ -244,7 +257,6 @@ class EventFiringWebElement implements WebDriverElement, WebDriverLocatable
             return $this->element->getCoordinates();
         } catch (WebDriverException $exception) {
             $this->dispatchOnException($exception);
-            throw $exception;
         }
     }
 
@@ -258,7 +270,6 @@ class EventFiringWebElement implements WebDriverElement, WebDriverLocatable
             return $this->element->getSize();
         } catch (WebDriverException $exception) {
             $this->dispatchOnException($exception);
-            throw $exception;
         }
     }
 
@@ -272,7 +283,6 @@ class EventFiringWebElement implements WebDriverElement, WebDriverLocatable
             return $this->element->getTagName();
         } catch (WebDriverException $exception) {
             $this->dispatchOnException($exception);
-            throw $exception;
         }
     }
 
@@ -286,7 +296,6 @@ class EventFiringWebElement implements WebDriverElement, WebDriverLocatable
             return $this->element->getText();
         } catch (WebDriverException $exception) {
             $this->dispatchOnException($exception);
-            throw $exception;
         }
     }
 
@@ -300,7 +309,6 @@ class EventFiringWebElement implements WebDriverElement, WebDriverLocatable
             return $this->element->isDisplayed();
         } catch (WebDriverException $exception) {
             $this->dispatchOnException($exception);
-            throw $exception;
         }
     }
 
@@ -314,7 +322,6 @@ class EventFiringWebElement implements WebDriverElement, WebDriverLocatable
             return $this->element->isEnabled();
         } catch (WebDriverException $exception) {
             $this->dispatchOnException($exception);
-            throw $exception;
         }
     }
 
@@ -328,7 +335,6 @@ class EventFiringWebElement implements WebDriverElement, WebDriverLocatable
             return $this->element->isSelected();
         } catch (WebDriverException $exception) {
             $this->dispatchOnException($exception);
-            throw $exception;
         }
     }
 
@@ -344,7 +350,6 @@ class EventFiringWebElement implements WebDriverElement, WebDriverLocatable
             return $this;
         } catch (WebDriverException $exception) {
             $this->dispatchOnException($exception);
-            throw $exception;
         }
     }
 
@@ -358,7 +363,6 @@ class EventFiringWebElement implements WebDriverElement, WebDriverLocatable
             return $this->element->getID();
         } catch (WebDriverException $exception) {
             $this->dispatchOnException($exception);
-            throw $exception;
         }
     }
 
@@ -374,41 +378,16 @@ class EventFiringWebElement implements WebDriverElement, WebDriverLocatable
             return $this->element->equals($other);
         } catch (WebDriverException $exception) {
             $this->dispatchOnException($exception);
-            throw $exception;
         }
     }
 
-    /**
-     * @param WebDriverException $exception
-     */
-    protected function dispatchOnException(WebDriverException $exception)
+    private function dispatchOnException($exception)
     {
         $this->dispatch(
             'onException',
             $exception,
             $this->dispatcher->getDefaultDriver()
         );
-    }
-
-    /**
-     * @param mixed $method
-     * @param mixed $arguments,...
-     */
-    protected function dispatch($method, ...$arguments)
-    {
-        if (!$this->dispatcher) {
-            return;
-        }
-
-        $this->dispatcher->dispatch($method, $arguments);
-    }
-
-    /**
-     * @param WebDriverElement $element
-     * @return EventFiringWebElement
-     */
-    protected function newElement(WebDriverElement $element)
-    {
-        return new static($element, $this->getDispatcher());
+        throw $exception;
     }
 }

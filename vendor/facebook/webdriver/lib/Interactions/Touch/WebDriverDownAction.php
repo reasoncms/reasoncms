@@ -19,13 +19,7 @@ use Facebook\WebDriver\WebDriverAction;
 
 class WebDriverDownAction extends WebDriverTouchAction implements WebDriverAction
 {
-    /**
-     * @var int
-     */
     private $x;
-    /**
-     * @var int
-     */
     private $y;
 
     /**

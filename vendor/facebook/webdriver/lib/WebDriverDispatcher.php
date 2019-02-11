@@ -22,11 +22,11 @@ class WebDriverDispatcher
     /**
      * @var array
      */
-    protected $listeners = [];
+    protected $listeners = array();
     /**
      * @var EventFiringWebDriver
      */
-    protected $driver;
+    protected $driver = null;
 
     /**
      * this is needed so that EventFiringWebElement can pass the driver to the
@@ -83,7 +83,7 @@ class WebDriverDispatcher
     public function dispatch($method, $arguments)
     {
         foreach ($this->listeners as $listener) {
-            call_user_func_array([$listener, $method], $arguments);
+            call_user_func_array(array($listener, $method), $arguments);
         }
 
         return $this;

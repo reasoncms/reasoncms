@@ -17,19 +17,15 @@ namespace Facebook\WebDriver;
 
 use Facebook\WebDriver\Exception\IndexOutOfBoundsException;
 use Facebook\WebDriver\Remote\DriverCommand;
-use Facebook\WebDriver\Remote\ExecuteMethod;
 
 /**
  * An abstraction allowing the driver to manipulate the browser's window
  */
 class WebDriverWindow
 {
-    /**
-     * @var ExecuteMethod
-     */
     protected $executor;
 
-    public function __construct(ExecuteMethod $executor)
+    public function __construct($executor)
     {
         $this->executor = $executor;
     }
@@ -38,13 +34,13 @@ class WebDriverWindow
      * Get the position of the current window, relative to the upper left corner
      * of the screen.
      *
-     * @return WebDriverPoint The current window position.
+     * @return array The current window position.
      */
     public function getPosition()
     {
         $position = $this->executor->execute(
             DriverCommand::GET_WINDOW_POSITION,
-            [':windowHandle' => 'current']
+            array(':windowHandle' => 'current')
         );
 
         return new WebDriverPoint(
@@ -57,13 +53,13 @@ class WebDriverWindow
      * Get the size of the current window. This will return the outer window
      * dimension, not just the view port.
      *
-     * @return WebDriverDimension The current window size.
+     * @return array The current window size.
      */
     public function getSize()
     {
         $size = $this->executor->execute(
             DriverCommand::GET_WINDOW_SIZE,
-            [':windowHandle' => 'current']
+            array(':windowHandle' => 'current')
         );
 
         return new WebDriverDimension(
@@ -81,7 +77,7 @@ class WebDriverWindow
     {
         $this->executor->execute(
             DriverCommand::MAXIMIZE_WINDOW,
-            [':windowHandle' => 'current']
+            array(':windowHandle' => 'current')
         );
 
         return $this;
@@ -96,11 +92,11 @@ class WebDriverWindow
      */
     public function setSize(WebDriverDimension $size)
     {
-        $params = [
+        $params = array(
             'width' => $size->getWidth(),
             'height' => $size->getHeight(),
             ':windowHandle' => 'current',
-        ];
+        );
         $this->executor->execute(DriverCommand::SET_WINDOW_SIZE, $params);
 
         return $this;
@@ -115,11 +111,11 @@ class WebDriverWindow
      */
     public function setPosition(WebDriverPoint $position)
     {
-        $params = [
+        $params = array(
             'x' => $position->getX(),
             'y' => $position->getY(),
             ':windowHandle' => 'current',
-        ];
+        );
         $this->executor->execute(DriverCommand::SET_WINDOW_POSITION, $params);
 
         return $this;
@@ -145,8 +141,8 @@ class WebDriverWindow
      */
     public function setScreenOrientation($orientation)
     {
-        $orientation = mb_strtoupper($orientation);
-        if (!in_array($orientation, ['PORTRAIT', 'LANDSCAPE'])) {
+        $orientation = strtoupper($orientation);
+        if (!in_array($orientation, array('PORTRAIT', 'LANDSCAPE'))) {
             throw new IndexOutOfBoundsException(
                 'Orientation must be either PORTRAIT, or LANDSCAPE'
             );
@@ -154,7 +150,7 @@ class WebDriverWindow
 
         $this->executor->execute(
             DriverCommand::SET_SCREEN_ORIENTATION,
-            ['orientation' => $orientation]
+            array('orientation' => $orientation)
         );
 
         return $this;

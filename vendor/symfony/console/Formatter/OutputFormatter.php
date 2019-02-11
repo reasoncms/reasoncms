@@ -50,10 +50,10 @@ class OutputFormatter implements OutputFormatterInterface
     public static function escapeTrailingBackslash($text)
     {
         if ('\\' === substr($text, -1)) {
-            $len = strlen($text);
+            $len = \strlen($text);
             $text = rtrim($text, '\\');
             $text = str_replace("\0", '', $text);
-            $text .= str_repeat("\0", $len - strlen($text));
+            $text .= str_repeat("\0", $len - \strlen($text));
         }
 
         return $text;
@@ -133,7 +133,7 @@ class OutputFormatter implements OutputFormatterInterface
         $message = (string) $message;
         $offset = 0;
         $output = '';
-        $tagRegex = '[a-z][a-z0-9,_=;-]*+';
+        $tagRegex = '[a-z][a-z0-9_=;-]*+';
         preg_match_all("#<(($tagRegex) | /($tagRegex)?)>#ix", $message, $matches, PREG_OFFSET_CAPTURE);
         foreach ($matches[0] as $i => $match) {
             $pos = $match[1];
@@ -145,7 +145,7 @@ class OutputFormatter implements OutputFormatterInterface
 
             // add the text up to the next tag
             $output .= $this->applyCurrentStyle(substr($message, $offset, $pos - $offset));
-            $offset = $pos + strlen($text);
+            $offset = $pos + \strlen($text);
 
             // opening tag?
             if ($open = '/' != $text[1]) {
@@ -196,7 +196,7 @@ class OutputFormatter implements OutputFormatterInterface
             return $this->styles[$string];
         }
 
-        if (!preg_match_all('/([^=]+)=([^;]+)(;|$)/', $string, $matches, PREG_SET_ORDER)) {
+        if (!preg_match_all('/([^=]+)=([^;]+)(;|$)/', strtolower($string), $matches, PREG_SET_ORDER)) {
             return false;
         }
 
@@ -208,20 +208,12 @@ class OutputFormatter implements OutputFormatterInterface
                 $style->setForeground($match[1]);
             } elseif ('bg' == $match[0]) {
                 $style->setBackground($match[1]);
-            } elseif ('options' === $match[0]) {
-                preg_match_all('([^,;]+)', $match[1], $options);
-                $options = array_shift($options);
-                foreach ($options as $option) {
-                    try {
-                        $style->setOption($option);
-                    } catch (\InvalidArgumentException $e) {
-                        @trigger_error(sprintf('Unknown style options are deprecated since Symfony 3.2 and will be removed in 4.0. Exception "%s".', $e->getMessage()), E_USER_DEPRECATED);
-
-                        return false;
-                    }
-                }
             } else {
-                return false;
+                try {
+                    $style->setOption($match[1]);
+                } catch (\InvalidArgumentException $e) {
+                    return false;
+                }
             }
         }
 
@@ -237,6 +229,6 @@ class OutputFormatter implements OutputFormatterInterface
      */
     private function applyCurrentStyle($text)
     {
-        return $this->isDecorated() && strlen($text) > 0 ? $this->styleStack->getCurrent()->apply($text) : $text;
+        return $this->isDecorated() && \strlen($text) > 0 ? $this->styleStack->getCurrent()->apply($text) : $text;
     }
 }

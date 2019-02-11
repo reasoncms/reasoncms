@@ -3,54 +3,43 @@ class Framework_MockObject_Matcher_ConsecutiveParametersTest extends PHPUnit_Fra
 {
     public function testIntegration()
     {
-        $mock = $this->getMockBuilder(stdClass::class)
-                     ->setMethods(['foo'])
-                     ->getMock();
-
-        $mock->expects($this->any())
-             ->method('foo')
-             ->withConsecutive(
-                 ['bar'],
-                 [21, 42]
-             );
-
-        $this->assertNull($mock->foo('bar'));
-        $this->assertNull($mock->foo(21, 42));
+        $mock = $this->getMock('stdClass', array('foo'));
+        $mock
+            ->expects($this->any())
+            ->method('foo')
+            ->withConsecutive(
+                array('bar'),
+                array(21, 42)
+            );
+        $mock->foo('bar');
+        $mock->foo(21, 42);
     }
 
-    public function testIntegrationWithLessAssertionsThanMethodCalls()
+    public function testIntegrationWithLessAssertionsThenMethodCalls()
     {
-        $mock = $this->getMockBuilder(stdClass::class)
-                     ->setMethods(['foo'])
-                     ->getMock();
-
-        $mock->expects($this->any())
-             ->method('foo')
-             ->withConsecutive(
-                 ['bar']
-             );
-
-        $this->assertNull($mock->foo('bar'));
-        $this->assertNull($mock->foo(21, 42));
+        $mock = $this->getMock('stdClass', array('foo'));
+        $mock
+            ->expects($this->any())
+            ->method('foo')
+            ->withConsecutive(
+                array('bar')
+            );
+        $mock->foo('bar');
+        $mock->foo(21, 42);
     }
 
     public function testIntegrationExpectingException()
     {
-        $mock = $this->getMockBuilder(stdClass::class)
-                     ->setMethods(['foo'])
-                     ->getMock();
-
-        $mock->expects($this->any())
-             ->method('foo')
-             ->withConsecutive(
-                 ['bar'],
-                 [21, 42]
-             );
-
+        $mock = $this->getMock('stdClass', array('foo'));
+        $mock
+            ->expects($this->any())
+            ->method('foo')
+            ->withConsecutive(
+                array('bar'),
+                array(21, 42)
+            );
         $mock->foo('bar');
-
-        $this->expectException(PHPUnit_Framework_ExpectationFailedException::class);
-
+        $this->setExpectedException('PHPUnit_Framework_ExpectationFailedException');
         $mock->foo('invalid');
     }
 }

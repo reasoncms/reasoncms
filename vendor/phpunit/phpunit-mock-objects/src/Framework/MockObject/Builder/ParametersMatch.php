@@ -32,7 +32,7 @@ interface PHPUnit_Framework_MockObject_Builder_ParametersMatch extends PHPUnit_F
      *
      * @return PHPUnit_Framework_MockObject_Builder_ParametersMatch
      */
-    public function with(...$arguments);
+    public function with();
 
     /**
      * Sets a matcher which allows any kind of parameters.
@@ -40,7 +40,7 @@ interface PHPUnit_Framework_MockObject_Builder_ParametersMatch extends PHPUnit_F
      * Some examples:
      * <code>
      * // match any number of parameters
-     * $b->withAnyParameters();
+     * $b->withAnyParamers();
      * </code>
      *
      * @return PHPUnit_Framework_MockObject_Matcher_AnyParameters

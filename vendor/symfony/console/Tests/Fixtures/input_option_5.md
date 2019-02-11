@@ -1,9 +1,10 @@
-#### `--option_name|-o`
+**option_name:**
 
-multiline
-option description
-
+* Name: `--option_name`
+* Shortcut: `-o`
 * Accept value: yes
 * Is value required: yes
 * Is multiple: no
+* Description: multiline
+  option description
 * Default: `NULL`
