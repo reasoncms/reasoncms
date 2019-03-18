@@ -77,15 +77,15 @@ class TableAdmin
 	/**
 	 * @var string which field label to sort
 	 */
-	var $sort_field = '';	
+	var $sort_field = '';
 	/**
 	 * @var string sort order to use
 	 */
-	var $sort_order = '';	
+	var $sort_order = '';
 	/**
 	 * @var string export mode currently only csv is supported
 	 */
-	var $export_format = 'csv'; 
+	var $export_format = 'csv';
 	/**
 	 * $var string default no data message
 	 */
@@ -120,36 +120,36 @@ class TableAdmin
 	var $allow_filters = true;
 	/**
 	 * @var boolean allow deletion
-	 */ 
-	var $allow_delete = false;	
+	 */
+	var $allow_delete = false;
 	/**
 	 * @var boolean allow row editing
-	 */ 
-	var $allow_row_delete = false;	
+	 */
+	var $allow_row_delete = false;
 	/**
 	 * @var boolean allow row editing
-	 */ 
+	 */
 	var $allow_edit = false;
 	/**
 	 * @var boolean allow data export
-	 */ 
+	 */
 	var $allow_export = true;
 	/**
 	 * @var boolean allow user to archive data
-	 */ 
+	 */
 	var $allow_archive = true;
 	/**
 	 * @var boolean allow individual row viewing
-	 */ 
+	 */
 	var $allow_view = true;
 	/**
 	 * @var boolean allow creation of new rows
-	 */ 
+	 */
 	var $allow_new = false;
 	/**
 	 * @var boolean allow file downloads
-	 */ 
-	var $allow_download_files = false;	
+	 */
+	var $allow_download_files = false;
 	/**
 	 * @var boolean whether or not to show the "Displaying x of y rows" header
 	 */
@@ -165,7 +165,7 @@ class TableAdmin
 	/**
 	 * @var boolean whether or not to show action column in last table cell
 	 */
-	var $show_actions_last_cell = false;	
+	var $show_actions_last_cell = false;
 	/**
 	 * @var object discoDB form that defines administrative interface and options - if unspecified a default with basic functionality is used
 	 */
@@ -176,7 +176,7 @@ class TableAdmin
 	var $primary_key = 'id'; // primary key field of table
 	/**
 	 * @var string name of table to store achive - not implemented yet
-	 */ 
+	 */
 	var $history_table = 'table_history';
 	/**
 	 * @var string prefix to use in class/id attributes
@@ -185,7 +185,7 @@ class TableAdmin
 	/**
 	 * @var filename_frag is appended to date-stamped filename when data is downloaded
 	 */
-	var $filename_frag = 'form';	
+	var $filename_frag = 'form';
 	/**
 	 * @var if set provides static filename for downloaded files
 	 */
@@ -193,8 +193,8 @@ class TableAdmin
 	/**
 	 * @var array mapping column_names to type and display labels
 	 * @access private
-	 */ 
-	var $_display_values = array();	
+	 */
+	var $_display_values = array();
 	/**
 	 * @var int total number of rows in $table_name
 	 */
@@ -206,7 +206,7 @@ class TableAdmin
 	/**
 	 * @var array populated with a sample row when data is built - allows header row to render correctly if filtering gets rid of all rows
 	 * @access private
-	 */ 
+	 */
 	var $_row = array();
 	/**
 	 * @var string db connection string of database to connect with
@@ -227,7 +227,7 @@ class TableAdmin
 	/**
 	 * @var string target for file downloads
 	 */
-	 var $file_download_base_url = '/thor/getFormFile.php';	 
+	 var $file_download_base_url = '/thor/getFormFile.php';
 	/**
 	 * @var array cleanup rules
 	 */
@@ -236,7 +236,7 @@ class TableAdmin
 							   'table_filter_clear' => array('function' => 'turn_into_string'),
 							   'table_action_id' => array('function' => 'check_against_regexp', 'extra_args' => array('naturalnumber')),
 							   'table_summations' => array('function' => 'turn_into_int'));
-	
+
 	var $_no_db_mode = false;
 	/**
 	 * Constructor
@@ -245,31 +245,31 @@ class TableAdmin
 	function TableAdmin()
 	{
 	}
-	
+
 	/**
 	 * INIT METHODS
 	 */
-	
+
 	/**
-	 * 
+	 *
 	 */
 	function init($db, $table_name, $filename_frag = '', $filename_real = '')
 	{
 		$this->set_db_conn($db);
 		$this->set_table_name($table_name);
 		$this->set_filename_frag($filename_frag);
-		
+
 		// grab information from the table and setup display value array
 		if ($this->_check_table_exists())
 		{
 			$this->_build_display_values();
-		
+
 			// grab the request and set parameters accordingly
 			$this->_set_params_from_request();
-		
+
 			// not implemented
 			//$this->init_history();
-			
+
 			// call appropriate init
 			if (isset($this->table_action)) $this->init_action();
 			elseif (isset($this->table_row_action) && isset($this->table_action_id) && $this->verify_table_action_id()) $this->init_row_action();
@@ -280,7 +280,7 @@ class TableAdmin
 			trigger_error('The table ' . $this->get_table_name() . ' does not exist - using database connection ' . $this->get_db_conn());
 		}
 	}
-	
+
 	/**
 	 * Init from array takes an array of display values and sets up the request and _display_values
 	 */
@@ -291,7 +291,7 @@ class TableAdmin
 		{
 			$this->_no_db_mode = true;
 			$this->_build_display_values_from_array($display_values);
-			
+
 			if (!$custom_setup) // disable functions that are enabled by default class
 			{
 				$this->set_show_actions_first_cell(false);
@@ -301,12 +301,12 @@ class TableAdmin
 				$this->set_allow_archive(false);
 				$this->set_show_header(false);
 			}
-			
+
 			$this->_set_params_from_request();
 			$this->init_default();
 		}
 	}
-	
+
 	/**
 	 * If the data keys are the column headers, this can be used as a shortcut - just init and run
 	 */
@@ -320,7 +320,7 @@ class TableAdmin
 		$this->init_view_no_db($display_values, $custom_setup);
 		$this->set_data_from_array($data);
 	}
-	
+
 	/**
 	 * Init table global action
 	 */
@@ -328,7 +328,7 @@ class TableAdmin
 	{
 		$form =& $this->get_admin_form();
 		if ($form) $form->set_action($this->get_table_action());
-		
+
 		switch ($this->get_table_action()) {
 		case "delete_all":
 			$this->get_data();
@@ -354,7 +354,7 @@ class TableAdmin
 			break;
 		}
 	}
-	
+
 	/**
 	 * Init table row action
 	 */
@@ -365,13 +365,13 @@ class TableAdmin
 		$this->set_admin_form($form);
 		$form->setup_form($this);
 		// this is all discodb specific stuff ... should not really be here
-		//$form->setup_db($this->get_db_conn(), $this->get_table_name(), $this->get_table_action_id()); 
+		//$form->setup_db($this->get_db_conn(), $this->get_table_name(), $this->get_table_action_id());
 		//$form->set_action($this->get_table_row_action());
 		//$form->set_id_column_name($this->get_primary_key());
-		
+
 		$form->init();
 	}
-	
+
 	/**
 	 * Init when an allowable action is not specified
 	 */
@@ -386,7 +386,7 @@ class TableAdmin
 			if (!$this->get_sort_field()) $this->set_sort_field();
 			if (!$this->get_sort_order()) $this->set_sort_order();
 			if (!$this->get_no_data_message()) $this->set_no_data_message();
-		}			
+		}
 	}
 
 	/**
@@ -399,7 +399,7 @@ class TableAdmin
 			$this->_create_table_history_table();
 		}
 	}
-	
+
 	/**
 	 * Handles all the internal logic for an instantiated table viewer - request variables will override any settings that correspond to a request
 	 * variable that may have been specified prior to the init ...
@@ -407,23 +407,23 @@ class TableAdmin
 	function _set_params_from_request()
 	{
 		// alter cleanup rules
-		$this->cleanup_rules['table_sort_field'] = array('function' => 'check_against_array', 'extra_args' => array_keys($this->_display_values)); // dynamically add		
+		$this->cleanup_rules['table_sort_field'] = array('function' => 'check_against_array', 'extra_args' => array_keys($this->_display_values)); // dynamically add
 		$va = $this->_get_valid_actions();
 		$vra = $this->_get_valid_row_actions();
 		if (!empty($va)) $this->cleanup_rules['table_action'] = array('function' => 'check_against_array', 'extra_args' => $va);
 		if (!empty($vra)) $this->cleanup_rules['table_row_action'] = array('function' => 'check_against_array', 'extra_args' => $vra);
-		
+
 		$this->request = carl_clean_vars(conditional_stripslashes($_REQUEST), $this->cleanup_rules);
 		if (isset($this->request['table_action'])) 		 $this->set_action($this->request['table_action']);
 		if (isset($this->request['table_row_action'])) 	 $this->set_row_action($this->request['table_row_action']);
-		if (isset($this->request['table_action_id'])) 	 $this->set_action_id($this->request['table_action_id']);	
+		if (isset($this->request['table_action_id'])) 	 $this->set_action_id($this->request['table_action_id']);
 		if (isset($this->request['table_sort_order'])) 	 $this->set_sort_order($this->request['table_sort_order']);
 		if (isset($this->request['table_sort_field'])) 	 $this->set_sort_field($this->request['table_sort_field']);
 		if (isset($this->request['table_filters']))		 $this->set_filters($this->request['table_filters']);
 		if (isset($this->request['table_filter_clear'])) $this->clear_filters($this->request['table_filters']);
 		if (isset($this->request['table_summations']))   $this->set_show_column_summations($this->request['table_summations']);
 	}
-	
+
 	function _get_valid_actions()
 	{
 		$actions = array();
@@ -433,7 +433,7 @@ class TableAdmin
 		if ($this->allow_download_files) $actions[] = 'batch_download';
 		return $actions;
 	}
-	
+
 	function _get_valid_row_actions()
 	{
 		$actions = array();
@@ -444,7 +444,7 @@ class TableAdmin
 		// if ($this->allow_download_file) $actions[] = 'download_file';
 		return $actions;
 	}
-	
+
 	// SET COMMANDS THAT PASS THRU TO ADMIN CLASS METHODS IF THEY EXISTS
 	function set_fields_to_show($fields_to_show_array = NULL)
 	{
@@ -458,9 +458,9 @@ class TableAdmin
 					$this->fields_to_show = $af->get_fields_to_show();
 				}
 			}
-		}	
+		}
 	}
-	
+
 	// SET COMMANDS WITH SOME LOGIC
 	function set_fields_to_entity_convert($fields_to_entity_convert_array = NULL)
 	{
@@ -474,9 +474,9 @@ class TableAdmin
 					$this->fields_to_entity_convert = $af->get_fields_to_entity_convert();
 				}
 			}
-		}	
+		}
 	}
-	
+
 	function set_export_fields($export_fields_array = NULL)
 	{
 		if (!is_null($export_fields_array)) $this->fields_to_export = $export_fields_array;
@@ -489,9 +489,9 @@ class TableAdmin
 					$this->fields_to_export = $af->get_fields_to_export();
 				}
 			}
-		}	
+		}
 	}
-	
+
 	function set_fields_that_allow_sorting($fields_that_allow_sorting_array = NULL)
 	{
 		if (!is_null($fields_that_allow_sorting_array)) $this->fields_that_allow_sorting = $fields_that_allow_sorting_array;
@@ -505,9 +505,9 @@ class TableAdmin
 				}
 			}
 		}
-		
+
 	}
-	
+
 	function set_no_data_message($no_data_message = NULL)
 	{
 		if (!is_null($no_data_message)) $this->no_data_message = $no_data_message;
@@ -520,9 +520,9 @@ class TableAdmin
 					$this->no_data_message = $af->get_no_data_message();
 				}
 			}
-		}		
+		}
 	}
-	
+
 	function set_sort_field($field = NULL)
 	{
 		if (!is_null($field)) $this->sort_field = $field;
@@ -534,12 +534,12 @@ class TableAdmin
 				{
 					$this->sort_field = ($af->get_default_sort_field()) ? $af->get_default_sort_field() : 'id';
 				}
-				
+
 			}
 		}
 		if (empty($this->sort_field)) $this->sort_field = 'id';
 	}
-	
+
 	function set_sort_order($order = NULL)
 	{
 		//only 'desc' or 'asc' are valid -- if invalid default to 'desc'
@@ -556,23 +556,23 @@ class TableAdmin
 		}
 		if (empty($this->sort_order)) $this->sort_order = 'desc';
 	}
-	
+
 	// BASIC SET COMMANDS
 	function set_allow_edit($val = NULL)
 	{
 		if (!is_null($val)) $this->allow_edit = $val;
 	}
-	
+
 	function set_allow_view($val = NULL)
 	{
 		if (!is_null($val)) $this->allow_view = $val;
 	}
-	
+
 	function set_allow_delete($val = NULL)
 	{
 		if (!is_null($val)) $this->allow_delete = $val;
 	}
-	
+
 	function set_allow_row_delete($val = NULL)
 	{
 		if (!is_null($val)) $this->allow_row_delete = $val;
@@ -582,22 +582,22 @@ class TableAdmin
 	{
 		if (!is_null($val)) $this->allow_download_files = $val;
 	}
-	
+
 	function set_allow_export($val = NULL)
 	{
 		if (!is_null($val)) $this->allow_export = $val;
 	}
-	
+
 	function set_allow_archive($val = NULL)
 	{
 		if (!is_null($val)) $this->allow_archive = $val;
 	}
-	
+
 	function set_allow_new($val = NULL)
 	{
 		if (!is_null($val)) $this->allow_new = $val;
 	}
-	
+
 	function set_allow_filters($val = NULL)
 	{
 		if (!is_null($val)) $this->allow_filters = $val;
@@ -611,34 +611,34 @@ class TableAdmin
 	{
 		if (!is_null($val)) $this->show_column_summations = $val;
 	}
-	
+
 	function set_show_actions_first_cell($val = NULL)
 	{
 		if (!is_null($val)) $this->show_actions_first_cell = $val;
 	}
-	
+
 	function set_show_actions_last_cell($val = NULL)
 	{
 		if (!is_null($val)) $this->show_actions_first_cell = $val;
 	}
-	
+
 	function set_export_format($val = NULL)
 	{
 		if (!is_null($val)) $this->export_format = $val;
 	}
-	
+
 	function set_admin_form(&$form)
 	{
 		$this->admin_form =& $form;
 	}
-	
+
 	function set_db_conn($db_conn)
 	{
 		$orig = get_current_db_connection_name();
 		$this->_db_conn = $db_conn;
 		$this->_orig_db_conn = ($orig) ? $orig : $db_conn;
 	}
-	
+
 	function set_table_name($table_name)
 	{
 		$this->_table_name = $table_name;
@@ -648,12 +648,12 @@ class TableAdmin
 	{
 		$this->filename_real = $filename;
 	}
-	
+
 	function set_filename_frag($filename_frag)
 	{
 		$this->filename_frag = $filename_frag;
 	}
-	
+
 	/**
 	 * Pagination is not yet implemented
 	 */
@@ -661,12 +661,12 @@ class TableAdmin
 	{
 		$this->page = $input;
 	}
-	
+
 	function set_num_per_page($num_per_page)
 	{
 		$this->num_per_page = $num_per_page;
 	}
-	
+
 	function set_filters($filter_array = array())
 	{
 		if (!empty($filter_array))
@@ -678,7 +678,7 @@ class TableAdmin
 			}
 		}
 	}
-	
+
 	function clear_filters($filter_array = array())
 	{
 		if (!empty($filter_array))
@@ -690,27 +690,27 @@ class TableAdmin
 			}
 		}
 	}
-	
+
 	function set_action($string)
 	{
-		$this->table_action = $string;		
+		$this->table_action = $string;
 	}
-	
+
 	function set_row_action($string)
 	{
-		$this->table_row_action = $string;	
+		$this->table_row_action = $string;
 	}
-	
+
 	function set_action_id($id)
 	{
 		$this->table_action_id = $id;
 	}
-	
+
 	/**
 	 * Sets permissions based upon a custom_admin_form that defines the method is_allowable_action($action)
 	 */
 	function set_privileges_from_admin_form()
-	{	
+	{
 		$form =& $this->get_admin_form();
 		if ($form)
 		{
@@ -727,7 +727,7 @@ class TableAdmin
 		}
 		else trigger_error('A custom form must be assigned using the set_admin_form method before calling set_privileges_from_admin_form.');
 	}
-	
+
 	/**
 	 * Set data sets _table_data
 	 */
@@ -739,7 +739,7 @@ class TableAdmin
 		$this->_filtered_rows = count ($data);
 		$this->_table_data =& $data;
 	}
-	
+
 	/**
 	 * verify that the table_action_id requested is valid
 	 */
@@ -751,18 +751,18 @@ class TableAdmin
 		{
 			return true;
 		}
-		else return false;	
+		else return false;
 	}
-	
+
 	function verify_row_action()
 	{
-	
+
 	}
 
 	/**
 	 * ALL THE CLASS GET METHODS
 	 */
-	 
+
 	/**
 	 * @return array unfiltered table data, according to sort_field and sort_order - uses _build_data to generate the data
 	 */
@@ -784,27 +784,27 @@ class TableAdmin
 	{
 		return $this->filters;
 	}
-	
+
 	function &get_admin_form()
 	{
 		return $this->admin_form;
 	}
-	
+
 	function &get_fields_to_show()
 	{
 		return $this->fields_to_show;
 	}
-	
+
 	function &get_fields_to_entity_convert()
 	{
 		return $this->fields_to_entity_convert;
 	}
-	
+
 	function &get_fields_that_allow_sorting()
 	{
 		return $this->fields_that_allow_sorting;
 	}
-	
+
 	/**
 	 * @return string the current table global action
 	 */
@@ -812,7 +812,7 @@ class TableAdmin
 	{
 		return $this->table_action;
 	}
-	
+
 	/**
 	 * @return string the current table row action
 	 */
@@ -820,7 +820,7 @@ class TableAdmin
 	{
 		return $this->table_row_action;
 	}
-	
+
 	/**
 	 * @return string the current table row action id
 	 */
@@ -828,7 +828,7 @@ class TableAdmin
 	{
 		return (isset($this->table_action_id)) ? $this->table_action_id : false;
 	}
-	
+
 	/**
 	 * @return string table name used by the class
 	 */
@@ -836,7 +836,7 @@ class TableAdmin
 	{
 		return $this->_table_name;
 	}
-	
+
 	/**
 	 * @return string db conn string used by the class
 	 */
@@ -844,22 +844,22 @@ class TableAdmin
 	{
 		return $this->_db_conn;
 	}
-	
+
 	function get_orig_db_conn()
 	{
 		return $this->_orig_db_conn;
 	}
-	
+
 	function get_primary_key()
 	{
 		return $this->primary_key;
 	}
-	
+
 	function get_sort_field()
 	{
 		return $this->sort_field;
 	}
-	
+
 	function get_sort_order()
 	{
 		return $this->sort_order;
@@ -874,15 +874,15 @@ class TableAdmin
 	{
 		static $labels;
 		if (!empty($labels[$label])) return $labels[$label];
-	
+
 		foreach ($this->_display_values as $field => $details)
 			$labels[$details['label']] = $field;
 
 		if (!empty($labels[$label])) return $labels[$label];
-		
+
 		return false;
 	}
-			
+
 	/**
 	 * @return boolean true if the row count of unfiltered data is greater than 0
 	 */
@@ -891,7 +891,7 @@ class TableAdmin
 		if ($this->_total_rows > 0) return true;
 		else return false;
 	}
-	
+
 	/**
 	 * build_data reads in all values stored from a table form according to sort_field and sort_order
 	 * @return $my_data array of associative arrays which represent each row
@@ -934,9 +934,9 @@ class TableAdmin
 		}
 		return $my_data;
 	}
-	
+
 	/**
-	 * _filter_data modifies data according to an array of filters, and allows modules to apply filtering rules unrelated to user input 
+	 * _filter_data modifies data according to an array of filters, and allows modules to apply filtering rules unrelated to user input
 	 * @param &$data
 	 * @param $filter_array
 	 */
@@ -946,7 +946,7 @@ class TableAdmin
 		if (!empty($filter_array) && $this->allow_filters)
 		{
 			$active_filter = array_pop($filter_array);
-			
+
 			if ($active_filter['name'] == 'id')
 			{
 				foreach ($data as $k => $v)
@@ -963,7 +963,7 @@ class TableAdmin
 			}
 			elseif (strlen($active_filter['value']) > 0)
 			{
-				foreach ($data as $k => $v) 
+				foreach ($data as $k => $v)
 				{
 					if (strpos(strtolower($v[$active_filter['name']]), strtolower($active_filter['value'])) === false) unset ($data[$k]);
 				}
@@ -971,7 +971,7 @@ class TableAdmin
 			if (count($filter_array) > 0) $this->_filter_data($data, $filter_array);
 		}
 	}
-	
+
 	/**
 	 * build_filters builds the WHERE clause of a query string based upon the class array filters
 	 *
@@ -989,7 +989,7 @@ class TableAdmin
 			$ret = ' WHERE';
 			foreach ($filters as $k=>$v)
 			{
-				if (!empty($v)) $ret .= ' '. $k . ' LIKE ' . $v . ',';		
+				if (!empty($v)) $ret .= ' '. $k . ' LIKE ' . $v . ',';
 			}
 			$ret = substr($ret, 0, -1); //trim trailing comma
 		}
@@ -1017,7 +1017,7 @@ class TableAdmin
 			$first = '';
 		}
 		foreach ($row as $k => $v)
-		{	
+		{
 			$type = (!empty($this->_display_values[$k]['type'])) ? $this->_display_values[$k]['type'] : 'text';
 			$cur_value = (!empty($this->filters[$k])) ? htmlspecialchars($this->filters[$k]['value'],ENT_QUOTES,'UTF-8') : '';
 			$ret .= '<td'.$first.'>';
@@ -1057,10 +1057,10 @@ class TableAdmin
 	/**
 	 * Generate an HTML table row of with a sum for each column in $data_array
 	 * that contains only numeric values
-	 * 
-	 * The table row puts sums in the same respective table cell as you would 
+	 *
+	 * The table row puts sums in the same respective table cell as you would
 	 * see in the browser
-	 * 
+	 *
 	 * @param array $data_array
 	 * @return string html table row
 	 */
@@ -1148,12 +1148,12 @@ class TableAdmin
 		$ret .= '</tr>';
 		return $ret;
 	}
-	
+
 	function field_is_sortable($k)
 	{
 		return (!isset($this->fields_that_allow_sorting)) ? true : in_array($k, $this->fields_that_allow_sorting);
 	}
-	
+
 	/**
 	 * Generates HTML for a data row
 	 * @param array $header_row can be any row from the data since the keys are always the same
@@ -1163,7 +1163,7 @@ class TableAdmin
 	function gen_data_row($data_row, $class)
 	{
 		$row_id = (isset($data_row[$this->primary_key])) ? $data_row[$this->primary_key] : false;
-		if (isset($this->fields_to_show)) 
+		if (isset($this->fields_to_show))
 		{
 			$this->limit_columns($data_row);
 		}
@@ -1181,7 +1181,7 @@ class TableAdmin
 		}
 		foreach ($data_row as $k=>$v)
 		{
-			$v = $this->should_convert_field($k) ? htmlspecialchars($v,ENT_QUOTES,'UTF-8') : $v;	
+			$v = $this->should_convert_field($k) ? htmlspecialchars($v,ENT_QUOTES,'UTF-8') : $v;
 			$v = (strlen($v) > 0) ? $v : '<br />';
 
 			// if it's a file, let's make it downloadable
@@ -1201,7 +1201,7 @@ class TableAdmin
 		$ret .= '</tr>';
 		return $ret;
 	}
-	
+
 	function should_convert_field($k)
 	{
 		if (isset($this->_fields_to_entity_convert[$k])) return $this->_fields_to_entity_convert[$k];
@@ -1219,7 +1219,7 @@ class TableAdmin
 		}
 		return $this->_fields_to_entity_convert[$k];
 	}
-	
+
 	/**
 	 * limit_columns accepts a row by reference, and removes fields that are set to not display
 	 * @param array row to consider
@@ -1236,7 +1236,7 @@ class TableAdmin
 		}
 		foreach ($this->_fields_to_unset[$dbc][$tn] as $z) { unset($row[$z]); }
 	}
-	
+
 	/**
 	 * limit_columns accepts a row by reference, and removes fields that are set to not display
 	 * @param array row to consider
@@ -1251,7 +1251,7 @@ class TableAdmin
 		}
 		foreach ($this->_fields_to_unset as $z) { unset($row[$z]); }
 	}
-	
+
 	/**
 	 * Returns array with key / value pairs indicating label and link to actions
 	 *
@@ -1266,7 +1266,7 @@ class TableAdmin
 	function get_row_actions(&$data_row, $row_id)
 	{
 		$row_actions = array();
-		
+
 		// view
 		if ($this->allow_view)
 		{
@@ -1274,7 +1274,7 @@ class TableAdmin
 			$this->parse_filters_for_url($link_params1);
 			$row_actions['View'] = carl_make_link($link_params1);
 		}
-		
+
 		// edit
 		if ($this->allow_edit)
 		{
@@ -1282,7 +1282,7 @@ class TableAdmin
 			$this->parse_filters_for_url($link_params2);
 			$row_actions['Edit'] = carl_make_link($link_params2);
 		}
-		
+
 		// delete
 		if ($this->allow_row_delete)
 		{
@@ -1292,7 +1292,7 @@ class TableAdmin
 		}
 		return $row_actions;
 	}
-	
+
 	/**
 	 * Iterate through row actions array and return a nice chunk of html
 	 *
@@ -1324,7 +1324,7 @@ class TableAdmin
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Generates HTML to represent the stored data which corresponds to a thor form
 	 * @param array $data_array
@@ -1363,7 +1363,7 @@ class TableAdmin
 		$links_batchdownload['table_action'] = 'batch_download';
 		if ($this->allow_delete) $menu_links['Delete Stored Data'] = carl_make_link($links_delete);
 		if ($this->allow_new) $menu_links['Create New Row'] = carl_make_link($links_new);
-		
+
 		// column sums is a toggle
 		// change link name based on current state
 		$link_sum_text = (!$this->show_column_summations ? "Show" : "Hide" ) . " Column Sums";
@@ -1397,14 +1397,14 @@ class TableAdmin
 		$links_base = array('table_sort_field' => $this->sort_field, 'table_sort_order' => $this->sort_order, 'table_filters_clear' => '', 'table_action' => '', 'table_row_action' => '', 'table_action_id' => '', 'table_export_format' => '');
 		return $links_base;
 	}
-	
+
 	function get_menu_links_base_with_filters()
 	{
 		$links = $this->gen_menu_links_base();
 		$this->parse_filters_for_url($links);
 		return $links;
 	}
-	
+
 	function gen_menu($link_array)
 	{
 		foreach ($link_array as $k=>$v)
@@ -1413,14 +1413,14 @@ class TableAdmin
 			{
 				$links[] = '<a href="'.$v.'">'.$k.'</a>';
 			}
-			else 
+			else
 			{
 				$links[] = '<strong>'.$k.'</strong>';
 			}
 		}
 		return '<p><strong>Options</strong>: ' . implode(' | ', $links) . '</p>';
 	}
-	
+
 	/**
 	 * Creates an excel compatible csv file and outputs it as a user download. This function will
 	 * not work properly unless output buffering is active. It cleans the output buffer before
@@ -1443,19 +1443,40 @@ class TableAdmin
 			}
 			array_unshift($table_data, $head_row);
 		}
+
 		foreach ($table_data as $data_row)
 		{
+			$row_id = (isset($data_row[$this->primary_key])) ? $data_row[$this->primary_key] : false;
 			if (isset($this->fields_to_export)) $this->limit_export_columns($data_row);
 			$line = '';
 			$separator = '';
 			foreach ($data_row as $k => $v)
 			{
-				$pos = strpos($v, $delim);
-       		 	$v = str_replace('"', '""', $v);
-			$v = str_replace("\r\n", "\n", $v); // best linefeed handling I can come up with though mac and windows
-							    // excel behave a bit differently
-       		 	$line .= $separator. '"' . trim($v) . '"';
-        		if ($separator == '') $separator = $delim;
+				$pos = strpos( $v, $delim );
+				$v = str_replace( '"', '""', $v );
+
+				// if it's a file, let's try to make it downloadable
+				$type = ( ! empty( $this->_display_values[ $k ]['type'] ) ) ? $this->_display_values[ $k ]['type'] : 'text';
+				if ( $type == "file" && $row_id != 'Id' ) {
+					$link_params = array(
+						'table'    => $this->get_table_name(),
+						'row'      => $row_id,
+						'col'      => $k,
+						'filename' => $v,
+
+						'site_id' => ( isset( $_GET['site_id'] ) ) ? $_GET['site_id'] : $this->parent->site_id,
+					);
+					$v           = '=HYPERLINK(""' . carl_make_link( $link_params, $this->file_download_base_url, '', true, false ) . '"", ""' . $v . '"")';
+					$v           = str_replace( 'amp;', '', $v ); // try to save a few more characters - limited to 255 for the cel
+//					$v           = str_replace( 'wsgdev03.its', 'apps', $v ); // convert to APPS from dev server for testing
+				}
+
+				$v = str_replace( "\r\n", "\n", $v ); // best linefeed handling I can come up with though mac and windows
+				// excel behave a bit differently
+				$line .= $separator . '"' . trim( $v ) . '"';
+				if ( $separator == '' ) {
+					$separator = $delim;
+				}
 			}
 			$line .= "\n";
 			$ret .= $line;
@@ -1472,13 +1493,13 @@ class TableAdmin
 			// IE will barf without these
 			header("Pragma: private");
 			header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-			
+
 			header("Expires: 0");
-			echo $ret;			
+			echo $ret;
 			exit;
 		}
 	}
-	
+
 	function run()
 	{
 		if (isset($this->table_action))
@@ -1494,7 +1515,7 @@ class TableAdmin
 			$this->run_default();
 		}
 	}
-	
+
 	function run_default()
 	{
 		$data =& $this->get_data();
@@ -1510,7 +1531,7 @@ class TableAdmin
 			echo $table_viewer_html;
 		}
 	}
-	
+
 	function run_action()
 	{
 		if ($this->table_action == 'delete_all')
@@ -1526,7 +1547,7 @@ class TableAdmin
 			$this->run_export();
 		}
 	}
-	
+
 	function run_row_action()
 	{
 		if ($this->table_row_action == 'view' || $this->table_row_action == 'edit' || $this->table_row_action == 'delete' || $this->table_row_action == 'new' || $this->table_row_action == "download_file")
@@ -1535,7 +1556,7 @@ class TableAdmin
 			$form->run();
 		}
 	}
-	
+
 	function run_export()
 	{
 		if ($this->export_format == 'csv')
@@ -1558,7 +1579,7 @@ class TableAdmin
 		$links_base = $this->gen_menu_links_base();
 		$links_export = $links_view = $links_base;
 		$this->parse_filters_for_url($links_view);
-		
+
 		//$links_export['table_export_format'] = 'csv';
 		$links_export['table_action'] = 'export';
 		$menu_links['View Stored Data'] = carl_make_link($links_view);
@@ -1596,25 +1617,25 @@ class TableAdmin
 			}
 		}
 	}
-	
+
 	function build_columns()
 	{
 		return '*';
 	}
-	
+
 	// placeholder function for eventual ability to add columns
 	function add_column($column_name)
 	{
 	}
-	
+
 	// placeholder function for eventual ability to remove columns
 	function remove_column($column_name)
 	{
 	}
-	
+
 	/**
 	 * Augment an array of key / value pairs intended for $_GET / $_POST to have a set of table filters that will be understood by the class
-	 *  
+	 *
 	 * @param array url_array array to add table filters to
 	 * @param boolean htmlspecialchars default false - should filter values run through htmlspecialchars ... should be false if the resulting array is going through carl_make_link
 	 */
@@ -1626,7 +1647,7 @@ class TableAdmin
 			$url_array['table_filters'][$k] = ($htmlspecialchars) ? htmlspecialchars($v['value'],ENT_QUOTES,'UTF-8') : $v['value'];
 		}
 	}
-	
+
 	/**
 	 * _check_table_exists does just what it says - checks if the table parameter is actually a table in the database
 	 *
@@ -1649,7 +1670,7 @@ class TableAdmin
   		}
   		return $table_exists[$dbconn][$table];
 	}
-	
+
 	/**
 	 * Not implememented yet
 	 * @todo complete this functionality
@@ -1666,9 +1687,9 @@ class TableAdmin
 		$res = mysql_query( $q ) or trigger_error( 'Error: mysql error in table: '.mysql_error() );
 		connectDB($this->get_orig_db_conn()); // reconnect to default DB
 	}
-	
+
 	/**
-	 * Returns an array that describes the label and plasmature type, indexed by column name 
+	 * Returns an array that describes the label and plasmature type, indexed by column name
 	 */
 	function _build_display_values()
 	{
@@ -1676,7 +1697,7 @@ class TableAdmin
   		connectDB($this->get_db_conn());
   		$res = mysql_query($q);
   		connectDB($this->get_orig_db_conn()); // reconnect to default DB
-  		
+
   		$this->_display_values = array();
   		while($field = mysql_fetch_assoc($res))
   		{
@@ -1684,8 +1705,8 @@ class TableAdmin
   			$this->set_field_display_name($field['Field'], $field['Field']);
   		}
 	}
-	
-	/** 
+
+	/**
 	 * Called by _build_display_values, which passes the field name and db column type to be
 	 * used to set the data type for this column. You can override this if you need custom
 	 * type handling for a particular field.
@@ -1704,12 +1725,12 @@ class TableAdmin
 		}
 	}
 
-	/** 
+	/**
 	 * Called by _build_display_values, which passes the field name that is
 	 * used to set the display name for this column. You can override this if you need custom
 	 * name handling for a particular field.
 	 *
-	 * If an admin form is present and defines the get_field_display_name method, 
+	 * If an admin form is present and defines the get_field_display_name method,
 	 * it will be used to build column labels.
 	 */
 	function set_field_display_name($field, $field_name)
@@ -1721,8 +1742,8 @@ class TableAdmin
 		else $this->_display_values[$field]['label'] = $field_name;
 	}
 
-	
-	/** 
+
+	/**
 	 * Returns an array that describes the label and gives a plasmature type of text
 	 */
 	function _build_display_values_from_array($data)
@@ -1748,7 +1769,7 @@ class TableAdmin
 		return $res;
 	}
 }
-	
+
 	/**
 	 * Provides a basic default admin interface - this will often be extended by classes that want to provide a custom admin but this should
 	 * suffice for basic view / edit / create privileges on a discoDB table
@@ -1756,64 +1777,64 @@ class TableAdmin
 	 * @author Nathan White
 	 */
 	class DiscoDefaultAdmin extends DiscoDB
-	{		
+	{
 		/**
 		 * Defines which actions are allowable in format 'action' => true|false|function_name_that_returns_boolean_result
 		 *
 		 * @var array
 		 */
 		var $allowable_actions;
-		
+
 		/**
 		 * Which fields to show as column headers
 		 *
 		 * @var array
 		 */
 		var $fields_to_show;
-		
+
 		/**
 		 * Display names for column headers for database fields
 		 *
 		 * @var array
 		 */
-		var $field_display_names;		
-		
+		var $field_display_names;
+
 		/**
 		 * Which fields to include in export
 		 *
 		 * @var array
 		 */
 		var $fields_to_export;
-		
+
 		/**
 		 * Default sort field
 		 *
 		 * @var string
 		 */
 		var $default_sort_field;
-		
+
 		/**
 		 * Default sort order
 		 *
 		 * @var string asc or desc
 		 */
 		var $default_sort_order = 'desc';
-		
+
 		/**
 		 * If set to true, each row of data will be passed to the forms transform_data function
 		 */
 		var $form_transforms_data = false;
-		
+
 		/**
-		 * Defines which actions are handled by the class 
+		 * Defines which actions are handled by the class
 		 */
 		var $custom_handled_actions = array(); // NOT CURRENTLY BEING USED
-		
+
 		/**
 		 * Contains the current table action - if any
 		 */
 		var $table_action;
-		
+
 		/**
 		 * Returns true if the user has access to the functions allowed by the admin form
 		 */
@@ -1821,7 +1842,7 @@ class TableAdmin
 		{
 			return false;
 		}
-		
+
 		// setup form is given a reference to the table_admin at instantiation and should be whatever necessary
 		function setup_form(&$table_admin)
 		{
@@ -1829,7 +1850,7 @@ class TableAdmin
 			$this->set_action($table_admin->get_table_row_action());
 			$this->set_id_column_name($table_admin->get_primary_key());
 		}
-		
+
 		/**
 		 * Transforms the data passed into the function - set data_row to false to eliminate it from the presented set.
 		 */
@@ -1844,31 +1865,31 @@ class TableAdmin
 		{
 			return $this;
 		}
-		
+
 		function pre_show_form()
 		{
 			if ($this->get_action() == 'new') $this->pre_show_form_new();
 			elseif ($this->get_action() == 'view') $this->pre_show_form_view();
 			elseif ($this->get_action() == 'edit') $this->pre_show_form_edit();
 			elseif ($this->get_action() == 'delete') $this->pre_show_form_delete();
-		}		
+		}
 		function pre_show_form_default() {}
 		function pre_show_form_new() { $this->pre_show_form_default(); }
 		function pre_show_form_view() { $this->pre_show_form_default(); }
 		function pre_show_form_edit() { $this->pre_show_form_default(); }
 		function pre_show_form_delete() { $this->pre_show_form_default(); }
-	
+
 		function on_every_time()
 		{
 			if ($this->get_action() == 'new') $this->on_every_time_new();
 			elseif ($this->get_action() == 'view') $this->on_every_time_view();
 			elseif ($this->get_action() == 'edit') $this->on_every_time_edit();
 			elseif ($this->get_action() == 'delete') $this->on_every_time_delete();
-		}		
+		}
 		function on_every_time_default() {}
 		function on_every_time_new() { $this->on_every_time_default(); }
-		function on_every_time_view() 
-		{ 
+		function on_every_time_view()
+		{
 			$this->actions = array();
 			$element_names = $this->get_element_names();
 			foreach ($element_names as $element)
@@ -1876,9 +1897,9 @@ class TableAdmin
 				$this->change_element_type($element, 'solidtext');
 			}
 		}
-		
+
 		function on_every_time_edit() { $this->on_every_time_default(); }
-		
+
 		function on_every_time_delete()
 		{
 			$this->actions = array('delete' => 'Confirm Delete', 'cancel' => 'Cancel');
@@ -1889,7 +1910,7 @@ class TableAdmin
 			}
 			$this->add_element('delete_confirm_text', 'comment', array('text'=>'<h3>Are you sure you want to delete the record?</h3>'));
 		}
-		
+
 		function run_error_checks()
 		{
 			if ($this->get_action() == 'new') $this->run_error_checks_new();
@@ -1897,20 +1918,20 @@ class TableAdmin
 			elseif ($this->get_action() == 'edit') $this->run_error_checks_edit();
 			elseif ($this->get_action() == 'delete') $this->run_error_checks_delete();
 		}
-		
+
 		function run_error_checks_default() {}
 		function run_error_checks_new() { $this->run_error_checks_default(); }
 		function run_error_checks_view() { $this->run_error_checks_default(); }
 		function run_error_checks_edit() { $this->run_error_checks_default(); }
 		function run_error_checks_delete() { $this->run_error_checks_default(); }
-		
+
 		function process()
 		{
 			if ($this->get_action() == 'new') $this->process_new();
 			elseif ($this->get_action() == 'view') $this->process_view();
 			elseif ($this->get_action() == 'edit') $this->process_edit();
 			elseif ($this->get_action() == 'delete') $this->process_delete();
-		}		
+		}
 		function process_default() { parent::process(); }
 		function process_new() { $this->process_default(); }
 		function process_view() { $this->process_default(); }
@@ -1925,20 +1946,20 @@ class TableAdmin
 				$result = db_query($qry, 'The delete query failed');
 			}
 		}
-		
+
 		function where_to()
 		{
 			if ($this->get_action() == 'new') return $this->where_to_new();
 			elseif ($this->get_action() == 'view') return $this->where_to_view();
 			elseif ($this->get_action() == 'edit') return $this->where_to_edit();
 			elseif ($this->get_action() == 'delete') return $this->where_to_delete();
-		}		
+		}
 		function where_to_default() { return carl_make_redirect(array('table_row_action'=>'', 'table_action_id'=>'')); }
 		function where_to_new() { return $this->where_to_default(); }
 		function where_to_view() { return $this->where_to_default(); }
 		function where_to_edit() { return $this->where_to_default(); }
 		function where_to_delete() { return $this->where_to_default(); }
-		
+
 		function is_allowable_action($action_string)
 		{
 			if (isset($this->allowable_actions[$action_string]))
@@ -1955,22 +1976,22 @@ class TableAdmin
 			}
 			return NULL;
 		}
-		
+
 		function does_form_transform_data()
 		{
 			return $this->form_transforms_data;
 		}
-		
+
 		function set_action($action)
 		{
 			$this->table_action = $action;
 		}
-		
+
 		function get_action()
 		{
 			return $this->table_action;
 		}
-		
+
 		function get_field_display_name($field)
 		{
 			if (isset($this->field_display_names[$field]))
@@ -1987,7 +2008,7 @@ class TableAdmin
 				return $this->fields_to_show;
 			}
 		}
-		
+
 		function get_fields_to_export()
 		{
 			if (isset($this->fields_to_export))
@@ -1995,18 +2016,18 @@ class TableAdmin
 				return $this->fields_to_export;
 			}
 		}
-		
+
 		function get_default_sort_order()
 		{
 			return $this->default_sort_order;
 		}
-		
+
 		function get_default_sort_field()
 		{
 			return $this->default_sort_field;
 		}
 	}
-	
+
 	/**
 	 * Provides an interface for the delete all option in table_admin which allows export before deletion
 	 *
@@ -2014,7 +2035,7 @@ class TableAdmin
 	 */
 	class DiscoAdminDelete extends Disco
 	{
-		var $num_rows;              
+		var $num_rows;
 		var $elements = array('disco_confirm_private' => 'hidden');
 		var $actions = array( 'disco_confirm_delete_forever' => 'Delete Forever',
 							  'disco_confirm_cancel'         => 'Cancel' );
@@ -2022,12 +2043,12 @@ class TableAdmin
 		var $csv_export_string;
 		var $batch_file_download_string = "";
 		var $form_output;
-		
+
 		function set_num_rows($num_rows)
 		{
 			$this->num_rows = $num_rows;
 		}
-		
+
 		function pre_show_form()
 		{
 			if ($this->num_rows > 0)
@@ -2055,22 +2076,22 @@ class TableAdmin
 		{
 			$this->batch_file_download_string = '<ul><li><a href="'.$link.'">Batch Download Attachments</a></li></ul>';
 		}
-		
+
 		function provide_link_to_csv_export($link)
 		{
 			$this->csv_export_string = '<ul><li><a href="'.$link.'">Download all '.$this->num_rows.' rows of data as .csv file</a></li></ul>';
 		}
-		
+
 		function get_status()
 		{
 			return $this->status;
 		}
-		
+
 		function get_form_output()
 		{
 			return $this->form_output;
 		}
-		
+
 		function generate()
 		{
 			ob_start();
@@ -2078,7 +2099,7 @@ class TableAdmin
 			$this->form_output = ob_get_contents();
 			ob_end_clean();
 		}
-		
+
 		function process()
 		{
 			$this->show_form = false;
@@ -2094,7 +2115,7 @@ class TableAdmin
 	}
 
 	/**
-	 * 
+	 *
 	 *
 	 * @author Tom Feiler
 	 */
@@ -2103,7 +2124,7 @@ class TableAdmin
 		/**
 		 * @var string target for file downloads
 		 */
-		var $file_download_base_url = '/thor/getFormFile.php';	 
+		var $file_download_base_url = '/thor/getFormFile.php';
 		var $actions = array( 'disco_confirm_export' => 'Generate Zip...');
 		function __construct($tableName, $fileColumns, $data, $url = null)
 		{
@@ -2140,12 +2161,12 @@ class TableAdmin
 			echo '<h2>Batch Download Attachments</h2>';
 			echo '<p>This will generate a zip with all attachments for the rows in the range:</p>';
 		}
-		
+
 		function get_form_output()
 		{
 			return $this->form_output;
 		}
-		
+
 		function generate()
 		{
 			$dataRange = Array();
@@ -2162,7 +2183,7 @@ class TableAdmin
 			$this->form_output = ob_get_contents();
 			ob_end_clean();
 		}
-		
+
 		function process()
 		{
 			if ($this->get_chosen_action() == "disco_confirm_export") {
