@@ -1840,6 +1840,9 @@ class MinisiteTemplate
 				$es2->add_relation( 'site_state = "Live"' );
 			}
 			$non_reason_parent_sites = $es2->run_one();
+			foreach ( $non_reason_parent_sites as $nrps ) {
+				$nrps->set_value( 'base_url', $nrps->get_value( 'url' ) );
+			}
 
 			$all_parent_sites = array_merge( $reason_parent_sites, $non_reason_parent_sites );
 			usort( $all_parent_sites, function ( $a, $b ) {
