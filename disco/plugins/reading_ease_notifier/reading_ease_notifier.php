@@ -99,7 +99,7 @@
 					$label = REASON_READING_EASE_LABEL;
 				}
 				
-				$formatted_reading_ease_notification .= '<span class="readingEaseLabel">'.REASON_READING_EASE_LABEL.'</span>: <span class="currentReadingEase">' . $score . '</span>';
+				$formatted_reading_ease_notification .= '<span class="readingEaseLabel">'.$label.'</span>: <span class="currentReadingEase">' . $score . '</span>';
 				
 				$formatted_reading_ease_notification .= ' (<span class="currentReadingEaseLabel">' . self::get_ease_label($score) . '</span>)';
 				
