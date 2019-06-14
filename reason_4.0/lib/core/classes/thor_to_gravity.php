@@ -195,6 +195,12 @@ class reasonFormToGravityJson
 				'enableAttachments' => false,
 			));
 		}
+		$errors = prettify_email_addresses($form->get_value('email_of_recipient'), 'mixed', 'errors');
+		$error_count = count($errors);
+		if($error_count)
+		{
+			$this->add_message('Recipient email(s) included ' . $error_count . ' username(s) that could not be resolved to an email address. These usernames have been replaced with the webmaster email address. Please resolve this in Gravity Forms.');
+		}
 		return $data;
 	}
 	protected function add_confirmations($data, $form)
