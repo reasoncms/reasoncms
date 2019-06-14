@@ -5,18 +5,11 @@
 
 include_once('paths.php');
 require_once( INCLUDE_PATH . 'xml/xmlparser.php' );
+include_once( CARL_UTIL_INC . 'basic/email_funcs.php' );
 
 class reasonFormToGravityJson
 {
-	protected $messages = array(
-		'Not yet implemented: notification emails',
-		'Not yet implemented: confirmation message',
-		'Not yet implemented: access restrictions',
-		'Not yet implemented: scheduling',
-		'Not yet implemented: entry limiting',
-		'Not yet implemented: prepopulation from ldap',
-		'Not yet implemented: payment forms or other custom thor forms',
-	);
+	protected $messages = array();
 	function get_json($form)
 	{
 		$json_data = $this->get_initial_form_data();
@@ -32,6 +25,12 @@ class reasonFormToGravityJson
 				$json_data['fields'] = $this->get_field_data_from_parsed_xml($xml_object, $form);
 			}
 		}
+		$json_data = $this->add_notifications($json_data, $form);
+		$json_data = $this->add_confirmations($json_data, $form);
+		$json_data = $this->add_access_restrictions($json_data, $form);
+		$json_data = $this->add_scheduling($json_data, $form);
+		$json_data = $this->add_submission_limit($json_data, $form);
+		$json_data = $this->modify_custom_form($json_data, $form);
 		return json_encode(array(
 			0 => $json_data,
 			'version' => '2.4.5.10',
@@ -169,6 +168,82 @@ class reasonFormToGravityJson
 			'fields' => '',
 			'displayOnly' => '',
 		);
+	}
+	protected function add_notifications($data, $form)
+	{
+		if($form->get_value('email_of_recipient'))
+		{
+			$data['notifications'] = array(array(
+				'isActive' => true,
+				'id' => '5d039ce4e7f09', // not sure what this is about
+				'name' => 'Notification',
+					'service' => 'wordpress',
+				'event' => 'form_submission',
+				'to' => prettify_email_addresses($form->get_value('email_of_recipient'), 'mixed', 'string'),
+				'toType' => 'email',
+				'cc' => '',
+				'bcc' => '',
+				'subject' => 'New submission from {form_title}',
+				'message' => '{all_fields}',
+				'from' => '', // Does this work to leave empty? Is there a reasonable fallback in WP?
+				'fromName' => '',
+				'replyTo' => '',
+				'routing' => null,
+				'conditionalLogic' => null,
+				'disableAutoformat' => false,
+				'enableAttachments' => false,
+			));
+		}
+		return $data;
+	}
+	protected function add_confirmations($data, $form)
+	{
+		$data['confirmations'] = array(array(
+			'id' => '5d039ce4ea46d',
+			'name' => 'Default Confirmation',
+			'isDefault' => true,
+			'type' => 'message',
+			'message' => $form->get_value('thank_you_message'),
+			'url' => '',
+			'pageId' => 0,
+			'queryString' => '',
+			'disableAutoformat' => false,
+			'conditionalLogic' => array(),
+		));
+		return $data;
+	}
+	protected function add_access_restrictions($data, $form)
+	{
+		$groups = $form->get_left_relationship('form_to_authorized_viewing_group');
+		if(count($groups) > 0)
+		{
+			$this->add_message('Did not add access restrictions applied to this form. Code not yet written.');
+		}
+		return $data;
+	}
+	protected function add_scheduling($data, $form)
+	{
+		if($form->get_value('open_date') && $form->get_value('close_date') && $form->get_value('open_date') != '0000-00-00 00:00:00' && $form->get_value('close_date') != '0000-00-00 00:00:00')
+		{
+			$this->add_message('Did not add schedule restrictions applied to this form. Code not yet written.');
+		}
+		return $data;
+	}
+	protected function add_submission_limit($data, $form)
+	{
+		if($form->get_value('submission_limit'))
+		{
+			$this->add_message('Did not add submission limit applied to this form. Code not yet written.');
+		}
+		return $data;
+	}
+	protected function modify_custom_form($data, $form)
+	{
+		if($form->get_value('thor_view'))
+		{
+			$this->add_message('This form has custom behavior. Code not yet written to automatically transfer custom behavior to Gravity Forms.');
+		}
+		return $data;
 	}
 	protected function get_label_for_element($element)
 	{
