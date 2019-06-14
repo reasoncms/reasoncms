@@ -339,6 +339,52 @@ class reasonFormToGravityJson
 		$data = $this->modify_values_for_prefill($data, $element, $form);
 		return $data;
 	}
+	protected function get_json_data_for_date($element, $form, $gravity_id)
+	{
+		$data = $this->get_initial_field_data();
+		$data['id'] = $gravity_id;
+		$data['type'] = 'date'; 
+		$data['dateType'] = 'datepicker';
+		$data['calendarIconType'] = 'calendar';
+		$data['label'] = $this->get_label_for_element($element);
+		$data['isRequired'] = (!empty($element->tagAttrs['required'])) ? true : false;
+		$data['defaultValue'] = (!empty($element->tagAttrs['value'])) ? $element->tagAttrs['value'] : '';
+		$data = $this->modify_values_for_prefill($data, $element, $form);
+		if(!empty($element->tagAttrs['date_field_time_enabled']))
+		{
+			$this->add_message('Gravity forms does not support a shared date/time field. "'. $data['label'] . '" added as a date field without time component.');
+		}
+		return $data;
+	}
+	protected function get_json_data_for_time($element, $form, $gravity_id)
+	{
+		$data = $this->get_initial_field_data();
+		$data['id'] = $gravity_id;
+		$data['type'] = 'time'; 
+		$data['timeFormat'] = '12';
+		$data['label'] = $this->get_label_for_element($element);
+		$data['isRequired'] = (!empty($element->tagAttrs['required'])) ? true : false;
+		$data['defaultValue'] = (!empty($element->tagAttrs['value'])) ? $element->tagAttrs['value'] : '';
+		$data['inputs'] = array(
+			array(
+				'id' => $gravity_id.'.1',
+				'label' => 'HH',
+				'name' => '',
+			),
+			array(
+				'id' => $gravity_id.'.2',
+				'label' => 'MM',
+				'name' => '',
+			),
+			array(
+				'id' => $gravity_id.'.3',
+				'label' => 'AM/PM',
+				'name' => '',
+			),
+		);
+		$data = $this->modify_values_for_prefill($data, $element, $form);
+		return $data;
+	}
 	protected function does_form_prefill($form)
 	{
 		switch($form->get_value('magic_string_autofill'))
@@ -400,17 +446,27 @@ class reasonFormToGravityJson
 	}
 	protected function modify_json_data_for_prefill_your_email($data, $element, $form)
 	{
-		$this->add_message('Unable to set prefill for "' . $this->get_label_for_element($element) . '". Code not yet written.');
+		$data['type'] = 'email';
+		$data['allowsPrepopulate'] = true;
+		$data['inputName'] = 'email';
 		return $data;
 	}
 	protected function modify_json_data_for_prefill_your_home_phone($data, $element, $form)
 	{
-		$this->add_message('Unable to set prefill for "' . $this->get_label_for_element($element) . '". Code not yet written.');
+		$data['type'] = 'phone';
+		$data['allowsPrepopulate'] = true;
+		$data['inputName'] = 'phone';
+		$data['phoneFormat'] = 'international';
+		$this->add_message('"Your Home Phone" given generic "phone" prefill due to limitations in Gravity forms.');
 		return $data;
 	}
 	protected function modify_json_data_for_prefill_your_work_phone($data, $element, $form)
 	{
-		$this->add_message('Unable to set prefill for "' . $this->get_label_for_element($element) . '". Code not yet written.');
+		$data['type'] = 'phone';
+		$data['allowsPrepopulate'] = true;
+		$data['inputName'] = 'phone';
+		$data['phoneFormat'] = 'international';
+		$this->add_message('"Your Work Phone" given generic "phone" prefill due to limitations in Gravity forms.');
 		return $data;
 	}
 	protected function modify_json_data_for_prefill_your_title($data, $element, $form)
