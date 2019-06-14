@@ -6,6 +6,7 @@
 include_once('paths.php');
 require_once( INCLUDE_PATH . 'xml/xmlparser.php' );
 include_once( CARL_UTIL_INC . 'basic/email_funcs.php' );
+reason_include_once("function_libraries/file_utils.php");
 
 class reasonFormToGravityJson
 {
@@ -217,23 +218,37 @@ class reasonFormToGravityJson
 		$groups = $form->get_left_relationship('form_to_authorized_viewing_group');
 		if(count($groups) > 0)
 		{
-			$this->add_message('Did not add access restrictions applied to this form. Code not yet written.');
+			$data['requireLogin'] = true;
+			$this->add_message('Set form to require login. Anyone who can log in will be able to access this form unless more specific access control is manually applied in WordPress on the page the form is placed on.');
 		}
 		return $data;
 	}
 	protected function add_scheduling($data, $form)
 	{
-		if($form->get_value('open_date') && $form->get_value('close_date') && $form->get_value('open_date') != '0000-00-00 00:00:00' && $form->get_value('close_date') != '0000-00-00 00:00:00')
+		if($form->get_value('open_date') && $form->get_value('open_date') != '0000-00-00 00:00:00')
 		{
-			$this->add_message('Did not add schedule restrictions applied to this form. Code not yet written.');
+			$data['scheduleForm'] = true;
+			$data['scheduleStart'] = prettify_mysql_datetime($form->get_value('open_date'), 'm/d/Y');
+			$data['scheduleStartHour'] = (integer) prettify_mysql_datetime($form->get_value('open_date'), 'g');
+			$data['scheduleStartMinute'] = (integer) prettify_mysql_datetime($form->get_value('open_date'), 'i');
+			$data['scheduleStartAmpm'] = prettify_mysql_datetime($form->get_value('open_date'), 'a');
+		}
+		if($form->get_value('close_date') && $form->get_value('close_date') != '0000-00-00 00:00:00')
+		{
+			$data['scheduleForm'] = true;
+			$data['scheduleEnd'] = prettify_mysql_datetime($form->get_value('close_date'), 'm/d/Y');
+			$data['scheduleEndHour'] = (integer) prettify_mysql_datetime($form->get_value('close_date'), 'g');
+			$data['scheduleEndMinute'] = (integer) prettify_mysql_datetime($form->get_value('close_date'), 'i');
+			$data['scheduleEndAmpm'] = prettify_mysql_datetime($form->get_value('close_date'), 'a');
 		}
 		return $data;
 	}
 	protected function add_submission_limit($data, $form)
 	{
-		if($form->get_value('submission_limit'))
+		if($form->get_value('submission_limit') > 0)
 		{
-			$this->add_message('Did not add submission limit applied to this form. Code not yet written.');
+			$data['limitEntries'] = true;
+			$data['limitEntriesCount'] = (integer) $form->get_value('submission_limit');
 		}
 		return $data;
 	}
@@ -387,8 +402,27 @@ class reasonFormToGravityJson
 			$this->add_message('Unable to restrict mime types on "' . $data['label'] . '". This restriction is not supported in Gravity forms.');
 		}
 		if (!empty($element->tagAttrs['restrict_maxsize'])) {
-			// @todo figure out the format of this. "1MB" seems to resolve to "1" but need to figure out more
-			$this->add_message('Unable to restrict maximum size on "' . $data['label'] . '". Export not yet supported.');
+			if(strpos('.', $element->tagAttrs['restrict_maxsize']) !== false)
+			{
+				$this->add_message('Unable to apply fractional file size restriction in Gravity Forms on "'.$data['label'].'"');
+			}
+			else
+			{
+				if(substr($element->tagAttrs['restrict_maxsize'], -2) != 'MB')
+				{
+					$this->add_message('Gravity Forms only supports file size restrictions in whole megabytes. Size restriction on "'.$data['label'].'" is not in megabytes. Rounded up to a whole megabyte value.');
+				}
+				$bytes = convertFormattedSizeToNumberOfBytes($element->tagAttrs['restrict_maxsize']);
+				if($bytes > 0)
+				{
+					$megabytes = ceil($bytes / 1048576);
+					$data['maxFileSize'] = $megabytes;
+				}
+				else
+				{
+					$this->add_message('Unable to apply file size restriction on "'.$data['label'].'"');
+				}
+			}
 		}
 		$data = $this->modify_values_for_prefill($data, $element, $form);
 		return $data;
