@@ -67,6 +67,11 @@ $entity_delegates_config_setting = array(
 			'entity_delegates/media_work.php',
 		),
 	),
+	'form' => array(
+		'append' => array(
+			'entity_delegates/form.php',
+		),
+	),
 );
 
 

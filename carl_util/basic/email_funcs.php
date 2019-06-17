@@ -18,12 +18,13 @@ require_once( CARL_UTIL_INC . 'basic/misc.php' );
  *
  * @param mixed $addresses can be any of the following: 1) a valid email address, 2) a username in the directory, 3) a comma-delimited combination of addresses and/or usernames, or 4) an array of addresses and/or usernames.
  * @param string $address_type can be 'mixed', 'email', or 'username'
- * @param string $return_type either 'string' or 'array'
+ * @param string $return_type 'string', 'array', 'errors'
  * @return mixed Comma separated email addresses or array of email addresses (when $return_type == 'array') 
  *
  **/
 function prettify_email_addresses($addresses, $address_type = 'mixed', $return_type = 'string')
 {
+	$errors = array();
 	if($address_type != 'mixed' && $address_type != 'email' && $address_type != 'username')
 	{
 		trigger_error('$address_type parameter ('.$address_type.') must be "mixed","email", or "username." Defaulting to "mixed".');
@@ -46,7 +47,10 @@ function prettify_email_addresses($addresses, $address_type = 'mixed', $return_t
 				{
 					if(empty($dir_value))
 					{
-						trigger_error('Username does not exist in directory service: '.$address.'. setting address to ' . WEBMASTER_EMAIL_ADDRESS . ' instead.');
+						$msg = 'Username does not exist in directory service: '.$address.'. setting address to ' . WEBMASTER_EMAIL_ADDRESS . ' instead.';
+						trigger_error($msg);
+						$errors[] = $msg;
+						
 						$address = WEBMASTER_EMAIL_ADDRESS;
 					}
 					else
@@ -64,7 +68,9 @@ function prettify_email_addresses($addresses, $address_type = 'mixed', $return_t
 			$num_results = preg_match( '/^([^<]+<)?([-.]|\w)+@([-.]|\w)+\.([-.]|\w)+>?$/i', $address );
 			if ($num_results <= 0)
 			{
-				trigger_error('The address ' . $address . ' is invalid - setting address to ' . WEBMASTER_EMAIL_ADDRESS . ' instead.');
+				$msg = 'The address ' . $address . ' is invalid - setting address to ' . WEBMASTER_EMAIL_ADDRESS . ' instead.';
+				trigger_error($msg);
+				$errors[] = $msg;
 				$pretty_address_array[] = WEBMASTER_EMAIL_ADDRESS;
 			}
 			else
@@ -76,6 +82,8 @@ function prettify_email_addresses($addresses, $address_type = 'mixed', $return_t
 	
 	if ($return_type == 'string') {
 		return implode(', ', $pretty_address_array);
+	} elseif($return_type == 'errors') {
+		return $errors;
 	} else {
 		return $pretty_address_array;
 	}
