@@ -31,6 +31,7 @@ class reasonFormToGravityJson
 		$json_data = $this->add_access_restrictions($json_data, $form);
 		$json_data = $this->add_scheduling($json_data, $form);
 		$json_data = $this->add_submission_limit($json_data, $form);
+		$json_data = $this->add_editable_rules($json_data, $form);
 		$json_data = $this->modify_custom_form($json_data, $form);
 		return json_encode(array(
 			0 => $json_data,
@@ -217,6 +218,10 @@ class reasonFormToGravityJson
 			'disableAutoformat' => false,
 			'conditionalLogic' => array(),
 		));
+		if($form->get_value('email_submitter'))
+		{
+			$this->add_message('This form is set up to email the submitter. Export code not yet written to transfer this automatically, so it will need to be manually configured in Gravity Forms.');
+		}
 		return $data;
 	}
 	protected function add_access_restrictions($data, $form)
@@ -225,7 +230,7 @@ class reasonFormToGravityJson
 		if(count($groups) > 0)
 		{
 			$data['requireLogin'] = true;
-			$this->add_message('Set form to require login. Anyone who can log in will be able to access this form unless more specific access control is manually applied in WordPress on the page the form is placed on.');
+			$this->add_message('This Reason form is set to limit access to a group. Note that the Gravity Forms import process only supports broad access control -- anyone who can log in will be able to access this form until more specific access control is manually applied in WordPress on the page the form is placed on.');
 		}
 		return $data;
 	}
@@ -262,7 +267,23 @@ class reasonFormToGravityJson
 	{
 		if($form->get_value('thor_view'))
 		{
-			$this->add_message('This form has custom behavior. Code not yet written to automatically transfer custom behavior to Gravity Forms.');
+			$this->add_message('This form has custom behavior. Export code not yet written to automatically transfer custom behavior to Gravity Forms.');
+		}
+		return $data;
+	}
+	protected function add_editable_rules($data, $form)
+	{
+		if($form->get_value('is_editable') == 'yes')
+		{
+			$this->add_message('This form allows submitters to come back and edit previously submitted entries. This export does not yet support automatically transferring that functionality to Gravity Forms, so it will need to be manually configured in WordPress.');
+			if($form->get_value('allow_multiple') == 'yes')
+			{
+				// stub for when we add support for this
+			}
+			if($form->get_value('email_link') == 'yes')
+			{
+				// stub for when we add support for this
+			}
 		}
 		return $data;
 	}

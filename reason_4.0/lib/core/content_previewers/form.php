@@ -19,7 +19,15 @@
 			
 			$data = $this->_entity->get_gravity_forms_json_and_messages();
 			$this->show_item_default( 'gravity_forms_json', '<textarea>'.htmlspecialchars($data['json']).'</textarea>' );
-			$this->show_item_default( 'gravity_forms_error_messages', implode( '<br />', $data['messages'] ) );
+			if(!empty($data['messages']))
+			{
+				$messages = '<ul><li>' . implode( '</li><li>', $data['messages'] ) . '</li></ul>';
+			}
+			else
+			{
+				$messages = 'No messages. Import should be clean!';
+			}
+			$this->show_item_default( 'gravity_forms_export_messages', $messages );
 		}
 
 		function show_item_thor_content( $field , $value )
