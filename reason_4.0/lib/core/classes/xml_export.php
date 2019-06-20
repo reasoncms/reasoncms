@@ -182,24 +182,11 @@ class ExportXMLWriter extends XMLWriter
 		}
 	}
 
-	public function formatAndFinish($site, $type)
+	public function finish($site, $type)
 	{
 		$this->endDocument();
 		$string = $this->outputMemory();
-
-		// Validate and format the output.
-		// Note: this seems to decode certain entities (like &quot; goes back to ")
-		// The impact of the decoding is unclear, as returned XML is still valid
-		// and HTML decoding a value produces valid html (AFAICT)
-		$dom = new DOMDocument('1.0', 'UTF-8');
-		$dom->preserveWhiteSpace = false;
-		$dom->formatOutput = true;
-
-		if ($dom->loadXML($string)) {
-			return $dom->saveXML();
-		} else {
-			throw new Exception("Could not format XML for type '{$type}' in site '{$site}'");
-		}
+		return $string;
 	}
 }
 
@@ -290,7 +277,7 @@ class reason_xml_export_generator_version_point_one extends reason_xml_export_ge
 		}
 		$xml->endElement(); //reason_data
 
-		return $xml->formatAndFinish($site->get_value('unique_name'), $type->get_value('unique_name'));
+		return $xml->finish($site->get_value('unique_name'), $type->get_value('unique_name'));
 	}
 
 	/**
