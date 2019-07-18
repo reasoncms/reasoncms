@@ -182,7 +182,7 @@ class ExportXMLWriter extends XMLWriter
 		}
 	}
 
-	public function formatAndFinish($site, $type)
+	public function formatAndFinish()
 	{
 		$this->endDocument();
 		$string = $this->outputMemory();
@@ -198,7 +198,7 @@ class ExportXMLWriter extends XMLWriter
 		if ($dom->loadXML($string)) {
 			return $dom->saveXML();
 		} else {
-			throw new Exception("Could not format XML for type '{$type}' in site '{$site}'");
+			throw new Exception("Could not format XML");
 		}
 	}
 }
@@ -225,14 +225,18 @@ class reason_xml_export_generator_version_point_one extends reason_xml_export_ge
 			'from' => 'http://' . REASON_HOST . '/',
 		]);
 
+		if(!empty($entities))
+		{
 		foreach ($entities as $e) {
 			$type = new entity($e->get_value('type'));
+			
 			$site = $e->get_owner();
+			$site_unique_name = !empty($site) ? $site->get_value('unique_name') : "";
 
 			$xml->startElementWithAttrs('entity', [
 				'id' => $e->id(),
 				'type' => $type->get_value('unique_name'),
-				'site' => $site->get_value('unique_name'),
+				'site' => $site_unique_name,
 			]);
 			if ($e->get_value('unique_name')) {
 				$xml->addAttribute('unique_name', $e->get_value('unique_name'));
@@ -288,9 +292,10 @@ class reason_xml_export_generator_version_point_one extends reason_xml_export_ge
 			$xml->endElement(); //relationships
 			$xml->endElement(); //entity
 		}
+		}
 		$xml->endElement(); //reason_data
 
-		return $xml->formatAndFinish($site->get_value('unique_name'), $type->get_value('unique_name'));
+		return $xml->formatAndFinish();
 	}
 
 	/**
