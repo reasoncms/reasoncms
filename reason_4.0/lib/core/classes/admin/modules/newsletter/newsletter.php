@@ -717,6 +717,7 @@ class NewsletterExporter {
 			$output = '<h1>' . $data['info']['title'] . '</h1>';
 		if ($data['info']['intro'])
 			$output .= '<p>' . $data['info']['intro'] . '</p>';
+		$output = tidy($output);
 		if (!empty($data['pubs'])) 
 		{
 			$output .= "<h2>Recent News</h2>";
@@ -745,7 +746,7 @@ class NewsletterExporter {
 			}
 			$output .= "</ul>";
 		}
-		return tidy($output);
+		return $output;
 	}
 
 	/**
@@ -782,6 +783,7 @@ class NewsletterExporter {
 			$output = '<h1>' . $data['info']['title'] . '</h1>';
 		if ($data['info']['intro'])
 			$output .= '<p>' . $data['info']['intro'] . '</p>';
+		$output = tidy($output);
 		if (!empty($data['pubs'])) 
 		{
 			$output .= "<h2>Recent News</h2>";
@@ -811,7 +813,7 @@ class NewsletterExporter {
 			}
 			$output .= "</ul>";
 		}
-		return tidy($output);
+		return $output;
 	}	
 	
 	/**
@@ -851,6 +853,7 @@ class NewsletterExporter {
 			$output = '<h1>' . $data['info']['title'] . '</h1>';
 		if ($data['info']['intro'])
 			$output .= '<p>' . $data['info']['intro'] . '</p>';
+		$output = tidy($output);
 		if (!empty($data['pubs'])) 
 		{
 			$output .= "<h2>Recent News</h2>";
@@ -885,7 +888,7 @@ class NewsletterExporter {
 			}
 
 		}
-		return tidy($output);
+		return $output;
 	}
 	
 	/**
@@ -931,6 +934,7 @@ class NewsletterExporter {
 			$output = '<h1>' . $data['info']['title'] . '</h1>';
 		if ($data['info']['intro'])
 			$output .= '<p>' . $data['info']['intro'] . '</p>';
+		$output = tidy($output);
 		if (!empty($data['pubs'])) 
 		{
 			$output .= "<h2>Recent News</h2>";
@@ -969,7 +973,7 @@ class NewsletterExporter {
 			}
 
 		}
-		return tidy($output);
+		return $output;
 	}
 	
 	/**
@@ -1009,6 +1013,7 @@ class NewsletterExporter {
 			$output = '<h1>' . $data['info']['title'] . '</h1>';
 		if ($data['info']['intro'])
 			$output .= '<p>' . $data['info']['intro'] . '</p>';
+		$output = tidy($output);
 		if (!empty($data['pubs'])) 
 		{
 			$output .= "<h2>Recent News</h2>";
@@ -1050,7 +1055,7 @@ class NewsletterExporter {
 			}
 
 		}
-		return tidy($output);
+		return $output;
 	}
 }
 ?>
