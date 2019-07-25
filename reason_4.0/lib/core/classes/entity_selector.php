@@ -7,17 +7,17 @@
 	 * @package reason
 	 * @subpackage classes
 	 *
-	 * 
+	 *
 	 * As of Reason 4.2 this has been modified to not select across the allowable relationship table. This change
 	 * depends on using unique relationship names (also in Reason 4.2).
 	 */
-	 
+
 	 /**
 	 * Include the necessary files
 	 */
 	include_once( 'reason_header.php' );
 	reason_include_once( 'classes/entity.php' );
-	
+
 	/**
 	 * defines array_diff_assoc for case where someone is using PHP versions earlier that 4.3
 	 */
@@ -42,7 +42,7 @@
 			return $r ;
 		}
 	}
-	
+
 	/**
 	 * table of returns the a string in the form [table name].$name
 	 * this function is used if you know that a specific entity has a specific name, but you don't
@@ -65,7 +65,7 @@
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Generic sorting function for reason
 	 *
@@ -113,9 +113,9 @@
 			$ec .= 'return -'.$cmp.'($a->get_value(\''.$field.'\'),$b->get_value(\''.$field.'\'));'."\n";
 		usort($ents,create_function('$a,$b',$ec));
 	} // }}}
-	
+
 	/**
-	 * Checks an array of entities to see if an entity exists in the 
+	 * Checks an array of entities to see if an entity exists in the
 	 * array which has the value of $value in the field $field
 	 *
 	 * @param array $entity_array the array of entities to search
@@ -137,7 +137,7 @@
 	 * @author Brendon Stanton
 	 */
 	class entity_selector extends DBSelector // {{{
-	{ 
+	{
 		/**#@+
 		 * @access public
 		 */
@@ -187,15 +187,15 @@
 		var $table_mod_action = '';
 
 		var $limit_fields = '';
-		
-		/**#@-*/	
+
+		/**#@-*/
 		/**
 		 * Contains the local environment
 		 * @access private
 		 * @var array
 		 */
 		var $_env = array( 'restrict_site' => true );
-		
+
 		/**
 		 * Contains the relationship sort value queue - should be processed right before query
 		 * @access private
@@ -209,12 +209,12 @@
 		 * @var array
 		 */
 		var $_rel_meta_field_queue = array();
-		
+
 		/**
 		 * Storage for the multivalue result mode
 		 *
 		 * If this is on, relationship fields with multiple entries returned will have those values
-		 * stored as an array in the entity. Be aware that when this is set to true, 
+		 * stored as an array in the entity. Be aware that when this is set to true,
 		 * $entity->get_value() may either return a string or an array
 		 *
 		 * This var shouldn't be set directly -- use enable_multivalue_results() and disable_multivalue_results().
@@ -227,14 +227,14 @@
 		 * Should I try to dynamically exclude tables that aren't used in the select.
 		 *
 		 * This can increase performance significantly in cases where you might not know which tables
-		 * should be used in advance, but you want to only include the tables that you need. It relies on 
+		 * should be used in advance, but you want to only include the tables that you need. It relies on
 		 * parsing anything added to add_relation before building the query, and will not work well if you
 		 * have statements in add_relation that don't use fully qualified entity_table.field_name pairs.
 		 */
 		var $_exclude_tables_dynamically = false;
-		 
+
 		var $union = false;
-		
+
 		/**
 		 * Set a limit on entities returned, enforced in php.
 		 *
@@ -248,7 +248,7 @@
 		 * @var integer
 		 */
 		protected $entity_limit = -1;
-		
+
 		/**
 		 * Do we need to have all multivalued fields when an entity limit is applied?
 		 *
@@ -263,9 +263,9 @@
 		 * @var boolean
 		 */
 		protected $entity_limit_full_multivalued_fields = true;
-				
+
 		/**
- 		 * Constructor 
+ 		 * Constructor
 		 * @param int $site_id optional site id, if set will only select entities belonging to the given site
 		 */
 		function entity_selector($site_id = false) // {{{
@@ -281,7 +281,7 @@
 			$this->type = array();
 			$this->site_id = $site_id;
 		} // }}}
- 		 
+
  		  /**
  		  * Does the actual work of adding relationship sort fields to the entity selector
  		  * @param int $entity_id the entity on the left side of a relationship
@@ -306,13 +306,13 @@
  		 				continue;
  		 			}
  		 		}
- 		 		
+
  		 		$test_entity_id = strpos($cur_element, '.entity_a = ' . $entity_id);
  		 		if ($test_entity_id != false)
  		 		{
  		 			$rel_name_from_entity_id = substr($cur_element, 0, $test_entity_id);
  		 		}
- 		 		
+
  		 		if (!empty($allowable_rel_id) && (!empty($rel_name_from_entity_id)) && (!empty($rel_name_from_rel_type))
  		 		    && ($rel_name_from_entity_id == $rel_name_from_rel_type))
  		 		{
@@ -320,7 +320,7 @@
  		 			if (!in_array($rel_name_from_entity_id.".rel_sort_order AS ".$alias, $this->fields))
  		 			$this->add_field($rel_name_from_entity_id, 'rel_sort_order', $alias);
  		 		}
- 		 		
+
  		 		elseif (empty($allowable_rel_id) && !empty($rel_name_from_entity_id))
  		 		{
  		 		 	$relation_array = array();
@@ -360,7 +360,7 @@
  		 		{
  		 			$rel_name_from_entity_id = substr($cur_element, 0, $test_entity_id);
  		 		}
- 		 		
+
  		 		if (!empty($allowable_rel_id) && (!empty($rel_name_from_entity_id)) && (!empty($rel_name_from_rel_type))
  		 		    && ($rel_name_from_entity_id == $rel_name_from_rel_type))
  		 		{
@@ -368,7 +368,7 @@
  		 			if (!in_array($rel_name_from_entity_id.".meta_id AS ".$alias, $this->fields))
  		 			$this->add_field($rel_name_from_entity_id, 'meta_id', $alias);
  		 		}
- 		 		
+
  		 		elseif (empty($allowable_rel_id) && !empty($rel_name_from_entity_id))
  		 		{
  		 		 	$relation_array = array();
@@ -377,13 +377,13 @@
  		 		}
  		 	}
  		 }
- 		 
+
  		 /**
-	 	 * Adds relationship sort field to entities. 
-	 	 * 
-	 	 * The following code adds the rel_sort value in the relationships table for entities where a page (entity_a) 
-	 	 * is on the left side of a relationship with an image (entity_b). 
-	 	 * 
+	 	 * Adds relationship sort field to entities.
+	 	 *
+	 	 * The following code adds the rel_sort value in the relationships table for entities where a page (entity_a)
+	 	 * is on the left side of a relationship with an image (entity_b).
+	 	 *
 	 	 * <code>
 	 	 * $es->add_rel_sort_field($page->id(), relationship_id_of('minisite_page_to_image'))
  		 * </code>
@@ -399,10 +399,10 @@
  		 {
  		 	$this->_rel_sort_field_queue[] = array($entity_id, $allowable_rel_id, $alias);
  		 }
- 		 
+
 		 /**
 		  * Adds a field from relationship metadata to the entity selector
-		  * 
+		  *
 		  * @param int $entity_id The entity on the left side of a relationship
 		  * @param int $allowable_rel_id Optional parameter specifying relationship ID
 		  * @param string $alias
@@ -435,7 +435,7 @@
  		 		$this->_add_rel_meta_field($rel_meta[0], $rel_meta[1], $rel_meta[2]);
  		 	}
  		 }
- 		 
+
 		/**
 		 * Optimize entity selector
 		 *
@@ -509,7 +509,7 @@
 		/**
 		 *
 		 * Takes another DBSelector or entity_selector and combines it with the current table.
-		 * Ignores tables with the same name. 
+		 * Ignores tables with the same name.
 		 * @param entity_selector $es
 		 * @return void
 		 */
@@ -589,7 +589,7 @@
 				if($add) $this->type[] = $value;
 			}
 		} // }}}
-		
+
 		function swallow_optimize($es)
 		{
 			if(!empty($es->optimize))
@@ -600,9 +600,9 @@
 					$this->optimize = $this->optimize . ', ' . $es->optimize;
 			}
 		}
-		
-		/**#@-*/	
-		
+
+		/**#@-*/
+
 
 		/**
 		 * MERGE
@@ -610,7 +610,7 @@
 
 		/**
 		 * Takes another DBSelector or entity_selector and combines it with the current table.
-		 * Attempts to rename tables intelligently.  Sets num and start so that they select 
+		 * Attempts to rename tables intelligently.  Sets num and start so that they select
 		 * the max number of objects specified.  If num is set to -1 (i.e. select all) it gets
 		 * overwritten with the more restricted one
 		 * @param entity_selector $es
@@ -628,7 +628,7 @@
 				$this->merge_order($es, $tables);
 				$this->merge_types($es);
 				if( $tables[ 'entity' ] )
-					$this->add_relation( 'entity.id = ' . $tables[ 'entity' ] . '.id' ); 
+					$this->add_relation( 'entity.id = ' . $tables[ 'entity' ] . '.id' );
 			}
 		} // }}}
 		/**
@@ -677,7 +677,7 @@
 				reset($tables);
 				while( list($pat, $rep) = each($tables))
 					$value = preg_replace('|^'.$pat.'\.|' , $rep.'.' , $value );
-				
+
 				$this->fields[] = $value;
 			}
 		} // }}}
@@ -706,14 +706,14 @@
 			$start = min($es->start, $this->start);
 			$fint = $this->start + $this->num -1;
 			$fine = $es->start + $es->num -1;
-			
+
 			if(($this->num == -1)&&($es->num == -1))
 				$finish = -1;
 			elseif($this->num == -1)
 				$finish = $fine;
 			else
 				$finish = max($fint, $fine);
-			
+
 			if($finish == -1) $this->num = -1;
 			else
 				$this->num = $finish - $start + 1;
@@ -751,7 +751,7 @@
 				if($add) $this->type[] = $value;
 			}
 		} // }}}
-		/**#@-*/	
+		/**#@-*/
 
 		/**
 		 * Other class functions
@@ -830,12 +830,12 @@
 			$es = new entity_selector( $this->site_id );
 			$es->add_table('relationship' , 'relationship');
 			$tables = $this->merge_tables( $es );
-			if(isset( $tables['relationship'] ) AND $tables['relationship']) 
+			if(isset( $tables['relationship'] ) AND $tables['relationship'])
 			{
 				$relationship_name = $tables['relationship'];
 			}
 			else $relationship_name = 'relationship';
-			
+
 			$this->add_relation( $relationship_name . '.entity_a = entity.id' );
 			if(is_array($entity_id))
 			{
@@ -880,13 +880,13 @@
 			$es = new entity_selector( $this->site_id );
 			$es->add_table('relationship' , 'relationship');
 			$tables = $this->merge_tables( $es );
-			if(isset( $tables['relationship'] ) AND $tables['relationship']) 
+			if(isset( $tables['relationship'] ) AND $tables['relationship'])
 			{
 				$relationship_name = $tables['relationship'];
 			}
 			else
 				$relationship_name = 'relationship';
-			
+
 			$this->add_relation( $relationship_name . '.entity_b = entity.id' );
 			if(is_array($entity_id))
 			{
@@ -924,13 +924,13 @@
 			{
 				if( $this->type[0] )
 					$type = $this->type[0] ;
-				else 
+				else
 					return '';
 			}
-			
+
 			if (count($this->_rel_sort_field_queue) > 0) $this->_process_rel_sort_fields();
 			if (count($this->_rel_meta_field_queue) > 0) $this->_process_rel_meta_fields();
-			
+
 			$new_e = new entity_selector($this->site_id);
 			$sharing = '';
 			if( $this->owns )
@@ -945,7 +945,7 @@
 				$new_e->add_relation( 'entity.state = "'.reason_sql_string_escape($status).'"' );
 			else
 				$new_e->add_relation( 'entity.state != "Archived"' );
-			
+
 			if (is_array($this->limit_fields) && empty($this->table_mod) && $this->_exclude_tables_dynamically)
 			{
 				$to_exclude = false;
@@ -986,25 +986,25 @@
  		 			$this->exclude_tables($to_exclude);
  		 		}
 			}
-			
+
 			$new_e->swallow( get_entities_by_type_object( $type , $this->site_id, $sharing, $this->table_mod, $this->table_mod_action ));
-				
+
 			if (is_array($this->limit_fields)) $new_e->fields = array_unique(array_merge(array('entity.id'), $this->limit_fields));
 			$new_e->swallow( $this );
-			
-			
+
+
 			if ($this->union)
 			{
 				$union_clause = '';
 				$union_es = carl_clone($new_e);
-				
+
 				foreach ($this->diff['fields'] as $k=>$union)
 				{
 					$multi_union_es[$k] = carl_clone($new_e);
 					$multi_union_es[$k]->fields = array_diff($union_es->fields, $this->diff['fields'][$k]);
 					$multi_union_es[$k]->tables = array_diff_assoc($union_es->tables, $this->diff['tables'][$k]);
 					$multi_union_es[$k]->relations = array_diff($union_es->relations, $this->diff['relations'][$k]);
-					
+
 					$alter_array = (array_diff($union_es->fields, $multi_union_es[$k]->fields));
 					foreach ($alter_array as $k2=>$v)
 					{
@@ -1015,7 +1015,7 @@
 				}
 
 				foreach ($multi_union_es as $mu_es) $merged_es[] = carl_clone($mu_es);
-				
+
 				if (count($multi_union_es) > 1) // if we are unifying multiples we want to run altered multi_union_es queries and one additional
 				{
 					// prep final selector - needs to select all while padding left and right relationship fields with 0
@@ -1028,10 +1028,10 @@
 					foreach ($new_e->fields as $k=>$v)
 					{
 						if (!isset($union_es->fields[$k])) $union_es->fields[$k] = $this->union_fields[$v];
-						
+
 					}
 					ksort($union_es->fields); //$union_es now holds a base es
-					
+
 					foreach ($merged_es as $k => $alter_es)
 					{
 						// fix fields - invert what is being selected as 0 and those that are not
@@ -1040,7 +1040,7 @@
 							if (isset($this->union_fields[$v])) $merged_es[$k]->fields[$k2] = $this->union_fields[$v];
 							elseif (in_array($v, $this->union_fields)) $merged_es[$k]->fields[$k2] = current($this->diff['fields'][$k]);
 						}
-						
+
 						$merged_es[$k]->tables = array_merge($this->diff['tables'][$k], $union_es->tables);
 						$merged_es[$k]->relations = array_merge($this->diff['relations'][$k], $union_es->relations);
 					}
@@ -1059,14 +1059,14 @@
 		 * @return void
 		 */
 		function get_queries() // {{{
-		{	
+		{
 			$queries = array();
 			reset( $this->type );
 			while( list( , $one_type) = each( $this->type ) )
 				$queries[] = $this->get_one_query( $one_type );
 			return $queries;
 		} // }}}
-		
+
 		/**
 		 * Get ids - same args as run_one, but does the query and returns an array of the ids that match.
 		 *
@@ -1109,7 +1109,7 @@
 			mysql_free_result( $r );
 			return $ids;
 		}
-		
+
 		/**
 		 * Runs one query for the ES.  If type is empty, it uses the first type by default.
 		 * This is often called without paramaters in code for front end stuff.
@@ -1125,6 +1125,10 @@
 		 */
 		function run_one($type = '', $status = 'Live' , $error = 'run_one error', $printQuery = false) // runs query for one type, returns array of results {{{
 		{
+			if ( get_current_db_connection_name() !== REASON_DB ) {
+				// to fix 'aar.entity does not exist' errors
+				connectDB( REASON_DB );
+			}
 			if( !$type )
 			{
 				if( isset($this->type[0]) && $this->type[0] )
@@ -1158,15 +1162,15 @@
 				}
 				//echo '<p>Cache miss</p>';
 			}
-			
+
 			$fetching_all_fields = true;
 			if (!empty($this->limit_fields) || !empty($this->table_mod) || ( empty($this->table_mod) && $this->_exclude_tables_dynamically ) )
 				$fetching_all_fields = false;
-			
+
 			$results = array();
 			if ($printQuery) { echo "QUERY: [" . $query . "]<p>"; }
 			$r = db_query( $query , $this->description.': '.$error );
-			
+
 			if ($printQuery) { echo "Got back [" . mysql_num_rows($r) . "] ROWS...<P>"; }
 			$num_results = 0;
 			while( $row = mysql_fetch_array( $r, MYSQL_ASSOC ) )
@@ -1191,7 +1195,7 @@
 						{
 							if (empty($cur_value)) $e->set_value($key, $val);
 							else $e->set_value($key, array($cur_value, $val));
-						}						
+						}
 					}
 				}
 				else
@@ -1229,7 +1233,7 @@
 		} // }}}
 		/**
 		 * Turns on multivalue results
-		 * 
+		 *
 		 * When multivalue results is on, relationship fields that are multiply matched will all be returned
 		 * in an array as the entities' value for the field.
 		 *
@@ -1240,10 +1244,10 @@
 		{
 			$this->_enable_multivalue_results = true;
 		}
-		
+
 		/**
 		 * Turns off multivalue results
-		 * 
+		 *
 		 * When multivalue results is on, relationship fields that are multiply matched will all be returned
 		 * in an array as the entities' value for the field.
 		 *
@@ -1254,12 +1258,12 @@
 		{
 			$this->_enable_multivalue_results = false;
 		}
-		
+
 		/**
 		 * Sets exclude tables dynamically
-		 * 
+		 *
 		 * When on, we exclude tables from the query that meet this criteria:
-		 * 
+		 *
 		 * 1. Are not part of a field name that we are selecting.
 		 * 2. Are not the table in a table.field_name string in a relation statement.
 		 *
@@ -1270,7 +1274,7 @@
 		{
 			$this->_exclude_tables_dynamically = $boolean;
 		}
-		
+
 		/**
 		 * Runs all queries for the ES.
 		 * @param string $status Either Live, Pending, Archived... (optional)
@@ -1284,7 +1288,7 @@
 			while(list( , $type) = each( $this->type ))
 				$entities[ $type ] = $this->run_one( $type , $status, $error );
 			return $entities;
-		} // }}} 
+		} // }}}
 
 		/**
 		 * Gets the number of entities a query of one type will return
@@ -1312,7 +1316,7 @@
 				$new_e->add_relation( 'entity.state = "' . $status . '"' );
 			else
 				$new_e->add_relation( 'entity.state != "Archived"' );
-			
+
 			if ($this->union) // count based on query for entities which match or do not match conditionals
 			{
 				$key_search = array_flip($new_e->fields);
@@ -1324,7 +1328,7 @@
 				}
 			}
 			return $new_e->get_count();
-				
+
 		} // }}}
 		/**
 		 * Gets all the counts for a query
@@ -1337,13 +1341,13 @@
 			while(list( , $type) = each( $this->type ))
 				$counts[ $type ] = $this->get_one_count( $type );
 			return $counts;
-		} // }}} 
+		} // }}}
 
 		/**
 		 * Gets the entity with the greatest value for the specified field
 		 * @param string $field the name of the field for which you want the max value
 		 * @param int $type type_id (or blank for default)
-		 * @return entity entity with max value of field 
+		 * @return entity entity with max value of field
 		 */
 		function get_max( $field , $type = false) // {{{
 		{
@@ -1361,14 +1365,14 @@
 			$item = $m->run_one( $type , 'Live', "error selecting max");
 			if(!$item) return false;
 			$current = end($item);
-			
+
 			return $current;
 		} // }}}
 		/**
 		 * Gets the entity with the smallest value for the specified field
 		 * @param string $field the name of the field for which you want the min value
 		 * @param int $type type_id (or blank for default)
-		 * @return entity entity with min value of field 
+		 * @return entity entity with min value of field
 		 */
 		function get_min( $field , $type = false) // {{{
 		{
@@ -1389,8 +1393,8 @@
 			return $current;
 		} // }}}
 		/**
-		 * Adds a new field to the entity which is actually not a field of entity, but rather a field of 
-		 * an entity which is related to the current entities.  The entities selected by the ES will be 
+		 * Adds a new field to the entity which is actually not a field of entity, but rather a field of
+		 * an entity which is related to the current entities.  The entities selected by the ES will be
 		 * on the left side of the relationship.
 		 * Will return multiples of an entity if it has multiples of the same relationship.  Not sure
 		 * how to change this.
@@ -1430,19 +1434,19 @@
 				$cur_es = carl_clone($this);
 				$this->union = true;
 			}
-			
+
 			$es = new entity_selector();
-			
+
 			$es->add_table( 'relationship' , 'relationship' );
 			$es->add_table( '__entity__' , 'entity' );
-			
+
 			if($table != 'entity' )
 				$es->add_table( $table );
 			$tables = $this->merge_tables($es);
-			
+
 			if( isset( $tables[ 'relationship' ] ) AND $tables[ 'relationship' ] )
 				$r = $tables[ 'relationship' ];
-			else 
+			else
 				$r = 'relationship';
 
 			if( isset( $tables[ '__entity__' ] ) AND $tables[ '__entity__' ] )
@@ -1454,27 +1458,27 @@
 				$t = $e;
 			else
 			{
-				
+
 				if( !empty($tables[ $table ]) )
 					$t = $tables[ $table ];
 				else
 					$t = $table;
-			}	
-			
+			}
+
 			if( $e != $t )
 				$this->add_relation( $e . '.id = ' . $t . '.id' );
-			
+
 			$this->add_relation( $e . '.id = ' . $r . '.entity_b' );
 			$this->add_relation( 'entity.id = ' . $r . '.entity_a' );
 			$this->add_relation( $r . '.type = ' . $rel_type_id );
-			
+
 			$this->add_field( $t , $field , $alias );
 			if( $this->_env['restrict_site'] AND !empty($this->_env['site']) )
 			{
 				$this->add_relation( '(' . $r . '.site=0 OR ' . $r . '.site=' . $this->_env['site'] . ')' );
 			}
 			if ($limit_results === false)
-			{	
+			{
 				$this->union_fields[end($this->fields)] = '0 as ' . $alias;
 				$this->diff['fields'][] = array_diff_assoc($this->fields, $cur_es->fields);
 				$this->diff['tables'][] = array_diff_assoc($this->tables, $cur_es->tables);
@@ -1489,8 +1493,8 @@
 			return array( $alias => array( 'table_orig' => $table, 'table' => $t , 'field' => $field ) );
 		} // }}}
 		/**
-		 * Adds a new field to the entity which is actually not a field of entity, but rather a field of 
-		 * an entity which is related to the current entities.  The entities selected by the ES will be 
+		 * Adds a new field to the entity which is actually not a field of entity, but rather a field of
+		 * an entity which is related to the current entities.  The entities selected by the ES will be
 		 * on the right side of the relationship.
 		 * Will return multiples of an entity if it has multiples of the same relationship.  Not sure
 		 * how to change this.
@@ -1531,19 +1535,19 @@
 				$cur_es = carl_clone($this);
 				$this->union = true;
 			}
-			
+
 			$es = new entity_selector();
-			
+
 			$es->add_table( 'relationship' , 'relationship' );
 			$es->add_table( '__entity__' , 'entity' );
-			
+
 			if($table != 'entity' )
 				$es->add_table( $table );
 			$tables = $this->merge_tables($es);
-			
+
 			if( !empty( $tables[ 'relationship' ] ) )
 				$r = $tables[ 'relationship' ];
-			else 
+			else
 				$r = 'relationship';
 
 			if( !empty( $tables[ '__entity__' ] ) )
@@ -1555,16 +1559,16 @@
 				$t = $e;
 			else
 			{
-				
+
 				if( !empty($tables[ $table ]) )
 					$t = $tables[ $table ];
 				else
 					$t = $table;
-			}	
-			
+			}
+
 			if( $e != $t )
 				$this->add_relation( $e . '.id = ' . $t . '.id' );
-			
+
 			$this->add_relation( $e . '.id = ' . $r . '.entity_a' );
 			$this->add_relation( 'entity.id = ' . $r . '.entity_b' );
 			$this->add_relation( $r . '.type = ' . $rel_type_id );
@@ -1575,7 +1579,7 @@
 				$this->add_relation( '(' . $r . '.site=0 OR ' . $r . '.site=' . reason_sql_string_escape($this->_env['site']) . ')' );
 			}
 			if ($limit_results === false)
-			{	
+			{
 				$this->union_fields[end($this->fields)] = '0 as ' . $alias;
 				$this->diff['fields'][] = array_diff_assoc($this->fields, $cur_es->fields);
 				$this->diff['tables'][] = array_diff_assoc($this->tables, $cur_es->tables);
@@ -1597,7 +1601,7 @@
 			return array( $alias => array( 'table_orig' => $table, 'table' => $t , 'field' => $field ) );
 		} // }}}
 
-		/**	 
+		/**
 		* Return relationship metadata for entities returned by the entity selector. This is still
 		* somewhat experimental. For some types of queries, you may need to turn on enable_multivalue_results
 		* to get all of the results
@@ -1694,12 +1698,12 @@
 		}
 
 		/**
-		 * Sets entity tables to exclude from the entity selector 
+		 * Sets entity tables to exclude from the entity selector
 		 * The entity table cannot be excluded
 		 *
 		 * @param array exclude_array - array of entity table names to exclude
 		 * @return void
-		 */		
+		 */
 		function exclude_tables($exclude = '')
 		{
 			if (is_array($exclude)) $exclude_array = $exclude;
@@ -1764,7 +1768,7 @@
 			}
 			else $this->limit_fields = array();
 		}
-		
+
 		function get_merged_query($es_array)
 		{
 			$union_text = '';
@@ -1779,23 +1783,23 @@
 			if ($this->num > 0) $str .= "LIMIT\n".$this->start.', '.$this->num;
 			return $str;
 		}
-		
+
 		function set_entity_factory(&$factory_class)
 		{
 			$this->entity_factory_class =& $factory_class;
 		}
-		
+
 		function &get_entity_factory()
 		{
 			if (!isset($this->entity_factory_class)) $this->entity_factory_class = false;
 			return $this->entity_factory_class;
 		}
-		
+
 		function set_entity_limit($num, $full_multivalued_fields = true) {
 			$this->entity_limit = (integer) $num;
 			$this->entity_limit_full_multivalued_fields = (boolean) $full_multivalued_fields;
 		}
-		
+
 		function get_entity_limit() {
 			return $this->entity_limit;
 		}

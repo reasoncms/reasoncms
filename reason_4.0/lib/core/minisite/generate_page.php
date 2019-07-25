@@ -19,7 +19,6 @@
  *  mechanism.
  */
 
-connectDB( REASON_DB );
 include_once('reason_header.php');
 reason_include_once('classes/page_cache.php' );
 
