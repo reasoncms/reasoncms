@@ -920,6 +920,10 @@
 		 */
 		function get_one_query( $type = '', $status = 'Live' ) // {{{
 		{
+			if ( get_current_db_connection_name() !== REASON_DB ) {
+				// to fix 'aar.entity does not exist' errors
+				connectDB( REASON_DB );
+			}
 			if( !$type )
 			{
 				if( $this->type[0] )

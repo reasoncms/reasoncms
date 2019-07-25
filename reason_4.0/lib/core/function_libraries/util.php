@@ -48,7 +48,7 @@
 	 * $image_type = new entity(id_of('image'));
 	 *
 	 * Or, if you're not confident:
-	 * 
+	 *
 	 * if($id = id_of('notsure', true, false))
 	 * {
 	 * 	$entity = new entity($id);
@@ -84,7 +84,7 @@
 	 * @param boolean $static_cache (entity unique name changes / updates flush the static cache so manually setting this to false is rarely/never necessary)
 	 * @param boolean $report_not_found_error Trigger a warning if the unique name is not in the database. Set to false if the value is coming from userland or if it is a test that you will be doing separate reporting on.
 	 * @return mixed The unique_name of the corresponding entity or false if not found.
-	 */	
+	 */
 	function unique_name_of( $id, $static_cache = true, $report_not_found_error = true )
 	{
 		static $retrieved;
@@ -103,7 +103,7 @@
 			return false;
 		}
 	}
-	
+
 	/**
 	 * We use a 1 hour cache for this super common query. We update the cache in admin_actions.php whenever unique names are added or changed.
 	 */
@@ -119,17 +119,17 @@
 			return reason_refresh_unique_names();
 		}
 	}
-	
+
 	/**
 	 * Create/refresh the unique name cache from the database.
-	 * 
+	 *
 	 * @return array unique names
 	 */
 	function reason_refresh_unique_names()
 	{
 		$cache = new ReasonObjectCache('reason_unique_names');
 		$cache->lock(10);
-		
+
 		$retrieved = array();
 		$dbq = new DBSelector();
 		$dbq->add_table('entity');
@@ -158,7 +158,7 @@
 		$cache->unlock();
 		return $retrieved;
 	}
-	
+
 	/**
 	 * Check to see if a given unique name exists in the Reason database
 	 *
@@ -172,7 +172,7 @@
 			return true;
 		return false;
 	}
-	
+
 	/**
 	 * Identifies whether a given string could be used as a unique name
 	 *
@@ -201,7 +201,7 @@
 			return $string;
 		return '';
 	}
-	
+
 	/**
 	 * Get the id of a relationship in the allowable_relationships table
 	 *
@@ -272,7 +272,7 @@
 			return false;
 		}
 	}
-	
+
 	/**
 	 * We use a 1 hour cache for this super common query. We update the cache in admin_actions.php whenever allowable relationships are added or changed.
 	 */
@@ -288,10 +288,10 @@
 			return reason_refresh_relationship_names();
 		}
 	}
-	
+
 	/**
 	 * Create/refresh the relationship name cache from the database.
-	 * 
+	 *
 	 * @return array unique names
 	 */
 	function reason_refresh_relationship_names()
@@ -337,7 +337,7 @@
 			return true;
 		return false;
 	}
-	
+
 	/**
 	 * Find out if a given table name exists in reason
 	 *
@@ -354,7 +354,7 @@
 		$results = $es->run_one();
 		return (!empty($results));
 	}
-	
+
 	/**
 	 * Get all the allowable relationships that feature a given type
 	 * @param integer $type_id
@@ -384,10 +384,10 @@
 	}
 
    /**
-	* Finds the id of the allowable relationship of the "site borrows ..." relationship for a given type.  
+	* Finds the id of the allowable relationship of the "site borrows ..." relationship for a given type.
 	* @param int $type_id The id of the type whose borrows relationship we seek
 	* @return mixed $alrel_id The id of the allowable relationship or false if none found
-	*/	
+	*/
 	function get_borrows_relationship_id($type_id)
 	{
 		static $cache = array();
@@ -416,9 +416,9 @@
 		}
 		return $cache[$type_id];
 	}
-	
+
 	/**
-	* Finds the id of the allowable relationship of the "site owns ..." relationship for a given type.  
+	* Finds the id of the allowable relationship of the "site owns ..." relationship for a given type.
 	* @param int $type_id The id of the type whose owns relationship we seek
 	* @return mixed $alrel_id The id of the allowable relationship or false if none found
 	*/
@@ -450,7 +450,7 @@
 		}
 		return $cache[$type_id];
 	}
-	
+
 	/**
 	 * Finds the id of the parent allowable relationship for a given type
 	 *
@@ -479,9 +479,9 @@
 				$cache[$type_id] = false;
 			}
 		}
-		return $cache[$type_id]; 
+		return $cache[$type_id];
 	}
-	
+
 	// big fat warning: this object will not retrieve the 'entity' table.  that is assumed.  use this function at your own risk.
 	// REMEMBER TO ADD THE ENTITY TABLE TO THE LIST OF TABLES THIS WILL PRODUCE
 	function get_entity_tables_by_type_object( $type ) // {{{
@@ -507,24 +507,28 @@
  	 */
  	function get_entity_tables_by_type( $type, $cache = true )
 	{
+		if ( get_current_db_connection_name() !== REASON_DB ) {
+			// to fix 'aar.entity does not exist' errors
+			connectDB( REASON_DB );
+		}
 		static $retrieved;
 		if( !$cache OR !isset( $retrieved[ $type ] ) OR !$retrieved[ $type ] )
 		{
 			$dbq = get_entity_tables_by_type_object( $type );
-			
+
 			$tables[] = 'entity';
 			$r = db_query( $dbq->get_query(),'Unable to load entity tables by type.' );
 			while( $row = mysql_fetch_array( $r, MYSQL_ASSOC ) )
 				$tables[] = $row['name'];
 			mysql_free_result( $r );
-			
+
 			$retrieved[ $type ] = $tables;
 			return $tables;
 		}
 		else
 			return $retrieved[ $type ];
 	}
-	
+
 // 	/**
 // 	 * @param type id of a type entity.
 // 	 * @param whether or not to use the static cache
@@ -544,7 +548,7 @@
 // 		}
 // 		return $retrieved[ $type ];
 // 	}
-// 	
+//
 // 	/**
 // 	 * Find entity tables for a given type and store them in a ReasonObjectCache.
 // 	 *
@@ -568,13 +572,13 @@
 // 		}
 // 		return $tables;
 // 	}
-	
+
 	function get_entity_tables_by_id_object( $id ) // {{{
 	{
 		$dbq = new DBSelector;
 
 		$dbq->add_field( 't','name' );
-		
+
 		$dbq->add_table( 't','entity' );
 		$dbq->add_table( 'type','entity' );
 		$dbq->add_table( 'item','entity' );
@@ -616,7 +620,7 @@
 			trigger_error('Empty ID passed to get_entity_tables_by_id()',FATAL);
 			die();
 		}
-		
+
 		// originally: if( !$cache OR !isset( $retrieved[ $id ] ) OR !$retrieved[ $id ] )
 		if( !$cache OR empty( $retrieved[ $id ] ) )
 		{
@@ -692,7 +696,7 @@
 		}
 		return false;
 	}
-	
+
 	function get_fields_by_content_table( $table, $cache = true ) // {{{
 	{
 		static $results = '';
@@ -712,7 +716,7 @@
 	//------------------------------------------------
 	//	entity retrieval
 	//------------------------------------------------
-	
+
 	function get_entity_by_id_object( $id ) // {{{
 	{
 		$dbq = new DBSelector;
@@ -729,7 +733,7 @@
 		$dbq->add_relation( 'entity.id = '.$id );
 		return $dbq;
 	} // }}}
-	
+
 	/**
 	 * Return fully populated values for an entity.
 	 *
@@ -757,7 +761,7 @@
 		else
 			return $retrieved[ $id ];
 	} // }}}
-	
+
 	/**
 	 * Set up a dbselector object for grabbing Reason entities
 	 *
@@ -778,7 +782,7 @@
 		if ($table_action == 'include') $tables = $table_mod;
 		else $tables = get_entity_tables_by_type( $type );
 		if ($table_action == 'exclude') $tables = array_diff($tables, $table_mod);
-		
+
 		foreach( $tables as $table )
 		{
 			$dbq->add_field( $table,'*' );
@@ -787,7 +791,7 @@
 			if( $table != 'entity' )
 				$dbq->add_relation( '`entity`.`id` = `'.$table.'`.`id`' );
 		}
-		
+
 		$dbq->add_relation( '`entity`.`type` = "'.$type.'"' );
 
 		if( $site_id && $sharing )
@@ -881,7 +885,7 @@
 		}
 		return $fields;
 	} // }}}
-	
+
 	//------------------------------------------------
 	//	association retrieval
 	//------------------------------------------------
@@ -908,7 +912,7 @@
 
 	function get_associations_by_type_object( $type_a, $type_b ) // {{{
 	/*	gets all associations where entity_a's content_type_id = $type_a and entity_b's ctid = $type_b
-	 *	returns a list of entity ids 
+	 *	returns a list of entity ids
 	 */
 	{
 		$dbq = new DBSelector;
@@ -949,7 +953,7 @@
 	function get_entity_associations( $id ) // {{{
 	{
 		$dbq = get_entity_associations_object( $id );
-		
+
 		$r = db_query( $dbq->get_query(), 'Unable to retrieve associations for this entity' );
 		while( $row = mysql_fetch_array( $r, MYSQL_ASSOC ) )
 			$res[ $row['entity_b'] ] = $row['entity_b'];
@@ -968,7 +972,7 @@
 		$dbq->add_field( 'r','entity_a' );
 		$dbq->add_field( 'r','entity_b' );
 		$dbq->add_relation( 'r.type = ar.id' );
-		// backwards compatibility 
+		// backwards compatibility
 		if (reason_relationship_names_are_unique() && in_array($relation_type, array('owns', 'borrows', 'archive')))
 		{
 			$dbq->add_relation( 'ar.type = "'.$relation_type.'"' );
@@ -1084,7 +1088,7 @@
 			return false;
 		}
 	} // }}}
-	
+
 	/**
 	 * @return array of site entities that borrow an entity.
 	 * @todo consider just using entity selector
@@ -1101,7 +1105,7 @@
 		}
 		return $sites;
 	}
-	
+
 	/**
 	 * Get the reason id for a username or null if it does not exist (or no username is provided).
 	 *
@@ -1154,7 +1158,7 @@
 		else
 			return false;
 	} // }}}
-	
+
 	/**
 	 * Returns the value of REASON_MAINTENANCE_MODE
 	 * @return REASON_MAINTENANCE_MODE
@@ -1168,7 +1172,7 @@
 		else trigger_error('Please define REASON_MAINTENANCE_MODE in reason_settings.php. It should default to false.');
 		return false;
 	}
-	
+
 	/**
 	 * Determines if a given reason user has a given privilege
 	 *
@@ -1270,7 +1274,7 @@
 		$privs_cache[$user_id][$privilege] = false;
 		return false;
 	}
-	
+
 	/**
 	 * Get the user roles for a given user id
 	 * @param integer $user_id
@@ -1287,7 +1291,7 @@
 		if(empty($roles_cache[$user_id]))
 		{
 			$roles_cache[$user_id] = array();
-			
+
 			reason_include_once('classes/entity_selector.php');
 			$es = new entity_selector();
 			$es->add_type(id_of('user_role'));
@@ -1295,7 +1299,7 @@
 			$es->limit_fields(array('entity.unique_name'));
 			$es->add_right_relationship($user_id, relationship_id_of( 'user_to_user_role' ));
 			$roles = $es->run_one();
-			
+
 			if(!empty($roles))
 			{
 				foreach($roles as $role)
@@ -1313,7 +1317,7 @@
 		}
 		return $roles_cache[$user_id];
 	}
-	
+
 	/**
 	 * Determine if a given role has a given privilege
 	 *
@@ -1330,7 +1334,7 @@
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Determine if a given user can pose as another given user
 	 *
@@ -1346,7 +1350,7 @@
 			return true;
 		return false;
 	}
-	
+
 	/**
 	 * Get the way user privileges are assigned to roles
 	 *
@@ -1362,14 +1366,14 @@
 		{
 			return $GLOBALS['reason_role_privileges'];
 		}
-		
+
 		static $errored = false;
 		if(!$errored)
 		{
 			trigger_error('Unable to find the $GLOBALS[\'reason_role_privileges\'] setting. Falling back to the legacy role privileges array.');
 			$errored = true;
 		}
-		
+
 		return array(
 				'contribute_only_role'=>array('add','edit_pending','delete_pending',),
 				'editor_user_role'=>array('add','edit_pending','delete_pending','edit','delete','publish','borrow','expunge','switch_theme',),
@@ -1378,7 +1382,7 @@
 				'admin_role'=>array('add','edit_pending','delete_pending','edit','delete','publish','borrow','expunge','duplicate','edit_html','switch_theme','pose_as_other_user','assign_any_page_type','edit_head_items','edit_unique_names','edit_fragile_slugs','edit_home_page_nav_link','edit_form_advanced_options','manage_allowable_relationships','view_sensitive_data','manage_integration_settings','edit_raw_ldap_filters','upload_full_size_image','upgrade','db_maintenance','update_urls','bypass_locks','manage_locks','customize_all_themes','suppress_staff_listings','manage_embed_handlers',),
 		);
 	}
-	
+
 	/* Get info about available user privileges
 	 *
 	 * @param mixed NULL for all, string priv name for info on a single privilege
@@ -1481,7 +1485,7 @@
 				'description' => 'The privilege to prevent the listing of a Faculty/Staff type',
 			),
 		);
-		
+
 		if(empty($priv_name))
 			return $all_privs;
 		elseif(isset($all_privs[$priv_name]))
@@ -1492,9 +1496,9 @@
 
 	function get_owner_site_id( $entity_id ) //{{{
 	{
-		// do we really need the whole object? 
+		// do we really need the whole object?
 		//$d = get_entity_by_id_object( $entity_id );
-		
+
 		$d = new DBSelector;
 
 		$d->add_table( 'entity' );
@@ -1518,7 +1522,7 @@
 		else
 			return false;
 	} // }}}
-	
+
 	/**
 	 * @return boolean whether or not relationship unique names have been implemented in this reason database - call me only once
 	 */
@@ -1535,7 +1539,7 @@
 		}
 		return $rel_names_are_unique;
 	}
-	
+
 	/**
 	 * A simple helper function for getting the content of a uniquely named text blurb
 	 *
@@ -1566,7 +1570,7 @@
 
 	/**
 	 * Returns the path components after /minisite_templates/modules/
-	 * 
+	 *
 	 * @param string full_path - absolute path
 	 * @param string suffix - extension to strip
 	 * @param string dir - we retain this for backwards compatibility - carl_basename should be used instead if this is specified
@@ -1577,10 +1581,10 @@
 	{
 		return carl_basename( $full_path, $suffix, $dir );
 	}
-	
+
 	/**
 	 * Returns the path components after /reason_package/
-	 * 
+	 *
 	 * @param string full_path - absolute path
 	 * @param string suffix - extension to strip
 	 *
@@ -1600,7 +1604,7 @@
 			{
 				return carl_basename( $local_path . carl_substr($full_path, carl_strlen($real_local_path)), $suffix, $dir );
 			}
-			
+
 			// now try core
 			$core_path = reason_get_core_path("");
 			$real_core_path = realpath($core_path);
@@ -1621,7 +1625,7 @@
 		trigger_error('deprecated function clean_vars called by ' . $file . ' on line ' . $code_line . ' - use carl_clean_vars instead', WARNING);
 		return carl_clean_vars( $vars, $rules );
 	}
-	
+
 	/* **** Some helpful queries **** {{{
 
 		>> show all relationships, substitute ids in relationship to the names in entity
@@ -1629,7 +1633,7 @@
 
 
 	 }}} */
-	
+
 	/**
 	 * Determines if a site shares a type
 	 * @param integer $site_id the id of the site
@@ -1643,14 +1647,14 @@
 		{
 			$dbq = new DBSelector();
 			$dbq->add_table( 'ar','allowable_relationship' );
-			$dbq->add_table( 'r', 'relationship' );	
+			$dbq->add_table( 'r', 'relationship' );
 
 			$dbq->add_relation( 'ar.name = "site_shares_type"' );
 			$dbq->add_relation( 'r.type = ar.id' );
 
 			$dbq->add_relation( 'r.entity_a = '.$site_id );
 			$dbq->add_relation( 'r.entity_b = '.$type_id );
-	
+
 			$q = $dbq->get_query();
 			$r = db_query( $q, 'Failed determination of site\'s sharing status.' );
 			if( mysql_num_rows( $r ) > 0 )
@@ -1664,19 +1668,19 @@
 		}
 		return $retrieved[$site_id][$type_id];
 	}
-	
-	
+
+
 	/**
 	 * Determines the HTML editor for a particular site
 	 * @param integer $site_id the id of the site
-	 * @return string $html_editor_name name of the html editor used by the site	 
+	 * @return string $html_editor_name name of the html editor used by the site
 	 */
 	function html_editor_name($site_id)
 	{
 		$obj = get_html_editor_integration_object($site_id);
 		return $obj->get_plasmature_type();
 	}
-	
+
 	/**
 	 * Returns params particular to the editor assigned to a particular site
 	 * @param integer $site_id the id of the site
@@ -1693,7 +1697,7 @@
 		$obj = get_html_editor_integration_object($site_id);
 		return $obj->get_configuration_options();
 	}
-	
+
 	function get_html_editor_integration_object($site_id)
 	{
 		static $editor_objects = array();
@@ -1704,7 +1708,7 @@
 			$es->add_right_relationship($site_id,relationship_id_of('site_to_html_editor'));
 			$es->set_num(1);
 			$editors = $es->run_one();
-			
+
 			$html_editor_filename = defined('REASON_DEFAULT_HTML_EDITOR') ? REASON_DEFAULT_HTML_EDITOR : 'base.php';
 			if(!empty($editors))
 			{
@@ -1718,7 +1722,7 @@
 			{
 				$html_editor_filename .= '.php';
 			}
-			
+
 			if(reason_file_exists('html_editors/'.$html_editor_filename))
 			{
 				reason_include_once('html_editors/'.$html_editor_filename);
@@ -1750,12 +1754,12 @@
 		}
 		return $editor_objects[$site_id];
 	}
-	
+
 	function make_empty_array($site_id = 0, $user_id = 0)
 	{
 		return array();
 	}
-	
+
 	/**
 	 * Works like implode(), but only includes an element if it is not empty.
 	 */
@@ -1763,12 +1767,12 @@
 	{
 		$return = '';
 		$fired = false;
-		
+
 		if (!is_array($array) && func_num_args() >= 2) {
 			$array = func_get_args();
 			unset($array[0]);
 		}
-		
+
 		foreach ((array) $array as $el) {
 			if (empty($el) && ($el !== (int) $el))
 				continue;
@@ -1780,7 +1784,7 @@
 		}
 		return $return;
 	}
-	
+
 	/**
 	 * Find out what page types use the a given module
 	 *
@@ -1832,7 +1836,7 @@
 		}
 		return $retrieved[$name];
 	}
-	
+
 	/**
 	 * Determine if a given user can edit a given site
 	 *
@@ -1865,7 +1869,7 @@
 		}
 		return $cache[$user_id][$site_id];
 	}
-	
+
 	/**
 	 * Convert special characters into HTML/XHTML/XML entities, but don't double-encode
 	 *
@@ -1881,7 +1885,7 @@
 		$string = str_replace(array('&amp;','&gt;','&lt;','&quot;','&#039;'),array('&','>','<','"',"'"),$string);
 		return htmlspecialchars($string, ENT_QUOTES, 'UTF-8' );
 	}
-	
+
 	/**
 	 * Log the amount of time it took to generate the current page/process
 	 *
@@ -1899,7 +1903,7 @@
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Turn an array of unique names into an array of entities
 	 *
@@ -1923,7 +1927,7 @@
 		}
 		return $entities;
 	}
-	
+
 	/**
 	 * Get a list of tables that are not normal entity tables, and which should not be treated as such
 	 *
@@ -1933,7 +1937,7 @@
 	{
 		return array('allowable_relationship','entity','page_cache_log','relationship','URL_history',);
 	}
-	
+
 	/**
 	 * Checks whether or not something is an entity.
 	 *
@@ -1945,7 +1949,7 @@
 	 *
 	 * Please note this in its default behavior this just checks to see if an item is of class entity - that does not mean it has a type or
 	 * or exists in the database.
-	 * 
+	 *
 	 * @param object
 	 * @param mixed of_type - if "true" makes sure the entity has some value for type, if given a unique name, makes sure the entity is of that type.
 	 * @todo the has_value statements will crash when run on an entity that has been initialized with a string instead of a numeric id - consider fixing this
@@ -1964,7 +1968,7 @@
 		}
 		return $is_entity;
 	}
-	
+
 	/**
 	 * In a multidomain reason install the web path for a site might not be the web path for the current domain.
 	 *
@@ -2017,18 +2021,18 @@
 		{
 			$unique = $type;
 		}
-		
+
 		if(is_object($type))
 		{
 			$unique = $type->get_value('unique_name');
 		}
-		
+
 		if (empty($unique))
 		{
 			trigger_error('$type not an object, integer, or string');
 			$unique = NULL;
 		}
-		
+
 		if($unique && (file_exists(REASON_INC.'www/ui_images/types/'.$unique.'.png') || file_exists(REASON_INC.'www/local/ui_images/types/'.$unique.'.png') ) )
 		{
 			return REASON_HTTP_BASE_PATH.'ui_images/types/'.reason_htmlspecialchars($unique).'.png';
@@ -2041,11 +2045,11 @@
 		{
 			return '';
 		}
-		
+
 	}
-	
+
 	/**
-	 * Get the default webpath when the setting is not derived from a domain defined in 
+	 * Get the default webpath when the setting is not derived from a domain defined in
 	 * domain_settings.php
 	 * @return string the file system path to the web root
 	 */
@@ -2062,7 +2066,7 @@
 			return WEB_PATH;
 		}
 	}
-	
+
 	/**
 	 * Get the relationship id for archived entities for a given type
 	 * @param integer $type_id
@@ -2096,7 +2100,7 @@
 		}
 		return $cache[$type_id];
 	}
-	
+
 	/**
 	 * Can a given site edit a type? If so, the following are true:
 	 *
@@ -2123,7 +2127,7 @@
 				$es->add_right_relationship($site_id, relationship_id_of('site_to_type'));
 				$es->add_relation('entity.id = "'.$type_id.'"');
 				$result = $es->run_one();
-				
+
 				$es2 = new entity_selector();
 				$es2->limit_tables();
 				$es2->limit_fields();
@@ -2131,7 +2135,7 @@
 				$es2->add_right_relationship($site_id, relationship_id_of('site_cannot_edit_type'));
 				$es2->add_relation('entity.id = "'.$type_id.'"');
 				$result2 = $es2->run_one();
-				
+
 				$cache[$site_id][$type_id] = (!empty($result) && empty($result2));
 			}
 		}
@@ -2142,7 +2146,7 @@
 		}
 		return $cache[$site_id][$type_id];
 	}
-	
+
 	/**
 	 * Gets all the relationship info about an allowable relationship
 	 * @param int $r_id id in ar table
@@ -2159,11 +2163,11 @@
 		}
 		return $cache[$alrel_id];
 	}
-	
+
 	/**
-	 * Determine whether relationship metadata is allowed on a particular relationship.  If you 
+	 * Determine whether relationship metadata is allowed on a particular relationship.  If you
 	 * pass an optional site_id, it will also check if metadata is allowed in that site context.
-	 * 
+	 *
 	 * @staticvar array $site_types
 	 * @param int $alrel_id
 	 * @param int $site_id
@@ -2194,7 +2198,7 @@
 
 	/**
 	 * Given an allowable relationship id, return the type entity for the metadata it supports.
-	 * 
+	 *
 	 * @param int $alrel_id
 	 * @return object
 	 */
@@ -2209,7 +2213,7 @@
 		if ($result = $es->run_one())
 			return reset($result);
 	}
-	
+
 	/**
 	 * Get the sites a given user has administrative access to
 	 *
@@ -2222,15 +2226,15 @@
 			$user_id = $user->id();
 		else
 			$user_id = (integer) $user;
-		
+
 		if(empty($user_id))
 		{
 			trigger_error('reason_user_sites() requires a user entity or integer ID as its first parameter. Returning empty array.');
 			return array();
 		}
-		
+
 		static $cache = array();
-		
+
 		if(!isset($cache[$user_id]))
 		{
 			$es = new entity_selector();
@@ -2240,10 +2244,10 @@
 			$es->limit_fields();
 			$cache[$user_id] = $es->run_one();
 		}
-		
+
 		return $cache[$user_id];
 	}
-	
+
 	/**
 	 * Escape a string for use in a Reason db sql statement
 	 *
@@ -2275,7 +2279,7 @@
 	{
 		if(is_numeric($site))
 			$site = new entity($site);
-		
+
 		if(empty($theme))
 		{
 			$es = new entity_selector();
@@ -2292,7 +2296,7 @@
 		{
 			$theme = new entity($theme);
 		}
-		
+
 		if($theme->get_value('theme_customizer'))
 		{
 			reason_include_once('theme_customizers/'.$theme->get_value('theme_customizer').'.php');
@@ -2328,7 +2332,7 @@
 		}
 		return (isset($customizer)) ? $customizer : false;
 	}
-	
+
 	/**
 	 * Returns the version number of this instance of Reason CMS.
 	 */
@@ -2343,7 +2347,7 @@
 		}
 		return $version;
 	}
-	
+
 	/**
 	 * Returns an HTMLPurifier config object defined in config/htmlpurifier/setup.php.
 	 *
@@ -2368,14 +2372,14 @@
 		}
 		return $config[$config_requested];
 	}
-	
+
 	/**
 	 * Returns XHTML snippets filtered to remove XSS vectors using HTMLPurifier.
 	 *
 	 * This is expensive - best used before saving content as opposed to on display of content.
 	 *
 	 * Note we only run filters if the raw_html provided is a string - boolean, int, NULL, etc pass through untouched.
-	 * 
+	 *
 	 * We also skip tidy and purification in any of these cases:
 	 *
 	 * - $raw_html is empty
@@ -2399,7 +2403,7 @@
 		}
 		return $raw_html;
 	}
-	
+
 	/**
 	 * Returns sanitized entity value according to rules defined in config/entity_sanitization/setup.php
 	 *
@@ -2413,7 +2417,7 @@
 		if (defined('REASON_ENABLE_ENTITY_SANITIZATION') && (REASON_ENABLE_ENTITY_SANITIZATION === true))
 		{
 			if (empty($GLOBALS['_reason_entity_sanitization'])) reason_include_once('config/entity_sanitization/setup.php');
-			$type_unique_name = (is_numeric($type_unique_name_or_id)) ? unique_name_of($type_unique_name_or_id) : $type_unique_name_or_id;	
+			$type_unique_name = (is_numeric($type_unique_name_or_id)) ? unique_name_of($type_unique_name_or_id) : $type_unique_name_or_id;
 			if (isset($GLOBALS['_reason_entity_sanitization'][$type_unique_name][$field_name]))
 			{
 				if ($GLOBALS['_reason_entity_sanitization'][$type_unique_name][$field_name] != '') // if it is the empty string we don't sanitize
@@ -2433,14 +2437,14 @@
 		return (isset($sanitize_func)) ? $sanitize_func($raw_value) : $raw_value;
 	}
 
-	
+
 	/**
 	 * Returns sanitized entity values according to rules defined in config/entity_sanitization/setup.php
 	 *
 	 * @param mixed $type_unique_name_or_id
 	 * @param array $raw_value_array
 	 * @return array
-	 */	
+	 */
 	function reason_sanitize_values($type_unique_name_or_id, $raw_value_array)
 	{
 		if (defined('REASON_ENABLE_ENTITY_SANITIZATION') && (REASON_ENABLE_ENTITY_SANITIZATION === true))
@@ -2469,12 +2473,12 @@
 		if (!file_exists($dirname)) {
 			return false;
 		}
-	  
+
 		// Simple delete for a file
 		if (is_file($dirname) || is_link($dirname)) {
 			return unlink($dirname);
 		}
-	  
+
 		// Loop through the folder
 		$dir = dir($dirname);
 		while (false !== $entry = $dir->read()) {
@@ -2482,11 +2486,11 @@
 			if ($entry == '.' || $entry == '..') {
 				continue;
 			}
-	  
+
 			// Recurse
 			rmdir_and_contents($dirname . DIRECTORY_SEPARATOR . $entry);
 		}
-	  
+
 		// Clean up
 		$dir->close();
 		return rmdir($dirname);
