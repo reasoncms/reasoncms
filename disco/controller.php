@@ -37,10 +37,10 @@ class FormController
 	 *
 	 * @access private
 	 * @see FormStep
-	 * @var array of objects 
+	 * @var array of objects
 	 */
 	var $forms;
-	
+
 	/**
 	 * possible transitions between forms
 	 *
@@ -136,29 +136,29 @@ class FormController
 	/**#@+
 	 * @access private
 	 */
-	
+
 	/**
 	 * up to date path of where user has travelled
 	 * @var array
 	 */
 	var $_path = array();
-	
+
 	/**
 	 * has the controller init()ed?
 	 * @var bool
 	 */
 	var $_inited = false;
-	
+
 	/**
 	 * internal copy of request variables available
 	 */
 	var $_request;
-	
+
 	/**
 	 * internal copy of session form data
 	 */
 	var $_form_data;
-	
+
 	/**
 	 * Map of variables to forms
 	 *
@@ -169,7 +169,7 @@ class FormController
 	 * @var array
 	 */
 	var $_vars = array();
-	
+
 	/**
 	 * reverse lookup array of vars.  structured like so:
 	 * <code>
@@ -179,19 +179,19 @@ class FormController
 	 * @var array
 	 */
 	var $_form_vars = array();
-	
+
 	/**
 	 * step of the process the user is on.
 	 * @var string
 	 */
 	var $_current_step;
-	
+
 	/**
 	 * is this the first time the FormController has been run?
 	 * @var bool
 	 */
 	var $_first_run = true;
-	
+
 	/**
 	 * simple array to store names of form steps in the order they were added.
 	 *
@@ -200,19 +200,19 @@ class FormController
 	 * @var string
 	 */
 	var $_form_order_added = array();
-	
+
 	/**
 	 * Request variable name that holds the current step.  Generally passed in the URL as a GET var
 	 * @var string
 	 */
 	var $_step_var_name = '_step';
-	
+
 	/**
 	 * key for sessioned form data
 	 * @var string
 	 */
 	var $_data_key = '_fc_data';
-	
+
 	/**
 	 * key for sessioned path data in
 	 * @var string
@@ -224,14 +224,14 @@ class FormController
 	 * @var string
 	 */
 	var $_base_url;
-	
+
 	/**
 	 * Without this, the start of a form will clobber the text of a query string on $form->run();
 	 * @var boolean
 	 * @access public
 	 */
 	var $preserve_query_string = true;
-	
+
 	/**
 	 * Used to store the name of the first step
 	 * @var string
@@ -261,9 +261,9 @@ class FormController
 	 * that the user start from the beginning, set this to true
 	 */
 	var $allow_arbitrary_start = false;
-	
+
 	/**#@-*/
-	
+
 	/**
 	 * Constructor
 	 *
@@ -273,11 +273,11 @@ class FormController
 	function FormController() // {{{
 	{
 	} // }}}
-	
+
 	//=========================================//
 	//======== PUBLIC RUNNABLE METHODS ========//
 	//=========================================//
-	
+
 	/**
 	 * Set up the controller
 	 * @access public
@@ -294,15 +294,15 @@ class FormController
 				header('Location: '.get_current_url( 'https' ) );
 				exit;
 			}
-			
+
 			$host = (empty($url_parts['port'])) ? $url_parts['host'] : $url_parts['host'] .':'.$url_parts['port'];
 			$this->_base_url = $url_parts[ 'scheme' ].'://'.$host.$url_parts['path'];
 
 			if (empty($this->_request)) $this->set_request();
-			
+
 			$this->session = new $this->session_class;
 			$this->session->set_session_name($this->session_name);
-			
+
 			// determine if this is a first run or not, start session
 			if (!$this->session->exists() && !$this->session->has_started())
 			{
@@ -310,7 +310,7 @@ class FormController
 			}
 
 			if ($this->session->has_started() || $this->session->exists())
-			{	
+			{
 				if( !$this->session->get($this->_data_key . '_running') )
 				{
 					$this->_first_run = true;
@@ -326,7 +326,7 @@ class FormController
 				}
 				$this->_inited = true;
 			} else {
-				trigger_error( 'FormController Error: Failed to start session');	
+				trigger_error( 'FormController Error: Failed to start session');
 			}
 
 			// build the master list of form to variable
@@ -371,7 +371,7 @@ class FormController
 		}
 		else
 		{
-			// If this looks like the first time we've hit the page, but there's a 
+			// If this looks like the first time we've hit the page, but there's a
 			// request for a form step that isn't the first one, we've probably had
 			// the session expire out from under us.
 			if( $this->_first_run && !$this->allow_arbitrary_start)
@@ -380,7 +380,7 @@ class FormController
 				{
 					if ($this->_request[ $this->_step_var_name ] != $this->_get_start_step())
 					{
-						$this->session->set( 'timeout_msg' , $this->sess_timeout_msg);		
+						$this->session->set( 'timeout_msg' , $this->sess_timeout_msg);
 					}
 				}
 			}
@@ -403,12 +403,12 @@ class FormController
 				}
 			}
 		}
-		
+
 		if( empty( $this->_current_step ) )
 		{
 			$this->_current_step = $this->_get_start_step();
 		}
-		
+
 		$this->validate_step();
 	} // }}}
 	/**
@@ -476,7 +476,7 @@ class FormController
 		}
 		return $this->_final_step;
 	} // }}}
-	 
+
 	/**
 	 * Return the name of the current step
 	 * @access public
@@ -530,7 +530,7 @@ class FormController
 	{
 	} // }}}
 
-	
+
 	/**
 	 * Updates the session with all new/changed data from the current form step.
 	 * You can pass your own set of form var names, for cases where you have dynamic
@@ -545,12 +545,12 @@ class FormController
 		{
 			$no_session = array_merge( (array) $no_session, (array) $f->no_session );
 		}
-		
+
 		if (!is_array($vars))
 		{
 			$vars = $this->_form_vars[ $this->_current_step ];
 		}
-		
+
 		foreach( $vars AS $var )
 		{
 			if( !in_array( $var, $no_session ) )
@@ -596,7 +596,7 @@ class FormController
 			// session file.
 			trigger_error('Session has expired', E_USER_NOTICE);
 			$_SESSION[ 'timeout_msg' ] = true;
-			
+
 			//! This should be a little more descriptive if we're going to be timing out more often, don't you think? Maybe preserve cur_module? Or site_id if they exist?
 			header('Location: '.$this->_base_url.'?'.$this->_step_var_name.'='.$this->_get_start_step());
 			exit;
@@ -608,23 +608,25 @@ class FormController
 			header('Location: '.$this->_base_url.'?'.$this->_step_var_name.'='.$this->_get_start_step() );
 			exit;
 		}
-		
+
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		
+
 		// intercept posts, store in session, redirect to a new page, send disco the sessioned _POST
-		
+
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		$this->intercept_post();
-		
+
 		$final_step = ( $this->_current_step == $this->_get_final_step() );
-		
+
 		// get the actual object that has already been instantiated.
 		// we know current step is good since validate_step has run.
 		$f =& $this->forms[ $this->_current_step ];
-		$f->set_request( $this->_request );
+		if ( ! $_SESSION['stationery_fc_data_running'] ) { //// HACK ALERT: fixing a bug on the Stationery Ordering site ////
+			$f->set_request( $this->_request ); // <-- somehow wrecks the session on Stationery site???
+		}
 		$actions = array();
 		if( !empty( $this->transitions[ $this->_current_step ] ) )
 		{
@@ -645,11 +647,11 @@ class FormController
 							$actions[ $action ] = $label;
 						}
 						break;
-					
+
 					case 'method':
 						$actions[ 'next' ] = $this->default_next_text;
 						break;
-					
+
 					default:
 						trigger_error('Unknown transition step decision type.  How is that for programmer jargon?');
 						break;
@@ -680,9 +682,9 @@ class FormController
 				$actions[ 'next' ] = $this->default_final_text;
 		}
 		$f->actions = $actions;
-		
+
 		$f->run_load_phase();
-		
+
 		if( !empty( $f->chosen_action ) )
 		{
 			if( $f->chosen_action == 'back' )
@@ -692,12 +694,12 @@ class FormController
 			// Save the last action; otherwise, it's not available to forms.
 			$this->session->set('chosen_action', $f->chosen_action);
 		}
-		
+
 		if( empty( $form_jump ) )
 		{
 			$f->run_process_phase();
-			
-			// $processed was added to FormStep to see if the form is done.  
+
+			// $processed was added to FormStep to see if the form is done.
 			// This will be false on first time or in error checking. We
 			// don't want to load the form values into the session until
 			// the form has passed error checking.
@@ -731,9 +733,9 @@ class FormController
 			$this->session->set( 'timeout_msg' , '');
 			echo $this->sess_timeout_msg;
 		}
-		
+
 		$f->run_display_phase();
-		
+
 		if( $final_step AND $f->processed )
 		{
 			$final_where_to = $f->where_to();
@@ -752,11 +754,11 @@ class FormController
 			}
 		}
 	} // }}}
-	
+
 	//====================================================================//
 	//========== PUBLIC DATA MANIPULATION AND RETRIEVAL METHODS ==========//
 	//====================================================================//
-	
+
 	/**
 	 * Gets all form class names that the Controller is using
 	 * @access public
@@ -878,9 +880,9 @@ class FormController
 	{
 		// TODO:
 		// check to see if next forms actually exist
-		
+
 		// make sure decision methods exist
-		
+
 		$this->transitions[ $form ] = $transition_args;
 	} // }}}
 	/**
@@ -909,7 +911,7 @@ class FormController
 		}
 		return $rules;
 	} // }}}
-		
+
 	function get_form_data($key)
 	{
 		if (!isset($this->_form_data))
@@ -921,7 +923,7 @@ class FormController
 		else
 			return '';
 	}
-	
+
 	function set_form_data($key, $val)
 	{
 		if (!isset($this->_form_data))
@@ -940,13 +942,13 @@ class FormController
 		}
 		return $this->_form_data;
 	}
-	
+
 	function set_all_form_data($data)
 	{
 		$this->_form_data = $data;
 		$this->session->set($this->_data_key, $this->_form_data);
 	}
-	
+
 	function destroy_form_data()
 	{
 		$this->session->set($this->_data_key, array());
@@ -955,16 +957,16 @@ class FormController
 	function reset_to_first_run()
 	{
 		$this->session->set($this->_path_key, array());
-		$this->session->set($this->_data_key . '_running', '');		
+		$this->session->set($this->_data_key . '_running', '');
 	}
-	
+
 	function set_session_class($class)
 	{
 		if (class_exists($class))
 		{
 			$this->session_class = $class;
 		} else {
-			trigger_error( 'FormController Error: Requested session class does not exist:' . $class);	
+			trigger_error( 'FormController Error: Requested session class does not exist:' . $class);
 		}
 	}
 
@@ -1003,15 +1005,15 @@ class FormController
 		{
 			return $this->get_form_data('controller_'.$step.'_processed');
 		} else {
-			trigger_error( 'FormController Error: get_step_is_complete called on nonexistent step:' . $step);	
+			trigger_error( 'FormController Error: get_step_is_complete called on nonexistent step:' . $step);
 			return false;
-		}			
-	}	
-	
+		}
+	}
+
 	//=========================================//
 	//========== PRIVATE METHODS ==============//
 	//=========================================//
-	
+
 	/**
 	 * Populates each form step with the data saved in the session
 	 * @access private
@@ -1037,7 +1039,7 @@ class FormController
 		// if it's the final step, there is no next step
 		if( $this->_current_step == $this->_get_final_step() )
 			return;
-		
+
 		// determine where to go from here.
 		$trans = $this->transitions[ $this->_current_step ];
 		// nothing was specified as a next step for this form.  try to figure out where to go.
@@ -1173,7 +1175,7 @@ class FormController
 /**
  * Multi Page Form Controller Session
  *
- * A very minimal session class for standalone use.  For Reason integration, use one of the 
+ * A very minimal session class for standalone use.  For Reason integration, use one of the
  * Reason session classes
  *
  * @author Mark Heiman
