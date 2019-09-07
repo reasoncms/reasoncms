@@ -25,12 +25,21 @@ $GLOBALS[ '_social_integrator_class_names' ][ basename( __FILE__, '.php' ) ] = '
  * Currently this provides content manager integration and also implements:
  *
  * - SocialAccountProfileLinks
- *
+ * - SocialAccountPlatform
  *
  * @author Gage Dykema
  */
-class ReasonLinkedInIntegrator extends ReasonSocialIntegrator implements SocialAccountProfileLinks
+class ReasonLinkedInIntegrator extends ReasonSocialIntegrator implements SocialAccountProfileLinks, SocialAccountPlatform
 {
+	/****************** SocialAccountPlatformimplementation ********************/
+	public function get_platform_name()
+	{
+		return 'LinkedIn';
+	}
+	public function get_platform_icon()
+	{
+		return REASON_HTTP_BASE_PATH . 'modules/social_account/images/linkedin.png';
+	}
 	/****************** SocialAccountProfileLinks implementation ********************/
 	public function get_profile_link_text($social_entity_id)
 	{
