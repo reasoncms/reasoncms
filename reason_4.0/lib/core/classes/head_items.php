@@ -174,6 +174,15 @@ class HeadItems
 	{
 		if($url[0] === '/' && substr($url, -5) === '.less')
 		{
+			if(defined('REASON_HTTP_BASE_PATH_LOCAL') && substr($url, 0, strlen(REASON_HTTP_BASE_PATH)) === REASON_HTTP_BASE_PATH)
+			{
+				$remainder = substr($url, strlen(REASON_HTTP_BASE_PATH));
+				$local_full_path = WEB_PATH.REASON_HTTP_BASE_PATH_LOCAL.$remainder;
+				if(file_exists($local_full_path))
+				{
+					$url = REASON_HTTP_BASE_PATH_LOCAL.$remainder;
+				}
+			}
 			return $this->add_less_stylesheet( $url, $media, $add_to_top, $wrapper );
 		}
 		if ($url[0] === '/' && substr($url, -5) === '.scss')
@@ -585,6 +594,20 @@ class HeadItems
 		}
 		$this->handle_duplicates($html_items);
 		return implode("\n",$html_items)."\n";
+	}
+	
+	function get_stylesheet_urls()
+	{
+		$ret = array();
+		pray($this->_head_items);
+		foreach($this->_head_items as $item)
+		{
+			if($item['element'] == 'link' && isset($item['attributes']['rel']) && $item['attributes']['rel'] == 'stylesheet' && !empty($item['attributes']['href']))
+			{
+				$ret[] = $item['attributes']['href'];
+			}
+		}
+		return $ret;
 	}
 
 	/**
