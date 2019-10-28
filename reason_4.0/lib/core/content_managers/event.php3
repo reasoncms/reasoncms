@@ -335,7 +335,7 @@
 			}
 			else
 			{
-				$ret .= '<p><a href="https://apps.carleton.edu/campus/web-group/training/forms/" target="_blank">How to set up registration/ticketing for this event</a></p>';
+				$ret .= '<p><a href="https://apps.carleton.edu/campus/web-group/training/events/tickets/" target="_blank">How to set up registration/ticketing for this event</a></p>';
 			}
 			return $ret;
 		}
