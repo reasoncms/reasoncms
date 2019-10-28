@@ -37,7 +37,7 @@
 			{
 				$this->head_items->add_javascript(JQUERY_UI_URL, true);
 				$this->head_items->add_javascript(JQUERY_URL, true);
-				$this->head_items->add_stylesheet(JQUERY_UI_CSS_URL);        
+				$this->head_items->add_stylesheet(JQUERY_UI_CSS_URL);
 				$this->head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH . 'formbuilder/js/formbuilder_translation.js');
 				$this->head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH . 'formbuilder/js/jquery.formbuilder.js');
 				$this->head_items->add_stylesheet(REASON_PACKAGE_HTTP_BASE_PATH . 'formbuilder/css/jquery.formbuilder.css');
@@ -53,12 +53,12 @@
 			$this->add_required( 'thank_you_message' );
 
 			$this->add_element( 'thor_comment', 'hidden');
-		
+
 			$this->set_comments( 'email_of_recipient', form_comment('When a user submits the form, their responses will be sent here. You are encouraged to use '.SHORT_ORGANIZATION_NAME.' usernames instead of complete '.SHORT_ORGANIZATION_NAME.' email addresses. Multiple addresses or usernames may be separated by commas. This field is required if this form does not save responses in Reason.') );
 			$this->set_comments( 'submission_limit', form_comment('To limit the number of submissions to this form, make sure the form is saving its data in Reason and enter a maximum number of submissions here. The form will stop accepting submissions when this limit is reached. A value of 0 indicates no limit.'));
 			$this->set_comments( 'open_date', form_comment('If this value is set, the form will not accept submissions before this date and time.'));
 			$this->set_comments( 'close_date', form_comment('If this value is set, the form will not accept submissions after this date and time.'));
-	
+
 			$this->set_display_name( 'email_of_recipient', 'Email of Recipient' );
 			$this->set_display_name( 'thor_content', 'Form Fields' );
 			$this->set_display_name( 'db_flag', 'Form Response Options' );
@@ -71,7 +71,7 @@
 				'no'=>'Only email form responses to the recipient(s) listed below; do not save in Reason.',
 					)));
 			$this->change_element_type( 'thank_you_message' , html_editor_name($this->admin_page->site_id) , html_editor_params($this->admin_page->site_id, $this->admin_page->user_id) );
-			
+
 			$db_flag = $this->get_value('db_flag');
 			$display_return_link = $this->get_value('display_return_link');
 			if (empty($db_flag)) $this->set_value('db_flag', 'no');
@@ -94,14 +94,14 @@
 			$this->add_element('thank_you_note','comment',array('text'=>'<h3>Thank You Note</h3>') );
 			$this->set_display_name('thank_you_message','This information is displayed after someone submits the form:');
 			$this->add_element('limiting_note','comment',array('text'=>'<h3>Limiting and Scheduling</h3>') );
-			
-			
+
+
 			$es = new entity_selector($this->admin_page->site_id);
 			$es->description = "Get future, non-recurring events on this site";
 			$es->add_type(id_of('event_type'));
 			$es->add_relation(" `event`.`datetime` > NOW() AND `event`.`recurrence` = 'none' ");
 			$es->set_order(" `event`.`datetime` DESC");
-			
+
 			$events = $es->run_one();
 			$events_on_form = array();
 			foreach($events as $event) {
@@ -116,20 +116,20 @@
 			$script = '<script type="text/plain" id="event_rel_info">' . $json . '</script>';
 			$this->add_element('event_rel_info', 'comment', array('text' => $script));
 
-			// Stash a privs flag in the page source for the JS 
+			// Stash a privs flag in the page source for the JS
 			// to pick up client side. This flag shows hidden admin-only
 			// fields in the formbuilder tool.
 			$has_advanced = reason_user_has_privs($this->admin_page->user_id, 'edit_form_advanced_options');
 			$user_options_json = json_encode(array("user_has_advanced_options" => $has_advanced));
 			$script = '<script type="text/plain" id="user_options_json">' . $user_options_json . '</script>';
 			$this->add_element('user_options_json', 'comment', array('text' => $script));
-			
+
 			$this->set_element_properties('submission_limit', array('size'=>'4'));
 			// echo "<HR>using thor version...[" . USE_THOR_VERSION . "]<hr>";
-            
+
 			$published = false;
 			$publish_status_text = '';
-			
+
 			$es = new entity_selector();
 			$es->add_type(id_of('minisite_page'));
 			$es->add_left_relationship($this->admin_page->id, relationship_id_of('page_to_form'));
@@ -137,7 +137,7 @@
 			if ($pages_with_form)
 			{
 				$published = true;
-				
+
 				$str_pages_with_form = '';
 				foreach ($pages_with_form as $page_with_form)
 				{
@@ -145,18 +145,18 @@
 					$reason_page_url->set_id( $page_with_form->_id );
 					$page_url = $reason_page_url->get_url();
 					$str_pages_with_form .= '<li><a target="_blank" href="' . $page_url . '">' . $page_with_form->get_value('name') . '</a>';
-					
+
 					if ( !in_array( $page_with_form->get_value( 'custom_page' ), page_types_that_use_module( 'form' ) ) )
 					{
 						$str_pages_with_form .= ' (Warning: Page needs to be given the <em>Form</em> page type for this form to show up.)';
 					}
-					
+
 					$str_pages_with_form .= '</li>';
 				}
-				
+
 				$publish_status_text .= '<strong>Status:</strong> Published to the following page(s):<ul>' . $str_pages_with_form . '</ul>';
 			}
-			
+
 			$es = new entity_selector();
 			$es->add_type(id_of('event_type'));
 			$es->add_left_relationship($this->admin_page->id, relationship_id_of('event_to_form'));
@@ -164,23 +164,23 @@
 			if ($events_with_form)
 			{
 				$published = true;
-				
+
 				$str_events_with_form = '';
 				foreach ($events_with_form as $event_with_form)
 				{
 					$str_events_with_form .= '<li>' . $event_with_form->get_value('name') . '</li>';
 				}
-				
+
 				$publish_status_text .= '<strong>Status:</strong> Published as registration form for the following event(s):<ul>' . $str_events_with_form . '</ul>';
 			}
-			
+
 			if (!$published)
 			{
-				$publish_status_text .= '<strong>Status:</strong> Unpublished. <a target="_blank" href="http://reasoncms.org/userdocs/managing-content/other-types/forms/#attaching_a_form_to_a_page">How to publish your form</a>';
+				$publish_status_text .= '<strong>Status:</strong> Unpublished. <a target="_blank" href="https://apps.carleton.edu/campus/web-group/training/forms/">How to publish your form</a>';
 			}
-			
+
 			$this->add_element('publish_status', 'comment', array('text'=>$publish_status_text));
-			
+
 			if (USE_THOR_VERSION == THOR_VERSION_FLASH)
 			{
 				include_once( THOR_INC . 'plasmature/flash.php' );
@@ -252,11 +252,11 @@
 			}
 			$this->setup_tableless_element();
 		}
-		
+
 		function pre_error_check_advanced_options()
 		{
 		}
-		
+
 		function run_error_checks_advanced_options()
 		{
 			if(reason_user_has_privs($this->admin_page->user_id, 'edit_form_advanced_options'))
@@ -274,7 +274,7 @@
 		}
 		/**
 		 * Grab the value of the thor_view element - if it corresponds to something in the folder, then set the value
-		 * of the pull down menu accordingly. If not, 
+		 * of the pull down menu accordingly. If not,
 		 */
 		function setup_thor_view_element()
 		{
@@ -287,14 +287,14 @@
 			$form_entity = new entity ($this->admin_page->id);
 			$thor_view_value = $form_entity->get_value('thor_view');
 			$this->change_element_type('thor_view', 'select', array('options' => $options));
-			
+
 			$comment_str = form_comment('Enter the fully qualified path <strong>OR</strong> a relative path 
 				from your core / local directory to a thor_view file. Paths entered here will clear any view selected above.');
 			$this->add_element('thor_view_custom','text', array('display_name' => 'Custom Thor View Path', 'size' => '75', 'comments' => $comment_str));
 			if (!empty($thor_view_value) && !isset($options[$thor_view_value]))
 			$this->set_value('thor_view_custom', $thor_view_value);
 		}
-		
+
 		/**
 		 * New in Reason 4.4, if this is present and set to 1 the form module will use the tableless stacked box class.
 		 *
@@ -311,14 +311,14 @@
 				{
 					$this->change_element_type('tableless', 'checkbox', array('checked_value' => 1, 'description' => 'Use tableless display for this form.'));
 				}
-				else $this->change_element_type('tableless', 'hidden');	
+				else $this->change_element_type('tableless', 'hidden');
 			}
 			else
 			{
 				trigger_error('The field "tableless" needs to be added to the form table. Please run the 4.3 to 4.4 upgrade scripts.');
 			}
 		}
-		
+
 		function pre_error_check_actions()
 		{
 			if ($this->db_table_exists_check())
@@ -335,12 +335,12 @@
 				$this->remove_element('thor_content');
 				$data_manager_link = $this->admin_page->make_link( array( 'cur_module' => 'ThorData' ));
 				$data_comment= '<div id="manageDataNote"><p><strong>This form has stored data. </strong><a href="'.$data_manager_link.'">Manage stored data</a></p>';
-				$data_comment.='<p>To edit this form, you will first need to delete the stored data.</p></div>';	
-				$this->change_element_type('thor_comment','comment',array('text'=>$data_comment));	
+				$data_comment.='<p>To edit this form, you will first need to delete the stored data.</p></div>';
+				$this->change_element_type('thor_comment','comment',array('text'=>$data_comment));
 			}
 			$this->pre_error_check_advanced_options();
 		}
-		
+
 		function run_error_checks()
 		{
 			$email_of_recipient = $this->get_value('email_of_recipient');
@@ -349,7 +349,7 @@
 			{
 				$this->set_error('email_of_recipient', 'Because the data is not being saved to a database, you must provide an valid e-mail address or netID' );
 			}
-			
+
 			if($this->get_value('email_of_recipient'))
 			{
 				$bad_usernames = array();
@@ -383,7 +383,7 @@
 					$this->set_error('email_of_recipient',$msg);
 				}
 			}
-			
+
 			if ($this->get_value('submission_limit') && $db_flag == 'no')
 			{
 				$this->set_error('submission_limit','You have set a submission limit, but this form is not saving data to a database. Please enable the database option or remove the submission limit.');
@@ -394,7 +394,7 @@
 
 		/**
 		 * Get the Thor XML definition for this form
-		 * 
+		 *
 		 * @return string a thor xml form defition
 		 */
 		function get_thor_content_value()
@@ -404,7 +404,7 @@
 				$thorContent = $this->get_value('thor_content');
 			} else {
 				// Once a form collects submissions, the thor_content field changes types
-				// on the content manager object. So actually check the form entity's 
+				// on the content manager object. So actually check the form entity's
 				// value for thor_content.
 				$thorContent = $this->entity->get_value('thor_content');
 			}
@@ -414,7 +414,7 @@
 
 		/**
 		 * Determine if the form has event ticket items present in the definition
-		 * 
+		 *
 		 * @return boolean TRUE if form has one or more event tickets defined
 		 */
 		function has_event_tickets()
@@ -455,7 +455,7 @@
 
 		/**
 		 * Get Event IDs out of the thor form xml
-		 * 
+		 *
 		 * @return array of event IDs in the form, or an empty array
 		 */
 		function get_event_ids_in_form()
@@ -487,7 +487,7 @@
 		/**
 		 * Manage 'event_to_form' relationships when a event ticket form node is present
 		 * or deleted.
-		 * 
+		 *
 		 * Also trigger the requirements routine for forms with event ticket
 		 */
 		function run_error_checks_event_tickets()
@@ -515,7 +515,7 @@
 					$this->set_error($elementName, $info['message'] . " Please resave the form to automatically correct the issue.");
 				}
 			}
-			
+
 			// Make sure the form definition has a field named "Your Email"
 			$thorContent = $this->get_thor_content_value();
 			try {
@@ -595,11 +595,11 @@
 				$es->add_type(id_of('minisite_page'));
 				$es->add_left_relationship($this->admin_page->id, relationship_id_of('page_to_form'));
 				$result = $es->run_one();
-				
-				$page = (isset($result[$page_id])) ? $result[$page_id]: current($result);	
+
+				$page = (isset($result[$page_id])) ? $result[$page_id]: current($result);
 			}
 		}
-		
+
 		function db_table_exists_check()
 		{
 			$table = $this->form_prefix . $this->admin_page->id;
@@ -609,7 +609,7 @@
   			$res = mysql_query($q);
   			$results = mysql_fetch_assoc($res);
   			if (strstr($results['Msg_text'],"doesn't exist") ) $ret = false;
-  			else 
+  			else
 			{
 				$ret = true;
 				$this->type = 'db';
@@ -630,7 +630,7 @@
 				$q = 'create table thor	(
 					id int(10) NOT NULL auto_increment,
 					content text NULL, PRIMARY KEY (id))';
-				$res = db_query($q, 'could not create thor temporary data storage using db connection '.THOR_FORM_DB_CONN);			
+				$res = db_query($q, 'could not create thor temporary data storage using db connection '.THOR_FORM_DB_CONN);
 			}
                         connectDB(REASON_DB);
 		}
