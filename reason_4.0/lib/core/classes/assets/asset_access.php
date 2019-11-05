@@ -41,20 +41,20 @@ class ReasonAssetAccess
 	var $site;
 	var $asset;
 	var $_username;
-	
+
 	function ReasonAssetAccess($asset_id = '')
 	{
 		if (!empty($asset_id)) $this->set_asset_id((int) $asset_id);
 	}
-	
+
 	/**
 	 * sets $site entity given a site_id
-	 */ 
+	 */
 	function set_site_id($site_id)
 	{
 		$this->site = new entity($site_id);
 	}
-	
+
 	/**
 	 * sets $asset entity given an asset_id
 	 */
@@ -63,7 +63,7 @@ class ReasonAssetAccess
 		$e = new entity($asset_id);
 		if (reason_is_entity($e, 'asset')) $this->asset = $e;
 	}
-	
+
 	/**
 	 * sets $site entity to the owner of $asset
 	 */
@@ -72,12 +72,12 @@ class ReasonAssetAccess
 		$owner_asset = $this->asset->get_owner();
 		$this->set_site_id($owner_asset->id());
 	}
-	
+
 	function set_username($username)
 	{
 		$this->_username = $username;
 	}
-	
+
 	function get_username()
 	{
 		if($this->_username === NULL)
@@ -86,10 +86,10 @@ class ReasonAssetAccess
 		}
 		return $this->_username;
 	}
-	
+
 	/**
 	 * does everything - ensures page is secure, checks for access, delivers file or headers user to forbidden page
-	 */ 
+	 */
 	function run()
 	{
 		if (empty($this->asset)) return false;
@@ -139,7 +139,7 @@ class ReasonAssetAccess
 			exit();
 		}
 	}
-	
+
 	/**
 	 * determines whether or not authentication is necessary for a particular asset
 	 * and whether the current user is a member of the group that has access
@@ -152,23 +152,23 @@ class ReasonAssetAccess
 		$es->add_type(id_of('group_type'));
 		$es->set_num(1);
 		$groups = $es->run_one();
-		
+
 		if(empty($groups))
 		{
 			return true;
 		}
-		
-		
+
+
 		$group = current($groups);
 		$gh = new group_helper();
 		$gh->set_group_by_entity($group);
-		
+
 		$access = ($gh->is_username_member_of_group("")) // test if anonymous access is allowed
 		          ? true // if so return true
 		          : $gh->is_username_member_of_group( $this->get_username()); // else discover and check username
-		
-		
-		
+
+
+
 		if($access === NULL) // unknown due to non-logged-in-user
 		{
 			reason_require_authentication('login_to_access_file');
@@ -176,7 +176,7 @@ class ReasonAssetAccess
 		}
 		return $access; // true or false
 	}
-	
+
 	/**
 	 * _send_file delivers the asset to the client - if should be invoked using the run function of the class and not called directly
 	 *
@@ -194,7 +194,7 @@ class ReasonAssetAccess
 		{
 
 			$file_size = filesize($file_path);
-		
+
 			// disposition needs some extensive testing - should it be attachment or inline?
 			// $file_disposition = ($file_ext == 'pdf') ? 'attachment' : 'inline'; // download by default
 
@@ -208,7 +208,7 @@ class ReasonAssetAccess
 			} else {
 				$file_disposition = 'inline';
 			}
-		
+
 			$mime_type = $this->get_mime_type();
 			if(!empty($mime_type) && strstr($mime_type, "text/")) {
 				 $file_handle = fopen($file_path, "r"); }
@@ -239,7 +239,7 @@ class ReasonAssetAccess
 			trigger_error ('The asset at ' . $file_path . ' could not be sent to the user because it does not exist');
 		}
 	}
-	
+
 	/**
 	 * Determines the MIME type of the asset based on its file extension.
 	 * Requires the {@link APACHE_MIME_TYPES} constant to be properly defined.
@@ -250,15 +250,21 @@ class ReasonAssetAccess
 	 */
 	function get_mime_type($fileext = '')
 	{
+		// Local override not working, so I'm doing this in here directly (dhuyck 11/5/2019):
+		// Force the IRB data security form to download rather than open in-browser
+		if ( $this->asset->id() == id_of( 'irb_data_security_form' ) ) {
+			return 'application/octet-stream';
+		}
+
 		if ($this->asset && is_object($this->asset) && $this->asset->has_value('mime_type'))
 		{
 		 	return $this->asset->get_value('mime_type');
 		}
-	    
+
 		$fileext = (empty($fileext))
 			? $this->asset->get_value('file_type')
 			: $fileext;
-		
+
 		return mime_type_from_extension($fileext, '');
 	}
 }
