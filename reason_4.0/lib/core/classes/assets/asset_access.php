@@ -252,7 +252,7 @@ class ReasonAssetAccess
 	{
 		// Local override not working, so I'm doing this in here directly (dhuyck 11/5/2019):
 		// Force the IRB data security form to download rather than open in-browser
-		if ( $this->asset->id() == id_of( 'irb_data_security_form' ) ) {
+		if ( is_object( $this->asset ) && $this->asset->id() == id_of( 'irb_data_security_form' ) ) {
 			return 'application/octet-stream';
 		}
 
