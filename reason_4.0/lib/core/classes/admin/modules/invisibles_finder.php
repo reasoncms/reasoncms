@@ -103,10 +103,16 @@ class InvisiblesFinderModule extends DefaultModule {
 				$this->render_invisible_entities( $type, $invisibles );
 
 				$relationship_type_id = @relationship_id_of( 'page_to_' . $type->get_value( 'unique_name' ) );
+				if ( ! $relationship_type_id ) {
+					$relationship_type_id = @relationship_id_of( 'minisite_page_to_' . $type->get_value( 'unique_name' ) );
+				}
 				if ( $site && $relationship_type_id ) {
-					echo "<hr><h2>Unused Entities (experimental)</h2><p>These items do not seem to be attached to any pages &mdash; <span style='color: red;'>but caution: they may be linked in content or in use another way!</span></p>";
-					$unused = $this->get_unused_entities( $type, $site, $relationship_type_id );
+					list( $used, $unused ) = $this->get_unused_entities( $type, $site, $relationship_type_id );
+					echo "<hr><div style='float: left; width: 45%; margin-right: 5%;'><h3>Entities in use (experimental)</h3><p>These items appear to be attached to the site's pages</p>";
+					$this->render_invisible_entities( $type, $used, $site, '_blank' );
+					echo "</div><div style='float: left; width: 45%;'><h3>Unused Entities (experimental)</h3><p>These items do not seem to be attached to any pages &mdash; <span style='color: red;'>but caution: they may be linked in content or in use another way!</span></p>";
 					$this->render_invisible_entities( $type, $unused, $site, '_blank' );
+					echo '</div>';
 				}
 			} else {
 				foreach ( $all_types as $type ) {
@@ -207,9 +213,14 @@ QUERY;
 
 			$unmatched_ids = array_diff( $entities_of_type_ids, $entities_attached );
 
-			return array_map( function ( $item ) {
-				return new entity( $item );
-			}, $unmatched_ids );
+			return [
+				array_map( function ( $item ) {
+					return new entity( $item );
+				}, $entities_attached ),
+				array_map( function ( $item ) {
+					return new entity( $item );
+				}, $unmatched_ids ),
+			];
 		}
 
 		return null;
