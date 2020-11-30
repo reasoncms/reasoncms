@@ -11,7 +11,7 @@ reason_include_once('function_libraries/image_tools.php');
  * Include the default module
  */
 reason_include_once('classes/admin/modules/default.php');
-	
+
 /**
  * Exports reason images in a zip file
  */
@@ -22,7 +22,7 @@ class ReasonExportImagesModule extends DefaultModule
 	{
 		$this->admin_page->title = 'Export Images';
 	}
-	
+
 	function run()
 	{
 		if(empty($this->admin_page->request['site_id']))
@@ -35,48 +35,49 @@ class ReasonExportImagesModule extends DefaultModule
 			echo 'This module requires the Zip extension. Please enable PHP Zip extension and try again.';
 			return;
 		}
-		
+
 		$d = $this->get_form();
 		$d->run();
-		
+
 		if($d->successfully_submitted())
 		{
-			set_time_limit( 600 ); // give it 10 minutes to complete
-			
+			$timeout = isset( $_GET['timeout'] ) && intval( $_GET['timeout'] ) > 600 ? intval( $_GET['timeout'] ) : 600;
+			set_time_limit( $timeout ); // give it at least 10 minutes to complete
+
 			$site = new entity($this->admin_page->request['site_id']);
-			
+
 			$zip = new ZipArchive();
 			$zip_filename = 'image-export-'.$site->get_value('unique_name').'-'.date('Y-m-d-h-i-s').'--'.uniqid().'.zip';
 			$zip_filepath = REASON_TEMP_DIR.$zip_filename;
-			
+
 			if ($zip->open($zip_filepath, ZipArchive::CREATE) !== TRUE)
 			{
 				echo 'Unable to create zip file. Please have an administrator check filesystem permissions.';
 				return;
 			}
-			
+
 			$images = $this->get_images($d);
-			
+
 			if(empty($images))
 			{
 				echo 'No images to export';
 				return;
 			}
-			
+
 			$paths = $this->get_paths_for_images($images);
-			
-			
+
+
 			if(empty($paths))
 			{
 				echo 'No images on filesystem to export';
 				return;
 			}
-			
+
 			foreach($paths as $image_id => $image_info)
 			{
 				$zip->addFile($image_info['path'], $image_info['filename']);
 			}
-			
+
 			if($zip->close())
 			{
 				$file_handle = fopen($zip_filepath, "rb");
@@ -86,7 +87,7 @@ class ReasonExportImagesModule extends DefaultModule
 					echo 'Zip file creation didn\'t work. Please contact an administrator to troubleshoot.';
 					return;
 				}
-				
+
 				while(ob_get_level() > 0)
 				{
 					ob_end_clean();
@@ -100,11 +101,11 @@ class ReasonExportImagesModule extends DefaultModule
 				header('Content-Transfer-Encoding: binary');
 				header('Expires: 0');
 				header('X-Robots-Tag: noindex');
-		
+
 				fpassthru($file_handle);
-				
+
 				fclose($file_handle);
-				
+
 				if(!unlink($zip_filepath))
 				{
 					trigger_error('Unable to delete temporary zip file at '.$zip_filepath);
@@ -146,9 +147,9 @@ class ReasonExportImagesModule extends DefaultModule
 		return $images;
 	}
 	function get_paths_for_images($images)
-	{	
+	{
 		$paths = array();
-		
+
 		foreach($images as $image)
 		{
 			$type = 'original';
