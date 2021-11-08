@@ -451,7 +451,7 @@ class CourseListModule extends DefaultMinisiteModule
 			foreach ($fac_data as $id => $name)
 			{
 				list($last, $first) = explode(', ', $name);
-				$faculty[$id] = $first[0].'. '.$last;
+				$faculty[$id] = mb_substr($first, 0, 1).'. '.$last;
 			}
 			$details[] = join(', ', $faculty);	
 		}
