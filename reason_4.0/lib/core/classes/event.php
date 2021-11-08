@@ -101,7 +101,7 @@ class reasonEvent
 		{
 			$date_info = parse_mysql_date($values['datetime']);
 			$values['month_day_of_week'] = carl_date( 'l',$date_info['timestamp'] );
-			$values['week_of_month'] = floor($date_info['day']/7)+1;
+			$values['week_of_month'] = ceil($date_info['day']/7);
 		}
 		else
 		{

@@ -66,7 +66,8 @@ class recaptchaType extends defaultType
 				}
 				else
 				{
-					if (!empty($resp->getErrorCodes())) {
+					$error_codes = $resp->getErrorCodes();
+					if (!empty($error_codes)) {
 						/*
 						 * Possible error codes:
 						 * missing-input-secret		The secret parameter is missing.

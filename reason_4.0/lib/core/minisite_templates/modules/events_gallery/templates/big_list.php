@@ -9,7 +9,7 @@ class eventsGalleryBig_listTemplate
 	function get_markup($events)
 	{
 		$ret = '<div id="eventsGalleryModule" class="bigList">'."\n";
-		$ret .= '<ul class="events">'."\n";
+		$ret .= '<ul class="events">';
 		foreach($events as $event)
 		{
 			$ret .= '<li class="event">'."\n";
@@ -44,7 +44,7 @@ class eventsGalleryBig_listTemplate
 			$ret .= '</span>'."\n";
 			$ret .= '</span>'."\n";
 			$ret .= '</a>'."\n";
-			$ret .= '</li>'."\n";
+			$ret .= '</li>';
 		}
 		$ret .= '</ul>'."\n";
 		$ret .= '</div>'."\n";

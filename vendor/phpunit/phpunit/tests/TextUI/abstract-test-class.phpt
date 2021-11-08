@@ -12,14 +12,14 @@ PHPUnit_TextUI_Command::main();
 --EXPECTF--
 PHPUnit %s by Sebastian Bergmann and contributors.
 
-W                                                                   1 / 1 (100%)
+F
 
-Time: %s, Memory: %sMb
+Time: %s, Memory: %s
 
-There was 1 warning:
+There was 1 failure:
 
 1) Warning
 Cannot instantiate class "AbstractTest".
 
-WARNINGS!
-Tests: 1, Assertions: 0, Warnings: 1.
+FAILURES!
+Tests: 1, Assertions: 0, Failures: 1.

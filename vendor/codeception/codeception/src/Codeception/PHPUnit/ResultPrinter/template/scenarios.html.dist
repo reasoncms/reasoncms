@@ -20,21 +20,22 @@
 		 .scenarioStepsTable .stepName { padding: 5px; }
 
 		 .scenarioStepsTable td {
-		 border: 1px solid #ccc;
-		 font-family: 'Varela Round', arial;
-		 -webkit-border-radius: 5px;
-		 -moz-border-radius: 5px;
-		 border-radius: 5px;
-		 background: rgb(255,255,255); /* Old browsers */
-		 background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(229,229,229,1) 100%); /* FF3.6+ */
-		 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,1)), color-stop(100%,rgba(229,229,229,1))); /* Chrome,Safari4+ */
-		 background: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* Chrome10+,Safari5.1+ */
-		 background: -o-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* Opera11.10+ */
-		 background: -ms-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* IE10+ */
-		 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e5e5e5',GradientType=0 ); /* IE6-9 */
-		 background: linear-gradient(top, rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* W3C */
-
+            background: #fff;
 		 }
+
+         .quiet {
+             color: #333;
+             font-size: 0.8em;
+         }
+
+         .screenshot {
+             max-height: 400px;
+             overflow-y: scroll;
+             display: block;
+         }
+         .screenshot img {
+             zoom: 0.5;
+         }
 
          @media (max-width: 1200px) {
            #toolbar-filter {
@@ -70,7 +71,9 @@
              border-radius: 0px;
          }
 
-
+         .scenarioStepsTable .error a {
+             color: #eef;
+         }
 
          .scenarioStepsTable.substeps td {
              background: #bdc3c7;
@@ -102,6 +105,18 @@
 		 border-radius: 5px;
 		 padding: 20px;
 		 }
+
+         .toggle {
+             background: rgba(255,255,255,0.5);
+             border-radius: 10px;
+             display: inline-block;
+             width: 20px;
+             height: 20px;
+             text-align: center;
+             margin: auto;
+             color: #666
+         }
+
 		 ul#toolbar-filter {
             display: block;
             position: fixed;
@@ -129,13 +144,13 @@
   function showHide(nodeId, linkObj)
   {
     var subObj = document.getElementById('stepContainer' + nodeId);
-
-    if (linkObj.innerHTML.indexOf('+')>0) {
-      linkObj.innerHTML = linkObj.innerHTML.replace('+','-');
+    var toggle = linkObj.childNodes[0];
+    if (toggle.innerHTML != '-') {
+      toggle.innerHTML = '-';
       subObj.style.display='block';
       subObj.style.width = '100%';
     } else {
-      linkObj.innerHTML = linkObj.innerHTML.replace('-','+');
+      toggle.innerHTML = '+';
       subObj.style.display='none';
     }
   }

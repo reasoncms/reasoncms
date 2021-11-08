@@ -292,6 +292,10 @@ class mediaFileFeed extends defaultFeed
 		{
 			$this->feed->nullify_items();
 		}
+		if(!empty($this->request['exclude_restricted_works']))
+		{
+			$this->feed->exclude_restricted_works();
+		}
 	}
 }
 
@@ -301,6 +305,7 @@ class mediaFileRSS extends ReasonRSS
 	var $rel_sort = false;
 	var $_page_id;
 	var $_nullify_items = false;
+	var $_exclude_restricted_works = false;
 	function set_num_works( $num )
 	{
 		$this->num_works = $num;
@@ -316,6 +321,10 @@ class mediaFileRSS extends ReasonRSS
 	function nullify_items()
 	{
 		$this->_nullify_items = true;
+	}
+	function exclude_restricted_works($exclude = true)
+	{
+		$this->_exclude_restricted_works = $exclude;
 	}
 	function _build_rss()
 	{
@@ -360,6 +369,19 @@ class mediaFileRSS extends ReasonRSS
 		$media_works = $works_es->run_one();
 		foreach($media_works as $work)
 		{
+			if($this->_exclude_restricted_works)
+			{
+				$groups = $work->get_left_relationship('av_restricted_to_group');
+				if(!empty($groups))
+				{
+					$gh = new group_helper();
+					$gh->set_group_by_entity(reset($groups));
+					if($gh->requires_login())
+					{
+						continue;
+					}
+				}
+			}
 			$es = new entity_selector();
 			$es->add_type(id_of('av_file'));
 			$es->add_right_relationship($work->id(),relationship_id_of('av_to_av_file'));

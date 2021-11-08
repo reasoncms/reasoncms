@@ -348,4 +348,89 @@ function carl_util_get_url_contents($url, $verify_ssl = false, $http_auth_userna
 	curl_close( $ch );
 	return $page;
 }
-?>
+
+/**
+ * Functions below are to sign URLs and validate signed URLs
+ *
+ * Adapted from https://github.com/googlemaps/url-signing/blob/gh-pages/urlsigner.php
+ * Also see https://github.com/spatie/url-signer as a reference
+ */
+
+/**
+ * Encode a string to URL-safe base64
+ * @param $value
+ * @return mixed
+ */
+function encode_base64_url_safe($value)
+{
+	return str_replace(array('+', '/'), array('-', '_'), base64_encode($value));
+}
+
+/**
+ * Decode a string from URL-safe base64
+ * @param $value
+ * @return bool|string
+ */
+function decode_base64_url_safe($value)
+{
+	return base64_decode(str_replace(array('-', '_'), array('+', '/'), $value));
+}
+
+function create_signature($url, $signature_key)
+{
+	return hash_hmac('sha1', $url, $signature_key, true);
+}
+
+/**
+ * Sign a request URL with a URL signing secret.
+ * @param string $url The URL to sign
+ * @param string $signing_key Your URL signing secret
+ * @return string The signed request URL
+ */
+function sign_url($url, $signing_key)
+{
+	// We only need to sign the path+query part of the string
+	$parts = parse_url($url);
+	$uri = $parts['path'] . '?' . $parts['query'];
+
+	$decoded_key = decode_base64_url_safe($signing_key);
+	$signature = create_signature($uri, $decoded_key);
+
+	// Encode the binary signature into base64 for use within a URL
+	$encoded_signature = encode_base64_url_safe($signature);
+
+	$original_url = $parts['scheme'] . '://' . $parts['host'] . $parts['path'] . '?' . $parts['query'];
+
+	return $original_url . '&signature=' . $encoded_signature;
+}
+
+/**
+ * Validate a signed url.
+ *
+ * @param string $url
+ * @param string $signing_key
+ *
+ * @return bool
+ */
+function validate_url($url, $signing_key)
+{
+	$parts = parse_url($url);
+	$query_arr = [];
+	parse_str($parts['query'], $query_arr);
+	if (!array_key_exists('signature', $query_arr)) {
+		return false;
+	}
+
+	$provided_signature = decode_base64_url_safe($query_arr['signature']);
+
+	// Now remove the provided signature to find the intended URL and calculate its signature.
+	// We only need to sign the path+query part of the string
+	$query_arr['signature'] = null;
+	$intended_uri = $parts['path'] . '?' . http_build_query($query_arr, null, '&', PHP_QUERY_RFC3986);
+
+	// Create a valid signature for the intended URL
+	$decoded_key = decode_base64_url_safe($signing_key);
+	$valid_signature = create_signature($intended_uri, $decoded_key);
+
+	return $valid_signature === $provided_signature;
+}

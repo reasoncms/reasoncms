@@ -66,9 +66,9 @@ class redirect_interval {
     }
 }
 
-class redirect_self {
+class redirect_meta_refresh {
     function GET() {
-        include __DIR__.'/view/redirect_self.php';
+        include __DIR__.'/view/redirect_meta_refresh.php';
     }
 }
 
@@ -88,6 +88,12 @@ class redirect_base_uri_has_path {
 class redirect_base_uri_has_path_302 {
     function GET() {
         header('Location: /somepath/info', true, 302);
+    }
+}
+
+class location_201 {
+    function GET() {
+        header('Location: /info', true, 201);
     }
 }
 
@@ -156,6 +162,7 @@ class facebookController {
 
 class form {
     function GET($matches) {
+        data::set('query', $_GET);
         $url = strtolower($matches[1]);
         if (empty($matches[1])) {
             $url = 'index';
@@ -238,5 +245,28 @@ class contentType2 {
 class unsetCookie {
     function GET() {
         header('Set-Cookie: a=; Expires=Thu, 01 Jan 1970 00:00:01 GMT');
+    }
+}
+
+class basehref {
+    function GET() {
+        include __DIR__.'/view/basehref.php';
+    }
+}
+
+class jserroronload {
+    function GET() {
+        include __DIR__.'/view/jserroronload.php';
+    }
+}
+
+class userAgent {
+    function GET() {
+        echo $_SERVER['HTTP_USER_AGENT'];
+    }
+}
+class minimal {
+    function GET() {
+        include __DIR__.'/view/minimal.php';
     }
 }

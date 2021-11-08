@@ -18,7 +18,7 @@ class PHPUnit_Util_Filesystem
     /**
      * @var array
      */
-    protected static $buffer = [];
+    protected static $buffer = array();
 
     /**
      * Maps class names to source file names:
@@ -34,7 +34,7 @@ class PHPUnit_Util_Filesystem
     public static function classNameToFilename($className)
     {
         return str_replace(
-            ['_', '\\'],
+            array('_', '\\'),
             DIRECTORY_SEPARATOR,
             $className
         ) . '.php';

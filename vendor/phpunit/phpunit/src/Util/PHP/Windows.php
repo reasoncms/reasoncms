@@ -8,6 +8,8 @@
  * file that was distributed with this source code.
  */
 
+use SebastianBergmann\Environment\Runtime;
+
 /**
  * Windows utility for PHP sub-processes.
  *
@@ -28,8 +30,10 @@ class PHPUnit_Util_PHP_Windows extends PHPUnit_Util_PHP_Default
      *
      * @see https://bugs.php.net/bug.php?id=51800
      */
-    public function runJob($job, array $settings = [])
+    public function runJob($job, array $settings = array())
     {
+        $runtime = new Runtime;
+
         if (false === $stdout_handle = tmpfile()) {
             throw new PHPUnit_Framework_Exception(
                 'A temporary file could not be created; verify that your TEMP environment variable is writable'
@@ -37,12 +41,12 @@ class PHPUnit_Util_PHP_Windows extends PHPUnit_Util_PHP_Default
         }
 
         $process = proc_open(
-            $this->getCommand($settings),
-            [
-                0 => ['pipe', 'r'],
-                1 => $stdout_handle,
-                2 => ['pipe', 'w']
-            ],
+            $runtime->getBinary() . $this->settingsToParameters($settings),
+            array(
+            0 => array('pipe', 'r'),
+            1 => $stdout_handle,
+            2 => array('pipe', 'w')
+            ),
             $pipes
         );
 
@@ -66,7 +70,7 @@ class PHPUnit_Util_PHP_Windows extends PHPUnit_Util_PHP_Default
 
         $this->cleanup();
 
-        return ['stdout' => $stdout, 'stderr' => $stderr];
+        return array('stdout' => $stdout, 'stderr' => $stderr);
     }
 
     /**

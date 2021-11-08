@@ -11,10 +11,11 @@
 
 namespace Symfony\Component\Console\Tests\Formatter;
 
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 
-class OutputFormatterTest extends \PHPUnit_Framework_TestCase
+class OutputFormatterTest extends TestCase
 {
     public function testEmptyTag()
     {
@@ -27,6 +28,9 @@ class OutputFormatterTest extends \PHPUnit_Framework_TestCase
         $formatter = new OutputFormatter(true);
 
         $this->assertEquals('foo<bar', $formatter->format('foo\\<bar'));
+        $this->assertEquals('foo << bar', $formatter->format('foo << bar'));
+        $this->assertEquals('foo << bar \\', $formatter->format('foo << bar \\'));
+        $this->assertEquals("foo << \033[32mbar \\ baz\033[39m \\", $formatter->format('foo << <info>bar \\ baz</info> \\'));
         $this->assertEquals('<info>some info</info>', $formatter->format('\\<info>some info\\</info>'));
         $this->assertEquals('\\<info>some info\\</info>', OutputFormatter::escape('<info>some info</info>'));
 
@@ -195,6 +199,9 @@ class OutputFormatterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             'some question', $formatter->format('<question>some question</question>')
         );
+        $this->assertEquals(
+            'some text with inline style', $formatter->format('<fg=red>some text with inline style</>')
+        );
 
         $formatter->setDecorated(true);
 
@@ -209,6 +216,9 @@ class OutputFormatterTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertEquals(
             "\033[30;46msome question\033[39;49m", $formatter->format('<question>some question</question>')
+        );
+        $this->assertEquals(
+            "\033[31msome text with inline style\033[39m", $formatter->format('<fg=red>some text with inline style</>')
         );
     }
 

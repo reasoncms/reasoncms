@@ -1,4 +1,6 @@
 <?php
+use Codeception\Util\Stub;
+
 require_once __DIR__ . '/TestsForWeb.php';
 
 /**
@@ -11,7 +13,8 @@ class FrameworksTest extends TestsForWeb
      */
     protected $module;
 
-    public function setUp() {
+    public function setUp()
+    {
         $this->module = new \Codeception\Module\UniversalFramework(make_container());
     }
 
@@ -78,4 +81,15 @@ class FrameworksTest extends TestsForWeb
         }
     }
 
+    public function testCreateSnapshotOnFail()
+    {
+        $module = Stub::construct(get_class($this->module), [make_container()], [
+            '_savePageSource' => Stub::once(function ($filename) {
+                $this->assertEquals(codecept_log_dir('Codeception.Module.UniversalFramework.looks.like..test.fail.html'), $filename);
+            }),
+        ]);
+        $module->amOnPage('/');
+        $cest = new \Codeception\Test\Cest($this->module, 'looks:like::test', 'demo1Cest.php');
+        $module->_failed($cest, new PHPUnit_Framework_AssertionFailedError());
+    }
 }

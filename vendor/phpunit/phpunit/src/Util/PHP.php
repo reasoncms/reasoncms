@@ -8,8 +8,6 @@
  * file that was distributed with this source code.
  */
 
-use SebastianBergmann\Environment\Runtime;
-
 /**
  * Utility methods for PHP sub-processes.
  *
@@ -17,52 +15,6 @@ use SebastianBergmann\Environment\Runtime;
  */
 abstract class PHPUnit_Util_PHP
 {
-    /**
-     * @var Runtime
-     */
-    protected $runtime;
-
-    /**
-     * @var bool
-     */
-    protected $stderrRedirection = false;
-
-    /**
-     * Creates internal Runtime instance.
-     */
-    public function __construct()
-    {
-        $this->runtime = new Runtime();
-    }
-
-    /**
-     * Defines if should use STDERR redirection or not.
-     *
-     * Then $stderrRedirection is TRUE, STDERR is redirected to STDOUT.
-     *
-     * @throws PHPUnit_Framework_Exception
-     *
-     * @param bool $stderrRedirection
-     */
-    public function setUseStderrRedirection($stderrRedirection)
-    {
-        if (!is_bool($stderrRedirection)) {
-            throw PHPUnit_Util_InvalidArgumentHelper::factory(1, 'boolean');
-        }
-
-        $this->stderrRedirection = $stderrRedirection;
-    }
-
-    /**
-     * Returns TRUE if uses STDERR redirection or FALSE if not.
-     *
-     * @return bool
-     */
-    public function useStderrRedirection()
-    {
-        return $this->stderrRedirection;
-    }
-
     /**
      * @return PHPUnit_Util_PHP
      *
@@ -101,28 +53,6 @@ abstract class PHPUnit_Util_PHP
     }
 
     /**
-     * Returns the command based into the configurations.
-     *
-     * @param array $settings
-     *
-     * @return string
-     */
-    public function getCommand(array $settings)
-    {
-        $command = $this->runtime->getBinary();
-        $command .= $this->settingsToParameters($settings);
-
-        if ('phpdbg' === PHP_SAPI) {
-            $command .= ' -qrr ' . escapeshellarg(__DIR__ . '/PHP/eval-stdin.php');
-        }
-        if (true === $this->stderrRedirection) {
-            $command .= ' 2>&1';
-        }
-
-        return $command;
-    }
-
-    /**
      * Runs a single job (PHP code) using a separate PHP process.
      *
      * @param string $job
@@ -132,7 +62,7 @@ abstract class PHPUnit_Util_PHP
      *
      * @throws PHPUnit_Framework_Exception
      */
-    abstract public function runJob($job, array $settings = []);
+    abstract public function runJob($job, array $settings = array());
 
     /**
      * @param array $settings
@@ -273,7 +203,7 @@ abstract class PHPUnit_Util_PHP
         $exception = $error->thrownException();
 
         if ($exception instanceof __PHP_Incomplete_Class) {
-            $exceptionArray = [];
+            $exceptionArray = array();
             foreach ((array) $exception as $key => $value) {
                 $key                  = substr($key, strrpos($key, "\0") + 1);
                 $exceptionArray[$key] = $value;

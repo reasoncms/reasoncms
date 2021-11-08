@@ -90,7 +90,7 @@ class PHPUnit_Util_Printer
                 $this->outTarget,
                 tidy_repair_file(
                     $this->outTarget,
-                    ['indent' => true, 'wrap' => 0],
+                    array('indent' => true, 'wrap' => 0),
                     'utf8'
                 )
             );
@@ -128,7 +128,7 @@ class PHPUnit_Util_Printer
             }
         } else {
             if (PHP_SAPI != 'cli' && PHP_SAPI != 'phpdbg') {
-                $buffer = htmlspecialchars($buffer);
+                $buffer = htmlspecialchars($buffer, ENT_SUBSTITUTE);
             }
 
             print $buffer;

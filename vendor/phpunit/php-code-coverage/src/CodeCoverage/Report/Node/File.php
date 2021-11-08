@@ -38,22 +38,22 @@ class PHP_CodeCoverage_Report_Node_File extends PHP_CodeCoverage_Report_Node
     /**
      * @var array
      */
-    protected $classes = [];
+    protected $classes = array();
 
     /**
      * @var array
      */
-    protected $traits = [];
+    protected $traits = array();
 
     /**
      * @var array
      */
-    protected $functions = [];
+    protected $functions = array();
 
     /**
      * @var array
      */
-    protected $linesOfCode = [];
+    protected $linesOfCode = array();
 
     /**
      * @var int
@@ -83,12 +83,12 @@ class PHP_CodeCoverage_Report_Node_File extends PHP_CodeCoverage_Report_Node
     /**
      * @var array
      */
-    protected $startLines = [];
+    protected $startLines = array();
 
     /**
      * @var array
      */
-    protected $endLines = [];
+    protected $endLines = array();
 
     /**
      * @var bool
@@ -98,18 +98,17 @@ class PHP_CodeCoverage_Report_Node_File extends PHP_CodeCoverage_Report_Node
     /**
      * Constructor.
      *
-     * @param string                       $name
-     * @param PHP_CodeCoverage_Report_Node $parent
-     * @param array                        $coverageData
-     * @param array                        $testData
-     * @param bool                         $cacheTokens
-     *
-     * @throws PHP_CodeCoverage_InvalidArgumentException
+     * @param  string                       $name
+     * @param  PHP_CodeCoverage_Report_Node $parent
+     * @param  array                        $coverageData
+     * @param  array                        $testData
+     * @param  bool                         $cacheTokens
+     * @throws PHP_CodeCoverage_Exception
      */
     public function __construct($name, PHP_CodeCoverage_Report_Node $parent, array $coverageData, array $testData, $cacheTokens)
     {
         if (!is_bool($cacheTokens)) {
-            throw PHP_CodeCoverage_InvalidArgumentException::create(
+            throw PHP_CodeCoverage_Util_InvalidArgumentHelper::factory(
                 1,
                 'boolean'
             );
@@ -352,7 +351,7 @@ class PHP_CodeCoverage_Report_Node_File extends PHP_CodeCoverage_Report_Node
      */
     protected function calculateStatistics()
     {
-        $classStack = $functionStack = [];
+        $classStack = $functionStack = array();
 
         if ($this->cacheTokens) {
             $tokens = PHP_Token_Stream_CachingFactory::get($this->getPath());
@@ -542,9 +541,9 @@ class PHP_CodeCoverage_Report_Node_File extends PHP_CodeCoverage_Report_Node
         $link = $this->getId() . '.html#';
 
         foreach ($classes as $className => $class) {
-            $this->classes[$className] = [
+            $this->classes[$className] = array(
                 'className'       => $className,
-                'methods'         => [],
+                'methods'         => array(),
                 'startLine'       => $class['startLine'],
                 'executableLines' => 0,
                 'executedLines'   => 0,
@@ -553,13 +552,24 @@ class PHP_CodeCoverage_Report_Node_File extends PHP_CodeCoverage_Report_Node
                 'crap'            => 0,
                 'package'         => $class['package'],
                 'link'            => $link . $class['startLine']
-            ];
+            );
 
             $this->startLines[$class['startLine']] = &$this->classes[$className];
             $this->endLines[$class['endLine']]     = &$this->classes[$className];
 
             foreach ($class['methods'] as $methodName => $method) {
-                $this->classes[$className]['methods'][$methodName] = $this->newMethod($methodName, $method, $link);
+                $this->classes[$className]['methods'][$methodName] = array(
+                    'methodName'      => $methodName,
+                    'signature'       => $method['signature'],
+                    'startLine'       => $method['startLine'],
+                    'endLine'         => $method['endLine'],
+                    'executableLines' => 0,
+                    'executedLines'   => 0,
+                    'ccn'             => $method['ccn'],
+                    'coverage'        => 0,
+                    'crap'            => 0,
+                    'link'            => $link . $method['startLine']
+                );
 
                 $this->startLines[$method['startLine']] = &$this->classes[$className]['methods'][$methodName];
                 $this->endLines[$method['endLine']]     = &$this->classes[$className]['methods'][$methodName];
@@ -578,9 +588,9 @@ class PHP_CodeCoverage_Report_Node_File extends PHP_CodeCoverage_Report_Node
         $link = $this->getId() . '.html#';
 
         foreach ($traits as $traitName => $trait) {
-            $this->traits[$traitName] = [
+            $this->traits[$traitName] = array(
                 'traitName'       => $traitName,
-                'methods'         => [],
+                'methods'         => array(),
                 'startLine'       => $trait['startLine'],
                 'executableLines' => 0,
                 'executedLines'   => 0,
@@ -589,13 +599,24 @@ class PHP_CodeCoverage_Report_Node_File extends PHP_CodeCoverage_Report_Node
                 'crap'            => 0,
                 'package'         => $trait['package'],
                 'link'            => $link . $trait['startLine']
-            ];
+            );
 
             $this->startLines[$trait['startLine']] = &$this->traits[$traitName];
             $this->endLines[$trait['endLine']]     = &$this->traits[$traitName];
 
             foreach ($trait['methods'] as $methodName => $method) {
-                $this->traits[$traitName]['methods'][$methodName] = $this->newMethod($methodName, $method, $link);
+                $this->traits[$traitName]['methods'][$methodName] = array(
+                    'methodName'      => $methodName,
+                    'signature'       => $method['signature'],
+                    'startLine'       => $method['startLine'],
+                    'endLine'         => $method['endLine'],
+                    'executableLines' => 0,
+                    'executedLines'   => 0,
+                    'ccn'             => $method['ccn'],
+                    'coverage'        => 0,
+                    'crap'            => 0,
+                    'link'            => $link . $method['startLine']
+                );
 
                 $this->startLines[$method['startLine']] = &$this->traits[$traitName]['methods'][$methodName];
                 $this->endLines[$method['endLine']]     = &$this->traits[$traitName]['methods'][$methodName];
@@ -614,7 +635,7 @@ class PHP_CodeCoverage_Report_Node_File extends PHP_CodeCoverage_Report_Node
         $link = $this->getId() . '.html#';
 
         foreach ($functions as $functionName => $function) {
-            $this->functions[$functionName] = [
+            $this->functions[$functionName] = array(
                 'functionName'    => $functionName,
                 'signature'       => $function['signature'],
                 'startLine'       => $function['startLine'],
@@ -624,7 +645,7 @@ class PHP_CodeCoverage_Report_Node_File extends PHP_CodeCoverage_Report_Node
                 'coverage'        => 0,
                 'crap'            => 0,
                 'link'            => $link . $function['startLine']
-            ];
+            );
 
             $this->startLines[$function['startLine']] = &$this->functions[$functionName];
             $this->endLines[$function['endLine']]     = &$this->functions[$functionName];
@@ -635,11 +656,9 @@ class PHP_CodeCoverage_Report_Node_File extends PHP_CodeCoverage_Report_Node
      * Calculates the Change Risk Anti-Patterns (CRAP) index for a unit of code
      * based on its cyclomatic complexity and percentage of code coverage.
      *
-     * @param int   $ccn
-     * @param float $coverage
-     *
+     * @param  int    $ccn
+     * @param  float  $coverage
      * @return string
-     *
      * @since  Method available since Release 1.2.0
      */
     protected function crap($ccn, $coverage)
@@ -656,29 +675,5 @@ class PHP_CodeCoverage_Report_Node_File extends PHP_CodeCoverage_Report_Node
             '%01.2F',
             pow($ccn, 2) * pow(1 - $coverage/100, 3) + $ccn
         );
-    }
-
-    /**
-     * @param string $methodName
-     * @param array  $method
-     * @param string $link
-     *
-     * @return array
-     */
-    private function newMethod($methodName, array $method, $link)
-    {
-        return [
-            'methodName'      => $methodName,
-            'visibility'      => $method['visibility'],
-            'signature'       => $method['signature'],
-            'startLine'       => $method['startLine'],
-            'endLine'         => $method['endLine'],
-            'executableLines' => 0,
-            'executedLines'   => 0,
-            'ccn'             => $method['ccn'],
-            'coverage'        => 0,
-            'crap'            => 0,
-            'link'            => $link . $method['startLine'],
-        ];
     }
 }

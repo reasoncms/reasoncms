@@ -14,12 +14,12 @@ PHPUnit_TextUI_Command::main();
 --EXPECTF--
 PHPUnit %s by Sebastian Bergmann and contributors.
 
-Runtime:       %s
-Configuration: %sconfiguration.custom-printer.xml
+Runtime:	%s
+Configuration:	%sconfiguration.custom-printer.xml
 
-I                                                                   1 / 1 (100%)
+I
 
-Time: %s, Memory: %sMb
+Time: %s, Memory: %s
 
 There was 1 incomplete test:
 

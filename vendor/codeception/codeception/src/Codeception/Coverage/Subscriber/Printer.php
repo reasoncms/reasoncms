@@ -12,7 +12,7 @@ class Printer implements EventSubscriberInterface
 {
     use StaticEvents;
 
-    static $events = [
+    public static $events = [
         Events::RESULT_PRINT_AFTER => 'printResult'
     ];
 
@@ -23,7 +23,7 @@ class Printer implements EventSubscriberInterface
         'show_uncovered' => false
     ];
 
-    static $coverage;
+    public static $coverage;
     protected $options;
     protected $logDir;
     protected $destination = [];
@@ -52,16 +52,15 @@ class Printer implements EventSubscriberInterface
 
     public function printResult(PrintResultEvent $e)
     {
-        if ($this->options['steps']) {
-            return;
-        }
         $printer = $e->getPrinter();
         if (!$this->settings['enabled']) {
             $printer->write("\nCodeCoverage is disabled in `codeception.yml` config\n");
             return;
         }
 
-        $this->printConsole($printer);
+        if (!$this->options['quiet']) {
+            $this->printConsole($printer);
+        }
         $printer->write("Remote CodeCoverage reports are not printed to console\n");
         $this->printPHP();
         $printer->write("\n");
@@ -77,7 +76,14 @@ class Printer implements EventSubscriberInterface
             $this->printText();
             $printer->write("Text report generated in {$this->options['coverage-text']}\n");
         }
-
+        if ($this->options['coverage-crap4j']) {
+            $this->printCrap4j();
+            $printer->write("Crap4j report generated in {$this->options['coverage-crap4j']}\n");
+        }
+        if ($this->options['coverage-phpunit']) {
+            $this->printPHPUnit();
+            $printer->write("PHPUnit report generated in {$this->options['coverage-phpunit']}\n");
+        }
     }
 
     protected function printConsole(\PHPUnit_Util_Printer $printer)
@@ -120,8 +126,26 @@ class Printer implements EventSubscriberInterface
     protected function printText()
     {
         $writer = new \PHP_CodeCoverage_Report_Text(
-            $this->settings['low_limit'], $this->settings['high_limit'], $this->settings['show_uncovered'], false
+            $this->settings['low_limit'],
+            $this->settings['high_limit'],
+            $this->settings['show_uncovered'],
+            false
         );
-        file_put_contents($this->absolutePath($this->options['coverage-text']), $writer->process(self::$coverage, false));
+        file_put_contents(
+            $this->absolutePath($this->options['coverage-text']),
+            $writer->process(self::$coverage, false)
+        );
+    }
+
+    protected function printCrap4j()
+    {
+        $writer = new \PHP_CodeCoverage_Report_Crap4j;
+        $writer->process(self::$coverage, $this->absolutePath($this->options['coverage-crap4j']));
+    }
+
+    protected function printPHPUnit()
+    {
+        $writer = new \PHP_CodeCoverage_Report_XML(\PHPUnit_Runner_Version::id());
+        $writer->process(self::$coverage, $this->absolutePath($this->options['coverage-phpunit']));
     }
 }

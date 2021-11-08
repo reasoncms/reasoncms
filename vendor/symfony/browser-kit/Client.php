@@ -12,8 +12,8 @@
 namespace Symfony\Component\BrowserKit;
 
 use Symfony\Component\DomCrawler\Crawler;
-use Symfony\Component\DomCrawler\Link;
 use Symfony\Component\DomCrawler\Form;
+use Symfony\Component\DomCrawler\Link;
 use Symfony\Component\Process\PhpProcess;
 
 /**
@@ -45,8 +45,6 @@ abstract class Client
     private $isMainRequest = true;
 
     /**
-     * Constructor.
-     *
      * @param array     $server    The server parameters (equivalent of $_SERVER)
      * @param History   $history   A History instance to store the browser history
      * @param CookieJar $cookieJar A CookieJar instance to store the cookies
@@ -234,8 +232,6 @@ abstract class Client
     /**
      * Clicks on a given link.
      *
-     * @param Link $link A Link instance
-     *
      * @return Crawler
      */
     public function click(Link $link)
@@ -283,11 +279,17 @@ abstract class Client
             ++$this->redirectCount;
         }
 
+        $originalUri = $uri;
+
         $uri = $this->getAbsoluteUri($uri);
 
         $server = array_merge($this->server, $server);
 
-        if (isset($server['HTTPS'])) {
+        if (!empty($server['HTTP_HOST']) && null === parse_url($originalUri, PHP_URL_HOST)) {
+            $uri = preg_replace('{^(https?\://)'.preg_quote($this->extractHost($uri)).'}', '${1}'.$server['HTTP_HOST'], $uri);
+        }
+
+        if (isset($server['HTTPS']) && null === parse_url($originalUri, PHP_URL_SCHEME)) {
             $uri = preg_replace('{^'.parse_url($uri, PHP_URL_SCHEME).'}', $server['HTTPS'] ? 'https' : 'http', $uri);
         }
 
@@ -468,14 +470,15 @@ abstract class Client
 
         if (-1 !== $this->maxRedirects) {
             if ($this->redirectCount > $this->maxRedirects) {
+                $this->redirectCount = 0;
                 throw new \LogicException(sprintf('The maximum number (%d) of redirections was reached.', $this->maxRedirects));
             }
         }
 
         $request = $this->internalRequest;
 
-        if (in_array($this->internalResponse->getStatus(), array(302, 303))) {
-            $method = 'get';
+        if (\in_array($this->internalResponse->getStatus(), array(302, 303))) {
+            $method = 'GET';
             $files = array();
             $content = null;
         } else {
@@ -484,7 +487,7 @@ abstract class Client
             $content = $request->getContent();
         }
 
-        if ('get' === strtolower($method)) {
+        if ('GET' === strtoupper($method)) {
             // Don't forward parameters for GET request as it should reach the redirection URI
             $parameters = array();
         } else {
@@ -542,9 +545,9 @@ abstract class Client
             return parse_url($currentUri, PHP_URL_SCHEME).':'.$uri;
         }
 
-        // anchor?
-        if (!$uri || '#' == $uri[0]) {
-            return preg_replace('/#.*?$/', '', $currentUri).$uri;
+        // anchor or query string parameters?
+        if (!$uri || '#' == $uri[0] || '?' == $uri[0]) {
+            return preg_replace('/[#?].*?$/', '', $currentUri).$uri;
         }
 
         if ('/' !== $uri[0]) {

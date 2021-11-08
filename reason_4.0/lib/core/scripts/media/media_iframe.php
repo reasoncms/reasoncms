@@ -270,7 +270,8 @@ video { height: 100%;
         position: absolute; }
 body { margin: 0; 
        height: 100%; 
-       width: 100%; }
+       width: 100%;
+       overflow: hidden; }
 img.nonImage {
 	position:relative;
 	left:-9999px;
@@ -285,7 +286,7 @@ echo '<script src="'.JQUERY_URL.'"></script>'."\n";
 if ($media_work && $media_work->get_value('integration_library') && $media_work->get_value('integration_library') != 'default')
 {
 	// media api
-	echo '<script src="/reason_package/reason_4.0/lib/core/classes/media/api/media_api.js"></script>'."\n";
+	echo '<script src="/reason_package/reason_4.0/lib/core/classes/media/api/media_api.js?v=2"></script>'."\n";
 }
 elseif ($media_work && $media_work->get_value('av_type') == '')
 {

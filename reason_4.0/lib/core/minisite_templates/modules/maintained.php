@@ -3,7 +3,7 @@
  * @package reason
  * @subpackage minisite_templates
  */
-	
+
 	/**
 	 * Include parent class & dependencies; register module with Reason
 	 */
@@ -12,7 +12,7 @@
 	include_once( CARL_UTIL_INC . 'dir_service/directory.php' );
 
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'MaintainedModule';
-	
+
 	/**
 	 * A minisite module that displays information about who maintains the site & when the page was last updated
 	 *
@@ -104,14 +104,19 @@
 			$maintainer = $this->parent->site_info->get_value('primary_maintainer');
 			if( !empty($maintainer) )
 			{
-				
+
 				$maintainer_info = $this->_get_maintainer_info($maintainer);
 				if (!empty($maintainer_info['full_name']))
 				{
-					if(!empty($maintainer_info['email']))
-						$html = '<a href="mailto:'.htmlspecialchars($maintainer_info['email'],ENT_QUOTES,'UTF-8').'">'.htmlspecialchars($maintainer_info['full_name'],ENT_QUOTES,'UTF-8').'</a>';
-					else
-						$html = $maintainer_info['full_name'];
+//					if(!empty($maintainer_info['email']))
+//						$html = '<a href="mailto:'.htmlspecialchars($maintainer_info['email'],ENT_QUOTES,'UTF-8').'">'.htmlspecialchars($maintainer_info['full_name'],ENT_QUOTES,'UTF-8').'</a>';
+//					else
+//						$html = $maintainer_info['full_name'];
+
+					$html = sprintf( '<a href="https://www.carleton.edu/directory/?person=%s">%s</a>',
+						$maintainer,
+						! empty( $maintainer_info['full_name'] ) ? $maintainer_info['full_name'] : $maintainer
+					);
 				}
 				else
 				{
@@ -129,9 +134,9 @@
 		function _get_maintainer_info($maintainer)
 		{
 			$email = $full_name = '';
-		
+
 			// Check to see if it's before or after 7 am, and set the last colleague->ldap sync time appropriately.
-				
+
 			if(carl_date('G') < 7) // it's before 7am
 			{
 				$ldap_last_sync_time = strtotime('7 am yesterday');
@@ -140,14 +145,14 @@
 			{
 				$ldap_last_sync_time = strtotime('7 am today');
 			}
-				
+
 			/*	Either of the following conditions will fire the ldap->reason sync:
 				1: the cached info predates the last colleague->ldap sync (presumed to be daily by 7 am.)
 				2: the primary maintainer has been changed since the last ldap->reason sync. */
-					
-			if($this->parent->site_info->get_value('cache_last_updated') <= date('Y-m-d', $ldap_last_sync_time) 
+
+			if($this->parent->site_info->get_value('cache_last_updated') <= date('Y-m-d', $ldap_last_sync_time)
 				|| $this->parent->site_info->get_value('username_cache') != $this->parent->site_info->get_value('primary_maintainer') )
-			{					
+			{
 				$dir = new directory_service();
 				if ($dir->search_by_attribute('ds_username', $maintainer, array('ds_email','ds_fullname')))
 				{
@@ -157,19 +162,19 @@
 					$full_name = (!carl_empty_html($full_name)) ? $full_name : trim(strip_tags($maintainer));
 					$values = array('email_cache'=>$email, 'name_cache'=>$full_name, 'cache_last_updated'=>date('Y-m-d H:i:s'), 'username_cache'=>$maintainer);
 					$update_vals = array('ldap_cache'=>$values);
-					
+
 					reason_include_once( 'function_libraries/admin_actions.php' );
-					
-					/* I know this is nonstandard, but it's the only way right now 
-					to update the entity without creating an archive and changing 
+
+					/* I know this is nonstandard, but it's the only way right now
+					to update the entity without creating an archive and changing
 					the last_updated field on all the sites every day... */
-					
+
 					$sqler = new SQLER;
 					foreach( $update_vals AS $table => $fields )
 					{
 						$sqler->update_one( $table, $fields, $this->parent->site_info->id() );
 					}
-					
+
 				}
 			}
 			//If info cached on site is new, don't do ldap stuff-just grab off of site info
@@ -184,24 +189,24 @@
 		{
 			// munge date into a good looking format
 			$date = $this->parent->cur_page->get_value('last_modified');
-			
+
 			// ask each module when the entities is contains were most recently modified
 			foreach( array_keys($this->parent->_modules) as $key )
 			{
 				$temp = $this->parent->_modules[$key]->last_modified();
-				
+
 				// use the newer date
 				if( !empty( $temp ) AND $temp > $date )
 					$date = $temp;
 			}
-			
+
 			return prettify_mysql_timestamp( $date, $this->last_mod_date_format );
 		}
 		function _get_social_media_links_html()
 		{
 			reason_include_once('minisite_templates/modules/social_account/models/profile_links.php');
 			reason_include_once('minisite_templates/modules/social_account/views/profile_links.php');
-			
+
 			/** instantiate and setup the model **/
 			$model = new ReasonSocialProfileLinksModel;
 			$model->config('site_id', $this->site_id);

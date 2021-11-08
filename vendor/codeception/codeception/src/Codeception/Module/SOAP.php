@@ -1,9 +1,11 @@
 <?php
 namespace Codeception\Module;
 
+use Codeception\Lib\Interfaces\API;
 use Codeception\Lib\Interfaces\DependsOnModule;
+use Codeception\Lib\Notification;
 use Codeception\Module as CodeceptionModule;
-use Codeception\TestCase;
+use Codeception\TestInterface;
 use Codeception\Exception\ModuleException;
 use Codeception\Exception\ModuleRequireException;
 use Codeception\Lib\Framework;
@@ -34,6 +36,7 @@ use Codeception\Util\XmlStructure;
  * ## Configuration
  *
  * * endpoint *required* - soap wsdl endpoint
+ * * SOAPAction - replace SOAPAction HTTP header (Set to '' to SOAP 1.2)
  *
  * ## Public Properties
  *
@@ -48,9 +51,9 @@ class SOAP extends CodeceptionModule implements DependsOnModule
         'schema_url' => 'http://schemas.xmlsoap.org/soap/envelope/',
         'framework_collect_buffer' => true
     ];
-    
+
     protected $requiredFields = ['endpoint'];
-    
+
     protected $dependencyMessage = <<<EOF
 Example using PhpBrowser as backend for SOAP module.
 --
@@ -87,9 +90,16 @@ EOF;
      */
     protected $connectionModule;
 
-    public function _before(TestCase $test)
+    public function _before(TestInterface $test)
     {
         $this->client = &$this->connectionModule->client;
+        $this->buildRequest();
+        $this->xmlResponse = null;
+        $this->xmlStructure = null;
+    }
+
+    protected function onReconfigure()
+    {
         $this->buildRequest();
         $this->xmlResponse = null;
         $this->xmlStructure = null;
@@ -107,7 +117,7 @@ EOF;
             $this->isFunctional = true;
         }
     }
-    
+
     private function getClient()
     {
         if (!$this->client) {
@@ -123,7 +133,7 @@ EOF;
         }
         return $this->xmlResponse;
     }
-    
+
     private function getXmlStructure()
     {
         if (!$this->xmlStructure) {
@@ -131,7 +141,7 @@ EOF;
         }
         return $this->xmlStructure;
     }
-    
+
     /**
      * Prepare SOAP header.
      * Receives header name and parameters as array.
@@ -219,7 +229,7 @@ EOF;
             $response = $this->processExternalRequest($action, $req);
         }
 
-        $this->debugSection("Response", $response);
+        $this->debugSection("Response", (string) $response);
         $this->xmlResponse = SoapUtils::toXml($response);
         $this->xmlStructure = null;
     }
@@ -247,7 +257,7 @@ EOF;
     public function seeSoapResponseEquals($xml)
     {
         $xml = SoapUtils::toXml($xml);
-        $this->assertEquals($this->getXmlResponse()->C14N(), $xml->C14N());
+        $this->assertEquals($xml->C14N(), $this->getXmlResponse()->C14N());
     }
 
     /**
@@ -288,7 +298,7 @@ EOF;
     public function dontSeeSoapResponseEquals($xml)
     {
         $xml = SoapUtils::toXml($xml);
-        \PHPUnit_Framework_Assert::assertXmlStringNotEqualsXmlString($this->getXmlResponse()->C14N(), $xml->C14N());
+        \PHPUnit_Framework_Assert::assertXmlStringNotEqualsXmlString($xml->C14N(), $this->getXmlResponse()->C14N());
     }
 
 
@@ -381,13 +391,22 @@ EOF;
      *
      * @param $code
      */
-    public function seeResponseCodeIs($code)
+    public function seeSoapResponseCodeIs($code)
     {
         $this->assertEquals(
             $code,
             $this->client->getInternalResponse()->getStatus(),
             "soap response code matches expected"
         );
+    }
+
+    /**
+     * @deprecated use seeSoapResponseCodeIs instead
+     */
+    public function seeResponseCodeIs($code)
+    {
+        Notification::deprecate('SOAP::seeResponseCodeIs deprecated in favor of seeSoapResponseCodeIs', 'SOAP Module');
+        $this->seeSoapResponseCodeIs($code);
     }
 
     /**
@@ -461,7 +480,7 @@ EOF;
             [
                 'HTTP_Content-Type' => 'text/xml; charset=UTF-8',
                 'HTTP_Content-Length' => strlen($body),
-                'HTTP_SOAPAction' => $action
+                'HTTP_SOAPAction' => isset($this->config['SOAPAction']) ? $this->config['SOAPAction'] : $action
             ],
             $body
         );

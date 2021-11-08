@@ -3,7 +3,7 @@ function functionCallback()
 {
     $args = func_get_args();
 
-    if ($args == ['foo', 'bar']) {
+    if ($args == array('foo', 'bar')) {
         return 'pass';
     }
 }

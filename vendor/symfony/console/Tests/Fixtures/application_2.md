@@ -17,7 +17,7 @@ help
 * Description: Displays help for a command
 * Usage:
 
-  * `help [--format FORMAT] [--raw] [--] [<command_name>]`
+  * `help [--xml] [--format FORMAT] [--raw] [--] [<command_name>]`
 
 The <info>help</info> command displays help for a given command:
 
@@ -40,6 +40,16 @@ To display the list of available commands, please use the <info>list</info> comm
 * Default: `'help'`
 
 ### Options:
+
+**xml:**
+
+* Name: `--xml`
+* Shortcut: <none>
+* Accept value: no
+* Is value required: no
+* Is multiple: no
+* Description: To output help as XML
+* Default: `false`
 
 **format:**
 
@@ -137,7 +147,7 @@ list
 * Description: Lists commands
 * Usage:
 
-  * `list [--raw] [--format FORMAT] [--] [<namespace>]`
+  * `list [--xml] [--raw] [--format FORMAT] [--] [<namespace>]`
 
 The <info>list</info> command lists all commands:
 
@@ -166,6 +176,16 @@ It's also possible to get raw list of commands (useful for embedding command run
 * Default: `NULL`
 
 ### Options:
+
+**xml:**
+
+* Name: `--xml`
+* Shortcut: <none>
+* Accept value: no
+* Is value required: no
+* Is multiple: no
+* Description: To output list as XML
+* Default: `false`
 
 **raw:**
 

@@ -18,8 +18,6 @@ namespace {{namespace}}_generated;
 // You should not change it manually as it will be overwritten on next build
 // @codingStandardsIgnoreFile
 
-{{use}}
-
 trait {{name}}Actions
 {
     /**
@@ -54,14 +52,15 @@ EOF;
 
     public function __construct($settings)
     {
-        $this->name = $settings['class_name'];
+        $this->name = $settings['actor'];
         $this->settings = $settings;
         $this->di = new Di();
         $modules = Configuration::modules($this->settings);
         $this->moduleContainer = new ModuleContainer($this->di, $settings);
         foreach ($modules as $moduleName) {
-            $this->modules[$moduleName] = $this->moduleContainer->create($moduleName);
+            $this->moduleContainer->create($moduleName);
         }
+        $this->modules = $this->moduleContainer->all();
         $this->actions = $this->moduleContainer->getActions();
     }
 
@@ -69,11 +68,6 @@ EOF;
     public function produce()
     {
         $namespace = rtrim($this->settings['namespace'], '\\');
-
-        $uses = [];
-        foreach ($this->modules as $module) {
-            $uses[] = "use " . get_class($module) . ";";
-        }
 
         $methods = [];
         $code = [];
@@ -92,7 +86,6 @@ EOF;
             ->place('namespace', $namespace ? $namespace . '\\' : '')
             ->place('hash', self::genHash($this->modules, $this->settings))
             ->place('name', $this->name)
-            ->place('use', implode("\n", $uses))
             ->place('methods', implode("\n\n ", $code))
             ->produce();
     }
@@ -135,7 +128,6 @@ EOF;
                 ->place('action', str_replace('dont', 'cant', $refMethod->name))
                 ->place('step', 'ConditionalAssertion')
                 ->produce();
-
         } elseif (0 === strpos($refMethod->name, 'am')) {
             $type = 'Condition';
         } else {
@@ -159,13 +151,11 @@ EOF;
     {
         $params = [];
         foreach ($refMethod->getParameters() as $param) {
-
             if ($param->isOptional()) {
                 $params[] = '$' . $param->name . ' = null';
             } else {
                 $params[] = '$' . $param->name;
             };
-
         }
         return implode(', ', $params);
     }
@@ -215,4 +205,4 @@ EOF;
     {
         return $this->numMethods;
     }
-} 
+}

@@ -153,12 +153,9 @@ class PHP_CodeCoverage_Report_HTML
     }
 
     /**
-     * @param string $directory
-     *
+     * @param  string                     $directory
      * @return string
-     *
-     * @throws PHP_CodeCoverage_RuntimeException
-     *
+     * @throws PHP_CodeCoverage_Exception
      * @since  Method available since Release 1.2.0
      */
     private function getDirectory($directory)
@@ -175,7 +172,7 @@ class PHP_CodeCoverage_Report_HTML
             return $directory;
         }
 
-        throw new PHP_CodeCoverage_RuntimeException(
+        throw new PHP_CodeCoverage_Exception(
             sprintf(
                 'Directory "%s" does not exist.',
                 $directory

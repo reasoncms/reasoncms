@@ -231,9 +231,10 @@ class DefaultMediaWorkDisplayer implements MediaWorkDisplayerInterface
 				$markup = '<iframe class="media_file_iframe ' . strtolower($current->get_value('av_type')) . '" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" allowfullscreen="allowfullscreen" height="'.intval($iframe_height).'" width="'.intval($iframe_width).'" ';
 				
 				$markup .= 'src="'.$this->get_iframe_src($iframe_height, $iframe_width).'" ';
-				
-				if(!empty($this->media_work->get_value('av_type')))
-					$markup .= 'title="'.reason_htmlspecialchars($this->media_work->get_value('av_type')).'" ';
+
+				$av_type = $this->media_work->get_value('av_type');
+				if(!empty($av_type))
+					$markup .= 'title="'.reason_htmlspecialchars($av_type).'" ';
 				
 				$markup .= '>';
 				$markup .= '</iframe>'."\n";

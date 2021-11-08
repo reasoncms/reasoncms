@@ -181,16 +181,17 @@
 					if ($displayer)
 					{
 						$displayer->set_media_work($media_work);
-						if ($media_work->get_value('integration_library') == 'youtube' && !empty($media_work->get_value('entry_id')))
+						$entry_id = $media_work->get_value('entry_id');
+						if ($media_work->get_value('integration_library') == 'youtube' && !empty($entry_id))
 						{
 							$timeline_item_json['media'] = [
-								'url' => $this->prep_string_for_json('https://www.youtube.com/watch?v=' . $media_work->get_value('entry_id')),
+								'url' => $this->prep_string_for_json('https://www.youtube.com/watch?v=' . $entry_id),
 							];
 						}
-						else if ($media_work->get_value('integration_library') == 'vimeo' && !empty($media_work->get_value('entry_id')))
+						else if ($media_work->get_value('integration_library') == 'vimeo' && !empty($entry_id))
 						{
 							$timeline_item_json['media'] = [
-								'url' => $this->prep_string_for_json('https://vimeo.com/' . $media_work->get_value('entry_id')),
+								'url' => $this->prep_string_for_json('https://vimeo.com/' . $entry_id),
 							];
 						}
 						else

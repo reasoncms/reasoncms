@@ -15,7 +15,7 @@ PHPUnit_TextUI_Command::main();
 --EXPECTF--
 PHPUnit %s by Sebastian Bergmann and contributors.
 
-..F.                                                                4 / 4 (100%)<?xml version="1.0" encoding="UTF-8"?>
+..F.<?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
   <testsuite name="DataProviderTest" file="%sDataProviderTest.php" tests="4" assertions="4" failures="1" errors="0" time="%f">
     <testsuite name="DataProviderTest::testAdd" tests="4" assertions="4" failures="1" errors="0" time="%f">
@@ -34,7 +34,7 @@ Failed asserting that 2 matches expected 3.
 </testsuites>
 
 
-Time: %s, Memory: %sMb
+Time: %s, Memory: %s
 
 There was 1 failure:
 

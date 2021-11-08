@@ -3,12 +3,12 @@
  * @package reason
  * @subpackage admin
  */
- 
+
 /**
  * Include the default module
  */
 reason_include_once('classes/admin/modules/default.php');
-	
+
 /**
  * List various administrative tools
  */
@@ -18,13 +18,13 @@ class ReasonAdminToolsModule extends DefaultModule
 	{
 		$this->admin_page =& $page;
 	}
-	
+
 	function init()
 	{
 		$this->admin_page->title = 'Administrative Tools';
-		$this->head_items->add_stylesheet(REASON_ADMIN_CSS_DIRECTORY.'admin_tools.css');                	
+		$this->head_items->add_stylesheet(REASON_ADMIN_CSS_DIRECTORY.'admin_tools.css');
 	}
-	
+
 	function _get_tools()
 	{
 		return array(
@@ -44,7 +44,7 @@ class ReasonAdminToolsModule extends DefaultModule
 											'description' => 'See what has been added, deleted, and updated recently in Reason',
 					'safety_level' => 'safe',
 									),
-									REASON_HTTP_BASE_PATH.'scripts/search/find_across_sites.php' => array(
+								'?cur_module=Search' => array(
 											'title' => 'Search Across All Reason Sites',
 											'description' => 'Find a given string anywhere in Reason',
 					'safety_level' => 'safe',
@@ -134,6 +134,21 @@ class ReasonAdminToolsModule extends DefaultModule
 					'description' => 'Provides statistics on usage by type in Reason.',
 					'safety_level' => 'safe',
 				),
+				'?site_id='.id_of('master_admin').'&cur_module=TypeUsage' => array(
+					'title' => 'Type & Module Usage',
+					'description' => 'Provides statistics on how frequently each type and module is used by each site',
+					'safety_level' => 'safe',
+				),
+				'?site_id='.id_of('master_admin').'&cur_module=GroupUsage' => array(
+					'title' => 'Group Usage',
+					'description' => 'Provides statistics on how this reason instance uses groups for access control',
+					'safety_level' => 'safe',
+				),
+				'?cur_module=FindPageFromURL' => array(
+					'title' => 'Find Page From URL',
+					'description' => 'Given a URL, find all pages that have been at that URL',
+					'safety_level' => 'safe',
+				),
 			),
 			'Content Actions' => array(
 				REASON_HTTP_BASE_PATH.'scripts/urls/update_urls.php' => array(
@@ -141,7 +156,7 @@ class ReasonAdminToolsModule extends DefaultModule
 					'description' => 'Run the .htaccess rewrites for a particular site or for all sites. (also: get the command for creating site directories that need creation)',
 					'safety_level' => 'safe',
 				),
-				'?cur_module=EventSplit' => array(  
+				'?cur_module=EventSplit' => array(
 					'title' => 'Split Repeating Event',
 					'description' => 'Chop a repeating event into multiple separate events (note: to use this module, first edit an event entity, then change the cur_module part of the query to "cur_module=EventSplit")',
 					'safety_level' => 'safe',
@@ -151,9 +166,9 @@ class ReasonAdminToolsModule extends DefaultModule
 					'description' => 'Migrate a publication from old-style news (e.g. no publication entity, single news page per site) to the modern blog/publication format.',
 					'safety_level' => 'safe',
 				),
-				'?cur_module=ShareSiteOwnership' => array(  
-					'title' => 'Share Site Ownership',
-					'description' => 'Assign some or all of a user\'s sites to another user as well.',
+				'?cur_module=ShareSiteOwnership' => array(
+					'title' => 'Duplicate Site Access',
+					'description' => 'Give some or all of a user\'s sites to another user as well.',
 					'safety_level' => 'safe',
 				),
 				REASON_HTTP_BASE_PATH.'scripts/move/move_entities_among_sites.php' => array(
@@ -161,12 +176,22 @@ class ReasonAdminToolsModule extends DefaultModule
 					'description' => 'Move entities from one site to another. Additional steps required if moving pages or assets.',
 					'safety_level' => 'careful',
 				),
+//				REASON_HTTP_BASE_PATH.'scripts/copy/copy_entities_among_sites.php' => array(
+//					'title' => 'Copy Entities',
+//					'description' => 'Copy entities from one site to another. Additional steps required if moving pages or assets.',
+//					'safety_level' => 'experimental',
+//				),
+				'?cur_module=CopyBorrowing&site_id='.id_of('master_admin') => array(
+					'title' => 'Copy Borrowing Between Sites',
+					'description' => 'Copy borrow relationships from one site to another',
+					'safety_level' => 'careful',
+				),
 				REASON_HTTP_BASE_PATH.'scripts/search/find_and_replace.php' => array(
 					'title' => 'Find and Replace',
 					'description' => 'Find and replace across multiple entities on multiple sites',
 					'safety_level' => 'careful',
 				),
-				'?cur_module=CopySitePages' => array(  
+				'?cur_module=CopySitePages' => array(
 					'title' => 'Copy Site Pages',
 					'description' => 'Copy the pages (and only the pages) from one site into a new site.',
 					'safety_level' => 'careful',
@@ -261,7 +286,7 @@ class ReasonAdminToolsModule extends DefaultModule
 			),
 		);
 	}
-	
+
 	function run()
 	{
 		echo '<div id="adminToolsModule">'."\n";
@@ -281,7 +306,7 @@ class ReasonAdminToolsModule extends DefaultModule
 			{
 				echo '<div class="tool '.htmlspecialchars($info['safety_level']).'">'."\n";
 				echo '<h4><a href="'.htmlspecialchars($url).'">'.htmlspecialchars($info['title']).'</a> <span class="safetyLevel">('.htmlspecialchars(ucfirst($info['safety_level'])).')</span></h4>'."\n";
-				echo '<p>'.htmlspecialchars($info['description']).'</p>'."\n";	
+				echo '<p>'.htmlspecialchars($info['description']).'</p>'."\n";
 				echo '</div>'."\n";
 			}
 			echo '</div>'."\n";

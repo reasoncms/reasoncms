@@ -4,7 +4,7 @@
  * @package reason
  * @subpackage content_managers
  */
- 
+
  /**
   * Store the class name so that the admin page can use this content manager
   */
@@ -17,7 +17,8 @@
 	require_once INCLUDE_PATH . '/disco/plugins/input_limiter/input_limiter.php';
 	reason_include_once('classes/event.php');
 	reason_include_once('classes/api/geocoder.php');
-	
+	reason_include_once('function_libraries/google_maps.php');
+
 	/**
 	 * A content manager for event entities
 	 *
@@ -25,17 +26,17 @@
 	 *
 	 * @todo support google maps premiere keys
 	 */
-	class event_handler extends ContentManager 
+	class event_handler extends ContentManager
 	{
 		var $years_out = 3;
 		var $sync_vals = array();
 		var $registration_page_types = array('event_registration','event_signup',);
-		
+
 		function should_run_api()
 		{
 			return ( ($this->geolocation_enabled() && isset($_REQUEST['module_api']) && ($_REQUEST['module_api'] == 'geocoder') ) );
 		}
-		
+
 		function run_api()
 		{
 			if ($this->geolocation_enabled())
@@ -44,12 +45,12 @@
 				$geocoderAPI->run();
 			}
 		}
-		
+
 		/**
 		 * geolocation is currently not enabled in the core - but we still want to see if the upgrade script has been run and
 		 * prompt the user to run it if not. once the core events module and others are updated to use the geolocation info
 		 * we will enable it in the content manager.
-		 * 
+		 *
 		 * @todo fix to have value based upon the constant once we are ready with modules
 		 */
 		function geolocation_enabled()
@@ -69,7 +70,7 @@
 			}
 			return $this->_geolocation_enabled;
 		}
-		
+
 		function _event_type_supports_geolocation()
 		{
 			if (!isset($this->_event_type_supports_geolocation))
@@ -78,20 +79,19 @@
 			}
 			return $this->_event_type_supports_geolocation;
 		}
-		
+
 		function init_head_items()
 		{
 			$this->head_items->add_javascript(JQUERY_URL, true); // uses jquery - jquery should be at top
-			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH .'event.js?v=2');
+			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH .'event.js?v=3');
 			if ($this->geolocation_enabled())
 			{
-				$base_gmap_url = (HTTPS_AVAILABLE) ? 'https://maps-api-ssl.google.com/maps/api/js' : 'http://maps.google.com/maps/api/js';
-				$this->head_items->add_javascript($base_gmap_url . '?v=3&libraries=geometry&sensor=false', true);
+				$this->head_items->add_javascript(create_google_maps_js_url(["libraries" => "geometry"]), true);
 				$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH . 'content_managers/event/geo.js?v=2');
 				$this->head_items->add_stylesheet(WEB_JAVASCRIPT_PATH . 'content_managers/event/geo.css');
 			}
 		}
-		
+
 		function check_for_recurrence_field_existence()
 		{
 			if(!$this->_is_element('recurrence'))
@@ -102,7 +102,7 @@
 				die();
 			}
 		}
-			
+
 		function alter_data() // {{{
 		{
 			if ($this->is_element('geopoint')) $this->remove_element('geopoint'); // never want to set this directly.
@@ -115,7 +115,7 @@
 			$this->add_element('hr2', 'hr');
 			$this->add_element('hr3', 'hr');
 			$this->add_element('hr4', 'hr');
-			
+
 			if(REASON_USES_DISTRIBUTED_AUDIENCE_MODEL)
 				$es = new entity_selector($site->id());
 			else
@@ -125,14 +125,14 @@
 			$es->limit_fields();
 			$es->set_num(1);
 			$result = $es->run_one();
-			
+
 			if(!empty($result))
 			{
 				$this->add_element('audiences_heading', 'comment', array('text'=>'<h4>Visibility</h4> To which groups do you wish to promote this event? (Please enter at least one)'));
-				$this->add_relationship_element('audiences', id_of('audience_type'), 
+				$this->add_relationship_element('audiences', id_of('audience_type'),
 				relationship_id_of('event_to_audience'),'right','checkbox',REASON_USES_DISTRIBUTED_AUDIENCE_MODEL,'smart',1);
 			}
-			
+
 			$es = new entity_selector();
 			$es->add_type(id_of('site'));
 			$es->add_left_relationship(id_of('category_type'), relationship_id_of('site_to_type'));
@@ -141,12 +141,12 @@
 			$es->limit_fields();
 			$es->set_num(1);
 			$result = $es->run_one();
-			
+
 			if(!empty($result))
 			{
 				$this->add_relationship_element('categories', id_of('category_type'), relationship_id_of('event_to_event_category'),'right','checkbox',true,'smart',1);
 			}
-			
+
 			$this->add_element('date_and_time', 'comment', array('text'=>'<h4>Date, Time, and Duration of Event</h4>'));
 			$this->add_element('info_head', 'comment', array('text'=>'<h4>Title and Description</h4>'));
 			$this->add_element('other_info_head', 'comment', array('text'=>'<h4>Other Information</h4>'));
@@ -163,14 +163,14 @@
 				$minutes[$i] = $i;
 
 			$this->change_element_type( 'datetime','textDateTime' );
-			
+
 			$this->change_element_type( 'content' , html_editor_name($this->admin_page->site_id) , html_editor_params($this->admin_page->site_id, $this->admin_page->user_id) );
-			$this->change_element_type( 'recurrence', 'select_no_sort', 
-				array(	'options' => array(	'none'=>'Never (One-Time Event)', 
-											'daily'=>'Daily', 
-											'weekly'=>'Weekly', 
-											'monthly'=>'Monthly', 
-											'yearly'=>'Yearly'), 
+			$this->change_element_type( 'recurrence', 'select_no_sort',
+				array(	'options' => array(	'none'=>'Never (One-Time Event)',
+											'daily'=>'Daily',
+											'weekly'=>'Weekly',
+											'monthly'=>'Monthly',
+											'yearly'=>'Yearly'),
 											'add_empty_value_to_top' => false,
 					) );
 			$this->change_element_type( 'minutes', 'select_no_label', array('options'=>$minutes,'sort_options'=>false) );
@@ -222,13 +222,13 @@
 			$this->set_display_name( 'week_of_month', 'On the' );
 			$this->set_display_name( 'month_day_of_week', ' ' );
 			$this->set_display_name( 'show_hide', 'Event Status' );
-			$this->change_element_type( 'show_hide', 'radio_no_sort', array( 
-				'options' => array( 
+			$this->change_element_type( 'show_hide', 'radio_no_sort', array(
+				'options' => array(
 				//	'tentative' => 'This event is tentative; only display it on calendar planning views.',
 					'show' => 'Publish this event',
-					'hide' => 'Hide this event from all calendars', 
-				//	'cancelled' => 'This event has been cancelled; display it with an appropriate flag.' 
-				), 
+					'hide' => 'Hide this event from all calendars',
+				//	'cancelled' => 'This event has been cancelled; display it with an appropriate flag.'
+				),
 				'add_empty_value_to_top' => false, ) );
 			$this->set_display_name( 'end_date', 'Repeat this event until' );
 			$this->set_comments(	 'end_date', form_comment( 'Month/Day/Year' ));
@@ -249,7 +249,7 @@
 			$this->add_required( 'datetime' );
 			$this->add_required( 'recurrence' );
 			$this->add_required( 'show_hide' );
-			
+
 			// Check if there is an event page that allows registration on the site.
 			// If there is not, hide the registration field.
 			$ps = new entity_selector($this->get_value( 'site_id' ));
@@ -266,7 +266,7 @@
 			{
 				$this->change_element_type( 'registration', 'protected' );
 			}
-			
+
 			// general default values
 			if( !$this->get_value( 'sponsor' ) )
 			{
@@ -297,22 +297,26 @@
 				$this->set_value('show_hide', 'show');
 			if( !$this->get_value('registration') )
 				$this->set_value('registration', 'none');
-				
+
 			$this->add_element('this_event_is','protected');
 			$this->add_element('this_event_is_comment','protected');
-			
+
 			$this->setup_location_fields();
-			
+
 			//pray($this);
 			$this->set_event_field_order();
-			
-			// limit characters for title and description 
+
+			// limit characters for title and description
 			$limiter = new DiscoInputLimiter($this);
 			$limiter->limit_field('name', 70);
 			$limiter->limit_field('description', 140);
-			
+
+			// Add reading level notifier plugin to content editor
+			$this->add_readability_notifiers('content');
+			$this->add_readability_notifiers('description');
+
 		} // }}}
-		
+
 		function get_registration_info()
 		{
 			$e = new entity($this->get_value('id'));
@@ -331,7 +335,7 @@
 			}
 			else
 			{
-				$ret .= '<p><a href="http://reasoncms.org/userdocs/managing-content/other-types/event-tickets/" target="_blank">How to set up registration/ticketing for this event</a></p>';
+				$ret .= '<p><a href="https://apps.carleton.edu/campus/web-group/training/events/tickets/" target="_blank">How to set up registration/ticketing for this event</a></p>';
 			}
 			return $ret;
 		}
@@ -346,15 +350,15 @@
 				$this->add_element('location_head', 'comment', array('text'=>'<h4>Where is this event?</h4>'));
 				$this->set_display_name('location', 'Location Name');
 				$this->add_element('auto_update_coordinates', 'checkboxfirst');
-			
+
 				// the value of auto_update_coordinates should depend on whether or not they are currently in sync.
 				// if they are in sync - then leave it checked.
 				// if they are not in sync - uncheck it.
 				$auto_update_value = ($this->entity_uses_custom_coordinates()) ? "0" : "1";
-				
+
 				$this->set_value('auto_update_coordinates', $auto_update_value);
 				$this->set_comments('auto_update_coordinates', form_comment('If checked, the latitude and longitude will be automatically updated on save according to the address of the event.'));
-				
+
 				// lets set comments on the address field
 				if ($auto_update_value)
 				{
@@ -373,7 +377,7 @@
 				if ($this->is_element('address')) $this->remove_element('address');
 			}
 		}
-		
+
 		/**
 		 * Check whether the saved entity values are using custom coordinates - this is used to initally set auto update.
 		 */
@@ -390,14 +394,14 @@
 				{
 					$geocoder = new geocoder($addy);
 					$geocode = $geocoder->get_geocode();
-					if ($geocode['latitude'] != $lat || $geocode['longitude'] != $lng) return true;	
+					if ($geocode['latitude'] != $lat || $geocode['longitude'] != $lng) return true;
 				}
 				elseif ($lat && $lng && !$addy) return true;
 				else return false;
 			}
 			return false;
 		}
-		
+
 		/**
 		 * We perform geocoding as needed here - this ensures the map and lat / lon get updated even if there are other errors on the form.
 		 */
@@ -412,12 +416,12 @@
 				}
 			}
 		}
-		
+
 		function set_event_field_order()
 		{
 			$this->set_order (array ('this_event_is_comment','this_event_is', 'date_and_time', 'datetime', 'hours', 'minutes', 'recurrence', 'frequency', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'monthly_repeat', 'week_of_month', 'month_day_of_week', 'end_date', 'term_only', 'dates', 'show_hide', 'hr1', 'info_head', 'name', 'description', 'location_head', 'location', 'address', 'auto_update_coordinates', 'latitude', 'longitude', 'other_info_head', 'sponsor', 'contact_username', 'contact_organization', 'url', 'content', 'keywords', 'categories', 'hr2', 'registration_info', 'hr3', 'audiences_heading','audiences','no_share', 'hr4',  ));
 		}
-		
+
 		function _should_offer_split()
 		{
 			if($this->get_value('recurrence') == 'none')
@@ -426,31 +430,31 @@
 				return false;
 			return true;
 		}
-		
+
 		function run_error_checks() // {{{
 		{
 			parent::run_error_checks();
-			
+
 			if(!$this->_has_errors())
 			{
 				$rev = new reasonEvent();
 				$rev->pass_disco_form_reference($this);
 				$rev->clean_up();
 				$rev->find_errors();
-				
+
 				/*
-				
+
 				// Similarity checking is still experimental.
 				// This code snippet is functional, but we don't really want to put it into production
 				// until the similarity checking is faster and more robust.
-				
+
 				$similar = $rev->find_similar_events();
 				if(!empty($similar))
 				{
 					$num = count($similar);
-					
+
 					$options = array();
-					
+
 					if($num > 1)
 					{
 						$error_text = 'There are '.$num.' events already in Reason that appear similar to this one';
@@ -483,7 +487,7 @@
 					$this->set_display_name('this_event_is',$display_name);
 					$this->set_error('this_event_is',$error_text);
 					$this->set_event_field_order();
-					
+
 				}
 				*/
 			}
@@ -500,7 +504,7 @@
 			$this->do_event_processing();
 			parent::process();
 		} // }}}
-		
+
 		/**
 		 * If auto update is on and the address has changed, geolocate the IP
 		 */
@@ -515,7 +519,7 @@
 				//$auto_update = $this->get_value('auto_update_coordinates');
 				$lat = $this->get_value('latitude');
 				$lng = $this->get_value('longitude');
-				
+
 				// if update is on lets always do the geolocation.
 				$this->set_value('latitude', "");
 				$this->set_value('longitude', "");
@@ -531,5 +535,5 @@
 				}
 			}
 		}
-	}	
+	}
 ?>

@@ -8,7 +8,15 @@
  * file that was distributed with this source code.
  */
 
-require_once dirname(dirname(dirname(dirname(__FILE__)))) . DIRECTORY_SEPARATOR . 'TestCase.php';
+if (!defined('TEST_FILES_PATH')) {
+    define(
+        'TEST_FILES_PATH',
+        dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR .
+        '_files' . DIRECTORY_SEPARATOR
+    );
+}
+
+require_once TEST_FILES_PATH . '../TestCase.php';
 
 /**
  * Tests for the PHP_CodeCoverage_Report_Clover class.

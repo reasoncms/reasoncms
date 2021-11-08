@@ -17,7 +17,6 @@ class Framework_TestListenerTest extends PHPUnit_Framework_TestCase implements P
     protected $endCount;
     protected $errorCount;
     protected $failureCount;
-    protected $warningCount;
     protected $notImplementedCount;
     protected $riskyCount;
     protected $skippedCount;
@@ -27,11 +26,6 @@ class Framework_TestListenerTest extends PHPUnit_Framework_TestCase implements P
     public function addError(PHPUnit_Framework_Test $test, Exception $e, $time)
     {
         $this->errorCount++;
-    }
-
-    public function addWarning(PHPUnit_Framework_Test $test, PHPUnit_Framework_Warning $e, $time)
-    {
-        $this->warningCount++;
     }
 
     public function addFailure(PHPUnit_Framework_Test $test, PHPUnit_Framework_AssertionFailedError $e, $time)

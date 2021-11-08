@@ -23,9 +23,9 @@ PHPUnit %s by Sebastian Bergmann and contributors.
 
 .
 STDOUT does not break test result
-E                                                                  2 / 2 (100%)
+E
 
-Time: %s, Memory: %sMb
+Time: %s, Memory: %s
 
 There was 1 error:
 

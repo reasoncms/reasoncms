@@ -66,8 +66,10 @@ class textType extends defaultTextType
 	 */
 	var $placeholder;
 
+	var $payment_element = false;
+
 	/** @access private */
-	var $type_valid_args = array( 'size', 'maxlength', 'placeholder' );
+	var $type_valid_args = array( 'size', 'maxlength', 'placeholder', 'payment_element' );
 
 	function get_display()
 	{
@@ -76,10 +78,13 @@ class textType extends defaultTextType
 			$display .= 'placeholder="'.htmlspecialchars($this->placeholder).'" ';
 		if(!$this->is_labeled())
 			$display .= 'aria-label="'.html_attribute_escape($this->display_name).'" ';
+		if ($this->payment_element) {
+			$display .= 'data-payment-element="true" ';
+		}
 		$display .= '/>';
 		return $display;
 	}
-	
+
 	function get_label_target_id()
 	{
 		return $this->get_id();
@@ -106,9 +111,10 @@ class solidtextType extends defaultTextType
 {
 	var $type = 'solidtext';
 	var $userland_changeable = false;
+	var $payment_element = false;
 
 	/** @access private */
-	var $type_valid_args = array( 'userland_changeable');
+	var $type_valid_args = array( 'userland_changeable', 'payment_element' );
 
 	function grab()
 	{
@@ -122,8 +128,14 @@ class solidtextType extends defaultTextType
 
 	function get_display()
 	{
-		$str  = '<input type="hidden" name="'.$this->name.'" id="'.$this->get_id().'" value="'.htmlspecialchars($this->get(),ENT_QUOTES).'"/>';
-		$str .= "\n".'<div class="solidText">' . htmlspecialchars($this->get(),ENT_QUOTES). '</div>';
+		$payment_element_attr = '';
+		$payment_element_div_attr = '';
+		if ($this->payment_element) {
+			$payment_element_attr = ' data-payment-element="true"';
+			$payment_element_div_attr = ' data-payment-element-text="true"';
+		}
+		$str  = '<input type="hidden" name="'.$this->name.'" id="'.$this->get_id().'" value="'.htmlspecialchars($this->get(),ENT_QUOTES).'"' . $payment_element_attr . '/>';
+		$str .= "\n".'<div class="solidText"' . $payment_element_div_attr . '>' . htmlspecialchars($this->get(),ENT_QUOTES). '</div>';
 		return $str;
 	}
 }
@@ -203,7 +215,7 @@ class passwordType extends defaultTextType
 		$display .= '/>';
 		return $display;
 	}
-	
+
 	function get_label_target_id()
 	{
 		return $this->get_id();
@@ -251,8 +263,15 @@ class money_solidTextType extends solidtextType
 	var $type_valid_args = array( 'currency_symbol','decimal_symbol' );
 	function get_display()
 	{
-		$str  = '<input type="hidden" name="'.htmlspecialchars($this->name).'" id="'.$this->get_id().'" value="'.htmlspecialchars($this->get(),ENT_QUOTES).'"/>';
-		$str .= "\n".'<div class="solidText">' . $this->currency_symbol . htmlspecialchars($this->get(),ENT_QUOTES). '</div>';
+		$payment_element_attr = '';
+		$payment_element_div_attr = '';
+		if ($this->payment_element) {
+			$payment_element_attr = ' data-payment-element="true"';
+			$payment_element_div_attr = ' data-payment-element-text="true"';
+		}
+
+		$str  = '<input type="hidden" name="'.htmlspecialchars($this->name).'" id="'.$this->get_id().'" value="'.htmlspecialchars($this->get(),ENT_QUOTES).'"' . $payment_element_attr . '/>';
+		$str .= "\n".'<div class="solidText"' . $payment_element_div_attr . '>' . $this->currency_symbol . htmlspecialchars($this->get(),ENT_QUOTES). '</div>';
 		return $str;
 	}
 }
@@ -313,7 +332,7 @@ class textareaType extends defaultTextType
 			}
 		}
 	}
-	
+
 	function get_label_target_id()
 	{
 		return $this->get_id();

@@ -40,32 +40,32 @@ class PHPUnit_Util_Log_JUnit extends PHPUnit_Util_Printer implements PHPUnit_Fra
     /**
      * @var DOMElement[]
      */
-    protected $testSuites = [];
+    protected $testSuites = array();
 
     /**
      * @var int[]
      */
-    protected $testSuiteTests = [0];
+    protected $testSuiteTests = array(0);
 
     /**
      * @var int[]
      */
-    protected $testSuiteAssertions = [0];
+    protected $testSuiteAssertions = array(0);
 
     /**
      * @var int[]
      */
-    protected $testSuiteErrors = [0];
+    protected $testSuiteErrors = array(0);
 
     /**
      * @var int[]
      */
-    protected $testSuiteFailures = [0];
+    protected $testSuiteFailures = array(0);
 
     /**
      * @var int[]
      */
-    protected $testSuiteTimes = [0];
+    protected $testSuiteTimes = array(0);
 
     /**
      * @var int
@@ -122,23 +122,35 @@ class PHPUnit_Util_Log_JUnit extends PHPUnit_Util_Printer implements PHPUnit_Fra
      */
     public function addError(PHPUnit_Framework_Test $test, Exception $e, $time)
     {
-        $this->doAddFault($test, $e, $time, 'error');
-        $this->testSuiteErrors[$this->testSuiteLevel]++;
-    }
+        if ($this->currentTestCase === null) {
+            return;
+        }
 
-    /**
-     * A warning occurred.
-     *
-     * @param PHPUnit_Framework_Test    $test
-     * @param PHPUnit_Framework_Warning $e
-     * @param float                     $time
-     *
-     * @since Method available since Release 5.1.0
-     */
-    public function addWarning(PHPUnit_Framework_Test $test, PHPUnit_Framework_Warning $e, $time)
-    {
-        $this->doAddFault($test, $e, $time, 'warning');
-        $this->testSuiteFailures[$this->testSuiteLevel]++;
+        if ($test instanceof PHPUnit_Framework_SelfDescribing) {
+            $buffer = $test->toString() . PHP_EOL;
+        } else {
+            $buffer = '';
+        }
+
+        if ($e instanceof PHPUnit_Framework_ExceptionWrapper) {
+            $type    = $e->getClassname();
+            $buffer .= (string) $e;
+        } else {
+            $type    = get_class($e);
+            $buffer .= PHPUnit_Framework_TestFailure::exceptionToString($e) . PHP_EOL .
+                       PHPUnit_Util_Filter::getFilteredStacktrace($e);
+        }
+
+        $error = $this->document->createElement(
+            'error',
+            PHPUnit_Util_XML::prepareString($buffer)
+        );
+
+        $error->setAttribute('type', $type);
+
+        $this->currentTestCase->appendChild($error);
+
+        $this->testSuiteErrors[$this->testSuiteLevel]++;
     }
 
     /**
@@ -150,7 +162,29 @@ class PHPUnit_Util_Log_JUnit extends PHPUnit_Util_Printer implements PHPUnit_Fra
      */
     public function addFailure(PHPUnit_Framework_Test $test, PHPUnit_Framework_AssertionFailedError $e, $time)
     {
-        $this->doAddFault($test, $e, $time, 'failure');
+        if ($this->currentTestCase === null) {
+            return;
+        }
+
+        if ($test instanceof PHPUnit_Framework_SelfDescribing) {
+            $buffer = $test->toString() . "\n";
+        } else {
+            $buffer = '';
+        }
+
+        $buffer .= PHPUnit_Framework_TestFailure::exceptionToString($e) .
+                   "\n" .
+                   PHPUnit_Util_Filter::getFilteredStacktrace($e);
+
+        $failure = $this->document->createElement(
+            'failure',
+            PHPUnit_Util_XML::prepareString($buffer)
+        );
+
+        $failure->setAttribute('type', get_class($e));
+
+        $this->currentTestCase->appendChild($failure);
+
         $this->testSuiteFailures[$this->testSuiteLevel]++;
     }
 
@@ -421,38 +455,5 @@ class PHPUnit_Util_Log_JUnit extends PHPUnit_Util_Printer implements PHPUnit_Fra
         if (is_bool($flag)) {
             $this->writeDocument = $flag;
         }
-    }
-
-    /**
-     * Method which generalizes addError() and addFailure()
-     *
-     * @param PHPUnit_Framework_Test $test
-     * @param Exception              $e
-     * @param float                  $time
-     * @param string                 $type
-     */
-    private function doAddFault(PHPUnit_Framework_Test $test, Exception $e, $time, $type)
-    {
-        if ($this->currentTestCase === null) {
-            return;
-        }
-
-        if ($test instanceof PHPUnit_Framework_SelfDescribing) {
-            $buffer = $test->toString() . "\n";
-        } else {
-            $buffer = '';
-        }
-
-        $buffer .= PHPUnit_Framework_TestFailure::exceptionToString($e) .
-                   "\n" .
-                   PHPUnit_Util_Filter::getFilteredStacktrace($e);
-
-        $fault = $this->document->createElement(
-            $type,
-            PHPUnit_Util_XML::prepareString($buffer)
-        );
-
-        $fault->setAttribute('type', get_class($e));
-        $this->currentTestCase->appendChild($fault);
     }
 }

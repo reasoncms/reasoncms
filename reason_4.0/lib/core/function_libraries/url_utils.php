@@ -93,12 +93,12 @@ function get_remote_filesize($uri,$user='',$pw='')
  * @param $url
  * @return mixed site ID integer if successful, else NULL
  */
-function get_site_id_from_url($url)
+function get_site_id_from_url($url, $live_only = false)
 {
 	$parsed = parse_url($url);
 	if(empty($parsed['host']) || hostname_is_associated_with_this_reason_instance($parsed['host']) )
 	{
-		$sites = get_potential_sites_from_path($parsed['path']);
+		$sites = get_potential_sites_from_path($parsed['path'], $live_only);
 		if(!empty($sites))
 		{
 			reset($sites);
@@ -139,7 +139,7 @@ function hostname_is_associated_with_this_reason_instance($hostname)
  * @param string $path
  * @return array Site entities
  */
-function get_potential_sites_from_path($path)
+function get_potential_sites_from_path($path, $live_only = false)
 {
 	if(!empty($path))
 	{
@@ -148,13 +148,17 @@ function get_potential_sites_from_path($path)
 		$prev_parts = '/';
 		foreach($path_parts as $part)
 		{
-			$values[] = $prev_parts = $prev_parts.$part.'/';
+			$values[] = reason_sql_string_escape( $prev_parts = $prev_parts.$part.'/' );
 		}
 		$where = '(site.base_url = "'.implode('" OR site.base_url = "',$values).'")';
 		
 		$es = new entity_selector();
 		$es->add_type(id_of('site'));
 		$es->add_relation($where);
+		if($live_only)
+		{
+			$es->add_relation('site.site_state = "Live"');
+		}
 		$es->set_order('site.base_url DESC');
 		$potential_sites = $es->run_one();
 		return $potential_sites;
@@ -198,14 +202,18 @@ function reason_get_page_url( $page_entity_or_id )
  * Get the absolute url for the site, given a reason entity or id for a site or page.
  *
  * @author Nathan White
- * @param mixed entity or entity_id corresponding to a page or site
+ * @param mixed entity or entity_id corresponding to a page or site or non-reason site
  * @return mixed string absolute url if successful; else null
  */
 function reason_get_site_url( $page_or_site_entity_or_id )
 {
 	$entity = is_numeric($page_or_site_entity_or_id) ? new entity($page_or_site_entity_or_id) : $page_or_site_entity_or_id;	
 	$type = $entity->has_value('type') ? $entity->get_value('type') : false;
-	if ( ($type == id_of('minisite_page')) || ($type == id_of('site')) )
+	if ( $type == id_of('non_reason_site_type'))
+	{
+		return $entity->get_value('url');
+	}
+	elseif ( ($type == id_of('minisite_page')) || ($type == id_of('site')) )
 	{
 		$site = ($type == id_of('minisite_page')) ? $entity->get_owner() : $entity;
 		$domain = ($site->has_value('domain') && $site->get_value('domain')) ? $site->get_value('domain') : REASON_HOST;

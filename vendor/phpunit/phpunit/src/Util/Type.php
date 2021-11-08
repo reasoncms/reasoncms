@@ -19,20 +19,20 @@ class PHPUnit_Util_Type
     {
         return in_array(
             $type,
-            [
-                'numeric',
-                'integer',
-                'int',
-                'float',
-                'string',
-                'boolean',
-                'bool',
-                'null',
-                'array',
-                'object',
-                'resource',
-                'scalar'
-            ]
+            array(
+            'numeric',
+            'integer',
+            'int',
+            'float',
+            'string',
+            'boolean',
+            'bool',
+            'null',
+            'array',
+            'object',
+            'resource',
+            'scalar'
+            )
         );
     }
 }

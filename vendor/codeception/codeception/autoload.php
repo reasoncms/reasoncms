@@ -1,10 +1,24 @@
 <?php
-// for phar
-if (file_exists(__DIR__.'/vendor/autoload.php')) {
-    require_once(__DIR__.'/vendor/autoload.php');
-} elseif (file_exists(__DIR__.'/../../autoload.php')) {
+
+$autoloadFile = './vendor/codeception/codeception/autoload.php';
+if (file_exists('./vendor/autoload.php') && file_exists($autoloadFile) && __FILE__ != realpath($autoloadFile)) {
+    //for global installation or phar file
+    fwrite(
+        STDERR,
+        "\n==== Redirecting to Composer-installed version in vendor/codeception ====\n"
+    );
+    require $autoloadFile;
+    //require package/bin instead of codecept to avoid printing hashbang line
+    require './vendor/codeception/codeception/package/bin';
+    die;
+} elseif (file_exists(__DIR__ . '/vendor/autoload.php')) {
+    // for phar
+    require_once(__DIR__ . '/vendor/autoload.php');
+} elseif (file_exists(__DIR__ . '/../../autoload.php')) {
+    //for composer
     require_once __DIR__ . '/../../autoload.php';
 }
+unset($autoloadFile);
 
 // @codingStandardsIgnoreStart
 // loading WebDriver aliases
@@ -28,7 +42,7 @@ if (!class_exists('RemoteWebDriver') and class_exists('Facebook\WebDriver\Remote
     interface WebDriverElement extends Facebook\WebDriver\WebDriverElement {};
 }
 
-@include_once __DIR__ . DIRECTORY_SEPARATOR . 'symfony-shim.php';
+include_once __DIR__ . DIRECTORY_SEPARATOR . 'shim.php';
 // compat
 if (PHP_MAJOR_VERSION < 7) {
     if (false === interface_exists('Throwable', false)) {
@@ -62,32 +76,48 @@ if (!function_exists('json_last_error_msg')) {
 }
 
 // function not autoloaded in PHP, thus its a good place for them
-function codecept_debug($data)
-{
-    \Codeception\Util\Debug::debug($data);
+if (!function_exists('codecept_debug')) {
+    function codecept_debug($data)
+    {
+        \Codeception\Util\Debug::debug($data);
+    }
 }
 
-function codecept_root_dir($appendPath = '')
-{
-    return \Codeception\Configuration::projectDir() . $appendPath;
+if (!function_exists('codecept_root_dir')) {
+    function codecept_root_dir($appendPath = '')
+    {
+        return \Codeception\Configuration::projectDir() . $appendPath;
+    }
 }
 
-function codecept_output_dir($appendPath = '')
-{
-    return \Codeception\Configuration::outputDir() . $appendPath;
+if (!function_exists('codecept_output_dir')) {
+    function codecept_output_dir($appendPath = '')
+    {
+        return \Codeception\Configuration::outputDir() . $appendPath;
+    }
 }
 
-function codecept_log_dir($appendPath = '')
-{
-    return \Codeception\Configuration::outputDir() . $appendPath;
+if (!function_exists('codecept_log_dir')) {
+    function codecept_log_dir($appendPath = '')
+    {
+        return \Codeception\Configuration::outputDir() . $appendPath;
+    }
 }
 
-function codecept_data_dir($appendPath = '')
-{
-    return \Codeception\Configuration::dataDir() . $appendPath;
+if (!function_exists('codecept_data_dir')) {
+    function codecept_data_dir($appendPath = '')
+    {
+        return \Codeception\Configuration::dataDir() . $appendPath;
+    }
 }
 
-function codecept_relative_path($path)
-{
-    return substr($path, strlen(codecept_root_dir()));
+if (!function_exists('codecept_relative_path')) {
+    function codecept_relative_path($path)
+    {
+        return \Codeception\Util\PathResolver::getRelativeDir(
+            $path,
+            \Codeception\Configuration::projectDir(),
+            DIRECTORY_SEPARATOR
+        );
+    }
 }

@@ -13,9 +13,9 @@ PHPUnit_TextUI_Command::main();
 --EXPECTF--
 PHPUnit %s by Sebastian Bergmann and contributors.
 
-.FFF                                                                4 / 4 (100%)
+.FFF
 
-Time: %s, Memory: %sMb
+Time: %s, Memory: %s
 
 There were 3 failures:
 

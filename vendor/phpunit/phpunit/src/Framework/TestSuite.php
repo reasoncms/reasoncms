@@ -11,31 +11,6 @@
 /**
  * A TestSuite is a composite of Tests. It runs a collection of test cases.
  *
- * Here is an example using the dynamic test definition.
- *
- * <code>
- * <?php
- * $suite = new PHPUnit_Framework_TestSuite;
- * $suite->addTest(new MathTest('testPass'));
- * ?>
- * </code>
- *
- * Alternatively, a TestSuite can extract the tests to be run automatically.
- * To do so you pass a ReflectionClass instance for your
- * PHPUnit_Framework_TestCase class to the PHPUnit_Framework_TestSuite
- * constructor.
- *
- * <code>
- * <?php
- * $suite = new PHPUnit_Framework_TestSuite(
- *   new ReflectionClass('MathTest')
- * );
- * ?>
- * </code>
- *
- * This constructor creates a suite with all the methods starting with
- * "test" that take no arguments.
- *
  * @since Class available since Release 2.0.0
  */
 class PHPUnit_Framework_TestSuite implements PHPUnit_Framework_Test, PHPUnit_Framework_SelfDescribing, IteratorAggregate
@@ -64,7 +39,7 @@ class PHPUnit_Framework_TestSuite implements PHPUnit_Framework_Test, PHPUnit_Fra
     /**
      * @var bool
      */
-    private $beStrictAboutChangesToGlobalState = null;
+    private $disallowChangesToGlobalState = null;
 
     /**
      * @var bool
@@ -83,14 +58,14 @@ class PHPUnit_Framework_TestSuite implements PHPUnit_Framework_Test, PHPUnit_Fra
      *
      * @var array
      */
-    protected $groups = [];
+    protected $groups = array();
 
     /**
      * The tests in the test suite.
      *
      * @var array
      */
-    protected $tests = [];
+    protected $tests = array();
 
     /**
      * The number of tests in the test suite.
@@ -107,7 +82,7 @@ class PHPUnit_Framework_TestSuite implements PHPUnit_Framework_Test, PHPUnit_Fra
     /**
      * @var array
      */
-    protected $foundClasses = [];
+    protected $foundClasses = array();
 
     /**
      * @var PHPUnit_Runner_Filter_Factory
@@ -225,7 +200,7 @@ class PHPUnit_Framework_TestSuite implements PHPUnit_Framework_Test, PHPUnit_Fra
      * @param PHPUnit_Framework_Test $test
      * @param array                  $groups
      */
-    public function addTest(PHPUnit_Framework_Test $test, $groups = [])
+    public function addTest(PHPUnit_Framework_Test $test, $groups = array())
     {
         $class = new ReflectionClass($test);
 
@@ -239,12 +214,12 @@ class PHPUnit_Framework_TestSuite implements PHPUnit_Framework_Test, PHPUnit_Fra
             }
 
             if (empty($groups)) {
-                $groups = ['default'];
+                $groups = array('default');
             }
 
             foreach ($groups as $group) {
                 if (!isset($this->groups[$group])) {
-                    $this->groups[$group] = [$test];
+                    $this->groups[$group] = array($test);
                 } else {
                     $this->groups[$group][] = $test;
                 }
@@ -306,7 +281,7 @@ class PHPUnit_Framework_TestSuite implements PHPUnit_Framework_Test, PHPUnit_Fra
      * as well as the separate import statements for the user's convenience.
      *
      * If the named file cannot be read or there are no new tests that can be
-     * added, a <code>PHPUnit_Framework_WarningTestCase</code> will be created instead,
+     * added, a <code>PHPUnit_Framework_Warning</code> will be created instead,
      * leaving the current test run untouched.
      *
      * @param string $filename
@@ -358,7 +333,7 @@ class PHPUnit_Framework_TestSuite implements PHPUnit_Framework_Test, PHPUnit_Fra
                 $class = new ReflectionClass($className);
 
                 if ($class->getFileName() == $filename) {
-                    $newClasses = [$className];
+                    $newClasses = array($className);
                     unset($this->foundClasses[$i]);
                     break;
                 }
@@ -547,7 +522,7 @@ class PHPUnit_Framework_TestSuite implements PHPUnit_Framework_Test, PHPUnit_Fra
 
                     $groups = PHPUnit_Util_Test::getGroups($className, $name);
 
-                    if ($data instanceof PHPUnit_Framework_WarningTestCase ||
+                    if ($data instanceof PHPUnit_Framework_Warning ||
                         $data instanceof PHPUnit_Framework_SkippedTestCase ||
                         $data instanceof PHPUnit_Framework_IncompleteTestCase) {
                         $test->addTest($data, $groups);
@@ -694,7 +669,7 @@ class PHPUnit_Framework_TestSuite implements PHPUnit_Framework_Test, PHPUnit_Fra
                         $this->markTestSuiteSkipped(implode(PHP_EOL, $missingRequirements));
                     }
 
-                    call_user_func([$this->name, $beforeClassMethod]);
+                    call_user_func(array($this->name, $beforeClassMethod));
                 }
             }
         } catch (PHPUnit_Framework_SkippedTestSuiteError $e) {
@@ -738,7 +713,7 @@ class PHPUnit_Framework_TestSuite implements PHPUnit_Framework_Test, PHPUnit_Fra
 
             if ($test instanceof PHPUnit_Framework_TestCase ||
                 $test instanceof self) {
-                $test->setbeStrictAboutChangesToGlobalState($this->beStrictAboutChangesToGlobalState);
+                $test->setDisallowChangesToGlobalState($this->disallowChangesToGlobalState);
                 $test->setBackupGlobals($this->backupGlobals);
                 $test->setBackupStaticAttributes($this->backupStaticAttributes);
                 $test->setRunTestInSeparateProcess($this->runTestInSeparateProcess);
@@ -749,7 +724,7 @@ class PHPUnit_Framework_TestSuite implements PHPUnit_Framework_Test, PHPUnit_Fra
 
         foreach ($hookMethods['afterClass'] as $afterClassMethod) {
             if ($this->testCase === true && class_exists($this->name, false) && method_exists($this->name, $afterClassMethod)) {
-                call_user_func([$this->name, $afterClassMethod]);
+                call_user_func(array($this->name, $afterClassMethod));
             }
         }
 
@@ -905,20 +880,20 @@ class PHPUnit_Framework_TestSuite implements PHPUnit_Framework_Test, PHPUnit_Fra
 
         // @scenario on TestCase::testMethod()
         // @test     on TestCase::testMethod()
-        $docComment = $method->getDocComment();
+        $doc_comment = $method->getDocComment();
 
-        return strpos($docComment, '@test')     !== false ||
-               strpos($docComment, '@scenario') !== false;
+        return strpos($doc_comment, '@test')     !== false ||
+               strpos($doc_comment, '@scenario') !== false;
     }
 
     /**
      * @param string $message
      *
-     * @return PHPUnit_Framework_WarningTestCase
+     * @return PHPUnit_Framework_Warning
      */
     protected static function warning($message)
     {
-        return new PHPUnit_Framework_WarningTestCase($message);
+        return new PHPUnit_Framework_Warning($message);
     }
 
     /**
@@ -950,14 +925,14 @@ class PHPUnit_Framework_TestSuite implements PHPUnit_Framework_Test, PHPUnit_Fra
     }
 
     /**
-     * @param bool $beStrictAboutChangesToGlobalState
+     * @param bool $disallowChangesToGlobalState
      *
      * @since  Method available since Release 4.6.0
      */
-    public function setbeStrictAboutChangesToGlobalState($beStrictAboutChangesToGlobalState)
+    public function setDisallowChangesToGlobalState($disallowChangesToGlobalState)
     {
-        if (is_null($this->beStrictAboutChangesToGlobalState) && is_bool($beStrictAboutChangesToGlobalState)) {
-            $this->beStrictAboutChangesToGlobalState = $beStrictAboutChangesToGlobalState;
+        if (is_null($this->disallowChangesToGlobalState) && is_bool($disallowChangesToGlobalState)) {
+            $this->disallowChangesToGlobalState = $disallowChangesToGlobalState;
         }
     }
 

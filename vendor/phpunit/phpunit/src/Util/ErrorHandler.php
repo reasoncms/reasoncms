@@ -23,7 +23,7 @@ require_once dirname(__DIR__) . '/Framework/Error/Deprecated.php';
  */
 class PHPUnit_Util_ErrorHandler
 {
-    protected static $errorStack = [];
+    protected static $errorStack = array();
 
     /**
      * Returns the error stack.
@@ -49,7 +49,7 @@ class PHPUnit_Util_ErrorHandler
             return false;
         }
 
-        self::$errorStack[] = [$errno, $errstr, $errfile, $errline];
+        self::$errorStack[] = array($errno, $errstr, $errfile, $errline);
 
         $trace = debug_backtrace(false);
         array_shift($trace);

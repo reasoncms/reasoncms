@@ -22,12 +22,12 @@ class PHP_CodeCoverage_Driver_Xdebug implements PHP_CodeCoverage_Driver
     public function __construct()
     {
         if (!extension_loaded('xdebug')) {
-            throw new PHP_CodeCoverage_RuntimeException('This driver requires Xdebug');
+            throw new PHP_CodeCoverage_Exception('This driver requires Xdebug');
         }
 
-        if (version_compare(phpversion('xdebug'), '2.2.1', '>=') &&
+        if (version_compare(phpversion('xdebug'), '2.2.0-dev', '>=') &&
             !ini_get('xdebug.coverage_enable')) {
-            throw new PHP_CodeCoverage_RuntimeException(
+            throw new PHP_CodeCoverage_Exception(
                 'xdebug.coverage_enable=On has to be set in php.ini'
             );
         }
@@ -55,10 +55,8 @@ class PHP_CodeCoverage_Driver_Xdebug implements PHP_CodeCoverage_Driver
     }
 
     /**
-     * @param array $data
-     *
+     * @param  array $data
      * @return array
-     *
      * @since Method available since Release 2.0.0
      */
     private function cleanup(array $data)
@@ -70,7 +68,7 @@ class PHP_CodeCoverage_Driver_Xdebug implements PHP_CodeCoverage_Driver
                 $numLines = $this->getNumberOfLinesInFile($file);
 
                 foreach (array_keys($data[$file]) as $line) {
-                    if ($line > $numLines) {
+                    if (isset($data[$file][$line]) && $line > $numLines) {
                         unset($data[$file][$line]);
                     }
                 }
@@ -81,10 +79,8 @@ class PHP_CodeCoverage_Driver_Xdebug implements PHP_CodeCoverage_Driver
     }
 
     /**
-     * @param string $file
-     *
+     * @param  string $file
      * @return int
-     *
      * @since Method available since Release 2.0.0
      */
     private function getNumberOfLinesInFile($file)

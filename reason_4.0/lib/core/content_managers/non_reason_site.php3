@@ -35,6 +35,11 @@
 			$this->change_element_type( 'base_breadcrumbs', 'hidden');
 			$this->change_element_type( 'base_url', 'hidden');
 			//$this->change_element_type( 'department', 'hidden');
+			$this->change_element_type( 'theme_customization', 'hidden');
+			$this->change_element_type( 'home_title_pattern', 'hidden');
+			$this->change_element_type( 'secondary_title_pattern', 'hidden');
+			$this->change_element_type( 'item_title_pattern', 'hidden');
+			$this->change_element_type( 'suppress_scoped_search_option', 'hidden');
 			$this->change_element_type( 'asset_directory', 'hidden');
 			$this->change_element_type( 'loki_default', 'hidden');
 			$this->change_element_type( 'short_department_name', 'hidden');

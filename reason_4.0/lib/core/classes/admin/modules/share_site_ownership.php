@@ -34,7 +34,7 @@
 		function init() // {{{
 		{
 			parent::init();
-			$this->admin_page->title = 'Share Site Ownership';
+			$this->admin_page->title = 'Copy Site Access';
 			if (!empty($this->admin_page->request['share_user_id']))
 			{
 				$this->user_id = (int) $this->admin_page->request['share_user_id'];
@@ -70,14 +70,14 @@
 				echo '<p>Sorry; use of this module is restricted.</p>'."\n";
 				return;
 			}
-			echo '<p>Use this form to assign the set of sites owned by one user to another user.</p>';
+			echo '<p>Use this form to copy one user\'s set of sites to another user.</p>';
 			
 			if ($this->change_count)
 				echo '<p class="callOut">'.$this->change_count.' sites assigned.</p>';
 			
 			echo '<form method="post" name="userForm" id="userForm">'."\n";
-			echo '<h4>Step One: Choose the Original Site Owner</h4>';
-			echo '<label for="share_user_id">Site Owner</label>: ';
+			echo '<h4>Step One: Choose the Original User</h4>';
+			echo '<label for="share_user_id">User</label>: ';
 			echo '<select name="share_user_id" class="jumpDestination siteMenu" id="share_user_id"';
 			echo ' onchange="document.forms[\'userForm\'].submit()">'."\n";
 			echo '<option value="">--</option>'."\n";
@@ -94,7 +94,7 @@
 			
 			if (!empty($this->user_id) && !empty($this->user_sites))
 			{
-				echo '<h4>Step Two: Choose the Sites to be Assigned to the New Owner</h4>';
+				echo '<h4>Step Two: Choose the Sites to be Assigned to Another User</h4>';
 				echo '<form method="post" name="siteForm" id="siteForm">'."\n";
 				echo '<input type="hidden" name="share_user_id" value="'.$this->user_id.'" />';
 				echo '<ul style="list-style:none">'."\n";
@@ -106,8 +106,8 @@
 					echo '/> '.$site->get_value('name').'</li>'."\n";
 				}
 				echo '</ul>'."\n";
-				echo '<h4>Step Three: Choose the New Owner</h4>';
-				echo '<label for="new_user_id">New Site Owner</label>: ';
+				echo '<h4>Step Three: Choose the New User</h4>';
+				echo '<label for="new_user_id">New User</label>: ';
 				echo '<select name="new_user_id" class="jumpDestination siteMenu" id="new_user_id">'."\n";
 				echo '<option value="">--</option>'."\n";
 				foreach( array_keys($users) AS $user_id )

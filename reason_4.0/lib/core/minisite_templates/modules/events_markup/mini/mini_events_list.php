@@ -87,6 +87,9 @@ class miniEventsListMarkup implements eventsListMarkup
 				$ret .=  '</div>'."\n";
 			}
 			
+			$years_shown = array(
+				date('Y'),
+			);
 			foreach($events as $day => $times)
 			{
 				if('ongoing' == $day)
@@ -94,7 +97,15 @@ class miniEventsListMarkup implements eventsListMarkup
 				
 				$today = ($day == $this->bundle->today()) ? ' (Today)' : '';
 				$ret .= '<div class="dayblock" id="dayblock_'.$day.'">'."\n";
-				$ret .= '<h4 class="day"><a name="'.$day.'"></a><span class="daySpan">'.prettify_mysql_datetime( $day, 'D' ).'</span><span class="monthSpan">'.prettify_mysql_datetime( $day, ' M' ).'</span><span class="numberSpan">'.prettify_mysql_datetime( $day, ' j' ).$today.'</span></h4>'."\n";
+				$ret .= '<h4 class="day">';
+				$ret .= '<a name="'.$day.'"></a><span class="daySpan">'.prettify_mysql_datetime( $day, 'D' ).'</span><span class="monthSpan">'.prettify_mysql_datetime( $day, ' M' ).'</span><span class="numberSpan">'.prettify_mysql_datetime( $day, ' j' ).$today.'</span>';
+				$year = prettify_mysql_datetime( $day, 'Y' );
+				if(!in_array($year, $years_shown))
+				{
+					$ret .= ', <span class="yearSpan">'.$year.'</span>';
+					$years_shown[] = $year;
+				}
+				$ret .= '</h4>'."\n";
 				$ret .= '<ul class="dayEvents">';
 				foreach($times as $time => $events)
 				{

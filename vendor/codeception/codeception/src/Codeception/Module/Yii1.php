@@ -3,23 +3,26 @@ namespace Codeception\Module;
 
 use Codeception\Lib\Framework;
 use Codeception\Exception\ModuleConfigException;
-use Codeception\TestCase;
+use Codeception\Lib\Interfaces\PartedModule;
+use Codeception\TestInterface;
 use Codeception\Lib\Connector\Yii1 as Yii1Connector;
 use Codeception\Util\ReflectionHelper;
 use Yii;
 
 /**
- * This module provides integration with Yii framework (http://www.yiiframework.com/) (1.1.14dev).
+ * This module provides integration with [Yii Framework 1.1](http://www.yiiframework.com/doc/guide/).
  *
  * The following configurations are available for this module:
- * <ul>
- * <li>appPath - full path to the application, include index.php</li>
- * <li>url - full url to the index.php entry script</li>
- * </ul>
+ *
+ *  * `appPath` - full path to the application, include index.php</li>
+ *  * `url` - full url to the index.php entry script</li>
+ *
  * In your index.php you must return an array with correct configuration for the application:
  *
  * For the simple created yii application index.php will be like this:
- * <pre>
+ *
+ * ```php
+ * <?php
  * // change the following paths if necessary
  * $yii=dirname(__FILE__).'/../yii/framework/yii.php';
  * $config=dirname(__FILE__).'/protected/config/main.php';
@@ -33,26 +36,34 @@ use Yii;
  *        'class' => 'CWebApplication',
  *        'config' => $config,
  * );
- * </pre>
+ * ```
  *
- * You can use this module by setting params in your functional.suite.yml:
- * <pre>
- * class_name: TestGuy
+ * You can use this module by setting params in your `functional.suite.yml`:
+ *
+ * ```yaml
+ * actor: FunctionalTester
  * modules:
- *     enabled: [Yii1, TestHelper]
- *     config:
- *         Yii1:
+ *     enabled:
+ *         - Yii1:
  *             appPath: '/path/to/index.php'
  *             url: 'http://localhost/path/to/index.php'
- * </pre>
- *
+ *         - \Helper\Functional
+ * ```
  *
  * You will also need to install [Codeception-Yii Bridge](https://github.com/Codeception/YiiBridge)
  * which include component wrappers for testing.
  *
- * When you are done, you can test this module by creating new empty Yii application and creating this scenario:
- * <pre>
- * $I = new TestGuy($scenario);
+ * When you are done, you can test this module by creating new empty Yii application and creating this Cept scenario:
+ *
+ * ```
+ * php codecept.phar g:cept functional IndexCept
+ * ```
+ *
+ * and write it as in example:
+ *
+ * ```php
+ * <?php
+ * $I = new FunctionalTester($scenario);
  * $I->wantTo('Test index page');
  * $I->amOnPage('/index.php');
  * $I->see('My Web Application','#header #logo');
@@ -65,14 +76,47 @@ use Yii;
  * $I->seeLink('Logout (demo)');
  * $I->click('Logout (demo)');
  * $I->seeLink('Login');
- * </pre>
+ * ```
+ *
  * Then run codeception: php codecept.phar --steps run functional
  * You must see "OK" and that all steps are marked with asterisk (*).
  * Do not forget that after adding module in your functional.suite.yml you must run codeception "build" command.
  *
- * @property Codeception\Lib\Connector\Yii1 $client
+ * ### Public Properties
+ *
+ * `client`: instance of `\Codeception\Lib\Connector\Yii1`
+ *
+ * ### Parts
+ *
+ * If you ever encounter error message:
+ *
+ * ```
+ * Yii1 module conflicts with WebDriver
+ * ```
+ *
+ * you should include Yii module partially, with `init` part only
+ *
+ * * `init`: only initializes module and not provides any actions from it. Can be used for unit/acceptance tests to avoid conflicts.
+ *
+ * ### Acceptance Testing Example:
+ *
+ * In `acceptance.suite.yml`:
+ *
+ * ```yaml
+ * class_name: AcceptanceTester
+ * modules:
+ *     enabled:
+ *         - WebDriver:
+ *             browser: firefox
+ *             url: http://localhost
+ *         - Yii1:
+ *             appPath: '/path/to/index.php'
+ *             url: 'http://localhost/path/to/index.php'
+ *             part: init # to not conflict with WebDriver
+ *         - \Helper\Acceptance
+ * ```
  */
-class Yii1 extends Framework
+class Yii1 extends Framework implements PartedModule
 {
 
     /**
@@ -155,12 +199,12 @@ class Yii1 extends Framework
         ];
     }
 
-    public function _before(TestCase $test)
+    public function _before(TestInterface $test)
     {
         $this->_createClient();
     }
 
-    public function _after(TestCase $test)
+    public function _after(TestInterface $test)
     {
         $_SESSION = [];
         $_GET = [];
@@ -180,8 +224,8 @@ class Yii1 extends Framework
      */
     private function getDomainRegex($template, $parameters = [])
     {
-        if (preg_match('#https?://(.*?)/#', $template, $matches)) {
-            $template = $matches[1];
+        if ($host = parse_url($template, PHP_URL_HOST)) {
+            $template = $host;
         }
         if (strpos($template, '<') !== false) {
             $template = str_replace(['<', '>'], '#', $template);
@@ -203,7 +247,8 @@ class Yii1 extends Framework
     {
         $domains = [$this->getDomainRegex(Yii::app()->request->getHostInfo())];
         if (Yii::app()->urlManager->urlFormat === 'path') {
-            $rules = ReflectionHelper::readPrivateProperty(Yii::app()->urlManager, '_rules');
+            $parent = Yii::app()->urlManager instanceof \CUrlManager ? '\CUrlManager' : null;
+            $rules = ReflectionHelper::readPrivateProperty(Yii::app()->urlManager, '_rules', $parent);
             foreach ($rules as $rule) {
                 if ($rule->hasHostInfo === true) {
                     $domains[] = $this->getDomainRegex($rule->template, $rule->params);
@@ -211,5 +256,10 @@ class Yii1 extends Framework
             }
         }
         return array_unique($domains);
+    }
+
+    public function _parts()
+    {
+        return ['init', 'initialize'];
     }
 }

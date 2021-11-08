@@ -16,6 +16,7 @@ reason_include_once( 'classes/function_bundle.php' );
 reason_include_once( 'classes/api/api.php' );
 reason_include_once( 'classes/borrow_this.php' );
 reason_include_once( 'function_libraries/safe_json.php' );
+reason_include_once( 'classes/string_to_sites.php' );
 include_once(CARL_UTIL_INC . 'cache/object_cache.php');
 include_once( CARL_UTIL_INC . 'dir_service/directory.php' );
 include_once( CARL_UTIL_INC . 'basic/cleanup_funcs.php' );
@@ -1116,34 +1117,10 @@ class EventsModule extends DefaultMinisiteModule
 	}
 	function _get_sites_from_string($string)
 	{
-		$sites = array();
-		$site_strings = explode(',',$string);
-		foreach($site_strings as $site_string)
-		{
-			$site_string = trim($site_string);
-			switch($site_string)
-			{
-				case 'k_parent_sites':
-					$psites = $this->_get_parent_sites($this->site_id);
-					if(!empty($psites))
-						$sites = $sites + $psites;
-					break;
-				case 'k_child_sites':
-					$csites = $this->_get_child_sites($this->site_id);
-					if(!empty($csites))
-						$sites = $sites + $csites;
-					break;
-				case 'k_sharing_sites':
-					$ssites = $this->_get_sharing_sites($this->site_id);
-					if(!empty($ssites))
-						$sites = $sites + $ssites;
-					break;
-				default:
-					$usites = $this->_get_sites_by_unique_name($site_string, $this->site_id);
-					if(!empty($usites))
-						$sites = $sites + $usites;
-			}
-		}
+		$parser = new stringToSites();
+		$site = new entity($this->site_id);
+		$parser->set_context_site($site);
+		$sites = $parser->get_sites_from_string($string);
 		return $sites;
 	}
 	/**
@@ -1400,6 +1377,20 @@ class EventsModule extends DefaultMinisiteModule
 		$this->show_focus();
 		return ob_get_clean();
 	}
+	
+	function get_section_markup_notice()
+	{
+		$ret = '';
+		
+		if( $cal = $this->get_current_calendar() )
+		{
+			if( $cal->limit_reached() )
+			{
+				$ret .= '<div class="notice"><h3>Not Showing All Events For This Time Period</h3><p>This calendar can only show ' . number_format( $cal->get_limit() ) . ' events at a time. Because the currently selected view contains more events than that, there are some events that are not shown below. Please try choosing a shorter timespan (e.g. day/week/month).</p></div>';
+			}
+		}
+		return $ret;
+	}
 	/**
 	 * Get the ical links section markup
 	 * @return string
@@ -1506,6 +1497,7 @@ class EventsModule extends DefaultMinisiteModule
 				$bundle->set_function('options_markup', array($this, 'get_section_markup_options'));
 				$bundle->set_function('navigation_markup', array($this, 'get_section_markup_navigation'));
 				$bundle->set_function('focus_markup', array($this, 'get_section_markup_focus'));
+				$bundle->set_function('notice_markup', array($this, 'get_section_markup_notice'));
 				$bundle->set_function('list_title_markup', array($this, 'get_section_markup_list_title'));
 				$bundle->set_function('ical_links_markup', array($this, 'get_section_markup_ical_links'));
 				$bundle->set_function('rss_links_markup', array($this, 'get_section_markup_rss_links'));
@@ -3109,7 +3101,8 @@ class EventsModule extends DefaultMinisiteModule
 		echo '<form action="'.$this->construct_link().'" method="post">'."\n";
 		echo '<h4>Jump to date:</h4>';
 		echo '<span style="white-space:nowrap;">'."\n";
-		echo '<select name="start_month">'."\n";
+		echo '<label for="eventDateJumpMonthSelect" class="hide">Month</label>';
+		echo '<select name="start_month" id="eventDateJumpMonthSelect">'."\n";
 		for($m = 1; $m <= 12; $m++)
 		{
 			$m_padded = str_pad($m,2,'0',STR_PAD_LEFT);
@@ -3120,7 +3113,8 @@ class EventsModule extends DefaultMinisiteModule
 			 echo '>'.$month_name.'</option>'."\n";
 		}
 		echo '</select>'."\n";
-		echo '<select name="start_day">'."\n";
+		echo '<label for="eventDateJumpDaySelect" class="hide">Day</label>';
+		echo '<select name="start_day" id="eventDateJumpDaySelect">'."\n";
 		for($d = 1; $d <= 31; $d++)
 		{
 			 echo '<option value="'.$d.'"';
@@ -3129,7 +3123,8 @@ class EventsModule extends DefaultMinisiteModule
 			 echo '>'.$d.'</option>'."\n";
 		}
 		echo '</select>'."\n";
-		echo '<select name="start_year">'."\n";
+		echo '<label for="eventDateJumpYearSelect" class="hide">Year</label>';
+		echo '<select name="start_year" id="eventDateJumpYearSelect">'."\n";
 		for($y = $min_year; $y <= $max_year; $y++)
 		{
 			 echo '<option value="'.$y.'"';
@@ -4122,7 +4117,8 @@ class EventsModule extends DefaultMinisiteModule
 			$event_url .= '&date='.urlencode($this->request['date']);
 		$cal_url = $this->string_to_external_url_safe('Event source: '.$event_url);
 		$details = (!empty($content)) ? $content.'%0A%0A' : '';
-		$details .= (!empty($e->get_value('url'))) ? $info_url.'%0A%0A'.$cal_url : $cal_url;
+		$url = $e->get_value('url');
+		$details .= (!empty($url)) ? $info_url.'%0A%0A'.$cal_url : $cal_url;
 		switch ($calendar) {
 			case 'google':
 				//Complete additional formating:

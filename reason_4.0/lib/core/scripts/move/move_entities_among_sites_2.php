@@ -29,11 +29,11 @@ if ( !empty($_REQUEST['site_id']) && !empty($_REQUEST['type_id'])  )
 {
 	$site_id = (integer) $_REQUEST['site_id'];
 	$type_id = (integer) $_REQUEST['type_id'];
-	
+
 	$start_date = (!empty($_REQUEST['creation_date_start'])) ? $_REQUEST['creation_date_start'] : '';
 	$end_date = (!empty($_REQUEST['creation_date_end'])) ? $_REQUEST['creation_date_end'] : '';
 	$name = (!empty($_REQUEST['name_contains'])) ? $_REQUEST['name_contains'] : '';
-	$sort = (!empty($_REQUEST['sort'])) ? $_REQUEST['sort'] : 'entity.id';	
+	$sort = (!empty($_REQUEST['sort'])) ? $_REQUEST['sort'] : 'entity.id';
 }
 else
 {
@@ -58,6 +58,8 @@ echo '</head><body>'."\n";
 
 echo '<h1>Move Entities Among Sites</h1>'."\n";
 echo '<h2>Step 2 of 2: Choose which site owns each entity</h2>'."\n";
+$e = new entity( $type_id );
+echo '<h3 style="background-color: #ffc; padding: 0.2em 0.5em;">Currently viewing entities of type: ' . $e->get_display_name() . ' (' . $type_id . ')</h3>'."\n";
 
 echo '<form method="post" action="' . REASON_HTTP_BASE_PATH . 'scripts/move/move_entities_among_sites_3.php' . '">'."\n";
 

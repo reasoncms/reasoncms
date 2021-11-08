@@ -28,7 +28,7 @@ class PHPUnit_Framework_MockObject_MockBuilder
     /**
      * @var array
      */
-    private $methods = [];
+    private $methods = array();
 
     /**
      * @var string
@@ -38,7 +38,7 @@ class PHPUnit_Framework_MockObject_MockBuilder
     /**
      * @var array
      */
-    private $constructorArgs = [];
+    private $constructorArgs = array();
 
     /**
      * @var bool
@@ -142,8 +142,7 @@ class PHPUnit_Framework_MockObject_MockBuilder
     /**
      * Specifies the subset of methods to mock. Default is to mock all of them.
      *
-     * @param array|null $methods
-     *
+     * @param  array|null                               $methods
      * @return PHPUnit_Framework_MockObject_MockBuilder
      */
     public function setMethods($methods)
@@ -156,8 +155,7 @@ class PHPUnit_Framework_MockObject_MockBuilder
     /**
      * Specifies the arguments for the constructor.
      *
-     * @param array $args
-     *
+     * @param  array                                    $args
      * @return PHPUnit_Framework_MockObject_MockBuilder
      */
     public function setConstructorArgs(array $args)
@@ -170,8 +168,7 @@ class PHPUnit_Framework_MockObject_MockBuilder
     /**
      * Specifies the name for the mock class.
      *
-     * @param string $name
-     *
+     * @param  string                                   $name
      * @return PHPUnit_Framework_MockObject_MockBuilder
      */
     public function setMockClassName($name)
@@ -197,7 +194,6 @@ class PHPUnit_Framework_MockObject_MockBuilder
      * Enables the invocation of the original constructor.
      *
      * @return PHPUnit_Framework_MockObject_MockBuilder
-     *
      * @since  Method available since Release 1.2.0
      */
     public function enableOriginalConstructor()
@@ -223,7 +219,6 @@ class PHPUnit_Framework_MockObject_MockBuilder
      * Enables the invocation of the original clone constructor.
      *
      * @return PHPUnit_Framework_MockObject_MockBuilder
-     *
      * @since  Method available since Release 1.2.0
      */
     public function enableOriginalClone()
@@ -249,7 +244,6 @@ class PHPUnit_Framework_MockObject_MockBuilder
      * Enables the use of class autoloading while creating the mock object.
      *
      * @return PHPUnit_Framework_MockObject_MockBuilder
-     *
      * @since  Method available since Release 1.2.0
      */
     public function enableAutoload()
@@ -263,7 +257,6 @@ class PHPUnit_Framework_MockObject_MockBuilder
      * Disables the cloning of arguments passed to mocked methods.
      *
      * @return PHPUnit_Framework_MockObject_MockBuilder
-     *
      * @since  Method available since Release 1.2.0
      */
     public function disableArgumentCloning()
@@ -277,7 +270,6 @@ class PHPUnit_Framework_MockObject_MockBuilder
      * Enables the cloning of arguments passed to mocked methods.
      *
      * @return PHPUnit_Framework_MockObject_MockBuilder
-     *
      * @since  Method available since Release 1.2.0
      */
     public function enableArgumentCloning()
@@ -291,7 +283,6 @@ class PHPUnit_Framework_MockObject_MockBuilder
      * Enables the invocation of the original methods.
      *
      * @return PHPUnit_Framework_MockObject_MockBuilder
-     *
      * @since  Method available since Release 2.0.0
      */
     public function enableProxyingToOriginalMethods()
@@ -305,7 +296,6 @@ class PHPUnit_Framework_MockObject_MockBuilder
      * Disables the invocation of the original methods.
      *
      * @return PHPUnit_Framework_MockObject_MockBuilder
-     *
      * @since  Method available since Release 2.0.0
      */
     public function disableProxyingToOriginalMethods()
@@ -319,10 +309,8 @@ class PHPUnit_Framework_MockObject_MockBuilder
     /**
      * Sets the proxy target.
      *
-     * @param object $object
-     *
+     * @param  object                                   $object
      * @return PHPUnit_Framework_MockObject_MockBuilder
-     *
      * @since  Method available since Release 2.0.0
      */
     public function setProxyTarget($object)

@@ -18,7 +18,7 @@
  *  Ok.  The way this page works has been altered in parts and in order to maximize the efficiency of the caching
  *  mechanism.
  */
- 
+
 include_once('reason_header.php');
 reason_include_once('classes/page_cache.php' );
 
@@ -68,19 +68,19 @@ function get_minisite_template($theme_id)
  *
  * Because of the expense of this call we skip it for cached pages.
  */
-function get_validated_site($site_id, $page_id) 
+function get_validated_site($site_id, $page_id)
 {
 	static $validated;
 	if (isset($validated[$site_id][$page_id])) return $validated[$site_id][$page_id];
 	if ($site_id != $_REQUEST['site_id'])
 	{
 		trigger_error('the site id in $_REQUEST[\'site_id\'] - ' . $_REQUEST['site_id'] . ' - does not match the site id in the .htaccess file - ' . $site_id . ' - possible hack attempt.', FATAL);
-		die;			
+		die;
 	}
 	if ($page_id != $_REQUEST['page_id'])
 	{
 		trigger_error('the page id in $_REQUEST[\'page_id\'] - ' . $_REQUEST['page_id'] . ' - does not match the page id in the .htaccess file - ' . $page_id . ' - possible hack attempt.', FATAL);
-		die;			
+		die;
 	}
 
 	$page = new entity($page_id);
@@ -99,7 +99,7 @@ function get_validated_site($site_id, $page_id)
 		trigger_error('generate_page called with page_id ' . $page_id . ' which is not a live or pending page', FATAL);
 		die;
 	}
-	
+
 	$actual_site_id = get_owner_site_id($page_id);
 	if (empty($actual_site_id))
 	{
@@ -111,7 +111,7 @@ function get_validated_site($site_id, $page_id)
 		trigger_error('generate page called with site_id ' . $site_id . ', but the actual owner of page_id ' . $page_id . ' is ' . $actual_site_id .'. Rewrites may need to be run.', FATAL);
 		die;
 	}
-	
+
 	$site = new entity($actual_site_id);
 	if (!$site->get_values())
 	{
@@ -154,7 +154,7 @@ header("Content-Type: text/html; charset=UTF-8");
 
 // Apache >=2.0.48 sets the REDIRECT REMOTE USER and not the REMOTE USER if an internal redirect
 // is sent to an unauthenticated (no BASIC AUTH applied) page.  This gets around our code not
-// being aware of the change. 
+// being aware of the change.
 if(empty($_SERVER['REMOTE_USER']) AND !empty($_SERVER['REDIRECT_REMOTE_USER']))
 	$_SERVER['REMOTE_USER'] = $_SERVER['REDIRECT_REMOTE_USER'];
 
@@ -198,12 +198,12 @@ if( !empty( $site_id ) && !empty( $page_id )) // need site_id and page_id to pro
 
 	// Determine whether to use caching or not
 	$no_cache_reasons = array();
-	
+
 	// We check if a cache exists and use it if not expired.
 	$cache = new ReasonPageCache();
 	$cache->set_site_id($site_id);
 	$cache->set_page_id($page_id);
-	
+
 	if ($cache->is_cached(get_current_url()) || // if this is true we never need to hit the database
 	    ( ($site = get_validated_site($site_id, $page_id)) && $site->get_value( 'use_page_caching' ) ) )
 	{
@@ -214,7 +214,7 @@ if( !empty( $site_id ) && !empty( $page_id )) // need site_id and page_id to pro
 		$use_cache = false;
 		$no_cache_reasons[] = 'unsupported site';
 	}
-	
+
 	//-----------------------------------------------------------
 	// CONDITION UNDER WHICH WE SHOULD NOT USE PAGE CACHING
 	//  - if visitor is a listed developer who is not testing the cache
@@ -255,21 +255,21 @@ if( !empty( $site_id ) && !empty( $page_id )) // need site_id and page_id to pro
 		$cache_hit = !empty( $page );
 	}
 	else $cache_hit = null;
-	
+
 	// we run the page code if we are not using the caching system at all OR we are but did not have a hit
 	if( !$use_cache OR ($use_cache AND !$cache_hit) )
 	{
 		reason_include_once( 'classes/entity_selector.php' );
 		$site = get_validated_site( $site_id, $page_id );
-	
+
 		// A small assurance - the cache will only contain the output of the following code.  Anything printed
 		// before the ob_start() or after the ob_end_clean() will NOT be contained in the saved cache.  Ah, the
 		// beauty of stackable output buffers.
-		
+
 		// if we are a developer lets turn off the error_handler on screen output to make sure we do not cache error messages.
 		if (is_developer() && ($use_cache && !$cache_hit)) error_handler_config("display_errors", false);
 		ob_start();
-		
+
 		// get minisite template for this minisite
 		$theme = get_theme( $site->id());
 		if( $theme )
@@ -280,7 +280,7 @@ if( !empty( $site_id ) && !empty( $page_id )) // need site_id and page_id to pro
 			trigger_error('Site id '.$site_id.' does not have a theme associated with it, so minisite index cannot determine which template to use', FATAL);
 			die();
 		}
-		
+
 		if( !empty( $template ) )
 		{
 			$filename = $template->get_value('name').'.php';
@@ -322,17 +322,17 @@ if( !empty( $site_id ) && !empty( $page_id )) // need site_id and page_id to pro
 		// if we are a developer lets turn back on the error_handler on screen output
 		if (is_developer() && ($use_cache && !$cache_hit)) error_handler_config("display_errors", true);
 	}
-	
+
 	///////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
 	//    display the page
 	///////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
 	echo $page;
-	
+
 	// if we're using a cache, make sure to store the new result
 	// also, record stats about misses here
-	
+
 	$page_gen_time = round( 1000 * (get_microtime() - $s) );
 	if( $use_cache AND !$cache_hit )
 	{
@@ -352,11 +352,11 @@ if( !empty( $site_id ) && !empty( $page_id )) // need site_id and page_id to pro
 		}
 		else
 			$str .= 'caching is OFF: '.implode(', ',$no_cache_reasons);
-		
+
 		echo "\n".'<div id="reasonDeveloper" style="background-color:#ddd;color:#555;font-size:0.75em;padding:1px 1em;">';
 		echo '<p>'.$str.'</p>';
 		if (isset($t) && method_exists($t, 'display_developer_section'))
-		{	
+		{
 			$t->display_developer_section();
 		}
 		if(defined('THIS_IS_A_DEVELOPMENT_REASON_INSTANCE') && THIS_IS_A_DEVELOPMENT_REASON_INSTANCE)

@@ -74,7 +74,9 @@
 		$limiter->suggest_limit('meta_description', 156);
 		$limiter->auto_show_hide('meta_description', false);
 
-
+		// Add reading level notifier plugin to content editor
+			$this->add_readability_notifiers('content');
+			$this->add_readability_notifiers('description');
 
 
 			//make more sophisticated changes to the content manager

@@ -38,8 +38,11 @@
 				$es->add_relation('`show_hide` = "show"');
 				$es->set_order($this->params['order']);
 				$this->_modify_events_es($es);
-				$events = $es->run_one();
 				$class = $this->get_model_class($this->params['model']);
+				if(method_exists($class, 'modify_es')) {
+					$class::modify_es($es);
+				}
+				$events = $es->run_one();
 				foreach($events as $id => $event)
 				{
 					$this->events[$id] = new $class($event);

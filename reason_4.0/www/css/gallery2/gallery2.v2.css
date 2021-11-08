@@ -23,9 +23,9 @@ ul#imageGalleryItemList li.item {
 	overflow: hidden;
 	margin: 0 10px;
 	padding:10px;
-	background-color: #CCCCCC;
-	border: 1px solid #000000;
-	color: #666666;
+	background-color: #dadada;
+	border: 1px solid #5e5e5e;
+	color: #5e5e5e;
 	font-weight: bold;
 }
 

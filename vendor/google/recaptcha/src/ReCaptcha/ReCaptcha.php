@@ -35,16 +35,16 @@ class ReCaptcha
      * Version of this client library.
      * @const string
      */
-    const VERSION = 'php_1.1.3';
+    const VERSION = 'php_1.1.2';
 
     /**
      * Shared secret for the site.
-     * @var string
+     * @var type string
      */
     private $secret;
 
     /**
-     * Method used to communicate with service. Defaults to POST request.
+     * Method used to communicate  with service. Defaults to POST request.
      * @var RequestMethod
      */
     private $requestMethod;
@@ -54,7 +54,6 @@ class ReCaptcha
      *
      * @param string $secret shared secret between site and reCAPTCHA server.
      * @param RequestMethod $requestMethod method used to send the request. Defaults to POST.
-     * @throws \RuntimeException if $secret is invalid
      */
     public function __construct($secret, RequestMethod $requestMethod = null)
     {

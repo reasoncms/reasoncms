@@ -24,8 +24,7 @@ class PHPUnit_Framework_MockObject_Matcher_AnyParameters extends PHPUnit_Framewo
     }
 
     /**
-     * @param PHPUnit_Framework_MockObject_Invocation $invocation
-     *
+     * @param  PHPUnit_Framework_MockObject_Invocation $invocation
      * @return bool
      */
     public function matches(PHPUnit_Framework_MockObject_Invocation $invocation)

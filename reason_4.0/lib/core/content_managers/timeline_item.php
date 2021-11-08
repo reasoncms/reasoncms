@@ -80,8 +80,9 @@ class TimelineItemManager extends ContentManager
 		$timeline_items = $es->run_one();
 		
 		foreach ($timeline_items as $timeline_item) {
-			if (!empty($timeline_item->get_value('group'))) {
-				$groups[] = $timeline_item->get_value('group');
+			$group = $timeline_item->get_value('group');
+			if (!empty($group)) {
+				$groups[] = $group;
 			}
 		}
 		

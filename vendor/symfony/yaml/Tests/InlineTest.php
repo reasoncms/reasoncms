@@ -11,9 +11,10 @@
 
 namespace Symfony\Component\Yaml\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Yaml\Inline;
 
-class InlineTest extends \PHPUnit_Framework_TestCase
+class InlineTest extends TestCase
 {
     /**
      * @dataProvider getTestsForParse
@@ -58,8 +59,10 @@ class InlineTest extends \PHPUnit_Framework_TestCase
 
             $this->assertEquals('1.2', Inline::dump(1.2));
             $this->assertContains('fr', strtolower(setlocale(LC_NUMERIC, 0)));
-        } finally {
             setlocale(LC_NUMERIC, $locale);
+        } catch (\Exception $e) {
+            setlocale(LC_NUMERIC, $locale);
+            throw $e;
         }
     }
 
@@ -71,12 +74,12 @@ class InlineTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException        \Symfony\Component\Yaml\Exception\ParseException
-     * @expectedExceptionMessage Found unknown escape character "\V".
+     * @group legacy
+     * throws \Symfony\Component\Yaml\Exception\ParseException in 3.0
      */
     public function testParseScalarWithNonEscapedBlackslashShouldThrowException()
     {
-        Inline::parse('"Foo\Var"');
+        $this->assertSame('Foo\Var', Inline::parse('"Foo\Var"'));
     }
 
     /**
@@ -189,33 +192,66 @@ class InlineTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider getReservedIndicators
-     * @expectedException Symfony\Component\Yaml\Exception\ParseException
-     * @expectedExceptionMessage cannot start a plain scalar; you need to quote the scalar.
+     * @group legacy
+     * @expectedDeprecation Not quoting the scalar "@foo " starting with "@" is deprecated since Symfony 2.8 and will throw a ParseException in 3.0.
+     * throws \Symfony\Component\Yaml\Exception\ParseException in 3.0
      */
-    public function testParseUnquotedScalarStartingWithReservedIndicator($indicator)
+    public function testParseUnquotedScalarStartingWithReservedAtIndicator()
     {
-        Inline::parse(sprintf('{ foo: %sfoo }', $indicator));
-    }
-
-    public function getReservedIndicators()
-    {
-        return array(array('@'), array('`'));
+        Inline::parse('{ foo: @foo }');
     }
 
     /**
-     * @dataProvider getScalarIndicators
-     * @expectedException Symfony\Component\Yaml\Exception\ParseException
-     * @expectedExceptionMessage cannot start a plain scalar; you need to quote the scalar.
+     * @group legacy
+     * @expectedDeprecation Not quoting the scalar "`foo " starting with "`" is deprecated since Symfony 2.8 and will throw a ParseException in 3.0.
+     * throws \Symfony\Component\Yaml\Exception\ParseException in 3.0
      */
-    public function testParseUnquotedScalarStartingWithScalarIndicator($indicator)
+    public function testParseUnquotedScalarStartingWithReservedBacktickIndicator()
     {
-        Inline::parse(sprintf('{ foo: %sfoo }', $indicator));
+        Inline::parse('{ foo: `foo }');
+    }
+
+    /**
+     * @group legacy
+     * @expectedDeprecation Not quoting the scalar "|foo " starting with "|" is deprecated since Symfony 2.8 and will throw a ParseException in 3.0.
+     * throws \Symfony\Component\Yaml\Exception\ParseException in 3.0
+     */
+    public function testParseUnquotedScalarStartingWithLiteralStyleIndicator()
+    {
+        Inline::parse('{ foo: |foo }');
+    }
+
+    /**
+     * @group legacy
+     * @expectedDeprecation Not quoting the scalar ">foo " starting with ">" is deprecated since Symfony 2.8 and will throw a ParseException in 3.0.
+     * throws \Symfony\Component\Yaml\Exception\ParseException in 3.0
+     */
+    public function testParseUnquotedScalarStartingWithFoldedStyleIndicator()
+    {
+        Inline::parse('{ foo: >foo }');
     }
 
     public function getScalarIndicators()
     {
         return array(array('|'), array('>'));
+    }
+
+    /**
+     * @dataProvider getDataForIsHash
+     */
+    public function testIsHash($array, $expected)
+    {
+        $this->assertSame($expected, Inline::isHash($array));
+    }
+
+    public function getDataForIsHash()
+    {
+        return array(
+            array(array(), false),
+            array(array(1, 2, 3), false),
+            array(array(2 => 1, 1 => 2, 0 => 3), true),
+            array(array('foo' => 1, 'bar' => 2), true),
+        );
     }
 
     public function getTestsForParse()
@@ -424,6 +460,47 @@ class InlineTest extends \PHPUnit_Framework_TestCase
             array('[foo, { bar: foo, foo: [foo, { bar: foo }] }, [foo, { bar: foo }]]', array('foo', array('bar' => 'foo', 'foo' => array('foo', array('bar' => 'foo'))), array('foo', array('bar' => 'foo')))),
 
             array('[foo, \'@foo.baz\', { \'%foo%\': \'foo is %foo%\', bar: \'%foo%\' }, true, \'@service_container\']', array('foo', '@foo.baz', array('%foo%' => 'foo is %foo%', 'bar' => '%foo%'), true, '@service_container')),
+
+            array('{ foo: { bar: { 1: 2, baz: 3 } } }', array('foo' => array('bar' => array(1 => 2, 'baz' => 3)))),
         );
+    }
+
+    /**
+     * @expectedException \Symfony\Component\Yaml\Exception\ParseException
+     * @expectedExceptionMessage Malformed inline YAML string: {this, is not, supported}.
+     */
+    public function testNotSupportedMissingValue()
+    {
+        Inline::parse('{this, is not, supported}');
+    }
+
+    public function testVeryLongQuotedStrings()
+    {
+        $longStringWithQuotes = str_repeat("x\r\n\\\"x\"x", 1000);
+
+        $yamlString = Inline::dump(array('longStringWithQuotes' => $longStringWithQuotes));
+        $arrayFromYaml = Inline::parse($yamlString);
+
+        $this->assertEquals($longStringWithQuotes, $arrayFromYaml['longStringWithQuotes']);
+    }
+
+    public function testBooleanMappingKeysAreConvertedToStrings()
+    {
+        $this->assertSame(array('false' => 'foo'), Inline::parse('{false: foo}'));
+        $this->assertSame(array('true' => 'foo'), Inline::parse('{true: foo}'));
+    }
+
+    public function testTheEmptyStringIsAValidMappingKey()
+    {
+        $this->assertSame(array('' => 'foo'), Inline::parse('{ "": foo }'));
+    }
+
+    /**
+     * @expectedException \Symfony\Component\Yaml\Exception\ParseException
+     * @expectedExceptionMessage Unexpected end of line, expected one of ",}".
+     */
+    public function testUnfinishedInlineMap()
+    {
+        Inline::parse("{abc: 'def'");
     }
 }

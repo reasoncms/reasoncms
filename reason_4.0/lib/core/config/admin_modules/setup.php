@@ -108,6 +108,7 @@
 		'AnalyticsAbout'=>array('file'=>'analytics.php', 'class'=>'AnalyticsAboutModule'),
 		'ShareSiteOwnership'=>array('file'=>'share_site_ownership.php', 'class'=>'ShareSiteOwnershipModule'),
 		'BorrowThis'=>array('file'=>'borrow_this.php', 'class'=>'BorrowThisModule'),
+		'CopyBorrowing'=>array('file'=>'copy_borrowing.php', 'class'=>'CopyBorrowingModule'),
 		'NoRelReport'=>array('file'=>'no_rel_report.php', 'class'=>'NoRelReportModule'),
 		'UserPosing'=>array('file'=>'user_posing.php', 'class'=>'UserPosingModule'),
 	 	'CopySitePages'=>array('file'=>'copy_site_pages.php','class'=>'ReasonCopySitePagesModule'),
@@ -116,6 +117,10 @@
 		'EntityStats'=>array('file'=>'entity_stats.php', 'class'=>'ReasonEntityStatsModule'),
 		'InvisiblesFinder'=>array('file'=>'invisibles_finder.php', 'class'=>'InvisiblesFinderModule'),
 		'SharingStats'=>array('file'=>'sharing_stats.php', 'class'=>'ReasonSharingStatsModule'),
+		'FindPageFromURL'=>array('file'=>'find_page_from_url.php', 'class'=>'FindPageFromURLModule'),
+		'Search'=>array('file'=>'search.php', 'class'=>'ReasonAdminSearchModule'),
+		'TypeUsage'=>array('file'=>'type_usage.php', 'class'=>'ReasonTypeUsageModule'),
+		'GroupUsage'=>array('file'=>'group_usage.php', 'class'=>'GroupUsageModule'),
 	);
 
 if (reason_file_exists('config/admin_modules/setup_local.php'))

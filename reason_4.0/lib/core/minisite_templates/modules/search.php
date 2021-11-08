@@ -117,7 +117,7 @@
 		}
 		function run_search_input_field()
 		{
-			echo '<input type="text" name="'.$this->get_seach_form_input_field_name().'" size="'.min(strlen($this->default_text), 40).'" value="'.$this->default_text.'" onfocus=\'if(this.value=="'.$this->default_text.'") {this.value="";}\' onblur=\'if(this.value=="") {this.value="'.$this->default_text.'";}\' class="searchInputBox" id="minisiteSearchInput" />'."\n";
+			echo '<label for="minisiteSearchInput" class="hide">'.$this->default_text.'</label><input type="text" name="'.$this->get_seach_form_input_field_name().'" size="'.min(strlen($this->default_text), 40).'" value="'.$this->default_text.'" onfocus=\'if(this.value=="'.$this->default_text.'") {this.value="";}\' onblur=\'if(this.value=="") {this.value="'.$this->default_text.'";}\' class="searchInputBox" id="minisiteSearchInput" />'."\n";
 		}
 		function run_script_go()
 		{

@@ -98,7 +98,7 @@ class reasonEventRepeater
 		elseif( $this->recurrence == 'monthly' AND $this->monthly_repeat == 'semantic' )
 		{
 			$this->month_day_of_week = carl_date( 'l',$this->ustart );
-			$this->week_of_month = floor($this->dstart/7)+1;
+			$this->week_of_month = ceil($this->dstart/7);
 		}
 		else
 		{

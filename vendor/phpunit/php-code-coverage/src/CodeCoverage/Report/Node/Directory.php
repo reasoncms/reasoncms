@@ -18,17 +18,17 @@ class PHP_CodeCoverage_Report_Node_Directory extends PHP_CodeCoverage_Report_Nod
     /**
      * @var PHP_CodeCoverage_Report_Node[]
      */
-    protected $children = [];
+    protected $children = array();
 
     /**
      * @var PHP_CodeCoverage_Report_Node_Directory[]
      */
-    protected $directories = [];
+    protected $directories = array();
 
     /**
      * @var PHP_CodeCoverage_Report_Node_File[]
      */
-    protected $files = [];
+    protected $files = array();
 
     /**
      * @var array
@@ -139,8 +139,7 @@ class PHP_CodeCoverage_Report_Node_Directory extends PHP_CodeCoverage_Report_Nod
     /**
      * Adds a new directory.
      *
-     * @param string $name
-     *
+     * @param  string                                 $name
      * @return PHP_CodeCoverage_Report_Node_Directory
      */
     public function addDirectory($name)
@@ -156,14 +155,12 @@ class PHP_CodeCoverage_Report_Node_Directory extends PHP_CodeCoverage_Report_Nod
     /**
      * Adds a new file.
      *
-     * @param string $name
-     * @param array  $coverageData
-     * @param array  $testData
-     * @param bool   $cacheTokens
-     *
+     * @param  string                            $name
+     * @param  array                             $coverageData
+     * @param  array                             $testData
+     * @param  bool                              $cacheTokens
      * @return PHP_CodeCoverage_Report_Node_File
-     *
-     * @throws PHP_CodeCoverage_InvalidArgumentException
+     * @throws PHP_CodeCoverage_Exception
      */
     public function addFile($name, array $coverageData, array $testData, $cacheTokens)
     {
@@ -222,7 +219,7 @@ class PHP_CodeCoverage_Report_Node_Directory extends PHP_CodeCoverage_Report_Nod
     public function getClasses()
     {
         if ($this->classes === null) {
-            $this->classes = [];
+            $this->classes = array();
 
             foreach ($this->children as $child) {
                 $this->classes = array_merge(
@@ -243,7 +240,7 @@ class PHP_CodeCoverage_Report_Node_Directory extends PHP_CodeCoverage_Report_Nod
     public function getTraits()
     {
         if ($this->traits === null) {
-            $this->traits = [];
+            $this->traits = array();
 
             foreach ($this->children as $child) {
                 $this->traits = array_merge(
@@ -264,7 +261,7 @@ class PHP_CodeCoverage_Report_Node_Directory extends PHP_CodeCoverage_Report_Nod
     public function getFunctions()
     {
         if ($this->functions === null) {
-            $this->functions = [];
+            $this->functions = array();
 
             foreach ($this->children as $child) {
                 $this->functions = array_merge(
@@ -285,7 +282,7 @@ class PHP_CodeCoverage_Report_Node_Directory extends PHP_CodeCoverage_Report_Nod
     public function getLinesOfCode()
     {
         if ($this->linesOfCode === null) {
-            $this->linesOfCode = ['loc' => 0, 'cloc' => 0, 'ncloc' => 0];
+            $this->linesOfCode = array('loc' => 0, 'cloc' => 0, 'ncloc' => 0);
 
             foreach ($this->children as $child) {
                 $linesOfCode = $child->getLinesOfCode();

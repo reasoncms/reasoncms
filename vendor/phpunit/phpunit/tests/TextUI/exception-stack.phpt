@@ -12,9 +12,9 @@ PHPUnit_TextUI_Command::main();
 --EXPECTF--
 PHPUnit %s by Sebastian Bergmann and contributors.
 
-EE                                                                  2 / 2 (100%)
+EE
 
-Time: %s, Memory: %sMb
+Time: %s, Memory: %s
 
 There were 2 errors:
 

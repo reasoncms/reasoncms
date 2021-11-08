@@ -11,6 +11,7 @@
 
 namespace Symfony\Component\CssSelector\Tests\Parser\Handler;
 
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\CssSelector\Parser\Reader;
 use Symfony\Component\CssSelector\Parser\Token;
 use Symfony\Component\CssSelector\Parser\TokenStream;
@@ -18,7 +19,7 @@ use Symfony\Component\CssSelector\Parser\TokenStream;
 /**
  * @author Jean-François Simon <contact@jfsimon.fr>
  */
-abstract class AbstractHandlerTest extends \PHPUnit_Framework_TestCase
+abstract class AbstractHandlerTest extends TestCase
 {
     /** @dataProvider getHandleValueTestData */
     public function testHandleValue($value, Token $expectedToken, $remainingContent)
@@ -62,7 +63,7 @@ abstract class AbstractHandlerTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals(0, $reader->getRemainingLength());
             $this->assertTrue($reader->isEOF());
         } else {
-            $this->assertEquals(strlen($remainingContent), $reader->getRemainingLength());
+            $this->assertEquals(\strlen($remainingContent), $reader->getRemainingLength());
             $this->assertEquals(0, $reader->getOffset($remainingContent));
         }
     }

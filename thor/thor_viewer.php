@@ -86,11 +86,17 @@ class ThorViewer extends TableAdmin
 	{
 		$form =& $this->get_admin_form();
 		if (!$form) $form = new DiscoDefaultAdmin();
+		$form->field_display_names = $this->get_display_name_map();
+	}
+	
+	function get_display_name_map()
+	{
+		$field_display_names = array();
 		foreach ($this->_display_values as $k=>$v)
 		{
 			$field_display_names[$k] = $v['label'];
 		}
-		$form->field_display_names = $field_display_names;
+		return $field_display_names;
 	}
 	
 	function _delete_data()

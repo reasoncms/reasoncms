@@ -58,8 +58,9 @@ class YouTubeLatestUserVideosFeedModel extends ReasonMVCModel
              * Please ensure that you have enabled the YouTube Data API for your project.
              */
 
-            if (!empty(YOUTUBE_DEVELOPER_KEY)) {
-                $client->setDeveloperKey(YOUTUBE_DEVELOPER_KEY);
+            $youtube_developer_key = YOUTUBE_DEVELOPER_KEY;
+            if (!empty($youtube_developer_key)) {
+                $client->setDeveloperKey($youtube_developer_key);
             }
 
             // Define an object that will be used to make all API requests.

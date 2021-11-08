@@ -3,11 +3,11 @@ class SomeClass
 {
     public function doSomething($a, $b)
     {
-        return;
+        return null;
     }
 
     public function doSomethingElse($c)
     {
-        return;
+        return null;
     }
 }

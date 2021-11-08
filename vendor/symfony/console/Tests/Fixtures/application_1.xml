@@ -3,7 +3,7 @@
   <commands>
     <command id="help" name="help">
       <usages>
-        <usage>help [--format FORMAT] [--raw] [--] [&lt;command_name&gt;]</usage>
+        <usage>help [--xml] [--format FORMAT] [--raw] [--] [&lt;command_name&gt;]</usage>
       </usages>
       <description>Displays help for a command</description>
       <help>The &lt;info&gt;help&lt;/info&gt; command displays help for a given command:
@@ -24,6 +24,9 @@
         </argument>
       </arguments>
       <options>
+        <option name="--xml" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>To output help as XML</description>
+        </option>
         <option name="--format" shortcut="" accept_value="1" is_value_required="1" is_multiple="0">
           <description>The output format (txt, xml, json, or md)</description>
           <defaults>
@@ -58,7 +61,7 @@
     </command>
     <command id="list" name="list">
       <usages>
-        <usage>list [--raw] [--format FORMAT] [--] [&lt;namespace&gt;]</usage>
+        <usage>list [--xml] [--raw] [--format FORMAT] [--] [&lt;namespace&gt;]</usage>
       </usages>
       <description>Lists commands</description>
       <help>The &lt;info&gt;list&lt;/info&gt; command lists all commands:
@@ -83,6 +86,9 @@
         </argument>
       </arguments>
       <options>
+        <option name="--xml" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>To output list as XML</description>
+        </option>
         <option name="--raw" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
           <description>To output raw command list</description>
         </option>

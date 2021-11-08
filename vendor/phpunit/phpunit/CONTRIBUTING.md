@@ -39,12 +39,10 @@ $ git clone git://github.com/sebastianbergmann/phpunit.git
 $ cd phpunit
 ```
 
-Retrieve PHPUnit's dependencies using [Composer](http://getcomposer.org/):
+Retrieve PHPUnit's dependencies using [Composer](https://getcomposer.org/):
 
 ```bash
-$ wget http://getcomposer.org/composer.phar
-
-$ php composer.phar install
+$ composer install
 ```
 
 The `phpunit` script can be used to invoke the PHPUnit test runner:
@@ -61,6 +59,7 @@ Please use the most specific issue tracker to search for existing tickets and to
 * [Code Coverage](https://github.com/sebastianbergmann/php-code-coverage/issues)
 * [Stub and Mock Objects](https://github.com/sebastianbergmann/phpunit-mock-objects/issues)
 * [DbUnit](https://github.com/sebastianbergmann/dbunit/issues)
+* [PHPUnit_Selenium](https://github.com/sebastianbergmann/phpunit-selenium/issues)
 * [Documentation](https://github.com/sebastianbergmann/phpunit-documentation/issues)
 * [Website](https://github.com/sebastianbergmann/phpunit-website/issues)
 

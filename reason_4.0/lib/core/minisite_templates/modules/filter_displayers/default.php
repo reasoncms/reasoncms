@@ -348,18 +348,36 @@ class defaultFilterDisplay
 		$combined_other_filter_links = implode('&amp;',$other_filter_links);
 	
 		$ret .= '<div class="filterSet">';
-		$ret .= '<select class="filterSelect" name="filter'.htmlspecialchars($key,ENT_QUOTES,"UTF-8").'">'."\n";
+		$label = '';
 		if(empty($this->filters[$key]))
 		{
 			if(empty($this->filters))
 			{
 				if(count($this->filter_types) == 1)
-					$ret .= '<option value="">Browse by '.current(array_keys($this->filter_types)).':</option>'."\n";
+				{
+					$label = 'Browse by '.current(array_keys($this->filter_types)).':';
+				}
 				else
-					$ret .= '<option value="">Focus on...</option>'."\n";
+				{
+					$label = 'Focus on...';
+				}
 			}
 			else
-				$ret .= '<option value="">Add focus...</option>'."\n";
+			{
+				$label = 'Add focus...';
+			}
+		}
+		else
+		{
+			$label = 'Browse by '.implode('/',array_keys($this->filter_types));
+		}
+		$name = 'filter'.htmlspecialchars($key,ENT_QUOTES,"UTF-8");
+		$id = $name.'Select';
+		$ret .= '<label class="hide" for="'.$id.'">'.$label.'</label>';
+		$ret .= '<select class="filterSelect" name="'.$name.'" id="'.$id.'">'."\n";
+		if(!empty($label))
+		{
+			$ret .= '<option value="">'.$label.'</option>'."\n";
 			$ret .= '<option value=""></option>'."\n";
 		}
 		foreach($this->filter_types as $filter_name=>$filter_type)

@@ -22,13 +22,13 @@ class PHP_CodeCoverage_Driver_PHPDBG implements PHP_CodeCoverage_Driver
     public function __construct()
     {
         if (PHP_SAPI !== 'phpdbg') {
-            throw new PHP_CodeCoverage_RuntimeException(
+            throw new PHP_CodeCoverage_Exception(
                 'This driver requires the PHPDBG SAPI'
             );
         }
 
         if (!function_exists('phpdbg_start_oplog')) {
-            throw new PHP_CodeCoverage_RuntimeException(
+            throw new PHP_CodeCoverage_Exception(
                 'This build of PHPDBG does not support code coverage'
             );
         }
@@ -49,11 +49,11 @@ class PHP_CodeCoverage_Driver_PHPDBG implements PHP_CodeCoverage_Driver
      */
     public function stop()
     {
-        static $fetchedLines = [];
+        static $fetchedLines = array();
 
         $dbgData = phpdbg_end_oplog();
 
-        if ($fetchedLines == []) {
+        if ($fetchedLines == array()) {
             $sourceLines = phpdbg_get_executable();
         } else {
             $newFiles = array_diff(
@@ -63,10 +63,10 @@ class PHP_CodeCoverage_Driver_PHPDBG implements PHP_CodeCoverage_Driver
 
             if ($newFiles) {
                 $sourceLines = phpdbg_get_executable(
-                    ['files' => $newFiles]
+                    array('files' => $newFiles)
                 );
             } else {
-                $sourceLines = [];
+                $sourceLines = array();
             }
         }
 
@@ -84,9 +84,8 @@ class PHP_CodeCoverage_Driver_PHPDBG implements PHP_CodeCoverage_Driver
     /**
      * Convert phpdbg based data into the format CodeCoverage expects
      *
-     * @param array $sourceLines
-     * @param array $dbgData
-     *
+     * @param  array $sourceLines
+     * @param  array $dbgData
      * @return array
      */
     private function detectExecutedLines(array $sourceLines, array $dbgData)

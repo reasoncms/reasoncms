@@ -3,12 +3,12 @@
  * @package reason
  * @subpackage admin
  */
- 
+
  /**
   * Include the default module
   */
 	reason_include_once('classes/admin/modules/default.php');
-	
+
 	/**
 	 * An administrative module that explains why a given item may not be deleted
 	 */
@@ -17,15 +17,15 @@
 		function NoDeleteModule( &$page ) // {{{
 		{
 			$this->admin_page =& $page;
-		} // }}}		
+		} // }}}
 		function init() // {{{
 		{
 			$dbq = $this->admin_page->get_required_ar_dbq();
-			
+
 			$this->values = $dbq->run();
-			
+
 			$this->borrowed_by = get_sites_that_are_borrowing_entity($this->admin_page->id);
-			
+
 			/* if( empty( $this->values ) && empty($this->borrowed_by ) )
 			{
 				$link = unhtmlentities( $this->admin_page->make_link( array( 'cur_module' => 'Delete' ) ) );
@@ -55,9 +55,9 @@
 			$type = new entity( $this->admin_page->type_id );
 			$entity = new entity($this->admin_page->id);
 			$user = new entity( $this->admin_page->user_id );
-			$text = 
+			$text =
 			array
-			( 
+			(
 							'root_node' => 'This is a root ' . $type->get_value( 'name' ) . ', so you may not delete it.  If you wish to delete this item, please contact the <a href="' . $this->admin_page->make_link(array("cur_module"=>"about_reason")) . '">web team</a>.',
 							'default' => 'You cannot currently delete this item because following items, which 
 										are associated with it, must be associated with a '.$type->get_value( 'name' ).'. If 
@@ -67,7 +67,7 @@
 										<li>delete its children</li>
 										<li>Select a different parent page for its children</li>
 										</ul>If you wish to delete this item, please select a different parent for the pages listed below.<br /><br />',
-							'borrowed' => '<p>This item is currently borrowed by one or more sites.  Deleting it might break their sites.  If you still want to delete it, contact the sites\' maintainers to ask if they can stop borrowing the item.</p>',
+							'borrowed' => '<p>This item is currently borrowed by one or more sites.  Deleting it might break their sites.  If you still want to delete it, contact the sites\' maintainers to ask if they can stop borrowing the item.</p><p style="border: 1px solid #f66; background-color: #fcc; padding: 1em;"><strong>Note for borrowed Events:</strong><br>If you are canceling an event, you can set its status to "tentative", and it will no longer appear on calendars, effectively removing the event without "deleting" it.</p>',
 							'locks' => 'This '.$type->get_value( 'name' ).' has had a lock applied to it that keeps it from being deleted. A reason administrator may have applied this lock in order to ensure that a site was not inadventently broken. Please contact a Reason administrator if you have any questions about the rationale for placing this lock on this '.$type->get_value( 'name' ).'.',
 			);
 			if(!empty($this->borrowed_by))
@@ -105,9 +105,9 @@
 																)
 														);
 
-					echo '<a href="' . $link . '" target="'.$v[ 'e_id' ].'">' . $v[ 'e_name' ] . 
+					echo '<a href="' . $link . '" target="'.$v[ 'e_id' ].'">' . $v[ 'e_name' ] .
 						 '</a><span class="smallText"> ('.prettify_string( $v[ 'name' ] ).')</span><br />';
-																 
+
 				}
 			}
 
